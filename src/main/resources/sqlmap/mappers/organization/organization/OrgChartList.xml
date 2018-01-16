@@ -158,9 +158,17 @@
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
                                        AND ( '''' <> Extent1.DEPT_CODE )
                                        AND ( 1 = Extent2.STUS )
-                                       AND ( Extent2.MEM_TYPE = #{memType} )
-                                       AND ( Extent1.MEM_LVL = #{memLvl} )
                              ]]>                                           
+                                       <choose>
+                                        <when test="memType == 4">
+                                            AND ( Extent2.MEM_TYPE IN ('1') )
+                                            AND ( Extent1.MEM_LVL = '1' )
+                                        </when>
+                                        <otherwise>
+                                            AND ( Extent2.MEM_TYPE = #{memType})
+                                            AND ( Extent1.MEM_LVL = #{memLvl} )
+                                        </otherwise>
+                                       </choose>   
                             <choose>
                                     <when test="memLvl == 1">
                                         AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
@@ -835,8 +843,15 @@
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
                                        AND ( '''' <> Extent1.DEPT_CODE )
                                        AND ( 1 = Extent2.STUS )
-                                       AND ( Extent2.MEM_TYPE = #{memType})
-                                       AND ( Extent1.MEM_LVL = #{memLvl} )]]>   
+                                       AND ( Extent2.MEM_TYPE = #{memType}) ]]>
+                                       <choose>
+                                        <when test="memLvl == 11">
+                                            AND ( Extent1.MEM_LVL = '1' )
+                                        </when>
+                                        <otherwise>
+                                            AND ( Extent1.MEM_LVL = #{memLvl} )
+                                        </otherwise>
+                                       </choose>
                                        AND ( Extent2.STUS IN ( 1,8 )
                                       <if test="deptIdCd != null and deptIdCd != '' and deptIdCd != '0' ">
                                             AND Extent1.mem_id = #{deptIdCd}
@@ -857,7 +872,6 @@
 			                                    </when>
 			                                    <when test="memLvl == 4">
 			                                        AND Extent2.MEM_CODE  = #{userName}
-			                                        
 			                                    </when>
 			                            </choose>                                                         
 			                            </if>                     

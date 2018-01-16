@@ -285,7 +285,7 @@
                 
                 console.log("성공.");
                 console.log("data : " + result);
-                if ( memType == "1" ) {
+                if ( memType == "1"  || memType == "4" ) {
                     AUIGrid.setGridData(myHpGridID, result);
                 }
             });
@@ -354,7 +354,10 @@
             var memLvl = $('#memLvl').val();
             
             
-            if (memType == "" ) {
+            if (memType == "4" ) {
+                memType = "3";
+                memLvl = "11";
+            } else if (memType == "" ) {
                 memType = "3";
             }
             
@@ -374,7 +377,7 @@
                 console.log("data : " + result);
                 //AUIGrid.setGridData(myCtGridID, result);
                 
-                if ( memType == "3" ) {
+                if ( memType == "3" || memType == "4" ) {
                     AUIGrid.setGridData(myCtGridID, result);
                 }                
             });        
@@ -441,7 +444,10 @@
            var memLvl = $('#memLvl').val();
            
            
-           if (memType == "" ) {
+           if (memType == "4" ) {
+               memType = "2";
+               memLvl = "11";
+           } else if (memType == "" ) {
                memType = "2";
            }
            
@@ -464,7 +470,7 @@
                 console.log(  JSON.stringify(result));
                 //AUIGrid.setGridData(myCdGridID, result);
                 
-                if ( memType == "2" ) {
+                if ( memType == "2"  || memType == "4" ) {
                     AUIGrid.setGridData(myCdGridID, result);
                 }                 
             });        
