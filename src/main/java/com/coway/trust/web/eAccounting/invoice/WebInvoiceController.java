@@ -142,6 +142,7 @@ public class WebInvoiceController {
 		// TODO appvPrcssStus 생성
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
 		
+		model.addAttribute("appvPrcssNo", params.get("appvPrcssNo"));
 		model.addAttribute("appvPrcssStus", appvPrcssStus);
 		model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
 		model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
@@ -623,5 +624,20 @@ public class WebInvoiceController {
 		}
 		
 		return ResponseEntity.ok(info);
+	}
+	
+	@RequestMapping(value = "/getAppvExcelInfo.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> getAppvExcelInfo(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		
+		LOGGER.debug("params =====================================>>  " + params);
+		
+		List<EgovMap> list = webInvoiceService.getAppvExcelInfo(params);
+		
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(list);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
 	}
 }

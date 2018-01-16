@@ -475,6 +475,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectSameVender(params);
 	}
+
+	@Override
+	public List<EgovMap> getAppvExcelInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.getAppvExcelInfo(params);
+	}
 	
 	
 	

@@ -103,4 +103,6 @@ public interface WebInvoiceMapper {
 	
 	String selectSameVender(Map<String, Object> params);
 	
+	List<EgovMap> getAppvExcelInfo(Map<String, Object> params);
+	
 }
