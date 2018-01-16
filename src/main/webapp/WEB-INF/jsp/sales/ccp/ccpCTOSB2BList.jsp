@@ -148,7 +148,7 @@ function searchNotFoundHandler(event) {
 function createCtosGrid(){
 	var  columnLayout = [
 	                     {dataField : "batchId", headerText : "Batch No", width : "7%" , editable : false},
-	                     {dataField : "fileName", headerText : "File Name", width : "25%" , editable : false},
+	                     {dataField : "fileName", headerText : "File Name", width : "23%" , editable : false},
 	                     {dataField : "rowCnt", headerText : "Total", width : "7%" , editable : false},
 	                     {dataField : "comple", headerText : "Complete", width : "7%" , editable : false},
 	                     {dataField : "act", headerText : "Act", width : "7%" , editable : false},
@@ -156,7 +156,7 @@ function createCtosGrid(){
 	                     {dataField : "lt500", headerText : "LT500", width : "6%" , editable : false},
 	                     {dataField : "gt501", headerText : "GT501", width : "6%" , editable : false},
 	                     {dataField : "stus", headerText : "STATUS", width : "6%" , editable : false},
-	                     {dataField : "updDt", headerText : "Upload Time", width : "13%" , editable : false},
+	                     {dataField : "updDt", headerText : "Upload Time", width : "15%" , editable : false},
 	                     {dataField : "updUserId", headerText : "Upload User", width : "9%" , editable : false}
 	               ]
 	
