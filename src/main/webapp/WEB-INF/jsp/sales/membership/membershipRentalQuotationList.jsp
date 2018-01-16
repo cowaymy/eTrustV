@@ -207,10 +207,11 @@ function fn_goConvertSale(){
    
    var v_stus = selectedItems[0].item.c2;
    var v_quotId = selectedItems[0].item.qotatId;
+   var v_quotNo = selectedItems[0].item.qotatRefNo;
    
    
    if(v_stus !="ACT"){
-	   Common.alert("["+v_quotId + "] <spring:message code="sal.alert.disallowed" />");
+	   Common.alert("<b>["+v_quotNo + "] <spring:message code="sal.alert.disallowed" /><b/>");
 	   return false;
    }
    // status = expired면 접근불가 alert
