@@ -343,12 +343,11 @@ public class StaffClaimController {
 		
 		if(cnt > 0) {
 			message.setCode(AppConstants.FAIL);
-			message.setData(cnt);
 			message.setMessage("You can only request once a month.");
 		} else {
 			message.setCode(AppConstants.SUCCESS);
-			message.setData(cnt);
 		}
+		message.setData(cnt);
 		
 		return ResponseEntity.ok(message);
 	}
