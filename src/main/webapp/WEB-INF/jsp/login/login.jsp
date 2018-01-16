@@ -76,6 +76,14 @@
         }).submit();
     }
 
+    function fn_goMainExternal() {
+        $("#loginForm").attr("target", "");
+        $("#loginForm").attr({
+            action: getContextPath() + "/common/mainExternal.do",
+            method: "POST"
+        }).submit();
+    }
+
 
     function fnFindIdPopUp() {
         var popUpObj = Common.popupDiv(
@@ -235,7 +243,11 @@
                 }
                 else {  // 재로그인을 하지 않을려면, popup에서 호출.
                     fn_configCookies(userId);
-                    fn_goMain();
+                    if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
+                    	fn_goMain();
+                    }else{
+                    	fn_goMainExternal();
+                    }
                 }
             }
             , function (jqXHR, textStatus, errorThrown) {

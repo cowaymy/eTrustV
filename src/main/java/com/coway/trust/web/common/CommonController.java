@@ -63,6 +63,11 @@ public class CommonController {
 		return "common/main";
 	}
 
+	@RequestMapping(value = "/mainExternal.do")
+	public String mainExternal(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "common/mainExternal";
+	}
+
 	@RequestMapping(value = "/unauthorized.do")
 	public String unauthorized(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "/error/unauthorized";
@@ -160,7 +165,7 @@ public class CommonController {
 
 	/**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -169,10 +174,10 @@ public class CommonController {
 		List<EgovMap> resultList = commonService.getAccountList(params);
 		return ResponseEntity.ok(resultList);
 	}
-	
+
 	/**
 	 * Account 정보 조회 (크레딧 카드 리스트 / 은행 계좌 리스트)
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -185,7 +190,7 @@ public class CommonController {
 
 	/**
 	 * IssuedBank 정보 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -197,7 +202,7 @@ public class CommonController {
 
 	/**
 	 * Branch ID로 User 정보 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -206,7 +211,7 @@ public class CommonController {
 		List<EgovMap> resultList = commonService.getUsersByBranch(params);
 		return ResponseEntity.ok(resultList);
 	}
-	
+
 	@RequestMapping(value = "/selectCountryList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCountryList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> countryList = commonService.selectCountryList(params);
@@ -218,13 +223,13 @@ public class CommonController {
 		List<EgovMap> stateList = commonService.selectStateList(params);
 		return ResponseEntity.ok(stateList);
 	}
-	
+
 	@RequestMapping(value = "/selectAreaList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectAreaList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> AreaList = commonService.selectAreaList(params);
 		return ResponseEntity.ok(AreaList);
 	}
-	
+
 	@RequestMapping(value = "/selectPostCdList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectPostCdList(@RequestParam Map<String, Object> params) {
 		List<EgovMap> postCdList = commonService.selectPostCdList(params);
@@ -314,7 +319,7 @@ public class CommonController {
 
 	/**
 	 * Payment - Adjustment CN/DN : Adjustment Reason 정보 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */

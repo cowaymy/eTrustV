@@ -27,7 +27,19 @@
 	<ul class="right_opt">
 	    <li>Login as <span>${SESSION_INFO.userName}</span></li>
 	    <li><a href="${pageContext.request.contextPath}/login/logout.do" class="logout">Logout</a></li>
-	    <li><a href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
+
+	    <c:choose>
+	       <c:when test="${SESSION_INFO.userIsPartTime == '1'}">
+	       <li><a href="${pageContext.request.contextPath}/common/mainExternal.do"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
+	       </c:when>
+	       <c:when test="${SESSION_INFO.userIsExternal == '1'}">
+           <li><a href="${pageContext.request.contextPath}/common/mainExternal.do"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
+           </c:when>
+           <c:otherwise>
+           <li><a href="${pageContext.request.contextPath}/common/main.do"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_home.gif" alt="Home" /></a></li>
+           </c:otherwise>
+	    </c:choose>
+
 	    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
 	    <li id="menuLinkHelp"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_help.gif" alt="Help" /></a></li>
 	</ul>
