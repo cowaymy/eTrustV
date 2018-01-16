@@ -518,7 +518,6 @@ function fnSettiingHeader()
 
                      if (result.header[0][fieldStr] == "W52")
                      {
-                       console.log("M+0..W52..START");
                        nextRowFlag = "R2";
                      } 
 
