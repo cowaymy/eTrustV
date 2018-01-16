@@ -315,7 +315,7 @@
 </tr>
 <tr>
     <th scope="row">Superior</th>
-    <td colspan="3"><span><c:out value="( ${promoInfo.deptCodeFrom}    - ${promoInfo.c3} ) To ( ${ promoInfo.deptCodeTo}   - ${promoInfo.c4} )"/> </span></td>
+    <td colspan="3"><span><c:out value="( ${promoInfo.parentDeptCodeFrom}    - ${promoInfo.c3} ) To ( ${ promoInfo.parentDeptCodeTo}   - ${promoInfo.c4} )"/> </span></td>
     <th scope="row">Update By</th>
     <td><span><c:out value="${promoInfo.c6}"/></span></td>
 </tr>
