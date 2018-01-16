@@ -484,9 +484,9 @@ function fn_Sale_processing(){
        console.log( result);
        
        if(result !="" ){
-           Common.alert("Membership successfully saved.");
+           Common.alert("<b>Membership successfully saved.<br> You must key in payment.</b>");
            $("#_mConvSaleDiv1").remove();
-           //fn_selectListAjax() ;
+           fn_selectListAjax() ;
        }
        
     

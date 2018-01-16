@@ -399,7 +399,7 @@ var option = {
     	
     	Common.ajax("GET", "/sales/membershipRentalQut/saveCnvrToSale.do", $("#mSaveForm").serialize(), function(result){
             //result alert and reload
-            Common.alert("Quotation has successfully converted to sales.<br />", fn_success);
+            Common.alert("<b>Quotation has successfully converted to sales.<br /> You must key in payment</b>", fn_success);
         }, function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
