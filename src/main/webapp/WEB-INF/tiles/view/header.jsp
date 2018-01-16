@@ -14,16 +14,25 @@
 	<div id="wrap" <c:if test="${param.isPop}"> class="solo" </c:if>><!-- wrap start -->
 
 	<header id="header"><!-- header start -->
-	<ul class="left_opt">
-		<li><a href="javascript:void(0);"><span id="header_refresh"><img src="${pageContext.request.contextPath}/resources/images/common/icon_refresh.png" alt="Refresh" /></span></a></li>
-	    <li>Neo(Mega Deal): <a href="javascript:void(0);"><span id="header_neo">-</span></a></li>
-	    <li>Sales(Key In): <a href="javascript:void(0);"><span id="header_sales">-</span></a></li>
-	  <!--   <li>Net Qty[<a href="javascript:void(0);"><span id="header_netQty"></span></a></li> -->
-	    <li>Net Qty [Outright : <a href="javascript:void(0);"><span id="header_outRight">-</span></a></li>
-	    <li>Instalment: <a href="javascript:void(0);"><span id="header_installment">-</span></a></li>
-	    <li>Rental: <a href="javascript:void(0);"><span id="header_rental">-</span></a></li>
-	    <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li>
-	</ul>
+	<c:choose>
+		<c:when test="${SESSION_INFO.userIsPartTime == '1'}">
+		</c:when>
+		<c:when test="${SESSION_INFO.userIsExternal == '1'}">
+		</c:when>
+		<c:otherwise>
+		<ul class="left_opt">
+        <li><a href="javascript:void(0);"><span id="header_refresh"><img src="${pageContext.request.contextPath}/resources/images/common/icon_refresh.png" alt="Refresh" /></span></a></li>
+        <li>Neo(Mega Deal): <a href="javascript:void(0);"><span id="header_neo">-</span></a></li>
+        <li>Sales(Key In): <a href="javascript:void(0);"><span id="header_sales">-</span></a></li>
+      <!--   <li>Net Qty[<a href="javascript:void(0);"><span id="header_netQty"></span></a></li> -->
+        <li>Net Qty [Outright : <a href="javascript:void(0);"><span id="header_outRight">-</span></a></li>
+        <li>Instalment: <a href="javascript:void(0);"><span id="header_installment">-</span></a></li>
+        <li>Rental: <a href="javascript:void(0);"><span id="header_rental">-</span></a></li>
+        <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li>
+        </ul>
+		</c:otherwise>
+	</c:choose>
+
 	<ul class="right_opt">
 	    <li>Login as <span>${SESSION_INFO.userName}</span></li>
 	    <li><a href="${pageContext.request.contextPath}/login/logout.do" class="logout">Logout</a></li>
