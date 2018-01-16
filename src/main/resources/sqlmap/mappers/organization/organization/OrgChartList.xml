@@ -915,7 +915,14 @@
                    else Project1.MEM_ORG_DESC_CODE 
                    end MEM_ORG_DESC_CODE ,
                case when project2.EVT_APPLY_DT is not null then  to_char(project2.EVT_APPLY_DT, 'MM/YYYY') 
-               else to_char(SYSDATE, 'MM/YYYY')
+             <choose>
+             <when test="nowDate != null and nowDate != '' ">
+               else #{nowDate}
+               </when>
+               <otherwise>
+                  else to_char(sysdate,'MM/YYYY')
+               </otherwise>
+               </choose>
               end EVT_APPLY_DT
               FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
                             Extent1.MEM_CODE MEM_CODE  ,
@@ -953,12 +960,21 @@
                             (
                               SELECT  A.* , b.code 
                              FROM ORG0007D A ,sys0013M  B
-                             where promo_ID in(SELECT max(promo_ID) FROM ORG0007D B  where b.mem_ID = A.mem_ID  and stus_id = 4 )
-                             and A.MEM_LVL_TO = b.code_id 
-                             <if test="evntDate != null and evntDate != '' ">
-                                   and to_char(A.EVT_APPLY_DT, 'MM/YYYY' ) = #{evntDate}
-                                
-                             </if>
+                             where promo_ID in(
+                             SELECT max(promo_ID) FROM ORG0007D C  
+                             where C.mem_ID = A.mem_ID  
+                             and C.stus_id = 4 
+                             and  C.PROMO_TYPE_ID   in ( 747, 748, 749)
+                        
+                             <choose>
+                             <when test="evntDate != null and evntDate != '' ">
+                                   and to_char(C.EVT_APPLY_DT, 'MM/YYYY' ) = #{evntDate}
+                             </when>
+                             <otherwise>
+                                   and to_char(C.EVT_APPLY_DT, 'MM/YYYY' ) = to_char(SYSDATE, 'MM/YYYY' )
+                             </otherwise>
+                             </choose>
+                             )  and A.MEM_LVL_TO = B.code_id 
                            )  Project2 
                            where 1=1 
                            and project1.mem_id = project2.mem_id(+)
