@@ -270,8 +270,11 @@ function setToCdc(){
 	doGetCombo('/logistics/inbound/InboundLocation', 'port', whLocId,'flocation', 'S' , '');
 	doGetCombo('/logistics/inbound/InboundLocation', '', '','tlocation', 'S' , '');
 	$("#popup_wrap").show();
+    doSysdate(0 , 'giptdate');
+    doSysdate(0 , 'gipfdate');
 }
 function createSMO(){
+
 	if(""==$('#tlocation').val() || null == $('#tlocation').val()){
 		  Common.alert("Please Check To Lcation");
 		return false;
@@ -281,6 +284,7 @@ function createSMO(){
 	data.checked = check;
 	data.form    = $("#giForm").serializeJSON();
     var url = "/logistics/inbound/reqSMO.do";
+    	console.log(data);
     Common.ajax("POST" , url , data , function(data){
     	console.log(data);
     	if("dup"==data.data.reqNo){
@@ -467,6 +471,8 @@ function f_multiCombos() {
             <input type="hidden" name="gtype" id="gtype" value="GI"/>
             <input type="hidden" name="serialqty" id="serialqty"/>
             <input type="hidden" name="reqstno" id="reqstno"/>
+            <input type="hidden" name="giptdate" id="giptdate"  class="j_date" />
+            <input type="hidden" name="gipfdate" id="gipfdate"  class="j_date" />
             <input type="hidden" name="prgnm"  id="prgnm" value="${param.CURRENT_MENU_CODE}"/>
             <table class="type1">
             <caption>search table</caption>
