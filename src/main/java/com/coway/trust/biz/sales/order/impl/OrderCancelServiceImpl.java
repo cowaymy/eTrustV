@@ -293,7 +293,7 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
     			}else{
     				saveParam.put("rentalSchemeStusId", "REG");
     			}
-				saveParam.put("rentalSchemeStusId", reqStageIdValue);
+				//saveParam.put("rentalSchemeStusId", reqStageIdValue);
 				orderCancelMapper.updateCancelSAL0071D(saveParam);											// RentalScheme
 			}
 			
