@@ -246,7 +246,7 @@
                               labelText : "Edit",
                               onclick : function(rowIndex, columnIndex, value, item) {
 
-                                   if(item.result == "" || item.result == undefined) {
+                                   if(item.code == "ACT") {
                                         Common.alert('Not able to EDIT for the HS order status in Active.');
                                         return false;
                                    }
@@ -361,6 +361,9 @@
                     return;
                 } else if (checkedItems.length >= 2) {
                 	Common.alert('Only availbale to entry a result with single HS order');
+                    return;
+                }  else if (checkedItems[0]["code"] != "ACT") {
+                    Common.alert('Only availbale to entry a result<br/>for the HS order status in Active');
                     return;
                 } else{
                     var str = "";
