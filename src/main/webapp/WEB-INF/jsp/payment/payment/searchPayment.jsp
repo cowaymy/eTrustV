@@ -253,6 +253,19 @@ function fn_openWinPop(val){
 function fn_clear(){
     $("#searchForm")[0].reset();
 }
+
+function fn_officialReceiptReport(){
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+    if (selectedItem[0] > -1){    
+        var orNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "orNo");        
+        $("#reportPDFForm #v_ORNo").val(orNo);        
+        Common.report("reportPDFForm");
+        
+    }else{
+        Common.alert("<spring:message code='pay.alert.noPay'/>");
+   }
+}
 </script>
 
 <!-- content start -->
