@@ -154,7 +154,7 @@
             <td><input type="text" id="addStockQty" name="addStockQty" onkeyup="fn_inputAmt(this)" title="" placeholder="" class="" /></td>
         </tr>
         <tr>
-            <th scope="row">Item Price<span class="must">*</span></th>
+            <th scope="row">Unit Price<span class="must">*</span></th>
             <td><input type="text" id="addItemPrc" name="addItemPrc" onkeyup="fn_inputAmt(this)" title="" placeholder="" class="" /></td>
         </tr>
     </tbody>

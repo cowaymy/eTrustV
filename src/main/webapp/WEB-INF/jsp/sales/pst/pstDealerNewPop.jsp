@@ -12,7 +12,7 @@
 
     doGetCombo('/common/selectCodeList.do', '17', '', 'cmbInitialTypeId', 'S' , '');                     // Initial Type Combo Box
     doGetCombo('/common/selectCodeList.do', '2', '', 'cmbRaceTypeId', 'S' , '');                        // Race Type Combo Box
-    doGetCombo('/common/selectCodeList.do', '357', '','newDealerType', 'S' , '');    // Dealer Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '357', '2575','newDealerType', 'S' , '');    // Dealer Type Combo Box
     doGetCombo('/sales/pst/dealerBrnchJsonList', '','','dealerBranch', 'S' , '');                 // Branch Combo Box
     
     $(document).ready(function(){

@@ -212,7 +212,7 @@ type : 'S'
 <h2>PST Request Do List</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDOReq()">NEW PST Request</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDOReq()">NEW PST Order</a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDORet()">NEW PST Return</a></p></li>

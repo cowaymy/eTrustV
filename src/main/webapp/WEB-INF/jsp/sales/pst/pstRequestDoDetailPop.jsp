@@ -79,10 +79,34 @@
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true,
+            showFooter : true  ,
             groupingMessage : "Here groupping"
         };
         
-        myGridID = GridCommon.createAUIGrid("#stock_grid_wrap", columnLayout, gridPros);
+        //푸터 설정
+        var footerObject = [{
+                                    labelText : "Total :",
+                                    positionField : "stkCodeDesc"
+                                    },
+                                    {
+                                    dataField : "pstItmReqQty",
+                                    positionField : "pstItmReqQty",
+                                    operation : "SUM",
+                                    formatString : "#,##0"
+                                    },
+                                    {
+                                    labelText : "Total :",
+                                    positionField : "pstItmBalQty"
+                                    },
+                                    {
+                                    dataField : "pstItmPrc",
+                                    positionField : "pstItmPrc",
+                                    operation : "SUM",
+                                    formatString : "#,##0.00"
+                              }];
+        
+        myGridID = GridCommon.createAUIGrid("#stock_grid_wrap", columnLayout,"", gridPros);
+        AUIGrid.setFooter(myGridID, footerObject); 
     }
     
     function fn_getStockListAjax(){
@@ -123,7 +147,7 @@
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <li><a href="#" class="on">PST Info</a></li>
-    <li><a href="#">PST Mail Addaree</a></li>
+    <li><a href="#">PST Mail Address</a></li>
     <li><a href="#">PST Delivery Address</a></li>
     <li><a href="#">PST MailContact</a></li>
     <li><a href="#">PST DeliveryContact</a></li>

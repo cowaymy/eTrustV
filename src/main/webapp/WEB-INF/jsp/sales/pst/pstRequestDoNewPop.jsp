@@ -13,14 +13,18 @@ isShowChoose: true,
     var totAmountVal = 0;
     
     $(document).ready(function(){
-        
+
         //Call Ajax
 //      fn_getDealerListAjax();
         
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-        doGetCombo('/sales/pst/getInchargeList', '', '','cmbPstIncharge', 'S' , ''); //Incharge Person
-        doGetCombo('/common/selectCodeList.do', '357', '','cmbNewDealerType', 'S' , '');     // Dealer Type Combo Box
+        CommonCombo.make("cmbPstIncharge", "/sales/pst/getInchargeList", '', $("#userId").val(), {
+            id: "codeId",
+            name: "codeName",
+            type:"S"
+        });//Incharge Person
+        doGetCombo('/common/selectCodeList.do', '357', '2575','cmbNewDealerType', 'S' , '');     // Dealer Type Combo Box
         
         if(insertForm.dealerTypeFlag.value == "REQ"){
         	CommonCombo.make("cmbLocation", "/common/selectCodeList.do", {groupCode:'361'}, "", {
@@ -35,6 +39,9 @@ isShowChoose: true,
                 type:"S"
             });     // WH LOC Combo Box
         }
+        
+        
+        fn_dealerToDealer('2575');
     });
 
     
@@ -50,7 +57,7 @@ isShowChoose: true,
                 editable : false
             }, {
                 dataField : "pstItmPrc",
-                headerText : "Item Price",
+                headerText : "Unit Price",
                 width : 110,
                 editable : false
             }, {
@@ -89,6 +96,7 @@ isShowChoose: true,
         };
         
         myStkGridID = GridCommon.createAUIGrid("#addStock_grid_wrap", columnLayout, '', gridPros);
+        
     }
     
     function fn_dealerInfo(){
@@ -300,24 +308,25 @@ isShowChoose: true,
         }
     }
     
-    function fn_dealerToDealer(){
-        if(insertForm.cmbNewDealerType.value == 0){
+    function fn_dealerToDealer(str){
+
+        if(str == 0){
 //          $("input:select[name='cmbPstType']").prop("checked", false);
 //            $("input:select[name='cmbPstType']").attr("disabled" , "disabled");
             return false;
         }
         if(insertForm.dealerTypeFlag.value == "REQ"){
-        	if(insertForm.cmbNewDealerType.value == 2575){
+        	if(str == 2575){
         		insertForm.pstType.value = 2577;
-        	}else if(insertForm.cmbNewDealerType.value == 2576){
+        	}else if(str == 2576){
         		insertForm.pstType.value = 2579;
         	}else{
         		Common.alert("Please check general code.");
         	}
         }else{
-        	if(insertForm.cmbNewDealerType.value == 2575){
+        	if(str== 2575){
                 insertForm.pstType.value = 2578;
-            }else if(insertForm.cmbNewDealerType.value == 2576){
+            }else if(str== 2576){
                 insertForm.pstType.value = 2580;
             }else{
                 Common.alert("Please check general code.");
@@ -337,7 +346,7 @@ isShowChoose: true,
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>New PST Request</h1>
+<h1>New PST Sales</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="newPopClose">CLOSE</a></p></li>
 </ul>
@@ -352,7 +361,7 @@ isShowChoose: true,
     <li><a href="#">Delivery Address</a></li>
     <li><a href="#">Mailing Contact Person</a></li>
     <li><a href="#">Delivery Contact Person</a></li>
-    <li><a href="#" onclick="javascript:chgTab();">Delivery Stock</a></li>
+    <li><a href="#" onclick="javascript:chgTab();">Sales Order</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -365,6 +374,7 @@ isShowChoose: true,
     <input type="hidden" id="insRate" name="insRate" value="${getRate.rate}">
     <input type="hidden" id="dealerTypeFlag" name="dealerTypeFlag" value="${dealerTypeFlag}">
     <input type="hidden" id="pstType" name="pstType">
+    <input type="hidden" id="userId" name="userId" value="${userId}">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -377,7 +387,7 @@ isShowChoose: true,
 <tr>
     <th scope="row">Dealer Type<span class="must">*</span></th>
     <td>
-        <select class="select w100p" id="cmbNewDealerType" name="cmbNewDealerType" onchange="fn_dealerToDealer()"></select>
+        <select class="select w100p" id="cmbNewDealerType" name="cmbNewDealerType" onchange="fn_dealerToDealer(this.value)"></select>
     </td>
     <th scope="row">Dealer<span class="must">*</span></th>
     <td>
@@ -699,7 +709,7 @@ isShowChoose: true,
 </section><!-- tap_wrap end -->
 
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_saveNewPstRequest()">Save PST Request</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_saveNewPstRequest()">SAVE</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
