@@ -204,6 +204,7 @@
         && FormUtil.isEmpty($('#listRelatedNo').val())
         && FormUtil.isEmpty($('#listCrtUserId').val())
         && FormUtil.isEmpty($('#listPromoCode').val())
+        && FormUtil.isEmpty($('#listRefNo').val())
         ) {
             
             if(FormUtil.isEmpty($('#listOrdStartDt').val()) || FormUtil.isEmpty($('#listOrdEndDt').val())) {
