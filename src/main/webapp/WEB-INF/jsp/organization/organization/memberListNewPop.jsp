@@ -670,6 +670,29 @@ function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
         Common.alert("Please check your address.");
     }
 }
+
+
+
+function fn_sponsorPop(){
+    Common.popupDiv("/organization/sponsorPop.do" , $('#memberAddForm').serializeJSON(), null , true,  '_searchSponDiv'); //searchSt
+}
+
+
+function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
+
+
+    $("#sponsorCd").val(msponsorCd);
+    $("#sponsorNm").val(msponsorNm);
+    $("#sponsorNric").val(msponsorNric);
+    
+    $("#_searchSponDiv").remove();
+    
+}
+
+
+
+
+
 //Get Area Id
 function fn_getAreaId(){
 
@@ -800,6 +823,8 @@ function checkNRICEnter(){
     	checkNRIC();
     }
 }
+
+
 
 function checkNRIC(){
 	var returnValue;
@@ -1045,7 +1070,7 @@ function checkNRIC(){
 
     <div class="search_100p"><!-- search_100p start -->
     <input type="text" title="" placeholder="Sponsor's Code" class="w100p" id="sponsorCd" name="sponsorCd" onKeyDown="fn_sponsorCheck()"/>
-    <a href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+    <a href="javascript:fn_sponsorPop();" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </div><!-- search_100p end -->
 
     </td>

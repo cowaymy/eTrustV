@@ -3947,5 +3947,135 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		where APLCTN_ID = #{memberId}
      
      </update>  
+     
+     
+        <select id="selectMemberType" parameterType="Map" resultType="egovMap">
+                SELECT Project1.CODE_ID code_Id  ,
+                       Project1.CODE_MASTER_ID CODE_MASTER_ID  ,
+                       Project1.CODE code  ,
+                       Project1.CODE_NAME CODE_NAME  ,
+                       Project1.CODE_DESC CODE_DESC  ,
+                       Project1.DISAB DISAB  ,
+                       Project1.CRT_DT CRT_DT  ,
+                       Project1.CRT_USER_ID CRT_USER_ID  ,
+                       Project1.UPD_DT UPD_DT  ,
+                       Project1.UPD_USER_ID UPD_USER_ID  ,
+                       Project1.OLD_CODE_ID OLD_CODE_ID  
+                  FROM ( SELECT Extent1.CODE_ID CODE_ID  ,
+                                Extent1.CODE_MASTER_ID CODE_MASTER_ID  ,
+                                Extent1.CODE CODE  ,
+                                Extent1.CODE_NAME CODE_NAME  ,
+                                Extent1.CODE_DESC CODE_DESC  ,
+                                Extent1.DISAB DISAB  ,
+                                Extent1.CRT_DT CRT_DT  ,
+                                Extent1.CRT_USER_ID CRT_USER_ID  ,
+                                Extent1.UPD_DT UPD_DT  ,
+                                Extent1.UPD_USER_ID UPD_USER_ID  ,
+                                Extent1.OLD_CODE_ID OLD_CODE_ID  
+                         FROM SYS0013M Extent1
+                          WHERE  Extent1.CODE_MASTER_ID = 1 ) Project1
+                  ORDER BY Project1.CODE_ID ASC
+
+
+          </select>     
+          
+          
+
+        <select id="selectSponBrnchList" parameterType="Map" resultType="egovMap">
+              SELECT Project1.BRNCH_ID code_Id  ,
+                   Project1.C1 CODE_NAME  
+              FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
+                            Extent1.CODE || N'-' || Extent1.NAME C1  
+                     FROM SYS0005M Extent1
+                      WHERE  ( 1 = Extent1.STUS_ID )
+                               AND ( Extent1.TYPE_ID IN ( 40,43 )
+                              ) ) Project1
+              ORDER BY Project1.C1 ASC
+          
+          </select>     
+          
+          
+          
+
+        <select id="selectSponMemberSearch" parameterType="Map" resultType="egovMap">
+
+                SELECT * 
+                  FROM ( SELECT Project1.MEM_ID MEM_ID  ,
+                                Project1.MEM_TYPE MEM_TYPE  ,
+                                Project1.MEM_CODE MEM_CODE  ,
+                                Project1.CODE_NAME CODE_NAME  ,
+                                Project1.NAME NAME  ,
+                                Project1.NRIC NRIC  ,
+                                Project1.NAME1 NAME1  ,
+                                Project1.UPD_DT UPD_DT  ,
+                                Project1.STUS STUS  ,
+                                Project1.C1 C1  
+                  FROM ( SELECT Project1.C1 C1  ,
+                                Project1.MEM_ID MEM_ID  ,
+                                Project1.MEM_CODE MEM_CODE  ,
+                                Project1.MEM_TYPE MEM_TYPE  ,
+                                Project1.NAME NAME  ,
+                                Project1.NRIC NRIC  ,
+                                Project1.STUS STUS  ,
+                                Project1.UPD_DT UPD_DT  ,
+                                Project1.CODE_NAME CODE_NAME  ,
+                                Project1.NAME1 NAME1  ,
+                                ROW_NUMBER() OVER ( ORDER BY Project1.MEM_CODE ASC  ) ROW_NUMBER  
+                         FROM ( SELECT GroupBy1.A1 C1  ,
+                                       Extent1.MEM_ID MEM_ID  ,
+                                       Extent1.MEM_CODE MEM_CODE  ,
+                                       Extent1.MEM_TYPE MEM_TYPE  ,
+                                       Extent1.NAME NAME  ,
+                                       Extent1.NRIC NRIC  ,
+                                       Extent1.STUS STUS  ,
+                                       Extent1.UPD_DT UPD_DT  ,
+                                       Extent2.CODE_NAME CODE_NAME  ,
+                                       Extent3.NAME NAME1  
+                                FROM ORG0001D Extent1
+                                       JOIN SYS0013M Extent2   ON Extent1.MEM_TYPE = Extent2.CODE_ID
+                                       JOIN SYS0038M Extent3   ON Extent1.STUS = Extent3.STUS_CODE_ID
+                                       CROSS JOIN ( SELECT COUNT(1)  A1  
+                                                    FROM ORG0001D Extent4
+                                                     WHERE  1=1
+                                                         <if test="cmbMemberType != null and cmbMemberType != '' ">
+                                                            AND (Extent4.MEM_TYPE = #{cmbMemberType})
+                                                         </if>
+                                                         <if test="txtMemberCode != null and txtMemberCode != '' ">
+                                                            AND ( Extent4.MEM_CODE LIKE #{txtMemberCode})
+                                                         </if>
+                                                         <if test="txtMemberName != null and txtMemberName != '' ">
+                                                            AND ( Extent4.NAME LIKE #{txtMemberName})
+                                                         </if>                                                       
+                                                         <if test="txtICNumber != null and txtICNumber != '' ">
+                                                            AND ( Extent4.NRIC LIKE #{txtICNumber})
+                                                         </if>  
+                                                         <if test="cmbBranch != null and cmbBranch != '' ">
+                                                            AND ( UTILS.CONVERT_TO_NUMBER(Extent4.BRNCH,10,0) = #{cmbBranch} ) 
+                                                         </if>                                                           
+                                                         ) GroupBy1
+                                                    WHERE  1=1
+                                                         <if test="cmbMemberType != null and cmbMemberType != '' ">
+                                                            AND (Extent1.MEM_TYPE = #{cmbMemberType})
+                                                         </if>                                                  
+                                                         <if test="txtMemberCode != null and txtMemberCode != '' ">
+                                                            AND ( Extent1.MEM_CODE LIKE #{txtMemberCode})
+                                                         </if>
+                                                         <if test="txtMemberName != null and txtMemberName != '' ">
+                                                            AND ( Extent1.NAME LIKE #{txtMemberName} )
+                                                         </if>                                                       
+                                                         <if test="txtICNumber != null and txtICNumber != '' ">
+                                                            AND ( Extent1.NRIC LIKE #{txtICNumber})
+                                                         </if>  
+                                                         <if test="cmbBranch != null and cmbBranch != '' ">
+                                                            AND ( UTILS.CONVERT_TO_NUMBER(Extent1.BRNCH,10,0) = #{cmbBranch} )  
+                                                         </if>                                                            
+                                                         ) Project1
+                                             ) Project1
+                 WHERE  Project1.ROW_NUMBER > 0
+                    ORDER BY Project1.MEM_CODE ASC )
+                 <![CDATA[         WHERE ROWNUM <= 10    ]]>
+
+          
+          </select>          
 
 </mapper>

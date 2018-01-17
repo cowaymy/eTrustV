@@ -1271,4 +1271,59 @@ public class MemberListController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+
+	@RequestMapping(value = "/sponsorPop.do")
+	public String sponsorPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		logger.debug("sponsorPopUp.............");
+		logger.debug("params : {}", params);
+		
+//		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
+
+		// 호출될 화면
+		return "organization/organization/sponsorPop";
+	}
+	
+	
+	
+	
+	
+		@RequestMapping(value = "/selectMemberType.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectMemberType(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
+			   logger.debug("groupCode : {}", params);
+//	           params.put("brnch_id", params.get("brnch_id")  );
+//	           params.put("mem_id",params.get("mem_id") );
+//	           params.put("mem_code",params.get("mem_code") );
+			   List<EgovMap> selectMemberType = memberListService.selectMemberType(params);
+			   return ResponseEntity.ok(selectMemberType);
+		}
+		
+		
+		
+		
+		@RequestMapping(value = "/selectSponBrnchList.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectSponBrnchList(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
+			   logger.debug("groupCode : {}", params);
+//	           params.put("brnch_id", params.get("brnch_id")  );
+//	           params.put("mem_id",params.get("mem_id") );
+//	           params.put("mem_code",params.get("mem_code") );
+			   List<EgovMap> selectSponBrnchList = memberListService.selectSponBrnchList(params);
+			   return ResponseEntity.ok(selectSponBrnchList);
+		}
+		
+		
+		
+		
+		@RequestMapping(value = "/sponMemberSearch.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectSponMemberSearch(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+			List<EgovMap> list =null;
+	    	list = memberListService.selectSponMemberSearch(params);
+			return ResponseEntity.ok(list);
+		}
+		
+		
+		
+	
 }

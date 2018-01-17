@@ -2118,4 +2118,23 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		// TODO Auto-generated method stub
 		return memberListMapper.updateHpApprovalReject(params) > 0;
 	}
+	
+	
+	@Override
+	public List<EgovMap> selectMemberType(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectMemberType(params);
+	}
+
+	@Override
+	public List<EgovMap> selectSponBrnchList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectSponBrnchList(params);
+	}
+
+	@Override
+	public List<EgovMap> selectSponMemberSearch(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectSponMemberSearch(params);
+	}	
 }

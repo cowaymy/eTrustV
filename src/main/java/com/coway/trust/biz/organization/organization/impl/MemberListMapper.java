@@ -224,4 +224,10 @@ public interface MemberListMapper {
 
 	int updateHpApprovalReject(Map<String, Object> params);
 
+	List<EgovMap> selectMemberType(Map<String, Object> params);
+
+	List<EgovMap> selectSponBrnchList(Map<String, Object> params);
+
+	List<EgovMap> selectSponMemberSearch(Map<String, Object> params);
+
 }
