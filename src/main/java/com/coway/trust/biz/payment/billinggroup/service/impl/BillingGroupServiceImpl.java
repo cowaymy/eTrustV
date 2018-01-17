@@ -685,8 +685,8 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			insBillGrpMap.put("custBillInchgMemId", "0");
 			insBillGrpMap.put("custBillEmail", params.get("email") != null ? String.valueOf(params.get("email")) : "");
 			insBillGrpMap.put("custBillIsEstm", "0");
-			insBillGrpMap.put("custBillIsSms", params.get("isSms") != null ? "1" : "0");
-			insBillGrpMap.put("custBillIsPost", params.get("isPost") != null ? "1" : "0");
+			insBillGrpMap.put("custBillIsSms", String.valueOf(params.get("isSms")));
+			insBillGrpMap.put("custBillIsPost", String.valueOf(params.get("isPost")));
 
 			int custBillIdSeq = billingGroupMapper.getSAL0024DSEQ();
 			grpNo = billingGroupMapper.selectDocNo24Seq();
@@ -702,7 +702,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			// SALES ORDER MASTER UPDATE
 			billingGroupMapper.updSalesOrderMaster(updSalesMap);
 
-			String chkEstm = params.get("isEstm") != null ? String.valueOf(params.get("isEstm")) : "0";
+			String chkEstm = String.valueOf(params.get("isEstm"));
 			if (chkEstm.equals("1") && !String.valueOf(params.get("email")).equals("")) {
 
 				Map<String, Object> estmMap = new HashMap<String, Object>();
