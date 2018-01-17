@@ -12,7 +12,6 @@
 }
 </style>
 <script type="text/javascript">
-var excelGrid;
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
 var attachList = null;
@@ -380,10 +379,6 @@ $(document).ready(function () {
     $("#pReject_btn").click(fn_RejectSubmit);
     
     fn_setGridData(myGridID, myGridData);
-    
-    $("#pExcelDown_btn").click(fn_getAppvExcelInfo);
-    
-    console.log("${PAGE_AUTH.funcUserDefine1}");
 });
 
 function fn_approvalSubmit() {
@@ -581,159 +576,6 @@ function fn_atchViewDown(fileGrpId, fileId) {
         }
     });
 }
-
-function fn_getAppvExcelInfo() {
-	Common.ajax("POST", "/eAccounting/webInvoice/getAppvExcelInfo.do?_cacheId=" + Math.random(), {appvPrcssNo:"${appvPrcssNo}"}, function(result) {
-        console.log(result);
-        
-        //그리드 생성
-        fn_makeGrid();
-        
-        AUIGrid.setGridData(excelGrid, result.data);
-        
-        if(result.data.length > 0) {
-        	var clmNo = result.data[0].appvReqKeyNo;
-        	var reqstDt = result.data[0].reqstDt;
-        	reqstDt = reqstDt.replace(/\//gi, "");
-        	GridCommon.exportTo("excel_grid_wrap", 'xlsx', clmNo + "_" + reqstDt);
-        } else {
-        	Common.alert('There is no data to download.');
-        } 
-    });
-}
-
-function fn_makeGrid(){
-
-    var excelPop = [
-        {
-        	dataField : "appvReqKeyNo",
-        	headerText : 'Claim No',
-        	width : 100,
-        	cellMerge : true
-        },{
-            dataField : "reqstDt",
-            headerText : 'Request Date',
-            width : 100,
-            cellMerge : true 
-        },{
-            dataField : "reqstUserId",
-            headerText : 'Request User Id',
-            width : 100,
-            cellMerge : true 
-        },{
-            dataField : "invcNo",
-            headerText : 'Invoice No',
-            width : 100
-        },{
-            dataField : "invcDt",
-            headerText : 'Invoice Date',
-            width : 100
-        },{
-            dataField : "invcType",
-            headerText : 'Invoice Type',
-            width : 100
-        },{
-            dataField : "memAccId",
-            headerText : 'Member Account Id',
-            width : 100
-        },{
-            dataField : "memAccName",
-            headerText : 'Member Account Name',
-            width : 100
-        },{
-            dataField : "supplir",
-            headerText : 'Supplier Name',
-            width : 100
-        },{
-            dataField : "payDueDt",
-            headerText : 'Payment Due Date',
-            width : 100
-        },{
-            dataField : "expType",
-            headerText : 'Expense Type',
-            width : 100
-        },{
-            dataField : "expTypeName",
-            headerText : 'Expense Type Name',
-            width : 100
-        },{
-            dataField : "costCentr",
-            headerText : 'Cost Center',
-            width : 100
-        },{
-            dataField : "costCentrName",
-            headerText : 'Cost Center Name',
-            width : 100
-        },{
-            dataField : "budgetCode",
-            headerText : 'Budget Code',
-            width : 100
-        },{
-            dataField : "budgetCodeName",
-            headerText : 'Budget Code Name',
-            width : 100
-        },{
-            dataField : "glAccCode",
-            headerText : 'GL Account Code',
-            width : 100
-        },{
-            dataField : "glAccCodeName",
-            headerText : 'GL Account Code Name',
-            width : 100
-        },{
-            dataField : "taxCode",
-            headerText : 'Tax Code',
-            width : 100
-        },{
-            dataField : "taxName",
-            headerText : 'Tax Code Name',
-            width : 100
-        },{
-            dataField : "netAmt",
-            headerText : 'Net Amount',
-            width : 100
-        },{
-            dataField : "taxAmt",
-            headerText : 'Tax Amount',
-            width : 100
-        },{
-            dataField : "taxNonClmAmt",
-            headerText : 'Tax Non Claim Amount',
-            width : 100
-        },{
-            dataField : "appvAmt",
-            headerText : 'Approve Amount',
-            width : 100
-        },{
-            dataField : "utilNo",
-            headerText : 'Utilities Account No',
-            width : 100
-        },{
-            dataField : "jPayNo",
-            headerText : 'JomPAY No',
-            width : 100
-        },{
-            dataField : "bilPeriodF",
-            headerText : 'Billing Period From',
-            width : 100
-        },{
-            dataField : "bilPeriodT",
-            headerText : 'Billing Period To',
-            width : 100
-        }
-    ];
-        
-     var excelOptions = {
-            enableCellMerge : true,
-            showStateColumn:false,
-            fixedColumnCount    : 3,
-            showRowNumColumn    : false,
-            //headerHeight : 100,
-            usePaging : false
-      }; 
-    
-     excelGrid = GridCommon.createAUIGrid("#excel_grid_wrap", excelPop, "", excelOptions);
-}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -855,9 +697,6 @@ function fn_makeGrid(){
 <article class="grid_wrap" id="approveView_grid_wrap"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
 
-<article class="grid_wrap" id="excel_grid_wrap" style="display: none;"><!-- grid_wrap start -->
-</article><!-- grid_wrap end -->
-
 <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <c:if test="${appvPrcssResult eq 'R'}">
@@ -865,9 +704,6 @@ function fn_makeGrid(){
     <li><p class="btn_blue2"><a href="#" id="pReject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
     </c:if>
     </c:if>
-    <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
-    <li><p class="btn_blue2"><a href="#" id="pExcelDown_btn">EXCEL DW</a></p></li>
-    <%-- </c:if> --%>
 </ul>
 
 </section><!-- pop_body end -->

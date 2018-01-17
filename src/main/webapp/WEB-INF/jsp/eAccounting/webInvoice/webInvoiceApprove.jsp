@@ -17,6 +17,7 @@
  }
 </style>
 <script type="text/javascript">
+var excelGrid;
 var appvPrcssNo;
 var atchFileGrpId;
 var clmType;
@@ -196,6 +197,7 @@ $(document).ready(function () {
     $("#search_createUser_btn").click(fn_searchUserIdPop);
     $("#approve_btn").click(fn_approveRegistPop);
     $("#reject_btn").click(fn_rejectRegistPop);
+    $("#excelDown_btn").click(fn_getAppvExcelInfo);
     
     AUIGrid.bind(invoAprveGridID, "cellDoubleClick", function( event ) 
             {
@@ -424,6 +426,161 @@ function fn_appvRejctSubmit(type, rejctResn) {
     }
     //fn_closePop();
 }
+
+function fn_getAppvExcelInfo() {
+	var list = AUIGrid.getColumnValues(invoAprveGridID, "appvPrcssNo", true);
+	console.log(list);
+    Common.ajax("POST", "/eAccounting/webInvoice/getAppvExcelInfo.do?_cacheId=" + Math.random(), {appvPrcssNo:list}, function(result) {
+        console.log(result);
+        
+        //그리드 생성
+        fn_makeGrid();
+        
+        AUIGrid.setGridData(excelGrid, result.data);
+        
+        if(result.data.length > 0) {
+            var clmNo = result.data[0].appvReqKeyNo;
+            var reqstDt = result.data[0].reqstDt;
+            reqstDt = reqstDt.replace(/\//gi, "");
+            GridCommon.exportTo("excel_grid_wrap", 'xlsx', clmNo + "_" + reqstDt);
+        } else {
+            Common.alert('There is no data to download.');
+        }
+    });
+}
+
+function fn_makeGrid(){
+
+    var excelPop = [
+        {
+            dataField : "appvReqKeyNo",
+            headerText : 'Claim No',
+            width : 100,
+            cellMerge : true
+        },{
+            dataField : "reqstDt",
+            headerText : 'Request Date',
+            width : 100,
+            cellMerge : true 
+        },{
+            dataField : "reqstUserId",
+            headerText : 'Request User Id',
+            width : 100,
+            cellMerge : true 
+        },{
+            dataField : "invcNo",
+            headerText : 'Invoice No',
+            width : 100
+        },{
+            dataField : "invcDt",
+            headerText : 'Invoice Date',
+            width : 100
+        },{
+            dataField : "invcType",
+            headerText : 'Invoice Type',
+            width : 100
+        },{
+            dataField : "memAccId",
+            headerText : 'Member Account Id',
+            width : 100
+        },{
+            dataField : "memAccName",
+            headerText : 'Member Account Name',
+            width : 100
+        },{
+            dataField : "supplir",
+            headerText : 'Supplier Name',
+            width : 100
+        },{
+            dataField : "payDueDt",
+            headerText : 'Payment Due Date',
+            width : 100
+        },{
+            dataField : "expType",
+            headerText : 'Expense Type',
+            width : 100
+        },{
+            dataField : "expTypeName",
+            headerText : 'Expense Type Name',
+            width : 100
+        },{
+            dataField : "costCentr",
+            headerText : 'Cost Center',
+            width : 100
+        },{
+            dataField : "costCentrName",
+            headerText : 'Cost Center Name',
+            width : 100
+        },{
+            dataField : "budgetCode",
+            headerText : 'Budget Code',
+            width : 100
+        },{
+            dataField : "budgetCodeName",
+            headerText : 'Budget Code Name',
+            width : 100
+        },{
+            dataField : "glAccCode",
+            headerText : 'GL Account Code',
+            width : 100
+        },{
+            dataField : "glAccCodeName",
+            headerText : 'GL Account Code Name',
+            width : 100
+        },{
+            dataField : "taxCode",
+            headerText : 'Tax Code',
+            width : 100
+        },{
+            dataField : "taxName",
+            headerText : 'Tax Code Name',
+            width : 100
+        },{
+            dataField : "netAmt",
+            headerText : 'Net Amount',
+            width : 100
+        },{
+            dataField : "taxAmt",
+            headerText : 'Tax Amount',
+            width : 100
+        },{
+            dataField : "taxNonClmAmt",
+            headerText : 'Tax Non Claim Amount',
+            width : 100
+        },{
+            dataField : "appvAmt",
+            headerText : 'Approve Amount',
+            width : 100
+        },{
+            dataField : "utilNo",
+            headerText : 'Utilities Account No',
+            width : 100
+        },{
+            dataField : "jPayNo",
+            headerText : 'JomPAY No',
+            width : 100
+        },{
+            dataField : "bilPeriodF",
+            headerText : 'Billing Period From',
+            width : 100
+        },{
+            dataField : "bilPeriodT",
+            headerText : 'Billing Period To',
+            width : 100
+        }
+    ];
+        
+     var excelOptions = {
+            enableCellMerge : true,
+            showStateColumn:false,
+            fixedColumnCount    : 3,
+            showRowNumColumn    : false,
+            //headerHeight : 100,
+            usePaging : false
+      }; 
+    
+     excelGrid = GridCommon.createAUIGrid("#excel_grid_wrap", excelPop, "", excelOptions);
+}
 </script>
 
 <section id="content"><!-- content start -->
@@ -498,6 +655,9 @@ function fn_appvRejctSubmit(type, rejctResn) {
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_grid"><a href="#" id="excelDown_btn">EXCEL DW</a></p></li>
+    </c:if>
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 	<li><p class="btn_grid"><a href="#" id="approve_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
 	<li><p class="btn_grid"><a href="#" id="reject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
@@ -505,6 +665,9 @@ function fn_appvRejctSubmit(type, rejctResn) {
 </ul>
 
 <article class="grid_wrap" id="approve_grid_wrap"><!-- grid_wrap start -->
+</article><!-- grid_wrap end -->
+
+<article class="grid_wrap" id="excel_grid_wrap" style="display: none;"><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
