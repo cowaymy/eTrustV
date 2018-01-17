@@ -722,6 +722,13 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	}
 
 
+	@Override
+	public void updateInsFailServiceLogs(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		
+	}
+
+
 
 	   
 /*	@Override

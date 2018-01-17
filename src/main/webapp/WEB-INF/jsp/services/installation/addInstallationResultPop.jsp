@@ -81,13 +81,22 @@ $(document).ready(function() {
             $("#completedHide").show();
             $("#completedHide1").show();
             $("#completedHide2").show();
+        
+          
         }
+      
+    
     });
 
 });
 
 function fn_saveInstall(){
-
+	 if($("#addInstallForm #installStatus").val() == 4){
+		if( $("#failReason").val() != 0 || $("#nextCallDate").val() != ''){
+			Common.alert("Can Not Select FailReason and nextCallDate When You Selected  Complete Status");
+			return;
+		} 
+	 }
 
 	Common.ajax("POST", "/services/addInstallation.do", $("#addInstallForm").serializeJSON(), function(result) {
         console.log(result);
@@ -709,7 +718,7 @@ var gridPros = {
            <option value="${list.codeId}">${list.codeName}</option>
         </c:forEach> -->
     </td>
-    <th scope="row"><spring:message code='service.title.ActualInstallStatust'/></th>
+    <th scope="row">Actual Install Date</th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="installDate" name="installDate"/></td>
 </tr>
 <tr>

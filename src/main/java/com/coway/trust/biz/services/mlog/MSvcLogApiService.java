@@ -142,6 +142,8 @@ public interface MSvcLogApiService {
 	List<EgovMap> afterServiceParts_b(Map<String, Object> params);
 
 	void SP_RETURN_BILLING_EARLY_TERMI(Map<String, Object> params);
+
+	void updateInsFailServiceLogs(Map<String, Object> params);
 	
 
 }

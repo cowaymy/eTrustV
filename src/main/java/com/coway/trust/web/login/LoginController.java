@@ -195,5 +195,14 @@ public class LoginController {
 		List<EgovMap> selectSecureResnList = loginService.selectSecureResnList(params);
 		return ResponseEntity.ok(selectSecureResnList);
 	}
-
+	
+	@RequestMapping(value="/myInfo.do", method = RequestMethod.GET)
+	public String myInfo(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO){
+		model.addAttribute("userSettingFlag", sessionVO);
+		LOGGER.debug("userSettingPop: {} ,getUserId: {}", params.toString(),sessionVO.getUserId());
+		return "/login/myInfo";
+		
+		
+	}
+	
 }
