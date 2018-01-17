@@ -1029,9 +1029,11 @@ function fn_winClose(){
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:110px" />
+    <col style="width:150px" />
     <col style="width:*" />
-    <col style="width:170px" />
+    <col style="width:120px" />
+    <col style="width:*" />
+    <col style="width:120px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -1053,14 +1055,14 @@ function fn_winClose(){
 </tr>
 <tr>
     <th scope="row">Replacement CT</th>
-    <td>
+    <td colspan="2">
        <select class="w100p" id="replacementCT" name="replacementCT">
        </select>
     </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="3">
+    <td colspan="5">
     <textarea cols="20" rows="5" id="remark" name="remark"></textarea>
     </td>
 </tr>

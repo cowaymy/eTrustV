@@ -57,7 +57,7 @@
 
        <!-- By KV start ReplacementCT-->
         <select id="selectReplaceCTList" parameterType="Map" resultType="egovMap">
-            select a.mem_id  as code_Id, a.mem_code as code_Name, a.name,a.stus, c.name, a.mem_type, b.code, d.mem_lvl, e.mem_org_desc,a.brnch as brnch_id, f.name, d.ct_sub_grp
+            select a.mem_id  as code_Id, a.mem_code || ' - ' || a.name as code_Name, a.name,a.stus, c.name, a.mem_type, b.code, d.mem_lvl, e.mem_org_desc,a.brnch as brnch_id, f.name, d.ct_sub_grp
             FROM   ORG0001D a ,   /*Member eg.get mem_type eg HP, CODY, CT*/
                         SYS0013M b,  /*CodeDetail eg.HP, CODY, CT full desc*/
                         SYS0038M c,  /*StatusCode    eg.active, not active*/
@@ -71,9 +71,9 @@
              AND e.MEM_ORG_LVL =  d.MEM_LVL
              AND  f.brnch_id = d.brnch_id
              AND a.stus = 1                          /* fixed*/
-             AND d.mem_lvl = 4                     /* fixed*/
+             AND d.mem_lvl IN ('3', '4')                     /* fixed*/
              AND a.brnch =#{brnch_id}                    /*dynamid get from parameter*/
-             AND d.ct_sub_grp = (select  ct_sub_grp from ORG0005D where mem_id =#{mem_id})    /*dynamid get from parameter*/
+             <!-- AND d.ct_sub_grp = (select  ct_sub_grp from ORG0005D where mem_id =#{mem_id}) -->    /*dynamid get from parameter*/
              AND a.mem_code != #{mem_code}   /*dynamid get from parameter*/
           </select>
        <!-- By KV start - ReplacementCT -->
