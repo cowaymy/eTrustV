@@ -121,15 +121,8 @@
         INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID)
         <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
         SELECT
-            (CASE
-                    WHEN LENGTH(#{item.refNo}) <![CDATA[   < ]]> 7 THEN LPAD(#{item.refNo},7,'0')
-                    WHEN LENGTH(#{item.refNo}) <![CDATA[   > ]]> 7 THEN LPAD(#{item.refNo},14,'0')
-                    ELSE #{item.refNo} END),
-            (CASE
-                    WHEN #{item.refCode} IS NULL THEN #{item.refCode}
-                    WHEN #{item.refCode} = 'A' THEN LPAD(#{item.refCode},3,'0')
-                    WHEN LENGTH(#{item.refCode}) <![CDATA[   < ]]> 2 THEN  LPAD(#{item.refCode},2,'0')
-                    ELSE #{item.refCode} END),
+            #{item.refNo},            
+            #{item.refCode},
             #{item.id},
             #{item.itemId}
         FROM DUAL
