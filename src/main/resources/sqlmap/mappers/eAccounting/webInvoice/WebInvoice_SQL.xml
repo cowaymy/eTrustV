@@ -1187,7 +1187,10 @@ SELECT <!-- M.APPV_PRCSS_NO,  -->
 FROM   FCM0004M M 
        JOIN FCM0015D D 
          ON M.APPV_PRCSS_NO = D.APPV_PRCSS_NO 
-WHERE  M.APPV_PRCSS_NO = #{appvPrcssNo}
+WHERE  M.APPV_PRCSS_NO IN
+<foreach item="item" collection="appvPrcssNo" index="index" open="(" separator="," close=")">
+             #{item}
+</foreach>
 </select>
 
 </mapper>
