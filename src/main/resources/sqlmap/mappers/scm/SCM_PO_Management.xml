@@ -667,8 +667,8 @@ WITH PO_APPROVAL_SUMMARY
       SELECT 
              NVL(STOCK_CTGRY,'ZZ_SUM') STOCK_CTGRY
            , NVL(PRE_CDC,'ALL_SUM') CDC
-           , SUM(PRE_QTY) QTY
-           , SUM(PRE_FOB_PRC) FOB_AMT
+           , SUM(QTY) QTY
+           , SUM(FOB_AMT) FOB_AMT
        FROM SCM0043V
       WHERE PRE_SCM_YEAR = #{scmYearCbBox} 
         AND PRE_EST_WEEK = #{scmPeriodCbBox}
