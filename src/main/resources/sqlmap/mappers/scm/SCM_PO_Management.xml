@@ -189,6 +189,50 @@
 </select>
  
 <!-- PO Issue --> 
+
+<select id="selectScmPrePoItemView" parameterType="Map" resultType="egovMap">
+  SELECT   
+         SCM08M.STOCK_CODE
+        ,SYS26M.STK_DESC  STOCK_NAME
+        ,(SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 15 AND CODE_ID = STK_TYPE_ID) STK_TYPE_NAME
+        ,SCM11D.PRE_QTY PLAN_QTY
+        ,NVL(SCM11D.PO_QTY,0) PO_QTY  
+        ,SCM17M.MOQ   
+        ,SYS26M.STK_CTGRY_ID
+        
+        ,SCM11D.PRE_YEAR
+        ,SCM11D.PRE_MONTH
+        ,SCM11D.PRE_WEEK_TH
+        ,SCM17M.CDC_CODE PRE_CDC
+        ,SYS26M.STK_TYPE_ID
+   FROM SCM0008M SCM08M
+		    LEFT JOIN SCM0017M SCM17M  ON SCM17M.STOCK_CODE = SCM08M.STOCK_CODE AND SCM17M.CDC_CODE =  DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+		    LEFT JOIN SCM0011D SCM11D  ON SCM11D.PRE_STOCK_CODE = SCM08M.STOCK_CODE 
+			                            AND SCM11D.PRE_YEAR = #{scmYearCbBox} 
+			                            AND SCM11D.PRE_MONTH IN (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN='1' )
+			                            AND PRE_WEEK_TH = #{scmPeriodCbBox} 
+			                            AND PRE_CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+			  LEFT JOIN SYS0026M SYS26M  ON SYS26M.STK_CODE = SCM08M.STOCK_CODE
+   WHERE 1 = 1
+  <choose>
+   <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+    AND  SYS26M.STK_TYPE_ID IN
+       <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+           #{item}
+       </foreach>
+   </when>
+  </choose>
+                                                                    
+  <choose>
+   <when test='stkCodes != null and !stkCodes.isEmpty '>
+    AND  SCM08M.STOCK_CODE IN
+       <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
+           #{item}
+       </foreach>
+   </when>
+  </choose>    
+     
+</select>
  
 <select id="selectScmPoView" parameterType="Map" resultType="egovMap">
 		SELECT
@@ -252,7 +296,7 @@
       ORDER BY PO_NO DESC
 </select>
  
-<select id="selectScmPrePoItemView" parameterType="Map" resultType="egovMap">
+<select id="selectScmPrePoItemView_TEMP" parameterType="Map" resultType="egovMap">
     SELECT
          0 checkFlag
          , PRE_YEAR   
