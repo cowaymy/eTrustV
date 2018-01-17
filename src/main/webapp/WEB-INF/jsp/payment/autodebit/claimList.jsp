@@ -520,6 +520,159 @@ function fn_uploadFile(){
 	
 }
 
+
+function fn_uploadFile3(){
+
+	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+	var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc");
+	var bankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankId");
+
+    var formData = new FormData();
+
+    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+	formData.append("ctrlId", ctrlId);
+	formData.append("ctrlIsCrc", ctrlIsCrc);
+	formData.append("bankId", bankId);
+    
+	Common.ajaxFile("/payment/updateClaimResultItemBulk3.do", formData, 
+		function(result){
+			resetUpdatedItems(); // 초기화
+
+			var message = "";        
+			message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
+            result.data.totalItem+" ; "+
+            result.data.totalSuccess+" ; "+
+            result.data.totalFail+"' htmlEscape='false' argumentSeparator=';' />";
+
+			Common.confirm(message,
+				function (){
+					var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+
+					//param data array
+					var data = {};
+					data.form = [{"ctrlId":ctrlId, "ctrlIsCrc" : ctrlIsCrc , "bankId" : bankId}];
+
+					//CALIM RESULT UPDATE
+					if(updateResultItemKind == 'LIVE'){
+						Common.ajax("POST", "/payment/updateClaimResultLive.do", data, 
+							function(result) {
+								Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
+							},
+							function(result) {
+								Common.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
+							}
+						);     
+					}
+
+					//CALIM RESULT UPDATE NEXT DAY
+					if(updateResultItemKind == 'NEXT'){
+						Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data, 
+							function(result) {
+								var resultMsg = "";
+								resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";    	   
+
+								Common.alert(resultMsg);
+							},
+							function(result) {
+								Common.alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
+							}
+						);
+					}
+				}
+			);
+		},  
+		function(jqXHR, textStatus, errorThrown) {
+			try {
+				console.log("status : " + jqXHR.status);
+				console.log("code : " + jqXHR.responseJSON.code);
+				console.log("message : " + jqXHR.responseJSON.message);
+				console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+			} catch (e) {
+				console.log(e);
+			}
+			Common.alert("Fail : " + jqXHR.responseJSON.message);        
+		}
+	);
+	
+}
+
+
+
+function fn_uploadFile4(){
+
+	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+	var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc");
+	var bankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankId");
+
+    var formData = new FormData();
+
+    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+	formData.append("ctrlId", ctrlId);
+	formData.append("ctrlIsCrc", ctrlIsCrc);
+	formData.append("bankId", bankId);
+    
+	Common.ajaxFile("/payment/updateClaimResultItemBulk4.do", formData, 
+		function(result){
+			resetUpdatedItems(); // 초기화
+
+			var message = "";        
+			message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
+            result.data.totalItem+" ; "+
+            result.data.totalSuccess+" ; "+
+            result.data.totalFail+"' htmlEscape='false' argumentSeparator=';' />";
+
+			Common.confirm(message,
+				function (){
+					var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+
+					//param data array
+					var data = {};
+					data.form = [{"ctrlId":ctrlId, "ctrlIsCrc" : ctrlIsCrc , "bankId" : bankId}];
+
+					//CALIM RESULT UPDATE
+					if(updateResultItemKind == 'LIVE'){
+						Common.ajax("POST", "/payment/updateClaimResultLive.do", data, 
+							function(result) {
+								Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
+							},
+							function(result) {
+								Common.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
+							}
+						);     
+					}
+
+					//CALIM RESULT UPDATE NEXT DAY
+					if(updateResultItemKind == 'NEXT'){
+						Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data, 
+							function(result) {
+								var resultMsg = "";
+								resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";    	   
+
+								Common.alert(resultMsg);
+							},
+							function(result) {
+								Common.alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
+							}
+						);
+					}
+				}
+			);
+		},  
+		function(jqXHR, textStatus, errorThrown) {
+			try {
+				console.log("status : " + jqXHR.status);
+				console.log("code : " + jqXHR.responseJSON.code);
+				console.log("message : " + jqXHR.responseJSON.message);
+				console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
+			} catch (e) {
+				console.log(e);
+			}
+			Common.alert("Fail : " + jqXHR.responseJSON.message);        
+		}
+	);
+	
+}
+
 //Result Update Pop-UP 에서 Upload 버튼 클릭시 처리
 function fn_resultFileUp(){
 	
@@ -1070,6 +1223,8 @@ function fn_openDivScheduleSettingPop() {
         
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.upload'/></a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_uploadFile3();">upload Bulk3</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_uploadFile4();">upload Bulk4</a></p></li>
             <!--<li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();"><spring:message code='pay.btn.upload'/></a></p></li>-->
             <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/ClaimResultUpdate_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
         </ul>

@@ -8,6 +8,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -42,6 +43,7 @@ import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.csv.CsvReadComponent;
+import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.claim.FormDef;
 import com.coway.trust.web.common.claim.ClaimFileALBHandler;
@@ -287,9 +289,6 @@ public class ClaimController {
 	}
 	
 	
-	
-	
-	
 	/**
 	 * Claim Result Upload File 처리 - 새로운 방식으로....
 	 * 
@@ -321,8 +320,172 @@ public class ClaimController {
 		cvsParam.put("voList", vos);
 		cvsParam.put("userId", sessionVO.getUserId());
 		
-		EgovMap resultMap = claimService.updateClaimResultItemBulk(claimMap, cvsParam);
+		//EgovMap resultMap = claimService.updateClaimResultItemBulk(claimMap, cvsParam);
+		EgovMap resultMap = claimService.updateClaimResultItemBulk2(claimMap, cvsParam);
+		
 				
+		
+		// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(resultMap);
+    	message.setMessage("Saved Successfully");
+    
+    	return ResponseEntity.ok(message);
+	}
+	
+	
+
+	/**
+	 * Claim Result Upload File 처리 - 새로운 방식으로....
+	 * 
+	 * @param params
+	 * @param model
+	 * @return
+	 * @RequestParam Map<String, Object> params
+	 */
+	@RequestMapping(value = "/updateClaimResultItemBulk3.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateClaimResultItemBulk3(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
+		
+		LOGGER.debug("ctrlId : {}  ", request.getParameter("ctrlId"));
+		LOGGER.debug("ctrlIsCrc : {}  ", request.getParameter("ctrlIsCrc"));
+		LOGGER.debug("bankId : {}  ", request.getParameter("bankId"));
+		
+		//Master 정보 세팅
+		Map<String, Object> claimMap = new HashMap<String, Object>();
+		claimMap.put("ctrlId",request.getParameter("ctrlId"));
+		claimMap.put("ctrlIsCrc",request.getParameter("ctrlIsCrc"));
+		claimMap.put("bankId",request.getParameter("bankId"));
+		
+		//기존 데이터 삭제
+		claimService.deleteClaimResultItem(claimMap);
+		
+		//CVS 파일 세팅
+		Map<String, MultipartFile> fileMap = request.getFileMap();		
+		MultipartFile multipartFile = fileMap.get("csvFile");
+		List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ClaimResultUploadVO::create);
+		
+		//CVS 파일 객체 세팅 
+		Map<String, Object> cvsParam = new HashMap<String, Object>();				
+		cvsParam.put("voList", vos);
+		cvsParam.put("userId", sessionVO.getUserId());
+		
+		//파일 내용 Insert
+		claimService.updateClaimResultItemBulk3(claimMap, cvsParam);
+		
+		// Credit Card, ALB, CIMB가 아니면 Item 삭제한다.
+				if (!"1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))
+						&& !"2".equals(String.valueOf(claimMap.get("bankId")))
+						&& !"3".equals(String.valueOf(claimMap.get("bankId")))) {
+					claimService.removeItmId(claimMap);
+				}
+				
+				// message 처리를 위한 값 세팅
+				EgovMap resultMap = null;
+				if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {			
+					resultMap = claimService.selectUploadResultBank(claimMap);			
+				} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc"))) || "134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+					resultMap =  claimService.selectUploadResultCRC(claimMap);
+				}
+				
+				//return resultMap;	
+		
+		// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(resultMap);
+    	message.setMessage("Saved Successfully");
+    
+    	return ResponseEntity.ok(message);
+	}
+	
+	
+	/**
+	 * Claim Result Upload File 처리 - 새로운 방식으로....
+	 * 
+	 * @param params
+	 * @param model
+	 * @return
+	 * @RequestParam Map<String, Object> params
+	 */
+	@RequestMapping(value = "/updateClaimResultItemBulk4.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateClaimResultItemBulk4(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
+		
+		LOGGER.debug("ctrlId : {}  ", request.getParameter("ctrlId"));
+		LOGGER.debug("ctrlIsCrc : {}  ", request.getParameter("ctrlIsCrc"));
+		LOGGER.debug("bankId : {}  ", request.getParameter("bankId"));
+		
+		//Master 정보 세팅
+		Map<String, Object> claimMap = new HashMap<String, Object>();
+		claimMap.put("ctrlId",request.getParameter("ctrlId"));
+		claimMap.put("ctrlIsCrc",request.getParameter("ctrlIsCrc"));
+		claimMap.put("bankId",request.getParameter("bankId"));
+		
+		//기존 데이터 삭제
+		claimService.deleteClaimResultItem(claimMap);
+		
+		//CVS 파일 세팅
+		Map<String, MultipartFile> fileMap = request.getFileMap();		
+		MultipartFile multipartFile = fileMap.get("csvFile");
+		List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ClaimResultUploadVO::create);
+		
+		//CVS 파일 객체 세팅 
+		Map<String, Object> cvsParam = new HashMap<String, Object>();				
+		cvsParam.put("voList", vos);
+		cvsParam.put("userId", sessionVO.getUserId());
+		
+		//파일 내용 Insert
+		//claimService.updateClaimResultItemBulk3(claimMap, cvsParam);
+		//cvs 파일 저장 처리
+				List<ClaimResultUploadVO> vos2 = (List<ClaimResultUploadVO>)cvsParam.get("voList");		
+				
+				
+				List<Map> list = vos2.stream().map(r -> {
+					Map<String, Object> map = BeanConverter.toMap(r);
+					
+					map.put("refNo", r.getRefNo());
+					map.put("refCode", r.getRefCode());
+					map.put("id", claimMap.get("ctrlId"));
+					map.put("itemId", r.getItemId());
+					
+					return map;
+				})	.collect(Collectors.toList());
+				
+				
+				
+				int size = 500;
+				int page = list.size() / size;
+				int start;
+				int end;
+				
+				Map<String, Object> bulkMap = new HashMap<>();
+				for (int i = 0; i <= page; i++) {
+					start = i * size;
+					end = size;
+					if(i == page){
+						end = list.size();
+					}
+					bulkMap.put("list",
+							list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+					claimService.updateClaimResultItemBulk4(bulkMap);
+				}
+		
+		// Credit Card, ALB, CIMB가 아니면 Item 삭제한다.
+				if (!"1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))
+						&& !"2".equals(String.valueOf(claimMap.get("bankId")))
+						&& !"3".equals(String.valueOf(claimMap.get("bankId")))) {
+					claimService.removeItmId(claimMap);
+				}
+				
+				// message 처리를 위한 값 세팅
+				EgovMap resultMap = null;
+				if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {			
+					resultMap = claimService.selectUploadResultBank(claimMap);			
+				} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc"))) || "134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+					resultMap =  claimService.selectUploadResultCRC(claimMap);
+				}
+				
+				//return resultMap;	
 		
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();

@@ -188,6 +188,160 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 		
 	}
 	
+	
+	
+
+    
+	/**
+     * Auto Debit - Claim Result Update : New Version
+     * @param params
+     */
+	@Override
+	public EgovMap updateClaimResultItemBulk2(Map<String, Object> claimMap , Map<String, Object> cvsParam) throws Exception{
+		
+		//기존 데이터 삭제
+		claimMapper.deleteClaimResultItem(claimMap);
+		
+		//cvs 파일 저장 처리
+		List<ClaimResultUploadVO> vos = (List<ClaimResultUploadVO>)cvsParam.get("voList");
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		for (int idx = 0; idx < vos.size(); idx++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("refNo", vos.get(idx).getRefNo());
+			map.put("refCode", vos.get(idx).getRefCode());
+			map.put("id", claimMap.get("ctrlId"));
+			map.put("itemId", vos.get(idx).getItemId());
+			
+			//list.add(idx, map);
+			
+			claimMapper.insertClaimResultItem(map);
+		}
+			
+		// Credit Card, ALB, CIMB가 아니면 Item 삭제한다.
+		if (!"1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))
+				&& !"2".equals(String.valueOf(claimMap.get("bankId")))
+				&& !"3".equals(String.valueOf(claimMap.get("bankId")))) {
+			claimMapper.removeItmId(claimMap);
+		}
+		
+		// message 처리를 위한 값 세팅
+		EgovMap resultMap = null;
+		if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {			
+			resultMap = claimMapper.selectUploadResultBank(claimMap);			
+		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc"))) || "134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+			resultMap =  claimMapper.selectUploadResultCRC(claimMap);
+		}
+		
+		return resultMap;		
+		
+	}
+	
+	
+	/**
+     * Auto Debit - Claim Result Update
+     * @param params
+     */
+	@Override
+    public void deleteClaimResultItem(Map<String, Object> claimMap) {
+		//기존 데이터 삭제
+		claimMapper.deleteClaimResultItem(claimMap);
+	}
+	
+	/**
+     * Auto Debit - Claim Result Update
+     * @param params
+     */
+	@Override
+    public void removeItmId(Map<String, Object> claimMap) {
+		//기존 데이터 삭제
+		claimMapper.removeItmId(claimMap);
+	}
+    
+	@Override
+	public EgovMap selectUploadResultBank (Map<String, Object> claimMap){
+		return claimMapper.selectUploadResultBank(claimMap);	
+	}
+	
+	@Override
+    public EgovMap selectUploadResultCRC (Map<String, Object> claimMap){
+    	return claimMapper.selectUploadResultCRC(claimMap);
+    }
+	
+	/**
+     * Auto Debit - Claim Result Update : New Version
+     * @param params
+     */
+	@Override
+	public void updateClaimResultItemBulk3(Map<String, Object> claimMap , Map<String, Object> cvsParam) throws Exception{
+		
+		//기존 데이터 삭제
+		//claimMapper.deleteClaimResultItem(claimMap);
+		
+		//cvs 파일 저장 처리
+		List<ClaimResultUploadVO> vos = (List<ClaimResultUploadVO>)cvsParam.get("voList");		
+		
+		
+		List<Map> list = vos.stream().map(r -> {
+			Map<String, Object> map = BeanConverter.toMap(r);
+			
+			map.put("refNo", r.getRefNo());
+			map.put("refCode", r.getRefCode());
+			map.put("id", claimMap.get("ctrlId"));
+			map.put("itemId", r.getItemId());
+			
+			return map;
+		})	.collect(Collectors.toList());
+		
+		/*
+		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
+		
+		for (int idx = 0; idx < vos.size(); idx++) {
+			Map<String, Object> map = new HashMap<String, Object>();
+			
+			map.put("refNo", vos.get(idx).getRefNo());
+			map.put("refCode", vos.get(idx).getRefCode());
+			map.put("id", claimMap.get("ctrlId"));
+			map.put("itemId", vos.get(idx).getItemId());
+			
+			list.add(idx, map);
+		}
+		*/
+		
+		int size = 500;
+		int page = list.size() / size;
+		int start;
+		int end;
+		
+		Map<String, Object> bulkMap = new HashMap<>();
+		for (int i = 0; i <= page; i++) {
+			start = i * size;
+			end = size;
+			if(i == page){
+				end = list.size();
+			}
+			bulkMap.put("list",
+					list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+			claimMapper.insertClaimResultItemBulk(bulkMap);
+		}
+		
+			
+		
+	}
+	
+	
+	/**
+     * Auto Debit - Claim Result Update : New Version
+     * @param params
+     */
+	@Override
+	public void updateClaimResultItemBulk4(Map<String, Object> bulkMap) throws Exception{
+		claimMapper.insertClaimResultItemBulk(bulkMap);
+	}
+	
+	
+	
 	/**
      * Auto Debit - Claim Result Update Live
      * @param params

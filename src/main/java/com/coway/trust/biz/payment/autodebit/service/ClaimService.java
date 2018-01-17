@@ -52,6 +52,42 @@ public interface ClaimService
      * @param params
      */
     EgovMap updateClaimResultItemBulk(Map<String, Object> claimMap , Map<String, Object> cvsParam) throws Exception;
+    
+    /**
+     * Auto Debit - Claim Result Update : New Version
+     * @param params
+     */
+    EgovMap updateClaimResultItemBulk2(Map<String, Object> claimMap , Map<String, Object> cvsParam) throws Exception;
+    
+    
+    /**
+     * Auto Debit - Claim Result Update
+     * @param params
+     */
+    void deleteClaimResultItem(Map<String, Object> claimMap);
+    
+    /**
+     * Auto Debit - Claim Result Update
+     * @param params
+     */
+    void removeItmId(Map<String, Object> claimMap);
+    
+    EgovMap selectUploadResultBank (Map<String, Object> claimMap);
+    
+    EgovMap selectUploadResultCRC (Map<String, Object> claimMap);
+    
+    /**
+     * Auto Debit - Claim Result Update : New Version
+     * @param params
+     */
+    void updateClaimResultItemBulk3(Map<String, Object> claimMap , Map<String, Object> cvsParam) throws Exception;
+    
+    
+    /**
+     * Auto Debit - Claim Result Update : New Version
+     * @param params
+     */
+	void updateClaimResultItemBulk4(Map<String, Object> bulkMap) throws Exception;
 	
     /**
      * Auto Debit - Claim Result Update LIVE
