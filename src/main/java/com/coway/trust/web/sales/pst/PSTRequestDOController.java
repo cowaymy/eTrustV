@@ -234,11 +234,15 @@ public class PSTRequestDOController {
 	@RequestMapping(value = "/insertPstRequestDOPop.do")
 	public String insertPstRequestDOPop(@RequestParam Map<String, Object>params, ModelMap model) {
 		logger.info(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> " + params.toString());
+		
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+
 		// Dealer combo box - Dealer Type 입력 후 onchange로 인해 안씀.
 //		List<EgovMap> cmbDealerList = pstRequestDOService.pstNewCmbDealerList();
 		EgovMap getRate = pstRequestDOService.getRate();
 		
 //		model.addAttribute("cmbDealerList", cmbDealerList);
+		model.addAttribute("userId", sessionVO.getUserId());
 		model.addAttribute("getRate", getRate);
 		model.addAttribute("dealerTypeFlag", params.get("dealerTypeFlag"));
 		
