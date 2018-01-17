@@ -554,9 +554,9 @@ public class ServiceApiController {
 					}
 				}
 				 
-					//>>>>>>>>>>>>>>>>>logs call
-					LOGGER.info(" serviceNo>>>>>> : {}", hsTransLogs1.get(i).get("serviceNo").toString());
-					returnUsedPartsService.returnPartsInsert(hsTransLogs1.get(i).get("serviceNo").toString());
+//					//>>>>>>>>>>>>>>>>>logs call
+//					LOGGER.info(" serviceNo>>>>>> : {}", hsTransLogs1.get(i).get("serviceNo").toString());
+//					returnUsedPartsService.returnPartsInsert(hsTransLogs1.get(i).get("serviceNo").toString());
 			}
 
 			
