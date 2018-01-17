@@ -73,7 +73,7 @@
 	    <if test="MBRSH_CRT_DT != null and MBRSH_CRT_DT != ''">   
 	        AND to_char(A.MBRSH_CRT_DT,'yyyymmdd') =  to_char(to_date (#{MBRSH_CRT_DT} ,'DD/MM/YYYY'),'yyyymmdd') 
 	    </if>
-	    ORDER BY ORD_ID  ASC
+	    ORDER BY  A.ORD_NO, A.MBRSH_NO  ASC
   
     </select>
 <!--     <select id="selectMembershipList" parameterType="Map" resultType="egovMap">

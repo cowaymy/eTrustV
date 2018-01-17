@@ -1092,7 +1092,6 @@
 							                 FROM PAY0023D E1
 							                        LEFT JOIN PAY0017D E2   ON E2.ACC_INV_VOID_INVC_NO = E1.SRV_LDGR_REF_NO
 							                  WHERE  ( E1.SRV_LDGR_CNTRCT_ID = #{CNTRCT_ID} )
-							                           AND ( E1.SRV_LDGR_AMT > UTILS.CONVERT_TO_NUMBER(0,18) )
 							                           AND ( 160 <> E1.SRV_LDGR_TYPE_ID )
 							                           AND ( 1307 <> E1.SRV_LDGR_TYPE_ID )
 							                           AND ( E2.ACC_INV_VOID_ID IS NULL ) ) S
