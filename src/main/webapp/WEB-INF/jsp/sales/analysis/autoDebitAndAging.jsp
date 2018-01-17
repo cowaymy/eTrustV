@@ -3,11 +3,17 @@
 
 <script type="text/javascript">
 
+$(document).ready(function() {
+	
+	//doGetCombo('/common/selectCodeList.do', '8', '','_cmbTypeId_', 'S' , '');   // Customer Type Combo Box
+	CommonCombo.make("_custType", '/common/selectCodeList.do', {groupCode: '8'}, '' ,{type: "M", isShowChoose: false});
+});
+
 function fn_setParameter(method){
     
 	//validation
 	if($("#_inputDate").val() == null || $("#_inputDate").val() == ''){
-		Common.alert("Please key in date");
+		Common.alert('<spring:message code="sal.alert.msg.keyInDate" />');
 		return;
 	}
 	
@@ -130,13 +136,13 @@ function fn_setParameter(method){
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Analysis</li>
-    <li>Auto Debit & Aging</li>
+    <li><spring:message code="sal.title.analysis" /></li>
+    <li><spring:message code="sal.title.autoDebAndAgeing" /></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Auto Debit/Month Ageing/CCP</h2>
+<h2><spring:message code="sal.title.autoDebMonthAgCcp" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -150,28 +156,25 @@ function fn_setParameter(method){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Report Type</th>
+    <th scope="row"><spring:message code="sal.text.reportType" /></th>
     <td>
     <select class="w100p" id="_rptType">
-	    <option value="0" selected="selected">Auto Debit Account Based(Regular Rental Status)</option>
-	    <option value="1">Ageing Movement(Regular Status)</option>
-	    <option value="2">CCP Daily Success Monitoring</option>
-	    <option value="3">Ageing Movement By State(Regular Status)</option>
+	    <option value="0" selected="selected"><spring:message code="sal.combo.text.autoDebAccBase" /></option>
+	    <option value="1"><spring:message code="sal.combo.text.ageing" /></option>
+	    <option value="2"><spring:message code="sal.combo.text.ccpSucsMonitor" /></option>
+	    <option value="3"><spring:message code="sal.combo.text.agMovByState" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sales.promo.custType"/></th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="_custType">
-	    <option value="964" selected="selected">Individual</option>
-	    <option value="965">Corporate</option>
-    </select>
+    <select class="multy_select w100p" multiple="multiple" id="_custType"></select>
     </td>
 </tr>
 <tr>
     <th scope="row">Date</th>
-     <td><input type="text" title="기준년월" placeholder="DD/MM/YYYY" class="j_date2 w100p" readonly="readonly" id="_inputDate"/></td>
+     <td><input type="text"  placeholder="DD/MM/YYYY" class="j_date2 w100p" readonly="readonly" id="_inputDate"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -179,9 +182,8 @@ function fn_setParameter(method){
 </form>
 </section><!-- search_table end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a onclick="javascript: fn_setParameter('PDF')">Generate In PDF</a></p></li>
-    <li><p class="btn_blue2"><a onclick="javascript: fn_setParameter('EXCEL')">Generate In Excel</a></p></li>
-    <li><p class="btn_blue2"><a href="#">Clear</a></p></li>
+    <li><p class="btn_blue2"><a onclick="javascript: fn_setParameter('PDF')"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue2"><a onclick="javascript: fn_setParameter('EXCEL')"><spring:message code="sal.btn.genExcel" /></a></p></li>
 </ul>
 
 </section><!-- content end -->

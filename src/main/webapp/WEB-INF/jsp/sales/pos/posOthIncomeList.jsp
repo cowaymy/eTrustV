@@ -130,7 +130,7 @@ $(document).ready(function() {
     	
     	//Validation   
         if(FormUtil.isEmpty($('#_sDate').val()) || FormUtil.isEmpty($('#_eDate').val())) {
-                Common.alert("* Please select order date<br/>");
+                Common.alert('<spring:message code="sal.alert.msg.selectOrdDate" />');
                 return;
         }
         
@@ -138,11 +138,9 @@ $(document).ready(function() {
         var endDate = $('#_eDate').val();
         
         if( fn_getDateGap(startDate , endDate) > 31){
-            Common.alert("Start date can not be more than 31 days before the end date.");
+            Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
             return;
         }
-    	
-    	
     	
         fn_getPosListAjax();
     });
@@ -158,12 +156,12 @@ $(document).ready(function() {
         var clickChk = AUIGrid.getSelectedItems(posGridID);
         //Validation
         if(clickChk == null || clickChk.length <= 0 ){
-            Common.alert("* No Order Selected. ");
+            Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
             return;
         }
         
         if(clickChk[0].item.posTypeId == 1361){  //reversal
-            Common.alert("* Reversal POS are prohibited!");
+            Common.alert('<spring:message code="sal.alert.msg.posProhibit" />');
             return;
         }
         
@@ -179,7 +177,7 @@ $(document).ready(function() {
         }, null ,ajaxOtp);
         
         if(chkRv == false){
-            Common.alert("* Reversal POS are prohibited!");
+            Common.alert('<spring:message code="sal.alert.msg.posProhibit" />');
             return;
         }
         //TODO payment 완료 후 추가 Validation 
@@ -235,14 +233,14 @@ $(document).ready(function() {
     	
     	var rowCnt = AUIGrid.getRowCount(posGridID);
         if(rowCnt <= 0 ){
-            Common.alert("* please Search First.");
+            Common.alert('<spring:message code="sal.alert.msg.searchFirst" />');
             return;
         }
         var updateList = AUIGrid.getEditedRowItems(posGridID);
-        console.log("updateList(type) : " + $.type(updateList));
+    //    console.log("updateList(type) : " + $.type(updateList));
         
         if(updateList == null || updateList.length <= 0 ){
-            Common.alert("* No data Change.");
+            Common.alert('<spring:message code="sal.alert.msg.noDataChange" />');
             return;
         }
         
@@ -261,14 +259,14 @@ $(document).ready(function() {
         
     	var rowCnt = AUIGrid.getRowCount(posItmDetailGridID);
         if(rowCnt <= 0 ){
-            Common.alert("* please Search Item(s).");
+            Common.alert('<spring:message code="sal.alert.msg.searchItm" />');
             return;
         }
         var updateList = AUIGrid.getEditedRowItems(posItmDetailGridID);
-        console.log("updateList(type) : " + $.type(updateList));
+ //       console.log("updateList(type) : " + $.type(updateList));
         
         if(updateList == null || updateList.length <= 0 ){
-            Common.alert("* No data Change.");
+            Common.alert('<spring:message code="sal.alert.msg.noDataChange" />');
             return;
         }
         
@@ -287,12 +285,12 @@ $(document).ready(function() {
     AUIGrid.bind(posGridID, "cellEditBegin", function(event) {
            //Reversal
             if(event.item.posTypeId == 1361){
-                Common.alert("* Can not Change Status ");
+                Common.alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
                 return false;
             }
            // Active NonReceive Only
             if(event.value != 1 && event.value != 96){
-               Common.alert("* Can not Change Status ");
+            	Common.alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
                return false;
            }
            
@@ -303,12 +301,12 @@ $(document).ready(function() {
     AUIGrid.bind(posItmDetailGridID, "cellEditBegin", function(event) {
         
         if(event.item.posTypeId == 1361){
-            Common.alert("* Reversal  can not Change  Status");
+            Common.alert('<spring:message code="sal.alert.msg.canNotChngStatusByReversal" />');
             return false;
         }
         // Active NonReceive Only
          if(event.value != 96){
-            Common.alert("* Can not Change Status ");
+            Common.alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
             return false;
         }
         //Others
@@ -324,14 +322,14 @@ function girdHide(){
 
 function createPosItmDetailGrid(){
     var posItmColumnLayout =  [ 
-                                {dataField : "stkCode", headerText : "Item Code", width : '10%' , editable : false}, 
-                                {dataField : "stkDesc", headerText : "Item Description", width : '30%' , editable : false},
-                                {dataField : "qty", headerText : "Qty", width : '10%' , editable : false},
-                                {dataField : "amt", headerText : "Unit Price", width : '10%' , dataType : "numeric", formatString : "#,##0.00" , editable : false}, 
-                                {dataField : "chrg", headerText : "Sub Total(Exclude GST)", width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
-                                {dataField : "txs", headerText : "GST(6%)", width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
-                                {dataField : "tot", headerText : "Total Amount", width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
-                                { dataField : "rcvStusId",  headerText : "rcvStusId", width : '10%',
+                                {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%' , editable : false}, 
+                                {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%' , editable : false},
+                                {dataField : "qty", headerText : '<spring:message code="sal.title.qty" />', width : '10%' , editable : false},
+                                {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00" , editable : false}, 
+                                {dataField : "chrg", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
+                                {dataField : "txs", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
+                                {dataField : "tot", headerText : '<spring:message code="sal.text.totAmt" />', width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
+                                { dataField : "rcvStusId",  headerText : '<spring:message code="sal.title.rcvStusId" />', width : '10%',
                                     labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                                          var retStr = "";
                                          for(var i=0,len=arrItmStusCode.length; i<len; i++) {
@@ -365,9 +363,7 @@ function createPosItmDetailGrid(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
     };
     
     posItmDetailGridID = GridCommon.createAUIGrid("#itm_detail_grid_wrap", posItmColumnLayout,'', itmGridPros);  // address list
@@ -498,7 +494,7 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
     Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
         if(memInfo == null) {
-            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+            Common.alert('<spring:message code="sal.alert.msg.memNotFound" />'+memCode+'</b>');
         }
         else {
             
@@ -524,17 +520,17 @@ function createAUIGrid(){
     
     
     var posColumnLayout =  [ 
-                            {dataField : "posNo", headerText : "POS No.", width : '8%', editable : false}, 
-                            {dataField : "posDt", headerText : "Sales Date", width : '8%', editable : false},
-                            {dataField : "userName", headerText : "Member ID", width : '8%', editable : false},
-                            {dataField : "codeName", headerText : "POS Type", width : '8%', editable : false},
-                            {dataField : "codeName1", headerText : "Sales Type", width : '8%', editable : false},
-                            {dataField : "taxInvcRefNo", headerText : "Invoice No.", width : '18%', editable : false}, 
-                            {dataField : "name", headerText : "Customer Name", width : '8%', editable : false},
-                            {dataField : "whLocCode", headerText : "Branch", width : '8%' , style : 'left_style', editable : false},
-                            {dataField : "whLocCode", headerText : "Warehouse", width : '8%', editable : false},
-                            {dataField : "posTotAmt", headerText : "Total Amount", width : '8%', editable : false},
-                            {dataField : "stusId", headerText : "Status", width : '10%',
+                            {dataField : "posNo", headerText : '<spring:message code="sal.title.posNo" />', width : '8%', editable : false}, 
+                            {dataField : "posDt", headerText : '<spring:message code="sal.title.salDate" />', width : '8%', editable : false},
+                            {dataField : "userName", headerText : '<spring:message code="sal.title.memberId" />', width : '8%', editable : false},
+                            {dataField : "codeName", headerText : '<spring:message code="sal.title.posType" />', width : '8%', editable : false},
+                            {dataField : "codeName1", headerText : '<spring:message code="sal.title.salesType" />', width : '8%', editable : false},
+                            {dataField : "taxInvcRefNo", headerText : '<spring:message code="sal.title.invoiceNo" />', width : '18%', editable : false}, 
+                            {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : '8%', editable : false},
+                            {dataField : "whLocCode", headerText : '<spring:message code="sal.text.branch" />', width : '8%' , style : 'left_style', editable : false},
+                            {dataField : "whLocCode", headerText : '<spring:message code="sal.title.warehouse" />', width : '8%', editable : false},
+                            {dataField : "posTotAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '8%', editable : false},
+                            {dataField : "stusId", headerText : '<spring:message code="sal.title.status" />', width : '10%',
                                 labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                                     var retStr = "";
                                     for(var i=0,len=arrPosStusCode.length; i<len; i++) {
@@ -571,9 +567,7 @@ function createAUIGrid(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
     };
     
     posGridID = GridCommon.createAUIGrid("#pos_grid_wrap", posColumnLayout,'', gridPros);  // address list
@@ -604,7 +598,7 @@ function fn_getDateGap(sdate, edate){
     
     var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
     
-    console.log("gap : " + gap);
+  //  console.log("gap : " + gap);
     
     return gap;
 }
@@ -624,15 +618,15 @@ function fn_getDateGap(sdate, edate){
 <h2>POS Other income Listing</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" id="_systemBtn">POS System</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_systemBtn"><spring:message code="sal.title.text.posSystem" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" id="_reversalBtn">POS Reversal</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_reversalBtn"><spring:message code="sal.title.text.posReversal" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_underDevelop()"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_underDevelop()"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -653,25 +647,25 @@ function fn_getDateGap(sdate, edate){
 </colgroup>
 <tbody> 
 <tr>
-    <th scope="row">POS Type</th>
+    <th scope="row"><spring:message code="sal.title.posType" /></th>
     <td>
     <select class="w100p disabled" id="cmbPosTypeId"  disabled="disabled"></select>
     </td>
-    <th scope="row">POS Sales Type</th>
+    <th scope="row"><spring:message code="sal.title.text.posSalesType" /></th>
     <td>
     <select class="w100p" id="cmbSalesTypeId" name="posTypeId"></select>
     </td>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
     <td>
         <select class="w100p" id="cmbStatusTypeId" name="posStatusId" ></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">POS No.</th>
+    <th scope="row"><spring:message code="sal.title.posNo" /></th>
     <td>
     <input type="text" title="" placeholder="POS No." class="w100p"  name="posNo" />
     </td>
-    <th scope="row">Sales Date</th>
+    <th scope="row"><spring:message code="sal.title.salDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate" id="_sDate" value="${bfDay}"/></p>
@@ -679,7 +673,7 @@ function fn_getDateGap(sdate, edate){
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate"  id="_eDate" value="${toDay}"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Member Code</th>
+    <th scope="row"><spring:message code="sal.title.memberCode" /></th>
     <td>
         <div class="search_100p"><!-- search_100p start -->
 	        <input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="w100p" />
@@ -689,12 +683,12 @@ function fn_getDateGap(sdate, edate){
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch / Warehouse</th>
+    <th scope="row"><spring:message code="sal.title.text.brnchWarehouse" /></th>
     <td>
         <select  id="cmbWhBrnchId"  disabled="disabled" class="disabled w100p" name="brnchId"></select>
     </td>
     <td colspan="2" style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhId" class="w100p" ></td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td>
     <input type="text" title="" placeholder="Customer Name" class="w100p" name="posCustName" />
     </td>
@@ -702,10 +696,10 @@ function fn_getDateGap(sdate, edate){
 </tbody>
 </table><!-- table end -->
 
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<%-- <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
-    <dt>Link</dt>
+    <dt><spring:message code="sal.title.text.link" /></dt>
     <dd>
     <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
@@ -723,7 +717,7 @@ function fn_getDateGap(sdate, edate){
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
 </dl>
-</aside><!-- link_btns_wrap end -->
+</aside><!-- link_btns_wrap end --> --%>
 
 </form>
 </section><!-- search_table end -->
@@ -736,7 +730,7 @@ function fn_getDateGap(sdate, edate){
 </ul> -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Result List</h3>
+<h3><spring:message code="sal.title.text.resultList" /></h3>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -745,13 +739,13 @@ function fn_getDateGap(sdate, edate){
 
 <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue2 big"><a id="_posStatusBtn">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_posStatusBtn"><spring:message code="sal.btn.save" /></a></p></li>
     </c:if>  
 </ul>
 <!--item Grid  -->
 <div id="_itmDetailGridDiv">
 <aside class="title_line"><!-- title_line start -->
-<h3>Item List</h3>
+<h3><spring:message code="sal.title.itmList" /></h3>
 </aside><!-- title_line end -->
 <article class="grid_wrap"><!-- grid_wrap start --> 
 <div id="itm_detail_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
@@ -759,7 +753,7 @@ function fn_getDateGap(sdate, edate){
 
 <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue2 big"><a id="_itemStatusBtn">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_itemStatusBtn"><spring:message code="sal.btn.save" /></a></p></li>
     </c:if>
 </ul>
 </div>

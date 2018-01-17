@@ -38,13 +38,13 @@ $(document).ready(function() {
  // 파일 선택하기
  $('#fileSelector').on('change', function(evt) {
      if (!checkHTML5Brower()) {
-         Common.alert("* Not Support HTML5 your Browser!. Please Upload To Server.");
+         Common.alert('<spring:message code="sal.alert.msg.notSupportBrowser" />');
          return;
      } else {
          var data = null;
          var file = evt.target.files[0];
          if (typeof file == "undefined") {
-             Common.alert("* can not Select this File.");
+             Common.alert('<spring:message code="sal.alert.msg.canNotSelectFile" />');
              return;
          }
          var reader = new FileReader();
@@ -92,7 +92,7 @@ $(document).ready(function() {
 	 var gridCnt = AUIGrid.getRowCount(myGridID);
      //console.log("rowCnt : " + rowCnt);
      if(gridCnt <= 0){
-         Common.alert("* No Member Selected. ");
+         Common.alert('<spring:message code="sal.alert.msg.noMembershipSelect" />');
          return;
      }
 	
@@ -113,7 +113,7 @@ $(document).ready(function() {
 	});
 	if( null != validMemCodeArr && validMemCodeArr.length > 0){
 		validMemList = validMemCodeArr.toString();
-		Common.alert("* The Branch of Member ID<br/> ["+validMemList+"]<br/> is not valid .<br/>");
+		Common.alert('<spring:message code="sal.alert.msg.notValidMemForBrnch"  arguments="'+validMemList+'"/>');
 		return;
 	}
 	 
@@ -163,7 +163,7 @@ function setAUIGrid(jsonData) {
  var firstRow = jsonData;
  
  if(typeof firstRow == "undefined") {
-     Common.alert("* Can Convert File. Please Try Again.");
+     Common.alert('<spring:message code="sal.alert.msg.canNotConvReTry" />');
      $("#fileSelector").val("");
      return;
  }
@@ -180,7 +180,7 @@ function setAUIGrid(jsonData) {
 
 	//template Chk
 	if(memIdArray == null || memIdArray.length <= 0){
-		Common.alert("* Template was Chaged. Please Try Again. ");
+		Common.alert('<spring:message code="sal.alert.msg.TemplChngReTry" />');
 		$("#fileSelector").val("");
 		return;
 	}
@@ -192,7 +192,7 @@ function setAUIGrid(jsonData) {
 	 Common.ajax("GET", "/sales/pos/getUploadMemList", jsonParam , function(result) {
 		 
 		 if(result == null){
-			 Common.alert('<b>Member not found.</br>');
+			 Common.alert('<spring:message code="sal.alert.msg.memNotFound2" />');
 			 $("#fileSelector").val("");
 			 return;
 		 }else{
@@ -202,7 +202,7 @@ function setAUIGrid(jsonData) {
 			  if(result.length != jsonData.length){
 				
 				  if(result.length >  jsonData.length){
-					  Common.alert("* Confilct Member ID. Please Try Again.");
+					  Common.alert('<spring:message code="sal.alert.msg.conflicMemId" />');
 					  return;
 				  }
 				  
@@ -215,8 +215,8 @@ function setAUIGrid(jsonData) {
                      strArr.push(result[idx].memCode);   
                   }
                   
-				  console.log("memIdArray : "+ memIdArray);  //jsonData  from EXEL
-				  console.log("strArr : " + strArr);  //result from DB
+			//	  console.log("memIdArray : "+ memIdArray);  //jsonData  from EXEL
+			//	  console.log("strArr : " + strArr);  //result from DB
 				  
 				  $.each(memIdArray, function(idx, el) {
 					
@@ -226,7 +226,7 @@ function setAUIGrid(jsonData) {
 					  }
 				  });
 				  rtnMemList = rtnMemArr.toString();
-				  Common.alert("Member ID ["+ rtnMemList +"] is not valid");
+				  Common.alert('<spring:message code="sal.alert.msg.memNotValid" />');
 				  $("#fileSelector").val("");
 				  return;
 			 }
@@ -240,11 +240,11 @@ function setAUIGrid(jsonData) {
 function createInitGrid() {
  
    var columnLayout = [
-			                     {dataField : "memId" , headerText : "Member ID", width : "20%",  editable : false },
-			                     {dataField : "memCode" , headerText : "Member Code", width : "20%",  editable : false },
-			                     {dataField : "name" , headerText : "Member NAme", width : "20%",  editable : false },
-			                     {dataField : "nric" , headerText : "Member NRIC", width : "20%",  editable : false },
-			                     {dataField : "code" , headerText : "Branch", width : "20%",  editable : false },
+			                     {dataField : "memId" , headerText : '<spring:message code="sal.title.memberId" />', width : "20%",  editable : false },
+			                     {dataField : "memCode" , headerText : '<spring:message code="sal.title.memberCode" />', width : "20%",  editable : false },
+			                     {dataField : "name" , headerText : '<spring:message code="sal.title.memberName" />', width : "20%",  editable : false },
+			                     {dataField : "nric" , headerText : '<spring:message code="sal.title.memberNRIC" />', width : "20%",  editable : false },
+			                     {dataField : "code" , headerText : '<spring:message code="sal.text.branch" />', width : "20%",  editable : false },
 			                     {dataField : "brnch" , visible : false},
 			                     {dataField : "memType" , visible : false},
 			                     {dataField : "fullName" , visible : false},
@@ -302,14 +302,14 @@ function setInputFile2(){//인풋파일 세팅하기
 <header class="pop_header"><!-- pop_header start -->
 <h1>Member Upload</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_memUpPopClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_memUpPopClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/sales/PosMemberUploadTemplate.xlsx">Template</a></p></li>
+    <li><p class="btn_blue"><a href="${pageContext.request.contextPath}/resources/download/sales/PosMemberUploadTemplate.xlsx"><spring:message code="sal.btn.template" /></a></p></li>
 </ul>
 
 <table class="type1 mt10"><!-- table start -->
@@ -320,10 +320,10 @@ function setInputFile2(){//인풋파일 세팅하기
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Upload File</th>
+    <th scope="row"><spring:message code="sal.title.text.uploadFile" /></th>
     <td>
     <div class="auto_file2"><!-- auto_file start -->
-    <input type="file" title="file add"  id="fileSelector" accept=".xlsx" value="sadfasdf"/>
+    <input type="file" title="file add"  id="fileSelector" accept=".xlsx" />
     </div><!-- auto_file end -->
     </td>
 </tr>
@@ -331,11 +331,11 @@ function setInputFile2(){//인풋파일 세팅하기
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Member List</h2>
+<h2><spring:message code="sal.title.text.memList" /></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="_memDelBtn">DEL</a></p></li>
+    <li><p class="btn_grid"><a id="_memDelBtn"><spring:message code="sal.btn.del" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -343,7 +343,7 @@ function setInputFile2(){//인풋파일 세팅하기
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_memSaveBtn">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_memSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

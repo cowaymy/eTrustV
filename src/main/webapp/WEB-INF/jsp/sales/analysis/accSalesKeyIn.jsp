@@ -22,7 +22,7 @@ var cnt =  -1;
                     loader();	
     			}else if(sessionAuth == '2'){//auth Cody
     				$("#reportType").val('');
-                    Common.alert("access deny.");
+                    Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
                 }else{
                 	$("#reportFileName").val('/sales/CowayDailySalesStatusHP_Adv.rpt');
                     $("#viewType").val("WINDOW");
@@ -36,7 +36,7 @@ var cnt =  -1;
 	                loader();   
 				}else if(sessionAuth == '1'){ //auth HP
 					$("#reportType").val('');
-                    Common.alert("access deny.");   
+                    Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');   
                 }else{
                 	$("#reportFileName").val('/sales/CowayDailySalesStatusCody.rpt');
                     $("#viewType").val("WINDOW");
@@ -60,7 +60,7 @@ var cnt =  -1;
                 $("#viewType").val("PDF");
                 fn_downloadReport(1);
 			}else{
-				Common.alert("Please select Report Type");
+				Common.alert('<spring:message code="sal.alert.msg.selectRptFile" />');
 			}
 			
 		});
@@ -143,18 +143,6 @@ var cnt =  -1;
         }
     }
     
-    
-   /*  function fn_maintanceSession(){
-    	
-    } */
-    
-   /*  function getMaintance(){
-    	
-    }
-    
-    function endMaintance(){
-    	
-    } */
 </script>
 
 
@@ -168,10 +156,10 @@ var cnt =  -1;
 <section id="content"><!-- content start -->
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Analysis - Accumulated Sales Key-In</h2>
+        <h2><spring:message code="sal.page.title.accSalesKeyIn" /></h2>
         
 		<ul class="right_btns">
-		    <li><p class="btn_blue"><a href="#" id="_pdfDownBtn" ><span></span>PDF Download</a></p></li>
+		    <li><p class="btn_blue"><a href="#" id="_pdfDownBtn" ><span></span><spring:message code="sal.btn.genPDF" /></a></p></li>
 		</ul>
     </aside><!-- title_line end -->
 
@@ -183,12 +171,12 @@ var cnt =  -1;
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Report Type</th>
+    <th scope="row"><spring:message code="sal.text.reportType" /></th>
     <td>
-    <select class="w100p" id="reportType" name="reportType">
+    <select class="w100p" id="reportType" name="reportType"><!-- 398  -->
         <option selected="selected">choose one</option>
-        <option value="0">HP Analysis</option>
-        <option value="1">Cody Analysis</option>
+        <option value="0"><spring:message code="sal.combo.text.hpAnalysis" /></option>
+        <option value="1"><spring:message code="sal.combo.text.codyAnalysis" /></option>
     </select>
     </td>
 </tr>

@@ -92,7 +92,7 @@ $(document).ready(function() {
     			
     			if(basketCodeArray[idx] == values[i]){
     				msg += $("#_purcItems").find("option[value='"+values[i]+"']").text();
-    				Common.alert("* " + msg +" is exist in list.");
+    				Common.alert("* " + msg +'<spring:message code="sal.alert.msg.isExistInList" />');
     				return;
     			}
 			}
@@ -220,7 +220,7 @@ $(document).ready(function() {
 		var nullChkNo = AUIGrid.getRowCount(basketGridID);
 	//	console.log(' nullChkNo(row 개수) : ' + nullChkNo);
 		if(nullChkNo == null || nullChkNo < 1){
-			Common.alert("* please Select item.");
+			Common.alert('<spring:message code="sal.alert.msg.selectItm" />');
 			return;
 		}
 		//2. 장바구니 수량 중  0 이 있는지 체크
@@ -232,7 +232,7 @@ $(document).ready(function() {
             }
         });
 		if( valChk == false){
-			Common.alert("* List has '0' inventory item(s).");
+			Common.alert('<spring:message code="sal.alert.msg.listNoInvItm" />');
 			return;
 		}
 		
@@ -245,7 +245,7 @@ $(document).ready(function() {
 			}
 		});
 		if(valChk == false){
-			Common.alert("* List has '0' price item(s).");
+			Common.alert('<spring:message code="sal.alert.msg.listNoPrcItm" />');
             return;
 		}
 		//4. 장바구니에 입력한 수량이 0 이 있는지 체크
@@ -257,7 +257,7 @@ $(document).ready(function() {
             }
         });
         if(valChk == false){
-        	Common.alert("* Please key in the item quantity.");
+        	Common.alert('<spring:message code="sal.alert.msg.keyInQty" />');
             return;
         }
         //5. inventory 수량 보다 입력한 수량값이 넘는지 체크
@@ -270,11 +270,11 @@ $(document).ready(function() {
 				}
 			});
         	if(valChk == false){
-        		Common.alert('* Short of stock volume!');
+        		Common.alert('<spring:message code="sal.alert.msg.shortOfVol" />');
         		return;
         	}
         }else{
-        	Common.alert("Failed to add new item. Please try again later.");
+        	Common.alert('<spring:message code="sal.alert.msg.failedToNewItm" />');
         	return;
         }
 		//6. 장바구니 리스트 중에 필터가 있을 경우  stkTypeId == 62
@@ -290,7 +290,7 @@ $(document).ready(function() {
 		if(filterChkFlag ==true){ //필터가 있을 때
 			//6 - 1. 필터인데 reason 선택했는지 체크
 			if( null == $("#_purcReason").val() || '' == $("#_purcReason").val()){
-				Common.alert("* Please Key in the POS Reason. ");
+				Common.alert('<spring:message code="sal.alert.msg.keyInPosResn" />');
 				return;
 			}
 			//6 - 2. 필터인데 해당 시리얼 번호를 입력한 수량에 맞는 개수를 가져왔는지 체크
@@ -310,13 +310,13 @@ $(document).ready(function() {
 					}//loop end
 					// cnt 와 qty 매칭  // serialCnt == idxObj.inputQty
 ////////////////////////////////////////  Serial Number Check ///////////////////////////////////////////////////  추후 시리얼 번호 관리시 주석 해제					
-				    /* if(serialCnt != idxObj.inputQty){
-						Common.alert(" Please check the Serial No. for Filters.<br> Contact the LOG team for Serial.");
+				    if(serialCnt != idxObj.inputQty){
+						Common.alert('<spring:message code="sal.alert.msg.chkFilterNotMatch" />');
 						return;
-					}  */
+					}
 ////////////////////////////////////////Serial Number Check ///////////////////////////////////////////////////
 
-				     //TEMP LOGIC  추후 시리얼 번호 관리시 로직 삭제  
+				 /*     //TEMP LOGIC  추후 시리얼 번호 관리시 로직 삭제  
 				    if(serialCnt < idxObj.inputQty){
 				    	var tempLength = 0;
 				    	tempLength = idxObj.inputQty - serialCnt;
@@ -337,10 +337,10 @@ $(document).ready(function() {
 				    }else if(serialCnt > idxObj.inputQty){
 				    	Common.alert("Serial number quantities can not be more than the quantity entered.");
 				    	return;
-				    }  
+				    }// Temp Logic */
 				}else{
 					console.log("not Filter");
-				}// Temp Logic
+				}
 				//Exsit Filter
 				$("#_mainSerialGrid").css("display" , "");
 			}//loop end
@@ -386,14 +386,14 @@ $(document).ready(function() {
 	//Edit Grid by Half Round
 	AUIGrid.bind(basketGridID, "cellEditEndBefore", function( event ) {
 	    
-		console.log("event.dataField : " + JSON.stringify(event.dataField));
+	//	console.log("event.dataField : " + JSON.stringify(event.dataField));
 		
 		if(event.dataField == 'amt'){
 			var fixVal = 0 ;
 	        fixVal = event.value.toFixed(2);
 	        
-	        console.log("event.value : " + event.value);
-	        console.log("fixVal : " + fixVal);
+	     //   console.log("event.value : " + event.value);
+	     //   console.log("fixVal : " + fixVal);
 	        return fixVal; // 사용자가 입력한 값에 컴마가 있으면 제거 후 적용	
 		}
 		
@@ -416,8 +416,8 @@ $(document).ready(function() {
 	            }
 			}
 			
-			console.log("inputQty : " + inputQty);
-			console.log("times : " + times);
+		//	console.log("inputQty : " + inputQty);
+		//	console.log("times : " + times);
 			//return inputQty*times;
 			return inputQty;
 		}
@@ -453,15 +453,13 @@ function fn_createSerialConfirmGrid(){
 	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
 	        softRemoveRowMode : false,
-	        showRowCheckColumn : false, //checkBox
-	        noDataMessage       : "No Item found.",
-	        groupingMessage     : "Here groupping"
+	        showRowCheckColumn : false
 	};
 	
 	 var seriaConfirmlColumnLayout =  [ 
-                                {dataField : "matnr", headerText : "Filter Code", width : '33%' , editable : false} ,
-                                {dataField : "stkDesc", headerText : "Filter Name", width : '33%' , editable : false},
-                                {dataField : "serialNo", headerText : "Serial", width : '33%' , editable : false},
+                                {dataField : "matnr", headerText : '<spring:message code="sal.title.filterCode" />', width : '33%' , editable : false} ,
+                                {dataField : "stkDesc", headerText :'<spring:message code="sal.title.filterName" />', width : '33%' , editable : false},
+                                {dataField : "serialNo", headerText : '<spring:message code="sal.title.serial" />', width : '33%' , editable : false},
                                 {dataField : "stkId" , visible : true}
                                ];
 	 
@@ -524,31 +522,31 @@ function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataF
 function fn_createBasketGrid(){
 	
 	 var basketColumnLayout =  [ 
-	                            {dataField : "stkCode", headerText : "Item Code", width : '10%' , editable : false}, 
-	                            {dataField : "stkDesc", headerText : "Item Description", width : '30%', editable : false},
-	                            {dataField : "qty", headerText : "Inventory", width : '10%', editable : false},
-	                            {dataField : "inputQty", headerText : "Qty", width : '10%', editable : true, dataType : "numeric"},
-	                            {dataField : "amt", headerText : "Unit Price", width : '10%', dataType : "numeric", formatString : "#,##0.00",editRenderer : {
+	                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%' , editable : false}, 
+	                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%', editable : false},
+	                            {dataField : "qty", headerText : '<spring:message code="sal.title.inventory" />', width : '10%', editable : false},
+	                            {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '10%', editable : true, dataType : "numeric"},
+	                            {dataField : "amt", headerText :'<spring:message code="sal.title.unitPrice" />', width : '10%', dataType : "numeric", formatString : "#,##0.00",editRenderer : {
 	                                type : "InputEditRenderer",
 	                                onlyNumeric : true,
 	                                allowPoint : true
 	                            }},
-	                            {dataField : "subChanges", headerText : "Exclude GST", width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00",expFunction : function(  rowIndex, columnIndex, item, dataField ) { 
+	                            {dataField : "subChanges", headerText : '<spring:message code="sal.title.excludeGST" />', width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00",expFunction : function(  rowIndex, columnIndex, item, dataField ) { 
 	                                var subObj = fn_calculateAmt(item.amt , item.inputQty);
 	                                return Number(subObj.subChanges); 
 	                            }},
-	                            {dataField : "taxes", headerText : "GST(6%)", width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00", expFunction : function(  rowIndex, columnIndex, item, dataField ) { 
+	                            {dataField : "taxes", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00", expFunction : function(  rowIndex, columnIndex, item, dataField ) { 
 	                                var subObj = fn_calculateAmt(item.amt , item.inputQty);
 	                                return Number(subObj.taxes); 
 	                            }},
 	                            {
 	                                dataField : "undefined", 
-	                                headerText : "SERIAL", 
+	                                headerText : '<spring:message code="sal.title.serial" />', 
 	                                width : '10%',
 	                                styleFunction : cellStyleFunction,
 	                                renderer : {
 	                                         type : "ButtonRenderer", 
-	                                         labelText : "SERIAL", 
+	                                         labelText : '<spring:message code="sal.title.serial" />', 
 	                                         onclick : function(rowIndex, columnIndex, value, item) {
 	                                        	
 	                                        	 //filter Grid`s Serial No
@@ -581,9 +579,7 @@ function fn_createBasketGrid(){
 	            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
 	            softRemoveRowMode : false,
-	            showRowCheckColumn : true, //checkBox
-	            noDataMessage       : "No Item found.",
-	            groupingMessage     : "Here groupping"
+	            showRowCheckColumn : true
 	    };
 	    
 	    basketGridID = GridCommon.createAUIGrid("#basket_grid_wrap", basketColumnLayout,'', gridPros);  
@@ -598,8 +594,8 @@ function fn_initField(){
 	var tempModule =  $("#_posModuleType").val();
 	var tempSysType = $("#_posSystemType").val();
 	
-	console.log("tempModule : " + tempModule);
-	console.log("tempSysType : " + tempSysType);
+//	console.log("tempModule : " + tempModule);
+// console.log("tempSysType : " + tempSysType);
 	
 	if($("#_posModuleType").val() == 2390){ //2390 == POS Sales
 	
@@ -705,16 +701,16 @@ function f_multiCombo(){
 <input type="hidden" id="_whBrnchId" value="${whBrnchId}">
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Purchase Items Search</h1>
+<h1><spring:message code="sal.title.purcItmSrch" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_itmSrchPopClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_itmSrchPopClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a id="_basketAdd">Add</a></p></li>
+    <li><p class="btn_blue"><a id="_basketAdd"><spring:message code="sal.btn.add" /></a></p></li>
 </ul>
 
 <form id="_itemSrcForm">
@@ -731,17 +727,17 @@ function f_multiCombo(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Item Type</th>
+    <th scope="row"><spring:message code="sal.title.itmType" /></th>
     <td>
     <select class="w100p" id="_purcItemType"></select>
     </td>
-    <th scope="row">Item</th>
+    <th scope="row"><spring:message code="sal.title.item" /></th>
     <td>
     <select class="w100p" id="_purcItems" name="itmLists"></select>
     </td>
 </tr>
 <tr>
-<th scope="row">POS Reason</th>
+<th scope="row"><spring:message code="sal.title.posResn" /></th>
     <td>
     <select class="w100p disabled" id="_purcReason" name="purcReason" disabled="disabled"></select>
     </td>
@@ -752,11 +748,11 @@ function f_multiCombo(){
 </form>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Item List</h2>
+<h2><spring:message code="sal.title.itmList" /></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="_chkDelBtn">Delete</a></p></li>
+    <li><p class="btn_grid"><a id="_chkDelBtn"><spring:message code="sal.btn.delete" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -773,7 +769,7 @@ function f_multiCombo(){
 <div id="_gridArea">
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Filter Serial Information</h2>
+<h2><spring:message code="sal.title.filterSerialInfo" /></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -782,7 +778,7 @@ function f_multiCombo(){
 
 </div>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_itemSrchSaveBtn">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_itemSrchSaveBtn"><spring:message code="sal.btn.save2" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

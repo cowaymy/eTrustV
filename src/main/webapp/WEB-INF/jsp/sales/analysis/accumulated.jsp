@@ -6,7 +6,7 @@
 function fn_report(type) {
 	
 	if($("#yyyymmDate").val() == null || $("#yyyymmDate").val() == ''){
-		Common.alert("Please key in date.");
+		Common.alert('<spring:message code="sal.alert.msg.keyInDate" />');
 		return;
 	}
 	
@@ -34,7 +34,7 @@ function fn_report(type) {
 //	alert($("#V_INPUTDATE").val());
 	
 	var option = {
-        isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+        isProcedure : true 
     };
 
     Common.report("dataForm", option);
@@ -50,7 +50,7 @@ function fn_report(type) {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Accumulated Account Report</h2>
+<h2><spring:message code="sal.title.accumulatedAccRpt" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -67,21 +67,21 @@ function fn_report(type) {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Report Type</th>
+    <th scope="row"><spring:message code="sal.text.reportType" /></th>
     <td>
     <select class="w100p" id="reportType" name="reportType">
-        <option value="0">Report Accumulated Account</option>
-        <option value="1">Report Rental Details Account</option>
-        <option value="2">Report Membershipsales Details Account</option>
+        <option value="0"><spring:message code="sal.combo.text.rptAccumulatedAcc" /></option>
+        <option value="1"><spring:message code="sal.combo.text.rptRenDetAcc" /></option>
+        <option value="2"><spring:message code="sal.combo.text.rptMemDetAcc" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Date</th>
-    <td><input type="text" id="yyyymmDate" name="yyyymmDate" title="기준년월" placeholder="DD/MM/YYYY" class="j_date2 w100p" /></td>
+    <th scope="row"><spring:message code="sal.title.date" /></th>
+    <td><input type="text" id="yyyymmDate" name="yyyymmDate"  placeholder="DD/MM/YYYY" class="j_date2 w100p" /></td>
 </tr>
 <tr>
-    <td colspan="2"><p><span>(Valid report date : Start on 1/1/2013 onwards)</span></p></td>
+    <td colspan="2"><p><span><spring:message code="sal.title.text.valReqDate" /></span></p></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -90,9 +90,8 @@ function fn_report(type) {
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_report('PDF');">Generate In PDF</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_report('EXCEL');">Generate In Excel</a></p></li>
-    <li><p class="btn_blue2"><a href="#">Clear</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_report('PDF');"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_report('EXCEL');"><spring:message code="sal.btn.genExcel" /></a></p></li>
 </ul>
 
 </section><!-- content end -->

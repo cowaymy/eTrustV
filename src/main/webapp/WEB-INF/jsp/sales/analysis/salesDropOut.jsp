@@ -53,15 +53,15 @@ function validRequiredField(){
 	
 	if(($("#dpSalesDateFr").val() == null || $("#dpSalesDateFr").val().length == 0) || ($("#dpSalesDateTo").val() == null || $("#dpSalesDateTo").val().length == 0)){
         valid = false;
-        message += "* Please key in the Sales Date (From & To).\n";
+        message += '<spring:message code="sal.alert.msg.keyInSalesDate" />';
     }
 	if($('#cmbAppType :selected').length < 0){
 		valid = false;
-        message += "* Please select an Application Type.\n";
+        message += '<spring:message code="sal.alert.msg.salAppType" />';
 	}
 	
 	if(valid == false){
-		Common.alert("Sales Dropout Listing" + DEFAULT_DELIMITER + message);
+		Common.alert('<spring:message code="sal.alert.msg.salDropListing" />' + DEFAULT_DELIMITER + message);
 	}
 	
 	return valid;
@@ -138,13 +138,13 @@ function btnGenerate_Click(){
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-    <li>Analysis</li>
-    <li>Auto Debit & Aging</li>
+    <li><spring:message code="sal.title.analysis" /></li>
+    <li><spring:message code="sal.alert.msg.salDropListing" /></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Sales Dropout Listing</h2>
+<h2><spring:message code="sal.alert.msg.salDropListing" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -158,36 +158,36 @@ function btnGenerate_Click(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Sales Date</th>
+    <th scope="row"><spring:message code="sal.title.salDate" /></th>
     <td>
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpSalesDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpSalesDateTo"/></p>
     </td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbAppType" data-placeholder="App Type">
-        <option value="66" selected>Rental</option>
-        <option value="67" selected>Outright</option>
-        <option value="68" selected>Installment</option>
+        <option value="66" selected><spring:message code="sal.combo.text.rental" /></option>
+        <option value="67" selected><spring:message code="sal.combo.text.outright" /></option>
+        <option value="68" selected><spring:message code="sal.combo.text.installment" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Sales Type</th>
+    <th scope="row"><spring:message code="sal.title.salesType" /></th>
      <td>
-        <label><input type="radio" name="searchby" id="btnAll" value="btnAll" checked/><span>All Sales</span></label>
-        <label><input type="radio" name="searchby" id="btnOnly" value="btnOnly"/><span>Drop Out Only</span></label>
+        <label><input type="radio" name="searchby" id="btnAll" value="btnAll" checked/><span><spring:message code="sal.title.allSales" /></span></label>
+        <label><input type="radio" name="searchby" id="btnOnly" value="btnOnly"/><span><spring:message code="sal.title.dropOutOnly" /></span></label>
      </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a onclick="javascript: btnGenerate_Click()">Generate to Excel</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: clearBtn()">Clear</a></p></li>
+    <li><p class="btn_blue2"><a onclick="javascript: btnGenerate_Click()"><spring:message code="sal.btn.genExcel" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: clearBtn()"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

@@ -21,9 +21,7 @@ var gridPros = {
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
         softRemoveRowMode : false,
-        showRowCheckColumn : true, //checkBox
-        noDataMessage       : "No Item found.",
-        groupingMessage     : "Here groupping"
+        showRowCheckColumn : true
 };
 
 $(document).ready(function() {
@@ -42,7 +40,7 @@ $(document).ready(function() {
 		
 		//Validation
 		if( null == chkArr || chkArr.length <= 0){
-			Common.alert('* Please Select Serial Number .');
+			Common.alert('<spring:message code="sal.alert.msg.selSerialNum" />');
 			return;
 		}
 		
@@ -93,9 +91,9 @@ function setSerialGridData() {
 function createSerialGrid() {
 	
 	 var serialColumnLayout =  [ 
-                                {dataField : "matnr", headerText : "Filter Code", width : '33%' , editable : false} ,
-                                {dataField : "stkDesc", headerText : "Filter Name", width : '33%' , editable : false},
-                                {dataField : "serialNo", headerText : "Serial", width : '33%' , editable : false} 
+                                {dataField : "matnr", headerText : '<spring:message code="sal.title.filterCode" />', width : '33%' , editable : false} ,
+                                {dataField : "stkDesc", headerText : '<spring:message code="sal.title.filterName" />', width : '33%' , editable : false},
+                                {dataField : "serialNo", headerText : '<spring:message code="sal.title.serial" />', width : '33%' , editable : false} 
                                ];
      serialGrid = GridCommon.createAUIGrid("#serialList_grid_wrap", serialColumnLayout,'', gridPros);  
      AUIGrid.resize(serialGrid , 960, 300);
@@ -112,9 +110,9 @@ function createSerialGrid() {
     <input type="hidden" name="tempSerialArr" id="_tempSerialArr" value="${tempSerialArr}'">
 </form> --%>
 <header class="pop_header"><!-- pop_header start -->
-<h1>Filter Serial Search</h1>
+<h1><spring:message code="sal.title.filterSerialSrch" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_filterSrchCloseBtn">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_filterSrchCloseBtn"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -125,7 +123,7 @@ function createSerialGrid() {
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul> -->
 <aside class="title_line"><!-- title_line start -->
-<h2>Filter Serial List</h2>
+<h2><spring:message code="sal.title.filterSerialList" /></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -133,7 +131,7 @@ function createSerialGrid() {
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_filterSaveBtn">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_filterSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 
