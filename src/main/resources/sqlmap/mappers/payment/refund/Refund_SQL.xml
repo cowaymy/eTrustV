@@ -16,7 +16,8 @@ SELECT A.ORD_ID                          ORD_ID,
        A.ISSUEBANKCODE                   ISSUE_BANK_CODE,
        A.ISSUEBANK                       ISSUE_BANK,
        A.BANK_ACC_ID                     BANK_ACC_ID,
-       A.BANK_ACC_NAME                   BANK_ACC_NAME,
+        (case a.pay_mode when 'Credit Card' then (case when SUBSTR(a.WOR_NO,1,3) = 'EOR' or SUBSTR(a.WOR_NO,1,3) = 'AOR' or SUBSTR(a.WOR_NO,1,3) = 'ADR' then '2710/204'|| ' - ' || a.issuebank else (acct.ACC_CODE || ' - ' || a.issuebank) end)else (acct.ACC_CODE || ' - ' || a.issuebank) end ) bank_acc_name,
+       <!--  A.BANK_ACC_NAME                   BANK_ACC_NAME,-->
        A.BANKACCNO                       BANK_ACC_NO,
        A.CC_HOLDER_NAME                  CC_HOLDER_NAME,
        A.CC_NO                           CC_NO,
@@ -592,6 +593,7 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
               ON CUSTACC.CUST_ACC_ID = RPS.CUST_ACC_ID
        LEFT JOIN SAL0028D CUSTCRC
               ON CUSTCRC.CUST_CRC_ID = RPS.CUST_CRC_ID
+               left join SYS0001M acct on acct.ACC_id = a.bank_acc_id
 WHERE  A.WOR_NO NOT LIKE 'ROR%'
        AND A.ORD_ID NOT IN (SELECT SALES_ORD_ID FROM   PAY0045D)
        <if test="startDt != null and startDt != ''">
@@ -658,7 +660,8 @@ GROUP  BY A.ORD_ID,
           BANK.NAME,
           CUSTACC.CUST_ACC_NO,
           CUSTCRC.CUST_CRC_OWNER,
-          CUSTCRC.CUST_ORI_CRC_NO
+          CUSTCRC.CUST_ORI_CRC_NO,
+           acct.ACC_CODE
 ORDER  BY A.ORD_ID
     </select>
 
@@ -740,8 +743,7 @@ ORDER  BY A.ORD_ID
        Project1.PAY_TYPE_ID PAY_TYPE_ID  ,
        Project1.PAY_ITM_ID PAY_ITM_ID  ,
        Project1.ACC_CODE ACC_CODE  ,
-       (case Project1.PAY_MODE when 'Credit Card' then (case when SUBSTR(Project1.WOR_NO,1,3) = 'EOR' or SUBSTR(Project1.WOR_NO,1,3) = 'AOR' or SUBSTR(Project1.WOR_NO,1,3) = 'ADR' then '2710/204'|| ' - ' || Project1.ACC_DESC else (Project1.ACC_CODE || ' - ' || Project1.ACC_DESC) end) else
-     (Project1.ACC_CODE || ' - ' || Project1.ACC_DESC) end) AS BANK_ACC  ,
+       (Project1.ACC_CODE || ' - ' || Project1.ACC_DESC) AS BANK_ACC  ,
        Project1.ACC_DESC ACC_DESC  ,
        Project1.NAME NAME  ,
        Project1.REF_NO REF_NO  ,
