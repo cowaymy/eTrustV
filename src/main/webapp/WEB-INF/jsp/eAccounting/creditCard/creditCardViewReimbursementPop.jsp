@@ -62,10 +62,10 @@ var newGridColumnLayout = [ {
     dataField : "chrgUserName",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
-    dataField : "sCostCentr",
+    dataField : "costCentr",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
-    dataField : "sCostCentrName",
+    dataField : "costCentrName",
     visible : false // Color 칼럼은 숨긴채 출력시킴
 }, {
     dataField : "clmMonth",
@@ -74,10 +74,10 @@ var newGridColumnLayout = [ {
     dataField : "invcDt",
     headerText : '<spring:message code="crditCardNewReim.invcBrDt" />'
 }, {
-    dataField : "costCentr",
+    dataField : "sCostCentr",
     headerText : '<spring:message code="pettyCashCustdn.costCentrCode" />'
 }, {
-    dataField : "costCentrName",
+    dataField : "sCostCentrName",
     headerText : '<spring:message code="pettyCashCustdn.costCentrName" />',
     style : "aui-grid-user-custom-left"
 }, {
