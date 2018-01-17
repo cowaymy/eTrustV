@@ -79,6 +79,7 @@ import com.coway.trust.api.mobile.services.sales.OutStandingResultVo;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerDto;
 import com.coway.trust.api.mobile.services.sales.RentalServiceCustomerForm;
 import com.coway.trust.biz.common.AdaptorService;
+import com.coway.trust.biz.logistics.returnusedparts.ReturnUsedPartsService;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.biz.services.as.ServicesLogisticsPFCService;
 import com.coway.trust.biz.services.bs.HsManualService;
@@ -123,6 +124,12 @@ public class ServiceApiController {
 	
 	@Autowired
 	private AdaptorService adaptorService;	
+	
+	@Resource(name = "returnUsedPartsService")
+	private ReturnUsedPartsService returnUsedPartsService;
+	
+	
+	
 	
 	@ApiOperation(value = "Heart Service Job List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/heartServiceJobList", method = RequestMethod.GET)
@@ -546,8 +553,17 @@ public class ServiceApiController {
 						MSvcLogApiService.updateSuccessStatus(transactionId);
 					}
 				}
+				 
+					//>>>>>>>>>>>>>>>>>logs call
+					LOGGER.info(" serviceNo>>>>>> : {}", hsTransLogs1.get(i).get("serviceNo").toString());
+					returnUsedPartsService.returnPartsInsert(hsTransLogs1.get(i).get("serviceNo").toString());
 			}
-		}   		
+
+			
+		}
+		
+		
+
 		
 		
 		
