@@ -1171,11 +1171,13 @@ SELECT ROWNUM AS rnum ,
                                    Distinct1.STK_ID STK_ID  ,
                                    Distinct1.STK_CODE STK_CODE  ,
                                    Distinct1.STK_DESC STK_DESC,
+                                   Distinct1.SERIAL_CHK,
                                    Distinct1.SRV_FILTER_ID,
                                    Distinct1.srv_config_id
                               FROM ( SELECT DISTINCT Extent3.STK_ID STK_ID  ,
                                                      Extent3.STK_CODE STK_CODE  ,
                                                      Extent3.STK_DESC STK_DESC  ,
+                                                     Extent3.SERIAL_CHK,
                                                      1 C1,
                                                      Filter1.SRV_FILTER_ID,
                                                      Filter1.srv_config_id
@@ -1228,7 +1230,9 @@ SELECT ROWNUM AS rnum ,
             select  distinct1.SRV_FILTER_STK_ID AS STK_ID,
                            distinct1.STK_CODE,
                            distinct1.STK_DESC,
+                           distinct1.SERIAL_CHK,
                            c.BS_RESULT_ITM_ID,
+                           c.SERIAL_NO,
                            CASE WHEN distinct1.SRV_FILTER_STK_ID = c.BS_RESULT_PART_ID 
                                    THEN C.BS_RESULT_PART_QTY
                                    ELSE 0
@@ -1236,6 +1240,7 @@ SELECT ROWNUM AS rnum ,
                FROM( SELECT  e.SRV_FILTER_STK_ID AS STK_ID,
                            f.STK_CODE,
                            f.STK_DESC,
+                           f.SERIAL_CHK,
                            e.SRV_FILTER_STK_ID              
                      FROM SVC0008D A,
                               SAL0090D D,
@@ -1245,7 +1250,7 @@ SELECT ROWNUM AS rnum ,
                       AND D.SRV_CONFIG_ID = E.SRV_CONFIG_ID
                       AND E.SRV_FILTER_STK_ID = F.STK_ID
                       AND E.SRV_FILTER_STUS_ID = '1'
-                      AND A.SCHDUL_ID = #{selSchdulId} ) distinct1, (select Y.BS_RESULT_PART_ID, BS_RESULT_ITM_ID, BS_RESULT_PART_QTY
+                      AND A.SCHDUL_ID = #{selSchdulId} ) distinct1, (select Y.BS_RESULT_PART_ID, Y.SERIAL_NO, BS_RESULT_ITM_ID, BS_RESULT_PART_QTY
 		                                                                  from SVC0007D Y ,(SELECT SCHDUL_ID,
 		                                                                                   MAX(X.RESULT_ID) AS RESULT_ID
 		                                                                                   FROM SVC0006D X 
@@ -1779,7 +1784,7 @@ SELECT ROWNUM AS rnum ,
                     , sysdate
                     , #{bsResultCrtUserId}
                     , #{bsResultFilterClm}
-                    , #{SerialNo}
+                    , nvl(#{serialNo}, '')
             )
             </insert>
 
@@ -3041,6 +3046,7 @@ SELECT ROWNUM AS rnum ,
             ,BS_RESULT_CRT_DT
             ,BS_RESULT_CRT_USER_ID
             ,BS_RESULT_FILTER_CLM
+            ,SERIAL_NO
             )
             values
             (
@@ -3053,6 +3059,7 @@ SELECT ROWNUM AS rnum ,
             ,sysdate
             ,#{BSResultCreateBy}
             ,nvl(#{BSResultFilterClaim},0)    
+            ,nvl(#{SerialNo}, '')
             )
           </insert>
           

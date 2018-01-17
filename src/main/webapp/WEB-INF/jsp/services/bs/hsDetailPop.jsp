@@ -57,10 +57,15 @@
 						        }*/
                 editable : true
                 }, {                        
-                    dataField : "SerialNo",
+                    dataField : "serialNo",
                     headerText : "Serial No",
                     width : 240	                            
-            }];
+                }, {                        
+                    dataField : "serialChk",
+                    headerText : "Serial Check",
+                    width : 100,
+                    visible:false   
+                }];
             // 그리드 속성 설정
             var gridPros = {
                 // 페이징 사용       
@@ -118,7 +123,7 @@
 	                	     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 	                	     console.log(selectedItems);
 	                	     
-	                	     var ct = selectedItems[0].item.c5;
+	                	     var ct = selectedItems[0].item.c5;//////
 	                	     var sk = event.item.stkId;
 	                	     
 		                	 var  availQty =isstckOk(ct ,sk);
@@ -172,7 +177,7 @@
     	   
     	   AUIGrid.forceEditingComplete(myDetailGridID, null, false);
     	   AUIGrid.updateAllToValue(myDetailGridID, "name", '');
-    	   AUIGrid.updateAllToValue(myDetailGridID, "SerialNo", '');
+    	   AUIGrid.updateAllToValue(myDetailGridID, "serialNo", '');
     	   
            if ($("#cmbStatusType1").val() == 4) {    // Completed
         	   $("input[name='settleDate']").attr('disabled', false);
@@ -277,6 +282,31 @@
                 return false;
             }  */
                         
+            
+            // 시리얼넘버체크
+            //수정된 행 아이템들(배열)
+            var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
+            
+            var serialChkCode = new Array();
+            var serialChkName = new Array();
+            var j = 0;
+            for (var i = 0; i < editedRowItems.length; i++) {
+            	if (parseInt(editedRowItems[i]["name"]) > 0 && editedRowItems[i]["serialChk"] == "Y" &&
+            			(editedRowItems[i]["serialNo"] == null || editedRowItems[i]["serialNo"] == "") ) {
+            		serialChkCode[j] = editedRowItems[i]["stkCode"];
+                    serialChkName[j] = editedRowItems[i]["stkDesc"];
+                    j++;
+            	}
+            }
+            
+            var serialChkList = "";
+            if (serialChkCode.length > 0) {
+            	for (var i = 0; i < serialChkCode.length; i++) {
+            		serialChkList = serialChkList + "<br/>" + serialChkCode[i] + " - " + serialChkName[i];
+            	}
+            	Common.alert("Please insert 'Serial No' for" + serialChkList);
+            	return false;
+            }
             
              //var jsonObj =  GridCommon.getEditData(myDetailGridID);
             // add by jgkim

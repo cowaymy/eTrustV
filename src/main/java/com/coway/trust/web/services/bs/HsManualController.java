@@ -409,6 +409,7 @@ public class HsManualController {
 		model.addAttribute("failReasonList", failReasonList);
 		model.addAttribute("MOD", params.get("MOD"));
 		//model.addAttribute("serMemList", serMemList);
+		model.addAttribute("ROW", params.get("ROW"));
 
 		return "services/bs/hsEditPop";
 
@@ -497,6 +498,7 @@ public class HsManualController {
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 		
+		logger.debug("insList : {}", insList);
 		resultValue = hsManualService.addIHsResult(formMap, insList, sessionVO);
 		
 		int status = 0;

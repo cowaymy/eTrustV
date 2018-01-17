@@ -32,17 +32,17 @@ var myDetailGridData = null;
         var columnLayout = [ {
                     dataField:"stkCode",
                     headerText:"Filter Code",
-                    width:200,
+                    width:140,
                     height:30
                 }, {                        
                     dataField : "stkId",
                     headerText : "Filter id",
-                    width : 140,
+                    width : 240,
                     visible:false   
                 }, {                        
                     dataField : "stkDesc",
                     headerText : "Filter Name",
-                    width : 440              
+                    width : 240              
                     }, {
                     dataField : "bsResultItmId",
                     headerText : "Filter Name",
@@ -53,13 +53,22 @@ var myDetailGridData = null;
                     headerText : "Filter Quantity",
                     width : 120,
                     dataType : "numeric",
-                    editRenderer : {
+                    /* editRenderer : {
                         type : "NumberStepRenderer",
                         min : 0,
                         max : 50,
                         step : 1,
                         textEditable : true
-                    }
+                    } */
+            }, {                        
+                dataField : "serialNo",
+                headerText : "Serial No",
+                width : 240                             
+            }, {                        
+                dataField : "serialChk",
+                headerText : "Serial Check",
+                width : 100,
+                visible:false   
             }];
             // 그리드 속성 설정
             var gridPros = {
@@ -83,7 +92,10 @@ var myDetailGridData = null;
                 wrapSelectionMove : true,
                 
                 // 줄번호 칼럼 렌더러 출력
-                showRowNumColumn : true
+                showRowNumColumn : true,
+                
+                // 수정한 셀에 수정된 표시(마크)를 출력할 지 여부
+                showEditedCellMarker : false
         
             };
             
@@ -91,7 +103,7 @@ var myDetailGridData = null;
                 myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
                 
                 AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
-                    if (event.columnIndex == 4){
+                    if (event.columnIndex == 4 || event.columnIndex == 5){
                         if ($("#cmbStatusType2").val() == 4) {    // Completed
                             return true;
                         } else if ($("#cmbStatusType2").val() == 21) {    // Failed
@@ -102,6 +114,34 @@ var myDetailGridData = null;
                             return false;
                         }
                     }
+                });
+                
+                // 에디팅 정상 종료 이벤트 바인딩
+                AUIGrid.bind(myDetailGridID, "cellEditEnd", function (event){
+                        console.log(event);
+                     
+                        //가용재고 체크 하기 
+                        if(event.columnIndex == 4){
+                            
+                                 //마스터 그리드 
+                                 var selectedItem = AUIGrid.getItemByRowIndex(myGridID, '${ROW}');
+                                 console.log(selectedItem);
+                                 
+                                 var ct = selectedItem.c5;
+                                 var sk = event.item.stkId;
+                                 
+                                 var  availQty =isstckOk(ct ,sk);
+                                 
+                                 if(availQty == 0){
+                                     Common.alert('*<b> There are no available stocks.</b>');
+                                     AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+                                 }else{
+                                     if  ( availQty  <  Number(event.value) ){
+                                         Common.alert('*<b> Not enough available stock to the member.  <br> availQty['+ availQty +'] </b>');
+                                         AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+                                     }
+                                 }
+                        }       
                 });
                 
     }
@@ -331,7 +371,8 @@ var myDetailGridData = null;
             $("#cmbStatusType2").change(function(){
                 
                 AUIGrid.forceEditingComplete(myDetailGridID, null, false);
-                AUIGrid.updateAllToValue(myDetailGridID, "name", '0');
+                AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+                AUIGrid.updateAllToValue(myDetailGridID, "serialNo", '');
                 
                 if ($("#cmbStatusType2").val() == 4) {    // Completed
                     $("input[name='settleDt']").attr('disabled', false);
@@ -366,12 +407,14 @@ var myDetailGridData = null;
              
              AUIGrid.setGridData(myDetailGridID, result);   
              
-             // Grid 안의 값이 음수인 경우 0으로 출력
+             // Grid 안의 값이 음수 또는 0인 경우 빈칸으로 출력
              var cnt = result.length;
              for (var i=0; i<cnt; i++) {
-                 var minusCheck = AUIGrid.getCellValue(myDetailGridID, i, "name");
-                 if (minusCheck < 0) {
-                     AUIGrid.updateRow(myDetailGridID, { name : "0" }, i, false);
+                 var qtyCheck = AUIGrid.getCellValue(myDetailGridID, i, "name");
+                 if (qtyCheck < 0) {
+                     AUIGrid.updateRow(myDetailGridID, { name : "" }, i, false);
+                 } else if (qtyCheck == 0) {
+                     AUIGrid.updateRow(myDetailGridID, { name : "" }, i, false);
                  }
              }
              
@@ -448,6 +491,33 @@ var myDetailGridData = null;
                  return false;
              }
          } */
+         
+          // 시리얼넘버체크
+          //수정된 행 아이템들(배열)
+          var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
+          
+          var serialChkCode = new Array();
+          var serialChkName = new Array();
+          var j = 0;
+          for (var i = 0; i < editedRowItems.length; i++) {
+        	  alert("Qty : " + parseInt(editedRowItems[i]["name"]) + " / serailChk : " + editedRowItems[i]["serialChk"]
+        	            	  + " / serialNo : " + editedRowItems[i]["serialNo"]);
+              if (parseInt(editedRowItems[i]["name"]) > 0 && editedRowItems[i]["serialChk"] == "Y" &&
+                      (editedRowItems[i]["serialNo"] == null || editedRowItems[i]["serialNo"] == "") ) {
+                  serialChkCode[j] = editedRowItems[i]["stkCode"];
+                  serialChkName[j] = editedRowItems[i]["stkDesc"];
+                  j++;
+              }
+          }
+          
+          var serialChkList = "";
+          if (serialChkCode.length > 0) {
+              for (var i = 0; i < serialChkCode.length; i++) {
+                  serialChkList = serialChkList + "<br/>" + serialChkCode[i] + " - " + serialChkName[i];
+              }
+              Common.alert("Please insert 'Serial No' for" + serialChkList);
+              return false;
+          }
     	 
     	  var resultList = new Array();
     	     $("#cmbCollectType1").val(editHSResultForm.cmbCollectType.value);
@@ -500,6 +570,18 @@ var myDetailGridData = null;
 //             AUIGrid.resize(gridName);
 //         }, 100);
     }    
+        
+
+    function isstckOk(ct , sk){
+        var availQty = 0;
+        Common.ajaxSync("GET", "/services/as/getSVC_AVAILABLE_INVENTORY.do",{CT_CODE: ct  , STK_CODE: sk }, function(result) {
+                console.log("isstckOk.");
+                console.log( result);
+                availQty = result.availQty;
+        });
+        return availQty;
+    }
+    
     </script>
     
     

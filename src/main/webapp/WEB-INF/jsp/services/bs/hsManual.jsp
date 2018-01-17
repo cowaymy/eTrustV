@@ -255,8 +255,8 @@
                                   $("#_salesOrdId").val(item.salesOrdId);
                                   $("#_openGb").val("edit");
                                   $("#_brnchId").val(item.brnchId);
-
-                                  Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
+                                  
+                                  Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT&ROW="+rowIndex, $("#popEditForm").serializeJSON(), null , true , '');
                   }
            }
                 }];

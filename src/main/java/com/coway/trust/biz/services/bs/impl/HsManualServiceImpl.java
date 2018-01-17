@@ -520,7 +520,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   		            if("".equals(filterLastserial)){
   		            	docSub.put("prvSerialNo", filterLastserial);
   		            }else {
-  		            	docSub.put("lastSerialNo", docSub.get("SerialNo"));
+  		            	docSub.put("lastSerialNo", docSub.get("serialNo"));
   		            }
 
   	                docSub.put("settleDate", params.get("settleDate"));
@@ -1166,6 +1166,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			//bsd.put("BSResultCreateAt",0 );
 			bsd.put("BSResultCreateBy",String.valueOf(sessionVO.getUserId()) );
 			bsd.put("BSResultFilterClaim",String.valueOf(1));
+			bsd.put("SerialNo",String.valueOf(docSub.get("serialNo") ));
 			
 			bsResultDet.add(bsd);
 		}
