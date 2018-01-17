@@ -14,6 +14,9 @@ $(document).ready(function(){
     $('#lostListing').click(function() {
         Common.popupDiv("/sales/trBook/trBookMgmtLostReportListPop.do", null, null, true);
     });
+    $('#reqBatch').click(function() {
+        Common.popupDiv("/sales/trBook/requestBahchListPop.do", null, null, true);
+    });
      
 });
 
@@ -175,6 +178,10 @@ function fn_trBookTranBulk(){
 	Common.popupDiv("/sales/trBook/trBookTranBulkPop.do",$("#listSForm").serializeJSON(), null, true, "trBookTranBulkPop");
 }
 
+function fn_requestBatch(){
+	Common.popupDiv("/sales/trBook/requestBatchPop.do",$("#listSForm").serializeJSON(), null, true, "requestBatchPop");
+}
+
 function fn_getBookActionValidation(){
 	
 	var valid = true;
@@ -295,6 +302,12 @@ function fn_getBookActionValidation(){
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn"><a href="#" id="lostListing">Lost Listing</a></p></li>
 		</c:if>
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+        <li><p class="link_btn"><a href="#" onclick="javascript:fn_trBookTransaction();">Transaction List</a></p></li>
+        </c:if>
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+        <li><p class="link_btn"><a href="#" id="reqBatch">Request Batch</a></p></li>
+        </c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
@@ -320,9 +333,6 @@ function fn_getBookActionValidation(){
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookReturn();">Return</a></p></li>          <!-- TODO 권한 120  -->
-	</c:if>
-	<c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookTransaction();">Transaction List</a></p></li>
 	</c:if>
 </ul>
 
