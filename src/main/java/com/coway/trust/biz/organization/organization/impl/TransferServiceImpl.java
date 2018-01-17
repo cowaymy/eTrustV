@@ -83,13 +83,18 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 			memberPromoEntry.put("updated", new Date());
 			memberPromoEntry.put("updator", sessionVo.getUserId());
 			memberPromoEntry.put("deptCodeFrom", memberModel.get("deptcode1"));
-			memberPromoEntry.put("deptCodeTo", deptCode.get("deptCode"));
+			if (memberModel.get("memberlvl1").toString().equals("4")) {
+				memberPromoEntry.put("deptCodeTo", deptCode.get("deptCode"));
+			} else {
+				memberPromoEntry.put("deptCodeTo", memberModel.get("deptcode1"));
+			}
 			memberPromoEntry.put("parentDeptCodeFrom", parentFrom.get("deptCode"));
 			memberPromoEntry.put("parentIDFrom", parentFrom.get("memId"));
-			if (memberModel.get("memberlvl1").toString().equals("4")) {
+			if (memberModel.get("memberlvl1").toString().equals("4")) {//////수정가능
 				memberPromoEntry.put("parentDeptCodeTo", deptCode.get("deptCode"));
 			} else {
-				memberPromoEntry.put("parentDeptCodeTo", parentTo.get("deptCode"));
+//				memberPromoEntry.put("parentDeptCodeTo", parentTo.get("deptCode"));
+				memberPromoEntry.put("parentDeptCodeTo", deptCode.get("deptCode"));
 			}
 //			memberPromoEntry.put("parentDeptCodeTo", parentTo.get("deptCode"));
 			memberPromoEntry.put("parentIDTo", deptCode.get("memId"));
@@ -102,12 +107,19 @@ public class TransferServiceImpl extends EgovAbstractServiceImpl implements Tran
 
 			if (memberModel.get("memberlvl1").toString().equals("4")) {
 				memberPromoEntry.put("lastDeptCode",deptCode.get("deptCode"));
-			} else {
-				memberPromoEntry.put("lastDeptCode",deptCode.get("lastDeptCode") );
+				memberPromoEntry.put("lastGrpCode", deptCode.get("lastGrpCode"));
+				memberPromoEntry.put("lastOrgCode", deptCode.get("lastOrgCode"));
+			} else if (memberModel.get("memberlvl1").toString().equals("3")) {
+				memberPromoEntry.put("lastDeptCode", memberModel.get("deptcode1"));
+				memberPromoEntry.put("lastGrpCode", deptCode.get("lastGrpCode"));
+				memberPromoEntry.put("lastOrgCode", deptCode.get("lastOrgCode"));
+			} else if (memberModel.get("memberlvl1").toString().equals("2")) {
+				memberPromoEntry.put("lastGrpCode", memberModel.get("deptcode1"));
+				memberPromoEntry.put("lastOrgCode", deptCode.get("lastOrgCode"));
 			}
 //			memberPromoEntry.put("lastDeptCode",deptCode.get("lastDeptCode") );
-			memberPromoEntry.put("lastGrpCode", deptCode.get("lastGrpCode"));
-			memberPromoEntry.put("lastOrgCode", deptCode.get("lastOrgCode"));
+//			memberPromoEntry.put("lastGrpCode", deptCode.get("lastGrpCode"));
+//			memberPromoEntry.put("lastOrgCode", deptCode.get("lastOrgCode"));
 			memberPromoEntry.put("evtApplyDt", transferDate);
 
 			logger.debug("memberPromoEntry : {}",memberPromoEntry);
