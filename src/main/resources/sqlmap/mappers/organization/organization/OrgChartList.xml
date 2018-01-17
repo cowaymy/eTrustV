@@ -883,38 +883,41 @@
         
         
         <select id="selectOrgChartDetList" parameterType="Map" resultType="egovMap">
-        SELECT * 
-        FROM(
-            SELECT Project1.MEM_ID MEM_ID  ,
-                   Project1.C1 C1  ,
-                   Project1.MEM_CODE MEM_CODE  ,
-                   Project1.NRIC NRIC  ,
-                   Project1.NAME NAME  ,
-                   case when (project2.LAST_DEPT_CODE is not null 
-                            and project2.LAST_GRP_CODE is not null 
-                            and project2.LAST_ORG_CODE is not null)
-                        THEN project2.LAST_DEPT_CODE
-                   Else
-                   Project1.DEPT_CODE   
-                  
+       select *
+       from (
+        SELECT search2.MEM_ID ,
+                   search2.C1 C1  ,
+                   search2.MEM_CODE MEM_CODE  ,
+                   search2.NRIC NRIC  ,
+                   search2.NAME NAME  ,
+                   search2.MEM_LVL MEM_LVL,
+                   
+                    case when (search2.LAST_DEPT_CODE is not null 
+                            or search2.LAST_GRP_CODE is not null 
+                            or search2.LAST_ORG_CODE is not null)
+                        THEN search2.LAST_DEPT_CODE
+                   Else search2.DEPT_CODE   
                    end DEPT_CODE,
-                    case when (project2.LAST_DEPT_CODE is not null 
-                            and project2.LAST_GRP_CODE is not null 
-                            and project2.LAST_ORG_CODE is not null)
-                          THEN project2.LAST_GRP_CODE
-                    ELSE   Project1.GRP_CODE
+                   
+                   case when (search2.LAST_DEPT_CODE is not null 
+                            or search2.LAST_GRP_CODE is not null 
+                            or search2.LAST_ORG_CODE is not null)
+                          THEN search2.LAST_GRP_CODE
+                    ELSE   search2.GRP_CODE
                     END GRP_CODE  ,
-                    case when (project2.LAST_DEPT_CODE is not null 
-                            and project2.LAST_GRP_CODE is not null 
-                            and project2.LAST_ORG_CODE is not null)
-                          then project2.LAST_ORG_CODE
-                    else Project1.ORG_CODE 
+                    
+                    case when (search2.LAST_DEPT_CODE is not null 
+                            or search2.LAST_GRP_CODE is not null 
+                            or search2.LAST_ORG_CODE is not null)
+                          then search2.LAST_ORG_CODE
+                    else search2.ORG_CODE 
                     end ORG_CODE  ,
-                   Project1.MEM_LVL MEM_LVL  ,
-                   case when (project2.code is not null) then project2.code
-                   else Project1.MEM_ORG_DESC_CODE 
+                          
+                     case when (search2.code is not null) then search2.code
+                   else search2.MEM_ORG_DESC_CODE 
                    end MEM_ORG_DESC_CODE ,
-               case when project2.EVT_APPLY_DT is not null then  to_char(project2.EVT_APPLY_DT, 'MM/YYYY') 
+                
+                case when search2.EVT_APPLY_DT is not null then  to_char(search2.EVT_APPLY_DT, 'MM/YYYY') 
              <choose>
              <when test="nowDate != null and nowDate != '' ">
                else #{nowDate}
@@ -923,7 +926,27 @@
                   else to_char(sysdate,'MM/YYYY')
                </otherwise>
                </choose>
-              end EVT_APPLY_DT
+                 end EVT_APPLY_DT
+                   
+    
+                   
+        FROM(
+            SELECT Project1.MEM_ID MEM_ID  ,
+                   Project1.C1 C1  ,
+                   Project1.MEM_CODE MEM_CODE  ,
+                   Project1.NRIC NRIC  ,
+                   Project1.NAME NAME  ,
+                   project2.LAST_DEPT_CODE,
+                   Project1.DEPT_CODE , 
+                   project2.LAST_GRP_CODE,
+                   Project1.GRP_CODE,
+                   project2.LAST_ORG_CODE ,
+                   Project1.ORG_CODE ,
+                   Project1.MEM_LVL MEM_LVL  ,
+                   project2.code,
+                   Project1.MEM_ORG_DESC_CODE ,
+                   project2.EVT_APPLY_DT
+                   
               FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
                             Extent1.MEM_CODE MEM_CODE  ,
                             Extent1.NAME NAME  ,
@@ -955,30 +978,50 @@
                             AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE 
                       WHERE   1 = Extent1.STUS
                                AND  Extent1.MEM_TYPE IN ( 1,2,3 )
-                              
+                               AND  EXTENT1.MEM_ID NOT IN (
+                               SELECT C.MEM_ID
+                               from  ORG0007D C
+                               where c.stus_id = 4
+                               and C.PROMO_TYPE_ID   in ( 757 , 758)
+                               <choose>
+                             <when test="resignDate != null and resignDate != '' ">
+                                <![CDATA[    and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{resignDate} ]]>
+                             </when>
+                             <otherwise>
+                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= to_char(SYSDATE, 'MM/YYYY' ) ]]>
+                             </otherwise>
+                             </choose>
+                               ) 
                               ) Project1 , 
                             (
                               SELECT  A.* , b.code 
                              FROM ORG0007D A ,sys0013M  B
-                             where promo_ID in(
-                             SELECT max(promo_ID) FROM ORG0007D C  
-                             where C.mem_ID = A.mem_ID  
-                             and C.stus_id = 4 
-                             and  C.PROMO_TYPE_ID   in ( 747, 748, 749)
-                        
+  
+                  
+                             where A.MEM_LVL_TO = B.code_id 
+                             and promo_id in ( select max(promo_id) 
+                                              from  ORG0007D C
+                                              where c.stus_id = 4
+                                              and C.PROMO_TYPE_ID   in ( 747, 748, 749)
+                                             
+               
                              <choose>
                              <when test="evntDate != null and evntDate != '' ">
-                                   and to_char(C.EVT_APPLY_DT, 'MM/YYYY' ) = #{evntDate}
+                                  <![CDATA[  and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{evntDate} ]]>
                              </when>
                              <otherwise>
-                                   and to_char(C.EVT_APPLY_DT, 'MM/YYYY' ) = to_char(SYSDATE, 'MM/YYYY' )
+                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= to_char(SYSDATE, 'MM/YYYY' ) ]]>
                              </otherwise>
                              </choose>
-                             )  and A.MEM_LVL_TO = B.code_id 
+                                 group by C.MEM_ID )
+                              
                            )  Project2 
                            where 1=1 
                            and project1.mem_id = project2.mem_id(+)
-                           )  search1  
+                           )  search2  
+                           
+                        )   search1
+                        
                            where 1=1
                               <if test="codeList != null and codeList != '' ">
                                      AND  search1.MEM_LVL IN

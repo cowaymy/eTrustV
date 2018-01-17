@@ -152,7 +152,8 @@ function fn_excelDown(){
                                   memLvl   :  memLvl ,
                                   evntDate : $("#searchDt").val(),
                                   srchDate : $("#searchDt").val(),
-                                  nowDate : $("#searchDt").val()
+                                  nowDate : $("#searchDt").val(),
+                                  resignDate : $("#searchDt").val()
                                   };
             
 	        Common.ajax("GET", "/organization/selectOrgChartDetList.do",paramsDetdata, function(result) {
