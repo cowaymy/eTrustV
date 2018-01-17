@@ -2435,7 +2435,92 @@
                 } -->
 
             <select id="getRentalCustomerList" parameterType="Map" resultType="egovMap">
-        <![CDATA[ 
+            
+            
+            <![CDATA[ 
+		            SELECT A.NAME AS cust_Name,
+					       SOM.SALES_ORD_NO AS sales_Order_No,
+					       CD.CODE_NAME AS payment_Mode,
+					       X.TARGET AS target_Amount,
+					       X.AMT AS amount,
+					       B.MODE_ID AS payment_Mode_Id
+					  FROM (SELECT A.ACC_DEBT_ORD_ID SALES_ORD_ID,
+					               A.ACC_DEBT_SRV_CNTRCT_ID CNTRCT_ID,
+					               (CASE
+					                   WHEN A.ACC_DEBT_SRV_CNTRCT_ID <> 0 THEN A.ACC_DEBT_SRV_CNTRCT_NO
+					                   ELSE A.ACC_DEBT_ORD_NO
+					                END)
+					                  REF_NO,
+					               A.ACC_DEBT_YEAR,
+					               A.ACC_DEBT_MONTH,
+					               TRUNC (S.ACC_DEBT_SUB_OPNG_COLCT_TRGET, 2) TARGET,
+					               TRUNC (S.ACC_DEBT_SUB_CURR_COLCT, 2) + TRUNC (S.ACC_DEBT_SUB_CURR_ADJ, 2) AMT,
+					               A.ACC_DEBT_ORD_TRGET_CODY_ID MEM_ID,
+					               TRUNC (A.ACC_DEBT_COLCT_UPD_DT) UPD_DT,
+					               B.MEM_CODE
+					          FROM PAY0052S A
+					               JOIN PAY0053S S
+					                  ON     S.ACC_DEBT_ORD_ID = A.ACC_DEBT_ORD_ID
+					                     AND S.ACC_DEBT_SRV_CNTRCT_ID = A.ACC_DEBT_SRV_CNTRCT_ID
+					               JOIN ORG0001D B ON B.MEM_ID = A.ACC_DEBT_ORD_TRGET_CODY_ID
+					         WHERE     A.ACC_DEBT_OPNG_RENTAL_STUS = 'REG'
+					               AND A.ACC_DEBT_OPNG_APP_TYPE_ID = 66
+					               AND S.ACC_DEBT_SUB_OPNG_OTSTND_AGING < 5
+					               AND S.ACC_DEBT_SUB_OPNG_COLCT_TRGET > 0
+					        UNION ALL
+					        SELECT ACC_DEBT_ORD_ID,
+					               ACC_DEBT_SRV_CNTRCT_ID,
+					               (CASE
+					                   WHEN ACC_DEBT_SRV_CNTRCT_ID <> 0 THEN ACC_DEBT_SRV_CNTRCT_NO
+					                   ELSE ACC_DEBT_ORD_NO
+					                END),
+					               ACC_DEBT_YEAR,
+					               ACC_DEBT_MONTH,
+					               TRUNC (ACC_DEBT_SUB_OPNG_COLCT_TRGET, 2),
+					               TRUNC (ACC_DEBT_SUB_CURR_COLCT, 2),
+					               ACC_DEBT_ORD_TRGET_CODY_ID,
+					               TRUNC (ACC_DEBT_COLCT_UPD_DT),
+					               B.MEM_CODE
+					          FROM (SELECT *
+					                  FROM PAY0150D A
+					                 WHERE     A.ACC_YM = TO_CHAR (ADD_MONTHS (SYSDATE, -1), 'YYYYMM')
+					                       AND A.ACC_DEBT_YEAR = TO_CHAR (ADD_MONTHS (SYSDATE, -1), 'YYYY')
+					                       AND A.ACC_DEBT_MONTH = TO_NUMBER (TO_CHAR (ADD_MONTHS (SYSDATE, -1), 'MM')))
+					               A
+					               JOIN ORG0001D B ON B.MEM_ID = A.ACC_DEBT_ORD_TRGET_CODY_ID) X
+					       LEFT JOIN SAL0074D RPS
+					          ON RPS.SALES_ORD_ID = X.SALES_ORD_ID AND RPS.SVC_CNTRCT_ID = X.CNTRCT_ID
+					       LEFT JOIN SYS0013M CD ON Cd.CODE_ID = RPS.MODE_ID
+					       LEFT JOIN SAL0001D SOM ON SOM.SALES_ORD_ID = X.SALES_ORD_ID
+					       LEFT JOIN SAL0027D CC ON CC.CUST_CNTC_ID = SOM.CUST_CNT_ID
+					       LEFT JOIN SAL0071D SC ON SC.SALES_ORD_ID = X.SALES_ORD_ID
+					       LEFT JOIN SAL0029D A ON A.CUST_ID = SOM.CUST_ID
+					       JOIN SAL0074D B ON B.SALES_ORD_ID = SOM.SALES_ORD_ID
+					 WHERE 1 = 1 
+                     AND X.MEM_CODE = #{userId}
+             ]]>
+                  <if test="searchKeyword != null and searchKeyword != ''">
+                    <choose>
+                        <when test="searchType == 2">
+                             AND A.NAME  LIKE  '%'||#{searchKeyword}||'%'
+                        </when>
+                        <when test="searchType == 1">
+                            AND SOM.SALES_ORD_NO like '%'|| #{searchKeyword} ||'%'
+                        </when>
+                        <otherwise>
+                          AND 1 = 1
+                        </otherwise>
+                    </choose>
+                   </if>
+            
+            
+            
+            
+            
+            
+            
+            
+<!--         <![CDATA[ 
                     SELECT A.NAME AS cust_Name
                           , SOM.SALES_ORD_NO AS sales_Order_No
                           , CD.CODE_NAME AS payment_Mode  
@@ -2506,7 +2591,7 @@
                           AND 1 = 1
                         </otherwise>
                     </choose>
-                   </if>      
+                   </if>       -->
                          
                         
 
