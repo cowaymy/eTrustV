@@ -169,7 +169,7 @@
                  , T5.USER_NAME AS PIC_NAME
                  , T6.DEALER_NAME 
                  , T6.DEALER_NRIC  
-                 , T1.CRT_DT
+                 , TO_CHAR(T1.CRT_DT, 'DD-MM-YYYY HH:mi:SS') CRT_DT
                  , NVL(T8.WH_LOC_ID, 0) AS WH_LOC_ID
           FROM SAL0062D T1
            LEFT OUTER
