@@ -561,4 +561,9 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	public EgovMap selectGSTCertInfo(Map<String, Object> params) {
 		return orderDetailMapper.selectGSTCertInfo(params);
 	}
+	
+	@Override
+	public EgovMap selectCurrentBSResultByBSNo(Map<String, Object> params) {
+		return orderDetailMapper.selectCurrentBSResultByBSNo(params);
+	}
 }

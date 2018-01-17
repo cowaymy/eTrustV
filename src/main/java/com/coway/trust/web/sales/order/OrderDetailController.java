@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.order.OrderDetailService;
+import com.coway.trust.biz.services.bs.HsManualService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -37,6 +38,9 @@ public class OrderDetailController {
 	
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
+	
+	@Resource(name = "hsManualService")
+	private HsManualService hsManualService;
 	
 	@RequestMapping(value = "/orderDetailPop.do")
 	public String getOrderDetailPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
@@ -171,5 +175,35 @@ public class OrderDetailController {
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultList);
+	}
+	
+    
+    @RequestMapping(value = "/selectCurrentBSResultByBSNo.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectCurrentBSResultByBSNo(@RequestParam Map<String, Object> params) {
+    	EgovMap rslt = orderDetailService.selectCurrentBSResultByBSNo(params);
+    	return ResponseEntity.ok(rslt);
+    }
+    
+	@RequestMapping(value = "/hsBasicInfoPop.do")
+	public String selecthsBasicInfoPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {
+
+		EgovMap basicinfo = null;
+
+		params.put("salesOrderId", params.get("salesOrdId"));
+		logger.debug("===========================================>");  
+		logger.debug("params : {}", params);  
+		logger.debug("===========================================>");  
+
+		basicinfo = hsManualService.selectHsViewBasicInfo(params);
+
+		List<EgovMap>  cmbCollectTypeComboList = hsManualService.cmbCollectTypeComboList(params);
+		List<EgovMap>  failReasonList = hsManualService.failReasonList(params);
+		model.addAttribute("basicinfo", basicinfo);
+		logger.debug("basicinfo : {}", basicinfo);
+		model.addAttribute("cmbCollectTypeComboList", cmbCollectTypeComboList);
+		model.addAttribute("failReasonList", failReasonList);
+		model.addAttribute("MOD", params.get("MOD"));
+
+		return "sales/order/include/hsEditPop";
 	}
 }

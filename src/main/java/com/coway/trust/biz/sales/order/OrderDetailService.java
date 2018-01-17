@@ -41,4 +41,6 @@ public interface OrderDetailService {
 	EgovMap selectGSTCertInfo(Map<String, Object> params);
 
 	List<EgovMap> selectEcashList(Map<String, Object> params);
+
+	EgovMap selectCurrentBSResultByBSNo(Map<String, Object> params);
 }

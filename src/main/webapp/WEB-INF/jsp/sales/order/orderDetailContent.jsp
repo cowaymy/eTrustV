@@ -93,9 +93,6 @@
 	<li><a id="aTabMI" href="#" onClick="javascript:chgTab('memInfo');">Membership Info</a></li>
 	<li><a id="aTabDS" href="#" onClick="javascript:chgTab('docInfo');">Document Submission</a></li>
 	<li><a href="#" onClick="javascript:chgTab('callLogInfo');">Call Log</a></li>
-<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
-	<li><a href="#">Guarantee Info</a></li>
-</c:if>
 	<li><a href="#" onClick="javascript:chgTab('payInfo');">Payment Listing</a></li>
 	<li><a href="#" onClick="javascript:chgTab('transInfo');">Last 6 Months Transaction</a></li>
 	<li><a href="#">Order Configuration</a></li>
@@ -143,11 +140,8 @@
 ------------------------------------------------------------------------------->
 <%@ include file="/WEB-INF/jsp/sales/order/include/callLog.jsp" %>
 <!------------------------------------------------------------------------------
-    Quarantee Info
+    Guarantee Info(2018.01.17 Remove Tab)
 ------------------------------------------------------------------------------->
-<c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
-<%@ include file="/WEB-INF/jsp/sales/order/include/qrntInfo.jsp" %>
-</c:if>
 <!------------------------------------------------------------------------------
     Payment Listing
 ------------------------------------------------------------------------------->

@@ -436,6 +436,7 @@
              , V1.VRIFY_REM
           FROM SAL1010V V1
          WHERE V1.ORD_ID = #{salesOrderId}
+           AND ROWNUM &lt;= 1
     </select>
 
     <select id="selectOrderCCPFeedbackCodeByOrderID" parameterType="Map" resultType="egovMap">
@@ -1396,5 +1397,65 @@
              )
          GROUP BY TYPE
     </select>
-    
+
+    <select id="selectCurrentBSResultByBSNo" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+		SELECT T.RESULT_ID RESULT_ID
+		     , T.NO NO
+		     , T.TYPE_ID TYPE_ID
+		     , T.SCHDUL_ID SCHDUL_ID
+		     , T.SALES_ORD_ID SALES_ORD_ID
+		     , T.CODY_ID CODY_ID
+		     , T.SETL_DT SETL_DT
+		     , T.RESULT_STUS_CODE_ID RESULT_STUS_CODE_ID
+		     , T.FAIL_RESN_ID FAIL_RESN_ID
+		     , T.REN_COLCT_ID REN_COLCT_ID
+		     , T.WH_ID WH_ID
+		     , T.RESULT_REM RESULT_REM
+		     , T.RESULT_CRT_DT RESULT_CRT_DT
+		     , T.RESULT_CRT_USER_ID RESULT_CRT_USER_ID
+		     , T.RESULT_UPD_DT RESULT_UPD_DT
+		     , T.RESULT_UPD_USER_ID RESULT_UPD_USER_ID
+		     , T.RESULT_IS_SYNC RESULT_IS_SYNC
+		     , T.RESULT_IS_EDIT RESULT_IS_EDIT
+		     , T.RESULT_STOCK_USE RESULT_STOCK_USE
+		     , T.RESULT_IS_CURR RESULT_IS_CURR
+		     , T.RESULT_MTCH_ID RESULT_MTCH_ID
+		     , T.RESULT_IS_ADJ RESULT_IS_ADJ
+		     , T.RESULT_ENTRY_POINT RESULT_ENTRY_POINT
+		     , T.RESULT_MOBILE_ID RESULT_MOBILE_ID
+		  FROM
+		     ( SELECT T2.RESULT_ID RESULT_ID
+		            , T2.NO NO
+		            , T2.TYPE_ID TYPE_ID
+		            , T2.SCHDUL_ID SCHDUL_ID
+		            , T2.SALES_ORD_ID SALES_ORD_ID
+		            , T2.CODY_ID CODY_ID
+		            , T2.SETL_DT SETL_DT
+		            , T2.RESULT_STUS_CODE_ID RESULT_STUS_CODE_ID
+		            , T2.FAIL_RESN_ID FAIL_RESN_ID
+		            , T2.REN_COLCT_ID REN_COLCT_ID
+		            , T2.WH_ID WH_ID
+		            , T2.RESULT_REM RESULT_REM
+		            , T2.RESULT_CRT_DT RESULT_CRT_DT
+		            , T2.RESULT_CRT_USER_ID RESULT_CRT_USER_ID
+		            , T2.RESULT_UPD_DT RESULT_UPD_DT
+		            , T2.RESULT_UPD_USER_ID RESULT_UPD_USER_ID
+		            , T2.RESULT_IS_SYNC RESULT_IS_SYNC
+		            , T2.RESULT_IS_EDIT RESULT_IS_EDIT
+		            , T2.RESULT_STOCK_USE RESULT_STOCK_USE
+		            , T2.RESULT_IS_CURR RESULT_IS_CURR
+		            , T2.RESULT_MTCH_ID RESULT_MTCH_ID
+		            , T2.RESULT_IS_ADJ RESULT_IS_ADJ
+		            , T2.RESULT_ENTRY_POINT RESULT_ENTRY_POINT
+		            , T2.RESULT_MOBILE_ID RESULT_MOBILE_ID
+		         FROM SVC0008D T1
+		         JOIN SVC0006D T2
+		           ON T2.SCHDUL_ID = T1.SCHDUL_ID
+		          AND 1 = T2.RESULT_IS_CURR
+		          AND 306 = T2.TYPE_ID
+		        WHERE T1.NO = #{no} AND ROWNUM <= 1
+		     ) T
+    ]]>
+    </select>
 </mapper>
