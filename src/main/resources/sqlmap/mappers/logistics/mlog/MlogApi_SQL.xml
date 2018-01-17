@@ -455,6 +455,7 @@
 <!-- 	   AND L54.DELVRY_DT <= TO_CHAR (TO_DATE ('20171202', 'YYYY/MM/DD'), 'yyyymmdd') -->
 	   AND l47.trnsc_type = 'UM'
 	   AND NVL (L54.DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
+	   AND NVL (L54.DELVRY_GI_CMPLT, 'N') <![CDATA[ <>]]> 'N'
 	   and s28q.wh_loc_code = #{userId}  
 	    <if test="searchType == 1 ">
             and l47.pridic_frqncy = 'A'
