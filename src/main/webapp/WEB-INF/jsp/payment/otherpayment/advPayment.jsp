@@ -420,7 +420,21 @@ $(document).ready(function(){
     
     fn_payTypeChange();
     
+    
+    
 });
+
+function payDateSetting(){
+	
+	var now = new Date();
+	var year= now.getFullYear();
+	var mon = (now.getMonth()+1)>9 ? ''+(now.getMonth()+1) : '0'+(now.getMonth()+1);
+	var currentDay = now.getDate()>9 ? ''+now.getDate() : '0'+now.getDate();
+    
+	$("#cashPayDate").val(currentDay + "/" + mon + "/" + year);
+	$("#chequePayDate").val(currentDay + "/" + mon + "/" + year);
+	$("#onlinePayDate").val(currentDay + "/" + mon + "/" + year);
+}
 
 function fn_chgAppType(){
      var appType = $("#appType").val();
@@ -2155,6 +2169,7 @@ function fn_payTypeChange(){
     $("#cashSearchForm")[0].reset();
     $("#chequeSearchForm")[0].reset();
     $("#onlineSearchForm")[0].reset();
+    payDateSetting();
     var payType = $("#keyInPayType").val();
     if(payType == "105"){//Cash
         $("#cashSearch").show();
@@ -2208,6 +2223,7 @@ function fn_bankChange(bankVal){
             $("#cashVAAccount").removeClass("readonly");
             $("#cashVAAccount").attr('readonly', false);
             $("#cashBankAcc").attr('disabled', false);
+            $("#cashBankAcc").val('525');
             //$("#cashBankAcc").addClass("w100p disabled");
         }
     }else if(bankVal == "CHQ"){
@@ -2223,6 +2239,7 @@ function fn_bankChange(bankVal){
             $("#chequeVAAccount").removeClass("readonly");
             $("#chequeVAAccount").attr("readonly", false);
             $("#chequeBankAcc").attr('disabled', false);
+            $("#chequeBankAcc").val('525');
             //$("#chequeBankAcc").addClass("w100p disabled");
         }
     }else if(bankVal == "ONL"){
@@ -3002,7 +3019,7 @@ function isDupOutSrvcToFinal(){
                             </td>
                             <th scope="row">Pay Date</th>
                             <td>
-                                <input id="cashPayDate" name="cashPayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                                <input id="cashPayDate" name="cashPayDate" type="text" title="" placeholder="" class="w100p" readonly />
                             </td>
                         </tr>
 						<tr>
@@ -3114,7 +3131,7 @@ function isDupOutSrvcToFinal(){
                             </td>
                             <th scope="row">Pay Date</th>
                             <td>
-                                <input id="chequePayDate" name="chequePayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+                                <input id="chequePayDate" name="chequePayDate" type="text" title="" placeholder="" class="w100p" readonly />
                             </td>
                         </tr>
 						<tr>
@@ -3235,7 +3252,7 @@ function isDupOutSrvcToFinal(){
 	                        </td>
 	                        <th scope="row">Pay Date</th>
 	                        <td>
-	                            <input id="onlinePayDate" name="onlinePayDate" type="text" title="" placeholder="" class="j_date w100p" readonly />
+	                            <input id="onlinePayDate" name="onlinePayDate" type="text" title="" placeholder="" class="w100p" readonly />
 	                        </td>
 	                    </tr>
 						<tr>
