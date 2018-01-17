@@ -227,8 +227,7 @@ public class CcpRentMemShipController {
 		custBasicMap = ccpRentMemShipService.selectCustBasicInfo(params);
 		
 		//Installation Address
-		//TODO 마이그레이션 이후 주석 해제(Magic Addr 관련)
-		//installMap = ccpRentMemShipService.selectOrderInfoInstallation(params);
+		installMap = ccpRentMemShipService.selectOrderInfoInstallation(params);
 		
 		//PayMode
 		//Payment Info

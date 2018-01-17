@@ -11,10 +11,10 @@ var optionModule = {
 
 $(document).ready(function() {
     
-	//to List
+/* 	//to List
     $("#_btnList").click(function() {
     	window.close();
-    });
+    }); */
     
     $("#_btnClose").click(function() {
     	window.close();
@@ -95,13 +95,13 @@ function  bind_RetrieveData(){
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
         
-        if(isAllowSendSMS() == true){
+        /* if(isAllowSendSMS() == true){
             
             $("#_smsDiv").css("display" , "");
             $("#_updSmsChk").attr("checked" , true);
             $("#_updSmsMsg").attr("disabled" , false);
             setSMSMessage();
-        }
+        } */
     }else if(ccpStus == "5"){
         
         //field
@@ -117,13 +117,13 @@ function  bind_RetrieveData(){
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
         
-        if(isAllowSendSMS() == true){
+       /*  if(isAllowSendSMS() == true){
             
             $("#_smsDiv").css("display" , "");
             $("#_updSmsChk").attr("checked" , true);
             $("#_updSmsMsg").attr("disabled" , false);
             setSMSMessage();
-        }
+        } */
     }else if(ccpStus == "6"){
         
         //field
@@ -210,7 +210,7 @@ function  isValidMobileNo(inputContact){
 }
 
 
-function isAllowSendSMS(){
+/* function isAllowSendSMS(){
     
     var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
     var editSalesManTelMobile = $("#_editSalesManTelMobile").val();
@@ -231,7 +231,7 @@ function isAllowSendSMS(){
     
     return true;
     
-}
+} */
 
 function loadIncomeRange(){
     
@@ -643,9 +643,9 @@ function chgTab(tabNm) {
 </tbody>
 </table><!-- table end -->
 </div>
-<ul class="center_btns">
+<!-- <ul class="center_btns">
     <li><p class="btn_blue2"><a id="_btnList">List</a></p></li>
-</ul>
+</ul> -->
 
 
 </section>

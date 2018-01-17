@@ -115,10 +115,10 @@ $(function() {
     	}
     	
     	//FeedBack
-    	if( '' == $("#_reasonCodeConfirm").val() || null == $("#_reasonCodeConfirm").val()){
+    	/* if( '' == $("#_reasonCodeConfirm").val() || null == $("#_reasonCodeConfirm").val()){
     		Common.alert("* Please Select the Feedback Code. ");
             return false;
-    	}
+    	} */
     	
     	//Call Message
     	if( '' == $("#_cfCallMessage").val() || null == $("#_cfCallMessage").val()){
@@ -310,7 +310,7 @@ $(function() {
         <th scope="row">Installation Address</th>
         <td colspan="3"><span>${installMap.fullAddress}</span></td>
     </tr>
-    <tr>
+    <%-- <tr>
         <th scope="row">Country</th>
         <td><span>${installMap.country}</span></td>
         <th scope="row">State</th>
@@ -321,7 +321,7 @@ $(function() {
         <td><span>${installMap.city}</span></td>
         <th scope="row">AreaPostcode</th>
         <td><span>${installMap.postcode}</span></td>
-    </tr>
+    </tr> --%>
     </tbody>
     </table><!-- table end -->
 

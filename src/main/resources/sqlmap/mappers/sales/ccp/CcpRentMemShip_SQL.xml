@@ -460,8 +460,8 @@
                    Extent1.INST_CNT_DEPT   ,
                    Extent1.INST_CNT_POST   ,
                    Extent1.VRIFY_REM VRIFY_REM,
-                   CASE  WHEN ( Extent1.ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.ADDR_DTL)) ELSE '' END ||' '|| 
-                   NVL(Extent1.STREET, '') ||' '|| Extent2.AREA ||' '|| Extent2.POSTCODE ||' '|| Extent2.CITY ||' '|| Extent2.STATE ||' '|| Extent2.COUNTRY AS FULL_ADDRESS,
+                   CASE  WHEN ( Extent1.INST_ADDR_DTL IS NOT NULL ) THEN LTRIM(RTRIM(Extent1.INST_ADDR_DTL)) ELSE '' END ||' '|| 
+                   NVL(Extent1.INST_STREET, '') ||' '|| Extent2.AREA ||' '|| Extent2.POSTCODE ||' '|| Extent2.CITY ||' '|| Extent2.STATE ||' '|| Extent2.COUNTRY AS FULL_ADDRESS,
                    Extent2.AREA_ID,
                    Extent2.ISO,
                    Extent2.COUNTRY,
@@ -469,8 +469,8 @@
                    Extent2.CITY,
                    Extent2.POSTCODE,
                    Extent2.AREA,
-                   Extent1.STREET,
-                   Extent1.ADDR_DTL 
+                   Extent1.INST_STREET,
+                   Extent1.INST_ADDR_DTL 
               FROM ( SELECT vOrderInstallationInfo.ORD_ID ORD_ID  ,                        
                             vOrderInstallationInfo.INST_CNT_NAME INST_CNT_NAME  ,
                             vOrderInstallationInfo.INST_CNT_NRIC INST_CNT_NRIC  ,
@@ -504,10 +504,13 @@
                             vOrderInstallationInfo.INSTALL_CNTC_ID INSTALL_CNTC_ID  ,
                             vOrderInstallationInfo.INST_CNT_DEPT INST_CNT_DEPT  ,
                             vOrderInstallationInfo.INST_CNT_POST INST_CNT_POST  ,
-                            vOrderInstallationInfo.VRIFY_REM VRIFY_REM  
+                            vOrderInstallationInfo.VRIFY_REM VRIFY_REM,
+                            vOrderInstallationInfo.AREA_ID,
+                            vOrderInstallationInfo.INST_ADDR_DTL,
+                            vOrderInstallationInfo.INST_STREET  
                      FROM SAL1010V vOrderInstallationInfo ) Extent1
-                     LEFT JOIN SYS0064M Extent2   ON Extent2.AREA_ID = Extent1.AREA_ID
-                     <![CDATA[                                 
+                     LEFT JOIN SYS0064M Extent2   ON Extent2.AREA_ID = Extent1.AREA_ID AND Extent1.AREA_ID NOT LIKE 'DM%'
+              <![CDATA[                                  
               WHERE  Extent1.ORD_ID = #{srvCntrctOrdId} AND ROWNUM <= 1
               ]]>
     </select>
