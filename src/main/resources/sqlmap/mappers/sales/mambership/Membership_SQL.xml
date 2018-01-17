@@ -15,7 +15,7 @@
 		           CASE WHEN ( A.MBRSH_EXPR_DT IS NOT NULL ) THEN A.MBRSH_EXPR_DT ELSE '' END MBRSH_EXPR_DT  ,
 		           A.PAC_NAME  ,
 		           A.MBRSH_DUR  ,
-		           TO_CHAR(A.MBRSH_OTSTND , 'FM9,999.00')  MBRSH_OTSTND,
+		           TO_CHAR(A.MBRSH_OTSTND , 'FM9,990.00')  MBRSH_OTSTND,
 		           A.CUST_NAME  ,
 		           A.CUST_IC  
 		   FROM SAL1004V A
@@ -177,7 +177,7 @@
 				       stb.mbrsh_bill_no , stb.ord_id ,
 				       stb.ord_no , stb.mbrsh_pac_amt ,
 				       stb.mbrsh_filter_amt ,
-				       stb.mbrsh_tot_amt , TO_CHAR(stb.mbrsh_otstnd ,'FM9,999.00') mbrsh_otstnd,
+				       stb.mbrsh_tot_amt , TO_CHAR(stb.mbrsh_otstnd ,'FM9,990.00') mbrsh_otstnd,
 				       CASE WHEN ( stb.mbrsh_freq IS NOT NULL ) THEN stb.mbrsh_freq||' month(s)'  ELSE  stb.mbrsh_freq||'' END  mbrsh_freq,  
 				       CASE WHEN ( stb.mbrsh_dur IS NOT NULL ) THEN stb.mbrsh_dur||' month(s)'  ELSE  stb.mbrsh_dur||'' END  mbrsh_dur  ,
 				       to_char(stb.mbrsh_start_dt,'dd-mm-yyyy' )   mbrsh_start_dt ,
