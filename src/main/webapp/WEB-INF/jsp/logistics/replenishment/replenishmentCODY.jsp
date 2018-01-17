@@ -219,7 +219,8 @@ $(function(){
         var addedItems = AUIGrid.getColumnValues(listGrid,"reqqty");
         if (addedItems.length > 0){
             for (var i = 0 ; i < addedItems.length ; i++){
-                if(""==addedItems[i] || 0==addedItems[i]){
+              //  if(""==addedItems[i] || 0==addedItems[i]){
+                if(""==addedItems[i]){
                     Common.alert("Plese Check "+"<spring:message code='log.head.requestqty'/>" +".");
                     return false;
                 }       
