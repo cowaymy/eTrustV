@@ -2547,7 +2547,96 @@
 
 
          <select id="selectOutstandingResult" parameterType="Map" resultType="egovMap">
-             <![CDATA[      select *
+    <![CDATA[     
+		         SELECT *
+					  FROM (  SELECT A.SALES_ORD_ID,
+					                 A.SALES_ORD_NO,
+					                 A.LAST_UP_DT,
+					                 SUM (NVL (B.AMT, 0)) sum_Rpf,
+					                 SUM (NVL (C.AMT, 0)) sum_Rpt,
+					                 SUM (NVL (D.AMT, 0)) sum_Rhf,
+					                 SUM (NVL (E.AMT, 0)) sum_Rental,
+					                 SUM (NVL (F.AMT, 0)) sum_Adjust,
+					                 SUM (A.TOT) TOT
+					            FROM (  SELECT M.SALES_ORD_ID,
+					                           m.sales_ord_no,
+					                           UTILS.CONVERT_TO_NUMBER (SUM (L.RENT_AMT), 10, 2) TOT,
+					                           MAX (L.RENT_DT_TM) LAST_UP_DT
+					                      FROM SAL0001D M JOIN PAY0022D L ON L.RENT_SO_ID = M.SALES_ORD_ID
+					                     WHERE M.APP_TYPE_ID = 66 AND m.SALES_ORD_NO = #{salesOrderNo}
+					                  GROUP BY M.SALES_ORD_ID, m.sales_ord_no) A
+					                 LEFT JOIN
+					                 (  SELECT L.RENT_SO_ID, CD.CODE_NAME TYPE, SUM (L.RENT_AMT) AMT
+					                      FROM PAY0022D L
+					                           JOIN SAL0001D M ON M.SALES_ORD_ID = L.RENT_SO_ID
+					                           JOIN SYS0013M CD ON CD.CODE_ID = L.RENT_DOC_TYPE_ID
+					                     WHERE     L.RENT_DOC_TYPE_ID IN (161)
+					                           AND L.RENT_SO_ID <> 0
+					                           AND M.APP_TYPE_ID = 66
+					                           AND m.SALES_ORD_NO = #{salesOrderNo}
+					                  GROUP BY L.RENT_SO_ID, CD.CODE_NAME) B
+					                    ON B.RENT_SO_ID = A.SALES_ORD_ID
+					                 LEFT JOIN
+					                 (  SELECT L.RENT_SO_ID, CD.CODE_NAME TYPE, SUM (L.RENT_AMT) AMT
+					                      FROM PAY0022D L
+					                           JOIN SAL0001D M ON M.SALES_ORD_ID = L.RENT_SO_ID
+					                           JOIN SYS0013M CD ON CD.CODE_ID = L.RENT_DOC_TYPE_ID
+					                     WHERE     L.RENT_DOC_TYPE_ID IN (162)
+					                           AND L.RENT_SO_ID <> 0
+					                           AND M.APP_TYPE_ID = 66
+					                           AND m.SALES_ORD_NO = #{salesOrderNo}
+					                  GROUP BY L.RENT_SO_ID, CD.CODE_NAME) C
+					                    ON C.RENT_SO_ID = A.SALES_ORD_ID
+					                 LEFT JOIN
+					                 (  SELECT L.RENT_SO_ID, CD.CODE_NAME TYPE, SUM (L.RENT_AMT) AMT
+					                      FROM PAY0022D L
+					                           JOIN SAL0001D M ON M.SALES_ORD_ID = L.RENT_SO_ID
+					                           JOIN SYS0013M CD ON CD.CODE_ID = L.RENT_DOC_TYPE_ID
+					                     WHERE     L.RENT_DOC_TYPE_ID IN (1059)
+					                           AND L.RENT_SO_ID <> 0
+					                           AND M.APP_TYPE_ID = 66
+					                           AND m.SALES_ORD_NO = #{salesOrderNo}
+					                  GROUP BY L.RENT_SO_ID, CD.CODE_NAME) D
+					                    ON D.RENT_SO_ID = A.SALES_ORD_ID
+					                 LEFT JOIN
+					                 (  SELECT X.RENT_SO_ID, SUM (X.AMT) AMT
+					                      FROM (  SELECT L.RENT_SO_ID, SUM (L.RENT_AMT) AMT
+					                                FROM PAY0022D L JOIN SAL0001D M ON M.SALES_ORD_ID = L.RENT_SO_ID
+					                               WHERE     L.RENT_DOC_TYPE_ID NOT IN (155,
+					                                                                    157,
+					                                                                    161,
+					                                                                    162,
+					                                                                    1059)
+					                                     AND L.RENT_SO_ID <> 0
+					                                     AND M.APP_TYPE_ID = 66
+					                                     AND m.SALES_ORD_NO = #{salesOrderNo}
+					                            GROUP BY L.RENT_SO_ID
+					                            UNION ALL
+					                              SELECT L.RENT_SO_ID, SUM (L.RENT_AMT) AMT
+					                                FROM PAY0022D L JOIN SAL0001D M ON M.SALES_ORD_ID = L.RENT_SO_ID
+					                               WHERE     L.RENT_DOC_NO LIKE 'ACN%'
+					                                     AND L.RENT_SO_ID <> 0
+					                                     AND M.APP_TYPE_ID = 66
+					                                     AND m.SALES_ORD_NO = #{salesOrderNo}
+					                            GROUP BY L.RENT_SO_ID) X
+					                  GROUP BY X.RENT_SO_ID) E
+					                    ON E.RENT_SO_ID = A.SALES_ORD_ID
+					                 LEFT JOIN
+					                 (  SELECT L.RENT_SO_ID, SUM (L.RENT_AMT) AMT
+					                      FROM PAY0022D L JOIN SAL0001D M ON M.SALES_ORD_ID = L.RENT_SO_ID
+					                     WHERE     L.RENT_DOC_TYPE_ID IN (155, 157)
+					                           AND L.RENT_SO_ID <> 0
+					                           AND M.APP_TYPE_ID = 66
+					                           AND L.RENT_DOC_NO NOT LIKE 'ACN%'
+					                           AND m.SALES_ORD_NO = #{salesOrderNo}
+					                  GROUP BY L.RENT_SO_ID) F
+					                    ON F.RENT_SO_ID = A.SALES_ORD_ID
+					        GROUP BY A.SALES_ORD_ID, A.LAST_UP_DT, a.sales_ord_no)
+					 WHERE 1 = 1
+					 ]]>
+ 
+ 
+<!--              <![CDATA[      select *
                     from (   SELECT A.SALES_ORD_ID ,
                                A.SALES_ORD_NO ,
                               A.LAST_UP_DT ,
@@ -2647,13 +2736,43 @@
                          GROUP BY A.SALES_ORD_ID,A.LAST_UP_DT, a.sales_ord_no
                          )
                          where 1=1
-                         and SALES_ORD_NO = #{salesOrderNo}    ]]>
+                         and SALES_ORD_NO = #{salesOrderNo}    ]]> -->
          </select>
 
 
 
          <select id="selectOutstandingResultDetailList" parameterType="Map" resultType="egovMap">
-            SELECT A.CODE_NAME AS TYPE,
+
+				  SELECT SYS13M.CODE_NAME AS TYPE,
+				         MST.RENT_DOC_NO AS DOC_NO,
+				         NVL (MST.RENT_AMT, 0) AS amount,
+				         TO_CHAR (NVL (MST.RENT_INST_NO, 0)) AS INSTALL_NO,
+				         TO_CHAR (MST.RENT_DT_TM, 'YYYYMMDD') AS EVENT_DATE
+				    FROM (SELECT RENT_DOC_NO,
+				                 RENT_DOC_TYPE_ID,
+				                 RENT_DT_TM,
+				                 RENT_AMT,
+				                 RENT_INST_NO
+				            FROM PAY0022D A, SAL0001D B
+				           WHERE A.RENT_SO_ID = B.SALES_ORD_ID AND B.SALES_ORD_NO = #{salesOrderNo}
+				          UNION ALL
+				          SELECT TRADE_DOC_NO,
+				                 TRADE_DOC_TYPE_ID,
+				                 TRADE_DT_TM,
+				                 TRADE_AMT,
+				                 TRADE_INST_NO
+				            FROM PAY0035D A, SAL0001D B
+				           WHERE A.TRADE_SO_ID = B.SALES_ORD_ID AND B.SALES_ORD_NO = #{salesOrderNo}) MST,
+				         SYS0013M SYS13M
+				   WHERE MST.RENT_DOC_TYPE_ID = SYS13M.CODE_ID(+) AND SYS13M.CODE_MASTER_ID = 37
+				ORDER BY MST.RENT_INST_NO ASC
+
+
+
+
+
+
+ <!--            SELECT A.CODE_NAME AS TYPE,
                    A.RENT_DOC_NO AS DOC_NO,
                    0 AS NALANCE_AMT,
                    NVL (SUM (CASE WHEN A.MODE_ID = '132' THEN A.RENT_AMT  END ), 0) DEBIT_AMT,
@@ -2694,7 +2813,7 @@
                                                     FROM SAL0001D
                                                     WHERE SALES_ORD_NO = #{salesOrderNo}) 
                                                           ) A
-            GROUP BY A.CODE_NAME, A.RENT_DOC_NO ,A.INSTALL_DT,a.INSTALL_ENTRY_NO
+            GROUP BY A.CODE_NAME, A.RENT_DOC_NO ,A.INSTALL_DT,a.INSTALL_ENTRY_NO -->
          </select>
 
 
