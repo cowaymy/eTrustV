@@ -18,7 +18,7 @@ $(document).ready(function(){
     AUIGrid.bind(oListGridID, "cellDoubleClick", function(event) {  });
 
     $("#rbt").attr("style","display:none");
-    $("#ORD_NO_RESULT").attr("style","display:none");
+    $("#FREE_ORD_NO_RESULT").attr("style","display:none");
     
 });
 
@@ -32,7 +32,7 @@ function setPackgCombo(){
 function f_multiCombo(){
 	
 	$('#cTPackage').change(function() {
-		$("#PAC_ID").val($(this).val());
+		$("#FREE_PAC_ID").val($(this).val());
 		
 		console.log(this)
 	    Common.ajax("GET", "/sales/membership/selectMembershipFree_PChange", $("#getDataForm").serialize(), function(result) {
@@ -41,7 +41,7 @@ function f_multiCombo(){
 		    	if(result.length > 0){
 		    		   $("#bsFreq").html (result[0].srvMemItmPriod+" month(s)");
 		    		   $("#duration").html (result[0].c1+" month(s)");
-		    		   $("#TOYYMM").val (result[0].toyymm);
+		    		   $("#FREE_TOYYMM").val (result[0].toyymm);
 		    		   
 	                    
 		    	}else{
@@ -65,12 +65,12 @@ function fn_doConfirm (){
 		if(result.length == 0)	{
 			
 			 $("#cbt").attr("style","display:inline");
-			 $("#ORD_NO").attr("style","display:inline");
+			 $("#FREE_ORD_NO").attr("style","display:inline");
 			 $("#sbt").attr("style","display:inline");
 			 
 			 
 			 $("#rbt").attr("style","display:none");
-			 $("#ORD_NO_RESULT").attr("style","display:none");
+			 $("#FREE_ORD_NO_RESULT").attr("style","display:none");
 			 
 			 $("#resultcontens").attr("style","display:none");
               
@@ -79,18 +79,18 @@ function fn_doConfirm (){
              
 		 }else{
 			 
-			 $("#ORD_ID").val( result[0].ordId);
-			 $("#ORD_NO_RESULT").val( result[0].ordNo);
+			 $("#FREE_ORD_ID").val( result[0].ordId);
+			 $("#FREE_ORD_NO_RESULT").val( result[0].ordNo);
 			 
 			 
 		     $("#cbt").attr("style","display:none");
-             $("#ORD_NO").attr("style","display:none");
+             $("#FREE_ORD_NO").attr("style","display:none");
              $("#sbt").attr("style","display:none");
              
              
 
              $("#rbt").attr("style","display:inline");
-             $("#ORD_NO_RESULT").attr("style","display:inline");
+             $("#FREE_ORD_NO_RESULT").attr("style","display:inline");
              $("#resultcontens").attr("style","display:inline");
              
              fn_getDataInfo();
@@ -152,7 +152,7 @@ function fn_getDataCPerson (){
 		$("#telR").html(result[0].telR);
 		$("#telf").html(result[0].telf);
 		$("#email").html(result[0].email);
-		$("#SAVE_CUST_CNTC_ID").val(result[0].custCntcId);
+		$("#FREE_SAVE_CUST_CNTC_ID").val(result[0].custCntcId);
 		
          
     });
@@ -170,7 +170,7 @@ function fn_getDataCPerson (){
      $("#telR").html("");
      $("#telf").html("");
      $("#email").html("");
-     $("#SAVE_CUST_CNTC_ID").val("");
+     $("#FREE_SAVE_CUST_CNTC_ID").val("");
  }
   
  /*bs_history*/ 
@@ -192,7 +192,7 @@ function  fn_goCustSearch(){
 
 function fn_callbackOrdSearchFunciton(item){
     console.log(item);
-    $("#ORD_NO").val(item.ordNo);
+    $("#FREE_ORD_NO").val(item.ordNo);
     fn_doConfirm();
     
 }
@@ -216,16 +216,16 @@ function setText(result){
 	        $("#custNric").html(result.basic.custNric);
             $("#custType").html(result.basic.custType);
             
-            $("#CUST_ID").val( result.basic.custId);
-            $("#STOCK_ID").val( result.basic.stockId);
-            $("#SAVE_SRV_CONFIG_ID").val(result.srvconfig.configId);
+            $("#FREE_CUST_ID").val( result.basic.custId);
+            $("#FREE_STOCK_ID").val( result.basic.stockId);
+            $("#FREE_SAVE_SRV_CONFIG_ID").val(result.srvconfig.configId);
             
             if(result.srvconfig.exprtext =="Expired"){
             	 $("#expire").html( "<font color='Red'>"+result.srvconfig.exprtext+"</font>");
-            	 $("#IS_EXPIRE").val("1"); 
+            	 $("#FREE_IS_EXPIRE").val("1"); 
             }else{
             	 $("#expire").html( result.srvconfig.exprtext);
-            	 $("#IS_EXPIRE").val("0");
+            	 $("#FREE_IS_EXPIRE").val("0");
             }
 	        
 /* 	        var address  =  result.installation.instAddr1 +" "+  
@@ -399,7 +399,17 @@ function createAUIGridHList() {
 
 
 function fn_doReset() {
-    window.close();
+   // window.close();
+    
+    $("#cbt").attr("style","display:inline");
+    $("#FREE_ORD_NO").attr("style","display:inline");
+    $("#sbt").attr("style","display:inline");
+    
+    
+    $("#rbt").attr("style","display:none");
+    $("#FREE_ORD_NO_RESULT").attr("style","display:none");
+    
+    $("#resultcontens").attr("style","display:none");
 }
 
 
@@ -420,7 +430,7 @@ function fn_addContactPersonInfo(objInfo){
           $("#telR").html(objInfo.telR);
           $("#telf").html(objInfo.telf);
           $("#email").html(objInfo.email);
-          $("#SAVE_CUST_CNTC_ID").val(objInfo.custCntcId);
+          $("#FREE_SAVE_CUST_CNTC_ID").val(objInfo.custCntcId);
           
           
 }
@@ -442,14 +452,14 @@ function fn_doSave(){
 			 if (fn_validStartDate() ){
 				   var aList  = new Array();
 				 
-				    $("#SAVE_ORD_ID").val($("#ORD_ID").val());
-				    $("#SAVE_PAC_ID").val($("#PAC_ID").val());
-				    $("#SAVE_BS_FREQ").val(($("#bsFreq").text()).replace(" <spring:message code="sales.month" />",""));    
+				    $("#FREE_SAVE_ORD_ID").val($("#FREE_ORD_ID").val());
+				    $("#FREE_SAVE_PAC_ID").val($("#FREE_PAC_ID").val());
+				    $("#FREE_SAVE_BS_FREQ").val(($("#bsFreq").text()).replace(" <spring:message code="sales.month" />",""));    
 				    
 				    aList = $("#mypStartDate").val().split("/");
 				    
-				    $("#SAVE_START_DATE").val(aList[1]+"-"+aList[0]+"-");
-				    $("#SAVE_DURATION").val(($("#duration").text()).replace(" <spring:message code="sales.month" />",""));
+				    $("#FREE_SAVE_START_DATE").val(aList[1]+"-"+aList[0]+"-");
+				    $("#FREE_SAVE_DURATION").val(($("#duration").text()).replace(" <spring:message code="sales.month" />",""));
 				 
 				    Common.ajax("GET", "/sales/membership/selectMembershipFree_save", $("#saveForm").serialize(), function(result) {
 				    	
@@ -468,7 +478,7 @@ function fn_doSave(){
 				   
 				   
 			 }else{
-				   if(  $("#IS_EXPIRE").val() == 0){
+				   if(  $("#FREE_IS_EXPIRE").val() == 0){
 							 Common.alert(" <b><spring:message code="sal.alert.msg.invalidStartDate" /></b>");
 							 return ;
 					}else{
@@ -507,17 +517,17 @@ function fn_validStartDate(){
 	
 	var rtnFlag =false; 
 	var aList  = new Array();
-	var compareDate  = $("#TOYYMM").val();
+	var compareDate  = $("#FREE_TOYYMM").val();
 	var  selectedDate = ($("#mypStartDate").val());
 	
 	 
     aList = selectedDate.split("/");
     selectedDate=aList[1]+""+aList[0];
       
-    console.log("compareDate["+compareDate+"]selectedDate["+selectedDate+"]IS_EXPIRE["+$("#IS_EXPIRE").val()+"]");
+    console.log("compareDate["+compareDate+"]selectedDate["+selectedDate+"]IS_EXPIRE["+$("#FREE_IS_EXPIRE").val()+"]");
       
 	
-	if(  $("#IS_EXPIRE").val() == 0){
+	if(  $("#FREE_IS_EXPIRE").val() == 0){
 		 //compareDate = FormUtil.convertStrToDateFormat($("#expire").text() ,"yyyyMM" ,"" ); 
 		
 		 //dd-mm-yyyy
@@ -539,16 +549,16 @@ function fn_validStartDate(){
 }
 
 
-function fn_close(){
+/* function fn_close(){
 	
 	window.close();
-}
+} */
 
 </script>
 
 
 
-<div id="popup_wrap" class="popup_wrap  pop_win"><!-- popup_wrap start -->
+<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="sal.page.title.freeMem" /></h1>
@@ -568,12 +578,12 @@ function fn_close(){
 
 <form id="getDataForm" method="post">
 <div style="display:none">
-    <input type="text" name="ORD_ID"     id="ORD_ID"/>  
-    <input type="text" name="CUST_ID"    id="CUST_ID"/>  
-    <input type="text" name="IS_EXPIRE"  id="IS_EXPIRE"/>   <!--  1: EXPIRE  -->
-    <input type="text" name="STOCK_ID"  id="STOCK_ID"/>  
-    <input type="text" name="PAC_ID"  id="PAC_ID"/>  
-    <input type="text" name="TOYYMM"  id="TOYYMM"/>  
+    <input type="text" name="ORD_ID"     id="FREE_ORD_ID"/>  
+    <input type="text" name="CUST_ID"    id="FREE_CUST_ID"/>  
+    <input type="text" name="IS_EXPIRE"  id="FREE_IS_EXPIRE"/>   <!--  1: EXPIRE  -->
+    <input type="text" name="STOCK_ID"  id="FREE_STOCK_ID"/>  
+    <input type="text" name="PAC_ID"  id="FREE_PAC_ID"/>  
+    <input type="text" name="TOYYMM"  id="FREE_TOYYMM"/>  
 </div>
 </form>
 
@@ -601,8 +611,8 @@ function fn_close(){
     <th scope="row"  ><spring:message code="sal.text.ordNo" /></th>
     <td >
  
-          <input type="text" title="" id="ORD_NO" name="ORD_NO" placeholder="" class="" /><p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> <spring:message code="sal.btn.confirm" /></a></p>   <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()"><spring:message code="sal.btn.search" /></a></p>
-          <input type="text" title="" id="ORD_NO_RESULT" name="ORD_NO_RESULT"   placeholder="" class="readonly " readonly="readonly" /><p class="btn_sky" id="rbt"> <a href="#" onclick="javascript :fn_doReset()"><spring:message code="sal.btn.reselect" /></a></p>
+          <input type="text" title="" id="FREE_ORD_NO" name="ORD_NO" placeholder="" class="" /><p class="btn_sky"  id='cbt'> <a href="#" onclick="javascript: fn_doConfirm()"> <spring:message code="sal.btn.confirm" /></a></p>   <p class="btn_sky" id='sbt'><a href="#" onclick="javascript: fn_goCustSearch()"><spring:message code="sal.btn.search" /></a></p>
+          <input type="text" title="" id="FREE_ORD_NO_RESULT" name="ORD_NO_RESULT"   placeholder="" class="readonly " readonly="readonly" /><p class="btn_sky" id="rbt"> <a href="#" onclick="javascript :fn_doReset()"><spring:message code="sal.btn.reselect" /></a></p>
     
 	    </div> 
     </td>
@@ -828,13 +838,13 @@ function fn_close(){
 </table><!-- table end -->
 
 <div  style="display:none">
-	<input type="text" name="SAVE_ORD_ID"  id="SAVE_ORD_ID"/>  
-	<input type="text" name="SAVE_PAC_ID"  id="SAVE_PAC_ID"/>  
-	<input type="text" name="SAVE_BS_FREQ"  id="SAVE_BS_FREQ"/>  
-	<input type="text" name="SAVE_START_DATE"  id="SAVE_START_DATE"/>  
-	<input type="text" name="SAVE_DURATION"  id="SAVE_DURATION"/>  
-	<input type="text" name="SAVE_CUST_CNTC_ID"  id="SAVE_CUST_CNTC_ID"/>  
-	<input type="text" name="SAVE_SRV_CONFIG_ID"  id="SAVE_SRV_CONFIG_ID"/>  
+	<input type="text" name="SAVE_ORD_ID"  id="FREE_SAVE_ORD_ID"/>  
+	<input type="text" name="SAVE_PAC_ID"  id="FREE_SAVE_PAC_ID"/>  
+	<input type="text" name="SAVE_BS_FREQ"  id="FREE_SAVE_BS_FREQ"/>  
+	<input type="text" name="SAVE_START_DATE"  id="FREE_SAVE_START_DATE"/>  
+	<input type="text" name="SAVE_DURATION"  id="FREE_SAVE_DURATION"/>  
+	<input type="text" name="SAVE_CUST_CNTC_ID"  id="FREE_SAVE_CUST_CNTC_ID"/>  
+	<input type="text" name="SAVE_SRV_CONFIG_ID"  id="FREE_SAVE_SRV_CONFIG_ID"/>  
 </div>
 
 </form>
