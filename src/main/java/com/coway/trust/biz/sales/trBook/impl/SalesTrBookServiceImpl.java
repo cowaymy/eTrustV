@@ -498,8 +498,23 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 		return salesTrBookMapper.getCreateByList();
 	}
 
-	
+	@Override
+	public List<EgovMap> selelctRequestBahchList(Map<String, Object> params) {
+		return salesTrBookMapper.selelctRequestBahchList(params);
+	}
 
+	@Override
+	public EgovMap selelctRequestBahchInfo(Map<String, Object> params) {
+		return salesTrBookMapper.selelctRequestBahchInfo(params);
+	}
+
+	@Override
+	public void updateBkReqStus(Map<String, Object> params) {
+
+		salesTrBookMapper.updateBkReqStus(params);
+		
+		
+	}
 
 
 }

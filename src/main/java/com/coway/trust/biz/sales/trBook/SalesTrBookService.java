@@ -53,4 +53,10 @@ public interface SalesTrBookService {
 	List<EgovMap> selectTransitInfoList(Map<String, Object> params);
 
 	List<EgovMap> getCreateByList() throws Exception;
+	
+	List<EgovMap> selelctRequestBahchList(Map<String, Object> params);
+	
+	EgovMap selelctRequestBahchInfo(Map<String, Object> params);
+
+	void updateBkReqStus(Map<String, Object> params);
 }

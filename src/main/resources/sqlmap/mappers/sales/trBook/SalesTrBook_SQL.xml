@@ -13,7 +13,7 @@
 			       TR_BOOK_NO_START ,
 			       TR_BOOK_NO_END ,
 			       TR_BOOK_PGE ,
-			       TR_BOOK_CRT_DT ,
+			       TO_CHAR(TR_BOOK_CRT_DT, 'dd/mm/yyyy') TR_BOOK_CRT_DT,
 			       TR_BOOK_CRT_USER_ID ,
 			       TR_BOOK_CRT_USER_NAME ,
 			       BOX_ID ,
@@ -31,7 +31,7 @@
 	          AND TR_BOOK_NO = #{trBookNo}
 	          </if>
 	          <if test="trBookCrtDt != null and trBookCrtDt != '' ">
-               AND TO_CHAR(TR_BOOK_CRT_DT, 'dd/mm/yyyy') = #{trBookCrtDt}
+                AND TO_CHAR(TR_BOOK_CRT_DT, 'ddmmyyyy') = REPLACE ( #{trBookCrtDt} , '/', '')
 	          </if>
               <if test="trBookCrtUser != null and trBookCrtUser != '' ">
               AND TR_BOOK_CRT_USER_NAME = #{trBookCrtUser}
@@ -879,7 +879,6 @@
 		    WHERE  A.TR_BOOK_ID = #{trBookId}
     </select>
     
-    
     <select id="getCreateByList" resultType="EgovMap">
 	    SELECT DISTINCT tm.TR_BOOK_CRT_USER_ID CODE_ID,
 	                            tm.TR_BOOK_CRT_USER_ID||'-'||USER_FULL_NAME CODE_NAME
@@ -887,4 +886,95 @@
 	            JOIN SYS0047M usr 
 	            ON usr.USER_ID = tm.TR_BOOK_CRT_USER_ID
     </select>
+    
+    <select id="selelctRequestBahchList" parameterType="map" resultType="EgovMap">
+         SELECT DISTINCT 1 C1  ,
+		             CASE WHEN  A.TR_BOOK_BK_REQ_CRT_DT IS NOT NULL THEN TO_CHAR(A.TR_BOOK_BK_REQ_CRT_DT , 'dd/mm/yyyy') ELSE NULL END TR_BOOK_BK_REQ_CRT_DT  ,
+		             A.TR_BOOK_BK_REQ_CRT_USER_ID   ,
+		             CASE WHEN D.USER_ID IS NOT NULL THEN D.USER_NAME ELSE ' 'END CRT_USER  ,
+		             CASE WHEN A.TR_BOOK_NO_END IS NOT NULL  THEN A.TR_BOOK_NO_END ELSE ' ' END TR_BOOK_NO_END  ,
+		             A.TR_BOOK_BK_REQ_END_RECIPT_NO   ,
+		             A.TR_BOOK_BK_REQ_IS_SYNC   ,
+		             A.TR_BOOK_BK_REQ_PGE_PER_BOOK   ,
+		             A.TR_BOOK_BK_REQ_QTY   ,
+		             A.TR_BOOK_BK_REQ_BRNCH_ID   ,
+		             C.CODE CODE  ,
+		             C.NAME NAME  ,
+		             A.TR_BOOK_BK_REQ_ID   ,
+		             A.TR_BOOK_BK_REQ_NO   ,
+		             A.TR_BOOK_BK_REQ_PREFIX   ,
+		             A.TR_BOOK_BK_REQ_STUS_ID   ,
+		             B.CODE CODE1  ,
+		             B.NAME NAME1  ,
+		             CASE WHEN A.TR_BOOK_NO_START IS NOT NULL THEN A.TR_BOOK_NO_START ELSE ' ' END TR_BOOK_NO_START  ,
+		             A.TR_BOOK_BK_REQ_START_RECIPT_NO TR_BOOK_BK_REQ_START_RECIPT_NO  ,
+		             CASE WHEN A.TR_BOOK_BK_REQ_UPD_DT IS NOT NULL THEN TO_CHAR(A.TR_BOOK_BK_REQ_UPD_DT , 'dd/mm/yyyy') ELSE NULL END TR_BOOK_BK_REQ_UPD_DT  ,
+		             A.TR_BOOK_BK_REQ_UPD_USER_ID TR_BOOK_BK_REQ_UPD_USER_ID  ,
+		             CASE WHEN  F.USER_ID IS NOT NULL THEN F.USER_NAME ELSE ' ' END UPD_USER 
+		FROM MSC0027D A
+		    JOIN SYS0038M B   ON B.STUS_CODE_ID = A.TR_BOOK_BK_REQ_STUS_ID
+		    JOIN SYS0005M C   ON C.BRNCH_ID = A.TR_BOOK_BK_REQ_BRNCH_ID
+		    LEFT JOIN SYS0047M D   ON D.USER_ID = A.TR_BOOK_BK_REQ_CRT_USER_ID
+		    LEFT JOIN SYS0047M F   ON F.USER_ID = A.TR_BOOK_BK_REQ_UPD_USER_ID
+		WHERE 1=1		
+         <if test="batchStatus != null and batchStatus != '' "> 
+		   AND A.TR_BOOK_BK_REQ_STUS_ID IN
+              <foreach collection="batchStatus" item="item" open="(" separator="," close=")">
+                  #{item}                
+              </foreach>
+		 </if>
+		 <if test="batchNo != null and batchNo != '' "> 
+		   AND A.TR_BOOK_BK_REQ_NO = #{batchNo}
+		 </if>
+		 <if test="reqBranch != null and reqBranch != '' "> 
+		   AND A.TR_BOOK_BK_REQ_BRNCH_ID = #{reqBranch}                
+		 </if>
+		 <if test="batchCrtDt != null and batchCrtDt != '' "> 
+		   AND TO_CHAR(A.TR_BOOK_BK_REQ_CRT_DT, 'yyyymmdd') = to_char(to_date (#{batchCrtDt} ,'DD/MM/YYYY'),'yyyymmdd') 
+		</if>
+		<if test="userNm != null and userNm != '' ">  
+		   AND D.USER_NAME = #{userNm}
+		</if>               
+		ORDER BY TR_BOOK_BK_REQ_ID ASC
+    </select>
+    
+    <select id="selelctRequestBahchInfo" parameterType="map" resultType="EgovMap">
+        SELECT A.TR_BOOK_BK_REQ_ID  REQ_ID ,
+                A.TR_BOOK_BK_REQ_NO  REQ_NO ,
+                A.TR_BOOK_BK_REQ_STUS_ID   STUS_ID,
+                A.TR_BOOK_BK_REQ_BRNCH_ID  BRNCH_ID ,
+                A.TR_BOOK_BK_REQ_PREFIX   PREFIX,
+                A.TR_BOOK_BK_REQ_QTY   QTY,
+                A.TR_BOOK_BK_REQ_PGE_PER_BOOK  PGE_PER_BOOK ,
+                A.TR_BOOK_BK_REQ_START_RECIPT_NO START_RECIPT_NO  ,
+                A.TR_BOOK_BK_REQ_END_RECIPT_NO  END_RECIPT_NO ,
+                A.TR_BOOK_BK_REQ_CRT_USER_ID CRT_USER_ID   ,
+                A.TR_BOOK_BK_REQ_UPD_USER_ID UPD_USER_ID   ,
+                A.TR_BOOK_BK_REQ_IS_SYNC   IS_SYNC,
+                B.CODE CODE  ,
+                B.NAME NAME  ,
+                C.CODE CODE1  ,
+                C.NAME NAME1  ,
+                CASE WHEN A.TR_BOOK_BK_REQ_CRT_DT IS NOT NULL THEN TO_CHAR(A.TR_BOOK_BK_REQ_CRT_DT, 'dd/mm/yyyy hh24:mi:ss AM')  ELSE NULL END CRT_DT  ,
+                CASE WHEN D.USER_ID IS NOT NULL THEN D.USER_NAME ELSE ' ' END CRT_USER  ,
+                CASE WHEN A.TR_BOOK_NO_END IS NOT NULL THEN A.TR_BOOK_NO_END ELSE ' ' END TR_BOOK_NO_END  ,
+                CASE WHEN A.TR_BOOK_NO_START IS NOT NULL THEN A.TR_BOOK_NO_START ELSE ' ' END TR_BOOK_NO_START  ,
+                CASE WHEN A.TR_BOOK_BK_REQ_UPD_DT IS NOT NULL THEN TO_CHAR(A.TR_BOOK_BK_REQ_UPD_DT,  'dd/mm/yyyy hh24:mi:ss AM')  ELSE NULL END UPD_DT  ,
+                CASE WHEN E.USER_ID IS NOT NULL THEN E.USER_NAME ELSE ' ' END UPD_USER  
+         FROM MSC0027D A
+                JOIN SYS0038M B   ON B.STUS_CODE_ID = A.TR_BOOK_BK_REQ_STUS_ID
+                JOIN SYS0005M C   ON C.BRNCH_ID = A.TR_BOOK_BK_REQ_BRNCH_ID
+                LEFT JOIN SYS0047M D   ON D.USER_ID = A.TR_BOOK_BK_REQ_CRT_USER_ID
+                LEFT JOIN SYS0047M E   ON E.USER_ID = A.TR_BOOK_BK_REQ_UPD_USER_ID
+          WHERE  A.TR_BOOK_BK_REQ_ID = #{reqId} 
+          AND ROWNUM <![CDATA[<= ]]>1
+    </select>
+    
+  
+    <update id="updateBkReqStus" parameterType="Map">    
+      UPDATE MSC0027D
+		   SET TR_BOOK_BK_REQ_STUS_ID = 8,
+		         TR_BOOK_BK_REQ_UPD_DT = SYSDATE
+		 WHERE  TR_BOOK_BK_REQ_ID = #{reqId}
+	</update>
 </mapper>

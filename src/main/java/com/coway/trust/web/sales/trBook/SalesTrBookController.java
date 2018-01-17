@@ -679,4 +679,56 @@ public class SalesTrBookController {
 		return ResponseEntity.ok(createByList);
 		
 	}
+	
+	@RequestMapping(value = "/requestBahchListPop.do")
+	public String requestBahchListPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
+
+		model.addAttribute("reqBranch", sessionVO.getUserBranchId());
+
+		logger.debug("sessionVO.getCode() =====================================>>  " + sessionVO.getCode());
+		return "sales/trBook/requestBatchListPop";
+	}
+	
+	@RequestMapping(value = "/selelctRequestBahchList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selelctRequestBahchList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {		
+		
+		logger.debug("in  selelctRequestBahchList ");
+		logger.debug("params =====================================>>  " + params);
+		
+
+		String[] batchStatus = request.getParameterValues("batchStatus");
+		params.put("batchStatus", batchStatus);
+
+		List<EgovMap> resultList = salesTrBookService.selelctRequestBahchList(params);
+		
+		return ResponseEntity.ok(resultList);
+	}
+
+	@RequestMapping(value = "/requestBatchDetailPop.do")
+	public String requestBatchDetailPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
+
+		logger.debug("params =====================================>>  " + params);
+		
+		EgovMap result = salesTrBookService.selelctRequestBahchInfo(params);
+		
+		model.put("result", result);
+		
+		return "sales/trBook/requestBatchDetailPop";
+	}
+	
+	@RequestMapping(value = "/updateBkReqStus")
+	public ResponseEntity<ReturnMessage> updateBkReqStus(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
+		
+		logger.debug("params =====================================>>  " + params);
+		
+		salesTrBookService.updateBkReqStus(params);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData("");
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
 }
