@@ -3988,8 +3988,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                             Extent1.CODE || N'-' || Extent1.NAME C1  
                      FROM SYS0005M Extent1
                       WHERE  ( 1 = Extent1.STUS_ID )
-                               AND ( Extent1.TYPE_ID IN ( 40,43 )
-                              ) ) Project1
+                                ) Project1
               ORDER BY Project1.C1 ASC
           
           </select>     
