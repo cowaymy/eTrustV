@@ -5,12 +5,13 @@
 
 
 <select id="selectPosSeq" resultType="String">
-   SELECT
-       'SOH'
-       ||TO_CHAR (SYSDATE, 'YYMMDD')
-       || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
-  FROM LOG0047M
-  WHERE SUBSTR (REQST_NO, 1, 9) =  'SOH'||TO_CHAR (SYSDATE, 'YYMMDD')
+<!--    SELECT -->
+<!--        'SOH' -->
+<!--        ||TO_CHAR (SYSDATE, 'YYMMDD') -->
+<!--        || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO -->
+<!--   FROM LOG0047M -->
+<!--   WHERE SUBSTR (REQST_NO, 1, 9) =  'SOH'||TO_CHAR (SYSDATE, 'YYMMDD') -->
+    SELECT  'SOH'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(SOH_SEQ.NEXTVAL, 5, '0') FROM  DUAL
 </select>
 
 <select id="PosSearchList" parameterType="Map" resultType="egovMap">

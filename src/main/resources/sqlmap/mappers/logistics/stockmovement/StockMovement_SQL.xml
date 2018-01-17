@@ -3,12 +3,13 @@
 <mapper namespace="com.coway.trust.biz.logistics.stockmovement.impl.StockMovementMapper">
 
     <select id="selectStockMovementSeq" resultType="String">
-        SELECT
-               'SMO'
-               ||TO_CHAR (SYSDATE, 'YYMMDD')
-               || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
-          FROM LOG0047M
-          WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD')
+<!--         SELECT -->
+<!--                'SMO' -->
+<!--                ||TO_CHAR (SYSDATE, 'YYMMDD') -->
+<!--                || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO -->
+<!--           FROM LOG0047M -->
+<!--           WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD') -->
+        SELECT  'SMO'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(SMO_SEQ.NEXTVAL, 5, '0') FROM  DUAL
     </select>
     <select id="selectStockMovementMainList" parameterType="Map" resultType="egovMap">
         select ROWNUM rnum , l47.REQST_STUS     status
@@ -264,12 +265,13 @@
            and l56.stk_code = #{itmcd}
     </select>
     <select id="selectDeliveryStockMovementSeq" resultType="String">
-        SELECT
-               'DVR'
-               ||TO_CHAR (SYSDATE, 'YYMMDD')
-               || NVL (TO_CHAR (MAX (SUBSTR (DELVRY_NO, 10, 5) + 1), 'FM00000'), '00001') AS DELVRY_NO
-          FROM LOG0054M
-         WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD')
+<!--         SELECT -->
+<!--                'DVR' -->
+<!--                ||TO_CHAR (SYSDATE, 'YYMMDD') -->
+<!--                || NVL (TO_CHAR (MAX (SUBSTR (DELVRY_NO, 10, 5) + 1), 'FM00000'), '00001') AS DELVRY_NO -->
+<!--           FROM LOG0054M -->
+<!--          WHERE SUBSTR (DELVRY_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD') -->
+         SELECT  'DVR'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(DVL_SEQ.NEXTVAL, 5, '0') FROM  DUAL
     </select>
 
 <!--

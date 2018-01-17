@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.replenishment.impl.ReplenishmentMapper">
-        <select id="selectStockMovementSeq" resultType="String">
-        SELECT
-               'SMO' 
-               ||TO_CHAR (SYSDATE, 'YYMMDD')
-               || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
-          FROM LOG0047M
-          WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD') 
+   <select id="selectStockMovementSeq" resultType="String">
+<!--         SELECT -->
+<!--                'SMO'  -->
+<!--                ||TO_CHAR (SYSDATE, 'YYMMDD') -->
+<!--                || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO -->
+<!--           FROM LOG0047M -->
+<!--           WHERE SUBSTR (REQST_NO, 1, 9) =  'SMO'||TO_CHAR (SYSDATE, 'YYMMDD')  -->
+        SELECT  'SMO'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(SMO_SEQ.NEXTVAL, 5, '0') FROM  DUAL
     </select>
     
     

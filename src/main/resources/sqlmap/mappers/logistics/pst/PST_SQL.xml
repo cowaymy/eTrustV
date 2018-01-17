@@ -2,12 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.pst.impl.PstMapper">
 <select id="selectPstMovementSeq" resultType="String">
-    SELECT
-           'PST' 
-           ||TO_CHAR (SYSDATE, 'YYMMDD')
-           || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO
-      FROM LOG0047M
-      WHERE SUBSTR (REQST_NO, 1, 9) =  'PST'||TO_CHAR (SYSDATE, 'YYMMDD') 
+<!--     SELECT -->
+<!--            'PST'  -->
+<!--            ||TO_CHAR (SYSDATE, 'YYMMDD') -->
+<!--            || NVL (TO_CHAR (MAX (SUBSTR (REQST_NO, 10, 5) + 1), 'FM00000'), '00001') AS REQST_NO -->
+<!--       FROM LOG0047M -->
+<!--       WHERE SUBSTR (REQST_NO, 1, 9) =  'PST'||TO_CHAR (SYSDATE, 'YYMMDD')  -->
+    SELECT  'PST'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(PST_SEQ.NEXTVAL, 5, '0') FROM  DUAL
 </select>
 <select id="PstSearchList" parameterType="Map" resultType="egovMap">
 	SELECT ROWNUM rnum , S62.PST_SALES_ORD_ID psoid, S62.PST_REF_NO psono, S62.PST_STUS_ID pststus, S62.CRT_DT crtdt , TO_CHAR(S62.CRT_DT , 'YYYYMMDDhh24miss') crtdt1 
@@ -93,13 +94,14 @@
                         ,#{itmcd} , #{itmnm}, #{reqqty} ,#{uom} ,'Y', #{userid} , SYSDATE)
  </insert>
  <select id="selectMdnNo" resultType="String">
-    SELECT
-           'MDN' 
-           ||TO_CHAR (SYSDATE, 'YYMMDD')
-           || NVL (TO_CHAR (MAX (SUBSTR (MATRL_DOC_NO, 10, 5) + 1), 'FM00000'), '00001')
-           AS RMDN  
-      FROM LOG0059M
-     WHERE SUBSTR (MATRL_DOC_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD')
+<!--     SELECT -->
+<!--            'MDN'  -->
+<!--            ||TO_CHAR (SYSDATE, 'YYMMDD') -->
+<!--            || NVL (TO_CHAR (MAX (SUBSTR (MATRL_DOC_NO, 10, 5) + 1), 'FM00000'), '00001') -->
+<!--            AS RMDN   -->
+<!--       FROM LOG0059M -->
+<!--      WHERE SUBSTR (MATRL_DOC_NO, 4, 6) = TO_CHAR (SYSDATE, 'YYMMDD') -->
+    SELECT  'MDN'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(MDN_SEQ.NEXTVAL, 5, '0') FROM  DUAL
  </select>
  <select id="selectRequestData" parameterType="String" resultType="Map">
     SELECT L47.TRNSC_TYPE trnstype,
