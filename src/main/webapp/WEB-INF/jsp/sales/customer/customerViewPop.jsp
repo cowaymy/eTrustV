@@ -446,9 +446,9 @@
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Custormer ID</th>
+        <th scope="row">Customer ID</th>
         <td><span>${result.custId}</span></td>
-        <th scope="row">Custormer Type</th>
+        <th scope="row">Customer Type</th>
         <td>
             <span> 
                 ${result.codeName1}
@@ -462,7 +462,7 @@
         <td><span>${result.crtDt}</span></td>
     </tr>
     <tr>
-        <th scope="row">Custormer Name</th>
+        <th scope="row">Customer Name</th>
         <td colspan="3">${result.name}</td>
         <th scope="row">Create By</th>
         <td>
@@ -482,7 +482,7 @@
     <tr>
         <th scope="row">Email</th>
         <td>${result.email}</td>
-        <th scope="row">nationality</th>
+        <th scope="row">Nationality</th>
         <td>${result.cntyName}</td>
         <th scope="row">Update At</th>
         <td>${result.updDt}</td>
