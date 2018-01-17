@@ -310,6 +310,7 @@ isShowChoose: true,
     
     function fn_dealerToDealer(str){
 
+    	alert($("#cmbNewDealerType").val());
         if(str == 0){
 //          $("input:select[name='cmbPstType']").prop("checked", false);
 //            $("input:select[name='cmbPstType']").attr("disabled" , "disabled");
@@ -318,6 +319,8 @@ isShowChoose: true,
         if(insertForm.dealerTypeFlag.value == "REQ"){
         	if(str == 2575){
         		insertForm.pstType.value = 2577;
+//        		$("#cmbNewDealerType").val(2577);
+//        		alert($("#cmbNewDealerType").val());
         	}else if(str == 2576){
         		insertForm.pstType.value = 2579;
         	}else{
@@ -332,7 +335,7 @@ isShowChoose: true,
                 Common.alert("Please check general code.");
             }
         }
-        
+//      alert($("#cmbNewDealerType").val());
 //      doGetCombo('/common/selectCodeList.do', '358', $("#cmbDealerType").val(),'cmbPstType', 'M' , '');         // PST Type Combo Box
 //      CommonCombo.make('cmbPstType', '/common/selectCodeList.do', {codeId : $("#cmbDealerType").val()} , '', {type: 'M'});
         CommonCombo.make("cmbDealer", "/sales/pst/pstNewDealerInfo.do", {cmbNewDealerType : $("#cmbNewDealerType").val()} , '' , optionUnit); //Status
