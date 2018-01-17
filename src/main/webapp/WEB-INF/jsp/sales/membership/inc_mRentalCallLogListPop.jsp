@@ -17,14 +17,15 @@ $(document).ready(function(){
 function createMRCallLogGrid(){
     
     var cLayout = [
-         {dataField : "code",headerText : "Status", width : 100 ,editable : false},
-         {dataField : "cnfmLogMsg", headerText : "Call Message", width : 300 ,editable : false},
-         {dataField : "cnfmLogSmsMsg", headerText : "SMS Message", width :300 ,editable : false},
-         {dataField : "userName", headerText : "Key By", width :100 ,editable : false},
-         {dataField : "cnfmLogCrtDt", headerText : "Key At", width :120 ,dataType : "date", formatString : "dd-mm-yyyy" ,editable : false}
+         {dataField : "num",headerText : "No.", width : 40 },
+         {dataField : "code",headerText : "Status", width : 100 },
+         {dataField : "cnfmLogMsg", headerText : "Call Message", width : 300 },
+         {dataField : "cnfmLogSmsMsg", headerText : "SMS Message", width :300 },
+         {dataField : "userName", headerText : "Key By", width :100 },
+         {dataField : "cnfmLogCrtDt", headerText : "Key At", width :120 ,dataType : "date", formatString : "dd-mm-yyyy"}
    ];
-    
-    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};  
+
+     var gridPros = { wordWrap : true, usePaging : true, fixedColumnCount    : 0,   pageRowCount: 20, editable: false,  showRowNumColumn : false, showStateColumn     : false};   
     mRCallLogGrid = GridCommon.createAUIGrid("#call_grid_wrap", cLayout,'' ,gridPros); 
 }
 

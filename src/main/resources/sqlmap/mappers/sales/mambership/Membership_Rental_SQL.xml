@@ -781,7 +781,8 @@
 										       S.CNFM_LOG_SMS_MSG   ,
 										       S.CNFM_LOG_CRT_DT   ,
 										       S.USER_NAME   ,
-										       S.CODE CODE  
+										       S.CODE CODE,
+										       ROWNUM NUM  
 										  FROM ( SELECT Extent2.CNFM_LOG_ID   ,
 										                Extent2.CNFM_LOG_MSG   ,
 										                Extent2.CNFM_LOG_SMS_MSG   ,
@@ -1095,8 +1096,7 @@
 							                           AND ( 160 <> E1.SRV_LDGR_TYPE_ID )
 							                           AND ( 1307 <> E1.SRV_LDGR_TYPE_ID )
 							                           AND ( E2.ACC_INV_VOID_ID IS NULL ) ) S
-							          ORDER BY S.SRV_LDGR_REF_DT ASC
-)
+							          ORDER BY S.SRV_LDGR_REF_DT ASC )
                     ]]>
          </select>
          
@@ -1131,10 +1131,11 @@
 					      SELECT   S.ORD_ID   ,
 								       S.ADDR_DTL   ,
 								       S.STREET   ,
-								       S.MAIL_CNTY   ,
-								       S.MAIL_STATE   ,
 								       S.MAIL_AREA   ,
+								       S.MAIL_CITY   ,
+								       S.MAIL_STATE   ,
 								       S.MAIL_POST_CODE   ,
+								       S.MAIL_CNTY   ,
 								       S.MAIL_CNT_NAME   ,
 								       S.MAIL_CNT_NRIC   ,
 								       S.MAIL_CNT_EMAIL   ,
@@ -1164,6 +1165,7 @@
 								                V.MAIL_CNTY   ,
 								                V.MAIL_STATE   ,
 								                V.MAIL_AREA   ,
+								                V.MAIL_CITY   ,
 								                V.MAIL_POST_CODE   ,
 								                V.MAIL_CNT_NAME   ,
 								                V.MAIL_CNT_NRIC   ,

@@ -76,7 +76,7 @@ function fn_getmRLedgerGridAjax (){
          $("#txtProduct").html("("+result.baseInfo.stockCode+") "+result.baseInfo.stockDesc);
          
         
-         $("#txtAddrInst").html();
+         $("#txtAddrInst").html(result.addressInfo.fullAddr);
          $("#txtInstallDate").html();
          
          
@@ -94,11 +94,11 @@ function fn_getmRLedgerGridAjax (){
          
          var  mailAddress;
          
-	       mailAddress += " " + result.orderMailingInfo.mailAddress1 ;
-	       mailAddress += " " + result.orderMailingInfo.mailAddress2 ;
-	       mailAddress += " " + result.orderMailingInfo.mailAddress3 ;
+	       mailAddress += " " + result.orderMailingInfo.addrDtl ;
+	       mailAddress += " " + result.orderMailingInfo.street ;
+	       mailAddress += " " + result.orderMailingInfo.mailArea ;
+	       mailAddress += " " + result.orderMailingInfo.mailCity ;
 	       mailAddress += " " + result.orderMailingInfo.mailPostCode;
-	       mailAddress += " " + result.orderMailingInfo.mailArea;
 	       mailAddress += " " + result.orderMailingInfo.mailCnty;
 		       
 		 $("#txtAddrMail").html(mailAddress);  

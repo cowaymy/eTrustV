@@ -100,7 +100,7 @@ function fn_setMRentalOrderInfoSet(){
     $("#rO_txtLastMembership").html(vmrOrderResultObj.configInfo.c1);
     $("#rO_txtLastExpireDate").html(vmrOrderResultObj.configInfo.srvPrdExprDt);
     
-    $("#rO_txtInstAddress").html("rO_txtInstAddress");
+    $("#rO_txtInstAddress").html(vmrOrderResultObj.addressInfo.fullAddr);
     $("#rO_txtProductCategory").html(vmrOrderResultObj.orderInfo.stkCtgryName );
     
 }

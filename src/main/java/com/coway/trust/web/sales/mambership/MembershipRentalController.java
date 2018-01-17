@@ -322,7 +322,7 @@ public class  MembershipRentalController {
 		
 		
 		orderInfo 	   = membershipService.selectOderInfoTab(params);
-		//addressInfo    = membershipService.selectInstallAddr(params);
+		addressInfo    = membershipService.selectInstallAddr(params);
 		configInfo    = membershipRentalService.selectConfigInfo(params);
 		
 		
@@ -512,7 +512,7 @@ public class  MembershipRentalController {
 		
 		baseInfo 			= membershipService.selectMembershipFree_Basic(params);
 		orderMailingInfo   = membershipRentalService.selectOrderMailingInfo(params);
-		//addressInfo      = membershipService.selectInstallAddr(params);
+		addressInfo      = membershipService.selectInstallAddr(params);
 		salesInfo 			= membershipRentalService.selectCcontactSalesInfo(params);
 		
 		

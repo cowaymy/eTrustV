@@ -6,11 +6,11 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:100px" />
+    <col style="width:180px" />
     <col style="width:*" />
-    <col style="width:100px" />
+    <col style="width:180px" />
     <col style="width:*" /> 
-    <col style="width:100px" />
+    <col style="width:180px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -55,8 +55,7 @@
 
 <tr>
     <th scope="row"><spring:message code="sal.text.insAddr" /></th>
-    <td colspan="5"><span id="ins_full_address">${contactInfoTab.instAddr1}&nbsp;${contactInfoTab.instAddr2}&nbsp; ${contactInfoTab.instAddr3}&nbsp;
-                            ${contactInfoTab.instPostCode}&nbsp;${contactInfoTab.instArea}&nbsp;${contactInfoTab.instState}&nbsp;${contactInfoTab.instCnty}&nbsp;
+    <td colspan="5"><span id="ins_full_address">${contactInfoTab.fullAddr}
      </span></td>
 </tr>
 </tbody>

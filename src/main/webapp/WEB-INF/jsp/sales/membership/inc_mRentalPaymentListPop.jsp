@@ -49,7 +49,7 @@ function createMRPayGridGrid(){
          {dataField : "userName", headerText : "<spring:message code="sal.title.creator" />",width :100, editable : false }
    ];
     
-    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};  
+    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,  showRowNumColumn : true};  
     mRPayGrid = GridCommon.createAUIGrid("#pay_grid_wrap", cLayout,'' ,gridPros); 
 }
 
@@ -69,7 +69,7 @@ function createMRPayDetailGridGrid(){
          {dataField : "payItmRem", headerText : "<spring:message code="sal.title.remark" />",width :250 ,editable : false}
    ];
     
-    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};  
+    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1, showRowNumColumn : true};  
     mRPayDetailGrid = GridCommon.createAUIGrid("#pay_detail_grid_wrap", cLayout,'' ,gridPros); 
 }
 

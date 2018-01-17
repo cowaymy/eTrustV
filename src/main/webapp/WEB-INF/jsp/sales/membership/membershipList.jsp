@@ -135,17 +135,17 @@
 	        
 	        //AUIGrid 칼럼 설정
 	        var columnLayout = [
-               {     dataField  : "mbrshNo",     headerText  : "<spring:message code="sal.title.mbrshNo" />",   width          : 100,   editable       : false}, 
-               {     dataField  : "mbrshOtstnd",   headerText  : "<spring:message code="sal.title.outstanding" />",  width          : 95,    editable       : false}, 
-               {     dataField  : "ordNo",   headerText  : "<spring:message code="sal.title.ordNo" />",     width          : 75,  editable       : false}, 
-               {     dataField  : "custName",     headerText  : "<spring:message code="sal.title.custName" />",      width          : 150,    editable       : false}, 
-               {     dataField  : "mbrshStusCode",    headerText   : "<spring:message code="sal.title.status" />",    width           : 55,    editable        : false}, 
-               {     dataField  : "mbrshStartDt", headerText  : "<spring:message code="sal.title.stDate" />",  width       : 90,  editable    : false, dataType : "date", formatString : "dd/mm/yyyy"}, 
-               {     dataField   : "mbrshExprDt",  headerText  : "<spring:message code="sal.title.expireDate" />",   width       : 90,    editable    : false, dataType : "date", formatString : "dd/mm/yyyy"}, 
-               {     dataField   : "pacName",  headerText  : "<spring:message code="sal.title.package" />",  width       : 150, editable    : false}, 
-               {     dataField   : "mbrshDur", headerText  : "<spring:message code="sal.title.durationMth" />", width       : 75,   editable    : false}, 
-               {     dataField   : "mbrshCrtDt",  headerText  : "<spring:message code="sal.title.crtDate" />",  width       : 90,  editable    : false,dataType : "date", formatString : "dd/mm/yyyy"}, 
-               {     dataField   : "mbrshCrtUserId",  headerText  : "<spring:message code="sal.title.creator" />", width       : 100, editable    : false},
+               {     dataField : "mbrshNo",     headerText  : "<spring:message code="sal.title.mbrshNo" />",   width          : 100,   editable       : false}, 
+               {     dataField : "mbrshOtstnd",   headerText  : "<spring:message code="sal.title.outstanding" />",  width          : 95,    editable       : false}, 
+               {     dataField : "ordNo",   headerText  : "<spring:message code="sal.title.ordNo" />",     width          : 75,  editable       : false}, 
+               {     dataField : "custName",     headerText  : "<spring:message code="sal.title.custName" />",      width          : 150,    editable       : false}, 
+               {     dataField : "mbrshStusCode",    headerText   : "<spring:message code="sal.title.status" />",    width           : 55,    editable        : false}, 
+               {     dataField : "mbrshStartDt", headerText  : "<spring:message code="sal.title.stDate" />",  width       : 90,  editable    : false, dataType : "date", formatString : "dd/mm/yyyy"}, 
+               {     dataField : "mbrshExprDt",  headerText  : "<spring:message code="sal.title.expireDate" />",   width       : 90,    editable    : false, dataType : "date", formatString : "dd/mm/yyyy"}, 
+               {     dataField : "pacName",  headerText  : "<spring:message code="sal.title.package" />",  width       : 150, editable    : false}, 
+               {     dataField : "mbrshDur", headerText  : "<spring:message code="sal.title.durationMth" />", width       : 75,   editable    : false}, 
+               {     dataField : "mbrshCrtDt",  headerText  : "<spring:message code="sal.title.crtDate" />",  width       : 90,  editable    : false,dataType : "date", formatString : "dd/mm/yyyy"}, 
+               {     dataField : "mbrshCrtUserId",  headerText  : "<spring:message code="sal.title.creator" />", width       : 100, editable    : false},
                {     dataField : "mbrshId", visible : false },
                {     dataField : "ordId",visible : false}	                            
 	       ];
