@@ -128,7 +128,7 @@ function fn_report_1(){
 		orderDateFrom = frArr[0]+"/"+frArr[1]+"/"+frArr[2]; // dd/MM/yyyy
 		orderDateTo = toArr[0]+"/"+toArr[1]+"/"+toArr[2];
 
-		whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yyyy') AND TO_DATE('"+$("#dpDateTo").val()+"', 'dd//MM/yyyy'))";
+		whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+$("#dpDateFr").val()+" 00:00:00', 'dd/MM/yyyy HH24:MI:SS') AND TO_DATE('"+$("#dpDateTo").val()+" 23:59:59', 'dd/MM/yyyy HH24:MI:SS'))";
     }
 	
 	if($("#cmbType :selected").val() == "1"){
@@ -427,7 +427,7 @@ function fn_report_6(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>CCP Listing</h1>
+<h1>CCP Performance</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
