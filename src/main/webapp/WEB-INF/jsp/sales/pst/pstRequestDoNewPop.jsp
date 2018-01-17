@@ -24,7 +24,7 @@ isShowChoose: true,
             name: "codeName",
             type:"S"
         });//Incharge Person
-        doGetCombo('/common/selectCodeList.do', '357', '2575','cmbNewDealerType', 'S' , '');     // Dealer Type Combo Box
+        doGetCombo('/common/selectCodeList.do', '357', '','cmbNewDealerType', 'S' , '');     // Dealer Type Combo Box
         
         if(insertForm.dealerTypeFlag.value == "REQ"){
         	CommonCombo.make("cmbLocation", "/common/selectCodeList.do", {groupCode:'361'}, "", {
@@ -41,7 +41,7 @@ isShowChoose: true,
         }
         
         
-        fn_dealerToDealer('2575');
+//        fn_dealerToDealer('2575');
     });
 
     
@@ -310,7 +310,7 @@ isShowChoose: true,
     
     function fn_dealerToDealer(str){
 
-    	alert($("#cmbNewDealerType").val());
+
         if(str == 0){
 //          $("input:select[name='cmbPstType']").prop("checked", false);
 //            $("input:select[name='cmbPstType']").attr("disabled" , "disabled");
