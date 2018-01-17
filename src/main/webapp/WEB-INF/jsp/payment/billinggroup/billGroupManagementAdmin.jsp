@@ -396,12 +396,12 @@ var addOrderLayout = [
         var orderNo = $("#orderNo").val();
         orderNo = $.trim(orderNo);
                 
-        /* if(currentDay >= 32 || currentDay == 1){
+        if(currentDay >= 26 || currentDay == 1){
             
             Common.alert("<spring:message code='pay.alert.unable26And1'/>");
             return;
             
-        }else{ */
+        }else{
             
             if(orderNo == ""){
                 valid = false;
@@ -411,7 +411,7 @@ var addOrderLayout = [
             if(valid){
                 
                 Common.ajax("GET","/payment/selectBillGroup.do", {"orderNo":orderNo}, function(result){
-                    console.log(result);
+
                     if(result.data.selectBasicInfo != null){
                         
                         $("#displayVisible").show();
@@ -427,22 +427,31 @@ var addOrderLayout = [
                         $("#nric").text(result.data.selectBasicInfo.nric);
                         $("#customerName").text(result.data.selectBasicInfo.name);
                         
-                        if(result.data.selectBasicInfo.custBillIsPost == "1"){
-                            $("#post").prop('checked', true);
-                        }else{
-                            $("#post").prop('checked', false);
-                        }
+                        $("#post").prop('checked', false);//reset
+                        $("#sms").prop('checked', false);//reset
+                        $("#estm").prop('checked', false);//reset
+                        var isPost = result.data.selectBasicInfo.custBillIsPost;
+                        var isSms = result.data.selectBasicInfo.custBillIsSms;
+                        var isEstm = result.data.selectBasicInfo.custBillIsEstm;
                         
-                        if(result.data.selectBasicInfo.custBillIsSms == "1"){
-                            $("#sms").prop('checked', true);
+                        if(isPost == 1 && isSms == 1 && isEstm == 1){
+                          $("#post").prop('checked', true);
+                        }else if(isPost == 1 && isSms == 1 && isEstm == 0){
+                          $("#sms").prop('checked', true);
+                        }else if(isPost == 1 && isSms == 0 && isEstm == 0){
+                          $("#post").prop('checked', true);
+                        }else if(isPost == 0 && isSms == 1 && isEstm == 0){
+                          $("#sms").prop('checked', true);
+                        }else if(isPost == 0 && isSms == 0 && isEstm == 1){
+                          $("#estm").prop('checked', true);
+                        }else if(isPost == 0 && isSms == 1 && isEstm == 1){
+                          $("#estm").prop('checked', true);
+                        }else if(isPost == 1 && isSms == 0 && isEstm == 1){
+                          $("#estm").prop('checked', true);
                         }else{
-                            $("#sms").prop('checked', false);
-                        }
-                        
-                        if(result.data.selectBasicInfo.custBillIsEstm == "1"){
-                            $("#estm").prop('checked', true);
-                        }else{
-                            $("#estm").prop('checked', false);
+                          $("#sms").prop('checked', false);
+                          $("#estm").prop('checked', false);
+                          $("#post").prop('checked', false);
                         }
                         
                         $("#remark").text(result.data.selectBasicInfo.custBillRem);
@@ -453,7 +462,12 @@ var addOrderLayout = [
                             $("#email").text("");
                         }
                         
-                        
+                        if(result.data.selectBasicInfo.custBillEmailAdd != undefined){
+                            $("#additionalEmail").text(result.data.selectBasicInfo.custBillEmailAdd);
+                        }else{
+                            $("#additionalEmail").text("");
+                        }
+                                              
                         //Mailling Addres
                         if(result.data.selectMaillingInfo != null){
                             $("#maillingAddr").text(result.data.selectMaillingInfo.addr);
@@ -495,7 +509,7 @@ var addOrderLayout = [
                 Common.alert(message);
                 $("#displayVisible").hide();
             }
-        //}
+        }
     }
     
     function fn_billGrpHistory(){
@@ -1440,9 +1454,9 @@ var addOrderLayout = [
 									<tr>
 									    <th scope="row">Billing Type</th>
 									    <td colspan="3">
-										    <label><input type="checkbox" disabled="disabled" id="post" name="post"/><span>Post</span></label>
-										    <label><input type="checkbox" disabled="disabled" id="sms" name="sms"/><span>SMS</span></label>
-										    <label><input type="checkbox" disabled="disabled" id="estm" name="estm"/><span>E-Statement</span></label>
+										    <label><input type="radio" disabled="disabled" id="post" name="post" value="1"/><span>Post</span></label>
+                        <label><input type="radio" disabled="disabled" id="sms" name="sms" value="2"/><span>SMS</span></label>
+                        <label><input type="radio" disabled="disabled" id="estm" name="estm" value="3"/><span>E-Statement</span></label>
 									    </td>
 									</tr>
 									<tr>

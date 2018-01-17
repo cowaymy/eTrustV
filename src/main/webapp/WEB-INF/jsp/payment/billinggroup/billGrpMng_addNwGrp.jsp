@@ -84,9 +84,9 @@ var contPersonLayout = [
                        }];
 
 
-	function fn_estmEvent(){
-	    
-		if($("#estm").is(":checked")){
+	function fn_estmEvent(val){
+
+		if(val == 3){
 			$("#email").attr('disabled', false);
 		}else{
 			$("#email").val("");
@@ -339,25 +339,25 @@ var contPersonLayout = [
         if($("#post").is(":checked") == false && $("#sms").is(":checked") == false && $("#estm").is(":checked") == false ){
             
             valid = false;
-            message += "<spring:message code='pay.alert.selectBillingType'/>";
+            message += "<spring:message code='pay.alert.selectBillingType.'/>";
         }else{
         	
         	if($("#changePop_sms").is(":checked") && custTypeId == "965"){
                 
                 valid = false;
-                message += "<spring:message code='pay.alert.smsNotAllow'/>";
+                message += "<spring:message code='pay.alert.smsNotAllow.'/>";
             }
         	
             if($("#estm").is(":checked")){
                 
                 if($("#email").val().trim() == ""){
                 	valid = false;
-                	message += "<spring:message code='pay.alert.emailAddress'/>";
+                	message += "<spring:message code='pay.alert.emailAddress.'/>";
                 }else{
                 	
                 	if(FormUtil.checkEmail(($("#email").val().trim())) == true){
                         valid = false;
-                        message += "<spring:message code='pay.alert.invalidEmail'/>"; 
+                        message += "<spring:message code='pay.alert.invalidEmail.'/>"; 
                      }
                 }
             }
@@ -370,7 +370,26 @@ var contPersonLayout = [
         
         if(custCntcId == ""){
             valid = false;
-            message += "<spring:message code='pay.alert.selectContPerson'/>";
+            message += "<spring:message code='pay.alert.selectContPerson.'/>";
+        }
+        
+        if($("#post").is(":checked")){
+        	$("#isPost").val(1);
+        }else{
+        	$("#isPost").val(0);
+        }
+        
+        if($("#sms").is(":checked")){
+        	$("#isSms").val(1);
+          
+        }else{
+        	$("#isSms").val(0);
+        }
+        
+        if($("#sms").is(":checked")){
+        	$("#isEstm").val(1);
+        }else{
+        	$("#isEstm").val(0);
         }
         
         if(valid){
@@ -408,6 +427,9 @@ var contPersonLayout = [
 		<input type="hidden" name="custTypeId" id="custTypeId">
 		<input type="hidden" name="custAddId" id="custAddId">
 		<input type="hidden" name="custCntcId" id="custCntcId">
+		<input type="hidden" name="isPost" id="isPost">
+    <input type="hidden" name="isSms" id="isSms">
+    <input type="hidden" name="isEstm" id="isEstm">
 		<div id="wrap"><!-- wrap start -->
 			<section id="content"><!-- content start -->
 				<ul class="path">
@@ -459,9 +481,9 @@ var contPersonLayout = [
 									<tr>
 									    <th scope="row">Billing Type</th>
 									    <td colspan="">
-									    <label><input type="checkbox"  id="post"  name="post" /><span>Post</span></label>
-									    <label><input type="checkbox"  id="sms"  name="sms" /><span>SMS</span></label>
-									    <label><input type="checkbox"  id="estm" name="estm" onclick="fn_estmEvent();"/><span>E-Statement</span></label>
+									    <label><input type="radio"  id="post"  name="billingType"  onclick="fn_estmEvent(1);"/><span>Post</span></label>
+									    <label><input type="radio"  id="sms"  name="billingType"  onclick="fn_estmEvent(2);"/><span>SMS</span></label>
+									    <label><input type="radio"  id="estm" name="billingType"  onclick="fn_estmEvent(3);"/><span>E-Statement</span></label>
 									    </td>
 									    <th scope="row">Email</th>
 									    <td>
