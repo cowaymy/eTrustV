@@ -53,13 +53,13 @@ var myDetailGridData = null;
                     headerText : "Filter Quantity",
                     width : 120,
                     dataType : "numeric",
-                    /* editRenderer : {
+                     /* editRenderer : {
                         type : "NumberStepRenderer",
                         min : 0,
                         max : 50,
                         step : 1,
                         textEditable : true
-                    } */
+                    }  */
             }, {                        
                 dataField : "serialNo",
                 headerText : "Serial No",
@@ -500,8 +500,6 @@ var myDetailGridData = null;
           var serialChkName = new Array();
           var j = 0;
           for (var i = 0; i < editedRowItems.length; i++) {
-        	  alert("Qty : " + parseInt(editedRowItems[i]["name"]) + " / serailChk : " + editedRowItems[i]["serialChk"]
-        	            	  + " / serialNo : " + editedRowItems[i]["serialNo"]);
               if (parseInt(editedRowItems[i]["name"]) > 0 && editedRowItems[i]["serialChk"] == "Y" &&
                       (editedRowItems[i]["serialNo"] == null || editedRowItems[i]["serialNo"] == "") ) {
                   serialChkCode[j] = editedRowItems[i]["stkCode"];

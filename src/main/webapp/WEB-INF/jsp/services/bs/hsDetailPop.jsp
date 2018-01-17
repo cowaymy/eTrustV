@@ -53,7 +53,7 @@
 						            min : 0,
 						            max : 50,
 						            step : 1,
-						            textEditable : false
+						            textEditable : true
 						        }*/
                 editable : true
                 }, {                        
