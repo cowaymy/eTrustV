@@ -163,7 +163,7 @@ function fn_changeBillSave(){
         valid = false;
         message += "<spring:message code='pay.alert.selectBillingType'/>";
     }
-    alert(custTypeId);
+
     if($("#changePop_sms").is(":checked") && custTypeId == "965"){
         valid = false;
         message += "<spring:message code='pay.alert.smsNotAllow.'/>";
