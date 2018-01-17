@@ -733,6 +733,7 @@
         <if test="apprReqFlag == 'Y'.toString() ">
         , CUST_BILL_EMAIL = #{emailNew}
         , CUST_BILL_IS_ESTM = #{custBillIsEstm}
+        , CUST_BILL_EMAIL_ADD = #{emailAdd}
         </if>
         <if test="changeMainFlag == 'Y'.toString() or newGrpFlag == 'Y'.toString() or addOrdFlag == 'Y'.toString() ">
         , CUST_BILL_SO_ID = #{custBillSoId}
@@ -1220,6 +1221,7 @@
 	          END USER_NAME  ,
 	       Limit1.CUST_BILL_ID CUST_BILL_ID  ,
 	       Limit1.EMAIL EMAIL  ,
+	       Limit1.EMAIL_ADD EMAIL_ADD  ,
 	       Limit1.EMAIL_FAIL_DESC EMAIL_FAIL_DESC  ,
 	       Limit1.EMAIL_FAIL_IND EMAIL_FAIL_IND  ,
 	       Limit1.REF_NO REF_NO  ,
@@ -1234,6 +1236,7 @@
 	                Extent1.STUS_CODE_ID STUS_CODE_ID  ,
 	                Extent1.CUST_BILL_ID CUST_BILL_ID  ,
 	                Extent1.EMAIL EMAIL  ,
+	                Extent1.EMAIL_ADD EMAIL_ADD  ,
 	                Extent1.CNFM_CODE CNFM_CODE  ,
 	                Extent1.CRT_DT CRT_DT  ,
 	                Extent1.CRT_USER_ID CRT_USER_ID  ,
@@ -1788,6 +1791,13 @@
                 AND ( Extent1.SALES_ORD_NO = #{salesOrdNo} )
                 </if>
 	          AND ROWNUM <![CDATA[<= ]]>  1 ) Limit1
+    </select>
+    
+    <select id="selectEstmLatelyHistory" parameterType="Map" resultType="egovMap">
+        SELECT REQ_ID FROM PAY0060D
+        WHERE  CUST_BILL_ID = #{custBillId}
+        AND ROWNUM <![CDATA[ <= ]]> 1
+        ORDER BY REQ_ID DESC
     </select>
 
     <update id="updCustBillMaster" parameterType="Map">

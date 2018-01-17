@@ -275,4 +275,11 @@ public interface BillingGroupMapper {
 	 * @return
 	 */
     void updCustBillMaster(Map<String, Object> params);
+    
+    /**
+	 * selectEstmLatelyHistory 조회
+	 * @param param
+	 * @return
+	 */
+	EgovMap selectEstmLatelyHistory(Map<String, Object> param);
 }

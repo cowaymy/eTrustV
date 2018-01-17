@@ -685,8 +685,8 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			insBillGrpMap.put("custBillInchgMemId", "0");
 			insBillGrpMap.put("custBillEmail", params.get("email") != null ? String.valueOf(params.get("email")) : "");
 			insBillGrpMap.put("custBillIsEstm", "0");
-			insBillGrpMap.put("custBillIsSms", params.get("sms") != null ? "1" : "0");
-			insBillGrpMap.put("custBillIsPost", params.get("post") != null ? "1" : "0");
+			insBillGrpMap.put("custBillIsSms", params.get("isSms") != null ? "1" : "0");
+			insBillGrpMap.put("custBillIsPost", params.get("isPost") != null ? "1" : "0");
 
 			int custBillIdSeq = billingGroupMapper.getSAL0024DSEQ();
 			grpNo = billingGroupMapper.selectDocNo24Seq();
@@ -702,7 +702,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			// SALES ORDER MASTER UPDATE
 			billingGroupMapper.updSalesOrderMaster(updSalesMap);
 
-			String chkEstm = params.get("estm") != null ? String.valueOf(params.get("estm")) : "0";
+			String chkEstm = params.get("isEstm") != null ? String.valueOf(params.get("isEstm")) : "0";
 			if (chkEstm.equals("1") && !String.valueOf(params.get("email")).equals("")) {
 
 				Map<String, Object> estmMap = new HashMap<String, Object>();
@@ -987,6 +987,14 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 					billingGroupMapper.updReqEstm(params);
 				}
 			}
+			
+			EgovMap lateHistory = billingGroupMapper.selectEstmLatelyHistory(params);
+			if(lateHistory != null){
+				Map<String, Object> updCanMap = new HashMap<String, Object>();
+				updCanMap.put("reqId", String.valueOf(lateHistory.get("reqId")));
+				updCanMap.put("stusCodeId", "10");
+				billingGroupMapper.updReqEstm(updCanMap);
+			}
 
 			Map<String, Object> insHisMap = new HashMap<String, Object>();
 			insHisMap.put("custBillId", String.valueOf(params.get("custBillId")));
@@ -1019,7 +1027,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			billingGroupMapper.insHistory(insHisMap);
 
 			Map<String, Object> estmMap = new HashMap<String, Object>();
-			estmMap.put("stusCodeId", "44");
+			estmMap.put("stusCodeId", "5");//approve
 			estmMap.put("custBillId", String.valueOf(params.get("custBillId")));
 			estmMap.put("email", String.valueOf(params.get("reqEmail")).trim());
 			estmMap.put("cnfmCode", CommonUtils.getRandomNumber(10));
@@ -1030,8 +1038,17 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			estmMap.put("emailAdditional", String.valueOf(params.get("reqAdditionalEmail")).trim());
 			// estmReq 인서트
 			billingGroupMapper.insEstmReq(estmMap);
-			String reqId = String.valueOf(estmMap.get("reqIdSeq"));
-
+			//String reqId = String.valueOf(estmMap.get("reqIdSeq"));
+			
+			Map<String, Object> updCustMap = new HashMap<String, Object>();
+			updCustMap.put("custBillId", String.valueOf(params.get("custBillId")));
+			updCustMap.put("emailNew", String.valueOf(params.get("reqEmail")).trim());// new
+			updCustMap.put("emailAdd", String.valueOf(params.get("reqAdditionalEmail")).trim());// email additional
+			updCustMap.put("apprReqFlag", "Y");
+			updCustMap.put("userId", userId);
+			updCustMap.put("custBillIsEstm", "1");
+			billingGroupMapper.updCustMaster(updCustMap);
+			
 			// E-mail 전송하기
 			EmailVO email = new EmailVO();
 			List<String> toList = new ArrayList<String>();
@@ -1267,6 +1284,8 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 				: "0";
 		String email = selectEStatementReqs.get("email") != null ? String.valueOf(selectEStatementReqs.get("email"))
 				: "";
+		String emailAdd = selectEStatementReqs.get("emailAdd") != null ? String.valueOf(selectEStatementReqs.get("emailAdd"))
+				: "";
 
 		if (selectEStatementReqs != null && Integer.parseInt(reqId) > 0) {
 			EgovMap selectCustBillMaster = billingGroupMapper.selectCustBillMaster(params);
@@ -1274,6 +1293,9 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 					? String.valueOf(selectCustBillMaster.get("custBillId")) : "0";
 			String custBillEmail = selectCustBillMaster.get("custBillEmail") != null
 					? String.valueOf(selectCustBillMaster.get("custBillEmail")) : "";
+			String custBillEmailAdd = selectCustBillMaster.get("custBillEmailAdd") != null
+					? String.valueOf(selectCustBillMaster.get("custBillEmailAdd")) : "";
+
 
 			if (selectCustBillMaster != null && Integer.parseInt(custBillId) > 0) {
 
@@ -1281,6 +1303,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 				updCustMap.put("custBillId", custBillId);
 				updCustMap.put("emailOld", custBillEmail);// old
 				updCustMap.put("emailNew", email);// new
+				updCustMap.put("emailAdd", emailAdd);// email additional
 				updCustMap.put("apprReqFlag", "Y");
 				updCustMap.put("userId", userId);
 				updCustMap.put("custBillIsEstm", "1");
@@ -1307,8 +1330,8 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 				String isPostNew = "0";
 				String typeId = "1047";
 				String sysHisRemark = "[System] E-Statement Approve";
-				String emailAddtionalNew = "";
-				String emailAddtionalOld = "";
+				String emailAddtionalNew = emailAdd;
+				String emailAddtionalOld = custBillEmailAdd;
 
 				Map<String, Object> insHisMap = new HashMap<String, Object>();
 

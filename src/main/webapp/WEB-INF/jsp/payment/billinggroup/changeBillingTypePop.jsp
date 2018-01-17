@@ -64,13 +64,45 @@ $(function(){
 function changeBillingInfo(custBillId){
 	
 	Common.ajax("GET","/payment/selectChangeBillType.do", {"custBillId":custBillId}, function(result){
-		
+		console.log(result);
         $('#changeTypeForm #custTypeId').val(result.data.basicInfo.typeId);//hidden
         $('#changeBill_grpNo').text(result.data.basicInfo.custBillGrpNo);
         $('#changeBill_ordGrp').text(result.data.grpOrder.orderGrp);$('#changeBill_ordGrp').css("color","red");
         $('#changeBill_remark').text(result.data.basicInfo.custBillRem);
         
-        if(result.data.basicInfo.custBillIsPost == "1"){
+        var isPost = result.data.basicInfo.custBillIsPost;
+        var isSms = result.data.basicInfo.custBillIsSms;
+        var isEstm = result.data.basicInfo.custBillIsEstm;
+        
+        if(isPost == 1 && isSms == 1 && isEstm == 1){
+        	$("#changePop_estm").prop('checked', true);
+        	$("#changePop_estm").prop('disabled', false);
+          $('#changePop_estmVal').val(result.data.basicInfo.custBillEmail);
+        }else if(isPost == 1 && isSms == 1 && isEstm == 0){
+        	$("#changePop_sms").prop('checked', true);
+        }else if(isPost == 1 && isSms == 0 && isEstm == 0){
+        	$("#changePop_post").prop('checked', true);
+        }else if(isPost == 0 && isSms == 1 && isEstm == 0){
+        	$("#changePop_sms").prop('checked', true);
+        }else if(isPost == 0 && isSms == 0 && isEstm == 1){
+        	$("#changePop_estm").prop('checked', true);
+        	$("#changePop_estm").prop('disabled', false);
+          $('#changePop_estmVal').val(result.data.basicInfo.custBillEmail);
+        }else if(isPost == 0 && isSms == 1 && isEstm == 1){
+        	$("#changePop_estm").prop('checked', true);
+        	$("#changePop_estm").prop('disabled', false);
+          $('#changePop_estmVal').val(result.data.basicInfo.custBillEmail);
+        }else if(isPost == 1 && isSms == 0 && isEstm == 1){
+        	$("#changePop_estm").prop('checked', true);
+        	$("#changePop_estm").prop('disabled', false);
+          $('#changePop_estmVal').val(result.data.basicInfo.custBillEmail);
+        }else{
+        	$("#changePop_sms").prop('checked', false);
+        	$("#changePop_estm").prop('checked', false);
+        	$("#changePop_post").prop('checked', false);
+        }
+        
+        /* if(result.data.basicInfo.custBillIsPost == "1"){
             $("#changePop_post").prop('checked', true);
         }else{
             $("#changePop_post").prop('checked', false);
@@ -90,7 +122,7 @@ function changeBillingInfo(custBillId){
             $("#changePop_estm").prop('checked', false);
             $("#changePop_estm").prop('disabled', true);
             $('#changePop_estmVal').val("");
-        }
+        } */
         AUIGrid.destroy(estmHisPopGridID); 
         estmHisPopGridID = GridCommon.createAUIGrid("estmHisPopGrid", estmHisPopColumnLayout,null,gridPros);
         AUIGrid.setGridData(estmHisPopGridID, result.data.estmReqHistory);
@@ -104,35 +136,37 @@ function fn_changeBillSave(){
     var reasonUpd = $("#changePop_Reason").val();
     var custBillId = $("#changeTypeForm #custBillId").val();
     var custTypeId = $('#changeTypeForm #custTypeId').val();
+    var valid = true;
+    var message = "";
+    var isPost = 0;
+    var isSms = 0;
+    var isEstm = 0;
     if($("#changePop_post").is(":checked")){
-        $("#changePop_post").val(1);
+    	isPost = 1;
     }else{
-        $("#changePop_post").val(0);
+    	isPost = 0;
     }
     
     if($("#changePop_sms").is(":checked")){
-        $("#changePop_sms").val(1);
+        isSms = 1;
     }else{
-        $("#changePop_sms").val(0);
+    	isSms = 0;
     }
     
     if($("#changePop_estm").is(":checked")){
-        $("#changePop_estm").val(1);
+    	isEstm = 1;
     }else{
-        $("#changePop_estm").val(0);
+    	isEstm = 0;
     }
-    
-    var valid = true;
-    var message = "";
     
     if($("#changePop_post").is(":checked") == false && $("#changePop_sms").is(":checked") == false && $("#changePop_estm").is(":checked") == false ){
         valid = false;
         message += "<spring:message code='pay.alert.selectBillingType'/>";
     }
-    
+    alert(custTypeId);
     if($("#changePop_sms").is(":checked") && custTypeId == "965"){
         valid = false;
-        message += "<spring:message code='pay.alert.smsNotAllow'/>";
+        message += "<spring:message code='pay.alert.smsNotAllow.'/>";
     }
     
     if($.trim(reasonUpd) ==""){
@@ -147,10 +181,8 @@ function fn_changeBillSave(){
     }
     
     if(valid){
-        var post = $("#changePop_post").val();
-        var sms = $("#changePop_sms").val();
-        var estm = $("#changePop_estm").val();
-        Common.ajax("GET","/payment/saveChangeBillType.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "post" : post, "sms" : sms, "estm" : estm, "custBillEmail" :custBillEmail}, function(result){
+        
+        Common.ajax("GET","/payment/saveChangeBillType.do", {"custBillId":custBillId, "reasonUpd" : reasonUpd, "post" : isPost, "sms" : isSms, "estm" : isEstm, "custBillEmail" :custBillEmail}, function(result){
             console.log(result);
             Common.alert(result.message);
         });
@@ -252,17 +284,17 @@ function fn_estmReqPopClose(){
                         <tr>
                             <th scope="row" rowspan="3">Current Bill Type</th>
                             <td colspan="3">
-                                <label><input type="checkbox" id="changePop_post" name="changePop_post"/><span>Post</span></label>
+                                <label><input type="radio" id="changePop_post" name="billType"/><span>Post</span></label>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3">
-                                <label><input type="checkbox" id="changePop_sms" name="changePop_sms"/><span>SMS</span></label>
+                                <label><input type="radio" id="changePop_sms" name="billType"/><span>SMS</span></label>
                             </td>
                         </tr>
                         <tr>
                             <td colspan="3">
-	                            <label><input type="checkbox" disabled="disabled"  id="changePop_estm" name="changePop_estm"/><span>E-Statement </span></label>
+	                            <label><input type="radio" disabled="disabled"  id="changePop_estm" name="billType"/><span>E-Statement </span></label>
 	                            <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();"><spring:message code='pay.btn.requestNewEmail'/></a></p>
                             </td>
                         </tr>
