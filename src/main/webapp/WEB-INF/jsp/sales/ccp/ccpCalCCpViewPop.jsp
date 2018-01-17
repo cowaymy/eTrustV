@@ -34,8 +34,8 @@ $(document).ready(function() {
     
     var ccpStus = $("#_ccpStusId").val();
     CommonCombo.make("_statusEdit", "/sales/ccp/getCcpStusCodeList", '', ccpStus , optionUnit); //Status
-    
-    CommonCombo.make("_rejectStatusEdit", "/sales/ccp/getCcpRejectCodeList", '', '' , optionUnitCh); //Status 
+    var ccpRejVal = $("#_ccpRejectId").val();
+    CommonCombo.make("_rejectStatusEdit", "/sales/ccp/getCcpRejectCodeList", '', ccpRejVal , optionUnitCh); //Status 
      
     var selReasonCode = $("#_ccpResnId").val();
     CommonCombo.make("_reasonCodeEdit", "/sales/ccp/selectReasonCodeFbList", '', selReasonCode ,optionUnitCh ); //Status
@@ -435,7 +435,8 @@ function chgTab(tabNm) {
      <!-- from ccpInfoMap  -->
      <input type="hidden" id="_ccpStusId" name="ccpStusId" value="${ccpInfoMap.ccpStusId}">
      <input type="hidden" id="_ccpIncRngId" value="${ccpInfoMap.ccpIncomeRangeId}">
-     <input type="hidden" id="_ccpResnId" value="${ccpInfoMap.resnId}"> 
+     <input type="hidden" id="_ccpResnId" value="${ccpInfoMap.resnId}">
+     <input type="hidden" id="_ccpRejectId" value="${ccpInfoMap.ccpRjStusId}">         
      
      <input type="hidden" id="_ccpIsHold" value="${ccpInfoMap.ccpIsHold}">
      <input type="hidden" id="_ccpIsSaman" value="${ccpInfoMap.ccpIsSaman}">
