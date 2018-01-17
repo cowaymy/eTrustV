@@ -89,6 +89,12 @@ public interface ClaimService
      */
 	void updateClaimResultItemBulk4(Map<String, Object> bulkMap) throws Exception;
 	
+	/**
+     * Auto Debit - Claim Result Update : New Version
+     * @param params
+     */
+	void updateClaimResultItemArrange(Map<String, Object> claimMap) throws Exception;
+	
     /**
      * Auto Debit - Claim Result Update LIVE
      * @param params

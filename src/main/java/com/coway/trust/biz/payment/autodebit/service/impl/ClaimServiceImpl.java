@@ -325,11 +325,7 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 					list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
 			claimMapper.insertClaimResultItemBulk(bulkMap);
 		}
-		
-			
-		
-	}
-	
+	}	
 	
 	/**
      * Auto Debit - Claim Result Update : New Version
@@ -341,6 +337,14 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 	}
 	
 	
+	/**
+     * Auto Debit - Claim Result Update : New Version
+     * @param params
+     */
+	@Override
+	public void updateClaimResultItemArrange(Map<String, Object> claimMap) throws Exception{
+		claimMapper.updateClaimResultItemArrange(claimMap);
+	}
 	
 	/**
      * Auto Debit - Claim Result Update Live

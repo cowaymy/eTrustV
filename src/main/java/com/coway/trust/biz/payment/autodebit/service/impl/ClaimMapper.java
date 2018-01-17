@@ -58,6 +58,13 @@ public interface ClaimMapper {
 	 * @param params
 	 * @return
 	 */
+	void updateClaimResultItemArrange(Map<String, Object> params);
+	
+	/**
+	 * Auto Debit - Claim Result Update : 아이템 등록
+	 * @param params
+	 * @return
+	 */
 	void removeItmId(Map<String, Object> params);
 	
 	/**

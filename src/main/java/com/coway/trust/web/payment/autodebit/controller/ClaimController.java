@@ -437,55 +437,53 @@ public class ClaimController {
 		//파일 내용 Insert
 		//claimService.updateClaimResultItemBulk3(claimMap, cvsParam);
 		//cvs 파일 저장 처리
-				List<ClaimResultUploadVO> vos2 = (List<ClaimResultUploadVO>)cvsParam.get("voList");		
+		List<ClaimResultUploadVO> vos2 = (List<ClaimResultUploadVO>)cvsParam.get("voList");
+		
+		List<Map> list = vos2.stream().map(r -> {
+			Map<String, Object> map = BeanConverter.toMap(r);
+			
+			map.put("refNo", r.getRefNo());
+			map.put("refCode", r.getRefCode());
+			map.put("id", claimMap.get("ctrlId"));
+			map.put("itemId", r.getItemId());
+			
+			return map;
+		})	.collect(Collectors.toList());
 				
+		int size = 500;
+		int page = list.size() / size;
+		int start;
+		int end;
 				
-				List<Map> list = vos2.stream().map(r -> {
-					Map<String, Object> map = BeanConverter.toMap(r);
-					
-					map.put("refNo", r.getRefNo());
-					map.put("refCode", r.getRefCode());
-					map.put("id", claimMap.get("ctrlId"));
-					map.put("itemId", r.getItemId());
-					
-					return map;
-				})	.collect(Collectors.toList());
-				
-				
-				
-				int size = 500;
-				int page = list.size() / size;
-				int start;
-				int end;
-				
-				Map<String, Object> bulkMap = new HashMap<>();
-				for (int i = 0; i <= page; i++) {
-					start = i * size;
-					end = size;
-					if(i == page){
-						end = list.size();
-					}
-					bulkMap.put("list",
-							list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
-					claimService.updateClaimResultItemBulk4(bulkMap);
-				}
+		Map<String, Object> bulkMap = new HashMap<>();
+		for (int i = 0; i <= page; i++) {
+			start = i * size;
+			end = size;
+			
+			if(i == page){
+				end = list.size();
+			}
+			bulkMap.put("list",list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+			claimService.updateClaimResultItemBulk4(bulkMap);
+		}
+		
+		//업로드된 값을 재정리 한다. REF_CODE / REF_NO LPAD 처리
+		claimService.updateClaimResultItemArrange(claimMap);
 		
 		// Credit Card, ALB, CIMB가 아니면 Item 삭제한다.
-				if (!"1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))
-						&& !"2".equals(String.valueOf(claimMap.get("bankId")))
-						&& !"3".equals(String.valueOf(claimMap.get("bankId")))) {
-					claimService.removeItmId(claimMap);
-				}
+		if (!"1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))
+					&& !"2".equals(String.valueOf(claimMap.get("bankId")))
+					&& !"3".equals(String.valueOf(claimMap.get("bankId")))) {
+			claimService.removeItmId(claimMap);
+		}
 				
-				// message 처리를 위한 값 세팅
-				EgovMap resultMap = null;
-				if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {			
-					resultMap = claimService.selectUploadResultBank(claimMap);			
-				} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc"))) || "134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
-					resultMap =  claimService.selectUploadResultCRC(claimMap);
-				}
-				
-				//return resultMap;	
+		//message 처리를 위한 값 세팅
+		EgovMap resultMap = null;
+		if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+			resultMap = claimService.selectUploadResultBank(claimMap);			
+		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc"))) || "134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+			resultMap =  claimService.selectUploadResultCRC(claimMap);
+		}
 		
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();

@@ -1222,9 +1222,7 @@ function fn_openDivScheduleSettingPop() {
         <!-- search_table end -->
         
         <ul class="center_btns" >
-            <li><p class="btn_blue2"><a href="javascript:fn_uploadFile();"><spring:message code='pay.btn.upload'/></a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:fn_uploadFile3();">upload Bulk3</a></p></li>
-            <li><p class="btn_blue2"><a href="javascript:fn_uploadFile4();">upload Bulk4</a></p></li>
+            <li><p class="btn_blue2"><a href="javascript:fn_uploadFile4();"><spring:message code='pay.btn.upload'/></a></p></li>
             <!--<li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();"><spring:message code='pay.btn.upload'/></a></p></li>-->
             <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/ClaimResultUpdate_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
         </ul>
