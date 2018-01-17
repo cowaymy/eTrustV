@@ -164,6 +164,10 @@ function fnExcelExport(fileNm)
 // search
 function fnSearchBtnList()
 {
+
+	/*
+	 SAP에서 ITF0151M Insert 후, TRIGGER 통해 SCM0039M에 INSERT...
+	*/
    var startDT = $("#startDate").val();
    var endDT = $("#endDate").val();
 
