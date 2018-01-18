@@ -174,6 +174,18 @@ public class SurveyMgmtController {
 		
 	}
 	
+	@RequestMapping(value = "/selectSalesOrdNotList2.do")
+	//public ResponseEntity<EgovMap> selectSalesOrdNotList(@RequestParam(value = "salesOrdNo[]") String[] salesOrdNo , @RequestParam Map<String, Object> params) throws Exception{
+	public ResponseEntity<EgovMap> selectSalesOrdNotList2( @RequestParam Map<String, Object> params){
+		
+		LOGGER.debug("params : {}", params.get("salesOrdNo"));
+		EgovMap filterList = null;
+		filterList = surveyMgmtService.selectSalesOrdNotList2(params);
+		LOGGER.debug("filterList : {}", filterList);
+		return ResponseEntity.ok(filterList);
+		
+	}
+	
 	@RequestMapping(value = "/surveyEventDisplayPop.do")
 	public String surveyEventDisplayPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
 		

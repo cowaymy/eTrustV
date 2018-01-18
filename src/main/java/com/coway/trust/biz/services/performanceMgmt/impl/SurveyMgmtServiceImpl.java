@@ -45,6 +45,8 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 		return surveyMgmtMapper.selectSurveyEventList(params);
 	}
 	
+	
+	
 	@Override
 	public int addSurveyEventCreate(List<Object> addList,String loginId) {	
 		
@@ -191,6 +193,11 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 	@Override
 	public List<EgovMap> selectSalesOrdNotList(Map<String, Object> params) {
 		return surveyMgmtMapper.selectSalesOrdNotList(params);
+	}
+	
+	@Override
+	public EgovMap selectSalesOrdNotList2(Map<String, Object> params) {
+		return surveyMgmtMapper.selectSalesOrdNotList2(params);
 	}
 	
 	@Override

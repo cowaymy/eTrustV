@@ -50,6 +50,8 @@ public interface SurveyMgmtMapper {
 	int deleteSurveyEventQuestion(Map<String, Object> params);
 	
 	int deleteSurveyEventAns(Map<String, Object> params);
+	
+	EgovMap selectSalesOrdNotList2(Map<String, Object> params);
 
 
 }

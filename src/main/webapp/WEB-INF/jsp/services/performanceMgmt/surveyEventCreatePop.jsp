@@ -33,8 +33,8 @@ var columnLayout_q=[
 
 var columnLayout_target=[             
  {dataField:"salesOrdNo", headerText:'Sales Order', width: "25%", editable : true},
- {dataField:"name", headerText:'Name', width: "25%", editable : true},
- {dataField:"contNo", headerText:'Contact Number', width: "25%", editable : true },
+ {dataField:"name", headerText:'Name', width: "25%", editable : false},
+ {dataField:"contNo", headerText:'Contact Number', width: "25%", editable : false },
  {dataField:"callMem", headerText:'Calling Agent', editable : true},
 ];
 
@@ -76,6 +76,7 @@ $(document).ready(function(){
     myGridID_Q = GridCommon.createAUIGrid("grid_wrap_q", columnLayout_q, "", gridOptions_q);
     myGridID_Target = GridCommon.createAUIGrid("grid_wrap_target", columnLayout_target, "", gridOptions2);
     
+    
     //var rowCount = AUIGrid.getRowPosition(myGridID_Q);
 
     var item_info = { "hcTypeId" :  "Event Survey", "evtTypeDesc" : "", "evtMemId" : "", "evtDt" :  "", "evtCompRqstDate" :  "", "evtCompRate" :  "", "com" :  ""}; //row 추가
@@ -83,6 +84,52 @@ $(document).ready(function(){
     
     AUIGrid.bind(myGridID_Q, "removeRow_q", auiRemoveRowHandler);
     AUIGrid.bind(myGridID_Target, "removeRow_target", auiRemoveRowHandler);
+    
+    AUIGrid.bind(myGridID_Target, "cellEditEnd", function( event ) {
+        //alert("rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " cellEditEnd");
+        var rowCount1 = AUIGrid.getRowCount(myGridID_Target);
+        /*
+        for(var i = 0 ; i<rowCount1-1; i++){
+        	if(AUIGrid.getCellValue(myGridID , i , "salesOrdNo")==event.value){
+        		alert("same salesOrdNo");
+        		AUIGrid.removeRow(myGridID_Target, rowCount-1);
+                AUIGrid.removeSoftRows(myGridID_Target);
+                return false;
+        	}
+        }
+        */
+        if(event.columnIndex ==0){
+        	var salesOrdNo = event.value;
+        	
+        	Common.ajax("Get", "/services/performanceMgmt/selectSalesOrdNotList2.do?salesOrdNo="+ salesOrdNo +"", '' , function(result) {
+                if(result!=null){
+	                console.log("성공.");
+	                console.log("data : "+ result);
+	                AUIGrid.addRow(myGridID_Target, result, "first");
+	                var rowCount2 = AUIGrid.getRowCount(myGridID_Target);
+	                AUIGrid.removeRow(myGridID_Target, rowCount2-1);
+	                AUIGrid.removeSoftRows(myGridID_Target);
+	               //AUIGrid.setGridData(myGridID_Target, result );
+                }else{
+                	Common.alert("<spring:message code='sys.common.alert.sys.common.alert.NoSuch' arguments='branch' htmlEscape='false'/>");
+                    var rowCount2 = AUIGrid.getRowCount(myGridID_Target);
+                    AUIGrid.removeRow(myGridID_Target, rowCount2-1);
+                    AUIGrid.removeSoftRows(myGridID_Target);
+                }
+                
+           });
+        	/*
+        	Common.ajax("GET", "/services/performanceMgmt/selectSalesOrdNotList2.do?salesOrdNo="+salesOrdNo , function(result) {
+        	    alert(result.salesOrdNo);        		
+        		
+        		console.log("성공.");
+                console.log("data : " + result);   
+        		AUIGrid.setGridData(myGridID_Target, result );
+        		
+            });
+        	*/
+        }
+     });
     
     fn_getCodeSearch('');
     
@@ -160,6 +207,10 @@ $(document).ready(function(){
      $('#excelDown_target').click(function() {
          GridCommon.exportTo("grid_wrap_target", 'xlsx', "Survey Target and Calling Agent");
      });
+     
+     
+     
+     
    
      //save
      $("#save_create").click(function() {
@@ -168,14 +219,12 @@ $(document).ready(function(){
              
              var addList_info = AUIGrid.getAddedRowItems(myGridID_Info);
              var v_evtMemId = addList_info[0].evtMemId;
-             
 
              Common.ajax("GET", "/services/performanceMgmt/selectEvtMemIdList.do", {memId : v_evtMemId}, function(result) {
                  if(result.length == 0){
                      result = false;
                      Common.alert("'In Charge of the Event' is a wrong member code.");
                  } else {
-                     
                      var rowCount_t = AUIGrid.getRowCount(myGridID_Target);
                      //alert("rowCount_t::"+rowCount_t);
                      
@@ -216,7 +265,7 @@ $(document).ready(function(){
                              }else if(v_salesOrdNo == ""){
                             	 nullCount ++;
                              }
-                         } 
+                         }
                          //alert("중복안된값들"+duplicationChkList);
                          Common.ajax("GET", "/services/performanceMgmt/selectSalesOrdNotList.do", {salesOrdNo : salesOrdNo} , function(result) {
                              //if(result.length == 0 || salesOrderListLength != (result.length+duplicatedCount)){

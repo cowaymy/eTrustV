@@ -68,12 +68,15 @@ $(document).ready(function(){
 	$("#respondInfo").click(function() {
 		
 		  var counselingNum = $("#counselingNo").text();
+		  
 		    Common.ajax("Get", "/services/tagMgmt/getRemarkResults.do?counselingNo="+ counselingNum +"", '' , function(result) {
+		    	
 		    	 console.log("성공.");
 		         console.log("data : "+ result);
 		        AUIGrid.setGridData(gridID1 , result );
 		        AUIGrid.resize(gridID1,900,300);
 		    });
+		    
 	});
 	
 	  doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'inputMainDept' , 'S', '');

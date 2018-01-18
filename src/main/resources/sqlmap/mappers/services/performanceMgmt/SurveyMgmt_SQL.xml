@@ -17,8 +17,28 @@
     
     <select id="selectSurveyEventList" parameterType="Map" resultType="egovMap">
 	<![CDATA[
-		SELECT A.EVT_TYPE_DESC, B.MEM_CODE, C.CODE_DESC, A.EVT_DT, A.EVT_ID
-        FROM CCR0012M A, ORG0001D B, SYS0013M C
+	SELECT EVT_TYPE_DESC,MEM_CODE,CODE_DESC,EVT_DT,EVT_ID,
+      CASE WHEN P_CNT/T_CNT*100>=EVT_COMP_RATE THEN 'Complete'
+      ELSE 'In Progress'
+      END AS SURVEY_STATUS
+FROM (
+		SELECT A.EVT_TYPE_DESC, B.MEM_CODE, C.CODE_DESC, A.EVT_DT, A.EVT_ID,X.CNT P_CNT , Y.CNT T_CNT,Z.EVT_COMP_RATE
+        FROM CCR0012M A
+        LEFT OUTER JOIN(
+                        SELECT EVT_ID,COUNT(*) CNT FROM 
+                        (SELECT DISTINCT A.EVT_CONT_ID,B.EVT_ID 
+                          FROM CCR0002D A, CCR0013M B 
+                          WHERE A.EVT_CONT_ID = B.EVT_CONT_ID-- AND B.EVT_ID = 26
+                          ) A
+                        GROUP BY A.EVT_ID
+                        ) X ON A.EVT_ID = X.EVT_ID
+        LEFT OUTER JOIN (
+                        SELECT EVT_ID, COUNT(*) CNT FROM CCR0013M  GROUP BY EVT_ID
+                        ) Y ON A.EVT_ID = Y.EVT_ID
+        LEFT OUTER JOIN (
+                        SELECT EVT_ID,EVT_COMP_RATE FROM CCR0012M
+                        ) Z ON A.EVT_ID = Z.EVT_ID
+        , ORG0001D B, SYS0013M C
         WHERE A.EVT_TYPE_ID = 2718
         AND A.EVT_MEM_ID = B.MEM_ID
         AND B.MEM_TYPE = C.CODE_ID
@@ -36,6 +56,7 @@
 		<if test="eventMemCode != null and eventMemCode != '' ">
 		AND B.MEM_CODE = #{eventMemCode}
 		</if>
+		)
 	</select>
 	
 	
@@ -281,6 +302,16 @@
                </if>
            </foreach>
         </if>
+    </select>
+    
+    <select id="selectSalesOrdNotList2" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+        select b.sales_ord_no,a.NAME, a.TEL_M1  CONT_NO
+        from sal0027d a, sal0001d b         
+        WHERE 1=1
+        AND a.CUST_CNTC_ID = b.CUST_CNT_ID
+        AND b.SALES_ORD_NO = #{salesOrdNo}
+        ]]>
     </select>
     
     
