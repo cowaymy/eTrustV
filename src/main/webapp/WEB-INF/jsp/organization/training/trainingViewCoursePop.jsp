@@ -169,9 +169,9 @@ $(document).ready(function () {
     });
     
     // Member Type
-    CommonCombo.make("memTypeView", "/common/selectCodeList.do", {groupCode : '1'}, "${courseInfo.coursMemTypeId}", {
+    CommonCombo.make("memTypeView", "/common/selectCodeList.do", {groupCode : '1', codeIn : 'HP,CD,CT,ST'}, "${courseInfo.coursMemTypeId}", {
         id: "codeId",
-        name: "code",
+        name: "codeName",
         type:"S"
     });
     
@@ -252,6 +252,43 @@ function newCheckAll(isChecked) {
 }
 
 function fn_updateCourseAttendee() {
+	
+	if(form_newCours.newCodeId.value == ""){
+        Common.alert("* Please select the course type.");
+        return false;
+    }
+    if(form_newCours.generalCodeView.value == ""){
+        Common.alert("* Please select the Member(Y/N).");
+        return false;
+    }else if(form_newCours.generalCodeView.value == "2318"){
+
+        if($("#memTypeView").val() == ""){
+            Common.alert("* Please select the Member Type.");
+            return false;
+        }
+    }
+    if(form_newCours.coursCode.value == ""){
+        Common.alert("* Please key in the course code.");
+        return false;
+    }
+    if(form_newCours.coursName.value == ""){
+        Common.alert("* Please key in the course name.");
+        return false;
+    }
+    if(form_newCours.coursStart.value == "" && form_newCours.coursEnd.value == ""){
+        Common.alert("* Please select the training period.");
+        return false;
+    }else{
+        if(fn_getDateGap() < 1){
+            Common.alert("Please check the training period.");
+            return false;
+        }
+    }
+    if(form_newCours.coursLoc.value == ""){
+        Common.alert("* Please key in the location.");
+        return false;
+    }
+    
 	var obj = $("#form_newCours").serializeJSON();
 	obj.gridData = GridCommon.getEditData(newAttendeeGridID);
 	console.log(obj);
@@ -279,6 +316,24 @@ function fn_inputAmt(obj){
     
 }
 
+function fn_getDateGap(){
+    
+    var startArr, endArr;
+    var sdate=$("#newCoursStart").val();
+    var edate=$("#newCoursEnd").val();
+    
+    startArr = sdate.split('/');
+    endArr = edate.split('/');
+    
+    var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
+    var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
+    
+    var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
+    
+//    console.log("gap : " + gap);
+
+    return gap;
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->

@@ -264,6 +264,44 @@ CommonCombo.make("attendanceNew", "/common/selectCodeList.do", {groupCode : '327
 });
 
 function fn_insertCourseAttendee() {
+	
+	if(form_newCours.newCodeId.value == ""){
+		Common.alert("* Please select the course type.");
+		return false;
+	}
+	if(form_newCours.generalCodeNew.value == ""){
+        Common.alert("* Please select the Member(Y/N).");
+        return false;
+    }else if(form_newCours.generalCodeNew.value == "2318"){
+
+    	if($("#memTypeNew").val() == ""){
+    		Common.alert("* Please select the Member Type.");
+    		return false;
+    	}
+    }
+	if(form_newCours.coursCode.value == ""){
+        Common.alert("* Please key in the course code.");
+        return false;
+    }
+	if(form_newCours.coursName.value == ""){
+        Common.alert("* Please key in the course name.");
+        return false;
+    }
+	if(form_newCours.newCoursStart.value == "" && form_newCours.newCoursEnd.value == ""){
+        Common.alert("* Please select the training period.");
+        return false;
+    }else{
+        if(fn_getDateGap() < 1){
+            Common.alert("Please check the training period.");
+            return false;
+        }
+    }
+	if(form_newCours.coursLoc.value == ""){
+        Common.alert("* Please key in the location.");
+        return false;
+    }
+	
+	
 	$("#attendanceNew").removeAttr("disabled");
 	var obj = $("#form_newCours").serializeJSON();
 	obj.gridData = GridCommon.getEditData(newAttendeeGridID);
@@ -277,6 +315,25 @@ function fn_insertCourseAttendee() {
         
         fn_selectCourseList();
     });
+}
+
+function fn_getDateGap(){
+    
+    var startArr, endArr;
+    var sdate=$("#newCoursStart").val();
+    var edate=$("#newCoursEnd").val();
+    
+    startArr = sdate.split('/');
+    endArr = edate.split('/');
+    
+    var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
+    var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
+    
+    var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
+    
+//    console.log("gap : " + gap);
+
+    return gap;
 }
 </script>
 
@@ -296,7 +353,7 @@ function fn_insertCourseAttendee() {
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="form_newCours">
+<form action="#" method="post" id="form_newCours" name="form_newCours">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
