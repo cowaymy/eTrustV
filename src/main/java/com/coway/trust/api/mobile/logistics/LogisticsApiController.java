@@ -996,7 +996,11 @@ public class LogisticsApiController {
 		String str = MlogApiService.stockMovementCommonCancle(params);
 		
 		if (str != null && !"".equals(str)){
-			throw new PreconditionException(AppConstants.FAIL, "In process of request.");
+			if ("18".equals(str)){
+				throw new PreconditionException(AppConstants.FAIL, "It cannot delete for INS.");
+			}else{
+				throw new PreconditionException(AppConstants.FAIL, "In process of request.");
+			}
 		}
 							
 	}
@@ -1012,7 +1016,11 @@ public class LogisticsApiController {
 		String str = MlogApiService.stockMovementCommonCancle(params);
 		
 		if (str != null && !"".equals(str)){
-			throw new PreconditionException(AppConstants.FAIL, "In process of request.");
+			if ("18".equals(str)){
+				throw new PreconditionException(AppConstants.FAIL, "It cannot delete for INS.");
+			}else{
+				throw new PreconditionException(AppConstants.FAIL, "In process of request.");
+			}
 		}
 							
 	}
@@ -1027,7 +1035,11 @@ public class LogisticsApiController {
 		String str = MlogApiService.stockMovementCommonCancle(params);
 		
 		if (str != null && !"".equals(str)){
-			throw new PreconditionException(AppConstants.FAIL, "In process of request.");
+			if ("18".equals(str)){
+				throw new PreconditionException(AppConstants.FAIL, "It cannot delete for INS.");
+			}else{
+				throw new PreconditionException(AppConstants.FAIL, "In process of request.");
+			}
 		}
 							
 	}
