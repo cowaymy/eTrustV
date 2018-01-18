@@ -246,8 +246,9 @@
                        type : "ButtonRenderer",
                        labelText : "Order",
                        onclick : function(rowIndex, columnIndex, value, item) {
-                    	   $("#_ordId").val(item.salesOrdId);
-                    	    Common.popupWin('legderParam', "/sales/order/orderLedger2ViewPop.do", option);
+                    	    //$("#_ordId").val(item.salesOrdId);
+                    	    //Common.popupWin('legderParam', "/sales/order/orderLedger2ViewPop.do", option);
+                    	    Common.popupDiv("/sales/order/orderDetailPop.do", { salesOrderId : item.salesOrdId }, null, true, "_divIdOrdDtl");
                    }
             }
         }];
@@ -304,8 +305,9 @@
                      type : "ButtonRenderer",
                      labelText : "Order",
                      onclick : function(rowIndex, columnIndex, value, item) {
-                    	 $("#_ordId").val(item.salesOrdId);
-                         Common.popupWin('legderParam', "/sales/order/orderLedger2ViewPop.do", option);
+                    	 //$("#_ordId").val(item.salesOrdId);
+                         //Common.popupWin('legderParam', "/sales/order/orderLedger2ViewPop.do", option);
+                         Common.popupDiv("/sales/order/orderDetailPop.do", { salesOrderId : item.salesOrdId }, null, true, "_divIdOrdDtl");
                    }
             }
         }];
