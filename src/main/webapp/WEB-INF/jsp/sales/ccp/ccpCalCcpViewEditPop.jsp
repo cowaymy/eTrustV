@@ -114,7 +114,7 @@ $(document).ready(function() {
                     return;
                 }
             }
-            if( '6' == $("#_statusEdit").val() || '1' == $("#_statusEdit").val()){
+            if( '6' == $("#_statusEdit").val()){  //|| '1' == $("#_statusEdit").val()
                 if(null == $("#_reasonCodeEdit").val() || '' == $("#_reasonCodeEdit").val()){
                     Common.alert("<spring:message code='sys.common.alert.validation' arguments='CCP Feedback Code'/>");
                     return;
