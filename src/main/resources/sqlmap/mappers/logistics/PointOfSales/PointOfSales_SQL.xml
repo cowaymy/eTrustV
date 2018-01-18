@@ -136,7 +136,9 @@ select ROWNUM rnum , l47.REQST_STUS     status
     FROM  LOG0056M L56,
               SYS0026M S26,
               sys0028m s28 ,
-             (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <![CDATA[<>]]> 'Y'  GROUP BY LOC_ID , ITM_CODE ) L75,
+             (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <![CDATA[<>]]> 'Y'   
+              AND  reqst_no IN (SELECT reqst_no  FROM log0047m WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+              GROUP BY LOC_ID , ITM_CODE ) L75,
              (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 15) S15,
              (select * from sys0013m where code_master_id = 11) s11
     WHERE 1=1

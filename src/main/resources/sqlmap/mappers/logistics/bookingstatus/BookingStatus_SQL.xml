@@ -26,7 +26,9 @@
 		, (SELECT * FROM sys0013m WHERE code_master_id = 308) trand
 		WHERE 1=1
 		AND l75.trnsc_type_dtl = trand.code
-
+		AND l75.reqst_no IN (SELECT reqst_no
+                                          FROM log0047m
+                                         WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
         <if test="stkreqstno !=null and stkreqstno !=''">
             AND l47.reqst_no = #{stkreqstno}
         </if>

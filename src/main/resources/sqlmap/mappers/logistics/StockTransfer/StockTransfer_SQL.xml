@@ -202,6 +202,7 @@
              ,(SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=S26.UOM) uom
           from log0056m l56 , sys0026m s26 , sys0028m s28
              ,(select loc_id , itm_code , sum(nvl(reqst_qty , 0)) - sum(nvl(mov_qty , 0)) as bookqty from log0075m where nvl(final_cmplt , 'N') <![CDATA[<>]]> 'Y'
+                AND  reqst_no IN (SELECT reqst_no FROM log0047m WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
                 group by loc_id , itm_code ) l75
              , (select * from sys0013m where code_master_id = 15) s15
              , (select * from sys0013m where code_master_id = 11) s11
@@ -566,7 +567,8 @@
 		 FROM 
 		  LOG0056M L56 ,
 		 (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <![CDATA[<>]]> 'Y'
-		                GROUP BY LOC_ID , ITM_CODE) L75
+		  AND  reqst_no IN (SELECT reqst_no FROM log0047m WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
+		  GROUP BY LOC_ID , ITM_CODE) L75
 		WHERE 1 = 1
 		AND L56.STK_CODE = L75.ITM_CODE(+)
 		AND L56.LOC_ID = L75.LOC_ID(+)
