@@ -360,6 +360,12 @@
     </select>
     <select id="selectCMM0029DCD" parameterType="Map" resultType="EgovMap">
         SELECT T1.TASK_ID, T1. EMPLY_ID, T4. EMPLY_CODE,T1.RUN_ID,T2.MEM_TYPE MEM_TYPE,
+         case when t4.EMPLY_LEV =4 and EMPLY_BIZ_TYPE_ID = 1375 then 'CDN'
+          when t4.EMPLY_LEV =4 and EMPLY_BIZ_TYPE_ID = 1376  then 'CDC'
+            when t4.EMPLY_LEV =3 then 'CM'
+            when t4.EMPLY_LEV =2 then 'SCM'
+            when t4.EMPLY_LEV =1 then 'GCM'
+            end EMPLY_CODE_RANK,
             nvl(T1.R1,'0') r1,nvl(T1.R2,'0') r2,nvl(T1.R3,'0') r3 ,nvl(T1.R4,'0') r4,nvl(T1.R5,'0') r5,
             nvl(T1.R6,'0') r6,nvl(T1.R7,'0') r7,nvl(T1.R8,'0') r8,nvl(T1.R10,'0') r10,nvl(T1.R11,'0')r11,
             nvl(T1.R13,'0') r13,nvl(T1.R18,'0') r18,nvl(T1.R19,'0') r19,nvl(T1.R20,'0') r20, nvl(T1.R21,'0') r21,
