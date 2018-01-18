@@ -2283,4 +2283,16 @@
             UPD_USER_ID = #{userId}
             WHERE CUST_ID = #{basicCustId}
   </update>
+  
+  <select id="billAddrExist"  parameterType="Map" resultType="int">
+            SELECT count(0) CNT FROM SAL0024D
+	         WHERE CUST_BILL_STUS_ID <![CDATA[<>]]> 8 
+	             AND CUST_BILL_ADD_ID = #{getparam}
+  </select>
+  
+  <select id="installAddrExist"  parameterType="Map" resultType="int">
+            SELECT count(0) CNT FROM SAL0045D
+	         WHERE STUS_CODE_ID <![CDATA[<>]]> 10
+	             AND ADD_ID = #{getparam}
+  </select>
 </mapper>

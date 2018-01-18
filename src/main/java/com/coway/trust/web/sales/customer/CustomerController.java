@@ -983,12 +983,22 @@ public class CustomerController {
 			
 			/*LOGGER.info("팝업창 파라미터 확인 :  custId = " + params.get("custId") + " , custAddId = " + params.get("custAddId"));*/
 			EgovMap detailaddr = null;
+			
 			LOGGER.info("##### updateCustomerAddressInfoPop START #####");
 			LOGGER.info("### 가져온 파라미터 확인 : " + params.get("editCustAddId"));
+			
 			params.put("getparam", params.get("editCustAddId"));
+			
 			detailaddr = customerService.selectCustomerAddrDetailViewPop(params);
 			LOGGER.info("### DetailAddress 정보 확인  : " + detailaddr.toString());
+			int billAddrExist = customerService.billAddrExist(params);
+			int installAddrExist = customerService.installAddrExist(params);
+			
+			LOGGER.info("##### billAddrExist 확인 : " + billAddrExist);
+			LOGGER.info("### installAddrExist 확인 : " + installAddrExist);
 			model.addAttribute("detailaddr", detailaddr);
+			model.addAttribute("billAddrExistCnt", billAddrExist);
+			model.addAttribute("installAddrExistCnt", installAddrExist);
 			
 			return "sales/customer/customerAddressEditInfoPop"; 
 		}

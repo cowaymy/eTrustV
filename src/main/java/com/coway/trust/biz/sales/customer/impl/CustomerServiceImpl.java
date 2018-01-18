@@ -793,5 +793,16 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	}
 	
 	
+	@Override
+	public int billAddrExist(Map<String, Object> params) {
+		
+		return customerMapper.billAddrExist(params);
+	}
 	
+	
+	@Override
+	public int installAddrExist(Map<String, Object> params) {
+		
+		return customerMapper.installAddrExist(params);
+	}
 }

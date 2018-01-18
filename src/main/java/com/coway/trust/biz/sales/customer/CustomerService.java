@@ -515,4 +515,7 @@ public interface CustomerService {
 	void updateLimitBasicInfo(Map<String, Object> params) throws Exception;
 	
 	int getCustIdSeq() throws Exception;
+	
+	int billAddrExist(Map<String, Object> params);
+	int installAddrExist(Map<String, Object> params);
 }
