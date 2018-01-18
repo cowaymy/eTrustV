@@ -571,6 +571,9 @@
                    SUM (NVL (MOV_QTY, 0)) MOV_QTY
               FROM LOG0075M
           <![CDATA[    WHERE NVL (FINAL_CMPLT, 'N') <> 'Y' ]]>
+             AND REQST_NO IN (SELECT REQST_NO
+                            FROM LOG0047M
+                      <![CDATA[      WHERE NVL (REQST_DEL, 'N') <> 'Y') ]]>
           GROUP BY LOC_ID, ITM_CODE) L75,
          CRDC
          WHERE     1 = 1
@@ -613,6 +616,9 @@
                          SUM (NVL (MOV_QTY, 0)) MOV_QTY
                     FROM LOG0075M
            <![CDATA[        WHERE NVL (FINAL_CMPLT, 'N') <> 'Y' ]]>
+              AND REQST_NO IN (SELECT REQST_NO
+                            FROM LOG0047M
+                         <![CDATA[    WHERE NVL (REQST_DEL, 'N') <> 'Y') ]]>
                 GROUP BY LOC_ID, ITM_CODE ) L75,
                CRDC
                WHERE     1 = 1
@@ -638,6 +644,9 @@
                                      SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
                                 FROM LOG0075M
                                WHERE NVL (FINAL_CMPLT, 'N') <> 'Y'
+                                  AND REQST_NO IN (SELECT REQST_NO
+                            FROM LOG0047M
+                           WHERE NVL (REQST_DEL, 'N') <> 'Y')
                             GROUP BY LOC_ID, ITM_CODE)  C
         WHERE B.LOC_ID = L.RDC 
           AND B.LOC_ID = C.LOC_ID(+)
@@ -650,6 +659,9 @@
                                      SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
                                 FROM LOG0075M
                                WHERE NVL (FINAL_CMPLT, 'N') <> 'Y'
+                                   AND REQST_NO IN (SELECT REQST_NO
+                            FROM LOG0047M
+                           WHERE NVL (REQST_DEL, 'N') <> 'Y')
                             GROUP BY LOC_ID, ITM_CODE) C
         WHERE B.LOC_ID = L.CDC
            AND B.LOC_ID = C.LOC_ID(+)
