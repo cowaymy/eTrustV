@@ -1315,10 +1315,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		int checkInt =0 ;
     		
     		// bsResultDet
-    	
+    		Map<String, Object> bsResultDet_Rev = null; 
     		for(int i = 0 ; i<qryResultDet.size() ; i++){
-    			Map<String, Object> bsResultDet_Rev = new HashMap<String, Object>();
     			
+    			bsResultDet_Rev = new HashMap<String, Object>();
     			//bsResultDet_Rev.put("BSResultItemID", 0);
     			bsResultDet_Rev.put("BSResultID", BSResultM_resultID);
     			bsResultDet_Rev.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));//BS_RESULT_PART_ID
@@ -1340,28 +1340,28 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     				hsManualMapper.addbsResultDet_Rev(bsResultDet_Rev);	//insert svc 0007d c
     				checkInt ++;
     				if(i == (qryResultDet.size() - 1)){ // 마지막일때 넘기기
-        				logger.debug("reverse JM"+ String.valueOf(bsResultDet_Rev.get("BSResultID")));
-        				//물류 프로시져 호출
-        	    	    Map<String, Object>  logPram = null ;
-        	    	      logPram =new HashMap<String, Object>();
-        	    	         logPram.put("ORD_ID", String.valueOf(bsResultDet_Rev.get("BSResultID")));   
-        	    	         logPram.put("RETYPE", "RETYPE");  
-        	    	         logPram.put("P_TYPE", "OD06");  
-        	    	         logPram.put("P_PRGNM", "HSCEN");  
-        	    	         logPram.put("USERID", String.valueOf(sessionVO.getUserId()));   
-        	    	         
-    
-        	    	    Map   SRMap=new HashMap(); 
-        	    	    logger.debug("ASManagementListServiceImpl.asResult_update in  CENCAL  물류 차감  PRAM ===>"+ logPram.toString());
-        	    	   servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);  
-        	    	    logger.debug("ASManagementListServiceImpl.asResult_update  in  CENCAL 물류 차감 결과   ===>" +logPram.toString());
+        			
     				}
     			}
     		}
     		
     		if(checkInt > 0){
     			hsManualMapper.addbsResultMas_Rev(bsResultMas_Rev); //svc 0006d B insert
-    			
+    			logger.debug("reverse JM"+ String.valueOf(bsResultDet_Rev.get("BSResultID")));
+				//물류 프로시져 호출
+	    	    Map<String, Object>  logPram = null ;
+	    	      logPram =new HashMap<String, Object>();
+	    	         logPram.put("ORD_ID", String.valueOf(bsResultDet_Rev.get("BSResultID")));   
+	    	         logPram.put("RETYPE", "RETYPE");  
+	    	         logPram.put("P_TYPE", "OD06");  
+	    	         logPram.put("P_PRGNM", "HSCEN");  
+	    	         logPram.put("USERID", String.valueOf(sessionVO.getUserId()));   
+	    	         
+
+	    	    Map   SRMap=new HashMap(); 
+	    	    logger.debug("ASManagementListServiceImpl.asResult_update in  CENCAL  물류 차감  PRAM ===>"+ logPram.toString());
+	    	   servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_REVERSE(logPram);  
+	    	    logger.debug("ASManagementListServiceImpl.asResult_update  in  CENCAL 물류 차감 결과   ===>" +logPram.toString());
     		}
     		
     		EgovMap qry_stkReqM = null;
@@ -1510,17 +1510,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     				if(i == (bsResultDet.size() - 1)){
         				logger.debug("request JM"+ i + String.valueOf(row.get("BSResultID")));
     
-        	    		//////////////////////물류호출/////////////////////
-        	    		Map<String, Object> logPram2 =new HashMap<String, Object>();
-        	            logPram2.put("ORD_ID",  String.valueOf(row.get("BSResultID")));
-        	            logPram2.put("RETYPE", "COMPLET");
-        	            logPram2.put("P_TYPE", "OD05");
-        	            logPram2.put("P_PRGNM", "HSCOM");
-        	            logPram2.put("USERID", sessionVO.getUserId());
-    
-        	            logger.debug("HSCOM 물류 호출 PRAM ===>"+ logPram2.toString());
-        	            servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram2);
-        	            logger.debug("HSCOMCALL 물류 호출 결과 ===> {}" , logPram2);
+        	   
     				}
     				
     			}
@@ -1544,6 +1534,22 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     		
     		Map<String, Object> qrySchedule = new HashMap<String, Object>();
     		qrySchedule = hsManualMapper.selectQrySchedule(bsResultMas);
+    		
+     		//////////////////////물류호출/////////////////////
+    		Map<String, Object> logPram2 =new HashMap<String, Object>();
+            logPram2.put("ORD_ID",  String.valueOf(qrySchedule.get("no")));
+            logPram2.put("RETYPE", "COMPLET");
+            logPram2.put("P_TYPE", "OD05");
+            logPram2.put("P_PRGNM", "HSCOM");
+            logPram2.put("USERID", sessionVO.getUserId());
+
+            logger.debug("HSCOM 물류 호출 PRAM ===>"+ logPram2.toString());
+            servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram2);
+            logger.debug("HSCOMCALL 물류 호출 결과 ===> {}" , logPram2);
+    		
+    		
+    		
+    		
     	
     		hsManualMapper.updateQryConfig(bsResultMas);
     		Map<String, Object> qryConfig = new HashMap<String, Object>();

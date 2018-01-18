@@ -93,7 +93,7 @@ $(document).ready(function() {
 function fn_saveInstall(){
 	 if($("#addInstallForm #installStatus").val() == 4){
 		if( $("#failReason").val() != 0 || $("#nextCallDate").val() != ''){
-			Common.alert("Can Not Select FailReason and nextCallDate When You Selected  Complete Status");
+			Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
 			return;
 		} 
 	 }
