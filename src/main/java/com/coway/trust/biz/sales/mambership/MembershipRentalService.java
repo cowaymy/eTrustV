@@ -42,8 +42,8 @@ public interface MembershipRentalService {
 	EgovMap usp_SELECT_ServiceContract_Ledger(Map<String, Object> params);
 	EgovMap selectQuotInfoInfo(Map<String, Object> params);
 
-	
-	
+	List<EgovMap> paymentViewHistory(Map<String, Object> params);
+	void viewHistPaySetting(Map<String, Object> setmap);
 	
 	
 }

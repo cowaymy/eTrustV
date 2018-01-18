@@ -76,6 +76,7 @@ public interface MembershipRentalMapper {
 	
 	EgovMap   selectQuotInfoInfo(Map<String, Object> params);
 
+	List<EgovMap> paymentViewHistory(Map<String, Object> params);
 	
-	
+	void viewHistPaySetting(Map<String, Object> setmap);
 }

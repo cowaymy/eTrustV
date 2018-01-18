@@ -11,6 +11,8 @@ import javax.annotation.Resource;
 
 import org.springframework.stereotype.Service;
 import org.apache.commons.lang.StringUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import com.coway.trust.biz.sales.mambership.MembershipRentalService;
 import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
@@ -33,7 +35,8 @@ public class MembershipRentalServiceImpl extends EgovAbstractServiceImpl impleme
 	
 	@Resource(name = "orderRegisterMapper")
 	private OrderRegisterMapper orderRegisterMapper;  
-	 
+	
+	private static Logger logger = LoggerFactory.getLogger(MembershipRentalServiceImpl.class);
 	
 	@Override
 	public List<EgovMap> selectList(Map<String, Object> params) {
@@ -133,6 +136,19 @@ public class MembershipRentalServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public EgovMap selectQuotInfoInfo(Map<String, Object> params) {
 		return membershipRentalMapper.selectQuotInfoInfo(params);
+	}
+	
+	
+	@Override
+	public List<EgovMap> paymentViewHistory(Map<String, Object> params) {
+		return membershipRentalMapper.paymentViewHistory(params);
+	}
+	
+	
+	@Override
+	public void viewHistPaySetting(Map<String, Object> setmap){
+		logger.debug("					" + setmap.toString());
+		membershipRentalMapper.viewHistPaySetting(setmap);
 	}
 	
 }
