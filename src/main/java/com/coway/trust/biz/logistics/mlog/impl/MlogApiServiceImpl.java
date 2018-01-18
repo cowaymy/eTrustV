@@ -361,7 +361,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		String delvryNo = MlogApiMapper.StockMovementDelvryNo(cancleMap); // in : smo / out : delvry_no
         String test = MlogApiMapper.StockMovementReqstCancelYn(cancleMap);
         if (test != null && !"".equals(test)) { // 일반 요청 상태
-        	return test;
+        	return "18";
         }
 		if (delvryNo == null || "".equals(delvryNo)) { // 일반 요청 상태
 			MlogApiMapper.StockMovementReqstCancel(cancleMap);
