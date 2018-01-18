@@ -1590,6 +1590,13 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
 	       AND NVL(L54.DEL_FLAG , 'N') <![CDATA[<>]]> 'Y' 
 	  GROUP BY L54.DELVRY_NO 
     </select>
+    
+    <select id="StockMovementReqstCancelYN" parameterType="Map" resultType="String">
+        SELECT REF_DOC_NO
+          FROM LOG0047M
+         WHERE REQST_NO = #{smoNo}
+           AND REQST_TYPE_DTL = 'OD01'
+    </select>
 	
 	<update id="StockMovementReqstCancel"  parameterType="Map">
 	    UPDATE LOG0047M 

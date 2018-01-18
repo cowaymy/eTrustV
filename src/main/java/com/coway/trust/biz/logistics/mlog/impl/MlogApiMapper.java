@@ -142,5 +142,7 @@ public interface MlogApiMapper {
 	String dateParsing(String param);
 	
 	Map<String, Object> selectDelvryGRcmplt(String delNo);
+	
+	String StockMovementReqstCancelYn(Map<String, Object> receiveMap);
 
 }
