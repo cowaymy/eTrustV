@@ -531,8 +531,17 @@
             
             Common.alert('GST Amount' + DEFAULT_DELIMITER + '<b>'+msg+'</b>');
         });
+        $('#btnViewHistory').click(function() { 
+            fn_doViewHistory_Click();
+        });
     });
-    
+
+    function fn_doViewHistory_Click(){
+    	 var pram  ="?srvCntrctId=0&ordId=${salesOrderId}"; 
+    	 
+    	 Common.popupDiv("/sales/membershipRental/paymentViewHistoryPop.do"+pram ,null, null , true , '_ViewHistoryDiv1');    	      
+    }
+
 	function fn_excludeGstAmt() {
         //Amount before GST
         var oldPrice     = $('#orgOrdPrice').val();
