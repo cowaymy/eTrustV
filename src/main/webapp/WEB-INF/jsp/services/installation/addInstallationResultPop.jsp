@@ -91,12 +91,33 @@ $(document).ready(function() {
 });
 
 function fn_saveInstall(){
-	 if($("#addInstallForm #installStatus").val() == 4){
+	 if($("#addInstallForm #installStatus").val() == 4){   // Completed
 		if( $("#failReason").val() != 0 || $("#nextCallDate").val() != ''){
 			Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
 			return;
-		} 
+		}
+	 
+		if ( $("#addInstallForm #installDate").val() == '' ) {
+			Common.alert("Please insert 'Actual Install Date'");
+            return;
+		} else if ( $("#addInstallForm #sirimNo").val() == '' ) {
+			Common.alert("Please insert 'SIRIM No'");
+            return;
+		} else if ( $("#addInstallForm #serialNo").val() == '' ) {
+            Common.alert("Please insert 'Serial No'");
+            return;
+        }
 	 }
+	 
+	 if($("#addInstallForm #installStatus").val() == 21){  // Failed
+	        if( $("#failReason").val() == 0 ){
+	            Common.alert("Please choose 'Failed Reason'");
+	            return;
+	        } else if ( $("#nextCallDate").val() == '' ) {
+	        	Common.alert("Please insert 'Next Call Date'");
+                return;
+	        }
+	}
 
 	Common.ajax("POST", "/services/addInstallation.do", $("#addInstallForm").serializeJSON(), function(result) {
         console.log(result);
