@@ -92,7 +92,8 @@ public class SirimServiceImpl extends EgovAbstractServiceImpl implements SirimSe
 		// Logger.debug("upuser_id ! : {}", params.get("upuser_id"));
 
 		String addWarehouse = (String) params.get("addWarehouse");
-		String addTypeSirim = (String) params.get("addTypeSirim");
+		//int  addTypeSirim = (int) params.get("addTypeSirim");
+		int addTypeSirim = Integer.parseInt((String) params.get("addTypeSirim"));
 		String addPrefixNo = (String) params.get("addPrefixNo");
 		int Qty = Integer.parseInt((String) params.get("addQuantity"));
 		String addSirimNoFirst = (String) params.get("addSirimNoFirst");
