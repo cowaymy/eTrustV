@@ -16,15 +16,19 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.util.StringUtils;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.mambership.MembershipRentalService;
 import com.coway.trust.biz.sales.mambership.MembershipService;
+import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 
@@ -594,6 +598,54 @@ public class  MembershipRentalController {
 	public String membershipKeyInListPop (@RequestParam Map<String, Object> params) throws Exception{
 		return "sales/membership/membershipRentalKeyInListPop";
 	}
+	
+	@RequestMapping(value = "/paymentViewHistoryPop.do")
+	public String paymentViewHistoryPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
+
+		logger.debug("in  paymentViewHistory ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		model.addAttribute("srvCntrctId", params.get("srvCntrctId"));
+		model.addAttribute("salesOrdId", params.get("ordId"));
+		model.addAttribute("userId", sessionVO.getUserId());
+	
+		return "sales/membership/mRentalPaymentViewHistoryPop";
+	}
+	
+	@RequestMapping(value = "/paymentViewHistoryAjax", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> paymentViewHistoryAjax(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+		logger.debug("in  paymentViewHistory ");
+
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		List<EgovMap> list = membershipRentalService.paymentViewHistory(params);
+	
+		return ResponseEntity.ok(list);
+	}
+	
+	@RequestMapping(value = "/paymentViewHistoryConfirm.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> paymentViewHistoryConfirm(@RequestParam Map<String, Object> params, Model model) {
+		
+		logger.debug("			pram set  log");
+		logger.debug("					" + params.toString());
+		logger.debug("			pram set end  ");
+		
+		membershipRentalService.viewHistPaySetting(params);
+		
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
