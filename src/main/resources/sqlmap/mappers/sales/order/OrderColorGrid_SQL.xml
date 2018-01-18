@@ -320,13 +320,13 @@
 		                                     FROM SAL1006V vB ) E4   ON E4.ORD_ID = F1.OrderID1
 	          WHERE 1=1
 	          <if test="orgCode != null and orgCode != ''">
-	              AND F1.ORG_CODE = #{orgCode}
+	              AND UPPER(F1.ORG_CODE) = UPPER(#{orgCode})
 	          </if>
 	          <if test="grpCode != null and grpCode != ''">
-	              AND F1.GRP_CODE = #{grpCode}
+	              AND UPPER(F1.GRP_CODE) = UPPER(#{grpCode})
 	          </if>
 	          <if test="deptCode != null and deptCode != ''">
-	              AND F1.DEPT_CODE = #{deptCode}
+	              AND UPPER(F1.DEPT_CODE) = UPPER(#{deptCode})
 	          </if>
 	          <if test="memCode != null and memCode != ''" >
                   AND F1.MEM_CODE = #{memCode}
