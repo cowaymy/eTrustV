@@ -165,9 +165,8 @@ function fnExcelExport(fileNm)
 function fnSearchBtnList()
 {
 
-	/*
-	 SAP에서 ITF0151M Insert 후, TRIGGER 통해 SCM0039M에 INSERT...
-	*/
+	//	 SAP에서 ITF0151M Insert 후, TRIGGER 통해 SCM0039M에 INSERT...
+
    var startDT = $("#startDate").val();
    var endDT = $("#endDate").val();
 
@@ -188,11 +187,10 @@ function fnSearchBtnList()
              , params
              , function(result) 
                {
-                  console.log("성공 fnSearchBtnList: " + result.selectOtdStatusViewList.length);
                   AUIGrid.setGridData(myGridID, result.selectOtdStatusViewList);
                   if(result != null && result.selectOtdStatusViewList.length > 0)
                   {
-                      console.log("success: " + result.selectOtdStatusViewList[0].poNo); 
+                    console.log("success: " + result.selectOtdStatusViewList.length + " /PoNo: " + result.selectOtdStatusViewList[0].poNo); 
                   }
                }
              , function(jqXHR, textStatus, errorThrown)
