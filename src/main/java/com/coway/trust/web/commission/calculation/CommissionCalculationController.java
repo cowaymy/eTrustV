@@ -732,6 +732,8 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_CD_CM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDS_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CD_SCM_LEV);
+		if((params.get("code")).equals(CommissionConstants.COMIS_CDG_P01))
+			params.put("emplyLev", CommissionConstants.COMIS_CD_GCM_LEV);
 		
 		List<EgovMap> dataList = commissionCalculationService.selectData7001(params);
 		
