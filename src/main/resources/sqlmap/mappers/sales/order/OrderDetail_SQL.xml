@@ -440,12 +440,19 @@
     </select>
 
     <select id="selectOrderCCPFeedbackCodeByOrderID" parameterType="Map" resultType="egovMap">
-        SELECT T2.CODE
+ 
+        select A.CODE,
+               A.RESN_DESC
+        from (
+           SELECT T2.CODE
              , T2.RESN_DESC
+             , rank() over (order by CCP_ID ) rnk
           FROM SAL0102D T1
           JOIN SYS0032M T2
             ON T2.RESN_ID = T1.CCP_RESN_ID
-         WHERE T1.CCP_SALES_ORD_ID = #{salesOrderId}
+         WHERE T1.CCP_SALES_ORD_ID =  #{salesOrderId}
+          ) A
+         where a.rnk = 1
     </select>
 
     <select id="selectOrderCCPInfoByOrderID" parameterType="Map" resultType="egovMap">
