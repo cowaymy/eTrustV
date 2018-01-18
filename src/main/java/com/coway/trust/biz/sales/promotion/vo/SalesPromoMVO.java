@@ -73,6 +73,8 @@ public class SalesPromoMVO implements Serializable {
     
 	private int isNew;
 
+	private int megaDeal;
+
 	public int getPromoId() {
 		return promoId;
 	}
@@ -303,6 +305,14 @@ public class SalesPromoMVO implements Serializable {
 
 	public void setIsNew(int isNew) {
 		this.isNew = isNew;
+	}
+
+	public int getMegaDeal() {
+		return megaDeal;
+	}
+
+	public void setMegaDeal(int megaDeal) {
+		this.megaDeal = megaDeal;
 	}
 	
 }

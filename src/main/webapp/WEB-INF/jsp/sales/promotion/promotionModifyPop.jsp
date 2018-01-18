@@ -29,6 +29,13 @@
             $("#btnPromoEdit").addClass("blind");
             $("#btnPromoSave").addClass("blind");
         }
+        
+        if('${promoInfo.megaDeal}' == '1') {
+            $('#megaDealY').prop("checked", true);
+        }
+        else {
+            $('#megaDealN').prop("checked", true);
+        }
     });
 
     function fn_addOption() {
@@ -132,7 +139,8 @@
                 promoAddDiscPrc         : $('#promoAddDiscPrc').val().trim(),
                 promoAddDiscPv          : $('#promoAddDiscPv').val().trim(),
                 exTrade                 : $('#exTrade').val(),
-                empChk                  : $('#empChk').val()
+                empChk                  : $('#empChk').val(),
+                megaDeal                : $('input:radio[name="megaDeal"]:checked').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -738,6 +746,14 @@
             $('#sctPromoDetail').removeClass("blind");
         }
         
+        //Promo Application = Rental
+        if(promoAppVal == '2284') {
+            $('[name="megaDeal"]').removeAttr("disabled");
+        }
+        else {
+            $('[name="megaDeal"]').prop("disabled", true);
+            $('#megaDealN').prop("checked", true);
+        }
     }
 
 </script>
@@ -895,6 +911,12 @@
     <td><input id="promoAddDiscPrc" name="promoAddDiscPrc" value="${promoInfo.promoAddDiscPrc}" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row"><spring:message code='sales.promo.addDiscPV'/></th>
     <td><input id="promoAddDiscPv" name="promoAddDiscPv" value="${promoInfo.promoAddDiscPv}" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Mega Deal</th>
+    <td colspan=3>
+        <input id="megaDealY" name="megaDeal" type="radio" value="1" /><span>Yes</span>
+        <input id="megaDealN" name="megaDeal" type="radio" value="0" /><span>No</span></td>
 </tr>
 <!--
 <tr>

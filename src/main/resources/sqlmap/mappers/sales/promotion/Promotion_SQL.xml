@@ -282,7 +282,8 @@
              , CRT_DT
              , UPD_USER_ID
              , UPD_DT
-             , IS_NEW)
+             , IS_NEW
+             , MEGA_DEAL)
         VALUES
              ( #{promoId}
              , #{promoMtchId}
@@ -312,7 +313,8 @@
              , SYSDATE
              , #{updUserId}
              , SYSDATE
-             , #{isNew})
+             , #{isNew}
+             , #{megaDeal})
     </insert>
 
     <insert id="insertSalesPromoD" parameterType="salesPromoDVO">
@@ -404,6 +406,7 @@
              , T1.PROMO_ADD_DISC_PV
              , T1.EMP_CHK
              , T1.EX_TRADE
+             , T1.MEGA_DEAL
           FROM SAL0017D T1
          WHERE T1.PROMO_ID = #{promoId}
     </select>
@@ -596,6 +599,7 @@
              , EX_TRADE                = #{exTrade}
              , UPD_USER_ID             = #{updUserId}
              , UPD_DT                  = SYSDATE
+             , MEGA_DEAL               = #{megaDeal}
          WHERE PROMO_ID                = #{promoId}
     </update>
     

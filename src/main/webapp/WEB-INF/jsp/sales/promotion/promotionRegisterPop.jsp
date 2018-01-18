@@ -103,7 +103,8 @@
                 promoAddDiscPrc         : $('#promoAddDiscPrc').val().trim(),
                 promoAddDiscPv          : $('#promoAddDiscPv').val().trim(),
                 exTrade                 : $('#exTrade').val(),
-                empChk                  : $('#empChk').val()
+                empChk                  : $('#empChk').val(),
+                megaDeal                : $('input:radio[name="megaDeal"]:checked').val()
             },
             salesPromoDGridDataSetList  : GridCommon.getEditData(stckGridID),
             freeGiftGridDataSetList     : GridCommon.getEditData(giftGridID)
@@ -648,13 +649,16 @@
         if(promoAppVal == '2284') {
             $('#promoDiscPeriodTp').val('2293');
             $('#promoDiscPeriod').val('').prop("disabled", true);
+            
+            $('[name="megaDeal"]').removeAttr("disabled");
         }
-        /*
         else {
-            $('#promoDiscPeriodTp').val('');
-            $('#promoDiscPeriod').removeAttr("disabled");
+//          $('#promoDiscPeriodTp').val('');
+//          $('#promoDiscPeriod').removeAttr("disabled");
+
+            $('[name="megaDeal"]').prop("disabled", true);
+            $('#megaDealN').prop("checked", true);
         }
-        */
     }
 </script>
 
@@ -802,6 +806,12 @@
     <td><input id="promoAddDiscPrc" name="promoAddDiscPrc" type="text" title="" placeholder="" class="w100p" /></td>
     <th scope="row"><spring:message code='sales.promo.addDiscPV'/></th>
     <td><input id="promoAddDiscPv" name="promoAddDiscPv" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Mega Deal</th>
+    <td colspan=3>
+        <input id="megaDealY" name="megaDeal" type="radio" value="1" disabled/><span>Yes</span>
+        <input id="megaDealN" name="megaDeal" type="radio" value="0" disabled checked/><span>No</span></td>
 </tr>
 <!--
 <tr>
