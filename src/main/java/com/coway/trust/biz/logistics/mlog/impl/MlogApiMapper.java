@@ -143,6 +143,6 @@ public interface MlogApiMapper {
 	
 	Map<String, Object> selectDelvryGRcmplt(String delNo);
 	
-	String StockMovementReqstCancelYn(Map<String, Object> receiveMap);
+	String StockMovementReqstChk(Map<String, Object> reqmap);
 
 }

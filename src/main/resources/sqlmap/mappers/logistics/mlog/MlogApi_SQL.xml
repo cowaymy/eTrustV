@@ -2,6 +2,13 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.mlog.impl.MlogApiMapper">
     
+  <select id="StockMovementReqstChk" parameterType="Map" resultType="String">
+        SELECT REF_DOC_NO
+          FROM LOG0047M
+         WHERE REQST_NO = #{smoNo}
+           AND REQST_TYPE_DTL = 'OD01'
+    </select>
+    
     
     <select id="selectDelvryGRcmplt" parameterType="String" resultType="Map">
     SELECT 
@@ -1591,12 +1598,7 @@ SELECT L48.REQST_NO REQ_NO , L48.REQST_NO_ITM smo_No_Item , L48.ITM_CODE parts_C
 	  GROUP BY L54.DELVRY_NO 
     </select>
     
-    <select id="StockMovementReqstCancelYN" parameterType="Map" resultType="String">
-        SELECT REF_DOC_NO
-          FROM LOG0047M
-         WHERE REQST_NO = #{smoNo}
-           AND REQST_TYPE_DTL = 'OD01'
-    </select>
+
 	
 	<update id="StockMovementReqstCancel"  parameterType="Map">
 	    UPDATE LOG0047M 

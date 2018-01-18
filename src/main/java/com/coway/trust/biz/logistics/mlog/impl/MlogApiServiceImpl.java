@@ -358,7 +358,7 @@ public class MlogApiServiceImpl extends EgovAbstractServiceImpl implements MlogA
 		cancleMap.put("gtype", params.get("reqStatus"));
 
 		
-		String test = MlogApiMapper.StockMovementReqstCancelYn(cancleMap);
+		String test = MlogApiMapper.StockMovementReqstChk(cancleMap);
         
 		if (test != null && !"".equals(test)) { // 일반 요청 상태
         	return "18";
