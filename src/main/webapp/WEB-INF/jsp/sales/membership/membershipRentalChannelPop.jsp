@@ -378,9 +378,8 @@ function fn_doViewHistory_Click(){
 	 var ORD_ID ='${srvCntrctOrdId}' ;
 	 
 	 var pram  ="?srvCntrctId="+SRV_CNTRCT_ID+"&ordId="+ORD_ID; 
-	 alert("The program is under development");
-	 alert("fn_doViewHistory_공통팝업 호출 " +pram);
-	 //Common.popupDiv("/sales/membershipRental/mRContSalesViewPop.do"+pram ,null, null , true , '_ViewHistoryDiv1');
+	 
+	 Common.popupDiv("/sales/membershipRental/paymentViewHistoryPop.do"+pram ,null, null , true , '_ViewHistoryDiv1');
 	      
 }
 
