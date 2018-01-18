@@ -391,7 +391,7 @@ public class MembershipController {
 		map.put("installation", installation);
 		map.put("srvconfig", srvconfig);
 		
-		logger.debug("srvconfig====>"+srvconfig.toString());
+		//logger.debug("srvconfig====>"+srvconfig.toString());
 		
 
 		return ResponseEntity.ok(map);
