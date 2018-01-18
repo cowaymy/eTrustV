@@ -1295,5 +1295,361 @@
 								            
             ]]>
   </select>
+  
+  <select id="paymentViewHistory" parameterType="Map" resultType="egovMap">
+            <![CDATA[  
+            
+                     SELECT  0 HIST_REN_PAY_ID, 
+							    Extent1.SALES_ORD_ID,
+							    Extent1.ISSU_NRIC ,
+						        Extent2.CODE,
+						         CASE
+						            WHEN (131 <> Extent1.MODE_ID)
+						            THEN
+						               CASE
+						                  WHEN (NOT ( (Extent3.CUST_ACC_NO IS NULL)
+						                             OR ( (LENGTH (Extent3.CUST_ACC_NO)) = 0)))
+						                  THEN
+						                     Extent3.CUST_ACC_NO
+						                  ELSE
+						                     ' '
+						               END
+						            ELSE
+						               '************' || SUBSTR (Extent4.CUST_ORI_CRC_NO, 13, 4)
+						         END
+						            CUST_ACC_NO,
+						         CASE
+						            WHEN (Extent1.DD_APPLY_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						            THEN
+                                         TO_CHAR(Extent1.DD_APPLY_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						         END
+						            DD_APPLY_DT,
+						         CASE
+						            WHEN (131 <> Extent1.MODE_ID)
+						            THEN
+						               CASE
+						                  WHEN (Extent5.BANK_ID IS NOT NULL) THEN Extent5.CODE
+						                  ELSE ' '
+						               END
+						            WHEN (Extent6.BANK_ID IS NOT NULL)
+						            THEN
+						               Extent6.CODE
+						            ELSE
+						               ' '
+						         END
+						            BANK_CODE_ID,
+						         CASE
+						            WHEN (131 = Extent1.MODE_ID)
+						            THEN
+						               CASE
+						                  WHEN (Extent4.CUST_CRC_EXPR IS NOT NULL)
+						                  THEN
+						                     Extent4.CUST_CRC_EXPR
+						                  ELSE
+						                     ' '
+						               END
+						            ELSE
+						               ' '
+						         END
+						            CUST_CRC_EXPR,
+						         0 C5,
+						         CASE
+						            WHEN (Extent1.MODE_ID IS NOT NULL) THEN Extent1.MODE_ID
+						            ELSE 0
+						         END
+						            MODE_ID,
+						     'Current' C6,
+						         CASE
+						            WHEN (131 <> Extent1.MODE_ID)
+						            THEN
+						               CASE
+						                  WHEN (Extent3.CUST_ACC_OWNER IS NOT NULL)
+						                  THEN
+						                     Extent3.CUST_ACC_OWNER
+						                  ELSE
+						                     ' '
+						               END
+						            WHEN (Extent4.CUST_CRC_OWNER IS NOT NULL)
+						            THEN
+						               Extent4.CUST_CRC_OWNER
+						            ELSE
+						               ' '
+						         END
+						            CUST_CRC_OWNER,
+						         CASE
+						            WHEN (Extent1.DD_REJCT_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						            THEN
+                                         TO_CHAR(Extent1.DD_REJCT_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						         END
+						            DD_REJCT_DT,
+						         CASE
+						            WHEN (Extent7.RESN_ID IS NOT NULL) THEN Extent7.CODE
+						            ELSE ' '
+						         END
+						            RESN_CODE_ID,
+						         CASE
+						            WHEN (Extent1.DD_START_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						            THEN
+                                         TO_CHAR(Extent1.DD_START_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						         END
+						            DD_START_DT,
+						         CASE
+						            WHEN (Extent1.DD_SUBMIT_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						            THEN
+                                         TO_CHAR(Extent1.DD_SUBMIT_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						         END
+						            DD_SUBMIT_DT,
+						         CASE
+						            WHEN (1 = Extent1.IS_3RD_PARTY)
+						            THEN
+						               CASE
+						                  WHEN (Extent8.CUST_ID IS NOT NULL) THEN Extent8.NAME
+						                  ELSE ' '
+						               END
+						            ELSE
+						               ' '
+						         END
+						            CUST_NAME,
+						         CASE
+						            WHEN (Extent1.UPD_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						            THEN
+                                         TO_CHAR(Extent1.UPD_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						         END
+						            UPD_DT,
+						         CASE
+						            WHEN (Extent9.USER_ID IS NOT NULL) THEN Extent9.USER_NAME
+						            ELSE ' '
+						         END
+						            USER_NAME
+						  FROM                           SAL0074D Extent1
+						                              JOIN
+						                                 SYS0013M Extent2
+						                              ON Extent2.CODE_ID = Extent1.MODE_ID
+						                           LEFT JOIN
+						                              SAL0022D Extent3
+						                           ON     (Extent3.CUST_ACC_ID = Extent1.CUST_ACC_ID)
+						                              AND (131 <> Extent1.MODE_ID)
+						                              AND (Extent1.CUST_ACC_ID > 0)
+						                        LEFT JOIN
+						                           SAL0028D Extent4
+						                        ON     (Extent4.CUST_CRC_ID = Extent1.CUST_CRC_ID)
+						                           AND (131 = Extent1.MODE_ID)
+						                           AND (Extent1.CUST_CRC_ID > 0)
+						                     LEFT JOIN
+						                        SYS0004M Extent5
+						                     ON     (Extent5.BANK_ID = Extent3.CUST_ACC_BANK_ID)
+						                        AND (131 <> Extent1.MODE_ID)
+						                        AND (Extent1.CUST_ACC_ID > 0)
+						                        AND (Extent3.CUST_ACC_ID > 0)
+						                  LEFT JOIN
+						                     SYS0004M Extent6
+						                  ON     (Extent6.BANK_ID = Extent4.CUST_CRC_BANK_ID)
+						                     AND (131 = Extent1.MODE_ID)
+						                     AND (Extent1.CUST_CRC_ID > 0)
+						                     AND (Extent4.CUST_CRC_ID > 0)
+						               LEFT JOIN
+						                  SYS0032M Extent7
+						               ON (Extent7.RESN_ID = Extent1.FAIL_RESN_ID)
+						                  AND (Extent1.FAIL_RESN_ID > 0)
+						            LEFT JOIN
+						               SAL0029D Extent8
+						            ON (Extent8.CUST_ID = Extent1.CUST_ID)
+						               AND (1 = Extent1.IS_3RD_PARTY)
+						         LEFT JOIN
+						            SYS0047M Extent9
+						         ON Extent9.USER_ID = Extent1.UPD_USER_ID
+						 WHERE (Extent1.SALES_ORD_ID = #{salesOrdId})
+						     AND (Extent1.SVC_CNTRCT_ID = #{srvCntrctId})
+					UNION
+						  SELECT   Ext1.HIST_REN_PAY_ID,
+						           Ext1.SALES_ORD_ID,
+						           Ext1.ISSU_NRIC,
+						           Ext2.CODE,
+						           CASE
+						              WHEN (131 <> Ext1.MODE_ID)
+						              THEN
+						                 CASE
+						                    WHEN (NOT ( (Ext3.CUST_ACC_NO IS NULL)
+						                               OR ( (LENGTH (Ext3.CUST_ACC_NO)) = 0)))
+						                    THEN
+						                       Ext3.CUST_ACC_NO
+						                    ELSE
+						                       ' '
+						                 END
+						              ELSE
+						                 ' '
+						           END
+						              CUST_ACC_NO,
+						           CASE
+						              WHEN (Ext1.DD_APPLY_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						              THEN
+                                         TO_CHAR(Ext1.DD_APPLY_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						           END
+						              DD_APPLY_DT,
+						           CASE
+						              WHEN (131 <> Ext1.MODE_ID)
+						              THEN
+						                 CASE
+						                    WHEN (Ext5.BANK_ID IS NOT NULL) THEN Ext5.CODE
+						                    ELSE ' '
+						                 END
+						              WHEN (Ext6.BANK_ID IS NOT NULL)
+						              THEN
+						                 Ext6.CODE
+						              ELSE
+						                 ' '
+						           END
+						              BANK_CODE_ID,
+						           CASE
+						              WHEN (131 = Ext1.MODE_ID)
+						              THEN
+						                 CASE
+						                    WHEN (Ext4.CUST_CRC_EXPR IS NOT NULL)
+						                    THEN
+						                       Ext4.CUST_CRC_EXPR
+						                    ELSE
+						                       ' '
+						                 END
+						              ELSE
+						                 ' '
+						           END
+						              CUST_CRC_EXPR,
+						           0 C5,
+						           CASE
+						              WHEN (Ext1.MODE_ID IS NOT NULL) THEN Ext1.MODE_ID
+						              ELSE 0
+						           END
+						           MODE_ID,
+						            'Old'  C6,
+						           CASE
+						              WHEN (131 <> Ext1.MODE_ID)
+						              THEN
+						                 CASE
+						                    WHEN (Ext3.CUST_ACC_OWNER IS NOT NULL)
+						                    THEN
+						                       Ext3.CUST_ACC_OWNER
+						                    ELSE
+						                       ' '
+						                 END
+						              WHEN (Ext4.CUST_CRC_OWNER IS NOT NULL)
+						              THEN
+						                 Ext4.CUST_CRC_OWNER
+						              ELSE
+						                 ' '
+						           END
+						              CUST_CRC_OWNER,
+						           CASE
+						              WHEN (Ext1.DD_REJCT_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						              THEN
+                                         TO_CHAR(Ext1.DD_REJCT_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						           END
+						              DD_REJCT_DT,
+						           CASE
+						              WHEN (Ext7.RESN_ID IS NOT NULL) THEN Ext7.CODE
+						              ELSE ' '
+						           END
+						              RESN_CODE_ID,
+						           CASE
+						              WHEN (Ext1.DD_START_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						              THEN
+                                         TO_CHAR(Ext1.DD_START_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						           END
+						              DD_START_DT,
+						           CASE
+						              WHEN (Ext1.DD_SUBMIT_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						              THEN
+						                 TO_CHAR(Ext1.DD_SUBMIT_DT, 'DD-MM-YYYY')
+						              ELSE
+						                 '-'
+						           END
+						              DD_SUBMIT_DT,
+						           CASE
+						              WHEN (1 = Ext1.IS_3RD_PARTY)
+						              THEN
+						                 CASE
+						                    WHEN (Ext8.CUST_ID IS NOT NULL) THEN Ext8.NAME
+						                    ELSE ' '
+						                 END
+						              ELSE
+						                 ' '
+						           END
+						              CUST_NAME,
+						           CASE
+						              WHEN (Ext1.UPD_DT > TO_DATE('1900-01-01', 'yyyy-MM-dd'))
+						              THEN
+                                         TO_CHAR(Ext1.UPD_DT, 'DD-MM-YYYY')
+                                      ELSE
+                                         '-'
+						           END
+						              UPD_DT,
+						           CASE
+						              WHEN (Ext9.USER_ID IS NOT NULL) THEN Ext9.USER_NAME
+						              ELSE ' '
+						           END
+						              USER_NAME
+						    FROM                           SAL0076D Ext1
+						                                JOIN
+						                                   SYS0013M Ext2
+						                                ON Ext2.CODE_ID = Ext1.MODE_ID
+						                             LEFT JOIN
+						                                SAL0022D Ext3
+						                             ON     (Ext3.CUST_ACC_ID = Ext1.CUST_ACC_ID)
+						                                AND (131 <> Ext1.MODE_ID)
+						                                AND (Ext1.CUST_ACC_ID > 0)
+						                          LEFT JOIN
+						                             SAL0028D Ext4
+						                          ON     (Ext4.CUST_CRC_ID = Ext1.CUST_CRC_ID)
+						                             AND (131 = Ext1.MODE_ID)
+						                             AND (Ext1.CUST_CRC_ID > 0)
+						                       LEFT JOIN
+						                          SYS0004M Ext5
+						                       ON     (Ext5.BANK_ID = Ext3.CUST_ACC_BANK_ID)
+						                          AND (131 <> Ext1.MODE_ID)
+						                          AND (Ext1.CUST_ACC_ID > 0)
+						                          AND (Ext3.CUST_ACC_ID > 0)
+						                    LEFT JOIN
+						                       SYS0004M Ext6
+						                    ON     (Ext6.BANK_ID = Ext4.CUST_CRC_BANK_ID)
+						                       AND (131 = Ext1.MODE_ID)
+						                       AND (Ext1.CUST_CRC_ID > 0)
+						                       AND (Ext4.CUST_CRC_ID > 0)
+						                 LEFT JOIN
+						                    SYS0032M Ext7
+						                 ON (Ext7.RESN_ID = Ext1.FAIL_RESN_ID)
+						                    AND (Ext1.FAIL_RESN_ID > 0)
+						              LEFT JOIN
+						                 SAL0029D Ext8
+						              ON (Ext8.CUST_ID = Ext1.CUST_ID)
+						                 AND (1 = Ext1.IS_3RD_PARTY)
+						           LEFT JOIN
+						              SYS0047M Ext9
+						           ON Ext9.USER_ID = Ext1.UPD_USER_ID
+						   WHERE (Ext1.SALES_ORD_ID = #{salesOrdId})
+						       AND (Ext1.SVC_CNTRCT_ID = #{srvCntrctId})
+                                            
+            ]]>
+  </select>
+  
+  <select id="viewHistPaySetting" statementType="CALLABLE" parameterType="Map">
+        { 
+            CALL SP_UPD_PAY_REACTVT_PAY_SETNG_H(#{histRenPayId}, #{userId})
+        }
+      </select>
 
 </mapper>
