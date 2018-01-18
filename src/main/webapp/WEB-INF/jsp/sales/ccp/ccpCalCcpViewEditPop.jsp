@@ -292,7 +292,7 @@ function fn_ccpStatusChangeFunc(getVal){
                         $("#_updSmsChk").prop('checked', true) ;
                         $("#_updSmsMsg").attr("disabled" , false);
                         $("#_reasonCodeEdit").val("2177");
-                        setSMSMessage('Pending' , 'FAILED CTOS SCORE');
+                        setSMSMessage('Pending' , $("#_reasonCodeEdit option:selected").text());
                     }
                 } //
             }else if(ficoScre >= 451 && ficoScre <= 500){  
@@ -302,7 +302,7 @@ function fn_ccpStatusChangeFunc(getVal){
                         $("#_updSmsChk").prop('checked', true) ;
                         $("#_updSmsMsg").attr("disabled" , false);
                         $("#_reasonCodeEdit").val("1872");
-                        setSMSMessage('Pending' , 'FAILED CTOS');
+                        setSMSMessage('Pending' , $("#_reasonCodeEdit option:selected").text());
                     }
                 }
             }else if(ficoScre == 0){
@@ -312,7 +312,7 @@ function fn_ccpStatusChangeFunc(getVal){
                         $("#_updSmsChk").prop('checked', true) ;
                         $("#_updSmsMsg").attr("disabled" , false);
                         $("#_reasonCodeEdit").val("1872");
-                        setSMSMessage('Pending' , 'FAILED CTOS');
+                        setSMSMessage('Pending' , $("#_reasonCodeEdit option:selected").text());
                     }
                 }
             }
@@ -738,8 +738,30 @@ function chgTab(tabNm) {
     }
  }
  
- function fn_smsController(){
+ function fn_suggestRem(text){
+	 var textarr = text.split('-');
+	 console.log("textarr  : " + JSON.stringify(textarr));
+	 var rtnStr = '';
+	 for (var idx = 0; idx < textarr.length; idx++) {
+		if(idx > 0){
+			rtnStr += textarr[idx];
+		}
+	}
 	 
+	 return rtnStr;
+ }
+ 
+ function fn_chgFunFeedBack(val){
+	 var suggRem = fn_suggestRem($("#_reasonCodeEdit option:selected").text());
+	 //$("#_reasonCodeEdit").val(val);
+	 var ccpstus = $("#_ccpStusId").val();
+	 var rtnstr = '';
+	 if(ccpstus == 1){
+		 rtnstr = 'Pending';
+	 }else{
+		 rtnstr = 'Approved'
+	 }
+	  setSMSMessage(rtnstr , suggRem);
  }
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
@@ -973,7 +995,7 @@ function chgTab(tabNm) {
 </tr>
 <tr>
     <th scope="row">CCP Feedback Code</th>
-    <td colspan="5"><span><select class="w100p" name="reasonCodeEdit" id="_reasonCodeEdit"></select></span></td>  
+    <td colspan="5"><span><select class="w100p" name="reasonCodeEdit" id="_reasonCodeEdit" onchange="javascript: fn_chgFunFeedBack(this.value)"></select></span></td>  
 </tr>
 <tr>
     <th scope="row">Special Remark</th>
