@@ -24,10 +24,10 @@ $(function() {
 
 $(document).ready(function() {
     
-    //to List
+   /*  //to List
     $("#_btnList").click(function() {
     	window.close();
-    });
+    }); */
     
     $("#_btnClose").click(function() {
     	window.close();
@@ -84,19 +84,20 @@ $(document).ready(function() {
     //SMS Checked
     // Consignment Change
     $("#_updSmsChk").change(function() {
-        
         //Init
         $("#_updSmsMsg").val('');
         $("#_updSmsMsg").attr("disabled" , "disabled");
         if($("#_updSmsChk").is(":checked") == true){
-            
-            if(isAllowSendSMS() == true){
-                
+        	/* if(isAllowSendSMS() == true){
                 $("#_updSmsMsg").attr("disabled" , false);
                 setSMSMessage();
+            } */
+            
+            var currStus = $("#_statusEdit").val();
+            if(currStus != null && currStus != ''){
+            	fn_ccpStatusChangeFunc(currStus);	
             }
         }
-        
     });
     
     //Save
@@ -241,15 +242,20 @@ function calSave(){
 
 function fn_ccpStatusChangeFunc(getVal){
     
+	var isHold = $("#_onHoldCcp").is("checked") == true? 1 : 0;
+	var ficoScre = '${ccpInfoMap.ccpFico}'; //FICO SCORE
+	var bankrupt = '${ccpInfoMap.ctosBankrupt}'; //BANKRUPT  //CTOS_BANKRUPT
+	
     //Init
     $("#_smsDiv").css("display" , "none");
     $("#_updSmsChk").attr("checked" , false);
     $("#_updSmsMsg").val('');
     $("#_updSmsMsg").attr("disabled" , "disabled");
     
+    
     if(getVal != null && getVal != ''){
         
-        if(getVal == '1'){
+        if(getVal == '1'){  //ACTIVE
             
             //field 
             $("#_incomeRangeEdit").attr("disabled" , false);
@@ -270,15 +276,47 @@ function fn_ccpStatusChangeFunc(getVal){
             $("#_summon").attr("disabled" , false);
             $("#_letterOfUdt").attr("disabled" , false);
             
-            if(isAllowSendSMS() == true){
+           /*  if(isAllowSendSMS() == true){
                 
                 $("#_smsDiv").css("display" , "");
-                $("#_updSmsChk").attr("checked" , true);
+                $("#_updSmsChk").prop('checked', true) ;
                 $("#_updSmsMsg").attr("disabled" , false);
                 setSMSMessage();
-            }
+            } */
             
-        }else if(getVal == '5'){
+            //sms  changed by Lee(2018/01/18)
+            if(ficoScre >= 350 && ficoScre <= 450){
+                if(isHold == 0){   ////on hold
+                    if(isAllowSendSMS() == true){
+                        $("#_smsDiv").css("display" , "");
+                        $("#_updSmsChk").prop('checked', true) ;
+                        $("#_updSmsMsg").attr("disabled" , false);
+                        $("#_reasonCodeEdit").val("2177");
+                        setSMSMessage('Pending' , 'FAILED CTOS SCORE');
+                    }
+                } //
+            }else if(ficoScre >= 451 && ficoScre <= 500){  
+                if(bankrupt == 1 && isHold == 0){
+                    if(isAllowSendSMS() == true){
+                        $("#_smsDiv").css("display" , "");
+                        $("#_updSmsChk").prop('checked', true) ;
+                        $("#_updSmsMsg").attr("disabled" , false);
+                        $("#_reasonCodeEdit").val("1872");
+                        setSMSMessage('Pending' , 'FAILED CTOS');
+                    }
+                }
+            }else if(ficoScre == 0){
+                if(bankrupt == 1 && isHold == 0){
+                    if(isAllowSendSMS() == true){
+                        $("#_smsDiv").css("display" , "");
+                        $("#_updSmsChk").prop('checked', true) ;
+                        $("#_updSmsMsg").attr("disabled" , false);
+                        $("#_reasonCodeEdit").val("1872");
+                        setSMSMessage('Pending' , 'FAILED CTOS');
+                    }
+                }
+            }
+        }else if(getVal == '5'){  // APPROVE
             
              //field //FICO it doesn`t work
              $("#_incomeRangeEdit").attr("disabled" , false);
@@ -302,14 +340,18 @@ function fn_ccpStatusChangeFunc(getVal){
                  $("#_ficoScore").attr("disabled" , false);
              });
              
+             //sms Changed by Lee (2018/01/18)
              if(isAllowSendSMS() == true){
-                    
-                    $("#_smsDiv").css("display" , "");
-                    $("#_updSmsChk").attr("checked" , true);
-                    $("#_updSmsMsg").attr("disabled" , false);
-                    setSMSMessage();
+                 if(isHold == 0){
+                	 $("#_smsDiv").css("display" , "");
+                     $("#_updSmsMsg").attr("disabled" , false);
+                     //$("#_updSmsChk").prop('checked', true) ;
+                     $("#_updSmsChk").prop('checked', true) ;
+                     $("#_reasonCodeEdit").val('');
+                     setSMSMessage('Approved' , ' ');  
+                 }
              }
-        }else if(getVal == '6'){
+        }else if(getVal == '6'){  //CANCEL
             
             //field
             $("#_incomeRangeEdit").attr("disabled" , false);
@@ -335,6 +377,11 @@ function fn_ccpStatusChangeFunc(getVal){
 function  bind_RetrieveData(){
 
     var ccpStus = $("#_ccpStusId").val();
+    var ficoScre = '${ccpInfoMap.ccpFico}'; //FICO SCORE
+    var bankrupt = '${ccpInfoMap.ctosBankrupt}'; //BANKRUPT  //CTOS_BANKRUPT
+    var ccpHold = '${ccpInfoMap.ccpIsHold}';  // 0 , 1
+    
+    console.log("ccpStus : " + ccpStus +", ficoScre : " + ficoScre + " , bankrupt : " + bankrupt + ", ccpHold : " + ccpHold);
     //pre Value
     $("#_isPreVal").val("1");
     //Fico
@@ -359,13 +406,48 @@ function  bind_RetrieveData(){
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
         
-        if(isAllowSendSMS() == true){
+        /* if(isAllowSendSMS() == true){
             
             $("#_smsDiv").css("display" , "");
-            $("#_updSmsChk").attr("checked" , true);
+            $("#_updSmsChk").prop('checked', true) ;
             $("#_updSmsMsg").attr("disabled" , false);
             setSMSMessage();
+        } */
+        
+        //sms  changed by Lee(2018/01/18)
+        
+        if(ficoScre >= 350 && ficoScre <= 450){
+            if(ccpHold == 0){   ////on hold
+            	if(isAllowSendSMS() == true){
+                    $("#_smsDiv").css("display" , "");
+                    $("#_updSmsChk").prop('checked', true) ;
+                    $("#_updSmsMsg").attr("disabled" , false);
+                    $("#_reasonCodeEdit").val("2177");
+                    setSMSMessage('Pending' , 'FAILED CTOS SCORE');
+                }
+            }
+        }else if(ficoScre >= 451 && ficoScre <= 500){  
+            if(bankrupt == 1 && ccpHold == 0){
+            	if(isAllowSendSMS() == true){
+                    $("#_smsDiv").css("display" , "");
+                    $("#_updSmsChk").prop('checked', true) ;
+                    $("#_updSmsMsg").attr("disabled" , false);
+                    $("#_reasonCodeEdit").val("1872");
+                    setSMSMessage('Pending' , 'FAILED CTOS');
+                }
+            }
+        }else if(ficoScre == 0){
+        	if(bankrupt == 1 && ccpHold == 0){
+        		if(isAllowSendSMS() == true){
+                    $("#_smsDiv").css("display" , "");
+                    $("#_updSmsChk").prop('checked', true) ;
+                    $("#_updSmsMsg").attr("disabled" , false);
+                    $("#_reasonCodeEdit").val("1872");
+                    setSMSMessage('Pending' , 'FAILED CTOS');
+                }
+        	}
         }
+        
     }else if(ccpStus == "5"){
         
         //field
@@ -381,13 +463,44 @@ function  bind_RetrieveData(){
         $("#_summon").attr("disabled" , false);
         $("#_letterOfUdt").attr("disabled" , false);
         
-        if(isAllowSendSMS() == true){
+        /* if(isAllowSendSMS() == true){
             
             $("#_smsDiv").css("display" , "");
-            $("#_updSmsChk").attr("checked" , true);
+            $("#_updSmsChk").prop('checked', true) ;
             $("#_updSmsMsg").attr("disabled" , false);
             setSMSMessage();
-        }
+        } */
+        
+        //sms  changed by Lee(2018/01/18)
+       /*  if(ficoScre >= 501 && ficoScre <= 850){
+        	if(ccpHold == 0){   ////on hold
+                if(isAllowSendSMS() == true){
+                    $("#_smsDiv").css("display" , "");
+                    $("#_updSmsChk").prop('checked', true) ;
+                    $("#_updSmsMsg").attr("disabled" , false);
+                    setSMSMessage('Approved' , ' ');
+                }
+            }
+        }else if(ficoScre >= 451 && ficoScre <= 500){
+        	if(bankrupt == 0 && ccpHold == 0){
+                if(isAllowSendSMS() == true){
+                    $("#_smsDiv").css("display" , "");
+                    $("#_updSmsChk").prop('checked', true) ;
+                    $("#_updSmsMsg").attr("disabled" , false);
+                    setSMSMessage('Approved' , ' ');
+                }
+            }
+        }else if(ficoScre == 0){
+        	if(bankrupt == 0 && ccpHold == 0){
+                if(isAllowSendSMS() == true){
+                    $("#_smsDiv").css("display" , "");
+                    $("#_updSmsChk").prop('checked', true) ;
+                    $("#_updSmsMsg").attr("disabled" , false);
+                    setSMSMessage('Approved' , ' ');
+                }
+            }
+        } */
+        
     }else if(ccpStus == "6"){
         
         //field
@@ -424,17 +537,15 @@ function  bind_RetrieveData(){
     
 }// bindData
 
-
-function setSMSMessage(){
-    
+//changed by Lee (2018/01/18)
+function setSMSMessage(status, remark){
+	
     var salesmanMemTypeID  = $("#_editSalesMemTypeId").val();
-    
     var custName = $("#_editCustName").val().substr(0 , 15).trim();
     var ordNo = $("#_editOrdNo").val();
-    var ccpStatus = $("#_statusEdit").val() == '1' ? "Pending" : "Approved";
+    //var ccpStatus = $("#_statusEdit").val() == '1' ? "Pending" : "Approved";
     var webSite = salesmanMemTypeID == '1'?  "hp.coway.com.my" : "cody.coway.com.my";
-    
-    var message = "Order : " + ordNo + "\n" + "Name : " + custName + "\n" + "CCPstatus : " + ccpStatus + "\n" + "Remark :" + "\n" + webSite;
+    var message = "Order : " + ordNo + "\n" + "Name : " + custName + "\n" + "CCPstatus : " + status + "\n" + "Remark :"+ remark + "\n" + webSite;
     
     $("#_updSmsMsg").val(message);
     
@@ -487,9 +598,7 @@ function isAllowSendSMS(){
             return false;
         }
     }
-    
     return true;
-    
 }
 
 
@@ -627,7 +736,11 @@ function chgTab(tabNm) {
         Common.alert("No result from CTOS");
         return;
     }
-} 
+ }
+ 
+ function fn_smsController(){
+	 
+ }
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -910,7 +1023,7 @@ function chgTab(tabNm) {
 
 </div>
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="_btnList">List</a></p></li>
+    <!-- <li><p class="btn_blue2"><a id="_btnList">List</a></p></li> -->
     <li><p class="btn_blue2"><a id="_calBtnSave">Save</a></p></li>
 </ul>
 

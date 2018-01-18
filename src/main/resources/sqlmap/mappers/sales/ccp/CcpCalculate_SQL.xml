@@ -695,7 +695,7 @@ SELECT Extent1.CCP_ID   ,
 </resultMap>
 
 <select id="selectCcpInfoByCcpId"  parameterType="Map" resultMap="ccpInfoCLOBMap" > 
-    SELECT Extent1.CCP_ID   ,
+   <!--  SELECT Extent1.CCP_ID   ,
        Extent1.CCP_STUS_ID   ,
        Extent1.CCP_TOT_SCRE_POINT   ,
        Extent1.CCP_INCOME_RANGE_ID   ,
@@ -715,7 +715,35 @@ SELECT Extent1.CCP_ID   ,
          LEFT JOIN SYS0038M Extent2   ON Extent1.CCP_STUS_ID = Extent2.STUS_CODE_ID
          LEFT JOIN SYS0032M Extent3   ON Extent1.CCP_RESN_ID = Extent3.RESN_ID
          LEFT JOIN SYS0008M Extent4   ON Extent1.CCP_INCOME_RANGE_ID = Extent4.SCRE_CTGRY_ID
+         LEFT JOIN SYS0038M Extent5   ON Extent1.CCP_RJ_STUS_ID = Extent5.STUS_CODE_ID -->
+   
+   
+   <!-- Changed By Lee (2018/01/18) -->      
+   SELECT Extent1.CCP_ID   ,
+       Extent1.CCP_STUS_ID   ,
+       Extent1.CCP_TOT_SCRE_POINT   ,
+       Extent1.CCP_INCOME_RANGE_ID   ,
+       Extent2.NAME   ,
+       CASE WHEN ( Extent1.CCP_REM IS NULL ) THEN NULL ELSE Extent1.CCP_REM END CCP_REM ,
+       CASE WHEN ( Extent1.CCP_PNC_REM IS NULL ) THEN NULL ELSE Extent1.CCP_PNC_REM END CCP_PNC_REM ,
+       CASE WHEN ( Extent3.RESN_ID IS NULL ) THEN 0 ELSE Extent3.RESN_ID END RESN_ID ,
+       CASE WHEN ( Extent3.RESN_DESC IS NULL ) THEN '' ELSE Extent3.RESN_DESC END RESN_DESC ,
+       CASE WHEN ( 1 = Extent1.CCP_IS_LOU ) THEN 1 ELSE 0 END CCP_IS_LOU ,
+       CASE WHEN ( 1 = Extent1.CCP_IS_SAMAN ) THEN 1 ELSE 0 END CCP_IS_SAMAN ,
+       CASE WHEN ( 1 = Extent1.CCP_IS_HOLD ) THEN 1 ELSE 0 END CCP_IS_HOLD ,
+       CASE WHEN ( Extent5.NAME IS NULL ) THEN '' ELSE Extent5.NAME END NAME1  ,
+       CASE WHEN ( Extent4.SCRE_CTGRY_DESC IS NULL ) THEN '' ELSE Extent4.SCRE_CTGRY_DESC END SCRE_CTGRY_DESC ,
+       CASE WHEN ( Extent1.CCP_FICO IS NULL ) THEN 0 ELSE Extent1.CCP_FICO END CCP_FICO,
+       NVL(Extent1.CCP_RJ_STUS_ID , 0) CCP_RJ_STUS_ID,
+       CASE WHEN  (1 = Extent7.CTOS_BANKRUPT) THEN 1 ELSE 0 END CTOS_BANKRUPT 
+  FROM SAL0102D Extent1
+         LEFT JOIN SYS0038M Extent2   ON Extent1.CCP_STUS_ID = Extent2.STUS_CODE_ID
+         LEFT JOIN SYS0032M Extent3   ON Extent1.CCP_RESN_ID = Extent3.RESN_ID
+         LEFT JOIN SYS0008M Extent4   ON Extent1.CCP_INCOME_RANGE_ID = Extent4.SCRE_CTGRY_ID
          LEFT JOIN SYS0038M Extent5   ON Extent1.CCP_RJ_STUS_ID = Extent5.STUS_CODE_ID
+         LEFT JOIN SAL0001D Extent6   ON Extent1.CCP_SALES_ORD_ID = Extent6.SALES_ORD_ID
+         LEFT JOIN SAL0107D Extent7   ON Extent6.SALES_ORD_NO = Extent7.ORD_NO 
+         LEFT JOIN SAL0074D Extent8   ON Extent8.SALES_ORD_ID = Extent6.SALES_ORD_ID
 <![CDATA[        
  WHERE  Extent1.CCP_ID = #{ccpId} 
  AND ROWNUM <= 1
