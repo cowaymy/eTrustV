@@ -223,13 +223,13 @@ public class EgovFileUploadUtil extends EgovFormBasedFileUtil {
 			vo.setServerPath(blackUploadPath);
 			vo.setServerSubPath(blackSubPath);
 
-			String physicalName = getPhysicalFileName();
+			/*String physicalName = getPhysicalFileName();
 
 			if (addExtension) {
 				physicalName = physicalName + "." + FilenameUtils.getExtension(tmp).toLowerCase();
-			}
+			}*/
 
-			vo.setPhysicalName(physicalName);
+			vo.setPhysicalName(tempFileName);
 			vo.setSize(mFile.getSize());
 			vo.setExtension(FilenameUtils.getExtension(tmp).toLowerCase());
 

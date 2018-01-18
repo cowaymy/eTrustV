@@ -413,7 +413,7 @@
             </choose>  
 		 AND ROWNUM <![CDATA[<=]]> 1
     </select>
-    
+
     <select id="selectMemberInfoByCode" parameterType="map" resultType="EgovMap">
          SELECT DISTINCT C1  ,
 		            MEM_ID,
@@ -970,11 +970,98 @@
           AND ROWNUM <![CDATA[<= ]]>1
     </select>
     
-  
     <update id="updateBkReqStus" parameterType="Map">    
       UPDATE MSC0027D
 		   SET TR_BOOK_BK_REQ_STUS_ID = 8,
 		         TR_BOOK_BK_REQ_UPD_DT = SYSDATE
 		 WHERE  TR_BOOK_BK_REQ_ID = #{reqId}
 	</update>
+	
+	<select id="selelctMemberInfoByCode" parameterType="map" resultType="EgovMap">
+        SELECT A.C1 ,
+                   A.MEM_ID ,
+                   A.MEM_CODE ,
+                   A.NAME ,
+                   A.NRIC ,
+                   A.CODE_NAME 
+              FROM ( SELECT DISTINCT UNI.C1   ,
+                                     UNI.MEM_ID   ,
+                                     UNI.MEM_CODE   ,
+                                     UNI.NAME   ,
+                                     UNI.NRIC   ,
+                                     UNI.CODE_NAME   
+                     FROM ( SELECT 1 C1  ,
+                                   A.MEM_ID   ,
+                                   A.MEM_CODE   ,
+                                   A.NAME   ,
+                                   A.NRIC   ,
+                                   B.CODE_NAME   
+                            FROM ORG0001D A
+                                   JOIN SYS0013M B   ON B.CODE_ID = A.MEM_TYPE
+                             WHERE  A.MEM_CODE = #{trHolder}
+                            UNION ALL 
+                            SELECT 1 C1  ,
+                                   C.USER_ID   ,
+                                   C.USER_NAME   ,
+                                   C.USER_NAME   ,
+                                   C.USER_NRIC   ,
+                                   'Staff' C2  
+                            FROM SYS0047M C
+                             WHERE  C.USER_NAME = #{trHolder} 
+                             ) UNI 
+                       ) A 
+                       WHERE ROWNUM  <![CDATA[<= ]]>1
+    </select>
+    
+	 <select id="selelctUnderDCFRequest" parameterType="map" resultType="EgovMap">
+	     SELECT DCF_REQ_NO 
+	         FROM LOG0068M A
+	                JOIN LOG0064M B   ON  B.DCF_REQ_ENTRY_ID = A.DCF_REQ_ENTRY_ID 
+	                AND B.DCF_REQ_STUS_ID IN ( 33,60 ) 
+	          WHERE  1 = A.DCF_REQ_COM_FILD_STUS_ID 
+	              AND A.DCF_COM_FILD_TYPE_ID = 7
+	              AND A.DCF_REQ_COM_FILD_REF_NO = #{trBookNo}
+	        ORDER BY A.DCF_REQ_ENTRY_ID ASC
+	  </select>
+	  
+	 <select id="selelctDcfMaster" parameterType="map" resultType="EgovMap">
+	     SELECT A.DCF_REQ_ENTRY_ID   ,
+			       A.DCF_REQ_NO   ,
+			       A.DCF_REQ_USER_ID   ,
+			       A.DCF_REQ_RCIPT_GRP_ID   ,
+			       A.DCF_REQ_TYPE_ID   ,
+			       A.DCF_REQ_CAT_ID   ,
+			       A.DCF_REQ_SUB_ID   ,
+			       A.DCF_REQ_STUS_ID   ,
+			       A.DCF_REQ_PRO_STUS_ID   ,
+			       A.DCF_REQ_SETL_DT   ,
+			       A.DCF_REQ_DESC   ,
+			       A.DCF_REQ_REM   ,
+			       A.DCF_PRIOR_LVL   ,
+			       A.DCF_REQ_HAS_ATTACH   ,
+			       A.DCF_REQ_ATTACH_FILE_NAME   ,
+			       A.DCF_REQ_RCV_FDBCK   ,
+			       A.DCF_REQ_CRT_DT   ,
+			       A.DCF_REQ_CRT_USER_ID   ,
+			       A.DCF_REQ_UPD_DT   ,
+			       A.DCF_REQ_UPD_USER_ID   ,
+			       A.DCF_REQ_RESN_ID   ,
+			       A.DCF_REQ_APPV_USER_ID   ,
+			       A.DCF_REQ_APPV_DT   ,
+			       A.DCF_REQ_APPV_REM   ,
+			       A.DCF_REQ_APPV_STUS_ID   ,
+			       A.DCF_REQ_BRNCH_ID   ,
+			       A.DCF_REQ_DEPT_ID   ,
+			       A.DCF_REQ_APPV_REQ_RESN_ID   ,
+			       A.DCF_REQ_ON_BEHALF   
+			  FROM LOG0064M A
+			         JOIN LOG0068M B   ON ( B.DCF_REQ_ENTRY_ID = A.DCF_REQ_ENTRY_ID )
+			         AND ( 1 = B.DCF_REQ_COM_FILD_STUS_ID )
+			         AND ( 7 = B.DCF_COM_FILD_TYPE_ID )
+			 WHERE  ( 81 = A.DCF_REQ_SUB_ID )
+			          AND ( 33 = A.DCF_REQ_STUS_ID )
+			          AND ( B.DCF_REQ_COM_FILD_REF_NO = #{trBookNo} ) 
+			          AND ROWNUM <![CDATA[<= ]]> 1
+	  </select>
+    
 </mapper>

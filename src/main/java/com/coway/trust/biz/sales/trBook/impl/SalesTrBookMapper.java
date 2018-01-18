@@ -83,4 +83,8 @@ public interface SalesTrBookMapper {
 	EgovMap selelctRequestBahchInfo(Map<String, Object> params);
 
 	void updateBkReqStus(Map<String, Object> params);
+
+	EgovMap selelctMemberInfoByCode(Map<String, Object> params);
+
+	EgovMap selelctUnderDCFRequest(Map<String, Object> params);
 }

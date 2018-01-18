@@ -40,7 +40,10 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 	@Autowired
 	private FileApplication fileApplication;
 	
-	@Value("${com.file.upload.path}")
+/*	@Value("${com.file.upload.path}")
+	private String uploadDir;*/
+	
+	@Value("${web.resource.upload.file}")
 	private String uploadDir;
 	
 
@@ -263,7 +266,7 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 		
 		
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFilesNewName(request, uploadDir,
-				File.separator + "trBook" + File.separator + "DCF", 1024 * 1024 * 6, false, docNo+".zip");
+				File.separator + "DCF", 1024 * 1024 * 6, false, docNo+".zip");
 		
 		
 		params.put("list", list);	
@@ -275,7 +278,7 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 			params.put("hasAttach", 1);
 			params.put("fileName", "~/WebShare" + list.get(0).getServerSubPath()+ File.separator + list.get(0).getFileName());			
 			
-			fileApplication.businessAttach(FileType.WEB, FileVO.createList(list), params);
+			fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
 		}
 		
 		
@@ -514,6 +517,16 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 		salesTrBookMapper.updateBkReqStus(params);
 		
 		
+	}
+
+	@Override
+	public EgovMap selelctMemberInfoByCode(Map<String, Object> params) {
+		return salesTrBookMapper.selelctMemberInfoByCode(params);
+	}
+
+	@Override
+	public EgovMap selelctUnderDCFRequest(Map<String, Object> params) {
+		return salesTrBookMapper.selelctUnderDCFRequest(params);
 	}
 
 

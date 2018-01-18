@@ -80,7 +80,6 @@ public class SalesTrBookController {
 
 			if ("".equals(branch) || null == branch) {
     			branch = "HQ";
-    			params.put("trHolderType", "Member");
 			}
 			params.put("branch", branch);
 			
@@ -571,7 +570,8 @@ public class SalesTrBookController {
 		
 		params.put("userId", sessionVO.getUserId());
 		params.put("branchId", sessionVO.getUserBranchId());
-		params.put("deptId", sessionVO.getUserDeptId());	
+		//params.put("deptId", sessionVO.getUserDeptId());	
+		params.put("deptId", 0);	
 		
 		
 		EgovMap saveView = salesTrBookService.updateReportLost(params, request);		
@@ -731,4 +731,47 @@ public class SalesTrBookController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/reportLostViewPop.do")
+	public String reportLostViewPop(@RequestParam Map<String, Object>params, ModelMap model){
+		
+		logger.debug("params ======================================>>> " + params);
+		
+		return "sales/trBook/reportLostViewPop";
+	}
+	@RequestMapping(value = "/inc_dcfInfoPop.do")
+	public String inc_dcfInfoPop(@RequestParam Map<String, Object>params, ModelMap model){
+		
+		logger.debug("params ======================================>>> " + params);
+		
+		return "sales/trBook/inc_dcfInfoPop";
+	}
+	@RequestMapping(value = "/inc_lostInfoPop.do")
+	public String inc_lostInfo(@RequestParam Map<String, Object>params, ModelMap model){
+		
+		logger.debug("params ======================================>>> " + params);
+		
+	    EgovMap lostInfo = salesTrBookService.selectTrBookInfo(params);
+	    
+	    EgovMap memberInfo = salesTrBookService.selelctMemberInfoByCode(lostInfo);
+	    
+	    EgovMap dcfInfo = salesTrBookService.selelctUnderDCFRequest(lostInfo);
+	    
+	    model.addAttribute("dcfInfo", dcfInfo);
+	    model.addAttribute("memberInfo", memberInfo);
+		model.addAttribute("lostInfo", lostInfo);
+		
+		return "sales/trBook/inc_lostInfoPop";
+	}
+	
+	@RequestMapping(value = "/selectFeedBackCode")
+	public ResponseEntity<List<EgovMap>> selectFeedBackCode(@RequestParam Map<String, Object>params, ModelMap model){
+		
+		logger.debug("params ======================================>>> " + params);
+		
+		List<EgovMap> feedBackList = salesTrBookService.selectFeedBackCode();	
+		
+		return ResponseEntity.ok(feedBackList);
+	}
+	
 }
