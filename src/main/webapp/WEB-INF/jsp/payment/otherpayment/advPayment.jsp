@@ -932,6 +932,7 @@ function rentalDiscountValue(){
         originalprice = mthRentAmt * advMonth;
         discountrate = 0;
     }
+
     
     //선납금 할인을 적용한 금액 표시    
     recalculateRentalTotalAmtWidthAdv(discountValue,originalprice,discountrate);
@@ -976,13 +977,14 @@ function recalculateRentalTotalAmtWidthAdv(discountValue, originalPrice, discoun
     }
 
     var grandtotal = tot + discountValue;
-    $("#rentalAdvAmt").val(discountValue);
+    $("#rentalAdvAmt").val($.number(discountValue,2,'.',''));
     
     if (tot > 0) {
         $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
     } else {
         $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
     }
+	
 }
 
 //선택된 Master Grid 데이터의 Slave 데이터 건을 Bold 처리함
@@ -1648,6 +1650,7 @@ function srvcDiscountValue(){
     var rows = AUIGrid.getRowIndexesByValue(targetSrvcMstGridID, "srvCntrctId", $("#srvcId").val());
     var srvCntrctRental = AUIGrid.getCellValue(targetSrvcMstGridID, rows, "srvCntrctRental");    
     
+
     if (advMonth >= 12 && advMonth < 24) {
         discountValue = srvCntrctRental * advMonth * 0.95;
         originalprice = srvCntrctRental * advMonth;
@@ -1661,7 +1664,7 @@ function srvcDiscountValue(){
         originalprice = srvCntrctRental * advMonth;
         discountrate = 0;
     }
-    
+	    
     //선납금 할인을 적용한 금액 표시
     recalculateSrvcTotalAmtWidthAdv(discountValue,originalprice,discountrate);
 }
@@ -1711,13 +1714,14 @@ function recalculateSrvcTotalAmtWidthAdv(discountValue, originalPrice, discountr
     }
 
     var grandtotal = tot + discountValue;    
-    $("#srvcAdvAmt").val(discountValue);
+    $("#srvcAdvAmt").val($.number(discountValue,2,'.',''));
     
     if (tot > 0) {
         $("#srvcTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
     } else {
         $("#srvcTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
     }
+
 }
 
 

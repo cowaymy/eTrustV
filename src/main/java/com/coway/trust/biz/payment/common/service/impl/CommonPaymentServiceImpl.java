@@ -1120,12 +1120,23 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		if(rcList != null && rcList.size() > 0){
 			for (EgovMap obj : rcList) 
 			{
-				paymentInfo = commonPaymentMapper.selectOutSrvcBillInfo(obj);
 				
-				obj.put("packageCharge", paymentInfo.get("packageCharge"));
-				obj.put("filterCharge", paymentInfo.get("filterCharge"));
-				obj.put("packagePaid", paymentInfo.get("packagePaid"));
-				obj.put("filterPaid", paymentInfo.get("filterPaid"));				
+				if(obj.get("cnvrMemId") != null && 
+							Integer.parseInt(String.valueOf(obj.get("cnvrMemId"))) > 0){
+					paymentInfo = commonPaymentMapper.selectOutSrvcBillInfo(obj);
+					
+					obj.put("packageCharge", paymentInfo.get("packageCharge"));
+					obj.put("filterCharge", paymentInfo.get("filterCharge"));
+					obj.put("packagePaid", paymentInfo.get("packagePaid"));
+					obj.put("filterPaid", paymentInfo.get("filterPaid"));
+				}else{				
+					
+					obj.put("packageCharge", 0);
+					obj.put("filterCharge", 0);
+					obj.put("packagePaid", 0);
+					obj.put("filterPaid", 0);
+					
+				}				
 			}	
 		}		
 		return rcList;

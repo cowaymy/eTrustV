@@ -268,6 +268,27 @@ $(document).ready(function(){
 	            recalculateSrvcTotalAmt();
 	        }
 	    });
+
+		//Rental Order Info 선택시 해당 Billing 정보 bold 로 표시하기
+    AUIGrid.bind(targetSrvcMstGridID, "cellClick", function(event) {
+        if(event.dataField == "btnCheck"){
+            var chkVal = AUIGrid.getCellValue(targetSrvcMstGridID, event.rowIndex, "btnCheck");
+            var srvCntrctRefNo = AUIGrid.getCellValue(targetSrvcMstGridID, event.rowIndex, "srvCntrctRefNo");
+            var rowCnt = AUIGrid.getRowCount(targetSrvcDetGridID);
+            
+            if(rowCnt > 0){
+                for(i = 0 ; i < rowCnt ; i++){
+                    if(AUIGrid.getCellValue(targetSrvcDetGridID, i, "srvCntrctRefNo") ==  srvCntrctRefNo){
+                        AUIGrid.setCellValue(targetSrvcDetGridID, i, "btnCheck", chkVal);
+                    }
+                }
+            }
+            
+            recalculateSrvcTotalAmt();
+        }else{
+        	srvcChangeRowStyleFunction(AUIGrid.getCellValue(targetSrvcMstGridID, event.rowIndex, "srvCntrctRefNo"));
+        }
+    });
 	  
 	    //Bill Payment 체크박스 선택시 금액 계산
 	    AUIGrid.bind(targetBillMstGridID, "cellClick", function(event) {
@@ -705,7 +726,7 @@ var columnLayout = [
 	        originalprice = mthRentAmt * advMonth;
 	        discountrate = 0;
 	    }
-	    
+			    
 	    //선납금 할인을 적용한 금액 표시    
 	    recalculateRentalTotalAmtWidthAdv(discountValue,originalprice,discountrate);
 	}
@@ -767,13 +788,15 @@ var columnLayout = [
 	    }
 
 	    var grandtotal = tot + discountValue;
-	    $("#rentalAdvAmt").val(discountValue);
+	    $("#rentalAdvAmt").val($.number(discountValue,2,'.',''));
 	    
+
 	    if (tot > 0) {
 	        $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
 	    } else {
 	        $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
 	    }
+		
 	}
 
 	
@@ -790,6 +813,30 @@ var columnLayout = [
 	    // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
 	    AUIGrid.update(targetRenDetGridID);
 	}
+
+	
+function rentalCheckBillGroup(){
+	if($("#rentalOrdNo").val() != ''){
+		fn_rentalConfirm();
+	}
+}
+
+
+//Advance Month 변경시 이벤트
+function fn_rentalAdvMonthChangeTxt(){
+  //Rental Membership Adv Month가 0보다 크면 billing group 선택못합
+  if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
+      $("#isRentalBillGroup").attr("checked", false);
+      $("#isRentalBillGroup").attr("disabled", true);
+      
+      if($("#rentalOrdNo").val() != ''){
+          fn_rentalConfirm();
+      }
+  }else{
+      $("#isRentalBillGroup").attr("disabled", false);
+      recalculateRentalTotalAmt();  
+  }
+}
 	
 	//Bill Payment Amount 계산
 	function recalculateBillTotalAmt(){
@@ -918,13 +965,14 @@ var columnLayout = [
 	    }
 
 	    var grandtotal = tot + discountValue;    
-	    $("#srvcAdvAmt").val(discountValue);
+	    $("#srvcAdvAmt").val($.number(discountValue,2,'.',''));
 	    
 	    if (tot > 0) {
 	        $("#srvcTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
 	    } else {
 	        $("#srvcTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
 	    }
+		
 	}
 	
 	function addRentalToFinal(){
@@ -2167,6 +2215,108 @@ function fn_outConfirm(){
       }
   }
 
+  
+
+//선택된 Master Grid 데이터의 Slave 데이터 건을 Bold 처리함
+function srvcChangeRowStyleFunction(srvCntrctRefNo) {
+  // row Styling 함수를 다른 함수로 변경
+  AUIGrid.setProp(targetSrvcDetGridID, "rowStyleFunction", function(rowIndex, item) {
+      if(item.srvCntrctRefNo == srvCntrctRefNo) {
+          return "my-row-style";
+      }
+      return "";
+  });
+  
+  // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
+  AUIGrid.update(targetSrvcDetGridID);
+};
+
+
+
+function srvcCheckBillGroup(){
+    if($("#srvcId").val() != ''){
+    	fn_srvcOrderInfo();
+    }
+}
+
+
+//Advance Month 변경시 이벤트
+function fn_srvcAdvMonth(){    
+  var advMonth = $("#srvcAdvMonthType").val();
+  
+  if(advMonth == 99 ){
+      $("#srvcTxtAdvMonth").val(1);
+      $('#srvcTxtAdvMonth').removeClass("readonly");
+      $("#srvcTxtAdvMonth").prop("readonly",false);
+  }else{
+      $("#srvcTxtAdvMonth").val(advMonth);
+      $('#srvcTxtAdvMonth').addClass("readonly");
+      $("#srvcTxtAdvMonth").prop("readonly",true);
+  }
+  
+  //Rental Membership Adv Month가 0보다 크면 billing group 선택못합
+  if($("#srvcTxtAdvMonth").val() != '' && $("#srvcTxtAdvMonth").val() > 0){
+	  $("#isSrvcBillGroup").attr("checked", false);
+	  $("#isSrvcBillGroup").attr("disabled", true); 
+	  
+	  if($("#srvcId").val() != ''){
+		  fn_srvcOrderInfo();
+      }
+  }else{
+	  $("#isSrvcBillGroup").attr("disabled", false);
+	  recalculateSrvcTotalAmt();  
+  }
+}
+
+
+
+//Advance Month 변경시 이벤트
+function fn_srvcAdvMonthChangeTxt(){
+	//Rental Membership Adv Month가 0보다 크면 billing group 선택못합
+	if($("#srvcTxtAdvMonth").val() != '' && $("#srvcTxtAdvMonth").val() > 0){
+		$("#isSrvcBillGroup").attr("checked", false);
+		$("#isSrvcBillGroup").attr("disabled", true);
+		
+		if($("#srvcId").val() != ''){
+			fn_srvcOrderInfo();
+		}
+	}else{
+	    $("#isSrvcBillGroup").attr("disabled", false);
+	    recalculateSrvcTotalAmt();  
+	}
+}
+
+
+  //Rental Membership Amount 선납금 할인율 적용
+function srvcDiscountValue(){
+    var discountValue = 0.0;
+    var discountrate = 0;
+    var originalprice = 0.0;
+
+    //Advance Specification 관련 금액 계산
+    var advMonth = $("#srvcTxtAdvMonth").val();    
+    var rows = AUIGrid.getRowIndexesByValue(targetSrvcMstGridID, "srvCntrctId", $("#srvcId").val());
+    var srvCntrctRental = AUIGrid.getCellValue(targetSrvcMstGridID, rows, "srvCntrctRental");    
+    
+    if (advMonth >= 12 && advMonth < 24) {
+        discountValue = srvCntrctRental * advMonth * 0.95;
+        originalprice = srvCntrctRental * advMonth;
+        discountrate = 5;
+    } else if (advMonth >= 24 && advMonth < 61) {
+        discountValue = srvCntrctRental * advMonth * 0.9;
+        originalprice = srvCntrctRental * advMonth;
+        discountrate = 10;
+    } else {
+        discountValue = srvCntrctRental * advMonth;
+        originalprice = srvCntrctRental * advMonth;
+        discountrate = 0;
+    }
+	    
+    //선납금 할인을 적용한 금액 표시
+    recalculateSrvcTotalAmtWidthAdv(discountValue,originalprice,discountrate);
+}
+
+
 //**************************************************
 //**************************************************
 //Bill Payment  관련 Script 
@@ -3047,7 +3197,7 @@ function fn_setSearchPayType() {
  <div id="page2" style="display:none;">
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>Normal Payment</h2>
+        <h2>Manual Key-In</h2>
         <ul class="right_btns">
         <li><p class="btn_blue"><a href="#" onclick="javascript:fn_pageBack();">Back</a></p></li>
 </ul>
