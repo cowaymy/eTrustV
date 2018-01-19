@@ -1592,7 +1592,7 @@
                   </otherwise>
               </choose>
            </if>
-        <if test='stoIn !=null and codeIn != "" '> <!--  ex)  String codeIn = "11,22,33,44"-->
+        <if test='stoIn !=null and stoIn != "" '> <!--  ex)  String codeIn = "11,22,33,44"-->
             AND S28M.WH_LOC_GB IN (SELECT     REGEXP_SUBSTR (#{stoIn}, '[^,]+', 1, LEVEL)
                                     FROM DUAL
                                     CONNECT BY REGEXP_SUBSTR (#{stoIn}, '[^,]+', 1, LEVEL) IS NOT NULL)
