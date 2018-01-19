@@ -154,7 +154,7 @@ public class OrderModifyController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 //		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		message.setMessage("Mailing address has been updated.");
+		message.setMessage("Contact person has been updated.");
 
 		return ResponseEntity.ok(message);
 	}
