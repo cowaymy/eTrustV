@@ -394,7 +394,6 @@
                 }
             };
 
-            alert($('input:radio[name=gender]:checked').val());
             Common.ajax("POST", "/sales/customer/insCustBasicInfo.do", customerForm, function(result) {
                 
             	if(result != null){
