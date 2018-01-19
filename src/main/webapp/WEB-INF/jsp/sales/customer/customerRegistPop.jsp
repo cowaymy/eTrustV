@@ -310,6 +310,7 @@
             $("input:radio[name='gender']").attr("disabled" , false);
             $('input:radio[name="gender"][value="M"]').prop('checked', true);
             $("#gender").val('M');
+            alert($("#gender").val());
             $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
         }else{
         	$("#_oldNric_").val('');
