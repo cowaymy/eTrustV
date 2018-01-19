@@ -61,8 +61,11 @@
                     <if test="payDtFr != null and payDtTo != null and payDtFr != '' and payDtTo != '' ">
                     AND B.PAY_DATA <![CDATA[   >= ]]> TO_DATE(#{payDtFr},'DD/MM/YYYY') 
                     AND B.PAY_DATA <![CDATA[   < ]]> TO_DATE(#{payDtTo},'DD/MM/YYYY') + 1
-                    </if>                    
+                    </if>
             )
+            <if test="orNo != '' ">
+                    AND C.OR_NO = #{orNo}
+            </if>    
         GROUP BY 
             A.GROUP_SEQ,
             A.LDGR_TYPE,
