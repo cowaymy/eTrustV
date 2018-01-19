@@ -39,42 +39,18 @@
     </select>
 
     <select id="selectSvcExpire" parameterType="int" resultType="egovMap">
-        SELECT T.SRV_PRD_ID
-             , T.SRV_CONFIG_ID
-             , T.SRV_MBRSH_ID
-             , T.SRV_PRD_START_DT
-             , T.SRV_PRD_EXPR_DT
+        SELECT T.SRV_PRD_EXPR_DT
              , T.SRV_PRD_EXPR_DT_MMYY
              , T.SRV_PRD_EXPR_DT_MMYY_ADD
-             , T.SRV_PRD_DUR
-             , T.SRV_PRD_STUS_ID
-             , T.SRV_PRD_REM
-             , T.SRV_PRD_CRT_DT
-             , T.SRV_PRD_CRT_USER_ID
-             , T.SRV_PRD_UPD_DT
-             , T.SRV_PRD_UPD_USER_ID
-             , T.SRV_PRD_CNTRCT_ID
           FROM
-             ( SELECT T2.SRV_PRD_ID
-                    , T2.SRV_CONFIG_ID
-                    , T2.SRV_MBRSH_ID
-                    , T2.SRV_PRD_START_DT
-                    , T2.SRV_PRD_EXPR_DT
-                    , TO_CHAR(T2.SRV_PRD_EXPR_DT, 'MM/YY') SRV_PRD_EXPR_DT_MMYY
-                    , TO_CHAR(ADD_MONTHS(T2.SRV_PRD_EXPR_DT, 1),'MM/YY') SRV_PRD_EXPR_DT_MMYY_ADD
-                    , T2.SRV_PRD_DUR
-                    , T2.SRV_PRD_STUS_ID
-                    , T2.SRV_PRD_REM
-                    , T2.SRV_PRD_CRT_DT
-                    , T2.SRV_PRD_CRT_USER_ID
-                    , T2.SRV_PRD_UPD_DT
-                    , T2.SRV_PRD_UPD_USER_ID
-                    , T2.SRV_PRD_CNTRCT_ID
-                 FROM SAL0090D T1
-                 JOIN SAL0088D T2   ON T1.SRV_CONFIG_ID = T2.SRV_CONFIG_ID
-                WHERE T1.SRV_SO_ID = #{value}
-                  AND 1 = T1.SRV_STUS_ID
-                ORDER BY T2.SRV_PRD_EXPR_DT DESC
+             ( SELECT T1.SRV_EXPR_DT SRV_PRD_EXPR_DT
+                    , TO_CHAR(T1.SRV_EXPR_DT, 'MM/YY') SRV_PRD_EXPR_DT_MMYY
+                    , TO_CHAR(ADD_MONTHS(T1.SRV_EXPR_DT, 1),'MM/YY') SRV_PRD_EXPR_DT_MMYY_ADD
+                 FROM SAL0095D T1
+                WHERE T1.SRV_SALES_ORD_ID = #{value}
+                  AND 4 = T1.SRV_STUS_CODE_ID
+                  AND SRV_EXPR_DT IS NOT NULL
+                ORDER BY T1.SRV_EXPR_DT DESC
              ) T
          WHERE ROWNUM &lt;= 1
     </select>
