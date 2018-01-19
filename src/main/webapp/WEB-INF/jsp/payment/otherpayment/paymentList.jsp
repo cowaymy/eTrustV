@@ -214,8 +214,9 @@
                                  <a href="javascript:fn_orderSearchPop();" id="search"><spring:message code='sys.btn.search'/></a>
                              </p>
                         </td>
-                        <th scope="row"></th>
+                        <th scope="row">OR No</th>
                         <td>
+                            <input type="text" id="orNo" name="orNo" class="w100p" />
                         </td>
                     </tr>
 					<tr>
