@@ -97,25 +97,17 @@ function fn_saveInstall(){
 			return;
 		}
 	 
-		if ( $("#addInstallForm #installDate").val() == '' ) {
-			Common.alert("Please insert 'Actual Install Date'");
-            return;
-		} else if ( $("#addInstallForm #sirimNo").val() == '' ) {
-			Common.alert("Please insert 'SIRIM No'");
-            return;
-		} else if ( $("#addInstallForm #serialNo").val() == '' ) {
-            Common.alert("Please insert 'Serial No'");
+		if ( $("#addInstallForm #installDate").val() == '' ||  $("#addInstallForm #sirimNo").val() == '' || 
+				$("#addInstallForm #serialNo").val() == '' ) {
+			Common.alert("Please insert 'Actual Install Date', 'SIRIM No',  'Serial No' <br/>in complete status");
             return;
         }
 	 }
 	 
 	 if($("#addInstallForm #installStatus").val() == 21){  // Failed
-	        if( $("#failReason").val() == 0 ){
-	            Common.alert("Please choose 'Failed Reason'");
+	        if( $("#failReason").val() == 0 || $("#nextCallDate").val() == '' ){
+	        	Common.alert("Please insert 'Failed Reason', 'Next Call Date'<br/>in fail status");
 	            return;
-	        } else if ( $("#nextCallDate").val() == '' ) {
-	        	Common.alert("Please insert 'Next Call Date'");
-                return;
 	        }
 	}
 
