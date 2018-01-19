@@ -12,26 +12,25 @@ $(document).ready(function() {
     createAUIGrid3();
     fn_installationResult();
 
-
-    if(${resultInfo.allowComm} =="1"){
-            $("#allowCheck").attr("checked",true);
-    }        
-    if(${resultInfo.isTradeIn} =="1"){
-            $("#tradeCheck").attr("checked",true);
-    }        
-    if(${resultInfo.requireSms} =="1"){
-            $("#smsCheck").attr("checked",true);
-    }        
+    fn_setResultCheck();
     
-    
-    
-    
-              
                   
 });
 
 
+    function fn_setResultCheck(){
+	    if(${resultInfo.allowComm} =="1"){
+	            $("#allowCheck").attr("checked",true);
+	    }        
+	    if(${resultInfo.isTradeIn} =="1"){
+	            $("#tradeCheck").attr("checked",true);
+	    }        
+	    if(${resultInfo.requireSms} =="1"){
+	            $("#smsCheck").attr("checked",true);
+	    }        
+    }
 
+    
 function createAUIGrid3() {
     //AUIGrid 칼럼 설정
     var columnLayout = [ {
@@ -154,9 +153,9 @@ function fn_winClose(){
 
 <form action="#" id="membeSponForm" method="post">
  <input type="hidden" value="<c:out value="${resultInfo.resultId}"/>" id="resultId"/>
- <input type="text" value="<c:out value="${resultInfo.allowComm}"/>" id="resultId"/>
- <input type="text" value="<c:out value="${resultInfo.isTradeIn}"/>" id="resultId"/>
- <input type="text" value="<c:out value="${resultInfo.requireSms}"/>" id="resultId"/>
+ <input type="hidden" value="<c:out value="${resultInfo.allowComm}"/>" id="resultId"/>
+ <input type="hidden" value="<c:out value="${resultInfo.isTradeIn}"/>" id="resultId"/>
+ <input type="hidden" value="<c:out value="${resultInfo.requireSms}"/>" id="resultId"/>
  
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post">
