@@ -393,7 +393,7 @@
                     asEmail : insContactForm.asEmail.value                  
                 }
             };
-            
+            alert(insBasicForm.gender.value);
             Common.ajax("POST", "/sales/customer/insCustBasicInfo.do", customerForm, function(result) {
                 
             	if(result != null){
