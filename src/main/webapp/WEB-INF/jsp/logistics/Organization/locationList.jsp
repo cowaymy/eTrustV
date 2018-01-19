@@ -310,10 +310,12 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
         }else{
         	$("#ptchk").prop("checked" , false);
         }
-    	
+    	/*
     	doGetComboData('/common/selectStockLocationList.do', { locgb : '01'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
     	doGetComboData('/common/selectStockLocationList.do', { locgb : '02'}, AUIGrid.getCellValue(myGridID ,rowid,'rdccode'),'mrdccode', 'S' , '');
-        
+        */
+    	doGetComboData('/common/selectStockLocationList.do', { stoIn : '01,05'}, AUIGrid.getCellValue(myGridID ,rowid,'cdccode'),'mcdccode', 'S' , '');
+    	doGetComboData('/common/selectStockLocationList.do', { stoIn : '02,05'}, AUIGrid.getCellValue(myGridID ,rowid,'rdccode'),'mrdccode', 'S' , '');
         
         if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '01'  || AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '05'){
         	$("#mcdccode").prop("disabled" , true);
