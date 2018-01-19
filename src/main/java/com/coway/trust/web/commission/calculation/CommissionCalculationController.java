@@ -200,7 +200,7 @@ public class CommissionCalculationController {
 		}
 		
 		List<EgovMap> map = commissionCalculationService.runningPrdCheck(params);
-		System.out.println(map);
+		
 		message.setData(map);
 		
 		return ResponseEntity.ok(message);

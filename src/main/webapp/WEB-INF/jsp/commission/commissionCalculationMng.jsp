@@ -372,9 +372,9 @@
 	       <input type="hidden" name="code" id="code"/>
 	       <input type="hidden" name="batchYn" id="batchYn"/>
 	       
-			<ul class="right_btns">
+		<%-- 	<ul class="right_btns">
 				<c:if test="${PAGE_AUTH.funcChange == 'Y'}"><li><p class="btn_grid"><a href="#" id="runBatch"><spring:message code='commission.button.runBatch'/></a></p></li></c:if>
-			</ul>
+			</ul> --%>
 			
 			<article class="grid_wrap">
 				<!-- grid_wrap start -->

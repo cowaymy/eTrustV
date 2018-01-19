@@ -2820,7 +2820,7 @@
             JOIN (
                     SELECT CAL_SEQ,CAL_NAME FROM CMM0053M 
                      WHERE CAL_STATE= #{stateId}
-                         AND CAL_START_TIME BETWEEN SYSDATE-30/(24*60) 
+                         AND CAL_START_TIME BETWEEN SYSDATE-20/(24*60) 
                          AND SYSDATE AND CAL_NAME NOT LIKE 'BS%' 
                      group by CAL_SEQ,CAL_NAME
                 ) B ON A.CAL_SEQ=B.CAL_SEQ
@@ -2830,9 +2830,9 @@
                       WHERE CODE_MASTER_ID= #{mstId}
                     </if>
                 ) C ON A.CAL_NAME=C.CODE_NAME
-        <if test="prdNm != null and prdNm != ''">
+      <!--   <if test="prdNm != null and prdNm != ''">
         WHERE A.CAL_NAME = #{prdNm}
-        </if>
+        </if> -->
     </select>
     
     <select id="runPrdTimeValid"  parameterType="Map" resultType="EgovMap">
