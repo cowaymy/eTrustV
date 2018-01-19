@@ -122,44 +122,34 @@ function fn_winClose(){
 </script>
 
 
-<!-- --------------------------------------DESIGN ----------------------------------- -->
-
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
 <h1>Installation Result</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<form action="#" id="membeSponForm" method="post">
-
- <input type="hidden" value="<c:out value="${resultInfo.resultId}"/>" id="resultId"/>
- <input type="hidden" value="<c:out value="${memberView.memId}"/>" id="memberid"/>
- <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype"/>
- <input type="hidden" value="<c:out value="${memberView.bank}"/> "  id="bank"/>
- <input type="hidden" value="<c:out value="${memberView.hsptlz}"/> "  id="hsptlz"/>
-<section class="tap_wrap"><!-- tap_wrap start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
       <div id="grid_wrap3" style="width: 100%; height: 130px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
-
-
-
-
+<form action="#" id="membeSponForm" method="post">
+ <input type="hidden" value="<c:out value="${resultInfo.resultId}"/>" id="resultId"/>
+ 
+ 
+<section class="search_table"><!-- search_table start -->
+<form action="#" method="post">
 
 <table class="type1"><!-- table start -->
-<caption>Order Details</caption>
+<caption>table</caption>
 <colgroup>
-    <col style="width:160px" />
+    <col style="width:120px" />
     <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:140px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -215,17 +205,19 @@ function fn_winClose(){
     </td>
     <th scope="row">Result Key At</th>
     <td>
-    <span><c:out value="${resultInfo.nextCallDt}"/></span>
+    <span><c:out value="${resultInfo.c2}"/></span>
     </td>
 </tr>
 </tbody>
 </table>
 
+</form>
+</section><!-- search_table end -->
 
+<ul class="center_btns">
+</ul>
 
 </form>
-<!--  ---------------------------------------------------------------------------  -->
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-
