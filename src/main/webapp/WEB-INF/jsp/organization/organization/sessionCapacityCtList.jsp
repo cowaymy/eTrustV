@@ -265,12 +265,19 @@
 			    Common.ajax("GET", "/organization/selectSsCapacityCTM", $("#searchForm").serialize(), function(result2) {
 	                
 		                console.log("성공(CTM).");
-		                console.log("data : " + result2);
+		                //console.log("CTM : " + result2[0].ctm);
+		                
+		                if (result2.length > 1) {
+		                	Common.alert("There are several CTM in the branch.<br/>Can't collect capacity to CTM from CT.");
+		                } else if (result2.length == 0) {
+		                	Common.alert("There is no CTM in the branch.<br/>Can't collect capacity to CTM from CT.");
+		                } else {
+		                	ctm = result2[0];
+		                }
 		                
 		                for( i in result2){
-		                    //console.log(result2[i]);
-		                    ctm = result2[i];
-		                    console.log("CTM : " + ctm);
+		                    console.log(result2[i]);
+		                    //console.log("CTM : " + result2[i]["ctmCode"]);
 		                }
 	            });
 		    });
@@ -329,6 +336,7 @@
     	Common.ajax("POST", "/organization/saveCapacity.do", GridCommon.getEditData(myGridID), function(result) {
             console.log("성공.");
             console.log("data : " + result);
+            fn_getSsCapacityBrListAjax();
         });
     }
     

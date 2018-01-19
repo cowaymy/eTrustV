@@ -20,10 +20,13 @@
 
 
     <select id="selectBranchList" parameterType="Map" resultType="egovMap">
+    SELECT * 
+    FROM (
     <choose>
         <when test="userType == 2">
 	        SELECT s005m.brnch_id AS CODE_ID
 	                , s005m.code || '-' || s005m.name AS CODE_NAME
+	                , S005M.CODE AS CODE_ORDER
 	            from SYS0005M s005m
 	                    ,SYS0013M s0013m
 	            where s005m.type_id = s0013m.code_id                    
@@ -56,22 +59,27 @@
         </when>
         <when test="userType == 4 or userType == 6 ">
                 SELECT s005m.brnch_id AS code_id,
-                       s005m.code || '-' || s005m.NAME AS code_name
+                       s005m.code || '-' || s005m.NAME AS code_name,
+                       S005M.CODE AS CODE_ORDER
                   FROM sys0005m s005m, sys0013m s0013m
                  WHERE s005m.type_id = s0013m.code_id AND s005m.type_id IN (42)
                 UNION ALL
                 SELECT s005m.brnch_id AS code_id,
-                       s005m.code || '-' || s005m.NAME AS code_name
+                       s005m.code || '-' || s005m.NAME AS code_name, 
+                       S005M.CODE AS CODE_ORDER
                   FROM sys0005m s005m, sys0013m s0013m
                  WHERE s005m.type_id = s0013m.code_id AND s005m.code = 'DSC-28'            
         </when>
         <when test="userType == 3">
 				SELECT S005M.BRNCH_ID AS CODE_ID,
-				           S005M.CODE || '-' || S005M.NAME AS CODE_NAME
+				           S005M.CODE || '-' || S005M.NAME AS CODE_NAME, 
+				           S005M.CODE AS CODE_ORDER
 				  FROM SYS0005M S005M, SYS0013M S0013M
 				 WHERE S005M.TYPE_ID = S0013M.CODE_ID AND S005M.CODE = 'DSC-28'        
         </when>
     </choose>        
+    ) PROJECT
+    ORDER BY PROJECT.CODE_ORDER ASC
          
           </select>
 

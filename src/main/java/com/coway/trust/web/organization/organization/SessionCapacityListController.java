@@ -97,9 +97,9 @@ public class SessionCapacityListController {
 	}	
 	
 	@RequestMapping(value = "/selectSsCapacityCTM", method = RequestMethod.GET)
-	public ResponseEntity<EgovMap> selectSsCapacityCTM(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectSsCapacityCTM(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
 		
-		EgovMap ssCapacityCTM = null;
+		List<EgovMap> ssCapacityCTM = null;
 		
         // 조회.
 		ssCapacityCTM = sessionCapacityListService.selectSsCapacityCTM(params);        

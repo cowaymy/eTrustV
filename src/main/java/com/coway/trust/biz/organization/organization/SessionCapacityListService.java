@@ -25,7 +25,7 @@ public interface SessionCapacityListService {
 	
 	List<EgovMap> seleBranchCodeSearch(Map<String, Object>params);
 
-	EgovMap selectSsCapacityCTM(Map<String, Object> params);
+	List<EgovMap> selectSsCapacityCTM(Map<String, Object> params);
 
 	void updateCTMCapacity(List<Object> udtList, SessionVO sessionVO);
 

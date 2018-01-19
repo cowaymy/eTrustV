@@ -44,7 +44,7 @@ public class SessionCapacityListServiceImpl extends EgovAbstractServiceImpl impl
 	}
 	
 	@Override
-	public EgovMap selectSsCapacityCTM(Map<String, Object> params) {
+	public List<EgovMap> selectSsCapacityCTM(Map<String, Object> params) {
 	
 		return sessionCapacityListMapper.selectSsCapacityCTM(params);
 	}

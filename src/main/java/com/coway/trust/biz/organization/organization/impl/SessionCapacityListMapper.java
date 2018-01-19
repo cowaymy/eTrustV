@@ -26,7 +26,7 @@ public interface SessionCapacityListMapper {
 
 	List<EgovMap> seleBranchCodeSearch(Map<String, Object> params);
 
-	EgovMap selectSsCapacityCTM(Map<String, Object> params);
+	List<EgovMap> selectSsCapacityCTM(Map<String, Object> params);
 
 	
 	

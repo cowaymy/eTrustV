@@ -130,7 +130,8 @@
 					FROM ORG0001D A, ORG0005D B
 					WHERE A.MEM_ID = B.MEM_ID 
 					AND A.BRNCH = #{cmbbranchId} 
-					AND A.MEM_TYPE = '3' 
+					AND A.MEM_TYPE = '3'
+					AND A.STUS      = '1' 
 					AND B.MEM_LVL = '2'
 					<!-- AND ROWNUM = 1 -->
         </select>
@@ -227,12 +228,14 @@
 		      AND C.CT_ID = A.MEM_ID
 		      AND A.BRNCH = #{codeId} 
 		      AND A.MEM_TYPE = '3' 
+		      AND A.STUS       = '1'
 		      AND B.MEM_LVL != '2') BB
 	ON (AA.CT_ID = (SELECT A.MEM_ID 
 			                FROM ORG0001D A, ORG0005D B
 			                WHERE A.MEM_ID = B.MEM_ID 
 			                AND A.BRNCH = #{codeId} 
 			                AND A.MEM_TYPE = '3' 
+			                AND A.STUS      = '1'
 			                AND B.MEM_LVL = '2' ))
 	WHEN MATCHED THEN
 	    UPDATE SET
@@ -254,6 +257,7 @@
 					                  WHERE A.MEM_ID = B.MEM_ID 
 					                  AND A.BRNCH = #{codeId} 
 					                  AND A.MEM_TYPE = '3' 
+					                  AND A.STUS      = '1'
 					                  AND B.MEM_LVL = '2' 
 					                  AND ROWNUM = 1), BB.SUM_M_AS, BB.SUM_M_INS, BB.SUM_M_RTN, BB.SUM_A_AS, BB.SUM_A_INS, BB.SUM_A_RTN, BB.SUM_E_AS, BB.SUM_E_INS, BB.SUM_E_RTN, SYSDATE, #{userId}, SYSDATE, #{userId})
     </update>

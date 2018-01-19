@@ -910,7 +910,13 @@
         }        
         
         function fn_excelDown(){
-            GridCommon.exportTo("grid_wrap", "xlsx", "HS Order Search");
+        	var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+
+            if (radioVal == 1 ){ // HS Order Search
+            	GridCommon.exportTo("grid_wrap", "xlsx", "HS Order Search");
+            } else {    // Manual HS
+            	GridCommon.exportTo("grid_wrap", "xlsx", "Manual HS");
+            }
         }
         
     </script>
@@ -1162,13 +1168,20 @@
 </form>
 </div>
 
-
+<table class="type1"><!-- table start -->
+            <tbody>
+            <tr>
+                <td>
                 <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
                 <label><input type="radio" name="searchDivCd" value="2" onClick="fn_checkRadioButton('comm_stat_flag')" />Manual HS</label>
+                </td>
+            </tr>
+            </tbody>
+</table>
 
     <ul class="right_btns">
 		<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
-		    <!-- <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">GENERATE</a></p></li> -->
+		    <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">GENERATE</a></p></li>
 		</c:if>    
     </ul>
 
