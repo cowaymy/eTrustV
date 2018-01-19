@@ -27,11 +27,7 @@ function f_multiCombo() {
             selectAll : true,
             width : '80%'
         });
-        $('#memCode').change(function() {
-        }).multipleSelect({
-            selectAll : true,
-            width : '80%'
-        });
+     
 
 
     });
@@ -43,13 +39,10 @@ $(document).ready(function(){
 		var memType = $("#memType").val();
 		if(memType == 2){
 			 doGetCombo('/services/mileageCileage/selectBranch', 42, '','branch', 'M' ,  'f_multiCombo');
-			 doGetCombo('/services/mileageCileage/selectMemberCode', 2, '','memCode', 'M' ,  'f_multiCombo');
+			// doGetCombo('/services/mileageCileage/selectMemberCode', 2, '','memCode', 'M' ,  'f_multiCombo');
 		}else if(memType == 3){
 			doGetCombo('/services/mileageCileage/selectBranch', 43, '','branch', 'M' ,  'f_multiCombo');
-			doGetCombo('/services/mileageCileage/selectMemberCode', 3, '','memCode', 'M' ,  'f_multiCombo');
-		}else if(memType == 2,3){
-			doGetCombo('/services/mileageCileage/selectBranch', '', '','branch', 'M' ,  'f_multiCombo');
-			doGetCombo('/services/mileageCileage/selectMemberCode', '', '','memCode', 'M' ,  'f_multiCombo');
+			//GetCombo('/services/mileageCileage/selectMemberCode', 3, '','memCode', 'M' ,  'f_multiCombo');
 		}
 	 });
 });
@@ -59,6 +52,7 @@ function fn_resultSearch(){
         Common.alert("<spring:message code='sys.msg.necessary' arguments='Period' htmlEscape='false'/>");
         return;
     }
+	 
 	Common.ajax(
 		    "GET",
 		    "/services/mileageCileage/selectSchemaResultMgmt.do",
@@ -112,7 +106,7 @@ function fn_excelDown(){
 <tr>
     <th scope="row">Member Type</th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="memType" name="memType">
+    <select class="w100p" id="memType" name="memType">
         <option value="2">CODY</option>
         <option value="3">CT</option>
     </select>
@@ -137,9 +131,9 @@ function fn_excelDown(){
     </td>
     <th scope="row">Member Code</th>
     <td>
-        <div class="search_100p"><!-- search_100p start -->
-        <select class="multy_select w100p" multiple="multiple" id="memCode" name="memCode"></select>
-        </div><!-- search_100p end -->
+        
+        <input class="w100p"  id="memCode" name="memCode" />
+       
     </td>
 </tr>
 </tbody>

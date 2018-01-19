@@ -501,148 +501,153 @@ SELECT ROWNUM AS RNUM, Z.* FROM (
         </if>
 </select>
 
-<select id="selectSchemaResultMgmt"  parameterType="Map" resultType="egovMap">
-
-SELECT
-MEM_TYPE,
-CODE AS BRANCH_ID,
-MEM_CODE,
-SERVICE_DATE,
-DISTANCE as TOTAL_DISTANCE,
+<select id="selectCTResultMgmt"  parameterType="Map" resultType="egovMap">
 <![CDATA[
-(SELECT (NVL(MILEAGE_AMT,0) + (((NVL(DISTANCE,0)-NVL(DEDUCT_FLAG,0))*NVL(MULTI_RATE,0))+NVL(EXT_CHARG,0)))
-  FROM SVC0033M
-  WHERE mem_type = z.mem_Type
-  AND PERIOD_FROM <= UPD_DT
-  AND PERIOD_TO     >= UPD_DT
-  AND RANGE_FROM  <= DISTANCE
-  AND RANGE_TO       > DISTANCE
-  ) AS MILEAGE
-                  ]]>
-FROM
-  (SELECT MEM_TYPE,
-  CODE,
-  MEM_CODE,
-  SERVICE_DATE,
-  SUM(DISTANCE) AS DISTANCE
-  FROM
-    (SELECT B.MEM_TYPE,
-     C.CODE,
-    B.MEM_CODE,
-    TO_CHAR(A.CRT_DT, 'YYYY/MM/DD') AS SERVICE_DATE,
-    A.DISTANCE
-    FROM SVC0008D A,
-      ORG0001D B,
-      SYS0005M C
-    WHERE A.CODY_ID                 = B.MEM_ID
-    AND B.BRNCH                        = C.BRNCH_ID
+SELECT MEM_CODE,Decode(MEM_TYPE ,2,'CODY','CT') MEM_TYPE ,SERVICE_DATE, DISTANCE TOTAL_DISTANCE, BRANCH_ID ,   
+             ( 
+		        SELECT (NVL(MILEAGE_AMT,0) + (((NVL(DISTANCE,0)-NVL(DEDUCT_FLAG,0))*NVL(MULTI_RATE,0))+NVL(EXT_CHARG,0)))
+		              FROM SVC0033M A
+		              WHERE A.mem_type = z.mem_Type
+		              AND PERIOD_FROM <= UPD_DT
+		              AND PERIOD_TO     >= UPD_DT
+		              AND RANGE_FROM  <= DISTANCE
+		              AND RANGE_TO       >= DISTANCE
+             ) AS MILEAGE
+                                                                    ]]>
+FROM 
+      (
+            SELECT MEM_TYPE,MEM_CODE, SERVICE_DATE,NVL (SUM(DISTANCE),0 ) AS DISTANCE ,  code BRANCH_ID
+            FROM
+            (
+              SELECT C.MEM_TYPE,C.MEM_CODE,D.code ,TO_CHAR(B.AS_SETL_DT, 'YYYY/MM/DD') AS SERVICE_DATE , A.DISTANCE
+               FROM SVC0001D A, 
+                    SVC0004D B,
+                    ORG0001D C,
+                    SYS0005M D
+                WHERE A.AS_ID = B.AS_ENTRY_ID
+                AND TO_CHAR(B.AS_SETL_DT, 'MM/YYYY') = #{month}
+                AND B.AS_CT_ID = C.MEM_ID
+                AND C.BRNCH  = D.BRNCH_ID
+                AND UPPER(C.MEM_CODE)   IN  
+                <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+                
+                UNION ALL
+                
+     
+              SELECT C.MEM_TYPE,C.MEM_CODE, D.code ,TO_CHAR(B.INSTALL_DT, 'YYYY/MM/DD') AS SERVICE_DATE , A.DISTANCE
+               FROM SAL0046D A, 
+                    SAL0047D B,
+                    ORG0001D C,
+                    SYS0005M D
+                WHERE A.INSTALL_ENTRY_ID = B.ENTRY_ID
+                AND TO_CHAR(B.INSTALL_DT, 'MM/YYYY') = #{month}
+                AND B.CT_ID = C.MEM_ID
+                AND C.BRNCH  = D.BRNCH_ID
+                AND UPPER(C.MEM_CODE)   IN  
+                <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+               
+            UNION ALL 
+            
+            SELECT C.MEM_TYPE,C.MEM_CODE, D.code ,TO_CHAR(B.STK_RETN_DT, 'YYYY/MM/DD') AS SERVICE_DATE , A.DISTANCE
+            FROM    Log0038D A, 
+                    Log0039D B,
+                    ORG0001D C,
+                    SYS0005M D
+                WHERE   A.STK_RETN_ID = B.STK_RETN_ID
+                AND TO_CHAR(B.STK_RETN_DT, 'MM/YYYY') = #{month}
+                AND B.STK_RETN_CT_MEM_ID = C.MEM_ID
+                AND C.BRNCH  = D.BRNCH_ID
+                AND UPPER(C.MEM_CODE)  IN  
+                <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>   
+                
+            ) A
+            GROUP BY MEM_CODE, SERVICE_DATE, code, MEM_TYPE    
+      ) Z
+
+  where 1=1
 
                 <if test="memTypeList != null and memTypeList != '' ">
-                   AND MEM_TYPE IN
+                   AND Z.MEM_TYPE IN
                    <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
                    #{item}
                    </foreach>
                 </if>
                 <if test="memCodeList != null and memCodeList != '' ">
-                   AND B.MEM_CODE IN
+                   AND UPPER(Z.MEM_CODE) IN UPPER
                    <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
                    #{item}
                    </foreach>
                 </if>
                 <if test="branchList != null and branchList != '' ">
-                   AND  C.CODE IN
+                   AND  Z.CODE IN
                    <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
                    #{item}
                    </foreach>
                 </if>
-/*     AND B.MEM_CODE                  = {memCode} */                                         /*'CD102098'*/
-/*    AND C.code                          = {branch}    */                                          /*'CDB-21'*/
-    AND A.YEAR                          = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)    /* 2017 SUBSTR(:month,0,2)*/
-    AND A.MONTH                       = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)    /*  11 SUBSTR(:month,3,4) */
-    /*AND TO_CHAR(A.CRT_DT, 'YYYYMMDD') = '20171123' FOR DAILY MILEAGE CLAIM */
-
-    UNION ALL
-    SELECT B.MEM_TYPE,
-     C.CODE,
-    B.MEM_CODE,
-    TO_CHAR(A.CRT_DT, 'YYYY/MM/DD') AS SERVICE_DATE,
-    A.DISTANCE
-    FROM log0038d A,
-      ORG0001D B,
-      SYS0005M C
-    WHERE A.CT_ID                 = B.MEM_ID
-    AND B.BRNCH                        = C.BRNCH_ID
+         order by SERVICE_DATE   
+</select>
+<select id="selectSchemaResultMgmt"  parameterType="Map" resultType="egovMap">
+<![CDATA[
+  SELECT MEM_CODE
+             , Decode(MEM_TYPE ,2,'CODY','CT') MEM_TYPE
+             , SERVICE_DATE
+             , DISTANCE TOTAL_DISTANCE
+             ,  BRANCH_ID
+             ,  ( SELECT (NVL(MILEAGE_AMT,0) + (((NVL(DISTANCE,0)-NVL(DEDUCT_FLAG,0))*NVL(MULTI_RATE,0))+NVL(EXT_CHARG,0)))
+              FROM SVC0033M A
+              WHERE A.mem_type = z.mem_Type
+              AND PERIOD_FROM <= UPD_DT
+              AND PERIOD_TO     >= UPD_DT
+              AND RANGE_FROM  <= DISTANCE
+              AND RANGE_TO       >= DISTANCE
+           ) AS MILEAGE
+    ]]>
+FROM 
+      (
+            SELECT MEM_TYPE,MEM_CODE, SERVICE_DATE, NVL (SUM(DISTANCE) , 0 ) AS DISTANCE ,  code BRANCH_ID
+            FROM
+            (
+                SELECT B.MEM_TYPE,B.MEM_CODE, TO_CHAR(C.SETL_DT, 'YYYY/MM/DD') AS SERVICE_DATE, A.DISTANCE , D.code
+                FROM SVC0008D A, ORG0001D B , SVC0006D C ,  SYS0005M  D
+                WHERE A.CODY_ID = B.MEM_ID 
+                AND B.BRNCH  = D.BRNCH_ID
+                AND   A.SCHDUL_ID = C.SCHDUL_ID
+                AND UPPER(B.MEM_CODE) IN  
+                <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
+                   #{item}
+                 </foreach>
+                AND A.YEAR = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2) 
+                AND A.MONTH = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)
+            ) A
+            GROUP BY MEM_CODE, SERVICE_DATE, code, MEM_TYPE
+      ) Z
+  where 1=1
 
                 <if test="memTypeList != null and memTypeList != '' ">
-                   AND MEM_TYPE IN
+                   AND Z.MEM_TYPE IN
                    <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
                    #{item}
                    </foreach>
                 </if>
                 <if test="memCodeList != null and memCodeList != '' ">
-                   AND B.MEM_CODE IN
+                   AND UPPER(Z.MEM_CODE) IN
                    <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
                    #{item}
                    </foreach>
                 </if>
                 <if test="branchList != null and branchList != '' ">
-                   AND  C.CODE IN
+                   AND  Z.CODE IN
                    <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
                    #{item}
                    </foreach>
                 </if>
-/*     AND B.MEM_CODE                  = {memCode} */                                         /*'CD102098'*/
-/*    AND C.code                          = {branch}    */                                          /*'CDB-21'*/
-    AND TO_CHAR(a.APP_DT,'YYYY')                          = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)    /* 2017 SUBSTR(:month,0,2)*/
-    AND  TO_CHAR(a.APP_DT,'MM')                       = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)    /*  11 SUBSTR(:month,3,4) */
-    /*AND TO_CHAR(A.CRT_DT, 'YYYYMMDD') = '20171123' FOR DAILY MILEAGE CLAIM */
-
-    UNION ALL
-    SELECT B.MEM_TYPE,
-     C.CODE,
-    B.MEM_CODE,
-    TO_CHAR(A.AS_crt_dt, 'YYYY/MM/DD') AS SERVICE_DATE,
-    A.DISTANCE
-    FROM svc0001d A,
-      ORG0001D B,
-      SYS0005M C
-    WHERE A.AS_MEM_id                 = B.MEM_ID
-    AND B.BRNCH                        = C.BRNCH_ID
-
-                <if test="memTypeList != null and memTypeList != '' ">
-                   AND MEM_TYPE IN
-                   <foreach item="item" collection="memTypeList" index="index" open="(" separator="," close=")">
-                   #{item}
-                   </foreach>
-                </if>
-                <if test="memCodeList != null and memCodeList != '' ">
-                   AND B.MEM_CODE IN
-                   <foreach item="item" collection="memCodeList" index="index" open="(" separator="," close=")">
-                   #{item}
-                   </foreach>
-                </if>
-                <if test="branchList != null and branchList != '' ">
-                   AND  C.CODE IN
-                   <foreach item="item" collection="branchList" index="index" open="(" separator="," close=")">
-                   #{item}
-                   </foreach>
-                </if>
-/*     AND B.MEM_CODE                  = {memCode} */                                         /*'CD102098'*/
-/*    AND C.code                          = {branch}    */                                          /*'CDB-21'*/
-    AND TO_CHAR(a.AS_APPNT_DT,'YYYY')                         = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 2)    /* 2017 SUBSTR(:month,0,2)*/
-    AND TO_CHAR(a.AS_APPNT_DT,'MM')                      = REGEXP_SUBSTR(#{month}, '[^/]+', 1, 1)    /*  11 SUBSTR(:month,3,4) */
-    /*AND TO_CHAR(A.CRT_DT, 'YYYYMMDD') = '20171123' FOR DAILY MILEAGE CLAIM */
-    ) A
-  GROUP BY MEM_TYPE,
-  CODE,
-  MEM_CODE,
-    SERVICE_DATE
-  ) z
-
-
-
-
-
+         order by SERVICE_DATE       
 </select>
     <select id="selectBranch"  parameterType="Map" resultType="egovMap">
         SELECT CODE CODE_ID,

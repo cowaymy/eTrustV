@@ -165,7 +165,14 @@ public class MileageCalculationServiceImpl extends EgovAbstractServiceImpl imple
     			}
     		}		
 		}*/
-		return mileageCalculationMapper.selectSchemaResultMgmt(params);
+		logger.debug("params {}" , params );
+		if( ( String.valueOf( params.get("memType") ) ).equals("2")){ //memType cody 
+			return mileageCalculationMapper.selectSchemaResultMgmt(params);
+		}
+		else { 
+			
+			return mileageCalculationMapper.selectCTResultMgmt(params);
+		}
 	}
 	
 	
