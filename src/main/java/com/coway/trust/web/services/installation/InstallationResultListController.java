@@ -70,6 +70,43 @@ public class InstallationResultListController {
 		return "services/installation/installationResultList";
 	}
 
+	
+	
+
+	/**
+	 * Installation Result DetailPopup
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/installationResultPop.do")
+	public String installationResultPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		EgovMap resultInfo = installationResultListService.getInstallationResultInfo(params);
+		model.addAttribute("resultInfo", resultInfo);
+		logger.debug("viewInstallation : {}", resultInfo);
+
+
+		// 호출될 화면
+		return "services/installation/installationResultPop";
+	}
+	
+	
+	
+	@RequestMapping(value = "/viewInstallationResult.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> viewInstallationResult(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+		logger.debug("params : {}", params);
+		List<EgovMap> viewInstallation = installationResultListService.viewInstallationResult(params);
+		logger.debug("viewInstallation : {}", viewInstallation);
+		return ResponseEntity.ok(viewInstallation);
+	}
+	
+		
+		
+		
 	/**
 	 * Search rule book management list
 	 *
@@ -149,6 +186,13 @@ public class InstallationResultListController {
 		return "services/installation/installationResultDetailPop";
 	}
 
+	
+	
+	
+
+	
+	
+	
 	/**
 	 * InstallationResultDetailPop View Installation Result
 	 *

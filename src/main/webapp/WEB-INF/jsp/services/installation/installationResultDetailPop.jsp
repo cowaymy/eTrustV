@@ -2,8 +2,11 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
+
+var myGridID_view;
+
+
 $(document).ready(function() {
-	var myGridID_view;
 
 	createInstallationViewAUIGrid();
 	fn_viewInstallResultSearch();
@@ -28,6 +31,20 @@ $(document).ready(function() {
 
 		}
 	}
+	
+	
+	
+       AUIGrid.bind(myGridID_view, "cellDoubleClick", function(event) {
+          //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId"));
+          var statusCode =  AUIGrid.getCellValue(myGridID_view, event.rowIndex, "resultId");
+
+//           alert(AUIGrid.getCellValue(myGridID_view, event.rowIndex, "resultId"));
+           Common.popupDiv("/services/installationResultPop.do?isPop=true&resultId=" + AUIGrid.getCellValue(myGridID_view, event.rowIndex, "resultId"));
+      });
+      
+      
+
+            
 
 });
 

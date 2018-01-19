@@ -81,4 +81,8 @@ public interface InstallationResultListService {
 	
 	EgovMap getLocInfo(Map<String, Object> params);
 
+	EgovMap getInstallationResultInfo(Map<String, Object> params);
+
+	List<EgovMap> viewInstallationResult(Map<String, Object> params);
+
 }

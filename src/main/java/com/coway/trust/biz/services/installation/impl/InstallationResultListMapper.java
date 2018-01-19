@@ -200,7 +200,11 @@ public interface InstallationResultListMapper {
 	
 
 	//get bill address  info 
-	EgovMap getMAddressInfo(Map<String, Object> params); 
+	EgovMap getMAddressInfo(Map<String, Object> params);
+
+	EgovMap getInstallationResultInfo(Map<String, Object> params);
+
+	List<EgovMap> viewInstallationResult(Map<String, Object> params); 
 
 	
 	
