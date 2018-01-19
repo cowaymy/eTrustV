@@ -21,6 +21,7 @@ import com.coway.trust.biz.payment.otherpayment.service.BankStatementService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -121,8 +122,10 @@ public class BankStatementController {
 				itemMap.put("fTrnscRef2", String.valueOf(gridMap.get("4")));		//ref6
 				itemMap.put("fTrnscRef6", String.valueOf(gridMap.get("5")));		//ref7
 				itemMap.put("fTrnscRem", String.valueOf(gridMap.get("6")));		//TYPE
-				itemMap.put("fTrnscDebtAmt", String.valueOf(gridMap.get("7")));	//DEBIT
-				itemMap.put("fTrnscCrditAmt", String.valueOf(gridMap.get("8")));	//CREDIT
+				String debit = CommonUtils.isEmpty(gridMap.get("7")) ? "0" : String.valueOf(gridMap.get("7")).replace(",", "");
+				String credit = CommonUtils.isEmpty(gridMap.get("8")) ? "0" : String.valueOf(gridMap.get("8")).replace(",", "");
+				itemMap.put("fTrnscDebtAmt", debit);	//DEBIT
+				itemMap.put("fTrnscCrditAmt", credit);	//CREDIT
 				itemMap.put("fTrnscRef4", String.valueOf(gridMap.get("9")));	//Deposit Slip No / EFT / MID
 				itemMap.put("fTrnscNewChqNo", String.valueOf(gridMap.get("10")));		// Chq No
 				itemMap.put("fTrnscRefVaNo", String.valueOf(gridMap.get("11")));	// VA number

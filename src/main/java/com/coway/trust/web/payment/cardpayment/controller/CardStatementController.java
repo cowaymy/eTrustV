@@ -23,6 +23,7 @@ import com.coway.trust.biz.payment.otherpayment.service.BankStatementService;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -120,13 +121,20 @@ public class CardStatementController {
 				itemMap.put("crditCard", String.valueOf(gridMap.get("1")));	// Credit Card
 				itemMap.put("crcTrnscNo", String.valueOf(gridMap.get("2")));		//Card Number
 				itemMap.put("crcTrnscAppv", String.valueOf(gridMap.get("3")));		//Approval No
-				itemMap.put("crcGrosAmt", String.valueOf(gridMap.get("4")));		//Gross
-				itemMap.put("crcBcAmt", String.valueOf(gridMap.get("5")));		//Bank Charge
-				itemMap.put("crcGstAmt", String.valueOf(gridMap.get("6")));		//GST
-				itemMap.put("crcNetAmt", String.valueOf(gridMap.get("7")));		//Net
-				itemMap.put("crcTotBcAmt", String.valueOf(gridMap.get("8")));	//Total Bank Charge
-				itemMap.put("crcTotGstAmt", String.valueOf(gridMap.get("9")));	//Total GST
-				itemMap.put("crcTotNetAmt", String.valueOf(gridMap.get("10")));	//Total Net
+				String gross = CommonUtils.isEmpty(gridMap.get("4")) ? "0" : String.valueOf(gridMap.get("4")).replace(",", "");
+				String bankCarge = CommonUtils.isEmpty(gridMap.get("5")) ? "0" : String.valueOf(gridMap.get("5")).replace(",", "");
+				String gst = CommonUtils.isEmpty(gridMap.get("6")) ? "0" : String.valueOf(gridMap.get("6")).replace(",", "");
+				String net = CommonUtils.isEmpty(gridMap.get("7")) ? "0" : String.valueOf(gridMap.get("7")).replace(",", "");
+				String totalBankCharge = CommonUtils.isEmpty(gridMap.get("8")) ? "0" : String.valueOf(gridMap.get("8")).replace(",", "");
+				String totalGst = CommonUtils.isEmpty(gridMap.get("9")) ? "0" : String.valueOf(gridMap.get("9")).replace(",", "");
+				String totalNet = CommonUtils.isEmpty(gridMap.get("10")) ? "0" : String.valueOf(gridMap.get("10")).replace(",", "");
+				itemMap.put("crcGrosAmt", gross);		//Gross
+				itemMap.put("crcBcAmt", bankCarge);		//Bank Charge
+				itemMap.put("crcGstAmt", gst);		//GST
+				itemMap.put("crcNetAmt", net);		//Net
+				itemMap.put("crcTotBcAmt", totalBankCharge);	//Total Bank Charge
+				itemMap.put("crcTotGstAmt", totalGst);	//Total GST
+				itemMap.put("crcTotNetAmt", totalNet);	//Total Net
 				itemMap.put("userId", sessionVO.getUserId());		
 			
 				itemList.add(itemMap);

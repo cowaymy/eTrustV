@@ -83,13 +83,13 @@
         {dataField : "1",headerText : "<spring:message code='pay.head.creditCard'/>",editable : true},                    
         {dataField : "2",headerText : "<spring:message code='pay.head.cardNumber'/>", editable : true},
         {dataField : "3",headerText : "<spring:message code='pay.head.approvalNo'/>", editable : true},                    
-        {dataField : "4",headerText : "<spring:message code='pay.head.grossRm'/>", editable : true},
-        {dataField : "5",headerText : "<spring:message code='pay.head.bcRm'/>", editable : true},
-        {dataField : "6",headerText : "<spring:message code='pay.head.gstRm'/>", editable : true},
-        {dataField : "7",headerText : "<spring:message code='pay.head.netRm'/>", editable : true},
-        {dataField : "8",headerText : "<spring:message code='pay.head.totalBc'/>", editable : true},                    
-        {dataField : "9",headerText : "<spring:message code='pay.head.totalGst'/>", editable : true},
-        {dataField : "10",headerText : "<spring:message code='pay.head.totalNet'/>", editable : true}
+        {dataField : "4",headerText : "<spring:message code='pay.head.grossRm'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "5",headerText : "<spring:message code='pay.head.bcRm'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "6",headerText : "<spring:message code='pay.head.gstRm'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "7",headerText : "<spring:message code='pay.head.netRm'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "8",headerText : "<spring:message code='pay.head.totalBc'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},                    
+        {dataField : "9",headerText : "<spring:message code='pay.head.totalGst'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "10",headerText : "<spring:message code='pay.head.totalNet'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"}
         ];
     
     

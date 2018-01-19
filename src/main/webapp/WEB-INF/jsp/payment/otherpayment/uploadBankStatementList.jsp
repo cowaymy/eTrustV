@@ -89,8 +89,8 @@
 		{dataField : "4", headerText : "<spring:message code='pay.head.ref6'/>", editable : true},
         {dataField : "5", headerText : "<spring:message code='pay.head.ref7'/>", editable : true},
         {dataField : "6", headerText : "<spring:message code='pay.head.mode'/>", editable : true},
-        {dataField : "7", headerText : "<spring:message code='pay.head.debit'/>", editable : true},
-        {dataField : "8", headerText : "<spring:message code='pay.head.credit'/>", editable : true},        
+        {dataField : "7", headerText : "<spring:message code='pay.head.debit'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "8", headerText : "<spring:message code='pay.head.credit'/>", editable : true, dataType:"numeric", formatString:"#,##0.00"},        
 		{dataField : "9", headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>", editable : true},
 		{dataField : "10", headerText : "<spring:message code='pay.head.chqNo'/>", editable : true},
 		{dataField : "11", headerText : "<spring:message code='pay.head.vaNumber'/>", editable : true}
