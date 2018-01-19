@@ -122,18 +122,32 @@ function fn_searchUserIdPop() {
 
 // 그리드에 set 하는 function
 function fn_loadOrderSalesman(memId, memCode) {
-
-    Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
-
-        if(memInfo == null) {
-            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+	var result = true;
+    var list = AUIGrid.getColumnValues(approveLineGridID, "memCode", true);
+    
+    if(list.length > 0) {
+        for(var i = 0; i < list.length; i ++) {
+            if(memCode == list[i]) {
+                result = false;
+            }
         }
-        else {
-        	console.log(memInfo);
-        	AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "memCode", memInfo.memCode);
-            AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "name", memInfo.name);
-        }
-    });
+    }
+    
+    if(result) {
+        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+
+            if(memInfo == null) {
+                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+            }
+            else {
+                console.log(memInfo);
+                AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "memCode", memInfo.memCode);
+                AUIGrid.setCellValue(approveLineGridID, selectRowIdx, "name", memInfo.name);
+            }
+        });
+    } else {
+        Common.alert('Not allowed to select same User ID in Approval Line');
+    }
 }
 
 function fn_newRegistMsgPop() {
