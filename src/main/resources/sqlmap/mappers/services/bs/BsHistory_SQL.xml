@@ -160,7 +160,7 @@ SELECT
                              JOIN SAL1006V vOrderBasicInfo
                             ON      Extent1.SALES_ORD_ID =  vOrderBasicInfo.ORD_ID                         
                                 WHERE 1=1
-                                             AND Extent3.Sales_Ord_No LIKE  '%' ||#{orderNumber}'
+                                             AND Extent3.Sales_Ord_No LIKE  '%' ||#{orderNumber}
                                                  ) Distinct1                                                  
                   ORDER BY Distinct1.SCHDUL_ID ASC
                   ]]>
