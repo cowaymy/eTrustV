@@ -520,7 +520,10 @@ public class CustomerController {
 
 		LOGGER.info("##########getCustCareCntId :::::::   " + getCustCareCntId);
 		
-		Map<String, Object> insmap = new HashMap();	
+		Map<String, Object> insmap = new HashMap();
+		
+		Map<String, Object> ins29Dmap = new HashMap();	
+		
 		// Basic Info
 		int tempCustSeq = 0 ; 
 		tempCustSeq = customerService.getCustIdSeq();
@@ -554,6 +557,36 @@ public class CustomerController {
 		insmap.put("visaExpr", vo.getVisaExpr() != null ? vo.getVisaExpr() : defaultDate);
 		insmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
 		insmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
+		
+		ins29Dmap.put("custSeq", tempCustSeq);
+		ins29Dmap.put("custName", vo.getCustName());
+		ins29Dmap.put("cmbNation", String.valueOf(vo.getCmbNation()) != null ? vo.getCmbNation() : 0);
+		if(vo.getDob() != null && !"".equals(vo.getDob())){
+			ins29Dmap.put("dob", vo.getDob());
+		}else{
+			ins29Dmap.put("dob", defaultDate);
+		}
+		ins29Dmap.put("nric", vo.getNric() != null ? vo.getNric() : "");
+		ins29Dmap.put("oldNric", vo.getOldNric() != null ? vo.getOldNric() : "");
+		ins29Dmap.put("gender", vo.getGender() != null ? vo.getGender() : "");
+		ins29Dmap.put("cmbRace", String.valueOf(vo.getCmbRace()) != null ? vo.getCmbRace() : 0);
+		ins29Dmap.put("email", vo.getEmail() != null ? vo.getEmail() : "");
+		if(vo.getRem() != null){
+			ins29Dmap.put("rem",vo.getRem());
+		}else{
+			ins29Dmap.put("rem", null);
+		}
+		ins29Dmap.put("stusCodeId", 1);				//고정
+		ins29Dmap.put("updUserId", sessionVo.getUserId());		
+		ins29Dmap.put("renGrp", "");					//고정
+		ins29Dmap.put("pstTerms", 0);					//고정
+		ins29Dmap.put("idOld", 0);						//고정
+		ins29Dmap.put("crtUserId", sessionVo.getUserId());			
+		ins29Dmap.put("cmbTypeId", vo.getCmbTypeId());
+		ins29Dmap.put("pasSportExpr", vo.getPasSportExpr() != null ? vo.getPasSportExpr() : defaultDate);
+		ins29Dmap.put("visaExpr", vo.getVisaExpr() != null ? vo.getVisaExpr() : defaultDate);
+		ins29Dmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
+		ins29Dmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
 		
 		// Address
 		insmap.put("addrDtl", vo.getAddrDtl());
@@ -603,7 +636,7 @@ public class CustomerController {
 			return null;
 		}
 		
-		customerService.insertCustomerInfo(insmap);
+		customerService.insertCustomerInfo(ins29Dmap);
 		customerService.insertAddressInfo(insmap);
 		customerService.insertContactInfo(insmap);
 		customerService.insertCareContactInfo(insmap);
