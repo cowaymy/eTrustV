@@ -456,7 +456,7 @@ var batchInfoLayout = [
     		var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "batchId");
     		
     		if(totalInvalid > 0){
-    			Common.alert("<spring:message code='pay.alert.pay.alert.invalidItemExist'/>");
+    			Common.alert("<spring:message code='pay.alert.invalidItemExist'/>");
     			return;
     		}else{
     			if(totalValid > 0){
