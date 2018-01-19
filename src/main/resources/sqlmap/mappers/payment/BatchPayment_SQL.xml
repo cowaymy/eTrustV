@@ -486,7 +486,7 @@
 		SYSDATE,
 		#{validStatusId},
 		#{validRemark},
-		#{userOrderNo},
+		LPAD(#{userOrderNo}, 7, '0'),
 		#{userTrNo},
 		#{userRefNo},
 		#{userAmount},
