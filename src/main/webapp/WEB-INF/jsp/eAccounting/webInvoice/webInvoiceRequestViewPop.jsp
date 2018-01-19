@@ -369,8 +369,16 @@ $(document).ready(function () {
     $("#viewInvcDt").text(myGridData[0].invcDt);
     $("#viewReqstDt").text(myGridData[0].reqstDt);
     $("#viewReqstUserId").text(myGridData[0].reqstUserId);
-    $("#viewMemAccId").text(myGridData[0].memAccId);
-    $("#viewMemAccName").text(myGridData[0].memAccName);
+    var clmNo = myGridData[0].clmNo
+    var clmType = clmNo.substr(0, 2);
+    if(clmType == "J3") {
+        $("#viewMemAccNameTh").html('<spring:message code="crditCardNewReim.crditCardNo" />');
+        $("#viewMemAccNameTd").text(myGridData[0].crditCardNo);
+    } else {
+        $("#viewMemAccNameTh").html('<spring:message code="invoiceApprove.member" />');
+        $("#viewMemAccId").val(myGridData[0].memAccId);
+        $("#viewMemAccNameTd").text(myGridData[0].memAccName);
+    }
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
     $("#viewAppvAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
     
@@ -620,8 +628,8 @@ function fn_atchViewDown(fileGrpId, fileId) {
     <td id="viewReqstUserId"></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="invoiceApprove.member" /></th>
-    <td id="viewMemAccName"></td>
+    <th scope="row" id="viewMemAccNameTh"></th>
+    <td id="viewMemAccNameTd"></td>
     <th scope="row"><spring:message code="newWebInvoice.payDueDate" /></th>
     <td id="viewPayDueDt"></td>
 </tr>
