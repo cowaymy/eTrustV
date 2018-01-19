@@ -3814,4 +3814,26 @@
  
  
     </select>
+    
+
+    
+      <select id="selectTaxInvoice" parameterType="Map" resultType="egovMap">
+      
+       
+	 SELECT search.TAX_INVOICE_CUST_NAME, search.TAX_INVOICE_CONT_PERS
+	 from (
+	  SELECT B.NAME TAX_INVOICE_CUST_NAME, D.NAME TAX_INVOICE_CONT_PERS, Rank() over(order by c.CUST_BILL_ID desc ) rcnt_info
+	    FROM 
+	   SAL0001D A,   
+	   SAL0027D B, 
+	   SAL0024D C,
+	   SAL0029D D 
+	   WHERE A.CUST_CNT_ID = B.CUST_CNTC_ID
+	   AND   A.SALES_ORD_ID = C.CUST_BILL_SO_ID
+	    AND   A.CUST_ID = D.CUST_ID
+	   AND   A.SALES_ORD_ID = #{AS_SO_ID}
+	  
+	   ) search
+	   where search.rcnt_info = 1
+      </select>
 </mapper>

@@ -915,7 +915,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	//invoice
 	public  int  setPay31dData(ArrayList<AsResultChargesViewVO>  vewList ,Map<String, Object> params){ 
 			
-		LOGGER.debug("									===> setPay31dData   in");		
+		LOGGER.debug("									===> setPay31dData   in");	
+		LOGGER.debug("params : {}", params);
 		Map<String, Object>  pay31dMap = new HashMap();
 		   
 			double  totalCharges =0;
@@ -931,6 +932,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				}
 			}
 			
+		// tax invoice ,
+		EgovMap taxPersonInfo =	 ASManagementListMapper.selectTaxInvoice(params); 
 			
 			
     	   pay31dMap.put("taxInvcId",params.get("taxInvcId")); 
@@ -938,8 +941,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     	   pay31dMap.put("taxInvcRefDt","");
     	   pay31dMap.put("taxInvcSvcNo",params.get("AS_RESULT_NO")); 
     	   pay31dMap.put("taxInvcType","118"); 
-    	   pay31dMap.put("taxInvcCustName",params.get("TAX_INVOICE_CUST_NAME"));    
-    	   pay31dMap.put("taxInvcCntcPerson",params.get("TAX_INVOICE_CONT_PERS")); 
+    	   pay31dMap.put("taxInvcCustName",taxPersonInfo.get("taxInvoiceCustName"));    
+    	   pay31dMap.put("taxInvcCntcPerson",taxPersonInfo.get("taxInvoiceContPers")); 
     	   pay31dMap.put("taxInvcAddr1",""); 
     	   pay31dMap.put("taxInvcAddr2",""); 
     	   pay31dMap.put("taxInvcAddr3",""); 

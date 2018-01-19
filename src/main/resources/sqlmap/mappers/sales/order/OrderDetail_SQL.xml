@@ -446,7 +446,7 @@
         from (
            SELECT T2.CODE
              , T2.RESN_DESC
-             , rank() over (order by CCP_ID ) rnk
+             , rank() over (order by CCP_ID desc) rnk
           FROM SAL0102D T1
           JOIN SYS0032M T2
             ON T2.RESN_ID = T1.CCP_RESN_ID
