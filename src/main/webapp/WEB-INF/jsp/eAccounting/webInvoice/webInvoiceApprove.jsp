@@ -366,6 +366,7 @@ function fn_webInvoiceAppvViewPop() {
     var data = {
     		clmType : clmType
             ,appvPrcssNo : appvPrcssNo
+            ,pageAuthFuncChange : "${PAGE_AUTH.funcChange}"
     };
     Common.popupDiv("/eAccounting/webInvoice/webInvoiceAppvViewPop.do", data, null, true, "webInvoiceAppvViewPop");
 }

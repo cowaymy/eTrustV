@@ -142,6 +142,7 @@ public class WebInvoiceController {
 		// TODO appvPrcssStus 생성
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
 		
+		model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
 		model.addAttribute("appvPrcssStus", appvPrcssStus);
 		model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
 		model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));

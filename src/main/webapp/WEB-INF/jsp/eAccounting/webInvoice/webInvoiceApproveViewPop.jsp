@@ -698,7 +698,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    <c:if test="${pageAuthFuncChange eq 'Y'}">
     <c:if test="${appvPrcssResult eq 'R'}">
     <li><p class="btn_blue2"><a href="#" id="pApprove_btn"><spring:message code="invoiceApprove.title" /></a></p></li>
     <li><p class="btn_blue2"><a href="#" id="pReject_btn"><spring:message code="webInvoice.select.reject" /></a></p></li>
