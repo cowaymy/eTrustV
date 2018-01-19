@@ -198,24 +198,26 @@ var gridPros = {
 function fn_orderSearch(){
 	
     Common.ajax("GET", "/services/bs/bsHistorySearch", $("#searchForm").serialize(), function(orderList) {
-        console.log("성공.");
-//        console.log("data : " + orderList[0]);
-        AUIGrid.setGridData(myGridID, orderList);
-        
-        $("#name").text(orderList[0].name);
-        $("#orderNumber").text(orderList[0].salesOrdNo);
-        $("#orderNumber2").text(orderList[0].salesOrdNo);
-        $("#product").text("("+orderList[0].stockCode+") "+orderList[0].stockDesc);
-        $("#installationDate").text(orderList[0].installDate);
-        $("#customerAddress").text(orderList[0].customerAddress);
-        $("#installationAddress").text(orderList[0].installAddress);
-        $("#mobile").text(orderList[0].mailCntTelM);
-        $("#residence").text(orderList[0].mailCntTelR);
-        $("#office").text(orderList[0].mailCntTelO);
-        $("#fax").text(orderList[0].mailCntTelF);
-        $("#bankAccount").text(orderList[0].jomPayRef);
-        $("#customerType").text(orderList[0].custType);
-        $("#orderId").val(orderList[0].salesOrdId);
+    	if(orderList.length>0){
+	        console.log("성공.");
+	//        console.log("data : " + orderList[0]);
+	        AUIGrid.setGridData(myGridID, orderList);
+	        
+	        $("#name").text(orderList[0].name);
+	        $("#orderNumber").text(orderList[0].salesOrdNo);
+	        $("#orderNumber2").text(orderList[0].salesOrdNo);
+	        $("#product").text("("+orderList[0].stockCode+") "+orderList[0].stockDesc);
+	        $("#installationDate").text(orderList[0].installDate);
+	        $("#customerAddress").text(orderList[0].customerAddress);
+	        $("#installationAddress").text(orderList[0].installAddress);
+	        $("#mobile").text(orderList[0].mailCntTelM);
+	        $("#residence").text(orderList[0].mailCntTelR);
+	        $("#office").text(orderList[0].mailCntTelO);
+	        $("#fax").text(orderList[0].mailCntTelF);
+	        $("#bankAccount").text(orderList[0].jomPayRef);
+	        $("#customerType").text(orderList[0].custType);
+	        $("#orderId").val(orderList[0].salesOrdId);
+    	}
     });
     
 //    fn_orderSearch2();

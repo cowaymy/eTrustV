@@ -31,9 +31,9 @@ var columnLayout_qEdit=[
 
 var columnLayout_targetEdit=[             
  {dataField:"salesOrdNo", headerText:'Sales Order', width: 250},
- {dataField:"name", headerText:'Name', width: 250},
- {dataField:"contNo", headerText:'Contact Number', width: 250},
- {dataField:"callMem", headerText:'Calling Agent'},
+ {dataField:"name", headerText:'Name', width: 250,editable : false},
+ {dataField:"contNo", headerText:'Contact Number', width: 250,editable : false},
+ {dataField:"callMem", headerText:'Calling Agent', editable : true},
  {dataField:"evtContId", headerText:'EVT_CONT_ID(CCR0013M)', visible: false},
  {dataField:"evtId", headerText:'EVT_ID(CCR0012M)', editable : false, visible: false}
 ];
@@ -100,7 +100,7 @@ $(document).ready(function(){
         	if(AUIGrid.isAddedById(myGridID_TargetEdit, event.item.evtContId)) {
                 return true;
             }else{
-                return false;
+                return true;
             }
         }       
     });
@@ -143,7 +143,31 @@ $(document).ready(function(){
        
    });
     
+    AUIGrid.bind(myGridID_TargetEdit, "cellEditEnd", function( event ) {
+    	var rowCount1 = AUIGrid.getRowCount(myGridID_TargetEdit);
     
+	    if(event.columnIndex ==0){
+	        var salesOrdNo = event.value;
+	        
+	        Common.ajax("Get", "/services/performanceMgmt/selectSalesOrdNotList2.do?salesOrdNo="+ salesOrdNo +"", '' , function(result) {
+	            if(result!=null){
+	                console.log("성공.");
+	                console.log("data : "+ result);
+	                AUIGrid.addRow(myGridID_TargetEdit, result, "last");
+	                var rowCount2 = AUIGrid.getRowCount(myGridID_TargetEdit);
+	                AUIGrid.removeRow(myGridID_TargetEdit, rowCount2-2);
+	                AUIGrid.removeSoftRows(myGridID_TargetEdit);
+	               //AUIGrid.setGridData(myGridID_TargetEdit, result );
+	            }else{
+	                Common.alert("<spring:message code='sys.common.alert.sys.common.alert.NoSuch' arguments='branch' htmlEscape='false'/>");
+	                var rowCount2 = AUIGrid.getRowCount(myGridID_TargetEdit);
+	                AUIGrid.removeRow(myGridID_TargetEdit, rowCount2-1);
+	                AUIGrid.removeSoftRows(myGridID_TargetEdit);
+	            }
+	            
+	       });
+	    }
+    });
     
     //save
     $("#save_edit").click(function() {

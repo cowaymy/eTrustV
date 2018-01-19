@@ -36,4 +36,6 @@ public interface SurveyMgmtService {
 	int addEditedSurveyEventTarget(Map<String, Map<String, ArrayList<Object>>> params, String loginId);
 	
 	EgovMap selectSalesOrdNotList2(Map<String, Object> params);
+	
+	
 }

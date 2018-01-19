@@ -377,6 +377,23 @@ FROM (
     <delete id="deleteSurveyEventAns" parameterType="Map">
        DELETE FROM CCR0004M WHERE HC_DEF_ID = #{hcDefId}
     </delete>
+    
+    <update id="udtSurveyEventTarget" parameterType="Map">
+        <selectKey keyProperty="evtId" resultType="Integer" order="BEFORE">
+            SELECT EVT_ID FROM CCR0013M WHERE EVT_ID = #{evtId} AND SALES_ORD_NO = #{salesOrdNo}
+        </selectKey>
+        UPDATE CCR0013M
+        SET 
+            CALL_MEM = #{callMem}
+            ,UPD_USER_ID = #{crtUserId}
+            , UPD_DT = SYSDATE
+        WHERE EVT_ID = #{evtId}
+        AND SALES_ORD_NO = #{salesOrdNo}
+    </update>
 
+
+    <select id="selectSurveyEventTarget"  parameterType="Map" resultType="int">
+        SELECT COUNT(*) CNT FROM CCR0013M WHERE EVT_ID = #{evtId} AND SALES_ORD_NO = #{salesOrdNo}
+    </select>
    
 </mapper>

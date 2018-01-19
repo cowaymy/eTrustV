@@ -236,16 +236,39 @@ public class SurveyMgmtServiceImpl implements SurveyMgmtService{
 			
 			//세번째 그리드 등록...
 			ArrayList<Object> b_addList = bGrid.get(AppConstants.AUIGRID_ADD);
-			
+//			ArrayList<Object> b_addList = bGrid.get(AppConstants.AUIGRID_ALL);
+			System.out.println("-------------------------------------");;
+			System.out.println(b_addList.size());
 			if(b_addList != null && b_addList.size() > 0){
     			for(Object row : b_addList){
     				Map<String, Object> bRow = (Map<String, Object>) row;
     				bRow.put("evtId", masterRow.get("evtId"));
+    		//		bRow.put("salesOrdNo", masterRow.get("salesOrdNo"));
     				//xxxMapper.insertBB(bRow);
     				((Map<String, Object>) bRow).put("crtUserId", loginId);
     				((Map<String, Object>) bRow).put("updUserId", loginId);
-    				
+    				//surveyMgmtMapper.udtSurveyEventTarget((Map<String, Object>) bRow);
     				surveyMgmtMapper.addSurveyEventTarget((Map<String, Object>) bRow);
+    			}
+			}
+			
+			ArrayList<Object> b2_addList = bGrid.get(AppConstants.AUIGRID_UPDATE);
+			System.out.println("-------------------1------------------");;
+			System.out.println(b2_addList.size());
+			if(b2_addList != null && b2_addList.size() > 0){
+				System.out.println("-------------------2------------------");;
+				for(int i=0;i< b2_addList.size();i++){
+					System.out.println("------------------3-------------------");;
+					
+					Map<String, Object> bRow = (Map<String, Object>) b2_addList.get(i);
+    				//xxxMapper.insertBB(bRow);
+    				((Map<String, Object>) bRow).put("crtUserId", loginId);
+    				((Map<String, Object>) bRow).put("updUserId", loginId);
+    				int cnt = 0 ;
+    				cnt = surveyMgmtMapper.selectSurveyEventTarget((Map<String, Object>) bRow);
+    				if(cnt >0){
+    					surveyMgmtMapper.udtSurveyEventTarget((Map<String, Object>) bRow);
+    				}
     			}
 			}
 			
