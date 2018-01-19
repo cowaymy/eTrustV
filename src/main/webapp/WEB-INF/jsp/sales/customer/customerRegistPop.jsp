@@ -309,8 +309,6 @@
             $("#genderForm").removeAttr('disabled');
             $("input:radio[name='gender']").attr("disabled" , false);
             $('input:radio[name="gender"][value="M"]').prop('checked', true);
-            $("#gender").val('M');
-            alert($("#gender").val());
             $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
         }else{
         	$("#_oldNric_").val('');
@@ -954,8 +952,8 @@
             <th scope="row">Gender <span class="brown_text">#</span></th>
             <td>
                 <div id="genderForm" >
-                <label><input type="radio" id="gender" name="gender"  value="M" disabled="disabled"/><span>Male</span></label>
-                <label><input type="radio" id="gender" name="gender"  value="F" disabled="disabled"/><span>Female</span></label>
+                <label><input type="radio" name="gender"  value="M" disabled="disabled"/><span>Male</span></label>
+                <label><input type="radio" name="gender"  value="F" disabled="disabled"/><span>Female</span></label>
                 </div>
             </td>
             <th scope="row">Email(1)</th>
