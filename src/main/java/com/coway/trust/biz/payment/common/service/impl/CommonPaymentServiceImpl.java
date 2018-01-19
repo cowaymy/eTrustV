@@ -108,6 +108,21 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		return rcList;
 	}
 	
+	
+    /**
+	 * Payment - Order Info Rental Mega Deal여부  조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */
+	@Override
+	public EgovMap selectMegaDealByOrderId(Map<String, Object> params) {
+		return commonPaymentMapper.selectMegaDealByOrderId(params);
+	}
+	
+	
+	
 	/**
 	 * Payment - Order Info Rental Billing 정보 조회 
 	 * @param params

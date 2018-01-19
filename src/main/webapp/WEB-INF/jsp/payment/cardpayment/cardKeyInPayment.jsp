@@ -815,12 +815,21 @@ function fn_callBackRentalOrderInfo(ordNo, ordId){
 //Rental Order Info 조회
 function fn_rentalOrderInfo(){
 	var data; 
+	var megaDeal;
 		
     if($("#isRentalBillGroup").is(":checked")){
     	data = {"billGrpId" : $("#rentalBillGrpId").val() };
     }else{		
 		data = {"orderId" : $("#rentalOrdId").val() };
 	}
+
+	//Order ID로 MegaDeal 여부를 조회한다.
+	megaDeal = {"orderId" : $("#rentalOrdId").val() };
+	Common.ajax("GET", "/payment/common/selectMegaDealByOrderId.do", megaDeal, function(result) {
+
+        $("#rentalMegaDeal").val(result.megaDeal);
+    });
+
     
 	//Rental : Order 정보 조회
 	Common.ajax("GET", "/payment/common/selectOrderInfoRental.do", data, function(result) {
@@ -919,24 +928,31 @@ function rentalDiscountValue(){
     var advMonth = $("#rentalTxtAdvMonth").val();    
     var rows = AUIGrid.getRowIndexesByValue(targetRenMstGridID, "salesOrdId", $("#rentalOrdId").val());
     var mthRentAmt = AUIGrid.getCellValue(targetRenMstGridID, rows, "mthRentAmt");
+	var megaDeal = $("#rentalMegaDeal").val();    
 
-    if (advMonth >= 6 && advMonth < 12){
-        discountValue = mthRentAmt * advMonth * 0.97;
-        originalprice = mthRentAmt * advMonth;
-        discountrate = 3;
-    } else if (advMonth >= 12 && advMonth < 24) {
-        discountValue = mthRentAmt * advMonth * 0.95;
-        originalprice = mthRentAmt * advMonth;
-        discountrate = 5;
-    } else if (advMonth >= 24 && advMonth < 61) {
-        discountValue = mthRentAmt * advMonth * 0.9;
-        originalprice = mthRentAmt * advMonth;
-        discountrate = 10;
-    } else {
-        discountValue = mthRentAmt * advMonth;
-        originalprice = mthRentAmt * advMonth;
-        discountrate = 0;
-    }
+	if(megaDeal == 0 ){
+	    if (advMonth >= 6 && advMonth < 12){
+	        discountValue = mthRentAmt * advMonth * 0.97;
+	        originalprice = mthRentAmt * advMonth;
+	        discountrate = 3;
+	    } else if (advMonth >= 12 && advMonth < 24) {
+	        discountValue = mthRentAmt * advMonth * 0.95;
+	        originalprice = mthRentAmt * advMonth;
+	        discountrate = 5;
+	    } else if (advMonth >= 24 && advMonth < 61) {
+	        discountValue = mthRentAmt * advMonth * 0.9;
+	        originalprice = mthRentAmt * advMonth;
+	        discountrate = 10;
+	    } else {
+	        discountValue = mthRentAmt * advMonth;
+	        originalprice = mthRentAmt * advMonth;
+	        discountrate = 0;
+	    }
+	}else{
+		discountValue = mthRentAmt * advMonth;
+		originalprice = mthRentAmt * advMonth;
+		discountrate = 0;
+	}
     
     //선납금 할인을 적용한 금액 표시    
     recalculateRentalTotalAmtWidthAdv(discountValue,originalprice,discountrate);
@@ -982,12 +998,21 @@ function recalculateRentalTotalAmtWidthAdv(discountValue, originalPrice, discoun
 
     var grandtotal = tot + discountValue;
     $("#rentalAdvAmt").val($.number(discountValue,2,'.',''));
+	var megaDeal = $("#rentalMegaDeal").val();    
 
-    if (tot > 0) {
-        $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
-    } else {
-        $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
-    }
+	if(megaDeal == 0 ){
+	    if (tot > 0) {
+	        $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
+	    } else {
+	        $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
+	    }
+	}else{
+		if (tot > 0) {
+	        $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + ") = RM " + $.number(grandtotal,2));
+	    } else {
+	        $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + ") = RM " + $.number(grandtotal,2));
+	    }
+	}
 	
 }
 
@@ -2420,6 +2445,7 @@ function isDupOutSrvcToFinal(){
 	            <input type="hidden" name="rentalOrdId" id="rentalOrdId" />
 	            <input type="hidden" name="rentalBillGrpId" id="rentalBillGrpId" />
 	            <input type="hidden" name="rentalAdvAmt" id="rentalAdvAmt" />
+	            <input type="hidden" name="rentalMegaDeal" id="rentalMegaDeal" />
 	            
 	            <table class="type1">
 	                <caption>table</caption>

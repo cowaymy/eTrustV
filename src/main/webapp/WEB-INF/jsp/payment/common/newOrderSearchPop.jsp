@@ -557,11 +557,20 @@ function fn_callBackRentalOrderInfo(ordNo, ordId){
 //Rental Order Info 조회
 function fn_rentalOrderInfo(){
 	var data; 
+	var megaDeal;
+
     if($("#isRentalBillGroup").is(":checked")){
     	data = {"billGrpId" : $("#rentalBillGrpId").val() };
     }else{		
 		data = {"orderId" : $("#rentalOrdId").val() };
 	}
+
+	//Order ID로 MegaDeal 여부를 조회한다.
+	megaDeal = {"orderId" : $("#rentalOrdId").val() };
+	Common.ajax("GET", "/payment/common/selectMegaDealByOrderId.do", megaDeal, function(result) {
+
+        $("#rentalMegaDeal").val(result.megaDeal);
+    });
     
 	//Rental : Order 정보 조회
 	Common.ajax("GET", "/payment/common/selectOrderInfoRental.do", data, function(result) {
@@ -658,24 +667,31 @@ function rentalDiscountValue(){
     var advMonth = $("#rentalTxtAdvMonth").val();    
     var rows = AUIGrid.getRowIndexesByValue(targetRenMstGridID, "salesOrdId", $("#rentalOrdId").val());
     var mthRentAmt = AUIGrid.getCellValue(targetRenMstGridID, rows, "mthRentAmt");
+	var megaDeal = $("#rentalMegaDeal").val();    
 
-    if (advMonth >= 6 && advMonth < 12){
-        discountValue = mthRentAmt * advMonth * 0.97;
-        originalprice = mthRentAmt * advMonth;
-        discountrate = 3;
-    } else if (advMonth >= 12 && advMonth < 24) {
-        discountValue = mthRentAmt * advMonth * 0.95;
-        originalprice = mthRentAmt * advMonth;
-        discountrate = 5;
-    } else if (advMonth >= 24 && advMonth < 61) {
-        discountValue = mthRentAmt * advMonth * 0.9;
-        originalprice = mthRentAmt * advMonth;
-        discountrate = 10;
-    } else {
-        discountValue = mthRentAmt * advMonth;
-        originalprice = mthRentAmt * advMonth;
-        discountrate = 0;
-    }
+	if(megaDeal == 0 ){
+		if (advMonth >= 6 && advMonth < 12){
+			discountValue = mthRentAmt * advMonth * 0.97;
+			originalprice = mthRentAmt * advMonth;
+			discountrate = 3;
+		} else if (advMonth >= 12 && advMonth < 24) {
+			discountValue = mthRentAmt * advMonth * 0.95;
+			originalprice = mthRentAmt * advMonth;
+			discountrate = 5;
+		} else if (advMonth >= 24 && advMonth < 61) {
+			discountValue = mthRentAmt * advMonth * 0.9;
+			originalprice = mthRentAmt * advMonth;
+			discountrate = 10;
+		} else {
+			discountValue = mthRentAmt * advMonth;
+			originalprice = mthRentAmt * advMonth;
+			discountrate = 0;
+		}
+	}else{
+		discountValue = mthRentAmt * advMonth;
+		originalprice = mthRentAmt * advMonth;
+		discountrate = 0;
+	}
     
     //선납금 할인을 적용한 금액 표시    
     recalculateRentalTotalAmtWidthAdv(discountValue,originalprice,discountrate);
@@ -720,13 +736,22 @@ function recalculateRentalTotalAmtWidthAdv(discountValue, originalPrice, discoun
     }
 
     var grandtotal = tot + discountValue;
-    $("#rentalAdvAmt").val(discountValue);
+    $("#rentalAdvAmt").val($.number(discountValue,2,'.',''));
+	var megaDeal = $("#rentalMegaDeal").val();    
     
-    if (tot > 0) {
-        $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
-    } else {
-        $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
-    }
+	if(megaDeal == 0 ){
+	    if (tot > 0) {
+	        $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
+	    } else {
+	        $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
+	    }
+	}else{
+		if (tot > 0) {
+	        $("#rentalTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + ") = RM " + $.number(grandtotal,2));
+	    } else {
+	        $("#rentalTotalAmtTxt").text("(RM " + $.number(originalPrice,2) + ") = RM " + $.number(grandtotal,2));
+	    }
+	}
 }
 
 //선택된 Master Grid 데이터의 Slave 데이터 건을 Bold 처리함
@@ -803,6 +828,12 @@ function fn_rentalAdvMonthChangeTxt(){
 
 function addRentalToFinal(){
 	var addedCount = 0;
+
+	if(isDupRentalToFinal() > 0){
+    	Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+		return;
+	}
+
     var rowCnt = AUIGrid.getRowCount(targetRenMstGridID);
     maxSeq = maxSeq + 1;
 
@@ -936,6 +967,71 @@ function addRentalToFinal(){
 }
 
 
+
+
+// Add 할때 중복된 건이 있는지 체크한다.
+function isDupRentalToFinal(){
+    var rowCnt = AUIGrid.getRowCount(targetRenMstGridID);
+	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","RENTAL");
+	var dupCnt = 0;
+
+    if(rowCnt > 0){
+        for(i = 0 ; i < rowCnt ; i++){
+
+            var mstChkVal = AUIGrid.getCellValue(targetRenMstGridID, i ,"btnCheck");
+            var mstSalesOrdNo = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdNo");            
+            var mstRpf = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpf");
+            var mstRpfPaid = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpfPaid");
+            
+            if(mstChkVal == 1){
+            	if(mstRpf - mstRpfPaid > 0){
+					if(addedRows.length > 0) {
+						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){							
+							if (AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId && 161 == addedRows[addedIdx].billTypeId) {
+								dupCnt++;
+							}
+						}
+					}            		
+            	}
+            	
+            	var detailRowCnt = AUIGrid.getRowCount(targetRenDetGridID);
+                for(j = 0 ; j < detailRowCnt ; j++){
+                    var detChkVal = AUIGrid.getCellValue(targetRenDetGridID, j ,"btnCheck");
+                    var detSalesOrdNo = AUIGrid.getCellValue(targetRenDetGridID, j ,"ordNo");
+
+                    if(mstSalesOrdNo == detSalesOrdNo && detChkVal == 1){
+
+						if(addedRows.length > 0) {
+							for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+							
+								if (AUIGrid.getCellValue(targetRenMstGridID, j ,"salesOrdId") == addedRows[addedIdx].ordId && 
+									AUIGrid.getCellValue(targetRenDetGridID, j ,"installment") == addedRows[addedIdx].installment &&
+									AUIGrid.getCellValue(targetRenDetGridID, j ,"billTypeId") == addedRows[addedIdx].billTypeId) {
+									dupCnt++;
+								}
+							}
+						}      
+                    }
+                }
+                
+                //Advance Month 
+                if($("#rentalTxtAdvMonth").val() != '' && $("#rentalTxtAdvMonth").val() > 0){
+					if(addedRows.length > 0) {
+						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){						
+							if (AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId && 1032 == addedRows[addedIdx].billTypeId) {
+								dupCnt++;
+							}
+						}
+					}                       
+				}
+            }
+        }
+    }
+
+	return dupCnt;
+}
+
+
 //**************************************************
 //**************************************************
 //Outright 관련 Script 
@@ -1021,6 +1117,13 @@ function resetOutGrid(){
 
 function addOutToFinal(){
 	var addedCount = 0;
+
+	if(isDupOutToFinal() > 0){
+    	Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+		return;
+	}
+
+
     var rowCnt = AUIGrid.getRowCount(targetOutMstGridID);    
     maxSeq = maxSeq + 1;
 
@@ -1070,6 +1173,35 @@ function addOutToFinal(){
     }
     
     recalculatePaymentTotalAmt();
+}
+
+
+
+// Add 할때 중복된 건이 있는지 체크한다.
+function isDupOutToFinal(){
+    var rowCnt = AUIGrid.getRowCount(targetOutMstGridID);
+	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","OUT");
+	var dupCnt = 0;
+
+	if(rowCnt > 0){
+        for(i = 0 ; i < rowCnt ; i++){
+        	
+        	var targetAmt = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
+        	
+        	if(targetAmt > 0){
+
+				if(addedRows.length > 0) {
+					for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){							
+						if (AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdId") == addedRows[addedIdx].ordId) {
+							dupCnt++;
+						}
+					}
+				}   
+        	}
+        }
+    }
+
+	return dupCnt;
 }
 
 
@@ -1345,7 +1477,7 @@ function recalculateSrvcTotalAmtWidthAdv(discountValue, originalPrice, discountr
     }
 
     var grandtotal = tot + discountValue;    
-    $("#srvcAdvAmt").val(discountValue);
+    $("#srvcAdvAmt").val($.number(discountValue,2,'.',''));
     
     if (tot > 0) {
         $("#srvcTotalAmtTxt").text("RM " + $.number(tot,2) + " + (RM " + $.number(originalPrice,2)  + " - " + discountrate + "%) = RM " + $.number(grandtotal,2));
@@ -1359,6 +1491,12 @@ function recalculateSrvcTotalAmtWidthAdv(discountValue, originalPrice, discountr
 
 function addSrvcToFinal(){
 	var addedCount = 0;
+
+	if(isDupSrvcToFinal() > 0){
+    	Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+		return;
+	}
+
     var rowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
     maxSeq = maxSeq + 1;
     
@@ -1530,6 +1668,81 @@ function addSrvcToFinal(){
 
 
 
+
+// Add 할때 중복된 건이 있는지 체크한다.
+function isDupSrvcToFinal(){
+	var rowCnt = AUIGrid.getRowCount(targetSrvcMstGridID);
+	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","MEMBERSHIP");
+	var dupCnt = 0;
+
+	if(rowCnt > 0){
+		for(i = 0 ; i < rowCnt ; i++){
+
+			var mstChkVal = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"btnCheck");
+			var mstSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctRefNo");
+			var mstFilterCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterCharges");
+			var mstFilterChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"filterChargesPaid");            
+			var mstPenaltyCharges = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyCharges");
+			var mstPenaltyChargesPaid = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"penaltyChargesPaid");            
+
+			if(mstChkVal == 1){
+				if(mstFilterCharges - mstFilterChargesPaid > 0){
+
+					if(addedRows.length > 0) {
+						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){							
+							if (AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctOrdId") == addedRows[addedIdx].ordId && 1307 == addedRows[addedIdx].billTypeId) {
+								dupCnt++;
+							}
+						}
+					}  
+				}
+
+				if(mstPenaltyCharges - mstPenaltyChargesPaid > 0){
+					if(addedRows.length > 0) {
+						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){							
+							if (AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctOrdId") == addedRows[addedIdx].ordId && 1306 == addedRows[addedIdx].billTypeId) {
+								dupCnt++;
+							}
+						}
+					}  
+				}
+
+				//Advance Month 
+				if($("#srvcTxtAdvMonth").val() != '' && $("#srvcTxtAdvMonth").val() > 0){
+					if(addedRows.length > 0) {
+						for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){							
+							if (AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctOrdId") == addedRows[addedIdx].ordId && 154 == addedRows[addedIdx].billTypeId) {
+								dupCnt++;
+							}
+						}
+					}  
+				}
+
+				var detailRowCnt = AUIGrid.getRowCount(targetSrvcDetGridID);
+				for(j = 0 ; j < detailRowCnt ; j++){
+					var detChkVal = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"btnCheck");
+					var detSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvCntrctRefNo");
+
+					if(mstSrvCntrctRefNo == detSrvCntrctRefNo && detChkVal == 1){
+						if(addedRows.length > 0) {
+							for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+								if (AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvCntrctOrdId") == addedRows[addedIdx].ordId && 
+										AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvPaySchdulNo") == addedRows[addedIdx].installment &&
+										AUIGrid.getCellValue(targetSrvcDetGridID, j ,"srvLdgrTypeId") == addedRows[addedIdx].billTypeId) {
+									dupCnt++;
+								}
+							}
+						}   
+					}
+				}
+			}
+		}
+	}
+
+	return dupCnt;
+}
+
+
 //**************************************************
 //**************************************************
 //Bill Payment  관련 Script 
@@ -1599,7 +1812,13 @@ function addBillToFinal(){
     if(checkArray.length > 1){
         Common.alert("<spring:message code='pay.alert.onlyOneBill'/>");
         return;     
-    }else{      
+    }else{
+		
+		if(isDupHPToFinal() > 0 || isDupASToFinal() > 0){
+			Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+			return;
+		}
+
         var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);      
         maxSeq = maxSeq + 1;
 
@@ -1650,6 +1869,58 @@ function addBillToFinal(){
         
         recalculatePaymentTotalAmt();
     }
+}
+
+
+
+
+// Add 할때 중복된 건이 있는지 체크한다.
+function isDupASToFinal(){
+	var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
+	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","AS");
+	var dupCnt = 0;
+
+
+	if(rowCnt > 0){
+		for(i = 0 ; i < rowCnt ; i++){
+			if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
+				if(addedRows.length > 0) {
+					for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){							
+						if (AUIGrid.getCellValue(targetBillMstGridID, i ,"billId") == addedRows[addedIdx].billId && AUIGrid.getCellValue(targetBillMstGridID, i ,"appType") == 'AS') {
+							dupCnt++;
+						}
+					}
+				}  
+			}
+		}
+	}   	
+	return dupCnt;
+}
+
+
+// Add 할때 중복된 건이 있는지 체크한다.
+function isDupHPToFinal(){
+	var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
+	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","HP");
+	var dupCnt = 0;
+
+
+	if(rowCnt > 0){
+		for(i = 0 ; i < rowCnt ; i++){
+			if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
+				var targetAmt = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
+
+				if(addedRows.length > 0) {
+					for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){							
+						if (AUIGrid.getCellValue(targetBillMstGridID, i ,"billId") == addedRows[addedIdx].billId && AUIGrid.getCellValue(targetBillMstGridID, i ,"appType") == 'HP') {
+							dupCnt++;
+						}
+					}
+				}  
+			}
+		}
+	}   	
+	return dupCnt;
 }
 
 //**************************************************
@@ -1716,6 +1987,12 @@ function resetOutSrvcGrid(){
 
 function addOutSrvcToFinal(){
 	var addedCount = 0;
+
+	if(isDupOutSrvcToFinal() > 0){
+    	Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
+		return;
+	}
+
     var rowCnt = AUIGrid.getRowCount(targetOutSrvcMstGridID);    
     maxSeq = maxSeq + 1;
 
@@ -1800,6 +2077,45 @@ function addOutSrvcToFinal(){
     recalculatePaymentTotalAmt();
 }
 
+
+
+// Add 할때 중복된 건이 있는지 체크한다.
+function isDupOutSrvcToFinal(){
+    var rowCnt = AUIGrid.getRowCount(targetOutSrvcMstGridID);
+	var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","OUT_MEM");
+	var dupCnt = 0;
+
+    if(rowCnt > 0){
+		for(i = 0 ; i < rowCnt ; i++){
+			var packageAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid"); 
+
+			if(packageAmt > 0){
+				if(addedRows.length > 0) {
+					for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){							
+						if (AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 164 == addedRows[addedIdx].billTypeId) {
+							dupCnt++;
+						}
+					}
+				}  
+			}
+
+			var filterAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"filterPaid"); 
+
+			if(filterAmt > 0){
+				if(addedRows.length > 0) {
+					for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){							
+						if (AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"quotNo") == addedRows[addedIdx].billNo && 542 == addedRows[addedIdx].billTypeId) {
+							dupCnt++;
+						}
+					}
+				}  
+			}
+		}
+    }
+
+	return dupCnt;
+}
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -1853,7 +2169,8 @@ function addOutSrvcToFinal(){
 	            <input type="hidden" name="rentalOrdId" id="rentalOrdId" />
 	            <input type="hidden" name="rentalBillGrpId" id="rentalBillGrpId" />
 	            <input type="hidden" name="rentalAdvAmt" id="rentalAdvAmt" />
-	            
+   	            <input type="hidden" name="rentalMegaDeal" id="rentalMegaDeal" />
+
 	            <table class="type1">
 	                <caption>table</caption>
 	                <colgroup>

@@ -26,6 +26,15 @@ public interface CommonPaymentService{
     List<EgovMap> selectOrderInfoRental(Map<String, Object> params);
     
     /**
+	 * Payment - Order Info Rental Mega Deal여부  조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+    EgovMap selectMegaDealByOrderId(Map<String, Object> params);
+    
+    /**
 	 * Payment - Bill Info Rental 조회 
 	 * @param params
 	 * @param model

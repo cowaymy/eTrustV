@@ -1298,4 +1298,14 @@
             A.GROUP_SEQ =   #{seq}      
     </select>
     
+    <select id="selectMegaDealByOrderId" parameterType="Map" resultType="egovMap">
+        SELECT 
+            NVL(MEGA_DEAL,0) AS MEGA_DEAL
+        FROM 
+            SAL0001D A 
+            JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
+        WHERE 
+            A.SALES_ORD_ID = #{orderId}
+   </select>
+    
 </mapper>

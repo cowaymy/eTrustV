@@ -79,6 +79,29 @@ public class CommonPaymentController {
 		return ResponseEntity.ok(resultList);
 	}
 	
+	/**
+	 * Payment - Order Info Rental Mega Deal여부  조회 
+	 * @param params
+	 * @param model
+	 * @return
+	 * 
+	 */	
+	@RequestMapping(value = "/selectMegaDealByOrderId.do", method = RequestMethod.GET)
+	public ResponseEntity<EgovMap> selectMegaDealByOrderId(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params : {} ", params);	
+		// 조회.
+		EgovMap resultMap = commonPaymentService.selectMegaDealByOrderId(params);
+		
+		if(resultMap == null || resultMap.get("megaDeal") == null){
+			resultMap = new EgovMap();
+			resultMap.put("megaDeal",0);			
+		}
+    
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultMap);
+	}
+	
 	/******************************************************
 	 * Payment - Bill Info Rental
 	 *****************************************************/	
