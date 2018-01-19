@@ -66,10 +66,10 @@
     // ajax list 조회.
     function searchList(){
     	
-    	if(FormUtil.checkReqValue($("#ordNo"))){
-            Common.alert("<spring:message code='pay.alert.orderNumberFirst'/>");
-            return;
-        }
+    	if(FormUtil.checkReqValue($("#ordNo")) && FormUtil.checkReqValue($("#orNo"))){
+    		Common.alert("Please key in the order number OR OR No.");
+    		return;
+    	}
         
         //if(FormUtil.checkReqValue($("#tranDateFr")) ||
 		//	FormUtil.checkReqValue($("#tranDateTo"))){
