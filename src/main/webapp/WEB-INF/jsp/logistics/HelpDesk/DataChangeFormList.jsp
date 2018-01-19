@@ -458,32 +458,57 @@ var respondlogLayout = [{dataField: "c2",headerText :"<spring:message code='log.
     }
     
 
-    function fileDown(){
+//     function fileDown(){
     	
-    	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+//     	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
    	
-    	var fileName = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno");
-    	var subPath = AUIGrid.getCellValue(myGridID,  selectedItem[0], "c8");
-//    	alert("subPath  :  "+subPath);
-    	var orignlFileNm = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno")+".zip";
-    	subPath =subPath.substr(10,5);
-    	subPath=subPath.replace("~","");
-    	fileName =fileName+".zip";
+//     	var fileName = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno");
+//     	var subPath = AUIGrid.getCellValue(myGridID,  selectedItem[0], "c8");
+// //    	alert("subPath  :  "+subPath);
+//     	var orignlFileNm = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno")+".zip";
+//     	//subPath =subPath.substr(10,5);
+//     	subPath =subPath.substr(10);
+//     	//subPath=subPath.replace("~","");
+//     	subPath=subPath.replace("DCF","logitics");
+//     	//fileName =fileName+".zip";
     	
-//     	alert("fileName  :  "+fileName);
-//     	alert("subPath???  :  "+subPath);
-//     	alert("orignlFileNm???  :  "+orignlFileNm);
-//    	alert(subPath.substr(0,14));
+    	
+//      	alert("fileName  :  "+fileName);
+//      	alert("subPath???  :  "+subPath);
+// //     	alert("orignlFileNm???  :  "+orignlFileNm);
+// //    	alert(subPath.substr(0,14));
     	    	
-     if( "N"== subPath || ""==subPath || null==subPath ||""==fileName || null==fileName){
-         Common.alert("File is not exist.");
-         return false;
-     }
+//      if( "N"== subPath || ""==subPath || null==subPath ||""==fileName || null==fileName){
+//          Common.alert("File is not exist.");
+//          return false;
+//      }
      
-      window.open("<c:url value='/file/fileDown.do?subPath=" + subPath
-              + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
-              + "'/>");    
+//      fileName ="";
+     
+//       window.open("<c:url value='/file/fileDown.do?subPath=" + subPath
+//               + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
+//               + "'/>");    
+//   }
+
+function fileDown(rowIndex,str){
+
+ var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    
+ var fileName = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno");
+ var subPath = AUIGrid.getCellValue(myGridID,  selectedItem[0], "c8");
+ var orignlFileNm = AUIGrid.getCellValue(myGridID,  selectedItem[0], "dcfreqno")+".zip";
+
+ if( "N"== subPath || ""==subPath || null==subPath ||""==fileName || null==fileName){
+	    Common.alert("File is not exist.");
+	    return false;
   }
+ 
+ subPath=subPath.replace("~","");
+ subPath ="/resources"+subPath
+	
+  window.open("${pageContext.request.contextPath}"+subPath);
+}
+
 
     /*----------------------------------------   셀렉트박스 이벤트 시작 ---------------------------------------------------- */
     function getComboRelays(obj, value, tag, selvalue) {
