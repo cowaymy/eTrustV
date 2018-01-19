@@ -1787,12 +1787,11 @@
 
         Common.ajax("POST", "/sales/order/updateCntcPerson.do", $('#frmCntcPer').serializeJSON(), function(result) {
                 
-                Common.alert("Mailing Address Updated" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+                Common.alert("Contact Person Updated" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-//                  Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update mailing address.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                    Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update mailing address.</b>");
+                    Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update contact person.</b>");
                 }
                 catch(e) {
                     console.log(e);
