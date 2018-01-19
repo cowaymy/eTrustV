@@ -54,7 +54,7 @@
              $("#_delBtn").css("display", "none" );
          }else{
              // SAL0024D에 존재하면 delete 버튼 숨기기
-             if($("#billAddrExistCnt").val() > 0){alert("SAL0024D");
+             if($("#billAddrExistCnt").val() > 0){
                  $("#_delBtn").css("display", "none" );
              }else{
                  // SAL0045D에 존재하면 delete 버튼 숨기기
