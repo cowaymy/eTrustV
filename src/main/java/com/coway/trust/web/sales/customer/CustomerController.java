@@ -538,6 +538,7 @@ public class CustomerController {
 		}
 		insmap.put("nric", vo.getNric() != null ? vo.getNric() : "");
 		insmap.put("oldNric", vo.getOldNric() != null ? vo.getOldNric() : "");
+		LOGGER.info("##########vo.getGender() :::::::   " + vo.getGender());
 		insmap.put("gender", vo.getGender() != null ? vo.getGender() : "");
 		insmap.put("cmbRace", String.valueOf(vo.getCmbRace()) != null ? vo.getCmbRace() : 0);
 		insmap.put("email", vo.getEmail() != null ? vo.getEmail() : "");
@@ -568,6 +569,7 @@ public class CustomerController {
 		}
 		ins29Dmap.put("nric", vo.getNric() != null ? vo.getNric() : "");
 		ins29Dmap.put("oldNric", vo.getOldNric() != null ? vo.getOldNric() : "");
+		LOGGER.info("########## vo.getGender() :::::::   " + vo.getGender());
 		ins29Dmap.put("gender", vo.getGender() != null ? vo.getGender() : "");
 		ins29Dmap.put("cmbRace", String.valueOf(vo.getCmbRace()) != null ? vo.getCmbRace() : 0);
 		ins29Dmap.put("email", vo.getEmail() != null ? vo.getEmail() : "");
@@ -635,6 +637,8 @@ public class CustomerController {
 		if(nricDupMap != null){
 			return null;
 		}
+		
+		LOGGER.info("########## ins29Dmap :::::::   " + ins29Dmap.toString());
 		
 		customerService.insertCustomerInfo(ins29Dmap);
 		customerService.insertAddressInfo(insmap);
