@@ -1368,8 +1368,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		Map<String,Object> taxInvoiceOutrightSub = new HashMap<String,Object>();
 		Map<String,Object> salesOrderM = new HashMap<String,Object>();
 
-		int statusId =  Integer.parseInt( CommonUtils.nvl( params.get("installStatus")).toString());
-		String sirimNo = CommonUtils.nvl( params.get("hidStockIsSirim").toString())!= "0" ? CommonUtils.nvl(  params.get("hidStockIsSirim")).toString().toUpperCase() : "";
+		int statusId =  Integer.parseInt( CommonUtils.nvl( params.get("installStatus")).toString());//
+		String sirimNo = CommonUtils.nvl( params.get("sirimNo").toString())!= "" ? CommonUtils.nvl(  params.get("sirimNo")).toString().toUpperCase() : "";
 		String serialNo =CommonUtils.nvl(  params.get("serialNo")).toString();
 		int failId   = CommonUtils.nvl(  params.get("failReason")) != ""  ? Integer.parseInt( CommonUtils.nvl( params.get("failReason")).toString()) : 0;
 		String nextCallDate =CommonUtils.nvl(  params.get("nextCallDate")).toString();
@@ -2095,7 +2095,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
             
                 logger.debug("Transfer 물류 호출 PRAM ===> "+ transProc.toString());
                 servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS(transProc);
-                procResult = transProc.get("p1").toString();
+                procResult = transProc.get("p1").toString().substring(0, 3);
                 logger.debug("Transfer 물류 호출 결과 ===> " +procResult);
                 /////////////////////////물류 호출 END //////////////////////
 

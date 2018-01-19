@@ -114,6 +114,11 @@ function fn_saveInstall(){
 	Common.ajax("POST", "/services/addInstallation.do", $("#addInstallForm").serializeJSON(), function(result) {
         console.log(result);
         Common.alert(result.message,fn_saveclose);
+        
+        /* if (result.code == 'Y') {
+        	$("#popup_wrap").remove();
+        	fn_installationListSearch();
+        } */
     });
 }
 
@@ -736,7 +741,7 @@ var gridPros = {
 </tr>
 <tr>
     <th scope="row"><spring:message code='service.title.CTCode'/></th>
-    <td><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width:200px;" id="ctCode"  readonly="readonly" name="ctCode" />
+    <td><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width:100%;" id="ctCode"  readonly="readonly" name="ctCode" />
     <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
     <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
     <th scope="row"><spring:message code='service.title.CTName'/></th>

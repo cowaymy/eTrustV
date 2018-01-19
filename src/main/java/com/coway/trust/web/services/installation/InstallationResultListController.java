@@ -398,7 +398,7 @@ public class InstallationResultListController {
 		if(CommonUtils.nvl(params.get("installStatus")).equals("21")){
 		
 			if(resultCnt > 0){
-				message.setMessage("There is complete sesult exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
+				message.setMessage("There is complete result exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
     		} else {
     			resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
     			if( null !=resultValue){
@@ -425,7 +425,7 @@ public class InstallationResultListController {
 			}else{    		
 	        	
 	        		if(resultCnt > 0){
-	        			message.setMessage("There is complete sesult exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
+	        			message.setMessage("There is complete result exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
 	        		} else {
 	            		resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
 	            		

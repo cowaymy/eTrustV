@@ -29,6 +29,10 @@ function fn_saveInstall(){
         console.log("성공.");
         console.log("data : " + result);
         Common.alert(result.message);
+        if (result.message == "Installation result successfully updated.") {
+        	$("#popup_wrap").remove();
+        	fn_installationListSearch();
+        }
     });
 }
 </script>
