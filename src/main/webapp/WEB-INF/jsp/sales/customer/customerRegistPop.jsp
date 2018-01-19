@@ -4,7 +4,7 @@
     
     //AUIGrid 그리드 객체
     var myGridID;          // credit card
-    var myGridID1;        // bank account
+    var myGridID1;        // bank account grid
     
     //Choose Message
     var optionState = {chooseMessage: " 1.States "};
