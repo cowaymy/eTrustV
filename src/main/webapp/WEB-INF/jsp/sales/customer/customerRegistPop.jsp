@@ -369,7 +369,7 @@
                     pasSportExpr : insBasicForm.pasSportExpr.value,
                     dob : insBasicForm.dob.value,
                     visaExpr : insBasicForm.visaExpr.value,
-                    gender : insBasicForm.gender.value,
+                    gender : $('input:radio[name=gender]:checked').val(),
                     email : insBasicForm.email.value,
                     cmbRace : insBasicForm.cmbRace.value,
                     telM1 : insBasicForm.telM1.value,
@@ -393,7 +393,8 @@
                     asEmail : insContactForm.asEmail.value                  
                 }
             };
-            alert(insBasicForm.gender.value);
+
+            alert($('input:radio[name=gender]:checked').val());
             Common.ajax("POST", "/sales/customer/insCustBasicInfo.do", customerForm, function(result) {
                 
             	if(result != null){
