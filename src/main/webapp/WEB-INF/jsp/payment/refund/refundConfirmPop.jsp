@@ -222,12 +222,12 @@ function fn_setConfirmGridEvent() {
             selectedRowIndex = event.rowIndex;
             selectedItem = event.item;
             
-            payModeCode = event.item.payModeCode;
+            payModeCode = ""+ event.item.payModeCode;
             custBankId = "" + event.item.custBankId;
             if(payModeCode == "105" || payModeCode == "106" || payModeCode == "108") {
             	bankAccId = "523";
             } else {
-            	bankAccId = event.item.bankAccId;
+            	bankAccId = "" + event.item.bankAccId;
             }
             fn_refundInfoKeyInPop(event.item.ccnoPaytChannel, event.item.ccholdernamePaytChannel);
         } else {
