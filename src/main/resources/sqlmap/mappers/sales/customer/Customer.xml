@@ -1524,7 +1524,7 @@
 			  FROM 
 			    SAL0029D 
 			  WHERE  
-			     STUS_CODE_ID = 1
+			     STUS_CODE_ID IN ('1', '9')
 			  <if test=" null != cmbTypeId and '' != cmbTypeId">
 			     AND 
 			         TYPE_ID = #{cmbTypeId}
