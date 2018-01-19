@@ -499,6 +499,7 @@ var mileageGridColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
+    editable : false,
     editRenderer : {
         type : "InputEditRenderer",
         onlyNumeric : true,
@@ -511,6 +512,7 @@ var mileageGridColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
+    editable : false,
     editRenderer : {
         type : "InputEditRenderer",
         onlyNumeric : true,
