@@ -5,7 +5,7 @@
     
 <select id="selectWarehouseList" parameterType="Map" resultType="EgovMap">  
     SELECT Extent1.WH_LOC_ID CODE_ID  ,
-	           Extent1.WH_LOC_CODE CODE  ,
+	           Extent1.OLD_WH_LOC_CODE CODE  ,
 	           Extent1.WH_LOC_DESC CODE_NAME  
       FROM SYS0028M Extent1
       WHERE  ( 1 = Extent1.WH_LOC_STUS_ID ) 
