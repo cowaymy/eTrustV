@@ -1198,7 +1198,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     -->
     <th scope="row">Transport Code<span class="must">*</span></th>
     <td>
-    <select class="w100p disabled"  id="transportCd" name="transportCd">
+    <select class="w100p"  id="transportCd" name="transportCd">
     </select>
     </td>
 </tr>

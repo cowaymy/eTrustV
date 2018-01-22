@@ -146,4 +146,8 @@ public interface MemberListService {
 
 	List<EgovMap> selectSponMemberSearch(Map<String, Object> params);
 
+	void insertDocSub(List<Object> updList, String memCode, int userId, String memberType, String trainType);
+
+	EgovMap memberListService(Map<String, Object> params);
+
 }

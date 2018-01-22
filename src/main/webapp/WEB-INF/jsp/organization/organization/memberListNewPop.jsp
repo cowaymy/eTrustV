@@ -40,7 +40,7 @@ function fn_saveConfirm(){
     }
 }
 function fn_docSubmission(){
-	    Common.ajax("GET", "/organization/selectHpDocSubmission",  $("#memType").serialize(), function(result) {
+	    Common.ajax("GET", "/organization/selectHpDocSubmission", { memType : $("#memberType").serialize() , trainType : $("#traineeType1").val()}, function(result) {
 		console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID_Doc, result);
@@ -186,6 +186,7 @@ function fn_departmentCode(value){
 
         	   var traineeType =  $("#traineeType1").val();
         	   
+        	   fn_docSubmission()
         	   console.log("fn_departmentCode traineeType>> " + traineeType)
         	   
         	   if( traineeType == '2'){
@@ -358,9 +359,10 @@ $(document).ready(function() {
         doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');
     });
 	
-	// Member Type 바꾸면 입력한 NRIC 비우기
+	// Member Type 바꾸면 입력한 NRIC 비우기, doc 새로불러오기
 	$("#memberType").change(function (){
 		$("#nric").val('');
+		  fn_docSubmission();
     });
 
 	$("#memberType").click(function (){
@@ -413,13 +415,20 @@ $(document).ready(function() {
 });
 function createAUIGridDoc() {
     //AUIGrid 칼럼 설정
-    var columnLayout = [ {
+    var columnLayout = [ 
+        {
+            dataField : "codeId",
+            headerText : "DocumentId",
+            editable : false,
+            width : 0
+        }                 
+       ,{
         dataField : "codeName",
         headerText : "Document",
         editable : false,
-        width : 120
+        width : 220
     }, {
-        dataField : "",
+        dataField : "submission",
         headerText : "Submission",
         editable : false,
         width : 130,
@@ -431,24 +440,42 @@ function createAUIGridDoc() {
             unCheckValue : "0",
          // 체크박스 Visible 함수
             checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
-            	if(item.c1 == 1){
-	            	AUIGrid.updateRow(myGridID_Doc, {
-	            		  "c1" : "0"
-	            		}, rowIndex);
-            	}else{
-            		AUIGrid.updateRow(myGridID_Doc, {
-                        "c1" : "1"
-                      }, rowIndex);
-            	}
+                if(item.docQty == 0){
+                    AUIGrid.updateRow(myGridID_Doc, { 
+                         "docQty" : "1" 
+                           
+                        }, rowIndex); 
+                }
                 return true;
             }
-
+            
         }
     }, {
-        dataField : "c1",
+        dataField : "docQty",
         headerText : "Qty",
-        editable : false,
-        width : 130
+        dataType : "numeric",
+        editRenderer : {
+            type : "NumberStepRenderer",
+            min : 0,
+            max : 10,
+            step : 1,
+            textEditable : true
+        },
+        width : 130, 
+        checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
+            if(item.docQty != 0){
+                AUIGrid.updateRow(myGridID_Doc, { 
+                      "submission" : "1" 
+                       
+                    }, rowIndex); 
+            }else{
+                AUIGrid.updateRow(myGridID_Doc, { 
+                    "submission" : "0" 
+                  }, rowIndex); 
+            }
+            return true;
+        }
+        
     }];
      // 그리드 속성 설정
     var gridPros = {
@@ -629,6 +656,12 @@ function fn_saveValidation(){
 	        Common.alert("Please key  in Training Course");
 	        return false;
 	    }
+    }
+    if($("#memberType").val() =='5'){
+    	if($("#traineeType1").val() ==''){
+    		   Common.alert("Please key in Trainee type");
+    		   return false;
+    	}
     }
     
 	return true;

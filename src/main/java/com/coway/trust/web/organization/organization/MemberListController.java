@@ -391,7 +391,7 @@ public class MemberListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/memberSave", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveMemberl(@RequestBody Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> saveMemberl(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 
 
 		Boolean success = false;
@@ -415,6 +415,15 @@ public class MemberListController {
 		logger.debug("formMap : {}", formMap);
 		String memCode = "";
 		memCode = memberListService.saveMember(formMap, updList);
+		int userId = sessionVO.getUserId();
+		String memberType =String.valueOf(formMap.get("memberType"));
+		String trainType =String.valueOf(formMap.get("traineeType1"));
+		
+		logger.debug(trainType + "train1111");
+		//doc 넣기
+	
+		memberListService.insertDocSub(updList, memCode, userId, memberType, trainType);
+		
 		logger.debug("memCode : {}", memCode);
 		// 결과 만들기.
        	ReturnMessage message = new ReturnMessage();
@@ -446,8 +455,19 @@ public class MemberListController {
 		logger.debug("params : {}"+params);
 		List<EgovMap> selectDocSubmission;
 		
-		if("2".equals((String)params.get("memType"))){//type가 Coway Lady면 쿼리가 살짝다름.....
+		
+		if("2".equals((String)params.get("memType")) || "2".equals(String.valueOf(params.get("trainType")))){//type가 Coway Lady면 traniee 쿼리가 살짝다름.....
 			selectDocSubmission = memberListService.selectCodyDocSubmission(params);
+		}else if("5".equals(String.valueOf(params.get("memType")))){
+			 params.put("memId" , String.valueOf(params.get("memberID")));
+			 EgovMap getTrainType = memberListService.memberListService(params);
+			if("2".equals(String.valueOf(getTrainType.get("train")))){
+				selectDocSubmission = memberListService.selectCodyDocSubmission(params);
+			}
+			else{
+				selectDocSubmission = memberListService.selectHpDocSubmission(params);
+			}
+			 
 		}else{
 			selectDocSubmission = memberListService.selectHpDocSubmission(params);
 		}
@@ -738,7 +758,6 @@ public class MemberListController {
 	 * @return
 	 * @throws Exception
 	 */
-
 	@RequestMapping(value = "/memberListEditPop.do")
 	public String memberListEditPop(@RequestParam Map<String, Object> params, ModelMap model) {
 

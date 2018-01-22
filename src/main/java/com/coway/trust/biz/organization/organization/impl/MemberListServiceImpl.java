@@ -2082,8 +2082,21 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     				}
     				
     				else{
+    				
+    					
     					if(memType.equals("2")){
     						oneDocSub.put("subTypeId", 1417);	
+    					}else if(memType.equals("5")){
+    						//trainee type
+    					EgovMap getTrainType= memberListMapper.selectTrainType(oneDocSub);
+    					String trainType = String.valueOf(getTrainType.get("train"));
+    						if(trainType.equals("2")){
+    							oneDocSub.put("subTypeId", 1417);	
+    						}
+    						else{
+    							oneDocSub.put("subTypeId", 247);	
+    						}
+
     					}
     					else{
     						oneDocSub.put("subTypeId", 247);	
@@ -2137,5 +2150,47 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public List<EgovMap> selectSponMemberSearch(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return memberListMapper.selectSponMemberSearch(params);
+	}
+
+	@Override
+	public void insertDocSub(List<Object> updList, String memCode, int userId, String memberType,  String trainType) {
+		// TODO Auto-generated method stub
+		Map<String, Object> getMap = new HashMap<>();
+		getMap.put("memberType", memberType);
+		getMap.put("memCode", memCode);
+		//memId 가져오기
+		EgovMap getMemId = memberListMapper.getMemIdwithCode(getMap);
+		
+		if(updList !=null){
+    		for(int i=0 ; i < updList.size(); i++ ){
+    			 //udtList : [{codeId=1414, codeName=Cody PA Copy, typeId=1414, typeDtSeq=4, docQty=0 , 
+    			//하나씩 받아와서 
+    			Map<String, Object> oneDocSub = (Map<String, Object>) updList.get(i);
+    			oneDocSub.put("memCode", memCode);
+    			oneDocSub.put("userId", userId);
+    			oneDocSub.put("memType", memberType);
+    			oneDocSub.put("memId", String.valueOf(getMemId.get("memId")));
+    			
+
+    			int docQty= Integer.parseInt(String.valueOf( oneDocSub.get("docQty") ) );
+    			
+    			if (  docQty != 0 ){// doc가 0이아니면
+    				if(trainType.equals("2")){
+						oneDocSub.put("subTypeId", 1417);	
+					}
+					else{
+						oneDocSub.put("subTypeId", 247);	
+					}
+    				memberListMapper.insertDocSub(oneDocSub);
+    			}
+    		}
+		
 	}	
+}
+
+	@Override
+	public EgovMap memberListService(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectTrainType(params);
+	}
 }

@@ -230,4 +230,10 @@ public interface MemberListMapper {
 
 	List<EgovMap> selectSponMemberSearch(Map<String, Object> params);
 
+	EgovMap getMemIdwithCode(Map<String, Object> getMap);
+
+	EgovMap selectTrainType(Map<String, Object> oneDocSub);
+
+
+
 }
