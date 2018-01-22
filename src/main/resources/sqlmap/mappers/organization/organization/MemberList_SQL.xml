@@ -1079,7 +1079,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		         FROM ORG0001D Extent1
 		         JOIN ORG0003D Extent2   ON Extent2.APLCTN_ID = Extent1.APLICNT_ID
 		          WHERE  ( Extent1.MEM_ID =  #{MemberID} ) 
-		           WHERE ROWNUM <= 1 ) Limit1
+		           AND ROWNUM <= 1 ) Limit1
 		]]>
     </select>
 
