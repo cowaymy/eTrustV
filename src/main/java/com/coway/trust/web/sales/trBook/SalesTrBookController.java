@@ -774,4 +774,60 @@ public class SalesTrBookController {
 		return ResponseEntity.ok(feedBackList);
 	}
 	
+
+	@RequestMapping(value = "/saveReportLost", method = RequestMethod.POST) 
+	public ResponseEntity<EgovMap> saveReportLost (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		logger.debug("in  saveNewTrBook ");
+		
+		logger.debug("params =====================================>>  " + params);
+
+		EgovMap dcfInfo = salesTrBookService.selelctDcfMaster(params);
+
+		EgovMap saveView =  new EgovMap();
+
+		saveView.put("dcfInfo", dcfInfo); 
+		
+		if(dcfInfo == null){			
+			params.put("userId", sessionVO.getUserId());
+			params.put("branchId", sessionVO.getUserBranchId());
+			//params.put("deptId", sessionVO.getUserDeptId());	
+			params.put("deptId", 0);	
+			
+			saveView = salesTrBookService.saveReportLost(params);
+		}	   		
+		return ResponseEntity.ok(saveView);
+	}
+	
+	@RequestMapping(value = "/reportLostUploadPop.do")
+	public String reportLostUploadPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
+		logger.debug("in  reportLostUploadPop.do ");
+		logger.debug("params =====================================>>  " + params);
+		
+		model.addAttribute("docNo", params.get("docNo"));
+		model.addAttribute("dcfReqEntryId", params.get("dcfReqEntryId"));
+				
+		return "sales/trBook/reportLost_whole_FileUploadPop";
+	}
+	
+	@RequestMapping(value = "/reportLostUploadFile", method = RequestMethod.POST) 
+	public  ResponseEntity<ReturnMessage> reportLostUploadFile(MultipartHttpServletRequest request,
+			@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {	
+		logger.debug("in  reportLostUploadFile ");
+		logger.debug("params =====================================>>  " + params);
+		
+		params.put("userId", sessionVO.getUserId());
+			
+		salesTrBookService.reportLostWholefileUpload(params, request);		
+		
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData("");
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
 }

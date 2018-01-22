@@ -63,4 +63,10 @@ public interface SalesTrBookService {
 	EgovMap selelctMemberInfoByCode(Map<String, Object> params);
 
 	EgovMap selelctUnderDCFRequest(Map<String, Object> params);
+
+	EgovMap selelctDcfMaster(Map<String, Object> params);
+
+	EgovMap saveReportLost(Map<String, Object> params);
+
+	EgovMap reportLostWholefileUpload(Map<String, Object> params, MultipartHttpServletRequest request) throws Exception ;
 }

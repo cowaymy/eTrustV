@@ -87,4 +87,12 @@ public interface SalesTrBookMapper {
 	EgovMap selelctMemberInfoByCode(Map<String, Object> params);
 
 	EgovMap selelctUnderDCFRequest(Map<String, Object> params);
+
+	EgovMap selelctDcfMaster(Map<String, Object> params);
+
+	EgovMap selectTrBookM(EgovMap trBookInfo);
+
+	void updateFileName(Map<String, Object> params);
+
+	void updateTrBookM(EgovMap trBookInfo);
 }

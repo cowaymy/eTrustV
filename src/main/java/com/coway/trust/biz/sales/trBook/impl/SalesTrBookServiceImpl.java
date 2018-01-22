@@ -315,12 +315,15 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 				saveView.put("success", false); 
 				saveView.put("massage",  messageSourceAccessor.getMessage(SalesConstants.MSG_DCF_SETTLED)); 
 			}else{
-				
-				Map<String, Object> reqM = new HashMap<>();
-				
+
 				params.put("dcfReqAppvRem",  messageSourceAccessor.getMessage(SalesConstants.MSG_DCF_OUTO_REM));
 				
-				if(Integer.parseInt(reqMInfo.get("dcfReqProStusId").toString()) == 36 && Integer.parseInt(reqMInfo.get("dcfReqProStusId").toString()) == 34){
+				//UPDATE REQUEST MASTER
+				salesTrBookMapper.updateDCFRequestMs(params);
+				
+				reqMInfo = salesTrBookMapper.selectRequestMaster(params);
+				
+				if("36".equals(reqMInfo.get("dcfReqProStusId").toString()) && "34".equals(reqMInfo.get("dcfReqStusId").toString())){
 					List<EgovMap> comFieldList = salesTrBookMapper.selectDCFCompulsoryFieldListByRequestID(reqMInfo);
 					
 					String bookNo = "";  
@@ -348,7 +351,7 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 					
 					EgovMap trBookInfo = salesTrBookMapper.selectTrBookInfo(params);
 										
-					if(lostType == "Whole"){
+					if(lostType.equals("Whole")){
 						
 					}else{
 						
@@ -369,10 +372,6 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 						}
 					}					
 				}
-				
-				//UPDATE REQUEST MASTER
-				salesTrBookMapper.updateDCFRequestMs(params);
-				
 				// SAVE RESPOND LOG
 				salesTrBookMapper.insertDCFResponseLogs(params);
 			}
@@ -527,6 +526,187 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 	@Override
 	public EgovMap selelctUnderDCFRequest(Map<String, Object> params) {
 		return salesTrBookMapper.selelctUnderDCFRequest(params);
+	}
+
+	@Override
+	public EgovMap selelctDcfMaster(Map<String, Object> params) {
+		return salesTrBookMapper.selelctDcfMaster(params);
+	}
+
+	@Override
+	public EgovMap saveReportLost(Map<String, Object> params) {
+		
+		params.put("docNoId", 48);
+		String docNo=salesTrBookMapper.getDocNo(params);
+		
+		params.put("docNo", docNo);
+		params.put("trNo", params.get("trBookNo"));
+		
+		salesTrBookMapper.insertRequestMaster(params);		
+		salesTrBookMapper.insertRequestDet(params);
+		
+		Map<String, Object> cf1 = new HashMap<>();
+		
+		cf1.put("dcfReqEntryId", params.get("dcfReqEntryId"));
+		cf1.put("typeId", 9);
+		cf1.put("refNo", params.get("trHolderType"));
+		cf1.put("stusId", 1);		
+		cf1.put("userId", params.get("userId"));		
+		salesTrBookMapper.insertRequestComField(cf1);
+		
+		cf1.put("typeId", 3);
+		cf1.put("refNo", params.get("memCode"));
+		salesTrBookMapper.insertRequestComField(cf1);
+		
+		cf1.put("typeId", 7);
+		cf1.put("refNo", params.get("trBookNo"));
+		salesTrBookMapper.insertRequestComField(cf1);
+		
+		cf1.put("typeId", 8);
+		cf1.put("refNo", "Whole");
+		salesTrBookMapper.insertRequestComField(cf1);
+
+		EgovMap saveView = new EgovMap();
+		
+		EgovMap reqMInfo = salesTrBookMapper.selectRequestMaster(params);
+		
+		if(reqMInfo != null){
+			if("10".equals(reqMInfo.get("dcfReqStusId").toString())  || "34".equals(reqMInfo.get("dcfReqStusId").toString()) ){				
+				saveView.put("success", false); 
+				saveView.put("massage",  messageSourceAccessor.getMessage(SalesConstants.MSG_DCF_SETTLED)); 
+			}else{
+								
+				params.put("dcfReqAppvRem",  messageSourceAccessor.getMessage(SalesConstants.MSG_DCF_OUTO_REM));
+				
+				//UPDATE REQUEST MASTER
+				salesTrBookMapper.updateDCFRequestMs(params);
+				
+				reqMInfo = salesTrBookMapper.selectRequestMaster(params);
+				
+				if("36".equals(reqMInfo.get("dcfReqProStusId").toString()) && "34".equals(reqMInfo.get("dcfReqStusId").toString())){
+										
+					List<EgovMap> comFieldList = salesTrBookMapper.selectDCFCompulsoryFieldListByRequestID(reqMInfo);
+					
+					String bookNo = "";  
+					String holder = "";
+					String lostType = ""; 
+					
+					
+					for(EgovMap obj : comFieldList){
+						logger.debug("11111111111111111111 " + obj.get("dcfComFildTypeId").toString());
+						logger.debug("22222222222222222222 " + obj.get("dcfReqComFildRefNo").toString());
+						
+						
+						if("7".equals(obj.get("dcfComFildTypeId").toString())){
+						
+							bookNo = obj.get("dcfReqComFildRefNo").toString();
+						}
+						if("3".equals(obj.get("dcfComFildTypeId").toString())){
+							
+							holder = obj.get("dcfReqComFildRefNo").toString();
+						}
+						if("8".equals(obj.get("dcfComFildTypeId").toString())){
+							
+							lostType = obj.get("dcfReqComFildRefNo").toString();
+						}
+						
+					}
+					
+					
+					params.put("bookNo", bookNo);
+					params.put("return", "return");
+					
+					EgovMap trBookInfo = salesTrBookMapper.selectTrBookInfo(params);
+										
+					if(lostType.equals("Whole")){
+						
+						EgovMap trBookList = salesTrBookMapper.selectTrBookM(trBookInfo);
+						
+						if(trBookList != null){
+														
+							trBookInfo.put("trTrnsitStusId", 67);
+							trBookInfo.put("userId", params.get("userId"));
+							salesTrBookMapper.updateTrBookM(trBookInfo);
+							
+							List<EgovMap> trBookDet = salesTrBookMapper.selectTrBookDetailsList(trBookInfo);
+							
+							if(trBookDet != null){
+								
+								for(EgovMap detail : trBookDet){
+
+									params.put("trStusId", 67);
+									params.put("trBookItmId", detail.get("trBookItmId"));
+									salesTrBookMapper.update_MSC0029D(params);
+								}
+							}
+							
+							params.put("trBookId", trBookInfo.get("trBookId"));
+							params.put("trTypeId", 756);
+							params.put("trLocCode", holder);
+							params.put("trRcordQyt", -1);
+							salesTrBookMapper.insertTrRecord(params);
+							
+						}
+					}else{
+						
+						List<EgovMap> changeItemList = salesTrBookMapper.selectDCFChangeItemListByRequestID(reqMInfo);
+						
+						for (EgovMap obj : changeItemList){
+							
+							params.put("trBookId", trBookInfo.get("trBookId"));
+							params.put("trReceiptNo", obj.get("dcfReqDetFildChg"));
+							params.put("dcfUpdate", "dcfUpdate");
+							
+							List<EgovMap> trBookDet = salesTrBookMapper.selectTrBookDetailsList(params);
+							
+							if(trBookDet != null){
+								params.put("trStusId", 67);
+								salesTrBookMapper.update_MSC0029D(params);
+							}
+						}
+					}					
+				}
+				
+				// SAVE RESPOND LOG
+				salesTrBookMapper.insertDCFResponseLogs(params);
+			}
+
+			saveView.put("success", true); 
+			saveView.put("docNo", docNo); 
+			saveView.put("dcfReqEntryId", params.get("dcfReqEntryId")); 
+			
+		}else{
+
+			saveView.put("success", false); 
+			saveView.put("massage",  messageSourceAccessor.getMessage(SalesConstants.MSG_DCF_UNABLE)); 
+		}
+		
+		return saveView;
+		
+	}
+
+	@Override
+	public EgovMap reportLostWholefileUpload(Map<String, Object> params, MultipartHttpServletRequest request) throws Exception {		
+		
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFilesNewName(request, uploadDir,
+				File.separator + "DCF", 1024 * 1024 * 3, false, params.get("docNo").toString()+".zip");
+		
+		
+		params.put("list", list);	
+		
+		logger.debug("list SIZE=============" + list.size());
+		
+		if(list.size() > 0){
+			
+			params.put("hasAttach", 1);
+			params.put("fileName", "~/WebShare" + list.get(0).getServerSubPath()+ File.separator + list.get(0).getFileName());			
+			
+			fileApplication.businessAttach(FileType.WEB_DIRECT_RESOURCE, FileVO.createList(list), params);
+		}
+		
+		salesTrBookMapper.updateFileName(params);
+		
+		return null;
 	}
 
 

@@ -582,8 +582,8 @@
 		             33,                /*DCF_REQ_STUS_ID*/
 		             59,              /*DCF_REQ_PRO_STUS_ID*/
 		             SYSDATE,      /*DCF_REQ_SETL_DT*/
-		             #{remark},   /*DCF_REQ_DESC*/
-		             '',                   /*DCF_REQ_REM*/
+		             #{description},   /*DCF_REQ_DESC*/
+		             #{remark},                   /*DCF_REQ_REM*/
 		             0,                    /*DCF_PRIOR_LVL*/
 		             #{hasAttach},                    /*DCF_REQ_HAS_ATTACH*/
 		             #{fileName},                    /*DCF_REQ_ATTACH_FILE_NAME*/
@@ -1063,5 +1063,13 @@
 			          AND ( B.DCF_REQ_COM_FILD_REF_NO = #{trBookNo} ) 
 			          AND ROWNUM <![CDATA[<= ]]> 1
 	  </select>
+	  
+    <update id="updateFileName" parameterType="Map"> 
+		  UPDATE LOG0064M
+			   SET DCF_REQ_HAS_ATTACH = #{hasAttach},
+			       DCF_REQ_ATTACH_FILE_NAME = #{fileName},
+			       DCF_REQ_UPD_DT = SYSDATE
+			 WHERE  DCF_REQ_ENTRY_ID =  #{dcfReqEntryId}
+	 </update>
     
 </mapper>
