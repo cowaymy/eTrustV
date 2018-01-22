@@ -69,7 +69,7 @@ public class RentalMemberShipBillingServiceImpl extends EgovAbstractServiceImpl 
 		
 		int userId = sessionVO.getUserId();
     	int taskCount = 0;
-    	int taskTotalAmount = 0;
+    	double taskTotalAmount = 0;
     	Map<String, Object> taskOrderMap = new HashMap<String, Object>();
     	Map<String, Object> formMap = (Map<String, Object>)formList.get(0);
     	int newTaskId = rentalMemberShipBillingMapper.getTaskIdSeq_M();
@@ -82,7 +82,7 @@ public class RentalMemberShipBillingServiceImpl extends EgovAbstractServiceImpl 
     			hm = (HashMap) taskBillList.get(i);
     			
     			taskCount = taskCount + 1;
-    			taskTotalAmount = taskTotalAmount + Integer.parseInt(String.valueOf(hm.get("billAmt")));
+    			taskTotalAmount = taskTotalAmount + Double.parseDouble(String.valueOf(hm.get("billAmt")));
     			
     			taskOrderMap.put("salesOrdId", String.valueOf(hm.get("salesOrdId")));
     			taskOrderMap.put("taskReferenceNo", "");
@@ -91,8 +91,8 @@ public class RentalMemberShipBillingServiceImpl extends EgovAbstractServiceImpl 
                     taskOrderMap.put("taskBillTypeId", 1305);
                 }
                 
-                int billAmt;
-                billAmt      =  hm.get("billAmt") != null ? (int)hm.get("billAmt") : 0;
+                double billAmt;
+                billAmt      =  hm.get("billAmt") != null ? Double.parseDouble(String.valueOf(hm.get("billAmt"))) : 0;
                 
                 taskOrderMap.put("taskBillUpdateBy", userId);
                 taskOrderMap.put("taskBillAmt", new DecimalFormat("0.00").format(billAmt));
