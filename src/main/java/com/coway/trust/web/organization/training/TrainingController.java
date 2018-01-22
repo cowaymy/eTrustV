@@ -259,12 +259,16 @@ public class TrainingController {
 		model.addAttribute("courseStatusList", new Gson().toJson(courseStatusList));
 		
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		String getUserName = sessionVO.getUserName();
-		params.put("userId", getUserName);
+		String getUserMemId = sessionVO.getMemId();
+		params.put("memId", getUserMemId);
 		
-		EgovMap memInfo = trainingService.selectMemInfo(params);
+		LOGGER.debug("MEM_Id =================================>>  " + sessionVO.getMemId());
+		
+		EgovMap memInfo = trainingService.getMemCodeForCourse(params);
 		if(memInfo != null){
 			model.addAttribute("coursMemCode", memInfo.get("memCode"));
+		}else{
+			model.addAttribute("coursMemCode", "NO");
 		}
 		
 		
