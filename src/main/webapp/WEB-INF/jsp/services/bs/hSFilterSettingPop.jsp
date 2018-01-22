@@ -27,6 +27,9 @@
                                if($("#orderId").val() == "" || $("#orderId").val() == undefined) {
                                     return false;
                                }
+                               
+                               var SRV_FILTER_STK_ID =    AUIGrid.getCellValue(myDetailGridIDActive, rowIndex, "srvFilterStkId");
+                               $("#orderInfoForm #srvFilterStkId").val(SRV_FILTER_STK_ID);
                               
                               //Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
                               Common.popupDiv("/services/bs/hSFilterUseHistoryPop.do", $("#orderInfoForm").serializeJSON(), null , true , '');
