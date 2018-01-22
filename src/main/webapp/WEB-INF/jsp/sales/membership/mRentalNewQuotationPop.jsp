@@ -113,15 +113,21 @@ function fn_getDataInfo (_ordid){
                 
             }else{
 
-		        $("#cbt").attr("style","display:none");
-		        $("#ORD_NO_P").attr("style","display:none");
-		        $("#sbt").attr("style","display:none");
-		        $("#rbt").attr("style","display:inline");
-		        $("#ORD_NO_RESULT").attr("style","display:inline");
-		        $("#resultcontens").attr("style","display:inline");
+                resultBasicObject = result.basic;
+		        var billMonth = getOrderCurrentBillMonth();   
+                
+                if(fn_CheckRentalOrder(billMonth)){ 
+                    $("#cbt").attr("style","display:none");
+                    $("#ORD_NO_P").attr("style","display:none");
+                    $("#sbt").attr("style","display:none");
+                    $("#rbt").attr("style","display:inline");
+                    $("#ORD_NO_RESULT").attr("style","display:inline");
+                    $("#resultcontens").attr("style","display:inline");
+
+                    setText(result);
+                    setPackgCombo();
+                }
 		        
-		         setText(result);
-		         setPackgCombo();
             }           
         }
     });
@@ -723,23 +729,57 @@ function  fn_validRequiredField_Save(){
      return  rtnValue;
 }
 
+function getOrderCurrentBillMonth (){   
+	   var billMonth =0;
+	   
+	   Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth", { ORD_ID: $("#ORD_ID").val() } , function(result) {
+	        console.log( result);
+	        
+	        if(result.length > 0 ){
+	              if(   parseInt( result[0].nowDate ,10) > parseInt( result[0].rentInstDt ,10)   ){
+	                  
+	                  billMonth =61;
+	                  console.log( "==========billMonth============"+billMonth);
+	                  
+	                  return billMonth ;
+	                  
+	              }else{
+	                  Common.ajaxSync("GET", "/sales/membership/getOrderCurrentBillMonth",{ ORD_ID: $("#ORD_ID").val() , RENT_INST_DT : 'SYSDATE'  }  , function(_result) {
+	                      
+	                      console.log( "==========2============");
+	                      console.log( _result);
+	                      
+	                      if(_result.length > 0 ){
+	                          billMonth = _result[0].rentInstNo;
+	                      }
+	                     
+	                      console.log( "==========2 end ============["+billMonth+"]");
+	                      
+	                  });
+	              }
+	        }
+	   });
+	   
+	   return billMonth;
+	 }
+
 
 function fn_CheckRentalOrder(billMonth){
     
     var rtnMsg ="";
     var rtnValue=true ;
         
-    if(resultBasicObject.appTypeId ==66 ){
+    if(resultBasicObject.appTypeId == 66 ){
         
-        if( $("#rentalStus").text() == "REG" ||$("#rentalStus").text() == "INV" ){
+        if(resultBasicObject.rentalStus == "REG" ||resultBasicObject.rentalStus == "INV" ){
         
             if(billMonth > 60){
                         Common.ajaxSync("GET", "/sales/membership/getOderOutsInfo", $("#getDataForm").serialize(), function(result) {
                             console.log( "==========3===");
                             console.log(result);
-                            if(result.outsInfo.length >0 ){
-                                if(result.outsInfo.Order_TotalOutstanding >0){
-                                     rtnMsg += "Not allow to choose 2 Years Advance Promotion  Promotion. <br>" ;
+                            if(result != null ){
+                                if(result.ordTotOtstnd  >0){
+                                     rtnMsg += "* This order has outstanding. Membership purchase is disallowed.<br/>" ;
                                      rtnValue =false; 
                                 }
                             }

@@ -74,8 +74,9 @@ function fn_doConfirm (){
              $("#ORD_NO_RESULT").val( result[0].ordNo);
              
              fn_getDataInfo();
-             
+              
              fn_outspro();
+             
              
          }
    });
@@ -111,17 +112,24 @@ function fn_getDataInfo (){
         		 return;
         		 
         	 }else{
-                 
-                 $("#cbt").attr("style","display:none");
-                 $("#ORD_NO").attr("style","display:none");
-                 $("#sbt").attr("style","display:none");
 
-                 $("#rbt").attr("style","display:inline");
-                 $("#ORD_NO_RESULT").attr("style","display:inline");
-                 $("#resultcontens").attr("style","display:inline");
-        		 
-                 setText(result);
-                 setPackgCombo();
+       		    resultBasicObject = result.basic;
+       		    
+                var billMonth = getOrderCurrentBillMonth();   
+                                 
+                if(fn_CheckRentalOrder(billMonth)){ 
+                	$("#cbt").attr("style","display:none");
+                    $("#ORD_NO").attr("style","display:none");
+                    $("#sbt").attr("style","display:none");
+
+                    $("#rbt").attr("style","display:inline");
+                    $("#ORD_NO_RESULT").attr("style","display:inline");
+                    $("#resultcontens").attr("style","display:inline");
+                     
+                     setText(result);
+                     setPackgCombo();
+                }
+                
         	 }        	 
          }
          
@@ -1141,21 +1149,22 @@ function  fn_validRequiredField_Save(){
 
 
 function fn_CheckRentalOrder(billMonth){
-    
     var rtnMsg ="";
     var rtnValue=true ;
-        
+    
     if(resultBasicObject.appTypeId ==66 ){
-        
-        if( $("#rentalStus").text() == "REG" ||$("#rentalStus").text() == "INV" ){
+
+       /*  if( $("#rentalStus").text() == "REG" ||$("#rentalStus").text() == "INV" ){ */
+        if( resultBasicObject.rentalStus == "REG" ||resultBasicObject.rentalStus == "INV" ){
         
             if(billMonth > 60){
                         Common.ajaxSync("GET", "/sales/membership/getOderOutsInfo", $("#getDataForm").serialize(), function(result) {
                             console.log( "==========3===");
                             console.log(result);
-                            if(result.length >0 ){
+                            
+                            if(result !=  null ){
                                 if(result.ordTotOtstnd > 0){
-                                     rtnMsg += "<spring:message code="sal.alert.msg.notAllowPromotion" /><br>" ;
+                                     rtnMsg += "* This order has outstanding. Membership purchase is disallowed.<br />" ;
                                      rtnValue =false; 
                                 }
                             }
