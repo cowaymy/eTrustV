@@ -58,8 +58,8 @@ var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log
 							{dataField: "c7",headerText :"<spring:message code='log.head.approvalstatus'/>"             ,width: "15%"     ,height:30 , visible:false},
 							{dataField: "c2",headerText :"<spring:message code='log.head.approveat'/>"                   ,width:    "15%"     ,height:30 , visible:false},
 							{dataField: "dcfreqstatusid",headerText :"<spring:message code='log.head.dcf_req_stus_id'/>"                ,width: "15%"     ,height:30 , visible:false},
-							{dataField: "salesOrdNo",headerText :"Ref.DOC.no_2"                ,width: "15%"     ,height:30 , visible:true}
-							
+							{dataField: "salesOrdNo",headerText :"Ref.DOC.no_2"                ,width: "15%"     ,height:30 , visible:true},
+							{dataField: "userName",headerText :"Creator"        ,width:120    ,height:30 }
                    ];
 
 var resop = {

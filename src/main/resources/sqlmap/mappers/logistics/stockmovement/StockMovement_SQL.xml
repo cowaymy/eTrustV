@@ -46,6 +46,7 @@
              , uomt.code_name uomnm
              , l47.reqst_type reqsttype
              , l47.reqst_type_dtl reqsttypedtl
+             , NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = l47.CRT_USER_ID),l47.CRT_USER_ID) user_Name
           from log0047m l47
              , log0048d l48
              , (select * from sys0013m where code_master_id = 306) tran

@@ -52,6 +52,7 @@
         , to_char(to_date(L60.DOC_POSTNG_DT , 'yyyymmdd') , 'dd/mm/yyyy') postingdate
         ,l59.CRT_DT
         ,l60.sales_ord_no sales_ord_no
+        , NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = l59.CRT_USER_ID),l59.CRT_USER_ID) user_Name
         from log0059m l59
         , log0060d l60
         , sys0026m s26
