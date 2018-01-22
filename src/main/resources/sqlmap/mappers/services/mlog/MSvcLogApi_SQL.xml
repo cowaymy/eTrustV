@@ -1268,7 +1268,7 @@
                            INNER JOIN SVC0008D S08A
                               ON S08A.SALES_ORD_ID = S01A.SALES_ORD_ID
                            LEFT JOIN SVC0006D S06A ON S06A.SCHDUL_ID = S08A.SCHDUL_ID
-                           LEFT JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID
+                           LEFT JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID AND S87A.SRV_FILTER_STK_ID = S07A.BS_RESULT_PART_ID
                            INNER JOIN ORG0001D O1DA ON O1DA.MEM_ID = S08A.CODY_ID
                            LEFT OUTER JOIN (
                                SELECT 
