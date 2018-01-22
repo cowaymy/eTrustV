@@ -1078,7 +1078,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		  FROM ( SELECT TO_CHAR(Extent2.CNFM_DT,'YYYY-MM-DD') CNFM_DT
 		         FROM ORG0001D Extent1
 		         JOIN ORG0003D Extent2   ON Extent2.APLCTN_ID = Extent1.APLICNT_ID
-		          WHERE  ( Extent1.MEM_ID =  #{MemberID} ) )
+		          WHERE  ( Extent1.MEM_ID =  #{MemberID} ) 
 		           WHERE ROWNUM <= 1 ) Limit1
 		]]>
     </select>
