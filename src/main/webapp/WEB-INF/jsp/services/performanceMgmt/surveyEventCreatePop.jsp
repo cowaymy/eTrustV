@@ -15,11 +15,11 @@ var  CodeList = [];
 
 var columnLayout_info=[             
  {dataField:"hcTypeId", headerText:'Event Type', width: 130, editable : false},
- {dataField:"evtTypeDesc", headerText:'Event Name', width: 170, editable : true},
- {dataField:"evtMemId", headerText:'In Charge of</br>the Event', width: 130, editable : true},
- {dataField:"evtDt", headerText:'Date for</br>the Event', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true} },
- {dataField:"evtCompRqstDate", headerText:'Requested</br>Complete Date', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true}  },
- {dataField:"evtCompRate", headerText:'Complete</br>Condition Rate', width: 130, editable : true},
+ {dataField:"evtTypeDesc", headerText:'Event Name<span class="must" style="color:red">*</span>', width: 170, editable : true},
+ {dataField:"evtMemId", headerText:'In Charge of</br>the Event<span class="must" style="color:red">*</span>', width: 130, editable : true},
+ {dataField:"evtDt", headerText:'Date for</br>the Event<span class="must" style="color:red">*</span>', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true} },
+ {dataField:"evtCompRqstDate", headerText:'Requested</br>Complete Date<span class="must" style="color:red">*</span>', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true}  },
+ {dataField:"evtCompRate", headerText:'Complete</br>Condition Rate<span class="must" style="color:red">*</span>', width: 130, editable : true},
  {dataField:"com", headerText:'Complete</br>Status', editable : false},
 ];
 
@@ -566,11 +566,44 @@ function to_json(workbook) {
     workbook.SheetNames.forEach(function(sheetName) {
         var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName], {defval:""});
 
-        console.log(roa);
+        //console.log(roa);
 
-        for(var i=0; i<roa.length; i++){
-	        var obj = roa[i];
+        for(var i=0; i<roa.length; i++){	        
+        	var obj = roa[i];
+        	//if(obj["Sales Order"]!=null){
+        		var salesOrdNo = obj["Sales Order"];
+        		var callMem = obj["Calling Agent"];
+        		console.debug(callMem);
+                
+                Common.ajax("Get", "/services/performanceMgmt/selectSalesOrdNotList2.do?salesOrdNo="+ salesOrdNo+"&callMem="+callMem +"", '' , function(result) {
+                    if(result!=null){
+                        console.log("성공.");
+                        console.log("data : "+ result);
+                        AUIGrid.addRow(myGridID_Target, result, "first");
+                        var rowCount2 = AUIGrid.getRowCount(myGridID_Target);
+                        AUIGrid.removeRow(myGridID_Target, rowCount2-1);
+                        AUIGrid.removeSoftRows(myGridID_Target);
+                       //AUIGrid.setGridData(myGridID_Target, result );
+                       /* 
+                       obj["salesOrdNo"] = result.salesOrdNo;
+                        delete obj["Sales Order"];
+                        obj["name"] = result.name;
+                        delete obj["Name"];
+                        obj["contNo"] = result.contNo;
+                        delete obj["Contact Number"];
+                        obj["callMem"] = callMem;
+                        delete obj["Calling Agent"];
+                        */
+                    }else{
+                        //Common.alert("<spring:message code='sys.common.alert.sys.common.alert.NoSuch' arguments='branch' htmlEscape='false'/>");
+                        var rowCount2 = AUIGrid.getRowCount(myGridID_Target);
+                        AUIGrid.removeRow(myGridID_Target, rowCount2-1);
+                        AUIGrid.removeSoftRows(myGridID_Target);
+                    }
+                });
+        	//}
 	        //var obj = JSON.stringify(roa);
+	        /*
 	        obj["salesOrdNo"] = obj["Sales Order"];
 	        delete obj["Sales Order"];
 	        obj["name"] = obj["Name"];
@@ -579,6 +612,7 @@ function to_json(workbook) {
 	        delete obj["Contact Number"];
 	        obj["callMem"] = obj["Calling Agent"];
 	        delete obj["Calling Agent"];
+	        */
         }
         var json = JSON.stringify([obj]);
 

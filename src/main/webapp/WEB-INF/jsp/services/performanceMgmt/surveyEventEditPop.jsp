@@ -11,12 +11,12 @@ var undefCount = 0;
 
 var columnLayout_infoEdit=[             
  {dataField:"evtTypeId", headerText:'Event Type', width: 130, editable : false},
- {dataField:"evtTypeDesc", headerText:'Event Name', width: 170, editable : false},
- {dataField:"memCode", headerText:'In Charge of</br>the Event', width: 130, editable : false},
- {dataField:"evtDt", headerText:'Date for</br>the Event', width: 130, editable : false, dataType : "date", formatString : "dd/mm/yyyy"},
- {dataField:"evtCompRqstDate", headerText:'Requested</br>Complete Date', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true} , dataType : "date", formatString : "dd/mm/yyyy" },
- {dataField:"evtCompRate", headerText:'Complete</br>Condition Rate', width: 130, editable : true},
- {dataField:"com", headerText:'Complete</br>Status', editable : false},
+ {dataField:"evtTypeDesc", headerText:'Event Name <span class="must" style="color:red">*</span>', width: 170, editable : false},
+ {dataField:"memCode", headerText:'In Charge of</br>the Event <span class="must" style="color:red">*</span>', width: 130, editable : false},
+ {dataField:"evtDt", headerText:'Date for</br>the Event <span class="must" style="color:red">*</span>', width: 130, editable : false, dataType : "date", formatString : "dd/mm/yyyy"},
+ {dataField:"evtCompRqstDate", headerText:'Requested</br>Complete Date <span class="must" style="color:red">*</span>', width: 130, editable : true, editRenderer : {type : "CalendarRenderer", showEditorBtnOver : true, showExtraDays : true} , dataType : "date", formatString : "dd/mm/yyyy" },
+ {dataField:"evtCompRate", headerText:'Complete</br>Condition Rate <span class="must" style="color:red">*</span>', width: 130, editable : true},
+ {dataField:"com", headerText:'Complete</br>Status <span class="must" style="color:red">*</span>', editable : false},
  {dataField:"evtId", headerText:'EVT_ID(CCR0012M)', editable : false, visible: false}
 ];
 

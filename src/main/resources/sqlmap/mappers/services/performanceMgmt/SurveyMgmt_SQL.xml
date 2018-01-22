@@ -306,7 +306,7 @@ FROM (
     
     <select id="selectSalesOrdNotList2" parameterType="Map" resultType="egovMap">
         <![CDATA[
-        select b.sales_ord_no,a.NAME, a.TEL_M1  CONT_NO
+        select b.sales_ord_no,a.NAME, a.TEL_M1  CONT_NO,#{callMem} CALL_MEM
         from sal0027d a, sal0001d b         
         WHERE 1=1
         AND a.CUST_CNTC_ID = b.CUST_CNT_ID
