@@ -495,18 +495,38 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
 
         if(memInfo == null) {
             Common.alert('<spring:message code="sal.alert.msg.memNotFound" />'+memCode+'</b>');
+            $("#salesmanPopCd").val('');
+            $("#hiddenSalesmanPopId").val('');
+            //Clear Grid
+            fn_clearAllGrid();
         }
         else {
             
             if(isPop == 1){
                 $('#hiddenSalesmanPopId').val(memInfo.memId);
                 $('#salesmanPopCd').val(memInfo.memCode);
-               
-                $('#salesmanPopCd').removeClass("readonly");    
+                $('#salesmanPopCd').removeClass("readonly");  
+                
+                Common.ajax("GET", "/sales/pos/getMemCode", {memCode : memCode},function(result){
+                    
+                    if(result != null){
+                        $("#_cmbWhBrnchIdPop").val(result.brnch);
+                        $("#_payBrnchCode").val(result.brnch);
+                        getLocIdByBrnchId(result.brnch);    
+                    }else{
+                        Common.alert('<spring:message code="sal.alert.msg.memHasNoBrnch" />');
+                        $("#salesmanPopCd").val('');
+                        $("#hiddenSalesmanPopId").val('');
+                        $("#_cmbWhBrnchIdPop").val('');
+                        $("#cmbWhIdPop").val('');
+                        //Clear Grid
+                        fn_clearAllGrid();
+                        return;
+                    }
+                 });
             }else{
                 $('#hiddenSalesmanId').val(memInfo.memId);
                 $('#salesmanCd').val(memInfo.memCode);
-               
                 $('#salesmanCd').removeClass("readonly");
             }
             

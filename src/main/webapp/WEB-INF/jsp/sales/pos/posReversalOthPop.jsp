@@ -108,7 +108,7 @@ $(document).ready(function() {
         console.log("rem : " + $("#_reversalRem").val());
         //Validation
         if ($("#_reversalRem").val() == null || $("#_reversalRem").val().trim() == "") {
-            Common.alert("* Reversal Remark can not be Empty!.");
+            Common.alert('<spring:message code="sal.alert.msg.posRvsRemCannotBeEmpty" />');
             return;
         }
         
@@ -117,11 +117,13 @@ $(document).ready(function() {
          Common.ajax("POST", "/sales/pos/insertPosReversal.do", $("#_revForm").serializeJSON(), function(result){
              
              if(result == null){
-                 Common.alert("<b>Failed to reverse. Please try again later.</b>");
+                 Common.alert('<spring:message code="sal.alert.msg.posFailToReverse" />');
              }else{
                  //console.log("result : "+result);
                  //console.log("result.posRefNo : " + result.posRefNo); 
-                 Common.alert("POS Reverse successfully. <br />  POS Ref No. : " + result.posRefNo + " <br />" , fn_popClose());
+                 //Common.alert("POS Reverse successfully. <br />  POS Ref No. : " + result.posRefNo + " <br />" , fn_popClose());
+                 
+                 Common.alert('<spring:message code="sal.alert.msg.posRvsSuccNotiRefNo" arguments="'+result.posRefNo+'" />' , fn_popClose());
              }
          });
     });
@@ -137,13 +139,13 @@ function createPurchaseGridID(){
     
     
     var posColumnLayout =  [ 
-                            {dataField : "stkCode", headerText : "Item Code", width : '10%'}, 
-                            {dataField : "stkDesc", headerText : "Item Description", width : '30%'},
-                            {dataField : "qty", headerText : "Qty", width : '12%'},
-                            {dataField : "amt", headerText : "Unit Price", width : '12%' , dataType : "numeric", formatString : "#,##0.00"}, 
-                            {dataField : "chrg", headerText : "Sub Total(Exclude GST)", width : '12%', dataType : "numeric", formatString : "#,##0.00"},
-                            {dataField : "txs", headerText : "GST(6%)", width : '12%', dataType : "numeric", formatString : "#,##0.00"},
-                            {dataField : "tot", headerText : "Total Amount", width : '12%', dataType : "numeric", formatString : "#,##0.00"}
+                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%'}, 
+                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%'},
+                            {dataField : "qty", headerText : '<spring:message code="sal.title.qty" />', width : '12%'},
+                            {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '12%' , dataType : "numeric", formatString : "#,##0.00"}, 
+                            {dataField : "chrg", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '12%', dataType : "numeric", formatString : "#,##0.00"},
+                            {dataField : "txs", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '12%', dataType : "numeric", formatString : "#,##0.00"},
+                            {dataField : "tot", headerText : '<spring:message code="sal.text.totAmt" />', width : '12%', dataType : "numeric", formatString : "#,##0.00"}
                            ];
     
     //그리드 속성 설정
@@ -160,9 +162,7 @@ function createPurchaseGridID(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
-            noDataMessage       : "No Item found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
     };
     
     posChargeBalGridID = GridCommon.createAUIGrid("#item_grid_wrap", posColumnLayout,'', gridPros);  // address list
@@ -197,7 +197,6 @@ function createPurchaseGridID(){
 }
 
 </script>
-
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <form id="_revForm">
 <!--Hidden Value  -->
@@ -232,18 +231,18 @@ function createPurchaseGridID(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>POS Reversal</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_reversalClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_reversalClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
-<ul class="right_btns">
-    <li><p class="btn_blue2"><a href="#">Save</a></p></li>
-</ul>
+<%-- <ul class="right_btns">
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.save" /></a></p></li>
+</ul> --%>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>POS Information</h2>
+<h2><spring:message code="sal.title.text.posInfo" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -256,11 +255,11 @@ function createPurchaseGridID(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">POS Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.posType" /><span class="must">*</span></th>
     <td>
     <select class="w100p disabled" id="_reversalPosModuleTypeId" disabled="disabled"></select>
     </td>
-    <th scope="row">POS Sales Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.posSalesType" /><span class="must">*</span></th>
     <td>
     <select class="w100p disabled" id="_reversalPosTypeId" disabled="disabled"></select>
     </td>
@@ -270,7 +269,7 @@ function createPurchaseGridID(){
 
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Particular Information</h2>
+<h2><spring:message code="sal.title.text.particInfo" /></h2>
 </aside><!-- title_line end -->
 
 
@@ -285,51 +284,51 @@ function createPurchaseGridID(){
 </colgroup>
 <tbody>
 <tr>
-     <th scope="row">Customer Name</th>
+     <th scope="row"><spring:message code="sal.text.custName" /></th>
      <td colspan="3">
         <input type="text" title="" placeholder="CustomerName" class="w100p readonly"  value="${revDetailMap.posCustName}" name="insPosCustName" readonly="readonly"/>
     </td>   
 </tr>
 <tr>
-    <th scope="row">Address Detail</th>
+    <th scope="row"><spring:message code="sal.text.addressDetail" /></th>
     <td colspan="3">
         <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p readonly"  value="${revDetailMap.addrDtl}"  readonly="readonly"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Street</th>
+    <th scope="row"><spring:message code="sal.text.street" /></th>
     <td colspan="3">
         <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Street" class="w100p readonly"  value="${revDetailMap.street}" readonly="readonly"/>
     </td>
 </tr>
 <tr>  
-    <th scope="row">Area(4)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
     <td colspan="3">
         <input type="text" title="" id="mArea"  class="w100p readonly"  readonly="readonly"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">City(2)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
     <td>
     <input type="text" title="" id="mCity"  class="w100p readonly"  readonly="readonly"/>  
     </td>
-    <th scope="row">PostCode(3)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.postCode3" /><span class="must">*</span></th>
     <td>
     <input type="text" title="" id="mPostCd"  class="w100p readonly"  readonly="readonly"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">State(1)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.state1" /><span class="must">*</span></th>
     <td>
     <input type="text" title="" id="mState"  class="w100p readonly"  readonly="readonly"/>
     </td>
-    <th scope="row">Country<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.country" /><span class="must">*</span></th>
     <td>
     <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td colspan="3">
         <input type="text" title="" placeholder="" class="w100p readonly"  id="_posRemark" name="posRemark" value="${revDetailMap.posRem}" readonly="readonly"/> 
     </td>
@@ -338,7 +337,7 @@ function createPurchaseGridID(){
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Charges Balance</h2>
+<h2><spring:message code="sal.title.text.chargeBal" /></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -346,7 +345,7 @@ function createPurchaseGridID(){
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Reversal Details</h2>
+<h2><spring:message code="sal.title.text.reversalDetail" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -357,7 +356,7 @@ function createPurchaseGridID(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Reversal Remark</th>
+    <th scope="row"><spring:message code="sal.title.text.reversalRem" /></th>
     <td>
         <input type="text" title="" placeholder="" class="w100p"  id="_reversalRem" name="reversalRem"/>
     </td>
@@ -366,7 +365,7 @@ function createPurchaseGridID(){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_confirmReversalBtn">Confirm to Reversal</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_confirmReversalBtn"><spring:message code="sal.title.text.confirmToReversal" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 </form>

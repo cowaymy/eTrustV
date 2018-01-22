@@ -102,7 +102,7 @@ $(document).ready(function() {
     	console.log("rem : " + $("#_reversalRem").val());
     	//Validation
     	if ($("#_reversalRem").val() == null || $("#_reversalRem").val().trim() == "") {
-			Common.alert("* Reversal Remark can not be Empty!.");
+			Common.alert('<spring:message code="sal.alert.msg.posRvsRemCannotBeEmpty" />');
 			return;
 		}
     	
@@ -110,19 +110,21 @@ $(document).ready(function() {
     	 $("#_rePosRcvDt").val($("#_recevDateOri").val());
     	 Common.ajax("POST", "/sales/pos/insertPosReversal.do", $("#_revForm").serializeJSON(), function(result){
     		 
-    		 var returnMsg = "POS Reverse successfully. <br /> ";
+    		 var returnMsg = '<spring:message code="sal.alert.msg.posRevSucss" />';
     		 
     		 if(result == null){
-    			 Common.alert("<b>Failed to reverse. Please try again later.</b>");
+    			 Common.alert('<spring:message code="sal.alert.msg.posFailToReverse" />');
     		 }else{
     			 //console.log("result : "+result);
                  //console.log("result.posRefNo : " + result.posRefNo);
                  
                  if(result.posWorNo != null && result.posWorNo != ''){
-                	 returnMsg += "POS Ref No. : " + result.posRefNo + " <br />";	 
+                	 //returnMsg += "POS Ref No. : " + result.posRefNo + " <br />";
+                	 returnMsg += '<spring:message code="sal.alert.msg.posRefNumber"  arguments="'+result.posRefNo+'"/>';
                  }
                  if(result.posWorNo != null && result.posWorNo != ''){
-                	 returnMsg += "POS Ref No. : " + result.posWorNo + " <br />";
+                	 //returnMsg += "POS Ref No. : " + result.posWorNo + " <br />";
+                	 returnMsg += '<spring:message code="sal.alert.msg.posRefNumber"  arguments="'+result.posWorNo+'"/>';
                  }
                  Common.alert(returnMsg , fn_popClose());
     		 }
@@ -140,13 +142,13 @@ function createPurchaseGridID(){
     
     
     var posColumnLayout =  [ 
-                            {dataField : "stkCode", headerText : "Item Code", width : '10%'}, 
-                            {dataField : "stkDesc", headerText : "Item Description", width : '30%'},
-                            {dataField : "qty", headerText : "Qty", width : '12%'},
-                            {dataField : "amt", headerText : "Unit Price", width : '12%' , dataType : "numeric", formatString : "#,##0.00"}, 
-                            {dataField : "chrg", headerText : "Sub Total(Exclude GST)", width : '12%', dataType : "numeric", formatString : "#,##0.00"},
-                            {dataField : "txs", headerText : "GST(6%)", width : '12%', dataType : "numeric", formatString : "#,##0.00"},
-                            {dataField : "tot", headerText : "Total Amount", width : '12%', dataType : "numeric", formatString : "#,##0.00"}
+                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%'}, 
+                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%'},
+                            {dataField : "qty", headerText : '<spring:message code="sal.title.qty" />', width : '12%'},
+                            {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '12%' , dataType : "numeric", formatString : "#,##0.00"}, 
+                            {dataField : "chrg", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '12%', dataType : "numeric", formatString : "#,##0.00"},
+                            {dataField : "txs", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '12%', dataType : "numeric", formatString : "#,##0.00"},
+                            {dataField : "tot", headerText : '<spring:message code="sal.text.totAmt" />', width : '12%', dataType : "numeric", formatString : "#,##0.00"}
                            ];
     
     //그리드 속성 설정
@@ -163,9 +165,7 @@ function createPurchaseGridID(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
-            noDataMessage       : "No Item found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
     };
     
     posChargeBalGridID = GridCommon.createAUIGrid("#item_grid_wrap", posColumnLayout,'', gridPros);  // address list
@@ -202,16 +202,16 @@ function createPurchaseGridID(){
 function createRePayGrid(){
 	
 	var paymentColumnLayout =  [ 
-                                {dataField : "codeName" , headerText : "Mode", width : "10%",  editable : false },
-                                {dataField : "payItmRefNo" , headerText : "Ref No", width : "10%",  editable : false },
-                                {dataField : "payItmAmt" , headerText : "Amount", width : "10%",  editable : false, dataType : "numeric", formatString : "#,##0.00" },
-                                {dataField : "payItmOriCcNo" , headerText : "C.Card", width : "10%",  editable : false },
-                                {dataField : "payItmAppvNo" , headerText : "Aproval No", width : "10%",  editable : false },
-                                {dataField : "payItmCardModeCode" , headerText : "CRC Mode", width : "10%",  editable : false }, 
-                                {dataField : "name" , headerText : "Issued Bank", width : "8%",  editable : false },
-                                {dataField : "accDesc" , headerText : "Bank Acc", width : "10%",  editable : false },
-                                {dataField : "payItmRefDt" , headerText : "Ref Date", width : "10%",  editable : false }, 
-                                {dataField : "payItmRem" , headerText : "Remark", width : "10%",  editable : false }
+                                {dataField : "codeName" , headerText : '<spring:message code="sal.title.text.mode" />', width : "10%",  editable : false },
+                                {dataField : "payItmRefNo" , headerText : '<spring:message code="sal.title.text.refNo" />', width : "10%",  editable : false },
+                                {dataField : "payItmAmt" , headerText : '<spring:message code="sal.title.amount" />', width : "10%",  editable : false, dataType : "numeric", formatString : "#,##0.00" },
+                                {dataField : "payItmOriCcNo" , headerText : '<spring:message code="sal.title.text.credCard" />', width : "10%",  editable : false },
+                                {dataField : "payItmAppvNo" , headerText : '<spring:message code="sal.title.text.apprvNo" />', width : "10%",  editable : false },
+                                {dataField : "payItmCardModeCode" , headerText : '<spring:message code="sal.title.text.crcMode" />', width : "10%",  editable : false }, 
+                                {dataField : "name" , headerText : '<spring:message code="sal.title.text.issuedBank" />', width : "8%",  editable : false },
+                                {dataField : "accDesc" , headerText : '<spring:message code="sal.text.bankAccNo" />', width : "10%",  editable : false },
+                                {dataField : "payItmRefDt" , headerText : '<spring:message code="sal.title.text.refDate" />', width : "10%",  editable : false }, 
+                                {dataField : "payItmRem" , headerText : '<spring:message code="sal.title.remark" />', width : "10%",  editable : false }
                                 
                             ];
     
@@ -230,9 +230,7 @@ var payGridPros = {
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             softRemoveRowMode : false,
-            showRowCheckColumn : false, //checkBox
-            noDataMessage       : "No Item found.",
-            groupingMessage     : "Here groupping"
+            showRowCheckColumn : false
     };
     
     posRePayGridID = GridCommon.createAUIGrid("#rePay_grid_wrap", paymentColumnLayout,'', payGridPros);  // address list
@@ -289,27 +287,27 @@ function fn_setPayGridData(){
 <input type="hidden" id="_rePayId" name="rePayId" value="${payDetailMap.payId}">
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>POS Reversal</h1>
+<h1><spring:message code="sal.title.text.posReversal" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_reversalClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_reversalClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
-<ul class="right_btns">
+<!-- <ul class="right_btns">
     <li><p class="btn_blue2"><a href="#">Save</a></p></li>
-</ul>
+</ul> -->
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on" onclick="javascript: fn_reSizeAllGrid()">purchase info</a></li>
-    <li id="_isPayTab"><a onclick="javascript: fn_reSizeAllGrid()">payment mode</a></li>
+    <li><a href="#" class="on" onclick="javascript: fn_reSizeAllGrid()"><spring:message code="sal.title.text.purcInfo" /></a></li>
+    <li id="_isPayTab"><a onclick="javascript: fn_reSizeAllGrid()"><spring:message code="sal.text.payMode" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
 <aside class="title_line"><!-- title_line start -->
-<h2>POS Information</h2>
+<h2><spring:message code="sal.title.text.posInfo" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -322,11 +320,11 @@ function fn_setPayGridData(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">POS Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.posType" /><span class="must">*</span></th>
     <td>
     <select class="w100p disabled" id="_reversalPosModuleTypeId" disabled="disabled"></select>
     </td>
-    <th scope="row">POS Sales Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.posSalesType" /><span class="must">*</span></th>
     <td>
     <select class="w100p disabled" id="_reversalPosTypeId" disabled="disabled"></select>
     </td>
@@ -335,7 +333,7 @@ function fn_setPayGridData(){
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Particular Information</h2>
+<h2><spring:message code="sal.title.text.particInfo" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -347,13 +345,13 @@ function fn_setPayGridData(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Member Code<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.memberCode" /><span class="must">*</span></th>
     <td colspan="2">
         <input type="text" title="" placeholder="" class="w100p disabled"  value="${revDetailMap.memCode}" disabled="disabled" /><!-- <a href="#" class="search_btn"><img src="../images/common/normal_search.gif" alt="search" /></a> -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch / Warehouse<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.brnchWarehouse" /><span class="must">*</span></th>
     <td>
         <select  id="_reversalPosWhBrnchId" disabled="disabled" class="disabled w100p"></select>
     </td>
@@ -362,14 +360,14 @@ function fn_setPayGridData(){
     </td>
 </tr>
 <tr>
-    <th scope="row">Receive Date<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.recvDate" /><span class="must">*</span></th>
     <td>
         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" value="${revDetailMap.posDt}" disabled="disabled"  id="_recevDateOri"/>
     </td>
     <td></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remarks" /></th>
     <td colspan="2">
         <input type="text" title="" placeholder="" class="w100p disabled" value="${revDetailMap.posRem}" disabled="disabled"/>
     </td>
@@ -378,7 +376,7 @@ function fn_setPayGridData(){
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Charges Balance</h2>
+<h2><spring:message code="sal.title.text.chargeBal" /></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -389,7 +387,7 @@ function fn_setPayGridData(){
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Payment Information</h2>
+<h2><spring:message code="sal.title.text.paymInfo" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -404,19 +402,19 @@ function fn_setPayGridData(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Total Charges</th>
+    <th scope="row"><spring:message code="sal.title.text.totCharges" /></th>
     <td>${payDetailMap.posTotAmt}</td>
-    <th scope="row">Receipt No</th>
+    <th scope="row"><spring:message code="sal.title.receiptNo" /></th>
     <td>${payDetailMap.orNo}</td>
-    <th scope="row">Debtor Acc</th>
+    <th scope="row"><spring:message code="sal.title.debtorAcc" /></th>
     <td>${payDetailMap.accCode} - ${payDetailMap.accDesc}</td>
 </tr>
 <tr>
-    <th scope="row">Branch Code</th>
+    <th scope="row"><spring:message code="sal.title.text.brnchCode" /></th>
     <td>${payDetailMap.code} - ${payDetailMap.name1}</td>
-    <th scope="row">TR Ref No</th>
+    <th scope="row"><spring:message code="sal.title.text.trRefNo" /></th>
     <td>${payDetailMap.trNo}</td>
-    <th scope="row">TR Issued Date</th>
+    <th scope="row"><spring:message code="sal.title.text.trIssueDate" /></th>
     <td>${payDetailMap.trIssuDt}</td>
 </tr>
 </tbody>
@@ -431,7 +429,7 @@ function fn_setPayGridData(){
 </section><!-- tap_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Reversal Details</h2>
+<h2><spring:message code="sal.title.text.reversalDetail" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -442,7 +440,7 @@ function fn_setPayGridData(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Reversal Remark</th>
+    <th scope="row"><spring:message code="sal.title.text.reversalRem" /></th>
     <td>
         <input type="text" title="" placeholder="" class="w100p"  id="_reversalRem" name="reversalRem"/>
     </td>
@@ -451,7 +449,7 @@ function fn_setPayGridData(){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_confirmReversalBtn">Confirm to Reversal</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_confirmReversalBtn"><spring:message code="sal.title.text.confirmToReversal" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 </form>

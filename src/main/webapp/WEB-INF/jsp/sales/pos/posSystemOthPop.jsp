@@ -45,6 +45,10 @@ $(document).ready(function() {
     //Purchase Btn
     $("#_purchBtn").click(function() {
     	
+    	 if($("#hiddenSalesmanPopId").val() == null || $("#hiddenSalesmanPopId").val() ==	 ''){
+    		 Common.alert('<spring:message code="sal.alert.msg.plzKeyinMember" />');
+    		 return;
+    	 }
     	 //TODO 창고 파라미터가져가야함
     	 Common.popupDiv("/sales/pos/posItmSrchPop.do", $("#_sysForm").serializeJSON(), null, true);
     });
@@ -76,7 +80,7 @@ $(document).ready(function() {
         };
         Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : $("#hiddenSalesmanPopId").val(), memCode : $("#salesmanPopCd").val()}, function(memInfo) {
             if(memInfo == null) {
-                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                Common.alert('<spring:message code="sal.alert.msg.memNotFound" />'+memCode+'</b>');
                 return;
             }
         },null,ajaxOption);
@@ -95,7 +99,7 @@ $(document).ready(function() {
         
         //Remark Null Check
         if( null == $("#_posRemark").val() || '' == $("#_posRemark").val()){
-            Common.alert(" * Please key in Remark. ");
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinRemark" />');
             return;
         }
         //Save
@@ -194,16 +198,18 @@ function fn_payPass(){
     data.form = $("#_sysForm").serializeJSON();
     
     Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
-        Common.alert("POS saved. <br /> POS Ref No. :  [" + result.reqDocNo + "]" ,  fn_bookingAndpopClose()); 
+        Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo"  arguments="'+result.reqDocNo+'"/>' ,  fn_bookingAndpopClose());  
+        //Common.alert("POS saved. <br /> POS Ref No. :  [" + result.reqDocNo + "]" ,  fn_bookingAndpopClose());  
+
     });
    
 }
 
-function fn_bookingAndpopClose(){
+/* function fn_bookingAndpopClose(){
    //프로시저 호출
    // 콜백  >> 
    $("#_systemClose").click();
-}
+} */
 //////////////////////////////////////////////////
 
 
@@ -339,7 +345,7 @@ function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
         $("#areaId").val(areaid);
         $("#_searchDiv").remove();
     }else{
-        Common.alert("Please check your address.");
+        Common.alert('<spring:message code="sal.alert.msg.addrCheck" />');
     }
 }
 
@@ -377,20 +383,20 @@ function createPurchaseGridID(){
     
     
     var posColumnLayout =  [ 
-                            {dataField : "stkCode", headerText : "Item Code", width : '10%'}, 
-                            {dataField : "stkDesc", headerText : "Item Description", width : '30%'},
-                            {dataField : "qty", headerText : "Inv.Stock", width : '10%'},
-                            {dataField : "inputQty", headerText : "Qyt", width : '10%'},
-                            {dataField : "amt", headerText : "Unit Price", width : '10%' , dataType : "numeric", formatString : "#,##0.00"}, 
-                            {dataField : "subTotal", headerText : "Sub Total(Exclude GST)", width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%'}, 
+                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%'},
+                            {dataField : "qty", headerText : '<spring:message code="sal.title.text.invStock" />', width : '10%'},
+                            {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '10%'},
+                            {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00"}, 
+                            {dataField : "subTotal", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
                                 var calObj = fn_calculateAmt(item.amt , item.inputQty);
                                 return Number(calObj.subChanges); 
                             }},
-                            {dataField : "subChng", headerText : "GST(6%)", width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                            {dataField : "subChng", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
                                 var calObj = fn_calculateAmt(item.amt , item.inputQty);
                                 return Number(calObj.taxes);
                             }},
-                            {dataField : "totalAmt", headerText : "Total Amount", width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                            {dataField : "totalAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
                                 var calObj = fn_calculateAmt(item.amt , item.inputQty);
                                 return Number(calObj.subTotal);
                             }},
@@ -414,9 +420,7 @@ function createPurchaseGridID(){
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             showRowCheckColumn : true, //checkBox
-            softRemoveRowMode : false,
-            noDataMessage       : "No Item found.",
-            groupingMessage     : "Here groupping"
+            softRemoveRowMode : false
     };
     
     purchaseGridID = GridCommon.createAUIGrid("#item_grid_wrap", posColumnLayout,'', gridPros);  // address list
@@ -472,29 +476,35 @@ function fn_calculateAmt(amt, qty) {
     
 }
 
+
+function fn_clearAllGrid(){
+    
+    AUIGrid.clearGridData(purchaseGridID);  //purchase TempGridID
+    AUIGrid.resize(purchaseGridID , 960, 300);
+}
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>POS Request</h1>
+<h1><spring:message code="sal.title.text.posRequest" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_systemClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_systemClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-     <li><p class="btn_blue2"><a id="_purchBtn">Purchase Items</a></p></li>
-    <li><p class="btn_blue2"><a id="_posReqSaveBtn">Save</a></p></li>
+     <li><p class="btn_blue2"><a id="_purchBtn"><spring:message code="sal.title.text.purchItems" /></a></p></li>
+    <li><p class="btn_blue2"><a id="_posReqSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>POS Information</h2>
+<h2><spring:message code="sal.title.text.posInfo" /></h2>
 </aside><!-- title_line end -->
 <form id="_sysForm">
 <!-- HIDDEN VALUES -->
-<input type="hidden" name="hidLocId" id="_hidLocId" value="${locMap.whLocId }">
+<input type="hidden" name="hidLocId" id="_hidLocId" value="${locMap.whLocId}">
 <input type="hidden" name="cmbWhBrnchIdPop" value="${memCodeMap.brnch}">
 
 <input type="hidden" name="posReason" id="_posReason">  
@@ -513,11 +523,11 @@ function fn_calculateAmt(amt, qty) {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">POS Type</th>
+    <th scope="row"><spring:message code="sal.title.posType" /></th>
     <td>
     <select class="w100p" id="_insPosModuleType" name="insPosModuleType"></select>
     </td>
-    <th scope="row">POS Sales Type</th>
+    <th scope="row"><spring:message code="sal.title.text.posSalesType" /></th>
     <td>
     <select class="w100p" id="_insPosSystemType" name="insPosSystemType"></select>
     </td>
@@ -526,7 +536,7 @@ function fn_calculateAmt(amt, qty) {
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Particular Information</h2>
+<h2><spring:message code="sal.title.text.particInfo" /></h2>
 </aside><!-- title_line end -->
 
 <div id="_divOth">
@@ -540,57 +550,57 @@ function fn_calculateAmt(amt, qty) {
 </colgroup>
 <tbody>
 <tr>
-     <th scope="row">Customer Name</th>
+     <th scope="row"><spring:message code="sal.text.custName" /></th>
      <td colspan="3">
         <input type="text" title="" placeholder="CustomerName" class="w100p"  value="CASH" name="insPosCustName" id="_insPosCustName"/> 
     </td>   
 </tr>
 <tr>
-    <th scope="row">Area search</th>
+    <th scope="row"><spring:message code="sal.title.text.areaSearch" /></th>
     <td colspan="3">
         <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
     </td>
 </tr>
 <tr>
-    <th scope="row">Address Detail</th>
+    <th scope="row"><spring:message code="sal.text.addressDetail" /></th>
     <td colspan="3">
         <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
     </td>
 </tr>
 <tr>
-    <th scope="row">Street</th>
+    <th scope="row"><spring:message code="sal.text.street" /></th>
     <td colspan="3">
         <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
     </td>
 </tr>
 <tr>
-    <th scope="row">Area(4)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
     <td colspan="3">
         <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">City(2)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
     </td>
-    <th scope="row">PostCode(3)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.postCode3" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">State(1)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.state1" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
     </td>
-    <th scope="row">Country<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.country" /><span class="must">*</span></th>
     <td>
     <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td colspan="3">
         <input type="text" title="" placeholder="" class="w100p"  id="_posRemarkOth" /> 
     </td>
@@ -609,7 +619,7 @@ function fn_calculateAmt(amt, qty) {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Member Code</th> 
+    <th scope="row"><spring:message code="sal.text.memberCode" /></th> 
     <td> 
         <input id="salesmanPopCd" name="salesmanPopCd" type="text" title="" placeholder="" class=""  value="${memCodeMap.memCode}"/>
         <input id="hiddenSalesmanPopId" name="salesmanPopId" type="hidden"  value="${memCodeMap.memId}"/>
@@ -617,20 +627,20 @@ function fn_calculateAmt(amt, qty) {
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch / Warehouse</th>
+    <th scope="row"><spring:message code="sal.title.text.brnchWarehouse" /></th>
     <td>
          <select  id="_cmbWhBrnchIdPop" name="cmbWhBrnchIdPop"></select>
         <input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}">
     </td>
 </tr>
 <tr>
-    <th scope="row">Receive Date</th>
+    <th scope="row"><spring:message code="sal.title.text.recvDate" /></th>
     <td>
         <input type="text" title="기준년월" class="j_date w100p" placeholder="MM/YYYY" readonly="readonly"  id="_recvDate" name="recvDate"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td>
         <input type="text" title="" placeholder="" class="w100p" id="_posRemarkHq"  />
     </td>
@@ -642,11 +652,11 @@ function fn_calculateAmt(amt, qty) {
 </div>
 </form>
 <aside class="title_line"><!-- title_line start --> 
-<h2>Charges Balance</h2>
+<h2><spring:message code="sal.title.text.chargeBal" /></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="_purcDelBtn">DEL</a></p></li>
+    <li><p class="btn_grid"><a id="_purcDelBtn"><spring:message code="sal.btn.del" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

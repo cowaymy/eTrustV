@@ -692,14 +692,15 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
                 		Common.alert('<spring:message code="sal.alert.msg.memHasNoBrnch" />');
                 		$("#salesmanPopCd").val('');
                         $("#hiddenSalesmanPopId").val('');
+                        $("#_cmbWhBrnchIdPop").val('');
+                        $("#cmbWhIdPop").val();
                 		//Clear Grid
                         fn_clearAllGrid();
                 		return;
                 	}
-                });
-                
+                 });
         	}else{
-        	//	console.log("리스트임");
+             //	console.log("리스트임");
         		$('#hiddenSalesmanId').val(memInfo.memId);
                 $('#salesmanCd').val(memInfo.memCode);
                 $('#salesmanCd').removeClass("readonly");

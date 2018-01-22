@@ -253,7 +253,7 @@ $(document).ready(function() {
     			
     			var memSize = AUIGrid.getGridData(memGridID);
     			if(memSize == null || memSize.length <= 0){
-    				Common.alert("* Please Key in meber(s) first.");
+    				Common.alert('<spring:message code="sal.alert.msg.plzKeyinMemFirst" />');
     				return;
     			}
     		}
@@ -262,11 +262,11 @@ $(document).ready(function() {
     			
     			// 창고 Validation
     			if($("#_cmbWhBrnchIdPop").val() == null || $("#_cmbWhBrnchIdPop").val() == ''){
-    				Common.alert('* please Select Warehouse`s Branch.');
+    				Common.alert('<spring:message code="sal.alert.msg.selectWarehsBrnch" />');
     				return;
     			}
     			if($("#_hidLocId").val() == null || $("#_hidLocId").val() == ''){
-    				Common.alert('* Warehouse`s Branch has no Location Id.');
+    				Common.alert('<spring:message code="sal.alert.msg.warehsHasNoBrnch" />');
                     return;
     			}
     			//창고 parameter
@@ -294,11 +294,11 @@ $(document).ready(function() {
     			
     		    // 창고 Validation
                 if($("#_cmbWhBrnchIdPop").val() == null || $("#_cmbWhBrnchIdPop").val() == ''){
-                    Common.alert('* please Select Warehouse`s Branch.');
+                    Common.alert('<spring:message code="sal.alert.msg.selectWarehsBrnch" />');
                     return;
                 }
                 if($("#_hidLocId").val() == null || $("#_hidLocId").val() == ''){
-                    Common.alert('* Warehouse`s Branch has no Location Id.');
+                    Common.alert('<spring:message code="sal.alert.msg.warehsHasNoBrnch" />');
                     return;
                 }
                 //창고 parameter
@@ -317,21 +317,21 @@ $(document).ready(function() {
     	/****Validation ***/
     	//Purchase Grid Null Check
     	if(AUIGrid.getGridData(purchaseGridID) <= 0){
-    		Common.alert("* Please select the Item(s). ");
+    		Common.alert('<spring:message code="sal.alert.msg.selectItms" />');
     		return;
     	}
     	
     	//Member Grid Null Check
     	if($("#_insPosModuleType").val() == 2391){
     		if(AUIGrid.getGridData(memGridID) <= 0){
-                Common.alert("* Please select the Member(s). ");
+                Common.alert('<spring:message code="sal.alert.msg.selectMembers" />');
                 return;
             }	
     	}
     	
     	//Member Code and Id Null Check
     	if(null == $("#salesmanPopCd").val() || '' == $("#salesmanPopCd").val()){
-    		Common.alert("* Please select the member code.");
+    		Common.alert('<spring:message code="sal.alert.msg.selectMemCode" />');
     		return;
     	}
     	//Member Check
@@ -341,25 +341,25 @@ $(document).ready(function() {
         };
     	Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : $("#hiddenSalesmanPopId").val(), memCode : $("#salesmanPopCd").val()}, function(memInfo) {
             if(memInfo == null) {
-                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                Common.alert('<spring:message code="sal.alert.msg.memNotFound" />'+memCode+'</b>');
                 return;
             }
         },null,ajaxOption);
     	//Branch WareHouse Null Check
     	if( null == $("#_cmbWhBrnchIdPop").val() || '' == $("#_cmbWhBrnchIdPop").val()){
-    		Common.alert("* Please select the warehouse. ");
+    		Common.alert('<spring:message code="sal.alert.msg.selectWarehs" />');
     		return;
     	}
     	//Receive Date Null Check
     	if( null == $("#_recvDate").val() || '' == $("#_recvDate").val()){
-    		Common.alert("* Please select the Receive date.");
+    		Common.alert('<spring:message code="sal.alert.msg.selectRecevDate" />');
     		return;
     	}
     	// Compare with Todaty?
     	
     	//Remark Null Check
     	if( null == $("#_posRemark").val() || '' == $("#_posRemark").val()){
-    		Common.alert(" * Please key in Remark. ");
+    		Common.alert('<spring:message code="sal.alert.msg.plzKeyinRemark" />');
     		return;
     	}
     	
@@ -372,7 +372,7 @@ $(document).ready(function() {
             
             
             if(null == $("#_payTrIssueDate").val() || '' == $("#_payTrIssueDate").val()){
-            	Common.alert("* Pease select the TR issued date.");
+            	Common.alert('<spring:message code="sal.alert.msg.selectTrIssuedDate" />');
             	$("#_payTrIssueDate").focus();
             	return;
             }
@@ -386,14 +386,14 @@ $(document).ready(function() {
                 }
             } */
             if( null == $("#_payBrnchCode").val() || '' == $("#_payBrnchCode").val()){
-            	Common.alert("* Please select a branch.");
+            	Common.alert('<spring:message code="sal.alert.msg.selectABranch" />');
             	$("#_payBrnchCode").focus();
             	return;
             }
             
             
             if(null == $("#_payDebtorAcc").val() ||  '' == $("#_payDebtorAcc").val()){
-            	Common.alert("* Please select a debtor account.");
+            	Common.alert('<spring:message code="sal.alert.msg.selectDebAcc" />');
             	return;
             }
             
@@ -403,7 +403,7 @@ $(document).ready(function() {
             var purchTotAmt = fn_calcuPurchaseAmt();
             
             if( payTotAmt == null || payTotAmt == 0 || purchTotAmt == null || purchTotAmt == 0 || (payTotAmt != purchTotAmt)){
-            	Common.alert("* Partial/Overpay Payment are prohibited.");
+            	Common.alert('<spring:message code="sal.alert.msg.payMethodProhibit" />');
             	return;
             }
             
@@ -450,61 +450,61 @@ $(document).ready(function() {
     	
     	//Validation
     	if(null == $("#_payMode").val() || '' == $("#_payMode").val()){
-    		Common.alert("* Please select a payment mode.");
+    		Common.alert('<spring:message code="sal.alert.msg.plzSelectPaymMode" />');
     		return;
     	}
     	
     	if(null == $("#_payAmt").val() || '' == $("#_payAmt").val()){
-    		Common.alert("* Amount cannot be empty.");
+    		Common.alert('<spring:message code="sal.alert.msg.amtCannotBempty" />');
     		return;
     	}
     	
     	if(FormUtil.checkNum($("#_payAmt"))){
-    		Common.alert("* Please Key In Number.");
+    		Common.alert('<spring:message code="sal.alert.msg.plzKeyInNumber" />');
     		return;
     	}
     	
     	if(null == $("#_payBankAccount").val() || '' == $("#_payBankAccount").val()){
-    		Common.alert("* Please select a bank account.");
+    		Common.alert('<spring:message code="sal.alert.msg.plzSelectBankAcc" />'); 
     		return;
     	}
     	
     	if($("#_payMode") == 107){  //Card Select
     		
     		if(null == $("#_payIssueBank").val() || '' == $("#_payIssueBank").val()){
-    			Common.alert("* Please select a issued bank.");
+    			Common.alert('<spring:message code="sal.alert.msg.plzSelectIssuedBank" />');
     			return;
     		}
     	
     		if(null == $("#_payCreditCardNo").val() || '' == $("#_payCreditCardNo").val()){
-    		    Common.alert("* Please key in CRC no.");
+    		    Common.alert('<spring:message code="sal.alert.msg.plzKeyinCrcNo" />');
     		    return;
     		}else{
     			var crcNo = $("#_payCreditCardNo").val();
     			if(crcNo.length != 16){
-    				Common.alert("* Credit card number must be 16 digits.");
+    				Common.alert('<spring:message code="sal.alert.msg.crcNoMustbeSisxteenDigit" />');
     				return;
     			}
     		}
     		
     		if(null == $("#_payCrcType").val() || '' == $("#_payCrcType").val()){
-    		     Common.alert("* Please select a  CRC type. ");   		
+    		     Common.alert('<spring:message code="sal.alert.msg.plzSelectCrcType" />');   		
     		     return;
     		}
     		
     		if (null == $("#_payCrcMode").val() || '' == $("#_payCrcMode").val()) {
-				Common.alert(" Please select a  CRC mode.");
+				Common.alert('<spring:message code="sal.alert.msg.plzSelectCrcMode" />');
 				return;
 			}
     		
     		if(null == $("#_payApprovNo").val() || '' == $("#_payApprovNo").val()){
-    			Common.alert("* Please key in approval no.");
+    			Common.alert('<spring:message code="sal.alert.msg.plzKeyinApprovNo" />');
     			return;
     		}else{
     			var tempAppNo = $("#_payApprovNo").val();
     			
     			if(tempAppNo.length != 6){
-    				Common.alert("* Approval number must be 6 characters.");
+    				Common.alert('<spring:message code="sal.alert.msg.approvalNoMustbeSixChar" />');
     				return;
     			}
     		}
@@ -683,7 +683,7 @@ function fn_payPass(){
      data.form = $("#_sysForm").serializeJSON();
 	 
      Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
-         Common.alert("POS saved. <br /> POS Ref No. :  [" + result.reqDocNo + "]" , fn_popClose()); 
+         Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'"/>', fn_popClose()); 
      });
 	
 }
@@ -716,7 +716,7 @@ function fn_payProceed(){
     
     Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
     	
-    	Common.alert("POS saved. <br /> POS Ref No. :  [" + result.reqDocNo + "]" , fn_bookingAndpopClose()); 
+    	Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'" />' , fn_bookingAndpopClose()); 
     });
 }
 
@@ -759,20 +759,20 @@ function createPurchaseGridID(){
     
     
     var posColumnLayout =  [ 
-                            {dataField : "stkCode", headerText : "Item Code", width : '10%'}, 
-                            {dataField : "stkDesc", headerText : "Item Description", width : '30%'},
-                            {dataField : "qty", headerText : "Inv.Stock", width : '10%'},
-                            {dataField : "inputQty", headerText : "Qyt", width : '10%'},
-                            {dataField : "amt", headerText : "Unit Price", width : '10%' , dataType : "numeric", formatString : "#,##0.00"}, 
-                            {dataField : "subTotal", headerText : "Sub Total(Exclude GST)", width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%'}, 
+                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%'},
+                            {dataField : "qty", headerText : '<spring:message code="sal.title.text.invStock" />', width : '10%'},
+                            {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '10%'},
+                            {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00"}, 
+                            {dataField : "subTotal", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
                             	return Number(calObj.subChanges); 
 							}},
-                            {dataField : "subChng", headerText : "GST(6%)", width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                            {dataField : "subChng", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
                                 return Number(calObj.taxes);
                             }},
-                            {dataField : "totalAmt", headerText : "Total Amount", width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                            {dataField : "totalAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
                             	return Number(calObj.subTotal);
                             }},
@@ -796,9 +796,7 @@ function createPurchaseGridID(){
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             showRowCheckColumn : true, //checkBox
-            softRemoveRowMode : false,
-            noDataMessage       : "No Item found.",
-            groupingMessage     : "Here groupping"
+            softRemoveRowMode : false
     };
     
     purchaseGridID = GridCommon.createAUIGrid("#item_grid_wrap", posColumnLayout,'', gridPros);  // address list
@@ -855,9 +853,9 @@ var serialGridPros = {
     };
     
   var serialConfirmlColumnLayout =  [ 
-                             {dataField : "matnr", headerText : "Filter Code", width : '33%' , editable : false  } ,
-                             {dataField : "stkDesc", headerText : "Filter Name", width : '33%' , editable : false },
-                             {dataField : "serialNo", headerText : "Serial", width : '33%' , editable : false },
+                             {dataField : "matnr", headerText : '<spring:message code="sal.title.filterCode" />', width : '33%' , editable : false  } ,
+                             {dataField : "stkDesc", headerText : '<spring:message code="sal.title.filterName" />', width : '33%' , editable : false },
+                             {dataField : "serialNo", headerText : '<spring:message code="sal.title.serial" />', width : '33%' , editable : false },
                              {dataField : "stkId" , visible :true}//STK_ID
                             ];
     
@@ -882,17 +880,15 @@ function creatememGridID(){
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             softRemoveRowMode : false,
-            showRowCheckColumn : false, //checkBox
-            noDataMessage       : "No Item found.",
-            groupingMessage     : "Here groupping"
+            showRowCheckColumn : false
     };
 	
 	var memConfirmlColumnLayout =  [ 
-	                                     {dataField : "memId" , headerText : "Member ID", width : "20%",  editable : false },
-		                                 {dataField : "memCode" , headerText : "Member Code", width : "20%",  editable : false },
-		                                 {dataField : "name" , headerText : "Member NAme", width : "20%",  editable : false },
-		                                 {dataField : "nric" , headerText : "Member NRIC", width : "20%",  editable : false },
-		                                 {dataField : "code" , headerText : "Branch", width : "20%",  editable : false },
+	                                     {dataField : "memId" , headerText : '<spring:message code="sal.title.memberId" />', width : "20%",  editable : false },
+		                                 {dataField : "memCode" , headerText : '<spring:message code="sal.title.memberCode" />', width : "20%",  editable : false },
+		                                 {dataField : "name" , headerText : '<spring:message code="sal.title.memberName" />', width : "20%",  editable : false },
+		                                 {dataField : "nric" , headerText : '<spring:message code="sal.title.memberNRIC" />', width : "20%",  editable : false },
+		                                 {dataField : "code" , headerText : '<spring:message code="sal.text.branch" />', width : "20%",  editable : false },
 		                                 {dataField : "brnch" , visible : false},
 		                                 {dataField : "memType" , visible : false},
 		                                 {dataField : "fullName" , visible : false},
@@ -919,25 +915,23 @@ function createPaymentGrid(){
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             softRemoveRowMode : false,
-            showRowCheckColumn : false, //checkBox
-            noDataMessage       : "No Item found.",
-            groupingMessage     : "Here groupping"
+            showRowCheckColumn : false
     };
    
    var paymentColumnLayout =  [ 
                                    {dataField : "payMode", visible : false},
-                                   {dataField : "payModeTxt" , headerText : "Mode", width : "10%",  editable : false },
+                                   {dataField : "payModeTxt" , headerText : '<spring:message code="sal.title.text.mode" />', width : "10%",  editable : false },
                                    {dataField : "payTrRefNo", visible : false},
-                                   {dataField : "transactionRefNo" , headerText : "Ref No", width : "10%",  editable : false },
-                                   {dataField : "payAmt" , headerText : "Amount", width : "10%",  editable : false, dataType : "numeric", formatString : "#,##0.00" },
-                                   {dataField : "payCreditCardNo" , headerText : "C.Card", width : "8%",  editable : false },
-                                   {dataField : "payApprovNo" , headerText : "Aproval No", width : "8%",  editable : false },
-                                   {dataField : "payCrcMode" , headerText : "CRC Mode", width : "8%",  editable : false },
-                                   {dataField : "payIssueBank" , headerText : "Issued Bank", width : "8%",  editable : false },
-                                   {dataField : "payBankAccountTxt" , headerText : "Bank Acc", width : "10%",  editable : false },
+                                   {dataField : "transactionRefNo" , headerText : '<spring:message code="sal.title.text.refNo" />', width : "10%",  editable : false },
+                                   {dataField : "payAmt" , headerText : '<spring:message code="sal.title.amount" />', width : "10%",  editable : false, dataType : "numeric", formatString : "#,##0.00" },
+                                   {dataField : "payCreditCardNo" , headerText : '<spring:message code="sal.title.text.credCard" />', width : "8%",  editable : false },
+                                   {dataField : "payApprovNo" , headerText : '<spring:message code="sal.title.text.apprvNo" />', width : "8%",  editable : false },
+                                   {dataField : "payCrcMode" , headerText : '<spring:message code="sal.title.text.crcMode" />', width : "8%",  editable : false },
+                                   {dataField : "payIssueBank" , headerText : '<spring:message code="sal.title.text.issuedBank" />', width : "8%",  editable : false },
+                                   {dataField : "payBankAccountTxt" , headerText : '<spring:message code="sal.text.bankAccNo" />', width : "10%",  editable : false },
                                    {dataField : "payBankAccount", visible : false},// 
-                                   {dataField : "payRefDate" , headerText : "Ref Date", width : "10%",  editable : false },
-                                   {dataField : "payRem" , headerText : "Remark", width : "10%",  editable : false },
+                                   {dataField : "payRefDate" , headerText : '<spring:message code="sal.title.text.refDate" />', width : "10%",  editable : false },
+                                   {dataField : "payRem" , headerText : '<spring:message code="sal.title.remark" />', width : "10%",  editable : false },
                                    {
                                        dataField : "undefined", 
                                        headerText : " ", 
@@ -1015,21 +1009,21 @@ function fn_inputAmt(obj){
 
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>POS Request</h1>
+<h1><spring:message code="sal.title.text.posRequest" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_systemClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_systemClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue2"><a id="_purchBtn">Purchase Items</a></p></li>
-    <li><p class="btn_blue2" ><a id="_purchMemBtn" style="display: none;">Member List</a></p></li>
-    <li><p class="btn_blue2"><a id="_posReqSaveBtn">Save</a></p></li>
+    <li><p class="btn_blue2"><a id="_purchBtn"><spring:message code="sal.title.text.purchItems" /></a></p></li>
+    <li><p class="btn_blue2" ><a id="_purchMemBtn" style="display: none;"><spring:message code="sal.title.text.memList" /></a></p></li>
+    <li><p class="btn_blue2"><a id="_posReqSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 <aside class="title_line"><!-- title_line start -->
-<h2>Please select POS Type</h2>
+<h2><spring:message code="sal.title.text.plzSelectPosType" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -1042,11 +1036,11 @@ function fn_inputAmt(obj){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">POS Type</th>
+    <th scope="row"><spring:message code="sal.title.posType" /></th>
     <td>
     <select class="w100p" id="_insPosModuleType" ></select>
     </td>
-    <th scope="row">POS Sales Type</th>
+    <th scope="row"><spring:message code="sal.title.text.posSalesType" /></th>
     <td>
     <select class="w100p" id="_insPosSystemType" ></select>
     </td>
@@ -1056,14 +1050,14 @@ function fn_inputAmt(obj){
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on" id="_purchaseTab">Purchase info</a></li>
-    <li id="_payTab"><a id="_paymentTab">Payment mode</a></li>
+    <li><a href="#" class="on" id="_purchaseTab"><spring:message code="sal.title.text.purcInfo" /></a></li>
+    <li id="_payTab"><a id="_paymentTab"><spring:message code="sal.text.payMode" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Particular Information</h2>
+<h2><spring:message code="sal.title.text.particInfo" /></h2>
 </aside><!-- title_line end -->
 
 <form id="_sysForm">
@@ -1085,7 +1079,7 @@ function fn_inputAmt(obj){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Member Code</th>
+    <th scope="row"><spring:message code="sal.text.memberCode" /></th>
     <td>  
         <div class="search_100p"><!-- search_100p start -->
 	        <input id="salesmanPopCd" name="salesmanPopCd" type="text" title="" placeholder="" class="w100p"  value="${memCodeMap.memCode}"/>
@@ -1096,18 +1090,18 @@ function fn_inputAmt(obj){
     <td></td>
 </tr>
 <tr>
-    <th scope="row">Branch / Warehouse</th>
+    <th scope="row"><spring:message code="sal.title.text.brnchWarehouse" /></th>
     <td><select  id="_cmbWhBrnchIdPop" name="cmbWhBrnchIdPop" class="w100p"></select></td>
     <td style="padding-left:0"><input type="text" disabled="disabled" id="cmbWhIdPop"  value="${locMap.whLocDesc}"></td>
 </tr>
 <tr>
-    <th scope="row">Receive Date</th>
+    <th scope="row"><spring:message code="sal.title.text.recvDate" /></th>
     <td colspan="2">
         <input type="text" title="기준년월" class="j_date w100p" placeholder="MM/YYYY" readonly="readonly"  id="_recvDate" name="recvDate"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td colspan="2">
         <input type="text" title="" placeholder="" class="w100p" id="_posRemark" name="posRemark" />
     </td>
@@ -1116,13 +1110,13 @@ function fn_inputAmt(obj){
 </table><!-- table end -->
 </form>
 <aside class="title_line"><!-- title_line start -->
-<h2>Charges Balance</h2>
+<h2><spring:message code="sal.title.text.chargeBal" /></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
     <!-- <li><p class="btn_grid"><a id="_purchBtn">Purchase Items</a></p></li>
     <li><p class="btn_grid" ><a id="_purchMemBtn" style="display: none;">Member List</a></p></li> -->
-    <li><p class="btn_grid"><a id="_purcDelBtn">DEL</a></p></li>
+    <li><p class="btn_grid"><a id="_purcDelBtn"><spring:message code="sal.btn.del" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -1140,7 +1134,7 @@ function fn_inputAmt(obj){
 
 <div id="_mainMemberGrid" style="display: none;">
 <aside class="title_line"><!-- title_line start -->
-<h2>Member List</h2>
+<h2><spring:message code="sal.title.text.memList" /></h2>
 </aside><!-- title_line end -->
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="memTemp_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
@@ -1151,7 +1145,7 @@ function fn_inputAmt(obj){
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Payment Information</h2>
+<h2><spring:message code="sal.title.text.paymInfo" /></h2>
 </aside><!-- title_line end -->
 
 <form id="_payForm">
@@ -1172,64 +1166,64 @@ function fn_inputAmt(obj){
 </colgroup>
 <tbody>
 <tr>
-<th>Total Charges</th>
+<th><spring:message code="sal.title.text.totCharges" /></th>
 <td colspan="5" id="_payTotCharges"></td>
 </tr>
 <tr>
-<th>Branch Code</th>
+<th><spring:message code="sal.title.text.brnchCode" /></th>
 <td>
     <select class="w100p disabled" id="_payBrnchCode"  disabled="disabled"></select>
 </td>
-<th>TR Ref No.</th>
+<th><spring:message code="sal.title.text.trRefNo" /></th>
 <td><input type="text" title="" placeholder="TR Ref No." class="w100p" id="_payTrRefNo" name="payTrRefNo"  maxlength="10"/></td>
-<th>TR Issued Date</th>
+<th><spring:message code="sal.title.text.trIssueDate" /></th>
 <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="_payTrIssueDate"  name="payTrIssueDate" readonly="readonly"/></td>
 </tr>
 <tr>
-<th>Payment Mode</th>
+<th><spring:message code="sal.text.payMode" /></th>
 <td>
     <select class="w100p" id="_payMode" name="payMode">
-        <option value="105">Cash</option>
-        <option value="108">Deduct Commission</option>
+        <option value="105"><spring:message code="sal.combo.text.cash" /></option>
+        <option value="108"><spring:message code="sal.combo.text.deduction" /></option>
     </select>
 </td>
-<th>Transaction Ref No.</th>
+<th><spring:message code="sal.title.text.transacRefNo" /></th>
 <td><input type="text" title="" placeholder="Transaction Ref No." class="w100p" id="_transactionRefNo" name="transactionRefNo" /></td>
-<th>Amount</th>
+<th><spring:message code="sal.title.amount" /></th>
 <td><input type="text" title="" placeholder="" class="w100p" id="_payAmt" name="payAmt" onkeyup="fn_inputAmt(this)" /></td>
 </tr>
 <tr>
-<th>Credit Card No.</th>
+<th><spring:message code="sal.text.creditCardNo" /></th>
 <td><input type="text" title="" placeholder="Credit Card No." class="w100p disabled" id="_payCreditCardNo" name="payCreditCardNo" disabled="disabled"/></td>
-<th>CRC Type</th>
+<th><spring:message code="sal.title.text.crcType" /></th>
 <td>
     <select class="w100p disabled"  id="_payCrcType" name="payCrcType" disabled="disabled"></select>
 </td>
-<th>CRC Mode</th>
+<th><spring:message code="sal.title.text.crcMode" /></th>
 <td>
     <select class="w100p disabled" id="_payCrcMode" name="payCrcMode" disabled="disabled">
         <option value="" disabled="disabled" selected="selected"></option>
-        <option value="1">ONLINE</option>
-        <option value="0">OFFLINE</option>
+        <option value="1"><spring:message code="sal.combo.text.online" /></option>
+        <option value="0"><spring:message code="sal.combo.text.offline" /></option>
     </select>
 </td>
 </tr>
 <tr>
-<th>Approval No.</th>
+<th><spring:message code="sal.title.text.apprvNo" /></th>
 <td><input type="text" title="" placeholder="Credit Card No." class="w100p disabled" id="_payApprovNo" name="payApprovNo" disabled="disabled"/></td>
-<th>Issue Bank</th>
+<th><spring:message code="sal.text.issueBank" /></th>
 <td>
     <select class="w100p disabled" id="_payIssueBank" name="payIssueBank"  disabled="disabled"></select>
 </td>
-<th>Bank Account</th>
+<th><spring:message code="sal.title.text.bankAccount" /></th>
 <td>
     <select class="w100p" id="_payBankAccount" name="payBankAccount"></select>
 </td>
 </tr>
 <tr>
-<th>Ref Date</th>
+<th><spring:message code="sal.title.text.refDate" /></th>
 <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="_payRefDate" name="payRefDate"  readonly="readonly"/></td>
-<th>Debtor Acc.</th>
+<th><spring:message code="sal.title.debtorAcc" /></th>
 <td>
     <select class="w100p"  id="_payDebtorAcc"  disabled="disabled"></select>
 </td>
@@ -1237,7 +1231,7 @@ function fn_inputAmt(obj){
 <td></td>
 </tr>
 <tr>
-<th>Remark</th>
+<th><spring:message code="sal.title.remark" /></th>
 <td colspan="5"><textarea cols="20" rows="5" placeholder="" id="_payRem" name="payRem"></textarea></td>
 </tr>
 
@@ -1245,15 +1239,15 @@ function fn_inputAmt(obj){
 </table><!-- table end -->
 </form>
 <ul class="right_btns">
-    <li><p class="btn_grid"><a  id="_addPayMode">Add Payment Mode</a></p></li>
-    <li><p class="btn_grid"><a id="_clearPayGrid">Clear All</a></p></li>
+    <li><p class="btn_grid"><a  id="_addPayMode"><spring:message code="sal.title.text.addPaymMode" /></a></p></li>
+    <li><p class="btn_grid"><a id="_clearPayGrid"><spring:message code="sal.title.text.clearAll" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="payment_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
-<span class="bold_text mt10" id="_totalPayAmount">Total Pay Amount : </span>
+<span class="bold_text mt10" id="_totalPayAmount"><spring:message code="sal.title.text.totPayAmt" /></span>
 
 </article><!-- tap_area end -->
 </section><!-- tap_wrap start -->
