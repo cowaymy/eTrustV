@@ -712,8 +712,8 @@ function fn_itempopList(data){
     var rowPos = "first";
     var rowList = [];
     
-    AUIGrid.removeRow(reqGrid, "selectedIndex");
-    AUIGrid.removeSoftRows(reqGrid);
+    //AUIGrid.removeRow(reqGrid, "selectedIndex");
+    //AUIGrid.removeSoftRows(reqGrid);
     for (var i = 0 ; i < data.length ; i++){
         rowList[i] = {
             //itmid : data[i].item.itemid,
