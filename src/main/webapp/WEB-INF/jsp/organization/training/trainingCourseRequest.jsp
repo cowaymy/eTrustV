@@ -290,6 +290,11 @@ function fn_setToDay() {
 }
 
 function fn_selectCourseList() {
+	if($("coursMemCode").val() == "NO"){
+		Common.alert("No member code.");
+		return false;
+	}
+	
 	Common.ajax("GET", "/organization/training/selectCourseRequestList.do", $("#form_course").serialize(), function(result) {
         console.log(result);
         AUIGrid.setGridData(courseGridID, result);
