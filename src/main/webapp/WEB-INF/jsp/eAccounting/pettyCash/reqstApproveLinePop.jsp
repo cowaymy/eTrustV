@@ -96,7 +96,6 @@ $(document).ready(function () {
     	    });
     
     //fn_setTemporaryData();
-    
     fn_addRow();
 });
 

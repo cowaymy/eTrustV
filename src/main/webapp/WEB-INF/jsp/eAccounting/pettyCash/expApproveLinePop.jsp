@@ -95,7 +95,8 @@ $(document).ready(function () {
     	        selectRowIdx = event.rowIndex;
     	    });
     
-    fn_setTemporaryData();
+    //fn_setTemporaryData();
+    fn_addRow();
 });
 
 function fn_setTemporaryData() {

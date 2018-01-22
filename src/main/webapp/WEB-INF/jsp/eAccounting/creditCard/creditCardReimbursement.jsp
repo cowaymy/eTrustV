@@ -115,7 +115,7 @@ $(document).ready(function () {
                 if(event.item.appvPrcssStusCode == "T") {
                     fn_viewReimbursementPop();
                 } else {
-                	var clmNo = event.item.clmNo;
+                	clmNo = event.item.clmNo;
                     var clmType = clmNo.substr(0, 2);
                 	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType);
                 }
@@ -586,13 +586,19 @@ function fn_getAllTotAmt() {
     // allTotAmt GET, SET
     var allTotAmt = 0.00;
     var totAmtList = AUIGrid.getColumnValues (newGridID, "totAmt", true);
+    console.log(totAmtList);
     console.log(totAmtList.length);
     for(var i = 0; i < totAmtList.length; i++) {
         allTotAmt += totAmtList[i];
     }
-    allTotAmt += "";
+    //allTotAmt = allTotAmt.toFixed(2);
+    console.log($.number(allTotAmt,2,'.',''));
+    allTotAmt = $.number(allTotAmt,2,'.',',');
+    //allTotAmt += "";
     console.log(allTotAmt);
-    $("#allTotAmt_text").text(allTotAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+    
+    //$("#allTotAmt_text").text(allTotAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+    $("#allTotAmt_text").text(allTotAmt);
 }
 
 function fn_insertReimbursement(st) {

@@ -334,7 +334,7 @@ public class CreditCardController {
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
-		List<EgovMap> itemList = creditCardService.selectReimbursementItems((String) params.get("clmNo"));
+		List<EgovMap> itemList = creditCardService.selectReimbursementItems(params);
 		
 		return ResponseEntity.ok(itemList);
 	}
@@ -345,7 +345,7 @@ public class CreditCardController {
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		// TODO selectExpenseItems
-		List<EgovMap> itemList = creditCardService.selectReimbursementItems((String) params.get("clmNo"));
+		List<EgovMap> itemList = creditCardService.selectReimbursementItems(params);
 		List<EgovMap> taxCodeFlagList = creditCardService.selectTaxCodeCreditCardFlag();
 		
 		model.addAttribute("callType", params.get("callType"));

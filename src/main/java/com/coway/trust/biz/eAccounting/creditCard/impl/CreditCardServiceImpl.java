@@ -149,9 +149,9 @@ public class CreditCardServiceImpl implements CreditCardService {
 	}
 
 	@Override
-	public List<EgovMap> selectReimbursementItems(String clmNo) {
+	public List<EgovMap> selectReimbursementItems(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		return creditCardMapper.selectReimbursementItems(clmNo);
+		return creditCardMapper.selectReimbursementItems(params);
 	}
 
 	@Override

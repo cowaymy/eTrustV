@@ -43,7 +43,7 @@ public interface CreditCardMapper {
 	
 	void insertReimbursementItem(Map<String, Object> params);
 	
-	List<EgovMap> selectReimbursementItems(String clmNo);
+	List<EgovMap> selectReimbursementItems(Map<String, Object> params);
 	
 	EgovMap selectReimburesementInfo(Map<String, Object> params);
 	

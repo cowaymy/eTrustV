@@ -184,6 +184,7 @@ var newGridPros = {
     headerHeight : 40,
     // 그리드가 height 지정( 지정하지 않으면 부모 height 의 100% 할당받음 )
     height : 175,
+    softRemoveRowMode : false,
     rowIdField : "clmSeq",
     // 셀 선택모드 (기본값: singleCell)
     selectionMode : "multipleCells"

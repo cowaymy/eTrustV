@@ -309,12 +309,12 @@ ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO) T
        WHERE 1=1
         <if test="startDt != null and startDt != ''">
         <![CDATA[ 
-             OR T.CRT_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+             AND T.CRT_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
         ]]>
         </if>          
         <if test="endDt != null and endDt != ''">
         <![CDATA[ 
-             OR T.CRT_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+             AND T.CRT_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
         </if>          
         <if test="crditCardUserId != null and crditCardUserId != ''">
@@ -485,7 +485,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
     )
 </insert>
 
-<select id="selectReimbursementItems" parameterType="String" resultType="egovMap">
+<select id="selectReimbursementItems" parameterType="Map" resultType="egovMap">
 /* creditCardMapper.selectReimbursementItems */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
 SELECT T1.CLM_SEQ, 

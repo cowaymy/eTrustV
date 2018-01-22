@@ -277,8 +277,8 @@ public class StaffClaimController {
 		return ResponseEntity.ok(message);
 	}
 	
-	@RequestMapping(value = "/completedMsgPop.do")
-	public String completedMsgPop(@RequestBody Map<String, Object> params, ModelMap model) {
+	@RequestMapping(value = "/completedMsgPop.do", method = RequestMethod.POST)
+	public String completedMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("callType", params.get("callType"));
 		model.addAttribute("clmNo", params.get("clmNo"));
 		return "eAccounting/staffClaim/completedMsgPop";
