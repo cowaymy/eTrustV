@@ -2183,7 +2183,7 @@
     }
     
     function fn_loadListPexch() {
-        var stkType = APP_TYPE_ID == '1412' ? '3' : '1';
+        var stkType = APP_TYPE_ID == '66' ? '1' : '2';
         
         //doGetProductCombo('/common/selectProductCodeList.do',  stkType, '', 'cmbOrderProduct', 'S', ''); //Product Code
         doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID}, '', 'cmbOrderProduct', 'S', 'fn_setOptGrpClass');//product 생성
