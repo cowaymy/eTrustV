@@ -372,4 +372,10 @@ public class TrainingServiceImpl implements TrainingService {
 		trainingMapper.cancelCourseReq(params);
 	}
 	
+	
+	@Override
+	public EgovMap getMemCodeForCourse(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return trainingMapper.getMemCodeForCourse(params);
+	}
 }

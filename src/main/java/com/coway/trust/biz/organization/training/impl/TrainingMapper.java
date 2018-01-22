@@ -52,4 +52,6 @@ public interface TrainingMapper {
 	void registerCourseReq(Map<String, Object> params);
 	
 	void cancelCourseReq(Map<String, Object> params);
+	
+	EgovMap getMemCodeForCourse(Map<String, Object> params);
 }
