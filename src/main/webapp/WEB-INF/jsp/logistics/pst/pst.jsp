@@ -319,7 +319,7 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                         str += "Please Check Delivery Qty of  " + rowItem.item.psono   + ", " + rowItem.item.itmname + "<br />";
                         checkDelqty= true;
                     }
-                    if (rowItem.item.serialchk =='Y'){
+                    /*if (rowItem.item.serialchk =='Y'){
                         serialchk = true;
                     }/*else{
                         serialchk = false;
