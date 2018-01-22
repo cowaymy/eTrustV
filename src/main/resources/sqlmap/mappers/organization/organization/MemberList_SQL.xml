@@ -148,7 +148,8 @@
 
 
 			Project1.C1 C1,
-			project1.TRAINEE_TYPE
+			project1.TRAINEE_TYPE,
+			project1.TEST_RESULT
 
 			FROM ( SELECT Project1.C1 C1,
 			         Project1.MEM_ID MEM_ID,
@@ -166,6 +167,7 @@
 			         Project1.brnch_id,
                     Project1.ct_sub_grp,
                     project1.TRAINEE_TYPE,
+                    project1.TEST_RESULT,
 
 			         row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
 
@@ -184,7 +186,16 @@
 			        Extent5.ct_sub_grp,
                     extent1.TRAINEE_TYPE,
 			        /*By KV*/
-			        Extend6.MEM_ORG_DESC position_name
+			        Extend6.MEM_ORG_DESC position_name,
+			        CASE
+				        WHEN ( Extend8.COURS_TEST_RESULT = 'P' )
+				        THEN 'Pass'
+				        WHEN ( Extend8.COURS_TEST_RESULT = 'F' )
+				        THEN 'Fail'
+				        WHEN ( Extend8.COURS_TEST_RESULT = 'AB' )
+				        THEN 'Absent'
+			        ELSE ''
+			        END TEST_RESULT
 
 			        FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
 			        INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
@@ -265,6 +276,8 @@
 	                        </choose>
                          </if>
 			            )  GroupBy1
+			            LEFT JOIN MSC0009D Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
+			            
 			            WHERE 1=1
 
                         <if test="memTypeCom != null and memTypeCom != ''">

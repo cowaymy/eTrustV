@@ -11,9 +11,33 @@ function fn_memberListNew(){
 }
 
 function fn_memberListSearch(){
- 	Common.ajax("GET", "/organization/memberListSearch", $("#searchForm").serialize(), function(result) {
+	/* if ($("#memTypeCom").val() == '5' ) {
+		AUIGrid.showColumnByDataField(myGridID, "testResult"); 
+		AUIGrid.setColumnProp( myGridID, 6, { width : 130, visible : true } );
+    } else {
+        AUIGrid.setColumnProp( myGridID, 6, { width : 0, visible : false } );
+    } */
+ 	
+    Common.ajax("GET", "/organization/memberListSearch", $("#searchForm").serialize(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
+        
+        var isTrainee = 0;
+        for (var i=0; i<result.length; i++) {
+        	if (result[i]["membertype"] == 5) {
+        		isTrainee = 1;
+        	} else {
+        		result[i]["testResult"] = "";
+        	}
+        }
+        
+        if (isTrainee != 0) {
+        	AUIGrid.showColumnByDataField(myGridID, "testResult"); 
+            AUIGrid.setColumnProp( myGridID, 6, { width : 130, visible : true } );
+        } else {
+        	AUIGrid.setColumnProp( myGridID, 6, { width : 0, visible : false } );
+        }
+        
         AUIGrid.setGridData(myGridID, result);
     });
 
@@ -85,6 +109,13 @@ function fn_requestVacationPop(){
     console.log(memberid + " :: " + memberType + " :: " + traineeType)
     
     if ( memberType == 5 && (traineeType == 2 || traineeType == 3)) {
+    	
+    	//alert(testResult);
+    	
+    	if ( testResult != 'Pass') {
+    		Common.alert("Can't register the trainee due to test result in Fail/Absent");
+    		return;
+    	}
     
      Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType }, function(result) {
          console.log("성공.");
@@ -191,6 +222,7 @@ $(document).ready(function() {
         traineeType = AUIGrid.getCellValue(myGridID, event.rowIndex, "traineeType");
         nric = AUIGrid.getCellValue(myGridID, event.rowIndex, "nric");
         memberName = AUIGrid.getCellValue(myGridID, event.rowIndex, "name");
+        testResult = AUIGrid.getCellValue(myGridID, event.rowIndex, "testResult");
     	//Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });
 
@@ -234,6 +266,12 @@ function createAUIGrid() {
 		    editable : false,
 		    width : 130
 		}, {
+            dataField : "testResult",
+            headerText : "Test Result",
+            editable : false,
+            width : 0,
+            visible : false
+        }, {
 		    dataField : "updated",
 		    headerText : "Last Update",
 		    editable : false,
