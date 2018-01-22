@@ -179,8 +179,20 @@ public class SurveyMgmtController {
 	public ResponseEntity<EgovMap> selectSalesOrdNotList2( @RequestParam Map<String, Object> params){
 		
 		LOGGER.debug("params : {}", params.get("salesOrdNo"));
+		String son = null;
+		if(params.get("salesOrdNo")!=null){
+			son = params.get("salesOrdNo").toString();
+		}
+		//EgovMap filterList = new EgovMap();
 		EgovMap filterList = null;
 		filterList = surveyMgmtService.selectSalesOrdNotList2(params);
+		if(filterList==null&&son.length()>0){
+			
+			System.out.println(son);
+			filterList = new EgovMap();
+			filterList.put("salesOrdNo", son);
+			filterList.put("name", null);
+		}
 		LOGGER.debug("filterList : {}", filterList);
 		return ResponseEntity.ok(filterList);
 		

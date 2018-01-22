@@ -104,7 +104,7 @@ $(document).ready(function(){
         	Common.ajax("Get", "/services/performanceMgmt/selectSalesOrdNotList2.do?salesOrdNo="+ salesOrdNo +"", '' , function(result) {
                 if(result!=null){
 	                console.log("성공.");
-	                console.log("data : "+ result);
+	                //console.log("data : "+ result);
 	                AUIGrid.addRow(myGridID_Target, result, "first");
 	                var rowCount2 = AUIGrid.getRowCount(myGridID_Target);
 	                AUIGrid.removeRow(myGridID_Target, rowCount2-1);
@@ -563,26 +563,51 @@ function process_wb(wb) {
 // 엑셀 시트를 파싱하여 반환
 function to_json(workbook) {
     var result = {};
+    var alert_no= null;
     workbook.SheetNames.forEach(function(sheetName) {
         var roa = XLSX.utils.sheet_to_row_object_array(workbook.Sheets[sheetName], {defval:""});
 
         //console.log(roa);
-
+        var message = "Can not such salesOrdNo : ";
+        
         for(var i=0; i<roa.length; i++){	        
         	var obj = roa[i];
         	//if(obj["Sales Order"]!=null){
         		var salesOrdNo = obj["Sales Order"];
         		var callMem = obj["Calling Agent"];
+        		/*
         		console.debug(callMem);
-                
+        		
+        		Common.ajax("Get", "/services/performanceMgmt/selectSalesOrdNotList3.do?salesOrdNo="+ salesOrdNo+"&callMem="+callMem +"", '' , function(result) {
+        			if(result==null){
+        				
+        			}
+        		});
+        		*/
+        		
                 Common.ajax("Get", "/services/performanceMgmt/selectSalesOrdNotList2.do?salesOrdNo="+ salesOrdNo+"&callMem="+callMem +"", '' , function(result) {
+                	//console.log('000000000000000000000000000');
+                    //console.log(callMem);
+                    //console.log(obj["Sales Order"]);                	
                     if(result!=null){
-                        console.log("성공.");
-                        console.log("data : "+ result);
-                        AUIGrid.addRow(myGridID_Target, result, "first");
-                        var rowCount2 = AUIGrid.getRowCount(myGridID_Target);
-                        AUIGrid.removeRow(myGridID_Target, rowCount2-1);
-                        AUIGrid.removeSoftRows(myGridID_Target);
+                    	
+                    	if(result.name!=null){
+	                        console.log("성공.");                        
+	                        AUIGrid.addRow(myGridID_Target, result, "first");
+	                        var rowCount2 = AUIGrid.getRowCount(myGridID_Target);
+	                        AUIGrid.removeRow(myGridID_Target, rowCount2-1);
+	                        AUIGrid.removeSoftRows(myGridID_Target);
+                    	}else{
+                    		
+                    	    alert("No such salesOrdNo : "+result.salesOrdNo);
+                    	    
+                    	    
+                    		//Common.alert("<spring:message code='sys.common.alert.sys.common.alert.NoSuch' arguments='branch' htmlEscape='false'/>");
+                            var rowCount2 = AUIGrid.getRowCount(myGridID_Target);
+                            AUIGrid.removeRow(myGridID_Target, rowCount2-1);
+                            AUIGrid.removeSoftRows(myGridID_Target);
+                        }
+                        
                        //AUIGrid.setGridData(myGridID_Target, result );
                        /* 
                        obj["salesOrdNo"] = result.salesOrdNo;
@@ -590,6 +615,7 @@ function to_json(workbook) {
                         obj["name"] = result.name;
                         delete obj["Name"];
                         obj["contNo"] = result.contNo;
+                        
                         delete obj["Contact Number"];
                         obj["callMem"] = callMem;
                         delete obj["Calling Agent"];
@@ -614,13 +640,22 @@ function to_json(workbook) {
 	        delete obj["Calling Agent"];
 	        */
         }
+        /*
+        if(alert_no!=null){
+            //Common.alert("<spring:message code='sys.common.alert.sys.common.alert.NoSuch' arguments='branch' htmlEscape='false'/> "+alert_no);
+            alert(alert_no);
+        }
+        */
+        
         var json = JSON.stringify([obj]);
 
-
+        
+        
         if(roa.length > 0){
             result[sheetName] = roa;
         }
     });
+    
     return result;
 }
 
