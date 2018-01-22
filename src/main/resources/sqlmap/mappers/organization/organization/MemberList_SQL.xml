@@ -3587,7 +3587,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 LEFT JOIN SYS0015M Extent17   ON Extent17.CNTY_ID = TO_NUMBER(Extent1.APLICNT_NATION,99999.99)
                 LEFT JOIN SYS0013M Extent18   ON Extent18.CODE_ID = TO_NUMBER(Extent1.APLICNT_RACE,99999.99)
 --                LEFT JOIN SYS0013M Extent19   ON Extent19.CODE_ID = Extent1.TRNSPRT
-                LEFT JOIN ORG0001D Extent20   ON Extent20.MEM_CODE = Extent1.APLICNT_SPOUSE_CODE
+                LEFT JOIN ORG0001D Extent20   ON Extent20.MEM_CODE = Extent1.APLICNT_SPONS_CODE
                 LEFT JOIN SYS0013M Extent21   ON Extent21.CODE_ID = TO_NUMBER(Extent1.APLICNT_MARTL,99999.99)
                 LEFT JOIN SYS0028M Extent22   ON ( Extent22.WH_LOC_CODE = Extent1.APLICNT_CODE )
                 AND ( Extent1.APLICNT_TYPE IN ( 2,3 )
