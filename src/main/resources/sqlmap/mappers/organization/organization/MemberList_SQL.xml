@@ -1332,6 +1332,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                                AND ( 1 = Extent1.STUS_ID ) ) Project1
                      ORDER BY Project1.CODE_NAME ASC -->
       
+      
       <![CDATA[
         
 			         
@@ -3860,7 +3861,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
            , APLICNT_BANK_ID =#{issuedBank}
            </if>
            <if test="Birth != null and Birth != '' ">
-            ,APLICNT_DOB  =to_date( to_date(#{Birth}, 'DD/MM/YY') , 'YY/MM/DD' )
+            ,APLICNT_DOB  =to_date( #{Birth} , 'DD-MM-YYYY' )
            </if>
             <if test="statusID != null and statusID != '' ">
             , STUS_ID = #{statusID}
@@ -3926,7 +3927,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       , SYSDATE
       , #{userId}
       , SYSDATE
-      , #{docSubBatchId}
+      , 0
       )
     </insert>
     
@@ -4088,6 +4089,38 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                  <![CDATA[         WHERE ROWNUM <= 10    ]]>
 
           
-          </select>          
+          </select>   
+          
+                 
 
+        <select id="getMemIdwithCode" parameterType="String" resultType="EgovMap">
+           <choose>
+           <when test = "memberType != null and memberType != '2803' "  >
+                Select mem_id 
+                from org0001d
+                where mem_code= #{memCode}
+            </when>
+            <otherwise>
+                Select APLCTN_ID mem_id 
+                from org0003d
+                where APLICNT_CODE= #{memCode}
+            </otherwise>
+        </choose>
+        
+        </select>
+        
+        
+        
+        
+        <select id="selectTrainType" parameterType="Map" resultType="egovMap">
+                 select TRAINEE_TYPE train
+                 from org0001d
+                where mem_id= #{memId}
+        
+        </select>
+        
+        
+        
+        
+        
 </mapper>
