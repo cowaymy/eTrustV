@@ -197,7 +197,13 @@
             	  
             	  var ctm_row = -1;
             	  if( ctm ) {
-            		  ctm_row = AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm);
+            		  if ( AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm) != null 
+            				  && AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm) != ""
+            				  && AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm) >= 0 ) {
+            			  ctm_row = AUIGrid.getRowIndexesByValue(myGridID, "memCode", ctm);
+            		  } else {
+            			  ctm_row = -1;
+            		  }
             	  }
             	  
             	  if (event.rowIndex == ctm_row) {
@@ -272,7 +278,7 @@
 		                } else if (result2.length == 0) {
 		                	Common.alert("There is no CTM in the branch.<br/>Can't collect capacity to CTM from CT.");
 		                } else {
-		                	ctm = result2[0];
+		                	ctm = result2[0]["ctmCode"];
 		                }
 		                
 		                for( i in result2){
