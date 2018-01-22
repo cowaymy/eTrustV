@@ -126,7 +126,7 @@ function fn_selectMember() {
 	<th scope="row"><spring:message code="memAcc.group" /></th>
 	<td>
 	<select class="w100p" id="accGrp" name="accGrp">
-        <option value="VM11" <c:if test="${accGrp eq 'VM11'}">selected</c:if>>Coway_Suppliers-Expense</option>
+        <option value="VM11" <c:if test="${accGrp eq 'VM11'}">selected</c:if>><spring:message code="memAcc.local" /></option>
         <option value="VM07" <c:if test="${accGrp eq 'VM07'}">selected</c:if>><spring:message code="memAcc.cody" /></option>
         <option value="VM08" <c:if test="${accGrp eq 'VM08'}">selected</c:if>><spring:message code="memAcc.ct" /></option>
         <option value="VM10" <c:if test="${accGrp eq 'VM10'}">selected</c:if>><spring:message code="memAcc.staff" /></option>
