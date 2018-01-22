@@ -628,5 +628,16 @@ SELECT Extent1.COURS_ITM_ID   ,
          WHERE COURS_ID = #{coursId}
            AND COURS_MEM_ID = #{memId}
     </update>
+    
+    <select id="getMemCodeForCourse" parameterType="Map" resultType="egovMap">
+    /* trainingMapper.getMemCodeForCourse */
+    SELECT MEM_ID 
+             , MEM_TYPE
+             , NAME
+             , NRIC
+             , MEM_CODE
+      FROM ORG0001D 
+    WHERE MEM_ID = #{memId}
+</select>
 
 </mapper>
