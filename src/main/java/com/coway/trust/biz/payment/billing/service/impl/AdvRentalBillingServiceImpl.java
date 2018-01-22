@@ -95,7 +95,7 @@ public class AdvRentalBillingServiceImpl extends EgovAbstractServiceImpl impleme
                 }
 
                 double billAmt;
-                billAmt      =  hm.get("billAmt") != null ? (double)hm.get("billAmt") : 0;
+                billAmt      =  hm.get("billAmt") != null ? Double.parseDouble(String.valueOf(hm.get("billAmt"))) : 0;
                 
                 taskOrderMap.put("taskBillUpdateBy", userId);
                 taskOrderMap.put("taskBillAmt", new DecimalFormat("0.00").format(billAmt));
