@@ -17,8 +17,12 @@ public interface SalesPlanMngementMapper {
 	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);  
 	List<EgovMap> selectSupplyCdcPop(Map<String, Object> params);  
 	List<EgovMap> selectPlanDatePlanByCdc(Map<String, Object> params);  
+	List<EgovMap> selectPlanIdByCdc(Map<String, Object> params);  
+	List<EgovMap> selectMonthPlanByCdc(Map<String, Object> params);  
 	void updatePlanByCDC(Map<String, Object> params);
 	void insertSalesPlanMstCdc(Map<String, Object> params);
+	/*Stored-Procedure Call*/
+	String callSpCreateSupplyPlanSummary(Map<String, Object> params);
 	
     /*Supply_CORP */
 	List<EgovMap> selectSupplyCorpList(Map<String, Object> params);

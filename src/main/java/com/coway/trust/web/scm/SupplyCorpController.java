@@ -80,8 +80,8 @@ public class SupplyCorpController {
 		return ResponseEntity.ok(selectSalesPlanMaster);
 	}
 
-	@RequestMapping(value = "/selectSupplyPlanCDCSearch.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectSupplyPlanCDCSearch(@RequestBody Map<String, Object> params) 
+	@RequestMapping(value = "/selectSupplyPlanByCdcSearch.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSupplyPlanByCdcSearch(@RequestBody Map<String, Object> params) 
 	{
 		LOGGER.debug("selectSupplyPlanCDC_Input : {}", params.toString());
 		
@@ -172,6 +172,23 @@ public class SupplyCorpController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);
-	}	
+	}
+	
+	// supplyPlanByCDC Stored Procedure
+	@RequestMapping(value = "/insertOrderSummarySPCall.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertOrderSummarySPCall(@RequestBody Map<String, Object> params,SessionVO sessionVO) 
+	{
+		/* Stored Procedure Call (SP_SCM_PLAN_BY_CDC_INS) */
+		String retval = salesPlanMngementService.callSpCreateSupplyPlanSummary(params, sessionVO);
+		LOGGER.debug("SPCall_Retvalue : {}", retval.toString());
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(retval);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
 
 }

@@ -68,9 +68,20 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	public List<EgovMap> selectSupplyCdcPop(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectSupplyCdcPop(params);
 	}	
+
 	@Override
 	public List<EgovMap> selectPlanDatePlanByCdc(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectPlanDatePlanByCdc(params);
+	}	
+	
+	@Override
+	public List<EgovMap> selectPlanIdByCdc(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectPlanIdByCdc(params);
+	}	
+	
+	@Override
+	public List<EgovMap> selectMonthPlanByCdc(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectMonthPlanByCdc(params);
 	}	
 	
 	// Supply-Corp
@@ -212,6 +223,28 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		LOGGER.debug(" return_Params : {} , SaveCnt: {} ", params.toString(), saveCnt );
 		
 		return saveCnt;
+	}
+	
+	/* Order Summary Stored Procedure  */
+	@Override
+	public String callSpCreateSupplyPlanSummary(Map<String, Object> params, SessionVO sessionVO)
+	{
+		String returnValue = "OkSP";
+		String selectPlanMonth = salesPlanMngementMapper.selectMonthPlanByCdc(params).get(0).get("planMonth").toString();
+		
+		params.put("planMonth", selectPlanMonth);
+		params.put("crtUserId", sessionVO.getUserId());
+		
+		salesPlanMngementMapper.callSpCreateSupplyPlanSummary(params); 
+		
+		LOGGER.debug("SupplyPlanSummary Return_Params : {} , returnValue: {} ", params.toString(), params.get("rtnVal").toString() );
+		
+		if (!"O.K".equals(params.get("rtnVal")))
+		  returnValue = "FailSP"+ "_" + params.get("planMonth").toString();
+		else
+		  returnValue = returnValue + "_" + params.get("planMonth").toString();
+		
+		return returnValue;
 	}
 	
 	@Override

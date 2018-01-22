@@ -343,25 +343,19 @@ function headerClickHandler(event)
   }
 }
 
-//특정 칼럼 값으로 체크하기 (기존 더하기)
+/****************** Grouping Checked  *********************** 
+rowIdField 와 상관없이 같은 필드값을 가지는 모든 row는 체크 및 체크해제.
+1. 같은 poNo인 경우 모두 체크 해제.
+*************************************************************/
 function addCheckedRowsByValue(selValue) 
 {
-  console.log("grouping Checked: " + selValue);
-  // rowIdField 와 상관없이 행 아이템의 특정 값에 체크함
-  // 행아이템의 code 필드 중 데이타가 selValue 인 것 모두 체크.
-  AUIGrid.addCheckedRowsByValue(MainGridID, "checkFlag", selValue);
-  
-  // 만약 복수 값(Emma, Steve) 체크 하고자 한다면 다음과 같이 배열로 삽입
-  //AUIGrid.addCheckedRowsByValue(SummaryGridID, "name", ["Emma", "Steve"]);
+ AUIGrid.addCheckedRowsByValue(MainGridID, "poNo", selValue);
 }
-//특정 칼럼 값으로 체크 해제 하기
+//2. 같은 poNo인 경우 모두 체크 해제.
 function addUncheckedRowsByValue(selValue) 
 {
-  console.log("grouping UnChecked: " + selValue);
-  // 행아이템의 code 필드 중 데이타가 selValue인 것 모두 체크 해제함
-  AUIGrid.addUncheckedRowsByValue(MainGridID, "checkFlag", selValue);
+ AUIGrid.addUncheckedRowsByValue(MainGridID, "poNo", selValue);
 }
-
 
 
 function fnChkApprovalUpdINF()
@@ -379,9 +373,10 @@ function fnChkApprovalUpdINF()
 
   if (checkedItemsList.length > 0)
   {
-    for (var icnt = 0; icnt < checkedItemsList.length; icnt++)
+    for (var icnt = 0; icnt < checkedItemsList.length; icnt++){
       console.log("poNo: " + checkedItemsList[icnt].poNo + " /poItmNo: "+ checkedItemsList[icnt].poItmNo+ " /stockCode: "+ checkedItemsList[icnt].stockCode );
-
+    }
+    
     data.checked = checkedItemsList;
 
     Common.ajax("POST"
@@ -817,7 +812,17 @@ function fnMainGridCreate()
             // 체크박스 표시 설정
             showRowCheckColumn : true,              
             // 전체 선택 체크박스가 독립적인 역할을 할지 여부
-            independentAllCheckBox : true,   
+            independentAllCheckBox : true, 
+            // Grouping Checked
+            rowCheckableFunction : function(rowIndex, isChecked, item) 
+            {
+              if (isChecked == false) 
+               addCheckedRowsByValue(AUIGrid.getCellValue(MainGridID, rowIndex, "poNo"));
+              else
+               addUncheckedRowsByValue(AUIGrid.getCellValue(MainGridID, rowIndex, "poNo"));
+                  
+              return true;
+            },     
 
             // rowCheckDisabledFunction 으로 비활성화된 체크박스는 체크 반응이 일어나지 않습니다.(rowCheckableFunction 불필요)
             rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
@@ -826,9 +831,9 @@ function fnMainGridCreate()
                 return false; 
               }
               return true;
-            }
+            },
 
-					 ,rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
+					  rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
 					  {
 					    if(item.cbBoxFlag == 5) { //5(Approved) 면 false고 disabled 처리됨
 					       return false; 
@@ -895,130 +900,120 @@ $(document).ready(function()
 </script>
 
 <section id="content"><!-- content start -->
-<ul class="path">
-	<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
-	<li>Sales</li>
-	<li>Order list</li>
-</ul>
-
-<aside class="title_line"><!-- title_line start -->  
-<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>  
-<h2>PO Approval</h2>
-<ul class="right_btns">
-	<li><p class="btn_blue"><a onclick="fnSearchBtnList();"><span class="search"></span>Search</a></p></li>
-</ul>
-</aside><!-- title_line end -->
-
-
-<section class="search_table"><!-- search_table start -->
-<form id="MainForm" method="post" action="">
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:160px" />
-	<col style="width:*" />
-  <col style="width:160px" />
-  <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row">EST Year &amp; Week</th>
-	<td>
-
-	<div class="date_set"><!-- date_set start -->
-	<p>
-	 <select class="w100p" id="scmYearCbBox" name="scmYearCbBox">
-   </select>
-	</p>
-	<span>&nbsp;</span>
-	<p>
-	 <select class="sel_date" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
-   </select>
-	</p>
-	</div><!-- date_set end -->
-
-	</td>
-  <!-- Stock Type 추가 -->
-  <th scope="row">Stock Type</th>
-  <td>
-    <select id="scmStockType" name="scmStockType" multiple="multiple" >
-    </select>
-  </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-
-<article class="grid_wrap mt10"><!-- grid_wrap start -->
-<!-- 그리드 영역 1-->
- <div id="SummaryGrid_DIV" style="height:230px;"></div>
-</article><!-- grid_wrap end -->
-
-<ul class="right_btns">
-  <li><p class="btn_grid"><a onclick="fnExcelExport('PO Approval');">EXCEL DOWN</a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-<!-- 그리드 영역 2-->
- <div id="MainGrid_DIV"></div> 
-</article><!-- grid_wrap end -->
-
-<ul class="center_btns">
-  <li><p class="btn_blue"><a onclick="fnChkApprovalUpdINF();">APPROVE SELECTED PO(s)</a></p></li>
-</ul>
-
-<ul class="center_btns">
-	<li>
-	 <p class="btn_blue2 big">
-<!-- 	   <a href="javascript:void(0);">Download Raw Data</a> -->
-	 </p>
-	</li>
-</ul>
-
-<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<p class="show_btn">
-  <%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
-</p>
-<dl class="link_list">
-	<dt>Link</dt>
-	<dd>
-	<ul class="btns">
-		<li><p class="link_btn"><a href="javascript:void(0);">menu1</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu2</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu3</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu4</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">Search Payment</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu6</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu7</a></p></li>
-		<li><p class="link_btn"><a href="javascript:void(0);">menu8</a></p></li>
+	<ul class="path">
+		<li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
+		<li>Sales</li>
+		<li>Order list</li>
 	</ul>
-	<ul class="btns">
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu1</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu3</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu4</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu6</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu7</a></p></li>
-		<li><p class="link_btn type2"><a href="javascript:void(0);">menu8</a></p></li>
+	
+	<aside class="title_line"><!-- title_line start -->  
+	<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>  
+	<h2>PO Approval</h2>
+	<ul class="right_btns">
+		<li><p class="btn_blue"><a onclick="fnSearchBtnList();"><span class="search"></span>Search</a></p></li>
 	</ul>
-	<p class="hide_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-	</dd>
-</dl>
-</aside><!-- link_btns_wrap end -->
+	</aside><!-- title_line end -->
 
-</form>
-</section><!-- search_table end -->
+
+	<section class="search_table"><!-- search_table start -->
+		<form id="MainForm" method="post" action="">
+		
+		<table class="type1"><!-- table start -->
+		<caption>table</caption>
+		<colgroup>
+			<col style="width:160px" />
+			<col style="width:*" />
+		  <col style="width:160px" />
+		  <col style="width:*" />
+		</colgroup>
+		<tbody>
+		<tr>
+			<th scope="row">EST Year &amp; Week</th>
+			<td>
+		
+			<div class="date_set"><!-- date_set start -->
+			<p>
+			 <select class="w100p" id="scmYearCbBox" name="scmYearCbBox">
+		   </select>
+			</p>
+			<span>&nbsp;</span>
+			<p>
+			 <select class="sel_date" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
+		   </select>
+			</p>
+			</div><!-- date_set end -->
+		
+			</td>
+		  <!-- Stock Type 추가 -->
+		  <th scope="row">Stock Type</th>
+		  <td>
+		    <select id="scmStockType" name="scmStockType" multiple="multiple" >
+		    </select>
+		  </td>
+		</tr>
+		</tbody>
+		</table><!-- table end -->
+		
+		<article class="grid_wrap mt10"><!-- grid_wrap start -->
+		<!-- 그리드 영역 1-->
+		 <div id="SummaryGrid_DIV" style="height:230px;"></div>
+		</article><!-- grid_wrap end -->
+		
+		<ul class="right_btns">
+		  <li><p class="btn_grid"><a onclick="fnExcelExport('PO Approval');">EXCEL DOWN</a></p></li>
+		</ul>
+		
+		<article class="grid_wrap"><!-- grid_wrap start -->
+		<!-- 그리드 영역 2-->
+		 <div id="MainGrid_DIV"></div> 
+		</article><!-- grid_wrap end -->
+		
+		<ul class="center_btns">
+		  <li><p class="btn_blue"><a onclick="fnChkApprovalUpdINF();">APPROVE SELECTED PO(s)</a></p></li>
+		</ul>
+		
+		<ul class="center_btns">
+			<li>
+			 <p class="btn_blue2 big">
+		<!-- 	   <a href="javascript:void(0);">Download Raw Data</a> -->
+			 </p>
+			</li>
+		</ul>
+		
+		<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+		<p class="show_btn">
+		  <%-- <a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a> --%>
+		</p>
+		<dl class="link_list">
+			<dt>Link</dt>
+			<dd>
+			<ul class="btns">
+				<li><p class="link_btn"><a href="javascript:void(0);">menu1</a></p></li>
+				<li><p class="link_btn"><a href="javascript:void(0);">menu2</a></p></li>
+				<li><p class="link_btn"><a href="javascript:void(0);">menu3</a></p></li>
+				<li><p class="link_btn"><a href="javascript:void(0);">menu4</a></p></li>
+				<li><p class="link_btn"><a href="javascript:void(0);">Search Payment</a></p></li>
+				<li><p class="link_btn"><a href="javascript:void(0);">menu6</a></p></li>
+				<li><p class="link_btn"><a href="javascript:void(0);">menu7</a></p></li>
+				<li><p class="link_btn"><a href="javascript:void(0);">menu8</a></p></li>
+			</ul>
+			<ul class="btns">
+				<li><p class="link_btn type2"><a href="javascript:void(0);">menu1</a></p></li>
+				<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
+				<li><p class="link_btn type2"><a href="javascript:void(0);">menu3</a></p></li>
+				<li><p class="link_btn type2"><a href="javascript:void(0);">menu4</a></p></li>
+				<li><p class="link_btn type2"><a href="javascript:void(0);">Search Payment</a></p></li>
+				<li><p class="link_btn type2"><a href="javascript:void(0);">menu6</a></p></li>
+				<li><p class="link_btn type2"><a href="javascript:void(0);">menu7</a></p></li>
+				<li><p class="link_btn type2"><a href="javascript:void(0);">menu8</a></p></li>
+			</ul>
+			<p class="hide_btn"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+			</dd>
+		</dl>
+		</aside><!-- link_btns_wrap end -->
+		
+		</form>
+	
+	</section><!-- search_table end -->
 
 </section><!-- content end -->
-
-<aside class="bottom_msg_box"><!-- bottom_msg_box start -->
-<p>Information Message Area</p>
-</aside><!-- bottom_msg_box end -->
-		
-</section><!-- container end -->
-<hr />
-
-</div><!-- wrap end -->
-</body>
-</html>

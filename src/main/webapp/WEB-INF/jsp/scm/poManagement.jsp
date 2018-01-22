@@ -271,9 +271,10 @@ function fnCheckedDelete(Obj)
   {
 	  var data = {};
 	  
-    for (var icnt = 0; icnt < checkedItemsList.length; icnt++)
+    for (var icnt = 0; icnt < checkedItemsList.length; icnt++){
       console.log("poNo: " + checkedItemsList[icnt].poNo + " /poItmNo: "+ checkedItemsList[icnt].poItmNo+ " /estWeek: "+ checkedItemsList[icnt].estWeek );
-
+    }
+    
     data.checked = checkedItemsList;
 
     Common.ajax("POST"
@@ -508,6 +509,21 @@ function addMoveChecked(moveStockCode)
    }
 
 	 return rtBooled
+}
+
+/****************** Grouping Checked  *********************** 
+ rowIdField 와 상관없이 같은 필드값을 가지는 모든 row는 체크 및 체크해제.
+ 1. 같은 poNo인 경우 모두 체크 해제.
+*************************************************************/
+function addCheckedRowsByValue(selValue) 
+{
+  AUIGrid.addCheckedRowsByValue(SCMPOViewGridID, "poNo", selValue);
+}
+
+// 2. 같은 poNo인 경우 모두 체크 해제.
+function addUncheckedRowsByValue(selValue) 
+{
+  AUIGrid.addUncheckedRowsByValue(SCMPOViewGridID, "poNo", selValue);
 }
 
 //행 추가 이벤트 핸들러
@@ -1044,7 +1060,17 @@ $(document).ready(function()
             // 체크박스 표시 설정
             showRowCheckColumn : true,              
             // 전체 선택 체크박스가 독립적인 역할을 할지 여부
-            independentAllCheckBox : true,   
+            independentAllCheckBox : true,
+            // Grouping Checked
+            rowCheckableFunction : function(rowIndex, isChecked, item) 
+            {
+              if (isChecked == false) 
+               addCheckedRowsByValue(AUIGrid.getCellValue(SCMPOViewGridID, rowIndex, "poNo"));
+              else
+               addUncheckedRowsByValue(AUIGrid.getCellValue(SCMPOViewGridID, rowIndex, "poNo"));
+                  
+              return true;
+            },   
 
             // rowCheckDisabledFunction 으로 비활성화된 체크박스는 체크 반응이 일어나지 않습니다.(rowCheckableFunction 불필요)
             rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
@@ -1054,9 +1080,9 @@ $(document).ready(function()
               }
               
               return true;
-            }
+            },
 
-           ,rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
+            rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
             {
               if(item.cbBoxFlag == 5) { // Approve시 disabled
                  return false; // false 반환하면 disabled 처리됨

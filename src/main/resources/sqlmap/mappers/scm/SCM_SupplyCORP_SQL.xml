@@ -40,7 +40,7 @@
       FROM SCM0005M 
      WHERE PLAN_YEAR = #{scmYearCbBox}
        AND PLAN_WEEK = #{scmPeriodCbBox}
-       AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC','') 
+       AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox}) 
                    
   </select> 
   
@@ -70,7 +70,7 @@
                                 FROM SCM0005M  
                                WHERE PLAN_YEAR = #{scmYearCbBox} 
                                  AND PLAN_WEEK = #{scmPeriodCbBox} 
-                                 AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC','') 
+                                 AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox}) 
                              )
        AND CMPLT = 0
   </select> 
@@ -141,7 +141,7 @@
                                 FROM SCM0005M  
                                WHERE PLAN_YEAR = #{scmYearCbBox} 
                                  AND PLAN_WEEK = #{scmPeriodCbBox} 
-                                 AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC','')  
+                                 AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})  
                             )
         AND S06D.STOCK_CODE = S26M.STK_CODE
 
@@ -286,7 +286,7 @@ INSERT INTO SCM0006D
                   ,PSI_NAME 
                   ,STOCK_CTGRY 
                   ,STOCK_NAME
-                          
+                
                   ,NVL2(S6D_STOK_CODE,M_3               ,0) M_3 
                   ,NVL2(S6D_STOK_CODE,M_2               ,0) M_2 
                   ,NVL2(S6D_STOK_CODE,M_1               ,0) M_1 
@@ -303,6 +303,7 @@ INSERT INTO SCM0006D
                   ,NVL2(S6D_STOK_CODE,WS1               ,0) WS1                
                   ,NVL2(S6D_STOK_CODE,WS2               ,0) WS2                
                   ,NVL2(S6D_STOK_CODE,WS3               ,0) WS3
+
                       
                   ,NVL2(S6D_STOK_CODE,W00               ,0) W00               
                   ,NVL2(S6D_STOK_CODE,W01               ,0) W01               
@@ -469,7 +470,34 @@ INSERT INTO SCM0006D
          AND PSI_ID  = #{psiId} 
          AND STOCK_CODE = #{code}  
          
-</insert>  
+</insert>
+
+<select id="selectPlanIdByCdc" parameterType="Map" resultType="egovMap">
+    SELECT 
+          PLAN_ID
+         ,PLAN_YEAR
+         ,PLAN_WEEK
+         ,CDC
+         ,PLAN_MONTH
+         ,PLAN_STUS
+     FROM SCM0005M             
+    WHERE PLAN_YEAR = #{scmYearCbBox}
+      AND PLAN_WEEK = #{scmPeriodCbBox}
+      AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC', #{cdcCbBox})
+</select>  
+
+<select id="selectMonthPlanByCdc" parameterType="Map" resultType="egovMap">
+    SELECT 
+          PLAN_ID
+         ,PLAN_YEAR
+         ,PLAN_WEEK
+         ,PLAN_MONTH
+         ,CDC
+         ,PLAN_STUS
+     FROM SCM0005M             
+    WHERE PLAN_YEAR = #{scmYearCbBox}
+      AND PLAN_WEEK = #{scmPeriodCbBox}
+</select>  
   
   <!-- Supply-CORP -->
   <select id="selectSupplyCorpList" parameterType="Map" resultType="egovMap">
@@ -548,6 +576,19 @@ INSERT INTO SCM0006D
      ORDER BY STOCK_CTGRY
              ,STOCK_CODE
              ,PSI_ID
-  </select> 
+  </select>
+  
+<resultMap id="supplyPlanOrderSummayMap" type="egovMap"></resultMap>
+<select id="callSpCreateSupplyPlanSummary" statementType="CALLABLE" parameterType="Map">
+    { call SP_SCM_PLAN_BY_CDC_INS (   
+                                     #{scmYearCbBox}
+                                   , #{planMonth}
+                                   , #{scmPeriodCbBox}
+                                   , #{crtUserId}
+                                   , #{rtnVal, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=supplyPlanOrderSummayMap}
+                                  )
+    }
+    
+</select> 
   
 </mapper>

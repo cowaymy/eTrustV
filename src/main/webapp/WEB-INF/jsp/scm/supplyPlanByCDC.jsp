@@ -65,8 +65,9 @@ function fnSelectPeriodReset()
        periodCheckBox.options[0] = new Option("Select a WEEK","");
 }
 
-function fnCreate(obj)
+function fnCreatePreviousSupplyPlan(obj)
 {
+	  // SCM0005M & SCM0006D(Previous SupplyPlan Data)
 	  if ($("#scmYearCbBox").val().length < 1) 
 	  {
 	    Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
@@ -85,14 +86,54 @@ function fnCreate(obj)
 	    return false;
 	  }
 	    
-	  Common.ajax("POST", "/scm/insertSalesPlanMstCdc.do"
+	  Common.ajax("POST"
+			        , "/scm/insertSalesPlanMstCdc.do"  
 	            , $("#MainForm").serializeJSON()    
 	            , function(result) 
 	             {
-	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	                fnSettiingHeader();
-	                //console.log("성공." + JSON.stringify(result));
-	                //console.log("data : " + result.data);
+	                fnByCdcSettiingHeader();
+	             } 
+	           , function(jqXHR, textStatus, errorThrown) 
+	            {
+	              try 
+	              {
+	                console.log("Fail Status : " + jqXHR.status);
+	                console.log("code : "        + jqXHR.responseJSON.code);
+	                console.log("message : "     + jqXHR.responseJSON.message);
+	                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+	              } 
+	              catch (e) 
+	              {
+	                console.log(e);
+	              }
+	              Common.alert("Fail : " + jqXHR.responseJSON.message);
+	            }); 
+}
+
+function fnCreateNewSupplyPlan(obj)
+{
+	  if ($("#scmYearCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
+	    return false;
+	  } 
+
+	  if ($("#scmPeriodCbBox").val().length < 1) 
+	  {
+	    Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
+	    return false;
+	  }
+
+	  // SP_SCM_PLAN_BY_CDC_INS Call
+	  Common.ajax("POST"
+			        , "/scm/insertOrderSummarySPCall.do"
+	            , $("#MainForm").serializeJSON()    
+	            , function(result) 
+	             {		        	
+			           if (result.data.split('_')[0] == "OkSP")
+			        	   Common.alert("[ " +result.data.split('_')[1] +" Month ] " + "<spring:message code='sys.scm.planByCdc.creation'/>" + " " + "<spring:message code='pay.head.success'/>");
+			           else if (result.data == "FailSP")
+			        	   Common.alert("[ " +result.data.split('_')[1] +" Month ] " + "<spring:message code='sys.scm.planByCdc.creation'/>" + " " + "<spring:message code='pay.head.fail'/>");
 	             } 
 	           , function(jqXHR, textStatus, errorThrown) 
 	            {
@@ -272,7 +313,7 @@ function fnSearchBtnList()
 	 params = $.extend($("#MainForm").serializeJSON(), params);
 		    
    Common.ajax("POST"
-		       , "/scm/selectSupplyPlanCDCSearch.do"
+		       , "/scm/selectSupplyPlanByCdcSearch.do"
 	         , params
            , function(result) 
            {
@@ -454,7 +495,7 @@ function fnDetailPop(stockCode)
           );  
 }
 
-function fnSettiingHeader()
+function fnByCdcSettiingHeader()
 {
   if ($("#scmYearCbBox").val().length < 1) 
   {
@@ -514,7 +555,7 @@ function fnSettiingHeader()
                             
                   };
   
-  Common.ajax("POST", "/scm/selectCalendarHeader.do"
+  Common.ajax("POST", "/scm/selectCalendarHeaderByCdc.do"
           , $("#MainForm").serializeJSON()
           , function(result) 
           {     
@@ -540,7 +581,6 @@ function fnSettiingHeader()
                                    { 
                                       headerText : "Stock"
                                      ,style : "my-header" 
-                                    // , width : 13
                                      ,children : [
                                                    {                            
                                                       dataField : result.header[0].isSaved
@@ -1059,8 +1099,9 @@ function fnSettiingHeader()
                   console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
                 });   
   
-
-              fnSearchBtnList();
+             // MainList DATA 
+             fnSearchBtnList();
+              
             }
           }
         ,function(jqXHR, textStatus, errorThrown) 
@@ -1107,7 +1148,7 @@ $(document).ready(function()
 <ul class="right_btns">
 	<li>
 	 <p class="btn_blue">
-	   <a onclick="fnSettiingHeader();">
+	   <a onclick="fnByCdcSettiingHeader();">
 	     <span class="search"></span>Search
 	   </a>
 	 </p>
@@ -1220,19 +1261,19 @@ $(document).ready(function()
 <ul class="left_btns">
 	<li>
 	 <p class="btn_grid">
-	     <input type='button' id='SaveBtn' value="Change Selected Items' Status To Saved" disabled />
+<!-- 	     <input type='button' id='SaveBtn' value="Change Selected Items' Status To Saved" disabled /> -->
 	 </p>
 	</li>
 	
 	<li>
 	 <p class="btn_grid">
-	   <input type='button' id='ConfirmBtn' name='ConfirmBtn' value='Confirm' disabled />
+<!-- 	   <input type='button' id='ConfirmBtn' name='ConfirmBtn' value='Confirm' disabled /> -->
 	 </p>
 	</li>
 	
 	<li>
 	 <p class="btn_grid">
-	   <input type='button' id='UpdateBtn' name='UpdateBtn' value='Update M0 Data' disabled />
+<!-- 	   <input type='button' id='UpdateBtn' name='UpdateBtn' value='Update M0 Data' disabled /> -->
 	 </p>
 	</li>
 </ul>
@@ -1240,21 +1281,23 @@ $(document).ready(function()
 <ul class="right_btns">
   <li>
    <p class="btn_grid">
-    <a onclick="fnCreate(this);">Create</a>
-   </p>
-  </li>
-  <li>
-   <p class="btn_grid">
-    <a href="javascript:void(0);">Delete</a>
-    <input type='button' id='UpdateBtn' value='Update M0 Data' disabled /> 
+    <a onclick="fnCreatePreviousSupplyPlan(this);">Create Previous-Weekly</a>
    </p>
   </li>
   
 	<li>
 	 <p class="btn_grid">
-	   <input type='button' id='Re-CalculateBtn' name='Re-CalculateBtn' value='Re-Calculate' disabled />
+	   <a onclick="fnCreateNewSupplyPlan(this);">Create New-Monthly</a>
 	 </p>
 	</li>
+	
+<!-- 	<li>
+   <p class="btn_grid btn_disabled">
+    <a href="javascript:void(0);">Delete</a>
+    <input type='button' id='UpdateBtn' value='Update M0 Data' disabled /> 
+   </p>
+  </li> -->
+  
 	<li>
 	 <p id='updSaveBtn' class="btn_grid btn_disabled">
    <a onclick="fnUpdateSave(this);">Save</a></p></li>

@@ -17,10 +17,13 @@ public interface SalesPlanMngementService
 	List<EgovMap> selectSupplyCdcMainList(Map<String, Object> params);
 	List<EgovMap> selectSupplyCdcPop(Map<String, Object> params);
 	List<EgovMap> selectPlanDatePlanByCdc(Map<String, Object> params);
+	List<EgovMap> selectPlanIdByCdc(Map<String, Object> params);
+	List<EgovMap> selectMonthPlanByCdc(Map<String, Object> params);
 	List<EgovMap> selectSupplyCdcSaveFlag(Map<String, Object> params);  
 	int updatePlanByCDC(List<Object> addList, Integer updUserId);
+	String callSpCreateSupplyPlanSummary(Map<String, Object> params, SessionVO sessionVO);
 	
-	//Supply-Corp
+	//Supply_Corp
 	List<EgovMap> selectSupplyCorpList(Map<String, Object> params);
 	
 	//Sales

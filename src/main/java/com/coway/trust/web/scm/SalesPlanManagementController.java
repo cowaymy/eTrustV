@@ -60,9 +60,7 @@ public class SalesPlanManagementController {
 		
 		if (!planInfo.isEmpty())
 		{
-			LOGGER.debug("planMonth_map : {}", planInfo.get(0).toString() );
 			String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));
-			LOGGER.debug("selectPlanMonth : {}", selectPlanMonth);	
 			
             ((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);
 			
@@ -71,9 +69,39 @@ public class SalesPlanManagementController {
 			List<EgovMap> seperaionInfo = salesPlanMngementService.selectSeperation(params);  // WeekCount per month
 			List<EgovMap> childFieldList_M0 = salesPlanMngementService.selectChildField(params);
 			
-			LOGGER.debug("seperaionInfo : {}", seperaionInfo.toString());
-			
 			map.put("planInfo",planInfo);
+			map.put("seperaionInfo",seperaionInfo);
+			map.put("getChildField",childFieldList_M0);			
+		}
+		
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/selectCalendarHeaderByCdc.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectCalendarHeaderByCdcList(@RequestBody Map<String, Object> params) 
+	{
+		LOGGER.debug("selectCalendarHeaderList : {}", params.toString());
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		List<EgovMap> selectCalendarHeaderList = salesPlanMngementService.selectCalendarHeader(params);
+		List<EgovMap> planByCdcInfo = salesPlanMngementService.selectPlanIdByCdc(params);
+		
+		map.put("header", selectCalendarHeaderList);
+		
+		if (!planByCdcInfo.isEmpty())
+		{
+			String selectPlanMonthByCdc = String.valueOf(planByCdcInfo.get(0).get("planMonth"));
+			LOGGER.debug("selectPlanMonthByCdc : {}", selectPlanMonthByCdc);	
+			
+			((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonthByCdc);
+			
+			LOGGER.debug("selectCalendarHeaderList_Params : {}", params.toString());
+			
+			List<EgovMap> seperaionInfo = salesPlanMngementService.selectSeperation(params);  // SCM0018M
+			List<EgovMap> childFieldList_M0 = salesPlanMngementService.selectChildField(params);			
+			
+			map.put("planByCdcInfo",planByCdcInfo);
 			map.put("seperaionInfo",seperaionInfo);
 			map.put("getChildField",childFieldList_M0);			
 		}
