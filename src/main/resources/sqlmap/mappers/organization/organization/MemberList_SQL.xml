@@ -3614,14 +3614,14 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			        GROUP BY COURS_ID) MS9
 			 WHERE 1 = 1
 			   AND MS8.COURS_ID = MS9.COURS_ID(+)
-			   AND COURS_TYPE_CODE_ID IN ('1027')
+			   AND COURS_MEM_TYPE_ID = '2'
 			   AND COURS_STUS_ID = '1'
 			   AND COURS_LIMIT > nvl (MS9.CNT, 0)
                AND COURS_START  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
             ]]>
             </when>
             <when test="groupCode == 3">
-            <![CDATA[
+            <![CDATA[ 
 			SELECT MS8.COURS_ID AS CODE_ID, MS8.COURS_NAME AS CODE_NAME
 			  FROM MSC0008D MS8,
 			       (SELECT   COURS_ID, COUNT (1) CNT
@@ -3631,7 +3631,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			        GROUP BY COURS_ID) MS9
 			 WHERE 1 = 1
 			   AND MS8.COURS_ID = MS9.COURS_ID(+)
-			   AND COURS_TYPE_CODE_ID IN ('1022', '1023', '1024')
+			   AND COURS_MEM_TYPE_ID = '3'
 			   AND COURS_STUS_ID = '1'
 			   AND COURS_LIMIT > nvl (MS9.CNT, 0)
 			   AND COURS_START  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
