@@ -68,6 +68,9 @@ public class ClaimController {
 
 	@Value("${autodebit.file.upload.path}")
 	private String filePath;
+	
+	@Value("${autodebit.file.download.path}")
+	private String fileDownloadPath;
 
 	@Value("${autodebit.email.receiver}")
 	private String emailReceiver;
@@ -832,44 +835,54 @@ public class ClaimController {
 			// ALB
 			if ("2".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
 				//this.createClaimFileALB(claimMap);
+				claimService.deleteClaimFileDownloadInfo(claimMap);
 				this.createClaimFileNewALB(claimMap);
 			}
 
             // CIMB
             if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+            	claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileCIMB(claimMap);
             }
             
             // HLBB
             if ("5".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+            	claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileHLBB(claimMap);
             }
             
             // MBB
             if ("21".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+            	claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileMBB(claimMap);
             }
             
             // PBB
             if ("6".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+            	claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFilePBB(claimMap);
             }
             
             // RHB
             if ("7".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+            	claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileRHB(claimMap);
             }
             
             // BSN
             if ("9".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+            	claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileBSN(claimMap);
             }
             
             // My Clear
             if ("46".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+            	claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileMyClear(claimMap);
             }		
 		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+			
+			claimService.deleteClaimFileDownloadInfo(claimMap);
 			
 			//10000건 단위로 추출하기 위해 전체 건수 조회
 			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
@@ -879,12 +892,13 @@ public class ClaimController {
 				for(int i = 1 ; i <= pageCnt ; i++){					
 					claimMap.put("pageNo", i);
 					claimMap.put("rowCount", 10000);
-					this.createClaimFileCrcCIMB(claimMap);
+					this.createClaimFileCrcCIMB(claimMap,i);
 				}
 			}
 			//this.createClaimFileCrcCIMB(claimMap);
 			
 		} else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+			claimService.deleteClaimFileDownloadInfo(claimMap);
 			this.createClaimFileFPX(claimMap);
 		}
 		
@@ -983,18 +997,26 @@ public class ClaimController {
 				}
 			}
 		}	
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", 1);
+		claimMap.put("filePath", fileDownloadPath+"/ALB/ClaimBank/");
+		claimMap.put("fileName", sFile);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
+		
 				
 		// E-mail 전송하기
-		File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("New ALB Auto Debit Claim File - Batch Date : " + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);
+//		File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
+//		EmailVO email = new EmailVO();
+//
+//		email.setTo(emailReceiver);
+//		email.setHtml(false);
+//		email.setSubject("New ALB Auto Debit Claim File - Batch Date : " + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+//		email.setText("Please find attached the claim file for your kind perusal.");
+//		email.addFile(file);
+//
+//		adaptorService.sendEmail(email, false);
 
 	}
 	
@@ -1040,18 +1062,26 @@ public class ClaimController {
 				}
 			}
 		}	
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", 1);
+		claimMap.put("filePath", fileDownloadPath+"/CIMB/ClaimBank/");
+		claimMap.put("fileName", sFile);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
+				
 				
 		// E-mail 전송하기
-		File file = new File(filePath + "/CIMB/ClaimBank/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("CIMB Auto Debit Claim File - Batch Date : " + inputDate);
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);		
+//		File file = new File(filePath + "/CIMB/ClaimBank/" + sFile);
+//		EmailVO email = new EmailVO();
+//
+//		email.setTo(emailReceiver);
+//		email.setHtml(false);
+//		email.setSubject("CIMB Auto Debit Claim File - Batch Date : " + inputDate);
+//		email.setText("Please find attached the claim file for your kind perusal.");
+//		email.addFile(file);
+//
+//		adaptorService.sendEmail(email, false);		
 	}
 	
 	private ClaimFileCIMBHandler getTextDownloadCIMBHandler(String fileName, String[] columns, String[] titles, String path,
@@ -1094,19 +1124,27 @@ public class ClaimController {
 					LOGGER.info(ex.getMessage());
 				}
 			}
-		}	
+		}
+		
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", 1);
+		claimMap.put("filePath", fileDownloadPath+"/HLBB/ClaimBank/");
+		claimMap.put("fileName", sFile);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-		File file = new File(filePath + "/HLBB/ClaimBank/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("HLBB Auto Debit Claim File - Batch Date : " + inputDate);
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);
+//		File file = new File(filePath + "/HLBB/ClaimBank/" + sFile);
+//		EmailVO email = new EmailVO();
+//
+//		email.setTo(emailReceiver);
+//		email.setHtml(false);
+//		email.setSubject("HLBB Auto Debit Claim File - Batch Date : " + inputDate);
+//		email.setText("Please find attached the claim file for your kind perusal.");
+//		email.addFile(file);
+//
+//		adaptorService.sendEmail(email, false);
 		
 		
 	}
@@ -1156,18 +1194,25 @@ public class ClaimController {
 				}
 			}
 		}	
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", 1);
+		claimMap.put("filePath", fileDownloadPath+"/MMB/ClaimBank/");
+		claimMap.put("fileName", sFile);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-		File file = new File(filePath + "/MMB/ClaimBank/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("MBB Auto Debit Claim File - Batch Date : " + inputDate);
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);
+//		File file = new File(filePath + "/MMB/ClaimBank/" + sFile);
+//		EmailVO email = new EmailVO();
+//
+//		email.setTo(emailReceiver);
+//		email.setHtml(false);
+//		email.setSubject("MBB Auto Debit Claim File - Batch Date : " + inputDate);
+//		email.setText("Please find attached the claim file for your kind perusal.");
+//		email.addFile(file);
+//
+//		adaptorService.sendEmail(email, false);
 	}
 	
 	
@@ -1211,19 +1256,26 @@ public class ClaimController {
 					LOGGER.info(ex.getMessage());
 				}
 			}
-		}	
+		}
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", 1);
+		claimMap.put("filePath", fileDownloadPath+"/PBB/ClaimBank/");
+		claimMap.put("fileName", sFile);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-		File file = new File(filePath + "/PBB/ClaimBank/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("PBB Auto Debit Claim File - Batch Date : " + inputDate);
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);
+//		File file = new File(filePath + "/PBB/ClaimBank/" + sFile);
+//		EmailVO email = new EmailVO();
+//
+//		email.setTo(emailReceiver);
+//		email.setHtml(false);
+//		email.setSubject("PBB Auto Debit Claim File - Batch Date : " + inputDate);
+//		email.setText("Please find attached the claim file for your kind perusal.");
+//		email.addFile(file);
+//
+//		adaptorService.sendEmail(email, false);
 		
 
 		/*********************************************
@@ -1270,17 +1322,25 @@ public class ClaimController {
 
 		out2nd.close();
 		fileWriter2nd.close();
+		
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", 2);
+		claimMap.put("filePath", fileDownloadPath+"/PBB/ClaimBank/");
+		claimMap.put("fileName", sFile2nd);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
 
 		// E-mail 전송하기
-		EmailVO email2 = new EmailVO();
-
-		email2.setTo(emailReceiver);
-		email2.setHtml(false);
-		email2.setSubject("PBB Auto Debit Claim File - Batch Date : " + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
-		email2.setText("Please find attached the claim file for your kind perusal.");
-		email2.addFile(file2nd);
-
-		adaptorService.sendEmail(email2, false);
+//		EmailVO email2 = new EmailVO();
+//
+//		email2.setTo(emailReceiver);
+//		email2.setHtml(false);
+//		email2.setSubject("PBB Auto Debit Claim File - Batch Date : " + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+//		email2.setText("Please find attached the claim file for your kind perusal.");
+//		email2.addFile(file2nd);
+//
+//		adaptorService.sendEmail(email2, false);
 	}
 	
 	private ClaimFilePBBHandler getTextDownloadPBBHandler(String fileName, String[] columns, String[] titles, String path,
@@ -1327,18 +1387,26 @@ public class ClaimController {
 				}
 			}
 		}	
+		
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", 1);
+		claimMap.put("filePath", fileDownloadPath+"/RHB/ClaimBank/");
+		claimMap.put("fileName", sFile);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-		File file = new File(filePath + "/RHB/ClaimBank/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("RHB Auto Debit Claim File - Batch Date : " + inputDate);
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);
+//		File file = new File(filePath + "/RHB/ClaimBank/" + sFile);
+//		EmailVO email = new EmailVO();
+//
+//		email.setTo(emailReceiver);
+//		email.setHtml(false);
+//		email.setSubject("RHB Auto Debit Claim File - Batch Date : " + inputDate);
+//		email.setText("Please find attached the claim file for your kind perusal.");
+//		email.addFile(file);
+//
+//		adaptorService.sendEmail(email, false);
 		
 	}
 	
@@ -1389,18 +1457,26 @@ public class ClaimController {
 				}
 			}
 		}	
+		
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", 1);
+		claimMap.put("filePath", fileDownloadPath+"/BSN/ClaimBank/");
+		claimMap.put("fileName", sFile);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-		File file = new File(filePath + "/BSN/ClaimBank/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("BSN Auto Debit Claim File - Batch Date : " + inputDate);
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);		
+//		File file = new File(filePath + "/BSN/ClaimBank/" + sFile);
+//		EmailVO email = new EmailVO();
+//
+//		email.setTo(emailReceiver);
+//		email.setHtml(false);
+//		email.setSubject("BSN Auto Debit Claim File - Batch Date : " + inputDate);
+//		email.setText("Please find attached the claim file for your kind perusal.");
+//		email.addFile(file);
+//
+//		adaptorService.sendEmail(email, false);		
 	}
 	
 	private ClaimFileBSNHandler getTextDownloadBSNHandler(String fileName, String[] columns, String[] titles, String path,
@@ -1447,19 +1523,26 @@ public class ClaimController {
 					LOGGER.info(ex.getMessage());
 				}
 			}
-		}	
+		}
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", 1);
+		claimMap.put("filePath", fileDownloadPath+"/MyClear/ClaimBank/");
+		claimMap.put("fileName", sFile);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-		File file = new File(filePath + "/MyClear/ClaimBank/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("My Clear Auto Debit Claim File - Batch Date : " + inputDate);
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);
+//		File file = new File(filePath + "/MyClear/ClaimBank/" + sFile);
+//		EmailVO email = new EmailVO();
+//
+//		email.setTo(emailReceiver);
+//		email.setHtml(false);
+//		email.setSubject("My Clear Auto Debit Claim File - Batch Date : " + inputDate);
+//		email.setText("Please find attached the claim file for your kind perusal.");
+//		email.addFile(file);
+//
+//		adaptorService.sendEmail(email, false);
 	}
 	
 	private ClaimFileMyClearHandler getTextDownloadMyClearHandler(String fileName, String[] columns, String[] titles, String path,
@@ -1478,7 +1561,7 @@ public class ClaimController {
 	 * @param claimDetailList
 	 * @throws Exception
 	 */
-	public void createClaimFileCrcCIMB(EgovMap claimMap) throws Exception {
+	public void createClaimFileCrcCIMB(EgovMap claimMap, int idx) throws Exception {
 		
 		ClaimFileCrcCIMBHandler downloadHandler = null;
 		String sFile;
@@ -1505,19 +1588,27 @@ public class ClaimController {
 					LOGGER.info(ex.getMessage());
 				}
 			}
-		}	
+		}
+		
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", idx);
+		claimMap.put("filePath", fileDownloadPath+"/CRC/");
+		claimMap.put("fileName", sFile);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-		File file = new File(filePath + "/CRC/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("CIMB Credit Card Claim File - Batch Date : " + inputDate);
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);
+//		File file = new File(filePath + "/CRC/" + sFile);
+//		EmailVO email = new EmailVO();
+//
+//		email.setTo(emailReceiver);
+//		email.setHtml(false);
+//		email.setSubject("CIMB Credit Card Claim File - Batch Date : " + inputDate);
+//		email.setText("Please find attached the claim file for your kind perusal.");
+//		email.addFile(file);
+//
+//		adaptorService.sendEmail(email, false);
 		
 	}
 	
@@ -1562,18 +1653,26 @@ public class ClaimController {
 				}
 			}
 		}	
+		
+		
+		//파일다운로드 정보 INSERT
+		claimMap.put("fileNo", 1);
+		claimMap.put("filePath", fileDownloadPath+"/FPX/ClaimBank/");
+		claimMap.put("fileName", sFile);
+		
+		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-		File file = new File(filePath + "/FPX/ClaimBank/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("FPX Auto Debit Claim File - Batch Date : " + inputDate);
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);
+//		File file = new File(filePath + "/FPX/ClaimBank/" + sFile);
+//		EmailVO email = new EmailVO();
+//
+//		email.setTo(emailReceiver);
+//		email.setHtml(false);
+//		email.setSubject("FPX Auto Debit Claim File - Batch Date : " + inputDate);
+//		email.setText("Please find attached the claim file for your kind perusal.");
+//		email.addFile(file);
+//
+//		adaptorService.sendEmail(email, false);
 	}
 	
 	private ClaimFileFPXHandler getTextDownloadFPXHandler(String fileName, String[] columns, String[] titles, String path,
@@ -1583,5 +1682,35 @@ public class ClaimController {
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFileFPXHandler(excelDownloadVO, params);
 	}
+	
+	/**
+	 *  
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initClaimFileDownPop.do")
+	public String initClaimFileDownPop(@RequestParam Map<String, Object> params, ModelMap model) {		
+		
+		model.put("ctrlId", params.get("ctrlId"));
+		return "payment/autodebit/claimFileDownloadPop";
+	}
+	
+	/**
+	 *
+	 * 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectClaimFileDown.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectClaimFileDown(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 조회.
+		List<EgovMap> resultList = claimService.selectClaimFileDown(params);
+
+		// 조회 결과 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+
 }
 

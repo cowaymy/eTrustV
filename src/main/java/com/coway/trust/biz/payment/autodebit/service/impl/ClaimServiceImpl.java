@@ -452,6 +452,37 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 	}
 	
 	
+	/**
+     * Auto Debit - Claim Result Update
+     * @param params
+     */
+	@Override
+    public void deleteClaimFileDownloadInfo(Map<String, Object> claimMap) {
+		//기존 데이터 삭제
+		claimMapper.deleteClaimFileDownloadInfo(claimMap);
+	}
+	
+	/**
+     * Auto Debit - Claim Result Update
+     * @param params
+     */
+	@Override
+    public void insertClaimFileDownloadInfo(Map<String, Object> claimMap) {
+		claimMapper.insertClaimFileDownloadInfo(claimMap);
+	}
+	
+	/**
+	 *  
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@Override
+	public List<EgovMap> selectClaimFileDown(Map<String, Object> params) {
+		return claimMapper.selectClaimFileDown(params);
+	}
+	
 	
 	
 }

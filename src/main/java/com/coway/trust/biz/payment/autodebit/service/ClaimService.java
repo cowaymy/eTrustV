@@ -169,6 +169,27 @@ public interface ClaimService
 	 */
 	int selectClaimDetailByIdCnt(Map<String, Object> params);
 	
+	/**
+     * 
+     * @param params
+     */
+    void deleteClaimFileDownloadInfo(Map<String, Object> claimMap);
+    
+    /**
+     * 
+     * @param params
+     */
+    void insertClaimFileDownloadInfo(Map<String, Object> claimMap);
+    
+    /**
+   	 *  
+   	 * @param 
+   	 * @param params
+   	 * @param model
+   	 * @return
+   	 */
+       List<EgovMap> selectClaimFileDown(Map<String, Object> params);
+	
 	
     
 }

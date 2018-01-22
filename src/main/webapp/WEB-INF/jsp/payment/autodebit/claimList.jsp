@@ -862,6 +862,27 @@ function fn_openDivScheduleSettingPop() {
 }
 
 
+//Generation File Download 팝업
+function fn_openDivPopDown(){
+
+	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+	if (selectedItem[0] > -1){
+
+		var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
+		var ctrlStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlStusId");
+		var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName");
+
+		if(ctrlStusId != 1){
+			Common.alert("<spring:message code='pay.alert.claimFile' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");		
+		}else{
+			Common.popupDiv('/payment/initClaimFileDownPop.do', {"ctrlId" : ctrlId}, null , true ,'_claimFileDownPop');            	
+		}
+	}else{
+		Common.alert("<spring:message code='pay.alert.noClaim'/>");
+	}
+}
+
 </script>
 
 <!-- content start -->
@@ -968,6 +989,7 @@ function fn_openDivScheduleSettingPop() {
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');"><spring:message code='pay.btn.claimResultLive'/></a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULTNEXT');"><spring:message code='pay.btn.claimResultNextDay'/></a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');"><spring:message code='pay.btn.reGenerateClaimFile'/></a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPopDown('FILEDN');">Generation File Down</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('SMS');"><spring:message code='pay.btn.failDeductionSMS'/></a></p></li>                                                                       
                     </ul>
                     <ul class="btns">

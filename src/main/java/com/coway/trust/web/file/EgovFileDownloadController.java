@@ -184,4 +184,68 @@ public class EgovFileDownloadController {
 //			printwriter.close();
 		}
 	}
+	
+	/**
+	 * 첨부파일로 등록된 파일에 대하여 다운로드를 제공한다.
+	 *
+	 * @param params
+	 * @param response
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/fileDownClaim.do")
+	public void fileDownClaim(@RequestParam Map<String, Object> params, HttpServletRequest request,
+			HttpServletResponse response) throws Exception {
+
+		String fileId = (String) params.get("fileId");
+		String subPath;
+		String fileName;
+		String originalFileName;
+
+		if (StringUtils.isNotEmpty(fileId)) {
+			FileVO fileVO = fileService.getFile(Integer.parseInt(fileId));
+			subPath = fileVO.getFileSubPath();
+			fileName = fileVO.getPhysiclFileName();
+			originalFileName = fileVO.getAtchFileName();
+		} else {
+			subPath = (String) params.get("subPath");
+			fileName = (String) params.get("fileName");
+			originalFileName = (String) params.get("orignlFileNm");
+		}		
+		System.out.println("uFile : " + uploadDir + "/" + subPath + "/" +  fileName);		
+		File uFile = new File(uploadDir + "/" + subPath, fileName);		
+		
+		long fSize = uFile.length();
+		
+		System.out.println("fSize : " + fSize);
+
+		if (fSize > 0) {
+			System.out.println("step1  ");
+			String mimetype = "application/x-msdownload";
+			response.setContentType(mimetype);
+			response.setHeader("Set-Cookie", "fileDownload=true; path=/"); 	///resources/js/jquery.fileDownload.js   callback 호출시 필수.
+			setDisposition(originalFileName, request, response);
+			BufferedInputStream in = null;
+			BufferedOutputStream out = null;
+
+			System.out.println("step2  ");
+			try {
+				System.out.println("step3  ");
+				in = new BufferedInputStream(new FileInputStream(uFile));
+				System.out.println("step4  ");
+				out = new BufferedOutputStream(response.getOutputStream());
+				System.out.println("step5  ");
+
+				FileCopyUtils.copy(in, out);
+				out.flush();
+			} catch (IOException ex) {
+				EgovBasicLogger.ignore("IO Exception", ex);
+			} finally {
+				EgovResourceCloseHelper.close(in, out);
+			}
+
+		} else {
+
+			throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + originalFileName);
+		}
+	}
 }

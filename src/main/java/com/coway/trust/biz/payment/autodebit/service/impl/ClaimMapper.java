@@ -194,5 +194,28 @@ public interface ClaimMapper {
 	 * @return
 	 */
 	int selectClaimDetailByIdCnt(Map<String, Object> params);
+	
+	/**
+	 * Auto Debit - Claim Result Deactivate 처리 : 아이템 삭제
+	 * @param params
+	 * @return
+	 */
+	void deleteClaimFileDownloadInfo(Map<String, Object> params);	
+	
+	/**
+	 * Auto Debit - Claim Result Deactivate 처리 : 아이템 삭제
+	 * @param params
+	 * @return
+	 */
+	void insertClaimFileDownloadInfo(Map<String, Object> params);
+	
+	/**
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	List<EgovMap> selectClaimFileDown(Map<String, Object> params);
 
 }
