@@ -1246,7 +1246,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
         			promoEntry.put("promoId", 0);
         			promoEntry.put("requestNo", "");
-        			promoEntry.put("statusId", 4);
+        			promoEntry.put("statusId", 60);
         			promoEntry.put("promoTypeId", Integer.parseInt(params.get("action").toString()));
         			promoEntry.put("memTypeId",memberView.get("memType"));
         			promoEntry.put("memberId", memberView.get("memId"));
@@ -1258,8 +1258,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         			promoEntry.put("updator", userId);
         			promoEntry.put("deptCodeFrom", "");
         			promoEntry.put("deptCodeTo", "");
-        			promoEntry.put("parentIdFrom", 0);
-        			promoEntry.put("parentIdTo", 0);
+        			promoEntry.put("parentIdFrom", memberView.get("c33"));
+        			promoEntry.put("parentIdTo", memberView.get("c33"));
         			promoEntry.put("statusIdFrom", 1);
         			promoEntry.put("statusIdTo", Integer.parseInt(params.get("action").toString()) == 757 ? 3 : 51);
         			promoEntry.put("remark", params.get("remark").toString().trim());
@@ -1272,6 +1272,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         			promoEntry.put("lastOrgCode", memberView.get("c43"));
         			promoEntry.put("PRmemId",0);
         			promoEntry.put("branchId",null);
+        			promoEntry.put("evtApplyDt", params.get("dtT/R"));
         			logger.debug("promoEntry : {}",promoEntry);
 
         			EgovMap selectMember = memberListMapper.selectMember(member);
@@ -1324,7 +1325,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         				selectMember.put("syncCheck", member.get("syncCheck"));
 
         				logger.debug("selectMember : {}",selectMember);
-        				memberListMapper.updateMember(selectMember);
+//        				memberListMapper.updateMember(selectMember);
         				//User
         				EgovMap selectUserName = memberListMapper.selectUserName(selectMember);
         				if(selectUserName != null){

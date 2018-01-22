@@ -95,6 +95,7 @@
         var vPromoId = ${promoInfo.promoId}; //promoId
         var vStatusId = ${promoInfo.stusId}; //statusId 
         var vPromoTypeId = ${promoInfo.promoTypeId};
+        //alert("vPromoId : "+vPromoId+" / vStatusId : "+vStatusId+" / vPromoTypeId : "+vPromoTypeId);
          
         if (vStatusId == 10) {
                 //Cancel */
@@ -143,6 +144,10 @@
 
 
                  }
+             } else if (vPromoTypeId == 757){   // Terminate
+                 fn_confirmMemberEventPromote(vPromoId);
+             } else if (vPromoTypeId == 758){   // Resign
+                 fn_confirmMemberEventPromote(vPromoId);
              }
         }
     } 
@@ -261,7 +266,15 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Member Promote/Demote Confirmation</h1>
+<c:choose>
+    <c:when test="${promoInfo.promoTypeId eq '757' or promoInfo.promoTypeId eq '758'}">
+    <h1>Member Terminate/Resign Confirmation</h1>
+    </c:when>
+    <c:otherwise>
+    <h1>Member Promote/Demote Confirmation</h1>
+    </c:otherwise>
+</c:choose>
+
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 <!--     <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_confirm()">CONFIRM</a></p></li> -->       
