@@ -174,11 +174,10 @@ public class SupplyCorpController {
 		return ResponseEntity.ok(message);
 	}
 	
-	// supplyPlanByCDC Stored Procedure
+	/* Stored Procedure Call (SP_SCM_PLAN_BY_CDC_INS) */
 	@RequestMapping(value = "/insertOrderSummarySPCall.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertOrderSummarySPCall(@RequestBody Map<String, Object> params,SessionVO sessionVO) 
 	{
-		/* Stored Procedure Call (SP_SCM_PLAN_BY_CDC_INS) */
 		String retval = salesPlanMngementService.callSpCreateSupplyPlanSummary(params, sessionVO);
 		LOGGER.debug("SPCall_Retvalue : {}", retval.toString());
 
