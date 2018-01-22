@@ -202,7 +202,7 @@ function fn_setSupplierEvent() {
 }
 
 function fn_supplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM01"}, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM11"}, null, true, "supplierSearchPop");
 }
 
 function fn_costCenterSearchPop() {
@@ -210,7 +210,7 @@ function fn_costCenterSearchPop() {
 }
 
 function fn_popSupplierSearchPop() {
-    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop",accGrp:"VM01"}, null, true, "supplierSearchPop");
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop",accGrp:"VM11"}, null, true, "supplierSearchPop");
 }
 
 function fn_viewEditWebInvoicePop(clmNo) {
