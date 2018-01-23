@@ -73,4 +73,12 @@ public class OrderColorGridController {
 		
 		return ResponseEntity.ok(colorGridList);
 	}
+	
+	@RequestMapping(value = "/colorGridProductList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> colorGridCmbProduct(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		List<EgovMap> colorGridProductList = orderColorGridService.colorGridCmbProduct();
+		
+		return ResponseEntity.ok(colorGridProductList);
+	}
 }
