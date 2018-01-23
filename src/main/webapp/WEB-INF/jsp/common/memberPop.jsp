@@ -79,6 +79,10 @@
             groupingMessage     : "Here groupping"
         };
         
+        if(callPrgm == "APPROVE_LINE") {
+        	columnLayout[3].visible = false;
+        }
+        
         myGridID = GridCommon.createAUIGrid("grid_mem_wrap", columnLayout, "", gridPros);
     }
 
