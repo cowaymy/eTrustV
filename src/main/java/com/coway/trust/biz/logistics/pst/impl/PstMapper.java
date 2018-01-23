@@ -59,6 +59,8 @@ public interface PstMapper {
 	
 	String selectinvoiceTaxId();
 	
+	String selectinvoiceItemId();
+	
 	void insertStockCardList(Map<String, Object> params);
 	
 	Map<String , Object> selectDealerAddressMasic(int dealerid);
