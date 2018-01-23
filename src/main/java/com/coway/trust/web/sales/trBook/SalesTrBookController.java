@@ -109,13 +109,16 @@ public class SalesTrBookController {
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
+		
+		params.put("trBookNoStart", params.get("trNo"));
+		params.put("trBookNoEnd", params.get("trNo"));
 
 		List<EgovMap> list = salesTrBookService.selectTrBookList(params);
 
 	
 		return ResponseEntity.ok(list);
 	}
-	
+
 	@RequestMapping(value = "/trBookMgmtDetailPop.do")
 	public String trBookMgmtDetailPop(@RequestParam Map<String, Object>params, ModelMap model){
 		
@@ -140,6 +143,7 @@ public class SalesTrBookController {
 		
 		return "sales/trBook/trBookAddSinglePop";
 	}
+
 	
 	@RequestMapping(value = "/trBookAddBulkPop.do")
 	public String trBookAddBulkPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
@@ -279,7 +283,7 @@ public class SalesTrBookController {
 	}
 	
 	
-	
+	//TODO 어디서 쓰는거더라....
 	@RequestMapping(value = "/selectTrBookByHolder")
 	public ResponseEntity <EgovMap>selectTrBookByHolder(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
 		
@@ -798,6 +802,7 @@ public class SalesTrBookController {
 		}	   		
 		return ResponseEntity.ok(saveView);
 	}
+
 	
 	@RequestMapping(value = "/reportLostUploadPop.do")
 	public String reportLostUploadPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
@@ -825,6 +830,107 @@ public class SalesTrBookController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData("");
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	
+	@RequestMapping(value = "/trBookDeactivatePop.do")
+	public String trBookDeactivatePop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
+		
+		logger.debug("params ======================================>>> " + params);
+		
+		EgovMap detailInfo = salesTrBookService.selectTrBookDetailInfo(params);
+		model.addAttribute("detailInfo", detailInfo);
+		
+		return "sales/trBook/trBookDeactivatePop";
+	}
+
+	
+	@RequestMapping(value = "/trBookDeactivate", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> trBookDeactivate (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		logger.debug("in  trBookDeactivate ");
+		
+		logger.debug("params =====================================>>  " + params);
+		
+		params.put("userId", sessionVO.getUserId());
+		params.put("trTrnsitStusId", 8);
+		
+		salesTrBookService.updateTrBookM(params);
+				
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData("");
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+		
+	@RequestMapping(value = "/trBookKeepBoxPop.do")
+	public String trBookKeepBoxPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO){
+		
+		logger.debug("params ======================================>>> " + params);
+		
+		EgovMap detailInfo = salesTrBookService.selectTrBookDetailInfo(params);
+		model.addAttribute("detailInfo", detailInfo);
+		
+		return "sales/trBook/trBookKeepBoxPop";
+	}
+	
+	@RequestMapping(value = "/selelctBoxList", method = RequestMethod.GET) 
+	public ResponseEntity<List<EgovMap>> selelctBoxList(@RequestParam Map<String, Object> params,
+			HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+		
+		logger.debug("in  selelctBoxList ");
+		
+		logger.debug("param ===================>>  " + params);
+		
+		List<EgovMap> list = salesTrBookService.selelctBoxList(params);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	@RequestMapping(value = "/insertKeepIntoBox", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> insertKeepIntoBox (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		logger.debug("in  trBookDeactivate ");
+		
+		logger.debug("params =====================================>>  " + params);
+		
+		params.put("userId", sessionVO.getUserId());
+		
+		salesTrBookService.insertKeepIntoBox(params);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData("");
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/insertKeepIntoNewBox", method = RequestMethod.POST) 
+	public ResponseEntity<ReturnMessage> insertKeepIntoNewBox (@RequestBody Map<String, Object> params, ModelMap model,	SessionVO sessionVO) throws Exception{		
+		
+		logger.debug("in  trBookDeactivate ");
+		
+		logger.debug("params =====================================>>  " + params);
+		
+		params.put("userId", sessionVO.getUserId());
+		params.put("branchId", sessionVO.getUserBranchId());
+		params.put("branchCode", sessionVO.getCode());
+		
+		String boxNo = salesTrBookService.insertKeepIntoNewBox(params);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(boxNo);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return ResponseEntity.ok(message);

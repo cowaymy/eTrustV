@@ -222,6 +222,8 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 		params.put("trRcordQyt", 1);
 		salesTrBookMapper.insertTrRecord(params);
 		
+		salesTrBookMapper.updateTrBookM(params);
+		
 		List<EgovMap> list = salesTrBookMapper.selectTrBookDetailsList(params);
 		
 		if(list.size() > 0){
@@ -707,6 +709,39 @@ public class SalesTrBookServiceImpl  extends EgovAbstractServiceImpl implements 
 		salesTrBookMapper.updateFileName(params);
 		
 		return null;
+	}
+
+	@Override
+	public void updateTrBookM(Map<String, Object> params) {
+		salesTrBookMapper.updateTrBookM(params);		
+	}
+
+	@Override
+	public List<EgovMap> selelctBoxList(Map<String, Object> params) {
+		return salesTrBookMapper.selelctBoxList(params);
+	}
+
+	@Override
+	public void insertKeepIntoBox(Map<String, Object> params) {
+		salesTrBookMapper.insertKeepIntoBoxD(params);
+		
+	}
+
+	@Override
+	public String insertKeepIntoNewBox(Map<String, Object> params) {
+		
+		params.put("docNoId", 71);
+		String docNo=salesTrBookMapper.getDocNo(params);
+		
+		params.put("docNo", docNo);
+		
+		salesTrBookMapper.insertKeepIntoBox(params);
+		
+		salesTrBookMapper.insertKeepIntoBoxD(params);
+		
+		salesTrBookMapper.insertKeepIntoBoxRcord(params);
+		
+		return docNo;
 	}
 
 

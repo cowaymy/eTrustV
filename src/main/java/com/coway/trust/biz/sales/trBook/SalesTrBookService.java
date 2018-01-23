@@ -69,4 +69,12 @@ public interface SalesTrBookService {
 	EgovMap saveReportLost(Map<String, Object> params);
 
 	EgovMap reportLostWholefileUpload(Map<String, Object> params, MultipartHttpServletRequest request) throws Exception ;
+
+	void updateTrBookM(Map<String, Object> params);
+
+	List<EgovMap> selelctBoxList(Map<String, Object> params);
+
+	void insertKeepIntoBox(Map<String, Object> params);
+
+	String insertKeepIntoNewBox(Map<String, Object> params);
 }

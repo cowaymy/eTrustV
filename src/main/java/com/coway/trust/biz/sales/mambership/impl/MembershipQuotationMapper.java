@@ -77,7 +77,7 @@ public interface MembershipQuotationMapper {
 	List<EgovMap>   selectSrchMembershipQuotationPop(Map<String, Object> params);
 	
 	EgovMap   getEntryDocNo(Map<String, Object> params);
+	
 	void update_SAL0093D_Stus(Map<String, Object> params);
-	
-	
+		
 }

@@ -94,5 +94,13 @@ public interface SalesTrBookMapper {
 
 	void updateFileName(Map<String, Object> params);
 
-	void updateTrBookM(EgovMap trBookInfo);
+	void updateTrBookM(Map<String, Object> params);
+
+	List<EgovMap> selelctBoxList(Map<String, Object> params);
+
+	void insertKeepIntoBoxD(Map<String, Object> params);
+
+	void insertKeepIntoBox(Map<String, Object> params);
+
+	void insertKeepIntoBoxRcord(Map<String, Object> params);
 }

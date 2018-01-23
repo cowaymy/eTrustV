@@ -43,10 +43,10 @@
               AND TR_HOLDER_TYPE = #{trHolderType}
 	          </if>
               <if test="trBookNoStart != null and trBookNoStart != '' ">
-              AND #{trNo} <![CDATA[>= ]]>TR_BOOK_NO_START
+              AND #{trBookNoStart} <![CDATA[>= ]]>TR_BOOK_NO_START
 	          </if>
               <if test="trBookNoEnd != null and trBookNoEnd != '' ">
-               AND #{trNo} <![CDATA[<= ]]>TR_BOOK_NO_END
+               AND #{trBookNoEnd} <![CDATA[<= ]]>TR_BOOK_NO_END
 	          </if>
               <if test="stutusId != null and stutusId != '' ">
                AND TR_BOOK_STUS_ID = #{stutusId}
@@ -1062,7 +1062,7 @@
 			          AND ( 33 = A.DCF_REQ_STUS_ID )
 			          AND ( B.DCF_REQ_COM_FILD_REF_NO = #{trBookNo} ) 
 			          AND ROWNUM <![CDATA[<= ]]> 1
-	  </select>
+	  </select>	 
 	  
     <update id="updateFileName" parameterType="Map"> 
 		  UPDATE LOG0064M
@@ -1071,5 +1071,127 @@
 			       DCF_REQ_UPD_DT = SYSDATE
 			 WHERE  DCF_REQ_ENTRY_ID =  #{dcfReqEntryId}
 	 </update>
+	 
+	 <select id="selelctBoxList" parameterType="map" resultType="EgovMap">
+          SELECT BOX_ID   ,
+			           BOX_NO   ,
+			           BOX_STUS_ID   ,
+			           BOX_STUS_CODE   ,
+			           BOX_STUS_NAME   ,
+			           BOX_HOLDER   ,
+			           BOX_OPEN_DT   ,
+			           BOX_SCRAP_DT   ,
+			           BOX_CRT_BRNCH_ID   ,
+			           BOX_CRT_BRNCH_CODE   ,
+			           BOX_CRT_BRNCH_NAME   ,
+			           BOX_CRT_DT   ,
+			           BOX_CRT_USER_ID   ,
+			           BOX_CRT_USER_NAME   ,
+			           BOX_BOOK_QTY   
+			  FROM MSC1003V
+			WHERE  BOX_HOLDER = #{boxHolder}
+			<if test="boxNo != null and boxNo != '' ">
+			     AND BOX_NO = #{boxNo}
+			</if>
+			  ORDER BY BOX_NO ASC
+      </select>
+      
+    <insert id="insertKeepIntoBoxD" parameterType="Map">
+        <selectKey keyProperty="trBoxDetId" resultType="int" order="BEFORE">
+        SELECT MSC0032D_TR_BOX_DET_ID_SEQ.NEXTVAL FROM DUAL 
+        </selectKey>  
+        
+            INSERT INTO MSC0032D 
+            (
+                TR_BOX_DET_ID,
+                TR_BOX_ID,
+                TR_BOOK_ID,
+                TR_BOX_ITM_STUS_ID,
+                TR_BOOK_INSERT_DT_TM,
+                TR_BOOK_CRT_DT,
+                TR_BOOK_CRT_USER_ID,
+                TR_BOOK_UPD_DT,
+                TR_BOOK_UPD_USER_ID
+             )
+		     VALUES 
+		     (
+		         #{trBoxDetId}, 
+		         #{trBoxId},
+	             #{trBookId},
+	             1,
+	             SYSDATE,
+	             SYSDATE,
+	             #{userId},
+	             SYSDATE,
+	             #{userId}
+	         )
+    </insert>  
+    
+    <insert id="insertKeepIntoBox" parameterType="Map">
+        <selectKey keyProperty="trBoxId" resultType="int" order="BEFORE">
+        SELECT MSC0031D_TR_BOX_ID_SEQ.NEXTVAL FROM DUAL 
+        </selectKey>  
+        
+		INSERT INTO MSC0031D 
+		(
+		      TR_BOX_ID,
+		      TR_BOX_NO,
+              TR_BOX_STUS_ID,
+              TR_BOX_OPEN_DT_TM,
+              TR_BOX_SCRAP_DT_TM,
+              TR_BOX_BRNCH_ID,
+              TR_BOX_CRT_DT,
+              TR_BOX_CRT_USER_ID,
+              TR_BOX_UPD_DT,
+              TR_BOX_UPD_USER_ID
+        )
+        VALUES 
+        (
+            #{trBoxId},
+		    #{docNo},
+             1,
+             SYSDATE,
+             SYSDATE,
+             #{branchId},
+             SYSDATE,
+             #{userId},
+             SYSDATE,
+             #{userId}
+        )
+    </insert>  
+    
+     <insert id="insertKeepIntoBoxRcord" parameterType="Map">
+        <selectKey keyProperty="trRcordId" resultType="int" order="BEFORE">
+        SELECT MSC0033D_TR_RCORD_ID_SEQ.NEXTVAL FROM DUAL 
+        </selectKey>  
+        
+        INSERT INTO MSC0033D 
+        (
+            TR_RCORD_ID,
+            TR_BOX_ID,
+            TR_TYPE_ID,
+            TR_LOC_CODE,
+            TR_RCORD_DT_TM,
+            TR_RCORD_STUS_ID,
+            TR_RCORD_CRT_DT,
+            TR_RCORD_CRT_USER_ID,
+            TR_RCORD_QTY,
+            TR_REF_NO
+        )
+        VALUES 
+        (
+            #{trRcordId},
+            #{trBoxId},
+             767,
+             #{branchCode},
+             SYSDATE,
+             1,
+             SYSDATE,
+             #{userId},
+             1,
+             #{docNo}
+             )
+    </insert>  
+    
     
 </mapper>

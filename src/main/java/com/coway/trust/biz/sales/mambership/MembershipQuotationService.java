@@ -64,9 +64,6 @@ public interface MembershipQuotationService {
 	List<EgovMap>   selectSrchMembershipQuotationPop(Map<String, Object> params);
 
 	void updateStus(Map<String, Object> params);
-	
-	
-	
 
 	
 }
