@@ -68,7 +68,7 @@ var optionUnit = {
                 editable : false,
                 style: 'left_style'
             }, {
-                dataField : "rsCnvrStusTo",
+                dataField : "telM1",
                 headerText : "Contact No",
                 width : 160,
                 editable : false,
