@@ -273,7 +273,9 @@ public class MileageCalculationController {
 		String[] branchList = request.getParameterValues("branch");
 		String[] memTypeList = request.getParameterValues("memType");
 		String[] memCodeList = request.getParameterValues("memCode");
-		params.put("branchList", branchList);
+		if(!params.get("branch").toString().equals("")){
+			params.put("branchList", branchList);
+		}
 		params.put("memTypeList", memTypeList);
 		params.put("memCodeList", memCodeList);
 		List<EgovMap> selectSchemaMgmt = mileageCalculationService.selectSchemaResultMgmt(params);

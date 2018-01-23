@@ -34,14 +34,14 @@ function f_multiCombo() {
 }
 $(document).ready(function(){
 	mileageCalSchemaResList();
-
+	 doGetCombo('/services/mileageCileage/selectBranch', 42, '','branch', 'S' ,  '');
 	$("#memType").change(function (){
 		var memType = $("#memType").val();
 		if(memType == 2){
-			 doGetCombo('/services/mileageCileage/selectBranch', 42, '','branch', 'M' ,  'f_multiCombo');
+			 doGetCombo('/services/mileageCileage/selectBranch', 42, '','branch', 'S' ,  '');
 			// doGetCombo('/services/mileageCileage/selectMemberCode', 2, '','memCode', 'M' ,  'f_multiCombo');
 		}else if(memType == 3){
-			doGetCombo('/services/mileageCileage/selectBranch', 43, '','branch', 'M' ,  'f_multiCombo');
+			doGetCombo('/services/mileageCileage/selectBranch', 43, '','branch', 'S' ,  '');
 			//GetCombo('/services/mileageCileage/selectMemberCode', 3, '','memCode', 'M' ,  'f_multiCombo');
 		}
 	 });
@@ -122,7 +122,7 @@ function fn_excelDown(){
     <th scope="row">Branch</th>
     <td>
         <div class="search_100p"><!-- search_100p start -->
-        <select class="multy_select w100p" multiple="multiple"id="branch" name="branch">
+        <select class="w100p" id="branch" name="branch">
             <%-- <c:forEach var="list" items="${branchList}">
              <option value="${list.codeId}">${list.codeName}</option>
          </c:forEach> --%>
