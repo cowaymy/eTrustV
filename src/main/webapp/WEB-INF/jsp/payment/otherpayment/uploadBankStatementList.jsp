@@ -459,7 +459,7 @@ function showDownloadPop(){
 
 //Download List Select and GridDataSet
 function searchDownloadList(){
-	Common.ajax("GET","/payment/selectBankStatementDownloadList.do", $("#downloadForm").serializeJSON(), function(result){
+	Common.ajax("POST","/payment/selectBankStatementDownloadList.do", $("#downloadForm").serializeJSON(), function(result){
         AUIGrid.setGridData(myDownloadGridID, result);
         AUIGrid.resize(myDownloadGridID);
     });
