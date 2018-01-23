@@ -22,7 +22,7 @@ import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 
-@Api(value = "공통 api", description = "공통 api")
+@Api(value = "common api", description = "common api")
 @RestController(value = "MobileCommonController")
 @RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/common")
 public class CommonApiController {
@@ -31,7 +31,7 @@ public class CommonApiController {
 	@Resource(name = "commonService")
 	private CommonService commonService;
 
-	@ApiOperation(value = "공통코드 전체 목록 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "CommonCode All List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/codes", method = RequestMethod.GET)
 	public ResponseEntity<List<CommonCodeAllDto>> getAllCommonCodes(@ModelAttribute CommonCodeAllForm commonCodeAllForm)
 			throws Exception {
@@ -45,7 +45,7 @@ public class CommonApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "공통코드 목록 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "CommonCode List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/{codeMasterId}/codes", method = RequestMethod.GET)
 	public ResponseEntity<List<CommonCodeDto>> getCommonCodes(
 			@ApiParam(value = "코드 마스터 아이디", required = true) @PathVariable int codeMasterId,
@@ -62,7 +62,7 @@ public class CommonApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "BANK 목록 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "BANK List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/banks", method = RequestMethod.GET)
 	public ResponseEntity<List<BankAllDto>> getBanks(@ModelAttribute BankAllForm bankAllForm) throws Exception {
 
@@ -76,7 +76,7 @@ public class CommonApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Defect Code Master 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Defect Code Master Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/defect/masters", method = RequestMethod.GET)
 	public ResponseEntity<List<DefectMasterDto>> getDefectMasters(@ModelAttribute DefectMasterForm defectMasterForm)
 			throws Exception {
@@ -88,7 +88,7 @@ public class CommonApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Defect Code Detail 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Defect Code Detail Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/defect/details", method = RequestMethod.GET)
 	public ResponseEntity<List<DefectDetailDto>> getDefectDetails(@ModelAttribute DefectDetailForm defectDetailForm)
 			throws Exception {
@@ -100,7 +100,7 @@ public class CommonApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Malfunction Reason 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Malfunction Reason Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/malfunction/reasons", method = RequestMethod.GET)
 	public ResponseEntity<List<MalfunctionReasonDto>> getMalfunctionReasons(
 			@ModelAttribute MalfunctionReasonForm malfunctionReasonForm) throws Exception {
@@ -113,7 +113,7 @@ public class CommonApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Malfunction Code 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Malfunction Code Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/malfunction/codes", method = RequestMethod.GET)
 	public ResponseEntity<List<MalfunctionCodeDto>> getMalfunctionCodes(
 			@ModelAttribute MalfunctionCodeForm malfunctionCodeForm) throws Exception {
@@ -126,7 +126,7 @@ public class CommonApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Reason Code 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Reason Code Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/reason/codes", method = RequestMethod.GET)
 	public ResponseEntity<List<ReasonCodeDto>> getReasonCodes(@ModelAttribute ReasonCodeForm reasonCodeForm)
 			throws Exception {
@@ -139,7 +139,7 @@ public class CommonApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Product Master 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Product Master Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/product/masters", method = RequestMethod.GET)
 	public ResponseEntity<List<ProductMasterDto>> getProductMasters(@ModelAttribute ProductMasterForm productMasterForm)
 			throws Exception {
@@ -153,7 +153,7 @@ public class CommonApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Product Detail 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Product Detail Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/product/details", method = RequestMethod.GET)
 	public ResponseEntity<List<ProductDetailDto>> getProductDetails(@ModelAttribute ProductDetailForm productDetailForm)
 			throws Exception {

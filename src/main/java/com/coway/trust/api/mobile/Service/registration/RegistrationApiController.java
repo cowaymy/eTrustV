@@ -29,7 +29,7 @@ public class RegistrationApiController {
 	@Autowired
 	private RegistrationService registrationService;
 
-	@ApiOperation(value = "Heart", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "HeartServiceRegistrationSample", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/hearts", method = RequestMethod.POST)
 	public ResponseEntity<HeartDto> heart(@RequestBody List<HeartForm> heartForms) throws Exception {
 

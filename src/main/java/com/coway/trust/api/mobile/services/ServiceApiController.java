@@ -131,7 +131,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "Heart Service Job List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Heart Service Job List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/heartServiceJobList", method = RequestMethod.GET)
 	public ResponseEntity<List<HeartServiceJobDto>> getHeartServiceJob(
 			@ModelAttribute HeartServiceJobForm HeartServiceJobForm) throws Exception {
@@ -155,7 +155,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "Heart Service Job List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Heart Service Job List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/heartServiceJobList_b", method = RequestMethod.GET)
 	public ResponseEntity<List<HeartServiceJobDto>> getHeartServiceJob_b(
 			@ModelAttribute HeartServiceJobForm HeartServiceJobForm) throws Exception {
@@ -178,7 +178,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "AfterServiceJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "AfterServiceJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/afterServiceJobList", method = RequestMethod.GET)
 	public ResponseEntity<List<AfterServiceJobDto>> getHeartServiceJob(
 			@ModelAttribute AfterServiceJobForm AfterServiceJobForm) throws Exception {
@@ -202,7 +202,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "AfterServiceJob List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "AfterServiceJob List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/afterServiceJobList_b", method = RequestMethod.GET)
 	public ResponseEntity<List<AfterServiceJobDto_b>> getHeartServiceJob_b(
 			@ModelAttribute AfterServiceJobForm AfterServiceJobForm) throws Exception {
@@ -227,7 +227,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "InstallationJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "InstallationJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/installationJobList", method = RequestMethod.GET)
 	public ResponseEntity<List<InstallationJobDto>> getInstallationJobList(
 			@ModelAttribute InstallationJobForm InstallationJobForm) throws Exception {
@@ -250,7 +250,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "InstallationJob List batch조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "InstallationJob List batchSearch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/installationJobList_b", method = RequestMethod.GET)
 	public ResponseEntity<List<InstallationJobDto>> getInstallationJobList_b(
 			@ModelAttribute InstallationJobForm InstallationJobForm) throws Exception {
@@ -274,7 +274,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "ProductRetrunJob List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "ProductRetrunJob List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/productRetrunJobList", method = RequestMethod.GET)
 	public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList(
 			@ModelAttribute ProductRetrunJobForm ProductRetrunJobForm) throws Exception {
@@ -297,7 +297,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "ProductRetrunJob List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "ProductRetrunJob List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/productRetrunJobList_b", method = RequestMethod.GET)
 	public ResponseEntity<List<ProductRetrunJobDto>> getProductRetrunJobList_b(
 			@ModelAttribute ProductRetrunJobForm ProductRetrunJobForm) throws Exception {
@@ -321,7 +321,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "Heart Service Parts List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Heart Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/heartServiceParts", method = RequestMethod.GET)
 	public ResponseEntity<List<HeartServicePartsDto>> heartServiceParts(
 			@ModelAttribute HeartServicePartsForm heartServicePartsForm) throws Exception {
@@ -345,7 +345,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "Heart Service Parts List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Heart Service Parts List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/heartServiceParts_b", method = RequestMethod.GET)
 	public ResponseEntity<List<HeartServicePartsDto>> heartServiceParts_b(
 			@ModelAttribute HeartServicePartsForm heartServicePartsForm) throws Exception {
@@ -368,7 +368,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "After Service Parts List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "After Service Parts List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/afterServiceParts", method = RequestMethod.GET)
 	public ResponseEntity<List<AfterServicePartsDto>> afterServiceParts(
 			@ModelAttribute AfterServicePartsForm afterServicePartsForm) throws Exception {
@@ -391,7 +391,7 @@ public class ServiceApiController {
 	
 	
 	
-	@ApiOperation(value = "After Service Parts List batch 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "After Service Parts List batch Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/afterServiceParts_b", method = RequestMethod.GET)
 	public ResponseEntity<List<AfterServicePartsDto>> afterServiceParts_b(
 			@ModelAttribute AfterServicePartsForm afterServicePartsForm) throws Exception {

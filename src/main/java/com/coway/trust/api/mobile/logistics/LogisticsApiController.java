@@ -118,7 +118,7 @@ public class LogisticsApiController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	@ApiOperation(value = "RDC Stock List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "RDC Stock List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/rdcStockList", method = RequestMethod.GET)
 	public ResponseEntity<List<RdcStockListDto>> getRDCStockList(@ModelAttribute RdcStockListForm RdcStockListForm)
 			throws Exception {
@@ -138,7 +138,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Stock by Holder List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Stock by Holder List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/stockbyHolderList", method = RequestMethod.GET)
 	public ResponseEntity<List<StockByHolderListDto>> getStockbyHolderList(
 			@ModelAttribute StockByHolderListForm StockByHolderListForm) throws Exception {
@@ -157,7 +157,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Common StockList 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Common StockList Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/stockCommonQty", method = RequestMethod.GET)
 	public ResponseEntity<List<StockByHolderQtyDto>> getStockbyHolderQty(
 			@ModelAttribute StockByHolderQtyForm StockByHolderQtyForm) throws Exception {
@@ -176,7 +176,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "DisplayCt_CodyList 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "DisplayCt_CodyList Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/displayCt_CodyList", method = RequestMethod.GET)
 	public ResponseEntity<List<DisplayCt_CodyListDto>> getCTStockList(
 			@ModelAttribute DisplayCt_CodyListForm DisplayCt_CodyListForm) throws Exception {
@@ -195,7 +195,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Inventory Status Display - Overall Stock 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Inventory Status Display - Overall Stock Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/inventoryOverallStock", method = RequestMethod.GET)
 	public ResponseEntity<List<InventoryOverallStockDto>> getInventoryOverallStock(
 			@ModelAttribute InventoryOverallStockForm InventoryOverallStockForm) throws Exception {
@@ -214,7 +214,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Inventory Status Display - All List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Inventory Status Display - All List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/inventoryAllList", method = RequestMethod.GET)
 	public ResponseEntity<List<InventoryAllListDto>> getAllStockList(
 			@ModelAttribute InventoryAllListForm InventoryAllListForm) throws Exception {
@@ -234,7 +234,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Inventory Status Display - Stock by Holder 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Inventory Status Display - Stock by Holder Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/inventoryStockByHolder", method = RequestMethod.GET)
 	public ResponseEntity<List<InventoryStockByHolderDto>> getInventoryStockByHolder(
 			@ModelAttribute InventoryStockByHolderForm InventoryStockByHolderForm) throws Exception {
@@ -254,7 +254,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "StockReceive 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "StockReceive Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/stockReceiveList", method = RequestMethod.GET)
 	public ResponseEntity<List<LogStockReceiveDto>> stockReceiveList(
 			@ModelAttribute LogStockReceiveForm LogStockReceiveForm) throws Exception {
@@ -287,7 +287,7 @@ public class LogisticsApiController {
 
 	}
 
-	@ApiOperation(value = "My Stock List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "My Stock List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/myStockList", method = RequestMethod.GET)
 	public ResponseEntity<List<MyStockListDto>> getMyStockList(@ModelAttribute MyStockListForm MyStockListForm)
 			throws Exception {
@@ -307,7 +307,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Return On-Hand Stock - Parts Search 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Return On-Hand Stock - Parts Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/returnPartsSearch", method = RequestMethod.GET)
 	public ResponseEntity<List<ReturnPartsSearchDto>> getReturnPartsSearch(
 			@ModelAttribute ReturnPartsSearchForm ReturnPartsSearchForm) throws Exception {
@@ -327,7 +327,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Alternative Filter Master List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Alternative Filter Master List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/alternativeFilterMList", method = RequestMethod.GET)
 	public ResponseEntity<List<AlternativeFilterMListDto>> getAlternativeFilterMList(
 			@ModelAttribute AlternativeFilterMListForm AlternativeFilterMListForm) throws Exception {
@@ -347,7 +347,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Alternative Filter Detail List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Alternative Filter Detail List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/alternativeFilterDList", method = RequestMethod.GET)
 	public ResponseEntity<List<AlternativeFilterDListDto>> getAlternativeFilterDList(
 			@ModelAttribute AlternativeFilterDListForm AlternativeFilterDListForm) throws Exception {
@@ -367,7 +367,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Item Bank & Cody Item - Location List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Item Bank & Cody Item - Location List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/itemBankLocationList", method = RequestMethod.GET)
 	public ResponseEntity<List<ItemBankLocationListDto>> getItemBankLocationList(
 			@ModelAttribute ItemBankLocationListForm ItemBankLocationListForm) throws Exception {
@@ -387,7 +387,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Item Bank & Cody Item - Item List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Item Bank & Cody Item - Item List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/itemBankItemList", method = RequestMethod.GET)
 	public ResponseEntity<List<ItemBankItemListDto>> getItemBankItemList(
 			@ModelAttribute ItemBankItemListForm ItemBankItemListForm) throws Exception {
@@ -408,7 +408,7 @@ public class LogisticsApiController {
 	}
 	
 	
-	@ApiOperation(value = "Item Bank & Cody Item - Result List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Item Bank & Cody Item - Result List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/itemBankResultList", method = RequestMethod.GET)
 	public ResponseEntity<List<ItemBankResultListDto>> getItemBankResultList( @ModelAttribute ItemBankResultListForm itemBankResultListForm) throws Exception {
 
@@ -427,7 +427,7 @@ public class LogisticsApiController {
 	}
 	
 	
-	@ApiOperation(value = "Request Result - List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Request Result - List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/requestResultList", method = RequestMethod.GET)
 	public ResponseEntity<List<RequestResultMListDto>> getRequestResultList(
 			@ModelAttribute RequestResultListForm RequestResultListForm) throws Exception {
@@ -460,7 +460,7 @@ public class LogisticsApiController {
 
 	}
 
-	@ApiOperation(value = "Return On-Hand Stock - List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Return On-Hand Stock - List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/returnOnHandStockList", method = RequestMethod.GET)
 	public ResponseEntity<List<ReturnOnHandStockMListDto>> getreturnOnHandStockList(
 			@ModelAttribute ReturnOnHandStockListForm ReturnOnHandStockListForm) throws Exception {
@@ -491,7 +491,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(hList);
 	}
 
-	@ApiOperation(value = "Audit Stock - Result Detail 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Audit Stock - Result Detail Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/auditStockResultDetail", method = RequestMethod.GET)
 	public ResponseEntity<List<StockAuditResultDetailDto>> getAuditStockResultDetail(
 			@ModelAttribute StockAuditResultDetailForm StockAuditResultDetailForm) throws Exception {
@@ -511,7 +511,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Stock Transfer - Request Status List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Stock Transfer - Request Status List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/StockTransferReqStatusList", method = RequestMethod.GET)
 	public ResponseEntity<List<StockTransferReqStatusMListDto>> getStockTransferReqStatusList(
 			@ModelAttribute StockTransferReqStatusListForm StockTransferReqStatusListForm) throws Exception {
@@ -543,7 +543,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(hList);
 	}
 
-	@ApiOperation(value = "Adjustment Stock - None-Barcode List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Adjustment Stock - None-Barcode List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/noneBarcodeList", method = RequestMethod.GET)
 	public ResponseEntity<AdjustmentStockNoneBarcodeListVo> getNonBarcodeList(
 			@ModelAttribute NonBarcodeListForm nonbarcodeListForm) throws Exception {
@@ -590,7 +590,7 @@ public class LogisticsApiController {
 
 	}
 
-	@ApiOperation(value = "Adjustment Stock - Barcode List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Adjustment Stock - Barcode List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/barcodeListForm", method = RequestMethod.GET)
 	public ResponseEntity<AdjustmentStockBarcodeListVo> getBarcodeList(@ModelAttribute BarcodeListForm barcodeListForm)
 			throws Exception {
@@ -644,7 +644,7 @@ public class LogisticsApiController {
 	}
 	
 	
-	@ApiOperation(value = "Display of Used Parts & Filter 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Display of Used Parts & Filter Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/usedParts", method = RequestMethod.GET)
 	public ResponseEntity<List<UsedPartsDto>> getusedPartsList(@ModelAttribute UsedPartsListForm usedPartsListForm)
 			throws Exception {
@@ -659,7 +659,7 @@ public class LogisticsApiController {
 	}
 	
 	
-	@ApiOperation(value = "miscPart Master 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "miscPart Master Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/miscPartList", method = RequestMethod.GET)
 	public ResponseEntity<List<MiscPartDto>> miscPartList(@ModelAttribute MiscPartListForm miscPartListForm ) throws Exception {
 
@@ -678,7 +678,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Filter Inventory Display - Not Change List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Filter Inventory Display - Not Change List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/filterNotChangeList", method = RequestMethod.GET)
 	public ResponseEntity<FilterNotChangeListVo> getfilterNotChangeList(
 			@ModelAttribute FilterNotChangeListForm filterNotChangeListForm) throws Exception {
@@ -723,7 +723,7 @@ public class LogisticsApiController {
 	}
 	
 	
-	@ApiOperation(value = "Filter Inventory Display - User Filter List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Filter Inventory Display - User Filter List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/userFilterList", method = RequestMethod.GET)
 	public ResponseEntity<UserFilterListVo> getuserFilterList(
 			@ModelAttribute UserFilterListForm userFilterListForm) throws Exception {
@@ -772,7 +772,7 @@ public class LogisticsApiController {
 	
 	
 	
-	@ApiOperation(value = "Filter Inventory Display - Change List 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Filter Inventory Display - Change List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/filterChangeList", method = RequestMethod.GET)
 	public ResponseEntity<FilterChangeListVo> getfilterChangeList(
 			@ModelAttribute FilterChangeListForm filterChangeListForm) throws Exception {
@@ -817,7 +817,7 @@ public class LogisticsApiController {
 
 	}
 	
-	@ApiOperation(value = "Inventory Status Display - On Hand Stock (My Stock)조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Inventory Status Display - On Hand Stock (My Stock)Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/inventoryOnHandStock", method = RequestMethod.GET)
 	public ResponseEntity<List<InventoryOnHandStockDto>> getInventoryOnHandStock(@ModelAttribute InventoryOnHandStockForm inventoryOnHandStockForm)
 			throws Exception {
@@ -852,7 +852,7 @@ public class LogisticsApiController {
 	 * 아래부분 현창배 추가
 	 */
 
-	@ApiOperation(value = "Stock Audit Result 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Stock Audit Result Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/stockaudit/result", method = RequestMethod.GET)
 	public ResponseEntity<List<StockAuditResultDto>> getStockAuditResult(
 			@ModelAttribute StockAuditResultForm stockauditresultForm) throws Exception {
@@ -866,7 +866,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Stock Price 조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Stock Price Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/stock/price", method = RequestMethod.GET)
 	public ResponseEntity<List<StockPriceDto>> getStockPriceList(@ModelAttribute StockPriceForm stockpriceForm)
 			throws Exception {

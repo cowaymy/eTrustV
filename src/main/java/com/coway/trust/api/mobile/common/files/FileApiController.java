@@ -25,7 +25,7 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import springfox.documentation.annotations.ApiIgnore;
 
-@Api(value = "파일관리", description = "file api")
+@Api(value = "filemanagement", description = "file api")
 @RestController(value = "MobileFileApiController")
 @RequestMapping(AppConstants.MOBILE_API_BASE_URI + "/file")
 public class FileApiController {
@@ -41,7 +41,7 @@ public class FileApiController {
 	private FileApplication fileApplication;
 
 	// 공통 파일 테이블에서 관리하는 api 입니다.
-	@ApiOperation(value = "파일업로드", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+	@ApiOperation(value = "FileUpload", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<FileDto> fileUpload(@ApiIgnore MultipartHttpServletRequest request,
 			@ModelAttribute FileForm fileForm) throws Exception {
@@ -58,7 +58,7 @@ public class FileApiController {
 		return ResponseEntity.ok(fileDto);
 	}
 
-	@ApiOperation(value = "파일조회", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "FileSearch", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/{fileGroupId}/files", method = RequestMethod.GET)
 	public ResponseEntity<FileDto> getFilesByGroupId(
 			@ApiParam(value = "파일 그룹 아이디", required = true) @PathVariable int fileGroupId) throws Exception {
