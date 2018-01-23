@@ -712,19 +712,61 @@ function fn_itempopList(data){
     var rowPos = "first";
     var rowList = [];
     
+    var reqitms = AUIGrid.getGridData(reqGrid);
+    
     //AUIGrid.removeRow(reqGrid, "selectedIndex");
     //AUIGrid.removeSoftRows(reqGrid);
-    for (var i = 0 ; i < data.length ; i++){
-        rowList[i] = {
-            //itmid : data[i].item.itemid,
-            itmcode : data[i].item.itemcode,
-            itmdesc : data[i].item.itemname,
-            itemserialChk : data[i].item.serialchk,
-            itemuom       : data[i].item.uom
-        }
-    }
-    
-    AUIGrid.addRow(reqGrid, rowList, rowPos);
+//     for (var i = 0 ; i < data.length ; i++){
+//         rowList[i] = {
+//             //itmid : data[i].item.itemid,
+//             itmcode : data[i].item.itemcode,
+//             itmdesc : data[i].item.itemname,
+//             itemserialChk : data[i].item.serialchk,
+//             itemuom       : data[i].item.uom
+//         }
+//     }
+
+    if (data.length > 0){
+        var rowPos = "first";
+        var item = new Object();
+        var rowList = [];
+        var boolitem = true;
+        var k = 0 ;
+        for (var i = 0 ; i < data.length ; i++){
+            for (var j = 0 ; j < reqitms.length ; j++){
+
+                if (reqitms[j].itmcode == data[i].item.itemcode ){
+
+                    Common.alert("Product number already selected.");
+                    boolitem = false;
+                    break;
+                      
+                }
+            }
+            
+            if (boolitem){
+                rowList[k] =  {
+                	  itmcode : data[i].item.itemcode,
+                      itmdesc : data[i].item.itemname,
+                      itemserialChk : data[i].item.serialchk,
+                      itemuom       : data[i].item.uom,
+                	  rqty:0
+                    }
+                k++;
+              }
+//               else{
+//             	 return boolitem;
+//              }
+            
+            //AUIGrid.addUncheckedRowsByIds(resGrid, checkedItems[i].rnum);
+            //boolitem = true;
+     
+        } 
+        AUIGrid.addRow(reqGrid, rowList, rowPos);
+}  
+
+
+ //   AUIGrid.addRow(reqGrid, rowList, rowPos);
     
 }
 

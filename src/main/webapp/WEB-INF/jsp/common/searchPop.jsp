@@ -113,7 +113,13 @@ $(function(){
     });
     $('#transfer').click(function(){
     	var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
-    	opener.fn_itempopList(selectedItems);
+    	var tet = opener.fn_itempopList(selectedItems);
+//     	console.log(tet);
+//     	if(tet!= undefined && tet!= "undefined"  && !tet ){
+//     		Common.alert("Product number already selected.");
+    	
+//     	}
+    	self.close();
     })
 });
 
