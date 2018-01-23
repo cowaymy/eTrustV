@@ -155,18 +155,34 @@
                                        END C1  
                              FROM ORG0005D Extent1
                                     JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
-                              WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
-                                       AND ( '''' <> Extent1.DEPT_CODE )
-                                       AND ( 1 = Extent2.STUS )
+                                    LEFT JOIN (SELECT *
+										            FROM ORG0007D C
                              ]]>                                           
+										            <choose>
+										             <when test="searchDt != null and searchDt != '' ">
+							<![CDATA[			     WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
+										              </when>
+										              <otherwise>
+							<![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
+										              </otherwise>
+										            </choose>
+										            ) Extent3 
+						            ON Extent1.MEM_ID = Extent3.MEM_ID
+                              WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
+<![CDATA[                         AND ( '''' <> Extent1.DEPT_CODE ) ]]>
+                                       AND ( 1 = Extent2.STUS )
                                        <choose>
                                         <when test="memType == 4">
                                             AND ( Extent2.MEM_TYPE IN ('1') )
-                                            AND ( Extent1.MEM_LVL = '1' )
+                                            AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.MEM_LVL_TO = '1')
+<![CDATA[                                      OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_LVL = '1' ) ]]>
+		                                            OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_LVL = '1' )
                                         </when>
                                         <otherwise>
                                             AND ( Extent2.MEM_TYPE = #{memType})
-                                            AND ( Extent1.MEM_LVL = #{memLvl} )
+                                            AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.MEM_LVL_TO = #{memLvl})
+<![CDATA[                                      OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_LVL = #{memLvl} ) ]]>
+		                                            OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_LVL = #{memLvl} )
                                         </otherwise>
                                        </choose>   
                             <choose>
@@ -183,8 +199,22 @@
                                         AND Extent2.MEM_CODE = #{userName}
                                     </when>
                             </choose>                                        
-                                       AND ( Extent2.STUS IN ( 1,8 )
-                                      ) ) Project1
+                                       AND ( Extent2.STUS IN ( 1,8 ) )
+                                       AND ( Extent3.PROMO_ID    IN (SELECT MAX(C.PROMO_ID)
+													                              FROM ORG0007D C
+													                              <choose>
+													                                <when test="searchDt != null and searchDt != '' ">
+<![CDATA[   									                                   WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
+													                                </when>
+													                                <otherwise>
+<![CDATA[   									                                   WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
+													                                </otherwise>
+													                              </choose>
+													                              GROUP BY C.MEM_ID)
+									            OR Extent3.PROMO_ID      IS NULL )
+<![CDATA[						  AND ( (Extent3.PROMO_TYPE_ID NOT IN (757, 758) OR Extent3.PROMO_TYPE_ID IS NULL)
+									         OR (Extent3.STUS_ID <> 4 OR Extent3.STUS_ID IS NULL ) ) ]]>
+                                       ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
  
         </select>
@@ -336,16 +366,46 @@
                                        END C1  
                              FROM ORG0005D Extent1
                                     JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+                                    LEFT JOIN (SELECT *
+                                                    FROM ORG0007D C
+                             ]]>                                           
+                                                    <choose>
+                                                     <when test="searchDt != null and searchDt != '' ">
+                            <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
+                                                      </when>
+                                                      <otherwise>
+                            <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
+                                                      </otherwise>
+                                                    </choose>
+                                                    ) Extent3 
+                                    ON Extent1.MEM_ID = Extent3.MEM_ID
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
-                                       AND ( '''' <> Extent1.DEPT_CODE )
+<![CDATA[                         AND ( '''' <> Extent1.DEPT_CODE ) ]]>
                                        AND ( 1 = Extent2.STUS )
                                        AND ( Extent2.MEM_TYPE = '1' )
-                                       AND ( Extent1.MEM_LVL = #{memLvl} )
-                                       AND ( Extent1.MEM_UP_ID = #{memId} )
-                                       AND ( Extent2.STUS IN ( 1,8 )
-                                      ) ) Project1
+                                       AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.MEM_LVL_TO = #{memLvl})
+<![CDATA[                                 OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_LVL = #{memLvl} ) ]]>
+                                               OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_LVL = #{memLvl} )
+                                       AND ( Extent2.STUS IN ( 1,8 ) )
+                                       AND ( Extent3.PROMO_ID    IN (SELECT MAX(C.PROMO_ID)
+                                                                                  FROM ORG0007D C
+                                                                                  <choose>
+                                                                                    <when test="searchDt != null and searchDt != '' ">
+<![CDATA[                                                                          WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
+                                                                                    </when>
+                                                                                    <otherwise>
+<![CDATA[                                                                          WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(sysdate,'MM/YYYY') ]]>
+                                                                                    </otherwise>
+                                                                                  </choose>
+                                                                                  GROUP BY C.MEM_ID)
+                                                OR Extent3.PROMO_ID      IS NULL )
+<![CDATA[                         AND ( (Extent3.PROMO_TYPE_ID NOT IN (757, 758) OR Extent3.PROMO_TYPE_ID IS NULL)
+                                             OR (Extent3.STUS_ID <> 4 OR Extent3.STUS_ID IS NULL ) ) 
+                                       AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.PARENT_ID_TO = #{memId})
+									        OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_UP_ID = #{memId} )
+									        OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_UP_ID = #{memId} )]]>
+                                      ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
-                             ]]>     
         </select>
         
         
@@ -840,24 +900,43 @@
                                        END C1  
                              FROM ORG0005D Extent1
                                     JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
+                                    LEFT JOIN (SELECT *
+                                                    FROM ORG0007D C
+                             ]]>                                           
+                                                    <choose>
+                                                     <when test="searchDt != null and searchDt != '' ">
+                            <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
+                                                      </when>
+                                                      <otherwise>
+                            <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
+                                                      </otherwise>
+                                                    </choose>
+                                                    ) Extent3 
+                                    ON Extent1.MEM_ID = Extent3.MEM_ID
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
-                                       AND ( '''' <> Extent1.DEPT_CODE )
+<![CDATA[                         AND ( '''' <> Extent1.DEPT_CODE ) ]]>
                                        AND ( 1 = Extent2.STUS )
-                                       AND ( Extent2.MEM_TYPE = #{memType}) ]]>
+                                       AND ( Extent2.MEM_TYPE = #{memType})
                                        <choose>
                                         <when test="memLvl == 11">
-                                            AND ( Extent1.MEM_LVL = '1' )
+                                            AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.MEM_LVL_TO = '1' )
+<![CDATA[                                 OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_LVL = '1' ) ]]>
+                                               OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_LVL = '1' )
                                         </when>
                                         <otherwise>
-                                            AND ( Extent1.MEM_LVL = #{memLvl} )
+                                            AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.MEM_LVL_TO = #{memLvl})
+<![CDATA[                                 OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_LVL = #{memLvl} ) ]]>
+                                               OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_LVL = #{memLvl} )
                                         </otherwise>
                                        </choose>
-                                       AND ( Extent2.STUS IN ( 1,8 )
+                                       AND ( Extent2.STUS IN ( 1,8 ) )
                                       <if test="deptIdCd != null and deptIdCd != '' and deptIdCd != '0' ">
                                             AND Extent1.mem_id = #{deptIdCd}
                                       </if>    
                                       <if test="groupCode != null and groupCode != ''">
-                                            AND ( Extent1.MEM_UP_ID = #{groupCode} )
+<![CDATA[                              AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.PARENT_ID_TO = #{groupCode})
+                                            OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_UP_ID = #{groupCode} )
+                                            OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_UP_ID = #{groupCode} ) ]]>
                                       </if>     
                                       <if test="groupCode == null or groupCode == ''">                                   
 			                            <choose>
@@ -875,7 +954,21 @@
 			                                    </when>
 			                            </choose>                                                         
 			                            </if>                     
-                                      ) ) Project1
+			                          AND ( Extent3.PROMO_ID    IN (SELECT MAX(C.PROMO_ID)
+                                                                                  FROM ORG0007D C
+                                                                                  <choose>
+                                                                                    <when test="searchDt != null and searchDt != '' ">
+<![CDATA[                                                                          WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
+                                                                                    </when>
+                                                                                    <otherwise>
+<![CDATA[                                                                          WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(sysdate,'MM/YYYY') ]]>
+                                                                                    </otherwise>
+                                                                                  </choose>
+                                                                                  GROUP BY C.MEM_ID)
+                                                OR Extent3.PROMO_ID      IS NULL )
+<![CDATA[                         AND ( (Extent3.PROMO_TYPE_ID NOT IN (757, 758) OR Extent3.PROMO_TYPE_ID IS NULL)
+                                             OR (Extent3.STUS_ID <> 4 OR Extent3.STUS_ID IS NULL ) ) ]]>
+                                      ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
                                
         </select>        

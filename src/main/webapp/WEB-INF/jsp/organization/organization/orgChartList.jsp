@@ -99,7 +99,7 @@
                  console.log("data : " + event.item);                       
 
                     $.ajax({
-                        url: "/organization/selectOrgChartCdList.do?groupCode=" + item.memId + "&memLvl=" + vMemLvl + "&memType="+memType ,
+                        url: "/organization/selectOrgChartCdList.do?groupCode=" + item.memId + "&memLvl=" + vMemLvl + "&memType="+memType + "&searchDt="+$('#searchDt').val(),
                         success: function(data) {
                             // 성공 시 완전한 배열 객체로 삽입하십시오.
                             event.response(data);
@@ -117,7 +117,7 @@
                  console.log("data : " + event.item);                       
 
                     $.ajax({
-                        url: "/organization/selectOrgChartCdList.do?groupCode=" + item.memId + "&memLvl=" + vMemLvl + "&memType="+memType ,
+                        url: "/organization/selectOrgChartCdList.do?groupCode=" + item.memId + "&memLvl=" + vMemLvl + "&memType="+memType + "&searchDt="+$('#searchDt').val(),
                         success: function(data) {
                             // 성공 시 완전한 배열 객체로 삽입하십시오.
                             event.response(data);
@@ -195,8 +195,9 @@
         // 조회 버튼/리스트 조회.
         function fn_SelectOrgChartListAjax() {
         
+        	fn_getOrgChartHPListAjax();
             fn_getOrgChartCdListAjax();
-
+        	fn_getOrgChartCtListAjax();
 
 
 
@@ -279,7 +280,7 @@
         //hp
            var paramHpdata;
            //paramHpdata = { groupCode : parentId , memType : cmbMemberTp , memLvl : deptLevel};
-           paramHpdata = { memType : memType , memLvl : memLvl};
+           paramHpdata = { memType : memType , memLvl : memLvl, searchDt : $('#searchDt').val()};
         
             Common.ajax("GET", "/organization/selectOrgChartHpList.do", paramHpdata, function(result) {
                 
@@ -293,7 +294,6 @@
             
                 // cd리스트 조회.
         function fn_getOrgChartCtListAjax() {
-        
 /*             var deptIdCd = 0;
             var deptLevelCd = 1;
             var parentIdCd;
@@ -364,7 +364,7 @@
          //hp
             var paramCddata;
             //paramHpdata = { groupCode : parentId , memType : cmbMemberTp , memLvl : deptLevel};
-            paramCddata = { memType : memType , memLvl : memLvl};
+            paramCddata = { memType : memType , memLvl : memLvl, searchDt : $('#searchDt').val()};
             
             //ct
            //var paramCddata;
@@ -389,7 +389,6 @@
         
         
                 function fn_getOrgChartCdListAjax() {
-        
             var deptIdCd = 0;
             var deptLevelCd = 1;
             var parentIdCd;
@@ -454,7 +453,7 @@
         //CD
            var paramCddata;
            //paramHpdata = { groupCode : parentId , memType : cmbMemberTp , memLvl : deptLevel};
-           paramCddata = { memType : memType , memLvl : memLvl, groupCode : ""};
+           paramCddata = { memType : memType , memLvl : memLvl, groupCode : "", searchDt : $('#searchDt').val()};
            
            
             //cd
