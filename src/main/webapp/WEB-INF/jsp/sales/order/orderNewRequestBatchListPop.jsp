@@ -226,7 +226,7 @@
     </td>
     <td>
         <p class="btn_sky"><a href="#" id="readCSV">Read CSV</a></p>
-        <p class="btn_sky"><a id="init_file" href="${pageContext.request.contextPath}/resources/download/sales/ConversionRequest_Format.csv">Download CSV Format</a></p>
+        <p class="btn_sky"><a id="init_file" href="${pageContext.request.contextPath}/resources/download/sales/orderConversionRequest_Format.csv">Download CSV Format</a></p>
         <p class="btn_sky"><a href="#" id="success_file1" onclick="fn_saveBulk()">SAVE</a></p>
         <p class="btn_sky"><a href="#" id="success_file2" >Clear</a></p>
     </td>

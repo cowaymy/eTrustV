@@ -308,7 +308,7 @@ var cnvrListGrid;
     <input type="file" id="fileSelector" title="file add" />
     </div><!-- auto_file end -->
 <!--     <p class="btn_sky"><a href="#" onclick="fn_readFile();">Read CSV</a></p> -->
-    <p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/ConversionRequest_Format.csv">Download CSV Format</a></p>
+    <p class="btn_sky"><a href="${pageContext.request.contextPath}/resources/download/sales/orderConversionRequest_Format.csv">Download CSV Format</a></p>
     </td>
 </tr>
 </tbody>
