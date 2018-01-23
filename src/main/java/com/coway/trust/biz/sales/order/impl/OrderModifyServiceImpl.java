@@ -236,6 +236,18 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 	}
 	
 	@Override
+	public void updateOrderMailingAddress2(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+
+		Map<String, Object> inMap = new HashMap<String, Object>();
+		
+		inMap.put("custBillAddId", params.get("custAddId"));
+		inMap.put("updUserId", sessionVO.getUserId());
+		inMap.put("salesOrdId", params.get("salesOrdId"));
+
+		orderModifyMapper.updateCustAddId(inMap);
+	}
+	
+	@Override
 	public void updateNric(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### OrderModifyServiceImpl.updateNric");

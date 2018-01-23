@@ -15,6 +15,7 @@
     var PROMO_DESC    = "${promoDesc}";
     var SRV_PAC_ID    = "${srvPacId}";
     var GST_CHK       = "${orderDetail.basicInfo.gstChk}";
+    var ADDR_ID       = "${orderDetail.basicInfo.ordAddrId}";
     
     var keyValueList = [];
     
@@ -223,6 +224,10 @@
             if(!fn_validMailingAddress()) return false;            
             fn_doSaveMailingAddress();
         });
+        $('#btnSaveMailingAddress2').click(function() {            
+            if(!fn_validMailingAddress2()) return false;            
+            fn_doSaveMailingAddress2();
+        });
         $('#btnSaveCntcPerson').click(function() {            
             if(!fn_validCntcPerson()) return false;
             fn_doSaveCntcPerson();
@@ -259,6 +264,12 @@
         });
         $('#btnBillSelAddr').click(function() {
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_MAIL_ADR"}, null, true);
+        });
+        $('#btnMailNewAddr').click(function() {
+            Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : CUST_ID, callParam : "ORD_MODIFY_MAIL_ADR2"}, null , true);
+        });
+        $('#btnMailSelAddr').click(function() {
+            Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_MAIL_ADR2"}, null, true);
         });
         $('#btnInstNewAddr').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : CUST_ID, callParam : "ORD_MODIFY_INST_ADR"}, null , true);
@@ -762,11 +773,19 @@
             $('#scBI').addClass("blind");
         }
         if(tabNm == 'MAL') {
-            $('#scMA').removeClass("blind");
+            if(APP_TYPE_ID == '66') {
+                $('#scMA').removeClass("blind");
+                fn_loadBillGrpMailAddr(ORD_ID);
+            }
+            else {
+                $('#scMA2').removeClass("blind");
+                fn_loadMailAddress(ADDR_ID);
+            }
+
             $('#aTabMA').click();
-            fn_loadBillGrpMailAddr(ORD_ID);
         } else {
             $('#scMA').addClass("blind");
+            $('#scMA2').addClass("blind");
         }
         if(tabNm == 'CNT') {
             $('#scCP').removeClass("blind");
@@ -1338,6 +1357,24 @@
         });
     }
 
+    function fn_loadMailAddress(custAddId) {
+        Common.ajax("GET", "/sales/order/selectCustAddJsonInfo.do", {custAddId : custAddId}, function(mailAddrInfo) {
+
+            if(mailAddrInfo != null) {
+                
+                $('#txtMailAAddrDtl').text(mailAddrInfo.addrDtl);
+                $('#txtMailStreet').text(mailAddrInfo.street);
+                $('#txtMailArea').text(mailAddrInfo.area);
+                $('#txtMailCity').text(mailAddrInfo.city);
+                $('#txtMailPostcode').text(mailAddrInfo.postcode);
+                $('#txtMailState').text(mailAddrInfo.state);
+                $('#txtMailCountry').text(mailAddrInfo.country);
+                
+                $('#txtHiddenAddressID').val(mailAddrInfo.custAddId);                
+            }
+        });
+    }
+
     function fn_loadUpdateInfo(ordId) {
         Common.ajax("GET", "/sales/order/selectBasicInfoJson.do", {salesOrderId : ordId}, function(basicInfo) {
 
@@ -1698,6 +1735,19 @@
         return isValid;
     }
     
+    function fn_validMailingAddress2() {
+        var isValid = true, msg = "";
+
+        if(FormUtil.isEmpty($('#txtHiddenAddressID').val().trim())) {
+            isValid = false;
+            msg += "* Please select an address.<br/>";
+        }
+
+        if(!isValid) Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+        return isValid;
+    }
+    
     function fn_validBasicInfo() {
         var isValid = true, msg = "";
 
@@ -1767,6 +1817,25 @@
         console.log('!@# fn_doSaveMailingAddress START');
 
         Common.ajax("POST", "/sales/order/updateMailingAddress.do", $('#frmMailAddr').serializeJSON(), function(result) {
+                
+                Common.alert("Mailing Address Updated" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+            
+            }, function(jqXHR, textStatus, errorThrown) {
+                try {
+//                  Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update mailing address.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    Common.alert("Failed To Update" + DEFAULT_DELIMITER + "<b>Failed to update mailing address.</b>");
+                }
+                catch(e) {
+                    console.log(e);
+                }
+            }
+        );
+    }
+
+    function fn_doSaveMailingAddress2() {
+        console.log('!@# fn_doSaveMailingAddress2 START');
+
+        Common.ajax("POST", "/sales/order/updateMailingAddress2.do", $('#frmMailAddr2').serializeJSON(), function(result) {
                 
                 Common.alert("Mailing Address Updated" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
@@ -2204,6 +2273,67 @@
 </section>
 <!------------------------------------------------------------------------------
     Mailing Address Edit END
+------------------------------------------------------------------------------->
+<!------------------------------------------------------------------------------
+    Mailing Address Edit START(Not Rental)
+------------------------------------------------------------------------------->
+<section id="scMA2" class="blind">
+<aside class="title_line"><!-- title_line start -->
+<h3>Mailing Address</h3>
+</aside><!-- title_line end -->
+<ul class="right_btns mb10">
+    <li><p class="btn_grid"><a id="btnMailNewAddr" href="#">Add New Address</a></p></li>
+    <li><p class="btn_grid"><a id="btnMailSelAddr" href="#">Select Mailing Address</a></p></li>
+</ul>
+
+<section class="search_table"><!-- search_table start -->
+<form id="frmMailAddr2" method="post">
+<input name="salesOrdId" type="hidden" value="${salesOrderId}"/>
+<input id="txtHiddenAddressID" name="custAddId" type="hidden" />
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+	<col style="width:150px" />
+	<col style="width:*" />
+	<col style="width:150px" />
+	<col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+	<th scope="row">Address Detail<span class="must">*</span></th>
+	<td colspan="3"><span id="txtMailAAddrDtl"></span></td>
+</tr>
+<tr>
+	<th scope="row">Street<span class="must">*</span></th>
+	<td colspan="3"><span id="txtMailStreet"></span></td>
+</tr>
+<tr>
+	<th scope="row">Area<span class="must">*</span></th>
+	<td colspan="3" id="txtMailArea"><span></span></td>
+</tr>
+<tr>
+	<th scope="row">City</th>
+	<td><span id="txtMailCity"></span></td>
+	<th scope="row">PostCode</th>
+	<td><span id="txtMailPostcode"></span></td>
+</tr>
+<tr>
+	<th scope="row">State</th>
+	<td><span id="txtMailState"></span></td>
+	<th scope="row">Country</th>
+	<td><span id="txtMailCountry"></span></td>
+</tr>
+</tbody>
+</table><!-- table end -->
+</form>
+</section><!-- search_table end -->
+<ul class="center_btns">
+	<li><p class="btn_blue2"><a id="btnSaveMailingAddress2" href="#">SAVE</a></p></li>
+</ul>
+</section>
+<!------------------------------------------------------------------------------
+    Mailing Address Edit END(Not Rental)
 ------------------------------------------------------------------------------->
 <!------------------------------------------------------------------------------
     Contact Person Edit START

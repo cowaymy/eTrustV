@@ -247,6 +247,10 @@
                 fn_loadInstallAddr(result.data);
                 $("#_close1").click();
             }
+            if('${callParam}' == 'ORD_MODIFY_MAIL_ADR2') {
+                fn_loadMailAddress(result.data);
+                $("#_close1").click();
+            }
         });
     }
 	 

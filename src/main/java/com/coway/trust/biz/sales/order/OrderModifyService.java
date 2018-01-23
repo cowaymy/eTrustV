@@ -62,4 +62,6 @@ public interface OrderModifyService {
 
 	void updateGSTEURCertificate(GSTEURCertificateVO gSTEURCertificateVO, SessionVO sessionVO);
 
+	void updateOrderMailingAddress2(Map<String, Object> params, SessionVO sessionVO) throws ParseException;
+
 }

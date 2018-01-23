@@ -92,6 +92,12 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 		EgovMap orderCfgInfo 	 = orderDetailMapper.selectOrderConfigInfo(params);
 		EgovMap gstCertInfo      = orderDetailMapper.selectGSTCertInfo(params);
 		
+		String memInfo           = orderDetailMapper.selectMemberInfo((String) basicInfo.get("custNric"));
+		
+		if(CommonUtils.isNotEmpty(memInfo)) {
+			basicInfo.put("memInfo", "("+memInfo+")");
+		}
+		
 		if(SalesConstants.APP_TYPE_CODE_RENTAL.equals(basicInfo.get("appTypeCode").toString())) {
 			
 			rentPaySetInf = orderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
@@ -565,5 +571,10 @@ public class OrderDetailServiceImpl extends EgovAbstractServiceImpl implements O
 	@Override
 	public EgovMap selectCurrentBSResultByBSNo(Map<String, Object> params) {
 		return orderDetailMapper.selectCurrentBSResultByBSNo(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectASInfoList(Map<String, Object> params) {
+		return orderDetailMapper.selectASInfoList(params);
 	}
 }

@@ -312,11 +312,11 @@
              , SALES_ORD_NO
              , NAME
              , CODE
-             , NAME AS NAME1
+             , NAME1 AS NAME1
              , ACC_CODE
              , ACC_DESC
-             , NAME AS NAME2
-             , NAME AS NAME3
+             , NAME2 AS NAME2
+             , NAME3 AS NAME3
              , USER_NAME
              , REV_RECEIPT_NO
           FROM
@@ -1116,6 +1116,15 @@
     ]]>
     </select>
     
+    <select id="selectMemberInfo" parameterType="string" resultType="string">
+        SELECT CODE
+          FROM ORG0001D T1
+             , SYS0013M T2
+         WHERE T1.STUS = 1
+           AND T1.MEM_TYPE = T2.CODE_ID
+           AND T1.NRIC = #{value}
+    </select>
+    
     <resultMap id="transMap" type="egovMap"></resultMap>
     <select id="selectLast6MonthTransList" parameterType="Map"  statementType="CALLABLE">
         {
@@ -1464,5 +1473,57 @@
 		        WHERE T1.NO = #{no} AND ROWNUM <= 1
 		     ) T
     ]]>
+    </select>
+    
+    <select id="selectASInfoList" parameterType="Map" resultType="egovMap">
+		SELECT DISTINCT T.AS_ID
+		     , T.AS_NO
+		     , T.AS_SO_ID
+		     , T.AS_REQST_DT
+		     , T.AS_STUS_ID
+		     , T.AS_TYPE_ID
+		     , T.CODE CODE
+		     , T.CODE CODE1
+		     , T.SALES_ORD_NO
+		     , T.CODE CODE2
+		     , T.NAME
+		     , T.NRIC
+		     , T.AS_RESULT_ID
+		     , T.AS_RESULT_NO
+		     , T.USER_NAME
+		     , T.AS_TOT_AMT
+		  FROM
+		     ( SELECT DISTINCT T1.AS_ID
+		            , T1.AS_NO
+		            , T1.AS_SO_ID
+		            , T1.AS_REQST_DT
+		            , T1.AS_STUS_ID
+		            , T1.AS_TYPE_ID
+		            , T2.CODE CODE
+		            , T3.CODE CODE1
+		            , T4.SALES_ORD_NO
+		            , T5.CODE CODE2
+		            , T6.NAME NAME
+		            , T6.NRIC NRIC
+		            , T7.AS_RESULT_ID
+		            , T7.AS_RESULT_NO
+		            , T8.USER_NAME
+		            , T7.AS_TOT_AMT
+		         FROM SVC0001D T1
+		        JOIN SYS0013M T2 ON T1.AS_TYPE_ID = T2.CODE_ID
+		        JOIN SYS0038M T3 ON T1.AS_STUS_ID = T3.STUS_CODE_ID
+		        JOIN SAL0001D T4 ON T1.AS_SO_ID = T4.SALES_ORD_ID
+		        JOIN SYS0013M T5 ON T4.APP_TYPE_ID = T5.CODE_ID
+		        JOIN SAL0029D T6 ON T4.CUST_ID = T6.CUST_ID
+		        LEFT
+		        JOIN SVC0004D T7 ON T1.AS_ID = T7.AS_ENTRY_ID
+		                        AND 457 = T7.AS_RESULT_TYPE_ID
+		                        AND 1 = T7.AS_RESULT_IS_CURR
+		        LEFT
+		        JOIN SYS0047M T8 ON T1.AS_CRT_USER_ID = T8.USER_ID
+		       WHERE 8 != T1.AS_STUS_ID
+		         AND T1.AS_NO = #{asNo}
+		     ) T
+		 ORDER BY T.AS_ID
     </select>
 </mapper>

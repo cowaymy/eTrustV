@@ -29,6 +29,9 @@
 	    else if($('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR') {
 	        fn_loadMailAddr(custAddId);
 	    }
+	    else if($('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR2') {
+	        fn_loadMailAddress(custAddId);
+	    }
 	    else if($('#callPrgm').val() == 'ORD_MODIFY_INST_ADR') {
 	        fn_loadInstallAddrInfoNew(custAddId);
 	    }

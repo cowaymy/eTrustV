@@ -184,6 +184,15 @@ public class OrderDetailController {
     	return ResponseEntity.ok(rslt);
     }
     
+	@RequestMapping(value = "/selectASInfoList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectASInfoList(@RequestParam Map<String, Object>params, ModelMap model) {
+
+		List<EgovMap> resultList = orderDetailService.selectASInfoList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(resultList);
+	}
+    
 	@RequestMapping(value = "/hsBasicInfoPop.do")
 	public String selecthsBasicInfoPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {
 
@@ -206,4 +215,5 @@ public class OrderDetailController {
 
 		return "sales/order/include/hsEditPop";
 	}
+
 }

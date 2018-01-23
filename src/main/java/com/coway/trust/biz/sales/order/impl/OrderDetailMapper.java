@@ -89,9 +89,13 @@ public interface OrderDetailMapper {
 
 	EgovMap selectGSTCertInfo(Map<String, Object> params); //Guarantee Info
 
+	String selectMemberInfo(String params); //Member Info
+
 	List<EgovMap> selectLast6MonthTransList(Map<String, Object> params); //Last 6 Months Transaction
 
 	List<EgovMap> selectLast6MonthTransListNew(Map<String, Object> params); //Last 6 Months Transaction
 
 	EgovMap selectCurrentBSResultByBSNo(Map<String, Object> params); //Guarantee Info
+
+	List<EgovMap> selectASInfoList(Map<String, Object> params); //Last 6 Months Transaction
 }

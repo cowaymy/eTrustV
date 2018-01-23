@@ -43,4 +43,6 @@ public interface OrderDetailService {
 	List<EgovMap> selectEcashList(Map<String, Object> params);
 
 	EgovMap selectCurrentBSResultByBSNo(Map<String, Object> params);
+
+	List<EgovMap> selectASInfoList(Map<String, Object> params);
 }

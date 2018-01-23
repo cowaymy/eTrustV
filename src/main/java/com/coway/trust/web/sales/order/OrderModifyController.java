@@ -145,6 +145,20 @@ public class OrderModifyController {
 		return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/updateMailingAddress2.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateMailingAddress2(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
+		
+		orderModifyService.updateOrderMailingAddress2(params, sessionVO);
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage("Information successfully updated.");
+
+		return ResponseEntity.ok(message);
+	}
+	
 	@RequestMapping(value = "/updateCntcPerson.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateCntcPerson(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
 		

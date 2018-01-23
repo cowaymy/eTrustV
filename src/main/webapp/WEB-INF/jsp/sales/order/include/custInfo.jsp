@@ -52,7 +52,7 @@
     <th scope="row">Customer ID</th>
     <td><span>${orderDetail.basicInfo.custId}</span></td>
     <th scope="row">Customer Name</th>
-    <td colspan="3"><span>${orderDetail.basicInfo.custName}</span></td>
+    <td colspan="3"><span>${orderDetail.basicInfo.custName} ${orderDetail.basicInfo.memInfo}</span></td>
 </tr>
 <tr>
     <th scope="row">Customer Type</th>
