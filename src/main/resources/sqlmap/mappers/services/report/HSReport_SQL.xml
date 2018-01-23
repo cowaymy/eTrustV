@@ -213,7 +213,7 @@
 				                Extent2.LAST_DEPT_CODE LAST_DEPT_CODE  ,
 				                Extent2.LAST_GRP_CODE LAST_GRP_CODE  ,
 				                Extent2.LAST_ORG_CODE LAST_ORG_CODE  ,
-				                Extent1.MEM_CODE || ' - ' || Extent1.NAME C1  
+				                Extent2.DEPT_CODE || ' - ' || Extent1.NAME C1  
 				         FROM ORG0001D Extent1
 				                JOIN ORG0005D Extent2   ON ( Extent2.MEM_ID = Extent1.MEM_ID )
 				                AND ( 3 = Extent2.MEM_LVL )
