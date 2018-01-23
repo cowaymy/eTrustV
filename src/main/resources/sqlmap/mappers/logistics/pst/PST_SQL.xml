@@ -259,12 +259,15 @@
  <select id="invoiceDocNoSelect" parameterType="int" resultType="String">
     select FN_GET_DOCNO(#{docno}) from dual
  </select>
+ <select id="selectinvoiceItemId" resultType="String">
+    select PAY0031D_SEQ.NEXTVAL from dual
+ </select>
  <insert id="InvoiceDListInsert" parameterType="Map">
     insert into PAY0032D( INVC_ITM_ID, TAX_INVC_ID, INVC_ITM_TYPE, INVC_ITM_ORD_NO, INVC_ITM_PO_NO, 
        INVC_ITM_CODE, INVC_ITM_DESC1, INVC_ITM_DESC2, INVC_ITM_SERIAL_NO, INVC_ITM_QTY,        
        INVC_ITM_UNIT_PRC, INVC_ITM_GST_RATE, INVC_ITM_GST_TXS, INVC_ITM_CHRG, INVC_ITM_AMT_DUE) 
   values (
-       #{invoicetaxid} , #{taxinvoidid} , #{itemtype} , #{itemordno} , #{pstpo} , 
+       #{invoiceitmid} , #{taxinvoidid} , #{itemtype} , #{itemordno} , #{pstpo} , 
        #{itmcd} , #{itmnm1} , #{itmnm2} , #{serialno} , #{reqqty},
        #{itmprc} , #{gstrate} ,
        <choose>
