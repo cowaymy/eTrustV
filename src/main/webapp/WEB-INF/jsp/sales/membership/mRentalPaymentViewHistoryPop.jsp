@@ -77,7 +77,7 @@
                       onclick : function(rowIndex, columnIndex, value, item) {
                            //pupupWin
                           $("#histRenPayId").val(item.histRenPayId);
-                          fn_confirm();
+                          fn_confirm(item.code, item.bankCodeId, item.ddApplyDt);
                       }
                }
            }, {
@@ -151,10 +151,10 @@
        }
     }
     
-    function fn_confirm(){
+    function fn_confirm(mode, bank, applyDt){
 
     	var msg = "Request Summary </br> Are you sure want to reactivate this account? </br>";
-    	msg += "Pay Mode[DD] </br> Bank Code: [MBB] </br> Apply Date: [06/04/16]";
+    	msg += "Pay Mode["+mode+"] </br> Bank Code: ["+bank+"] </br> Apply Date: ["+applyDt+"]";
     	
     	Common.confirm(msg, fn_confirmOk);
     	
