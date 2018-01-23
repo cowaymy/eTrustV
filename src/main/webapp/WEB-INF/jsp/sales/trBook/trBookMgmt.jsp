@@ -110,13 +110,13 @@ function fn_trBookAssign(){
                 Common.alert("TR Book Informtion"  + DEFAULT_DELIMITER + "[" + bookNo + "] is holding by [" + trHolder +"]. Book assign is disallowed.");
                 return ;
             }else{
-                Common.popupDiv("/sales/trBook/trBookReturnPop.do",$("#listSForm").serializeJSON(), null, true, "trBookRetrunPop");
+
+                Common.popupDiv("/sales/trBook/trBookAssignPop.do",$("#listSForm").serializeJSON(), null, true, "trBookAssignPop");
+              //  Common.popupDiv("/sales/trBook/trBookReturnPop.do",$("#listSForm").serializeJSON(), null, true, "trBookRetrunPop");
             }
-            
             
 		}
 		
-		   Common.popupDiv("/sales/trBook/trBookAssignPop.do",$("#listSForm").serializeJSON(), null, true, "trBookAssignPop");
 	}
 	
 }
@@ -142,6 +142,33 @@ function fn_trBookReturn(){
                 return ;
             }else{
                 Common.popupDiv("/sales/trBook/trBookReturnPop.do",$("#listSForm").serializeJSON(), null, true, "trBookRetrunPop");
+            }
+    	}
+		 
+	 }
+}
+
+function fn_trBookReport(){
+	
+    if($("#trBookId").val()==""){     
+    	
+        Common.alert("Book Missing" + DEFAULT_DELIMITER + "No TR book selected.");
+        
+    }else{  
+    	
+    	if(fn_getBookActionValidation()){
+    		var selectedItems = AUIGrid.getSelectedItems(trBookGridID);        
+            var first = selectedItems[0];
+            
+            var bookId = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookId");
+            var bookStus = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookStusCode");
+            var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
+                    
+            if(bookStus != "ACT"){
+                Common.alert("TR Book Informtion"  + DEFAULT_DELIMITER + "[" + bookNo + "] this book is not active. Report lost is disallowed.");
+                return ;
+            }else{
+                Common.popupDiv("/sales/trBook/reportLostViewPop.do",$("#listSForm").serializeJSON(), null, true, "reportLostViewPop");
             }
     	}
 		 
@@ -333,6 +360,9 @@ function fn_getBookActionValidation(){
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookReturn();">Return</a></p></li>          <!-- TODO 권한 120  -->
+	</c:if>
+	<c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookReport();">Report Lost (Whole)</a></p></li>          <!-- TODO 권한 179  -->
 	</c:if>
 </ul>
 
