@@ -287,7 +287,7 @@
    } ;
 
    function fn_otpGrouping(data, obj){
-       alert(obj);
+
        var targetObj = document.getElementById(obj);
        
        for(var i=targetObj.length-1; i>=0; i--) {
