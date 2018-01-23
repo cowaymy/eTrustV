@@ -205,8 +205,8 @@ public class BankStatementController {
 	 * @param model
 	 * @return
 	 */	
-	@RequestMapping(value = "/selectBankStatementDownloadList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectBankStatementDownloadList(@RequestParam Map<String, Object> params, ModelMap model) {
+	@RequestMapping(value = "/selectBankStatementDownloadList.do", method = RequestMethod.POST)
+	public ResponseEntity<List<EgovMap>> selectBankStatementDownloadList(@RequestBody Map<String, Object> params, ModelMap model) {
 		
 		LOGGER.debug("params : " + params);
 		
