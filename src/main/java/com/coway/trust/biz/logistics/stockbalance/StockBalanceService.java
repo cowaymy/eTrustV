@@ -15,6 +15,8 @@ public interface StockBalanceService
 
 	List<EgovMap> stockBalanceSearchList(Map<String, Object> params);
 
+	List<EgovMap> selectStockBalanceDetailsList(Map<String, Object> params);
+
 	List<EgovMap> stockBalanceMovementType(Map<String, Object> params);
 
 }
