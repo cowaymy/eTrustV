@@ -110,48 +110,6 @@ function fnCreatePreviousSupplyPlan(obj)
 	            }); 
 }
 
-function fnCreateNewSupplyPlan(obj)
-{
-	  if ($("#scmYearCbBox").val().length < 1) 
-	  {
-	    Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
-	    return false;
-	  } 
-
-	  if ($("#scmPeriodCbBox").val().length < 1) 
-	  {
-	    Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
-	    return false;
-	  }
-
-	  // SP_SCM_PLAN_BY_CDC_INS Call
-	  Common.ajax("POST"
-			        , "/scm/insertOrderSummarySPCall.do"
-	            , $("#MainForm").serializeJSON()    
-	            , function(result) 
-	             {		        	
-			           if (result.data.split('_')[0] == "OkSP")
-			        	   Common.alert("[ " +result.data.split('_')[1] +" Month ] " + "<spring:message code='sys.scm.planByCdc.creation'/>" + " " + "<spring:message code='pay.head.success'/>");
-			           else if (result.data == "FailSP")
-			        	   Common.alert("[ " +result.data.split('_')[1] +" Month ] " + "<spring:message code='sys.scm.planByCdc.creation'/>" + " " + "<spring:message code='pay.head.fail'/>");
-	             } 
-	           , function(jqXHR, textStatus, errorThrown) 
-	            {
-	              try 
-	              {
-	                console.log("Fail Status : " + jqXHR.status);
-	                console.log("code : "        + jqXHR.responseJSON.code);
-	                console.log("message : "     + jqXHR.responseJSON.message);
-	                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	              } 
-	              catch (e) 
-	              {
-	                console.log(e);
-	              }
-	              Common.alert("Fail : " + jqXHR.responseJSON.message);
-	            }); 
-}
-
 function fnSelectCDCComboList(codeId)
 {
 	  CommonCombo.make("cdcCbBox"
@@ -1284,12 +1242,6 @@ $(document).ready(function()
     <a onclick="fnCreatePreviousSupplyPlan(this);">Create Previous-Weekly</a>
    </p>
   </li>
-  
-	<li>
-	 <p class="btn_grid">
-	   <a onclick="fnCreateNewSupplyPlan(this);">Create New-Monthly</a>
-	 </p>
-	</li>
 	
 <!-- 	<li>
    <p class="btn_grid btn_disabled">

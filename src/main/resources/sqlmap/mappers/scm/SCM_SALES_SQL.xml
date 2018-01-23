@@ -2,7 +2,106 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.scm.impl.SalesPlanMngementMapper"> 
 
-    <select id="selectStockCtgrySummary" parameterType="Map" resultType="egovMap">
+<select id="selectStockCtgrySummary" parameterType="Map" resultType="egovMap">
+WITH SALES_PLAN_SUMMARY
+  AS
+  (
+    SELECT 
+           SAILS_MAIN.PLAN_ID PLAN_MASTER_ID ,SAILS_MAIN.TEAM ,SYS26M.STK_TYPE_ID,SYS13M.CODE CATEGORY ,SAILS_MAIN.STOCK_CODE CODE,SYS26M.STK_DESC NAME 
+          ,SAILS_MAIN.M0_PLAN ,SAILS_MAIN.M0_ORD ,SAILS_MAIN.M1 ,SAILS_MAIN.M2 ,SAILS_MAIN.M3 ,SAILS_MAIN.M4 ,SAILS_MAIN.M1_ORD ,SAILS_MAIN.M2_ORD 
+          ,SAILS_MAIN.M3_ORD ,SAILS_MAIN.M_3 ,SAILS_MAIN.M_2 ,SAILS_MAIN.M_1 
+        
+          ,SCM02D.W00 ,SCM02D.W01 ,SCM02D.W02 ,SCM02D.W03 ,SCM02D.W04 ,SCM02D.W05 ,SCM02D.W06 ,SCM02D.W07 ,SCM02D.W08 ,SCM02D.W09 ,SCM02D.W10 ,SCM02D.W11 ,SCM02D.W12 ,SCM02D.W13 ,SCM02D.W14
+          ,SCM02D.W15 ,SCM02D.W16 ,SCM02D.W17 ,SCM02D.W18 ,SCM02D.W19 ,SCM02D.W20 ,SCM02D.W21 ,SCM02D.W22 ,SCM02D.W23 ,SCM02D.W24 ,SCM02D.W25 ,SCM02D.W26 ,SCM02D.W27 ,SCM02D.W28 ,SCM02D.W29
+          ,SCM02D.W30 ,SCM02D.WS1 ,SCM02D.WS2 ,SCM02D.WS3 ,SCM02D.WS4 ,SCM02D.WS5  
+                        
+          ,SAILS_MAIN.PRE_M3_AVG_ORDED ,SAILS_MAIN.PRE_M3_AVG_ISSU ,SAILS_MAIN.SCM_YEAR ,SAILS_MAIN.SCM_MONTH ,SAILS_MAIN.SCM_WEEK_TH ,SAILS_MAIN.SCM_WEEK_TH_SN   
+          ,SAILS_MAIN.PRE_M3_AVG_ORDED_RATE ,SAILS_MAIN.PRE_M3_AVG_ISSU_RATE  
+    FROM (
+          SELECT SCM01M.PLAN_ID ,SCM30S.SCM_YEAR ,SCM30S.SCM_MONTH ,SCM30S.SCM_WEEK_TH ,SCM30S.SCM_WEEK_TH_SN ,SCM30S.STOCK_CODE ,SCM30S.TEAM ,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
+                ,SUM(PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE ,SUM(PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED ,SUM(PRE_M3_AVG_ISSU) PRE_M3_AVG_ISSU ,SUM(M1_ORD) M1_ORD ,SUM(M2_ORD) M2_ORD
+                ,SUM(M3_ORD) M3_ORD ,SUM(M_3) M_3 ,SUM(M_2) M_2 ,SUM(M_1) M_1 ,SUM(M0_PLAN) M0_PLAN ,SUM(M0_ORD) M0_ORD ,SUM(M1) M1 ,SUM(M2) M2 ,SUM(M3) M3 ,SUM(M4) M4
+            FROM SCM0030S SCM30S
+                ,SCM0001M SCM01M
+           WHERE SCM30S.SCM_YEAR  = #{scmYearCbBox}
+            <if test="selectPlanMonth != null and selectPlanMonth !=''">
+             AND SCM30S.SCM_MONTH = #{selectPlanMonth}
+            </if>
+            <if test="scmPeriodCbBox != null and scmPeriodCbBox !=''">
+             AND SCM30S.SCM_WEEK_TH = #{scmPeriodCbBox} 
+             </if> 
+             AND SCM30S.SCM_YEAR    = SCM01M.PLAN_YEAR
+             AND SCM30S.SCM_MONTH   = SCM01M.PLAN_MONTH 
+             AND SCM30S.SCM_WEEK_TH = SCM01M.PLAN_WEEK
+             AND SCM30S.SCM_WEEK_TH_SN =1 
+             AND SCM30S.TEAM = SCM01M.TEAM
+             <if test="scmTeamCbBox != null and scmTeamCbBox !=''">
+             AND SCM01M.TEAM = #{scmTeamCbBox} 
+             </if>
+           GROUP BY SCM01M.PLAN_ID
+                   ,SCM30S.SCM_YEAR
+                   ,SCM30S.SCM_MONTH
+                   ,SCM30S.SCM_WEEK_TH
+                   ,SCM30S.SCM_WEEK_TH_SN
+                   ,SCM30S.STOCK_CODE
+                   ,SCM30S.TEAM
+       ) SAILS_MAIN 
+         LEFT OUTER JOIN SCM0002D SCM02D ON SAILS_MAIN.TEAM = SCM02D.TEAM 
+                                         AND SAILS_MAIN.STOCK_CODE = SCM02D.STOCK_CODE 
+                                         AND SAILS_MAIN.PLAN_ID = SCM02D.PLAN_MASTER_ID
+         LEFT OUTER JOIN SYS0026M SYS26M ON SAILS_MAIN.STOCK_CODE = SYS26M.STK_CODE
+         LEFT OUTER JOIN SYS0013M SYS13M ON SYS26M.STK_CTGRY_ID = SYS13M.CODE_ID
+  )
+  SELECT   
+           SALES_PLAN_SUMMARY.PLAN_MASTER_ID
+         , SALES_PLAN_SUMMARY.SCM_YEAR
+         , SALES_PLAN_SUMMARY.SCM_MONTH
+         , SALES_PLAN_SUMMARY.SCM_WEEK_TH
+         , SALES_PLAN_SUMMARY.TEAM
+         , SALES_PLAN_SUMMARY.STK_TYPE_ID
+         , SALES_PLAN_SUMMARY.CATEGORY  
+         , ROUND(AVG(M_1 + M_2 + M_3)) ||'/'|| ROUND(AVG(M1_ORD + M2_ORD + M3_ORD)) M3_AVG_ISSUE_ORDER
+         , ROUND(SUM(M_1)) ||'/'|| ROUND(SUM(M1_ORD)) M1_ISSUE_ORDER
+         , ROUND(SUM(M0_PLAN)) ||'/'|| ROUND(SUM(M0_ORD)) M0_PLAN_ORDER 
+         , SUM(M1) M1 
+         , SUM(M2) M2 
+         , SUM(M3) M3 
+         , SUM(M4) M4 
+         , SUM(W00)  AS W00 ,SUM(W01)  AS W01 ,SUM(W02)  AS W02 ,SUM(W03)  AS W03 ,SUM(W04)  AS W04 
+         , SUM(W05)  AS W05 ,SUM(W06)  AS W06 ,SUM(W07)  AS W07 ,SUM(W08)  AS W08 ,SUM(W09)  AS W09 
+         , SUM(W10)  AS W10 ,SUM(W11)  AS W11 ,SUM(W12)  AS W12 ,SUM(W13)  AS W13 ,SUM(W14)  AS W14  
+         , SUM(W15)  AS W15 ,SUM(W16)  AS W16 ,SUM(W17)  AS W17 ,SUM(W18)  AS W18 ,SUM(W19)  AS W19 
+         , SUM(W20)  AS W20 ,SUM(W21)  AS W21 ,SUM(W22)  AS W22 ,SUM(W23)  AS W23 ,SUM(W24)  AS W24
+         , SUM(W25)  AS W25 ,SUM(W26)  AS W26 ,SUM(W27)  AS W27 ,SUM(W28)  AS W28 ,SUM(W29)  AS W29 ,SUM(W30)  AS W30
+         , ROUND(AVG(M1_ORD + M2_ORD + M3_ORD)) AS PRE_M3_AVG_ORDERED 
+                     
+    FROM SALES_PLAN_SUMMARY
+   WHERE 1 = 1
+     <choose>
+      <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+       AND SALES_PLAN_SUMMARY.STK_TYPE_ID IN
+          <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+              #{item}
+          </foreach>
+      </when>
+    </choose>
+    
+    <choose>
+      <when test='stkCategories != null and !stkCategories.isEmpty  '>
+         AND SALES_PLAN_SUMMARY.CATEGORY IN (SELECT CODE FROM SYS0013M WHERE CODE_ID IN 
+            <foreach item="item" collection="stkCategories" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+            )
+        </when>
+      </choose>   
+      
+    GROUP BY SALES_PLAN_SUMMARY.PLAN_MASTER_ID, SALES_PLAN_SUMMARY.SCM_YEAR ,SALES_PLAN_SUMMARY.SCM_MONTH
+           , SALES_PLAN_SUMMARY.SCM_WEEK_TH, SALES_PLAN_SUMMARY.TEAM, SALES_PLAN_SUMMARY.STK_TYPE_ID, SALES_PLAN_SUMMARY.CATEGORY  
+  ORDER BY SALES_PLAN_SUMMARY.CATEGORY    
+</select>
+    
+    <select id="selectStockCtgrySummary_TEMP" parameterType="Map" resultType="egovMap">
 				SELECT 
 				       SCM39V.STOCK_CTGRY  CATEGORY
 				     , ROUND(AVG(M_1 + M_2 + M_3)) ||'/'|| ROUND(AVG(M1_ORD + M2_ORD + M3_ORD)) M3_AVG_Issue_Order
@@ -426,10 +525,10 @@
 					  ) M0
 					,
 					(
-					   SELECT SCM_YEAR
+					  SELECT SCM_YEAR
 					        ,SCM_MONTH
 					        ,COUNT(SCM_YEAR) REC_CNT
-					  FROM SCM0018M
+					    FROM SCM0018M
       <choose>
         <when test=' selectPlanMonth != null and (selectPlanMonth +1) > 12 '>	
            WHERE SCM_YEAR =  (#{scmYearCbBox} +1)
@@ -445,10 +544,10 @@
 					) M1
 					,
 					(
-					   SELECT SCM_YEAR
+					  SELECT SCM_YEAR
 					        ,SCM_MONTH
 					        ,COUNT(SCM_YEAR) REC_CNT
-					  FROM SCM0018M
+					    FROM SCM0018M
       <choose>
         <when test=' selectPlanMonth != null and (selectPlanMonth +1) > 12 '> 
            WHERE SCM_YEAR =  (#{scmYearCbBox} +1)
@@ -464,11 +563,10 @@
 					) M2
 					,
 					(
-					
-					   SELECT SCM_YEAR
+				    SELECT SCM_YEAR
 					        ,SCM_MONTH
 					        ,COUNT(SCM_YEAR) REC_CNT
-					  FROM SCM0018M 
+					   FROM SCM0018M 
       <choose>
         <when test=' selectPlanMonth != null and (selectPlanMonth +1) > 12 '> 
            WHERE SCM_YEAR =  (#{scmYearCbBox} +1)
@@ -598,7 +696,108 @@
 			  AND ROWNUM    = 1
     </select>
     
-    <select id="selectSalesPlanMngmentList" parameterType="Map" resultType="egovMap">
+<select id="selectSalesPlanMngmentList" parameterType="Map" resultType="egovMap">
+     SELECT SALES_PLAN_MAIN_LIST.*
+			    , FN_GET_COUNT_SCM_WEEK_TH(SALES_PLAN_MAIN_LIST.CODE,SALES_PLAN_MAIN_LIST.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -4) ) BEF_4_WEEK_TH
+			    , FN_GET_COUNT_SCM_WEEK_TH(SALES_PLAN_MAIN_LIST.CODE,SALES_PLAN_MAIN_LIST.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -3) ) BEF_3_WEEK_TH
+			    , FN_GET_COUNT_SCM_WEEK_TH(SALES_PLAN_MAIN_LIST.CODE,SALES_PLAN_MAIN_LIST.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -2) ) BEF_2_WEEK_TH
+			    , FN_GET_COUNT_SCM_WEEK_TH(SALES_PLAN_MAIN_LIST.CODE,SALES_PLAN_MAIN_LIST.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -1) ) BEF_1_WEEK_TH  
+			              
+			FROM (
+			        SELECT 
+			               SAILS_MAIN.CHECK_FLAG ,SAILS_MAIN.PLAN_ID PLAN_MASTER_ID ,SAILS_MAIN.TEAM ,SYS26M.STK_TYPE_ID,SYS13M.CODE CATEGORY ,SAILS_MAIN.STOCK_CODE CODE,SYS26M.STK_DESC NAME 
+			              ,ROUND(SAILS_MAIN.PRE_M3_AVG_ISSU)  ||'/'|| ROUND(SAILS_MAIN.PRE_M3_AVG_ORDED)  M3_AVG_ISSUE_ORDER ,ROUND(SAILS_MAIN.M_1)  ||'/'|| ROUND(SAILS_MAIN.M1_ORD)  M1_ISSUE_ORDER
+			              ,SAILS_MAIN.M0_PLAN ||'/'|| SAILS_MAIN.M0_ORD M0_PLAN_ORDER ,SAILS_MAIN.M1 ,SAILS_MAIN.M2 ,SAILS_MAIN.M3 ,SAILS_MAIN.M4
+			
+			              ,SCM02D.W00 ,SCM02D.W01 ,SCM02D.W02 ,SCM02D.W03 ,SCM02D.W04 ,SCM02D.W05 ,SCM02D.W06 ,SCM02D.W07 ,SCM02D.W08 ,SCM02D.W09 ,SCM02D.W10 ,SCM02D.W11 ,SCM02D.W12 ,SCM02D.W13 ,SCM02D.W14
+			              ,SCM02D.W15 ,SCM02D.W16 ,SCM02D.W17 ,SCM02D.W18 ,SCM02D.W19 ,SCM02D.W20 ,SCM02D.W21 ,SCM02D.W22 ,SCM02D.W23 ,SCM02D.W24 ,SCM02D.W25 ,SCM02D.W26 ,SCM02D.W27 ,SCM02D.W28 ,SCM02D.W29
+			              ,SCM02D.W30 ,SCM02D.WS1 ,SCM02D.WS2 ,SCM02D.WS3 ,SCM02D.WS4 ,SCM02D.WS5  
+			                
+			              ,SAILS_MAIN.PRE_M3_AVG_ORDED ,SAILS_MAIN.PRE_M3_AVG_ISSU ,SAILS_MAIN.M1_ORD  ,SAILS_MAIN.M2_ORD ,SAILS_MAIN.M3_ORD ,SAILS_MAIN.M_3 ,SAILS_MAIN.M_2 ,SAILS_MAIN.M_1   
+			              ,SAILS_MAIN.SCM_YEAR ,SAILS_MAIN.SCM_MONTH ,SAILS_MAIN.SCM_WEEK_TH ,SAILS_MAIN.SCM_WEEK_TH_SN   ,SAILS_MAIN.PRE_M3_AVG_ORDED_RATE ,SAILS_MAIN.PRE_M3_AVG_ISSU_RATE
+			                
+			          FROM (
+				                SELECT PLAN_STUS_ID CHECK_FLAG
+				                      ,SCM01M.PLAN_ID 
+				                      ,SCM30S.SCM_YEAR 
+				                      ,SCM30S.SCM_MONTH 
+				                      ,SCM30S.SCM_WEEK_TH 
+				                      ,SCM30S.SCM_WEEK_TH_SN 
+				                      ,SCM30S.STOCK_CODE 
+				                      ,SCM30S.TEAM 
+				                      ,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
+				                      ,SUM(PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE
+				                      ,SUM(PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED
+				                      ,SUM(PRE_M3_AVG_ISSU) PRE_M3_AVG_ISSU
+				                      ,SUM(M1_ORD) M1_ORD
+				                      ,SUM(M2_ORD) M2_ORD
+				                      ,SUM(M3_ORD) M3_ORD
+				                        
+				                      ,SUM(M_3) M_3
+				                      ,SUM(M_2) M_2
+				                      ,SUM(M_1) M_1               
+				                      ,SUM(M0_PLAN) M0_PLAN
+				                      ,SUM(M0_ORD) M0_ORD
+				                        
+				                      ,SUM(M1) M1
+				                      ,SUM(M2) M2
+				                      ,SUM(M3) M3
+				                      ,SUM(M4) M4                                          
+				                              
+				                  FROM SCM0030S SCM30S
+				                      ,SCM0001M SCM01M
+				                 WHERE SCM30S.SCM_YEAR  = #{scmYearCbBox}
+				                   AND SCM30S.SCM_MONTH = #{selectPlanMonth}
+				                   AND SCM30S.SCM_WEEK_TH = #{scmPeriodCbBox} 
+				                   AND SCM30S.SCM_YEAR    = SCM01M.PLAN_YEAR
+				                   AND SCM30S.SCM_MONTH   = SCM01M.PLAN_MONTH 
+				                   AND SCM30S.SCM_WEEK_TH = SCM01M.PLAN_WEEK
+				                   AND SCM30S.SCM_WEEK_TH_SN =1 
+				                   AND SCM30S.TEAM = SCM01M.TEAM
+				                  <if test='scmTeamCbBox != null and scmTeamCbBox !="" '>
+				                   AND SCM01M.TEAM = #{scmTeamCbBox}  
+				                  </if>
+				                 GROUP BY SCM01M.PLAN_STUS_ID 
+				                         ,SCM01M.PLAN_ID
+				                         ,SCM30S.SCM_YEAR
+				                         ,SCM30S.SCM_MONTH
+				                         ,SCM30S.SCM_WEEK_TH
+				                         ,SCM30S.SCM_WEEK_TH_SN
+				                         ,SCM30S.STOCK_CODE
+				                         ,SCM30S.TEAM
+			                         
+			              ) SAILS_MAIN 
+			               
+			                LEFT OUTER JOIN SCM0002D SCM02D ON SAILS_MAIN.TEAM = SCM02D.TEAM 
+			                                               AND SAILS_MAIN.STOCK_CODE = SCM02D.STOCK_CODE 
+			                                               AND SAILS_MAIN.PLAN_ID = SCM02D.PLAN_MASTER_ID
+			                LEFT OUTER JOIN SYS0026M SYS26M ON SAILS_MAIN.STOCK_CODE = SYS26M.STK_CODE
+			                LEFT OUTER JOIN SYS0013M SYS13M ON SYS26M.STK_CTGRY_ID = SYS13M.CODE_ID
+			               
+           ) SALES_PLAN_MAIN_LIST
+       WHERE 1 = 1                                                                                  
+      <choose>
+        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STK_TYPE_ID IN
+            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+
+        </when>
+      </choose>
+                                                                         
+      <choose>
+        <when test='stkCodes != null and !stkCodes.isEmpty '>
+         AND CODE IN
+            <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </when>
+      </choose>
+
+</select>
+    
+    <select id="selectSalesPlanMngmentList_TEMP" parameterType="Map" resultType="egovMap">
       SELECT 
              (SELECT PLAN_STUS_ID
                 FROM SCM0001M

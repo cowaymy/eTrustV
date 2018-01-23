@@ -230,7 +230,7 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	public String callSpCreateSupplyPlanSummary(Map<String, Object> params, SessionVO sessionVO)
 	{
 		String returnValue = "OkSP";
-		String selectPlanMonth = salesPlanMngementMapper.selectMonthPlanByCdc(params).get(0).get("planMonth").toString();
+		String selectPlanMonth = salesPlanMngementMapper.selectMonthCombo(params).get(0).get("scmMonth").toString();
 		
 		params.put("planMonth", selectPlanMonth);
 		params.put("crtUserId", sessionVO.getUserId());
