@@ -60,7 +60,7 @@
 			var type = $("#reportType").val(); //report type
 			var cmmDt = $("#searchForm #cmmDt").val(); //commission date
 			var salesPersonCd = $("#searchForm [name=salesPersonCd]").val(); //member code
-			 
+
 			if (type == "") {
 				//Common.alert("Please select Report Type ");
 				Common.alert("<spring:message code='commission.alert.report.selectType'/>");
@@ -69,20 +69,20 @@
 				//Common.alert("Please select Commission Period ");
 				Common.alert("<spring:message code='commission.alert.report.selectPeriod'/>");
 				return;
-		  } 
+		  }
 
 			var reportDownFileName = ""; //download report name
 			var reportFileName = ""; //reportFileName
 			var reportViewType = ""; //viewType
 
 			//default input setting
-			$($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name		  
+			$($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
 			$($reportForm).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
 			$($reportForm).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
 			var month = Number(cmmDt.substring(0, 2));
 			var year = Number(cmmDt.substring(3));
 			var taskID = month + (year * 12) - 24157; //taskId
-			
+
 			var option = {
 			        isProcedure : false, // procedure 로 구성된 리포트 인경우 필수.
 			      };
@@ -101,9 +101,9 @@
 				  option = {
 	                      isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
 	                    };
-				  
-				if(salesPersonCd=="503581"){//GCM 
-					reportFileName = "/commission/SGMComm_PDF.rpt"; //reportFileName				
+
+				if(salesPersonCd=="503581"){//GCM
+					reportFileName = "/commission/SGMComm_PDF.rpt"; //reportFileName
 				 	$($reportForm).append('<input type="hidden" id="Memcode" name="@Memcode" value="" /> ');
 			    $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
 			    $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
@@ -115,9 +115,9 @@
 			     $($reportForm).append('<input type="hidden" id="Month" name="Month" value="" /> ');
 			     $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 			     $($reportForm).append('<input type="hidden" id="Year" name="Year" value="" /> ');
-				}				
-				reportDownFileName = "HPCommission_" + today; //report name			
-				reportViewType = "PDF"; //viewType			
+				}
+				reportDownFileName = "HPCommission_" + today; //report name
+				reportViewType = "PDF"; //viewType
 
 				$("#reportForm #Memcode").val(salesPersonCd);
 				$("#reportForm #Month").val(month);
@@ -126,41 +126,41 @@
 			} else if (type == "2") {
 
 				reportFileName = "/commission/HPCommissionRawData_Excel.rpt"; //reportFileName
-				reportDownFileName = "HPCommissionRawData_" + today; //report name     
+				reportDownFileName = "HPCommissionRawData_" + today; //report name
 				reportViewType = "EXCEL"; //viewType
 
-				//set parameters		
+				//set parameters
 				$($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
 				$("#reportForm #TaskID").val(taskID);
 
 			} else if (type == "3") {
 
 				reportFileName = "/commission/HPTBBRawFile_Excel.rpt"; //reportFileName
-				reportDownFileName = "HPTBBRawFile_" + today; //report name     
+				reportDownFileName = "HPTBBRawFile_" + today; //report name
 				reportViewType = "EXCEL"; //viewType
 
 				//set parameters
 				$($reportForm).append('<input type="hidden" id="CommDate" name="CommDate" value="" /> ');
-		    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');		
-		   
+		    $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
+
 		    $("#reportForm #CommDate").val(cmmDt.substring(3)+"-"+cmmDt.substring(0, 2)+"-"+"01");
 	      $("#reportForm #TaskID").val(taskID);
 
 			} else if (type == "4") {
 
 				reportFileName = "/commission/CommCalHPRawData_Excel.rpt"; //reportFileName
-				reportDownFileName = "CommCalHPRawData_" + today; //report name     
+				reportDownFileName = "CommCalHPRawData_" + today; //report name
 				reportViewType = "EXCEL"; //viewType
 
-				//set parameters			
+				//set parameters
 				$($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-			
+
 				$("#reportForm #TaskID").val(taskID);
-				
+
 			} else if (type == "5") {
 
 				reportFileName = "/commission/HPSHIReport.rpt"; //reportFileName
-				reportDownFileName = "HPSHIRaw_" + today; //report name     
+				reportDownFileName = "HPSHIRaw_" + today; //report name
 				reportViewType = "EXCEL"; //viewType
 
 				//set parameters
@@ -171,7 +171,7 @@
 				$("#reportForm #TaskID").val(taskID);
 
 			}
-			
+
 			//report info
 			if (reportFileName == "" || reportDownFileName == "" || reportViewType == "") {
 				Common.alert("<spring:message code='sys.common.alert.validation' arguments='Report Info' htmlEscape='false'/>");
@@ -184,10 +184,10 @@
 			$("#reportForm #viewType").val(reportViewType);
 
 			//  report 호출
-			
+
 			Common.report("reportForm", option);
 			$("#searchForm #confirmChk").val("N");
-			  
+
 		});
 
 	});
@@ -237,20 +237,20 @@
 						<th scope="row"><spring:message code='commission.text.search.reportType'/></th>
 						<td colspan="3"><select id="reportType" name="reportType">
 								<option value="">Report/Raw Data Type</option>
-								<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+								<%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 								    <option value="1">HP Commission Statement</option>
-								</c:if>
+								</c:if> --%>
 								<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-									<option value="2">HP Commission Raw (All)</option>								
+									<option value="2">HP Commission Raw (All)</option>
 									<option value="3">HP TBB File Data Raw</option>
 									<option value="4">HP Comm Calculation</option>
 									<option value="5">HP SHI Index Raw</option>
-								</c:if>						
+								</c:if>
 						</select></td>
 					</tr>
 					<tr id="mConfirm" name="mConfirm" style="display: none;">
 						<th scope="row"><spring:message code='commission.text.search.memCode'/></th>
-						<td colspan="3"><input type="text" id="salesPersonCd" name="salesPersonCd" <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && PAGE_AUTH.funcUserDefine2 != 'Y'}"> value="${loginId }" readonly</c:if> /> 
+						<td colspan="3"><input type="text" id="salesPersonCd" name="salesPersonCd" <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' && PAGE_AUTH.funcUserDefine2 != 'Y'}"> value="${loginId }" readonly</c:if> />
 						  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y' }"><a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if>
 							<p class="btn_sky">
 								<a href="#" id="confirm" name="confirm"><spring:message code='commission.button.confirm'/></a>

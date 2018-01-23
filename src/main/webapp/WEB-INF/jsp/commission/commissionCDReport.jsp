@@ -60,7 +60,7 @@
             var type = $("#reportType").val(); //report type
             var cmmDt = $("#searchForm #cmmDt").val(); //commission date
             var salesPersonCd = $("#searchForm [name=salesPersonCd]").val(); //member code
-             
+
             if (type == "") {
                 Common.alert("<spring:message code='commission.alert.report.selectType'/>");
                 //Common.alert("Please select Report Type ");
@@ -76,7 +76,7 @@
             var reportViewType = ""; //viewType
 
             //default input setting
-            $($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name       
+            $($reportForm).append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
             $($reportForm).append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
             $($reportForm).append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
             var month = Number(cmmDt.substring(0, 2));
@@ -95,7 +95,7 @@
                 }
 
                 reportFileName = "/commission/CodyComm_PDF.rpt"; //reportFileName
-                reportDownFileName = "CodyCommission_" + today; //report name           
+                reportDownFileName = "CodyCommission_" + today; //report name
                 reportViewType = "PDF"; //viewType
 
                 //set parameters
@@ -111,7 +111,7 @@
             } else if (type == "2") {
 
                 reportFileName = "/commission/CMCommissionRawData_Excel.rpt"; //reportFileName
-                reportDownFileName = "CMCommissionRawData_" + today; //report name     
+                reportDownFileName = "CMCommissionRawData_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
                 //set parameters
@@ -124,14 +124,14 @@
             } else if (type == "3") {
 
                 reportFileName = "/commission/CommCalCodyRawData_Excel.rpt"; //reportFileName
-                reportDownFileName = "CommCalCodyRawData_" + today; //report name     
+                reportDownFileName = "CommCalCodyRawData_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
                 //set parameters
                 $($reportForm).append('<input type="hidden" id="Month" name="@Month" value="" /> ');
             $($reportForm).append('<input type="hidden" id="TaskID" name="@TaskID" value="" /> ');
             $($reportForm).append('<input type="hidden" id="Year" name="@Year" value="" /> ');
-           
+
             $("#reportForm #Month").val(month);
             $("#reportForm #Year").val(year);
             $("#reportForm #TaskID").val(taskID);
@@ -139,40 +139,40 @@
             } else if (type == "4") {
 
                 reportFileName = "/commission/ComCalCMRawData_Excel.rpt"; //reportFileName
-                reportDownFileName = "ComCalCMRawData_" + today; //report name     
+                reportDownFileName = "ComCalCMRawData_" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
-                //set parameters            
+                //set parameters
                 $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-            
+
                 $("#reportForm #TaskID").val(taskID);
-                
+
             } else if (type == "5") {
 
                 reportFileName = "/commission/HandCollectRawData_Excel.rpt"; //reportFileName
-                reportDownFileName = "HandCollectRawData__" + today; //report name     
+                reportDownFileName = "HandCollectRawData__" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
-                //set parameters            
+                //set parameters
                 $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-            
+
                 $("#reportForm #TaskID").val(taskID);
-                
+
             } else if (type == "6") {
 
                 reportFileName = "/commission/CodyRentationRaw_Excel.rpt"; //reportFileName
-                reportDownFileName = "CodyRentationRaw__" + today; //report name     
+                reportDownFileName = "CodyRentationRaw__" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
-                //set parameters        
+                //set parameters
                 $($reportForm).append('<input type="hidden" id="TaskID" name="TaskID" value="" /> ');
-        
+
                 $("#reportForm #TaskID").val(taskID);
-                
+
             } else if (type == "7") {
 
                 reportFileName = "/commission/CodySHIReport.rpt"; //reportFileName
-                reportDownFileName = "CodySHIRaw__" + today; //report name     
+                reportDownFileName = "CodySHIRaw__" + today; //report name
                 reportViewType = "EXCEL"; //viewType
 
                 //set parameters
@@ -185,8 +185,8 @@
             } else if (type == "8") {
 
                 reportFileName = "/commission/CMSHIReport.rpt"; //reportFileName
-                reportDownFileName = "CMSHIRaw_" + today; //report name     
-                reportViewType = "EXCEL"; //viewType   
+                reportDownFileName = "CMSHIRaw_" + today; //report name
+                reportViewType = "EXCEL"; //viewType
 
                 //set parameters
                 $($reportForm).append('<input type="hidden" id="CommDate" name="CommDate" value="" /> ');
@@ -198,7 +198,7 @@
             } else if (type == "9") {
 
             reportFileName = "/commission/CodyCommissionRawData_Excel.rpt"; //reportFileName
-            reportDownFileName = "CodyCommissionRawData_Excel_" + today; //report name     
+            reportDownFileName = "CodyCommissionRawData_Excel_" + today; //report name
             reportViewType = "EXCEL"; //viewType
 
             //set parameters
@@ -277,9 +277,9 @@
                         <th scope="row"><spring:message code='commission.text.search.reportType'/></th>
                         <td colspan="3"><select id="reportType" name="reportType">
                                 <option value="">Report/Raw Data Type</option>
-                                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' }">
+                                <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y' }">
 	                                <option value="1">Cody Commisision Statement</option>
-                                </c:if>
+                                </c:if> --%>
                                 <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 	                                <option value="9">Cody Commission Raw (All)</option>
 	                                <option value="2">Cody Manager Commission</option>
