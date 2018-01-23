@@ -117,6 +117,9 @@ public class BatchPaymentServiceImpl extends EgovAbstractServiceImpl implements 
 				int detailSeq = batchPaymentMapper.getPAY0043DSEQ();
 				detailList.get(i).put("detId", detailSeq);
 				detailList.get(i).put("batchId", mastetSeq);
+				detailList.get(i).put("jomPay", master.get("jomPay"));
+				
+				logger.debug("detailList {}",detailList.get(i));
 				batchPaymentMapper.saveBatchPayDetailList(detailList.get(i));
 			}
 			//CALL PROCEDURE

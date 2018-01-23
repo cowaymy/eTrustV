@@ -315,6 +315,10 @@ public class BatchPaymentController {
 		master.put("paymentType", 97);
 		master.put("paymentRemark", "");
 		master.put("paymentCustType", 1368);
+		master.put("jomPay", request.getParameter("jomPay"));
+		
+		
+		
 		
 		int result = batchPaymentService.saveBatchPaymentUpload(master, detailList);
 		if(result > 0){

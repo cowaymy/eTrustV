@@ -28,7 +28,8 @@ var gridPros = {
         editable : false,
         
         // 상태 칼럼 사용
-        showStateColumn : false
+        showStateColumn : false,
+        selectionMode       : "singleRow"
 };
 
 var gridPros2 = {
@@ -506,6 +507,9 @@ var batchInfoLayout = [
         formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
         formData.append("payModeId", payModeId);
         
+        if($("#jomPay").is(":checked")) formData.append("jomPay","1");
+        else  formData.append("jomPay","");
+        
         Common.ajaxFile("/payment/csvFileUpload.do", formData, function(result){
             $('#paymentMode option[value=""]').attr('selected', 'selected');
 
@@ -920,13 +924,15 @@ var batchInfoLayout = [
 			<table class="type1"><!-- table start -->
 				<caption>table</caption>
 				<colgroup>
-				    <col style="width:150px" />
+				    <col style="width:130px" />
 				    <col style="width:*" />
+				    <col style="width:130px" />
+                    <col style="width:*" />
 				</colgroup>
 				<tbody>
 					<tr>
 					    <th scope="row">Payment Mode</th>
-					    <td>
+					    <td >
 					    <select class="" id="paymentMode" name="paymentMode">
 					        <option value=""></option>
 					        <option value="105">Cash (CSH)</option>
@@ -934,10 +940,15 @@ var batchInfoLayout = [
 					        <option value="108">Online Payment (ONL)</option>
 					    </select>
 					    </td>
-					</tr>
+					    
+					       <th scope="row">JomPay</th>
+	                       <td>  
+	                            <input type='checkbox' id ='jomPay' name='jomPay' value='1'>
+	                       </td>
+                    </tr>
 					<tr>
 					    <th scope="row">File</th>
-					    <td>
+					    <td colspan='3'>
 					    <div class="auto_file"><!-- auto_file start -->
 					        <input type="file" title="file add" id="uploadfile" name="uploadfile" />
 					    </div><!-- auto_file end -->

@@ -486,7 +486,16 @@
 		SYSDATE,
 		#{validStatusId},
 		#{validRemark},
-		LPAD(#{userOrderNo}, 7, '0'),
+		 decode( #{jomPay} , '1' ,
+		             (   SELECT B.SALES_ORD_NO
+		                   FROM SAL0024D A, SAL0001D B
+		                  WHERE 1=1
+		                    AND A.CUST_BILL_ID = B.CUST_BILL_ID
+		                    AND A.CUST_BILL_SO_ID = B.SALES_ORD_ID
+		                    AND CUST_BILL_PAY_REF_NO1  =   LPAD(#{userOrderNo}, 8, '0')
+                      ),
+                      LPAD(#{userOrderNo}, 7, '0')
+		 ) ,
 		#{userTrNo},
 		#{userRefNo},
 		#{userAmount},
