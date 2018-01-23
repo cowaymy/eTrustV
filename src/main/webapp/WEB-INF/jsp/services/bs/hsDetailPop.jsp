@@ -299,14 +299,15 @@
             	}
             }
             
-            var serialChkList = "";
+            // 시리얼넘버체크 막아둠
+            /* var serialChkList = "";
             if (serialChkCode.length > 0) {
             	for (var i = 0; i < serialChkCode.length; i++) {
             		serialChkList = serialChkList + "<br/>" + serialChkCode[i] + " - " + serialChkName[i];
             	}
             	Common.alert("Please insert 'Serial No' for" + serialChkList);
             	return false;
-            }
+            } */
             
              //var jsonObj =  GridCommon.getEditData(myDetailGridID);
             // add by jgkim
