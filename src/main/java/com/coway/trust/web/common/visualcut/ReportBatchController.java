@@ -149,7 +149,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"RCM" + File.separator + "RCM_Daily_2015_S" + CommonUtils.getNowDate() + ".xls");
+				"RCM" + File.separator + "RCM_Daily_S" + CommonUtils.getNowDate() + ".xls");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] RCM_Daily_2015_S...");
@@ -164,7 +164,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"RCM" + File.separator + "RCM_Daily_2015_S_2" + CommonUtils.getNowDate() + ".xls");
+				"RCM" + File.separator + "RCM_Daily_S_2" + CommonUtils.getNowDate() + ".xls");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] RCM_Daily_2015_S_2...");
