@@ -66,7 +66,7 @@ var staffClaimColumnLayout = [ {
 
 //그리드 속성 설정
 var staffClaimGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -80,11 +80,29 @@ var staffClaimGridID;
 
 $(document).ready(function () {
 	staffClaimGridID = AUIGrid.create("#staffClaim_grid_wrap", staffClaimColumnLayout, staffClaimGridPros);
-    
+
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#registration_btn").click(fn_newStaffClaimPop);
-    
-    AUIGrid.bind(staffClaimGridID, "cellDoubleClick", function( event ) 
+    $("#_staffClaimBtn").click(function() {
+
+        //Param Set
+        var gridObj = AUIGrid.getSelectedItems(staffClaimGridID);
+
+
+        if(gridObj == null || gridObj.length <= 0 ){
+            Common.alert("* No Record Selected. ");
+            return;
+        }
+
+        var claimno = gridObj[0].item.clmNo;
+        $("#_repClaimNo").val(claimno);
+        console.log("clmNo : " + $("#_repClaimNo").val());
+
+        fn_report();
+        //Common.alert('The program is under development.');
+    });
+
+    AUIGrid.bind(staffClaimGridID, "cellDoubleClick", function( event )
             {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + event.item.clmNo);
@@ -98,24 +116,24 @@ $(document).ready(function () {
                     var clmType = clmNo.substr(0, 2);
                 	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType);
                 }
-                
+
             });
-    
+
     $("#appvPrcssStus").multipleSelect("checkAll");
-    
+
     fn_setToMonth();
 });
 
 function fn_setToMonth() {
     var month = new Date();
-    
+
     var mm = month.getMonth() + 1;
     var yyyy = month.getFullYear();
-    
+
     if(mm < 10){
         mm = "0" + mm
     }
-    
+
     month = mm + "/" + yyyy;
     $("#clmMonth").val(month)
 }
@@ -134,16 +152,16 @@ function fn_clearData() {
         $("#invcType").val("F");
         $("#invcNo").val("");
         $("#expDesc").val("");
-        
+
         fn_destroyMyGrid();
         fn_createMyGrid();
-        
+
         fn_myGridSetEvent();
-        
+
         $("#attachTd").html("");
         $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
     }
-    
+
     //clmSeq = 0;
 }
 
@@ -158,7 +176,7 @@ function fn_setEvent() {
             var year = clmMonth.substring(3);
             console.log("year : " + year + " month : " + month);
             clmMonth = year + month;
-            
+
             var now = new Date;
             var mm = now.getMonth() + 1;
             var yyyy = now.getFullYear();
@@ -167,7 +185,7 @@ function fn_setEvent() {
             }
             now = yyyy + "" + mm;
             console.log("yyyy : " + yyyy + " mm : " + mm);
-            
+
             console.log(clmMonth);
             console.log(now);
             if(Number(clmMonth) > Number(now)) {
@@ -196,14 +214,14 @@ function fn_setEvent() {
             }
         }
    });
-	    
+
 	 // 파일 선택하기
 	    $('#file').on('change', function(evt) {
 	        var data = null;
 	        var file = evt.target.files[0];
 	        if (typeof file == "undefined") {
 	            console.log("파일 선택 시 취소!!");
-	            
+
 	            delete myFileCaches[selectRowIdx + 1];
 
 	            AUIGrid.updateRow(mileageGridID, {
@@ -211,19 +229,19 @@ function fn_setEvent() {
 	            }, selectRowIdx);
 	            return;
 	        }
-	        
+
 	        /* if(file.size > 2048000) {
 	            alert("개별 파일은 2MB 를 초과해선 안됩니다.");
 	            return;
 	        } */
-	        
+
 	        console.log(recentGridItem);
-	        
+
 	        // 서버로 보낼 파일 캐시에 보관
 	        myFileCaches[selectRowIdx + 1  ] = {
 	            file : file
 	        };
-	        
+
 	        // 파일 수정이라면 수정하는 파일 아이디 보관
 	        if(!FormUtil.isEmpty(recentGridItem.atchFileGrpId)) {
                 update.push(recentGridItem.atchFileId);
@@ -232,13 +250,13 @@ function fn_setEvent() {
 
 	        console.log("업로드 할 파일 선택 : \r\n" + file.name);
 	        console.log(myFileCaches);
-	        
+
 	        // 선택 파일명 그리드에 출력 시킴
 	        AUIGrid.updateRow(mileageGridID, {
 	            atchFileName :  file.name
 	        }, selectRowIdx);
 	    });
-	 
+
 	    $(":input:radio[name=expGrp]").on('change', function(evt) {
 	         fn_checkExpGrp();
 	     });
@@ -288,7 +306,7 @@ function fn_setCostCenterEvent() {
                 }
             });
         }
-   }); 
+   });
 }
 
 function fn_setSupplierEvent() {
@@ -308,7 +326,7 @@ function fn_setSupplierEvent() {
                 }
             });
         }
-   }); 
+   });
 }
 
 function fn_PopExpenseTypeSearchPop() {
@@ -319,10 +337,10 @@ function fn_setPopExpType() {
     console.log("Action");
     AUIGrid.setCellValue(myGridID , selectRowIdx , "budgetCode", $("#search_budgetCode").val());
     AUIGrid.setCellValue(myGridID , selectRowIdx , "budgetCodeName", $("#search_budgetCodeName").val());
-    
+
     AUIGrid.setCellValue(myGridID , selectRowIdx , "expType", $("#search_expType").val());
     AUIGrid.setCellValue(myGridID , selectRowIdx , "expTypeName", $("#search_expTypeName").val());
-    
+
     AUIGrid.setCellValue(myGridID , selectRowIdx , "glAccCode", $("#search_glAccCode").val());
     AUIGrid.setCellValue(myGridID , selectRowIdx , "glAccCodeName", $("#search_glAccCodeName").val());
 }
@@ -337,9 +355,9 @@ function fn_createMileageAUIGrid() {
 
     // 실제로 #grid_wrap 에 그리드 생성
     mileageGridID = AUIGrid.create("#mileage_grid_wrap", mileageGridColumnLayout, mileageGridPros);
-    
+
     fn_mileageGridSetEvent();
-    
+
     // AUIGrid 에 데이터 삽입합니다.
     //AUIGrid.setGridData("#mileage_grid_wrap", gridData);
 }
@@ -491,7 +509,7 @@ function fn_createMyGrid() {
     myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
     // AUIGrid 에 데이터 삽입합니다.
     //AUIGrid.setGridData("#mileage_grid_wrap", gridData);
-    
+
     fn_myGridSetEvent();
 }
 
@@ -533,7 +551,7 @@ function fn_addRow() {
         	if(clmSeq == 0) {
         		Common.ajaxFile("/eAccounting/codyClaim/attachFileUpload.do", formData, function(result) {
                     console.log(result);
-                    
+
                     var gridDataList = AUIGrid.getGridData(mileageGridID);
                     for(var i = 0; i < gridDataList.length; i++) {
                         var data = {
@@ -569,9 +587,9 @@ function fn_addRow() {
                         console.log(data);
                         AUIGrid.addRow(newGridID, data, "last");
                     }
-                    
+
                     fn_getAllTotAmt();
-                    
+
                     // Grid 초기화
                     fn_destroyMileageGrid();
                     fn_createMileageAUIGrid();
@@ -582,10 +600,10 @@ function fn_addRow() {
                 console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
                 formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
                 console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-                
+
         		Common.ajaxFile("/eAccounting/codyClaim/attachFileUpdate.do", formData, function(result) {
                     console.log(result);
-                    
+
                     var gridDataList = AUIGrid.getGridData(mileageGridID);
                     for(var i = 0; i < gridDataList.length; i++) {
                         var data = {
@@ -624,13 +642,13 @@ function fn_addRow() {
                         	AUIGrid.updateRow(newGridID, data, AUIGrid.rowIdToIndex(newGridID, gridDataList[i].clmSeq));
                         }
                     }
-                    
+
                     console.log(data);
-                    
+
                     fn_getAllTotAmt();
-                    
+
                     clmSeq = 0;
-                    
+
                     // Grid 초기화
                     fn_destroyMileageGrid();
                     fn_createMileageAUIGrid();
@@ -657,13 +675,13 @@ function fn_addRow() {
                         ,expDesc : $("#expDesc").val()
                         ,gridData : GridCommon.getEditData(myGridID)
                 };
-                
+
                 Common.ajaxFile("/eAccounting/codyClaim/attachFileUpload.do", formData, function(result) {
                     console.log(result);
-                    
+
                     data.atchFileGrpId = result.data.fileGroupKey
                     console.log(data);
-                    
+
                     if(data.gridData.add.length > 0) {
                         for(var i = 0; i < data.gridData.add.length; i++) {
                             data.gridData.add[i].costCentr = data.costCentr;
@@ -685,7 +703,7 @@ function fn_addRow() {
                             AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                         }
                     }
-                    
+
                     fn_getAllTotAmt();
                 });
             } else {
@@ -707,10 +725,10 @@ function fn_addRow() {
                         ,expDesc : $("#expDesc").val()
                         ,gridData : GridCommon.getEditData(myGridID)
                 };
-                
+
                 $("#attachTd").html("");
                 $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
-                
+
                 formData.append("atchFileGrpId", atchFileGrpId);
                 formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
                 console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
@@ -718,9 +736,9 @@ function fn_addRow() {
                 console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
                 Common.ajaxFile("/eAccounting/codyClaim/attachFileUpdate.do", formData, function(result) {
                     console.log(result);
-                    
+
                     console.log(data);
-                    
+
                     if(data.gridData.add.length > 0) {
                         for(var i = 0; i < data.gridData.add.length; i++) {
                             data.gridData.add[i].costCentr = data.costCentr;
@@ -767,16 +785,16 @@ function fn_addRow() {
                             AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
                         }
                     }
-                    
+
                     fn_getAllTotAmt();
-                    
+
                     clmSeq = 0;
                 });
             }
-        	
+
             fn_clearData();
         }
-        
+
     }
 }
 
@@ -806,7 +824,7 @@ function fn_insertStaffClaimExp(st) {
             console.log(result);
             clmNo = result.data.clmNo;
             fn_selectStaffClaimItemList();
-            
+
             if(st == "new"){
                 Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
                 $("#newStaffClaimPop").remove();
@@ -852,7 +870,7 @@ function fn_selectStaffClaimInfo() {
             $("#normalExp_radio").prop("checked", false);
             $("#carMileage_radio").prop("checked", true);
             fn_checkExpGrp();
-            
+
         	$("#newCostCenter").val(result.costCentr);
             $("#newCostCenterText").val(result.costCentrName);
             $("#newMemAccId").val(result.memAccId);
@@ -867,7 +885,7 @@ function fn_selectStaffClaimInfo() {
             $("#glAccCodeName").val(result.glAccCodeName);
             $("#budgetCode").val(result.budgetCode);
             $("#budgetCodeName").val(result.budgetCodeName);
-        	
+
         	// TODO attachFile
             attachList = result.attachList;
             console.log(attachList);
@@ -883,9 +901,9 @@ function fn_selectStaffClaimInfo() {
                 }
             }
             console.log(result);
-            
+
             AUIGrid.setGridData(mileageGridID, result.itemGrp);
-            
+
             AUIGrid.bind(mileageGridID, "cellDoubleClick", function( event ) {
                 console.log("mileageGridID cellDoubleClick");
                 if(event.dataField == "atchFileName") {
@@ -928,7 +946,7 @@ function fn_selectStaffClaimInfo() {
             $("#carMileage_radio").prop("checked", false);
             $("#normalExp_radio").prop("checked", true);
             fn_checkExpGrp();
-            
+
         	$("#newCostCenter").val(result.costCentr);
             $("#newCostCenterText").val(result.costCentrName);
             $("#newMemAccId").val(result.memAccId);
@@ -944,9 +962,9 @@ function fn_selectStaffClaimInfo() {
             $("#invcDt").val(result.invcDt);
             $("#gstRgistNo").val(result.gstRgistNo);
             $("#expDesc").val(result.expDesc);
-            
+
             AUIGrid.setGridData(myGridID, result.itemGrp);
-            
+
             // TODO attachFile
             attachList = result.attachList;
             console.log(attachList);
@@ -960,7 +978,7 @@ function fn_selectStaffClaimInfo() {
                             $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
                         }
                     }
-                    
+
                     // 파일 다운
                     $(".input_text").dblclick(function() {
                         var oriFileName = $(this).val();
@@ -990,7 +1008,7 @@ function fn_selectStaffClaimInfo() {
                     $(".auto_file2 a:contains('Delete')").click(function() {
                         var div = $(this).parents(".auto_file2");
                         var oriFileName = div.find(":text").val();
-                        console.log(oriFileName);   
+                        console.log(oriFileName);
                         for(var i = 0; i < attachList.length; i++) {
                             if(attachList[i].atchFileName == oriFileName) {
                                 remove.push(attachList[i].atchFileId);
@@ -1072,7 +1090,7 @@ function fn_approveLinePop() {
                 // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
                 fn_updateStaffClaimExp("");
             }
-            
+
             Common.popupDiv("/eAccounting/codyClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
         }
     });
@@ -1081,7 +1099,7 @@ function fn_approveLinePop() {
 function fn_deleteStaffClaimExp() {
 	// Grid Row 삭제
     AUIGrid.removeRow(newGridID, deleteRowIdx);
-    
+
     fn_getAllTotAmt();
 	var data = {
 			clmNo : clmNo,
@@ -1093,7 +1111,7 @@ function fn_deleteStaffClaimExp() {
 	console.log(data);
 	Common.ajax("POST", "/eAccounting/codyClaim/deleteCodyClaimExp.do", data, function(result) {
         console.log(result);
-       
+
         // function 호출 안되서 ajax 직접호출
         Common.ajax("GET", "/eAccounting/codyClaim/selectCodyClaimList.do?_cacheId=" + Math.random(), $("#form_staffClaim").serialize(), function(result) {
             console.log(result);
@@ -1137,12 +1155,12 @@ function fn_checkExpGrp() {
 }
 
 function fn_myGridSetEvent() {
-    AUIGrid.bind(myGridID, "cellClick", function( event ) 
+    AUIGrid.bind(myGridID, "cellClick", function( event )
             {
                 console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 selectRowIdx = event.rowIndex;
             });
-    
+
     AUIGrid.bind(myGridID, "cellEditBegin", function( event ) {
         // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
         if($("#invcType").val() == "S") {
@@ -1159,7 +1177,7 @@ function fn_myGridSetEvent() {
             }
         }
   });
-    
+
     AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
         if(event.dataField == "gstBeforAmt" || event.dataField == "gstAmt" || event.dataField == "taxNonClmAmt") {
             var taxAmt = 0;
@@ -1274,7 +1292,23 @@ function fn_mileageGridSetEvent() {
         }
   });
 }
+
+function fn_report() {
+    var option = {
+        isProcedure : true
+    };
+    Common.report("dataForm", option);
+}
+
 </script>
+
+<!-- report Form -->
+<form id="dataForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/codyClaim.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+
+    <input type="hidden" id="_repClaimNo" name="v_CLM_NO" />
+</form>
 
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -1328,6 +1362,23 @@ function fn_mileageGridSetEvent() {
 </tr>
 </tbody>
 </table><!-- table end -->
+
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+        <ul class="btns">
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+            <li><p class="link_btn"><a href="#" id="_staffClaimBtn">Cody Claim</a></p></li>
+            </c:if>
+        </ul>
+        <ul class="btns">
+        </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
