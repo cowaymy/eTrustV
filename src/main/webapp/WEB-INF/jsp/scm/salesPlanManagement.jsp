@@ -2061,8 +2061,8 @@ function fnSearchBtnList()
 	            	  $('#btnUpdate').addClass("btn_disabled");
 	            	  $('#btnInsert').addClass("btn_disabled");
 	            	  $('#btnDelete').addClass("btn_disabled");
-
-	            	  Common.alert("Create Previous Weekly");
+	            	  
+	            	  Common.alert("<spring:message code='sys.scm.SalesPlan.runCreation'/>");
 	              }
 	
 	              gAddrowCnt = 0;
