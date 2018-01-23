@@ -118,7 +118,7 @@ function fn_deleteRow() {
 }
 
 function fn_searchUserIdPop() {
-	Common.popupDiv("/common/memberPop.do", null, null, true);
+	Common.popupDiv("/common/memberPop.do", {callPrgm:"NRIC_VISIBLE"}, null, true);
 }
 
 // 그리드에 set 하는 function

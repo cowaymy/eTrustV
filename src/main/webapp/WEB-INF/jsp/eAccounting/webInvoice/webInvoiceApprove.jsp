@@ -317,7 +317,7 @@ function fn_setCostCenter() {
 }
 
 function fn_searchUserIdPop() {
-    Common.popupDiv("/common/memberPop.do", null, null, true);
+    Common.popupDiv("/common/memberPop.do", {callPrgm:"NRIC_VISIBLE"}, null, true);
 }
 
 // set 하는 function
