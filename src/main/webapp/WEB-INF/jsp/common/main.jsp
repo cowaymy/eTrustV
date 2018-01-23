@@ -54,7 +54,7 @@
         editable: false,
         visible: false
     }];
-
+/*
     var tagStatusColumnLayout =
 	[
 		{
@@ -109,7 +109,7 @@
 		    editable: false
 		}
 	];
-
+*/
     var detailColumnLayout =
     [
 	     /* PK , rowid 용 칼럼*/
@@ -331,7 +331,7 @@
         detailGridID = GridCommon.createAUIGrid("detailGrid", detailColumnLayout, "stusCodeId", dtailOptions);
 
         /***********************************************[ CODE_ID GRID] ************************************************/
-
+        /*
         var statusCodeOptions =
             {
                 usePaging: false,
@@ -345,6 +345,7 @@
         statusCodeGridID = GridCommon.createAUIGrid("tagStatusGrid", tagStatusColumnLayout, "", statusCodeOptions);
 
         fn_selectTagStatusListAjax("Y");
+        */
         fn_selectDailyPerformanceListAjax();
     });   //$(document).ready
 
@@ -355,14 +356,14 @@
             AUIGrid.setGridData(noticeGridID, result);
         });
     }
-
+/*
     // Tag Status 리스트 조회.
     function fn_selectTagStatusListAjax(_initYn) {
         Common.ajax("GET", "/common/getTagStatus.do", {initYn:_initYn}, function (result) {
             AUIGrid.setGridData(statusCodeGridID, result);
         });
     }
-
+*/
     // Daily Performance 리스트 조회.
     function fn_selectDailyPerformanceListAjax() {
         Common.ajax("GET", "/common/getDailyPerformance.do", {}, function (result) {
@@ -410,16 +411,16 @@
             <!-- 그리드 영역1 -->
             <div id="noticeGrid" style="height:132px;"></div>
         </article><!-- grid_wrap end -->
-
-        <aside class="title_line main_title mt30"><!-- title_line start -->
+<!--
+        <aside class="title_line main_title mt30">
             <h2>Tag Status</h2>
             <p class="more"><a href="javascript:fn_openPopup_tagStatus();"><spring:message code='sys.label.more'/> ></a></p>
-        </aside><!-- title_line end -->
+        </aside>
 
-        <article class="grid_wrap"><!-- grid_wrap start -->
-            <!-- 그리드 영역2 -->
+        <article class="grid_wrap">
             <div id="tagStatusGrid" style="height:132px;"></div>
-        </article><!-- grid_wrap end -->
+        </article>
+-->
 
         <aside class="title_line main_title mt30"><!-- title_line start -->
             <h2>Daily Performance</h2>
