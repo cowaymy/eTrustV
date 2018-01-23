@@ -346,7 +346,7 @@
 	          <if test="createEnDate != null and createEnDate != ''">
 	              AND F1.ORD_DT <![CDATA[<=]]> TO_DATE(#{createEnDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
 	          </if>
-	          <if test="stkId != null and stkId != ''">
+	          <if test="cmbProduct != null and cmbProduct != ''">
 	              AND F1.STK_ID = #{cmbProduct}
 	          </if>
 	          <if test="netSalesMonth != null and netSalesMonth != ''">
