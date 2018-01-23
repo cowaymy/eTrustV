@@ -198,4 +198,23 @@ public class BankStatementController {
         return ResponseEntity.ok(message);
 	}
 	
+	/**
+	 * Bank Statement Download List  조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	@RequestMapping(value = "/selectBankStatementDownloadList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBankStatementDownloadList(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		LOGGER.debug("params : " + params);
+		
+        // 조회.
+        List<EgovMap> resultList = bankStatementService.selectBankStatementDownloadList(params);		
+        
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultList);
+	}
+	
 }

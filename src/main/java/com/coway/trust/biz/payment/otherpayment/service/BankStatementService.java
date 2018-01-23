@@ -49,4 +49,13 @@ public interface BankStatementService
 	 */
     boolean updateBankStateDetail(List<Object> paramList);
     
+    /**
+	 * Bank Statement Download List  조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+    List<EgovMap> selectBankStatementDownloadList(Map<String, Object> params);
+    
 }

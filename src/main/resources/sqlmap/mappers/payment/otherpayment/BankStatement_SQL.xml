@@ -229,4 +229,43 @@
         WHERE
             F_TRNSC_ID = #{fTrnscId}
     </update>    
+    
+    <select id="selectBankStatementDownloadList" parameterType="Map" resultType="egovMap">
+        SELECT
+            B.F_TRNSC_ID AS F_TRNSC_ID,
+            A.BANK_ID AS BANK_ID,
+            C.NAME AS BANK_NAME,
+            A.F_BANK_JRNL_ACC_ID AS BANK_ACC,
+            D.ACC_CODE || ' - ' ||  D.ACC_DESC AS BANK_ACC_NAME,
+            B.F_TRNSC_DT,
+            B.F_TRNSC_REF_CHQ_NO,
+            B.F_TRNSC_REF_VA_NO,
+            B.F_TRNSC_REF3,
+            B.F_TRNSC_REF1,
+            B.F_TRNSC_REF4,
+            B.F_TRNSC_REF2,
+            B.F_TRNSC_REF6,
+            B.F_TRNSC_REM,
+            B.F_TRNSC_DEBT_AMT,
+            B.F_TRNSC_CRDIT_AMT,
+            B.F_TRNSC_TELLER_ID,
+            B.F_TRNSC_NEW_CHQ_NO,
+            (SELECT COUNT(1) FROM PAY0081D WHERE F_BANK_JRNL_ID = A.F_BANK_JRNL_ID AND CRC_MAPPING_STUS_ID =1 
+                AND OTH_KEYIN_STUS_ID =1 
+                AND OTH_KEYIN_BC_STUS_ID = 1) AS COUNT
+        FROM
+            PAY0079D A 
+            JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID 
+            LEFT JOIN SYS0004M C ON A.BANK_ID = C.BANK_ID
+            LEFT JOIN SYS0001M D ON A.F_BANK_JRNL_ACC_ID = D.ACC_ID AND D.IS_PAY_CASH = 1            
+        WHERE 
+            1=1
+            <if test="downloadTranDateFr != null and downloadTranDateFr != '' and downloadTranDateTo != null and downloadTranDateTo != '' ">
+            AND A.TRNSC_DT BETWEEN TO_DATE(#{downloadTranDateFr} ,'DD/MM/YYYY') AND TO_DATE(#{downloadTranDateTo} ,'DD/MM/YYYY')
+            </if>
+            <if test="downloadBankAccount != null and downloadBankAccount != '' ">
+            AND A.F_BANK_JRNL_ACC_ID = #{downloadBankAccount}
+            </if>  
+        ORDER BY B.F_TRNSC_ID DESC              
+    </select>
 </mapper>

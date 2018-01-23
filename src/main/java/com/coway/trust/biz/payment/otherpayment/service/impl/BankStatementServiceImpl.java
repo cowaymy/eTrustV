@@ -114,5 +114,18 @@ public class BankStatementServiceImpl extends EgovAbstractServiceImpl implements
 		}
 		return result;
 	}
+
+	/**
+	 * Bank Statement Download List  조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	@Override
+	public List<EgovMap> selectBankStatementDownloadList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return bankStatementMapper.selectBankStatementDownloadList(params);
+	}
 	
 }

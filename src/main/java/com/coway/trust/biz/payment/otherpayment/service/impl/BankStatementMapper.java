@@ -69,4 +69,13 @@ public interface BankStatementMapper {
 	 */
 	int updateBankStateDetail(Map<String, Object> params);
 	
+	/**
+	 * Bank Statement Download List  조회
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+    List<EgovMap> selectBankStatementDownloadList(Map<String, Object> params);
+	
 }

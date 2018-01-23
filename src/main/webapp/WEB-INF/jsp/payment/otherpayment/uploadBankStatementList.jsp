@@ -13,6 +13,7 @@
 	var myGridID;
 	var myDetailGridID;
 	var myUploadGridID;
+	var myDownloadGridID;
 	var selectedGridValue;
 
 	//Grid Properties 설정
@@ -96,6 +97,28 @@
 		{dataField : "11", headerText : "<spring:message code='pay.head.vaNumber'/>", editable : true}
 		];
     
+    var downloadGridLayout = [
+		{dataField : "bankId",headerText : "<spring:message code='pay.head.bankId'/>",editable : false, visible : false},
+		{dataField : "bankAcc",headerText : "<spring:message code='pay.head.bankAccountCode'/>", editable : false, visible : false},
+		{dataField : "count",headerText : "", editable : false, visible : false},
+		{dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>", editable : false},     
+		{dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>", editable : false},                    
+		{dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},                    
+		{dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.dateTime'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+		{dataField : "fTrnscTellerId",headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : false},
+		{dataField : "fTrnscRef3",headerText : "<spring:message code='pay.head.description1'/>",editable : false},
+		{dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.description2'/>", editable : false},
+		{dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.ref5'/>", editable : false},
+		{dataField : "fTrnscRef2",headerText : "<spring:message code='pay.head.ref6'/>", editable : false},
+		{dataField : "fTrnscRef6",headerText : "<spring:message code='pay.head.ref7'/>", editable : false},                    
+		{dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>", editable : false},
+		{dataField : "fTrnscDebtAmt",headerText : "<spring:message code='pay.head.debit'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+		{dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+		{dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>", editable : false},
+		{dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>", editable : false},
+		{dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNumber'/>", editable : false}
+		];
+    
     
 	$(document).ready(function(){
 		
@@ -108,10 +131,14 @@
 		//Upload Pop Up화면 : Bank Account 조회
 	    doGetCombo('/common/getAccountList.do', 'CASH' , ''   , 'uploadBankAccount' , 'S', '');
 		
+		//Download Pop Up화면 : Bank Account 조회
+        doGetCombo('/common/getAccountList.do', 'CASH' , ''   , 'downloadBankAccount' , 'S', '');
+		
 		//그리드 생성
 	    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	    myDetailGridID = GridCommon.createAUIGrid("detail_grid_wrap", detailColumnLayout,null,gridPros2);
 	    myUploadGridID = GridCommon.createAUIGrid("grid_upload_wrap", uploadGridLayout,null,gridPros2);
+	    myDownloadGridID = GridCommon.createAUIGrid("grid_download_wrap", downloadGridLayout,null,gridPros2);
 	    
 	    // 셀 더블클릭 이벤트 바인딩 : 상세 팝업 
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
@@ -423,6 +450,29 @@ function updateBankStateDetail(){
 	}
 	
 }
+
+//Download 버튼 클릭시 업로드 팝업
+function showDownloadPop(){
+    $("#download_wrap").show();
+    AUIGrid.resize(myDownloadGridID);         
+}
+
+//Download List Select and GridDataSet
+function searchDownloadList(){
+	Common.ajax("GET","/payment/selectBankStatementDownloadList.do", $("#downloadForm").serializeJSON(), function(result){
+        AUIGrid.setGridData(myDownloadGridID, result);
+        AUIGrid.resize(myDownloadGridID);
+    });
+}
+
+function gridExportToExcel() {
+	var fileName = "";
+	var tranDateFr = $("#downloadTranDateFr").val().replace(/\//gi, "");
+	var tranDateTo = $("#downloadTranDateTo").val().replace(/\//gi, "");
+	var bankAccount = $("#downloadBankAccount option:selected").text().replace(/(\s*)/g, "");
+	fileName = tranDateFr + "_" + tranDateTo + "_" + bankAccount;
+    GridCommon.exportTo("grid_download_wrap", "xlsx", fileName);
+}
 </script>
 <!-- content start -->
 <section id="content">
@@ -435,6 +485,7 @@ function updateBankStateDetail(){
         <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Upload Bank Statement</h2>
         <ul class="right_btns">
+             <li><p class="btn_blue"><a href="javascript:showDownloadPop();">Download</a></p></li>
              <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                 <li><p class="btn_blue"><a href="javascript:showUploadPop();"><spring:message code='pay.btn.newUpload'/></a></p></li>
                 <li><p class="btn_blue"><a href="javascript:bankStateDelete();"><spring:message code='pay.btn.delete'/></a></p></li>
@@ -648,6 +699,73 @@ POP-UP (UPLOAD)
         <!-- search_result end -->
 
 
+    </section>
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
+
+<!--------------------------------------------------------------- 
+POP-UP (DOWNLOAD)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="download_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header">
+        <h1>Download Bank Statement</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="javascript:hideViewPopup('#download_wrap');"><spring:message code='sys.btn.close'/></a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            
+            <ul class="right_btns mb10">
+            <li><p class="btn_blue2"><a href="#" onclick="javascript:searchDownloadList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            </ul>
+            
+            <form id="downloadForm">         
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                <colgroup>
+                    <col style="width:165px" />
+                    <col style="width:*" />                
+                </colgroup>
+                <tbody>
+                    <tr>
+                        <th scope="row">Transaction Date</th>
+                        <td>
+                            <!-- date_set start -->
+                            <div class="date_set w100p">
+                            <p><input type="text" id="downloadTranDateFr" name="downloadTranDateFr" title="Transaction Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text" id="downloadTranDateTo" name="downloadTranDateTo" title="Transaction End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            </div>
+                            <!-- date_set end -->
+                        </td>
+                        <th scope="row">Bank Account</th>
+                        <td>  
+                            <select id="downloadBankAccount" name="downloadBankAccount" class="w100p">                                                               
+                            </select>
+                        </td>
+                    </tr>
+                </tbody>  
+            </table>
+            </form>
+        </section>
+
+        <section class="search_result">
+            <article class="grid_wrap"  id="grid_download_wrap"></article>  
+        </section>
+        <!-- search_table end -->
+        
+        <ul class="center_btns">
+            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:gridExportToExcel();">Generate</a></p></li>
+        </ul>
     </section>
     <!-- pop_body end -->
 </div>
