@@ -25,4 +25,8 @@ public class OrderColorGridServiceImpl extends EgovAbstractServiceImpl implement
 	public List<EgovMap> colorGridList(Map<String, Object> params) {
 		return orderColorGridMapper.colorGridList(params);
 	}
+	
+	public List<EgovMap> colorGridCmbProduct() {
+		return orderColorGridMapper.colorGridCmbProduct();
+	}
 }

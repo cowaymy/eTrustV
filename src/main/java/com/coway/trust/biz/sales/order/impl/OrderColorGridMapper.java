@@ -11,4 +11,5 @@ public interface OrderColorGridMapper {
 
 	List<EgovMap> colorGridList(Map<String, Object> params);
 	
+	List<EgovMap> colorGridCmbProduct();
 }
