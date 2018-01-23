@@ -44,7 +44,7 @@ function fn_assignSave(){
     	 $("#msg").attr("style", "color:red");
     	 return false;
      }
-     Common.ajax("POST", "/sales/trBook/saveAssign", $("#saveForm").serializeJSON(), function(result) {
+     Common.ajax("POST", "/sales/trBook/saveAssign", $("#saveAssignForm").serializeJSON(), function(result) {
          
          console.log("성공.");
          console.log( result);        
@@ -53,12 +53,12 @@ function fn_assignSave(){
 
              $("#msg").attr("style", "color:red");
          }else{
-
              $("#msg").attr("style", "color:green");
+             $("#memBtn").hide();
+             $("#btnAssignSave").hide();
+             fn_selectListAjax();
          }
          $("#msg").html(result.msg);
-         $("#memBtn").hide();
-         $("#btnSave").hide();
          
     },
     function(jqXHR, textStatus, errorThrown){
@@ -86,12 +86,12 @@ function fn_assignSave(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>Assign</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<form action="#" method="post" id="saveForm" name="saveForm">
+<form action="#" method="post" id="saveAssignForm" name="saveAssignForm">
 <input type="hidden" id="assignHTrBookId" name="assignHTrBookId" value="${trBookId}">
 <input type="hidden" id="memTypeId" name="memTypeId">
 <input type="hidden" id="memTypeText" name="memTypeText">
@@ -150,7 +150,7 @@ function fn_assignSave(){
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" id="btnSave" onclick="javascript:fn_assignSave();">SAVE</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" id="btnAssignSave" onclick="javascript:fn_assignSave();">SAVE</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

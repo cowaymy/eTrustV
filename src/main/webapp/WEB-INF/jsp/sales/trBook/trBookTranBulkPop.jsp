@@ -192,7 +192,7 @@ function fn_tranBulkSave(){
 
 
          Common.alert("Save Successful" + DEFAULT_DELIMITER + "Selected TR book(s) successfully transfer to courier.<br/>Transit Number : " + result.data );
-         $("#btnSave").hide();
+         $("#btnTranBulkSave").hide();
          
          fromItems = new Array();
          idx = 0;
@@ -298,7 +298,7 @@ function fn_tranBulkSave(){
 
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="btnSave" onclick="javascript:fn_tranBulkSave();">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="btnTranBulkSave" onclick="javascript:fn_tranBulkSave();">Save</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

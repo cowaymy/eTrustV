@@ -22,7 +22,7 @@ function fn_save(){
     $("#saveFeedback").val($("#feedback").val() );
 	
     Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
-        Common.ajax("POST", "/sales/trBook/saveReportLost", $("#saveForm").serializeJSON(), function(result) { // Common.alert(result.message);
+        Common.ajax("POST", "/sales/trBook/saveReportLost", $("#saveLostForm").serializeJSON(), function(result) { // Common.alert(result.message);
         
         	 if(result.dcfInfo != null){
         		 Common.alert("This TR Book is under request [" + result.dcfInfo.defReqNo + "]");
@@ -67,7 +67,7 @@ function go_uploadPage(){
 
 
 <!-- get param Form  -->
-<form id="saveForm" method="get">
+<form id="saveLostForm" method="get">
 <input type="hidden" id="saveTrHolderType" name="trHolderType"  >
 <input type="hidden" id="saveMemCode" name="memCode"  >
 <input type="hidden" id="saveTrBookNo" name="trBookNo"  >

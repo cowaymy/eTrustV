@@ -9,7 +9,7 @@ $(document).ready(function(){
     });
     
     
-    $("#btnSave").hide();
+    $("#btnAddBulkSave").hide();
     $("#btnReKey").hide();
 });
 
@@ -42,7 +42,7 @@ function fn_Generate(){
         $("#trBookNoEnd").prop("readonly", true);
         $("#trBookNoEnd").attr("class", "readonly");
         
-        $("#btnSave").show();
+        $("#btnAddBulkSave").show();
         $("#btnReKey").show();
     }
 }
@@ -146,7 +146,7 @@ function fn_ReKey(){
     $("#trBookNoEnd").val("");
     
 
-    $("#btnSave").hide();
+    $("#btnAddBulkSave").hide();
     $("#btnReKey").hide();
 }
 
@@ -201,7 +201,7 @@ function validRequiredField_Save_Add()
         $("#trNoTo").val($("#prefix").val()  + $("#trBookNoEnd").val());
         
         
-        Common.ajax("GET", "/sales/trBook/selectTrBookDup", $("#saveForm").serialize(), function(result) {
+        Common.ajax("GET", "/sales/trBook/selectTrBookDup", $("#saveAddBulkForm").serialize(), function(result) {
             
             console.log("성공.");
             console.log( result);
@@ -212,7 +212,7 @@ function validRequiredField_Save_Add()
                 Message += "<spring:message code="sal.alert.msg.existTrBook" /><br />";
             }else{
             	
-            	Common.ajax("GET", "/sales/trBook/selectTrBookDupBulk", $("#saveForm").serialize(), function(result) {
+            	Common.ajax("GET", "/sales/trBook/selectTrBookDupBulk", $("#saveAddBulkForm").serialize(), function(result) {
                     
                     console.log("성공.");
                     console.log( result);
@@ -244,12 +244,12 @@ function fn_save(){
              
              $("#prefix").attr("disabled", false);
              
-            Common.ajax("POST", "/sales/trBook/saveNewTrBookBulk", $("#saveForm").serializeJSON(), function(result){
+            Common.ajax("POST", "/sales/trBook/saveNewTrBookBulk", $("#saveAddBulkForm").serializeJSON(), function(result){
     
                 console.log("성공." + JSON.stringify(result));
                 console.log("data : " + result.data);
                 
-                $("#btnSave").hide();
+                $("#btnAddBulkSave").hide();
                 $("#btnReKey").hide();
                 
                 $("#trBookAddBulkPop").hide();
@@ -291,7 +291,7 @@ function fn_save(){
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<form action="#" method="post" id="saveForm" name="saveForm">
+<form action="#" method="post" id="saveAddBulkForm" name="saveAddBulkForm">
 	<input type="hidden" id="trNoTo" name="trNoTo" />
 	<input type="hidden" id="trNoFrom" name="trNoFrom" />
 	
@@ -338,7 +338,7 @@ function fn_save(){
 </table><!-- table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();"  id="btnSave"><spring:message code="sal.btn.save" /></a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();"  id="btnAddBulkSave"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </form>
 </section><!-- pop_body end -->

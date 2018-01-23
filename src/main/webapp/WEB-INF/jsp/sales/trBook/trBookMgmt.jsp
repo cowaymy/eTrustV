@@ -32,7 +32,8 @@ function creatGrid(){
 	          {dataField : "trBookPge", headerText : "Total Sheet(s)", width : 130	    },
 	          {dataField : "trBookStusCode", headerText : "Status", width : 110	    },
 	          {dataField : "trHolder", headerText : "Holder", width : 110	    },
-	          {dataField : "trHolderType", headerText : "Holder", width : 110	    }	          
+	          {dataField : "trHolderType", headerText : "Holder", width : 110	    }	,          
+	          {dataField : "boxNo", headerText : "", width : 110,	  visible:false   }         
 	          ];
 	    
 
@@ -54,7 +55,7 @@ function creatGrid(){
 	          Common.popupDiv("/sales/trBook/trBookMgmtDetailPop.do",$("#listSForm").serializeJSON(), null, true, "trBookMgmtDetailPop");
 	          
 	     });
-	    // 셀 더블클릭 이벤트 바인딩
+	    // 셀 클릭 이벤트 바인딩
 	     AUIGrid.bind(trBookGridID, "cellClick", function(event){
 	         
 	          $("#trBookId").val(AUIGrid.getCellValue(trBookGridID , event.rowIndex , "trBookId"));
@@ -235,6 +236,61 @@ function fn_getBookActionValidation(){
     return valid;
 }
 
+function fn_trBookDeactivate(){
+	
+    if($("#trBookId").val()==""){       
+        Common.alert("Book Missing" + DEFAULT_DELIMITER + "No TR book selected.");
+	}else{          
+	       
+	     if(fn_getBookActionValidation()){
+	         var selectedItems = AUIGrid.getSelectedItems(trBookGridID);        
+	         var first = selectedItems[0];
+	         
+	         var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
+	         var trHolder = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolder");
+	         var trHolderType = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolderType");
+	         
+	         if(trHolderType != "Branch"){
+	             Common.alert("TR Book Informtion"  + DEFAULT_DELIMITER + "[" + bookNo + "] is holding by [" + trHolder +"]. Deactivation is disallowed.");
+	             return ;
+	         }else{
+	             Common.popupDiv("/sales/trBook/trBookDeactivatePop.do",$("#listSForm").serializeJSON(), null, true, "trBookDeactivatePop");
+	         }
+	     }
+	     
+	 }
+}
+
+function fn_trBookKeep(){
+    if($("#trBookId").val()==""){       
+        Common.alert("Book Missing" + DEFAULT_DELIMITER + "No TR book selected.");
+    }else{    
+	
+	    var selectedItems = AUIGrid.getSelectedItems(trBookGridID); 
+	    
+	    var first = selectedItems[0];
+	    
+	    var bookId = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookId");
+	    var bookStatus = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookStusCode");
+	    var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
+
+	    if ((bookStatus == "CLO") || (bookStatus == "CLOLOST"))
+	    {
+
+	    	var boxNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "boxNo");
+	    	
+	    	if(boxNo == " "){	    		
+	    		Common.popupDiv("/sales/trBook/trBookKeepBoxPop.do",$("#listSForm").serializeJSON(), null, true, "trBookKeepBoxPop");
+	    	}else{
+	    		Common.alert("Book Missing" + DEFAULT_DELIMITER +"This book has been kept in box [" + boxNo + "].");
+	    	}
+	    	
+	    }else{
+	    	Common.alert("TR Book Informtion"+DEFAULT_DELIMITER+"<b>[" + BookNo + "] this book not yet closed. Only closed book can keep into box.</b>");
+	    }
+    }
+}
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -363,6 +419,12 @@ function fn_getBookActionValidation(){
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
 	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookReport();">Report Lost (Whole)</a></p></li>          <!-- TODO 권한 179  -->
+	</c:if>
+	<c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookDeactivate();">Deactivate</a></p></li>          <!-- TODO 권한 129  -->
+	</c:if>
+	<c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookKeep();">Keep Into Box</a></p></li>          <!-- TODO 권한 125  -->
 	</c:if>
 </ul>
 

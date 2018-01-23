@@ -24,7 +24,7 @@ function fn_tranSingleSave(){
     	 return false;
      }
      
-     Common.ajax("POST", "/sales/trBook/saveTranSingle", $("#saveForm").serializeJSON(), function(result) {
+     Common.ajax("POST", "/sales/trBook/saveTranSingle", $("#saveTranSingleForm").serializeJSON(), function(result) {
          
          console.log("성공.");
          console.log( result);        
@@ -37,7 +37,7 @@ function fn_tranSingleSave(){
              $("#msg").attr("style", "color:green");
          }
          $("#msg").html("* This book has successfully transfer out to courier.");
-         $("#btnSave").hide();
+         $("#btnTranSingleSave").hide();
          
     },
     function(jqXHR, textStatus, errorThrown){
@@ -51,7 +51,7 @@ function fn_tranSingleSave(){
          {
            console.log(e);
          }
-         alert("Fail : " + jqXHR.responseJSON.message);
+        // alert("Fail : " + jqXHR.responseJSON.message);
 
          $("#msg").attr("style", "color:red");
          $("#msg").html("* Failed to save. Please try again later.");
@@ -65,12 +65,12 @@ function fn_tranSingleSave(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>TRANSFER TR BOOK</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<form action="#" method="post" id="saveForm" name="saveForm">
+<form action="#" method="post" id="saveTranSingleForm" name="saveTranSingleForm">
 <input type="hidden" id="tranTrBookId" name="tranTrBookId" value="${trBookId}">
 <input type="hidden" id="tranHolder" name="tranHolder" value="${detailInfo.trHolder}">
 <span id="msg"> </span>
@@ -120,7 +120,7 @@ function fn_tranSingleSave(){
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" id="btnSave" onclick="javascript:fn_tranSingleSave();">SAVE</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" id="btnTranSingleSave" onclick="javascript:fn_tranSingleSave();">SAVE</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

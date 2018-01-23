@@ -47,7 +47,7 @@ function creatDetailGrid(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>View TR BOOK</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -74,7 +74,7 @@ function creatDetailGrid(){
 </tr>
 <tr>
 	<th scope="row">TR No</th>
-	<td colspan="3">${detailInfo.trBookNoStart }</td>
+	<td colspan="3">${detailInfo.trBookNoStart } To ${detailInfo.trBookNoEnd }</td>
 </tr>
 <tr>
 	<th scope="row">Status</th>

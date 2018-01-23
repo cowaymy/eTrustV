@@ -14,15 +14,14 @@ $(document).ready(function(){
         window.event.returnValue = false;
         
    });
-    
-    
+        
     CommonCombo.make("branch", "/sales/trBook/selectBranch", "", "${branch}", {
         id: "code",
         name: "name"
     });
     
     
-    $("#btnSave").hide();
+    $("#btnAddSingleSave").hide();
     $("#btnReKey").hide();
 });
 
@@ -39,7 +38,7 @@ function fn_Generate(){
 		$("#trBookNoEnd").prop("readonly", true);
         $("#trBookNoEnd").attr("class", "readonly");
         
-	    $("#btnSave").show();
+	    $("#btnAddSingleSave").show();
 	    $("#btnReKey").show();
 	}
 }
@@ -141,7 +140,7 @@ function fn_ReKey(){
     $("#trBookNoEnd").val("");
     
 
-    $("#btnSave").hide();
+    $("#btnAddSingleSave").hide();
     $("#btnReKey").hide();
 }
 
@@ -191,12 +190,11 @@ function validRequiredField_Save_Add()
         $("#trNoTo").val($("#prefix").val()  + $("#trBookNoEnd").val());
         
         
-        Common.ajax("GET", "/sales/trBook/selectTrBookDup", $("#saveForm").serialize(), function(result) {
+        Common.ajax("GET", "/sales/trBook/selectTrBookDup", $("#saveAddSingleForm").serialize(), function(result) {
             
             console.log("성공.");
             console.log( result);
 
-            alert(result.data);  
             if (result.data)
             {
                 valid = false;
@@ -221,12 +219,12 @@ function fn_save(){
 			 $("#prefix").attr("disabled", false);
 			 $("#branch").attr("disabled", false);
 			 
-	        Common.ajax("POST", "/sales/trBook/saveNewTrBook", $("#saveForm").serializeJSON(), function(result){
+	        Common.ajax("POST", "/sales/trBook/saveNewTrBook", $("#saveAddSingleForm").serializeJSON(), function(result){
 	
 	            console.log("성공." + JSON.stringify(result));
 	            console.log("data : " + result.data);
 	            
-	            $("#btnSave").hide();
+	            $("#btnAddSingleSave").hide();
 	            $("#btnReKey").hide();
 	            
 	            $("#trBookAddSinglePop").hide();
@@ -244,9 +242,7 @@ function fn_save(){
 	            catch (e)
 	            {
 	              console.log(e);
-	            }
-	            alert("Fail : " + jqXHR.responseJSON.message);
-	
+	            }	
 	            Common.alert("Failed To Save" + DEFAULT_DELIMITER + "Failed to add new TR book. Please try again later.");
 	        });
 
@@ -262,12 +258,12 @@ function fn_save(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>ADD NEW TR BOOK(SINGLE)</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<form action="#" method="post" id="saveForm" name="saveForm">
+<form action="#" method="post" id="saveAddSingleForm" name="saveAddSingleForm">
 <input type="hidden" id="trNoTo" name="trNoTo" />
 <input type="hidden" id="trNoFrom" name="trNoFrom" />
 
@@ -307,7 +303,7 @@ function fn_save(){
 </table><!-- table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();" id="btnSave">SAVE</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();" id="btnAddSingleSave">SAVE</a></p></li>
 </ul>
 
 </form>

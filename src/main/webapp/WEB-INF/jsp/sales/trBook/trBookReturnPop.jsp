@@ -190,6 +190,7 @@ function auiCellEditignHandler(event)
 function fn_goAction(str, rowIndex){
 
     $("#trStusId").val(str);
+    AUIGrid.forceEditingComplete(trReBookGridID, null, false);
 	
 	switch (str)
     {
@@ -263,7 +264,7 @@ function fn_updateReTrBook(actionStr){
 	
 }
 
-function fn_save(){	
+function fn_returnSave(){	
 
     var idx = AUIGrid.getRowCount("trReBookGridID");
 	
@@ -281,7 +282,7 @@ function fn_save(){
 		        Common.alert("Item Successfully " + DEFAULT_DELIMITER + "Return successfully saved. <br />TR book has been returned to [" + result.reqNo + "].");
 
 		        fn_selectReBookListAjax();
-		        $("#btnSave").hide();
+		        $("#btnReturnSave").hide();
 		        fn_selectListAjax();
 		     }
 		     , function(jqXHR, textStatus, errorThrown){
@@ -467,7 +468,7 @@ function fn_validRequiredField(rowIndex)
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" id="btnSave" onclick="javascript:fn_save();">SAVE</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" id="btnReturnSave" onclick="javascript:fn_returnSave();">SAVE</a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
