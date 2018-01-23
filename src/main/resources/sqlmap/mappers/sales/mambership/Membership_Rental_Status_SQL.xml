@@ -119,13 +119,13 @@
 			              AND TT.RS_CNVR_NO = #{rsCnvrNo}
 			              </if>
 			              <if test="stRsCnvrCrtDt != null and stRsCnvrCrtDt != ''">
-			              AND TO_CHAR(TT.RS_CNVR_CRT_DT , 'DD/MM/YYYY') BETWEEN #{stRsCnvrCrtDt} AND #{edRsCnvrCrtDt}
+			              AND TO_CHAR(TT.RS_CNVR_CRT_DT , 'yyyymmdd') BETWEEN TO_CHAR(TO_DATE(#{stRsCnvrCrtDt}, 'dd/mm/yyyy'), 'yyyymmdd') AND TO_CHAR(TO_DATE(#{edRsCnvrCrtDt}, 'dd/mm/yyyy'), 'yyyymmdd')
 			              </if>
 		                     <if test="creatUser != null and creatUser != ''">
 			              AND CASE WHEN  TT.CRT_USER_ID IS NOT NULL  THEN TT.CRT_USER_NAME ELSE '' END = #{creatUser} 
 			              </if>		              
 		                     <if test="stRsCnvrCnfmDt != null and stRsCnvrCnfmDt != ''">
-			              AND TO_CHAR(TT.RS_CNVR_CNFM_DT , 'DD/MM/YYYY')  BETWEEN #{stRsCnvrCnfmDt} AND #{edRsCnvrCnfmDt}
+			              AND TO_CHAR(TT.RS_CNVR_CNFM_DT , 'DD/MM/YYYY')  BETWEEN TO_CHAR(TO_DATE(#{stRsCnvrCnfmDt}, 'dd/mm/yyyy'), 'yyyymmdd') AND TO_CHAR(TO_DATE(#{edRsCnvrCnfmDt}, 'dd/mm/yyyy'), 'yyyymmdd')
 			              </if>		              
 		                     <if test="rsCnvrRem != null and rsCnvrRem != ''">
 			              AND TT.RS_CNVR_REM LIKE '%'||#{rsCnvrRem}||'%' 
