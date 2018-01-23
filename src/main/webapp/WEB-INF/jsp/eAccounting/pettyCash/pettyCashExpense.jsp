@@ -996,7 +996,7 @@ function fn_report() {
 
 <!-- report Form -->
 <form id="dataForm">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Report2.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/PettyCashExpense.rpt" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
 
