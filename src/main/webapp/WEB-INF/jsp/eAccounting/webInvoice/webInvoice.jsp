@@ -73,7 +73,7 @@ var webInvoiceColumnLayout = [ {
 
 //그리드 속성 설정
 var webInvoiceGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -85,12 +85,14 @@ var webInvoiceGridID;
 
 $(document).ready(function () {
 	webInvoiceGridID = AUIGrid.create("#webInvoice _grid_wrap", webInvoiceColumnLayout, webInvoiceGridPros);
-	
+
 	$("#search_supplier_btn").click(fn_supplierSearchPop);
 	$("#search_costCenter_btn").click(fn_costCenterSearchPop);
 	$("#registration_btn").click(fn_newWebInvoicePop);
-	
-	AUIGrid.bind(webInvoiceGridID, "cellDoubleClick", function( event ) 
+
+
+
+	AUIGrid.bind(webInvoiceGridID, "cellDoubleClick", function( event )
 		    {
 		        console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
 		        console.log("CellDoubleClick clmNo : " + event.item.clmNo);
@@ -104,28 +106,48 @@ $(document).ready(function () {
 		        	var clmType = clmNo.substr(0, 2);
 		        	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType);
 		        }
-		        
+
 		    });
-	
+
+	$("#_webInvBtn").click(function() {
+
+        //Param Set
+        var gridObj = AUIGrid.getSelectedItems(webInvoiceGridID);
+
+
+        if(gridObj == null || gridObj.length <= 0 ){
+            Common.alert("* No Value Selected. ");
+            return;
+        }
+
+        var clmNo = gridObj[0].item.clmNo;
+        $("#_clmNo").val(clmNo);
+        console.log("clmNo : " + $("#_clmNo").val());
+
+        fn_report();
+        //Common.alert('The program is under development.');
+    });
+
 	$("#appvPrcssStus").multipleSelect("checkAll");
-	
+
 	fn_setToDay();
 });
 
+
 function fn_setToDay() {
     var today = new Date();
-    
+
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
-    
+
     if(dd < 10) {
         dd = "0" + dd;
     }
     if(mm < 10){
         mm = "0" + mm
     }
-    
+
     today = dd + "/" + mm + "/" + yyyy;
     $("#startDt").val(today)
     $("#endDt").val(today)
@@ -140,7 +162,7 @@ function fn_setPayDueDtEvent() {
         var year = payDueDt.substring(6);
         console.log("year : " + year + " month : " + month + " day : " + day);
         payDueDt = year + month + day;
-        
+
         var now = new Date;
         var dd = now.getDate();
         var mm = now.getMonth() + 1;
@@ -153,14 +175,14 @@ function fn_setPayDueDtEvent() {
         }
         now = yyyy + "" + mm + "" + dd;
         console.log("yyyy : " + yyyy + " mm : " + mm + " dd : " + dd);
-        
+
         console.log(payDueDt);
         console.log(now);
         if(Number(payDueDt) < Number(now)) {
             Common.alert('<spring:message code="webInvoice.payDueDt.msg" />');
             $("#payDueDt").val(dd + "/" + mm + "/" + yyyy);
         }
-   }); 
+   });
 }
 
 function fn_setCostCenterEvent() {
@@ -177,7 +199,7 @@ function fn_setCostCenterEvent() {
                 }
             });
         }
-   }); 
+   });
 }
 
 function fn_setSupplierEvent() {
@@ -198,7 +220,7 @@ function fn_setSupplierEvent() {
                 }
             });
         }
-   }); 
+   });
 }
 
 function fn_supplierSearchPop() {
@@ -271,28 +293,28 @@ function fn_setPopSupplier() {
 function fn_setPopExpType() {
 	AUIGrid.setCellValue(newGridID , selectRowIdx , "budgetCode", $("#search_budgetCode").val());
     AUIGrid.setCellValue(newGridID , selectRowIdx , "budgetCodeName", $("#search_budgetCodeName").val());
-    
+
     AUIGrid.setCellValue(newGridID , selectRowIdx , "expType", $("#search_expType").val());
     AUIGrid.setCellValue(newGridID , selectRowIdx , "expTypeName", $("#search_expTypeName").val());
-    
+
     AUIGrid.setCellValue(newGridID , selectRowIdx , "glAccCode", $("#search_glAccCode").val());
     AUIGrid.setCellValue(newGridID , selectRowIdx , "glAccCodeName", $("#search_glAccCodeName").val());
 }
 
 function fn_setKeyInDate() {
     var today = new Date();
-    
+
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
-    
+
     if(dd < 10) {
         dd = "0" + dd;
     }
     if(mm < 10){
         mm = "0" + mm
     }
-    
+
     today = dd + "/" + mm + "/" + yyyy;
     $("#keyDate").val(today)
 }
@@ -384,6 +406,7 @@ function fn_checkEmpty() {
 	return checkResult;
 }
 
+
 function fn_selectWebInvoiceItemList(clmNo) {
     var obj = {
             clmNo : clmNo
@@ -406,13 +429,13 @@ function fn_budgetCodePop(rowIndex){
     } else {
     	Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
     }
-}  
+}
 
 //Gl Account Pop 호출
 function fn_glAccountSearchPop(rowIndex){
-    
+
     var myValue = AUIGrid.getCellValue(newGridID, rowIndex, "budgetCode");
-    
+
     if(!FormUtil.isEmpty(myValue)){
     	var data = {
                 rowIndex : rowIndex
@@ -428,12 +451,12 @@ function fn_glAccountSearchPop(rowIndex){
 }
 
 function fn_setNewGridEvent() {
-	AUIGrid.bind(newGridID, "cellClick", function( event ) 
+	AUIGrid.bind(newGridID, "cellClick", function( event )
 		    {
 		        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
 		        selectRowIdx = event.rowIndex;
 		    });
-		    
+
 		    AUIGrid.bind(newGridID, "cellEditBegin", function( event ) {
 		        // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
 		        if($("#invcType").val() == "S") {
@@ -450,7 +473,7 @@ function fn_setNewGridEvent() {
 		            }
 		        }
 		  });
-		    
+
 		    AUIGrid.bind(newGridID, "cellEditEnd", function( event ) {
 		        if(event.dataField == "netAmt" || event.dataField == "taxAmt" || event.dataField == "taxNonClmAmt") {
 		            var taxAmt = 0;
@@ -580,6 +603,14 @@ function fn_selectWebInvoiceInfo(clmNo) {
     Common.ajax("GET", "/eAccounting/webInvoice/selectWebInvoiceInfo.do?_cacheId=" + Math.random(), obj, fn_setWebInvoiceInfo);
 }
 
+
+function fn_report() {
+    var option = {
+        isProcedure : false
+    };
+    Common.report("dataForm", option);
+}
+
 function fn_setWebInvoiceInfo(result) {
 	console.log("fn_setWebInvoiceInfo Action");
 	console.log(result);
@@ -606,9 +637,9 @@ function fn_setWebInvoiceInfo(result) {
     $("#bilPeriodF").val(result.bilPeriodF);
     $("#bilPeriodF").val(result.bilPeriodF);
     $("#invcRem").val(result.invcRem);
-    
+
     AUIGrid.setGridData(newGridID, result.itemGrp);
-    
+
     // TODO attachFile
     attachList = result.attachList;
     console.log(attachList);
@@ -622,7 +653,7 @@ function fn_setWebInvoiceInfo(result) {
                     $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
                 }
             }
-            
+
             // 파일 다운
             $(".input_text").dblclick(function() {
                 var oriFileName = $(this).val();
@@ -652,7 +683,7 @@ function fn_setWebInvoiceInfo(result) {
             $(".auto_file2 a:contains('Delete')").click(function() {
                 var div = $(this).parents(".auto_file2");
                 var oriFileName = div.find(":text").val();
-                console.log(oriFileName);   
+                console.log(oriFileName);
                 for(var i = 0; i < attachList.length; i++) {
                     if(attachList[i].atchFileName == oriFileName) {
                         remove.push(attachList[i].atchFileId);
@@ -663,7 +694,16 @@ function fn_setWebInvoiceInfo(result) {
         }
     }
 }
+
 </script>
+<form id="dataForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Web_Invoice.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
+
+    <!-- params -->
+    <input type="hidden" id="_clmNo" name="V_CLMNO" />
+</form>
 
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -732,6 +772,25 @@ function fn_setWebInvoiceInfo(result) {
 
 </form>
 </section><!-- search_table end -->
+
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+        <ul class="btns">
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+            <li><p class="link_btn"><a href="#" id="_webInvBtn">Web Invoice</a></p></li>
+            </c:if>
+        </ul>
+        <ul class="btns">
+        </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
+
+
 
 <section class="search_result"><!-- search_result start -->
 
