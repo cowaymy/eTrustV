@@ -68,7 +68,7 @@ var pettyCashExpColumnLayout = [ {
 
 //그리드 속성 설정
 var pettyCashExpGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -82,12 +82,30 @@ var pettyCashExpGridID;
 
 $(document).ready(function () {
 	pettyCashExpGridID = AUIGrid.create("#expenseMgmt_grid_wrap", pettyCashExpColumnLayout, pettyCashExpGridPros);
-    
+
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#search_costCenter_btn").click(fn_costCenterSearchPop);
     $("#registration_btn").click(fn_newExpensePop);
-    
-    AUIGrid.bind(pettyCashExpGridID, "cellDoubleClick", function( event ) 
+    $("#_pettyCashExpenseBtn").click(function() {
+
+        //Param Set
+        var gridObj = AUIGrid.getSelectedItems(pettyCashExpGridID);
+
+
+        if(gridObj == null || gridObj.length <= 0 ){
+            Common.alert("* No Record Selected. ");
+            return;
+        }
+
+        var claimno = gridObj[0].item.clmNo;
+        $("#_repClaimNo").val(claimno);
+        console.log("clmNo : " + $("#_repClaimNo").val());
+
+        fn_report();
+        //Common.alert('The program is under development.');
+    });
+
+    AUIGrid.bind(pettyCashExpGridID, "cellDoubleClick", function( event )
             {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + event.item.clmNo);
@@ -102,22 +120,22 @@ $(document).ready(function () {
                 	fn_webInvoiceRequestPop(event.item.appvPrcssNo, clmType);
                 }
             });
-    
+
     $("#appvPrcssStus").multipleSelect("checkAll");
-    
+
     fn_setToMonth();
 });
 
 function fn_setToMonth() {
     var month = new Date();
-    
+
     var mm = month.getMonth() + 1;
     var yyyy = month.getFullYear();
-    
+
     if(mm < 10){
         mm = "0" + mm
     }
-    
+
     month = mm + "/" + yyyy;
     $("#clmMonth").val(month)
 }
@@ -127,7 +145,7 @@ function fn_clearData() {
     /* $("#form_newExpense").each(function() {
     	this.reset();
     }); */
-    
+
     $("#invcDt").val("");
     $("#sMemAccName").val("");
     $("#gstRgistNo").val("");
@@ -135,15 +153,15 @@ function fn_clearData() {
     $("#invcNo").val("");
     $("#expDesc").val("");
     $("#utilNo").val("");
-    
+
     AUIGrid.destroy(myGridID);
     myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
-    
+
     fn_myGridSetEvent();
-    
+
     $("#attachTd").html("");
     $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
-    
+
     clmSeq = 0;
 }
 
@@ -158,7 +176,7 @@ function fn_setEvent() {
             var year = clmMonth.substring(3);
             console.log("year : " + year + " month : " + month);
             clmMonth = year + month;
-            
+
             var now = new Date;
             var mm = now.getMonth() + 1;
             var yyyy = now.getFullYear();
@@ -167,7 +185,7 @@ function fn_setEvent() {
             }
             now = yyyy + "" + mm;
             console.log("yyyy : " + yyyy + " mm : " + mm);
-            
+
             console.log(clmMonth);
             console.log(now);
             if(Number(clmMonth) > Number(now)) {
@@ -184,7 +202,7 @@ function fn_setEvent() {
                 }
         	}
         }
-   }); 
+   });
 }
 
 function fn_supplierSearchPop() {
@@ -220,7 +238,7 @@ function fn_setCostCenter() {
 /* function fn_setPopCostCenter() {
     $("#newCostCenter").val($("#search_costCentr").val());
     $("#newCostCenterText").val($("#search_costCentrName").val());
-    
+
     if(fn_checkForCustdnNric()){
         // Approved Cash Amount GET and CUSTDN_NRIC GET
         var data = {
@@ -250,7 +268,7 @@ function fn_setPopSupplier() {
     $("#bankCode").val($("#search_bankCode").val());
     $("#bankName").val($("#search_bankName").val());
     $("#bankAccNo").val($("#search_bankAccNo").val());
-    
+
     if(fn_checkForCustdnNric()){
         // Approved Cash Amount GET and CUSTDN_NRIC GET
         var data = {
@@ -291,7 +309,7 @@ function fn_setSupplierEvent() {
                     $("#bankName").val(row.bankName);
                     $("#bankAccNo").val(row.bankAccNo);
                 }
-                
+
                 if(fn_checkForCustdnNric()){
                     // Approved Cash Amount GET and CUSTDN_NRIC GET
                     var data = {
@@ -317,7 +335,7 @@ function fn_setSupplierEvent() {
                 }
             });
         }
-   }); 
+   });
 }
 
 function fn_setPopSubSupplier() {
@@ -330,10 +348,10 @@ function fn_setPopExpType() {
     console.log("Action");
     AUIGrid.setCellValue(myGridID , selectRowIdx , "budgetCode", $("#search_budgetCode").val());
     AUIGrid.setCellValue(myGridID , selectRowIdx , "budgetCodeName", $("#search_budgetCodeName").val());
-    
+
     AUIGrid.setCellValue(myGridID , selectRowIdx , "expType", $("#search_expType").val());
     AUIGrid.setCellValue(myGridID , selectRowIdx , "expTypeName", $("#search_expTypeName").val());
-    
+
     AUIGrid.setCellValue(myGridID , selectRowIdx , "glAccCode", $("#search_glAccCode").val());
     AUIGrid.setCellValue(myGridID , selectRowIdx , "glAccCodeName", $("#search_glAccCodeName").val());
 }
@@ -470,13 +488,13 @@ function fn_addRow() {
                     ,bilPeriodT : $("#bilPeriodT").val()
                     ,gridData : GridCommon.getEditData(myGridID)
             };
-            
+
         	Common.ajaxFile("/eAccounting/pettyCash/attachFileUpload.do", formData, function(result) {
                 console.log(result);
-                
+
                 data.atchFileGrpId = result.data.fileGroupKey
                 console.log(data);
-                
+
                 if(data.gridData.add.length > 0) {
                 	for(var i = 0; i < data.gridData.add.length; i++) {
                 		data.gridData.add[i].costCentr = data.costCentr;
@@ -500,7 +518,7 @@ function fn_addRow() {
                 		AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                 	}
                 }
-                
+
                 fn_getAllTotAmt();
             });
         } else {
@@ -527,10 +545,10 @@ function fn_addRow() {
                     ,bilPeriodT : $("#bilPeriodT").val()
                     ,gridData : GridCommon.getEditData(myGridID)
             };
-            
+
             $("#attachTd").html("");
             $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='file' title='file add' /><label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#' id='remove_btn' onclick='javascript:fn_getRemoveFileList()'>Delete</a></span></div>");
-            
+
         	formData.append("atchFileGrpId", atchFileGrpId);
         	formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
             console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
@@ -538,9 +556,9 @@ function fn_addRow() {
             console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
         	Common.ajaxFile("/eAccounting/pettyCash/attachFileUpdate.do", formData, function(result) {
                 console.log(result);
-                
+
                 console.log(data);
-                
+
                 if(data.gridData.add.length > 0) {
                     for(var i = 0; i < data.gridData.add.length; i++) {
                         data.gridData.add[i].costCentr = data.costCentr;
@@ -591,13 +609,13 @@ function fn_addRow() {
                     	AUIGrid.removeRow(newGridID, AUIGrid.rowIdToIndex(newGridID, data.gridData.remove[i].clmSeq));
                     }
                 }
-                
+
                 fn_getAllTotAmt();
-                
+
                 clmSeq = 0;
             });
         }
-        
+
         fn_clearData();
     }
 }
@@ -679,9 +697,9 @@ function fn_selectExpenseInfo() {
         $("#bilPeriodT").val(result.bilPeriodT);
         $("#newCrtUserId").val(result.crtUserId);
         $("#newCrtUserName").val(result.userName);
-        
+
         AUIGrid.setGridData(myGridID, result.itemGrp);
-        
+
         // TODO attachFile
         attachList = result.attachList;
         console.log(attachList);
@@ -695,7 +713,7 @@ function fn_selectExpenseInfo() {
                         $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
                     }
                 }
-                
+
                 // 파일 다운
                 $(".input_text").dblclick(function() {
                     var oriFileName = $(this).val();
@@ -725,7 +743,7 @@ function fn_selectExpenseInfo() {
                 $(".auto_file2 a:contains('Delete')").click(function() {
                     var div = $(this).parents(".auto_file2");
                     var oriFileName = div.find(":text").val();
-                    console.log(oriFileName);   
+                    console.log(oriFileName);
                     for(var i = 0; i < attachList.length; i++) {
                         if(attachList[i].atchFileName == oriFileName) {
                             remove.push(attachList[i].atchFileId);
@@ -801,14 +819,14 @@ function fn_expApproveLinePop() {
         // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
     	fn_updatePettyCashExp("");
     }
-    
+
     Common.popupDiv("/eAccounting/pettyCash/expApproveLinePop.do", null, null, true, "approveLineSearchPop");
 }
 
 function fn_deletePettyCashExp() {
 	// Grid Row 삭제
     AUIGrid.removeRow(newGridID, deleteRowIdx);
-    
+
     fn_getAllTotAmt();
     var data = {
             clmNo : clmNo,
@@ -819,7 +837,7 @@ function fn_deletePettyCashExp() {
     console.log(data);
     Common.ajax("POST", "/eAccounting/pettyCash/deletePettyCashExp.do", data, function(result) {
         console.log(result);
-        
+
         // function 호출 안되서 ajax 직접호출
         //fn_selectExpenseList();
         Common.ajax("GET", "/eAccounting/pettyCash/selectExpenseList.do?_cacheId=" + Math.random(), $("#form_pettyCashExp").serialize(), function(result) {
@@ -840,12 +858,12 @@ function fn_selectTaxRate() {
 }
 
 function fn_myGridSetEvent() {
-	AUIGrid.bind(myGridID, "cellClick", function( event ) 
+	AUIGrid.bind(myGridID, "cellClick", function( event )
             {
                 console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 selectRowIdx = event.rowIndex;
             });
-    
+
     AUIGrid.bind(myGridID, "cellEditBegin", function( event ) {
         // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
         if($("#invcType").val() == "S") {
@@ -862,7 +880,7 @@ function fn_myGridSetEvent() {
             }
         }
   });
-    
+
     AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
         if(event.dataField == "gstBeforAmt" || event.dataField == "gstAmt" || event.dataField == "nonClmGstAmt") {
             var taxAmt = 0;
@@ -965,7 +983,26 @@ function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
     };
     Common.popupDiv("/eAccounting/webInvoice/webInvoiceRqstViewPop.do", data, null, true, "webInvoiceRqstViewPop");
 }
+
+function fn_report() {
+    var option = {
+        isProcedure : true
+    };
+    Common.report("dataForm", option);
+}
+
+
 </script>
+
+<!-- report Form -->
+<form id="dataForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Report2.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
+
+    <!-- params -->
+    <input type="hidden" id="_repClaimNo" name="V_CLAIMNO" />
+</form>
 
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -1025,6 +1062,23 @@ function fn_webInvoiceRequestPop(appvPrcssNo, clmType) {
 </tr>
 </tbody>
 </table><!-- table end -->
+
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt>Link</dt>
+        <dd>
+        <ul class="btns">
+            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+            <li><p class="link_btn"><a href="#" id="_pettyCashExpenseBtn">Petty Cash Slip</a></p></li>
+            </c:if>
+        </ul>
+        <ul class="btns">
+        </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
