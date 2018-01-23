@@ -1667,6 +1667,18 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		}
 		return hsManualMapper.selectHsOrderInMonth(params);
 	}
+
+	@Override
+	public List<EgovMap> hSMgtResultViewResultFilter(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.hSMgtResultViewResultFilter(params);
+	}
+
+	@Override
+	public EgovMap hSMgtResultViewResult(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return hsManualMapper.hSMgtResultViewResult(params);
+	}
 	
 	
 }

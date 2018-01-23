@@ -229,6 +229,10 @@ public interface HsManualMapper {
 	int saveValidation(Map<String, Object> params);
 
 	EgovMap selectHsOrderInMonth(Map<String, Object> params);
+
+	List<EgovMap> hSMgtResultViewResultFilter(Map<String, Object> params);
+
+	EgovMap hSMgtResultViewResult(Map<String, Object> params);
 		
 
 }

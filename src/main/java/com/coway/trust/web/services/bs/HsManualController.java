@@ -429,6 +429,32 @@ public class HsManualController {
 		return ResponseEntity.ok(hsViewfilterInfo);
 	}
 
+	
+	@RequestMapping(value = "/hSMgtResultViewResultPop.do")
+	public String hSMgtResultViewResultPop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {
+		
+		EgovMap hSMgtResultViewResult = null;
+		
+		hSMgtResultViewResult = hsManualService.hSMgtResultViewResult(params);
+		model.addAttribute("hSMgtResultViewResult", hSMgtResultViewResult);
+		
+		return "services/bs/hSManagementResultViewResultPop";
+	}
+
+	
+	
+	@RequestMapping(value = "/hSMgtResultViewResultFilter.do")
+	public ResponseEntity<List<EgovMap>> hSMgtResultViewResultFilter(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) throws Exception {
+
+		List<EgovMap> hSMgtResultViewResultFilter = null;
+
+		hSMgtResultViewResultFilter = hsManualService.hSMgtResultViewResultFilter(params);
+		//model.addAttribute("hsViewfilterInfo", hsViewfilterInfo);
+
+		return ResponseEntity.ok(hSMgtResultViewResultFilter);
+	}
+	
+	
 
 
 	@RequestMapping(value = "/selectHistoryHSResult.do")

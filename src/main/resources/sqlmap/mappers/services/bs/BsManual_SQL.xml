@@ -2048,7 +2048,50 @@ SELECT ROWNUM AS rnum ,
 
               <select id="selectHistoryHSResult" parameterType="Map" resultType="egovMap">
                    <![CDATA[
-                        SELECT Limit1.RESULT_ID RESULT_ID  ,
+                   
+                   
+	                   SELECT Distinct1.C1 C1  ,
+					       Distinct1.RESULT_ID RESULT_ID  ,
+					       Distinct1.NO NO  ,
+					       Distinct1.RESULT_IS_CURR RESULT_IS_CURR  ,
+					       Distinct1.CODE CODE  ,
+					       Distinct1.MEM_CODE MEM_CODE  ,
+					       Distinct1.SETL_DT SETL_DT  ,
+					       Distinct1.RESULT_STOCK_USE RESULT_STOCK_USE  ,
+					       Distinct1.RESULT_CRT_DT RESULT_CRT_DT  ,
+					       Distinct1.USER_NAME USER_NAME  
+					  FROM ( SELECT DISTINCT Filter1.RESULT_ID RESULT_ID  ,
+					                         Filter1.NO NO  ,
+					                         Filter1.SETL_DT SETL_DT  ,
+					                         Filter1.RESULT_CRT_DT RESULT_CRT_DT  ,
+					                         decode(Filter1.RESULT_STOCK_USE,'1','O','X') RESULT_STOCK_USE  ,
+                                             decode(Filter1.RESULT_IS_CURR,'1','Current',Filter1.RESULT_IS_CURR)  RESULT_IS_CURR  ,
+					                         Filter1.CODE CODE  ,
+					                         1 C1  ,
+					                         Filter1.MEM_CODE MEM_CODE  ,
+					                         Extent4.USER_NAME USER_NAME  
+					         FROM ( SELECT Extent1.RESULT_ID RESULT_ID  ,
+					                       Extent1.NO NO  ,
+					                       Extent1.SCHDUL_ID SCHDUL_ID  ,
+					                       Extent1.SETL_DT SETL_DT  ,
+					                       Extent1.RESULT_CRT_DT RESULT_CRT_DT  ,
+					                       Extent1.RESULT_CRT_USER_ID RESULT_CRT_USER_ID  ,
+					                       Extent1.RESULT_STOCK_USE RESULT_STOCK_USE  ,
+					                       Extent1.RESULT_IS_CURR RESULT_IS_CURR  ,
+					                       Extent2.CODE CODE  ,
+					                       Extent3.MEM_CODE MEM_CODE  
+					                FROM SVC0006D Extent1
+					                       JOIN SYS0038M Extent2   ON Extent1.RESULT_STUS_CODE_ID = Extent2.STUS_CODE_ID
+					                       LEFT JOIN ORG0001D Extent3   ON Extent1.CODY_ID = Extent3.MEM_ID
+					                 WHERE  8 <> Extent1.RESULT_STUS_CODE_ID ) Filter1
+					                LEFT JOIN SYS0047M Extent4   ON Filter1.RESULT_CRT_USER_ID = Extent4.USER_ID
+					          WHERE  Filter1.SCHDUL_ID = #{hrResultId} ) Distinct1
+					          
+					          
+					          
+					                                  ]]>
+					          
+<!--                         SELECT Limit1.RESULT_ID RESULT_ID  ,
                                    Limit1.SALES_ORD_ID SALES_ORD_ID  ,
                                    Limit1.SALES_ORD_NO SALES_ORD_NO  ,
                                    Limit1.NO1 NO  ,
@@ -2114,8 +2157,8 @@ SELECT ROWNUM AS rnum ,
                                             LEFT JOIN SYS0032M Extent8   ON Extent8.RESN_ID = Extent1.FAIL_RESN_ID
                                             LEFT JOIN SYS0028M Extent9   ON Extent9.WH_LOC_ID = Extent1.WH_ID
                                             LEFT JOIN SYS0047M Extent10   ON Extent10.USER_ID = Extent1.RESULT_CRT_USER_ID
-                                      WHERE  Extent1.RESULT_ID = #{hrResultId} AND ROWNUM <= 1 ) Limit1
-                        ]]>
+                                      WHERE  Extent1.RESULT_ID = #{hrResultId} AND ROWNUM <= 1 ) Limit1 -->
+
                             </select>
 
 
@@ -2142,7 +2185,7 @@ SELECT ROWNUM AS rnum ,
                                                      Filter1.RESULT_CRT_DT RESULT_CRT_DT  ,
                                                      Filter1.RESULT_IS_CURR RESULT_IS_CURR  ,
                                                      Filter1.BS_RESULT_PART_QTY BS_RESULT_PART_QTY  ,
-                                                     Filter1.BS_RESULT_FILTER_CLM BS_RESULT_FILTER_CLM  ,
+                                                     decode(Filter1.BS_RESULT_FILTER_CLM,'0','X','O') BS_RESULT_FILTER_CLM,
                                                      Filter1.STK_ID STK_ID  ,
                                                      Filter1.STK_CODE STK_CODE  ,
                                                      Filter1.STK_DESC STK_DESC  ,
@@ -3484,4 +3527,108 @@ SELECT ROWNUM AS rnum ,
          )
 
         </select>
+        
+        
+
+
+
+                 <select id="hSMgtResultViewResult" parameterType="Map" resultType="egovMap">
+                   <![CDATA[
+							 SELECT Limit1.RESULT_ID RESULT_ID  ,
+							       Limit1.SALES_ORD_ID SALES_ORD_ID  ,
+							       Limit1.SALES_ORD_NO SALES_ORD_NO  ,
+							       Limit1.NO1 NO  ,
+							       Limit1.MONTH MONTH  ,
+							       Limit1.YEAR YEAR  ,
+							       Limit1.NO NO1  ,
+							       Limit1.STUS_CODE_ID STUS_CODE_ID  ,
+							       Limit1.CODE CODE  ,
+							       (Limit1.SETL_DT) C1  ,
+							       Limit1.REN_COLCT_ID REN_COLCT_ID  ,
+							       Limit1.CODE1 CODE1  ,
+							       Limit1.RESN_DESC RESN_DESC  ,
+							       CASE 
+							            WHEN ( Limit1.SRV_REM IS NOT NULL ) THEN Limit1.SRV_REM
+							       ELSE ''
+							          END C2  ,
+							       Limit1.CODY_ID CODY_ID  ,
+							       Limit1.MEM_CODE MEM_CODE  ,
+							       Limit1.NAME NAME  ,
+							       Limit1.FAIL_RESN_ID FAIL_RESN_ID  ,
+							       Limit1.CODE2 CODE2  ,
+							       Limit1.REASONDESC1 REASONDESC1  ,
+							       Limit1.WH_LOC_CODE WH_LOC_CODE  ,
+							       Limit1.WH_LOC_DESC WH_LOC_DESC  ,
+							       Limit1.RESULT_REM RESULT_REM  ,
+							       Limit1.USER_NAME USER_NAME  ,
+							       Limit1.RESULT_CRT_DT RESULT_CRT_DT  ,
+							       Limit1.RESULT_IS_CURR RESULT_IS_CURR  
+							  FROM ( SELECT Extent1.RESULT_ID RESULT_ID  ,
+							                Extent1.NO NO  ,
+							                Extent1.SALES_ORD_ID SALES_ORD_ID  ,
+							                Extent1.CODY_ID CODY_ID  ,
+							                Extent1.SETL_DT SETL_DT  ,
+							                Extent1.FAIL_RESN_ID FAIL_RESN_ID  ,
+							                Extent1.REN_COLCT_ID REN_COLCT_ID  ,
+							                Extent1.RESULT_REM RESULT_REM  ,
+							                Extent1.RESULT_CRT_DT RESULT_CRT_DT  ,
+							                Extent1.RESULT_IS_CURR RESULT_IS_CURR  ,
+							                Extent2.NO NO1  ,
+							                Extent2.MONTH MONTH  ,
+							                Extent2.YEAR YEAR  ,
+							                Extent3.SALES_ORD_NO SALES_ORD_NO  ,
+							                Extent4.SRV_REM SRV_REM  ,
+							                Extent5.STUS_CODE_ID STUS_CODE_ID  ,
+							                Extent5.CODE CODE  ,
+							                Extent6.CODE CODE1  ,
+							                Extent6.RESN_DESC RESN_DESC  ,
+							                Extent7.MEM_CODE MEM_CODE  ,
+							                Extent7.NAME NAME  ,
+							                Extent8.CODE CODE2  ,
+							                Extent8.RESN_DESC REASONDESC1  ,
+							                Extent9.WH_LOC_CODE WH_LOC_CODE  ,
+							                Extent9.WH_LOC_DESC WH_LOC_DESC  ,
+							                Extent10.USER_NAME USER_NAME  
+							         FROM SVC0006D Extent1
+							                JOIN SVC0008D Extent2   ON Extent2.SCHDUL_ID = Extent1.SCHDUL_ID
+							                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent2.SALES_ORD_ID
+							                JOIN SAL0090D Extent4   ON ( Extent4.SRV_SO_ID = Extent3.SALES_ORD_ID )
+							                AND ( 1 = Extent4.SRV_STUS_ID )
+							                JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.RESULT_STUS_CODE_ID
+							                LEFT JOIN SYS0032M Extent6   ON Extent6.RESN_ID = Extent1.REN_COLCT_ID
+							                LEFT JOIN ORG0001D Extent7   ON Extent7.MEM_ID = Extent1.CODY_ID
+							                LEFT JOIN SYS0032M Extent8   ON Extent8.RESN_ID = Extent1.FAIL_RESN_ID
+							                LEFT JOIN SYS0028M Extent9   ON Extent9.WH_LOC_ID = Extent1.WH_ID
+							                LEFT JOIN SYS0047M Extent10   ON Extent10.USER_ID = Extent1.RESULT_CRT_USER_ID
+							          WHERE  Extent1.RESULT_ID = #{MresultId} AND ROWNUM <= 1 ) Limit1
+                        ]]>
+                            </select>
+                            
+                            
+                            
+                 <select id="hSMgtResultViewResultFilter" parameterType="Map" resultType="egovMap">
+                   <![CDATA[
+						SELECT Distinct1.C1 C1  ,
+						       Distinct1.STK_ID STK_ID  ,
+						       Distinct1.STK_CODE STK_CODE  ,
+						       Distinct1.STK_DESC STK_DESC  ,
+						       Distinct1.BS_RESULT_PART_QTY BS_RESULT_PART_QTY  ,
+						       Distinct1.BS_RESULT_FILTER_CLM BS_RESULT_FILTER_CLM  
+						  FROM ( SELECT DISTINCT Extent1.BS_RESULT_PART_QTY BS_RESULT_PART_QTY  ,
+						                         decode(Extent1.BS_RESULT_FILTER_CLM,'0','X','O') BS_RESULT_FILTER_CLM  ,
+						                         Extent2.STK_ID STK_ID  ,
+						                         Extent2.STK_CODE STK_CODE  ,
+						                         Extent2.STK_DESC STK_DESC  ,
+						                         1 C1  
+						         FROM SVC0007D Extent1
+						                JOIN SYS0026M Extent2   ON Extent1.BS_RESULT_PART_ID = Extent2.STK_ID
+						          WHERE  ( Extent1.BS_RESULT_ID = #{MresultId} )
+						                   AND ( Extent1.BS_RESULT_PART_QTY > 0 )
+						                   AND ( 0 <> Extent1.BS_RESULT_PART_ID ) ) Distinct1
+
+                        ]]>
+                            </select>
+                            
+                            
+                                                                
 </mapper>

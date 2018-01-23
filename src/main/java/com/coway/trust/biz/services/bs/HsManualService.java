@@ -122,5 +122,10 @@ public interface HsManualService {
 
 	EgovMap selectHsOrderInMonth(Map<String, Object> params);
 
+	List<EgovMap> hSMgtResultViewResultFilter(Map<String, Object> params);
+
+	EgovMap hSMgtResultViewResult(Map<String, Object> params);
+
+
 
 }

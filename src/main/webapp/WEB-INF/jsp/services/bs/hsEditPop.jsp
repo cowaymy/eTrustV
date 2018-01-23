@@ -153,62 +153,97 @@ var myDetailGridData = null;
     function createAUIGrid2(){
         // AUIGrid 칼럼 설정
         var resultColumnLayout = [ {
-                    dataField:"stkCode",
+                    dataField:"resultIsCurr",
                     headerText:"Version",
-                    width:200,
+                    width:100,
                     height:30
                 }, {                        
-                    dataField : "no1",
+                    dataField : "no",
                     headerText : "BSR No",
                     width : 140
                 }, {                        
                     dataField : "code",
                     headerText : "Status",
-                    width : 440              
+                    width : 140              
                 }, {
                     dataField : "memCode",
                     headerText : "Member",
-                    width : 240  
+                    width : 140  
                 }, {
                     dataField : "c1",
                     headerText : "Settle Date",
-                    width : 240 ,
+                    width : 140 ,
                     dataType : "date", 
                     formatString : "dd/mm/yyyy"                  
                 }, {
-                    dataField : "bsResultItmId",
+                    dataField : "resultStockUse",
                     headerText : "Has Filter",
-                    width : 240                      
+                    width : 140                      
                 }, {
-                    dataField : "bsResultItmId",
+                    dataField : "resultCrtDt",
                     headerText : "Key At",
-                    width : 240                   
+                    width : 140,
+                    dataType : "date", 
+                    formatString : "dd/mm/yyyy"                       
                 }, {
-                    dataField : "bsResultItmId",
+                    dataField : "userName",
                     headerText : "Key By",
-                    width : 240                        
+                    width : 140                        
                 }, {
-                    dataField : "bsResultItmId",
-                    headerText : "View",
-                    width : 240    
+                    dataField : "resultId",
+                    headerText : "result_id",
+                    width : 140,
+                    visible:false           
+                },{
+                        dataField : "undefined",
+                        headerText : "View",
+                        width : 170,
+                        renderer : {
+                              type : "ButtonRenderer",
+                              labelText : "View",
+                              onclick : function(rowIndex, columnIndex, value, item) {
+
+                                   if(item.code == "ACT") {
+                                        Common.alert('Not able to EDIT for the HS order status in Active.');
+                                        return false;
+                                   }
+
+/*                                   $("#_schdulId").val(item.schdulId);
+                                  $("#_salesOrdId").val(item.salesOrdId);
+                                  $("#_openGb").val("edit");
+                                  $("#_brnchId").val(item.brnchId);
+ */                                  
+                                  var aaa = AUIGrid.getCellValue(myDetailGridID2, rowIndex,"resultId");
+                                    $("#MresultId").val(AUIGrid.getCellValue(myDetailGridID2, rowIndex,"resultId"));
+                                    Common.popupDiv("/services/bs/hSMgtResultViewResultPop.do", $("#viewHSResultForm").serializeJSON());
+
+                  }
+           }
             }];
             
             // 그리드 속성 설정
             var gridPros = {
-                usePaging           : true,         //페이징 사용
-                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-                editable            : false,            
-                fixedColumnCount    : 1,            
-                showStateColumn     : true,             
-                displayTreeOpen     : false,            
-                selectionMode       : "singleRow",  //"multipleCells",            
-                headerHeight        : 30,       
-                useGroupingPanel    : false,        //그룹핑 패널 사용
-                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No order found.",
-                groupingMessage     : "Here groupping"
+                // 페이징 사용       
+                //usePaging : true,
+                // 한 화면에 출력되는 행 개수 20(기본값:20)
+                //pageRowCount : 20,
+                
+                editable : false,
+                
+                //showStateColumn : true, 
+                
+                //displayTreeOpen : true,
+                
+                headerHeight : 30,
+                
+                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                skipReadonlyColumns : true,
+                
+                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                wrapSelectionMove : true,
+                
+                // 줄번호 칼럼 렌더러 출력
+                showRowNumColumn : true
         
             };
                 //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
@@ -237,18 +272,17 @@ var myDetailGridData = null;
                 }, {
                     dataField : "bsResultFilterClm",
                     headerText : "Claim",
-                    width : 240    ,
-                    visible:false                       
+                    width : 240                    
                }, {
                     dataField : "resultCrtDt",
                     headerText : "Key At",
-                    width : 240        ,
-                    visible:false                    
+                    width : 240 ,
+                    dataType : "date", 
+                    formatString : "dd/mm/yyyy"                    
                }, {
                     dataField : "userName",
                     headerText : "Key By",
-                    width : 240       ,
-                    visible:false                    
+                    width : 240                    
 
             }];
             // 그리드 속성 설정
@@ -599,8 +633,8 @@ var myDetailGridData = null;
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-<form action="#" id="editHSResultForm" method="post">  
- 
+<form action="#" id="viewHSResultForm" method="post">  
+    <input type="hidden" name="MresultId" id="MresultId"/>
 <aside class="title_line"><!-- title_line start -->
 <h2>HS Information</h2>
 </aside><!-- title_line end -->
