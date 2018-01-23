@@ -46,12 +46,12 @@ $(document).ready(function(){
 	                fn_checkNewCnvr();
                     
 	            } else {
-	                alert('No data to import!');
+	                Common.alert('No data to import!');
 	            }
 	        };
 
 	        reader.onerror = function() {
-	            alert('Unable to read ' + file.fileName);
+	        	Common.alert('Unable to read ' + file.fileName);
 	        };
 
 	});  
@@ -185,7 +185,7 @@ function fn_saveNewCnvr(){
     
     for(var i=0; i < idx; i++){    	
     	if(AUIGrid.getCellValue(cnvrListGrid, i, "chkYn") == "N"){
-    		alert("<spring:message code="sales.msg.error" />");
+    		Common.alert("<spring:message code="sales.msg.error" />");
     		return;
     	}    		
     }
