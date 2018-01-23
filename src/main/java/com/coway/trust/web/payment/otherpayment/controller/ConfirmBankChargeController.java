@@ -1,5 +1,6 @@
 package com.coway.trust.web.payment.otherpayment.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -60,30 +61,31 @@ public class ConfirmBankChargeController {
 
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		
-		List<EgovMap> keyInList = confirmBankChargeService.selectNorKeyInList(params);
+		//List<EgovMap> keyInList = confirmBankChargeService.selectNorKeyInList(params);
 		List<EgovMap> stateList = confirmBankChargeService.selectBankStateMatchList(params);
 		
-		resultMap.put("keyInList", keyInList);
+		//resultMap.put("keyInList", keyInList);
 		resultMap.put("stateList", stateList);
         
 		// 조회 결과 리턴.
         return ResponseEntity.ok(resultMap);
 	}
 	/**
-	 * Confirm Bank Charge - Mapping 처리 
+	 * Confirm Bank Charge - Confrim 처리 
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/saveBankChgMapping.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveBankChgMapping(
-			@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
 		
 		LOGGER.debug("params : {} ", params);
 		
+		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
+		
 		// 저장
-		params.put("userId", sessionVO.getUserId());
-		confirmBankChargeService.saveBankChgMapping(params);
+		confirmBankChargeService.saveBankChgConfirm(gridList, sessionVO);
 		
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();

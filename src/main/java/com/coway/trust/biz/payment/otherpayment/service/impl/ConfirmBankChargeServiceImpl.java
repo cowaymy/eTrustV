@@ -8,6 +8,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import com.coway.trust.biz.payment.otherpayment.service.AdvPaymentMatchService;
 import com.coway.trust.biz.payment.otherpayment.service.ConfirmBankChargeService;
+import com.coway.trust.cmmn.model.SessionVO;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -34,39 +35,38 @@ public class ConfirmBankChargeServiceImpl extends EgovAbstractServiceImpl implem
 	}
 	
 	/**
-	 * Advance Payment Matching - Mapping 처리 
+	 * Advance Payment Matching - Confrim 처리 
 	 * @param params
 	 * @param model
 	 * @return
 	 */		
 	@Override
-	public void saveBankChgMapping(Map<String, Object> params) {
-		
-		//Group Payment Mapping처리
-		confirmBankChargeMapper.mappingBankChgGroupPayment(params);
-		
-		//Bank Statement Mapping 처리
-		confirmBankChargeMapper.mappingBankStatementBankChg(params);
-		
+	public void saveBankChgConfirm(List<Object> paramList, SessionVO sessionVO) {
 		
 		//Interface 테이블 처리 - Bank Statement Bank Charge 
-		List<EgovMap> returnList = advPaymentMatchMapper.selectMappedData(params);
+		//List<EgovMap> returnList = advPaymentMatchMapper.selectMappedData(params);
+		int seq = 0;
 		
-		
-		if(returnList != null && returnList.size() > 0){
-			for(int i = 0 ; i < returnList.size(); i++){
+		if(paramList != null && paramList.size() > 0){
+			for(int i = 0 ; i < paramList.size(); i++){
 				
-				EgovMap ifMap  = (EgovMap) returnList.get(i);				
+				Map<String, Object> ifMap = (Map<String, Object>)paramList.get(i);
+				ifMap.put("userId", sessionVO.getUserId());
+				
+				LOGGER.debug("ifMap============================" + ifMap);
+				//Group Payment Mapping처리
+				//confirmBankChargeMapper.mappingBankChgGroupPayment(ifMap);
+				
+				//Bank Statement Mapping 처리
+				confirmBankChargeMapper.mappingBankStatementBankChg(ifMap);
 				
 				//variance
-				ifMap.put("variance", params.get("variance"));
-				ifMap.put("userId", params.get("userId"));				
-				advPaymentMatchMapper.insertAdvPaymentMatchIF(ifMap);
+				//ifMap.put("variance", params.get("variance"));
+				ifMap.put("bankSeq", seq+1);
+				confirmBankChargeMapper.insertConfBankChargeIF(ifMap);
+				seq++;
 			}
 		}
-		
-		
 	}
-	
 	
 }

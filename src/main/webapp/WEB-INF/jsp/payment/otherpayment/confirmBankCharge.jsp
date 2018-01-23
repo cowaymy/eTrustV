@@ -8,93 +8,51 @@
 </style>
 <script type="text/javaScript">
 
-var norKeyInGridId;
 var bankStmtGridId;
-
 var selectedGridValue;
 
-var gridPros2 = {
+var gridPros = {
 	editable : false,				// 편집 가능 여부 (기본값 : false)
 	showRowCheckColumn : true,		// 체크박스 표시 설정
-	rowCheckToRadio : true,			// 체크박스 대신 라디오버튼 출력함
 	softRemoveRowMode:false,
-    headerHeight : 35,				// 기본 헤더 높이 지정
+	headerHeight : 35,				// 기본 헤더 높이 지정
 	showStateColumn : false			// 상태 칼럼 사용
 };
 
-var norKeyInLayout = [ 
-	{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : 90 , editable : false},
-	{dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.paymentMode'/>",width : 90 , editable : false},
-	{dataField : "payItmRefDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 100 , editable : false},
-	{dataField : "payItmBankAccNm",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},
-	{dataField : "payItmBankInSlipNo",headerText : "<spring:message code='pay.head.slipNo'/>",width : 120 , editable : false},
-	{dataField : "refDtl",headerText : "<spring:message code='pay.head.refDetailsJompayRef'/>",width : 120 , editable : false},
-	{dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" },
-	{dataField : "bankChgAmt",headerText : "Bank<br>Charge",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" }];
 
 var bankStmtLayout = [
-	{dataField : "fTrnscId",headerText : "<spring:message code='pay.head.id'/>",width : 150 , editable : false, visible : false},
-	{dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 100 , editable : false},
-	{dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.refCheqNo'/>",width : 120 , editable : false},
-	{dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.description'/>" , editable : false},
-	{dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>",width : 100 , editable : false},
-	{dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" },
-	{dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>",width : 100 , editable : false},
-	{dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>",width : 100 , editable : false},
-	{dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNo'/>",width : 100 , editable : false}];
+	{dataField : "bankId",headerText : "<spring:message code='pay.head.bankId'/>",editable : false, visible : false},
+	{dataField : "bankAcc",headerText : "<spring:message code='pay.head.bankAccountCode'/>", editable : false, visible : false},
+	{dataField : "count",headerText : "", editable : false, visible : false},
+	{dataField : "fTrnscId",headerText : "<spring:message code='pay.head.tranxId'/>", editable : false},
+	{dataField : "bankName",headerText : "<spring:message code='pay.head.bank'/>", editable : false},                   
+	{dataField : "bankAccName",headerText : "<spring:message code='pay.head.bankAccount'/>",editable : false},          
+	{dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.dateTime'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+	{dataField : "fTrnscTellerId",headerText : "<spring:message code='pay.head.refCheqNo'/>", editable : false},
+	{dataField : "fTrnscRef3",headerText : "<spring:message code='pay.head.description1'/>",editable : false},
+	{dataField : "fTrnscRefChqNo",headerText : "<spring:message code='pay.head.description2'/>", editable : false},
+	{dataField : "fTrnscRef1",headerText : "<spring:message code='pay.head.ref5'/>", editable : false},
+	{dataField : "fTrnscRef2",headerText : "<spring:message code='pay.head.ref6'/>", editable : false},
+	{dataField : "fTrnscRef6",headerText : "<spring:message code='pay.head.ref7'/>", editable : false},
+	{dataField : "fTrnscRem",headerText : "<spring:message code='pay.head.type'/>", editable : false},
+	{dataField : "fTrnscDebtAmt",headerText : "<spring:message code='pay.head.debit'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+	{dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.credit'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+	{dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>", editable : false},
+	{dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>", editable : false},
+	{dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNumber'/>", editable : false},
+	{dataField : "count",headerText : "", editable : false, visible : false},
+	{dataField : "accCode",headerText : "", editable : false, visible : false}
+	];
 
 
 $(document).ready(function(){
     
 	//CASH Bank Account combo box setting
-	doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
-	doGetCombo('/common/selectCodeList.do', '393' , ''   , 'accCode' , 'S', '');
-
-    norKeyInGridId = GridCommon.createAUIGrid("nor_keyin_grid_wrap", norKeyInLayout,"",gridPros2);
-    bankStmtGridId = GridCommon.createAUIGrid("bank_stmt_grid_wrap", bankStmtLayout,"",gridPros2);
-
-	// 셀 더블클릭 이벤트 바인딩 : 상세 팝업 
-	AUIGrid.bind(norKeyInGridId, "cellDoubleClick", function(event) {
-		
-		var groupSeq = AUIGrid.getCellValue(norKeyInGridId , event.rowIndex , "groupSeq");	
-		Common.popupDiv('/payment/initDetailGrpPaymentPop.do', {"groupSeq" : groupSeq}, null , true ,'_viewDtlGrpPaymentPop');
-
-	});
+	doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAccount', 'S', '' );
+    
+	bankStmtGridId = GridCommon.createAUIGrid("bank_stmt_grid_wrap", bankStmtLayout,"",gridPros);
     
 });
-
-function fn_payTypeChange(){
-	var payType = $("#payType").val();
-	
-	if(payType == '105'){
-		doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
-	}else if(payType == '106'){
-		doGetCombo('/common/getAccountList.do', 'CHQ','', 'bankAcc', 'S', '' );
-	}else if(payType == '108'){
-		doGetCombo('/common/getAccountList.do', 'ONLINE','', 'bankAcc', 'S', '' );
-	}
-}
-
-function fn_bankChange(){
-	
-	var bankType = $("#bankType").val();
-    
-	$("#vaAccount").val('');
-	$("#bankAcc").val('');
-	
-	if(bankType != "2730"){
-		$("#vaAccount").addClass("readonly");
-		$("#vaAccount").attr('readonly', true);
-		$("#bankAcc").attr('disabled', false);
-		$("#bankAcc").removeClass("disabled");
-	}else{
-		$("#vaAccount").removeClass("readonly");
-		$("#vaAccount").attr('readonly', false);
-		$("#bankAcc").attr('disabled', true);
-		$("#bankAcc").addClass("w100p disabled");
-	}
- 
-}
 
 //조회버튼 클릭시 처리    
 function fn_searchBankChgMatchList(){
@@ -107,7 +65,7 @@ function fn_searchBankChgMatchList(){
 
 	Common.ajax("POST","/payment/selectBankChgMatchList.do", $("#searchForm").serializeJSON(), function(result){
 
-		AUIGrid.setGridData(norKeyInGridId, result.keyInList);
+		console.log(result);
 		AUIGrid.setGridData(bankStmtGridId, result.stateList);
 	});
 }
@@ -118,75 +76,42 @@ function fn_clear(){
 
 
 function fn_mapping(){	
-	var norKeyInItems = AUIGrid.getCheckedRowItems(norKeyInGridId);
-	var bankStmtItem = AUIGrid.getCheckedRowItems(bankStmtGridId);
-	var keyInRowItem;
+	var bankStmtItem = AUIGrid.getCheckedRowItemsAll(bankStmtGridId);
 	var stateRowItem;
 	var keyInAmount = 0;
 	var stmtAmount =0;
 	var groupSeq =0;
 	var fTrnscId =0;
+	var data = {};
 
-	if( norKeyInItems.length < 1 || bankStmtItem.length < 1){
-		Common.alert("<spring:message code='pay.alert.checkManualKeyInListStateList'/>");
+	if(bankStmtItem.length < 1){
+		Common.alert("<spring:message code='Please check Bank Statement List'/>");
 		return;
 	}else{
-
-		keyInRowItem = norKeyInItems[0];
-		stateRowItem = bankStmtItem[0];
-
-		keyInAmount = Number(keyInRowItem.item.totAmt) + Number(keyInRowItem.item.bankChgAmt);
-		stmtAmount = Number(stateRowItem.item.fTrnscCrditAmt);
-		groupSeq = keyInRowItem.item.groupSeq;
-		fTrnscId = stateRowItem.item.fTrnscId;
-
-		if(keyInAmount != stmtAmount){
-           	Common.alert("<spring:message code='pay.alert.amountNotSame'/>",
-				function (){
-					
-					$("#journal_entry_wrap").show();   					
-					$("#groupSeq").val(groupSeq);
-					$("#fTrnscId").val(fTrnscId);
-					$("#preKeyInAmt").val(keyInAmount);
-					$("#bankStmtAmt").val(stmtAmount);
-					$("#variance").val(keyInAmount-stmtAmount);
-					$("#accCode").val('');
-					$("#remark").val('');
-				}
-			);
-		} else {
-			$("#groupSeq").val(groupSeq);
-			$("#fTrnscId").val(fTrnscId);
-			$("#preKeyInAmt").val(keyInAmount);
-			$("#bankStmtAmt").val(stmtAmount);
-			$("#variance").val(keyInAmount-stmtAmount);
-			$("#accCode").val('');
-			$("#remark").val('');
-
-			fn_saveMapping('N');
-		}
+		
+		//stateRowItem = bankStmtItem[0];
+		//stmtAmount = Number(stateRowItem.item.fTrnscCrditAmt);
+		//fTrnscId = stateRowItem.item.fTrnscId;
+		
+		if(bankStmtItem.length > 0)
+			data.all = bankStmtItem;
+		
+		Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
+		      
+			Common.ajax("POST", "/payment/saveBankChgMapping.do", data, function(result) {
+				
+				var message = "<spring:message code='pay.alert.mappingSuccess'/>";
+				Common.alert(message, function(){
+					fn_searchBankChgMatchList();
+					//$("#journal_entry_wrap").hide();                    
+				});        
+			});
+		});
 	}
 }
 
-function fn_saveMapping(withPop){
-	//Journal Entry 팝업을 띄웠을때만 validation check를 한다. 
-	if(withPop == 'Y'){
-		if(FormUtil.checkReqValue($("#accCode option:selected"))){
-			Common.alert("<spring:message code='pay.alert.selectAccountCode'/>");
-			return;
-		}
+/* function fn_saveMapping(){
 
-		if(FormUtil.checkReqValue($("#remark"))){
-			Common.alert("<spring:message code='pay.alert.inputRemark'/>");
-			return;
-		}
-
-		if( FormUtil.byteLength($("#remark").val()) > 3000 ){
-			Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
-    		return;
-	    }
-	}
-	
 	Common.confirm("<spring:message code='pay.alert.wantToSave'/>",function (){
 	    Common.ajax("POST", "/payment/saveBankChgMapping.do", $("#entryForm").serializeJSON(), function(result) {
 			var message = "<spring:message code='pay.alert.mappingSuccess'/>";
@@ -197,7 +122,7 @@ function fn_saveMapping(withPop){
     		});        
 	    });
 	});
-}
+} */
 
 
 
@@ -211,6 +136,7 @@ function fn_saveMapping(withPop){
         <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Confirm Bank Charge</h2>
         <ul class="right_btns">
+            <li><p class="btn_blue"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.mapping'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_searchBankChgMatchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
@@ -232,75 +158,42 @@ function fn_saveMapping(withPop){
                         <td>
                             <!-- date_set start -->
                             <div class="date_set w100p">
-                            <p><input type="text" id="transDateFr" name="transDateFr" title="Transaction Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <p><input type="text" id="transDateFr" name="tranDateFr" title="Transaction Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
                             <span>To</span>
-                            <p><input type="text" id="transDateTo" name="transDateTo" title="Transaction End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <p><input type="text" id="transDateTo" name="tranDateTo" title="Transaction End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
                             </div>
                             <!-- date_set end -->
                         </td>
-						<th scope="row"></th>
-                        <td></td>
+						            <th scope="row">Upload By</th>
+                        <td><input type="text" id="uploadUserNm" name="uploadUserNm" title="" placeholder="Upload User Name" class="w100p" /></td>
                     </tr>
-					<tr>
-                        <th scope="row">Payment Type</th>
-                        <td>
-                            <select id="payType" name="payType" class="w100p"  onchange="javascript:fn_payTypeChange();">
-                                <option value="105">Cash</option>
-                                <option value="106">Cheque</option>
-                                <option value="108">Online</option>
+					          <tr>
+                        <th scope="row">Bank Account</th>
+                        <td>  
+                            <select id="bankAccount" name="bankAccount" class="w100p">                                                               
                             </select>
                         </td>
-						<th scope="row">Bank Type</th>
-						<td>
-							<select id="bankType" name="bankType"  class="w100p" onchange="javascript:fn_bankChange();">
-								<option value="2728">JomPay</option>
-								<option value="2729">MBB CDM</option>
-								<option value="2730">VA</option>
-								<option value="2731">Others</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">Bank Account</th>
-						<td>
-							<select id="bankAcc" name="bankAcc"  class="w100p"></select>
-						</td>
-						<th scope="row">VA Account</th>
-						<td>
-							<input type="text" id="vaAccount" name="vaAccount"  maxlength="16"  class="w100p readonly" readonly="readonly" />
-						</td>
-					</tr>
+                        <th scope="row">Upload Date</th>
+                        <td>
+                            <!-- date_set start -->
+                            <div class="date_set w100p">
+                            <p><input type="text" id="uploadDateFr" name="uploadDateFr" title="Upload Start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            <span>To</span>
+                            <p><input type="text" id="uploadDateTo" name="uploadDateTo" title="Upload End Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+                            </div>
+                            <!-- date_set end -->
+                        </td>
+					         </tr>
                 </tbody>
             </table><!-- table end -->
         </form> 
     </section><!-- search_table end -->
 
-	<!-- link_btns_wrap start -->
-	<aside class="link_btns_wrap">
-		<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-		<dl class="link_list">
-			<dt>Link</dt>
-			<dd>
-				<ul class="btns">
-					<li><p class="link_btn"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.match'/></a></p></li>
-				</ul>
-				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-			</dd>
-		</dl>
-	</aside>
-	<!-- link_btns_wrap end -->
-
     <div class="divine_auto"><!-- divine_auto start -->
-        <div style="width:50%;">
-            <aside class="title_line"><!-- title_line start -->
-                <h3>Manual Key-in List</h3>
-            </aside><!-- title_line end -->
-            <article id="nor_keyin_grid_wrap" class="grid_wrap"></article>
-        </div><!-- border_box end -->
-        <div style="width:50%;">
-            <aside class="title_line"><!-- title_line start -->
+        <div style="width:100%;">
+            <!-- <aside class="title_line">title_line start
                 <h3>Bank Statement</h3>
-            </aside><!-- title_line end -->
+            </aside>title_line end -->
             <article id="bank_stmt_grid_wrap" class="grid_wrap"></article>
         </div>
     </div>
@@ -310,7 +203,7 @@ function fn_saveMapping(withPop){
     POP-UP (JOURNAL ENTRY)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
-<div class="popup_wrap" id="journal_entry_wrap" style="display:none;">
+<%-- <div class="popup_wrap" id="journal_entry_wrap" style="display:none;">
     <!-- pop_header start -->
     <header class="pop_header" id="pop_header">
         <h1>JOURNAL ENTRY</h1>
@@ -375,5 +268,5 @@ function fn_saveMapping(withPop){
     </section>
     </form>       
     <!-- pop_body end -->
-</div>
+</div> --%>
 <!-- popup_wrap end -->

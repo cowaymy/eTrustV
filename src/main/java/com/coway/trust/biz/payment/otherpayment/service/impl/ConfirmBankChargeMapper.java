@@ -42,7 +42,13 @@ public interface ConfirmBankChargeMapper {
 	 */	
 	void mappingBankStatementBankChg(Map<String, Object> params);
 	
-	
+	/**
+	 * 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+	void insertConfBankChargeIF(Map<String, Object> params);
 	
 	
 }
