@@ -96,7 +96,13 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 				}
 				psoid = (int)insMap.get("psoid");
 				
-				totalPrice = totalPrice+(Integer.parseInt((String)insMap.get("reqqty")) * (int)insMap.get("itmprc"));
+				//logger.debug(" :::: " + (double)insMap.get("itmprc"));
+				//logger.debug(" :::: " + (int)insMap.get("itmprc"));
+				try{
+					totalPrice = totalPrice+(Integer.parseInt((String)insMap.get("reqqty")) * (int)insMap.get("itmprc"));
+				}catch(Exception ex){
+					totalPrice = totalPrice+(Integer.parseInt((String)insMap.get("reqqty")) * (int)((double)insMap.get("itmprc")));
+				}
 				pst.updatePSTsalesDetail(insMap);
 				pst.insertPSTsalesLog(insMap);
 				if (bool && ((int)insMap.get("balqty") - Integer.parseInt((String)insMap.get("reqqty")) == 0)){
@@ -190,8 +196,14 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			ordMap  = insMap;
 			if (psttype == 2577 || 2579 == psttype){
 				if (reqqty > 0 ){
-					charge = charge + (reqqty * (int)insMap.get("itmprc") * Double.parseDouble(String.valueOf(insMap.get("pcr")))); 
-					incharge = incharge + (reqqty * (int)insMap.get("itmprc"));
+					logger.debug(" :::: " + String.valueOf(insMap.get("pcr")));
+					try{
+						charge = charge + (double)(reqqty * (int)insMap.get("itmprc") * Double.parseDouble(String.valueOf(insMap.get("pcr"))));
+						incharge = incharge + (reqqty * (int)insMap.get("itmprc"));
+					}catch(Exception ex){
+						charge = charge + (reqqty * (double)insMap.get("itmprc") * Double.parseDouble(String.valueOf(insMap.get("pcr"))));
+						incharge = incharge + (reqqty * (double)insMap.get("itmprc"));
+					}					
 				}
 			}
 			invoiceD.put("itemtype", 1272);
@@ -277,15 +289,15 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			//invoiceD
 			for (int i = 0 ; i < invoiceList.size(); i++){
 				Map<String , Object> indmap = (Map)invoiceList.get(i);
-				logger.debug(" ::: {}" , indmap );
-				
+				String invoiceoitmid = pst.selectinvoiceItemId();
 				if (taxrate > 0){
 					indmap.put("gstrate", taxrate);
 				}else{
 					indmap.put("gstrate", 0);
 				}
-				indmap.put("taxinvoidid", invoicetaxid);
-				indmap.put("invoicetaxid", invoicetaxid);
+				indmap.put("taxinvoidid" , invoicetaxid);
+				indmap.put("invoiceitmid", invoiceoitmid);
+				logger.debug(" ::: {} ", indmap);
 				pst.InvoiceDListInsert(indmap);
 			}
 			
