@@ -79,7 +79,7 @@
             groupingMessage     : "Here groupping"
         };
         
-        if(callPrgm == "APPROVE_LINE") {
+        if(callPrgm == "NRIC_VISIBLE") {
         	columnLayout[3].visible = false;
         }
         
