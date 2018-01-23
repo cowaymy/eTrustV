@@ -1666,6 +1666,9 @@
     </insert>
     
     <insert id="insertAccTaxInvoiceOutright" parameterType="accTaxInvoiceOutrightVO">
+      <selectKey keyProperty="taxInvcId" resultType="Integer" order="BEFORE">
+        SELECT PAY0033D_TAX_INVC_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
 		INSERT
 		  INTO PAY0033D
 		     ( TAX_INVC_ID
@@ -1692,7 +1695,7 @@
 		     , STREET
 		     ) 
 		VALUES
-		     ( PAY0033D_TAX_INVC_ID_SEQ.NEXTVAL
+		     ( #{taxInvcId}
 		     , #{taxInvcRefNo}
 		     , SYSDATE
 		     , #{taxInvcCustName}

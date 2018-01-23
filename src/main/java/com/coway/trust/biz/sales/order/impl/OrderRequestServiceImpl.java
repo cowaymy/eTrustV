@@ -1266,8 +1266,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
                     OrderBill.setAccBillTaskId(0);
                   //OrderBill.AccBillRefDate = DateTime.Now;
                     OrderBill.setAccBillRefNo("1000");
-                    OrderBill.setAccBillOrdId(CommonUtils.intNvl(params.get("salesOrdId")));
-                    OrderBill.setAccBillOrdNo((String)params.get("salesOrdNo"));
+                    OrderBill.setAccBillOrdId(Integer.parseInt(Long.toString(salesOrderMVO.getSalesOrdId())));
+                    OrderBill.setAccBillOrdNo(salesOrderMVO.getSalesOrdNo());
                     OrderBill.setAccBillTypeId(1159);
                     OrderBill.setAccBillModeId(1164);
                     OrderBill.setAccBillSchdulId(0);
@@ -1376,6 +1376,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
                     TaxInvoiceOutright.setStreet(street);
                     
                     orderRequestMapper.insertAccTaxInvoiceOutright(TaxInvoiceOutright);
+                    
+                    logger.debug("@#### TaxInvoiceOutright.getTaxInvcId() :"+TaxInvoiceOutright.getTaxInvcId());
                     
                     AccTaxInvoiceOutright_SubVO TaxinvoiceOutrightD = new AccTaxInvoiceOutright_SubVO();
                     
@@ -1534,10 +1536,15 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         orderExchangeMasterVO.setSoExchgOldCustId(CommonUtils.intNvl(String.valueOf((BigDecimal)somMap.get("custId"))));
         orderExchangeMasterVO.setSoExchgNwCustId(CommonUtils.intNvl(String.valueOf((BigDecimal)somMap.get("custId"))));
 
+        int callEntryId = 0;
+        
         if(orderExchangeMasterVO.getSoCurStusId() == 24) { //BEFORE INSTALL
         	params.put("opt", "2");
-        	EgovMap callEntryMap2 = orderRequestMapper.selectCallEntry(params);        	
-        	orderExchangeMasterVO.setSoExchgOldCallEntryId(CommonUtils.intNvl(String.valueOf((BigDecimal)callEntryMap2.get("callEntryId"))));
+        	EgovMap callEntryMap2 = orderRequestMapper.selectCallEntry(params);
+        	
+        	if(callEntryMap2 != null) {
+        		callEntryId = CommonUtils.intNvl(callEntryMap2.get("callEntryId"));
+        	}
         }
         else { //AFTER INSTALL
         	EgovMap lastInstallMap = orderRequestMapper.selecLastInstall(params);
@@ -1547,13 +1554,17 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         	
         	EgovMap srvConfingMap = orderRequestMapper.selectSrvConfiguration(params);
         	
-        	orderExchangeMasterVO.setSoExchgOldCallEntryId(CommonUtils.intNvl(String.valueOf((BigDecimal)callEntryMap3.get("callEntryId"))));
+        	if(callEntryMap3 != null) {        	
+        		callEntryId = CommonUtils.intNvl(callEntryMap3.get("callEntryId"));
+        	}
         	orderExchangeMasterVO.setSoExchgOldSrvConfigId(CommonUtils.intNvl(String.valueOf((BigDecimal)srvConfingMap.get("srvConfigId"))));
         	orderExchangeMasterVO.setSoExchgNwSrvConfigId(CommonUtils.intNvl(String.valueOf((BigDecimal)srvConfingMap.get("srvConfigId"))));
         	orderExchangeMasterVO.setInstallEntryId(CommonUtils.intNvl(String.valueOf((BigDecimal)lastInstallMap.get("installEntryId"))));
         }
         
-        orderRequestMapper.insertSalesOrderExchange(orderExchangeMasterVO);
+    	orderExchangeMasterVO.setSoExchgOldCallEntryId(CommonUtils.intNvl(callEntryId));
+
+    	orderRequestMapper.insertSalesOrderExchange(orderExchangeMasterVO);
         
         if(orderExchangeMasterVO.getSoCurStusId() == 24) {
         	//BEFORE INSTALL CASE
