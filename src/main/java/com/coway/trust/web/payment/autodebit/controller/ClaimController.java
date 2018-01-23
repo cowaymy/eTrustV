@@ -1007,16 +1007,16 @@ public class ClaimController {
 		
 				
 		// E-mail 전송하기
-//		File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
-//		EmailVO email = new EmailVO();
-//
-//		email.setTo(emailReceiver);
-//		email.setHtml(false);
-//		email.setSubject("New ALB Auto Debit Claim File - Batch Date : " + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
-//		email.setText("Please find attached the claim file for your kind perusal.");
-//		email.addFile(file);
-//
-//		adaptorService.sendEmail(email, false);
+		File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("New ALB Auto Debit Claim File - Batch Date : " + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
 
 	}
 	
@@ -1072,16 +1072,16 @@ public class ClaimController {
 				
 				
 		// E-mail 전송하기
-//		File file = new File(filePath + "/CIMB/ClaimBank/" + sFile);
-//		EmailVO email = new EmailVO();
-//
-//		email.setTo(emailReceiver);
-//		email.setHtml(false);
-//		email.setSubject("CIMB Auto Debit Claim File - Batch Date : " + inputDate);
-//		email.setText("Please find attached the claim file for your kind perusal.");
-//		email.addFile(file);
-//
-//		adaptorService.sendEmail(email, false);		
+		File file = new File(filePath + "/CIMB/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("CIMB Auto Debit Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);		
 	}
 	
 	private ClaimFileCIMBHandler getTextDownloadCIMBHandler(String fileName, String[] columns, String[] titles, String path,
@@ -1135,16 +1135,16 @@ public class ClaimController {
 		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-//		File file = new File(filePath + "/HLBB/ClaimBank/" + sFile);
-//		EmailVO email = new EmailVO();
-//
-//		email.setTo(emailReceiver);
-//		email.setHtml(false);
-//		email.setSubject("HLBB Auto Debit Claim File - Batch Date : " + inputDate);
-//		email.setText("Please find attached the claim file for your kind perusal.");
-//		email.addFile(file);
-//
-//		adaptorService.sendEmail(email, false);
+		File file = new File(filePath + "/HLBB/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("HLBB Auto Debit Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
 		
 		
 	}
@@ -1197,22 +1197,22 @@ public class ClaimController {
 		
 		//파일다운로드 정보 INSERT
 		claimMap.put("fileNo", 1);
-		claimMap.put("filePath", fileDownloadPath+"/MMB/ClaimBank/");
+		claimMap.put("filePath", fileDownloadPath+"/MBB/ClaimBank/");
 		claimMap.put("fileName", sFile);
 		
 		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-//		File file = new File(filePath + "/MMB/ClaimBank/" + sFile);
-//		EmailVO email = new EmailVO();
-//
-//		email.setTo(emailReceiver);
-//		email.setHtml(false);
-//		email.setSubject("MBB Auto Debit Claim File - Batch Date : " + inputDate);
-//		email.setText("Please find attached the claim file for your kind perusal.");
-//		email.addFile(file);
-//
-//		adaptorService.sendEmail(email, false);
+		File file = new File(filePath + "/MBB/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("MBB Auto Debit Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
 	}
 	
 	
@@ -1266,16 +1266,16 @@ public class ClaimController {
 		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-//		File file = new File(filePath + "/PBB/ClaimBank/" + sFile);
-//		EmailVO email = new EmailVO();
-//
-//		email.setTo(emailReceiver);
-//		email.setHtml(false);
-//		email.setSubject("PBB Auto Debit Claim File - Batch Date : " + inputDate);
-//		email.setText("Please find attached the claim file for your kind perusal.");
-//		email.addFile(file);
-//
-//		adaptorService.sendEmail(email, false);
+		File file = new File(filePath + "/PBB/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("PBB Auto Debit Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
 		
 
 		/*********************************************
@@ -1397,16 +1397,16 @@ public class ClaimController {
 		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-//		File file = new File(filePath + "/RHB/ClaimBank/" + sFile);
-//		EmailVO email = new EmailVO();
-//
-//		email.setTo(emailReceiver);
-//		email.setHtml(false);
-//		email.setSubject("RHB Auto Debit Claim File - Batch Date : " + inputDate);
-//		email.setText("Please find attached the claim file for your kind perusal.");
-//		email.addFile(file);
-//
-//		adaptorService.sendEmail(email, false);
+		File file = new File(filePath + "/RHB/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("RHB Auto Debit Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
 		
 	}
 	
@@ -1467,16 +1467,16 @@ public class ClaimController {
 		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-//		File file = new File(filePath + "/BSN/ClaimBank/" + sFile);
-//		EmailVO email = new EmailVO();
-//
-//		email.setTo(emailReceiver);
-//		email.setHtml(false);
-//		email.setSubject("BSN Auto Debit Claim File - Batch Date : " + inputDate);
-//		email.setText("Please find attached the claim file for your kind perusal.");
-//		email.addFile(file);
-//
-//		adaptorService.sendEmail(email, false);		
+		File file = new File(filePath + "/BSN/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("BSN Auto Debit Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);		
 	}
 	
 	private ClaimFileBSNHandler getTextDownloadBSNHandler(String fileName, String[] columns, String[] titles, String path,
@@ -1533,16 +1533,16 @@ public class ClaimController {
 		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-//		File file = new File(filePath + "/MyClear/ClaimBank/" + sFile);
-//		EmailVO email = new EmailVO();
-//
-//		email.setTo(emailReceiver);
-//		email.setHtml(false);
-//		email.setSubject("My Clear Auto Debit Claim File - Batch Date : " + inputDate);
-//		email.setText("Please find attached the claim file for your kind perusal.");
-//		email.addFile(file);
-//
-//		adaptorService.sendEmail(email, false);
+		File file = new File(filePath + "/MyClear/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("My Clear Auto Debit Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
 	}
 	
 	private ClaimFileMyClearHandler getTextDownloadMyClearHandler(String fileName, String[] columns, String[] titles, String path,
@@ -1599,16 +1599,16 @@ public class ClaimController {
 		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-//		File file = new File(filePath + "/CRC/" + sFile);
-//		EmailVO email = new EmailVO();
-//
-//		email.setTo(emailReceiver);
-//		email.setHtml(false);
-//		email.setSubject("CIMB Credit Card Claim File - Batch Date : " + inputDate);
-//		email.setText("Please find attached the claim file for your kind perusal.");
-//		email.addFile(file);
-//
-//		adaptorService.sendEmail(email, false);
+		File file = new File(filePath + "/CRC/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("CIMB Credit Card Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
 		
 	}
 	
@@ -1663,16 +1663,16 @@ public class ClaimController {
 		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
-//		File file = new File(filePath + "/FPX/ClaimBank/" + sFile);
-//		EmailVO email = new EmailVO();
-//
-//		email.setTo(emailReceiver);
-//		email.setHtml(false);
-//		email.setSubject("FPX Auto Debit Claim File - Batch Date : " + inputDate);
-//		email.setText("Please find attached the claim file for your kind perusal.");
-//		email.addFile(file);
-//
-//		adaptorService.sendEmail(email, false);
+		File file = new File(filePath + "/FPX/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("FPX Auto Debit Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
 	}
 	
 	private ClaimFileFPXHandler getTextDownloadFPXHandler(String fileName, String[] columns, String[] titles, String path,

@@ -989,7 +989,7 @@ function fn_openDivPopDown(){
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');"><spring:message code='pay.btn.claimResultLive'/></a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULTNEXT');"><spring:message code='pay.btn.claimResultNextDay'/></a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');"><spring:message code='pay.btn.reGenerateClaimFile'/></a></p></li>
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPopDown('FILEDN');">Generation File Down</a></p></li>
+                        <!--<li><p class="link_btn"><a href="javascript:fn_openDivPopDown('FILEDN');">Generation File Down</a></p></li>-->
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('SMS');"><spring:message code='pay.btn.failDeductionSMS'/></a></p></li>                                                                       
                     </ul>
                     <ul class="btns">

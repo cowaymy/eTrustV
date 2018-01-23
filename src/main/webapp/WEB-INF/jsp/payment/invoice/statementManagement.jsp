@@ -92,6 +92,12 @@ function fn_generateInv(){
 		var success = false;
 		var taskId = AUIGrid.getCellValue(myGridID , selectedGridValue , "taskId");
 		var taskInvoiceGenerate = AUIGrid.getCellValue(myGridID , selectedGridValue , "isInvcGenrt");
+		var taskType = AUIGrid.getCellValue(myGridID , selectedGridValue , "taskType");
+
+		if(taskType == 'BILL' || taskType == 'EARLY BILL'){
+			Common.alert("BILL / EARLY BILL will be running Procedure by IT team.");
+			return;
+		}
 		   
 		if(taskInvoiceGenerate != 1){
 			Common.ajax("GET", "/payment/generateInvoice.do", {"taskId" : taskId}, function(result) {
