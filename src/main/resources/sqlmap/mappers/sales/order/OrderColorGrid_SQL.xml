@@ -375,5 +375,20 @@
         ORDER BY D1.ORD_ID DESC
 
     </select>
+    
+    <select id="colorGridCmbProduct" resultType="egovMap">
+        SELECT S.STK_ID CODE_ID
+			     , S.STK_CODE || ' - ' || S.STK_DESC CODE_NAME
+			     , C.CODE_NAME GROUP_CD 
+		   FROM SYS0026M S, SAL0016M P, SYS0013M C
+		 WHERE S.STK_ID = P.STK_ID
+			 AND S.STK_CTGRY_ID = C.CODE_ID
+			 AND S.IS_NCV <![CDATA[<>]]> 1
+			 AND S.STUS_CODE_ID = 1
+			 AND S.STK_TYPE_ID = 61
+			 AND P.AMT <![CDATA[>]]> 0
+	    GROUP BY s.STK_ID, s.STK_CODE, s.STK_DESC, c.CODE_NAME
+        ORDER BY c.CODE_NAME, s.STK_DESC
+    </select>
 
 </mapper>
