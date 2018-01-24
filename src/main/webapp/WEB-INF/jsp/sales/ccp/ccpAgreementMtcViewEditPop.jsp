@@ -373,8 +373,16 @@
                 return false;
             }
             
-            if($("#_agrPeriodStart").val() > $("#_agrPeriodEnd").val()){
-                Common.alert("* Agreement Period Start Date cannot bigger than End Date.");
+            var startDateAr = $("#_agrPeriodStart").val().split('/');
+            var endDateAr = $("#_agrPeriodEnd").val().split('/');
+            var startChgStr = '';
+            var endChgStr = '';
+            startChgStr = startDateAr[2]+startDateAr[1]+startDateAr[0];
+            endChgStr = endDateAr[2]+endDateAr[1]+endDateAr[0];
+            
+            if(startChgStr > endChgStr){
+            	
+            	Common.alert("* Agreement Period Start Date cannot bigger than End Date.");
                 return false;
             }
             

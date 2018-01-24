@@ -145,14 +145,16 @@ public class CcpRentMemShipController {
 		payMap = ccpRentMemShipService.selectPaySetInfo(params);
 		LOGGER.info("_____________________________________________ (10)");
 		
-		BigDecimal thirdPartyDec = (BigDecimal)payMap.get("is3rdParty");
-		
-		if(thirdPartyDec.intValue() == 1){
+		if(payMap != null){
+			BigDecimal thirdPartyDec = (BigDecimal)payMap.get("is3rdParty");
 			
-			params.put("custId", payMap.get("custId"));
-			LOGGER.info("_____________________________________________ (11)");
-			thirdMap = ccpRentMemShipService.selectCustThridPartyInfo(params);
-			LOGGER.info("_____________________________________________ (12)");
+			if(thirdPartyDec.intValue() == 1){
+				
+				params.put("custId", payMap.get("custId"));
+				LOGGER.info("_____________________________________________ (11)");
+				thirdMap = ccpRentMemShipService.selectCustThridPartyInfo(params);
+				LOGGER.info("_____________________________________________ (12)");
+			}
 		}
 		
 		//Mailing Info
@@ -233,12 +235,14 @@ public class CcpRentMemShipController {
 		//Payment Info
 		payMap = ccpRentMemShipService.selectPaySetInfo(params);
 		
-		BigDecimal thirdPartyDec = (BigDecimal)payMap.get("is3rdParty");
-		
-		if(thirdPartyDec.intValue() == 1){
+		if(payMap != null){
+			BigDecimal thirdPartyDec = (BigDecimal)payMap.get("is3rdParty");
 			
-			params.put("custId", payMap.get("custId"));
-			thirdMap = ccpRentMemShipService.selectCustThridPartyInfo(params);
+			if(thirdPartyDec.intValue() == 1){
+				
+				params.put("custId", payMap.get("custId"));
+				thirdMap = ccpRentMemShipService.selectCustThridPartyInfo(params);
+			}
 		}
 		
 		//Contact Info
