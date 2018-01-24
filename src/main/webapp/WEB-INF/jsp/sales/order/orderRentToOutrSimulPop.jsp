@@ -25,7 +25,7 @@
             fn_reselect();
         });
         $('#btnViewLedgerSimul').click(function() {
-            Common.popupDiv("/sales/order/orderLedger2ViewPop.do", {ordId : $('#hiddenOrderID').val()});
+            Common.popupWin("formApprv", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
         });
         $('#btnPrintSimul').click(function() {
             Common.alert('<b>The program is under development.</b>');
@@ -249,7 +249,7 @@
 <section class="pop_body"><!-- pop_body start -->
 <form id="formApprv" action="#" method="post">
     
-<input id="hiddenOrderID"           type="hidden" />
+<input id="hiddenOrderID" name="ordId" type="hidden" />
 <input id="hiddenStockID"           type="hidden" />
 <input id="hiddenOrderDate"         type="hidden" />
 <input id="hiddenTotalBillRPF"      type="hidden" />
