@@ -213,11 +213,11 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		int saveCnt = 0;
 		
 		params.put("crtUserId", sessionVO.getUserId());
-		
+		// SCM0005M Insert
 		salesPlanMngementMapper.insertSalesPlanMstCdc(params);
 		
 		saveCnt++;
-		
+		// SCM0006D Insert
 		salesPlanMngementMapper.insertSalesCdcDetail(params);
 		
 		LOGGER.debug(" return_Params : {} , SaveCnt: {} ", params.toString(), saveCnt );

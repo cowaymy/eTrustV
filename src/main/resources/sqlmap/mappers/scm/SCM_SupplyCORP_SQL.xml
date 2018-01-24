@@ -75,7 +75,129 @@
        AND CMPLT = 0
   </select> 
   
-  <select id="selectSupplyCdcMainList" parameterType="Map" resultType="egovMap">
+<select id="selectSupplyCdcMainList" parameterType="Map" resultType="egovMap">
+	     SELECT 
+	               MOD( DENSE_RANK() OVER ( ORDER BY STOCK_CTGRY ,SUPPLY_BY_CDC.CODE),2) DIV_ODD
+	             , CMPLT IS_SAVED
+	             , LAST_UPD_COLUMN
+	             , PSI_ID
+	             , PSI_NAME   PSI
+	             , STOCK_CTGRY CATEGORY
+	             , STOCK_NAME  NAME
+	             , SYS26M.STK_TYPE_ID 
+	             , PLAN_MASTER_ID 
+	             , SUPPLY_BY_CDC.*             
+	             , ROUND(OVERDUE) OVERDUE  
+	             , ROUND(WS0) BEF_1_WEEK_TH  
+	             , ROUND(WS1) BEF_2_WEEK_TH  
+	             , ROUND(WS2) BEF_3_WEEK_TH  
+	             , ROUND(WS3) BEF_4_WEEK_TH  
+	             , ROUND(W00) W00
+	             , ROUND(W01) W01
+	             , ROUND(W02) W02
+	             , ROUND(W03) W03
+	             , ROUND(W04) W04
+	             , ROUND(W05) W05
+	             , ROUND(W06) W06
+	             , ROUND(W07) W07
+	             , ROUND(W08) W08
+	             , ROUND(W09) W09
+	             , ROUND(W10) W10
+	             , ROUND(W11) W11
+	             , ROUND(W12) W12
+	             , ROUND(W13) W13
+	             , ROUND(W14) W14
+	             , ROUND(W15) W15
+	             , ROUND(W16) W16
+	             , ROUND(W17) W17
+	             , ROUND(W18) W18
+	             , ROUND(W19) W19
+	             , ROUND(W20) W20
+	             , ROUND(W21) W21
+	             , ROUND(W22) W22
+	             , ROUND(W23) W23
+	             , ROUND(W24) W24
+	             , ROUND(W25) W25
+	             , ROUND(W26) W26
+	             , ROUND(W27) W27
+	             , ROUND(W28) W28
+	             , ROUND(W29) W29
+	             , ROUND(W30) W30
+
+         FROM ( 
+               SELECT  SCM05M.PLAN_STUS ,SCM05M.PLAN_ID ,SCM30S.SCM_YEAR ,SCM30S.SCM_MONTH ,SCM30S.SCM_WEEK_TH ,SCM30S.STOCK_CODE CODE ,SCM30S.CDC --,SCM30S.TEAM
+                      ,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
+                      ,SUM(PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE
+                      ,SUM(PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED
+                      ,SUM(PRE_M3_AVG_ISSU) M3_ISSU_AVG
+                      ,SUM(M1_ORD) M1_ORD
+                      ,SUM(M2_ORD) M2_ORD
+                      ,SUM(M3_ORD) M3_ORD
+                                          
+                      ,SUM(M_3) M_3
+                      ,SUM(M_2) M_2
+                      ,SUM(M_1) M_1               
+                      ,SUM(M0_PLAN) M0_PLAN
+                      ,SUM(M0_ORD) M0_PLAN_ORDER
+                                          
+                      ,SUM(M1) M1
+                      ,SUM(M2) M2
+                      ,SUM(M3) M3
+                      ,SUM(M4) M4 
+                      
+                  FROM SCM0030S SCM30S
+                      ,SCM0005M SCM05M
+                 WHERE SCM30S.SCM_YEAR  = #{scmYearCbBox} 
+                   AND SCM30S.SCM_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1 )
+                   AND SCM30S.SCM_WEEK_TH = #{scmPeriodCbBox} 
+                   AND SCM30S.CDC         = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})  
+                   AND SCM30S.SCM_YEAR    = SCM05M.PLAN_YEAR
+                   AND SCM30S.SCM_MONTH   = SCM05M.PLAN_MONTH 
+                   AND SCM30S.SCM_WEEK_TH = SCM05M.PLAN_WEEK
+                   AND SCM30S.SCM_WEEK_TH_SN = 1
+                   AND SCM30S.CDC = SCM05M.CDC
+                     
+                 GROUP BY SCM05M.PLAN_STUS
+                         ,SCM05M.PLAN_ID
+                         ,SCM30S.SCM_YEAR
+                         ,SCM30S.SCM_MONTH
+                         ,SCM30S.SCM_WEEK_TH
+                         ,SCM30S.STOCK_CODE
+                         ,SCM30S.CDC
+                       
+            ) SUPPLY_BY_CDC   
+               
+            LEFT OUTER JOIN SCM0006D SCM06D ON SUPPLY_BY_CDC.CODE = SCM06D.STOCK_CODE 
+                                            AND SUPPLY_BY_CDC.PLAN_ID = SCM06D.PLAN_MASTER_ID
+            LEFT OUTER JOIN SYS0026M SYS26M ON SUPPLY_BY_CDC.CODE  = SYS26M.STK_CODE
+            LEFT OUTER JOIN SYS0013M SYS13M ON SYS26M.STK_CTGRY_ID = SYS13M.CODE_ID  
+  
+      WHERE 1 = 1
+
+     <choose>
+       <when test='stkCodes != null and !stkCodes.isEmpty '>
+        AND SUPPLY_BY_CDC.CODE IN
+           <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
+               #{item}
+           </foreach>
+       </when>
+     </choose>        
+     
+     <choose>
+       <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
+         AND  STK_TYPE_ID IN
+           <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+               #{item}
+           </foreach>
+       </when>
+     </choose>
+     
+     ORDER BY STOCK_CTGRY
+             ,SUPPLY_BY_CDC.CODE
+             ,PSI_ID
+</select>
+  
+  <select id="selectSupplyCdcMainList_TEMP" parameterType="Map" resultType="egovMap">
   SELECT  
            MOD( DENSE_RANK() OVER ( ORDER BY STOCK_CTGRY ,STOCK_CODE),2) DIV_ODD
            ,PLAN_DTL_ID   
@@ -236,36 +358,30 @@
 </select>  
   
 <insert id="insertSalesPlanMstCdc" parameterType="Map">
-        <selectKey keyProperty="salesPlanMstCdcSeq" resultType="int" order="BEFORE">
-            SELECT SCM0005M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
-        </selectKey>
-         
-            INSERT INTO SCM0005M
-                   (
-                    PLAN_ID 
-                  , PLAN_YEAR
-                  , PLAN_WEEK                    
-                  , CDC
-                  , PLAN_MONTH
-                  , PLAN_STUS
-									, LAST_UP_DT
-									, PLAN_CRT_DT
-									, VER_DT
-									, VER_NO
-                   )
-             VALUES
-                  (
-                     #{salesPlanMstCdcSeq}
-                   , #{scmYearCbBox}
-                   , #{scmPeriodCbBox}
-                   , DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC', #{cdcCbBox})  
-                   , (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1 )
-                   , 4
-                   , SYSDATE
-                   , SYSDATE
-                   , SYSDATE
-                   , 1
-                  )
+    <selectKey keyProperty="salesPlanMstCdcSeq" resultType="int" order="BEFORE">
+        SELECT SCM0005M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
+    </selectKey>
+     
+        INSERT INTO SCM0005M
+               (
+                 PLAN_ID
+                ,PLAN_YEAR
+                ,PLAN_WEEK
+                ,CDC
+                ,PLAN_MONTH
+                ,PLAN_STUS
+                ,VER_DT
+               )
+         VALUES
+              (
+                 #{salesPlanMstCdcSeq}
+               , #{scmYearCbBox}
+               , #{scmPeriodCbBox}
+               , DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC', #{cdcCbBox})  
+               , (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1 )
+               , 4
+               , SYSDATE
+              )
 </insert> 
 
 <insert id="insertSalesCdcDetail" parameterType="Map">

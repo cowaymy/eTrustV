@@ -65,7 +65,6 @@ var popUpGridLayout =
         },{
             dataField : "stockName",
             headerText : "<spring:message code='sys.scm.pomngment.stockName' />",
-            style : "aui-grid-left-column",
             width : "20%",
         },{
             dataField : "cdc",

@@ -329,6 +329,9 @@ function fnSearchBtnList()
 
                 $('#updSaveBtn').removeClass("btn_disabled");
               }
+              else
+            	  Common.alert("<spring:message code='sys.scm.SalesPlan.runCreation'/>");
+        	  
            }
 				 , function(jqXHR, textStatus, errorThrown)
 				   {
