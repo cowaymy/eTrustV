@@ -44,6 +44,9 @@
                     <if test="vaAccount != null and vaAccount != '' ">  
                     AND B.VA_ACC_NO = #{vaAccount}       
                     </if>
+                    <if test="branchId != null and branchId != '' ">  
+                    AND B.BRNCH_ID = #{branchId}       
+                    </if>
                     AND A.KEY_IN_SCRN = 'ADV'
             )
         GROUP BY 
