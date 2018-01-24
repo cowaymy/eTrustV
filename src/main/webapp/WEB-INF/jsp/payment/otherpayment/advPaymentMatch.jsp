@@ -49,6 +49,9 @@ $(document).ready(function(){
 	//CASH Bank Account combo box setting
 	doGetCombo('/common/getAccountList.do', 'CASH','', 'bankAcc', 'S', '' );
 	doGetCombo('/common/selectCodeList.do', '393' , ''   , 'accCode' , 'S', '');
+	
+	//Branch Combo 생성
+	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
 
     advKeyInGridId = GridCommon.createAUIGrid("adv_keyin_grid_wrap", advKeyInLayout,"",gridPros2);
     bankStmtGridId = GridCommon.createAUIGrid("bank_stmt_grid_wrap", bankStmtLayout,"",gridPros2);
@@ -335,10 +338,12 @@ function fn_saveDebtor(){
                             </div>
                             <!-- date_set end -->
                         </td>
-						<th scope="row"></th>
-                        <td></td>
+						            <th scope="row">KeyIn Branch</th>
+                        <td>
+						              <select id="branchId" name="branchId"  class="w100p"></select>
+						            </td>
                     </tr>
-					<tr>
+					         <tr>
                         <th scope="row">Payment Type</th>
                         <td>
                             <select id="payType" name="payType" class="w100p"  onchange="javascript:fn_payTypeChange();">
@@ -347,26 +352,26 @@ function fn_saveDebtor(){
                                 <option value="108">Online</option>
                             </select>
                         </td>
-						<th scope="row">Bank Type</th>
-						<td>
-							<select id="bankType" name="bankType"  class="w100p" onchange="javascript:fn_bankChange();">
-								<option value="2728">JomPay</option>
-								<option value="2729">MBB CDM</option>
-								<option value="2730">VA</option>
-								<option value="2731">Others</option>
-							</select>
-						</td>
-					</tr>
-					<tr>
-						<th scope="row">Bank Account</th>
-						<td>
-							<select id="bankAcc" name="bankAcc"  class="w100p"></select>
-						</td>
-						<th scope="row">VA Account</th>
-						<td>
-							<input type="text" id="vaAccount" name="vaAccount"  maxlength="16"  class="w100p readonly" readonly="readonly" />
-						</td>
-					</tr>
+												<th scope="row">Bank Type</th>
+												<td>
+													<select id="bankType" name="bankType"  class="w100p" onchange="javascript:fn_bankChange();">
+														<option value="2728">JomPay</option>
+														<option value="2729">MBB CDM</option>
+														<option value="2730">VA</option>
+														<option value="2731">Others</option>
+													</select>
+												</td>
+					         </tr>
+									<tr>
+												<th scope="row">Bank Account</th>
+												<td>
+													<select id="bankAcc" name="bankAcc"  class="w100p"></select>
+												</td>
+												<th scope="row">VA Account</th>
+												<td>
+													<input type="text" id="vaAccount" name="vaAccount"  maxlength="16"  class="w100p readonly" readonly="readonly" />
+												</td>
+									</tr>
                 </tbody>
             </table><!-- table end -->
         </form> 
@@ -510,7 +515,7 @@ function fn_saveDebtor(){
                     <tr>
                         <th scope="row">Remark</th>
                         <td>
-							<textarea id="debtorRemark" name="debtorRemark"  cols="10" rows="3" placeholder=""></textarea>
+							             <textarea id="debtorRemark" name="debtorRemark"  cols="10" rows="3" placeholder=""></textarea>
                         </td>
                     </tr>
                    </tbody>  
