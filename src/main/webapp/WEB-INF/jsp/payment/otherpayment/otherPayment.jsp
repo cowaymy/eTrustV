@@ -1802,15 +1802,20 @@ function isDupHPToFinal(){
     	}else{
 
     		var item = new Object();
+    		var allItems = AUIGrid.getGridData(bankGridID);
     		//var rowId = AUIGrid.getSelectedIndex();
-    		
-            item.bank = AUIGrid.getCellValue(bankGridID,rowId,"bank");
-            item.bankAccount = AUIGrid.getCellValue(bankGridID,rowId,"bankAccName");
-            item.date = AUIGrid.getCellValue(bankGridID,rowId,"trnscDt");
-            item.refChequeNo = AUIGrid.getCellValue(bankGridID,rowId,"chqNo");
-            item.mode = AUIGrid.getCellValue(bankGridID,rowId,"type");
-            item.trId = AUIGrid.getCellValue(bankGridID,rowId,"ref3");
-            item.amount = AUIGrid.getCellValue(bankGridID,rowId,"crdit");            
+    		if(allItems.length > 0){
+    			
+    			item.bank = AUIGrid.getCellValue(bankGridID,rowId,"bank");
+    			item.bankAccount = AUIGrid.getCellValue(bankGridID,rowId,"bankAccName");
+    			item.date = AUIGrid.getCellValue(bankGridID,rowId,"trnscDt");
+    			item.refChequeNo = AUIGrid.getCellValue(bankGridID,rowId,"chqNo");
+    			item.mode = AUIGrid.getCellValue(bankGridID,rowId,"type");
+    			item.trId = AUIGrid.getCellValue(bankGridID,rowId,"ref3");
+    			item.amount = AUIGrid.getCellValue(bankGridID,rowId,"crdit");       
+    			
+    		}
+                 
    		
     		if($('#payMode').val() == '105'){
     			item.pendingAmount = $("#cash").find("#amount").val();
@@ -1826,6 +1831,11 @@ function isDupHPToFinal(){
                     return;
                 }
     			
+                if(FormUtil.checkReqValue($("#slipNo"))){
+                    Common.alert("<spring:message code='pay.alert.noSlipNo'/>");
+                    return;
+                }
+                
                 var selBankType = $("#cash").find("#bankType").val();
                 if(selBankType != '' ){
 	                if(selBankType == '2730'){
@@ -1856,6 +1866,11 @@ function isDupHPToFinal(){
     			
                 if(FormUtil.checkReqValue($("#cheque").find("#amount")) ||$("#cheque").find("#amount").val() <= 0 ){
                     Common.alert("<spring:message code='pay.alert.noAmount'/>");
+                    return;
+                }
+                
+                if(FormUtil.checkReqValue($("#chqNo"))){
+                    Common.alert("<spring:message code='pay.alert.noSlipNo'/>");
                     return;
                 }
                 
@@ -3066,7 +3081,7 @@ function fn_setSearchPayType() {
                    <td>
                         <input type="text" id="trDateCash" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
                    </td>
-                <th scope="row">Slip No.</th>
+                <th scope="row">Slip No.<span class="must">*</span></th>
                 <td>
                    <input type="text" id="slipNo" name="slipNo" class="w100p"  />
                 </td>
@@ -3162,7 +3177,7 @@ function fn_setSearchPayType() {
                    <td>
                         <input type="text" id="trDateCheque" name="trDate" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/>
                    </td>
-                <th scope="row">Slip No.</th>
+                <th scope="row">Slip No.<span class="must">*</span></th>
                 <td>
                    <input type="text" id="chqNo" name="chqNo" class="w100p"  />
                 </td>
