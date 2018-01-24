@@ -848,7 +848,7 @@
 								                CASE 
 								                     WHEN ( ( E1.CRT_DT IS NOT NULL )
 								                       AND ( to_char( E1.CRT_DT,'yyyymmdd') > '19000101' ) ) THEN  to_char(E1.CRT_DT,'yyyymmdd')
-								                ELSE to_char('01-01-1900' ,'dd-mm-yyyy')
+								                ELSE NULL
 								                   END C3  ,
 								                CASE 
 								                     WHEN ( E1.CORP_TYPE_ID IS NOT NULL ) THEN E1.CORP_TYPE_ID
@@ -867,10 +867,10 @@
 								                ELSE ' '
 								                   END C7  ,
 								                CASE 
-								                     WHEN ( 964 <> E1.TYPE_ID ) THEN   to_char('19000101' ,'yyyymmdd')
+								                     WHEN ( 964 <> E1.TYPE_ID ) THEN   NULL
 								                     WHEN ( ( E1.DOB IS NOT NULL )
 								                       AND (  to_char(E1.DOB ,'yyyymmdd')  > '19000101' ) ) THEN  to_char(E1.DOB ,'yyyymmdd')   
-								                ELSE to_char('01-01-1900' ,'dd-mm-yyyy')
+								                ELSE NULL
 								                   END C8  ,
 								                CASE 
 								                     WHEN ( E1.EMAIL IS NOT NULL ) THEN E1.EMAIL
@@ -912,7 +912,7 @@
 								                CASE 
 								                     WHEN ( ( E1.UPD_DT IS NOT NULL )
 								                       AND ( to_char(E1.UPD_DT,'yyyymmdd') > '19000101' ) ) THEN  to_char(E1.UPD_DT,'yyyymmdd')
-								                ELSE  to_char('01-01-1900' ,'dd-mm-yyyy')
+								                ELSE  NULL
 								                   END C17  ,
 								                CASE 
 								                     WHEN ( E3.USER_ID IS NOT NULL ) THEN E3.USER_NAME
