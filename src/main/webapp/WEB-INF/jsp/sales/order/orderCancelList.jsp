@@ -44,7 +44,6 @@
             $("#paramCallStusId").val(event.item.callStusId);
             $("#paramCallStusCode").val(event.item.callStusCode);
             $("#paramReqNo").val(event.item.reqNo);
-            alert(event.item.reqStageId);
             $("#paramReqStusId").val(event.item.reqStusId);
             $("#paramReqStusCode").val(event.item.reqStusCode);
             $("#paramReqStusName").val(event.item.reqStusName);
