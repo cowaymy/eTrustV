@@ -494,11 +494,11 @@ WHERE 1=1
                        FROM FCM0015D A, FCM0004M B
                      WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
                          AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
-                         AND TO_CHAR(A.INVC_DT, 'YYYYMM') =  #{budgetPlanYear}||#{budgetPlanMonth}
+                         AND TO_CHAR(A.INVC_DT, 'YYYYMM') =  #{budgetPlanYear}||TO_CHAR(#{budgetPlanMonth}, 'FM00')
                      GROUP BY A.COST_CENTR, A.BUDGET_CODE, A.GL_ACC_CODE
                  )   C          
                         ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY') 
-                        AND A.BUDGET_PLAN_MONTH = TO_CHAR(C.INVC_DT, 'MM') 
+                        AND TO_CHAR(A.BUDGET_PLAN_MONTH, 'FM00') = TO_CHAR(C.INVC_DT, 'MM') 
                         AND A.COST_CENTR     = C.COST_CENTR 
                         AND A.BUDGET_CODE  = C.BUDGET_CODE 
                         AND A.GL_ACC_CODE  = C.GL_ACC_CODE
@@ -529,11 +529,24 @@ WHERE 1=1
         WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
             AND A.APPV_STUS = 'C' 
                         ]]>
+          <choose>
+          <when test="stDate != null and stDate !='' "> 
+               <if test="edDate != null and edDate != '' ">
+            AND B.BUDGET_ADJ_YEAR  || TO_CHAR(B.BUDGET_ADJ_MONTH,'FM00') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
+               </if>    
+               <if test="edDate == null or edDate == '' ">       
+            AND  B.BUDGET_ADJ_YEAR  || TO_CHAR(B.BUDGET_ADJ_MONTH,'FM00') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
+                </if>                   
+            </when>
+            <otherwise>
             AND B.BUDGET_ADJ_YEAR   = #{budgetPlanYear}
-            AND B.BUDGET_ADJ_MONTH  = #{budgetPlanMonth}            
+            AND B.BUDGET_ADJ_MONTH  = TO_CHAR(#{budgetPlanMonth}, 'FM00')  
+            </otherwise>
+            </choose> 
             AND B.COST_CENTR         = #{costCentr}
             AND B.BUDGET_CODE        = #{budgetCode}
             AND B.GL_ACC_CODE        = #{glAccCode}
+            ORDER BY B.BUDGET_ADJ_YEAR, B.BUDGET_ADJ_MONTH      
   </select>
   
   <select id="selectPenConAmount" parameterType="Map" resultType="egovMap">
@@ -556,11 +569,25 @@ WHERE 1=1
      <if test='type == "Consumed" '>
          AND A.APPV_PRCSS_STUS =  'A'  
      </if>
-         AND TO_CHAR(B.INVC_DT, 'yyyy')   = #{budgetPlanYear}
-         AND TO_CHAR(B.INVC_DT, 'mm')   = #{budgetPlanMonth}          
-         AND B.COST_CENTR         = #{costCentr}
-         AND B.BUDGET_CODE        = #{budgetCode}
-         AND B.GL_ACC_CODE        = #{glAccCode}
+     
+         <choose>
+          <when test="stDate != null and stDate !='' "> 
+               <if test="edDate != null and edDate != '' ">
+            AND TO_CHAR(B.INVC_DT, 'yyyymm') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
+               </if>    
+               <if test="edDate == null or edDate == '' ">       
+            AND  TO_CHAR(B.INVC_DT, 'yyyymm') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
+                </if>                   
+            </when>
+            <otherwise>
+            AND TO_CHAR(B.INVC_DT, 'yyyy')   = #{budgetPlanYear}
+            AND TO_CHAR(B.INVC_DT, 'mm')   = TO_CHAR(#{budgetPlanMonth}, 'FM00')  
+            </otherwise>
+            </choose> 
+            AND B.COST_CENTR         = #{costCentr}
+            AND B.BUDGET_CODE        = #{budgetCode}
+            AND B.GL_ACC_CODE        = #{glAccCode}
+            ORDER BY B.INVC_DT  
   </select>
   
   <select id="selectAdjustmentList" parameterType="Map" resultType="egovMap">
@@ -920,6 +947,15 @@ WHERE 1=1
   
   
     <select id="selectAvailableBudgetList" parameterType="Map" resultType="egovMap">
+    SELECT COST_CENTR, COST_CENTER_TEXT, GL_ACC_CODE, GL_ACC_DESC, BUDGET_CODE, BUDGET_CODE_TEXT,
+			SUM(PLAN_AMT) PLAN_AMT,
+			SUM(CHNG_AMT) CHNG_AMT,
+			SUM(ADJUST_AMT) ADJUST_AMT,
+			SUM(TOTAL) TOTAL,
+			SUM(PEND_APPV_AMT) PEND_APPV_AMT,
+			SUM(CONSUM_APPV_AMT) CONSUM_APPV_AMT,
+			SUM(AVAILABLE_AMT) AVAILABLE_AMT
+    From (
       SELECT A.COST_CENTR
                 ,(SELECT COST_CENTER_TEXT FROM FCM0008M B WHERE B.COST_CENTER = A.COST_CENTR )COST_CENTER_TEXT
                 ,A.GL_ACC_CODE
@@ -927,7 +963,7 @@ WHERE 1=1
                 ,A.BUDGET_CODE
                 ,(SELECT BUDGET_CODE_TEXT FROM FCM0010M B WHERE B.BUDGET_CODE = A.BUDGET_CODE) BUDGET_CODE_TEXT
                 ,A.BUDGET_PLAN_YEAR
-                ,A.BUDGET_PLAN_MONTH
+                ,TO_CHAR(A.BUDGET_PLAN_MONTH, 'FM00') BUDGET_PLAN_MONTH
                 ,A.PLAN_AMT
                 ,A.CHNG_AMT
                 ,NVL(B.TOTAL,0) AS ADJUST_AMT
@@ -1006,7 +1042,7 @@ WHERE 1=1
                      GROUP BY A.COST_CENTR, A.BUDGET_CODE, A.GL_ACC_CODE
                  )   C          
                         ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY') 
-                        AND A.BUDGET_PLAN_MONTH = TO_CHAR(C.INVC_DT, 'MM') 
+                        AND TO_CHAR(A.BUDGET_PLAN_MONTH, 'FM00') = TO_CHAR(C.INVC_DT, 'MM') 
                         AND A.COST_CENTR     = C.COST_CENTR 
                         AND A.BUDGET_CODE  = C.BUDGET_CODE 
                         AND A.GL_ACC_CODE  = C.GL_ACC_CODE
@@ -1019,7 +1055,7 @@ WHERE 1=1
 	          AND BUDGET_PLAN_YEAR  || TO_CHAR(BUDGET_PLAN_MONTH,'FM00') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stYearMonth},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edYearMonth},'/',''), 'mmyyyy'), 'yyyymm')
 	        </if>	 
 	        <if test="edYearMonth == null or edYearMonth == '' ">       
-              AND BUDGET_PLAN_YEAR  || TO_CHAR(BUDGET_PLAN_MONTH,'FM00') = TO_CHAR(TO_DATE(REPLACE(#{edYearMonth},'/',''), 'mmyyyy'), 'yyyymm')
+              AND BUDGET_PLAN_YEAR  || TO_CHAR(BUDGET_PLAN_MONTH,'FM00') = TO_CHAR(TO_DATE(REPLACE(#{stYearMonth},'/',''), 'mmyyyy'), 'yyyymm')
             </if>
          </if>      
 
@@ -1047,7 +1083,10 @@ WHERE 1=1
            <if test="edBudgetCode == null or edBudgetCode == ''">
            AND A.BUDGET_CODE = #{stBudgetCode} 
            </if>
-        </if>                         
+        </if>   
+         )
+    group by COST_CENTR, COST_CENTER_TEXT, GL_ACC_CODE, GL_ACC_DESC, BUDGET_CODE, BUDGET_CODE_TEXT
+    ORDER BY  COST_CENTR, BUDGET_CODE, GL_ACC_CODE        
   </select>
 
 </mapper>

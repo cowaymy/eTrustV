@@ -69,12 +69,12 @@ $(document).ready(function(){
      
         penGridID = GridCommon.createAUIGrid("#penGridID", penPopColumnLayout, "", penOptions);
         
-        fn_selectListAjax();
+        fn_selectListPenAjax();
         
 });
 
 //리스트 조회.
-function fn_selectListAjax() {  
+function fn_selectListPenAjax() {  
      
     Common.ajax("GET", "/eAccounting/budget/selectPenConAmountList", $("#penPForm").serialize(), function(result) {
             
@@ -110,6 +110,8 @@ function comma(str) {
 <form action="#" method="post" id="penPForm" name="penPForm">
     <input type="hidden" id="budgetPlanYear" name="budgetPlanYear"  value="${item.budgetPlanYear }"/>
     <input type="hidden" id="budgetPlanMonth" name="budgetPlanMonth"  value="${item.budgetPlanMonth }"/>
+    <input type="hidden" id="stDate" name="stDate"  value="${item.stDate }"/>
+    <input type="hidden" id="edDate" name="edDate"  value="${item.edDate }"/>
     <input type="hidden" id="costCentr" name ="costCentr" value="${item.costCentr }"/>
     <input type="hidden" id="glAccCode" name ="glAccCode"  value="${item.glAccCode }" />
     <input type="hidden"  id="budgetCode" name ="budgetCode" value="${item.budgetCode }"/>
