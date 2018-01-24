@@ -2187,7 +2187,7 @@
         
         //doGetProductCombo('/common/selectProductCodeList.do',  stkType, '', 'cmbOrderProduct', 'S', ''); //Product Code
         doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:SRV_PAC_ID}, '', 'cmbOrderProduct', 'S', 'fn_setOptGrpClass');//product 생성
-        doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '287', stusCodeId:'1'}, '', 'cmbReasonExch', 'S', ''); //Reason Code
+        doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '287'}, '', 'cmbReasonExch', 'S', ''); //Reason Code
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
     }
     

@@ -7,7 +7,9 @@
 		     , T1.CODE || ' - ' || T1.RESN_DESC CODE_NAME
 		  FROM SYS0032M T1
 		 WHERE T1.RESN_TYPE_ID = #{resnTypeId}
+		 <if test='stusCodeId != null and stusCodeId !=""'>
 		   AND T1.STUS_CODE_ID = #{stusCodeId}
+		 </if>
 		 ORDER BY T1.RESN_ID
     </select>
     
