@@ -3563,7 +3563,8 @@ SELECT ROWNUM AS rnum ,
 							       Limit1.RESULT_REM RESULT_REM  ,
 							       Limit1.USER_NAME USER_NAME  ,
 							       Limit1.RESULT_CRT_DT RESULT_CRT_DT  ,
-							       Limit1.RESULT_IS_CURR RESULT_IS_CURR  
+							       Limit1.RESULT_IS_CURR RESULT_IS_CURR  ,
+							       Limit1.REN_COLCT_desc
 							  FROM ( SELECT Extent1.RESULT_ID RESULT_ID  ,
 							                Extent1.NO NO  ,
 							                Extent1.SALES_ORD_ID SALES_ORD_ID  ,
@@ -3571,6 +3572,8 @@ SELECT ROWNUM AS rnum ,
 							                Extent1.SETL_DT SETL_DT  ,
 							                Extent1.FAIL_RESN_ID FAIL_RESN_ID  ,
 							                Extent1.REN_COLCT_ID REN_COLCT_ID  ,
+							               (SELECT RESN_DESC
+							                    From SYS0032M where 174 = resn_type_id  and resn_id = Extent1.REN_COLCT_ID ) REN_COLCT_desc ,							                
 							                Extent1.RESULT_REM RESULT_REM  ,
 							                Extent1.RESULT_CRT_DT RESULT_CRT_DT  ,
 							                Extent1.RESULT_IS_CURR RESULT_IS_CURR  ,
