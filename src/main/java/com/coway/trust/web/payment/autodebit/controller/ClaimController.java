@@ -998,12 +998,12 @@ public class ClaimController {
 			}
 		}	
 		
-		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", 1);
-		claimMap.put("filePath", fileDownloadPath+"/ALB/ClaimBank/");
-		claimMap.put("fileName", sFile);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", 1);
+//		claimMap.put("filePath", fileDownloadPath+"/ALB/ClaimBank/");
+//		claimMap.put("fileName", sFile);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 		
 				
 		// E-mail 전송하기
@@ -1063,12 +1063,12 @@ public class ClaimController {
 			}
 		}	
 		
-		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", 1);
-		claimMap.put("filePath", fileDownloadPath+"/CIMB/ClaimBank/");
-		claimMap.put("fileName", sFile);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", 1);
+//		claimMap.put("filePath", fileDownloadPath+"/CIMB/ClaimBank/");
+//		claimMap.put("fileName", sFile);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 				
 		// E-mail 전송하기
@@ -1127,12 +1127,12 @@ public class ClaimController {
 		}
 		
 		
-		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", 1);
-		claimMap.put("filePath", fileDownloadPath+"/HLBB/ClaimBank/");
-		claimMap.put("fileName", sFile);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", 1);
+//		claimMap.put("filePath", fileDownloadPath+"/HLBB/ClaimBank/");
+//		claimMap.put("fileName", sFile);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
 		File file = new File(filePath + "/HLBB/ClaimBank/" + sFile);
@@ -1177,7 +1177,7 @@ public class ClaimController {
 			inputDate = CommonUtils.nvl(ctrlBatchDt).equals("") ? "1900-01-01" : ctrlBatchDt;
 			sFile = "ADSACC.txt";
 
-			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/MMB/ClaimBank/", claimMap);			
+			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/MBB/ClaimBank/", claimMap);			
 			
 			largeExcelService.downLoadClaimFileMBB(claimMap, downloadHandler);
 			downloadHandler.writeFooter();
@@ -1195,12 +1195,12 @@ public class ClaimController {
 			}
 		}	
 		
-		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", 1);
-		claimMap.put("filePath", fileDownloadPath+"/MBB/ClaimBank/");
-		claimMap.put("fileName", sFile);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", 1);
+//		claimMap.put("filePath", fileDownloadPath+"/MBB/ClaimBank/");
+//		claimMap.put("fileName", sFile);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
 		File file = new File(filePath + "/MBB/ClaimBank/" + sFile);
@@ -1258,12 +1258,12 @@ public class ClaimController {
 			}
 		}
 		
-		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", 1);
-		claimMap.put("filePath", fileDownloadPath+"/PBB/ClaimBank/");
-		claimMap.put("fileName", sFile);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", 1);
+//		claimMap.put("filePath", fileDownloadPath+"/PBB/ClaimBank/");
+//		claimMap.put("fileName", sFile);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
 		File file = new File(filePath + "/PBB/ClaimBank/" + sFile);
@@ -1389,12 +1389,12 @@ public class ClaimController {
 		}	
 		
 		
-		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", 1);
-		claimMap.put("filePath", fileDownloadPath+"/RHB/ClaimBank/");
-		claimMap.put("fileName", sFile);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", 1);
+//		claimMap.put("filePath", fileDownloadPath+"/RHB/ClaimBank/");
+//		claimMap.put("fileName", sFile);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
 		File file = new File(filePath + "/RHB/ClaimBank/" + sFile);
@@ -1459,12 +1459,12 @@ public class ClaimController {
 		}	
 		
 		
-		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", 1);
-		claimMap.put("filePath", fileDownloadPath+"/BSN/ClaimBank/");
-		claimMap.put("fileName", sFile);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", 1);
+//		claimMap.put("filePath", fileDownloadPath+"/BSN/ClaimBank/");
+//		claimMap.put("fileName", sFile);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
 		File file = new File(filePath + "/BSN/ClaimBank/" + sFile);
@@ -1525,12 +1525,12 @@ public class ClaimController {
 			}
 		}
 		
-		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", 1);
-		claimMap.put("filePath", fileDownloadPath+"/MyClear/ClaimBank/");
-		claimMap.put("fileName", sFile);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", 1);
+//		claimMap.put("filePath", fileDownloadPath+"/MyClear/ClaimBank/");
+//		claimMap.put("fileName", sFile);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
 		File file = new File(filePath + "/MyClear/ClaimBank/" + sFile);
@@ -1591,12 +1591,12 @@ public class ClaimController {
 		}
 		
 		
-		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", idx);
-		claimMap.put("filePath", fileDownloadPath+"/CRC/");
-		claimMap.put("fileName", sFile);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", idx);
+//		claimMap.put("filePath", fileDownloadPath+"/CRC/");
+//		claimMap.put("fileName", sFile);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
 		File file = new File(filePath + "/CRC/" + sFile);
@@ -1655,12 +1655,12 @@ public class ClaimController {
 		}	
 		
 		
-		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", 1);
-		claimMap.put("filePath", fileDownloadPath+"/FPX/ClaimBank/");
-		claimMap.put("fileName", sFile);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", 1);
+//		claimMap.put("filePath", fileDownloadPath+"/FPX/ClaimBank/");
+//		claimMap.put("fileName", sFile);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 				
 		// E-mail 전송하기
 		File file = new File(filePath + "/FPX/ClaimBank/" + sFile);
