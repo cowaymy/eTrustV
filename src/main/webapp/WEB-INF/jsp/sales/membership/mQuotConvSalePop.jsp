@@ -470,7 +470,7 @@ function fn_Sale_processing(){
 								srvMemPvYear : '0',
 								srvMemIsMnl : '0',
 								srvMemBrnchId : $("#BranchID").val(),
-								srvMemPacPromoId :packageInfo.promoId,
+								srvMemPacPromoId :packageInfo.pacPromoId,
 								srvMemFormNo:'',
 								trType:  $("#trType").val() ,
 								srvStockCode :  $("#inc_stockCode").text(),
