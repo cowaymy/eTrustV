@@ -2083,9 +2083,10 @@ SELECT ROWNUM AS rnum ,
 					                FROM SVC0006D Extent1
 					                       JOIN SYS0038M Extent2   ON Extent1.RESULT_STUS_CODE_ID = Extent2.STUS_CODE_ID
 					                       LEFT JOIN ORG0001D Extent3   ON Extent1.CODY_ID = Extent3.MEM_ID
-					                 WHERE  8 <> Extent1.RESULT_STUS_CODE_ID ) Filter1
+					                 WHERE  8 <> Extent1.RESULT_STUS_CODE_ID
+					                  and Extent1.RESULT_IS_CURR = '1' ) Filter1
 					                LEFT JOIN SYS0047M Extent4   ON Filter1.RESULT_CRT_USER_ID = Extent4.USER_ID
-					          WHERE  Filter1.SCHDUL_ID = #{hrResultId} ) Distinct1
+					          WHERE  Filter1.SCHDUL_ID = #{selSchdulId} ) Distinct1
 					          
 					          
 					          

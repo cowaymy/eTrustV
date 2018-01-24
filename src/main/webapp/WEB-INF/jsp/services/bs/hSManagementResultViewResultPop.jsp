@@ -128,20 +128,24 @@ function fn_winClose(){
  
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post">
-
+<aside class="title_line mt20"><!-- title_line start -->
+<h2>Hart Service Information</h2>
+</aside><!-- title_line end -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:120px" />
-    <col style="width:*" />
+    <col style="width:130px" />
     <col style="width:140px" />
-    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:140px" />
+    <col style="width:140px" />        
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" style="width: 103px; ">Order No</th>
+    <th scope="row" style="width: 160px; ">Order No</th>
     <td>
-     <span style="width: 129px; "><c:out value="${hSMgtResultViewResult.salesOrdNo}"/></span>
+     <span scope="row" style="width: 129px; "><c:out value="${hSMgtResultViewResult.salesOrdNo}"/></span>
     </td>
     <th scope="row" style="width: 117px; ">BS No</th>
     <td>
@@ -151,17 +155,27 @@ function fn_winClose(){
     <td>
     <span style="width: 173px; "><c:out value="${hSMgtResultViewResult.month}/${hSMgtResultViewResult.year}"/></span>
     </td>    
+<tr>
+    <th scope="row" style="width: 160px; ">Config Remark</th>
+    <td colspan="5" style="width: 129px; ">
+    <span ><c:out value="${hSMgtResultViewResult.c2}"/></span>
+    </td> 
+</tr>    
 </tr>
 </tbody>
 </table>
-
+<aside class="title_line mt20"><!-- title_line start -->
+<h2>HS Result Information</h2>
+</aside><!-- title_line end -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:120px" />
-    <col style="width:*" />
+    <col style="width:130px" />
     <col style="width:140px" />
-    <col style="width:*" />
+    <col style="width:130px" />
+    <col style="width:140px" />
+    <col style="width:140px" />       
 </colgroup>
 <tbody>
 <tr>

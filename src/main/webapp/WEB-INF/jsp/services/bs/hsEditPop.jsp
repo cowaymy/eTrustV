@@ -456,7 +456,7 @@ var myDetailGridData = null;
          }); 
     	 
         
-          Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{hrResultId : hrResultId}, function(result) {
+          Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{selSchdulId : selSchdulId}, function(result) {
             console.log("성공 selectHistoryHSResult.");
             console.log("data : " + result);
             AUIGrid.setGridData(myDetailGridID2, result);            
