@@ -88,15 +88,15 @@
     function fn_modifyNotice() {
 
         if (FormUtil.isEmpty($("#ntceSubject").val())) {
-            Common.alert("Please key in Subject");
+            Common.alert("<spring:message code='notice.alert.subject'/>");
             return false;
         }
         if (FormUtil.isEmpty($("#ntceCntnt").val())) {
-            Common.alert("Please key in Content");
+            Common.alert("<spring:message code='notice.alert.content'/>");
             return false;
         }
         if (FormUtil.isEmpty($("#password").val())) {
-            Common.alert("Please key in Password");
+            Common.alert("<spring:message code='notice.alert.password'/>");
             return false;
         }
 
