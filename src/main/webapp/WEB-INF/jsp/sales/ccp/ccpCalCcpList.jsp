@@ -15,7 +15,10 @@ $(document).ready(function() {
 	
 	doGetCombo('/sales/ccp/getBranchCodeList', '', '','_keyInBranch', 'M' , 'f_multiCombo'); //Branch
 	doGetCombo('/sales/ccp/selectDscCodeList', '', '','_keyInDscBranch', 'S' , 'f_multiCombo'); //Branch
-	doGetProductCombo('/common/selectProductCodeList.do', '', '', 'listProductId', 'S'); //Product Code
+	
+	//doGetProductCombo('/common/selectProductCodeList.do', '', '', 'listProductId', 'S'); //Product Code
+	doGetComboWh('/sales/order/colorGridProductList.do', '', '', 'listProductId', '', ''); //Product Code
+	
 	doGetCombo('/common/selectCodeList.do', '51', '',  '_calCcpType', 'S'); // CCP Type Id
 	doGetCombo('/common/selectCodeList.do', '53', '',  '_calScheme', 'S'); // Scheme Type Id
 	doGetCombo('/sales/ccp/selectReasonCodeFbList', '', '','_reasonCode', 'M' , 'f_multiCombo'); //Reason
@@ -94,6 +97,96 @@ $(document).ready(function() {
     });
 	
 });//Doc Ready Func End
+
+//def Combo(select Box OptGrouping)
+function doGetComboWh(url, groupCd , selCode, obj , type, callbackFn){
+  
+  $.ajax({
+      type : "GET",
+      url : url,
+      data : { groupCode : groupCd},
+      dataType : "json",
+      contentType : "application/json;charset=UTF-8",
+      success : function(data) {
+         var rData = data;
+         Common.showLoader(); 
+         fn_otpGrouping(rData, obj)
+      },
+      error: function(jqXHR, textStatus, errorThrown){
+          alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
+      },
+      complete: function(){
+          Common.removeLoader();
+      }
+  }); 
+} ;
+
+function fn_otpGrouping(data, obj){
+
+   var targetObj = document.getElementById(obj);
+   
+   for(var i=targetObj.length-1; i>=0; i--) {
+          targetObj.remove( i );
+   }
+   
+   obj= '#'+obj;
+   
+   // grouping
+   var count = 0;
+   $.each(data, function(index, value){
+       
+       if(index == 0){
+          $("<option />", {value: "", text: 'Choose One'}).appendTo(obj);
+       }
+       
+       if(index > 0 && index != data.length){
+           if(data[index].groupCd != data[index -1].groupCd){
+               $(obj).append('</optgroup>');
+               count = 0;
+           }
+       }
+       
+       if(data[index].codeId == null  && count == 0){
+           $(obj).append('<optgroup label="">');
+           count++;
+       }
+       if(data[index].codeId == 736 && count == 0){
+           $(obj).append('<optgroup label="Air Purifier">');
+           count++;
+       }
+       if(data[index].codeId == 110  && count == 0){
+           $(obj).append('<optgroup label="Bidet">');
+           count++;
+       }
+       if(data[index].codeId == 790 && count == 0){
+           $(obj).append('<optgroup label="Juicer">');
+           count++;
+       }
+       //
+       if(data[index].codeId == 856 && count == 0){
+           $(obj).append('<optgroup label="Point Of Entry ">');
+           count++;
+       }
+       if(data[index].codeId == 538 && count == 0){
+           $(obj).append('<optgroup label="Softener ">');
+           count++;
+       }
+       if(data[index].codeId == 217 && count == 0){
+           $(obj).append('<optgroup label="Water Purifier ">');
+           count++;
+       }
+
+       $('<option />', {value : data[index].codeId, text: data[index].codeName}).appendTo(obj); // WH_LOC_ID
+       
+       
+       if(index == data.length){
+           $(obj).append('</optgroup>');
+       }
+   });
+   //optgroup CSS
+   $("optgroup").attr("class" , "optgroup_text");
+   
+}
 
 $.fn.clearForm = function() {
     return this.each(function() {
@@ -257,8 +350,8 @@ function popup(location){
     <td>
     <select class="multy_select w100p" multiple="multiple" name="calCcpStatus">
         <option value="1" selected="selected">Active</option>
-        <option value="5">Approved</option>
-        <option value="4">Rejected</option>
+        <option value="5" selected="selected">Approved</option>
+        <option value="4" selected="selected">Rejected</option>
     </select>
     </td>
 </tr>

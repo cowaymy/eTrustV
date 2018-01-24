@@ -134,8 +134,8 @@ public class CcpRentMemShipController {
 		LOGGER.info("_____________________________________________ (5)");
 		orderInfoMap = ccpRentMemShipService.selectOrderInfo(params);
 		LOGGER.info("_____________________________________________ (6)");
-		//TODO 마이그레이션 이후 주석 해제(Magic Addr 관련)
-		//installMap = ccpRentMemShipService.selectOrderInfoInstallation(params);
+		
+		installMap = ccpRentMemShipService.selectOrderInfoInstallation(params);
 		LOGGER.info("_____________________________________________ (7)");
 		cofigMap = ccpRentMemShipService.selectSrvMemConfigInfo(params);
 		LOGGER.info("_____________________________________________ (8)");

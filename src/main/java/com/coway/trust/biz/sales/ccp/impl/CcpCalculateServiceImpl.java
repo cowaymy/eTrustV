@@ -920,6 +920,11 @@ public class CcpCalculateServiceImpl extends EgovAbstractServiceImpl implements 
 		}
 		return resultMap;
 	}
-	
-	
+
+
+	@Override
+	public List<EgovMap> getCcpInstallationList(Map<String, Object> params) throws Exception {
+		
+		return ccpCalculateMapper.getCcpInstallationList(params);
+	}
 }

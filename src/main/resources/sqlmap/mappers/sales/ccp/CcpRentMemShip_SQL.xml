@@ -426,7 +426,7 @@
     </select>
     
     <select id="selectOrderInfoInstallation"  parameterType="Map" resultType="egovMap">
-			SELECT Extent1.ORD_ID   ,               
+			<!-- SELECT Extent1.ORD_ID   ,               
                    Extent1.INST_CNT_NAME   ,
                    Extent1.INST_CNT_NRIC   ,
                    Extent1.INST_CNT_EMAIL   ,
@@ -512,7 +512,54 @@
                      LEFT JOIN SYS0064M Extent2   ON Extent2.AREA_ID = Extent1.AREA_ID AND Extent1.AREA_ID NOT LIKE 'DM%'
               <![CDATA[                                  
               WHERE  Extent1.ORD_ID = #{srvCntrctOrdId} AND ROWNUM <= 1
-              ]]>
+              ]]> -->
+              
+              SELECT V1.INSTALL_ID
+             , V1.ORD_ID
+             , V1.INST_ADDR_DTL
+             , V1.INST_STREET
+             , V1.INST_AREA
+             , V1.INST_POSTCODE
+             , V1.INST_CITY
+             , V1.INST_STATE
+             , V1.INST_COUNTRY
+             , V1.INST_CNT_NAME
+             , V1.INST_CNT_NRIC
+             , V1.INST_CNT_EMAIL
+             , V1.INST_CNT_TEL_M
+             , V1.INST_CNT_TEL_O
+             , V1.INST_CNT_TEL_R
+             , V1.INST_CNT_TEL_F
+             , V1.INST_CNT_GENDER
+             , V1.FIRST_INSTALL_NO
+             , V1.FIRST_INSTALL_CT_CODE
+             , V1.FIRST_INSTALL_CT_NAME
+             , V1.FIRST_INSTALL_DT
+             , V1.FIRST_INSTALL_REM
+             , V1.FIRST_INSTALL_SIRIM_NO
+             , V1.FIRST_INSTALL_SERIAL_NO
+             , V1.LAST_INSTALL_NO
+             , V1.LAST_INSTALL_CT_CODE
+             , V1.LAST_INSTALL_CT_NAME
+             , V1.LAST_INSTALL_DT
+             , V1.LAST_INSTALL_REM
+             , V1.LAST_INSTALL_SIRIM_NO
+             , V1.LAST_INSTALL_SERIAL_NO
+             , V1.DSC_ID
+             , V1.DSC_CODE
+             , V1.DSC_NAME
+             , V1.INSTCT
+             , V1.PREFER_INST_DT
+             , V1.PREFER_INST_TM
+             , V1.INSTALL_ADDR_ID
+             , V1.INSTALL_CNTC_ID
+             , V1.INST_CNT_DEPT
+             , V1.INST_CNT_POST
+             , V1.VRIFY_REM
+             , V1.INST_ADDR_DTL||' '||V1.INST_STREET||' '||V1.INST_AREA||' '||V1.INST_POSTCODE||' '|| V1.INST_CITY ||' '||V1.INST_STATE||' '||V1.INST_COUNTRY  FULL_ADDRESS 
+          FROM SAL1010V V1
+         WHERE V1.ORD_ID = #{srvCntrctOrdId}
+           AND ROWNUM &lt;= 1
     </select>
     
     <select id="selectSrvMemConfigInfo"  parameterType="Map" resultType="egovMap">

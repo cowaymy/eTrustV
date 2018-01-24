@@ -472,5 +472,18 @@ public class CcpCalculateController {
 		return "sales/ccp/ccpCalPerformancePop";
 	}
 	
+	
+	@RequestMapping(value = "/ccpCalInstallationAreaPop.do")
+	public String ccpCalInstallationAreaPop(@RequestParam Map<String, Object> params) throws Exception{
+		return "sales/ccp/ccpCalInstallationAreaPop";
+	}
+	
+	
+	@RequestMapping(value = "/getCcpInstallationList")
+	public ResponseEntity<List<EgovMap>> getCcpInstallationList(@RequestParam Map<String, Object> params) throws Exception{
+		List<EgovMap> instList = null;
+		instList = ccpCalculateService.getCcpInstallationList(params);
+		return ResponseEntity.ok(instList);
+	}
 }
 

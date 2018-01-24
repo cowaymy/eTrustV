@@ -344,6 +344,8 @@ function fn_report_6(){
         date = "0" + date;
     }
 	
+    console.log("date1 : " + date1 + ", strdate  : " + strdate );
+    
 	if(cmbTypeVal == "9"){
 		
 		$("#reportParameter").append('<input type="hidden" id="V_INPUTDATE" name="V_INPUTDATE" value="" />');

@@ -634,7 +634,11 @@ function unitCombo(url, mst , ctgryVal , selCode, obj , type, callbackFn){
         url : getContextPath() + url,
         data : {ccpMasterId : mst ,  screCtgryTypeId : ctgryVal},
         dataType : "json",
+        async : false,
         contentType : "application/json;charset=UTF-8",
+        beforeSend:function(){
+        	Common.showLoader();
+        },
         success : function(data) {
             var rData = data;
             doDefCombo(rData, selCode, obj , type,  callbackFn);
@@ -643,6 +647,7 @@ function unitCombo(url, mst , ctgryVal , selCode, obj , type, callbackFn){
             alert("Draw ComboBox['"+obj+"'] is failed. \n\n Please try again.");
         },
         complete: function(){
+        	Common.removeLoader();
         }
     });
 } ;
@@ -763,6 +768,10 @@ function chgTab(tabNm) {
 	 }
 	  setSMSMessage(rtnstr , suggRem);
  }
+ 
+ function fn_installationArea(){
+     Common.popupDiv("/sales/ccp/ccpCalInstallationAreaPop.do", '', null, true, "_instPopDiv");
+ }
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -815,6 +824,9 @@ function chgTab(tabNm) {
     
     <!-- previous -->
     <input type="hidden" id="_isPreVal" >
+    
+    <!-- cust ID  -->
+    <input type="hidden"  id="_editCustId" value="${orderDetail.basicInfo.custId}"> 
 </form>
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num5">
@@ -874,6 +886,7 @@ function chgTab(tabNm) {
 <aside class="title_line"><!-- title_line start -->
 <h3>CCP Score Point</h3>
 <ul class="right_btns">
+    <li><p class="btn_blue2"><a onclick="javascript: fn_installationArea()">Installation Area</a></p></li>
     <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')">FICO Report</a></p></li>  
     <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('CTOS_VIEW')">CTOS Report</a></p></li> 
 </ul>

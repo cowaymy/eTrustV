@@ -72,7 +72,7 @@ $(function() {
     function fn_setSMSmsg(){
         var msg = '';
         var ordNo = '${orderInfoMap.ordNo}';
-        var custNm = '${custBasicMap.name}';
+        var custNm = $("#_custHiddName").val();
         var stus = '${confirmResultMap.name }';
         msg += "ORDER : " + ordNo + "\r\n";
         msg += "NAME : " + custNm + "\r\n";
@@ -115,10 +115,13 @@ $(function() {
     	}
     	
     	//FeedBack
-    	/* if( '' == $("#_reasonCodeConfirm").val() || null == $("#_reasonCodeConfirm").val()){
-    		Common.alert("* Please Select the Feedback Code. ");
-            return false;
-    	} */
+    	console.log('$("#_updMemStatus option:selected").val() : ' + $("#_updMemStatus option:selected").val());
+     	if($("#_updMemStatus option:selected").val() != "5"){
+     		if( '' == $("#_reasonCodeConfirm").val() || null == $("#_reasonCodeConfirm").val()){
+                Common.alert("* Please Select the Feedback Code. ");
+                return false;
+            }	
+    	}
     	
     	//Call Message
     	if( '' == $("#_cfCallMessage").val() || null == $("#_cfCallMessage").val()){
@@ -177,6 +180,8 @@ $(function() {
 <!-- hiddenValues -->
 <input type="hidden" id="_cfCustType" value="${confirmResultMap.cnfmCustTypeId}"> 
 <input type="hidden" id="_cfFeedbackId" value="${confirmResultMap.cnfmFdbckId}">
+<input type="hidden" id="_custHiddName" value="${custBasicMap.name}">
+
 
 <form id="ajaxForm">
     <input type="hidden" name="cnfmCntrctId" value="${cnfmCntrctId}">
@@ -541,7 +546,7 @@ $(function() {
 <tr>
     <th scope="row">Membership Status</th>
     <td>
-    <select class="w100p" name="updMemStatus">
+    <select class="w100p" name="updMemStatus" id="_updMemStatus">
         <option value="44" selected="selected">Pending</option>
         <option value="5">Approved</option>
         <option value="10">Cancelled</option>

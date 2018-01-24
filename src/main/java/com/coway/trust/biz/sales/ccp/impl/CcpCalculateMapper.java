@@ -94,4 +94,6 @@ public interface CcpCalculateMapper {
 	EgovMap chkECash(Map<String, Object> params);
 	
 	EgovMap getResultRowForCTOSDisplayForCCPCalculation(Map<String, Object> params);
+	
+	List<EgovMap> getCcpInstallationList(Map<String, Object> params);
 }

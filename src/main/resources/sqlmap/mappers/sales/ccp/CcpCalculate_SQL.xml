@@ -1247,4 +1247,31 @@ WHERE
 AND T1.CNT = 1
 </select>
 
+
+<!-- ccp Installation Grid -->
+<select id="getCcpInstallationList" parameterType="Map" resultType="egovMap">
+			 SELECT 
+			    A.SALES_ORD_NO, 
+			    A.APP_TYPE_ID, 
+			    G.CODE_DESC APP_TYPE,
+			    A.STUS_CODE_ID,
+			    I.CODE ORDER_STATUS, 
+			    C.ITM_STK_ID,
+			    H.STK_DESC,
+			    D.ADDR_DTL||' '||D.STREET||' '||E.AREA FULL_ADDRESS,
+			    E.CITY,
+			    E.STATE, 
+			    F.STUS_CODE_ID RENTAL_STATUS
+			FROM SAL0001D A 
+			    JOIN SAL0046D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+			    JOIN SAL0002D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
+			    JOIN SAL0023D D ON A.CUST_ADD_ID = D.CUST_ADD_ID
+			    JOIN SYS0064M E ON D.AREA_ID = E.AREA_ID    
+			    LEFT JOIN SAL0071D F ON A.SALES_ORD_ID = F.SALES_ORD_ID
+			    JOIN SYS0013M G ON G.CODE_ID = A.APP_TYPE_ID
+			    JOIN SYS0026M H ON H.STK_ID = C.ITM_STK_ID
+			    JOIN SYS0038M I ON I.STUS_CODE_ID = A.STUS_CODE_ID  
+			WHERE A.APP_TYPE_ID IN ( 66, 67, 68, 1412)
+			AND A.CUST_ID = #{custId}
+</select>
 </mapper>

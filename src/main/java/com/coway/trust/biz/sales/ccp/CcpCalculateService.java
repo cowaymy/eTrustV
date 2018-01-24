@@ -38,4 +38,6 @@ public interface CcpCalculateService {
 	
 	Map<String, Object> getResultRowForCTOSDisplayForCCPCalculation(Map<String, Object> params) throws Exception;
 	
+	List<EgovMap> getCcpInstallationList(Map<String, Object> params)throws Exception;
+	
 }
