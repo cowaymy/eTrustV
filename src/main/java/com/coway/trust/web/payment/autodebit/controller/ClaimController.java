@@ -832,54 +832,54 @@ public class ClaimController {
 			// ALB
 			if ("2".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
 				//this.createClaimFileALB(claimMap);
-				claimService.deleteClaimFileDownloadInfo(claimMap);
+				//claimService.deleteClaimFileDownloadInfo(claimMap);
 				this.createClaimFileNewALB(claimMap);
 			}
 
             // CIMB
             if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	claimService.deleteClaimFileDownloadInfo(claimMap);
+            	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileCIMB(claimMap);
             }
             
             // HLBB
             if ("5".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	claimService.deleteClaimFileDownloadInfo(claimMap);
+            	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileHLBB(claimMap);
             }
             
             // MBB
             if ("21".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	claimService.deleteClaimFileDownloadInfo(claimMap);
+            	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileMBB(claimMap);
             }
             
             // PBB
             if ("6".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	claimService.deleteClaimFileDownloadInfo(claimMap);
+            	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFilePBB(claimMap);
             }
             
             // RHB
             if ("7".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	claimService.deleteClaimFileDownloadInfo(claimMap);
+            	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileRHB(claimMap);
             }
             
             // BSN
             if ("9".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	claimService.deleteClaimFileDownloadInfo(claimMap);
+            	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileBSN(claimMap);
             }
             
             // My Clear
             if ("46".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	claimService.deleteClaimFileDownloadInfo(claimMap);
+            	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileMyClear(claimMap);
             }		
 		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 			
-			claimService.deleteClaimFileDownloadInfo(claimMap);
+			//claimService.deleteClaimFileDownloadInfo(claimMap);
 			
 			//10000건 단위로 추출하기 위해 전체 건수 조회
 			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
@@ -895,7 +895,7 @@ public class ClaimController {
 			//this.createClaimFileCrcCIMB(claimMap);
 			
 		} else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
-			claimService.deleteClaimFileDownloadInfo(claimMap);
+			//claimService.deleteClaimFileDownloadInfo(claimMap);
 			this.createClaimFileFPX(claimMap);
 		}
 		
