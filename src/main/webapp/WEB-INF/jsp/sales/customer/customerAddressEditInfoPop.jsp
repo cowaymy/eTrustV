@@ -68,7 +68,7 @@
          //Delete
          $("#_delBtn").click(function() {
             
-            Common.confirm("Are you sure want to delete this address ?", fn_deleteAddressAjax);
+            Common.confirm("<spring:message code='sal.alert.msg.areYouSureWantToDelAddr' />", fn_deleteAddressAjax);
          });
          
          //Enter Event
@@ -327,7 +327,7 @@
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.page.title.addCustAddr" /></h1>
+<h1><spring:message code="sal.page.title.editCustAddr" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="_close1"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
