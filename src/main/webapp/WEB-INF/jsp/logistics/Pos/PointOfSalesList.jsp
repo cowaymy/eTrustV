@@ -276,7 +276,7 @@ $(document).ready(function(){
  });
 
     function test() {
-    	alert($("#searchReqType").val());
+    	//alert($("#searchReqType").val());
     }
 //btn clickevent
 $(function(){
@@ -447,7 +447,6 @@ $(function(){
             Common.alert("No data selected.");
             return;
         }else{
-        	alert("status :   "+checkedItems[0].item.status);
              if(checkedItems[0].item.status != 'O'){
                  Common.alert("No Delete SOH No.");
              }else{
@@ -778,7 +777,7 @@ function f_addrow(){
 function fn_delete(){
     var getCheckedRowItems = AUIGrid.getCheckedRowItems(listGrid);
     var reqstono=getCheckedRowItems[0].item.reqstno;
-    alert("reqstono ???  "+reqstono);
+    //alert("reqstono ???  "+reqstono);
     fn_deleteAjax(reqstono);
          
 }
