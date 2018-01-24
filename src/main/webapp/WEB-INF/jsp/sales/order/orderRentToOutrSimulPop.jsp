@@ -86,8 +86,7 @@
                             totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill);
                         }
                         else {
-                            totalBillAmt = (view.TotalBillAmt + view.TotalDNBill - view.TotalCNBill)
-                                            + (view.totalbillrpf + view.totaldnrpf - view.totalcnrpf);
+                            totalBillAmt = (result.TotalBillAmt + result.TotalDNBill - result.TotalCNBill) + (result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
                         }
                         
                         console.log('result.totalbillrpf:'+result.totalbillrpf);
