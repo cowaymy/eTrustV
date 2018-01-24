@@ -206,7 +206,7 @@ function fn_winClose(){
 <tr>
     <th scope="row">Collection Code</th>
     <td colspan="3">
-    <span><c:out value="${hSMgtResultViewResult.code2}"/></span>
+    <span><c:out value="${hSMgtResultViewResult.renColctDesc}"/></span>
     </td>
     <th scope="row">Key At</th>
     <td>
