@@ -185,7 +185,7 @@
 
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-            <li><p class="btn_blue"><a id="newPop" onclick="javascript:fn_newNotice();" href="#">New</a></p></li>
+            <li><p class="btn_blue"><a id="newPop" onclick="javascript:fn_newNotice();" href="#"><spring:message code='notice.btn.new'/></a></p></li>
         </ul>
         <br>
 
