@@ -125,7 +125,7 @@
 	             , ROUND(W30) W30
 
          FROM ( 
-               SELECT  SCM05M.PLAN_STUS ,SCM05M.PLAN_ID ,SCM30S.SCM_YEAR ,SCM30S.SCM_MONTH ,SCM30S.SCM_WEEK_TH ,SCM30S.STOCK_CODE CODE ,SCM30S.CDC --,SCM30S.TEAM
+               SELECT  SCM05M.PLAN_STUS ,SCM05M.PLAN_ID ,SCM30S.SCM_YEAR ,SCM30S.SCM_MONTH ,SCM30S.SCM_WEEK_TH ,SCM30S.STOCK_CODE CODE ,SCM30S.CDC 
                       ,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
                       ,SUM(PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE
                       ,SUM(PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED
@@ -385,6 +385,190 @@
 </insert> 
 
 <insert id="insertSalesCdcDetail" parameterType="Map">
+INSERT INTO SCM0006D
+            ( PLAN_DTL_ID ,PLAN_MASTER_ID ,PSI_ID ,STOCK_CODE ,CMPLT ,LAST_UPD_COLUMN ,PSI_NAME,STOCK_CTGRY ,STOCK_NAME    
+             ,M_3 ,M_2 ,M_1 ,M3_ISSU_AVG  ,SALES_PLAN_PRCNTAG ,M0_ORD ,M0_PLAN 
+             ,M1  ,M2  ,M3  ,M4 ,OVERDUE  ,WS0 ,WS1 ,WS2 ,WS3      
+             ,W00 ,W01 ,W02 ,W03 ,W04 ,W05 ,W06 ,W07 ,W08 ,W09 ,W10 ,W11 ,W12 ,W13 ,W14 ,W15 
+             ,W16 ,W17 ,W18 ,W19 ,W20 ,W21 ,W22 ,W23 ,W24 ,W25 ,W26 ,W27 ,W28 ,W29 ,W30 
+            )
+
+           SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL PLAN_DTL_ID 
+                  ,#{salesPlanMstCdcSeq} PLAN_MASTER_ID 
+                  ,NVL(PSI_ID,0) PSI_ID
+                  ,STOCK_CODE 
+                  ,CMPLT              
+                  ,LAST_UPD_COLUMN       
+                  ,PSI_NAME 
+                  ,STOCK_CTGRY 
+                  ,STOCK_NAME
+                
+                  ,NVL2(S6D_STOK_CODE,M_3               ,0) M_3 
+                  ,NVL2(S6D_STOK_CODE,M_2               ,0) M_2 
+                  ,NVL2(S6D_STOK_CODE,M_1               ,0) M_1 
+                  ,NVL(NVL2(S6D_STOK_CODE,M3_ISSU_AVG       ,0),0) M3_ISSU_AVG
+                  ,NVL(NVL2(S6D_STOK_CODE,SALES_PLAN_PRCNTAG,0),0) SALES_PLAN_PRCNTAG
+                  ,NVL2(S6D_STOK_CODE,M0_ORD            ,0) M0_ORD            
+                  ,NVL2(S6D_STOK_CODE,M0_PLAN           ,0) M0_PLAN
+                  ,NVL2(S6D_STOK_CODE,M1                ,0) M1                
+                  ,NVL2(S6D_STOK_CODE,M2                ,0) M2                
+                  ,NVL2(S6D_STOK_CODE,M3                ,0) M3                
+                  ,NVL2(S6D_STOK_CODE,M4                ,0) M4
+                  ,NVL2(S6D_STOK_CODE,OVERDUE           ,0) OVERDUE 
+                  ,NVL2(S6D_STOK_CODE,WS0               ,0) WS0                
+                  ,NVL2(S6D_STOK_CODE,WS1               ,0) WS1                
+                  ,NVL2(S6D_STOK_CODE,WS2               ,0) WS2                
+                  ,NVL2(S6D_STOK_CODE,WS3               ,0) WS3
+
+                      
+                  ,NVL2(S6D_STOK_CODE,W00               ,0) W00               
+                  ,NVL2(S6D_STOK_CODE,W01               ,0) W01               
+                  ,NVL2(S6D_STOK_CODE,W02               ,0) W02               
+                  ,NVL2(S6D_STOK_CODE,W03               ,0) W03               
+                  ,NVL2(S6D_STOK_CODE,W04               ,0) W04               
+                  ,NVL2(S6D_STOK_CODE,W05               ,0) W05               
+                  ,NVL2(S6D_STOK_CODE,W06               ,0) W06               
+                  ,NVL2(S6D_STOK_CODE,W07               ,0) W07               
+                  ,NVL2(S6D_STOK_CODE,W08               ,0) W08               
+                  ,NVL2(S6D_STOK_CODE,W09               ,0) W09               
+                  ,NVL2(S6D_STOK_CODE,W10               ,0) W10
+                                
+                  ,NVL2(S6D_STOK_CODE,W11               ,0) W11              
+                  ,NVL2(S6D_STOK_CODE,W12               ,0) W12
+                  ,NVL2(S6D_STOK_CODE,W13               ,0) W13               
+                  ,NVL2(S6D_STOK_CODE,W14               ,0) W14               
+                  ,NVL2(S6D_STOK_CODE,W15               ,0) W15               
+                  ,NVL2(S6D_STOK_CODE,W16               ,0) W16               
+                  ,NVL2(S6D_STOK_CODE,W17               ,0) W17               
+                  ,NVL2(S6D_STOK_CODE,W18               ,0) W18               
+                  ,NVL2(S6D_STOK_CODE,W19               ,0) W19               
+                  ,NVL2(S6D_STOK_CODE,W20               ,0) W20
+                                 
+                  ,NVL2(S6D_STOK_CODE,W21               ,0) W21               
+                  ,NVL2(S6D_STOK_CODE,W22               ,0) W22               
+                  ,NVL2(S6D_STOK_CODE,W23               ,0) W23               
+                  ,NVL2(S6D_STOK_CODE,W24               ,0) W24               
+                  ,NVL2(S6D_STOK_CODE,W25               ,0) W25   
+                  ,NVL2(S6D_STOK_CODE,W26               ,0) W26
+                  ,NVL2(S6D_STOK_CODE,W27               ,0) W27
+                  ,NVL2(S6D_STOK_CODE,W28               ,0) W28
+                  ,NVL2(S6D_STOK_CODE,W29               ,0) W29
+                  ,NVL2(S6D_STOK_CODE,W30               ,0) W30               
+
+              FROM( 
+              
+                    SELECT  NVL(CMPLT,0) CMPLT ,LAST_UPD_COLUMN ,M0_ORD ,M0_PLAN ,M1 ,M2 ,M3 ,M3_ISSU_AVG ,M4 ,M_1 ,M_2 ,M_3 ,OVERDUE,PLAN_DTL_ID ,PLAN_MASTER_ID ,PSI_ID ,PSI_NAME
+                           ,SALES_PLAN_PRCNTAG ,SCM08M.STOCK_CODE ,CODE S6D_STOK_CODE, STK_TYPE_ID ,NAME STOCK_NAME  ,CATEGORY STOCK_CTGRY
+                           ,WS0 ,WS1 ,WS2 ,WS3 ,W00 ,W01 ,W02 ,W03 ,W04 ,W05 ,W06 ,W07 ,W08 ,W09 ,W10 ,W11 ,W12 ,W13 ,W14 ,W15 ,W16 ,W17 ,W18 ,W19 ,W20 
+                           ,W21 ,W22 ,W23 ,W24 ,W25 ,W26 ,W27 ,W28 ,W29 ,W30
+                         
+                      FROM SCM0008M SCM08M
+                           LEFT OUTER JOIN( 
+                           
+                                           SELECT 
+                                                 MOD( DENSE_RANK() OVER ( ORDER BY STOCK_CTGRY ,SUPPLY_BY_CDC.CODE),2) DIV_ODD
+                                               , CMPLT 
+                                               , LAST_UPD_COLUMN
+                                               , PSI_ID
+                                               , PSI_NAME   
+                                               , STOCK_CTGRY CATEGORY
+                                               , STOCK_NAME  NAME
+                                               , SYS26M.STK_TYPE_ID 
+                                               , SCM06D.PLAN_DTL_ID
+                                               , PLAN_MASTER_ID 
+                                               , SALES_PLAN_PRCNTAG
+                                               , SUPPLY_BY_CDC.*             
+                                               , ROUND(OVERDUE) OVERDUE  
+                                               , ROUND(WS0) WS0  
+                                               , ROUND(WS1) WS1  
+                                               , ROUND(WS2) WS2  
+                                               , ROUND(WS3) WS3  
+                                               , ROUND(W00) W00
+                                               , ROUND(W01) W01
+                                               , ROUND(W02) W02
+                                               , ROUND(W03) W03
+                                               , ROUND(W04) W04
+                                               , ROUND(W05) W05
+                                               , ROUND(W06) W06
+                                               , ROUND(W07) W07
+                                               , ROUND(W08) W08
+                                               , ROUND(W09) W09
+                                               , ROUND(W10) W10
+                                               , ROUND(W11) W11
+                                               , ROUND(W12) W12
+                                               , ROUND(W13) W13
+                                               , ROUND(W14) W14
+                                               , ROUND(W15) W15
+                                               , ROUND(W16) W16
+                                               , ROUND(W17) W17
+                                               , ROUND(W18) W18
+                                               , ROUND(W19) W19
+                                               , ROUND(W20) W20
+                                               , ROUND(W21) W21
+                                               , ROUND(W22) W22
+                                               , ROUND(W23) W23
+                                               , ROUND(W24) W24
+                                               , ROUND(W25) W25
+                                               , ROUND(W26) W26
+                                               , ROUND(W27) W27
+                                               , ROUND(W28) W28
+                                               , ROUND(W29) W29
+                                               , ROUND(W30) W30
+
+                                           FROM (
+                                                 SELECT  SCM05M.PLAN_STUS ,SCM05M.PLAN_ID ,SCM30S.SCM_YEAR ,SCM30S.SCM_MONTH ,SCM30S.SCM_WEEK_TH ,SCM30S.STOCK_CODE CODE ,SCM30S.CDC 
+                                                        ,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
+                                                        ,SUM(PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE
+                                                        ,SUM(PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED
+                                                        ,SUM(PRE_M3_AVG_ISSU) M3_ISSU_AVG
+                                                        ,SUM(M1_ORD) M1_ORD
+                                                        ,SUM(M2_ORD) M2_ORD
+                                                        ,SUM(M3_ORD) M3_ORD
+                                                                            
+                                                        ,SUM(M_3) M_3
+                                                        ,SUM(M_2) M_2
+                                                        ,SUM(M_1) M_1               
+                                                        ,SUM(M0_PLAN) M0_PLAN
+                                                        ,SUM(M0_ORD) M0_ORD
+                                                                            
+                                                        ,SUM(M1) M1
+                                                        ,SUM(M2) M2
+                                                        ,SUM(M3) M3
+                                                        ,SUM(M4) M4 
+                                                        
+                                                    FROM SCM0030S SCM30S
+                                                        ,SCM0005M SCM05M
+                                                   WHERE SCM30S.SCM_YEAR  = (CASE WHEN (TO_NUMBER(#{scmPeriodCbBox}) = 1) THEN (TO_NUMBER(#{scmYearCbBox}) -1) ELSE (TO_NUMBER(#{scmYearCbBox}) ) END)
+                                                     AND SCM30S.SCM_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = CASE WHEN (TO_NUMBER(#{scmPeriodCbBox}) = 1) THEN (TO_NUMBER(#{scmYearCbBox}) -1) ELSE (TO_NUMBER(#{scmYearCbBox})) END AND  WEEK_TH  = CASE WHEN (TO_NUMBER(#{scmPeriodCbBox}) = 1) THEN 52 ELSE (TO_NUMBER(#{scmPeriodCbBox}) -1) END  AND WEEK_TH_SN = 1  AND NVL(USE_YN,'Y')='Y')
+                                                     AND SCM30S.SCM_WEEK_TH = (CASE WHEN (TO_NUMBER(#{scmPeriodCbBox}) = 1) THEN 52 ELSE (TO_NUMBER(#{scmPeriodCbBox}) -1) END)
+                                                     AND SCM30S.CDC         = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})  
+                                                     AND SCM30S.SCM_YEAR    = SCM05M.PLAN_YEAR
+                                                     AND SCM30S.SCM_MONTH   = SCM05M.PLAN_MONTH 
+                                                     AND SCM30S.SCM_WEEK_TH = SCM05M.PLAN_WEEK
+                                                     AND SCM30S.SCM_WEEK_TH_SN = 1
+                                                     AND SCM30S.CDC = SCM05M.CDC
+                                                       
+                                                   GROUP BY SCM05M.PLAN_STUS
+                                                           ,SCM05M.PLAN_ID
+                                                           ,SCM30S.SCM_YEAR
+                                                           ,SCM30S.SCM_MONTH
+                                                           ,SCM30S.SCM_WEEK_TH
+                                                           ,SCM30S.STOCK_CODE
+                                                           ,SCM30S.CDC
+                                                     
+                                                         
+                                                ) SUPPLY_BY_CDC   
+                                                 
+                                                LEFT OUTER JOIN SCM0006D SCM06D ON SUPPLY_BY_CDC.CODE = SCM06D.STOCK_CODE 
+                                                                                AND SUPPLY_BY_CDC.PLAN_ID = SCM06D.PLAN_MASTER_ID
+                                                LEFT OUTER JOIN SYS0026M SYS26M ON SUPPLY_BY_CDC.CODE  = SYS26M.STK_CODE
+                                                LEFT OUTER JOIN SYS0013M SYS13M ON SYS26M.STK_CTGRY_ID = SYS13M.CODE_ID
+                           
+                           )  S30SMAIN ON S30SMAIN.CODE = SCM08M.STOCK_CODE
+              )  WHERE STK_TYPE_ID IS NOT NULL
+</insert> 
+
+<insert id="insertSalesCdcDetail_TEMP" parameterType="Map">
 INSERT INTO SCM0006D
             ( PLAN_DTL_ID ,PLAN_MASTER_ID ,PSI_ID ,STOCK_CODE ,CMPLT ,LAST_UPD_COLUMN ,PSI_NAME,STOCK_CTGRY ,STOCK_NAME    
              ,M_3 ,M_2 ,M_1 ,M3_ISSU_AVG  ,SALES_PLAN_PRCNTAG ,M0_ORD ,M0_PLAN 
