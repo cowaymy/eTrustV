@@ -69,9 +69,6 @@ public class ClaimController {
 	@Value("${autodebit.file.upload.path}")
 	private String filePath;
 	
-	@Value("${autodebit.file.download.path}")
-	private String fileDownloadPath;
-
 	@Value("${autodebit.email.receiver}")
 	private String emailReceiver;
 
@@ -1325,22 +1322,22 @@ public class ClaimController {
 		
 		
 		//파일다운로드 정보 INSERT
-		claimMap.put("fileNo", 2);
-		claimMap.put("filePath", fileDownloadPath+"/PBB/ClaimBank/");
-		claimMap.put("fileName", sFile2nd);
-		
-		claimService.insertClaimFileDownloadInfo(claimMap);
+//		claimMap.put("fileNo", 2);
+//		claimMap.put("filePath", fileDownloadPath+"/PBB/ClaimBank/");
+//		claimMap.put("fileName", sFile2nd);
+//		
+//		claimService.insertClaimFileDownloadInfo(claimMap);
 
 		// E-mail 전송하기
-//		EmailVO email2 = new EmailVO();
-//
-//		email2.setTo(emailReceiver);
-//		email2.setHtml(false);
-//		email2.setSubject("PBB Auto Debit Claim File - Batch Date : " + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
-//		email2.setText("Please find attached the claim file for your kind perusal.");
-//		email2.addFile(file2nd);
-//
-//		adaptorService.sendEmail(email2, false);
+		EmailVO email2 = new EmailVO();
+
+		email2.setTo(emailReceiver);
+		email2.setHtml(false);
+		email2.setSubject("PBB Auto Debit Claim File - Batch Date : " + CommonUtils.nvl(claimMap.get("ctrlBatchDt")));
+		email2.setText("Please find attached the claim file for your kind perusal.");
+		email2.addFile(file2nd);
+
+		adaptorService.sendEmail(email2, false);
 	}
 	
 	private ClaimFilePBBHandler getTextDownloadPBBHandler(String fileName, String[] columns, String[] titles, String path,
