@@ -59,7 +59,7 @@
             groupingMessage : "Here groupping"
         };
         
-        inchargeGridID = GridCommon.createAUIGrid("#incharge_grid_wrap", inchargeColumnLayout, gridPros);
+        inchargeGridID = GridCommon.createAUIGrid("#incharge_grid_wrap", inchargeColumnLayout, "", gridPros);
     }
     
     function createCallResultGrid() {
@@ -113,7 +113,7 @@
             selectionMode : "multipleCells",
             headerHeight : 30,
             // 그룹핑 패널 사용
-            useGroupingPanel : true,
+            useGroupingPanel : false,
             // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             skipReadonlyColumns : true,
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -123,7 +123,7 @@
             groupingMessage : "Here groupping"
         };
         
-        callResultGridID = GridCommon.createAUIGrid("#callResult_grid_wrap", callResultColumnLayout, gridPros);
+        callResultGridID = GridCommon.createAUIGrid("#callResult_grid_wrap", callResultColumnLayout, "", gridPros);
     }
     
     function createcallLogGird() {
@@ -149,11 +149,12 @@
             }, {
                 dataField : "callRosAmt",
                 headerText : "Amount",
-                width : 80,
+                width : 70,
                 editable : false
             },{
                 dataField : "callRem",
                 headerText : "Remark",
+                width : 350,
                 editable : false
             }, {
                 dataField : "rosCallerUserName",
@@ -187,7 +188,7 @@
             selectionMode : "multipleCells",
             headerHeight : 30,
             // 그룹핑 패널 사용
-            useGroupingPanel : true,
+            useGroupingPanel : false,
             // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             skipReadonlyColumns : true,
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -197,7 +198,7 @@
             groupingMessage : "Here groupping"
         };
         
-        callLogGirdID = GridCommon.createAUIGrid("#callLog_grid_wrap", callLogColumnLayout, gridPros);
+        callLogGirdID = GridCommon.createAUIGrid("#callLog_grid_wrap", callLogColumnLayout, '',gridPros);
     }
     
     // contact Ajax
