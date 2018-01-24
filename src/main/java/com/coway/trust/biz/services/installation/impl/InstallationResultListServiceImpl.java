@@ -2132,6 +2132,29 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 	@Override
 	public int editInstallationResult(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
+		String allowCom = String.valueOf(params.get("allwcom"));
+		String istrade= String.valueOf(params.get("trade"));
+		String isreqsms= String.valueOf(params.get("reqsms"));
+		if(allowCom.equals("on")){
+		  	params.put("allowCom", 1);
+		}
+		else{
+			params.put("allowCom", 0);
+		}
+		if(istrade.equals("on")){
+		  	params.put("istrade", 1);
+		}
+		else{
+			params.put("istrade", 0);
+		}
+		if(isreqsms.equals("on")){
+		  	params.put("isreqsms", 1);
+		}
+		else{
+			params.put("isreqsms", 0);
+		}
+		
+		
 		int resultValue =installationResultListMapper.updateInstallResultEdit(params);
 
 		return resultValue;

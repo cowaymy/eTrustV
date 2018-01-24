@@ -74,17 +74,18 @@ $(document).ready(function() {
 /*     ("#hiddenPostCode").val("${customerAddress.typeId}");
     ("#hiddenStateName").val("${customerAddress.typeId}");
     ("#hiddenCountryName").val("${customerAddress.typeId}"); */
+    $("#checkCommission").prop("checked",true);
+    $("#addInstallForm #installStatus").change(function (){
+        console.log($("#addInstallForm #installStatus").val());
+        if($("#addInstallForm #installStatus").val() == 4){
+    
+                $("#checkCommission").prop("checked",true);
 
-    $("#installStatus").change(function (){
-        console.log($("#installStatus").val());
-        if($("#installStatus").val() == 4){
-            $("#completedHide").show();
-            $("#completedHide1").show();
-            $("#completedHide2").show();
-        
-          
         }
-      
+        else{
+        	
+            $("#checkCommission").prop("checked",false);
+        }      
     
     });
 

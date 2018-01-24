@@ -729,7 +729,8 @@ public class InstallationResultListController {
 
 		int userId = sessionVO.getUserId();
 		params.put("user_id", userId);
-
+		logger.debug("params : {}", params);
+	
 		resultValue = installationResultListService.editInstallationResult(params, sessionVO);
 		if(resultValue>0){
 			message.setMessage("Installation result successfully updated.");

@@ -1221,6 +1221,7 @@ public class ServiceApiController {
         			params.put("refNo1","0"); 
         			params.put("refNo2","0"); 
         			params.put("codeId",String.valueOf(installResult.get("257")));
+        			params.put("checkCommission", 1);
         			
         			if(orderInfo !=null){	
         				params.put("hidOutright_Price",CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));

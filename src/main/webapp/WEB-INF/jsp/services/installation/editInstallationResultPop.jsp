@@ -118,9 +118,9 @@ function fn_saveInstall(){
 </tr>
 <tr>
     <td colspan="4">
-        <input id="allwcom" type="checkbox" value="1" disabled/><span><spring:message code='service.btn.AllowCommission'/> ?</span>
-        <input id="trade" type="checkbox" value="1" disabled/><span><spring:message code='service.btn.IsTradeIn'/> ?</span> 
-        <input id="reqsms" type="checkbox" value="1" disabled/><span><spring:message code='service.btn.RequiredSMS'/> ?</span>
+        <input id="allwcom" name="allwcom" type="checkbox"  /><span><spring:message code='service.btn.AllowCommission'/> ?</span>
+        <input id="trade" name="trade" type="checkbox"  /><span><spring:message code='service.btn.IsTradeIn'/> ?</span> 
+        <input id="reqsms" name="reqsms" type="checkbox" /><span><spring:message code='service.btn.RequiredSMS'/> ?</span>
     </td>
 </tr>
 </tbody>

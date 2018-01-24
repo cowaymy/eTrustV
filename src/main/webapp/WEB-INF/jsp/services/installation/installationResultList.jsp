@@ -13,14 +13,14 @@ $(document).ready(function() {
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
           //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId"));
           var statusCode =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code1");
-          if(statusCode == "ACT"){
+         /*  if(statusCode == "ACT"){
         	 // alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
         	  //Common.alert("Installation is under status [active]. No result to view.");
         	  Common.alert("<spring:message code='service.msg.activeView'/> ");
-          }else{
+          }else{ */
         	 // alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
         	  Common.popupDiv("/services/installationResultDetailPop.do?isPop=true&installEntryId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId")+"&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
-          }
+          
       });
 
     AUIGrid.bind(myGridID, "cellClick", function(event) {

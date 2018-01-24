@@ -4081,6 +4081,9 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
     <update id="updateInstallResultEdit" parameterType="Map">
          UPDATE SAL0047D
            SET REM = #{remark},
+               ALLOW_COMM=#{allowCom} ,
+               IS_TRADE_IN=#{istrade},
+               REQUIRE_SMS =  #{isreqsms},
                SIRIM_NO = UPPER(#{sirimNo}) ,
                SERIAL_NO = #{serialNo},
                DOC_REF_NO1 = #{refNo1},
