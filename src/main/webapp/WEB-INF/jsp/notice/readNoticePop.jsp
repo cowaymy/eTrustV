@@ -146,7 +146,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
-        <h1>View Notice</h1>
+        <h1><spring:message code='notice.title.ViewNotice'/></h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" id="popClose"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
@@ -195,19 +195,19 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Emergency</th>
+                    <th scope="row"><spring:message code='notice.title.emergency'/></th>
                     <td>
                         <label><input id="emgncyFlag" name="emgncyFlag" value="${noticeInfo.emgncyFlag}"
                                       type="checkbox"/><span></span></label>
                     </td>
-                    <th scope="row">Password</th>
+                    <th scope="row"><spring:message code='notice.title.password'/></th>
                     <td colspan="3">
                         <input id="password" name="password" type="password" value="${noticeInfo.password}" title=""
                                placeholder="" class=""/>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Notice Period</th>
+                    <th scope="row"><spring:message code='notice.title.NoticePeriod'/></th>
                     <td colspan="5">
 
                         <div class="date_set"><!-- date_set start -->
@@ -221,7 +221,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Contents<span class="must">*</span></th>
+                    <th scope="row"><spring:message code='notice.title.content'/><span class="must">*</span></th>
                     <td colspan="5">
                         <textarea id="ntceCntnt" name="ntceCntnt" cols="20" rows="30"
                                   style="margin: 0px 4px 0px 0px; width: 827px; height: 340px;">${noticeInfo.ntceCntnt}</textarea>
@@ -238,7 +238,7 @@
                 </colgroup>
                 <tbody>
                 <tr>
-                    <th scope="row" rowspan="2">Attached File</th>
+                    <th scope="row" rowspan="2"><spring:message code='notice.title.AttachedFile'/></th>
                     <td>
                         <c:forEach var="fileInfo" items="${files}" varStatus="status">
                         <div class="auto_file2"><!-- auto_file start -->
@@ -279,13 +279,13 @@
 <c:choose>
     <c:when test="${not empty noticeInfo.crtUserId && noticeInfo.rgstUserNm eq userName}">
         <ul class="center_btns">
-            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_modifyNotice();">Modify</a></p></li>
-            <li><p class="btn_blue2 big"><a href="#" id="delete">Delete</a></p></li>
+            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_modifyNotice();"><spring:message code='notice.btn.modify'/></a></p></li>
+            <li><p class="btn_blue2 big"><a href="#" id="delete"><spring:message code='sys.btn.delete'/></a></p></li>
         </ul>
     </c:when>
     <c:otherwise>
         <ul class="center_btns">
-            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_close();">List</a></p></li>
+            <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_close();"><spring:message code='notice.btn.list'/></a></p></li>
         </ul>
     </c:otherwise>
 </c:choose>
