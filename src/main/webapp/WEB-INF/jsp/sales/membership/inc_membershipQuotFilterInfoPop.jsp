@@ -48,10 +48,10 @@ function fn_getMembershipQuotInfoAjax (){
 
 
 function fn_getMembershipQuotInfoFilterAjax (_QUOT_ID){
-	
+		
 	  var v_QUOT_ID = $("#QUOT_ID").val();
 	  
-	  if(_QUOT_ID !=""){
+	  if(_QUOT_ID !="" && _QUOT_ID != undefined){
 		   v_QUOT_ID = _QUOT_ID;
 	  }
 	  
