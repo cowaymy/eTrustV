@@ -483,11 +483,11 @@ var contPersonLayout = [
 									    <td colspan="">
 									    <label><input type="radio"  id="post"  name="billingType"  onclick="fn_estmEvent(1);"/><span>Post</span></label>
 									    <label><input type="radio"  id="sms"  name="billingType"  onclick="fn_estmEvent(2);"/><span>SMS</span></label>
-									    <label><input type="radio"  id="estm" name="billingType"  onclick="fn_estmEvent(3);"/><span>E-Statement</span></label>
+									    <label><input type="radio"  id="estm" name="billingType"  onclick="fn_estmEvent(3);" checked="checked" /><span>E-Statement</span></label>
 									    </td>
 									    <th scope="row">Email</th>
 									    <td>
-									        <input type="text"  id="email" name="email" disabled="disabled"/>
+									        <input type="text"  id="email" name="email" />
 									    </td>
 									</tr>
 									<tr>

@@ -98,31 +98,10 @@ function changeBillingInfo(custBillId){
           $('#changePop_estmVal').val(result.data.basicInfo.custBillEmail);
         }else{
         	$("#changePop_sms").prop('checked', false);
-        	$("#changePop_estm").prop('checked', false);
+        	$("#changePop_estm").prop('checked', true);
         	$("#changePop_post").prop('checked', false);
         }
         
-        /* if(result.data.basicInfo.custBillIsPost == "1"){
-            $("#changePop_post").prop('checked', true);
-        }else{
-            $("#changePop_post").prop('checked', false);
-        }
-        
-        if(result.data.basicInfo.custBillIsSms == "1"){
-            $("#changePop_sms").prop('checked', true);
-        }else{
-            $("#changePop_sms").prop('checked', false);
-        }
-        
-        if(result.data.basicInfo.custBillIsEstm == "1"){
-            $("#changePop_estm").prop('checked', true);
-            $("#changePop_estm").prop('disabled', false);
-            $('#changePop_estmVal').val(result.data.basicInfo.custBillEmail);
-        }else{
-            $("#changePop_estm").prop('checked', false);
-            $("#changePop_estm").prop('disabled', true);
-            $('#changePop_estmVal').val("");
-        } */
         AUIGrid.destroy(estmHisPopGridID); 
         estmHisPopGridID = GridCommon.createAUIGrid("estmHisPopGrid", estmHisPopColumnLayout,null,gridPros);
         AUIGrid.setGridData(estmHisPopGridID, result.data.estmReqHistory);
@@ -154,6 +133,12 @@ function fn_changeBillSave(){
     }
     
     if($("#changePop_estm").is(":checked")){
+    	
+    	if(custBillEmail == ''){
+    		Common.alert("* Please request new email.");
+    		return;
+    	}
+    	
     	isEstm = 1;
     }else{
     	isEstm = 0;
@@ -294,7 +279,7 @@ function fn_estmReqPopClose(){
                         </tr>
                         <tr>
                             <td colspan="3">
-	                            <label><input type="radio" disabled="disabled"  id="changePop_estm" name="billType"/><span>E-Statement </span></label>
+	                            <label><input type="radio"   id="changePop_estm" name="billType"/><span>E-Statement </span></label>
 	                            <input type="text" title="" placeholder="" class="readonly" id="changePop_estmVal" name="changePop_estmVal"/><p class="btn_sky"><a href="javascript:fn_reqNewMail();"><spring:message code='pay.btn.requestNewEmail'/></a></p>
                             </td>
                         </tr>
