@@ -78,7 +78,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
     <header class="pop_header"><!-- pop_header start -->
-        <h1>New Notice</h1>
+        <h1><spring:message code='notice.title.NewNotice'/></h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" id="popClose"><spring:message code='sys.btn.close'/></a></p></li>
         </ul>
@@ -112,19 +112,19 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Emergency</th>
+                    <th scope="row"><spring:message code='notice.title.emergency'/></th>
                     <td>
                         <label><input id="emgncyFlagCheck" type="checkbox"
                                       onclick="javascript:fn_checkbox();"/><span></span></label>
                     </td>
-                    <th scope="row">Password</th>
+                    <th scope="row"><spring:message code='notice.title.password'/></th>
                     <td>
                         <input id="password" name="password" type="password" onkeydown="onlyNumber(this)" title=""
                                placeholder="Number Only" class="w100p"/>
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Notice Period</th>
+                    <th scope="row"><spring:message code='notice.title.NoticePeriod'/></th>
                     <td colspan="3">
 
                         <div class="date_set"><!-- date_set start -->
@@ -138,7 +138,7 @@
                     </td>
                 </tr>
                 <tr>
-                    <th scope="row">Contents<span class="must">*</span></th>
+                    <th scope="row"><spring:message code='notice.title.content'/><span class="must">*</span></th>
                     <td colspan="3">
                         <textarea id="ntceCntnt" name="ntceCntnt" cols="20" rows="30"
                                   style="margin: 0px 4px 0px 0px; width: 827px; height: 340px;"></textarea>
@@ -155,7 +155,7 @@
                 </colgroup>
                 <tbody>
                 <tr>
-                    <th scope="row" rowspan="2">Attached File</th>
+                    <th scope="row" rowspan="2"><spring:message code='notice.title.AttachedFile'/></th>
                     <td>
                         <div class="auto_file2 attachment_file w100p"><!-- auto_file start -->
                             <input type="file" title="file add" style="width:300px"/>
@@ -173,8 +173,8 @@
         -->
 
         <ul class="center_btns">
-            <li><p class="btn_blue2 big"><a onclick="javascript:fn_saveNewNotice();">Save</a></p></li>
-            <li><p class="btn_blue2 big"><a onclick="javascript:fn_close();">Cancel</a></p></li>
+            <li><p class="btn_blue2 big"><a onclick="javascript:fn_saveNewNotice();"><spring:message code='sys.btn.save'/></a></p></li>
+            <li><p class="btn_blue2 big"><a onclick="javascript:fn_close();"><spring:message code='sys.btn.cancel'/></a></p></li>
         </ul>
 
     </section><!-- pop_body end -->
