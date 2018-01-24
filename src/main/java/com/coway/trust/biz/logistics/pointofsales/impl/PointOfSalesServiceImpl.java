@@ -257,5 +257,18 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		
 		return reqcnt;
 	}
+	
+	@Override
+	public void deleteStoNo(Map<String, Object> params) {
+		
+		String reqstono = (String) params.get("reqstono");
+		logger.info(" otherNo ~ ???? : {}", params.get("reqstono"));
+		if(!"".equals(reqstono) || null != reqstono){
+			PointOfSalesMapper.updateStockHead(reqstono);
+			PointOfSalesMapper.deleteStockDelete(reqstono);
+			PointOfSalesMapper.deleteStockBooking(reqstono);
+		}
+	}
+	
 
 }

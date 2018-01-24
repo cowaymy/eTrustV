@@ -380,5 +380,20 @@ public class PointOfSalesController {
 		map.put("keyvalue", fileGroupKey);
 		return ResponseEntity.ok(map);
 	}
+	
+	@RequestMapping(value = "/deleteStoNo.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> deleteStoNo(@RequestParam Map<String, Object> params,
+			Model model) {
 
+		logger.debug("params : {}", params);
+		PointOfSalesService.deleteStoNo(params);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+	
 }

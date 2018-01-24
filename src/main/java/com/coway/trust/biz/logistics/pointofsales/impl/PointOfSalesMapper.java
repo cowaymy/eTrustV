@@ -46,5 +46,11 @@ public interface PointOfSalesMapper {
 	int selectOtherReqChk(String reqno);
 	
 	int selectOtherReqCancleChk(String reqno);
+	
+	void updateStockHead(String reqstono);
+	
+	void deleteStockDelete(String reqstono);
+	
+	void deleteStockBooking(String reqstono);
 
 }

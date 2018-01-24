@@ -440,6 +440,23 @@ $(function(){
         var paramdata = { groupCode : '308' , orderValue : 'CODE_NAME' , likeValue:$("#searchTransType").val()};
         doGetComboData('/logistics/pos/selectTypeList.do', paramdata, '','searchReqType', 'S' , '');
     });
+    
+    $('#delete').click(function(){
+    	var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+         if(checkedItems.length <= 0){
+            Common.alert("No data selected.");
+            return;
+        }else{
+        	alert("status :   "+checkedItems[0].item.status);
+             if(checkedItems[0].item.status != 'O'){
+                 Common.alert("No Delete SOH No.");
+             }else{
+                 var reqstono=checkedItems[0].item.reqstno;
+                 Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete); 
+             }
+        }     
+    });
+    
 
 
 });
@@ -757,6 +774,29 @@ function f_addrow(){
     return false;
 }
 
+
+function fn_delete(){
+    var getCheckedRowItems = AUIGrid.getCheckedRowItems(listGrid);
+    var reqstono=getCheckedRowItems[0].item.reqstno;
+    alert("reqstono ???  "+reqstono);
+    fn_deleteAjax(reqstono);
+         
+}
+
+
+function fn_deleteAjax(reqstono){
+    
+    var url = "/logistics/pos/deleteStoNo.do";
+    Common.ajax("GET", url , {"reqstono":reqstono} , function(result)    {
+        Common.alert(""+result.message+"</br> Delete : "+reqstono, locationList);
+    });
+         
+}
+
+function locationList(){
+    $('#search').click();
+}
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -867,6 +907,7 @@ function f_addrow(){
 </c:if>
 <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
          <li><p class="btn_grid"><a id="insert">New</a></p></li>
+         <li><p class="btn_grid"><a id="delete">Delete</a></p></li>
 </c:if>
          <li><p class="btn_grid"><a id="goodIssue">GI/GR</a></p></li>
          <li><p class="btn_grid"><a id="issueCancel">GI/GR Cancel</a></p></li>
