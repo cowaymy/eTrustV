@@ -126,7 +126,7 @@ Common.ajax("GET", "/sales/membership/selectMembershipQuotInfo", {QUOT_ID:v_QUOT
                       $("#inc_cntTelF").html(result[0].cntTelF);
                       $("#inc_cntEmail").html(result[0].cntEmail);
                       
-                      $("#BranchID").val(result[0].brnchName );
+                      //$("#BranchID").val(result[0].brnchName );
 
                       
                       
@@ -362,7 +362,7 @@ function fn_getMembershipDataInfo (){
     	
     	pMInfo =result[0];
     	
-    	 $("#BranchID").val(result[0].brnchId);
+    	 //$("#BranchID").val(result[0].brnchId);
          $("#last_membership_text").html( result[0].pacCode +" "+ result[0].pacName);
          $("#expire_date_text").html( result[0].mbrshExprDt);
     });
@@ -538,7 +538,7 @@ function fn_getHasBill (){
 <div  style="display:inline">
 <input type="hidden" name="ORD_ID"  id="ORD_ID"  value="${ORD_ID}"/>
 <input type="hidden" name="LAST_MBRSH_ID"  id="LAST_MBRSH_ID"  />
-<input type="hidden" name="BranchID"  id="BranchID"  />
+<input type="hidden" name="BranchID"  id="BranchID"  value="${SESSION_INFO.userBranchId}"/>
 <input type="hidden" name="aaQUOT_ID"  id="aaQUOT_ID" value=  '${QUOT_ID}'  />
  </div>
     
