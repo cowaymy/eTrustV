@@ -164,7 +164,7 @@ function createCtosGrid(){
 	//그리드 속성 설정
     var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            pageRowCount        : 9,           //한 화면에 출력되는 행 개수 20(기본값:20)            
             editable            : false,            
             fixedColumnCount    : 1,            
             showStateColumn     : false,             
@@ -232,7 +232,7 @@ function createCtosDetailGrid(){
 	//그리드 속성 설정
     var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+            pageRowCount        : 9,           //한 화면에 출력되는 행 개수 20(기본값:20)            
             editable            : false,            
             fixedColumnCount    : 1,            
             showStateColumn     : false,             
