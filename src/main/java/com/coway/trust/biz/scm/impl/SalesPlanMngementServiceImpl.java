@@ -214,7 +214,7 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		
 		params.put("crtUserId", sessionVO.getUserId());
 		// SCM0005M Insert
-		salesPlanMngementMapper.insertSalesPlanMstCdc(params);
+		//salesPlanMngementMapper.insertSalesPlanMstCdc(params);
 		
 		saveCnt++;
 		// SCM0006D Insert

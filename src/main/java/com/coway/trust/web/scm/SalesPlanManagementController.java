@@ -394,14 +394,30 @@ public class SalesPlanManagementController {
 	public ResponseEntity<ReturnMessage> insertSalesPlanMstCdc(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 		
 		LOGGER.debug("insertSalesPlanMstCdc_params : {}", params);
-		
-		
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		int tmpCnt = 0;
 		int totCnt = 0;
 		
-		tmpCnt = salesPlanMngementService.insertSalesPlanMstCdc(params, sessionVO);
-		totCnt = totCnt + tmpCnt;
+        List<EgovMap> planByCdcInfo = salesPlanMngementService.selectPlanIdByCdc(params);
+		
+        // SCMSupplyPlanMaster(SCM0005M) Creation Check.
+		if (!planByCdcInfo.isEmpty())
+		{
+		  String selectPlanIdSeq = String.valueOf(planByCdcInfo.get(0).get("planId"));
+						
+		  ((Map<String, Object>) params).put("salesPlanMstCdcSeq", selectPlanIdSeq);
+			
+		  LOGGER.debug("supplyPlanMst_Params : {}", params.toString());
+		
+		  //SCMSupplyPlanDetail Insert (SCM0006D)
+		  tmpCnt = salesPlanMngementService.insertSalesPlanMstCdc(params, sessionVO);
+		  totCnt = totCnt + tmpCnt;
+		}
+		else
+		{
+		   Precondition.checkNotNull(params.get("planId"),
+			  messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "planId" }));	
+		}
 		
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
