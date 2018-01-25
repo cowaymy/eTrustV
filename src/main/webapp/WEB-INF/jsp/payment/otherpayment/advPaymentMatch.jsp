@@ -152,7 +152,8 @@ function fn_mapping(){
 					$("#fTrnscId").val(fTrnscId);
 					$("#preKeyInAmt").val(keyInAmount);
 					$("#bankStmtAmt").val(stmtAmount);
-					$("#variance").val(keyInAmount-stmtAmount);
+					//$("#variance").val(keyInAmount-stmtAmount);
+					$("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
 					$("#accCode").val('');
 					$("#remark").val('');
 				}
@@ -162,7 +163,8 @@ function fn_mapping(){
 			$("#fTrnscId").val(fTrnscId);
 			$("#preKeyInAmt").val(keyInAmount);
 			$("#bankStmtAmt").val(stmtAmount);
-			$("#variance").val(keyInAmount-stmtAmount);
+			//$("#variance").val(keyInAmount-stmtAmount);
+			$("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
 			$("#accCode").val('');
 			$("#remark").val('');
 
