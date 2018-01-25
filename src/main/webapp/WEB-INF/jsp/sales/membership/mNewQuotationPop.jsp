@@ -50,7 +50,7 @@ function fn_doConfirm (){
     Common.ajax("GET", "/sales/membership/selectMembershipFreeConF", $("#sForm").serialize(), function(result) {
          console.log( result);
          
-         if(result.length == 0)  {
+         if(result == null)  {
             
              $("#cbt").attr("style","display:inline");
              $("#ORD_NO").attr("style","display:inline");
