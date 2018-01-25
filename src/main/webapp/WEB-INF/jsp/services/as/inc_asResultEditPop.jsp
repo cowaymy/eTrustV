@@ -216,13 +216,25 @@ function  fn_setSVC0004dInfo(result){
     //$("#ddlCTCodeText").val( result[0].c12); 
     //$("#ddlCTCode").val( result[0].c11);
     
-    
+    /*
+    c11: 35530
+    c12: "CT100528"
+    asBrnchId: 77
+    c5: "DSC-16"
+    */
+
+    /*
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     $("#ddlCTCode").val(selectedItems[0].item.asMemId);
     $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
     $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
+    */
     
+    $("#ddlCTCode").val(result[0].c11);
+    $("#ddlDSCCode").val(result[0].asBrnchId);
+    $("#ddlCTCodeText").val(result[0].c12);
+    $("#ddlDSCCodeText").val(result[0].c5);
     
     $("#ddlWarehouse").val( result[0].asWhId); 
     $("#txtRemark").val( result[0].asResultRem); 
