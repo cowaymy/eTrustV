@@ -270,7 +270,7 @@ function fnSearchBtnList()
              , params
              , function(result) 
                {
-                  console.log("성공 fnSearchBtnList: " + result.selectOnTimeWeeklyStartPoint.length);
+                  //console.log("성공 fnSearchBtnList: " + result.selectOnTimeWeeklyStartPoint.length);
                   
                   if(result != null && result.selectOnTimeWeeklyStartPoint.length > 0)
                   {
