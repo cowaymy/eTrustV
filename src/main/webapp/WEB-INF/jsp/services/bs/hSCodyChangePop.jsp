@@ -16,12 +16,12 @@
 
     function createAUIGridCust(){
         var columnLayout = [ {
+        	width : 20,
             renderer : {
             type : "CheckBoxEditRenderer",
             showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
             editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
             checkValue : "1", // true, false 인 경우가 기본
-            width : 30,
             unCheckValue : "0",
          // 체크박스 Visible 함수
             checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
@@ -55,10 +55,6 @@
             headerText : "Customer",
             width : 120,
             visible:false
-        }, {   
-            dataField : "name",
-            headerText : "Customer",
-            width : 200
         }, {   
             dataField : "salesOrdId",
             headerText : "salesordid",
@@ -106,7 +102,11 @@
             headerText : "stusCodeId",
             visible : false,
             width : 130
-           }];
+         }, {   
+             dataField : "name",
+             headerText : "Customer",
+             width : 200
+         }];
         // 그리드 속성 설정
         var gridPros = {
             // 페이징 사용       
@@ -263,7 +263,7 @@
 
 
     function fn_getselectPopUpListAjax(){
-        Common.ajax("GET", "/services/bs/selectPopUpCdList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}' ,Department : '${department}'}, function(result) {
+        Common.ajax("GET", "/services/bs/selectPopUpCdList.do", {SaleOrdList : '${ordCdList}',BrnchCdList : '${brnchCdList}' ,DepartmentList : '${deptList}'}, function(result) {
             console.log("성공.");
             console.log("data : " + result);
             
@@ -341,7 +341,7 @@
 <h2>Cody List</h2>
 </aside><!-- title_line end -->
 
-<div class="border_box" style="height:400px"><!-- border_box start -->
+<div class="border_box" style="height:100% width: 40%"><!-- border_box start -->
 
     <input type="hidden" name="ManuaMyBSMonth"  id="ManuaMyBSMonth" value="${ManuaMyBSMonth}"/>
     
@@ -351,20 +351,20 @@
 </ul>
 
 <article class="grid_wrapCd"><!-- grid_wrap start -->
-<div id="grid_wrapCd" style="width: 100%; height: 334px; margin: 0 auto;"></div>
+<div id="grid_wrapCd" style="height: 100%; width: 100%; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </div><!-- border_box end -->
 
 </div>
 
-<div style="width:50%;">
+<div style="width:30%;">
 
 <aside class="title_line"><!-- title_line start -->
 <h2>HS Order List</h2>
 </aside><!-- title_line end -->
 
-<div class="border_box" style="height:400px; width: 550px"><!-- border_box start -->
+<div class="border_box" style="height:100%;"><!-- border_box start -->
 
 <ul class="right_btns">
 <!--     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
@@ -372,7 +372,7 @@
 </ul>
 
 <article class="grid_wrapCust"><!-- grid_wrap start -->
-      <div id="grid_wrapCust" style="width: 530px; height: 334px; margin: 0 auto;"></div>
+      <div id="grid_wrapCust" style="height: 100%; width: 100%; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
@@ -385,10 +385,6 @@
 
 </div>
 
-<div style="width:30%;">
-
-
-</div><!-- border_box end -->
 
 </div>
 </form>

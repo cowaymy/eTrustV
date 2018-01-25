@@ -126,6 +126,10 @@ public interface HsManualService {
 
 	EgovMap hSMgtResultViewResult(Map<String, Object> params);
 
+	List<EgovMap> assignDeptMemUp(Map<String, Object> params);
+
+	List<EgovMap> selectCMList(Map<String, Object> params);
+
 
 
 }

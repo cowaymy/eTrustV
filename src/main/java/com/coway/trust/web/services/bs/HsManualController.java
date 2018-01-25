@@ -100,10 +100,12 @@ public class HsManualController {
 		@RequestMapping(value = "/selecthSCodyChangePop.do")
 		public String selecthSCodyChangePop(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model ,SessionVO sessionVO) {
 
+			logger.debug("selecthSCodyChangePop params : {}", params);
+			
 			model.addAttribute("brnchCdList",  params.get("BrnchId"));
 			model.addAttribute("ordCdList",  params.get("CheckedItems"));
 			model.addAttribute("ManuaMyBSMonth",  params.get("ManuaMyBSMonth"));
-			model.addAttribute("department",  params.get("department"));
+			model.addAttribute("deptList",  params.get("deptList"));
 			return "services/bs/hSCodyChangePop";
 		}
 
@@ -147,15 +149,18 @@ public class HsManualController {
 			logger.debug(" selectPopUpList in  ");
 
 			if(null != params.get("SaleOrdList")){
-
     			String olist = (String)params.get("SaleOrdList");
-
     			String[] spl = olist.split(",");
-
     			params.put("saleOrdListSp", spl);
 			}
+			
+			if(null != params.get("DepartmentList")){
+				String deptList = (String)params.get("DepartmentList");
+				String[] spl = deptList.split(",");
+				params.put("deptListSpl", spl);
+			}
 			logger.debug("params1 : {}", params);
-
+			
 			//brnch to CodyList
 			List<EgovMap> resultList = hsManualService.getCdList_1(params);
 			//model.addAttribute("brnchCdList1", resultList);
@@ -1035,6 +1040,74 @@ public class HsManualController {
 		}
 		
 		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/assignDeptMemUp.do",method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> assignDeptMemUp(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws ParseException {
+		
+		logger.debug("assignDeptMemUp params : {}", params);
+		
+		if(null != params.get("deptList")){
+
+			String deptList = (String)params.get("deptList");
+
+			String[] spl = deptList.split(",");
+
+			params.put("deptListSpl", spl);
+		}
+		logger.debug("assignDeptMemUp params1 : {}", params);
+		
+		List<EgovMap>  assignDeptMemUpList = hsManualService.assignDeptMemUp(params);
+		model.addAttribute("assignDeptMemUpList", assignDeptMemUpList);
+		
+		return ResponseEntity.ok(assignDeptMemUpList);
+	}
+	
+	@RequestMapping(value = "/assignBrnchCMPop.do" )
+	public String assignBrnchCMPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		
+		logger.debug("assignBrnchCMPop params : {}", params);
+		
+		model.addAttribute("brnchCdList",  params.get("BrnchId"));
+		model.addAttribute("ordCdList",  params.get("CheckedItems"));
+		model.addAttribute("ManuaMyBSMonth",  params.get("ManuaMyBSMonth"));
+		model.addAttribute("deptList",  params.get("deptList"));
+		
+		return "services/bs/hsBrnchCMChangePop";
+	}
+	
+	/**
+	 * Services - HS  - Assign Cody Transfer - No 팝업 - CM 콤보박스 리스트
+	 *
+	 * @param params
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectBrnchCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBrnchCode(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		List<EgovMap>  cmbBrnchCodeList = hsManualService.selectBranchList(params);
+		model.addAttribute("cmbBrnchCodeList", cmbBrnchCodeList);
+
+		return ResponseEntity.ok(cmbBrnchCodeList);
+	}
+	
+	/**
+	 * Services - HS  - Assign Cody Transfer - No 팝업 - CM 콤보박스 리스트
+	 *
+	 * @param params
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/selectCMList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCMList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+		
+		List<EgovMap>  cmbCMList = hsManualService.selectCMList(params);
+		model.addAttribute("cmbCMList", cmbCMList);
+
+		return ResponseEntity.ok(cmbCMList);
 	}
 	
 }

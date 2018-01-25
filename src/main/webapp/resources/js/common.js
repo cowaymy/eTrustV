@@ -702,6 +702,44 @@ var Common = {
         }, okCallback, cancelCallback);
 
     },
+    
+    /**
+     * confirm 대체용. -> 버튼 이름 변경 가능
+     * 예) Common.confirm("save ??", function(){...}, function{...});
+     *
+     *  * 예2) DEFAULT_DELIMITER (var.jsp > DEFAULT_DELIMITER = " |!|" ) 로 구분 하여 첫번째는 title, 두번째는 message 처리.
+     * Common.confirm("title" + DEFAULT_DELIMITER + "message test~", function(){...}, function{...});
+     *
+     * @param message
+     * @param okCallback
+     * @param cancelCallback
+     */
+    confirmCustomizingButton: function (message, button1, button2, okCallback, cancelCallback) {
+
+        if(FormUtil.isEmpty(message)){
+            alert("message parameter  is empty !!!!!!");
+            return;
+        }
+
+        var msgArray = message.split(DEFAULT_DELIMITER);
+        var title = "Message";
+        var content = "";
+
+        if(msgArray.length > 1){
+            title = msgArray[0];
+            content = msgArray[1];
+        }else{
+            content = message;
+        }
+
+        Common.confirmCustomizingButtonBase({
+            title : title,
+            content : content,
+            button1 : button1,
+            button2 : button2
+        }, okCallback, cancelCallback);
+
+    },
 
     confirmById: function (message, okCallback, cancelCallback, confirmDivId) {
 
@@ -770,6 +808,93 @@ var Common = {
             + '<ul class="center_btns">'
             + '	<li><p class="btn_blue2" id="_confirmOk"><a href="javascript:void(0);">OK</a></p></li>'
             + '	<li><p class="btn_blue2" id="_confirmCancel"><a href="javascript:void(0);">Cancel</a></p></li>'
+            + '</ul>'
+            + '</section>'
+            + '</div>';
+
+
+        var $obj = $(msgHtml);
+
+        $("body").append($obj);
+
+        $("#_confirmOk").find('a').focus();
+
+        $obj.find('#_popClose').on('click', function () {
+            $obj.remove();
+        });
+
+        $obj.find('#_confirmOk').on('click', function () {
+            if (okCallback) {
+                okCallback();
+            }
+            
+            if(option.isManual){
+                console.log("this confirm is manual mode....");
+            }else{
+                $obj.remove();
+            }
+        });
+
+        $obj.find('#_confirmCancel').on('click', function () {
+            if (cancelCallback) {
+                cancelCallback();
+            }
+            $obj.remove();
+        });
+
+        // // Define the Dialog and its properties.
+        // $("#_popup_wrap_confirm").dialog({
+        //     resizable: false,
+        //     modal: true,
+        //     title: "Modal",
+        //     height: 250,
+        //     width: 400
+        // });
+    },
+    
+    
+    /**
+     * 공통 confirm BASE.... -> 버튼 이름 변경 가능
+     * @param option
+     *
+     *           예) var option = {
+                            title : title,                  // 헤더 제목
+                            content : content,      // 메세지
+                            isBig : true                // 창 크기 : default = false
+                        };
+     *
+     * @param okCallback
+     * @param cancelCallback
+     */
+    confirmCustomizingButtonBase : function (_options, okCallback, cancelCallback) {
+
+        var option = {
+            title : "Message",
+            isBig : false,
+            isManual : false,
+            confirmDivId : "_popup_wrap_confirm",
+            button1 : "OK",
+            button2 : "Cancel"
+        };
+
+        option = $.extend(option, _options);
+
+        var bigClass = "";
+
+        if(option.isBig){
+            bigClass = "msg_big";
+        }
+
+        var msgHtml = '<div id="' + option.confirmDivId + '"  confirm="Y" class="popup_wrap msg_box ' + bigClass + '">'
+            + '	<header class="pop_header">'
+            + '<h1>' + option.title + '</h1>'
+            + '<p class="pop_close" id="_popClose"><a href="javascript:void(0);">close</a></p>'
+            + '</header>'
+            + '<section class="pop_body">'
+            + '<p class="msg_txt">' + option.content + '</p>'
+            + '<ul class="center_btns">'
+            + '	<li><p class="btn_blue2" id="_confirmOk"><a href="javascript:void(0);">' + option.button1 + '</a></p></li>'
+            + '	<li><p class="btn_blue2" id="_confirmCancel"><a href="javascript:void(0);">' + option.button2 + '</a></p></li>'
             + '</ul>'
             + '</section>'
             + '</div>';

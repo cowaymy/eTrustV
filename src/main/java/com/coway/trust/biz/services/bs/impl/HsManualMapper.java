@@ -111,6 +111,8 @@ public interface HsManualMapper {
 	List<EgovMap> selectOrderActiveFilter(Map<String, Object> params);
 
 	void updateAssignCody(Map<String, Object> updateMap);
+	
+	void updateAssignCody90D(Map<String, Object> updateMap);
 
 	void updateHsSVC0006D(Map<String, Object> sal0090);
 
@@ -233,6 +235,10 @@ public interface HsManualMapper {
 	List<EgovMap> hSMgtResultViewResultFilter(Map<String, Object> params);
 
 	EgovMap hSMgtResultViewResult(Map<String, Object> params);
+
+	List<EgovMap> assignDeptMemUp(Map<String, Object> params);
+
+	List<EgovMap> selectCMList(Map<String, Object> params);
 		
 
 }

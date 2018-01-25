@@ -26,7 +26,6 @@
         <when test="userType == 2">
 	        SELECT s005m.brnch_id AS CODE_ID
 	                , s005m.code || '-' || s005m.name AS CODE_NAME
-	                , S005M.CODE AS CODE_ORDER
 	            from SYS0005M s005m
 	                    ,SYS0013M s0013m
 	            where s005m.type_id = s0013m.code_id                    
@@ -59,27 +58,30 @@
         </when>
         <when test="userType == 4 or userType == 6 ">
                 SELECT s005m.brnch_id AS code_id,
-                       s005m.code || '-' || s005m.NAME AS code_name,
-                       S005M.CODE AS CODE_ORDER
+                       s005m.code || '-' || s005m.NAME AS code_name
                   FROM sys0005m s005m, sys0013m s0013m
                  WHERE s005m.type_id = s0013m.code_id AND s005m.type_id IN (42)
                 UNION ALL
                 SELECT s005m.brnch_id AS code_id,
-                       s005m.code || '-' || s005m.NAME AS code_name, 
-                       S005M.CODE AS CODE_ORDER
+                       s005m.code || '-' || s005m.NAME AS code_name
                   FROM sys0005m s005m, sys0013m s0013m
                  WHERE s005m.type_id = s0013m.code_id AND s005m.code = 'DSC-28'            
         </when>
         <when test="userType == 3">
 				SELECT S005M.BRNCH_ID AS CODE_ID,
-				           S005M.CODE || '-' || S005M.NAME AS CODE_NAME, 
-				           S005M.CODE AS CODE_ORDER
+				           S005M.CODE || '-' || S005M.NAME AS CODE_NAME
 				  FROM SYS0005M S005M, SYS0013M S0013M
 				 WHERE S005M.TYPE_ID = S0013M.CODE_ID AND S005M.CODE = 'DSC-28'        
         </when>
+        <otherwise>
+	        SELECT S005M.BRNCH_ID AS CODE_ID
+        			 , S005M.CODE || '-' || S005M.NAME AS CODE_NAME
+			FROM SYS0005M S005M
+			WHERE S005M.TYPE_ID IN (42)
+        </otherwise>
     </choose>        
     ) PROJECT
-    ORDER BY PROJECT.CODE_ORDER ASC
+    ORDER BY PROJECT.CODE_NAME ASC
          
           </select>
 
@@ -202,35 +204,6 @@
                 SELECT ROWNUM AS rnum ,
                            a.*
                   FROM (
-                SELECT DISTINCT b.dept_code,b.mem_id,
-                       d.mem_code AS cody_id,
-                       d.name AS cody_name,
-                       d.stus
-                  FROM sys0005m a,
-                       org0005d b,
-                       sys0064m c,
-                       org0001d d,
-                       sys0038m extent2,
-                       sal0023d e,
-                       sal0001d f,
-                       sal0045d g
-                  WHERE a.brnch_id = d.brnch
-                    AND c.cody_brnch_code = a.code
-                    AND c.cody_mangr_user_id = b.dept_code
-                    AND b.mem_id = d.mem_id
-                    AND e.area_id = c.area_id
-                    AND f.cust_id = e.cust_id
-                    AND f.sales_ord_id = g.sales_ord_id
-                    AND e.cust_add_id = g.add_id
-                    AND d.stus = '1'
-                    AND d.mem_type = '2'
-                    AND b.mem_lvl = '4'
-                    AND f.sales_ord_no IN (#{SaleOrdList})
-                    ) a
-              union all
-SELECT ROWNUM AS rnum ,
-                           a.*
-                  FROM (
                 SELECT DISTINCT b.dept_code, 
                        b.mem_id,
                        d.mem_code AS cody_id,
@@ -245,9 +218,14 @@ SELECT ROWNUM AS rnum ,
                     AND d.stus = '1'
                     AND d.mem_type = '2'
                     AND b.mem_lvl = '4'
-                    AND b.dept_code =#{Department}
+                    <if test="deptListSpl != null and deptListSpl != ''">
+			            AND b.dept_code IN
+			           <foreach item="item" collection="deptListSpl" index="index" open="(" separator="," close=")">
+			            #{item}
+			           </foreach>
+			        </if>
                     ) a      
-                    
+                 ORDER BY DEPT_CODE ASC, CODY_ID ASC
           </select>
 
 
@@ -1312,6 +1290,15 @@ SELECT ROWNUM AS rnum ,
                                UPD_DT =SYSDATE
                            WHERE SCHDUL_ID =#{schdulId}
      </insert>
+     
+     <update id="updateAssignCody90D" parameterType="Map" >
+                       UPDATE SAL0090D
+						SET SRV_CODY_ID = #{codyId},
+						   SRV_UPD_USER_ID = #{updator} ,
+						   SRV_UPD_DT = SYSDATE
+						WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SVC0008D
+						                                    WHERE SCHDUL_ID = #{schdulId})
+     </update>
 
 
         <select id="getNextSchdulId"  resultType="int">
@@ -3633,6 +3620,31 @@ SELECT ROWNUM AS rnum ,
                         ]]>
                             </select>
                             
-                            
+
+       <select id="assignDeptMemUp" parameterType="Map" resultType="egovMap">
+		SELECT MEM_ID, MEM_UP_ID, DEPT_CODE, BRNCH_ID 
+		FROM ORG0005D
+		<if test="deptList != null and deptList != ''">
+            WHERE DEPT_CODE IN
+           <foreach item="item" collection="deptListSpl" index="index" open="(" separator="," close=")">
+            #{item}
+           </foreach>
+        </if>
+		AND MEM_LVL = '3'
+       </select>
+
+
+    <select id="selectCMList" parameterType="Map" resultType="egovMap">
+    SELECT A.DEPT_CODE AS CODE_ID, A.DEPT_CODE || '-' || B.NAME AS CODE_NAME
+	FROM ORG0005D A, ORG0001D B, SYS0005M C
+	WHERE A.MEM_ID   = B.MEM_ID
+	AND A.BRNCH_ID   = C.BRNCH_ID
+	AND A.DEPT_CODE IS NOT NULL
+	AND B.MEM_TYPE   = 2
+	AND A.MEM_LVL    = '3'
+	AND A.BRNCH_ID   = #{groupCode}
+	AND B.STUS       = '1'
+	ORDER BY b.MEM_CODE
+    </select>
                                                                 
 </mapper>

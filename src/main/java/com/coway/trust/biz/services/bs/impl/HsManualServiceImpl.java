@@ -981,9 +981,15 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 			for (int i = 0; i < updateItemList.size(); i++) {
 				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
+				logger.debug("updateMap : {}"+updateMap);
 				hsManualMapper.updateAssignCody(updateMap) ;
+				hsManualMapper.updateAssignCody90D(updateMap) ;
 
-				rtnValue += "Cody Transfer for HS Order ‘" + updateMap.get("no") +"'" + " from " + "'" + updateMap.get("oldCodyCd") +"'"+ " to " + "'" +updateMap.get("codyCd")  + "'"  + "\r\n";
+				if (i != 0) {
+					rtnValue += "<br>";
+				}
+				
+				rtnValue += "* Cody Transfer for HS Order ‘" + updateMap.get("no") +"'" + "<br>from " + "'" + updateMap.get("oldCodyCd") +"'"+ " to " + "'" +updateMap.get("codyCd")  + "'"  + "\r\n";
 				rtnValue = rtnValue.replace("\n", line);
 			}
 		}
@@ -1678,6 +1684,16 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	public EgovMap hSMgtResultViewResult(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return hsManualMapper.hSMgtResultViewResult(params);
+	}
+
+	@Override
+	public List<EgovMap> assignDeptMemUp(Map<String, Object> params) {
+		return hsManualMapper.assignDeptMemUp(params);
+	}
+
+	@Override
+	public List<EgovMap> selectCMList(Map<String, Object> params) {
+		return hsManualMapper.selectCMList(params);
 	}
 	
 	
