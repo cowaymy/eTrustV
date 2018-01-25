@@ -209,8 +209,6 @@ function fnComplexChartDraw(chartData)
 // search
 function fnSearchBtnList()
 {
-   console.log( "Year: " + $("#scmYearCbBox").val() );
-
    if ($("#scmYearCbBox").val().length < 1)
    {
      Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
