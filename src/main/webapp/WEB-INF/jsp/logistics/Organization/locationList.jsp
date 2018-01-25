@@ -68,7 +68,7 @@ var columnLayout = [{dataField: "locid",headerText :"<spring:message code='log.h
 							{dataField: "locbranch1",headerText :"<spring:message code='log.head.loc_branch'/>"      ,width:100   ,height:30 , visible:false},                          
 							{dataField: "locbranch2",headerText :"<spring:message code='log.head.loc_branch'/>"      ,width:100   ,height:30 , visible:false},                          
 							{dataField: "locbranch3",headerText :"<spring:message code='log.head.loc_branch'/>"      ,width:100   ,height:30 , visible:false},                          
-							{dataField: "whlocgb",headerText :"<spring:message code='log.head.locationtype'/>"    ,width:100   ,height:30 , visible:false},                         
+							{dataField: "whlocgb",headerText :"<spring:message code='log.head.locationtype'/>"    ,width:100   ,height:30 , visible:false},
 							{dataField: "whlocgbnm",headerText :"<spring:message code='log.head.locationtype'/>"      ,width:   "15%"    ,height:30 , visible:true},                
 							{dataField: "serialftchk",headerText :"<spring:message code='log.head.serialcheck'/>"      ,width:100   ,height:30 , visible:false},                        
 							{dataField: "serialptchk",headerText :"<spring:message code='log.head.serialcheck'/>"      ,width:100   ,height:30 , visible:false},                        
@@ -324,7 +324,8 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
         	$("#slplant").prop("disabled" , false);
         }else if (AUIGrid.getCellValue(myGridID ,rowid,'whlocgb') == '02'){
             $("#mcdccode").prop("disabled" , false);
-            $("#mrdccode").prop("disabled" , true);
+            //$("#mrdccode").prop("disabled" , true);
+            $("#mrdccode").prop("disabled" , false);
             $("#plant").prop("disabled" , false);
             $("#slplant").prop("disabled" , true);
         }else{
