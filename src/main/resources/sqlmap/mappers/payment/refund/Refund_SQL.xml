@@ -52,8 +52,8 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                C.NAME                                   CUST_NAME,
                TRUNC(PD.PAY_ITM_AMT, 2)                 AMT,
                CD.CODE_NAME                             APP_TYPE,
-               <!-- CR.SO_REQ_UPD_DT                         CANCL_DT, -->
-               CR.SO_REQ_ACTUAL_CANCL_DT                CANCL_DT,
+               CR.SO_REQ_UPD_DT                         CANCL_DT,
+               <!-- CR.SO_REQ_ACTUAL_CANCL_DT                CANCL_DT, -->
                CR.SO_REQ_RESN_ID                        CANCL_MODE_CODE,
                PDD.CODE_ID                               PAY_MODE_CODE,
                PDD.CODE_NAME                            PAY_MODE,

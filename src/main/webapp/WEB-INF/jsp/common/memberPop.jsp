@@ -99,6 +99,14 @@
 	    });
 	});
 	
+	$(function(){
+        $('#clearBtn').click(function() {
+        	$("#searchMemberFormPop").each(function() {
+                this.reset();
+            });
+        });
+    });
+	
 </script>
 </head>
 <body>
@@ -117,7 +125,7 @@
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="searchBtn" href="#"><span class="search"></span>SEARCH</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>CLEAR</a></p></li>
+    <li><p class="btn_blue"><a id="clearBtn" href="javascript:void(0);"><span class="clear"></span>CLEAR</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
