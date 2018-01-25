@@ -173,6 +173,7 @@
 <!-- PO Issue --> 
 
 <select id="selectScmPrePoItemView" parameterType="Map" resultType="egovMap">
+
   SELECT   
          SCM08M.STOCK_CODE
         ,SYS26M.STK_DESC  STOCK_NAME
@@ -182,9 +183,9 @@
         ,SCM17M.MOQ   
         ,SYS26M.STK_CTGRY_ID
         
-        ,SCM11D.PRE_YEAR
-        ,SCM11D.PRE_MONTH
-        ,SCM11D.PRE_WEEK_TH
+        ,#{scmYearCbBox} PRE_YEAR
+        ,(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN='1') PRE_MONTH
+        ,#{scmPeriodCbBox} PRE_WEEK_TH
         ,SCM17M.CDC_CODE PRE_CDC
         ,SYS26M.STK_TYPE_ID
    FROM SCM0008M SCM08M
