@@ -540,8 +540,8 @@
        Limit1.HSPTLZ  HSPTLZ,
        Limit1.RELIGION,
        Limit1.CNFM_DT,
-       Limit1.MAIN_DEPT,
-       Limit1.SUB_DEPT,
+       (select CODE_DESC DEPT_NAME from sys0013M where code =  Limit1.MAIN_DEPT) MAIN_DEPT,
+      (select CODE_DESC SUB_DEPT from sys0013M where code =  Limit1.SUB_DEPT) SUB_DEPT,
       Limit1.BANK_NAME,
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course
   FROM (
@@ -3300,8 +3300,8 @@ SELECT Limit1.MEM_ID MEM_ID  ,
        Limit1.RANK RANK  ,
        Limit1.C60 C60  ,
        Limit1.HSPTLZ  HSPTLZ,
-       Limit1.MAIN_DEPT,
-       Limit1.SUB_DEPT,
+       (select CODE_DESC DEPT_NAME from sys0013M where code =  Limit1.MAIN_DEPT) MAIN_DEPT,
+      (select CODE_DESC SUB_DEPT from sys0013M where code =  Limit1.SUB_DEPT) SUB_DEPT,
        (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course
   FROM (
 SELECT Extent1.APLCTN_ID MEM_ID  ,

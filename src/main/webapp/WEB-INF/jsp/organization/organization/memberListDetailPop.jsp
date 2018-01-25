@@ -859,10 +859,21 @@ function fn_winClose(){
     <td>
     <span><span><c:out value="${ApplicantConfirm.cnfmDt}"/></span></span>
     </td>
+      <th scope="row">Main Department</th>
+    <td>
+    <span><span><c:out value="${memberView.mainDept}"/></span></span>
+    </td>
+     <th scope="row">Sub Department</th>
+    <td>
+    <span><span><c:out value="${memberView.subDept}"/></span></span>
+    </td>
+    
+    
     <th scope="row" class="hideContent">Cody PA Expired</th>
     <td class="hideContent">
     <span><span><c:out value="${PAExpired.agExprDt}"/></span></span>
     </td>
+    
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1196,7 +1207,7 @@ function fn_winClose(){
     <th scope="row">Remark</th>
     <td colspan="3">
     <textarea cols="20" rows="5" id="remark1" name="remark1" ></textarea>
-    </td>
+ 
 </tr>
 </tbody>
 </table><!-- table end -->

@@ -318,6 +318,7 @@ public class MemberListController {
 		logger.debug("selectDocSubmission : {}", selectDocSubmission);
 		return ResponseEntity.ok(selectDocSubmission);
 	}
+	
 
 	/**
 	 * Search rule book management list
