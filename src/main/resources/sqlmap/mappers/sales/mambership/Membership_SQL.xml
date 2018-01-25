@@ -690,18 +690,18 @@
            ]]>
     </select>
     
-      
+              <!--    <![CDATA[
+   SELECT S.ORD_ID   ,
+                   S.ORD_NO   
+              FROM ( SELECT V.ORD_ID   ,
+                            V.ORD_NO  ,
+                            V.ORD_STUS_CODE  
+                     FROM SAL1006V V ) S
+             WHERE  ( S.ORD_NO = #{ORD_NO} )
+                      AND ( 'COM' = S.ORD_STUS_CODE ) AND ROWNUM <= 1
+     ]]> -->
     <select id="selectMembershipFreeConF" parameterType="Map" resultType="egovMap">
-         <![CDATA[
-			    SELECT S.ORD_ID   ,
-			       S.ORD_NO   
-			  FROM ( SELECT V.ORD_ID   ,
-			                V.ORD_NO  ,
-			                V.ORD_STUS_CODE  
-			         FROM SAL1006V V ) S
-			 WHERE  ( S.ORD_NO = #{ORD_NO} )
-			          AND ( 'COM' = S.ORD_STUS_CODE ) AND ROWNUM <= 1
-     ]]>
+         select * from sal0001d where stus_code_id in('1', '4')
     </select>
     
     <select id="selectMembershipFree_srvconfig" parameterType="Map" resultType="egovMap">
