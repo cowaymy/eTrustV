@@ -1455,12 +1455,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		logger.debug("installResult : {}", installResult);
 
     		//update salesorderM status(SAL0001D)
-    		if (callTypeId.equals("258")){
-
-    		}else{
+//    		if (callTypeId.equals("258")){
+//
+//    		}else{
     			salesOrderM.put("salesOrdId", CommonUtils.nvl( params.get("hidSalesOrderId")).toString());
     			salesOrderM.put("statusCodeId", CommonUtils.nvl( params.get("installStatus")).toString().equals("4") ? 4 : 1 );
-    		}
+//    		}
 
     		///////////////////////add by jgkim     get addr  //////////////////
     		// PAY0033D

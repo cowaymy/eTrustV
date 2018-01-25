@@ -338,13 +338,119 @@ public class InstallationResultListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/addinstallationResultProductDetailPop.do")
-	public String installationResultProductExchangeDetail(@RequestParam Map<String, Object> params, ModelMap mode ,SessionVO sessionVOl) throws Exception {
+	public String installationResultProductExchangeDetail(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVOl) throws Exception {
 		logger.debug("params : {}",params);
 		EgovMap viewDetail = installationResultListService.selectViewDetail(params);
 		//Order Detail Tab
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params ,sessionVOl);
-		mode.addAttribute("viewDetail", viewDetail);
-		mode.addAttribute("orderDetail", orderDetail);
+		model.addAttribute("viewDetail", viewDetail);
+		model.addAttribute("orderDetail", orderDetail);
+		
+		// 180125_추가
+		List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
+		params.put("ststusCodeId", 1);
+		params.put("reasonTypeId", 172);
+		List<EgovMap> failReason = installationResultListService.selectFailReason(params);
+		EgovMap callType = installationResultListService.selectCallType(params);
+		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
+		EgovMap stock = installationResultListService.getStockInCTIDByInstallEntryIDForInstallationView(installResult);
+		EgovMap sirimLoc = installationResultListService.getSirimLocByInstallEntryID(installResult);
+
+		EgovMap orderInfo = null;
+		if(params.get("codeId").toString().equals("258")){
+			orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
+		}else{
+			orderInfo = installationResultListService.getOrderInfo(params);
+		}
+
+		if(null == orderInfo){
+			orderInfo = new EgovMap();
+		}
+		String promotionId = "";
+		if(CommonUtils.nvl(params.get("codeId")).toString().equals("258")){
+			promotionId = CommonUtils.nvl(orderInfo.get("c8"));
+		}else{
+			promotionId = CommonUtils.nvl(orderInfo.get("c2"));
+		}
+
+		if( promotionId.equals("")){
+			promotionId="0";
+		}
+
+		logger.debug("promotionId : {}", promotionId);
+
+		EgovMap promotionView = new EgovMap();
+
+		List<EgovMap> CheckCurrentPromo  = installationResultListService.checkCurrentPromoIsSwapPromoIDByPromoID(Integer.parseInt( promotionId));
+		if(CheckCurrentPromo.size() > 0){
+			promotionView  = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(Integer.parseInt(promotionId), Integer.parseInt(installResult.get("installStkId").toString()),true);
+		}else{
+			if(promotionId != "0"){
+				 promotionView  = installationResultListService.getAssignPromoIDByCurrentPromoIDAndProductID(Integer.parseInt(promotionId), Integer.parseInt(installResult.get("installStkId").toString()),false);
+
+			}else{
+
+
+				if(null == promotionView){
+					promotionView = new EgovMap();
+				}
+
+				promotionView.put("promoId", "0");
+				promotionView.put("promoPrice", CommonUtils.nvl(params.get("codeId")).toString() == "258" ? CommonUtils.nvl(orderInfo.get("c15")) : CommonUtils.nvl(orderInfo.get("c5")));
+				promotionView.put("promoPV", CommonUtils.nvl(params.get("codeId")).toString() == "258" ?  CommonUtils.nvl(orderInfo.get("c16")) : CommonUtils.nvl(orderInfo.get("c6")));
+				promotionView.put("swapPromoId","0");
+				promotionView.put("swapPromoPV","0");
+				promotionView.put("swapPormoPrice","0");
+			}
+		}
+		
+		logger.debug("paramsqqqq {}",params);
+		Object custId =( orderInfo == null ? installResult.get("custId") :  orderInfo.get("custId") );
+		params.put("custId", custId);
+		EgovMap customerInfo = installationResultListService.getcustomerInfo(params);
+		//EgovMap customerAddress = installationResultListService.getCustomerAddressInfo(customerInfo);
+		EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
+		EgovMap installation = installationResultListService.getInstallationBySalesOrderID(installResult);
+		EgovMap installationContract = installationResultListService.getInstallContactByContactID(installation);
+		EgovMap salseOrder = installationResultListService.getSalesOrderMBySalesOrderID(installResult);
+		EgovMap hpMember= installationResultListService.getMemberFullDetailsByMemberIDCode(salseOrder);
+
+		//if(params.get("codeId").toString().equals("258")){
+
+		//}
+
+
+		logger.debug("installResult : {}", installResult);
+		logger.debug("orderInfo : {}", orderInfo);
+		logger.debug("customerInfo : {}", customerInfo);
+		logger.debug("customerContractInfo : {}", customerContractInfo);
+		logger.debug("installation : {}", installation);
+		logger.debug("installationContract : {}", installationContract);
+		logger.debug("salseOrder : {}", salseOrder);
+		logger.debug("hpMember : {}", hpMember);
+		logger.debug("callType : {}", callType);
+		logger.debug("failReason : {}", failReason);
+		logger.debug("installStatus : {}",installStatus);
+		logger.debug("stock : {}",stock);
+		logger.debug("sirimLoc : {}",sirimLoc);
+		logger.debug("promotionView : {}",promotionView);
+		logger.debug("CheckCurrentPromo : {}",CheckCurrentPromo);
+		//logger.debug("customerAddress : {}", customerAddress);
+		model.addAttribute("installResult", installResult);
+		model.addAttribute("orderInfo", orderInfo);
+		model.addAttribute("customerInfo", customerInfo);
+		//model.addAttribute("customerAddress", customerAddress);
+		model.addAttribute("customerContractInfo", customerContractInfo);
+		model.addAttribute("installationContract", installationContract);
+		model.addAttribute("salseOrder", salseOrder);
+		model.addAttribute("hpMember", hpMember);
+		model.addAttribute("callType", callType);
+		model.addAttribute("failReason", failReason);
+		model.addAttribute("installStatus", installStatus);
+		model.addAttribute("stock", stock);
+		model.addAttribute("sirimLoc", sirimLoc);
+		model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
+		model.addAttribute("promotionView", promotionView);
 
 		// 호출될 화면
 		return "services/installation/addInstallationResultProductDetailPop";
@@ -422,7 +528,7 @@ public class InstallationResultListController {
 			}else{
 				if(Integer.parseInt(locInfo.get("availQty").toString())<1){
 					message.setMessage("Can't complete the Installation without available stock in the CT");
-			}else{    		
+				}else{    		
 	        	
 	        		if(resultCnt > 0){
 	        			message.setMessage("There is complete result exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");

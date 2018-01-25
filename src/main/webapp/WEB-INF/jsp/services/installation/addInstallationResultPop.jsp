@@ -742,11 +742,11 @@ var gridPros = {
 </tr>
 <tr>
     <th scope="row"><spring:message code='service.title.CTCode'/></th>
-    <td><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width:100%;" id="ctCode"  readonly="readonly" name="ctCode" />
+    <td colspan="3"><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width:100%;" id="ctCode"  readonly="readonly" name="ctCode" />
     <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
     <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
-    <th scope="row"><spring:message code='service.title.CTName'/></th>
-    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td>
+    <%-- <th scope="row"><spring:message code='service.title.CTName'/></th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td> --%>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -827,8 +827,8 @@ Name: HM MUHAMMAD IMRAN - ROADSHOW</textarea>
     <th scope="row"><spring:message code='service.title.FailedReason'/></th>
     <td>
         <select class="w100p" id="failReason" name="failReason">
+	        <option value="0">Failed Reason</option>
 	        <c:forEach var="list" items="${failReason }" varStatus="status">
-	            <option value="0">Failed Reason</option>
 	           <option value="${list.resnId}">${list.c1}</option>
 	        </c:forEach>
     </select>
