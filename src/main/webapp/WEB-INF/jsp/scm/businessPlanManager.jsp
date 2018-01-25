@@ -26,11 +26,6 @@ $(function()
 	  fnSelectStockTypeComboList('15');  	  
 });
 
-function fnCallInterface()
-{
-  $("#intfTypeCbBox option:eq(1)").prop("selected",true);
-}
-
 function fnSelectStockTypeComboList(codeId)
 {
     CommonCombo.make("scmStockType"
