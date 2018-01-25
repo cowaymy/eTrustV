@@ -450,7 +450,7 @@
 		                                                  AS result_Acceptance_Name,
 		                                               svc0001d.REF_REQST AS reqRefNo,
 		                                               svc0001d.as_type_id,
-		                                               sal0045d.instct
+		                                               DBMS_LOB.SUBSTR(CCR0007D.CALL_REM, 4000, 1) AS instct
 		                                          FROM sal0001d,
 		                                               sal0002d,
 		                                               sal0022d,
@@ -467,7 +467,9 @@
 		                                               svc0004d,
 		                                               org0001d,
 		                                               sys0005m,
-		                                               sys0026m
+		                                               sys0026m,
+                                                       CCR0006D,
+                                                       CCR0007D		                                               
 		                                         WHERE     svc0001d.as_mem_id = org0001d.mem_id
 		                                               AND sal0001d.sales_ord_id = sal0002d.sales_ord_id
 		                                               AND sal0001d.sales_ord_id = svc0001d.as_so_id
@@ -487,6 +489,8 @@
 		                                               AND svc0001d.as_id = svc0004d.as_entry_id(+)
 		                                               AND org0001d.brnch = sys0005m.brnch_id
 		                                               AND sal0002d.itm_stk_id = sys0026m.stk_id
+                                                     and svc0001d.AS_CALLLOG_ID = CCR0006D.CALL_ENTRY_ID
+                                                     and CCR0006D.CALL_ENTRY_ID = CCR0007D.CALL_ENTRY_ID  		                                               
 		                                               AND ORG0001D.MEM_CODE = #{userId}
 		                                               AND SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS (
 		                                                                                     LAST_DAY (
