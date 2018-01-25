@@ -74,7 +74,6 @@ public class SalesTrBookController {
 
 		logger.debug("param ===================>>  " + params);
 		String branch = sessionVO.getCode();
-		String close = "";
 			
 		if(CommonUtils.isEmpty(params.get("pgm"))){
 
@@ -93,7 +92,7 @@ public class SalesTrBookController {
 						
 						int tmp = Integer.parseInt(String.valueOf(stutus[i]));
 						if (36 == tmp) {
-							params.put("Close", close);
+							params.put("Close", "close");
 						}
 					}
 				}
