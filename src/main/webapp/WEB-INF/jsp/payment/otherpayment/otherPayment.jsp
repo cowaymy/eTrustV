@@ -101,6 +101,8 @@ $(document).ready(function(){
         selectedItem = event.item.id;
         isMapped = event.item.stus;
         rowId = event.rowIndex;
+
+		//TR Date 세팅
         var trDate = new Date(event.item.trnscDt);
         var dd = trDate.getDate();
         var mm = trDate.getMonth() + 1;
@@ -110,22 +112,39 @@ $(document).ready(function(){
             dd = "0" + dd;
         }
         if(mm < 10){
-            mm = "0" + mm
+            mm = "0" + mm;
         }
         
         trDate = dd + "/" + mm + "/" + yyyy;
+
+		//Current Date 세팅
+		var currDate = new Date();
+        var currDay = currDate.getDate();
+        var currMon = currDate.getMonth() + 1;
+        var currYear = currDate.getFullYear();
+        
+        if(currDay < 10) {
+            currDay = "0" + currDay;
+        }
+        if(currMon < 10){
+            currMon = "0" + currMon;
+        }
+        
+        currDate = currDay + "/" + currMon + "/" + currYear;
+
+
         if($("#payMode").val() == "105") {
         	$("#cash").find("#amount").val(event.item.crdit);
         	$("#trDateCash").val(trDate);
-            $("#keyInPayDateCash").val(trDate);
+            $("#keyInPayDateCash").val(currDate);
         } else if($("#payMode").val() == "106") {
         	$("#cheque").find("#amount").val(event.item.crdit);
         	$("#trDateCheque").val(trDate);
-            $("#keyInPayDateCheque").val(trDate);
+            $("#keyInPayDateCheque").val(currDate);
         } else if($("#payMode").val() == "108") {
         	$("#online").find("#amount").val(event.item.crdit);
         	$("#trDateOnline").val(trDate);
-            $("#keyInPayDateOnline").val(trDate);
+            $("#keyInPayDateOnline").val(currDate);
         }
     });
     
@@ -142,7 +161,7 @@ $(document).ready(function(){
      $("#searchBankType option[value='2728']").remove(); 
      
 	 $('#payMode').change(function() {
-		 
+
 		 //cash일때, online<div>감추고 Cash에 대한 Bank Acc불러옴
 		 if($('#payMode').val() == '105'){
 			 fn_setSearchPayType();
@@ -199,8 +218,7 @@ $(document).ready(function(){
              $("#searchBankType").append("<option value='2728'>JomPay</option>");
              $("#searchBankType").append("<option value='2730'>VA</option>");
              $("#searchBankType").append("<option value='2731'>Others</option>");
-        }
-		 
+        }		 
 	 });
 	 
 	
@@ -2814,6 +2832,8 @@ function fn_setSearchPayType() {
 		$("#searchPayType").val("ONL");
 	}
 }
+
+
 </script>
 <!-- content start -->
 
