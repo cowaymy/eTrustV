@@ -224,4 +224,8 @@ public interface PosMapper {
 	EgovMap chkUserIdByUserName(Map<String, Object> params);
 	
 	List<EgovMap> chkOldReqSerial(Map<String, Object> params);
+	
+	void insertPayT(Map<String, Object> params);
+	
+	int getSeqPay0240T();
 }

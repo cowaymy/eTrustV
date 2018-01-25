@@ -377,6 +377,12 @@ public class SalesConstants {
 	
 	public static final int POS_TRX_REVERSE_TYPE = 101;
 	public static final int POS_GL_RECEIPT_REVERSE_TYPE = 101;
+	
+	public static final int POS_PAY_ORDER_SEQ = 0;
+	public static final String POS_PAY_APP_TYPE = "POS";
+	public static final String POS_PAY_ROUTE = "WEB";
+	public static final String POS_PAY_KEY_IN_SCRN = "POS";
+	public static final int POS_PAY_LEDGER_TYPE = 6;
 	 
     //ROS CALL
 	public static final int ROS_CALLER_USER_ID = 0;  //ROSCallerUserID

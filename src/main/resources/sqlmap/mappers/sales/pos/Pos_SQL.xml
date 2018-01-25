@@ -559,7 +559,8 @@
 				    CRT_USER_ID, 
 				    CRT_DT,
 				    UPD_USER_ID,
-				    UPD_DT )
+				    UPD_DT,
+				    POS_CRT_DEPT_CODE )
   VALUES ( #{posMasterSeq},
            #{docNoPsn},
            #{posBillId},
@@ -601,7 +602,8 @@
            #{userId},
            SYSDATE,
            #{userId},
-           SYSDATE)
+           SYSDATE,
+           #{userDeptCode})
     </insert>
     
     <insert id="insertPosDetail" parameterType="Map">
@@ -1131,7 +1133,8 @@
                     CRT_USER_ID, 
                     CRT_DT,
                     UPD_USER_ID,
-                    UPD_DT )
+                    UPD_DT,
+                    POS_CRT_DEPT_CODE )
   VALUES ( #{posMasterSeq},
            #{docNoPsn},
            #{posBillId},
@@ -1165,7 +1168,8 @@
             #{userId},
            SYSDATE,
            #{userId},
-           SYSDATE)
+           SYSDATE,
+           #{userDeptCode})
     </insert>
     
     <select id="getOldDetailList"  parameterType="Map" resultType="egovMap"> 
@@ -3047,4 +3051,86 @@
 			WHERE
 			    POS_ID = #{rePosId}
      </select>
+     
+     <select id="getSeqPay0240T" resultType="java.lang.Integer">
+         SELECT PAY0240T_SEQ.NEXTVAL FROM DUAL
+     </select>
+     
+     <insert id="insertPayT" parameterType="Map">
+        <selectKey keyProperty="rsltSeq" resultType="java.lang.Integer" order="BEFORE" >
+            SELECT PAY0252T_SEQ.NEXTVAL FROM DUAL
+        </selectKey>
+        <!-- <selectKey keyProperty="groupSeq" resultType="java.lang.Integer" order="BEFORE">
+            SELECT PAY0240T_SEQ.NEXTVAL FROM DAUL 
+        </selectKey> -->
+        
+		INSERT INTO PAY0252T(
+										    RSLT_SEQ ,
+										    GROUP_SEQ ,
+										    PRCSS_SEQ ,
+										    TRX_ID ,
+										    PAY_ID ,
+										    PAY_ITM_ID ,
+										    PAY_ITM_MODE_ID ,
+										    TOT_AMT ,
+										    PAY_ITM_AMT ,
+										    BANK_CHG_AMT ,
+										    APP_TYPE ,
+										    CRC_STATE_MAPPING_ID ,
+										    CRC_STATE_MAPPING_STUS_ID ,
+										    CRC_STATE_MAPPING_USER_ID ,
+										    CRC_STATE_MAPPING_DT ,
+										    BANK_STATE_MAPPING_ID ,
+										    BANK_STATE_MAPPING_STUS_ID ,
+										    BANK_STATE_MAPPING_USER_ID ,
+										    BANK_STATE_MAPPING_DT ,
+										    REV_STUS_ID ,
+										    REV_USER_ID ,
+										    REV_DT ,
+										    PAY_ROUTE ,
+										    KEY_IN_SCRN ,
+										    LDGR_TYPE ,
+										    BANK_CHG_MAPPING_ID ,
+										    BANK_CHG_MAPPING_STUS_ID ,
+										    BANK_CHG_MAPPING_USER_ID ,
+										    BANK_CHG_MAPPING_DT ,
+										    FT_STUS_ID ,
+										    FT_USER_ID ,
+										    FT_DT 
+										)
+						      VALUES(
+    										#{rsltSeq},
+    										#{groupSeq},
+    										#{prcssSeq},
+    										#{trxId},
+    										#{payId},
+    										#{payItmId},
+    										#{payItmModeId},
+    										#{totAmt},
+    										#{payItmAmt},
+    										#{bankChgAmt},
+    										#{appType},
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										#{payRoute},
+    										#{payKeyinScrn},
+    										#{ldgrType},
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL,
+    										NULL
+										)
+     </insert>
 </mapper>

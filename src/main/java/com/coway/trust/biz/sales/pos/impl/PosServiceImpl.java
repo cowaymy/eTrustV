@@ -264,10 +264,16 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		posMap.put("posMtchId", 0);
 		posMap.put("posCustomerId", SalesConstants.POS_CUST_ID);  //107205
 		posMap.put("userId", params.get("userId"));
-		if(params.get("userDeptId") == null){
+		
+		/*if(params.get("userDeptId") == null){
 			params.put("userDeptId", 0);
 		}
-		posMap.put("userDeptId", params.get("userDeptId"));
+		*/
+		posMap.put("userDeptId", 0);
+		if(params.get("userDeptId") == null){
+			params.put("userDeptCode", " ");
+		}
+		posMap.put("userDeptCode", params.get("userDeptId"));
 		
 		//Status Setting
 		if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){   //2390   // POS-TYPE : POS SALES 
@@ -590,6 +596,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             	String trxNo = "";
             	String worNo = "";
             	int trxSeq = 0;
+            	int groupSeq = 0;
             	
             	Map<String, Object> trxMap = new HashMap<String, Object>();
             	
@@ -604,7 +611,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             	
             	//Seq
             	trxSeq = posMapper.getSeqPay0069D();
-            	
+            	groupSeq = posMapper.getSeqPay0240T();
             	
             	//9.  ********************************************************************************************************* PAY X
             	
@@ -826,6 +833,30 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             		posMapper.insertAccGlRoute(glrouteMap);
             		LOGGER.info("############### 12 -["+idx+"]. POS ACCGLROUTE INSERT END  ################");
             		
+            		
+            		/****** ADD LOGIC  : INSERT PAY0252T  // ADD BY LEE SH (2018/01/25) ****/
+                	Map<String, Object> payTMap = new HashMap<String, Object>();
+                	
+                	payTMap.put("groupSeq", groupSeq);
+                	payTMap.put("prcssSeq", idx); 
+                	payTMap.put("trxId", trxSeq);
+                	payTMap.put("payId", payMseq);
+                	payTMap.put("payItmId", posDSeq);
+                	payTMap.put("payItmModeId", paydMap.get("payMode"));
+                	payTMap.put("totAmt", payFormMap.get("hidTotPayAmt"));
+                	payTMap.put("payItmAmt",  paydMap.get("payAmt"));
+                	payTMap.put("bankChgAmt", paymMap.get("bankChgAmt"));
+                	payTMap.put("appType", SalesConstants.POS_PAY_APP_TYPE);  //POS
+                	payTMap.put("payRoute", SalesConstants.POS_PAY_ROUTE);
+                	payTMap.put("payKeyinScrn", SalesConstants.POS_PAY_KEY_IN_SCRN);
+                	payTMap.put("ldgrType", SalesConstants.POS_PAY_LEDGER_TYPE);
+                	
+                	LOGGER.info("############### 13 -["+idx+"]. POS PAYT INSERT START  ################");
+            		LOGGER.info("############### 13 -["+idx+"]. POS PAYT INSERT param : " + payTMap.toString());
+                	posMapper.insertPayT(payTMap);
+                	LOGGER.info("############### 13 -["+idx+"]. POS PAYT INSERT END  ################");
+
+                	
             	}//Loop End
             	//PAYMENT GRID 가져옴
             }
@@ -914,6 +945,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			int ordVoidSeq = 0;
 			int ordVoidSubSeq = 0;
 			int stkSeq = 0;
+			int groupSeq = 0;
 			
 			String giResult = "";
 			String reqResult = "";
@@ -963,10 +995,15 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			posMap.put("posCustomerId", SalesConstants.POS_CUST_ID);  //107205
 			posMap.put("userId", params.get("userId"));
 			
-			if(params.get("userDeptId") == null){
+			/*if(params.get("userDeptId") == null){
 				params.put("userDeptId", 0);
 			}
-			posMap.put("userDeptId", params.get("userDeptId"));
+			posMap.put("userDeptId", params.get("userDeptId"));*/
+			posMap.put("userDeptId", 0);
+			if(params.get("userDeptId") == null){
+				params.put("userDeptCode", " ");
+			}
+			posMap.put("userDeptCode", params.get("userDeptId"));
 			posMap.put("crAccId", params.get("rePosCrAccId"));
 			posMap.put("drAccId", params.get("rePosDrAccId"));
 			posMap.put("posReason", params.get("rePosResnId"));
@@ -1344,10 +1381,11 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       			EgovMap payInfoMap = null;
       			int payMseq = 0;
       			payInfoMap = posMapper.getPayInfoByPayId(params);
+      			Map<String, Object> rePaymMap = new HashMap<String, Object>();
       			
       			if(payInfoMap != null){
       			
-          			Map<String, Object> rePaymMap = new HashMap<String, Object>();
+          			
           			payMseq = posMapper.getSeqPay0064D();
           			rePaymMap.put("payMseq", payMseq);
           			rePaymMap.put("orNo", rorNo); //doc(82)
@@ -1398,6 +1436,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       			Map<String, Object> updPaymMap = new HashMap<String, Object>();
       			
       			int payXseq = posMapper.getSeqPay0069D();
+      			groupSeq = posMapper.getSeqPay0240T();  // add by lee (2018-01-25)
       			
       			if(getTrxInfoMap != null){
       				
@@ -1525,6 +1564,28 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       						posMapper.insertReAccGlRoute(accReMap);
       						LOGGER.info("############### 17 -["+idx+"] POS Reverse AccGLRoute INSERT END  ################");
       					}
+      					
+      					/****** ADD LOGIC  : INSERT PAY0252T  // ADD BY LEE SH (2018/01/25) ****/
+                    	Map<String, Object> payTMap = new HashMap<String, Object>();
+                    	
+                    	payTMap.put("groupSeq", groupSeq);
+                    	payTMap.put("prcssSeq", idx); 
+                    	payTMap.put("trxId", payXseq);  //TRX ID
+                    	payTMap.put("payId", payMseq);
+                    	payTMap.put("payItmId", payDseq);
+                    	payTMap.put("payItmModeId", paydMap.get("payMode"));
+                    	payTMap.put("totAmt", rePaymMap.get("totAmt"));  
+                    	payTMap.put("payItmAmt",  paydMap.get("payAmt"));
+                    	payTMap.put("bankChgAmt", rePaymMap.get("bankChgAmt"));  
+                    	payTMap.put("appType", SalesConstants.POS_PAY_APP_TYPE);  //POS
+                    	payTMap.put("payRoute", SalesConstants.POS_PAY_ROUTE);
+                    	payTMap.put("payKeyinScrn", SalesConstants.POS_PAY_KEY_IN_SCRN);
+                    	payTMap.put("ldgrType", SalesConstants.POS_PAY_LEDGER_TYPE);
+                    	
+                    	LOGGER.info("############### 17(2) -["+idx+"]. POS PAYT INSERT START  ################");
+                		LOGGER.info("############### 17(2) -["+idx+"]. POS PAYT INSERT param : " + payTMap.toString());
+                    	posMapper.insertPayT(payTMap);
+                    	LOGGER.info("############### 17(2) -["+idx+"]. POS PAYT INSERT END  ################");
 					}
       				//LOOP End
       				
