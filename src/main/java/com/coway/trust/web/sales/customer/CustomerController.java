@@ -516,8 +516,6 @@ public class CustomerController {
 		
 		getCustCareCntId = customerService.getCustCareCntIdSeq();
 		
-//		String getCustVano = "98 9920 " + String.Format("{0:0000 0000}", "50158");
-
 		LOGGER.info("##########getCustCareCntId :::::::   " + getCustCareCntId);
 		
 		Map<String, Object> insmap = new HashMap();
@@ -559,6 +557,27 @@ public class CustomerController {
 		insmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
 		insmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
 		
+//		98 9920 0068 7067
+		
+		String getCustVano = "";
+		int custseqLenghth = Integer.toString(tempCustSeq).length();
+		String tempCustSeqVa = String.valueOf(tempCustSeq);
+		LOGGER.info("##########custseqLenghth :::::::   " + custseqLenghth);
+		LOGGER.info("##########tempCustSeqVa :::::::   " + tempCustSeqVa);
+		if(custseqLenghth == 4){
+			getCustVano = "98 9920 0000" + tempCustSeqVa;
+		}else if(custseqLenghth == 5){
+			getCustVano = "98 9920 000" + tempCustSeqVa.substring(0,1) + " " + tempCustSeqVa.substring(1);
+		}else if(custseqLenghth == 6){
+			getCustVano = "98 9920 00" + tempCustSeqVa.substring(0,2) + " " + tempCustSeqVa.substring(2);
+		}else if(custseqLenghth == 7){
+			getCustVano = "98 9920 0" + tempCustSeqVa.substring(0,3) + " " + tempCustSeqVa.substring(3);
+		}else if(custseqLenghth == 8){
+			getCustVano = "98 9920 " + tempCustSeqVa.substring(0,4) + " " + tempCustSeqVa.substring(4);
+		}
+		
+		
+		ins29Dmap.put("getCustVano", getCustVano);
 		ins29Dmap.put("custSeq", tempCustSeq);
 		ins29Dmap.put("custName", vo.getCustName());
 		ins29Dmap.put("cmbNation", String.valueOf(vo.getCmbNation()) != null ? vo.getCmbNation() : 0);
