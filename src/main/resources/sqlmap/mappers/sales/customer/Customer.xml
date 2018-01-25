@@ -1382,7 +1382,7 @@
 						            #{cmbTypeId},
 						            TO_DATE(#{pasSportExpr}, 'DD/MM/YYYY'),
                                     TO_DATE(#{visaExpr}, 'DD/MM/YYYY'),
-						            NULL,
+						            #{getCustVano},
 						            #{cmbCorpTypeId},
 						            #{gstRgistNo},
 						            #{oldNric})
