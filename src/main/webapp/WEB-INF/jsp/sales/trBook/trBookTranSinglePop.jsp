@@ -3,12 +3,12 @@
 <script type="text/javaScript" language="javascript">
 $(document).ready(function(){      
 	
-	CommonCombo.make("branch", "/sales/trBook/selectBranch", "", "", {
+	CommonCombo.make("tranBranch", "/sales/trBook/selectBranch", "", "", {
         id: "code",
         name: "name"
     });
 	
-	CommonCombo.make("courier", "/sales/trBook/selectCourier", "", "", {
+	CommonCombo.make("tranCourier", "/sales/trBook/selectCourier", "", "", {
         id: "curierCode",
         name: "curierName"
     });
@@ -17,7 +17,7 @@ $(document).ready(function(){
 
 function fn_tranSingleSave(){
 	
-     if ($("#branch").val() == "" || $("#courier").val() == "")
+     if ($("#tranBranch").val() == "" || $("#tranCourier").val() == "")
      {
     	 $("#msg").html("* Some required fields are empty.");
     	 $("#msg").attr("style", "color:red");
@@ -105,14 +105,14 @@ function fn_tranSingleSave(){
 <tr>
 	<th scope="row"><span class="must">*</span>Transfer To</th>
     <td>
-        <select class=" w100p"  id="branch" name="branch">
+        <select class=" w100p"  id="tranBranch" name="branch">
         </select>
     </td>
 </tr>
 <tr>
 	<th scope="row"><span class="must">*</span>Courier</th>
     <td>
-        <select class=" w100p"  id="courier" name="courier">
+        <select class=" w100p"  id="tranCourier" name="courier">
         </select>
     </td>
 </tr>

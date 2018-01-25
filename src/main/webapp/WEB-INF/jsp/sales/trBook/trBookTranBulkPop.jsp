@@ -16,7 +16,7 @@ $(document).ready(function(){
             name: "name"
         });
         
-        CommonCombo.make("courier", "/sales/trBook/selectCourier", "", "", {
+        CommonCombo.make("tBulkCourier", "/sales/trBook/selectCourier", "", "", {
             id: "curierCode",
             name: "curierName"
         });
@@ -164,7 +164,7 @@ function fn_selectTranListAjax() {
 
 function fn_tranBulkSave(){
     
-     if ($("#branchFrom").val() == "" ||$("#branchTo").val() == "" || $("#courier").val() == "")
+     if ($("#branchFrom").val() == "" ||$("#branchTo").val() == "" || $("#tBulkCourier").val() == "")
      {
     	 Common.alert("Required Field Empty" + DEFAULT_DELIMITER + "Some required fields are empty.");
          return false;
@@ -260,7 +260,7 @@ function fn_tranBulkSave(){
 <tr>
     <th scope="row"><span class="must">*</span>Courier</th>
     <td>
-        <select class="w100p" id="courier" name="courier">
+        <select class="w100p" id="tBulkCourier" name="courier">
         </select>
     </td>
 </tr>

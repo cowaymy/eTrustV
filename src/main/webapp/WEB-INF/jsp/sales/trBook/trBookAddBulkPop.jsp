@@ -3,7 +3,7 @@
 <script type="text/javaScript" language="javascript">
 $(document).ready(function(){      
     
-    CommonCombo.make("branch", "/sales/trBook/selectBranch", "", "${branch}", {
+    CommonCombo.make("bulkBranch", "/sales/trBook/selectBranch", "", "${branch}", {
         id: "brnchId",
         name: "name"
     });
@@ -162,7 +162,7 @@ function validRequiredField_Save_Add()
     var valid = true;
     var Message = "";
 
-    if ($("#branch").val() == "")
+    if ($("#bulkBranch").val() == "")
     {
         valid = false;
         Message += "<spring:message code="sal.alert.msg.selectBranch" /><br />";
@@ -307,7 +307,7 @@ function fn_save(){
 <tr>
 	<th scope="row"><spring:message code="sal.text.branch" /></th>
 	<td>
-		<select class=" w100p"  id="branch" name="branch">
+		<select class=" w100p"  id="bulkBranch" name="branch">
 		</select>
 	</td>
 	<th scope="row"><spring:message code="sal.text.prefixNo" /></th>

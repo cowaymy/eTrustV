@@ -386,10 +386,10 @@ function fn_trBookKeep(){
 		<li><p class="link_btn"><a href="#" id="lostListing">Lost Listing</a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn"><a href="#" onclick="javascript:fn_trBookTransaction();">Transaction List</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_trBookTransaction();">Transaction List</a></p></li>
         </c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn"><a href="#" id="reqBatch">Request Batch</a></p></li>
+        <li><p class="link_btn type2"><a href="#" id="reqBatch">Request Batch</a></p></li>
         </c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>

@@ -15,7 +15,7 @@ $(document).ready(function(){
         
    });
         
-    CommonCombo.make("branch", "/sales/trBook/selectBranch", "", "${branch}", {
+    CommonCombo.make("singleBranch", "/sales/trBook/selectBranch", "", "${branch}", {
         id: "code",
         name: "name"
     });
@@ -156,7 +156,7 @@ function validRequiredField_Save_Add()
     var valid = true;
     var Message = "";
 
-    if ($("#branch").val() == "")
+    if ($("#singleBranch").val() == "")
     {
         valid = false;
         Message += "* Please select the branch.<br />";
@@ -217,7 +217,7 @@ function fn_save(){
 		 if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){     
 			 
 			 $("#prefix").attr("disabled", false);
-			 $("#branch").attr("disabled", false);
+			 $("#singlebranch").attr("disabled", false);
 			 
 	        Common.ajax("POST", "/sales/trBook/saveNewTrBook", $("#saveAddSingleForm").serializeJSON(), function(result){
 	
@@ -279,7 +279,7 @@ function fn_save(){
 <tr>
 	<th scope="row">Branch</th>
 	<td>
-		<select class="disabled w100p" disabled="disabled" id="branch" name="branch">
+		<select class="disabled w100p" disabled="disabled" id="singleBranch" name="branch">
 		</select>
 	</td>
 	<th scope="row">Prefix No</th>
