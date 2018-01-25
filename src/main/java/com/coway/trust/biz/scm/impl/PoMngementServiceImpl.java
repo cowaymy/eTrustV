@@ -162,7 +162,7 @@ public class PoMngementServiceImpl implements PoMngementService {
 		}
 			
 		if(StringUtils.isEmpty(preYear)){
-			throw new ApplicationException(AppConstants.FAIL, "필수값 오류 입니다.");
+			throw new ApplicationException(AppConstants.FAIL, "필수값(YEAR) 오류 입니다.");
 		}
 
 		EgovMap newPonoMap =  selectPOIssueNewPoNo( params );

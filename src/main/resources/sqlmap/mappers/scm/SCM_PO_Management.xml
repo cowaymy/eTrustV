@@ -313,9 +313,11 @@
                     , #{inPreCdc} PRE_CDC
                     , #{inPreYear} PRE_Year
                     , #{inPreWeekTh} PRE_WEEK_TH
+                    , ROW_NUMBER() OVER (PARTITION BY VENDOR, MATRL_MST, PURCHS_ORG ORDER BY SEQ_NO DESC) RANK_NO
                FROM LOG0078M LOG78M 
               WHERE MATRL_MST = #{inStockCode} 
-          )
+              
+          ) WHERE RANK_NO = 1  
 </select>
 
 <select id="selectPoRightMove_TEMP" parameterType="Map" resultType="egovMap">
