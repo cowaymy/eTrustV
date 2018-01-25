@@ -446,6 +446,7 @@ function fn_Sale_processing(){
 	var mSaveForm={
 								srvMemQuotId :   $("#QUOT_ID").val() =="" ?  '${QUOT_ID}' : $("#QUOT_ID").val()  ,
 							    srvSalesOrdId: $("#ORD_ID").val() ,
+							    srvSalesOrdNo: packageInfo.ordNo ,
 								srvMemQuotNo:packageInfo.quotNo,
 							    srvMemQuotCntName:pMInfo.cntName,
 							    srvMemQuotCustName:pMInfo.custName,
@@ -475,6 +476,7 @@ function fn_Sale_processing(){
 								trType:  $("#trType").val() ,
 								srvStockCode :  $("#inc_stockCode").text(),
 							    srvStockDesc :  $("#inc_stockDesc").text(),
+							    poNo : $("#poNo").val()
 								
 	}
    
@@ -628,7 +630,24 @@ function fn_getHasBill (){
     <jsp:include page ='${pageContext.request.contextPath}/sales/membership/inc_quotFilterInfo.do'/> 
 <!-- oder info tab  end...-->
 
+<br/>
 
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:150px" />
+    <col style="width:*" />
+    <col style="width:150px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">PO No</th>
+    <td><input type="text" id="poNo" name="poNo" title="" placeholder="" class="w100p" /></td>
+    <td colspan="2"></td>
+</tr>
+</tbody>
+</table><!-- table end -->
 
 <%--
 <section class="search_table mt20"><!-- search_table start -->

@@ -70,6 +70,7 @@ public interface MembershipConvSaleMapper {
 	EgovMap  getSAL0093D_Data(Map<String, Object> params);
 	
 	List<EgovMap> getFilterListData(Map<String, Object> params);
+	EgovMap getNewAddr(Map<String, Object> params);
 	
 	
 

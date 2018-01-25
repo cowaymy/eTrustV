@@ -201,10 +201,12 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 	
 
 	@Override
-	public void    insertQuotationInfo(Map<String, Object> params) {
+	public String  insertQuotationInfo(Map<String, Object> params) {
 		 
 		boolean isVerifyGSTEURCertificate   = true;
 		boolean verifyGSTZeroRateLocation = true;
+		
+		String docNo = "";
 		
 		int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
 		if(zeroRat > 0 ){
@@ -279,7 +281,7 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 		
 		params.put("DOCNO", "20");
 		EgovMap  docNoMp = membershipQuotationMapper.getEntryDocNo(params); 
-		
+		docNo = docNoMp.get("docno").toString();
 		params.put("srvMemQuotNo",docNoMp.get("docno"));
 		EgovMap   seqMap = membershipQuotationMapper.getSAL0093D_SEQ (params);
 		
@@ -374,6 +376,8 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 				 }
 			 }
 		 }
+		 
+		 return docNo;
 	}
 	   
 	

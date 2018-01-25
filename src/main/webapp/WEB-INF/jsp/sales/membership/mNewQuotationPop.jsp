@@ -1219,8 +1219,10 @@ function fn_unconfirmSalesPerson(){
          return   false;
     
     }else{
-         Common.popupDiv("/sales/membership/mNewQuotationSavePop.do" , $("#getDataForm").serializeJSON(), null , true , '_saveDiv1'); 
-    }
+    	fn_DoSaveProcess();
+    
+    	/* Common.popupDiv("/sales/membership/mNewQuotationSavePop.do" , $("#getDataForm").serializeJSON(), null , true , '_saveDiv1'); */ 
+    } 
 }
 
 
@@ -1300,7 +1302,7 @@ function  fn_DoSaveProcess(_saveOption){
          
          if(result.code =="00"){
              
-             if(_saveOption == "1"){
+        	 /*   if(_saveOption == "1"){
                  
                   Common.alert("<spring:message code="sal.alert.title.quotationSaveProceedToPayment" />"  +DEFAULT_DELIMITER
                 		               +" <b> <spring:message code="sal.alert.msg.quotationSaveProceedToPayment" /> " 
@@ -1308,13 +1310,12 @@ function  fn_DoSaveProcess(_saveOption){
 
                   setTimeout(function(){ fn_saveResultTrans(result.data) ;}, 3000); 
                   
-             }else{
+             }else{ */
                   Common.alert("<spring:message code="sal.alert.title.quotationSaved" />" +DEFAULT_DELIMITER+" <b> <spring:message code="sal.alert.msg.quotationSaved" />" + result.data + "<br /> ");
 
                   $("#_NewQuotDiv1").remove();
                   fn_selectListAjax();
-             }
-             
+            /*  }              */
          }else{
               Common.alert("<spring:message code="sal.alert.title.saveFail" />" +DEFAULT_DELIMITER+" <b><spring:message code="sal.alert.msg.saveFail" /></b> ");
          }

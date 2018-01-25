@@ -340,7 +340,8 @@
                TAX_INVC_ADDR3, TAX_INVC_ADDR4, TAX_INVC_POST_CODE, 
                TAX_INVC_STATE_NAME, TAX_INVC_CNTY, TAX_INVC_TASK_ID, 
                TAX_INVC_REM, TAX_INVC_CHRG, TAX_INVC_TXS, 
-               TAX_INVC_AMT_DUE, TAX_INVC_CRT_DT, TAX_INVC_CRT_USER_ID) 
+               TAX_INVC_AMT_DUE, TAX_INVC_CRT_DT, TAX_INVC_CRT_USER_ID,
+               AREA_ID,ADDR_DTL,STREET) 
             VALUES (
                #{taxInvcId}, 
                #{taxInvcRefNo}, 
@@ -362,7 +363,10 @@
                #{taxInvcTxs}, 
                #{taxInvcAmtDue}, 
                #{taxInvcCrtDt}, 
-               #{taxInvcCrtUserId}
+               #{taxInvcCrtUserId},
+               #{areaId},
+               #{addrDtl},
+               #{street}
              )
              
           </insert>
@@ -379,7 +383,8 @@
                    INVC_ITM_ADD1, INVC_ITM_ADD2, INVC_ITM_ADD3, 
                    INVC_ITM_ADD4, INVC_ITM_POST_CODE, INVC_ITM_AREA_NAME, 
                    INVC_ITM_STATE_NAME, INVC_ITM_CNTY, INVC_ITM_INSTALL_DT, 
-                   INVC_ITM_RETN_DT, INVC_ITM_BILL_REF_NO) 
+                   INVC_ITM_RETN_DT, INVC_ITM_BILL_REF_NO,
+                   AREA_ID,ADDR_DTL,STREET) 
                 VALUES (   
                            PAY0032D_SEQ.NEXTVAL, 
                            #{taxInvcId}, 
@@ -406,7 +411,10 @@
                            #{invcItmCnty}, 
                            #{invcItmInstallDt}, 
                            #{invcItmRetnDt}, 
-                           #{invcItmBillRefNo}
+                           #{invcItmBillRefNo},
+			               #{areaId},
+			               #{addrDtl},
+			               #{street}
                         )
       </insert>
       
@@ -471,7 +479,14 @@
              )  
       
       </insert>
-     
-     
-    
+      
+    <select id="getNewAddr" parameterType="Map" resultType="egovMap">
+	    SELECT D.AREA_ID
+		           ,C.STREET
+		           ,C.ADDR_DTL
+		  FROM SAL0001D A JOIN SAL0024D B ON A.CUST_BILL_ID = B.CUST_BILL_ID 
+		    JOIN SAL0023D C ON C.CUST_ADD_ID = (CASE WHEN A.CUST_BILL_ID = 0 THEN  A.CUST_ADD_ID ELSE B.CUST_BILL_ADD_ID END)
+		    JOIN SYS0064M D ON  C.AREA_ID = D.AREA_ID
+		WHERE A.SALES_ORD_ID = #{srvSalesOrdId}
+    </select>
 </mapper>

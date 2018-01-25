@@ -378,12 +378,12 @@ public class  MembershipQuotationController {
 		params.put("srvCreateBy", sessionVO.getUserId());
 		params.put("srvUpdateAt", sessionVO.getUserId());
 		
-		membershipQuotationService.insertQuotationInfo(params);
+		String docNo = membershipQuotationService.insertQuotationInfo(params);
 		
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage((String)params.get("SAL0093D_NO"));
-		message.setData(params.get("SAL0093D_SEQ"));
+		message.setData(docNo);
 		 
 		        
 		logger.debug("mNewQuotationSave SAL0093D_SEQ {}", params.get("SAL0093D_SEQ"));

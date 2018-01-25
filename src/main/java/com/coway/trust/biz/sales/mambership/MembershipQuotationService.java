@@ -50,7 +50,7 @@ public interface MembershipQuotationService {
 	
 	EgovMap	    	getOderOutsInfo(Map<String, Object> params);
 	
-	void 	insertQuotationInfo(Map<String, Object> params) ;
+	String 	insertQuotationInfo(Map<String, Object> params) ;
 	
 	EgovMap	   getMembershipFilterChargeList(Map<String, Object> params);
 	

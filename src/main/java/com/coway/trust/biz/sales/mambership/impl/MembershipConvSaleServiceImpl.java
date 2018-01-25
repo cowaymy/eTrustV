@@ -478,6 +478,8 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
     		
     		Map<String, Object>  pay31dMap = new HashMap<String, Object>();
     		
+    		EgovMap newAddr = membershipConvSaleMapper.getNewAddr(params);
+    		
     		//채번 
     		int taxInvcId	 = posMapper.getSeqPay0031D();
     		
@@ -502,6 +504,9 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
      	    pay31dMap.put("taxInvcAmtDue",Double.toString(totalAmountDue)); 
      	    pay31dMap.put("taxInvcCrtDt",new Date()); 
      	    pay31dMap.put("taxInvcCrtUserId",params.get("updator"));
+     	    pay31dMap.put("areaId",newAddr.get("areaId"));
+     	    pay31dMap.put("addrDtl",newAddr.get("addrDtl"));
+     	    pay31dMap.put("street",newAddr.get("street"));
      	    
      	    
      	     logger.debug(" in Invoice master   ==>"+pay31dMap.toString());
@@ -522,10 +527,10 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
          	    		 Map<String, Object>  pay32dMap = new HashMap<String, Object>();
          	    		 pay32dMap.put("taxInvcId", taxInvcId);
   		    		     pay32dMap.put("invcItmType","1266"); 
-  		    		     pay32dMap.put("invcItmOrdNo",params.get("srvSalesOrdId")); 
-  		    		     pay32dMap.put("invcItmPoNo",""  ); 
+  		    		     pay32dMap.put("invcItmOrdNo",params.get("srvSalesOrdNo")); 
+  		    		     pay32dMap.put("invcItmPoNo",params.get("poNo")  ); 
   		    		     pay32dMap.put("invcItmCode", params.get("srvStockCode")); 
-  		    		     pay32dMap.put("invcItmDesc1", params.get("inc_stockDesc"));    //
+  		    		     pay32dMap.put("invcItmDesc1", params.get("srvStockDesc"));    //
   		    		     pay32dMap.put("invcItmDesc2", ""); 
   		    		     pay32dMap.put("invcItmSerialNo", ""); 
   		    		     pay32dMap.put("invcItmQty", Integer.parseInt(CommonUtils.nvl(params.get("srvDur")))  / 12); 
@@ -545,6 +550,9 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
   		    		     pay32dMap.put("invcItmInstallDt", ""); 
   		    		     pay32dMap.put("invcItmRetnDt", "");
   		    		     pay32dMap.put("invcItmBillRefNo","");
+  		    		     pay32dMap.put("areaId",newAddr.get("areaId"));
+  		    		     pay32dMap.put("addrDtl",newAddr.get("addrDtl"));
+  		    		     pay32dMap.put("street",newAddr.get("street"));
   		    		   
       		       	     logger.debug(" in package Invoice detail   ==>"+pay32dMap.toString());
       		       		 int detailCnt =membershipConvSaleMapper.PAY0032D_insert(pay32dMap);   
