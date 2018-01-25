@@ -50,7 +50,7 @@ function fn_doConfirm (){
     Common.ajax("GET", "/sales/membership/selectMembershipFreeConF", $("#sForm").serialize(), function(result) {
          console.log( result);
          
-         if(result == null)  {
+         if(result == 0)  {
             
              $("#cbt").attr("style","display:inline");
              $("#ORD_NO").attr("style","display:inline");
@@ -60,7 +60,7 @@ function fn_doConfirm (){
              
              $("#resultcontens").attr("style","display:none");
               
-             Common.alert(" <spring:message code="sal.alert.msg.noOrderFound" /> ");
+             Common.alert("No order found or this order is not under complete status or activation status.");
              return ;
              
          }else{

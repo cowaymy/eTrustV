@@ -59,7 +59,7 @@ function fn_doConfirm (){
              
              $("#resultcontens").attr("style","display:none");
               
-             Common.alert(" No order found or this order is not under complete status. ");
+             Common.alert("No order found or this order is not under complete status or activation status.");
              return ;
              
          }else{

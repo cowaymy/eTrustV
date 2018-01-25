@@ -163,7 +163,14 @@
 		 </select> -->
 		 
 		 <select id="newConfirm" parameterType="Map" resultType="egovMap">
-					 SELECT S.SALES_ORD_ID   ,
+		 
+		         select sales_ord_id ,
+                          sales_ord_no  
+                   from sal0001d 
+                 where stus_code_id in('1', '4') 
+                    and sales_ord_no = #{ORD_NO}
+		 
+				<!-- 	 SELECT S.SALES_ORD_ID   ,
 							       S.SALES_ORD_NO   ,
 							       S.REF_NO   ,
 							       S.SALES_DT   ,
@@ -173,8 +180,8 @@
 							       S.MEM_ID   ,
 							       S.BRNCH_ID   ,
 							       S.APP_TYPE_ID   ,
-							      -- S.DSCNT_AMT   ,
-							     --  S.TAX_AMT   ,
+							      /* S.DSCNT_AMT   ,
+							       S.TAX_AMT   ,*/
 							       S.TOT_AMT   ,
 							       S.PROMO_ID   ,
 							       S.BINDING_NO   ,
@@ -206,7 +213,7 @@
 							       S.PAY_COM_DT   ,
 							       S.DEF_RENT_AMT   ,
 							       S.REF_DOC_ID   ,
-							       --S.RENT_PROMO_ID   ,
+							       /*S.RENT_PROMO_ID   ,*/
 							       S.SALES_HM_ID   ,
 							       S.SALES_SM_ID   ,
 							       S.SALES_GM_ID   ,
@@ -223,8 +230,8 @@
 							                E.MEM_ID   ,
 							                E.BRNCH_ID   ,
 							                E.APP_TYPE_ID   ,
-							                --E.DSCNT_AMT   ,
-							                --E.TAX_AMT   ,
+							                /*E.DSCNT_AMT   ,
+							                E.TAX_AMT   ,*/
 							                E.TOT_AMT   ,
 							                E.PROMO_ID   ,
 							                E.BINDING_NO   ,
@@ -265,8 +272,7 @@
 							         FROM SAL0001D E
 							                JOIN SAL0002D Extent2   ON Extent2.SALES_ORD_ID = E.SALES_ORD_ID
 							          WHERE  ( E.SALES_ORD_NO = #{ORD_NO} )
-							                   AND ( 4 = E.STUS_CODE_ID ) AND ROWNUM <![CDATA[<=]]>   1 ) S
-					 
+							                   AND ( 4 = E.STUS_CODE_ID ) AND ROWNUM <![CDATA[<=]]>   1 ) S -->
 		 </select>
 		 
 		 

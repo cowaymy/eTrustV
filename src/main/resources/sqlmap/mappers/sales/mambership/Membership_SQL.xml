@@ -701,7 +701,11 @@
                       AND ( 'COM' = S.ORD_STUS_CODE ) AND ROWNUM <= 1
      ]]> -->
     <select id="selectMembershipFreeConF" parameterType="Map" resultType="egovMap">
-         select * from sal0001d where stus_code_id in('1', '4')
+         select sales_ord_id ord_id,
+                  sales_ord_no ord_no 
+           from sal0001d 
+         where stus_code_id in('1', '4') 
+            and sales_ord_no = #{ORD_NO}
     </select>
     
     <select id="selectMembershipFree_srvconfig" parameterType="Map" resultType="egovMap">
