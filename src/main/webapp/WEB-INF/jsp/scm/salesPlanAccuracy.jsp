@@ -173,9 +173,11 @@ function getTimeStamp()
 function fnExcelExport(fileNm)
 {   // 1. grid ID 
     // 2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-    // 3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
-
-    GridCommon.exportTo("#WeeklyGridDiv", "xlsx", fileNm+'_'+getTimeStamp() ); 
+    // 3. exprot ExcelFileName  myGridID, locGridId
+   if (fileNm == "Monthly")
+    GridCommon.exportTo("#MonthlyGridDiv", "xlsx", fileNm );
+   else
+    GridCommon.exportTo("#WeeklyGridDiv", "xlsx", fileNm ); 
 }
 
 function fnWeeklySelectDataList()
@@ -740,7 +742,7 @@ $(document).ready(function()
 <aside class="title_line"><!-- title_line start -->
 <h3>Monthly Report</h3>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="javascript:void(0);">Download</a></p></li>
+	<li><p class="btn_blue"><a onclick="fnExcelExport('Monthly');">Download</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -752,7 +754,7 @@ $(document).ready(function()
 <aside class="title_line"><!-- title_line start -->
 <h3>Weekly Detail</h3>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="javascript:void(0);">Download</a></p></li>
+	<li><p class="btn_blue"><a onclick="fnExcelExport('Weekly');">Download</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
