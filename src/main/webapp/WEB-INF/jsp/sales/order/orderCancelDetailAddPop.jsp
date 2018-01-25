@@ -342,10 +342,10 @@
                       Common.alert("Please key in the remark");
                       return false;
                   }
-                  if(addCallForm.cmbAssignCt.value == ""){
-                      Common.alert("Please key in the Assign CT");
-                      return false;
-                  }
+                  //if(addCallForm.cmbAssignCt.value == ""){
+                  //    Common.alert("Please key in the Assign CT");
+                  //    return false;
+                  //}
               }
           }
     	Common.ajax("GET", "/sales/order/saveCancel.do", $("#addCallForm").serializeJSON(), function(result) {
