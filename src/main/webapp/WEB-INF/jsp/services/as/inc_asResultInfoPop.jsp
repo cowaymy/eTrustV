@@ -11,7 +11,7 @@ $(document).ready(function(){
     
     createCFilterAUIGrid() ;
     
-    doGetCombo('/services/as/getASFilterInfo.do', '', '','ddlFilterCode', 'S' , ''); 
+    //doGetCombo('/services/as/getASFilterInfo.do', '', '','ddlFilterCode', 'S' , ''); 
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
     doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '','ddlFailReason', 'S' , '');    
     

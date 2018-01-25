@@ -77,6 +77,8 @@ function fn_getASOrderInfo(){
             $("#txtMembership").text(result[0].c5);
             $("#txtExpiredDate").text(result[0].c6);
             
+            var prdctCd=$("#txtProductCode").text();
+            doGetCombo('/services/as/getASFilterInfo.do?prdctCd='+prdctCd, '', '','ddlFilterCode', 'S' , '');     
             
         });
 }
