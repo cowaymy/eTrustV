@@ -283,7 +283,7 @@ function fnSearchBtnList()
                                  
                   if(result != null && result.selectInvenRptTotalStatusList.length > 0)
                   {
-                    console.log("success: " + result.selectInvenRptTotalStatusList[0].trgetYear);
+                    //console.log("success: " + result.selectInvenRptTotalStatusList[0].trgetYear);
 
                     // Status Grid-Setting.
                     AUIGrid.setGridData(gInventoryRPTStatusGridID, result.selectInvenRptTotalStatusList);
