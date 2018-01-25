@@ -2193,4 +2193,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		// TODO Auto-generated method stub
 		return memberListMapper.selectTrainType(params);
 	}
+
+	@Override
+	public void updateDocSubWhenAppr(Map<String, Object> params, SessionVO sessionVO) {
+		int userId = sessionVO.getUserId();
+		params.put("userId",userId);
+		
+		memberListMapper.updateDocSubWhenApproval(params);
+		
+	}
 }

@@ -234,6 +234,8 @@ public interface MemberListMapper {
 
 	EgovMap selectTrainType(Map<String, Object> oneDocSub);
 
+	void updateDocSubWhenApproval(Map<String, Object> params);
+
 
 
 }

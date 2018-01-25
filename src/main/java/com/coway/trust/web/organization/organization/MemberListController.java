@@ -451,14 +451,15 @@ public class MemberListController {
 	 */
 	@RequestMapping(value = "/selectHpDocSubmission", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectHpDocSubmission(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model) {
-		logger.debug("memberType : {}"+params.get("memType")+"11111111111111");
+		logger.debug("memberType : {}"+params.get("memType")+"11111111111111"); // member new detail edit 다쓰인다
 		logger.debug("params : {}"+params);
 		List<EgovMap> selectDocSubmission;
 		
-		
-		if("2".equals((String)params.get("memType")) || "2".equals(String.valueOf(params.get("trainType")))){//type가 Coway Lady면 traniee 쿼리가 살짝다름.....
+		params.put("memType" , params.get("memType").toString().trim() );
+		logger.debug("params : {}"+params);
+		if("2".equals( params.get("memType").toString().trim() )|| "2".equals(String.valueOf(params.get("trainType")))){//type가 Coway Lady면 traniee 쿼리가 살짝다름.....
 			selectDocSubmission = memberListService.selectCodyDocSubmission(params);
-		}else if("5".equals(String.valueOf(params.get("memType")))){
+		}else if("5".equals( String.valueOf(params.get("memType")).trim() )){
 			 params.put("memId" , String.valueOf(params.get("memberID")));
 			 EgovMap getTrainType = memberListService.memberListService(params);
 			if("2".equals(String.valueOf(getTrainType.get("train")))){
@@ -873,7 +874,7 @@ public class MemberListController {
 		//update = memberListService.updateMember(formMap, updList,sessionVO);
 //		memberListService.updateMemberBranch(formMap);
 //		memberListService.updateMemberBranch2(formMap);
-
+		
 		//update
 		
 		memCode =  (String)formMap.get("memCode");
@@ -926,9 +927,9 @@ public class MemberListController {
    	}else{
    		message.setMessage("Compelete to Edit a Member Code : " +memCode);
    	}
-   	logger.debug("message : {}", message);
+   	logger.debug("message : {}", message + memCode);
 
-   	System.out.println("msg   " + success);
+   	System.out.println("msg   " + success + memCode);
 //
 	return ResponseEntity.ok(message);
 	}
@@ -977,8 +978,14 @@ public class MemberListController {
 			if (resultValue.get("duplicMemCode") != null) {
 				message.setMessage("This member is already registered<br/>as member code : "
 						+ resultValue.get("duplicMemCode").toString());
+				
 			} else {
 				message.setMessage((String)resultValue.get("memCode"));
+				// doc UPdate
+				params.put("hpMemId",  resultValue.get("memId").toString());
+				logger.debug("params {}" , params);
+				memberListService.updateDocSubWhenAppr(params , sessionVO);
+				
 			}
 		} else if (resultValue.size() == 0) {
 			message.setMessage("There is no address information to the HP applicant code");

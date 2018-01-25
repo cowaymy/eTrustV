@@ -231,7 +231,7 @@ function createAUIGrid1() {
         editable : false,
         width : 700
     }, {
-        dataField : "docCopyQty",
+        dataField : "docQty",
         headerText : "Qty",
         editable : false,
         width : 150
@@ -501,13 +501,13 @@ var gridPros = {
 function fn_selectDocSubmission(){
 
     var jsonObj = {
-            MemberID : $("#memberid").val(),
-            MemberType : $("#memtype").val()
+            memberID : $("#memberid").val(),
+            memType : $("#memtype").val()
 
     };
 
 
-    Common.ajax("GET", "/organization/selectDocSubmission",jsonObj, function(result) {
+    Common.ajax("GET", "/organization/selectHpDocSubmission",jsonObj, function(result) {
         console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID1, result);

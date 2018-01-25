@@ -150,4 +150,6 @@ public interface MemberListService {
 
 	EgovMap memberListService(Map<String, Object> params);
 
+	void updateDocSubWhenAppr(Map<String, Object> params, SessionVO sessionVO);
+
 }

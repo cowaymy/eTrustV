@@ -1332,7 +1332,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                                AND ( 1 = Extent1.STUS_ID ) ) Project1
                      ORDER BY Project1.CODE_NAME ASC -->
       
-      
+      <if test="memType !='2803'">
       <![CDATA[
         
 			         
@@ -1358,7 +1358,36 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 AND  A.MEM_ID    = #{memberID}) MEMINFO 
                 WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)
                ]]>
+               </if>
+                 
+      <if test="memType =='2803'">
+      <![CDATA[
+    
+        SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
+            FROM (
+                 SELECT Extent1.CODE_ID CODE_ID ,
+                    Extent1.CODE_DESC CODE_NAME,
+                    Extent2.TYPE_ID TYPE_ID ,
+                    Extent2.TYPE_DT_SEQ TYPE_DT_SEQ
+                  FROM SYS0013M Extent1
+                  JOIN ORG0013C Extent2
+                  ON Extent1.CODE_ID           = Extent2.TYPE_ID
+                  WHERE ( Extent2.TYPE_CODE_ID = 247 )
+                  AND ( 1                      = Extent2.STUS_ID )
+                  AND ( Extent2.TYPE_GRP_ID    = 247 )
+                  ORDER BY Extent2.TYPE_DT_SEQ ASC
+                ) DOCLIST , (
+                SELECT B.*
+                FROM ORG0003D A,
+                  ORG0010D B
+                WHERE A.APLCTN_ID    = B.DOC_MEM_ID
+                AND  A.APLCTN_ID    = #{memberID}) MEMINFO 
+                WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)
+               ]]>
+            </if>
   </select>
+  
+  
 
 
   <select id="selectCodyDocSubmission" parameterType="Map" resultType="egovMap">
@@ -2403,7 +2432,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
     </insert>
 
    <select id="afterSelTrainee" resultType="egovMap">
-        SELECT MEM_CODE  FROM ORG0001D  WHERE MEM_ID =#{memberId}
+        SELECT MEM_CODE, MEM_ID   FROM ORG0001D  WHERE MEM_ID =#{memberId}
   </select>
 
   <select id="getMemberListView" parameterType="Map" resultType="egovMap">
@@ -3798,7 +3827,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			A.DEPT_CODE c41,
 		    to_char( A.APLICNT_DOB ,'DD/MM/YYYY' ) c29,
 			C.NAME c36,
-		
+		    A.APLICNT_CODE Mem_Code,
 			B.AREA area_Id,
 			B.COUNTRY,
 			B.CITY,
@@ -3892,13 +3921,23 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </update>
     
      <select id="selectOneDocSub" parameterType="Map" resultType="egovMap">
+       <if test="memType != '2803' ">
        SELECT B.*
        FROM ORG0001D A,
       ORG0010D B
       WHERE A.MEM_ID    = B.DOC_MEM_ID
        AND A.MEM_ID   = #{memId}
        AND B.DOC_TYPE_ID = #{codeId}
+       </if>
+       <if test=" memType == '2803' ">
+        SELECT B.*
+       FROM ORG0003D A,
+      ORG0010D B
+      WHERE A.APLCTN_ID    = B.DOC_MEM_ID
+       AND A.APLCTN_ID   = #{memId}
+       AND B.DOC_TYPE_ID = #{codeId}
        
+       </if>
        
     </select>
     
@@ -4118,7 +4157,16 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 where mem_id= #{memId}
         
         </select>
-        
+     <update id="updateDocSubWhenApproval" parameterType="Map">
+    UPDATE ORG0010D
+    SET UPD_USER_ID =#{userId}
+    , UPD_DT = SYSDATE
+    , DOC_MEM_ID = #{hpMemId}
+    
+    WHERE DOC_MEM_ID = #{MemberID}
+   
+    
+    </update>
         
         
         
