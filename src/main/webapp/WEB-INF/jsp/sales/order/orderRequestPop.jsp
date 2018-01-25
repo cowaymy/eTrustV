@@ -1912,7 +1912,7 @@
     function fn_validReqOwntBillGroup() {
         var isValid = true, msg = "";
         
-        if(APP_TYPE_ID == '66' || IS_NEW_VER == 'Y') {
+      //if(APP_TYPE_ID == '66' || IS_NEW_VER == 'Y') {
             if(!$('#grpOpt1').is(":checked") && !$('#grpOpt2').is(":checked")) {
                 isValid = false;
                 msg += "* Please select the group option.<br>";
@@ -1925,7 +1925,7 @@
                     }
                 }
             }
-        }
+      //}
         
         if(!isValid) {
             $('#tabBG').click();

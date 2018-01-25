@@ -642,6 +642,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     
     private void preprocCustBillMaster(CustBillMasterVO custBillMasterVO, Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
+    	logger.debug("@#### preprocCustBillMaster START");
+    	
     	custBillMasterVO.setCustBillId(0);
     	custBillMasterVO.setCustBillSoId(CommonUtils.intNvl(params.get("salesOrdId")));
     	custBillMasterVO.setCustBillCustId(CommonUtils.intNvl(params.get("txtHiddenCustID")));
@@ -838,6 +840,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		int stusCodeId = CommonUtils.intNvl(somMap.get("stusCodeId"));
 		int appTypeId  = CommonUtils.intNvl(somMap.get("appTypeId"));
 		
+		logger.debug("@#### appTypeId:"+appTypeId);
+		
 		//SALES ORDER MASTER
 		SalesOrderMVO salesOrderMVO =  new SalesOrderMVO();
 		this.preprocSalesOrderM(salesOrderMVO, params, sessionVO, SalesConstants.ORDER_REQ_TYPE_CD_OTRN);
@@ -851,15 +855,21 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		CustBillMasterVO custBillMasterVO = new CustBillMasterVO();
 		
 		if(appTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+			logger.debug("@#### 000");
 			this.preprocRentPaySet(rentPaySetVO, params, sessionVO);
 		}
 		
+		logger.debug("@#### isNewVer:"+params.get("isNewVer"));
+
 		//2018.01.01
-		if(appTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL || "Y".equals(params.get("isNewVer"))) {
-    		if("new".equals((String)params.get("btnBillGroup"))) {
+		//if(appTypeId == SalesConstants.APP_TYPE_CODE_ID_RENTAL || "Y".equals(params.get("isNewVer"))) {
+			logger.debug("@#### 222");
+			logger.debug("@#### btnBillGroup:"+(String)params.get("btnBillGroup"));
+			logger.debug("@#### grpOpt:"+(String)params.get("grpOpt"));
+    		if("new".equals((String)params.get("grpOpt"))) {
     			this.preprocCustBillMaster(custBillMasterVO, params, sessionVO);
     		}
-		}
+		//}
 		
 		//ORDER EXCHANGE
 		SalesOrderExchangeVO salesOrderExchangeVO = new SalesOrderExchangeVO();		
@@ -884,7 +894,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         }
 
         //2018.01.01
-        if(appTypeId == 66 || "Y".equals(params.get("isNewVer"))) {
+        //if(appTypeId == 66 || "Y".equals(params.get("isNewVer"))) {
+        if(custBillMasterVO != null && CommonUtils.intNvl(custBillMasterVO.getCustBillSoId()) > 0) {
         	//INSERT CUSTOMER BILL MASTER (NEW*)
         	logger.debug("@#### isNewVer:"+params.get("isNewVer"));
         	
@@ -897,53 +908,53 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         	salesOrderMVO.setCustBillId(custBillMasterVO.getCustBillId());
         	
         	orderRegisterMapper.updateCustBillId(salesOrderMVO);
-        	
-        	//Check current CustBillMaster
-        	
-        	params.put("custBillId", CurrentCustBillID);
-        	
-        	EgovMap bilMap = billingGroupMapper.selectCustBillMaster(params);
-        	
-        	if(bilMap != null) {
-        		if(CommonUtils.intNvl(bilMap.get("custBillSoId")) == CommonUtils.intNvl(somMap.get("salesOrdId"))) {
-        			// ---> Is Main Order in old group
+        }
+        
+    	//Check current CustBillMaster
+    	
+    	params.put("custBillId", CurrentCustBillID);
+    	
+    	EgovMap bilMap = billingGroupMapper.selectCustBillMaster(params);
+    	
+    	if(bilMap != null) {
+    		if(CommonUtils.intNvl(bilMap.get("custBillSoId")) == CommonUtils.intNvl(somMap.get("salesOrdId"))) {
+    			// ---> Is Main Order in old group
+    			params.put("custBillId", CommonUtils.intNvl(bilMap.get("custBillId")));
+    			params.put("custId", CommonUtils.intNvl(bilMap.get("custBillCustId")));
+    			params.put("stusCodeId", 4);
+    			
+    			EgovMap somMap2 = orderRequestMapper.selectSalesOrderMOtran(params);
+    			
+    			if(somMap2 != null) {
+    				// Min Complete Order : Set as main
+    				CustBillMasterVO tempVO2 = new CustBillMasterVO();
+    				
+    				tempVO2.setCustBillId(CommonUtils.intNvl(bilMap.get("custBillId")));
+    				tempVO2.setCustBillSoId(CommonUtils.intNvl(somMap2.get("salesOrdId")));
+    				tempVO2.setCustBillUpdUserId(sessionVO.getUserId());
+    				
+    				orderRequestMapper.updateCustBillMasterOtran(tempVO2);
+    			}
+    			else {
+    				// Min Active Order : Set as main
         			params.put("custBillId", CommonUtils.intNvl(bilMap.get("custBillId")));
         			params.put("custId", CommonUtils.intNvl(bilMap.get("custBillCustId")));
-        			params.put("stusCodeId", 4);
+        			params.put("stusCodeId", 1);
         			
-        			EgovMap somMap2 = orderRequestMapper.selectSalesOrderMOtran(params);
-        			
-        			if(somMap2 != null) {
-        				// Min Complete Order : Set as main
-        				CustBillMasterVO tempVO2 = new CustBillMasterVO();
+        			EgovMap somMap3 = orderRequestMapper.selectSalesOrderMOtran(params);
+    				
+        			if(somMap3 != null) {
+        				CustBillMasterVO tempVO3 = new CustBillMasterVO();
+
+        				tempVO3.setCustBillId(CommonUtils.intNvl(bilMap.get("custBillId")));
+        				tempVO3.setCustBillSoId(CommonUtils.intNvl(somMap2.get("salesOrdId")));
+        				tempVO3.setCustBillUpdUserId(sessionVO.getUserId());
         				
-        				tempVO2.setCustBillId(CommonUtils.intNvl(bilMap.get("custBillId")));
-        				tempVO2.setCustBillSoId(CommonUtils.intNvl(somMap2.get("salesOrdId")));
-        				tempVO2.setCustBillUpdUserId(sessionVO.getUserId());
-        				
-        				orderRequestMapper.updateCustBillMasterOtran(tempVO2);
+        				orderRequestMapper.updateCustBillMasterOtran(tempVO3);
         			}
-        			else {
-        				// Min Active Order : Set as main
-            			params.put("custBillId", CommonUtils.intNvl(bilMap.get("custBillId")));
-            			params.put("custId", CommonUtils.intNvl(bilMap.get("custBillCustId")));
-            			params.put("stusCodeId", 1);
-            			
-            			EgovMap somMap3 = orderRequestMapper.selectSalesOrderMOtran(params);
-        				
-            			if(somMap3 != null) {
-            				CustBillMasterVO tempVO3 = new CustBillMasterVO();
-    
-            				tempVO3.setCustBillId(CommonUtils.intNvl(bilMap.get("custBillId")));
-            				tempVO3.setCustBillSoId(CommonUtils.intNvl(somMap2.get("salesOrdId")));
-            				tempVO3.setCustBillUpdUserId(sessionVO.getUserId());
-            				
-            				orderRequestMapper.updateCustBillMasterOtran(tempVO3);
-            			}
-        			}
-        		}
-        	}
-        }
+    			}
+    		}
+    	}
         
         EgovMap sodMap = orderRequestMapper.selectSalesOrderD(params);
         

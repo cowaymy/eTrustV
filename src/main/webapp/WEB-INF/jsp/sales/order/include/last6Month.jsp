@@ -38,7 +38,7 @@
                
                 if(asId != 0) {
                     //var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&mod=RESULTVIEW&as_Result_No="+asResultNo;                
-                    //Common.popupDiv("/services/as/asResultEditViewPop.do" , {ord_Id : '${orderDetail.basicInfo.ordId}', ord_No : '${orderDetail.basicInfo.ordNo}', as_No : sVal, as_Id : asId, mod : 'RESULTVIEW', as_Result_No : asResultNo}, null , true , '_newASResultDiv1');
+                    Common.popupDiv("/services/as/asResultEditViewPop.do" , {ord_Id : '${orderDetail.basicInfo.ordId}', ord_No : '${orderDetail.basicInfo.ordNo}', as_No : sVal, as_Id : asId, mod : 'RESULTVIEW', as_Result_No : asResultNo}, null , true , '_newASResultDiv1');
                 }
                 else {
                     Common.alert("No Result View" + DEFAULT_DELIMITER + "<b>No AS result to view.</b>");

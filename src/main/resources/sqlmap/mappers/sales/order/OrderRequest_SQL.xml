@@ -1893,7 +1893,7 @@
 		  FROM SAL0001D T1
 		 WHERE T1.CUST_BILL_ID = #{custBillId}
 		   AND T1.STUS_CODE_ID = #{stusCodeId}
-		   AND T1.APP_TYPE_ID = 66
+      <!-- AND T1.APP_TYPE_ID = 66 -->
 		   AND T1.CUST_ID = #{custId}
            AND ROWNUM &lt;= 1
     </select>
