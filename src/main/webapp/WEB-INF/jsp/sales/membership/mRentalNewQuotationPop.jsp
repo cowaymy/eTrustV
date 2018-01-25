@@ -833,10 +833,7 @@ function fn_unconfirmSalesPerson(){
          return   false;
     
     }else{
-    	
-         /* Common.popupDiv("/sales/membership/mNewQuotationSavePop.do" ,null ,null , true , '_saveDiv1'); */ 
-    	fn_DoSaveProcess();
-         
+         Common.popupDiv("/sales/membership/mNewQuotationSavePop.do" ,null ,null , true , '_saveDiv1'); 
     }
 }
 
