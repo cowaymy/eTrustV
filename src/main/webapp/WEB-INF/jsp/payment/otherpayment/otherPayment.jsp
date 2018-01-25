@@ -372,6 +372,13 @@ var columnPending=[
         headerText : "<spring:message code='pay.head.pendingAmount'/>",
         editable : false
     }
+		,
+    {
+        dataField : "oriPendingAmount",
+        headerText : "<spring:message code='pay.head.pendingAmount'/>",
+        editable : false,
+		visible : false
+    }
 ];
 
 // AUIGrid 칼럼 설정
@@ -769,10 +776,10 @@ var columnLayout = [
 	  }
 
 	  $("#paymentTotalAmtTxt").text("RM " + $.number(totalAmt,2)); 
-	  var tempPendingAmt = Number(AUIGrid.getCellValue(pendingGridID,0,"amount"));
+	  var tempPendingAmt = Number(AUIGrid.getCellValue(pendingGridID,0,"oriPendingAmount"));
 	  var tempTot = tempPendingAmt - totalAmt;
 
-	  AUIGrid.updateRow(pendingGridID, { "pendingAmount" : tempTot }, 0);
+	  AUIGrid.updateRow(pendingGridID, { "pendingAmount" : $.number(tempTot,2) }, 0);
 	}
 
 	//Rental Amount 선납금 할인을 적용한 금액 표시
@@ -1837,6 +1844,7 @@ function isDupHPToFinal(){
    		
     		if($('#payMode').val() == '105'){
     			item.pendingAmount = $("#cash").find("#amount").val();
+				item.oriPendingAmount = $("#cash").find("#amount").val();
     			
     			//Transaction Date 체크
                 if(FormUtil.checkReqValue($("#trDateCash"))){
@@ -1875,6 +1883,7 @@ function isDupHPToFinal(){
                 
     		}else if($('#payMode').val() == '106'){
     			item.pendingAmount = $("#cheque").find("#amount").val();
+				item.oriPendingAmount = $("#cheque").find("#amount").val();
     			
     			//Transaction Date 체크
                 if(FormUtil.checkReqValue($("#trDateCheque"))){
@@ -1919,6 +1928,7 @@ function isDupHPToFinal(){
     			}
     			var tot = amt+chgAmt;
     			item.pendingAmount = tot;
+				item.oriPendingAmount = tot;
     			
     			//Transaction Date 체크
                 if(FormUtil.checkReqValue($("#trDateOnline"))){
