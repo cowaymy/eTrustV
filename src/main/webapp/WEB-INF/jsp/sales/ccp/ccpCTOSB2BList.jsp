@@ -65,7 +65,7 @@ $(document).ready(function() {
 	//Order Search
 	$("#_ordSrchBtn").click(function() {
 		
-		/* $("#_filterChange").val("0");
+		$("#_filterChange").val("0");
 		clearDetailFilterAll();
 		
 		if( null == $("#_ordNo").val() || '' == $("#_ordNo").val()){
@@ -80,7 +80,7 @@ $(document).ready(function() {
 		        wrapSearch : true, // 끝에서 되돌리기 여부
 		};
 		
-		AUIGrid.search(ctosDetailGridID, "ordNo", $("#_ordNo").val() , options); */
+		AUIGrid.search(ctosDetailGridID, "ordNo", $("#_ordNo").val() , options);
 		
 		
 		//Validation
