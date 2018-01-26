@@ -105,8 +105,20 @@ function fn_setdetail(result){
         $("#eProductID").val(result.list1.installStkId);
  }
 	//$("#retWarehouseID").text(result.list1.brnchId);
-	
-	//alert(result.list1.c9+","+result.list1.c8);
+	String.prototype.zf = function(len){return "0".string(len - this.length) + this;};
+
+	var date = new Date();
+    var year = date.getFullYear() % 1000;
+    var month = date.getMonth()+1;
+    if(date.getMonth()+1 < 10){
+        month = "0"+date.getMonth()+1;
+    }
+    if(month.length>2){
+    	month = month.replace('0','');
+    }
+    //alert(result.list1.c3.substr(0,5));
+    //alert(year+'/'+month);
+    //alert(result.list1.stusCodeId);
 	if(result.list1.stusCodeId==4){
 		if(result.list1.c3==null){
 			//$("#lblErrorMessage").text(result.list1.salesOrdNo);
@@ -115,8 +127,8 @@ function fn_setdetail(result){
 			$("#lblErrorMessage").text("* No installation record found for this order.");
 			$("#divResultReversal").hide();
 		}
-		/*
-		if(result.list1.c9==result.list1.c8){
+		if(result.list1.c3.substr(0,5)==(year+'/'+month)){
+		//if(result.list1.c9==result.list1.c8){
 			$("#lblErrorMessage").text("");
 			$("#lblErrorMessage").hide();
 			$("#btnReverse").show();
@@ -127,7 +139,7 @@ function fn_setdetail(result){
 			$("#btnReverse").hide();
             $("#divResultReversal").hide();
 		}
-		*/
+		
 	}else{
         $("#lblErrorMessage").show();
 		$("#lblErrorMessage").text("* Only installation complete result can be reverse.");
