@@ -535,25 +535,6 @@ MERGE INTO SCM0011D
          )
 </insert>
   
-  <select id="selectReportPDFExcel_TEMP" parameterType="Map" resultType="egovMap">
-          SELECT T0.PO_NO
-					     , T0.PO_ISSU_DT 
-					     , T1.STOCK_CODE ITEM_CODE_KOR
-					     , T4.STOCK_CODE ITEM_CODE_MAL
-					     , '' AS MATERIAL
-					     , T2.STK_DESC AS DESCRIPTION
-					     , NVL(T3.FOB_PRC,0) AS UNITPRICE
-					     , T1.QTY
-					     , (NVL(T3.FOB_PRC,0)*NVL(T1.QTY,0)) AS AMOUNT
-					     , '' AS REMARK
-					  FROM SCM0009M T0
-					       LEFT JOIN SCM0010D T1 ON T1.PO_NO      = T0.PO_NO
-					       LEFT JOIN SYS0026M T2 ON T2.STK_CODE   = T1.STOCK_CODE
-					       LEFT JOIN SCM0020M T3 ON T3.STOCK_CODE = T1.STOCK_CODE
-					       LEFT JOIN SCM0024M T4 ON T4.STOCK_CODE = T1.STOCK_CODE
-					WHERE T0.PO_NO= '{?V_PO_NO}'   
-  </select>
-  
   <!-- PO Approval -->
  
 <select id="selectPoApprovalSummary" parameterType="Map" resultType="egovMap">
