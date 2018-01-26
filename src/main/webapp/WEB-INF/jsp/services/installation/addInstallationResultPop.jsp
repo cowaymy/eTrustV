@@ -40,7 +40,7 @@ $(document).ready(function() {
         $("#hidActualCTId").val("0");
     }
 
-    if("${orderInfo}" != null){
+    if("${orderInfo.installEntryId}" != null){
     	$("#hidCategoryId").val("${orderInfo.stkCtgryId}");
     	if(callType == 258){
     		$("#hidPromotionId").val("${orderInfo.c8}");
