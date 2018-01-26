@@ -164,6 +164,8 @@ public interface BillingGroupMapper {
 	 */
 	List<EgovMap> selectReqMaster(Map<String, Object> param);
 	
+	List<EgovMap> selectBeforeReqIDs(Map<String, Object> param);
+	
 	/**
 	 * updReqEstm
 	 * @param params

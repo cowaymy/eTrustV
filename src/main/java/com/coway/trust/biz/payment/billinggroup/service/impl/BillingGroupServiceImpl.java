@@ -939,7 +939,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 		params.put("userId", userId);
 
 		// master 조회.
-		List<EgovMap> reqMaster = billingGroupMapper.selectReqMaster(params);
+		List<EgovMap> reqMaster = billingGroupMapper.selectBeforeReqIDs(params);
 		EgovMap selectCustBillMaster = billingGroupMapper.selectCustBillMaster(params);
 		String custBillEmail = selectCustBillMaster.get("custBillEmail") != null
 				? String.valueOf(selectCustBillMaster.get("custBillEmail")) : "";
@@ -988,13 +988,14 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 				}
 			}
 			
-			EgovMap lateHistory = billingGroupMapper.selectEstmLatelyHistory(params);
-			if(lateHistory != null){
-				Map<String, Object> updCanMap = new HashMap<String, Object>();
-				updCanMap.put("reqId", String.valueOf(lateHistory.get("reqId")));
-				updCanMap.put("stusCodeId", "10");
-				billingGroupMapper.updReqEstm(updCanMap);
-			}
+			//등록할 이메일의 직전의 이메일 정보를 취소 처리한다. : 하지만 사용하지 않음
+//			EgovMap lateHistory = billingGroupMapper.selectEstmLatelyHistory(params);
+//			if(lateHistory != null){
+//				Map<String, Object> updCanMap = new HashMap<String, Object>();
+//				updCanMap.put("reqId", String.valueOf(lateHistory.get("reqId")));
+//				updCanMap.put("stusCodeId", "10");
+//				billingGroupMapper.updReqEstm(updCanMap);
+//			}
 
 			Map<String, Object> insHisMap = new HashMap<String, Object>();
 			insHisMap.put("custBillId", String.valueOf(params.get("custBillId")));

@@ -1160,6 +1160,15 @@
 		 AND ( 44 = Extent1.STUS_CODE_ID )
     </select>
     
+    <select id="selectBeforeReqIDs" parameterType="Map" resultType="egovMap">
+			SELECT
+			    REQ_ID    
+			FROM 
+			    PAY0060D
+			WHERE  
+			    CUST_BILL_ID = #{custBillId}
+    </select>
+    
     <update id="updReqEstm" parameterType="Map">
         UPDATE PAY0060D
         SET STUS_CODE_ID = #{stusCodeId},
