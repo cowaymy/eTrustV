@@ -321,46 +321,6 @@
           ) WHERE RANK_NO = 1  
 </select>
 
-<select id="selectPoRightMove_TEMP" parameterType="Map" resultType="egovMap">
-    SELECT  STOCK_CODE
-          , STOCK_NAME
-          , MOQ
-          , ROUND_UP_MOQ
-          , (ROUND_UP_MOQ * MOQ ) PO_QTY
-          , FOB_PRICE
-          , ( (ROUND_UP_MOQ * MOQ) * FOB_PRICE ) FOB_AMOUNT
-          , CURRENCY
-          , VENDOR
-          , VENDOR_TXT
-          , REQ_DATE
-          , STOCK_TYPE
-          , STOCK_CATEGORY
-          , PRE_CDC
-          , PRE_YEAR
-          , PRE_WEEK_TH
-      FROM
-          (
-		          SELECT MATRL_MST STOCK_CODE
-						        , (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{inStockCode} AND STK_CTGRY_ID = #{inStkCtgryId} AND STK_TYPE_ID = #{inStkTypeId}) STOCK_NAME
-						        , (#{inPlanQty} - #{inPoQty}) PLAN_QTY   
-						        , #{inMoq} MOQ
-						        ,  CEIL( (#{inPlanQty} - #{inPoQty} ) / #{inMoq} ) ROUND_UP_MOQ
-						        , (CEIL( (#{inPlanQty} - #{inPoQty} ) / #{inMoq} ) * #{inMoq} ) CALCUL_PO_QTY
-						        , ROUND((LOG78M.PURCHS_PRC / LOG78M.CONDI_PRC_UNIT),3) FOB_PRICE
-						        , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID = '94' AND CODE_ID = LOG78M.CUR ) CURRENCY
-						        , VENDOR
-						        , VENDOR_TXT
-						        , (SELECT ( #{scmPeriodCbBox} + LEAD_TM ) FROM SCM0008M WHERE STOCK_CODE = #{inStockCode} AND ROWNUM = 1) REQ_DATE
-						        , (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID=15 AND CODE_ID = #{inStkTypeId} ) STOCK_TYPE
-						        , (SELECT CODE FROM SYS0013M WHERE CODE_MASTER_ID=11 AND CODE_ID = #{inStkCtgryId} ) STOCK_CATEGORY
-						        , #{inPreCdc} PRE_CDC
-						        , #{inPreYear} PRE_Year
-						        , #{inPreWeekTh} PRE_WEEK_TH
-						   FROM LOG0078M LOG78M 
-						  WHERE MATRL_MST = #{inStockCode} 
-          )
-</select>
- 
 <select id="selectScmPoStatusCnt" parameterType="Map" resultType="egovMap">
           SELECT  
 				        (
