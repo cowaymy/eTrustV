@@ -138,8 +138,12 @@ function fn_mapping(){
 		keyInRowItem = advKeyInItems[0];
 		stateRowItem = bankStmtItem[0];
 
-		keyInAmount = Number(keyInRowItem.item.totAmt) + Number(keyInRowItem.item.bankChgAmt);
+		keyInAmount = Number(keyInRowItem.item.totAmt) - Number(keyInRowItem.item.bankChgAmt);
+		keyInAmount = $.number(keyInAmount,2,'.','');
+
 		stmtAmount = Number(stateRowItem.item.fTrnscCrditAmt);
+		stmtAmount = $.number(stmtAmount,2,'.','');
+
 		groupSeq = keyInRowItem.item.groupSeq;
 		fTrnscId = stateRowItem.item.fTrnscId;
 
