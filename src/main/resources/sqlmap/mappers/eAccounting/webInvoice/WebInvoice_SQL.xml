@@ -987,6 +987,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,REQPERNM
        ,REQDEPTNM
        ,DOCDATE
+       ,DUEDATE
        ,CARDCODE
        ,LINEID
        ,INVONO
@@ -1020,6 +1021,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,#{reqstUserId}
        ,#{costCentrName}
        ,TO_CHAR(TO_DATE(#{invcDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
+       ,TO_CHAR(SYSDATE, 'YYYYMMDD')
        ,#{memAccId}
        ,#{appvItmSeq}
        ,#{invcNo}
