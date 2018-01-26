@@ -202,7 +202,7 @@
                     //headerText : "Type",
                     headerText : '<spring:message code="service.grid.Type" />',
                     width : 100,          
-                    editable : false
+                    visible:false
                 }, {                        
                     dataField : "srvFilterPriod",
                     //headerText : "Change Period",
