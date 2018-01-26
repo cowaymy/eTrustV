@@ -100,7 +100,11 @@
     <select id="selectCrcKeyInList" parameterType="Map" resultType="egovMap">
         SELECT 
             GROUP_SEQ, 
-            PAY_ITM_CC_NO, 
+            (CASE 
+                  WHEN PAY_ITM_CC_NO IS NULL THEN ' '
+                  WHEN LENGTH(PAY_ITM_CC_NO) >= 13 THEN SUBSTR(PAY_ITM_CC_NO,0,6) 
+                                              || '******' || SUBSTR(PAY_ITM_CC_NO,13,LENGTH(PAY_ITM_CC_NO))            
+                                                                ELSE PAY_ITM_CC_NO END) PAY_ITM_CC_NO, 
             PAY_ITM_REF_DT, 
             PAY_ITM_APPV_NO, 
             PAY_ITM_CARD_MODE_ID, 
@@ -116,15 +120,15 @@
                     B.PAY_ITM_APPV_NO PAY_ITM_APPV_NO,
                     B.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID,
                     B.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID,
-                    C.CODE_NAME CARD_MODE_NAME,
+                    NVL(C.CODE_NAME, ' ') CARD_MODE_NAME,
                     NVL(SUM(A.PAY_ITM_AMT),0) + NVL(MAX(A.BANK_CHG_AMT),0) AS AMOUNT,
-                    E.ACC_DESC CRC_MC_NAME
+                    NVL(E.ACC_DESC, ' ') CRC_MC_NAME
                 FROM 
                     PAY0252T A
                     JOIN PAY0065D B ON A.PAY_ITM_ID = B.PAY_ITM_ID
-                    JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.DISAB = 0 AND C.CODE_MASTER_ID = '130'
-                    JOIN PAY0240T D ON A.GROUP_SEQ = D.SEQ
-                    JOIN SYS0001M E ON D.BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
+                    LEFT JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.DISAB = 0 AND C.CODE_MASTER_ID = '130'
+                    LEFT JOIN PAY0240T D ON A.GROUP_SEQ = D.SEQ
+                    LEFT JOIN SYS0001M E ON D.BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
                 WHERE 
                     A.PAY_ITM_MODE_ID = 107
                     AND A.CRC_STATE_MAPPING_STUS_ID = 1
