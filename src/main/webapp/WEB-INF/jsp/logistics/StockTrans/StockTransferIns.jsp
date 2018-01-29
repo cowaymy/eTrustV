@@ -50,6 +50,7 @@ var reqop = {usePaging : true,useGroupingPanel : false , Editable:true};
 
 var uomlist = f_getTtype('42' , '');
 var paramdata;
+var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}];
 
 
 $(document).ready(function(){
@@ -69,6 +70,8 @@ $(document).ready(function(){
     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
+    
+    doDefCombo(amdata, 'M' ,'sam', 'S', '');
 
     $("#cancelTr").hide();
     /**********************************
@@ -275,6 +278,10 @@ function locationList(){
 	$('#list').click();
 }
 function f_validatation(v){
+	if ($("#sam").val() == null || $("#sam").val() == undefined || $("#sam").val() == ""){
+		Common.alert("Please select one of Request Auto/Manual Type.");
+        return false;
+	}
 	if ($("#sttype").val() == null || $("#sttype").val() == undefined || $("#sttype").val() == ""){
         Common.alert("Please select one of Transaction Type.");
         return false;
@@ -489,7 +496,11 @@ function f_multiCombo() {
 </tr>
 <tr>
     <th scope="row">Remark</th>
-    <td colspan="7"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" maxlength="50"/></td>
+    <td colspan="4"><input id="dochdertxt" name="dochdertxt" type="text" title="" placeholder="" class="w100p" maxlength="50"/></td>
+    <th scope="row">Auto / Manual </th>
+    <td colspan='2'>
+       <select class="w100p" id="sam" name="sam"></select>
+    </td>
 </tr>
 <!-- <tr id="cancelTr">
     <th scope="row">Defect Reason</th>

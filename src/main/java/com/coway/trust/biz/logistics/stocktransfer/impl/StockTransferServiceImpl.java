@@ -82,8 +82,10 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 				stocktran.insStockTransfer(insMap);
 			}
 		}
-		//
-		insertStockBooking(fMap);
+		// booking insert
+		if ("M".equals((String)fMap.get("sam"))){
+			insertStockBooking(fMap);
+		}
 
 		return reqNo;
 
@@ -468,6 +470,26 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 		}
 		
 		return delchk;
+	}
+
+	@Override
+	public String selectMaxQtyCheck(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		String reChk = "";
+		
+		Map<String, Object> map = new HashMap();
+		map.put("itmcd", param.get("itmcd"));
+		map.put("tlocation", param.get("reqloc"));
+		map.put("rqty", param.get("delyqty"));
+		int iCnt = stocktran.selectAvaliableStockQty(map);
+		
+		logger.debug( " 486 Line ::::: " + iCnt);
+		if (iCnt == 1 ){
+			reChk = "N";
+		}else{
+			reChk = "Y";
+		}
+		return reChk;
 	}
 	
 	

@@ -575,5 +575,4 @@
 		AND L56.STK_CODE = #{itmcd}
 		AND L56.LOC_ID = #{tlocation}
     </select>
-     
 </mapper>

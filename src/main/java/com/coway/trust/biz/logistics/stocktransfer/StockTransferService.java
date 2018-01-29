@@ -39,4 +39,6 @@ public interface StockTransferService {
 	void deleteStoNo(Map<String, Object> param);
 	
 	int selectDelNo(Map<String, Object> param);
+	
+	String selectMaxQtyCheck(Map<String, Object> param);
 }

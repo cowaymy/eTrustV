@@ -72,7 +72,10 @@ var rescolumnLayout=[{dataField:   "rnum",headerText :"<spring:message code='log
                      {dataField: "crtdt",headerText :"Reqst. Create Date"            ,width:120    ,height:30                },
                      {dataField: "reqdate",headerText :"Reqst. Required Date"          ,width:120    ,height:30                }
                      ];
-var reqcolumnLayout;
+var reqcolumnLayout=[{dataField: "reqloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 },
+                     {dataField: "itmcd",headerText :"<spring:message code='log.head.matcode'/>"                   ,width:120    ,height:30 },
+                     {dataField: "delyqty",headerText :"<spring:message code='log.head.deliveredqty'/>"                  ,width:120    ,height:30}
+                    ];
 
 //var serialcolumn       =[{dataField: "itmcd",headerText :"<spring:message code='log.head.materialcode'/>"                   ,width:  "20%"       ,height:30 },
 //{dataField: "itmname",headerText :"<spring:message code='log.head.materialname'/>"                 ,width:  "25%"       ,height:30 },
@@ -95,6 +98,7 @@ var resop = {
         showStateColumn : false,
         showBranchOnGrouping : false
         };
+var reqop = {editable : true};        
 
 // var serialop = {
 //         editable : true
@@ -152,10 +156,15 @@ $(document).ready(function(){
      ***********************************/
 
     listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, resop);
+    reqGrid  = AUIGrid.create("#sub_grid_wrap", reqcolumnLayout, reqop);
     //listGrid = GridCommon.createAUIGrid("#main_grid_wrap", rescolumnLayout,"", resop);
     //serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
 
     AUIGrid.bind(listGrid, "cellClick", function( event ) {});
+    
+    AUIGrid.bind(reqGrid, "cellClick", function( event ) {
+    	console.log(event);
+    });
 
     AUIGrid.bind(listGrid, "cellEditBegin", function (event){
 
@@ -405,10 +414,19 @@ $(function(){
                   break;
               }
           }
+        /*******여기부터************/
+        var bool = true;
+        bool = fnQtyChk(checkedItems);
+        if (!bool){
+        	Common.alert('Delivery quantity is more than stock. Please check again.');
+        	return false;
+        }
+        
+        /*******여기까지************/
         if(chkfalg=="Y"){
             var data = {};
             data.checked = checkedItems;
-            console.log(data);
+            
             Common.ajax("POST", "/logistics/stocktransfer/StocktransferReqDelivery.do", data, function(result) {
             	if("dup"==result.data){
 	            	Common.alert( " Not enough Qty, Please search again. ");
@@ -455,6 +473,49 @@ $(function(){
     });
 });
 
+function fnQtyChk(data){
+	
+	var rowPos = "first";
+	var rowList = [];
+	
+	for (var i = 0 ; i < data.length ; i++){
+		rowList [i] = {
+		itmcd   : data[i].itmcd,
+		delyqty : data[i].delyqty,
+        reqloc  : data[i].rcvloc
+		};
+	}
+	
+	AUIGrid.setGridData(reqGrid, rowList);
+	
+	AUIGrid.setGroupBy(reqGrid, ["itmcd"], {
+        dataFields : [ "delyqty" ]
+    } );
+	
+	var rdata = AUIGrid.getGridData(reqGrid);
+	var bool = true;
+	for (var i = 0 ; i < rdata.length ; i++){
+// 		console.log(rdata[i].itmcd);
+// 		console.log(rdata[i].children[0].reqloc);
+// 		console.log(rdata[i].children[rdata[i].children.length -1 ].delyqty);
+		
+		var param = "itmcd="+rdata[i].itmcd+"&reqloc="+rdata[i].children[0].reqloc+"&delyqty="+rdata[i].children[rdata[i].children.length -1 ].delyqty;
+		
+		Common.ajax("GET" , "/logistics/stocktransfer/stockMaxQtyCheck.do" , param , function(result){
+	        //AUIGrid.setGridData(resGrid, result.data);
+	        if (result.chkyn == 'N'){
+	        	bool = false;
+	        }else{
+	        	bool = true;
+	        }
+	    },null, {async : false});
+		//console.log(bool);
+		if (!bool){
+			break;
+		}
+	}
+	return bool;
+}
 
 function fn_itempopList(data){
 
@@ -806,6 +867,7 @@ function f_addrow(){
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
+        <div id="sub_grid_wrap" class="mt10" style="height:450px"></div>
 
     </section><!-- search_result end -->
 

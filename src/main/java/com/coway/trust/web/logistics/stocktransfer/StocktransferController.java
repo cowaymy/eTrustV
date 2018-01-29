@@ -518,4 +518,17 @@ public class StocktransferController {
 		return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/stockMaxQtyCheck.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> stockMaxQtyCheck(@RequestParam Map<String, Object> params,
+			Model model) {
+		
+		logger.debug(" :::: {} ", params);
+		
+		String chkYn = stock.selectMaxQtyCheck(params);
+		Map<String, Object> map = new HashMap();
+		map.put("chkyn" , chkYn);
+
+		return ResponseEntity.ok(map);
+	}
+	
 }
