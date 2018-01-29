@@ -115,7 +115,7 @@
                 (
                 SELECT
                     A.GROUP_SEQ GROUP_SEQ,
-                    B.PAY_ITM_CC_NO PAY_ITM_CC_NO,
+                    B.PAY_ITM_ORI_CC_NO PAY_ITM_CC_NO,
                     B.PAY_ITM_REF_DT PAY_ITM_REF_DT,
                     B.PAY_ITM_APPV_NO PAY_ITM_APPV_NO,
                     B.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID,
@@ -140,7 +140,7 @@
                     </if>
                 GROUP BY 
                     A.GROUP_SEQ,
-                    B.PAY_ITM_CC_NO,
+                    B.PAY_ITM_ORI_CC_NO,
                     B.PAY_ITM_REF_DT,
                     B.PAY_ITM_APPV_NO,
                     B.PAY_ITM_CARD_MODE_ID,
