@@ -50,6 +50,18 @@ $(document).ready(function(){
          }else if(  event.marker == "added-edited"){
         	 
          }
+        
+        $("#ddlStatus").change(function(){
+            if($("#ddlStatus").val() == 4 ){
+                $("#iscommission").attr("checked",true);
+            	
+            }
+            else{
+            	 $("#iscommission").attr("checked",false);
+            }
+        	
+        });
+        
   });
     
     
@@ -571,9 +583,9 @@ function fn_filterAddVaild(){
 
 function fn_filterAdd(){
     
-	if(fn_chStock() ==false){
+	 if(fn_chStock() ==false){
 		   return ;
-	}
+	} 
 	
     if(fn_filterAddVaild() ==false){
         Common.alert('*<b>Please fill up the compulsory fields to add the filter.</b>');

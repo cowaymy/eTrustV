@@ -2553,7 +2553,7 @@
 	            , #{entryId}
 	            , #{statusCodeId}
 	            , #{ctid}
-	            ,  sysdate
+	            ,  TO_DATE(#{installDate},'DD-MM-YYYY')
 	            , #{remark}
 	            , #{glpost}
 	            , #{creator}
@@ -2593,9 +2593,19 @@
 		   SET STUS_CODE_ID = #{stusCodeId},
 		       INSTALL_RESULT_ID = #{installResultId},
 		       UPD_DT = SYSDATE,
-		       UPD_USER_ID = #{creator}
+		       UPD_USER_ID = #{creator},
+		       INSTALL_DT = TO_DATE(#{installDate},'DD-MM-YYYY')
 		 WHERE  ( INSTALL_ENTRY_ID = #{installEntryId} )
 		 </update>
+		 
+		 
+		  <update id="updateInstallEntryEdit" parameterType="Map">
+         UPDATE SAL0046D
+           SET UPD_DT = SYSDATE,
+               UPD_USER_ID = #{user_id},
+               INSTALL_DT = TO_DATE(#{installdt},'DD-MM-YYYY')
+         WHERE  ( INSTALL_ENTRY_ID = #{entryId} )
+         </update>
 		<insert id="insertSirim" parameterType="Map">
 		 INSERT INTO LOG0040D (
 		      SIRIM_ID
@@ -3971,6 +3981,7 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
        ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
           END C1  ,
        Limit1.CRT_DT CRT_DT  ,
+      TO_char( Limit1.INSTALL_DT, 'dd/mm/yyyy') INSTALL_DT, 
        CASE
             WHEN ( Limit1.USER_ID IS NOT NULL ) THEN Limit1.USER_NAME
        ELSE 'N'
@@ -4089,7 +4100,9 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
                DOC_REF_NO1 = #{refNo1},
                DOC_REF_NO2 = #{refNo1},
                UPD_DT = SYSDATE,
-               UPD_USER_ID = #{user_id}
+               UPD_USER_ID = #{user_id},
+              INSTALL_DT= to_date( #{installdt} , 'DD/MM/YYYY' )
+               
          WHERE  ( RESULT_ID = #{resultId} )
          </update>
 

@@ -378,6 +378,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 						maxId = installationResultListMapper.selectMaxId(maxIdValue);
 						logger.debug("maxId : {}", maxId);
 						entry.put("stusCodeId", installResult.get("statusCodeId"));
+						entry.put("installDate",  installResult.get("installDate"));
 						entry.put("installResultId", maxId);
 						entry.put("updated",  installResult.get("created"));
 						entry.put("updator",  installResult.get("creator"));
@@ -1946,6 +1947,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     				s46dup.put("updated",  installResult.get("created"));
     				s46dup.put("updator",  installResult.get("creator"));
     				s46dup.put("installEntryId",  installResult.get("entryId"));
+    				s46dup.put("installDate",  installResult.get("installDate"));
+    				
 
             		installationResultListMapper.updateInstallEntry(s46dup);
 
@@ -1974,6 +1977,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         		entry.put("stusCodeId", installResult.get("statusCodeId"));
         		entry.put("updated",  installResult.get("created"));
         		entry.put("updator",  installResult.get("creator"));
+        		entry.put("installDate",  installResult.get("installDate"));
         		installationResultListMapper.updateInstallEntry(entry);
 		}
 
@@ -2156,6 +2160,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		
 		
 		int resultValue =installationResultListMapper.updateInstallResultEdit(params);
+		installationResultListMapper.updateInstallEntryEdit(params);
 
 		return resultValue;
 	}

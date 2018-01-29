@@ -56,6 +56,7 @@ function fn_saveInstall(){
 
 <form action="#" id="editInstallForm" method="post">
 <input type="hidden" value="<c:out value="${installInfo.resultId}"/> "  id="resultId" name="resultId"/>
+<input type="hidden" value="<c:out value="${installInfo.installEntryId}"/> "  id="entryId" name="entryId"/>
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -68,9 +69,11 @@ function fn_saveInstall(){
 <tr>
     <th scope="row"><spring:message code='service.title.InstallationNo'/></th>
     <td>
+      <span><c:out value="${installInfo.c14}" /></span>
     </td>
     <th scope="row"><spring:message code='service.title.InstallationStatus'/></th>
     <td>
+      <span><c:out value="${installInfo.name}" /></span>
     </td>
 </tr>
 <tr>
@@ -108,6 +111,16 @@ function fn_saveInstall(){
         <th scope="row"><spring:message code='service.title.RefNo'/> (2)</th>
     <td>
         <input type="text" id="refNo2" name="refNo2" value="<c:out value="${installInfo.docRefNo2}" />" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">Actual Install Date</th>
+    <td>
+        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" title="Create start Date" placeholder="DD/MM/YYYY"  id="installdt" name="installdt" value="<c:out value="${installInfo.installDt}" />" />
+    </td>
+        <th scope="row"></th>
+    <td>
+        
     </td>
 </tr>
 <tr>

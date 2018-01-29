@@ -523,7 +523,7 @@ public class InstallationResultListController {
 			
 			
 		}else{
-			if(locInfo==null){
+		if(locInfo==null){
 				message.setMessage("Can't complete the Installation without available stock in the CT");
 			}else{
 				if(Integer.parseInt(locInfo.get("availQty").toString())<1){
@@ -550,8 +550,8 @@ public class InstallationResultListController {
 	            			}
 	            			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 	            		}
-	        		}
-	    		}
+	            		}
+			}
 			}
 		
 		}

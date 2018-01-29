@@ -204,7 +204,9 @@ public interface InstallationResultListMapper {
 
 	EgovMap getInstallationResultInfo(Map<String, Object> params);
 
-	List<EgovMap> viewInstallationResult(Map<String, Object> params); 
+	List<EgovMap> viewInstallationResult(Map<String, Object> params);
+
+	void updateInstallEntryEdit(Map<String, Object> params); 
 
 	
 	
