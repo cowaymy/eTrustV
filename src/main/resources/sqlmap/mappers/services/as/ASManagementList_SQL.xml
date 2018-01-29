@@ -2159,9 +2159,9 @@
      
      <select id="geTtotalAASLeft" parameterType="Map" resultType="egovMap">    
 		<![CDATA[		     
-				SELECT totalLgAmt,
-				           totalUsedLgAmt ,
-				           (totalLgAmt - totalUsedLgAmt) totalAASLeft
+				SELECT sum(totalLgAmt),
+				           sum(totalUsedLgAmt) ,
+				           (sum(totalLgAmt) - sum(totalUsedLgAmt)) totalAASLeft
 				FROM(
 				    SELECT 
 				        (totalLgAmt * -1) totalLgAmt ,
