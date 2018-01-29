@@ -3530,7 +3530,7 @@
 				WHERE A.SALES_ORD_ID = (SELECT E1.SALES_ORD_ID 
 							                        FROM SAL0001D E1
 							                        LEFT JOIN LOG0038D E2 ON E1.SALES_ORD_ID = E2.SALES_ORD_ID
-							                        WHERE E1.SALES_ORD_NO = #{serviceNo}
+							                        WHERE E2.RETN_NO = #{serviceNo}
 							                        AND E2.STUS_CODE_ID = '4')
        </update>
        
