@@ -83,9 +83,10 @@ $(document).ready(function() {
           
           if($("#orderNo").val()==""){        
             console.log($("#orderNo").val());
-              if( $("#createDate").val() =="" ||  $("#endDate").val() ==""  ||   $("#listDSCCode").val() ==""  ){
+             /*  if( $("#createDate").val() =="" ||  $("#endDate").val() ==""  ||   $("#listDSCCode").val() ==""  ) */
+             if( $("#createDate").val() =="" ||  $("#endDate").val() ==""  ) {
                     
-                     Common.alert('Branch and Order Date are compulsory option to search');
+                     Common.alert('Order Date are compulsory option to search');
                      return ;
                  }
              

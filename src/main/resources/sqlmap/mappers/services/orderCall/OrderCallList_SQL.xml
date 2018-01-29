@@ -135,13 +135,13 @@
                             
                    </if>
                    <if test="createDate != '' and endDate == '' ">
-                            <![CDATA[ AND  TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')  >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[ AND  TO_DATE(Extent1.SALES_ORD_DT)  >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
                    </if>
                    <if test="endDate != '' and createDate == '' ">
-                            <![CDATA[  AND  TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')    <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[  AND  TO_DATE(Extent1.SALES_ORD_DT)    <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
                    </if>
                    <if test="createDate != '' and endDate != '' ">
-                            <![CDATA[  AND TO_DATE(Extent1.CRT_DT,'DD/MM/YYYY')    between TO_DATE(#{createDate},  'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[  AND TO_DATE(Extent1.SALES_ORD_DT)    between TO_DATE(#{createDate},  'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
                    </if>
                     <if test="callStrDate != '' and callEndDate == '' ">
                             <![CDATA[ AND  TO_DATE(Extent1.CALL_LOG_DT,'DD/MM/YYYY')  >= TO_DATE(#{callStrDate}, 'DD/MM/YYYY') ]]>
