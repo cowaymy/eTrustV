@@ -6,9 +6,9 @@
 
 
 $(document).ready(function(){
-
-	createAUIGrid();
 	
+	createAUIGrid();
+
 	fn_getASOrderInfo();
     fn_getASEvntsInfo();
     fn_getCallLog();
@@ -47,7 +47,8 @@ function fn_getASOrderInfo(){
             $("#txtTelMobile").text(result[0].instCntTelM);
             $("#txtTelResidence").text(result[0].instCntTelR);
             $("#txtTelOffice").text(result[0].instCntTelO);
-            $("#txtInstallAddress").text(result[0].instCntName);
+            //$("#txtInstallAddress").text(result[0].instCntName);
+            $("#txtInstallAddress").text(result[0].instAddrDtl);
             
             $("#txtProductCode").text(result[0].stockCode);
             $("#txtProductName").text(result[0].stockDesc);
@@ -62,6 +63,7 @@ function fn_getASOrderInfo(){
             $("#txtMembership").text(result[0].c5);
             $("#txtExpiredDate").text(result[0].c6);
             
+            //$("#txtASKeyBy").text(result[0].userFullName);
             
         });
 }
@@ -190,8 +192,7 @@ function fn_getCallLog(){
     <th scope="row">Requestor</th>
     <td colspan="3">   <span id="txtRequestor">text</span>  </td>
     <th scope="row">AS Key By</th>
-    <td>
-    </td>
+    <td> <span id="txtASKeyBy">text</span> </td>
 </tr>
 <tr>
     <th scope="row">Requestor Contact</th>

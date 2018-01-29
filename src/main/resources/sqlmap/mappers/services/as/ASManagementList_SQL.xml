@@ -931,7 +931,9 @@
 							              AND ( S.SRV_MEM_SALESMAN_NAME IS NULL ) ) ) THEN S.SRV_MEM_PAC_NAME
 							       ELSE ' '
 							          END C5  ,
-							       to_char(S.SRV_MEM_EXPR_DT ,'dd/mm/yyyy') C6  
+							       to_char(S.SRV_MEM_EXPR_DT ,'dd/mm/yyyy') C6, 
+							       S.USER_FULL_NAME,
+							       S.INST_ADDR_DTL
 							  FROM ( SELECT E.ORD_ID ORD_ID  ,
 							                E.ORD_NO ORD_NO  ,
 							                E.RENTAL_STUS RENTAL_STUS  ,
@@ -949,6 +951,7 @@
 							                '' INST_STATE  ,
 							                '' INST_AREA  ,
 							                '' INST_POST_CODE  ,
+							                E2.INST_ADDR_DTL INST_ADDR_DTL, 
 							                E2.INST_CNT_NAME INST_CNT_NAME  ,
 							                E2.INST_CNT_TEL_M INST_CNT_TEL_M  ,
 							                E2.INST_CNT_TEL_O INST_CNT_TEL_O  ,
@@ -980,7 +983,8 @@
 							                E4.SRV_MEM_SALESMAN_CODE SRV_MEM_SALESMAN_CODE  ,
 							                E4.SRV_MEM_SALESMAN_NAME SRV_MEM_SALESMAN_NAME  ,
 							                E5.CODE_ID CODE_ID  ,
-							                E5.CODE_NAME CODE_NAME  
+							                E5.CODE_NAME CODE_NAME, 
+							                E6.USER_FULL_NAME
 							         FROM ( SELECT vOrderBasicInfo.*
 							                FROM SAL1006V vOrderBasicInfo ) E
 							                JOIN ( SELECT vOrderInstallationInfo.*  
@@ -991,6 +995,7 @@
 							                LEFT JOIN ( SELECT vOrderSrvMemConfigInfo.*  
 							                            FROM SAL1014V vOrderSrvMemConfigInfo ) E4   ON E.ORD_ID = E4.ORD_ID
 							                LEFT JOIN SYS0013M E5   ON Extent3.STK_CTGRY_ID = E5.CODE_ID
+							                LEFT JOIN SYS0047M E6 ON E.UPD_USER_ID = E6.USER_NAME
 							          WHERE  E.ORD_ID = #{ORD_ID} AND ROWNUM   <![CDATA[ <=   ]]> 1 ) S
 				                
      </select>
@@ -1171,10 +1176,18 @@
    <select id="getASHistoryInfo" parameterType="Map" resultType="egovMap">
 			     SELECT S.C1 C1  ,
 								       S.AS_NO AS_NO  ,
-								       S.AS_REQST_DT AS_REQST_DT  ,
+								       CASE
+									     WHEN ( S.AS_REQST_DT IS NOT NULL )
+									     THEN TO_CHAR(S.AS_REQST_DT, 'DD/MM/YYYY')
+									     ELSE '-'
+									   END AS_REQST_DT ,
 								       S.CODE CODE  ,
 								       S.C2 C2  ,
-								       S.AS_SETL_DT AS_SETL_DT  ,
+								       CASE
+									     WHEN ( S.AS_SETL_DT IS NOT NULL )
+									     THEN TO_CHAR(S.AS_SETL_DT, 'DD/MM/YYYY')
+									     ELSE '-'
+									   END AS_SETL_DT ,
 								       S.C3 C3  ,
 								       S.C4 C4  ,
 								       S.C5 C5  ,
@@ -1216,7 +1229,7 @@
 								                AND ( 457 = Extent3.AS_RESULT_TYPE_ID )
 								                LEFT JOIN SYS0032M Extent4   ON D.AS_MALFUNC_ID = Extent4.RESN_ID
 								                LEFT JOIN SYS0032M Extent5   ON D.AS_MALFUNC_RESN_ID = Extent5.RESN_ID
-								                LEFT JOIN ORG0001D Extent6   ON Extent3.AS_CT_ID = Extent6.MEM_ID
+								                LEFT JOIN ORG0001D Extent6   ON D.AS_MEM_ID = Extent6.MEM_ID
 								                LEFT JOIN SYS0032M Extent7   ON Extent3.AS_SLUTN_RESN_ID = Extent7.RESN_ID
 								          WHERE  D.AS_SO_ID = #{ORD_ID} ) S
    </select>
