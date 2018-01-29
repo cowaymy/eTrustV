@@ -400,9 +400,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		
 		
 		if(log39cnt > 0){
-			logger.debug("updateState_LOG0038D==>" +params.toString());
+			logger.debug("updateState_LOG0038D / updateState_SAL0001D==>" +params.toString());
 			int  log38cnt  = MSvcLogApiMapper.updateState_LOG0038D(params);
-			logger.debug("log38cnt==>" +log39cnt);
+			logger.debug("log38cnt==>" +log38cnt);
+			int  sal1dcnt  = MSvcLogApiMapper.updateState_SAL0001D(params);
+			logger.debug("sal1dcnt==>" +sal1dcnt);
 		}
 		
 		

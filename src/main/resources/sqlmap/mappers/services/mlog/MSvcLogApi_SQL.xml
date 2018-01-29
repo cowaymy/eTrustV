@@ -3524,6 +3524,16 @@
                 WHERE  retn_no   = #{serviceNo}
        </update>
        
+       <update id="updateState_SAL0001D" parameterType="Map">
+                UPDATE SAL0001D A
+				SET STUS_CODE_ID = '10'
+				WHERE A.SALES_ORD_ID = (SELECT E1.SALES_ORD_ID 
+							                        FROM SAL0001D E1
+							                        LEFT JOIN LOG0038D E2 ON E1.SALES_ORD_ID = E2.SALES_ORD_ID
+							                        WHERE E1.SALES_ORD_NO = #{serviceNo}
+							                        AND E2.STUS_CODE_ID = '4')
+       </update>
+       
        <select id="getRetnCrtUserId" parameterType="Map" resultType="java.lang.String">
          SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{stkRetnCrtUserId}
       </select>

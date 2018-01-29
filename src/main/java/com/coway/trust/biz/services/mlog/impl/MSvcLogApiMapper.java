@@ -145,6 +145,7 @@ public interface MSvcLogApiMapper {
 	
 	/*ProductReturnResult  API*/
 	int  updateState_LOG0038D(Map<String, Object> params);
+	int  updateState_SAL0001D(Map<String, Object> params);
 	int  insert_LOG0039D(Map<String, Object> params);
 	int  updateAppTm_LOG0038D(Map<String, Object> params);
 	int  insertFailed_LOG0039D(Map<String, Object> params);  
