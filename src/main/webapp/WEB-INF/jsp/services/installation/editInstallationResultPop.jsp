@@ -79,7 +79,7 @@ function fn_saveInstall(){
 <tr>
     <th scope="row"><spring:message code='service.title.Creator'/></th>
     <td>
-        <span><c:out value="${installInfo.crtUserId}" /></span>
+        <span><c:out value="${installInfo.c2}" /></span>
     </td>
     <th scope="row"><spring:message code='service.title.CreateDate'/></th>    
     <td>
