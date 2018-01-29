@@ -56,10 +56,7 @@ function fn_save(){
 }
 
 
-function go_uploadPage(){
-	alert("docNo " +$("#saveDocNo").val() );
-	alert("dcfReqEntryId" +$("#saveDcfReqEntryId").val() );
-	
+function go_uploadPage(){	
     Common.popupDiv("/sales/trBook/reportLostUploadPop.do", {"docNo" : $("#saveDocNo").val(), "dcfReqEntryId" : $("#saveDcfReqEntryId").val()}, null, true, "fileUploadPop");
 }
 
