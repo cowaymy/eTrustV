@@ -277,7 +277,7 @@
                          </if>
 			            )  GroupBy1
 			            LEFT JOIN MSC0009D Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
-			            
+
 			            WHERE 1=1
 
                         <if test="memTypeCom != null and memTypeCom != ''">
@@ -1092,7 +1092,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		  FROM ( SELECT TO_CHAR(Extent2.CNFM_DT,'YYYY-MM-DD') CNFM_DT
 		         FROM ORG0001D Extent1
 		         JOIN ORG0003D Extent2   ON Extent2.APLCTN_ID = Extent1.APLICNT_ID
-		          WHERE  ( Extent1.MEM_ID =  #{MemberID} ) 
+		          WHERE  ( Extent1.MEM_ID =  #{MemberID} )
 		           AND ROWNUM <= 1 ) Limit1
 		]]>
     </select>
@@ -1360,10 +1360,10 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)
                ]]>
                </if>
-                 
+
       <if test="memType =='2803'">
       <![CDATA[
-    
+
         SELECT DOCLIST.* ,NVL( MEMINFO.DOC_COPY_QTY , 0 ) DOC_QTY
             FROM (
                  SELECT Extent1.CODE_ID CODE_ID ,
@@ -1382,13 +1382,13 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 FROM ORG0003D A,
                   ORG0010D B
                 WHERE A.APLCTN_ID    = B.DOC_MEM_ID
-                AND  A.APLCTN_ID    = #{memberID}) MEMINFO 
+                AND  A.APLCTN_ID    = #{memberID}) MEMINFO
                 WHERE DOCLIST.CODE_ID = MEMINFO.DOC_TYPE_ID(+)
                ]]>
             </if>
   </select>
-  
-  
+
+
 
 
   <select id="selectCodyDocSubmission" parameterType="Map" resultType="egovMap">
@@ -3665,7 +3665,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             ]]>
             </when>
             <when test="groupCode == 3">
-            <![CDATA[ 
+            <![CDATA[
 			SELECT MS8.COURS_ID AS CODE_ID, MS8.COURS_NAME AS CODE_NAME
 			  FROM MSC0008D MS8,
 			       (SELECT   COURS_ID, COUNT (1) CNT
@@ -3828,11 +3828,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			A.DEPT_CODE c41,
 		    to_char( A.APLICNT_DOB ,'DD/MM/YYYY' ) c29,
 			C.NAME c36,
-<<<<<<< .mine
-
-=======
 		    A.APLICNT_CODE Mem_Code,
->>>>>>> .r8278
 			B.AREA area_Id,
 			B.COUNTRY,
 			B.CITY,
@@ -3933,10 +3929,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       WHERE A.MEM_ID    = B.DOC_MEM_ID
        AND A.MEM_ID   = #{memId}
        AND B.DOC_TYPE_ID = #{codeId}
-<<<<<<< .mine
 
-
-=======
        </if>
        <if test=" memType == '2803' ">
         SELECT B.*
@@ -3945,10 +3938,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       WHERE A.APLCTN_ID    = B.DOC_MEM_ID
        AND A.APLCTN_ID   = #{memId}
        AND B.DOC_TYPE_ID = #{codeId}
-       
+
        </if>
-       
->>>>>>> .r8278
+
+
     </select>
 
     <update id="updateDocSub" parameterType="Map">
@@ -4010,8 +4003,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		where APLCTN_ID = #{memberId}
 
      </update>
-     
-     
+
+
         <select id="selectMemberType" parameterType="Map" resultType="egovMap">
                 SELECT Project1.CODE_ID code_Id  ,
                        Project1.CODE_MASTER_ID CODE_MASTER_ID  ,
@@ -4023,7 +4016,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                        Project1.CRT_USER_ID CRT_USER_ID  ,
                        Project1.UPD_DT UPD_DT  ,
                        Project1.UPD_USER_ID UPD_USER_ID  ,
-                       Project1.OLD_CODE_ID OLD_CODE_ID  
+                       Project1.OLD_CODE_ID OLD_CODE_ID
                   FROM ( SELECT Extent1.CODE_ID CODE_ID  ,
                                 Extent1.CODE_MASTER_ID CODE_MASTER_ID  ,
                                 Extent1.CODE CODE  ,
@@ -4034,34 +4027,34 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                                 Extent1.CRT_USER_ID CRT_USER_ID  ,
                                 Extent1.UPD_DT UPD_DT  ,
                                 Extent1.UPD_USER_ID UPD_USER_ID  ,
-                                Extent1.OLD_CODE_ID OLD_CODE_ID  
+                                Extent1.OLD_CODE_ID OLD_CODE_ID
                          FROM SYS0013M Extent1
                           WHERE  Extent1.CODE_MASTER_ID = 1 ) Project1
                   ORDER BY Project1.CODE_ID ASC
 
 
-          </select>     
-          
-          
+          </select>
+
+
 
         <select id="selectSponBrnchList" parameterType="Map" resultType="egovMap">
               SELECT Project1.BRNCH_ID code_Id  ,
-                   Project1.C1 CODE_NAME  
+                   Project1.C1 CODE_NAME
               FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
-                            Extent1.CODE || N'-' || Extent1.NAME C1  
+                            Extent1.CODE || N'-' || Extent1.NAME C1
                      FROM SYS0005M Extent1
                       WHERE  ( 1 = Extent1.STUS_ID )
                                 ) Project1
               ORDER BY Project1.C1 ASC
-          
-          </select>     
-          
-          
-          
+
+          </select>
+
+
+
 
         <select id="selectSponMemberSearch" parameterType="Map" resultType="egovMap">
 
-                SELECT * 
+                SELECT *
                   FROM ( SELECT Project1.MEM_ID MEM_ID  ,
                                 Project1.MEM_TYPE MEM_TYPE  ,
                                 Project1.MEM_CODE MEM_CODE  ,
@@ -4071,7 +4064,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                                 Project1.NAME1 NAME1  ,
                                 Project1.UPD_DT UPD_DT  ,
                                 Project1.STUS STUS  ,
-                                Project1.C1 C1  
+                                Project1.C1 C1
                   FROM ( SELECT Project1.C1 C1  ,
                                 Project1.MEM_ID MEM_ID  ,
                                 Project1.MEM_CODE MEM_CODE  ,
@@ -4082,7 +4075,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                                 Project1.UPD_DT UPD_DT  ,
                                 Project1.CODE_NAME CODE_NAME  ,
                                 Project1.NAME1 NAME1  ,
-                                ROW_NUMBER() OVER ( ORDER BY Project1.MEM_CODE ASC  ) ROW_NUMBER  
+                                ROW_NUMBER() OVER ( ORDER BY Project1.MEM_CODE ASC  ) ROW_NUMBER
                          FROM ( SELECT GroupBy1.A1 C1  ,
                                        Extent1.MEM_ID MEM_ID  ,
                                        Extent1.MEM_CODE MEM_CODE  ,
@@ -4092,11 +4085,11 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                                        Extent1.STUS STUS  ,
                                        Extent1.UPD_DT UPD_DT  ,
                                        Extent2.CODE_NAME CODE_NAME  ,
-                                       Extent3.NAME NAME1  
+                                       Extent3.NAME NAME1
                                 FROM ORG0001D Extent1
                                        JOIN SYS0013M Extent2   ON Extent1.MEM_TYPE = Extent2.CODE_ID
                                        JOIN SYS0038M Extent3   ON Extent1.STUS = Extent3.STUS_CODE_ID
-                                       CROSS JOIN ( SELECT COUNT(1)  A1  
+                                       CROSS JOIN ( SELECT COUNT(1)  A1
                                                     FROM ORG0001D Extent4
                                                      WHERE  1=1
                                                          <if test="cmbMemberType != null and cmbMemberType != '' ">
@@ -4107,78 +4100,78 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                                                          </if>
                                                          <if test="txtMemberName != null and txtMemberName != '' ">
                                                             AND ( Extent4.NAME LIKE #{txtMemberName})
-                                                         </if>                                                       
+                                                         </if>
                                                          <if test="txtICNumber != null and txtICNumber != '' ">
                                                             AND ( Extent4.NRIC LIKE #{txtICNumber})
-                                                         </if>  
+                                                         </if>
                                                          <if test="cmbBranch != null and cmbBranch != '' ">
-                                                            AND ( UTILS.CONVERT_TO_NUMBER(Extent4.BRNCH,10,0) = #{cmbBranch} ) 
-                                                         </if>                                                           
+                                                            AND ( UTILS.CONVERT_TO_NUMBER(Extent4.BRNCH,10,0) = #{cmbBranch} )
+                                                         </if>
                                                          ) GroupBy1
                                                     WHERE  1=1
                                                          <if test="cmbMemberType != null and cmbMemberType != '' ">
                                                             AND (Extent1.MEM_TYPE = #{cmbMemberType})
-                                                         </if>                                                  
+                                                         </if>
                                                          <if test="txtMemberCode != null and txtMemberCode != '' ">
                                                             AND ( Extent1.MEM_CODE LIKE #{txtMemberCode})
                                                          </if>
                                                          <if test="txtMemberName != null and txtMemberName != '' ">
                                                             AND ( Extent1.NAME LIKE #{txtMemberName} )
-                                                         </if>                                                       
+                                                         </if>
                                                          <if test="txtICNumber != null and txtICNumber != '' ">
                                                             AND ( Extent1.NRIC LIKE #{txtICNumber})
-                                                         </if>  
+                                                         </if>
                                                          <if test="cmbBranch != null and cmbBranch != '' ">
-                                                            AND ( UTILS.CONVERT_TO_NUMBER(Extent1.BRNCH,10,0) = #{cmbBranch} )  
-                                                         </if>                                                            
+                                                            AND ( UTILS.CONVERT_TO_NUMBER(Extent1.BRNCH,10,0) = #{cmbBranch} )
+                                                         </if>
                                                          ) Project1
                                              ) Project1
                  WHERE  Project1.ROW_NUMBER > 0
                     ORDER BY Project1.MEM_CODE ASC )
                  <![CDATA[         WHERE ROWNUM <= 10    ]]>
 
-          
-          </select>   
-          
-                 
+
+          </select>
+
+
 
         <select id="getMemIdwithCode" parameterType="String" resultType="EgovMap">
            <choose>
            <when test = "memberType != null and memberType != '2803' "  >
-                Select mem_id 
+                Select mem_id
                 from org0001d
                 where mem_code= #{memCode}
             </when>
             <otherwise>
-                Select APLCTN_ID mem_id 
+                Select APLCTN_ID mem_id
                 from org0003d
                 where APLICNT_CODE= #{memCode}
             </otherwise>
         </choose>
-        
+
         </select>
-        
-        
-        
-        
+
+
+
+
         <select id="selectTrainType" parameterType="Map" resultType="egovMap">
                  select TRAINEE_TYPE train
                  from org0001d
                 where mem_id= #{memId}
-        
+
         </select>
      <update id="updateDocSubWhenApproval" parameterType="Map">
     UPDATE ORG0010D
     SET UPD_USER_ID =#{userId}
     , UPD_DT = SYSDATE
     , DOC_MEM_ID = #{hpMemId}
-    
+
     WHERE DOC_MEM_ID = #{MemberID}
-   
-    
+
+
     </update>
-        
-        
-        
-        
+
+
+
+
 </mapper>
