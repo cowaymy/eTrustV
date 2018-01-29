@@ -384,7 +384,8 @@ function fn_getASOrderInfo(){
             $("#txtTelMobile").text(result[0].instCntTelM);
             $("#txtTelResidence").text(result[0].instCntTelR);
             $("#txtTelOffice").text(result[0].instCntTelO);
-            $("#txtInstallAddress").text(result[0].instCntName);
+            //$("#txtInstallAddress").text(result[0].instCntName);
+            $("#txtInstallAddress").text(result[0].instAddrDtl);
             
             $("#txtProductCode").text(result[0].stockCode);
             $("#txtProductName").text(result[0].stockDesc);

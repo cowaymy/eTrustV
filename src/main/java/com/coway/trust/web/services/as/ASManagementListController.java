@@ -275,7 +275,11 @@ public class ASManagementListController {
 		}
 		*/ 
 		//logger.debug("in orderDetail :==>" +orderDetail.toString());
-		logger.debug("in as_ord_basicInfo :==>" +as_ord_basicInfo.toString());
+		if (as_ord_basicInfo != null) {
+			logger.debug("in as_ord_basicInfo :==>" +as_ord_basicInfo.toString());
+		} else {
+			logger.debug("in as_ord_basicInfo :==> null");
+		}
 		
 		return "services/as/resultASReceiveEntryPop";
 	}  
