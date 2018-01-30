@@ -396,6 +396,8 @@ var addOrderLayout = [
         var orderNo = $("#orderNo").val();
         orderNo = $.trim(orderNo);
                 
+        // test
+        currentDay = 24;
         if(currentDay >= 26 || currentDay == 1){
             
             Common.alert("<spring:message code='pay.alert.unable26And1'/>");
@@ -449,9 +451,9 @@ var addOrderLayout = [
                         }else if(isPost == 1 && isSms == 0 && isEstm == 1){
                         	$("#estm").prop('checked', true);
                         }else{
-                        	$("#sms").prop('checked', false);
-                        	$("#estm").prop('checked', false);
-                        	$("#post").prop('checked', false);
+                        	//$("#sms").prop('checked', false);
+                        	$("#estm").prop('checked', true);
+                        	//$("#post").prop('checked', false);
                         }
                         
                         $("#remark").text(result.data.selectBasicInfo.custBillRem);
