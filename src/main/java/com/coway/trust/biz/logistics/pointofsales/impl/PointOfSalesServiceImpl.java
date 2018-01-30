@@ -93,7 +93,7 @@ public class PointOfSalesServiceImpl extends EgovAbstractServiceImpl implements 
 		// }
 		// }
 
-		if (!("OH03".equals(formMap.get("insReqType")) || "OH09".equals(formMap.get("insReqType")))) {// OH03 , OH09
+		if (!("OH03".equals(formMap.get("insReqType")) || "OH09".equals(formMap.get("insReqType")) ||  "OG".equals(formMap.get("insTransType")))) {// OH03 , OH09
 			insertStockBooking(formMap);
 		}
 		return seq;
