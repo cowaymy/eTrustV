@@ -18,12 +18,12 @@
 	 function createAUIGrid(){
 		 
 	        var columnLayout = [ 
-					             {dataField : "c3",            headerText : "Date",    width :100, editable : false},
-					             {dataField : "codeDesc",  headerText : "Type",    width : 300},
-					             {dataField : "c6",            headerText : "DocNo",  width : 100},
-					             {dataField : "c4",            headerText : "Debit",    width : 100},
-					             {dataField : "c5",            headerText : "Credit",   width :100},
-					             {dataField : "c7",            headerText : "Balance", width : 100}
+					             {dataField : "c3",            headerText : "<spring:message code="sal.title.date" />",    width :100, editable : false},
+					             {dataField : "codeDesc",  headerText : "<spring:message code="sal.title.type" />",    width : 300},
+					             {dataField : "c6",            headerText : "<spring:message code="sal.title.docNo" />",  width : 100},
+					             {dataField : "c4",            headerText : "<spring:message code="sal.title.debit" />",    width : 100},
+					             {dataField : "c5",            headerText : "Credi",   width :100},
+					             {dataField : "c7",            headerText : "<spring:message code="sal.title.balance" />", width : 100}
 	       ];
 	        
 	        //그리드 속성 설정
@@ -66,9 +66,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Membership Ledger</h1>
+<h1><spring:message code="sel.page.title.membershipLedger" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
