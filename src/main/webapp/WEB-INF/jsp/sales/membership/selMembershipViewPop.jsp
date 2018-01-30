@@ -16,9 +16,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Membership Management - View</h1>
+<h1><spring:message code="sal.page.title.membershipManagementView" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -27,10 +27,10 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Membership Info</a></li>
-    <li><a href="#">Order Info</a></li>
-    <li><a href="#">Contact Info</a></li>
-    <li><a href="#" > Filter Charge Info</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.membershipInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.ordInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.contactInfo" /></a></li>
+    <li><a href="#" ><spring:message code="sal.tap.title.filterChargeInfo" /></a></li>
 </ul>
 
 
