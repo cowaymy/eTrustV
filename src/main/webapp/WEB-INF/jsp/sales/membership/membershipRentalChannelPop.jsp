@@ -418,8 +418,7 @@ function fn_doSelectCard_Click(){
     	_custId = $("#txtThirdPartyID").val();
     }
     
-    alert(_custId);
-    Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : _custId, callPrgm : "ORD_REGISTER_PAYM_CRC"}, null, true ,'_SelectCardDiv1');
+    Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : _custId, callPrgm : "ORD_REQUEST_PAY"}, null, true ,'_SelectCardDiv1');
 }
 
 
@@ -431,7 +430,7 @@ function fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCr
 	$("#txtRentPayCRCExpiry").val(custCrcExpr);
 	$("#txtRentPayCRCBank").val(bankName);
 	$("#txtRentPayCRCCardType").val(codeName);
-	$("#custOriCrcNo").val(custOriCrcNo);
+	$("#_custOriCrcNo").val(custOriCrcNo);
 	
 }
 
@@ -501,9 +500,6 @@ function fn_doSave(){
 
 function fn_setSaveForm(){
 	
-	
-	alert("in save... ");
-	
 	var defaultDate  ="01/01/1900";
 	
 	var _bankID =0;
@@ -539,12 +535,12 @@ function fn_setSaveForm(){
 		    statusCodeID:1,
 		    is3rdParty:$('#paybyCk').is(':checked')?1 : 0 ,
 		    customerID:$('#paybyCk').is(':checked')?$("#hiddenThirdPartyID").val() :$("#txtThirdPartyID").val()  , 
-		    editTypeID:0,
+		    editTypeID:0,     // what is this?
 		    nRICOld:$("#txtRentPayIC").val()!=""?$("#txtRentPayIC").val()   : "" ,
 		    failReasonID:$('#rejectChbox').is(':checked')?$("#cmbRentPaymode").val()  : 0,
 		    issuedNRIC:_issuedNRIC,
-		    aeonConvert:false,
-		    remark :  "",
+		    aeonConvert:false,    // What is this?
+		    remark :  "",     //remark 없음
 		    payTerm : $("#cmbPayTerm").val(),
 		    serviceContractID :  '${srvCntrctId}'  
 		     
@@ -555,7 +551,7 @@ function fn_setSaveForm(){
           Common.alert(result.message);
           fn_selectListAjax();
 
-         $("# _PayChannelDiv1").remove();
+//         $("# _PayChannelDiv1").remove();
           
           
       }, function(jqXHR, textStatus, errorThrown) {
@@ -797,6 +793,10 @@ function  fn_DisableControl(){
 }
 
 
+//function fn_loadCreditCard2(){
+//	$("#_close1").click();
+//}
+
 </script>
 
 
@@ -810,7 +810,7 @@ function  fn_DisableControl(){
 <form  id='hForm' name='hForm'>
 <div style="display:none"> 
     <input type="text" name='hiddenThirdPartyID' id='hiddenThirdPartyID' >
-    <input type="text" name='custOriCrcNo' id='custOriCrcNo' >
+    <input type="text" name='custOriCrcNo' id='_custOriCrcNo' >
     
     
 </div>
