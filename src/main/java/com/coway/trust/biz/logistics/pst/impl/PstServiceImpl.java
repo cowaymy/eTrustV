@@ -199,11 +199,16 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 					logger.debug(" :::: " + String.valueOf(insMap.get("pcr")));
 					try{
 						charge = charge + (double)(reqqty * (int)insMap.get("itmprc") * Double.parseDouble(String.valueOf(insMap.get("pcr"))));
-						incharge = incharge + (reqqty * (int)insMap.get("itmprc"));
 					}catch(Exception ex){
 						charge = charge + (reqqty * (double)insMap.get("itmprc") * Double.parseDouble(String.valueOf(insMap.get("pcr"))));
+					}
+					
+					try{
+						incharge = incharge + (reqqty * (int)insMap.get("itmprc"));
+					}catch(Exception ex){
 						incharge = incharge + (reqqty * (double)insMap.get("itmprc"));
-					}					
+					}
+					
 				}
 			}
 			invoiceD.put("itemtype", 1272);
