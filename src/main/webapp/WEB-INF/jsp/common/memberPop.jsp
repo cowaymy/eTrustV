@@ -18,7 +18,9 @@
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
             
         	if(callPrgm=="TR_BOOK_ASSIGN"){
-        		fn_loadOrderSalesman($("#popMemType").val(), $('select[name="memType"] :selected').text(), 
+        		fn_loadOrderSalesman(
+        				AUIGrid.getCellValue(myGridID , event.rowIndex , "memType"),
+        				AUIGrid.getCellValue(myGridID , event.rowIndex , "memTypeName"), 
                 		AUIGrid.getCellValue(myGridID , event.rowIndex , "memId"), 
                         AUIGrid.getCellValue(myGridID , event.rowIndex , "memCode"),
                         AUIGrid.getCellValue(myGridID , event.rowIndex , "name"));
