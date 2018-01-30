@@ -736,6 +736,7 @@
         }
         
         if(tabNm == 'PRM') {
+            /*
             if(PROMO_CODE.indexOf('CMCPG160105') != -1 || PROMO_DESC.indexOf('EX-TRADE')    != -1 || PROMO_DESC.indexOf('EXTRADE')     != -1
             || PROMO_CODE.indexOf('CMCPG160401') != -1 || PROMO_DESC.indexOf('CMCPG160402') != -1 || PROMO_DESC.indexOf('CMCPG160403') != -1
             || PROMO_CODE.indexOf('CMCPG160404') != -1 || PROMO_DESC.indexOf('CMCPG160601') != -1 || PROMO_DESC.indexOf('CMCPG160602') != -1
@@ -747,7 +748,7 @@
                     
                 return false;
             }
-            
+            */
             if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
                 var msg = "This order is not in active/complete status.<br/>Edit promotion is disallowed.";
                         
