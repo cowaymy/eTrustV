@@ -95,16 +95,16 @@ function f_EvCombo(){
  function tr_CreateAUIGrid(){
          
             var columnLayout = [ 
-                                 {dataField : "type",       headerText : "Type",    width :300}, 
-                                 {dataField : "trNo",       headerText : "TR No",    width : 100},
-                                 {dataField : "issDate",   headerText : "Issued Date",  width : 200},
+                                 {dataField : "type",       headerText : "<spring:message code="sal.title.type" />",    width :300}, 
+                                 {dataField : "trNo",       headerText : "<spring:message code="sal.title.trNo" />",    width : 100},
+                                 {dataField : "issDate",   headerText : "<spring:message code="sal.title.issueDate" />",  width : 200},
 	                             {
 			                            dataField : "undefined",
 			                            headerText : " ",
 			                            width           : 110,    
 			                            renderer : {
 			                                type : "ButtonRenderer",
-			                                labelText : "Remove",
+			                                labelText : "<spring:message code="sal.title.remove" />",
 			                                onclick : function(rowIndex, columnIndex, value, item) {
 			                                	 AUIGrid.removeRow(trGridID, rowIndex);
 			                                }
@@ -127,9 +127,7 @@ function f_EvCombo(){
                     useGroupingPanel    : false,        //그룹핑 패널 사용
                     skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                     wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                    showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                    noDataMessage       : "No order found.",
-                    groupingMessage     : "Here groupping",
+                    showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력   
                     softRemovePolicy : "exceptNew"
                 };
         
@@ -142,11 +140,11 @@ function f_EvCombo(){
 			var columnLayout = [ 
 			            {
 			                dataField : "undefined",
-			                headerText : "remove ",
+			                headerText : "<spring:message code="sal.title.remove" />",
 			                width           : 50,    
 			                renderer : {
 			                    type : "ButtonRenderer",
-			                    labelText : "Remove",
+			                    labelText : "<spring:message code="sal.title.Remove" />",
 			                    onclick : function(rowIndex, columnIndex, value, item) {
 			                         //AUIGrid.removeRow(trGridID, rowIndex);
 			                    }
@@ -154,46 +152,46 @@ function f_EvCombo(){
 			            },
 			            {
 			                dataField : "undefined",
-			                headerText : "copy ",
+			                headerText : "<spring:message code="sal.title.copy" /> ",
 			                width           : 50,    
 			                renderer : {
 			                    type : "ButtonRenderer",
-			                    labelText : "Copy",
+			                    labelText : "<spring:message code="sal.title.Copy" />",
 			                    onclick : function(rowIndex, columnIndex, value, item) {
 			                         //AUIGrid.removeRow(trGridID, rowIndex);
 			                    }
 			                }
 			            },
-			            {dataField : "modeId",       headerText : "modeId",      width :160}, 
-			            {dataField : "modeName",     headerText : "modeName",    width :160}, 
-			            {dataField : "refNo",        headerText : "refNo",       width :160}, 
-			            {dataField : "cCNo",         headerText : "cCNo",        width :160}, 
-			            {dataField : "cCTypeId",     headerText : "cCTypeId",    width :160}, 
-			            {dataField : "cCTypeName",   headerText : "cCTypeName",  width :160}, 
-			            {dataField : "cCExpiry",     headerText : "cCExpiry",    width :160}, 
-			            {dataField : "cCOwner",      headerText : "cCOwner",     width :160}, 
-			            {dataField : "chqNo",        headerText : "chqNo",       width :160}, 
-			            {dataField : "issueBankId",  headerText : "issueBankId", width :160}, 
-			            {dataField : "issueBankCode",headerText : "issueBankCode",width :160}, 
-			            {dataField : "amount",       headerText : "amount",      width :160}, 
-			            {dataField : "isOnline",     headerText : "isOnline",    width :160}, 
-			            {dataField : "isOnlineStr",  headerText : "isOnlineStr", width :160}, 
-			            {dataField : "bankAccId",    headerText : "bankAccId",   width :160}, 
-			            {dataField : "bankAccCode",  headerText : "bankAccCode", width :160}, 
-			            {dataField : "refDate",      headerText : "refDate",     width :160}, 
-			            {dataField : "appvNo",       headerText : "appvNo",      width :160}, 
-			            {dataField : "remark",       headerText : "remark",      width :160}, 
-			            {dataField : "bCAmt",        headerText : "bCAmt",       width :160}, 
-			            {dataField : "bankBranchId", headerText : "bankBranchId",width :160}, 
-			            {dataField : "bankInSlipNo", headerText : "bankInSlipNo",width :160}, 
-			            {dataField : "eFTNo",        headerText : "eFTNo",       width :160}, 
-			            {dataField : "chqDepositNo", headerText : "chqDepositNo",width :160}, 
-			            {dataField : "runningNo",    headerText : "runningNo",   width :160}, 
-			            {dataField : "cardTypeId",   headerText : "cardTypeId",  width :160}, 
-			            {dataField : "cardType",     headerText : "cardType",    width :160}, 
-			            {dataField : "cRCModeId",    headerText : "cRCModeId",   width :160}, 
-			            {dataField : "payTypeId",    headerText : "payTypeId",   width :160}, 
-			            {dataField : "refItemNo",    headerText : "refItemNo",   width :160}
+			            {dataField : "modeId",       headerText : "<spring:message code="sal.title.modeId" />",      width :160}, 
+			            {dataField : "modeName",     headerText : "<spring:message code="sal.title.modeName" />",    width :160}, 
+			            {dataField : "refNo",        headerText : "<spring:message code="sal.title.refNo2" />",       width :160}, 
+			            {dataField : "cCNo",         headerText : "<spring:message code="sal.title.cCNo" />",        width :160}, 
+			            {dataField : "cCTypeId",     headerText : "<spring:message code="sal.title.cCTypeId" />",    width :160}, 
+			            {dataField : "cCTypeName",   headerText : "<spring:message code="sal.title.cCtypeName" />",  width :160}, 			            
+			            {dataField : "cCExpiry",     headerText : "<spring:message code="sal.title.cCExpiry" />",    width :160}, 
+			            {dataField : "cCOwner",      headerText : "<spring:message code="sal.title.cCOwner" />",     width :160}, 
+			            {dataField : "chqNo",        headerText : "<spring:message code="sal.title.chqNo" />",       width :160}, 
+			            {dataField : "issueBankId",  headerText : "<spring:message code="sal.title.issueBankId" />", width :160}, 
+			            {dataField : "issueBankCode",headerText : "<spring:message code="sal.title.issueBankCode" />",width :160}, 
+			            {dataField : "amount",       headerText : "<spring:message code="sal.title.amount2" />",      width :160}, 
+			            {dataField : "isOnline",     headerText : "<spring:message code="sal.title.isOnline" />",    width :160}, 
+			            {dataField : "isOnlineStr",  headerText : "<spring:message code="sal.title.isOnlineStr" />", width :160}, 
+			            {dataField : "bankAccId",    headerText : "<spring:message code="sal.title.bankAccId" />",   width :160}, 
+			            {dataField : "bankAccCode",  headerText : "<spring:message code="sal.title.bankAccCode" />", width :160}, 
+			            {dataField : "refDate",      headerText : "<spring:message code="sal.title.refDate2" />",     width :160}, 
+			            {dataField : "appvNo",       headerText : "<spring:message code="sal.title.appvNo" />",      width :160}, 
+			            {dataField : "remark",       headerText : "<spring:message code="sal.title.remark2" />",      width :160}, 
+			            {dataField : "bCAmt",        headerText : "<spring:message code="sal.title.bCAmt" />",       width :160}, 
+			            {dataField : "bankBranchId", headerText : "<spring:message code="sal.title.bankBranchId" />",width :160}, 
+			            {dataField : "bankInSlipNo", headerText : "<spring:message code="sal.title.bankInSlipNo" />",width :160}, 
+			            {dataField : "eFTNo",        headerText : "<spring:message code="sal.title.eFTNo" />",       width :160}, 
+			            {dataField : "chqDepositNo", headerText : "<spring:message code="sal.title.chqDepositNo" />",width :160}, 
+			            {dataField : "runningNo",    headerText : "<spring:message code="sal.title.runningNo" />",   width :160}, 
+			            {dataField : "cardTypeId",   headerText : "<spring:message code="sal.title.cardTypeId" />",  width :160}, 
+			            {dataField : "cardType",     headerText : "<spring:message code="sal.title.cardType" />",    width :160}, 
+			            {dataField : "cRCModeId",    headerText : "<spring:message code="sal.title.cRCModeId" />",   width :160}, 
+			            {dataField : "payTypeId",    headerText : "<spring:message code="sal.title.payTypeId" />",   width :160}, 
+			            {dataField : "refItemNo",    headerText : "<spring:message code="sal.title.refItemNo" />",   width :160}
 			];
 			
 			
@@ -209,9 +207,7 @@ function f_EvCombo(){
                     useGroupingPanel    : false,        //그룹핑 패널 사용
                     skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                     wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                    showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                    noDataMessage       : "No order found.",
-                    groupingMessage     : "Here groupping",
+                    showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력 
                     softRemovePolicy : "exceptNew"
                 };
         
@@ -327,7 +323,7 @@ function fn_goColleConfirm() {
 	
 	if($("#COLL_MEM_CODE").val() =="") {
 	        
-	        Common.alert("Please key in the collector code before you confirm the payment collector ");
+	        Common.alert("<spring:message code="sal.alert.msg.keyInCollectorCode" /> ");
 	        return ;
 	}
 	    
@@ -348,7 +344,7 @@ function fn_goColleConfirm() {
 	         }else {
 	        	 
                  $("#COLL_MEM_NAME").html("");
-	             Common.alert(" Unable to find [" +$("#COLL_MEM_CODE").val() +"] in system. <br>  Please ensure you key in the correct member code.   ");
+	             Common.alert(" <spring:message code="sal.alert.msg.unableToFind" /> [" +$("#COLL_MEM_CODE").val() +"] <spring:message code="sal.alert.msg.unableToFind2" />   ");
 	             return ;
 	         }
 	         
@@ -375,7 +371,7 @@ function fn_resultAddNewTr(item){
 			    	 
 			    	  fn_addRow(gItem);
 			     }else{
-                     Common.alert("<b>Failed to bind current TR list.<br />Please try again later.</b>");
+                     Common.alert("<b><spring:message code="sal.alert.msg.failedTrList" /></b>");
                      return ;
 			     }
 			     
@@ -394,7 +390,7 @@ function fn_resultAddNewTr(item){
 			    	  fn_addRow(gItem2);
 	              
 			     }else{
-                      Common.alert("<b>Failed to bind current TR list.<br />Please try again later.</b>");
+                      Common.alert("<b><spring:message code="sal.alert.msg.failedTrList" /></b>");
                       return ;
 	              }
 			      
@@ -411,7 +407,7 @@ function fn_resultAddNewTr(item){
 		          if( AUIGrid.isUniqueValue (trGridID,"trId",gItem.trId )){
 		        	        fn_addRow(gItem);
 		          }else{
-		        	  Common.alert("<b>Failed to bind current TR list.<br />Please try again later.</b>");
+		        	  Common.alert("<b><spring:message code="sal.alert.msg.failedTrList" /></b>");
 		              return ;
 		          }
 	  }
@@ -482,9 +478,9 @@ function  fn_Charges_init(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Membership Payment</h1>
+<h1><spring:message code="sal.page.title.membershipPayment" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -507,11 +503,11 @@ function  fn_Charges_init(){
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Membership Info</a></li>
-    <li><a href="#">Order Info</a></li>
-    <li><a href="#">Contact Info</a></li>
-    <li><a href="#">Charges</a></li>
-    <li><a href="#" onclick=" javascript:AUIGrid.resize(membershipQuotInfoFilterGridID, 900,300);" >Filter Charge Info</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.membershipInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.ordInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.contactInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.charges" /></a></li>
+    <li><a href="#" onclick=" javascript:AUIGrid.resize(membershipQuotInfoFilterGridID, 900,300);" ><spring:message code="sal.tap.title.filterChargeInfo" /></a></li>
 </ul>
 
 
@@ -539,7 +535,7 @@ function  fn_Charges_init(){
 <div class="border_box"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Package Charges</h2>
+<h2><spring:message code="sal.page.subtitle.packageCharges" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -550,28 +546,28 @@ function  fn_Charges_init(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Charges</th>
-    <td><span id='packageCharge'>text</span></td>
+    <th scope="row"><spring:message code="sal.text.charges" /></th>
+    <td><span id='packageCharge'></span></td>
 </tr>
 <tr>
-    <th scope="row">Paid</th>
-    <td><span id='packagePaid'  class="must">text</span></td>
+    <th scope="row"><spring:message code="sal.text.paid" /></th>
+    <td><span id='packagePaid'  class="must"></span></td>
 </tr>
 <tr>
-    <th scope="row">DN</th>
-    <td><span id='packageDn'>text</span></td>
+    <th scope="row"><spring:message code="sal.text.dn" /></th>
+    <td><span id='packageDn'></span></td>
 </tr>
 <tr>
-    <th scope="row">CN</th>
-    <td><span id='packageCn' class="must">text</span></td>
+    <th scope="row"><spring:message code="sal.text.cn" /></th>
+    <td><span id='packageCn' class="must"></span></td>
 </tr>
 <tr>
-    <th scope="row">Reverse/Refund</th>
-    <td><span id='packageRev'>text</span></td>
+    <th scope="row"><spring:message code="sal.text.reverseRefund" /></th>
+    <td><span id='packageRev'></span></td>
 </tr>
 <tr>
-    <th scope="row">Total Outstanding</th>
-    <td><span id='packageOutstanding'>text</span></td>
+    <th scope="row"><spring:message code="sal.text.totalOutstanding" /></th>
+    <td><span id='packageOutstanding'></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -584,7 +580,7 @@ function  fn_Charges_init(){
 <div class="border_box"><!-- border_box start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Filter Charges</h2>
+<h2><spring:message code="sal.title.filterCharges" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -596,28 +592,28 @@ function  fn_Charges_init(){
 <tbody>
      
 <tr>
-    <th scope="row">Charges</th>
-    <td><span id='filterCharge'>text</span></td>
+    <th scope="row"><spring:message code="sal.text.charges" /></th>
+    <td><span id='filterCharge'></span></td>
 </tr>
 <tr>
-    <th scope="row">Paid</th>
-    <td><span id='filterPaid' class="must">text</span></td>
+    <th scope="row"><spring:message code="sal.text.paid" /></th>
+    <td><span id='filterPaid' class="must"></span></td>
 </tr>
 <tr>
-    <th scope="row">DN</th>
-    <td><span id='filterDn'>text</span></td>
+    <th scope="row"><spring:message code="sal.text.dn" /></th>
+    <td><span id='filterDn'></span></td>
 </tr>
 <tr>
-    <th scope="row">CN</th>
-    <td><span id='filterCn' class="must">text</span></td>
+    <th scope="row"><spring:message code="sal.text.cn" /></th>
+    <td><span id='filterCn' class="must"></span></td>
 </tr>
 <tr>
-    <th scope="row">Reverse/Refund</th>
-    <td><span id='filterRev'>text</span></td>
+    <th scope="row"><spring:message code="sal.text.reverseRefund" /></th>
+    <td><span id='filterRev'></span></td>
 </tr>
 <tr>
-    <th scope="row">Total Outstanding</th>
-    <td><span id='filterOutstanding'>text</span></td>
+    <th scope="row"><spring:message code="sal.text.totalOutstanding" /></th>
+    <td><span id='filterOutstanding'></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -640,7 +636,7 @@ function  fn_Charges_init(){
 </section><!-- tap_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Payment Information</h2>
+<h2><spring:message code="sal.page.subtitle.paymentInfo" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -654,10 +650,10 @@ function  fn_Charges_init(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">TR Number</th>
+    <th scope="row"><spring:message code="sal.text.trNumber" /></th>
     <td>
     <div>
-    <p class="btn_sky"><a href="#" onclick="javascript:fn_goAddNewTr()">Add New TR</a></p>
+    <p class="btn_sky"><a href="#" onclick="javascript:fn_goAddNewTr()"><spring:message code="sal.btn.addNewTR" /></a></p>
     <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="tr_grid_wrap" style="width:790px; height:150px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
@@ -670,7 +666,7 @@ function  fn_Charges_init(){
 </section><!-- search_table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Payment Collector Information</h2>
+<h2><spring:message code="sal.page.subtitle.payCollectorInfo" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -686,19 +682,19 @@ function  fn_Charges_init(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Collector Code</th>
+    <th scope="row"><spring:message code="sal.text.collectorCode" /></th>
     <td><input type="text" title="" placeholder="" class=""  id="COLL_MEM_CODE"  NAME="COLL_MEM_CODE"/>
-        <p class="btn_sky"  id="confirmbt" ><a href="#" onclick="javascript:fn_goColleConfirm()">Confirm</a></p>  
-        <p class="btn_sky"  id="searchbt"><a href="#" onclick="javascript:fn_goCollecter()" >Search</a></p>  
-        <p class="btn_sky"  id="resetbt"><a href="#" onclick="javascript:fn_goCollecterReset()" >Reset</a></p>
+        <p class="btn_sky"  id="confirmbt" ><a href="#" onclick="javascript:fn_goColleConfirm()"><spring:message code="sal.btn.confirm" /></a></p>  
+        <p class="btn_sky"  id="searchbt"><a href="#" onclick="javascript:fn_goCollecter()" ><spring:message code="sal.btn.search" /></a></p>  
+        <p class="btn_sky"  id="resetbt"><a href="#" onclick="javascript:fn_goCollecterReset()" ><spring:message code="sal.btn.reset" /></a></p>
      </td>
-    <th scope="row">Collector Name</th>
+    <th scope="row"><spring:message code="sal.text.collectorName" /></th>
     <td><span id="COLL_MEM_NAME" NAME="COLL_MEM_NAME">-</span></td>
 </tr> 
 <tr>
-    <th scope="row">Commission</th>
+    <th scope="row"><spring:message code="sal.text.commission" /></th>
     <td colspan="3">
-    <label><input type="checkbox" /><span>Commission applied ?</span></label>
+    <label><input type="checkbox" /><span><spring:message code="sal.text.commissionApplied" /></span></label>
     </td>
 </tr>
 </tbody>
@@ -711,7 +707,7 @@ function  fn_Charges_init(){
 
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Payment Item</h2>
+<h2><spring:message code="sal.page.subtitle.payItem" /></h2>
 </aside><!-- title_line end -->
 
 ---------------------   add on for Payment Item -----------------------------
