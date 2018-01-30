@@ -164,7 +164,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		 * CN값 계산 
 		 *********************************************************/		
 		EgovMap rpfCnMap = commonPaymentMapper.selectRpfCnAmount(params);
-		EgovMap rpfNewCnMap = commonPaymentMapper.selectRpfCnAmount(params);		
+		EgovMap rpfNewCnMap = commonPaymentMapper.selectRpfCnNewAmount(params);		
 		
 		if(rpfCnMap != null && rpfCnMap.get("cnAmt") != null){
 			rpfCNAmount = Double.parseDouble(String.valueOf(rpfCnMap.get("cnAmt")));
