@@ -548,7 +548,7 @@ var myDetailGridData = null;
                   serialChkList = serialChkList + "<br/>" + serialChkCode[i] + " - " + serialChkName[i];
               }
               Common.alert("Please insert 'Serial No' for" + serialChkList);
-              return false;
+              //return false;
           }
     	 
     	  var resultList = new Array();
@@ -702,6 +702,7 @@ var myDetailGridData = null;
 </article><!-- acodi_wrap end -->
 
 
+<form action="#" id="editHSResultForm" method="post">  
 <aside class="title_line mt20"><!-- title_line start -->
 <h2>HS Result Information</h2>
 </aside><!-- title_line end -->
