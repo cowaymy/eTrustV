@@ -396,8 +396,6 @@ var addOrderLayout = [
         var orderNo = $("#orderNo").val();
         orderNo = $.trim(orderNo);
                 
-        // test
-        currentDay = 24;
         if(currentDay >= 26 || currentDay == 1){
             
             Common.alert("<spring:message code='pay.alert.unable26And1'/>");
