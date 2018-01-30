@@ -1163,6 +1163,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		for(int i=0; i< docType.size(); i++) {
 			Map<String, Object> bsd = new HashMap<String, Object>();
 			Map<String, Object>  docSub = (Map<String, Object>) docType.get(i);
+			logger.debug("docSub{} : " + docSub);
+			
 			//bsd.put("BSResultItemID",0 );
 			bsd.put("BSResultID",String.valueOf(params.get("hidschdulId")));
 			bsd.put("BSResultPartID",String.valueOf(docSub.get("stkId") ));
@@ -1172,7 +1174,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			//bsd.put("BSResultCreateAt",0 );
 			bsd.put("BSResultCreateBy",String.valueOf(sessionVO.getUserId()) );
 			bsd.put("BSResultFilterClaim",String.valueOf(1));
-			bsd.put("SerialNo",String.valueOf(docSub.get("serialNo") ));
+			bsd.put("SerialNo", docSub.get("serialNo")!=null ? String.valueOf(docSub.get("serialNo")) : "");
 			
 			bsResultDet.add(bsd);
 		}

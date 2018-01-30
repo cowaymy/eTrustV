@@ -548,7 +548,7 @@ var myDetailGridData = null;
                   serialChkList = serialChkList + "<br/>" + serialChkCode[i] + " - " + serialChkName[i];
               }
               Common.alert("Please insert 'Serial No' for" + serialChkList);
-              //return false;
+              return false;
           }
     	 
     	  var resultList = new Array();
