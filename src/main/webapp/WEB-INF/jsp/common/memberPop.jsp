@@ -53,6 +53,10 @@
                 headerText : "Member Code",
                 width : 120
             }, {
+                dataField : "memTypeName",
+                headerText : "Member Type",
+                width : 120
+            }, {
                 dataField : "name",
                 headerText : "Member Name"
             }, {
