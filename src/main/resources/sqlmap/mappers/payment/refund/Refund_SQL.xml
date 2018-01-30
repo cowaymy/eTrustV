@@ -6,6 +6,7 @@
 SELECT A.ORD_ID                          ORD_ID,
        A.ORD_NO                          ORD_NO,
        A.WOR_NO                          WOR_NO,
+       A.TRX_DT                                TRX_DT,
        A.CUST_NAME                       CUST_NAME,
        SUM(A.AMT)                        AMT,
        A.APP_TYPE                        APP_TYPE,
@@ -48,6 +49,7 @@ SELECT A.ORD_ID                          ORD_ID,
 FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                SOM.SALES_ORD_NO                         ORD_NO,
                PM.OR_NO                                 WOR_NO,
+               PT.TRX_DT                                  TRX_DT,
                NVL(CR.SO_REQ_ATTACH, ' ')               ATTACH,
                C.NAME                                   CUST_NAME,
                TRUNC(PD.PAY_ITM_AMT, 2)                 AMT,
@@ -153,6 +155,8 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                  ON CD.CODE_ID = SOM.APP_TYPE_ID
                JOIN PAY0064D PM
                  ON PM.SALES_ORD_ID = CR.SO_REQ_SO_ID
+               JOIN PAY0069D PT
+                 ON PT.TRX_ID = PM.TRX_ID
                JOIN PAY0065D PD
                  ON PD.PAY_ID = PM.PAY_ID
                JOIN SYS0013M PMT
@@ -228,6 +232,7 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
         SELECT SOM.SALES_ORD_ID                         ORD_ID,
                SOM.SALES_ORD_NO                         ORD_NO,
                PM.OR_NO                                 WOR_NO,
+               PT.TRX_DT                                TRX_DT,
                NVL(CR.SO_REQ_ATTACH, ' ')               ATTACH,
                C.NAME                                   CUST_NAME,
                TRUNC(PD.PAY_ITM_AMT, 2)                 AMT,
@@ -332,6 +337,8 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                  ON C.CUST_ID = SOM.CUST_ID
                JOIN PAY0064D PM
                  ON PM.SALES_ORD_ID = TERM.TRMNAT_ORD_ID
+               JOIN PAY0069D PT
+                 ON PT.TRX_ID = PM.TRX_ID
                JOIN SYS0005M PMB
                  ON PMB.BRNCH_ID = PM.BRNCH_ID
                JOIN SYS0013M PMT
@@ -400,6 +407,7 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
         SELECT SOM.SALES_ORD_ID                     ORD_ID,
                SOM.SALES_ORD_NO                     ORD_NO,
                ' '                                  WOR_NO,
+               NULL                             TRX_DT,
                ' '                                  ATTACH,
                C.NAME                               CUST_NAME,
                TRUNC(( SUM(TL.TRADE_AMT) * -1 ), 2) AMT,
@@ -627,6 +635,7 @@ WHERE  A.WOR_NO NOT LIKE 'ROR%'
 GROUP  BY A.ORD_ID,
           A.ORD_NO,
           A.WOR_NO,
+          A.TRX_DT,
           A.CUST_NAME,
           A.APP_TYPE,
           A.CANCL_DT,

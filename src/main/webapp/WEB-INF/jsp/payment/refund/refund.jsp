@@ -32,6 +32,11 @@ var refundColumnLayout = [ {
     dataField : "ordNo",
     headerText : "<spring:message code='pay.head.orderNo'/>"
 }, {
+    dataField : "trxDt",
+    headerText : "Transaction Date",
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
+}, {
     dataField : "worNo",
     headerText : "<spring:message code='pay.head.orNo'/>"
 }, {
@@ -116,6 +121,9 @@ var refundColumnLayout = [ {
 }, {
     dataField : "ocrRemark",
     headerText : "OCR Remark"
+}, {
+    dataField : "mailAddress",
+    headerText : "Mailling Address"
 }, {
     dataField : "instAddress",
     headerText : "Install Address"
