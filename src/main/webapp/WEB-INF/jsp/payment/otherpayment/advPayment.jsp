@@ -639,7 +639,27 @@ function saveAdvPayment(){
             Common.alert("<spring:message code='pay.alert.noAmount'/>");
             return;
         }
-		
+
+		//BankCharge Amount는 Billing 금액의 5%를 초과할수 없다
+		var bcAmt4Limit = 0;
+		var payAmt4Limit = 0;
+		var bcLimit = 0;
+
+		if(!FormUtil.isEmpty($("#onlineBankChgAmt").val())) {
+			bcAmt4Limit = Number($("#onlineBankChgAmt").val());
+			payAmt4Limit = Number($("#onlineAmount").val());
+
+			bcAmt4Limit = Number($.number(bcAmt4Limit,2,'.',''));
+			payAmt4Limit = Number($.number(payAmt4Limit,2,'.',''));
+			bcLimit = Number($.number(payAmt4Limit * 0.05,2,'.',''));
+
+			if (bcLimit < bcAmt4Limit) {
+				Common.alert("Bank Charge Amount can not exceed 5% of Amount.");
+				return;
+			}
+		}
+
+	
 		 if(FormUtil.checkReqValue($("#onlineTransDate"))){
 			    Common.alert("<spring:message code='pay.alert.transDateEmpty '/>");
 	            return;

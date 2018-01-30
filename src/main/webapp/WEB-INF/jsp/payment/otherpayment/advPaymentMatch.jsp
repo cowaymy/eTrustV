@@ -375,7 +375,7 @@ function fn_saveDebtor(){
 												</td>
 												<th scope="row">VA Account</th>
 												<td>
-													<input type="text" id="vaAccount" name="vaAccount"  maxlength="16"  class="w100p readonly" readonly="readonly" />
+													<input type="text" id="vaAccount" name="vaAccount"  class="w100p readonly" readonly="readonly" />
 												</td>
 									</tr>
                 </tbody>
