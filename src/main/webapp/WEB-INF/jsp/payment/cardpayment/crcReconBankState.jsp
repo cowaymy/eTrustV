@@ -51,7 +51,7 @@
     
     var columnUnMappedCrcLayout = [
         {dataField : "crcStateId", headerText : "<spring:message code='pay.head.id'/>", editable : false, visible:false}, 
-        {dataField : "crcTrnscDt", headerText : "<spring:message code='pay.head.transactionDate'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},    
+        {dataField : "crcTrnscDt", headerText : "<spring:message code='pay.head.transactionDate'/>", editable : false},    
         {dataField : "crcTrnscMid", headerText : "<spring:message code='pay.head.midNo'/>", editable : false},    
         {dataField : "accDesc", headerText : "<spring:message code='pay.head.bankAccount'/>", editable : false},   
         {dataField : "netAmt", headerText : "<spring:message code='pay.head.totalNetAmount'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
@@ -71,7 +71,7 @@
     var columnUnMappedBankLayout = [
          {dataField : "codeId", headerText : "<spring:message code='pay.head.codeId'/>", editable : false, visible:false},                  
          {dataField : "fTrnscId", headerText : "<spring:message code='pay.head.id'/>", editable : false, visible:false},                             
-         {dataField : "fTrnscDt", headerText : "<spring:message code='pay.head.transactionDate'/>", editable : false, dataType:"date",formatString:"dd/mm/yyyy"},    
+         {dataField : "fTrnscDt", headerText : "<spring:message code='pay.head.transactionDate'/>", editable : false, dataType:"date"},    
          {dataField : "mid", headerText : "<spring:message code='pay.head.midNo'/>", editable : false},    
          {dataField : "accDesc", headerText : "<spring:message code='pay.head.bankAccount'/>", editable : false},   
          {dataField : "creditAmt", headerText : "<spring:message code='pay.head.totalNetAmount'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"}
@@ -105,18 +105,26 @@
     	 Common.ajax("GET","/payment/selectCrcBnkMappingList.do", $("#searchForm").serialize(), function(result){
     		 AUIGrid.setGridData(mappedGridID, result.mappingList);
     		 AUIGrid.setGridData(crcStatementGridID, result.crcUnMappingList);
+    		 
+    		 console.log(result.crcUnMappingList);
     		 AUIGrid.setGridData(bankStatementGridID, result.bankUnMappingList);
     	 });
     }
     
     function fn_mapping(){
         
-    	var crcCheckedItem = AUIGrid.getCheckedRowItems(crcStatementGridID);
-		var bankCheckedItem = AUIGrid.getCheckedRowItems(crcStatementGridID);
+    	var crcCheckedItem    = AUIGrid.getCheckedRowItems(crcStatementGridID);
+    	
+    	
+		//var bankCheckedItem  = AUIGrid.getCheckedRowItems(crcStatementGridID);  editing by hgham 20180130
+        var bankCheckedItem  = AUIGrid.getCheckedRowItems(bankStatementGridID);
+		
 		
     	var item = new Object();
-		
     	var curDate = new Date();
+    	
+    	
+    	
     	
 		item.crcStateId = AUIGrid.getCellValue(crcStatementGridID, crcCheckedItem[0].rowIndex , "crcStateId");
 		item.fTrnscId = AUIGrid.getCellValue(bankStatementGridID, bankCheckedItem[0].rowIndex, "fTrnscId");
