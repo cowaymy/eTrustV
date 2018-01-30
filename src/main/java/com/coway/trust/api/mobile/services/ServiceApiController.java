@@ -1196,6 +1196,16 @@ public class ServiceApiController {
         			
         			EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
         			params.put("installEntryId", installResult.get("installEntryId"));
+        			
+        			try{
+        				
+            			params.put("hidInstallation_AddDtl", installResult.get("addrDtl"));
+            			params.put("hidInstallation_AreaID", installResult.get("areaId"));
+            			
+        			}catch(Exception e){
+        				e.printStackTrace();
+        			}
+        	           
         			EgovMap orderInfo = installationResultListService.getOrderInfo(params);
         			
         			String userId = MSvcLogApiService.getUseridToMemid(params);

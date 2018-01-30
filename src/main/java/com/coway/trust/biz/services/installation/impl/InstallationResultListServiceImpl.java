@@ -1590,8 +1590,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	        		// set address
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR1",CommonUtils.nvl(addrM.get("taxInvcAddr1")));
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR2",CommonUtils.nvl(addrM.get("taxInvcAddr2")));
-        	        		taxInvoiceOutright.put("TAX_INVC_ADDR3",0);
-        	        		taxInvoiceOutright.put("TAX_INVC_ADDR4",0);
+        	        		taxInvoiceOutright.put("TAX_INVC_ADDR3","");
+        	        		taxInvoiceOutright.put("TAX_INVC_ADDR4","");
         	        		taxInvoiceOutright.put("TAX_INVC_POST_CODE",CommonUtils.nvl(addrM.get("taxInvcPostCode")));
         	        		taxInvoiceOutright.put("TAX_INVC_STATE_NAME",CommonUtils.nvl(addrM.get("taxInvcStateName")));
         	        		taxInvoiceOutright.put("TAX_INVC_CNTY",CommonUtils.nvl(addrM.get("taxInvcCnty")));
