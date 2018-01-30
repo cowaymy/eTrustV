@@ -109,6 +109,10 @@ var mappingLayout = [
 
 var crcKeyInLayout = [ 
                        {
+                           dataField : "salesOrdNo",
+                           headerText : "<spring:message code='pay.head.orderNO'/>",
+                           editable : false
+                       }, {
                            dataField : "crcMcName",
                            headerText : "<spring:message code='pay.head.mcBank'/>",
                            editable : false
