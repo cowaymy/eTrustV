@@ -48,5 +48,9 @@ public interface MembershipRentalChannelMapper {
 	
 	int  SAL0077D_update(Map<String, Object> params);
 	
+	EgovMap  paymentServiceContract(Map<String, Object> params);
+	
+	EgovMap  paymentRentPaySet(Map<String, Object> params);
+	
 	
 }

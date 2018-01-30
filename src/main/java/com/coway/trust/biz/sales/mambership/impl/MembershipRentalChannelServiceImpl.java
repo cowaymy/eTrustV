@@ -37,12 +37,17 @@ public class MembershipRentalChannelServiceImpl extends EgovAbstractServiceImpl 
 	@Override 
 	public int  SAL0074D_update(Map<String, Object> params) {
 		
-		int  val   =0;
 		int rtnVal=0;
-		val =membershipRentalChannelMapper.SAL0074D_update(params);
 		
-		if(val > 0){
-			rtnVal =membershipRentalChannelMapper.SAL0077D_update(params);
+		EgovMap paymentServiceContract = membershipRentalChannelMapper.paymentServiceContract(params);
+		EgovMap paymentRentPaySet = membershipRentalChannelMapper.paymentRentPaySet(params);
+		
+		if(paymentServiceContract != null){
+			if(paymentRentPaySet != null){
+				membershipRentalChannelMapper.SAL0074D_update(params);
+			}
+			rtnVal = membershipRentalChannelMapper.SAL0077D_update(params);
+			
 		}
 		
 		return rtnVal;
