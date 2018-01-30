@@ -34,18 +34,18 @@ function vChange(obj){
 function createMRLedgerGrid(){
     
     var cLayout = [
-         {dataField : "refDt",headerText : "Date", width : 80 ,dataType : "date", editable : false},
-         {dataField : "instno", headerText : "Inst<br/> No", width : 38 ,editable : false},
-         {dataField : "doctypename", headerText : "Type", width :130 ,editable : false},
-         {dataField : "srvLdgrRefNo", headerText : "Doc No", width :110 ,editable : false},
-         {dataField : "resnDesc", headerText : "Adj Reason", width :100 ,editable : false},
-         {dataField : "payMode", headerText : "Pay<br/>mode", width :48 ,editable : false},
-         {dataField : "payDt", headerText : "Ref Date", width :80 ,dataType : "date", editable : false},
-         {dataField : "chqrefno", headerText : "Ref No", width :100 ,editable : false},
-         {dataField : "accCode", headerText : "Acc Code", width :80 ,editable : false},
-         {dataField : "debitamt", headerText : "Debit", width :60 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
-         {dataField : "creditamt", headerText : "Credit", width :60 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
-         {dataField : "balanceamt", headerText : "Balance", width :60 ,dataType : "number", formatString : "#,000.00"  ,editable : false}
+         {dataField : "refDt",headerText : "<spring:message code="sal.title.date" />", width : 80 ,dataType : "date", editable : false},
+         {dataField : "instno", headerText : "<spring:message code="sal.title.instBrNo" />", width : 38 ,editable : false},
+         {dataField : "doctypename", headerText : "<spring:message code="sal.title.type" />", width :130 ,editable : false},
+         {dataField : "srvLdgrRefNo", headerText : "<spring:message code="sal.title.docNo" />", width :110 ,editable : false},
+         {dataField : "resnDesc", headerText : "<spring:message code="sal.title.adjReason" />", width :100 ,editable : false},
+         {dataField : "payMode", headerText : "<spring:message code="sal.title.payBrMode" />", width :48 ,editable : false},
+         {dataField : "payDt", headerText : "<spring:message code="sal.title.RefDate" />", width :80 ,dataType : "date", editable : false},
+         {dataField : "chqrefno", headerText : "<spring:message code="sal.title.refNo" />", width :100 ,editable : false},
+         {dataField : "accCode", headerText : "<spring:message code="sal.title.accCode" />", width :80 ,editable : false},
+         {dataField : "debitamt", headerText : "<spring:message code="sal.title.debit" />", width :60 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
+         {dataField : "creditamt", headerText : "<spring:message code="sal.title.credit" />", width :60 ,dataType : "number", formatString : "#,000.00"  ,editable : false},
+         {dataField : "balanceamt", headerText : "<spring:message code="sal.title.balance" />", width :60 ,dataType : "number", formatString : "#,000.00"  ,editable : false}
          
    ];
     
@@ -143,9 +143,9 @@ function fn_getmRLedgerProcessGridAjax (v){
  <fmt:setLocale value="en_US"/>
        
 <header class="pop_header"><!-- pop_header start -->
-<h1>RENTAL MEMBERSHIP LEDGER</h1>
+<h1><spring:message code="sal.page.title.rentalMembershipLedger" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -161,44 +161,44 @@ function fn_getmRLedgerProcessGridAjax (v){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Customer Name</th>
+	<th scope="row"><spring:message code="sal.text.custName" /></th>
 	<td><span id='txtCust'></span></td>
-	<th scope="row">Order Number</th>
+	<th scope="row"><spring:message code="sal.text.ordNum" /></th>
 	<td ><span id='txtOrderNo'></span></td>
 </tr>
 <tr>
-	<th scope="row">Rental Membership No.</th>
+	<th scope="row"><spring:message code="sal.text.rentalMembershipNo" /></th>
 	<td><span id='txtContractRefNo'></span></td>
-	<th scope="row">Period</th>
+	<th scope="row"><spring:message code="sal.text.preiod" /></th>
 	<td ><span id='txtContractPeriod'></span></td>
 </tr>
 <tr>
-	<th scope="row">Product</th>
+	<th scope="row"><spring:message code="sal.text.product" /></th>
 	<td><span id='txtProduct' ></span></td>
-	<th scope="row">Install Date</th>
+	<th scope="row"><spring:message code="sal.text.insDate" /></th>
 	<td ><span id='txtInstallDate'></span></td>
 </tr>
 <tr>
-	<th scope="row">Install Address</th>
+	<th scope="row"><spring:message code="sal.text.insAddr" /></th>
 	<td><span id='txtAddrMail' ></span></td>
-	<th scope="row">Install Address</th>
+	<th scope="row"><spring:message code="sal.text.insAddr" /></th>
 	<td ><span id='txtAddrInst'></span></td>
 </tr>
 <tr>
-	<th scope="row">Mobile</th>
+	<th scope="row"><spring:message code="sal.text.mobile" /></th>
 	<td><span id='txtTelM' ></span></td>
-	<th scope="row">Residence</th>
+	<th scope="row"><spring:message code="sal.text.residence" /></th>
 	<td><span id='txtTelR'  ></span></td>
     
 </tr>
 <tr>
-	<th scope="row">Office</th>
+	<th scope="row"><spring:message code="sal.text.office" /></th>
 	<td><span id='txtTelO'></span></td>
-	<th scope="row">Fax</th>
+	<th scope="row"><spring:message code="sal.text.fax" /></th>
 	<td ><span id='txtTelF'></span></td>
 </tr>
 <tr>
-	<th scope="row">CIMB Dedicated <br/>Bank Acc</th>
+	<th scope="row"><spring:message code="sal.text.cimbDedicated" /> <br/><spring:message code="sal.text.bankAcc" /></th>
 	<td><span id='txtCustVano'  > </span></td>
 	<th scope="row"></th>
 	<td ><span></span></td>
@@ -220,23 +220,23 @@ function fn_getmRLedgerProcessGridAjax (v){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Total Outstanding</th>
+    <th scope="row"><spring:message code="sal.text.totalOutstanding" /></th>
     <td><span  id='totOtstnd'></span></td>
-    <th scope="row">Outstanding Month</th>
+    <th scope="row"><spring:message code="sal.text.outstandingMonth" /></th>
     <td><span id='otstndMonth'></span></td>
-    <th scope="row">Unbill Amount</th>
+    <th scope="row"><spring:message code="sal.text.unbillAmount" /></th>
     <td><span id='unbillAmt'></span></td>
     <th scope="row"></th>
     <td><span></span></td>
 </tr>
 <tr>
-    <th scope="row">Penalty Charges</th>
+    <th scope="row"><spring:message code="sal.text.penaltyCharges" /></th>
     <td><span id='totPnaltyChrg'></span></td>
-    <th scope="row">Penalty Paid</th>
+    <th scope="row"><spring:message code="sal.text.penaltyPaid" /></th>
     <td><span id='totPnaltyPaid'></span></td>
-    <th scope="row">Penalty Adjustment</th>
+    <th scope="row"><spring:message code="sal.text.penaltyAdjustment" /></th>
     <td><span id='totPnaltyAdj'></span></td>
-    <th scope="row">Balance Penatly</th>
+    <th scope="row"><spring:message code="sal.text.balancePenalty" /></th>
     <td><span id='totPnaltyBal'></span></td>
 </tr>
 </tbody>
@@ -244,9 +244,9 @@ function fn_getmRLedgerProcessGridAjax (v){
 
 <ul class="left_btns ">
 
-     <li>Transaction Date</li>
+     <li><spring:message code="sal.text.transactionDate" /></li>
      <li><input type="text" title="Create start Date" placeholder="MM/YYYY"  onchange="vChange(this)" class="j_date2 w100p mtz-monthpicker-widgetcontainer"  id="vsalesDate" name="vsalesDate" /></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_goLedgerPrint();">DO Print</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_goLedgerPrint();"><spring:message code="sal.btn.doPrint" /></a></p></li>
 </ul> 
 
 <article class="grid_wrap"><!-- grid_wrap start -->
