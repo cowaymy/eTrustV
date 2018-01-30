@@ -430,12 +430,15 @@ function fileDown(rowIndex){
       var fileName = AUIGrid.getCellValue(listGrid,  rowIndex, "filename");
       var orignlFileNm = AUIGrid.getCellValue(listGrid,  rowIndex, "fileName")+".zip";
    if(""==subPath || null==subPath ||""==fileName || null==fileName ){
-	   Common.alert("File is not exist.");
-	   return false;
-   }
+      var oldSet = AUIGrid.getCellValue(listGrid,  rowIndex, "fileUrl");
+	  // Common.alert("File is not exist.");
+	  // return false;
+	   window.open("${pageContext.request.contextPath}"+"/resources/"+oldSet);
+   }else{
     window.open("<c:url value='/file/fileDown.do?subPath=" + subPath
             + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm
             + "'/>");
+   }
 }
 
 function fn_modifyileSpace(str){
