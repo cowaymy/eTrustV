@@ -98,42 +98,42 @@ var option = {
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "stkCode",
-                headerText : "Code",
+                headerText : "<spring:message code="sal.title.code" />",
                 width : 100,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "stkDesc",
-                headerText : "Description",
+                headerText : "<spring:message code="sal.title.description" />",
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "qotatItmChrg",
-                headerText : "Filter Charges",
+                headerText : "<spring:message code="sal.title.filterCharges" />",
                 width : 110,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "qotatItmTxs",
-                headerText : "Filter Taxes",
+                headerText : "<spring:message code="sal.title.filterTaxes" />",
                 width : 110,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "qotatItmAmt",
-                headerText : "Filter Amount",
+                headerText : "<spring:message code="sal.title.filterAmount" />",
                 width : 110,
                 editable : false,
                 style: 'left_style'
             },{
                 dataField : "qotatItmAmt",
-                headerText : "Charge Price",
+                headerText : "<spring:message code="sal.title.chargePrice" />",
                 width : 120,
                 editable : false,
                 style: 'left_style'
             },{
                 dataField : "qotatItmExpDt",
-                headerText : "Last Change Date",
+                headerText : "<spring:message code="sal.title.lastChangeDate" />",
                 width : 100,
                 dataType : "date",
                 formatString : "dd-mm-yyyy" ,
@@ -160,8 +160,7 @@ var option = {
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true,
-            groupingMessage : "Here groupping"
+            showRowNumColumn : true
         };
         
         myGridID = AUIGrid.create("#filter_grid_wrap", columnLayout, gridPros);
@@ -233,9 +232,9 @@ var option = {
             },
             error : function (data) {
                 if(data == null){               //error
-                    Common.alert("fail to Load DB");
+                    Common.alert("<spring:message code="sal.alert.msg.failToLoadDB" />");
                 }else{                            // No data
-                    Common.alert("Unable to find ["+inputVal+"] in system. Please ensure you key in the correct member code.");
+                    Common.alert("<spring:message code="sal.alert.msg.unableToFind" /> ["+inputVal+"] <spring:message code="sal.alert.msg.unableToFind2" />");
                 }
             }
         });
@@ -292,7 +291,7 @@ var option = {
         if(!FormUtil.IsValidBankAccount($('#hiddenRentPayBankAccID').val(), $('#rentPayBankAccNo').val())) {
 //            fn_clearRentPaySetDD();
             $('#sctDirectDebit').removeClass("blind");
-            Common.alert("Invalid Bank Account" + DEFAULT_DELIMITER + "<b>Invalid account for auto debit.</b>");
+            Common.alert("<spring:message code="sal.alert.title.invalidBankAcc" />" + DEFAULT_DELIMITER + "<b><spring:message code="sal.alert.msg.invalidBankAcc" /></b>");
         }
     }
     
@@ -353,15 +352,14 @@ var option = {
             }
             else {
                 if(sMethd == 2) {
-                    Common.alert('<b>Third party not found.<br />'
-                               + 'Your input third party ID : ' + custId + '</b>');
+                    Common.alert('<spring:message code="sal.alert.msg.thirdPartyNotFound" /> ' + custId + '</b>');
                 }
             }
         });
         }
         else {
-            Common.alert('<b>Third party and customer cannot be same person/company.<br />'
-                       + 'Your input third party ID : ' + custId + '</b>');
+            Common.alert('<b><spring:message code="sal.alert.msg.thirdPartyPershonCompany" /><br />'
+                       + '<spring:message code="sal.alert.msg.thirdPartyId" /> : ' + custId + '</b>');
         }
 
         $('#sctThrdParty').removeClass("blind");
@@ -375,21 +373,21 @@ var option = {
         }
     	
     	if($("#cmbRentPaymode").val() == ""){
-    		Common.alert("Please select Rental Paymode");
+    		Common.alert("<spring:message code="sal.alert.msg.pleaseSelectRentalPaymode" />");
     		return false;
     	}
     	
     	if(mSaveForm.groupVal.value == "1"){
     		if($('input:radio[id="billingGroup"]').is(":checked") == false){
-    			Common.alert("Please select Group Option");
+    			Common.alert("<spring:message code="sal.alert.msg.pleaseSelectGroupOption" />");
                 return false;
     		}else{
     			if(!$("#btnBillGroupPost" ).is(":checked") && !$("#btnBillGroupSMS" ).is(":checked") && !$("#btnBillGroupEStatement" ).is(":checked")) {
-                    Common.alert("* Please select at least one billing method.<br>");
+                    Common.alert("* <spring:message code="sal.alert.msg.pleaseSelectBillingMethod" /><br>");
                     return false;
                 }else{
                 	if($("#thrdPartyTypeId").val() == '965' && $("#btnBillGroupSMS" ).is(":checked")) {
-                		Common.alert("* SMS billing method is not allow for company type customer.<br>");
+                		Common.alert("* <spring:message code="sal.alert.msg.smsBillingMethod" /><br>");
                 		return false;
                     }
                 }
@@ -399,7 +397,7 @@ var option = {
     	
     	Common.ajax("GET", "/sales/membershipRentalQut/saveCnvrToSale.do", $("#mSaveForm").serialize(), function(result){
             //result alert and reload
-            Common.alert("<b>Quotation has successfully converted to sales.<br /> You must key in payment</b>", fn_success);
+            Common.alert("<b><spring:message code="sal.alert.msg.succQuotKeyInPayment" /></b>", fn_success);
         }, function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -408,11 +406,11 @@ var option = {
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
     
                 //Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common.alert("Unable to retrieve exchange request in system.");
+                Common.alert("<spring:message code="sal.alert.msg.unableToRetrieve" />");
                 }
             catch (e) {
                 console.log(e);
-                alert("Saving data prepration failed.");
+                Common.alert("<spring:message code="sal.alert.msg.savingDataPreprationFailed" />");
             }
             alert("Fail : " + jqXHR.responseJSON.message);
         });
@@ -427,9 +425,9 @@ var option = {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Rental Membership - Convert To Sales</h1>
+<h1><spring:message code="sal.page.title.rentalMembershipConvToSal" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="cnvrClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="cnvrClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -437,10 +435,10 @@ var option = {
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Package Info</a></li>
-    <li><a href="#">Order Info</a></li>
-    <li><a href="#">Contact Info</a></li>
-    <li><a href="#" onclick="javascript: fn_resizefunc(myGridID)">Filter Charge Info</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.packInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.ordInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.contactInfo" /></a></li>
+    <li><a href="#" onclick="javascript: fn_resizefunc(myGridID)"><spring:message code="sal.tap.title.filterChargeInfo" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -463,41 +461,41 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Quotation No</th>
+    <th scope="row"><spring:message code="sal.text.quotationNo" /></th>
     <td><span>${packageInfo.qotatRefNo }</span></td>
-    <th scope="row">Creator Date</th>
+    <th scope="row"><spring:message code="sal.text.createDate" /></th>
     <td><span>${fn:substring(packageInfo.qotatCrtDt, 8, 10)}/${fn:substring(packageInfo.qotatCrtDt, 5, 7)}/${fn:substring(packageInfo.qotatCrtDt, 0, 4)}</span></td>
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code="sal.text.creator" /></th>
     <td><span>${packageInfo.userName }</span></td>
 </tr>
 <tr>
-    <th scope="row">Membership No</th>
+    <th scope="row"><spring:message code="sal.text.membershipNo" /></th>
     <td><span></span></td>
-    <th scope="row">Valid Date</th>
+    <th scope="row"><spring:message code="sal.text.validDate" /></th>
     <td colspan="3"><span>${fn:substring(packageInfo.qotatValIdDt, 8, 10)}/${fn:substring(packageInfo.qotatValIdDt, 5, 7)}/${fn:substring(packageInfo.qotatValIdDt, 0, 4)}</span></td>
 </tr>
 <tr>
-    <th scope="row">Duration</th>
-    <td><span>${packageInfo.qotatCntrctDur } month(s)</span></td>
-    <th scope="row">Package</th>
+    <th scope="row"><spring:message code="sal.text.duration" /></th>
+    <td><span>${packageInfo.qotatCntrctDur } <spring:message code="sal.text.month" /></span></td>
+    <th scope="row"><spring:message code="sal.text.package" /></th>
     <td colspan="3"><span>${packageInfo.srvCntrctPacDesc }</span></td>
 </tr>
 <tr>
-    <th scope="row">Total Amount</th>
+    <th scope="row"><spring:message code="sal.text.totAmt" /></th>
     <td><span>${packageInfo.qotatTotalAmt }</span></td>
-    <th scope="row">Rental Amount</th>
+    <th scope="row"><spring:message code="sal.text.rentalAmount" /></th>
     <td><span>${packageInfo.qotatRentalAmt }</span></td>
-    <th scope="row">Filter Amount</th>
+    <th scope="row"><spring:message code="sal.text.filAmt" /></th>
     <td><span>${packageInfo.qotatExpFilterAmt }</span></td>
 </tr>
 <tr>
-    <th scope="row">Package Promotion</th>
+    <th scope="row"><spring:message code="sal.text.packPromotion" /></th>
     <td colspan="5"><span>${packageInfo.packagePromoDesc }</span></td>
 </tr>
 <tr>
-    <th scope="row">Filter Promotion</th>
+    <th scope="row"><spring:message code="sal.text.filterPromo" /></th>
     <td colspan="3"><span>${packageInfo.filterPromoDesc }</span></td>
-    <th scope="row">BS Frequency</th>
+    <th scope="row"><spring:message code="sal.text.bsFrequency" /></th>
     <td><span>${packageInfo.srvCntrctFormNo }</span></td>
 </tr>
 </tbody>
@@ -519,47 +517,47 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><span>${orderInfo.ordNo }</span></td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
         <span><if test="${orderInfo.ordDt } != null">
             ${fn:substring(orderInfo.ordDt, 8, 10)}/${fn:substring(orderInfo.ordDt, 5, 7)}/${fn:substring(orderInfo.ordDt, 0, 4)}
         </if></span>
     </td>
-    <th scope="row">Order Status</th>
+    <th scope="row"><spring:message code="sal.text.orderStatus" /></th>
     <td><span>${orderInfo.ordStusName }</span></td>
 </tr>
 <tr>
-    <th scope="row">Product Category</th>
+    <th scope="row"><spring:message code="sal.text.productCategory" /></th>
     <td colspan="3"><span>${orderInfo.stkCtgryName }</span></td>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td><span>${orderInfo.appTypeDesc }</span></td>
 </tr>
 <tr>
-    <th scope="row">Product Code</th>
+    <th scope="row"><spring:message code="sal.text.productCode" /></th>
     <td><span>${orderInfo.stockCode }</span></td>
-    <th scope="row">Product Name</th>
+    <th scope="row"><spring:message code="sal.text.productName" /></th>
     <td colspan="3"><span>${orderInfo.stockDesc }</span></td>
 </tr>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><span>${orderInfo.custId }</span></td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.text.nric" />/<spring:message code="sal.text.companyNo" /></th>
     <td colspan="3"><span>${orderInfo.custNric }</span></td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td colspan="5"><span>${orderInfo.custName }</span></td>
 </tr>
 <tr>
-    <th scope="row">Last Membership</th>
+    <th scope="row"><spring:message code="sal.text.lastMem" /></th>
     <td><span>${fn:substring(orderInfo2nd.srvPrdExprDt, 8, 10)}/${fn:substring(orderInfo2nd.srvPrdExprDt, 5, 7)}/${fn:substring(orderInfo2nd.srvPrdExprDt, 0, 4)}</span></td>
-    <th scope="row">Expire Date</th>
+    <th scope="row"><spring:message code="sal.text.expireDate" /></th>
     <td colspan="3"><span>${orderInfo2nd.srvCntrctPacDesc }</span></td>
 </tr>
 <tr>
-    <th scope="row">Install Address</th>
+    <th scope="row"><spring:message code="sal.text.insAddr" /></th>
     <td colspan="5"><span>${addrInfo.fullAddr }</span></td>
 </tr>
 </tbody>
@@ -586,29 +584,29 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td colspan="5"><span>${cntcInfo.name }</span></td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><span>${cntcInfo.nric }</span></td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span>${cntcInfo.gender }</span></td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${cntcInfo.codename1 }</span></td>
 </tr>
 <tr>
-    <th scope="row">Mobile No</th>
+    <th scope="row"><spring:message code="sal.text.mobileNo" /></th>
     <td><span>${cntcInfo.telM1 }</span></td>
-    <th scope="row">Office No</th>
+    <th scope="row"><spring:message code="sal.text.officeNo" /></th>
     <td><span>${cntcInfo.telO }</span></td>
-    <th scope="row">Residence No</th>
+    <th scope="row"><spring:message code="sal.text.residenceNo" /></th>
     <td><span>${cntcInfo.telR }</span></td>
 </tr>
 <tr>
-    <th scope="row">Fax No</th>
+    <th scope="row"><spring:message code="sal.text.faxNo" /></th>
     <td><span>${cntcInfo.telf }</span></td>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td colspan="3"><span>${cntcInfo.email }</span></td>
 </tr>
 </tbody>
@@ -627,7 +625,7 @@ var option = {
 </section><!-- tap_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Rental Payment Information</h3>
+<h3><spring:message code="sal.page.title.rentalPayInfo" /></h3>
 </aside><!-- title_line end -->
 
 <form id="mSaveForm" name="mSaveForm" method=GET>
@@ -656,7 +654,7 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Pay By Third Party</th>
+    <th scope="row"><spring:message code="sal.text.payByThirdParty" /></th>
     <td colspan="3"><input type="checkbox" id="thrdParty" name="thrdParty" onclick="checkboxDivChg();"></td>
 </tr>
 </tbody>
@@ -674,29 +672,29 @@ var option = {
 <tr>
     <td colspan="4">
         <aside class="title_line"><!-- title_line start -->
-        <h3>Third Party</h3>
+        <h3><spring:message code="sal.text.thirdParty" /></h3>
         </aside><!-- title_line end -->
 
         <ul class="right_btns w100p mb10">
-            <li><p class="btn_sky small"><a href="#" onclick="fn_newParty()">Add New Third Party</a></p></li>
+            <li><p class="btn_sky small"><a href="#" onclick="fn_newParty()"><spring:message code="sal.btn.addNewThirdParty" /></a></p></li>
         </ul>
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer ID<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.customerId" /><span class="must">*</span></th>
     <td><input id="thrdPartyId" name="thrdPartyId" type="text" title="" placeholder="Third Party ID" class="" />
         <a href="#" class="search_btn" id="thrdPartyBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="hidden" title="" placeholder="Third Party ID" class="" /></td>
-    <th scope="row">Type</th>
+    <th scope="row"><spring:message code="sal.text.type" /></th>
     <td>
         <input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p readonly" readonly/>
         <input type="hidden" id="thrdPartyTypeId" name="thrdPartyTypeId">
     </td>
 </tr>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td><input id="thrdPartyName" name="thrdPartyName" type="text" title="" placeholder="Customer Name" class="w100p readonly" readonly/></td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.text.nric" />/<spring:message code="sal.text.companyNo" /></th>
     <td><input id="thrdPartyNric" name="thrdPartyNric" type="text" title="" placeholder="NRIC/Company Number" class="w100p readonly" readonly/></td>
 </tr>
 </tbody>
@@ -712,12 +710,12 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Rental Paymode<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.rentalPaymode" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="cmbRentPaymode" name="cmbRentPaymode" onchange="fn_payModeChg()">
     </select>
     </td>
-    <th scope="row">NRIC on DD/Passbook</th>
+    <th scope="row"><spring:message code="sal.text.nricPassbook" /></th>
     <td><input type="text" id="rentPayIc" name="rentPayIc" title="" placeholder="NRIC on DD/Passbook" class="w100p" /></td>
 </tr>
 </tbody>
@@ -735,30 +733,30 @@ var option = {
 <tr>
     <td colspan="4">
         <aside class="title_line"><!-- title_line start -->
-        <h3>Direct Debit</h3>
+        <h3><spring:message code="sal.page.subtitle.directDebit" /></h3>
         </aside><!-- title_line end -->
 
         <ul class="right_btns w100p mb10">
-            <li><p class="btn_sky small"><a href="#" id="btnAddBankAccount">Add New Bank Account</a></p></li>
-            <li><p class="btn_sky small"><a href="#" id="btnSelBankAccount">Select Another Bank Account</a></p></li>
+            <li><p class="btn_sky small"><a href="#" id="btnAddBankAccount"><spring:message code="sal.btn.addNewBankAccount" /></a></p></li>
+            <li><p class="btn_sky small"><a href="#" id="btnSelBankAccount"><spring:message code="sal.btn.selectAnotherBankAccount" /></a></p></li>
         </ul>
     </td>
 </tr>
 <tr>
-    <th scope="row">Account Number<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.accountNumber" /><span class="must">*</span></th>
     <td><input id="rentPayBankAccNo" name="rentPayBankAccNo" type="text" title="" placeholder="Account Number readonly" class="w100p readonly" readonly/>
         <input id="hiddenRentPayBankAccID" name="hiddenRentPayBankAccID" type="hidden" /></td>
-    <th scope="row">Account Type</th>
+    <th scope="row"><spring:message code="sal.text.accountType" /></th>
     <td><input id="rentPayBankAccType" name="rentPayBankAccType" type="text" title="" placeholder="Account Type readonly" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Account Holder</th>
+    <th scope="row"><spring:message code="sal.text.accountHolder" /></th>
     <td><input id="accName" name="accName" type="text" title="" placeholder="Account Holder" class="w100p readonly" readonly/></td>
-    <th scope="row">Issue Bank Branch</th>
+    <th scope="row"><spring:message code="sal.text.issueBankBranch" /></th>
     <td><input id="accBranch" name="accBranch" type="text" title="" placeholder="Issue Bank Branch" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Issue Bank</th>
+    <th scope="row"><spring:message code="sal.text.issueBank" /></th>
     <td colspan=3><input id="accBank" name="accBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly/>
         <input id="hiddenAccBankId" name="hiddenAccBankId" type="hidden" /></td>
 </tr>
@@ -779,44 +777,44 @@ var option = {
 <tr>
     <td colspan="4">
         <aside class="title_line"><!-- title_line start -->
-        <h3>Credit Card</h3>
+        <h3><spring:message code="sal.page.subtitle.creditCard" /></h3>
         </aside><!-- title_line end -->
 
         <ul class="right_btns w100p mb10">
-            <li><p class="btn_sky small"><a href="#" id="addCreditCardBtn">Add New Credit Card</a></p></li>
-            <li><p class="btn_sky small"><a href="#" id="selCreditCardBtn">Select Another Credit Card</a></p></li>
+            <li><p class="btn_sky small"><a href="#" id="addCreditCardBtn"><spring:message code="sal.btn.addNewCreditCard" /></a></p></li>
+            <li><p class="btn_sky small"><a href="#" id="selCreditCardBtn"><spring:message code="sal.btn.selectAnotherCreditCard" /></a></p></li>
         </ul>
     </td>
 </tr>
 <tr>
-    <th scope="row">Credit Card Number<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.creditCardNumber" /><span class="must">*</span></th>
     <td>
         <input id="rentPayCRCNo" name="rentPayCRCNo" type="text" title="" placeholder="Credit Card Number" class="w100p readonly" readonly/>
         <input id="hiddenRentPayCRCId" name="hiddenRentPayCRCId" type="hidden" />
         <input id="hiddenRentPayEncryptCRCNoId" name="hiddenRentPayEncryptCRCNoId" type="hidden" />
     </td>
-    <th scope="row">Credit Card Type</th>
+    <th scope="row"><spring:message code="sal.text.creditCardType" /></th>
     <td>
         <input id="rentPayCRCType" name="rentPayCRCType" type="text" title="" placeholder="Credit Card Type" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Name On Card</th>
+    <th scope="row"><spring:message code="sal.text.nameOnCard" /></th>
     <td>
         <input id="rentPayCRCName" name="rentPayCRCName" type="text" title="" placeholder="Name On Card" class="w100p readonly" readonly/>
     </td>
-    <th scope="row">Expiry</th>
+    <th scope="row"><spring:message code="sal.text.expiry" /></th>
     <td>
         <input id="rentPayCRCExpiry" name="rentPayCRCExpiry" type="text" title="" placeholder="Credit Card Expiry" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Issue Bank</th>
+    <th scope="row"><spring:message code="sal.text.issueBank" /></th>
     <td>
         <input id="rentPayCRCBank" name="rentPayCRCBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly/>
         <input id="hiddenRentPayCRCBankId" name="hiddenRentPayCRCBankId" type="hidden" title="" class="w100p" />
     </td>
-    <th scope="row">Card Type</th>
+    <th scope="row"><spring:message code="sal.text.cardType" /></th>
     <td>
         <input id="rentPayCRCCardType" name="rentPayCRCCardType" type="text" title="" placeholder="Card Type" class="w100p readonly" readonly/>
     </td>
@@ -830,7 +828,7 @@ var option = {
 
 <div id="billGrpFont">
 <aside class="title_line"><!-- title_line start -->
-<h3>Rental Billing Group</h3>
+<h3><spring:message code="sal.page.subtitle.rentalBillingGroup" /></h3>
 </aside><!-- title_line end -->
 </div>
 
@@ -847,10 +845,10 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Group Option<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.groupOption" /><span class="must">*</span></th>
     <td colspan="3">
-    <label><input type="radio" id="billingGroup" name="billingGroup" value="N" onclick="fn_groupChg('N')"/><span>New Billing Group</span></label>
-    <label><input type="radio" id="billingGroup" name="billingGroup" value="E" onclick="fn_groupChg('E')"/><span>Existing Billing Group</span></label>
+    <label><input type="radio" id="billingGroup" name="billingGroup" value="N" onclick="fn_groupChg('N')"/><span><spring:message code="sal.btn.newBillingGroup" /></span></label>
+    <label><input type="radio" id="billingGroup" name="billingGroup" value="E" onclick="fn_groupChg('E')"/><span><spring:message code="sal.btn.existingBillingGroup" /></span></label>
     </td>
 </tr>
 </tbody>
@@ -867,21 +865,21 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" rowspan="3">Billing Method<span class="must">*</span></th>
+    <th scope="row" rowspan="3"><spring:message code="sal.text.billingMethod" /><span class="must">*</span></th>
     <td colspan="3">
-        <label><input type="checkbox" id="btnBillGroupPost"/><span>Post</span></label><br>
+        <label><input type="checkbox" id="btnBillGroupPost"/><span><spring:message code="sal.text.post" /></span></label><br>
     </td>
 </tr>
 <tr>
     <td colspan="3">
-        <label><input type="checkbox" id="btnBillGroupSMS"/><span>SMS</span></label><br>
+        <label><input type="checkbox" id="btnBillGroupSMS"/><span><spring:message code="sal.text.sms" /></span></label><br>
     </td>
 </tr>
 <tr>
     <td>
-        <label><input type="checkbox" id="btnBillGroupEStatement"/><span>E-Statement</span></label>
+        <label><input type="checkbox" id="btnBillGroupEStatement"/><span><spring:message code="sal.text.eStatement" /></span></label>
     </td>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td><input type="text" title="" id="txtBillGroupEmail" placeholder="Email Address" class="w100p" /></td>
 </tr>
 </tbody>
@@ -901,19 +899,19 @@ var option = {
 <tr>
     <td colspan="4">
         <aside class="title_line"><!-- title_line start -->
-        <h3>Billing Group Selection</h3>
+        <h3><spring:message code="sal.page.subtitle.billingGroupSelection" /></h3>
         </aside><!-- title_line end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Billing Group<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.billingGroup" /><span class="must">*</span></th>
     <td><input id="billGrp" name="billGrp" type="text" title="" placeholder="Billing Group" class="readonly" readonly/><a id="billGrpBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <input id="hiddenBillGrpId" name="billGrpId" type="hidden" /></td>
-    <th scope="row">Billing Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.billingType" /><span class="must">*</span></th>
     <td><input id="billType" name="billType" type="text" title="" placeholder="Billing Type" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Billing Address</th>
+    <th scope="row"><spring:message code="sal.text.billingAddress" /></th>
     <td colspan="3"><textarea id="billAddr" name="billAddr" cols="20" rows="5" readonly></textarea></td>
 </tr>
 </tbody>
@@ -930,7 +928,7 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="3"><textarea id="billRem" name="billRem" cols="20" rows="5" ></textarea></td>
 </tr>
 </tbody>
@@ -940,7 +938,7 @@ var option = {
 </section><!-- search_table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Sales Person Information</h3>
+<h3><spring:message code="sal.text.salPersonInfo" /></h3>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -955,16 +953,16 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Sales Person Code</th>
+    <th scope="row"><spring:message code="sal.text.salPersonCode" /></th>
     <td>
         <input type="text" id="_inputMemCode" name="inputMemCode" title="" value="${packageInfo.memCode }" placeholder="" class=""/>
         <input type="hidden" id="_hiddenInputMemCode" >
         <input type="hidden" id="_govAgMemId" name="govAgMemId">
-        <p class="btn_sky"><a href="#" id="_memConfirm">Confirm</a></p> 
-        <p class="btn_sky"><a href="#" id="_memSearch">Search</a></p>
-        <p class="btn_sky"><a  id="_memReSelected" onclick="fn_reselect()">Reselect</a></p>
+        <p class="btn_sky"><a href="#" id="_memConfirm"><spring:message code="sal.btn.confirm" /></a></p> 
+        <p class="btn_sky"><a href="#" id="_memSearch"><spring:message code="sal.btn.search" /></a></p>
+        <p class="btn_sky"><a  id="_memReSelected" onclick="fn_reselect()"><spring:message code="sal.btn.reselect" /></a></p>
     </td>
-    <th scope="row">Sales Person Name</th>
+    <th scope="row"><spring:message code="sal.text.salPersonName" /></th>
     <td><span id="_getMemName">${packageInfo.memName }</span></td>
 </tr>
 </tbody>
@@ -973,7 +971,7 @@ var option = {
 </section><!-- search_table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>PO Information</h3>
+<h3><spring:message code="sal.page.subtitle.poInfo" /></h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -986,7 +984,7 @@ var option = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">PO No</th>
+    <th scope="row"><spring:message code="sal.text.poNo" /></th>
     <td><input type="text" id="poNo" name="poNo" title="" placeholder="" class="w100p" /></td>
     <td colspan="2"></td>
 </tr>
@@ -994,7 +992,7 @@ var option = {
 </table><!-- table end -->
 
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_ctsSave()">Convert to Sales</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_ctsSave()"><spring:message code="sal.btn.convertToSale" /></a></p></li>
 </ul>
 
 </form>
