@@ -3527,11 +3527,42 @@
        <update id="updateState_SAL0001D" parameterType="Map">
                 UPDATE SAL0001D A
 				SET STUS_CODE_ID = '10'
-				WHERE A.SALES_ORD_ID = (SELECT E1.SALES_ORD_ID 
-							                        FROM SAL0001D E1
-							                        LEFT JOIN LOG0038D E2 ON E1.SALES_ORD_ID = E2.SALES_ORD_ID
-							                        WHERE E2.RETN_NO = #{serviceNo}
-							                        AND E2.STUS_CODE_ID = '4')
+				WHERE A.SALES_ORD_NO = #{salesOrderNo}
+       </update>
+       
+       <insert  id="insert_SAL0009D" parameterType="Map">
+                INSERT INTO SAL0009D (
+											    LOG_ID,
+											    SALES_ORD_ID,
+											    PRGRS_ID,
+											    LOG_DT,
+											    REF_ID,
+											    IS_LOK,
+											    LOG_CRT_USER_ID,
+											    LOG_CRT_DT )
+				VALUES (
+						    SAL0009D_LOG_ID_SEQ.NEXTVAL,
+						    (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo}),
+						    '13',
+						    SYSDATE,
+						    '0',
+						    '0',
+						    (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE = #{userId}),
+						    SYSDATE ) 
+       </insert>
+       
+       <update id="updateState_SAL0020D" parameterType="Map">
+                UPDATE SAL0020D
+				SET SO_REQ_STUS_ID = '32'
+				WHERE SO_REQ_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D
+				                                    WHERE SALES_ORD_NO = #{salesOrderNo})
+       </update>
+       
+       <update id="updateState_SAL0071D" parameterType="Map">
+                UPDATE SAL0071D
+				SET STUS_CODE_ID = 'TER'
+				WHERE SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D
+				                                   WHERE SALES_ORD_NO = #{salesOrderNo})
        </update>
        
        <select id="getRetnCrtUserId" parameterType="Map" resultType="java.lang.String">
