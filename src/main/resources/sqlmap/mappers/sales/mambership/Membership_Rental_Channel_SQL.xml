@@ -59,5 +59,64 @@
 		 WHERE  ( SRV_CNTRCT_ID = #{serviceContractID})
 
    </insert>
+   
+	<select id="paymentServiceContract" parameterType="Map" resultType="egovMap">
+           <![CDATA[    
+                  SELECT Extent1.SRV_CNTRCT_ID   ,
+				       Extent1.SRV_CNTRCT_REF_NO   ,
+				       Extent1.SRV_CNTRCT_QUOT_ID   ,
+				       Extent1.SRV_CNTRCT_ORD_ID   ,
+				       Extent1.SRV_CNTRCT_STUS_ID   ,
+				       Extent1.SRV_CNTRCT_PCKG_ID   ,
+				       Extent1.SRV_CNTRCT_REM   ,
+				       Extent1.SRV_CNTRCT_NET_MONTH   ,
+				       Extent1.SRV_CNTRCT_NET_YEAR   ,
+				       Extent1.SRV_CNTRCT_RENTAL   ,
+				       Extent1.SRV_CNTRCT_EXP_FILTER   ,
+				       Extent1.SRV_CNTRCT_BRNCH_ID   ,
+				       Extent1.SRV_CNTRCT_SALESMAN   ,
+				       Extent1.SRV_CNTRCT_CRT_DT   ,
+				       Extent1.SRV_CNTRCT_CRT_USER_ID   ,
+				       Extent1.SRV_CNTRCT_UPD_DT   ,
+				       Extent1.SRV_CNTRCT_UPD_USER_ID   ,
+				       Extent1.SRV_CNTRCT_PROMO_ID   ,
+				       Extent1.SRV_CNTRCT_FORM_NO   
+			   FROM SAL0077D Extent1
+			 WHERE Extent1.SRV_CNTRCT_ID = #{serviceContractID} 
+			     AND ROWNUM <= 1
+           ]]>
+	</select>
 
+    <select id="paymentRentPaySet" parameterType="Map" resultType="egovMap">
+           <![CDATA[    
+                  SELECT Extent1.RENT_PAY_ID   ,
+					         Extent1.SALES_ORD_ID   ,
+					         Extent1.MODE_ID   ,
+					         Extent1.CUST_CRC_ID   ,
+					         Extent1.BANK_ID   ,
+					         Extent1.CUST_ACC_ID   ,
+					         Extent1.DD_APPLY_DT   ,
+					         Extent1.DD_SUBMIT_DT   ,
+					         Extent1.DD_START_DT   ,
+					         Extent1.DD_REJCT_DT   ,
+					         Extent1.UPD_USER_ID   ,
+					         Extent1.UPD_DT   ,
+					         Extent1.STUS_CODE_ID   ,
+					         Extent1.IS_3RD_PARTY   ,
+					         Extent1.CUST_ID   ,
+					         Extent1.EDIT_TYPE_ID   ,
+					         Extent1.NRIC_OLD   ,
+					         Extent1.FAIL_RESN_ID   ,
+					         Extent1.ISSU_NRIC   ,
+					         Extent1.AEON_CNVR   ,
+					         Extent1.REM   ,
+					         Extent1.LAST_APPLY_USER   ,
+					         Extent1.PAY_TRM   ,
+					         Extent1.SVC_CNTRCT_ID   
+				    FROM SAL0074D Extent1
+				  WHERE Extent1.SALES_ORD_ID = #{salesOrderID}
+					  AND Extent1.SVC_CNTRCT_ID = #{serviceContractID} 
+					  AND ROWNUM <= 1
+           ]]>
+    </select>
 </mapper>
