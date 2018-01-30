@@ -174,5 +174,7 @@ public interface MSvcLogApiMapper {
 	  
 	// call SP_RETURN_BILLING_EARLY_TERMI( #{ORD_ID},#{USER_ID},#{SERVICE_NO} )
 	void SP_RETURN_BILLING_EARLY_TERMI ( Map<String, Object> params);
+
+	String getInstallDate(Map<String, Object> insApiresult);
 	
 }

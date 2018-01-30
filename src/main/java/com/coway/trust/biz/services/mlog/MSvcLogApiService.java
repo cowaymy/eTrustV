@@ -144,6 +144,8 @@ public interface MSvcLogApiService {
 	void SP_RETURN_BILLING_EARLY_TERMI(Map<String, Object> params);
 
 	void updateInsFailServiceLogs(Map<String, Object> params);
+
+	String getInstallDate(Map<String, Object> insApiresult);
 	
 
 }

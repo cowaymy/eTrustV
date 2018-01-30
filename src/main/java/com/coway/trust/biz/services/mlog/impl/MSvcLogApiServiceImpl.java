@@ -737,6 +737,13 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	}
 
 
+	@Override
+	public String getInstallDate(Map<String, Object> insApiresult) {
+		// TODO Auto-generated method stub
+		return MSvcLogApiMapper.getInstallDate(insApiresult);
+	}
+
+
 
 	   
 /*	@Override

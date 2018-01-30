@@ -1209,6 +1209,7 @@ public class ServiceApiController {
         			EgovMap orderInfo = installationResultListService.getOrderInfo(params);
         			
         			String userId = MSvcLogApiService.getUseridToMemid(params);
+        			String installDate    = MSvcLogApiService.getInstallDate(insApiresult);
         			
         			sessionVO1.setUserId(Integer.parseInt(userId));
         			
@@ -1224,8 +1225,9 @@ public class ServiceApiController {
         			params.put("hiddeninstallEntryNo",String.valueOf(installResult.get("installEntryNo")));
         			params.put("hidTradeLedger_InstallNo",String.valueOf(installResult.get("installEntryNo")));
         			
+        			params.put("installDate" , installDate );
+        			LOGGER.debug("installDate 값 : " + installDate);
         			params.put("CTID",String.valueOf(userId));
-        			params.put("installDate","");
         			params.put("updator", String.valueOf(userId)); 
         			params.put("nextCallDate","01-01-1999"); 
         			params.put("refNo1","0"); 

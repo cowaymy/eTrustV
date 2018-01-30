@@ -698,6 +698,15 @@ public class ASManagementListController {
 		logger.debug("in  getASFilterInfo.....");		
 		logger.debug("params : {}", params.toString());
 		
+		if(params.get("prdctCd") != null){
+			String str	 = params.get("prdctCd").toString();
+			String[] Idx = str.split("B");
+			
+			params.put("prdctCd", Idx[0]);
+		}
+		logger.debug("params : {}", params.toString());
+		
+		
 		List<EgovMap>  list = ASManagementListService.getASFilterInfo(params);
 		
 		return ResponseEntity.ok(list);  

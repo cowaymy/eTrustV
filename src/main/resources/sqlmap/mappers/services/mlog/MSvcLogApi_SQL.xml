@@ -3568,6 +3568,12 @@
        <select id="getRetnCrtUserId" parameterType="Map" resultType="java.lang.String">
          SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{stkRetnCrtUserId}
       </select>
+      
+         <select id="getInstallDate" parameterType="Map" resultType="java.lang.String">
+         Select to_char( to_Date(#{checkInDate} ,'YYYY/MM/DD') ,  'DD/MM/YYYY' ) from dual
+         
+         </select>
+     
           
        <insert  id="insert_LOG0039D" parameterType="Map">
                 INSERT INTO LOG0039D (
