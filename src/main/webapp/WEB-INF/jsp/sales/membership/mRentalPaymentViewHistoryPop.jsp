@@ -27,53 +27,53 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "c6",
-                headerText : "Type",
+                headerText : "<spring:message code="sal.title.type" />",
                 width : 80,
                 editable : false
             }, {
                 dataField : "code",
-                headerText : "Mode",
+                headerText : "<spring:message code="sal.title.mode" />",
                 width : 70,
                 editable : false
             }, {
                 dataField : "custCrcOwner",
-                headerText : "Crc/Acc Owner",
+                headerText : "<spring:message code="sal.title.crcAccOwner" />",
                 width : 120,
                 editable : false
             }, {
                 dataField : "custAccNo",
-                headerText : "Crc/Acc No",
+                headerText : "<spring:message code="sal.title.crcAccNo" />",
                 width : 120,
                 editable : false
             }, {
                 dataField : "custCrcExpr",
-                headerText : "Expiry Date",
+                headerText : "<spring:message code="sal.title.expiryDate" />",
                 editable : false
             }, {
                 dataField : "bankCodeId",
-                headerText : "Bank",
+                headerText : "<spring:message code="sal.title.bank" />",
                 width : 90,
                 editable : false
             }, {
                 dataField : "ddApplyDt",
-                headerText : "Apply Date",
+                headerText : "<spring:message code="sal.title.applyDate" />",
                 editable : false
             }, {
                 dataField : "ddSubmitDt",
-                headerText : "Submit Date",
+                headerText : "<spring:message code="sal.title.submitDate" />",
                 editable : false
             }, {
                 dataField : "-",
-                headerText : "Approve Date",
+                headerText : "<spring:message code="sal.title.approveDate" />",
                 editable : false
             },{
                 dataField : "undefined",
-                headerText : "Reactivate",
+                headerText : "<spring:message code="sal.title.reactivate" />",
                 width : 110,
                 styleFunction : cellStyleFunction,
                 renderer : {
                       type : "ButtonRenderer",
-                      labelText : "Confirm",
+                      labelText : "<spring:message code="sal.btn.confirm" />",
                       onclick : function(rowIndex, columnIndex, value, item) {
                            //pupupWin
                           $("#histRenPayId").val(item.histRenPayId);
@@ -82,27 +82,27 @@
                }
            }, {
                 dataField : "ddRejctDt",
-                headerText : "Reject Date",
+                headerText : "<spring:message code="sal.title.rejectDate" />",
                 editable : false
             }, {
                 dataField : "resnCodeId",
-                headerText : "Reject Code",
+                headerText : "<spring:message code="sal.title.rejectCode" />",
                 editable : false
             }, {
                 dataField : "issuNric",
-                headerText : "Issued NRIC",
+                headerText : "<spring:message code="sal.title.issuedNric" />",
                 editable : false
             }, {
                 dataField : "custName",
-                headerText : "Third Party",
+                headerText : "<spring:message code="sal.title.thirdParty" />",
                 editable : false
             }, {
                 dataField : "userName",
-                headerText : "Updator",
+                headerText : "<spring:message code="sal.title.updator" />",
                 editable : false
             }, {
                 dataField : "updDt",
-                headerText : "Update Date",
+                headerText : "<spring:message code="sal.title.updateDate" />",
                 editable : false
             }];
         
@@ -126,8 +126,7 @@
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : false,
-            groupingMessage : "Here groupping"
+            showRowNumColumn : false
         };
         
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
@@ -153,8 +152,8 @@
     
     function fn_confirm(mode, bank, applyDt){
 
-    	var msg = "Request Summary </br> Are you sure want to reactivate this account? </br>";
-    	msg += "Pay Mode["+mode+"] </br> Bank Code: ["+bank+"] </br> Apply Date: ["+applyDt+"]";
+    	var msg = "<spring:message code="sal.conf.requestSummary" /> </br>";
+    	msg += "<spring:message code="sal.conf.payMode" />["+mode+"] </br> <spring:message code="sal.conf.bankCode" />: ["+bank+"] </br> <spring:message code="sal.conf.applyDate" />: ["+applyDt+"]";
     	
     	Common.confirm(msg, fn_confirmOk);
     	
@@ -165,14 +164,14 @@
         Common.ajax("GET", "/sales/membershipRental/paymentViewHistoryConfirm.do", $('#historyForm').serializeJSON(), function(result) {
             console.log(result);
             
-            Common.alert('Payment Setting has been successfully reactivated.');
+            Common.alert('<spring:message code="sal.alert.msg.succPaySet" />');
             
             //$("#histClose").click();
             fn_paymentViewHistAjax();
 
         }, function(jqXHR, textStatus, errorThrown) {
             try {
-                Common.alert("Failed to reactivate this Payment Setting. Please try again later.");
+                Common.alert("<spring:message code="sal.alert.msg.failPaySet" />");
             }
             catch(e) {
                 console.log(e);
@@ -183,9 +182,9 @@
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>RENTAL PAY SETTING HISTORY</h1>
+<h1><spring:message code="sal.page.title.renPaySetHis" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="histClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="histClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->

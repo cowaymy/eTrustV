@@ -17,9 +17,9 @@ function fn_doback(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Rental Membership Sales View </h1>
+<h1><spring:message code="sal.page.title.rentalMembershipSalesView" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#"  id="pcl_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"  id="pcl_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -29,11 +29,11 @@ function fn_doback(){
 <section class="tap_wrap"><!-- tap_wrap start -->
 
 <ul class="tap_type1">
-    <li><a href="#" class="on">Membership Info</a></li>
-    <li><a href="#">Order Info</a></li>
-    <li><a href="#">Payment Channel</a></li>
-    <li><a href="#">Payment List</a></li>
-    <li><a href="#">Call Log List</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.membershipInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.ordInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.paymentChannel" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.paymentList" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.callLogList" /></a></li>
 </ul>
 
 

@@ -1348,7 +1348,7 @@ function fn_cTPackageChanged(){
 <header class="pop_header"><!-- pop_header start -->
 <h1>Rental Membership -New Quotation  </h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="nc_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="nc_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
