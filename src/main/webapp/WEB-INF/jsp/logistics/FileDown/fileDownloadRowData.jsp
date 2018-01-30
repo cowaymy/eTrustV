@@ -31,7 +31,7 @@ var rawFileGrid2;
 
 var columnLayout1 = [
 					{dataField: "orignlfilenm",headerText :"<spring:message code='log.head.filename'/>" ,width: "30%"   ,visible:true },                
-					{dataField: "updDt",headerText :"<spring:message code='log.head.writetime'/>"   ,width: "30%"   , dataType :    "date"    ,formatString :     "yyyy. mm. dd t hh:MM"    ,visible:true },  
+					{dataField: "updDt",headerText :"<spring:message code='log.head.writetime'/>"   ,width: "30%"   , dataType :    "date"    ,formatString :     "yyyy. mm. dd hh:MM TT"    ,visible:true },  
 					{dataField: "filesize",headerText :"<spring:message code='log.head.filesize'/>" ,width: "30%"   ,postfix :  "bytes"   ,dataType :    "numeric" ,visible:true},  
                     {
                         dataField : "",
@@ -52,7 +52,7 @@ var columnLayout1 = [
                     
 var columnLayout2 = [
 					{dataField: "orignlfilenm",headerText :"<spring:message code='log.head.filename'/>" ,width: "30%"   ,visible:true },                
-					{dataField: "updDt",headerText :"<spring:message code='log.head.writetime'/>"   ,width: "30%"   , dataType :     "date"     ,formatString :     "yyyy. mm. dd t hh:MM"    ,visible:true },  
+					{dataField: "updDt",headerText :"<spring:message code='log.head.writetime'/>"   ,width: "30%"   , dataType :     "date"     ,formatString :     "yyyy. mm. dd hh:MM TT"    ,visible:true },  
 					{dataField: "filesize",headerText :"<spring:message code='log.head.filesize'/>" ,width: "30%"   ,postfix :  "bytes"   ,dataType :     "numeric" ,visible:true},  
                     {
                         dataField : "",
