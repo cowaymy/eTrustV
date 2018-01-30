@@ -50,7 +50,8 @@ type : 'S'
     
     });
     
-    doGetCombo('/common/selectCodeList.do', '357', '','cmbDealerType', 'S' , '');     // Dealer Type Combo Box
+    //doGetCombo('/common/selectCodeList.do', '357', '','cmbDealerType', 'S' , '');     // Dealer Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '', '','cmbDealerType', 'S' , '');     // Dealer Type Combo Box
     
 //    doGetCombo('/status/selectStatusCategoryCdList.do', '20', '','pstStusIds', 'S' , ''); 
 
