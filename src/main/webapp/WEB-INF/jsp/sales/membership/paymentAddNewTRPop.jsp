@@ -30,16 +30,16 @@ function fn_goAddTR(){
 	
 	
 	if($("#tr_type").val() =="" ){
-		 Common.alert("* Please fill up all the required fields.");
+		 Common.alert("* <spring:message code="sal.alert.msg.pleaseRequiredFields" />");
 		 return  false;
 	}
 	
 	if($("#tr_number").val() =="" ){
-        Common.alert("* Please fill up all the required fields.");
+        Common.alert("* <spring:message code="sal.alert.msg.pleaseRequiredFields" />");
         return false ;
    }
 	if($("#tr_issueddate").val() =="" ){
-        Common.alert("* Please fill up all the required fields.");
+        Common.alert("* <spring:message code="sal.alert.msg.pleaseRequiredFields" />");
         return  false;
    }
 	
@@ -55,9 +55,9 @@ function fn_goAddTR(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Add New TR</h1>
+<h1><spring:message code="sal.page.title.addNewTR" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#"  id="payadd_close">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"  id="payadd_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -74,21 +74,21 @@ function fn_goAddTR(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">TR Type  <span class="must">*</span> </th>
+	<th scope="row"><spring:message code="sal.text.trType" />  <span class="must">*</span> </th>
 	<td>
 	<select id="tr_type" name="tr_type">
-		<option value="1">Membership Package </option>
-		<option value="2">Filter (1st BS)</option>
-		<option value="3">Membership Package & Filter (1st BS)</option>
+		<option value="1"><spring:message code="sal.text.membershipPackage" /> </option>
+		<option value="2"><spring:message code="sal.text.filter1stBs" /></option>
+		<option value="3"><spring:message code="sal.text.memFilter1stBs" /></option>
 	</select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">TR Number <span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.trNumber" /> <span class="must">*</span></th>
 	<td><input type="text" title=""  id="tr_number"  placeholder="" /></td>
 </tr>
 <tr>
-	<th scope="row">Issued Date <span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.issuedDate" /> <span class="must">*</span></th>
 	<td><input type="text" title="Create start Date"    id="tr_issueddate" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 </tbody>
