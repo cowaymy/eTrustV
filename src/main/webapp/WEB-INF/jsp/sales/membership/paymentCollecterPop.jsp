@@ -66,18 +66,18 @@ $(document).ready(function(){
 function createAUIGrid(){
     
     var cLayout = [
-	         {dataField : "codeName",headerText : "Type", width : 100},
-	         {dataField : "memCode", headerText : "Code", width : 100},
-	         {dataField : "name", headerText : "Name", width :300},
-	         {dataField : "nric", headerText : "NRIC", width :100},
-	         {dataField : "c1", headerText : "Join Date", width :140},
+	         {dataField : "codeName",headerText : "<spring:message code="sal.title.type" />", width : 100},
+	         {dataField : "memCode", headerText : "<spring:message code="sal.title.code" />", width : 100},
+	         {dataField : "name", headerText : "<spring:message code="sal.title.name" />", width :300},
+	         {dataField : "nric", headerText : "<spring:message code="sal.title.nric" />", width :100},
+	         {dataField : "c1", headerText : "<spring:message code="sal.title.joinDate" />", width :140},
 	         {
                  dataField : "undefined",
                  headerText : " ",
                  width           : 110,    
                  renderer : {
                      type : "ButtonRenderer",
-                     labelText : "select",
+                     labelText : "<spring:message code="sal.title.select" />",
                      onclick : function(rowIndex, columnIndex, value, item) {
                     	 
                     	 if('${resultFun}' == 'C'){
@@ -129,9 +129,9 @@ function fn_doClear(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Collector Search</h1>
+<h1><spring:message code="sal.page.title.collecctorSearch" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#"  id="pcl_close">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"  id="pcl_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -141,8 +141,8 @@ function fn_doClear(){
 <form action="#" method="post">
 
 <ul class="right_btns mb10">
-	<li><p class="btn_blue"><a href="#"  onclick="javascript:fn_getPaymentCollecterList()"><span class="search" ></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_doClear()"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#"  onclick="javascript:fn_getPaymentCollecterList()"><span class="search" ></span><spring:message code="sal.btn.search" /></a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_doClear()"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -157,20 +157,20 @@ function fn_doClear(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Member Type</th>
+	<th scope="row"><spring:message code="sal.text.memtype" /></th>
 	<td>
 	<select class="w100p"  id="MEM_TYPE"  name="MEM_TYPE">
 	</select>
 	</td>
-	<th scope="row">Member Code</th>
+	<th scope="row"><spring:message code="sal.text.memberCode" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="MEM_CODE"   name="MEM_CODE"/></td>
-	<th scope="row">Join Date</th>
+	<th scope="row"><spring:message code="sal.text.joinDate" /></th>
 	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY"   id="JOIN_DATE"   name="JOIN_DATE" class="j_date w100p" /></td>
 </tr>
 <tr>
-	<th scope="row">Member Name</th>
+	<th scope="row"><spring:message code="sal.text.memberName" /></th>
 	<td colspan="3"><input type="text" title="" placeholder="" class="w100p"  id="MEM_NAME"   name="MEM_NAME"  /></td>
-	<th scope="row">NRIC</th>
+	<th scope="row"><spring:message code="sal.text.nric" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p"  id="NRIC"   name="NRIC" /></td>
 </tr>
 </tbody>
