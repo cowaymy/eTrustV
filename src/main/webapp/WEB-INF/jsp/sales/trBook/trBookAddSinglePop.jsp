@@ -190,6 +190,7 @@ function validRequiredField_Save_Add()
         $("#trNoTo").val($("#prefix").val()  + $("#trBookNoEnd").val());
         
         
+        
         Common.ajax("GET", "/sales/trBook/selectTrBookDup", $("#saveAddSingleForm").serialize(), function(result) {
             
             console.log("성공.");
@@ -217,7 +218,7 @@ function fn_save(){
 		 if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){     
 			 
 			 $("#prefix").attr("disabled", false);
-			 $("#singlebranch").attr("disabled", false);
+			 $("#singleBranch").attr("disabled", false);
 			 
 	        Common.ajax("POST", "/sales/trBook/saveNewTrBook", $("#saveAddSingleForm").serializeJSON(), function(result){
 	
