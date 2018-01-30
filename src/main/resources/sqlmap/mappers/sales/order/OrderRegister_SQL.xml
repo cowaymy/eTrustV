@@ -612,6 +612,7 @@
 		SELECT TT.MEM_ID
 		     , TT.MEM_CODE
 		     , TT.MEM_TYPE
+		     , TT.MEM_TYPE_NAME
 		     , TT.NAME
 		     , TT.NRIC
 		     , TT.RANK
@@ -627,6 +628,7 @@
 		  FROM ( SELECT T.MEM_ID
 		              , T.MEM_CODE
 		              , T.MEM_TYPE
+		              , T.MEM_TYPE_NAME
 		              , T.NAME
 		              , T.NRIC
 		              , T.RANK
@@ -644,6 +646,7 @@
 		              ( SELECT T1.MEM_ID
 		                     , T1.MEM_CODE
 		                     , T1.MEM_TYPE
+		                     , T3.CODE_NAME AS MEM_TYPE_NAME
 		                     , T1.NAME
 		                     , T1.NRIC
 		                     , T1.RANK
@@ -660,6 +663,10 @@
 		                  LEFT
 		                  JOIN ORG0005D T2
 		                    ON T2.MEM_ID = T1.MEM_ID
+                          LEFT
+                          JOIN SYS0013M T3
+                            ON T3.CODE_ID = T1.MEM_TYPE
+                           AND T3.CODE_MASTER_ID = 1
 		                 WHERE 8 != T1.STUS
 		                 <if test='stus != null and stus > 0'>
 		                   AND T1.STUS = #{stus}
