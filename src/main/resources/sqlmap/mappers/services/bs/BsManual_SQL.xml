@@ -2529,25 +2529,25 @@
 
 
                     <select id="selectHSAddFilterSetInfo" parameterType="Map" resultType="egovMap">
-
-                            SELECT Distinct1.C1 C1  ,
-                                   Distinct1.STK_ID code_Id  ,
-                                   Distinct1.STK_CODE STK_CODE  ,
-                                   (Distinct1.STK_CODE || '-' ||  Distinct1.STK_DESC) as code_Name ,
-                                   Distinct1.BOM_PART_PRIOD BOM_PART_PRIOD
-                              FROM ( SELECT DISTINCT Extent2.BOM_PART_PRIOD BOM_PART_PRIOD  ,
-                                                     Extent3.STK_ID STK_ID  ,
-                                                     Extent3.STK_CODE STK_CODE  ,
-                                                     Extent3.STK_DESC STK_DESC  ,
-                                                     1 C1
-                                     FROM SAL0002D Extent1
-                                            JOIN LOG0001M Extent2   ON ( Extent2.BOM_STK_ID = Extent1.ITM_STK_ID )
-                                            AND ( 1 = Extent2.BOM_PART_STUS_ID )
-                                            AND ( Extent2.BOM_PART_PRIOD > 0 )
-                                            LEFT JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent2.BOM_PART_ID
-                                      WHERE   Extent2.BOM_PART_PRIOD > 0
-                                               AND  Extent1.SALES_ORD_ID = #{salesOrdId}  ) Distinct1
-
+<![CDATA[
+                            SELECT  E.STK_CODE, E.STK_ID CODE_ID, (E.STK_CODE || '-' || E.STK_DESC) CODE_NAME
+							FROM   
+							SAL0002D A,
+							SYS0026M B,
+							LOG0043M C,
+							LOG0044D D,
+							SYS0026M E
+							WHERE 1=1
+							AND   A.ITM_STK_ID  = B.STK_ID
+							AND   B.STK_CODE    = C.MATRL_NO
+							AND   C.BOM         = D.BOM
+							AND   D.BOM_COMPNT  = E.STK_CODE
+							AND   E.STK_CTGRY_ID = '54'
+							AND   E.STK_TYPE_ID = '62'
+							AND   A.SALES_ORD_ID = #{salesOrdId} --'363904'
+							AND   TO_CHAR(D.VALID_FROM_DT,'YYYYMMDD') <   TO_CHAR(SYSDATE,'YYYYMMDD')     
+							AND   TO_CHAR(D.VALID_TO_DT,'YYYYMMDD')   >   TO_CHAR(SYSDATE,'YYYYMMDD')
+]]>
                     </select>
 
 
@@ -2618,6 +2618,52 @@
                                       FILTER_BARCD_CHK_Y_N ,
                                       FILTER_BARCD_SERIAL_NO   -->
                                      )
+            </insert>
+            
+            <insert id="saveHsFilterInfoAdd" parameterType="Map">
+                        INSERT INTO SAL0087D (
+											    SRV_FILTER_ID, 
+											    SRV_CONFIG_ID, 
+											    SRV_FILTER_STK_ID, 
+											    SRV_FILTER_PRIOD, 
+											    SRV_FILTER_PRV_CHG_DT, 
+											    SRV_FILTER_STUS_ID, 
+											    SRV_FILTER_REM, 
+											    SRV_FILTER_CRT_DT, 
+											    SRV_FILTER_CRT_USER_ID, 
+											    SRV_FILTER_UPD_DT, 
+											    SRV_FILTER_UPD_USER_ID
+											    )
+			             VALUES  (
+									    SAL0087D_SRV_FILTER_ID_SEQ.nextval,
+									    (SELECT SRV_CONFIG_ID FROM SAL0090D WHERE SRV_SO_ID = #{salesOrdId}),
+									    #{filterCode},
+									    ( SELECT  D.LEAD_TM_OFFSET
+									      FROM   
+									      SAL0002D A,
+									      SYS0026M B,
+									      LOG0043M C,
+									      LOG0044D D,
+									      SYS0026M E
+									      WHERE 1=1
+									      AND   A.ITM_STK_ID  = B.STK_ID
+									      AND   B.STK_CODE    = C.MATRL_NO
+									      AND   C.BOM         = D.BOM
+									      AND   D.BOM_COMPNT  = E.STK_CODE
+									      AND   E.STK_CTGRY_ID = '54'
+									      AND   E.STK_TYPE_ID = '62'
+									      AND   A.SALES_ORD_ID = #{salesOrdId}
+									      AND   E.STK_ID = #{filterCode}
+<![CDATA[						      AND   TO_CHAR(D.VALID_FROM_DT,'YYYYMMDD') <   TO_CHAR(SYSDATE,'YYYYMMDD')     
+									      AND   TO_CHAR(D.VALID_TO_DT,'YYYYMMDD')   >   TO_CHAR(SYSDATE,'YYYYMMDD') ), ]]>
+									    TO_DATE(#{lastChangeDate},'DD/MM/YYYY'),
+									    '1',
+									    NVL(#{remark}, ''),
+									    SYSDATE,
+									    #{updator},
+									    SYSDATE,
+									    #{updator}
+									  )
             </insert>
 
 

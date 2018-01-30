@@ -1093,11 +1093,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		String filterCode = String.valueOf(params.get("filterCode"));
 		
 //		if (ProductID == 892 || orderdate < CutOffDate)
-		if(productID == "892"){
+		/*if(productID == "892"){
 			if(filterCode == "303" || filterCode == "901"){
 				filterPeriod = "6";
 			}
-		}
+		}*/
 		
 		Map<String, Object> send_sal0087D = new HashMap();
 		
@@ -1105,16 +1105,19 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			EgovMap sal0087D = hsManualMapper.getSrvConfigFilter_SAL0087D(params);
 			
 			if( sal0087D != null){
-				send_sal0087D.put("SRV_FILTER_PRIOD", filterPeriod);
+				/*send_sal0087D.put("SRV_FILTER_PRIOD", filterPeriod);
 				send_sal0087D.put("SRV_FILTER_PRV_CHG_DT", params.get("lastChangeDate"));
 				send_sal0087D.put("SRV_FILTER_STUS_ID", 1);
 				send_sal0087D.put("SRV_FILTER_UPD_USER_ID" , params.get("updator"));
 				send_sal0087D.put("SRV_FILTER_REM", params.get("remark"));
 				
-                hsManualMapper.saveChanges(send_sal0087D);
+                hsManualMapper.saveChanges(send_sal0087D);*/
+				
+				// 이미 존재
+				result = -100;
 
 			}else {
-				send_sal0087D.put("SRV_FILTER_ID"          ,0);
+				/*send_sal0087D.put("SRV_FILTER_ID"          ,0);
 				send_sal0087D.put("SRV_CONFIG_ID"          ,configID);
 				send_sal0087D.put("SRV_FILTER_STK_ID"      ,filterCode);
 				send_sal0087D.put("SRV_FILTER_PRIOD"       ,filterPeriod);
@@ -1126,7 +1129,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 //				send_sal0087D.put("SRV_FILTER_UPD_DT"      ,);sysdate
 				send_sal0087D.put("SRV_FILTER_UPD_USER_ID" ,params.get("updator"));
 
-				hsManualMapper.saveChanges(send_sal0087D);
+				hsManualMapper.saveChanges(send_sal0087D);*/
+				
+				//Insert SAL0087D
+				hsManualMapper.saveHsFilterInfoAdd(params);
+				
 			}
 		}
 		

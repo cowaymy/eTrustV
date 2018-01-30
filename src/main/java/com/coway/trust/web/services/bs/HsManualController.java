@@ -783,11 +783,15 @@ public class HsManualController {
 //			List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 			
 			int resultValue = hsManualService.saveHsFilterInfoAdd(params);
+			logger.debug("resultValue : {}", resultValue);
 			
 			if(resultValue>0){
 				message.setCode(AppConstants.SUCCESS);
 				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-			}else{
+			} else if (resultValue == -100){
+				message.setCode("88");
+				message.setMessage("Can't add existed filter");
+			} else{
 				message.setCode(AppConstants.FAIL);
 				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 			}

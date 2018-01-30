@@ -51,9 +51,11 @@
 	                  
 	                  
 	                  if(FormUtil.checkReqValue($("#dpPrevServiceDate"))){
-	                      lastChangeDate = $("#dpPrevServiceDate").val();
+	                      //lastChangeDate = ("01/01/1900");
+	                      Commom.alert("Please insert 'Previous Service Date''");
+	                      return false;
 	                  }else {
-	                      lastChangeDate = ("01/01/1900");
+	                      lastChangeDate = $("#dpPrevServiceDate").val();
 	                  }
 	                  
 	
@@ -103,10 +105,12 @@
                     fn_getActivefilterInfo();
                      //Common.alert("<b>The filter successfully added.</b>",fn_close);
                      Common.alert("<b><spring:message code='service.msg.filter.add'/></b>",fn_close);
+               }else if (result.code = "88"){
+                   //Common.alert("<b>Failed to add this filter. Please try again later.</b>");
+                   Common.alert("<b>Can't add existed filter</b>");
                }else{
                     //Common.alert("<b>Failed to add this filter. Please try again later.</b>");
                     Common.alert("<b><spring:message code='service.msg.filter.fail'/></b>");
-                    
                }
            });
     }

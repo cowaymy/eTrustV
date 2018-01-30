@@ -153,6 +153,8 @@ public interface HsManualMapper {
 	EgovMap getSrvConfigFilter_SAL0087D(Map<String, Object> params);
 
 	void saveChanges(Map<String, Object> send_sal0087D);
+	
+	void saveHsFilterInfoAdd(Map<String, Object> params);
 
 	int saveDeactivateFilter(Map<String, Object> params);
 
