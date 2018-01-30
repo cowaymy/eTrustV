@@ -54,7 +54,7 @@
                     LEFT JOIN SAL0001D F ON E.BILL_SO_ID = F.SALES_ORD_ID                
                 WHERE 1=1
                     <if test="ordNo != '' ">
-                    AND D.SALES_ORD_NO = #{ordNo} OR F.SALES_ORD_NO = #{ordNo}
+                    AND (D.SALES_ORD_NO = #{ordNo} OR F.SALES_ORD_NO = #{ordNo})
                     </if>
                     <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
                     AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY') 
