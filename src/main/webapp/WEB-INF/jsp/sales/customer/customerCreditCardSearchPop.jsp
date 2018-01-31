@@ -101,9 +101,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Credit Card</h1>
+<h1><spring:message code="sal.page.title.custCreditCard" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -122,7 +122,7 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Contact Keyword</th>
+	<th scope="row"><spring:message code="sal.text.contactKeyword" /></th>
 	<td ><input id="searchWord" name="searchWord" type="text" title="" placeholder="Keyword" class="w100p" /></td>
 </tr>
 </tbody>
@@ -131,8 +131,9 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="crcSearchBtn" href="#"">SEARCH</a></p></li>
-	<li><p class="btn_grid"><a href="#">CLEAR</a></p></li>
+	<li><p class="btn_grid"><a id="crcSearchBtn" href="#""><spring:message code="sal.btn.search" /></a></p></li>
+	<li><p class="btn_grid"><a href="#"><spring:message code="sal.btn.clear" />
+</a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

@@ -20,15 +20,15 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
         var accRem = document.insAccountForm.accRem.value;
         
         if(accType == ''){
-            Common.alert("Please select the account type");
+            Common.alert("<spring:message code='sal.alert.msg.pleaseSelectTheAccType' />");
             return false;
         }
         if(accBank == ''){
-            Common.alert("Please select issue bank");
+            Common.alert("<spring:message code='sal.alert.msg.pleaseSelectTheIssueBank' />");
             return false;
         }
         if(accNo == ''){
-            Common.alert("Please key in the bank account number");
+            Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheBankAccNum' />");
             return false;
         }else{
         	//number check
@@ -44,19 +44,19 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
             /* length validation  */
             lengResult = fn_lengthCheck(accBank, accNo);
             if(lengResult == false){
-                Common.alert("* Invalid bank account number.");
+                Common.alert("* <spring:message code='sal.alert.msg.invalidBankAccNum' />");
                 return false;
             } 
             
             /* availability validation */
             availableResult = fn_availabilityCheck(accBank, accNo);
             if(availableResult == true){
-                Common.alert("* Invalid bank account number.");
+                Common.alert("* <spring:message code='sal.alert.msg.invalidBankAccNum' />");
                 return false;
             }
         }
         if(accOwner == ''){
-            Common.alert("Please key in the bank account owner name");
+            Common.alert("<spring:message code='sal.alert.msg.pleaseKeyBankAccOwnName' />");
             return false;
         }
         
@@ -244,9 +244,9 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer New Bank Account</h1>
+<h1><spring:message code="sal.page.title.custNewBankAcc" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_bankInsCloseBtn">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_bankInsCloseBtn"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -262,35 +262,35 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
 	</colgroup>
 		<tbody>
 			<tr>
-			    <th scope="row">Type<span class="must">*</span></th>
+			    <th scope="row"><spring:message code="sal.text.type" /><span class="must">*</span></th>
 			    <td>
 				    <select class="w100p" id="_insCmbBankType" name="cmbBankType">
 				    </select>
 			    </td>
-			    <th scope="row">Issue Bank<span class="must">*</span></th>
+			    <th scope="row"><spring:message code="sal.text.issueBank" /><span class="must">*</span></th>
 			    <td>
 				    <select class="w100p" id="_insCmbAccBank" name="cmbAccBank">
 				    </select>
 			    </td>
 			</tr>
 			<tr>
-			    <th scope="row">Account No<span class="must">*</span></th>
+			    <th scope="row"><spring:message code="sal.text.accNo" /><span class="must">*</span></th>
 			    <td>
 			        <input type="text" id="_insAccNo" name="accNo" title="" placeholder="Account No" class="w100p" />
 			    </td>
-			    <th scope="row">Bank Branch</th>
+			    <th scope="row"><spring:message code="sal.text.bankBranch" /></th>
 			    <td>
 			        <input type="text" id="_insBankBranch" name="bankBranch" title="" placeholder="Bank Branch" class="w100p" />
 			    </td>
 			</tr>
 			<tr>
-			    <th scope="row">Account Owner<span class="must">*</span></th>
+			    <th scope="row"><spring:message code="sal.text.accountOwner" /><span class="must">*</span></th>
 			    <td colspan="3">
 			        <input type="text" id="_insAccOwner" name="accOwner" title="" placeholder="Account Owner" class="w100p" />
 			    </td>
 			</tr>
 			<tr>
-			    <th scope="row">Remarks</th>
+			    <th scope="row"><spring:message code="sal.text.remark" /></th>
 			    <td colspan="3">
 			        <textarea cols="20" rows="5" id="_insAccRem" name="accRem" placeholder="Remark"></textarea>
 			    </td>
@@ -299,7 +299,7 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
 	</table><!-- table end -->
 	
 	<ul class="center_btns">
-	    <li><p class="btn_blue2 big"><a href="#" onclick="fn_addBankAccount()">Add Bank Account</a></p></li>
+	    <li><p class="btn_blue2 big"><a href="#" onclick="fn_addBankAccount()"><spring:message code="sal.btn.addBankAccout" /></a></p></li>
 	</ul>
 </form>
 </section><!-- pop_body end -->

@@ -47,38 +47,38 @@
 	    	/* Validation */
 	    	//Credit Card Type
 	    	if("" == $("#cmbCrcTypeId").val() || null == $("#cmbCrcTypeId").val()){
-	    		Common.alert("* Please select credit card type.");
+	    		Common.alert("* <spring:message code='sal.alert.msg.pleaseSelectCreditCardType' />");
 	            return;
 	    	}
 	        
 	    	//Issue Bank
 	    	if("" == $("#cmbCrcBankId").val() || null == $("#cmbCrcBankId").val()){
-                Common.alert("* Please select issue bank.");
+                Common.alert("* <spring:message code='sal.alert.msg.pleaseSelectTheIssueBank' />");
                 return;
             }
 	    	
 	    	//Credit Card No 
 	    	if("" == $("#custOriCrcNo").val() || null == $("#custOriCrcNo").val()){
-	    		Common.alert("* Please key in credit card number.");
+	    		Common.alert("* <spring:message code='sal.alert.msg.pleaseKeyInCreditCardNum' />");
                 return;
 	    	}else{// not null and not empty
 	    		
 	    		// number Check
 	    	    if(FormUtil.checkNum($("#custOriCrcNo"))){ 
-	    	    	Common.alert("* Invalid credit card number.");
+	    	    	Common.alert("* <spring:message code='sal.alert.msg.invalidCreditCardNum' />.");
 	                return;
 	    	    }
 	    	    
 	    	    //digit 16
 	    	    if(16 != $("#custOriCrcNo").val().length){
-	    	    	Common.alert("* Credit card number must in 16 digits.");
+	    	    	Common.alert("* <spring:message code='sal.alert.msg.creditCardNumMustIn16Digits' />.");
                     return;
 	    	    }
 	    	}
 	    	
 	    	//Exp Date
 	    	if("" == $("#expDate").val() || null == $("#expDate").val()){
-                Common.alert("* Please select credit card expiry date.");
+                Common.alert("* <spring:message code='sal.alert.msg.pleaseSelectCreditCardExpDate' />.");
                 return;
             }else{
             	//form Translate
@@ -89,21 +89,21 @@
 	    	
 	    	//Name On Card (Card Owner)
 	    	if("" == $("#custCrcOwner").val() || null == $("#custCrcOwner").val()){
-                Common.alert("* Please key in name on card.");
+                Common.alert("* <spring:message code='sal.alert.msg.pleaseKeyInNameOnCard' />.");
                 return;
             }else{ // not null and not empty
             	
             	//special character
             	var regExp = /^[a-zA-Z0-9 ]*$/i;
             	if( regExp.test($("#custCrcOwner").val()) == false ){
-            		 Common.alert("* Name on card cannot contains of special character.");
+            		 Common.alert("* <spring:message code='sal.alert.NameOnCardCannotContainOfSpecChr' />.");
                      return;
             	}
             }
 	    	
 	    	//Card Type 
 	    	if("" == $("#cmbCardTypeId").val() || null == $("#cmbCardTypeId").val()){
-                Common.alert("* Please select the card type.");
+                Common.alert("* <spring:message code='sal.alert.pleaseSelectTheCardType' />.");
                 return;
             }
 	    	
@@ -113,7 +113,7 @@
 	    });
 		
 	    $("#_delBtn").click(function() {
-            Common.confirm("Are you sure want to delete this credit card ?", fn_deleteCardAjax);
+            Common.confirm("<spring:message code='sal.alert.msg.areYouSureWantToDelCreditCard' />", fn_deleteCardAjax);
         });
 		
 	});// document Ready Func End
@@ -213,9 +213,9 @@
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>EDIT CUSTOMER CREDIT CARD INFO</h1>
+<h1><spring:message code="sal.page.title.editCustCreditCardInfo" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close1">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close1"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <input type="hidden" value="${detailcard.custCrcTypeId}" id="selCodeCrcTypeId">
@@ -236,30 +236,30 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.type" /><span class="must">*</span></th>
     <td>
     <select class="disabled w100p" id="cmbCrcTypeId" disabled="disabled" ></select>
     </td>
-    <th scope="row">Issue Bank<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.issueBank" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="cmbCrcBankId" name="custCrcBankId"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Credit Card No<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="Account Number" class="w100p"  value="${detailcard.custOriCrcNo}" name="custOriCrcNo" 
     onchange="javascript : fn_cardNoChangeFunc(this.value)" id="custOriCrcNo" maxlength="16"/></td>
-    <th scope="row">Expiry Date<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.expiryDate" /><span class="must">*</span></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date2 w100p"  readonly="readonly" id="expDate" name="custCrcExpr"/></td>
 </tr>
 <tr>
-    <th scope="row">Name On Card<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.nameOnCard" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="" class="w100p"  value="${detailcard.custCrcOwner}" maxlength="70" name="custCrcOwner" id="custCrcOwner" /></td>
-    <th scope="row">Card Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.cardType" /><span class="must">*</span></th>
     <td><select class="w100p" id="cmbCardTypeId" name="cardTypeId"></select></td>
 </tr>
 <tr>
-    <th scope="row">Remarks</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="3">
     <textarea cols="20" rows="5" name="custCrcRem">${detailcard.custCrcRem}</textarea>
     </td>
@@ -268,8 +268,8 @@
 </table><!-- table end -->
 </form><!-- form end  -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="_updBtn">Update</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" id="_delBtn">Delete</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_updBtn"><spring:message code="sal.btn.update" /></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_delBtn"><spring:message code="sal.btn.delete" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

@@ -3,7 +3,7 @@
 
 <script type="text/javaScript" language="javascript">
 
-  	//AUIGrid »ý¼º ÈÄ ¹ÝÈ¯ ID
+  	//AUIGrid ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¯ ID
 	
     $(document).ready(function(){
         doGetCombo('/common/selectCodeList.do',       '20', '', 'cmbBankType', 'S', ''); //Add Bank Type Combo Box
@@ -22,28 +22,28 @@
 
         if($("#cmbBankType option:selected").index() <= 0) {
             isValid = false;
-            msg += "* Please select the account type.<br/>";
+            msg += "<spring:message code='sal.alert.msg.pleaseSelectTheAccType' />";
         }
 
         if($("#cmbAccBank option:selected").index() <= 0) {
             isValid = false;
-            msg += "* Please select the issue bank.<br/>";
+            msg += "<spring:message code='sal.alert.msg.pleaseSelectTheIssueBank' />";
         }
 
         if(FormUtil.isEmpty($('#txtAccNo').val())) {
             isValid = false;
-            msg += "* Please key in the bank account number.<br/>";
+            msg += "<spring:message code='sal.alert.msg.pleaseKeyInTheBankAccNum' />";
         }
         else {
             if(FormUtil.checkNum($('#txtAccNo'))) {
                 isValid = false;
-                msg += "* Invalid bank account number.<br/>";
+                msg += "<spring:message code='sal.alert.msg.invalidBankAccNum' /><br/>";
             }
             else {
                 if($("#cmbAccBank option:selected").index() > 0) {
                     if(!FormUtil.IsValidBankAccount($('#cmbAccBank').val(), $('#txtAccNo').val())) {
                         isValid = false;
-                        msg += "* Invalid bank account number.<br/>";
+                        msg += "<spring:message code='sal.alert.msg.invalidBankAccNum' /><br/>";
                     }
                     else {
                         var isExist = fn_existAccNo('${custId}', $('#txtAccNo').val().trim(), $('#cmbAccBank').val());
@@ -51,7 +51,7 @@
                         if(isExist) {
                             console.log('xxxxxx');
                             isValid = false;
-                            msg += "* Bank account is existing<br/>";
+                            msg += "<spring:message code='sal.alert.msg.bankAccIsExisting' />";
                         }
                     }
                 }
@@ -80,7 +80,7 @@
         
         Common.ajax("POST", "/sales/customer/insertBankAccountInfo2.do", $('#frmBankAcc').serializeJSON(), function(result) {
                 
-                Common.alert("Bank Account Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+                Common.alert("<spring:message code='sal.alert.title.bankAccAdded' />" + DEFAULT_DELIMITER + "<b><spring:message code='sal.alert.msg.successfully' /></b>");
 
         	    if('${callPrgm}' == 'ORD_REGISTER_BANK_ACC' || '${callPrgm}' == 'PRE_ORD') {
         	        fn_loadBankAccountPop(result.data);
@@ -88,7 +88,7 @@
         	    }
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
-                    Common.alert("Failed To Add" + DEFAULT_DELIMITER + "<b>Failed to add new bank account. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                    Common.alert("<spring:message code='sal.alert.title.failedToAdd' />" + DEFAULT_DELIMITER + "<b><spring:message code='sal.alert.msg.failedToAddNewbankAcc' />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
                 }
                 catch(e) {
                     console.log(e);
@@ -101,9 +101,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Add Bank Account</h1>
+<h1><spring:message code="sal.title.addBankAccount" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="addDdCloseBtn" href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="addDdCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -121,33 +121,33 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Type<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.type" /><span class="must">*</span></th>
 	<td>
 	<select id="cmbBankType" name="bankType" class="w100p disabled"></select>
 	</td>
-	<th scope="row">Issue Bank<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.issueBank" /><span class="must">*</span></th>
 	<td>
 	<select id="cmbAccBank" name="accBank" class="w100p"></select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Account No<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.accNo" /><span class="must">*</span></th>
 	<td>
 	<input id="txtAccNo" name="accNo" type="text" title="" placeholder="Account No" class="w100p" />
 	</td>
-	<th scope="row">Bank Branch</th>
+	<th scope="row"><spring:message code="sal.text.bankBranch" /></th>
 	<td>
 	<input id="txtAccBankBranch" name="accBankBranch"type="text" title="" placeholder="Bank Branch" class="w100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Account Owner<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.accountOwner" /><span class="must">*</span></th>
 	<td colspan="3">
 	<input id="txtAccName" name="accName" type="text" title="" placeholder="Account Owner" class="w100p" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Remarks</th>
+	<th scope="row"><spring:message code="sal.text.remark" /></th>
 	<td colspan="3">
 	<textarea id="txtAccRemark" name="accRemark" cols="20" rows="5" placeholder="Remark"></textarea>
 	</td>
@@ -157,7 +157,7 @@
 </form>
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a id="btnAddBankAcc" href="#">Add Bank Account</a></p></li>
+	<li><p class="btn_blue2 big"><a id="btnAddBankAcc" href="#"><spring:message code="sal.btn.addBankAccout" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

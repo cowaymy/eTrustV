@@ -3,7 +3,7 @@
 
 <script type="text/javaScript" language="javascript">
 
-  	//AUIGrid »ý¼º ÈÄ ¹ÝÈ¯ ID
+  	//AUIGrid ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ ï¿½ï¿½È¯ ID
 	
     $(document).ready(function(){
         doGetCombo('/common/selectCodeList.do', '21',  '','cmbCreditCardType', 'S', ''); // Add Card Type Combo Box
@@ -37,34 +37,34 @@
         
         if($("#cmbCreditCardType option:selected").index() <= 0) {
             isValid = false;
-            msg += "* Please select credit card type.<br/>";
+            msg += "* <spring:message code='sal.alert.msg.pleaseSelectCreditCardType' /><br/>";
         }
 
         if($("#cmbIssBank option:selected").index() <= 0) {
             isValid = false;
-            msg += "* Please select issue bank.<br/>";
+            msg += "* <spring:message code='sal.alert.msg.pleaseSelectTheIssueBank' /><br/>";
         }
 
         if(FormUtil.isEmpty($('#cardNo').val())) {
             isValid = false;
-            msg += "* Please key in credit card number.<br/>";
+            msg += "* <spring:message code='sal.alert.msg.pleaseKeyInCreditCardNum' /><br/>";
         }
         else {
             if($('#cardNo').val().trim().length != 16) {
                 isValid = false;
-                msg += "* Credit card number must in 16 digits.<br/>";
+                msg += "* <spring:message code='sal.alert.msg.creditCardNumMustIn16Digits' /><br/>";
             }
             else {
                 if(FormUtil.checkNum($('#cardNo'))) {
                     isValid = false;
-                    msg += "* Invalid credit card number.<br/>";
+                    msg += "<spring:message code='sal.alert.msg.invalidCreditCardNum' />";
                 }
                 else {
                     var isExistCrc = fn_existCrcNo('${custId}', $('#cardNo').val().trim());
                     
                     if(isExistCrc) {
                         isValid = false;
-                        msg += "* Credit card is existing.<br/>";
+                        msg += "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
                     }
                     else {
                         if($("#cmbCreditCardType option:selected").index() > 0) {
@@ -72,14 +72,14 @@
                                 //MASTER
                                 if($('#cardNo').val().trim().substring(0, 1) != "5") {
                                     isValid = false;
-                                    msg += "* Invalid credit card number.<br/>";
+                                    msg += "<spring:message code='sal.alert.msg.invalidCreditCardNum' />";
                                 }
                             }
                             else if($("#cmbCreditCardType").val() == '112') {
                                 //VISA
                                 if($('#cardNo').val().trim().substring(0, 1) != "4") {
                                     isValid = false;
-                                    msg += "* Invalid credit card number.<br/>";
+                                    msg += "<spring:message code='sal.alert.msg.invalidCreditCardNum' />";
                                 }
                             }
                         }
@@ -90,22 +90,22 @@
         
         if(FormUtil.isEmpty($('#expDate').val())) {
             isValid = false;
-            msg += "* Please select credit card expiry date.<br/>";
+            msg += "<spring:message code='sal.alert.msg.pleaseSelectCreditCardExpDate' />";
         }
         if(FormUtil.isEmpty($('#nameOnCard').val())) {
             isValid = false;
-            msg += "* Please key in name on card<br/>";
+            msg += "<spring:message code='sal.alert.msg.pleaseKeyInNameOnCard' />";
         }
         else {
             if(!FormUtil.checkSpecialChar($('#nameOnCard').val())) {
                 isValid = false;
-                msg += "* Name on card cannot contains of special character.<br/>";
+                msg += "<spring:message code='sal.alert.NameOnCardCannotContainOfSpecChr' />";
             }
         }
         
         if($("#cmbCardType option:selected").index() <= 0) {
             isValid = false;
-            msg += "* Please select the card type.<br/>";
+            msg += "<spring:message code='sal.alert.pleaseSelectTheCardType' />";
         }
         
         if(!isValid) {
@@ -156,9 +156,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Add Credit Card</h1>
+<h1><spring:message code="sal.page.title.addCreditCard" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="addCrcCloseBtn" href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="addCrcCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -176,37 +176,37 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Type<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.type" /><span class="must">*</span></th>
 	<td>
 	    <select class="w100p" id="cmbCreditCardType" name="creditCardType" disabled></select>
 	</td>
-	<th scope="row">Issue Bank<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.issueBank" /><span class="must">*</span></th>
 	<td>
 	<select id="cmbIssBank" name="issBank" class="w100p"></select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Credit Card No<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
 	<td>
 	    <input id="cardNo" name="cardNo" type="text" title="" placeholder="Credit Card Number" class="w100p" />
 	</td>
-	<th scope="row">Expiry Date<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.expiryDate" /><span class="must">*</span></th>
 	<td>
 	    <input id="expDate" name="expDate" type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2" />
 	</td>
 </tr>
 <tr>
-	<th scope="row">Name On Card<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.nameOnCard" /><span class="must">*</span></th>
 	<td>
 	    <input id="nameOnCard" name="nameOnCard" type="text" title="" placeholder="Name On Card" class="w100p" />
 	</td>
-	<th scope="row">Card Type<span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.cardType" /><span class="must">*</span></th>
 	<td>
 	    <select class="w100p" id="cmbCardType" name="cardType"></select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Remarks</th>
+	<th scope="row"><spring:message code="sal.text.remark" /></th>
 	<td colspan="3">
 	    <textarea id="cardRem" name="cardRem" cols="20" rows="5" placeholder="Remark"></textarea>
 	</td>
@@ -216,7 +216,7 @@
 </form>
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a id="btnAddCreditCard" href="#">Add Credit Card</a></p></li>
+	<li><p class="btn_blue2 big"><a id="btnAddCreditCard" href="#"><spring:message code="sal.btn.addCreditCard" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

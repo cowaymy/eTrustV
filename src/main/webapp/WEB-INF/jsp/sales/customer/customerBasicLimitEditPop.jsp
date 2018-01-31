@@ -131,9 +131,9 @@ function fn_closeFunc(){
 <input type="hidden" value="${selVisible}" id="_selVisible">
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Basic Info Maintenance(Limit)</h1>
+<h1><spring:message code="sal.page.title.custBasicInfoMaintenanceLimit" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_close" onclick="javascript: fn_closeFunc()">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_close" onclick="javascript: fn_closeFunc()"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -147,30 +147,30 @@ function fn_closeFunc(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">EDIT Type</th>
+    <th scope="row"><spring:message code="sal.text.editType" /></th>
     <td>
     <select id="_editCustomerInfo">
-        <option value="1" <c:if test="${selectParam eq 1}">selected</c:if>>Edit Basic Info</option>
-        <option value="2" <c:if test="${selectParam eq 2}">selected</c:if>>Edit Customer Address</option>
-        <option value="3" <c:if test="${selectParam eq 3}">selected</c:if>>Edit Contact Info</option>
-        <option value="4" <c:if test="${selectParam eq 4}">selected</c:if>>Edit Bank Account</option>
-        <option value="5" <c:if test="${selectParam eq 5}">selected</c:if>>Edit Credit Card</option>
-        <option value="6" <c:if test="${selectParam eq 6}">selected</c:if>>Edit Basic Info(Limit)</option>
+        <option value="1" <c:if test="${selectParam eq 1}">selected</c:if>><spring:message code="sal.combo.text.editBasicInfo" /></option>
+        <option value="2" <c:if test="${selectParam eq 2}">selected</c:if>><spring:message code="sal.combo.text.editCustAddr" /></option>
+        <option value="3" <c:if test="${selectParam eq 3}">selected</c:if>><spring:message code="sal.combo.text.editContactInfo" /></option>
+        <option value="4" <c:if test="${selectParam eq 4}">selected</c:if>><spring:message code="sal.combo.text.editBankAcc" /></option>
+        <option value="5" <c:if test="${selectParam eq 5}">selected</c:if>><spring:message code="sal.combo.text.editCreditCard" /></option>
+        <option value="6" <c:if test="${selectParam eq 6}">selected</c:if>><spring:message code="sal.combo.text.editBasicInfoLimit" /></option>
     </select>
-    <p class="btn_sky"><a href="#" id="_confirm">Confirm</a></p>
+    <p class="btn_sky"><a href="#" id="_confirm"><spring:message code="sal.btn.confirm" /></a></p>
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </div>
 <aside class="title_line"><!-- title_line start -->
-<h2>Customer Information</h2>
+<h2><spring:message code="sal.page.title.custInformation" /></h2>
 </aside><!-- title_line end -->
 <section class="tap_wrap mt10"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Basic Info</a></li>
-    <li><a href="#">Main Address</a></li>
-    <li><a href="#">Main Contact</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.mainAddr" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.mainContact" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -187,9 +187,9 @@ function fn_closeFunc(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><span>${result.custId}</span></td>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
         <span> 
                 ${result.codeName1}
@@ -199,13 +199,13 @@ function fn_closeFunc(){
                 </c:if>
             </span>
     </td>
-    <th scope="row">Create At</th>
+    <th scope="row"><spring:message code="sal.text.createAt" /></th>
     <td>${result.crtDt}</td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td colspan="3">${result.name}</td>
-    <th scope="row">Create By</th>
+    <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td>
         <c:if test="${result.crtUserId ne 0}">
                 ${result.crtUserId}
@@ -213,43 +213,43 @@ function fn_closeFunc(){
     </td>
 </tr>
 <tr>
-    <th scope="row">NRIC/Company Number</th>
+    <th scope="row"><spring:message code="sal.text.nricCompanyNum" /></th>
     <td><span>${result.nric}</span></td>
-    <th scope="row">GST Registration No</th>
+    <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
     <td>${result.gstRgistNo}</td>
-    <th scope="row">Update By</th>
+    <th scope="row"><spring:message code="sal.text.updateBy" /></th>
     <td>${result.userName1}</td>
 </tr>
 <tr>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td><span>${result.email}</span></td>
-    <th scope="row">Nationality</th>
+    <th scope="row"><spring:message code="sal.text.nationality" /></th>
     <td>${result.cntyName}</td>
-    <th scope="row">Update At</th>
+    <th scope="row"><spring:message code="sal.text.updateAt" /></th>
     <td>${result.updDt}</td>
 </tr>
 <tr>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span>${result.gender}</span></td>
-    <th scope="row">DOB</th>
+    <th scope="row"><spring:message code="sal.text.dob" /></th>
     <td>
         <c:if test="${result.dob ne '01-01-1900'}">
                 ${result.dob}
         </c:if>
     </td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td>${result.codeName2 }</td>
 </tr>
 <tr>
-    <th scope="row">Passport Expire</th>
+    <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
     <td><span>${result.pasSportExpr}</span></td>
-    <th scope="row">Visa Expire</th>
+    <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
     <td>${result.visaExpr}</td>
-    <th scope="row">VA Number</th>
+    <th scope="row"><spring:message code="sal.text.vaNumber" /></th>
     <td>${result.custVaNo}</td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="5"><span>${result.rem}</span></td>
 </tr>
 </tbody>
@@ -265,11 +265,11 @@ function fn_closeFunc(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Full Address</th>
+    <th scope="row"><spring:message code="sal.text.fullAddr" /></th>
     <td><span>${addresinfo.fullAddress}</span></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td>${addresinfo.rem}</td>
 </tr>
 </tbody>
@@ -290,11 +290,11 @@ function fn_closeFunc(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td><span>${contactinfo.name1}</span></td>
-    <th scope="row">Initial</th>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
     <td><span>${contactinfo.code}</span></td>
-    <th scope="row">Genders</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td>
             <c:choose >
                 <c:when test="${contactinfo.gender eq 'M'}">
@@ -310,9 +310,9 @@ function fn_closeFunc(){
      </td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><span>${contactinfo.nric}</span></td>
-    <th scope="row">DOB</th>
+    <th scope="row"><spring:message code="sal.text.dob" /></th>
     <td>
         <span>
             <c:if test="${contactinfo.dob ne  '01-01-1900'}">
@@ -320,27 +320,27 @@ function fn_closeFunc(){
             </c:if> 
         </span>
     </td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${contactinfo.codeName}</span></td>
 </tr>
 <tr>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td><span>${contactinfo.email}</span></td>
-    <th scope="row">Department</th>
+    <th scope="row"><spring:message code="sal.text.dept" /></th>
     <td><span>${contactinfo.dept}</span></td>
-    <th scope="row">Post</th>
+    <th scope="row"><spring:message code="sal.text.post" /></th>
     <td><span>${contactinfo.pos}</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile)</th>
+    <th scope="row"><spring:message code="sal.text.telM" /></th>
     <td><span>${contactinfo.telM1}</span></td>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><span>${contactinfo.telR}</span></td>
-    <th scope="row">Tel (Office)</th>
-    <td><span>${contactinfo.telO }</span></td>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
+    <td><span>${contactinfo.telO}</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td>${contactinfo.telf}</td>
     <th scope="row"></th>
     <td></td>
@@ -353,11 +353,11 @@ function fn_closeFunc(){
 </section><!-- tap_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Customer Basic Information</h2>
+<h2><spring:message code="sal.page.title.custBasicInformation" /></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p><span class="red_text">* Compulsory Field</span> <span class="brown_text"># Compulsory Field (For Individual Type)</span></p></li>
+    <li><p><span class="red_text">* <spring:message code="sal.text.compulsoryField" /></span> <span class="brown_text"># <spring:message code="sal.text.compulsoryFieldForIndType" /></span></p></li>
 </ul>
 <form id="_limUpdForm" method="post">
 <input type="hidden" id="_tempCustTypeId" name="tempCustTypeId">
@@ -372,24 +372,24 @@ function fn_closeFunc(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
     <select class="w100p" id="basicCmbCustTypeId"></select>
     </td>
-    <th scope="row">Company Type</th>
+    <th scope="row"><spring:message code="sal.text.companyType" /></th>
     <td>
     <select class="w100p" id="basicCmbCorpTypeId" name="basicCmbCorpTypeId"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">GST Registration No</th>
+    <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
     <td colspan="3"><input type="text" title="" placeholder="GST Registration No" class="w100p"  id="_gstRgstNo"/>${result.gstRgistNo}</td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_update">Update</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_update"><spring:message code="sal.btn.update" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

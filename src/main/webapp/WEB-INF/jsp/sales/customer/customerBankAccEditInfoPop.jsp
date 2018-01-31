@@ -50,14 +50,14 @@
     			/* length validation  */
     			lengResult = fn_lengthCheck(bankId, AccNo);
     			if(lengResult == false){
-    				Common.alert("* Invalid bank account number.");
+    				Common.alert("<spring:message code='sal.alert.msg.invalidBankAccNum' />");
     				return;
     			} 
     			
     			/* availability validation */
     			availableResult = fn_availabilityCheck(bankId, AccNo);
     			if(availableResult == true){
-    				Common.alert("* Invalid bank account number.");
+    				Common.alert("<spring:message code='sal.alert.msg.invalidBankAccNum' />");
                     return;
     			}
     		}
@@ -73,14 +73,14 @@
         });
     	
     	 $("#_delBtn").click(function() {
-    	       Common.confirm("Are you sure want to delete this bank account ?", fn_deleteBankAjax);
+    	       Common.confirm("<spring:message code='sal.alert.msg.areYouSureWannaDelThisBankAcc' />", fn_deleteBankAjax);
    	     });
 	});
     
     //update Call Ajax
     function fn_customerBankInfoUpdateAjax(){
     	Common.ajax("GET", "/sales/customer/updateCustomerBankInfoAf.do", $("#updForm").serialize(), function(result) {
-    		Common.alert(result.message, fn_parentReload);
+    		Common.alert("<spring:message code='sal.alert.msg.successfully' />", fn_parentReload);
     	});
     }
     
@@ -99,7 +99,7 @@
         
         Common.ajax("GET", "/sales/customer/deleteCustomerBank.do", $("#updForm").serialize(), function(result){
             //result alert and closePage
-            Common.alert(result.message, fn_closePage);
+            Common.alert(<spring:message code='sal.alert.msg.successfully' />, fn_closePage);
         });
     }
     
@@ -292,9 +292,9 @@
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>EDIT CUSTOMER BANK INFO</h1>
+<h1><spring:message code="sal.page.title.editCustBankInfo" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close1" >CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close1" ><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <input type="hidden" value="${detailbank.custAccTypeId}" id="selCodeAccType"> 
@@ -312,27 +312,27 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.type" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="bankCmbAccTypeId" name="bankCustAccTypeId"></select>
     </td>
-    <th scope="row">Issue Bank<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.issueBank" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="bankCmbAccBankId" name="bankCustAccBankId"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Account No<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.accNo" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="Account Number" class="w100p"  value="${detailbank.custAccNo}" maxlength="16" id="bankAccountNo" name="bankCustAccNo"/></td>
-    <th scope="row">Bank Branch</th>
+    <th scope="row"><spring:message code="sal.text.bankBranch" /></th>
     <td><input type="text" title="" placeholder="Bank Branch" class="w100p" value="${detailbank.custAccBankBrnch}" maxlength="16" name="bankCustAccBankBrnch"/></td>
 </tr>
 <tr>
-    <th scope="row">Account Owner<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.accountOwner" /><span class="must">*</span></th>
     <td colspan="3"><input type="text" title="" placeholder="Account Owner" class="w100p"  value="${detailbank.custAccOwner}" id="bankCustAccOwner" name="bankCustAccOwner"/></td>
 </tr>
 <tr>
-    <th scope="row">Remarks</th>
+    <th scope="row"><spring:message code="sal.text.remarks" /></th>
     <td colspan="3">
     <textarea cols="20" rows="5" name="bankCustAccRem">${detailbank.custAccRem}</textarea>
     </td>
@@ -341,8 +341,8 @@
 </table><!-- table end -->
 </form><!-- Form end  -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="_updBtn">Update</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" id="_delBtn">Delete</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_updBtn"><spring:message code="sal.btn.update" /></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_delBtn"><spring:message code="sal.btn.delete" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

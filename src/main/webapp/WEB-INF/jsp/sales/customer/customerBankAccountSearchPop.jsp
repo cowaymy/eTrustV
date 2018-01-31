@@ -82,9 +82,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Bank Account</h1>
+<h1><spring:message code="sal.page.title.custBankAcc" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -103,7 +103,7 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Address Keyword</th>
+	<th scope="row"><spring:message code="sal.text.addrKeyword" /></th>
 	<td ><input id="searchWord" name="searchWord" type="text" title="" placeholder="Keyword" class="w100p" /></td>
 </tr>
 </tbody>

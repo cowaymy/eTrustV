@@ -77,19 +77,19 @@ $(document).ready(function(){
             // 1. validation
             //Customer Name
             if('' == $("#basicName").val() || null == $("#basicName").val()){
-                Common.alert("*Please enter Customer Name.");
+                Common.alert("<spring:message code='sal.alert.msg.pleaseEnterCustName' />");
                 return;
             }
             //Race
             if('' == $("#basicCmdRaceTypeId").val() || null == $("#basicCmdRaceTypeId").val()){
-                Common.alert("*Please enter Race");
+                Common.alert("<spring:message code='sal.alert.msg.pleaseEnterRace' />");
                 return;
             }
             //Email 
             if('' != $("#basicEmail").val() && null != $("#basicEmail").val()){
                 
                 if(FormUtil.checkEmail($("#basicEmail").val()) == true){
-                    Common.alert("* Invalid email address.");
+                    Common.alert("<spring:message code='sal.msg.invalidEmail' />");
                     return;
                  }
             }
@@ -112,7 +112,7 @@ $(document).ready(function(){
             if('' != $("#basicEmail").val() && null != $("#basicEmail").val()){
                 
                 if(FormUtil.checkEmail($("#basicEmail").val()) == true){
-                    Common.alert("* Invalid email address.");
+                    Common.alert("<spring:message code='sal.msg.invalidEmail' />");
                     return;
                  }
             }
@@ -160,9 +160,9 @@ $(document).ready(function(){
 <input type="hidden" value="${result.raceId }" id="selCodeRaceId">
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Basic Info Maintenance</h1>
+<h1><spring:message code="sal.page.title.custBasicInfoMaintenance" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -176,31 +176,31 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">EDIT Type</th>
+    <th scope="row"><spring:message code="sal.text.editType" /></th>
     <td>
     <select id="_editCustomerInfo">
-        <option value="1" <c:if test="${selectParam eq 1}">selected</c:if>>Edit Basic Info</option>
-        <option value="2" <c:if test="${selectParam eq 2}">selected</c:if>>Edit Customer Address</option>
-        <option value="3" <c:if test="${selectParam eq 3}">selected</c:if>>Edit Contact Info</option>
-        <option value="4" <c:if test="${selectParam eq 4}">selected</c:if>>Edit Bank Account</option>
-        <option value="5" <c:if test="${selectParam eq 5}">selected</c:if>>Edit Credit Card</option>
-        <option value="6" <c:if test="${selectParam eq 6}">selected</c:if>>Edit Basic Info(Limit)</option>
+        <option value="1" <c:if test="${selectParam eq 1}">selected</c:if>><spring:message code="sal.combo.text.editBasicInfo" /></option>
+        <option value="2" <c:if test="${selectParam eq 2}">selected</c:if>><spring:message code="sal.combo.text.editCustAddr" /></option>
+        <option value="3" <c:if test="${selectParam eq 3}">selected</c:if>><spring:message code="sal.combo.text.editContactInfo" /></option>
+        <option value="4" <c:if test="${selectParam eq 4}">selected</c:if>><spring:message code="sal.combo.text.editBankAcc" /></option>
+        <option value="5" <c:if test="${selectParam eq 5}">selected</c:if>><spring:message code="sal.combo.text.editCreditCard" /></option>
+        <option value="6" <c:if test="${selectParam eq 6}">selected</c:if>><spring:message code="sal.combo.text.editBasicInfoLimit" /></option>
     </select>
-    <p class="btn_sky"><a href="#" id="_confirm">Confirm</a></p>
+    <p class="btn_sky"><a href="#" id="_confirm"><spring:message code="sal.btn.confirm" /></a></p>
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Customer Information</h2>
+<h2><spring:message code="sal.page.title.custInformation" /></h2>
 </aside><!-- title_line end -->
 
 <section class="tap_wrap mt10"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Basic Info</a></li>
-    <li><a href="#">Main Address</a></li>
-    <li><a href="#">Main Contact</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.mainAddr" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.mainContact" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -217,9 +217,9 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><span>${result.custId}</span></td>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
         <span> 
                 ${result.codeName1}
@@ -229,13 +229,13 @@ $(document).ready(function(){
                 </c:if>
             </span>
     </td>
-    <th scope="row">Create At</th>
+    <th scope="row"><spring:message code="sal.text.createAt" /></th>
     <td>${result.crtDt}</td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td colspan="3">${result.name}</td>
-    <th scope="row">Create By</th>
+    <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td>
         <c:if test="${result.crtUserId ne 0}">
                 ${result.userName}
@@ -243,43 +243,43 @@ $(document).ready(function(){
     </td>
 </tr>
 <tr>
-    <th scope="row">NRIC/Company Number</th>
+    <th scope="row"><spring:message code="sal.text.nricCompanyNum" /></th>
     <td><span>${result.nric}</span></td>
-    <th scope="row">GST Registration No</th>
+    <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
     <td>${result.gstRgistNo}</td>
-    <th scope="row">Update By</th>
+    <th scope="row"><spring:message code="sal.text.updateBy" /></th>
     <td>${result.userName1}</td>
 </tr>
 <tr>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td><span>${result.email}</span></td>
-    <th scope="row">Nationality</th>
+    <th scope="row"><spring:message code="sal.text.nationality" /></th>
     <td>${result.cntyName}</td>
-    <th scope="row">Update At</th>
+    <th scope="row"><spring:message code="sal.text.updateAt" /></th>
     <td>${result.updDt}</td>
 </tr>
 <tr>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span>${result.gender}</span></td>
-    <th scope="row">DOB</th>
+    <th scope="row"><spring:message code="sal.text.dob" /></th>
     <td>
         <c:if test="${result.dob ne '01-01-1900'}">
                 ${result.dob}
         </c:if>
     </td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td>${result.codeName2 }</td>
 </tr>
 <tr>
-    <th scope="row">Passport Expire</th>
+    <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
     <td><span>${result.pasSportExpr}</span></td>
-    <th scope="row">Visa Expire</th>
+    <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
     <td>${result.visaExpr}</td>
-    <th scope="row">VA Number</th>
+    <th scope="row"><spring:message code="sal.text.vaNumber" /></th>
     <td>${result.custVaNo}</td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="5"><span>${result.rem}</span></td>
 </tr>
 </tbody>
@@ -295,11 +295,11 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Full Address</th>
+    <th scope="row"><spring:message code="sal.text.fullAddr" /></th>
     <td><span>${addresinfo.fullAddress}</span></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td>${addresinfo.rem}</td>
 </tr>
 </tbody>
@@ -320,11 +320,11 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td><span>${contactinfo.name1}</span></td>
-    <th scope="row">Initial</th>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
     <td><span>${contactinfo.code}</span></td>
-    <th scope="row">Genders</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td>
             <c:choose >
                 <c:when test="${contactinfo.gender eq 'M'}">
@@ -340,9 +340,9 @@ $(document).ready(function(){
      </td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><span>${contactinfo.nric}</span></td>
-    <th scope="row">DOB</th>
+    <th scope="row"><spring:message code="sal.text.dob" /></th>
     <td>
         <span>
             <c:if test="${contactinfo.dob ne  '01-01-1900'}">
@@ -350,27 +350,27 @@ $(document).ready(function(){
             </c:if> 
         </span>
     </td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${contactinfo.codeName}</span></td>
 </tr>
 <tr>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td><span>${contactinfo.email}</span></td>
-    <th scope="row">Department</th>
+    <th scope="row"><spring:message code="sal.text.dept" /></th>
     <td><span>${contactinfo.dept}</span></td>
-    <th scope="row">Post</th>
+    <th scope="row"><spring:message code="sal.text.post" /></th>
     <td><span>${contactinfo.pos}</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile)</th>
+    <th scope="row"><spring:message code="sal.text.telM" /></th>
     <td><span>${contactinfo.telM1}</span></td>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><span>${contactinfo.telR}</span></td>
-    <th scope="row">Tel (Office)</th>
-    <td><span>${contactinfo.telO }</span></td>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
+    <td><span>${contactinfo.telO}</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td>${contactinfo.telf}</td>
     <th scope="row"></th>
     <td></td>
@@ -383,9 +383,9 @@ $(document).ready(function(){
 </section><!-- tap_wrap end -->
 <!-- ########## Basic Info End ##########  -->
 <aside class="title_line mt30"><!-- title_line start -->
-<h2>Customer Basic Information</h2>
+<h2><spring:message code="sal.page.title.custBasicInformation" /></h2>
 <ul class="right_opt mt10">
-    <li><span class="red_text">*Compulsory Field</span> <span class="brown_text">#Compulsory Field(For Indvidual Type)</span></li>
+    <li><span class="red_text">*<spring:message code="sal.text.compulsoryField" /></span> <span class="brown_text">#<spring:message code="sal.text.compulsoryFieldForIndType" /></span></li>
 </ul>
 </aside><!-- title_line end -->
 <!-- ######### Update Field Start  ######### -->
@@ -402,62 +402,62 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td colspan="3">
     <select name="basicCmbCustTypeId" id="basicCmbCustTypeId" class="disabled w100p" ></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Company Type<span class="must">*</span></th> 
+    <th scope="row"><spring:message code="sal.text.companyType" /><span class="must">*</span></th> 
     <td><select name="basicCmbCorpTypeId" id="basicCmbCorpTypeId" class="disabled w100p" ></select></td> 
-    <th scope="row">NRIC/Company No<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.nricCompanyNo" /><span class="must">*</span></th>
     <td>
     <input type="text" title="" placeholder=""   value="${result.nric}" id="basicNric"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer Name<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.custName" /><span class="must">*</span></th>
     <td>
     <input type="text" title="" placeholder="" class="w100p"  name="basicName" value="${result.name }" id="basicName" maxlength="70"/> <!-- name  -->
     </td>
-    <th scope="row">Nationality <span class="brown_text">#</span></th>
+    <th scope="row"><spring:message code="sal.text.nationality" /> <span class="brown_text">#</span></th>
     <td>
         <select class="disabled w100p" disabled="disabled" id="basicCmdNationTypeId" name="basicCmdNationTypeId"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">DOB <span class="brown_text">#</span></th>
+    <th scope="row"><spring:message code="sal.text.dob" /> <span class="brown_text">#</span></th>
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"   value="${result.dob}" name="basicDob" id="basicDob" readonly="readonly"/>
     </td>
-    <th scope="row">Passport Expire</th>
+    <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  value="${result.pasSportExpr}" name="basicPasSportExpr" readonly="readonly"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Gender <span class="brown_text">#</span></th>
+    <th scope="row"><spring:message code="sal.text.gender" /> <span class="brown_text">#</span></th>
     <td>
     <label><input type="radio" name="basicGender"  <c:if test="${result.gender ne 'F'}">checked</c:if>  value="M"/><span>Male</span></label>
     <label><input type="radio" name="basicGender"  <c:if test="${result.gender eq 'F'}">checked</c:if> value="F" /><span>Female</span></label>
     </td>
-    <th scope="row">Visa Expire</th>
+    <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" value="${result.visaExpr }" name="basicVisaExpr" readonly="readonly"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Race <span class="brown_text">#</span></th>
+    <th scope="row"><spring:message code="sal.text.race" /> <span class="brown_text">#</span></th>
     <td>
     <select class="w100p" id="basicCmdRaceTypeId" name="basicRaceId"></select>
     </td>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td>
     <input type="text" title="" placeholder="" class="w100p"  value="${result.email}" name="basicEmail" id="basicEmail"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Remarks</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="3"><textarea cols="20" placeholder="Remarks" rows="5" name="basicRem">${result.rem}</textarea></td>
 </tr>
 </tbody>
@@ -465,7 +465,7 @@ $(document).ready(function(){
 </form><!-- form end -->
 <div id="_basicUpdBtn">
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#none" id="_updBtn">Update</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#none" id="_updBtn"><spring:message code="sal.btn.update" /></a></p></li>
 </ul>
 </div>
 </section><!-- pop_body end -->
