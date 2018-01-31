@@ -494,8 +494,15 @@ public class InstallationResultListController {
 
 		boolean success = false;
 		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
-		EgovMap locInfo = installationResultListService.getLocInfo(installResult);
+//		EgovMap locInfo = installationResultListService.getLocInfo(installResult);
+		logger.debug("installResult : {}"+ installResult);
 		
+		Map<String, Object> locInfoEntry = new HashMap<String, Object>();
+		locInfoEntry.put("CT_CODE", installResult.get("ctMemCode"));
+		locInfoEntry.put("STK_CODE", installResult.get("installStkId"));
+		logger.debug("locInfoEntry : {}"+ locInfoEntry);
+		EgovMap  locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
+		logger.debug("locInfo : {}"+ locInfo);
 		
 		EgovMap validMap =  installationResultListService.validationInstallationResult(params);
 		int resultCnt = ((BigDecimal)validMap.get("resultCnt")).intValue();

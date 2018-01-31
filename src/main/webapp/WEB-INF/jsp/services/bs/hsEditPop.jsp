@@ -730,6 +730,7 @@ var myDetailGridData = null;
     <th scope="row">Fail Reason</th>
     <td>
     <select class="w100p" id ="failReason"  name ="failReason">
+        <option>Choose One</option>
        <c:forEach var="list" items="${failReasonList}" varStatus="status">
              <option value="${list.codeId}">${list.codeName } </option>
         </c:forEach>
