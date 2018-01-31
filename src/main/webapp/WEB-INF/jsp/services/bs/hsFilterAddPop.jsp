@@ -99,13 +99,13 @@
                console.log("fn_doSaveFilterInfo_Add.");
                console.log(result);
                
-               if(result.code = "00"){
+               if(result.code == "00"){
                     $("#popClose").click();
                     fn_getInActivefilterInfo();
                     fn_getActivefilterInfo();
                      //Common.alert("<b>The filter successfully added.</b>",fn_close);
                      Common.alert("<b><spring:message code='service.msg.filter.add'/></b>",fn_close);
-               }else if (result.code = "88"){
+               }else if (result.code == "88"){
                    //Common.alert("<b>Failed to add this filter. Please try again later.</b>");
                    Common.alert("<b>Can't add existed filter</b>");
                }else{

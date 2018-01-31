@@ -2581,8 +2581,9 @@
                                    Extent1.SRV_FILTER_UPD_DT SRV_FILTER_UPD_DT  ,
                                    Extent1.SRV_FILTER_UPD_USER_ID SRV_FILTER_UPD_USER_ID  ,
                                    Extent1.SRV_FILTER_EXPR_DT SRV_FILTER_EXPR_DT
-                              FROM SAL0087D Extent1
-                             WHERE  ( Extent1.SRV_CONFIG_ID = #{salesOrdId} )
+                              FROM SAL0087D Extent1, SAL0090D A
+                              WHERE A.SRV_CONFIG_ID = Extent1.SRV_CONFIG_ID 
+                              AND  ( A.SRV_SO_ID = #{salesOrdId} )
                              <![CDATA[           AND ( Extent1.SRV_FILTER_STK_ID = #{filterCode} ) AND ROWNUM <= 1 ]]>
 
                     </select>

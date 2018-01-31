@@ -1133,6 +1133,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 				
 				//Insert SAL0087D
 				hsManualMapper.saveHsFilterInfoAdd(params);
+				result = 1;
 				
 			}
 		}
