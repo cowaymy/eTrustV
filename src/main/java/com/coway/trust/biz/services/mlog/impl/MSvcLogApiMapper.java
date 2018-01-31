@@ -150,6 +150,7 @@ public interface MSvcLogApiMapper {
 	int  updateState_SAL0020D(Map<String, Object> params);
 	int  updateState_SAL0071D(Map<String, Object> params);
 	
+	int  insert_SVC0026T(Map<String, Object> params);
 	int  insert_LOG0039D(Map<String, Object> params);
 	int  updateAppTm_LOG0038D(Map<String, Object> params);
 	int  insertFailed_LOG0039D(Map<String, Object> params);  

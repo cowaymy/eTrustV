@@ -394,6 +394,11 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		//lev 3   =>  물류 return 
 		//lev 4   =>   xxxx....
 		
+		logger.debug("insert_SVC0026T==>" +params.toString());
+		int  log26Tcnt  = MSvcLogApiMapper.insert_SVC0026T(params);
+		logger.debug("log26Tcnt==>" +log26Tcnt);
+		
+		
 		logger.debug("insert_LOG0039D==>" +params.toString());
 		int  log39cnt  = MSvcLogApiMapper.insert_LOG0039D(params);
 		logger.debug("log39cnt==>" +log39cnt);

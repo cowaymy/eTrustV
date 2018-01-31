@@ -1355,6 +1355,7 @@ public class ServiceApiController {
 	    	cvMp.put("salesOrderNo",  String.valueOf(paramsTran.get("salesOrderNo"))); 
 	    	cvMp.put("userId",  String.valueOf(paramsTran.get("userId"))); 
 	    	cvMp.put("serviceNo",  String.valueOf(paramsTran.get("serviceNo"))); 
+	    	cvMp.put("transactionId",  String.valueOf(paramsTran.get("transactionId"))); 
 	    	
 			
 	    	EgovMap  rtnValue = MSvcLogApiService.productReturnResult(cvMp);

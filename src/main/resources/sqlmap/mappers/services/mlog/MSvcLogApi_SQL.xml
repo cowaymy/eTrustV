@@ -3574,6 +3574,49 @@
          
          </select>
      
+       
+       <insert  id="insert_SVC0026T" parameterType="Map">
+                INSERT INTO SVC0026T (
+				                      RESULT_SEQ
+				                      ,RESULT_CRT_USER_ID
+				                      ,SALES_ORD_ID
+				                      ,SVC_NO
+				                      ,RESULT_REM
+				                      ,OWNER_CODE
+				                      ,RESULT_CUST_NAME
+				                      ,RESULT_IC_MOBILE_NO
+				                      ,RESULT_EMAIL_NO
+				                      ,ACCEPTANCE_NAME
+				                      ,SIGN_DATA
+				                      ,CRT_DT
+				                      ,SIGN_REG_TM
+				                      ,TRNSC_ID
+				                      ,TRAN_STUS_CD
+				                      ,CHECKIN_DT
+				                      ,CHECKIN_TM
+				                      ,CHECKIN_GPS
+				                      )
+				VALUES(
+				       SVC0026T_RESULT_SEQ.NEXTVAL
+				       ,(SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE = #{userId})
+				       ,(SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo})
+				       ,#{serviceNo}
+				       ,#{stkRetnRem}
+				       ,#{ownerCode}
+				       ,#{resultCustName}
+				       ,#{resultIcmobileNo}
+				       ,#{resultRptEmailNo}
+				       ,#{resultAceptName}
+				       ,#{signData}
+				       ,SYSDATE
+				       ,#{signRegTm}
+				       ,#{transactionId}
+				       ,'Y'
+				       ,#{checkinDt}
+				       ,#{checkinTm}
+				       ,#{checkinGps}
+				       )
+       </insert>
           
        <insert  id="insert_LOG0039D" parameterType="Map">
                 INSERT INTO LOG0039D (
