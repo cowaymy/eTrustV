@@ -33,7 +33,7 @@ function fn_save(){
             		 
             	        console.log("성공." + JSON.stringify(result));
             	        
-            		 Common.confirm("Report Summary "+DEFAULT_DELIMITER + "TR book lost result successfully saved.<br /><br />Are you want to add in attachment file ?</b>", go_uploadPage , null);
+            		 Common.confirm("<spring:message code="sal.alert.title.reportSummary" /> "+DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.reportSummary" /></b>", go_uploadPage , null);
             		 
             		 $("#savebt").hide();
             	 }else{
@@ -80,9 +80,9 @@ function go_uploadPage(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TR BOOK - REPORT LOST</h1>
+<h1><spring:message code="sal.page.title.trBookReportLost" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -91,8 +91,8 @@ function go_uploadPage(){
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">DCF Info</a></li>
-    <li><a href="#">Lost Info</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.dcfInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.lostInfo" /></a></li>
 </ul>
 
 
