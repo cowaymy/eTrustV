@@ -391,7 +391,10 @@
            Extent18.AREA,
            ctcode.mem_code as ct_mem_code,
            ctcode.name as ct_mem_name ,
-           Extent1.CT_ID
+           Extent1.CT_ID ,
+           Extent17.ADDR_DTL ,
+           Extent17.STREET    ,
+           Extent18.AREA_ID
 	  FROM SAL0046D Extent1
 	         LEFT JOIN SAL0047D Extent2   ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
 	         JOIN SAL0001D Extent3   ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -3612,9 +3615,29 @@
         ,#{TAX_INVC_OVERDU}
         ,#{TAX_INVC_AMT_DUE}
         ,#{TAX_INVC_PO_NO}
-        ,#{AREA_ID}
-        ,#{ADDR_DTL}
-        ,#{STREET}
+        ,(SELECT   AREA_ID 
+			     FROM   SAL0001D B  ,
+			               SAL0023D C  ,
+			               SAL0024D D  
+			 WHERE   B.SALES_ORD_ID =#{hidSalesOrderId}
+			 AND B.CUST_BILL_ID    = D.CUST_BILL_ID
+			 AND C.CUST_ADD_ID     = D.CUST_BILL_ADD_ID
+			 AND ROWNUM =1  )
+        , (SELECT   ADDR_DTL 
+                 FROM     SAL0001D B  ,
+                           SAL0023D C  ,  
+                           SAL0024D D  
+             WHERE   B.SALES_ORD_ID =#{hidSalesOrderId}
+             AND B.CUST_BILL_ID    = D.CUST_BILL_ID
+             AND C.CUST_ADD_ID     = D.CUST_BILL_ADD_ID
+             AND ROWNUM =1   )
+        , (SELECT   STREET  FROM   SAL0001D B  ,
+                           SAL0023D C  ,
+                           SAL0024D D  
+             WHERE   B.SALES_ORD_ID =#{hidSalesOrderId}
+             AND B.CUST_BILL_ID    = D.CUST_BILL_ID
+             AND C.CUST_ADD_ID    = D.CUST_BILL_ADD_ID
+             AND ROWNUM =1  ) 
           )
           </insert>
 
@@ -3667,7 +3690,7 @@
         ,#{INVC_ITM_FEES_AMT_DUE}
         ,#{INVC_ITM_FEES_CHRG}
         ,#{AREA_ID}
-        ,#{ADDR_DTL}
+        ,#{ADDR_DTL} 
         ,#{STREET}
           )
           </insert>

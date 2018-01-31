@@ -1582,13 +1582,14 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         				 	String TAX_INVC_ID = installationResultListMapper.getPAY0033D_SEQ(invoiceNum);
 
         					//Insert TaxinvoiceOutright
+        				 	taxInvoiceOutright.put("hidSalesOrderId", CommonUtils.nvl( params.get("hidSalesOrderId")));
         					taxInvoiceOutright.put("TAX_INVC_ID",TAX_INVC_ID);
         					taxInvoiceOutright.put("TAX_INVC_REF_NO",invoiceNo);
         					taxInvoiceOutright.put("TAX_INVC_REF_DT", CommonUtils.getNowDate());
         					taxInvoiceOutright.put("TAX_INVC_CUST_NAME",CommonUtils.nvl( custInfoMap.get("customer")));
         	        		taxInvoiceOutright.put("TAX_INVC_CNTC_PERSON", CommonUtils.nvl(custInfoMap.get("contact")));
         	        		// set address
-        	        		taxInvoiceOutright.put("TAX_INVC_ADDR1",CommonUtils.nvl(addrM.get("taxInvcAddr1")));
+        	        		taxInvoiceOutright.put("TAX_INVC_ADDR1",CommonUtils.nvl(addrM.get("taxInvcAddr1")));    
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR2",CommonUtils.nvl(addrM.get("taxInvcAddr2")));
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR3","");
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR4","");
