@@ -14,11 +14,7 @@
 <script type="text/javascript">
 var supplierColumnLayout = [ {
 	dataField : "accGrp",
-    visible : false
-},{
-	dataField : "accGrpName",
-    headerText : '<spring:message code="memAcc.group" />',
-    style : "aui-grid-user-custom-left"
+	headerText : '<spring:message code="memAcc.group" />'
 },{
     dataField : "memAccId",
     headerText : '<spring:message code="memAcc.memAccCode" />'
