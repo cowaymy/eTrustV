@@ -55,7 +55,7 @@ function validRequiredField(){
 	
 	if(($("#dpUpdateFromDate").val() == null || $("#dpUpdateFromDate").val().length == 0) || ($("#dpUpdateToDate").val() == null || $("#dpUpdateToDate").val().length == 0)){
 		valid = false;
-        message += "* Please key in the date (From & To).\n";
+        message += "<spring:message code="sal.alert.msg.keyInDate" /></br>";
 	}
 	
 	/* 
@@ -66,7 +66,7 @@ function validRequiredField(){
 	*/	
 	
 	if(valid == false){
-		Common.alert("Warning" + DEFAULT_DELIMITER + message);
+		Common.alert("<spring:message code="sal.alert.title.warning" />" + DEFAULT_DELIMITER + message);
 	}
 	
 	return valid;
@@ -82,7 +82,7 @@ function btnGenerateExcel_Click(){
 			if($('#cboOrganization :selected').length > 0){
 				fn_report("EXCEL");
 			}else{
-				Common.alert("Alert" + DEFAULT_DELIMITER + "Please select at least one option from Organization Code to Print.");
+				Common.alert("<spring:message code="sal.alert.msg.organisationCodeToPrint" />");
 			}
 		}
 	}
@@ -97,7 +97,7 @@ function btnGeneratePDF_Click(){
             if($('#cboOrganization :selected').length > 0){
                 fn_report("PDF");
             }else{
-                Common.alert("Alert" + DEFAULT_DELIMITER + "Please select at least one option from Organization Code to Print.");
+                Common.alert("<spring:message code="sal.alert.msg.organisationCodeToPrint" />");
             }
         }
     }
@@ -381,7 +381,7 @@ function cboGroup_SelectedIndexChanged(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TR Book Management Summary Listing</h1>
+<h1><spring:message code="sal.page.title.trBookMgmtSummaryListing" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -408,42 +408,42 @@ function cboGroup_SelectedIndexChanged(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Book No</th>
+    <th scope="row"><spring:message code="sal.text.bookNo" /></th>
     <td><input type="text" title="" placeholder="Book No" class="w100p" id="txtTRBookNo"/></td>
-    <th scope="row">Return To Branch</th>
+    <th scope="row"><spring:message code="sal.text.returnToBranch" /></th>
     <td>
         <select class="w100p" id="cmbBranch"></select>
     </td>
-    <th scope="row">Update Date</th>
+    <th scope="row"><spring:message code="sal.text.updateDate" /></th>
     <td>
         <div class="date_set w100p"><!-- date_set start -->
-        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpUpdateFromDate"/></p>
+        <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date" id="dpUpdateFromDate"/></p>
         <span>To</span>
-        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpUpdateToDate"/></p>
+        <p><input type="text"  placeholder="DD/MM/YYYY" class="j_date" id="dpUpdateToDate"/></p>
         </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Create By</th>
+    <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td><input type="text" title="" placeholder="Create By" class="w100p" id="txtCreator"/></td>
-    <th scope="row">Book Holder</th>
+    <th scope="row"><spring:message code="sal.text.bookHolder" /></th>
     <td><input type="text" title="" placeholder="Book Holder" class="w100p" id="txtTRBookHolder"/></td>
-    <th scope="row">Holder Type</th>
+    <th scope="row"><spring:message code="sal.text.holderType" /></th>
     <td>
         <select class="w100p" id="ddlHolderType" onchange="ddlHolderType_SelectedIndexChanged()">
-            <option data-placeholder="true" hidden>Holder Type</option>
-            <option value="Branch">Branch</option>
-            <option value="Member">Member</option>
+            <option data-placeholder="true" hidden><spring:message code="sal.text.holderType" /></option>
+            <option value="Branch"><spring:message code="sal.text.branch" /></option>
+            <option value="Member"><spring:message code="sal.text.member" /></option>
         </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.text.status" /></th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="ddlBookStatus" data-placeholder="Status">
-            <option value="ACT" selected>Active</option>
-            <option value="CLO" selected>Close</option>
-            <option value="LOST" selected>Lost</option>
+            <option value="ACT" selected><spring:message code="sal.text.active" /></option>
+            <option value="CLO" selected><spring:message code="sal.text.close" /></option>
+            <option value="LOST" selected><spring:message code="sal.text.lost" /></option>
         </select>
     </td>
     <th scope="row"></th>
@@ -452,27 +452,27 @@ function cboGroup_SelectedIndexChanged(){
     <td></td>
 </tr>
 <tr>
-    <th scope="row">Member Type</th>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
     <td>
         <select class="w100p" id="cboMember" onchange="cboMember_SelectedIndexChanged()">
-            <option data-placeholder="true" hidden value="0">Member Type</option>
-            <option value="1">Health Planner</option>
-            <option value="2">Coway Lady</option>
-            <option value="3">Coway Technician</option>
-            <option value="4">Staff</option>
+            <option data-placeholder="true" hidden value="0"><spring:message code="sal.text.memtype" /></option>
+            <option value="1"><spring:message code="sal.text.healthPlanner" /></option>
+            <option value="2"><spring:message code="sal.text.cowayLady" /></option>
+            <option value="3"><spring:message code="sal.text.cowayTechnician" /></option>
+            <option value="4"><spring:message code="sal.text.staff" /></option>
         </select>
     </td>
-    <th scope="row">Organization Code</th>
+    <th scope="row"><spring:message code="sal.text.organizationCode" /></th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="cboOrganization" data-placeholder="Organization Code" onchange="cboOrganization_SelectedIndexChanged()"></select>
     </td>
-    <th scope="row">Group Code</th>
+    <th scope="row"><spring:message code="sal.text.GroupCode" /></th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="cboGroup" data-placeholder="Group Code" onchange="cboGroup_SelectedIndexChanged()"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Department Code</th>
+    <th scope="row"><spring:message code="sal.text.departmentCode" /></th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="cboDepartment" data-placeholder="Department Code"></select>
     </td>
@@ -483,8 +483,8 @@ function cboGroup_SelectedIndexChanged(){
 
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript: btnGeneratePDF_Click()">Generate To PDF</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript: btnGenerateExcel_Click()">Generate To Excel</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript: btnGeneratePDF_Click()"><spring:message code="sal.btn.genToPdf" /></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript: btnGenerateExcel_Click()"><spring:message code="sal.btn.getToExcel" /></a></p></li>
 </ul>
 
 

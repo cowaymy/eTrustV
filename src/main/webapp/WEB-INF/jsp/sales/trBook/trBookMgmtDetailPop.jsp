@@ -20,10 +20,10 @@ $(document).ready(function(){
 
 function creatDetailGrid(){
     var trDColLayout = [ 
-         {dataField : "trReciptNo", headerText : "Book No", width : 150      },
-         {dataField : "itmStusCode", headerText : "Status", width : 150       },
-         {dataField : "itmUpdBy", headerText : "trBookNoStart", width : 150        },
-         {dataField : "itmUpdDt", headerText : "Update Date", width : 150        }        
+         {dataField : "trReciptNo", headerText : "<spring:message code="sal.title.bookNo" />", width : 150      },
+         {dataField : "itmStusCode", headerText : "<spring:message code="sal.title.status" />", width : 150       },
+         {dataField : "itmUpdBy", headerText : "<spring:message code="sal.title.updateBy" />", width : 150        },
+         {dataField : "itmUpdDt", headerText : "<spring:message code="sal.title.updateDate" />", width : 150        }        
          ];
    
 
@@ -45,7 +45,7 @@ function creatDetailGrid(){
 <div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>View TR BOOK</h1>
+<h1><spring:message code="sal.page.title.viewTrBook" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -54,7 +54,7 @@ function creatDetailGrid(){
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>TR Book Details</h2>
+<h2><spring:message code="sal.page.subtitle.trBookDetails" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -67,38 +67,38 @@ function creatDetailGrid(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">TR Book No</th>
+	<th scope="row"><spring:message code="sal.text.trBookNo" /></th>
 	<td>${detailInfo.trBookNo }</td>
-	<th scope="row">Prefix No</th>
+	<th scope="row"><spring:message code="sal.text.prefixNo" /></th>
 	<td>${detailInfo.trBookPrefix }</td>
 </tr>
 <tr>
-	<th scope="row">TR No</th>
+	<th scope="row"><spring:message code="sal.text.trNo" /></th>
 	<td colspan="3">${detailInfo.trBookNoStart } To ${detailInfo.trBookNoEnd }</td>
 </tr>
 <tr>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="sal.text.status" /></th>
 	<td>${detailInfo.trBookStusCode }</td>
-	<th scope="row">Total Page(s)</th>
+	<th scope="row"><spring:message code="sal.text.totalPages" /></th>
 	<td>${detailInfo.trBookPge }</td>
 </tr>
 <tr>
-	<th scope="row">Holder Type</th>
+	<th scope="row"><spring:message code="sal.text.holderType" /></th>
 	<td>${detailInfo.trHolderType }</td>
-	<th scope="row">Create By</th>
+	<th scope="row"><spring:message code="sal.text.createBy" /></th>
 	<td>${detailInfo.trBookCrtUserName }</td>
 </tr>
 <tr>
-	<th scope="row">Holder</th>
+	<th scope="row"><spring:message code="sal.text.holder" /></th>
 	<td>${detailInfo.trHolder }</td>
-	<th scope="row">Create At</th>
+	<th scope="row"><spring:message code="sal.text.createAt" /></th>
 	<td>${detailInfo.trBookCrtDt }</td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>TR Receipt Information</h2>
+<h2><spring:message code="sal.page.subtitle.trReceiptInfo" /></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->

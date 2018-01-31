@@ -83,7 +83,7 @@ function validRequiredField(){
 	
 	if(($("#rdpDateTo").val() == null || $("#rdpDateTo").val().length == 0) || ($("#rdpDateFrom").val() == null || $("#rdpDateFrom").val().length == 0)){
 		valid = false;
-		message += "* Please select the date closed (From & To).\n";
+		message += "<spring:message code="sal.alert.msg.selectClosedDate" /></br>";
 	}
 	
 	if(!($("#rdpDateTo").val() == null || $("#rdpDateTo").val().length == 0) || !($("#rdpDateFrom").val() == null || $("#rdpDateFrom").val().length == 0)){
@@ -96,12 +96,12 @@ function validRequiredField(){
 		
 		if((datefrom.getTime() + 30*day) < dateto){
 			valid = false;
-            message += "* Interval of date closed cannot exceed 30 days.\n";
+            message += "<spring:message code="sal.alert.msg.interval30days" /></br>";
 		}			 
 	}
 	
 	if(valid == false){
-        Common.alert("Report Generate Summary" + DEFAULT_DELIMITER + message);
+        Common.alert("<spring:message code="sal.alert.title.reportGenSummary" />" + DEFAULT_DELIMITER + message);
 
     }else{
     	btnGenerateExcel_Click();
@@ -289,7 +289,7 @@ $(document).ready(function() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TR Book Report - Lost Report List</h1>
+<h1><spring:message code="sal.page.title.trBookReportLostReportList" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -314,24 +314,24 @@ $(document).ready(function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Date Closed</th>
+    <th scope="row"><spring:message code="sal.text.dateClosed" /></th>
     <td>
         <div class="date_set w100p"><!-- date_set start -->
         <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="rdpDateFrom"/></p>
-        <span>To</span>
+        <span><spring:message code="sal.text.to" /></span>
         <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="rdpDateTo"/></p>
         </div><!-- date_set end -->
     </td>
-    <th scope="row">Lost Type</th>
+    <th scope="row"><spring:message code="sal.text.lostType" /></th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="cmbLostType">
-            <option value="pieces" selected>Pieces</option>
-            <option value="whole_book" selected>Booklet</option>
+            <option value="pieces" selected><spring:message code="sal.text.pieces" /></option>
+            <option value="whole_book" selected><spring:message code="sal.text.booklet" /></option>
         </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">TR No.</th>
+    <th scope="row"><spring:message code="sal.text.trNo" />.</th>
     <td>
         <div class="date_set w100p"><!-- date_set start -->
         <p><input type="text" name="" class="w100p" id="txtTRFrom"></p>
@@ -339,39 +339,39 @@ $(document).ready(function() {
         <p><input type="text" name="" class="w100p" id="txtTRTo"></p>
         </div><!-- date_set end -->
     </td>
-    <th scope="row">Key-In Branch</th>
+    <th scope="row"><spring:message code="sal.text.keyInBranch" /></th>
     <td><select data-placeholder="Key-In Branch" class="w100p" id="cmbBranch">
                 <option value="0">All</option>
            </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">TR Book No.</th>
+    <th scope="row"><spring:message code="sal.text.trBookNo" />.</th>
         <td><input type="text" title="" placeholder="TR Book No" class="w100p" id="txtTRBookNo"/></td>
-    <th scope="row">Key-In User</th>
+    <th scope="row"><spring:message code="sal.text.keyInUser" /></th>
     <td><input type="text" title="" placeholder="Key-In User" class="w100p" id="txtKeyInUser"/></td>
 </tr>
 <tr>
-    <th scope="row">Member Type</th>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
     <td>
         <select class="w100p" id="cboMember" onchange="cboMember_SelectedIndexChanged()" data-placeholder="Member Type">
-            <option value="1">Health Planner</option>
-            <option value="2">Coway Lady</option>
-            <option value="3">Coway Technician</option>
-            <option value="4">Staff</option>
+            <option value="1"><spring:message code="sal.text.healthPlanner" /></option>
+            <option value="2"><spring:message code="sal.text.cowayLady" /></option>
+            <option value="3"><spring:message code="sal.text.cowayTechnician" /></option>
+            <option value="4"><spring:message code="sal.text.staff" /></option>
         </select>
     </td>
-    <th scope="row">Organization Code</th>
+    <th scope="row"><spring:message code="sal.text.organizationCode" /></th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="cboOrganization" onchange="cboOrganization_SelectedIndexChanged()" data-placeholder="Organization Code" disabled></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Group Code</th>
+    <th scope="row"><spring:message code="sal.text.GroupCode" /></th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="cboGroup" onchange="cboGroup_SelectedIndexChanged()" data-placeholder="Group Code" disabled></select>
     </td>
-    <th scope="row">Department Code</th>
+    <th scope="row"><spring:message code="sal.text.departmentCode" /></th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="cboDepartment" data-placeholder="Department Code" disabled></select>
     </td>
@@ -380,7 +380,7 @@ $(document).ready(function() {
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript: validRequiredField()">Generate To Excel</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript: validRequiredField()"><spring:message code="sal.btn.getToExcel" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

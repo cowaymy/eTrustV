@@ -25,14 +25,14 @@ function creatGrid(){
 
 	    var trBookColLayout = [ 
 	          {dataField : "trBookId", headerText : "", width : 140	 , visible:false   },
-	          {dataField : "trBookNo", headerText : "Book No", width : 140	    },
-	          {dataField : "trBookPrefix", headerText : "Prefix", width : 110	    },
-	          {dataField : "trBookNoStart", headerText : "From", width : 120	    },
-	          {dataField : "trBookNoEnd", headerText : "To", width : 120	    },
-	          {dataField : "trBookPge", headerText : "Total Sheet(s)", width : 130	    },
-	          {dataField : "trBookStusCode", headerText : "Status", width : 110	    },
-	          {dataField : "trHolder", headerText : "Holder", width : 110	    },
-	          {dataField : "trHolderType", headerText : "Holder", width : 110	    }	,          
+	          {dataField : "trBookNo", headerText : "<spring:message code="sal.title.bookNo" />", width : 140	    },
+	          {dataField : "trBookPrefix", headerText : "<spring:message code="sal.title.prefix" />", width : 110	    },
+	          {dataField : "trBookNoStart", headerText : "<spring:message code="sal.title.from" />", width : 120	    },
+	          {dataField : "trBookNoEnd", headerText : "<spring:message code="sal.title.to" />", width : 120	    },
+	          {dataField : "trBookPge", headerText : "<spring:message code="sal.title.sheet" />", width : 130	    },
+	          {dataField : "trBookStusCode", headerText : "<spring:message code="sal.title.status" />", width : 110	    },
+	          {dataField : "trHolder", headerText : "<spring:message code="sal.title.holder" />", width : 110	    },
+	          {dataField : "trHolderType", headerText : "<spring:message code="sal.title.holderType" />", width : 110	    }	,          
 	          {dataField : "boxNo", headerText : "", width : 110,	  visible:false   }         
 	          ];
 	    
@@ -108,7 +108,7 @@ function fn_trBookAssign(){
             var trHolderType = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolderType");
             
             if(trHolderType != "Branch"){
-                Common.alert("TR Book Informtion"  + DEFAULT_DELIMITER + "[" + bookNo + "] is holding by [" + trHolder +"]. Book assign is disallowed.");
+                Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.isHoldingBy" /> [" + trHolder +"]. <spring:message code="sal.alert.msg.bookAssignIsDisallowed" />");
                 return ;
             }else{
 
@@ -126,7 +126,7 @@ function fn_trBookReturn(){
 	
     if($("#trBookId").val()==""){     
     	
-        Common.alert("Book Missing" + DEFAULT_DELIMITER + "No TR book selected.");
+        Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.noTrBookSelected" />");
         
     }else{  
     	
@@ -139,7 +139,7 @@ function fn_trBookReturn(){
             var trHolderType = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolderType");
                     
             if(trHolderType != "Member"){
-                Common.alert("TR Book Informtion"  + DEFAULT_DELIMITER + "[" + bookNo + "] is holding by branch [" + trHolder +"]. Book return is disallowed.");
+                Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.isHoldingByBranch" /> [" + trHolder +"]. <spring:message code="sal.alert.msg.bookReturnIsDisallowed" />");
                 return ;
             }else{
                 Common.popupDiv("/sales/trBook/trBookReturnPop.do",$("#listSForm").serializeJSON(), null, true, "trBookRetrunPop");
@@ -153,7 +153,7 @@ function fn_trBookReport(){
 	
     if($("#trBookId").val()==""){     
     	
-        Common.alert("Book Missing" + DEFAULT_DELIMITER + "No TR book selected.");
+        Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.noTrBookSelected" />");
         
     }else{  
     	
@@ -166,7 +166,7 @@ function fn_trBookReport(){
             var bookNo = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trBookNo");
                     
             if(bookStus != "ACT"){
-                Common.alert("TR Book Informtion"  + DEFAULT_DELIMITER + "[" + bookNo + "] this book is not active. Report lost is disallowed.");
+                Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.reportLostIsDisallowed" />");
                 return ;
             }else{
                 Common.popupDiv("/sales/trBook/reportLostViewPop.do",$("#listSForm").serializeJSON(), null, true, "reportLostViewPop");
@@ -179,7 +179,7 @@ function fn_trBookReport(){
 function fn_trBookTranSingle(){
     
     if($("#trBookId").val()==""){       
-           Common.alert("Book Missing" + DEFAULT_DELIMITER + "No TR book selected.");
+           Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.noTrBookSelected" />");
     }else{          
           
         if(fn_getBookActionValidation()){
@@ -191,7 +191,7 @@ function fn_trBookTranSingle(){
             var trHolderType = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolderType");
             
             if(trHolderType != "Branch"){
-                Common.alert("TR Book Informtion"  + DEFAULT_DELIMITER + "[" + bookNo + "] is holding by [" + trHolder +"]. Book transfer is disallowed.");
+                Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.isHoldingBy" /> [" + trHolder +"]. <spring:message code="sal.alert.msg.bookTransferIsDisallowed" />");
                 return ;
             }else{
                 Common.popupDiv("/sales/trBook/trBookTranSinglePop.do",$("#listSForm").serializeJSON(), null, true, "trBookTranSinglePop");
@@ -224,12 +224,12 @@ function fn_getBookActionValidation(){
    
     if ((bookStatus == "CLO") || (bookStatus == "CLOLOST"))
     {
-        Common.alert("TR Book Informtion"  + DEFAULT_DELIMITER + "[" + bookNo + "] this book has been returned & closed.");
+        Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.bookHasReturnClosed" />");
         valid = false ;
     }
     else if (bookStatus == "IACT")
     {
-        Common.alert("TR Book Informtion"  + DEFAULT_DELIMITER + "[" + bookNo + "] this book has been deactivated.");
+        Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.bookHasDeactivated" />");
         valid = false ;
     }
     
@@ -239,7 +239,7 @@ function fn_getBookActionValidation(){
 function fn_trBookDeactivate(){
 	
     if($("#trBookId").val()==""){       
-        Common.alert("Book Missing" + DEFAULT_DELIMITER + "No TR book selected.");
+        Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.noTrBookSelected" />");
 	}else{          
 	       
 	     if(fn_getBookActionValidation()){
@@ -251,7 +251,7 @@ function fn_trBookDeactivate(){
 	         var trHolderType = AUIGrid.getCellValue(trBookGridID , first.rowIndex , "trHolderType");
 	         
 	         if(trHolderType != "Branch"){
-	             Common.alert("TR Book Informtion"  + DEFAULT_DELIMITER + "[" + bookNo + "] is holding by [" + trHolder +"]. Deactivation is disallowed.");
+	             Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"  + DEFAULT_DELIMITER + "[" + bookNo + "] <spring:message code="sal.alert.msg.isHoldingBy" /> [" + trHolder +"]. <spring:message code="sal.alert.msg.deactivationIsDisallowed" />");
 	             return ;
 	         }else{
 	             Common.popupDiv("/sales/trBook/trBookDeactivatePop.do",$("#listSForm").serializeJSON(), null, true, "trBookDeactivatePop");
@@ -263,7 +263,7 @@ function fn_trBookDeactivate(){
 
 function fn_trBookKeep(){
     if($("#trBookId").val()==""){       
-        Common.alert("Book Missing" + DEFAULT_DELIMITER + "No TR book selected.");
+        Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.noTrBookSelected" />");
     }else{    
 	
 	    var selectedItems = AUIGrid.getSelectedItems(trBookGridID); 
@@ -282,11 +282,11 @@ function fn_trBookKeep(){
 	    	if(boxNo == " "){	    		
 	    		Common.popupDiv("/sales/trBook/trBookKeepBoxPop.do",$("#listSForm").serializeJSON(), null, true, "trBookKeepBoxPop");
 	    	}else{
-	    		Common.alert("Book Missing" + DEFAULT_DELIMITER +"This book has been kept in box [" + boxNo + "].");
+	    		Common.alert("<spring:message code="sal.alert.title.bookMissing" />" + DEFAULT_DELIMITER +"<spring:message code="sal.alert.msg.thisBookHasBeenKeptInBox" /> [" + boxNo + "].");
 	    	}
 	    	
 	    }else{
-	    	Common.alert("TR Book Informtion"+DEFAULT_DELIMITER+"<b>[" + BookNo + "] this book not yet closed. Only closed book can keep into box.</b>");
+	    	Common.alert("<spring:message code="sal.alert.title.trBookInfo" />"+DEFAULT_DELIMITER+"<b>[" + BookNo + "] <spring:message code="sal.alert.msg.bookYetClosed" /></b>");
 	    }
     }
 }
@@ -303,12 +303,12 @@ function fn_trBookKeep(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>TR Book Management</h2>
+<h2><spring:message code="sal.page.title.trBookManagement" /></h2>
 <ul class="right_btns">
 	<c:if test="${PAGE_AUTH.funcView == 'Y'}">
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
 	</c:if>
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -328,43 +328,43 @@ function fn_trBookKeep(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Book No</th>
+	<th scope="row"><spring:message code="sal.text.bookNo" /></th>
 	<td>
 	<input type="text" title="" placeholder="Book No" class="w100p"  id="trBookNo" name ="trBookNo"/>
 	</td>
-	<th scope="row">TR No</th>
+	<th scope="row"><spring:message code="sal.text.trNo" /></th>
 	<td>
 	<input type="text" title="" placeholder="TR No" class="w100p" id="trNo" name="trNo"/>
 	</td>
-	<th scope="row">Create Date</th>
+	<th scope="row"><spring:message code="sal.text.createDate" /></th>
 	<td>
 		<input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="trBookCrtDt" name="trBookCrtDt"/>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Create By</th>
+	<th scope="row"><spring:message code="sal.text.createBy" /></th>
 	<td>
 	<input type="text" title="" placeholder="Create By" class="w100p" id="trBookCrtUser" name="trBookCrtUser"/>
 	</td>
-	<th scope="row">Book Holder</th>
+	<th scope="row"><spring:message code="sal.text.bookHolder" /></th>
 	<td>
 	<input type="text" title="" placeholder="Book Holder" class="w100p" id="trBookHolder" name="trBookHolder" />
 	</td>
-	<th scope="row">Holder Type</th>
+	<th scope="row"><spring:message code="sal.text.holderType" /></th>
 	<td>
 		<select class="w100p" id="trHolderType" name="trHolderType">
-			<option value="Branch" selected="selected">Branch</option>
-			<option value="Member">Member</option>
+			<option value="Branch" selected="selected"><spring:message code="sal.text.branch" /></option>
+			<option value="Member"><spring:message code="sal.text.member" /></option>
 		</select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="sal.text.status" /></th>
 	<td>
 		<select class="multy_select w100p" multiple="multiple" id="status" name="status">
-			<option value="1" selected="selected">Active</option>
-			<option value="36">Close</option>
-			<option value="67">Lost</option>
+			<option value="1" selected="selected"><spring:message code="sal.text.active" /></option>
+			<option value="36"><spring:message code="sal.text.close" /></option>
+			<option value="67"><spring:message code="sal.text.lost" /></option>
 		</select>
 	</td>
 	<td colspan="4"></td>
@@ -380,16 +380,16 @@ function fn_trBookKeep(){
 	<dd>
 	<ul class="btns">
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-		<li><p class="link_btn"><a href="#" id="summaryListing">Summary Listing</a></p></li>
+		<li><p class="link_btn"><a href="#" id="summaryListing"><spring:message code="sal.btn.link.summaryListing" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-		<li><p class="link_btn"><a href="#" id="lostListing">Lost Listing</a></p></li>
+		<li><p class="link_btn"><a href="#" id="lostListing"><spring:message code="sal.btn.link.lostListing" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_trBookTransaction();">Transaction List</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_trBookTransaction();"><spring:message code="sal.btn.link.transactionList" /></a></p></li>
         </c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" id="reqBatch">Request Batch</a></p></li>
+        <li><p class="link_btn type2"><a href="#" id="reqBatch"><spring:message code="sal.btn.link.requestBatch" /></a></p></li>
         </c:if>
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -400,31 +400,31 @@ function fn_trBookKeep(){
 
 <ul class="right_btns mt10">
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookAddSingle();">ADD(Single)</a></p></li> <!-- TODO 권한 177  -->
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookAddSingle();"><spring:message code="sal.btn.addSingle" /></a></p></li> <!-- TODO 권한 177  -->
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookAddBulk();">ADD(Bulk)</a></p></li>    <!-- TODO 권한 177  -->
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookAddBulk();"><spring:message code="sal.btn.addBulk" /></a></p></li>    <!-- TODO 권한 177  -->
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookTranSingle();">Transfer(Single)</a></p></li>  <!-- TODO 권한 122  -->
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookTranSingle();"><spring:message code="sal.btn.transferSingle" /></a></p></li>  <!-- TODO 권한 122  -->
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookTranBulk();">Transfer(Bulk)</a></p></li>    <!-- TODO 권한 178  -->
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookTranBulk();"><spring:message code="sal.btn.transferBulk" /></a></p></li>    <!-- TODO 권한 178  -->
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookAssign();">Assign</a></p></li>          <!-- TODO 권한 118  -->
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookAssign();"><spring:message code="sal.btn.assign" /></a></p></li>          <!-- TODO 권한 118  -->
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookReturn();">Return</a></p></li>          <!-- TODO 권한 120  -->
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookReturn();"><spring:message code="sal.btn.return" /></a></p></li>          <!-- TODO 권한 120  -->
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookReport();">Report Lost (Whole)</a></p></li>          <!-- TODO 권한 179  -->
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookReport();"><spring:message code="sal.btn.reportLostWhole" /></a></p></li>          <!-- TODO 권한 179  -->
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookDeactivate();">Deactivate</a></p></li>          <!-- TODO 권한 129  -->
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookDeactivate();"><spring:message code="sal.btn.deactive" /></a></p></li>          <!-- TODO 권한 129  -->
 	</c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
-	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookKeep();">Keep Into Box</a></p></li>          <!-- TODO 권한 125  -->
+	<li><p class="btn_grid"><a href="#" onclick="javascript:fn_trBookKeep();"><spring:message code="sal.btn.keepIntoBox" /></a></p></li>          <!-- TODO 권한 125  -->
 	</c:if>
 </ul>
 

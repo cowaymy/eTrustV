@@ -13,7 +13,7 @@ $(document).ready(function(){
 	if ("${detailInfo.trHolderType}" != "Branch")
     {
         $("#trBookAssignPop").remove();
-	    Common.alert("TR Book Informtion" + DEFAULT_DELIMITER + "[ ${detailInfo.trBookNo} ] is holding by [ ${detailInfo.trHolder} ]. Book assign is disallowed.</b>");
+	    Common.alert("<spring:message code="sal.alert.title.trBookInfo" />" + DEFAULT_DELIMITER + "[ ${detailInfo.trBookNo} ] <spring:message code="sal.alert.msg.isHoldingBy" /> [ ${detailInfo.trHolder} ]. <spring:message code="sal.alert.msg.bookAssignIsDisallowed" /></b>");
     }
 });
 
@@ -40,7 +40,7 @@ function fn_assignSave(){
 	
      if ($("#assignMemCode").val() == "")
      {
-    	 $("#msg").html("* Some required fields are empty.");
+    	 $("#msg").html("<spring:message code="sal.msg.requiredEmpty" />");
     	 $("#msg").attr("style", "color:red");
     	 return false;
      }
@@ -75,7 +75,7 @@ function fn_assignSave(){
          alert("Fail : " + jqXHR.responseJSON.message);
 
          $("#msg").attr("style", "color:red");
-         $("#msg").html("* Failed to save. Please try again later.");
+         $("#msg").html("<spring:message code="sal.msg.failToSave" />");
      });
           
 }
@@ -106,23 +106,23 @@ function fn_assignSave(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">TR Book No</th>
+	<th scope="row"><spring:message code="sal.text.trBookNo" /></th>
 	<td>${detailInfo.trBookNo}</td>
 </tr>
 <tr>
-	<th scope="row">TR Prefix No</th>
+	<th scope="row"><spring:message code="sal.text.trPrefixNo" /></th>
 	<td>${detailInfo.trBookPrefix}</td>
 </tr>
 <tr>
-	<th scope="row">No of Page(s)</th>
+	<th scope="row"><spring:message code="sal.text.noOfPage" /></th>
 	<td>${detailInfo.trBookPge}</td>
 </tr>
 <tr>
-	<th scope="row">TR No</th>
+	<th scope="row"><spring:message code="sal.text.trNo" /></th>
 	<td>${detailInfo.trBookNoStart} To ${detailInfo.trBookNoEnd}</td>
 </tr>
 <tr>
-	<th scope="row">TR Book Holder</th>
+	<th scope="row"><spring:message code="sal.text.trBookHolder" /></th>
 	<td> ${detailInfo.trHolder}</td>
 </tr>
 <!-- <tr>
@@ -138,7 +138,7 @@ function fn_assignSave(){
 	</td>
 </tr> -->
 <tr>
-	<th scope="row">Assign Member</th>
+	<th scope="row"><spring:message code="sal.text.assignMember" /></th>
 	<td>
 	<input type="hidden" id="assignMemId" name="assignMemId"/>
 	<input type="hidden" id="assignMemCode" name="assignMemCode"/>
@@ -150,7 +150,7 @@ function fn_assignSave(){
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" id="btnAssignSave" onclick="javascript:fn_assignSave();">SAVE</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" id="btnAssignSave" onclick="javascript:fn_assignSave();"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

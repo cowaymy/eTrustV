@@ -15,7 +15,7 @@ function fn_deactivate(){
         console.log("data : " + result.cnt);
 
         $("#deActMsg").attr("style", "color:green");
-        $("#deActMsg").html("* This TR book has been deactivated.");
+        $("#deActMsg").html("<spring:message code="sal.msg.deacivated" />");
         $("#btnDeact").hide();
         fn_selectListAjax();
         
@@ -33,7 +33,7 @@ function fn_deactivate(){
           }
          
           $("#deActMsg").attr("style", "color:red");
-          $("#deActMsg").html("* Failed to save. Please try again later.");
+          $("#deActMsg").html("<spring:message code="sal.msg.failToSave" />");
     });
 }
 
@@ -41,7 +41,7 @@ function fn_deactivate(){
 <div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>DEACTIVATE TR BOOK</h1>
+<h1><spring:message code="sal.page.title.deactivateTrBook" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -63,23 +63,23 @@ function fn_deactivate(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">TR Book No</th>
+	<th scope="row"><spring:message code="sal.text.trBookNo" /></th>
 	<td>${detailInfo.trBookNo }</td>
 </tr>
 <tr>
-    <th scope="row">TR Prefix No</th>
+    <th scope="row"><spring:message code="sal.text.trPrefixNo" /></th>
     <td>${detailInfo.trBookPrefix }</td>
 </tr>
 <tr>
-	<th scope="row">No of Page(s)</th>
+	<th scope="row"><spring:message code="sal.text.noOfPage" /></th>
 	<td>${detailInfo.trBookPge }</td>
 </tr>
 <tr>
-    <th scope="row">TR No</th>
+    <th scope="row"><spring:message code="sal.text.trNo" /></th>
     <td>${detailInfo.trBookNoStart } to ${detailInfo.trBookNoEnd }</td>    
 </tr>
 <tr>
-	<th scope="row">TR Book Holder</th>
+	<th scope="row"><spring:message code="sal.text.trBookHolder" /></th>
 	<td>${detailInfo.trHolder }</td>
 </tr>
 </tbody>
@@ -87,7 +87,7 @@ function fn_deactivate(){
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="btnDeact" onclick="fn_deactivate();">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="btnDeact" onclick="fn_deactivate();"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 

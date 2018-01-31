@@ -16,10 +16,10 @@ $(document).ready(function(){
 
 function creatBoxGrid(){
     var boxLayout = [ 
-         {dataField : "boxId", headerText : "Box ID", width : 150 , visible:false     },
-         {dataField : "boxNo", headerText : "Box No", width : 180      },
-         {dataField : "boxHolder", headerText : "Box Holder", width : 180       },
-         {dataField : "boxBookQty", headerText : "Book in Box", width : 180        }       
+         {dataField : "boxId", headerText : "<spring:message code="sal.title.boxId" />", width : 150 , visible:false     },
+         {dataField : "boxNo", headerText : "<spring:message code="sal.title.boxNo" />", width : 180      },
+         {dataField : "boxHolder", headerText : "<spring:message code="sal.title.boxHolder" />", width : 180       },
+         {dataField : "boxBookQty", headerText : "<spring:message code="sal.title.bookInBox" />", width : 180        }       
          ];
    
 
@@ -58,7 +58,7 @@ function fn_KeepIntoBox(){
 		
 	if($("#searchBox").val() == 'E'){		
 		if($("#keepTrBoxId").val() == ""){		
-			Common.alert("Box Missing" +DEFAULT_DELIMITER+ "No TR box selected.");
+			Common.alert("<spring:message code="sal.alert.title.boxMissing" />" +DEFAULT_DELIMITER+ "<spring:message code="sal.alert.msg.noTrBoxSelected" />");
 		}else{
 			
 			Common.ajax("POST", "/sales/trBook/insertKeepIntoBox", $("#keepSaveForm").serializeJSON(), function(result)    {
@@ -66,7 +66,7 @@ function fn_KeepIntoBox(){
 		        console.log("성공." + JSON.stringify(result));
 		        console.log("data : " + result.cnt);
 
-		        Common.alert("Save Successful" +DEFAULT_DELIMITER+ "TR book has successfully kept into box.");
+		        Common.alert("<spring:message code="sal.alert.title.saveSuccsess2" />" +DEFAULT_DELIMITER+ "<spring:message code="sal.alert.msg.succKeptIntoBox" />");
 		        $("#btnKeep").hide();
 		        fn_selectListAjax();
 		        
@@ -83,7 +83,7 @@ function fn_KeepIntoBox(){
 		            console.log(e);
 		          }
 		         
-		          Common.alert("Failed To Save" +DEFAULT_DELIMITER+"Some unexpected error occurred in page.<br />Please try again later.");
+		          Common.alert("<spring:message code="sal.alert.title.saveFail" />" +DEFAULT_DELIMITER+"<spring:message code="sal.alert.msg.errorOccurred" />");
 		    });
 			
 		}
@@ -96,7 +96,7 @@ function fn_KeepIntoBox(){
 
             $("#newBoxNo").text(result.data);
             
-            Common.alert("Save Successful" +DEFAULT_DELIMITER+ "TR book has successfully kept into box.");
+            Common.alert("<spring:message code="sal.alert.title.saveSuccsess2" />" +DEFAULT_DELIMITER+ "<spring:message code="sal.alert.msg.succKeptIntoBox" />");
             fn_selectListAjax();
             $("#btnKeep").hide();
             
@@ -112,7 +112,7 @@ function fn_KeepIntoBox(){
               {
                 console.log(e);
               }
-              Common.alert("Failed To Save" +DEFAULT_DELIMITER+"Some unexpected error occurred in page.<br />Please try again later.");
+              Common.alert("<spring:message code="sal.alert.title.saveFail" />" +DEFAULT_DELIMITER+"<spring:message code="sal.alert.msg.errorOccurred" />");
         });
 		
 	}
@@ -135,7 +135,7 @@ function fn_searchBoxList(){
 <div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TR BOOK - KEEP INTO BOX</h1>
+<h1><spring:message code="sal.page.title.trBookKeepIntoBox" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -144,7 +144,7 @@ function fn_searchBoxList(){
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>TR Book Details</h2>
+<h2><spring:message code="sal.page.subtitle.trBookDetails" /></h2>
 </aside><!-- title_line end -->
 
 <form action="#" method="post" id="keepSaveForm" name ="keepSaveForm">
@@ -163,19 +163,19 @@ function fn_searchBoxList(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">TR Book No</th>
+	<th scope="row"><spring:message code="sal.text.trBookNo" /></th>
 	<td>${detailInfo.trBookNo }</td>
-	<th scope="row">Prefix No</th>
+	<th scope="row"><spring:message code="sal.text.prefixNo" /></th>
 	<td>${detailInfo.trBookPrefix }</td>
 </tr>
 <tr>
-	<th scope="row">TR No</th>
+	<th scope="row"><spring:message code="sal.text.trNo" /></th>
 	<td colspan="3">${detailInfo.trBookNoStart } To ${detailInfo.trBookNoEnd }</td>
 </tr>
 <tr>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="sal.text.status" /></th>
 	<td>${detailInfo.trBookStusCode }</td>
-	<th scope="row">Total Page(s)</th>
+	<th scope="row"><spring:message code="sal.text.totalPages" /></th>
 	<td>${detailInfo.trBookPge }</td>
 </tr>
 
@@ -183,7 +183,7 @@ function fn_searchBoxList(){
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Select TR Box</h2>
+<h2><spring:message code="sal.page.subtitle.selectTrBox" /></h2>
 </aside><!-- title_line end -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -193,10 +193,10 @@ function fn_searchBoxList(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Box Option</th>
+    <th scope="row"><spring:message code="sal.text.boxOption" /></th>
     <td>
-    <label><input type="radio" id="searchBox" name="searchBox" value="E" onclick="fn_searchBox('E')" checked="checked"/><span>Existing Box</span></label>
-    <label><input type="radio" id="searchBox" name="searchBox" value="N" onclick="fn_searchBox('N')"/><span>New Box</span></label>
+    <label><input type="radio" id="searchBox" name="searchBox" value="E" onclick="fn_searchBox('E')" checked="checked"/><span><spring:message code="sal.text.existingBox" /></span></label>
+    <label><input type="radio" id="searchBox" name="searchBox" value="N" onclick="fn_searchBox('N')"/><span><spring:message code="sal.text.newBox" /></span></label>
     </td>
 </tr>
 
@@ -236,13 +236,13 @@ function fn_searchBoxList(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Branch</th>
+    <th scope="row"><spring:message code="sal.text.branch" /></th>
     <td>
     <span>${SESSION_INFO.code} - ${SESSION_INFO.branchName}</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">New Box No</th>
+    <th scope="row"><spring:message code="sal.text.newBoxNo" /></th>
     <td>
     <span id="newBoxNo"></span>
     </td>
@@ -252,7 +252,7 @@ function fn_searchBoxList(){
 </div>
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="btnKeep" onclick="fn_KeepIntoBox();">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="btnKeep" onclick="fn_KeepIntoBox();"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
