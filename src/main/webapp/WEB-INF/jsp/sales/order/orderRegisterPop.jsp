@@ -1352,7 +1352,7 @@
         //----------------------------------------------------------------------
         var vAppType    = $('#appType').val();
         var vDefRentAmt = vAppType == '66' ? $('#ordRentalFees').val().trim() : 0;
-        var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
+        var vCustBillId = $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0;
         var vBindingNo  = FormUtil.isEmpty($('#txtOldOrderID').val().trim()) ? $('#relatedNo').val().trim() : $('#hiddenOldOrderId').val().trim();
         var vCnvrSchemeId;
 

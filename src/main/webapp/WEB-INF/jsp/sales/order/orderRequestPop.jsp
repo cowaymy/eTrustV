@@ -1528,8 +1528,9 @@
     function fn_loadOrderInfoOwnt() {
         if(APP_TYPE_ID == '66') {
             fn_tabOnOffSetOwnt('REN_PAY', 'SHOW');
-            fn_tabOnOffSetOwnt('BIL_GRP', 'SHOW');
         }
+
+        fn_tabOnOffSetOwnt('BIL_GRP', 'SHOW');
 
         $('#dpPreferInstDateOwnt').val("${orderDetail.installationInfo.preferInstDt}");
         $('#tpPreferInstTimeOwnt').val("${orderDetail.installationInfo.preferInstTm}");
