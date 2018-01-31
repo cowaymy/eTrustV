@@ -66,7 +66,38 @@
 
     function createAUIGrid(){
         // AUIGrid 칼럼 설정
-	    var columnLayout = [ {
+	    var columnLayout = [ 
+	                        {
+                                dataField : "memberid",
+                                headerText : "memberid",
+                                width:0
+                               
+                               
+                           }, {
+                                 dataField : "branchid",
+                                 headerText : "branchid",
+                                 width:0
+                                
+                                
+                            },{
+	                        	 dataField : "eventdt",
+	                             headerText : "eventdt",
+	                             width:0
+	                        	
+	                        	
+	                        },
+	                   {
+                           dataField : "checkFlag",
+                            headerText : ' ',
+                             width: 20,
+                           renderer : {
+                                             type : "CheckBoxEditRenderer",
+                                               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                               editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
+                                               checkValue : "1", // true, false 인 경우가 기본
+                                               unCheckValue : "0"
+                                           }
+                       },{
                     dataField : "promoId",
                     headerText : "promo ID.",
                     width : 120,
@@ -149,7 +180,57 @@ function fn_getOrgEventListAjax() {
         AUIGrid.setGridData(myGridID, result);
     });
 }
+function fn_failOrgEventsAjax(){
+    var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
+     console.log(activeItems);
+  
+ 
+    Common.confirm("Do you want to cancel the Events?"  , fn_MemsFail );
+ 
+}
+function fn_MemsFail(){
+ var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
+ console.log(activeItems);
 
+ 
+ var jasonObj={update : activeItems};
+ console.log(jasonObj);
+    Common.ajax("POST", "/organization/updateMemberListFail", jasonObj, function(result) {
+
+         console.log("성공.");
+         console.log("data : " + result);
+         Common.alert(result.message);
+         
+   
+     });
+}
+
+
+function fn_getOrgEventsAjax(){
+	   var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
+	    console.log(activeItems);
+	 
+	
+	   Common.confirm("Do you want to approve the Events?"  , fn_MemsApprove );
+	
+}
+function fn_MemsApprove(){
+	var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
+	console.log(activeItems);
+
+	
+	var jasonObj={update : activeItems};
+	console.log(jasonObj);
+	   Common.ajax("POST", "/organization/updateMemberListApprove", jasonObj, function(result) {
+
+	        console.log("성공.");
+	        console.log("data : " + result);
+	        Common.alert(result.message);
+	        
+	  
+	    });
+	
+}
 
 // 그리드 초기화.
 function resetUpdatedItems() {
@@ -205,6 +286,8 @@ function f_info(data , v){
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>Member Event Search</h2>
 <ul class="right_btns">
+     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getOrgEventsAjax();">Complete Members Event</a></p></li>
+     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_failOrgEventsAjax();">Cancel Members Event</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getOrgEventListAjax();"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
 </ul>
@@ -310,6 +393,7 @@ function f_info(data , v){
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a href="#" onclick="javascript:fn_confirmPopup();">Confirm Member Event</a></p></li>
+       
         <!-- <li><p class="link_btn"><a href="#">menu2</a></p></li>
         <li><p class="link_btn"><a href="#">menu3</a></p></li>
         <li><p class="link_btn"><a href="#">menu4</a></p></li>

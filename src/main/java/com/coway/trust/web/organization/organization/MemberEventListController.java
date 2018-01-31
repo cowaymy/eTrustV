@@ -1,6 +1,8 @@
 package com.coway.trust.web.organization.organization;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -21,6 +23,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.organization.organization.MemberEventService;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -140,7 +143,7 @@ public class MemberEventListController {
 //		String promoId = request.getParameterValues("promoId");	
 //		params.put("promoId", promoId);
 
-		success = memberEventService.selectMemberPromoEntries(params);		
+		success = memberEventService.selectMemberPromoEntries(params);		//수정시 조심 updateMemberListApprove, Fail  같이쓰인다
 		
 //		List<EgovMap> promoEntries = memberEventService.selectMemberPromoEntries(param);		
 //		logger.debug("promoEntries : {}", promoEntries);
@@ -195,6 +198,64 @@ public class MemberEventListController {
 
 		return ResponseEntity.ok(resultList);
 	}
+	
+	@RequestMapping(value = "/updateMemberListApprove", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateMemberListApprove(@RequestBody Map<String, ArrayList<Object>> params ){
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("params {}", params);
+		List<Object> updateList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		logger.debug("updateList {}", updateList);
+		Map<String, Object> approveMap  = null;
+		int approveCount = 0;
+		for(int i = 0 ; i < updateList.size(); i++  ){
+			approveMap = (Map<String, Object>) updateList.get(i);
+			approveMap.put("promoId" , approveMap.get("promoId").toString() );
+			approveMap.put("confirmStatus", "4");
+			approveMap.put("memId" , approveMap.get("memberid").toString() );
+			approveMap.put("evtApplyDate" , approveMap.get("eventdt").toString() );
+			approveMap.put("branchId" , approveMap.get("branchid").toString() );
+			
+			//memId confirmStatus branchId evtApplyDate
+			logger.debug("approveMap {}", approveMap);
+			memberEventService.selectMemberPromoEntries(approveMap);	
+			
+			approveCount++;
+		}
+		
+		message.setMessage( approveCount  + " Request Event Completed " );
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	@RequestMapping(value = "/updateMemberListFail", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateMemberListFail(@RequestBody Map<String, ArrayList<Object>> params ){
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("params {}", params);
+		List<Object> updateList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+		logger.debug("updateList {}", updateList);
+		Map<String, Object> approveMap  = null;
+		int approveCount = 0;
+		for(int i = 0 ; i < updateList.size(); i++  ){
+			approveMap = (Map<String, Object>) updateList.get(i);
+			approveMap.put("promoId" , approveMap.get("promoId").toString() );
+			approveMap.put("confirmStatus", "10");
+			approveMap.put("memId" , approveMap.get("memberid").toString() );
+			approveMap.put("evtApplyDate" , approveMap.get("eventdt").toString() );
+			approveMap.put("branchId" , approveMap.get("branchid").toString() );
+			
+			//memId confirmStatus branchId evtApplyDate
+			logger.debug("approveMap {}", approveMap);
+			memberEventService.selectMemberPromoEntries(approveMap);	
+			
+			approveCount++;
+		}
+		
+		message.setMessage( approveCount  + " Request Event Cancelled" );
+		
+		return ResponseEntity.ok(message);
+	}
+	
 	
 	
 	
