@@ -52,19 +52,19 @@ function fn_Generate(){
     if ($("#prefix").val() == "")
     {
         valid = false;
-        Message += "* Please select the prefix number.<br />";
+        Message += "<spring:message code="sal.alert.msg.selectPrefix" /><br />";
     }
 
     if ($("#trBookNoStart").val() == "")
     {
         valid = false;
-        Message += "* Please key in the starting number.<br />";
+        Message += "<spring:message code="sal.alert.msg.start" /><br />";
     }
 
     if ($("#trBookPage").val() == "")
     {
         valid = false;
-        Message += "* Please key in the page of book.<br />";
+        Message += "<spring:message code="sal.alert.msg.pageOfBook" /><br />";
     }
     else
     {
@@ -74,7 +74,7 @@ function fn_Generate(){
             if (isNaN($("#trBookNoStart").val().substring(0,1)))
             {
                 valid = false;
-                Message += "* Invalid starting number.<br />";
+                Message += "<spring:message code="sal.alert.msg.notNumber" /><br />";
             }
             else
             {
@@ -86,7 +86,7 @@ function fn_Generate(){
                 if (lNo.length > $("#trBookNoStart").val().length)
                 {
                     valid = false;
-                    Message += "* Invalid starting number. Ending number exceed length.<br />";
+                    Message += "<spring:message code="sal.alert.msg.exceedLength" /><br />";
                 }
                 else
                 {
@@ -96,7 +96,7 @@ function fn_Generate(){
         }
     }
     if (!valid)    	
-    	 Common.alert("Generate Ending Number Summary "+DEFAULT_DELIMITER + Message);
+    	 Common.alert("<spring:message code="sal.alert.title.generateEndNumSummary" /> "+DEFAULT_DELIMITER + Message);
 
     return valid;
 }
@@ -159,28 +159,28 @@ function validRequiredField_Save_Add()
     if ($("#singleBranch").val() == "")
     {
         valid = false;
-        Message += "* Please select the branch.<br />";
+        Message += "<spring:message code="sal.alert.msg.selectBranch" /><br />";
     }
     if ($("#prefix").val() == "")
     {
         valid = false;
-        Message += "* Please select the prefix number.<br />";
+        Message += "<spring:message code="sal.alert.msg.selectPrefix" /><br />";
     }
     if ($("#trBookPage").val() == "")
     {
         valid = false;
-        Message += "* Please key in the page of book.<br />";
+        Message += "<spring:message code="sal.alert.msg.pageOfBook" /><br />";
     }
     
     if ($("#trBookNoStart").val() == "")
     {
         valid = false;
-        Message += "* Please key in the starting number.<br />";
+        Message += "<spring:message code="sal.alert.msg.start" /><br />";
     }
     if ($("#trBookNoEnd").val() == "")
     {
         valid = false;
-        Message += "* Please generate the ending number.<br />";
+        Message += "<spring:message code="sal.alert.msg.generateEndNum" /><br />";
     }
 
     if ($("#trBookNoStart").val() != "" && $("#trBookNoEnd").val() != "")
@@ -199,14 +199,14 @@ function validRequiredField_Save_Add()
             if (result.data)
             {
                 valid = false;
-                Message += "* One or more receipt number(s) is same with existing TR book.<br />";
+                Message += "<spring:message code="sal.alert.msg.existTrBook" /><br />";
             }
 
        }, "", {async: false} );
     }
 
     if (!valid)       
-        Common.alert("Add TR Book Summary "+DEFAULT_DELIMITER + Message);
+        Common.alert("<spring:message code="sal.alert.title.addTrBookSummary" /> "+DEFAULT_DELIMITER + Message);
     
     return valid;
 }
@@ -230,7 +230,7 @@ function fn_save(){
 	            
 	            $("#trBookAddSinglePop").hide();
 	            //fn_selectCancellReqInfoAjax();
-	            Common.alert("TR Book Saved" + DEFAULT_DELIMITER + "New TR book successfully saved. <br />TR Book Number : " + result.data );
+	            Common.alert("<spring:message code="sal.alert.title.trBookSaved" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.trBookSaved" /> " + result.data );
 	          
 	        }
 	        , function(jqXHR, textStatus, errorThrown){
@@ -244,7 +244,7 @@ function fn_save(){
 	            {
 	              console.log(e);
 	            }	
-	            Common.alert("Failed To Save" + DEFAULT_DELIMITER + "Failed to add new TR book. Please try again later.");
+	            Common.alert("<spring:message code="sal.alert.title.saveFail" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.failTrBookSave" />");
 	        });
 
         }));
@@ -257,7 +257,7 @@ function fn_save(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ADD NEW TR BOOK(SINGLE)</h1>
+<h1><spring:message code="sal.page.title.addNewTrBookSingle" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -278,33 +278,33 @@ function fn_save(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Branch</th>
+	<th scope="row"><spring:message code="sal.text.branch" /></th>
 	<td>
 		<select class="disabled w100p" disabled="disabled" id="singleBranch" name="branch">
 		</select>
 	</td>
-	<th scope="row">Prefix No</th>
+	<th scope="row"><spring:message code="sal.text.prefixNo" /></th>
 	<td>
 		<select class="disabled w100p" disabled="disabled" id="prefix" name="prefix">
-			<option value="SO">SO</option>
+			<option value="SO"><spring:message code="sal.text.so" /></option>
 		</select>
 	</td>
 </tr>
 <tr>
-	<th scope="row">Page of Book</th>
-	<td colspan="3"><input type="text" title="" placeholder="" class="" id="trBookPage" name="trBookPage"/><span>(Maximum:200)</span></td>
+	<th scope="row"><spring:message code="sal.text.pageOfBook" /></th>
+	<td colspan="3"><input type="text" title="" placeholder="" class="" id="trBookPage" name="trBookPage"/><span><spring:message code="sal.text.maximum200" /></span></td>
 </tr>
 <tr>
-	<th scope="row">Stating Number</th>
-	<td><input type="text" title="" placeholder="" class="" id="trBookNoStart" name="trBookNoStart"/><p class="btn_sky"><a href="#" onclick="javascript:fn_Generate();">Generate</a></p></td>
-	<th scope="row">Ending Number</th>
-	<td><input type="text" title="" placeholder="" class="" id="trBookNoEnd" name="trBookNoEnd"/><p class="btn_sky"><a href="#"  onclick="javascript:fn_ReKey();" id="btnReKey">Re-Key</a></p></td>
+	<th scope="row"><spring:message code="sal.text.startingNumber" /></th>
+	<td><input type="text" title="" placeholder="" class="" id="trBookNoStart" name="trBookNoStart"/><p class="btn_sky"><a href="#" onclick="javascript:fn_Generate();"><spring:message code="sal.btn.generate" /></a></p></td>
+	<th scope="row"><spring:message code="sal.text.endingNumber" /></th>
+	<td><input type="text" title="" placeholder="" class="" id="trBookNoEnd" name="trBookNoEnd"/><p class="btn_sky"><a href="#"  onclick="javascript:fn_ReKey();" id="btnReKey"><spring:message code="sal.btn.reKey" /></a></p></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();" id="btnAddSingleSave">SAVE</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save();" id="btnAddSingleSave"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </form>

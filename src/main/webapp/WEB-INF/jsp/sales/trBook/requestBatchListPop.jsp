@@ -30,15 +30,15 @@ function creatReqBatchGrid(){
 
     var colLayout = [ 
           {dataField : "trBookBkReqId", headerText : "", width : 140  , visible:false   },
-          {dataField : "trBookBkReqNo", headerText : "Batch No", width : 120      },
-          {dataField : "code1", headerText : "Status", width : 80       },
-          {dataField : "code", headerText : "Branch", width : 120        },
-          {dataField : "trBookBkReqQty", headerText : "Quantity", width : 80        },
-          {dataField : "trBookBkReqPgePerBook", headerText : "Page Per Book", width : 120      },
-          {dataField : "trBookBkReqStartReciptNo", headerText : "Start TR", width : 110     },
-          {dataField : "trBookBkReqEndReciptNo", headerText : "End TR", width : 110       },
-          {dataField : "crtUser", headerText : "Creator", width : 110       } ,            
-          {dataField : "trBookBkReqCrtDt", headerText : "Create Date", width : 110       }             
+          {dataField : "trBookBkReqNo", headerText : "<spring:message code="sal.title.batchNo" />", width : 120      },
+          {dataField : "code1", headerText : "<spring:message code="sal.title.status" />", width : 80       },
+          {dataField : "code", headerText : "<spring:message code="sal.title.branch" />", width : 120        },
+          {dataField : "trBookBkReqQty", headerText : "<spring:message code="sal.title.quantity" />", width : 80        },
+          {dataField : "trBookBkReqPgePerBook", headerText : "<spring:message code="sal.title.pagePerBook" />", width : 120      },
+          {dataField : "trBookBkReqStartReciptNo", headerText : "<spring:message code="sal.title.startTr" />", width : 110     },
+          {dataField : "trBookBkReqEndReciptNo", headerText : "<spring:message code="sal.title.endTr" />", width : 110       },
+          {dataField : "crtUser", headerText : "<spring:message code="sal.title.creator" />", width : 110       } ,            
+          {dataField : "trBookBkReqCrtDt", headerText : "<spring:message code="sal.title.crtDate" />", width : 110       }             
           ];
     
 
@@ -77,7 +77,7 @@ function fn_selectReqBatchList() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TR Book Transaction</h1>
+<h1><spring:message code="sal.page.title.trBookTransaction" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -91,8 +91,8 @@ function fn_selectReqBatchList() {
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectReqBatchList();"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#" id="btnClear"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectReqBatchList();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+	<li><p class="btn_blue"><a href="#" id="btnClear"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -108,26 +108,26 @@ function fn_selectReqBatchList() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Batch Number</th>
+	<th scope="row"><spring:message code="sal.text.batchNumber" /></th>
 	<td><input type="text" title="" placeholder="Request Number" class="w100p"  id="batchNo" name ="batchNo"/>
-	<th>Batch Status</th>
+	<th><spring:message code="sal.text.batchStatus" /></th>
 	<td>
 	    <select class="multy_select w100p" multiple="multiple" id="batchStatus" name="batchStatus">
-            <option value="1" selected="selected">Active</option>
-            <option value="4">Complete</option>
-            <option value="8">Inactive</option>
+            <option value="1" selected="selected"><spring:message code="sal.text.active" /></option>
+            <option value="4"><spring:message code="sal.text.complete" /></option>
+            <option value="8"><spring:message code="sal.text.inactive" /></option>
         </select>
     </td>
-	<th scope="row">Create Date</th>
+	<th scope="row"><spring:message code="sal.text.createDate" /></th>
 	<td><input type="text"  placeholder="DD/MM/YYYY" class="j_date w100p" id="batchCrtDt" name="batchCrtDt"/>
 </tr>
 <tr>
-	<th scope="row">Request Branch</th>
+	<th scope="row"><spring:message code="sal.text.requestBranch" /></th>
 	<td>
        <select class="w100p" id="reqBranch" name="reqBranch">
        </select>
     </td>
-	<th scope="row">Creator</th>
+	<th scope="row"><spring:message code="sal.text.creator" /></th>
 	<td><input type="text" title="" placeholder="Creator(Username)" class="w100p"  id="userNm" name ="userNm"/></td>
 	<td colspan="2"></td>
 </tr>

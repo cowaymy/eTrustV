@@ -14,7 +14,7 @@ $(document).ready(function(){
 		       $("#requestBatchDetailPop").remove();
 		       fn_selectReqBatchList();
 		       
-		       Common.alert("BATCH DEACTIVATED" + DEFAULT_DELIMITER + "This request batch has been deactivated.");
+		       Common.alert("<spring:message code="sal.alert.title.batchDeactivated" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.batchDeactivated" />");
 
 		  }); 
 	});
@@ -27,7 +27,7 @@ $(document).ready(function(){
 <div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>View TR BULK REQUEST BATCH</h1>
+<h1><spring:message code="sal.page.title.viewTrBulkRequestBatch" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -36,7 +36,7 @@ $(document).ready(function(){
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Batch Information</h2>
+<h2><spring:message code="sal.page.subtitle.batchInformation" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -51,41 +51,41 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Request Number</th>
+	<th scope="row"><spring:message code="sal.text.requestNumber" /></th>
 	<td>${result.reqNo }</td>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="sal.text.status" /></th>
 	<td>${result.name }</td>
-	<th scope="row">  Create At </th>
+	<th scope="row">  <spring:message code="sal.text.createAt" /> </th>
 	<td>${result.crtDt }</td>
 </tr>
 <tr>
-	<th scope="row">Request Branch</th>
+	<th scope="row"><spring:message code="sal.text.requestBranch" /></th>
 	<td colspan="3">${result.code1 } - ${result.name1 }</td>
-	<th scope="row">Create By</th>
+	<th scope="row"><spring:message code="sal.text.createBy" /></th>
 	<td>${result.crtUser }</td>
 </tr>
 <tr>
-	<th scope="row">Prefix</th>
+	<th scope="row"><spring:message code="sal.text.prefix" /></th>
 	<td>${result.prefix }</td>
-	<th scope="row">Quantity</th>
+	<th scope="row"><spring:message code="sal.text.quantity" /></th>
 	<td>${result.qty }</td>
-	<th scope="row">Page Per Book</th>
+	<th scope="row"><spring:message code="sal.text.pagePerBook" /></th>
 	<td>${result.pgePerBook }</td>
 </tr>
 <tr>
-	<th scope="row">Start TR</th>
+	<th scope="row"><spring:message code="sal.text.startTr" /></th>
 	<td>${result.startReciptNo }</td>
-	<th scope="row">End TR</th>
+	<th scope="row"><spring:message code="sal.text.endTr" /></th>
 	<td>${result.endReciptNo }</td>
-	<th scope="row"> Update At </th>
+	<th scope="row"> <spring:message code="sal.text.updateAt" /> </th>
 	<td>${result.updDt }</td>
 </tr>
 <tr>
-	<th scope="row">Start Book</th>
+	<th scope="row"><spring:message code="sal.text.startBook" /></th>
 	<td>${result.trBookNoStart }</td>
-	<th scope="row"> End Book </th>
+	<th scope="row"> <spring:message code="sal.text.endBook" /> </th>
 	<td>${result.trBookNoEnd }</td>
-	<th scope="row"> Update By </th>
+	<th scope="row"> <spring:message code="sal.text.updateBy" /> </th>
 	<td>${result.updUser }</td>
 </tr>
 </tbody>
