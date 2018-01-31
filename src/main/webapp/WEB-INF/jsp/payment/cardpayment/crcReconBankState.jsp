@@ -45,6 +45,9 @@
         //{dataField : "bnkAcc",headerText : "<spring:message code='pay.head.bankAccount'/>",width : 100 , editable : false},  
         {dataField : "netAmt",headerText : "<spring:message code='pay.head.crcNetAmount'/>",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},        
         {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.bankStatementId'/>",width : 200 , editable : false},
+        
+        {dataField : "debtAmt",headerText : "Debit <br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        
         {dataField : "creditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "mappingDate",headerText : "<spring:message code='pay.head.mappingDate'/>",width : 240 , editable : false},
    ];
@@ -74,6 +77,7 @@
          {dataField : "fTrnscDt", headerText : "<spring:message code='pay.head.transactionDate'/>", editable : false, dataType:"date"},    
          {dataField : "mid", headerText : "<spring:message code='pay.head.midNo'/>", editable : false},    
          {dataField : "accDesc", headerText : "<spring:message code='pay.head.bankAccount'/>", editable : false},   
+         {dataField : "debtAmt", headerText :  "Debit Amount", editable : false, dataType:"numeric", formatString:"#,##0.00"},
          {dataField : "creditAmt", headerText : "<spring:message code='pay.head.totalNetAmount'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"}
          /*{
              dataField : "btnCheck",
@@ -134,6 +138,7 @@
 		item.netAmt = AUIGrid.getCellValue(crcStatementGridID, crcCheckedItem[0].rowIndex, "netAmt");
 		item.creditAmt = AUIGrid.getCellValue(bankStatementGridID, bankCheckedItem[0].rowIndex, "creditAmt");
 		
+	    item.debtAmt = AUIGrid.getCellValue(bankStatementGridID, bankCheckedItem[0].rowIndex, "debtAmt");
 		item.codeId = AUIGrid.getCellValue(bankStatementGridID, bankCheckedItem[0].rowIndex, "codeId");
 		
 		item.mappingDate = curDate.getDate() + "/" + (curDate.getMonth() +1) +"/" + curDate.getFullYear();
