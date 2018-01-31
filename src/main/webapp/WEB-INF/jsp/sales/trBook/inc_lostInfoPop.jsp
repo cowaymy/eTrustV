@@ -7,7 +7,7 @@ $(document).ready(function(){
 	if("${dcfInfo}" != null && "${dcfInfo}" != ""){
 		
 		$("#savebt").hide();
-		Common.alert("<b>This TR Book is under DCF [ ${dcfInfo.defReqNo} ].<br />No other action is allowed at this moment.</b>");
+		Common.alert("<b><spring:message code="sal.alert.msg.underDCF" /> [ ${dcfInfo.defReqNo} ].<br /><spring:message code="sal.alert.msg.noOtherAction" /></b>");
 	}
     
     $("#saveTrHolderType").val("${lostInfo.trHolderType }");
@@ -30,27 +30,27 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Lost Type</th>
-    <td><span>Lost - Whole</span></td>
-    <th scope="row">TR Book No</th>
+    <th scope="row"><spring:message code="sal.text.lostType" /></th>
+    <td><span><spring:message code="sal.text.lostWhole" /></span></td>
+    <th scope="row"><spring:message code="sal.text.trBookNo" /></th>
     <td><span>${lostInfo.trBookNo }</span></td>
 </tr>
 <tr>
-    <th scope="row">TR No</th>
+    <th scope="row"><spring:message code="sal.text.trNo" /></th>
     <td><span>${lostInfo.trBookNoStart } To ${lostInfo.trBookNoEnd }</span></td>
-    <th scope="row">Total Page(s)</th>
+    <th scope="row"><spring:message code="sal.text.totalPages" /></th>
     <td><span>${lostInfo.trBookPge }</span></td>
 </tr>
 <tr>
-    <th scope="row">Holder Type</th>
+    <th scope="row"><spring:message code="sal.text.holderType" /></th>
     <td><span>${lostInfo.trHolderType }</span></td>
-    <th scope="row">  Holder Code </th>
+    <th scope="row">  <spring:message code="sal.text.holderCode" /> </th>
     <td><span>${memberInfo.memCode }</span></td>
 </tr>
 <tr>
-    <th scope="row">Holder Name</th>
+    <th scope="row"><spring:message code="sal.text.holderName" /></th>
     <td><span>${memberInfo.name }</span></td>
-    <th scope="row">Holder NRIC</th>
+    <th scope="row"><spring:message code="sal.text.holderNric" /></th>
     <td><span>${memberInfo.nric }</span></td>
 </tr>
 
