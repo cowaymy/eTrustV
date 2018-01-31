@@ -203,7 +203,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Price / PDF(From)</th>
+    <th scope="row">Price / RPF(From)</th>
     <td>
     <span>${exchangeDetailInfo.soExchgOldPrc }</span>
     </td>
@@ -215,7 +215,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Price / PDF(To)</th>
+    <th scope="row">Price / RPF(To)</th>
     <td>
     <span>${exchangeDetailInfo.soExchgNwPrc }</span>
     </td>
