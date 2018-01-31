@@ -24,36 +24,36 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Type</th>
-    <td><span>Data Change Form (DCF)</span></td>
-    <th scope="row">Category</th>
-    <td><span>TR Book</span></td>
-    <th scope="row">Subject</th>
-    <td><span>TR Book Lost</span></td>
+    <th scope="row"><spring:message code="sal.text.type" /></th>
+    <td><span><spring:message code="sal.text.dataChangeForm" /></span></td>
+    <th scope="row"><spring:message code="sal.text.category" /></th>
+    <td><span><spring:message code="sal.text.trBook" /></span></td>
+    <th scope="row"><spring:message code="sal.text.subject" /></th>
+    <td><span><spring:message code="sal.text.trBookLost" /></span></td>
 </tr>
 <tr>
-    <th scope="row">Requester</th>
+    <th scope="row"><spring:message code="sal.text.requester" /></th>
     <td><span>${SESSION_INFO.userName}</span></td>
-    <th scope="row">Recipient</th>
-    <td><span></span>Own approver(s)</td>
-    <th scope="row">Request Branch</th>
+    <th scope="row"><spring:message code="sal.text.recipient" /></th>
+    <td><span></span><spring:message code="sal.text.ownApprover" /></td>
+    <th scope="row"><spring:message code="sal.text.requestBranch" /></th>
     <td><span>${SESSION_INFO.code}</span></td>
 </tr>
 <tr>
-    <th scope="row">Request On Behalf</th>
+    <th scope="row"><spring:message code="sal.text.requestOnBehalf" /></th>
     <td colspan="3"><input type="text"  title=""  placeholder="Request On Behalf" class="w100p" id=""  name="" readonly="readonly"/></td>
-    <th scope="row">Reason <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.reason" /> <span class="must">*</span></th>
     <td>    
 	    <select class="w100p"  id='feedback' name ='feedback' >
 	    </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Description <span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.description" /> <span class="must">*</span></th>
     <td colspan="5"> <textarea cols="20" rows="5" id='description'  name='description' placeholder="Description" ></textarea></td>
 </tr>
 <tr>
-    <th scope="row">Remark </th>
+    <th scope="row"><spring:message code="sal.text.remark" /> </th>
     <td colspan="5"> <textarea cols="20" rows="5" id='remark'  name='remark' placeholder="Remark" ></textarea></td>
 </tr>
 
