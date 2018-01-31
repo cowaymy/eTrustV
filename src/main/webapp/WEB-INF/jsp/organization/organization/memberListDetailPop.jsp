@@ -115,7 +115,7 @@ function createAUIGrid4() {
         editable : false,
         width : 120
     }, {
-        dataField : "memorgdescription1",
+        dataField : "memOrgDesc",
         headerText : "From",
         editable : false,
         width : 130
@@ -125,7 +125,7 @@ function createAUIGrid4() {
         editable : false,
         width : 130
     }, {
-        dataField : "memOrgDesc",
+        dataField : "memorgdescription1",
         headerText : "To",
         editable : false,
         width : 130
@@ -146,15 +146,15 @@ function createAUIGrid4() {
         width : 180
 
     }, {
+        dataField : "crtDt",
+        headerText : "Create Date",
+        width : 130
+    },{
         dataField : "userName",
         headerText : "Creator",
         editable : false,
         width : 130
 
-    }, {
-        dataField : "crtDt",
-        headerText : "Create Date",
-        width : 130
     }];
      // 그리드 속성 설정
     var gridPros = {
@@ -869,11 +869,14 @@ function fn_winClose(){
     </td>
     
     
-    <th scope="row" class="hideContent">Cody PA Expired</th>
+    
+    
+</tr>
+<tr>
+<th scope="row" class="hideContent">Cody PA Expired</th>
     <td class="hideContent">
     <span><span><c:out value="${PAExpired.agExprDt}"/></span></span>
     </td>
-    
 </tr>
 </tbody>
 </table><!-- table end -->
