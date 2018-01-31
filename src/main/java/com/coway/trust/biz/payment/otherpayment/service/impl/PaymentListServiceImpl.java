@@ -171,10 +171,23 @@ public class PaymentListServiceImpl extends EgovAbstractServiceImpl implements P
     	//Payment 임시테이블(PAY0240T) 시퀀스 조회
     	Integer seq = commonPaymentMapper.getPayTempSEQ();
     	
-    	//payment 임시정보 등록
-    	paramMap.put("seq", seq);
-    	commonPaymentMapper.insertTmpPaymentInfoFT(paramMap);
-		
+    	
+    	//임시정보 count
+    	int isSource = commonPaymentMapper.countTmpPaymentInfoFT(paramMap);
+    	
+    	//기존에 PAY0240T에 데이터가 없으면 PAY0064D/PAY0065D에서 데이터를 가져온다.
+    	if(isSource == 0){
+        	//payment 임시정보 등록
+        	paramMap.put("seq", seq);
+        	commonPaymentMapper.insertTmpPaymentInfoFT2(paramMap);    		
+    		
+    	}else{
+        	//payment 임시정보 등록
+        	paramMap.put("seq", seq);
+        	commonPaymentMapper.insertTmpPaymentInfoFT(paramMap);    		
+    		
+    	}
+    	
 		//billing 임시정보 등록
     	if (paramList.size() > 0) {    		
     		Map<String, Object> hm = null;    		

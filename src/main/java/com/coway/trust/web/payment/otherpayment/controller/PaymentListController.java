@@ -321,13 +321,9 @@ public class PaymentListController {
 		
 		Map<String, Object> formInfo = new HashMap<String, Object> ();
 		
-		System.out.println("formList.size : " + formList.size());
-		
 		if(formList.size() > 0){
     		for(Object obj : formList){
     			Map<String, Object> map = (Map<String, Object>) obj;
-    			System.out.println("VAlues : " + (String)map.get("name") + " / "+ map.get("value"));		
-    			
     			formInfo.put((String)map.get("name"), map.get("value"));
     		}
     	}		

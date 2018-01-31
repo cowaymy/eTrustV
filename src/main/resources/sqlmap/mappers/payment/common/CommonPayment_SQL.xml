@@ -1136,6 +1136,17 @@
         )
     </insert>  
     
+    <select id="countTmpPaymentInfoFT" parameterType="Map" resultType="int">
+        SELECT
+            COUNT(1) AS CNT
+        FROM 
+            PAY0240T
+        WHERE
+            SEQ = #{groupSeq}          
+    </select>
+    
+    
+    
     <!-- proceduar Log Insert -->
     <insert id="insertTmpPaymentInfoFT" parameterType="Map">
         INSERT INTO PAY0240T (
@@ -1156,6 +1167,67 @@
         WHERE
             SEQ = #{groupSeq} 
     </insert>  
+    
+    
+    <!-- proceduar Log Insert -->
+    <insert id="insertTmpPaymentInfoFT2" parameterType="Map">
+        INSERT INTO PAY0240T (
+            SEQ,PAY_TYPE,CARD_MODE_ID,ISSU_BANK_ID,TRNSC_DT,CARD_NO,CARD_TYPE,CRDIT_CARD_TYPE,
+            AMT,APPV_NO,EXPR_DT,TENURE,REF_NO,BANK_CHRG_AMT,CC_HOLDER_NAME,RUNNG_NO,BANK_ACC_ID,
+            ITM_REM,TR_NO,TR_ISSU_DT,COLL_MEM_ID,PAY_DT,IS_ONLINE,IS_LOCK,IS_3PARTY,STUS_ID,IS_FUND_TRNSF,
+            SKIP_RECON,PAY_ITM_CARD_TYPE,PAY_ITM_CARD_MODE,CHQ_NO,CHQ_DEP_RECIPT_NO,BANK_SLIP_NO,EFT_NO,
+            THRD_PARTY_IC,BANK_BRNCH_ID,GRP_ID,PAYER_NM,REF_DTL,BANK_TYPE_ID,VA_ACC_NO,IS_COMM_CHK
+        ) 
+        SELECT 
+            #{seq},
+            B.PAY_ITM_MODE_ID AS PAY_TYPE,
+            B.PAY_ITM_CARD_MODE_ID AS CARD_MODE_ID,
+            B.PAY_ITM_ISSU_BANK_ID AS ISSU_BANK_ID,
+            B.PAY_ITM_REF_DT AS TRNSC_DT,
+			B.PAY_ITM_ORI_CC_NO AS CARD_NO,
+			B.PAY_ITM_CARD_TYPE_ID AS CARD_TYPE,
+			B.PAY_ITM_CC_TYPE_ID AS CRDIT_CARD_TYPE,
+			TO_NUMBER(#{oldAmt}) AS AMT,
+			B.PAY_ITM_APPV_NO AS APPV_NO,
+			B.PAY_ITM_CC_EXPR_DT AS EXPR_DT,
+			B.TENURE AS TENURE,
+			B.PAY_ITM_REF_NO AS REF_NO,
+			A.BANK_CHG_AMT AS BANK_CHRG_AMT,
+			B.PAY_ITM_CC_HOLDER_NAME AS CC_HOLDER_NAME,
+			B.PAY_ITM_RUNNG_NO AS RUNNG_NO,
+			B.PAY_ITM_BANK_ACC_ID AS BANK_ACC_ID,
+			B.PAY_ITM_REM AS ITM_REM,
+			A.TR_NO AS TR_NO,
+			A.TR_ISSU_DT AS TR_ISSU_DT,
+			A.COLL_MEM_ID AS COLL_MEM_ID,
+			A.PAY_DATA AS PAY_DT,
+			B.PAY_ITM_IS_ONLINE AS IS_ONLINE,
+			B.PAY_ITM_IS_LOK AS IS_LOCK,
+			B.PAY_ITM_IS_THRD_PARTY AS IS_3PARTY,
+			A.STUS_CODE_ID AS STUS_ID,
+			B.IS_FUND_TRNSFR AS IS_FUND_TRNSF,
+			B.SKIP_RECON AS SKIP_RECON,
+			B.PAY_ITM_CARD_TYPE_ID AS PAY_ITM_CARD_TYPE,
+			B.PAY_ITM_CARD_MODE_ID AS PAY_ITM_CARD_MODE,
+			B.PAY_ITM_CHQ_NO AS CHQ_NO,
+			B.PAY_ITM_CHQ_DEP_RECIPT_NO AS CHQ_DEP_RECIPT_NO,
+			B.PAY_ITM_BANK_IN_SLIP_NO AS BANK_SLIP_NO,
+			B.PAY_ITM_EFT_NO AS EFT_NO,
+			B.PAY_ITM_THRD_PARTY_IC AS THRD_PARTY_ID,
+			B.PAY_ITM_BANK_BRNCH_ID AS BANK_BRNCH_ID,
+			B.PAY_ITM_GRP_ID AS GRP_ID,
+			A.PAYER_NM AS PAYER_NAME,
+			A.REF_DTL AS REF_DTL,
+			A.BANK_TYPE_ID AS BANK_TYPE_ID,
+			A.VA_ACC_NO AS VA_ACC_NO,
+			1
+    FROM 
+            PAY0064D A 
+            JOIN PAY0065D B ON A.PAY_ID = B.PAY_ID 
+    WHERE 
+            A.PAY_ID = #{payId}
+            AND ROWNUM <![CDATA[   <= ]]> 1
+    </insert> 
     
     <insert id="insertTmpNormalPaymentInfo" parameterType="Map">
         INSERT INTO PAY0240T

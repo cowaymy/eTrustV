@@ -473,11 +473,20 @@ public interface CommonPaymentMapper {
 	 */
 	void insertTmpPaymentInfo(Map<String, Object> params);
 	
+	
+	int countTmpPaymentInfoFT(Map<String, Object> params);
+	
 	/**
 	 * Payment 임시정보 등록하기 : Fund Transfer용
 	 * @return
 	 */
 	void insertTmpPaymentInfoFT(Map<String, Object> params);
+	
+	/**
+	 * Payment 임시정보 등록하기 : Fund Transfer용
+	 * @return
+	 */
+	void insertTmpPaymentInfoFT2(Map<String, Object> params);
 	
 	/**
 	 * Payment Billing 임시정보 등록하기
