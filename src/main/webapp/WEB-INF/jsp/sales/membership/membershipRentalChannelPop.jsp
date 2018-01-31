@@ -457,10 +457,44 @@ function fn_doSelectBank_Click(){
     }else{
         _custId = $("#txtThirdPartyID").val();
     }
-    alert("확인필요!!!");
-    Common.popupDiv("/sales/customer/customer/customerAddBankAccountPop.do", {custId : _custId}, null, true ,'_SelectCardDiv1');
+
+    //Common.popupDiv("/sales/customer/customer/customerAddBankAccountPop.do", {custId : _custId}, null, true ,'_SelectCardDiv1');
+    Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : _custId, callPrgm : "ORD_REGISTER_BANK_ACC"});
 }
 
+function fn_loadBankAccountPop(bankAccId) {
+//  fn_clearRentPaySetDD();
+
+  fn_loadBankAccount(bankAccId);
+  
+  $('#sctDirectDebit').removeClass("blind");
+
+  if(!FormUtil.IsValidBankAccount($('#hiddenRentPayBankAccID').val(), $('#txtRentPayBankAccNo').val())) {
+//      fn_clearRentPaySetDD();
+      $('#sctDirectDebit').removeClass("blind");
+      Common.alert("Invalid Bank Account" + DEFAULT_DELIMITER + "<b>Invalid account for auto debit.</b>");
+  }
+}
+
+function fn_loadBankAccount(bankAccId) {
+  console.log("fn_loadBankAccount START");
+  
+  Common.ajax("GET", "/sales/order/selectCustomerBankDetailView.do", {getparam : bankAccId}, function(rsltInfo) {
+
+      if(rsltInfo != null) {
+          console.log("fn_loadBankAccount Setting");
+          
+          $("#hiddenRentPayBankAccID").val(rsltInfo.custAccId);
+          $("#txtRentPayBankAccNo").val(rsltInfo.custAccNo);
+//          $("#rentPayBankAccNoEncrypt").val(rsltInfo.custEncryptAccNo);
+          $("#txtRentPayBankAccType").val(rsltInfo.codeName);
+          $("#txtRentPayBankAccName ").val(rsltInfo.custAccOwner);
+          $("#txtRentPayBankAccBankBranch").val(rsltInfo.custAccBankBrnch);
+          $("#hiddenAccBankId").val(rsltInfo.custAccBankId);
+          $("#txtRentPayBankAccBank").val(rsltInfo.bankCode + ' - ' + rsltInfo.bankName);
+      }
+  });
+}
 
 function fn_loadBankCard(){
     
@@ -1018,7 +1052,9 @@ function  fn_DisableControl(){
 		
 		<tr>
 		    <th scope="row">Account Number<span class="must">*</span></th>
-		    <td><input type="text" title="" placeholder= "Bank Account Number " readonly class="w100p"  id='txtRentPayBankAccNo' name='txtRentPayBankAccNo'/></td>
+		    <td><input type="text" title="" placeholder= "Bank Account Number " readonly class="w100p"  id='txtRentPayBankAccNo' name='txtRentPayBankAccNo'/>
+		          <input id="hiddenRentPayBankAccID" name="hiddenRentPayBankAccID" type="hidden" /></td>
+		    </td>
 		    <th scope="row">Account Type</th>
 		    <td><input type="text" title="" placeholder="Bank Account Type" readonly class="w100p"  id='txtRentPayBankAccType'  name='txtRentPayBankAccType' /></td>
 		</tr>
