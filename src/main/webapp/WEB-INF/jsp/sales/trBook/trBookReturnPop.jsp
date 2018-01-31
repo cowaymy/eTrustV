@@ -66,8 +66,8 @@ function creatTrReBookGrid(){
     var trReBookColLayout = [ 
           {dataField : "trBookItmId", headerText : "", width : 140  , visible:false  },
           {dataField : "itmUnderDcf", headerText : "", width : 140  , visible:false  },
-          {dataField : "trReciptNo", headerText : "Receipt No", width : 140    },
-          {dataField : "action", headerText : "Action", width : 140 , editable : true,
+          {dataField : "trReciptNo", headerText : "<spring:message code="sal.title.receiptNo" />", width : 140    },
+          {dataField : "action", headerText : "<spring:message code="sal.title.action" />", width : 140 , editable : true,
         	   labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                   var retStr = "";
                   for(var i=0,len=keyValueList.length; i<len; i++) {
@@ -85,9 +85,9 @@ function creatTrReBookGrid(){
                      valueField : "value" // value 에 해당되는 필드명
                }
 		  },
-          {dataField : "feedback", headerText : "Feedback Code", width : 200, editable:true, style:"aui-grid-drop-list-ul" ,
+          {dataField : "feedback", headerText : "<spring:message code="sal.title.feedbackCode" />", width : 200, editable:true, style:"aui-grid-drop-list-ul" ,
 			  labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
-                  var retStr = "Feedback Code";
+                  var retStr = "<spring:message code="sal.title.feedbackCode" />";
                   for(var i=0,len=feedBackList.length; i<len; i++) {
                       if(feedBackList[i]["resnId"] == value) {
                           retStr = feedBackList[i]["value"];
@@ -103,17 +103,17 @@ function creatTrReBookGrid(){
                      valueField : "value" // value 에 해당되는 필드명
                }
 		  },
-          {dataField : "remark", headerText : "Remark", width : 350  ,   style:"my-left-style" }  ,        
+          {dataField : "remark", headerText : "<spring:message code="sal.title.remark" />", width : 350  ,   style:"my-left-style" }  ,        
           {dataField : "", headerText : "", width : 80,
         	  renderer : {
                   type : "ButtonRenderer",
-                  labelText : "Go",
+                  labelText : "<spring:message code="sal.btn.Go" />",
                   onclick : function(rowIndex, columnIndex, value, item) {
                       $("#trItemId").val(AUIGrid.getCellValue(trReBookGridID, rowIndex, "trBookItmId"));
                       $("#itmUnderDcf").val(AUIGrid.getCellValue(trReBookGridID, rowIndex, "itmUnderDcf"));
                       
                       if($("#itmUnderDcf").val() =="1"){
-                    	  Common.alert("Action Restriction"  + DEFAULT_DELIMITER + "This TR is under DCF process.<br />No other action is allowed at this moment.");
+                    	  Common.alert("<spring:message code="sal.alert.title.actionRestriction" />"  + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.underDCF" />.<br /><spring:message code="sal.alert.msg.noOtherAction" />");
                           return ;
                       }else{
                     	  fn_goAction(AUIGrid.getCellValue(trReBookGridID, rowIndex, "action"), rowIndex);
@@ -196,14 +196,14 @@ function fn_goAction(str, rowIndex){
     {
         case "10":
             //TO CANCEL
-            Common.confirm("Action Confirmation"  + DEFAULT_DELIMITER + "Are you sure want to cancel this item ?", function(){
+            Common.confirm("<spring:message code="sal.alert.title.actionConfirmation" />"  + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.actionConfirmation" />", function(){
             	fn_updateReTrBook("Cancel");
             });
             break;
         case "67":
             if (fn_validRequiredField(rowIndex))
             {
-            	Common.confirm("Action Confirmation"+ DEFAULT_DELIMITER + "Are you sure want to report lost this item ?", function(){
+            	Common.confirm("<spring:message code="sal.alert.title.actionConfirmation" />"+ DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.actionConfirmation2" />", function(){
             	
                     $("#trReFeedback").val(AUIGrid.getCellValue(trReBookGridID, rowIndex, "feedback"));
                     $("#trReRemark").val(AUIGrid.getCellValue(trReBookGridID, rowIndex, "remark"));
@@ -217,13 +217,13 @@ function fn_goAction(str, rowIndex){
             break;
         case "70":
             //USED BY FINANCE
-             Common.confirm("Action Confirmation"  + DEFAULT_DELIMITER + "Are you sure want to set this item as Finance Used Receipt ?", function(){
+             Common.confirm("<spring:message code="sal.alert.title.actionConfirmation" />"  + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.actionConfirmation3" />", function(){
             	 fn_updateReTrBook("Set As Finance Use");
             });
            break;
         case "72":
             //USED BY MARKETING
-             Common.confirm("Action Confirmation"  + DEFAULT_DELIMITER + "Are you sure want to set this item as Marketing Used Receipt ?", function(){
+             Common.confirm("<spring:message code="sal.alert.title.actionConfirmation" />"  + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.actionConfirmation4" />", function(){
             	 fn_updateReTrBook("Set As Marketing Use");
             });
             break;
@@ -244,7 +244,7 @@ function fn_updateReTrBook(actionStr){
         console.log("성공." + JSON.stringify(result));
         console.log("data : " + result.cnt);
 
-        Common.alert("Item Successfully " + actionStr + DEFAULT_DELIMITER + "The item has successfully " + actionStr + ".");
+        Common.alert("<spring:message code="sal.alert.title.itemSuccessfully" /> " + actionStr + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.itemSuccessfully" /> " + actionStr + ".");
 
         fn_selectReBookListAjax();
      }
@@ -259,7 +259,7 @@ function fn_updateReTrBook(actionStr){
           {
             console.log(e);
           }
-          Common.alert("Fail To " + actionStr + DEFAULT_DELIMITER + "Fail to " + actionStr + " this item. Please try again later.");
+          Common.alert("<spring:message code="sal.alert.title.failTo" /> " + actionStr + DEFAULT_DELIMITER + "<spring:message code="sal.alert.title.failTo" /> " + actionStr + " <spring:message code="sal.alert.msg.failItem" />");
     });
 	
 }
