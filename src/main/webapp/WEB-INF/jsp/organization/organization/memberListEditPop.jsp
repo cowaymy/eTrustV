@@ -145,7 +145,23 @@ $(document).ready(function() {
     doGetCombo('/common/selectCodeList.do', '3', '','language', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
-    doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
+    
+    if($("#traineeType").val() == "2" || $("#traineeType").val() == "3"){
+     var groupCode  = {groupCode : $("#traineeType").val()}; 
+                   Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
+        
+                        $("#course").find('option').each(function() {
+                            $(this).remove();
+                        });                     
+                         console.log("-------------------------" + JSON.stringify(result));
+                         if (result!= null) {
+                         $("#course").append("<option value=''>Choose One</option>");
+                            for( var i=0; i< result.length; i++) {
+                             $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
+                            }
+                         }  
+                     });    
+    }
     doGetCombo('/organization/selectBusinessType.do', '', '','businessType', 'S' , '');
     /*fill edit field*/
     /*
@@ -972,7 +988,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
 <input type="hidden" id="searchSt1" name="searchSt1">
 <input type="hidden" id="streetDtl1" name="streetDtl1">
 <input type="hidden" id="addrDtl1" name="addrDtl1">
-<input type="hidden" id="traineeType" name="traineeType">
+<input type="hidden" id="traineeType" name="traineeType" value="${memberView.traineeType}">
 <input type="hidden" id="memType" name="memType" value="${memType}">
 <input type="hidden"id="MemberID" name="MemberID" value="${memId}">
 

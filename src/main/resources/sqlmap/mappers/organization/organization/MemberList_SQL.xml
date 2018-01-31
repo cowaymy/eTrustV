@@ -465,6 +465,7 @@
         Limit1.POSTCODE,
         Limit1.STATE,
         Limit1.COUNTRY,
+       Limit1.TRAINEE_TYPE ,
        Limit1.C3 C3  ,
        Limit1.C4 C4  ,
        Limit1.C5 C5  ,
@@ -574,7 +575,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.RANK RANK  ,
                 Extent1.TR_NO TR_NO  ,
                 Extent1.HSPTLZ HSPTLZ  ,
+                Extent1.TRAINEE_TYPE,
                 Extent2.NAME NAME1  ,
+                
                 Extent3.CODE_NAME CODE_NAME   ,
                 CASE
                      WHEN ( Extent1.BRNCH IS NOT NULL ) THEN TO_NUMBER(Extent1.BRNCH,99999.99)
