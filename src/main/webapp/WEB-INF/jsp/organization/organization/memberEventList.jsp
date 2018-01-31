@@ -53,6 +53,7 @@
 
         });
 
+    
     });
 
 
@@ -199,7 +200,8 @@ function fn_MemsFail(){
 
          console.log("성공.");
          console.log("data : " + result);
-         Common.alert(result.message);
+         $("#requestStatus").val("60");
+         Common.alert(result.message, fn_getOrgEventListAjax());
          
    
      });
@@ -225,7 +227,8 @@ function fn_MemsApprove(){
 
 	        console.log("성공.");
 	        console.log("data : " + result);
-	        Common.alert(result.message);
+	        $("#requestStatus").val("60");
+	        Common.alert(result.message, fn_getOrgEventListAjax());
 	        
 	  
 	    });
