@@ -126,6 +126,30 @@ function fn_detailSearch(authCode){
     )
 };
 
+function fn_detailSearchForMenu(){
+    var authCode = "";
+
+	if(AUIGrid.getSelectedItems(grdAuth).length > 0){
+		authCode = AUIGrid.getSelectedItems(grdAuth)[0].item.authCode;
+	}else{
+		Common.alert("<spring:message code='sys.info.grid.selectMessage'/>"+" Auth Grid");
+		return;
+	}
+
+    Common.ajax(
+            "GET",
+            "/common/selectAuthMenuMappingList.do",
+            "authCode="+authCode+"&menuCode="+$("#menuCode").val(),
+            function(data, textStatus, jqXHR){ // Success
+//              alert(JSON.stringify(data));
+                AUIGrid.setGridData(grdMenuMapping, data);
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
+};
+
 function fn_detailSave(){
 	if(fn_checkChangeRows(grdMenuMapping)){
 		return;
@@ -326,6 +350,16 @@ var detailOptions =
 
 /****************************Program Init Start********************************/
 $(document).ready(function(){
+
+    $("#menuCode").keydown(function(key)
+	{
+	      if (key.keyCode == 13)
+	      {
+	    	  fn_detailSearchForMenu();
+	      }
+
+	});
+
     // AUIGrid 그리드를 생성
     grdAuth = GridCommon.createAUIGrid("grdAuth", gridAuthColumnLayout,"", options);
     // ready 이벤트 바인딩
@@ -348,9 +382,6 @@ $(document).ready(function(){
     AUIGrid.bind(grdMenuMapping, "ready", function(event) {
     	gridDetailDataLength = AUIGrid.getGridData(grdMenuMapping).length; // 그리드 전체 행수 보관
 
-    	for(var idx = 0 ; idx < gridDetailDataLength ; idx++){
-
-    	}
     });
 
     // 헤더 클릭 핸들러 바인딩(checkAll)
@@ -432,6 +463,7 @@ $(document).ready(function(){
     <th scope="row">Menu</th>
     <td>
     <input id="menuCode" name="menuCode" type="text" title="" value="" placeholder="Menu Code or Name" class="" />
+    <a href="#" class="search_btn" onclick="javascript:fn_detailSearchForMenu()"><img src="/resources/images/common/normal_search.gif" alt="search"></a>
     </td>
 </tr>
 </tbody>

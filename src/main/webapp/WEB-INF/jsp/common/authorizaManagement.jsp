@@ -267,15 +267,14 @@ function fnSetParamAuthCd(myGridID, rowIndex)
 function fnSelectAuthListAjax()
 {
    Common.ajax("GET", "/authorization/selectAuthList.do"
-           , $("#MainForm").serialize()
+           , "authCodeName="+$("#authCode").val()
            , function(result)
            {
-              console.log("성공 data : " + result);
-              AUIGrid.setGridData(myGridID, result);
-              if(result != null && result.length > 0)
-              {
-                //fnSetSelectedColumn(myGridID, 0);
-              }
+	           AUIGrid.setGridData(myGridID, result);
+	           if(result != null && result.length > 0)
+	           {
+	             //fnSetSelectedColumn(myGridID, 0);
+	           }
            });
 }
 
@@ -551,6 +550,8 @@ $(document).ready(function()
 	<th scope="row">Auth</th>
 	<td>
 	<input type="text" id="authCode" name="authCode"  title="" placeholder="Auth Code or Name" class="" />
+
+    <input type="text" title="" id="hiddenInput" name="hiddenInput" placeholder="hiddenInput" style="display:none;" class="" />
 	</td>
 	<!-- <th scope="row">Auth Name</th>
 	<td>
