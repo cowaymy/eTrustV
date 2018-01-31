@@ -55,7 +55,7 @@ function validRequiredField(){
 	
 	if(($("#dpUpdateFromDate").val() == null || $("#dpUpdateFromDate").val().length == 0) || ($("#dpUpdateToDate").val() == null || $("#dpUpdateToDate").val().length == 0)){
 		valid = false;
-        message += "<spring:message code="sal.alert.msg.keyInDate" /></br>";
+        message += "<spring:message code="sal.alert.msg.keyInDateFromTo" /></br>";
 	}
 	
 	/* 
