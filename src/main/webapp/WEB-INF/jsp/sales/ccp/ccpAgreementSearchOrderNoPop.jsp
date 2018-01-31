@@ -57,13 +57,13 @@ $(document).ready(function() {
  function createAUIGrid(){
 	 
 	 var orderColumnLayout = [
-	                               {dataField : "ordNo",headerText : "Order No", width : '10%'},
-	                               {dataField : "ordDt", headerText : "Order Date", width : '10%'},
-	                               {dataField : "appTypeCode", headerText : "App Type", width : '10%'},
-	                               {dataField : "ordStusCode", headerText : "Status", width : '20%'},
-	                               {dataField : "stockDesc", headerText : "Product", width : '10%'},  
-	                               {dataField : "custName", headerText : "Customer Name",width : '30%'},
-	                               {dataField : "custNric", headerText : "NRIC/Company No", width : '10%'}
+	                               {dataField : "ordNo",headerText : '<spring:message code="sal.text.ordNo" />', width : '10%'},
+	                               {dataField : "ordDt", headerText : '<spring:message code="sal.text.ordDate" />', width : '10%'},
+	                               {dataField : "appTypeCode", headerText : '<spring:message code="sal.title.text.appType" />', width : '10%'},
+	                               {dataField : "ordStusCode", headerText : '<spring:message code="sal.title.status" />', width : '20%'},
+	                               {dataField : "stockDesc", headerText : '<spring:message code="sal.title.text.product" />', width : '10%'},  
+	                               {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />',width : '30%'},
+	                               {dataField : "custNric", headerText : '<spring:message code="sal.title.text.nricCompNo" />', width : '10%'}
 	                               /* {
 	                                   dataField : "undefined", 
 	                                   headerText : " ", 
@@ -94,9 +94,7 @@ $(document).ready(function() {
              useGroupingPanel    : false,        //그룹핑 패널 사용
              skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
              wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-             noDataMessage       : "No order found.",
-             groupingMessage     : "Here groupping"
+             showRowNumColumn    : true
          };
 	 
 	 orderGridID = GridCommon.createAUIGrid("#order_grid_wrap", orderColumnLayout,'',gridPros);//Order Search List
@@ -140,17 +138,17 @@ $(document).ready(function() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ORDER SEARCH</h1>
+<h1><spring:message code="sal.title.text.ordSrch" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_closeOrdPop">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_closeOrdPop"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue"><span class="search"></span><a href="#" id="_orderSearchBtn">Search</a></p></li>
-    <li><p class="btn_blue"><span class="clear" ></span><a href="#" onclick="javascript:$('#_searchOrdForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue"><span class="search"></span><a href="#" id="_orderSearchBtn"><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><span class="clear" ></span><a href="#" onclick="javascript:$('#_searchOrdForm').clearForm();"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 <form id="_searchOrdForm" method="get">
 <table class="type1"><!-- table start -->
@@ -165,19 +163,19 @@ $(document).ready(function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><input type="text" title="" placeholder="Order No" class="w100p" name="searchOrdNo" /></td>
-    <th scope="row">App Type</th><!-- ASIS Source Not Exist -->
+    <th scope="row"><spring:message code="sal.title.text.appType" /></th><!-- ASIS Source Not Exist -->
     <td>
     <select class="w100p" id="listAppType" name="searchOrdAppType"></select>
     </td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  name="searchOrdDate"/></td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td colspan="3"><input type="text" title="" placeholder="Customer Name" class="w100p"  name="searchOrdCustName"/></td>
-    <th scope="row">NRIC/Comp No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td><input type="text" title="" placeholder="NRIC/Company No" class="w100p"  name="searchOrdCustNric"/></td>
 </tr>
 </tbody>

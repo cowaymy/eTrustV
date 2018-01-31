@@ -33,7 +33,7 @@ $(document).ready(function() {
 		  
 		//Validation
 		if( null == $("#_sDate").val() || '' == $("#_sDate").val()){
-			Common.alert("* please key in from Date");
+			Common.alert('<spring:message code="sal.alert.msg.plzKeyInFromDt" />');
 			return;
 		}
 		
@@ -69,7 +69,7 @@ $(document).ready(function() {
 		clearDetailFilterAll();
 		
 		if( null == $("#_ordNo").val() || '' == $("#_ordNo").val()){
-            Common.alert("* Please key in order number. ");
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyInOrdNumb" />');
             return;
         }
 		
@@ -139,25 +139,25 @@ function searchNotFoundHandler(event) {
     var wrapFound = event.wrapFound; 
     
     if(wrapFound) {
-        Common.alert("Not Found.  <br/> Order No : " + term);
+        Common.alert('<spring:message code="sal.alert.msg.notFoundBrOrdNo" />' + term);
     } else {
-    	Common.alert("Not Found.  <br/> Order No : " + term);
+    	Common.alert('<spring:message code="sal.alert.msg.notFoundBrOrdNo" />' + term);
     }
 };
 
 function createCtosGrid(){
 	var  columnLayout = [
-	                     {dataField : "batchId", headerText : "Batch No", width : "7%" , editable : false},
-	                     {dataField : "fileName", headerText : "File Name", width : "23%" , editable : false},
-	                     {dataField : "rowCnt", headerText : "Total", width : "7%" , editable : false},
-	                     {dataField : "comple", headerText : "Complete", width : "7%" , editable : false},
-	                     {dataField : "act", headerText : "Act", width : "7%" , editable : false},
-	                     {dataField : "zero", headerText : "ZERO", width : "6%" , editable : false},
-	                     {dataField : "lt500", headerText : "LT500", width : "6%" , editable : false},
-	                     {dataField : "gt501", headerText : "GT501", width : "6%" , editable : false},
-	                     {dataField : "stus", headerText : "STATUS", width : "6%" , editable : false},
-	                     {dataField : "updDt", headerText : "Upload Time", width : "15%" , editable : false},
-	                     {dataField : "updUserId", headerText : "Upload User", width : "9%" , editable : false}
+	                     {dataField : "batchId", headerText : '<spring:message code="sal.title.text.batchNo" />', width : "7%" , editable : false},
+	                     {dataField : "fileName", headerText : '<spring:message code="sal.title.text.fileName" />', width : "23%" , editable : false},
+	                     {dataField : "rowCnt", headerText : '<spring:message code="sal.title.text.tot" />', width : "7%" , editable : false},
+	                     {dataField : "comple", headerText : '<spring:message code="sal.combo.text.compl" />', width : "7%" , editable : false},
+	                     {dataField : "act", headerText : '<spring:message code="sal.title.text.act" />', width : "7%" , editable : false},
+	                     {dataField : "zero", headerText : '<spring:message code="sal.title.text.zero" />', width : "6%" , editable : false},
+	                     {dataField : "lt500", headerText : '<spring:message code="sal.title.text.lt500" />', width : "6%" , editable : false},
+	                     {dataField : "gt501", headerText : '<spring:message code="sal.title.text.gt500" />', width : "6%" , editable : false},
+	                     {dataField : "stus", headerText : '<spring:message code="sal.title.status" />', width : "6%" , editable : false},
+	                     {dataField : "updDt", headerText : '<spring:message code="sal.title.text.uploadTime" />', width : "15%" , editable : false},
+	                     {dataField : "updUserId", headerText : '<spring:message code="sal.title.text.uploadUser" />', width : "9%" , editable : false}
 	               ]
 	
 	
@@ -174,9 +174,7 @@ function createCtosGrid(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : false,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : false
         };
     
 	ctosListGridID = GridCommon.createAUIGrid("#ctos_grid_wrap", columnLayout,'', gridPros);
@@ -187,18 +185,18 @@ function createCtosGrid(){
 
 function createCtosDetailGrid(){
 	var  columnLayout = [
-                         {dataField : "batchId", headerText : "Batch No", width : "8%" , editable : false},
-                         {dataField : "ordNo", headerText : "Order No", width : "8%" , editable : false},
-                         {dataField : "custIc", headerText : "Customer IC", width : "10%" , editable : false},
-                         {dataField : "custName", headerText : "Customer Name", width : "16%" , editable : false},
-                         {dataField : "prcName", headerText : "Status", width : "7%" , editable : false},
-                         {dataField : "ficoScre", headerText : "Score", width : "7%" , editable : false},
-                         {dataField : "codeName", headerText : "Bankrupt", width : "8%" , editable : false},
-                         {dataField : "ctosDt", headerText : "Update Time", width : "9%" , editable : false},
-                         {dataField : "updUserId", headerText : "Update User", width : "9%" , editable : false},
+                         {dataField : "batchId", headerText : '<spring:message code="sal.title.text.batchNo" />', width : "8%" , editable : false},
+                         {dataField : "ordNo", headerText : '<spring:message code="sal.text.ordNo" />', width : "8%" , editable : false},
+                         {dataField : "custIc", headerText : '<spring:message code="sal.title.text.custIC" />', width : "10%" , editable : false},
+                         {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : "16%" , editable : false},
+                         {dataField : "prcName", headerText : '<spring:message code="sal.title.status" />', width : "7%" , editable : false},
+                         {dataField : "ficoScre", headerText : '<spring:message code="sal.title.text.score" />', width : "7%" , editable : false},
+                         {dataField : "codeName", headerText : '<spring:message code="sal.title.text.bankrupt" />', width : "8%" , editable : false},
+                         {dataField : "ctosDt", headerText : '<spring:message code="sal.title.text.updateTime" />', width : "9%" , editable : false},
+                         {dataField : "updUserId", headerText : '<spring:message code="sal.title.text.updateUser" />', width : "9%" , editable : false},
                          {
                              dataField : "undefined", 
-                             headerText : "Fico Report", 
+                             headerText : '<spring:message code="sal.title.text.ficoReport" />', 
                              width : '9%',
                              renderer : {
                                       type : "ButtonRenderer", 
@@ -214,7 +212,7 @@ function createCtosDetailGrid(){
                          },
                          {
                              dataField : "undefined", 
-                             headerText : "CTOS Report", 
+                             headerText : '<spring:message code="sal.title.text.ctosReport" />', 
                              width : '9%',
                              renderer : {
                                       type : "ButtonRenderer", 
@@ -242,9 +240,7 @@ function createCtosDetailGrid(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : false,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : false
         };
     
 	ctosDetailGridID = GridCommon.createAUIGrid("#ctos_detail_grid_wrap", columnLayout,'', gridPros);
@@ -344,7 +340,7 @@ function fn_displayReport(viewType, batchId, ordNo){
 	},'',{async : false});
 	
 	if(isRe == true){
-		Common.alert("No result from CTOS");
+		Common.alert('<spring:message code="sal.alert.msg.noResultCTOS" />');
 		return;
 	}
 }
@@ -361,12 +357,12 @@ function fn_displayReport(viewType, batchId, ordNo){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>CTOS(B2B) Result</h2>
+<h2><spring:message code="sal.title.text.ctosB2BResult" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a id="_search"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -386,9 +382,9 @@ function fn_displayReport(viewType, batchId, ordNo){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">From Date</th>
+    <th scope="row"><spring:message code="sal.title.text.fromDate" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="_sDate" name="sDate" value="${toDay}"/></td>
-    <th scope="row">To Date</th>
+    <th scope="row"><spring:message code="sal.title.text.toDate" /></th>
     <td><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="_eDate"  name="eDate"/></td>
    <!--  <th scope="row">Status</th>
     <td>
@@ -417,11 +413,11 @@ function fn_displayReport(viewType, batchId, ordNo){
 <ul class="right_btns">
     <li>
         <select id="_filterChange" disabled="disabled">
-            <option value="0" selected="selected">All</option>
-            <option value="1">Active</option>
-            <option value="2">Complete</option>
-            <option value="3">Previos Score</option>
-            <option value="4">No Score(0)</option>
+            <option value="0" selected="selected"><spring:message code="sal.btn.all" /></option>
+            <option value="1"><spring:message code="sal.btn.active" /></option>
+            <option value="2"><spring:message code="sal.combo.text.compl" /></option>
+            <option value="3"><spring:message code="sal.title.text.previousScore" /></option>
+            <option value="4"><spring:message code="sal.title.text.noScore" /></option>
             <option value="5"> <= 500</option>
             <option value="6"> > 500</option>
         </select>

@@ -13,14 +13,14 @@ $(document).ready(function() {
 function createInstallGrid(){
 	
 	var  columnLayout = [
-                         {dataField : "salesOrdNo", headerText : "Order No", width : "8%" , editable : false},
-                         {dataField : "appType", headerText : "App Type", width : "8%" , editable : false},
-                         {dataField : "orderStatus", headerText : "Order Status", width : "10%" , editable : false},
-                         {dataField : "stkDesc", headerText : "Product Model", width : "15%" , editable : false},
-                         {dataField : "fullAddress", headerText : "Detail Address", width : "30%" , editable : false},
-                         {dataField : "city", headerText : "CITY", width : "9%" , editable : false},
-                         {dataField : "state", headerText : "STATE", width : "9%" , editable : false},
-                         {dataField : "rentalStatus", headerText : "Rental Status", width : "11%" , editable : false}
+                         {dataField : "salesOrdNo", headerText : '<spring:message code="sal.text.ordNo" />', width : "8%" , editable : false},
+                         {dataField : "appType", headerText : '<spring:message code="sal.title.text.appType" />', width : "8%" , editable : false},
+                         {dataField : "orderStatus", headerText : '<spring:message code="sal.title.text.ordStus" />', width : "10%" , editable : false},
+                         {dataField : "stkDesc", headerText : '<spring:message code="sal.title.text.productModel" />', width : "15%" , editable : false},
+                         {dataField : "fullAddress", headerText : '<spring:message code="sal.title.text.detailAddr" />', width : "30%" , editable : false},
+                         {dataField : "city", headerText : '<spring:message code="sal.text.city" />', width : "9%" , editable : false},
+                         {dataField : "state", headerText : '<spring:message code="sal.text.state" />', width : "9%" , editable : false},
+                         {dataField : "rentalStatus", headerText : '<spring:message code="sal.text.rentalStatus" />', width : "11%" , editable : false}
                    ]
 	 var gridPros = {
             usePaging           : true,         //페이징 사용
@@ -50,9 +50,9 @@ function createInstallGrid(){
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>Installation Area</h1>
+<h1><spring:message code="sal.title.text.installArea" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_btnClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_btnClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->

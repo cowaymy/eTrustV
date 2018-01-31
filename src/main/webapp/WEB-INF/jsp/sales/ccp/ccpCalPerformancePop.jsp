@@ -28,36 +28,36 @@ function ValidRequiredField(){
     
     if($("#cmbType option:selected").index() < 1){
     	valid = false;
-    	message += "* Please select a report type.\n";
+    	message += '<spring:message code="sal.alert.msg.plzSelReportType" />';
     }else{
     	if(cmbTypeVal == '1' || cmbTypeVal == '2' || cmbTypeVal == '3' || cmbTypeVal == '4'){
     		if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){	
     			valid = false;
-                message += "* Please key in the Order Date.\n";
+                message += '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
     		}
     	}else if(cmbTypeVal == '5' || cmbTypeVal == '7'){
     		if($("#dpOrderMonth").val() == null || $("#dpOrderMonth").val().length == 0){
     			valid = false;
-                message += "* Please select the order month.\n";
+                message += '<spring:message code="sal.alert.msg.plzSelOrdMonth" />';
             }
     	}else if(cmbTypeVal == '6'){
     		if($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0){
     			valid = false;
-                message += "* Please key in the Order Date.\n";
+                message += '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
             }
     	}else if(cmbTypeVal == '8'){
             if($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0){
                 valid = false;
-                message += "* Please key in the Order Date.\n";
+                message += '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
             }
         }else if(cmbTypeVal == "9" || cmbTypeVal == "10" || cmbTypeVal == "11" || cmbTypeVal == "12" || cmbTypeVal == "13"){
         	if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){   
                 valid = false;
-                message += "* Please key in the Order Date.\n";
+                message += '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
             }
         	if($("#dpOrderMonth").val() == null || $("#dpOrderMonth").val().length == 0){
                 valid = false;
-                message += "* Please select the order month.\n";
+                message += '<spring:message code="sal.alert.msg.plzSelOrdMonth" />';
             }
         }
     }
@@ -65,7 +65,7 @@ function ValidRequiredField(){
     if(valid == true){
         fn_report();
     }else{
-    	Common.alert("CCP Generate Summary" + DEFAULT_DELIMITER + message);
+    	Common.alert('<spring:message code="sal.alert.msg.ccpGenSummry" />' + DEFAULT_DELIMITER + message);
     }
 }
 
@@ -429,9 +429,9 @@ function fn_report_6(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>CCP Performance</h1>
+<h1><spring:message code="sal.title.text.ccpPerfomance" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -452,48 +452,48 @@ function fn_report_6(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Report Type</th>
+    <th scope="row"><spring:message code="sal.text.reportType" /></th>
     <td>
     <select class="" id="cmbType">
-        <option data-placeholder="true" hidden>Report/Raw Data Type</option>
-        <option value="" style="background-color: DarkGray; font-color:black; font-weight:bold" disabled>CCP Performance Report</option>
-        <option value="1">By Key-In Branch</option>
-        <option value="2">By Service Branch</option>
-        <option value="7">Monthly CCP Status Report (By Standard Remark)</option>
-        <option value="" style="background-color: DarkGray; font-color:black; font-weight:bold" disabled>CCP Summary Report</option>
-        <option value="3">CCP Daily Productivity Report</option>
-        <option value="4" hidden>Daily Summary By Region</option>
-        <option value="5" hidden>Daily Summary Nationwide</option>
-        <option value="6" hidden>Daily Summary By Key-In Time</option>
-        <option value="8">3 Days Summary Report</option>
-        <option value="9">CCP Turn Around Time</option>
-        <option value="10">Daily Rental Sales Summary</option>
-        <option value="11">CCP Scoring Performance</option>
-        <option value="12">Active Installation Status</option>
-        <option value="13">Monthly CCP Active by DSC</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.title.text.rptRawDataType" /></option>
+        <option value="" style="background-color: DarkGray; font-color:black; font-weight:bold" disabled><spring:message code="sal.title.text.ccpPerfoRpt" /></option>
+        <option value="1"><spring:message code="sal.combo.text.byKeyInBrnch" /></option>
+        <option value="2"><spring:message code="sal.combo.text.byServiceBrnch" /></option>
+        <option value="7"><spring:message code="sal.combo.text.monthlyCcpStusRpt" /></option>
+        <option value="" style="background-color: DarkGray; font-color:black; font-weight:bold" disabled><spring:message code="sal.combo.text.ccpSummRpt" /></option>
+        <option value="3"><spring:message code="sal.combo.text.ccpDailyProductRpt" /></option>
+        <option value="4" hidden><spring:message code="sal.combo.text.dailySummByRegion" /></option>
+        <option value="5" hidden><spring:message code="sal.combo.text.dailySummNation" /></option>
+        <option value="6" hidden><spring:message code="sal.combo.text.dailySummByKeyinTime" /></option>
+        <option value="8"><spring:message code="sal.combo.text.3daysSummRpt" /></option>
+        <option value="9"><spring:message code="sal.combo.text.ccpTurnAroundTime" /></option>
+        <option value="10"><spring:message code="sal.combo.text.dailyRentalSalesSumm" /></option>
+        <option value="11"><spring:message code="sal.combo.text.ccpScorPerfomance" /></option>
+        <option value="12"><spring:message code="sal.combo.text.actInstallStatus" /></option>
+        <option value="13"><spring:message code="sal.combo.text.monthlyCcpActByDsc" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Order Month</th>
+    <th scope="row"><spring:message code="sal.title.text.ordMonth" /></th>
     <td><input type="text" title="Create end Date" placeholder="MM/YYYY" class="j_date2" id="dpOrderMonth"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: ValidRequiredField();">Generate</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: ValidRequiredField();"><spring:message code="sal.btn.generate" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 

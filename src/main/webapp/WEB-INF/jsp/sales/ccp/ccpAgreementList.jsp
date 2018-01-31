@@ -104,15 +104,15 @@ function fn_selectCcpAgreementListAjax(){
 function createCcpAUIGrid(){
 	
 	var  columnLayout = [
-	      {dataField : "govAgBatchNo", headerText : "Agreement No", width : "10%" , editable : false},
-	      {dataField : "name", headerText : "Customer Name", width : "20%" , editable : false},
-	      {dataField : "salesOrdNo", headerText : "Order No", width : "10%" , editable : false},
-	      {dataField : "name1", headerText : "Status", width : "10%" , editable : false},
-	      {dataField : "code", headerText : "Type", width : "10%" , editable : false},
-	      {dataField : "govAgPrgrsName", headerText : "Progress", width : "10%" , editable : false},
-	      {dataField : "govAgStartDt", headerText : "Agreement Start", width : "10%" , editable : false},
-	      {dataField : "govAgEndDt", headerText : "Agreement Expiry", width : "10%" , editable : false},
-	      {dataField : "govAgCrtDt", headerText : "Created", width : "10%" , editable : false},
+	      {dataField : "govAgBatchNo", headerText : '<spring:message code="sal.title.text.agrNo" />', width : "10%" , editable : false},
+	      {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : "20%" , editable : false},
+	      {dataField : "salesOrdNo", headerText : '<spring:message code="sal.title.ordNo" />', width : "10%" , editable : false},
+	      {dataField : "name1", headerText : '<spring:message code="sal.title.status" />', width : "10%" , editable : false},
+	      {dataField : "code", headerText : '<spring:message code="sal.title.type" />', width : "10%" , editable : false},
+	      {dataField : "govAgPrgrsName", headerText : '<spring:message code="sal.title.text.prgss" />', width : "10%" , editable : false},
+	      {dataField : "govAgStartDt", headerText : '<spring:message code="sal.title.text.agrStart" />', width : "10%" , editable : false},
+	      {dataField : "govAgEndDt", headerText : '<spring:message code="sal.title.text.agrExpiry" />', width : "10%" , editable : false},
+	      {dataField : "govAgCrtDt", headerText : '<spring:message code="sal.text.created" />', width : "10%" , editable : false},
 	      {dataField : "govAgId", visible : false}
 	]
 	
@@ -141,15 +141,15 @@ function createOrdAUIGrid(){
 	
 	var orderColumnLayout = [
                              
-                             {dataField : "salesOrdNo" , headerText : "Order No" , width : "15%"},  
-                             {dataField : "codeName" , headerText : "Status" , width : "15%"},
-                             {dataField : "govAgItmStartDt" , headerText : "Start Date" , width : "10%"},
-                             {dataField : "govAgItmExprDt" , headerText : "Expiry Date" , width : "10%"},
-                             {dataField : "name" , headerText : "Customer" , width : "10%"},
-                             {dataField : "govAgItmInstResult" , headerText : "Install Result" , width : "10%"},    
-                             {dataField : "govAgItmRentResult" , headerText : "Rental Status" , width : "10%"},
-                             {dataField : "userFullName" , headerText : "Creator" , width : "10%"}, 
-                             {dataField : "govAgItmCrtDt" , headerText : "Created" , width : "10%"}
+                             {dataField : "salesOrdNo" , headerText :'<spring:message code="sal.title.ordNo" />' , width : "15%"},  
+                             {dataField : "codeName" , headerText : '<spring:message code="sal.title.status" />' , width : "15%"},
+                             {dataField : "govAgItmStartDt" , headerText : '<spring:message code="sal.text.startDate" />' , width : "10%"},
+                             {dataField : "govAgItmExprDt" , headerText : '<spring:message code="sal.text.expiryDate" />', width : "10%"},
+                             {dataField : "name" , headerText : '<spring:message code="sal.title.text.customer" />' , width : "10%"},
+                             {dataField : "govAgItmInstResult" , headerText : '<spring:message code="sal.title.text.installResult" />' , width : "10%"},    
+                             {dataField : "govAgItmRentResult" , headerText : '<spring:message code="sal.text.rentalStatus" />' , width : "10%"},
+                             {dataField : "userFullName" , headerText : '<spring:message code="sal.text.creator" />' , width : "10%"}, 
+                             {dataField : "govAgItmCrtDt" , headerText : 'Created', width : "10%"}
        ];
       
        //그리드 속성 설정
@@ -166,9 +166,7 @@ function createOrdAUIGrid(){
               useGroupingPanel    : false,        //그룹핑 패널 사용
               skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
               wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-              showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-              noDataMessage       : "No Order found.",
-              groupingMessage     : "Here groupping"
+              showRowNumColumn    : true
           };
       
       ordGridID = GridCommon.createAUIGrid("ord_grid_wrap", orderColumnLayout,'', gridPros);
@@ -205,15 +203,15 @@ function popup(location){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Government Agreement List</h2>
+<h2><spring:message code="sal.title.text.govAgrList" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue"><a href="#" id="_goToAddWindow" ><span class="add"></span>New</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_goToAddWindow" ><span class="add"></span><spring:message code="sal.title.text.new" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript : fn_selectCcpAgreementListAjax()"><span class="search" ></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript : fn_selectCcpAgreementListAjax()"><span class="search" ></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -233,63 +231,63 @@ function popup(location){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Agreement No.</th>
+    <th scope="row"><spring:message code="sal.title.text.agrNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p"  name="govAgBatchNo"/></td>
-    <th scope="row">Create Date (From)</th>
+    <th scope="row"><spring:message code="sal.title.text.crtDateFrom" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  name="govAgCrtDtFrom" readonly="readonly"/></td>
-    <th scope="row">Create Date (To)</th>
+    <th scope="row"><spring:message code="sal.title.text.crtDateTo" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgCrtDtTo" readonly="readonly"/></td>
 </tr>
 <tr>
-    <th scope="row">Order No.</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" name="salesOrdNo"/></td>
-    <th scope="row">Agreement Start From</th>
+    <th scope="row"><spring:message code="sal.title.text.agrStartFrom" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgStartDtFrom" readonly="readonly"/></td>
-    <th scope="row">Agreement Start To</th>
+    <th scope="row"><spring:message code="sal.title.text.agrStartTo" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgStartDtTo" readonly="readonly"/></td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><input type="text" title="" placeholder="" class="w100p"  name="name"/></td>
-    <th scope="row">Agreement Expiry From</th>
+    <th scope="row"><spring:message code="sal.title.text.agrExpFrom" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgEndDtFrom" readonly="readonly"/></td>
-    <th scope="row">Agreement Expiry To</th>
+    <th scope="row"><spring:message code="sal.title.text.agrExpTo" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" name="govAgEndDtTo" readonly="readonly"/></td>
 </tr>
 <tr>
-    <th scope="row">Progress</th>
+    <th scope="row"><spring:message code="sal.title.text.prgss" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" name="progressVal">
-        <option value="7" selected="selected">Verifying Progress</option>
-        <option value="8" selected="selected">Verifying Progress</option>
-        <option value="9" selected="selected">Stamping & Confirmation Progress</option>
-        <option value="10" selected="selected">Filling Progress</option>
+        <option value="7" selected="selected"><spring:message code="sal.title.text.submissPrgss" /></option>
+        <option value="8" selected="selected"><spring:message code="sal.title.text.verifyPrgss" /></option>
+        <option value="9" selected="selected"><spring:message code="sal.title.text.stampingConfPrgss" /></option>
+        <option value="10" selected="selected"><spring:message code="sal.title.text.fillingPrgss" /></option>
     </select>
     </td>
-    <th scope="row">Agreement Status</th>
+    <th scope="row"><spring:message code="sal.title.text.agrStatus" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" name="statusVal">
-        <option value="1" selected="selected">Active</option>
-        <option value="4" selected="selected">Completed</option>
-        <option value="10" selected="selected">Cancelled</option>
+        <option value="1" selected="selected"><spring:message code="sal.btn.active" /></option>
+        <option value="4" selected="selected"><spring:message code="sal.combo.text.compl" /></option>
+        <option value="10" selected="selected"><spring:message code="sal.combo.text.cancelled" /></option>
     </select>
     </td>
-    <th scope="row">Agreement Type</th>
+    <th scope="row"><spring:message code="sal.title.text.agreeType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" name="typeVal">
-        <option value="949" selected="selected">New</option>
-        <option value="950" selected="selected">Renew</option>
+        <option value="949" selected="selected"><spring:message code="sal.title.text.new" /></option>
+        <option value="950" selected="selected"><spring:message code="sal.title.text.reNew" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">AGM Requestor</th>
+    <th scope="row"><spring:message code="sal.title.text.agmReqstor" /></th>
     <td>
     <select class="multy_select w100p" disabled="disabled"></select>
     </td>
-    <th scope="row">Member Code</th>
+    <th scope="row"><spring:message code="sal.text.memberCode" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" name="memCode"/></td>
-    <th scope="row">Agreement Creator</th>
+    <th scope="row"><spring:message code="sal.title.text.agrCrtor" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" name="userName"/></td>
 </tr>
 </tbody>
@@ -298,20 +296,20 @@ function popup(location){
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
-    <dt>Link</dt>
+    <dt><spring:message code="sal.title.text.link" /></dt>
     <dd>
     <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('rowData')">RAW Data</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('rowData')"><spring:message code="sal.title.text.rawData" /></a></p></li>
         </c:if>
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('listing')">Listing</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('listing')"><spring:message code="sal.title.text.listing" /></a></p></li>
         </c:if>
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('summary')">Summary</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('summary')"><spring:message code="sal.title.text.summary" /></a></p></li>
         </c:if>
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('consignmentCourier')">Consignment Courier</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onclick="javascript : popup('consignmentCourier')"><spring:message code="sal.title.text.consCourier" /></a></p></li>
         </c:if>
     </ul>
     <ul class="btns">

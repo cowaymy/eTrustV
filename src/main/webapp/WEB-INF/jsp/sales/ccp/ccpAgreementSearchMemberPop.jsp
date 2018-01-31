@@ -45,11 +45,11 @@ function fn_getSearchResultJsonListAjax(){
 function createAUIGrid(){
     
     var memberColumnLayout = [
-                                  {dataField : "codeName",headerText : "Type", width : '15%'},
-                                  {dataField : "memCode", headerText : "Code", width : '15%'},
-                                  {dataField : "name", headerText : "Name", width : '30%'},
-                                  {dataField : "nric", headerText : "NRIC", width : '20%'},
-                                  {dataField : "joinDt", headerText : "Join Date", width : '10%'},
+                                  {dataField : "codeName",headerText : '<spring:message code="sal.title.type" />', width : '15%'},
+                                  {dataField : "memCode", headerText : '<spring:message code="sal.title.text.code" />', width : '15%'},
+                                  {dataField : "name", headerText : '<spring:message code="sal.text.name" />', width : '30%'},
+                                  {dataField : "nric", headerText : '<spring:message code="sal.text.nric" />', width : '20%'},
+                                  {dataField : "joinDt", headerText : '<spring:message code="sal.title.text.joinDate" />', width : '10%'},
                                   {dataField : "memId" , visible : false},
                                   {
                                       dataField : "undefined", 
@@ -84,9 +84,7 @@ function createAUIGrid(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
         };
     
     memGridID = GridCommon.createAUIGrid("#member_grid_wrap", memberColumnLayout,'',gridPros);//Order Search List
@@ -95,17 +93,17 @@ function createAUIGrid(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Sales Person Search</h1>
+<h1><spring:message code="sal.title.text.salesPersonSrch" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_closeMemPop">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_closeMemPop"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue"><a href="#" id="_memSearchBtn"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="Claer"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_memSearchBtn"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a href="#"><span class="Claer"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
@@ -123,25 +121,25 @@ function createAUIGrid(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Member Type</th>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
     <td>
     <select class="w100p" name="searchMemType">
-        <option selected="selected" value="">Choose One</option>
-        <option value="1">Health Planner (HP)</option>
-        <option value="2">Coway Lady (CODY)</option>
-        <option value="3">Coway Technician (CT)</option>
-        <option value="4">Staff</option>
+        <option selected="selected" value=""><spring:message code="sal.combo.text.chooseOne" /></option>
+        <option value="1"><spring:message code="sal.combo.text.healthPlanner" /></option>
+        <option value="2"><spring:message code="sal.combo.text.cowayLady" /></option>
+        <option value="3"><spring:message code="sal.combo.text.cowayTechnician" /></option>
+        <option value="4"><spring:message code="sal.text.staff" /></option>
     </select>
     </td>
-    <th scope="row">Member Code</th>
+    <th scope="row"><spring:message code="sal.title.memberCode" /></th>
     <td><input type="text" title="" placeholder="Member Code" class="w100p" name="searchMemCode" /></td>
-    <th scope="row">Join Date</th>
+    <th scope="row"><spring:message code="sal.title.text.joinDate" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  name="searchDate"/></td>
 </tr>
 <tr>
-    <th scope="row">Member Name</th>
+    <th scope="row"><spring:message code="sal.title.memberName" /></th>
     <td colspan="3"><input type="text" title="" placeholder="Member Name" class="w100p" name="searchCustName"/></td>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><input type="text" title="" placeholder="Member NRIC" class="w100p" name="searchCustNric" /></td>
 </tr>
 </tbody>

@@ -41,7 +41,7 @@ function validRequiredField(){
 	}
 		
 	if(valid == false){
-        Common.alert("Contract Agreement Summary" + DEFAULT_DELIMITER + message);
+        Common.alert('<spring:message code="sal.title.text.cntcAgrSummary" />' + DEFAULT_DELIMITER + message);
     }else{
     	fn_report();
     }
@@ -137,9 +137,9 @@ function fn_report(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Contract Agreement Summary Report</h1>
+<h1><spring:message code="sal.title.text.cntcAgrSumRpt" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -162,58 +162,58 @@ function fn_report(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Agreement Type</th>
+    <th scope="row"><spring:message code="sal.title.text.agreeType" /></th>
     <td>
     <select class="w100p" id="cmbAgrType">
-        <option data-placeholder="true" hidden>Agreement Type</option>
-        <option value="949">New</option>
-        <option value="950">Renew</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.title.text.agreeType" /></option>
+        <option value="949"><spring:message code="sal.title.text.new" /></option>
+        <option value="950"><spring:message code="sal.title.text.reNew" /></option>
     </select>
     </td>
-    <th scope="row">Agreement Start</th>
+    <th scope="row"><spring:message code="sal.title.text.agrStart" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dtStartFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dtStartTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Search By</th>
+    <th scope="row"><spring:message code="sal.title.text.searchBy" /></th>
     <td>
-    <label><input type="radio" name="searchby" value="btnDaily"/><span>Daily</span></label>
-    <label><input type="radio" name="searchby" value="btnMonthly"/><span>Monthly</span></label>
+    <label><input type="radio" name="searchby" value="btnDaily"/><span><spring:message code="sal.title.text.daily" /></span></label>
+    <label><input type="radio" name="searchby" value="btnMonthly"/><span><spring:message code="sal.title.text.monthly" /></span></label>
     </td>
-    <th scope="row">Agreement Expiry</th>
+    <th scope="row"><spring:message code="sal.title.text.agrExpiry" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dtExpiryFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dtExpiryTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Created Date</th>
+    <th scope="row"><spring:message code="sal.text.crtDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Agreement Status</th>
+    <th scope="row"><spring:message code="sal.title.text.agrStatus" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple"  data-placeholder="All items selected" id="cboAgmStatus">
-        <option value="ACT" selected>Active</option>
-        <option value="COM" selected>Completed</option>
-        <option value="CAN" selected>Cancelled</option>
+        <option value="ACT" selected><spring:message code="sal.btn.active" /></option>
+        <option value="COM" selected><spring:message code="sal.combo.text.compl" /></option>
+        <option value="CAN" selected><spring:message code="sal.combo.text.cancelled" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Month / Year</th>
+    <th scope="row"><spring:message code="sal.title.text.mthYear" /></th>
     <td><input type="text" title="Create start Date" placeholder="Month&Year" class="j_date w100p" id="dpMthYear"/></td>
     <th scope="row"></th>
     <td></td>
@@ -222,8 +222,8 @@ function fn_report(){
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: fn_report();">Generate PDF</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: fn_report();"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/GovContractAgrSummaryPDF.rpt" />

@@ -110,7 +110,7 @@ $(function() {
     	//Customer Type
     	if( '' == $("#_custTypeConfirm").val() || null == $("#_custTypeConfirm").val()){
     		
-    		Common.alert("* Please Select the customer type. ");
+    		Common.alert('<spring:message code="sal.alert.msg.plzSelCustType" />');
             return false;
     	}
     	
@@ -118,7 +118,7 @@ $(function() {
     	console.log('$("#_updMemStatus option:selected").val() : ' + $("#_updMemStatus option:selected").val());
      	if($("#_updMemStatus option:selected").val() != "5"){
      		if( '' == $("#_reasonCodeConfirm").val() || null == $("#_reasonCodeConfirm").val()){
-                Common.alert("* Please Select the Feedback Code. ");
+                Common.alert('<spring:message code="sal.alert.msg.plzSelFeedbackCode" />');
                 return false;
             }	
     	}
@@ -126,7 +126,7 @@ $(function() {
     	//Call Message
     	if( '' == $("#_cfCallMessage").val() || null == $("#_cfCallMessage").val()){
     		
-    		Common.alert("* Please key in the call message. ");
+    		Common.alert('<spring:message code="sal.alert.msg.plzKeyInCallMsg" />');
     		return false;
     		
     	}
@@ -138,11 +138,11 @@ $(function() {
     function createCallGrid(){
         
         var  columnLayout = [
-                             {dataField : "code", headerText : "Status", width : "10%" , editable : false},
-                             {dataField : "cnfmLogMsg", headerText : "Call Message", width : "35%" , editable : false},
-                             {dataField : "cnfmLogSmsMsg", headerText : "SMS Message", width : "35%" , editable : false},
-                             {dataField : "userName", headerText : "Key By", width : "10%" , editable : false},
-                             {dataField : "cnfmLogCrtDt", headerText : "Key At", width : "10%" , editable : false}
+                             {dataField : "code", headerText : '<spring:message code="sal.title.status" />', width : "10%" , editable : false},
+                             {dataField : "cnfmLogMsg", headerText : '<spring:message code="sal.title.text.callMsg" />', width : "35%" , editable : false},
+                             {dataField : "cnfmLogSmsMsg", headerText : '<spring:message code="sal.title.text.smsMsg" />', width : "35%" , editable : false},
+                             {dataField : "userName", headerText : '<spring:message code="sal.title.text.keyBy" />', width : "10%" , editable : false},
+                             {dataField : "cnfmLogCrtDt", headerText : '<spring:message code="sal.title.text.keyAt" />', width : "10%" , editable : false}
                        ]
                        
                        //그리드 속성 설정
@@ -161,8 +161,7 @@ $(function() {
                                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
                                showRowNumColumn    : false,         //줄번호 칼럼 렌더러 출력    
-                               noDataMessage       : "No transaction found in this call.",
-                               groupingMessage     : "Here groupping"
+                               noDataMessage       : '<spring:message code="sal.title.text.noTransacFoundThisCall" />'
                            };
                        
         callGrid = GridCommon.createAUIGrid("#call_grid_wrap", columnLayout, gridPros);
@@ -187,9 +186,9 @@ $(function() {
     <input type="hidden" name="cnfmCntrctId" value="${cnfmCntrctId}">
 </form>
 <header class="pop_header"><!-- pop_header start -->
-<h1>CCP RentalMembership Comfirm Result</h1>
+<h1><spring:message code="sal.title.text.ccpRentalMemConfirmResult" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -197,7 +196,7 @@ $(function() {
 
 <article class="acodi_wrap"><!-- acodi_wrap start -->
 <dl>
-    <dt class="click_add_on on"><a href="#">Call Log Info</a></dt>
+    <dt class="click_add_on on"><a href="#"><spring:message code="sal.title.text.callLogInfo" /></a></dt>
     <dd>
 
     <table class="type1"><!-- table start -->
@@ -208,7 +207,7 @@ $(function() {
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Membership Status</th>
+        <th scope="row"><spring:message code="sal.title.text.memShipStus" /></th>
         <td>${confirmResultMap.name }</td>
     </tr>
     </tbody>
@@ -229,7 +228,7 @@ $(function() {
     </article><!-- grid_wrap end -->
 
     </dd>
-    <dt class="click_add_on"><a href="#">Order Basic Info</a></dt>
+    <dt class="click_add_on"><a href="#"><spring:message code="sal.title.text.ordBasicInfo" /></a></dt>
     <dd>
 
     <table class="type1"><!-- table start -->
@@ -244,40 +243,40 @@ $(function() {
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Order No</th>
+        <th scope="row"><spring:message code="sal.text.ordNo" /></th>
         <td><span>${orderInfoMap.ordNo}</span></td>
-        <th scope="row">Order Date</th>
+        <th scope="row"><spring:message code="sal.text.ordDate" /></th>
         <td><span>${orderInfoMap.ordDt}</span></td>
-        <th scope="row">Order Status</th>
+        <th scope="row"><spring:message code="sal.title.text.ordStus" /></th>
         <td><span>${orderInfoMap.ordStusName}</span></td>
     </tr>
     <tr>
-        <th scope="row">Product Category</th>
+        <th scope="row"><spring:message code="sal.title.text.productCategory" /></th>
         <td colspan="3"><span>${orderInfoMap.stkCtgryName}</span></td>
-        <th scope="row">Application Type</th>
+        <th scope="row"><spring:message code="sal.text.appType" /></th>
         <td><span>${orderInfoMap.appTypeCode}</span></td>
     </tr>
     <tr>
-        <th scope="row">Product Code</th>
+        <th scope="row"><spring:message code="sal.text.productCode" /></th>
         <td><span>${orderInfoMap.stockCode}</span></td>
-        <th scope="row">Product Name</th>
+        <th scope="row"><spring:message code="sal.title.productName" /></th>
         <td colspan="3"><span>${orderInfoMap.stockDesc}</span></td>
     </tr>
     <tr>
-        <th scope="row">Last Nembership</th>
+        <th scope="row"><spring:message code="sal.text.lastMem" /></th>
         <td colspan="3"><span>${cofigMap.lastMembership}</span></td>
-        <th scope="row">Expire Date</th>
+        <th scope="row"><spring:message code="sal.title.expireDate" /></th>
         <td><span>${cofigMap.srvPrdExprDt}</span></td>
     </tr>
     </tbody>
     </table><!-- table end -->
 
     </dd>
-    <dt class="click_add_on"><a href="#">Customer Basic Info</a></dt>
+    <dt class="click_add_on"><a href="#"><spring:message code="sal.title.text.custBasicInfo" /></a></dt>
     <dd>
 
     <aside class="title_line"><!-- title_line start -->
-    <h2>Customer Basic Info</h2>
+    <h2><spring:message code="sal.title.text.custBasicInfo" /></h2>
     </aside><!-- title_line end -->
 
     <table class="type1"><!-- table start -->
@@ -290,16 +289,16 @@ $(function() {
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Customer Name</th>
+        <th scope="row"><spring:message code="sal.text.custName" /></th>
         <td><span>${custBasicMap.name}</span></td>
-        <th scope="row">NRIC / Company No.</th>
+        <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
         <td><span>${custBasicMap.nric}</span></td>
     </tr>
     </tbody>
     </table><!-- table end -->
 
     <aside class="title_line"><!-- title_line start -->
-    <h2>Installation Address</h2>
+    <h2><spring:message code="sal.text.instAddr" /></h2>
     </aside><!-- title_line end -->
 
     <table class="type1"><!-- table start -->
@@ -312,7 +311,7 @@ $(function() {
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Installation Address</th>
+        <th scope="row"><spring:message code="sal.text.instAddr" /></th>
         <td colspan="3"><span>${installMap.fullAddress}</span></td>
     </tr>
     <%-- <tr>
@@ -331,7 +330,7 @@ $(function() {
     </table><!-- table end -->
 
     <aside class="title_line"><!-- title_line start -->
-    <h2>Rental Pay Setting</h2>
+    <h2><spring:message code="sal.title.text.rentalPaySetting" /></h2>
     </aside><!-- title_line end -->
 
     <table class="type1"><!-- table start -->
@@ -346,9 +345,9 @@ $(function() {
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Payment Mode</th>
+        <th scope="row"><spring:message code="sal.text.payMode" /></th>
         <td><span>${payMap.codeName }</span></td>
-        <th scope="row">Name On Card</th>
+        <th scope="row"><spring:message code="sal.text.nameOnCard" /></th>
         <td colspan="3"><span>
         <c:if test="${empty payMap.custCrcOwner}">
               -
@@ -359,7 +358,7 @@ $(function() {
         </span></td>
     </tr>
     <tr>
-        <th scope="row">Credit Card No.</th>
+        <th scope="row"><spring:message code="sal.text.creditCardNo" /></th>
         <td><span>
         <c:if test="${empty payMap.custCrcNo }">
             -
@@ -368,7 +367,7 @@ $(function() {
             ${payMap.custCrcNo}
         </c:if>
         </span></td>
-        <th scope="row">Card Type</th>
+        <th scope="row"><spring:message code="sal.text.cardType" /></th>
         <td><span>
          <c:if test="${empty payMap.codeName1}">
            -
@@ -377,7 +376,7 @@ $(function() {
 	        ${payMap.codeName1}
 	    </c:if>
         </span></td>
-        <th scope="row">Expiry Date</th>
+        <th scope="row"><spring:message code="sal.text.expiryDate" /></th>
         <td><span>
         <c:if test="${not empty payMap.custCrcExpr}">
          ${payMap.custCrcExpr}
@@ -388,7 +387,7 @@ $(function() {
         </span></td>
     </tr>
     <tr>
-        <th scope="row">Bank Acc No.</th>
+        <th scope="row"><spring:message code="sal.text.bankAccNo" /></th>
         <td><span>
         <c:if test="${empty payMap.custAccNo}">
         -
@@ -397,7 +396,7 @@ $(function() {
 	        ${payMap.custAccNo}
 	    </c:if>
         </span></td>
-        <th scope="row">Issue Bank</th>
+        <th scope="row"><spring:message code="sal.text.issueBank" /></th>
         <td><span>
         <c:if test="${not empty payMap.bankCode}">
         ${payMap.bankCode}
@@ -406,7 +405,7 @@ $(function() {
 	        - ${payMap.bankName}
 	    </c:if>
         </span></td>
-        <th scope="row">Account Name</th>
+        <th scope="row"><spring:message code="sal.text.accName" /></th>
         <td><span>
         <c:if test="${empty payMap.custAccOwner}">
         -
@@ -417,16 +416,16 @@ $(function() {
         </span></td>
     </tr>
     <tr>
-        <th scope="row">Pay By Third Party</th>
+        <th scope="row"><spring:message code="sal.text.payByThirdParty" /></th>
         <td><span>
         <c:if test="${payMap.is3rdParty eq 0}">
-        No
+            <spring:message code="sal.title.text.no" />
 	    </c:if>
 	    <c:if test="${payMap.is3rdParty eq 1}">
-	        Yes
+	        <spring:message code="sal.title.text.yes" />
 	    </c:if>
         </span></td>
-        <th scope="row">Third Party ID</th>
+        <th scope="row"><spring:message code="sal.text.thirdPartyId" /></th>
         <td><span>
         <c:if test="${not empty thirdMap}">
             ${thirdMap.custId}
@@ -435,7 +434,7 @@ $(function() {
             -
         </c:if>
         </span></td>
-        <th scope="row">Third Party Type</th>
+        <th scope="row"><spring:message code="sal.text.thirdPartyType" /></th>
         <td><span>
         <c:if test="${not empty thirdMap}">
             ${thirdMap.codeName1}
@@ -446,7 +445,7 @@ $(function() {
         </span></td>
     </tr>
     <tr>
-        <th scope="row">Third Party Name</th>
+        <th scope="row"><spring:message code="sal.text.thirdPartyName" /></th>
         <td colspan="3"><span>
          <c:if test="${not empty thirdMap}">
            ${thirdMap.name}
@@ -455,7 +454,7 @@ $(function() {
 	           -
 	     </c:if>
         </span></td>
-        <th scope="row">Third Party NRIC</th>
+        <th scope="row"><spring:message code="sal.text.thirdPartyNric" /></th>
         <td><span>
         <c:if test="${not empty thirdMap}">
            ${thirdMap.nric}
@@ -466,19 +465,19 @@ $(function() {
         </span></td>
     </tr>
     <tr>
-        <th scope="row">Apply Date</th>
+        <th scope="row"><spring:message code="sal.text.applyDate" /></th>
         <td><span>${payMap.ddApplyDt}</span></td>
-        <th scope="row">Submit Date</th>
+        <th scope="row"><spring:message code="sal.text.submitDate" /></th>
         <td><span>${payMap.ddSubmitDt}</span></td>
-        <th scope="row">Start Date</th>
+        <th scope="row"><spring:message code="sal.text.startDate" /></th>
         <td><span>${payMap.ddStartDt}</span></td>
     </tr>
     <tr>
-        <th scope="row">Reject Date</th>
+        <th scope="row"><spring:message code="sal.text.rejectDate" /></th>
         <td><span>${payMap.ddRejctDt}</span></td>
-        <th scope="row">Reject Code</th> 
+        <th scope="row"><spring:message code="sal.text.rejectCode" /></th> 
         <td><span>${payMap.resnCode}</span></td>
-        <th scope="row">Payment Term</th>
+        <th scope="row"><spring:message code="sal.text.payTerm" /></th>
         <td><span>
         <c:if test="${not empty payMap.payTrm}">
         ${payMap.payTrm} month(s)
@@ -489,7 +488,7 @@ $(function() {
     </table><!-- table end -->
 
     <aside class="title_line"><!-- title_line start -->
-    <h2>Contact Person</h2>
+    <h2><spring:message code="sal.tap.title.contactPerson" /></h2>
     </aside><!-- title_line end -->
 
     <table class="type1"><!-- table start -->
@@ -504,15 +503,15 @@ $(function() {
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Contact Person Name</th>
+        <th scope="row"><spring:message code="sal.title.text.contactPersonName" /></th>
         <td><span>${contactMap.name }</span></td>
     </tr>
     <tr>
-        <th scope="row">Mobile No.</th>
+        <th scope="row"><spring:message code="sal.title.text.mobileNo" /></th>
         <td><span>${contactMap.telM1 }</span></td>
-        <th scope="row">Office No.</th>
+        <th scope="row"><spring:message code="sal.title.text.officeNo" /></th>
         <td><span>${contactMap.telO }</span></td>
-        <th scope="row">House No.</th>
+        <th scope="row"><spring:message code="sal.title.text.houseNop" /></th>
         <td><span>${contactMap.telR }</span></td>
     </tr>
     </tbody>
@@ -523,7 +522,7 @@ $(function() {
 </article><!-- acodi_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Membership Info</h2>
+<h2><spring:message code="sal.title.text.memshipInfo" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -544,45 +543,45 @@ $(function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Membership Status</th>
+    <th scope="row"><spring:message code="sal.title.text.memShipStus" /></th>
     <td>
     <select class="w100p" name="updMemStatus" id="_updMemStatus">
-        <option value="44" selected="selected">Pending</option>
-        <option value="5">Approved</option>
-        <option value="10">Cancelled</option>
+        <option value="44" selected="selected"><spring:message code="sal.text.pending" /></option>
+        <option value="5"><spring:message code="sal.combo.text.approv" /></option>
+        <option value="10"><spring:message code="sal.combo.text.cancelled" /></option>
     </select>
     </td>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
     <select class="w100p" id="_custTypeConfirm" name="updCustType"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Membership F/B Code</th>
+    <th scope="row"><spring:message code="sal.text.memFBcode" /></th>
     <td>
     <select class="w100p" id="_reasonCodeConfirm" name="updReasonCode"></select>
     </td>
-    <th scope="row">Membership Type</th>
+    <th scope="row"><spring:message code="sal.text.membershipType" /></th>
     <td>
     <select class="w100p" name="updMemType">
-        <option value="1313" selected="selected">Rental</option>
-        <option value="1314">Staff</option>
+        <option value="1313" selected="selected"><spring:message code="sal.combo.text.rental" /></option>
+        <option value="1314"><spring:message code="sal.text.staff" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remarks" /></th>
     <td colspan="3"><textarea cols="20" rows="5" name="updRemark" placeholder="remark">${confirmResultMap.cnfmRem }</textarea></td>
 </tr>
 <tr>
-    <th scope="row">P &amp; C Remark</th>
+    <th scope="row"><spring:message code="sal.title.text.pncRem" /></th>
     <td colspan="3"><textarea cols="20" rows="5" name="updPncRemark" placeholder="P & C Remark">${confirmResultMap.cnfmPncRem }</textarea></td> 
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Call Info</h2>
+<h2><spring:message code="sal.title.text.callInfo" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -593,14 +592,14 @@ $(function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Call Message<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.callMsg" /><span class="must">*</span></th>
     <td><textarea cols="20" rows="5" id="_cfCallMessage" name="updCallMsg" placeholder="Call Message"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>SMS Info</h2>
+<h2><spring:message code="sal.title.text.smsInfo" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -612,15 +611,15 @@ $(function() {
 <tbody>
 <tr>
     <td colspan="2">
-    <label><input type="checkbox"  id="_updSmsChk" /><span>Send SMS ?</span></label>
+    <label><input type="checkbox"  id="_updSmsChk" /><span><spring:message code="sal.title.text.sendSmsQuest" /></span></label>
     </td>
 </tr>
 <tr>
-    <th scope="row">SMS Message</th>
+    <th scope="row"><spring:message code="sal.title.text.smsMsg" /></th>
     <td><textarea cols="20" rows="5" name="updSmsMsg" id="_updSmsMsg" placeholder="SMS Message" disabled="disabled" ></textarea></td>
 </tr>
  <tr>   
-    <td colspan="2"><span id="_charCounter">Total Character(s) :</span></td>
+    <td colspan="2"><span id="_charCounter"><spring:message code="sal.title.text.totChars" /></span></td>
  </tr>
 </tbody>
 </table><!-- table end -->
@@ -629,7 +628,7 @@ $(function() {
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_confirmSave">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_confirmSave"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

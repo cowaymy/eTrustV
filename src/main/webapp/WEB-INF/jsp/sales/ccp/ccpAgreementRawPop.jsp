@@ -82,7 +82,7 @@ function ValidRequiredField(){
 	if(valid == true){
 		fn_report();
 	}else{
-		Common.alert("CCP Generate Summary" + DEFAULT_DELIMITER + message);
+		Common.alert('<spring:message code="sal.alert.msg.ccpGenSummry" />'+ DEFAULT_DELIMITER + message);
 	}
 }
 
@@ -91,9 +91,9 @@ function ValidRequiredField(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>CCP Listing</h1>
+<h1><spring:message code="sal.title.text.ccpListing" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -114,58 +114,58 @@ function ValidRequiredField(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Agreement No</th>
+    <th scope="row"><spring:message code="sal.title.text.agrNo" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="" placeholder="" class="w100p" id="txtAgrNoFrom"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="" placeholder="" class="w100p" id="txtAgrNoTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Agreement Start Date</th>
+    <th scope="row"><spring:message code="sal.title.text.agrStartDate" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Progress Status</th>
+    <th scope="row"><spring:message code="sal.combo.text.prgssStus" /></th>
     <td>
     <select id="ddlProgress">
-        <option value="" hidden>Progress</option>
-        <option value="7">Agreement Submission</option>
-        <option value="8">Agreement Verifying</option>
-        <option value="9">Agreement Stamping & Confirmation</option>
-        <option value="10">Agreement Filling</option>
+        <option value="" hidden><spring:message code="sal.title.text.prgss" /></option>
+        <option value="7"><spring:message code="sal.title.agrSubmission" /></option>
+        <option value="8"><spring:message code="sal.title.agrVerifying" /></option>
+        <option value="9"><spring:message code="sal.title.argStmpAndConfirm" /></option>
+        <option value="10"><spring:message code="sal.title.text.agrFilling" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Agreement Status</th>
+    <th scope="row"><spring:message code="sal.title.text.agrStatus" /></th>
     <td>
     <select id="cmbAgrStatus">
-        <option value="" hidden>Status</option>
-        <option value="1">Active</option>
-        <option value="4">Complete</option>
-        <option value="10">Cancelled</option>
+        <option value="" hidden><spring:message code="sal.title.status" /></option>
+        <option value="1"><spring:message code="sal.btn.active" /></option>
+        <option value="4"><spring:message code="sal.combo.text.compl" /></option>
+        <option value="10"><spring:message code="sal.combo.text.cancelled" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Create By</th>
+    <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td><input type="text" title="" placeholder="" class="" id="txtCreator"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: ValidRequiredField();">Generate</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: ValidRequiredField();"><spring:message code="sal.btn.generate" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/GovContratAgrRaw.rpt" />

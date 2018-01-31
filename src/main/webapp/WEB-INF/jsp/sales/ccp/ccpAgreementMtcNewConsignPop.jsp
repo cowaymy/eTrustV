@@ -69,7 +69,7 @@
     	
     	//라디오 버튼 체크 안했을 때
     	if($("input[name='updCourier']:checked").val() == '' || $("input[name='updCourier']:checked").val() == null){
-    		Common.alert("* Please select the Courier Method.");
+    		Common.alert('<spring:message code="sal.alert.msg.plzSelectCourierMethod" />');
     		return false;
     	}else{ // 체크 했을때 (else)      
             // 1. check 값이 Courier 일 때 
@@ -78,14 +78,14 @@
             	//Consign Number 널체크
                 if($("#_updConsignmentNo").val() == '' ||$("#_updConsignmentNo").val() == null ){
                 	
-                	Common.alert("* Please key in the Courier Consignment No.");
+                	Common.alert('<spring:message code="sal.alert.msg.plzKeyinCourierConsNo" />');
                 	return false;
                 	
                 }
             	
                 //배송회사 널체크
                 if($("#_updCourierSelect").val() == '' || $("#_updCourierSelect").val() == null ){  
-                	Common.alert("* Please select the Courier.");
+                	Common.alert('<spring:message code="sal.alert.msg.plzSelectCourier" />');
                     return false;
                 }
             }
@@ -93,14 +93,14 @@
         
         // 리퀘스터  널 체크
         if($("#_updAgmReq").val() == '' || $("#_updAgmReq").val() == null){
-        	Common.alert("* Please select the AGM Requestor.");
+        	Common.alert('<spring:message code="sal.alert.msg.plzSelectAgmReq" />');
         	return false;
         }
         
         //method 널 체크 (리시브 / 센드)
         if($("#_updConsignMethod").val() == '' || $("#_updConsignMethod").val() == null){
         	
-        	Common.alert("* Please select the Consign Method.");
+        	Common.alert('<spring:message code="sal.alert.msg.plzSelectConsignMethod" />');
         	return false;
         	
         }else{ //method 선택 했을 때
@@ -109,7 +109,7 @@
         	if('1236' == $("#_updConsignMethod").val()){
         		//Send Date 널 체크
         		if('' == $("#_updConSendDate").val() || null == $("#_updConSendDate").val()){
-        			Common.alert("* Please key in the Consignment Send Date.");
+        			Common.alert('<spring:message code="sal.alert.msg.plzKeyinConsignSendDate" />');
         			return false;
         		}
         	}
@@ -118,7 +118,7 @@
             if('1237' == $("#_updConsignMethod").val()){
             	// Receive Date 널 체크
             	if('' == $("#_updConReceiveDate").val() || null == $("#_updConReceiveDate").val()){
-                    Common.alert("* Please key in the Consignment End Date.");
+                    Common.alert('<spring:message code="sal.alert.msg.plzKeyinConsignEndDate" />');
                     return false;
                 }
             }
@@ -171,9 +171,9 @@
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>ADD NEW CONSIGNMENT</h1>
+<h1><spring:message code="sal.title.text.addNewConsignment" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_conClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_conClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -190,43 +190,43 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Courier Method.</th>
+    <th scope="row"><spring:message code="sal.title.text.courierMethod" /></th>
     <td colspan="3">
-    <label><input type="radio" name="updCourier" value="H"/><span>By Hand</span></label>
-    <label><input type="radio" name="updCourier" value="C"/><span>Courier</span></label>
+    <label><input type="radio" name="updCourier" value="H"/><span><spring:message code="sal.combo.text.byHand" /></span></label>
+    <label><input type="radio" name="updCourier" value="C"/><span><spring:message code="sal.text.courier" /></span></label>
     </td>
 </tr>
 <tr>
-    <th scope="row">Courier Consignment No.</th>
+    <th scope="row"><spring:message code="sal.title.text.courierConsNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" name="updConsignmentNo"  id="_updConsignmentNo"/></td> 
-    <th scope="row">Courier</th>
+    <th scope="row"><spring:message code="sal.text.courier" /></th>
     <td>
     <select class="w100p" name="updCourierSelect" id="_updCourierSelect" ></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Cosign Method</th> 
+    <th scope="row"><spring:message code="sal.title.text.consignMethod" /></th> 
     <td>
     <select class="w100p" name="updConsignMethod" id="_updConsignMethod" onchange="javascript : fn_changeDateForm(this.value)">
-        <option value="1237">Receive</option>
-        <option value="1236">Send</option>
+        <option value="1237"><spring:message code="sal.combo.text.recv" /></option>
+        <option value="1236"><spring:message code="sal.combo.texxt.send" /></option>
     </select>
     </td>
-    <th scope="row">AGM Requestor</th>
+    <th scope="row"><spring:message code="sal.title.text.agmReqstor" /></th>
     <td>
     <select class="w100p" name="updAgmReq" id="_updAgmReq">
-        <option value="1">HP</option>
-        <option value="2">CODY</option>
-        <option value="1234">Customer</option>
+        <option value="1"><spring:message code="sal.title.text.hp" /></option>
+        <option value="2"><spring:message code="sal.title.text.cody" /></option>
+        <option value="1234"><spring:message code="sal.title.text.customer" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row" class="consignSendDate">Consignment Send Date</th>
+    <th scope="row" class="consignSendDate"><spring:message code="sal.title.text.consignSendDate" /></th>
     <td class="consignSendDate">
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  name="updConSendDate" id="_updConSendDate"/>
     </td>
-    <th scope="row" class="consignReceiveDate" >Consignment Receive Date</th>
+    <th scope="row" class="consignReceiveDate" ><spring:message code="sal.title.text.consignRecvDate" /></th>
     <td class="consignReceiveDate">
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  name="updConReceiveDate" id="_updConReceiveDate"/>
     </td>
@@ -235,8 +235,8 @@
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="_conSaveBtn">Save</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" id="_conClear">Clear</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_conSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_conClear"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 </div>

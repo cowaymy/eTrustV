@@ -65,7 +65,7 @@ function fn_searchNewOrderPop(){
     var inputNum = $("#_salesOrderNo").val();
     
     if(inputNum == null || inputNum == '' ){
-        Common.alert("Please key in Order Number.");
+        Common.alert('<spring:message code="sal.alert.msg.plzKeyinOrdNo" />');
         return;
     }
   //  fn_getOrderId(inputNum);
@@ -83,7 +83,7 @@ function fn_searchNewOrderPop(){
             isRtn = true;
     	}else{
     		isRtn = false;
-    		Common.alert("No Order found .");
+    		Common.alert('<spring:message code="sal.alert.msg.noRodFound" />');
     	}
     },'',ajaxOpt);
     
@@ -97,9 +97,9 @@ function fn_searchNewOrderPop(){
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>CCP Agreement New Search</h1>
+<h1><spring:message code="sal.title.text.ccpAgrNewSrch" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
@@ -115,15 +115,15 @@ function fn_searchNewOrderPop(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td>
         <input type="text" style="display: none;" >
         <input type="text" title="" placeholder="" class="" id="_salesOrderNo" name="salesOrderNo" />
         <p class="btn_sky">
-            <a  id="_confirm">Confirm</a>
+            <a  id="_confirm"><spring:message code="sal.btn.confirm" /></a>
         </p>
         <p class="btn_sky">
-            <a  id="_ordSearch">Search</a>
+            <a  id="_ordSearch"><spring:message code="sal.btn.search" /></a>
         </p>
     </td>
 </tr>

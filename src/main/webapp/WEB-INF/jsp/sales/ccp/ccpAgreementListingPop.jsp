@@ -141,13 +141,13 @@ function ValidRequiredField(){
     
     if($("#dpDateFrom").val() == null || $("#dpDateFrom").val().length == 0){
         valid = false;
-        message += "* Please key in the Created Date.\n";
+        message += '<spring:message code="sal.alert.msg.plzKeyinCrtDate" />';
     }
 
     if(valid == true){
         fn_report();
     }else{
-    	Common.alert("Contract Agreement Generate Summary" + DEFAULT_DELIMITER + message);
+    	Common.alert('<spring:message code="sal.alert.msg.contAgrGenSummary" />' + DEFAULT_DELIMITER + message);
     }
 }
 
@@ -156,9 +156,9 @@ function ValidRequiredField(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Agreement Listing</h1>
+<h1><spring:message code="sal.title.text.agrListing" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -181,7 +181,7 @@ function ValidRequiredField(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="" placeholder="Order No (From)" class="w100p" id="txtOrderNo1"/></p>
@@ -189,42 +189,42 @@ function ValidRequiredField(){
     <p><input type="text" title="" placeholder="Order No (To)" class="w100p" id="txtOrderNo2" /></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Agreement Type</th>
+    <th scope="row"><spring:message code="sal.title.text.agreeType" /></th>
     <td>
     <select class="w100p" id="cmbAgrType">
-        <option value="" hidden>Agreement Type</option>
-        <option value="949">New</option>
-        <option value="950">Renew</option>
+        <option value="" hidden><spring:message code="sal.title.text.agreeType" /></option>
+        <option value="949"><spring:message code="sal.title.text.new" /></option>
+        <option value="950"><spring:message code="sal.title.text.reNew" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Progress</th>
+    <th scope="row"><spring:message code="sal.title.text.prgss" /></th>
     <td>
     <select class="w100p" id="cmbProgress">
-        <option value="" hidden>Progress</option>
-        <option value="7">Submission Progress</option>
-        <option value="8">Verifying Progress</option>
-        <option value="9">Stamping & Confirmation Progress</option>
-        <option value="10">Filling Progress</option>
+        <option value="" hidden><spring:message code="sal.title.text.prgss" /></option>
+        <option value="7"><spring:message code="sal.title.text.submissPrgss" /></option>
+        <option value="8"><spring:message code="sal.title.text.verifyPrgss" /></option>
+        <option value="9"><spring:message code="sal.title.text.stampingConfPrgss" /></option>
+        <option value="10"><spring:message code="sal.title.text.fillingPrgss" /></option>
     </select>
     </td>
-    <th scope="row">CCP Status</th>
+    <th scope="row"><spring:message code="sal.title.text.ccpStatus" /></th>
     <td>
     <select class="w100p" id="cmbCCPStatus">
-        <option value="" hidden>CCP Status</option>
-        <option value="1">Active</option>
-        <option value="5">Approved</option>
-        <option value="6">Rejected</option>
+        <option value="" hidden><spring:message code="sal.title.text.ccpStatus" /></option>
+        <option value="1"><spring:message code="sal.btn.active" /></option>
+        <option value="5"><spring:message code="sal.combo.text.approv" /></option>
+        <option value="6"><spring:message code="sal.combo.text.rej" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Created Date<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.crtDate" /><span class="must">*</span></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateFrom"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateTo"/></p>
     </div><!-- date_set end -->
     </td>
@@ -232,52 +232,51 @@ function ValidRequiredField(){
     <td></td>
 </tr>
 <tr>
-    <th scope="row">Agreement Start</th>
+    <th scope="row"><spring:message code="sal.title.text.agrStart" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dtAgmStartFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dtAgmStartTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Agreement Expiry</th>
+    <th scope="row"><spring:message code="sal.title.text.agrExpiry" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dtAgmExpiryFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dtAgmExpiryTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Sorting By</th>
+    <th scope="row"><spring:message code="sal.text.sortingBy" /></th>
     <td colspan="3">
     <select class="w100p" id="cmbSorting">
-        <option value="1" >Sorting By AGM No</option>
-        <option value="2">Sorting By Order No</option>
-        <option value="3">Sorting By Created Date</option>
-        <option value="4">Sorting By Agreement Type</option>
-        <option value="5">Sorting By Progress</option>
+        <option value="1" ><spring:message code="sal.combo.text.sortingByAgmNo" /></option>
+        <option value="2"><spring:message code="sal.combo.text.sortingByOrdNo" /></option>
+        <option value="3"><spring:message code="sal.combo.text.sortingByCrtDt" /></option>
+        <option value="4"><spring:message code="sal.combo.text.sortingByAgreementType" /></option>
+        <option value="5"><spring:message code="sal.combo.text.sortingByPrgss" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Agreement Status</th>
+    <th scope="row"><spring:message code="sal.title.text.agrStatus" /></th>
     <td colspan="3"> 
     <select  multiple="multiple" class="multy_select w100p" id="cboAgmStatus" data-placeholder="Agreement Status">
-        <option value="ACT">Active</option>
-        <option value="COM">Completed</option>
-        <option value="CAN">Cancelled</option>
+        <option value="ACT"><spring:message code="sal.btn.active" /></option>
+        <option value="COM"><spring:message code="sal.combo.text.compl" /></option>
+        <option value="CAN"><spring:message code="sal.combo.text.cancelled" /></option>
     </select>
-    
     </td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: ValidRequiredField();">Generate PDF</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: ValidRequiredField();"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 

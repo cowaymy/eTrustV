@@ -57,7 +57,7 @@
                 $("#_btnSave").css("display" , "none");
                 //List Reload
                 fn_selectCcpAgreementListAjax();
-                Common.confirm('Contract agreement successfully updated. Are you sure want to upload attachment(s) for this agreement ?' , fn_fileUpload , ""); 
+                Common.confirm('<spring:message code="sal.confirm.msg.wantToUpload" />' , fn_fileUpload , ""); 
                 
                 //Send E-Mail
                 if( ("7" == $("#_updPrgId").val() && "5" == $("#_msgStatus").val()) || "8" == $("#_updPrgId").val()){
@@ -78,7 +78,7 @@
         
     }); // Document Ready End
     
-    //추후 구현 필요
+    
     function fn_fileUpload(){
         
         var uploadParam = {msgId : $("#_upMsgId").val()};
@@ -92,12 +92,12 @@
         
         var consignColumnLayout = [
                 
-                {dataField : "userName" , headerText : "Creator" , width : "10%"},
-                {dataField : "agCnsgnRcivDt" , headerText : "Receive Date" , width : "10%"},
-                {dataField : "agCnsgnSendDt" , headerText : "Sent Date" , width : "10%"},
+                {dataField : "userName" , headerText : '<spring:message code="sal.title.creator" />' , width : "10%"},
+                {dataField : "agCnsgnRcivDt" , headerText : '<spring:message code="sal.title.text.recvDate" />' , width : "10%"},
+                {dataField : "agCnsgnSendDt" , headerText : '<spring:message code="sal.title.text.sentDate" />' , width : "10%"},
                 { 
                     dataField : "cnsgnUserIdHand", 
-                    headerText : "By Hand", 
+                    headerText : '<spring:message code="sal.combo.text.byHand" />', 
                     width:'10%', 
                     renderer : { 
                         type : "TemplateRenderer", 
@@ -122,9 +122,9 @@
                     } 
                     
                   },
-                {dataField : "agCosignNo" , headerText : "Consignment No." , width : "20%"},
-                {dataField : "curierName" , headerText : "Courier" , width : "30%"},
-                {dataField : "codeName" , headerText : "AGM Requestor" , width : "10%"}
+                {dataField : "agCosignNo" , headerText : '<spring:message code="sal.title.text.consignNo" />' , width : "20%"},
+                {dataField : "curierName" , headerText : '<spring:message code="sal.text.courier" />' , width : "30%"},
+                {dataField : "codeName" , headerText : '<spring:message code="sal.title.text.agmReqstor" />' , width : "10%"}
                
         ];
         
@@ -142,9 +142,7 @@
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No Consignment found.",
-                groupingMessage     : "Here groupping"
+                showRowNumColumn    : true
             };
          
         consignGridID = GridCommon.createAUIGrid("consign_grid_wrap", consignColumnLayout,'', gridPros);   
@@ -154,15 +152,15 @@
         //govAgMsgAttachFileName
         var msgColumnLayout = [
                                    
-                                   {dataField : "userName" , headerText : "Creator" , width : "10%"},
-                                   {dataField : "govAgMsgCrtDt" , headerText : "Created" , width : "10%"},
-                                   {dataField : "name" , headerText : "Status" , width : "10%"},
-                                   {dataField : "govAgPrgrsName" , headerText : "Progress" , width : "10%"},
-                                   {dataField : "govAgRoleDesc" , headerText : "Department" , width : "10%"},
-                                   {dataField : "govAgMsg" , headerText : "Message" , width : "30%"},
-                                   {dataField : "govAgMsgHasAttach" , headerText : "Attachement" , width : "10%"},
+                                   {dataField : "userName" , headerText : '<spring:message code="sal.text.creator" />' , width : "10%"},
+                                   {dataField : "govAgMsgCrtDt" , headerText : '<spring:message code="sal.text.created" />' , width : "10%"},
+                                   {dataField : "name" , headerText : '<spring:message code="sal.title.status" />' , width : "10%"},
+                                   {dataField : "govAgPrgrsName" , headerText : '<spring:message code="sal.title.text.prgss" />' , width : "10%"},
+                                   {dataField : "govAgRoleDesc" , headerText : '<spring:message code="sal.text.dept" />' , width : "10%"},
+                                   {dataField : "govAgMsg" , headerText : '<spring:message code="sal.title.text.msg" />' , width : "30%"},
+                                   {dataField : "govAgMsgHasAttach" , headerText : '<spring:message code="sal.title.text.attatch" />' , width : "10%"},
                                    {dataField : "atchFileGrpId" , visible : false},
-                                   {dataField : "atchFileId",  headerText : "download", width : '10%', styleFunction : cellStyleFunction,  
+                                   {dataField : "atchFileId",  headerText : '<spring:message code="sal.title.text.download" />', width : '10%', styleFunction : cellStyleFunction,  
                                          renderer : {
                                            type : "ButtonRenderer",
                                            labelText : "Download",
@@ -183,7 +181,7 @@
                                                        Common.removeLoader();
                                                        console.log('File download a success!');
                                                }).fail(function () {
-                                            	       Common.alert("The file might be deleted or changed location.");
+                                            	       Common.alert('<spring:message code="sal.alert.msg.fileMissing" />');
                                             	       Common.removeLoader();
                                                });
                                                 
@@ -207,9 +205,7 @@
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No Message Log found.",
-                groupingMessage     : "Here groupping"
+                showRowNumColumn    : true
             };
          
         msgGridID = GridCommon.createAUIGrid("msgLog_grid_wrap", msgColumnLayout,'', gridPros);
@@ -220,10 +216,10 @@
         
         var orderColumnLayout = [
                                
-                               {dataField : "salesOrdNo" , headerText : "Order No" , width : "20%"},  
-                               {dataField : "name" , headerText : "Customer" , width : "40%"},
-                               {dataField : "govAgItmInstResult" , headerText : "Install Result" , width : "20%"},    
-                               {dataField : "govAgItmRentResult" , headerText : "Rental Status" , width : "20%"}
+                               {dataField : "salesOrdNo" , headerText : '<spring:message code="sal.text.ordNo" />' , width : "20%"},  
+                               {dataField : "name" , headerText : '<spring:message code="sal.title.text.customer" />' , width : "40%"},
+                               {dataField : "govAgItmInstResult" , headerText : '<spring:message code="sal.title.text.installResult" />' , width : "20%"},    
+                               {dataField : "govAgItmRentResult" , headerText : '<spring:message code="sal.text.rentalStatus" />' , width : "20%"}
                               
          ];
         
@@ -241,9 +237,7 @@
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No Order found.",
-                groupingMessage     : "Here groupping"
+                showRowNumColumn    : true
             };
         
         orderGridID = GridCommon.createAUIGrid("order_grid_wrap", orderColumnLayout,'', gridPros);
@@ -347,7 +341,6 @@
                 $("#_agrPeriodStart").attr("disabled" , false );
                 $("#_agrPeriodEnd").attr("disabled" , false );
             }
-            
         }
     }
     
@@ -356,7 +349,7 @@
         //msgStatus
         if(null == $("#_msgStatus").val() || '' == $("#_msgStatus").val() ){
             
-            Common.alert("* Agreement Progress Status is required.");
+            Common.alert('<spring:message code="sal.alert.msg.agrPrgsStusReq" />');
             return false;
         }
         
@@ -364,12 +357,12 @@
         if($("#_msgStatus").val() == '5' || $("#_msgStatus").val() == '44'){
             
             if(null == $("#_agrPeriodStart").val() || '' == $("#_agrPeriodStart").val()){
-                Common.alert("* Agreement Period Start Date is required.");
+                Common.alert('<spring:message code="sal.alert.msg.agrPeriodStDateReq" />');
                 return false;
             }
             
             if(null == $("#_agrPeriodEnd").val() || '' == $("#_agrPeriodEnd").val()){
-                Common.alert("* Agreement Period End Date is required.");
+                Common.alert('<spring:message code="sal.alert.msg.agrPeriodEdDateReq" />');
                 return false;
             }
             
@@ -382,7 +375,7 @@
             
             if(startChgStr > endChgStr){
             	
-            	Common.alert("* Agreement Period Start Date cannot bigger than End Date.");
+            	Common.alert('<spring:message code="sal.alert.msg.agrPeriodStDateCanNotBigEdDate" />');
                 return false;
             }
             
@@ -393,7 +386,7 @@
             if($("#_msgStatus").val() == '5' ){
                 
                 if(null == $("#_agrPeriodStart").val() || '' == $("#_agrPeriodStart").val() || null == $("#_agrPeriodEnd").val() || '' == $("#_agrPeriodEnd").val() ){
-                    Common.alert("* Please select the contract period.");
+                    Common.alert('<spring:message code="sal.alert.msg.plzSelCntcPeriod" />');
                     return false;
                  }
             }
@@ -402,7 +395,7 @@
                   
                 //_agrType
                 if(null == $("#_agrType").val() || '' == $("#_agrType").val()){
-                    Common.alert("* Agreement Type is required.");
+                    Common.alert('<spring:message code="sal.alert.msg.agrTypeIsReq" />');
                     return false;
                 }
             }
@@ -413,7 +406,7 @@
             if($("#_msgStatus").val() == '6' ){
                 
                 if(null == $("#_agrPeriodStart").val() || '' == $("#_agrPeriodStart").val() || null == $("#_agrPeriodEnd").val() || '' == $("#_agrPeriodEnd").val() ){
-                    Common.alert("* Agreement Submission stage not allow to reject.");
+                    Common.alert('<spring:message code="sal.alert.msg.agrSubmStgNotAllowRej" />');
                     return false;
                 }
             }
@@ -422,7 +415,7 @@
         
         //Remark
         if(null == $("#_resultRemark").val() || '' == $("#_resultRemark").val()){
-            Common.alert("* Result Remark is required .");
+            Common.alert('<spring:message code="sal.alert.msg.resultRemIsReq" />');
             return false;
         }
         
@@ -463,9 +456,9 @@
     <input type="hidden" name="govAgId" value="${infoMap.govAgId}" id="_secGovAgId"> 
 </form>
 <header class="pop_header"><!-- pop_header start -->
-<h1>Contract Agreement Maintenance/View</h1>
+<h1><spring:message code="sal.title.text.cntcAgrMtcView" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close" >CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close" ><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
@@ -473,14 +466,14 @@
 <input type="hidden" id="_upMsgId"  >
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on" onclick="javascript: fn_resizeFun('agrInfo')">Agreement Info</a></li>
-    <li><a href="#" onclick="javascript: fn_resizeFun('order')">Contract Order(s)</a></li>
+    <li><a href="#" class="on" onclick="javascript: fn_resizeFun('agrInfo')"><spring:message code="sal.title.text.agrInfo" /></a></li>
+    <li><a href="#" onclick="javascript: fn_resizeFun('order')"><spring:message code="sal.title.text.cntcOrds" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Agreement Information</h2>
+<h2><spring:message code="sal.title.agrInformation" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -494,39 +487,39 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Agreement No.</th> 
+    <th scope="row"><spring:message code="sal.title.text.agrNo" /></th> 
     <td><span>${infoMap.govAgBatchNo}</span></td>
-    <th scope="row">Member Code</th>
+    <th scope="row"><spring:message code="sal.text.memberCode" /></th>
     <td><span>${infoMap.memCode}</span></td>
 </tr>
 <tr>
-    <th scope="row">Agreement Type</th>
+    <th scope="row"><spring:message code="sal.title.text.agreeType" /></th>
     <td><span>${infoMap.codeName}</span></td>
-    <th scope="row">Create Date</th> 
+    <th scope="row"><spring:message code="sal.text.createDate" /></th> 
     <td><span>${infoMap.govAgCrtDt}</span></td>
 </tr>
 <tr>
-    <th scope="row">Quantity</th> 
+    <th scope="row"><spring:message code="sal.text.quantity" /></th> 
     <td><span>${infoMap.govAgQty}</span></td>
-    <th scope="row">Agreement Status</th>
+    <th scope="row"><spring:message code="sal.title.text.agrStatus" /></th>
     <td><span>${infoMap.name1}</span></td>
 </tr>
 <tr>
-    <th scope="row">Progress</th>
+    <th scope="row"><spring:message code="sal.title.text.prgss" /></th>
     <td><span>${infoMap.govAgPrgrsName}</span></td> 
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code="sal.text.creator" /></th>
     <td><span>${infoMap.userName}</span></td>
 </tr>
 <tr>
-    <th scope="row">Agreement Start</th>  
+    <th scope="row"><spring:message code="sal.title.text.agrStart" /></th>  
     <td><span>${infoMap.govAgStartDt}</span></td>
-    <th scope="row">Agreement Expiry</th>
+    <th scope="row"><spring:message code="sal.title.text.agrExpiry" /></th>
     <td><span>${infoMap.govAgEndDt}</span></td>
 </tr>
 <tr>
-    <th scope="row">Latest Receive Date</th>  
+    <th scope="row"><spring:message code="sal.title.text.latestRecvDate" /></th>  
     <td><span>${infoMap.govAgLastRcivDt}</span></td>
-    <th scope="row">Latest Send Date</th>
+    <th scope="row"><spring:message code="sal.title.text.latestSendDate" /></th>
     <td><span>${infoMap.govAgLastSendDt}</span></td> 
 </tr>
 </tbody>
@@ -546,11 +539,11 @@
 </section><!-- tap_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Consignment Log</h2>
+<h2><spring:message code="sal.title.text.consignmentLog" /></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="_addNewConsign">Add New Consignment</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="_addNewConsign"><spring:message code="sal.title.text.addNewConsignment" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -558,7 +551,7 @@
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Message Log</h2>
+<h2><spring:message code="sal.title.text.msgLog" /></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -568,7 +561,7 @@
 <div id="_agrResult">
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Contract Agreement Result</h2>
+<h2><spring:message code="sal.title.text.cntcAgrResult" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -587,61 +580,61 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Message Status</th>
+    <th scope="row"><spring:message code="sal.title.text.msgStatus" /></th>
     <td>
     <select class="w100p" id="_msgStatus" onchange="javascript : fn_statusChangeFunc(this.value)" name="updMsgStatus"></select>
     </td>
-    <th scope="row">Agreement Type</th>
+    <th scope="row"><spring:message code="sal.title.text.agreeType" /></th>
     <td>
     <select class="w100p" id="_agrType"  name="updAgrType">
-        <option value="949">NEW</option>
-        <option value="950">RENEW</option>
+        <option value="949"><spring:message code="sal.title.text.new" /></option>
+        <option value="950"><spring:message code="sal.title.text.reNew" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Notification</th>
+    <th scope="row"><spring:message code="sal.title.text.notification" /></th>
     <td colspan="3">
     <div class="date_set"><!-- date_set start -->
     <p>
     <select class="w100p" id="_isNotification" name="updIsNotification"> 
-        <option value="false" selected="selected">No</option>
-        <option value="true">Yes</option>
+        <option value="false" selected="selected"><spring:message code="sal.title.text.no" /></option>
+        <option value="true"><spring:message code="sal.title.text.yes" /></option>
     </select>
     </p>
     <p>
     <select class="w100p" id="_notificationMonth" name="updNotificationMonth">
-        <option value="0" selected="selected">0 Months</option>
-        <option value="1">1 Months</option>
-        <option value="2">2 Months</option>
-        <option value="3">3 Months</option>
-        <option value="4">4 Months</option>
-        <option value="5">5 Months</option>
-        <option value="6">6 Months</option>
+        <option value="0" selected="selected"><spring:message code="sal.combo.text.zeroMonth" /></option>
+        <option value="1"><spring:message code="sal.combo.text.oneMonth" /></option>
+        <option value="2"><spring:message code="sal.combo.text.twoMonth" /></option>
+        <option value="3"><spring:message code="sal.combo.text.threeMonth" /></option>
+        <option value="4"><spring:message code="sal.combo.text.fourMonth" /></option>
+        <option value="5"><spring:message code="sal.combo.text.fiveMonth" /></option>
+        <option value="6"><spring:message code="sal.combo.text.sixMonth" /></option>
     </select>
     </p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Agreement Period</th>
+    <th scope="row"><spring:message code="sal.title.text.agrPrd" /></th>
     <td colspan="3">
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  readonly="readonly" id="_agrPeriodStart" name="updPeriodStart"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" readonly="readonly" id="_agrPeriodEnd" name="updPeriodEnd"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Result Remark</th>
+    <th scope="row"><spring:message code="sal.title.text.resultRem" /></th>
     <td colspan="3"><textarea cols="20" rows="5" id="_resultRemark" name="updResultRemark"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" id="_btnSave">Save</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_btnSave"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </form>

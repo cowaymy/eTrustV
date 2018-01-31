@@ -44,11 +44,11 @@ function validRequiredField(){
 	
 	if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
 		valid = false;
-		message = "* Please key in the Order Date.\n";
+		message = '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
 	}
 	
 	if(valid == false){
-		Common.alert("CCP Generate Summary" + DEFAULT_DELIMITER + message);
+		Common.alert('<spring:message code="sal.alert.msg.ccpGenSummry" />' + DEFAULT_DELIMITER + message);
 	}
 	
 	return valid;
@@ -298,9 +298,9 @@ CommonCombo.make('cmbCCPFeedbackCode', '/sales/ccp/selectReasonCodeFbList', '' ,
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>CCP Listing</h1>
+<h1><spring:message code="sal.title.text.ccpListing" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -321,119 +321,119 @@ CommonCombo.make('cmbCCPFeedbackCode', '/sales/ccp/selectReasonCodeFbList', '' ,
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="" placeholder="Order No (From)" class="w100p" id="txtOrderNumberFrom"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="" placeholder="Order No (To)" class="w100p" id="txtOrderNumberTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Region</th>
+    <th scope="row"><spring:message code="sal.title.text.region" /></th>
     <td>
     <select class="" id="cmbRegion"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch</th>
+    <th scope="row"><spring:message code="sal.text.branch" /></th>
     <td>
     <select class="" id="cmbbranch"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Group Code</th>
+    <th scope="row"><spring:message code="sal.title.text.groupCode" /></th>
     <td><input type="text" title="" placeholder="Group Code" class="" id="txtGrpCode"/></td>
 </tr>
 <tr>
-    <th scope="row">CCP Status</th>
+    <th scope="row"><spring:message code="sal.title.text.ccpStatus" /></th>
     <td>
     <select class="" id="cmbprogress">
-        <option data-placeholder="true" hidden>CCP Progress</option>
-        <option value="1">ACT - Active (Including Pending)</option>
-        <option value="5">APV - Approved</option>
-        <option value="6">RJT - Rejected</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.title.text.ccpPrgss" /></option>
+        <option value="1"><spring:message code="sal.combo.text.actIncPending" /></option>
+        <option value="5"><spring:message code="sal.combo.text.apvApved" /></option>
+        <option value="6"><spring:message code="sal.combo.rjtRjted" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">CC Point</th>
+    <th scope="row"><spring:message code="sal.title.text.ccpPoint" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="" placeholder="CCP Ponit (From)" class="w100p" id="txtPointFrom"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="" placeholder="CCP Ponit (To)" class="w100p" id="txtPointTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">On Hold Case</th>
+    <th scope="row"><spring:message code="sal.title.text.onHoldCase" /></th>
     <td>
     <select class="" id="cmbHold">
-        <option data-placeholder="true" hidden>CCP On-hold Case</option>
-        <option value="Yes">Yes</option>
-        <option value="No">No</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.title.text.ccpOnHoldCase" /></option>
+        <option value="Yes"><spring:message code="sal.title.text.yes" /></option>
+        <option value="No"><spring:message code="sal.title.text.no" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Reject Status</th>
+    <th scope="row"><spring:message code="sal.title.text.rejStus" /></th>
     <td>
     <select class="" id="cmbRjtStatus">
-        <option data-placeholder="true" hidden>Reject Status</option>
-        <option value="18">CANF - Cancel Fund Transfer</option>
-        <option value="10">CAN - Cancelled</option>
-        <option value="13">CA1Y - Convert To Advance 1 Year</option>
-        <option value="17">CANR - Cancel Refund</option>
-        <option value="Yes">CA2Y - Convert To Advance 2 Years</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.title.text.rejStus" /></option>
+        <option value="18"><spring:message code="sal.combo.text.canfCancelFundTransfer" /></option>
+        <option value="10"><spring:message code="sal.combo.text.canCanceled" /></option>
+        <option value="13"><spring:message code="sal.combo.text.ca1yConvAdv1Year" /></option>
+        <option value="17"><spring:message code="sal.combo.text.canrCancelRefund" /></option>
+        <option value="Yes"><spring:message code="sal.combo.text.ca2yConvAdv2Year" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">CCP Feedback Code</th>
+    <th scope="row"><spring:message code="sal.title.text.ccpFeedbackCode" /></th>
     <td>
     <select class="" id="cmbCCPFeedbackCode"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Last Updator</th>
+    <th scope="row"><spring:message code="sal.text.title.lastUpdator" /></th>
     <td><input type="text" title="" placeholder="Last Updator (Username)" class="" id="txtUpdator"/></td>
 </tr>
 <tr>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
     <select class="" id="cmbCustType">
-        <option data-placeholder="true" hidden>Customer Type</option>
-        <option value="965">Company</option>
-        <option value="964">Individual</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.text.custType" /></option>
+        <option value="965"><spring:message code="sal.combo.text.company" /></option>
+        <option value="964"><spring:message code="sal.combo.text.individual" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">DSC Branch</th>
+    <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
     <td>
     <select class="" id="cmbDSCBranch"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Product</th>
+    <th scope="row"><spring:message code="sal.title.text.product" /></th>
     <td>
     <select class="" id="cmbProduct"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Key in Hour</th>
+    <th scope="row"><spring:message code="sal.title.text.keyInHour" /></th>
     <td>
     <div class="time_picker" ><!-- time_picker start -->
     <input type="text" title="" placeholder="Key in Hour(hh:mm:tt)" class="time_date" id="dpTimeHour"/>
@@ -468,19 +468,19 @@ CommonCombo.make('cmbCCPFeedbackCode', '/sales/ccp/selectReasonCodeFbList', '' ,
     </td>
 </tr>
 <tr>
-    <th scope="row">Sorting</th>
+    <th scope="row"><spring:message code="sal.text.sortingBy" /></th>
     <td>
     <select class="" id="cmbSort">
-        <option data-placeholder="true" hidden>Sorting By</option>
-        <option value="1">Sorting By Region</option>
-        <option value="2">Sorting By Branch</option>
-        <option value="3">Sorting By Order Date</option>
-        <option value="4">Sorting By Order Number</option>
-        <option value="5">Sorting By CCP Progress Status</option>
-        <option value="6">Sorting By Username</option>
-        <option value="7">Sorting By Customer Name</option>
-        <option value="8">Sorting By DSC Branch</option>
-        <option value="9">Sorting By Product</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.text.sortingBy" /></option>
+        <option value="1"><spring:message code="sal.combo.text.sortingByRegion" /></option>
+        <option value="2"><spring:message code="sal.combo.text.sortingByBranch" /></option>
+        <option value="3"><spring:message code="sal.combo.text.sortingByOrdDt" /></option>
+        <option value="4"><spring:message code="sal.combo.text.sortingByOrdNumber" /></option>
+        <option value="5"><spring:message code="sal.combo.text.sortingByCcpPrgStus" /></option>
+        <option value="6"><spring:message code="sal.combo.text.sortingByUserName" /></option>
+        <option value="7"><spring:message code="sal.combo.text.sortingByCustomerName" /></option>
+        <option value="8"><spring:message code="sal.combo.text.sortingByDscBrnch" /></option>
+        <option value="9"><spring:message code="sal.combo.text.sortingByProduct" /></option>
     </select>
     </td>
 </tr>
@@ -488,9 +488,9 @@ CommonCombo.make('cmbCCPFeedbackCode', '/sales/ccp/selectReasonCodeFbList', '' ,
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Click()">Generate PDF</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenExcel_Click()">Generate Excel</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Click()"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenExcel_Click()"><spring:message code="sal.btn.genExcel" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

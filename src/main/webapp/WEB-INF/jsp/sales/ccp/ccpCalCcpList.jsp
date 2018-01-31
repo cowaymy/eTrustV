@@ -54,7 +54,7 @@ $(document).ready(function() {
                 Common.popupWin('_detailForm', "/sales/ccp/ccpCalCCpViewPop.do", option);
             }
     	}else{
-    		Common.alert("access deny.");
+    		Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
     	}
     });
 	
@@ -63,12 +63,12 @@ $(document).ready(function() {
 		//Validation 
 		var selectedItem = AUIGrid.getSelectedItems(calGrid);
 		if(selectedItem.length <= 0){
-			Common.alert(" No result selected. ");
+			Common.alert('<spring:message code="sal.alert.msg.noResultSelected" />');
             return;
 		}
 		
 		if(selectedItem[0].item.ccpStusId != 1){
-			Common.alert("CCP Status not in active .");
+			Common.alert('<spring:message code="sal.alert.msg.ccpStusIsNotAct" />');
 			return;
 		}
 		
@@ -82,12 +82,12 @@ $(document).ready(function() {
         //Validation 
         var selectedItem = AUIGrid.getSelectedItems(calGrid);
         if(selectedItem.length <= 0){
-            Common.alert(" No result selected. ");
+            Common.alert('<spring:message code="sal.alert.msg.noResultSelected" />');
             return;
         }
         
         if(selectedItem[0].item.ccpStusId != 1){
-            Common.alert("CCP Status not in active .");
+            Common.alert('<spring:message code="sal.alert.msg.ccpStusIsNotAct" />');
             return;
         }
         
@@ -207,20 +207,20 @@ $.fn.clearForm = function() {
 function createCalGrid(){
 	
 	var  columnLayout = [
-	                     {dataField : "salesOrdNo", headerText : "Order<br/>No", width : "7%" , editable : false},
-	                     {dataField : "ccpIsHold", headerText : "Hold", width : "4%" , editable : false,
+	                     {dataField : "salesOrdNo", headerText : '<spring:message code="sal.title.text.ordBrNo" />', width : "7%" , editable : false},
+	                     {dataField : "ccpIsHold", headerText : '<spring:message code="sal.title.text.hold" />', width : "4%" , editable : false,
 	                       renderer : {type : "CheckBoxEditRenderer", editable : false , checkValue : true , unCheckValue : false}
 	                     },
-	                     {dataField : "refNo", headerText : "Order<br/>Ref No", width : "7%" , editable : false},
-	                     {dataField : "name1", headerText : "Branch", width : "7%" , editable : false},
-	                     {dataField : "keyAt", headerText : "Key At<br/>(By)", width : "10%" , editable : false},
-	                     {dataField : "name", headerText : "Customer<br/> Name", width : "9%" , editable : false},
-	                     {dataField : "ccpTotScrePoint", headerText : "Total<br/> Point", width : "7%" , editable : false},
-	                     {dataField : "ccpStatus", headerText : "CCP<br/>Status", width : "7%" , editable : false},
-	                     {dataField : "name2", headerText : "CCP<br/> Reject<br/> Status", width : "7%" , editable : false},
-	                     {dataField : "ccpRem", headerText : "CCP<br/> Remark", width : "15%" , editable : false},
-	                     {dataField : "resnDesc", headerText : "Special <br/>Remark", width : "10%" , editable : false},
-	                     {dataField : "updAt", headerText : "Last<br/> Update At <br/>(By)", width : "10%" , editable : false},
+	                     {dataField : "refNo", headerText :'<spring:message code="sal.title.text.ordBrRefNo" />', width : "7%" , editable : false},
+	                     {dataField : "name1", headerText : '<spring:message code="sal.text.branch" />', width : "7%" , editable : false},
+	                     {dataField : "keyAt", headerText : '<spring:message code="sal.title.text.keyAtBrBy" />', width : "10%" , editable : false},
+	                     {dataField : "name", headerText : '<spring:message code="sal.title.text.customerName" />', width : "9%" , editable : false},
+	                     {dataField : "ccpTotScrePoint", headerText : '<spring:message code="sal.title.text.totBrPoint" />', width : "7%" , editable : false},
+	                     {dataField : "ccpStatus", headerText : '<spring:message code="sal.title.text.ccpBrStus" />', width : "7%" , editable : false},
+	                     {dataField : "name2", headerText : '<spring:message code="sal.title.text.ccpBrRjtBrStus" />', width : "7%" , editable : false},
+	                     {dataField : "ccpRem", headerText : '<spring:message code="sal.title.text.ccpBrRem" />', width : "15%" , editable : false},
+	                     {dataField : "resnDesc", headerText : '<spring:message code="sal.title.text.specialBrRem" />', width : "10%" , editable : false},
+	                     {dataField : "updAt", headerText : '<spring:message code="sal.title.text.lastBrUpdAtBrBy" />', width : "10%" , editable : false},
 	                     {dataField : "ccpId", visible : false},
 	                     {dataField : "salesOrdId", visible : false},
 	                     {dataField : "ccpStusId", visible : false}, 
@@ -243,8 +243,6 @@ function createCalGrid(){
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping",
             wordWrap :  true
         };
 	
@@ -297,18 +295,18 @@ function popup(location){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Customer Credibility Point List</h2>
+<h2><spring:message code="sal.title.text.custCredibPtList" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue type2"><a id="_updPayBtn">Update Payment Channel</a></p></li>
+    <li><p class="btn_blue type2"><a id="_updPayBtn"><spring:message code="sal.title.text.updPayChnnl" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}"> 
-    <li><p class="btn_blue type2"><a id="_updCustBtn">Update Customer Info</a></p></li>
+    <li><p class="btn_blue type2"><a id="_updCustBtn"><spring:message code="sal.title.text.updCustInfo" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue type2"><a id="_calSearch"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue type2"><a id="_calSearch"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue type2"><a href="#" onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue type2"><a href="#" onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 <form id="_detailForm">
@@ -336,80 +334,80 @@ function popup(location){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No.</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p"  name="calOrdNo"/></td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" name="calStartDate"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date"  name="calEndDate"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">CCP Status<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.ccpStatus" /><span class="must">*</span></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" name="calCcpStatus">
-        <option value="1" selected="selected">Active</option>
-        <option value="5" selected="selected">Approved</option>
-        <option value="4" selected="selected">Rejected</option>
+        <option value="1" selected="selected"><spring:message code="sal.btn.active" /></option>
+        <option value="5" selected="selected"><spring:message code="sal.combo.text.approv" /></option>
+        <option value="4" selected="selected"><spring:message code="sal.combo.text.rej" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch</th>
+    <th scope="row"><spring:message code="sal.text.branch" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" name="calBranch" id="_keyInBranch"></select>
     </td>
-    <th scope="row">DSC Branch</th>
+    <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
     <td>
     <select class="w100p" name="calDscBranch" id="_keyInDscBranch"></select>
     </td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><input type="text" title="" placeholder="" class="w100p"  name="calCustName"/></td>
 </tr>
 <tr>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p"  name="calNric"/></td>
-    <th scope="row">Action Point</th>
+    <th scope="row"><spring:message code="sal.title.text.actionPoint" /></th>
     <td>
     <select class="w100p" name="calActPoint">
-        <option value="">Choose One</option>
-        <option value="1">No Action Point</option>
+        <option value=""><spring:message code="sal.combo.text.chooseOne" /></option>
+        <option value="1"><spring:message code="sal.title.text.noActionPoint" /></option>
     </select>
     </td>
-    <th scope="row">Product</th>
+    <th scope="row"><spring:message code="sal.title.text.product" /></th>
     <td>
     <select class="w100p" id="listProductId" name="calProductId"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">CCP Type</th>
+    <th scope="row"><spring:message code="sal.title.text.ccpType" /></th>
     <td>
     <select class="w100p" name="calCcpType" id="_calCcpType"></select>
     </td>
-    <th scope="row">Scheme Type</th>
+    <th scope="row"><spring:message code="sal.title.text.schemeType" /></th>
     <td>
     <select class="w100p" name="calScheme" id="_calScheme"></select>
     </td>
-    <th scope="row">Order Ref No</th>
+    <th scope="row"><spring:message code="sal.title.text.ordRefNo" /></th>
     <td><input type="text" title="" placeholder="" class="w100p"  name="calOrdRefNo"/></td>
 </tr>
 <tr>
-    <th scope="row">Region</th>
+    <th scope="row"><spring:message code="sal.title.text.region" /></th>
     <td>
     <select class="w100p" name="calRegion" id="_calRegion">
-        <option value="">Choose one</option>
-        <option value="651">Central</option>
-        <option value="652">Northern</option>
-        <option value="654">Central A</option>
-        <option value="655">Central B</option>
+        <option value=""><spring:message code="sal.combo.text.chooseOne" /></option>
+        <option value="651"><spring:message code="sal.combo.text.central" /></option>
+        <option value="652"><spring:message code="sal.combo.text.northern" /></option>
+        <option value="654"><spring:message code="sal.combo.text.centralA" /></option>
+        <option value="655"><spring:message code="sal.combo.text.centralB" /></option>
     </select>
     </td>
-    <th scope="row">CCP F/B Code</th>
+    <th scope="row"><spring:message code="sal.title.text.ccpFbCode" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="_reasonCode" name="calReason"></select>
     </td>
-    <th scope="row">Last Update User</th>
+    <th scope="row"><spring:message code="sal.title.text.lastUpdUser" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" name="calUpdator"/></td>
 </tr>
 </tbody>
@@ -418,17 +416,17 @@ function popup(location){
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
-    <dt>Link</dt>
+    <dt><spring:message code="sal.title.text.link" /></dt>
     <dd>
     <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-        <li><p class="link_btn"><a href="#" onclick="javascript : popup('listing')">Listing</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : popup('listing')"><spring:message code="sal.title.text.listing" /></a></p></li>
         </c:if>
         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-        <li><p class="link_btn"><a href="#" onclick="javascript : popup('rawData')">RAW Data</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : popup('rawData')"><spring:message code="sal.title.text.rawData" /></a></p></li>
         </c:if>
         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-        <li><p class="link_btn"><a href="#" onclick="javascript : popup('performance')">Performance</a></p></li>
+        <li><p class="link_btn"><a href="#" onclick="javascript : popup('performance')"><spring:message code="sal.title.text.perfomance" /></a></p></li>
         </c:if>
     </ul>
     <ul class="btns">

@@ -15,11 +15,10 @@ $(document).ready(function() {
 		
 		if(null == fileName || '' == fileName){
 			
-			Common.alert("* Please select File.");
+			Common.alert('<spring:message code="sal.alert.msg.selFile" />');
 			return;
 			
 		}
-		
 		//Upload Start
 		
 		//$("#_fileName").val($("#_updMsgId").val());
@@ -49,16 +48,16 @@ function setInputFile2(){//인풋파일 세팅하기
 
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ATTACHMENT FILE UPLOAD</h1>
+<h1><spring:message code="sal.title.text.attchFileUpload" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_uploadCloseBtn">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_uploadCloseBtn"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><p>*** Attachment file will be replace if you re-upload the file.</p></li>
+    <li><p><spring:message code="sal.page.subTitle.attachment" /></p></li>
 </ul>
 <form id="_uploadForm" method="post" enctype="multipart/form-data">
 <input type="hidden" id="_updMsgId" name="updMsgId" value="${msgId}">
@@ -70,7 +69,7 @@ function setInputFile2(){//인풋파일 세팅하기
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" rowspan="2">Attachment</th>
+    <th scope="row" rowspan="2"><spring:message code="sal.text.attachment" /></th>
     <td>
      <div class="auto_file2"><!-- auto_file start -->
         <input type="file" title="file add" style="width:300px" id="_fileName"/>
@@ -78,13 +77,13 @@ function setInputFile2(){//인풋파일 세팅하기
     </td>
 </tr>
 <tr>
-    <td colspan="2"><p><span class="red_text">Allowed file extension : .zip || Allowed file size : &lt;= 5MB</span></p></td>
+    <td colspan="2"><p><span class="red_text"><spring:message code="sal.text.fileExtension" /></span></p></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_fileUpBtn">Upload Attachment</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_fileUpBtn"><spring:message code="sal.btn.updAttachment" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

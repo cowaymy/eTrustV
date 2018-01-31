@@ -314,9 +314,7 @@ var gridPros = {
     useGroupingPanel    : false,        //그룹핑 패널 사용
     skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-    showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-    noDataMessage       : "No order found.",
-    groupingMessage     : "Here groupping"
+    showRowNumColumn    : true
 };
     
 function chgTab(tabNm) {
@@ -398,9 +396,9 @@ function chgTab(tabNm) {
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>CCP Calculation View</h1>
+<h1><spring:message code="sal.title.text.ccpCalView" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_btnClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_btnClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -453,17 +451,17 @@ function chgTab(tabNm) {
 </form>
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num5">
-    <li><a href="#" class="on">Basic Info</a></li>
-    <li><a href="#">Sales Person</a></li>
-    <li><a href="#">Customer Info</a></li>
-    <li><a href="#">Installation Info</a></li>
-    <li><a href="#">Mailing Info</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.text.salPerson" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.custInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.installInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.maillingInfo" /></a></li>
     <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
-    <li><a href="#">Payment Channel</a></li>
+    <li><a href="#"><spring:message code="sal.title.text.paymentChnnl" /></a></li>
     </c:if>
-    <li><a href="#">Relief Certificate</a></li>
-    <li><a href="#" onClick="javascript:chgTab('docInfo');">Document Submission</a></li>
-    <li><a href="#" onClick="javascript:chgTab('payInfo');">Payment Listing</a></li>
+    <li><a href="#"><spring:message code="sal.title.text.reliefCertificate" /></a></li>
+    <li><a href="#" onClick="javascript:chgTab('docInfo');"><spring:message code="sal.title.text.docuSubmission" /></a></li>
+    <li><a href="#" onClick="javascript:chgTab('payInfo');"><spring:message code="sal.title.text.paymentListing" /></a></li>
 </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -507,11 +505,11 @@ function chgTab(tabNm) {
 </section><!-- tap_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>CCP Score Point</h3>
+<h3><spring:message code="sal.title.text.ccpScorePoint" /></h3>
 <ul class="right_btns">
-    <li><p class="btn_blue2"><a onclick="javascript: fn_installationArea()">Installation Area</a></p></li> 
-    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')">FICO Report</a></p></li>  
-    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('CTOS_VIEW')">CTOS Report</a></p></li> 
+    <li><p class="btn_blue2"><a onclick="javascript: fn_installationArea()"><spring:message code="sal.title.text.installArea" /></a></p></li> 
+    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('FICO_VIEW')"><spring:message code="sal.title.text.ficoReport" /></a></p></li>  
+    <li><p class="btn_blue2"><a onclick="javascript: fn_displayReport('CTOS_VIEW')"><spring:message code="sal.title.text.ctosReport" /></a></p></li> 
 </ul>
 </aside><!-- title_line end -->
 
@@ -530,41 +528,41 @@ function chgTab(tabNm) {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order Unit</th>
+    <th scope="row"><spring:message code="sal.title.text.ordUnit" /></th>
     <td>
         <select class="w100p" name="ordUnit" id="_ordUnit"></select>
     </td>
-    <th scope="row">Count</th>
+    <th scope="row"><spring:message code="sal.title.text.count" /></th>
     <td><span><b>${fieldMap.ordUnitCount }</b></span></td>
-    <th scope="row">Point</th>
+    <th scope="row"><spring:message code="sal.title.text.point" /></th>
     <td><span><b>${fieldMap.orderUnitPoint}</b></span></td>
 </tr>
 <tr>
-    <th scope="row">Avg ROS Mth</th>
+    <th scope="row"><spring:message code="sal.title.text.avgRosMth" /></th>
     <td> <select class="w100p" name="ordMth" id="_ordMth"></select></td>
-    <th scope="row">Count</th>
+    <th scope="row"><spring:message code="sal.title.text.count" /></th>
     <td><span><b>${fieldMap.rosCount}</b></span></td>
-    <th scope="row">Point</th>
+    <th scope="row"><spring:message code="sal.title.text.point" /></th>
     <td><span><b>${fieldMap.rosUnitPoint}</b></span></td> 
 </tr>
 <tr>
-    <th scope="row">Suspension/Termination</th> 
+    <th scope="row"><spring:message code="sal.title.text.suspensionTermination" /></th> 
     <td> <select class="w100p" name="ordSuspen" id="_ordSuspen"></select></td>
-    <th scope="row">Count</th>
+    <th scope="row"><spring:message code="sal.title.text.count" /></th>
     <td><span><b>${fieldMap.susUnitCount}</b></span></td>
-    <th scope="row">Point</th>
+    <th scope="row"><spring:message code="sal.title.text.point" /></th>
     <td><span><b>${fieldMap.susUnitPoint}</b></span></td>
 </tr>
 <tr>
-    <th scope="row">Existing Customer</th>
+    <th scope="row"><spring:message code="sal.title.text.existCust" /></th>
     <td><select class="w100p" name="ordExistingCust" id="_ordExistingCust"></select></td>
-    <th scope="row">Count</th>
+    <th scope="row"><spring:message code="sal.title.text.count" /></th>
     <td><span><b>${fieldMap.custUnitCount}</b></span></td>
-    <th scope="row">Point</th>
+    <th scope="row"><spring:message code="sal.title.text.point" /></th>
     <td><span><b>${fieldMap.custUnitPoint}</b></span></td>
 </tr>
 <tr>
-    <th scope="row">Total Point</th>
+    <th scope="row"><spring:message code="sal.title.text.totPoint" /></th>
     <td colspan="5"><b>${fieldMap.totUnitPoint}</b></td>
 </tr>
 </tbody>
@@ -574,7 +572,7 @@ function chgTab(tabNm) {
 </section><!-- search_table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>CCP Result</h3>
+<h3><spring:message code="sal.title.text.ccpResult" /></h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -589,35 +587,35 @@ function chgTab(tabNm) {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">CCP Status</th>
+    <th scope="row"><spring:message code="sal.title.text.ccpStatus" /></th>
     <td><span><select class="w100p" name="statusEdit" id="_statusEdit"></select></span></td>
-    <th scope="row">Income Range</th>
+    <th scope="row"><spring:message code="sal.title.text.ccpIncomeRange" /></th>
     <td><span><select class="w100p" name="incomeRangeEdit" id="_incomeRangeEdit"></select></span></td> 
-    <th scope="row">Reject Status</th>
+    <th scope="row"><spring:message code="sal.title.text.rejStus" /></th>
     <td><span><select class="w100p" name="rejectStatusEdit" id="_rejectStatusEdit"></select></span></td>
 </tr>
 <tr>
-    <th scope="row">FICO Score</th>
+    <th scope="row"><spring:message code="sal.title.text.ficoScore" /></th>
     <td colspan="5"><span>${ccpInfoMap.ccpFico}</span></td>
 </tr>
 <tr>
-    <th scope="row">CCP Feedback Code</th>
+    <th scope="row"><spring:message code="sal.title.text.ccpFeedbackCode" /></th>
     <td colspan="5"><span><select class="w100p" name="reasonCodeEdit" id="_reasonCodeEdit"></select></span></td>  
 </tr>
 <tr>
-    <th scope="row">Special Remark</th>
+    <th scope="row"><spring:message code="sal.title.text.specialRem" /></th>
     <td colspan="5"><textarea cols="20" rows="5" id="_spcialRem" name="spcialRem">${ccpInfoMap.ccpRem}</textarea></td>
 </tr>
 <tr>
-    <th scope="row">P &amp; C Remark</th>
+    <th scope="row"><spring:message code="sal.title.text.pncRem" /></th>
     <td colspan="5"><textarea cols="20" rows="5" id="_pncRem" name="pncRem">${ccpInfoMap.ccpPncRem}</textarea></td> 
 </tr>
 <tr>
-    <th scope="row">Letter Of Undertaking</th>
+    <th scope="row"><spring:message code="sal.title.letterOfUnder" /></th>
     <td><span><input type="checkbox"  id="_letterOfUdt"  name="letterOfUdt"/></span></td> 
-    <th scope="row">Summon</th>
+    <th scope="row"><spring:message code="sal.title.text.summon" /></th>
     <td><span><input type="checkbox"  id="_summon"  name="summon"/></span></td>
-    <th scope="row">On Hold CCP</th>
+    <th scope="row"><spring:message code="sal.title.text.onHoldCcp" /></th>
     <td><span><input type="checkbox"  id="_onHoldCcp"  name="onHoldCcp"/></span></td>
 </tr>
 </tbody>
@@ -625,7 +623,7 @@ function chgTab(tabNm) {
 
 <div id="_smsDiv" style="display: none;">
 <aside class="title_line"><!-- title_line start -->
-<h2>SMS Info</h2>
+<h2><spring:message code="sal.title.text.smsInfo" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -637,15 +635,15 @@ function chgTab(tabNm) {
 <tbody>
 <tr>
     <td colspan="2">
-    <label><input type="checkbox"  id="_updSmsChk"  /><span>Send SMS ?</span></label>
+    <label><input type="checkbox"  id="_updSmsChk"  /><span><spring:message code="sal.title.text.sendSmsQuest" /></span></label>
     </td>
 </tr>
 <tr>
-    <th scope="row">SMS Message</th>
+    <th scope="row"><spring:message code="sal.title.text.smsMsg" /></th>
     <td><textarea cols="20" rows="5" name="updSmsMsg" id="_updSmsMsg"></textarea></td>
 </tr>
 <tr>
-    <td colspan="2"><span>Total Character(s) : 75</span></td>
+    <td colspan="2"><span><spring:message code="sal.title.text.totChars" /></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->

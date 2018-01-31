@@ -117,18 +117,18 @@ function validRequiredField(){
 	
 	if($("#cmbType :selected").index() < 1){
 		valid = false;
-		message += "* Please select a report type.\n";
+		message += '<spring:message code="sal.alert.msg.plzSelReportType" />';
 	}
 
 	if(($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0) || ($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
 		valid = false;
-		message += "* Please key in the Order Date.\n";
+		message += '<spring:message code="sal.alert.msg.plzKeyinOrdDt" />';
 	}
 	
 	if(valid == true){
         fn_report();
     }else{
-    	Common.alert("CCP Generate Summary" + DEFAULT_DELIMITER + message);
+    	Common.alert('<spring:message code="sal.alert.msg.ccpGenSummry" />' + DEFAULT_DELIMITER + message);
     }
 }
 
@@ -280,9 +280,9 @@ CommonCombo.make('cmbbranch', '/sales/ccp/getBranchCodeList', '' , '');
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>CCP Raw Data</h1>
+<h1><spring:message code="sal.title.text.ccpRawData" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -303,39 +303,39 @@ CommonCombo.make('cmbbranch', '/sales/ccp/getBranchCodeList', '' , '');
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Report Type</th>
+    <th scope="row"><spring:message code="sal.text.reportType" /></th>
     <td>
     <select class="" id="cmbType" onchange="cmbType_SelectedIndexChanged()">
-        <option data-placeholder="true" hidden>Report/Raw Data Type</option>
-        <option value="1">CCP -Customer Information Raw Data</option>
-        <option value="2">CCP -Order Information Raw Data</option>
-        <option value="3">CCP -CCP Information Raw Data</option>
-        <option value="4">CCP -CCP Assignment B2B Raw Data</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.title.text.rptRawDataType" /></option>
+        <option value="1"><spring:message code="sal.combo.text.ccpCustInfoRawData" /></option>
+        <option value="2"><spring:message code="sal.combo.text.ccpOrderInfoRawData" /></option>
+        <option value="3"><spring:message code="sal.combo.text.ccpCcpInfoRawData" /></option>
+        <option value="4"><spring:message code="sal.combo.text.ccpCcpAssignB2BRawData" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="" placeholder="" class="w100p" id="txtOrderNumberFrom"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="" placeholder="" class="w100p" id="txtOrderNumberTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpDateTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Key in Hour</th>
+    <th scope="row"><spring:message code="sal.title.text.keyInHour" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
 
@@ -370,7 +370,7 @@ CommonCombo.make('cmbbranch', '/sales/ccp/getBranchCodeList', '' , '');
     </ul>
     </div><!-- time_picker end -->
 
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
 
     <div class="time_picker"><!-- time_picker start -->
     <input type="text" title="" placeholder="" class="time_date" id="tpTimeTo"/>
@@ -408,13 +408,13 @@ CommonCombo.make('cmbbranch', '/sales/ccp/getBranchCodeList', '' , '');
     </td>
 </tr>
 <tr>
-    <th scope="row">Region</th>
+    <th scope="row"><spring:message code="sal.title.text.region" /></th>
     <td>
     <select class="" id="cmbRegion"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch</th>
+    <th scope="row"><spring:message code="sal.text.branch" /></th>
     <td>
     <select class="" id="cmbbranch"></select>
     </td>
@@ -423,8 +423,8 @@ CommonCombo.make('cmbbranch', '/sales/ccp/getBranchCodeList', '' , '');
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: validRequiredField();">Generate</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: validRequiredField();"><spring:message code="sal.btn.generate" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />
