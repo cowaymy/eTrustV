@@ -237,6 +237,7 @@
 			       Extent1.SO_EXCHG_OLD_PRC ,
 			       Extent1.SO_EXCHG_NW_PRC ,
 			       Extent1.SO_EXCHG_OLD_PV ,
+			       Extent1.SO_EXCHG_NW_PV ,
 			       Extent1.SO_EXCHG_CRT_DT,
 			       Extent1.SO_EXCHG_CRT_USER_ID  ,
 			       Extent1.SO_EXCHG_UPD_DT  ,
