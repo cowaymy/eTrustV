@@ -207,14 +207,18 @@ public class MemberEventListController {
 		logger.debug("updateList {}", updateList);
 		Map<String, Object> approveMap  = null;
 		int approveCount = 0;
+		
+	
+		
 		for(int i = 0 ; i < updateList.size(); i++  ){
 			approveMap = (Map<String, Object>) updateList.get(i);
 			approveMap.put("promoId" , approveMap.get("promoId").toString() );
 			approveMap.put("confirmStatus", "4");
 			approveMap.put("memId" , approveMap.get("memberid").toString() );
 			approveMap.put("evtApplyDate" , approveMap.get("eventdt").toString() );
-			approveMap.put("branchId" , approveMap.get("branchid").toString() );
-			
+			if(approveMap.get("branchid") != null){
+				approveMap.put("branchId" , approveMap.get("branchid").toString() );
+			}
 			//memId confirmStatus branchId evtApplyDate
 			logger.debug("approveMap {}", approveMap);
 			memberEventService.selectMemberPromoEntries(approveMap);	
@@ -255,19 +259,6 @@ public class MemberEventListController {
 		
 		return ResponseEntity.ok(message);
 	}
-	
-	
-	
-	
-	
-		
-	
-	
-	
-	
-	
-	
-	
 	
 				
 }

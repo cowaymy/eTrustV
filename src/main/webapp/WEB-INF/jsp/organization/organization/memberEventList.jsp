@@ -201,7 +201,7 @@ function fn_MemsFail(){
          console.log("성공.");
          console.log("data : " + result);
          $("#requestStatus").val("60");
-         Common.alert(result.message, fn_getOrgEventListAjax());
+         Common.alert(result.message, fn_getOrgEventListAjax(    $("#requestStatus").val("60")));
          
    
      });
@@ -228,7 +228,7 @@ function fn_MemsApprove(){
 	        console.log("성공.");
 	        console.log("data : " + result);
 	        $("#requestStatus").val("60");
-	        Common.alert(result.message, fn_getOrgEventListAjax());
+	        Common.alert(result.message, fn_getOrgEventListAjax($("#requestStatus").val("60")));
 	        
 	  
 	    });
