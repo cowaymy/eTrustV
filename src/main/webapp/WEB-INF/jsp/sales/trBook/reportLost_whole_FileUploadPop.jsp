@@ -29,7 +29,7 @@ function fn_attachFile(){
 			        console.log("성공." + JSON.stringify(result));
 			        console.log("data : " + result.cnt);
 
-			        Common.alert("Record Saved" + DEFAULT_DELIMITER + result.massage);
+			        Common.alert("<spring:message code="sal.alert.title.recordSaved" />" + DEFAULT_DELIMITER + result.massage);
 
 			        $("#fileUploadPop").remove();
 			        
@@ -81,7 +81,7 @@ function setInputFile2(){//인풋파일 세팅하기
 </colgroup>
 <tbody>
 <tr>
-<th scope="row">Request Number </th>
+<th scope="row"><spring:message code="sal.text.requestNumber" /> </th>
 <td><span >${docNo}</span>
 </tr>
 <tr>
@@ -94,7 +94,7 @@ function setInputFile2(){//인풋파일 세팅하기
 	</td>
 </tr>
 <tr>
-	<td scope="row" colspan="2"><span class="red_text">Allowed file extension : .zip || Allowed file size : <= 3MB</span></td>
+	<td scope="row" colspan="2"><span class="red_text"><spring:message code="sal.text.fileExtension2" /></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
