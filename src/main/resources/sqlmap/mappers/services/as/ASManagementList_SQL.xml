@@ -109,7 +109,7 @@
 						                       JOIN SAL0001D Extent4   ON Extent1.AS_SO_ID = Extent4.SALES_ORD_ID
 						                       JOIN SYS0013M Extent5   ON Extent4.APP_TYPE_ID = Extent5.CODE_ID
 						                       JOIN SAL0029D Extent6   ON Extent4.CUST_ID = Extent6.CUST_ID
-						                       JOIN ORG0001D Extent8   ON Extent8.MEM_ID = Extent1.AS_MEM_ID
+						                       LEFT JOIN ORG0001D Extent8   ON Extent1.AS_MEM_ID = Extent8.MEM_ID 
 						                       LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent8.BRNCH
 						                       LEFT JOIN SVC0004D Extent7   ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
 						                       AND ( 457 = Extent7.AS_RESULT_TYPE_ID )

@@ -2529,7 +2529,7 @@
 
 
                     <select id="selectHSAddFilterSetInfo" parameterType="Map" resultType="egovMap">
-<![CDATA[
+
                             SELECT  E.STK_CODE, E.STK_ID CODE_ID, (E.STK_CODE || '-' || E.STK_DESC) CODE_NAME
 							FROM   
 							SAL0002D A,
@@ -2542,10 +2542,10 @@
 							AND   B.STK_CODE    = C.MATRL_NO
 							AND   C.BOM         = D.BOM
 							AND   D.BOM_COMPNT  = E.STK_CODE
-							AND   E.STK_CTGRY_ID = '54'
+							<!-- AND   E.STK_CTGRY_ID = '54' -->
 							AND   E.STK_TYPE_ID = '62'
-							AND   A.SALES_ORD_ID = #{salesOrdId} --'363904'
-							AND   TO_CHAR(D.VALID_FROM_DT,'YYYYMMDD') <   TO_CHAR(SYSDATE,'YYYYMMDD')     
+							AND   A.SALES_ORD_ID = #{salesOrdId}
+<![CDATA[				AND   TO_CHAR(D.VALID_FROM_DT,'YYYYMMDD') <   TO_CHAR(SYSDATE,'YYYYMMDD')     
 							AND   TO_CHAR(D.VALID_TO_DT,'YYYYMMDD')   >   TO_CHAR(SYSDATE,'YYYYMMDD')
 ]]>
                     </select>
@@ -2651,7 +2651,7 @@
 									      AND   B.STK_CODE    = C.MATRL_NO
 									      AND   C.BOM         = D.BOM
 									      AND   D.BOM_COMPNT  = E.STK_CODE
-									      AND   E.STK_CTGRY_ID = '54'
+									      <!-- AND   E.STK_CTGRY_ID = '54' -->
 									      AND   E.STK_TYPE_ID = '62'
 									      AND   A.SALES_ORD_ID = #{salesOrdId}
 									      AND   E.STK_ID = #{filterCode}
