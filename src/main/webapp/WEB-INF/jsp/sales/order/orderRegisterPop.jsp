@@ -708,8 +708,8 @@
             $('#spEmail2').text("");
             $('#billMthdEmail1').prop("checked", false).prop("disabled", true);
             $('#billMthdEmail2').prop("checked", false).prop("disabled", true);
-            $('#billMthdEmailTxt1').val("").prop("disabled", true);
-            $('#billMthdEmailTxt2').val("").prop("disabled", true);
+          //$('#billMthdEmailTxt1').val("").prop("disabled", true);
+          //$('#billMthdEmailTxt2').val("").prop("disabled", true);
 
             if($("#billMthdEstm").is(":checked")) {
                 $('#spEmail1').text("*");
@@ -1802,6 +1802,16 @@
                                     isValid = false;
                                     msg += "* Invalid email address.<br>";
                                 }
+                            }
+                            if(!FormUtil.checkReqValue($('#billMthdEmailTxt2')) && FormUtil.checkEmail($('#billMthdEmailTxt2').val())) {
+                                isValid = false;
+                                msg += "* Invalid email address.<br>";
+                            }
+                        }
+                        else {
+                            if(!FormUtil.checkReqValue($('#billMthdEmailTxt1')) && FormUtil.checkEmail($('#billMthdEmailTxt1').val())) {
+                                isValid = false;
+                                msg += "* Invalid email address.<br>";
                             }
                             if(!FormUtil.checkReqValue($('#billMthdEmailTxt2')) && FormUtil.checkEmail($('#billMthdEmailTxt2').val())) {
                                 isValid = false;
