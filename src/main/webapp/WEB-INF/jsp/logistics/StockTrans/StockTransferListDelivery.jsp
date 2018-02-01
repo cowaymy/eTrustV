@@ -418,7 +418,7 @@ $(function(){
         var bool = true;
         bool = fnQtyChk(checkedItems);
         if (!bool){
-        	Common.alert('Delivery quantity is more than stock. Please check again.');
+        	Common.alert('There are Not Enough Stocks. Please Check Available Stocks Qty. ');
         	return false;
         }
         

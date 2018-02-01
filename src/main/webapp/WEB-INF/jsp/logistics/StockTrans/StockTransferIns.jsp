@@ -50,7 +50,8 @@ var reqop = {usePaging : true,useGroupingPanel : false , Editable:true};
 
 var uomlist = f_getTtype('42' , '');
 var paramdata;
-var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}];
+//var amdata = [{"codeId": "A","codeName": "Auto"},{"codeId": "M","codeName": "Manaual"}]; // auto 만 세팅
+var amdata = [{"codeId": "A","codeName": "Auto"}];
 
 
 $(document).ready(function(){
@@ -71,8 +72,8 @@ $(document).ready(function(){
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
     
-    doDefCombo(amdata, 'M' ,'sam', 'S', '');
-
+    //doDefCombo(amdata, 'M' ,'sam', 'S', '');  Change Select condition From Manual to Auto  to avoid 
+    doDefCombo(amdata, 'A' ,'sam', 'S', '');
     $("#cancelTr").hide();
     /**********************************
      * Header Setting End
