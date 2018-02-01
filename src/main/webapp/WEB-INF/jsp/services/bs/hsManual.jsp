@@ -412,8 +412,7 @@
 
 
 
-        $(function(){
-           $("#codyChange").click(function(){
+        function fn_codyChangeHQ(){
            $("#_openGb").val("codyChange");
 
            var radioVal = $("input:radio[name='searchDivCd']:checked").val();
@@ -552,8 +551,149 @@
 
             }
 
-        });
-    });
+        }
+        
+        function fn_codyChange(){
+            $("#_openGb").val("codyChange");
+
+            var radioVal = $("input:radio[name='searchDivCd']:checked").val();
+            if (radioVal == '2') {
+                Common.alert("'Assign Cody Transfer' is not allow in Manual HS");
+                return false;
+            }
+            
+             var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
+           
+
+             if(checkedItems.length <= 0) {
+                 Common.alert('No data selected.');
+                 return false;
+             }else{
+                 
+                 
+             /* if(checkedItems.length > 1){
+                  Common.alert('please choose one data selected.');
+                  return false;
+             } */
+                 var str = "";
+                 var custStr = "";
+                 var rowItem;
+                 var brnchId = "";
+                 var saleOrdList = "";
+                 var list = "";
+                 var brnchCnt = 0;
+                 var ctBrnchCodeOld = "";
+                 var dept="";
+                 var deptList = "";
+
+                 //var saleOrdList = [];
+                 var saleOrd = {
+                      salesOrdNo : ""
+                 };
+
+
+                 for(var i=0, len = checkedItems.length; i<len; i++) {
+                     rowItem = checkedItems[i];
+                     saleOrdList += rowItem.salesOrdNo;
+                     deptList = deptList+rowItem.deptCode+","+rowItem.codyMangrUserId
+
+                     if(i  != len -1){
+                         saleOrdList += ",";
+                         deptList += ",";
+                     }
+
+                     /* //동일 brnch 만 수정하도록
+                     if(i !=0 ){
+                         if(ctBrnchCodeOld != rowItem.codyBrnchCode ){
+                             brnchCnt += 1 ;
+                         }
+                     }
+                     ctBrnchCodeOld = rowItem.codyBrnchCode; */
+                     
+                     if(i==0){
+                          brnchId = rowItem.branchCd;
+                     }
+
+                     //상태 com은 수정 못하도록
+                      if(rowItem.stusCodeId == "4"){
+                         Common.alert('Not Allow to Cody Transfer for Complete HS Order');
+                         return ;
+                      }
+
+
+                      dept = rowItem.deptCode;
+                
+
+                 }
+                 
+                 //Common.confirmCustomizingButton("Do you want to transfer an assign cody<br>with this CM group?", "Yes", "No", fn_originBrnchAssign, fn_selectBrnchCM);
+                 fn_originBrnchAssign();
+                 
+                  
+                  /* // deptCode의 MEM_UP_ID가 동일한 것만 수정 가능하도록
+                  Common.ajax("GET", "/services/bs/assignDeptMemUp.do?deptList="+deptList, "" , function(result){
+                     //console.log(result);
+                     
+                     var memUpId = "";
+                     var memUpCnt = 0;
+                     for (var j=0; j<result.length; j++) {
+                         console.log(result[j]);
+                         if (j == 0) {
+                             memUpId = result[j]["memUpId"];
+                         } else if (j != 0){
+                             if(memUpId != result[j]["memUpId"] ){
+                                 memUpCnt += 1 ;
+                             }
+                         }
+                     }
+                     
+                     if (memUpCnt != 0) {
+                         //alert("memUpId 다름");
+                         // Department의 MEM_UP_ID가 다른 걸 한꺼번에 Assign Cody Transfer 하려고 할 때 alert 메시지
+                         Common.alert("Not Avaialable to Assign Cody Transfer </br>With different assigned Cody's Group in Single Time.");
+                         return;
+                     } else {
+                         //alert("memUpId 동일");
+                         
+                         Common.confirmCustomizingButton("같은 브랜치?", "Yes", "No", fn_sameBrnchAssign, fn_otherBrnchAssign);
+                     }
+                     
+                  }); */
+                 
+                 /* if(brnchCnt > 0 ){
+                     Common.alert("Not Avaialable to Assign Cody Transfer With Several CDB in Single Time.");
+                     return;
+                 } */
+                 
+                 function fn_originBrnchAssign(){
+                     var jsonObj = {
+                              "SaleOrdList" : saleOrdList,
+                              "BrnchId": brnchId,
+                              "ManualCustId" : $("#manualCustomer").val(),
+                              "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
+                              "department" : dept
+                              
+                     };
+
+                     Common.popupDiv("/services/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId+"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()+"&deptList="+deptList);
+                  }
+                  
+                  /* function fn_selectBrnchCM(){
+                      var jsonObj = {
+                              "SaleOrdList" : saleOrdList,
+                              "BrnchId": brnchId,
+                              "ManualCustId" : $("#manualCustomer").val(),
+                              "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
+                              "department" : dept
+                              
+                     };
+                      
+                      Common.popupDiv("/services/bs/assignBrnchCMPop.do?JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId+"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()+"&deptList="+deptList);
+                  } */
+
+             }
+
+         }
         
 
         /* function fn_sameBrnchAssign(){
@@ -1038,7 +1178,8 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>HS Management</h2>
 <ul class="right_btns">
-     <li><p class="btn_blue"><a id="codyChange">Assign Cody Transfer</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_codyChangeHQ();" id="codyChangeHQ">Assign Cody Transfer HQ</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_codyChange();" id="codyChange" >Assign Cody Transfer</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getHSAddListAjax();" id="addResult">Add HS Result</a></p></li>
     <li><p class="btn_blue"><a id="hSConfiguration" name="hSConfiguration">Create HS Order</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBSListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
