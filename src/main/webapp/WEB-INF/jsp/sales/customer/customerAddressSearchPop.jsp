@@ -48,11 +48,11 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [{
 	            dataField : "name",
-	            headerText : "<spring:message code="sal.title.status" />",
+	            headerText : '<spring:message code="sal.title.status" />',
 	            width : 80
 	        }, {
 	            dataField : "addr",
-	            headerText : "<spring:message code="sal.title.address" />"
+	            headerText : '<spring:message code="sal.title.address" />'
 	        },{
 	            dataField : "custAddId",
 	            visible : false

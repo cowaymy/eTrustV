@@ -48,14 +48,14 @@
                 /* length validation  */
                 lengResult = fn_lengthCheck(bankId, AccNo);
                 if(lengResult == false){
-                    Common.alert("* Invalid bank account number.");
+                    Common.alert('<spring:message code="sal.alert.msg.invaildBankAccNum" />');
                     return;
                 } 
                 
                 /* availability validation */
                 availableResult = fn_availabilityCheck(bankId, AccNo);
                 if(availableResult == true){
-                    Common.alert("* Invalid bank account number.");
+                    Common.alert('<spring:message code="sal.alert.msg.invaildBankAccNum" />');
                     return;
                 }
             }
@@ -268,9 +268,9 @@
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>ADD NEW BANK ACCOUNT</h1>
+<h1><spring:message code="sal.btn.addNewBankAcc" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close1" >CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close1" ><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
@@ -286,27 +286,27 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.type" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="bankCmbAccTypeId" name="bankCustAccTypeId"></select>
     </td>
-    <th scope="row">Issue Bank<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.issueBank" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="bankCmbAccBankId" name="bankCustAccBankId"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Account No<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.accNo" /><span class="must">*</span></th>
     <td><input type="text" title="" placeholder="Account Number" class="w100p"  maxlength="16" id="bankAccountNo" name="bankCustAccNo"/></td>
-    <th scope="row">Bank Branch</th>
+    <th scope="row"><spring:message code="sal.text.bankBranch" /></th>
     <td><input type="text" title="" placeholder="Bank Branch" class="w100p"  maxlength="16" name="bankCustAccBankBrnch"/></td>
 </tr>
 <tr>
-    <th scope="row">Account Owner<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.accountOwner" /><span class="must">*</span></th>
     <td colspan="3"><input type="text" title="" placeholder="Account Owner" class="w100p"   id="bankCustAccOwner" name="bankCustAccOwner"/></td>
 </tr>
 <tr>
-    <th scope="row">Remarks</th>
+    <th scope="row"><spring:message code="sal.text.remarks" /></th>
     <td colspan="3">
     <textarea cols="20" rows="5" name="bankCustAccRem"></textarea>
     </td>
@@ -315,7 +315,7 @@
 </table><!-- table end -->
 </form><!-- Form end  -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="_saveBtn">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_saveBtn"><spring:message code="sal.btn.save2" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

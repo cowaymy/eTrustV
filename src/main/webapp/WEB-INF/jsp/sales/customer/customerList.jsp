@@ -39,7 +39,7 @@
             
             
             if(gridObj == null || gridObj.length <= 0 ){
-                Common.alert("* No Customer Selected. ");
+                Common.alert('<spring:message code="sal.alert.msg.noCustSel" />');
                 return;
             }
             
@@ -60,7 +60,7 @@
             	
             	//VA number
             	if($("#custVaNo").val() == null || $("#custVaNo").val() == ''){
-            		Common.alert("* Please Key in at least one of the<br/> 'Customer ID' , 'NRIC/Company No' , 'Customer Name'.<br/> OR Key in 'VA number' ");
+            		Common.alert('<spring:message code="sal.alert.msg.plzKeyInAtleastOneOfTheCondition" />');
                     return;                    	
                 }
             }
@@ -82,26 +82,26 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "custId",
-                headerText : "ID",
+                headerText : '<spring:message code="sal.title.id" />',
                 width : 140,
                 editable : false
             }, {
                 dataField : "codeName1",
-                headerText : "Type",
+                headerText : '<spring:message code="sal.title.type" />',
                 width : 160,
                 editable : false
             }, {
                 dataField : "codeName",
-                headerText : "Corp Type",
+                headerText : '<spring:message code="sal.title.text.corpType" />',
                 width : 170,
                 editable : false
             }, {
                 dataField : "name",
-                headerText : "Name",
+                headerText : '<spring:message code="sal.text.name" />',
                 editable : false
             }, {
                 dataField : "nric",
-                headerText : "NRIC/Company No",
+                headerText : '<spring:message code="sal.title.text.nricCompNo" />',
                 width : 170,
                 editable : false
             },{
@@ -158,9 +158,7 @@
             wrapSelectionMove : true,
             
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true,
-            
-            groupingMessage : "Here groupping"
+            showRowNumColumn : true
         };
         
         //custGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
@@ -220,7 +218,7 @@
                 Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
                 $("#_close").click();
             }else{
-                Common.alert("access deny.");
+                Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
             }
         }
         if(status == '2'){
@@ -228,7 +226,7 @@
                 Common.popupDiv('/sales/customer/updateCustomerAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2');
                 $("#_close").click();
             }else{
-                Common.alert("access deny.");
+                Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
             }
         }
         if(status == '3'){
@@ -236,7 +234,7 @@
                 Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
                 $("#_close").click();
             }else{
-                Common.alert("access deny.");
+                Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
             }
         }
         if(status == '4'){
@@ -244,7 +242,7 @@
                 Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
                 $("#_close").click();
             }else{
-                Common.alert("access deny.");
+                Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
             }
         }
         if(status == '5'){
@@ -252,7 +250,7 @@
                 Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
                 $("#_close").click();
             }else{
-                Common.alert("access deny.");
+                Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
             }
         }
         if(status == '6'){ 
@@ -260,7 +258,7 @@
                 Common.popupDiv("/sales/customer/updateCustomerBasicInfoLimitPop.do", $("#popForm").serializeJSON(), null , true , '_editDiv6');
                 $("#_close").click();
             }else{
-                Common.alert("access deny.");
+                Common.alert('<spring:message code="sal.alert.msg.accessDeny" />');
             }
         }
     }
@@ -301,14 +299,14 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Customer list</h2>
+<h2><spring:message code="sal.title.text.custList" /></h2>
 
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insert()"><span class="new"></span>NEW</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insert()"><span class="new"></span><spring:message code="sal.title.text.new" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" id="_listSearchBtn"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_listSearchBtn"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
 </ul>
 </aside><!-- title_line end -->
@@ -328,40 +326,40 @@
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Customer Type</th>
+        <th scope="row"><spring:message code="sal.text.custType" /></th>
         <td>
         <select id="cmbTypeId" name="cmbTypeId" class="multy_select w100p" multiple="multiple">
         </select>
         </td>
-        <th scope="row">Customer ID</th>
+        <th scope="row"><spring:message code="sal.text.customerId" /></th>
         <td>
         <input type="text" title="Customer ID" id="custId" name="custId" placeholder="Customer ID (Number Only)" class="w100p" />
         </td>
-        <th scope="row">NRIC/Company No</th>
+        <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
         <td>
         <input type="text" title="NRIC/Company No" id="_nric" name="nric" placeholder="NRIC / Company Number" class="w100p" " />
         </td>
     </tr>
     <tr>
-        <th scope="row">Customer Name</th>
+        <th scope="row"><spring:message code="sal.text.custName" /></th>
         <td>
           <input type="text" title="Customer Name" id="name" name="name" placeholder="Customer Name" class="w100p" />
         </td>
-        <th scope="row">Nationality</th>
+        <th scope="row"><spring:message code="sal.text.nationality" /></th>
         <td>
           <select  id="nation" name="nation" class="w100p"></select>
         </td>
-        <th scope="row">DOB</th>
+        <th scope="row"><spring:message code="sal.text.dob" /></th>
         <td>
         <input type="text" title="DOB" id="_dob" name="dob" placeholder="DD/MM/YYYY" class="j_date" />
         </td>
     </tr>
     <tr>
-        <th scope="row">V.A Number</th>
+        <th scope="row"><spring:message code="sal.title.text.vaNum" /></th>
         <td>
           <input type="text" title="V.A Number" id="custVaNo" name="custVaNo" placeholder="Virtual Account (VA) Number" class="w100p" />
         </td>
-        <th scope="row">Company Type</th>
+        <th scope="row"><spring:message code="sal.title.text.companyType" /></th>
         <td>
           <select id="cmbCorpTypeId" name="cmbCorpTypeId" class="multy_select w100p" multiple="multiple">
         </select>
@@ -375,11 +373,11 @@
     <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
     <dl class="link_list">
-        <dt>Link</dt>
+        <dt><spring:message code="sal.title.text.link" /></dt>
         <dd>
         <ul class="btns">
             <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-            <li><p class="link_btn"><a href="#" id="_custVALetterBtn">Customer VA Letter</a></p></li>
+            <li><p class="link_btn"><a href="#" id="_custVALetterBtn"><spring:message code="sal.title.text.custVaLetter" /></a></p></li>
             </c:if>
         </ul>
         <ul class="btns">

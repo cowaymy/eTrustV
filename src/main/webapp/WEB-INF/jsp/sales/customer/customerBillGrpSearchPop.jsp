@@ -37,14 +37,14 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [{
 	            dataField  : "custBillGrpNo",
-	            headerText : "<spring:message code="sal.title.groupNo" />",
+	            headerText : '<spring:message code="sal.title.groupNo" />',
 	            width      : 100
 	        }, {
 	            dataField  : "billAddrFull",
-	            headerText : "<spring:message code="sal.title.billingAddress" />",
+	            headerText : '<spring:message code="sal.title.billingAddress" />',
 	        }, {
 	            dataField  : "billType",
-	            headerText : "<spring:message code="sal.title.billingType" />",
+	            headerText : '<spring:message code="sal.title.billingType" />',
 	            width      : 100
 	        },{
 	            dataField : "custBillRem",
@@ -70,9 +70,7 @@
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
         };
         
         billGrpGridID = GridCommon.createAUIGrid("grid_bill_wrap", columnLayout, "", gridPros);

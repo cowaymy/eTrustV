@@ -39,21 +39,21 @@
 	function createAUIGrid() {
         var columnLayout = [ {
             dataField : "area",
-            headerText : "AREA",
+            headerText : '<spring:message code="sal.text.area" />',
             editable : false
         }, {
             dataField : "postcode",
-            headerText : "POSTCODE",
+            headerText : '<spring:message code="sal.text.postCode" />',
             width : 90,
             editable : false
         }, {
             dataField : "city",
-            headerText : "CITY",
+            headerText : '<spring:message code="sal.text.city" />',
             width : 160,
             editable : false
         }, {
             dataField : "state",
-            headerText : "STATE",
+            headerText : '<spring:message code="sal.text.state" />',
             width : 180,
             editable : false
         },{
@@ -95,9 +95,7 @@
             wrapSelectionMove : true,
             
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : false,
-            
-            groupingMessage : "Here groupping"
+            showRowNumColumn : false
         };
     
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
@@ -116,16 +114,16 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Search Address</h1>
+<h1><spring:message code="sal.title.text.searchAddress" /></h1>
 <ul class="right_opt">
-    <li id="mClose"><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li id="mClose"><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Search Address</h2>
+<h2><spring:message code="sal.title.text.searchAddress" /></h2>
 </aside><!-- title_line end -->
 
 <form action="" id="searchAddrForm" name="searchAddrForm" method="POST">
@@ -143,7 +141,7 @@
     </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Installation Information </h2>
+<h2><spring:message code="sal.title.text.installInfomation" /></h2>
 </aside><!-- title_line end -->
 
 </section><!-- pop_body end -->

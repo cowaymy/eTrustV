@@ -59,15 +59,15 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Status",          dataField : "name",       editable : false, width : 80  }
-          , { headerText : "Name",            dataField : "name1" }
-          , { headerText : "NRIC",            dataField : "nric",       editable : false, width : 100 }
-          , { headerText : "Race",            dataField : "codeName",   editable : false, width : 80  }
-          , { headerText : "Gender",          dataField : "gender",     editable : false, width : 80  }
-          , { headerText : "Tel (Mobile)",    dataField : "telM1",      editable : false, width : 120 }
-          , { headerText : "Tel (Office)",    dataField : "telO",       editable : false, width : 120 }
-          , { headerText : "Tel (Residence)", dataField : "telR",       editable : false, width : 120 }
-          , { headerText : "Tel (Fax)",       dataField : "telf",       editable : false, width : 120 }
+            { headerText : '<spring:message code="sal.title.status" />',          dataField : "name",       editable : false, width : 80  }
+          , { headerText : '<spring:message code="sal.text.name" />',            dataField : "name1" }
+          , { headerText : '<spring:message code="sal.text.nric" />',            dataField : "nric",       editable : false, width : 100 }
+          , { headerText : '<spring:message code="sal.text.race" />',            dataField : "codeName",   editable : false, width : 80  }
+          , { headerText : '<spring:message code="sal.text.gender" />',          dataField : "gender",     editable : false, width : 80  }
+          , { headerText : '<spring:message code="sal.text.telM" />',    dataField : "telM1",      editable : false, width : 120 }
+          , { headerText : '<spring:message code="sal.text.telO" />',    dataField : "telO",       editable : false, width : 120 }
+          , { headerText : '<spring:message code="sal.text.telR" />', dataField : "telR",       editable : false, width : 120 }
+          , { headerText : '<spring:message code="sal.text.telF" />',       dataField : "telf",       editable : false, width : 120 }
           , { headerText : "custCntcId",      dataField : "custCntcId", visible  : false  }
           ];
 
@@ -96,13 +96,13 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Status",          dataField : "name",          width : 100 }
-          , { headerText : "Name",            dataField : "name1"}
-          , { headerText : "NRIC",            dataField : "nric",          width : 120 }
-          , { headerText : "Tel (Mobile)",    dataField : "telM1",         width : 120 }
-          , { headerText : "Tel (Office)",    dataField : "telO",          width : 120 }
-          , { headerText : "Tel (Residence)", dataField : "telR",          width : 120 }
-          , { headerText : "Tel (Fax)",       dataField : "telf",          width : 120 }
+            { headerText : '<spring:message code="sal.title.status" />',          dataField : "name",          width : 100 }
+          , { headerText : '<spring:message code="sal.text.name" />',            dataField : "name1"}
+          , { headerText : '<spring:message code="sal.text.nric" />',            dataField : "nric",          width : 120 }
+          , { headerText : '<spring:message code="sal.text.telM" />',    dataField : "telM1",         width : 120 }
+          , { headerText : '<spring:message code="sal.text.telO" />',    dataField : "telO",          width : 120 }
+          , { headerText : '<spring:message code="sal.text.telR" />', dataField : "telR",          width : 120 }
+          , { headerText : '<spring:message code="sal.text.telF" />',       dataField : "telf",          width : 120 }
           , { headerText : "custCareCntId",   dataField : "custCareCntId", visible : false }
           ];
 
@@ -168,9 +168,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Contact</h1>
+<h1><spring:message code="sal.title.text.customerCntc" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -189,7 +189,7 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Contact Keyword</th>
+	<th scope="row"><spring:message code="sal.title.text.cntcKeyword" /></th>
 	<td ><input id="searchWord" name="searchWord" type="text" title="" placeholder="Keyword" class="w100p" /></td>
 </tr>
 </tbody>
@@ -198,8 +198,8 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="cntcSearchBtn" href="#"">SEARCH</a></p></li>
-	<li><p class="btn_grid"><a href="#">CLEAR</a></p></li>
+	<li><p class="btn_grid"><a id="cntcSearchBtn" href="#""><spring:message code="sal.btn.search" /></a></p></li>
+	<li><p class="btn_grid"><a href="#"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

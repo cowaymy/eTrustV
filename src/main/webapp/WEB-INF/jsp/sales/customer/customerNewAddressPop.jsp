@@ -23,28 +23,28 @@
 			    
 			 /* addr1 addr2 null check */
 			 if( ( "" == $("#addrDtl").val() || null == $("#addrDtl").val())){
-				 Common.alert("* Please key in the address.");
+				 Common.alert('<spring:message code="sal.alert.msg.plzKeyinAddr" />');
 				 return;
 			 }
 			 
 			 if($("#mState").val() == ''){
-		         Common.alert("Please key in the state.");
+		         Common.alert('<spring:message code="sal.alert.msg.plzKeyinState" />');
 		         return;
 	         }
 	         if($("#mCity").val() == ''){
-	             Common.alert("Please key in the city.");
+	             Common.alert('<spring:message code="sal.alert.msg.plzKeyinCity" />');
 	             return ;
 	         }
 	         if($("#mTown").val() == ''){
-	              Common.alert("Please key in the town.");
+	              Common.alert('<spring:message code="sal.alert.msg.plzKeyinTown" />');
 	              return ;
 	         }
 	         if($("#mStreet").val() == ''){
-	              Common.alert("Please key in the street.");
+	              Common.alert('<spring:message code="sal.alert.msg.plzKeyinStreet" />');
 	              return ;
 	         }
 	         if($("#mPostCd").val() == ''){
-	              Common.alert("Please key in the postcode.");
+	              Common.alert('<spring:message code="sal.alert.msg.plzKeyinPostcode" />');
 	              return ;
 	         }
 	         
@@ -298,7 +298,7 @@
             $("#areaId").val(areaid);
             $("#_searchDiv").remove();
         }else{
-            Common.alert("Please check your address.");
+            Common.alert('<spring:message code="sal.alert.msg.addrCheck" />');
         }
     }
     
@@ -331,9 +331,9 @@
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>ADD CUSTOMER ADDRESS</h1>
+<h1><spring:message code="sal.page.title.addCustAddr" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close1">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close1"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
@@ -357,51 +357,51 @@
     </colgroup>
          <tbody>
             <tr>
-                <th scope="row">Street search<span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.text.streetSearch" /><span class="must">*</span></th>
                 <td colspan="3">
                 <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                 </td>
             </tr>
             <tr>
-                <th scope="row" >Address Detail<span class="must">*</span></th>
+                <th scope="row" ><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
                 <td colspan="3">
                 <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p"  />
                 </td>
             </tr>
             <tr>
-                <th scope="row" >Street</th>
+                <th scope="row" ><spring:message code="sal.text.street" /></th>
                 <td colspan="3">
                 <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p"  />
                 </td>
             </tr>
             <tr>
-               <th scope="row">Area(4)<span class="must">*</span></th>
+               <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
                 <td colspan="3">
                 <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
                 </td>
             </tr>
             <tr>
-                 <th scope="row">City(2)<span class="must">*</span></th>
+                 <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
                 <td>
                 <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
                 </td>
-                <th scope="row">PostCode(3)<span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.text.postCode3" /><span class="must">*</span></th>
                 <td>
                 <select class="w100p" id="mPostCd"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
                 </td>
             </tr>
             <tr>
-                <th scope="row">State(1)<span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.text.state1" /><span class="must">*</span></th>
                 <td>
                 <select class="w100p" id="mState"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
                 </td>
-                <th scope="row">Country<span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.text.country" /><span class="must">*</span></th>
                 <td>
                 <input type="text" title="" id="mCountry" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Remarks</th>
+                <th scope="row"><spring:message code="sal.text.remarks" /></th>
                 <td colspan="3">
                 <textarea cols="20" rows="5" id="addrRem" name="addrRem" placeholder="Remark"></textarea>
                 </td>
@@ -411,7 +411,7 @@
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="_saveBtn">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_saveBtn"><spring:message code="sal.btn.save2" /></a></p></li>
 </ul>
 
 </section>

@@ -41,10 +41,10 @@ $(document).ready(function(){
 	
     	// Bank Column
         var bankColumnLayout= [
-               {dataField : "custAccOwner", headerText : "<spring:message code="sal.title.accountHolder" />", width : '25%'}, 
-               {dataField : "codeName", headerText : "<spring:message code="sal.title.type" />", width : '25%'}, 
-               {dataField : "bankName", headerText : "<spring:message code="sal.title.issueBank" />", width : '25%'},
-               {dataField : "custAccNo", headerText : "<spring:message code="sal.title.accNo" />", width : '25%'},
+               {dataField : "custAccOwner", headerText : '<spring:message code="sal.title.accountHolder" />', width : '25%'}, 
+               {dataField : "codeName", headerText : '<spring:message code="sal.title.type" />', width : '25%'}, 
+               {dataField : "bankName", headerText : '<spring:message code="sal.title.issueBank" />', width : '25%'},
+               {dataField : "custAccNo", headerText : '<spring:message code="sal.title.accNo" />', width : '25%'},
                {dataField : "custAccId" , visible : false},
                {dataField : "custId" , visible : false}
          ];

@@ -178,35 +178,35 @@
         var columnLayout = [ 
             {         
                 dataField : "cardType",
-                headerText : "Card Type",
+                headerText : '<spring:message code="sal.text.cardType" />',
                 width : 100,
                 editable : true
             },{
                 dataField : "crcType",
-                headerText : "Crc Type",
+                headerText : '<spring:message code="sal.title.text.crcType" />',
                 width : 100,
                 editable : true
             },{
                 dataField : "bank",
-                headerText : "Bank",
+                headerText : '<spring:message code="sal.title.text.bank" />',
                 width : 100,
                 editable : true
             }, {
                 dataField : "nmCard",
-                headerText : "Name",
+                headerText : '<spring:message code="sal.text.name" />',
                 editable : true
             }, {
                 dataField : "creditCardNo",
-                headerText : "Credit Card No",
+                headerText : '<spring:message code="sal.text.creditCardNo" />',
                 width : 100,
                 editable : true
             }, {
                 dataField : "cardExpiry",
-                headerText : "Expiry",
+                headerText : '<spring:message code="sal.title.text.expiry" />',
                 editable : true
             }, {
                 dataField : "cardRem",
-                headerText : "Remark",
+                headerText : '<spring:message code="sal.title.remark" />',
                 editable : true
             }];
         
@@ -214,31 +214,31 @@
         var columnLayout1 = [ 
             {         
                 dataField : "accTypeId",
-                headerText : "Type",
+                headerText : '<spring:message code="sal.title.type" />',
                 width : 100,
                 editable : true
             },{
                 dataField : "accBankId",
-                headerText : "Bank",
+                headerText : '<spring:message code="sal.title.text.bank" />',
                 width : 100,
                 editable : true
             },{
                 dataField : "accOwner",
-                headerText : "Name",
+                headerText : '<spring:message code="sal.text.name" />',
                 width : 100,
                 editable : true
             }, {
                 dataField : "accNo",
-                headerText : "Account No",
+                headerText : '<spring:message code="sal.text.accNo" />',
                 editable : true
             }, {
                 dataField : "bankBranch",
-                headerText : "Bank Branch",
+                headerText : '<spring:message code="sal.text.bankBranch" />',
                 width : 100,
                 editable : true
             }, {
                 dataField : "accRem",
-                headerText : "Remark",
+                headerText : '<spring:message code="sal.title.remark" />',
                 editable : true
             }];
 
@@ -399,7 +399,7 @@
             	if(result != null){
             		$("._custMakeBtn").css("display" , "none");
             	}else{
-            		Common.alert("Duplicate NRIC Number.");
+            		Common.alert('<spring:message code="sal.alert.msg.dupNricNum" />');
             		return;
             	}
                 Common.alert("<spring:message code='sys.msg.success'/><br/>" + " Customer ID : " + result , fn_winClose);
@@ -439,12 +439,12 @@
     function fn_saveValidationCheck(){
     	console.log("1.  type Check");
     	if($("#_cmbTypeId_").val() == ''){
-            Common.alert("Please select costomer type");
+            Common.alert('<spring:message code="sal.alert.msg.plzSelCustType" />');
             return false;
         }
     	 console.log("2.  nric Check");
         if($("#_nric_").val() == ''){
-            Common.alert("Please key in NRIC/Company number");
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinNricCompNum" />');
             return false;
         }
         /*else if($("#_nric_").length > 12){
@@ -457,50 +457,50 @@
         } */
         console.log("3.  name check");
         if($("#_custName_").val() == ''){
-            Common.alert("Please key in customer name");
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinCustName" />');
             return false;
         }
         console.log("4.  tel check");
         if($("#_telM1_").val() == '' && $("#_telR_").val() == '' && $("#_telF_").val() == '' && $("#_telO_").val() == '' ){
-            Common.alert("Please key in at least one contact number");
+            Common.alert('<spring:message code="sal.msg.keyInContactNum" />');
             return false;
         }else{
             if($("#_telM1_").val() != ''){
                 if(FormUtil.checkNum($("#_telM1_"))){
-                    Common.alert("* Invalid telephone number (Mobile).");
+                    Common.alert('<spring:message code="sal.alert.msg.invaildTelNumM" />');
                     return false;
                 }
                 if($("#_telM1_").length > 20){
-                    Common.alert("* Telephone number (Mobile) exceed length of 20.");
+                    Common.alert('<spring:message code="sal.alert.msg.telMNumExceedLengTwenty" />');
                     return false;
                 }
             }
             if($("#_telO_").val() != ''){
 
                    if(FormUtil.checkNum($("#_telO_"))){
-                       Common.alert("* Invalid telephone number (Office).");
+                       Common.alert('<spring:message code="sal.alert.msg.invaildTelNumO" />');
                        return false;
                    }
                    if($("#_telO_").length > 20){
-                       Common.alert("* Telephone number (Office) exceed length of 20.");
+                       Common.alert('<spring:message code="sal.alert.msg.telONumExceedLengTwenty" />');
                        return false;
                    }
                }
             if($("#_telR_").val() != ''){
                    if(FormUtil.checkNum($("#_telR_"))){
-                       Common.alert("* Invalid telephone number (Resistance).");
+                       Common.alert('<spring:message code="sal.alert.msg.invaildTelNumR" />');
                    }
                    if($("#_telR_").length > 20){
-                       Common.alert("* Telephone number (Resistance) exceed length of 20.");
+                       Common.alert('<spring:message code="sal.alert.msg.telRNumExceedLengTwenty" />');
                        return false;
                    }
                }
             if($("#_telF_").val() != ''){
                    if(FormUtil.checkNum($("#_telF_"))){
-                       Common.alert("* Invalid telephone number (Fax).");
+                       Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
                    }
                    if($("#_telF_").length > 20){
-                       Common.alert("* Telephone number (Fax) exceed length of 20.");
+                       Common.alert('<spring:message code="sal.alert.msg.telFNumExceedLengTwenty" />');
                        return false;
                    }
                }
@@ -508,50 +508,50 @@
         console.log("5.  cmb type check");
         if($("#_cmbTypeId_").val() == '964'){
             if($("#_cmbNation_").val() == ''){
-                Common.alert("* Please select nationality.");
+                Common.alert('<spring:message code="sal.alert.msg.plzSelNationality" />');
                 return false;
             }
             if($("#_dob_").val() == ''){
-                Common.alert("* Please key in customer DOB.");
+                Common.alert('<spring:message code="sal.alert.msg.plzKeyinCustDob" />');
                    return false;
             }
             // Gender validation check (해야함.) * Customer is exist.
             if($("#_cmbRace_").val() == ''){
-                Common.alert("* Please select customer race.");
+                Common.alert('<spring:message code="sal.alert.msg.plzSelCustRace" />');
                    return false;
             }
             if($("#_cmbInitials_").val() == ''){
-                Common.alert("* Please select contact person initial.");
+                Common.alert('<spring:message code="sal.alert.msg.plzSelCntcPersonInitial" />');
                    return false;
             }
         }
         console.log("6.  detail addr check");
         if($("#_addrDtl_").val() == ''){
-            Common.alert("Please key in the address.");
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinAddr" />');
             return false;
         }
         
         console.log("7.  area check");
         if($("#_mArea_").val() == ''){
-                Common.alert("Please key in the area.");
+                Common.alert('<spring:message code="sal.alert.msg.plzKeyinArea" />');
                 return false;
         }
         
         console.log("8.  city check");
         if($("#_mCity_").val() == ''){
-            Common.alert("Please key in the city.");
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinCity" />');
             return false;
         }
         
         console.log("9.  postcode check");
         if($("#_mPostCd_").val() == ''){
-            Common.alert("Please key in the postcode.");
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinPostcode" />');
             return false;
         }
         
         console.log("10.  state check");
         if($("#_mState_").val() == ''){
-            Common.alert("Please key in the state.");
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinState" />');
             return false;
         }
         
@@ -559,12 +559,12 @@
         if($("#_asCustName_").val() == ''){
             $("#_contactTab").click();
             
-        	Common.alert("Please key in customer contact name.", fn_focusToCustName);
+        	Common.alert('<spring:message code="sal.alert.msg.plzKeyinCustCntcName" />', fn_focusToCustName);
             return false;
         }
         console.log("12.  contact check");
         if($("#_asTelM_").val() == '' && $("#_asTelR_").val() == '' && $("#_asTelF_").val() == '' && $("#_asTelO_").val() == '' ){
-            Common.alert("Please key in at least one contact number");
+            Common.alert('<spring:message code="sal.msg.keyInContactNum" />');
             return false;
         }
         
@@ -645,7 +645,7 @@
             $("#areaId").val(areaid);
             $("#_searchDiv").remove();
         }else{
-            Common.alert("Please check your address.");
+            Common.alert('<spring:message code="sal.alert.msg.addrCheck" />');
         }
     }
     
@@ -717,7 +717,7 @@
         }else{
             if(FormUtil.checkEmail($("#_email_").val())){
 //              $("input[name='email']").focus();
-                Common.alert("Invalid email address.");
+                Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
                 
                 $("#_email_").val('');
                 
@@ -728,7 +728,7 @@
     
     function asEmailCheck(){
         if(FormUtil.checkEmail($("#_asEmail_").val())){
-            Common.alert("Invalid email address.");
+            Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
             $("#_asEmail_").val('');
 //            $("#asEmail").focus();
             return false;
@@ -748,7 +748,7 @@
     
     function fn_addrSearch(){
         if($("#_searchSt_").val() == ''){
-            Common.alert("Please search.");
+            Common.alert('<spring:message code="sal.alert.msg.plzSearch" />');
             return false;
         }
         Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
@@ -772,7 +772,7 @@
     	Common.ajax("POST", "/sales/customer/nricDupChk.do", nricObj, function(result){
     		
     		if(result != null){
-    				msg += "* This is existing Customer.<br/> Customer ID : " + result.custId;
+    				msg += '<spring:message code="sal.alert.msg.existCustomerBrCustId" />' + result.custId;
     				isDup = true;
     		}
     	}, '', ajaOtp);
@@ -858,24 +858,24 @@
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>New Customer</h1>
+<h1><spring:message code="sal.title.text.newCustomer" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_insCloseBtn">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_insCloseBtn"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns">
-    <li><span class="red_text">*Compulsory Field</span> <span class="brown_text">#Compulsory Field(For Indvidual Type)</span></li>
+    <li><span class="red_text"><spring:message code="sal.title.text.compulsoryField" /></span> <span class="brown_text">#Compulsory Field(For Indvidual Type)</span></li>
 </ul>
 
 <section class="tap_wrap mt20"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Basic Info</a></li>
-    <li><a href="#">Install Address</a></li>
-    <li><a href="#" id="_contactTab">Additional Service Contact</a></li>
-    <li><a href="#" onclick="javascript:chgTab('card');">Credit Card</a></li>
-    <li><a href="#" onclick="javascript:chgTab('account');">Bank Account</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.text.insAddr" /></a></li>
+    <li><a href="#" id="_contactTab"><spring:message code="sal.title.text.additialServiceContact" /></a></li>
+    <li><a href="#" onclick="javascript:chgTab('card');"><spring:message code="sal.title.text.creditCard" /></a></li>
+    <li><a href="#" onclick="javascript:chgTab('account');"><spring:message code="sal.title.text.bankAccount" /></a></li>
 </ul>
 <!-- dup Nric Check  -->
 <article class="tap_area"><!-- tap_area start -->
@@ -890,110 +890,110 @@
     </colgroup>
     <tbody>
         <tr>
-            <th scope="row">Customer Type<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.text.custType" /><span class="must">*</span></th>
             <td>
                 <select class="w100p"  id="_cmbTypeId_" name="cmbTypeId" onchange="onChangeCompanyType(this.value)">
                 </select>
             </td>
-            <th scope="row">Company Type</th>
+            <th scope="row"><spring:message code="sal.title.text.companyType" /></th>
             <td id="corpTypeForm">
                 <select class="w100p disabled" id="_cmbCorpTypeId_" name="cmbCorpTypeId" disabled="disabled">
                 </select>
             </td>
         </tr>
         <tr>
-            <th scope="row">Initials<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.text.initial" /><span class="must">*</span></th>
             <td>
                 <select class="w100p" id="_cmbInitials_" name="cmbInitials"></select>
             </td>
-            <th scope="row">Old IC/Army/Police</th>
+            <th scope="row"><spring:message code="sal.title.text.oldIcarmyPolice" /></th>
             <td >
                 <input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18"  placeholder="Old IC/Army/Police" class="w100p"  disabled="disabled" />
             </td>
         </tr>
         <tr>
-            <th scope="row">Customer Name<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.text.custName" /><span class="must">*</span></th>
             <td colspan="3">
                 <input type="text" title="" id="_custName_" name="custName" placeholder="Customer Name" class="w100p" />
             </td>
         </tr>
         <tr>
-            <th scope="row">NRIC/Company No<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.title.text.nricCompNo" /><span class="must">*</span></th>
             <td>
                 <input type="text" title="" id="_nric_" name="nric" maxlength="18"  placeholder="NRIC/Company No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" />
             </td>
-            <th scope="row">GST Registration No</th>
+            <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
             <td>
                 <input type="text" title="" id="_gstRgistNo_" name="gstRgistNo" placeholder="GST Registration No" class="w100p readonly" disabled="disabled" />
             </td>
         </tr>
         <tr>
-            <th scope="row">Nationality <span class="brown_text">#</span></th>
+            <th scope="row"><spring:message code="sal.text.nationality" /><span class="brown_text">#</span></th>
             <td>
                 <select class="w100p disabled" id="_cmbNation_" name="cmbNation" disabled="disabled">
                 </select>
             </td>
-            <th scope="row">Passport Expire</th>
+            <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
             <td>
                 <input type="text" title="Create start Date" id="_pasSportExpr_" name="pasSportExpr" placeholder="DD/MM/YYYY" class="j_date" />
             </td>
         </tr>
         <tr>
-            <th scope="row">DOB <span class="brown_text">#</span></th>
+            <th scope="row"><spring:message code="sal.text.dob" /><span class="brown_text">#</span></th>
             <td>
                 <input type="text" id="_dob_" name="dob" title="Create start Date" placeholder="Date Of Brith" class="j_date3 w100p"  disabled="disabled"/>
             </td>
-            <th scope="row">Visa Expire</th>
+            <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
             <td>
                 <input type="text" id="_visaExpr_" name="visaExpr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" />
             </td>
         </tr>
         <tr>
-            <th scope="row">Gender <span class="brown_text">#</span></th>
+            <th scope="row"><spring:message code="sal.text.gender" /><span class="brown_text">#</span></th>
             <td>
                 <div id="genderForm" >
-                <label><input type="radio" name="gender"  value="M" disabled="disabled"/><span>Male</span></label>
-                <label><input type="radio" name="gender"  value="F" disabled="disabled"/><span>Female</span></label>
+                <label><input type="radio" name="gender"  value="M" disabled="disabled"/><span><spring:message code="sal.title.text.male" /></span></label>
+                <label><input type="radio" name="gender"  value="F" disabled="disabled"/><span><spring:message code="sal.title.text.female" /></span></label>
                 </div>
             </td>
-            <th scope="row">Email(1)</th>
+            <th scope="row"><spring:message code="sal.title.text.eamilOne" /></th>
             <td>
               <input type="text" id="_email_" name="email" title="" onBlur="javascript:emailCheck()" placeholder="Email" class="w100p" />
             </td>
         </tr>
         <tr>
-            <th scope="row">Race <span class="brown_text">#</span></th>
+            <th scope="row"><spring:message code="sal.text.race" /><span class="brown_text">#</span></th>
             <td>
                 <select class="w100p disabled" id="_cmbRace_" name="cmbRace" disabled="disabled">
                 </select>
             </td>
-            <th scope="row">Tel(Mobile)(1)<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.title.text.telMOne" /><span class="must">*</span></th>
             <td>
                 <input type="text" id="_telM1_" name="telM1" maxlength="20" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
             </td>
         </tr>
         <tr>
-            <th scope="row">Tel(Residence)(1)<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.title.text.telROne" /><span class="must">*</span></th>
             <td>
             <input type="text" id="_telR_" name="telR" maxlength="20" title="" placeholder="Telephone Number (Residence)" class="w100p" />
             </td>
-            <th scope="row">Tel(Fax)(1)<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.title.text.telFOne" /><span class="must">*</span></th>
             <td>
             <input type="text" id="_telF_" name="telF" maxlength="20" title="" placeholder="Telephone Number (Fax)" class="w100p" />
             </td>
         </tr>
         <tr>
-            <th scope="row">Tel(Office)(1)<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.title.text.telOOne" /><span class="must">*</span></th>
             <td>
             <input type="text" id="_telO_" name="telO" maxlength="20" title="" placeholder="Telephone Number (Office)" class="w100p" />
             </td>
-            <th scope="row">Ext No.</th>
+            <th scope="row"><spring:message code="sal.title.text.extNo" /></th>
             <td>
             <input type="text" id="_ext_" name="ext" title="" placeholder="Extension Number" class="w100p" />
             </td>
         </tr>
         <tr>
-            <th scope="row">Remark</th>
+            <th scope="row"><spring:message code="sal.title.remark" /></th>
             <td colspan="3">
             <textarea cols="20" rows="5" id="_rem_" name="rem" placeholder="Remark"></textarea>
             </td>
@@ -1003,7 +1003,7 @@
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 
@@ -1012,7 +1012,7 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Installation Address</h2>
+<h2><spring:message code="sal.text.instAddr" /></h2>
 </aside><!-- title_line end -->
 
 <form id="insAddressForm" name="insAddressForm" method="POST">
@@ -1027,51 +1027,51 @@
     </colgroup>
          <tbody>
             <tr>
-                <th scope="row">Area search<span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.title.text.areaSearch" /><span class="must">*</span></th>
                 <td colspan="3">
                 <input type="text" title="" id="_searchSt_" name="searchSt" placeholder="" class="" /><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                 </td>
             </tr>
             <tr>
-                <th scope="row" >Address Detail<span class="must">*</span></th>
+                <th scope="row" ><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
                 <td colspan="3">
                 <input type="text" title="" id="_addrDtl_" name="addrDtl" placeholder="Detail Address" class="w100p"  />
                 </td>
             </tr>
             <tr>
-                <th scope="row" >Street</th>
+                <th scope="row" ><spring:message code="sal.text.street" /></th>
                 <td colspan="3">
                 <input type="text" title="" id="_streetDtl_" name="streetDtl" placeholder="Detail Address" class="w100p"  />
                 </td>
             </tr>
             <tr>
-               <th scope="row">Area(4)<span class="must">*</span></th>
+               <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
                 <td colspan="3">
                 <select class="w100p" id="_mArea_"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
                 </td>
             </tr>
             <tr>
-                 <th scope="row">City(2)<span class="must">*</span></th>
+                 <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
                 <td>
                 <select class="w100p" id="_mCity_"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
                 </td>
-                <th scope="row">PostCode(3)<span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.text.postCode3" /><span class="must">*</span></th>
                 <td>
                 <select class="w100p" id="_mPostCd_"  name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select>
                 </td>
             </tr>
             <tr>
-                <th scope="row">State(1)<span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.text.state1" /><span class="must">*</span></th>
                 <td>
                 <select class="w100p" id="_mState_"  name="mState" onchange="javascript : fn_selectState(this.value)"></select>
                 </td>
-                <th scope="row">Country<span class="must">*</span></th>
+                <th scope="row"><spring:message code="sal.text.country" /><span class="must">*</span></th>
                 <td>
                 <input type="text" title="" id="_mCountry_" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia"/>
                 </td>
             </tr>
             <tr>
-                <th scope="row">Remarks</th>
+                <th scope="row"><spring:message code="sal.text.remarks" /></th>
                 <td colspan="3">
                 <textarea cols="20" rows="5" id="_addrRem_" name="addrRem" placeholder="Remark"></textarea>
                 </td>
@@ -1080,7 +1080,7 @@
     </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save2" /></a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
@@ -1088,9 +1088,9 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Installation Address</h2>
+<h2><spring:message code="sal.text.instAddr" /></h2>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_copyCustInfo()">Copy From Customer Info</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_copyCustInfo()"><spring:message code="sal.title.text.copyFromCustInfo" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -1105,37 +1105,37 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
     <td colspan="3">
     <input type="text" id="_asCustName_" name="asCustName" title="" placeholder="Name" class="w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Tel(Mobile)(2)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.telMTwo" /><span class="must">*</span></th>
     <td>
     <input type="text" id="_asTelM_" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" />
     </td>
-    <th scope="row">Tel(Residence)(2)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.telRTwo" /><span class="must">*</span></th>
     <td>
     <input type="text" id="_asTelR_" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Tel(Office)(2)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.telOTwo" /><span class="must">*</span></th>
     <td>
     <input type="text" id="_asTelO_" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" />
     </td>
-    <th scope="row">Ext</th>
+    <th scope="row"><spring:message code="sal.title.text.ext" /></th>
     <td>
     <input type="text" id="_asExt_" name="asExt" title="" placeholder="Extension Number" class="w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Tel(Fax)(2)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.telFTwo" /><span class="must">*</span></th>
     <td>
     <input type="text" id="_asTelF_" name="asTelF" title="" placeholder="Telephone Number (Fax)" class="w100p" />
     </td>
-    <th scope="row">Email(2)</th>
+    <th scope="row"><spring:message code="sal.title.text.emailTwo" /></th>
     <td>
     <input type="text" id="_asEmail_" name="asEmail" title="" onBlur="javascript:asEmailCheck()" placeholder="Email" class="w100p" />
     </td>
@@ -1144,14 +1144,14 @@
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" onclick="fn_addCreditCardPop()">ADD CREDIT CARD</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_addCreditCardPop()"><spring:message code="sal.title.text.addCrdCard" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -1159,13 +1159,13 @@
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
 <ul class="right_btns" >
-    <li><p class="btn_grid"><a href="#" onclick="fn_addBankAccountPop()">ADD BANK ACCOUNT</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_addBankAccountPop()"><spring:message code="sal.title.addBankAccount" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -1173,7 +1173,7 @@
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </article><!-- tap_area end -->

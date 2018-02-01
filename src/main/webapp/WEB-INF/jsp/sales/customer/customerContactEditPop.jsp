@@ -45,17 +45,17 @@ $(document).ready(function(){
 	
     	 // Contact Column
         var contactColumnLayout= [ 
-              {dataField : "name", headerText : "Status", width : '10%'},
-              {dataField : "name1", headerText : "Name", width : '40%'},
-              {dataField : "telM1", headerText : "Tel(Mobile)", width : '10%'},
-              {dataField : "telO", headerText : "Tel(Office)",width : '10%'},
-              {dataField : "telR", headerText : "Tel(Residence)", width : '10%' },
-              {dataField : "telf",headerText : "Tel(Fax)",width : '10%'},
+              {dataField : "name", headerText : '<spring:message code="sal.title.status" />', width : '10%'},
+              {dataField : "name1", headerText : '<spring:message code="sal.msg.name" />', width : '40%'},
+              {dataField : "telM1", headerText : '<spring:message code="sal.text.telM" />', width : '10%'},
+              {dataField : "telO", headerText : '<spring:message code="sal.text.telO" />',width : '10%'},
+              {dataField : "telR", headerText : '<spring:message code="sal.text.telR" />', width : '10%' },
+              {dataField : "telf",headerText : '<spring:message code="sal.text.telF" />',width : '10%'},
               {dataField : "custCntcId", visible: false },
               {dataField : "custId", visible : false},
               { 
                   dataField : "setMain", 
-                  headerText : "Set As Main", 
+                  headerText : '<spring:message code="sal.title.setAsMain" />', 
                   width:'10%', 
                   renderer : { 
                       type : "TemplateRenderer", 
@@ -163,6 +163,7 @@ $(document).ready(function(){
 <tr>
     <th scope="row"><spring:message code="sal.text.editType" /></th>
     <td>
+    <select id="_editCustomerInfo">
         <option value="1" <c:if test="${selectParam eq 1}">selected</c:if>><spring:message code="sal.combo.text.editBasicInfo" /></option>
         <option value="2" <c:if test="${selectParam eq 2}">selected</c:if>><spring:message code="sal.combo.text.editCustAddr" /></option>
         <option value="3" <c:if test="${selectParam eq 3}">selected</c:if>><spring:message code="sal.combo.text.editContactInfo" /></option>

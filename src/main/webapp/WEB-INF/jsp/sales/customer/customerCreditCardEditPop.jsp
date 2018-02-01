@@ -42,12 +42,12 @@ $(document).ready(function(){
 	
     	// CreditCard Column
         var creditCardColumnLayout = [
-               {dataField : "custCrcOwner", headerText : "Name On Card", width : '15%'}, 
-               {dataField : "codeName", headerText : "Card Type", width : '15%'}, 
-               {dataField : "codeName1", headerText : "Type", width : '15%'},
-               {dataField : "bankName", headerText : "Issue Bank", width : '25%'},
-               {dataField : "custOriCrcNo", headerText : "Credit Card No", width : '15%'},
-               {dataField : "custCrcExpr", headerText : "Expiry", width : '15%'},
+               {dataField : "custCrcOwner", headerText : '<spring:message code="sal.text.nameOnCard" />', width : '15%'}, 
+               {dataField : "codeName", headerText : '<spring:message code="sal.text.cardType" />', width : '15%'}, 
+               {dataField : "codeName1", headerText : '<spring:message code="sal.title.type" />', width : '15%'},
+               {dataField : "bankName", headerText : '<spring:message code="sal.text.issueBank" />', width : '25%'},
+               {dataField : "custOriCrcNo", headerText : '<spring:message code="sal.text.creditCardNo" />', width : '15%'},
+               {dataField : "custCrcExpr", headerText : '<spring:message code="sal.title.text.expiry" />', width : '15%'},
                {dataField : "custCrcId", visible : false},
                {dataField : "custId", visible : false}
          ];	
@@ -66,9 +66,7 @@ $(document).ready(function(){
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No order found.",
-                groupingMessage     : "Here groupping"
+                showRowNumColumn    : true
         };
       
         creditCardGridID = GridCommon.createAUIGrid("#creditcard_grid_wrap", creditCardColumnLayout,'',gridPros); // credit card list
@@ -88,7 +86,7 @@ $(document).ready(function(){
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Credit Card Maintenance</h1>
+<h1><spring:message code="sal.title.text.custCrcMaintence" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -128,7 +126,7 @@ $(document).ready(function(){
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Customer Information</h2>
+<h2><spring:message code="sal.page.title.custInformation" /></h2>
 </aside><!-- title_line end -->
 
 <section class="tap_wrap mt10"><!-- tap_wrap start -->

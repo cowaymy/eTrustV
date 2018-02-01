@@ -33,10 +33,10 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Account No",     dataField : "custAccNo",    width : 150 }
-          , { headerText : "Account Holder", dataField : "custAccOwner", width : 240 }
-          , { headerText : "Type",           dataField : "codeName",     width : 150 }
-          , { headerText : "Issue Bank",     dataField : "bankCodeName"}
+            { headerText : '<spring:message code="sal.text.accNo" />',     dataField : "custAccNo",    width : 150 }
+          , { headerText : '<spring:message code="sal.title.accountHolder" />', dataField : "custAccOwner", width : 240 }
+          , { headerText : '<spring:message code="sal.text.type" />',           dataField : "codeName",     width : 150 }
+          , { headerText : '<spring:message code="sal.text.issueBank" />',     dataField : "bankCodeName"}
           , { headerText : "custAccId",      dataField : "custAccId",  visible : false}];
 
         //그리드 속성 설정
@@ -52,9 +52,7 @@
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
         };
         
         accGridID = GridCommon.createAUIGrid("grid_acc_wrap", columnLayout, "", gridPros);
@@ -112,8 +110,8 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-	<li><p class="btn_grid"><a id="btnBankAcc" href="#"">SEARCH</a></p></li>
-	<li><p class="btn_grid"><a id="btnBankAccClear" href="#">CLEAR</a></p></li>
+	<li><p class="btn_grid"><a id="btnBankAcc" ><spring:message code="sal.btn.search" /></a></p></li>
+	<li><p class="btn_grid"><a id="btnBankAccClear" ><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

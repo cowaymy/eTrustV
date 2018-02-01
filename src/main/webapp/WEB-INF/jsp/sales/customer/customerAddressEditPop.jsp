@@ -41,15 +41,15 @@ $(document).ready(function(){
 	
 		var addrColumnLayout = [ {
 	        dataField : "name",
-	        headerText : "<spring:message code="sal.title.status" />",
+	        headerText : '<spring:message code="sal.title.status" />',
 	        width : '10%'
 	    },{
             dataField : "areaChk",
-            headerText : "<spring:message code="sal.title.isNew" />",
+            headerText : '<spring:message code="sal.title.isNew" />',
             width : '10%'
         }, {
 	        dataField : "addr",
-	        headerText : "<spring:message code="sal.title.address" />",
+	        headerText : '<spring:message code="sal.title.address" />',
 	        width : '70%'
 	    }, {
 	        dataField : "custAddId",
@@ -65,7 +65,7 @@ $(document).ready(function(){
 	        visible : false
 	    },{ 
 	        dataField : "setMain", 
-	        headerText : "<spring:message code="sal.title.setAsMain" />", 
+	        headerText : '<spring:message code="sal.title.setAsMain" />', 
 	        width:'10%', 
 	        renderer : { 
 	            type : "TemplateRenderer", 

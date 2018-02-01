@@ -33,16 +33,16 @@
     	
     	// Address Column
         var addrColumnLayout = [ 
-             {dataField : "name", headerText : "Status", width : '10%'}, 
-             {dataField : "addr", headerText : "Address", width : '80%'},
+             {dataField : "name", headerText : '<spring:message code="sal.title.status" />', width : '10%'}, 
+             {dataField : "addr", headerText : '<spring:message code="sal.title.address" />', width : '80%'},
              {dataField : "custAddId", visible : false},
              {
                  dataField : "undefined", 
-                 headerText : "View", 
+                 headerText : '<spring:message code="sal.title.text.view" />', 
                  width : '10%',
                  renderer : {
                           type : "ButtonRenderer", 
-                          labelText : "View", 
+                          labelText : '<spring:message code="sal.title.text.view" />', 
                           onclick : function(rowIndex, columnIndex, value, item) {
                               //pupupWin
                              $("#getparam").val(item.custAddId);
@@ -65,9 +65,7 @@
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No order found.",
-                groupingMessage     : "Here groupping"
+                showRowNumColumn    : true
             };
         
         // custInfoGridID = GridCommon.createAUIGrid("grid_custInfo_wrap", columnLayout, "", gridPros);
@@ -78,20 +76,20 @@
     function createContactGrid() {
     	// Contact Column
         var contactColumnLayout= [ 
-              {dataField : "name", headerText : "Status", width : '10%'},
-              {dataField : "name1", headerText : "Name", width : '40%'},
-              {dataField : "telM1", headerText : "Tel(Mobile)", width : '10%'},
-              {dataField : "telO", headerText : "Tel(Office)",width : '10%'},
-              {dataField : "telR", headerText : "Tel(Residence)", width : '10%' },
-              {dataField : "telf",headerText : "Tel(Fax)",width : '10%'},
+              {dataField : "name", headerText : '<spring:message code="sal.title.status" />', width : '10%'},
+              {dataField : "name1", headerText : '<spring:message code="sal.text.name" />', width : '40%'},
+              {dataField : "telM1", headerText : '<spring:message code="sal.text.telM" />', width : '10%'},
+              {dataField : "telO", headerText : '<spring:message code="sal.text.telO" />',width : '10%'},
+              {dataField : "telR", headerText : '<spring:message code="sal.text.telR" />', width : '10%' },
+              {dataField : "telf",headerText : '<spring:message code="sal.text.telF" />',width : '10%'},
               {dataField : "custCntcId", visible: false },
               {
                   dataField : "undefined",
-                  headerText : "View",
+                  headerText : '<spring:message code="sal.title.text.view" />',
                   width : '10%',
                   renderer : {
                         type : "ButtonRenderer",
-                        labelText : "View",
+                        labelText : '<spring:message code="sal.title.text.view" />',
                         onclick : function(rowIndex, columnIndex, value, item) {
                              //pupupWin
                             $("#getparam").val(item.custCntcId);
@@ -114,9 +112,7 @@
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No order found.",
-                groupingMessage     : "Here groupping"
+                showRowNumColumn    : true
             };
         
         contactGridID = GridCommon.createAUIGrid("#contact_grid_wrap", contactColumnLayout,'',gridPros); // contact list
@@ -125,18 +121,18 @@
     function createBankGrid(){
     	// Bank Column
         var bankColumnLayout= [
-               {dataField : "custAccOwner", headerText : "Account Holder", width : '30%'}, 
-               {dataField : "codeName", headerText : "Type", width : '20%'}, 
-               {dataField : "bankName", headerText : "Issue Bank", width : '20%'},
-               {dataField : "custAccNo", headerText : "Account No", width : '20%'},
+               {dataField : "custAccOwner", headerText : '<spring:message code="sal.title.accountHolder" />', width : '30%'}, 
+               {dataField : "codeName", headerText : '<spring:message code="sal.text.type" />', width : '20%'}, 
+               {dataField : "bankName", headerText : '<spring:message code="sal.text.issueBank" />', width : '20%'},
+               {dataField : "custAccNo", headerText : '<spring:message code="sal.text.accNo" />', width : '20%'},
                {dataField : "custAccId" , visible : false},
                {
                    dataField : "undefined",
-                   headerText : "View",
+                   headerText : '<spring:message code="sal.title.text.view" />',
                    width : '10%',
                    renderer : {
                       type : "ButtonRenderer",
-                      labelText : "View",
+                      labelText : '<spring:message code="sal.title.text.view" />',
                       onclick : function(rowIndex, columnIndex, value, item) {
                           
                           $("#getparam").val(item.custAccId);
@@ -158,9 +154,7 @@
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No order found.",
-                groupingMessage     : "Here groupping"
+                showRowNumColumn    : true
             };
          
          bankAccountGirdID = GridCommon.createAUIGrid("#bank_grid_wrap", bankColumnLayout,'',gridPros); // bank account list
@@ -170,20 +164,20 @@
     	
     	// CreditCard Column
         var creditCardColumnLayout = [
-               {dataField : "custCrcOwner", headerText : "Name On Card", width : '15%'}, 
-               {dataField : "codeName", headerText : "Card Type", width : '10%'}, 
-               {dataField : "codeName1", headerText : "Type", width : '10%'},
-               {dataField : "bankName", headerText : "Issue Bank", width : '30%'},
-               {dataField : "custOriCrcNo", headerText : "Credit Card No", width : '15%'},
-               {dataField : "custCrcExpr", headerText : "Expiry", width : '10%'},
+               {dataField : "custCrcOwner", headerText : '<spring:message code="sal.text.nameOnCard" />', width : '15%'}, 
+               {dataField : "codeName", headerText : '<spring:message code="sal.text.cardType" />', width : '10%'}, 
+               {dataField : "codeName1", headerText : '<spring:message code="sal.title.type" />', width : '10%'},
+               {dataField : "bankName", headerText : '<spring:message code="sal.text.issueBank" />', width : '30%'},
+               {dataField : "custOriCrcNo", headerText : '<spring:message code="sal.text.creditCardNo" />', width : '15%'},
+               {dataField : "custCrcExpr", headerText : '<spring:message code="sal.title.text.expiry" />', width : '10%'},
                {dataField : "custCrcId", visible : false},
                {
                    dataField : "undefined",
-                   headerText : "View",
+                   headerText : '<spring:message code="sal.title.text.view" />',
                    width : '10%',
                    renderer : {
                        type : "ButtonRenderer",
-                       labelText : "View",
+                       labelText : '<spring:message code="sal.title.text.view" />',
                        onclick : function(rowIndex, columnIndex, value, item) {
                           
                            $("#getparam").val(item.custCrcId);
@@ -205,9 +199,7 @@
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No order found.",
-                groupingMessage     : "Here groupping"
+                showRowNumColumn    : true
             };
         
         creditCardGridID = GridCommon.createAUIGrid("#creditcard_grid_wrap", creditCardColumnLayout,'',gridPros); // credit card list
@@ -217,21 +209,21 @@
     function createOwnOrderGrid(){
     	// Own Order Column
         var ownOrderColumnLayout = [
-               { dataField : "salesOrdNo", headerText : "Order No", width : '10%'},
-               { dataField : "salesDt", headerText : "Order Date", width : '10%'},
-               { dataField : "code", headerText : "App Type", width : '10%'},
-               { dataField : "code1", headerText : "Status", width : '5%'},
-               { dataField : "stkDesc", headerText : "Product", width : '15%'},
-               { dataField : "code2", headerText : "Paymode", width : '10%' },
-               { dataField : "bankCode", headerText : "Issue Bank", width : '10%'},
-               { dataField : "rentAmt", headerText : "Outstanding", width : '10%'},
+               { dataField : "salesOrdNo", headerText : '<spring:message code="sal.text.ordNo" />', width : '10%'},
+               { dataField : "salesDt", headerText : '<spring:message code="sal.text.ordDate" />', width : '10%'},
+               { dataField : "code", headerText : '<spring:message code="sal.title.text.appType" />', width : '10%'},
+               { dataField : "code1", headerText : '<spring:message code="sal.title.status" />', width : '5%'},
+               { dataField : "stkDesc", headerText : '<spring:message code="sal.title.text.product" />', width : '15%'},
+               { dataField : "code2", headerText : '<spring:message code="sal.title.paymode" />', width : '10%' },
+               { dataField : "bankCode", headerText : '<spring:message code="sal.title.issueBank" />', width : '10%'},
+               { dataField : "rentAmt", headerText : '<spring:message code="sal.title.outstanding" />', width : '10%'},
                { 
                    dataField : "undefined", 
-                   headerText : "View Ledger", 
+                   headerText : '<spring:message code="sal.title.text.viewLedger" />', 
                    width : '10%',
                    renderer : {
                        type : "ButtonRenderer",
-                       labelText : "Ledger",
+                       labelText : '<spring:message code="sal.btn.link.ledger" />',
                        onclick : function(rowIndex, columnIndex, value, item) {
                            $("#_ordId").val(item.salesOrdId);
                     	   Common.popupWin('legderParam', "/sales/order/orderLedgerViewPop.do", option);
@@ -240,11 +232,11 @@
                },
                {
                    dataField : "undefined",
-                   headerText : "View Order",
+                   headerText : '<spring:message code="sal.title.text.viewOrder" />',
                    width : '10%',
                    renderer : {
                        type : "ButtonRenderer",
-                       labelText : "Order",
+                       labelText : '<spring:message code="sal.title.text.order" />',
                        onclick : function(rowIndex, columnIndex, value, item) {
                     	    //$("#_ordId").val(item.salesOrdId);
                     	    //Common.popupWin('legderParam', "/sales/order/orderLedger2ViewPop.do", option);
@@ -266,9 +258,7 @@
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No order found.",
-                groupingMessage     : "Here groupping"
+                showRowNumColumn    : true
             };
         
         ownOrderGridID = GridCommon.createAUIGrid("#ownorder_grid_wrap", ownOrderColumnLayout,'',gridPros); // own order list
@@ -277,21 +267,21 @@
     function createThirdPartyGrid(){
     	// Thrid Party Order Column
         var thirdPartyColumnLayout = [
-             {dataField : "salesOrdNo",headerText : "Order No", width : '10%'},
-             {dataField : "salesDt", headerText : "Order Date", width : '10%'},
-             {dataField : "code", headerText : "App Type", width : '10%'},
-             {dataField : "code1", headerText : "Status", width : '5%'},
-             {dataField : "stkDesc", headerText : "Product", width : '15%'},
-             {dataField : "code2", headerText : "Paymode",width : '10%'},
-             {dataField : "bankCode", headerText : "Issue Bank", width : '10%'},
-             {dataField : "rentAmt",headerText : "Outstanding", width : '10%'},
+             {dataField : "salesOrdNo",headerText : '<spring:message code="sal.text.ordNo" />', width : '10%'},
+             {dataField : "salesDt", headerText : '<spring:message code="sal.text.ordDate" />', width : '10%'},
+             {dataField : "code", headerText : '<spring:message code="sal.title.text.appType" />', width : '10%'},
+             {dataField : "code1", headerText : '<spring:message code="sal.title.status" />', width : '5%'},
+             {dataField : "stkDesc", headerText : '<spring:message code="sal.title.text.product" />', width : '15%'},
+             {dataField : "code2", headerText : '<spring:message code="sal.title.paymode" />',width : '10%'},
+             {dataField : "bankCode", headerText : '<spring:message code="sal.title.issueBank" />', width : '10%'},
+             {dataField : "rentAmt",headerText : '<spring:message code="sal.title.outstanding" />', width : '10%'},
              {
                  dataField : "undefined",
-                 headerText : "View Ledger",
+                 headerText : '<spring:message code="sal.title.text.viewLedger" />',
                  width : '10%',
                  renderer : {
                      type : "ButtonRenderer",
-                     labelText : "Ledger",
+                     labelText : '<spring:message code="sal.btn.link.ledger" />',
                      onclick : function(rowIndex, columnIndex, value, item) {
 	                    	 $("#_ordId").val(item.salesOrdId);
 	                         Common.popupWin('legderParam', "/sales/order/orderLedgerViewPop.do", option);
@@ -299,11 +289,11 @@
                  }
              },{
                  dataField : "undefined",
-                 headerText : "View Order",
+                 headerText : '<spring:message code="sal.title.text.viewOrder" />',
                  width : '10%',
                  renderer : {
                      type : "ButtonRenderer",
-                     labelText : "Order",
+                     labelText : '<spring:message code="sal.title.text.order" />',
                      onclick : function(rowIndex, columnIndex, value, item) {
                     	 //$("#_ordId").val(item.salesOrdId);
                          //Common.popupWin('legderParam', "/sales/order/orderLedger2ViewPop.do", option);
@@ -325,9 +315,7 @@
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                noDataMessage       : "No order found.",
-                groupingMessage     : "Here groupping"
+                showRowNumColumn    : true
             };
         
         thirdPartyGridID = GridCommon.createAUIGrid("#thirdparty_grid_wrap", thirdPartyColumnLayout,'',gridPros);// third party list 
@@ -418,21 +406,21 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>View Customer</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 <article class="acodi_wrap"><!-- acodi_wrap start -->
 <dl>
-    <dt class="click_add_on on"><a href="#">Customer Information</a></dt>
+    <dt class="click_add_on on"><a href="#"><spring:message code="sal.page.title.custInformation" /></a></dt>
     <dd>
     
     <section class="tap_wrap mt0"><!-- tap_wrap start -->
     <ul class="tap_type1">
-        <li><a href="#" class="on">Basic Info</a></li>
-        <li><a href="#">Main Address</a></li>
-        <li><a href="#">Main Contact</a></li>
+        <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+        <li><a href="#"><spring:message code="sal.tap.title.mainAddr" /></a></li>
+        <li><a href="#"><spring:message code="sal.tap.title.mainContact" /></a></li>
     </ul>
     <!-- ######### basic info ######### -->
     <article class="tap_area"><!-- tap_area start -->
@@ -448,9 +436,9 @@
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Customer ID</th>
+        <th scope="row"><spring:message code="sal.text.customerId" /></th>
         <td><span>${result.custId}</span></td>
-        <th scope="row">Customer Type</th>
+        <th scope="row"><spring:message code="sal.text.custType" /></th>
         <td>
             <span> 
                 ${result.codeName1}
@@ -460,13 +448,13 @@
                 </c:if>
             </span>
         </td>
-        <th scope="row">Create At</th>
+        <th scope="row"><spring:message code="sal.text.createAt" /></th>
         <td><span>${result.crtDt}</span></td>
     </tr>
     <tr>
-        <th scope="row">Customer Name</th>
+        <th scope="row"><spring:message code="sal.text.custName" /></th>
         <td colspan="3">${result.name}</td>
-        <th scope="row">Create By</th>
+        <th scope="row"><spring:message code="sal.text.createBy" /></th>
         <td>
             <c:if test="${result.crtUserId ne 0}">
                 ${result.userName1}
@@ -474,51 +462,51 @@
         </td>
     </tr>
     <tr>
-        <th scope="row">NRIC/Company Number</th>
+        <th scope="row"><spring:message code="sal.text.nricCompanyNum" /></th>
         <td>${result.nric}</td>
-        <th scope="row">GST Registration No</th>
+        <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
         <td>${result.gstRgistNo}</td>
-        <th scope="row">Update By</th>
+        <th scope="row"><spring:message code="sal.text.updateBy" /></th>
         <td>${result.userName1}</td>
     </tr>
     <tr>
-        <th scope="row">Email</th>
+        <th scope="row"><spring:message code="sal.text.email" /></th>
         <td>${result.email}</td>
-        <th scope="row">Nationality</th>
+        <th scope="row"><spring:message code="sal.text.nationality" /></th>
         <td>${result.cntyName}</td>
-        <th scope="row">Update At</th>
+        <th scope="row"><spring:message code="sal.text.updateAt" /></th>
         <td>${result.updDt}</td>
     </tr>
     <tr>
-        <th scope="row">Gender</th>
+        <th scope="row"><spring:message code="sal.text.gender" /></th>
         <td>${result.gender}</td>
-        <th scope="row">DOB</th>
+        <th scope="row"><spring:message code="sal.text.dob" /></th>
         <td>
             <c:if test="${result.dob ne '01-01-1900'}">
                 ${result.dob}
             </c:if>
         </td>
-        <th scope="row">Race</th>
+        <th scope="row"><spring:message code="sal.title.race" /></th>
         <td>${result.codeName2 }</td>
     </tr>
     <tr>
-        <th scope="row">Passport Expire</th>
+        <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
         <td>
             <c:if test="${result.pasSportExpr ne '01-01-1900'}">
                 ${result.pasSportExpr}
             </c:if>
         </td> 
-        <th scope="row">Visa Expire</th>
+        <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
         <td>
            <c:if test="${result.visaExpr ne '01-01-1900'}">
                 ${result.visaExpr}
             </c:if>
          </td>
-        <th scope="row">VA Number</th>
+        <th scope="row"><spring:message code="sal.text.vaNumber" /></th>
         <td>${result.custVaNo}</td>
     </tr>
     <tr>
-        <th scope="row">Remark</th>
+        <th scope="row"><spring:message code="sal.title.remark" /></th>
         <td colspan="5">${result.rem}</td>
     </tr>
     </tbody>
@@ -535,11 +523,11 @@
     </colgroup>
     <tbody>
      <tr>
-         <th scope="row">Full Address</th>
+         <th scope="row"><spring:message code="sal.text.fullAddr" /></th>
          <td><span>${addresinfo.fullAddress}</span></td>
      </tr>
      <tr>
-         <th scope="row">Remark</th>
+         <th scope="row"><spring:message code="sal.title.remark" /></th>
          <td>${addresinfo.rem}</td>
      </tr>
     </tbody>
@@ -560,11 +548,11 @@
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Name</th>
+        <th scope="row"><spring:message code="sal.text.name" /></th>
         <td><span>${contactinfo.name1}</span></td>
-        <th scope="row">Initial</th>
+        <th scope="row"><spring:message code="sal.text.initial" /></th>
         <td>${contactinfo.code}</td>
-        <th scope="row">Gender</th>
+        <th scope="row"><spring:message code="sal.text.gender" /></th>
         <td>
             <c:choose >
                 <c:when test="${contactinfo.gender eq 'M'}">
@@ -580,35 +568,35 @@
         </td>
     </tr>
     <tr>
-        <th scope="row">NRIC</th>
+        <th scope="row"><spring:message code="sal.text.nric" /></th>
         <td>${contactinfo.nric}</td>
-        <th scope="row">DOB</th>
+        <th scope="row"><spring:message code="sal.text.dob" /></th>
         <td>
             <c:if test="${contactinfo.dob ne  '01-01-1900'}">
                 ${contactinfo.dob}
             </c:if> 
         </td>
-        <th scope="row">Race</th>
+        <th scope="row"><spring:message code="sal.text.race" /></th>
         <td>${contactinfo.codeName}</td>
     </tr>
     <tr>
-        <th scope="row">Email</th>
+        <th scope="row"><spring:message code="sal.text.email" /></th>
         <td>${contactinfo.email}</td>
-        <th scope="row">Department</th>
+        <th scope="row"><spring:message code="sal.text.dept" /></th>
         <td>${contactinfo.dept}</td>
-        <th scope="row">Post</th>
+        <th scope="row"><spring:message code="sal.text.post" /></th>
         <td>${contactinfo.pos}</td>
     </tr>
     <tr>
-        <th scope="row">Tel (Mobile)</th>
+        <th scope="row"><spring:message code="sal.text.telM" /></th>
         <td>${contactinfo.telM1}</td>
-        <th scope="row">Tel (Residence)</th>
+        <th scope="row"><spring:message code="sal.text.telR" /></th>
         <td>${contactinfo.telR}</td>
-        <th scope="row">Tel (Office)</th>
+        <th scope="row"><spring:message code="sal.text.telO" /></th>
         <td>${contactinfo.telO }</td>
     </tr>
     <tr>
-        <th scope="row">Tel (Fax)</th>
+        <th scope="row"><spring:message code="sal.text.telF" /></th>
         <td colspan="5">${contactinfo.telf}</td>
     </tr>
     </tbody>
@@ -618,42 +606,42 @@
     </dd>
     <!-- ######### Tab Area #########  -->
     <!-- ######### Customer Address List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, addrGridID)">Customer Address List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, addrGridID)"><spring:message code="sal.title.custAddrList" /></a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="address_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Customer Contact List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, contactGridID)">Customer Contact List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, contactGridID)"><spring:message code="sal.title.custContactList" /></a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="contact_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Customer Bank Account List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, bankAccountGirdID)">Customer Bank Account List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, bankAccountGirdID)"><spring:message code="sal.title.custBankAccList" /></a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="bank_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Customer Credit Card List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, creditCardGridID)">Customer Credit Card List</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, creditCardGridID)"><spring:message code="sal.title.custCrdCardList" /></a></dt>
     <dd> 
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="creditcard_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- ######### Own Order(s) List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, ownOrderGridID)">Own Order(s)</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, ownOrderGridID)"><spring:message code="sal.title.ownOrds" /></a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="ownorder_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
     <!-- #########hird Party Order(s) List ######### -->
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, thirdPartyGridID)">Third Party Order(s)</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, thirdPartyGridID)"><spring:message code="sal.title.text.thirdPartyOrds" /></a></dt>
     <dd>
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="thirdparty_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

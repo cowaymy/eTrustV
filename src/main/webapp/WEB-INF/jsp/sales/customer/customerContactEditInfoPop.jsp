@@ -3,7 +3,7 @@
 <script type="text/javascript">
 $(document).ready(function() {
 
-	//j_date
+    //j_date
     var pickerOpts={
             changeMonth:true,
             changeYear:true,
@@ -20,154 +20,154 @@ $(document).ready(function() {
     };
 
     $(".j_date2").monthpicker(monthOptions);
-	
-	var selCodeInitial = $("#selCodeInitial").val();
-	var selCodeRace = $("#selCodeRace").val();
-	
-	doGetCombo('/common/selectCodeList.do', '17', selCodeInitial, 'cntcCmbInitialTypeId', 'S' , ''); // Customer Initial Type Combo Box
-	doGetCombo('/common/selectCodeList.do', '2', selCodeRace, 'cntcCmbRaceTypeId', 'S' , ''); // Customer Race Type Combo Box
-	
-	// main 일 경우 delete 버튼 숨기기
+    
+    var selCodeInitial = $("#selCodeInitial").val();
+    var selCodeRace = $("#selCodeRace").val();
+    
+    doGetCombo('/common/selectCodeList.do', '17', selCodeInitial, 'cntcCmbInitialTypeId', 'S' , ''); // Customer Initial Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '2', selCodeRace, 'cntcCmbRaceTypeId', 'S' , ''); // Customer Race Type Combo Box
+    
+    // main 일 경우 delete 버튼 숨기기
     if($("#stusCodeId").val() == 9){
         $("#_delBtn").css("display", "none" );
     } 
-	
-	// update Button Click
-	$("#_updBtn").click(function() {
-		// 1. validation
-		//Initial
-		if("" == $("#cntcCmbInitialTypeId").val() || null == $("#cntcCmbInitialTypeId").val()){
-			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Initial'/>");
-			return;
-		}
-		//Gender
-		if("" == $("input[name='cntcGender']").val() || null == $("input[name='cntcGender']").val()){
-			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Gender'/>");
-			return;
-		}
-		//Customer Name
-		if("" == $("#cntcName").val() || null == $("#cntcName").val()){
-			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Customer Name'/>");
-			return;
-		}
-		//Race
-		if("" == $("#cntcCmbRaceTypeId").val() || null == $("#cntcCmbRaceTypeId").val()){
-			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Race'/>");
-			return;
-		}
-		//Nric
-		if("" != $("#cntcNric").val() && null != $("#cntcNric").val()){
-			//console.log("log : " + FormUtil.checkNum($("#cntcNric")));
-			if(FormUtil.checkNum($("#cntcNric"))){
-				Common.alert("<spring:message code="'sal.msg.invalidNric' />");
-				return;
-			}
-		}
-		//Tel
-		if(("" == $("#cntcTelm").val() || null == $("#cntcTelm").val()) && ("" == $("#cntcTelr").val() || null == $("#cntcTelr").val())
-				&& ("" == $("#cntcTelo").val() || null == $("#cntcTelo").val()) && ("" == $("#cntcTelf").val() || null == $("#cntcTelf").val())){
-			
-			Common.alert("<spring:message code='sal.msg.keyInContactNum' />");
+    
+    // update Button Click
+    $("#_updBtn").click(function() {
+        // 1. validation
+        //Initial
+        if("" == $("#cntcCmbInitialTypeId").val() || null == $("#cntcCmbInitialTypeId").val()){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Initial'/>");
             return;
-		}else{
-			// telm(Mobile)
-			if("" != $("#cntcTelm").val() && null != $("#cntcTelm").val()){
-				if(FormUtil.checkNum($("#cntcTelm"))){
-					Common.alert("<spring:message code='sal.alert.msg.invalidTelNumMobile' />");
-					return;
-				}
-			}
-			// telr(Residence)
-			if("" != $("#cntcTelr").val() && null != $("#cntcTelr").val()){
+        }
+        //Gender
+        if("" == $("input[name='cntcGender']").val() || null == $("input[name='cntcGender']").val()){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Gender'/>");
+            return;
+        }
+        //Customer Name
+        if("" == $("#cntcName").val() || null == $("#cntcName").val()){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Customer Name'/>");
+            return;
+        }
+        //Race
+        if("" == $("#cntcCmbRaceTypeId").val() || null == $("#cntcCmbRaceTypeId").val()){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Race'/>");
+            return;
+        }
+        //Nric
+        if("" != $("#cntcNric").val() && null != $("#cntcNric").val()){
+            //console.log("log : " + FormUtil.checkNum($("#cntcNric")));
+            if(FormUtil.checkNum($("#cntcNric"))){
+                Common.alert("<spring:message code='sal.msg.invalidNric' />");
+                return;
+            }
+        }
+        //Tel
+        if(("" == $("#cntcTelm").val() || null == $("#cntcTelm").val()) && ("" == $("#cntcTelr").val() || null == $("#cntcTelr").val())
+                && ("" == $("#cntcTelo").val() || null == $("#cntcTelo").val()) && ("" == $("#cntcTelf").val() || null == $("#cntcTelf").val())){
+            
+            Common.alert("<spring:message code='sal.msg.keyInContactNum' />");
+            return;
+        }else{
+            // telm(Mobile)
+            if("" != $("#cntcTelm").val() && null != $("#cntcTelm").val()){
+                if(FormUtil.checkNum($("#cntcTelm"))){
+                    Common.alert("<spring:message code='sal.alert.msg.invalidTelNumMobile' />");
+                    return;
+                }
+            }
+            // telr(Residence)
+            if("" != $("#cntcTelr").val() && null != $("#cntcTelr").val()){
                 if(FormUtil.checkNum($("#cntcTelr"))){
                     Common.alert("<spring:message code='sal.alert.msg.invalidTelNumResidence' />");
                     return;
                 }
             }
-			// telo(Office)
-			if("" != $("#cntcTelo").val() && null != $("#cntcTelo").val()){
+            // telo(Office)
+            if("" != $("#cntcTelo").val() && null != $("#cntcTelo").val()){
                 if(FormUtil.checkNum($("#cntcTelo"))){
                     Common.alert("<spring:message code='sal.alert.msg.invalidTelNumOffice' />");
                     return;
                 }
             }
-			// telf(Fax)
-			if("" != $("#cntcTelf").val() && null != $("#cntcTelf").val()){
+            // telf(Fax)
+            if("" != $("#cntcTelf").val() && null != $("#cntcTelf").val()){
                 if(FormUtil.checkNum($("#cntcTelf"))){
                     Common.alert("<spring:message code='sal.alert.msg.invalidTelNumFax' />");
                     return;
                 }
             }
-			
-		}// tel end
-		
-	    //Ext
-	    if(""  != $("#cntcExtNo").val() && null != $("#cntcExtNo").val()){
-	    	
-	    	if(FormUtil.checkNum($("#cntcExtNo"))){
-	    		 Common.alert("<spring:message code='sal.alert.msg.invalidExtNoNumber' />");
-	    		 return;
-	    	}
-	    }
-		//Email
-		if("" != $("#cntcEmail").val() && null != $("#cntcEmail").val()){
-			
-			if(FormUtil.checkEmail($("#cntcEmail").val())){
-				 Common.alert("<spring:message code='sal.msg.invalidEmail' />");
+            
+        }// tel end
+        
+        //Ext
+        if(""  != $("#cntcExtNo").val() && null != $("#cntcExtNo").val()){
+            
+            if(FormUtil.checkNum($("#cntcExtNo"))){
+                 Common.alert("<spring:message code='sal.alert.msg.invalidExtNoNumber' />");
                  return;
-			}
-		}
-		
-		// Validation Success
-		// 2. Update
-		fn_customerContactInfoUpdateAjax();
-		
-	});
-	
-	 //Delete
+            }
+        }
+        //Email
+        if("" != $("#cntcEmail").val() && null != $("#cntcEmail").val()){
+            
+            if(FormUtil.checkEmail($("#cntcEmail").val())){
+                 Common.alert("<spring:message code='sal.msg.invalidEmail' />");
+                 return;
+            }
+        }
+        
+        // Validation Success
+        // 2. Update
+        fn_customerContactInfoUpdateAjax();
+        
+    });
+    
+     //Delete
     $("#_delBtn").click(function() {
        Common.confirm("<spring:message code='sal.alert.msg.areYouSureWantToDelContPerson' />", fn_deleteContactAjax);
     });
 }); // Document Ready Func End
 
 /* ####### update Func ########### */
-	// Call Ajax - DB Update
-	function fn_customerContactInfoUpdateAjax(){
-	    Common.ajax("GET", "/sales/customer/updateCustomerContactInfoAf.do",$("#updForm").serialize(), function(result) {
-	        Common.alert(result.message, fn_parentReload);
-	    });
-	}
-	
-	// Parent Reload Func
-	function fn_parentReload() {
-		fn_selectPstRequestDOListAjax(); //parent Method (Reload)
-		$("#_close1").click();
+    // Call Ajax - DB Update
+    function fn_customerContactInfoUpdateAjax(){
+        Common.ajax("GET", "/sales/customer/updateCustomerContactInfoAf.do",$("#updForm").serialize(), function(result) {
+            Common.alert(result.message, fn_parentReload);
+        });
+    }
+    
+    // Parent Reload Func
+    function fn_parentReload() {
+        fn_selectPstRequestDOListAjax(); //parent Method (Reload)
+        $("#_close1").click();
         $("#_close").click();
         $("#_selectParam").val('3');
         Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
         Common.popupDiv("/sales/customer/updateCustomerContactInfoPop.do", $('#editForm').serializeJSON(), null , true, '_editDiv3Pop');
         
-	}
+    }
 /* ####### update Func  End########### */
 
 /* ####### delete Func ########### */
     //delete
-	function fn_deleteContactAjax(){
-	    
-	    Common.ajax("GET", "/sales/customer/deleteCustomerContact.do", $("#updForm").serialize(), function(result){
-	        //result alert and closePage
-	        Common.alert(result.message, fn_closePage);
-	    });
-	}
-	
-	//Parent Reload and PageClose Func
-	function fn_closePage(){
-		fn_selectPstRequestDOListAjax(); //parent Method (Reload)
+    function fn_deleteContactAjax(){
+        
+        Common.ajax("GET", "/sales/customer/deleteCustomerContact.do", $("#updForm").serialize(), function(result){
+            //result alert and closePage
+            Common.alert(result.message, fn_closePage);
+        });
+    }
+    
+    //Parent Reload and PageClose Func
+    function fn_closePage(){
+        fn_selectPstRequestDOListAjax(); //parent Method (Reload)
         $("#_close1").click();
         $("#_close").click();
         $("#_selectParam").val('3');
         Common.popupDiv('/sales/customer/updateCustomerContactPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv3');
-	}
+    }
 /* ####### delete Func End ########### */
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
