@@ -680,11 +680,11 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 ELSE ''
                    END C29  ,
                 CASE
-                     WHEN ( Extent1.JOIN_DT IS NOT NULL ) THEN TO_char(Extent1.JOIN_DT,'yyyy-mm-dd')
+                     WHEN ( Extent1.JOIN_DT IS NOT NULL ) THEN TO_char(Extent1.JOIN_DT,'dd/mm/yyyy')
                 ELSE ''
                    END C30  ,
                 CASE
-                     WHEN ( Extent25.USER_VAL_ID_TO IS NOT NULL ) THEN to_char(Extent25.USER_VAL_ID_TO,'yyyy-mm-dd')
+                     WHEN ( Extent25.USER_VAL_ID_TO IS NOT NULL ) THEN to_char(Extent25.USER_VAL_ID_TO,'dd/mm/yyyy')
                 ELSE ''
                    END C31  ,
                 CASE

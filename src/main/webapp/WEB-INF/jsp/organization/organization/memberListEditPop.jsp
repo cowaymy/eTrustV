@@ -300,7 +300,8 @@ function fn_setMemInfo(data){
     }
     
     if(data.c62!=null&&jQuery.trim(data.c62).length>0){
-        $("#transportCd option[value="+ data.c62 +"]").attr("selected", true);
+        //$("#transportCd option[value="+ data.c62 +"]").attr("selected", true);
+        doGetCombo('/common/selectCodeList.do', '7', data.c62,'transportCd', 'S' , ''); 
     }
     
     if(data.bank!=null&&jQuery.trim(data.bank).length>0){
@@ -378,7 +379,7 @@ function fn_setMemInfo(data){
 	
 	
 	
-    doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
+    //doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
     
     
 }
@@ -726,11 +727,11 @@ function fn_saveValidation(){
                 valid = false;
                 message += "* Please key in the bank account no. \n ";
             }
-        	if($("#transportCd").val()=="")
+        	/* if($("#transportCd").val()=="")
             {
                 valid = false;
                 message += "* Please select the transport code. \n ";
-            }
+            } */
         	
             //if (cmbMemDepCode.SelectedIndex <= -1)
             //{
@@ -1212,7 +1213,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     </select>
     </td>
     -->
-    <th scope="row">Transport Code<span class="must">*</span></th>
+    <th scope="row">Transport Code</th>
     <td>
     <select class="w100p"  id="transportCd" name="transportCd">
     </select>
