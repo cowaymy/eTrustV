@@ -949,7 +949,8 @@ function fn_serialChck(rowindex , rowitem , str){
             <tbody>
                 <tr>
                     <th scope="row">GI Posting Date</th>
-                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" value="" readonly/></td>
+                    <!-- <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" value="" readonly/></td> -->
+                    <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                     <th scope="row">GI Doc Date</th>
                     <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
                 </tr>
