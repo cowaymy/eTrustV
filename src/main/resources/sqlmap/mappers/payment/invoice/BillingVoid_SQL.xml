@@ -132,7 +132,7 @@
     </select>
     
     <select id="saveInvoiceVoidResult" statementType="CALLABLE" parameterType="Map">
-        {call SP_INST_VOID_INVC_STATE(#{statementNo}, #{remark},#{userId})}
+        {call SP_INST_VOID_INVC_STATE_TAX(#{statementNo}, #{remark},#{userId})}
     </select>
     
 </mapper>
