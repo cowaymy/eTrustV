@@ -785,11 +785,11 @@
 			<tr>
 			    <th scope="row">Assign CT</th>
 			    <td>
-			    <select id="cmbAssignCt" name="cmbAssignCt" class="w100p">
-			        <option value="">Assign CT</option>
-                    <c:forEach var="list" items="${selectAssignCTList }">
+			    <select id="cmbAssignCt" name="cmbAssignCt" class="w100p" disabled="disabled">
+			        <option value=""></option>
+                     <c:forEach var="list" items="${selectAssignCTList }">
                         <option value="${list.memId}">${list.memCodeName}</option>
-                    </c:forEach>
+                    </c:forEach> 
 			    </select>
 			    </td>
 

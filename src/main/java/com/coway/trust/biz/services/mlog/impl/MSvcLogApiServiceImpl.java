@@ -453,11 +453,24 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	@Override
 	public void  setPRFailJobRequest (Map<String, Object> params) {
 		
-		
+		//ccr6d , ccr7d
 		//lev 1   =>  38m ffaild   
 		//lev 2   =>  39m ffaild  
 		
+
 		logger.debug("setPRFailJobRequest==>" +params.toString());
+		String callEntryID= MSvcLogApiMapper.select_SeqCCR0006D(params);
+		
+		params.put("callEntryID", callEntryID);
+		
+		String callResultID = MSvcLogApiMapper.select_SeqCCR0007D(params);
+		
+		params.put("callResultID", callResultID);
+		logger.debug("setPRFailJobRequest==>" +params.toString());
+		MSvcLogApiMapper.insert_CCR0006D(params);
+		MSvcLogApiMapper.insert_CCR0007D(params);
+
+		
 		int  log38cnt  = MSvcLogApiMapper.updateFailed_LOG0038D(params);
 		int  log39cnt  = MSvcLogApiMapper.insertFailed_LOG0039D(params);  
 		logger.debug("log39cnt==>" +log39cnt);

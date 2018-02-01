@@ -1736,10 +1736,12 @@ public class ServiceApiController {
 		Map<String, Object> params = PRFailJobRequestForm.createMaps(pRFailJobRequestForm);
 		
 		if (RegistrationConstants.IS_INSERT_PRFAIL_LOG) {
-			//MSvcLogApiService.savePrFailServiceLogs(params);
+	
 		}
 	       
 		MSvcLogApiService.setPRFailJobRequest(params);		
+		// Call Log Update
+		
   	
         transactionId = pRFailJobRequestForm.getTransactionId();
 		

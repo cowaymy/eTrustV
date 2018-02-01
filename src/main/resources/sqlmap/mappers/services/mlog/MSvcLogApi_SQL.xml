@@ -3720,7 +3720,8 @@
                     SET    STUS_CODE_ID   = '21',
                              UPD_DT             = sysdate,
                              UPD_USER_ID     = (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId}),
-                             FAIL_RESN_ID     =#{failReasonCode}
+                             FAIL_RESN_ID     =#{failReasonCode},
+                             CALL_ENTRY_ID = #{callEntryID}
                 WHERE  retn_no = #{serviceNo}
        </update>
        
@@ -3754,7 +3755,57 @@
                        WHERE  AS_NO              = #{AS_NO}
        
        </insert> 
-                
+       <insert id="insert_CCR0006D" parameterType="Map">
+       INSERT INTO CCR0006D 
+      ( CALL_ENTRY_ID , SALES_ORD_ID , TYPE_ID 
+      , STUS_CODE_ID , RESULT_ID , DOC_ID
+       , CRT_USER_ID , CRT_DT , CALL_DT 
+       , IS_WAIT_FOR_CANCL , HAPY_CALLER_ID 
+       , UPD_DT , UPD_USER_ID , ORI_CALL_DT ) 
+       VALUES (
+        #{callEntryID} ,  (SELECT  SALES_ORD_ID  FROM SAL0001D WHERE  SALES_ORD_NO  =#{salesOrderNo}) , 259
+       ,19 , #{callResultID} , 0
+       ,(SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId}), SYSDATE , SYSDATE + 1
+       ,0 , 0 
+       ,SYSDATE , (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId} ) , SYSDATE + 1
+       )
+   
+       </insert>
+       
+             <insert id="insert_CCR0007D" parameterType="Map">
+       INSERT INTO CCR0007D 
+      (CALL_RESULT_ID , CALL_ENTRY_ID , CALL_STUS_ID 
+      , CALL_DT , CALL_ACTN_DT , CALL_FDBCK_ID 
+      , CALL_CT_ID , CALL_REM , CALL_CRT_USER_ID 
+      , CALL_CRT_DT , CALL_CRT_USER_ID_DEPT
+       , CALL_HC_ID , CALL_ROS_AMT 
+       , CALL_SMS , CALL_SMS_REM  ) 
+       VALUES (
+       #{callResultID}, #{callEntryID} ,  19
+       , SYSDATE + 1 , to_date('1900/01/01', 'YYYY/MM/DD' ) , 0 
+       , 0 , ' ' , (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId})
+       , SYSDATE , 0 
+       , 0 , 0 
+       , 0 , ' '
+       )
+     
+       </insert>
+   
+   <select id="select_SeqCCR0006D" parameterType="Map" resultType="java.lang.String">
+   
+    select CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL
+   From dual
+   
+   </select>
+   <select id="select_SeqCCR0007D" parameterType="Map" resultType="java.lang.String">
+   
+    select CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL 
+   From dual
+   
+   </select>
+
+  
+   
                 
       <resultMap id="bliingRtnCode" type="egovMap" />     
       
