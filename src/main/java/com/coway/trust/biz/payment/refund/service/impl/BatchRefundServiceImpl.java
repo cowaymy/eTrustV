@@ -32,12 +32,12 @@ public class BatchRefundServiceImpl implements BatchRefundService {
 		List<EgovMap> bRefundItem = batchRefundMapper.selectBatchRefundItem(params);
 		
 		int totalInvalid = 0;
-		int totalValidAmt = 0;
+		double totalValidAmt = 0;
 		for (EgovMap egovMap : bRefundItem) {
 			if(Integer.parseInt(String.valueOf(egovMap.get("validStusId"))) == 21) {
 				totalInvalid = totalInvalid + 1;
 			} else if (Integer.parseInt(String.valueOf(egovMap.get("validStusId"))) == 4) {
-				totalValidAmt = totalValidAmt + Integer.parseInt(String.valueOf(egovMap.get("amt")));
+				totalValidAmt = totalValidAmt + Double.parseDouble(String.valueOf(egovMap.get("amt")));
 			}
 		}
 		
