@@ -2437,7 +2437,7 @@ function addOutSrvcToFinal(){
 	            item.billStatus = "";   
 	            item.billTypeId = 164;   
 	            item.billTypeNm   = "Membership Package"; 
-	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cntName");
+	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"custName");
 	            item.discountAmt = 0;
 	            item.installment  = 0;                        
 	            item.ordId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
@@ -2471,7 +2471,7 @@ function addOutSrvcToFinal(){
 	            item.billStatus = "";   
 	            item.billTypeId = 542;   
 	            item.billTypeNm   = "Filter (1st BS)"; 
-	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cntName");
+	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"custName");
 	            item.discountAmt = 0;
 	            item.installment  = 0;                        
 	            item.ordId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");

@@ -25,7 +25,6 @@ function fn_makeStatementList(type){
 		$("#statementList").append("<option value='initCompanyStatementPop.do'>CompanyStatement</option>");
 		$("#statementList").append("<option value='initCompanyInvoicePop.do'>CompanyInvoice</option>");
 		$("#statementList").append("<option value='initIndividualRentalStatementPop.do'>IndivisualStatement</option>");
-		$("#statementList").append("<option value='initProformaInvoicePop.do'>ProformaInvoice</option>");
 		$("#statementList").append("<option value='initOutrightInvoicePop.do'>OutrightInvoice</option>");
 		$("#statementList").append("<option value='initPenaltyInvoicePop.do'>PenaltyInvoice</option>");
 		$("#statementList").append("<option value='initMembershipInvoicePop.do'>MembershipInvoice</option>");
@@ -37,6 +36,7 @@ function fn_makeStatementList(type){
 		$("#statementList").append("<option value='initTaxInvoiceRenMembershipPop.do'>TaxInvoice(Rental Membership)</option>");
 		$("#statementList").append("<option value='initTaxInvoiceMiscellaneousPop.do'>TaxInvoice(Miscellaneous)</option>");
 		$("#statementList").append("<option value='initStatementCompanyRentalPop.do'>Statement Company(Rental)</option>");
+		$("#statementList").append("<option value='initProformaInvoicePop.do'>ProformaInvoice</option>");
 	}
 }
 

@@ -206,7 +206,7 @@ var targetOutSrvcMstColumnLayout = [
     { dataField:"ordId" ,headerText:"Order ID" ,editable : false , width : 100, visible : false },
 	{ dataField:"quotNo" ,headerText:"Quotation<br>Number" ,editable : false},
     { dataField:"ordNo" ,headerText:"Order<br>Number" ,editable : false , width : 150 },
-    { dataField:"cntName" ,headerText:"Customer<br>Name" ,editable : false , width : 250, visible : false},          
+    { dataField:"custName" ,headerText:"Customer<br>Name" ,editable : false , width : 250, visible : false},          
 	{ dataField:"totAmt" ,headerText:"Total<br>Amount" ,editable : false , width : 110 , dataType : "numeric", formatString : "#,##0.00"},      
 	{ dataField:"packageCharge" ,headerText:"Package<br>Amount" ,editable : false , width : 110 , dataType : "numeric", formatString : "#,##0.00"},      
     { dataField:"packagePaid" ,headerText:"Package<br>Paid" ,editable : false , width : 110 , dataType : "numeric", formatString : "#,##0.00"},      
@@ -2018,7 +2018,7 @@ function addOutSrvcToFinal(){
 	            item.billStatus = "";   
 	            item.billTypeId = 164;   
 	            item.billTypeNm   = "Membership Package"; 
-	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cntName");
+	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"custName");
 	            item.discountAmt = 0;
 	            item.installment  = 0;                        
 	            item.ordId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
@@ -2052,7 +2052,7 @@ function addOutSrvcToFinal(){
 	            item.billStatus = "";   
 	            item.billTypeId = 542;   
 	            item.billTypeNm   = "Filter (1st BS)"; 
-	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"cntName");
+	            item.custNm   = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"custName");
 	            item.discountAmt = 0;
 	            item.installment  = 0;                        
 	            item.ordId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
