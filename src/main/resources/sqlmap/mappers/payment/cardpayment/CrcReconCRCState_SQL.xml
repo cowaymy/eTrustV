@@ -99,6 +99,7 @@
     
     <select id="selectCrcKeyInList" parameterType="Map" resultType="egovMap">
         SELECT 
+            SALES_ORD_NO,
             GROUP_SEQ, 
             (CASE 
                   WHEN PAY_ITM_CC_NO IS NULL THEN ' '
@@ -114,6 +115,7 @@
             FROM 
                 (
                 SELECT
+                    G.SALES_ORD_NO SALES_ORD_NO,
                     A.GROUP_SEQ GROUP_SEQ,
                     B.PAY_ITM_ORI_CC_NO PAY_ITM_CC_NO,
                     B.PAY_ITM_REF_DT PAY_ITM_REF_DT,
@@ -129,6 +131,8 @@
                     LEFT JOIN SYS0013M C ON B.PAY_ITM_CARD_MODE_ID = C.CODE_ID AND C.DISAB = 0 AND C.CODE_MASTER_ID = '130'
                     LEFT JOIN PAY0240T D ON A.GROUP_SEQ = D.SEQ
                     LEFT JOIN SYS0001M E ON D.BANK_ACC_ID = E.ACC_ID AND E.ACC_STUS_ID = 1 AND E.IS_PAY_CRC = 1
+                    JOIN PAY0064D F ON A.PAY_ID = F.PAY_ID
+                    JOIN SAL0001D G ON F.SALES_ORD_ID = G.SALES_ORD_ID
                 WHERE 
                     A.PAY_ITM_MODE_ID = 107
                     AND A.CRC_STATE_MAPPING_STUS_ID = 1
@@ -139,6 +143,7 @@
                     AND B.PAY_ITM_BANK_ACC_ID = #{bankAcc}
                     </if>
                 GROUP BY 
+                    G.SALES_ORD_NO,
                     A.GROUP_SEQ,
                     B.PAY_ITM_ORI_CC_NO,
                     B.PAY_ITM_REF_DT,
