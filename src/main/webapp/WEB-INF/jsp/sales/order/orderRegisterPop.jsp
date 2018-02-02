@@ -334,6 +334,16 @@
                     $("#gstChk").removeAttr("disabled");
                 }
                 else if($("#appType").val() != '' && $("#appType").val() != '66'){
+                    
+                    var appTypeVal = $("#appType").val();
+                    var stkIdVal   = $("#ordProudct").val();
+                    var promoIdVal = $("#ordPromo").val();
+                    
+                    fn_loadProductPrice(appTypeVal, stkIdVal);
+                    if(FormUtil.isNotEmpty(promoIdVal)) {
+                        fn_loadPromotionPrice(promoIdVal, stkIdVal);
+                    }
+                    
                     if(custInfo.gstChk == '1') {
                         $("#gstChk").val('1').prop("disabled", true);
                         $("#pBtnCal").removeClass("blind");

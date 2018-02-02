@@ -1273,6 +1273,50 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		this.preprocSalesOrderDetails(salesOrderDVO, sessionVO);
 		this.preprocInstallationMaster(installationVO, sessionVO);
 		
+		//------------------------------------------------------------------------------
+		// START
+		//------------------------------------------------------------------------------
+        logger.debug("@#### salesOrderMVO.getTotAmt()    :"+salesOrderMVO.getTotAmt());
+        logger.debug("@#### salesOrderMVO.getMthRentAmt():"+salesOrderMVO.getMthRentAmt());
+        logger.debug("@#### salesOrderMVO.getTotPv()     :"+salesOrderMVO.getTotPv());
+        
+        int promoId = CommonUtils.intNvl(salesOrderMVO.getPromoId());
+        
+        if(promoId > 0) {
+
+            Map<String, Object> iMap = new HashMap<String, Object>();
+            
+            iMap.put("promoId", Integer.toString(promoId));
+            iMap.put("stkId", salesOrderDVO.getItmStkId());
+
+            EgovMap oMap  = this.selectProductPromotionPriceByPromoStockID(iMap);
+
+            BigDecimal totAmt = new BigDecimal((String)oMap.get("orderPricePromo"));
+            BigDecimal mthRentAmt = new BigDecimal((String)oMap.get("orderRentalFeesPromo"));
+            BigDecimal totPv = new BigDecimal((String)oMap.get("orderPVPromo"));
+            
+            if(CommonUtils.intNvl(salesOrderMVO.getGstChk()) == 1) {            	
+            	totAmt = totAmt.multiply(new BigDecimal(1/1.06)).setScale(0, BigDecimal.ROUND_FLOOR);
+            	mthRentAmt = mthRentAmt.multiply(new BigDecimal(1/1.06)).setScale(0, BigDecimal.ROUND_FLOOR);
+            	totPv = new BigDecimal((String)oMap.get("orderPVPromoGST"));
+            	
+            	if(orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+            		totAmt = totAmt.divide(new BigDecimal(10), 0, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10));
+            	}
+            }
+            
+            logger.debug("@#### totAmt    :"+totAmt);
+            logger.debug("@#### mthRentAmt:"+mthRentAmt);
+            logger.debug("@#### totPv     :"+totPv);
+            
+            salesOrderMVO.setTotAmt(totAmt);
+            salesOrderMVO.setMthRentAmt(mthRentAmt);
+            salesOrderMVO.setDscntAmt(mthRentAmt);
+        }
+		//------------------------------------------------------------------------------
+		// END
+		//------------------------------------------------------------------------------
+        
 		//regOrderVO.setSalesOrderMVO(salesOrderMVO);
 		regOrderVO.setSalesOrderDVO(salesOrderDVO);
 		regOrderVO.setInstallationVO(installationVO);
