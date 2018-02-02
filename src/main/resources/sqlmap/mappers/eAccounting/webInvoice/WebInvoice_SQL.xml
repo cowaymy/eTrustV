@@ -1145,9 +1145,13 @@ WHERE  CLM_TYPE = #{clmType}
 
 <select id="selectSameVender" parameterType="Map" resultType="String">
 /* webInvoiceMapper.selectSameVender */
-SELECT CLM_NO 
+SELECT A.CLM_NO 
 FROM   FCM0002M 
-WHERE  UPPER(MEM_ACC_ID) = UPPER(#{memAccId}) AND INVC_NO = #{invcNo}
+LEFT JOIN FCM0004M B
+ON A.CLM_NO = B.APPV_REQ_KEY_NO
+WHERE B.APPV_PRCSS_STUS != 'J' 
+    AND UPPER(A.MEM_ACC_ID) = UPPER(#{memAccId}) 
+    AND A.INVC_NO = #{invcNo}
 <if test="clmNo != null and clmNo != ''">
     AND CLM_NO != #{clmNo}
 </if>

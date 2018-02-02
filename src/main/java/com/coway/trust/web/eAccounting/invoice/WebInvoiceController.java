@@ -530,7 +530,7 @@ public class WebInvoiceController {
 		
 	}
 	
-	@RequestMapping(value = "/selectTaxRate", method = RequestMethod.GET) 
+	@RequestMapping(value = "/selectTaxRate.do", method = RequestMethod.GET) 
 	public ResponseEntity<EgovMap> selectTaxRate (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
 		
 		LOGGER.debug("Params =====================================>>  " + params);
@@ -541,7 +541,7 @@ public class WebInvoiceController {
 		
 	}
 	
-	@RequestMapping(value = "/selectClamUn", method = RequestMethod.GET) 
+	@RequestMapping(value = "/selectClamUn.do", method = RequestMethod.GET) 
 	public ResponseEntity<EgovMap> selectClamUn (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
 		
 		LOGGER.debug("Params =====================================>>  " + params);
@@ -555,7 +555,7 @@ public class WebInvoiceController {
 		
 	}
 	
-	@RequestMapping(value = "/selectSameVender", method = RequestMethod.GET) 
+	@RequestMapping(value = "/selectSameVender.do", method = RequestMethod.GET) 
 	public ResponseEntity<ReturnMessage> selectSameVender (@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) throws Exception{	
 		
 		LOGGER.debug("Params =====================================>>  " + params);
