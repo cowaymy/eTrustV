@@ -3474,18 +3474,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 ELSE ''
                    END C40,
                 CASE
-                     WHEN ( NOT ( ( Extent4.MEM_ID IS NULL )
-                       AND ( Extent4.MEM_CODE IS NULL )
-                       AND ( Extent4.MEM_LVL IS NULL )
-                       AND ( Extent4.DEPT_CODE IS NULL )
-                       AND ( Extent4.GRP_CODE IS NULL )
-                       AND ( Extent4.ORG_CODE IS NULL )
-                       AND ( Extent4.TOP_ORG_CODE IS NULL )
-                       AND ( Extent4.MEM_UP_ID IS NULL )
-                       AND ( Extent4.LVL3_UP_ID IS NULL )
-                       AND ( Extent4.LVL2_UP_ID IS NULL )
-                       AND ( Extent4.LVL1_UP_ID IS NULL )
-                       AND ( Extent4.LVL0_UP_ID IS NULL ) ) ) THEN Extent4.DEPT_CODE
+                    WHEN ( Extent1.DEPT_CODE IS NOT NULL ) THEN Extent1.DEPT_CODE
                 ELSE ''
                    END C41  ,
                 CASE

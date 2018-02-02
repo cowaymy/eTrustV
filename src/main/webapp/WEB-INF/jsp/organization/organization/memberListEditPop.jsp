@@ -1204,6 +1204,14 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     -->
     <th scope="row">Department Code<span class="must">*</span></th>
     <td>
+        <%-- <c:choose>
+            <c:when test = "${memberView.memType =='2803'}">
+                <select class="w100p" id="deptCd" name="deptCd">
+            </c:when>
+            <c:otherwise>
+                <span><c:out value="${memberView.c41}"/></span>
+            </c:otherwise>
+        </c:choose> --%>
      <span><c:out value="${memberView.c41}"/></span>
      <!-- <span><c:out value="${memberView.c41} - ${memberView.c22} - ${memberView.c23} "/></span> -->
     </td>

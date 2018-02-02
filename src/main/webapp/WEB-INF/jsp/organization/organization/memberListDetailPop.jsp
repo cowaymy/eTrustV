@@ -726,7 +726,14 @@ function fn_winClose(){
 <tr>
     <th scope="row">Member Group</th>
     <td colspan="3">
-     <span><c:out value="${memberView.c41} - ${memberView.c22} - ${memberView.c23} "/></span>
+        <c:choose>
+            <c:when test = "${memberView.memType =='2803'}">
+                <span><c:out value="${memberView.c41}"/></span>
+            </c:when>
+            <c:otherwise>
+                <span><c:out value="${memberView.c41} - ${memberView.c22} - ${memberView.c23} "/></span>
+            </c:otherwise>
+        </c:choose>
     </td>
     <th scope="row">Transport</th>
     <td>
