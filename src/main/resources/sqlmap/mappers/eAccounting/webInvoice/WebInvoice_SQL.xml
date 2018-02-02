@@ -104,7 +104,7 @@ SELECT   T.CLM_NO
     </if>
     <if test="memAccName != null and memAccName != ''">
     <![CDATA[
-    AND UPPER(MEM_ACC_NAME) LIKE '%' || UPPER(#{memAccName}) || '%'
+    AND UPPER(MEM_ACC_NAME) LIKE UPPER(#{memAccName}) || '%'
     ]]>
     </if>
     <if test="gstRgistNo != null and gstRgistNo != ''">
