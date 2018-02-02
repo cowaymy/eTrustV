@@ -1739,6 +1739,8 @@ public class ServiceApiController {
 	
 		}
 	       
+		MSvcLogApiService.savePrFailServiceLogs(params);
+		
 		MSvcLogApiService.setPRFailJobRequest(params);		
 		// Call Log Update
 		
