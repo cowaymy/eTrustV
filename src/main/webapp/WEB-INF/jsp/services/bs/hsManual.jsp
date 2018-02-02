@@ -255,7 +255,7 @@
                                   $("#_salesOrdId").val(item.salesOrdId);
                                   $("#_openGb").val("edit");
                                   $("#_brnchId").val(item.brnchId);
-                                  
+
                                   Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT&ROW="+rowIndex, $("#popEditForm").serializeJSON(), null , true , '');
                   }
            }
@@ -299,7 +299,7 @@
 		                    if ($("#cmdCdManager").val() == '' || $("#cmdCdManager").val() == null) {
 		                        Common.alert("Please Select 'Cody Manager'");
 		                        return false;
-		                    } 
+		                    }
 	                    }
                 	}
                     Common.ajax("GET", "/services/bs/selectHsAssiinlList.do", $("#searchForm").serialize(), function(result) {
@@ -332,10 +332,10 @@
 	                        if ($("#cmdCdManager1").val() == '' || $("#cmdCdManager1").val() == null) {
 	                            Common.alert("Please Select 'Cody Manager'");
 	                            return false;
-	                        } 
+	                        }
 	                    }
-                   } 
-                   
+                   }
+
                        // Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:$("#brnchId1").val(),cmdCdManager1:$("#memId1").val()}, function(result) {
                    Common.ajax("GET", "/services/bs/selectHsManualList.do", {ManuaSalesOrder:$("#ManuaSalesOrder").val(),ManuaMyBSMonth:$("#ManuaMyBSMonth").val(),ManualCustomer:$("#manualCustomer").val(),cmdBranchCode1:HsCdBranch,cmdCdManager1:memId}, function(result) {
                        console.log("성공.");
@@ -352,7 +352,7 @@
 
 
             function fn_getHSAddListAjax(){
-            	
+
 //             Common.popupDiv("/services/addInstallationPopup.do?isPop=true&installEntryId=" + installEntryId+"&codeId=" + codeid1);
                 var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
 
@@ -420,16 +420,16 @@
         	   Common.alert("'Assign Cody Transfer' is not allow in Manual HS");
         	   return false;
            }
-           
+
             var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
-          
+
 
             if(checkedItems.length <= 0) {
                 Common.alert('No data selected.');
                 return false;
             }else{
-            	
-            	
+
+
             /* if(checkedItems.length > 1){
             	 Common.alert('please choose one data selected.');
             	 return false;
@@ -468,7 +468,7 @@
                         }
                     }
                     ctBrnchCodeOld = rowItem.codyBrnchCode; */
-                    
+
                     if(i==0){
                          brnchId = rowItem.branchCd;
                     }
@@ -481,17 +481,17 @@
 
 
                      dept = rowItem.deptCode;
-               
+
 
                 }
-                
+
                 Common.confirmCustomizingButton("Do you want to transfer an assign cody<br>with this CM group?", "Yes", "No", fn_originBrnchAssign, fn_selectBrnchCM);
-                
-                 
+
+
                  /* // deptCode의 MEM_UP_ID가 동일한 것만 수정 가능하도록
                  Common.ajax("GET", "/services/bs/assignDeptMemUp.do?deptList="+deptList, "" , function(result){
                  	//console.log(result);
-                 	
+
                  	var memUpId = "";
                  	var memUpCnt = 0;
                  	for (var j=0; j<result.length; j++) {
@@ -504,7 +504,7 @@
                             }
                         }
                  	}
-                 	
+
                  	if (memUpCnt != 0) {
                  		//alert("memUpId 다름");
                  		// Department의 MEM_UP_ID가 다른 걸 한꺼번에 Assign Cody Transfer 하려고 할 때 alert 메시지
@@ -512,17 +512,17 @@
                  		return;
                  	} else {
                  		//alert("memUpId 동일");
-                 		
+
                  		Common.confirmCustomizingButton("같은 브랜치?", "Yes", "No", fn_sameBrnchAssign, fn_otherBrnchAssign);
                  	}
-                 	
+
                  }); */
-                
+
                 /* if(brnchCnt > 0 ){
                     Common.alert("Not Avaialable to Assign Cody Transfer With Several CDB in Single Time.");
                     return;
                 } */
-                
+
                 function fn_originBrnchAssign(){
                     var jsonObj = {
                              "SaleOrdList" : saleOrdList,
@@ -530,12 +530,12 @@
                              "ManualCustId" : $("#manualCustomer").val(),
                              "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
                              "department" : dept
-                             
+
                     };
 
                     Common.popupDiv("/services/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId+"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()+"&deptList="+deptList);
                  }
-                 
+
                  function fn_selectBrnchCM(){
                 	 var jsonObj = {
                              "SaleOrdList" : saleOrdList,
@@ -543,16 +543,16 @@
                              "ManualCustId" : $("#manualCustomer").val(),
                              "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
                              "department" : dept
-                             
+
                     };
-                	 
+
                 	 Common.popupDiv("/services/bs/assignBrnchCMPop.do?JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId+"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()+"&deptList="+deptList);
                  }
 
             }
 
         }
-        
+
         function fn_codyChange(){
             $("#_openGb").val("codyChange");
 
@@ -561,16 +561,16 @@
                 Common.alert("'Assign Cody Transfer' is not allow in Manual HS");
                 return false;
             }
-            
+
              var checkedItems = AUIGrid.getCheckedRowItemsAll(myGridID);
-           
+
 
              if(checkedItems.length <= 0) {
                  Common.alert('No data selected.');
                  return false;
              }else{
-                 
-                 
+
+
              /* if(checkedItems.length > 1){
                   Common.alert('please choose one data selected.');
                   return false;
@@ -609,7 +609,7 @@
                          }
                      }
                      ctBrnchCodeOld = rowItem.codyBrnchCode; */
-                     
+
                      if(i==0){
                           brnchId = rowItem.branchCd;
                      }
@@ -622,18 +622,18 @@
 
 
                       dept = rowItem.deptCode;
-                
+
 
                  }
-                 
+
                  //Common.confirmCustomizingButton("Do you want to transfer an assign cody<br>with this CM group?", "Yes", "No", fn_originBrnchAssign, fn_selectBrnchCM);
                  fn_originBrnchAssign();
-                 
-                  
+
+
                   /* // deptCode의 MEM_UP_ID가 동일한 것만 수정 가능하도록
                   Common.ajax("GET", "/services/bs/assignDeptMemUp.do?deptList="+deptList, "" , function(result){
                      //console.log(result);
-                     
+
                      var memUpId = "";
                      var memUpCnt = 0;
                      for (var j=0; j<result.length; j++) {
@@ -646,7 +646,7 @@
                              }
                          }
                      }
-                     
+
                      if (memUpCnt != 0) {
                          //alert("memUpId 다름");
                          // Department의 MEM_UP_ID가 다른 걸 한꺼번에 Assign Cody Transfer 하려고 할 때 alert 메시지
@@ -654,17 +654,17 @@
                          return;
                      } else {
                          //alert("memUpId 동일");
-                         
+
                          Common.confirmCustomizingButton("같은 브랜치?", "Yes", "No", fn_sameBrnchAssign, fn_otherBrnchAssign);
                      }
-                     
+
                   }); */
-                 
+
                  /* if(brnchCnt > 0 ){
                      Common.alert("Not Avaialable to Assign Cody Transfer With Several CDB in Single Time.");
                      return;
                  } */
-                 
+
                  function fn_originBrnchAssign(){
                      var jsonObj = {
                               "SaleOrdList" : saleOrdList,
@@ -672,12 +672,12 @@
                               "ManualCustId" : $("#manualCustomer").val(),
                               "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
                               "department" : dept
-                              
+
                      };
 
                      Common.popupDiv("/services/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId+"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()+"&deptList="+deptList);
                   }
-                  
+
                   /* function fn_selectBrnchCM(){
                       var jsonObj = {
                               "SaleOrdList" : saleOrdList,
@@ -685,16 +685,16 @@
                               "ManualCustId" : $("#manualCustomer").val(),
                               "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
                               "department" : dept
-                              
+
                      };
-                      
+
                       Common.popupDiv("/services/bs/assignBrnchCMPop.do?JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId+"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()+"&deptList="+deptList);
                   } */
 
              }
 
          }
-        
+
 
         /* function fn_sameBrnchAssign(){
         	var jsonObj = {
@@ -703,14 +703,14 @@
                     "ManualCustId" : $("#manualCustomer").val(),
                     "ManuaMyBSMonth" : $("#ManuaMyBSMonth").val(),
                     "department" : dept
-                    
+
            };
 
              Common.popupDiv("/services/bs/selecthSCodyChangePop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  +"&department="+ dept );
         }
-        
+
         function fn_otherBrnchAssign(){
-        	
+
         } */
 
 
@@ -799,12 +799,12 @@
                 	else{
                 		Common.popupDiv("/services/bs/selectHSConfigListPop.do?isPop=true&JsonObj="+jsonObj+"&CheckedItems="+saleOrdList+"&BrnchId="+brnchId +"&ManuaMyBSMonth="+$("#ManuaMyBSMonth").val()  );
                 	}
-                	
-                	
-                });
-                
 
-                
+
+                });
+
+
+
 
             }
 
@@ -839,7 +839,7 @@
       $("#cmdcodyCode").find('option').each(function() {
                 $(this).remove();
             }); */
-            
+
             if ($(this).val().trim() == "") {
                 return;
             }
@@ -863,7 +863,7 @@
              }
              if( $("#userType").val() != "3") {
                 doGetCombo('/services/bs/getCdDeptList.do', $(this).val() , ''   , 'cmdCdManager1' , 'S', 'fn_cmdBranchCode1');
-             }   
+             }
          });
 
 
@@ -917,43 +917,43 @@
                 });
 
             if ( $("#memberLevel").val() != "") {
-            
+
                 if ( $("#memberLevel").val()  == "4" ) {
-                
-                    $("#txtAssigncodyCode").val($("#userName").val()); 
+
+                    $("#txtAssigncodyCode").val($("#userName").val());
                     $("#txtAssigncodyCode").attr("readOnly", true)
-                
+
                 }
-                
-                
-            
-                
+
+
+
+
                 $("#cmdBranchCode option:eq(1)", '#searchForm').attr("selected", true);
                 $("#cmdBranchCode1 option:eq(1)", '#searchForm').attr("selected", true);
-                
 
-                //$("#cmdCdManager1 option:eq(1)", '#searchForm').attr("selected", true); 
-                
+
+                //$("#cmdCdManager1 option:eq(1)", '#searchForm').attr("selected", true);
+
 
                 $('#cmdBranchCode').trigger('click');
                 $('#cmdBranchCode1').trigger('click');
-                
+
                 $('#cmdBranchCode', '#searchForm').attr("readonly", true );
                 $('#cmdBranchCode1', '#searchForm').attr("readonly",  true );
-                
+
                 $('#cmdBranchCode', '#searchForm').attr('class','w100p readonly ');
                 $('#cmdBranchCode1', '#searchForm').attr('class','w100p readonly ');
-                
+
                 /*$('#cmdCdManager', '#searchForm').attr("readonly", true );
                 $('#cmdCdManager1', '#searchForm').attr("readonly",  true );
-                
+
 		        $('#cmdBranchCode', '#searchForm').attr("readonly", true );
 		        $('#cmdBranchCode1', '#searchForm').attr("readonly",  true );
-		        
+
 		        $('#cmdBranchCode', '#searchForm').attr('class','w100p readonly ');
 		        $('#cmdBranchCode1', '#searchForm').attr('class','w100p readonly ');
                 */
-            } 
+            }
         });
 
         function fn_checkRadioButton(objName){
@@ -1099,11 +1099,11 @@
         function fn_hsSummary(){
             Common.popupDiv("/services/bs/report/bSSummaryList.do"  , null, null , true , '');
         }
-        
+
         function fn_filterForecastList(){
             Common.popupDiv("/services/bs/report/filterForecastListingPop.do"  , null, null , true , '');
         }
-        
+
 
 
 
@@ -1114,18 +1114,18 @@
 	            $('#cmdCdManager', '#searchForm').attr("readonly", true );
 	            $('#cmdCdManager', '#searchForm').attr('class','w100p readonly ');
             }
-            
+
         }
-        
+
         function fn_cmdBranchCode1() {
 	        if ( $("#memberLevel").val() == "3" ||  $("#memberLevel").val() == "4" ) {
-	        
+
 	            $("#cmdCdManager1 option:eq(1)", '#searchForm').attr("selected", true);
 	            $('#cmdCdManager1', '#searchForm').attr("readonly", true );
 	            $('#cmdCdManager1', '#searchForm').attr('class','w100p readonly ');
-	        }            
-        }        
-        
+	        }
+        }
+
         function fn_excelDown(){
         	var radioVal = $("input:radio[name='searchDivCd']:checked").val();
 
@@ -1135,7 +1135,10 @@
             	GridCommon.exportTo("grid_wrap", "xlsx", "Manual HS");
             }
         }
-        
+
+        function fn_hsConfigOld(){
+            window.open("/services/bs/hsManualOld.do",'_self');
+        }
     </script>
 
 
@@ -1149,12 +1152,12 @@
     <input type="hidden" name="manuaMyBSMonth"  id="_manuaMyBSMonth"/>  <!-- salesOrdId  -->
     <input type="hidden" id="brnchId1" name="brnchId1"> <!-- Manual branch -->
      <input type="hidden" id="memId1" name="memId1"> <!-- Manual branch -->
-     
+
      <input type="hidden" id="memberLevel" name="memberLevel" value="${memberLevel}"> <!-- Manual branch -->
-     
-     <input type="hidden" id="userName" name="userName" value="${userName}"> 
+
+     <input type="hidden" id="userName" name="userName" value="${userName}">
      <input type="hidden" id="userType" name="userType" value="${userType}">
-     
+
 </form>
 
 <%-- <form id="popEditViewForm" method="post">
@@ -1267,11 +1270,11 @@
                 <th scope="row">Dept Code</th>
                 <td>
                     <input id="deptCode" name="deptCode" type="text" title=""  placeholder="DEPT CODE" class="w100p" />
-                </td>        
+                </td>
                 <th scope="row"></th>
                 <td>
-                    
-                </td>   
+
+                </td>
             </tr>
 
             </tbody>
@@ -1289,6 +1292,7 @@
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportGroup()">HS Report(Group)</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsSummary()">HS Summary Listing</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_filterForecastList()">HS Filter Forecast Listring</a></p></li>
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsConfigOld()">HS Config(Old system version)</a></p></li>
                     </ul>
 <!--              <ul class="btns">
                     <li><p class="link_btn"><a href="#">menu1</a></p></li>
@@ -1400,7 +1404,7 @@
     <ul class="right_btns">
 		<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
 		    <li><p class="btn_grid"><a href="#" onclick="fn_excelDown()">GENERATE</a></p></li>
-		</c:if>    
+		</c:if>
     </ul>
 
 <section class="search_result"><!-- search_result start -->
@@ -1424,7 +1428,7 @@
 </section><!-- content end -->
 </form>
 
-<!-- 
+<!--
 
     <div class="popup_wrap" id="confiopenwindow" style="display:none">popup_wrap start
         <header class="pop_header">pop_header start
