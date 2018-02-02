@@ -612,7 +612,7 @@ FROM   (SELECT SUBSTR(APPV_REQ_KEY_NO, 0, 2) AS CLM_TYPE,
         FROM   FCM0004M 
         WHERE  SUBSTR(APPV_REQ_KEY_NO, 0, 2) = #{clmType}
                AND TO_DATE(TO_CHAR(REQST_DT, 'MM'), 'MM') = TO_DATE(TO_CHAR(SYSDATE, 'MM'), 'MM')) T 
-WHERE  T.REQST_USER_ID = #{userName}         
+WHERE  T.REQST_USER_ID = #{userId}         
 </select>
 
 
