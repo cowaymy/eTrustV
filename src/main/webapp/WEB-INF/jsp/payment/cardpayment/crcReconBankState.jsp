@@ -40,14 +40,12 @@
     var columnMappedLayout = [ 
         {dataField : "codeId", headerText : "<spring:message code='pay.head.codeId'/>", editable : false, visible:false}, 
 		{dataField : "crcStateId", headerText : "<spring:message code='pay.head.crcId'/>", editable : false, visible:false}, 
-        {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 240 , editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
+        {dataField : "fTrnscDt",headerText : "<spring:message code='pay.head.transactionDate'/>",width : 240 , editable : false},
         {dataField : "crcTrnscMid",headerText : "<spring:message code='pay.head.midNo'/>",width : 200, editable : false},
         //{dataField : "bnkAcc",headerText : "<spring:message code='pay.head.bankAccount'/>",width : 100 , editable : false},  
         {dataField : "netAmt",headerText : "<spring:message code='pay.head.crcNetAmount'/>",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},        
-        {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.bankStatementId'/>",width : 200 , editable : false},
-        
-        {dataField : "debtAmt",headerText : "Debit <br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
-        
+        {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.bankStatementId'/>",width : 200 , editable : false},        
+        {dataField : "debtAmt",headerText : "Debit <br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},        
         {dataField : "creditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "mappingDate",headerText : "<spring:message code='pay.head.mappingDate'/>",width : 240 , editable : false},
    ];
@@ -74,7 +72,7 @@
     var columnUnMappedBankLayout = [
          {dataField : "codeId", headerText : "<spring:message code='pay.head.codeId'/>", editable : false, visible:false},                  
          {dataField : "fTrnscId", headerText : "<spring:message code='pay.head.id'/>", editable : false, visible:false},                             
-         {dataField : "fTrnscDt", headerText : "<spring:message code='pay.head.transactionDate'/>", editable : false, dataType:"date"},    
+         {dataField : "fTrnscDt", headerText : "<spring:message code='pay.head.transactionDate'/>", editable : false},    
          {dataField : "mid", headerText : "<spring:message code='pay.head.midNo'/>", editable : false},    
          {dataField : "accDesc", headerText : "<spring:message code='pay.head.bankAccount'/>", editable : false},   
          {dataField : "debtAmt", headerText :  "Debit Amount", editable : false, dataType:"numeric", formatString:"#,##0.00"},

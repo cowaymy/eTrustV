@@ -13,7 +13,7 @@
             SubCrc.CRC_STATE_ID,
             TO_CHAR((SELECT sysdate FROM DUAL), 'DD/MM/YYYY') AS MAPPING_DATE
         FROM(
-            -- CREDIT CARD STATEMENT
+            /* CREDIT CARD STATEMENT */
                 SELECT B.CRC_STATE_ID, 
                         B.CRC_TRNSC_MID,
                         D.CODE_ID,
@@ -32,7 +32,8 @@
                     D.CODE_ID,
                     B.CRC_TRNSC_DT) SubCrc
         JOIN
-                (--BANK STATEMENT 
+                (
+                /* BANK STATEMENT */ 
                 SELECT 
                         B.F_TRNSC_ID,
                         B.F_TRNSC_REF4 AS MID,
@@ -79,7 +80,7 @@
 		        AND B.CRC_STATE_ID NOT IN (SELECT 
 		                    SubCrc.CRC_STATE_ID
 		                FROM(
-		                        -- CREDIT CARD STATEMENT
+		                        /* CREDIT CARD STATEMENT */
 		                SELECT B.CRC_STATE_ID, 
 		                        B.CRC_TRNSC_MID,
 		                        D.CODE_ID,
@@ -145,7 +146,7 @@
 			  AND B.F_TRNSC_ID NOT IN(
 			  SELECT SubBank.F_TRNSC_ID
 			            FROM(
-			                -- CREDIT CARD STATEMENT
+			                /* CREDIT CARD STATEMENT */
 			                SELECT B.CRC_STATE_ID, 
 			                        B.CRC_TRNSC_MID,
 			                        D.CODE_ID,
@@ -164,7 +165,8 @@
 			                    D.CODE_ID,
 			                    B.CRC_TRNSC_DT) SubCrc
 			            JOIN
-			            (--BANK STATEMENT 
+			            (
+			            /* BANK STATEMENT */ 
 			            SELECT 
 			                        B.F_TRNSC_ID,
 			                        B.F_TRNSC_REF4 AS MID,
