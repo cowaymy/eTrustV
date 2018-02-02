@@ -1339,7 +1339,7 @@ public class ServiceApiController {
 	    	cvMp.put("stkRetnCrtUserId",         paramsTran.get("userId"));
 	    	cvMp.put("stkRetnUpdUserId",        paramsTran.get("userId")); 
 	    	cvMp.put("stkRetnResultIsSynch",   "0"); 
-	    	cvMp.put("stkRetnAllowComm",  		"0"); 
+	    	cvMp.put("stkRetnAllowComm",  	"1"); 
 	    	cvMp.put("stkRetnCtMemId",  		paramsTran.get("userId")); 
 	    	cvMp.put("checkinDt",  					String.valueOf(paramsTran.get("checkInDate"))); 
 	    	cvMp.put("checkinTm",  				String.valueOf(paramsTran.get("checkInTime"))); 
