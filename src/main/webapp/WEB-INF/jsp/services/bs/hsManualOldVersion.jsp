@@ -75,8 +75,8 @@
                                 },{
                                     dataField : "srvConfigId",
                                     headerText : "config ID",
-                                    width : 120
-                                    //visible : false
+                                    width : 120,
+                                    visible : false
                                 }
                                 ];
 
