@@ -208,7 +208,7 @@
             <tr>
                 <th scope="row">Order No</th>
                 <td>
-                    <input id="salesOrdNo" name="salesOrdNo"  value ="0437881" 'type="text" title="" placeholder="Order No" class="w100p" />
+                    <input id="salesOrdNo" name="salesOrdNo" type="text" title="" placeholder="Order No" class="w100p" />
                 </td>
                 <th scope="row">Application Type</th>
                 <td>
@@ -308,85 +308,3 @@
 
 </section><!-- content end -->
 </form>
-
-<%-- <!-- popup_wrap start -->
-<div class="popup_wrap" id="view_wrap" style="display:none;">
-    <!-- pop_header start -->
-    <header class="pop_header" id="new_pop_header">
-        <h1>BS MANAGEMENT - CONFIGURATION - BASIC INFO</h1>
-        <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#new_wrap')">CLOSE</a></p></li>
-        </ul>
-    </header>
-    <!-- pop_header end -->
-
-    <!-- pop_body start -->
-    <form name="viewForm" id="viewForm"  method="post">
-    <section class="pop_body">
-        <!-- search_table start -->
-        <section class="search_table">
-            <!-- table start -->
-            <table class="type1">
-                <caption>table</caption>
-                 <colgroup>
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                    <col style="width:165px" />
-                    <col style="width:*" />
-                </colgroup>
-
-                <tbody>
-                    <tr>
-                        <th scope="row">Order No</th>
-                         <td id="view_ordNo"></td>
-                         <th scope="row">Application Type</th>
-                         <td id="view_appType"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Installation Address</th>
-                        <td colspan='3''>
-                        <textarea cols="20" rows="5" id="entry_remark" name="entry_remark" placeholder="" > ${orderInstallationInfo.instAddrDtl} </textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Product</th>
-                        <td id="view_product"></td>
-                        <th scope="row">Customer Name</th>
-                        <td id="view_custNm"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">NRIC/Company No</th>
-                        <td id="view_nric"></td>
-                        <th scope="row">BS Availability</th>
-                        <td id="view_bsAvailability"></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">BS Cody Code</th>
-                        <td id="view_cody"></td>
-                        <th scope="row">Last BS Date</th>
-                        <!-- <td id="view_bsDate"></td> -->
-                        <td><p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate" id="_sDate" value="${bsOrderServiceSetting.setlDt}"/></p></td>
-                    </tr>
-                    <tr>
-                        <th scope="row" >Remark</th>
-                        <td id="view_remark" colspan='3'>
-                        <textarea cols="20" rows="5" id="view_remark" name="view_remark" placeholder="" ></textarea></td>
-                    </tr>
-                    <tr>
-                        <th scope="row">Happy Call Service</th>
-                        <td id="view_serviceType"  colspan='3'></td>
-
-                    </tr>
-                    <tr>
-                         <th scope="row">Prefer BS Week</th>
-                       <td id="view_bsWeek" colspan='3'></td>
-                    </tr>
-                   </tbody>
-            </table>
-        </section>
-        <!-- search_table end -->
-    </section>
-    </form>
-    <!-- pop_body end -->
-</div>
-<!-- popup_wrap end --> --%>
