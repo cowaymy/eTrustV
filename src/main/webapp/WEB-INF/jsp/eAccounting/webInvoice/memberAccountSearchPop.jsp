@@ -132,7 +132,7 @@ function fn_selectMember() {
 <tr>
 	<th scope="row"><spring:message code="memAcc.memAccName" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" name="memAccName"/></td>
-	<th scope="row"><spring:message code="newWebInvoice.gstRegistNo" /></th>
+	<th scope="row">GST Registration No.</th>
 	<td><input type="text" title="" placeholder="" class="w100p" name="gstRgistNo"/></td>
 </tr>
 </tbody>
