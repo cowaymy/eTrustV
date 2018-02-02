@@ -123,10 +123,10 @@ function creatGrid(){
         var assignColLayout = [ 
               {dataField : "salesOrdId", headerText : "", width : 90  , visible:false   },
               {dataField : "typeId", headerText : "", width : 90  , visible:false   },
-              {dataField : "salesOrdNo", headerText : "Order No.", width : 80 , editable       : false   },
-              {dataField : "custId", headerText : "Customer<br/>ID", width : 80 , editable       : false       },
-              {dataField : "name", headerText : "Customer Name", width : 130 , editable       : false        },
-              {dataField : "corpTypeId", headerText : "Company<br/>Type", width : 100, 	  editable       : true
+              {dataField : "salesOrdNo", headerText : '<spring:message code="sal.title.text.ordNop" />', width : 80 , editable       : false   },
+              {dataField : "custId", headerText : '<spring:message code="sal.title.text.customerBrId" />', width : 80 , editable       : false       },
+              {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : 130 , editable       : false        },
+              {dataField : "corpTypeId", headerText : '<spring:message code="sal.title.text.companyBrType" />', width : 100, 	  editable       : true
                   , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                       var retStr = value;
                       for(var i=0,len=companyList.length; i<len; i++) {
@@ -144,10 +144,10 @@ function creatGrid(){
 	                  valueField : "codeName" // value 에 해당되는 필드명
 	              }  
               },
-              {dataField : "colctTrget", headerText : "Open O/S<br/>Target", width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
-              {dataField : "rentAmt", headerText : "Current<br/>O/S", width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
-              {dataField : "openMthAging", headerText : "Open Aging<br/>Month", width : 95  , editable       : false      } ,            
-              {dataField : "suggestAgent", headerText : "Suggest<br/>Caller", width : 90    , editable       : false     , style:"aui-grid-drop-list-ul" 
+              {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "rentAmt", headerText : '<spring:message code="sal.title.text.currBrOs" />', width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "openMthAging", headerText : '<spring:message code="sal.title.text.openAgingBrMonth" />', width : 95  , editable       : false      } ,            
+              {dataField : "suggestAgent", headerText : '<spring:message code="sal.title.text.suggestBrCaller" />', width : 90    , editable       : false     , style:"aui-grid-drop-list-ul" 
             	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                   var retStr = value;
                   for(var i=0,len=suggestList.length; i<len; i++) {
@@ -166,7 +166,7 @@ function creatGrid(){
 	              }   */
 	            } ,  
 	          {dataField : "prevAgentId", headerText : "", width : 90    ,   visible:false ,   editable       : false},
-              {dataField : "agentId", headerText : "ROS Caller", width : 90    ,     editable       : true ,  style:"aui-grid-drop-list-ul" 
+              {dataField : "agentId", headerText : '<spring:message code="sal.title.text.rosCaller" />', width : 90    ,     editable       : true ,  style:"aui-grid-drop-list-ul" 
                   , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                       var retStr = '';
                       for(var i=0,len=agentList.length; i<len; i++) {
@@ -184,15 +184,15 @@ function creatGrid(){
 	                  valueField : "agentName" // value 에 해당되는 필드명
 	              }  
 	            } ,            
-              {dataField : "assigned", headerText : "Assigned", width : 70  , editable       : false     } ,            
-              {dataField : "sensitiveFg", headerText : "Sensitive", width : 70   ,editable       : false    }             
+              {dataField : "assigned", headerText : '<spring:message code="sal.title.text.assigned" />', width : 70  , editable       : false     } ,            
+              {dataField : "sensitiveFg", headerText : '<spring:message code="sal.title.text.sensitive" />', width : 70   ,editable       : false    }             
               ];
         
         var excelColLayout = [ 
-              {dataField : "salesOrdNo", headerText : "Order No.", width : 80 , editable       : false   },
-              {dataField : "custId", headerText : "Customer<br/>ID", width : 80 , editable       : false       },
-              {dataField : "name", headerText : "Customer Name", width : 150 , editable       : false   ,style :"my-left-style"     },
-              {dataField : "corpTypeId", headerText : "Company<br/>Type", width : 100, 	  editable       : true
+              {dataField : "salesOrdNo", headerText : '<spring:message code="sal.title.text.ordNop" />', width : 80 , editable       : false   },
+              {dataField : "custId", headerText : '<spring:message code="sal.title.text.customerBrId" />', width : 80 , editable       : false       },
+              {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : 150 , editable       : false   ,style :"my-left-style"     },
+              {dataField : "corpTypeId", headerText : '<spring:message code="sal.title.text.companyBrType" />', width : 100, 	  editable       : true
                   , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                       var retStr = value;
                       for(var i=0,len=companyList.length; i<len; i++) {
@@ -210,10 +210,10 @@ function creatGrid(){
 	                  valueField : "codeName" // value 에 해당되는 필드명
 	              }  
               },
-              {dataField : "colctTrget", headerText : "Open O/S<br/>Target", width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
-              {dataField : "rentAmt", headerText : "Current<br/>O/S", width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
-              {dataField : "openMthAging", headerText : "Open Aging<br/>Month", width : 95  , editable       : false      } ,            
-              {dataField : "oriPrevAgentId", headerText : "Prev Caller", width : 150    ,    editable       : false,  style:"aui-grid-drop-list-ul" 
+              {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "rentAmt", headerText : '<spring:message code="sal.title.text.currBrOs" />', width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "openMthAging", headerText : '<spring:message code="sal.title.text.openAgingBrMonth" />', width : 95  , editable       : false      } ,            
+              {dataField : "oriPrevAgentId", headerText : '<spring:message code="sal.title.text.prevCaller" />', width : 150    ,    editable       : false,  style:"aui-grid-drop-list-ul" 
             	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                       var retStr = value;
                       for(var i=0,len=suggestList.length; i<len; i++) {
@@ -225,7 +225,7 @@ function creatGrid(){
                                       return retStr;
                   }
               },
-              {dataField : "suggestAgent", headerText : "Suggest Caller", width : 150    , editable       : false     ,  style:"aui-grid-drop-list-ul" 
+              {dataField : "suggestAgent", headerText : '<spring:message code="sal.title.text.suggestCaller" />', width : 150    , editable       : false     ,  style:"aui-grid-drop-list-ul" 
             	  , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                   var retStr = value;
                   for(var i=0,len=suggestList.length; i<len; i++) {
@@ -243,8 +243,8 @@ function creatGrid(){
 	                  valueField : "agentName" // value 에 해당되는 필드명
 	              }   */
 	            } ,  
-	          {dataField : "prevAgentId", headerText : "Caller ID", width : 90    ,      editable       : false},
-              {dataField : "agentId", headerText : "ROS Caller", width : 150    ,     editable       : true ,  style:"aui-grid-drop-list-ul" 
+	          {dataField : "prevAgentId", headerText : '<spring:message code="sal.title.text.callerId" />', width : 90    ,      editable       : false},
+              {dataField : "agentId", headerText : '<spring:message code="sal.title.text.rosCaller" />', width : 150    ,     editable       : true ,  style:"aui-grid-drop-list-ul" 
                   , labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                       var retStr = '';
                       for(var i=0,len=agentList.length; i<len; i++) {
@@ -262,10 +262,10 @@ function creatGrid(){
 	                  valueField : "agentName" // value 에 해당되는 필드명
 	              }  
 	           } ,            
-              {dataField : "updAgentDt", headerText : "Assigned DT", width : 100  , editable       : false     } ,            
-              {dataField : "assigned", headerText : "Assigned", width : 70  , editable       : false     } ,            
-              {dataField : "sensitiveFg", headerText : "Sensitive", width : 70   ,editable       : false    },             
-              {dataField : "rem", headerText : "Remark", width : 200   ,editable       : false  ,style :"my-left-style"  }             
+              {dataField : "updAgentDt", headerText : '<spring:message code="sal.title.text.assignedDt" />', width : 100  , editable       : false     } ,            
+              {dataField : "assigned", headerText : '<spring:message code="sal.title.text.assigned" />', width : 70  , editable       : false     } ,            
+              {dataField : "sensitiveFg", headerText : '<spring:message code="sal.title.text.sensitive" />', width : 70   ,editable       : false    },             
+              {dataField : "rem", headerText : '<spring:message code="sal.title.remark" />', width : 200   ,editable       : false  ,style :"my-left-style"  }             
               ];
         
 
@@ -327,7 +327,7 @@ function fn_selectListAjax() {
     AUIGrid.forceEditingComplete(assignGrid, null, false);
 	 
 	 if($("#rentalStatus").val() == ""){
-	        Common.alert("Please select a Rental Status.");
+	        Common.alert('<spring:message code="sal.alert.msg.plzSelRentalStus" />');
 	        return ;
 	 }
 	 
@@ -361,7 +361,7 @@ function fn_save() {
     var editedRowItems = AUIGrid.getEditedRowItems(assignGrid); 
     
     if(editedRowItems.length <= 0) {
-        Common.alert("There Are No Update Items.");
+        Common.alert('<spring:message code="sal.alert.msg.noUpdateItem" />');
         return ;
     }
     console.log(editedRowItems);
@@ -413,12 +413,12 @@ function fn_badAccReport(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>RCMS Assign Agent</h2>
+<h2><spring:message code="sal.title.text.rcmsAssignAgent" /></h2>
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#"  id="btnUpload" onclick="javascript:fn_uploadPop();"></span>Upload (Assign)</a></p></li>
-    <li><p class="btn_blue"><a href="#" id="btnSave" onclick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#" id="btnClear" onclick="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#"  id="btnUpload" onclick="javascript:fn_uploadPop();"></span><spring:message code="sal.title.text.uploadAssign" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" id="btnSave" onclick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" id="btnClear" onclick="javascript:fn_clear();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -441,32 +441,32 @@ function fn_badAccReport(){
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">RCMS APP Type<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.title.text.rcmsAppType" /><span class="must">*</span></th>
         <td>
         <select id="appType" name="appType" class="w100p disabled" disabled="disabled" >
         </select>
         </td>
-        <th scope="row">Order Status<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.title.text.ordStus" /><span class="must">*</span></th>
         <td>
           <select  id="orderStatus" name="orderStatus" class="w100p"></select>
         </td>
-        <th scope="row">Rental Status<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.text.rentalStatus" /><span class="must">*</span></th>
         <td>        
         <select id="rentalStatus" name="rentalStatus" class="multy_select w100p" multiple="multiple">
         </select>
         </td>
     </tr>
     <tr>
-        <th scope="row">Customer Type<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.text.custType" /><span class="must">*</span></th>
         <td>
           <select  id="customerType" name="customerType" class="w100p" onchange="javascript:fn_customerChng();"></select>
         </td>
-        <th scope="row">Company Type</th>
+        <th scope="row"><spring:message code="sal.title.text.companyType" /></th>
         <td>
         <select id="companyType" name="companyType" class="multy_select w100p" multiple="multiple">
         </select>
         </td>
-        <th scope="row">Opening Aging Month</th>
+        <th scope="row"><spring:message code="sal.title.text.openAgingBrMth" /></th>
         <td>
         <select id="openMonth" name="openMonth" class="multy_select w100p" multiple="multiple">
         </select>
@@ -475,22 +475,22 @@ function fn_badAccReport(){
         </td>
     </tr>
     <tr>
-        <th scope="row">ROS Caller</th>
+        <th scope="row"><spring:message code="sal.title.text.rosCaller" /></th>
         <td>          
         <select id="rosCaller" name="rosCaller" class="multy_select w100p" multiple="multiple">
         </select>
         </td>
-        <th scope="row">Order No.</th>
+        <th scope="row"><spring:message code="sal.title.text.ordNop" /></th>
         <td>        
         <input type="text" title="" placeholder="" class="w100p" id="orderNo" name="orderNo"/>
         </td>
-        <th scope="row">Customer ID</th>
+        <th scope="row"><spring:message code="sal.text.customerId" /></th>
         <td>
         <input type="text" title="" placeholder="" class="w100p" id="customerId" name="customerId" />
         </td>
     </tr>
     <tr>
-        <th scope="row">Assigned</th>
+        <th scope="row"><spring:message code="sal.title.text.assigned" /></th>
         <td>
         <input type="checkbox" id="assignYn" name="assignYn"  value="Y"/>          
         </td>
@@ -503,10 +503,10 @@ function fn_badAccReport(){
     <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
     <dl class="link_list">
-        <dt>Link</dt>
+        <dt><spring:message code="sal.title.text.link" /></dt>
         <dd>
         <ul class="btns">
-            <li><p class="link_btn type2"><a onclick="javascript: fn_badAccReport()">Bad Account RAW</a></p></li>
+            <li><p class="link_btn type2"><a onclick="javascript: fn_badAccReport()"><spring:message code="sal.title.text.badaccRaw" /></a></p></li>
         </ul>
         <ul class="btns">
         </ul>
@@ -520,9 +520,9 @@ function fn_badAccReport(){
 
 <section class="search_result"><!-- search_result start -->
 <ul class="right_btns mt10">
-    <li><p class="btn_grid"><a href="#" id="excelDown">Download</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_edit();">EDIT</a></p></li>   
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_save();">SAVE</a></p></li>   
+    <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code="sal.title.text.download" /></a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_edit();"><spring:message code="sal.title.text.edit" /></a></p></li>   
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_save();"><spring:message code="sal.btn.save" /></a></p></li>   
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

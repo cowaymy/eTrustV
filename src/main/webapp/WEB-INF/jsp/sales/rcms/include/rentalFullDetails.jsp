@@ -1,3 +1,5 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript" language="javascript">
 
     //AUIGrid 생성 후 반환 ID
@@ -20,9 +22,7 @@
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
         };
     $(document).ready(function(){
     	
@@ -42,7 +42,7 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Main Order",          dataField : "isMain",      width : '10%' , 
+            { headerText : '<spring:message code="sal.title.text.mainOrder" />',          dataField : "isMain",      width : '10%' , 
                renderer : 
 		            {  type : "CheckBoxEditRenderer",
 		                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -51,12 +51,12 @@
 		                unCheckValue : 0
 		            } 
             }
-          , { headerText : "Customer ID",      dataField : "custId",        width : '15%' }
-          , { headerText : "Order No",  dataField : "salesOrdNo", width : '20%' }
-          , { headerText : "Order Date", dataField : "salesDt",  width : '10%' }
-          , { headerText : "Status",   dataField : "code",    width : '10%' }
-          , { headerText : "Product",            dataField : "product", width : '20%' }
-          , { headerText : "Rental Fees",            dataField : "mthRentAmt", width : '15%' }
+          , { headerText : '<spring:message code="sal.text.customerId" />',      dataField : "custId",        width : '15%' }
+          , { headerText : '<spring:message code="sal.text.ordNo" />',  dataField : "salesOrdNo", width : '20%' }
+          , { headerText : '<spring:message code="sal.text.ordDate" />', dataField : "salesDt",  width : '10%' }
+          , { headerText : '<spring:message code="sal.title.status" />',   dataField : "code",    width : '10%' }
+          , { headerText : '<spring:message code="sal.title.text.product" />',            dataField : "product", width : '20%' }
+          , { headerText : '<spring:message code="sal.title.text.rentalFees" />',            dataField : "mthRentAmt", width : '15%' }
           ];
 
         billingGroupLatestSummaryGridID = GridCommon.createAUIGrid("grid_billing_summ_wrap", columnLayout, "", rentalGridPros);
@@ -72,12 +72,12 @@
     function createAUIGrid_agreement(){
         //AUIGrid 칼럼 설정
         var agreLayout = [
-          {   dataField : "govAgBatchNo",  headerText : 'Agreement No.',         width : '20%' }
-         ,{   dataField : "name",     headerText : 'Agreement Status',     width :'10%' }
-         ,{   dataField : "govAgPrgrsName",  headerText : 'Agreement Progress',         width : '30%' }
-         ,{   dataField : "code",    headerText : 'Agreement Type',        width : '20%' }
-         ,{   dataField : "govAgStartDt", headerText : 'Start Date',   width : '10%' }
-         ,{   dataField : "govAgEndDt",  headerText : 'Expired Date',     width : '10%'  }
+          {   dataField : "govAgBatchNo",  headerText : '<spring:message code="sal.title.text.agreementNo" />',         width : '20%' }
+         ,{   dataField : "name",     headerText : '<spring:message code="sal.title.text.agrStatus" />',     width :'10%' }
+         ,{   dataField : "govAgPrgrsName",  headerText : '<spring:message code="sal.title.text.agreementPrgs" />',         width : '30%' }
+         ,{   dataField : "code",    headerText : '<spring:message code="sal.title.text.agreeType" />',        width : '20%' }
+         ,{   dataField : "govAgStartDt", headerText : '<spring:message code="sal.text.startDate" />',   width : '10%' }
+         ,{   dataField : "govAgEndDt",  headerText : '<spring:message code="sal.title.text.expiredDate" />',     width : '10%'  }
         ];
         agreementGridID = GridCommon.createAUIGrid("grid_amg_history_wrap", agreLayout, "", rentalGridPros);
      
@@ -103,7 +103,7 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>ROS Latest Summary</h3>
+<h3><spring:message code="sal.title.text.rosLatestSummary" /></h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -120,40 +120,41 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Total Outstanding</th>
+    <th scope="row"><spring:message code="sal.title.text.totOutstanding" /></th>
     <td><span>${ordOutInfo.ordTotOtstnd}</span></td>
-    <th scope="row">Outstanding Month</th>
+    <th scope="row"><spring:message code="sal.title.text.outstandingMonth" /></th>
     <td><span>${ordOutInfo.ordOtstndMth}</span></td>
-    <th scope="row">Unbill Amount</th>
+    <th scope="row"><spring:message code="sal.title.text.unbillAmt" /></th>
     <td><span>${ordOutInfo.ordUnbillAmt}</span></td>
-    <th scope="row">Last Month Paid</th>
+    <th scope="row"><spring:message code="sal.title.text.lastMonthPaid" /></th>
     <td><span>${sixMonthMap.prev1Month}</span></td>
 </tr>
 <tr>
-    <th scope="row">Penalty Charges</th>
+    <th scope="row"><spring:message code="sal.title.text.penaltyCharges" /></th>
     <td><span>${ordOutInfo.totPnaltyChrg}</span></td>
-    <th scope="row">Penalty Paid</th>
+    <th scope="row"><spring:message code="sal.title.text.penaltyPaid" /></th>
     <td><span>${ordOutInfo.totPnaltyPaid}</span></td>
-    <th scope="row">Penalty Adjustment</th>
+    <th scope="row"><spring:message code="sal.title.text.penaltyAdjmt" /></th>
     <td><span>${ordOutInfo.totPnaltyAdj}</span></td>
-    <th scope="row">This Month Paid</th>
+    <th scope="row"><spring:message code="sal.title.text.thisMonthPaid" /></th>
     <td><span>${sixMonthMap.curMonth}</span></td>
 </tr>
 <tr>
-    <th scope="row">Rental Status</th>
+    <th scope="row"><spring:message code="sal.text.rentalStatus" />
+    </th>
     <td><span>${rentalMap.rentalStus}</span></td>
-    <th scope="row">Pay Mode</th>
+    <th scope="row"><spring:message code="sal.title.text.payMode" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayModeDesc}</span></td>
-    <th scope="row">Payment Term</th>
+    <th scope="row"><spring:message code="sal.text.payTerm" /></th>
     <td><span>${orderDetail.rentPaySetInf.payTrm} month(s)</span></td>
-    <th scope="row">Billed Month</th>
+    <th scope="row"><spring:message code="sal.title.text.billedMonth" /></th>
     <td><span>${billMonthMap.rentInstNo}</span></td>
 </tr>
 </tbody>
 </table>   
 
 <aside class="title_line"><!-- title_line start -->
-<h3>AGM History Summary</h3>
+<h3><spring:message code="sal.title.text.agmHistorySummary" /></h3>
 </aside><!-- title_line end -->
 
 <div id ="_agreDiv" >
@@ -163,7 +164,7 @@
 </div>
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Billing Group Latest Summary</h3>
+<h3><spring:message code="sal.title.text.billingGrpLatestSummary" /></h3>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->

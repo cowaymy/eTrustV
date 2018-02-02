@@ -8,7 +8,7 @@ function fn_addNewItem(){
 	if(fn_addValidation() == true){
 		Common.ajax("POST", "/sales/rcms/addNewOrdNo", $("#_newForm").serializeJSON(), function(result){
 			if(result != null){
-				Common.alert("New item added.", fn_closePop);	
+				Common.alert('<spring:message code="sal.alert.msg.newItmAdded" />', fn_closePop);	
 			}
 		});
 	}
@@ -26,14 +26,14 @@ function fn_addValidation(){
 	
 	//null
 	if( null == $("#_addOrdNo").val() || '' == $("#_addOrdNo").val()){
-		Common.alert("Please key in the Order No. <br />");
+		Common.alert('<spring:message code="sal.alert.msg.plzKeyInOrderNoBr" />');
 		return false;
 	}
 	
 	//Already In Batch
 	Common.ajax("GET", "/sales/rcms/alreadyExistOrdNo", {ordNo : $("#_addOrdNo").val() , batchId : '${batchId}'}, function(result){
         if(result != null){
-        	Common.alert("* This order no. is existing in the upload batch.<br />");
+        	Common.alert('<spring:message code="sal.alert.msg.alreadyInBatchOrder" />');
             isRtn = false;
         }
     },null,{async : false});
@@ -44,7 +44,7 @@ function fn_addValidation(){
     //Invalid Ord No
     Common.ajax("GET", "/sales/rcms/searchExistOrdNo", {ordNo : $("#_addOrdNo").val()}, function(result){
         if(result == null){
-            Common.alert("* Invalid order no.<br />");
+            Common.alert('<spring:message code="sal.alert.msg.invaildOrdNoBr" />');
             isRtn = false;
             $("#_ordId").val("");
         }else{
@@ -62,15 +62,15 @@ function fn_addValidation(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ORDER REMARK UPLOAD - VIEW UPLOAD BATCH</h1>
+<h1><spring:message code="sal.title.text.ordRemUploadViewUploadBatch" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_AddPopclose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_AddPopclose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 <aside class="title_line"><!-- title_line start -->
-<h3>Add Order Remark Batch</h3>
+<h3><spring:message code="sal.title.text.addOrdRemBatch" /></h3>
 </aside><!-- title_line end -->
 
 <form  id="_newForm">
@@ -84,14 +84,14 @@ function fn_addValidation(){
 </colgroup>
 <tbody>
     <tr>
-        <th scope="row">Order No.</th>
+        <th scope="row"><spring:message code="sal.title.text.ordNop" /></th>
         <td>
             <input type="text" title="" placeholder="" class="w100p"  id="_addOrdNo" name="addOrdNo"/>
             <input type="text" style="display: none;">
         </td>
     </tr>
    <tr>
-        <th scope="row">Remark<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.title.remark" /><span class="must">*</span></th>
         <td>
             <textarea id="_addRem" name="addRem"></textarea>
         </td>
@@ -101,7 +101,7 @@ function fn_addValidation(){
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a onclick="javascript: fn_addNewItem()">Add Item</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript: fn_addNewItem()"><spring:message code="sal.title.text.addItm" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

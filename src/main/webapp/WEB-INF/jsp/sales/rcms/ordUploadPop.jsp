@@ -12,7 +12,7 @@ $(document).ready(function() {
 	$("#_ordUploadBtn").click(function() {
 		
 		if(null == $("#fileSelector").val() || '' == $("#fileSelector").val().trim()){
-			Common.alert("* Please select your csv file.<br />");
+			Common.alert('<spring:message code="sal.title.text.plzSelYourCsvFileBr" />');
 			return;
 		}
 		
@@ -20,12 +20,12 @@ $(document).ready(function() {
 		formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
 		Common.ajaxFile("/sales/rcms/uploadOrdRem.do", formData, function(result){
 			if(result == null){
-				Common.alert("<b>Please check your file contents.<br />It might has some invalid data in your file.</b>");
+				Common.alert('<spring:message code="sal.alert.msg.plzChkUrFileContents" />');
 			}else{
-				Common.alert("<b>Your data has been posted.<br />Please confirm the batch for final setting.<br /> Upload Batch ID : " + result.ordRemSeq + "</b>", fn_popClose);
+				Common.alert('<spring:message code="sal.alert.msg.urDatahasbeenposted" />'+ result.ordRemSeq + "</b>", fn_popClose);
 			}
 		}, function(jqXHR, textStatus, errorThrown){
-			Common.alert("<b>Please check your file contents.<br />It might has some invalid data in your file.</b>");
+			Common.alert('<spring:message code="sal.alert.msg.plzChkUrFileContents" />');
 			console.log("jqXHR : " + jqXHR + " , textStatus : " + textStatus + " ,errorThrown " + errorThrown);
 		});
 	});
@@ -52,9 +52,9 @@ function fn_popClose(){
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order Upload</h1>
+<h1><spring:message code="sal.title.text.OrdUpload" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_popClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_popClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
@@ -70,7 +70,7 @@ function fn_popClose(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Upload File</th>
+    <th scope="row"><spring:message code="sal.title.text.uploadFile" /></th>
     <td>
     <div class="auto_file2"><!-- auto_file start -->
     <input type="file" title="file add"  id="fileSelector" accept=".csv"  name="uploadfile"/>
@@ -82,8 +82,8 @@ function fn_popClose(){
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_ordUploadBtn">Upload</a></p></li>
-    <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/sales/OrderRemarkUploadFormat.csv">Download</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_ordUploadBtn"><spring:message code="sal.title.text.upload" /></a></p></li>
+    <li><p class="btn_blue2 big"><a href="${pageContext.request.contextPath}/resources/download/sales/OrderRemarkUploadFormat.csv"><spring:message code="sal.title.text.download" /></a></p></li>
 </ul>
 </section><!-- search_table end -->
 </section><!-- content end -->

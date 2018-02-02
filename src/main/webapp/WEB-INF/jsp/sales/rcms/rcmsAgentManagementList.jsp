@@ -61,7 +61,7 @@ AUIGrid.bind(agentGridID, "cellEditEndBefore", function( event ) {
 	
 	if(event.dataField == 'agentName'){
 		if(event.value.length > 41){
-			Common.alert("Please key in agent name under 41 digit(s).");
+			Common.alert('<spring:message code="sal.alert.msg.plzKeyinAgentNameUnder41Digit" />');
 			
 			if(event.oldValue == null || event.oldValue == ''){
 				return '';
@@ -91,12 +91,12 @@ function fn_chkAgentVal(){
 	//1. NullCheck
 	var agentSize = AUIGrid.getGridData(agentGridID);
     if(agentSize == null || agentSize.length <= 0){
-        Common.alert("No Change Data.");
+        Common.alert('<spring:message code="sal.alert.msg.noChngData" />');
         return false;
     }
 	
 	if(editArr == null || editArr.size <= 0){
-		Common.alert("No Change Data.");
+		Common.alert('<spring:message code="sal.alert.msg.noChngData" />');
 		return false;
 	}
 	//1 - 1 . Add Row Check
@@ -104,13 +104,13 @@ function fn_chkAgentVal(){
 		$(editArr.add).each(function(idx, el) {
 			//console.log("el["+idx+"] : " + el.agentName + " , " +  el.userId);
 			if(el.agentName.trim() == ''){
-				Common.alert("Agent Name Can not be empty.");
+				Common.alert('<spring:message code="sal.alert.msg.agentNameCannotBeEmpty" />');
 				isVal = false;
 				return false;
 			}
 			
 			if(el.userId.trim() == ''  ){
-				Common.alert("Web ID Can not be empty.");
+				Common.alert('<spring:message code="sal.alert.msg.webIdCannotBeEmpty" />');
                 isVal = false;
                 return false;
 			}
@@ -127,13 +127,13 @@ function fn_chkAgentVal(){
         $(editArr.update).each(function(idx, el) {
             //console.log("el["+idx+"] : " + el.agentName + " , " +  el.userId);
             if(el.agentName.trim() == ''){
-                Common.alert("Agent Name Can not be empty.");
+                Common.alert('<spring:message code="sal.alert.msg.agentNameCannotBeEmpty" />');
                 isVal = false;
                 return false;
             }
             
             if(el.userId.trim() == ''  ){
-                Common.alert("Web ID Can not be empty.");
+                Common.alert('<spring:message code="sal.alert.msg.webIdCannotBeEmpty" />');
                 isVal = false;
                 return false;
             }
@@ -163,7 +163,7 @@ function fn_chkAgentVal(){
 	}, null , {async : false});
 	
 	if(rtnMsg != ''){
-		Common.alert("User Web ID not a vailid.<br>" + rtnMsg);
+		Common.alert('<spring:message code="sal.alert.msg.userWebIdNotValidbr" />' + rtnMsg);
 		return;
 	}
 	
@@ -183,7 +183,7 @@ function fn_chkAgentVal(){
 	}, null , {async : false});
 	
 	if(rtnMsg != ''){
-        Common.alert("Duplicate User Web ID.<br>" + rtnMsg);
+        Common.alert('<spring:message code="sal.alert.msg.dupUserWebId" />' + rtnMsg);
         return;
     }
 	// ____________________Validation Success
@@ -271,9 +271,9 @@ function createAgentGrid(){
     
     
     var agentColumnLayout =  [ 
-                            {dataField : "agentId", headerText : "Agent ID", width : '10%' , editable : false}, 
-                            {dataField : "agentName", headerText : "Agent Name", width : '20%'},
-                            { dataField : "agentType",  headerText : "Agent Type", width : '20%',
+                            {dataField : "agentId", headerText : '<spring:message code="sal.title.text.agentId" />', width : '10%' , editable : false}, 
+                            {dataField : "agentName", headerText : '<spring:message code="sal.title.text.agentName" />', width : '20%'},
+                            { dataField : "agentType",  headerText : '<spring:message code="sal.title.text.agentType" />', width : '20%',
                                 labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                                      var retStr = "";
                                      for(var i=0,len=typeArr.length; i<len; i++) {
@@ -292,9 +292,9 @@ function createAgentGrid(){
                                         easyMode : false
                                   }
                             },
-                            {dataField : "userId", headerText : "Web ID", width : '20%'},
-                            {dataField : "crtDt", headerText : "Registration Date", width : '10%' , editable : false}, 
-                            { dataField : "stusId",  headerText : "Status", width : '20%',
+                            {dataField : "userId", headerText : '<spring:message code="sal.title.text.webId" />', width : '20%'},
+                            {dataField : "crtDt", headerText : '<spring:message code="sal.title.text.registrationDate" />', width : '10%' , editable : false}, 
+                            { dataField : "stusId",  headerText : '<spring:message code="sal.title.status" />', width : '20%',
                                 labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                                      var retStr = "";
                                      for(var i=0,len=statusArr.length; i<len; i++) {
@@ -329,9 +329,7 @@ function createAgentGrid(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
     };
     
     agentGridID = GridCommon.createAUIGrid("#agent_grid_wrap", agentColumnLayout,'', gridPros);  // address list
@@ -357,13 +355,13 @@ function addRowToGrid(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Agent Management</h2>
+<h2><spring:message code="sal.title.text.agentMgnt" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue"><a id="_agentSave"><span></span>Save</a></p></li>
+    <li><p class="btn_blue"><a id="_agentSave"><span></span><spring:message code="sal.btn.save" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a id="_agentSearch"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a id="_agentSearch"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
 </ul>
 </aside><!-- title_line end -->
@@ -383,15 +381,15 @@ function addRowToGrid(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Agent Type</th>
+    <th scope="row"><spring:message code="sal.title.text.agentType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="_agentType" name="agentType"></select>
     </td>
-    <th scope="row">Agent Name</th>
+    <th scope="row"><spring:message code="sal.title.text.agentName" /></th>
     <td>
     <input type="text" title="Agent Name" placeholder="Agent Name" class="w100p" name="agentName" />
     </td>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="_agentStatus" name="agentStatus"></select>
     </td>
@@ -406,12 +404,12 @@ function addRowToGrid(){
 
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_grid"><a onclick="javascript : addRowToGrid()">ADD</a></p></li>
+    <li><p class="btn_grid"><a onclick="javascript : addRowToGrid()"><spring:message code="sal.btn.addBtn" /></a></p></li>
     </c:if>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Agent Result</h3>
+<h3><spring:message code="sal.title.text.agentResult" /></h3>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->

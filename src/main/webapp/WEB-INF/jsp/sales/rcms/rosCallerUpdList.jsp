@@ -68,14 +68,14 @@ function createRosCallerGrid(){
 	
 	 var callerColumnLayout =  [ 
                              
-                             {dataField : "id", headerText : "Batch ID", width : '10%', editable : false},
-                             {dataField : "totUpDt", headerText : "Total Rows", width : '10%' , editable : false},
-                             {dataField : "totCmplt", headerText : "Total Success", width : '10%' , editable : false},
-                             {dataField : "totFail", headerText : "Total Fail", width : '10%' , editable : false},
-                             {dataField : "rosYear", headerText : "ROS Year", width : '10%' , editable : false}, 
-                             {dataField : "rosMonth", headerText : "ROS Month", width : '10%' , editable : false},
-                             {dataField : "userName", headerText : "Updator", width : '20%' , editable : false},
-                             {dataField : "crtDt", headerText : "Update At", width : '20%' , editable : false}
+                             {dataField : "id", headerText : '<spring:message code="sal.title.text.batchId" />', width : '10%', editable : false},
+                             {dataField : "totUpDt", headerText : '<spring:message code="sal.title.text.totalRows" />', width : '10%' , editable : false},
+                             {dataField : "totCmplt", headerText : '<spring:message code="sal.title.text.totalSuccess" />', width : '10%' , editable : false},
+                             {dataField : "totFail", headerText : '<spring:message code="sal.title.text.totalFail" />', width : '10%' , editable : false},
+                             {dataField : "rosYear", headerText : '<spring:message code="sal.title.text.rosYear" />', width : '10%' , editable : false}, 
+                             {dataField : "rosMonth", headerText : '<spring:message code="sal.title.text.rosMonth" />', width : '10%' , editable : false},
+                             {dataField : "userName", headerText : '<spring:message code="sal.text.updator" />', width : '20%' , editable : false},
+                             {dataField : "crtDt", headerText : '<spring:message code="sal.text.updateAt" />', width : '20%' , editable : false}
                          
                             ];
      
@@ -104,9 +104,9 @@ function createRosCallerGrid(){
     
     var callerDetColumnLayout =  [ 
                             
-                            {dataField : "ordNo", headerText : "Order No", width : '20%', editable : false},
-                            {dataField : "userName", headerText : "Username", width : '20%' , editable : false},
-                            {dataField : "itmMsg", headerText : "Message", width : '60%' , editable : false},
+                            {dataField : "ordNo", headerText : '<spring:message code="sal.title.text.ordNop" />', width : '20%', editable : false},
+                            {dataField : "userName", headerText : '<spring:message code="sal.title.text.userName" />', width : '20%' , editable : false},
+                            {dataField : "itmMsg", headerText : '<spring:message code="sal.title.text.msg" />', width : '60%' , editable : false},
                             {dataField : "itmStusCodeId", visible : false}
                            ];
     
@@ -144,11 +144,11 @@ function createRosCallerGrid(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>ROS Caller Update</h2>
+<h2><spring:message code="sal.title.text.rosCallerUpdate" /></h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a onclick="javascript:fn_newCallerUpdate()"><span ></span>New Caller Update</a></p></li>
-    <li><p class="btn_blue"><a id="_searchBtn"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li> 
+    <li><p class="btn_blue"><a onclick="javascript:fn_newCallerUpdate()"><span ></span><spring:message code="sal.title.text.newRosCallerUpdate" /></a></p></li>
+    <li><p class="btn_blue"><a id="_searchBtn"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li> 
 </ul>
 </aside><!-- title_line end -->
 
@@ -168,15 +168,15 @@ function createRosCallerGrid(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Batch ID</th>
+    <th scope="row"><spring:message code="sal.title.text.batchId" /></th>
     <td>
     <input type="text" title="" placeholder="Batch ID" class="w100p" id="_callBatchId" name="callBatchId" />
     </td>
-    <th scope="row">Update Date</th>
+    <th scope="row"><spring:message code="sal.title.text.updateDate" /></th>
     <td>
     <input type="text" title="key in Date" placeholder="DD/MM/YYYY" class="j_date"  name="srchDt" id="_srchDt"  readonly="readonly"/>
     </td>
-    <th scope="row">Updator</th>
+    <th scope="row"><spring:message code="sal.text.updator" /></th>
     <td>
     <input type="text" title="" placeholder="Updator" class="w100p" id="_callUpdtor" name="callUpdtor" />
     </td>

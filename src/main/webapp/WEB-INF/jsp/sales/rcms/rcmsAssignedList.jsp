@@ -126,18 +126,18 @@ function creatGrid(){
 
         var assignColLayout = [ 
               {dataField : "salesOrdId", headerText : "", width : 90  , visible:false   },
-              {dataField : "custBillId", headerText : "Order No.", width : 80 , visible:false     },
-              {dataField : "salesOrdNo", headerText : "Order No.", width : 80 , editable       : false   },
-              {dataField : "salesDt", headerText : "Order Date", width : 90 , editable       : false       },
-              {dataField : "code", headerText : "App<br/>Type", width : 60 , editable       : false       },
-              {dataField : "openRentalStus", headerText : "Rental<br/>Status", width : 80 , editable       : false        },
-              {dataField : "stkDesc", headerText : "Product", width : 110, 	  editable       : false },
-              {dataField : "name", headerText : "Customer Name", width : 130 , editable       : false        },
-              {dataField : "nric", headerText : "NRIC", width : 90, 	  editable       : false },
-              {dataField : "colctTrget", headerText : "Open O/S<br/>Target", width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
-              {dataField : "rentAmt", headerText : "Current<br/>O/S", width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
-              {dataField : "openMthAging", headerText : "Open Aging<br/>Month", width : 95  , editable       : false      } ,
-              {dataField : "sensitiveFg", headerText : "Sensitive", width : 70   ,editable       : false    }             
+              {dataField : "custBillId", headerText : '<spring:message code="sal.title.text.ordNop" />', width : 80 , visible:false     },
+              {dataField : "salesOrdNo", headerText : '<spring:message code="sal.title.text.ordNop" />', width : 80 , editable       : false   },
+              {dataField : "salesDt", headerText : '<spring:message code="sal.text.ordDate" />', width : 90 , editable       : false       },
+              {dataField : "code", headerText : '<spring:message code="sal.title..text.appBrType" />', width : 60 , editable       : false       },
+              {dataField : "openRentalStus", headerText : '<spring:message code="sal.title.text.rentalBrStus" />', width : 80 , editable       : false        },
+              {dataField : "stkDesc", headerText : '<spring:message code="sal.title.text.product" />', width : 110, 	  editable       : false },
+              {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : 130 , editable       : false        },
+              {dataField : "nric", headerText : '<spring:message code="sal.text.nric" />', width : 90, 	  editable       : false },
+              {dataField : "colctTrget", headerText : '<spring:message code="sal.title.text.openOsBrTarget" />', width : 80  , editable       : false,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "rentAmt", headerText : '<spring:message code="sal.title.text.currBrOs" />', width : 75  , editable       : false ,   dataType : "numeric", formatString : "#,##0.00", },
+              {dataField : "openMthAging", headerText : '<spring:message code="sal.title.text.openAgingBrMonth" />', width : 95  , editable       : false      } ,
+              {dataField : "sensitiveFg", headerText : '<spring:message code="sal.title.text.sensitive" />', width : 70   ,editable       : false    }             
               ];
         
 
@@ -170,8 +170,8 @@ function creatGrid(){
 function creatRosCallGrid(){
 
         var rosLayout = [ 
-              {dataField : "rosDt", headerText : "ROS Month", width : 250  ,  editable       : false    },
-              {dataField : "rosCallerUserId", headerText : "Caller", width : 250 , editable       : false   }
+              {dataField : "rosDt", headerText : '<spring:message code="sal.title.text.rosMonth" />', width : 250  ,  editable       : false    },
+              {dataField : "rosCallerUserId", headerText : '<spring:message code="sal.title.text.caller" />', width : 250 , editable       : false   }
               ];
         
 
@@ -191,7 +191,7 @@ function creatRosCallGrid(){
 function fn_selectListAjax() {  
 	 
 	 if($("#rentalStatus").val() == ""){
-	        Common.alert("Please select a Rental Status.");
+	        Common.alert('<spring:message code="sal.alert.msg.plzSelRentalStus" />');
 	        return ;
 	 }
 	 
@@ -236,7 +236,7 @@ function fn_newROSCall(){
     //Validation
     var selectedItem = AUIGrid.getSelectedItems(assignGrid);
     if(selectedItem.length <= 0){
-        Common.alert(" No result selected. ");
+        Common.alert('<spring:message code="sal.alert.msg.noResultSelected" />');
         return;
     }
     //Popup
@@ -260,7 +260,7 @@ function fn_clear(){
 function fn_edit(){
 	
 	if($("#salesOrdId").val() == ""){
-		Common.alert("Please select data to edit. ");
+		Common.alert('<spring:message code="sal.alert.msg.plzSelDataToEdit" />');
 		return;
 	}
 	Common.popupDiv("/sales/rcms/updateRemarkPop.do",null, fn_selectListAjax, true, "updateRemarkPop");
@@ -278,12 +278,12 @@ function fn_edit(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>RCMS List by Agent</h2>
+<h2><spring:message code="sal.title.text.rcmsListByAgent" /></h2>
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#"  id="btnUpload" onclick="javascript:fn_newROSCall();"></span>Ros Call</a></p></li>
-    <li><p class="btn_blue"><a href="#" id="btnSave" onclick="javascript:fn_selectListAjax();"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#" id="btnClear" onclick="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#"  id="btnUpload" onclick="javascript:fn_newROSCall();"></span><spring:message code="sal.title.text.rosCall" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" id="btnSave" onclick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" id="btnClear" onclick="javascript:fn_clear();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -306,32 +306,32 @@ function fn_edit(){
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">RCMS APP Type<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.title.text.rcmsAppType" /><span class="must">*</span></th>
         <td>
         <select id="appType" name="appType" class="w100p disabled" disabled="disabled" >
         </select>
         </td>
-        <th scope="row">Order Status<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.title.text.ordStus" /><span class="must">*</span></th>
         <td>
           <select  id="orderStatus" name="orderStatus" class="w100p"></select>
         </td>
-        <th scope="row">Rental Status<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.text.rentalStatus" /><span class="must">*</span></th>
         <td>        
         <select id="rentalStatus" name="rentalStatus" class="multy_select w100p" multiple="multiple">
         </select>
         </td>
     </tr>
     <tr>
-        <th scope="row">Customer Type<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.text.custType" /><span class="must">*</span></th>
         <td>
           <select  id="customerType" name="customerType" class="w100p" onchange="javascript:fn_customerChng();"></select>
         </td>
-        <th scope="row">Company Type</th>
+        <th scope="row"><spring:message code="sal.title.text.companyType" /></th>
         <td>
         <select id="companyType" name="companyType" class="multy_select w100p" multiple="multiple">
         </select>
         </td>
-        <th scope="row">Opening Aging Month</th>
+        <th scope="row"><spring:message code="sal.title.text.openAgingBrMth" /></th>
         <td>
         <select id="openMonth" name="openMonth" class="multy_select w100p" multiple="multiple">
         </select>
@@ -340,28 +340,28 @@ function fn_edit(){
         </td>
     </tr>
     <tr>
-        <th scope="row">ROS Caller</th>
+        <th scope="row"><spring:message code="sal.title.text.rosCaller" /></th>
         <td>          
         <select id="rosCaller" name="rosCaller" class="w100p" >
         </select>
         </td>
-        <th scope="row">Order No.</th>
+        <th scope="row"><spring:message code="sal.title.text.ordNop" /></th>
         <td>        
         <input type="text" title="" placeholder="" class="w100p" id="orderNo" name="orderNo"/>
         </td>
-        <th scope="row">Customer ID</th>
+        <th scope="row"><spring:message code="sal.text.customerId" /></th>
         <td>
         <input type="text" title="" placeholder="" class="w100p" id="customerId" name="customerId" />
         </td>
     </tr>
     <tr>
-        <th scope="row">ROS Status</th>
+        <th scope="row"><spring:message code="sal.title.text.rosStus" /></th>
         <td>
         <select class="w100p" id="rosStatus" name="rosStatus"></select>
         </td>
-        <th scope="row">Recall Date</th>
+        <th scope="row"><spring:message code="sal.title.text.reCallDate" /></th>
         <td><input type="text"  placeholder="DD/MM/YYYY" class="j_date w100p" id="_reCallYMD" name="reCallDtYmd"/></td>
-        <th scope="row">Recall Time</th>
+        <th scope="row"><spring:message code="sal.title.text.reCallTime" /></th>
         <td>
         <div class="time_picker" style="width: 43%"><!-- time_picker start -->
         <input type="text" title="" placeholder="" class="time_date w100p"  id="stReCallTime" />
@@ -393,7 +393,7 @@ function fn_edit(){
             <li><a href="#">24:00:00</a></li>
         </ul>
         </div>
-        To
+        <spring:message code="sal.title.to" />
         <div class="time_picker" style="width: 43%"><!-- time_picker start -->
          <input type="text" title="" placeholder="" class="time_date w100p" id="edReCallTime" />
         <ul>
@@ -427,11 +427,11 @@ function fn_edit(){
         </td>
     </tr>
     <tr>
-        <th scope="row">PTP Date</th>
+        <th scope="row"><spring:message code="sal.title.text.ptpDate" /></th>
         <td colspan="2">
         <div class="date_set" style="width: 70%"><!-- date_set start -->
         <p><input type="text" placeholder="DD/MM/YYYY" class="j_date"  id="stPtpDate" readonly="readonly" name="stPtpDate"/></p>
-        <span>To</span>
+        <span><spring:message code="sal.title.to" /></span>
         <p><input type="text" placeholder="DD/MM/YYYY" class="j_date"  id="edPtpDate" readonly="readonly" name="edPtpDate"/></p>
         </div>
         </td>
@@ -443,10 +443,10 @@ function fn_edit(){
     <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
     <dl class="link_list">
-        <dt>Link</dt>
+        <dt><spring:message code="sal.title.text.link" /></dt>
         <dd>
         <ul class="btns">
-            <li><p class="link_btn"><a href="#" id="_custVALetterBtn">Bad Account RAW</a></p></li>
+            <li><p class="link_btn"><a href="#" id="_custVALetterBtn"><spring:message code="sal.title.text.badaccRaw" /></a></p></li>
         </ul>
         <ul class="btns">
         </ul>
@@ -460,7 +460,7 @@ function fn_edit(){
 
 <section class="search_result"><!-- search_result start -->
 <ul class="right_btns mt10">
-    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_edit();">Remark</a></p></li>   
+    <li><p class="btn_grid"><a href="#" onclick="javascript:fn_edit();"><spring:message code="sal.title.remark" /></a></p></li>   
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

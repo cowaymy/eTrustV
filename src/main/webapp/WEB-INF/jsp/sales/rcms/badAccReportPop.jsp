@@ -16,7 +16,7 @@ function fn_genReport(type){
 	
 	//Validation
 	if($("#_rentalStusType").val() == null || $("#_rentalStusType").val() == ''){
-		Common.alert("Please Select Rental Status Type.");
+		Common.alert('<spring:message code="sal.alert.msg.plzSelRentalStusType" />');
 		return;
 	}
 	
@@ -36,7 +36,7 @@ function fn_genReport(type){
 	var rtnTypeStr = '';
 	rtnTypeStr = fn_changeValueToChar($("#_rentalStusType").val());
 	if(rtnTypeStr == null || rtnTypeStr == ''){
-		Common.alert("Please Contact IT Team");
+		Common.alert('<spring:message code="sal.alert.msg.plzContactITTeam" />');
 		return;
 	}
 	
@@ -76,15 +76,15 @@ function fn_changeValueToChar(num){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>BAD ACCOUNT</h1>
+<h1><spring:message code="sal.title.text.badAccount" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_AddPopclose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_AddPopclose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 <aside class="title_line"><!-- title_line start -->
-<h3>Bad Account Report</h3>
+<h3><spring:message code="sal.title.text.badAccRpt" /></h3>
 </aside><!-- title_line end -->
 
 <form id="badReport">
@@ -107,7 +107,7 @@ function fn_changeValueToChar(num){
 </colgroup>
 <tbody>
     <tr>
-        <th scope="row">Rental Status Type</th>
+        <th scope="row"><spring:message code="sal.title.text.rentalStusType" /></th>
         <td>
             <select  id="_rentalStusType" name="rentalStusType" class="w100p" >
                 <!--  <option value="INV">Investigation</option>
@@ -122,8 +122,8 @@ function fn_changeValueToChar(num){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a onclick="javascript: fn_genReport('EXCEL')">Generate Excel</a></p></li>
-    <li><p class="btn_blue2 big"><a onclick="javascript: fn_genReport('PDF')">Generate PDF</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript: fn_genReport('EXCEL')"><spring:message code="sal.btn.genExcel" /></a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript: fn_genReport('PDF')"><spring:message code="sal.btn.genPDF" /></a></p></li>
 </ul>
 
 </section>

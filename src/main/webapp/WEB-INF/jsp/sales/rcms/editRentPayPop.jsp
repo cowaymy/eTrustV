@@ -102,8 +102,8 @@
                 unCheckValue : 0
               }
             }
-          , { headerText : "Document",  dataField : "typeDesc",   editable : false }
-          , { headerText : "Qty",       dataField : "docCopyQty", editable : true,  width : 120 }
+          , { headerText : '<spring:message code="sal.title.text.document" />',  dataField : "typeDesc",   editable : false }
+          , { headerText : '<spring:message code="sal.title.qty" />',       dataField : "docCopyQty", editable : true,  width : 120 }
           , { headerText : "docTypeId", dataField : "docTypeId",  visible  : false }
           , { headerText : "docSoId",   dataField : "docSoId",    visible  : false }
           ];
@@ -136,9 +136,9 @@
         
         //AUIGrid 칼럼 설정
         var rfrColumnLayout = [
-            { headerText : "Order No",  dataField : "salesOrdNo", editable : false, width : 100 }
-          , { headerText : "Name",      dataField : "refName",    editable : true,  width : 200 }
-          , { headerText : "State",     dataField : "refStateId", editable : true,  width : 100,
+            { headerText : '<spring:message code="sal.text.ordNo" />',  dataField : "salesOrdNo", editable : false, width : 100 }
+          , { headerText : '<spring:message code="sal.text.name" />',      dataField : "refName",    editable : true,  width : 200 }
+          , { headerText : '<spring:message code="sal.text.state" />',     dataField : "refStateId", editable : true,  width : 100,
                     labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                     var retStr = value;
                     for(var i=0,len=keyValueList.length; i<len; i++) {
@@ -156,11 +156,11 @@
                     valueField : "name"        //value 에 해당되는 필드명
                 }
             }
-          , { headerText : "ContactNo", dataField : "refCntc",    editable : true,  width : 110, editRenderer : { type : "InputEditRenderer", 
+          , { headerText : '<spring:message code="sal.text.contactNo" />', dataField : "refCntc",    editable : true,  width : 110, editRenderer : { type : "InputEditRenderer", 
                                                                                                                   onlyNumeric : true}}
-          , { headerText : "Remark",    dataField : "refRem",     editable : true}
-          , { headerText : "Created",   dataField : "crtDt",      editable : false, width : 120 }
-          , { headerText : "Creator",   dataField : "userName",   editable : false, width : 100 }
+          , { headerText : '<spring:message code="sal.text.remark" />',    dataField : "refRem",     editable : true}
+          , { headerText : '<spring:message code="sal.title.created" />',   dataField : "crtDt",      editable : false, width : 120 }
+          , { headerText : '<spring:message code="sal.text.creator" />',   dataField : "userName",   editable : false, width : 100 }
           , { headerText : "ordRefId",  dataField : "ordRefId",   visible  : false}
           ];
 
@@ -304,7 +304,7 @@
             if(isChk) {
                 if($("#rentPayMode option:selected").index() <= 0) {
                     $("#chkRejectDate").prop("checked", false);
-                    Common.alert("Rental Paymode Required" + DEFAULT_DELIMITER + "<b>Please select the rental payment mode first.</b>");
+                    Common.alert('<spring:message code="sal.alert.msg.rentPayModeRequired" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzSelRentPayFirst" />');
                 }
                 else {
                     $('#spRjctDate').text("*");
@@ -353,7 +353,10 @@
                 fn_loadThirdParty(InputCustID, 2);
             }
             else {
-                Common.alert("Third Party Restriction" + DEFAULT_DELIMITER + "<b>Third party and customer cannot be same person/company.<br />Your input third party ID : "+InputCustID+"</b>");
+                //Common.alert('<spring:message code="sal.alert.msg.thirdPartyRestriction" />' + DEFAULT_DELIMITER + "<b>Third party and customer cannot be same person/company.<br />Your input third party ID : "+InputCustID+"</b>");
+                Common.alert('<spring:message code="sal.alert.msg.thirdPartyRestriction" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzInputPartyId" arguments="'+InputCustID+'" />');
+                
+
             }
         });
         $('#thrdPartyId').keydown(function (event) {
@@ -378,7 +381,7 @@
                     fn_loadThirdParty(InputCustID, 2);
                 }
                 else {
-                    Common.alert("Third Party Restriction" + DEFAULT_DELIMITER + "<b>Third party and customer cannot be same person/company.<br />Your input third party ID : "+InputCustID+"</b>");
+                	Common.alert('<spring:message code="sal.alert.msg.thirdPartyRestriction" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzInputPartyId" arguments="'+InputCustID+'" />');
                 }
                 return false;
             }
@@ -396,14 +399,15 @@
             if($("#rentPayMode option:selected").index() > 0) {
             
                 if($('#rentPayMode').val() == '133' || $('#rentPayMode').val() == '134') {
-                    Common.alert("Rental Paymode Restriction" + DEFAULT_DELIMITER + "<b>Currently we are not provide [" + $("#rentPayMode option:selected").text() + "] service.</b>");
+                    //Common.alert('<spring:message code="sal.alert.msg.rentPayRestriction" />' + DEFAULT_DELIMITER + "<b>Currently we are not provide [" + $("#rentPayMode option:selected").text() + "] service.</b>");
+                    Common.alert('<spring:message code="sal.alert.msg.rentPayRestriction" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.weNotProvideService" arguments="'+$("#rentPayMode option:selected").text() +'"/>');
                     $('#rentPayMode').val('');
                 }
                 else {
                     if($('#rentPayMode').val() == '131') {
                         if($('#thrdParty').is(":checked")) {
                             if(FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
-                                Common.alert("Third Party Required" + DEFAULT_DELIMITER + "<b>Please select the third party first.</b>");
+                                Common.alert('<spring:message code="sal.alert.msg.thirdPartyRequiredmsg" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzSelThirdPartyFirst" />');
                                 $('#rentPayMode').val('');
                             }
                             else {
@@ -417,7 +421,7 @@
                     else if($('#rentPayMode').val() == '132') {
                         if($('#thrdParty').is(":checked")) {
                             if(FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
-                                Common.alert("Third Party Required" + DEFAULT_DELIMITER + "<b>Please select the third party first.</b>");
+                            	Common.alert('<spring:message code="sal.alert.msg.thirdPartyRequiredmsg" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.plzSelThirdPartyFirst" />');
                                 $('#rentPayMode').val('');
                             }
                             else {
@@ -506,12 +510,19 @@
             
             var msg = '';
             
-            msg += 'Application Type : '+appTypeName +'<br>';
+            /* msg += 'Application Type : '+appTypeName +'<br>';
             msg += 'Product          : '+productName +'<br>';
             msg += 'Price(RPF)       : '+newPriceGST +'<br>';
             msg += 'Normal Rental    : '+oldRentalGST+'<br>';
             msg += 'Promotion        : '+newRentalGST+'<br>';
-            msg += '<br>The Price(Fee) was applied to the tab of [Sales Order]';
+            msg += '<br>The Price(Fee) was applied to the tab of [Sales Order]'; */
+            
+            msg += '<spring:message code="sal.alert.msg.applicationTypeCol"  arguments="'+appTypeName+'"/>';
+            msg += '<spring:message code="sal.alert.msg.productCol" arguments="'+productName+'"/>';
+            msg += '<spring:message code="sal.alert.msg.prcRPFCol" arguments="'+newPriceGST+'"/>';
+            msg += '<spring:message code="sal.alert.msg.normalRentalCol" arguments="'+oldRentalGST+'"/>';
+            msg += '<spring:message code="sal.alert.msg.promotionCol" arguments="'+newRentalGST+'"/>';
+            msg += '<spring:message code="sal.alert.msg.feeApplyToTab" />';
             
             fn_excludeGstAmt();
             
@@ -618,7 +629,7 @@
                 $("#modNewAddress").text(billCustInfo.fullAddress);
                 $("#modCustAddId").val(billCustInfo.custAddId);
                 
-                Common.alert("Address Selected" + DEFAULT_DELIMITER + "<b>New address selected.<br />Click save to confirm change address.</b>");
+                Common.alert('<spring:message code="sal.alert.msg.addrSeleted" />'+ DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.newAddrSelected" />');
             }
         });
     }
@@ -633,7 +644,8 @@
         Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
             if(memInfo == null || memInfo == 'undefined') {
-                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                //Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput"  arguments="'+memCode+'"/>');
             }
             else {
                 $('#modSalesmanId').val(memInfo.memId);
@@ -665,7 +677,8 @@
                 isEditable = result.isEditable;
 
                 if(isEditable == false) {
-                    Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>Customer NRIC/Company No. for Customer ID : " + CUST_ID + " is disallowed to edit.</b>");
+                    Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.disallowCustidEdit" arguments="'+CUST_ID+'" />');
+                    //<b>Customer NRIC/Company No. for Customer ID : " + CUST_ID + " is disallowed to edit.</b>
                 }
 
                 return isEditable;
@@ -683,15 +696,15 @@
             var msg = "[" + ORD_NO + "] is [" + APP_TYPE_DESC + "] order.<br/>"
                     + "Only rental order is allow to edit rental pay setting.";
                     
-            Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+            Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
                 
             return false;
         }
 
         if(tabNm == 'DOC' && ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
-            var msg = "This order is not in active/complete status.<br/>Edit document submission is disallowed.";
+            var msg = '<spring:message code="sal.alert.msg.notInActCompStusSubmm" />';
                     
-            Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+            Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
                 
             $('#btnSaveDocSub').addClass("blind");
         }
@@ -704,15 +717,15 @@
                 var msg = "[" + ORD_NO + "] is under [" + PROMO_CODE + "] promotion.<br/>"
                         + "Edit promotion request is disallowed.";
                         
-                Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+                Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
                     
                 return false;
             }
             
             if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
-                var msg = "This order is not in active/complete status.<br/>Edit promotion is disallowed.";
+                var msg = '<spring:message code="sal.alert.msg.notInActCompStusPromo" />';
                         
-                Common.alert("Action Restriction" + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
+                Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>");
                 
                 $('#btnSavePromo').addClass("blind");
             }
@@ -979,8 +992,8 @@
                 fn_loadThirdParty(InputCustID, 1);
             }
             else {
-                Common.alert("Third party and customer cannot be same person/company.<br/>Your input third party ID : "
-                    + InputCustID + DEFAULT_DELIMITER + "<b>Invalid third party ID.</b>");
+                Common.alert('<spring:message code="sal.alert.msg.thirdPartyCustCannotSame" />'
+                    + InputCustID + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msginvalidThirdPartyId" />');
             }
     }
 
@@ -1000,8 +1013,8 @@
             }
             else {
                 if(sMethd == 2) {
-                    Common.alert('<b>Third party not found.<br/>Your input third party ID : ' + custId + '</b>'
-                        + InputCustID + DEFAULT_DELIMITER + "Third Party Not Found");
+                    Common.alert('<spring:message code="sal.alert.msg.thirdPartyNotFoundInput" />' + custId + '</b>'
+                        + InputCustID + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.thirdPartyNotFoundmsg" />');
                 }
             }
         });
@@ -1056,7 +1069,7 @@
         if(!FormUtil.IsValidBankAccount($('#hiddenRentPayBankAccID').val(), $('#rentPayBankAccNo').val())) {
             fn_clearRentPaySetDD();
             $('#scPC_DirectDebit').removeClass("blind");
-            Common.alert("Invalid Bank Account" + DEFAULT_DELIMITER + "<b>Invalid account for auto debit.</b>");
+            Common.alert('<spring:message code="sal.alert.msg.invalidBankAccNum" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.invalidAccForAutoDebit" />');
         }
     }
     
@@ -1184,12 +1197,12 @@
                         fn_loadInstallAddrInfo2(addrIdNew);
                     }
                     else {
-                        Common.alert("Changed Failed" + DEFAULT_DELIMITER + "<b>Zero Rate Area cannot change to Non-Zero Rate Area.</b>");
+                        Common.alert('<spring:message code="sal.alert.msg.changeFailed" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.zeroRateAreaCnntChng" />');
                     }
                 }
                 else {
                     if(fn_checkGSTZRLocationByAddrId(addrIdOld) > 0) {
-                        Common.alert("Changed Failed" + DEFAULT_DELIMITER + "<b>Non-Zero Rate Area cannot change to Zero Rate Area.</b>");
+                        Common.alert('<spring:message code="sal.alert.msg.changeFailed" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.nonZeroRateAreaCnntChng" />');
                     }
                     else {
                         $("#modInstCustAddIdOld").val(addrIdNew);
@@ -1268,7 +1281,7 @@
 
                 $("#modCustCntcId").val(custCntcInfo.custCntcId);
                 
-                Common.alert("Contact Person Selected" + DEFAULT_DELIMITER + "<b>New contact person selected.<br />Click save to confirm change contact person.</b>");
+                Common.alert('<spring:message code="sal.alert.msg.contactPersonChnged" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.newCntcSeleted" />');
             }
         });
     }
@@ -1353,7 +1366,7 @@
             
             if(isChk == 1 && (FormUtil.isEmpty(qty) || qty == 0)) {
                 isValid = false;
-                msg = "* Please key in the quantity for your selected documents.";
+                msg = '<spring:message code="sal.alert.msg.plzKeyinQtySelDoc" />';
                 break;
             }
         }
@@ -1366,7 +1379,7 @@
 
         if(FormUtil.isEmpty($('#modCustNric').val().trim())) {
             isValid = false;
-            msg += "Please key in Cutomer NRIC / Company No";
+            msg += '<spring:message code="sal.alert.msg.plzKeyInCustNricComNo" />';
         }
         else {
             
@@ -1376,7 +1389,7 @@
             
             if(existNric > 0) {
                 isValid = false;
-                msg += "This is existing customer. Customer ID : "+existNric;
+                msg += '<spring:message code="sal.alert.msg.existingCustId" />'+existNric;
 
             }
             else {
@@ -1388,13 +1401,13 @@
                         if($('#modCustGender').val() == "F") {
                             if (lastDigit % 2 != 0) {
                                 isValid = false;
-                                msg += "Invalid NRIC.";
+                                msg += '<spring:message code="sal.alert.msg.invalidNric" />';
                             }
                         }
                         else {
                             if (lastDigit % 2 == 0) {
                                 isValid = false;
-                                msg += "Invalid NRIC.";
+                                msg += '<spring:message code="sal.alert.msg.invalidNric" />';
                             }
                         }
                     }
@@ -1402,7 +1415,7 @@
             }
         }        
         
-        if(!isValid) Common.alert("Save Validation" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveValidation" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
         
         console.log('msg:'+msg);
         console.log('isValid:'+isValid);
@@ -1434,18 +1447,18 @@
 
         if(FormUtil.checkReqValue($('#certRefNo'))) {
             isValid = false;
-            msg += "* Please key in the cert reference no.<br>";
+            msg += '<spring:message code="sal.alert.msg.plzKeyinCertRefNo" />';
         }
         if(FormUtil.isEmpty($('#certRefDt').val().trim())) {
             isValid = false;
-            msg += "* Please select the cert reference date.<br>";
+            msg += '<spring:message code="sal.alert.msg.plzSelCertRefDate" />';
         }
         if(FormUtil.checkReqValue($('#certRefFile'))) {
             isValid = false;
-            msg += "* No cert uploaded.<br>";
+            msg += '<spring:message code="sal.alert.msg.noCertUploaded" />';
         }
 
-        if(!isValid) Common.alert("Save Certificate Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert('<spring:message code="sal.alert.msg.saveCertSummary" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
     }
@@ -1455,35 +1468,35 @@
 
         if(FormUtil.isEmpty($('#modInstCustAddId').val())) {
             isValid = false;
-            msg += "* Please select an installation address.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzSelInstallAddr" />';
         }
 
         if(FormUtil.isEmpty($('#modInstCustCntcId').val())) {
             isValid = false;
-            msg += "* Please select an installation contact person.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzSelInstallContact" />';
         }
 
         if($("#dscBrnchId option:selected").index() <= 0) {
             isValid = false;
-            msg += "* Please select the DSC branch.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzSelDscBrnch" />';
         }
 
         if(FormUtil.isEmpty($('#modPreferInstDt').val().trim())) {
             isValid = false;
-            msg += "* Please select prefer install date.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzSelPreferInstDate" />';
         }
 
         if(FormUtil.isEmpty($('#modPreferInstTm').val().trim())) {
             isValid = false;
-            msg += "* Please select prefer install time.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzSelPreferInstTime" />';
         }
 
         if(FormUtil.isEmpty($('#modInstct').val().trim())) {
             isValid = false;
-            msg += "* Please key-in the special instruction.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzKeyinSpecialInstruction" />';
         }
 
-        if(!isValid) Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert('<spring:message code="sal.alert.msg.ordUpdSummary" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
     }
@@ -1494,25 +1507,25 @@
         if($('#thrdParty').is(":checked")) {
             if(FormUtil.isEmpty($('#hiddenThrdPartyId').val())) {
                 isValid = false;
-                msg += "* Please select the third party.<br/>";
+                msg += '<spring:message code="sal.alert.msg.plzSelThirdParty" />';
             }
         }
 
         if($("#rentPayMode option:selected").index() <= 0) {
             isValid = false;
-            msg += "* Please select the rental paymode.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzSelRentPayMode" />';
         }
         else {
             if($("#rentPayMode").val() == '131') {
                 //CRC
                 if(FormUtil.isEmpty($('#hiddenRentPayCRCId').val())) {
                     isValid = false;
-                    msg += "* Please select a credit card.<br/>";
+                    msg += '<spring:message code="sal.alert.msg.plzSelCrdCard" />';
                 }
                 else {
                     if(FormUtil.isEmpty($('#hiddenRentPayCRCBankId').val()) || $('#hiddenRentPayCRCBankId').val() == 0) {
                         isValid = false;
-                        msg += "* Invalid credit card issue bank.<br/>";
+                        msg += '<spring:message code="sal.alert.msg.invalidCrdCardIssuebank" />';
                     }
                 }
             }
@@ -1520,12 +1533,12 @@
                 //DD
                 if(FormUtil.isEmpty($('#hiddenRentPayBankAccID').val())) {
                     isValid = false;
-                    msg += "* Please select a bank account.<br/>";
+                    msg += '<spring:message code="sal.alert.msg.plzSelBankAccount" />';
                 }
                 else {
                     if(FormUtil.isEmpty($('#hiddenAccBankId').val()) || $('#hiddenAccBankId').val() == 0) {
                         isValid = false;
-                        msg += "* Invalid bank account issue bank.<br/>";
+                        msg += '<spring:message code="sal.alert.msg.invalidBankAccIssueBank" />';
                     }
                 }
             }
@@ -1548,13 +1561,13 @@
                 
         if(FormUtil.isEmpty($('#modApplyDate').val())) {
             isValid = false;
-            msg += "* Apply date is required.<br/>";
+            msg += '<spring:message code="sal.alert.msg.applyDtRequired" />';
         }
         else {
             if(FormUtil.isNotEmpty($('#modSubmitDate').val())) {
                 if(sSubDate < sAppDate) {
                     isValid = false;
-                    msg += "* Submit date must later than apply date.<br/>";
+                    msg += '<spring:message code="sal.alert.msg.submitDtmustLaster" />';
                 }
             }
         }
@@ -1562,12 +1575,12 @@
         if(FormUtil.isNotEmpty($('#modStartDate').val())) {
             if(FormUtil.isEmpty($('#modSubmitDate').val())) {
                 isValid = false;
-                msg += "* Submit date is required.<br/>";
+                msg += '<spring:message code="sal.alert.msg.submitDtRequired" />';
             }
             else {
                 if(sStaDate < sSubDate) {
                     isValid = false;
-                    msg += "* Start date must later than submit date.<br/>";
+                    msg += '<spring:message code="sal.alert.msg.startDtMustLaster" />';
                 }
             }
         }
@@ -1575,24 +1588,24 @@
         if($('#chkRejectDate').is(":checked")) {
             if(FormUtil.isEmpty($('#modRejectDate').val())) {
                 isValid = false;
-                msg += "* Reject date is required.<br/>";
+                msg += '<spring:message code="sal.alert.msg.rjtDtIsReq" />';
             }
             else {
                 if(FormUtil.isEmpty($('#modSubmitDate').val())) {
                     isValid = false;
-                    msg += "* Submit date is required.<br/>";
+                    msg += '<spring:message code="sal.alert.msg.submitDtRequired" />';
                 }
                 else {
                     if(sRjtDate < sSubDate) {
                         isValid = false;
-                        msg += "* Reject date must later than submit date.<br/>";
+                        msg += '<spring:message code="sal.alert.msg.rjtDtMustLater" />';
                     }
                 }
             }
             
             if($("#modRejectReason option:selected").index() <= 0) {
                 isValid = false;
-                msg += "* Reject select the reject reason.<br/>";
+                msg += '<spring:message code="sal.alert.msg.rjtSelRjtReason" />';
             }
         }
 
@@ -1606,21 +1619,21 @@
 
         if(FormUtil.isEmpty($('#modCustCntcId').val().trim())) {
             isValid = false;
-            msg += "* Please select the contact person.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzSelCntcPerson" />';
         }
 
         if(FormUtil.isEmpty($('#modRem2').val().trim())) {
             isValid = false;
-            msg += "* Please key in the reason to update.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzKeyinReasonUpdate" />';
         }
         else {
             if(FormUtil.byteLength($('#modRem2').val().trim()) > 200) {            
                 isValid = false;
-                msg += "* Reason to update cannot more than 200 characters.<br/>";
+                msg += '<spring:message code="sal.alert.msg.rsnUpdValidTwoHundChar" />';
             }
         }
 
-        if(!isValid) Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
     }
@@ -1630,18 +1643,18 @@
 
         if($("#ordPromo option:selected").index() <= 0) {
             isValid = false;
-            msg += "* Please select the promotion option<br/>";
+            msg += '<spring:message code="sal.alert.msg.selPromoOption" />';
         }
         if($('#promoId').val().trim() == $('#ordPromo').val().trim()) {
             isValid = false;
-            msg += "* Please select the other promotion option.<br/>";
+            msg += '<spring:message code="sal.alert.msg.selOrdPromoOption" />';
         }
         if(!$('#pBtnCal').hasClass("blind")) {
             isValid = false;
-            msg += "* Please press the Calculation button<br>";
+            msg += '<spring:message code="sal.alert.msg.pressCalBtn" />';
         }
 
-        if(!isValid) Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert('<spring:message code="sal.alert.msg.ordUpdSummary" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
     }
@@ -1651,21 +1664,21 @@
 
         if(FormUtil.isEmpty($('#modCustAddId').val().trim())) {
             isValid = false;
-            msg += "* Please select the address.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzSeltheAddr" />';
         }
 
         if(FormUtil.isEmpty($('#modRem').val().trim())) {
             isValid = false;
-            msg += "* Please key in the reason to update.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzKeyinReasonUpdate" />';
         }
         else {
             if(FormUtil.byteLength($('#modRem').val().trim()) > 200) {            
                 isValid = false;
-                msg += "* Reason to update cannot more than 200 characters.<br/>";
+                msg += '<spring:message code="sal.alert.msg.rsnUpdValidTwoHundChar" />';
             }
         }
 
-        if(!isValid) Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
     }
@@ -1675,7 +1688,7 @@
 
         if($('#modAppTypeId').val() == '68' && FormUtil.isEmpty($('#modInstallDur').val().trim())) {
             isValid = false;
-            msg += "* Please key in the installment duration.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzKeyinInstDuration" />';
         }
 
         if(FormUtil.isNotEmpty($('#modSalesmanTypeId').val().trim())) {
@@ -1693,23 +1706,24 @@
                         memType = "Cody";
                     }
                     
-                    msg += "* The " + memType + " department/group/organization code is missing.<br/>";
+                    //msg += "* The " + memType + " department/group/organization code is missing.<br/>";
+                    msg += '<spring:message code="sal.alert.grpCodeMissing" arguments="'+memType+'"/>';
                 }
             }
         }
         else {
             if($('#modAppTypeId').val() != '143') {
                 isValid = false;
-                msg += "* Please select a salesman.<br/>";
+                msg += '<spring:message code="sal.alert.msg.plzSelectSalesman" />';
             }
         }
         
         if($("#modKeyInBranch option:selected").index() <= 0) {
             isValid = false;
-            msg += "* Please select the key-in branch.<br/>";
+            msg += '<spring:message code="sal.alert.msg.plzSelTheKeyinbrnch" />';
         }
 
-        if(!isValid) Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert('<spring:message code="sal.alert.msg.ordUpdSummary" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
     }
@@ -1721,7 +1735,7 @@
         
         Common.ajax("POST", "/sales/order/updateOrderBasinInfo.do", $('#frmBasicInfo').serializeJSON(), function(result) {
                 
-                Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+                Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
@@ -1740,7 +1754,7 @@
 
         Common.ajax("POST", "/sales/order/updateMailingAddress.do", $('#frmMailAddr').serializeJSON(), function(result) {
                 
-                Common.alert("Mailing Address Updated" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+                Common.alert('<spring:message code="sal.alert.msg.mailingAddrUpdated" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
@@ -1759,7 +1773,7 @@
 
         Common.ajax("POST", "/sales/order/updateCntcPerson.do", $('#frmCntcPer').serializeJSON(), function(result) {
                 
-                Common.alert("Mailing Address Updated" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+                Common.alert('<spring:message code="sal.alert.msg.mailingAddrUpdated" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
@@ -1778,7 +1792,7 @@
 
         Common.ajax("POST", "/sales/order/updateNric.do", $('#frmNric').serializeJSON(), function(result) {
                 
-                Common.alert("Success To Update" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+                Common.alert('<spring:message code="sal.alert.msg.sucessUpdate" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
@@ -1797,7 +1811,7 @@
 
         Common.ajax("POST", "/sales/order/updateInstallInfo.do", $('#frmInstInfo').serializeJSON(), function(result) {
                 
-                Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+                Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
@@ -1816,7 +1830,7 @@
 
         Common.ajax("POST", "/sales/order/updatePaymentChannel.do", $('#payChanlForm').serializeJSON(), function(result) {
                 
-                Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+                Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
@@ -1840,7 +1854,7 @@
 
         Common.ajax("POST", "/sales/order/saveDocSubmission.do", orderVO, function(result) {
 
-            Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>Order Number : "+ORD_NO+"<br/>"+result.message+"</b>", fn_reloadPage);
+            Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>Order Number : "+ORD_NO+"<br/>"+result.message+"</b>", fn_reloadPage);
             
             }, function(jqXHR, textStatus, errorThrown) {
                 try {
@@ -1863,7 +1877,7 @@
 
         Common.ajax("POST", "/sales/order/saveReferral.do", orderModifyVO, function(result) {
             
-            Common.alert("New Member Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+            Common.alert('<spring:message code="sal.alert.msg.newMemSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
         },  function(jqXHR, textStatus, errorThrown) {
             try {
@@ -1873,7 +1887,7 @@
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
 
 //              Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save new member. Please try again later.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save new member. Please try again later.</b>");
+                Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.failToSaveNewMem" />');
             }
             catch (e) {
                 console.log(e);
@@ -1930,7 +1944,7 @@
 
         Common.ajax("POST", "/sales/order/updatePromoPriceInfo.do", salesOrderMVO, function(result) {
             
-            Common.alert("Update Summary" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+            Common.alert('<spring:message code="sal.alert.msg.updSummary" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
         },  function(jqXHR, textStatus, errorThrown) {
             try {
@@ -1965,7 +1979,7 @@
 
         Common.ajax("POST", "/sales/order/updateGstCertInfo.do", gSTEURCertificateVO, function(result) {
             
-            Common.alert("GST Certificate Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
+            Common.alert('<spring:message code="sal.alert.msg.gstCertificateSaved" />' + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_reloadPage);
             
         },  function(jqXHR, textStatus, errorThrown) {
             try {
@@ -1992,9 +2006,9 @@
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1 id="hTitle">Order Edit</h1>
+<h1 id="hTitle"><spring:message code="sal.title.text.ordEdit" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="btnCloseModify" href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnCloseModify" href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -2012,10 +2026,10 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Edit Type</th>
+    <th scope="row"><spring:message code="sal.text.editType" /></th>
     <td>
     <select id="ordEditType" class="mr5"></select>
-    <p class="btn_sky"><a id="btnEditType" href="#">Confirm</a></p>
+    <p class="btn_sky"><a id="btnEditType" href="#"><spring:message code="sal.btn.confirm" /></a></p>
     </td>
 </tr>
 </tbody>
@@ -2038,7 +2052,7 @@
 ------------------------------------------------------------------------------->
 <section id="scBI" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3>Basic Information</h3>
+<h3><spring:message code="sal.title.text.basicInfomation" /></h3>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -2063,43 +2077,43 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Installment Duration<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.instDuration" /><span class="must">*</span></th>
     <td><input id="modInstallDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p" disabled /></td>
-    <th scope="row">Salesman Code<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
     <td><input id="modSalesmanCd" name="salesmanCd" type="text" title="" placeholder="Salesman Code" class="" /><a id="btnSalesmanPop" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
 </tr>
 <tr>
-    <th scope="row">Reference No</th>
+    <th scope="row"><spring:message code="sal.text.refNo" /></th>
     <td><input id="modOrdRefNo" name="ordRefNo" type="text" title="" placeholder="Reference Number" class="w100p" /></td>
-    <th scope="row">Salesman Type</th>
+    <th scope="row"><spring:message code="sal.title.text.salesmanType" /></th>
     <td><input id="modSalesmanType" name="salesmanType" type="text" title="" placeholder="Salesman Type" class="readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">PO No</th>
+    <th scope="row"><spring:message code="sal.title.text.pono" /></th>
     <td><input id="modOrdPoNo" name="ordPoNo" type="text" title="" placeholder="PO Number" class="w100p" /></td>
-    <th scope="row">Salesman Name</th>
+    <th scope="row"><spring:message code="sal.text.salManName" /></th>
     <td><input id="modSalesmanName" name="salesmanName" type="text" title="" placeholder="Salesman Name" class="readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Key-In Branch<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.keyInBranch" /><span class="must">*</span></th>
     <td>
     <select id="modKeyInBranch" name="keyInBranch" class="w100p"></select>
     </td>
-    <th scope="row">Salesman NRIC</th>
+    <th scope="row"><spring:message code="sal.title.text.salesmanNric" /></th>
     <td><input id="modSalesmanIc" name="salesmanIc" type="text" title="" placeholder="Salesman NRIC" class="readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row" rowspan="3">Remark</th>
+    <th scope="row" rowspan="3"><spring:message code="sal.title.remark" /></th>
     <td rowspan="3"><textarea id="modOrdRem" name="ordRem" cols="20" rows="5"></textarea></td>
-    <th scope="row">Department Code</th>
+    <th scope="row"><spring:message code="sal.title.text.deptCode" /></th>
     <td><input id="modOrderDeptCode" name="orderDeptCode" type="text" title="" placeholder="Department Code" class="readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Group Code</th>
+    <th scope="row"><spring:message code="sal.title.text.groupCode" /></th>
     <td><input id="modOrderGrpCode" name="orderGrpCode" type="text" title="" placeholder="Group Code" class="readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Organization Code</th>
+    <th scope="row"><spring:message code="sal.title.text.orgCode" /></th>
     <td><input id="modOrderOrgCode" name="orderOrgCode" type="text" title="" placeholder="Organization Code" class="readonly" readonly/></td>
 </tr>
 </tbody>
@@ -2108,7 +2122,7 @@
 </form>
 </section><!-- search_table end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="btnSaveBasicInfo" name="btnSaveBasicInfo" href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnSaveBasicInfo" name="btnSaveBasicInfo" href="#"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------
@@ -2119,11 +2133,11 @@
 ------------------------------------------------------------------------------->
 <section id="scMA" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3>Billing Group Maintenance - Mailing Address</h3>
+<h3><spring:message code="sal.title.text.billingGrpMtncMailAddr" /></h3>
 </aside><!-- title_line end -->
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnBillNewAddr" href="#">Add New Address</a></p></li>
-    <li><p class="btn_grid"><a id="btnBillSelAddr" href="#">Select Mailing Address</a></p></li>
+    <li><p class="btn_grid"><a id="btnBillNewAddr" href="#"><spring:message code="sal.btn.addNewAddr" /></a></p></li>
+    <li><p class="btn_grid"><a id="btnBillSelAddr" href="#"><spring:message code="sal.title.text.seMailAddr" /></a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
@@ -2144,21 +2158,21 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Billing Group</th>
+    <th scope="row"><spring:message code="sal.title.text.billingGroup" /></th>
     <td><span id="modBillGroupNo"></span></td>
-    <th scope="row">Total Order In Group</th>
+    <th scope="row"><spring:message code="sal.title.text.totOrdGroup" /></th>
     <td><span id="modTotalOrder"></span></td>
 </tr>
 <tr>
-    <th scope="row">Current Address</th>
+    <th scope="row"><spring:message code="sal.title.text.currAddr" /></th>
     <td colspan="3"><span id="modAddress"></span></td>
 </tr>
 <tr>
-    <th scope="row">New Address</th>
+    <th scope="row"><spring:message code="sal.title.text.newAddr" /></th>
     <td colspan="3"><span id="modNewAddress"></span></td>
 </tr>
 <tr>
-    <th scope="row">Reason Update</th>
+    <th scope="row"><spring:message code="sal.title.text.reasonUpdate" /></th>
     <td colspan="3"><textarea id="modRem" name="sysHistRem" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
@@ -2166,7 +2180,7 @@
 </form>
 </section><!-- search_table end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="btnSaveMailingAddress" href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnSaveMailingAddress" href="#"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------
@@ -2177,11 +2191,11 @@
 ------------------------------------------------------------------------------->
 <section id="scCP" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3>Billing Group Maintenance - Contact Person</h3>
+<h3><spring:message code="sal.title.text.billingGrpMtcContactPerson" /></h3>
 </aside><!-- title_line end -->
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnNewCntc" href="#">Add New Contact</a></p></li>
-    <li><p class="btn_grid"><a id="btnSelCntc" href="#">Select Contact Person</a></p></li>
+    <li><p class="btn_grid"><a id="btnNewCntc" href="#"><spring:message code="sal.title.text.addNewCntc" /></a></p></li>
+    <li><p class="btn_grid"><a id="btnSelCntc" href="#"><spring:message code="sal.title.text.selContactPerson" /></a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
@@ -2202,16 +2216,16 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Billing Group</th>
+    <th scope="row"><spring:message code="sal.title.text.billingGroup" /></th>
     <td><span id="modBillGroupNo2"></span></td>
-    <th scope="row">Total Order In Group</th>
+    <th scope="row"><spring:message code="sal.title.text.totOrdGroup" /></th>
     <td><span id="modTotalOrder2"></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Current Contact Person</h2>
+<h2><spring:message code="sal.title.text.currCntcPerson" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -2224,26 +2238,26 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Contact Person</th>
+    <th scope="row"><spring:message code="sal.tap.title.contactPerson" /></th>
     <td colspan="3"><span id="modCntcPerson"></span></td>
 </tr>
 <tr>
-    <th scope="row">Mobile Number</th>
+    <th scope="row"><spring:message code="sal.title.text.mobNumber" /></th>
     <td><span id="modCntcMobNo"></span></td>
-    <th scope="row">Office Number</th>
+    <th scope="row"><spring:message code="sal.title.text.officeNumber" /></th>
     <td><span id="modCntcOffNo"></span></td>
 </tr>
 <tr>
-    <th scope="row">Residence Number</th>
+    <th scope="row"><spring:message code="sal.title.text.residenceNumber" /></th>
     <td><span id="modCntcResNo"></span></td>
-    <th scope="row">Fax Number</th>
+    <th scope="row"><spring:message code="sal.title.text.faxNumber" /></th>
     <td><span id="modCntcFaxNo"></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>New Contact Person</h2>
+<h2><spring:message code="sal.btn.newContactPerson" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -2256,23 +2270,23 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Contact Person</th>
-    <td colspan="3"><span id="modCntcPersonNew"></td>
+    <th scope="row"><spring:message code="sal.tap.title.contactPerson" /></th>
+    <td colspan="3"><span id="modCntcPersonNew"></span></td>
 </tr>
 <tr>
-    <th scope="row">Mobile Number</th>
+    <th scope="row"><spring:message code="sal.title.text.mobNumber" /></th>
     <td><span id="modCntcMobNoNew"></span></td>
-    <th scope="row">Office Number</th>
+    <th scope="row"><spring:message code="sal.title.text.officeNumber" /></th>
     <td><span id="modCntcOffNoNew"></span></td>
 </tr>
 <tr>
-    <th scope="row">Residence Number</th>
+    <th scope="row"><spring:message code="sal.title.text.residenceNumber" /></th>
     <td><span id="modCntcResNoNew"></span></td>
-    <th scope="row">Fax Number</th>
+    <th scope="row"><spring:message code="sal.title.text.faxNumber" /></th>
     <td><span id="modCntcFaxNoNew"></span></td>
 </tr>
 <tr>
-    <th scope="row">Reason Update</th>
+    <th scope="row"><spring:message code="sal.title.text.reasonUpdate" /></th>
     <td colspan="3"><textarea id="modRem2" name="sysHistRem" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
@@ -2280,7 +2294,7 @@
 </form>
 </section><!-- search_table end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="btnSaveCntcPerson" href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a id="btnSaveCntcPerson" href="#"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------
@@ -2291,7 +2305,7 @@
 ------------------------------------------------------------------------------->
 <section id="scIC" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3>NRIC/Company No.</h3>
+<h3><spring:message code="sal.title.text.nricCompNo" /></h3>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -2310,7 +2324,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">NRIC/Company No.</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td><input id="modCustNric" name="custNric" type="text" title="" placeholder="NRIC/Company No." class="" /></td>
 </tr>
 </tbody>
@@ -2318,7 +2332,7 @@
 </form>
 </section><!-- search_table end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="btnSaveNric" href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnSaveNric" href="#"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------
@@ -2329,11 +2343,11 @@
 ------------------------------------------------------------------------------->
 <section id="scIN" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3>Installation Address</h3>
+<h3><spring:message code="sal.text.instAddr" /></h3>
 </aside><!-- title_line end -->
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnInstNewAddr" href="#">Add New Address</a></p></li>
-    <li><p class="btn_grid"><a id="btnInstSelAddr" href="#">Select Mailing Address</a></p></li>
+    <li><p class="btn_grid"><a id="btnInstNewAddr" href="#"><spring:message code="sal.btn.addNewAddr" /></a></p></li>
+    <li><p class="btn_grid"><a id="btnInstSelAddr" href="#"><spring:message code="sal.title.text.seMailAddr" /></a></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
@@ -2361,38 +2375,38 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Address Detail<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.addressDetail" /><span class="must">*</span></th>
     <td colspan="3"><span id="modInstAddrDtl"></span></td>
 </tr>
 <tr>
-    <th scope="row">Street<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.street" /><span class="must">*</span></th>
     <td colspan="3"><span id="modInstStreet"></span></td>
 </tr>
 <tr>
-    <th scope="row">Area<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.area" /><span class="must">*</span></th>
     <td colspan="3" id="modInstArea"><span></span></td>
 </tr>
 <tr>
-    <th scope="row">City</th>
+    <th scope="row"><spring:message code="sal.text.city" /></th>
     <td><span id="modInstCity"></span></td>
-    <th scope="row">PostCode</th>
+    <th scope="row"><spring:message code="sal.text.postCode" /></th>
     <td><span id="modInstPostCd"></span></td>
 </tr>
 <tr>
-    <th scope="row">State</th>
+    <th scope="row"><spring:message code="sal.text.state" /></th>
     <td><span id="modInstState"></span></td>
-    <th scope="row">Country</th>
+    <th scope="row"><spring:message code="sal.text.country" /></th>
     <td><span id="modInstCnty"></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Installation Contact Person</h3>
+<h3><spring:message code="sal.title.text.installCntcPerson" /></h3>
 </aside><!-- title_line end -->
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnInstNewCntc" href="#">Add New Contact</a></p></li>
-    <li><p class="btn_grid"><a id="btnInstSelCntc" href="#">Select Contact Person</a></p></li>
+    <li><p class="btn_grid"><a id="btnInstNewCntc" href="#"><spring:message code="sal.title.text.addNewCntc" /></a></p></li>
+    <li><p class="btn_grid"><a id="btnInstSelCntc" href="#"><spring:message code="sal.title.text.selContactPerson" /></a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -2407,39 +2421,39 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
     <td><span id="modInstCntcName"></span></td>
-    <th scope="row">Initial</th>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
     <td><span id="modInstCntcInit"></span></td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span id="modInstCntcGender"></span></td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><span id="modInstCntcNric"></span></td>
-    <th scope="row">DOB</th>
+    <th scope="row"><spring:message code="sal.text.dob" /></th>
     <td><span id="modInstCntcDob"></span></td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span id="modInstCntcRace"></span></td>
 </tr>
 <tr>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td><span id="modInstCntcEmail"></span></td>
-    <th scope="row">Department</th>
+    <th scope="row"><spring:message code="sal.text.dept" /></th>
     <td><span id="modInstCntcDept"></span></td>
-    <th scope="row">Post</th>
+    <th scope="row"><spring:message code="sal.text.post" /></th>
     <td><span id="modInstCntcPost"></span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile)</th>
+    <th scope="row"><spring:message code="sal.text.telM" /></th>
     <td><span id="modInstCntcTelM"></span></td>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><span id="modInstCntcTelR"></span></td>
-    <th scope="row">Tel (Office)</th>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
     <td><span id="modInstCntcTelO"></span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td><span id="modInstCntcTelF"></span></td>
     <th scope="row"></th>
     <td><span></span></td>
@@ -2450,7 +2464,7 @@
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Installation Information</h3>
+<h3><spring:message code="sal.title.text.installInfomation" /></h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -2463,15 +2477,15 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">DSC Branch<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.dscBrnch" /><span class="must">*</span></th>
     <td colspan="3">
     <select id="dscBrnchId" name="dscBrnchId" class="w100p"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Prefer Install Date<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.perferInstDate" /><span class="must">*</span></th>
     <td><input id="modPreferInstDt" name="preDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" readonly/></td>
-    <th scope="row">Prefer Install Time<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.perferInstTime" /><span class="must">*</span></th>
     <td>
     <div class="time_picker w100p"><!-- time_picker start -->
     <input id="modPreferInstTm" name="preTm" type="text" title="" placeholder="" class="time_date w100p" readonly/>
@@ -2506,7 +2520,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Special Instruction<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.specialInstruction" /><span class="must">*</span></th>
     <td colspan="3"><textarea id="modInstct" name="instct" cols="20" rows="5"></textarea></td>
 </tr>
 </tbody>
@@ -2515,7 +2529,7 @@
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="btnSaveInstInfo" href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnSaveInstInfo" href="#"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------
@@ -2527,10 +2541,10 @@
 <section id="scPC" class="blind">
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Payment Channel</h3>
+<h3><spring:message code="sal.title.text.paymentChnnl" /></h3>
 </aside><!-- title_line end -->
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnViewHistory" href="#">View Histoty</a></p></li>
+    <li><p class="btn_grid"><a id="btnViewHistory" href="#"><spring:message code="sal.title.text.viewHistory" /></a></p></li>
 </ul>
 
 <form id="payChanlForm" name="payChanlForm" action="#" method="post">
@@ -2551,7 +2565,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Pay By Third Party</th>
+    <th scope="row"><spring:message code="sal.text.payByThirdParty" /></th>
     <td colspan="3">
     <label><input id="thrdParty" name="thrdParty" id="thrdParty" type="checkbox" value="1" /><span></span></label>
     </td>
@@ -2565,11 +2579,11 @@
 <section id="scPC_ThrdParty" class="blind">
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Third Party</h2>
+<h2><spring:message code="sal.title.text.thirdParty" /></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnAddCust" href="#">Add New Third Party</a></p></li>
+    <li><p class="btn_grid"><a id="btnAddCust" href="#"><spring:message code="sal.title.text.addNewThirdParty" /></a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -2582,17 +2596,17 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer ID<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.customerId" /><span class="must">*</span></th>
     <td><input id="thrdPartyId" name="thrdPartyId" type="text" title="" placeholder="Third Party ID" class="" />
         <a href="#" class="search_btn" id="btnThrdParty"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="hidden" title="" placeholder="Third Party ID" class="" /></td>
-    <th scope="row">Type</th>
+    <th scope="row"><spring:message code="sal.title.type" /></th>
     <td><span id="thrdPartyType"></span></td>
 </tr>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td><span id="thrdPartyName"></span></td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td><span id="thrdPartyNric"></span></td>
 </tr>
 </tbody>
@@ -2615,11 +2629,11 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Rental Paymode<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.rentPayMode" /><span class="must">*</span></th>
     <td>
     <select id="rentPayMode" name="rentPayMode" class="w100p"></select>
     </td>
-    <th scope="row">NRIC on DD/Passbook</th>
+    <th scope="row"><spring:message code="sal.title.text.nricOnPassbook" /></th>
     <td><input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 </tbody>
@@ -2633,12 +2647,12 @@
 <section id="scPC_CrCard" class="blind">
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Credit Card</h2>
+<h2><spring:message code="sal.title.text.crdCard" /></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb1m">
-    <li><p class="btn_grid"><a id="addCreditCardBtn" href="#">Add New Credit Card</a></p></li>
-    <li><p class="btn_grid"><a id="selCreditCardBtn" href="#">Select Another Credit Card</a></p></li>
+    <li><p class="btn_grid"><a id="addCreditCardBtn" href="#"><spring:message code="sal.title.text.addNewCrdCard" /></a></p></li>
+    <li><p class="btn_grid"><a id="selCreditCardBtn" href="#"><spring:message code="sal.title.text.selAnotherCrdCard" /></a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -2651,24 +2665,24 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Credit Card Number<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.crdCardNumber" /><span class="must">*</span></th>
     <td><span id="rentPayCRCNo"></span>
         <input id="hiddenRentPayCRCId" name="rentPayCRCId" type="hidden" />
         <input id="hiddenRentPayEncryptCRCNo" name="hiddenRentPayEncryptCRCNo" type="hidden" /></td>
-    <th scope="row">Credit Card Type</th>
+    <th scope="row"><spring:message code="sal.title.text.crdCardType" /></th>
     <td><span id="rentPayCRCType"></span></td>
 </tr>
 <tr>
-    <th scope="row">Name On Card</th>
+    <th scope="row"><spring:message code="sal.text.nameOnCard" /></th>
     <td><span id="rentPayCRCName"></span></td>
-    <th scope="row">Expiry</th>
+    <th scope="row"><spring:message code="sal.title.text.expiry" /></th>
     <td><span id="rentPayCRCExpiry"></span></td>
 </tr>
 <tr>
-    <th scope="row">Issue Bank</th>
+    <th scope="row"><spring:message code="sal.text.issueBank" /></th>
     <td><span id="rentPayCRCBank"></span>
         <input id="hiddenRentPayCRCBankId" name="rentPayCRCBankId" type="hidden" title="" class="w100p" /></td>
-    <th scope="row">Card Type</th>
+    <th scope="row"><spring:message code="sal.text.cardType" /></th>
     <td><span id="rentPayCRCCardType"></span></td>
 </tr>
 </tbody>
@@ -2680,12 +2694,12 @@
 ------------------------------------------------------------------------------->
 <section id="scPC_DirectDebit" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3>Direct Debit</h3>
+<h3><spring:message code="sal.title.text.directDebit" /></h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnAddBankAccount" href="#">Add New Bank Account</a></p></li>
-    <li><p class="btn_grid"><a id="btnSelBankAccount" href="#">Select Another Bank Account</a></p></li>
+    <li><p class="btn_grid"><a id="btnAddBankAccount" href="#"><spring:message code="sal.btn.addNewBankAcc" /></a></p></li>
+    <li><p class="btn_grid"><a id="btnSelBankAccount" href="#"><spring:message code="sal.title.text.selAnotherBankAcc" /></a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -2698,21 +2712,21 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Account Number<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.accNumber" /><span class="must">*</span></th>
     <td><span id="rentPayBankAccNo"></span>
         <input id="rentPayBankAccNoEncrypt" name="rentPayBankAccNoEncrypt" type="hidden" />
         <input id="hiddenRentPayBankAccID" name="hiddenRentPayBankAccID" type="hidden" />
-    <th scope="row">Account Type</th>
+    <th scope="row"><spring:message code="sal.title.text.accountType" /></th>
     <td><span id="rentPayBankAccType"></span></td>
 </tr>
 <tr>
-    <th scope="row">Account Holder</th>
+    <th scope="row"><spring:message code="sal.title.accountHolder" /></th>
     <td><span id="accName"></span></td>
-    <th scope="row">Issue Bank Branch</th>
+    <th scope="row"><spring:message code="sal.title.text.issueBankBrnch" /></th>
     <td><span id="accBranch"></span></td>
 </tr>
 <tr>
-    <th scope="row">Issue Bank</th>
+    <th scope="row"><spring:message code="sal.text.issueBank" /></th>
     <td colspan=3><span id="accBank"></span>
         <input id="hiddenAccBankId" name="hiddenAccBankId" type="hidden" /></td>
 </tr>
@@ -2731,20 +2745,20 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Apply Date<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.applyDate" /><span class="must">*</span></th>
     <td><input id="modApplyDate" name="applyDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
-    <th scope="row">Submit Date</th>
+    <th scope="row"><spring:message code="sal.text.submitDate" /></th>
     <td><input id="modSubmitDate" name="submitDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Start Date</th>
+    <th scope="row"><spring:message code="sal.text.startDate" /></th>
     <td><input id="modStartDate" name="startDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
     <th scope="row"><label>
         <input id="chkRejectDate" type="checkbox" value="1" /><span>Reject Date</span><span id="spRjctDate" class="must"></span></label></th>
     <td><input id="modRejectDate" name="rejectDate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" disabled /></td>
 </tr>
 <tr>
-    <th scope="row">Pay Term</th>
+    <th scope="row"><spring:message code="sal.title.text.payTerm" /></th>
     <td>
     <select id="modPayTerm" name="payTerm" class="w100p">
         <option value="0">No Term</option>
@@ -2756,7 +2770,7 @@
         <option value="6">6 Months</option>
     </select>
     </td>
-    <th scope="row">Reject Reason<span id="spRejectReason" class="must"></span></th>
+    <th scope="row"><spring:message code="sal.title.text.rejReason" /><span id="spRejectReason" class="must"></span></th>
     <td>
     <select id="modRejectReason" name="rejectReason" class="w100p" disabled></select>
     </td>
@@ -2767,7 +2781,7 @@
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="btnSavePayChan" href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnSavePayChan" href="#"><spring:message code="sal.btn.save2" /></a></p></li>
 </ul>  
 </section>
 <!------------------------------------------------------------------------------
@@ -2778,7 +2792,7 @@
 ------------------------------------------------------------------------------->
 <section id="scDS" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3>Document Submission</h3>
+<h3><spring:message code="sal.title.text.docuSubmission" /></h3>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -2786,7 +2800,7 @@
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="btnSaveDocSub" href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnSaveDocSub" href="#"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------
@@ -2797,7 +2811,7 @@
 ------------------------------------------------------------------------------->
 <section id="scRI" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3>Referrals Info</h3>
+<h3><spring:message code="sal.title.text.referralInfo" /></h3>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -2816,14 +2830,14 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No.</th>
+    <th scope="row"><spring:message code="sal.title.text.ordNop" /></th>
     <td><input type="text" value="${salesOrderNo}" title="" placeholder="" class="" disabled /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="btnCanclChg" href="#">CANCEL CHANGES</a></p></li>
-    <li><p class="btn_grid"><a id="btnAddRowReferral" href="#">ADD</a></p></li>
+    <li><p class="btn_grid"><a id="btnCanclChg" href="#"><spring:message code="sal.title.text.cancelChngs" /></a></p></li>
+    <li><p class="btn_grid"><a id="btnAddRowReferral" href="#"><spring:message code="sal.btn.addBtn" /></a></p></li>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_mod_rfr_wrap" style="width:100%; height:240px; margin:0 auto;"></div>
@@ -2832,7 +2846,7 @@
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="btnSaveReferral" href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnSaveReferral" href="#"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------
@@ -2843,11 +2857,11 @@
 ------------------------------------------------------------------------------->
 <section id="scPR" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3>Promotion Information</h3>
+<h3><spring:message code="sal.title.text.promoInfomation" /></h3>
 </aside><!-- title_line end -->
 
 <ul class="left_btns">
-    <li><p class="btn_blue"><p>Expired Promotion ?</p></li>
+    <li><p class="btn_blue"><p><spring:message code="sal.title.text.expiredPromoQuestion" /></p></li>
 </ul>
 
 <section class="search_table"><!-- search_table start -->
@@ -2861,41 +2875,41 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Product</th>
+    <th scope="row"><spring:message code="sal.title.text.product" /></th>
     <td><span id="prdName"></span></td>
-    <th scope="row">Price/RPF (RM)</th>
+    <th scope="row"><spring:message code="sal.title.text.priceRpfRm" /></th>
     <td><input id="ordPrice" name="ordPrice" type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
         <input id="promoId" name="promoId" type="hidden" /></td>
         <input id="stkId" name="stkId" type="hidden" /></td>
 </tr>
 <tr>
-    <th scope="row">Promotion<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th>
     <td>
     <select id="ordPromo" name="ordPromo" class="w100p"></select>
     </td>
-    <th scope="row">Normal Rental Fees (RM)</th>
+    <th scope="row"><spring:message code="sal.title.text.nomalRentFeeRm" /></th>
     <td><input id="orgOrdRentalFees" name="orgOrdRentalFees" type="text" title="" placeholder="Normal Rental Fees (Monthly)" class="w100p readonly" readonly /></td>
 </tr>
 <tr>
-    <th scope="row">PV</th>
+    <th scope="row"><spring:message code="sal.title.text.pv" /></th>
     <td><input id="ordPv" name="ordPv" type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
         <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
-    <th scope="row">Rental Fees (RM)</th>
+    <th scope="row"><spring:message code="sal.title.text.rentFeeRm" /></th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p>
         <p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" style="width:90px;"  class="readonly" readonly/></p></td>
 </tr>
 <tr>
-    <th scope="row">Related No</th>
+    <th scope="row"><spring:message code="sal.title.text.relatedNo" /></th>
     <td><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly/></td>
-    <td colspan="2"><p id="pBtnCal" class="btn_sky blind"><a id="btnCal" href="#">Exclude GST Calculation</a></p></td>
+    <td colspan="2"><p id="pBtnCal" class="btn_sky blind"><a id="btnCal" href="#"><spring:message code="sal.title.text.excludeGstCalcu" /></a></p></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </section>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="btnSavePromo" href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnSavePromo" href="#"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section>
@@ -2907,7 +2921,7 @@
 ------------------------------------------------------------------------------->
 <section id="scGC" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3>GST Certification</h3>
+<h3><spring:message code="sal.title.text.gstCertification" /></h3>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -2930,31 +2944,31 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Reference No<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.refNo" /><span class="must">*</span></th>
     <td><input id="certRefNo" name="certRefNo" type="text" title="" placeholder="Cert Reference No" class="w100p" /></td>
-    <th scope="row">Certificate Date<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.certificateDate" /><span class="must">*</span></th>
     <td><input id="certRefDt" name="certRefDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">GST Registration No</th>
+    <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
     <td colspan="3"><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">App Type</th>
+    <th scope="row"><spring:message code="sal.title.text.appType" /></th>
     <td>
     <select id="eurcRliefAppTypeId" class="w100p" disabled></select>
     </td>
-    <th scope="row">Certificate Type</th>
+    <th scope="row"><spring:message code="sal.title.text.certificateType" /></th>
     <td>
     <select id="eurcRliefTypeId" class="w100p" disabled></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td colspan="3"><textarea id="txtCertRemark" name="txtCertRemark" cols="20" rows="5"></textarea></td>
 </tr>
 <tr>
-    <th scope="row">Upload Relief Cert(.zip)</th>
+    <th scope="row"><spring:message code="sal.title.text.uploadReliefZipFile" /></th>
     <td colspan="3">
         <!-- auto_file start -->
         <div class="auto_file2">
@@ -2969,7 +2983,7 @@
 </form>
 </section><!-- search_table end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="btnSaveGstCert" name="btnSaveGstCert" href="#">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a id="btnSaveGstCert" name="btnSaveGstCert" href="#"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section>
 <!------------------------------------------------------------------------------

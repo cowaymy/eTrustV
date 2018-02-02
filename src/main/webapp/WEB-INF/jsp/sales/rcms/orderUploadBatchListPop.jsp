@@ -58,7 +58,8 @@ $(document).ready(function() {
         if(selectedItem[0].item.stusId == '1'){  //Active Only
         	Common.popupDiv("/sales/rcms/confirmUploadBatchPop.do", {batchId : selectedItem[0].item.uploadMid}, null , true, '_confirmBatchDiv');	
         }else{
-        	Common.alert("<b>Upload batch ["+selectedItem[0].item.uploadMid+"] is no longer active.</b><br/><b>Confirm batch is disallowed.</b>");
+        	//Common.alert("<b>Upload batch ["+selectedItem[0].item.uploadMid+"] is no longer active.</b><br/><b>Confirm batch is disallowed.</b>");
+        	Common.alert('<spring:message code="sal.alert.msg.noLongerActiveBatch" arguments="'+selectedItem[0].item.uploadMid+'" />');
         }
     });
 	
@@ -66,10 +67,10 @@ $(document).ready(function() {
 
 function createOrderRemGrid(){
 	var ordColumnLayout =  [ 
-                            {dataField : "uploadMid", headerText : "Batch ID", width : '25%' , editable : false}, 
-                            {dataField : "name", headerText : "Status", width : '25%', editable : false},
-                            {dataField : "crtUserName", headerText : "Uploader", width : '25%' , editable : false},
-                            {dataField : "crtDt", headerText : "Upload Date", width : '25%' , editable : false},
+                            {dataField : "uploadMid", headerText : '<spring:message code="sal.title.text.batchId" />', width : '25%' , editable : false}, 
+                            {dataField : "name", headerText : '<spring:message code="sal.title.status" />', width : '25%', editable : false},
+                            {dataField : "crtUserName", headerText : '<spring:message code="sal.alert.msg.uploader" />', width : '25%' , editable : false},
+                            {dataField : "crtDt", headerText : '<spring:message code="sal.alert.msg.uploadDate" />', width : '25%' , editable : false},
                             {dataField : "stusId", visible : false} 
                            ];
     
@@ -86,9 +87,7 @@ function createOrderRemGrid(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No Order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
     };
     
     ordRemGridID = GridCommon.createAUIGrid("#ordRem_grid_wrap", ordColumnLayout,'', gridPros);  // address list
@@ -98,20 +97,20 @@ function createOrderRemGrid(){
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
-<h1>ROS Call Log - Order Remark Upload</h1>
+<h1><spring:message code="sal.title.text.rosCallLogOrdRemUpload" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_updOrdRemClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_updOrdRemClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
-    <li><p class="btn_blue"><a id="_newUpload"><span ></span>New Upload</a></p></li>
-    <li><p class="btn_blue"><a id="_viewUpload"><span ></span>View Upload Batch</a></p></li>
-    <li><p class="btn_blue"><a id="_confirmUpload"><span ></span>Confirm Upload</a></p></li>
-    <li><p class="btn_blue"><a id="_srchBtn"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a onclick="javascript:$('#_srchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a id="_newUpload"><span ></span><spring:message code="sal.title.text.newUpload" /></a></p></li>
+    <li><p class="btn_blue"><a id="_viewUpload"><span ></span><spring:message code="sal.title.text.viewUploadBatch" /></a></p></li>
+    <li><p class="btn_blue"><a id="_confirmUpload"><span ></span><spring:message code="sal.title.text.confirmUpload" /></a></p></li>
+    <li><p class="btn_blue"><a id="_srchBtn"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a onclick="javascript:$('#_srchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -131,25 +130,25 @@ function createOrderRemGrid(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Batch ID</th>
+    <th scope="row"><spring:message code="sal.title.text.batchId" /></th>
     <td>
     <input type="text" title="" placeholder="Order No" class="w100p" id="_batchId" name="batchId"/>
     </td>
-    <th scope="row">Batch Status</th>
+    <th scope="row"><spring:message code="sal.title.text.batchStus" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="_batchStatus" name="batchStatus"></select>
     </td>
-    <th scope="row">Uploader</th>
+    <th scope="row"><spring:message code="sal.alert.msg.uploader" /></th>
     <td>
         <input type="text" title="" placeholder="Uploader" class="w100p" id="_uploader" name="uploader"/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Upload Date</th>
+    <th scope="row"><spring:message code="sal.alert.msg.uploadDate" /></th>
     <td colspan="5">
    <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="fromDt" id="_fromDt"  readonly="readonly"/></p>  
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="toDT"  id="_toDT" readonly="readonly"/></p>
     </div><!-- date_set end -->
     </td>

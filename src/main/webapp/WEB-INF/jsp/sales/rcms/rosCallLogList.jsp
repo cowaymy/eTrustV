@@ -115,13 +115,13 @@ function fn_orderUloadBatch(){
 
 function createRosCallGrid(){
 	 var rosColumnLayout =  [ 
-	                            {dataField : "ordNo", headerText : "Order No", width : '10%' , editable : false}, 
-	                            {dataField : "ordDt", headerText : "Order Date", width : '10%', editable : false},
-	                            {dataField : "appTypeCode", headerText : "App Type", width : '10%' , editable : false},
-	                            {dataField : "stockDesc", headerText : "Product", width : '20%' , editable : false},
-	                            {dataField : "custName", headerText : "Customer Name", width : '20%' , editable : false},
-	                            {dataField : "custNric", headerText : "NRIC/Company No", width : '20%' , editable : false}, 
-	                            {dataField : "rentalStus", headerText : "Rental Status", width : '10%' , editable : false},
+	                            {dataField : "ordNo", headerText : '<spring:message code="sal.text.ordNo" />', width : '10%' , editable : false}, 
+	                            {dataField : "ordDt", headerText : '<spring:message code="sal.text.ordDate" />', width : '10%', editable : false},
+	                            {dataField : "appTypeCode", headerText : '<spring:message code="sal.title.text.appType" />', width : '10%' , editable : false},
+	                            {dataField : "stockDesc", headerText : '<spring:message code="sal.title.text.product" />', width : '20%' , editable : false},
+	                            {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : '20%' , editable : false},
+	                            {dataField : "custNric", headerText : '<spring:message code="sal.title.text.nricCompNo" />', width : '20%' , editable : false}, 
+	                            {dataField : "rentalStus", headerText : '<spring:message code="sal.text.rentalStatus" />', width : '10%' , editable : false},
 	                            {dataField : "ordId", visible : false},
 	                            {dataField : "custId", visible : false},
 	                            {dataField : "custBillId", visible : false}
@@ -153,7 +153,7 @@ function fn_newROSCall(){
 	//Validation
 	var selectedItem = AUIGrid.getSelectedItems(rosGridID);
     if(selectedItem.length <= 0){
-        Common.alert(" No result selected. ");
+        Common.alert('<spring:message code="sal.alert.msg.noResultSelected" />');
         return;
     }
     //Popup
@@ -165,7 +165,7 @@ function fn_chargeOrderBillingType(){
 	//Validation
     var selectedItem = AUIGrid.getSelectedItems(rosGridID);
     if(selectedItem.length <= 0){
-        Common.alert(" No result selected. ");
+        Common.alert('<spring:message code="sal.alert.msg.noResultSelected" />');
         return;
     }
     //Popup
@@ -209,21 +209,21 @@ function fn_feedbackList(){
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>ROS Call Log</h2>
+<h2><spring:message code="sal.title.text.rosCallLog" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a onclick="javascript:fn_newROSCall()"><span ></span>NEW ROS Call</a></p></li>
+    <li><p class="btn_blue"><a onclick="javascript:fn_newROSCall()"><span ></span><spring:message code="sal.title.text.newRosCall" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-    <li><p class="btn_blue"><a onclick="javascript:fn_chargeOrderBillingType()"><span ></span>Charge Order Billing Type</a></p></li>
+    <li><p class="btn_blue"><a onclick="javascript:fn_chargeOrderBillingType()"><span ></span><spring:message code="sal.title.text.chargeOrderBillingType" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-    <li><p class="btn_blue"><a onclick="javascript:fn_orderUloadBatch()"><span ></span>Order Remark Upload Batch</a></p></li>
+    <li><p class="btn_blue"><a onclick="javascript:fn_orderUloadBatch()"><span ></span><spring:message code="sal.title.text.orderRemUploadBatch" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a id="_searchBtn"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a id="_searchBtn"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li> 
+    <li><p class="btn_blue"><a onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li> 
 </ul>
 </aside><!-- title_line end -->
 
@@ -243,38 +243,38 @@ function fn_feedbackList(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td>
     <input type="text" title="" placeholder="Order No" class="w100p" id="_ordNo" name="ordNo"/>
     </td>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="_appType" name="appType"></select>
     </td>
-    <th scope="row">Rental Status</th>
+    <th scope="row"><spring:message code="sal.text.rentalStatus" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="_rentalStatus" name="rentalStatus">
-        <option value="ACT">Active</option>
-        <option value="REG">Regular</option>
-        <option value="INV">Investigate</option>
-        <option value="SUS">Suspend</option>
-        <option value="RET">Return</option>
-        <option value="CAN">Cancel</option>
-        <option value="TER">Terminate</option>
-        <option value="WOF">Write Off</option>
+        <option value="ACT"><spring:message code="sal.btn.active" /></option>
+        <option value="REG"><spring:message code="sal.combo.text.regular" /></option>
+        <option value="INV"><spring:message code="sal.combo.text.investigate" /></option>
+        <option value="SUS"><spring:message code="sal.combo.text.supend" /></option>
+        <option value="RET"><spring:message code="sal.combo.text.returned" /></option>
+        <option value="CAN"><spring:message code="sal.combo.text.cancelled" /></option>
+        <option value="TER"><spring:message code="sal.combo.text.terminated" /></option>
+        <option value="WOF"><spring:message code="sal.combo.text.writeOff" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td>
     <input type="text" title="" placeholder="Customer ID (Number Only)" class="w100p" id="_custId" name="custId" />
     </td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td>
     <input type="text" title="" placeholder="Customer Name" class="w100p" id="_custName" name="custName"/>
     </td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td>
     <input type="text" title="" placeholder="NRIC/Company Number" class="w100p" id="_custNric" name="custNric" />
     </td>
@@ -285,10 +285,10 @@ function fn_feedbackList(){
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
-    <dt>Link</dt>
+    <dt><spring:message code="sal.title.text.link" /></dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn"><a onclick="javascript:fn_feedbackList()">Feedback List</a></p></li>
+        <li><p class="link_btn"><a onclick="javascript:fn_feedbackList()"><spring:message code="sal.title.text.feedbackList" /></a></p></li>
         <%-- <li><p class="link_btn"><a href="${pageContext.request.contextPath}/payment/initInvoiceIssue.do">Invoice</a></p></li>  --%> 
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>

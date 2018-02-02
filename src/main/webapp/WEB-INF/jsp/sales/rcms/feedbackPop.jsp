@@ -25,30 +25,30 @@ $(document).ready(function() {
 		
 		//Validation
 		if($("#_keyStartDate").val() == null || $("#_keyStartDate").val() == '' || $("#_keyEndDate").val() == null || $("#_keyEndDate").val() == ''){
-			Common.alert("* Please select the key-in date (From & To).<br />");
+			Common.alert('<spring:message code="sal.alert.msg.plzSelKeyinDateFromTo" />');
 			return;
 		}
 		
 		if($("#_appTypePop").val() == null || $("#_appTypePop").val() == ''){
-			Common.alert("* Please select at least one application type.<br />");
+			Common.alert('<spring:message code="sal.alert.msg.plzSeloneAppType" />');
 			return;
 		}
 		
 		if($("#_actionType").val() == null || $("#_actionType").val() == ''){
-            Common.alert("* Please select at least one action.<br />");
+            Common.alert('<spring:message code="sal.alert.msg.plzSeloneAction" />');
             return;
         }
 		
 		if(($("#_ordNoStr").val() != null && $("#_ordNoStr").val() != '') || ($("#_ordNoEnd").val() != null && $("#_ordNoEnd").val() != '')){
 			if($("#_ordNoStr").val() == null || $("#_ordNoStr").val() == '' || $("#_ordNoEnd").val() == null || $("#_ordNoEnd").val() == ''){
-				Common.alert("* Please key in the order number (From & To).<br />");
+				Common.alert('<spring:message code="sal.alert.msg.plzKeyInOrdNumFromTo" />');
 				return;
 			}
 		}
 		
 		if(($("#_ordStrdate").val() != null && $("#_ordStrdate").val() != '') || ($("#_ordEnddate").val() != null && $("#_ordEnddate").val() != '')){
             if($("#_ordStrdate").val() == null || $("#_ordStrdate").val() == '' || $("#_ordEnddate").val() == null || $("#_ordEnddate").val() == ''){
-                Common.alert("* Please key in the order date (From & To).<br />");
+                Common.alert('<spring:message code="sal.alert.msg.plzKeyInOrdDateFromTo" />');
                 return;
             }
         }
@@ -182,7 +182,7 @@ function fn_loadOrderSalesman(memId, memCode) {
     Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
         if(memInfo == null) {
-            Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+            Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput" />'+memCode+'</b>');
             $("#salesmanPopCd").val('');
             $("#hiddenSalesmanPopId").val('');
         }
@@ -220,9 +220,9 @@ $('.multy_select').change(function() {
 </form>
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>EDIT RCMS Remark</h1>
+<h1><spring:message code="sal.title.text.editRcmsRem" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
@@ -237,15 +237,15 @@ $('.multy_select').change(function() {
 </colgroup>
 <tbody>         
 <tr>
-    <th scope="row">Key-In Date</th>
+    <th scope="row"><spring:message code="sal.text.keyInDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  id="_keyStartDate" /></p>  
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="_keyEndDate" /></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Key User</th>
+    <th scope="row"><spring:message code="sal.title.text.keyUser" /></th>
     <td>    
         <div class="search_100p"><!-- search_100p start -->
         <input id="salesmanCd" name="salesmanCd" type="text" title="" placeholder="" class="w100p" />
@@ -255,54 +255,54 @@ $('.multy_select').change(function() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
         <select id="_appTypePop" name="appType" class="multy_select w100p" multiple="multiple"></select>
     </td>
-    <th scope="row">Action</th>
+    <th scope="row"><spring:message code="sal.title.text.action" /></th>
     <td>
         <select id="_actionType" name="actionType" class="multy_select w100p" multiple="multiple">
-            <option value="56">Call-In</option>
-            <option value="57">Call-Out</option>
-            <option value="58">Internal Feedback</option>
+            <option value="56"><spring:message code="sal.combo.text.callIn" /></option>
+            <option value="57"><spring:message code="sal.combo.text.callOut" /></option>
+            <option value="58"><spring:message code="sal.combo.text.internalFeedback" /></option>
         </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Order Number</th>
+    <th scope="row"><spring:message code="sal.text.ordNum" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" style="width: 100%" id="_ordNoStr"/></p>  
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" style="width: 100%" id="_ordNoEnd"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="_ordStrdate" /></p>  
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="_ordEnddate"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><input type="text" class="w100p" id="_feedCustId"></td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><input type="text" class="w100p" id="_feedCustName"></td>
 </tr>
 <tr>
-    <th scope="row">NRIC / Co. No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCoDotNo" /></th>
     <td><input type="text" class="w100p" id="_feedNric"></td>
-    <th scope="row">Sort By</th>
+    <th scope="row"><spring:message code="sal.title.text.sortBy" /></th>
     <td>
         <select id="_sortBy" name="sortBy" class="w100p">
-            <option value="1">By Key In Date</option>
-            <option value="2">By Key In User</option>
-            <option value="3">By Order Number</option>
-            <option value="4">By Application Type</option>
-            <option value="5">By Action</option>
+            <option value="1"><spring:message code="sal.combo.text.byKeyInDate" /></option>
+            <option value="2"><spring:message code="sal.combo.text.byKeyInUser" /></option>
+            <option value="3"><spring:message code="sal.combo.text.byOrdNumber" /></option>
+            <option value="4"><spring:message code="sal.combo.text.byApplicationType" /></option>
+            <option value="5"><spring:message code="sal.combo.text.byAction" /></option>
         </select>
     </td>
 </tr>
@@ -311,8 +311,8 @@ $('.multy_select').change(function() {
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a id="_rptGen" >Generate</a></p></li>
-    <li><p class="btn_blue2"><a onclick="javascript:$('#searchForm').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2"><a id="_rptGen" ><spring:message code="sal.btn.generate" /></a></p></li>
+    <li><p class="btn_blue2"><a onclick="javascript:$('#searchForm').clearForm();"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </section>
 </div>

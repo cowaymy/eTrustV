@@ -46,19 +46,19 @@ var smsGridID;
 
 var optionComboReason = {
         type: "S",
-        chooseMessage: "No Reason Code",
+        chooseMessage: '<spring:message code="sal.combo.choose.msg.noReasonCode" />',
         isShowChoose: true  
 };
 
 var optionComboFeedback = {
         type: "S",
-        chooseMessage: "No Feedback Code",
+        chooseMessage: '<spring:message code="sal.combo.choose.msg.noFeedbackCode" />',
         isShowChoose: true  
 };
 
 var optionComboStatus = {
         type: "S",
-        chooseMessage: "No ROS Status",
+        chooseMessage: '<spring:message code="sal.combo.choose.msg.noRosStus" />',
         isShowChoose: true  
 };
 
@@ -98,7 +98,7 @@ $(document).ready(function() {//////////////////////////////////////////////////
 				rtnList = fn_chkROSCallLogBillGroupOrderCount();
 				 
 				if(rtnList.length > 1){
-					Common.confirm("Total " + rtnList.length + " order. Are you sure you want to update?", fn_save);
+					Common.confirm('<spring:message code="sal.title.text.tot" />' + rtnList.length + '<spring:message code="sal.alert.msg.areUsureWantToUpdate" />', fn_save);
 				}else{
 					fn_save();
 				}
@@ -141,21 +141,21 @@ function fn_save(){
 				if(result.chkSms > 0){
 					console.log("send SMS Result : " + result.smsResultMSg);
 					if(result.total == result.success){
-	                    Common.alert("<b>ROS remark successfully saved.<br />SMS has already insert into sending queue.</b>");
+	                    Common.alert('<spring:message code="sal.alert.msg.rosMarkSuccessfullySavedSMSAlready" />');
 	                    $("#_newRosCallClose").click(); //close Pop
 	                }else{
-	                    Common.alert("<b>ROS remark successfully saved.<br />SMS sending failed.</b>");
+	                    Common.alert('<spring:message code="sal.alert.msg.rosMarkSuccessfullySavedSMSfail" />');
 	                    $("#_newRosCallClose").click(); //close Pop
 	                }
 				}else{
-					Common.alert("<b>ROS remark successfully saved.</b>");
+					Common.alert('<spring:message code="sal.alert.msg.rosRemSuccessfullySaved" />');
 					$("#_newRosCallClose").click(); //close Pop
 				}
 			}else{
-				Common.alert("<b>Failed to save ROS remark. Please try again later.</b>");
+				Common.alert('<spring:message code="sal.alert.msg.failToSaveRosRemTryAgain" />');
 			}
 		}else{
-			Common.alert("<b>Failed to prepare save data.<br />Please contact IT Department.</b>");	
+			Common.alert('<spring:message code="sal.alert.msg.failToPrepareSaveData" />');	
 		}
 	});
 }
@@ -169,25 +169,25 @@ function fn_validation(){
 	
 	//1. Action
 	if($("#_action").val() == null || $("#_action").val() == ''){
-		Common.alert("* Please select the action.<br />");
+		Common.alert('<spring:message code="sal.alert.msg.plzSelTheAction" />');
 		return false;
 	}
 	
 	//2. Main Reason
 	if($("#_mainReason").val() == null || $("#_mainReason").val() == ''){
-		Common.alert("* Please select the main reason.<br />");
+		Common.alert('<spring:message code="sal.alert.msg.selTheMainReason" />');
 		return false;
 	}
 	
 	//3.Feedback
 	if($("#_feedback").val() == null || $("#_feedback").val() == ''){
-		Common.alert("* Please select the feedback code.<br />");
+		Common.alert('<spring:message code="sal.alert.msg.selTheFeedbackCode" />');
 		return false;
 	}
 	
 	//4. Collect Amt
 	if($("#_collectAmt").val() == null || $("#_collectAmt").val() == ''){
-		Common.alert("* Please Key in amount.");
+		Common.alert('<spring:message code="sal.alert.msg.plzKeyInAmount" />');
 		return false;
 	}
 	
@@ -199,7 +199,7 @@ function fn_validation(){
 	
 	//6. Remark
     if($("#_rosRem").val() == null || $("#_rosRem").val() == ''){
-        Common.alert("* Please key in the ROS remark.<br />");
+        Common.alert('<spring:message code="sal.alert.msg.plzKeyInRosRemark" />');
         return false;
     }
 	 
@@ -207,7 +207,7 @@ function fn_validation(){
     if($("#_smsChk").is(":checked") == true ){
     	
     	if($("#_smsRem").val() == null || $("#_smsRem").val() == '' ){
-    		 Common.alert("* Please key in the SMS remark.<br />");
+    		 Common.alert('<spring:message code="sal.alert.msg.plzKeyIntheSmsRem" />');
     	        return false;
     	}
     	
@@ -220,7 +220,7 @@ function fn_validation(){
     	console.log("fullSMS : " + fullSMS);
     	console.log("fullSMS.length : " + fullSMS.length);
     	if(fullSMS.length > 160){
-    		Common.alert("* SMS message exceed 160 characters.<br />");
+    		Common.alert('<spring:message code="sal.alert.msg.smsMsgExceed160Char" />');
     		$("#_fullSms").val('');
     		return false;
     	}
@@ -249,10 +249,10 @@ function fn_chkROSCallLogBillGroupOrderCount(){
 function createSMSGrid(){
 	
 	var smsLayout = [
-	                  {   dataField : "code",     headerText : 'Type',     width :'10%' }
-	                 ,{   dataField : "rem",  headerText : 'Remark',         width : '65%' }
-	                 ,{   dataField : "userName",    headerText : 'Creator',        width : '15%' }
-	                 ,{   dataField : "callCrtDt", headerText : 'Create Date',   width : '10%' }	                 
+	                  {   dataField : "code",     headerText : '<spring:message code="sal.title.type" />',     width :'10%' }
+	                 ,{   dataField : "rem",  headerText : '<spring:message code="sal.text.remark" />',         width : '65%' }
+	                 ,{   dataField : "userName",    headerText : '<spring:message code="sal.text.creator" />',        width : '15%' }
+	                 ,{   dataField : "callCrtDt", headerText : '<spring:message code="sal.text.createDate" />',   width : '10%' }	                 
 	                ];
 	
 	
@@ -268,9 +268,7 @@ function createSMSGrid(){
 	        useGroupingPanel    : false,        //그룹핑 패널 사용
 	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-	        noDataMessage       : "No data found.",
-	        groupingMessage     : "Here groupping"
+	        showRowNumColumn    : true
 	    };
 	
 	smsGridID = GridCommon.createAUIGrid("grid_sms_ticket_wrap", smsLayout, "", smsGridPros);
@@ -375,13 +373,13 @@ function fn_chkValidNumber(){
 				$('#_smsChk').attr('checked', false);
 				$("#_smsRem").val('');
 		        $("#_smsRem").attr({"class" : "disabled" , "disabled" : "disabled"});
-	            Common.alert("<b>Invalid cody mobile number.<br />SMS to cody is disallowed.</b>");
+	            Common.alert('<spring:message code="sal.alert.msg.invalidCodyMobNum" />');
 			}
 		}else{
 			$('#_smsChk').attr('checked', false); 
 			$("#_smsRem").val('');
 	        $("#_smsRem").attr({"class" : "disabled" , "disabled" : "disabled"});
-			Common.alert("<b>No incharge cody found in this order.<br />SMS to cody is disallowed.</b>");
+			Common.alert('<spring:message code="sal.alert.msg.noInchargeCodyFoundOrder" />');
 		}
 	}else{
 		$("#_smsRem").val('');
@@ -444,9 +442,9 @@ Mobile No : ${salesManMap.telMobile}
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ROS Call Log - New ROS Call Log</h1>
+<h1><spring:message code="sal.title.text.rosCallLogNewRosCallLog" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="_newRosCallClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="_newRosCallClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -454,7 +452,7 @@ Mobile No : ${salesManMap.telMobile}
 <!-- Content Start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>SMS to Cody Ticket Log</h3>
+<h3><spring:message code="sal.title.text.smsToCodyTickeyLog" /></h3>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -462,31 +460,31 @@ Mobile No : ${salesManMap.telMobile}
 </article><!-- grid_wrap end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Order Full Details</h3>
+<h3><spring:message code="sal.title.text.orderFullDetails" /></h3>
 </aside><!-- title_line end -->
 <section class="tap_wrap mt0"><!-- tap_wrap start --> 
 <ul class="tap_type1 num4">
-    <li><a href="#" class="on">Basic Info</a></li>
-    <li><a href="#">HP / Cody</a></li>
-    <li><a id="aTabCI" href="#" onClick="javascript:chgGridTab('custInfo');">Customer Info</a></li>
-    <li><a href="#">Installation Info</a></li>
-    <li><a id="aTabMA" href="#">Mailling Info</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.hpCody" /></a></li>
+    <li><a id="aTabCI" href="#" onClick="javascript:chgGridTab('custInfo');"><spring:message code="sal.title.text.custInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.installInfo" /></a></li>
+    <li><a id="aTabMA" href="#"><spring:message code="sal.title.text.maillingInfo" /></a></li>
 <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
-    <li><a href="#">Payment Channel</a></li>
+    <li><a href="#"><spring:message code="sal.title.text.paymentChnnl" /></a></li>
 </c:if>
-    <li><a id="aTabMI" href="#" onClick="javascript:chgGridTab('memInfo');">Membership Info</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('docInfo');">Document Submission</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('callLogInfo');">Call Log</a></li>
+    <li><a id="aTabMI" href="#" onClick="javascript:chgGridTab('memInfo');"><spring:message code="sal.title.text.memshipInfo" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('docInfo');"><spring:message code="sal.title.text.docuSubmission" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('callLogInfo');"><spring:message code="sal.title.text.callLog" /></a></li>
 <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
-    <li><a href="#">Quarantee Info</a></li>
+    <li><a href="#"><spring:message code="sal.title.text.quaranteeInfo" /></a></li>
 </c:if>
-    <li><a href="#" onClick="javascript:chgGridTab('payInfo');">Payment Listing</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('transInfo');">Last 6 Months Transaction</a></li>
-    <li><a href="#">Order Configuration</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('autoDebitInfo');">Auto Debit Result</a></li>
-    <li><a href="#">Relief Certificate</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('discountInfo');">Discount</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('rentalfulldetail');">Rental Full Detail</a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('payInfo');"><spring:message code="sal.title.text.paymentListing" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('transInfo');"><spring:message code="sal.title.text.lastSixMonthTrnsaction" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.ordConfiguration" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('autoDebitInfo');"><spring:message code="sal.title.text.autoDebitResult" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.reliefCertificate" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('discountInfo');"><spring:message code="sal.title.text.discount" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('rentalfulldetail');"><spring:message code="sal.title.text.rentfullDetails" /></a></li>
 </ul>
 
 <!------------------------------------------------------------------------------
@@ -563,13 +561,13 @@ Mobile No : ${salesManMap.telMobile}
 <%@ include file="/WEB-INF/jsp/sales/rcms/include/rentalFullDetails.jsp" %>
 </section><!-- tap_wrap end --> 
 <aside class="title_line"><!-- title_line start -->
-<h3>NEW ROS Remark</h3>
+<h3><spring:message code="sal.title.text.newRosRemark" /></h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a onclick="javascript : fn_underDevelop()">email to Customer</a></p></li>
-    <li><p class="btn_grid"><a onclick="javascript : fn_invoice()">Invoice</a></p></li>
-    <li><p class="btn_grid"><a onclick="javascript : fn_editRentPaySetting()">Edit Rent Pay Setting</a></p></li>
+    <li><p class="btn_grid"><a onclick="javascript : fn_underDevelop()"><spring:message code="sal.title.text.emailToCust" /></a></p></li>
+    <li><p class="btn_grid"><a onclick="javascript : fn_invoice()"><spring:message code="sal.btn.link.invoice" /></a></p></li>
+    <li><p class="btn_grid"><a onclick="javascript : fn_editRentPaySetting()"><spring:message code="sal.title.text.editRentPaySetting" /></a></p></li>
 </ul>
 
 <form id="_insForm">
@@ -597,35 +595,35 @@ Mobile No : ${salesManMap.telMobile}
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Action<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.title.text.action" /><span class="must">*</span></th>
         <td>
         <select class="w100p" id="_action" name="action">
-            <option value="56">Call-In</option>
-            <option value="57">Call-Out</option>
-            <option value="58">Internal Feedback</option>
+            <option value="56"><spring:message code="sal.combo.text.callIn" /></option>
+            <option value="57"><spring:message code="sal.combo.text.callOut" /></option>
+            <option value="58"><spring:message code="sal.combo.text.internalFeedback" /></option>
         </select>
         </td>
     </tr>
     <tr>
-        <th scope="row">Main Reason</th>
+        <th scope="row"><spring:message code="sal.title.text.mainReason" /></th>
         <td>
         <select class="w100p" id="_mainReason" name="mainReason"></select>
         </td>
     </tr>
     <tr>
-        <th scope="row">FeedBack</th>
+        <th scope="row"><spring:message code="sal.title.text.feedback" /></th>
         <td>
         <select class="w100p disabled" id="_feedback" name="feedback" disabled="disabled"></select>
         </td>
     </tr>
     <tr>
-        <th scope="row">ROS Status<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.title.text.rosStus" /><span class="must">*</span></th>
         <td>
         <select class="w100p" id="_rosStatus" name="rosStatus"></select>
         </td>
     </tr>
     <tr>
-        <th scope="row">ROS Remark<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.title.text.rosRemark" /><span class="must">*</span></th>
         <td>
             <textarea id="_rosRem" name="rosRem"></textarea>
         </td>
@@ -645,11 +643,11 @@ Mobile No : ${salesManMap.telMobile}
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Recall Date</th>
+        <th scope="row"><spring:message code="sal.title.text.reCallDate" /></th>
         <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="_reCallYMD" name="reCallDtYmd"/></td>
     </tr>
     <tr>
-        <th scope="row">Recall Time</th>
+        <th scope="row"><spring:message code="sal.title.text.reCallTime" /></th>
         <td colspan="3">
         <div class="time_picker w100p"><!-- time_picker start -->
         <input type="text" title="" placeholder="" class="time_date w100p"  id="_reCallTime"/>
@@ -684,17 +682,17 @@ Mobile No : ${salesManMap.telMobile}
         </td>
     </tr>
     <tr>
-        <th scope="row">Collection Amount</th>
+        <th scope="row"><spring:message code="sal.title.text.collectionAmt" /></th>
         <td><input type="text" title="" placeholder="" class="w100p"  onkeyup="fn_inputAmt(this)"  onblur="javascript : fn_chkMaxAmtCheck(this.value)" id="_collectAmt" name="collectAmt"/></td>
-        <th scope="row">SMS Cody<span class="must">**</span></th>
+        <th scope="row"><spring:message code="sal.title.text.smsCody" /><span class="must">**</span></th>
         <td data-tooltip-text="${tooltipResult}"><label><input type="checkbox"  id="_smsChk" name="smsChk" onchange="javascript : fn_chkValidNumber()" /><span>SMS to Cody?</span></label></td>
     </tr>
     <tr>
-        <th scope="row">PTP Date</th>
+        <th scope="row"><spring:message code="sal.title.text.ptpDate" /></th>
         <td colspan="3"><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  onchange="javascript : fn_chkDate(this.value)" id="_ptpDate" readonly="readonly" name="ptpDate"/></td>
     </tr>
     <tr>
-        <th scope="row">SMS Remark<span class="must">**</span></th>
+        <th scope="row"><spring:message code="sal.title.text.smsRemark" /><span class="must">**</span></th>
         <td colspan="3">
             <textarea id="_smsRem" name="smsRem" class="disabled" disabled="disabled"></textarea>
         </td>
@@ -712,7 +710,7 @@ Mobile No : ${salesManMap.telMobile}
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Group Remark Sync?</th>
+        <th scope="row"><spring:message code="sal.title.text.grpRemSync" /></th>
         <td colspan="3"><input type="checkbox" id="_groupRemSync" name="groupRemSync"></td>
     </tr>
     </tbody>
@@ -720,7 +718,7 @@ Mobile No : ${salesManMap.telMobile}
 </form>
 <hr/>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a id="_rosCallSaveBtn">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a id="_rosCallSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section>
 </div>

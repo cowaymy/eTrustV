@@ -25,19 +25,19 @@ function createOrderRemDetailGrid(){
 							           onclick : function(rowIndex, columnIndex, value, item) {
 							        	   Common.ajax("POST", "/sales/rcms/updOrdNo", {batchId : item.uploadDetId}, function(result){
 							        		   if(result != null){
-							        			   Common.alert("<b>The item has been removed.</b>", fn_reLoadPage);
+							        			   Common.alert('<spring:message code="sal.title.text.itmHasbeenRemov" />', fn_reLoadPage);
 							        		   }else{
-							        			   Common.alert("<b>Failed to remove item. Please try again later.</b>");
+							        			   Common.alert('<spring:message code="sal.title.text.failToRemov" />');
 							        		   }
 							        	   });
 							           }
 							    }
 							},
-                            {dataField : "ordNo", headerText : "Order No.", width : '10%' , editable : false}, 
-                            {dataField : "rem", headerText : "Remark", width : '30%', editable : false},
-                            {dataField : "name1", headerText : "Status", width : '10%' , editable : false},
-                            {dataField : "validRem", headerText : "System Remark", width : '30%' , editable : false},
-                            {dataField : "ordId", headerText : "Order ID", width : '10%' , editable : false},
+                            {dataField : "ordNo", headerText : '<spring:message code="sal.title.text.ordNop" />', width : '10%' , editable : false}, 
+                            {dataField : "rem", headerText : '<spring:message code="sal.title.remark" />', width : '30%', editable : false},
+                            {dataField : "name1", headerText : '<spring:message code="sal.text.status" />', width : '10%' , editable : false},
+                            {dataField : "validRem", headerText : '<spring:message code="sal.title.text.sysRem" />', width : '30%' , editable : false},
+                            {dataField : "ordId", headerText : '<spring:message code="sal.title.text.ordId" />', width : '10%' , editable : false},
                             {dataField : "validStusId", visible : false},
                             {dataField : "uploadDetId", visible : false}
                            ];
@@ -55,9 +55,7 @@ function createOrderRemDetailGrid(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : false,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No Order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : false
     };
     
     ordRemDetailGridID = GridCommon.createAUIGrid("#dt_grid_wrap", ordRemDtColumnLayout,'', gridPros);  
@@ -69,7 +67,7 @@ function fn_confirmList(){
 	var ordList = AUIGrid.getColumnValues(ordRemDetailGridID, 'validStusId');
 	
 	if(ordList.length < 1){
-		Common.alert("* No valid item in this batch.<br />");
+		Common.alert('<spring:message code="sal.alert.msg.noValidItmThisBatch" />');
 		return;
 	}
 	
@@ -82,16 +80,16 @@ function fn_confirmList(){
 	
 	if(valCnt > 0){
 		console.log("valCnt : " + valCnt);
-		Common.alert("* Please remove the failed item.<br />");
+		Common.alert('<spring:message code="sal.alert.msg.plzRemovFailItm" />');
 		return;
 	}
 	
 	//Validation Pass
 	Common.ajax("POST", "/sales/rcms/confirmBatch", {batchId : '${batchId}'}, function(result){
 		 if(result != null){
-             Common.alert("<b>This upload batch has been confirmed and saved.</b>", fn_closePage);
+             Common.alert('<spring:message code="sal.alert.msg.uploadFileConfirmAndSaved" />', fn_closePage);
          }else{
-             Common.alert("<b>Failed To confirm batch. Please try again later.</b>");
+             Common.alert('<spring:message code="sal.alert.msg.failToConfirmBatch" />');
          }
 	});
 	
@@ -102,9 +100,9 @@ function fn_confirmList(){
 function fn_deactiveList(){
 	 Common.ajax("POST", "/sales/rcms/updBatch", {batchId : '${batchId}'}, function(result){
          if(result != null){
-             Common.alert("<b>This upload batch has been deactivated.</b>", fn_closePage);
+             Common.alert('<spring:message code="sal.alert.msg.hasbeenDeactived" />', fn_closePage);
          }else{
-             Common.alert("<b>Failed to deactive item. Please try again later.</b>");
+             Common.alert('<spring:message code="sal.alert.msg.failToDeactivItm" />');
          }
      });
 }
@@ -159,16 +157,16 @@ function fn_addItem(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ORDER REMARK UPLOAD - VIEW UPLOAD BATCH</h1>
+<h1><spring:message code="sal.title.text.ordRemUploadViewUploadBatch" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_confirmCloseBtn">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_confirmCloseBtn"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Order Remark Batch Info</h3>
+<h3><spring:message code="sal.title.text.ordRemBatchInfo" /></h3>
 </aside><!-- title_line end -->
 
 
@@ -182,35 +180,35 @@ function fn_addItem(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Batch ID</th>
+    <th scope="row"><spring:message code="sal.title.text.batchId" /></th>
     <td><span>${infoMap.uploadMid}</span></td>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
     <td><span>${infoMap.name}</span></td>
 </tr>
 <tr>
-    <th scope="row">Upload By</th>
+    <th scope="row"><spring:message code="sal.title.text.uploadBy" /></th>
     <td><span>${infoMap.updUserName}</span></td>
-    <th scope="row">Update By</th>
+    <th scope="row"><spring:message code="sal.text.updateBy" /></th>
     <td><span>${infoMap.updDt}</span></td>
 </tr>
 <tr>
-    <th scope="row">Total Item</th>
+    <th scope="row"><spring:message code="sal.title.text.totItem" /></th>
     <td><span>${infoMap.totCnt}</span></td>
-    <th scope="row">Total Valid / Invalid</th>
+    <th scope="row"><spring:message code="sal.title.text.totValidInvalid" /></th>
     <td><span>${infoMap.validCnt}/${infoMap.inValidCnt}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Batch Item</h3>
+<h3><spring:message code="sal.title.text.batchItem" /></h3>
 </aside><!-- title_line end -->
 
 <ul class="left_btns">
-    <li><p class="btn_grid"><a  onclick="fn_all()">All Item</a></p></li>
-    <li><p class="btn_grid"><a  onclick="fn_valid()">Valid Item</a></p></li>
-    <li><p class="btn_grid"><a  onclick="fn_invalid()">Invalid Item</a></p></li>
-    <li><p class="btn_grid"><a  onclick="fn_addItem()">Add Item</a></p></li>
+    <li><p class="btn_grid"><a  onclick="fn_all()"><spring:message code="sal.combo.text.allItm" /></a></p></li>
+    <li><p class="btn_grid"><a  onclick="fn_valid()"><spring:message code="sal.combo.text.validItm" /></a></p></li>
+    <li><p class="btn_grid"><a  onclick="fn_invalid()"><spring:message code="sal.combo.text.invalidItm" /></a></p></li>
+    <li><p class="btn_grid"><a  onclick="fn_addItem()"><spring:message code="sal.title.text.addItm" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -218,8 +216,8 @@ function fn_addItem(){
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a onclick="javascript: fn_confirmList()">Confirm</a></p></li>
-    <li><p class="btn_blue2 big"><a onclick="javascript: fn_deactiveList()">Deactive</a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript: fn_confirmList()"><spring:message code="sal.btn.confirm" /></a></p></li>
+    <li><p class="btn_blue2 big"><a onclick="javascript: fn_deactiveList()"><spring:message code="sal.btn.deactive" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
