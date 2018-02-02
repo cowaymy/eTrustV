@@ -1493,10 +1493,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 					  ////GST  do Not  2년 전부터 안했다고 함.
     			}
-    		}
-
-
-    		if(ApptypeID.equals("67")  || ApptypeID.equals("68") ||ApptypeID.equals("1412")){
+    		} else if(ApptypeID.equals("67")  || ApptypeID.equals("68") ||ApptypeID.equals("1412")){
     			
     			///////////////////////////////  고객 정보 및 주소 추가 /////////////////////////////////////////
     			EgovMap   custInfoMap    = new EgovMap();
@@ -1939,7 +1936,9 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     		installationResultListMapper.updateSalesOrderMStatus(salesOrderM);
 
 
-    		if("66".equals(ApptypeID)) {
+
+    		if("66".equals(ApptypeID) || "142".equals(ApptypeID) || "144".equals(ApptypeID)) {
+        		// Rental || Sponsor || Education
 
     			if(installResult.get("statusCodeId").toString().equals("4")){
     				EgovMap  s46dup =new EgovMap();
@@ -1954,10 +1953,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
             		installationResultListMapper.updateInstallEntry(s46dup);
 
     			}
-    		}
-
-
-    		if("67".equals(ApptypeID)   || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
+    		} else if("67".equals(ApptypeID)   || "68".equals(ApptypeID) || "1412".equals(ApptypeID)){	//api 추가
+    			// Outright || Instalment || Outright Plus
 
     			if(isBillAvb){
             		//insert taxinvoiceRental

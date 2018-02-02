@@ -530,12 +530,12 @@ public class InstallationResultListController {
 			
 			
 		}else{
-		if(locInfo==null){
-				message.setMessage("Can't complete the Installation without available stock in the CT");
-			}else{
-				if(Integer.parseInt(locInfo.get("availQty").toString())<1){
-					message.setMessage("Can't complete the Installation without available stock in the CT");
-				}else{    		
+//		if(locInfo==null){
+//				message.setMessage("Can't complete the Installation without available stock in the CT");
+//			}else{
+//				if(Integer.parseInt(locInfo.get("availQty").toString())<1){
+//					message.setMessage("Can't complete the Installation without available stock in the CT");
+//				}else{    		
 	        	
 	        		if(resultCnt > 0){
 	        			message.setMessage("There is complete result exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
@@ -557,9 +557,9 @@ public class InstallationResultListController {
 	            			}
 	            			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 	            		}
-	            		}
-			}
-			}
+            		}
+//			}
+//			}
 		
 		}
 		
