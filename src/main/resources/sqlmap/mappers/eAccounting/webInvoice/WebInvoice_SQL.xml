@@ -1146,7 +1146,7 @@ WHERE  CLM_TYPE = #{clmType}
 <select id="selectSameVender" parameterType="Map" resultType="String">
 /* webInvoiceMapper.selectSameVender */
 SELECT A.CLM_NO 
-FROM   FCM0002M 
+FROM   FCM0002M A
 LEFT JOIN FCM0004M B
 ON A.CLM_NO = B.APPV_REQ_KEY_NO
 WHERE B.APPV_PRCSS_STUS != 'J' 

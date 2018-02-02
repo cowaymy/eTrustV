@@ -248,6 +248,7 @@ function fn_approveLinePop() {
         });
     } else {
         // update
+        data.clmNo = $("#newClmNo").val();
         Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
             console.log(result);
             if(result.data && result.data != $("#newClmNo").val()) {

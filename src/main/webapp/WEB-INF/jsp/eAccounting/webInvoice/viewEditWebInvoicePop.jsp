@@ -380,7 +380,8 @@ function fn_approveLinePop() {
     
     var data = {
             memAccId : $("#newMemAccId").val(),
-            invcNo : $("#invcNo").val()
+            invcNo : $("#invcNo").val(),
+            clmNo : $("#newClmNo").val()
     }
     
     Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
