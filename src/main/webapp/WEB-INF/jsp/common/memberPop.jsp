@@ -91,7 +91,7 @@
         };
         
         if(callPrgm == "NRIC_VISIBLE") {
-        	columnLayout[3].visible = false;
+        	columnLayout[4].visible = false;
         }
         
         myGridID = GridCommon.createAUIGrid("grid_mem_wrap", columnLayout, "", gridPros);
