@@ -1529,7 +1529,7 @@
 			     AND 
 			         TYPE_ID = #{cmbTypeId}
 			  </if>   
-			  AND NRIC = #{nric}
+			  AND TRIM(NRIC) = TRIM(#{nric})
 			  <![CDATA[
 			  AND ROWNUM <= 1
 			  ]]>

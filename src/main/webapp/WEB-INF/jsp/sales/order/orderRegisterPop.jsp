@@ -941,6 +941,8 @@
             $('#ordProudct option').remove();
             $('#ordProudct optgroup').remove();
 
+            $('#ordPromo option').remove();
+
             var idx    = $("#srvPacId option:selected").index();
             var selVal = $("#srvPacId").val();
             
@@ -1616,10 +1618,16 @@
 
         var appTypeIdx = $("#appType option:selected").index();
         var appTypeVal = $("#appType").val();
+        var srvPacIdx  = $("#srvPacId option:selected").index();
+        var srvPacVal  = $("#srvPacId").val();
 
         if(appTypeIdx <= 0) {
             isValid = false;
             msg += "* Please select an application type.<br>";
+        }
+        else if(srvPacIdx <= 0 || srvPacVal == "") {
+            isValid = false;
+            msg += "* Please select an package type.<br>";
         }
         else {
             if(appTypeVal == '68' || appTypeVal == '1412') {
