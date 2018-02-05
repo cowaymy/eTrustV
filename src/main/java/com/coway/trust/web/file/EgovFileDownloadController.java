@@ -271,7 +271,8 @@ public class EgovFileDownloadController {
 			fileName = (String) params.get("fileName");
 			originalFileName = (String) params.get("orignlFileNm");
 		}		
-				
+		// 	File.separator = \
+		// Testing with \ or / is required
 		File uFile = new File(uploadDirWeb + "/" + subPath, fileName);
 		long fSize = uFile.length();
 
