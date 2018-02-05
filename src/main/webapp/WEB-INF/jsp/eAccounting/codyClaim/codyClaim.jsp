@@ -917,7 +917,7 @@ function fn_selectStaffClaimInfo() {
                                 atchFileGrpId : event.item.atchFileGrpId,
                                 atchFileId : event.item.atchFileId
                         };
-                        if(event.item.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
+                        if(event.item.fileExtsn == "jpg" || event.item.fileExtsn == "png" || event.item.fileExtsn == "gif") {
                             // TODO View
                             console.log(data);
                             Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
@@ -932,9 +932,9 @@ function fn_selectStaffClaimInfo() {
                                 console.log(result);
                                 var fileSubPath = result.fileSubPath;
                                 fileSubPath = fileSubPath.replace('\', '/'');
-                                console.log("/file/fileDown.do?subPath=" + fileSubPath
+                                console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
                                         + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                                window.open("/file/fileDown.do?subPath=" + fileSubPath
+                                window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
                                     + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                             });
                         }
@@ -1029,7 +1029,7 @@ function fn_atchViewDown(fileGrpId, fileId) {
     };
     Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
         console.log(result);
-        if(result.fileExtsn == "jpg" || result.fileExtsn == "png") {
+        if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
             // TODO View
             var fileSubPath = result.fileSubPath;
             fileSubPath = fileSubPath.replace('\', '/'');
@@ -1038,9 +1038,9 @@ function fn_atchViewDown(fileGrpId, fileId) {
         } else {
             var fileSubPath = result.fileSubPath;
             fileSubPath = fileSubPath.replace('\', '/'');
-            console.log("/file/fileDown.do?subPath=" + fileSubPath
+            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
                     + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-            window.open("/file/fileDown.do?subPath=" + fileSubPath
+            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
                 + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
         }
     });

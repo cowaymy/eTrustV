@@ -53,7 +53,7 @@ $(document).ready(function () {
                             atchFileGrpId : event.item.atchFileGrpId,
                             atchFileId : event.item.atchFileId
                     };
-                if(event.item.fileExtsn == "jpg" || event.item.fileExtsn == "png") {
+                if(event.item.fileExtsn == "jpg" || event.item.fileExtsn == "png" || event.item.fileExtsn == "gif") {
                     // TODO View
                 	Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
                         console.log(result);
@@ -67,9 +67,9 @@ $(document).ready(function () {
                         console.log(result);
                         var fileSubPath = result.fileSubPath;
                         fileSubPath = fileSubPath.replace('\', '/'');
-                        console.log("/file/fileDown.do?subPath=" + fileSubPath
+                        console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
                                 + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                        window.open("/file/fileDown.do?subPath=" + fileSubPath
+                        window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
                             + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                     });
                 }

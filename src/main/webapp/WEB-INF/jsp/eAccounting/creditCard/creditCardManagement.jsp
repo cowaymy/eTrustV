@@ -88,7 +88,7 @@ var mgmtColumnLayout = [ {
                             atchFileGrpId : item.atchFileGrpId,
                             atchFileId : item.atchFileId
                     };
-                    if(item.fileExtsn == "jpg" || item.fileExtsn == "png") {
+                    if(item.fileExtsn == "jpg" || item.fileExtsn == "png" || item.fileExtsn == "gif") {
                         // TODO View
                         console.log(data);
                         Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
@@ -103,9 +103,9 @@ var mgmtColumnLayout = [ {
                             console.log(result);
                             var fileSubPath = result.fileSubPath;
                             fileSubPath = fileSubPath.replace('\', '/'');
-                            console.log("/file/fileDown.do?subPath=" + fileSubPath
+                            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
                                     + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
-                            window.open("/file/fileDown.do?subPath=" + fileSubPath
+                            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
                                 + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
                         });
                     }

@@ -972,7 +972,7 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
     	
 	var file = atchFileName.split(".");
 	
-	   if(file[1] == "jpg" || file[1] == "png") {
+	   if(file[1] == "jpg" || file[1] == "png" || file[1] == "gif") {
            // TODO View
            var fileSubPath = fileSubPath;
            fileSubPath = fileSubPath.replace('\', '/'');
@@ -981,9 +981,9 @@ function fn_atchViewDown(atchFileName, fileSubPath, physiclFileName) {
        } else {
            var fileSubPath = fileSubPath;
            fileSubPath = fileSubPath.replace('\', '/'');
-           console.log("/file/fileDown.do?subPath=" + fileSubPath
+           console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
                    + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName);
-           window.open("/file/fileDown.do?subPath=" + fileSubPath
+           window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
                + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName);
        }
 }
