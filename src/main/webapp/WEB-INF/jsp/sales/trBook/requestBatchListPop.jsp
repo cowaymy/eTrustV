@@ -73,8 +73,61 @@ function fn_selectReqBatchList() {
 }
 
 
+function fn_doPrintBatch(){
+	//Validation
+	var selRow = AUIGrid.getSelectedItems(reqBatchGrid);
+	
+	//Validation
+    if(selRow == null || selRow.length <= 0 ){
+        Common.alert('<spring:message code="sal.alert.msg.noResultSelected" />');
+        return;
+    }
+	//Download Report
+    var date = new Date().getDate();
+    if(date.toString().length == 1){
+        date = "0" + date;
+    } 
+	
+	var rprFileName = selRow[0].item.trBookBkReqNo+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear();
+	//FileName
+	$("#reportDownFileName").val(rprFileName);
+	//Batch ID
+	$("#BatchID").val(selRow[0].item.trBookBkReqId);
+	//End Tr No
+	$("#EndTRNo").val(selRow[0].item.trBookBkReqEndReciptNo);
+	//Start Tr No
+    $("#StartTRNo").val(selRow[0].item.trBookBkReqStartReciptNo);
+	
+	/* console.log('$("#reportDownFileName").val() : ' +$("#reportDownFileName").val());
+	console.log('$("#BatchID").val() : ' +$("#BatchID").val());
+	console.log('$("#EndTRNo").val() : ' +$("#EndTRNo").val());
+	console.log('$("#StartTRNo").val() : ' +$("#StartTRNo").val()); */
+	
+	//download
+	fn_report();
+	
+}
+
+function fn_report() {
+    var option = {
+        isProcedure : false 
+    };
+    Common.report("dataForm", option);
+}
+
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
+
+<form id="dataForm">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/TRbookSummaryListingByBatch_PDF.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName"/><!-- Download Name -->
+    
+    <!-- params -->
+    <input type="hidden" id="BatchID" name="BatchID" />
+    <input type="hidden" id="EndTRNo" name="EndTRNo" />
+    <input type="hidden" id="StartTRNo" name="StartTRNo" />
+</form>
 
 <header class="pop_header"><!-- pop_header start -->
 <h1><spring:message code="sal.page.title.trBookTransaction" /></h1>
@@ -91,6 +144,7 @@ function fn_selectReqBatchList() {
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_doPrintBatch();"><spring:message code="sal.title.text.bulkTrBookListing" /></a></p></li>
 	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectReqBatchList();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
 	<li><p class="btn_blue"><a href="#" id="btnClear"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
