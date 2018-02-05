@@ -128,7 +128,9 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
     
     		EgovMap mailAddrInfo = customerMapper.selectCustomerViewMainAddress(params);
     		
-    		billGrpInfo.put("fullAddress", mailAddrInfo.get("fullAddress"));
+    		if(mailAddrInfo != null) {
+    			billGrpInfo.put("fullAddress", mailAddrInfo.get("fullAddress"));
+    		}
 		}
 		
 		return billGrpInfo;
