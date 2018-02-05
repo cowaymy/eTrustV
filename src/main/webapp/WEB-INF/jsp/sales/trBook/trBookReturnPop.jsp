@@ -377,7 +377,7 @@ function fn_validRequiredField(rowIndex)
 <input type="hidden" id="trReFeedback" name="trReFeedback">
 <input type="hidden" id="trReRemark" name="trReRemark">
 <input type="hidden" id="trReTrReciptNo" name="trReTrReciptNo">
-<input type="hidden" id="trReTrBookNo" name="trReTrBookNo" valeu ="${trBookInfo.trBookNo}">
+<input type="hidden" id="trReTrBookNo" name="trReTrBookNo" value ="${trBookInfo.trBookNo}">
 
 </form>
 <table class="type1"><!-- table start -->
