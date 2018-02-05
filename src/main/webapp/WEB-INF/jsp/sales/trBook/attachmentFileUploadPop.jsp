@@ -15,6 +15,9 @@ function fn_attachFile(){
 		return;
 	}else{
 		var str = $("#fileName").val().split(".");
+		alert(str.length);
+		alert(str[0]);
+		alert(str[1]);
 		if(str[1] != "zip"){
 	        Common.alert('<spring:message code="sal.alert.notZip" />');
 			return;
