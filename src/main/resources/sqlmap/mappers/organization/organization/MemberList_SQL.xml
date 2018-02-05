@@ -4164,6 +4164,15 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </update>
 
 
+    <resultMap id="memrtnCode" type="egovMap"></resultMap>
+    <resultMap id="memrtnMsg" type="egovMap"></resultMap>    
+    
+    <select id="SP_DAY_USER_CRT" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_DAY_USER_CRT( #{IN_MEMCODE},#{p1 , mode=OUT , jdbcType=INTEGER , javaType=int , resultMap=memrtnCode}, #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=memrtnMsg} )
+      }
+     </select>
+
 
 
 </mapper>

@@ -904,7 +904,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				user.put("userIsExternal", 0);
 
 				logger.debug("user : {}",user);
-				memberListMapper.insertUser(user);
+//				memberListMapper.insertUser(user);
 
 
 				//Save SystemRoleUser(For HP & CD)
@@ -1433,12 +1433,20 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		boolean success = false;
 		Map<String, Object> resultValue = new HashMap<String, Object>(); //팝업 결과값 가져가는 map
 
-		int a =memberListMapper.traineeUpdate(params);
-
-		if(a> 0){
-			resultValue =	memberListMapper.afterSelTrainee(params);
-		}
-
+    	int a =memberListMapper.traineeUpdate(params);
+    	
+    	if(a> 0){
+    		resultValue =	memberListMapper.afterSelTrainee(params);
+    		
+    		// SP_DAY_USER_CRT 프로시저 호출
+    		Map<String, Object>  userPram = new HashMap<String, Object>();
+    		userPram.put("IN_MEMCODE", resultValue.get("memCode"));
+    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>"+ userPram.toString());
+    		memberListMapper.SP_DAY_USER_CRT(userPram);
+    		userPram.put("P_STATUS", userPram.get("p1"));
+    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
+    	}
+    	
 		return resultValue;
 	}
 
@@ -1915,6 +1923,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    				
 	    				// resultValue.put("memCode", afterSelTrainee 결과)
 	    				resultValue =	memberListMapper.afterSelTrainee(params);
+	    				
+	    				// SP_DAY_USER_CRT 프로시저 호출
+	    	    		Map<String, Object>  userPram = new HashMap<String, Object>();
+	    	    		userPram.put("IN_MEMCODE", resultValue.get("memCode"));
+	    	    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>"+ userPram.toString());
+	    	    		memberListMapper.SP_DAY_USER_CRT(userPram);
+	    	    		userPram.put("P_STATUS", userPram.get("p1"));
+	    	    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
 	    				
 	    			}
 	    			

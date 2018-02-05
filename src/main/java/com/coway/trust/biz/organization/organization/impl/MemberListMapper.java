@@ -236,6 +236,8 @@ public interface MemberListMapper {
 
 	void updateDocSubWhenApproval(Map<String, Object> params);
 
+	Map<String, Object> SP_DAY_USER_CRT(Map<String, Object> param);
+
 
 
 }

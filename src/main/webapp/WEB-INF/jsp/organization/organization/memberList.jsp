@@ -102,7 +102,8 @@ function fn_requestVacationPop(){
  function fn_confirmMemRegisPop(){
      var jsonObj = {
              MemberID :memberid,
-            MemberType : memberType
+            MemberType : memberType,
+            MemberCode : membercode
     };
     //Common.popupDiv("/organization/confirmMemRegisPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
     
@@ -117,7 +118,7 @@ function fn_requestVacationPop(){
     		return;
     	}
     
-     Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType }, function(result) {
+     Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode }, function(result) {
          console.log("성공.");
          console.log( result);
 
@@ -150,13 +151,14 @@ function fn_clickHpReject(){
 function fn_hpMemRegisPop(){
      var jsonObj = {
              MemberID :memberid,
-            MemberType : memberType
+            MemberType : memberType,
+            MemberCode : membercode
     };
     
     if (memberType == "2803" ) {
     	if ( statusName == "Pending" ) {
     
-	     Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType, nric:nric }, function(result) {
+	     Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType, nric:nric, MemberCode : membercode }, function(result) {
 	         console.log("성공.");
 	         console.log( result);
 	
