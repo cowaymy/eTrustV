@@ -14,13 +14,13 @@
         
         //AUIGrid Ä®·³ ¼³Á¤
         var columnLayout = [
-            { headerText : "Order No",        dataField : "salesOrdNo", width   : 100   }
-          , { headerText : "Status",          dataField : "code",       width   : 100   }
-          , { headerText : "App Type",        dataField : "code1",      width   : 100   }
-          , { headerText : "Order Date",      dataField : "salesDt",    width   : 120   }
-          , { headerText : "Customer Name",   dataField : "name"                        }
-          , { headerText : "NRIC/Company No", dataField : "nric",       width   : 150   }
-          , { headerText : "salesOrdId",      dataField : "salesOrdId", visible : false }
+            { headerText : '<spring:message code="sal.text.ordNo" />',         dataField : "salesOrdNo", width   : 100   }
+          , { headerText : '<spring:message code="sal.text.status" />',        dataField : "code",       width   : 100   }
+          , { headerText : '<spring:message code="sal.title.text.appType" />', dataField : "code1",      width   : 100   }
+          , { headerText : '<spring:message code="sal.text.ordDate" />',       dataField : "salesDt",    width   : 120   }
+          , { headerText : '<spring:message code="sal.text.custName" />',      dataField : "name"                        }
+          , { headerText : '<spring:message code="sal.text.nricCompanyNo" />', dataField : "nric",       width   : 150   }
+          , { headerText : "salesOrdId",                                       dataField : "salesOrdId", visible : false }
           ];
         
         custInfoGridID = GridCommon.createAUIGrid("grid_custInfo_wrap", columnLayout, "", gridPros);
@@ -49,40 +49,40 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><span>${orderDetail.basicInfo.custId}</span></td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td colspan="3"><span>${orderDetail.basicInfo.custName} ${orderDetail.basicInfo.memInfo}</span></td>
 </tr>
 <tr>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td><span>${orderDetail.basicInfo.custType}</span></td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.text.nricCompanyNo" /></th>
     <td><span>${orderDetail.basicInfo.custNric}</span></td>
-    <th scope="row">JomPay Ref-1</th>
+    <th scope="row"><spring:message code="sal.text.jomPayRef1" /></th>
     <td><span>${orderDetail.basicInfo.jomPayRef}</span></td>
 </tr>
 <tr>
-    <th scope="row">Nationality</th>
+    <th scope="row"><spring:message code="sal.text.nationality" /></th>
     <td><span>${orderDetail.basicInfo.custNation}</span></td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span>${orderDetail.basicInfo.custGender}</span></td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${orderDetail.basicInfo.custRace}</span></td>
 </tr>
 <tr>
-    <th scope="row">VA Number</th>
+    <th scope="row"><spring:message code="sal.text.vaNumber" /></th>
     <td><span>${orderDetail.basicInfo.custVaNo}</span></td>
-    <th scope="row">Passport Exprire</th>
+    <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
     <td><span>${orderDetail.basicInfo.custPassportExpr}</span></td>
-    <th scope="row">Visa Exprire</th>
+    <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
     <td><span>${orderDetail.basicInfo.custVisaExpr}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Same Rental Group Order(s)</h2>
+<h2><spring:message code="sal.title.text.sameRentGrpOrd" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_result"><!-- search_result start -->
