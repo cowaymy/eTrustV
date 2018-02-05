@@ -20,24 +20,24 @@
  // AUIGrid 칼럼 설정                                                                            visible : false
     
     var trancolumnLayout = [
-							{dataField:"boxid"     ,headerText:"Box Id"     ,width:100   ,height:30 , visible:false},
-							{dataField:"boxno"     ,headerText:"Box No"     ,width:"33%" ,height:30 , visible:true},
-							{dataField:"status"    ,headerText:"Box Status" ,width:"34%" ,height:30 , visible:false},
-							{dataField:"statusid"  ,headerText:"Status ID"  ,width:100   ,height:30 , visible:false},
-							{dataField:"statuscd"  ,headerText:"Box Status" ,width:"34%" ,height:30 , visible:true},
-							{dataField:"holder"    ,headerText:"Location"   ,width:"15%" ,height:30 , visible:false},
-							{dataField:"branchid"  ,headerText:"BranchId"   ,width:120   ,height:30 , visible:false},
-							{dataField:"branchcd"  ,headerText:"BranchCode" ,width:120   ,height:30 , visible:false},
-							{dataField:"branchnm"  ,headerText:"BranchName" ,width:120   ,height:30 , visible:false},
-							{dataField:"bookqty"   ,headerText:"Book Qty"   ,width:"33%" ,height:30 , visible:true },
-							{dataField:"scrapdt"   ,headerText:"Scrap Date" ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:false },
-							{dataField:"scrapdt2"  ,headerText:"Scrap Date" ,width:"14%" ,height:30 , visible:false },
-							{dataField:"crtdt"     ,headerText:"Create At"  ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:false },
-							{dataField:"crtdt2"    ,headerText:"Create At"  ,width:"14%" ,height:30 , visible:false },
-							{dataField:"opendt"    ,headerText:"Open Dt"    ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:false },
-							{dataField:"opendt2"   ,headerText:"Open Dt"    ,width:"14%" ,height:30 , visible:false },
-							{dataField:"crtname"   ,headerText:"Create By"  ,width:"15%" ,height:30 , visible:false },
-							{dataField:"crtuser"   ,headerText:"Create ID"  ,width:120   ,height:30 , visible:false}
+							{dataField:"boxid"     ,headerText:'<spring:message code="sal.title.text.boxId" />'     ,width:100   ,height:30 , visible:false},
+							{dataField:"boxno"     ,headerText:'<spring:message code="sal.title.text.boxNo" />'     ,width:"33%" ,height:30 , visible:true},
+							{dataField:"status"    ,headerText:'<spring:message code="sal.title.text.boxStatus" />' ,width:"34%" ,height:30 , visible:false},
+							{dataField:"statusid"  ,headerText:'<spring:message code="sal.title.text.statusID" />'  ,width:100   ,height:30 , visible:false},
+							{dataField:"statuscd"  ,headerText:'<spring:message code="sal.title.text.boxStatus" />' ,width:"34%" ,height:30 , visible:true},
+							{dataField:"holder"    ,headerText:'<spring:message code="sal.title.text.location" />'   ,width:"15%" ,height:30 , visible:false},
+							{dataField:"branchid"  ,headerText:'<spring:message code="sal.title.text.branchId" />'   ,width:120   ,height:30 , visible:false},
+							{dataField:"branchcd"  ,headerText:'<spring:message code="sal.title.text.branchCode" />' ,width:120   ,height:30 , visible:false},
+							{dataField:"branchnm"  ,headerText:'<spring:message code="sal.title.text.branchName" />' ,width:120   ,height:30 , visible:false},
+							{dataField:"bookqty"   ,headerText:'<spring:message code="sal.title.text.bookQty" />'   ,width:"33%" ,height:30 , visible:true },
+							{dataField:"scrapdt"   ,headerText:'<spring:message code="sal.title.text.scrapDate" />' ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:false },
+							{dataField:"scrapdt2"  ,headerText:'<spring:message code="sal.title.text.scrapDate" />' ,width:"14%" ,height:30 , visible:false },
+							{dataField:"crtdt"     ,headerText:'<spring:message code="sal.text.createAt" />'  ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:false },
+							{dataField:"crtdt2"    ,headerText:'<spring:message code="sal.text.createAt" />'  ,width:"14%" ,height:30 , visible:false },
+							{dataField:"opendt"    ,headerText:'<spring:message code="sal.title.text.openDt" />'    ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:false },
+							{dataField:"opendt2"   ,headerText:'<spring:message code="sal.title.text.openDt" />'    ,width:"14%" ,height:30 , visible:false },
+							{dataField:"crtname"   ,headerText:'<spring:message code="sal.text.createBy" />'  ,width:"15%" ,height:30 , visible:false },
+							{dataField:"crtuser"   ,headerText:'<spring:message code="sal.title.text.createId" />'  ,width:120   ,height:30 , visible:false}
                            ];
     
     var tranoptions = {showStateColumn : false , editable : false, pageRowCount : 20, usePaging : false, useGroupingPanel : false };
@@ -85,11 +85,11 @@
 	$(function(){
     	$("#tranSaveBtn").click(function(){
     		if ($("#receiver").val() == ''){
-    			Common.alert('No Transfer To Data.<br />Please Select Transfer To Data.');
+    			Common.alert('<spring:message code="sal.title.text.noTransferToData" />');
     			return false;
     		}
     		if ($("#courier").val() == ''){
-                Common.alert('No Courier Data.<br />Please Select Courier Data.');
+                Common.alert('<spring:message code="sal.title.text.noCourierData" />');
                 return false;
             }
     		
@@ -216,7 +216,7 @@
 
     <aside class="title_line"><!-- title_line start -->
 		<p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-		<h2>Bulk Transfer</h2>
+		<h2><spring:message code="sal.title.text.bulkTransfer" /></h2>
 	</aside><!-- title_line end -->
 		
 		
@@ -224,7 +224,7 @@
 		<form id="bulkform" name="bulkform">
 		<input type="hidden" id="sender" name="sender" value="${SESSION_INFO.code}">
 		<aside class="title_line"><!-- title_line start -->
-		  <h3>Transfer Information</h3>
+		  <h3><spring:message code="sal.alert.msg.transferInformation" /></h3>
 		</aside><!-- title_line end -->
 		
 		<table class="type1"><!-- table start -->
@@ -235,17 +235,17 @@
 			</colgroup>
 			<tbody>
 			<tr>
-			    <th scope="row">Transit No</th>
+			    <th scope="row"><spring:message code="sal.title.transitNo" /></th>
 			    <td>
 			    <input type="text" id="transitno" name="transitno" title="" placeholder="" class="" disabled="true"/>
 			    </td>
 			</tr>
 			<tr>
-			    <th scope="row">Transfer To</th>
+			    <th scope="row"><spring:message code="sal.alert.msg.transferTo" /></th>
 			    <td><select class="w100p" id="receiver" name="receiver"></select></td>
 			</tr>
 			<tr>
-			    <th scope="row">Courier</th>
+			    <th scope="row"><spring:message code="sal.text.courier" /></th>
 			    <td><select class="w100p" id="courier" name="courier"></select></td>
 			</tr>
 			</tbody>
@@ -254,7 +254,7 @@
 		</ul>
 		
 		<aside class="title_line"><!-- title_line start -->
-		<h3>TR Box SelectionTR Box Selection</h3>
+		<h3><spring:message code="sal.title.trBoxSelTrBoxSelection" /></h3>
 		</aside><!-- title_line end -->
 		
 		<div class="divine_auto type2"><!-- divine_auto start -->
@@ -264,7 +264,7 @@
 		<div class="border_box" style="height:200px;"><!-- border_box start -->
 		
 		<aside class="title_line"><!-- title_line start -->
-		<h4 class="pt0">Closed Box Holding</h4>
+		<h4 class="pt0"><spring:message code="sal.title.colesdBoxHolding" /></h4>
 		</aside><!-- title_line end -->
 		
 		<article class="grid_wrap"><!-- grid_wrap start -->
@@ -280,7 +280,7 @@
 		<div class="border_box" style="height:200px;"><!-- border_box start -->
 		
 		<aside class="title_line"><!-- title_line start -->
-		<h4 class="pt0">Box To Transfer</h4>
+		<h4 class="pt0"><spring:message code="sal.title.text.boxToTransfer" /></h4>
 		</aside><!-- title_line end -->
 		
 		<article class="grid_wrap"><!-- grid_wrap start -->
@@ -299,12 +299,12 @@
 		</div><!-- divine_auto end -->
 		
 		<ul class="left_btns mt10">
-		    <li><p class="btn_blue2"><a id="filterBtn">Filter List</a></p></li>
-		    <li><p class="btn_blue2"><a id="showAllBtn">Show All</a></p></li>
+		    <li><p class="btn_blue2"><a id="filterBtn"><spring:message code="sal.title.text.filterList" /></a></p></li>
+		    <li><p class="btn_blue2"><a id="showAllBtn"><spring:message code="sal.title.text.showAll" /></a></p></li>
 		</ul>
 		
 		<ul class="center_btns">
-		    <li><p class="btn_blue2 big"><a id="tranSaveBtn">SAVE</a></p></li>
+		    <li><p class="btn_blue2 big"><a id="tranSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
 		</ul>
 		</form>
 	</section>
@@ -312,9 +312,9 @@
     <div id="filter_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 
         <header class="pop_header"><!-- pop_header start -->
-        <h1>Filter Box Book List</h1>
+        <h1><spring:message code="sal.title.text.filterBoxBookList" /></h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
         </ul>
         </header><!-- pop_header end -->
         
@@ -329,7 +329,7 @@
         </colgroup>
         <tbody>
         <tr>
-            <th scope="row">Box No</th>
+            <th scope="row"><spring:message code="sal.title.text.boxNo" /></th>
             <td>
             <input type="text" title="" id="pboxno" name="pboxno" placeholder="" class="w100p" />
             </td>
@@ -338,8 +338,8 @@
         </table><!-- table end -->
         </form>
         <ul class="center_btns">
-            <li><p class="btn_blue2 big"><a id="Btnsrch">Search</a></p></li>
-            <li><p class="btn_blue2 big"><a id="Btnclr">Clear</a></p></li>
+            <li><p class="btn_blue2 big"><a id="Btnsrch"><spring:message code="sal.btn.search" /></a></p></li>
+            <li><p class="btn_blue2 big"><a id="Btnclr"><spring:message code="sal.btn.clear" /></a></p></li>
         </ul>
         </section><!-- pop_body end -->
     

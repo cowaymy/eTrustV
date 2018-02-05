@@ -19,15 +19,15 @@ function creatTrTranGrid(){
 
     var trTranColLayout = [ 
           {dataField : "trBookId", headerText : "", width : 140  , visible:false   },
-          {dataField : "trBookNo", headerText : "Book No", width : 140      },
-          {dataField : "trBookPrefix", headerText : "Prefix", width : 110       },
-          {dataField : "trBookNoStart", headerText : "SO No. From", width : 120        },
-          {dataField : "trBookNoEnd", headerText : "SO No. To", width : 120        },
-          {dataField : "trBookPge", headerText : "Total Sheet(s)", width : 130      },
-          {dataField : "trBookStusCode", headerText : "Status", width : 110     },
-          {dataField : "trHolder", headerText : "Holder User", width : 110       },
-          {dataField : "trHolderType", headerText : "Holder Type", width : 110       } ,            
-          {dataField : "boxNo", headerText : "Box No", width : 110       }             
+          {dataField : "trBookNo", headerText : '<spring:message code="sal.title.bookNo" />', width : 140      },
+          {dataField : "trBookPrefix", headerText : '<spring:message code="sal.title.prefix" />', width : 110       },
+          {dataField : "trBookNoStart", headerText : '<spring:message code="sal.title.text.soNoFrom" />', width : 120        },
+          {dataField : "trBookNoEnd", headerText : '<spring:message code="sal.title.text.soNoTo" />', width : 120        },
+          {dataField : "trBookPge", headerText : '<spring:message code="sal.title.sheet" />', width : 130      },
+          {dataField : "trBookStusCode", headerText : '<spring:message code="sal.title.status" />', width : 110     },
+          {dataField : "trHolder", headerText : '<spring:message code="sal.title.text.holderUser" />', width : 110       },
+          {dataField : "trHolderType", headerText : '<spring:message code="sal.title.text.holderType" />', width : 110       } ,            
+          {dataField : "boxNo", headerText : '<spring:message code="sal.title.text.boxNo" />', width : 110       }             
           ];
     
 
@@ -54,12 +54,12 @@ function creatTrTranGrid(){
 function creatInfoGrid(){
 
     var infoColLayout = [ 
-          {dataField : "codeName", headerText : "Transit Type", width : 200  },
-          {dataField : "trTrnsitFrom", headerText : "Transit From", width : 140      },
-          {dataField : "trTrnsitTo", headerText : "Transit To", width : 140       },
-          {dataField : "trTrnsitDt", headerText : "Date Assign", width : 140        },
-          {dataField : "trTrnsitClosDt", headerText : "Date Close", width : 140        },
-          {dataField : "curierName", headerText : "Courier", width : 180      }
+          {dataField : "codeName", headerText : '<spring:message code="sal.title.text.transitType" />', width : 200  },
+          {dataField : "trTrnsitFrom", headerText : '<spring:message code="sal.text.transitFrom" />', width : 140      },
+          {dataField : "trTrnsitTo", headerText : '<spring:message code="sal.text.transitTo" />', width : 140       },
+          {dataField : "trTrnsitDt", headerText : '<spring:message code="sal.title.text.dateAssign" />', width : 140        },
+          {dataField : "trTrnsitClosDt", headerText : '<spring:message code="sal.title.text.dateClose" />', width : 140        },
+          {dataField : "curierName", headerText : '<spring:message code="sal.text.courier" />', width : 180      }
           ];
     
 
@@ -107,7 +107,7 @@ function fn_selectTransitInfoList() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TR Book Transaction</h1>
+<h1><spring:message code="sal.title.text.trBookTransaction" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -121,8 +121,8 @@ function fn_selectTransitInfoList() {
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
-	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectTrTranListAjax();"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a href="#" id="btnClear"><span class="clear"></span>Clear</a></p></li>
+	<li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectTrTranListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+	<li><p class="btn_blue"><a href="#" id="btnClear"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -138,22 +138,22 @@ function fn_selectTransitInfoList() {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Book No</th>
+	<th scope="row"><spring:message code="sal.title.bookNo" /></th>
 	<td><input type="text" title="" placeholder="Book No" class="w100p"  id="trTranBookNo" name ="trBookNo"/>
-	<th scope="row">TR No</th>
+	<th scope="row"><spring:message code="sal.title.text.trNo" /></th>
 	<td><input type="text" title="" placeholder="TR No" class="w100p" id="trTranNo" name="trNo"/>
-	<th scope="row">Create Date</th>
+	<th scope="row"><spring:message code="sal.text.createDate" /></th>
 	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="trTranBookCrtDt" name="trBookCrtDt"/>
 </tr>
 <tr>
-	<th scope="row">Book Holder</th>
+	<th scope="row"><spring:message code="sal.title.text.bookHolder" /></th>
 	<td><input type="text" title="" placeholder="Book Holder" class="w100p" id="trTranBookHolder" name="trBookHolder" />
-	<th scope="row">Holder Type</th>
+	<th scope="row"><spring:message code="sal.title.text.holderType" /></th>
 	<td>
 		<select class="w100p" id="trTranHolderType" name="trHolderType">
-            <option value="" selected="selected">Holder Type</option>
-            <option value="Branch" >Branch</option>
-            <option value="Member">Member</option>
+            <option value="" selected="selected"><spring:message code="sal.title.text.holderType" /></option>
+            <option value="Branch" ><spring:message code="sal.text.branch" /></option>
+            <option value="Member"><spring:message code="sal.title.text.member" /></option>
         </select>
 	</td>
 	<td colspan="2"></td>

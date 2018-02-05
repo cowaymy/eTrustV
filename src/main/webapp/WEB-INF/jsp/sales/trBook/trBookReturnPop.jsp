@@ -270,7 +270,7 @@ function fn_returnSave(){
 	
 	if(fn_validReturnTR(idx)){
 		if(idx > 0){
-			Common.alert("Return Save Restrict" + DEFAULT_DELIMITER + "There are some unmatch items found in list.<br/>Save return is disallowed.");
+			Common.alert('<spring:message code="sal.alert.msg.returnSaveRestrict" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.unmatchItemFound" />');
 		}else{			
 			
 			Common.ajax("POST", "/sales/trBook/saveReTrBook", $("#updateTrForm").serializeJSON(), function(result)    {
@@ -279,7 +279,8 @@ function fn_returnSave(){
 		        console.log("성공." + JSON.stringify(result));
 		        console.log("data : " + result.reqNo);
 
-		        Common.alert("Item Successfully " + DEFAULT_DELIMITER + "Return successfully saved. <br />TR book has been returned to [" + result.reqNo + "].");
+//		        Common.alert('<spring:message code="sal.alert.msg.itemSuccessfully" />' + DEFAULT_DELIMITER + "Return successfully saved. <br />TR book has been returned to [" + result.reqNo + "].");
+		        Common.alert('<spring:message code="sal.alert.msg.itemSuccessfully" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.rtnSuccSaveTrRtn" arguments="'+result.reqNo+'"/>');
 
 		        fn_selectReBookListAjax();
 		        $("#btnReturnSave").hide();
@@ -296,13 +297,13 @@ function fn_returnSave(){
 		          {
 		            console.log(e);
 		          }
-		          Common.alert("Failed To Save" + DEFAULT_DELIMITER + "Failed to save return. Please try again later.");
+		          Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.failToSaveReturnTryAgain" />');
 		    });
 		
 		}
 		
 	}else{
-		Common.alert("Failed To Save" + DEFAULT_DELIMITER + "Failed to save return. Please Select Return TR then try again.");
+		Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.fatilToSaveReturnSeleTr" />');
 	}
 	
 	
@@ -334,12 +335,12 @@ function fn_validRequiredField(rowIndex)
     if (AUIGrid.getCellValue( trReBookGridID, rowIndex , "feedback") == "")
     {
         valid = false;
-        message += "* Please select the feedback code.<br />";
+        message += '<spring:message code="sal.alert.msg.selTheFeedbackCode" />';
     }
     if (AUIGrid.getCellValue( trReBookGridID, rowIndex , "remark") == "")
     {
         valid = false;
-        message += "* Please key-in the remarks.<br />";
+        message += '<spring:message code="sal.alert.msg.plzKeyInRemarks" />';
     }
     if (!valid)
     {
@@ -353,7 +354,7 @@ function fn_validRequiredField(rowIndex)
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TR Book Management - Return</h1>
+<h1><spring:message code="sal.title.text.trBookMgmtRtn" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -362,7 +363,7 @@ function fn_validRequiredField(rowIndex)
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>TR Book Details</h2>
+<h2><spring:message code="sal.title.text.trBookDetails" /></h2>
 </aside><!-- title_line end -->
 <form action="#" method="post" id="updateTrForm" name="updateTrForm">
 <input type="hidden" id="trReBookId" name="trReBookId" value="${trBookId}">
@@ -389,50 +390,50 @@ function fn_validRequiredField(rowIndex)
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">TR Book No</th>
+	<th scope="row"><spring:message code="sal.title.text.trBookNo" /></th>
 	<td>${trBookInfo.trBookNo}</td>
-	<th scope="row">Prefix No</th>
+	<th scope="row"><spring:message code="sal.text.prefixNo" /></th>
 	<td>${trBookInfo.trBookPrefix}</td>
 </tr>
 <tr>
-	<th scope="row">TR No</th>
+	<th scope="row"><spring:message code="sal.title.text.trNo" /></th>
 	<td>${trBookInfo.trBookNoStart} To ${trBookInfo.trBookNoEnd}</td>
-	<th scope="row">TR Holder</th>
+	<th scope="row"><spring:message code="sal.title.text.trHolder" /></th>
 	<td>${trBookInfo.trHolder}</td>
 </tr>
 <tr>
-	<th scope="row">Status</th>
+	<th scope="row"><spring:message code="sal.title.status" /></th>
 	<td>${trBookInfo.trBookStusCode}</td>
-	<th scope="row">Total Page(s)</th>
+	<th scope="row"><spring:message code="sal.title.text.totPages" /></th>
 	<td>${trBookInfo.trBookPge}</td>
 </tr>
 <tr>
-	<th scope="row">Return To</th>
+	<th scope="row"><spring:message code="sal.title.text.returnTo" /></th>
 	<td colspan="3">${branch} - ${branchName}</td>
 </tr>
 <tr>
-	<th scope="row">Total Match</th>
+	<th scope="row"><spring:message code="sal.title.text.totalMatch" /></th>
 	<td><span id="totalMatch"></span></td>
-	<th scope="row">Total Unmatch</th>
+	<th scope="row"><spring:message code="sal.title.text.totUnmatch" /></th>
 	<td><span id="totalUnmatch"></span></td>
 </tr>
 <tr>
-	<th scope="row">Total Cancel</th>
+	<th scope="row"><spring:message code="sal.title.text.totCancel" /></th>
 	<td><span id="totalCancel"></span></td>
-	<th scope="row">Total Lost</th>
+	<th scope="row"><spring:message code="sal.title.text.totLost" /></th>
 	<td><span id="totalLost"></span></td>
 </tr>
 <tr>
-	<th scope="row">Total Finance Used</th>
+	<th scope="row"><spring:message code="sal.title.text.totFinanceUsed" /></th>
 	<td><span id="totalFinance"></span></td>
-	<th scope="row">Total Marketing Used</th>
+	<th scope="row"><spring:message code="sal.title.text.totMarketingUsed" /></th>
 	<td><span id="totalMarketing"></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Holder Information</h2>
+<h2><spring:message code="sal.title.text.holderInformation" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -445,22 +446,22 @@ function fn_validRequiredField(rowIndex)
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Member Code</th>
+	<th scope="row"><spring:message code="sal.text.memberCode" /></th>
 	<td>${memberInfo.memCode}</td>
-	<th scope="row">Member Type</th>
+	<th scope="row"><spring:message code="sal.text.memtype" /></th>
 	<td>${memberInfo.memType}</td>
 </tr>
 <tr>
-	<th scope="row">Member Name</th>
+	<th scope="row"><spring:message code="sal.title.memberName" /></th>
 	<td>${memberInfo.memName}</td>
-	<th scope="row">NRIC</th>
+	<th scope="row"><spring:message code="sal.text.nric" /></th>
 	<td>${memberInfo.memNric}</td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Unmatch Receipt</h2>
+<h2><spring:message code="sal.title.text.unmatchReceipt" /></h2>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -468,7 +469,7 @@ function fn_validRequiredField(rowIndex)
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" id="btnReturnSave" onclick="javascript:fn_returnSave();">SAVE</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" id="btnReturnSave" onclick="javascript:fn_returnSave();"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

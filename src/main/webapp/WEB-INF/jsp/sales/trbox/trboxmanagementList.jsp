@@ -9,44 +9,44 @@
     var keepGrid;
     var statusList = [{"codeId": "1","codeName": "Active"},{"codeId": "36","codeName": "Closed"}];
  // AUIGrid 칼럼 설정                                                                            visible : false
-    var columnLayout = [{dataField:"rnum"      ,headerText:"ROWNUM"     ,width:50    ,height:30 , visible:false},
-                        {dataField:"boxid"     ,headerText:"Box Id"     ,width:100   ,height:30 , visible:false},
-                        {dataField:"boxno"     ,headerText:"Box No"     ,width:"14%" ,height:30 , visible:true},
-                        {dataField:"status"    ,headerText:"Status"     ,width:"14%" ,height:30 , visible:true},
-                        {dataField:"statusid"  ,headerText:"Status ID"  ,width:100   ,height:30 , visible:false},
-						{dataField:"statuscd"  ,headerText:"Status CD"  ,width:100   ,height:30 , visible:false},
-                        {dataField:"holder"    ,headerText:"Location"   ,width:"15%" ,height:30 , visible:true},
-                        {dataField:"branchid"  ,headerText:"BranchId"   ,width:120   ,height:30 , visible:false},
-                        {dataField:"branchcd"  ,headerText:"BranchCode" ,width:120   ,height:30 , visible:false},
-						{dataField:"branchnm"  ,headerText:"BranchName" ,width:120   ,height:30 , visible:false},
-                        {dataField:"bookqty"   ,headerText:"Qty Book"   ,width:"14%" ,height:30 , visible:true },
-                        {dataField:"scrapdt"   ,headerText:"Scrap Date" ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true },
-                        {dataField:"scrapdt2"  ,headerText:"Scrap Date" ,width:"14%" ,height:30 , visible:false },
-                        {dataField:"crtdt"     ,headerText:"Create At"  ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true },
-                        {dataField:"crtdt2"    ,headerText:"Create At"  ,width:"14%" ,height:30 , visible:false },
-						{dataField:"opendt"    ,headerText:"Open Dt"    ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:false },
-						{dataField:"opendt2"   ,headerText:"Open Dt"    ,width:"14%" ,height:30 , visible:false },
-                        {dataField:"crtname"   ,headerText:"Create By"  ,width:"15%" ,height:30 , visible:true },
-                        {dataField:"crtuser"   ,headerText:"Create ID"  ,width:120   ,height:30 , visible:false}
+    var columnLayout = [{dataField:"rnum"      ,headerText:'<spring:message code="sal.title.text.rownum" />'     ,width:50    ,height:30 , visible:false},
+                        {dataField:"boxid"     ,headerText:'<spring:message code="sal.title.text.boxId" />'     ,width:100   ,height:30 , visible:false},
+                        {dataField:"boxno"     ,headerText:'<spring:message code="sal.title.text.boxNo" />'     ,width:"14%" ,height:30 , visible:true},
+                        {dataField:"status"    ,headerText:'<spring:message code="sal.title.status" />'     ,width:"14%" ,height:30 , visible:true},
+                        {dataField:"statusid"  ,headerText:'<spring:message code="sal.title.text.statusID" />'  ,width:100   ,height:30 , visible:false},
+						{dataField:"statuscd"  ,headerText:'<spring:message code="sal.title.text.stusCD" />'  ,width:100   ,height:30 , visible:false},
+                        {dataField:"holder"    ,headerText:'<spring:message code="sal.title.text.location" />'   ,width:"15%" ,height:30 , visible:true},
+                        {dataField:"branchid"  ,headerText:'<spring:message code="sal.title.text.branchId" />'   ,width:120   ,height:30 , visible:false},
+                        {dataField:"branchcd"  ,headerText:'<spring:message code="sal.title.text.branchCode" />' ,width:120   ,height:30 , visible:false},
+						{dataField:"branchnm"  ,headerText:'<spring:message code="sal.title.text.branchName" />' ,width:120   ,height:30 , visible:false},
+                        {dataField:"bookqty"   ,headerText:'<spring:message code="sal.title.text.qtyBook" />'   ,width:"14%" ,height:30 , visible:true },
+                        {dataField:"scrapdt"   ,headerText:'<spring:message code="sal.title.text.scrapDate" />' ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true },
+                        {dataField:"scrapdt2"  ,headerText:'<spring:message code="sal.title.text.scrapDate" />' ,width:"14%" ,height:30 , visible:false },
+                        {dataField:"crtdt"     ,headerText:'<spring:message code="sal.text.createAt" />'  ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true },
+                        {dataField:"crtdt2"    ,headerText:'<spring:message code="sal.text.createAt" />'  ,width:"14%" ,height:30 , visible:false },
+						{dataField:"opendt"    ,headerText:'<spring:message code="sal.title.text.openDt" />'    ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:false },
+						{dataField:"opendt2"   ,headerText:'<spring:message code="sal.title.text.openDt" />'    ,width:"14%" ,height:30 , visible:false },
+                        {dataField:"crtname"   ,headerText:'<spring:message code="sal.text.createBy" />'  ,width:"15%" ,height:30 , visible:true },
+                        {dataField:"crtuser"   ,headerText:'<spring:message code="sal.title.text.createId" />'  ,width:120   ,height:30 , visible:false}
                        ];
     
     var subculomnlayout = [
-                        {dataField:"trbid"     ,headerText:"Book Id"     ,width:100   ,height:30 , visible:false},
-                        {dataField:"trbno"     ,headerText:"Book No"     ,width:"20%" ,height:30 , visible:true},
-                        {dataField:"reciptstr" ,headerText:"From"        ,width:"20%" ,height:30 , visible:true},
-                        {dataField:"reciptend" ,headerText:"To"          ,width:"20%" ,height:30 , visible:true},
-                        {dataField:"crtnm"     ,headerText:"Keep By"     ,width:"20%" ,height:30 , visible:true},
-                        {dataField:"crtdt"     ,headerText:"Keep Date"   ,width:"20%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true}
+                        {dataField:"trbid"     ,headerText:'<spring:message code="sal.title.text.bookId" />'     ,width:100   ,height:30 , visible:false},
+                        {dataField:"trbno"     ,headerText:'<spring:message code="sal.title.bookNo" />'     ,width:"20%" ,height:30 , visible:true},
+                        {dataField:"reciptstr" ,headerText:'<spring:message code="sal.title.from" />'        ,width:"20%" ,height:30 , visible:true},
+                        {dataField:"reciptend" ,headerText:'<spring:message code="sal.title.to" />'          ,width:"20%" ,height:30 , visible:true},
+                        {dataField:"crtnm"     ,headerText:'<spring:message code="sal.title.text.keepBy" />'     ,width:"20%" ,height:30 , visible:true},
+                        {dataField:"crtdt"     ,headerText:'<spring:message code="sal.title.text.keepDate" />'   ,width:"20%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true}
                        ];
     
     var keepculomnlayout = [
-                           {dataField:"trbdetid"  ,headerText:"DET Id"      ,width:100   ,height:30 , visible:false},
-                           {dataField:"trbid"     ,headerText:"Book Id"     ,width:100   ,height:30 , visible:false},
-                           {dataField:"trbno"     ,headerText:"Book No"     ,width:"18%" ,height:30 , visible:true},
-                           {dataField:"reciptstr" ,headerText:"From"        ,width:"18%" ,height:30 , visible:true},
-                           {dataField:"reciptend" ,headerText:"To"          ,width:"18%" ,height:30 , visible:true},
-                           {dataField:"crtnm"     ,headerText:"Keep By"     ,width:"18%" ,height:30 , visible:true},
-                           {dataField:"crtdt"     ,headerText:"Keep Date"   ,width:"18%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true},
+                           {dataField:"trbdetid"  ,headerText:'<spring:message code="sal.title.text.detId" />'      ,width:100   ,height:30 , visible:false},
+                           {dataField:"trbid"     ,headerText:'<spring:message code="sal.title.text.bookId" />'     ,width:100   ,height:30 , visible:false},
+                           {dataField:"trbno"     ,headerText:'<spring:message code="sal.title.bookNo" />'     ,width:"18%" ,height:30 , visible:true},
+                           {dataField:"reciptstr" ,headerText:'<spring:message code="sal.title.from" />'        ,width:"18%" ,height:30 , visible:true},
+                           {dataField:"reciptend" ,headerText:'<spring:message code="sal.title.to" />'          ,width:"18%" ,height:30 , visible:true},
+                           {dataField:"crtnm"     ,headerText:'<spring:message code="sal.title.text.keepBy" />'     ,width:"18%" ,height:30 , visible:true},
+                           {dataField:"crtdt"     ,headerText:'<spring:message code="sal.title.text.keepDate" />'   ,width:"18%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true},
                            {
                                dataField : "undefined",
                                headerText : " ",
@@ -137,7 +137,8 @@
         console.log(itm);
         var param = "trbdetid="+itm.trbdetid;
         Common.ajax("GET" , url , param , function(data){
-            Common.alert("[" + itm.trbno + "] successfully removed from box.");
+            //Common.alert("[" + itm.trbno + "] successfully removed from box.");
+            Common.alert('<spring:message code="sal.alert.msg.successfullyRemoved" arguments="'+itm.trbno+'"/>');
             AUIGrid.removeRow(keepGrid, "selectedIndex");
             AUIGrid.removeSoftRows(keepGrid);
         });
@@ -311,10 +312,10 @@
             //$("#filterForm").serialize();
             Common.ajax("GET" , url , param , function(data){
                 if ($("#closeBtn").text() == "Close Box"){
-                	Common.alert('Box successfully close.');
+                	Common.alert('<spring:message code="sal.alert.msg.boxSuccessfullyClose" />');
                 	$("#closeBtn").text("Reopen Box");
                 }else if ($("#closeBtn").text() == "Reopen Box"){
-                	Common.alert('Box successfully reopen.');
+                	Common.alert('<spring:message code="sal.alert.msg.boxSuccessfullyReopen" />');
                     $("#closeBtn").text("Close Box");
                 }
             });
@@ -404,7 +405,7 @@
             var param = $("#singletranform").serialize();
             console.log(param);
             Common.ajax("GET" , url , param , function(data){
-            	Common.alert('TR box successfully transferred.<br/>Transit Number :' + data.data);
+            	Common.alert('<spring:message code="sal.alert.msg.trBoxSuccessTransferred" />' + data.data);
             	$("#tranSaveBtn").hide();
             });
 	    });
@@ -441,10 +442,10 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>TR Box Management </h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a id="btnKeep"><span class="search"></span>Keep & Release</a></p></li>
-            <li><p class="btn_blue"><a id="btnClose"><span class="search"></span>Close/Reopen</a></p></li>
-            <li><p class="btn_blue"><a id="btnSrch"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a id="btnClear"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a id="btnKeep"><span class="search"></span><spring:message code="sal.title.text.keepRelease" /></a></p></li>
+            <li><p class="btn_blue"><a id="btnClose"><span class="search"></span><spring:message code="sal.title.text.closeReopen" /></a></p></li>
+            <li><p class="btn_blue"><a id="btnSrch"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+            <li><p class="btn_blue"><a id="btnClear"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
@@ -464,32 +465,32 @@
             </colgroup>
             <tbody>
             <tr>
-                <th scope="row">Box Number</th>
+                <th scope="row"><spring:message code="sal.title.text.boxNumber" /></th>
                 <td>
                     <input type="text" title="" id="trbxnumber" name="trbxnumber" placeholder="Box Number" class="w100p" />
                 </td>
-                <th scope="row">Create Date</th>
+                <th scope="row"><spring:message code="sal.text.createDate" /></th>
                 <td>
 
                     <div class="date_set w100p"><!-- date_set start -->
                     <p><input type="text" title="Create start Date" name="sdate" id="sdate" placeholder="DD/MM/YYYY" class="j_date" /></p>
-                    <span>To</span>
+                    <span><spring:message code="sal.title.to" /></span>
                     <p><input type="text" title="Create end Date" name="edate" id="edate" placeholder="DD/MM/YYYY" class="j_date" /></p>
                     </div><!-- date_set end -->
 
                 </td>
-                <th scope="row">Creator</th>
+                <th scope="row"><spring:message code="sal.text.creator" /></th>
                 <td>
                     <input type="text" title="" placeholder="Creator(User Name)" class="w100p" name="crtuser" id="crtuser" />
                 </td>
             </tr>
             <tr>
-                <th scope="row">Box Status</th>
+                <th scope="row"><spring:message code="sal.title.text.boxStatus" /></th>
                 <td>
                     <select class="multy_select w100p" multiple="multiple" id="status" name="status"></select>
 
                 </td>
-                <th scope="row">Branch</th>
+                <th scope="row"><spring:message code="sal.text.branch" /></th>
                 <td>
                     <select class="w100p" name="branchid" id="branchid"></select>
                 </td>
@@ -502,15 +503,15 @@
         <aside class="link_btns_wrap">
             <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
             <dl class="link_list">
-            <dt>Link</dt>
+            <dt><spring:message code="sal.title.text.link" /></dt>
             <dd>
 <!--                 <ul class="btns"> -->
 <!--                     <li><p class="link_btn type2"><a href="#">menu1</a></p></li> -->
 <!--                 </ul> -->
                 <ul class="btns">
-                    <li><p class="link_btn"><a href="/misc/TRBox/TrBoxReceive.do">Receive</a></p></li>
-                    <li><p class="link_btn"><a  onclick="javascript : fn_downloadReport('EXCEL')">TR Box Excel</a></p></li>
-                    <li><p class="link_btn"><a  onclick="javascript : fn_downloadReport('PDF')">TR Box PDF</a></p></li>
+                    <li><p class="link_btn"><a href="/misc/TRBox/TrBoxReceive.do"><spring:message code="sal.combo.text.recv" /></a></p></li>
+                    <li><p class="link_btn"><a  onclick="javascript : fn_downloadReport('EXCEL')"><spring:message code="sal.title.text.trBoxExcel" /></a></p></li>
+                    <li><p class="link_btn"><a  onclick="javascript : fn_downloadReport('PDF')"><spring:message code="sal.title.text.trboxPDF" /></a></p></li>
                 </ul>
                 <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
             </dd>
@@ -524,9 +525,9 @@
     <section class="search_result"><!-- search_result start -->
 
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="singletranBtn">Single Transfer</a></p></li>
-            <li><p class="btn_grid"><a id="updBtn">Update</a></p></li>
-            <li><p class="btn_grid"><a id="insNew">NEW</a></p></li>
+            <li><p class="btn_grid"><a id="singletranBtn"><spring:message code="sal.title.text.singleTransfer" /></a></p></li>
+            <li><p class="btn_grid"><a id="updBtn"><spring:message code="sal.btn.update" /></a></p></li>
+            <li><p class="btn_grid"><a id="insNew"><spring:message code="sal.title.text.new" /></a></p></li>
         </ul>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
@@ -538,15 +539,15 @@
     <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 		<header class="pop_header"><!-- pop_header start -->
-		<h1>View TR Box</h1>
+		<h1><spring:message code="sal.title.text.viewTrBox" /></h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a id="viewclose">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a id="viewclose"><spring:message code="sal.btn.close" /></a></p></li>
 		</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
 		
 		<aside class="title_line"><!-- title_line start -->
-		<h2>TR Box Information</h2>
+		<h2><spring:message code="sal.title.text.trBoxInformation" /></h2>
 		</aside><!-- title_line end -->
 		
 		<table class="type1"><!-- table start -->
@@ -561,34 +562,34 @@
 		</colgroup>
 		<tbody>
 		<tr>
-		    <th scope="row">Box No</th>
+		    <th scope="row"><spring:message code="sal.title.text.boxNo" /></th>
 		    <td>
 		      <span id="vboxno"></span>
 		    </td>
-		    <th scope="row">Create At</th>
+		    <th scope="row"><spring:message code="sal.text.createAt" /></th>
 		    <td id="vcrtdt"></td>
-		    <th scope="row">Create By</th>
+		    <th scope="row"><spring:message code="sal.text.createBy" /></th>
 		    <td id="vcrtuser"></td>
 		</tr>
 		<tr>
-		    <th scope="row">Status</th>
+		    <th scope="row"><spring:message code="sal.title.status" /></th>
 		    <td id="vstatus"></td>
-		    <th scope="row">Box Holder</th>
+		    <th scope="row"><spring:message code="sal.title.text.boxHolder" /></th>
 		    <td colspan="3" id="vholder"></td>
 		</tr>
 		<tr>
-		    <th scope="row">Open Date</th>
+		    <th scope="row"><spring:message code="sal.title.text.openDate" /></th>
 		    <td id="vopendt"></td>
-		    <th scope="row">Expiry Date</th>
+		    <th scope="row"><spring:message code="sal.text.expiryDate" /></th>
 		    <td id="vexpirydt"></td>
-		    <th scope="row">Total Book</th>
+		    <th scope="row"><spring:message code="sal.text.totalBook" /></th>
 		    <td id="vtotalbook"></td>
 		</tr>
 		</tbody>
 		</table><!-- table end -->
 		
 		<aside class="title_line"><!-- title_line start -->
-		<h2>Book(s) In Box</h2>
+		<h2><spring:message code="sal.title.text.booksInBox" /></h2>
 		</aside><!-- title_line end -->
 		
 		<article class="grid_wrap"><!-- grid_wrap start -->
@@ -604,9 +605,9 @@
 	      <input type="hidden" id="loginbranchid" name="loginbranchid"/>
 	      <input type="hidden" id="loginbranchcd" name="loginbranchcd"/>
 	    <header class="pop_header"><!-- pop_header start -->
-	        <h1>Add New TR Box</h1>
+	        <h1><spring:message code="sal.title.text.addNewTrBox" /></h1>
 	            <ul class="right_opt">
-	            <li><p class="btn_blue2"><a id="insClose">CLOSE</a></p></li>
+	            <li><p class="btn_blue2"><a id="insClose"><spring:message code="sal.btn.close" /></a></p></li>
 	        </ul>
 	    </header><!-- pop_header end -->
 	
@@ -620,7 +621,7 @@
 	        </colgroup>
 	        <tbody>
 	            <tr>
-	                <th scope="row">Branch</th>
+	                <th scope="row"><spring:message code="sal.text.branch" /></th>
 	                <td>
 	                    <span id="insBrnch"></span>
 	                </td>
@@ -629,7 +630,7 @@
 	    </table><!-- table end -->
 	
 	    <ul class="center_btns">
-	        <li><p class="btn_blue2 big"><a id="insSave">SAVE</a></p></li>
+	        <li><p class="btn_blue2 big"><a id="insSave"><spring:message code="sal.btn.save" /></a></p></li>
 	    </ul>
 	
 	    </section><!-- pop_body end -->
@@ -639,15 +640,15 @@
 	<div id="keep_popup_wrap" class="popup_wrap" ><!-- popup_wrap start -->
 
         <header class="pop_header"><!-- pop_header start -->
-        <h1>Book Keep & Release</h1>
+        <h1><spring:message code="sal.title.text.bookKeepRelease" /></h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a id="viewclose">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a id="viewclose"><spring:message code="sal.btn.close" /></a></p></li>
         </ul>
         </header><!-- pop_header end -->
         <section class="pop_body"><!-- pop_body start -->
         
         <aside class="title_line"><!-- title_line start -->
-        <h2>TR Box Information</h2>
+        <h2><spring:message code="sal.title.text.trBoxInformation" /></h2>
         </aside><!-- title_line end -->
         
         <table class="type1"><!-- table start -->
@@ -662,33 +663,33 @@
 			</colgroup>
 			<tbody>
 				<tr>
-	            <th scope="row">Box No</th>
+	            <th scope="row"><spring:message code="sal.title.text.boxNo" /></th>
 	            <td>
 	              <span id="kboxno"></span>
 	            </td>
-	            <th scope="row">Create At</th>
+	            <th scope="row"><spring:message code="sal.text.createAt" /></th>
 	            <td id="kcrtdt"></td>
-	            <th scope="row">Create By</th>
+	            <th scope="row"><spring:message code="sal.text.createBy" /></th>
 	            <td id="kcrtuser"></td>
 	        </tr>
 	        <tr>
-	            <th scope="row">Status</th>
+	            <th scope="row"><spring:message code="sal.title.status" /></th>
 	            <td id="kstatus"></td>
-	            <th scope="row">Box Holder</th>
+	            <th scope="row"><spring:message code="sal.title.text.boxHolder" /></th>
 	            <td colspan="3" id="vholder"></td>
 	        </tr>
 	        <tr>
-	            <th scope="row">Open Date</th>
+	            <th scope="row"><spring:message code="sal.title.text.openDate" /></th>
 	            <td id="kopendt"></td>
-	            <th scope="row">Expiry Date</th>
+	            <th scope="row"><spring:message code="sal.text.expiryDate" /></th>
 	            <td id="kexpirydt"></td>
-	            <th scope="row">Total Book</th>
+	            <th scope="row"><spring:message code="sal.text.totalBook" /></th>
 	            <td id="ktotalbook"></td>
 	        </tr>
 		</table><!-- table end -->
         
         <aside class="title_line"><!-- title_line start -->
-        <h2>Book(s) In Box</h2>
+        <h2><spring:message code="sal.title.text.booksInBox" /></h2>
         </aside><!-- title_line end -->
         
         <article class="grid_wrap"><!-- grid_wrap start -->
@@ -696,8 +697,8 @@
         </article><!-- grid_wrap end -->
         
         <ul class="left_btns">
-		    <li><p class="btn_blue2"><a id="filterBtn">Filter List</a></p></li>
-		    <li><p class="btn_blue2"><a id="showallBtn">Show All</a></p></li>
+		    <li><p class="btn_blue2"><a id="filterBtn"><spring:message code="sal.title.text.filterList" /></a></p></li>
+		    <li><p class="btn_blue2"><a id="showallBtn"><spring:message code="sal.title.text.showAll" /></a></p></li>
 		</ul>
 
         </section><!-- pop_body end -->
@@ -707,9 +708,9 @@
     <div id="filter_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 
 		<header class="pop_header"><!-- pop_header start -->
-		<h1>Filter Box Book List</h1>
+		<h1><spring:message code="sal.title.text.filterBoxBookList" /></h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 		</ul>
 		</header><!-- pop_header end -->
 		
@@ -726,17 +727,17 @@
 		</colgroup>
 		<tbody>
 		<tr>
-		    <th scope="row">Book No</th>
+		    <th scope="row"><spring:message code="sal.text.bookNo" /></th>
 		    <td colspan="3">
 		    <input type="text" title="" id="ksbookno" name="ksbookno" placeholder="" class="w100p" />
 		    </td>
 		</tr>
 		<tr>
-		    <th scope="row">Receipt No</th>
+		    <th scope="row"><spring:message code="sal.title.receiptNo" /></th>
 		    <td>
 		    <input type="text" title="" id="ksreceiptfr" name="ksreceiptfr" placeholder="" class="w100p" />
 		    </td>
-		    <th scope="row">To</th>
+		    <th scope="row"><spring:message code="sal.title.to" /></th>
 		    <td>
 		    <input type="text" title="" id="ksreceiptto" name="ksreceiptto" placeholder="" class="w100p" />
 		    </td>
@@ -745,8 +746,8 @@
 		</table><!-- table end -->
 		</form>
 		<ul class="center_btns">
-		    <li><p class="btn_blue2 big"><a id="keepBtnsrch">Search</a></p></li>
-		    <li><p class="btn_blue2 big"><a id="keepBtnclr">Clear</a></p></li>
+		    <li><p class="btn_blue2 big"><a id="keepBtnsrch"><spring:message code="sal.btn.search" /></a></p></li>
+		    <li><p class="btn_blue2 big"><a id="keepBtnclr"><spring:message code="sal.btn.clear" /></a></p></li>
 		</ul>
 		</section><!-- pop_body end -->
 	
@@ -754,16 +755,16 @@
 	<div id="close_popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
 		<header class="pop_header"><!-- pop_header start -->
-		<h1>TR Box - Close  Reopen</h1>
+		<h1><spring:message code="sal.title.text.trBoxCloseReopen" /></h1>
 		<ul class="right_opt">
-		    <li><p class="btn_blue2"><a id="closePopupCloBtn">CLOSE</a></p></li>
+		    <li><p class="btn_blue2"><a id="closePopupCloBtn"><spring:message code="sal.btn.close" /></a></p></li>
 		</ul>
 		</header><!-- pop_header end -->
 		
 		<section class="pop_body"><!-- pop_body start -->
 		
 		<aside class="title_line"><!-- title_line start -->
-		<h2>TR Box Information</h2>
+		<h2><spring:message code="sal.title.text.trBoxInformation" /></h2>
 		</aside><!-- title_line end -->
 		
 		<table class="type1"><!-- table start -->
@@ -778,27 +779,27 @@
            </colgroup>
            <tbody>
                <tr>
-               <th scope="row">Box No</th>
+               <th scope="row"><spring:message code="sal.title.text.boxNo" /></th>
                <td>
                  <span id="cboxno"></span>
                </td>
-               <th scope="row">Create At</th>
+               <th scope="row"><spring:message code="sal.text.createAt" /></th>
                <td id="ccrtdt"></td>
-               <th scope="row">Create By</th>
+               <th scope="row"><spring:message code="sal.text.createBy" /></th>
                <td id="ccrtuser"></td>
            </tr>
            <tr>
-               <th scope="row">Status</th>
+               <th scope="row"><spring:message code="sal.title.status" /></th>
                <td id="cstatus"></td>
-               <th scope="row">Box Holder</th>
+               <th scope="row"><spring:message code="sal.title.text.boxHolder" /></th>
                <td colspan="3" id="cholder"></td>
            </tr>
            <tr>
-               <th scope="row">Open Date</th>
+               <th scope="row"><spring:message code="sal.title.text.openDate" /></th>
                <td id="copendt"></td>
-               <th scope="row">Expiry Date</th>
+               <th scope="row"><spring:message code="sal.text.expiryDate" /></th>
                <td id="cexpirydt"></td>
-               <th scope="row">Total Book</th>
+               <th scope="row"><spring:message code="sal.text.totalBook" /></th>
                <td id="ctotalbook"></td>
            </tr>
            </tbody>
@@ -806,7 +807,7 @@
            
 		
 		<ul class="center_btns">
-		    <li><p class="btn_blue2 big"><a id="closeBtn">Close Box</a></p></li>
+		    <li><p class="btn_blue2 big"><a id="closeBtn"><spring:message code="sal.title.text.closeBox" /></a></p></li>
 		</ul>
 		</section><!-- pop_body end -->
 		
@@ -815,16 +816,16 @@
 		<div id="update_popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
 			<header class="pop_header"><!-- pop_header start -->
-			<h1>TR Box - Update Info</h1>
+			<h1><spring:message code="sal.title.text.trBoxUpdateInfo" /></h1>
 			<ul class="right_opt">
-			    <li><p class="btn_blue2"><a id="updateCloseBtn">CLOSE</a></p></li>
+			    <li><p class="btn_blue2"><a id="updateCloseBtn"><spring:message code="sal.btn.close" /></a></p></li>
 			</ul>
 			</header><!-- pop_header end -->
 			
 			<section class="pop_body"><!-- pop_body start -->
 			
 			<aside class="title_line"><!-- title_line start -->
-			<h2>TR Box Information</h2>
+			<h2><spring:message code="sal.title.text.trBoxInformation" /></h2>
 			</aside><!-- title_line end -->
 			
 			<table class="type1"><!-- table start -->
@@ -839,34 +840,34 @@
            </colgroup>
            <tbody>
                <tr>
-               <th scope="row">Box No</th>
+               <th scope="row"><spring:message code="sal.title.text.boxNo" /></th>
                <td>
                  <span id="uboxno"></span>
                </td>
-               <th scope="row">Create At</th>
+               <th scope="row"><spring:message code="sal.text.createAt" /></th>
                <td id="ucrtdt"></td>
-               <th scope="row">Create By</th>
+               <th scope="row"><spring:message code="sal.text.createBy" /></th>
                <td id="ucrtuser"></td>
            </tr>
            <tr>
-               <th scope="row">Status</th>
+               <th scope="row"><spring:message code="sal.title.status" /></th>
                <td id="ustatus"></td>
-               <th scope="row">Box Holder</th>
+               <th scope="row"><spring:message code="sal.title.text.boxHolder" /></th>
                <td colspan="3" id="uholder"></td>
            </tr>
            <tr>
-               <th scope="row">Open Date</th>
+               <th scope="row"><spring:message code="sal.title.text.openDate" /></th>
                <td id="uopendt"></td>
-               <th scope="row">Expiry Date</th>
+               <th scope="row"><spring:message code="sal.text.expiryDate" /></th>
                <td id="uexpirydt"></td>
-               <th scope="row">Total Book</th>
+               <th scope="row"><spring:message code="sal.text.totalBook" /></th>
                <td id="utotalbook"></td>
            </tr>
            </tbody>
         </table><!-- table end -->
 			
 		<aside class="title_line"><!-- title_line start -->
-		<h2>Transfer Information</h2>
+		<h2><spring:message code="sal.alert.msg.transferInformation" /></h2>
 		</aside><!-- title_line end -->
 		
 		<table class="type1"><!-- table start -->
@@ -877,7 +878,7 @@
 		</colgroup>
 		<tbody>
 		<tr>
-		    <th scope="row">Scrap Date</th>
+		    <th scope="row"><spring:message code="sal.title.text.scrapDate" /></th>
 		    <td>
 		    <input type="text" title="Create start Date" id="uscrapdt" name="uscrapdt" placeholder="DD-MM-YYYY" class="j_date" />
 		    </td>
@@ -896,16 +897,16 @@
    	<div id="singletran_popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
        <header class="pop_header"><!-- pop_header start -->
-       <h1>TR Box - Information</h1>
+       <h1><spring:message code="sal.title.text.trBoxhyInfomation" /></h1>
        <ul class="right_opt">
-           <li><p class="btn_blue2"><a id="transferCloseBtn">CLOSE</a></p></li>
+           <li><p class="btn_blue2"><a id="transferCloseBtn"><spring:message code="sal.btn.close" /></a></p></li>
        </ul>
        </header><!-- pop_header end -->
        
        <section class="pop_body"><!-- pop_body start -->
        
        <aside class="title_line"><!-- title_line start -->
-       <h2>TR Box Information</h2>
+       <h2><spring:message code="sal.title.text.trBoxInformation" /></h2>
        </aside><!-- title_line end -->
        <form id="singletranform" name="singletranform">
        <input type="hidden" name="tranholder" id="tranholder"/>
@@ -922,34 +923,34 @@
            </colgroup>
            <tbody>
                <tr>
-               <th scope="row">Box No</th>
+               <th scope="row"><spring:message code="sal.title.text.boxNo" /></th>
                <td>
                  <span id="tboxno"></span>
                </td>
-               <th scope="row">Create At</th>
+               <th scope="row"><spring:message code="sal.text.createAt" /></th>
                <td id="tcrtdt"></td>
-               <th scope="row">Create By</th>
+               <th scope="row"><spring:message code="sal.text.createBy" /></th>
                <td id="tcrtuser"></td>
            </tr>
            <tr>
-               <th scope="row">Status</th>
+               <th scope="row"><spring:message code="sal.title.status" /></th>
                <td id="tstatus"></td>
-               <th scope="row">Box Holder</th>
+               <th scope="row"><spring:message code="sal.title.text.boxHolder" /></th>
                <td colspan="3" id="tholder"></td>
            </tr>
            <tr>
-               <th scope="row">Open Date</th>
+               <th scope="row"><spring:message code="sal.title.text.openDate" /></th>
                <td id="topendt"></td>
-               <th scope="row">Expiry Date</th>
+               <th scope="row"><spring:message code="sal.text.expiryDate" /></th>
                <td id="texpirydt"></td>
-               <th scope="row">Total Book</th>
+               <th scope="row"><spring:message code="sal.text.totalBook" /></th>
                <td id="ttotalbook"></td>
            </tr>
            </tbody>
         </table><!-- table end -->
             
         <aside class="title_line"><!-- title_line start -->
-        <h2>Transfer Information</h2>
+        <h2><spring:message code="sal.alert.msg.transferInformation" /></h2>
         </aside><!-- title_line end -->
         
         <table class="type1"><!-- table start -->
@@ -960,13 +961,13 @@
         </colgroup>
         <tbody>
         <tr>
-            <th scope="row">Transfer To</th>
+            <th scope="row"><spring:message code="sal.alert.msg.transferTo" /></th>
             <td>
             <select id="tbrnch" name="tbrnch" class="w100p" ></select>
             </td>
         </tr>
         <tr>
-            <th scope="row">Courier</th>
+            <th scope="row"><spring:message code="sal.text.courier" /></th>
             <td>
             <select id="tcourier" name="tcourier" class="w100p"></select>
             </td>
@@ -976,7 +977,7 @@
         </form>
         
         <ul class="center_btns">
-            <li><p class="btn_blue2 big"><a id="tranSaveBtn">Save</a></p></li>
+            <li><p class="btn_blue2 big"><a id="tranSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
         </ul>
         </section><!-- pop_body end -->
         

@@ -11,12 +11,12 @@ $(document).ready(function(){
 function fn_attachFile(){
 	
 	if($("#fileName").val() ==""){
-		Common.alert("<spring:message code="sal.alert.selectFile" />");
+		Common.alert('<spring:message code="sal.alert.selectFile" />');
 		return;
 	}else{
 		var str = $("#fileName").val().split(".");
 		if(str[1] != "zip"){
-	        Common.alert("<spring:message code="sal.alert.notZip" />");
+	        Common.alert('<spring:message code="sal.alert.notZip" />');
 			return;
 		}else{
 
@@ -52,7 +52,7 @@ function fn_attachFile(){
 			          {
 			            console.log(e);
 			          }
-			          Common.alert("<spring:message code="sal.alert.title.error" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.trBookLost" />");
+			          Common.alert('<spring:message code="sal.alert.title.error" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.trBookLost" />');
 			    });
 		}
 	}

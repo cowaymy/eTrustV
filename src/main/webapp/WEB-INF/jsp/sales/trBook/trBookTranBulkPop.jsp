@@ -37,46 +37,46 @@ function creatTranGrid(){
         		  showIcon : true
         		  }, 
           },
-          {dataField : "trBookNo", headerText : "Book No", width : 140      ,
+          {dataField : "trBookNo", headerText : '<spring:message code="sal.text.bookNo" />', width : 140      ,
               filter : {
                   showIcon : true
                   }, 
            },
-          {dataField : "trBookPrefix", headerText : "Prefix No", width : 110       ,
+          {dataField : "trBookPrefix", headerText : '<spring:message code="sal.text.prefixNo" />', width : 110       ,
               filter : {
                   showIcon : true
                   }, 
            },
-          {dataField : "trBookNoStart", headerText : "TR No (Start)", width : 120         ,
+          {dataField : "trBookNoStart", headerText : '<spring:message code="sal.title.text.trNoStart" />', width : 120         ,
                filter : {
                    showIcon : true
                    }, 
             },
-          {dataField : "trBookNoEnd", headerText : "TR No (End)", width : 120         ,
+          {dataField : "trBookNoEnd", headerText : '<spring:message code="sal.title.text.trNoEnd" />', width : 120         ,
                 filter : {
                     showIcon : true
                     }, 
              },
-          {dataField : "trBookPge", headerText : "Total Sheet(s)", width : 130     ,
+          {dataField : "trBookPge", headerText : '<spring:message code="sal.title.sheet" />', width : 130     ,
               filter : {
                   showIcon : true
                   }, 
            },
-          {dataField : "trBookStusCode", headerText : "Status", width : 110     },
-          {dataField : "trHolder", headerText : "Holder", width : 110       },
-          {dataField : "trHolderType", headerText : "Holder Type", width : 110       }             
+          {dataField : "trBookStusCode", headerText : '<spring:message code="sal.title.status" />', width : 110     },
+          {dataField : "trHolder", headerText : '<spring:message code="sal.title.text.holder" />', width : 110       },
+          {dataField : "trHolderType", headerText : '<spring:message code="sal.title.text.holderType" />', width : 110       }             
           ];
     
     var tranToColLayout = [ 
           {dataField : "trBookId", headerText : "", width : 140  , visible:false            },
-          {dataField : "trBookNo", headerText : "Book No", width : 140                 },
-          {dataField : "trBookPrefix", headerText : "Prefix No", width : 110                },
-          {dataField : "trBookNoStart", headerText : "TR No (Start)", width : 120        },
-          {dataField : "trBookNoEnd", headerText : "TR No (End)", width : 120        },
-          {dataField : "trBookPge", headerText : "Total Sheet(s)", width : 130              },
-          {dataField : "trBookStusCode", headerText : "Status", width : 110     },
-          {dataField : "trHolder", headerText : "Holder", width : 110       },
-          {dataField : "trHolderType", headerText : "Holder Type", width : 110       }             
+          {dataField : "trBookNo", headerText : '<spring:message code="sal.title.bookNo" />', width : 140                 },
+          {dataField : "trBookPrefix", headerText : '<spring:message code="sal.text.prefixNo" />', width : 110                },
+          {dataField : "trBookNoStart", headerText : '<spring:message code="sal.title.text.trNoStart" />', width : 120        },
+          {dataField : "trBookNoEnd", headerText : '<spring:message code="sal.title.text.trNoEnd" />', width : 120        },
+          {dataField : "trBookPge", headerText : '<spring:message code="sal.title.sheet" />', width : 130              },
+          {dataField : "trBookStusCode", headerText : '<spring:message code="sal.title.status" />', width : 110     },
+          {dataField : "trHolder", headerText : '<spring:message code="sal.title.text.holder" />', width : 110       },
+          {dataField : "trHolderType", headerText : '<spring:message code="sal.title.text.holderType" />', width : 110       }             
           ];
     
 
@@ -166,18 +166,18 @@ function fn_tranBulkSave(){
     
      if ($("#branchFrom").val() == "" ||$("#branchTo").val() == "" || $("#tBulkCourier").val() == "")
      {
-    	 Common.alert("Required Field Empty" + DEFAULT_DELIMITER + "Some required fields are empty.");
+    	 Common.alert('<spring:message code="sal.alert.msg.reqFieldEmpty" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.somReqFielddEmpty" />');
          return false;
      }
      
      if($("#branchFrom").val() == $("#branchTo").val()){
-         Common.alert("TR Book Information" + DEFAULT_DELIMITER + "You cannot transfer the TR book to same branch.");
+         Common.alert('<spring:message code="sal.alert.msg.trbookInformation" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.cannotTrsferTrBooktoSameBrnch" />');
          return false;
      }
      
      if(AUIGrid.getRowCount(tranToGridID) < 1){
 
-         Common.alert("TR Book Information" + DEFAULT_DELIMITER + "No book to transfer.<br />Please add book to transfer.");
+         Common.alert('<spring:message code="sal.alert.msg.trbookInformation" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.noBookTrsFerPlzAddBook" />');
          return false;
      }
      
@@ -191,7 +191,7 @@ function fn_tranBulkSave(){
          console.log( result);        
 
 
-         Common.alert("Save Successful" + DEFAULT_DELIMITER + "Selected TR book(s) successfully transfer to courier.<br/>Transit Number : " + result.data );
+         Common.alert('<spring:message code="sal.aerlt.msg.saveSuccessful" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.selTrBookSuccessTrsferToCourier" />' + result.data );
          $("#btnTranBulkSave").hide();
          
          fromItems = new Array();
@@ -210,7 +210,7 @@ function fn_tranBulkSave(){
            console.log(e);
          }
          
-         Common.alert("Failed To Save" + DEFAULT_DELIMITER + "Failed to save. Please try again later." );
+         Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.saveFail" />');
          
      });
           
@@ -221,7 +221,7 @@ function fn_tranBulkSave(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TR Book Management - Transfer Bulk</h1>
+<h1><spring:message code="sal.alert.msg.trBookMgmtTransferBulk" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -233,7 +233,7 @@ function fn_tranBulkSave(){
     <input type="hidden" id="branchId" name="branchId" value ="${branchId}"/>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Transfer Information</h2>
+<h2><spring:message code="sal.alert.msg.transferInformation" /></h2>
 </aside><!-- title_line end -->
 
 <table class="type1 mt10"><!-- table start -->
@@ -244,21 +244,21 @@ function fn_tranBulkSave(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><span class="must">*</span>Transfer From</th>
+    <th scope="row"><span class="must">*</span><spring:message code="sal.alert.msg.transferFrom" /></th>
     <td>
         <select class="w100p" id="branchFrom" name="branchFrom">
         </select>
     </td>
 </tr>
 <tr>
-    <th scope="row"><span class="must">*</span>Transfer To</th>
+    <th scope="row"><span class="must">*</span><spring:message code="sal.alert.msg.transferTo" /></th>
     <td>
         <select class="w100p" id="branchTo" name="branchTo">
         </select>
     </td>
 </tr>
 <tr>
-    <th scope="row"><span class="must">*</span>Courier</th>
+    <th scope="row"><span class="must">*</span><spring:message code="sal.text.courier" /></th>
     <td>
         <select class="w100p" id="tBulkCourier" name="courier">
         </select>
@@ -268,13 +268,13 @@ function fn_tranBulkSave(){
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>TR Book Selection</h2>
+<h2><spring:message code="sal.title.text.trBookSelection" /></h2>
 </aside><!-- title_line end -->
 
 <section class="transfer_wrap"><!-- transfer_wrap start -->
 <div class="tran_list" style="height:300px"><!-- tran_list start -->
     <aside class="title_line"><!-- title_line start -->
-    <h3>Book Holding</h3>
+    <h3><spring:message code="sal.title.text.bookHolding" /></h3>
     </aside><!-- title_line end -->
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="tranGridID" style="height:250px; margin:0 auto;"></div>
@@ -288,7 +288,7 @@ function fn_tranBulkSave(){
 
 <div class="tran_list" style="height:300px"><!-- tran_list start -->
     <aside class="title_line"><!-- title_line start -->
-    <h3>Book To Transfer</h3>
+    <h3><spring:message code="sal.title.text.bookToTransfer" /></h3>
     </aside><!-- title_line end -->
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="tranToGridID" style="height:250px; margin:0 auto;"></div>
@@ -298,7 +298,7 @@ function fn_tranBulkSave(){
 
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="btnTranBulkSave" onclick="javascript:fn_tranBulkSave();">Save</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="btnTranBulkSave" onclick="javascript:fn_tranBulkSave();"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

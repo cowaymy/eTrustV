@@ -7,10 +7,10 @@ function fn_save(){
 	var msg = "";
 
 	if($("#description").val() == ""){		
-		msg += "* Please key-in the description.<br />";
+		msg += '<spring:message code="sal.alert.msg.plzKeyInDesc" />';
 	}
 	if($("#feedback").val() == ""){
-        msg += "* Please select the reason.<br />";
+        msg += '<spring:message code="sal.alert.msg.plzSelTheReason" />';
 	}
 	
 	if(msg != ""){

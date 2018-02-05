@@ -40,12 +40,12 @@ $(document).ready(function(){
 	                fn_checkAgentList();
                     
 	            } else {
-	                Common.alert('No data to import!');
+	                Common.alert('<spring:message code="sal.alert.msg.noDataToImport" />');
 	            }
 	        };
 
 	        reader.onerror = function() {
-	        	Common.alert('Unable to read ' + file.fileName);
+	        	Common.alert('<spring:message code="sal.alert.msg.unableToRead" />' + file.fileName);
 	        };
 
 	});  
@@ -152,7 +152,7 @@ function fn_save(){
             {
               console.log(e);
             }
-            Common.alert("Failed To Save" + DEFAULT_DELIMITER + "Failed to update agent list. Please try again later.");
+            Common.alert('<spring:message code="sal.alert.title.saveFail" />' + DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.failToUpdateAgentList" />');
         });
 
     }));
@@ -163,7 +163,7 @@ function fn_save(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Upload – Assign to Agent</h1>
+<h1><spring:message code="sal.title.text.uploadAssignToAssign" /></h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="expense.CLOSE" /></a></p></li>
 </ul>

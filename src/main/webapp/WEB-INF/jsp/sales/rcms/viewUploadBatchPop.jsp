@@ -14,11 +14,11 @@ $(document).ready(function() {
 function createOrderRemDetailGrid(){
 	
 	var ordRemDtColumnLayout =  [ 
-                            {dataField : "ordNo", headerText : "Order No.", width : '10%' , editable : false}, 
-                            {dataField : "rem", headerText : "Remark", width : '35%', editable : false},
-                            {dataField : "name1", headerText : "Status", width : '10%' , editable : false},
-                            {dataField : "validRem", headerText : "System Remark", width : '35%' , editable : false},
-                            {dataField : "ordId", headerText : "Order ID", width : '10%' , editable : false},
+                            {dataField : "ordNo", headerText : '<spring:message code="sal.title.text.ordNop" />', width : '10%' , editable : false}, 
+                            {dataField : "rem", headerText : '<spring:message code="sal.title.remark" />', width : '35%', editable : false},
+                            {dataField : "name1", headerText : '<spring:message code="sal.title.status" />', width : '10%' , editable : false},
+                            {dataField : "validRem", headerText : '<spring:message code="sal.title.text.sysRem" />', width : '35%' , editable : false},
+                            {dataField : "ordId", headerText : '<spring:message code="sal.title.text.ordId" />', width : '10%' , editable : false},
                             {dataField : "validStusId", visible : false},   
                            ];
     
@@ -35,9 +35,7 @@ function createOrderRemDetailGrid(){
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-            noDataMessage       : "No Order found.",
-            groupingMessage     : "Here groupping"
+            showRowNumColumn    : true
     };
     
     ordRemDetailGridID = GridCommon.createAUIGrid("#dt_grid_wrap", ordRemDtColumnLayout,'', gridPros);  
@@ -78,16 +76,16 @@ function fn_invalid(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ORDER REMARK UPLOAD - VIEW UPLOAD BATCH</h1>
+<h1><spring:message code="sal.title.text.ordRemUploadViewUploadBatch" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Order Remark Batch Info</h3>
+<h3><spring:message code="sal.title.text.ordRemBatchInfo" /></h3>
 <%-- <c:if test="${cnvrInfo.code eq 'ACT'}">
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="fn_confirm()">Confirm</a></p></li>
@@ -107,34 +105,34 @@ function fn_invalid(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Batch ID</th>
+    <th scope="row"><spring:message code="sal.title.text.batchId" /></th>
     <td><span>${infoMap.uploadMid}</span></td>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
     <td><span>${infoMap.name}</span></td>
 </tr>
 <tr>
-    <th scope="row">Upload By</th>
+    <th scope="row"><spring:message code="sal.title.text.uploadBy" /></th>
     <td><span>${infoMap.updUserName}</span></td>
-    <th scope="row">Update By</th>
+    <th scope="row"><spring:message code="sal.text.updateBy" /></th>
     <td><span>${infoMap.updDt}</span></td>
 </tr>
 <tr>
-    <th scope="row">Total Item</th>
+    <th scope="row"><spring:message code="sal.title.text.totItem" /></th>
     <td><span>${infoMap.totCnt}</span></td>
-    <th scope="row">Total Valid / Invalid</th>
+    <th scope="row"><spring:message code="sal.title.text.totValidInvalid" /></th>
     <td><span>${infoMap.validCnt}/${infoMap.inValidCnt}</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Batch Item</h3>
+<h3><spring:message code="sal.title.text.batchItem" /></h3>
 </aside><!-- title_line end -->
 
 <ul class="left_btns">
-    <li><p class="btn_grid"><a  onclick="fn_all()">All Item</a></p></li>
-    <li><p class="btn_grid"><a  onclick="fn_valid()">Valid Item</a></p></li>
-    <li><p class="btn_grid"><a  onclick="fn_invalid()">Invalid Item</a></p></li>
+    <li><p class="btn_grid"><a  onclick="fn_all()"><spring:message code="sal.combo.text.allItm" /></a></p></li>
+    <li><p class="btn_grid"><a  onclick="fn_valid()"><spring:message code="sal.combo.text.validItm" /></a></p></li>
+    <li><p class="btn_grid"><a  onclick="fn_invalid()"><spring:message code="sal.combo.text.invalidItm" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

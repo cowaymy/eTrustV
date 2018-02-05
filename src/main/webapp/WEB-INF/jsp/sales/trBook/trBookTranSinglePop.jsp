@@ -63,7 +63,7 @@ function fn_tranSingleSave(){
 <div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>TRANSFER TR BOOK</h1>
+<h1><spring:message code="sal.title.text.transferTrBook" /></h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
@@ -83,34 +83,34 @@ function fn_tranSingleSave(){
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">TR Book No</th>
+	<th scope="row"><spring:message code="sal.title.text.trBookNo" /></th>
 	<td>${detailInfo.trBookNo}</td>
 </tr>
 <tr>
-	<th scope="row">TR Prefix No</th>
+	<th scope="row"><spring:message code="sal.title.text.trPrefixNo" /></th>
 	<td>${detailInfo.trBookPrefix}</td>
 </tr>
 <tr>
-	<th scope="row">No of Page(s)</th>
+	<th scope="row"><spring:message code="sal.title.text.noOfPages" /></th>
 	<td>${detailInfo.trBookPge}</td>
 </tr>
 <tr>
-	<th scope="row">TR No</th>
+	<th scope="row"><spring:message code="sal.title.text.trNo" /></th>
 	<td>${detailInfo.trBookNoStart} To ${detailInfo.trBookNoEnd}</td>
 </tr>
 <tr>
-	<th scope="row">TR Book Holder</th>
+	<th scope="row"><spring:message code="sal.title.text.trBookHolder" /></th>
 	<td> ${detailInfo.trHolder}</td>
 </tr>
 <tr>
-	<th scope="row"><span class="must">*</span>Transfer To</th>
+	<th scope="row"><span class="must">*</span><spring:message code="sal.alert.msg.transferTo" /></th>
     <td>
         <select class=" w100p"  id="tranBranch" name="branch">
         </select>
     </td>
 </tr>
 <tr>
-	<th scope="row"><span class="must">*</span>Courier</th>
+	<th scope="row"><span class="must">*</span><spring:message code="sal.text.courier" /></th>
     <td>
         <select class=" w100p"  id="tranCourier" name="courier">
         </select>
@@ -120,7 +120,7 @@ function fn_tranSingleSave(){
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" id="btnTranSingleSave" onclick="javascript:fn_tranSingleSave();">SAVE</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" id="btnTranSingleSave" onclick="javascript:fn_tranSingleSave();"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

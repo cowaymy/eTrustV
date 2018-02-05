@@ -45,7 +45,7 @@ function fn_save(){
 		
     Common.ajax("POST", "/sales/rcms/updateRemark", $("#saveForm").serializeJSON(), function(result) {
         
-           Common.alert("Success To Saved "+DEFAULT_DELIMITER + "RCMS item successfully saved.");
+           Common.alert('<spring:message code="sal.alert.msg.successToSaved" />'+DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.rcmsItemSuccessSaved" />');
 
            $("#updateRemarkPop").remove();
            
@@ -56,7 +56,7 @@ function fn_save(){
            console.log("실패하였습니다.");
            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
            
-           Common.alert("Failed To Save "+DEFAULT_DELIMITER + "Failed to save. Please try again later.");
+           Common.alert('<spring:message code="sal.alert.title.saveFail" />'+DEFAULT_DELIMITER + '<spring:message code="sal.alert.msg.saveFail" />');
 
            console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
            
@@ -69,9 +69,9 @@ function fn_save(){
 <div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>EDIT RCMS Remark</h1>
+<h1><spring:message code="sal.title.text.editRcmsRem" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -92,13 +92,13 @@ function fn_save(){
 </colgroup>
 <tbody>         
 <tr>
-	<th scope="row">Order No.</th>
+	<th scope="row"><spring:message code="sal.title.text.ordNop" /></th>
 	<td><input type="text" title="" class="readonly" readonly="readonly" style="width: 100%" id="popOrderNo"  name="popOrderNo"/></td>
-	<th scope="row">Sensitive<span class="must"></span></th>
+	<th scope="row"><spring:message code="sal.title.text.sensitive" /><span class="must"></span></th>
 	<td><input type="checkbox"  id="chkSensitiveFg"  name="chkSensitiveFg" onclick="fn_chk()"/></td>
 </tr>
 <tr>
-    <th scope="row">Remark </th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td colspan="3"> <textarea cols="20" rows="5" id='remark'  name='remark' placeholder="Remark" name='remark'></textarea></td>
 </tr>
 </tbody>
@@ -108,7 +108,7 @@ function fn_save(){
 </section><!-- search_table end -->
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a href="#" id='savebt'   onclick="javascript:fn_save()">Save</a></p></li>
+	<li><p class="btn_blue2 big"><a href="#" id='savebt'   onclick="javascript:fn_save()"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
