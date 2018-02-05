@@ -99,7 +99,7 @@ public class SalesTrBookController {
 			}
 			params.put("stutus", stutus);
 		}else{
-			params.put("stutusId", "0");
+			params.put("stutusId", "");
 		}
 		
 		
