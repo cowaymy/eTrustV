@@ -23,7 +23,7 @@
                 fn_setDetail(listMyGridID, event.rowIndex);
             }
             else {
-                Common.alert("Access Rights" + DEFAULT_DELIMITER + "<b>No User Access Rights</b>");
+                Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
             }
         });
         
@@ -71,7 +71,7 @@
             Common.popupDiv("/sales/order/copyChangeOrder.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
         }
         else {
-            Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
+            Common.alert('<spring:message code="sal.alert.msg.preOrdMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noPreOrdSel" /></b>');
         }
     }
 
@@ -107,7 +107,7 @@
             var gridObj = AUIGrid.getSelectedItems(listMyGridID);
             
             if(gridObj == null || gridObj.length <= 0 ){
-                Common.alert("* No order Selected. ");
+                Common.alert('* <spring:message code="sal.alert.msg.noOrdSel" />');
                 return;
             }
             
@@ -132,12 +132,9 @@
         	    GridCommon.exportTo("#list_grid_wrap", "xlsx", "SalesSearchResultList");
         		
 	        }else{
-	            Common.alert("* No record to export. ");
+	            Common.alert('* <spring:message code="sal.alert.msg.noExport" />');
 	        }
      
-        });
-        $('#btnSim').click(function() {
-            Common.alert('<b>The program is under development.</b>');
         });
         $('#btnRentalPaySet').click(function() {
         	Common.popupDiv("/sales/order/orderRentalPaySettingUpdateListPop.do", null, null, true);
@@ -162,7 +159,7 @@
                 Common.popupWin("_frmLedger", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
             }
             else {
-                Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
+                Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
             }
         });
         $('#_btnLedger2').click(function() {
@@ -173,7 +170,7 @@
                 Common.popupWin("_frmLedger", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
             }
             else {
-                Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
+                Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
             }
         });
         $('#_btnTaxInvc').click(function() {
@@ -209,19 +206,19 @@
             
             if(FormUtil.isEmpty($('#listOrdStartDt').val()) || FormUtil.isEmpty($('#listOrdEndDt').val())) {
                 isValid = false;
-                msg += "* Please select order date<br/>";
+                msg += '* <spring:message code="sal.alert.msg.selOrdDt" /><br/>';
             }
             else {
                 var diffDay = fn_diffDate($('#listOrdStartDt').val(), $('#listOrdEndDt').val());
                  
                 if(diffDay > 31 || diffDay < 0) {
                     isValid = false;
-                    msg += "* Please enter search period within one month.";
+                    msg += '* <spring:message code="sal.alert.msg.srchPeriodDt" />';
                 }
             }
         }
 
-        if(!isValid) Common.alert("Order Search" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+        if(!isValid) Common.alert('<spring:message code="sal.title.text.ordSrch" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
     }
@@ -245,7 +242,7 @@
             Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
         }
         else {
-            Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
+            Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
         }
     }
     
@@ -255,7 +252,7 @@
             Common.popupDiv("/sales/order/orderRequestPop.do", { salesOrderId : AUIGrid.getCellValue(listMyGridID, selIdx, "ordId") }, null , true);
         }
         else {
-            Common.alert("Sales Order Missing" + DEFAULT_DELIMITER + "<b>No sales order selected.</b>");
+            Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
         }
     }
     
@@ -380,7 +377,7 @@
             isValid = false;
         }
         
-        if(!isValid) Common.alert("Access Rights" + DEFAULT_DELIMITER + "<b>No User Access Rights</b>");
+        Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
         
         return isValid;
     }
@@ -401,7 +398,7 @@
             isValid = false;
         }
         
-        if(!isValid) Common.alert("Access Rights" + DEFAULT_DELIMITER + "<b>No User Access Rights</b>");
+        Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
         
         return isValid;
     }
@@ -452,9 +449,9 @@
   </c:if>
 </c:if>
 <c:if test="${SESSION_INFO.userIsExternal == '1'}">
-	<li><p class="btn_blue"><a id="_btnLedger1" href="#">Order Ledger(1)</a></p></li>
-	<li><p class="btn_blue"><a id="_btnLedger2" href="#">Order Ledger(2)</a></p></li>
-	<li><p class="btn_blue"><a id="_btnTaxInvc" href="#">Tax Invoice(Rental)</a></p></li>
+	<li><p class="btn_blue"><a id="_btnLedger1" href="#"><spring:message code="sal.btn.ledger" />(1)</a></p></li>
+	<li><p class="btn_blue"><a id="_btnLedger2" href="#"><spring:message code="sal.btn.ledger" />(2)</a></p></li>
+	<li><p class="btn_blue"><a id="_btnTaxInvc" href="#"><spring:message code="sal.btn.taxInvoice" /></a></p></li>
 </c:if>
 	<li><p class="btn_blue"><a id="btnSrch" href="#"><span class="search"></span><spring:message code='sales.Search'/></a></p></li>
 	<li><p class="btn_blue"><a id="btnClear" href="#"><span class="clear"></span><spring:message code='sales.Clear'/></a></p></li>
