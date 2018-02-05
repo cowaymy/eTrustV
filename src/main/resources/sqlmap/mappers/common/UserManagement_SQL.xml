@@ -169,8 +169,7 @@
 
 
 <select id="createUserId" resultType="egovMap">
-    SELECT (SELECT NVL(MAX(user_id),0)+1 FROM SYS0047M) as user_id
-      FROM DUAL
+    SELECT SYS0047M_USER_ID_SEQ.NEXTVAL AS user_id FROM DUAL
 </select>
 
 <update id="saveUserManagementList" parameterType="Map">
