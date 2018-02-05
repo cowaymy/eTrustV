@@ -171,7 +171,7 @@
 
 			         row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
 
-			         FROM ( SELECT
+			         FROM ( SELECT DISTINCT 
 			        GroupBy1.A1 C1,
 			        Extent1.MEM_ID MEM_ID,
 			        Extent1.MEM_CODE MEM_CODE,
