@@ -1181,7 +1181,7 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>HS Management</h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_codyChangeHQ();" id="codyChangeHQ">Assign Cody Transfer HQ</a></p></li>
+    <!-- <li><p class="btn_blue"><a href="#" onclick="javascript:fn_codyChangeHQ();" id="codyChangeHQ">Assign Cody Transfer HQ</a></p></li> -->
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_codyChange();" id="codyChange" >Assign Cody Transfer</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getHSAddListAjax();" id="addResult">Add HS Result</a></p></li>
     <li><p class="btn_blue"><a id="hSConfiguration" name="hSConfiguration">Create HS Order</a></p></li>
