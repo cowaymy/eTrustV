@@ -634,7 +634,11 @@
 					          ]]>
 			         LEFT JOIN SYS0028M Extent9   ON Extent9.WH_LOC_ID = Filter1.MOV_TO_LOC_ID
 			 WHERE  Filter1.TYPE_ID = #{typeId} 
-			     AND  Filter1.REF_ID = #{refId} 
+                 AND  Filter1.REF_ID = #{refId}
+               <if test='stusCodeId != null and stusCodeId !=""'>
+                 AND  Filter1.STATUSCODEID1 = #{stusCodeId} 
+               </if>
+                 AND ROWNUM &lt;= 1
     </select>
     
     <select id="selectAssignCT" parameterType="Map" resultType="egovMap">
