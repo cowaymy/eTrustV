@@ -13,7 +13,7 @@
             (CASE WHEN   (NET_AMT -  CREDIT_AMT )  =0  THEN  'true' ELSE  'false'  END) AS is_Amt_Same ,
             NET_AMT -  CREDIT_AMT  as  variance
         FROM(
-                SELECT B.CRC_STATE_ID, 
+                SELECT 
                         B.CRC_TRNSC_MID,
                         D.CODE_ID,
                         B.CRC_TRNSC_DT,
