@@ -10,9 +10,9 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Type of Document", dataField : "codeName"                }
-          , { headerText : "Submit Date",      dataField : "docSubDt",   width : 120 }
-          , { headerText : "Quantity",         dataField : "docCopyQty", width : 120 }
+            { headerText : '<spring:message code="sal.text.typeDoc" />',    dataField : "codeName"                }
+          , { headerText : '<spring:message code="sal.text.submitDate" />', dataField : "docSubDt",   width : 120 }
+          , { headerText : '<spring:message code="sal.text.quantity" />',   dataField : "docCopyQty", width : 120 }
           ];
         
         docGridID = GridCommon.createAUIGrid("grid_doc_wrap", columnLayout, "", gridPros);
