@@ -153,6 +153,9 @@ function fn_clearData() {
     $("#invcNo").val("");
     $("#expDesc").val("");
     $("#utilNo").val("");
+    $("#jPayNo").val("")
+    $("#bilPeriodF").val("")
+    $("#bilPeriodT").val("")
 
     AUIGrid.destroy(myGridID);
     myGridID = AUIGrid.create("#my_grid_wrap", myGridColumnLayout, myGridPros);
@@ -514,6 +517,9 @@ function fn_addRow() {
                 		data.gridData.add[i].cur = data.cur;
                 		data.gridData.add[i].expDesc = data.expDesc;
                 		data.gridData.add[i].utilNo = data.utilNo;
+                		data.gridData.add[i].jPayNo = data.jPayNo;
+                		data.gridData.add[i].bilPeriodF = data.bilPeriodF;
+                		data.gridData.add[i].bilPeriodT = data.bilPeriodT;
                 		data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
                 		AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                 	}
@@ -578,6 +584,9 @@ function fn_addRow() {
                         data.gridData.add[i].cur = data.cur;
                         data.gridData.add[i].expDesc = data.expDesc;
                         data.gridData.add[i].utilNo = data.utilNo;
+                        data.gridData.add[i].jPayNo = data.jPayNo;
+                        data.gridData.add[i].bilPeriodF = data.bilPeriodF;
+                        data.gridData.add[i].bilPeriodT = data.bilPeriodT;
                         data.gridData.add[i].atchFileGrpId = atchFileGrpId;
                         AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                     }
@@ -601,6 +610,9 @@ function fn_addRow() {
                         data.gridData.update[i].cur = data.cur;
                         data.gridData.update[i].expDesc = data.expDesc;
                         data.gridData.update[i].utilNo = data.utilNo;
+                        data.gridData.update[i].jPayNo = data.jPayNo;
+                        data.gridData.update[i].bilPeriodF = data.bilPeriodF;
+                        data.gridData.update[i].bilPeriodT = data.bilPeriodT;
                         AUIGrid.updateRow(newGridID, data.gridData.update[i], AUIGrid.rowIdToIndex(newGridID, data.gridData.update[i].clmSeq));
                     }
                 }
