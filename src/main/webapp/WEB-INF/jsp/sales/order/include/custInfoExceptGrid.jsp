@@ -14,37 +14,37 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><span>${orderDetail.basicInfo.custId}
     <c:if test="${not empty orderDetail.basicInfo.crtDur}">
         (${orderDetail.basicInfo.crtDur} month)    
     </c:if>
     </span></td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td colspan="3"><span>${orderDetail.basicInfo.custName}</span></td>
 </tr>
 <tr>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td><span>${orderDetail.basicInfo.custType}</span></td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.text.nricCompanyNo" /></th>
     <td><span>${orderDetail.basicInfo.custNric}</span></td>
-    <th scope="row">JomPay Ref-1</th>
+    <th scope="row"><spring:message code="sal.text.jomPayRef1" /></th>
     <td><span>${orderDetail.basicInfo.jomPayRef}</span></td>
 </tr>
 <tr>
-    <th scope="row">Nationality</th>
+    <th scope="row"><spring:message code="sal.text.nationality" /></th>
     <td><span>${orderDetail.basicInfo.custNation}</span></td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span>${orderDetail.basicInfo.custGender}</span></td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${orderDetail.basicInfo.custRace}</span></td>
 </tr>
 <tr>
-    <th scope="row">VA Number</th>
+    <th scope="row"><spring:message code="sal.text.vaNumber" /></th>
     <td><span>${orderDetail.basicInfo.custVaNo}</span></td>
-    <th scope="row">Passport Exprire</th>
+    <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
     <td><span>${orderDetail.basicInfo.custPassportExpr}</span></td>
-    <th scope="row">Visa Exprire</th>
+    <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
     <td><span>${orderDetail.basicInfo.custVisaExpr}</span></td>
 </tr>
 </tbody>
