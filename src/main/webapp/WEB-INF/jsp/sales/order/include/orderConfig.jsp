@@ -12,23 +12,23 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">BS Availability</th>
+    <th scope="row"><spring:message code="sal.text.bsAvail" /></th>
     <td><span>${orderDetail.orderCfgInfo.configBsGen}</span></td>
-    <th scope="row">BS Frequency</th>
+    <th scope="row"><spring:message code="sal.text.bsFrequency" /></th>
     <td><span>${orderDetail.orderCfgInfo.srvMemFreq} month(s)</span></td>
-    <th scope="row">Last BS Date</th>
+    <th scope="row"><spring:message code="sal.text.lastBsDt" /></th>
     <td><span>${orderDetail.orderCfgInfo.setlDt}</span></td>
 </tr>
 <tr>
-    <th scope="row">BS Cody Code</th>
+    <th scope="row"><spring:message code="sal.text.bsCodyCd" /></th>
     <td colspan="5"><span>${orderDetail.orderCfgInfo.memCode} - ${orderDetail.orderCfgInfo.name}</span></td>
 </tr>
 <tr>
-    <th scope="row">Config Remark</th>
+    <th scope="row"><spring:message code="sal.text.configRem" /></th>
     <td colspan="5"><span>${orderDetail.orderCfgInfo.configBsRem}</span></td>
 </tr>
 <tr>
-    <th scope="row">Happy Call Service</th>
+    <th scope="row"><spring:message code="sal.text.happyCallSvc" /></th>
     <td colspan="5">
     <label>
   <c:choose>
@@ -39,7 +39,7 @@
        <input type="checkbox" onClick="return false"/>
     </c:otherwise>
   </c:choose>
-    <span>Installation Type</span></label>
+    <span><spring:message code="sal.text.instType" /></span></label>
     <label>
   <c:choose>
     <c:when test="${orderDetail.orderCfgInfo.configSettBs == 1}">
@@ -49,7 +49,7 @@
        <input type="checkbox" onClick="return false"/>
     </c:otherwise>
   </c:choose>
-    <span>BS Type</span></label>
+    <span><spring:message code="sal.text.bsType" /></span></label>
     <label>
   <c:choose>
     <c:when test="${orderDetail.orderCfgInfo.configSettAs == 1}">
@@ -59,17 +59,17 @@
        <input type="checkbox" onClick="return false"/>
     </c:otherwise>
   </c:choose>
-    <span>AS Type</span></label>
+    <span><spring:message code="sal.text.asType" /></span></label>
     </td>
 </tr>
 <tr>
-    <th scope="row">Prefer BS Week</th>
+    <th scope="row"><spring:message code="sal.text.preferBsWeek" /></th>
     <td colspan="5">
-    <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 0 || orderDetail.orderCfgInfo.configBsWeek > 4}">checked</c:if> disabled/><span>None</span></label>
-    <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 1}">checked</c:if> disabled/><span>Week1</span></label>
-    <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 2}">checked</c:if> disabled/><span>Week2</span></label>
-    <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 3}">checked</c:if> disabled/><span>Week3</span></label>
-    <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 4}">checked</c:if> disabled/><span>Week4</span></label>
+    <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 0 || orderDetail.orderCfgInfo.configBsWeek > 4}">checked</c:if> disabled/><span><spring:message code="sal.text.none" /></span></label>
+    <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 1}">checked</c:if> disabled/><span><spring:message code="sal.text.week1" /></span></label>
+    <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 2}">checked</c:if> disabled/><span><spring:message code="sal.text.week2" /></span></label>
+    <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 3}">checked</c:if> disabled/><span><spring:message code="sal.text.week3" /></span></label>
+    <label><input type="radio" name="week" <c:if test="${orderDetail.orderCfgInfo.configBsWeek == 4}">checked</c:if> disabled/><span><spring:message code="sal.text.week4" /></span></label>
     </td>
 </tr>
 </tbody>
