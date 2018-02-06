@@ -71,5 +71,9 @@ public interface CrcReconBankStateMapper {
 	 * @return
 	 */	
 	void insertInterfaceTb(Map<String, Object> params);
+	
+	
+	void insertCardPaymentMatchIF(Map<String, Object> params);
+	
 
 }

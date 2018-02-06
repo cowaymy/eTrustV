@@ -22,6 +22,17 @@ var gridPros2 = {
 	showStateColumn : false			// 상태 칼럼 사용
 };
 
+
+
+var gridPros1 = {
+    editable : false,               // 편집 가능 여부 (기본값 : false)
+    showRowCheckColumn : true,      // 체크박스 표시 설정
+    rowCheckToCheck : true,         // 체크박스 대신 라디오버튼 출력함
+    softRemoveRowMode:false,
+    headerHeight : 35,              // 기본 헤더 높이 지정
+    showStateColumn : false         // 상태 칼럼 사용
+};
+
 var advKeyInLayout = [ 
 	{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGroupNo'/>",width : 90 , editable : false},
 	{dataField : "payItmModeNm",headerText : "<spring:message code='pay.head.paymentMode'/>",width : 90 , editable : false},
@@ -30,7 +41,8 @@ var advKeyInLayout = [
 	{dataField : "payItmBankInSlipNo",headerText : "<spring:message code='pay.head.slipNo'/>",width : 120 , editable : false},
 	{dataField : "refDtl",headerText : "<spring:message code='pay.head.refDetailsJompayRef'/>",width : 120 , editable : false},
 	{dataField : "totAmt",headerText : "<spring:message code='pay.head.amount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" },
-	{dataField : "bankChgAmt",headerText : "<spring:message code='pay.head.bankCharge'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" }];
+	{dataField : "bankChgAmt",headerText : "<spring:message code='pay.head.bankCharge'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" }
+];
 
 var bankStmtLayout = [
 	{dataField : "fTrnscId",headerText : "<spring:message code='pay.head.id'/>",width : 150 , editable : false, visible : false},
@@ -41,7 +53,8 @@ var bankStmtLayout = [
 	{dataField : "fTrnscCrditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 100 , editable : false, dataType:"numeric", formatString : "###0.00" },
 	{dataField : "fTrnscRef4",headerText : "<spring:message code='pay.head.depositSlipNoEftMid'/>",width : 100 , editable : false},
 	{dataField : "fTrnscNewChqNo",headerText : "<spring:message code='pay.head.chqNo'/>",width : 100 , editable : false},
-	{dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNo'/>",width : 100 , editable : false}];
+	{dataField : "fTrnscRefVaNo",headerText : "<spring:message code='pay.head.vaNo'/>",width : 100 , editable : false}
+];
 
 
 $(document).ready(function(){
@@ -53,7 +66,7 @@ $(document).ready(function(){
 	//Branch Combo 생성
 	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
 
-    advKeyInGridId = GridCommon.createAUIGrid("adv_keyin_grid_wrap", advKeyInLayout,"",gridPros2);
+    advKeyInGridId = GridCommon.createAUIGrid("adv_keyin_grid_wrap", advKeyInLayout,"",gridPros1);
     bankStmtGridId = GridCommon.createAUIGrid("bank_stmt_grid_wrap", bankStmtLayout,"",gridPros2);
 
 	// 셀 더블클릭 이벤트 바인딩 : 상세 팝업 

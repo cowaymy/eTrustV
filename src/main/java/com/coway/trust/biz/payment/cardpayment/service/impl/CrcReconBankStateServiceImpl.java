@@ -61,6 +61,7 @@ public class CrcReconBankStateServiceImpl extends EgovAbstractServiceImpl implem
 		for(int i=0; i<gridList.size(); i++){
 			Map<String, Object> row = (HashMap<String, Object>) gridList.get(i);
 			row.put("userId", userId);
+			
 			//crc 업데이트
 			System.out.println(row);
 			crcReconBankStateMapper.updateCrc(row);
@@ -91,6 +92,21 @@ public class CrcReconBankStateServiceImpl extends EgovAbstractServiceImpl implem
 			for(int j=0; j<insertList.size(); j++){
 				insertList.get(j).put("diffAmt", sum - Double.parseDouble(String.valueOf(insertList.get(j).get("creditAmt"))));
 				crcReconBankStateMapper.insertInterfaceTb(insertList.get(j));
+			}
+			
+			
+			
+			// IF942  insert   Confirm Bank Charge I/F  add by hgham 2018-02-06
+			if(((String) row.get("isAmtSame" )).equals("false")){
+				Map<String, Object> ifM = new HashMap<String, Object>();
+				
+				ifM.put("userId", userId);
+				ifM.put("accId",  row.get("accountCode" ));
+				ifM.put("variance", row.get("variance" ));
+				ifM.put("fTrnscId", row.get("fTrnscId" ));
+				
+				crcReconBankStateMapper.insertCardPaymentMatchIF(ifM);
+				
 			}
 		}
 		return 1;
