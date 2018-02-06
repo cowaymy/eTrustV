@@ -455,7 +455,17 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
                 $("#expDesc").text(result.data.invcRem);
                 $("#utilNo").text(result.data.utilNo);
                 $("#jPayNo").text(result.data.jPayNo);
-                var bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
+                var bilPeriod = "";
+                if(!FormUtil.isEmpty(result.data.bilPeriodF) && !FormUtil.isEmpty(result.data.bilPeriodT)) {
+                	bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
+                } else {
+                	if(!FormUtil.isEmpty(result.data.bilPeriodF) && FormUtil.isEmpty(result.data.bilPeriodT)) {
+                		bilPeriod = result.data.bilPeriodF + " - ";
+                	}
+                	if(FormUtil.isEmpty(result.data.bilPeriodF) && !FormUtil.isEmpty(result.data.bilPeriodT)) {
+                        bilPeriod = " - " + result.data.bilPeriodT;
+                    }
+                }
                 $("#bilPeriod").text(bilPeriod);
                 mGridColumnLayout[4].visible = false;
             } else if(clmType == "J2") {
@@ -465,7 +475,17 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
                 $("#payInfo2").show();
                 $("#utilNo").text(result.data.utilNo);
                 $("#jPayNo").text(result.data.jPayNo);
-                var bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
+                var bilPeriod = "";
+                if(!FormUtil.isEmpty(result.data.bilPeriodF) && !FormUtil.isEmpty(result.data.bilPeriodT)) {
+                    bilPeriod = result.data.bilPeriodF + " - " + result.data.bilPeriodT;
+                } else {
+                    if(!FormUtil.isEmpty(result.data.bilPeriodF) && FormUtil.isEmpty(result.data.bilPeriodT)) {
+                        bilPeriod = result.data.bilPeriodF + " - ";
+                    }
+                    if(FormUtil.isEmpty(result.data.bilPeriodF) && !FormUtil.isEmpty(result.data.bilPeriodT)) {
+                        bilPeriod = " - " + result.data.bilPeriodT;
+                    }
+                }
                 $("#bilPeriod").text(bilPeriod);
             } else {
                 $("#supplirTh").html('<spring:message code="pettyCashNewExp.supplierName" />');
