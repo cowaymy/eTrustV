@@ -270,24 +270,22 @@ public class EgovFileDownloadController {
 			subPath = (String) params.get("subPath");
 			fileName = (String) params.get("fileName");
 			originalFileName = (String) params.get("orignlFileNm");
-		}		
-		// 	File.separator = \
-		// Testing with \ or / is required
-		File uFile = new File(uploadDirWeb + "/" + subPath, fileName);
+		}
+
+		File uFile = new File(uploadDirWeb + File.separator + subPath, fileName);
 		long fSize = uFile.length();
 
 		if (fSize > 0) {
-		
 			String mimetype = "application/x-msdownload";
 			response.setContentType(mimetype);
 			response.setHeader("Set-Cookie", "fileDownload=true; path=/"); 	///resources/js/jquery.fileDownload.js   callback 호출시 필수.
 			setDisposition(originalFileName, request, response);
 			BufferedInputStream in = null;
 			BufferedOutputStream out = null;
-			
-			try {		
-				in = new BufferedInputStream(new FileInputStream(uFile));		
-				out = new BufferedOutputStream(response.getOutputStream());		
+
+			try {
+				in = new BufferedInputStream(new FileInputStream(uFile));
+				out = new BufferedOutputStream(response.getOutputStream());
 
 				FileCopyUtils.copy(in, out);
 				out.flush();
