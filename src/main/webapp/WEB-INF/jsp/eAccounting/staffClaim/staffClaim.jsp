@@ -816,9 +816,12 @@ function fn_getAllTotAmt() {
     for(var i = 0; i < totAmtList.length; i++) {
         allTotAmt += totAmtList[i];
     }
-    allTotAmt += "";
+    console.log($.number(allTotAmt,2,'.',''));
+    allTotAmt = $.number(allTotAmt,2,'.',',');
+    //allTotAmt += "";
     console.log(allTotAmt);
-    $("#allTotAmt_text").text(allTotAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+    //$("#allTotAmt_text").text(allTotAmt.replace(/(\d)(?=(?:\d{3})+(?!\d))/g, '$1,'));
+    $("#allTotAmt_text").text(allTotAmt);
 }
 
 function fn_insertStaffClaimExp(st) {
