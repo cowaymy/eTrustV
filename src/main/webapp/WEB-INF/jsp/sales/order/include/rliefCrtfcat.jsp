@@ -10,17 +10,17 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Reference No</th>
+    <th scope="row"><spring:message code="sal.text.refNo" /></th>
     <td><span>${orderDetail.gstCertInfo.eurcRefNo}</span></td>
-    <th scope="row">Certificate Date</th>
+    <th scope="row"><spring:message code="sal.title.text.certificateDate" /></th>
     <td><span>${orderDetail.gstCertInfo.eurcRefDt}</span></td>
 </tr>
 <tr>
-    <th scope="row">GST Registration No</th>
+    <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
     <td colspan="3"><span>${orderDetail.gstCertInfo.eurcCustRgsNo}</span></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="3"><span>${orderDetail.gstCertInfo.eurcRem}</span></td>
 </tr>
 </tbody>
