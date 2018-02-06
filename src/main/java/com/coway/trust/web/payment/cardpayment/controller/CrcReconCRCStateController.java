@@ -99,5 +99,28 @@ public class CrcReconCRCStateController {
 		return ResponseEntity.ok(message);
 	}
 	
+	/**
+	 * Mapping List Income 처리
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return 
+	 * @return
+	 */
+	@RequestMapping(value = "/updIncomeCrcStatement", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> updIncomeCrcStatement(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+			
+		ReturnMessage message = new ReturnMessage();
+			int userId = sessionVO.getUserId();
+			params.put("userId", userId);			
+			
+			crcReconCRCStateService.updIncomeCrcStatement(params);
+				
+			// 조회 결과 리턴.
+	    	message.setCode(AppConstants.SUCCESS);
+			
+			return ResponseEntity.ok(message);
+		}
+	
 	
 }

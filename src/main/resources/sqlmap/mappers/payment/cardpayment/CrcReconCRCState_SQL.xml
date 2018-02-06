@@ -356,4 +356,43 @@
                 GROUP BY  F.OR_NO, G.ORD_NO            
     </select>
     
+    
+    <insert id="updIncomeCrcStatementIF" parameterType="EgovMap">
+        INSERT INTO ITF0942M (
+            IF_KEY,
+            SEQ,
+            IF_TYPE,
+            TRAN_STATUS_CD,
+            RGST_DT,
+            RGST_TM,            
+            RGST_ID,            
+            PAY_DT,
+            BANK_SEQ,
+            BANK_ID,
+            BANKAC,
+            DIFF_TYPE,
+            DIFF_AMT
+        )
+        SELECT
+            FN_CRT_IFKEY('942'),
+            1,
+            '942',
+            '10',       
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),
+            #{userId},
+            B.CRC_TRNSC_DT,
+            (SELECT NVL(MAX(BANK_SEQ),0)+1 FROM ITF0942M WHERE TO_CHAR(PAY_DT,'YYYYMMDD') = TO_CHAR(B.CRC_TRNSC_DT,'YYYYMMDD')),            
+            B.CRC_TRNSC_ID,
+            (SELECT ACC_CODE FROM SYS0001M WHERE ACC_ID = A.CRC_STATE_ACC_ID), 
+            'AC002',
+            #{grosAmt}                        
+        FROM 
+            PAY0075D A
+            JOIN PAY0076D B ON A.CRC_STATE_ID = B.CRC_STATE_ID
+        WHERE
+            B.CRC_TRNSC_ID = #{crcTrnscId}
+            AND ROWNUM <![CDATA[ <= ]]> 1
+    </insert>
+    
 </mapper>

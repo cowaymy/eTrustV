@@ -88,4 +88,9 @@ public class CrcReconCRCStateServiceImpl extends EgovAbstractServiceImpl impleme
     	
 	}
 	
+	@Override
+	public void updIncomeCrcStatement(Map<String, Object> params) {
+		crcReconCRCStateMapper.updCrcStatement(params);
+		crcReconCRCStateMapper.updIncomeCrcStatementIF(params);
+	}
 }

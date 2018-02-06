@@ -28,6 +28,22 @@ var gridPros2 = {
         showRowCheckColumn : true,
         
         // 체크박스 대신 라디오버튼 출력함
+        rowCheckToRadio : false,
+        
+        softRemoveRowMode:false,
+        // 상태 칼럼 사용
+        showStateColumn : false
+        
+};
+
+var gridPros3 = {
+        // 편집 가능 여부 (기본값 : false)
+        editable : false,
+        
+        // 체크박스 표시 설정
+        showRowCheckColumn : true,
+        
+        // 체크박스 대신 라디오버튼 출력함
         rowCheckToRadio : true,
         
         softRemoveRowMode:false,
@@ -42,7 +58,7 @@ $(document).ready(function(){
 	
 	mappingGridId = GridCommon.createAUIGrid("mapping_grid_wrap", mappingLayout,"",gridPros);
 	crcKeyInGridId = GridCommon.createAUIGrid("crcKeyIn_grid_wrap", crcKeyInLayout,"",gridPros2);
-	crcStateGridId = GridCommon.createAUIGrid("crcState_grid_wrap", crcStateLayout,"",gridPros2);
+	crcStateGridId = GridCommon.createAUIGrid("crcState_grid_wrap", crcStateLayout,"",gridPros3);
 	
 });
 
@@ -233,41 +249,43 @@ var crcStateLayout = [
     	var keyInRowItem;
     	var stateRowItem;
     	var item = new Object();
-    	
-    	if(crcKeyInChkItem.length > 0 ){
-    		keyInRowItem = crcKeyInChkItem[0];
-            stateRowItem = crcStateChkItem[0];
-            
-            if(crcStateChkItem.length > 0){
-                
-                crcKeyInVal = keyInRowItem.item.groupSeq;
-                item.cardModeName = keyInRowItem.item.cardModeName;
-                item.crcMcName = stateRowItem.item.bankAccName;
-                item.crcTrnscDt = stateRowItem.item.crcTrnscDt;
-                item.crcTrnscNo = stateRowItem.item.crcTrnscNo; // crcNo no check?
-                item.crcTrnscAppv = stateRowItem.item.crcTrnscAppv;
-                item.amount = stateRowItem.item.grosAmt;
-                item.groupSeq = crcKeyInVal;//hidden field
-                item.orNo = keyInRowItem.item.orNo;//hidden field
-                item.ordNo = keyInRowItem.item.ordNo;//hidden field
-                item.crcTrnscId = stateRowItem.item.crcTrnscId;//hidden field
-                item.crcStateAccId = stateRowItem.item.crcStateAccId;//hidden field
-                item.crcTrnscMid = stateRowItem.item.crcTrnscMid;//hidden field
-                item.crcStateAccCode = stateRowItem.item.accCode;//hidden field
-                item.crditCard = stateRowItem.item.crditCard;//hidden field
-                
-                console.log(item);
-                AUIGrid.addRow(mappingGridId, item, "last");
-                AUIGrid.removeCheckedRows(crcKeyInGridId);
-                AUIGrid.removeCheckedRows(crcStateGridId);
-            }else{
-                Common.alert("<spring:message code='pay.alert.crcStateData'/>");
-            }
-            
-    	}else{
+
+		if(crcKeyInChkItem.length < 1 ){
     		Common.alert("<spring:message code='pay.alert.crcKeyInData'/>");
+			return;
     	}
-        
+
+		if(crcStateChkItem.length < 1){
+			Common.alert("<spring:message code='pay.alert.crcStateData'/>");
+			return;
+		}
+		
+		for(i = 0 ; i < crcKeyInChkItem.length ; i++){
+			keyInRowItem = crcKeyInChkItem[i];
+	        stateRowItem = crcStateChkItem[0];
+                
+			crcKeyInVal = keyInRowItem.item.groupSeq;
+			item.cardModeName = keyInRowItem.item.cardModeName;
+			item.crcMcName = stateRowItem.item.bankAccName;
+			item.crcTrnscDt = stateRowItem.item.crcTrnscDt;
+			item.crcTrnscNo = stateRowItem.item.crcTrnscNo; // crcNo no check?
+			item.crcTrnscAppv = stateRowItem.item.crcTrnscAppv;
+			item.amount = stateRowItem.item.grosAmt;
+			item.groupSeq = crcKeyInVal;//hidden field
+			item.orNo = keyInRowItem.item.orNo;//hidden field
+			item.ordNo = keyInRowItem.item.ordNo;//hidden field
+			item.crcTrnscId = stateRowItem.item.crcTrnscId;//hidden field
+			item.crcStateAccId = stateRowItem.item.crcStateAccId;//hidden field
+			item.crcTrnscMid = stateRowItem.item.crcTrnscMid;//hidden field
+			item.crcStateAccCode = stateRowItem.item.accCode;//hidden field
+			item.crditCard = stateRowItem.item.crditCard;//hidden field
+		
+			console.log(item);
+			AUIGrid.addRow(mappingGridId, item, "last");			
+		}
+
+		AUIGrid.removeCheckedRows(crcKeyInGridId);
+		AUIGrid.removeCheckedRows(crcStateGridId);
     }
     
     function fn_mappingListKnockOff() {
@@ -292,6 +310,29 @@ var crcStateLayout = [
         	Common.alert("<spring:message code='pay.alert.noMapping'/>");
         }
     }
+
+	function fn_incomeProc() {
+		var crcStateChkItem = AUIGrid.getCheckedRowItems(crcStateGridId);
+		var stateRowItem;
+
+		if(crcStateChkItem.length > 0){
+
+			stateRowItem = crcStateChkItem[0];
+
+			Common.confirm("Do you want to confirm the seleced item as income?",function (){
+				Common.ajax("GET","/payment/updIncomeCrcStatement.do", {"crcTrnscId" : stateRowItem.item.crcTrnscId, "grosAmt" : stateRowItem.item.grosAmt}, function(result){
+
+					var message = "Success Income Process";
+					Common.alert(message, function(){
+						fn_getCrcReconStateList();
+		    		});  
+					
+				});
+			});
+		}else{
+			Common.alert("<spring:message code='pay.alert.crcStateData'/>");
+		}
+	}
 	
 </script>
 <section id="content"><!-- content start -->
@@ -368,6 +409,9 @@ var crcStateLayout = [
 
     
     <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+        <li><p class="btn_blue2"><a href="javascript:fn_incomeProc();" id="btnIncome">Income</a></p></li>
+    </c:if>    
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="btn_blue2"><a href="javascript:fn_mappingProc();" id="btnMapping"><spring:message code='pay.btn.mapping'/></a></p></li>
     </c:if>    

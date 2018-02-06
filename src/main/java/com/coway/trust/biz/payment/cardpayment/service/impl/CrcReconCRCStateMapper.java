@@ -68,4 +68,11 @@ public interface CrcReconCRCStateMapper {
 	 */	
 	List<EgovMap> selectCrcKeyInOrNoList(Map<String, Object> params);
 	
+	/**
+	 * insertCrcStatementITF
+	 * @param params
+	 * @return
+	 */
+	void updIncomeCrcStatementIF(Map<String, Object> params);
+	
 }

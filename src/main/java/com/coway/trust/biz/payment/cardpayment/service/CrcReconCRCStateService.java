@@ -46,4 +46,13 @@ public interface CrcReconCRCStateService
 	 */	
     boolean updCrcReconState(int userId, List<Object> paramList);
     
+    /**
+	 * updCrcReconState
+	 * @param 
+	 * @param params
+	 * @param model
+	 * @return
+	 */	
+    void updIncomeCrcStatement(Map<String, Object> params);
+    
 }
