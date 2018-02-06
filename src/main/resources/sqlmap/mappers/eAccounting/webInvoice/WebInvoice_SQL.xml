@@ -66,8 +66,8 @@ SELECT   T.CLM_NO
              AND T.INVC_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
         </if>          
-        <if test="memAccID != null and memAccID != ''">
-             AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccID})
+        <if test="memAccId != null and memAccId != ''">
+             AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
         </if>          
         <if test="costCenter != null and costCenter != ''">
              AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
