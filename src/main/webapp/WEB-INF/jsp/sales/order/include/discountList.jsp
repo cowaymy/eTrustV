@@ -12,12 +12,12 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Order No",          dataField : "salesOrdNo",      width : 100 }
-          , { headerText : "DiscountType",      dataField : "codeDesc",        width : 180 }
-          , { headerText : "AmtPerInstalment",  dataField : "dcAmtPerInstlmt", width : 120 }
-          , { headerText : "Start Installment", dataField : "dcStartInstlmt",  width : 120 }
-          , { headerText : "End Installment",   dataField : "dcEndInstlmt",    width : 120 }
-          , { headerText : "Remark",            dataField : "rem"                          }
+            { headerText : '<spring:message code="sal.text.ordNo" />',        dataField : "salesOrdNo",      width : 100 }
+          , { headerText : '<spring:message code="sal.text.discountType" />', dataField : "codeDesc",        width : 180 }
+          , { headerText : '<spring:message code="sal.text.amtPerInst" />',   dataField : "dcAmtPerInstlmt", width : 120 }
+          , { headerText : '<spring:message code="sal.text.startInst" />',    dataField : "dcStartInstlmt",  width : 120 }
+          , { headerText : '<spring:message code="sal.text.endInst" />',      dataField : "dcEndInstlmt",    width : 120 }
+          , { headerText : '<spring:message code="sal.text.remark" />',       dataField : "rem"                          }
           ];
 
         discountGridID = GridCommon.createAUIGrid("grid_discount_wrap", columnLayout, "", gridPros);
