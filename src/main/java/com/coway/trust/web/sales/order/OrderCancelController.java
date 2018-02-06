@@ -238,6 +238,9 @@ public class OrderCancelController {
 		List<EgovMap> selectAssignCTList = orderCancelService.selectAssignCT(params);
 		
 		EgovMap cancelReqInfo = orderCancelService.cancelReqInfo(params);
+		
+		params.put("stusCodeId", 1);
+		
 		EgovMap ctAssignmentInfo = orderCancelService.ctAssignmentInfo(params);
 		
 		model.addAttribute("cancelReqInfo", cancelReqInfo);
