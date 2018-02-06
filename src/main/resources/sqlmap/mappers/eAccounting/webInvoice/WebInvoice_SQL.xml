@@ -812,8 +812,8 @@ SELECT T.APPV_PRCSS_NO
              AND T.REQST_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
         </if>          
-        <if test="memAccID != null and memAccID != ''">
-             AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccID})
+        <if test="memAccId != null and memAccId != ''">
+             AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
         </if>          
         <if test="createUser != null and createUser != ''">
              AND UPPER(T.REQST_USER_ID) = UPPER(#{createUser})
