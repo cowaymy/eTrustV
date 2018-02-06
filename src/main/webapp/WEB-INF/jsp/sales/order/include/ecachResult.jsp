@@ -12,11 +12,11 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Deduction Date", dataField : "fileItmCrt",    width : 120 }
-          , { headerText : "Payment Type",   dataField : "codeName" }
-          , { headerText : "Amount",         dataField : "fileItmAmt",    width : 120 }
-          , { headerText : "Success ?",      dataField : "isSuccess",     width : 120 }
-          , { headerText : "Reason",         dataField : "fileItmRem",    width : 260 }
+            { headerText : '<spring:message code="sal.text.deductDt" />',  dataField : "fileItmCrt",    width : 120 }
+          , { headerText : '<spring:message code="sal.title.payType" />',  dataField : "codeName" }
+          , { headerText : '<spring:message code="sal.title.amount" />',   dataField : "fileItmAmt",    width : 120 }
+          , { headerText : '<spring:message code="sal.text.isSuccess" />', dataField : "isSuccess",     width : 120 }
+          , { headerText : '<spring:message code="sal.text.reason" />',    dataField : "fileItmRem",    width : 260 }
           ];
 
         ecashGridID = GridCommon.createAUIGrid("grid_ecash_wrap", columnLayout, "", gridPros);
@@ -36,6 +36,6 @@
 <div id="grid_ecash_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <ul class="left_opt">
-    <li><span class="red_text">**</span> <span class="brown_text">Disclaimer : This data is subject to Coway private information property which is not meant to view by any public other than coway internal staff only.</span></li>
+    <li><span class="red_text">**</span> <span class="brown_text"><spring:message code="sal.msg.ecashRslt" /></span></li>
 </ul>
 </article><!-- tap_area end -->
