@@ -11,15 +11,15 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Receipt No",              dataField : "orNo",         width : 100 }
-          , { headerText : "Reverse For",             dataField : "revReceiptNo", width : 100 }
-          , { headerText : "Payment<br>Date",         dataField : "payData",      width : 80  }
-          , { headerText : "Payment Type",            dataField : "codeDesc",     width : 120 }
-          , { headerText : "Debtor Acc",              dataField : "accCode",      width : 100 }
-          , { headerText : "Key-In Branch<br>(Code)", dataField : "code",         width : 90  }
-          , { headerText : "Key-In Branch<br>(Name)", dataField : "name1",        width : 140 }
-          , { headerText : "Total Amount",            dataField : "totAmt",       width : 100 }
-          , { headerText : "Creator",                 dataField : "userName",     width : 80  }
+            { headerText : '<spring:message code="sal.title.receiptNo" />',    dataField : "orNo",         width : 100 }
+          , { headerText : '<spring:message code="sal.title.reverseFor" />',   dataField : "revReceiptNo", width : 100 }
+          , { headerText : '<spring:message code="sal.text.payDate" />',       dataField : "payData",      width : 80  }
+          , { headerText : '<spring:message code="sal.title.payType" />',      dataField : "codeDesc",     width : 120 }
+          , { headerText : '<spring:message code="sal.title.debtorAcc" />',    dataField : "accCode",      width : 100 }
+          , { headerText : '<spring:message code="sal.text.keyInBranchCd" />', dataField : "code",         width : 90  }
+          , { headerText : '<spring:message code="sal.text.keyInBranchNm" />', dataField : "name1",        width : 140 }
+          , { headerText : '<spring:message code="sal.text.totAmt" />',        dataField : "totAmt",       width : 100 }
+          , { headerText : '<spring:message code="sal.text.creator" />',       dataField : "userName",     width : 80  }
           ];
 
         payGridID = GridCommon.createAUIGrid("grid_pay_wrap", columnLayout, "", gridPros);
