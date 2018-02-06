@@ -14,15 +14,15 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Membership<br>No",    dataField : "mbrshNo",       width   : 120   }
-          , { headerText : "Bill No",             dataField : "mbrshBillNo",   width   : 100   }
-          , { headerText : "Date",                dataField : "mbrshCrtDt",    width   : 90    }
-          , { headerText : "Status",              dataField : "mbrshStusCode", width   : 70    }
-          , { headerText : "Package",             dataField : "pacName"                        }
-          , { headerText : "Start",               dataField : "mbrshStartDt",  width   : 90    }
-          , { headerText : "End",                 dataField : "mbrshExprDt",   width   : 90    }
-          , { headerText : "Duration<br>(month)", dataField : "mbrshDur",      width   : 80   }
-          , { headerText : "salesOrdId",          dataField : "salesOrdId",    visible : false }
+            { headerText : '<spring:message code="sal.title.mbrshNo" />',     dataField : "mbrshNo",       width   : 120   }
+          , { headerText : '<spring:message code="sal.text.billNo" />',       dataField : "mbrshBillNo",   width   : 100   }
+          , { headerText : '<spring:message code="sal.title.date" />',        dataField : "mbrshCrtDt",    width   : 90    }
+          , { headerText : '<spring:message code="sal.text.status" />',       dataField : "mbrshStusCode", width   : 70    }
+          , { headerText : '<spring:message code="sal.text.package" />',      dataField : "pacName"                        }
+          , { headerText : '<spring:message code="sal.text.start" />',        dataField : "mbrshStartDt",  width   : 90    }
+          , { headerText : '<spring:message code="sal.text.end" />',          dataField : "mbrshExprDt",   width   : 90    }
+          , { headerText : '<spring:message code="sal.text.durationMnth" />', dataField : "mbrshDur",      width   : 80    }
+          , { headerText : "salesOrdId",                                      dataField : "salesOrdId",    visible : false }
           ];
 
         memInfoGridID = GridCommon.createAUIGrid("grid_memInfo_wrap", columnLayout, "", gridPros);
