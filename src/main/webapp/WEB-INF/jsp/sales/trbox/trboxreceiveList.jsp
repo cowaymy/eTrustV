@@ -18,40 +18,40 @@
     var statusList = [{"codeId": "1","codeName": "Active/Pending"},{"codeId": "36","codeName": "Closed"}];
     var transtatusList = [{"codeId": "4","codeName": "Receive"},{"codeId": "50","codeName": "Not Received"}];
  // AUIGrid 칼럼 설정                                                                            visible : false
-    var columnLayout = [{dataField:"trboxno"      ,headerText:"Box No"       ,width:100   ,height:30 , visible:false},
-                        {dataField:"trnsitno"     ,headerText:"Transit No"   ,width:"14%" ,height:30 , visible:true },
-                        {dataField:"trnsitdt"     ,headerText:"Date"         ,width:"15%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true},
-                        {dataField:"trnsitdt2"    ,headerText:"DATE"         ,width:100   ,height:30 , visible:false},
-                        {dataField:"trnsitfr"     ,headerText:"From"         ,width:"14%" ,height:30 , visible:true },
-                        {dataField:"trnsitto"     ,headerText:"To"           ,width:"15%" ,height:30 , visible:true },
-                        {dataField:"trnsitstnm"   ,headerText:"Status"       ,width:"14%" ,height:30 , visible:true },
-                        {dataField:"trnsitstcd"   ,headerText:"Status"       ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"trnsitstid"   ,headerText:"Status"       ,width:"14%" ,height:30 , visible:false},
+    var columnLayout = [{dataField:"trboxno"      ,headerText:'<spring:message code="sal.title.text.boxNo" />'       ,width:100   ,height:30 , visible:false},
+                        {dataField:"trnsitno"     ,headerText:'<spring:message code="sal.title.text.transitNoD" />'   ,width:"14%" ,height:30 , visible:true },
+                        {dataField:"trnsitdt"     ,headerText:'<spring:message code="sal.title.date" />'         ,width:"15%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true},
+                        {dataField:"trnsitdt2"    ,headerText:'<spring:message code="sal.title.date" />'         ,width:100   ,height:30 , visible:false},
+                        {dataField:"trnsitfr"     ,headerText:'<spring:message code="sal.title.from" />'         ,width:"14%" ,height:30 , visible:true },
+                        {dataField:"trnsitto"     ,headerText:'<spring:message code="sal.title.to" />'           ,width:"15%" ,height:30 , visible:true },
+                        {dataField:"trnsitstnm"   ,headerText:'<spring:message code="sal.title.status" />'       ,width:"14%" ,height:30 , visible:true },
+                        {dataField:"trnsitstcd"   ,headerText:'<spring:message code="sal.title.status" />'       ,width:"14%" ,height:30 , visible:false},
+                        {dataField:"trnsitstid"   ,headerText:'<spring:message code="sal.title.status" />'       ,width:"14%" ,height:30 , visible:false},
                         
-                        {dataField:"trnsitcrtid"  ,headerText:"By"           ,width:"14%" ,height:30 , visible:true },
-                        {dataField:"trnsittotbox" ,headerText:"TotalBox"     ,width:"14%" ,height:30 , visible:true },
-                        {dataField:"trnsitcldt"   ,headerText:"Close Dt"     ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" , visible:false},
-                        {dataField:"trnsitcldt2"  ,headerText:"Close Dt"     ,width:"14%" ,height:30 , visible:false},
-                        {dataField:"trnsitcur"    ,headerText:"TrnCourier"   ,width:"15%" ,height:30 , visible:false},
-                        {dataField:"trtrnsitid"   ,headerText:"trtrnsitid"   ,width:120   ,height:30 , visible:false},
-                        {dataField:"trtrnsitstid" ,headerText:"trtrnsitstid" ,width:120   ,height:30 , visible:false},
-                        {dataField:"trnsitid"     ,headerText:"Transit ID"   ,width:120   ,height:30 , visible:false}
+                        {dataField:"trnsitcrtid"  ,headerText:'<spring:message code="sal.title.by" />'           ,width:"14%" ,height:30 , visible:true },
+                        {dataField:"trnsittotbox" ,headerText:'<spring:message code="sal.title.text.totalBox" />'     ,width:"14%" ,height:30 , visible:true },
+                        {dataField:"trnsitcldt"   ,headerText:'<spring:message code="sal.title.text.closeDt" />'     ,width:"14%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" , visible:false},
+                        {dataField:"trnsitcldt2"  ,headerText:'<spring:message code="sal.title.text.closeDt" />'     ,width:"14%" ,height:30 , visible:false},
+                        {dataField:"trnsitcur"    ,headerText:'<spring:message code="sal.title.text.trnCourier" />'   ,width:"15%" ,height:30 , visible:false},
+                        {dataField:"trtrnsitid"   ,headerText:'<spring:message code="sal.title.text.trtrnsitid" />'   ,width:120   ,height:30 , visible:false},
+                        {dataField:"trtrnsitstid" ,headerText:'<spring:message code="sal.title.text.trtrnsitid" />' ,width:120   ,height:30 , visible:false},
+                        {dataField:"trnsitid"     ,headerText:'<spring:message code="sal.title.text.transitId" />'   ,width:120   ,height:30 , visible:false}
                        ];
     
-    var viewcolumnLayout = [{dataField:"TTDI"  ,headerText:"TR_TRNSIT_DET_ID"     ,width:"14%" ,height:30 , visible:false},
-	                        {dataField:"TTRSI" ,headerText:"Close Dt"     ,width:"14%" ,height:30 , visible:false},
-	                        {dataField:"TBN"   ,headerText:"Box No"   ,width:"33%" ,height:30 , visible:true},
-	                        {dataField:"CNT"   ,headerText:"Total Book(s) In Box"  ,width:"34%",height:30 , visible:true},
-	                        {dataField:"TBI"   ,headerText:"trtrnsitid"   ,width:120 ,height:30 , visible:false},
-	                        {dataField:"CODE"  ,headerText:"Status" ,width:"33%" ,height:30 , visible:true}
+    var viewcolumnLayout = [{dataField:"TTDI"  ,headerText:'<spring:message code="sal.title.text.trTrnsitDetId" />'     ,width:"14%" ,height:30 , visible:false},
+	                        {dataField:"TTRSI" ,headerText:'<spring:message code="sal.title.text.closeDt" />'     ,width:"14%" ,height:30 , visible:false},
+	                        {dataField:"TBN"   ,headerText:'<spring:message code="sal.title.text.boxNo" />'   ,width:"33%" ,height:30 , visible:true},
+	                        {dataField:"CNT"   ,headerText:'<spring:message code="sal.title.text.totalBooksInBox" />'  ,width:"34%",height:30 , visible:true},
+	                        {dataField:"TBI"   ,headerText:'<spring:message code="sal.title.text.trtrnsitid" />'   ,width:120 ,height:30 , visible:false},
+	                        {dataField:"CODE"  ,headerText:'<spring:message code="sal.title.status" />' ,width:"33%" ,height:30 , visible:true}
 	                       ];
     
-    var trancolumnLayout = [{dataField:"TTDI"  ,headerText:"TR_TRNSIT_DET_ID"     ,width:"14%" ,height:30 , visible:false}, //
-                            {dataField:"TTRSI" ,headerText:"Close Dt"             ,width:"14%" ,height:30 , visible:false}, //
-                            {dataField:"TBN"   ,headerText:"Box No"               ,width:"33%" ,height:30 , visible:true},
-                            {dataField:"CNT"   ,headerText:"Total Book(s) In Box" ,width:"34%" ,height:30 , visible:true},
-                            {dataField:"TBI"   ,headerText:"trtrnsitid"           ,width:120   ,height:30 , visible:false},  //
-                            {dataField:"CODE"  ,headerText:"Status"               ,width:"33%" ,height:30 , visible:true}
+    var trancolumnLayout = [{dataField:"TTDI"  ,headerText:'<spring:message code="sal.title.text.trTrnsitDetId" />'     ,width:"14%" ,height:30 , visible:false}, //
+                            {dataField:"TTRSI" ,headerText:'<spring:message code="sal.title.text.closeDt" />'             ,width:"14%" ,height:30 , visible:false}, //
+                            {dataField:"TBN"   ,headerText:'<spring:message code="sal.title.text.boxNo" />'               ,width:"33%" ,height:30 , visible:true},
+                            {dataField:"CNT"   ,headerText:'<spring:message code="sal.title.text.totalBooksInBox" />' ,width:"34%" ,height:30 , visible:true},
+                            {dataField:"TBI"   ,headerText:'<spring:message code="sal.title.text.trtrnsitid" />'           ,width:120   ,height:30 , visible:false},  //
+                            {dataField:"CODE"  ,headerText:'<spring:message code="sal.title.status" />'               ,width:"33%" ,height:30 , visible:true}
                            ];
     
     var gridoptions = {showStateColumn : true , editable : false, pageRowCount : 20, usePaging : true, useGroupingPanel : false };
@@ -199,7 +199,7 @@
     	$("#viewinfoBtn").click(function(){
     		var selectedItems = AUIGrid.getSelectedItems(listGrid);
             if (selectedItems.length == 0 ){
-                Common.alert("Selected Data");
+                Common.alert('<spring:message code="sal.alert.msg.selectedDate" />');
                 return false;
             }else{
                 var itm = selectedItems[0].item;
@@ -213,7 +213,7 @@
     	$("#updrecBtn").click(function(){
     		var selectedItems = AUIGrid.getSelectedItems(listGrid);
             if (selectedItems.length == 0 ){
-                Common.alert("Selected Data");
+                Common.alert('<spring:message code="sal.alert.msg.selectedDate" />');
                 return false;
             }else{
             	$("#utrnno"     ).text('');
@@ -248,7 +248,7 @@
     	});
     	$("#tranSaveBtn").click(function(){
     		if ($("#utrnstatuslist").val() == ''){
-    			Common.alert('No item to update transit status.<br />Please add item to transit.');
+    			Common.alert('<spring:message code="sal.alert.msg.saveTransit" />');
     		}else{
 	    		var dat = GridCommon.getEditData(rightGrid);
 	            dat.form = $("#recvForm").serializeJSON();
@@ -361,8 +361,8 @@
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>TR Box Management </h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a id="btnSrch"><span class="search"></span>Search</a></p></li>
-            <li><p class="btn_blue"><a id="btnClear"><span class="clear"></span>Clear</a></p></li>
+            <li><p class="btn_blue"><a id="btnSrch"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+            <li><p class="btn_blue"><a id="btnClear"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
@@ -382,29 +382,29 @@
             </colgroup>
             <tbody>
             <tr>
-                <th scope="row">Transit No</th>
+                <th scope="row"><spring:message code="sal.title.text.transitNoD" /></th>
                 <td>
                     <input type="text" title="Transit No" id="trnsitno" name="trnsitno" placeholder="Transit No" class="w100p" />
                 </td>
-                <th scope="row">Box No</th>
+                <th scope="row"><spring:message code="sal.title.text.boxNo" /></th>
                 <td>
                     <input type="text" title="Box No" id="boxno" name="boxno" placeholder="Box No" class="w100p" />
                 </td>
-                <th scope="row">Create Date</th>
+                <th scope="row"><spring:message code="sal.text.createDate" /></th>
                 <td>
                     <input type="text" title="Create Date" name="crtdt" id="crtdt" placeholder="DD/MM/YYYY" class="j_date" />
                 </td>
             </tr>
             <tr>
-                <th scope="row">Create By</th>
+                <th scope="row"><spring:message code="sal.text.createBy" /></th>
                 <td>
                     <input type="text" title="Create By" id="crtuser" name="crtuser" placeholder="Create By" class="w100p" />
                 </td>
-                <th scope="row">Status</th>
+                <th scope="row"><spring:message code="sal.title.status" /></th>
                 <td>
                     <select class="w100p" id="status" name="status"></select>
                 </td>
-                <th scope="row">Transit To</th>
+                <th scope="row"><spring:message code="sal.text.transitTo" /></th>
                 <td>
                     <select class="w100p" id="branchid" name="branchid"></select>
                 </td>
@@ -417,8 +417,8 @@
     <section class="search_result"><!-- search_result start -->
 
         <ul class="right_btns">
-            <li><p class="btn_grid"><a id="updrecBtn">Update Receive</a></p></li>
-            <li><p class="btn_grid"><a id="viewinfoBtn">VIEW Info</a></p></li>
+            <li><p class="btn_grid"><a id="updrecBtn"><spring:message code="sal.btn.updRecv" /></a></p></li>
+            <li><p class="btn_grid"><a id="viewinfoBtn"><spring:message code="sal.title.text.viewInfo" /></a></p></li>
         </ul>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
@@ -430,15 +430,15 @@
     <div id="view_popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
         <header class="pop_header"><!-- pop_header start -->
-        <h1>Transit Receive View</h1>
+        <h1><spring:message code="sal.title.text.transitReceiveView" /></h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a id="viewclose">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a id="viewclose"><spring:message code="sal.btn.close" /></a></p></li>
         </ul>
         </header><!-- pop_header end -->
         <section class="pop_body"><!-- pop_body start -->
         
         <aside class="title_line"><!-- title_line start -->
-        <h2>Transit Information</h2>
+        <h2><spring:message code="sal.page.subTitle.transitInfo" /></h2>
         </aside><!-- title_line end -->
         
         <table class="type1"><!-- table start -->
@@ -453,54 +453,54 @@
 		</colgroup>
 		<tbody>
 		<tr>
-		    <th scope="row">Transit No</th>
+		    <th scope="row"><spring:message code="sal.text.transitNo" /></th>
 		    <td>
 		    <span id="vtrnno">1111</span>
 		    </td>
-		    <th scope="row">Transit Date</th>
+		    <th scope="row"><spring:message code="sal.text.transitDate" /></th>
 		    <td id="vtrndt"></td>
-		    <th scope="row">Transit Status </th>
+		    <th scope="row"><spring:message code="sal.title.text.transitStus" /></th>
 		    <td id="vtrnstatus"></td>
 		</tr>
 		<tr>
-		    <th scope="row">Transit From</th>
+		    <th scope="row"><spring:message code="sal.text.transitFrom" /></th>
 		    <td>
 		    <span id="vtrnfr"></span>
 		    </td>
-		    <th scope="row">Transit To</th>
+		    <th scope="row"><spring:message code="sal.text.transitTo" /></th>
 		    <td id="vtrnto"></td>
-		    <th scope="row">Close Date</th>
+		    <th scope="row"><spring:message code="sal.text.closeDate" /></th>
 		    <td id="vclodt"></td>
 		</tr>
 		<tr>
-		    <th scope="row">Total Book</th>
+		    <th scope="row"><spring:message code="sal.text.totalBook" /></th>
 		    <td>
 		    <span id="vtotbox">1111</span>
 		    </td>
-		    <th scope="row">Courier</th>
+		    <th scope="row"><spring:message code="sal.text.courier" /></th>
 		    <td id="vcourier"></td>
-		    <th scope="row">Creator</th>
+		    <th scope="row"><spring:message code="sal.text.creator" /></th>
 		    <td id="vcreator"></td>
 		</tr>
 		<tr>
-		    <th scope="row">Total Pending</th>
+		    <th scope="row"><spring:message code="sal.text.totalPending" /></th>
 		    <td>
 		    <span id="vtotpend">1111</span>
 		    </td>
-		    <th scope="row">Total Received</th>
+		    <th scope="row"><spring:message code="sal.text.totalReceived" /></th>
 		    <td id="vtotrecv"></td>
-		    <th scope="row">Total Not Received</th>
+		    <th scope="row"><spring:message code="sal.text.totalNotReceived" /></th>
 		    <td id="vtotnotrecv"></td>
 		</tr>
 		</tbody>
 		</table><!-- table end -->
         
         <aside class="title_line"><!-- title_line start -->
-		  <h3>Book Transit</h3>
+		  <h3><spring:message code="sal.title.text.bookTransit" /></h3>
 		</aside><!-- title_line end -->
 		
 		<aside class="title_line"><!-- title_line start -->
-		  <h4 id="viewh4">All Transit Book List</h4>
+		  <h4 id="viewh4"><spring:message code="sal.page.subTitle.allList" /></h4>
 		</aside><!-- title_line end -->
         
         <article class="grid_wrap"><!-- grid_wrap start -->
@@ -510,14 +510,14 @@
             <table>
                 <tr >
                    <td class="left_btns mt10">
-                    <li><p class="btn_blue2"><a href="javascript:viewGridFunc('')">All</a></p></li>
-                    <li><p class="btn_blue2"><a href="javascript:viewGridFunc('4')">Receive</a></p></li>
-                    <li><p class="btn_blue2"><a href="javascript:viewGridFunc('50')">Not Receive</a></p></li>
+                    <li><p class="btn_blue2"><a href="javascript:viewGridFunc('')"><spring:message code="sal.btn.all" /></a></p></li>
+                    <li><p class="btn_blue2"><a href="javascript:viewGridFunc('4')"><spring:message code="sal.combo.text.received" /></a></p></li>
+                    <li><p class="btn_blue2"><a href="javascript:viewGridFunc('50')"><spring:message code="sal.combo.text.notReceived" /></a></p></li>
                    </td>
                    <td class="right_btns mt10">
-                    <li><p>Pending</p></li>
-                    <li><p class="green_text">Received</p></li>
-                    <li><p class="red_text">Not Receive</p></li>
+                    <li><p><spring:message code="sal.text.pending" /></p></li>
+                    <li><p class="green_text"><spring:message code="sal.combo.text.received" /></p></li>
+                    <li><p class="red_text"><spring:message code="sal.btn.notRecv" /></p></li>
                 </td>
                 </tr>
             </table>
@@ -529,15 +529,15 @@
     <div id="upd_popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
         <header class="pop_header"><!-- pop_header start -->
-        <h1>Transit Receive View</h1>
+        <h1><spring:message code="sal.title.text.transitReceiveView" /></h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a id="updclose">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a id="updclose"><spring:message code="sal.btn.close" /></a></p></li>
         </ul>
         </header><!-- pop_header end -->
         <section class="pop_body"><!-- pop_body start -->
         
         <aside class="title_line"><!-- title_line start -->
-        <h2>Transit Information</h2>
+        <h2><spring:message code="sal.page.subTitle.transitInfo" /></h2>
         </aside><!-- title_line end -->
         <form id="recvForm" name="recvForm">
         <input type="hidden" id="transitstatus" name="transitstatus"/>
@@ -558,54 +558,54 @@
         </colgroup>
         <tbody>
         <tr>
-            <th scope="row">Transit No</th>
+            <th scope="row"><spring:message code="sal.text.transitNo" /></th>
             <td>
             <span id="utrnno"></span>
             </td>
-            <th scope="row">Transit Date</th>
+            <th scope="row"><spring:message code="sal.text.transitDate" /></th>
             <td id="utrndt"></td>
-            <th scope="row">Transit Status </th>
+            <th scope="row"><spring:message code="sal.text.transitStatus" /></th>
             <td id="utrnstatus"></td>
             
         </tr>
         <tr>
-            <th scope="row">Transit From</th>
+            <th scope="row"><spring:message code="sal.text.transitFrom" /></th>
             <td>
             <span id="utrnfr"></span>
             </td>
-            <th scope="row">Transit To</th>
+            <th scope="row"><spring:message code="sal.text.transitTo" /></th>
             <td id="utrnto"></td>
             
-            <th scope="row">Close Date</th>
+            <th scope="row"><spring:message code="sal.text.closeDate" /></th>
             <td id="uclodt"></td>
         </tr>
         <tr>
-            <th scope="row">Total Book</th>
+            <th scope="row"><spring:message code="sal.text.totalBook" /></th>
             <td>
             <span id="utotbox"></span>
             </td>
-            <th scope="row">Courier</th>
+            <th scope="row"><spring:message code="sal.text.courier" /></th>
             <td id="ucourier"></td>
             
             
-            <th scope="row">Creator</th>
+            <th scope="row"><spring:message code="sal.text.creator" /></th>
             <td id="ucreator"></td>
         </tr>
         <tr>
-            <th scope="row">Total Pending</th>
+            <th scope="row"><spring:message code="sal.text.totalPending" /></th>
             <td>
             <span id="utotpend"></span>
             </td>
-            <th scope="row">Total Received</th>
+            <th scope="row"><spring:message code="sal.text.totalReceived" /></th>
             <td id="utotrecv"></td>
-            <th scope="row">Total Not Received</th>
+            <th scope="row"><spring:message code="sal.text.totalNotReceived" /></th>
             <td id="utotnotrecv"></td>
         </tr>
         </tbody>
         </table><!-- table end -->
         
         <aside class="title_line"><!-- title_line start -->
-          <h3>Transit Result</h3>
+          <h3><spring:message code="sal.page.subTitle.transitResult" /></h3>
         </aside><!-- title_line end -->
         <table class="type1"><!-- table start -->
 		<caption>table</caption>
@@ -615,7 +615,7 @@
 		</colgroup>
 		<tbody>
 		<tr>
-		    <th scope="row">Transit Status</th>
+		    <th scope="row"><spring:message code="sal.title.text.transitStus" /></th>
 		    <td>
 		      <select id="utrnstatuslist" name="utrnstatuslist" class="w100p"></select>
 		    </td>
@@ -631,7 +631,7 @@
 			<div class="border_box" style="height:150px;"><!-- border_box start -->
 			
 			<aside class="title_line"><!-- title_line start -->
-			<h4 class="pt0">Book In Transit</h4>
+			<h4 class="pt0"><spring:message code="sal.page.subTitle.bookInTransit" /></h4>
 			</aside><!-- title_line end -->
 			
 			<article class="grid_wrap"><!-- grid_wrap start -->
@@ -647,7 +647,7 @@
 			<div class="border_box" style="height:150px;"><!-- border_box start -->
 			
 			<aside class="title_line"><!-- title_line start -->
-			<h4 class="pt0">Action List</h4>
+			<h4 class="pt0"><spring:message code="sal.title.text.actionList" /></h4>
 			</aside><!-- title_line end -->
 			
 			<article class="grid_wrap"><!-- grid_wrap start -->
@@ -666,12 +666,12 @@
 			</div><!-- divine_auto end -->
 			
 			<ul class="left_btns mt10">
-			    <li><p class="btn_blue2"><a id="FilterBtn">Filter List</a></p></li>
-			    <li><p class="btn_blue2"><a id="showAllBtn">Show All</a></p></li>
+			    <li><p class="btn_blue2"><a id="FilterBtn"><spring:message code="sal.title.text.filterList" /></a></p></li>
+			    <li><p class="btn_blue2"><a id="showAllBtn"><spring:message code="sal.title.text.showAll" /></a></p></li>
 			</ul>
 			</form>
 			<ul class="center_btns mt20">
-			    <li><p class="btn_blue2 big"><a id="tranSaveBtn">SAVE</a></p></li>
+			    <li><p class="btn_blue2 big"><a id="tranSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
 			</ul>
         </section>
         
@@ -682,9 +682,9 @@
     <div id="filter_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 
         <header class="pop_header"><!-- pop_header start -->
-        <h1>Filter Box Book List</h1>
+        <h1><spring:message code="sal.title.text.filterBoxBookList" /></h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+            <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
         </ul>
         </header><!-- pop_header end -->
         
@@ -699,7 +699,7 @@
         </colgroup>
         <tbody>
         <tr>
-            <th scope="row">Box No</th>
+            <th scope="row"><spring:message code="sal.title.text.boxNo" /></th>
             <td>
             <input type="text" title="" id="pboxno" name="pboxno" placeholder="" class="w100p" />
             </td>
@@ -708,8 +708,8 @@
         </table><!-- table end -->
         </form>
         <ul class="center_btns">
-            <li><p class="btn_blue2 big"><a id="Btnsrch">Search</a></p></li>
-            <li><p class="btn_blue2 big"><a id="Btnclr">Clear</a></p></li>
+            <li><p class="btn_blue2 big"><a id="Btnsrch"><spring:message code="sal.btn.search" /></a></p></li>
+            <li><p class="btn_blue2 big"><a id="Btnclr"><spring:message code="sal.btn.clear" /></a></p></li>
         </ul>
         </section><!-- pop_body end -->
     

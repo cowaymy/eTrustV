@@ -6,9 +6,9 @@
     var addrGridID;      // addrlist
     var contactGridID; // contact list
     var optionModule = {
-    	        type: "S",                  
-    	        isShowChoose: false  
-    	};
+                type: "S",                  
+                isShowChoose: false  
+        };
     
     $(document).ready(function(){
         fn_getAddrListAjax(); // address list
@@ -25,8 +25,8 @@
         
         // 셀 더블클릭 이벤트 바인딩 - contact 수정
         AUIGrid.bind(contactGridID, "cellDoubleClick", function(event){
-        	
-        	$("#_editDealerId").val(event.item.dealerId);
+            
+            $("#_editDealerId").val(event.item.dealerId);
             $("#_editDealerCntId").val(event.item.dealerCntId);
             Common.popupDiv("/sales/pst/dealerEditCntUpdPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv3Pop');
         });
@@ -47,16 +47,16 @@
         // 데이터 형태는 다음과 같은 형태임,
         var columnLayout = [{
                 dataField : "code",
-                headerText : "Status",
+                headerText : '<spring:message code="sal.title.status" />',
                 width : 120,
                 editable : false
             }, {
                 dataField : "fullAddr",
-                headerText : "Full Address",
+                headerText : '<spring:message code="sal.text.fullAddr" />',
                 editable : false
             }, {
                 dataField : "setMain", 
-                headerText : "Set As Main", 
+                headerText : '<spring:message code="sal.title.setAsMain" />', 
                 width:'10%', 
                 renderer : { 
                     type : "TemplateRenderer", 
@@ -105,7 +105,7 @@
         addrGridID = AUIGrid.create("#addr_grid_wrap", columnLayout, gridPros);
     }
     
-    doGetCombo('/common/selectCodeList.do', '357', ${pstDealerBasicInfo.dealerType},'editDealerType', 'S' , '');     // Dealer Type Combo Box
+    doGetCombo('/common/selectCodeList.do', '357', '${pstDealerBasicInfo.dealerType}','editDealerType', 'S' , '');     // Dealer Type Combo Box
     CommonCombo.make('cmbDealerBranch', "/sales/pst/dealerBrnchJsonList", '' , '${pstDealerBasicInfo.dealerBrnchId}', optionModule);
     
     // 조회조건 combo box
@@ -121,7 +121,7 @@
     }
     
     function fn_edit(){
-    	Common.ajax("GET", "/sales/pst/editDealer.do", $("#editForm").serialize(), function(result){
+        Common.ajax("GET", "/sales/pst/editDealer.do", $("#editForm").serialize(), function(result){
             //result alert and reload
             Common.alert("Success.", fn_success);
         }, function(jqXHR, textStatus, errorThrown) {
@@ -132,11 +132,11 @@
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
     
                 //Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                Common.alert("Unable to retrieve exchange request in system.");
+                Common.alert('<spring:message code="sal.alert.msg.unableToRetrieveExchgeReq" />');
                 }
             catch (e) {
                 console.log(e);
-                alert("Saving data prepration failed.");
+                alert('<spring:message code="sal.alert.msg.savingDataPreprationFailed" />');
             }
             alert("Fail : " + jqXHR.responseJSON.message);
             });
@@ -145,19 +145,19 @@
     
     function createCntGrid(){
         
-    	// Contact Column
+        // Contact Column
         var contactColumnLayout= [ 
-              {dataField : "stusCode", headerText : "Status", width : '10%'},
-              {dataField : "cntName", headerText : "Name", width : '35%'},
-              {dataField : "telM1", headerText : "Tel(Mobile)", width : '10%'},
-              {dataField : "telO", headerText : "Tel(Office)",width : '10%'},
-              {dataField : "telR", headerText : "Tel(Residence)", width : '10%' },
-              {dataField : "telf",headerText : "Tel(Fax)",width : '10%'},
+              {dataField : "stusCode", headerText : '<spring:message code="sal.title.status" />', width : '10%'},
+              {dataField : "cntName", headerText : '<spring:message code="sal.text.name" />', width : '35%'},
+              {dataField : "telM1", headerText : '<spring:message code="sal.text.telM" />', width : '10%'},
+              {dataField : "telO", headerText : '<spring:message code="sal.text.telO" />',width : '10%'},
+              {dataField : "telR", headerText : '<spring:message code="sal.text.telR" />', width : '10%' },
+              {dataField : "telf",headerText : '<spring:message code="sal.text.telF" />',width : '10%'},
               {dataField : "dealerCntId", visible: false },
               {dataField : "dealerId", visible : false},
               { 
                   dataField : "setMain", 
-                  headerText : "Set As Main", 
+                  headerText : '<spring:message code="sal.title.setAsMain" />', 
                   width:'10%', 
                   renderer : { 
                       type : "TemplateRenderer", 
@@ -216,7 +216,7 @@
     function fn_setMain(dealerAddId, dealerId){ 
         $("#tempDealerId").val(dealerId);
         $("#tempDealerAddrId").val(dealerAddId);  
-        Common.confirm("Are you sure want to set this address as main address ?", fn_changeMainAddr, fn_noConfirm);
+        Common.confirm('<spring:message code="sal.confirm.msg.confirmMainAddress" />', fn_changeMainAddr, fn_noConfirm);
         
     }
     
@@ -256,7 +256,7 @@
 
         $("#tempDealerId").val(dealerId);
         $("#tempDealerCntId").val(dealerCntId); 
-        Common.confirm(" Are you sure want to set this contact as main contact person ?", fn_changeMainContact, fn_noConfirmCnt);
+        Common.confirm('<spring:message code="sal.confirm.msg.confirmMainCntc" />', fn_changeMainContact, fn_noConfirmCnt);
        
     }
     
@@ -286,7 +286,7 @@
     }
     
     function fn_success(){
-    	fn_pstDealerListAjax();
+        fn_pstDealerListAjax();
         
         $("#_eClose").click();
     }
@@ -300,9 +300,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>EDIT DEALER</h1>
+<h1><spring:message code="sal.title.text.editDealer" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_eClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_eClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -317,18 +317,18 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">BASIC INFORMATION</a></li>
-    <li><a href="#" onclick="javascript: fn_resizefunc(addrGridID)">Main Address</a></li>
-    <li><a href="#" onclick="javascript: fn_resizefunc(contactGridID)">CONTACT</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.title.text.basicInfomation" /></a></li>
+    <li><a href="#" onclick="javascript: fn_resizefunc(addrGridID)"><spring:message code="sal.tap.title.mainAddr" /></a></li>
+    <li><a href="#" onclick="javascript: fn_resizefunc(contactGridID)"><spring:message code="sal.title.text.contact" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
     <aside class="title_line"><!-- title_line start -->
-    <h2>Dealer Basic Information</h2>
+    <h2><spring:message code="sal.title.text.dealerBasicInfo" /></h2>
     </aside><!-- title_line end -->
 
     <ul class="right_btns">
-        <li><p class="red_text">* Compulsory Field</p></li>
+        <li><p class="red_text"><spring:message code="sal.title.text.compulsoryField" /></p></li>
     </ul>
 
     <section class="search_table"><!-- search_table start -->
@@ -348,36 +348,36 @@
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Dealer Name<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.title.text.dealerName" /><span class="must">*</span></th>
         <td><input type="text" id="editDealerName" name="editDealerName" value="${pstDealerBasicInfo.dealerName }" title="" placeholder="" class="w100p" /></td>
-        <th scope="row">Dealer Type</th>
+        <th scope="row"><spring:message code="sal.title.text.dealerType" /></th>
         <td>
-	        <select class="w100p" id="editDealerType" name="editDealerType"></select>
-	    </td>
+            <select class="w100p" id="editDealerType" name="editDealerType"></select>
+        </td>
     </tr>
     <tr>
-        <th scope="row">Email</th>
+        <th scope="row"><spring:message code="sal.text.email" /></th>
         <td colspan="3"><input type="text" id="editEmail" name="editEmail" value="${pstDealerBasicInfo.dealerEmail }" title="" placeholder="" class="w100p" /></td>
     </tr>
     <tr>
-        <th scope="row">NRIC/Company No<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.title.text.nricCompNo" /><span class="must">*</span></th>
         <td><input type="text" title="" id="editNric" name="editNric" value="${pstDealerBasicInfo.dealerNric }" placeholder="" class="w100p" /></td>
-        <th scope="row">Branch<span class="must">*</span></th>
+        <th scope="row"><spring:message code="sal.text.branch" /><span class="must">*</span></th>
         <td>
         <select class="w100p" id="cmbDealerBranch" name="cmbDealerBranch">
         </select>
         </td>
     </tr>
     <tr>
-        <th scope="row">Creator</th>
+        <th scope="row"><spring:message code="sal.text.creator" /></th>
         <td><input type="text" value="${pstDealerBasicInfo.crtUserName }" title="" placeholder="" class="w100p readonly" readonly/></td>
-        <th scope="row">Created</th>
+        <th scope="row"><spring:message code="sal.text.created" /></th>
         <td><input type="text" value="${pstDealerBasicInfo.crtDt }" title="" placeholder="" class="w100p readonly" readonly/></td>
     </tr>
     <tr>
-        <th scope="row">Updator</th>
+        <th scope="row"><spring:message code="sal.text.updator" /></th>
         <td><input type="text" value="${pstDealerBasicInfo.updUserName }" title="" placeholder="" class="w100p readonly" readonly /></td>
-        <th scope="row">Updator</th>
+        <th scope="row"><spring:message code="sal.text.updator" /></th>
         <td><input type="text" value="${pstDealerBasicInfo.updDt }" title="" placeholder="" class="w100p readonly" readonly /></td>
     </tr>
     </tbody>
@@ -387,15 +387,15 @@
     </section><!-- search_table end -->
 
     <ul class="center_btns mt20">
-        <li><p class="btn_blue2 big"><a href="#" onclick="fn_edit()">Update</a></p></li>
-        <li><p class="btn_blue2 big"><a href="#">Clear</a></p></li>
+        <li><p class="btn_blue2 big"><a href="#" onclick="fn_edit()"><spring:message code="sal.btn.update" /></a></p></li>
+        <li><p class="btn_blue2 big"><a href="#"><spring:message code="sal.btn.clear" /></a></p></li>
     </ul>
 
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
     <aside class="title_line"><!-- title_line start -->
-    <h2>Dealer Main Address</h2>
+    <h2><spring:message code="sal.title.text.dealerMainAddr" /></h2>
     </aside><!-- title_line end -->
 
     <table class="type1"><!-- table start -->
@@ -406,23 +406,23 @@
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Full Address</th>
+        <th scope="row"><spring:message code="sal.text.fullAddr" /></th>
         <td><span>${dealerAddrTop.fullAddr}</span></td>
     </tr>
     <tr>
-        <th scope="row">Remark</th>
+        <th scope="row"><spring:message code="sal.title.remark" /></th>
         <td><span>${dealerAddrTop.rem}</span></td>
     </tr>
     </tbody>
     </table><!-- table end -->
 
     <aside class="title_line"><!-- title_line start -->
-    <h2>Dealer Address List</h2>
+    <h2><spring:message code="sal.title.text.dealerAddrList" /></h2>
     </aside><!-- title_line end -->
 
     <ul class="right_btns">
-	    <li><p class="btn_grid"><a href="#" id="_newAddr">Add New Address</a></p></li>
-	</ul>
+        <li><p class="btn_grid"><a href="#" id="_newAddr"><spring:message code="sal.btn.addNewAddr" /></a></p></li>
+    </ul>
   <!--   <section class="search_result">search_result start -->
 
     <article class="grid_wrap"><!-- grid_wrap start -->
@@ -432,7 +432,7 @@
 
 <article class="tap_area"><!-- tap_area start -->
     <aside class="title_line"><!-- title_line start -->
-    <h2>Dealer Main Contact</h2>
+    <h2><spring:message code="sal.title.text.dealerMainCntc" /></h2>
     </aside><!-- title_line end -->
 
     <table class="type1"><!-- table start -->
@@ -447,31 +447,31 @@
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Name</th>
-	    <td><span>${dealerCntTop.cntName}</span></td>
-	    <th scope="row">Initial</th>
-	    <td><span>${dealerCntTop.dealerInitial}</span></td>
-	    <th scope="row">Gender</th>
-	    <td><span>${dealerCntTop.gender}</span></td>
+        <th scope="row"><spring:message code="sal.text.name" /></th>
+        <td><span>${dealerCntTop.cntName}</span></td>
+        <th scope="row"><spring:message code="sal.text.initial" /></th>
+        <td><span>${dealerCntTop.dealerInitial}</span></td>
+        <th scope="row"><spring:message code="sal.text.gender" /></th>
+        <td><span>${dealerCntTop.gender}</span></td>
     </tr>
     <tr>
-        <th scope="row">NRIC</th>
-	    <td><span>${dealerCntTop.nric}</span></td>
-	    <th scope="row">Race</th>
-	    <td><span>${dealerCntTop.raceName}</span></td>
-	    <th scope="row">Tel (Mobile 1)</th>
-	    <td><span>${dealerCntTop.telM1}</span></td>
+        <th scope="row"><spring:message code="sal.text.nric" /></th>
+        <td><span>${dealerCntTop.nric}</span></td>
+        <th scope="row"><spring:message code="sal.text.race" /></th>
+        <td><span>${dealerCntTop.raceName}</span></td>
+        <th scope="row"><spring:message code="sal.title.text.telMobile1" /></th>
+        <td><span>${dealerCntTop.telM1}</span></td>
     </tr>
     <tr>
-        <th scope="row">Tel (Mobile 2)</th>
-	    <td><span>${dealerCntTop.telM2}</span></td>
-	    <th scope="row">Tel (Office)</th>
-	    <td><span>${dealerCntTop.telO}</span></td>
-	    <th scope="row">Tel (Residence)</th>
-	    <td><span>${dealerCntTop.telR}</span></td>
+        <th scope="row"><spring:message code="sal.title.text.telMobile2" /></th>
+        <td><span>${dealerCntTop.telM2}</span></td>
+        <th scope="row"><spring:message code="sal.text.telO" /></th>
+        <td><span>${dealerCntTop.telO}</span></td>
+        <th scope="row"><spring:message code="sal.text.telR" /></th>
+        <td><span>${dealerCntTop.telR}</span></td>
     </tr>
     <tr>
-        <th scope="row">Tel (Fax)</th>
+        <th scope="row"><spring:message code="sal.text.telF" /></th>
         <td><span>${dealerCntTop.telf}</span></td>
         <th scope="row"></th>
         <td><span></span></td>
@@ -482,12 +482,12 @@
     </table><!-- table end -->
 
     <aside class="title_line"><!-- title_line start -->
-    <h2>Dealer Contact List</h2>
+    <h2><spring:message code="sal.title.text.dealerCntcList" /></h2>
     </aside><!-- title_line end -->
 
     <ul class="right_btns">
-	    <li><p class="btn_grid"><a href="#" id="_newContact">Add New Contact</a></p></li>
-	</ul>
+        <li><p class="btn_grid"><a href="#" id="_newContact"><spring:message code="sal.title.text.addNewCntc" /></a></p></li>
+    </ul>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="contact_grid_wrap" style="width:100%; height:280px; margin:0 auto;"></div>

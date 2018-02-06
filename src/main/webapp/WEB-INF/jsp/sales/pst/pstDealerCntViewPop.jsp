@@ -7,9 +7,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>DEALER CONTACT</h1>
+<h1><spring:message code="sal.title.text.dealerContact" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -25,43 +25,43 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
     <td colspan="3"><span>${cntView.stusCode }</span></td>
 </tr>
 <tr>
-    <th scope="row">Initial</th>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
     <td><span>${cntView.dealerInitialCode }</span></td>
-    <th scope="row">Create By</th>
+    <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td><span>${cntView.dealerInitialCode }</span></td>
 </tr>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td><span>${cntView.cntName }</span></td>
-    <th scope="row">Update By</th>
+    <th scope="row"><spring:message code="sal.text.updateBy" /></th>
     <td><span>${cntView.dealerInitialCode }</span></td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><span>${cntView.nric }</span></td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span>${cntView.gender }</span></td>
 </tr>
 <tr>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${cntView.raceName }</span></td>
-    <th scope="row">Tel (Mobile 1)</th>
+    <th scope="row"><spring:message code="sal.title.text.telMobile1" /></th>
     <td><span>${cntView.telM1 }</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile 2)</th>
+    <th scope="row"><spring:message code="sal.title.text.telMobile2" /></th>
     <td><span>${cntView.telM2 }</span></td>
-    <th scope="row">Tel (Office)</th>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
     <td><span>${cntView.telO }</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><span>${cntView.telR }</span></td>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td><span>${cntView.telf }</span></td>
 </tr>
 </tbody>

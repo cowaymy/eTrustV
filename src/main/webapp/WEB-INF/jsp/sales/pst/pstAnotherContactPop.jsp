@@ -30,46 +30,46 @@
 	    //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
 	    var columnLayout = [{
 	            dataField : "stusCode",
-	            headerText : "Status",
+	            headerText : '<spring:message code="sal.title.status" />',
 	            width : 80,
 	            editable : false
 	        }, {
 	            dataField : "cntName",
-	            headerText : "Name",
+	            headerText : '<spring:message code="sal.text.name" />',
 	            editable : false
 	        }, {
                 dataField : "nric",
-                headerText : "NRIC",
+                headerText : '<spring:message code="sal.text.nric" />',
                 width : 120,
                 editable : false
             }, {
                 dataField : "raceName",
-                headerText : "Race",
+                headerText : '<spring:message code="sal.text.race" />',
                 width : 80,
                 editable : false
             }, {
                 dataField : "gender",
-                headerText : "Gender",
+                headerText : '<spring:message code="sal.text.gender" />',
                 width : 80,
                 editable : false
             }, {
                 dataField : "telM1",
-                headerText : "Tel(mobile)",
+                headerText : '<spring:message code="sal.text.telM" />',
                 width : 120,
                 editable : false
             }, {
                 dataField : "telO",
-                headerText : "Tel(Office)",
+                headerText : '<spring:message code="sal.text.telO" />',
                 width : 120,
                 editable : false
             }, {
                 dataField : "telR",
-                headerText : "Tel(Residance)",
+                headerText : '<spring:message code="sal.text.telR" />',
                 width : 120,
                 editable : false
             }, {
                 dataField : "telf",
-                headerText : "Tel(Fax)",
+                headerText : '<spring:message code="sal.text.telF" />',
                 width : 120,
                 editable : false
             }];
@@ -129,16 +129,16 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>WE BRING WELLNESS - DEALER CONTACT</h1>
+<h1><spring:message code="sal.title.text.weBringWellnessCntc" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue"><a href="#" id="_searchC"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_searchC"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
 </ul>
 <form id="editCForm" name="editCForm" method="GET">
     <input type="hidden" name="dealerId"  id="_editDealerId"/>  <!-- Cust Id  -->
@@ -154,7 +154,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Contact Keyword</th>
+    <th scope="row"><spring:message code="sal.title.text.cntcKeyword" /></th>
     <td><input type="text" title="" id="searchCont" name="searchCont" placeholder="Keyword" class="w100p" /></td>
 </tr>
 </tbody>

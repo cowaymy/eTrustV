@@ -30,12 +30,12 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [{
                 dataField : "code",
-                headerText : "Status",
+                headerText : '<spring:message code="sal.title.status" />',
                 width : 120,
                 editable : false
             }, {
                 dataField : "fullAddr",
-                headerText : "Address",
+                headerText : '<spring:message code="sal.text.address" />',
                 editable : false
             }];
        
@@ -97,16 +97,16 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>WE BRING WELLNESS - DEALER ADDRESS</h1>
+<h1><spring:message code="sal.title.text.weBringWellnessAddr" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="anotherClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="anotherClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     <!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 <form id="editForm" name="editForm" method="GET">
@@ -124,7 +124,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Address Keyword</th>
+    <th scope="row"><spring:message code="sal.text.addrKeyword" /></th>
     <td><input type="text" title="" id="searchAddr" name="searchAddr" placeholder="Keyword" class="w100p" /></td>
 </tr>
 </tbody>

@@ -7,9 +7,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>DEALER ADDRESS</h1>
+<h1><spring:message code="sal.title.text.dealerAddress" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -25,43 +25,43 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
     <td colspan="3">
     <span>${addrView.stusCode}</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Create By</th>
+    <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td>${addrView.crtUserName}</td>
-    <th scope="row">Update By</th>
+    <th scope="row"><spring:message code="sal.text.updateBy" /></th>
     <td>${addrView.updUserName}</td>
 </tr>
 <tr>
-    <th scope="row">Address Detail</th>
+    <th scope="row"><spring:message code="sal.text.addressDetail" /></th>
     <td colspan="3"><span>${addrView.addrDtl}</span></td>
 </tr>
 <tr>
-    <th scope="row">Street</th>
+    <th scope="row"><spring:message code="sal.text.street" /></th>
     <td colspan="3"><span>${addrView.street}</span></td>
 </tr>
 <tr>
-    <th scope="row">Area (4th)</th>
+    <th scope="row"><spring:message code="sal.title.text.area4th" /></th>
     <td colspan="3">${addrView.area}</td>
 </tr>
 <tr>
-    <th scope="row">City (2nd)</th>
+    <th scope="row"><spring:message code="sal.title.text.ciry2nd" /></th>
     <td>${addrView.city}</td>
-    <th scope="row">Postcode (3rd)</th>
+    <th scope="row"><spring:message code="sal.title.text.postcode3rd" /></th>
     <td>${addrView.postcode}</td>
 </tr>
 <tr>
-    <th scope="row">State (1st)</th>
+    <th scope="row"><spring:message code="sal.title.text.state1st" /></th>
     <td>${addrView.state}
-    <th scope="row">Country</th>
+    <th scope="row"><spring:message code="sal.text.country" /></th>
     <td>${addrView.country}</td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remarks" /></th>
     <td colspan="3"><span>${addrView.rem}</span></td>
 </tr>
 </tbody>

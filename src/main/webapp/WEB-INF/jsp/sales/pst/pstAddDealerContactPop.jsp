@@ -51,7 +51,7 @@
 	    //Nric
 	    if("" != $("#cntcNric").val() && null != $("#cntcNric").val()){
 	        if(FormUtil.checkNum($("#cntcNric"))){
-	            Common.alert("* Invalid nric number.");
+	            Common.alert('<spring:message code="sal.msg.invalidNric" />');
 	            return;
 	        }
 	    }
@@ -59,41 +59,41 @@
 	    if(("" == $("#cntcTelm1").val() || null == $("#cntcTelm1").val()) && ("" == $("#cntcTelr").val() || null == $("#cntcTelr").val())
 	            && ("" == $("#cntcTelo").val() || null == $("#cntcTelo").val()) && ("" == $("#cntcTelf").val() || null == $("#cntcTelf").val())){
 	        
-	        Common.alert("* Please key in at least one contact number.");
+	        Common.alert('<spring:message code="sal.alert.msg.plzKeyinAtLeastOneConNum" />');
 	        return;
 	    }else{
 	        // telm(Mobile1)
 	        if("" != $("#cntcTelm1").val() && null != $("#cntcTelm1").val()){
 	            if(FormUtil.checkNum($("#cntcTelm1"))){
-	                Common.alert("* Invalid telephone number (Mobile1).");
+	                Common.alert('<spring:message code="sal.alert.msg.invalidTelNumMob1" />');
 	                return;
 	            }
 	        }
 	        // telm(Mobile2)
             if("" != $("#cntcTelm2").val() && null != $("#cntcTelm2").val()){
                 if(FormUtil.checkNum($("#cntcTelm2"))){
-                    Common.alert("* Invalid telephone number (Mobile2).");
+                    Common.alert('<spring:message code="sal.alert.msg.invalidTelNumMob2" />');
                     return;
                 }
             }
 	        // telr(Residence)
 	        if("" != $("#cntcTelr").val() && null != $("#cntcTelr").val()){
 	            if(FormUtil.checkNum($("#cntcTelr"))){
-	                Common.alert("* Invalid telephone number (Residence).");
+	                Common.alert('<spring:message code="sal.alert.msg.invaildTelNumR" />');
 	                return;
 	            }
 	        }
 	        // telo(Office)
 	        if("" != $("#cntcTelo").val() && null != $("#cntcTelo").val()){
 	            if(FormUtil.checkNum($("#cntcTelo"))){
-	                Common.alert("* Invalid telephone number (Office).");
+	                Common.alert('<spring:message code="sal.alert.msg.invaildTelNumO" />');
 	                return;
 	            }
 	        }
 	        // telf(Fax)
 	        if("" != $("#cntcTelf").val() && null != $("#cntcTelf").val()){
 	            if(FormUtil.checkNum($("#cntcTelf"))){
-	                Common.alert("* Invalid telephone number (Fax).");
+	                Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
 	                return;
 	            }
 	        }
@@ -127,9 +127,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>DEALER CONTACT - ADD/EDIT</h1>
+<h1><spring:message code="sal.title.text.dealerContactAddEdit" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close2">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close2"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -147,46 +147,46 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
     <td colspan="3"><input type="text" title="" readOnly placeholder="Address Status" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Initial<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.initial" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="cntcCmbInitialTypeId" name="cntcInitial">
     </select>
     </td>
-    <th scope="row">Gender<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.gender" /><span class="must">*</span></th>
     <td>
-    <label><input type="radio" name="cntcGender" value="M" checked="checked"/><span>Male</span></label>
-    <label><input type="radio" name="cntcGender" value="F" /><span>Female</span></label>
+    <label><input type="radio" name="cntcGender" value="M" checked="checked"/><span><spring:message code="sal.title.text.male" /></span></label>
+    <label><input type="radio" name="cntcGender" value="F" /><span><spring:message code="sal.title.text.female" /></span></label>
     </td>
 </tr>
 <tr>
-    <th scope="row">Contact Name<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.contactName" /><span class="must">*</span></th>
     <td><input type="text" title="" id="cntcName" name="cntcName" maxlength="70" placeholder="Contact Name" class="w100p" /></td>
-    <th scope="row">Race<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.race" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="cntcCmbRaceTypeId" name="cntcCmbRaceTypeId">
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><input type="text" title="" name="cntcNric" id="cntcNric" maxlength="18" placeholder="NRIC" class="w100p" /></td>
-    <th scope="row">Tel (Mobile 1)<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.telMobile1" /><span class="must">*</span></th>
     <td><input type="text" id="cntcTelm1" name="cntcTelm1" maxlength="20" title="" placeholder="Telephone Number (Mobile 1)" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile 2)</th>
+    <th scope="row"><spring:message code="sal.title.text.telMobile2" /></th>
     <td><input type="text" id="cntcTelm2" name="cntcTelm2" maxlength="20" title="" placeholder="Telephone Number (Mobile 2)" class="w100p" /></td>
-    <th scope="row">Tel (Office)</th>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
     <td><input type="text" id="cntcTelo" name="cntcTelo" maxlength="20" title="" placeholder="Telephone Number (Office)" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><input type="text" id="cntcTelr" name="cntcTelr" maxlength="20" title="" placeholder="Telephone Number (Residence)" class="w100p" /></td>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td><input type="text" id="cntcTelf" name="cntcTelf" maxlength="20" title="" placeholder="Telephone Number (Fax)" class="w100p" /></td>
 </tr>
 </tbody>
@@ -194,7 +194,7 @@
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="_saveBtn">Save Address</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_saveBtn"><spring:message code="sal.title.text.saveAddress" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
