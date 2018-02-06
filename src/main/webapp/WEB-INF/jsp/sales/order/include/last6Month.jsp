@@ -41,7 +41,7 @@
                     Common.popupDiv("/services/as/asResultEditViewPop.do" , {ord_Id : '${orderDetail.basicInfo.ordId}', ord_No : '${orderDetail.basicInfo.ordNo}', as_No : sVal, as_Id : asId, mod : 'RESULTVIEW', as_Result_No : asResultNo}, null , true , '_newASResultDiv1');
                 }
                 else {
-                    Common.alert("No Result View" + DEFAULT_DELIMITER + "<b>No AS result to view.</b>");
+                    Common.alert('<spring:message code="sal.alert.msg.noRsltView" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAsRsltView" /></b>');
                 }
             }
             else if(sVal.substr(0, 2) == "BS" || sVal.substr(0, 2) == "HS") {
@@ -54,11 +54,11 @@
                     Common.popupDiv("/sales/order/hsBasicInfoPop.do", {schdulId : schdulId, salesOrdId : '${orderDetail.basicInfo.ordId}', MOD : 'VIEW'}, null , true , '_bsBasicPop'); 
                 }
                 else {
-                    Common.alert("No Result View" + DEFAULT_DELIMITER + "<b>No BS result to view.</b>");
+                    Common.alert('<spring:message code="sal.alert.msg.noRsltView" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAsRsltView" /></b>');
                 }
             }
             else {
-                Common.alert("No Data View" + DEFAULT_DELIMITER + "<b>No information to display.</b>");
+                Common.alert('<spring:message code="sal.alert.msg.noRsltView" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noInfo" /></b>');
             }
         }
     }
