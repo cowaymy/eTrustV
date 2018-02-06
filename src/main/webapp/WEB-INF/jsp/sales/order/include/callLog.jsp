@@ -10,15 +10,15 @@
         
         //AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "No",          dataField : "rownum",            visible  : false }
-          , { headerText : "Type",        dataField : "codeName",          width : 150 }
-          , { headerText : "Feedback",    dataField : "resnDesc",          width : 120 }
-          , { headerText : "Action",      dataField : "stusName",          width : 120 }
-          , { headerText : "Amount",      dataField : "callRosAmt",        width : 70  }
-          , { headerText : "Remark",      dataField : "callRem",           width : 250 }
-          , { headerText : "Caller",      dataField : "rosCallerUserName", width : 120 }
-          , { headerText : "Creator",     dataField : "callCrtUserName",   width : 80  }
-          , { headerText : "Create Date", dataField : "callCrtDt",         width : 130 }
+            { headerText : '<spring:message code="sal.title.text.no" />',       dataField : "rownum",            visible  : false }
+          , { headerText : '<spring:message code="sal.text.type" />',           dataField : "codeName",          width : 150 }
+          , { headerText : '<spring:message code="sal.title.text.feedback" />', dataField : "resnDesc",          width : 120 }
+          , { headerText : '<spring:message code="sal.title.text.action" />',   dataField : "stusName",          width : 120 }
+          , { headerText : '<spring:message code="sal.title.amount" />',        dataField : "callRosAmt",        width : 70  }
+          , { headerText : '<spring:message code="sal.text.remark" />',         dataField : "callRem",           width : 250 }
+          , { headerText : '<spring:message code="sal.title.text.caller" />',   dataField : "rosCallerUserName", width : 120 }
+          , { headerText : '<spring:message code="sal.text.creator" />',        dataField : "callCrtUserName",   width : 80  }
+          , { headerText : '<spring:message code="sal.text.createDate" />',     dataField : "callCrtDt",         width : 130 }
           ];
         
         var gridPros = {
