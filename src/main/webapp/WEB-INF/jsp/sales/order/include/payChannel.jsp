@@ -12,33 +12,33 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Rental Paymode</th>
+    <th scope="row"><spring:message code="sal.text.rentalPaymode" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayModeDesc}</span></td>
-    <th scope="row">Direct Debit Mode</th>
+    <th scope="row"><spring:message code="sal.text.ddMode" /></th>
     <td><span>${orderDetail.rentPaySetInf.clmDdMode}</span></td>
-    <th scope="row">Auto Debit Limit</th>
+    <th scope="row"><spring:message code="sal.text.autoDebitMode" /></th>
     <td><span>${orderDetail.rentPaySetInf.clmLimit}</span></td>
 </tr>
 <tr>
-    <th scope="row">Issue Bank</th>
+    <th scope="row"><spring:message code="sal.text.issueBank" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayIssBank}</span></span></td>
-    <th scope="row">Card Type</th>
+    <th scope="row"><spring:message code="sal.text.cardType" /></th>
     <td><span>${orderDetail.rentPaySetInf.cardType}</span></td>
-    <th scope="row">Claim Bill Date</th>
+    <th scope="row"><spring:message code="sal.text.claimBillDt" /></th>
     <td><span></span></td>
 </tr>
 <tr>
-    <th scope="row">Credit Card No</th>
+    <th scope="row"><spring:message code="sal.text.creditCardNo" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayCrcNo}</span></td>
-    <th scope="row">Name On Card</th>
+    <th scope="row"><spring:message code="sal.text.nameOnCard" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayCrOwner}</span></td>
-    <th scope="row">Expiry Date</th>
+    <th scope="row"><spring:message code="sal.text.expiryDate" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayCrcExpr}</span></td>
 </tr>
 <tr>
-    <th scope="row">Bank Account No</th>
+    <th scope="row"><spring:message code="sal.text.bankAccNo" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayAccNo}</span></td>
-    <th scope="row">Account Name</th>
+    <th scope="row"><spring:message code="sal.text.accName" /></th>
     <td><span>${orderDetail.rentPaySetInf.rentPayAccOwner}</span></td>
     <th scope="row">Issure NRIC</th>
     <td><span>${orderDetail.rentPaySetInf.issuNric}</span></td>
