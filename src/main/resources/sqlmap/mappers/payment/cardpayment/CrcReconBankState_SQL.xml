@@ -3,17 +3,16 @@
 <mapper namespace="com.coway.trust.biz.payment.cardpayment.service.impl.CrcReconBankStateMapper">
     
     <select id="selectMappingList" parameterType="Map" resultType="egovMap">
-        SELECT
+        SELECT 
             TO_CHAR(SubBank.F_TRNSC_DT, 'DD/MM/YYYY') AS F_TRNSC_DT,
             SubCrc.CRC_TRNSC_MID,
             SubCrc.NET_AMT,
             SubBank.F_TRNSC_ID,
             SubBank.CREDIT_AMT,
-            SubBank.CODE_ID,
-            SubCrc.CRC_STATE_ID,
-            TO_CHAR((SELECT sysdate FROM DUAL), 'DD/MM/YYYY') AS MAPPING_DATE
+            TO_CHAR((SELECT sysdate FROM DUAL), 'DD/MM/YYYY') AS MAPPING_DATE,
+            (CASE WHEN   (NET_AMT -  CREDIT_AMT )  =0  THEN  'true' ELSE  'false'  END) AS is_Amt_Same ,
+            NET_AMT -  CREDIT_AMT  as  variance
         FROM(
-            /* CREDIT CARD STATEMENT */
                 SELECT B.CRC_STATE_ID, 
                         B.CRC_TRNSC_MID,
                         D.CODE_ID,
@@ -27,13 +26,11 @@
                 AND KEYIN_STUS_ID = 4
                 AND B.BANK_MAPPING_STUS_ID = 1
                 GROUP BY 
-                    B.CRC_STATE_ID, 
                     B.CRC_TRNSC_MID,
                     D.CODE_ID,
                     B.CRC_TRNSC_DT) SubCrc
         JOIN
                 (
-                /* BANK STATEMENT */ 
                 SELECT 
                         B.F_TRNSC_ID,
                         B.F_TRNSC_REF4 AS MID,
@@ -60,6 +57,12 @@
 		<if test="bankAccount != null and bankAccount != '' ">
 		      AND SubBank.CODE_ID = #{bankAccount}
 		</if> 
+		GROUP  BY 
+         TO_CHAR (SubBank.F_TRNSC_DT, 'DD/MM/YYYY'),
+         SubCrc.CRC_TRNSC_MID,
+         SubCrc.NET_AMT,
+         SubBank.F_TRNSC_ID,
+         SubBank.CREDIT_AMT
     </select>
     
     <select id="selectUnMappedCrc" parameterType="Map" resultType="egovMap">
@@ -257,4 +260,41 @@
 		    #{diffAmt} 
 		)
     </insert>
+    
+    
+    
+    
+    <insert id="insertCardPaymentMatchIF" parameterType="EgovMap">
+    
+         INSERT INTO ITF0942M (
+            IF_KEY,
+            SEQ,
+            IF_TYPE,
+            TRAN_STATUS_CD,
+            RGST_DT,
+            RGST_TM,
+            RGST_ID,
+            PAY_DT,
+            BANK_SEQ,
+            BANK_ID,
+            BANKAC, 
+            DIFF_TYPE,
+            DIFF_AMT
+        ) VALUES (
+            FN_CRT_IFKEY('942'),
+            1,
+            '942',
+            '10',       
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            TO_CHAR(SYSDATE,'HHMMSS'),  
+            #{userId},     
+            sysdate,
+            (select   nvl(max(BANK_SEQ),0)+1    from    ITF0942M  where   to_char (PAY_DT,'yyyymmdd') = to_char(sysdate,'yyyymmdd')),
+            #{fTrnscId},
+            (select ACC_CODE    from SYS0001M where acc_id =#{accId} ) ,       
+            'AC002',
+            NVL(#{variance},0)
+        )   
+        
+      </insert>
 </mapper>

@@ -44,10 +44,19 @@
         {dataField : "crcTrnscMid",headerText : "<spring:message code='pay.head.midNo'/>",width : 200, editable : false},
         //{dataField : "bnkAcc",headerText : "<spring:message code='pay.head.bankAccount'/>",width : 100 , editable : false},  
         {dataField : "netAmt",headerText : "<spring:message code='pay.head.crcNetAmount'/>",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},        
+        
         {dataField : "fTrnscId",headerText : "<spring:message code='pay.head.bankStatementId'/>",width : 200 , editable : false},        
-        {dataField : "debtAmt",headerText : "Debit <br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},        
+        {dataField : "debtAmt",headerText : "Debit <br>Amount",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"}, 
+        
         {dataField : "creditAmt",headerText : "<spring:message code='pay.head.creditAmount'/>",width : 180 , editable : false, dataType:"numeric", formatString:"#,##0.00"},
         {dataField : "mappingDate",headerText : "<spring:message code='pay.head.mappingDate'/>",width : 240 , editable : false},
+        
+        {dataField : "variance",headerText : "Variance",width : 150 , editable : false ,dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "accountCode",headerText : "AccountCode",width : 150 , editable : false},
+        {dataField : "remark",headerText : "Remark",width : 150 , editable : false},
+        {dataField : "isAmtSame",headerText : "isAmtSame",width : 150 , editable : false ,visible:false}
+        
+        
    ];
     
     var columnUnMappedCrcLayout = [
@@ -55,12 +64,12 @@
         {dataField : "crcTrnscDt", headerText : "<spring:message code='pay.head.transactionDate'/>", editable : false},    
         {dataField : "crcTrnscMid", headerText : "<spring:message code='pay.head.midNo'/>", editable : false},    
         {dataField : "accDesc", headerText : "<spring:message code='pay.head.bankAccount'/>", editable : false},   
-        {dataField : "netAmt", headerText : "<spring:message code='pay.head.totalNetAmount'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"},
+        {dataField : "netAmt", headerText : "<spring:message code='pay.head.totalNetAmount'/>", editable : false, dataType:"numeric", formatString:"#,##0.00"}
         /*{
             dataField : "btnCheck",
             headerText : "CH.",
             width: 80,
-            renderer : {
+            renderer : { 
                 type : "CheckBoxEditRenderer",            
                 editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
                 checkValue : "1", // true, false 인 경우가 기본
@@ -101,6 +110,8 @@
     	bankStatementGridID = GridCommon.createAUIGrid("grid_wrap_bank_statement", columnUnMappedBankLayout, null, gridPros2);
     	
     	doGetCombo('/common/getBankAccountList.do', '', '', 'bankAccount', 'S', '');
+    	doGetCombo('/common/selectCodeList.do', '393' , ''   , 'accCode' , 'S', '');
+    	
     });
     
     function fn_searchList(){
@@ -113,19 +124,19 @@
     	 });
     }
     
+    
+    var item ; 
+    
     function fn_mapping(){
         
     	var crcCheckedItem    = AUIGrid.getCheckedRowItems(crcStatementGridID);
-    	
     	
 		//var bankCheckedItem  = AUIGrid.getCheckedRowItems(crcStatementGridID);  editing by hgham 20180130
         var bankCheckedItem  = AUIGrid.getCheckedRowItems(bankStatementGridID);
 		
 		
-    	var item = new Object();
+        item = new Object();
     	var curDate = new Date();
-    	
-    	
     	
     	
 		item.crcStateId = AUIGrid.getCellValue(crcStatementGridID, crcCheckedItem[0].rowIndex , "crcStateId");
@@ -133,6 +144,7 @@
 		
 		item.fTrnscDt = AUIGrid.getCellValue(bankStatementGridID, bankCheckedItem[0].rowIndex, "fTrnscDt");
 		item.crcTrnscMid = AUIGrid.getCellValue(bankStatementGridID, bankCheckedItem[0].rowIndex, "mid");
+		
 		item.netAmt = AUIGrid.getCellValue(crcStatementGridID, crcCheckedItem[0].rowIndex, "netAmt");
 		item.creditAmt = AUIGrid.getCellValue(bankStatementGridID, bankCheckedItem[0].rowIndex, "creditAmt");
 		
@@ -140,17 +152,62 @@
 		item.codeId = AUIGrid.getCellValue(bankStatementGridID, bankCheckedItem[0].rowIndex, "codeId");
 		
 		item.mappingDate = curDate.getDate() + "/" + (curDate.getMonth() +1) +"/" + curDate.getFullYear();
-
+		
 		console.log(item);
-		AUIGrid.addRow(mappedGridID, item, "last");
-
+	
 		AUIGrid.removeRow(crcStatementGridID, crcCheckedItem[0].rowIndex);
 		AUIGrid.removeRow(bankStatementGridID, bankCheckedItem[0].rowIndex);
 		
 		AUIGrid.removeSoftRows(crcStatementGridID);
 		AUIGrid.removeSoftRows(bankStatementGridID);
-    	
+		
+		
+		var  keyInAmount =item.netAmt; 
+		var  stmtAmount  =item.creditAmt;
+		
+		
+		if(keyInAmount != stmtAmount){
+            Common.alert("<spring:message code='pay.alert.transAmtNotSame'/>",
+                function (){
+                    
+                    $("#journal_entry_wrap").show();                    
+                    $("#fTrnscId").val(item.fTrnscId);  
+                    $("#preKeyInAmt").val(keyInAmount);
+                    $("#bankStmtAmt").val(stmtAmount);
+                    $("#variance").val($.number(keyInAmount-stmtAmount,2,'.',''));
+                    $("#accCode").val('');
+                    $("#remark").val('');
+                    $("#isAmtSame").val('false');
+                }
+            );
+            
+        }else{
+        	
+               
+        	item.variance = $("#variance").val();
+	        item.accountCode =  $("#accCode").val();
+	        item.remark =  $("#remark").val();
+	        item.isAmtSame ="true";
+	        AUIGrid.addRow(mappedGridID, item, "last");
+            
+        }
     }
+    
+    
+    
+    function fn_saveMapping(){
+    	
+    	item.variance = $("#variance").val();
+        item.accountCode =  $("#accCode").val();
+        item.remark =  $("#remark").val();
+        item.isAmtSame ="false";
+        
+        AUIGrid.addRow(mappedGridID, item, "last");
+        
+        $("#journal_entry_wrap").remove();   
+    }
+    
+    
     
     function fn_knockOff(){
     	Common.confirm("Are you sure you want to match this Payment & CRC items?",fn_updateMappingData);
@@ -289,4 +346,86 @@
     </ul>
 
 </section>
+
+
+
+<!--------------------------------------------------------------- 
+    POP-UP (JOURNAL ENTRY)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="journal_entry_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="pop_header">
+        <h1>JOURNAL ENTRY</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#journal_entry_wrap')"><spring:message code='sys.btn.close'/></a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+    
+    <!-- pop_body start -->
+    <form name="entryForm" id="entryForm"  method="post">
+    
+    <div  style='display:none'> 
+         <input type="text" id="groupSeq" name="groupSeq" />
+         <input type="text" id="fTrnscId" name="fTrnscId" />
+         <input type="text" id="isAmtSame" name="isAmtSame" />
+         <input type="text" id="accId" name="accId" />
+         <input type="text" id="diffType" name="diffType" />
+    </div>
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:200px" />
+                    <col style="width:*" />                
+                </colgroup>
+                
+                <tbody>
+                    <tr>
+                        <th scope="row">Pre Key In Amount (A)</th>
+                        <td>
+                            <input id="preKeyInAmt" name="preKeyInAmt" type="text" class="readonly" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Bank Statement Amount (B)</th>
+                        <td>
+                            <input id="bankStmtAmt" name="bankStmtAmt" type="text" class="readonly" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Variance (Variance = A - B)</th>
+                        <td>
+                            <input id="variance" name="variance" type="text" class="readonly" readonly />
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Account Code</th>
+                        <td>
+                            <select id="accCode" name="accCode" class="w100p"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">Remark</th>
+                        <td>
+                            <textarea id="remark" name="remark"  cols="10" rows="3" placeholder=""></textarea>
+                        </td>
+                    </tr>
+                   </tbody>  
+            </table>
+        </section>
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a href="javascript:fn_saveMapping('Y');"><spring:message code='sys.btn.save'/></a></p></li>
+        </ul>
+    </section>
+    </form>       
+    <!-- pop_body end -->
+</div>
+<!-- popup_wrap end -->
+
+
 <!-- content end -->
