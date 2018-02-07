@@ -185,8 +185,12 @@ function fn_MemsFail(){
  var activeItems = AUIGrid.getCheckedRowItems(myGridID);
 
  console.log(activeItems);
-
- 
+ for(var i in activeItems){
+	   if(activeItems[i].item.stusId != 60  ){
+		 	Common.alert("Only event [In Progress] status is allowed.");
+		   return;
+	   }
+ }
  var jasonObj={update : activeItems};
  console.log(jasonObj);
     Common.ajax("POST", "/organization/updateMemberListFail", jasonObj, function(result) {
@@ -202,9 +206,7 @@ function fn_MemsFail(){
 
 
 function fn_getOrgEventsAjax(){
-	   var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
-	    console.log(activeItems);
-	 
+
 	
 	   Common.confirm("Do you want to approve the Events?"  , fn_MemsApprove );
 	
@@ -213,6 +215,12 @@ function fn_MemsApprove(){
 	//var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
 	var activeItems = AUIGrid.getCheckedRowItems(myGridID);
 	console.log(activeItems);
+	 for(var i in activeItems){
+	       if(activeItems[i].item.stusId != 60  ){
+	           Common.alert("Only event [In Progress] status is allowed.");
+	           return;
+	       }
+	 }
 
 	
 	var jasonObj={update : activeItems};
