@@ -101,16 +101,17 @@
             }];
        
         // 그리드 속성 설정
-        var gridPros = {
+         var gridPros = {
             // 페이징 사용       
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
             editable : true,
-            fixedColumnCount : 1,
-            showStateColumn : true, 
+    //        fixedColumnCount : 0,
+            showStateColumn : false, 
             displayTreeOpen : true,
             selectionMode : "multipleCells",
+            wordWrap :  true,
             headerHeight : 30,
             // 그룹핑 패널 사용
             useGroupingPanel : false,
@@ -119,9 +120,27 @@
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true,
+            showRowNumColumn : false,
             groupingMessage : "Here groupping"
-        };
+        }; 
+        
+/*         var gridPros = {
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+              //  fixedColumnCount    : 0,            
+                showStateColumn     : false,             
+                displayTreeOpen     : false,            
+              //selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : false,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping",
+                wordWrap :  true
+            }; */
         
         callResultGridID = GridCommon.createAUIGrid("#callResult_grid_wrap", callResultColumnLayout, "", gridPros);
     }
@@ -176,16 +195,17 @@
             }];
        
         // 그리드 속성 설정
-        var gridPros = {
+         var gridPros = {
             // 페이징 사용       
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 10,
             editable : true,
-            fixedColumnCount : 1,
+       //     fixedColumnCount : 0,
             showStateColumn : false, 
             displayTreeOpen : false,
             selectionMode : "multipleCells",
+            wordWrap :  true,
             headerHeight : 30,
             // 그룹핑 패널 사용
             useGroupingPanel : false,
@@ -194,9 +214,27 @@
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
-            showRowNumColumn : true,
+            showRowNumColumn : false,
             groupingMessage : "Here groupping"
-        };
+        }; 
+        
+/*         var gridPros = {
+                usePaging           : true,         //페이징 사용
+                pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
+                editable            : false,            
+              //  fixedColumnCount    : 0,            
+                showStateColumn     : false,             
+                displayTreeOpen     : false,            
+              //selectionMode       : "singleRow",  //"multipleCells",            
+                headerHeight        : 30,       
+                useGroupingPanel    : false,        //그룹핑 패널 사용
+                skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                showRowNumColumn    : false,         //줄번호 칼럼 렌더러 출력    
+                noDataMessage       : "No order found.",
+                groupingMessage     : "Here groupping",
+                wordWrap :  true
+            }; */
         
         callLogGirdID = GridCommon.createAUIGrid("#callLog_grid_wrap", callLogColumnLayout, '',gridPros);
     }
@@ -224,7 +262,7 @@
  
     //resize func (tab click)
     function fn_resizefunc(gridName){ // 
-        AUIGrid.resize(gridName, 950, 300);
+       AUIGrid.resize(gridName, 950, 300);
    }
     
   //그리드 속성 설정
