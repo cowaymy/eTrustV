@@ -118,10 +118,10 @@
                       AND UPPER(Project1.PST_REF_NO) = UPPER(#{pstRefNo})
                   </if>
                   <if test="createStDate != null and createStDate != '' ">
-                       AND Project1.CRT_DT <![CDATA[  >= ]]>  TO_DATE( #{createStDate} , 'DD-MM-YYYY')
+                       AND Project1.CRT_DT <![CDATA[  >= ]]>  TO_DATE( #{createStDate} , 'DD/MM/YYYY')
                   </if>
                   <if test="createEnDate != null and createEnDate != ''">                              
-                       AND Project1.CRT_DT <![CDATA[  <= ]]>  TO_DATE( #{createStDate} , 'DD-MM-YYYY')
+                       AND Project1.CRT_DT <![CDATA[  < ]]>  TO_DATE( #{createStDate} , 'DD/MM/YYYY') + 1
                   </if>
                   <if test="pstDealerId != null and pstDealerId != ''">
                       AND Project1.PST_DEALER_ID = #{pstDealerId}
