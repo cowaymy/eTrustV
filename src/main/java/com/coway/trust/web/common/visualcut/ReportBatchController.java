@@ -417,6 +417,7 @@ public class ReportBatchController {
 	//@Scheduled(cron = "0 40 4 * * *") // 매일 5시에 실행 // sample : http://fmaker7.tistory.com/163
 	public void hPOwnPurchase() throws IOException {
 		LOGGER.info("[START] HP_OwnPurchase...");
+		Map<String, Object> params = new HashMap<>();
 		params.put(REPORT_FILE_NAME, "/visualcut/HP_OwnPurchase.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
