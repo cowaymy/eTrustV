@@ -2087,7 +2087,7 @@
     }
     
 	function fn_reloadPage(){
-	    Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
+	  //Common.popupDiv("/sales/order/orderModifyPop.do", { salesOrderId : ORD_ID, ordEditType : $('#ordEditType').val() }, null , true);
 	    $('#btnCloseModify').click();
 	}
 </script>
