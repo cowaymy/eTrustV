@@ -29,6 +29,15 @@ $(document).ready(function() {
 			return;
 		}
 		
+		//Search max 31Days Condition
+        var startDate = $('#_keyStartDate').val();
+        var endDate = $('#_keyEndDate').val();
+        
+        if( fn_getDateGap(startDate , endDate) > 31){
+            Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
+            return;
+        }
+		
 		if($("#_appTypePop").val() == null || $("#_appTypePop").val() == ''){
 			Common.alert('<spring:message code="sal.alert.msg.plzSeloneAppType" />');
 			return;
@@ -175,6 +184,23 @@ $(document).ready(function() {
 	    
 	});//Gen End
 });
+
+function fn_getDateGap(sdate, edate){
+    
+    var startArr, endArr;
+    
+    startArr = sdate.split('/');
+    endArr = edate.split('/');
+    
+    var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
+    var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
+    
+    var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
+    
+//    console.log("gap : " + gap);
+    
+    return gap;
+}
 
 
 function fn_loadOrderSalesman(memId, memCode) {

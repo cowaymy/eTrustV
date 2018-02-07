@@ -237,6 +237,30 @@
                 return ;
         	}
          }
+        
+        //Search Condition max 31Days -- add by Lee seok hee
+        if(($("#createStDate").val() != null && $("#createStDate").val() != '') || ($("#createEnDate").val() != null && $("#createEnDate").val() != '')){
+        	
+        	if($("#createStDate").val() == null || $("#createStDate").val() == ''){
+        		Common.alert("Please Key In Start Date");
+        		return;
+        	}
+        	
+        	if($("#createEnDate").val() == null || $("#createEnDate").val() == ''){
+        		Common.alert("please Key In End Date");
+        		return;
+        	}
+        	
+        	var startDate = $('#createStDate').val();
+            var endDate = $('#createEnDate').val();
+            
+            if( fn_getDateGap(startDate , endDate) > 31){
+                Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
+                return;
+            }
+        }
+        
+        
          
         Common.ajax("GET", "/sales/order/orderColorGridJsonList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
@@ -260,6 +284,23 @@
              // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
              AUIGrid.update(myGridID);
         });
+    }
+    
+    function fn_getDateGap(sdate, edate){
+        
+        var startArr, endArr;
+        
+        startArr = sdate.split('/');
+        endArr = edate.split('/');
+        
+        var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
+        var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
+        
+        var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
+        
+//        console.log("gap : " + gap);
+        
+        return gap;
     }
     
 
@@ -445,9 +486,9 @@
     <th scope="row">Order Date</th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" id="createStDate" name="createStDate" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create start Date" id="createStDate" name="createStDate" placeholder="DD/MM/YYYY" class="j_date" readonly="readonly"/></p>
     <span>To</span>
-    <p><input type="text" title="Create end Date" id="createEnDate" name="createEnDate" placeholder="DD/MM/YYYY" class="j_date" /></p>
+    <p><input type="text" title="Create end Date" id="createEnDate" name="createEnDate" placeholder="DD/MM/YYYY" class="j_date" readonly="readonly"/></p>
     </div><!-- date_set end -->
     </td>
     <th scope="row">Product</th>
