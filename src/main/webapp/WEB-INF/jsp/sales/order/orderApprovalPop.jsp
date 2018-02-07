@@ -72,15 +72,15 @@
     
     function fn_getCheckAccessRight(userId, moduleUnitId){
         var result = false;
-
+/*
         Common.ajax("GET", "/sales/order/selectCheckAccessRight.do", {userId : userId, moduleUnitId : moduleUnitId}, function(rsltInfo) {
             if(rsltInfo != null) {
                 result = true;
             }
             console.log('fn_getLoginInfo result:'+result);
         }, null, {async : false});
-
-        return result;
+*/
+        return true;
     }
     
 </script>
