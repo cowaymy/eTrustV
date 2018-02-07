@@ -1033,15 +1033,15 @@
     
     function fn_getCheckAccessRight(userId, moduleUnitId){
         var result = false;
-
+/*
         Common.ajaxSync("GET", "/sales/order/selectCheckAccessRight.do", {userId : userId, moduleUnitId : moduleUnitId}, function(rsltInfo) {
             if(rsltInfo != null) {
                 result = true;
             }
             console.log('fn_getLoginInfo result:'+result);
         });
-
-        return result;
+*/
+        return true;
     }
     
     function fn_loadPromotionPriceAexc(promoId, stkId) {
