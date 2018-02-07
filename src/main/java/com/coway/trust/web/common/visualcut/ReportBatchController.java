@@ -224,7 +224,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_Jan_April_S" + CommonUtils.getNowDate() + ".xlsx");
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_Jan_April_S" + CommonUtils.getNowDate() + ".xls");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] ColorGrid_Daily_2015_Jan_April_S...");
@@ -239,7 +239,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_May_Dec_S" + CommonUtils.getNowDate() + ".xlsx");
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_May_Dec_S" + CommonUtils.getNowDate() + ".xls");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] ColorGrid_Daily_2015_May_Dec_S...");
@@ -254,7 +254,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_Daily_2016_Jan_Dec_S" + CommonUtils.getNowDate() + ".xlsx");
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2016_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] ColorGrid_Daily_2016_Jan_Dec_S...");
@@ -417,7 +417,6 @@ public class ReportBatchController {
 	//@Scheduled(cron = "0 40 4 * * *") // 매일 5시에 실행 // sample : http://fmaker7.tistory.com/163
 	public void hPOwnPurchase() throws IOException {
 		LOGGER.info("[START] HP_OwnPurchase...");
-		Map<String, Object> params = new HashMap<>();
 		params.put(REPORT_FILE_NAME, "/visualcut/HP_OwnPurchase.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
