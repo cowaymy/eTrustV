@@ -86,19 +86,7 @@
 	                             width:0
 	                        	
 	                        	
-	                        },
-	                   {
-                           dataField : "checkFlag",
-                            headerText : ' ',
-                             width: 20,
-                           renderer : {
-                                             type : "CheckBoxEditRenderer",
-                                               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                                               editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
-                                               checkValue : "1", // true, false 인 경우가 기본
-                                               unCheckValue : "0"
-                                           }
-                       },{
+	                        },{
                     dataField : "promoId",
                     headerText : "promo ID.",
                     width : 120,
@@ -164,8 +152,10 @@
 	                 useGroupingPanel    : false,        //그룹핑 패널 사용
 	                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-	                 showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
-
+	                 showRowNumColumn    : true ,       //줄번호 칼럼 렌더러 출력
+	                 showRowCheckColumn : true,
+	                 showRowAllCheckBox : true
+	                 
 		    };
 		            //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
 		        myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
@@ -182,7 +172,8 @@ function fn_getOrgEventListAjax() {
     });
 }
 function fn_failOrgEventsAjax(){
-    var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
+   // var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
+   var activeItems = AUIGrid.getCheckedRowItems(myGridID);
      console.log(activeItems);
   
  
@@ -190,7 +181,9 @@ function fn_failOrgEventsAjax(){
  
 }
 function fn_MemsFail(){
- var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
+ //var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
+ var activeItems = AUIGrid.getCheckedRowItems(myGridID);
+
  console.log(activeItems);
 
  
@@ -217,7 +210,8 @@ function fn_getOrgEventsAjax(){
 	
 }
 function fn_MemsApprove(){
-	var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
+	//var activeItems = AUIGrid.getItemsByValue(myGridID, "checkFlag", "1");
+	var activeItems = AUIGrid.getCheckedRowItems(myGridID);
 	console.log(activeItems);
 
 	
