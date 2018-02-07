@@ -314,6 +314,21 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		logger.info("!@###### preprocRentPaySet START ");
 		
 		int iRentPayMode = Integer.parseInt((String) params.get("rentPayMode"));
+
+		String sIssuNric = "";
+		
+		if(CommonUtils.isNotEmpty(((String) params.get("rentPayIC")).trim())) {
+			sIssuNric = (String) params.get("rentPayIC");
+			logger.info("!@###### 000");
+		}
+		else if("1".equals((String) params.get("thrdParty"))) {
+			sIssuNric = (String) params.get("thrdPartyNric");
+			logger.info("!@###### 111");
+		}
+		else {
+			sIssuNric = (String) params.get("custNric");
+			logger.info("!@###### 222");
+		}
 		
 		rentPaySetVO.setRentPayId(Integer.parseInt((String) params.get("rentPayId")));
 //		rentPaySetVO.setSalesOrdId(Integer.parseInt((String) params.get("salesOrdId")));
@@ -332,7 +347,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		rentPaySetVO.setCustId("1".equals((String) params.get("thrdParty")) ? Integer.parseInt((String) params.get("hiddenThrdPartyId")) : 0);
 //		rentPaySetVO.setEditTypeId(0);
 		rentPaySetVO.setNricOld((String) params.get("rentPayIC"));
-		rentPaySetVO.setIssuNric(CommonUtils.isNotEmpty(params.get("rentPayIC")) ? (String) params.get("rentPayIC") : "1".equals((String) params.get("thrdParty")) ? (String) params.get("thrdPartyNric") : (String) params.get("custNric"));
+		rentPaySetVO.setIssuNric(sIssuNric);
 //		rentPaySetVO.setAeonCnvr(0);
 //		rentPaySetVO.setRem("");
 		rentPaySetVO.setLastApplyUser(sessionVO.getUserId());
