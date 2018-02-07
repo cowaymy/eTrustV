@@ -144,7 +144,7 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 			orderCancelMapper.updateCancelCCR0006D(saveParam);
 			
 			saveParam.put("soReqId", params.get("paramReqId"));
-			orderCancelMapper.updateCancelSAL0020D(saveParam);
+			orderCancelMapper.updReservalCancelSAL0020D(saveParam);
 			
 			logger.info("####################### Recall save End!! #####################");
 		} else if(status == 32){	// Confirm To Cancel
@@ -159,7 +159,7 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 			orderCancelMapper.updateCancelCCR0006D(saveParam);											// CallEntry
 				
 			saveParam.put("soReqId", params.get("paramReqId"));
-			orderCancelMapper.updateCancelSAL0020D(saveParam);											// SalesReqCancel
+			orderCancelMapper.updReservalCancelSAL0020D(saveParam);											// SalesReqCancel
 			
 			EgovMap salesReqCancel = orderCancelMapper.newSearchCancelSAL0020D(saveParam);
 			
