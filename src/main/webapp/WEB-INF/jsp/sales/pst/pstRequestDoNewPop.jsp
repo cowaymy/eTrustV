@@ -176,6 +176,13 @@ isShowChoose: true,
     
     function fn_addStockItemInfo(type, category, stkItem, qty, price, totPrice, stkId){
         
+        for(var j = 0; j < AUIGrid.getRowCount(myStkGridID); j++) {                    
+            if(stkId == AUIGrid.getCellValue(myStkGridID, j, "pstItmStkId")) {
+                Common.alert("* This stock item is existing.");
+                return false;
+            }
+        }
+        
         var item = new Object();
             item.pstItmStkId = stkId;
             item.pstItmStkDesc = stkItem;
@@ -183,14 +190,16 @@ isShowChoose: true,
             item.pstItmPrc = price;
             item.pstItmReqQty = qty;
             item.pstItmTotPrc = totPrice;
-            
+/*
             totUnitVal = totUnitVal + Number(qty);
             totAmountVal = totAmountVal + Number(totPrice);
             
             $("#totUnit").val(totUnitVal);
             $("#totAmount").val(totAmountVal);
-            
+*/
             AUIGrid.addRow(myStkGridID, item, "last"); 
+
+            calcTotal();
     }
     
     // save
@@ -274,23 +283,22 @@ isShowChoose: true,
         
     }
     
-    function fn_itemDel(){
-    	var item = new Object();
+    function fn_itemDel() {
+        AUIGrid.removeCheckedRows(myStkGridID);        
+        calcTotal();
+    }
+    
+    function calcTotal() {        
+        var totQty = 0;
+        var totPrc = 0;
         
-    	item.pstItmStkId = stkId;
-        item.pstItmStkDesc = stkItem;
-//        item.bank = category;
-        item.pstItmPrc = price;
-        item.pstItmReqQty = qty;
-        item.pstItmTotPrc = totPrice;
+        for(var j = 0; j < AUIGrid.getRowCount(myStkGridID); j++) {                    
+            totQty += Number(AUIGrid.getCellValue(myStkGridID, j, "pstItmReqQty"));
+            totPrc += Number(AUIGrid.getCellValue(myStkGridID, j, "pstItmTotPrc"));
+        }
         
-        totUnitVal = totUnitVal - Number(qty);
-        totAmountVal = totAmountVal - Number(totPrice);
-        
-        $("#totUnit").val(totUnitVal);
-        $("#totAmount").val(totAmountVal);
-    	
-        AUIGrid.removeCheckedRows(myStkGridID);
+        $("#totUnit").val(totQty);
+        $("#totAmount").val(totPrc);
     }
     
     function fn_success(){
