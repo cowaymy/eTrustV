@@ -34,7 +34,7 @@
         var targetObj = document.getElementById(obj);
 
         if(data.length == 0){
-        	Common.alert("No item found.");
+        	Common.alert('<spring:message code="sal.alert.msg.noItemFound" />');
         	return;
         }
         
@@ -68,20 +68,20 @@
         var totPrice = qty*price;
         
         if(type == "" && category == ""&& item == ""&& qty == ""&& price == ""){
-            Common.alert("* Some required fields are empty.");
+            Common.alert('<spring:message code="sal.alert.msg.someReqFieldEmpty" />');
             return false;
         }
         
         if(item == ""){
-        	Common.alert("* Some required fields are empty.");
+        	Common.alert('<spring:message code="sal.alert.msg.someReqFieldEmpty" />');
             return false;
         }
         if(qty == ""){
-            Common.alert("* Some required fields are empty.");
+            Common.alert('<spring:message code="sal.alert.msg.someReqFieldEmpty" />');
             return false;
         }
         if(price == ""){
-            Common.alert("* Some required fields are empty.");
+            Common.alert('<spring:message code="sal.alert.msg.someReqFieldEmpty" />');
             return false;
         }
         
@@ -107,9 +107,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Add Stock Item</h1>
+<h1><spring:message code="sal.title.text.addStockItem" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="autoClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="autoClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -124,44 +124,44 @@
     </colgroup>
     <tbody>
         <tr>
-            <th scope="row">Type</th>
+            <th scope="row"><spring:message code="sal.text.type" /></th>
             <td>
                 <select class="" id="addStockType" name="addStockType">
-                    <option value="">Stock Type</option>
-                    <option value="61">Stock</option>
-                    <option value="62">Filter</option>
-                    <option value="63">Spare Part</option>
-                    <option value="64">Miscellaneous</option>
+                    <option value=""><spring:message code="sal.combo.text.stockType" /></option>
+                    <option value="61"><spring:message code="sal.combo.text.stock" /></option>
+                    <option value="62"><spring:message code="sal.combo.text.filter" /></option>
+                    <option value="63"><spring:message code="sal.combo.text.sparePart" /></option>
+                    <option value="64"><spring:message code="sal.combo.text.miscellaneous" /></option>
                 </select>
             </td>
         </tr>
         <tr>
-            <th scope="row">Category</th>
+            <th scope="row"><spring:message code="sal.title.text.category" /></th>
             <td>
                 <select class="" id="addStockCate" name="addStockCate" onChange="fn_getStockItem('addStockItem', this.value, '', '')">
                 </select>
             </td>
         </tr>
         <tr>
-            <th scope="row">Stock Item<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.title.text.stockItem" /><span class="must">*</span></th>
             <td>
                 <select class="w100p" id="addStockItem" name="addStockItem">
                 </select>
                 </td>
         </tr>
         <tr>
-            <th scope="row">Quantity<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.text.quantity" /><span class="must">*</span></th>
             <td><input type="text" id="addStockQty" name="addStockQty" onkeyup="fn_inputAmt(this)" title="" placeholder="" class="" /></td>
         </tr>
         <tr>
-            <th scope="row">Unit Price<span class="must">*</span></th>
+            <th scope="row"><spring:message code="sal.title.unitPrice" /><span class="must">*</span></th>
             <td><input type="text" id="addItemPrc" name="addItemPrc" onkeyup="fn_inputAmt(this)" title="" placeholder="" class="" /></td>
         </tr>
     </tbody>
     </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_addStockItem()">Add Item</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_addStockItem()"><spring:message code="sal.title.text.addItm" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

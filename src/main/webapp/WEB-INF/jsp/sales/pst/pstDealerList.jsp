@@ -52,24 +52,24 @@ var optionUnit = {
         // 데이터 형태는 다음과 같은 형태임,
         var columnLayout = [ {
                 dataField : "dealerName",
-                headerText : "Dealer Name",
+                headerText : '<spring:message code="sal.title.text.dealerName" />',
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "code2",
-                headerText : "Status",
+                headerText : '<spring:message code="sal.title.status" />',
                 width : 140,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "cntName",
-                headerText : "Contact Name",
+                headerText : '<spring:message code="sal.title.text.contactName" />',
                 width : 230,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "telM1",
-                headerText : "Contact No",
+                headerText : '<spring:message code="sal.text.contactNo" />',
                 width : 160,
                 editable : false,
                 style: 'left_style'
@@ -129,15 +129,15 @@ var optionUnit = {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>PST Dealer View</h2>
+<h2><spring:message code="sal.title.text.pstDealerView" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="fn_new();"><span class="new"></span>New</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="fn_new();"><span class="new"></span><spring:message code="sal.title.text.new" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="fn_pstDealerListAjax();"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="fn_pstDealerListAjax();"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -162,19 +162,19 @@ var optionUnit = {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Dealer ID</th>
+    <th scope="row"><spring:message code="sal.title.text.dealerId" /></th>
     <td><input type="text" id="pstDealerId" name="pstDealerId" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Dealer Name</th>
+    <th scope="row"><spring:message code="sal.title.text.dealerName" /></th>
     <td><input type="text" id="pstDealerName" name="pstDealerName" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">Contact Name</th>
+    <th scope="row"><spring:message code="sal.title.text.contactName" /></th>
     <td><input type="text" id="pstCntName" name="pstCntName" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Dealer Type</th>
+    <th scope="row"><spring:message code="sal.title.text.dealerType" /></th>
     <td>
         <select class="multy_select w100p" id="cmbDealerType" name="cmbDealerType" multiple="multiple"></select>
     </td>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
     <td>
 	    <select class="multy_select w100p" id="cmbDealerStus" name="cmbDealerStus" multiple="multiple">
 	    </select>

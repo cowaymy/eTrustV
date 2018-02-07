@@ -28,16 +28,16 @@
 	    //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
 	    var columnLayout = [{
 	            dataField : "code",
-	            headerText : "Status",
+	            headerText : '<spring:message code="sal.title.status" />',
 	            width : 120,
 	            editable : false
 	        }, {
 	            dataField : "fullAddr",
-	            headerText : "Full Address",
+	            headerText : '<spring:message code="sal.text.fullAddr" />',
 	            editable : false
 	        }, {
 	        	dataField : "setMain", 
-	            headerText : "Set As Main", 
+	            headerText : '<spring:message code="sal.title.setAsMain" />', 
 	            width:'10%', 
 	            renderer : { 
 	                type : "TemplateRenderer", 
@@ -96,7 +96,7 @@
     function fn_setMain(dealerAddId, dealerId){ 
         $("#tempDealerId").val(dealerId);
         $("#tempDealerAddrId").val(dealerAddId);  
-        Common.confirm("Are you sure want to set this address as main address ?", fn_changeMainAddr, fn_noConfirm);
+        Common.confirm('<spring:message code="sal.confirm.msg.confirmMainAddress" />', fn_changeMainAddr, fn_noConfirm);
         
     }
 	
@@ -143,16 +143,16 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>EDIT PST DEALER ADDRESS</h1>
+<h1><spring:message code="sal.title.text.editPstDealerAddress" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Dealer Main Adderss</h2>
+<h2><spring:message code="sal.title.text.dealerMainAddr" /></h2>
 </aside><!-- title_line end -->
 
 <form id="paramForm" name="paramForm" method="GET">
@@ -173,22 +173,22 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Full Address</th>
+    <th scope="row"><spring:message code="sal.text.fullAddr" /></th>
     <td><span>${pstMailAddr.fullAddr }</span></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td><span>${pstMailAddr.rem }</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Dealer Address List</h2>
+<h2><spring:message code="sal.title.text.dealerAddrList" /></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="_newAddr">Add New Address</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="_newAddr"><spring:message code="sal.btn.addNewAddr" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

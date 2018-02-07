@@ -31,17 +31,17 @@ $(document).ready(function(){
     
          // Contact Column
         var contactColumnLayout= [ 
-              {dataField : "stusCode", headerText : "Status", width : '10%'},
-              {dataField : "cntName", headerText : "Name", width : '35%'},
-              {dataField : "telM1", headerText : "Tel(Mobile)", width : '10%'},
-              {dataField : "telO", headerText : "Tel(Office)",width : '10%'},
-              {dataField : "telR", headerText : "Tel(Residence)", width : '10%' },
-              {dataField : "telf",headerText : "Tel(Fax)",width : '10%'},
+              {dataField : "stusCode", headerText : '<spring:message code="sal.title.status" />', width : '10%'},
+              {dataField : "cntName", headerText : '<spring:message code="sal.text.name" />', width : '35%'},
+              {dataField : "telM1", headerText : '<spring:message code="sal.text.telM" />', width : '10%'},
+              {dataField : "telO", headerText : '<spring:message code="sal.text.telO" />',width : '10%'},
+              {dataField : "telR", headerText : '<spring:message code="sal.text.telR" />', width : '10%' },
+              {dataField : "telf",headerText : '<spring:message code="sal.text.telF" />',width : '10%'},
               {dataField : "dealerCntId", visible: false },
               {dataField : "dealerId", visible : false},
               { 
                   dataField : "setMain", 
-                  headerText : "Set As Main", 
+                  headerText : '<spring:message code="sal.title.setAsMain" />', 
                   width:'10%', 
                   renderer : { 
                       type : "TemplateRenderer", 
@@ -101,7 +101,7 @@ $(document).ready(function(){
 
         $("#tempDealerId").val(dealerId);
         $("#tempDealerCntId").val(dealerCntId); 
-        Common.confirm(" Are you sure want to set this contact as main contact person ?", fn_changeMainContact, fn_noConfirm);
+        Common.confirm('<spring:message code="sal.confirm.msg.confirmMainCntc" />', fn_changeMainContact, fn_noConfirm);
        
     }
     
@@ -144,16 +144,16 @@ $(document).ready(function(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>EDIT PST DEALER CONTACT</h1>
+<h1><spring:message code="sal.title.text.editPstDealerCntc" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_contClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_contClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Dealer Main Contact</h2>
+<h2><spring:message code="sal.title.text.dealerMainCntc" /></h2>
 </aside><!-- title_line end -->
 
 <form id="contForm" name="contForm" method="GET">
@@ -175,31 +175,31 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td><span>${pstMailContMain.cntName}</span></td>
-    <th scope="row">Initial</th>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
     <td><span>${pstMailContMain.dealerInitialCode}</span></td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span>${pstMailContMain.gender}</span></td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><span>${pstMailContMain.nric}</span></td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${pstMailContMain.raceName}</span></td>
-    <th scope="row">Tel (Mobile 1)</th>
+    <th scope="row"><spring:message code="sal.title.text.telMobile1" /></th>
     <td><span>${pstMailContMain.telM1}</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile 2)</th>
+    <th scope="row"><spring:message code="sal.title.text.telMobile2" /></th>
     <td><span>${pstMailContMain.telM2}</span></td>
-    <th scope="row">Tel (Office)</th>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
     <td><span>${pstMailContMain.telO}</span></td>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><span>${pstMailContMain.telR}</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td><span>${pstMailContMain.telf}</span></td>
     <th scope="row"></th>
     <td><span></span></td>
@@ -210,11 +210,11 @@ $(document).ready(function(){
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Dealer Contact List</h2>
+<h2><spring:message code="sal.title.text.dealerCntcList" /></h2>
 </aside><!-- title_line end -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="_newContact">Add New Contact</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="_newContact"><spring:message code="sal.title.text.addNewCntc" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
