@@ -5,12 +5,12 @@ $(document).ready(function(){
     /*  $('.multy_select').on("change", function() {
          //console.log($(this).val());
      }).multipleSelect({}); */
-  
-     doGetCombo('/common/selectCodeList.do', '10', '','appliType', 'M' , 'f_multiCombo'); 
+
+     doGetCombo('/common/selectCodeList.do', '10', '','appliType', 'M' , 'f_multiCombo');
 });
 
 function f_multiCombo() {
-    
+
     $('#appliType').change(function() {
     }).multipleSelect({
         selectAll : true,
@@ -38,33 +38,33 @@ function fn_openReport(){
             day = "0"+date.getDate();
         }
 	    if($("#orderStrDt").val() != '' && $("#orderEndDt").val() != '' && $("#orderStrDt").val() !=null && $("#orderEndDt").val() != null){
-	        whereSql +=" AND (som.sales_dt between to_date('"  + $("#orderStrDt").val() + "', 'DD/MM/YYYY') AND to_date('" +$("#orderEndDt").val()  + "', 'DD/MM/YYYY') ) ";
+	        whereSql +=" AND to_date(som.sales_dt) between to_date('"  + $("#orderStrDt").val() + "', 'DD/MM/YYYY') AND to_date('" +$("#orderEndDt").val()  + "', 'DD/MM/YYYY') ";
 	    }
-	    /* else{
-	        whereSql += "AND (cast(som.salesdate as Date) >=cast(dateadd(m,-2,dbo.getfirstdayofmonth(getdate())) as date))";
-	    } */
-	    
+	     else{
+	        whereSql += "AND to_date(som.sales_dt) >= to_date(ADD_MONTHS(FN_GET_FIRST_DAY_MONTH(SYSDATE), -2))";
+	    }
+
 	    if($("#pvMonth").val() != '' && $("#pvMonth").val() != null){
 	        whereSql += "AND som.pv_month = '" + $("#pvMonth").val().substring(0,2) + "' and som.pv_year = '" +  $("#pvMonth").val().substring(3,7) + "' ";
 	    }
 	    if($("#appliType").val() !='' && $("#appliType").val() !=null ){
 	        whereSql += " AND som.App_Type_ID In (" + $("#appliType").val() + ") ";
 	    }
-	    
+
 	    $("#installationRawDataForm #V_WHERESQL").val(whereSql);
 	    $("#installationRawDataForm #V_SELECTSQL").val('');
 	    $("#installationRawDataForm #reportFileName").val('/services/InstallationRawData_Excel.rpt');
 	    $("#installationRawDataForm #viewType").val("EXCEL");
 	    $("#installationRawDataForm #reportDownFileName").val("InstallationRawData_"+day+month+date.getFullYear());
-	    
+
 	    var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
-        
+
         Common.report("installationRawDataForm", option);
 	}
-	
-	
+
+
 }
 $.fn.clearForm = function() {
     return this.each(function() {
@@ -122,14 +122,14 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.ApplicationType'/></th>    
+    <th scope="row"><spring:message code='service.title.ApplicationType'/></th>
     <td>
     <select class="multy_select" multiple="multiple" id="appliType" name="appliType">
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.PVMonth_PVYear'/></th>    
+    <th scope="row"><spring:message code='service.title.PVMonth_PVYear'/></th>
     <td>
     <input type="text" title="기준년월" class="j_date2" id="pvMonth" name="pvMonth"/>
     </td>
