@@ -321,7 +321,7 @@ ORDER BY T.CLM_NO, T.REQST_DT
         #{clmNo}
        ,'R1'
        ,UPPER(#{costCentr})
-       ,#{costCentrName}
+       ,NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
        ,UPPER(#{memAccId})
        ,#{bankCode}
        ,#{bankAccNo}
@@ -371,7 +371,7 @@ WHERE T1.CLM_NO = #{clmNo}
 /* pettyCashMapper.updatePettyCashReqst */
    UPDATE FCM0012D
    SET COST_CENTR = UPPER(#{costCentr})
-       ,COST_CENTR_NAME = #{costCentrName}
+       ,COST_CENTR_NAME = NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
        ,MEM_ACC_ID = UPPER(#{memAccId})
        ,BANK_CODE = #{bankCode}
        ,BANK_ACC_NO = #{bankAccNo}
@@ -563,7 +563,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         #{clmNo}
        ,'J2'
        ,UPPER(#{costCentr})
-       ,#{costCentrName}
+       ,NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
        ,UPPER(#{memAccId})
        ,#{custdnNric}
        ,#{bankCode}
@@ -881,7 +881,7 @@ WHERE  T1.CLM_NO = #{clmNo}
 /* pettyCashMapper.updatePettyCashExp */
    UPDATE FCM0013M
    SET COST_CENTR = UPPER(#{costCentr})
-       ,COST_CENTR_NAME = #{costCentrName}
+       ,COST_CENTR_NAME = NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
        ,MEM_ACC_ID = UPPER(#{memAccId})
        ,CUSTDN_NRIC = #{custdnNric}
        ,BANK_CODE = #{bankCode}

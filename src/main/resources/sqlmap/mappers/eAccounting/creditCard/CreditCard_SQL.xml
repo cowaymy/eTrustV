@@ -146,7 +146,7 @@
        ,#{crditCardNo}
        ,#{chrgUserId}
        ,UPPER(#{costCentr})
-       ,#{costCentrName}
+       ,NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
        ,#{bankCode}
        ,#{bankName}
        ,#{crditCardType}
@@ -240,7 +240,7 @@ WHERE T1.CRDIT_CARD_SEQ = #{crditCardSeq}
        ,CRDIT_CARD_NO = #{crditCardNo}
        ,CHRG_USER_ID = #{chrgUserId}
        ,COST_CENTR = UPPER(#{costCentr})
-       ,COST_CENTR_NAME = #{costCentrName}
+       ,COST_CENTR_NAME = NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
        ,BANK_CODE = #{bankCode}
        ,BANK_NAME = #{bankName}
        ,CRDIT_CARD_TYPE = #{crditCardType}
@@ -485,7 +485,7 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
        ,#{expDesc}
        ,#{clamUn}
        ,UPPER(#{sCostCentr})
-       ,#{sCostCentrName}
+       ,NVL(#{sCostCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{sCostCentr})))
        ,#{gstRgistNo}
        ,SYSDATE
        ,#{userId}
@@ -737,7 +737,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
        ,COST_CENTR = UPPER(#{sCostCentr})
-       ,COST_CENTR_NAME = #{sCostCentrName}
+       ,COST_CENTR_NAME = NVL(#{sCostCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{sCostCentr})))
        ,GST_RGIST_NO = #{gstRgistNo}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}

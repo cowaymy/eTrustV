@@ -181,7 +181,7 @@ SELECT   T.CLM_NO
         #{clmNo}
        ,'J1'
        ,UPPER(#{costCentr})
-       ,#{costCentrName}
+       ,NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
        ,UPPER(#{memAccId})
        ,#{gstRgistNo}
        ,#{bankCode}
@@ -444,7 +444,7 @@ SELECT   T.CLM_NO
 /* webInvoiceMapper.updateWebInvoiceInfo */
    UPDATE FCM0002M
    SET COST_CENTR = UPPER(#{costCentr})
-       ,COST_CENTR_NAME = #{costCentrName}
+       ,COST_CENTR_NAME = NVL(#{costCentrName}, (SELECT COST_CENTER_TEXT FROM FCM0008M WHERE COST_CENTER = UPPER(#{costCentr})))
        ,MEM_ACC_ID = UPPER(#{memAccId})
        ,GST_RGIST_NO = #{gstRgistNo}
        ,BANK_CODE = #{bankCode}
