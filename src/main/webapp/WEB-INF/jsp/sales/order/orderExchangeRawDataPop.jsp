@@ -89,9 +89,9 @@ function btnGenerate_Click(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Exchange Raw Data</h1>
+<h1><spring:message code="sal.title.text.exchangeRawData" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -116,35 +116,35 @@ function btnGenerate_Click(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Exchange Type</th>
+    <th scope="row"><spring:message code="sal.title.text.exchangeType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbType" data-placeholder="Exchange Type">
-        <option value="282">Application Type Exchange</option>
-        <option value="283">Product Exchange</option>
-        <option value="284">Ownership Transfer</option>
+        <option value="282"><spring:message code="sal.combo.text.appTypeExchange" /></option>
+        <option value="283"><spring:message code="sal.combo.text.productExchange" /></option>
+        <option value="284"><spring:message code="sal.combo.text.ownershipTransfer" /></option>
     </select>
     </td>
-    <th scope="row">Exchange Status</th>
+    <th scope="row"><spring:message code="sal.title.text.exchangeStatus" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbStatus" data-placeholder="Exchange Status">
-        <option value="1">Active</option>
-        <option value="4">Complete</option>
-        <option value="10">Cancel</option>
+        <option value="1"><spring:message code="sal.btn.active" /></option>
+        <option value="4"><spring:message code="sal.combo.text.complete" /></option>
+        <option value="10"><spring:message code="sal.combo.text.cancel" /></option>
     </select>
     </td>
-    <th scope="row">Request Date</th>
+    <th scope="row"><spring:message code="sal.title.text.requestDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpReqDateFrom"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpReqDateTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Order Number</th>
+    <th scope="row"><spring:message code="sal.text.ordNum" /></th>
     <td><input type="text" title="" placeholder="Order Number" class="w100p" id="txtOrderNo"/></td>
-    <th scope="row">Requestor</th>
+    <th scope="row"><spring:message code="sal.title.text.requestor" /></th>
     <td><input type="text" title="" placeholder="Requestor (Username)" class="w100p" id="txtRequestBy"/></td>
     <th scope="row"></th>
     <td></td>
@@ -153,7 +153,7 @@ function btnGenerate_Click(){
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerate_Click()">Generate</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerate_Click()"><spring:message code="sal.btn.generate" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

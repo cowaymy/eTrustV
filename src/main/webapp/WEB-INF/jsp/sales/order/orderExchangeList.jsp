@@ -39,43 +39,43 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "codeName",
-                headerText : "Type",
+                headerText : '<spring:message code="sal.title.type" />',
                 width : 160,
                 editable : false
             }, {
                 dataField : "code",
-                headerText : "Status",
+                headerText : '<spring:message code="sal.title.status" />',
                 width : 100,
                 editable : false
             }, {
                 dataField : "salesOrdNo",
-                headerText : "Order No",
+                headerText : '<spring:message code="sal.text.ordNo" />',
                 width : 120,
                 editable : false
             }, {
                 dataField : "salesDt",
-                headerText : "Order Date",
+                headerText : '<spring:message code="sal.text.ordDate" />',
                 dataType : "date",
                 formatString : "dd/mm/yyyy" ,
                 width : 130,
                 editable : false
             }, {
                 dataField : "name",
-                headerText : "Customer Name",
+                headerText : '<spring:message code="sal.title.custName" />',
                 editable : false
             },{
             	dataField : "nric1",
-            	headerText : "NRIC/Company No",
+            	headerText : '<spring:message code="sal.title.text.nricCompNo" />',
             	width : 170,
             	editable : false
             },{
             	dataField : "soExchgCrtDt",
-            	headerText : "Create Date",
+            	headerText : '<spring:message code="sal.text.createDate" />',
             	width : 130,
             	editable : false
             },{
                 dataField : "crtUserName",
-                headerText : "Cearator",
+                headerText : '<spring:message code="sal.text.creator" />',
                 width : 140,
                 editable : false
            },{
@@ -196,12 +196,12 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Exchange List</h2>
+<h2><spring:message code="sal.title.text.exchangeList" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -229,55 +229,55 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Exchange Type</th>
+    <th scope="row"><spring:message code="sal.title.text.exchangeType" /></th>
     <td>
     <select id="cmbExcType" name="cmbExcType" class="multy_select w100p" multiple="multiple">
     </select>
     </td>
-    <th scope="row">Exchange Status</th>
+    <th scope="row"><spring:message code="sal.title.text.exchangeStatus" /></th>
     <td>
     <select id="cmbExcStatus" name="cmbExcStatus" class="multy_select w100p" multiple="multiple">
-        <option value="1" selected>Active</option>
-        <option value="4">Complete</option>
-        <option value="10">Cancel</option>
+        <option value="1" selected><spring:message code="sal.btn.active" /></option>
+        <option value="4"><spring:message code="sal.combo.text.compl" /></option>
+        <option value="10"><spring:message code="sal.combo.text.cancel" /></option>
     </select>
     </td>
-    <th scope="row">Request Date</th>
+    <th scope="row"><spring:message code="sal.title.text.requestDate" /></th>
     <td>
 
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" id="startCrtDt" name="startCrtDt" title="Create start Date" value="${bfDay}" placeholder="DD/MM/YYYY" class="j_date" /></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" id="endCrtDt" name="endCrtDt" title="Create end Date" value="${toDay}" placeholder="DD/MM/YYYY" class="j_date" /></p>
     </div><!-- date_set end -->
 
     </td>
 </tr>
 <tr>
-    <th scope="row">Order Number</th>
+    <th scope="row"><spring:message code="sal.text.ordNum" /></th>
     <td>
     <input type="text" id="salesOrdNo" name="salesOrdNo" title="" placeholder="Order Number" class="w100p" />
     </td>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
     <select id="cmbAppType" name="cmbAppType" class="multy_select w100p" multiple="multiple">
     </select>
     </td>
-    <th scope="row">Requestor</th>
+    <th scope="row"><spring:message code="sal.title.text.requestor" /></th>
     <td>
     <input type="text" title="" id="crtUserName" name="crtUserName" placeholder="Requestor (Username)" class="w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td>
     <input type="text" title="" id="custId" name="custId" placeholder="Customer ID (Number Only)" class="w100p" />
     </td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td>
     <input type="text" title="" id="custName" name="custName" placeholder="Customer Name" class="w100p" />
     </td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td>
     <input type="text" title="" id="custIc" name="custIc" placeholder="NRIC/Company Number" class="w100p" />
     </td>
@@ -288,11 +288,11 @@
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
-    <dt>Link</dt>
+    <dt><spring:message code="sal.title.text.link" /></dt>
     <dd>
     <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()">Exchange Raw Data</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()"><spring:message code="sal.title.text.exchangeRawData" /></a></p></li>
         </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
