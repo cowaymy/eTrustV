@@ -634,7 +634,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     	rentPaySetVO.setCustId("Y".equals((String)params.get("btnThirdParty")) ? CommonUtils.intNvl(params.get("txtHiddenThirdPartyID")) : CommonUtils.intNvl(params.get("txtHiddenCustID")));
     	rentPaySetVO.setEditTypeId(0);
     	rentPaySetVO.setNricOld((String)params.get("txtRentPayIC"));
-    	rentPaySetVO.setIssuNric(CommonUtils.isNotEmpty(params.get("txtRentPayIC")) ? (String)params.get("txtRentPayIC") : "Y".equals((String)params.get("btnThirdParty")) ? (String)params.get("txtThirdPartyNRIC") : (String)params.get("txtCustIC"));
+    	rentPaySetVO.setIssuNric(CommonUtils.isNotEmpty(((String)params.get("txtRentPayIC")).trim()) ? (String)params.get("txtRentPayIC") : "Y".equals((String)params.get("btnThirdParty")) ? (String)params.get("txtThirdPartyNRIC") : (String)params.get("txtCustIC"));
     	rentPaySetVO.setAeonCnvr(SalesConstants.IS_FALSE);
     	rentPaySetVO.setRem("");
     	rentPaySetVO.setLastApplyUser(sessionVO.getUserId());
