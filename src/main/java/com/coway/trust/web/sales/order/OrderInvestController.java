@@ -10,21 +10,31 @@ import javax.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.callcenter.common.FileDto;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.application.FileApplication;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderInvestService;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 
@@ -47,6 +57,12 @@ public class OrderInvestController {
 	
 	@Autowired
 	private SessionHandler sessionHandler;
+	
+	@Autowired
+	private FileApplication fileApplication;
+	
+	@Value("${com.file.upload.path}")
+	private String uploadDir;
 	
 	@RequestMapping(value = "/orderInvestList.do")
 	public String orderInvestList(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -198,6 +214,33 @@ public class OrderInvestController {
 		}
 		
 		return ResponseEntity.ok(map);
+	}
+	
+	
+	/**
+	 * 공통 파일 테이블 사용 Upload를 처리한다.
+	 *
+	 * @param request
+	 * @param model
+	 * @return
+	 * @throws Exception
+	 */
+	@RequestMapping(value = "/investFileUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<FileDto> sampleUploadCommon(MultipartHttpServletRequest request,
+			@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+		
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, SalesConstants.SALES_INVESTIGATION_SUBPATH, AppConstants.UPLOAD_MAX_FILE_SIZE);
+		
+		logger.debug("##### uploadDir ########" +uploadDir);
+		logger.debug("##### uploadParams #####" +params.toString());
+		
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+		
+		//serivce 에서 파일정보를 가지고, DB 처리.
+		int fileGroupKey = fileApplication.commonAttachByUserId(FileType.WEB, FileVO.createList(list), params);
+		FileDto fileDto = FileDto.create(list, fileGroupKey);
+				
+		return ResponseEntity.ok(fileDto);
 	}
 	
 	
