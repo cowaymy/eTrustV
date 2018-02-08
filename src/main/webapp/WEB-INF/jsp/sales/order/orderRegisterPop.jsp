@@ -2473,7 +2473,7 @@
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue"><a id="saveBtn" name="ordSaveBtn" href="#">OK</a></p></li>
+    <li><p class="btn_blue"><a id="saveBtn" name="ordSaveBtn" href="#"><spring:message code="sal.btn.ok" /></a></p></li>
 </ul>
 
 </form>
