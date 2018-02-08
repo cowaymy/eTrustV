@@ -48,7 +48,7 @@
             WHERE  
                 S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
             AND S28.WH_LOC_STK_GRAD = 'A'
-            AND S28.WH_LOC_GB IN ('02' , '05')
+            AND S28.WH_LOC_GB IN ('02' , '05' , '08')
             ORDER BY   S5.CODE      
    </select>
    
@@ -68,7 +68,7 @@
             WHERE  
                 S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
             AND S28.WH_LOC_STK_GRAD = 'A'
-            AND S28.WH_LOC_GB IN ('02' , '05')
+            AND S28.WH_LOC_GB IN ('02' , '05', '08')
             AND S5.BRNCH_ID = #{brnchId}
             <![CDATA[
             AND ROWNUM <= 1
