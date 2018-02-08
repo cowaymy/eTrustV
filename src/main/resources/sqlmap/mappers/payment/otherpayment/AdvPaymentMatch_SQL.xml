@@ -31,7 +31,7 @@
                     PAY0252T A
                     JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID                    
                     JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
-                    JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID    
+                    /*JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID*/    
                 WHERE
                     C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{transDateFr},'DD/MM/YYYY')
                     AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{transDateTo},'DD/MM/YYYY') + 1
