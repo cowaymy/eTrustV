@@ -1162,43 +1162,49 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				if ( params.get("action1").equals("747") ) {	// promote
 					if ( params.get("lvlTo") .equals("3") ) {	
 						promoEntry.put("lastDeptCode", deptCode.get("docNo"));
-						promoEntry.put("lastGrpCode", selectMemberOrgs.get("grpCode"));
-						promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
+						promoEntry.put("lastGrpCode", selectOrganization_new.get("lastGrpCode"));
+						promoEntry.put("lastOrgCode", selectOrganization_new.get("lastOrgCode"));
+						promoEntry.put("branchId", (selectOrganization_new != null) ? selectOrganization_new.get("brnchId") : 0);
 					} else  if ( params.get("lvlTo") .equals("2") ) {
 						promoEntry.put("lastGrpCode", deptCode.get("docNo"));
-						promoEntry.put("lastOrgCode", selectMemberOrgs.get("orgCode"));
+						promoEntry.put("lastOrgCode", selectOrganization_new.get("lastOrgCode"));
+						promoEntry.put("branchId", params.get("branchCode"));
 					} else if ( params.get("lvlTo") .equals("1") ) {
 						promoEntry.put("lastOrgCode", deptCode.get("docNo"));
+						promoEntry.put("branchId", 0);
 					}
 				} else {		// demote
 					if ( params.get("lvlTo") .equals("4") ) {	
 						Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
 						lastCodeEntry.put("deptCodeTo", promoEntry.get("deptCodeTo"));
 						lastCodeEntry.put("memberLvl", params.get("memberLvl"));
-						logger.debug("lastCodeEntry : {}",lastCodeEntry);
 						EgovMap selectLastCode = memberListMapper.selectLastCode(lastCodeEntry);
+						logger.debug("selectLastCode : {}",selectLastCode);
 						promoEntry.put("lastDeptCode", selectLastCode.get("lastDeptCode"));
 						promoEntry.put("lastGrpCode", selectLastCode.get("lastGrpCode"));
 						promoEntry.put("lastOrgCode", selectLastCode.get("lastOrgCode"));
+						promoEntry.put("branchId", (selectOrganization_new != null) ? selectOrganization_new.get("brnchId") : 0);
 					} else if ( params.get("lvlTo") .equals("3") ) {	
 						promoEntry.put("lastDeptCode", deptCode.get("docNo"));
 						
 						Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
 						lastCodeEntry.put("deptCodeTo", promoEntry.get("parentDeptCodeTo"));
 						lastCodeEntry.put("memberLvl", params.get("memberLvl"));
-						logger.debug("lastCodeEntry : {}",lastCodeEntry);
 						EgovMap selectLastCode = memberListMapper.selectLastCode(lastCodeEntry);
+						logger.debug("selectLastCode : {}",selectLastCode);
 						promoEntry.put("lastGrpCode", selectLastCode.get("lastGrpCode"));
 						promoEntry.put("lastOrgCode", selectLastCode.get("lastOrgCode"));
+						promoEntry.put("branchId", (selectOrganization_new != null) ? selectOrganization_new.get("brnchId") : 0);
 					} else  if ( params.get("lvlTo") .equals("2") ) {
 						promoEntry.put("lastGrpCode", deptCode.get("docNo"));
 						
 						Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
 						lastCodeEntry.put("deptCodeTo", promoEntry.get("parentDeptCodeTo"));
 						lastCodeEntry.put("memberLvl", params.get("memberLvl"));
-						logger.debug("lastCodeEntry : {}",lastCodeEntry);
 						EgovMap selectLastCode = memberListMapper.selectLastCode(lastCodeEntry);
+						logger.debug("selectLastCode : {}",selectLastCode);
 						promoEntry.put("lastOrgCode", selectLastCode.get("lastOrgCode"));
+						promoEntry.put("branchId", params.get("branchCode"));
 					}
 				}
 				
@@ -1209,7 +1215,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				EgovMap selectLastCode = memberListMapper.selectLastCode(lastCodeEntry);
 				logger.debug("selectLastCode : {}",selectLastCode);
 				
-				promoEntry.put("branchId", (selectLastCode != null) ? selectLastCode.get("brnchId") : 0);	
+//				promoEntry.put("branchId", (selectLastCode != null) ? selectLastCode.get("brnchId") : 0);	
 				
 				promoEntry.put("PRmemId",promoEntry.get("promoTypeId").toString().equals("747") ? selectMemberOrgs.get("memUpId").toString() : 0);
 				logger.debug("promoEntry : {}",promoEntry);
