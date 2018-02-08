@@ -20,7 +20,7 @@
 
 
     <select id="selectBranchList" parameterType="Map" resultType="egovMap">
-    SELECT * 
+    SELECT *
     FROM (
     <choose>
         <when test="userType == 2">
@@ -28,7 +28,7 @@
 	                , s005m.code || '-' || s005m.name AS CODE_NAME
 	            from SYS0005M s005m
 	                    ,SYS0013M s0013m
-	            where s005m.type_id = s0013m.code_id                    
+	            where s005m.type_id = s0013m.code_id
 	               and s005m.type_id in ( 42)
 	             <choose>
 	                     <when test="memberLevel == 1">
@@ -41,11 +41,11 @@
 	                                                        AND E.MEM_LVL ='2'
 	                                                        AND E.MEM_ID = F.MEM_ID
 	                                                        AND F.BRNCH = C.BRNCH_ID
-	                                                        AND A.USER_NAME  = #{userName}                         
-	                                                     )        
+	                                                        AND A.USER_NAME  = #{userName}
+	                                                     )
 	                     </when>
 	                     <when test="memberLevel == 2">
-	                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )        
+	                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )
 	                     </when>
 	                     <when test="memberLevel == 3">
 	                         AND S005M.CODE IN ( SELECT C.CODE FROM SYS0047M A, ORG0001D B, SYS0005M C WHERE 1 = 1 AND A.USER_NAME = B.MEM_CODE AND B.BRNCH = C.BRNCH_ID AND A.USER_NAME = #{userName} )
@@ -53,8 +53,8 @@
 	                     <when test="memberLevel == 4">
 	                         AND S005M.CODE = (SELECT C.CODE FROM ORG0001D A, ORG0005D B, SYS0005M C WHERE A.MEM_ID = B.MEM_ID AND A.BRNCH = C.BRNCH_ID AND A.MEM_CODE = #{userName})
 	                     </when>
-	             </choose>    
-	                         order by s005m.CODE ASC          
+	             </choose>
+	                         order by s005m.CODE ASC
         </when>
         <when test="userType == 4 or userType == 6 ">
                 SELECT s005m.brnch_id AS code_id,
@@ -65,13 +65,13 @@
                 SELECT s005m.brnch_id AS code_id,
                        s005m.code || '-' || s005m.NAME AS code_name
                   FROM sys0005m s005m, sys0013m s0013m
-                 WHERE s005m.type_id = s0013m.code_id AND s005m.code = 'DSC-28'            
+                 WHERE s005m.type_id = s0013m.code_id AND s005m.code = 'DSC-28'
         </when>
         <when test="userType == 3">
 				SELECT S005M.BRNCH_ID AS CODE_ID,
 				           S005M.CODE || '-' || S005M.NAME AS CODE_NAME
 				  FROM SYS0005M S005M, SYS0013M S0013M
-				 WHERE S005M.TYPE_ID = S0013M.CODE_ID AND S005M.CODE = 'DSC-28'        
+				 WHERE S005M.TYPE_ID = S0013M.CODE_ID AND S005M.CODE = 'DSC-28'
         </when>
         <otherwise>
 	        SELECT S005M.BRNCH_ID AS CODE_ID
@@ -79,10 +79,10 @@
 			FROM SYS0005M S005M
 			WHERE S005M.TYPE_ID IN (42)
         </otherwise>
-    </choose>        
+    </choose>
     ) PROJECT
     ORDER BY PROJECT.CODE_NAME ASC
-         
+
           </select>
 
 
@@ -100,7 +100,7 @@
                 AND A.DEPT_CODE IS NOT NULL
                 AND B.MEM_TYPE = 2
             <if test="userType == '2'.toString()">
-                    AND B.STUS IN (1,8)    
+                    AND B.STUS IN (1,8)
 	            <if test="memLevl == '1'.toString()">
 	                AND A.MEM_LVL  = '3'
 	                AND A.BRNCH_ID = #{groupCode}
@@ -113,11 +113,11 @@
 	                                                       ORG0001D D
 	                                                 WHERE A.MEM_ID = B.MEM_ID
 	                                                   AND B.DEPT_CODE = C.LAST_GRP_CODE
-	                                                   AND A.MEM_CODE = #{userName}       
+	                                                   AND A.MEM_CODE = #{userName}
 	                                                   AND C.MEM_LVL = '3'
 	                                                   AND C.MEM_ID = D.MEM_ID
-	                                                   )           
-	            </if>             
+	                                                   )
+	            </if>
 	            <if test="memLevl == '3'.toString()">
 	                AND A.MEM_LVL = #{memLevl}
 	                AND A.BRNCH_ID = #{groupCode}
@@ -125,7 +125,7 @@
 	            </if>
 	            <if test="memLevl == '4'.toString()">
 	                AND A.BRNCH_ID = #{groupCode}
-				    AND B.MEM_CODE  = #{userName}       
+				    AND B.MEM_CODE  = #{userName}
 	            </if>
             </if>
             <if test="userType == '4'.toString()">
@@ -149,7 +149,7 @@
                 AND A.DEPT_CODE IS NOT NULL
                 AND B.MEM_TYPE = 2
             <if test="userType == '2'.toString()">
-                    AND B.STUS IN (1,8)    
+                    AND B.STUS IN (1,8)
                 <if test="memLevl == '1'.toString()">
                     AND A.MEM_LVL  = '3'
                     AND A.BRNCH_ID = #{groupCode}
@@ -162,11 +162,11 @@
                                                            ORG0001D D
                                                      WHERE A.MEM_ID = B.MEM_ID
                                                        AND B.DEPT_CODE = C.LAST_GRP_CODE
-                                                       AND A.MEM_CODE = #{userName}       
+                                                       AND A.MEM_CODE = #{userName}
                                                        AND C.MEM_LVL = '3'
                                                        AND C.MEM_ID = D.MEM_ID
-                                                       )           
-                </if>             
+                                                       )
+                </if>
                 <if test="memLevl == '3'.toString()">
                     AND A.MEM_LVL = #{memLevl}
                     AND A.BRNCH_ID = #{groupCode}
@@ -174,7 +174,7 @@
                 </if>
                 <if test="memLevl == '4'.toString()">
                     AND A.BRNCH_ID = #{groupCode}
-                    AND B.MEM_CODE  = #{userName}       
+                    AND B.MEM_CODE  = #{userName}
                 </if>
             </if>
             <if test="userType == '4'.toString()">
@@ -204,7 +204,7 @@
                 SELECT ROWNUM AS rnum ,
                            a.*
                   FROM (
-                SELECT DISTINCT b.dept_code, 
+                SELECT DISTINCT b.dept_code,
                        b.mem_id,
                        d.mem_code AS cody_id,
                        d.name AS cody_name,
@@ -224,7 +224,7 @@
 			            #{item}
 			           </foreach>
 			        </if>
-                    ) a      
+                    ) a
                  ORDER BY DEPT_CODE ASC, CODY_ID ASC
           </select>
 
@@ -296,7 +296,7 @@
                                         ,SYS0038M STUS1
                                           ,SAL0095D SAL95D
                                         ,SYS0064M S64M
-                               
+
                                  WHERE 1=1
                                 AND SOM.CUST_ID = C.CUST_ID
                                 AND   C.CORP_TYPE_ID = CORPTYPE.CODE_ID(+)
@@ -317,8 +317,8 @@
                                and Stus1.STUS_CODE_ID(+) = mem.stus
                                and SOM.SALES_ORD_ID = SAL95D.SRV_SALES_ORD_ID(+)
                                and sal023.AREA_ID = S64M.AREA_ID
-                               
-                            
+
+
 
                       <!--      SELECT   distinct C.CUST_ID CUST_ID
                                         , C.NAME Name
@@ -390,8 +390,8 @@
                                      AND sys064.CODY_MANGR_USER_ID = SUBSTR(#{cmdCdManager1},1,7)
                                </if>
 								<if test="userType == '3'.toString()">
-								        AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')  
-								</if>    
+								        AND MEM.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
+								</if>
 
           </select>
 
@@ -643,13 +643,13 @@
 								            so.sales_ord_id,
 								            mg.CODY_BRNCH_CODE AS branch_cd,
 								            mg.cody_mangr_user_id
-								            ,og.dept_code 
+								            ,og.dept_code
 								        FROM
 								            svc0008d hs
 								            INNER JOIN sal0001d so ON so.sales_ord_id = hs.sales_ord_id
-								            INNER JOIN sal0045d ins ON ins.sales_ord_id = hs.sales_ord_id  
-								            inner JOIN sal0023d ad ON ad.cust_add_id = ins.add_id  
-								            inner JOIN sys0064m mg ON mg.area_id = ad.area_id  
+								            INNER JOIN sal0045d ins ON ins.sales_ord_id = hs.sales_ord_id
+								            inner JOIN sal0023d ad ON ad.cust_add_id = ins.add_id
+								            inner JOIN sys0064m mg ON mg.area_id = ad.area_id
 								            LEFT JOIN svc0006d hr ON hr.schdul_id = hs.schdul_id
 								            LEFT JOIN sys0038m st ON st.stus_code_id = hs.stus_code_id
 								            INNER JOIN sys0013m ap ON ap.code_id = so.app_type_id
@@ -657,8 +657,8 @@
 								            INNER JOIN org0001d cd ON cd.mem_id = hs.cody_id
 								            INNER JOIN sys0038m STUS ON STUS.stus_code_id = cd.stus
 								            LEFT JOIN org0001d ac ON ac.mem_id = hs.CODY_ID
-								            LEFT JOIN sys0005m br ON br.brnch_id = ac.brnch 
-								            LEFT JOIN org0005d og ON og.MEM_ID = CD.MEM_ID            
+								            LEFT JOIN sys0005m br ON br.brnch_id = ac.brnch
+								            LEFT JOIN org0005d og ON og.MEM_ID = CD.MEM_ID
 								                                             WHERE HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
 								                                                 AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
 								                                           <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
@@ -667,7 +667,7 @@
 								                                             <if test="txtComcodyCode != null and txtComcodyCode != ''">
 								                                            AND   AC.MEM_CODE = #{txtComcodyCode}
 								                                          </if>
-								
+
 								                                           <if test="myInstallMonth != null and myInstallMonth != ''">
 								                                              AND  SO.PV_MONTH = TO_CHAR(to_date(#{myInstallMonth},'MM/YYYY'),'MM')
 								                                           </if>
@@ -696,13 +696,13 @@
 								                                                     AND OG.DEPT_CODE = #{deptCode}
 								                                              </if>
 								                                              <if test="userType == '3'.toString()">
-																                     AND CD.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')  
-																             </if>    
-                                              
+																                     AND CD.MEM_CODE IN (SELECT MEM_CODE FROM ORG0001D WHERE MEM_TYPE = '3' AND STUS = '1')
+																             </if>
+
                         )Project2
 			        ) Project3
                     <![CDATA[   ) WHERE DUM_SEQ = 1 AND ROWNUM <= 20000 ]]>
-			
+
 
 
 
@@ -1210,16 +1210,16 @@
 					LEFT OUTER JOIN SVC0007D F ON B.RESULT_ID = F.BS_RESULT_ID AND D.SRV_FILTER_ID = F.BS_RESULT_PART_ID
 					WHERE A.SCHDUL_ID = #{selSchdulId}
                 ]]> -->
-               
+
                 <![CDATA[
-                    
+
             select  distinct1.SRV_FILTER_STK_ID AS STK_ID,
                            distinct1.STK_CODE,
                            distinct1.STK_DESC,
                            distinct1.SERIAL_CHK,
                            c.BS_RESULT_ITM_ID,
                            c.SERIAL_NO,
-                           CASE WHEN distinct1.SRV_FILTER_STK_ID = c.BS_RESULT_PART_ID 
+                           CASE WHEN distinct1.SRV_FILTER_STK_ID = c.BS_RESULT_PART_ID
                                    THEN C.BS_RESULT_PART_QTY
                                    ELSE 0
                                    END AS NAME
@@ -1227,7 +1227,7 @@
                            f.STK_CODE,
                            f.STK_DESC,
                            f.SERIAL_CHK,
-                           e.SRV_FILTER_STK_ID              
+                           e.SRV_FILTER_STK_ID
                      FROM SVC0008D A,
                               SAL0090D D,
                               SAL0087D E,
@@ -1239,7 +1239,7 @@
                       AND A.SCHDUL_ID = #{selSchdulId} ) distinct1, (select Y.BS_RESULT_PART_ID, Y.SERIAL_NO, BS_RESULT_ITM_ID, BS_RESULT_PART_QTY
 		                                                                  from SVC0007D Y ,(SELECT SCHDUL_ID,
 		                                                                                   MAX(X.RESULT_ID) AS RESULT_ID
-		                                                                                   FROM SVC0006D X 
+		                                                                                   FROM SVC0006D X
 		                                                                                   GROUP BY X.SCHDUL_ID) Z
 		                                                                  where  z.RESULT_ID = y.BS_RESULT_ID
 		                                                                  and z.SCHDUL_ID =#{selSchdulId2}
@@ -1290,7 +1290,7 @@
                                UPD_DT =SYSDATE
                            WHERE SCHDUL_ID =#{schdulId}
      </insert>
-     
+
      <update id="updateAssignCody90D" parameterType="Map" >
                        UPDATE SAL0090D
 						SET SRV_CODY_ID = #{codyId},
@@ -1363,7 +1363,7 @@
                                     Extent9.CODE CODE1  ,
                                     Extent11.RESULT_ID RESULT_ID  ,
                                     Extent11.NO NO1,
-                                    Extent1.CANC_REQ_NO as CANC_REQ_NO 
+                                    Extent1.CANC_REQ_NO as CANC_REQ_NO
                              FROM SVC0008D Extent1
                                     JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
                                     JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
@@ -1539,7 +1539,7 @@
               ORDER BY Extent1.CODE ASC
             ) a
         </select>
-        
+
         <select id="cmbCollectTypeComboList2"  parameterType="Map" resultType="egovMap">
         select a.CODE CODE_ID, a.c1 CODE_NAME
         from (
@@ -1853,7 +1853,7 @@
                                     Extent1.prev_svc_area prev_svc_area,
                                     Extent1.next_svc_area next_svc_area,
                                     Extent1.distance distance,
-                                    Extent1.CANC_REQ_NO                                    
+                                    Extent1.CANC_REQ_NO
                              FROM SVC0008D Extent1
                                     JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
                                     JOIN  SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
@@ -2035,8 +2035,8 @@
 
               <select id="selectHistoryHSResult" parameterType="Map" resultType="egovMap">
                    <![CDATA[
-                   
-                   
+
+
 	                   SELECT Distinct1.C1 C1  ,
 					       Distinct1.RESULT_ID RESULT_ID  ,
 					       Distinct1.NO NO  ,
@@ -2046,7 +2046,7 @@
 					       Distinct1.SETL_DT SETL_DT  ,
 					       Distinct1.RESULT_STOCK_USE RESULT_STOCK_USE  ,
 					       Distinct1.RESULT_CRT_DT RESULT_CRT_DT  ,
-					       Distinct1.USER_NAME USER_NAME  
+					       Distinct1.USER_NAME USER_NAME
 					  FROM ( SELECT DISTINCT Filter1.RESULT_ID RESULT_ID  ,
 					                         Filter1.NO NO  ,
 					                         Filter1.SETL_DT SETL_DT  ,
@@ -2056,7 +2056,7 @@
 					                         Filter1.CODE CODE  ,
 					                         1 C1  ,
 					                         Filter1.MEM_CODE MEM_CODE  ,
-					                         Extent4.USER_NAME USER_NAME  
+					                         Extent4.USER_NAME USER_NAME
 					         FROM ( SELECT Extent1.RESULT_ID RESULT_ID  ,
 					                       Extent1.NO NO  ,
 					                       Extent1.SCHDUL_ID SCHDUL_ID  ,
@@ -2066,7 +2066,7 @@
 					                       Extent1.RESULT_STOCK_USE RESULT_STOCK_USE  ,
 					                       Extent1.RESULT_IS_CURR RESULT_IS_CURR  ,
 					                       Extent2.CODE CODE  ,
-					                       Extent3.MEM_CODE MEM_CODE  
+					                       Extent3.MEM_CODE MEM_CODE
 					                FROM SVC0006D Extent1
 					                       JOIN SYS0038M Extent2   ON Extent1.RESULT_STUS_CODE_ID = Extent2.STUS_CODE_ID
 					                       LEFT JOIN ORG0001D Extent3   ON Extent1.CODY_ID = Extent3.MEM_ID
@@ -2074,11 +2074,11 @@
 					                  and Extent1.RESULT_IS_CURR = '1' ) Filter1
 					                LEFT JOIN SYS0047M Extent4   ON Filter1.RESULT_CRT_USER_ID = Extent4.USER_ID
 					          WHERE  Filter1.SCHDUL_ID = #{selSchdulId} ) Distinct1
-					          
-					          
-					          
+
+
+
 					                                  ]]>
-					          
+
 <!--                         SELECT Limit1.RESULT_ID RESULT_ID  ,
                                    Limit1.SALES_ORD_ID SALES_ORD_ID  ,
                                    Limit1.SALES_ORD_NO SALES_ORD_NO  ,
@@ -2380,7 +2380,10 @@
                            SET SRV_CODY_ID = #{hscodyId},
                                SRV_REM = #{remark},
                                SRV_BS_WEEK = #{srvBsWeek},
-                               SRV_BS_GEN = #{availability}
+                               SRV_BS_GEN = #{availability},
+                               <!-- Added By Chew Kah Kit -->
+                               SRV_UPD_USER_ID = #{SrvUpdateAt},
+                               SRV_UPD_DT = SYSDATE
                          WHERE   SRV_CONFIG_ID = #{srvConfigId}
 
                      </update>
@@ -2531,7 +2534,7 @@
                     <select id="selectHSAddFilterSetInfo" parameterType="Map" resultType="egovMap">
 
                             SELECT  E.STK_CODE, E.STK_ID CODE_ID, (E.STK_CODE || '-' || E.STK_DESC) CODE_NAME
-							FROM   
+							FROM
 							SAL0002D A,
 							SYS0026M B,
 							LOG0043M C,
@@ -2545,7 +2548,7 @@
 							<!-- AND   E.STK_CTGRY_ID = '54' -->
 							AND   E.STK_TYPE_ID = '62'
 							AND   A.SALES_ORD_ID = #{salesOrdId}
-<![CDATA[				AND   TO_CHAR(D.VALID_FROM_DT,'YYYYMMDD') <   TO_CHAR(SYSDATE,'YYYYMMDD')     
+<![CDATA[				AND   TO_CHAR(D.VALID_FROM_DT,'YYYYMMDD') <   TO_CHAR(SYSDATE,'YYYYMMDD')
 							AND   TO_CHAR(D.VALID_TO_DT,'YYYYMMDD')   >   TO_CHAR(SYSDATE,'YYYYMMDD')
 ]]>
                     </select>
@@ -2582,7 +2585,7 @@
                                    Extent1.SRV_FILTER_UPD_USER_ID SRV_FILTER_UPD_USER_ID  ,
                                    Extent1.SRV_FILTER_EXPR_DT SRV_FILTER_EXPR_DT
                               FROM SAL0087D Extent1, SAL0090D A
-                              WHERE A.SRV_CONFIG_ID = Extent1.SRV_CONFIG_ID 
+                              WHERE A.SRV_CONFIG_ID = Extent1.SRV_CONFIG_ID
                               AND  ( A.SRV_SO_ID = #{salesOrdId} )
                              <![CDATA[           AND ( Extent1.SRV_FILTER_STK_ID = #{filterCode} ) AND ROWNUM <= 1 ]]>
 
@@ -2620,19 +2623,19 @@
                                       FILTER_BARCD_SERIAL_NO   -->
                                      )
             </insert>
-            
+
             <insert id="saveHsFilterInfoAdd" parameterType="Map">
                         INSERT INTO SAL0087D (
-											    SRV_FILTER_ID, 
-											    SRV_CONFIG_ID, 
-											    SRV_FILTER_STK_ID, 
-											    SRV_FILTER_PRIOD, 
-											    SRV_FILTER_PRV_CHG_DT, 
-											    SRV_FILTER_STUS_ID, 
-											    SRV_FILTER_REM, 
-											    SRV_FILTER_CRT_DT, 
-											    SRV_FILTER_CRT_USER_ID, 
-											    SRV_FILTER_UPD_DT, 
+											    SRV_FILTER_ID,
+											    SRV_CONFIG_ID,
+											    SRV_FILTER_STK_ID,
+											    SRV_FILTER_PRIOD,
+											    SRV_FILTER_PRV_CHG_DT,
+											    SRV_FILTER_STUS_ID,
+											    SRV_FILTER_REM,
+											    SRV_FILTER_CRT_DT,
+											    SRV_FILTER_CRT_USER_ID,
+											    SRV_FILTER_UPD_DT,
 											    SRV_FILTER_UPD_USER_ID
 											    )
 			             VALUES  (
@@ -2640,7 +2643,7 @@
 									    (SELECT SRV_CONFIG_ID FROM SAL0090D WHERE SRV_SO_ID = #{salesOrdId}),
 									    #{filterCode},
 									    ( SELECT  D.LEAD_TM_OFFSET
-									      FROM   
+									      FROM
 									      SAL0002D A,
 									      SYS0026M B,
 									      LOG0043M C,
@@ -2655,7 +2658,7 @@
 									      AND   E.STK_TYPE_ID = '62'
 									      AND   A.SALES_ORD_ID = #{salesOrdId}
 									      AND   E.STK_ID = #{filterCode}
-<![CDATA[						      AND   TO_CHAR(D.VALID_FROM_DT,'YYYYMMDD') <   TO_CHAR(SYSDATE,'YYYYMMDD')     
+<![CDATA[						      AND   TO_CHAR(D.VALID_FROM_DT,'YYYYMMDD') <   TO_CHAR(SYSDATE,'YYYYMMDD')
 									      AND   TO_CHAR(D.VALID_TO_DT,'YYYYMMDD')   >   TO_CHAR(SYSDATE,'YYYYMMDD') ), ]]>
 									    TO_DATE(#{lastChangeDate},'DD/MM/YYYY'),
 									    '1',
@@ -2879,10 +2882,10 @@
                     </select>
                     <!-- <select id="selectHSCodyList" parameterType="Map" resultType="egovMap">
                             SELECT A.MEM_CODE CODE_ID, A.MEM_CODE || '-' ||  A.NAME CODE_NAME
-                            FROM  ORG0001D A, ORG0005D B 
-                            WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.DEPT_CODE = #{codyMangrUserId} AND B.MEM_LVL = '4' 
+                            FROM  ORG0001D A, ORG0005D B
+                            WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.DEPT_CODE = #{codyMangrUserId} AND B.MEM_LVL = '4'
                     </select> -->
-                    
+
                     <select id="selectHSCodyList" parameterType="Map" resultType="egovMap">
 	                    SELECT DISTINCT D.MEM_CODE CODE_ID, D.MEM_CODE || '-' ||  D.NAME CODE_NAME
 						FROM (SELECT MEM_CODE, NAME, 1 AS QUERYNO
@@ -2890,12 +2893,12 @@
 						      WHERE MEM_ID = (SELECT SRV_CODY_ID FROM SAL0090D WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{entry_orderNo}))
 						       union
 						      SELECT A.MEM_CODE, A.NAME , 2 AS QUERYNO
-						      FROM  ORG0001D A, ORG0005D B 
+						      FROM  ORG0001D A, ORG0005D B
 						      WHERE A.MEM_ID = B.MEM_ID AND A.STUS =  '1' AND B.DEPT_CODE = #{codyMangrUserId} AND B.MEM_LVL = '4'
 						      ORDER BY MEM_CODE
 						      ) D
                     </select>
-                    
+
                       <select id="selectMemberId" parameterType="Map" resultType="string">
                        select mem_id
                          from ORG0001D
@@ -2991,16 +2994,16 @@
                     call  SP_GET_ORD_FLT_USE_HIST(#{OrderID},#{SrvFilterStkId},#{cv_1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=thSFilterUseHistoryMap})
                  }
             </select>
-            
-            
+
+
             <select id="isHsAlreadyResult" parameterType="Map" resultType="java.lang.Integer">
-        <![CDATA[     
-               SELECT  COUNT(NO) CNT  
-               FROM  SVC0008D 
+        <![CDATA[
+               SELECT  COUNT(NO) CNT
+               FROM  SVC0008D
                WHERE NO =#{serviceNo}  AND STUS_CODE_ID <> '1'
         ]]>
     </select>
-    
+
             <select id="saveValidation" parameterType="Map" resultType="java.lang.Integer">
 		        SELECT COUNT(*) CNT
 				FROM SVC0008D A,
@@ -3008,20 +3011,20 @@
 				WHERE A.SCHDUL_ID = B.SCHDUL_ID
 				AND A.NO = #{serviceNo}
 		    </select>
-            
+
             <select id="GetDocNo"  parameterType="Map" resultType="java.lang.String">
                         select doc_no_prefix||doc_no as doc_no from SYS0022C
                         where doc_no_id = #{doctype}
 
-              </select>                             
-              
+              </select>
+
               <select id="GetDocNo1"  parameterType="Map" resultType="int">
                         select doc_no as doc_no from SYS0022C
                         where doc_no = #{nextNo}
 
               </select>
-              
-              
+
+
               <select id="selectQryBS_Rev" parameterType="Map" resultType="egovMap">
 				SELECT NO,
 				       SCHDUL_ID,
@@ -3055,7 +3058,7 @@
 				 WHERE RNN = 1
 
           </select>
-          
+
           <insert id="addbsResultMas_Rev" parameterType="Map">
                 insert into svc0006d
                 (RESULT_ID,
@@ -3103,7 +3106,7 @@
                 ,#{ResultIsAdjust}
                 )
           </insert>
-          
+
           <select id="selectQryResultDet" parameterType="Map" resultType="egovMap">
 
             select BS_RESULT_PART_ID
@@ -3116,11 +3119,11 @@
          order by BS_RESULT_ITM_ID
 
           </select>
-          
+
           <select id="getBSResultM_resultID" parameterType="Map" resultType="int">
                 select    SVC0006D_RESULT_ID_SEQ.nextval  result_id from dual
           </select>
-          
+
           <insert id="addbsResultDet_Rev" parameterType="Map">
           insert into svc0007d
             (BS_RESULT_ITM_ID
@@ -3128,7 +3131,7 @@
             ,BS_RESULT_PART_ID
             ,BS_RESULT_PART_DESC
             ,BS_RESULT_PART_QTY
-            ,BS_RESULT_REM 
+            ,BS_RESULT_REM
             ,BS_RESULT_CRT_DT
             ,BS_RESULT_CRT_USER_ID
             ,BS_RESULT_FILTER_CLM
@@ -3144,15 +3147,15 @@
             ,nvl(#{BSResultRemark},'')
             ,sysdate
             ,#{BSResultCreateBy}
-            ,nvl(#{BSResultFilterClaim},0)    
+            ,nvl(#{BSResultFilterClaim},0)
             ,nvl(#{SerialNo}, '')
             )
           </insert>
-          
+
           <select id="selectQry_stkReqM" parameterType="Map" resultType="egovMap">
 
             select STK_REQ_LOC_FROM_ID,STK_REQ_LOC_TO_ID
-                    ,STK_REQ_REM 
+                    ,STK_REQ_REM
               from LOG0016D a
                   ,LOG0015D b
              where REQ_ITM_REF_ID = #{ResultMatchID}
@@ -3162,7 +3165,7 @@
                and rownum = 1
 
           </select>
-          
+
           <insert id="addstkReqM_Rev" parameterType="Map">
           insert into LOG0015D
             (STK_REQ_ID
@@ -3184,42 +3187,42 @@
             ,#{StkReqCreateBy}
             )
           </insert>
-          
+
           <select id="getMobileWarehouseByMemID" parameterType="Map" resultType="int">
                 select wh_loc_id
                   from SYS0028M a
                        ,ORG0001D b
                  where WH_LOC_TYPE_ID = 278
-                   and b.MEM_CODE = a.WH_LOC_CODE   
+                   and b.MEM_CODE = a.WH_LOC_CODE
                    and b.MEM_ID = #{codyId}
           </select>
-          
+
           <select id="selectQryBS" parameterType="Map" resultType="egovMap">
             select no,sales_ord_id
               from SVC0008D
              where SCHDUL_ID = #{ScheduleID}
                and rownum = 1
           </select>
-          
+
           <select id="qry_stkReqD_Rev" parameterType="Map" resultType="egovMap">
             select BS_RESULT_PART_ID
                 ,BS_RESULT_PART_DESC
                 ,BS_RESULT_PART_QTY
                 ,BS_RESULT_REM
-                ,BS_RESULT_FILTER_CLM                                       
+                ,BS_RESULT_FILTER_CLM
           from SVC0007D
          where BS_RESULT_ID = #{ResultMatchID}
            and BS_RESULT_PART_ID !=0
            and BS_RESULT_PART_QTY >0
          order by BS_RESULT_ITM_ID
           </select>
-          
+
           <select id="getStkReqM_StkReqID" parameterType="Map" resultType="int">
                 select max(STK_REQ_ID) STK_REQ_ID from LOG0015D
           </select>
-          
+
           <insert id="addStkReqD_Rev" parameterType="Map">
-          
+
           insert into LOG0016D
             (REQ_ITM_ID
             ,REQ_ID
@@ -3244,7 +3247,7 @@
             ,#{ReqItemRemark}
             )
           </insert>
-          
+
           <insert id="addStkCrd_Rev" parameterType="Map">
           insert into LOG0014D
             (SR_CARD_ID
@@ -3263,7 +3266,7 @@
             ,CURR_RATE
             ,COST
             ,PRC
-            ,REM            
+            ,REM
             ,SERIAL_NO
             ,INSTALL_NO
             ,COST_DT
@@ -3304,7 +3307,7 @@
             ,#{Origin}
             )
           </insert>
-          
+
           <update id="updateQry_CurBS" parameterType="Map">
           update SVC0006D
            set RESULT_IS_CURR = 1
@@ -3314,8 +3317,8 @@
         and RESULT_IS_CURR = 0
         and SALES_ORD_ID = #{SalesOrderId}
           </update>
-          
-                
+
+
           <update id="updateQry_CurBSZero" parameterType="Map">
           update SVC0006D
            set RESULT_IS_CURR = 0
@@ -3329,22 +3332,22 @@
 									     where SCHDUL_ID  = #{ScheduleID}
                                    )
           </update>
-          
+
           <select id="selectResultId" parameterType="Map"  resultType="egovMap">
              select max(result_id) result_id
              from SVC0006D
              where SCHDUL_ID  = #{ScheduleID}
              and  RESULT_IS_CURR = 1
-          
-          
-          </select> 
-          
+
+
+          </select>
+
           <update id="updateQry_New" parameterType="Map">
           update SYS0022C
            set DOC_NO = #{nextDocNo_New}
         where DOC_NO_ID = #{ID_New}
           </update>
-          
+
           <insert id="addbsResultMas" parameterType="Map">
           insert into SVC0006D
             (RESULT_ID
@@ -3370,7 +3373,7 @@
             ,RESULT_MTCH_ID
             ,RESULT_IS_ADJ
             )
-            values 
+            values
             (
             #{ResultId}
             ,#{No}
@@ -3396,10 +3399,10 @@
             ,#{ResultIsAdjust}
             )
           </insert>
-          
+
           <update id="updatebsResultMas" parameterType="Map">
             UPDATE SVC0006D
-			SET SETL_DT = TO_DATE( NVL(#{SettleDate},'01/01/1900'), 'DD/MM/YYYY'), 
+			SET SETL_DT = TO_DATE( NVL(#{SettleDate},'01/01/1900'), 'DD/MM/YYYY'),
 			    RESULT_STUS_CODE_ID = #{ResultStatusCodeID},
 			    FAIL_RESN_ID = #{FailReasonID},
 			    REN_COLCT_ID = #{RenCollectionID},
@@ -3407,31 +3410,31 @@
 			WHERE SCHDUL_ID = #{ScheduleID}
 			AND RESULT_IS_CURR = 1
           </update>
-          
+
           <update id="updateQrySchedule" parameterType="Map">
           update SVC0008D
                set STUS_CODE_ID = #{ResultStatusCodeID}
                   ,ACTN_MEM_ID = #{CodyID}
             where SCHDUL_ID = #{ScheduleID}
           </update>
-          
+
           <update id="updateQryConfig" parameterType="Map">
           update SAL0090D
            set SRV_REM = #{ResultRemark}
               ,SRV_BS_WEEK = #{bsPreferWeek}
-        where SRV_STUS_ID = 1     
+        where SRV_STUS_ID = 1
           and SRV_SO_ID =#{SalesOrderId}
           </update>
-          
+
           <update id="updateQryConfig4" parameterType="Map">
           update SAL0090D
            set SRV_REM = #{ResultRemark}
               ,SRV_PREV_DT = TO_DATE(#{SettleDate}, 'DD/MM/YYYY')
               ,SRV_BS_WEEK = #{bsPreferWeek}
-        where SRV_STUS_ID = 1     
+        where SRV_STUS_ID = 1
           and SRV_SO_ID =#{SalesOrderId}
           </update>
-          
+
           <select id="selectLocationID" parameterType="Map" resultType="int">
             select B.WH_LOC_ID
               from org0001d a
@@ -3439,12 +3442,12 @@
              where mem_id = #{CodyID}
                and b.WH_LOC_CODE = a.MEM_CODE
           </select>
-          
+
           <select id="selectQrySchedule" parameterType="Map" resultType="egovMap">
-          select no from SVC0008D               
+          select no from SVC0008D
             where SCHDUL_ID = #{ScheduleID}
           </select>
-          
+
           <insert id="addStkCrd_new" parameterType="Map">
           insert into log0014d
             (
@@ -3464,7 +3467,7 @@
             ,CURR_RATE
             ,COST
             ,PRC
-            ,REM            
+            ,REM
             ,SERIAL_NO
             ,INSTALL_NO
             ,COST_DT
@@ -3505,14 +3508,14 @@
             ,#{Origin}
             )
           </insert>
-          
+
           <select id="selectQryConfig" parameterType="Map" resultType="egovMap">
           select SRV_CONFIG_ID
               from SAL0090D
              where SRV_STUS_ID = 1
                and SRV_SO_ID = #{SalesOrderId}
           </select>
-          
+
           <update id="updateQryFilter" parameterType="Map">
           update SAL0087D
             set SRV_FILTER_PRV_CHG_DT =  to_date(#{SettleDate},'DD/MM/YYYY')
@@ -3522,7 +3525,7 @@
               and SRV_FILTER_STUS_ID = 1
               and SRV_FILTER_STK_ID = #{BSResultPartID}
           </update>
-          
+
           <insert id="addBsResultDet_NoFilter" parameterType="Map">
             insert into SVC0007D
                 (BS_RESULT_ITM_ID
@@ -3547,23 +3550,23 @@
                 ,#{BSResultFilterClaim}
                 )
           </insert>
-          
-          
+
+
        <select id="selectHsOrderInMonth" parameterType="Map" resultType="egovMap">
          SELECT  SALES_ORD_ID
-         FROM  SVC0008D 
+         FROM  SVC0008D
          WHERE 1=1
          AND YEAR(+) = #{myBSYear}
          AND Month(+) = #{myBSMonth}
          AND SALES_ORD_ID IN(
 	         select SALES_ORD_ID
-	         from SAL0001D S1D 
-	         where S1D.SALES_ORD_NO= #{saleOrdList} 
+	         from SAL0001D S1D
+	         where S1D.SALES_ORD_NO= #{saleOrdList}
          )
 
         </select>
-        
-        
+
+
 
 
 
@@ -3582,7 +3585,7 @@
 							       Limit1.REN_COLCT_ID REN_COLCT_ID  ,
 							       Limit1.CODE1 CODE1  ,
 							       Limit1.RESN_DESC RESN_DESC  ,
-							       CASE 
+							       CASE
 							            WHEN ( Limit1.SRV_REM IS NOT NULL ) THEN Limit1.SRV_REM
 							       ELSE ''
 							          END C2  ,
@@ -3607,7 +3610,7 @@
 							                Extent1.FAIL_RESN_ID FAIL_RESN_ID  ,
 							                Extent1.REN_COLCT_ID REN_COLCT_ID  ,
 							               (SELECT RESN_DESC
-							                    From SYS0032M where 174 = resn_type_id  and resn_id = Extent1.REN_COLCT_ID ) REN_COLCT_desc ,							                
+							                    From SYS0032M where 174 = resn_type_id  and resn_id = Extent1.REN_COLCT_ID ) REN_COLCT_desc ,
 							                Extent1.RESULT_REM RESULT_REM  ,
 							                Extent1.RESULT_CRT_DT RESULT_CRT_DT  ,
 							                Extent1.RESULT_IS_CURR RESULT_IS_CURR  ,
@@ -3626,7 +3629,7 @@
 							                Extent8.RESN_DESC REASONDESC1  ,
 							                Extent9.WH_LOC_CODE WH_LOC_CODE  ,
 							                Extent9.WH_LOC_DESC WH_LOC_DESC  ,
-							                Extent10.USER_NAME USER_NAME  
+							                Extent10.USER_NAME USER_NAME
 							         FROM SVC0006D Extent1
 							                JOIN SVC0008D Extent2   ON Extent2.SCHDUL_ID = Extent1.SCHDUL_ID
 							                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent2.SALES_ORD_ID
@@ -3641,9 +3644,9 @@
 							          WHERE  Extent1.RESULT_ID = #{MresultId} AND ROWNUM <= 1 ) Limit1
                         ]]>
                             </select>
-                            
-                            
-                            
+
+
+
                  <select id="hSMgtResultViewResultFilter" parameterType="Map" resultType="egovMap">
                    <![CDATA[
 						SELECT Distinct1.C1 C1  ,
@@ -3651,13 +3654,13 @@
 						       Distinct1.STK_CODE STK_CODE  ,
 						       Distinct1.STK_DESC STK_DESC  ,
 						       Distinct1.BS_RESULT_PART_QTY BS_RESULT_PART_QTY  ,
-						       Distinct1.BS_RESULT_FILTER_CLM BS_RESULT_FILTER_CLM  
+						       Distinct1.BS_RESULT_FILTER_CLM BS_RESULT_FILTER_CLM
 						  FROM ( SELECT DISTINCT Extent1.BS_RESULT_PART_QTY BS_RESULT_PART_QTY  ,
 						                         decode(Extent1.BS_RESULT_FILTER_CLM,'0','X','O') BS_RESULT_FILTER_CLM  ,
 						                         Extent2.STK_ID STK_ID  ,
 						                         Extent2.STK_CODE STK_CODE  ,
 						                         Extent2.STK_DESC STK_DESC  ,
-						                         1 C1  
+						                         1 C1
 						         FROM SVC0007D Extent1
 						                JOIN SYS0026M Extent2   ON Extent1.BS_RESULT_PART_ID = Extent2.STK_ID
 						          WHERE  ( Extent1.BS_RESULT_ID = #{MresultId} )
@@ -3666,10 +3669,10 @@
 
                         ]]>
                             </select>
-                            
+
 
        <select id="assignDeptMemUp" parameterType="Map" resultType="egovMap">
-		SELECT MEM_ID, MEM_UP_ID, DEPT_CODE, BRNCH_ID 
+		SELECT MEM_ID, MEM_UP_ID, DEPT_CODE, BRNCH_ID
 		FROM ORG0005D
 		<if test="deptList != null and deptList != ''">
             WHERE DEPT_CODE IN
@@ -3693,5 +3696,5 @@
 	AND B.STUS       = '1'
 	ORDER BY b.MEM_CODE
     </select>
-                                                                
+
 </mapper>
