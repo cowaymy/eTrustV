@@ -39,6 +39,12 @@
         $("input[name=searchOrd]").removeAttr("disabled");
         $("#searchBtn").removeAttr("disabled");
     
+        //file Delete
+        $("#_fileDel").click(function() {
+            $("#attachInvest").val('');
+            $(".input_text").val('');
+            console.log("fileDel complete.");
+        });
     });
     
     //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
@@ -173,7 +179,7 @@
     }
     
     function setInputFile2(){//인풋파일 세팅하기
-        $(".auto_file").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Delete</a></span>");
+        $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a id='_fileDel'>Delete</a></span>");
     }
     
     function fn_goLedger1(){
@@ -278,7 +284,7 @@
 <tr>
     <th scope="row">Attachment</th>
     <td colspan="3">
-    <div class="auto_file"><!-- auto_file start -->
+    <div class="auto_file2"><!-- auto_file start -->
     <input type="file" id="attachInvest" name="attachInvest" title="file add" />
     </div><!-- auto_file end -->
     </td>
