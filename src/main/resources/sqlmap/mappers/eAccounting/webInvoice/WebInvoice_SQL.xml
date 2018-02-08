@@ -778,11 +778,8 @@ SELECT T.APPV_PRCSS_NO
                           WHERE  Q.RNUM = 1) T6 ON T3.ATCH_FILE_GRP_ID = T6.ATCH_FILE_GRP_ID
            WHERE     T2.APPV_LINE_USER_ID = #{memCode}
            <!-- WHERE 1=1 -->
-                 <!-- AND T1.APPV_PRCSS_STUS = 'R'
-              OR     T1.APPV_PRCSS_STUS = 'P' -->
-                 AND T2.APPV_STUS = 'R'
-              OR T2.APPV_STUS = 'A'
-              OR T2.APPV_STUS = 'J'
+                 AND (T1.APPV_PRCSS_STUS = 'R' OR     T1.APPV_PRCSS_STUS = 'P')
+                 AND (T2.APPV_STUS = 'R' OR T2.APPV_STUS = 'A' OR T2.APPV_STUS = 'J')
         <!-- GROUP BY T1.APPV_PRCSS_NO
                 ,T2.APPV_LINE_SEQ
                 ,T1.APPV_REQ_KEY_NO
