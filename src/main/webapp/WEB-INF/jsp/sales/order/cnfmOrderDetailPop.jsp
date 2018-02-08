@@ -51,9 +51,9 @@
 <div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order View</h1>
+<h1><spring:message code="sal.page.title.ordView" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#" id="btnCnfmOrderClose">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="btnCnfmOrderClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -67,39 +67,39 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Customer Name</th>
+	<th scope="row"><spring:message code="sal.text.custName" /></th>
 	<td><span id="txtCustName_RW"></span></td>
 </tr>
 <tr>
-	<th scope="row">NRIC</th>
+	<th scope="row"><spring:message code="sal.text.nric" /></th>
 	<td><span id="txtCustNRIC_RW"></span></td>
 </tr>
 <tr>
-	<th scope="row">Product</th>
+	<th scope="row"><spring:message code="sal.text.product" /></th>
 	<td><span id="txtProduct_RW"></span></td>
 </tr>
 <tr>
-	<th scope="row">Promotion</th>
+	<th scope="row"><spring:message code="sal.title.text.promo" /></th>
 	<td><span id="txtPromotion_RW"></span></td>
 </tr>
 <tr>
-	<th scope="row">HP/Code Code</th>
+	<th scope="row"><spring:message code="sal.text.hpCodyCd" /></th>
 	<td><span id="txtMemberCode_RW"></span></td>
 </tr>
 <tr>
-	<th scope="row">HP/Code Name</th>
+	<th scope="row"><spring:message code="sal.text.hpCodyNm" /></th>
 	<td><span id="txtMemberName_RW"></span></td>
 </tr>
 <tr id="tr1" class="blind">
-	<th scope="row">Advance Payment</th>
+	<th scope="row"><spring:message code="sal.text.advPay" /></th>
 	<td><span id="txtAdvPayment_RW"></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-	<li><p><span style="line-height:34px;">Double check data before save:</span></p></li>
-	<li><p class="btn_blue2 big"><a id="btnConfirm_RW" href="#">Ok</a></p></li>
+	<li><p><span style="line-height:34px;"><spring:message code="sal.msg.ordRegDtl" /></span></p></li>
+	<li><p class="btn_blue2 big"><a id="btnConfirm_RW" href="#"><spring:message code="sal.btn.ok" /></a></p></li>
 <!--
 	<li><p class="btn_blue2 big"><a id="btnBack_RW" href="#">Back</a></p></li>
 -->
