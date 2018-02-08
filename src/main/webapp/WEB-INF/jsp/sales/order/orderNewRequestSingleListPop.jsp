@@ -2,7 +2,15 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
-
+	//popup 크기
+	var option = {
+	        winName : "popup",
+	        width : "950px",   // 창 가로 크기
+	        height : "700px",    // 창 세로 크기
+	        resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
+	        scrollbars : "yes" // 스크롤바. (yes/no)(default : yes)
+	};
+	
     function fn_orderNoExist(){
         $("#searchOrdDt").show();
     }
@@ -20,12 +28,14 @@
 //            "target" : "_self",
 //            "action" : getContextPath() + "/sales/order/orderInvestList.do"
 //        }).submit();
-        fn_orderInvestigationListAjax();
+//        fn_orderInvestigationListAjax();
         Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#popForm").serializeJSON(), null, true, 'dtPop');
     }
     
     $(document).ready(function(){
-        
+    	//input setting
+        setInputFile2();
+    	
         $("input[name=searchOrd]").removeAttr("disabled");
         $("#searchBtn").removeAttr("disabled");
     
@@ -53,6 +63,7 @@
                 if(result.msg == "OK"){
                     var prod = result.stkCode + ' - ' + result.stkDesc;
                     $("#salesOrdId").val(result.salesOrdId);
+                    $("#ordId").val(result.salesOrdId);
                     $("#ordNo").html(result.salesOrdNo);
                     $("#salesDt").html(result.salesDt);
                     $("#orderStus").html(result.name);
@@ -100,6 +111,7 @@
             Common.alert("Please select an Investigation Request Type.");
             return false;
         }
+        
         if(callDay == ""){
             Common.alert("Call Date Cannot be Empty!");
             return false;
@@ -120,9 +132,17 @@
             Common.alert("Visitation Date Cannot be Empty!");
             return false;
         }
+        
         if(document.viewForm.invReqRem.value == ""){
             Common.alert("Please enter request remark!!");
             return false;
+        }
+        
+        if(document.viewForm.attachInvest.value != ""){
+            var formData = Common.getFormData("viewForm");
+            Common.ajaxFile("/sales/order/investFileUpload.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
+                
+            });
         }
         
         Common.ajax("GET", "/sales/order/orderNewRequestSingleOk", $("#viewForm").serializeJSON(), function(result) {
@@ -152,11 +172,13 @@
         });
     }
     
-//    function fn_viewSingle(salesOrdNoVal){
-//      document.searchForm.salesOrdNo.value = salesOrdNoVal;
-//      document.searchForm.action = '/sales/order/orderNewRequestSingleView';
-//        document.searchForm.submit();
-//    }
+    function setInputFile2(){//인풋파일 세팅하기
+        $(".auto_file").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Delete</a></span>");
+    }
+    
+    function fn_goLedger1(){
+        Common.popupWin('viewForm', "/sales/order/orderLedgerViewPop.do", option);
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
@@ -164,7 +186,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>Order Investigation Request</h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="singleClose">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -197,13 +219,14 @@
 <aside class="title_line"><!-- title_line start -->
 <h3>Particular Information</h3>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#">View Rent Ledger</a></p></li>
+    <li><p class="btn_blue"><a href="#"  onclick="javascript : fn_goLedger1()">View Rent Ledger</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
-<form id="viewForm" name="viewForm">
+<form id="viewForm" name="viewForm" enctype="multipart/form-data" action="#" method="post">
 <input type="hidden" id="invReqId" name="invReqId">
 <input type="hidden" id="salesOrdId" name="salesOrdId">
+<input type="hidden" id="ordId" name="ordId">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -253,7 +276,7 @@
     <td colspan="3"><input type="text" id="insVisitDt" name="insVisitDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
-    <th scope="row">Attachement</th>
+    <th scope="row">Attachment</th>
     <td colspan="3">
     <div class="auto_file"><!-- auto_file start -->
     <input type="file" id="attachInvest" name="attachInvest" title="file add" />
