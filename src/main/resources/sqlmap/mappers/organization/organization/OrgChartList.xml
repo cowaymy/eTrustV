@@ -977,153 +977,153 @@
         
         <select id="selectOrgChartDetList" parameterType="Map" resultType="egovMap">
        select *
-       from (
-        SELECT search2.MEM_ID ,
-                   search2.C1 C1  ,
-                   search2.MEM_CODE MEM_CODE  ,
-                   search2.NRIC NRIC  ,
-                   search2.NAME NAME  ,
-                   search2.MEM_LVL MEM_LVL,
-                   
-                    case when (search2.LAST_DEPT_CODE is not null 
-                            or search2.LAST_GRP_CODE is not null 
-                            or search2.LAST_ORG_CODE is not null)
-                        THEN search2.LAST_DEPT_CODE
-                   Else search2.DEPT_CODE   
-                   end DEPT_CODE,
-                   
-                   case when (search2.LAST_DEPT_CODE is not null 
-                            or search2.LAST_GRP_CODE is not null 
-                            or search2.LAST_ORG_CODE is not null)
-                          THEN search2.LAST_GRP_CODE
-                    ELSE   search2.GRP_CODE
-                    END GRP_CODE  ,
-                    
-                    case when (search2.LAST_DEPT_CODE is not null 
-                            or search2.LAST_GRP_CODE is not null 
-                            or search2.LAST_ORG_CODE is not null)
-                          then search2.LAST_ORG_CODE
-                    else search2.ORG_CODE 
-                    end ORG_CODE  ,
-                          
-                     case when (search2.code is not null) then search2.code
-                   else search2.MEM_ORG_DESC_CODE 
-                   end MEM_ORG_DESC_CODE ,
-                
-                case when search2.EVT_APPLY_DT is not null then  to_char(search2.EVT_APPLY_DT, 'MM/YYYY') 
-             <choose>
-             <when test="nowDate != null and nowDate != '' ">
-               else #{nowDate}
-               </when>
-               <otherwise>
-                  else to_char(sysdate,'MM/YYYY')
-               </otherwise>
-               </choose>
-                 end EVT_APPLY_DT
-                   
-    
-                   
-        FROM(
-            SELECT Project1.MEM_ID MEM_ID  ,
-                   Project1.C1 C1  ,
-                   Project1.MEM_CODE MEM_CODE  ,
-                   Project1.NRIC NRIC  ,
-                   Project1.NAME NAME  ,
-                   project2.LAST_DEPT_CODE,
-                   Project1.DEPT_CODE , 
-                   project2.LAST_GRP_CODE,
-                   Project1.GRP_CODE,
-                   project2.LAST_ORG_CODE ,
-                   Project1.ORG_CODE ,
-                   Project1.MEM_LVL MEM_LVL  ,
-                   project2.code,
-                   Project1.MEM_ORG_DESC_CODE ,
-                   project2.EVT_APPLY_DT
-                   
-              FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
-                            Extent1.MEM_CODE MEM_CODE  ,
-                            Extent1.NAME NAME  ,
-                            Extent1.NRIC NRIC  ,
-                            Extent2.MEM_LVL MEM_LVL  ,
-                            Extent2.DEPT_CODE DEPT_CODE  ,
-                            Extent2.GRP_CODE GRP_CODE  ,
-                            Extent2.ORG_CODE ORG_CODE  ,
-                            Extent3.MEM_ORG_DESC_CODE MEM_ORG_DESC_CODE  ,
-                            CASE 
-                                 WHEN ( Extent1.MEM_TYPE IS NOT NULL ) THEN Extent1.MEM_TYPE
-                            ELSE 0
-                               END C1  
-                     FROM ORG0001D Extent1
-                            JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
-                                          vMemberOrg.MEM_CODE MEM_CODE  ,
-                                          vMemberOrg.MEM_LVL MEM_LVL  ,
-                                          vMemberOrg.DEPT_CODE DEPT_CODE  ,
-                                          vMemberOrg.GRP_CODE GRP_CODE  ,
-                                          vMemberOrg.ORG_CODE ORG_CODE  ,
-                                          vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
-                                          vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
-                                          vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
-                                          vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
-                                          vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
-                                          vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
-                                   FROM ORG1001V vMemberOrg ) Extent2   ON Extent2.MEM_ID = Extent1.MEM_ID
-                            JOIN ORG0012D Extent3   ON ( Extent3.MEM_ORG_LVL = Extent2.MEM_LVL )
-                            AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE 
-                      WHERE   1 = Extent1.STUS
-                               AND  Extent1.MEM_TYPE IN ( 1,2,3 )
-                               AND  EXTENT1.MEM_ID NOT IN (
-                               SELECT C.MEM_ID
-                               from  ORG0007D C
-                               where c.stus_id = 4
-                               and C.PROMO_TYPE_ID   in ( 757 , 758)
-                               <choose>
-                             <when test="resignDate != null and resignDate != '' ">
-                                <![CDATA[    and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{resignDate} ]]>
-                             </when>
-                             <otherwise>
-                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= to_char(SYSDATE, 'MM/YYYY' ) ]]>
-                             </otherwise>
-                             </choose>
-                               ) 
-                              ) Project1 , 
-                            (
-                            
-			                       select ABC.*  
-			                      ,case when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 3) then 'CM'
-			                               when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 2) then 'SCM'
-			                               when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 1) then 'GCM' 
-			  
-			                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 3) then 'CTL'
-			                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 2) then 'CTM'
-			                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 1) then 'RM' 
-			                    else ABC.CODE1
-			                    end CODE
-			                     from (
-			
-				                             SELECT  A.* , b.code CODE1
-				                             FROM ORG0007D A ,sys0013M  B
-				                             where A.MEM_LVL_TO = B.code_id 
-				                             and promo_id in ( select max(promo_id) 
-							                                              from  ORG0007D C
-							                                              where c.stus_id = 4
-							                                              and C.PROMO_TYPE_ID   in ( 747, 748, 749)
-				                                             
-				               
-											                             <choose>
-											                             <when test="evntDate != null and evntDate != '' ">
-											                                  <![CDATA[  and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = #{evntDate} ]]>
-											                             </when>
-											                             <otherwise>
-											                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = to_char(SYSDATE, 'MM/YYYY' ) ]]>
-											                             </otherwise>
-											                             </choose>
-											                                 group by C.MEM_ID 
-				                                                        )
-			                                ) ABC
-                           )  Project2 
-                           where 1=1 
-                           and project1.mem_id = project2.mem_id(+)
-                           )  search2  
+	   from (
+			        SELECT search2.MEM_ID ,
+			                   search2.C1 C1  ,
+			                   search2.MEM_CODE MEM_CODE  ,
+			                   search2.NRIC NRIC  ,
+			                   search2.NAME NAME  ,
+			                   search2.MEM_LVL MEM_LVL,
+			                   
+			                    case when (search2.LAST_DEPT_CODE is not null 
+			                            or search2.LAST_GRP_CODE is not null 
+			                            or search2.LAST_ORG_CODE is not null)
+			                        THEN search2.LAST_DEPT_CODE
+			                   Else search2.DEPT_CODE   
+			                   end DEPT_CODE,
+			                   
+			                   case when (search2.LAST_DEPT_CODE is not null 
+			                            or search2.LAST_GRP_CODE is not null 
+			                            or search2.LAST_ORG_CODE is not null)
+			                          THEN search2.LAST_GRP_CODE
+			                    ELSE   search2.GRP_CODE
+			                    END GRP_CODE  ,
+			                    
+			                    case when (search2.LAST_DEPT_CODE is not null 
+			                            or search2.LAST_GRP_CODE is not null 
+			                            or search2.LAST_ORG_CODE is not null)
+			                          then search2.LAST_ORG_CODE
+			                    else search2.ORG_CODE 
+			                    end ORG_CODE  ,
+			                          
+			                     case when (search2.code is not null) then search2.code
+			                   else search2.MEM_ORG_DESC_CODE 
+			                   end MEM_ORG_DESC_CODE ,
+			                
+			                   case when search2.EVT_APPLY_DT is not null then  to_char(search2.EVT_APPLY_DT, 'MM/YYYY') 
+			             <choose>
+			             <when test="nowDate != null and nowDate != '' ">
+			               else #{nowDate}
+			               </when>
+			               <otherwise>
+			                  else to_char(sysdate,'MM/YYYY')
+			               </otherwise>
+			               </choose>
+			                 end EVT_APPLY_DT
+			                   
+			    
+			                   
+			        FROM(
+			            SELECT Project1.MEM_ID MEM_ID  ,
+			                   Project1.C1 C1  ,
+			                   Project1.MEM_CODE MEM_CODE  ,
+			                   Project1.NRIC NRIC  ,
+			                   Project1.NAME NAME  ,
+			                   project2.LAST_DEPT_CODE,
+			                   Project1.DEPT_CODE , 
+			                   project2.LAST_GRP_CODE,
+			                   Project1.GRP_CODE,
+			                   project2.LAST_ORG_CODE ,
+			                   Project1.ORG_CODE ,
+			                   Project1.MEM_LVL MEM_LVL  ,
+			                   project2.code,
+			                   Project1.MEM_ORG_DESC_CODE ,
+			                   project2.EVT_APPLY_DT
+			                   
+			              FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
+			                            Extent1.MEM_CODE MEM_CODE  ,
+			                            Extent1.NAME NAME  ,
+			                            Extent1.NRIC NRIC  ,
+			                            Extent2.MEM_LVL MEM_LVL  ,
+			                            Extent2.DEPT_CODE DEPT_CODE  ,
+			                            Extent2.GRP_CODE GRP_CODE  ,
+			                            Extent2.ORG_CODE ORG_CODE  ,
+			                            Extent3.MEM_ORG_DESC_CODE MEM_ORG_DESC_CODE  ,
+			                            CASE 
+			                                 WHEN ( Extent1.MEM_TYPE IS NOT NULL ) THEN Extent1.MEM_TYPE
+			                            ELSE 0
+			                               END C1  
+			                     FROM ORG0001D Extent1
+			                            JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
+			                                          vMemberOrg.MEM_CODE MEM_CODE  ,
+			                                          vMemberOrg.MEM_LVL MEM_LVL  ,
+			                                          vMemberOrg.DEPT_CODE DEPT_CODE  ,
+			                                          vMemberOrg.GRP_CODE GRP_CODE  ,
+			                                          vMemberOrg.ORG_CODE ORG_CODE  ,
+			                                          vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE  ,
+			                                          vMemberOrg.MEM_UP_ID MEM_UP_ID  ,
+			                                          vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
+			                                          vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
+			                                          vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
+			                                          vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
+			                                   FROM ORG1001V vMemberOrg ) Extent2   ON Extent2.MEM_ID = Extent1.MEM_ID
+			                            JOIN ORG0012D Extent3   ON ( Extent3.MEM_ORG_LVL = Extent2.MEM_LVL )
+			                            AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE 
+			                      WHERE   1 = Extent1.STUS
+			                               AND  Extent1.MEM_TYPE IN ( 1,2,3 )
+			                               AND  EXTENT1.MEM_ID NOT IN (
+																                               SELECT C.MEM_ID
+																                               from  ORG0007D C
+																                               where c.stus_id = 4
+																                               and C.PROMO_TYPE_ID   in ( 757 , 758)
+																                               <choose>
+																                             <when test="resignDate != null and resignDate != '' ">
+																                                <![CDATA[    and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{resignDate} ]]>
+																                             </when>
+																                             <otherwise>
+																                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= to_char(SYSDATE, 'MM/YYYY' ) ]]>
+																                             </otherwise>
+																                             </choose>
+			                                                                                ) 
+			                              ) Project1 , 
+			                            (
+			                            
+						                       select ABC.*  
+						                      ,case when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 3) then 'CM'
+						                               when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 2) then 'SCM'
+						                               when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 1) then 'GCM' 
+						  
+						                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 3) then 'CTL'
+						                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 2) then 'CTM'
+						                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 1) then 'RM' 
+						                    else ABC.CODE1
+						                    end CODE
+						                     from (
+						
+							                             SELECT  A.* , b.code CODE1
+							                             FROM ORG0007D A ,sys0013M  B
+							                             where A.MEM_TYPE_ID = B.code_id 
+							                             and promo_id in ( select max(promo_id) 
+										                                              from  ORG0007D C
+										                                              where c.stus_id = 4
+										                                              and C.PROMO_TYPE_ID   in ( 747, 748, 749)
+							                                             
+							               
+														                             <choose>
+														                             <when test="evntDate != null and evntDate != '' ">
+														                                  <![CDATA[  and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = #{evntDate} ]]>
+														                             </when>
+														                             <otherwise>
+														                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = to_char(SYSDATE, 'MM/YYYY' ) ]]>
+														                             </otherwise>
+														                             </choose>
+														                                 group by C.MEM_ID 
+							                                                        )
+						                                ) ABC
+			                           )  Project2 
+			                           where 1=1 
+			                           and project1.mem_id = project2.mem_id(+)
+			                           )  search2  
                            
                         )   search1
                         
