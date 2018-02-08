@@ -22,38 +22,38 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [{
                 dataField : "code",
-                headerText : "PST Type",
+                headerText : '<spring:message code="sal.title.text.pstType" />',
                 width : 80,
                 editable : false
             }, {
                 dataField : "pstRefNo",
-                headerText : "PST Ref No",
+                headerText : '<spring:message code="sal.title.text.pstRefNo" />',
                 width : 110,
                 editable : false
             }, {
                 dataField : "stkCodeDesc",
-                headerText : "Stock Description",
+                headerText : '<spring:message code="sal.title.text.stockDescription" />',
                 width : 200,
                 editable : false
             }, {
                 dataField : "pstQty",
-                headerText : "Quantity",
+                headerText : '<spring:message code="sal.text.quantity" />',
                 width : 80,
                 editable : false
             }, {
                 dataField : "pstStockRem",
-                headerText : "Remark",
+                headerText : '<spring:message code="sal.title.remark" />',
                 editable : false
             }, {
                 dataField : "crtDt",
-                headerText : "Create Date",
+                headerText : '<spring:message code="sal.title.crtDate" />',
                 dataType : "date",
                 formatString : "mm/dd/yyyy" ,
                 width : 100,
                 editable : false
             }, {
                 dataField : "userName",
-                headerText : "Creator",
+                headerText : '<spring:message code="sal.text.creator" />',
                 width : 100,
                 editable : false
             }];
@@ -114,9 +114,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>PST REQUEST INFOMATION</h1>
+<h1><spring:message code="sal.title.text.pstReqInformation" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="autoClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="autoClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -150,31 +150,31 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">PSO ID</th>
+    <th scope="row"><spring:message code="sal.title.text.psoId" /></th>
     <td><span>${pstInfo.pstSalesOrdId}</span></td>
-    <th scope="row">PSO RefNo</th>
+    <th scope="row"><spring:message code="sal.title.text.psoRefNo" /></th>
     <td><span>${pstInfo.pstRefNo}</span></td>
-    <th scope="row">Customer PO</th>
+    <th scope="row"><spring:message code="sal.title.text.customerPO" /></th>
     <td><span>${pstInfo.pstCustPo}</span></td>
 </tr>
 <tr>
-    <th scope="row">Currency Type</th>
+    <th scope="row"><spring:message code="sal.title.text.currencyType" /></th>
     <td><span>${pstInfo.pstCurTypeCode}</span></td>
-    <th scope="row">Currency Rate</th>
+    <th scope="row"><spring:message code="sal.title.text.currencyRate" /></th>
     <td><span>${pstInfo.pstCurRate}</span></td>
-    <th scope="row">Person In Charge</th>
+    <th scope="row"><spring:message code="sal.title.text.personInCharge" /></th>
     <td><span>${pstInfo.picName}</span></td>
 </tr>
 <tr>
-    <th scope="row">PSO Status</th>
+    <th scope="row"><spring:message code="sal.title.text.psoStatus" /></th>
     <td><span>${pstInfo.pstStusCode}</span></td>
-    <th scope="row">Create By</th>
+    <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td><span>${pstInfo.crtUserName}</span></td>
-    <th scope="row">Create At</th>
+    <th scope="row"><spring:message code="sal.text.createAt" /></th>
     <td><span>${pstInfo.crtDt}</span></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td colspan="5"><span>${pstInfo.pstRem}</span></td>
 </tr>
 </tbody>
@@ -187,7 +187,7 @@
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: fn_report();">Generate</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: fn_report();"><spring:message code="sal.btn.generate" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

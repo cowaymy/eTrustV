@@ -10,11 +10,8 @@ $(document).ready(function(){
     //AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
     createAddrGrid();
     fn_getCustomerAddressAjax(); // address list
-
-    
-    
         
-    });
+//    });   --?
     
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(addrGridID, "cellDoubleClick", function(event){
@@ -34,11 +31,11 @@ $(document).ready(function(){
     
         var addrColumnLayout = [ {
             dataField : "name",
-            headerText : "Status",
+            headerText : '<spring:message code="sal.title.status" />',
             width : '10%'
         }, {
             dataField : "addr",
-            headerText : "Address",
+            headerText : '<spring:message code="sal.title.address" />',
             width : '80%'
         }, {
             dataField : "custAddId",
@@ -51,7 +48,7 @@ $(document).ready(function(){
             visible : false
         },{ 
             dataField : "setMain", 
-            headerText : "Set As Main", 
+            headerText : '<spring:message code="sal.title.setAsMain" />', 
             width:'10%', 
             renderer : { 
                 type : "TemplateRenderer", 
@@ -117,7 +114,7 @@ $(document).ready(function(){
     function fn_setMain(custAddId, custId){ 
         $("#tempCustId").val(custId);
         $("#tempCustAddr").val(custAddId);  
-        Common.confirm("Are you sure want to set this address as main address ?", fn_changeMainAddr, fn_reloadPage);
+        Common.confirm('<spring:message code="sal.confirm.msg.confirmMainAddress" />', fn_changeMainAddr, fn_reloadPage);
         
     }
     
@@ -148,9 +145,9 @@ $(document).ready(function(){
 <input type="hidden" id="tempCustId">
 <input type="hidden" id="tempCustAddr">
 <header class="pop_header"><!-- pop_header start -->
-<h1>Customer Address Maintenance</h1>
+<h1><spring:message code="sal.page.title.custAddrMaintenance" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()" >CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close" onclick="javascript: fn_closeFunc()" ><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <!-- move Page & set Main Address Form  -->
@@ -159,14 +156,14 @@ $(document).ready(function(){
 
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Customer Information</h2>
+<h2><spring:message code="sal.page.title.custInformation" /></h2>
 </aside><!-- title_line end -->
 
 <section class="tap_wrap mt10"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Basic Info</a></li>
-    <li><a href="#">Main Address</a></li>
-    <li><a href="#">Main Contact</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.mainAddr" /></a></li>
+    <li><a href="#"><spring:message code="sal.tap.title.mainContact" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -183,9 +180,9 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><span>${result.custId}</span></td>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
         <span> 
                 ${result.codeName1}
@@ -195,13 +192,13 @@ $(document).ready(function(){
                 </c:if>
             </span>
     </td>
-    <th scope="row">Create At</th>
+    <th scope="row"><spring:message code="sal.text.createAt" /></th>
     <td>${result.crtDt}</td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td colspan="3">${result.name}</td>
-    <th scope="row">Create By</th>
+    <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td>
         <c:if test="${result.crtUserId ne 0}">
                 ${result.crtUserId}
@@ -209,43 +206,43 @@ $(document).ready(function(){
     </td>
 </tr>
 <tr>
-    <th scope="row">NRIC/Company Number</th>
+    <th scope="row"><spring:message code="sal.text.nricCompanyNum" /></th>
     <td><span>${result.nric}</span></td>
-    <th scope="row">GST Registration No</th>
+    <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
     <td>${result.gstRgistNo}</td>
-    <th scope="row">Update By</th>
+    <th scope="row"><spring:message code="sal.text.updateBy" /></th>
     <td>${result.userName1}</td>
 </tr>
 <tr>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td><span>${result.email}</span></td>
-    <th scope="row">Nationality</th>
+    <th scope="row"><spring:message code="sal.text.nationality" /></th>
     <td>${result.cntyName}</td>
-    <th scope="row">Update At</th>
+    <th scope="row"><spring:message code="sal.text.updateAt" /></th>
     <td>${result.updDt}</td>
 </tr>
 <tr>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span>${result.gender}</span></td>
-    <th scope="row">DOB</th>
+    <th scope="row"><spring:message code="sal.text.dob" /></th>
     <td>
         <c:if test="${result.dob ne '01-01-1900'}">
                 ${result.dob}
         </c:if>
     </td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td>${result.codeName2 }</td>
 </tr>
 <tr>
-    <th scope="row">Passport Expire</th>
+    <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
     <td><span>${result.pasSportExpr}</span></td>
-    <th scope="row">Visa Expire</th>
+    <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
     <td>${result.visaExpr}</td>
-    <th scope="row">VA Number</th>
+    <th scope="row"><spring:message code="sal.text.vaNumber" /></th>
     <td>${result.custVaNo}</td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="5"><span>${result.rem}</span></td>
 </tr>
 </tbody>
@@ -261,13 +258,13 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Full Address</th>
+    <th scope="row"><spring:message code="sal.text.fullAddr" /></th>
     <td>
         <span>${addresinfo.fullAddress}</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td>${addresinfo.rem}</td>
 </tr>
 </tbody>
@@ -288,18 +285,18 @@ $(document).ready(function(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td><span>${contactinfo.name1}</span></td>
-    <th scope="row">Initial</th>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
     <td><span>${contactinfo.code}</span></td>
-    <th scope="row">Genders</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td>
             <c:choose >
                 <c:when test="${contactinfo.gender eq 'M'}">
-                     Male
+                     <spring:message code="sal.title.text.male" />
                 </c:when>
                 <c:when test="${contactinfo.gender eq 'F'}">
-                     Female
+                     <spring:message code="sal.title.text.female" />
                 </c:when>
                 <c:otherwise>
                     <!-- korean : 5  -->                    
@@ -308,9 +305,9 @@ $(document).ready(function(){
      </td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><span>${contactinfo.nric}</span></td>
-    <th scope="row">DOB</th>
+    <th scope="row"><spring:message code="sal.text.dob" /></th>
     <td>
         <span>
             <c:if test="${contactinfo.dob ne  '01-01-1900'}">
@@ -318,27 +315,27 @@ $(document).ready(function(){
             </c:if> 
         </span>
     </td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${contactinfo.codeName}</span></td>
 </tr>
 <tr>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td><span>${contactinfo.email}</span></td>
-    <th scope="row">Department</th>
+    <th scope="row"><spring:message code="sal.text.dept" /></th>
     <td><span>${contactinfo.dept}</span></td>
-    <th scope="row">Post</th>
+    <th scope="row"><spring:message code="sal.text.post" /></th>
     <td><span>${contactinfo.pos}</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile)</th>
+    <th scope="row"><spring:message code="sal.text.telM" /></th>
     <td><span>${contactinfo.telM1}</span></td>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><span>${contactinfo.telR}</span></td>
-    <th scope="row">Tel (Office)</th>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
     <td><span>${contactinfo.telO}</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td>${contactinfo.telf}</td>
     <th scope="row"></th>
     <td></td>
@@ -352,7 +349,7 @@ $(document).ready(function(){
 <!-- ########## Basic Info End ##########  -->
 <!-- ########## Address Grid Start ########## -->
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="_newAddr">ADD New Address</a></p></li>
+    <li><p class="btn_grid"><a href="#" id="_newAddr"><spring:message code="sal.btn.addNewAddr" /></a></p></li>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="address_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>

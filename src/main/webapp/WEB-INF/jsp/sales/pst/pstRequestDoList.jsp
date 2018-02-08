@@ -75,24 +75,24 @@ type : 'S'
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "pstRefNo",
-                headerText : "PSO No",
+                headerText : '<spring:message code="sal.title.text.psoNo" />',
                 width : 140,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "dealerName",
-                headerText : "Dealer Name",
+                headerText : '<spring:message code="sal.title.text.dealerName" />',
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "pstCustPo",
-                headerText : "Customer PO",
+                headerText : '<spring:message code="sal.title.text.customerPO" />',
                 width : 170,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "crtDt",
-                headerText : "PSO Date",
+                headerText : '<spring:message code="sal.title.text.psoDate" />',
                 width : 160,
                 dataType : "date",
                 formatString : "dd/mm/yyyy" ,
@@ -100,7 +100,7 @@ type : 'S'
                 style: 'left_style'
             }, {
                 dataField : "code1",
-                headerText : "PSO Status",
+                headerText : '<spring:message code="sal.title.text.psoStatus" />',
                 width : 170,
                 editable : false,
                 style: 'left_style'
@@ -167,7 +167,7 @@ type : 'S'
     function fn_pstReport(){
         //Common.alert('The program is under development.');
         if($("#pstSalesOrdIdParam").val() == ''){
-        	Common.alert("No record selected.");
+        	Common.alert('<spring:message code="sal.alert.msg.noRecordSelected" />');
         	return false;
         }
         Common.popupDiv("/sales/pst/reportPstRequestDOPop.do", $("#searchForm").serializeJSON(), null , true, '_newDiv');
@@ -210,18 +210,18 @@ type : 'S'
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>PST Request Do List</h2>
+<h2><spring:message code="sal.title.text.pstRequestDoList" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDOReq()">NEW PST Order</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDOReq()"><spring:message code="sal.title.text.newPstOrder" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDORet()">NEW PST Return</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_insertPstRequestDORet()"><spring:message code="sal.title.text.newPstReturn" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectPstRequestDOListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -252,14 +252,14 @@ type : 'S'
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">PSO No</th>
+    <th scope="row"><spring:message code="sal.title.text.psoNo" /></th>
     <td><input type="text" title="" id=pstRefNo name="pstRefNo" placeholder="PSO Number" class="w100p" /></td>
-    <th scope="row">PSO Status</th>
+    <th scope="row"><spring:message code="sal.title.text.psoStatus" /></th>
     <td>
     <select class="multy_select w100p" id="pstStusIds" name="pstStusId" multiple="multiple">
     </select>
     </td>
-    <th scope="row">Create Date</th>
+    <th scope="row"><spring:message code="sal.text.createDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" id="createStDate" name="createStDate" title="Create start Date" value="${toDay}" placeholder="DD/MM/YYYY" class="j_date" /></p>
@@ -269,19 +269,19 @@ type : 'S'
     </td>
 </tr>
 <tr>
-    <th scope="row">Dealer ID</th>
+    <th scope="row"><spring:message code="sal.title.text.dealerId" /></th>
     <td><input type="text" title="" id="pstDealerId" name="pstDealerId" placeholder="Dealer ID (Number Only)" class="w100p" /></td>
-    <th scope="row">Dealer Name</th>
+    <th scope="row"><spring:message code="sal.title.text.dealerName" /></th>
     <td><input type="text" title="" id="dealerName" name="dealerName" placeholder="Dealer Name" class="w100p" /></td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td><input type="text" title="" id="pstNric" name="pstNric" placeholder="NRIC/Company Number" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Dealer Type</th>
+    <th scope="row"><spring:message code="sal.title.text.dealerType" /></th>
     <td>
         <select class="select w100p" id="cmbDealerType" name="cmbDealerType" onchange="fn_dealerToPst()"></select>
     </td>
-    <th scope="row">PST Type</th>
+    <th scope="row"><spring:message code="sal.title.text.pstType" /></th>
     <td>
         <select class="multy_select w100p" multiple="multiple" id="cmbPstType" name="cmbPstType" ></select>
     </td>
@@ -289,9 +289,9 @@ type : 'S'
     <td></td>
 </tr>
 <tr>
-    <th scope="row">Customer PO</th>
+    <th scope="row"><spring:message code="sal.title.text.customerPO" /></th>
     <td><input type="text" title="" id="pstCustPo" name="pstCustPo" placeholder="PO Number" class="w100p" /></td>
-    <th scope="row">Person In Charge</th>
+    <th scope="row"><spring:message code="sal.title.text.personInCharge" /></th>
     <td><input type="text" title="" id="pInCharge" name="pInCharge" placeholder="Person In Charge" class="w100p" /></td>
     <th scope="row"></th>
     <td></td>
@@ -303,7 +303,7 @@ type : 'S'
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
-    <dt>Link</dt>
+    <dt><spring:message code="sal.title.text.link" /></dt>
     <dd>
     <ul class="btns">
         <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">

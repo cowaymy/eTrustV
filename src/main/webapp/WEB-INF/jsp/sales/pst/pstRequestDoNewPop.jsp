@@ -53,21 +53,21 @@ isShowChoose: true,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [{
                 dataField : "pstItmStkDesc",
-                headerText : "Stock Description",
+                headerText : '<spring:message code="sal.title.text.stockDescription" />',
                 editable : false
             }, {
                 dataField : "pstItmPrc",
-                headerText : "Unit Price",
+                headerText : '<spring:message code="sal.title.unitPrice" />',
                 width : 110,
                 editable : false
             }, {
                 dataField : "pstItmReqQty",
-                headerText : "Quantity",
+                headerText : '<spring:message code="sal.text.quantity" />',
                 width : 110,
                 editable : false
             }, {
                 dataField : "pstItmTotPrc",
-                headerText : "Item Total Price",
+                headerText : '<spring:message code="sal.title.text.itemTotPrice" />',
                 width : 170,
                 editable : false
             }, {
@@ -163,7 +163,7 @@ isShowChoose: true,
           }
           catch (e) {
               console.log(e);
-              Common.alert("Liar data search failed.");
+              Common.alert('<spring:message code="sal.alert.msg.liarDataSrchFailed" />');
           }
 
           alert("Fail : " + jqXHR.responseJSON.message);          
@@ -178,7 +178,7 @@ isShowChoose: true,
         
         for(var j = 0; j < AUIGrid.getRowCount(myStkGridID); j++) {                    
             if(stkId == AUIGrid.getCellValue(myStkGridID, j, "pstItmStkId")) {
-                Common.alert("* This stock item is existing.");
+                Common.alert('<spring:message code="sal.title.text.thisStokItmisExist" />');
                 return false;
             }
         }
@@ -205,19 +205,19 @@ isShowChoose: true,
     // save
     function fn_saveNewPstRequest(){
     	if(insertForm.cmbDealer.value == ""){
-            Common.alert("* Please select a dealer.");
+            Common.alert('<spring:message code="sal.alert.msg.plzSelectADealer" />');
             return false;
         }
     	if(insertForm.pstNewCustPo.value == ""){
-            Common.alert("* Please key the customer PO.");
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyTheCustPo" />');
             return false;
         }
     	if(insertForm.cmbPstIncharge.value == ""){
-            Common.alert("* Please select person in charge.");
+            Common.alert('<spring:message code="sal.alert.msg.plzSelPersonInCharge" />');
             return false;
         }
     	if(insertForm.cmbLocation.value == ""){
-            Common.alert("* Please select WH Location.");
+            Common.alert('<spring:message code="sal.alert.msg.plzSelWhLocation" />');
             return false;
         }
 //    	if(insertForm.totUnit.value == ""){
@@ -269,7 +269,7 @@ isShowChoose: true,
             };
             
             Common.ajax("POST", "/sales/pst/insertNewRequestDO.do", pstRequestDOForm, function(result) {
-                Common.alert("Save PST Request Do", fn_success);
+                Common.alert('<spring:message code="sal.alert.msg.savePstReqDo" />', fn_success);
 
             }, function(jqXHR, textStatus, errorThrown) {
                 Common.alert("실패하였습니다.");
@@ -332,7 +332,7 @@ isShowChoose: true,
         	}else if(str == 2576){
         		insertForm.pstType.value = 2579;
         	}else{
-        		Common.alert("Please check general code.");
+        		Common.alert('<spring:message code="sal.alert.msg.plzChkGeneralCode" />');
         	}
         }else{
         	if(str== 2575){
@@ -340,7 +340,7 @@ isShowChoose: true,
             }else if(str== 2576){
                 insertForm.pstType.value = 2580;
             }else{
-                Common.alert("Please check general code.");
+                Common.alert('<spring:message code="sal.alert.msg.plzChkGeneralCode" />');
             }
         }
 //      alert($("#cmbNewDealerType").val());
@@ -357,9 +357,9 @@ isShowChoose: true,
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>New PST Sales</h1>
+<h1><spring:message code="sal.title.text.newPstSales" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="newPopClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="newPopClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -367,12 +367,12 @@ isShowChoose: true,
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num3">
-    <li><a href="#" class="on">Particular Information</a></li>
-    <li><a href="#">Mailing Address</a></li>
-    <li><a href="#">Delivery Address</a></li>
-    <li><a href="#">Mailing Contact Person</a></li>
-    <li><a href="#">Delivery Contact Person</a></li>
-    <li><a href="#" onclick="javascript:chgTab();">Sales Order</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.title.text.particInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.mailingAddr" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.deliveryAddress" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.mailingCntcPerson" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.deliveryCntcPerson" /></a></li>
+    <li><a href="#" onclick="javascript:chgTab();"><spring:message code="sal.title.text.salesOrder" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -396,11 +396,11 @@ isShowChoose: true,
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Dealer Type<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.dealerType" /><span class="must">*</span></th>
     <td>
         <select class="select w100p" id="cmbNewDealerType" name="cmbNewDealerType" onchange="fn_dealerToDealer(this.value)"></select>
     </td>
-    <th scope="row">Dealer<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.dealer" /><span class="must">*</span></th>
     <td>
         <select class="w100p" id="cmbDealer" name="cmbDealer" onchange="fn_dealerInfo()">
 <!--             <option value="">Dealer</option>
@@ -412,34 +412,34 @@ isShowChoose: true,
     </td>
 </tr>
 <tr>
-    <th scope="row">Branch</th>
+    <th scope="row"><spring:message code="sal.text.branch" /></th>
     <td>
         <select class="w100p" id="cmbPstBranch" name="cmbPstBranch" disabled="disabled">
         </select>
     </td>
-    <th scope="row">WH LOC</th>
+    <th scope="row"><spring:message code="sal.title.text.whLoc" /></th>
     <td>
         <select class="w100p" id="cmbLocation" name="cmbLocation">
         </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Person In Charge<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.personInCharge" /><span class="must">*</span></th>
     <td>
         <select class="w100p" id="cmbPstIncharge" name="cmbPstIncharge">
         </select>
     </td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td><input type="text" id="dealerNric" name="dealerNric" title="" placeholder="NRIC/Company Number" class="w100p" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Email</th>
+    <th scope="row"><spring:message code="sal.text.email" /></th>
     <td><input type="text" id="dealerEmail" name="dealerEmail" title="" placeholder="Email Address" class="w100p" readonly/></td>
-    <th scope="row">Customer PO<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.customerPO" /><span class="must">*</span></th>
     <td><input type="text" id="pstNewCustPo" name="pstNewCustPo" title="" placeholder="Customer PO" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td colspan="3"><textarea cols="20" rows="5" id="pstNewRem" name="pstNewRem"></textarea></td>
 </tr>
 </tbody>
@@ -465,26 +465,26 @@ isShowChoose: true,
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" rowspan="2">Mailing Address<span class="must">*</span></th>
+    <th scope="row" rowspan="2"><spring:message code="sal.title.text.mailingAddr" /><span class="must">*</span></th>
     <td colspan="3"><input type="text" id="newMailaddrDtl" name="newMailaddrDtl" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
     <td colspan="3"><input type="text" id="newMailstreet" name="newMailstreet" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
-    <th scope="row">Area</th>
+    <th scope="row"><spring:message code="sal.text.area" /></th>
     <td colspan="3"><input type="text" id="newMailarea" name="newMailarea" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
-    <th scope="row">City</th>
+    <th scope="row"><spring:message code="sal.text.city" /></th>
     <td><span><input type="text" id="newMailcity" name="newMailcity" title="" placeholder="" readonly class="w100p readonly" /></span></td>
-    <th scope="row">Postcode</th>
+    <th scope="row"><spring:message code="sal.text.postCode" /></th>
     <td><span><input type="text" id="newMailpostcode" name="newMailpostcode" title="" placeholder="" readonly class="w100p readonly" /></span></td>
 </tr>
 <tr>
-    <th scope="row">State</th>
+    <th scope="row"><spring:message code="sal.text.state" /></th>
     <td><input type="text" title="" id="newMailstate" name="newMailstate" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Country</th>
+    <th scope="row"><spring:message code="sal.text.country" /></th>
     <td><input type="text" title="" id="newMailcountry" name="newMailcountry" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 </tbody>
@@ -510,26 +510,26 @@ isShowChoose: true,
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" rowspan="2">Delivery Address<span class="must">*</span></th>
+    <th scope="row" rowspan="2"><spring:message code="sal.title.text.deliveryAddress" /><span class="must">*</span></th>
     <td colspan="3"><input type="text" id="newDelvryaddrDtl" name="newDelvryaddrDtl" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
     <td colspan="3"><input type="text" id="newDelvrystreet" name="newDelvrystreet" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
-    <th scope="row">Area</th>
+    <th scope="row"><spring:message code="sal.text.area" /></th>
     <td colspan="3"><input type="text" id="newDelvryarea" name="newDelvryarea" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
-    <th scope="row">City</th>
+    <th scope="row"><spring:message code="sal.text.city" /></th>
     <td><span><input type="text" id="newDelvrycity" name="newDelvrycity" title="" placeholder="" readonly class="w100p readonly" /></span></td>
-    <th scope="row">Postcode</th>
+    <th scope="row"><spring:message code="sal.text.postCode" /></th>
     <td><span><input type="text" id="newDelvrypostcode" name="newDelvrypostcode" title="" placeholder="" readonly class="w100p readonly" /></span></td>
 </tr>
 <tr>
-    <th scope="row">State</th>
+    <th scope="row"><spring:message code="sal.text.state" /></th>
     <td><input type="text" id="newDelvrystate" name="newDelvrystate" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Country</th>
+    <th scope="row"><spring:message code="sal.text.country" /></th>
     <td><input type="text" id="newDelvrycountry" name="newDelvrycountry" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 </tbody>
@@ -556,31 +556,31 @@ isShowChoose: true,
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
     <td><input type="text" id="newMailContCntName" name="newMailContCntName" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Initial</th>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
     <td><input type="text" id="newMailContDealerIniCd" name="newMailContDealerIniCd" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><input type="text" id="newMailContGender" name="newMailContGender" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><input type="text" id="newMailContNric" name="newMailContNric" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><input type="text" id="newMailContRaceName" name="newMailContRaceName" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row"></th>
     <td></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile)</th>
+    <th scope="row"><spring:message code="sal.text.telM" /></th>
     <td><input type="text" id="newMailContTelM1" name="newMailContTelM1" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><input type="text" id="newMailContTelR" name="newMailContTelR" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Tel (Office)</th>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
     <td><input type="text" id="newMailContTelO" name="newMailContTelO" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td><input type="text" id="newMailContTelF" name="newMailContTelF" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row"></th>
     <td></td>
@@ -611,31 +611,31 @@ isShowChoose: true,
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
     <td><input type="text" id="newDelvryContCntName" name="newDelvryContCntName" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Initial</th>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
     <td><input type="text" id="newDelvryContDealerIniCd" name="newDelvryContDealerIniCd" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><input type="text" id="newDelvryContGender" name="newDelvryContGender" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><input type="text" id="newDelvryContNric" name="newDelvryContNric" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><input type="text" id="newDelvryContRaceName" name="newDelvryContRaceName" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row"></th>
     <td></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile)</th>
+    <th scope="row"><spring:message code="sal.text.telM" /></th>
     <td><input type="text" id="newDelvryContTelM1" name="newDelvryContTelM1" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><input type="text" id="newDelvryContTelR" name="newDelvryContTelR" title="" placeholder="" readonly class="w100p readonly" /></td>
-    <th scope="row">Tel (Office)</th>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
     <td><input type="text" id="newDelvryContTelO" name="newDelvryContTelO" title="" placeholder="" readonly class="w100p readonly" /></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td><input type="text" id="newDelvryContTelF" name="newDelvryContTelF" title="" placeholder="" readonly class="w100p readonly" /></td>
     <th scope="row"></th>
     <td></td>
@@ -652,7 +652,7 @@ isShowChoose: true,
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Stock Item Request</h2>
+<h2><spring:message code="sal.title.text.stockItmRequest" /></h2>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -665,25 +665,25 @@ isShowChoose: true,
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Currency</th>
+    <th scope="row"><spring:message code="sal.title.text.currency" /></th>
     <td>
     <select id="curTypeCd" name="curTypeCd" onchange="fn_getRate()">
-        <option value="1150">MYR</option>
-        <option value="1149">SGD</option>
-        <option value="1148">USD</option>
+        <option value="1150"><spring:message code="sal.combo.text.myr" /></option>
+        <option value="1149"><spring:message code="sal.combo.text.sgd" /></option>
+        <option value="1148"><spring:message code="sal.combo.text.usd" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Currency Rate</th>
+    <th scope="row"><spring:message code="sal.title.text.currencyRate" /></th>
     <td><input type="text" id="curRate" name="curRate" value="1.00" title="" placeholder="" class="" /></td>
 </tr>
 <tr>
-    <th scope="row">Total Unit</th>
+    <th scope="row"><spring:message code="sal.title.text.totalUnit" /></th>
     <td><input type="text" id="totUnit" name="totUnit"  title="" placeholder="" class="" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Total Amount</th>
+    <th scope="row"><spring:message code="sal.text.totAmt" /></th>
     <td><input type="text" id="totAmount" name="totAmount" title="" placeholder="" class="" readonly/></td>
 </tr>
 </tbody>
@@ -693,8 +693,8 @@ isShowChoose: true,
 </section><!-- search_table end -->
 
 <ul class="left_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_addStockItemPop()">Add Stock Item</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="fn_itemDel()">Delete Stock Item</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_addStockItemPop()"><spring:message code="sal.title.text.addStockItem" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_itemDel()"><spring:message code="sal.title.text.deleteStockItm" /></a></p></li>
 </ul>
 
 <section class="search_result"><!-- search_result start 
@@ -720,7 +720,7 @@ isShowChoose: true,
 </section><!-- tap_wrap end -->
 
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_saveNewPstRequest()">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_saveNewPstRequest()"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

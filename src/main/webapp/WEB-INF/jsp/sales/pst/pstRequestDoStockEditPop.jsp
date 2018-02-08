@@ -40,35 +40,35 @@
     // AUIGrid 칼럼 설정
     var columnLayout = [ {
             dataField : "c2",
-            headerText : "Stock Description",
+            headerText : '<spring:message code="sal.title.text.stockDescription" />',
             editable : false
         }, {
             dataField : "pstItmReqQty",
-            headerText : "Request</br>Quantity",
+            headerText : '<spring:message code="sal.title.text.requestBrQty" />',
             width : 105,
             editable : false
         }, {
             dataField : "pstItmBalQty",
-            headerText : "Balance Quantity",
+            headerText : '<spring:message code="sal.title.text.balanceQty" />',
             width : 130,
             editable : false
         }, {
             dataField : "pstItmCanQty2",
-            headerText : "Cancel</br>Quantity",
+            headerText : '<spring:message code="sal.title.text.cancelBrQuantity" />',
             width : 100
         }, {
             dataField : "pstItmCanQty",
-            headerText : "Cancel</br>Quantity",
+            headerText : '<spring:message code="sal.title.text.cancelBrQuantity" />',
             width : 100,
             visible : false
         }, {
             dataField : "pstItmPrc",
-            headerText : "Item Price",
+            headerText : '<spring:message code="sal.title.itemPrice" />',
             width : 120,
             editable : false
         }, {
             dataField : "pstStockRem",
-            headerText : "Remark",
+            headerText : '<spring:message code="sal.title.remark" />',
             width : 170
         }];
     
@@ -95,7 +95,7 @@
       
         Common.ajax("POST", "/sales/pst/updateStockList.do", pstRequestDOForm, function(result) {
             
-            alert("PST info successfully updated");
+            alert('<spring:message code="sal.alert.msg.pstInfoSuccUpd" />');
             
             fn_getPstStockListAjax();
           //resetUpdatedItems(); // 초기화
@@ -130,13 +130,13 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>PST Request Info Edit</h1>
+<h1><spring:message code="sal.title.text.pstReqInfoEdit" /></h1>
  
 <ul class="right_opt">
 <!--    <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
     <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
     <li><p class="btn_blue2"><a href="#">NEW</a></p></li>-->
-    <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_close()">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"  onclick="javascript:fn_close()"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
  
 </header><!-- pop_header end -->
@@ -144,14 +144,14 @@
 <section class="pop_body"><!-- pop_body start -->
 
 <ul class="tap_type1">
-    <li><a href="#" onclick="javascript:fn_goPstInfo()">PST info</a></li>
-    <li><a href="#">PST Mail Address</a></li>
-    <li><a href="#">PST Delivery Address</a></li>
-    <li><a href="#">PST Mail Contact</a></li>
-    <li><a href="#">PST Delivery Contact</a></li>
-    <li><a href="#" class="on">PST Stock List</a></li>
+    <li><a href="#" onclick="javascript:fn_goPstInfo()"><spring:message code="sal.title.text.pstInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.pstMailAddress" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.pstDeliveryAddress" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.pstMailContact" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.pstDeliveryContact" /></a></li>
+    <li><a href="#" class="on"><spring:message code="sal.title.text.pstStockList" /></a></li>
 </ul>
-<h2>Request Item List</h2>
+<h2><spring:message code="sal.title.text.requestItemList" /></h2>
 
 <form name="searchForm" id="searchForm">
     <input type="hidden" id="pstSalesOrdId" name="pstSalesOrdId" value="${pstSalesOrdId}">
@@ -167,7 +167,7 @@
 <!-- search_result end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onClick="javascript:fn_updateStockList();">UPDATE STOCK</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onClick="javascript:fn_updateStockList();"><spring:message code="sal.btn.updStock" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

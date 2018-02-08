@@ -23,39 +23,39 @@
 	    //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
 	    var columnLayout = [{
 	            dataField : "stkCodeDesc",
-	            headerText : "Stock Description",
+	            headerText : '<spring:message code="sal.title.text.stockDescription" />',
 	            editable : false
 	        }, {
 	            dataField : "pstItmReqQty",
-	            headerText : "Request <br> Quantity",
+	            headerText : '<spring:message code="sal.title.text.reqBrQuantity" />',
 	            width : 120,
 	            editable : false
 	        }, {
                 dataField : "pstItmBalQty",
-                headerText : "Balance <br> Quantity",
+                headerText : '<spring:message code="sal.title.text.balanceBrQuantity" />',
                 width : 120,
                 editable : false
             }, {
 	            dataField : "pstItmCanQty2",
-	            headerText : "Cancel <br> Quantity",
+	            headerText : '<spring:message code="sal.title.text.cancelBrQuantity" />',
 	            dataType:"numeric", 
                 formatString:"###0",
 	            width : 120
 	        }, {
                 dataField : "pstItmCanQty",
-                headerText : "Cancel <br> Quantity",
+                headerText : '<spring:message code="sal.title.text.cancelBrQuantity" />',
                 width : 120,
                 visible : false
             }, {
 	            dataField : "pstItmPrc",
-	            headerText : "Item Price",
+	            headerText : '<spring:message code="sal.title.itemPrice" />',
 	            dataType:"numeric", 
 	            formatString:"#,##0.00",
 	            width : 130,
 	            editable : false
 	        }, {
                 dataField : "pstStockRem",
-                headerText : "Remark",
+                headerText : '<spring:message code="sal.title.remark" />',
                 width : 120
             }];
 	   
@@ -112,7 +112,7 @@
       
         Common.ajax("POST", "/sales/pst/updateStockList.do", pstRequestDOForm, function(result) {
             
-            Common.alert("PST info successfully updated");
+            Common.alert('<spring:message code="sal.alert.msg.pstInfoSuccUpd" />');
             $("#editClose").click();
             fn_getStockEditListAjax();
           //resetUpdatedItems(); // 초기화
@@ -171,9 +171,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>PSO Info Edit</h1>
+<h1><spring:message code="sal.title.text.psoInfoEdit" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="editClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="editClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -181,12 +181,12 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">PST Info</a></li>
-    <li><a href="#">PST MailAddress</a></li>
-    <li><a href="#">PST DeliveryAddress</a></li>
-    <li><a href="#">PST MailContact</a></li>
-    <li><a href="#">PST DeliveryContact</a></li>
-    <li><a href="#" onclick="javascript: fn_resizefunc(editGridID)">PST StockList</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.title.text.pstInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.pstMailAddress" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.pstDeliveryAddress" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.pstMailContact" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.pstDeliveryContact" /></a></li>
+    <li><a href="#" onclick="javascript: fn_resizefunc(editGridID)"><spring:message code="sal.title.text.pstStockList" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -215,40 +215,40 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">PSO ID</th>
+    <th scope="row"><spring:message code="sal.title.text.psoId" /></th>
     <td readOnly><span>${pstInfo.pstSalesOrdId}</span></td>
-    <th scope="row">PSO RefNo</th>
+    <th scope="row"><spring:message code="sal.title.text.psoRefNo" /></th>
     <td readOnly><span>${pstInfo.pstRefNo}</span></td>
-    <th scope="row">Customer PO</th>
+    <th scope="row"><spring:message code="sal.title.text.customerPO" /></th>
     <td readOnly><span>${pstInfo.pstCustPo}</span></td>
 </tr>
 <tr>
-    <th scope="row">Currency Type</th>
+    <th scope="row"><spring:message code="sal.title.text.currencyType" /></th>
     <td>
     <select id="curType" name="curType" class="w100p" onchange="fn_getRate()">
-        <option value="1150">MYR</option>
-        <option value="1149">SGD</option>
-        <option value="1148">USD</option>
+        <option value="1150"><spring:message code="sal.combo.text.myr" /></option>
+        <option value="1149"><spring:message code="sal.combo.text.sgd" /></option>
+        <option value="1148"><spring:message code="sal.combo.text.usd" /></option>
     </select>
     </td>
-    <th scope="row">Currency Rate</th>
+    <th scope="row"><spring:message code="sal.title.text.currencyRate" /></th>
     <td><input type="text" title="" id="editCurRate" name="editCurRate" value="${pstInfo.pstCurRate}" placeholder="" class="w100p" /></td>
-    <th scope="row">Person In Charge</th>
+    <th scope="row"><spring:message code="sal.title.text.personInCharge" /></th>
     <td>
         <select id="editIncharge" name="editIncharge" class="w100p">
         </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">PSO Status</th>
+    <th scope="row"><spring:message code="sal.title.text.psoStatus" /></th>
     <td readOnly><span>${pstInfo.pstStusCode}</span></td>
-    <th scope="row">Create By</th>
+    <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td readOnly><span>${pstInfo.crtUserName}</span></td>
-    <th scope="row">Create At</th>
+    <th scope="row"><spring:message code="sal.text.createAt" /></th>
     <td readOnly><span>${pstInfo.crtDt}</span></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td colspan="5"><textarea id="editInfoRem" name="editInfoRem" cols="20" rows="5" readonly>${pstInfo.pstRem}</textarea></td>
 </tr>
 </tbody>
@@ -259,8 +259,8 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_editAddrDtPop()">Add/Edit Address</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherAddrPop()">Select Another Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAddrDtPop()"><spring:message code="sal.title.text.addEditAddress" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherAddrPop()"><spring:message code="sal.title.text.selectAnotherAddress" /></a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -273,26 +273,26 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" rowspan="2">Mailing Address</th>
+    <th scope="row" rowspan="2"><spring:message code="sal.title.text.mailingAddr" /></th>
     <td colspan="3"><span>${pstMailContact.AddrDtl}</span></td>
 </tr>
 <tr>
     <td colspan="3"><span>${pstMailContact.street}</span></td>
 </tr>
 <tr>
-    <th scope="row">Area</th>
+    <th scope="row"><spring:message code="sal.text.area" /></th>
     <td colspan="3"><span>${pstMailContact.Area}</span></td>
 </tr>
 <tr>
-    <th scope="row">City</th>
+    <th scope="row"><spring:message code="sal.text.city" /></th>
     <td><span>${pstMailContact.city}</span></td>
-    <th scope="row">Postcode</th>
+    <th scope="row"><spring:message code="sal.text.postCode" /></th>
     <td><span>${pstMailContact.postcode}</span></td>
 </tr>
 <tr>
-    <th scope="row">State</th>
+    <th scope="row"><spring:message code="sal.text.state" /></th>
     <td><span>${pstMailContact.state}</span></td>
-    <th scope="row">Country</th>
+    <th scope="row"><spring:message code="sal.text.country" /></th>
     <td><span>${pstMailContact.country}</span></td>
 </tr>
 </tbody>
@@ -303,8 +303,8 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_editAddrDtPop()">Add/Edit Address</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherAddrPop()">Select Another Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAddrDtPop()"><spring:message code="sal.title.text.addEditAddress" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherAddrPop()"><spring:message code="sal.title.text.selectAnotherAddress" /></a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -317,26 +317,26 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row" rowspan="2">Delivery Address</th>
+    <th scope="row" rowspan="2"><spring:message code="sal.title.text.deliveryAddress" /></th>
     <td colspan="3"><span>${pstDeliveryContact.AddrDtl}&nbsp;</span></td>
 </tr>
 <tr>
     <td colspan="3"><span>${pstDeliveryContact.street}&nbsp;</span></td>
 </tr>
 <tr>
-    <th scope="row">Area</th>
+    <th scope="row"><spring:message code="sal.text.area" /></th>
     <td colspan="3"><span>${pstDeliveryContact.Area}</span></td>
 </tr>
 <tr>
-    <th scope="row">City</th>
+    <th scope="row"><spring:message code="sal.text.city" /></th>
     <td><span>${pstDeliveryContact.city}</span></td>
-    <th scope="row">Postcode</th>
+    <th scope="row"><spring:message code="sal.text.postCode" /></th>
     <td><span>${pstDeliveryContact.postcode}</span></td>
 </tr>
 <tr>
-    <th scope="row">State</th>
+    <th scope="row"><spring:message code="sal.text.state" /></th>
     <td><span>${pstDeliveryContact.state}</span></td>
-    <th scope="row">Country</th>
+    <th scope="row"><spring:message code="sal.text.country" /></th>
     <td><span>${pstDeliveryContact.country}</span></td>
 </tr>
 </tbody>
@@ -347,8 +347,8 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_editContDtPop()">Add/Edit Address</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherContPop()">Select Another Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editContDtPop()"><spring:message code="sal.title.text.addEditAddress" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherContPop()"><spring:message code="sal.title.text.selectAnotherAddress" /></a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -363,27 +363,27 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td><span>${pstMailContact.cntName }</span></td>
-    <th scope="row">Initial</th>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
     <td><span>${pstMailContact.dealerInitialCode }</span></td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span>${pstMailContact.gender }</span></td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><span>${pstMailContact.nric }</span></td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${pstMailContact.raceName }</span></td>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td><span>${pstMailContact.telf }</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile)</th>
+    <th scope="row"><spring:message code="sal.text.telM" /></th>
     <td><span>${pstMailContact.telM1 }</span></td>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><span>${pstMailContact.telR }</span></td>
-    <th scope="row">Tel (Office)</th>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
     <td><span>${pstMailContact.telO }</span></td>
 </tr>
 </tbody>
@@ -394,8 +394,8 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_editContDtPop()">Add/Edit Address</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherContPop()">Select Another Address</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editContDtPop()"><spring:message code="sal.title.text.addEditAddress" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_editAnotherContPop()"><spring:message code="sal.title.text.selectAnotherAddress" /></a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -410,27 +410,27 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Name</th>
+    <th scope="row"><spring:message code="sal.text.name" /></th>
     <td><span>${pstDeliveryContact.cntName }</span></td>
-    <th scope="row">Initial</th>
+    <th scope="row"><spring:message code="sal.text.initial" /></th>
     <td><span>${pstDeliveryContact.dealerInitialCode }</span></td>
-    <th scope="row">Gender</th>
+    <th scope="row"><spring:message code="sal.text.gender" /></th>
     <td><span>${pstDeliveryContact.gender }</span></td>
 </tr>
 <tr>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><span>${pstDeliveryContact.nric }</span></td>
-    <th scope="row">Race</th>
+    <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><span>${pstDeliveryContact.raceName }</span></td>
-    <th scope="row">Tel (Fax)</th>
+    <th scope="row"><spring:message code="sal.text.telF" /></th>
     <td><span>${pstDeliveryContact.telf }</span></td>
 </tr>
 <tr>
-    <th scope="row">Tel (Mobile)</th>
+    <th scope="row"><spring:message code="sal.text.telM" /></th>
     <td><span>${pstDeliveryContact.telM1 }</span></td>
-    <th scope="row">Tel (Residence)</th>
+    <th scope="row"><spring:message code="sal.text.telR" /></th>
     <td><span>${pstDeliveryContact.telR }</span></td>
-    <th scope="row">Tel (Office)</th>
+    <th scope="row"><spring:message code="sal.text.telO" /></th>
     <td><span>${pstDeliveryContact.telO }</span></td>
 </tr>
 </tbody>
@@ -457,7 +457,7 @@
 </section><!-- tap_wrap end -->
 
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_updateStockList();">Update Stock</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="javascript:fn_updateStockList();"><spring:message code="sal.btn.updStock" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->
