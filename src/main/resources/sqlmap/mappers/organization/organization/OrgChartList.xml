@@ -1087,27 +1087,39 @@
                                ) 
                               ) Project1 , 
                             (
-                              SELECT  A.* , b.code 
-                             FROM ORG0007D A ,sys0013M  B
-  
-                  
-                             where A.MEM_LVL_TO = B.code_id 
-                             and promo_id in ( select max(promo_id) 
-                                              from  ORG0007D C
-                                              where c.stus_id = 4
-                                              and C.PROMO_TYPE_ID   in ( 747, 748, 749)
-                                             
-               
-                             <choose>
-                             <when test="evntDate != null and evntDate != '' ">
-                                  <![CDATA[  and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{evntDate} ]]>
-                             </when>
-                             <otherwise>
-                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= to_char(SYSDATE, 'MM/YYYY' ) ]]>
-                             </otherwise>
-                             </choose>
-                                 group by C.MEM_ID )
-                              
+                            
+			                       select ABC.*  
+			                      ,case when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 3) then 'CM'
+			                               when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 2) then 'SCM'
+			                               when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 1) then 'GCM' 
+			  
+			                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 3) then 'CTL'
+			                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 2) then 'CTM'
+			                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 1) then 'RM' 
+			                    else ABC.CODE1
+			                    end CODE
+			                     from (
+			
+				                             SELECT  A.* , b.code CODE1
+				                             FROM ORG0007D A ,sys0013M  B
+				                             where A.MEM_LVL_TO = B.code_id 
+				                             and promo_id in ( select max(promo_id) 
+							                                              from  ORG0007D C
+							                                              where c.stus_id = 4
+							                                              and C.PROMO_TYPE_ID   in ( 747, 748, 749)
+				                                             
+				               
+											                             <choose>
+											                             <when test="evntDate != null and evntDate != '' ">
+											                                  <![CDATA[  and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = #{evntDate} ]]>
+											                             </when>
+											                             <otherwise>
+											                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = to_char(SYSDATE, 'MM/YYYY' ) ]]>
+											                             </otherwise>
+											                             </choose>
+											                                 group by C.MEM_ID 
+				                                                        )
+			                                ) ABC
                            )  Project2 
                            where 1=1 
                            and project1.mem_id = project2.mem_id(+)
