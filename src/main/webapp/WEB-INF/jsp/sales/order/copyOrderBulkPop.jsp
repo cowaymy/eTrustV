@@ -11,13 +11,13 @@
 	$(function(){
 	    $('#btnBulk').click(function() {
             if(FormUtil.checkReqValue($('#_copyQty'))) {
-                var msg = "* Please key in the Order Qty";
-                Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+                var msg = '* <spring:message code="sal.alert.msg.plzKeyInOrdQty" />';
+                Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
                 return false;
             }
             if($('#_copyQty').val() <= 1) {
-                var msg = "* Please key in a number greater than 1";
-                Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+                var msg = '* <spring:message code="sal.alert.msg.plzKeyInNum1" />';
+                Common.alert('<spring:message code="sal.alert.msg.saveSalOrdSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
                 return false;
             }
             else {
@@ -35,9 +35,9 @@
 <div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>New Order(Bulk)</h1>
+<h1><spring:message code="sal.title.text.newOrderBulk" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a href="#" id="btnCnfmOrderClose">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a href="#" id="btnCnfmOrderClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -51,22 +51,22 @@
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Customer Name</th>
+	<th scope="row"><spring:message code="sal.text.custName" /></th>
 	<td><input id="_custNm" name="custNm" type="text" value="${orderInfo.custName}" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row">Application Type</th>
+	<th scope="row"><spring:message code="sal.text.appType" /></th>
 	<td><input id="_appType" name="appType" type="text" value="${orderInfo.appTypeDesc}" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row">Order Copy Qty</th>
+	<th scope="row"><spring:message code="sal.text.ordCopyQty" /></th>
 	<td><input id="_copyQty" name="copyQty" type="text" title="" placeholder="Order Copy Qty" class="w100p" onkeydown="return FormUtil.onlyNumber(event)"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a id="btnBulk" href="#">Ok</a></p></li>
+	<li><p class="btn_blue2 big"><a id="btnBulk" href="#"><spring:message code="sal.btn.ok" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 
