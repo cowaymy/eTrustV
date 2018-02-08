@@ -247,7 +247,7 @@
             }
             else {
 //              Common.alert('<b>Customer not found.<br>Your input customer ID :'+$("#searchCustId").val()+'</b>');
-              Common.alert('<spring:message code="sal.alert.msg.custNotFound" arguments="'+custId+'"/>');
+                Common.alert('<spring:message code="sal.alert.msg.custNotFound" arguments="'+custId+'"/>');
             }
         });
     }
