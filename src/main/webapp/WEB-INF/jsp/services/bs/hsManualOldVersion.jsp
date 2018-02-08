@@ -128,6 +128,7 @@
                 AUIGrid.bind(myGridID, "cellClick", function(event) {
                   salesOrdId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
                   srvConfigId =  AUIGrid.getCellValue(myGridID, event.rowIndex, "srvConfigId");
+                  ordStus =  AUIGrid.getCellValue(myGridID, event.rowIndex, "ordStus");
               });
 
 
@@ -147,8 +148,11 @@
         	var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 
         	if (selectedItem[0] > -1){
-        		Common.popupDiv("/services/bs/hsConfigBasicOldPop.do?&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
-
+        		if(ordStus != "COM"){
+        			Common.alert("<b>This order is under status : [" + ordStus + "].<br />Basic info setting update is disallowed.</b>");
+        		}else{
+        		    Common.popupDiv("/services/bs/hsConfigBasicOldPop.do?&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
+        		}
             }else{
                  Common.alert('No BS record found.');
             }
