@@ -206,7 +206,9 @@ public interface InstallationResultListMapper {
 
 	List<EgovMap> viewInstallationResult(Map<String, Object> params);
 
-	void updateInstallEntryEdit(Map<String, Object> params); 
+	void updateInstallEntryEdit(Map<String, Object> params);
+
+	void updateRentalStatus(Map<String, Object> params); 
 
 	
 	

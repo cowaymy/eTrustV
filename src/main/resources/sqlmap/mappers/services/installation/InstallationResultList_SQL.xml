@@ -2609,6 +2609,19 @@
                INSTALL_DT = TO_DATE(#{installdt},'DD-MM-YYYY')
          WHERE  ( INSTALL_ENTRY_ID = #{entryId} )
          </update>
+         
+         
+    <update id="updateRentalStatus" parameterType="Map">
+     <![CDATA[
+        update sal0071d
+           set stus_code_id = 'REG'
+              ,ren_sch_dt = sysdate
+           
+         where sales_ord_id = #{salesOrderId}
+        ]]>
+    </update>
+         
+         
 		<insert id="insertSirim" parameterType="Map">
 		 INSERT INTO LOG0040D (
 		      SIRIM_ID

@@ -1984,8 +1984,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     	//	Complete
         if(installResult.get("statusCodeId").toString().equals("4")){
         	installationResultListMapper.insertOrderLog(orderLog);
+        	if("66".equals(ApptypeID)){
+        		installationResultListMapper.updateRentalStatus(orderLog);
+        	}
         }
-
 
         //Fail
         if(installResult.get("statusCodeId").toString().equals("21")){
