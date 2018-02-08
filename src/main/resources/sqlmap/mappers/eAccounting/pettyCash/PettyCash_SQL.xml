@@ -34,7 +34,7 @@
 			               T1.CRT_DT, 
 			               T1.UPD_DT, 
 			               T1.CRT_USER_ID, 
-			               T5.USER_NAME,, 
+			               T5.USER_NAME, 
 			               T1.UPD_USER_ID,
 			               (SELECT USER_NAME 
 			                FROM   SYS0047M 
