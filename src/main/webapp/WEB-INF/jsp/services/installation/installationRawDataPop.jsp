@@ -7,6 +7,10 @@ $(document).ready(function(){
      }).multipleSelect({}); */
 
      doGetCombo('/common/selectCodeList.do', '10', '','appliType', 'M' , 'f_multiCombo');
+     
+     $('#orderStrDt').val($.datepicker.formatDate('01/mm/yy', new Date()));
+     
+     $('#orderEndDt').val($.datepicker.formatDate('dd/mm/yy', new Date()));
 });
 
 function f_multiCombo() {
@@ -19,12 +23,15 @@ function f_multiCombo() {
 }
 
 function fn_validation(){
-	if($("#orderStrDt").val() != '' || $("#orderEndDt").val() != ''){
+	//if($("#orderStrDt").val()  == '' ||   $("#orderEndDt").val() == ''){
+		//alert(1);
         if($("#orderStrDt").val() == '' || $("#orderEndDt").val() == ''){
             Common.alert("<spring:message code='sys.common.alert.validation' arguments='Order date (From & To)' htmlEscape='false'/>");
             return false;
         }
-    }
+    //}
+	
+	//alert();
 	return true;
 }
 
@@ -110,7 +117,7 @@ $.fn.clearForm = function() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code='service.title.OrderDate'/></th>
+    <th scope="row"><spring:message code='service.title.OrderDate'/> <span class="must">*</span> </th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -140,10 +147,14 @@ $.fn.clearForm = function() {
 </form>
 </section><!-- search_table end -->
 
+
+
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_openReport()"><spring:message code='service.btn.Generate'/></a></p></li>
     <li><p class="btn_blue2 big"><a href="#" onclick="javascript:$('#installationRawDataForm').clearForm();"><spring:message code='service.btn.Clear'/></a></p></li>
 </ul>
+
+<div id="list_grid_wrap123" style="width:100%; height:200px; margin:0 auto;"></div>
 
 </section><!-- pop_body end -->
 
