@@ -20,7 +20,7 @@
         $('#txtOldOrderID').val('');
         
         if(FormUtil.checkReqValue($('#rwOldOrder'))) {
-            $('#lblOldOrderNo').text('* Please key in old order no.');
+            $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.plzKeyInOldOrdNo" />');
             return;
         }
         
@@ -39,29 +39,29 @@
              
             if(RESULT.rootState == 'ROOT_1') {
                 $('#rwOldOrder').clearForm();
-                $('#lblOldOrderNo').text('* Order Number not found!');
+                $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.oldOrdNoNotFound" />');
             }
             if(RESULT.rootState == 'ROOT_2') {
                 $('#rwOldOrder').clearForm();
-                $('#lblOldOrderNo').text('* Service type order is disallowed to register for ex-trade!');
+                $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.disallowExTrade" />');
             }
             if(RESULT.rootState == 'ROOT_3') {
                 $('#rwOldOrder').clearForm();
-                $('#lblOldOrderNo').text('* Order number invalid!');
+                $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.invalidOrdNo" />');
             }
             if(RESULT.rootState == 'ROOT_4') {
                 $('#oldOrderCloseBtn').click();
                 $('#speclInstct').val(RESULT.instSpecInst);
-                Common.confirm("Check Old Order No" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid), fn_apprvPopClose);
+                Common.confirm('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid), fn_apprvPopClose);
             }
             if(RESULT.rootState == 'ROOT_5') {
                 $('#rwOldOrder').clearForm();
-                $('#lblOldOrderNo').text('* Rental status not under REG, INV, SUS is disallowed to register for ex-trade!');
+                $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.disallowExTrade2" />');
             }
             if(RESULT.rootState == 'ROOT_6') {
                 $('#oldOrderCloseBtn').click();
                 $('#speclInstct').val(RESULT.instSpecInst);
-                Common.confirm("Confirm To Proceed" + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid), fn_apprvPopClose);
+                Common.confirm('<spring:message code="sal.alert.msg.cnfrmProc" />' + DEFAULT_DELIMITER + RESULT.msg, btnHidden_Valid_Click(RESULT.isInValid), fn_apprvPopClose);
             }
             if(RESULT.rootState == 'ROOT_7') {
                 $('#txtOldOrderID').val(RESULT.oldOrderId);
@@ -69,7 +69,7 @@
             }
             if(RESULT.rootState == 'ROOT_8') {
                 $('#rwOldOrder').clearForm();
-                $('#lblOldOrderNo').text('* Order Number has been used to register for ex-trade!');
+                $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.usedExTrade" />');
             }
         });
 	}
@@ -89,7 +89,7 @@
                 msg += "(Outstanding fee, below 57th months (rental) and different customer),<br>";
                 msg += "a pop up window which require the information of Report For Decision.";
                 
-            Common.confirm("Confirm To Save" + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_popOrderDetail);
+            Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_popOrderDetail);
 	    }
 	    else {
             fn_popOrderDetail();
@@ -103,9 +103,9 @@
 <div id="popup_wrap" class="popup_wrap size_small"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Plese Key In Old Order</h1>
+<h1><spring:message code="sal.alert.msg.plzKeyInOldOrd" /></h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="oldOrderCloseBtn" href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="oldOrderCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -133,7 +133,7 @@
 </ul>
 
 <ul class="center_btns">
-	<li><p class="btn_blue2 big"><a id="btnRWok" href="#">Ok</a></p></li>
+	<li><p class="btn_blue2 big"><a id="btnRWok" href="#"><spring:message code="sal.btn.ok" /></a></p></li>
 </ul>
 
 </form>
