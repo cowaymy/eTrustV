@@ -626,11 +626,12 @@ function fn_ValidRequiredField(){
 	/********************/
 	/*    cmbRentPaymode     */
 	/********************/
-	var idx    = $("#cmbRentPaymode option:selected").index();
-	if (idx <= -1  ){
-		
+//	var idx    = $("#cmbRentPaymode").val();
+
+	if ($("#cmbRentPaymode").val() == "" ){
 		rV = false;
         rMessage += "* Please select the rental paymode.<br />";
+//        return false;
         
     } else {
     	 if ($("#cmbRentPaymode").val() == "131") {              //Credit Car
