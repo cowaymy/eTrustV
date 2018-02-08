@@ -71,4 +71,6 @@ public interface WebInvoiceService {
 	
 	List<EgovMap> getAppvExcelInfo(Map<String, Object> params);
 	
+	String selectHrCodeOfUserId(String userId);
+	
 }

@@ -32,6 +32,7 @@ import com.coway.trust.biz.eAccounting.webInvoice.WebInvoiceService;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.google.gson.Gson;
 
@@ -68,7 +69,12 @@ public class PettyCashController {
 	}
 	
 	@RequestMapping(value = "/selectCustodianList.do")
-	public ResponseEntity<List<EgovMap>> selectCustodianList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectCustodianList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		
+		String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
+		if(!"A1101".equals(costCentr)) {
+			params.put("loginUserId", sessionVO.getUserId());
+		}
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
@@ -225,7 +231,12 @@ public class PettyCashController {
 	}
 	
 	@RequestMapping(value = "/selectRequestList.do")
-	public ResponseEntity<List<EgovMap>> selectRequestList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectRequestList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+		
+		String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
+		if(!"A1101".equals(costCentr)) {
+			params.put("loginUserId", sessionVO.getUserId());
+		}
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
@@ -372,7 +383,12 @@ public class PettyCashController {
 	}
 	
 	@RequestMapping(value = "/selectExpenseList.do")
-	public ResponseEntity<List<EgovMap>> selectExpenseList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectExpenseList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+		
+		String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
+		if(!"A1101".equals(costCentr)) {
+			params.put("loginUserId", sessionVO.getUserId());
+		}
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		

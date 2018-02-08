@@ -35,7 +35,11 @@ FROM   (SELECT T1.CLM_NO,
                LEFT JOIN FCM0006M T2 
                       ON T1.MEM_ACC_ID = T2.MEM_ACC_ID 
                LEFT JOIN FCM0004M T4 
-                      ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO WHERE CLM_TYPE = 'J8') T
+                      ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO WHERE CLM_TYPE = 'J8'
+          <if test="loginUserId != null and loginUserId != ''">
+            WHERE T1.CRT_USER_ID = #{loginUserId}
+          </if>
+            ) T
        WHERE 1=1
 <if test="clmMonth != null and clmMonth != ''">
 <![CDATA[ 

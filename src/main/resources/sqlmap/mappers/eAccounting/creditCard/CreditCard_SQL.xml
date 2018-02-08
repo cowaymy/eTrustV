@@ -5,99 +5,103 @@
 <select id="selectCrditCardMgmtList" parameterType="Map" resultType="egovMap">
 /* creditCardMapper.selectCrditCardMgmtList */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T.CRDIT_CARD_SEQ, 
-       T.CRDIT_CARD_USER_ID, 
-       T.CRDIT_CARD_USER_NAME, 
-       T.CRDIT_CARD_NO, 
-       T.CHRG_USER_ID, 
-       T.CHRG_USER_NAME, 
-       T.COST_CENTR, 
-       T.COST_CENTR_NAME, 
-       T.ATCH_FILE_GRP_ID, 
-       T.ATCH_FILE_ID, 
-       T.ATCH_FILE_NAME, 
-       T.FILE_EXTSN, 
-       T.FILE_CNT, 
-       T.CRDIT_CARD_STUS_CODE, 
-       T.CRDIT_CARD_STUS, 
-       T.CRT_DT, 
-       T.UPD_DT 
-FROM   (SELECT T1.CRDIT_CARD_SEQ, 
-               T1.CRDIT_CARD_USER_ID, 
-               T1.CRDIT_CARD_USER_NAME, 
-               ( SUBSTR(T1.CRDIT_CARD_NO, 1, 4) 
-                 || '********' 
-                 || SUBSTR(T1.CRDIT_CARD_NO, -4) ) AS CRDIT_CARD_NO, 
-               T1.CHRG_USER_ID, 
-               T2.NAME                             AS CHRG_USER_NAME, 
-               T1.COST_CENTR, 
-               T1.COST_CENTR_NAME, 
-               T1.ATCH_FILE_GRP_ID, 
-               T3.ATCH_FILE_ID, 
-               T3.ATCH_FILE_NAME, 
-               T3.FILE_EXTSN, 
-               T3.FILE_CNT, 
-               T1.CRDIT_CARD_STUS                  AS CRDIT_CARD_STUS_CODE, 
-               ( CASE T1.CRDIT_CARD_STUS 
-                   WHEN 'A' THEN 'Active' 
-                   WHEN 'R' THEN 'Removed' 
-                 END )                             AS CRDIT_CARD_STUS, 
-               T1.CRT_DT, 
-               T1.UPD_DT 
-        FROM   FCM0016M T1 
-               LEFT JOIN ORG0001D T2 
-                      ON T1.CHRG_USER_ID = T2.MEM_CODE 
-               LEFT JOIN (SELECT * 
-                          FROM   (SELECT Row_number () 
-                                           OVER ( 
-                                             PARTITION BY F1.ATCH_FILE_GRP_ID 
-                                             ORDER BY F1.ATCH_FILE_GRP_ID, 
-                                           F2.ATCH_FILE_ID) AS 
-                                         RNUM, 
-                                         F1.ATCH_FILE_GRP_ID, 
-                                         F2.ATCH_FILE_ID, 
-                                         F2.ATCH_FILE_NAME, 
-                                         F2.FILE_EXTSN, 
-                                         Count (F1.ATCH_FILE_ID) 
-                                           OVER ( 
-                                             PARTITION BY F1.ATCH_FILE_GRP_ID) 
-                                         FILE_CNT 
-                                  FROM   SYS0070M F1 
-                                         LEFT JOIN SYS0071D F2 
-                                                ON F1.ATCH_FILE_ID = 
-                                                   F2.ATCH_FILE_ID) F 
-                          WHERE  F.RNUM = 1) T3 
-                      ON T1.ATCH_FILE_GRP_ID = T3.ATCH_FILE_GRP_ID) T 
-       WHERE 1=1
-        <if test="startDt != null and startDt != ''">
-        <![CDATA[ 
-             AND T.UPD_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
-        ]]>
-        </if>          
-        <if test="endDt != null and endDt != ''">
-        <![CDATA[ 
-             AND T.UPD_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
-        ]]>
-        </if>          
-        <if test="crditCardUserId != null and crditCardUserId != ''">
-             AND T.CRDIT_CARD_USER_ID LIKE '%' || #{crditCardUserId} || '%'
-        </if>          
-        <if test="costCenter != null and costCenter != ''">
-             AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
-        </if>     
-        <if test="chrgUserId != null and chrgUserId != ''">
-             AND T.CHRG_USER_ID LIKE '%' || #{chrgUserId} || '%'
-        </if>   
-        <if test="crditCardNo != null and crditCardNo != ''">
-             AND T.CRDIT_CARD_NO LIKE '%' || #{crditCardNo} || '%'
-        </if>
-        <if test="crditCardStus != null and crditCardStus != ''">
-             AND T.CRDIT_CARD_STUS_CODE IN
-         <foreach item="item" collection="crditCardStus" index="index" open="(" separator="," close=")">
-             #{item}
-         </foreach>
-        </if>   
-        ORDER BY T.CRT_DT, T.UPD_DT         
+			SELECT T.CRDIT_CARD_SEQ, 
+			       T.CRDIT_CARD_USER_ID, 
+			       T.CRDIT_CARD_USER_NAME, 
+			       T.CRDIT_CARD_NO, 
+			       T.CHRG_USER_ID, 
+			       T.CHRG_USER_NAME, 
+			       T.COST_CENTR, 
+			       T.COST_CENTR_NAME, 
+			       T.ATCH_FILE_GRP_ID, 
+			       T.ATCH_FILE_ID, 
+			       T.ATCH_FILE_NAME, 
+			       T.FILE_EXTSN, 
+			       T.FILE_CNT, 
+			       T.CRDIT_CARD_STUS_CODE, 
+			       T.CRDIT_CARD_STUS, 
+			       T.CRT_DT, 
+			       T.UPD_DT 
+			FROM   (SELECT T1.CRDIT_CARD_SEQ, 
+			               T1.CRDIT_CARD_USER_ID, 
+			               T1.CRDIT_CARD_USER_NAME, 
+			               ( SUBSTR(T1.CRDIT_CARD_NO, 1, 4) 
+			                 || '********' 
+			                 || SUBSTR(T1.CRDIT_CARD_NO, -4) ) AS CRDIT_CARD_NO, 
+			               T1.CHRG_USER_ID, 
+			               T2.NAME                             AS CHRG_USER_NAME, 
+			               T1.COST_CENTR, 
+			               T1.COST_CENTR_NAME, 
+			               T1.ATCH_FILE_GRP_ID, 
+			               T3.ATCH_FILE_ID, 
+			               T3.ATCH_FILE_NAME, 
+			               T3.FILE_EXTSN, 
+			               T3.FILE_CNT, 
+			               T1.CRDIT_CARD_STUS                  AS CRDIT_CARD_STUS_CODE, 
+			               ( CASE T1.CRDIT_CARD_STUS 
+			                   WHEN 'A' THEN 'Active' 
+			                   WHEN 'R' THEN 'Removed' 
+			                 END )                             AS CRDIT_CARD_STUS, 
+			               T1.CRT_DT, 
+			               T1.UPD_DT 
+			        FROM   FCM0016M T1 
+			               LEFT JOIN ORG0001D T2 
+			                      ON T1.CHRG_USER_ID = T2.MEM_CODE 
+			               LEFT JOIN (SELECT * 
+			                          FROM   (SELECT Row_number () 
+			                                           OVER ( 
+			                                             PARTITION BY F1.ATCH_FILE_GRP_ID 
+			                                             ORDER BY F1.ATCH_FILE_GRP_ID, 
+			                                           F2.ATCH_FILE_ID) AS 
+			                                         RNUM, 
+			                                         F1.ATCH_FILE_GRP_ID, 
+			                                         F2.ATCH_FILE_ID, 
+			                                         F2.ATCH_FILE_NAME, 
+			                                         F2.FILE_EXTSN, 
+			                                         Count (F1.ATCH_FILE_ID) 
+			                                           OVER ( 
+			                                             PARTITION BY F1.ATCH_FILE_GRP_ID) 
+			                                         FILE_CNT 
+			                                  FROM   SYS0070M F1 
+			                                         LEFT JOIN SYS0071D F2 
+			                                                ON F1.ATCH_FILE_ID = 
+			                                                   F2.ATCH_FILE_ID) F 
+			                          WHERE  F.RNUM = 1) T3 
+			                      ON T1.ATCH_FILE_GRP_ID = T3.ATCH_FILE_GRP_ID
+			      <if test="loginUserId != null and loginUserId != ''">
+			        WHERE T1.CRT_USER_ID = #{loginUserId}
+			      </if>
+			        ) T 
+			WHERE 1=1
+			<if test="startDt != null and startDt != ''">
+				<![CDATA[
+				AND T.UPD_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+				]]>
+			</if>          
+			<if test="endDt != null and endDt != ''">
+				<![CDATA[ 
+				AND T.UPD_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+				]]>
+			</if>          
+			<if test="crditCardUserId != null and crditCardUserId != ''">
+			    AND T.CRDIT_CARD_USER_ID LIKE '%' || #{crditCardUserId} || '%'
+			</if>          
+			<if test="costCenter != null and costCenter != ''">
+			    AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
+			</if>     
+			<if test="chrgUserId != null and chrgUserId != ''">
+			    AND T.CHRG_USER_ID LIKE '%' || #{chrgUserId} || '%'
+			</if>   
+			<if test="crditCardNo != null and crditCardNo != ''">
+			    AND T.CRDIT_CARD_NO LIKE '%' || #{crditCardNo} || '%'
+			</if>
+			<if test="crditCardStus != null and crditCardStus != ''">
+			    AND T.CRDIT_CARD_STUS_CODE IN
+				<foreach item="item" collection="crditCardStus" index="index" open="(" separator="," close=")">
+				#{item}
+				</foreach>
+			</if>   
+			ORDER BY T.CRT_DT, T.UPD_DT                        
 </select>
 
 <select id="selectBankCode" resultType="egovMap">
@@ -260,53 +264,58 @@ WHERE T1.CRDIT_CARD_SEQ = #{crditCardSeq}
 <select id="selectReimbursementList" parameterType="Map" resultType="egovMap">
 /* creditCardMapper.selectReimbursementList */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT 
-T.CLM_NO, 
-       T.CRDIT_CARD_USER_ID, 
-       T.CRDIT_CARD_USER_NAME, 
-       T.CRDIT_CARD_NO, 
-       T.CHRG_USER_ID, 
-       T.CHRG_USER_NAME, 
-       T.COST_CENTR, 
-       T.COST_CENTR_NAME, 
-       T.CLM_MONTH, 
-       'MYR' AS CUR,
-       T.ALL_TOT_AMT, 
-       T.REQST_DT,
-       T.APPV_PRCSS_NO, 
-       T.APPV_PRCSS_STUS_CODE, 
-       T.APPV_PRCSS_STUS, 
-       T.APPV_PRCSS_DT,
-       T.CRT_DT
-FROM (SELECT T1.CLM_NO,
-T1.CRDIT_CARD_USER_ID,
-T1.CRDIT_CARD_USER_NAME,
-( SUBSTR(T1.CRDIT_CARD_NO, 1, 4) 
-                 || '********' 
-                 || SUBSTR(T1.CRDIT_CARD_NO, -4) ) AS CRDIT_CARD_NO,
-T1.CHRG_USER_ID,
-T2.NAME AS CHRG_USER_NAME,
-T1.COST_CENTR,
-T1.COST_CENTR_NAME,
-TO_DATE(T1.CLM_MONTH, 'YYYYMM') AS CLM_MONTH,
-T1.TOT_AMT AS ALL_TOT_AMT,
-T3.REQST_DT,
-T1.APPV_PRCSS_NO,
-NVL (T3.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE, 
-               NVL (( CASE T3.APPV_PRCSS_STUS 
-                        WHEN 'R' THEN 'Request' 
-                        WHEN 'P' THEN 'Approve In-Progress' 
-                        WHEN 'A' THEN 'Approved' 
-                        WHEN 'J' THEN 'Rejected' 
-                      END ), 'Temporary Save') AS APPV_PRCSS_STUS, 
-T3.APPV_PRCSS_DT,
-T1.CRT_DT
-FROM   FCM0017M T1
-LEFT JOIN ORG0001D T2 
-ON T1.CHRG_USER_ID = T2.MEM_CODE
-LEFT JOIN FCM0004M T3
-ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO) T
-       WHERE 1=1
+			SELECT T.CLM_NO, 
+			       T.CRDIT_CARD_USER_ID, 
+			       T.CRDIT_CARD_USER_NAME, 
+			       T.CRDIT_CARD_NO, 
+			       T.CHRG_USER_ID, 
+			       T.CHRG_USER_NAME, 
+			       T.COST_CENTR, 
+			       T.COST_CENTR_NAME, 
+			       T.CLM_MONTH, 
+			       'MYR' AS CUR, 
+			       T.ALL_TOT_AMT, 
+			       T.REQST_DT, 
+			       T.APPV_PRCSS_NO, 
+			       T.APPV_PRCSS_STUS_CODE, 
+			       T.APPV_PRCSS_STUS, 
+			       T.APPV_PRCSS_DT, 
+			       T.CRT_DT 
+			FROM   ( 
+			                 SELECT    T1.CLM_NO, 
+			                           T1.CRDIT_CARD_USER_ID, 
+			                           T1.CRDIT_CARD_USER_NAME, 
+			                           ( SUBSTR(T1.CRDIT_CARD_NO, 1, 4) 
+			                                     || '********' 
+			                                     || SUBSTR(T1.CRDIT_CARD_NO, -4) ) AS CRDIT_CARD_NO, 
+			                           T1.CHRG_USER_ID, 
+			                           T2.NAME AS CHRG_USER_NAME, 
+			                           T1.COST_CENTR, 
+			                           T1.COST_CENTR_NAME, 
+			                           TO_DATE(T1.CLM_MONTH, 'YYYYMM') AS CLM_MONTH, 
+			                           T1.TOT_AMT                      AS ALL_TOT_AMT, 
+			                           T3.REQST_DT, 
+			                           T1.APPV_PRCSS_NO, 
+			                           NVL (T3.APPV_PRCSS_STUS, 'T') AS APPV_PRCSS_STUS_CODE, 
+			                           NVL (( 
+			                           CASE T3.APPV_PRCSS_STUS 
+			                                     WHEN 'R' THEN 'Request' 
+			                                     WHEN 'P' THEN 'Approve In-Progress' 
+			                                     WHEN 'A' THEN 'Approved' 
+			                                     WHEN 'J' THEN 'Rejected' 
+			                           END ), 'Temporary Save') AS APPV_PRCSS_STUS, 
+			                           T3.APPV_PRCSS_DT, 
+			                           T1.CRT_DT 
+			                 FROM      FCM0017M T1 
+			                 LEFT JOIN ORG0001D T2 
+			                 ON        T1.CHRG_USER_ID = T2.MEM_CODE 
+			                 LEFT JOIN FCM0004M T3 
+			                 ON        T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
+			               <if test="loginUserId != null and loginUserId != ''">
+			                 WHERE T1.CRT_USER_ID = #{loginUserId}
+			               </if>
+			           ) T
+			WHERE 1=1
         <if test="startDt != null and startDt != ''">
         <![CDATA[ 
              AND T.CRT_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
@@ -338,7 +347,7 @@ ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO) T
              #{item}
          </foreach>
         </if>   
-        ORDER BY T.CLM_NO         
+             ORDER BY T.CLM_NO         
 </select>
 
 <select id="selectTaxCodeCreditCardFlag" resultType="egovMap">

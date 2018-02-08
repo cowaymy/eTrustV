@@ -481,6 +481,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.getAppvExcelInfo(params);
 	}
+
+	@Override
+	public String selectHrCodeOfUserId(String userId) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectHrCodeOfUserId(userId);
+	}
 	
 	
 	

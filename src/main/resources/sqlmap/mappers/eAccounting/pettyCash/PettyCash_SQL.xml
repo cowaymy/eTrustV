@@ -5,57 +5,93 @@
 <select id="selectCustodianList" parameterType="Map" resultType="egovMap">
 /* pettyCashMapper.selectCustodianList */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T1.COST_CENTR
-      ,T2.COST_CENTER_TEXT AS COST_CENTR_NAME
-      ,T1.CUSTDN AS MEM_ACC_ID
-      ,T3.MEM_ACC_NAME
-      ,T1.HEAD_DEPT_FLAG
-      ,T4.ATCH_FILE_GRP_ID
-      ,T4.ATCH_FILE_ID
-      ,T4.ATCH_FILE_NAME
-      ,T4.FILE_EXTSN
-      ,T4.FILE_CNT
-      ,T1.CRT_DT
-      ,T1.UPD_DT
-      ,T1.CRT_USER_ID
-      ,T5.USER_FULL_NAME AS USER_NAME
-      ,(SELECT USER_FULL_NAME FROM SYS0047M WHERE USER_ID = T1.UPD_USER_ID) AS UPD_USER_NAME
-  FROM FCM0011M T1 LEFT JOIN FCM0008M T2 ON T1.COST_CENTR = T2.COST_CENTER
-       LEFT JOIN FCM0006M T3 ON T1.CUSTDN = T3.MEM_ACC_ID
-       LEFT JOIN
-       (SELECT *
-          FROM (SELECT ROW_NUMBER () OVER (PARTITION BY F1.ATCH_FILE_GRP_ID ORDER BY F1.ATCH_FILE_GRP_ID
-                       ,F2.ATCH_FILE_ID) AS RNUM
-                      ,F1.ATCH_FILE_GRP_ID
-                      ,F2.ATCH_FILE_ID
-                      ,F2.ATCH_FILE_NAME
-                      ,F2.FILE_EXTSN
-                      ,COUNT (F1.ATCH_FILE_ID) OVER (PARTITION BY F1.ATCH_FILE_GRP_ID) FILE_CNT
-                  FROM SYS0070M F1 LEFT JOIN SYS0071D F2 ON F1.ATCH_FILE_ID = F2.ATCH_FILE_ID
-                       ) F
-         WHERE F.RNUM = 1) T4 ON T1.ATCH_FILE_GRP_ID = T4.ATCH_FILE_GRP_ID
-       LEFT JOIN SYS0047M T5 ON T1.CRT_USER_ID = T5.USER_ID
-       WHERE 1=1
+			SELECT T.COST_CENTR, 
+			       T.COST_CENTR_NAME, 
+			       T.MEM_ACC_ID, 
+			       T.MEM_ACC_NAME, 
+			       T.HEAD_DEPT_FLAG, 
+			       T.ATCH_FILE_GRP_ID, 
+			       T.ATCH_FILE_ID, 
+			       T.ATCH_FILE_NAME, 
+			       T.FILE_EXTSN, 
+			       T.FILE_CNT, 
+			       T.CRT_DT, 
+			       T.UPD_DT, 
+			       T.CRT_USER_ID, 
+			       T.USER_NAME, 
+			       T.UPD_USER_ID,
+			       T.UPD_USER_NAME 
+			FROM   (SELECT T1.COST_CENTR, 
+			               T2.COST_CENTER_TEXT               AS COST_CENTR_NAME, 
+			               T1.CUSTDN                         AS MEM_ACC_ID, 
+			               T3.MEM_ACC_NAME, 
+			               T1.HEAD_DEPT_FLAG, 
+			               T4.ATCH_FILE_GRP_ID, 
+			               T4.ATCH_FILE_ID, 
+			               T4.ATCH_FILE_NAME, 
+			               T4.FILE_EXTSN, 
+			               T4.FILE_CNT, 
+			               T1.CRT_DT, 
+			               T1.UPD_DT, 
+			               T1.CRT_USER_ID, 
+			               T5.USER_NAME,, 
+			               T1.UPD_USER_ID,
+			               (SELECT USER_NAME 
+			                FROM   SYS0047M 
+			                WHERE  USER_ID = T1.UPD_USER_ID) AS UPD_USER_NAME 
+			        FROM   FCM0011M T1 
+			               LEFT JOIN FCM0008M T2 
+			                      ON T1.COST_CENTR = T2.COST_CENTER 
+			               LEFT JOIN FCM0006M T3 
+			                      ON T1.CUSTDN = T3.MEM_ACC_ID 
+			               LEFT JOIN (SELECT * 
+			                          FROM   (SELECT ROW_NUMBER () 
+			                                           OVER ( 
+			                                             PARTITION BY F1.ATCH_FILE_GRP_ID 
+			                                             ORDER BY F1.ATCH_FILE_GRP_ID, 
+			                                           F2.ATCH_FILE_ID) AS 
+			                                         RNUM, 
+			                                         F1.ATCH_FILE_GRP_ID, 
+			                                         F2.ATCH_FILE_ID, 
+			                                         F2.ATCH_FILE_NAME, 
+			                                         F2.FILE_EXTSN, 
+			                                         COUNT (F1.ATCH_FILE_ID) 
+			                                           OVER ( 
+			                                             PARTITION BY F1.ATCH_FILE_GRP_ID) 
+			                                         FILE_CNT 
+			                                  FROM   SYS0070M F1 
+			                                         LEFT JOIN SYS0071D F2 
+			                                                ON F1.ATCH_FILE_ID = 
+			                                                   F2.ATCH_FILE_ID) F 
+			                          WHERE  F.RNUM = 1) T4 
+			                      ON T1.ATCH_FILE_GRP_ID = T4.ATCH_FILE_GRP_ID 
+			               LEFT JOIN SYS0047M T5 
+			                      ON T1.CRT_USER_ID = T5.USER_ID 
+			    <if test="loginUserId != null and loginUserId != ''">
+			        WHERE T1.CRT_USER_ID = #{loginUserId}
+                </if>
+			        ORDER  BY T1.CRT_DT, 
+			                  T1.UPD_DT) T 
+			WHERE  1 = 1 
         <if test="startDt != null and startDt != ''">
         <![CDATA[ 
-             AND T1.UPD_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
+             AND T.UPD_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
         ]]>
         </if>          
         <if test="endDt != null and endDt != ''">
         <![CDATA[ 
-             AND T1.UPD_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
+             AND T.UPD_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
         </if>          
         <if test="memAccId != null and memAccId != ''">
-             AND UPPER(T1.CUSTDN) = UPPER(#{memAccId})
+             AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
         </if>          
         <if test="costCentr != null and costCentr != ''">
-             AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
+             AND UPPER(T.COST_CENTR) = UPPER(#{costCentr})
         </if>     
         <if test="crtUserId != null and crtUserId != ''">
-             AND UPPER(T5.USER_NAME) = UPPER(#{crtUserId})
+             AND UPPER(T.UPD_USER_NAME) = UPPER(#{crtUserId})
         </if>   
-        ORDER BY T1.CRT_DT, T1.UPD_DT         
 </select>
 
 <select id="selectUserNric" parameterType="String" resultType="String">
@@ -217,7 +253,11 @@ FROM   (SELECT T1.CLM_NO,
                           WHERE  F.RNUM = 1) T3 
                       ON T1.ATCH_FILE_GRP_ID = T3.ATCH_FILE_GRP_ID 
                LEFT JOIN FCM0004M T4 
-                      ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO) T 
+                      ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO
+    <if test="loginUserId != null and loginUserId != ''">
+        WHERE T1.CRT_USER_ID = #{loginUserId}
+    </if>
+        ) T 
 WHERE  1 = 1 
 <if test="startDt != null and startDt != ''">
 <![CDATA[ 
@@ -451,7 +491,11 @@ FROM   (SELECT T1.CLM_NO,
                LEFT JOIN FCM0006M T2 
                       ON T1.MEM_ACC_ID = T2.MEM_ACC_ID 
                LEFT JOIN FCM0004M T3 
-                      ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO) T 
+                      ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
+         <if test="loginUserId != null and loginUserId != ''">
+             WHERE T1.CRT_USER_ID = #{loginUserId}
+         </if>
+         ) T 
 WHERE  1 = 1
 <if test="clmMonth != null and clmMonth != ''">
 <![CDATA[ 

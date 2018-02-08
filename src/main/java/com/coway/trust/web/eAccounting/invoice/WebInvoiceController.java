@@ -33,6 +33,7 @@ import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
+import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.EgovFormBasedFileVo;
 import com.google.gson.Gson;
 
@@ -256,7 +257,12 @@ public class WebInvoiceController {
 	}
 	
 	@RequestMapping(value = "/selectWebInvoiceList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectWebInvoiceList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectWebInvoiceList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+		
+		String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
+		if(!"A1101".equals(costCentr)) {
+			params.put("loginUserId", sessionVO.getUserId());
+		}
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
@@ -275,6 +281,9 @@ public class WebInvoiceController {
 	
 	@RequestMapping(value = "/selectApproveList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectApproveList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+		
+		String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+		params.put("memCode", memCode);
 		
 		LOGGER.debug("params =====================================>>  " + params);
 		
