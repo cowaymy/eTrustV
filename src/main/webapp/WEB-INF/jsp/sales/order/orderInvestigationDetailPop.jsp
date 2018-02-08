@@ -33,6 +33,15 @@
         }else{
             $("#_basicUpdBtn").css("display" , "none");
         }
+      
+//        $('#btnDownFile').click(function() {
+//            var fileSubPath = $('#subPath').val();
+//            var fileName = $('#fileName').val();
+//            var orignlFileNm = $('#orignlFileNm').val();
+            
+//            window.open("<c:url value='/file/fileDown.do?subPath=" + fileSubPath
+//                + "&fileName=" + fileName + "&orignlFileNm=" + orignlFileNm + "'/>");
+//        });
     });
     
     function createAUIGrid() {
@@ -313,7 +322,11 @@
 </tr>
 <tr>
     <th scope="row">Attachment</th>
-    <td colspan="3"><p class="btn_sky"><a href="#">No Attachment</a></p></td>
+    <td colspan="3">
+    <c:if test="${orderCustomerInfo.invReqAttachFile eq '' }">
+        <p class="btn_sky"><a href="#">No Attachment</a></p>
+    </c:if>
+    </td>
 </tr>
 <tr>
     <th scope="row">Remark</th>
