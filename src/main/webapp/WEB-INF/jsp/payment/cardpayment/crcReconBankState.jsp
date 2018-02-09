@@ -183,12 +183,16 @@
             
         }else{
         	
-               
-        	item.variance = $("#variance").val();
-	        item.accountCode =  $("#accCode").val();
-	        item.remark =  $("#remark").val();
-	        item.isAmtSame ="true";
-	        AUIGrid.addRow(mappedGridID, item, "last");
+            try{
+                item.variance = $("#variance").val();
+                item.accountCode =  $("#accCode").val();
+                item.remark =  $("#remark").val();
+                item.isAmtSame ="true";
+                AUIGrid.addRow(mappedGridID, item, "last");
+                
+            }  catch(e){
+            	  alert(e);
+            } 
             
         }
     }
