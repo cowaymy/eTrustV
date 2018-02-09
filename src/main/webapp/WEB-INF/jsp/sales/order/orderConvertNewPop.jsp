@@ -32,19 +32,19 @@ var cnvrListGrid;
 		
 	    var cnvrColLayout = [ {
 	        dataField : "ordNo",
-	        headerText : "Order No",
+	        headerText : "<spring:message code='sal.text.ordNo' />",
 	        width : 150
 	    },{
 	        dataField : "ordStusCode",
-	        headerText : "Order status",
+	        headerText : "<spring:message code='sal.title.text.ordStus' />",
 	        width : 100
 	    },{
 	        dataField : "appTypeCode",
-	        headerText : "App type",
+	        headerText : "<spring:message code='sal.title.text.appType' />",
 	        width : 150
 	    },{
 	        dataField : "rentalStus",
-	        headerText : "Rental status",
+	        headerText : "<spring:message code='sal.text.rentalStatus' />",
 	        width : 100
 	    },{
             dataField : "undefined",
@@ -225,7 +225,7 @@ var cnvrListGrid;
 	            console.log("성공." + JSON.stringify(result));
 	            console.log("data : " + result.data);
 	            
-	            Common.alert("New conversion batch successfully saved.", fn_end);       // 메시지 다시 만들어야함.
+	            Common.alert("<spring:message code='sal.alert.msg.newConversionBatchSuccessfully' />", fn_end);       // 메시지 다시 만들어야함.
 	          
 	        }
 	        , function(jqXHR, textStatus, errorThrown){
@@ -253,9 +253,9 @@ var cnvrListGrid;
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>NEW CONVERSION BATCH</h1>
+<h1><spring:message code="sal.page.title.newConversionBatch" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_closeNew">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_closeNew"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -272,19 +272,19 @@ var cnvrListGrid;
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Status Conversion<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.statusConversion" /><span class="must">*</span></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p>
     <select class="w100p" id="pRsCnvrStusFrom" name="pRsCnvrStusFrom" onchange="javascript:fn_changeCombo(this.value);">
-        <option value="REG">Regular</option>
-        <option value="INV">Investigate</option>
-        <option value="SUS">Suspend</option>
-        <option value="RET">Return</option>
-        <option value="TER">Terminate</option>
+        <option value="REG"><spring:message code="sal.combo.text.regular" /></option>
+        <option value="INV"><spring:message code="sal.combo.text.investigate" /></option>
+        <option value="SUS"><spring:message code="sal.combo.text.supend" /></option>
+        <option value="RET"><spring:message code="sal.combo.text.returned" /></option>
+        <option value="TER"><spring:message code="sal.combo.text.terminated" /></option>
     </select>
     </p>
-    <span>to</span>
+    <span><spring:message code="sal.text.to" /></span>
     <p>
     <select class="w100p" id="pRsCnvrStusTo" name="pRsCnvrStusTo">
     </select>
@@ -293,16 +293,16 @@ var cnvrListGrid;
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td><textarea cols="20" rows="5" id="newCnvrRem" name="newCnvrRem" placeholder="Remark"></textarea></td>
 </tr>
 <tr>
     <td colspan="2">
-    <label><input type="checkbox" id="rsCnvrReactFeesApply" name="rsCnvrReactFeesApply" value="1" checked/><span>Reactive Fees Apply ?</span></label>
+    <label><input type="checkbox" id="rsCnvrReactFeesApply" name="rsCnvrReactFeesApply" value="1" checked/><span><spring:message code="sal.text.reactiveFeesApply" /> ?</span></label>
     </td>
 </tr>
 <tr>
-    <th scope="row">Select your CSV file<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.selectYourCSVFile" /><span class="must">*</span></th>
     <td>
     <div class="auto_file"><!-- auto_file start -->
     <input type="file" id="fileSelector" title="file add" />
@@ -321,8 +321,8 @@ var cnvrListGrid;
 
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_saveNewCnvr();">SAVE</a></p></li>
-    <li><p class="btn_blue2 big"><a href="#" id="_clearBtn">CLEAR</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_saveNewCnvr();"><spring:message code="sal.btn.save" /></a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" id="_clearBtn"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </section><!-- search_table end -->
 
