@@ -1,0 +1,124 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.services.bs.impl.HsMthlyCnfigOldMapper">
+
+	<select id="selectHsMnthlyMaintainOldList" parameterType="Map" resultType="egovMap">
+	   SELECT
+		    M.SCHDUL_ID,
+		    M.NO BS_NO,
+		    M.MONTH,
+		    M.YEAR,
+		    M.STUS_CODE_ID,
+		    S.CODE STUS_CODE,
+		    O.SALES_ORD_ID,
+		    O.SALES_ORD_NO,
+		    T.CODE,
+		    RM.RESULT_ID,
+		    RM.NO RS_NO ,
+		    MEM.MEM_TYPE,
+		    M.CODY_ID,
+		    MEM.MEM_CODE,
+		    MEM.STUS,
+		    V1.FIRST_INSTALL_DT,
+		    V1.INST_STATE,
+		    V1.INST_AREA,
+		    MEM2.MEM_CODE MEM_CODE2,
+		    C.NAME,
+		    C.NRIC
+	FROM SVC0008D M
+		    JOIN SYS0038M S ON S.STUS_CODE_ID = M.STUS_CODE_ID
+		    JOIN SAL0001D O ON O.SALES_ORD_ID = M.SALES_ORD_ID
+		    JOIN SAL0029D C ON C.CUST_ID = O.CUST_ID
+		    JOIN SYS0013M T ON T.CODE_ID = O.APP_TYPE_ID
+		    JOIN SAL1010V_V2 V1 ON V1.ORD_ID = M.SALES_ORD_ID
+		    LEFT JOIN SVC0006D RM ON RM.SCHDUL_ID = M.SCHDUL_ID AND RM.TYPE_ID = 306 AND RM.RESULT_IS_CURR = 1
+		    LEFT JOIN ORG0001D MEM ON MEM.MEM_ID = M.CODY_ID
+		    LEFT JOIN ORG0001D MEM2 ON MEM2.MEM_ID = RM.CODY_ID
+	WHERE
+	    1 = 1
+	    <if test="salesOrdNo != null and salesOrdNo != ''">
+            AND O.SALES_ORD_NO = #{salesOrdNo}<!--  0000001 -->
+        </if>
+        <if test="bsNo != null and bsNo != ''">
+            AND M.NO = #{bsNo}
+        </if>
+        <if test="bsMonth != null and bsMonth != ''">
+            AND MONTH = EXTRACT(MONTH FROM TO_DATE(#{bsMonth},'MM/YYYY'))
+            AND YEAR = EXTRACT(YEAR FROM TO_DATE(#{bsMonth},'MM/YYYY'))
+        </if>
+        <if test="rsNo != null and rsNo != ''">
+            AND RM.NO = #{rsNo}
+        </if>
+         <if test="bsStatusList != null and bsStatusList != ''">
+            AND M.STUS_CODE_ID  IN
+            <foreach item="item" collection="bsStatusList" index="index" open="(" separator="," close=")">#{item}</foreach>
+        </if>
+        <if test="assignedMem != null and assignedMem != ''">
+            AND MEM.MEM_CODE = #{assignedMem}
+        </if>
+        <if test="instState != null and instState != ''">
+            AND UPPER(V1.INST_STATE) = UPPER(#{instState})
+        </if>
+        <if test="instArea != null and instArea != ''">
+            AND UPPER(V1.INST_AREA) LIKE UPPER(#{instArea})
+        </if>
+        <if test="instMonth != null and instMonth != ''">
+            AND TO_CHAR(TO_DATE(V1.FIRST_INSTALL_DT,'DD/MM/YYYY'),'MM/YYYY') = #{instMonth}
+        </if>
+        <if test="ineffectiveCody != null and ineffectiveCody != ''">
+            AND (M.CODY_ID = 0 OR MEM.STUS = 3 OR MEM.STUS = 51)
+        </if>
+        <if test="actionMem != null and actionMem != ''">
+            AND MEM2.MEM_CODE = #{actionMem}
+        </if>
+	    ORDER BY M.SCHDUL_ID
+    </select>
+
+    <select id="selectBSSettingOld" parameterType="Map" resultType="egovMap">
+		  SELECT
+		    M.SCHDUL_ID,
+		    M.NO,
+		    M.MONTH,
+		    M.YEAR,
+		    M.STUS_CODE_ID,
+		    S.CODE APP_TYPE,
+		    O.SALES_ORD_NO,
+		    T.CODE,
+		    O.SALES_ORD_ID,
+		    T.CODE_NAME,
+		    SR.SRV_REM,
+		    SR.SRV_BS_WEEK,
+		    R.NO,
+		    R.RESULT_ID,
+		    C.NAME,
+		    C.NRIC,
+		    STK.STK_CODE,
+		    STK.STK_DESC,
+		    STK.STK_ID,
+		    M.CODY_ID,
+		    MEM.MEM_CODE
+	    FROM SVC0008D M
+	    JOIN SYS0013M T2 ON M.TYPE_ID = T2.CODE_ID
+	    JOIN SYS0038M S ON M.STUS_CODE_ID = S.STUS_CODE_ID
+	    JOIN SAL0001D O ON M.SALES_ORD_ID = O.SALES_ORD_ID
+	    JOIN SAL0002D D ON O.SALES_ORD_ID = D.SALES_ORD_ID
+	    JOIN SYS0026M STK ON D.ITM_STK_ID = STK.STK_ID
+	    JOIN SAL0029D C ON O.CUST_ID = C.CUST_ID
+	    JOIN SAL0090D SR ON O.SALES_ORD_ID = SR.SRV_SO_ID AND 1 = SR.SRV_STUS_ID
+	    JOIN SYS0013M T ON O.APP_TYPE_ID = T.CODE_ID
+	    JOIN SAL0045D I ON O.SALES_ORD_ID = I.SALES_ORD_ID
+	    JOIN ORG0001D MEM ON M.CODY_ID = MEM.MEM_ID
+	    LEFT JOIN SVC0006D R ON M.SCHDUL_ID = R.SCHDUL_ID AND R.RESULT_IS_CURR = 1
+	    WHERE  M.SCHDUL_ID = #{schdulId}
+    </select>
+
+    <select id="selectHSCodyByCode" parameterType="Map" resultType="String">
+        SELECT MEM_ID FROM ORG0001D
+        WHERE
+          (MEM_TYPE = 2 OR MEM_TYPE = 3) AND STUS = 1
+          AND
+          MEM_CODE = #{codyCode}
+        ORDER BY MEM_CODE
+    </select>
+
+</mapper>
