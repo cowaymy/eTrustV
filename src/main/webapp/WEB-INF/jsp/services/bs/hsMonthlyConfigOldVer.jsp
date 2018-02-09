@@ -215,7 +215,7 @@
             <tr>
                 <th scope="row">Order No</th>
                 <td>
-                    <input id="salesOrdNo" name="salesOrdNo" value="0000018" type="text" title="" placeholder="Order No" class="w100p" />
+                    <input id="salesOrdNo" name="salesOrdNo" type="text" title="" placeholder="Order No" class="w100p" />
                 </td>
                 <th scope="row">BS Number</th>
                 <td>
