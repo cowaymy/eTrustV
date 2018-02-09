@@ -1139,6 +1139,10 @@
         function fn_hsConfigOld(){
             window.open("/services/bs/hsManualOld.do",'_self');
         }
+
+        function fn_hsMonthlySetting(){
+            window.open("/services/bs/hsMonthlyConfigOldVer.do",'_self');
+        }
     </script>
 
 
@@ -1293,6 +1297,7 @@
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsSummary()">HS Summary Listing</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_filterForecastList()">HS Filter Forecast Listring</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsConfigOld()">HS Config(Old system version)</a></p></li>
+                        <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsMonthlySetting()">HS Current Month Setting(Old system version)</a></p></li>
                     </ul>
 <!--              <ul class="btns">
                     <li><p class="link_btn"><a href="#">menu1</a></p></li>
