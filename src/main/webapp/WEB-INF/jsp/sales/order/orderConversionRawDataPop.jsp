@@ -14,20 +14,20 @@ $('.multy_select').change(function() {
 function validRequiredField(){
 	
 	var valid = true;
-	var message = "Field below are required : ";
+	var message = '<spring:message code="sal.alert.msg.fieldBelowReq" />';
 	
 	if($("#cmbRentalStatus :selected").index() < 1){
-		message += "\n * Current Rental Status.";
+		message += '<spring:message code="sal.alert.msg.currStatus" />';
         valid = false;
 	}
 	
 	if($("#cmbAgingMonth").val() == null || $("#cmbAgingMonth").val().length == 0){
-        message += "\n * Current Aging Month.";
+        message += '<spring:message code="sal.alert.msg.currAgingMonth" />';
         valid = false;
     }
 	
 	if(valid == false){
-        Common.alert("Report Generate Summary" + DEFAULT_DELIMITER + message);
+        Common.alert('<spring:message code="sal.alert.title.reportGenSummary" />' + DEFAULT_DELIMITER + message);
     }
 	
 	return valid;
@@ -94,9 +94,9 @@ function fn_report(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order Conversion Raw Data</h1>
+<h1><spring:message code="sal.title.text.ordConversionRawData" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -119,17 +119,17 @@ function fn_report(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Current Rental Status</th>
+    <th scope="row"><spring:message code="sal.title.text.currRentStatus" /></th>
     <td>
     <select class="w100p" id="cmbRentalStatus">
-        <option data-placeholder="true" hidden>Rental Status</option>
-        <option value="1">REG</option>
-        <option value="2">INV</option>
-        <option value="3">SUS</option>
-        <option value="4">RET</option>
+        <option data-placeholder="true" hidden><spring:message code="sal.title.text.rentalStatus" /></option>
+        <option value="1"><spring:message code="sal.combo.text.reg" /></option>
+        <option value="2"><spring:message code="sal.combo.text.inv" /></option>
+        <option value="3"><spring:message code="sal.combo.text.sus" /></option>
+        <option value="4"><spring:message code="sal.combo.text.ret" /></option>
     </select>
     </td>
-    <th scope="row">Current Aging Month (B)</th>
+    <th scope="row"><spring:message code="sal.title.text.currAgingMonthB" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbAgingMonth" data-placeholder="Aging Month">
         <option value="0">0</option>
@@ -158,7 +158,7 @@ function fn_report(){
 </form>
 <div style="height : 150px"></div>
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: fn_report()">Generate</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: fn_report()"><spring:message code="sal.btn.generate" /></a></p></li>
 </ul>
 </section><!-- content end -->
      
