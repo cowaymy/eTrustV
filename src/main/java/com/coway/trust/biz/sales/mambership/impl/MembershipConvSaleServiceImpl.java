@@ -72,6 +72,8 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 			 hasBill =true;
 		}
 		
+		hasBill =false;
+		
 		logger.debug("hasBill  =========== ==>");
 		logger.debug("hasBil ,{}" +hasBill);
 		logger.debug("hasBill  =========== ==>");
