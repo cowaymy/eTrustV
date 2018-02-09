@@ -54,7 +54,7 @@
             AND CG.SRV_BS_GEN = 1
         </if>
         <if test="codyAssign != null and codyAssign != ''">
-            AND (CG.SRV_CODY_ID = 0 OR CG.SRV_CODY_ID = 3 OR CG.SRV_CODY_ID = 51)
+            AND (CG.SRV_CODY_ID = 0 OR    MEM.STUS = 3 OR    MEM.STUS = 51)
         </if>
         <if test="inchargeMem != null and inchargeMem != ''">
             AND MEM.MEM_CODE = #{inchargeMem}
