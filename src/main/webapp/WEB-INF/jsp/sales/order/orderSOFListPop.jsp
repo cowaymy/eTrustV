@@ -46,17 +46,17 @@ function validRequiredField(){
 	
 	if(($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || ($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
 		valid = false;
-		message += "* Please key in the order date (From & To).\n";
+		message += '<spring:message code="sal.alert.msg.keyInOrdDateFromTo" />';
 	}
 	
 	if($('#cmbAppType :selected').length < 1){
 	   valid = false;
-        message += "* Please select at least one application type.\n";    
+        message += '<spring:message code="sal.alert.msg.selAtLeastOnAppType" />';    
 	}
  	if(!($("#txtOrderNoFr").val().trim() == null || $("#txtOrderNoFr").val().trim().length == 0) || !($("#txtOrderNoTo").val().trim() == null || $("#txtOrderNoTo").val().trim().length == 0)){
 	    if(($("#txtOrderNoFr").val().trim() == null || $("#txtOrderNoFr").val().trim().length == 0) || ($("#txtOrderNoTo").val().trim() == null || $("#txtOrderNoTo").val().trim().length == 0)){
 	    	valid = false;
-            message += "* Please key in the order number (From & To).\n";
+            message += '<spring:message code="sal.alert.msg.keyInOrdNoFromTo" />';
 	    }
 	} 
 	
@@ -219,9 +219,9 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order Report - Sales Order Form (SOF) List</h1>
+<h1><spring:message code="sal.title.text.ordReportSalesOrdFromSofList" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -244,50 +244,50 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbAppType"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Order Number</th>
+    <th scope="row"><spring:message code="sal.text.ordNum" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="" placeholder="" class="w100p" id="txtOrderNoFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="" placeholder="" class="w100p" id="txtOrderNoTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Key-In Branch</th>
+    <th scope="row"><spring:message code="sal.text.keyInBranch" /></th>
     <td>
     <select class="w100p" id="cmbKeyBranch"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="txtCustName"/></td>
-    <th scope="row">Key-In User</th>
+    <th scope="row"><spring:message code="sal.text.keyInUser" /></th>
     <td>
     <select class="w100p" id="cmbUser"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Sorting</th>
+    <th scope="row"><spring:message code="sal.title.text.sorting" /></th>
     <td>
     <select class="w100p" id="cmbSort">
         <!-- <option value="1">By Region</option> -->
-        <option value="2">By Branch</option>
-        <option value="3">By Order Date</option>
-        <option value="4" selected>By Order Number</option>
-        <option value="5">By Customer Name</option>
+        <option value="2"><spring:message code="sal.combo.text.byBrnch" /></option>
+        <option value="3"><spring:message code="sal.combo.text.byOrdDt" /></option>
+        <option value="4" selected><spring:message code="sal.combo.text.byOrdNumber" /></option>
+        <option value="5"><spring:message code="sal.combo.text.byCustName" /></option>
     </select>
     </td>
     <th scope="row"></th>
@@ -297,9 +297,9 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:btnGenerate_Click();">Generate PDF</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:btnGenerate_Excel_Click();">Generate Excel</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:$('#form').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:btnGenerate_Click();"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:btnGenerate_Excel_Click();"><spring:message code="sal.btn.genExcel" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:$('#form').clearForm();"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

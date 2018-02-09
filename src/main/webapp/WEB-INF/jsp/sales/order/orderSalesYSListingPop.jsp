@@ -55,11 +55,11 @@ function validRequiredField(){
 	if(($("#dpInstallDateFrom").val() == null || $("#dpInstallDateFrom").val().length == 0) || ($("#dpInstallDateTo").val() == null || $("#dpInstallDateTo").val().length == 0)){
 		
 		valid = false;
-		message += "* Please select the Install Date (From & To).\n";
+		message += '<spring:message code="sal.alert.msg.selInstallDateFromTo" />';
 	}
 	
 	if(valid == false){
-		Common.alert("Report Generate Summary" + DEFAULT_DELIMITER + message);
+		Common.alert('<spring:message code="sal.alert.title.reportGenSummary" />' + DEFAULT_DELIMITER + message);
 
     }
     
@@ -394,9 +394,9 @@ CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memTy
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order Report - Sales YS Listing</h1>
+<h1><spring:message code="sal.title.text.ordRptSalesYsListing" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -419,25 +419,25 @@ CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memTy
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Member Type</th>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
     <td>
     <select class="w100p" id="cmbMemberType" onchange="cmbMemberType_SelectedIndexChanged()">
-        <option value="0" selected>All</option>
-        <option value="1">Health Planner</option>
-        <option value="2">Cody</option>
-        <option value="4">Staff</option>
-        <option value="3">Coway Technician</option>
+        <option value="0" selected><spring:message code="sal.btn.all" /></option>
+        <option value="1"><spring:message code="sal.text.healthPlanner" /></option>
+        <option value="2"><spring:message code="sal.title.text.cody" /></option>
+        <option value="4"><spring:message code="sal.text.staff" /></option>
+        <option value="3"><spring:message code="sal.text.cowayTechnician" /></option>
     </select>
     </td>
-    <th scope="row">Org Code</th>
+    <th scope="row"><spring:message code="sal.text.orgCode" /></th>
     <td>
     <select class="w100p" id="cmbOrgCode" onchange="cmbOrgCode_SelectedIndexChanged()">
-        <option value="0">All</option>
+        <option value="0"><spring:message code="sal.btn.all" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">YS Aging</th>
+    <th scope="row"><spring:message code="sal.text.ysAging" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbYSAging">
         <option value="30" selected>< 31 Days</option>
@@ -447,35 +447,35 @@ CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memTy
         <option value="121" selected>> 120 Days</option>
     </select>
     </td>
-    <th scope="row">Grp Code</th>
+    <th scope="row"><spring:message code="sal.text.grpCode" /></th>
     <td>
     <select class="w100p disabled" id="cmbGrpCode" onchange="cmbGrpCode_SelectedIndexChanged()" disabled>
-        <option value="0">All</option>
+        <option value="0"><spring:message code="sal.btn.all" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Install Date</th>
+    <th scope="row"><spring:message code="sal.text.insDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date2 w100p" id="dpInstallDateFrom"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date2 w100p" id="dpInstallDateTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Dept Code</th>
+    <th scope="row"><spring:message code="sal.text.detpCode" /></th>
     <td>
     <select class="w100p disabled" id="cmbDeptCode" disabled>
-        <option value="0">All</option>
+        <option value="0"><spring:message code="sal.btn.all" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbCustType">
-        <option value="965" selected>Company</option>
-        <option value="964" selected>Individual</option>
+        <option value="965" selected><spring:message code="sal.combo.text.company" /></option>
+        <option value="964" selected><spring:message code="sal.combo.text.individual" /></option>
     </select>
     </td>
     <th scope="row"></th>
@@ -485,9 +485,9 @@ CommonCombo.make('cmbOrgCode', '/sales/order/getOrgCodeList', {memLvl : 1, memTy
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGeneratePDF_Click()">Generate PDF</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerateExcel_Click()">Generate Excel</a></p></li>
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:$('#form').clearForm();">Clear</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGeneratePDF_Click()"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript: btnGenerateExcel_Click()"><spring:message code="sal.btn.genExcel" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:$('#form').clearForm();"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

@@ -12,7 +12,7 @@ function btnGenerate_Click(){
 	if(!($("#mypSalesMonth").val() == null || $("#mypSalesMonth").val().length == 0)){
 		fn_report();
 	}else{
-		alert("Please select the sales month.");
+		Common.alert('<spring:message code="sal.alert.msg.plzSelSalesMonth" />');
 	}
 }
 
@@ -50,9 +50,9 @@ function fn_report(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>ASO SALES REPORT</h1>
+<h1><spring:message code="sal.text.title.asoSalesReport" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -73,14 +73,14 @@ function fn_report(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Sales Month</th>
+    <th scope="row"><spring:message code="sal.title.text.salesMonth" /></th>
     <td><input type="text" title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p" id="mypSalesMonth"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Click();">Generate Report</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Click();"><spring:message code="sal.btn.generateRpt" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

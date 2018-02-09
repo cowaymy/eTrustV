@@ -44,7 +44,7 @@ function validRequiredField(){
     	if((dpUpdateDateFr == null || dpUpdateDateFr.length == 0) || (dpUpdateDateTo == null || dpUpdateDateTo.length == 0)){
             
     		valid = false;
-    		message +=  "* Please key in the update date (From & To).\n";
+    		message +=  '<spring:message code="sal.alert.msg.plzKeyInUpdDtFromTo" />';
         }	
     }
     
@@ -54,7 +54,7 @@ function validRequiredField(){
         if((dpOrderDateFr == null || dpOrderDateFr.length == 0) || (dpOrderDateTo == null || dpOrderDateTo.length == 0)){
             
             valid = false;
-            message +=  "* Please key in the order date (From & To).\n";
+            message +=  '<spring:message code="sal.alert.msg.keyInOrdDateFromTo" />';
         }   
     }
 	
@@ -64,14 +64,14 @@ function validRequiredField(){
         if((txtOrderNoFr == null || txtOrderNoFr.length == 0) || (txtOrderNoTo == null || txtOrderNoTo.length == 0)){
             
             valid = false;
-            message +=  "* Please key in the order number (From & To).\n";
+            message +=  '<spring:message code="sal.alert.msg.keyInOrdNoFromTo" />';
         }   
     }
 	
 	if(valid == true){
 		   fn_report();
 	}else{
-	       Common.alert("Report Generate Summary" + DEFAULT_DELIMITER + message);
+	       Common.alert('<spring:message code="sal.alert.title.reportGenSummary" />' + DEFAULT_DELIMITER + message);
 	}	
 }
  
@@ -225,9 +225,9 @@ function cmbAppType_OnItemChecked(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order Report - Rental Pay Setting Update List</h1>
+<h1><spring:message code="sal.title.text.ordRptRentPaySetList" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -250,80 +250,80 @@ function cmbAppType_OnItemChecked(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Paymode</th>
+    <th scope="row"><spring:message code="sal.title.paymode" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbPaymode">
-        <option value="133" selected>AEON Express</option>
-        <option value="131" selected>Credit Card</option>
-        <option value="132" selected>Direct Debit</option>
-        <option value="134" selected>FPX</option>
-        <option value="130" selected>Regular (Cash/Cheque)</option>
+        <option value="133" selected><spring:message code="sal.combo.text.aeonExpress" /></option>
+        <option value="131" selected><spring:message code="sal.combo.text.creditCard" /></option>
+        <option value="132" selected><spring:message code="sal.combo.text.directDebit" /></option>
+        <option value="134" selected><spring:message code="sal.combo.text.fpx  " /></option>
+        <option value="130" selected><spring:message code="sal.combo.text.regualrCash" /></option>
     </select>
     </td>
-    <th scope="row">Update Date</th>
+    <th scope="row"><spring:message code="sal.title.text.updateDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpUpdateDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpUpdateDateTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="" placeholder="" class="w100p" id="txtOrderNoFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="" placeholder="" class="w100p"id="txtOrderNoTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Key-In Branch</th>
+    <th scope="row"><spring:message code="sal.text.keyInBranch" /></th>
     <td>
     <select class="w100p" id="cmbKeyBranch"></select>
     </td>
-    <th scope="row">Bank</th>
+    <th scope="row"><spring:message code="sal.title.text.bank" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbBank" data-placeholder="Bank Name"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Order App Type</th>
+    <th scope="row"><spring:message code="sal.title.text.ordAppType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbAppType" data-placeholder="App Type" onchange="cmbAppType_OnItemChecked()">
-        <option value="67">Outright</option>
-        <option value="66">Rental</option>
-        <option value="1412">Outright Plus</option>
+        <option value="67"><spring:message code="sal.combo.text.outright" /></option>
+        <option value="66"><spring:message code="sal.combo.text.rental" /></option>
+        <option value="1412"><spring:message code="sal.combo.text.outrightPlus" /></option>
     </select>
     </td>
-    <th scope="row">Order Status</th>
+    <th scope="row"><spring:message code="sal.title.text.ordStus" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbOrderSts" data-placeholder="Order Status">
-        <option value="1">Active</option>
-        <option value="4">Completed</option>
-        <option value="10">Cancelled</option>
+        <option value="1"><spring:message code="sal.btn.active" /></option>
+        <option value="4"><spring:message code="sal.combo.text.compl" /></option>
+        <option value="10"><spring:message code="sal.combo.text.cancelled" /></option>
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Rental Status</th>
+    <th scope="row"><spring:message code="sal.title.text.rentalStatus" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbRentalSts" data-placeholder="Rental Status">
-        <option value="REG">Regular</option>
-        <option value="INV">Investigate</option>
-        <option value="SUS">Suspend</option>
-        <option value="RET">Return</option>
-        <option value="TER">Terminated</option>
+        <option value="REG"><spring:message code="sal.combo.text.regular" /></option>
+        <option value="INV"><spring:message code="sal.combo.text.investigate" /></option>
+        <option value="SUS"><spring:message code="sal.combo.text.supend" /></option>
+        <option value="RET"><spring:message code="sal.combo.text.returned" /></option>
+        <option value="TER"><spring:message code="sal.combo.text.terminated" /></option>
     </select>
     </td>
     <th scope="row"></th>
@@ -333,8 +333,8 @@ function cmbAppType_OnItemChecked(){
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: validRequiredField();">Generate</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript: validRequiredField();"><spring:message code="sal.btn.generate" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/RentPaySetLastUpdateList.rpt" />
