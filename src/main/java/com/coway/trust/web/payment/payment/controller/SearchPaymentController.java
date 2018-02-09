@@ -773,7 +773,7 @@ public class SearchPaymentController {
 		String trIssuDt = "";
 		
 		//화면에서 넘어온값
-		String hiddenCollMemId = params.get("edit_txtCollectorId").equals("0") ?  "" : String.valueOf(params.get("edit_txtCollectorId"));
+		String hiddenCollMemId = params.get("edit_txtCollectorId").equals("0") ?  "0" : String.valueOf(params.get("edit_txtCollectorId"));
 		String btnAllowComm = params.get("btnAllowComm") != null ? "1" : "0"  ;
 		
 		if(viewMaster != null){
@@ -863,7 +863,7 @@ public class SearchPaymentController {
             
             searchPaymentService.saveChanges(branchMap);
 		}
-
+		
 		//1129 : Collector
 		if(!collMemId.equals(hiddenCollMemId)){
 			
@@ -929,12 +929,38 @@ public class SearchPaymentController {
 		}
 		
 		updMap.put("payId", String.valueOf(params.get("hiddenPayId")));
-		if(!trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")).trim())){
+		updMap.put("trNo", String.valueOf(params.get("edit_txtTRRefNo")).trim());
+		
+		/*
+		if(trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")).trim())){
+			updMap.put("trNo", "");			
+		}else {
 			updMap.put("trNo", String.valueOf(params.get("edit_txtTRRefNo")).trim());
-		}else{
-			updMap.put("trNo", "");
 		}
-			
+		*/
+		
+		updMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
+		
+		List<EgovMap> payD = searchPaymentService.selectPayDs(params);
+		
+		EgovMap hm = null;
+		EgovMap glRoute = null;
+		if(payD.size() > 0){
+			for (int i=0; i< payD.size() ; i++) {
+				hm = (EgovMap) payD.get(i);
+				
+				glRoute = searchPaymentService.selectGlRoute(String.valueOf(hm.get("payItmId")));
+				
+				if(glRoute != null){
+					Map<String, Object> glRouteMap = new HashMap<String, Object>();
+					glRouteMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
+					glRouteMap.put("id", String.valueOf(glRoute.get("id")));
+					searchPaymentService.updGlReceiptBranchId(glRouteMap);//PAY0009D 테이블 GL_RECIPT_BRNCH_ID 업데이트
+				}
+			}
+		}
+		
+		/*
 		if(params.get("edit_branchId") != null && !brnchId.equals(String.valueOf(params.get("edit_branchId")))){
 			updMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
 			
@@ -961,25 +987,37 @@ public class SearchPaymentController {
 		}else{
 			updMap.put("brnchId", "");
 		}
+		*/
 		
-		if(!collMemId.equals(hiddenCollMemId)){
-			updMap.put("collMemId", hiddenCollMemId);
-		}else{
+		updMap.put("collMemId", hiddenCollMemId);
+		
+		/*
+		if(collMemId.equals(hiddenCollMemId)){
 			updMap.put("collMemId", "");
+		} else{
+			updMap.put("collMemId", hiddenCollMemId);
 		}
-			
+		*/
+		
+		updMap.put("allowComm", btnAllowComm);
+		
+		/*
 		if(!allowComm.equals(btnAllowComm)){
 			updMap.put("allowComm", btnAllowComm);
 		}else{
 			updMap.put("allowComm", "");
 		}
+		*/
 		
 		String trIssueDate = CommonUtils.nvl(params.get("edit_txtTRIssueDate")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("edit_txtTRIssueDate"));
+		updMap.put("trIssueDate", trIssueDate);
+		/*
         if(!trIssuDt.equals(CommonUtils.nvl(params.get("edit_txtTRIssueDate")))){
 			updMap.put("trIssueDate", trIssueDate);
 		}else{
 			updMap.put("trIssueDate", "");
 		}
+		*/
 		searchPaymentService.updChanges(updMap);//변경값들 마스터테이블에 업데이트.
 		
 		// 결과 만들기.

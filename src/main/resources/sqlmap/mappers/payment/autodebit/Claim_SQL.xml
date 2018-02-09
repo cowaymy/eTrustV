@@ -366,8 +366,8 @@
                 WHERE
                     som.STUS_CODE_ID <![CDATA[   <> ]]> 10
                     AND rs.MODE_ID = 131
-                    AND som.APP_TYPE_ID = 66
-                    AND rs.BANK_ID IN (19,34,17,28)
+                    AND som.APP_TYPE_ID IN (66,1412)
+                    AND rs.BANK_ID IN (19,34,17,28,18,31,16)
                     AND som.SALES_ORD_ID = Extent3.SALES_ORD_ID
                     AND ROWNUM = 1
                 ) AS RENT_PAY_CRC_EXPR

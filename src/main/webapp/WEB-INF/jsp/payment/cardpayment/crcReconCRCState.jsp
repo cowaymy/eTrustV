@@ -74,9 +74,7 @@ var mappingLayout = [
                        }, {
                            dataField : "crcTrnscDt",
                            headerText : "<spring:message code='pay.head.transactionDate'/>",
-                           editable : false,
-                           dataType : "date", 
-                           formatString : "dd/mm/yyyy"
+                           editable : false
                        },{
                            dataField : "crcTrnscNo",
                            headerText : "<spring:message code='pay.head.crc.cardNo'/>",

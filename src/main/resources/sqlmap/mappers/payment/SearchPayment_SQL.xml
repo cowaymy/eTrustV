@@ -829,21 +829,11 @@
         UPDATE PAY0064D
         SET
         UPD_DT= SYSDATE 
-        <if test="trNo != '' ">
           , TR_NO=#{trNo}
-       </if>
-       <if test="collMemId != '' ">
-          ,COLL_MEM_ID = #{collMemId}
-       </if>
-       <if test="brnchId != '' ">
+          , COLL_MEM_ID = #{collMemId}
           , BRNCH_ID = #{brnchId}
-       </if>
-       <if test="trIssueDate != '' ">
           , TR_ISSU_DT = TO_DATE(#{trIssueDate},'DD/MM/YYYY')
-       </if>
-       <if test="allowComm != '' ">
-          , ALLOW_COMM = #{allowComm}
-       </if>
+          , ALLOW_COMM = #{allowComm}       
         WHERE PAY_ID=#{payId}
     </update>
     
