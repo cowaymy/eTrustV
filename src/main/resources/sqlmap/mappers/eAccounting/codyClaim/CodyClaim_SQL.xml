@@ -37,7 +37,7 @@ FROM   (SELECT T1.CLM_NO,
                LEFT JOIN FCM0004M T4 
                       ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO WHERE CLM_TYPE = 'J7'
           <if test="loginUserId != null and loginUserId != ''">
-            WHERE T1.CRT_USER_ID = #{loginUserId}
+            AND T1.CRT_USER_ID = #{loginUserId}
           </if>
             ) T
        WHERE 1=1
