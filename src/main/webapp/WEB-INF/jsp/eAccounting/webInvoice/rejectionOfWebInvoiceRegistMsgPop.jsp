@@ -8,6 +8,8 @@ $(document).ready(function(){
     	var rejctResn = $("#rejctResn").val();
     	console.log(rejctResn);
         fn_appvRejctSubmit("rejct", rejctResn);
+        $("#rejectRegistPop").remove();
+        $("#webInvoiceAppvViewPop").remove();
     });
 });
 

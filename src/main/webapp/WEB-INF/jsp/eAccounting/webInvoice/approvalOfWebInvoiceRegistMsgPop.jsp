@@ -6,6 +6,8 @@ $(document).ready(function(){
     $("#cancel_btn").click(fn_closePop);
     $("#confirm_btn").click(function () {
     	fn_appvRejctSubmit("appv", "");
+    	$("#approveRegistPop").remove();
+        $("#webInvoiceAppvViewPop").remove();
     });
 });
 
