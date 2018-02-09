@@ -1399,15 +1399,15 @@
                 VALUES ( #{resultId}, #{docNo} , #{typeId},#{schdulId} ,#{salesOrdId} ,#{codyId}
                               ,TO_DATE(#{setlDt},'DD-MM-YYYY'),#{resultStusCodeId},NVL(#{failResnId},0),NVL(#{renColctId},0),#{whId}
                             ,#{resultRem} ,SYSDATE
-                            <!-- ,#{resultCrtUserId} -->
-                            ,   SELECT USER_ID FROM SYS0047M
+                            ,#{resultCrtUserId}
+                           <!--  ,   SELECT USER_ID FROM SYS0047M
 								WHERE USER_NAME = ( SELECT MEM_CODE FROM ORG0001D
-								                                WHERE MEM_ID = #{codyId} )
+								                                WHERE MEM_ID = #{codyId} ) -->
                             ,SYSDATE 
-                            <!-- ,#{resultUpdUserId} -->
-                            ,   SELECT USER_ID FROM SYS0047M
+                            ,#{resultUpdUserId}
+                            <!-- ,   SELECT USER_ID FROM SYS0047M
 								WHERE USER_NAME = ( SELECT MEM_CODE FROM ORG0001D
-								                                WHERE MEM_ID = #{codyId} )
+								                                WHERE MEM_ID = #{codyId} ) -->
                             ,#{resultIsSync},#{resultIsEdit},#{resultStockUse},#{resultIsCurr},#{resultMtchId}
                             ,#{resultIsAdj}
                             ,#{temperateSetng},to_date(#{nextAppntDt},'yyyymmdd'),#{nextAppointmentTime}
