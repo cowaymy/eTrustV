@@ -72,7 +72,6 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 			 hasBill =true;
 		}
 		
-		hasBill =false;
 		
 		logger.debug("hasBill  =========== ==>");
 		logger.debug("hasBil ,{}" +hasBill);
@@ -315,7 +314,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
      	    pay0016dMap.put("accBillTaxRate",TAXRATE); 
      	    
      	    if(TAXRATE ==6){
-             	  pay0016dMap.put("accBillTxsAmt",Double.toString(  filterCharge  * 100 / 106)); 
+             	  pay0016dMap.put("accBillTxsAmt",Double.toString( filterCharge -  (filterCharge  * 100 / 106))); 
      	    }else{
      	    	pay0016dMap.put("accBillTxsAmt","0"); 
      	    }
@@ -444,7 +443,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
       	    pay0016dMap.put("accBillTaxRate",TAXRATE); 
       	    
       	    if(TAXRATE ==6){
-              	  pay0016dMap.put("accBillTxsAmt",Double.toString(  packageCharge  * 100 / 106)); 
+              	  pay0016dMap.put("accBillTxsAmt",Double.toString( packageCharge - (packageCharge  * 100 / 106))); 
       	    }else{
       	    	pay0016dMap.put("accBillTxsAmt","0"); 
       	    }
