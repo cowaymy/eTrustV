@@ -445,6 +445,7 @@ public class ServiceApiController {
 		// mobile 에서 받은 데이터를 로그 테이블에 insert......
 		LOGGER.debug("### INSERT_HEART_LOG : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
 		LOGGER.debug("### TransactionId : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
+		LOGGER.debug("### heartForms : {}", heartForms);
 		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
 
 			heartLogs = new ArrayList<>();
