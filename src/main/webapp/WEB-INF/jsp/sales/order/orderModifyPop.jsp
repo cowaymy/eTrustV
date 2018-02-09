@@ -603,7 +603,8 @@
         $('#hiddenThrdPartyId').val('');
         $('#thrdPartyType').text('');
         $('#thrdPartyName').text('');
-        $('#thrdPartyNric').text('');
+        $('#txtThrdPartyNric').text('');
+        $('#thrdPartyNric').val('');
     }
 
     //ClearControl_RentPaySet_DD
@@ -1044,7 +1045,8 @@
                 $('#thrdPartyId').val(custInfo.custId);
                 $('#thrdPartyType').text(custInfo.codeName1);
                 $('#thrdPartyName').text(custInfo.name);
-                $('#thrdPartyNric').text(custInfo.nric);
+                $('#txtThrdPartyNric').text(custInfo.nric);
+                $('#thrdPartyNric').val(custInfo.nric);
             }
             else {
                 if(sMethd == 2) {
@@ -2757,7 +2759,8 @@
     <th scope="row">Name</th>
     <td><span id="thrdPartyName"></span></td>
     <th scope="row">NRIC/Company No</th>
-    <td><span id="thrdPartyNric"></span></td>
+    <td><span id="txtThrdPartyNric"></span>
+        <input id="thrdPartyNric" name="thrdPartyNric" type="hidden" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
