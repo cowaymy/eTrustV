@@ -36,32 +36,32 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "susNo",
-                headerText : "Suspend Number",
+                headerText : '<spring:message code="sal.title.text.suspendNumber" />',
                 width : 220,
                 editable : false
             }, {
                 dataField : "name",
-                headerText : "Status",
+                headerText : '<spring:message code="sal.title.status" />',
                 width : 140,
                 editable : false
             }, {
                 dataField : "salesOrdNo",
-                headerText : "Order No",
+                headerText : '<spring:message code="sal.title.ordNo" />',
                 width : 150,
                 editable : false
             }, {
                 dataField : "susCrtDt",
-                headerText : "Create Date",
+                headerText : '<spring:message code="sal.title.crtDate" />',
                 width : 150,
                 editable : false
             }, {
                 dataField : "susCrtUserName",
-                headerText : "Creator",
+                headerText : '<spring:message code="sal.text.creator" />',
                 width : 180,
                 editable : false
             },{
                 dataField : "invNo",
-                headerText : "Investigate Number",
+                headerText : '<spring:message code="sal.title.text.investigateNumber" />',
                 editable : false
             },{
                 dataField : "salesOrdId",
@@ -119,7 +119,7 @@
 	
 	function fn_newSuspend(){
 		if(detailForm.susId.value == ""){
-            Common.alert("No suspend record selected.");
+            Common.alert('<spring:message code="sal.alert.msg.noSuspendRecordSelected" />');
             return false;
         }else{
             Common.popupDiv("/sales/order/orderSuspendNewResultPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
@@ -129,13 +129,13 @@
 	function fn_assignIncharge(){
 //		Common.alert('The program is under development.');
 		if(detailForm.susId.value == ""){
-            Common.alert("No suspend record selected.");
+            Common.alert('<spring:message code="sal.alert.msg.noSuspendRecordSelected" />');
             return false;
         }else{
         	if(searchForm.susStusId.value == "33" || searchForm.susStusId.value == "2"){
         		Common.popupDiv("/sales/order/inchargePersonPop.do", $("#detailForm").serializeJSON(), null, true, 'savePop');
         	}else{
-        		Common.alert("Reassign incharge person is disallowed.");
+        		Common.alert('<spring:message code="sal.alert.msg.reassignInchargePersonDisallow" />');
         		return false;
           	}
         }
@@ -151,15 +151,15 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Suspend List</h2>
+<h2><spring:message code="sal.title.text.suspendList" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onClick="fn_newSuspend()">New</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_newSuspend()"><spring:message code="sal.btn.new" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onClick="fn_assignIncharge()">Re-AssignIncharge</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_assignIncharge()"><spring:message code="sal.title.text.reAssignIncharge" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     <!-- <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 </aside><!-- title_line end -->
@@ -184,38 +184,38 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Suspend Number</th>
+    <th scope="row"><spring:message code="sal.title.text.suspendNumber" /></th>
     <td>
     <input type="text" title="" id="susNo" name="susNo" placeholder="Suspend Number" class="w100p" />
     </td>
-    <th scope="row">Order Number</th>
+    <th scope="row"><spring:message code="sal.text.ordNum" /></th>
     <td>
     <input type="text" title="" id="salesOrdNo" name="salesOrdNo" placeholder="Order Number" class="w100p" />
     </td>
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code="sal.text.creator" /></th>
     <td>
     <input type="text" title="" id="susCrtUserName" name="susCrtUserName" placeholder="Creator (Username)" class="w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
     <td>
     <select class="multy_select w100p" id="susStusId" name="susStusId" multiple="multiple">
-        <option value="33" selected>New</option>
-        <option value="2" selected>Suspend</option>
-        <option value="28">Regular</option>
-        <option value="69">Write Off</option>
+        <option value="33" selected><spring:message code="sal.title.text.new" /></option>
+        <option value="2" selected><spring:message code="sal.combo.text.supend" /></option>
+        <option value="28"><spring:message code="sal.combo.text.regular" /></option>
+        <option value="69"><spring:message code="sal.combo.text.writeOff" /></option>
     </select>
     </td>
-    <th scope="row">Investigate Number</th>
+    <th scope="row"><spring:message code="sal.title.text.investigateNumber" /></th>
     <td>
     <input type="text" id="invNo" name="invNo" title="" placeholder="Investigate Number" class="w100p" />
     </td>
-    <th scope="row">Create Date</th>
+    <th scope="row"><spring:message code="sal.text.createDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" id="startCrtDt" name="startCrtDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-    <span>To</span>
+    <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" id="endCrtDt" name="endCrtDt" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
     </div><!-- date_set end -->
     </td>

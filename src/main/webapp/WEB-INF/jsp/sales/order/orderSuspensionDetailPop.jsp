@@ -27,12 +27,12 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var inchargeColumnLayout = [{
                 dataField : "userName",
-                headerText : "Username",
+                headerText : '<spring:message code="sal.title.text.userName" />',
                 width : 160,
                 editable : false
             }, {
                 dataField : "userFullName",
-                headerText : "Name",
+                headerText : '<spring:message code="sal.text.name" />',
                 editable : false
             }];
        
@@ -69,31 +69,31 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var callResultColumnLayout = [{
                 dataField : "stusCode",
-                headerText : "Status",
+                headerText : '<spring:message code="sal.title.status" />',
                 width : 110,
                 editable : false
             }, {
                 dataField : "recalldt",
-                headerText : "Recall Date",
+                headerText : '<spring:message code="sal.title.text.reCallDate" />',
                 width : 130,
                 editable : false
             }, {
                 dataField : "resnDesc",
-                headerText : "Feedback",
+                headerText : '<spring:message code="sal.title.text.feedback" />',
                 width : 160,
                 editable : false
             }, {
                 dataField : "callRem",
-                headerText : "Remark",
+                headerText : '<spring:message code="sal.title.remark" />',
                 editable : false
             }, {
                 dataField : "callCrtUserName",
-                headerText : "Key By",
+                headerText : '<spring:message code="sal.title.text.keyBy" />',
                 width : 110,
                 editable : false
             }, {
                 dataField : "callCrtDt",
-                headerText : "Key At",
+                headerText : '<spring:message code="sal.title.text.keyAt" />',
                 dataType : "date", 
                 formatString : "dd/mm/yyyy",
                 width : 120,
@@ -152,43 +152,43 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var callLogColumnLayout = [{
                 dataField : "codeName",
-                headerText : "Type",
+                headerText : '<spring:message code="sal.title.type" />',
                 width : 130,
                 editable : false
             }, {
                 dataField : "'resnDesc",
-                headerText : "Feedback",
+                headerText : '<spring:message code="sal.title.text.feedback" />',
                 width : 160,
                 editable : false
             }, {
                 dataField : "stusCodeName",
-                headerText : "Action",
+                headerText : '<spring:message code="sal.title.text.action" />',
                 width : 120,
                 editable : false
             }, {
                 dataField : "callRosAmt",
-                headerText : "Amount",
+                headerText : '<spring:message code="sal.title.amount" />',
                 width : 70,
                 editable : false
             },{
                 dataField : "callRem",
-                headerText : "Remark",
+                headerText : '<spring:message code="sal.title.remark" />',
                 width : 350,
                 editable : false
             }, {
                 dataField : "rosCallerUserName",
-                headerText : "Caller",
+                headerText : '<spring:message code="sal.title.text.caller" />',
                 width : 110,
                 editable : false
             }, {
                 dataField : "callCrtUserName",
-                headerText : "Creator",
+                headerText : '<spring:message code="sal.text.creator" />',
                 width : 110,
                 editable : false
             },{
                 dataField : "callCrtDt",
                 headerText : "CreateDate",
-                dataType : "date", 
+                dataType : '<spring:message code="sal.title.date" />', 
                 formatString : "dd/mm/yyyy",
                 width : 120,
                 editable : false
@@ -334,9 +334,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Suspend View</h1>
+<h1><spring:message code="sal.title.text.suspendView" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -347,15 +347,15 @@
 </form>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>Suspend &amp; Call Log Information</h2>
+<h2><spring:message code="sal.title.text.suspendCallLogInfo" /></h2>
 </aside><!-- title_line end -->
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Suspend Info</a></li>
-    <li><a href="#" onclick="javascript: fn_resizefunc(callResultGridID)">Suspend Call Result</a></li>
-    <li><a href="#">Order Details</a></li>
-    <li><a href="#" onclick="javascript: fn_resizefunc(callLogGirdID)">Full Call Log</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.title.text.suspendInfo" /></a></li>
+    <li><a href="#" onclick="javascript: fn_resizefunc(callResultGridID)"><spring:message code="sal.title.text.suspendCallResult" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.orderDetails" /></a></li>
+    <li><a href="#" onclick="javascript: fn_resizefunc(callLogGirdID)"><spring:message code="sal.title.text.fullCallLog" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -372,25 +372,25 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Suspend Number</th>
+    <th scope="row"><spring:message code="sal.title.text.suspendNumber" /></th>
     <td><span>${suspensionInfo.susNo }</span></td>
-    <th scope="row">Create Date</th>
+    <th scope="row"><spring:message code="sal.text.createDate" /></th>
     <td><span>${suspensionInfo.susCrtDt }</span></td>
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code="sal.title.creator" /></th>
     <td><span>${suspensionInfo.susCrtUserName }</span></td>
 </tr>
 <tr>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.title.status" /></th>
     <td><span>${suspensionInfo.code }</span></td>
-    <th scope="row">Update Date</th>
+    <th scope="row"><spring:message code="sal.title.text.updateDate" /></th>
     <td><span>${suspensionInfo.susUpdDt }</span></td>
-    <th scope="row">Updator</th>
+    <th scope="row"><spring:message code="sal.text.updator" /></th>
     <td><span>${suspensionInfo.susUpdUserName }</span></td>
 </tr>
 <tr>
-    <th scope="row">Order Number</th>
+    <th scope="row"><spring:message code="sal.text.ordNum" /></th>
     <td><span>${suspensionInfo.salesOrdNo }</span></td>
-    <th scope="row">Investigate Number</th>
+    <th scope="row"><spring:message code="sal.title.text.investigateNumber" /></th>
     <td><span>${suspensionInfo.invNo }</span></td>
     <th scope="row"></th>
     <td><span></span></td>
@@ -399,7 +399,7 @@
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Suspend Incharge Person</h3>
+<h3><spring:message code="sal.title.text.suspendInchargePerson" /></h3>
 </aside><!-- title_line end
 
 <ul class="right_btns">
@@ -441,26 +441,26 @@
 <section class="tap_wrap mt10"><!-- tap_wrap start -->
 
 <ul class="tap_type1 num4">
-    <li><a href="#" class="on">Basic Info</a></li>
-    <li><a href="#">HP / Cody</a></li>
-    <li><a id="aTabCI" href="#" onClick="javascript:chgGridTab('custInfo');">Customer Info</a></li>
-    <li><a href="#">Installation Info</a></li>
-    <li><a id="aTabMA" href="#">Mailling Info</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.hpCody" /></a></li>
+    <li><a id="aTabCI" href="#" onClick="javascript:chgGridTab('custInfo');"><spring:message code="sal.title.text.custInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.installInfo" /></a></li>
+    <li><a id="aTabMA" href="#"><spring:message code="sal.title.text.maillingInfo" /></a></li>
 <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
-    <li><a href="#">Payment Channel</a></li>
+    <li><a href="#"><spring:message code="sal.title.text.paymentChnnl" /></a></li>
 </c:if>
-    <li><a id="aTabMI" href="#" onClick="javascript:chgGridTab('memInfo');">Membership Info</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('docInfo');">Document Submission</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('callLogInfo');">Call Log</a></li>
+    <li><a id="aTabMI" href="#" onClick="javascript:chgGridTab('memInfo');"><spring:message code="sal.title.text.memshipInfo" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('docInfo');"><spring:message code="sal.title.text.docuSubmission" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('callLogInfo');"><spring:message code="sal.title.text.callLog" /></a></li>
 <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
-    <li><a href="#">Quarantee Info</a></li>
+    <li><a href="#"><spring:message code="sal.title.text.quaranteeInfo" /></a></li>
 </c:if>
-    <li><a href="#" onClick="javascript:chgGridTab('payInfo');">Payment Listing</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('transInfo');">Last 6 Months Transaction</a></li>
-    <li><a href="#">Order Configuration</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('autoDebitInfo');">Auto Debit Result</a></li>
-    <li><a href="#">Relief Certificate</a></li>
-    <li><a href="#" onClick="javascript:chgGridTab('discountInfo');">Discount</a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('payInfo');"><spring:message code="sal.title.text.paymentListing" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('transInfo');"><spring:message code="sal.title.text.lastSixMonthTrnsaction" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.ordConfiguration" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('autoDebitInfo');"><spring:message code="sal.title.text.autoDebitResult" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.reliefCertificate" /></a></li>
+    <li><a href="#" onClick="javascript:chgGridTab('discountInfo');"><spring:message code="sal.title.text.discount" /></a></li>
 </ul>
 
 <!------------------------------------------------------------------------------
