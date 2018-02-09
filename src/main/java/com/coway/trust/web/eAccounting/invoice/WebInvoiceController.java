@@ -141,6 +141,7 @@ public class WebInvoiceController {
 		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 		
 		String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+		memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
 		for(int i = 0; i < appvLineInfo.size(); i++) {
 			EgovMap info = appvLineInfo.get(i);
 			if(memCode.equals(info.get("appvLineUserId"))) {
