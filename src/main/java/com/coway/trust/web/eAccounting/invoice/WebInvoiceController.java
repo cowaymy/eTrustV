@@ -140,12 +140,20 @@ public class WebInvoiceController {
 		List<EgovMap> appvLineInfo = webInvoiceService.selectAppvLineInfo(params);
 		List<EgovMap> appvInfoAndItems = webInvoiceService.selectAppvInfoAndItems(params);
 		
+		String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+		for(int i = 0; i < appvLineInfo.size(); i++) {
+			EgovMap info = appvLineInfo.get(i);
+			if(memCode.equals(info.get("appvLineUserId"))) {
+				String appvPrcssResult = String.valueOf(info.get("appvStus"));
+				model.addAttribute("appvPrcssResult", appvPrcssResult);
+			}
+		}
+		
 		// TODO appvPrcssStus 생성
 		String appvPrcssStus = webInvoiceService.getAppvPrcssStus(appvLineInfo, appvInfoAndItems);
 		
 		model.addAttribute("pageAuthFuncChange", params.get("pageAuthFuncChange"));
 		model.addAttribute("appvPrcssStus", appvPrcssStus);
-		model.addAttribute("appvPrcssResult", appvInfoAndItems.get(0).get("appvPrcssStus"));
 		model.addAttribute("appvInfoAndItems", new Gson().toJson(appvInfoAndItems));
 		
 		return "eAccounting/webInvoice/webInvoiceApproveViewPop";
