@@ -7,7 +7,7 @@ $(document).ready(function(){
 
 
 function fn_validation(){
-    
+
         if($("#reportType").val == ''){
         	 Common.alert("<spring:message code='sys.common.alert.validation' arguments='type' htmlEscape='false'/>");
              return false;
@@ -20,18 +20,22 @@ function fn_validation(){
 }
 
 function fn_openGenerate(){
-	
+
     if(fn_validation()){
-    	
+
         var whereSql = "";
         var keyInDateFrom =$("#reqstDateFr").val().substring(6,10) + "-" + $("#reqstDateFr").val().substring(3,5) + "-" + $("#reqstDateFr").val().substring(0,2) + " 12:00:00 AM";
-        var keyInDateTo = $("#reqstDateTo").val().substring(6,10) + "-" + $("#reqstDateTo").val().substring(3,5) + "-" + $("#reqstDateTo").val().substring(0,2)+ " 12:00:00 AM";;
-        
+        var keyInDateTo = $("#reqstDateTo").val().substring(6,10) + "-" + $("#reqstDateTo").val().substring(3,5) + "-" + $("#reqstDateTo").val().substring(0,2)+ " 12:00:00 AM";
+
+        var keyInDateFrom1 =$("#reqstDateFr").val().substring(6,10) + "-" + $("#reqstDateFr").val().substring(3,5) + "-" + $("#reqstDateFr").val().substring(0,2) ;
+        var keyInDateTo1 = $("#reqstDateTo").val().substring(6,10) + "-" + $("#reqstDateTo").val().substring(3,5) + "-" + $("#reqstDateTo").val().substring(0,2);
+
         if($("#reqstDateFr").val() != '' && $("#reqstDateTo").val() != '' && $("#reqstDateFr").val() != null && $("#reqstDateTo").val() != null){
-            whereSql += " and (a.AS_CRT_DT between to_date('" + $("#reqstDateFr").val() + "', 'DD/MM/YYYY') and to_date('" + $("#reqstDateTo").val() + "' , 'DD/MM/YYYY')) ";
+            whereSql += " and (TO_CHAR(a.AS_CRT_DT,'YYYY-MM-DD')) between '" + keyInDateFrom1 + "' and '" + keyInDateTo1 + "' ";
+           // whereSql += " and (a.AS_CRT_DT between to_date('" + $("#reqstDateFr").val() + "', 'DD/MM/YYYY') and to_date('" + $("#reqstDateTo").val() + "' , 'DD/MM/YYYY')) ";
         }
-        
-        
+
+
         if($("#reportType").val() == '1'){
         	var date = new Date();
             var month = date.getMonth()+1;
@@ -43,7 +47,7 @@ function fn_openGenerate(){
             $("#reportForm").append('<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" /> ');
             $("#reportForm").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
             $("#reportForm").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
-            
+
             $("#reportForm #V_SELECTSQL").val("");
             $("#reportForm #V_ORDERBYSQL").val("");
             $("#reportForm #V_FULLSQL").val("");
@@ -51,14 +55,14 @@ function fn_openGenerate(){
             $("#reportForm #reportFileName").val('/services/ASRawData.rpt');
             $("#reportForm #viewType").val("EXCEL");
             $("#reportForm #reportDownFileName").val("ASRawData_" +day+month+date.getFullYear());
-            
+
             var option = {
                     isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
             };
-            
+
             Common.report("reportForm", option);
         }
-        
+
         else{
             var date = new Date();
             var month = date.getMonth()+1;
@@ -66,27 +70,27 @@ function fn_openGenerate(){
             if(date.getDate() < 10){
                 day = "0"+date.getDate();
             }
-           
+
             $("#reportForm").append('<input type="hidden" id="V_KEYINDATEFROM" name="V_KEYINDATEFROM" /> ');
             $("#reportForm").append('<input type="hidden" id="V_KEYINDATETO" name="V_KEYINDATETO"  /> ');
             $("#reportForm").append('<input type="hidden" id="V_DSCBRANCHID" name="V_DSCBRANCHID" /> ');
-            
-            
-           
+
+
+
             $("#reportForm #V_KEYINDATEFROM").val(keyInDateFrom);
             $("#reportForm #V_KEYINDATETO").val(keyInDateTo);
             $("#reportForm #V_DSCBRANCHID").val(0);
             $("#reportForm #reportFileName").val('/services/ASSparePartRaw.rpt');
             $("#reportForm #viewType").val("EXCEL");
             $("#reportForm #reportDownFileName").val("ASSparePartRaw_" +day+month+date.getFullYear());
-            
+
             var option = {
                     isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
             };
-            
+
             Common.report("reportForm", option);
         }
-         
+
     }
 }
 
@@ -103,7 +107,7 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = -1;
         }
-        
+
     });
 };
 </script>
@@ -137,7 +141,7 @@ $.fn.clearForm = function() {
 <tr>
     <th scope="row">Report Type</th>
     <td>
-    <select id="reportType"> 
+    <select id="reportType">
         <option value="1">After Service (AS) Raw Data</option>
         <option value="2">After Service (AS) Spare Part Exchage Raw Data</option>
     </select>
