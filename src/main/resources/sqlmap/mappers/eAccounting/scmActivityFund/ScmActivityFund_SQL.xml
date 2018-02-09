@@ -75,7 +75,7 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        || TO_CHAR (SYSDATE, 'yymm')
        || NVL (TO_CHAR (MAX (SUBSTR (CLM_NO, 7, 4) + 1), 'FM0000'), '0001') AS CLM_NO
     FROM FCM0019M
-    WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')
+    WHERE SUBSTR (CLM_NO, 3, 4) = TO_CHAR (SYSDATE, 'yymm')  AND CLM_TYPE = 'J5'
 </select>
 
 <insert id="insertScmActivityFundExp" parameterType="Map">
