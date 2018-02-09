@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.cmmn.model.LoginVO;
+import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 import com.crystaldecisions.jakarta.poi.util.StringUtil;
@@ -92,10 +93,14 @@ public class OrderListController {
 	}
 	
 	@RequestMapping(value = "/orderRentToOutrSimulPop.do")
-	public String orderRentToOutrSimulPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String orderRentToOutrSimulPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO session) {
 		
 		model.put("ordNo", params.get("ordNo"));
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT3));
+		
+		//Report Param
+		model.put("userName", session.getUserId());
+		model.put("brnchCode", session.getBranchName());  //AS-IS Brnch Code 
 		
 		return "sales/order/orderRentToOutrSimulPop";
 	}

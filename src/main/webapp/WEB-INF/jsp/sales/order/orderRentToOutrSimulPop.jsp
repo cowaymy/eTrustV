@@ -28,7 +28,9 @@
             Common.popupWin("formApprv", "/sales/order/orderLedger2ViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
         });
         $('#btnPrintSimul').click(function() {
-            Common.alert('<b>The program is under development.</b>');
+            //Common.alert('<b>The program is under development.</b>');
+            fn_generateReport();
+            
         });
         
         $('#cmbPercentageInd').change(function(event) {
@@ -62,6 +64,64 @@
             }
         });
     });
+    
+    //Print Report Start
+    function fn_generateReport(){
+    	
+    	//Essential Params
+    	$("#reportFileName").val('/sales/RentalToOutrightSimulatorForm.rpt');
+    	$("#viewType").val('PDF');
+    	
+    	    //File Title
+    	var date = new Date().getDate();
+    	if(date.toString().length == 1){
+    	    date = "0" + date;
+    	} 
+    	var downFileName = "RentalToOutright_"+$("#txtOrderNo").val().trim() + " _ " +  date+(new Date().getMonth()+1)+new Date().getFullYear();
+    	$("#downFileName").val(downFileName);
+    	
+    	
+    	console.log("reportFileName : " + $("#reportFileName").val());
+    	
+    	console.log("_printOrdId : " + $("#hiddenOrderID").val());
+    	console.log("_printUserName : " + '${userName}');
+    	console.log("_printBranchCode : " + '${brnchCode}');
+    	console.log("_printOutrightPrice : " + $("#txtOutrightPrice").val());
+    	console.log("_printLastBillMth : " + $("#hiddenLastBillMth").val());
+    	console.log("_printTotalBillAmt : " + $("#txtTotalBillAmt").val());
+    	console.log("_printTotalOutstanding : " + $("#txtCurrentOutstanding").val());
+    	console.log("_printAdjPercent : " + $("#hiddenAdjPercent").val());
+    	console.log("_printAdjPercentAmt : "+ $("#hiddenAdjPercentAmt").val());
+    	console.log("_printAdjFixAmt : " + $("#hiddenAdjFixAmt").val());
+    	console.log("_printAdjPercentInd : " + $("#hiddenAdjPercentInd").val());
+    	console.log("_printAdjFixInd : " + $("#hiddenAdjFixInd").val());
+    	console.log("_printConversionAmt : " + $("#txtConvertAmt").val());
+    	console.log("_printTotalAmt : " + $("#txtTotalAmt").val());
+    	
+    	//Params Setting
+    	
+    	$("#_printOrdId").val($("#hiddenOrderID").val());  // int OrderID = int.Parse(hiddenOrderID.Value);
+    	$("#_printUserName").val('${userName}');  // string Username = li.LoginID;
+    	$("#_printBranchCode").val('${brnchCode}');  //string BranchCode = li.BranchCode;
+    	$("#_printOutrightPrice").val($("#txtOutrightPrice").val());  // decimal OutrightPrice = decimal.Parse(txtOutrightPrice.Text.Trim());
+    	$("#_printLastBillMth").val($("#hiddenLastBillMth").val());  //int LastBillMth = int.Parse(hiddenLastBillMth.Value);
+    	$("#_printTotalBillAmt").val($("#txtTotalBillAmt").val()); //decimal TotalBillAmt = decimal.Parse(txtTotalBillAmt.Text.Trim());
+    	$("#_printTotalOutstanding").val($("#txtCurrentOutstanding").val());  //decimal TotalOutstanding = decimal.Parse(txtCurrentOutstanding.Text.Trim());
+    	$("#_printAdjPercent").val($("#hiddenAdjPercent").val());  //decimal AdjPercent = decimal.Parse(hiddenAdjPercent.Value);
+    	$("#_printAdjPercentAmt").val($("#hiddenAdjPercentAmt").val()); //decimal AdjPercentAmt = decimal.Parse(hiddenAdjPercentAmt.Value);
+    	$("#_printAdjFixAmt").val($("#hiddenAdjFixAmt").val());  //decimal AdjFixAmt = decimal.Parse(hiddenAdjFixAmt.Value);
+    	$("#_printAdjPercentInd").val($("#hiddenAdjPercentInd").val());  //string AdjPercentInd = hiddenAdjPercentInd.Value;
+    	$("#_printAdjFixInd").val($("#hiddenAdjFixInd").val());  //string AdjFixInd = hiddenAdjFixInd.Value; 
+    	$("#_printConversionAmt").val($("#txtConvertAmt").val());  //decimal ConversionAmt = decimal.Parse(txtConvertAmt.Text.Trim());
+    	$("#_printTotalAmt").val($("#txtTotalAmt").val());  //decimal TotalAmt = decimal.Parse(txtTotalAmt.Text.Trim()); */
+        
+        //Generate Report
+    	var option = { isProcedure : false};
+    	Common.report("_printForm", option);
+    	
+    }
+    
+    
     
     function fn_doConfirm() {
         
@@ -235,6 +295,29 @@
 </script>
 </head>
 <body>
+<!-- Print Report Form -->
+<form id="_printForm">
+    <!--essential Params -->
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/RentalToOutrightSimulatorForm.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <input type="hidden" id="downFileName" name="reportDownFileName" value="" /> <!-- Download Name -->
+    
+    <!-- params -->
+    <input type="hidden" id="_printOrdId" name="OrderID" />
+    <input type="hidden" id="_printUserName" name="Username">
+    <input type="hidden" id="_printBranchCode" name="BranchCode">
+    <input type="hidden" id="_printOutrightPrice" name="OutrightPrice">
+    <input type="hidden" id="_printLastBillMth" name="LastBillMth">
+    <input type="hidden" id="_printTotalBillAmt" name="TotalBillAmt">
+    <input type="hidden" id="_printTotalOutstanding" name="TotalOutstanding">
+    <input type="hidden" id="_printAdjPercent" name="AdjPercent">
+    <input type="hidden" id="_printAdjPercentAmt" name="AdjPercentAmt">
+    <input type="hidden" id="_printAdjFixAmt" name="AdjFixAmt"> 
+    <input type="hidden" id="_printAdjPercentInd" name="AdjPercentInd">
+    <input type="hidden" id="_printAdjFixInd" name="AdjFixInd">
+    <input type="hidden" id="_printConversionAmt" name="ConversionAmt">
+    <input type="hidden" id="_printTotalAmt" name="TotalAmt">
+</form>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
