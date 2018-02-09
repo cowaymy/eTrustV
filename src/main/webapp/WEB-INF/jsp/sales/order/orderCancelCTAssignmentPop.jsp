@@ -22,12 +22,12 @@
 	 function cancelLogGrid(){
 	        // Cancellation Log Transaction Column
 	        var cancelLogColumnLayout = [ 
-	             {dataField : "code1", headerText : "Type", width : '10%'}, 
-	             {dataField : "code", headerText : "Status", width : '10%'},
-	             {dataField : "crtDt", headerText : "Create Date", width : '20%'}, 
-	             {dataField : "callentryUserName", headerText : "Creator", width : '20%'},
-	             {dataField : "updDt", headerText : "Update Date", width : '20%'}, 
-	             {dataField : "userName", headerText : "Updator", width : '20%'}
+	             {dataField : "code1", headerText : "<spring:message code='sal.text.type' />", width : '10%'}, 
+	             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
+	             {dataField : "crtDt", headerText : "<spring:message code='sal.text.createDate' />", width : '20%'}, 
+	             {dataField : "callentryUserName", headerText : "<spring:message code='sal.text.creator' />", width : '20%'},
+	             {dataField : "updDt", headerText : "<spring:message code='sal.title.text.updateDate' />", width : '20%'}, 
+	             {dataField : "userName", headerText : "<spring:message code='sal.text.updator' />", width : '20%'}
 	         ];
 	        
 	        //그리드 속성 설정
@@ -59,13 +59,13 @@
 	    function prodReturnGrid(){
 	        // Product Return Transaction Column
 	        var prodReturnColumnLayout = [ 
-	             {dataField : "retnNo", headerText : "Return No", width : '15%'}, 
-	             {dataField : "code", headerText : "Status", width : '10%'},
-	             {dataField : "created1", headerText : "Create Date", width : '11%'}, 
-	             {dataField : "username1", headerText : "Creator", width : '11%'},
-	             {dataField : "memCodeName2", headerText : "Assign CT"}, 
-	             {dataField : "ctGrp", headerText : "Group", width : '8%'},
-	             {dataField : "whLocCodeDesc", headerText : "Return Warehouse", width : '25%'}
+	             {dataField : "retnNo", headerText : "<spring:message code='sal.title.text.returnNo' />", width : '15%'}, 
+	             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
+	             {dataField : "created1", headerText : "<spring:message code='sal.text.createDate' />", width : '11%'}, 
+	             {dataField : "username1", headerText : "<spring:message code='sal.text.creator' />", width : '11%'},
+	             {dataField : "memCodeName2", headerText : "<spring:message code='sal.title.text.assignCt' />"}, 
+	             {dataField : "ctGrp", headerText : "<spring:message code='sal.title.text.group' />", width : '8%'},
+	             {dataField : "whLocCodeDesc", headerText : "<spring:message code='sal.title.text.returnWarehouse' />", width : '25%'}
 	         ];
 	        
 	        //그리드 속성 설정
@@ -132,7 +132,7 @@
 	        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
 	            if(memInfo == null) {
-	                Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+	                Common.alert('<b><spring:message code="sal.alert.msg.memNotFound" />'+memCode+'</b>');
 	            }
 	            else {
 	                $('#hiddenSalesmanId').val(memInfo.memId);
@@ -146,7 +146,7 @@
 	    
 	    function fn_saveCT(){
 	    	if(ctForm.salesmanCd.value == ""){
-	            Common.alert("Please select the Assign CT");
+	            Common.alert("<spring:message code='sal.alert.msg.pleaseSelectTheAssignCt' />");
 	            return false;
 	        }
 	    	
@@ -247,9 +247,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>CT ASSIGNMENT</h1>
+<h1><spring:message code="sal.page.title.ctAssignMent" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <form id="tabForm" name="tabForm" action="#" method="post">
@@ -261,7 +261,7 @@
 
 <article class="acodi_wrap"><!-- acodi_wrap start -->
 <dl>
-    <dt class="click_add_on on"><a href="#">Cancellation Request Information</a></dt>
+    <dt class="click_add_on on"><a href="#"><spring:message code="sal.title.cancellationRequestInfo" /></a></dt>
     <dd>
 
     <table class="type1"><!-- table start -->
@@ -276,88 +276,88 @@
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Request No</th>
+        <th scope="row"><spring:message code="sal.text.requestNo" /></th>
         <td><span>${cancelReqInfo.reqNo}</span></td>
-        <th scope="row">Creator</th>
+        <th scope="row"><spring:message code='sal.text.creator' /></th>
         <td><span>${cancelReqInfo.crtUserId}</span></td>
-        <th scope="row">Request Date</th>
+        <th scope="row"><spring:message code="sal.text.requestDate" /></th>
         <td><span>${cancelReqInfo.callRecallDt}</span></td>
     </tr>
     <tr>
-        <th scope="row">Request Status</th>
+        <th scope="row"><spring:message code="sal.text.requestStatus" /></th>
         <td><span>${cancelReqInfo.reqStusName}</span></td>
-        <th scope="row">Request Stage</th>
+        <th scope="row"><spring:message code="sal.title.text.requestStage" /></th>
         <td><span>${cancelReqInfo.reqStage}</span></td>
-        <th scope="row">Request Reason</th>
+        <th scope="row"><spring:message code="sal.text.requestReason" /></th>
         <td>${cancelReqInfo.reqResnCode} - ${cancelReqInfo.reqResnDesc}</td>
     </tr>
     <tr>
-        <th scope="row">Call Status</th>
+        <th scope="row"><spring:message code="sal.title.text.callStatus" /></th>
         <td><span>${cancelReqInfo.callStusName}</span></td>
-        <th scope="row">Recall Date</th>
+        <th scope="row"><spring:message code="sal.title.text.reCallDate" /></th>
         <td><span>${cancelReqInfo.callRecallDt}</span></td>
-        <th scope="row">Requestor</th>
+        <th scope="row"><spring:message code="sal.text.requestor" /></th>
         <td><span>${cancelReqInfo.reqster}</span></td>
     </tr>
     <tr>
-        <th scope="row">App Type (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.appTypeOnRequest" /></th>
         <td><span>${cancelReqInfo.appTypeName}</span></td>
-        <th scope="row">Stock (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.stockOnRequest" /></th>
         <td colspan="3">${cancelReqInfo.stockCode} - ${cancelReqInfo.stockName}</td>
     </tr>
     <tr>
-        <th scope="row">Outstanding (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.outstandingOnRequest" /></th>
         <td><span>${cancelReqInfo.ordOtstnd}</span></td>
-        <th scope="row">Penalty Amt (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.penaltyAmtOnRequest" /></th>
         <td><span>${cancelReqInfo.pnaltyAmt}</span></td>
-        <th scope="row">Adjustment Amt (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.adjustmentAmtOnRequest" /></th>
         <td><span>${cancelReqInfo.adjAmt}</span></td>
     </tr>
     <tr>
-        <th scope="row">Grand Total (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.grandTotalOnRequest" /></th>
         <td><span>${cancelReqInfo.grandTot}</span></td>
-        <th scope="row">Using Months (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.usingMonthsOnRequest" /></th>
         <td><span>${cancelReqInfo.usedMth}</span></td>
-        <th scope="row">Obligation Months (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.obligatioinMonthsOnRequest" /></th>
         <td><span>${cancelReqInfo.obligtMth}</span></td>
     </tr>
     <tr>
-        <th scope="row">Under Cooling Off Period ?</th>
+        <th scope="row"><spring:message code="sal.text.underCoolingOffPeriod" /></th>
         <td><span>${cancelReqInfo.isUnderCoolPriod}</span></td>
-        <th scope="row">Appointment Date</th>
+        <th scope="row"><spring:message code="sal.text.appointmentDate" /></th>
         <td><span>${cancelReqInfo.appRetnDg}</span></td>
-        <th scope="row">Actual Cancel Date</th>
+        <th scope="row"><spring:message code="sal.text.actualCancelDate" /></th>
         <td><span>${cancelReqInfo.actualCanclDt}</span></td>
     </tr>
     </tbody>
     </table><!-- table end -->
 
     </dd>
-    <dt class="click_add_on"><a href="#">Order Full Details</a></dt>
+    <dt class="click_add_on"><a href="#"><spring:message code="sal.title.text.orderFullDetails" /></a></dt>
     <dd>
 
     <section class="tap_wrap mt0"><!-- tap_wrap start -->
     <ul class="tap_type1 num4">
-        <li><a href="#" class="on">Basic Info</a></li>
-        <li><a href="#">HP / Cody</a></li>
-        <li><a id="aTabCI" href="#" onClick="javascript:chgGridTab('custInfo');">Customer Info</a></li>
-        <li><a href="#">Installation Info</a></li>
-        <li><a id="aTabMA" href="#">Mailling Info</a></li>
+        <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+        <li><a href="#"><spring:message code="sal.title.text.hpCody" /></a></li>
+        <li><a id="aTabCI" href="#" onClick="javascript:chgGridTab('custInfo');"><spring:message code="sal.title.text.custInfo" /></a></li>
+        <li><a href="#"><spring:message code="sal.title.text.installInfo" /></a></li>
+        <li><a id="aTabMA" href="#"><spring:message code="sal.title.text.maillingInfo" /></a></li>
     <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
-        <li><a href="#">Payment Channel</a></li>
+        <li><a href="#"><spring:message code="sal.title.text.paymentChnnl" /></a></li>
     </c:if>
-        <li><a id="aTabMI" href="#" onClick="javascript:chgGridTab('memInfo');">Membership Info</a></li>
-        <li><a href="#" onClick="javascript:chgGridTab('docInfo');">Document Submission</a></li>
-        <li><a href="#" onClick="javascript:chgGridTab('callLogInfo');">Call Log</a></li>
+        <li><a id="aTabMI" href="#" onClick="javascript:chgGridTab('memInfo');"><spring:message code="sal.title.text.memshipInfo" /></a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('docInfo');"><spring:message code="sal.title.text.docuSubmission" /></a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('callLogInfo');"><spring:message code="sal.title.text.callLog" /></a></li>
     <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
-        <li><a href="#">Quarantee Info</a></li>
+        <li><a href="#"><spring:message code="sal.title.text.paymentListing" /></a></li>
     </c:if>
-        <li><a href="#" onClick="javascript:chgGridTab('payInfo');">Payment Listing</a></li>
-        <li><a href="#" onClick="javascript:chgGridTab('transInfo');">Last 6 Months Transaction</a></li>
-        <li><a href="#">Order Configuration</a></li>
-        <li><a href="#" onClick="javascript:chgGridTab('autoDebitInfo');">Auto Debit Result</a></li>
-        <li><a href="#">Relief Certificate</a></li>
-        <li><a href="#" onClick="javascript:chgGridTab('discountInfo');">Discount</a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('payInfo');"><spring:message code="sal.title.text.paymentListing" /></a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('transInfo');"><spring:message code="sal.title.text.lastSixMonthTrnsaction" /></a></li>
+        <li><a href="#"><spring:message code="sal.title.text.ordConfiguration" /></a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('autoDebitInfo');"><spring:message code="sal.title.text.autoDebitResult" /></a></li>
+        <li><a href="#"><spring:message code="sal.title.text.reliefCertificate" /></a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('discountInfo');"><spring:message code="sal.title.text.discount" /></a></li>
     </ul>
 <!------------------------------------------------------------------------------
     Basic Info
@@ -439,7 +439,7 @@
     </article><!-- grid_wrap end -->
 
     </dd>
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(prodReturnGridID)">Product Return Transaction</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(prodReturnGridID)"><spring:message code="sal.text.productReturnTransaction" /></a></dt>
     <dd>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
@@ -468,27 +468,27 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Returm No</th>
+    <th scope="row"><spring:message code="sal.title.text.returnNo" /></th>
     <td><span>${ctAssignmentInfo.retnNo}</span></td>
-    <th scope="row">CT Group(Current)</th>
+    <th scope="row"><spring:message code="sal.text.ctGroupCurrent" /></th>
     <td><span>${ctAssignmentInfo.ctGrp}</span></td>
 </tr>
 <tr>
-    <th scope="row">CT Code(Current)</th>
+    <th scope="row"><spring:message code="sal.text.ctCodeCurrent" /></th>
     <td><span>${ctAssignmentInfo.memCode}</span></td>
-    <th scope="row">CT Name(Current)</th>
+    <th scope="row"><spring:message code="sal.text.ctNameCurrent" /></th>
     <td><span>${ctAssignmentInfo.memName} (${ctAssignmentInfo.nric})</span></td>
 </tr>
 <tr>
-    <th scope="row">Assign CT<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.assignCt" /><span class="must">*</span></th>
     <td><input type="text" title="" id="salesmanCd" name="salesmanCd" value="${ctAssignmentInfo.memCode}" placeholder="" class="" />
           <input id="hiddenSalesmanId" name="salesmanId" type="hidden"  />
           <a href="#" id="memBtn" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-    <th scope="row">CT Name</th>
+    <th scope="row"><spring:message code="sal.text.ctName" /></th>
     <td><span></span>${ctAssignmentInfo.memName} (${ctAssignmentInfo.nric})</td>
 </tr>
 <tr>
-    <th scope="row">CT Group<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.ctGroup" /><span class="must">*</span></th>
     <td>
     <select class="w100p" id="saveCtGroup" name="saveCtGroup">
         <option value="A">Group A</option>
@@ -503,7 +503,7 @@
 </table><!-- table end -->
 </form>
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveCT()">Save CT Assignment</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveCT()"><spring:message code="sal.btn.saveCtAssignment" /></a></p></li>
 </ul>
 
 </section><!-- pop_body end -->

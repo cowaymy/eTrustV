@@ -38,8 +38,8 @@
 <div id="popup_wrap" class="popup_wrap msg_box msg_big"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Investigation Result Confirmation</h1>
-<p class="pop_close"><a href="#" id="_regClose">close</a></p>
+<h1><spring:message code="sal.page.title.investigationResultConfirmation" /></h1>
+<p class="pop_close"><a href="#" id="_regClose"><spring:message code="sal.btn.close" /></a></p>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
@@ -51,17 +51,17 @@
 <input type="hidden" id="callResultStus" name="callResultStus" value="${callResultStus}">
 <input type="hidden" id="callResultRem" name="callResultRem" value="${callResultRem}">
 <div class="msg_txt">
-Order Number:<span>${saveSalesOrdNo}</span><br />
-This month is BS month for this order.<br />
-Ticket of BS request will be send to cody divison automatically by system.<br />
+<spring:message code="sal.text.orderNumber" /><span>${saveSalesOrdNo}</span><br />
+<spring:message code="sal.text.thisMonthIsBSMonthForThisOrder" /><br />
+<spring:message code="sal.text.ticketOfBSRequestWillBeSendTo" /><br />
 <p class="input_area">
-<label><input type="radio" name="ccticket" value="1"/><span>Don't Send Ticket</span></label>
-<label><input type="radio" name="ccticket" value="0"/><span>Ticket Send</span></label><br />
+<label><input type="radio" name="ccticket" value="1"/><span><spring:message code="sal.text.dontSendTicket" /></span></label>
+<label><input type="radio" name="ccticket" value="0"/><span><spring:message code="sal.text.ticketSend" /></span></label><br />
 </p><br />
-Are you sure want to remain this order to status regular?
+<spring:message code="sal.alert.msg.areYouSureWannaRemainThisOrdStusRegular" />
 </div>
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_regSaveOK()">YES</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_regSaveOK()"><spring:message code="sal.btn.yes" /></a></p></li>
 </ul>
 </form>
 </section><!-- pop_body end -->

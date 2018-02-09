@@ -42,30 +42,30 @@
 	function createAUIGrid() {
 		var columnLayout = [ {
 			dataField : "invReqNo",
-			headerText : "Request No",
+			headerText : "<spring:message code='sal.text.requestNo' />",
 			width : 140,
 			editable : false
 		}, {
 			dataField : "invReqPartyName",
-			headerText : "Request Party",
+			headerText : "<spring:message code='sal.text.requestParty' />",
 			width : 160,
 			editable : false
 		}, {
 			dataField : "invReqStusName",
-			headerText : "Request Status",
+			headerText : "<spring:message code='sal.text.requestStatus' />",
 			width : 170,
 			editable : false
 		}, {
 			dataField : "salesOrdNo",
-			headerText : "Order No.",
+			headerText : "<spring:message code='sal.title.text.ordNop' />",
 			editable : false
 		}, {
 			dataField : "invReqCrtUserName",
-			headerText : "Request By",
+			headerText : "<spring:message code='sal.text.requestBy' />",
 			editable : false
 		}, {
 			dataField : "invReqUpdDt",
-			headerText : "Request At",
+			headerText : "<spring:message code='sal.text.requestAt' />",
 			dataType : "date",
             formatString : "dd/mm/yyyy" ,
 			width : 170,
@@ -198,22 +198,22 @@
 		<p class="fav">
 			<a href="#" class="click_add_on">My menu</a>
 		</p>
-		<h2>Order Investigation Request Search - Officer</h2>
+		<h2><spring:message code="sal.page.title.orderInvestigationRequestSearch" /></h2>
 		<ul class="right_btns">
 			<li><p class="btn_blue">
-					<a href="#" onClick="fn_goSingle()">New Request(Single)</a>
+					<a href="#" onClick="fn_goSingle()"><spring:message code="sal.btn.newRequestSingle" /></a>
 				</p></li>
 			<li><p class="btn_blue">
-					<a href="#" onClick="fn_goBatch()">New Request(Batch)</a>
+					<a href="#" onClick="fn_goBatch()"><spring:message code="sal.btn.newRequestBatch" /></a>
 				</p></li>
 		    <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 			<li><p class="btn_blue">
 					<a href="#" onClick="fn_orderInvestigationListAjax()"><span
-						class="search"></span>Search</a>
+						class="search"></span><spring:message code="sal.btn.search" /></a>
 				</p></li>
 		    </c:if>
 			<li><p class="btn_blue">
-					<a href="#" onClick="fn_clear()" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a>
+					<a href="#" onClick="fn_clear()" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a>
 				</p></li>
 		</ul>
 	</aside>
@@ -237,10 +237,10 @@
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row">Request No</th>
+						<th scope="row"><spring:message code="sal.text.requestNo" /></th>
 						<td><input type="text" id="invReqNo" name="invReqNo" title=""
 							placeholder="" class="w100p" /></td>
-						<th scope="row">Request Date</th>
+						<th scope="row"><spring:message code="sal.text.requestDate" /></th>
 						<td>
 							<div class="date_set w100p">
 								<!-- date_set start -->
@@ -249,7 +249,7 @@
 										title="Create start Date"
 										placeholder="DD/MM/YYYY" class="j_date" />
 								</p>
-								<span>To</span>
+								<span><spring:message code="sal.text.to" /></span>
 								<p>
 									<input type="text" id="endCrtDt" name="endCrtDt"
 										title="Create end Date"
@@ -258,15 +258,15 @@
 							</div>
 							<!-- date_set end -->
 						</td>
-						<th scope="row">Order No</th>
+						<th scope="row"><spring:message code="sal.text.ordNo" /></th>
 						<td><input type="text" title="" id="salesOrdNo"
 							name="salesOrdNo" placeholder="" class="w100p" /></td>
 					</tr>
 					<tr>
-						<th scope="row">Request User</th>
+						<th scope="row"><spring:message code="sal.text.requestUser" /></th>
 						<td><input type="text" title="" id="invReqCrtUserName"
 							name="invReqCrtUserName" placeholder="" class="w100p" /></td>
-						<th scope="row">Request Status</th>
+						<th scope="row"><spring:message code="sal.text.requestStatus" /></th>
 						<td><select class="multy_select w100p" id="invReqStusId"
 							name="invReqStusId" multiple="multiple">
 								<option value="1">Active</option>
@@ -274,10 +274,10 @@
 								<option value="5">Approved</option>
 								<option value="6">Rejected</option>
 						</select></td>
-						<th scope="row">Request Party</th>
+						<th scope="row"><spring:message code="sal.text.requestParty" /></th>
 						<td><select class="w100p" id="invReqPartyId"
 							name="invReqPartyId">
-								<option value="">Request Party</option>
+								<option value=""><spring:message code="sal.text.requestParty" /></option>
 								<option value="770">Web User</option>
 								<option value="771">Cody User</option>
 						</select></td>
@@ -297,11 +297,11 @@
                 </colgroup>
                 <tbody>
                     <tr>
-                        <th scope="row">Org Code</th>
+                        <th scope="row"><spring:message code="sal.text.orgCode" /></th>
                         <td><input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="" class="w100p readonly" readonly/></td>
-                        <th scope="row">Grp Code</th>
+                        <th scope="row"><spring:message code="sal.text.grpCode" /></th>
                         <td><input type="text" title="" id="grpCode" name="grpCode" placeholder="" class="w100p" /></td>
-                        <th scope="row">Dept Code</th>
+                        <th scope="row"><spring:message code="sal.text.detpCode" /></th>
                         <td><input type="text" title="" id="deptCode" name="deptCode" placeholder="" class="w100p" /></td>
                     </tr>
                 </tbody>
@@ -322,10 +322,10 @@
 					<ul class="btns">
 						<li>
 						    <p class="link_btn type2">
-								<a href="#" onClick="fn_rawData()">Request Raw Data</a>
+								<a href="#" onClick="fn_rawData()"><spring:message code="sal.btn.requestRawData" /></a>
 							</p>
 					    </li>
-					    <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_goCallResult();">Call/result</a></p></li>
+					    <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_goCallResult();"><spring:message code="sal.btn.callResult" /></a></p></li>
 					</ul>
 					<p class="hide_btn">
 						<a href="#"><img

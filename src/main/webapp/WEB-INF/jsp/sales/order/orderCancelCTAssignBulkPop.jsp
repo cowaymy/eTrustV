@@ -74,36 +74,36 @@ function createAUIGrid() {
     //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
     var columnLayout = [ {
             dataField : "code1",
-            headerText : "Type",
+            headerText : "<spring:message code='sal.text.type' />",
             width : 70,
             editable : false
         }, {
             dataField : "name1",
-            headerText : "Customer Name",
+            headerText : "<spring:message code='sal.text.custName' />",
             width : 130,
             editable : false
         }, {
             dataField : "salesOrdNo",
-            headerText : "Order No.",
+            headerText : "<spring:message code='sal.title.text.ordNop' />",
             width : 90,
             editable : false
         }, {
             dataField : "retnNo",
-            headerText : "Return No",
+            headerText : "<spring:message code='sal.title.text.returnNo' />",
             width : 100,
             editable : false
         }, {
             dataField : "stkDesc",
-            headerText : "Model",
+            headerText : "<spring:message code='sal.text.model' />",
             width : 100,
             editable : false
         }, {
             dataField : "memCodeName",
-            headerText : "Current CT",
+            headerText : "<spring:message code='sal.text.currentCt' />",
             editable : false
         }, {
             dataField : "salesmanId",
-            headerText : "New Assign CT",
+            headerText : "<spring:message code='sal.text.newAssignCt' />",
             width : 130,
             labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
                 var retStr = "";
@@ -123,7 +123,7 @@ function createAUIGrid() {
                }
         }, {
             dataField : "checkConfim",
-            headerText : "Confirm",
+            headerText : "<spring:message code='sal.text.confirm' />",
             width : 70,
             renderer : { 
                 type : "CheckBoxEditRenderer", 
@@ -199,13 +199,13 @@ function createAUIGrid() {
     function fn_orderCancelBulkAjax() {
 		
 		if(searchBulkForm.dpAppointmentDate.value == ""){
-			Common.alert("* Please select installation date.");
+			Common.alert("<spring:message code='sal.pleaseSelectInstallationDate' />");
 			return false;
 		}
 
 		if(searchBulkForm.cmbDscBranchBulk.value == ""){
             if(searchBulkForm.cmbCtCodeBulk.value == ""){
-            	Common.alert("* Please select the CT code or DSC branch.");
+            	Common.alert("<spring:message code='sal.pleaseSelectTheCtCodeOrDSCBranch' />");
             	return false;
             }else{
             	return;
@@ -227,7 +227,7 @@ function createAUIGrid() {
         var updateList = AUIGrid.getEditedRowItems(myBulkdGridID);
         
         if(updateList == null || updateList.length <= 0 ){
-            Common.alert("* No data Change.");
+            Common.alert("<spring:message code='sal.alert.msg.noDataChange' />");
             return;
         }
         
@@ -266,9 +266,9 @@ function createAUIGrid() {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Change Assign CT(Bulk)</h1>
+<h1><spring:message code="sal.page.title.changeAssignCTBulk" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="bulkClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="bulkClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -276,8 +276,8 @@ function createAUIGrid() {
 
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="fn_orderCancelBulkAjax()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="fn_orderCancelBulkAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a href="#"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -294,34 +294,34 @@ function createAUIGrid() {
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Product Return Type</th>
+    <th scope="row"><spring:message code="sal.text.productReturnType" /></th>
     <td>
 	    <select class="multy_select w100p" multiple="multiple" id="cmbPRType" name="cmbPRType">
-	        <option value="296">Order Cancellation Product Return</option>
-	        <option value="297">Product Exchange Product Return</option>
+	        <option value="296"><spring:message code="sal.combo.orderCancelProductReturn" /></option>
+	        <option value="297"><spring:message code="sal.combo.productExchangeProductReturn" /></option>
 	    </select>
     </td>
-    <th scope="row">Appointment Date</th>
+    <th scope="row"><spring:message code="sal.text.appointmentDate" /></th>
     <td><input type="text" id="dpAppointmentDate" name="dpAppointmentDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
-    <th scope="row">DSC Branch</th>
+    <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
     <td>
         <select id="cmbDscBranchBulk" name="cmbDscBranchBulk" class="w100p">
-            <option value="">DSC Branch</option>
+            <option value=""><spring:message code="sal.title.text.dscBrnch" /></option>
             <c:forEach var="list" items="${dscBranchList }">
                 <option value="${list.brnchId }">${list.brnchName }</option>
             </c:forEach>
         </select>
     </td>
-    <th scope="row">Application</th>
+    <th scope="row"><spring:message code="sal.text.application" /></th>
     <td>
 	    <select id="cmbAppTypeBulk" name="cmbAppTypeBulk" class="multy_select w100p" multiple="multiple">
         </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">CT Group</th>
+    <th scope="row"><spring:message code="sal.text.ctGroup" /></th>
     <td>
     <select class="w100p" id="cmbCTGrpBulk" name="cmbCTGrpBulk">
         <option value="A">A</option>
@@ -329,10 +329,10 @@ function createAUIGrid() {
         <option value="C">C</option>
     </select>
     </td>
-    <th scope="row">CT Code</th>
+    <th scope="row"><spring:message code="sal.text.ctCode" /></th>
     <td>
 	    <select id="cmbCtCodeBulk" name="cmbCtCodeBulk" class="w100p">
-	        <option value="">CT Code</option>
+	        <option value=""><spring:message code="sal.text.ctCode" /></option>
 	        <c:forEach var="list" items="${selectAssignCTList }">
 	            <option value="${list.memId}">${list.memCode} - ${list.memCodeName}</option>
 	        </c:forEach>
@@ -340,13 +340,13 @@ function createAUIGrid() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Sort By</th>
+    <th scope="row"><spring:message code="sal.title.text.sortBy" /></th>
     <td colspan="3">
     <select class="w100p" id="sortBy" name="sortBy">
-        <option value="0">No Sorting</option>
-        <option value="1">Ret Number</option>
-        <option value="2">Order Number</option>
-        <option value="3">CT Code</option>
+        <option value="0"><spring:message code="sal.combo.noSorting" /></option>
+        <option value="1"><spring:message code="sal.combo.retNumber" /></option>
+        <option value="2"><spring:message code="sal.text.ordNum" /></option>
+        <option value="3"><spring:message code="sal.text.ctCode" /></option>
     </select>
     </td>
 </tr>
@@ -365,7 +365,7 @@ function createAUIGrid() {
 </section><!-- search_result end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_bulkSave()" >SAVE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_bulkSave()" ><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

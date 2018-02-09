@@ -32,18 +32,18 @@
         //AUIGrid 칼럼 설정
         var columnLayout = [{
                 dataField : "memId",
-                headerText : "Member ID",
+                headerText : "<spring:message code='sal.title.memberId' />",
                 width : 120
             }, {
                 dataField : "memCode",
-                headerText : "Member Code",
+                headerText : "<spring:message code='sal.title.memberCode' />",
                 width : 120
             }, {
                 dataField : "name",
-                headerText : "Member Name"
+                headerText : "<spring:message code='sal.title.memberName' />"
             }, {
                 dataField : "nric",
-                headerText : "Member IC",
+                headerText : "<spring:message code='sal.title.memberNRIC' />",
                 width : 120
             }];
 
@@ -92,9 +92,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Search Member</h1>
+<h1><spring:message code="sal.page.title.searchMember" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a id="memPopCloseBtn" href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a id="memPopCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -111,23 +111,23 @@
     <col style="width:210px" />
     <col style="width:*" />
 </colgroup>
-<tbody>
+<tbody> 
 <tr>
-    <th scope="row">Member Type</th>
+    <th scope="row"><spring:message code="sal.text.memtype" /></th>
     <td>
     <select id="popMemType" name="memType" class="w100p disabled" disabled></select>
     </td>
-    <th scope="row">Member Code</th>
+    <th scope="row"><spring:message code='sal.title.memberCode' /></th>
     <td><input id="popMemCd" name="memCode" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Member Name</th>
+    <th scope="row"><spring:message code='sal.title.memberName' /></th>
     <td><input id="popMemNm" name="name" type="text" title="" placeholder="" class="w100p" /></td>
-    <th scope="row">IC Number</th>
+    <th scope="row"><spring:message code="sal.text.icNumber" /></th>
     <td><input id="popIcNum" name="nric" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
 <tr>
-    <th scope="row">Branch</th>
+    <th scope="row"><spring:message code="sal.text.branch" /></th>
     <td colspan="3">
     <select id="popBrnchId" name="brnch" class="w100p"></select>
     </td>
@@ -138,8 +138,8 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a id="searchBtn" href="#">SEARCH</a></p></li>
-    <li><p class="btn_grid"><a href="#">CLEAR</a></p></li>
+    <li><p class="btn_grid"><a id="searchBtn" href="#"><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_grid"><a href="#"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

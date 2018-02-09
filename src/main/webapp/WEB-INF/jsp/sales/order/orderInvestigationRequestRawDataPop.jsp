@@ -146,9 +146,9 @@ CommonCombo.make('cmbRejectReason', '/sales/ccp/getReasonCodeList', '' , '', {ty
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Investigate Request Raw Data</h1>
+<h1><spring:message code="sal.page.title.investigateRequestRawData" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -173,11 +173,11 @@ CommonCombo.make('cmbRejectReason', '/sales/ccp/getReasonCodeList', '' , '', {ty
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Request No</th>
+    <th scope="row"><spring:message code="sal.text.requestNo" /></th>
     <td><input type="text" title="" placeholder="Request Number" class="w100p" id="txtReqNo"/></td>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><input type="text" title="" placeholder="Order Number" class="w100p" id="txtOrderNo"/></td>
-    <th scope="row">Request Date</th>
+    <th scope="row"><spring:message code="sal.text.requestDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpReqDateFr"/></p>
@@ -187,38 +187,38 @@ CommonCombo.make('cmbRejectReason', '/sales/ccp/getReasonCodeList', '' , '', {ty
     </td>
 </tr>
 <tr>
-    <th scope="row">Request Status</th>
+    <th scope="row"><spring:message code="sal.text.requestStatus" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbReqStatus" data-placeholder="Request Status">
-        <option value="1">Active</option>
-        <option value="44">Pending</option>
-        <option value="5">Approved</option>
-        <option value="6">Rejected</option>
+        <option value="1"><spring:message code="sal.combo.text.active" /></option>
+        <option value="44"><spring:message code="sal.text.pending" /></option>
+        <option value="5"><spring:message code="sal.combo.text.approv" /></option>
+        <option value="6"><spring:message code="sal.combo.text.rej" /></option>
     </select>
     </td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateFr"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.text.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpOrderDateTo"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Requestor</th>
+    <th scope="row"><spring:message code="sal.text.requestor" /></th>
     <td><input type="text" title="" placeholder="Requestor (Username)" class="w100p" id="txtRequestor"/></td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbAppType" data-placeholder="Application Type"></select>
     </td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><input type="text" title="" placeholder="Customer Name" class="w100p" id="txtCustName"/></td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.text.customerNRIC" /></th>
     <td><input type="text" title="" placeholder="NRIC/Company Number" class="w100p" id="txtCustIC"/></td>
 </tr>
 <tr>
-    <th scope="row">Reject Reason</th>
+    <th scope="row"><spring:message code="sal.title.text.rejReason" /></th>
     <td colspan="3">
     <select class="multy_select w100p" multiple="multiple" id="cmbRejectReason" data-placeholder="Reject Reason"></select>
     </td>
@@ -229,8 +229,8 @@ CommonCombo.make('cmbRejectReason', '/sales/ccp/getReasonCodeList', '' , '', {ty
 </table><!-- table end -->
 
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Click()">Generate</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Click()"><spring:message code="sal.btn.generate" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
 <input type="hidden" id="reportFileName" name="reportFileName" value="" />

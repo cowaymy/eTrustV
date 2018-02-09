@@ -43,26 +43,26 @@
 	    //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
 	    var logColumnLayout = [ {
 	            dataField : "codeName",
-	            headerText : "Type",
+	            headerText : "<spring:message code='sal.title.type' />",
 	            width : 190,
 	            editable : false
 	        }, {
 	            dataField : "name",
-	            headerText : "Status",
+	            headerText : "<spring:message code='sal.title.status' />",
 	            width : 130,
 	            editable : false
 	        }, {
 	            dataField : "callRem",
-	            headerText : "Message",
+	            headerText : "<spring:message code='sal.title.text.msg' />",
 	            editable : false
 	        }, {
 	            dataField : "userName",
-	            headerText : "Create By",
+	            headerText : "<spring:message code='sal.text.createBy' />",
 	            width : 130,
 	            editable : false
 	        }, {
 	            dataField : "callCrtDt",
-	            headerText : "Create At",
+	            headerText : "<spring:message code='sal.text.createAt' />",
 	            dataType : "date", 
                 formatString : "mm-dd-yyyy hh:24MI:ss",
 	            width : 130,
@@ -140,17 +140,17 @@
     function fn_callResultSave(){
 
     	var invmsg = "";
-        invmsg += "Order Number : " + ${investCallResultCust.salesOrdNo }+"<br>";
-        invmsg += "Are you sure want to remain this order to Investigate status ?";
+        invmsg += "<spring:message code='sal.text.orderNumber' /> " + ${investCallResultCust.salesOrdNo }+"<br>";
+        invmsg += "<spring:message code='sal.alert.msg.areYouSureWannaRemainThisOrdINVStus' />";
         
         var susmsg = "";
-        susmsg += "Order number : " + ${investCallResultCust.salesOrdNo }+"<br>";
+        susmsg += "<spring:message code='sal.text.orderNumber' /> " + ${investCallResultCust.salesOrdNo }+"<br>";
         susmsg += "This month is BS month for this order.</br>";
         susmsg += "Ticket of BS request will be send to cody divison automatically by system.</br>";
-        susmsg += "Are you sure want to remain this order to status regular  ?";
+        susmsg += "<spring:message code='sal.alert.msg.areYouSureWannaRemainThisOrdStusRegular' />";
         
     	if(saveForm.callResultRem.value == ""){
-    		Common.alert("Please Enter callResultRem Remark !");
+    		Common.alert("<spring:message code='sal.alert.msg.pleaseEnterCallResultRemRemark' />");
     		return false;
     	}
     	// REG 저장일때 BSMonth를 비교하여 ticket 라디오박스 confirm을 위한 체크 
@@ -182,7 +182,7 @@
         	}else if(saveForm.callResultStus.value == "2"){
         		Common.confirm(susmsg,fn_callResultSaveOK);
         	}else{
-        		Common.alert("Please try again");
+        		Common.alert("<spring:message code='sal.alert.msg.pleaseTryAgain' />");
         		return false;
         	}
         	
@@ -273,9 +273,9 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order Investigation Request Details - Officer</h1>
+<h1><spring:message code="sal.page.title.orderInvestigationRequestDetails" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_saveClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_saveClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -283,17 +283,17 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
-    <li><a href="#" class="on">Investigate Request Info</a></li>
-    <li><a href="#">Customer Info</a></li>
-    <li><a href="#" onclick="javascript: fn_resizefunc(callLogGridID)">Call Log</a></li>
+    <li><a href="#" class="on"><spring:message code="sal.text.investigateRequestInfo" /></a></li>
+    <li><a href="#"><spring:message code="sal.title.text.custInfo" /></a></li>
+    <li><a href="#" onclick="javascript: fn_resizefunc(callLogGridID)"><spring:message code="sal.title.text.callLog" /></a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3 class="pt0 mt0">Particular Information</h3>
+<h3 class="pt0 mt0"><spring:message code="sal.title.text.particInfo" /></h3>
 <ul class="right_btns top0">
-    <li><p class="btn_blue"><a href="#" onclick="javascript : fn_goLedger1()"><span class="search"></span>View Order Ledger(1)</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript : fn_goLedger1()"><span class="search"></span><spring:message code="sal.btn.viewOrderLedger1" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 <form id="gridParam" name="gridParam" method="GET">
@@ -313,56 +313,56 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Investigation No.</th>
+    <th scope="row"><spring:message code="sal.text.investigateNo" /></th>
     <td>
     <span>${investCallResultInfo.invNo }</span>
     </td>
-    <th scope="row">Investigate Status</th>
+    <th scope="row"><spring:message code="sal.text.investigateStatus" /></th>
     <td>${investCallResultInfo.name }
     </td>
 </tr>
 <tr>
-    <th scope="row">Investigated At</th>
+    <th scope="row"><spring:message code="sal.text.investigateAt" /></th>
     <td>
     <span>${investCallResultInfo.invCrtDt }</span>
     </td>
-    <th scope="row">BS Cancelled</th>
+    <th scope="row"><spring:message code="sal.text.bsCancelled" /></th>
     <td>-
     </td>
 </tr>
 <tr>
-    <th scope="row">Product</th>
+    <th scope="row"><spring:message code="sal.text.product" /></th>
     <td>
     <span>${investCallResultCust.stkDesc }</span>
     </td>
-    <th scope="row">Rental Status</th>
+    <th scope="row"><spring:message code="sal.text.rentalStatus" /></th>
     <td>${investCallResultCust.stusCodeId }
     </td>
 </tr>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td>
     <span>${investCallResultCust.salesOrdNo }</span>
     </td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.title.text.ordStus" /></th>
     <td>${investCallResultCust.salesDt }
     </td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
     <span>${investCallResultCust.codeName }</span>
     </td>
-    <th scope="row">Rental Fees</th>
+    <th scope="row"><spring:message code="sal.title.text.rentalFees" /></th>
     <td>RM ${investCallResultCust.mthRentAmt }
     </td>
 </tr>
 <tr>
-    <th scope="row">Last Update At</th>
+    <th scope="row"><spring:message code="sal.text.lastUpdateAt" /></th>
     <td>
     <span>${investCallResultInfo.invUpdDt }</span>
     </td>
-    <th scope="row">Last Update By</th>
+    <th scope="row"><spring:message code="sal.text.lastUpdateBy" /></th>
     <td>${investCallResultInfo.username1 }
     </td>
 </tr>
@@ -374,7 +374,7 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3 class="pt0">Customer  Information</h3>
+<h3 class="pt0"><spring:message code="sal.page.title.custInformation" /></h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -387,21 +387,21 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td>
     <span>${investCallResultCust.custId }</span>
     </td>
-    <th scope="row">Customer Type</th>
+    <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
     <span>${investCallResultCust.codeDesc }</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td>
     <span>${investCallResultCust.name }</span>
     </td>
-    <th scope="row">Customer NRIC</th>
+    <th scope="row"><spring:message code="sal.text.customerNRIC" /></th>
     <td>
     <span>${investCallResultCust.nric }</span>
     </td>
@@ -410,7 +410,7 @@
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Mailing Information  </h3>
+<h3><spring:message code="sal.text.mailingInformation" />  </h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -423,33 +423,33 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Contact Person</th>
+    <th scope="row"><spring:message code="sal.tap.title.contactPerson" /></th>
     <td colspan="3">
     <span>${investCallResultCust.name1 }</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Office No.</th>
+    <th scope="row"><spring:message code="sal.title.text.officeNo" /></th>
     <td>
     <span>${investCallResultCust.telO }</span>
     </td>
-    <th scope="row">Residence No.</th>
+    <th scope="row"><spring:message code="sal.text.residenceNo" /></th>
     <td>
     <span>${investCallResultCust.telR }</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Fax No.</th>
+    <th scope="row"><spring:message code="sal.text.faxNo" /></th>
     <td>
     <span>${investCallResultCust.telF }</span>
     </td>
-    <th scope="row">Mobile No.</th>
+    <th scope="row"><spring:message code="sal.title.text.mobileNo" /></th>
     <td>
     <span>${investCallResultCust.telM1 }</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Address</th>
+    <th scope="row"><spring:message code="sal.text.address" /></th>
     <td colspan="3">
     <span>${investCallResultCust.maillingAddr }</span>
     </td>
@@ -458,7 +458,7 @@
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Installation Information </h3>
+<h3><spring:message code="sal.title.text.installInfomation" /> </h3>
 </aside><!-- title_line end -->
 
 <table class="type1"><!-- table start -->
@@ -471,33 +471,34 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Contact Person</th>
+    <th scope="row"><spring:message code="sal.text.contactPerson" /></th>
     <td colspan="3">
     <span>${investCallResultCust.name2 }</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Office No.</th>
+    <th scope="row"><spring:message code="sal.title.text.officeNo" /></th>
     <td>
     <span>${investCallResultCust.telO1 }</span>
     </td>
-    <th scope="row">Residence No.</th>
+    <th scope="row"><spring:message code="sal.text.residenceNo" /></th>
     <td>
     <span>${investCallResultCust.telR1 }</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Fax No.</th>
+    <th scope="row"><spring:message code="sal.text.faxNo" /></th>
     <td>
     <span>${investCallResultCust.telF1 }</span>
     </td>
-    <th scope="row">Mobile No.</th>
+    <th scope="row"><spring:message code="sal.title.text.mobileNo" />
+</th>
     <td>
     <span>${investCallResultCust.telM11 }</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Address</th>
+    <th scope="row"><spring:message code="sal.text.address" /></th>
     <td colspan="3">
     <span>${investCallResultCust.installationAddr }</span>
     </td>
@@ -510,7 +511,7 @@
 <article class="tap_area"><!-- tap_area start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3 class="pt0">Call Log</h3>
+<h3 class="pt0"><spring:message code="sal.title.text.callLog" /></h3>
 </aside><!-- title_line end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -523,7 +524,7 @@
 
 <div id="saveSuspendDiv" style="display:none;"><!-- Status = Suspend일 경우 start -->
 <aside class="title_line"><!-- title_line start -->
-<h3>Investigation Result Information</h3>
+<h3><spring:message code="sal.text.investigationResultInfo" /></h3>
 </aside><!-- title_line end -->
 
 <form id="saveForm" name="saveForm" method="GET">
@@ -539,13 +540,13 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Suspend No</th>
+    <th scope="row"><spring:message code="sal.text.suspendno" /></th>
     <td>
     <span>-</span>
     </td>
 </tr>
 <tr>
-    <th scope="row">Status</th>
+    <th scope="row"><spring:message code="sal.text.status" /></th>
     <td>
     <select id="callResultStus" name="callResultStus" onChange="fn_stusChng()">
         <option value="29">(INV) Pending For Investigate</option>
@@ -559,7 +560,7 @@
     </td>
 </tr>
 <tr class="inchargeDiv" style="display:none">
-    <th scope="row" rowspan="2">Inchage Person</th>
+    <th scope="row" rowspan="2"><spring:message code="sal.text.incharge" /></th>
     <td>
     <select id="incharge" name="incharge" onchange="fn_inCharge('inchargeNm', this.value, '', '')">
         <option value="0">[Select One]</option>
@@ -575,7 +576,7 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td>
     <textarea cols="20" rows="5" id="callResultRem" name="callResultRem" placeholder=""></textarea>
     </td>
@@ -585,7 +586,7 @@
 </form>
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_callResultSave()">SAVE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_callResultSave()"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </div>

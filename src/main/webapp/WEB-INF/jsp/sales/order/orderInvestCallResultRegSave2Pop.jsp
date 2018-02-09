@@ -38,8 +38,8 @@
 <div id="popup_wrap" class="popup_wrap msg_box msg_big"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Investigation Result Confirmation</h1>
-<p class="pop_close"><a href="#" id="_reg2Close">close</a></p>
+<h1><spring:message code="sal.page.title.investigationResultConfirmation" /></h1>
+<p class="pop_close"><a href="#" id="_reg2Close"><spring:message code="sal.btn.close" /></a></p>
 </header><!-- pop_header end -->
 
 <form id="regForm" name="regForm" method="GET">
@@ -52,14 +52,14 @@
 </form>
 <section class="pop_body"><!-- pop_body start -->
 <div class="msg_txt">
-Order Number:<span>${saveSalesOrdNo}</span><br />
-No BS required for this order at current month.<br />
+<spring:message code="sal.text.orderNumber" /><span>${saveSalesOrdNo}</span><br />
+<spring:message code="sal.text.noBSRequiredForThisOrderAtCurrent" /><br />
 <br />
 
-Are you sure want to remain this order to status regular?
+<spring:message code="sal.alert.msg.areYouSureWannaRemainThisOrdStusRegular" />
 </div>
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="fn_regSaveOK()">YES</a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="fn_regSaveOK()"><spring:message code="sal.btn.yes" /></a></p></li>
 </ul>
 </section><!-- pop_body end -->
 

@@ -54,12 +54,12 @@
     function cancelLogGrid(){
         // Cancellation Log Transaction Column
         var cancelLogColumnLayout = [
-             {dataField : "code1", headerText : "Type", width : '10%'},
-             {dataField : "code", headerText : "Status", width : '10%'},
-             {dataField : "crtDt", headerText : "Create Date", width : '20%'},
-             {dataField : "callentryUserName", headerText : "Creator", width : '20%'},
-             {dataField : "updDt", headerText : "Update Date", width : '20%'},
-             {dataField : "userName", headerText : "Updator", width : '20%'}
+             {dataField : "code1", headerText : "<spring:message code='sal.text.type' />", width : '10%'}, 
+             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
+             {dataField : "crtDt", headerText : "<spring:message code='sal.text.createDate' />", width : '20%'}, 
+             {dataField : "callentryUserName", headerText : "<spring:message code='sal.text.creator' />", width : '20%'},
+             {dataField : "updDt", headerText : "<spring:message code='sal.title.text.updateDate' />", width : '20%'}, 
+             {dataField : "userName", headerText : "<spring:message code='sal.text.updator' />", width : '20%'}
          ];
 
         //그리드 속성 설정
@@ -91,13 +91,13 @@
     function prodReturnGrid(){
         // Product Return Transaction Column
         var prodReturnColumnLayout = [
-             {dataField : "retnNo", headerText : "Return No", width : '15%'},
-             {dataField : "code", headerText : "Status", width : '10%'},
-             {dataField : "created1", headerText : "Create Date", width : '11%'},
-             {dataField : "username1", headerText : "Creator", width : '11%'},
-             {dataField : "memCodeName2", headerText : "Assign CT"},
-             {dataField : "ctGrp", headerText : "Group", width : '8%'},
-             {dataField : "whLocCodeDesc", headerText : "Return Warehouse", width : '25%'}
+             {dataField : "retnNo", headerText : "<spring:message code='sal.title.text.returnNo' />", width : '15%'}, 
+             {dataField : "code", headerText : "<spring:message code='sal.text.status' />", width : '10%'},
+             {dataField : "created1", headerText : "<spring:message code='sal.text.createDate' />", width : '11%'}, 
+             {dataField : "username1", headerText : "<spring:message code='sal.text.creator' />", width : '11%'},
+             {dataField : "memCodeName2", headerText : "<spring:message code='sal.title.text.assignCt' />"}, 
+             {dataField : "ctGrp", headerText : "<spring:message code='sal.title.text.group' />", width : '8%'},
+             {dataField : "whLocCodeDesc", headerText : "<spring:message code='sal.title.text.returnWarehouse' />", width : '25%'}
          ];
 
         //그리드 속성 설정
@@ -253,22 +253,22 @@
 
     function fn_saveCancel(){
     	if(addCallForm.addStatus.value == ""){
-    		Common.alert("Please select the Status");
+    		Common.alert("<spring:message code='sal.alert.msg.pleaseSelectTheStatus' />");
     		return false;
     	}
     	console.log("status : " + $("#reqStageId").val());
     	if($("#addStatus").val() == '19'){     // Recall
 //    		if($("#reqStageId").val() == '24'){     // before installl
     			if(addCallForm.cmbFeedbackCd.value == ""){
-    				Common.alert("Please select the Feedback Code");
+    				Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
     				return false;
     			}
     			if(addCallForm.addCallRecallDt.value == ""){
-                    Common.alert("Please key in the recall Date");
+                    Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRecallDate' />");
                     return false;
                 }
     			if(addCallForm.addRem.value == ""){
-                    Common.alert("Please key in the remark");
+                    Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
                     return false;
                 }
 //    		}
@@ -278,21 +278,21 @@
           if($("#reqStageId").val() == '24'){     // before installl
         	  console.log("before : " + $("#reqStageId").val());
                 if(addCallForm.cmbFeedbackCd.value == ""){
-                    Common.alert("Please select the Feedback Code");
+                    Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
                     return false;
                 }
                 if(addCallForm.addRem.value == ""){
-                    Common.alert("Please key in the remark");
+                    Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
                     return false;
                 }
             }else if($("#reqStageId").val() == '25'){
             	console.log("after : " + $("#reqStageId").val());
             	if(addCallForm.cmbFeedbackCd.value == ""){
-                    Common.alert("Please select the Feedback Code");
+                    Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
                     return false;
                 }
                 if(addCallForm.cmbAssignCt.value == ""){
-                    Common.alert("Please key in the Assign CT");
+                    Common.alert("<spring:message code='sal.pleaseKeyInTheAssignCT' />");
                     return false;
                 }
                 if(addCallForm.cmbCtGroup.value == ""){
@@ -300,21 +300,21 @@
                    // return false;
                 }
                 if(addCallForm.addAppRetnDt.value == ""){
-                    Common.alert("Please key in the Appointment Date");
+                    Common.alert("<spring:message code='sal.pleaseKeyInTheAppointmentDate' />");
                     return false;
                 }
                 if(addCallForm.addRem.value == ""){
-                    Common.alert("Please key in the remark");
+                    Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
                     return false;
                 }
             }else{
             	console.log("else : " + $("#reqStageId").val());
             	if(addCallForm.cmbFeedbackCd.value == ""){
-                    Common.alert("Please select the Feedback Code");
+                    Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
                     return false;
                 }
             	if(addCallForm.addRem.value == ""){
-                    Common.alert("Please key in the remark");
+                    Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
                     return false;
                 }
             }
@@ -322,24 +322,24 @@
     	if($("#addStatus").val() == '31'){     // Reversal Of Cancellation
             if($("#reqStageId").val() == '24'){     // before installl
                   if(addCallForm.cmbFeedbackCd.value == ""){
-                      Common.alert("Please select the Feedback Code");
+                      Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
                       return false;
                   }
                   if(addCallForm.addRem.value == ""){
-                      Common.alert("Please key in the remark");
+                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
                       return false;
                   }
                   if(addCallForm.addCallRecallDt.value == ""){
-                      Common.alert("Please key in the recall Date");
+                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRecallDate' />");
                       return false;
                   }
               }else{
                   if(addCallForm.cmbFeedbackCd.value == ""){
-                      Common.alert("Please select the Feedback Code");
+                      Common.alert("<spring:message code='sal.alert.msg.plzSelFeedbackCode' />");
                       return false;
                   }
                   if(addCallForm.addRem.value == ""){
-                      Common.alert("Please key in the remark");
+                      Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInTheRemark' />");
                       return false;
                   }
                   //if(addCallForm.cmbAssignCt.value == ""){
@@ -463,14 +463,14 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <!-- pop_header start -->
 <header class="pop_header">
-<h1>Order Cancellation - New</h1>
+<h1><spring:message code="sal.page.title.orderCancellationNew" /></h1>
 <ul class="right_opt">
 <!--
     <li><p class="btn_blue2"><a href="#">COPY</a></p></li>
     <li><p class="btn_blue2"><a href="#">EDIT</a></p></li>
     <li><p class="btn_blue2"><a href="#">NEW</a></p></li>
  -->
-    <li><p class="btn_blue2"><a href="#" id="_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 <form id="tabForm" name="tabForm" action="#" method="post">
@@ -482,7 +482,7 @@
 
 <article class="acodi_wrap"><!-- acodi_wrap start -->
 <dl>
-    <dt class="click_add_on on"><a href="#">Cancellation Request Information</a></dt>
+    <dt class="click_add_on on"><a href="#"><spring:message code="sal.title.cancellationRequestInfo" /></a></dt>
     <dd>
     <table class="type1"><!-- table start -->
     <caption>table</caption>
@@ -496,74 +496,74 @@
     </colgroup>
     <tbody>
     <tr>
-        <th scope="row">Request No</th>
+        <th scope="row"><spring:message code="sal.text.requestNo" /></th>
         <td><span>${cancelReqInfo.reqNo}</span></td>
-        <th scope="row">Creator</th>
+        <th scope="row"><spring:message code='sal.text.creator' /></th>
         <td>${cancelReqInfo.crtUserId}</td>
-        <th scope="row">Request Date  </th>
+        <th scope="row"><spring:message code="sal.text.requestDate" /></th>
         <td>${cancelReqInfo.callRecallDt}</td>
     </tr>
     <tr>
-        <th scope="row">Request Status</th>
+        <th scope="row"><spring:message code="sal.text.requestStatus" /></th>
         <td><span>${cancelReqInfo.reqStusName}</span></td>
-        <th scope="row">Request Stage</th>
+        <th scope="row"><spring:message code="sal.title.text.requestStage" /></th>
         <td>${cancelReqInfo.reqStage}
         </td>
-        <th scope="row">Request Reason</th>
+        <th scope="row"><spring:message code="sal.text.requestReason" /></th>
         <td>${cancelReqInfo.reqResnCode} - ${cancelReqInfo.reqResnDesc}
         </td>
     </tr>
     <tr>
-        <th scope="row">Call Status</th>
+        <th scope="row"><spring:message code="sal.title.text.callStatus" /></th>
         <td>
         <span>${cancelReqInfo.callStusName}</span>
         </td>
-        <th scope="row">Recall Date</th>
+        <th scope="row"><spring:message code="sal.title.text.reCallDate" /></th>
         <td>${cancelReqInfo.callRecallDt}
         </td>
-        <th scope="row">Requestor</th>
+        <th scope="row"><spring:message code="sal.text.requestor" /></th>
         <td>${cancelReqInfo.reqster}
         </td>
     </tr>
     <tr>
-        <th scope="row">App Type (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.appTypeOnRequest" /></th>
         <td>
         <span>${cancelReqInfo.appTypeName}</span>
         </td>
-        <th scope="row">Stock (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.stockOnRequest" /></th>
         <td colspan="3">${cancelReqInfo.stockCode} - ${cancelReqInfo.stockName}
         </td>
     </tr>
     <tr>
-        <th scope="row">Outstanding (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.outstandingOnRequest" /></th>
         <td>
         <span>${cancelReqInfo.ordOtstnd}</span>
         </td>
-        <th scope="row">Penalty Amt (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.penaltyAmtOnRequest" /></th>
         <td>${cancelReqInfo.pnaltyAmt}
         </td>
-        <th scope="row">Adjustment Amt (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.adjustmentAmtOnRequest" /></th>
         <td>${cancelReqInfo.adjAmt}
         </td>
     </tr>
     <tr>
-        <th scope="row">Grand Total (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.grandTotalOnRequest" /></th>
         <td>
         <span>${cancelReqInfo.grandTot}</span>
         </td>
-        <th scope="row">Using Months (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.usingMonthsOnRequest" /></th>
         <td>${cancelReqInfo.usedMth}
         </td>
-        <th scope="row">Obligation Months (On Request)</th>
+        <th scope="row"><spring:message code="sal.text.obligatioinMonthsOnRequest" /></th>
         <td>${cancelReqInfo.obligtMth}
         </td>
     </tr>
     <tr>
-        <th scope="row">Under Cooling Off Period ?</th>
+        <th scope="row"><spring:message code="sal.text.underCoolingOffPeriod" /></th>
         <td>
         <span></span>
         </td>
-        <th scope="row">Appointment Date</th>
+        <th scope="row"><spring:message code="sal.text.appointmentDate" /></th>
         <td>
             <c:choose >
                 <c:when test="${cancelReqInfo.appRetnDg eq '01-01-1900'}">
@@ -574,7 +574,7 @@
                 </c:otherwise>
             </c:choose>
         </td>
-        <th scope="row">Actual Cancel Date</th>
+        <th scope="row"><spring:message code="sal.text.actualCancelDate" /></th>
         <td>
             <c:choose >
                 <c:when test="${cancelReqInfo.actualCanclDt eq '01-01-1900'}">
@@ -606,7 +606,7 @@
     </tr>
  -->
     <tr>
-        <th scope="row">OCR Remark</th>
+        <th scope="row">OCR <spring:message code="sal.text.remark" /></th>
         <td colspan="5">${cancelReqInfo.reqRem}
         </td>
     </tr>
@@ -614,31 +614,31 @@
     </table><!-- table end -->
 
     </dd>
-    <dt class="click_add_on"><a href="#">Order Full Details</a></dt>
+    <dt class="click_add_on"><a href="#"><spring:message code="sal.title.text.orderFullDetails" /></a></dt>
     <dd>
 
     <section class="tap_wrap mt0"><!-- tap_wrap start -->
     <ul class="tap_type1 num4">
-        <li><a href="#" class="on">Basic Info</a></li>
-        <li><a href="#">HP / Cody</a></li>
-        <li><a id="aTabCI" href="#" onClick="javascript:chgGridTab('custInfo');">Customer Info</a></li>
-        <li><a href="#">Installation Info</a></li>
-        <li><a id="aTabMA" href="#">Mailling Info</a></li>
+        <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+        <li><a href="#"><spring:message code="sal.title.text.hpCody" /></a></li>
+        <li><a id="aTabCI" href="#" onClick="javascript:chgGridTab('custInfo');"><spring:message code="sal.title.text.custInfo" /></a></li>
+        <li><a href="#"><spring:message code="sal.title.text.installInfo" /></a></li>
+        <li><a id="aTabMA" href="#"><spring:message code="sal.title.text.maillingInfo" /></a></li>
     <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN'}">
-        <li><a href="#">Payment Channel</a></li>
+        <li><a href="#"><spring:message code="sal.title.text.paymentChnnl" /></a></li>
     </c:if>
-        <li><a id="aTabMI" href="#" onClick="javascript:chgGridTab('memInfo');">Membership Info</a></li>
-        <li><a href="#" onClick="javascript:chgGridTab('docInfo');">Document Submission</a></li>
-        <li><a href="#" onClick="javascript:chgGridTab('callLogInfo');">Call Log</a></li>
+        <li><a id="aTabMI" href="#" onClick="javascript:chgGridTab('memInfo');"><spring:message code="sal.title.text.memshipInfo" /></a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('docInfo');"><spring:message code="sal.title.text.docuSubmission" /></a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('callLogInfo');"><spring:message code="sal.title.text.callLog" /></a></li>
     <c:if test="${orderDetail.basicInfo.appTypeCode == 'REN' && orderDetail.basicInfo.rentChkId == '122'}">
-        <li><a href="#">Quarantee Info</a></li>
+        <li><a href="#"><spring:message code="sal.title.text.paymentListing" /></a></li>
     </c:if>
-        <li><a href="#" onClick="javascript:chgGridTab('payInfo');">Payment Listing</a></li>
-        <li><a href="#" onClick="javascript:chgGridTab('transInfo');">Last 6 Months Transaction</a></li>
-        <li><a href="#">Order Configuration</a></li>
-        <li><a href="#" onClick="javascript:chgGridTab('autoDebitInfo');">Auto Debit Result</a></li>
-        <li><a href="#">Relief Certificate</a></li>
-        <li><a href="#" onClick="javascript:chgGridTab('discountInfo');">Discount</a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('payInfo');"><spring:message code="sal.title.text.paymentListing" /></a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('transInfo');"><spring:message code="sal.title.text.lastSixMonthTrnsaction" /></a></li>
+        <li><a href="#"><spring:message code="sal.title.text.ordConfiguration" /></a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('autoDebitInfo');"><spring:message code="sal.title.text.autoDebitResult" /></a></li>
+        <li><a href="#"><spring:message code="sal.title.text.reliefCertificate" /></a></li>
+        <li><a href="#" onClick="javascript:chgGridTab('discountInfo');"><spring:message code="sal.title.text.discount" /></a></li>
     </ul>
 
 <!------------------------------------------------------------------------------
@@ -713,7 +713,7 @@
     </section><!-- tap_wrap end -->
 
     </dd>
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(cancelLogGridID)">Cancellation Log Transaction</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(cancelLogGridID)"><spring:message code="sal.text.cancellationLogTransaction" /></a></dt>
     <dd>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
@@ -721,7 +721,7 @@
     </article><!-- grid_wrap end -->
 
     </dd>
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(prodReturnGridID)">Product Return Transaction</a></dt>
+    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(prodReturnGridID)"><spring:message code="sal.text.productReturnTransaction" /></a></dt>
     <dd>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
@@ -763,16 +763,16 @@
 	</colgroup>
 		<tbody>
 			<tr>
-			    <th scope="row">Status<span class="must">*</span></th>
+			    <th scope="row"><spring:message code="sal.text.status" /><span class="must">*</span></th>
 			    <td>
 			    <select id="addStatus" name="addStatus" class="w100p" onchange="onChangeStatusType()">
-			        <option value="">Call Log Status</option>
-			        <option value="19">Recall</option>
-			        <option value="32">Confirm To Cancel</option>
-			        <option value="31">Reversal Of Cancellation</option>
+			        <option value=""><spring:message code="sal.title.text.callLogStus" /></option>
+			        <option value="19"><spring:message code="sal.combo.text.recall" /></option>
+			        <option value="32"><spring:message code="sal.combo.text.confirmToCancel" /></option>
+			        <option value="31"><spring:message code="sal.combo.text.reversalOfCancellation" /></option>
 			    </select>
 			    </td>
-			    <th scope="row">Feedback Code</th>
+			    <th scope="row"><spring:message code="sal.text.feddbackCode" /></th>
 			    <td>
 			    <select id="cmbFeedbackCd" name="cmbFeedbackCd" class="disabled" disabled="disabled">
                     <option value="">Feedback Code</option>
@@ -783,7 +783,7 @@
 			    </td>
 			</tr>
 			<tr>
-			    <th scope="row">Assign CT</th>
+			    <th scope="row"><spring:message code="sal.title.text.assignCt" /></th>
 			    <td>
 			    <select id="cmbAssignCt" name="cmbAssignCt" class="w100p" disabled="disabled">
 			        <option value=""></option>
@@ -793,7 +793,7 @@
 			    </select>
 			    </td>
 
-			    <th scope="row">DSC Branch</th>
+			    <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
 				    <td>
 				            <input type="text" title="" placeholder=""  id="CTGroup" name="CTGroup" class="readonly "    readonly="readonly"  />
 				            <input type="hidden" title="" placeholder="" class="disabled" id="brnchId" name="brnchId"  class="readonly"    readonly="readonly" />
@@ -810,19 +810,19 @@
 
 
            <tr>
-	                <th scope="row">Request Date<span class="must">*</span></th>
+	                <th scope="row"><spring:message code="sal.text.requestDate" /><span class="must">*</span></th>
 				    <td>
 				    <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate"  onChange="fn_doAllaction()"/>
 				    </td>
 
 
-	                <th scope="row">Appointment Date</th>
+	                <th scope="row"><spring:message code="sal.text.appointmentDate" /></th>
 	                <td>
 	                  <input type="text" id="addAppRetnDt" name="addAppRetnDt" title="Create start Date" placeholder="DD/MM/YYYY" readonly="readonly"    class="j_date readonly"  />
 	                </td>
             </tr>
 			<tr>
-			       <th scope="row">Recall Date</th>
+			       <th scope="row"><spring:message code="sal.title.text.reCallDate" /></th>
 				    <td>
 				      <input type="text" id="addCallRecallDt" name="addCallRecallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" disabled="disabled" />
 				    </td>
@@ -835,7 +835,7 @@
 			</tr>
 
 			<tr>
-			    <th scope="row">Remark<span class="must">*</span></th>
+			    <th scope="row"><spring:message code="sal.text.remark" /><span class="must">*</span></th>
 			    <td colspan="3">
 	                <textarea id="addRem" name="addRem" cols="20" rows="5"></textarea>
 	            </td>
@@ -848,7 +848,7 @@
 
 
 <ul class="center_btns mt20">
-    <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()">SAVE</a></p></li>
+    <li><p class="btn_blue2 big"><a href="#" onClick="fn_saveCancel()"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 
 </div>

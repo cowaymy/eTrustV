@@ -148,9 +148,9 @@ CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '', {type:
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order Cancellation Request Raw Data</h1>
+<h1><spring:message code="sal.page.title.orderCancelRequestRawData" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -175,42 +175,42 @@ CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '', {type:
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Request Stage</th>
+    <th scope="row"><spring:message code="sal.title.text.requestStage" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbReqStage">
-        <option value="24" selected>Before Install</option>
-        <option value="25" selected>After Install</option>
+        <option value="24" selected><spring:message code="sal.text.beforeInstall" /></option>
+        <option value="25" selected><spring:message code="sal.text.afterInstall" /></option>
     </select>
     </td>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="cmbAppType"></select>
     </td>
-    <th scope="row">Request Date</th>
+    <th scope="row"><spring:message code="sal.text.requestDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpRequestDtFrom"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.text.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpRequestDtTo"/></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Request No</th>
+    <th scope="row"><spring:message code="sal.text.requestNo" /></th>
     <td><input type="text" title="" placeholder="Request Number" class="w100p" id="txtRequestNo"/></td>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><input type="text" title="" placeholder="Order Number" class="w100p" id="txtOrderNumber"/></td>
-    <th scope="row">Sales Branch</th>
+    <th scope="row"><spring:message code="sal.text.salesBranch" /></th>
     <td>
     <select class="w100p" id="cmbKeyBranch" data-placeholder="Key-In Branch"></select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td><input type="text" title="" placeholder="Customer ID (Number Only)" class="w100p" id="txtCustomerId"/></td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><input type="text" title="" placeholder="Customer Name" class="w100p" id="txtCustomerName"/></td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td><input type="text" title="" placeholder="NRIC/Company Number" class="w100p" id="txtICNumber"/></td>
 </tr>
 </tbody>
@@ -231,8 +231,8 @@ CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '', {type:
 <div style="height: 80px">
 </div>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Click()">Generate</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript: btnGenerate_Click()"><spring:message code="sal.btn.generate" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#form').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </section><!-- content end -->
      

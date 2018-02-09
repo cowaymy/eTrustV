@@ -61,44 +61,44 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "reqNo",
-                headerText : "Request No",
+                headerText : "<spring:message code='sal.title.requestNo' />",
                 width : 140,
                 editable : false
             }, {
                 dataField : "reqStusCode",
-                headerText : "Status",
+                headerText : "<spring:message code='sal.title.status' />",
                 width : 100,
                 editable : false
             }, {
                 dataField : "ordNo",
-                headerText : "Order No.",
+                headerText : "<spring:message code='sal.title.ordNo' />.",
                 width : 120,
                 editable : false
             }, {
                 dataField : "appTypeName",
-                headerText : "App Type",
+                headerText : "<spring:message code='sal.title.appType' />",
                 width : 120,
                 editable : false
             }, {
                 dataField : "custName",
-                headerText : "Customer",
+                headerText : "<spring:message code='sal.title.text.customer' />",
                 editable : false
             }, {
                 dataField : "custIc",
-                headerText : "NRIC/Company No",
+                headerText : "<spring:message code='sal.title.text.nricCompNo' />",
                 width : 170,
                 editable : false
             }, {
                 dataField : "reqStage",
-                headerText : "Request Stage",
+                headerText : "<spring:message code='sal.title.text.requestStage' />",
                 editable : false
             }, {
                 dataField : "callStusName",
-                headerText : "Call Status",
+                headerText : "<spring:message code='sal.title.text.callStatus' />",
                 editable : false
             }, {
                 dataField : "callRecallDt",
-                headerText : "Recall Date",
+                headerText : "<spring:message code='sal.title.text.reCallDate' />",
                 dataType : "date",
                 formatString : "dd-mm-yyyy" ,
                 editable : false
@@ -198,20 +198,20 @@
     	if(detailForm.reqId.value == ""){
     		Common.alert("No cancellation request selected.");
     		return false;
-    	}else{
-    		if(detailForm.paramCallStusId.value != '1' && detailForm.paramCallStusId.value != '19'){
-    			Common.alert("Cancellation request [" +detailForm.paramReqNo.value+ "] is under call status [" 
-    			                  +detailForm.paramCallStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
-    			return false;
-    		}else{
-    			if(detailForm.paramReqStusId.value != '1' && detailForm.paramReqStusId.value != '19'){
-                    Common.alert("Cancellation request [" +detailForm.paramReqNo.value+ "] is under call status [" 
-                    		          +detailForm.paramReqStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
-                    return false;
-    			}
-    		}
+    	}//else{test--------
+    	//	if(detailForm.paramCallStusId.value != '1' && detailForm.paramCallStusId.value != '19'){
+    	//		Common.alert("Cancellation request [" +detailForm.paramReqNo.value+ "] is under call status [" 
+    	//		                  +detailForm.paramCallStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
+    	//		return false;
+    	//	}else{
+    	//		if(detailForm.paramReqStusId.value != '1' && detailForm.paramReqStusId.value != '19'){
+        //            Common.alert("Cancellation request [" +detailForm.paramReqNo.value+ "] is under call status [" 
+        //            		          +detailForm.paramReqStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
+        //            return false;
+    	//		}
+    	//	}
     		Common.popupDiv("/sales/order/cancelNewLogResultPop.do", $("#detailForm").serializeJSON(), null , true, '_newDiv');
-    	}
+    	//}
     	
     }
     
@@ -236,15 +236,15 @@
     
     function fn_ctAssignment(){
     	if(detailForm.reqId.value == ""){
-            Common.alert("No cancellation request selected.");
+            Common.alert("<spring:message code='sal.alert.msg.noCancelRequestSelected' />.");
             return false;
         }else{
         	if(detailForm.paramReqStageId.value == '24'){
-                Common.alert("[" +detailForm.paramReqNo.value+ "] is requested on stage [Before Install] </br> Only request after install is allow to re-assign CT.");
+                Common.alert("[" +detailForm.paramReqNo.value+ "<spring:message code='sal.alert.msg.onlyRequestAfterInstallIsAllow' />.");
                 return false;
             }
         	if(detailForm.paramCallStusId.value == '1' || detailForm.paramCallStusId.value == '19'){
-                Common.alert("[" +detailForm.paramReqNo.value+ "] is under status ["+detailForm.paramReqStusName.value+"] </br> Re-assign CT is disallowed.");
+                Common.alert("[" +detailForm.paramReqNo.value+ "] is under status ["+detailForm.paramReqStusName.value+"] </br> <spring:message code='sal.alert.msg.reassignCtIsDisallowed' />.");
                 return false;
             }
         	Common.popupDiv("/sales/order/ctAssignmentInfoPop.do", $("#detailForm").serializeJSON(), null , true, '_CTDiv');
@@ -271,21 +271,21 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Order Cancellation</h2>
+<h2><spring:message code="sal.page.title.orderCancellation" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newLogResult()">New Log Result</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newLogResult()"><spring:message code="sal.btn.newLogResult" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_ctAssignment()">CT Assignment</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_ctAssignment()"><spring:message code="sal.btn.ctAssignment" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_CTBulk()">Change Assign CT(bulk)</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_CTBulk()"><spring:message code="sal.btn.changeAssignCTBulk" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_orderCancelListAjax()"><span class="search"></span>Search</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_orderCancelListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a href="#"  onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#"  onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -320,60 +320,60 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td>
         <input type="text" title="" id="ordNo" name="ordNo" placeholder="Order Number" class="w100p" />
     </td>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
         <select id="cmbAppTypeId" name="cmbAppTypeId" class="multy_select w100p" multiple="multiple">
         </select>
     </td>
-    <th scope="row">Request Date</th>
+    <th scope="row"><spring:message code="sal.text.requestDate" /></th>
     <td>
 
         <div class="date_set w100p"><!-- date_set start -->
             <p><input type="text" id="startCrtDt" name="startCrtDt" title="Create start Date" value="${bfDay}" placeholder="DD/MM/YYYY" class="j_date" /></p>
-        <span>To</span>
+        <span><spring:message code="sal.text.to" /></span>
             <p><input type="text" id="endCrtDt" name="endCrtDt" title="Create end Date" value="${toDay}" placeholder="DD/MM/YYYY" class="j_date" /></p>
         </div><!-- date_set end -->
 
     </td>
 </tr>
 <tr>
-    <th scope="row">Request No</th>
+    <th scope="row"><spring:message code="sal.text.requestNo" /></th>
     <td>
         <input type="text" title="" id="reqNo" name="reqNo" placeholder="Request Number" class="w100p" />
     </td>
-    <th scope="row">Call Log Status</th>
+    <th scope="row"><spring:message code="sal.title.text.callLogStus" /></th>
     <td>
         <select id="callStusId" name="callStusId" class="multy_select w100p" multiple="multiple">
-            <option value="1" selected>Active</option>
-            <option value="19" selected>Recall</option>
-            <option value="32">Confirm To Cancel</option>
-            <option value="31">Reversal Of Cancellation</option>
+            <option value="1" selected><spring:message code="sal.combo.text.active" /></option>
+            <option value="19" selected><spring:message code="sal.combo.text.recall" /></option>
+            <option value="32"><spring:message code="sal.combo.text.confirmToCancel" /></option>
+            <option value="31"><spring:message code="sal.combo.text.reversalOfCancellation" /></option>
         </select>
     </td>
-    <th scope="row">Call Log Date</th>
+    <th scope="row"><spring:message code="sal.text.callLogDate" /></th>
     <td>
 
         <div class="date_set w100p"><!-- date_set start -->
         <p><input type="text" id="startRecallDt" name="startRecallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-        <span>To</span>
+        <span><spring:message code="sal.text.to" /></span>
         <p><input type="text" id="endRecallDt" name="endRecallDt" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
         </div><!-- date_set end -->
 
     </td>
 </tr>
 <tr>
-    <th scope="row">Request Stage</th>
+    <th scope="row"><spring:message code="sal.title.text.requestStage" /></th>
     <td>
     <select id="reqStageId" name="reqStageId" class="multy_select w100p" multiple="multiple">
-        <option value="24" selected>Before Install</option>
-        <option value="25" selected>After Install</option>
+        <option value="24" selected><spring:message code="sal.text.beforeInstall" /></option>
+        <option value="25" selected><spring:message code="sal.text.afterInstall" /></option>
     </select>
     </td>
-    <th scope="row">DSC Branch</th>
+    <th scope="row"><spring:message code="sal.title.text.dscBrnch" /></th>
     <td>
         <select id="cmbDscBranchId" name="cmbDscBranchId" class="multy_select w100p" multiple="multiple">
             <c:forEach var="list" items="${dscBranchList }">
@@ -381,21 +381,21 @@
             </c:forEach>
         </select>
     </td>
-    <th scope="row">Creator</th>
+    <th scope="row"><spring:message code="sal.text.creator" /></th>
     <td>
     <input type="text" title="" id="crtUserId" name="crtUserId" placeholder="Creator(UserName)" class="w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Customer ID</th>
+    <th scope="row"><spring:message code="sal.text.customerId" /></th>
     <td>
     <input type="text" title="" id="custId" name="custId" placeholder="Customer ID(Number Only)" class="w100p" />
     </td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td>
     <input type="text" title="" id="custName" name="custName" placeholder="Customer Name" class="w100p" />
     </td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td>
     <input type="text" title="" id="custIc" name="custIc" placeholder="NRIC/Company Number" class="w100p" />
     </td>
@@ -410,7 +410,7 @@
     <dd>
     <ul class="btns">
     <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
-        <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()">Request Raw Data</a></p></li>
+        <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()"><spring:message code="sal.btn.requestRawData" /></a></p></li>
     </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>

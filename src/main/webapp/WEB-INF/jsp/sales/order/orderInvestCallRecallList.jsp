@@ -34,26 +34,26 @@
 	    //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
 	    var columnLayout = [ {
 	            dataField : "invNo",
-	            headerText : "Investigate No.",
+	            headerText : "<spring:message code='sal.text.investigateNo' />",
 	            editable : false
 	        }, {
 	            dataField : "name",
-	            headerText : "Investigate Status",
+	            headerText : "<spring:message code='sal.text.investigateStatus' />",
 	            width : 200,
 	            editable : false
 	        }, {
 	            dataField : "salesOrdNo",
-	            headerText : "Order No.",
+	            headerText : "<spring:message code='sal.title.text.ordNop' />",
 	            width : 200,
 	            editable : false
 	        }, {
 	            dataField : "userName",
-	            headerText : "Investigate By",
+	            headerText : "<spring:message code='sal.text.investigateBy' />",
 	            width : 200,
 	            editable : false
 	        }, {
 	            dataField : "invCrtDt",
-	            headerText : "Investigate At",
+	            headerText : "<spring:message code='sal.text.investigateAt' />",
 	            dataType : "date",
                 formatString : "dd-mm-yyyy" ,
 	            width : 200,
@@ -132,11 +132,11 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Order Investigation Call/Result Search</h2>
+<h2><spring:message code="sal.page.title.orderInvestigateionCallResultSearch" /></h2>
 <ul class="right_opt">
     <!-- <li><p class="btn_blue"><a href="#">Call/Result Detail</a></p></li> -->
-    <li><p class="btn_blue"><a href="#" onClick="fn_investCallResultListAjax()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_investCallResultListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -156,31 +156,31 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Investigate No.</th>
+    <th scope="row"><spring:message code="sal.text.investigateNo" /></th>
     <td>
     <input type="text" id="invNo" name="invNo" title="" placeholder="" class="" />
     </td>
-    <th scope="row">Investigate Date</th>
+    <th scope="row"><spring:message code="sal.text.investigateDate" /></th>
     <td>
     <div class="date_set"><!-- date_set start -->
     <p><input type="text" id="startCrtDt" name="startCrtDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-    <span>To</span>
+    <span><spring:message code="sal.text.to" /></span>
     <p><input type="text" id="endCrtDt" name="endCrtDt" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
     </div><!-- date_set end -->
     </td>
 </tr>
 <tr>
-    <th scope="row">Order No.</th>
+    <th scope="row"><spring:message code="sal.title.text.ordNop" /></th>
     <td>
     <input type="text" id="salesOrdNo" name="salesOrdNo" title="" placeholder="" class="" />
     </td>
-    <th scope="row">Investigate Status</th>
+    <th scope="row"><spring:message code="sal.text.investigateStatus" /></th>
     <td>
     <select class="multy_select" id="invStusId" name="invStusId" multiple="multiple">
-        <option value="1">Active</option>
-        <option value="29">Investigate</option>
-        <option value="28">Regular</option>
-        <option value="2">Suspend</option>
+        <option value="1"><spring:message code="sal.combo.text.active" /></option>
+        <option value="29"><spring:message code="sal.combo.text.investigate" /></option>
+        <option value="28"><spring:message code="sal.combo.text.regular" /></option>
+        <option value="2"><spring:message code="sal.combo.text.supend" /></option>
     </select>
     </td>
 </tr>
@@ -193,8 +193,8 @@
     <dt>Link</dt>
     <dd>
     <ul class="btns">
-        <li><p class="link_btn type2"><a href="#"  onClick="fn_rawData()">Application Form</a></p></li>
-        <li><p class="link_btn type2"><a href="#"  onClick="fn_rawData()">HP Applicant List</a></p></li>
+        <li><p class="link_btn type2"><a href="#"  onClick="fn_rawData()"><spring:message code="sal.btn.applicationForm" /></a></p></li>
+        <li><p class="link_btn type2"><a href="#"  onClick="fn_rawData()"><spring:message code="sal.btn.hpApplicantList" /></a></p></li>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>

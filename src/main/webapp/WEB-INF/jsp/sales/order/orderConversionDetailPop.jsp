@@ -22,37 +22,37 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "rsItmOrdNo",
-                headerText : "Order No",
+                headerText : "<spring:message code='sal.text.ordNo' />",
                 width : 90,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "code1",
-                headerText : "Status",
+                headerText : "<spring:message code='sal.text.status' />",
                 width : 70,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "rsSysAppTypeCode",
-                headerText : "App Type",
+                headerText : "<spring:message code='sal.title.text.appType' />",
                 width : 110,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "rsSysRentalStus",
-                headerText : "Rental Status",
+                headerText : "<spring:message code='sal.text.rentalStatus' />",
                 width : 110,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "rsItmCrtUserName",
-                headerText : "Creator",
+                headerText : "<spring:message code='sal.text.creator' />",
                 width : 120,
                 editable : false,
                 style: 'left_style'
             },{
                 dataField : "rsItmCrtDt",
-                headerText : "Create Date",
+                headerText : "<spring:message code='sal.text.createDate' />",
                 width : 100,
                 dataType : "date",
                 formatString : "dd/mm/yyyy" ,
@@ -60,7 +60,7 @@
                 style: 'left_style'
             },{
                 dataField : "rsItmValidRem",
-                headerText : "Remark",
+                headerText : "<spring:message code='sal.text.remark' />",
                 editable : false,
                 style: 'left_style'
             },{
@@ -149,26 +149,26 @@
 //				return false;
 //			}
 //		}
-		var msg = "<b>This conversion batch will process on daily schedule plan after you confirm with it.<br />";
-		     msg += "Are you sure want to confirm this conversion batch ?</b>";
+		var msg = "<b><spring:message code='sal.alert.msg.thisConversionBatchWillProcess' /><br />";
+		     msg += "<spring:message code='sal.alert.msg.areYouSureWantToConfirmConvtBatch' /></b>";
 		Common.confirm(msg,fn_confirmOK);
 	}
 
 	function fn_confirmOK(){
 		Common.ajax("GET", "/sales/order/updCnvrConfirm.do", $("#gridForm").serialize(), function(result){
-            Common.alert("This conversion batch has been confirmed.", fn_success);
+            Common.alert("<spring:message code='sal.alert.msg.conversionConfirmed' />", fn_success);
         });
 	}
 	
 	function fn_deactivate(){
-		var msg = ("<b>Are you sure want to deactivate this conversion batch ?</b>");
+		var msg = ("<b><spring:message code='sal.alert.msg.deactivateConversionBatch' /></b>");
 		Common.confirm(msg,fn_deactivateOK);
         
     }
 	
 	function fn_deactivateOK(){
         Common.ajax("GET", "/sales/order/updCnvrDeactive.do", $("#gridForm").serialize(), function(result){
-            Common.alert("<b>This conversion batch has been deactivated.</b>", fn_success);
+            Common.alert("<b><spring:message code='sal.alert.msg.conversionBatchDeactivated' /></b>", fn_success);
         });
     }
 </script>
@@ -176,20 +176,20 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Conversion View / Confirm</h1>
+<h1><spring:message code="sal.page.title.conversionViewConfirm" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="_close"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Conversion Batch Info</h3>
+<h3><spring:message code="sal.page.title.conversionBatchInfo" /></h3>
 <c:if test="${cnvrInfo.code eq 'ACT'}">
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onclick="fn_confirm()">Confirm</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="fn_deactivate()">Deactivate</a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="fn_confirm()"><spring:message code="sal.btn.confirm" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="fn_deactivate()"><spring:message code="sal.btn.deactivate" /></a></p></li>
 </ul>
 </c:if>
 </aside><!-- title_line end -->
@@ -217,23 +217,23 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Convert No</th>
+    <th scope="row"><spring:message code="sal.text.convertNo" /></th>
     <td><span>${cnvrInfo.rsCnvrNo }</span></td>
-    <th scope="row">Create At</th>
+    <th scope="row"><spring:message code="sal.text.createAt" /></th>
     <td><span>${cnvrInfo.rsCnvrCrtDt }</span></td>
-    <th scope="row">Create By</th>
+    <th scope="row"><spring:message code="sal.text.createBy" /></th>
     <td><span>${cnvrInfo.rsCnvrCrtUserName }</span></td>
 </tr>
 <tr>
-    <th scope="row">Batch Status</th>
+    <th scope="row"><spring:message code="sal.title.text.batchStus" /></th>
     <td><span>${cnvrInfo.name }</span></td>
-    <th scope="row">Status (From)</th>
+    <th scope="row"><spring:message code="sal.title.text.statusFrom" /></th>
     <td><span>${cnvrInfo.rsCnvrStusFrom }</span></td>
-    <th scope="row">Status (To)</th>
+    <th scope="row"><spring:message code="sal.title.text.statusTo" /></th>
     <td><span>${cnvrInfo.rsCnvrStusTo }</span></td>
 </tr>
 <tr>
-    <th scope="row">Reactive Fees Apply</th>
+    <th scope="row"><spring:message code="sal.text.reactiveFeesApply" /></th>
     <td><span>
         <c:choose >
              <c:when test="${cnvrInfo.rsCnvrReactFeesApply eq 1 }">
@@ -245,7 +245,7 @@
          </c:choose>
        </span>
     </td>
-    <th scope="row">Comfirm At</th>
+    <th scope="row"><spring:message code="sal.text.confirmAt" /></th>
     <td>
         <span>
             <c:choose >
@@ -258,13 +258,13 @@
             </c:choose>
         </span>
     </td>
-    <th scope="row">Confirm By</th>
+    <th scope="row"><spring:message code="sal.title.text.confirmBy" /></th>
     <td><span>${cnvrInfo.rsCnvrCnfmUserName }</span></td>
 </tr>
 <tr>
-    <th scope="row">Convert Status</th>
+    <th scope="row"><spring:message code="sal.title.text.convertStatus" /></th>
     <td><span>${cnvrInfo.name }</span></td>
-    <th scope="row">Convert At</th>
+    <th scope="row"><spring:message code="sal.text.convertAt" /></th>
     <td>
         <span>
             <c:choose >
@@ -277,32 +277,32 @@
             </c:choose>
         </span>
     </td>
-    <th scope="row">Convert By</th>
+    <th scope="row"><spring:message code="sal.text.convertBy" /></th>
     <td><span>${cnvrInfo.rsCnvrUserName }</span></td>
 </tr>
 <tr>
-    <th scope="row">Total Item</th>
+    <th scope="row"><spring:message code="sal.title.text.totItem" /></th>
     <td><span>${allRows }</span></td>
-    <th scope="row">Total Valid Item</th>
+    <th scope="row"><spring:message code="sal.text.totalValidItem" /></th>
     <td><span>${validRows }</span></td>
-    <th scope="row">Total Invalid Item</th>
+    <th scope="row"><spring:message code="sal.text.totalInvalidItem" /></th>
     <td><span>${invalidRows }</span></td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="5"><span>${cnvrInfo.rsCnvrRem }</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Batch Item</h3>
+<h3><spring:message code="sal.title.text.batchItem" /></h3>
 </aside><!-- title_line end -->
 
 <ul class="left_btns">
-    <li><p class="btn_grid"><a href="#" onclick="fn_all()">All Item</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="fn_valid()">Valid Item</a></p></li>
-    <li><p class="btn_grid"><a href="#" onclick="fn_invalid()">Invalid Item</a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_all()"><spring:message code="sal.combo.text.allItm" /></a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_valid()"><spring:message code="sal.combo.text.validItm" /></a></p></li>
+    <li><p class="btn_grid"><a href="#" onclick="fn_invalid()"><spring:message code="sal.combo.text.invalidItm" /></a></p></li>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->

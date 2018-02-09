@@ -114,16 +114,16 @@
         var callDayValue = callDay.substr(6) + callDay.substr(3,2) + callDay.substr(0,2);
 
         if(document.viewForm.cmbInvType.value == ""){
-            Common.alert("Please select an Investigation Request Type.");
+            Common.alert("<spring:message code='sal.alert.msg.pleaseSelectAnInvestRequest' />");
             return false;
         }
         
         if(callDay == ""){
-            Common.alert("Call Date Cannot be Empty!");
+            Common.alert("<spring:message code='sal.alert.msg.callDateCannotBeEmpty' />!");
             return false;
         }
         if(parseInt(callDayValue) > parseInt(todayYMD)){        // 현재날짜와 비교 callDay > now
-            Common.alert("* Called Date cannot be future date.");
+            Common.alert("* <spring:message code='sal.alert.msg.calledDateCannotBeFutureDate' />");
             return false;
         }
 //      if(document.viewForm.callDt.value == ""){        // rentalScheme와 비교 value > now
@@ -135,12 +135,12 @@
 //            return false;
 //        }
         if(document.viewForm.insVisitDt.value == ""){
-            Common.alert("Visitation Date Cannot be Empty!");
+            Common.alert("<spring:message code='sal.alert.msg.visitationDateConnotBeEmpty' />");
             return false;
         }
         
         if(document.viewForm.invReqRem.value == ""){
-            Common.alert("Please enter request remark!!");
+            Common.alert("<spring:message code='sal.alert.msg.pleaseEnterRequestRemark' />!");
             return false;
         }
         
@@ -157,7 +157,7 @@
               console.log("data : " + result);
 
               $("#invReqId").val(result.invReqId);
-              Common.alert("Order Investigation Request successfully saved.",fn_orderNoExist3 );
+              Common.alert("<spring:message code='sal.alert.msg.invRequestSuccessfully' />.",fn_orderNoExist3 );
               
               
 //              Common.popupDiv("/sales/order/orderInvestInfoPop.do", $("#viewForm").serializeJSON());
@@ -190,9 +190,9 @@
 <div id="popup_wrap" class="popup_wrap size_mid"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Order Investigation Request</h1>
+<h1><spring:message code="sal.page.title.orderInvestigationRequest" /></h1>
 <ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="singleClose">CLOSE</a></p></li>
+    <li><p class="btn_blue2"><a href="#" id="singleClose"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -209,10 +209,10 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No.</th>
+    <th scope="row"><spring:message code="sal.title.text.ordNop" /></th>
     <td><input type="text" id="searchOrd" name="searchOrd" disabled="disabled" title="" placeholder="" class="" />
-        <p class="btn_sky"><a href="#" id="searchBtn" onClick="fn_getNewReq()" disabled="disabled">Confirm</a></p>
-        <p class="btn_sky"><a href="#" onClick="fn_orderNoExist2()">Clear</a></p>
+        <p class="btn_sky"><a href="#" id="searchBtn" onClick="fn_getNewReq()" disabled="disabled"><spring:message code="sal.btn.confirm" /></a></p>
+        <p class="btn_sky"><a href="#" onClick="fn_orderNoExist2()"><spring:message code="sal.btn.clear" /></a></p>
     </td>
 </tr>
 </tbody>
@@ -223,9 +223,9 @@
 
 <div id="searchOrdDt" style="display:none;">
 <aside class="title_line"><!-- title_line start -->
-<h3>Particular Information</h3>
+<h3><spring:message code="sal.title.text.particInfo" /></h3>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#"  onclick="javascript : fn_goLedger1()">View Rent Ledger</a></p></li>
+    <li><p class="btn_blue"><a href="#"  onclick="javascript : fn_goLedger1()"><spring:message code="sal.btn.viewOrderLedger1" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -243,46 +243,46 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Order No.</th>
+    <th scope="row"><spring:message code="sal.text.ordNo" /></th>
     <td><span id="ordNo"></span></td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td><span id="salesDt"></span></td>
 </tr>
 <tr>
-    <th scope="row">Order Status</th>
+    <th scope="row"><spring:message code="sal.title.text.ordStus" /></th>
     <td><span id="orderStus"></span></td>
-    <th scope="row">Rental Status</th>
+    <th scope="row"><spring:message code="sal.text.rentalStatus" /></th>
     <td><span id="renStus"></span></td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td><span id="appType">${codeName}</span></td>
-    <th scope="row">Product</th>
+    <th scope="row"><spring:message code="sal.title.text.product" /></th>
     <td><span id="prod">${stkCode} - ${stkDesc}</span></td>
 </tr>
 <tr>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td><span id="custName">${name1}</span></td>
-    <th scope="row">NRIC</th>
+    <th scope="row"><spring:message code="sal.text.nric" /></th>
     <td><span id="nric">${nric}</span></td>
 </tr>
 <tr>
-    <th scope="row">Investigate Type</th>
+    <th scope="row"><spring:message code="sal.text.investigateType" /></th>
     <td colspan="3">
         <select id="cmbInvType" name="cmbInvType">
         </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Called Date</th>
+    <th scope="row"><spring:message code="sal.text.calledDate" /></th>
     <td colspan="3"><input type="text" id="insCallDt" name="insCallDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
-    <th scope="row">Visitation Date</th>
+    <th scope="row"><spring:message code="sal.text.visitationDate" /></th>
     <td colspan="3"><input type="text" id="insVisitDt" name="insVisitDt" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
 </tr>
 <tr>
-    <th scope="row">Attachment</th>
+    <th scope="row"><spring:message code="sal.text.attachment" /></th>
     <td colspan="3">
     <div class="auto_file2"><!-- auto_file start -->
     <input type="file" id="attachInvest" name="attachInvest" title="file add" />
@@ -290,14 +290,14 @@
     </td>
 </tr>
 <tr>
-    <th scope="row">Remark</th>
+    <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="3"><textarea cols="20" rows="5" id="invReqRem" name="invReqRem"></textarea></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 </form>
 <ul class="center_btns">
-    <li><p class="btn_blue"><a href="#" onClick="fn_reqInvest()">Request Investigate</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_reqInvest()"><spring:message code="sal.btn.requestInvestigate" /></a></p></li>
 </ul>
 </div>
 
