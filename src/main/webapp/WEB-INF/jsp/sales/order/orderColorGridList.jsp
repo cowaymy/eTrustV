@@ -101,13 +101,13 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "ordNo",
-                headerText : "Order No",
+                headerText : "<spring:message code='sal.text.ordNo' />",
                 width : 80,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "ordDt",
-                headerText : "Order Date",
+                headerText : "<spring:message code='sal.title.text.ordStus' />",
                 width : 90,
                 dataType : "date",
                 formatString : "dd/mm/yyyy" ,
@@ -115,73 +115,73 @@
                 style: 'left_style'
             }, {
                 dataField : "stusCode",
-                headerText : "Order Status",
+                headerText : "<spring:message code='sal.title.text.ordStus' />",
                 width : 100,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "appTypeCode",
-                headerText : "App Type",
+                headerText : "<spring:message code='sal.title.text.appType' />",
                 width : 80,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "custName",
-                headerText : "Customer Name",
+                headerText : "<spring:message code='sal.text.custName' />",
                 width : 120,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "stkCode",
-                headerText : "Product",
+                headerText : "<spring:message code='sal.title.text.product' />",
                 width : 150,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "salesmanCode",
-                headerText : "Salesman",
+                headerText : "<spring:message code='sal.title.text.salesman' />",
                 width : 100,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "installStus",
-                headerText : "Install </br>Status",
+                headerText : "<spring:message code='sal.title.text.installStatus' />",
                 width : 100,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "installFailResn",
-                headerText : "Fail </br> Reason",
+                headerText : "<spring:message code='sal.title.text.failReason' />",
                 width : 140,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "rsCnvrCnfmDt",
-                headerText : "Net </br>Month",
+                headerText : "<spring:message code='sal.title.text.netMonth' />",
                 width : 100,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "orgCode",
-                headerText : "Org Code",
+                headerText : "<spring:message code='sal.text.orgCode' />",
                 width : 100,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "grpCode",
-                headerText : "Grp Code",
+                headerText : "<spring:message code='sal.text.grpCode' />",
                 width : 100,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "deptCode",
-                headerText : "Dept</br>Code",
+                headerText : "<spring:message code='sal.text.detpCode' />",
                 width : 100,
                 editable : false,
                 style: 'left_style'
             }, {
                 dataField : "comDt",
-                headerText : "Com Date",
+                headerText : "<spring:message code='sal.title.text.comDate' />",
                 width : 90,
                 dataType : "date",
                 formatString : "dd/mm/yyyy" ,
@@ -189,7 +189,7 @@
                 style: 'left_style'
             }, {
                 dataField : "payComDt",
-                headerText : "Pay Date",
+                headerText : "<spring:message code='sal.title.text.payDate' />",
                 width : 90,
                 dataType : "date",
                 formatString : "dd/mm/yyyy" ,
@@ -233,7 +233,7 @@
 
         if( $("#netSalesMonth").val() ==""  &&  $("#createStDate").val() ==""  &&  $("#createEnDate").val() ==""  ){
         	if($("#ordNo").val() == "" && $("#custName").val() == "" && $("#custIc").val() == "" && $("#salesmanCode").val() == "" && $("#contactNum").val() == "" && $("#promoCode").val() == ""){
-        		Common.alert("You must key-in at least one of Order Date / Net Sales Month");
+        		Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
                 return ;
         	}
          }
@@ -242,12 +242,12 @@
         if(($("#createStDate").val() != null && $("#createStDate").val() != '') || ($("#createEnDate").val() != null && $("#createEnDate").val() != '')){
         	
         	if($("#createStDate").val() == null || $("#createStDate").val() == ''){
-        		Common.alert("Please Key In Start Date");
+        		Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInStartDate' />");
         		return;
         	}
         	
         	if($("#createEnDate").val() == null || $("#createEnDate").val() == ''){
-        		Common.alert("please Key In End Date");
+        		Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInEndDate' />");
         		return;
         	}
         	
@@ -424,10 +424,10 @@
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Color Grid</h2>
+<h2><spring:message code="sal.page.title.colorGrid" /></h2>
 <ul class="right_btns">
-    <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span>Search</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span>Clear</a></p></li>
+    <li><p class="btn_blue"><a href="#" onClick="fn_searchListAjax()"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
+    <li><p class="btn_blue"><a href="#" onclick="javascript:$('#searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -450,79 +450,79 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Organization Code</th>
+    <th scope="row"><spring:message code="sal.title.text.orgCode" /></th>
     <td>
     <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="Organization Code" class="w100p" />
     </td>
-    <th scope="row">Group Code</th>
+    <th scope="row"><spring:message code="sal.title.text.groupCode" /></th>
     <td>
     <input type="text" title="" id="grpCode" name="grpCode" placeholder="Group Code" class="w100p" />
     </td>
-    <th scope="row">Department Code</th>
+    <th scope="row"><spring:message code="sal.title.text.deptCode" /></th>
     <td>
     <input type="text" title="" id="deptCode" name="deptCode" placeholder="Department Code" class="w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Order No</th>
+    <th scope="row"><spring:message code='sal.text.ordNo' /></th>
     <td>
     <input type="text" title="" id="ordNo" name="ordNo" placeholder="Order Number" class="w100p" />
     </td>
-    <th scope="row">Customer Name</th>
+    <th scope="row"><spring:message code="sal.text.custName" /></th>
     <td>
     <input type="text" title="" id="custName" name="custName" placeholder="Customer Name" class="w100p" />
     </td>
-    <th scope="row">NRIC/Company No</th>
+    <th scope="row"><spring:message code="sal.title.text.nricCompNo" /></th>
     <td>
     <input type="text" title="" id="custIc" name="custIc" placeholder="NRIC/Company Number" class="w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Application Type</th>
+    <th scope="row"><spring:message code="sal.text.appType" /></th>
     <td>
     <select class="multy_select w100p" id="cmbAppType" name="cmbAppType" multiple="multiple">
     </select>
     </td>
-    <th scope="row">Order Date</th>
+    <th scope="row"><spring:message code="sal.text.ordDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" id="createStDate" name="createStDate" placeholder="DD/MM/YYYY" class="j_date" readonly="readonly"/></p>
-    <span>To</span>
+    <span><spring:message code="sal.text.to" /></span>
     <p><input type="text" title="Create end Date" id="createEnDate" name="createEnDate" placeholder="DD/MM/YYYY" class="j_date" readonly="readonly"/></p>
     </div><!-- date_set end -->
     </td>
-    <th scope="row">Product</th>
+    <th scope="row"><spring:message code="sal.title.text.product" /></th>
     <td>
     <select class="w100p" id="cmbProduct" name="cmbProduct">
     </select>
     </td>
 </tr>
 <tr>
-    <th scope="row">Net Sales Month</th>
+    <th scope="row"><spring:message code="sal.text.netSalesMonth" /></th>
     <td><input type="text" title="기준년월" id="netSalesMonth" name="netSalesMonth" placeholder="MM/YYYY" class="j_date2 w100p" /></td>
-    <th scope="row">Salesman Code</th>
+    <th scope="row"><spring:message code="sal.text.salManCode" /></th>
     <td>
     <input type="text" title="" id="salesmanCode" name="salesmanCode" placeholder="Salesman (Member Code)" class="w100p" />
     </td>
-    <th scope="row">Contact Number</th>
+    <th scope="row"><spring:message code="sal.text.contactNumber" /></th>
     <td>
     <input type="text" title="" id="contactNum" name="contactNum" placeholder="Contact Number" class="w100p" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Condition</th>
+    <th scope="row"><spring:message code="sal.text.condition" /></th>
     <td>
     <select class="w100p" id="cmbCondition" name="cmbCondition">
         <option value="">Choose One</option>
-        <option value="1">Active</option>
-        <option value="2">Cancel</option>
-        <option value="3">Net Sales</option>
-        <option value="4">Yellow Sheet</option>
-        <option value="5">Install Failed</option>
-        <option value="6">Install Active</option>
+        <option value="1"><spring:message code="sal.combo.text.active" /></option>
+        <option value="2"><spring:message code="sal.combo.text.cancel" /></option>
+        <option value="3"><spring:message code="sal.combo.text.netSales" /></option>
+        <option value="4"><spring:message code="sal.combo.text.yellowSheet" /></option>
+        <option value="5"><spring:message code="sal.combo.text.installFailed" /></option>
+        <option value="6"><spring:message code="sal.combo.text.installActive" /></option>
     </select>
     </td>
-    <th scope="row">Promotion Code</th>
+    <th scope="row"><spring:message code="sal.text.promotionCode" /></th>
     <td>
     <input type="text" title="" id="promoCode" name="promoCode" placeholder="Promotion Code" class="w100p" />
     </td>       
@@ -530,7 +530,7 @@
     <td></td>
 </tr>
 <tr>
-    <th scope="row" colspan="6" ><span class="must"> You must key-in at least one of Order Date / Net Sales Month</span>  </th>
+    <th scope="row" colspan="6" ><span class="must"> <spring:message code="sal.alert.msg.youMustKeyInatLeastOrdDateNetSales" /></span>  </th>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -569,10 +569,10 @@
 </section><!-- search_table end -->
 
 <ul class="left_btns">
-    <li><span class="green_text">Net Sales</span></li>
-    <li><span class="pink_text">Cancel</span></li>
-    <li><span class="yellow_text">Complete With Unnet</span></li>
-    <li><span class="black_text">Active</span></li>
+    <li><span class="green_text"><spring:message code="sal.combo.text.netSales" /></span></li>
+    <li><span class="pink_text"><spring:message code="sal.combo.text.cancel" /></span></li>
+    <li><span class="yellow_text"><spring:message code="sal.text.completeWithUnit" /></span></li>
+    <li><span class="black_text"><spring:message code="sal.combo.text.active" /></span></li>
 </ul>
 
 <section class="search_result"><!-- search_result start -->
