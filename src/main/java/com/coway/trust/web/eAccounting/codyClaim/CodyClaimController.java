@@ -178,9 +178,9 @@ public class CodyClaimController {
 		model.addAttribute("userName", sessionVO.getUserName());
 		model.addAttribute("itemList", new Gson().toJson(itemList));
 		model.addAttribute("clmNo", (String) params.get("clmNo"));
-		model.addAttribute("expGrp", itemList.get(0).get("expGrp"));
 		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeFlagList));
 		if(itemList.size() > 0) {
+			model.addAttribute("expGrp", itemList.get(0).get("expGrp"));
 			model.addAttribute("appvPrcssNo", itemList.get(0).get("appvPrcssNo"));
 		}
 		return "eAccounting/codyClaim/codyClaimViewExpensesPop";
