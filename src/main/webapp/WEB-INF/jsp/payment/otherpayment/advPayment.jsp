@@ -465,6 +465,13 @@ function fn_chgAppType(){
      $("#srvcTotalAmtTxt").text("RM " + $.number(0,2));
      $("#billTotalAmtTxt").text("RM " + $.number(0,2));
   	 $("#outSrvcTotalAmtTxt").text("RM " + $.number(0,2));
+
+	//우선 BANK_ID 528 삭제
+	for(var i= $("#cashBankAcc option").size() - 1 ; i >= 1; i-- ){
+		if($("#cashBankAcc option:eq("+i+")").val() == 528){
+			$("#cashBankAcc option:eq("+i+")").remove();
+		}
+	}
      
      if(appType == 1 ){
          $("#rentalSearch").show();
@@ -483,6 +490,11 @@ function fn_chgAppType(){
      }else if(appType == 5){
 		 $("#outSrvcSearch").show();
          AUIGrid.resize(targetOutSrvcMstGridID);
+
+		//CASH이고 APP_TYPE이 OUTRIGHT_MEMBERSHIP이면 BANK_ID 528 추가
+		if($("#keyInPayType").val() == "105"){//Cash
+			$("#cashBankAcc").append("<option value='528'>2210/001 - OTHER RECEIVABLES - HR PAYROLL EXPENSES</option>"); 
+		}
 	 }
 }
 
@@ -2218,6 +2230,15 @@ function fn_payTypeChange(){
     $("#chequeSearchForm")[0].reset();
     $("#onlineSearchForm")[0].reset();
     payDateSetting();
+
+	//우선 BANK_ID 528 삭제
+	for(var i= $("#cashBankAcc option").size() - 1; i >= 1; i-- ){
+		if($("#cashBankAcc option:eq("+i+")").val() == 528){
+			$("#cashBankAcc option:eq("+i+")").remove();
+		}
+	}
+
+
     var payType = $("#keyInPayType").val();
     if(payType == "105"){//Cash
         $("#cashSearch").show();
@@ -2228,7 +2249,13 @@ function fn_payTypeChange(){
         $("#cashBankType").append("<option value=''>Choose One</option>");
         $("#cashBankType").append("<option value='2729'>MBB CDM</option>");
         $("#cashBankType").append("<option value='2730'>VA</option>");
-        $("#cashBankType").append("<option value='2731'>Others</option>");
+        $("#cashBankType").append("<option value='2731'>Others</option>");		
+
+		//CASH이고 APP_TYPE이 OUTRIGHT_MEMBERSHIP이면 BANK_ID 528 추가
+		if($("#appType").val() == 5){
+			$("#cashBankAcc").append("<option value='528'>2210/001 - OTHER RECEIVABLES - HR PAYROLL EXPENSES</option>"); 
+		}
+
     }else if(payType == "106"){//Cheque
         $("#cashSearch").hide();
         $("#chequeSearch").show();

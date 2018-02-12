@@ -32,6 +32,11 @@ function fn_approval(){
         return;
 	}
 
+	if( FormUtil.byteLength($("#appvRemark").val()) < 1 ){
+		Common.alert("<spring:message code='pay.alert.insertRemark'/>");
+    	return;
+    }
+
 	if( FormUtil.byteLength($("#appvRemark").val()) > 3000 ){
 		Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
     	return;
