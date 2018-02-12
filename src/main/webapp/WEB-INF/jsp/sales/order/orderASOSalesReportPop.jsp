@@ -5,7 +5,11 @@
 
 $("#dataForm").empty();
 
-$("#mypSalesMonth").val(new Date().getMonth()+"/"+new Date().getFullYear());
+var nowMonth = new Date().getMonth();
+
+nowMonth = FormUtil.lpad(nowMonth, 2, "0");
+
+$("#mypSalesMonth").val(nowMonth+"/"+new Date().getFullYear());
 
 function btnGenerate_Click(){
 	
