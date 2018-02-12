@@ -1079,9 +1079,9 @@ function fn_updateStaffClaimExp(st) {
     }
 }
 
-function fn_approveLinePop() {
+function fn_approveLinePop(memAccId) {
 	// check request - Request once per user per month
-    Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J7"}, function(result) {
+    Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J7", memAccId:memAccId}, function(result) {
         console.log(result);
         if(result.data > 0) {
             Common.alert(result.message);

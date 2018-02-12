@@ -339,8 +339,6 @@ public class StaffClaimController {
 	@RequestMapping(value = "/checkOnceAMonth.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> checkOnceAMonth(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		
-		params.put("userName", String.valueOf(sessionVO.getUserName()));
-		
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		int cnt = staffClaimService.checkOnceAMonth(params);

@@ -609,14 +609,21 @@ WHERE  T1.CLM_NO = #{clmNo}
 
 <select id="checkOnceAMonth" parameterType="Map" resultType="int">
 /* staffClaimMapper.checkOnceAMonth */
-SELECT Count(*) AS CNT 
-FROM   (SELECT SUBSTR(APPV_REQ_KEY_NO, 0, 2) AS CLM_TYPE, 
-               REQST_USER_ID, 
-               REQST_DT 
-        FROM   FCM0004M 
-        WHERE  SUBSTR(APPV_REQ_KEY_NO, 0, 2) = #{clmType}
-               AND TO_DATE(TO_CHAR(REQST_DT, 'MM'), 'MM') = TO_DATE(TO_CHAR(SYSDATE, 'MM'), 'MM')) T 
-WHERE  T.REQST_USER_ID = #{userName}         
+SELECT COUNT(*) AS CNT 
+FROM   (SELECT SUBSTR(M.APPV_REQ_KEY_NO, 0, 2) AS CLM_TYPE, 
+               D.MEM_ACC_ID, 
+               M.REQST_DT 
+        FROM   FCM0004M M 
+               JOIN FCM0015D D 
+                 ON M.APPV_PRCSS_NO = D.APPV_PRCSS_NO 
+        WHERE  SUBSTR(M.APPV_REQ_KEY_NO, 0, 2) = #{clmType}
+               AND TO_DATE(TO_CHAR(M.REQST_DT, 'MM'), 'MM') = TO_DATE( 
+                   TO_CHAR(SYSDATE, 'MM'), 'MM') 
+        GROUP  BY M.APPV_PRCSS_NO, 
+                  M.APPV_REQ_KEY_NO, 
+                  D.MEM_ACC_ID, 
+                  M.REQST_DT) T 
+WHERE  T.MEM_ACC_ID = #{memAccId}         
 </select>
 
 

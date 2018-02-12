@@ -515,7 +515,9 @@ $(document).ready(function () {
     $("#add_btn").click(fn_addRow);
     $("#delete_btn").click(fn_deleteStaffClaimExp);
     $("#tempSave_btn").click(fn_tempSave);
-    $("#request_btn").click(fn_approveLinePop);
+    $("#request_btn").click(function() {
+    	fn_approveLinePop($("newMemAccId").val());
+    });
     $("#add_row").click(fn_addMyGridRow);
     $("#remove_row").click(fn_removeMyGridRow);
     
