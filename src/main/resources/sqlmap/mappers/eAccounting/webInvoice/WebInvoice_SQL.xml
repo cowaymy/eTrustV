@@ -816,7 +816,7 @@ SELECT T.APPV_PRCSS_NO
              AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
         </if>          
         <if test="createUser != null and createUser != ''">
-             AND UPPER(T.REQST_USER_ID) = UPPER(#{createUser})
+             AND UPPER(T.REQST_USER_ID) = (SELECT USER_NAME FROM SYS0047M WHERE HR_CODE = UPPER(#{createUser}))
         </if>          
         <if test="costCenter != null and costCenter != ''">
              AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
