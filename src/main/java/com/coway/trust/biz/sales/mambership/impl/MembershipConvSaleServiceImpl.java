@@ -188,12 +188,6 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 	 	 }
 		 
 		 
-		 
-		 
-			
-		 //--------------------------------------------------------------------//
-	     //                           FILTER     FILTER BILLING                           	   	   //
-	     //--------------------------------------------------------------------//
 		 double filterCharge = 0.00;
          double filterPaid = 0.00;
         
@@ -203,8 +197,142 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
          if(srvMemBsAmt> 0 && (srvMemBsAmt >srvMemPacAmt)){
         	filterCharge  =  (srvMemBsAmt - srvMemPacAmt);
          }
+		 
+		 
+		 
+		  //--------------------------------------------------------------------//
+	     //                           PACKAGE            BILLING                           	       //
+	     //--------------------------------------------------------------------//
+         double packageCharge = 0;
+         double packagePaid = 0;
+         
+         if (srvMemPacAmt > 0){
+             packageCharge = srvMemPacAmt;
+         }
          
          
+         if (packageCharge > 0) {
+        	 
+        	 //bill
+       	  	  Map<String , Object> pay0007dMap = new HashMap<String , Object> ();
+       	      pay0007dMap.put("billTypeId","223"); 
+		      pay0007dMap.put("billSoId",params.get("srvSalesOrdId")); 
+		      pay0007dMap.put("billMemId","0"); 
+		      pay0007dMap.put("billAsId","0" ); 
+		      pay0007dMap.put("billPayTypeId","386"); 
+		      
+		      
+ 		      if(hasBill){
+ 		    	  pay0007dMap.put("billNo", "0"); 
+ 	 		      pay0007dMap.put("billMemShipNo","0");  
+ 	 		      
+ 		      }else{
+
+ 		    	  pay0007dMap.put("billNo", params.get("srvMemBillNo")); 
+ 	 		      pay0007dMap.put("billMemShipNo",params.get("srvMemNo") );  
+
+		    		logger.debug("=================packageCharge  =========== ==>");
+					logger.debug("srvMemNo==>" +params.get("srvMemNo"));
+					logger.debug("srvMemBillNo==>" + params.get("srvMemBillNo"));
+					logger.debug("hasBill  =================================>");
+					
+ 		      }
+		      pay0007dMap.put("billDt",new Date()); 
+		      pay0007dMap.put("billAmt", packageCharge); 
+		      pay0007dMap.put("billRem",""); 
+		      pay0007dMap.put("billIsPaid","0"); 
+		      pay0007dMap.put("billIsComm","0"); 
+		      pay0007dMap.put("updUserId",params.get("userId")); 
+		      pay0007dMap.put("updDt",new Date()); 
+		      pay0007dMap.put("syncChk","0"); 
+		      pay0007dMap.put("coursId","0"); 
+		      pay0007dMap.put("stusId","1");
+		      
+ 		      logger.debug("package  pay0007dMap  ==>"+pay0007dMap.toString());
+			  int  pay0007dMapCnt =membershipConvSaleMapper.PAY0007D_insert(pay0007dMap);   
+		     logger.debug("package pay0007dMapCnt  ==>"+pay0007dMapCnt);
+		     
+		     ////////////////////Invoice  sum////////////////////
+		     totalCharges       =totalCharges + (packageCharge  -  (packageCharge) - (packageCharge  *  100 / 106));
+		     totalTaxes          = totalTaxes   +  (packageCharge - (packageCharge  *  100 / 106));
+		     totalAmountDue  = totalAmountDue + packageCharge ;
+		     ////////////////////Invoice  sum////////////////////
+		     
+             
+		     
+
+		      //Ledger
+		      Map<String , Object> pay0024dMap = new HashMap<String , Object> ();              
+		      if(hasBill){
+ 		    	  pay0024dMap.put("srvMemId",params.get("srvMemId")); 
+ 	 		      pay0024dMap.put("srvMemDocNo",params.get("srvMemId") );
+ 	 		  }else{
+ 		    	  pay0024dMap.put("srvMemId",params.get("srvMemId")); 
+ 	 		      pay0024dMap.put("srvMemDocNo",params.get("srvMemBillNo") );
+ 	 		  }
+		      
+		      pay0024dMap.put("srvMemDocTypeId","386"); 
+              pay0024dMap.put("srvMemDtTm",new Date()); 
+              pay0024dMap.put("srvMemAmt",packageCharge); 
+              pay0024dMap.put("srvMemInstNo","0"); 
+              pay0024dMap.put("srvMemBatchNo",""); 
+              pay0024dMap.put("srvMemUpdUserId",params.get("userId")); 
+              pay0024dMap.put("srvMemUpdDt",""); 
+              pay0024dMap.put("srvMemOrdId",sal0093dData.get("srvSalesOrdId"));   
+              pay0024dMap.put("srvMemQotatId",sal0093dData.get("srvMemQuotId")); 
+              pay0024dMap.put("r01","");
+              
+              
+              logger.debug("package  pay0024dMapCnt  ==>"+pay0024dMap.toString());
+  			  int  pay0024dMapCnt =membershipConvSaleMapper.PAY0024D_insert(pay0024dMap);   
+  		      logger.debug("package pay0024dMapCnt  ==>"+pay0024dMapCnt);
+  		      
+  		     
+  		    ////////////AccOrderBill////////////////////
+ 		    Map<String , Object> pay0016dMap = new HashMap<String , Object> ();     
+  		    pay0016dMap.put("accBillTaskId","0"); 
+      	    pay0016dMap.put("accBillRefDt",new Date()); 
+      	    pay0016dMap.put("accBillRefNo","1000"); 
+      	    pay0016dMap.put("accBillOrdId",params.get("srvSalesOrdId")); 
+      	    pay0016dMap.put("accBillTypeId","1159"); 
+      	    pay0016dMap.put("accBillModeId","1143"); 
+      	    pay0016dMap.put("accBillSchdulId","0"); 
+      	    pay0016dMap.put("accBillSchdulPriod","0");
+      	    pay0016dMap.put("accBillAdjId","0");
+      	    pay0016dMap.put("accBillSchdulAmt",packageCharge); 
+      	    pay0016dMap.put("accBillAdjAmt","0"); 
+      	    pay0016dMap.put("accBillNetAmt",packageCharge); 
+      	    pay0016dMap.put("accBillStus","1"); 
+      	    pay0016dMap.put("accBillRem",invoiceNum); 
+      	    pay0016dMap.put("accBillCrtDt",new Date()); 
+      	    pay0016dMap.put("accBillCrtUserId",params.get("updator")); 
+      	    pay0016dMap.put("accBillGrpId","0"); 
+      	    
+      	    pay0016dMap.put("accBillTaxCodeId",TAXRATE == 0 ? 28 : 39); 
+      	    pay0016dMap.put("accBillTaxRate",TAXRATE); 
+      	    
+      	    if(TAXRATE ==6){
+              	  pay0016dMap.put("accBillTxsAmt",Double.toString( packageCharge - (packageCharge  * 100 / 106))); 
+      	    }else{
+      	    	pay0016dMap.put("accBillTxsAmt","0"); 
+      	    }
+      	    
+      	    pay0016dMap.put("accBillAcctCnvr","0"); 
+      	    pay0016dMap.put("accBillCntrctId","0");
+      	    
+      	     logger.debug("filter  pay0016dMap  ==>"+pay0016dMap.toString());
+     		 int  pay0016dMapCnt =membershipConvSaleMapper.PAY0016D_insert(pay0016dMap);   
+     	     logger.debug("filter pay0016dMapCnt  ==>"+pay0016dMapCnt);
+  		    ////////////AccOrderBill////////////////////
+         }
+         
+         
+         
+		 
+			
+		 //--------------------------------------------------------------------//
+	     //                           FILTER     FILTER BILLING                           	   	   //
+	     //--------------------------------------------------------------------//
         
          if(filterCharge >0){
         	 
@@ -329,135 +457,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
          }
          
          
-         //--------------------------------------------------------------------//
-	     //                           PACKAGE            BILLING                           	       //
-	     //--------------------------------------------------------------------//
-         double packageCharge = 0;
-         double packagePaid = 0;
-         
-         if (srvMemPacAmt > 0){
-             packageCharge = srvMemPacAmt;
-         }
-         
-         
-         if (packageCharge > 0) {
-        	 
-        	 //bill
-       	  	  Map<String , Object> pay0007dMap = new HashMap<String , Object> ();
-       	      pay0007dMap.put("billTypeId","223"); 
-		      pay0007dMap.put("billSoId",params.get("srvSalesOrdId")); 
-		      pay0007dMap.put("billMemId","0"); 
-		      pay0007dMap.put("billAsId","0" ); 
-		      pay0007dMap.put("billPayTypeId","386"); 
-		      
-		      
- 		      if(hasBill){
- 		    	  
-
- 		    	  pay0007dMap.put("billNo", "0"); 
- 	 		      pay0007dMap.put("billMemShipNo","0");  
- 	 		      
- 		      }else{
-
- 		    	  pay0007dMap.put("billNo", params.get("srvMemBillNo")); 
- 	 		      pay0007dMap.put("billMemShipNo",params.get("srvMemNo") );  
-
-		    		logger.debug("=================packageCharge  =========== ==>");
-					logger.debug("srvMemNo==>" +params.get("srvMemNo"));
-					logger.debug("srvMemBillNo==>" + params.get("srvMemBillNo"));
-					logger.debug("hasBill  =================================>");
-					
- 		      }
-		      pay0007dMap.put("billDt",new Date()); 
-		      pay0007dMap.put("billAmt", packageCharge); 
-		      pay0007dMap.put("billRem",""); 
-		      pay0007dMap.put("billIsPaid","0"); 
-		      pay0007dMap.put("billIsComm","0"); 
-		      pay0007dMap.put("updUserId",params.get("userId")); 
-		      pay0007dMap.put("updDt",new Date()); 
-		      pay0007dMap.put("syncChk","0"); 
-		      pay0007dMap.put("coursId","0"); 
-		      pay0007dMap.put("stusId","1");
-		      
- 		      logger.debug("package  pay0007dMap  ==>"+pay0007dMap.toString());
-			  int  pay0007dMapCnt =membershipConvSaleMapper.PAY0007D_insert(pay0007dMap);   
-		     logger.debug("package pay0007dMapCnt  ==>"+pay0007dMapCnt);
-		     
-		     ////////////////////Invoice  sum////////////////////
-		     totalCharges       =totalCharges + (packageCharge  -  (packageCharge) - (packageCharge  *  100 / 106));
-		     totalTaxes          = totalTaxes   +  (packageCharge - (packageCharge  *  100 / 106));
-		     totalAmountDue  = totalAmountDue + packageCharge ;
-		     ////////////////////Invoice  sum////////////////////
-		     
-             
-		     
-
-		      //Ledger
-		      Map<String , Object> pay0024dMap = new HashMap<String , Object> ();              
-		      if(hasBill){
- 		    	  pay0024dMap.put("srvMemId",params.get("srvMemId")); 
- 	 		      pay0024dMap.put("srvMemDocNo",params.get("srvMemId") );
- 	 		  }else{
- 		    	  pay0024dMap.put("srvMemId",params.get("srvMemId")); 
- 	 		      pay0024dMap.put("srvMemDocNo",params.get("srvMemBillNo") );
- 	 		  }
-		      
-		      pay0024dMap.put("srvMemDocTypeId","386"); 
-              pay0024dMap.put("srvMemDtTm",new Date()); 
-              pay0024dMap.put("srvMemAmt",packageCharge); 
-              pay0024dMap.put("srvMemInstNo","0"); 
-              pay0024dMap.put("srvMemBatchNo",""); 
-              pay0024dMap.put("srvMemUpdUserId",params.get("userId")); 
-              pay0024dMap.put("srvMemUpdDt",""); 
-              pay0024dMap.put("srvMemOrdId",sal0093dData.get("srvSalesOrdId"));   
-              pay0024dMap.put("srvMemQotatId",sal0093dData.get("srvMemQuotId")); 
-              pay0024dMap.put("r01","");
-              
-              
-              logger.debug("package  pay0024dMapCnt  ==>"+pay0024dMap.toString());
-  			  int  pay0024dMapCnt =membershipConvSaleMapper.PAY0024D_insert(pay0024dMap);   
-  		      logger.debug("package pay0024dMapCnt  ==>"+pay0024dMapCnt);
-  		      
-  		     
-  		    ////////////AccOrderBill////////////////////
- 		    Map<String , Object> pay0016dMap = new HashMap<String , Object> ();     
-  		    pay0016dMap.put("accBillTaskId","0"); 
-      	    pay0016dMap.put("accBillRefDt",new Date()); 
-      	    pay0016dMap.put("accBillRefNo","1000"); 
-      	    pay0016dMap.put("accBillOrdId",params.get("srvSalesOrdId")); 
-      	    pay0016dMap.put("accBillTypeId","1159"); 
-      	    pay0016dMap.put("accBillModeId","1143"); 
-      	    pay0016dMap.put("accBillSchdulId","0"); 
-      	    pay0016dMap.put("accBillSchdulPriod","0");
-      	    pay0016dMap.put("accBillAdjId","0");
-      	    pay0016dMap.put("accBillSchdulAmt",packageCharge); 
-      	    pay0016dMap.put("accBillAdjAmt","0"); 
-      	    pay0016dMap.put("accBillNetAmt",packageCharge); 
-      	    pay0016dMap.put("accBillStus","1"); 
-      	    pay0016dMap.put("accBillRem",invoiceNum); 
-      	    pay0016dMap.put("accBillCrtDt",new Date()); 
-      	    pay0016dMap.put("accBillCrtUserId",params.get("updator")); 
-      	    pay0016dMap.put("accBillGrpId","0"); 
-      	    
-      	    pay0016dMap.put("accBillTaxCodeId",TAXRATE == 0 ? 28 : 39); 
-      	    pay0016dMap.put("accBillTaxRate",TAXRATE); 
-      	    
-      	    if(TAXRATE ==6){
-              	  pay0016dMap.put("accBillTxsAmt",Double.toString( packageCharge - (packageCharge  * 100 / 106))); 
-      	    }else{
-      	    	pay0016dMap.put("accBillTxsAmt","0"); 
-      	    }
-      	    
-      	    pay0016dMap.put("accBillAcctCnvr","0"); 
-      	    pay0016dMap.put("accBillCntrctId","0");
-      	    
-      	     logger.debug("filter  pay0016dMap  ==>"+pay0016dMap.toString());
-     		 int  pay0016dMapCnt =membershipConvSaleMapper.PAY0016D_insert(pay0016dMap);   
-     	     logger.debug("filter pay0016dMapCnt  ==>"+pay0016dMapCnt);
-  		    ////////////AccOrderBill////////////////////
-         }
-         
-         
+       
 	     if(hasBill  ==false){
 	  	     ////////////////Invoice////////////////////
 	 	     this.processInvoice(invoiceNum , params , totalCharges ,totalTaxes,totalAmountDue ,TAXRATE);
