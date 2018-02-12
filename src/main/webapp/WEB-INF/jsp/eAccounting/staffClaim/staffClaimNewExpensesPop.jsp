@@ -516,7 +516,7 @@ $(document).ready(function () {
     $("#delete_btn").click(fn_deleteStaffClaimExp);
     $("#tempSave_btn").click(fn_tempSave);
     $("#request_btn").click(function() {
-    	fn_approveLinePop($("newMemAccId").val());
+    	fn_approveLinePop($("#newMemAccId").val());
     });
     $("#add_row").click(fn_addMyGridRow);
     $("#remove_row").click(fn_removeMyGridRow);
