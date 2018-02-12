@@ -1197,8 +1197,8 @@ SELECT <!-- M.APPV_PRCSS_NO,  -->
        D.APPV_AMT, 
        D.UTIL_NO, 
        D.J_PAY_NO, 
-       TO_CHAR(D.BIL_PERIOD_F, 'DD/MM/YYYY'), 
-       TO_CHAR(D.BIL_PERIOD_T, 'DD/MM/YYYY'), 
+       TO_CHAR(D.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F, 
+       TO_CHAR(D.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T, 
        <!-- D.CLAM_UN, --> 
        D.EXP_DESC 
        <!-- ,D.ATCH_FILE_GRP_ID --> 
