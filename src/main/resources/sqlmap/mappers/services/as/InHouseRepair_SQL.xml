@@ -113,12 +113,12 @@
 				              AND A.AS_ID = B.AS_ENTRY_ID(+)
 				              AND A.AS_MEM_ID = C.MEM_ID
 				              AND REF_REQST IN ( 
-										                     SELECT  AS_RESULT_ID 
+										                     SELECT  TO_CHAR(AS_RESULT_ID) 
 										                        FROM  SVC0001D  A, SVC0004D  B  
 										                     WHERE   A.AS_ID =B.AS_ENTRY_ID   
 										                        AND  REF_REQST IN ( 
 										                                             SELECT 
-										                                                    A.AS_ID
+										                                                    TO_CHAR(A.AS_ID)
 										                                             FROM   SVC0001D A,
 										                                                    SVC0004D B,
 										                                                    SAL0001D C,
@@ -197,8 +197,8 @@
 			WHERE 1=1  
 		        AND as_Entry.tKy = in_Entry.tKy(+)
                 AND in_Entry.tKy = on_Entry.tKy(+)
-                AND as_Entry.AS_ID  = in_Entry.REF_REQST(+)
-                AND in_Entry.AS_RESULT_ID = on_Entry.REF_REQST(+)
+                AND TO_CHAR(as_Entry.AS_ID)  = in_Entry.REF_REQST(+)
+                AND TO_CHAR(in_Entry.AS_RESULT_ID) = on_Entry.REF_REQST(+)
                 
                 <if test="openServiceNo != null and openServiceNo  != '' " >   
                      AND  as_Entry.AS_NO = #{openServiceNo}
