@@ -178,7 +178,7 @@ public class ReportBatchController {
 		params.put(REPORT_FILE_NAME, "/visualcut/ColorGrid_Simplification_2014_2015.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
-		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "ColorGrid" + File.separator
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "ColorGrid_Simplification" + File.separator
 				+ "ColorGrid_Simplification_2014_2015" + CommonUtils.getNowDate() + ".xls");
 
 		this.viewProcedure(null, null, params);
