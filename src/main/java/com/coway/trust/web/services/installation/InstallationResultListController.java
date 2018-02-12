@@ -853,4 +853,25 @@ public class InstallationResultListController {
 
 		return ResponseEntity.ok(message);
 	}
+	
+	@RequestMapping(value = "/checkMonth.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkMonthInstallation(@RequestParam Map<String, Object> params,SessionVO sessionVO) {
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("params : {}", params);
+		
+		EgovMap isPossibleMonth = installationResultListService.checkMonthInstallDate(params);
+		
+		if(isPossibleMonth != null) {
+			
+			
+		}else {
+			message.setMessage("Please choose this month only");
+		}
+		
+		
+		return ResponseEntity.ok(message);
+	}
+	
+	
+	
 }

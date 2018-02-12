@@ -4315,6 +4315,17 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
                 order by CALL_ENTRY_ID desc
     </select>
     
+   
+     <select id="getCheckMonthInstallDt" parameterType="Map" resultType="egovMap">
+      select * 
+      from (
+		          select to_date(#{intallDate}, 'DD/MM/YYYY' ) check_month
+		           from dual
+               )a
+        where to_char(a.check_month, 'YYYYMM' )= to_char(sysdate , 'YYYYMM')
+     
+     </select>
+    
          <select id="getInstallationResultInfo" parameterType="Map" resultType="egovMap">
         <![CDATA[
 				  SELECT * 

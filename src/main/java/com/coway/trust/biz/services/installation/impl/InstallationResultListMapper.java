@@ -212,7 +212,9 @@ public interface InstallationResultListMapper {
 
 	void updateSal0004d(Map<String, Object> orderLog);
 
-	EgovMap checkExchangeCollLog(Map<String, Object> orderLog); 
+	EgovMap checkExchangeCollLog(Map<String, Object> orderLog);
+
+	EgovMap getCheckMonthInstallDt(Map<String, Object> params); 
 
 	
 	

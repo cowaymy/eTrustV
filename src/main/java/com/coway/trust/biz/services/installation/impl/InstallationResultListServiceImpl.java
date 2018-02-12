@@ -2200,4 +2200,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		// TODO Auto-generated method stub
 		return installationResultListMapper.viewInstallationResult(params);
 	}
+
+	@Override
+	public EgovMap checkMonthInstallDate(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return installationResultListMapper.getCheckMonthInstallDt(params);
+	}
 }

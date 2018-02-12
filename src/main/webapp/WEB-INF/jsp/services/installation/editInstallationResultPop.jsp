@@ -22,6 +22,22 @@ $(document).ready(function() {
            $("#reqsms").prop("checked",true);
        }
 	   
+	   $("#installdt").change(function(){
+		   var checkMon =   $("#installdt").val();
+	   
+		   
+		   Common.ajax("GET", "/services/checkMonth.do?intallDate=" + checkMon, ' ', function(result) {
+		        console.log("성공.");
+		        console.log("data : " + result);
+		        if(result.message == "Please choose this month only"){
+		        	Common.alert(result.message);
+		        	$("#installdt").val('');
+		        	
+		        }
+		   });
+		        
+	   });
+	   
 });
 
 function fn_saveInstall(){

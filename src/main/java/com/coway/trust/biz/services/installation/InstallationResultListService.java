@@ -85,4 +85,6 @@ public interface InstallationResultListService {
 
 	List<EgovMap> viewInstallationResult(Map<String, Object> params);
 
+	EgovMap checkMonthInstallDate(Map<String, Object> params);
+
 }

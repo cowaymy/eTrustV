@@ -88,6 +88,24 @@ $(document).ready(function() {
         }      
     
     });
+    
+    
+    
+    $("#installDate").change(function(){
+        var checkMon =   $("#installDate").val();
+    
+        
+        Common.ajax("GET", "/services/checkMonth.do?intallDate=" + checkMon, ' ', function(result) {
+             console.log("성공.");
+             console.log("data : " + result);
+             if(result.message == "Please choose this month only"){
+                 Common.alert(result.message);
+                 $("#installDate").val('');
+                 
+             }
+        });
+             
+    });
 
 });
 
