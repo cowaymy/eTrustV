@@ -377,7 +377,7 @@ $(document).ready(function () {
     } else {
         $("#viewMemAccNameTh").html('<spring:message code="invoiceApprove.member" />');
         $("#viewMemAccId").val(myGridData[0].memAccId);
-        $("#viewMemAccNameTd").text(myGridData[0].memAccName);
+        $("#viewMemAccNameTd").text(myGridData[0].memAccId + " / " + myGridData[0].memAccName);
     }
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
     $("#viewAppvAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
