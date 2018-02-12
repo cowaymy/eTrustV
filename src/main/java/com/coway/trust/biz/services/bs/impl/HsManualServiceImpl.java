@@ -475,7 +475,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			//api추가 end
 
 			logger.debug("### insertHsResultfinal : {}", insertHsResultfinal);
-			hsManualMapper.insertHsResultfinal(insertHsResultfinal);
+			hsManualMapper.insertHsResultfinal(insertHsResultfinal);		// INSERT SVC0006D
 
 
 	        //BSResultD
@@ -514,7 +514,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
   				if( !"".equals(vstkId) && !("null").equals(vstkId) && vstkId != null ) {
   					
-  					hsManualMapper.insertHsResultD(docSub);
+  					hsManualMapper.insertHsResultD(docSub);	// INSERT SVC0007D
 
   					String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
 
@@ -528,14 +528,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   	                docSub.put("hidCodyId", params.get("hidCodyId"));
   	                params.put("srvConfigId", docSub.get("srvConfigId"));
 
-  		            hsManualMapper.updateHsFilterSiriNo(docSub);
+  		            hsManualMapper.updateHsFilterSiriNo(docSub);	// UPDATE SAL0087D
   				}
 
 
 
 			}
 
-			hsManualMapper.updateHs009d(params);
+			hsManualMapper.updateHs009d(params);		// UPDATE SAL0090D
 
 		}
 
@@ -554,7 +554,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			insertHsScheduleM.put("resultStusCodeId", getHsResultMList.get("resultStusCodeId"));
 			insertHsScheduleM.put("actnMemId", getHsResultMList.get("codyId"));
 
-            hsManualMapper.updateHsScheduleM(insertHsScheduleM);
+            hsManualMapper.updateHsScheduleM(insertHsScheduleM);		// UPDATE SVC0008D
 
 		}
 
