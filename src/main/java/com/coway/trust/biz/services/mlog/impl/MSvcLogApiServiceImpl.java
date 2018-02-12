@@ -420,7 +420,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		
 		
 		params.put("P_SALES_ORD_NO", params.get("salesOrderNo"));
-		params.put("P_USER_ID",   params.get("stkRetnCrtUserId"));
+		params.put("P_USER_ID",   params.get("stkRetnCrtUserId")); 
 		params.put("P_RETN_NO",  params.get("serviceNo") );
 		MSvcLogApiMapper.SP_RETURN_BILLING_EARLY_TERMI(params);
 		
@@ -473,6 +473,8 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		
 		int  log38cnt  = MSvcLogApiMapper.updateFailed_LOG0038D(params);
 		int  log39cnt  = MSvcLogApiMapper.insertFailed_LOG0039D(params);  
+		MSvcLogApiMapper.updateFailed_SAL0020D(params);
+		
 		logger.debug("log39cnt==>" +log39cnt);
 	}
 	

@@ -3725,6 +3725,19 @@
                 WHERE  retn_no = #{serviceNo}
        </update>
        
+       
+
+         <update id="updateFailed_SAL0020D" parameterType="Map">
+         
+         update sal0020d  
+         set SO_REQ_UPD_USER_ID =  (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId})
+              , SO_REQ_UPD_DT = sysdate 
+              , SO_REQ_STUS_ID = 1
+              , SO_REQ_CUR_CALL_ENTRY_ID = #{callEntryID}
+         
+          where   SO_REQ_SO_ID  =  (SELECT  SALES_ORD_ID  FROM SAL0001D WHERE  SALES_ORD_NO  =#{salesOrderNo})
+         </update>
+       
          
          
          

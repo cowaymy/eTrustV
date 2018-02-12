@@ -803,9 +803,9 @@ public class ServiceApiController {
                      				params.put("AS_REN_COLCT_ID", 0);
                      				
                      				if(getAsBasic.get("asCmms")!=null){		
-                     					params.put("AS_CMMS", String.valueOf(getAsBasic.get("asCmms")));
+                     					params.put("AS_CMMS", "1");
                      				}else{
-                     					params.put("AS_CMMS", "");
+                     					params.put("AS_CMMS", "1");
                      				}
                      				
                      				if(getAsBasic.get("asBrnchId")!=null){		

@@ -185,5 +185,7 @@ public interface MSvcLogApiMapper {
 	String select_SeqCCR0007D(Map<String, Object> params);
 
 	void insert_CCR0007D(Map<String, Object> params);
+
+	void updateFailed_SAL0020D(Map<String, Object> params);
 	
 }

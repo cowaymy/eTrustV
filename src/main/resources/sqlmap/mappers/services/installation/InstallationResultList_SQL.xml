@@ -2620,7 +2620,14 @@
          where sales_ord_id = #{salesOrderId}
         ]]>
     </update>
-         
+    <update id="updateSal0004d" parameterType="Map">
+        UPDATE SAL0004D 
+        SET    SO_EXCHG_STUS_ID = '4'
+        , SO_EXCHG_UPD_USER_ID = #{logCreator}
+        , SO_EXCHG_UPD_DT = SYSDATE
+       where sales_ord_id = #{salesOrderId}
+    </update>
+
          
 		<insert id="insertSirim" parameterType="Map">
 		 INSERT INTO LOG0040D (
@@ -4298,7 +4305,15 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
         ]]>
     </select>
     
-    
+   
+    <select id="checkExchangeCollLog" parameterType="Map" resultType="egovMap">
+                select *
+                from ccr0006d
+                where  SALES_ORD_ID = #{salesOrderId}
+                and ROWNUM =1
+                and TYPE_ID = 258
+                order by CALL_ENTRY_ID desc
+    </select>
     
          <select id="getInstallationResultInfo" parameterType="Map" resultType="egovMap">
         <![CDATA[

@@ -102,6 +102,16 @@ $(document).ready(function(){
         $("#inHouseRepair_div").attr("style","display:none");
     }
     
+    $("#ddlStatus").change(function (){
+    	if($("#ddlStatus").val() == 4){
+    		   $("#iscommission").prop("checked",true);
+    	}
+    	else{
+    		$("#iscommission").prop("checked",false);
+    	}
+    	
+    });
+    
 });
 
 

@@ -208,7 +208,11 @@ public interface InstallationResultListMapper {
 
 	void updateInstallEntryEdit(Map<String, Object> params);
 
-	void updateRentalStatus(Map<String, Object> params); 
+	void updateRentalStatus(Map<String, Object> params);
+
+	void updateSal0004d(Map<String, Object> orderLog);
+
+	EgovMap checkExchangeCollLog(Map<String, Object> orderLog); 
 
 	
 	
