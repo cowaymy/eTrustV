@@ -489,6 +489,16 @@
     <span><c:out value="${branchDetail.c15}"/></span>
     </td>
 </tr>
+<tr>
+    <th scope="row">Cost Center</th>
+    <td colspan="3">
+    <span><c:out value="${branchDetail.costCentr}"/></span>
+    </td>
+    <%-- <th scope="row">Tel (2)</th>
+    <td>
+    <span><c:out value="${branchDetail.c15}"/></span>
+    </td> --%>
+</tr>
 </tbody>
 </table><!-- table end -->
 </form>

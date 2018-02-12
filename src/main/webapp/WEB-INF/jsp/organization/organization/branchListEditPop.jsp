@@ -426,7 +426,7 @@
     </td>
     <th scope="row">Cost Center</th>
     <td>
-     <input id="costCenter" name="costCenter" type="text" title="" placeholder="Cost Center" class="w100p"  value= "${branchDetail.costCenter}" />
+     <input id="costCenter" name="costCenter" type="text" title="" placeholder="Cost Center" class="w100p"  value= "${branchDetail.costCentr}" />
     </td>
 
 </tr>

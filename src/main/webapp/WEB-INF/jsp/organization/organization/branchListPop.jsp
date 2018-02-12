@@ -130,6 +130,12 @@
         	Common.alert("Please key in the start from date.");
             return false;
         }
+        
+        if($("#costCenter").val() == ''){
+            Common.alert("Please key in the Cost Center.");
+            return false;
+        }
+        
         return true;
     }
 
@@ -398,7 +404,7 @@
     <td>
         <input type="text" title="Start From Date" placeholder="DD/MM/YYYY" class="j_date" id="dtStartFromDt" name="dtStartFromDt"/>
     </td>
-      <th scope="row">Cost Center</th>
+      <th scope="row">Cost Center<span class="must">*</span></th>
     <td>
          <input type="text" title="Cost Center" placeholder="Cost Center"  id="costCenter" name="costCenter" value= "${branchDetail.c20}"/>
     </td>

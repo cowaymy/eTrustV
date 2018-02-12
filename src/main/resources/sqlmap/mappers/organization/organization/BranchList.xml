@@ -197,13 +197,15 @@
 						       Limit1.CODE_NAME CODE_NAME  ,
 						       Limit1.C17 C17  ,
 						       Limit1.C18 C18  ,
-						       Limit1.C19 C19
+						       Limit1.C19 C19 ,
+						       Limit1.COST_CENTR
 						  FROM ( SELECT Extent1.BRNCH_ID BRNCH_ID  ,
                                 Extent1.CODE CODE  ,
                                 Extent1.NAME NAME  ,
                                 Extent1.TYPE_ID TYPE_ID  ,
                                 Extent1.STUS_ID STUS_ID  ,
                                 Extent1.REGN_ID REGN_ID  ,
+                                Extent1.COST_CENTR,
                                 Extent2.CODE CODE1  ,
                                 Extent2.NAME NAME1  ,
                                 Extent3.CODE_NAME CODE_NAME  ,
