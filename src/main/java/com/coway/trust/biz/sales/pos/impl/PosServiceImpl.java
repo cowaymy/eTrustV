@@ -274,7 +274,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			params.put("userDeptCode", " ");
 		}
 		posMap.put("userDeptCode", params.get("userDeptId"));
-		
+
 		//Status Setting
 		if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){   //2390   // POS-TYPE : POS SALES 
 			
