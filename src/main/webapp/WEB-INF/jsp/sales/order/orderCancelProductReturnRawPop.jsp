@@ -47,32 +47,38 @@ $.fn.clearForm = function() {
 
 function btnGenerate_Click(){
 
-    var whereSQL = "";
+    var  from_req_dt = "";
+    var  to_req_dt = "";
+    var  from_ret_dt = "";
+    var  to_ret_dt = "";
     var runNo = 0;
 
 
     if(!($("#dpRequestDtFrom").val() == null || $("#dpRequestDtFrom").val().length == 0)){
-        whereSQL += " AND c.SO_REQ_CRT_DT >= TO_DATE('"+$("#dpRequestDtFrom").val()+"', 'dd/MM/YYYY') ";
+    	from_req_dt = $("#dpRequestDtFrom").val();
     }
 
     if(!($("#dpRequestDtTo").val() == null || $("#dpRequestDtTo").val().length == 0)){
-        whereSQL += " AND c.SO_REQ_CRT_DT < TO_DATE('"+$("#dpRequestDtTo").val()+"', 'dd/MM/YYYY')+1 "; //AddDays(1)
+    	to_req_dt = $("#dpRequestDtTo").val();
     }
 
     if(!($("#dpReturnDtFrom").val() == null || $("#dpReturnDtFrom").val().length == 0)){
-        whereSQL += " AND c.SO_REQ_CRT_DT >= TO_DATE('"+$("#dpReturnDtFrom").val()+"', 'dd/MM/YYYY') ";
+    	from_ret_dt = $("#dpReturnDtFrom").val();
     }
 
     if(!($("#dpReturnDtTo").val() == null || $("#dpReturnDtTo").val().length == 0)){
-        whereSQL += " AND c.SO_REQ_CRT_DT < TO_DATE('"+$("#dpReturnDtTo").val()+"', 'dd/MM/YYYY')+1 "; //AddDays(1)
+    	to_ret_dt = $("#dpReturnDtTo").val();
     }
 
 
 
-    $("#V_WHERESQL").val(whereSQL);
+    $("#V_REQUESTDTFROM").val(from_req_dt);
+    $("#V_REQUESTDTTO").val(to_req_dt);
+    $("#V_RETURNDTFROM").val(from_ret_dt);
+    $("#V_RETURNDTTO").val(to_ret_dt);
 
-    $("#reportDownFileName").val("OrderCancellationRequestRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-    $("#reportFileName").val("/sales/OrderCancellationRequestRawData.rpt");
+    $("#reportDownFileName").val("OrderCancellationProductReturnRawData_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+    $("#reportFileName").val("/sales/OrderCancellationProductReturnRawData.rpt");
     $("#viewType").val("EXCEL");
 
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
@@ -140,8 +146,10 @@ function btnGenerate_Click(){
 <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
 <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
-<input type="hidden" id="V_WHERESQL" name="V_WHERESQL" value="">
-
+<input type="hidden" id="V_REQUESTDTFROM" name="FROM_REQ_DT" value="">
+<input type="hidden" id="V_REQUESTDTTO" name="TO_REQ_DT" value="">
+<input type="hidden" id="V_RETURNDTFROM" name="FROM_RET_DT" value="">
+<input type="hidden" id="V_RETURNDTTO" name="TO_RET_DT" value="">
 </form>
 
 
