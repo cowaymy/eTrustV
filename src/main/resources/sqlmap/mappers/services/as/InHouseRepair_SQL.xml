@@ -2,200 +2,238 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.as.impl.InHouseRepairMapper">
 
-
- <select id="selInhouseList" parameterType="Map" resultType="egovMap">
-		WITH  as_Entry as (
-		          SELECT   1 tKy,
-			                   A.AS_ID,
-			                   A.AS_NO,
-			                   A.AS_MEM_ID,
-			                   A.AS_STUS_ID,
-			                   B.AS_SO_ID,
-			                   B.AS_RESULT_NO,
-			                   B.AS_ENTRY_ID,
-			                   B.AS_CT_ID,
-			                   B.AS_BRNCH_ID,
-			                   F.CODE,
-			                   E.CODE AS AS_DF_DESC,
-			                   G.STK_CODE,
-			                   G.STK_DESC,
-			                   H.MEM_CODE,
-			                   C.SALES_ORD_NO,
-			                   C.SALES_ORD_ID,
-			                   C.CUST_ID,
-			                   DECODE (A.AS_STUS_ID,  '1',    'ACT', '4', 'COM','21','FAI','10','CAN')  AS AS_STUS,
-			                   A.REF_REQST,
-			                   B.IN_HUSE_REPAIR_PRODUCT_CODE,
-			                   B.IN_HUSE_REPAIR_SERIAL_NO,
-			                   A.AS_APPNT_DT ,
-			                   S47D.SERIAL_NO
-		            FROM   SVC0001D A,
-			                   SVC0004D B,
-			                   SAL0001D C,
-			                   SAL0002D D,
-			                   SYS0026M G,
-			                   SYS0032M E,
-			                   SYS0005M F,
-			                   ORG0001D H,
-			                   SAL0046D S46D,
-	                           SAL0047D S47D
-		           WHERE       1 = 1
-		                   AND A.AS_ID = B.AS_ENTRY_ID
-		                   AND A.AS_SO_ID = C.SALES_ORD_ID
-		                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-		                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-		                   AND D.ITM_STK_ID = G.STK_ID
-		                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
-		                   AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
-		                   AND B.AS_CT_ID = H.MEM_ID
-		                   AND C.SALES_ORD_ID = S46D.SALES_ORD_ID
-		                   AND S46D.INSTALL_ENTRY_ID = S47D.ENTRY_ID(+)
-		                   AND B.AS_SLUTN_RESN_ID = '454'
-		) ,  
-		in_Entry as(
-		         SELECT    1 tKy, 
-			                   A.AS_ID,
-			                   A.AS_NO,
-			                   A.AS_MEM_ID,
-			                   A.AS_STUS_ID,
-			                   B.AS_SO_ID,
-			                   B.AS_RESULT_NO,
-			                   B.AS_RESULT_ID,
-			                   B.AS_ENTRY_ID,
-			                   B.AS_CT_ID,
-			                   B.AS_BRNCH_ID,
-			                   B.IN_HUSE_REPAIR_PROMIS_DT,
-			                   B.APPNT_DT,
-			                   F.CODE,
-			                   E.CODE AS AS_DF_DESC,
-			                   G.STK_CODE,
-			                   G.STK_DESC,
-			                   H.MEM_CODE,
-			                   A.AS_CRT_DT,
-			                   CASE 
-			                        WHEN ( B.AS_RESULT_STUS_ID  ='4' ) THEN  TO_CHAR( B.AS_RESULT_UPD_DT,'dd/mm/yyyy')
-			                   ELSE '-'
-			                   END AS AS_COM_DT  ,
-			                   DECODE (A.AS_STUS_ID, '1', 'ACT', '4', 'COM',  '21', 'FAI', '10',   'CAN')   AS IN_AS_STUS,
-			                   A.REF_REQST
-			            FROM   SVC0001D A,
-			                   SVC0004D B,
-			                   SAL0001D C,
-			                   SAL0002D D,
-			                   SYS0026M G,
-			                   SYS0032M E,
-			                   SYS0005M F,
-			                   ORG0001D H
-			           WHERE  A.AS_ID = B.AS_ENTRY_ID
-			                   AND A.AS_SO_ID = C.SALES_ORD_ID
-			                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-			                   AND C.SALES_ORD_ID = D.SALES_ORD_ID
-			                   AND D.ITM_STK_ID = G.STK_ID
-			                   AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
-			                   AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
-			                   AND B.AS_CT_ID = H.MEM_ID
-			                   AND A.AS_TYPE_ID = '2713'
-			),
-			on_Entry as(
-					           SELECT    1 tKy,
-		                                     A.AS_NO,
-		                                     (SELECT   STK_DESC       FROM   SYS0026M X      WHERE   X.STK_CODE = B.IN_HUSE_REPAIR_PRODUCT_CODE)  STK_DESC,
-							                 B.IN_HUSE_REPAIR_SERIAL_NO,
-							                 DECODE (A.AS_STUS_ID,  '1',  'ACT','4','COM', '21','FAI', '10',  'CAN')  AS AS_STUS,
-							                 A.REF_REQST,
+<select id="selInhouseList" parameterType="Map" resultType="egovMap">
+        WITH  as_Entry as (
+                 SELECT   tKy,
+                                   AS_ID,
+                                   AS_NO,
+                                   AS_MEM_ID,
+                                   AS_STUS_ID,
+                                   AS_SO_ID,
+                                   AS_RESULT_NO,
+                                   AS_ENTRY_ID,
+                                   AS_CT_ID,
+                                   AS_BRNCH_ID,
+                                   CODE,
+                                   AS_DF_DESC,
+                                   STK_CODE,
+                                   STK_DESC,
+                                   MEM_CODE,
+                                   SALES_ORD_NO,
+                                   SALES_ORD_ID,
+                                   CUST_ID,
+                                   AS_STUS,
+                                   REF_REQST,
+                                   IN_HUSE_REPAIR_PRODUCT_CODE,
+                                   IN_HUSE_REPAIR_SERIAL_NO,
+                                   AS_APPNT_DT,
+                                   SERIAL_NO,
+                                   RK
+                            FROM(
+                                      SELECT   1 tKy,
+                                                   A.AS_ID,
+                                                   A.AS_NO,
+                                                   A.AS_MEM_ID,
+                                                   A.AS_STUS_ID,
+                                                   B.AS_SO_ID,
+                                                   B.AS_RESULT_NO,
+                                                   B.AS_ENTRY_ID,
+                                                   B.AS_CT_ID,
+                                                   B.AS_BRNCH_ID,
+                                                   F.CODE,
+                                                   E.CODE AS AS_DF_DESC,
+                                                   G.STK_CODE,
+                                                   G.STK_DESC,
+                                                   H.MEM_CODE,
+                                                   C.SALES_ORD_NO,
+                                                   C.SALES_ORD_ID,
+                                                   C.CUST_ID,
+                                                   DECODE (A.AS_STUS_ID,  '1',    'ACT', '4', 'COM','21','FAI','10','CAN')  AS AS_STUS,
+                                                   A.REF_REQST,
+                                                   B.IN_HUSE_REPAIR_PRODUCT_CODE,
+                                                   B.IN_HUSE_REPAIR_SERIAL_NO,
+                                                   A.AS_APPNT_DT ,
+                                                   S47D.SERIAL_NO,
+                                                   RANK() OVER (PARTITION BY A.AS_SO_ID ORDER BY B.AS_RESULT_ID DESC) AS RK
+                                        FROM   SVC0001D A,
+                                                   SVC0004D B,
+                                                   SAL0001D C,
+                                                   SAL0002D D,
+                                                   SYS0026M G,
+                                                   SYS0032M E,
+                                                   SYS0005M F,
+                                                   ORG0001D H,
+                                                   SAL0046D S46D,
+                                                   SAL0047D S47D
+                                       WHERE      1 = 1
+                                               AND A.AS_ID = B.AS_ENTRY_ID
+                                               AND A.AS_SO_ID = C.SALES_ORD_ID
+                                               AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                                               AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                                               AND D.ITM_STK_ID = G.STK_ID
+                                               AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
+                                               AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
+                                               AND B.AS_CT_ID = H.MEM_ID
+                                               AND C.SALES_ORD_ID = S46D.SALES_ORD_ID
+                                               AND S46D.INSTALL_ENTRY_ID = S47D.ENTRY_ID(+)
+                                               AND B.AS_SLUTN_RESN_ID = '454'
+                                               AND TO_CHAR(A.AS_CRT_DT,'YYYY') >= 2018
+                                              <if test="ordNo != null and ordNo  != '' " >    
+                                                    AND  C.SALES_ORD_NO = #{ordNo}
+                                              </if>
+                        )WHERE RK =1 
+        ) ,  
+        in_Entry as(
+                 SELECT    1 tKy, 
+                               A.AS_ID,
+                               A.AS_NO,
+                               A.AS_MEM_ID,
+                               A.AS_STUS_ID,
+                               B.AS_SO_ID,
+                               B.AS_RESULT_NO,
+                               B.AS_RESULT_ID,
+                               B.AS_ENTRY_ID,
+                               B.AS_CT_ID,
+                               B.AS_BRNCH_ID,
+                               B.IN_HUSE_REPAIR_PROMIS_DT,
+                               B.APPNT_DT,
+                               F.CODE,
+                               E.CODE AS AS_DF_DESC,
+                               G.STK_CODE,
+                               G.STK_DESC,
+                               H.MEM_CODE,
+                               A.AS_CRT_DT,
+                               CASE 
+                                    WHEN ( B.AS_RESULT_STUS_ID  ='4' ) THEN  TO_CHAR( B.AS_RESULT_UPD_DT,'dd/mm/yyyy')
+                               ELSE '-'
+                               END AS AS_COM_DT  ,
+                               DECODE (A.AS_STUS_ID, '1', 'ACT', '4', 'COM',  '21', 'FAI', '10',   'CAN')   AS IN_AS_STUS,
+                               A.REF_REQST
+                        FROM   SVC0001D A,
+                               SVC0004D B,
+                               SAL0001D C,
+                               SAL0002D D,
+                               SYS0026M G,
+                               SYS0032M E,
+                               SYS0005M F,
+                               ORG0001D H
+                       WHERE  A.AS_ID = B.AS_ENTRY_ID
+                               AND A.AS_SO_ID = C.SALES_ORD_ID
+                               AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                               AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                               AND D.ITM_STK_ID = G.STK_ID
+                               AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
+                               AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
+                               AND B.AS_CT_ID = H.MEM_ID
+                               AND A.AS_TYPE_ID = '2713'
+            ),
+            on_Entry as(
+                SELECT tKy , AS_NO ,  IN_HUSE_REPAIR_SERIAL_NO , AS_STUS , REF_REQST , MEM_CODE , ON_COM_DT , RK ,STK_DESC
+                FROM(
+                               SELECT    1 tKy,
+                                             A.AS_NO,
+                                             (SELECT   STK_DESC       FROM   SYS0026M X      WHERE   X.STK_CODE = B.IN_HUSE_REPAIR_PRODUCT_CODE)  STK_DESC,
+                                             B.IN_HUSE_REPAIR_SERIAL_NO,
+                                             DECODE (A.AS_STUS_ID,  '1',  'ACT','4','COM', '21','FAI', '10',  'CAN')  AS AS_STUS,
+                                             A.REF_REQST,
                                              C.MEM_CODE ,
                                              CASE 
-				                                    WHEN ( B.AS_RESULT_STUS_ID  ='4' ) THEN  TO_CHAR( B.AS_RESULT_UPD_DT,'dd/mm/yyyy')
-				                             ELSE '-'
-				                             END AS ON_COM_DT
-		                        FROM   SVC0001D A, SVC0004D B , ORG0001D C
-				            WHERE   1 = 1 
-				              AND A.AS_ID = B.AS_ENTRY_ID(+)
-				              AND A.AS_MEM_ID = C.MEM_ID
-				              AND REF_REQST IN ( 
-										                     SELECT  TO_CHAR(AS_RESULT_ID) 
-										                        FROM  SVC0001D  A, SVC0004D  B  
-										                     WHERE   A.AS_ID =B.AS_ENTRY_ID   
-										                        AND  REF_REQST IN ( 
-										                                             SELECT 
-										                                                    TO_CHAR(A.AS_ID)
-										                                             FROM   SVC0001D A,
-										                                                    SVC0004D B,
-										                                                    SAL0001D C,
-										                                                    SAL0002D D,
-										                                                    SYS0026M G,
-										                                                    SYS0032M E,
-										                                                    SYS0005M F,
-										                                                    ORG0001D H
-										                                            WHERE       1 = 1
-										                                                    AND A.AS_ID = B.AS_ENTRY_ID
-										                                                    AND A.AS_SO_ID = C.SALES_ORD_ID
-										                                                    AND C.SALES_ORD_ID = D.SALES_ORD_ID
-										                                                    AND C.SALES_ORD_ID = D.SALES_ORD_ID
-										                                                    AND D.ITM_STK_ID = G.STK_ID
-										                                                    AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
-										                                                    AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
-										                                                    AND B.AS_CT_ID = H.MEM_ID
-										                                                    AND B.AS_SLUTN_RESN_ID  IN('454' ,'452')
-																	                        <if test="ordNo != null and ordNo  != '' " >    
-																			                     AND  C.SALES_ORD_NO = #{ordNo}
-																			                </if>
-										                                          )
-										                    )  
-			) 
-			SELECT 
-			         as_Entry.AS_ID,
-			         as_Entry.AS_NO,
-			         as_Entry.CUST_ID,
-			         as_Entry.AS_MEM_ID,
-			         as_Entry.AS_STUS_ID,
-			         as_Entry.AS_STUS,
-			         as_Entry.AS_SO_ID,
-			         as_Entry.AS_RESULT_NO,
-			         as_Entry.AS_ENTRY_ID,
-			         as_Entry.AS_CT_ID,
-			         as_Entry.MEM_CODE,
-			         as_Entry.AS_BRNCH_ID,
-			         as_Entry.CODE AS_BRNCH_DESC,
-			         as_Entry.AS_DF_DESC,
-			         as_Entry.STK_CODE,
-			         as_Entry.STK_DESC,
-			         as_Entry.SALES_ORD_NO,
-			         as_Entry.SALES_ORD_ID,
-			         as_Entry.IN_HUSE_REPAIR_PRODUCT_CODE,
-			         as_Entry.IN_HUSE_REPAIR_SERIAL_NO,
-			         as_Entry.AS_APPNT_DT, 
-			         as_Entry.SERIAL_NO,
-			         (SELECT NAME||'('||CUST_ID||')'  FROM  SAL0029D WHERE  CUST_ID = as_Entry.CUST_ID) CUST_NAME,
-			         in_Entry.AS_ID AS IN_AS_ID,
-			         in_Entry.AS_NO AS IN_AS_NO,
-			         in_Entry.AS_MEM_ID AS IN_AS_MEM_ID,
-			         in_Entry.AS_STUS_ID AS IN_AS_STUS_ID,
-			         in_Entry.AS_SO_ID AS IN_AS_SO_ID,
-			         in_Entry.AS_RESULT_NO AS IN_AS_RESULT_NO,
-			         in_Entry.AS_RESULT_ID AS IN_AS_RESULT_ID,
-			         in_Entry.AS_ENTRY_ID AS IN_AS_ENTRY_ID,
-			         in_Entry.AS_CT_ID AS IN_AS_CT_ID,
-			         in_Entry.MEM_CODE AS IN_MEM_CODE,
-			         in_Entry.AS_BRNCH_ID AS IN_AS_BRNCH_ID,
-			         in_Entry.CODE AS IN_AS_BRNCH_DESC,
-			         in_Entry.AS_DF_DESC AS IN_AS_DF_DESC,
-			         in_Entry.STK_CODE AS IN_STK_CODE,
-			         in_Entry.STK_DESC AS IN_STK_DESC,
-			         in_Entry.IN_HUSE_REPAIR_PROMIS_DT,
-			         in_Entry.APPNT_DT AS IN_APPNT_DT,
-			         in_Entry.AS_CRT_DT AS IN_AS_CRT_DT,
-			         in_Entry.AS_COM_DT AS IN_AS_COM_DT,
-			         in_Entry.IN_AS_STUS, 
-			         on_Entry.AS_NO      AS ON_AS_NO,
-			         on_Entry.STK_DESC   AS ON_STK_DESC,
-			         on_Entry.IN_HUSE_REPAIR_SERIAL_NO   AS ON_IN_HUSE_REPAIR_SERIAL_NO,
-			         on_Entry.AS_STUS   AS  ON_AS_STUS,
-			         on_Entry.MEM_CODE   AS ON_MEM_CODE ,
-			        on_Entry.ON_COM_DT  AS ON_COM_DT
-			FROM  as_Entry  ,in_Entry  ,on_Entry
-			WHERE 1=1  
-		        AND as_Entry.tKy = in_Entry.tKy(+)
+                                                    WHEN ( B.AS_RESULT_STUS_ID  ='4' ) THEN  TO_CHAR( B.AS_RESULT_UPD_DT,'dd/mm/yyyy')
+                                             ELSE '-'
+                                             END AS ON_COM_DT ,
+                                             RANK() OVER (PARTITION BY A.AS_SO_ID ORDER BY B.AS_RESULT_ID DESC) AS RK
+                                FROM   SVC0001D A, SVC0004D B , ORG0001D C
+                            WHERE   1 = 1 
+                              AND A.AS_ID = B.AS_ENTRY_ID(+)
+                              AND A.AS_MEM_ID = C.MEM_ID
+                              AND REF_REQST IN ( 
+                                                             SELECT  TO_CHAR(AS_RESULT_ID) 
+                                                                FROM  SVC0001D  A, SVC0004D  B  
+                                                             WHERE   A.AS_ID =B.AS_ENTRY_ID   
+                                                                AND  REF_REQST IN ( 
+                                                                                     SELECT 
+                                                                                            TO_CHAR(A.AS_ID)
+                                                                                     FROM   SVC0001D A,
+                                                                                            SVC0004D B,
+                                                                                            SAL0001D C,
+                                                                                            SAL0002D D,
+                                                                                            SYS0026M G,
+                                                                                            SYS0032M E,
+                                                                                            SYS0005M F,
+                                                                                            ORG0001D H
+                                                                                    WHERE       1 = 1
+                                                                                            AND A.AS_ID = B.AS_ENTRY_ID
+                                                                                            AND A.AS_SO_ID = C.SALES_ORD_ID
+                                                                                            AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                                                                                            AND C.SALES_ORD_ID = D.SALES_ORD_ID
+                                                                                            AND D.ITM_STK_ID = G.STK_ID
+                                                                                            AND B.AS_DEFECT_TYPE_ID(+) = E.RESN_ID
+                                                                                            AND A.AS_BRNCH_ID = F.BRNCH_ID(+)
+                                                                                            AND B.AS_CT_ID = H.MEM_ID
+                                                                                            AND B.AS_SLUTN_RESN_ID  IN('454' ,'452')
+                                                                                            <if test="ordNo != null and ordNo  != '' " >    
+                                                                                                 AND  C.SALES_ORD_NO = #{ordNo}
+                                                                                            </if>
+                                                                                           AND TO_CHAR(A.AS_CRT_DT,'YYYY') >= 2018
+                                                                                            
+                                                                                  )
+                                                                                  
+                                                            )  
+                    )WHERE RK=1
+            ) 
+            SELECT 
+                     as_Entry.AS_ID,
+                     as_Entry.AS_NO,
+                     as_Entry.CUST_ID,
+                     as_Entry.AS_MEM_ID,
+                     as_Entry.AS_STUS_ID,
+                     as_Entry.AS_STUS,
+                     as_Entry.AS_SO_ID,
+                     as_Entry.AS_RESULT_NO,
+                     as_Entry.AS_ENTRY_ID,
+                     as_Entry.AS_CT_ID,
+                     as_Entry.MEM_CODE,
+                     as_Entry.AS_BRNCH_ID,
+                     as_Entry.CODE AS_BRNCH_DESC,
+                     as_Entry.AS_DF_DESC,
+                     as_Entry.STK_CODE,
+                     as_Entry.STK_DESC,
+                     as_Entry.SALES_ORD_NO,
+                     as_Entry.SALES_ORD_ID,
+                     as_Entry.IN_HUSE_REPAIR_PRODUCT_CODE,
+                     as_Entry.IN_HUSE_REPAIR_SERIAL_NO,
+                     as_Entry.AS_APPNT_DT, 
+                     as_Entry.SERIAL_NO,
+                     (SELECT NAME||'('||CUST_ID||')'  FROM  SAL0029D WHERE  CUST_ID = as_Entry.CUST_ID) CUST_NAME,
+                     in_Entry.AS_ID AS IN_AS_ID,
+                     in_Entry.AS_NO AS IN_AS_NO,
+                     in_Entry.AS_MEM_ID AS IN_AS_MEM_ID,
+                     in_Entry.AS_STUS_ID AS IN_AS_STUS_ID,
+                     in_Entry.AS_SO_ID AS IN_AS_SO_ID,
+                     in_Entry.AS_RESULT_NO AS IN_AS_RESULT_NO,
+                     in_Entry.AS_RESULT_ID AS IN_AS_RESULT_ID,
+                     in_Entry.AS_ENTRY_ID AS IN_AS_ENTRY_ID,
+                     in_Entry.AS_CT_ID AS IN_AS_CT_ID,
+                     in_Entry.MEM_CODE AS IN_MEM_CODE,
+                     in_Entry.AS_BRNCH_ID AS IN_AS_BRNCH_ID,
+                     in_Entry.CODE AS IN_AS_BRNCH_DESC,
+                     in_Entry.AS_DF_DESC AS IN_AS_DF_DESC,
+                     in_Entry.STK_CODE AS IN_STK_CODE,
+                     in_Entry.STK_DESC AS IN_STK_DESC,
+                     in_Entry.IN_HUSE_REPAIR_PROMIS_DT,
+                     in_Entry.APPNT_DT AS IN_APPNT_DT,
+                     in_Entry.AS_CRT_DT AS IN_AS_CRT_DT,
+                     in_Entry.AS_COM_DT AS IN_AS_COM_DT,
+                     in_Entry.IN_AS_STUS, 
+                     on_Entry.AS_NO      AS ON_AS_NO,
+                     on_Entry.STK_DESC   AS ON_STK_DESC,
+                     on_Entry.IN_HUSE_REPAIR_SERIAL_NO   AS ON_IN_HUSE_REPAIR_SERIAL_NO,
+                     on_Entry.AS_STUS   AS  ON_AS_STUS,
+                     on_Entry.MEM_CODE   AS ON_MEM_CODE ,
+                    on_Entry.ON_COM_DT  AS ON_COM_DT
+            FROM  as_Entry  ,in_Entry  ,on_Entry
+            WHERE 1=1  
+                AND as_Entry.tKy = in_Entry.tKy(+)
                 AND in_Entry.tKy = on_Entry.tKy(+)
                 AND TO_CHAR(as_Entry.AS_ID)  = in_Entry.REF_REQST(+)
                 AND TO_CHAR(in_Entry.AS_RESULT_ID) = on_Entry.REF_REQST(+)
@@ -209,8 +247,8 @@
                 <if test="custProduct != null and custProduct  != '' " >   
                       AND as_Entry.STK_CODE =#{custProduct}
                 </if>
-			    <if test="ordNo != null and ordNo  != '' " >    
-			         AND  as_Entry.SALES_ORD_NO = #{ordNo}
+                <if test="ordNo != null and ordNo  != '' " >    
+                     AND  as_Entry.SALES_ORD_NO = #{ordNo}
                 </if>
                  
                 <if test="ihrServiceNo != null and ihrServiceNo  != '' " >    
@@ -252,6 +290,7 @@
                      AND   on_Entry.AS_STUS  =  #{closeStatus}
                  </if>
  </select>
+ 
 
     <select id="selInhouseList_BACKUP" parameterType="Map" resultType="egovMap">
 			  SELECT   as_Entry.AS_ID,
