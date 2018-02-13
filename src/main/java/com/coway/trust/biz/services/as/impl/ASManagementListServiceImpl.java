@@ -1338,6 +1338,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				 //}   
 			  }
 			// if( )
+			 if(svc0004dmap.get("IN_HUSE_REPAIR_REP_YN").equals("0") ){
+				  svc0004dmap.put("AS_RESULT_STUS_ID", "4");
+				  this.updateStateSVC0001D(svc0004dmap);
+			  }
 		  }
 		  
 		  
@@ -1350,10 +1354,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				  
 		            chkInHouseOpenComp = true;
 			  }
-			  if(svc0004dmap.get("IN_HUSE_REPAIR_REP_YN").equals("0") ){
-				  svc0004dmap.put("AS_RESULT_STUS_ID", "4");
-				  this.updateStateSVC0001D(svc0004dmap);
-			  }
+			 
 		  }
 		  
 		return   chkInHouseOpenComp ;
