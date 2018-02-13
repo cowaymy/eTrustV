@@ -213,45 +213,42 @@ $.fn.clearForm = function() {
     <col style="width:*" />
 </colgroup>
 <tbody>
+
 <tr>
-<th colspan="6">SGCM</th>
-</tr>
-<tr>
-    
+    <td colspan="1">GM</td>
     <th scope="row">Pax</th>
-    <td><input type="text" title="" placeholder="Order Number" class="w100p" id="orderNum" name="orderNum"/></td>
+    <td><input type="text" title="" placeholder="Pax" class="w100p" id="orderNum" name="orderNum"/></td>
     <th scope="row">Productivity</th>
-    <td><input type="text" title="" placeholder="Customer Code" class="w100p" id="customerCode" name="customerCode"/></td>
-</tr>
-<tr>
-<th colspan="6">GCM</th>
-</tr>
-<tr>
-    
-    <th scope="row">Pax</th>
-    <td><input type="text" title="" placeholder="Order Number" class="w100p" id="orderNum" name="orderNum"/></td>
-    <th scope="row">Productivity</th>
-    <td><input type="text" title="" placeholder="Customer Code" class="w100p" id="customerCode" name="customerCode"/></td>
-</tr>
-<tr>
-<th colspan="6">SGCM</th>
-</tr>
-<tr>
-    
-    <th scope="row">Pax</th>
-    <td><input type="text" title="" placeholder="Order Number" class="w100p" id="orderNum" name="orderNum"/></td>
-    <th scope="row">Productivity</th>
-    <td><input type="text" title="" placeholder="Customer Code" class="w100p" id="customerCode" name="customerCode"/></td>
+    <td><input type="text" title="" placeholder="Productivity" class="w100p" id="customerCode" name="customerCode"/></td>
+    <td></td>
 </tr>
 
 <tr>
-<th colspan="6">CM</th>
-</tr>
-<tr>
+    <td colspan="1">SCM</td>
     <th scope="row">Pax</th>
-    <td><input type="text" title="" placeholder="Order Number" class="w100p" id="orderNum" name="orderNum"/></td>
+    <td><input type="text" title="" placeholder="Pax" class="w100p" id="orderNum" name="orderNum"/></td>
     <th scope="row">Productivity</th>
-    <td><input type="text" title="" placeholder="Customer Code" class="w100p" id="customerCode" name="customerCode"/></td>
+    <td><input type="text" title="" placeholder="Productivity" class="w100p" id="customerCode" name="customerCode"/></td>
+    <td></td>
+</tr>
+
+<tr>
+    <td colspan="1">CM</td>
+    <th scope="row">Pax</th>
+    <td><input type="text" title="" placeholder="Pax" class="w100p" id="orderNum" name="orderNum"/></td>
+    <th scope="row">Productivity</th>
+    <td><input type="text" title="" placeholder="Productivity" class="w100p" id="customerCode" name="customerCode"/></td>
+    <td></td>
+</tr>
+
+
+<tr>
+<td colspan="1">CODY</td>
+    <th scope="row">Pax</th>
+    <td><input type="text" title="" placeholder="Pax" class="w100p" id="orderNum" name="orderNum"/></td>
+    <th scope="row">Productivity</th>
+    <td><input type="text" title="" placeholder="Productivity" class="w100p" id="customerCode" name="customerCode"/></td>
+    <td></td>
 </tr>
  
 </tbody>

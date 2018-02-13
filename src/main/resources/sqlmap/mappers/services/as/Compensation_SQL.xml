@@ -41,12 +41,12 @@
 				) ORD_INFO
 				 WHERE 1 = 1 
 				 AND SVC.SALES_ORD_NO = ORD_INFO.SALES_ORD_NO(+) -->
-			SELECT A.CUST_ID,                                                    /* CUSTOMER CODE    */
-				       A.SALES_ORD_NO,                                               /* ORDER NUMBER     */
-				       A.AS_NO,                                                           /* AS ORDER NUMBER */
-				       TO_CHAR(COMP_DT, 'DD/MM/YYYY')  COMP_DT,        /* COMPLETE DATA  */
-				       TO_CHAR(ISSUE_DT, 'DD/MM/YYYY') ISSUE_DT,        /* APPLICATION DATE */
-				       (SELECT DISTINCT CODE || '-' || NAME  CODE_NAME  FROM SYS0005M CODE WHERE 1=1 AND CODE.TYPE_ID= 43 AND CODE.CODE = A.CODE)   AS CODE, /* DSC BRANCH */
+			SELECT A.CUST_ID,                                                   
+				       A.SALES_ORD_NO,                                         
+				       A.AS_NO,                                                          
+				       TO_CHAR(COMP_DT, 'DD/MM/YYYY')  COMP_DT,      
+				       TO_CHAR(ISSUE_DT, 'DD/MM/YYYY') ISSUE_DT,     
+				       (SELECT DISTINCT CODE || '-' || NAME  CODE_NAME  FROM SYS0005M CODE WHERE 1=1 AND CODE.TYPE_ID= 43 AND CODE.CODE = A.CODE)   AS CODE,
 				       COMP_TOT_AMT, 
 				       B.NAME, 
 				       A.COMP_NO,
