@@ -1986,19 +1986,28 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		salesReqCancelVO.setSoReqCurrAmt(BigDecimal.ZERO);
 		salesReqCancelVO.setSoReqActualCanclDt(SalesConstants.DEFAULT_DATE);
 		
-		//salesReqCancelVO.setSoReqCanclTotOtstnd(new BigDecimal( (String)params.get("txtTotalAmount")));
-		//salesReqCancelVO.setSoReqCanclPnaltyAmt(new BigDecimal((String)params.get("txtPenaltyCharge")));
-		//salesReqCancelVO.setSoReqCanclAdjAmt(new BigDecimal((String)params.get("txtPenaltyAdj")));
-		//salesReqCancelVO.setSoReqCanclRentalOtstnd(new BigDecimal((String)params.get("txtCurrentOutstanding")));
+		BigDecimal bdTotalAmount = (params.get("txtTotalAmount") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtTotalAmount"));
+		BigDecimal bdPenaltyCharge = (params.get("txtPenaltyCharge") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtPenaltyCharge"));
+		BigDecimal bdPenaltyAdj = (params.get("txtPenaltyAdj") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtPenaltyAdj"));
+		BigDecimal bdCurrentOutstanding = (params.get("txtCurrentOutstanding") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtCurrentOutstanding"));
+		
+		logger.debug("bdTotalAmount : "+bdTotalAmount);
+		logger.debug("bdPenaltyCharge : "+bdPenaltyCharge);
+		logger.debug("bdPenaltyAdj : "+bdPenaltyAdj);
+		logger.debug("bdCurrentOutstanding : "+bdCurrentOutstanding);
+		
+		salesReqCancelVO.setSoReqCanclTotOtstnd(bdTotalAmount);
+		salesReqCancelVO.setSoReqCanclPnaltyAmt(bdPenaltyCharge);
+		salesReqCancelVO.setSoReqCanclAdjAmt(bdPenaltyAdj);
+		salesReqCancelVO.setSoReqCanclRentalOtstnd(bdCurrentOutstanding);
 
-	 
 		//edit by hgham 2017-12-30
+		/*
 		 salesReqCancelVO.setSoReqCanclTotOtstnd( new BigDecimal(CommonUtils.intNvl((params.get("txtTotalAmount")))));
 		 salesReqCancelVO.setSoReqCanclPnaltyAmt(new BigDecimal(CommonUtils.intNvl(params.get("txtPenaltyCharge"))));
 	     salesReqCancelVO.setSoReqCanclAdjAmt(new BigDecimal(CommonUtils.intNvl(params.get("txtPenaltyAdj"))));
 	     salesReqCancelVO.setSoReqCanclRentalOtstnd(new BigDecimal(CommonUtils.intNvl(params.get("txtCurrentOutstanding"))));
-
-
+		*/
 		
 		salesReqCancelVO.setSoReqCanclObPriod(CommonUtils.intNvl((String)params.get("txtObPeriod")));
 		salesReqCancelVO.setSoReqCanclUnderCoolPriod(SalesConstants.IS_FALSE);
