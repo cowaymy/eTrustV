@@ -157,7 +157,8 @@
                                                            AND TO_DATE (NVL (B.VALID_DT_TO, '29991231') || '23', 'YYYYMMDDHH24')
                         )
                  )
-             AND FAVORITES.CRT_USER_ID = #{userId}
+             AND FAVORITES.USER_ID = MAPP.USER_ID
+             AND FAVORITES.USER_ID = #{userId}
         ORDER BY FAVORITES.MYMENU_ORDER
     </select>
 
