@@ -111,9 +111,12 @@
 						                       JOIN SAL0029D Extent6   ON Extent4.CUST_ID = Extent6.CUST_ID
 						                       LEFT JOIN ORG0001D Extent8   ON Extent1.AS_MEM_ID = Extent8.MEM_ID 
 						                       LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent8.BRNCH
-						                       LEFT JOIN SVC0004D Extent7   ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
-						                       AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
-						                       AND ( 1 = Extent7.AS_RESULT_IS_CURR )
+						                       LEFT JOIN ( select * from svc0004d a where AS_RESULT_ID in (
+                                                                            select max(AS_RESULT_ID) from svc0004d group by AS_ENTRY_ID
+                                                               ) )  Extent7   
+										                                               ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
+																                       AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
+																                       AND ( 1 = Extent7.AS_RESULT_IS_CURR )
 						                 WHERE  ( 8    <![CDATA[ <> ]]> Extent1.AS_STUS_ID )
 						                   <if test="asStatusList != null and asStatusList != '' ">
 								                    AND Extent1.AS_STUS_ID  IN
@@ -387,11 +390,11 @@
 						                            END C2  ,
 						                         CASE 
 						                              WHEN ( Extent4.RESN_ID IS NOT NULL ) THEN Extent4.RESN_DESC
-						                         ELSE '-'
+						                         ELSE Extent8.DEFECT_TYPE_CODE_DESC
 						                            END C3  ,
 						                         CASE 
 						                              WHEN ( Extent5.RESN_ID IS NOT NULL ) THEN Extent5.RESN_DESC
-						                         ELSE '-'
+						                         ELSE Extent8.DEFECT_DTL_CODE_DESC
 						                            END C4  ,
 						                         CASE 
 						                              WHEN ( Extent6.MEM_ID IS NOT NULL ) THEN Extent6.MEM_CODE
@@ -415,6 +418,8 @@
 						                LEFT JOIN SYS0032M Extent5   ON Extent1.AS_MALFUNC_RESN_ID = Extent5.RESN_ID
 						                LEFT JOIN ORG0001D Extent6   ON Extent3.AS_CT_ID = Extent6.MEM_ID
 						                LEFT JOIN SYS0032M Extent7   ON Extent3.AS_SLUTN_RESN_ID = Extent7.RESN_ID
+						                LEFT JOIN SVC0056M Extent8   ON  Extent1.AS_MALFUNC_ID = Extent8.DEFECT_TYPE_CODE
+                                                                                   AND Extent1.AS_MALFUNC_RESN_ID = Extent8.DEFECT_DTL_CODE
 						          WHERE  Extent1.AS_SO_ID = #{SALES_ORD_ID} ) S
 	                
     </select>
@@ -3802,7 +3807,7 @@
       </select>
       
      <select id="getAsEventInfo" parameterType="Map" resultType="egovMap">
-    SELECT 
+  <!--   SELECT 
     B.DEFECT_TYPE_CODE_DESC malfu_code, 
     B.DEFECT_DTL_CODE_DESC malfu_reason, 
     D.CODE|| '-' || D.NAME DSC,
@@ -3822,8 +3827,27 @@
    AND F.ITM_STK_ID = G.STK_ID 
    AND G.STK_CTGRY_ID = B.PRODUCT_CTGRY_CODE
    AND C.BRNCH = D.BRNCH_ID
-   AND A.AS_NO = #{as_No}
+   AND A.AS_NO = #{as_No} -->
  
+ 
+  SELECT DISTINCT
+    case  when(H.RESN_ID IS NOT NULL) then H.RESN_DESC Else B.DEFECT_TYPE_CODE_DESC end malfu_code , 
+    case when (H.RESN_ID IS NOT NULL) then I.RESN_DESC else B.DEFECT_DTL_CODE_DESC end malfu_reason , 
+    D.CODE|| '-' || D.NAME DSC,
+    A. AS_APPNT_TM Req_tm
+    FROM SVC0001D A,
+       SVC0056M B,
+       ORG0001D C,
+       SYS0005M D,
+       SYS0032M H,
+       SYS0032M I
+ WHERE A.AS_MALFUNC_ID = B.DEFECT_TYPE_CODE
+    AND A.AS_MALFUNC_RESN_ID = B.DEFECT_DTL_CODE
+   AND A.AS_MEM_ID = C.MEM_ID
+   AND C.BRNCH = D.BRNCH_ID
+   AND A.AS_MALFUNC_ID = H.RESN_ID(+) 
+   and A.AS_MALFUNC_RESN_ID = I.RESN_ID(+)
+   AND A.AS_NO = #{as_No}
  
  
     </select>
