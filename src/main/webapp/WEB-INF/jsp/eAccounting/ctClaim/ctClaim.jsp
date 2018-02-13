@@ -1078,9 +1078,9 @@ function fn_updateStaffClaimExp(st) {
     }
 }
 
-function fn_approveLinePop(memAccId) {
+function fn_approveLinePop(memAccId, clmMonth) {
 	// check request - Request once per user per month
-    Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J8", memAccId:memAccId}, function(result) {
+    Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J8", memAccId:memAccId, clmMonth:clmMonth}, function(result) {
         console.log(result);
         if(result.data > 0) {
             Common.alert(result.message);
@@ -1300,6 +1300,21 @@ function fn_report() {
         isProcedure : true
     };
     Common.report("dataForm", option);
+}
+
+function fn_checkClmMonthAndMemAccId() {
+    var checkResult = true;
+    if(FormUtil.isEmpty($("#newMemAccId").val())) {
+        Common.alert('Please enter the CT Code');
+        checkResult = false;
+        return checkResult;
+    }
+    if(FormUtil.isEmpty($("#newClmMonth").val())) {
+        Common.alert('Please enter the Claim Month');
+        checkResult = false;
+        return checkResult;
+    }
+    return checkResult;
 }
 
 </script>

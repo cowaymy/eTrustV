@@ -518,7 +518,10 @@ $(document).ready(function () {
     $("#delete_btn").click(fn_deleteStaffClaimExp);
     $("#tempSave_btn").click(fn_tempSave);
     $("#request_btn").click(function() {
-    	fn_approveLinePop($("#newMemAccId").val());
+    	var result = fn_checkClmMonthAndMemAccId();
+        if(result) {
+            fn_approveLinePop($("#newMemAccId").val(), $("#newClmMonth").val());
+        }
     });
     $("#add_row").click(fn_addMyGridRow);
     $("#remove_row").click(fn_removeMyGridRow);
