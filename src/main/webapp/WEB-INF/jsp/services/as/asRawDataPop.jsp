@@ -48,9 +48,9 @@ function fn_openGenerate(){
             $("#reportForm").append('<input type="hidden" id="V_ORDERBYSQL" name="V_ORDERBYSQL" /> ');
             $("#reportForm").append('<input type="hidden" id="V_FULLSQL" name="V_FULLSQL" /> ');
 
-            $("#reportForm #V_SELECTSQL").val("");
-            $("#reportForm #V_ORDERBYSQL").val("");
-            $("#reportForm #V_FULLSQL").val("");
+            $("#reportForm #V_SELECTSQL").val(" ");
+            $("#reportForm #V_ORDERBYSQL").val(" ");
+            $("#reportForm #V_FULLSQL").val(" ");
             $("#reportForm #V_WHERESQL").val(whereSql);
             $("#reportForm #reportFileName").val('/services/ASRawData.rpt');
             $("#reportForm #viewType").val("EXCEL");
