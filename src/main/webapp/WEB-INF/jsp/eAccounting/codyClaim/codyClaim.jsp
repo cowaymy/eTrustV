@@ -1167,14 +1167,14 @@ function fn_myGridSetEvent() {
     AUIGrid.bind(myGridID, "cellEditBegin", function( event ) {
         // return false; // false, true 반환으로 동적으로 수정, 편집 제어 가능
         if($("#invcType").val() == "S") {
-            if(event.dataField == "nonClmGstAmt") {
+            if(event.dataField == "taxNonClmAmt") {
                 if(event.item.taxAmt <= 30) {
                     Common.alert('<spring:message code="newWebInvoice.gstLess.msg" />');
                     AUIGrid.forceEditingComplete(myGridID, null, true);
                 }
             }
         } else {
-            if(event.dataField == "nonClmGstAmt") {
+            if(event.dataField == "taxNonClmAmt") {
                 Common.alert('<spring:message code="newWebInvoice.gstFullTax.msg" />');
                 AUIGrid.forceEditingComplete(myGridID, null, true);
             }
@@ -1224,15 +1224,6 @@ function fn_myGridSetEvent() {
                         if((taxAmtCnt + event.value) > 30) {
                             Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
                             AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", event.oldValue);
-                        } else {
-                            taxAmt = event.value;
-                            if(event.item.oriTaxAmt > taxAmt) {
-                                taxNonClmAmt = event.item.oriTaxAmt - taxAmt;
-                            } else {
-                                taxNonClmAmt = taxAmt - event.item.oriTaxAmt;
-                            }
-                            AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", taxAmt);
-                            AUIGrid.setCellValue(myGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
                         }
                     }
                 }

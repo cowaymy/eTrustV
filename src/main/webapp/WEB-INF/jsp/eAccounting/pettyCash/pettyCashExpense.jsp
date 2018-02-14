@@ -939,15 +939,6 @@ function fn_myGridSetEvent() {
                         if((taxAmtCnt + event.value) > 30) {
                             Common.alert('<spring:message code="newWebInvoice.gstSimTax.msg" />');
                             AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", event.oldValue);
-                        } else {
-                            taxAmt = event.value;
-                            if(event.item.oriTaxAmt > taxAmt) {
-                                taxNonClmAmt = event.item.oriTaxAmt - taxAmt;
-                            } else {
-                                taxNonClmAmt = taxAmt - event.item.oriTaxAmt;
-                            }
-                            AUIGrid.setCellValue(myGridID, event.rowIndex, "gstAmt", taxAmt);
-                            AUIGrid.setCellValue(myGridID, event.rowIndex, "nonClmGstAmt", taxNonClmAmt);
                         }
                     }
                 }

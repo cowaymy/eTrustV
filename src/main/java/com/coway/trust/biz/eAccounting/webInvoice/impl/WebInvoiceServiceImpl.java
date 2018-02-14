@@ -405,29 +405,19 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		EgovMap appvInfo = appvInfoAndItems.get(0);
 		String reqstUserId = (String) appvInfo.get("reqstUserId");
 		String reqstDt = (String) appvInfo.get("reqstDt");
-		int appvLinePrcssCnt = Integer.parseInt(String.valueOf(appvInfo.get("appvLinePrcssCnt")));
 		String appvPrcssStus = "- Request By " + reqstUserId + " [" + reqstDt + "]";
-		// 아무도 승인 하지 않았을때
-		if(appvLinePrcssCnt == 0) {
-			// order by appvLineSeq
-			EgovMap lineInfo = appvLineInfo.get(0);
-//			String appvLineUserId = (String) lineInfo.get("appvLineUserId");
-			String appvLineUserName = (String) lineInfo.get("appvLineUserName");
-			appvPrcssStus += "<br> - Pending By " + appvLineUserName;
-		} else {
-			for(int i = 0; i < appvLineInfo.size(); i++) {
-				EgovMap appvLine = appvLineInfo.get(i);
-				String appvStus = (String) appvLine.get("appvStus");
-//				String appvLineUserId = (String) appvLine.get("appvLineUserId");
-				String appvLineUserName = (String) appvLine.get("appvLineUserName");
-				String appvDt = (String) appvLine.get("appvDt");
-				if("R".equals(appvStus)) {
-					appvPrcssStus += "<br> - Pending By " + appvLineUserName;
-				} else if ("A".equals(appvStus)) {
-					appvPrcssStus += "<br> - Approval By " + appvLineUserName + " [" + appvDt + "]";
-				} else if ("J".equals(appvStus)) {
-					appvPrcssStus += "<br> - Reject By " + appvLineUserName + " [" + appvDt + "]";
-				}
+		for(int i = 0; i < appvLineInfo.size(); i++) {
+			EgovMap appvLine = appvLineInfo.get(i);
+			String appvStus = (String) appvLine.get("appvStus");
+//			String appvLineUserId = (String) appvLine.get("appvLineUserId");
+			String appvLineUserName = (String) appvLine.get("appvLineUserName");
+			String appvDt = (String) appvLine.get("appvDt");
+			if("R".equals(appvStus) || "T".equals(appvStus)) {
+				appvPrcssStus += "<br> - Pending By " + appvLineUserName;
+			} else if ("A".equals(appvStus)) {
+				appvPrcssStus += "<br> - Approval By " + appvLineUserName + " [" + appvDt + "]";
+			} else if ("J".equals(appvStus)) {
+				appvPrcssStus += "<br> - Reject By " + appvLineUserName + " [" + appvDt + "]";
 			}
 		}
 		LOGGER.debug("appvPrcssStus =====================================>>  " + appvPrcssStus);
