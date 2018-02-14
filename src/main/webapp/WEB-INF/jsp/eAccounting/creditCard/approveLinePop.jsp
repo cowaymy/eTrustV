@@ -58,7 +58,7 @@ var approveLineColumnLayout = [ {
         	if (rowCount > 3) {
         		Common.alert('<spring:message code="approveLine.appvLine.msg" />');
         	} else {
-        		fn_addRow();
+        		fn_appvLineGridAddRow();
         	}
         	
         }
@@ -87,7 +87,7 @@ var approveLineGridID;
 $(document).ready(function () {
     approveLineGridID = AUIGrid.create("#approveLine_grid_wrap", approveLineColumnLayout, approveLineGridPros);
     
-    $("#delete_btn").click(fn_deleteRow);
+    $("#lineDel_btn").click(fn_appvLineDeleteRow);
     $("#submit").click(fn_newRegistMsgPop);
     
     AUIGrid.bind(approveLineGridID, "cellClick", function( event ) {
@@ -96,7 +96,7 @@ $(document).ready(function () {
     	    });
     
     //fn_setTemporaryData();
-    fn_addRow();
+    fn_appvLineGridAddRow();
 });
 
 function fn_setTemporaryData() {
@@ -109,11 +109,11 @@ function fn_setTemporaryData() {
     AUIGrid.setGridData(approveLineGridID, data);
 }
 
-function fn_addRow() {
+function fn_appvLineGridAddRow() {
     AUIGrid.addRow(approveLineGridID, {}, "first");
 }
 
-function fn_deleteRow() {
+function fn_appvLineDeleteRow() {
     AUIGrid.removeRow(approveLineGridID, selectRowIdx);
 }
 
@@ -186,7 +186,7 @@ function fn_newRegistMsgPop() {
 
 <ul class="right_btns">
 	<!--li><p class="btn_grid"><a href="#">Add</a></p></li-->
-	<li><p class="btn_grid"><a href="#" id="delete_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
+	<li><p class="btn_grid"><a href="#" id="lineDel_btn"><spring:message code="newWebInvoice.btn.delete" /></a></p></li>
 </ul>
 
 <article class="grid_wrap" id="approveLine_grid_wrap"><!-- grid_wrap start -->
