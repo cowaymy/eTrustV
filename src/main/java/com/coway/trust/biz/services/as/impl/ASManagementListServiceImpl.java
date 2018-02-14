@@ -2469,6 +2469,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			 
 		}else{
 			 c=  ASManagementListMapper.updateBasicSVC0004D(svc0004dmap);  
+			 if( svc0004dmap.get("AS_REPLACEMENT").equals("0") ){
+				 ASManagementListMapper.updateInHouseNOReplaceMentSVC0004D(svc0004dmap); 
+				 ASManagementListMapper.updateBasicInhouseSVC0001D(svc0004dmap); 
+			 }
+			 
+			 
 		}
 		
 		

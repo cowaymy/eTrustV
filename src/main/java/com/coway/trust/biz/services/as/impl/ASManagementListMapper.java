@@ -1,5 +1,6 @@
 package com.coway.trust.biz.services.as.impl;
 
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -183,6 +184,7 @@ public interface ASManagementListMapper {
 	EgovMap   getMemberByMemberIdCode(Map<String, Object> params);
 	EgovMap getAsEventInfo(Map<String, Object> params);
 	EgovMap selectTaxInvoice(Map<String, Object> params);
+	void updateInHouseNOReplaceMentSVC0004D(Map<String, Object> params);
 	
 	
 }

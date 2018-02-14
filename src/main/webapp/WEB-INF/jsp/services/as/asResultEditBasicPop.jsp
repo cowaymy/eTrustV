@@ -457,7 +457,8 @@ function  fn_setSaveFormData(){
                    IN_HUSE_REPAIR_GRP_CODE: $("#productGroup").val(),
                    IN_HUSE_REPAIR_PRODUCT_CODE: $("#productCode").val(),
                    IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val(),
-                   AS_RESULT_STUS_ID :  $("#ddlStatus").val()
+                   AS_RESULT_STUS_ID :  $("#ddlStatus").val(),
+                   AS_REPLACEMENT :$("#replacement:checked").val()
                    
 				   
 	}

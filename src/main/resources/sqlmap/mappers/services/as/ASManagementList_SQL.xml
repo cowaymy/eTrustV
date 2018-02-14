@@ -1902,8 +1902,13 @@
                                    AS_SLUTN_RESN_ID          =NVL(#{AS_SLUTN_RESN_ID},0)
               WHERE   AS_RESULT_ID = #{AS_RESULT_ID}  
     </insert>
-   
     
+    <update id="updateInHouseNOReplaceMentSVC0004D" parameterType="Map" >
+            UPDATE  SVC0004D 
+                            SET AS_RESULT_STUS_ID = 4
+            WHERE   AS_RESULT_ID = #{AS_RESULT_ID}  
+   
+    </update>
     <insert id="updateBasicInhouseSVC0004D" parameterType="Map" >
                 
                 UPDATE  SVC0004D 
