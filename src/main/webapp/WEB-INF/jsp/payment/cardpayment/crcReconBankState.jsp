@@ -342,10 +342,10 @@
     </div><!-- divine_auto end -->
     <ul class="right_btns">
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">        
-        <li><p class="btn_blue2" id="mapping"><a href="javascript:fn_mapping();"><spring:message code='pay.btn.mapping'/></a></p></li>            
+        <li><p class="btn_blue2" id="mapping"><a   href="#"  onclick="fn_mapping();" ><spring:message code='pay.btn.mapping'/></a></p></li>            
        </c:if>
      <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-        <li><p class="btn_blue2" id="knockOff"><a href="javascript:fn_knockOff();"><spring:message code='pay.btn.knockOff'/></a></p></li>
+        <li><p class="btn_blue2" id="knockOff"><a href="#"  onclick="fn_knockOff();" ><spring:message code='pay.btn.knockOff'/></a></p></li>
       </c:if>
     </ul>
 
