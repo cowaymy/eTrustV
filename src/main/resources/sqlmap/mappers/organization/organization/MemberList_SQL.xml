@@ -276,7 +276,11 @@
 	                        </choose>
                          </if>
 			            )  GroupBy1
-			            LEFT JOIN MSC0009D Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
+			            LEFT JOIN (  SELECT *
+							              FROM (SELECT A.*, ROW_NUMBER() OVER (PARTITION BY COURS_MEM_ID
+							                                                 ORDER BY COURS_ITM_ID DESC) ITM_ROWS
+							                    FROM MSC0009D A)
+							              WHERE ITM_ROWS = 1 ) Extend8 ON Extent1.MEM_ID = Extend8.COURS_MEM_ID
 
 			            WHERE 1=1
 
