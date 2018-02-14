@@ -658,7 +658,7 @@
 						         nvl(#{qotatExpFilterAmt},0),
 						         #{qotatCntrctDur},
 						         #{qotatCntrctFreq},
-						         sysdate ,
+						         LAST_DAY(SYSDATE) ,
 						         #{qotatSalesmanId},
 						         sysdate,
 						         #{qotatCrtUserId},
