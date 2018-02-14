@@ -373,7 +373,9 @@ public class PettyCashController {
 	}
 	
 	@RequestMapping(value = "/reqstCompletedMsgPop.do")
-	public String reqstCompletedMsgPop(ModelMap model) {
+	public String reqstCompletedMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("callType", params.get("callType"));
+		model.addAttribute("clmNo", params.get("clmNo"));
 		return "eAccounting/pettyCash/reqstCompletedMsgPop";
 	}
 	
