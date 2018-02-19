@@ -370,6 +370,7 @@
 		  , UPD_USER_ID
 		  , REV_ID
 		  , APPNT_DT
+		  ,SESION_CODE
 		   )
 		  VALUES (
 		   SAL0046D_INSTALL_ENTRY_ID_SEQ.NEXTVAL
@@ -385,11 +386,12 @@
 		  , SYSDATE
 		  , #{allowComm}
 		  , #{isTradeIn}
-		  , #{CTGroup}
+		  ,  #{CTGroup}
 		  , SYSDATE
 		  , #{updator}
 		  , #{revId}
 		  , TO_DATE(#{appDate},'dd-mm-yyyy')
+		  ,#{CTSSessionCode}
 		  )
         </insert>
         <select id="selectCallStatus" parameterType="Map" resultType="egovMap">
