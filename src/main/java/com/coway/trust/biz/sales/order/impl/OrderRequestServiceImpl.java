@@ -1361,8 +1361,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
                     TaxInvoiceOutright.setTaxInvcCustName((String) custBasicMap.get("name"));
                     TaxInvoiceOutright.setTaxInvcCntcPerson(BillContactPerson);
                     TaxInvoiceOutright.setAreaId(areaId);
-                    TaxInvoiceOutright.setTaxInvcStateName(addrDtl);
-                    TaxInvoiceOutright.setTaxInvcCnty(street);
+                  //TaxInvoiceOutright.setTaxInvcStateName(addrDtl);
+                  //TaxInvoiceOutright.setTaxInvcCnty(street);
                     TaxInvoiceOutright.setTaxInvcTaskId(0);
                   //TaxInvoiceOutright.TaxInvoiceCreated = DateTime.Now;
                     TaxInvoiceOutright.setTaxInvcRem(String.valueOf((BigDecimal)irv.get("installEntryId")));
