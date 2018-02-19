@@ -148,7 +148,8 @@
 
         	if (selectedItem[0] > -1){
         		if (stusCode == 'ACT'){
-        			if(day < 16){
+        			//if(day < 16){
+        			if(day < 26){
         			  Common.popupDiv("/services/bs/hsMnthlyMaintainOldPop.do?&schdulId="+schdulId+"&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
         			}else{
         				Common.alert("<b>Current month BS setting for this month has closed.</b>");
