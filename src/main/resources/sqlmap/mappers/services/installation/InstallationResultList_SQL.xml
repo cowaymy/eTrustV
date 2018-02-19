@@ -2625,7 +2625,7 @@
         SET    SO_EXCHG_STUS_ID = '4'
         , SO_EXCHG_UPD_USER_ID = #{logCreator}
         , SO_EXCHG_UPD_DT = SYSDATE
-       where sales_ord_id = #{salesOrderId}
+       where SO_ID = #{salesOrderId}
     </update>
 
          
