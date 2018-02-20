@@ -237,9 +237,9 @@
 						<th scope="row"><spring:message code='commission.text.search.reportType'/></th>
 						<td colspan="3"><select id="reportType" name="reportType">
 								<option value="">Report/Raw Data Type</option>
-								<%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+								<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 								    <option value="1">HP Commission Statement</option>
-								</c:if> --%>
+								</c:if>
 								<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 									<option value="2">HP Commission Raw (All)</option>
 									<option value="3">HP TBB File Data Raw</option>
