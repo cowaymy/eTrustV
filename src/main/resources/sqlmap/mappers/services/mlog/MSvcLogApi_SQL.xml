@@ -3,6 +3,62 @@
 <mapper namespace="com.coway.trust.biz.services.mlog.impl.MSvcLogApiMapper">
 
     <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
+    
+  SELECT 
+        appointment_Date,
+        service_No,
+        job_Status,
+        appointment_Time,
+        plan_Year,
+        plan_Month,
+        sales_Order_No,
+        app_Type,
+        sales_Promotion,
+        bank_Code,
+        card_Account_No,
+        handphone_Tel,
+        home_Tel,
+        office_Tel,
+        mail_Address,
+        resultIc_Mobile_No,
+        cust_Name,
+        customer_Type,
+        customer_Id,
+        customer_Va_No,
+        dsc_Code,
+        instruction,
+        sirim_No,
+        serial_No,
+        result_Cust_Name,
+        result_Report_Email_No,
+        result_Acceptance_Name,
+        fail_Reason_Code,
+        result_Remark,
+        rc_Code,
+        temperatureSetting,
+        nextAppointmentTime,
+        ownerCode,
+        resultCustName,
+        resultIcMobileNo,
+        resultReportEmailNo,
+        resultAcceptanceName,
+        signData,
+        nextAppointmentDate,
+        settled_By,
+        product_Name,
+        product_Code,
+        customer_Jom_Pay_Ref_No,
+        payment_ModeName,
+        payment_Mode,
+        contract_Duration,
+        Membership_Contract_Expiry,
+        rental_Status,
+        job_Type,
+        postcode,
+        service_State,
+        install_Address ,
+        CASE WHEN FILT_CNT    <![CDATA[> ]]>   0 THEN '1' ELSE '0' END need_Filter
+FROM (
 		SELECT DISTINCT
 		       TO_CHAR (A.APPNT_DT, 'YYYYMMDD') AS appointment_Date,
 		       A.NO AS service_No,
@@ -52,7 +108,6 @@
 		       TO_CHAR (R.SRV_DUR) AS contract_Duration,
 		       TO_CHAR (R.SRV_EXPR_DT, 'YYYYMMDD') AS Membership_Contract_Expiry,
 		       S.STUS_CODE_ID AS rental_Status,
-		       CASE WHEN V.FILT_CNT <![CDATA[ > ]]> 0 THEN '1' ELSE '0' END need_Filter,
 		       'HS' AS job_Type,
 		       (SELECT NVL (POSTCODE, '') AS POSTCODE
 		          FROM SYS0064M
@@ -65,7 +120,7 @@
 		       (SELECT (Q.ADDR_DTL || ' ' || Q.STREET || ' ' || AREA || ' ' || POSTCODE || ' ' || CITY || ' ' || STATE || ' ' || COUNTRY) AS POSTCODE
 		          FROM SYS0064M
 		         WHERE STATUS_ID = 1 AND AREA_ID = Q.AREA_ID)
-		          install_Address
+		          install_Address ,SRV_CONFIG_ID
 		  /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'POST')  postcode, */
 		  /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'STATE')  service_State, */
 		  /* FN_GET_SVC_MADDRESS(C.SALES_ORD_NO , 'FULL_ADDR')  install_Address */
@@ -88,9 +143,9 @@
 		       SAL0027D F,
 		       SAL0029D G,
 		       SAL0045D H,
-		       (  SELECT MAX (INSTALL_ENTRY_ID) AS INSTALL_ENTRY_ID, SALES_ORD_ID
-		            FROM SAL0046D
-		        GROUP BY SALES_ORD_ID) I,
+		       (  SELECT MAX (INSTALL_ENTRY_ID) AS INSTALL_ENTRY_ID, SALES_ORD_ID  ,STUS_CODE_ID
+                    FROM SAL0046D   WHERE  STUS_CODE_ID =4
+                GROUP BY SALES_ORD_ID ,STUS_CODE_ID ) I,
 		       (SELECT A.ENTRY_ID,
 		               A.SIRIM_NO,
 		               A.SERIAL_NO,
@@ -102,7 +157,7 @@
 		                    FROM SAL0047D A,
 		                         (  SELECT MAX (C.INSTALL_ENTRY_ID) AS ENTRY_ID, C.SALES_ORD_ID
 		                              FROM SVC0008D A
-		                                   INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID
+		                                   INNER JOIN ORG0001D B ON A.CODY_ID = B.MEM_ID   AND B.MEM_CODE = #{userId}
 		                                   INNER JOIN SAL0046D C ON A.SALES_ORD_ID = C.SALES_ORD_ID
 		                             WHERE     A.YEAR = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'YYYY')
 		                                   AND A.MONTH = TO_CHAR (TO_DATE (#{requestDate}, 'YYYY/MM'), 'MM')
@@ -132,12 +187,7 @@
 		                  ON A.SRV_SALES_ORD_ID = B.SRV_SALES_ORD_ID AND A.SRV_MEM_ID = B.SRV_MEM_ID) R,
 		       SAL0071D S,
 		       SAL0017D T,
-		       SAL0090D U,
-		       (  SELECT SRV_CONFIG_ID, COUNT (*) AS FILT_CNT
-		            FROM SAL0087D
-		           WHERE TO_CHAR (ADD_MONTHS (SRV_FILTER_PRV_CHG_DT, SRV_FILTER_PRIOD), 'YYYYMM') <![CDATA[ <= ]]>
-		                    TO_CHAR (SYSDATE, 'YYYYMM')
-		        GROUP BY SRV_CONFIG_ID) V
+		       SAL0090D U
 		 WHERE     A.SCHDUL_ID = B.SCHDUL_ID(+)
 		       AND A.SALES_ORD_ID = B.SALES_ORD_ID(+)
 		       AND A.SALES_ORD_ID = C.SALES_ORD_ID
@@ -159,7 +209,16 @@
 		       AND C.SALES_ORD_ID = S.SALES_ORD_ID(+)
 		       AND C.PROMO_ID = T.PROMO_ID(+)
 		       AND C.SALES_ORD_ID = U.SRV_SO_ID
-		       AND U.SRV_CONFIG_ID = V.SRV_CONFIG_ID(+)
+)AA
+,(
+             SELECT  SRV_CONFIG_ID  ,COUNT(*) FILT_CNT  FROM (
+             (SELECT *
+                        FROM SAL0087D
+                       WHERE TO_CHAR (ADD_MONTHS (SRV_FILTER_PRV_CHG_DT, SRV_FILTER_PRIOD), 'YYYYMM')   <![CDATA[ <=  ]]> TO_CHAR (SYSDATE, 'YYYYMM') ) 
+            ) GROUP BY SRV_CONFIG_ID 
+)S87D 
+WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)    
+		       
      </select>
 
 
