@@ -1382,7 +1382,7 @@
 						            #{cmbTypeId},
 						            TO_DATE(#{pasSportExpr}, 'DD/MM/YYYY'),
                                     TO_DATE(#{visaExpr}, 'DD/MM/YYYY'),
-						            #{getCustVano},
+						            '98 9920 '||SUBSTR(LPAD(#{custSeq}, 8, 0), 1,4)||' '||SUBSTR(LPAD(#{custSeq}, 8, 0),5),
 						            #{cmbCorpTypeId},
 						            #{gstRgistNo},
 						            #{oldNric})
