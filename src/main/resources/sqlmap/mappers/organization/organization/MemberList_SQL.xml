@@ -868,7 +868,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 ELSE ''
                    END C57  ,
                 CASE
-                     WHEN ( Extent1.SPOUSE_DOB IS NOT NULL ) THEN to_char(Extent1.SPOUSE_DOB,'yyyy-mm-dd')
+                     WHEN ( Extent1.SPOUSE_DOB IS NOT NULL ) THEN to_char(Extent1.SPOUSE_DOB,'dd/mm/yyyy')
                 ELSE ''
                    END C58  ,
                 CASE
@@ -1218,7 +1218,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             , #{spouseOcc}
             , #{spouseContat}
             <if test="spouseDob != null and spouseDob != '' and spouseDob != '01/01/1900'" >
-            , TO_DATE(#{spouseDob},'dd-mm-yyyy')
+            , TO_DATE(#{spouseDob},'dd/mm/yyyy')
             </if>
              <if test="spouseDob != null and spouseDob != '' and spouseDob == '01/01/1900'" >
             , TO_DATE(#{spouseDob},'dd-mm-yyyy')
@@ -2988,16 +2988,16 @@ SELECT Extent1.MEM_ID MEM_ID  ,
               TEL_MOBILE = #{mobileNo},
               EMAIL = #{email},
               SPUSE_CODE = #{spouseCode},
-              SPOUSE_NAME = #{sponsorNm},
-              SPOUSE_NRIC = #{sponsorNric},
+              SPOUSE_NAME = #{spouseName},
+              SPOUSE_NRIC = #{spouseNric},
               SPOUSE_OCPAT = #{spouseOcc},
               SPOUSE_TEL_CNTC = trim(#{spouseContat}),
               ]]>
-            <if test="spouseDOB != null and spouseDOB != '' and spouseDOB != '01/01/1900'" >
-            SPOUSE_DOB = TO_DATE(#{spouseDob},'YYYY-MM-DD'),
+            <if test="spouseDob != null and spouseDob != '' and spouseDob != '01/01/1900'" >
+            SPOUSE_DOB = TO_DATE(#{spouseDob},'DD/MM/YYYY'),
             </if>
-             <if test="spouseDOB != null and spouseDOB != '' and spouseDOB == '01/01/1900'" >
-            SPOUSE_DOB = TO_DATE(#{spouseDob},'YYYY-MM-DD'),
+             <if test="spouseDob != null and spouseDob != '' and spouseDob == '01/01/1900'" >
+            SPOUSE_DOB = TO_DATE(#{spouseDob},'DD/MM/YYYY'),
             </if>
 
             <if test="religion != null and religion != '' " >
@@ -3983,12 +3983,22 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
      </select>
 
        <update id="updateCodyPaDate" parameterType="Map">
-         <![CDATA[
+         <!-- <![CDATA[
           UPDATE ORG0002D Extent1
           set  Extent1.AG_EXPR_DT = TO_DATE(#{codyPaExpr}, 'DD-MM-YYYY')
          WHERE  ( Extent1.MEM_ID = #{MemberID} )
           AND ( 1 = Extent1.AG_STUS_ID ) AND ROWNUM <= 1
-        ]]>
+        ]]> -->
+          MERGE INTO ORG0002D
+		  USING DUAL
+		    ON (MEM_ID = #{MemberID} AND AG_STUS_ID = '1')
+		  WHEN MATCHED THEN 
+		    UPDATE SET AG_EXPR_DT = TO_DATE(#{codyPaExpr}, 'DD/MM/YYYY')
+		               , AG_UPD_USER_ID = #{user_id}
+		               , AG_UPD_DT = SYSDATE
+		  WHEN NOT MATCHED THEN 
+		    INSERT (AG_ID, MEM_ID, AG_TYPE_ID, AG_STUS_ID, AG_START_DT, AG_EXPR_DT, AG_CRT_USER_ID, AG_CRT_DT, AG_UPD_USER_ID, AG_UPD_DT)
+		    VALUES (ORG0002D_AG_ID_SEQ.NEXTVAL, #{MemberID}, '1416', '1', SYSDATE, TO_DATE(#{codyPaExpr}, 'DD/MM/YYYY'), #{user_id}, SYSDATE, #{user_id}, SYSDATE)
        </update>
 
 
@@ -4176,6 +4186,29 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             call SP_DAY_USER_CRT( #{IN_MEMCODE},#{p1 , mode=OUT , jdbcType=INTEGER , javaType=int , resultMap=memrtnCode}, #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=memrtnMsg} )
       }
      </select>
+     
+     <select id="selectAreaInfo" parameterType="Map" resultType="egovMap">
+               SELECT AREA_ID,
+						  ISO,
+						  COUNTRY,
+						  STATE,
+						  CITY,
+						  POSTCODE,
+						  AREA,
+						  AREA
+						  || ' '
+						  || POSTCODE
+						  || ' '
+						  || CITY
+						  || ' '
+						  || STATE
+						  || ' '
+						  || COUNTRY AS FULL_ADDRESS
+						FROM SYS0064M
+						WHERE ISO = 'MY'
+						AND AREA_ID = #{areaId}
+						AND STATUS_ID = 1
+      </select>
 
 
 

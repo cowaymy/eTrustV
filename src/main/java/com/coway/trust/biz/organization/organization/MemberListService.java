@@ -152,4 +152,6 @@ public interface MemberListService {
 
 	void updateDocSubWhenAppr(Map<String, Object> params, SessionVO sessionVO);
 
+	EgovMap selectAreaInfo(Map<String, Object> params);
+
 }

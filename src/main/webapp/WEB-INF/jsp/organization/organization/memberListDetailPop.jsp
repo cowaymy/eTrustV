@@ -765,7 +765,7 @@ function fn_winClose(){
     </td>
     <th scope="row">Sponsor's NRIC</th>
     <td>
-    <span><c:out value="${memberView.spouseNric}"/></span>
+    <span><c:out value="${memberView.c53}"/></span>
     </td>
 </tr>
 <tr>
@@ -811,7 +811,12 @@ function fn_winClose(){
     </td>
     <th scope="row">Terminate Date</th>
     <td>
-     <span><c:out value="${memberView.c54}"/></span>
+    <c:if test = "${memberView.c54 != '1900-01-01'}">
+        <span><c:out value="${memberView.c54}"/></span>
+    </c:if>
+     <%-- <span>
+        <c:out value="${memberView.c54}"/>
+    </span> --%>
     </td>
     <th scope="row">Postcode</th>
     <td>
@@ -1002,7 +1007,7 @@ function fn_winClose(){
     </td>
     <th scope="row">NRIC / Passport No.</th>
     <td>
-    <span></span>
+    <span><c:out value="${memberView.spouseNric}"/></span>
     </td>
 </tr>
 <tr>

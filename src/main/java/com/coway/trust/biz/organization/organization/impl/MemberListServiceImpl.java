@@ -176,10 +176,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			
 			MemApp.put("applicantSpouseCode",params.get("spouseCode").toString().trim()!=null ? params.get("spouseCode").toString().trim() : "");
 			MemApp.put("applicantSpouseName",params.get("spouseName").toString().trim()!=null ? params.get("spouseName").toString().trim() : "");
-			MemApp.put("applicantSpouseNRIC",params.get("spouseNRIC").toString().trim()!=null ? params.get("spouseNRIC").toString().trim() : "");
+			MemApp.put("applicantSpouseNRIC",params.get("spouseNric").toString().trim()!=null ? params.get("spouseNric").toString().trim() : "");
 			MemApp.put("applicantSpouseOccupation",params.get("spouseOcc").toString().trim()!=null ? params.get("spouseOcc").toString().trim() : "");
 			MemApp.put("applicantSpouseTelContact",params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
-			MemApp.put("applicantSpouseDOB",params.get("spouseDOB").toString().trim()!=null ? params.get("spouseDOB").toString().trim() :"01/01/1900");
+			MemApp.put("applicantSpouseDOB",params.get("spouseDob").toString().trim()!=null ? params.get("spouseDob").toString().trim() :"01/01/1900");
 			MemApp.put("applicantEduLevel",params.get("educationLvl")!=null && params.get("educationLvl")!="" ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
 			MemApp.put("applicantLanguage",params.get("language")!="" && params.get("language")!=null ? Integer.parseInt(params.get("language").toString().trim()) : 0);
 			MemApp.put("applicantBankID",Integer.parseInt(params.get("issuedBank").toString()));
@@ -307,9 +307,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		//두번째 탭 text 가져오기
 		params.put("spouseCode", params.get("spouseCode").toString().trim()!=null ? params.get("spouseCode").toString().trim() : "");
 		params.put("spouseName", params.get("spouseName").toString().trim()!=null ? params.get("spouseName").toString().trim() : "");
-		params.put("spouseNric", params.get("spouseNRIC").toString().trim()!=null ? params.get("spouseNRIC").toString().trim() : "");
+		params.put("spouseNric", params.get("spouseNric").toString().trim()!=null ? params.get("spouseNric").toString().trim() : "");
 		params.put("spouseOcc", params.get("spouseOcc").toString().trim()!=null ? params.get("spouseOcc").toString().trim() : "");
-		params.put("spouseDob", params.get("spouseDOB").toString().equals("") ? "01/01/1900":params.get("spouseDOB").toString().trim() );
+		params.put("spouseDob", params.get("spouseDob").toString().equals("") ? "01/01/1900":params.get("spouseDob").toString().trim() );
 		params.put("spouseContat", params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
 
 
@@ -1542,10 +1542,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		det.put("Email",(String) params.get("email"));
 		det.put("SpuseCode",(String) params.get("spouseCode"));
 		det.put("SpouseName",(String) params.get("spouseName"));
-		det.put("SpouseNRIC",((String) params.get("spouseNRIC")).toUpperCase());
+		det.put("spouseNric",((String) params.get("spouseNric")).toUpperCase());
 		det.put("SpouseOccupation",(String) params.get("spouseOcc"));
 		det.put("SpouseTelContact",(String) params.get("spouseContat"));
-		det.put("SpouseDOB",(String) params.get("spouseDOB"));
+		det.put("spouseDob",(String) params.get("spouseDob"));
 		det.put("EducationLevel",(String) params.get("educationLvl"));
 		det.put("Language",(String) params.get("language"));
 		det.put("Bank",(String) params.get("issuedBank"));
@@ -2224,4 +2224,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		memberListMapper.updateDocSubWhenApproval(params);
 		
 	}
+	
+	@Override
+	public EgovMap selectAreaInfo(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectAreaInfo(params);
+	}
+	
 }

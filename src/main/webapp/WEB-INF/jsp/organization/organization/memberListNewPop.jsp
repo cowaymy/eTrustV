@@ -111,20 +111,20 @@ function fn_departmentCode(value){
      } else {
         $('#spouseCode').val('');
         $('#spouseName').val('');
-        $('#spouseNRIC').val(''); 
-        $('#spouseDOB').val('');
+        $('#spouseNric').val(''); 
+        $('#spouseDob').val('');
         $('#spouseContat').val('');     
         
         $('#spouseCode', '#memberAddForm').attr("readonly", false);
         $('#spouseName', '#memberAddForm').attr("readonly", false);
-        $('#spouseNRIC', '#memberAddForm').attr("readonly", false);
-        $('#spouseDOB', '#memberAddForm').attr("readonly", false);
+        $('#spouseNric', '#memberAddForm').attr("readonly", false);
+        $('#spouseDob', '#memberAddForm').attr("readonly", false);
         $('#spouseContat', '#memberAddForm').attr("readonly", false);
         
         $('#spouseCode', '#memberAddForm').attr('class','w100p  ');
         $('#spouseName', '#memberAddForm').attr('class','w100p  ');
-        $('#spouseNRIC', '#memberAddForm').attr('class','w100p  ');
-        $('#spouseDOB', '#memberAddForm').attr('class','w100p  ');
+        $('#spouseNric', '#memberAddForm').attr('class','w100p  ');
+        $('#spouseDob', '#memberAddForm').attr('class','w100p  ');
         $('#spouseContat', '#memberAddForm').attr('class','w100p  ');
         
         $("#branch").attr("disabled", false);
@@ -1355,7 +1355,7 @@ function checkNRIC(){
     </td>
     <th scope="row">NRIC / Passport No.</th>
     <td>
-    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p readonly " id="spouseNRIC" readonly="readonly"  name="spouseNRIC"  value=""/>
+    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p readonly " id="spouseNric" readonly="readonly"  name="spouseNric"  value=""/>
     </td>
 </tr>
 <tr>
@@ -1365,7 +1365,7 @@ function checkNRIC(){
     </td>
     <th scope="row">Date of Birth</th>
     <td>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date readonly" id="spouseDOB" readonly="readonly"  name="spouseDOB" value=""/>
+    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date readonly" id="spouseDob" readonly="readonly"  name="spouseDob" value=""/>
     </td>
     <th scope="row">Contact No.</th>
     <td>

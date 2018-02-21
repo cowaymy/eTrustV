@@ -15,6 +15,7 @@ function fn_memberSave(){
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
 	            $("#searchSt1").val(insAddressForm.searchSt.value);
                 $("#traineeType").val(($("#traineeType").value));
+                $("#spouseDob").val($.trim($("#spouseDob").val()));
                 
                 $("#memberType").attr("disabled",false);
                 var jsonObj =  GridCommon.getEditData(myGridID_Doc);
@@ -288,7 +289,17 @@ function fn_setMemInfo(data){
     
     $("#sponsorNric").val(data.c53);
     //alert(data.c68);
-    $("#searchSt").val(data.c68);
+    $("#searchSt").val(data.area);
+    
+    $("#areaId").val(data.areaId);
+    
+    if(data.areaId!=null&&jQuery.trim(data.areaId).length>0){
+    	Common.ajax("GET", "/organization/selectAreaInfo.do", {areaId : data.areaId}, function(result) {
+            
+            fn_addMaddr(result.area, result.city, result.postcode, result.state, result.areaId, result.iso);
+           
+       });
+    }
     
     /*
     if(data.c4!=null&&jQuery.trim(data.c4).length>0){
@@ -536,19 +547,19 @@ function fn_saveValidation(){
 	*/
 	if($("#joinDate").val() == ''){    
         valid = false;
-        message += "* Please select joined date. \n ";        
+        message += "* Please select joined date.<br/>";        
     }
 	if($("#memberNm").val() == ''){
         valid = false;
-        message += "* Please key in member name. \n ";
+        message += "* Please key in member name.<br/>";
     }
 	if($("#national").val() == ''){
         valid = false;
-        message += "* Please select the nationality. \n ";
+        message += "* Please select the nationality.<br/>";
     }
 	if($("#nric").val() == ''){
         valid = false;
-        message += "* Please key in the NRIC. \n ";
+        message += "* Please key in the NRIC.<br/> ";
     }
     //else
     //{
@@ -560,20 +571,20 @@ function fn_saveValidation(){
     //}
 	if($('input[name=gender]:checked', '#memberAddForm').val() == null){
         valid = false;
-        message += "* Please select gender. \n ";
+        message += "* Please select gender.<br/> ";
     }
 	if($("#cmbRace").val() == ''){
         valid = false;
-        message += "* Please select race. \n ";
+        message += "* Please select race.<br/> ";
     }
 	//if($("#marrital").index(this) <=-1){    
 	if($("#marrital").val()==""){
         valid = false;
-        message += "* Please select marrital. \n ";
+        message += "* Please select marrital.<br/> ";
     }
     if ($("#Birth").val() == ""){
         valid = false;
-        message += "* Please select DOB. \n ";
+        message += "* Please select DOB.<br/>";
     }
     else
     {
@@ -586,12 +597,12 @@ function fn_saveValidation(){
             if (Age < 18)
             {
                 valid = false;
-                message += "* Member must 18 years old and above. \n ";
+                message += "* Member must 18 years old and above.<br/>";
             }
             if (DOBDate==$("#nric").val().substring(0, 6))
             {
                 valid = false;
-                message += "* The NRIC is mismatch with member's DOB. \n ";
+                message += "* The NRIC is mismatch with member's DOB.<br/>";
             }
         }
     }
@@ -610,7 +621,7 @@ function fn_saveValidation(){
     if ($("#mCountry").val() == "")
     {
         valid = false;
-        message += "* Please select the country. \n ";
+        message += "* Please select the country.<br/>";
     }
     else
     {
@@ -618,22 +629,26 @@ function fn_saveValidation(){
         {
     		if ($("#mState").val() == "") //mArea
             {
-                valid = false;
-                message += "* Please select the state. \n ";
+    			valid = false;
+                message += "* Please select the state.<br/>";
             }
     		if ($("#mArea").val() == "")  //mPostCd
             {
                 valid = false;
-                message += "* Please select the area. \n ";
+                message += "* Please select the area.<br/>";
             }
     		if ($("#mPostCd").val() == "")
             {
                 valid = false;
-                message += "* Please select the postcode. \n ";
+                message += "* Please select the postcode.<br/>";
             }
         }
     }
     
+    if($("#areaId").val() == ''){
+        message += "* Please key in the address.<br/>";
+        valid = false;
+    }
     //endregion
 
     //region Check Phone No
@@ -642,7 +657,7 @@ function fn_saveValidation(){
         !(jQuery.trim($("#residenceNo").val()).length>0))
     {
         valid = false;
-        message += "* Please key in the at least one contact no. \n ";
+        message += "* Please key in the at least one contact no.<br/>";
     }
     else
     {
@@ -652,7 +667,7 @@ function fn_saveValidation(){
             if(!jQuery.isNumeric(jQuery.trim($("#mobileNo").val())))            
             {
                 valid = false;
-                message += "* Invalid telephone number (Mobile).  \n ";
+                message += "* Invalid telephone number (Mobile).<br/>";
             }
         }
         if ((jQuery.trim($("#officeNo").val())).length>0)
@@ -660,7 +675,7 @@ function fn_saveValidation(){
         	if(!jQuery.isNumeric(jQuery.trim($("#officeNo").val())))
             {
                 valid = false;
-                message += "* Invalid telephone number (Office). \n ";
+                message += "* Invalid telephone number (Office).<br/>";
             }
         }
         if ((jQuery.trim($("#residenceNo").val())).length>0)
@@ -668,7 +683,7 @@ function fn_saveValidation(){
         	if(!jQuery.isNumeric(jQuery.trim($("#residenceNo").val())))
             {
                 valid = false;
-                message += "* Invalid telephone number (Residence). \n ";
+                message += "* Invalid telephone number (Residence).<br/>";
             }
         }
     }
@@ -678,7 +693,7 @@ function fn_saveValidation(){
     	if(!jQuery.isNumeric(jQuery.trim($("#spouseContat").val())))
         {
             valid = false;
-            message += "* Invalid spouse contant number. \n ";
+            message += "* Invalid spouse contant number.<br/>";
         }
     }
     //endregion
@@ -689,7 +704,7 @@ function fn_saveValidation(){
         if (!regEmail.test($("#email").val()))
         {
             valid = false;
-            message += "* Invalid contact person email.\n ";
+            message += "* Invalid contact person email.<br/>";
         }
     }
     //endregion
@@ -702,12 +717,12 @@ function fn_saveValidation(){
         	if($("#issuedBank").val()=="")
             {
                 valid = false;
-                message += "* Please select the issued bank. \n ";
+                message += "* Please select the issued bank.<br/>";
             }
             if (!(jQuery.trim($("#bankAccNo").val())).length>0)
             {
                 valid = false;
-                message += "* Please key in the bank account no. \n ";
+                message += "* Please key in the bank account no.<br/>";
             }
         	
             //if (cmbMemDepCode.SelectedIndex <= -1)
@@ -720,12 +735,12 @@ function fn_saveValidation(){
         	if($("#issuedBank").val()=="")
             {
                 valid = false;
-                message += "* Please select the issued bank. \n ";
+                message += "* Please select the issued bank.<br/>";
             }
         	if (!(jQuery.trim($("#bankAccNo").val())).length>0)
             {
                 valid = false;
-                message += "* Please key in the bank account no. \n ";
+                message += "* Please key in the bank account no.<br/>";
             }
         	/* if($("#transportCd").val()=="")
             {
@@ -985,7 +1000,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" id="memberAddForm" method="post">
-<input type="hidden" id="areaId" name="areaId">
+<input type="hidden" id="areaId" name="areaId" value="${memberView.areaId}">
 <input type="hidden" id="searchSt1" name="searchSt1">
 <input type="hidden" id="streetDtl1" name="streetDtl1">
 <input type="hidden" id="addrDtl1" name="addrDtl1">
@@ -1439,29 +1454,29 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
 <tr>
     <th scope="row">MCode</th>
     <td>
-    <input type="text" title="" placeholder="MCode" class="w100p" id="spouseCode" name="spouseCode"  value="<c:out value="${memberView.spouseCode}"/> "/>
+    <input type="text" title="" placeholder="MCode" class="w100p" id="spouseCode" name="spouseCode"  value="<c:out value="${memberView.spouseCode}"/>"/>
     </td>
     <th scope="row">Spouse Name</th>
     <td>
-    <input type="text" title="" placeholder="Spouse Nam" class="w100p" id="spouseName" name="spouseName" value="<c:out value="${memberView.spouseName}"/> "/>
+    <input type="text" title="" placeholder="Spouse Nam" class="w100p" id="spouseName" name="spouseName" value="<c:out value="${memberView.spouseName}"/>"/>
     </td>
     <th scope="row">NRIC / Passport No.</th>
     <td>
-    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="spouseNRIC" name="spouseNRIC" />
+    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="spouseNric" name="spouseNric" value="<c:out value="${memberView.spouseNric}"/>" />
     </td>
 </tr>
 <tr>
     <th scope="row">Occupation</th>
     <td>
-    <input type="text" title="" placeholder="Occupation" class="w100p" id="spouseOcc" value="<c:out value="${memberView.spouseOcpat}"/> " />
+    <input type="text" title="" placeholder="Occupation" class="w100p" id="spouseOcc" value="<c:out value="${memberView.spouseOcpat}"/>" />
     </td>
     <th scope="row">Date of Birth</th>
     <td>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="spouseDOB" name="spouseDOB" value="<c:out value="${memberView.c58}"/> " />
+    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="spouseDob" name="spouseDob" value="<c:out value="${memberView.c58}"/>" />
     </td>
     <th scope="row">Contact No.</th>
     <td>
-    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p" id="spouseContat" name="spouseContat" value="<c:out value="${memberView.spouseTelCntc}"/> " />
+    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p" id="spouseContat" name="spouseContat" value="<c:out value="${memberView.spouseTelCntc}"/>" />
     </td>
 </tr>
 </tbody>
@@ -1505,19 +1520,19 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
             <tr>
                 <th scope="row">Area search<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" value="<c:out value="${memberView.areaId}"/> "/><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+                <input type="text" title="" id="searchSt" name="searchSt" placeholder="" class="" value="<c:out value="${memberView.area}"/> "/><a href="#" onclick="fn_addrSearch()" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
                 </td>
             </tr>
             <tr>
                 <th scope="row" >Address Detail<span class="must">*</span></th>
                 <td colspan="3">
-                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.addrDtl}"/> " />
+                <input type="text" title="" id="addrDtl" name="addrDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.addrDtl}"/>" />
                 </td>
             </tr>
             <tr>
                 <th scope="row" >Street</th>
                 <td colspan="3">
-                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.street}"/> " />
+                <input type="text" title="" id="streetDtl" name="streetDtl" placeholder="Detail Address" class="w100p" value="<c:out value="${memberView.street}"/>" />
                 </td>
             </tr>
             <tr>

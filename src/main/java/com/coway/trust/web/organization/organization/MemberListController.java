@@ -870,7 +870,7 @@ public class MemberListController {
 		String memberType ="";
 		boolean update = false;
 
-		logger.debug("memCode : {}", formMap.get("memCode"));
+		logger.debug("formMap : {}", formMap);
 
 		//update = memberListService.updateMember(formMap, updList,sessionVO);
 //		memberListService.updateMemberBranch(formMap);
@@ -1351,6 +1351,14 @@ public class MemberListController {
 		}
 		
 		
+		@RequestMapping(value = "/selectAreaInfo.do", method = RequestMethod.GET)
+		public ResponseEntity<EgovMap> selectAreaInfo(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
+			EgovMap areaInfo =null;
+			areaInfo = memberListService.selectAreaInfo(params);
+			logger.debug("areaInfo : {}", areaInfo);
+			return ResponseEntity.ok(areaInfo);
+		}
 		
 	
 }

@@ -238,6 +238,8 @@ public interface MemberListMapper {
 
 	Map<String, Object> SP_DAY_USER_CRT(Map<String, Object> param);
 
+	EgovMap selectAreaInfo(Map<String, Object> params);
+
 
 
 }
