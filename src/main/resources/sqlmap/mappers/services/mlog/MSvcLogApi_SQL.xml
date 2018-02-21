@@ -590,11 +590,18 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 		                               E.IN_HUSE_REPAIR_PRODUCT_CODE AS in_House_Repair_Product_Code,
 		                               E.IN_HUSE_REPAIR_SERIAL_NO AS in_House_Repair_Serial_No,
 		                               B.AS_SLUTN_RESN_ID AS AS_SLUTN_RESN_ID
-		                          FROM SVC0001D A
-		                               INNER JOIN SVC0004D B ON A.REF_REQST = to_char(B.AS_RESULT_ID)
-		                               INNER JOIN SVC0001D C ON B.AS_ENTRY_ID = C.AS_ID
-		                               INNER JOIN SVC0001D D ON C.REF_REQST = to_char(D.AS_ID)
-		                               INNER JOIN SVC0004D E ON D.AS_ID = E.AS_ENTRY_ID)) B
+		                          FROM SVC0001D  A 
+                                       , SVC0004D B
+                                       , SVC0001D C
+                                       , SVC0001D D
+                                       , SVC0004D E 
+                                   WHERE A.REF_REQST = to_char(B.AS_RESULT_ID)
+                                       AND B.AS_ENTRY_ID = C.AS_ID
+                                       AND C.REF_REQST = to_char(D.AS_ID)
+                                       AND D.AS_ID = E.AS_ENTRY_ID
+                                       AND TO_CHAR(A.AS_CRT_DT,'YYYY') >= 2018
+                                       AND TO_CHAR(C.AS_CRT_DT,'YYYY') >= 2018
+                                       AND TO_CHAR(D.AS_CRT_DT,'YYYY') >= 2018  )) B
 		                  ON A.service_No = B.AS_NO) MST1
 		       LEFT OUTER JOIN
 		       (SELECT *
