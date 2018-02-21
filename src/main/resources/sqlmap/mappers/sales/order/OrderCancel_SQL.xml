@@ -251,14 +251,14 @@
 			       A.ACC_NAME ,
 			       A.ATTACH ,
 			       CASE 
-                         WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL ) THEN TO_CHAR(A.ACTUAL_CANCL_DT, 'DD-MM-YYYY')
-                   ELSE TO_CHAR('1900-01-01', 'DD-MM-YYYY') END ACTUAL_CANCL_DT  ,
+                         WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL ) THEN TO_CHAR(A.ACTUAL_CANCL_DT, 'DD/MM/YYYY')
+                   ELSE '01/01/1900' END ACTUAL_CANCL_DT  ,
                    CASE 
-                         WHEN ( A.APP_RETN_DT IS NOT NULL ) THEN TO_CHAR(A.APP_RETN_DT, 'DD-MM-YYYY')
-                   ELSE TO_CHAR('1900-01-01', 'DD-MM-YYYY') END APP_RETN_DT  ,
+                         WHEN ( A.APP_RETN_DT IS NOT NULL ) THEN TO_CHAR(A.APP_RETN_DT, 'DD/MM/YYYY')
+                   ELSE '01/01/1900' END APP_RETN_DT  ,
                    CASE 
-                         WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN TO_CHAR(A.CALL_RECALL_DT, 'DD-MM-YYYY')
-                   ELSE TO_CHAR('1900-01-01', 'DD-MM-YYYY') END CALL_RECALL_DT  ,
+                         WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN TO_CHAR(A.CALL_RECALL_DT, 'DD/MM/YYYY')
+                   ELSE '01/01/1900' END CALL_RECALL_DT  ,
 			       CASE 
 			             WHEN ( A.CRT_DT IS NOT NULL ) THEN A.CRT_DT
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CRT_DT  ,
@@ -429,8 +429,8 @@
 				       ELSE ''
 				          END NRIC  ,
 				       CASE 
-				            WHEN ( Filter1.CREATED1 IS NOT NULL ) THEN Filter1.CREATED1
-				       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
+				            WHEN (Filter1.CREATED1 IS NOT NULL) THEN TO_CHAR(Filter1.CREATED1, 'DD/MM/YYYY')
+				       ELSE '01/01/1900'
 				          END CREATED1  ,
 				       CASE 
 				            WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
