@@ -61,7 +61,7 @@
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
                 dataField : "reqNo",
-                headerText : "<spring:message code='sal.title.requestNo' />",
+                headerText : "<spring:message code='sal.title.text.reqNo' />",
                 width : 140,
                 editable : false
             }, {
@@ -76,7 +76,7 @@
                 editable : false
             }, {
                 dataField : "appTypeName",
-                headerText : "<spring:message code='sal.title.appType' />",
+                headerText : "<spring:message code='sal.title.text.appType' />",
                 width : 120,
                 editable : false
             }, {
