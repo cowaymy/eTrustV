@@ -580,7 +580,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 		                          FROM SVC0001D A INNER JOIN SVC0004D B ON A.AS_ID = B.AS_ENTRY_ID
 		                         WHERE A.REF_REQST IS NULL
 		                        UNION ALL
-		                        SELECT A.AS_NO AS AS_NO,
+		                        SELECT  /*+ ORDERED */  A.AS_NO AS AS_NO,
 		                               E.IN_HUSE_REPAIR_REM AS in_House_Repair_Remark,
 		                               DECODE (E.IN_HUSE_REPAIR_REPLACE_YN, '1', 'Y', 'N')
 		                                  AS inhouserepairreplacementyn,
@@ -598,10 +598,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                    WHERE A.REF_REQST = to_char(B.AS_RESULT_ID)
                                        AND B.AS_ENTRY_ID = C.AS_ID
                                        AND C.REF_REQST = to_char(D.AS_ID)
-                                       AND D.AS_ID = E.AS_ENTRY_ID
-                                       AND TO_CHAR(A.AS_CRT_DT,'YYYY') >= 2018
-                                       AND TO_CHAR(C.AS_CRT_DT,'YYYY') >= 2018
-                                       AND TO_CHAR(D.AS_CRT_DT,'YYYY') >= 2018  )) B
+                                       AND D.AS_ID = E.AS_ENTRY_ID )) B
 		                  ON A.service_No = B.AS_NO) MST1
 		       LEFT OUTER JOIN
 		       (SELECT *
