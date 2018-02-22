@@ -1439,6 +1439,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		boolean success = false;
 		Map<String, Object> resultValue = new HashMap<String, Object>(); //팝업 결과값 가져가는 map
 
+		// CT, CD 코드 생성
     	int a =memberListMapper.traineeUpdate(params);
     	
     	if(a> 0){
@@ -1451,6 +1452,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     		memberListMapper.SP_DAY_USER_CRT(userPram);
     		userPram.put("P_STATUS", userPram.get("p1"));
     		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
+    		
+    		// SP_SVC_LOG_SYS0028M(P_MEM_CODE) 프로시저 호출
+    		Map<String, Object>  logPram = new HashMap<String, Object>();
+    		logPram.put("P_MEM_CODE", resultValue.get("memCode"));
+    		logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 PRAM ===>"+ logPram.toString());
+    		memberListMapper.SP_SVC_LOG_SYS0028M(logPram);
+//    		logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 결과 ===>" +logPram);
     	}
     	
 		return resultValue;

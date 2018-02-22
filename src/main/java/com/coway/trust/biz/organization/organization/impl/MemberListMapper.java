@@ -240,6 +240,8 @@ public interface MemberListMapper {
 
 	EgovMap selectAreaInfo(Map<String, Object> params);
 
+	void SP_SVC_LOG_SYS0028M(Map<String, Object> logPram);
+
 
 
 }

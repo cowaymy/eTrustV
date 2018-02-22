@@ -1329,7 +1329,7 @@
                ORDER BY CODE
             </when>
             <when test='groupCode == "1"'>
-               ORDER BY BRNCH_ID
+               ORDER BY CODE
             </when>
             <otherwise>
                ORDER BY CODE_NAME
