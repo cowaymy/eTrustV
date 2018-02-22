@@ -725,6 +725,20 @@ public class ReportBatchController {
 		LOGGER.info("[END] CashFlowReport...");
 	}
 
+	@RequestMapping(value = "/TDBalanceReport.do")
+	//@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am) /*monthly - end of month eg 31 @ 28 ...
+	public void TDBalanceReport() {
+		LOGGER.info("[START] TDBalanceReport...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/TDBalanceReport.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"Finance" + File.separator + "TDBalance" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] TDBalanceReport...");
+	}
 
 	private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
 			throws IOException {
