@@ -254,7 +254,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "StockReceive Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	/*@ApiOperation(value = "StockReceive Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/stockReceiveList", method = RequestMethod.GET)
 	public ResponseEntity<List<LogStockReceiveDto>> stockReceiveList(
 			@ModelAttribute LogStockReceiveForm LogStockReceiveForm) throws Exception {
@@ -285,8 +285,42 @@ public class LogisticsApiController {
 
 		return ResponseEntity.ok(hList);
 
-	}
+	}*/
+	
+	@ApiOperation(value = "StockReceive Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/stockReceiveList", method = RequestMethod.GET)
+	public ResponseEntity<List<LogStockReceiveDto>> stockReceiveList(
+			@ModelAttribute LogStockReceiveForm LogStockReceiveForm) throws Exception {
 
+		Map<String, Object> params = LogStockReceiveForm.createMap(LogStockReceiveForm);
+
+		List<EgovMap> headerList = MlogApiService.StockReceiveList(params);
+
+		List<LogStockReceiveDto> hList = new ArrayList<>();
+		for (int i = 0; i < headerList.size(); i++) {
+			LOGGER.debug("headerList 값 : {}", headerList.get(i));
+		}
+		
+		hList = headerList.stream().map(r -> LogStockReceiveDto.create(r)).collect(Collectors.toList());
+
+		for (int i = 0; i < headerList.size(); i++) {
+
+
+			//for (int j = 0; j < hList.size(); j++) {
+				Map<String, Object> tmpMap = headerList.get(i);
+				List<EgovMap> serialList = MlogApiService.selectStockReceiveSerial(tmpMap);
+
+				List<LogStockPartsReceiveDto> partsList = serialList.stream()
+						.map(r -> LogStockPartsReceiveDto.create(r)).collect(Collectors.toList());
+				hList.get(i).setPartsList(partsList);
+			//}
+
+		}
+
+		return ResponseEntity.ok(hList);
+
+	}
+	
 	@ApiOperation(value = "My Stock List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/myStockList", method = RequestMethod.GET)
 	public ResponseEntity<List<MyStockListDto>> getMyStockList(@ModelAttribute MyStockListForm MyStockListForm)
@@ -452,10 +486,11 @@ public class LogisticsApiController {
 				List<EgovMap> reqParts = MlogApiService.getCommonReqParts(tmpMap);
 
 				List<RequestResultDListDto> partsList = reqParts.stream().map(r -> RequestResultDListDto.create(r)).collect(Collectors.toList());
-				RequestResultMListDto  odto = (RequestResultMListDto) hList.get(i);
+			//	RequestResultMListDto  odto = (RequestResultMListDto) hList.get(i);
 				
-				odto.setPartsList(partsList);
-				hList.set(i, odto) ;
+				hList.get(i).setPartsList(partsList);
+		   //odto.setPartsList(partsList);
+			//	hList.set(i, odto) ;
 			//}
 
 		}
@@ -464,7 +499,7 @@ public class LogisticsApiController {
 
 	}
 
-	@ApiOperation(value = "Return On-Hand Stock - List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	/*@ApiOperation(value = "Return On-Hand Stock - List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/returnOnHandStockList", method = RequestMethod.GET)
 	public ResponseEntity<List<ReturnOnHandStockMListDto>> getreturnOnHandStockList(
 			@ModelAttribute ReturnOnHandStockListForm ReturnOnHandStockListForm) throws Exception {
@@ -493,6 +528,38 @@ public class LogisticsApiController {
 
 		}
 		return ResponseEntity.ok(hList);
+	}*/
+	
+	
+	@ApiOperation(value = "Return On-Hand Stock - List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/returnOnHandStockList", method = RequestMethod.GET)
+	public ResponseEntity<List<ReturnOnHandStockMListDto>> getreturnOnHandStockList(
+			@ModelAttribute ReturnOnHandStockListForm ReturnOnHandStockListForm) throws Exception {
+
+		Map<String, Object> params = ReturnOnHandStockListForm.createMap(ReturnOnHandStockListForm);
+
+		List<EgovMap> headerList = MlogApiService.getCommonReqHeader(params);
+
+		List<ReturnOnHandStockMListDto> hList = new ArrayList<>();
+		for (int i = 0; i < headerList.size(); i++) {
+			LOGGER.debug("headerList 값 : {}", headerList.get(i));
+		}
+
+		hList = headerList.stream().map(r -> ReturnOnHandStockMListDto.create(r)).collect(Collectors.toList());
+	
+		for (int i = 0; i < headerList.size(); i++) {
+
+		//	for (int j = 0; j < hList.size(); j++) {
+				Map<String, Object> tmpMap = headerList.get(i);
+				List<EgovMap> reqParts = MlogApiService.getCommonReqParts(tmpMap);
+
+				List<ReturnOnHandStockDListDto> partsList = reqParts.stream()
+						.map(r -> ReturnOnHandStockDListDto.create(r)).collect(Collectors.toList());
+				hList.get(i).setPartsList(partsList);
+		//	}
+
+		}
+		return ResponseEntity.ok(hList);
 	}
 
 	@ApiOperation(value = "Audit Stock - Result Detail Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
@@ -515,7 +582,7 @@ public class LogisticsApiController {
 		return ResponseEntity.ok(list);
 	}
 
-	@ApiOperation(value = "Stock Transfer - Request Status List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	/*@ApiOperation(value = "Stock Transfer - Request Status List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/StockTransferReqStatusList", method = RequestMethod.GET)
 	public ResponseEntity<List<StockTransferReqStatusMListDto>> getStockTransferReqStatusList(
 			@ModelAttribute StockTransferReqStatusListForm StockTransferReqStatusListForm) throws Exception {
@@ -545,8 +612,41 @@ public class LogisticsApiController {
 
 		}
 		return ResponseEntity.ok(hList);
-	}
+	}*/
+	
+	@ApiOperation(value = "Stock Transfer - Request Status List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
+	@RequestMapping(value = "/StockTransferReqStatusList", method = RequestMethod.GET)
+	public ResponseEntity<List<StockTransferReqStatusMListDto>> getStockTransferReqStatusList(
+			@ModelAttribute StockTransferReqStatusListForm StockTransferReqStatusListForm) throws Exception {
 
+		Map<String, Object> params = StockTransferReqStatusListForm.createMap(StockTransferReqStatusListForm);
+
+		List<EgovMap> headerList = MlogApiService.getStockTransferReqStatusMList(params);
+
+		List<StockTransferReqStatusMListDto> hList = new ArrayList<>();
+		for (int i = 0; i < headerList.size(); i++) {
+			LOGGER.debug("Request Status headerList1111 값 : {}", headerList.get(i));
+		}
+
+		hList = headerList.stream().map(r -> StockTransferReqStatusMListDto.create(r)).collect(Collectors.toList());
+		
+		for (int i = 0; i < headerList.size(); i++) {
+
+			//for (int j = 0; j < hList.size(); j++) {
+				Map<String, Object> tmpMap = headerList.get(i);
+				tmpMap.put("searchStatus", params.get("searchStatus"));
+				List<EgovMap> reqParts = MlogApiService.getStockTransferReqStatusDList(tmpMap);
+
+				List<StockTransferReqStatusDListDto> partsList = reqParts.stream()
+						.map(r -> StockTransferReqStatusDListDto.create(r)).collect(Collectors.toList());
+				hList.get(i).setPartsList(partsList);
+		//	}
+
+		}
+		return ResponseEntity.ok(hList);
+	}
+	
+	
 	@ApiOperation(value = "Adjustment Stock - None-Barcode List Search", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
 	@RequestMapping(value = "/noneBarcodeList", method = RequestMethod.GET)
 	public ResponseEntity<AdjustmentStockNoneBarcodeListVo> getNonBarcodeList(
