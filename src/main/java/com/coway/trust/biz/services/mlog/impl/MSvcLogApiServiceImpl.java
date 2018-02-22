@@ -408,8 +408,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 			logger.debug("updateState_LOG0038D / updateState_SAL0001D / insert_SAL0009D ==>" +params.toString());
 			int  log38cnt  = MSvcLogApiMapper.updateState_LOG0038D(params);
 			logger.debug("log38cnt==>" +log38cnt);
-			int  sal1dcnt  = MSvcLogApiMapper.updateState_SAL0001D(params);
-			logger.debug("sal1dcnt==>" +sal1dcnt);
+		
 			int  sal9dcnt  = MSvcLogApiMapper.insert_SAL0009D(params);
 			logger.debug("sal9dcnt==>" +sal9dcnt);
 			int  sal20dcnt  = MSvcLogApiMapper.updateState_SAL0020D(params);
@@ -423,6 +422,9 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		params.put("P_USER_ID",   params.get("stkRetnCrtUserId")); 
 		params.put("P_RETN_NO",  params.get("serviceNo") );
 		MSvcLogApiMapper.SP_RETURN_BILLING_EARLY_TERMI(params);
+		
+		int  sal1dcnt  = MSvcLogApiMapper.updateState_SAL0001D(params);
+		logger.debug("sal1dcnt==>" +sal1dcnt);
 		
 		
 		   //물류 호출   add by hgham
