@@ -440,19 +440,23 @@ public class LogisticsApiController {
 		for (int i = 0; i < headerList.size(); i++) {
 			LOGGER.debug("headerList 값 : {}", headerList.get(i));
 		}
+		
+		hList = headerList.stream().map(r -> RequestResultMListDto.create(r)).collect(Collectors.toList());
+		
+		for (int i = 0; i < headerList.size(); i++) { 
 
-		for (int i = 0; i < headerList.size(); i++) {
+			
 
-			hList = headerList.stream().map(r -> RequestResultMListDto.create(r)).collect(Collectors.toList());
-
-			for (int j = 0; j < hList.size(); j++) {
-				Map<String, Object> tmpMap = headerList.get(j);
+			//for (int j = 0; j < hList.size(); j++) {
+				Map<String, Object> tmpMap = headerList.get(i);
 				List<EgovMap> reqParts = MlogApiService.getCommonReqParts(tmpMap);
 
-				List<RequestResultDListDto> partsList = reqParts.stream().map(r -> RequestResultDListDto.create(r))
-						.collect(Collectors.toList());
-				hList.get(j).setPartsList(partsList);
-			}
+				List<RequestResultDListDto> partsList = reqParts.stream().map(r -> RequestResultDListDto.create(r)).collect(Collectors.toList());
+				RequestResultMListDto  odto = (RequestResultMListDto) hList.get(i);
+				
+				odto.setPartsList(partsList);
+				hList.set(i, odto) ;
+			//}
 
 		}
 
