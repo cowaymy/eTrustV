@@ -88,7 +88,7 @@ public class OrderCallListController {
 	 */
 	@RequestMapping(value = "/searchOrderCallList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectOrderCallListSearch(@RequestParam Map<String, Object> params, HttpServletRequest request,ModelMap model) {
-		logger.debug("params : {}", params);
+		//logger.debug("params : {}", params);
 		
 		String[] appTypeList =  request.getParameterValues("appType");
 		String[] callLogTypeList =  request.getParameterValues("callLogType");
@@ -101,7 +101,7 @@ public class OrderCallListController {
 		params.put("DSCCodeList", DSCCodeList);
 		List<EgovMap> orderCallList = orderCallListService.selectOrderCall(params);
 		
-		logger.debug("orderCallList : {}", orderCallList);
+		//logger.debug("orderCallList : {}", orderCallList);
 		return ResponseEntity.ok(orderCallList);
 	}
 	
@@ -123,15 +123,15 @@ public class OrderCallListController {
 		
 		String productCode = orderCall.get("productCode").toString();
 		params.put("productCode", productCode);
-		logger.debug("jinmu : {}", params);
+		//logger.debug("jinmu : {}", params);
 		EgovMap cdcAvaiableStock = orderCallListService.selectCdcAvaiableStock(params);
-		logger.debug("jinmu1 : {}", cdcAvaiableStock);
+		//logger.debug("jinmu1 : {}", cdcAvaiableStock);
 		EgovMap  rdcStock = orderCallListService.selectRdcStock(params);
 		
 		
 		//Order Detail Tab
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params ,sessionVO);
-		logger.debug("orderCall : {}", orderCall);
+		//logger.debug("orderCall : {}", orderCall);
 		model.addAttribute("callStusCode", params.get("callStusCode"));
 		model.addAttribute("callStusId", params.get("callStusId"));
 		model.addAttribute("salesOrdId", params.get("salesOrdId"));
@@ -158,7 +158,7 @@ public class OrderCallListController {
 	public ResponseEntity<ReturnMessage>  insertCallResult(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		boolean success = false;
-		logger.debug("params : {}", params);
+		//logger.debug("params : {}", params);
 		String installationNo = "";
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		resultValue = orderCallListService.insertCallResult(params,sessionVO);
@@ -170,7 +170,7 @@ public class OrderCallListController {
 			if(state ==20){
 				
 				HashMap   spMap =(HashMap)resultValue.get("spMap");
-				logger.debug("spMap :"+ spMap.toString());   
+				//logger.debug("spMap :"+ spMap.toString());   
 				if(! "000".equals(spMap.get("P_RESULT_MSG"))){
 					resultValue.put("logerr","Y");
 					
@@ -204,11 +204,11 @@ public class OrderCallListController {
 	 */
 	@RequestMapping(value = "/getCallLogTransaction.do", method = RequestMethod.GET)
 	public  ResponseEntity<List<EgovMap>>  selectCallLogTransaction(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
-		logger.debug("params : {}", params);
+		//logger.debug("params : {}", params);
 		//Call Log Transation
 		List<EgovMap> callLogTran = orderCallListService.selectCallLogTransaction(params);
 		
-		logger.debug("callLogTran : {}", callLogTran);
+		//logger.debug("callLogTran : {}", callLogTran);
 		return ResponseEntity.ok(callLogTran);
 	}
 	
@@ -229,7 +229,7 @@ public class OrderCallListController {
 		
 		//Order Detail Tab
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params ,sessionVO);
-		logger.debug("orderCall : {}", orderCall);
+		//logger.debug("orderCall : {}", orderCall);
 		model.addAttribute("callStusCode", params.get("callStusCode"));
 		model.addAttribute("callStusId", params.get("callStusId"));
 		model.addAttribute("salesOrdId", params.get("salesOrdId"));
