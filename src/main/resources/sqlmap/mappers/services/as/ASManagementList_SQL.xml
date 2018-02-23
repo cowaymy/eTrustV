@@ -3864,7 +3864,7 @@
        
 	 SELECT search.TAX_INVOICE_CUST_NAME, search.TAX_INVOICE_CONT_PERS
 	 from (
-	  SELECT B.NAME TAX_INVOICE_CUST_NAME, D.NAME TAX_INVOICE_CONT_PERS, Rank() over(order by c.CUST_BILL_ID desc ) rcnt_info
+	  SELECT B.NAME TAX_INVOICE_CONT_PERS , D.NAME TAX_INVOICE_CUST_NAME , Rank() over(order by c.CUST_BILL_ID desc ) rcnt_info
 	    FROM 
 	   SAL0001D A,   
 	   SAL0027D B, 
