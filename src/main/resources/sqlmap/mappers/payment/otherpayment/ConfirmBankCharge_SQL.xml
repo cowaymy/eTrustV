@@ -150,7 +150,7 @@
             TO_CHAR(SYSDATE,'YYYYMMDD'),
             TO_CHAR(SYSDATE,'HHMMSS'),  
             #{userId},
-            SYSDATE,
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
             #{bankSeq},
             <!-- #{groupSeq}, -->
             <!-- #{salesOrdNo}, -->

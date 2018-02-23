@@ -151,7 +151,9 @@
                     FROM 
                         PAY0079D A 
                         JOIN PAY0081D B ON A.F_BANK_JRNL_ID = B.F_BANK_JRNL_ID
-                        LEFT JOIN SYS0001M C ON A.BANK_ID = C.ACC_ID
+                        <!-- LEFT JOIN SYS0001M C ON A.BANK_ID = C.ACC_ID -->
+                        <!-- ADD BY JGKIM 2018-02-23 -->
+                        LEFT JOIN SYS0001M C ON A.F_BANK_JRNL_ACC_ID = C.ACC_ID
                     ) E ON A.BANK_STATE_MAPPING_ID = E.F_TRNSC_ID
             WHERE 
                 A.GROUP_SEQ = #{groupSeq}
@@ -194,7 +196,7 @@
             TO_CHAR(SYSDATE,'YYYYMMDD'),
             TO_CHAR(SYSDATE,'HHMMSS'),  
             #{userId},     
-            #{payItmRefDt},
+            TO_CHAR(#{payItmRefDt},'YYYYMMDD'),
             #{bankSeq},
             #{groupSeq},
             #{salesOrdNo},
@@ -233,7 +235,7 @@
             TO_CHAR(SYSDATE,'YYYYMMDD'),
             TO_CHAR(SYSDATE,'HHMMSS'),  
             #{userId},
-            #{payItmRefDt},
+            TO_CHAR(#{payItmRefDt},'YYYYMMDD'),
             #{bankSeq},
             #{groupSeq},
             #{salesOrdNo},

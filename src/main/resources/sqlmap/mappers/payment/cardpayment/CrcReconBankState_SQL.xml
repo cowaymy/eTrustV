@@ -288,10 +288,12 @@
             TO_CHAR(SYSDATE,'YYYYMMDD'),
             TO_CHAR(SYSDATE,'HHMMSS'),  
             #{userId},     
-            sysdate,
-            (select   nvl(max(BANK_SEQ),0)+1    from    ITF0942M  where   to_char (PAY_DT,'yyyymmdd') = to_char(sysdate,'yyyymmdd')),
+            TO_CHAR(SYSDATE,'YYYYMMDD'),
+            (select   nvl(max(BANK_SEQ),0)+1    from    ITF0942M  where   PAY_DT = to_char(sysdate,'yyyymmdd')),
             #{fTrnscId},
-            (select ACC_CODE    from SYS0001M where acc_id =#{accId} ) ,       
+            <!-- (select ACC_CODE    from SYS0001M where acc_id =#{accId} ) , -->
+            <!-- ADD BY JGKIM 2018-02-23 -->
+            (select ACC_CODE    from SYS0001M where acc_id =(SELECT F_BANK_JRNL_ACC_ID FROM PAY0079D WHERE F_BANK_JRNL_ID = (SELECT F_BANK_JRNL_ID FROM PAY0081D WHERE F_TRNSC_ID = #{fTrnscId}))) ,       
             'AC002',
             NVL(#{variance},0)
         )   
