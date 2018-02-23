@@ -48,7 +48,7 @@ public class RequestData {
 		sb.append("<include_consent>1</include_consent>" + "\r\n");
 		sb.append("<include_ctos>1</include_ctos>" + "\r\n");
 		sb.append("<include_trex>1</include_trex>" + "\r\n");
-		sb.append("<include_ccris sum=\"1\">1</include_ccris>" + "\r\n");
+		sb.append("<include_ccris sum=\"0\">1</include_ccris>" + "\r\n");
 		sb.append("<include_dcheq>1</include_dcheq>" + "\r\n");
 		sb.append("<include_fico>1</include_fico>" + "\r\n");
 		sb.append("<include_ssm>0</include_ssm>" + "\r\n");
