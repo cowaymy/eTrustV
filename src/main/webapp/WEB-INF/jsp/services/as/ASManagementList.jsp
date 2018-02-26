@@ -416,8 +416,32 @@ $(document).ready(function() {
         var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid;
         Common.popupDiv("/services/as/asResultViewPop.do"+param ,null, null , true , '_newASResultDiv1');
     });   
+  
     
-});
+    var objDate = new Date();
+    // 년 구하기
+    var year = objDate.getFullYear() ; 
+    // 월 구하기
+    var month = addZeroInDate(objDate.getMonth()); 
+    // 일 구하기
+    var date= addZeroInDate(objDate.getDate() );
+    
+    var month2 = addZeroInDate(objDate.getMonth() + 1); 
+    
+    
+    $("#createStrDate").val(date+'/'+month +'/'+year);
+    $("#createEndDate").val(date+'/'+month2 +'/'+year);
+    
+});    
+    
+
+
+function addZeroInDate(value){
+	if(value < 10){
+		value = "0" + value;
+	}
+	return value
+}
 
 function asManagementGrid() {
     //AUIGrid 칼럼 설정
