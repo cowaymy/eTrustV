@@ -27,7 +27,9 @@
     var SRV_PAC_ID    = "${orderDetail.basicInfo.srvPacId}";
     var GST_CHK       = "${orderDetail.basicInfo.gstChk}";
     var IS_NEW_VER    = "${orderDetail.isNewVer}";
-
+    var txtPrice_uc_Value = "${orderDetail.basicInfo.ordAmt}";
+    var txtPV_uc_Value    = "${orderDetail.basicInfo.ordPv}";
+    
     var filterGridID;
     
     $(document).ready(function(){
@@ -194,6 +196,7 @@
                 $('#txtPVAexc').removeAttr("disabled");   
                 
                 //this.LoadPromotionPrice(int.Parse(cmbPromotion.SelectedValue), int.Parse(hiddenProductID.Value));
+                //fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(), STOCK_ID);
             }
         });
         $('#cmbPromotionAexc').change(function() {
@@ -254,6 +257,8 @@
                         if(GST_CHK == '1') {
                             fn_excludeGstAmtAexc();
                         }
+                        
+                        fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(), STOCK_ID);
                     }
                 });
             }
@@ -270,6 +275,7 @@
             }
 
             fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val(), $('#srvPacIdAexc').val());
+            fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(), STOCK_ID);
         });
         $('#custIdOwnt').change(function(event) {
             fn_selectCustInfo();
@@ -1049,7 +1055,14 @@
     }
     
     function fn_loadPromotionPriceAexc(promoId, stkId) {
-
+        
+        console.log('fn_loadPromotionPriceAexc START');
+        
+        var isNull1 = true;
+        var isNull2 = true;
+        var PromoItemPrice = 0;
+        var PromoItemPV = 0;
+        
         Common.ajaxSync("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId}, function(promoPriceInfo) {
 
             if(promoPriceInfo != null) {
@@ -1062,15 +1075,100 @@
 
                 $("#promoDiscPeriodTpAexc").val(promoPriceInfo.promoDiscPeriodTp);
                 $("#promoDiscPeriodAexc").val(promoPriceInfo.promoDiscPeriod);
-            }
-            else {
-                Common.alert('<spring:message code="sal.msg.unableFindPromo" />' + DEFAULT_DELIMITER + '<spring:message code="sal.msg.unableFindPromoForPord" />');
                 
-                if($('#btnCurrentPromo').is(":checked")) {
-                    $('#btnCurrentPromo').click();
-                }
+                PromoItemPrice = promoPriceInfo.orderPricePromo;
+                PromoItemPV = promoPriceInfo.orderPVPromo;
+                
+                isNull1 = false;
             }
         });
+        
+        console.log('fn_loadPromotionPriceAexc isNull1:'+isNull1);
+        
+        var totalAmount = 0;
+        
+        if("${orderDetail.basicInfo.appTypeId}" == "66") {
+            Common.ajaxSync("GET", "/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : ORD_NO}, function(result) {
+                
+                if(result != null) {
+                    isNull2 = false;
+                }
+                
+                if(fn_validateOrderAexc2(ORD_NO) == true) {
+                    
+                    var installdate = result.installdate;
+                    var today = '${toDay}';                        
+                  //var today = Number(todayYMD.substr(0, 4)) * 12;
+                    
+                    console.log('installdate:'+installdate);
+                    console.log('today:'+today);
+                    console.log('today.substr(6, 4):'+today.substr(6, 4));
+                    console.log('today.substr(3, 2):'+today.substr(3, 2));
+                    
+                    var monthDiff = ((Number(today.substr(6, 4)) * 12) + Number(today.substr(3, 2))) - ((Number(installdate.substr(0, 4)) * 12) + Number(installdate.substr(4, 2)));
+                    
+                    console.log('monthDiff:'+monthDiff);
+                    /*
+                    var totalBillAmt;
+                    
+                    console.log('monthDiff:'+monthDiff);
+                    
+                    if(monthDiff >= 1) {
+                        totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill);
+                    }
+                    else {
+                        totalBillAmt = (result.TotalBillAmt + result.TotalDNBill - result.TotalCNBill) + (result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
+                    }
+                    */
+                    var totalRPF = result.totalbillrpf + result.totaldnrpf - result.totalcnrpf;
+                    var totalBillAmount = result.totalbillamt + result.totaldnbill - result.totalcnbill;
+                    
+                    console.log('result.totalbillrpf:'+result.totalbillrpf);
+                    console.log('result.totaldnrpf:'+result.totaldnrpf);
+                    console.log('result.totalcnrpf:'+result.totalcnrpf);
+                    console.log('totalRPF:'+totalRPF);
+                    
+                    console.log('result.totalbillrpf:'+result.totalbillamt);
+                    console.log('result.totaldnrpf:'+result.totaldnbill);
+                    console.log('result.totalcnrpf:'+result.totaldnbill);
+                    console.log('totalBillAmount:'+totalBillAmount);
+                    
+                    console.log('PromoItemPrice:'+PromoItemPrice);
+                    console.log('PromoItemPrice:'+PromoItemPrice);
+                    console.log('PromoItemPV:'+PromoItemPV);
+                    
+                    if(monthDiff >= 1) {
+                        console.log('aaaaa');
+//                      totalAmount = pd.PromoItemPrice.ToString() - (totalBillAmount / 2);
+                        totalAmount = parseFloat(PromoItemPrice) - (totalBillAmount / 2);
+                    }
+                    else {
+                        console.log('bbbbb');
+//                      totalAmount = pd.PromoItemPrice.ToString()) - (totalRPF + totalBillAmount);
+                        totalAmount = parseFloat(PromoItemPrice) - (totalRPF + totalBillAmount);
+                    }
+                }
+            });
+        }
+
+        console.log('fn_loadPromotionPriceAexc isNull2:'+isNull2);
+
+        if(isNull1 == false && isNull2 == false) {
+            console.log('fn_loadPromotionPriceAexc isNull1 == false && isNull2 == false');
+            
+            console.log('totalAmount Before floor:'+totalAmount);
+            totalAmount = Math.floor(totalAmount);
+            console.log('totalAmount after floor:'+totalAmount);
+            
+            $('#txtPriceAexc').val(totalAmount);
+            $('#txtPVAexc').val(PromoItemPV);
+        }
+        else {
+            console.log('fn_loadPromotionPriceAexc isNull1 == false && isNull2 == false xxxxxx');
+            $('#txtPriceAexc').val(txtPrice_uc_Value);
+            $('#txtPVAexc').val(txtPV_uc_Value);
+        }
+        console.log('fn_loadPromotionPriceAexc totalAmount:'+totalAmount);
     }
 
     function fn_loadPromotionPrice(promoId, stkId) {
@@ -1386,7 +1484,7 @@
             
             fn_isLockOrder(tabNm);
             
-            fn_validateOrderAexc(ORD_NO);
+            //fn_validateOrderAexc(ORD_NO);
         } else {
             $('#scAE').addClass("blind");
         }
@@ -1424,6 +1522,28 @@
             Common.alert(msgT + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
             fn_disableControlAexc();
         }
+    }
+    
+    function fn_validateOrderAexc2(ORD_NO) {
+        var valid = '';
+        var msgT = '';
+        var msg = '';
+        var isTrue = true;
+        
+        Common.ajaxSync("GET", "/sales/order/selectValidateInfo.do", {salesOrdNo : ORD_NO}, function(rsltInfo) {
+            if(rsltInfo != null) {
+                valid = rsltInfo.isInValid;
+                msgT  = rsltInfo.msgT;
+                msg   = rsltInfo.msg;
+            }
+        });
+
+        if(valid == 'isInValid') {
+            Common.alert(msgT + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+            isTrue = false;
+        }
+        
+        return isTrue;
     }
     
     function fn_isLockOrder(tabNm) {
@@ -2272,6 +2392,7 @@
             $('#srvPacIdAexc option:eq(1)').attr('selected', 'selected');
             
             fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val(), $('#srvPacIdAexc').val()); 
+            fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(), STOCK_ID);
         }
     }
 </script>
