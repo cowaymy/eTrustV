@@ -2147,7 +2147,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 					}
 					
 					//Get Order Total Bill RPF
-					EgovMap tbMap2 = orderRequestMapper.selectAccRentLedger2(params);
+					EgovMap tbMap2 = orderRequestMapper.selectAccRentLedger3(params);
 					
 					if(CommonUtils.intNvl(tbMap2.get("cnt")) > 0) {
 						TotalBillRPF = (BigDecimal) tbMap2.get("rentAmt");
