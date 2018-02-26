@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.stereotype.Service;
+import org.springframework.util.StringUtils;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
@@ -142,57 +143,59 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		
 		EgovMap priceInfo = null;
 		
-		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(Integer.parseInt((String)params.get("promoId")));
-		
-		int isNew = CommonUtils.intNvl(promoMap.get("isNew"));
-		
-		if(isNew == 1) {
-			priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockIDNew(params); //New Data(2018.01.01~)
-			
-			if(priceInfo != null) {
-    			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer.parseInt(String.valueOf((BigDecimal)priceInfo.get("promoAppTypeId")))) { //Rental
-    				orderPricePromo      = (BigDecimal)priceInfo.get("promoPrcRpf");
-    				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
-    				orderPVPromoGST      = (BigDecimal)priceInfo.get("promoItmPvGst");
-    				orderRentalFeesPromo = (BigDecimal)priceInfo.get("promoAmt");
-    				
-    				normalRentalFees = (BigDecimal)priceInfo.get("amt");
-    			}
-    			else {
-    				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
-    				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
-    				orderPVPromoGST      = (BigDecimal)priceInfo.get("promoItmPvGst");
-    				orderRentalFeesPromo = BigDecimal.ZERO;
-
-    				normalRentalFees = BigDecimal.ZERO;
-    			}
+		if(!StringUtils.isEmpty(params.get("promoId"))) {
+    		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(Integer.parseInt((String)params.get("promoId")));
+    		
+    		int isNew = CommonUtils.intNvl(promoMap.get("isNew"));
+    		
+    		if(isNew == 1) {
+    			priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockIDNew(params); //New Data(2018.01.01~)
     			
-    			priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
-    			priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
-    			priceInfo.put("orderPVPromoGST", new DecimalFormat("0.00").format(orderPVPromoGST));
-    			priceInfo.put("orderRentalFeesPromo", new DecimalFormat("0.00").format(orderRentalFeesPromo));
-    			priceInfo.put("promoDiscPeriodTp", promoMap.get("promoDiscPeriodTp"));
-    			priceInfo.put("promoDiscPeriod", promoMap.get("promoDiscPeriod"));
-    			priceInfo.put("normalRentalFees", new DecimalFormat("0.00").format(normalRentalFees));
-			}
-		}
-		else {
-			priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params); //AS-IS Data(~2017.12.31)
-			
-			if(priceInfo != null) {
-    			orderPricePromo      = (BigDecimal)priceInfo.get("promoItmPrc");
-    			orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
-    			orderRentalFeesPromo = ((BigDecimal)priceInfo.get("promoItmRental")).compareTo(BigDecimal.ZERO) > 0 ? (BigDecimal)priceInfo.get("promoItmRental") : BigDecimal.ZERO;
+    			if(priceInfo != null) {
+        			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer.parseInt(String.valueOf((BigDecimal)priceInfo.get("promoAppTypeId")))) { //Rental
+        				orderPricePromo      = (BigDecimal)priceInfo.get("promoPrcRpf");
+        				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
+        				orderPVPromoGST      = (BigDecimal)priceInfo.get("promoItmPvGst");
+        				orderRentalFeesPromo = (BigDecimal)priceInfo.get("promoAmt");
+        				
+        				normalRentalFees = (BigDecimal)priceInfo.get("amt");
+        			}
+        			else {
+        				orderPricePromo      = (BigDecimal)priceInfo.get("promoAmt");
+        				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
+        				orderPVPromoGST      = (BigDecimal)priceInfo.get("promoItmPvGst");
+        				orderRentalFeesPromo = BigDecimal.ZERO;
+    
+        				normalRentalFees = BigDecimal.ZERO;
+        			}
+        			
+        			priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
+        			priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
+        			priceInfo.put("orderPVPromoGST", new DecimalFormat("0.00").format(orderPVPromoGST));
+        			priceInfo.put("orderRentalFeesPromo", new DecimalFormat("0.00").format(orderRentalFeesPromo));
+        			priceInfo.put("promoDiscPeriodTp", promoMap.get("promoDiscPeriodTp"));
+        			priceInfo.put("promoDiscPeriod", promoMap.get("promoDiscPeriod"));
+        			priceInfo.put("normalRentalFees", new DecimalFormat("0.00").format(normalRentalFees));
+    			}
+    		}
+    		else {
+    			priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params); //AS-IS Data(~2017.12.31)
     			
-    			priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
-    			priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
-    			priceInfo.put("orderRentalFeesPromo", new DecimalFormat("0.00").format(orderRentalFeesPromo));
-    			priceInfo.put("promoDiscPeriodTp", promoMap.get("promoDiscPeriodTp"));
-    			priceInfo.put("promoDiscPeriod", promoMap.get("promoDiscPeriod"));
-    			priceInfo.put("normalPricePromo", new DecimalFormat("0.00").format(normalRentalFees));
-			}
+    			if(priceInfo != null) {
+        			orderPricePromo      = (BigDecimal)priceInfo.get("promoItmPrc");
+        			orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
+        			orderRentalFeesPromo = ((BigDecimal)priceInfo.get("promoItmRental")).compareTo(BigDecimal.ZERO) > 0 ? (BigDecimal)priceInfo.get("promoItmRental") : BigDecimal.ZERO;
+        			
+        			priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
+        			priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
+        			priceInfo.put("orderRentalFeesPromo", new DecimalFormat("0.00").format(orderRentalFeesPromo));
+        			priceInfo.put("promoDiscPeriodTp", promoMap.get("promoDiscPeriodTp"));
+        			priceInfo.put("promoDiscPeriod", promoMap.get("promoDiscPeriod"));
+        			priceInfo.put("normalPricePromo", new DecimalFormat("0.00").format(normalRentalFees));
+    			}
+    		}
 		}
-
+		
 		return priceInfo;
 	}
 	
