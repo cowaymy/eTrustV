@@ -68,7 +68,7 @@ public class ClaimController {
 
 	@Value("${autodebit.file.upload.path}")
 	private String filePath;
-	
+
 	@Value("${autodebit.email.receiver}")
 	private String emailReceiver;
 
@@ -77,7 +77,7 @@ public class ClaimController {
 
 	@Resource(name = "claimService")
 	private ClaimService claimService;
-	
+
 	@Autowired
 	private CsvReadComponent csvReadComponent;
 
@@ -87,7 +87,7 @@ public class ClaimController {
 	// DataBase message accessor....
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	private String[] claimFileColumns = new String[] { "bankDtlId", "bankDtlCtrlId", "salesOrdId", "bankDtlDrDt",
 			"bankDtlDrBankTypeId", "bankDtlDrAccNo", "bankDtlDrName", "bankDtlAmt", "taskId", "crtUserId",
 			"crtDt", "updUserId", "updDt", "bankDtlDrNric", "bankDtlRenStus", "svcCntrctId", "bankDtlBankId",
@@ -99,7 +99,7 @@ public class ClaimController {
 	 *****************************************************/
 	/**
 	 * ClaimList 초기화 화면
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -111,7 +111,7 @@ public class ClaimController {
 
 	/**
 	 * Claim List List(Master Grid) 조회
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -127,7 +127,7 @@ public class ClaimController {
 
 	/**
 	 * Claim Master By Id (Master Grid) 조회 -
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -151,7 +151,7 @@ public class ClaimController {
 
 	/**
 	 * Claim Result Deactivate 처리
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -175,7 +175,7 @@ public class ClaimController {
 
 	/**
 	 * Claim Result - Fail Deduction SMS 재발송 처리
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -199,7 +199,7 @@ public class ClaimController {
 
 	/**
 	 * Claim Result Upload File 처리
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -287,11 +287,11 @@ public class ClaimController {
 
 		return ResponseEntity.ok(message);
 	}
-	
-	
+
+
 	/**
 	 * Claim Result Upload File 처리 - 새로운 방식으로....
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -299,46 +299,46 @@ public class ClaimController {
 	 */
 	@RequestMapping(value = "/updateClaimResultItemBulk.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateClaimResultItemBulk(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
-		
+
 		LOGGER.debug("ctrlId : {}  ", request.getParameter("ctrlId"));
 		LOGGER.debug("ctrlIsCrc : {}  ", request.getParameter("ctrlIsCrc"));
 		LOGGER.debug("bankId : {}  ", request.getParameter("bankId"));
-		
+
 		//Master 정보 세팅
 		Map<String, Object> claimMap = new HashMap<String, Object>();
 		claimMap.put("ctrlId",request.getParameter("ctrlId"));
 		claimMap.put("ctrlIsCrc",request.getParameter("ctrlIsCrc"));
 		claimMap.put("bankId",request.getParameter("bankId"));
-		
+
 		//CVS 파일 세팅
-		Map<String, MultipartFile> fileMap = request.getFileMap();		
+		Map<String, MultipartFile> fileMap = request.getFileMap();
 		MultipartFile multipartFile = fileMap.get("csvFile");
 		List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ClaimResultUploadVO::create);
-		
-		//CVS 파일 객체 세팅 
-		Map<String, Object> cvsParam = new HashMap<String, Object>();				
+
+		//CVS 파일 객체 세팅
+		Map<String, Object> cvsParam = new HashMap<String, Object>();
 		cvsParam.put("voList", vos);
 		cvsParam.put("userId", sessionVO.getUserId());
-		
+
 		//EgovMap resultMap = claimService.updateClaimResultItemBulk(claimMap, cvsParam);
 		EgovMap resultMap = claimService.updateClaimResultItemBulk2(claimMap, cvsParam);
-		
-				
-		
+
+
+
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
     	message.setMessage("Saved Successfully");
-    
+
     	return ResponseEntity.ok(message);
 	}
-	
-	
+
+
 
 	/**
 	 * Claim Result Upload File 처리 - 새로운 방식으로....
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -346,63 +346,63 @@ public class ClaimController {
 	 */
 	@RequestMapping(value = "/updateClaimResultItemBulk3.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateClaimResultItemBulk3(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
-		
+
 		LOGGER.debug("ctrlId : {}  ", request.getParameter("ctrlId"));
 		LOGGER.debug("ctrlIsCrc : {}  ", request.getParameter("ctrlIsCrc"));
 		LOGGER.debug("bankId : {}  ", request.getParameter("bankId"));
-		
+
 		//Master 정보 세팅
 		Map<String, Object> claimMap = new HashMap<String, Object>();
 		claimMap.put("ctrlId",request.getParameter("ctrlId"));
 		claimMap.put("ctrlIsCrc",request.getParameter("ctrlIsCrc"));
 		claimMap.put("bankId",request.getParameter("bankId"));
-		
+
 		//기존 데이터 삭제
 		claimService.deleteClaimResultItem(claimMap);
-		
+
 		//CVS 파일 세팅
-		Map<String, MultipartFile> fileMap = request.getFileMap();		
+		Map<String, MultipartFile> fileMap = request.getFileMap();
 		MultipartFile multipartFile = fileMap.get("csvFile");
 		List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ClaimResultUploadVO::create);
-		
-		//CVS 파일 객체 세팅 
-		Map<String, Object> cvsParam = new HashMap<String, Object>();				
+
+		//CVS 파일 객체 세팅
+		Map<String, Object> cvsParam = new HashMap<String, Object>();
 		cvsParam.put("voList", vos);
 		cvsParam.put("userId", sessionVO.getUserId());
-		
+
 		//파일 내용 Insert
 		claimService.updateClaimResultItemBulk3(claimMap, cvsParam);
-		
+
 		// Credit Card, ALB, CIMB가 아니면 Item 삭제한다.
 				if (!"1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))
 						&& !"2".equals(String.valueOf(claimMap.get("bankId")))
 						&& !"3".equals(String.valueOf(claimMap.get("bankId")))) {
 					claimService.removeItmId(claimMap);
 				}
-				
+
 				// message 처리를 위한 값 세팅
 				EgovMap resultMap = null;
-				if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {			
-					resultMap = claimService.selectUploadResultBank(claimMap);			
+				if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+					resultMap = claimService.selectUploadResultBank(claimMap);
 				} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc"))) || "134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 					resultMap =  claimService.selectUploadResultCRC(claimMap);
 				}
-				
-				//return resultMap;	
-		
+
+				//return resultMap;
+
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
     	message.setMessage("Saved Successfully");
-    
+
     	return ResponseEntity.ok(message);
 	}
-	
-	
+
+
 	/**
 	 * Claim Result Upload File 처리 - 새로운 방식으로....
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -410,93 +410,93 @@ public class ClaimController {
 	 */
 	@RequestMapping(value = "/updateClaimResultItemBulk4.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateClaimResultItemBulk4(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
-		
+
 		LOGGER.debug("ctrlId : {}  ", request.getParameter("ctrlId"));
 		LOGGER.debug("ctrlIsCrc : {}  ", request.getParameter("ctrlIsCrc"));
 		LOGGER.debug("bankId : {}  ", request.getParameter("bankId"));
-		
+
 		//Master 정보 세팅
 		Map<String, Object> claimMap = new HashMap<String, Object>();
 		claimMap.put("ctrlId",request.getParameter("ctrlId"));
 		claimMap.put("ctrlIsCrc",request.getParameter("ctrlIsCrc"));
 		claimMap.put("bankId",request.getParameter("bankId"));
-		
+
 		//기존 데이터 삭제
 		claimService.deleteClaimResultItem(claimMap);
-		
+
 		//CVS 파일 세팅
-		Map<String, MultipartFile> fileMap = request.getFileMap();		
+		Map<String, MultipartFile> fileMap = request.getFileMap();
 		MultipartFile multipartFile = fileMap.get("csvFile");
 		List<ClaimResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,false ,ClaimResultUploadVO::create);
-		
-		//CVS 파일 객체 세팅 
-		Map<String, Object> cvsParam = new HashMap<String, Object>();				
+
+		//CVS 파일 객체 세팅
+		Map<String, Object> cvsParam = new HashMap<String, Object>();
 		cvsParam.put("voList", vos);
 		cvsParam.put("userId", sessionVO.getUserId());
-		
+
 		//파일 내용 Insert
 		//claimService.updateClaimResultItemBulk3(claimMap, cvsParam);
 		//cvs 파일 저장 처리
 		List<ClaimResultUploadVO> vos2 = (List<ClaimResultUploadVO>)cvsParam.get("voList");
-		
+
 		List<Map> list = vos2.stream().map(r -> {
 			Map<String, Object> map = BeanConverter.toMap(r);
-			
+
 			map.put("refNo", r.getRefNo());
 			map.put("refCode", r.getRefCode());
 			map.put("id", claimMap.get("ctrlId"));
 			map.put("itemId", r.getItemId());
-			
+
 			return map;
 		})	.collect(Collectors.toList());
-				
+
 		int size = 500;
 		int page = list.size() / size;
 		int start;
 		int end;
-				
+
 		Map<String, Object> bulkMap = new HashMap<>();
 		for (int i = 0; i <= page; i++) {
 			start = i * size;
 			end = size;
-			
+
 			if(i == page){
 				end = list.size();
 			}
 			bulkMap.put("list",list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
 			claimService.updateClaimResultItemBulk4(bulkMap);
 		}
-		
+
 		//업로드된 값을 재정리 한다. REF_CODE / REF_NO LPAD 처리
 		claimService.updateClaimResultItemArrange(claimMap);
-		
+
 		// Credit Card, ALB, CIMB가 아니면 Item 삭제한다.
 		if (!"1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))
 					&& !"2".equals(String.valueOf(claimMap.get("bankId")))
 					&& !"3".equals(String.valueOf(claimMap.get("bankId")))) {
 			claimService.removeItmId(claimMap);
 		}
-				
+
 		//message 처리를 위한 값 세팅
 		EgovMap resultMap = null;
 		if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
-			resultMap = claimService.selectUploadResultBank(claimMap);			
+			resultMap = claimService.selectUploadResultBank(claimMap);
 		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc"))) || "134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 			resultMap =  claimService.selectUploadResultCRC(claimMap);
 		}
-		
+
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
     	message.setData(resultMap);
     	message.setMessage("Saved Successfully");
-    
+
     	return ResponseEntity.ok(message);
 	}
 
 	/**
 	 * Claim Result Update LIVE 처리
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -526,7 +526,7 @@ public class ClaimController {
 
 	/**
 	 * Claim Result Update NEXT DAY 처리
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -557,7 +557,7 @@ public class ClaimController {
 
 	/**
 	 * Generate New Claim 처리
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -650,7 +650,7 @@ public class ClaimController {
 
 	/**
 	 * Claim List - SMS deduction 팝업 리스트 조회
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -663,13 +663,13 @@ public class ClaimController {
 
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(detailList);
-	}	
-	
+	}
+
 	/******************************************************
-	 * Claim List - Schedule Claim Batch Pop-up  
-	 *****************************************************/	
+	 * Claim List - Schedule Claim Batch Pop-up
+	 *****************************************************/
 	/**
-	 * Claim List - Schedule Claim Batch Pop-up 초기화 화면 
+	 * Claim List - Schedule Claim Batch Pop-up 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -678,39 +678,39 @@ public class ClaimController {
 	public String initScheduleClaimBatchPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/autodebit/scheduleClaimBatchPop";
 	}
-	
+
 	/**
-	 * Claim List - Schedule Claim Batch Pop-up 리스트 조회 
-	 * @param 
+	 * Claim List - Schedule Claim Batch Pop-up 리스트 조회
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/selectScheduleClaimBatchPop.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectScheduleClaimBatchPop(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-		
+
 		String[] status = request.getParameterValues("status");
 		params.put("status", status);
-		
+
 		String[] claimType = request.getParameterValues("claimType");
 		params.put("claimType", claimType);
-		
+
 		String[] issueBank = request.getParameterValues("issueBank");
 		params.put("issueBank", issueBank);
-		
+
 		String[] claimDay = request.getParameterValues("claimDay");
 		params.put("claimDay", claimDay);
-		
-		LOGGER.debug("params : {} ", params);	
+
+		LOGGER.debug("params : {} ", params);
 		// 조회.
 		List<EgovMap> resultList = claimService.selectScheduleClaimBatchPop(params);
-    
+
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(resultList);
 	}
-	
+
 	/**
-	 * Claim List - Schedule Claim Batch Setting Pop-up 초기화 화면 
+	 * Claim List - Schedule Claim Batch Setting Pop-up 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -719,45 +719,45 @@ public class ClaimController {
 	public String initScheduleClaimSettingPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/autodebit/scheduleClaimSettingPop";
 	}
-	
+
 	/**
-	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
-	 * @param 
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/selectScheduleClaimSettingPop.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectScheduleClaimSettingPop(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-		
-		LOGGER.debug("params : {} ", params);	
+
+		LOGGER.debug("params : {} ", params);
 		// 조회.
 		List<EgovMap> resultList = claimService.selectScheduleClaimSettingPop(params);
-    
+
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(resultList);
 	}
-	
+
 	/**
-	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
-	 * @param 
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/isScheduleClaimSettingPop.do", method = RequestMethod.GET)
 	public ResponseEntity<Integer> isScheduleClaimSettingPop(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-		
-		LOGGER.debug("params : {} ", params);	
+
+		LOGGER.debug("params : {} ", params);
 		// 조회.
 		int resultCnt = claimService.isScheduleClaimSettingPop(params);
-    
+
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(resultCnt);
 	}
-	
+
 	/**
-	 * Claim List - Schedule Claim Batch Setting Pop-up 저장 
+	 * Claim List - Schedule Claim Batch Setting Pop-up 저장
 	 * @param params
 	 * @param model
 	 * @return
@@ -765,22 +765,22 @@ public class ClaimController {
 	@RequestMapping(value = "/saveScheduleClaimSettingPop.do", method = RequestMethod.GET)
     public ResponseEntity<ReturnMessage> saveScheduleClaimSettingPop(@RequestParam Map<String, Object> params,
     		Model model, SessionVO sessionVO) {
-		
+
 		params.put("userId", sessionVO.getUserId());
     	// 처리.
 		claimService.saveScheduleClaimSettingPop(params);
-		
+
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);    	
+    	message.setCode(AppConstants.SUCCESS);
     	message.setMessage("Saved Successfully");
-    	
+
     	return ResponseEntity.ok(message);
-		
+
     }
-	
+
 	/**
-	 * Claim List - Schedule Claim Batch Setting Pop-up 삭제 
+	 * Claim List - Schedule Claim Batch Setting Pop-up 삭제
 	 * @param params
 	 * @param model
 	 * @return
@@ -788,30 +788,30 @@ public class ClaimController {
 	@RequestMapping(value = "/removeScheduleClaimSettingPop.do", method = RequestMethod.GET)
     public ResponseEntity<ReturnMessage> removeScheduleClaimSettingPop(@RequestParam Map<String, Object> params,
     		Model model, SessionVO sessionVO) {
-		
+
 		params.put("userId", sessionVO.getUserId());
     	// 처리.
 		claimService.removeScheduleClaimSettingPop(params);
-		
+
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
-    	message.setCode(AppConstants.SUCCESS);    	
+    	message.setCode(AppConstants.SUCCESS);
     	message.setMessage("Saved Successfully");
-    	
+
     	return ResponseEntity.ok(message);
-		
+
     }
-	
+
 	/******************************************************
 	 * *****************************************************
-	 * 
+	 *
 	 * Claim List - Create File
-	 *    
+	 *
 	 ******************************************************
-	 ******************************************************/	
+	 ******************************************************/
 	/**
 	 * Claim Create File 처리
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -825,8 +825,8 @@ public class ClaimController {
 		// Calim Master 데이터 조회
 		Map<String, Object> map = (Map<String, Object>) formList.get(0);
 		EgovMap claimMap = claimService.selectClaimById(map);
-		
-		
+
+
 		// 파일 생성하기
 		if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 			// ALB
@@ -841,64 +841,65 @@ public class ClaimController {
             	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileCIMB(claimMap);
             }
-            
+
             // HLBB
             if ("5".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
             	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileHLBB(claimMap);
+            	this.createClaimFileHLBB2(claimMap);
             }
-            
+
             // MBB
             if ("21".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
             	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileMBB(claimMap);
             }
-            
+
             // PBB
             if ("6".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
             	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFilePBB(claimMap);
             }
-            
+
             // RHB
             if ("7".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
             	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileRHB(claimMap);
             }
-            
+
             // BSN
             if ("9".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
             	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileBSN(claimMap);
             }
-            
+
             // My Clear
             if ("46".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
             	//claimService.deleteClaimFileDownloadInfo(claimMap);
             	this.createClaimFileMyClear(claimMap);
-            }		
+            }
 		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
-			
+
 			//claimService.deleteClaimFileDownloadInfo(claimMap);
-			
+
 			//10000건 단위로 추출하기 위해 전체 건수 조회
 			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
 			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
-			
+
 			if (pageCnt > 0){
-				for(int i = 1 ; i <= pageCnt ; i++){					
+				for(int i = 1 ; i <= pageCnt ; i++){
 					claimMap.put("pageNo", i);
 					claimMap.put("rowCount", 10000);
 					this.createClaimFileCrcCIMB(claimMap,i);
 				}
 			}
 			//this.createClaimFileCrcCIMB(claimMap);
-			
+
 		} else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 			//claimService.deleteClaimFileDownloadInfo(claimMap);
 			this.createClaimFileFPX(claimMap);
 		}
-		
+
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -907,9 +908,9 @@ public class ClaimController {
 		return ResponseEntity.ok(message);
 
 	}
-	
+
 	public void createClaimFileALB(EgovMap claimMap) throws Exception {
-		
+
 		ClaimFileALBHandler downloadHandler = null;
 		String sFile;
 		String ctrlBatchDt;
@@ -920,11 +921,11 @@ public class ClaimController {
 			inputDate = CommonUtils.nvl(ctrlBatchDt).equals("") ? "1900-01-01" : ctrlBatchDt;
 			sFile = "ALB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + "B01.txt";
 
-			downloadHandler = getTextDownloadALBHandler(sFile, claimFileColumns, null, filePath, "/ALB/ClaimBank/", claimMap);			
-			
+			downloadHandler = getTextDownloadALBHandler(sFile, claimFileColumns, null, filePath, "/ALB/ClaimBank/", claimMap);
+
 			largeExcelService.downLoadClaimFileALB(claimMap, downloadHandler);
 			downloadHandler.writeFooter();
-			
+
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
@@ -936,8 +937,8 @@ public class ClaimController {
 					LOGGER.info(ex.getMessage());
 				}
 			}
-		}	
-				
+		}
+
 		// E-mail 전송하기
 		File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
 		EmailVO email = new EmailVO();
@@ -958,30 +959,30 @@ public class ClaimController {
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFileALBHandler(excelDownloadVO, params);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * ALB NEW - Create Claim File
-	 * 
+	 *
 	 * @param claimMap
 	 * @param claimDetailList
 	 * @throws Exception
 	 */
 	public void createClaimFileNewALB(EgovMap claimMap) throws Exception {
-		
+
 		ClaimFileNewALBHandler downloadHandler = null;
 		String todayDate;
 		String sFile;
-		
-		try {			
+
+		try {
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
 			sFile = "AD_Billing_" + todayDate + ".txt";
-			
-			downloadHandler = getTextDownloadNewALBHandler(sFile, claimFileColumns, null, filePath, "/ALB/ClaimBank/", claimMap);			
-			
+
+			downloadHandler = getTextDownloadNewALBHandler(sFile, claimFileColumns, null, filePath, "/ALB/ClaimBank/", claimMap);
+
 			largeExcelService.downLoadClaimFileNewALB(claimMap, downloadHandler);
-			downloadHandler.writeFooter();			
+			downloadHandler.writeFooter();
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
@@ -993,16 +994,16 @@ public class ClaimController {
 					LOGGER.info(ex.getMessage());
 				}
 			}
-		}	
-		
+		}
+
 //		//파일다운로드 정보 INSERT
 //		claimMap.put("fileNo", 1);
 //		claimMap.put("filePath", fileDownloadPath+"/ALB/ClaimBank/");
 //		claimMap.put("fileName", sFile);
-//		
+//
 //		claimService.insertClaimFileDownloadInfo(claimMap);
-		
-				
+
+
 		// E-mail 전송하기
 		File file = new File(filePath + "/ALB/ClaimBank/" + sFile);
 		EmailVO email = new EmailVO();
@@ -1016,7 +1017,7 @@ public class ClaimController {
 		adaptorService.sendEmail(email, false);
 
 	}
-	
+
 	private ClaimFileNewALBHandler getTextDownloadNewALBHandler(String fileName, String[] columns, String[] titles, String path,
 			String subPath, Map<String, Object> params) {
 		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
@@ -1024,27 +1025,27 @@ public class ClaimController {
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFileNewALBHandler(excelDownloadVO, params);
 	}
-	
+
 	/**
 	 * CIMB - Create Claim File
-	 * 
+	 *
 	 * @param claimMap
 	 * @param claimDetailList
 	 * @throws Exception
 	 */
 	public void createClaimFileCIMB(EgovMap claimMap) throws Exception {
-		
+
 		ClaimFileCIMBHandler downloadHandler = null;
-		String sFile;		
+		String sFile;
 		String inputDate;
 
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 			//sFile = "CIMB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + "B01.dat";
 			sFile = "BILLING_ORG2120_" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + ".txt";
-			
-			downloadHandler = getTextDownloadCIMBHandler(sFile, claimFileColumns, null, filePath, "/CIMB/ClaimBank/", claimMap);			
-			
+
+			downloadHandler = getTextDownloadCIMBHandler(sFile, claimFileColumns, null, filePath, "/CIMB/ClaimBank/", claimMap);
+
 			largeExcelService.downLoadClaimFileCIMB(claimMap, downloadHandler);
 			downloadHandler.writeFooter();
 
@@ -1058,16 +1059,16 @@ public class ClaimController {
 					LOGGER.info(ex.getMessage());
 				}
 			}
-		}	
-		
+		}
+
 //		//파일다운로드 정보 INSERT
 //		claimMap.put("fileNo", 1);
 //		claimMap.put("filePath", fileDownloadPath+"/CIMB/ClaimBank/");
 //		claimMap.put("fileName", sFile);
-//		
+//
 //		claimService.insertClaimFileDownloadInfo(claimMap);
-				
-				
+
+
 		// E-mail 전송하기
 		File file = new File(filePath + "/CIMB/ClaimBank/" + sFile);
 		EmailVO email = new EmailVO();
@@ -1078,9 +1079,9 @@ public class ClaimController {
 		email.setText("Please find attached the claim file for your kind perusal.");
 		email.addFile(file);
 
-		adaptorService.sendEmail(email, false);		
+		adaptorService.sendEmail(email, false);
 	}
-	
+
 	private ClaimFileCIMBHandler getTextDownloadCIMBHandler(String fileName, String[] columns, String[] titles, String path,
 			String subPath, Map<String, Object> params) {
 		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
@@ -1088,26 +1089,28 @@ public class ClaimController {
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFileCIMBHandler(excelDownloadVO, params);
 	}
-	
+
 	/**
 	 * HLBB - Create Claim File
-	 * 
+	 *
 	 * @param claimMap
 	 * @param claimDetailList
 	 * @throws Exception
 	 */
 	public void createClaimFileHLBB(EgovMap claimMap) throws Exception {
-		
+
 		ClaimFileHLBBHandler downloadHandler = null;
 		String sFile;
 		String inputDate;
 
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
+
+
 			sFile = "EPY1000991_" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyyyy") + ".csv";
-			
-			downloadHandler = getTextDownloadHLBBHandler(sFile, claimFileColumns, null, filePath, "/HLBB/ClaimBank/", claimMap);			
-			
+
+			downloadHandler = getTextDownloadHLBBHandler(sFile, claimFileColumns, null, filePath, "/HLBB/ClaimBank/", claimMap);
+
 			largeExcelService.downLoadClaimFileHLBB(claimMap, downloadHandler);
 			downloadHandler.writeFooter();
 
@@ -1122,15 +1125,15 @@ public class ClaimController {
 				}
 			}
 		}
-		
-		
+
+
 //		//파일다운로드 정보 INSERT
 //		claimMap.put("fileNo", 1);
 //		claimMap.put("filePath", fileDownloadPath+"/HLBB/ClaimBank/");
 //		claimMap.put("fileName", sFile);
-//		
+//
 //		claimService.insertClaimFileDownloadInfo(claimMap);
-				
+
 		// E-mail 전송하기
 		File file = new File(filePath + "/HLBB/ClaimBank/" + sFile);
 		EmailVO email = new EmailVO();
@@ -1142,106 +1145,25 @@ public class ClaimController {
 		email.addFile(file);
 
 		adaptorService.sendEmail(email, false);
-		
-		
+
+
 	}
-	
-	private ClaimFileHLBBHandler getTextDownloadHLBBHandler(String fileName, String[] columns, String[] titles, String path,
-			String subPath, Map<String, Object> params) {
-		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
-		excelDownloadVO.setFilePath(path);
-		excelDownloadVO.setSubFilePath(subPath);
-		return new ClaimFileHLBBHandler(excelDownloadVO, params);
-	}
-	
-	
-	/**
-	 * MBB - Create Claim File
-	 * 
-	 * @param claimMap
-	 * @param claimDetailList
-	 * @throws Exception
-	 */
-	public void createClaimFileMBB(EgovMap claimMap) throws Exception {
-		
-		ClaimFileMBBHandler downloadHandler = null;
+
+	public void createClaimFileHLBB2(EgovMap claimMap) throws Exception {
+
+		ClaimFileHLBBHandler downloadHandler = null;
 		String sFile;
-		String ctrlBatchDt;
 		String inputDate;
 
 		try {
-			ctrlBatchDt = (String) claimMap.get("ctrlBatchDt");
-			inputDate = CommonUtils.nvl(ctrlBatchDt).equals("") ? "1900-01-01" : ctrlBatchDt;
-			sFile = "ADSACC.txt";
+			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 
-			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/MBB/ClaimBank/", claimMap);			
-			
-			largeExcelService.downLoadClaimFileMBB(claimMap, downloadHandler);
+			sFile = "HLBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + "B01.csv";
+
+			downloadHandler = getTextDownloadHLBBHandler(sFile, claimFileColumns, null, filePath, "/HLBB/ClaimBank/", claimMap);
+
+			largeExcelService.downLoadClaimFileHLBB(claimMap, downloadHandler);
 			downloadHandler.writeFooter();
-			
-
-		} catch (Exception ex) {
-			throw new ApplicationException(ex, AppConstants.FAIL);
-		} finally {
-			if (downloadHandler != null) {
-				try {
-					downloadHandler.close();
-				} catch (Exception ex) {
-					LOGGER.info(ex.getMessage());
-				}
-			}
-		}	
-		
-//		//파일다운로드 정보 INSERT
-//		claimMap.put("fileNo", 1);
-//		claimMap.put("filePath", fileDownloadPath+"/MBB/ClaimBank/");
-//		claimMap.put("fileName", sFile);
-//		
-//		claimService.insertClaimFileDownloadInfo(claimMap);
-				
-		// E-mail 전송하기
-		File file = new File(filePath + "/MBB/ClaimBank/" + sFile);
-		EmailVO email = new EmailVO();
-
-		email.setTo(emailReceiver);
-		email.setHtml(false);
-		email.setSubject("MBB Auto Debit Claim File - Batch Date : " + inputDate);
-		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
-
-		adaptorService.sendEmail(email, false);
-	}
-	
-	
-	private ClaimFileMBBHandler getTextDownloadMBBHandler(String fileName, String[] columns, String[] titles, String path,
-			String subPath, Map<String, Object> params) {
-		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
-		excelDownloadVO.setFilePath(path);
-		excelDownloadVO.setSubFilePath(subPath);
-		return new ClaimFileMBBHandler(excelDownloadVO, params);
-	}
-	
-	/**
-	 * PBB - Create Claim File
-	 * 
-	 * @param claimMap
-	 * @param claimDetailList
-	 * @throws Exception
-	 */
-	public void createClaimFilePBB(EgovMap claimMap) throws Exception {
-		
-		ClaimFilePBBHandler downloadHandler = null;
-		String sFile;
-		String inputDate;
-
-		try {			
-			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");			
-			sFile = "WCBPBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01.DIF";
-			
-			downloadHandler = getTextDownloadPBBHandler(sFile, claimFileColumns, null, filePath, "/PBB/ClaimBank/", claimMap);			
-			
-			largeExcelService.downLoadClaimFilePBB(claimMap, downloadHandler);
-			downloadHandler.writeFooter();			
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
@@ -1254,14 +1176,136 @@ public class ClaimController {
 				}
 			}
 		}
-		
+
+		// E-mail 전송하기
+		File file = new File(filePath + "/HLBB/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("HLBB Auto Debit Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
+	}
+
+	private ClaimFileHLBBHandler getTextDownloadHLBBHandler(String fileName, String[] columns, String[] titles, String path,
+			String subPath, Map<String, Object> params) {
+		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+		excelDownloadVO.setFilePath(path);
+		excelDownloadVO.setSubFilePath(subPath);
+		return new ClaimFileHLBBHandler(excelDownloadVO, params);
+	}
+
+
+	/**
+	 * MBB - Create Claim File
+	 *
+	 * @param claimMap
+	 * @param claimDetailList
+	 * @throws Exception
+	 */
+	public void createClaimFileMBB(EgovMap claimMap) throws Exception {
+
+		ClaimFileMBBHandler downloadHandler = null;
+		String sFile;
+		String ctrlBatchDt;
+		String inputDate;
+
+		try {
+			ctrlBatchDt = (String) claimMap.get("ctrlBatchDt");
+			inputDate = CommonUtils.nvl(ctrlBatchDt).equals("") ? "1900-01-01" : ctrlBatchDt;
+			sFile = "ADSACC.txt";
+
+			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/MBB/ClaimBank/", claimMap);
+
+			largeExcelService.downLoadClaimFileMBB(claimMap, downloadHandler);
+			downloadHandler.writeFooter();
+
+
+		} catch (Exception ex) {
+			throw new ApplicationException(ex, AppConstants.FAIL);
+		} finally {
+			if (downloadHandler != null) {
+				try {
+					downloadHandler.close();
+				} catch (Exception ex) {
+					LOGGER.info(ex.getMessage());
+				}
+			}
+		}
+
+//		//파일다운로드 정보 INSERT
+//		claimMap.put("fileNo", 1);
+//		claimMap.put("filePath", fileDownloadPath+"/MBB/ClaimBank/");
+//		claimMap.put("fileName", sFile);
+//
+//		claimService.insertClaimFileDownloadInfo(claimMap);
+
+		// E-mail 전송하기
+		File file = new File(filePath + "/MBB/ClaimBank/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("MBB Auto Debit Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
+	}
+
+
+	private ClaimFileMBBHandler getTextDownloadMBBHandler(String fileName, String[] columns, String[] titles, String path,
+			String subPath, Map<String, Object> params) {
+		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+		excelDownloadVO.setFilePath(path);
+		excelDownloadVO.setSubFilePath(subPath);
+		return new ClaimFileMBBHandler(excelDownloadVO, params);
+	}
+
+	/**
+	 * PBB - Create Claim File
+	 *
+	 * @param claimMap
+	 * @param claimDetailList
+	 * @throws Exception
+	 */
+	public void createClaimFilePBB(EgovMap claimMap) throws Exception {
+
+		ClaimFilePBBHandler downloadHandler = null;
+		String sFile;
+		String inputDate;
+
+		try {
+			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
+			sFile = "WCBPBB" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy") + "01.DIF";
+
+			downloadHandler = getTextDownloadPBBHandler(sFile, claimFileColumns, null, filePath, "/PBB/ClaimBank/", claimMap);
+
+			largeExcelService.downLoadClaimFilePBB(claimMap, downloadHandler);
+			downloadHandler.writeFooter();
+
+		} catch (Exception ex) {
+			throw new ApplicationException(ex, AppConstants.FAIL);
+		} finally {
+			if (downloadHandler != null) {
+				try {
+					downloadHandler.close();
+				} catch (Exception ex) {
+					LOGGER.info(ex.getMessage());
+				}
+			}
+		}
+
 //		//파일다운로드 정보 INSERT
 //		claimMap.put("fileNo", 1);
 //		claimMap.put("filePath", fileDownloadPath+"/PBB/ClaimBank/");
 //		claimMap.put("fileName", sFile);
-//		
+//
 //		claimService.insertClaimFileDownloadInfo(claimMap);
-				
+
 		// E-mail 전송하기
 		File file = new File(filePath + "/PBB/ClaimBank/" + sFile);
 		EmailVO email = new EmailVO();
@@ -1273,7 +1317,7 @@ public class ClaimController {
 		email.addFile(file);
 
 		adaptorService.sendEmail(email, false);
-		
+
 
 		/*********************************************
 		 * Second file
@@ -1319,13 +1363,13 @@ public class ClaimController {
 
 		out2nd.close();
 		fileWriter2nd.close();
-		
-		
+
+
 		//파일다운로드 정보 INSERT
 //		claimMap.put("fileNo", 2);
 //		claimMap.put("filePath", fileDownloadPath+"/PBB/ClaimBank/");
 //		claimMap.put("fileName", sFile2nd);
-//		
+//
 //		claimService.insertClaimFileDownloadInfo(claimMap);
 
 		// E-mail 전송하기
@@ -1339,7 +1383,7 @@ public class ClaimController {
 
 		adaptorService.sendEmail(email2, false);
 	}
-	
+
 	private ClaimFilePBBHandler getTextDownloadPBBHandler(String fileName, String[] columns, String[] titles, String path,
 			String subPath, Map<String, Object> params) {
 		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
@@ -1347,11 +1391,11 @@ public class ClaimController {
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFilePBBHandler(excelDownloadVO, params);
 	}
-	
-	
+
+
 	/**
 	 * RHB - Create Claim File
-	 * 
+	 *
 	 * @param claimMap
 	 * @param claimDetailList
 	 * @throws Exception
@@ -1361,17 +1405,17 @@ public class ClaimController {
 		String inputDate;
 		String sFile;
 		String todayDate;
-		
+
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
 			sFile = "AB_00035_Datafile_" + todayDate + "_001.txt";
 
-			downloadHandler = getTextDownloadRHBHandler(sFile, claimFileColumns, null, filePath, "/RHB/ClaimBank/", claimMap);			
-			
+			downloadHandler = getTextDownloadRHBHandler(sFile, claimFileColumns, null, filePath, "/RHB/ClaimBank/", claimMap);
+
 			largeExcelService.downLoadClaimFileRHB(claimMap, downloadHandler);
 			downloadHandler.writeFooter();
-			
+
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
@@ -1383,16 +1427,16 @@ public class ClaimController {
 					LOGGER.info(ex.getMessage());
 				}
 			}
-		}	
-		
-		
+		}
+
+
 //		//파일다운로드 정보 INSERT
 //		claimMap.put("fileNo", 1);
 //		claimMap.put("filePath", fileDownloadPath+"/RHB/ClaimBank/");
 //		claimMap.put("fileName", sFile);
-//		
+//
 //		claimService.insertClaimFileDownloadInfo(claimMap);
-				
+
 		// E-mail 전송하기
 		File file = new File(filePath + "/RHB/ClaimBank/" + sFile);
 		EmailVO email = new EmailVO();
@@ -1404,10 +1448,10 @@ public class ClaimController {
 		email.addFile(file);
 
 		adaptorService.sendEmail(email, false);
-		
+
 	}
-	
-	
+
+
 	private ClaimFileRHBHandler getTextDownloadRHBHandler(String fileName, String[] columns, String[] titles, String path,
 			String subPath, Map<String, Object> params) {
 		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
@@ -1415,11 +1459,11 @@ public class ClaimController {
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFileRHBHandler(excelDownloadVO, params);
 	}
-	
-	
+
+
 	/**
 	 * BSN - Create Claim File
-	 * 
+	 *
 	 * @param claimMap
 	 * @param claimDetailList
 	 * @throws Exception
@@ -1432,16 +1476,16 @@ public class ClaimController {
 		String inputDate;
 
 		try {
-			
+
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 			todayDate = CommonUtils.getNowDate();
 			sFile = "BSN" + todayDate + "B01.txt";
 
-			downloadHandler = getTextDownloadBSNHandler(sFile, claimFileColumns, null, filePath, "/BSN/ClaimBank/", claimMap);			
-			
+			downloadHandler = getTextDownloadBSNHandler(sFile, claimFileColumns, null, filePath, "/BSN/ClaimBank/", claimMap);
+
 			largeExcelService.downLoadClaimFileBSN(claimMap, downloadHandler);
 			downloadHandler.writeFooter();
-			
+
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
@@ -1453,16 +1497,16 @@ public class ClaimController {
 					LOGGER.info(ex.getMessage());
 				}
 			}
-		}	
-		
-		
+		}
+
+
 //		//파일다운로드 정보 INSERT
 //		claimMap.put("fileNo", 1);
 //		claimMap.put("filePath", fileDownloadPath+"/BSN/ClaimBank/");
 //		claimMap.put("fileName", sFile);
-//		
+//
 //		claimService.insertClaimFileDownloadInfo(claimMap);
-				
+
 		// E-mail 전송하기
 		File file = new File(filePath + "/BSN/ClaimBank/" + sFile);
 		EmailVO email = new EmailVO();
@@ -1473,9 +1517,9 @@ public class ClaimController {
 		email.setText("Please find attached the claim file for your kind perusal.");
 		email.addFile(file);
 
-		adaptorService.sendEmail(email, false);		
+		adaptorService.sendEmail(email, false);
 	}
-	
+
 	private ClaimFileBSNHandler getTextDownloadBSNHandler(String fileName, String[] columns, String[] titles, String path,
 			String subPath, Map<String, Object> params) {
 		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
@@ -1483,10 +1527,10 @@ public class ClaimController {
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFileBSNHandler(excelDownloadVO, params);
 	}
-	
+
 	/**
 	 * My Clear - Create Claim File
-	 * 
+	 *
 	 * @param claimMap
 	 * @param claimDetailList
 	 * @throws Exception
@@ -1504,11 +1548,11 @@ public class ClaimController {
 			todayDate = CommonUtils.getNowDate();
 			sFile = "MyClear_Billing_" + todayDate + ".txt";
 
-			downloadHandler = getTextDownloadMyClearHandler(sFile, claimFileColumns, null, filePath, "/MyClear/ClaimBank/", claimMap);			
-			
+			downloadHandler = getTextDownloadMyClearHandler(sFile, claimFileColumns, null, filePath, "/MyClear/ClaimBank/", claimMap);
+
 			largeExcelService.downLoadClaimFileMyClear(claimMap, downloadHandler);
 			downloadHandler.writeFooter();
-			
+
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
@@ -1521,14 +1565,14 @@ public class ClaimController {
 				}
 			}
 		}
-		
+
 //		//파일다운로드 정보 INSERT
 //		claimMap.put("fileNo", 1);
 //		claimMap.put("filePath", fileDownloadPath+"/MyClear/ClaimBank/");
 //		claimMap.put("fileName", sFile);
-//		
+//
 //		claimService.insertClaimFileDownloadInfo(claimMap);
-				
+
 		// E-mail 전송하기
 		File file = new File(filePath + "/MyClear/ClaimBank/" + sFile);
 		EmailVO email = new EmailVO();
@@ -1541,7 +1585,7 @@ public class ClaimController {
 
 		adaptorService.sendEmail(email, false);
 	}
-	
+
 	private ClaimFileMyClearHandler getTextDownloadMyClearHandler(String fileName, String[] columns, String[] titles, String path,
 			String subPath, Map<String, Object> params) {
 		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
@@ -1549,17 +1593,17 @@ public class ClaimController {
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFileMyClearHandler(excelDownloadVO, params);
 	}
-	
-	
+
+
 	/**
 	 * CRC CIMB - Create Claim File
-	 * 
+	 *
 	 * @param claimMap
 	 * @param claimDetailList
 	 * @throws Exception
 	 */
 	public void createClaimFileCrcCIMB(EgovMap claimMap, int idx) throws Exception {
-		
+
 		ClaimFileCrcCIMBHandler downloadHandler = null;
 		String sFile;
 		String todayDate;
@@ -1567,11 +1611,11 @@ public class ClaimController {
 
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
-			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");			
+			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
 			sFile = "CRC_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".csv";
-			
-			downloadHandler = getTextDownloadCrcCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);			
-			
+
+			downloadHandler = getTextDownloadCrcCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+
 			largeExcelService.downLoadClaimFileCrcCIMB(claimMap, downloadHandler);
 			//downloadHandler.writeFooter();
 
@@ -1586,15 +1630,15 @@ public class ClaimController {
 				}
 			}
 		}
-		
-		
+
+
 //		//파일다운로드 정보 INSERT
 //		claimMap.put("fileNo", idx);
 //		claimMap.put("filePath", fileDownloadPath+"/CRC/");
 //		claimMap.put("fileName", sFile);
-//		
+//
 //		claimService.insertClaimFileDownloadInfo(claimMap);
-				
+
 		// E-mail 전송하기
 		File file = new File(filePath + "/CRC/" + sFile);
 		EmailVO email = new EmailVO();
@@ -1606,9 +1650,9 @@ public class ClaimController {
 		email.addFile(file);
 
 		adaptorService.sendEmail(email, false);
-		
+
 	}
-	
+
 	private ClaimFileCrcCIMBHandler getTextDownloadCrcCIMBHandler(String fileName, String[] columns, String[] titles, String path,
 			String subPath, Map<String, Object> params) {
 		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
@@ -1616,10 +1660,10 @@ public class ClaimController {
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFileCrcCIMBHandler(excelDownloadVO, params);
 	}
-	
+
 	/**
 	 * FPX - Create Claim File
-	 * 
+	 *
 	 * @param claimMap
 	 * @param claimDetailList
 	 * @throws Exception
@@ -1633,11 +1677,11 @@ public class ClaimController {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 			sFile = "CFT" + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + "SE00000293" + "01.dat";
 
-			downloadHandler = getTextDownloadFPXHandler(sFile, claimFileColumns, null, filePath, "/FPX/ClaimBank/", claimMap);			
-			
+			downloadHandler = getTextDownloadFPXHandler(sFile, claimFileColumns, null, filePath, "/FPX/ClaimBank/", claimMap);
+
 			largeExcelService.downLoadClaimFileFPX(claimMap, downloadHandler);
 			downloadHandler.writeFooter();
-			
+
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
@@ -1649,16 +1693,16 @@ public class ClaimController {
 					LOGGER.info(ex.getMessage());
 				}
 			}
-		}	
-		
-		
+		}
+
+
 //		//파일다운로드 정보 INSERT
 //		claimMap.put("fileNo", 1);
 //		claimMap.put("filePath", fileDownloadPath+"/FPX/ClaimBank/");
 //		claimMap.put("fileName", sFile);
-//		
+//
 //		claimService.insertClaimFileDownloadInfo(claimMap);
-				
+
 		// E-mail 전송하기
 		File file = new File(filePath + "/FPX/ClaimBank/" + sFile);
 		EmailVO email = new EmailVO();
@@ -1671,7 +1715,7 @@ public class ClaimController {
 
 		adaptorService.sendEmail(email, false);
 	}
-	
+
 	private ClaimFileFPXHandler getTextDownloadFPXHandler(String fileName, String[] columns, String[] titles, String path,
 			String subPath, Map<String, Object> params) {
 		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
@@ -1679,23 +1723,23 @@ public class ClaimController {
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFileFPXHandler(excelDownloadVO, params);
 	}
-	
+
 	/**
-	 *  
+	 *
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/initClaimFileDownPop.do")
-	public String initClaimFileDownPop(@RequestParam Map<String, Object> params, ModelMap model) {		
-		
+	public String initClaimFileDownPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
 		model.put("ctrlId", params.get("ctrlId"));
 		return "payment/autodebit/claimFileDownloadPop";
 	}
-	
+
 	/**
 	 *
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
