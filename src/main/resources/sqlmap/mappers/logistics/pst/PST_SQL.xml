@@ -217,6 +217,28 @@
               VALUES (#{pstdoid}
                      , #{reqstno}, #{psoid}, #{locid}, #{totalprice}, #{htext}, #{dostatusid}, #{psttype}, SYSDATE, #{userid}, 'PST'||LPAD((select max(PST_DO_ID)+1 from SAL0059D) , 7 , 0))
  </insert>
+ 
+ <select id="selectPstSalseDetailId" resultType="int">
+   SELECT DECODE((SELECT COUNT(PST_DOD_ITM_ID) FROM SAL0060D) , 0 , 1 , (SELECT MAX(PST_DOD_ITM_ID)+1 FROM SAL0060D) ) FROM DUAL 
+ </select>
+ <insert id="insertPSTsalesDOMD" parameterType="Map">
+ INSERT INTO SAL0060D (PST_DOD_ITM_ID,PST_DO_ID,PST_DOD_ITM_STK_ID,PST_DOD_ITM_QTY,CRT_DT,CRT_USER_ID,PST_DO_ITM_TAX_CODE_ID,PST_DO_ITM_TXS)
+              VALUES (#{pstDetailId}
+                     , #{pstdoid}, #{itmid},#{reqqty},SYSDATE, #{userid},#{taxcodeid},
+            <choose>
+		       <when test='gstrate > 0'>
+		        round((#{itmprc} * #{reqqty})*0.06 , 2)
+		       </when>
+		       <otherwise>
+		        0  
+		       </otherwise>
+            </choose>
+                     )
+ </insert>
+ 
+ 
+ 
+ 
  <select id="getZrExportationIDByPOSID" parameterType="int" resultType="int">
 	 SELECT ZRE_EXPT_ID zei FROM SAL0062D S62 , SYS0067M S67
 	  WHERE S62.PST_DEALER_ID = S67.ZRE_EXPT_DEALER_ID
@@ -249,7 +271,7 @@
 	       TAX_INVC_TASK_ID, TAX_INVC_REM, 
 	       TAX_INVC_CHRG, TAX_INVC_TXS, TAX_INVC_AMT_DUE, TAX_INVC_CRT_DT, 
 	       TAX_INVC_CRT_USER_ID)
-	   values (#{invoicetaxid} , #{invoiceno} , SYSDATE , #{reqstno} , 123 ,
+	   values (#{invoicetaxid} , #{invoiceno} , SYSDATE , 'PST'||LPAD((select max(PST_DO_ID) from SAL0059D) , 7 , 0) , 123 ,
 	           #{dealernm} , #{cntname} ,
 	           #{addr1} ,#{addr2} ,#{addr3} ,#{addr4} ,#{post} ,#{state} ,#{cnty} ,
 	           0 , #{pctcd} ,

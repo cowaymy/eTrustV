@@ -45,6 +45,10 @@ public interface PstMapper {
 	
 	void insertPSTsalesDOM(Map<String, Object> params);
 	
+	int selectPstSalseDetailId();
+	
+	void insertPSTsalesDOMD(Map<String, Object> params);
+	
 	void updatePSTsalesDetail(Map<String, Object> params);
 	
 	void insertPSTsalesLog(Map<String, Object> params);

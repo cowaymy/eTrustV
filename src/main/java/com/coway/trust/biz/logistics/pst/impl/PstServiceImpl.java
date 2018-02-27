@@ -42,6 +42,7 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 		int totalPrice = 0;
 		if (checkList.size() > 0) {
 			Map<String, Object> insMap = null;
+			Map<String, Object> mainDMap = new HashMap();
 			Map<String, Object> mainMap = new HashMap();
 			String tmpPstid = "";
 			boolean bool = true;
@@ -65,6 +66,7 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 				insMap.put("htext", formMap.get("doctext"));
 				if (!tmpPstid.equals((String)insMap.get("psono"))){
 					reqstSeq = pst.selectPstMovementSeq(); // 요청번호 채번
+					//logger.debug(" 요청번호 채번!!!!!!!! {} " + reqstSeq);
 					tmpPstid = (String)insMap.get("psono");
 					insMap.put("reqno"    , reqstSeq);
 
@@ -139,6 +141,50 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			mainMap.put("pstdoid", pstdoid);
 			pst.insertPSTsalesDOM(mainMap);
 			
+			logger.debug(" 11mainMap?????? {} " , mainMap);
+			
+			for (int j = 0; j < checkList.size(); j++) {
+				
+				Map<String, Object> tmp1 = (Map<String, Object>) checkList.get(j);//.get("item");
+				mainDMap = (Map<String, Object>)tmp1.get("item");
+				logger.debug(" 11mainDDDDDDDMap?????? {} " , mainDMap);
+				int pstDetailId = pst.selectPstSalseDetailId();
+							
+				//2577 , 2579
+				int zreexptid = 0;
+				try{
+					zreexptid = pst.getZrExportationIDByPOSID(psoid);
+				}catch(Exception ex){
+					zreexptid = 0;
+				}
+				int taxcodeid = 0;
+				int taxrate   = 0;
+				if (zreexptid != 0 )
+		        {
+					taxcodeid = 38;//TaxCodeID = 38; //ZE
+					taxrate   = 0;//TaxRate = 0;
+		        }
+		        else
+		        {
+		        	taxcodeid = 32;//TaxCodeID = 32; //SR
+		        	taxrate   = 6;//TaxRate = 6;
+		        }
+				
+				if (taxrate > 0){
+					mainDMap.put("gstrate", taxrate);
+				}else{
+					mainDMap.put("gstrate", 0);
+				}				
+				mainDMap.put("pstDetailId", pstDetailId);
+				mainDMap.put("pstdoid", pstdoid);
+				mainDMap.put("taxrate", taxrate);
+				mainDMap.put("taxcodeid", taxcodeid);
+			
+				pst.insertPSTsalesDOMD(mainDMap);
+				
+			}
+			
+			
 			BillOrderInsert(params , userId , reqstSeq);
 			//LOG0014D
 			
@@ -181,15 +227,20 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 		double charge = 0.0;
 		double incharge = 0.0;
 		
+		//Map<String , Object> invoiceD = new HashMap();
+		
 		Map<String , Object> ordMap = new HashMap();
-		ordMap.put("reqstno", reqstSeq);
-		Map<String , Object> invoiceD = new HashMap();
-		ordMap.put("reqstno", reqstSeq);
+	//	ordMap.put("reqstno", reqstSeq);	
+	//	ordMap.put("reqstno", reqstSeq);
 		int psoid = 0;
 		for (int i = 0 ; i < checkList.size(); i++){
+			Map<String , Object> invoiceD = new HashMap();
+		//	logger.debug(" :::??????checkList??????? {} ", checkList.get(i));
 			Map<String, Object> tmp = (Map<String, Object>) checkList.get(i);//.get("item");
 			int iCnt = 0;
 			insMap  = (Map<String, Object>)tmp.get("item");
+		//	logger.debug("------------------------------------- insMap---------------- -------{} ", insMap);
+			
 			psoid   = (int)insMap.get("psoid");
 			psttype = (int)insMap.get("psttypeid");
 			reqqty  = Integer.parseInt((String)insMap.get("reqqty"));
@@ -221,7 +272,10 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			invoiceD.put("reqqty", insMap.get("reqqty"));
 			invoiceD.put("itmprc", insMap.get("itmprc"));
 			
-			invoiceList.add(invoiceD);
+			//logger.debug(" :::??????요청수량?????????? {} ", insMap.get("reqqty"));		
+			
+			invoiceList.add(invoiceD);	
+			//logger.debug(" :::??????hamTestttttttttttttttt??????? {} ", invoiceList.get(i));		
 		}
 		
 		//2577 , 2579
@@ -268,6 +322,8 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			ordMap.put("charges", incharge);
 			ordMap.put("ammount", incharge+taxed);
 			
+			ordMap.put("reqstno", reqstSeq);
+			
 			Map<String , Object> addMap = pst.selectDealerAddressMasic((int)ordMap.get("dealerid"));
 			String invoicetaxid = pst.selectinvoiceTaxId();
 			ordMap.put("invoicetaxid", invoicetaxid);
@@ -290,10 +346,13 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 				ordMap.put("cnty" , addMap.get("COUNTRY"));
 			}
 			
+			logger.debug(" reqstno %%%%%%%%%%% {} ", ordMap.get("reqstno"));
+			
 			pst.InvoiceMListInsert(ordMap);
 			//invoiceD
 			for (int i = 0 ; i < invoiceList.size(); i++){
-				Map<String , Object> indmap = (Map)invoiceList.get(i);
+			//	logger.debug(" :::******invoiceList******** {} ", invoiceList.get(i));
+				Map<String , Object> indmap = (Map<String, Object>)invoiceList.get(i);
 				String invoiceoitmid = pst.selectinvoiceItemId();
 				if (taxrate > 0){
 					indmap.put("gstrate", taxrate);
@@ -302,7 +361,7 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 				}
 				indmap.put("taxinvoidid" , invoicetaxid);
 				indmap.put("invoiceitmid", invoiceoitmid);
-				logger.debug(" ::: {} ", indmap);
+				logger.debug(" :::!!!!!???? {} ", indmap);
 				pst.InvoiceDListInsert(indmap);
 			}
 			
