@@ -114,7 +114,7 @@ var ReceiveStatusCombo = [{"codeId": "4","codeName": "Complete"},{"codeId": "50"
             usePaging : true,                
             pageRowCount : 10,                
             editable : false,                
-            noDataMessage : "출력할 데이터가 없습니다.",
+            noDataMessage : "No Data found",
             enableSorting : true,
             selectionMode : "multipleRows",
             //selectionMode : "multipleCells",

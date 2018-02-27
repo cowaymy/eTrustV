@@ -61,7 +61,7 @@ SELECT Distinct1.TRNSIT_ID TRNSIT_ID  ,
                        vSirimTransferInfo.TOT_TRNSIT_ITM TOT_TRNSIT_ITM  ,
                        vSirimTransferInfo.TOT_CNT TOT_CNT  
               FROM LOG1003V vSirimTransferInfo ) Extent1
-                JOIN SYS0028M Extent2   ON ( Extent1.TRNSIT_TO = Extent2.WH_LOC_CODE )
+                JOIN SYS0028M Extent2   ON ( Extent1.TRNSIT_TO = Extent2.CODE2 )
                 OR ( ( Extent1.TRNSIT_TO IS NULL )
                 AND ( Extent2.WH_LOC_CODE IS NULL ) )
           WHERE 1 = 1  
