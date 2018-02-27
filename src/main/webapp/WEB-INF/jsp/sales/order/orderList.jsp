@@ -5,14 +5,14 @@
 
 	//AUIGrid 생성 후 반환 ID
 	var listMyGridID;
-	var IS_3RD_PARTY = '${SESSION_INFO.userIsExternal}';	
-	var MEM_TYPE     = '${SESSION_INFO.userTypeId}';	
+	var IS_3RD_PARTY = '${SESSION_INFO.userIsExternal}';
+	var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 
     var _option = {
     	width : "1200px", // 창 가로 크기
         height : "800px" // 창 세로 크기
     };
-    
+
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
@@ -26,45 +26,45 @@
                 Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
             }
         });
-        
+
         if(IS_3RD_PARTY == '0') {
             doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType', 'M', 'fn_multiCombo2'); //Common Code
         }
         else {
             doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '66', 'listAppType',  'S'); //Common Code
         }
-        
+
         //doGetCombo('/common/selectCodeList.do',       '10', '',   'listAppType', 'M', 'fn_multiCombo'); //Common Code
         doGetComboAndGroup2('/common/selectProductCodeList.do', '', '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성
 
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', 'listKeyinBrnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboSepa('/common/selectBranchCodeList.do',  '5', ' - ', '',   'listDscBrnchId', 'M', 'fn_multiCombo'); //Branch Code
-        
+
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : 5, parmDisab : 0}, '', 'listRentStus', 'M', 'fn_multiCombo');
     });
 
     function fn_setOptGrpClass() {
         $("optgroup").attr("class" , "optgroup_text");
     }
-    
+
     // 컬럼 선택시 상세정보 세팅.
     function fn_setDetail(gridID, rowIdx){
         //(_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc)
         Common.popupDiv("/sales/order/orderDetailPop.do", { salesOrderId : AUIGrid.getCellValue(gridID, rowIdx, "ordId") }, null, true, "_divIdOrdDtl");
     }
-    
+
     // 리스트 조회.
     function fn_selectListAjax() {
-        
+
         if(IS_3RD_PARTY == '1') $("#listAppType").removeAttr("disabled");
-        
+
         Common.ajax("GET", "/sales/order/selectOrderJsonList", $("#listSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(listMyGridID, result);
         });
-        
+
         if(IS_3RD_PARTY == '1') $("#listAppType").prop("disabled", true);
     }
-    
+
     function fn_copyChangeOrderPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
@@ -105,36 +105,36 @@
         	$("#dataForm").show();
         	//Param Set
             var gridObj = AUIGrid.getSelectedItems(listMyGridID);
-            
+
             if(gridObj == null || gridObj.length <= 0 ){
                 Common.alert('* <spring:message code="sal.alert.msg.noOrdSel" />');
                 return;
             }
-            
+
             var custID = gridObj[0].item.custId;
             $("#_repCustId").val(custID);
-            
+
             var date = new Date().getDate();
             if(date.toString().length == 1){
                 date = "0" + date;
-            } 
+            }
             $("#downFileName").val("CustomerVALetter_"+custID+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-            
+
             fn_letter_report();
-        	
+
         });
         $('#btnExport').click(function() {
-        	
+
         	var grdLength = "0";
         	grdLength = AUIGrid.getGridData(listMyGridID).length;
-        	
+
         	if(Number(grdLength) > 0){
         	    GridCommon.exportTo("#list_grid_wrap", "xlsx", "SalesSearchResultList");
-        		
+
 	        }else{
 	            Common.alert('* <spring:message code="sal.alert.msg.noExport" />');
 	        }
-     
+
         });
         $('#btnRentalPaySet').click(function() {
         	Common.popupDiv("/sales/order/orderRentalPaySettingUpdateListPop.do", null, null, true);
@@ -153,7 +153,7 @@
         });
         $('#_btnLedger1').click(function() {
             var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
-            
+
             if(selIdx > -1) {
                 $('#_ordId').val(AUIGrid.getCellValue(listMyGridID, selIdx, "ordId"));
                 Common.popupWin("_frmLedger", "/sales/order/orderLedgerViewPop.do", {width : "1000px", height : "720", resizable: "no", scrollbars: "no"});
@@ -176,15 +176,33 @@
         $('#_btnTaxInvc').click(function() {
             fn_invoicePop();
         });
+        $("#btnOrderOverview").click(function() {
+
+            //Param Set
+            var gridObj = AUIGrid.getSelectedItems(listMyGridID);
+
+
+            if(gridObj == null || gridObj.length <= 0 ){
+                Common.alert("* No Record Selected. ");
+                return;
+            }
+
+            var orderid = gridObj[0].item.ordId;
+            $("#_orderID").val(orderid);
+            console.log("ordId : " + $("#_orderID").val());
+
+            fn_report();
+            //Common.alert('The program is under development.');
+        });
     });
-    
+
     function fn_letter_report() {
         var option = {
-            isProcedure : false 
+            isProcedure : false
         };
         Common.report("dataForm", option);
     }
-    
+
     function fn_validSearchList() {
         var isValid = true, msg = "";
 
@@ -203,14 +221,14 @@
         && FormUtil.isEmpty($('#listPromoCode').val())
         && FormUtil.isEmpty($('#listRefNo').val())
         ) {
-            
+
             if(FormUtil.isEmpty($('#listOrdStartDt').val()) || FormUtil.isEmpty($('#listOrdEndDt').val())) {
                 isValid = false;
                 msg += '* <spring:message code="sal.alert.msg.selOrdDt" /><br/>';
             }
             else {
                 var diffDay = fn_diffDate($('#listOrdStartDt').val(), $('#listOrdEndDt').val());
-                 
+
                 if(diffDay > 31 || diffDay < 0) {
                     isValid = false;
                     msg += '* <spring:message code="sal.alert.msg.srchPeriodDt" />';
@@ -222,7 +240,7 @@
 
         return isValid;
     }
-    
+
     function fn_diffDate(startDt, endDt) {
         var arrDt1 = startDt.split("/");
         var arrDt2 = endDt.split("/");
@@ -232,10 +250,10 @@
 
         var diff = dt2 - dt1;
         var day = 1000*60*60*24;
-        
+
         return (diff/day);
     }
-    
+
     function fn_orderModifyPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
@@ -245,7 +263,7 @@
             Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
         }
     }
-    
+
     function fn_orderRequestPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
@@ -255,7 +273,7 @@
             Common.alert('<spring:message code="sal.alert.msg.ordMiss" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noOrdSel" /></b>');
         }
     }
-    
+
     function fn_orderSimulPop() {
         var selIdx = AUIGrid.getSelectedIndex(listMyGridID)[0];
         if(selIdx > -1) {
@@ -265,9 +283,9 @@
             Common.popupDiv("/sales/order/orderRentToOutrSimulPop.do", { ordId : '' }, null, true);
         }
     }
-    
+
     function createAUIGrid() {
-        
+
     	//AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : "<spring:message code='sales.OrderNo'/>", dataField : "ordNo",       editable : false, width : 80  }
@@ -288,24 +306,24 @@
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-          //selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+          //selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-        
+
         listMyGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
     }
-    
+
     function fn_calcGst(amt) {
         var gstAmt = 0;
         if(FormUtil.isNotEmpty(amt) || amt != 0) {
@@ -313,25 +331,25 @@
         }
         return gstAmt;
     }
-    
+
     function fn_multiCombo(){
         $('#listKeyinBrnchId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
         $('#listDscBrnchId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
         $('#listOrdStusId').multipleSelect("checkAll");
         $('#listRentStus').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
 //      $('#listRentStus').multipleSelect("checkAll");
@@ -341,20 +359,20 @@
         $('#listAppType').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
         $('#listAppType').multipleSelect("checkAll");
     }
-    
-    function fn_invoicePop() {    	
-    	Common.popupDiv("/payment/initTaxInvoiceRentalPop.do", '', null, true);    	
+
+    function fn_invoicePop() {
+    	Common.popupDiv("/payment/initTaxInvoiceRentalPop.do", '', null, true);
     }
-    
+
     function fn_checkAccessModify(tabNm) {
-        
+
         var isValid = true, msg = "";
-        
+
         if(tabNm == 'BSC' && '${PAGE_AUTH.funcUserDefine4}'  != 'Y') {
             isValid = false;
         } else if(tabNm == 'MAL' && '${PAGE_AUTH.funcUserDefine10}' != 'Y') {
@@ -376,16 +394,16 @@
         } else if(tabNm == 'GST' && '${PAGE_AUTH.funcUserDefine8}'  != 'Y') {
             isValid = false;
         }
-        
+
         Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
-        
+
         return isValid;
     }
-        
+
     function fn_checkAccessRequest(tabNm) {
-        
+
         var isValid = true, msg = "";
-        
+
         if(tabNm == 'CANC' && '${PAGE_AUTH.funcUserDefine15}'  != 'Y') {
             isValid = false;
         } else if(tabNm == 'PEXC' && '${PAGE_AUTH.funcUserDefine17}' != 'Y') {
@@ -397,10 +415,17 @@
         } else if(tabNm == 'OTRN' && '${PAGE_AUTH.funcUserDefine16}' != 'Y') {
             isValid = false;
         }
-        
+
         Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
-        
+
         return isValid;
+    }
+
+    function fn_report() {
+        var option = {
+            isProcedure : false
+        };
+        Common.report("dataForm2", option);
     }
 
 
@@ -468,15 +493,25 @@
     <input type="hidden" id="fileName" name="reportFileName" value="/sales/CustVALetter.rpt" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <input type="hidden" id="downFileName" name="reportDownFileName" value="" /> <!-- Download Name -->
-    
+
     <!-- params -->
     <input type="hidden" id="_repCustId" name="@CustID" />
+</form>
+
+<!-- order overview report Form -->
+<form id="dataForm2">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/OrderOverview.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
+    <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
+
+    <!-- params -->
+    <input type="hidden" id="_orderID" name="@OrderID" />
 </form>
 
 
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
-    
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -636,6 +671,10 @@
       <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
 		<li><p class="link_btn type2"><a href="#" id="btnYsListing"><spring:message code='sales.btn.ys'/></a></p></li>
 	  </c:if>
+      <c:if test="${PAGE_AUTH.funcUserDefine24 == 'Y'}">
+        <li><p class="link_btn type2"><a href="#" id="btnOrderOverview">Order Overview</a></p></li>
+      </c:if>
+
 	</ul>
 	<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 	</dd>
