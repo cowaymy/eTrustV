@@ -154,4 +154,6 @@ public interface MemberListService {
 
 	EgovMap selectAreaInfo(Map<String, Object> params);
 
+	List<EgovMap> selectAllBranchCode();
+
 }

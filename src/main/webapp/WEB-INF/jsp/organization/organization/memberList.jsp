@@ -113,10 +113,13 @@ function fn_requestVacationPop(){
     	
     	//alert(testResult);
     	
-    	if ( testResult != 'Pass') {
+    	if ( testResult == 'Fail' || testResult == 'Absent' ) {
     		Common.alert("Can't register the trainee due to test result in Fail/Absent");
     		return;
-    	}
+    	} else if ( testResult == '' || typeof(testResult) == 'undefined') {
+            Common.alert("Please register the test result first");
+            return;
+        }
     
      Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode }, function(result) {
          console.log("성공.");

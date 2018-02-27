@@ -98,7 +98,8 @@ $(document).ready(function() {
                    };
 
     		        doGetCombo("/organization/selectSuperiorTeam", jsonObj , ''   , 'cmbSuperior' , 'S', '');
-    		        doGetComboSepa("/common/selectBranchCodeList.do",4 , ':',''   , 'branchCode' , 'S', '');
+    		        //doGetComboSepa("/common/selectBranchCodeList.do",4 , ':',''   , 'branchCode' , 'S', '');
+    		        doGetCombo("/organization/selectAllBranchCode.do", '' , '' , 'branchCode' , 'S', '');
 
                 }
     		  // if(lvlTo == 3 && memberTypeID == 2) $("select[name=branchCode]").removeAttr('disabled')

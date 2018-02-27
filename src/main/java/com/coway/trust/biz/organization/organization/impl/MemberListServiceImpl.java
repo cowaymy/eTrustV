@@ -1454,11 +1454,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
     		
     		// SP_SVC_LOG_SYS0028M(P_MEM_CODE) 프로시저 호출
-    		Map<String, Object>  logPram = new HashMap<String, Object>();
-    		logPram.put("P_MEM_CODE", resultValue.get("memCode"));
-    		logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 PRAM ===>"+ logPram.toString());
-    		memberListMapper.SP_SVC_LOG_SYS0028M(logPram);
-//    		logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 결과 ===>" +logPram);
+//    		Map<String, Object>  logPram = new HashMap<String, Object>();
+//    		logPram.put("P_MEM_CODE", resultValue.get("memCode"));
+//    		logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 PRAM ===>"+ logPram.toString());
+//    		memberListMapper.SP_SVC_LOG_SYS0028M(logPram);
+////    		logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 결과 ===>" +logPram);
     	}
     	
 		return resultValue;
@@ -2237,6 +2237,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public EgovMap selectAreaInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return memberListMapper.selectAreaInfo(params);
+	}
+
+	@Override
+	public List<EgovMap> selectAllBranchCode() {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectAllBranchCode();
 	}
 	
 }

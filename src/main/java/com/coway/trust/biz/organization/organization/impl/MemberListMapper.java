@@ -242,6 +242,8 @@ public interface MemberListMapper {
 
 	void SP_SVC_LOG_SYS0028M(Map<String, Object> logPram);
 
+	List<EgovMap> selectAllBranchCode();
+
 
 
 }

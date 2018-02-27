@@ -2931,7 +2931,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
      <![CDATA[
         UPDATE SYS0047M
 
-            SET USER_UPD_USER_ID = #{user_id}, USER_UPD_DT = SYSDATE
+            SET USER_UPD_USER_ID = #{user_id}, 
+                  USER_UPD_DT = SYSDATE,
+                  USER_BRNCH_ID = #{selectBranch}
 
         WHERE ( User_ID = #{userId} )
         ]]>
@@ -4215,6 +4217,19 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             call SP_SVC_LOG_SYS0028M( #{P_MEM_CODE} )
       }
      </select>
+     
+     <select id="selectAllBranchCode" parameterType="Map" resultType="egovMap">
+        SELECT
+			Project1.BranchID AS CODE_ID,
+			Project1.C1 CODE_NAME
+		FROM ( SELECT
+				    Extent1.BRNCH_ID BranchID,
+				    Extent1.CODE||' - '||Extent1.NAME C1
+				    FROM SYS0005M Extent1
+				    WHERE 1 = Extent1.STUS_ID
+				  )  Project1
+	    ORDER BY Project1.C1 ASC
+    </select>
 
 
 </mapper>

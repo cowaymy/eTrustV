@@ -1360,5 +1360,11 @@ public class MemberListController {
 			return ResponseEntity.ok(areaInfo);
 		}
 		
+		@RequestMapping(value = "/selectAllBranchCode.do", method = RequestMethod.GET)
+		public ResponseEntity<List<EgovMap>> selectAllBranchCode(@RequestParam Map<String, Object> params) {
+			List<EgovMap> codeList = memberListService.selectAllBranchCode();
+			return ResponseEntity.ok(codeList);
+		}
+		
 	
 }
