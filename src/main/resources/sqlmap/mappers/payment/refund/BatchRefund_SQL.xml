@@ -457,7 +457,7 @@
     )
     values
     (
-        #{ifKey}
+        FN_CRT_IFKEY('941')
        ,1
        ,'941'
        ,'10'
