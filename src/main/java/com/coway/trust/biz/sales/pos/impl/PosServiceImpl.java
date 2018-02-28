@@ -892,7 +892,12 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             LOGGER.info("##################### POS Request Success!!! ######################################");
             LOGGER.info("##################### POS Request Success!!! ######################################");
             LOGGER.info("##################### POS Request Success!!! ######################################");
-		return rtnMap;
+		
+		    	rtnMap.put("logError", reqResult);
+		    	
+		    
+            
+            return rtnMap;
 	}
 
 	@Override

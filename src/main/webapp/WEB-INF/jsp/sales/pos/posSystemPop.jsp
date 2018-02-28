@@ -715,9 +715,15 @@ function fn_payProceed(){
     data.payform = $("#_payForm").serializeJSON();
     
     Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
+    	if(result.logError == "000"){
     	
-    	Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'" />' , fn_bookingAndpopClose()); 
-    });
+    	    	Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'" />' , fn_bookingAndpopClose()); 
+    	}
+    	else{
+    		  Common.alert("fail : Contact Logistics Team")
+    	}
+    	
+    	});
 }
 
 //Close
