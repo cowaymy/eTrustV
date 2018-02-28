@@ -64,13 +64,13 @@
 <tbody>
 <tr>
     <th rowspan="3" scope="row"><spring:message code="sal.title.text.svcBy" /></th>
-    <td><span class="txt_box">${orderDetail.codyInfo.orgCode} (<spring:message code="sal.title.text.orgCode" />)<i>(${orderDetail.codyInfo.memCode1}) ${orderDetail.codyInfo.name1} - ${orderDetail.codyInfo.telMobile1}</i></span></td>
+    <td><span class="txt_box">${orderDetail.codyInfo.orgCode} (<spring:message code="sal.title.text.orgCode" />)<i>(${orderDetail.codyInfo.memCode3}) ${orderDetail.codyInfo.name3} - ${orderDetail.codyInfo.telMobile3}</i></span></td>
 </tr>
 <tr>
     <td><span class="txt_box">${orderDetail.codyInfo.grpCode} (<spring:message code="sal.text.GroupCode" />)<i>(${orderDetail.codyInfo.memCode2}) ${orderDetail.codyInfo.name2} - ${orderDetail.codyInfo.telMobile2}</i></span></td>
 </tr>
 <tr>
-    <td><span class="txt_box">${orderDetail.codyInfo.deptCode} (<spring:message code="sal.title.text.deptCode" />)<i>(${orderDetail.codyInfo.memCode3}) ${orderDetail.codyInfo.name3} - ${orderDetail.codyInfo.telMobile3}</i></span></td>
+    <td><span class="txt_box">${orderDetail.codyInfo.deptCode} (<spring:message code="sal.title.text.deptCode" />)<i>(${orderDetail.codyInfo.memCode1}) ${orderDetail.codyInfo.name1} - ${orderDetail.codyInfo.telMobile1}</i></span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.codyCode" /></th>
