@@ -8,7 +8,7 @@ $("#dataForm").empty();
 var date = new Date().getDate();
 if(date.toString().length == 1){
     date = "0" + date;
-} 
+}
 $("#dpOrderDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
 $("#dpOrderDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
 
@@ -22,7 +22,7 @@ $('.multy_select').change(function() {
 
 $.fn.clearForm = function() {
 	$("#cmbPaymode").multipleSelect("checkAll");
-	
+
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
         if (tag === 'form'){
@@ -34,64 +34,64 @@ $.fn.clearForm = function() {
             this.selectedIndex = 0;
         }
         $("#dpOrderDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
-        $("#dpOrderDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());       
+        $("#dpOrderDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
         $("#cmbSorting").prop("selectedIndex", 2);
     });
 };
 
 function validRequiredField(){
-	
+
 	var valid = true;
 	var message = "";
-	
+
 	if(($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || ($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
 		   valid = false;
 		   message += '<spring:message code="sal.alert.msg.keyInOrdDateFromTo" />';
 	}
-	
+
 	if($('#cmbPaymode :selected').length < 1){
 		valid = false;
 		message += '<spring:message code="sal.alert.msg.plzSelAtleastOnePaymode" />';
 	}
-	
+
 	if(!($("#txtOrderNoFr").val().trim() == null || $("#txtOrderNoFr").val().trim().length == 0) || !($("#txtOrderNoTo").val().trim() == null || $("#txtOrderNoTo").val().trim().length == 0)){
 		if(($("#txtOrderNoFr").val().trim() == null || $("#txtOrderNoFr").val().trim().length == 0) || ($("#txtOrderNoTo").val().trim() == null || $("#txtOrderNoTo").val().trim().length == 0)){
 			valid = false;
 			message += '<spring:message code="sal.alert.msg.keyInOrdNoFromTo" />';
 		}
 	}
-	
+
 	if(valid == false){
         alert(message);
     }
-    
+
     return valid;
 }
 
 function btnGenerate_PDF_Click(){
-	
+
 	if(validRequiredField() == true){
         fn_report("PDF");
     }else{
         return false;
-    }	
+    }
 }
 
 function btnGenerate_Excel_Click(){
-	
+
 	if(validRequiredField() == true){
         fn_report("EXCEL");
     }else{
         return false;
-    }   
+    }
 }
 
-function fn_report(viewType){ 
-	
+function fn_report(viewType){
+
 	$("#reportFileName").val("");
     $("#reportDownFileName").val("");
     $("#viewType").val("");
-	
+
 	var orderNoFrom = "";
 	var orderNoTo = "";
 	var orderDateFrom = "";
@@ -103,54 +103,54 @@ function fn_report(viewType){
 	var whereSQL = "";
 	var extraWhereSQL = "";
     var orderBySQL = "";
-    
+
     var runNo = 0;
-    
+
     if($('#cmbPaymode :selected').length > 0){
     	whereSQL += " AND (";
-    	
-    	$('#cmbPaymode :selected').each(function(i, mul){ 
+
+    	$('#cmbPaymode :selected').each(function(i, mul){
             if(runNo > 0){
                 whereSQL += " OR r.MODE_ID = '"+$(mul).val()+"' ";
                 paymode += ", "+$(mul).text();
-            
+
             }else{
                 whereSQL += " r.MODE_ID = '"+$(mul).val()+"' ";
                 paymode += $(mul).text();
-                
+
             }
             runNo += 1;
         });
-        whereSQL += ") ";       
+        whereSQL += ") ";
     }
     runNo = 0;
-    
+
     if(!($("#dpOrderDateFr").val() == null || $("#dpOrderDateFr").val().length == 0) || !($("#dpOrderDateTo").val() == null || $("#dpOrderDateTo").val().length == 0)){
     	orderDateFrom = $("#dpOrderDateFr").val();
         orderDateTo = $("#dpOrderDateTo").val();
-        
+
         whereSQL += " AND (som.SALES_DT BETWEEN TO_DATE('"+orderDateFrom+"', 'dd/MM/YY') AND TO_DATE('"+orderDateTo+"', 'dd/MM/YY'))";
     }
-    
+
 	if($("#cmbKeyBranch :selected").index() > 0){
 		keyInBranch = $("#cmbKeyBranch :selected").text();
 		whereSQL += " AND som.BRNCH_ID = '"+$("#cmbKeyBranch :selected").val()+"'";
 	}
-	    
+
 	if(!($("#txtOrderNoFr").val().trim() == null || $("#txtOrderNoFr").val().trim().length == 0) && !($("#txtOrderNoTo").val().trim() == null || $("#txtOrderNoTo").val().trim().length == 0)){
 		orderNoFrom = $("#txtOrderNoFr").val().trim();
 		orderNoTo = $("#txtOrderNoTo").val().trim();
-		
+
 		whereSQL += " AND som.SALES_ORD_NO BETWEEN '"+orderNoFrom+"' AND '"+orderNoTo+"')";
 	}
-	
+
 	if($("#cmbUser :selected").index() > 0){
 		whereSQL += " AND som.CRT_USER_ID = '"+$("#cmbUser :selected").val()+"'";
 	}
-	
+
 	if($("#cmbSorting :selected").index() > -1){
 		sortBy = $("#cmbSorting :selected").text();
-		
+
 		if($("#cmbSorting :selected").val() == "1"){
             orderBySQL = " ORDER BY t2.CODE_NAME, b.CODE, t.CODE_NAME, som.SALES_ORD_NO";
         }else if($("#cmbSorting :selected").val() == "2"){
@@ -161,40 +161,40 @@ function fn_report(viewType){
             orderBySQL = " ORDER BY som.SALES_ORD_NO, t.CODE_NAME";
         }else if($("#cmbSorting :selected").val() == "5"){
             orderBySQL = " ORDER BY Issued_Bank, som.SALES_ORD_NO";
-        }   
+        }
 	}
 
     $("#reportDownFileName").val("OrderDDCRCList_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
 
     if(viewType == "PDF"){
-        $("#viewType").val("PDF");
-        $("#reportFileName").val("/sales/OrderDDCRCList.rpt");
+        $("#form #viewType").val("PDF");
+        $("#form #reportFileName").val("/sales/OrderDDCRCList.rpt");
     }else if(viewType == "EXCEL"){
-        $("#viewType").val("EXCEL");
-        $("#reportFileName").val("/sales/OrderDDCRCList_Excel.rpt");
+        $("#form #viewType").val("EXCEL");
+        $("#form #reportFileName").val("/sales/OrderDDCRCList_Excel.rpt");
     }
 
-    $("#V_ORDERNOFROM").val(orderNoFrom);
-    $("#V_ORDERNOTO").val(orderNoTo);
-    $("#V_ORDERDATEFROM").val(orderDateFrom);
-    $("#V_ORDERDATETO").val(orderDateTo);
-    $("#V_BRANCHREGION").val(branchRegion);
-    $("#V_KEYINBRANCH").val(keyInBranch);
-    $("#V_PAYMODE").val(paymode);
-    $("#V_SORTBY").val(sortBy);
-    $("#V_SELECTSQL").val("");
-    $("#V_WHERESQL").val(whereSQL);
-    $("#V_EXTRAWHERESQL").val(extraWhereSQL);
-    $("#V_ORDERBYSQL").val(orderBySQL);
-    $("#V_FULLSQL").val("");
-     
+    $("#form #V_ORDERNOFROM").val(orderNoFrom);
+    $("#form #V_ORDERNOTO").val(orderNoTo);
+    $("#form #V_ORDERDATEFROM").val(orderDateFrom);
+    $("#form #V_ORDERDATETO").val(orderDateTo);
+    $("#form #V_BRANCHREGION").val(branchRegion);
+    $("#form #V_KEYINBRANCH").val(keyInBranch);
+    $("#form #V_PAYMODE").val(paymode);
+    $("#form #V_SORTBY").val(sortBy);
+    $("#form #V_SELECTSQL").val("");
+    $("#form #V_WHERESQL").val(whereSQL);
+    $("#form #V_EXTRAWHERESQL").val(extraWhereSQL);
+    $("#form #V_ORDERBYSQL").val(orderBySQL);
+    $("#form #V_FULLSQL").val("");
+
     // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
             isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
     };
-    
+
     Common.report("form", option);
-	
+
 }
 
 CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '');
@@ -217,7 +217,7 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
-<form action="#" method="post" id="form">
+<form action="#" method="post" id="form" name="form">
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -304,7 +304,7 @@ CommonCombo.make('cmbUser', '/sales/order/getUserCodeList', '' , '');
 </form>
 
 </section><!-- content end -->
-     
+
 </section><!-- container end -->
 
 </div><!-- popup_wrap end -->
