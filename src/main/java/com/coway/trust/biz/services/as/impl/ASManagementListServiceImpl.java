@@ -61,6 +61,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		return ASManagementListMapper.getASFilterInfo(params);
 	}
 	
+	@Override
+	public List<EgovMap> getASFilterInfoOld(Map<String, Object> params) {
+		return ASManagementListMapper.getASFilterInfoOld(params);
+	}
+	
 
 	@Override
 	public List<EgovMap> getASReasonCode(Map<String, Object> params) {

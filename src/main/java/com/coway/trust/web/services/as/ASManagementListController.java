@@ -709,6 +709,10 @@ public class ASManagementListController {
 		
 		List<EgovMap>  list = ASManagementListService.getASFilterInfo(params);
 		
+		if (list.size() == 0) {
+			list = ASManagementListService.getASFilterInfoOld(params);
+		}
+		
 		return ResponseEntity.ok(list);  
 	}
 	

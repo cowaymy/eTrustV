@@ -1389,6 +1389,18 @@
 					          
     </select>
     
+    <select id="getASFilterInfoOld" parameterType="Map" resultType="egovMap">
+                <![CDATA[      SELECT D.STK_ID code_Id ,D.STK_CODE||'-'||D.STK_DESC code_Name
+                        FROM LOG0043M A, LOG0044D B, SYS0026M C, SYS0026M D 
+                        WHERE A.BOM = B.BOM
+                        AND   A.MATRL_NO = C.STK_CODE
+                        AND   B.BOM_COMPNT = D.STK_CODE
+                        AND   C.STK_OLD_CODE = #{prdctCd}
+                        AND   B.VALID_FROM_DT < SYSDATE 
+                        AND   B.VALID_TO_DT > SYSDATE
+                        ORDER BY D.STK_TYPE_ID
+                                 ]]>
+    </select>
     
    <insert id="insertSVC0004D" parameterType="Map" >  
     

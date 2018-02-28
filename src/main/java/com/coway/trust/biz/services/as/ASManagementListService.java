@@ -67,6 +67,8 @@ public interface ASManagementListService {
 	List<EgovMap> getASStockPrice(Map<String, Object> params);
 	
 	List<EgovMap> getASFilterInfo(Map<String, Object> params);
+	
+	List<EgovMap> getASFilterInfoOld(Map<String, Object> params);
 
 	List<EgovMap> getASReasonCode(Map<String, Object> params);
 	

@@ -50,6 +50,7 @@ public interface ASManagementListMapper {
 	 List<EgovMap> getASHistoryInfo(Map<String, Object> params);
 	 List<EgovMap> getASStockPrice(Map<String, Object> params);
 	 List<EgovMap> getASFilterInfo(Map<String, Object> params);
+	 List<EgovMap> getASFilterInfoOld(Map<String, Object> params);
 	 List<EgovMap> getASReasonCode(Map<String, Object> params);
 	 List<EgovMap> getASMember(Map<String, Object> params);
 	 List<EgovMap> getASReasonCode2(Map<String, Object> params);
