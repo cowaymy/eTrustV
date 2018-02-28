@@ -1266,8 +1266,9 @@ public class MemberListController {
 		int resultUpc4 = 0;
 		int resultUpc5 = 0;
 		if( !formMap.get("memberType").toString().equals("2803") ){// hp가아닐때
-		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
-		resultUpc3 = memberListService.memberListUpdate_memorg2(formMap);
+    		resultUpc1 = memberListService.memberListUpdate_user(formMap);
+    		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
+    		resultUpc3 = memberListService.memberListUpdate_memorg2(formMap);
 		
 		}
 		// 결과 만들기.
