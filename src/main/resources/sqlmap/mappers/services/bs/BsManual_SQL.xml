@@ -654,8 +654,8 @@
 								            LEFT JOIN sys0038m st ON st.stus_code_id = hs.stus_code_id
 								            INNER JOIN sys0013m ap ON ap.code_id = so.app_type_id
 								            INNER JOIN sal0029d cu ON cu.cust_id = so.cust_id
-								            INNER JOIN org0001d cd ON cd.mem_id = hs.cody_id
-								            INNER JOIN sys0038m STUS ON STUS.stus_code_id = cd.stus
+								            left JOIN org0001d cd ON cd.mem_id = hs.cody_id
+								            left JOIN sys0038m STUS ON STUS.stus_code_id = cd.stus
 								            LEFT JOIN org0001d ac ON ac.mem_id = hs.CODY_ID
 								            LEFT JOIN sys0005m br ON br.brnch_id = ac.brnch
 								            LEFT JOIN org0005d og ON og.MEM_ID = CD.MEM_ID
