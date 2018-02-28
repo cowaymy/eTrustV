@@ -73,7 +73,7 @@
 
 
                  <if test="STUS_ID != null and  STUS_ID != ''">
-                                     AND  E1.QOTAT_VAL_ID_DT<![CDATA[ >= ]]>  SYSDATE
+                                  <!--    AND  E1.QOTAT_VAL_ID_DT<![CDATA[ >= ]]>  SYSDATE -->
                                      AND  E1.QOTAT_STUS_ID IN
                                  <foreach item="item" collection="STUS_ID" index="index" open="(" separator="," close=")">
                                     #{item}
