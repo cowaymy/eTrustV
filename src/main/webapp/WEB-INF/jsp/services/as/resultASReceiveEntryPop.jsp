@@ -6,73 +6,73 @@
 <script type="text/javaScript">
 
 
-var asHistoryGrid; 
-var bsHistoryGrid; 
+var asHistoryGrid;
+var bsHistoryGrid;
 var ascallLogGridID;
 
 $(document).ready(function(){
     fn_keyEvent();
-    
 
-    AUIGrid.resize(asHistoryGrid,1000,300); 
-    AUIGrid.resize(bsHistoryGrid,1000,300); 
-    AUIGrid.resize(ascallLogGridID,1000,200); 
-    
+
+    AUIGrid.resize(asHistoryGrid,1000,300);
+    AUIGrid.resize(bsHistoryGrid,1000,300);
+    AUIGrid.resize(ascallLogGridID,1000,200);
+
     createASHistoryGrid();
     createBSHistoryGrid();
-    
+
     fn_getASHistoryInfo();
     fn_getBSHistoryInfo();
     fn_setComboBox();
-    
+
     fn_getErrMstList('${as_ord_basicInfo.ordNo}');
-    
-    
+
+
     <c:if test="${MOD eq 'VIEW'}">
     fn_setEditValue();
     createASCallLogAUIGrid();
     </c:if>
-    
+
     if ( '${mafuncId}'   != "undefined"     &&   '${mafuncId}'  !=""  ) {
-    	   //ASR인경우  SET ERRCODE 
+    	   //ASR인경우  SET ERRCODE
         $("#errorCode").val('${mafuncId}' );
-        $("#errorDesc").val('${mafuncResnId}' ); 
+        $("#errorDesc").val('${mafuncResnId}' );
         $("#ISRAS").val("RAS");
     }
-    
+
     $("#checkComm").prop("checked",true);
-   
+
 });
 
 
 
 function fn_getErrMstList(_ordNo){
-	
+
 	 var SALES_ORD_NO = _ordNo ;
      $("#errorCode option").remove();
-     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','errorCode', 'S' , '');            
+     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','errorCode', 'S' , '');
 }
 
 
 
 function fn_errMst_SelectedIndexChanged(){
-    
+
     var DEFECT_TYPE_CODE = $("#errorCode").val();
-    
+
      $("#errorDesc option").remove();
-     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','errorDesc', 'S' , 'fn_errDetail_SetVal');            
+     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','errorDesc', 'S' , 'fn_errDetail_SetVal');
 }
 
 
 function fn_errDetail_SetVal(){
-     $("#errorDesc").val( asMalfuncResnId); 
+     $("#errorDesc").val( asMalfuncResnId);
 }
 
 
- 
+
 
 function fn_setComboBox(){
-    doGetCombo('/common/selectCodeList.do', '24', '','requestor', 'S' , ''); 
+    doGetCombo('/common/selectCodeList.do', '24', '','requestor', 'S' , '');
     doGetCombo('/services/as/getBrnchId', '', '','branchDSC', 'S' , '');            // Customer Type Combo Box
 }
 
@@ -82,18 +82,18 @@ var asMalfuncResnId ;
 function fn_setEditValue(){
         Common.ajax("GET", "/services/as/selASEntryView.do", {AS_NO:'${AS_NO}'   }, function(result) {
             console.log("fn_setEditValue.");
-            
+
             var eOjb = result.asentryInfo;
             console.log( eOjb);
-            
-            
+
+
 
             $("#AS_PIC_ID").val(eOjb.asPicId) ;
             $("#AS_ID").val(eOjb.asId) ;
             $("#CTID").val(eOjb.asMemId) ;
             $("#CTGroup").val(eOjb.asMemGrp);
             $("#CTCode").val(eOjb.memCode);
-            
+
             $("#requestDate").val(eOjb.asReqstDt);
             $("#requestTime").val(eOjb.asReqstTm);
             $("#appDate").val(eOjb.asAppntDt);
@@ -101,48 +101,48 @@ function fn_setEditValue(){
             $("#branchDSC").val(eOjb.asBrnchId);
             $("#errorCode").val(eOjb.asMalfuncId);
             $("#errorDesc").val(eOjb.asMalfuncResnId);
-            
 
-            $("#errorCode").val(eOjb.asMalfuncId); 
+
+            $("#errorCode").val(eOjb.asMalfuncId);
             $("#errorDesc").val( eOjb.asMalfuncResnId);
-            
+
             asMalfuncResnId =eOjb.asMalfuncResnId;
             fn_errMst_SelectedIndexChanged(eOjb.asMalfuncResnId);
-            
-            
-            
-            
-            
+
+
+
+
+
             $("#txtRequestor").val(eOjb.asRemReqster);
             $("#requestor").val(eOjb.asReqsterTypeId);
-           
-            
+
+
             $("#requestorCont").val(eOjb.asRemReqsterCntc);
             $("#requestor").val(eOjb.asReqsterTypeId);
             $("#additionalCont").val(eOjb.asRemAddCntc);
             $("#CTSSessionCode").val(eOjb.asSesionCode);
             $("#perIncharge").val(eOjb.picName);
             $("#perContact").val(eOjb.picCntc);
-            
+
             $('#perIncharge').removeAttr("readonly").removeClass("readonly");
-            $('#perContact').removeAttr("readonly").removeClass("readonly");      
-            
-          
+            $('#perContact').removeAttr("readonly").removeClass("readonly");
+
+
             if(eOjb.asIsBsWithin30days == "1")  $("#checkBS").attr("checked",true);
             else    $("#checkBS").attr("checked",false);
-            
+
             if(eOjb.asAllowComm == "1") $("#checkComm").attr("checked",true);
-            else     $("#checkComm").attr("checked",false);  
-            
-               
+            else     $("#checkComm").attr("checked",false);
+
+
             if(eOjb.asRemReqsterCntcSms == "1")  $("#checkSms1").attr("checked",true);
             else   $("#checkSms1").attr("checked",false);
-            
+
             if(eOjb.asRemAddCntcSms == "1")   $("#checkSms2").attr("checked",true);
             else   $("#checkSms2").attr("checked",false);
-            
-            
-            
+
+
+
             fn_getCallLog();
         });
 }
@@ -153,8 +153,8 @@ function fn_setEditValue(){
 
 function fn_gird_resize(){
 
-    AUIGrid.resize(asHistoryGrid,900,300); 
-    AUIGrid.resize(bsHistoryGrid,900,300); 
+    AUIGrid.resize(asHistoryGrid,900,300);
+    AUIGrid.resize(bsHistoryGrid,900,300);
 }
 
 
@@ -187,14 +187,14 @@ function fn_getCustAddressInfo(){
             console.log("fn_getCustAddressInfo.");
             console.log(result.fulladdr);
             $("#sms_CustFulladdr").val(result.fulladdr);
-         
+
         });
 }
 
 
 
 function createASHistoryGrid(){
-    
+
     var cLayout = [
          {dataField : "asNo",headerText : "AS No", width : 100},
          {dataField : "c2", headerText : "ASR No", width : 100 ,editable : false},
@@ -206,16 +206,16 @@ function createASHistoryGrid(){
          {dataField : "c5", headerText : "CT Code", width :100 ,editable : false},
          {dataField : "c6", headerText : "Solution", width :100 ,editable : false},
          {dataField : "c7", headerText : "Amount", width :80 ,dataType : "number", formatString : "#,000.00"  ,editable : false}
-         
+
    ];
-    
-    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};  
-    asHistoryGrid = GridCommon.createAUIGrid("#ashistory_grid_wrap", cLayout,'' ,gridPros); 
+
+    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};
+    asHistoryGrid = GridCommon.createAUIGrid("#ashistory_grid_wrap", cLayout,'' ,gridPros);
 }
 
 
 function createBSHistoryGrid(){
-    
+
     var cLayout = [
          {dataField : "eNo",headerText : "BS No", width : 100 },
          {dataField : "edate", headerText : "BS Month", width : 100 ,editable : false},
@@ -226,22 +226,22 @@ function createBSHistoryGrid(){
          {dataField : "memCode", headerText : "Cody Code", width :100 },
          {dataField : "code3", headerText : "Fail Reason", width :100 ,editable : false},
          {dataField : "code2", headerText : "Collection Reason", width :100 ,editable : false}
-      
+
    ];
-    
-    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};  
-    bsHistoryGrid = GridCommon.createAUIGrid("#bshistory_grid_wrap", cLayout,'' ,gridPros); 
+
+    var gridPros = { usePaging : true,  pageRowCount: 20, editable: false, fixedColumnCount :1,selectionMode : "singleRow",  showRowNumColumn : true};
+    bsHistoryGrid = GridCommon.createAUIGrid("#bshistory_grid_wrap", cLayout,'' ,gridPros);
 }
 
 
 
 function fn_doAllaction(){
-	
-	
+
+
     var ord_id ='${as_ord_basicInfo.ordId}'   ;// '143486';
     var  vdte   =$("#requestDate").val();
-    
-    
+
+
     var options ={
     		ORD_ID: ord_id,
     	    S_DATE: vdte,
@@ -249,7 +249,7 @@ function fn_doAllaction(){
     	    CTIDObj: 'CTIDObj',
     	    CTgroupObj:'CTgroupObj'
     }
-    
+
     console.log("========>");
     console.log(options);
     Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte , OPTIONS:options ,TYPE:'AS'}, null , true , '_doAllactionDiv');
@@ -272,7 +272,7 @@ function fn_getMemberBymemberID(){
         Common.ajax("GET", "/services/as/getMemberBymemberID.do", {MEM_ID: $("#CTID").val() }, function(result) {
             console.log("fn_getMemberBymemberID.");
             console.log( result);
-            
+
             if(result !=null) {
                 $("#mobileNo").val(result.mInfo.telMobile);
             }
@@ -286,20 +286,20 @@ function fn_getMemberBymemberID(){
 
 
 function createASCallLogAUIGrid() {
-    
+
     var columnLayout = [
                         {dataField : "callRem",     headerText  : "Remark" ,editable       : false  } ,
                         { dataField : "c2", headerText  : "KeyBy",  width  : 80 , editable       : false},
                         { dataField : "callCrtDt", headerText  : "KeyAt ",  width  : 120  ,dataType : "date", formatString : "dd/mm/yyyy" }
-                     
-   ];   
-   
-    
-    var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};  
+
+   ];
+
+
+    var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};
     ascallLogGridID= GridCommon.createAUIGrid("ascallLog_grid_wrap", columnLayout  ,"" ,gridPros);
 }
-   
-   
+
+
 
 function fn_getCallLog(){
 	Common.ajax("GET", "/services/as/getCallLog", {AS_ID: $("#AS_ID").val()}, function(result) {
@@ -308,15 +308,15 @@ function fn_getCallLog(){
         AUIGrid.setGridData(ascallLogGridID, result);
     });
 }
-   
+
 function fn_loadPageControl(){
-    
-    
+
+
     /*
-    
+
     CodeManager cm = new CodeManager();
     IList<Data.CodeDetail> atl = cm.GetCodeDetails(10);
-    
+
     ddlAppType_Search.DataTextField = "CodeName";
     ddlAppType_Search.DataValueField = "Code";
     ddlAppType_Search.DataSource = atl.OrderBy(itm=>itm.CodeName);
@@ -356,13 +356,13 @@ function fn_loadPageControl(){
 
 
 function fn_doReset(){
-	
+
 	try{
 		$("#_resultNewEntryPopDiv1").remove();
 		fn_newASPop();
-		
+
 	}catch(e){
-		//콜센터 
+		//콜센터
 		window.close();
 	}
 }
@@ -404,20 +404,20 @@ function fn_doUpDate(){
                  "AS_MEM_GRP"               : $("#CTGroup").val(),
                  "AS_REQST_DT"              : $("#requestDate").val(),
                  "AS_REQST_TM"              : $("#requestTime").val(),
-                 "AS_APPNT_DT"              : $("#appDate").val(), 
-                 "AS_APPNT_TM"              : $("#appTime").val(),      
+                 "AS_APPNT_DT"              : $("#appDate").val(),
+                 "AS_APPNT_TM"              : $("#appTime").val(),
                  "AS_BRNCH_ID"              : $("#branchDSC").val(),
                  "AS_MALFUNC_ID"            : $("#errorCode").val(),
                  "AS_MALFUNC_RESN_ID"       : $("#errorDesc").val(),
-                 "AS_REM_REQSTER"           :  $("#txtRequestor").val(),  
+                 "AS_REM_REQSTER"           :  $("#txtRequestor").val(),
                  "AS_REM_REQSTER_CNTC"      : $("#requestorCont").val(),
                  "AS_CALLLOG_ID"            : '0',
                  "AS_STUS_ID"               : '1',
                  "AS_SMS"                  : '0',
-                 "AS_ENTRY_IS_SYNCH"        : '0',   
+                 "AS_ENTRY_IS_SYNCH"        : '0',
                  "AS_ENTRY_IS_EDIT"         : '0',
                  "AS_TYPE_ID"               : '674',
-                 "AS_REQSTER_TYPE_ID"       : $("#requestor").val(),  
+                 "AS_REQSTER_TYPE_ID"       : $("#requestor").val(),
                  "AS_IS_BS_WITHIN_30DAYS"   : $("#checkBS").prop("checked")   ? '1': '0',
                  "AS_ALLOW_COMM"            : $("#checkComm").prop("checked") ? '1': '0',
                  "AS_PREV_MEM_ID"           : 0,
@@ -432,38 +432,38 @@ function fn_doUpDate(){
                  "AS_ID": $("#AS_ID").val(),
                  "AS_PIC_ID": $("#AS_PIC_ID").val()
         }
-        
+
         console.log(updateForm);
-            
+
         Common.ajax("POST", "/services/as/updateASEntry.do",updateForm , function(result) {
                     console.log("asupdate.");
                     console.log( result);
-                    
+
                     $("#sFm").find("input, textarea, button, select").attr("disabled",true);
-                    $("#save_bt_div").hide(); 
+                    $("#save_bt_div").hide();
         });
     }
 }
 
 
 function fn_sendSms(_telNo, _msg){
-	
+
 	var smsMag =_msg;
 	var rTelNo    = _telNo;
-	
+
 	 if(_telNo !="" ){
 		 Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :smsMag} , function(result) {
 		        console.log("sms.");
 		        console.log( result);
 		    });
 	 }
-	
-   
-    
+
+
+
 }
 
 function  fn_doNewSave(){
-	
+
 	if( fn_validRequiredField_Save()){
 		var saveForm ={
 				 "AS_SO_ID"                  : '${as_ord_basicInfo.ordId}' ,
@@ -471,18 +471,18 @@ function  fn_doNewSave(){
                  "AS_MEM_GRP"               : $("#CTGroup").val(),
                  "AS_REQST_DT"              : $("#requestDate").val(),
                  "AS_REQST_TM"              : $("#requestTime").val(),
-                 "AS_APPNT_DT"              : $("#appDate").val(), 
-                 "AS_APPNT_TM"              : $("#appTime").val(),      
+                 "AS_APPNT_DT"              : $("#appDate").val(),
+                 "AS_APPNT_TM"              : $("#appTime").val(),
                  "AS_BRNCH_ID"              : $("#branchDSC").val(),
                  "AS_MALFUNC_ID"            : $("#errorCode").val(),
                  "AS_MALFUNC_RESN_ID"       : $("#errorDesc").val(),
-                 
+
                  "AS_REM_REQSTER"           : $("#txtRequestor").val()  ,
                  "AS_REM_REQSTER_CNTC"      : $("#requestorCont").val(),
                  "AS_CALLLOG_ID"            : '0',
                  "AS_STUS_ID"               : '1',
                  "AS_SMS"                  : '0',
-                 "AS_ENTRY_IS_SYNCH"        : '0',   
+                 "AS_ENTRY_IS_SYNCH"        : '0',
                  "AS_ENTRY_IS_EDIT"         : '0',
                  "AS_TYPE_ID"                     : $("#IN_AsResultId").val() ==  "" ? '674' : '2713'  ,
                  "AS_REQSTER_TYPE_ID"       :  $("#requestor").val(),
@@ -495,49 +495,49 @@ function  fn_doNewSave(){
                  "AS_SESION_CODE"           : $("#CTSSessionCode").val(),
                  "CALL_MEMBER"              : '0',
                  "REF_REQUEST"              : $("#IN_AsResultId").val() ,
-                 "CALL_REM"                     :$("#callRem").val(),   
+                 "CALL_REM"                     :$("#callRem").val(),
                  "PIC_NAME" :$("#perIncharge").val(),
                  "PIC_CNTC" :$("#perContact").val(),
-                 "ISRAS" :     $("#ISRAS").val() 
+                 "ISRAS" :     $("#ISRAS").val()
 		}
-		
+
 	    console.log(saveForm);
-	        
+
 	    Common.ajax("POST", "/services/as/saveASEntry.do",saveForm , function(result) {
 	                console.log("asSave.");
 	                console.log( result);
-	                
+
 	                if( result.logerr =="Y"){
 	                	//Common.alert("물류 오류 ..........." );
 	                	//return ;
 	                }
-	                
-	                //인하우스 결과 등록 처리 
+
+	                //인하우스 결과 등록 처리
 	               if($("#IN_AsResultId").val() !="" ){
 
 	            	   var  inAsR = AUIGrid.getSelectedItems(inHouseRGridID);
 
 	            	    var asid=result.asId;
 	            	    var asNo=result.asNo;
-	            	    
-	            	    
+
+
 	            	    var salesOrdNo=inAsR[0].item.salesOrdNo;
 	            	    var salesOrdId=inAsR[0].item.salesOrdId;
 	            	    var refReqst  =$("#IN_AsResultId").val();
-	            	   
+
 	                    var param = "?ord_Id="+salesOrdId+"&ord_No="+salesOrdNo+"&as_No="+asNo+"&as_Id="+asid+"&refReqst="+refReqst+"&isAuto=true" ;
 	                   Common.popupDiv("/services/as/ASNewResultPop.do"+param ,null, null , true , '_newASResultDiv1');
 	                }
-	                
-	                
-	                
+
+
+
 	                if(result.asNo !="" ){
-	                	var  smsck_1 =false; 
-	                	var  smsck_2 =false; 
-	                	var  smsck_3=false; 
-	                	
+	                	var  smsck_1 =false;
+	                	var  smsck_2 =false;
+	                	var  smsck_3=false;
+
 	                	Common.alert("Save Quotation Summary" +DEFAULT_DELIMITER +"<b>New AS successfully saved.<br />AS number : [" + result.asNo  + "]</b>"  ,function (){
-	                		
+
 	                		         var  sMSMessage = "";
 			                        var  asId            = result.asId;
 			                        var  asNo           = result.asNo;
@@ -545,7 +545,7 @@ function  fn_doNewSave(){
 			                        var  memCode   = $("#CTCode").val();
 			                        var  appDate        =$("#appDate").val();
 			                        var  branchDSC     =$("#branchDSC option:selected").text();
-			                        
+
 			                        if($("#checkSms").prop("checked")){
 			                            $("#sms_AsNo").val(asNo);
 			                            $("#sms_AsId").val(asId);
@@ -555,12 +555,12 @@ function  fn_doNewSave(){
 			                            var ordId           = '${as_ord_basicInfo.ordId}';
 			                            var custName    = "${as_ord_basicInfo.custName}".substring(0,49) ;
 			                            var custInstAdd  = $("#sms_CustFulladdr").val();
-			                            var pic               = $("#perIncharge").val();    
-			                            var piccontact    = $("#perContact").val();    
+			                            var pic               = $("#perIncharge").val();
+			                            var piccontact    = $("#perContact").val();
 			                            var requestor     =$("#requestor option:selected").text();
 			                            var  requestorContact =$("#requestorCont").val();
-			                            var errorCode     =$("#errorCode").val(); 
-			                            
+			                            var errorCode     =$("#errorCode").val();
+
 			                            sMSMessage  += asNo+"/";
 			                            sMSMessage  += ordNo+"/";
 			                            sMSMessage  += custName+"/";
@@ -571,36 +571,36 @@ function  fn_doNewSave(){
 			                            if(piccontact !="" ) sMSMessage  += piccontact+"/";
 			                            sMSMessage  += errorCode+"/";
 			                            sMSMessage  += " /TQ";
-			                            
+
 			                            $("#sms_Message").val(sMSMessage);
 			                            smsck_1 =true;
 			                        }
-			                        
+
 			                        if($("#checkSms1").prop("checked")){
 			                               var  sMSMessage = "";
 			                               var  appDate =$("#appDate").val();
 			                               var branchDSC =$("#branchDSC option:selected").text();
-			                               sMSMessage="Order="+ '${as_ord_basicInfo.ordNo}'+"   AS="+result.asNo+"  Appt Date="+appDate+"  DSC="+branchDSC+" TQ "; 
+			                               sMSMessage="Order="+ '${as_ord_basicInfo.ordNo}'+"   AS="+result.asNo+"  Appt Date="+appDate+"  DSC="+branchDSC+" TQ ";
 			                               var t = $("#additionalCont").val();
-			                               fn_sendSms(t ,sMSMessage);  
+			                               fn_sendSms(t ,sMSMessage);
 			                        }
-			                        
-			
+
+
 			                        if($("#checkSms2").prop("checked")){
                                         var  sMSMessage = "";
                                         sMSMessage = "COWAY RM0.00: Your order =" +  '${as_ord_basicInfo.ordNo}' + "  product issue had been successfully registered. Thank you!";
                                         var t = $("#additionalCont").val();
-                                        fn_sendSms(t ,sMSMessage);  
+                                        fn_sendSms(t ,sMSMessage);
 			                        }
-			                        
-			                        
+
+
 			                        $("#sFm").find("input, textarea, button, select").attr("disabled",true);
-			                        $("#save_bt_div").hide(); 
+			                        $("#save_bt_div").hide();
 			                        $("#_resultNewEntryPopDiv1").remove();
-			                        
+
 			                        if(smsck_1) Common.popupDiv("/services/as/sendSMSPop.do" ,null, null , true , '_dosmsmDiv');
                         });
-	               }	
+	               }
 	    } , 'callbackClose' );
 	}
 }
@@ -612,13 +612,13 @@ function callbackClose(){
 }
 
 function fn_validRequiredField_Save(){
-	
+
 	var rtnValue = true;
 	var  rtnMsg="";
 
     if(FormUtil.checkReqValue($("#requestDate"))){
            rtnMsg  +="Please select the request date.<br>" ;
-           rtnValue =false; 
+           rtnValue =false;
     }else {
     	/*
     	 var  nowdate      = $.datepicker.formatDate($.datepicker.ATOM, new Date());
@@ -626,114 +626,119 @@ function fn_validRequiredField_Save(){
                 nowdateArry = nowdateArry[0]+""+nowdateArry[1]+""+nowdateArry[2];
          var  rdateArray   =$("#appDate").val().split("/");
          var requestDate  =rdateArray[2]+""+rdateArray[1]+""+rdateArray[0];
-     
+
          if((parseInt(requestDate,10)  - parseInt(nowdateArry,10) ) > 14 || (parseInt(nowdateArry,10)  - parseInt(requestDate,10) )   >14){
             rtnMsg  +="* Request date should not be longer than 14 days from current date.<br />" ;
-            rtnValue =false; 
+            rtnValue =false;
         }
          */
     }
-    
-    
+
+
     if(FormUtil.checkReqValue($("#requestTime"))){
         //rtnMsg  +="Please select the request time.<br/>" ;
-        //rtnValue =false; 
+        //rtnValue =false;
     }
-    
-    
+
+
     if(FormUtil.checkReqValue($("#appDate"))){
 	        rtnMsg  +="Please select the appDate date.<br>" ;
-	        rtnValue =false; 
+	        rtnValue =false;
 	 }else {
-	     
-	     var  nowdate      = $.datepicker.formatDate($.datepicker.ATOM, new Date());
-	     var  nowdateArry  =nowdate.split("-");
-	            nowdateArry = nowdateArry[0]+""+nowdateArry[1]+""+nowdateArry[2];
-	     var  rdateArray   =$("#appDate").val().split("/");
-	     var requestDate  =rdateArray[2]+""+rdateArray[1]+""+rdateArray[0];
-	     
-	     if((parseInt(requestDate,10)  - parseInt(nowdateArry,10) ) > 14 || (parseInt(nowdateArry,10)  - parseInt(requestDate,10) )   >14){
-	         rtnMsg  +="* appDate date should not be longer than 14 days from current date.<br />" ;
-	         rtnValue =false; 
-	     }
+
+		 /*var  nowdate      = $.datepicker.formatDate($.datepicker.ATOM, new Date());
+         var  nowdateArry  =nowdate.split("-");
+                nowdateArry = nowdateArry[0]+""+nowdateArry[1]+""+nowdateArry[2];*/
+         var  rdateArray   =$("#appDate").val().split("/");
+         //var requestDate  =rdateArray[2]+"-"+rdateArray[1]+"-"+rdateArray[0];
+
+         var requestDate = new Date(rdateArray[2]+"-"+rdateArray[1]+"-"+rdateArray[0]);
+         var nowDate = new Date($.datepicker.formatDate($.datepicker.ATOM, new Date()));
+         var dayDiff1 =  Math.floor((Date.UTC(requestDate.getFullYear(), requestDate.getMonth(), requestDate.getDate()) - Date.UTC(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate()) ) /(1000 * 60 * 60 * 24));
+         var dayDiff2 =  Math.floor((Date.UTC(nowDate.getFullYear(), nowDate.getMonth(), nowDate.getDate()) - Date.UTC(requestDate.getFullYear(), requestDate.getMonth(), requestDate.getDate()) ) /(1000 * 60 * 60 * 24));
+
+         if(dayDiff1 > 14 || dayDiff2 >14){
+             rtnMsg  +="* appDate date should not be longer than 14 days from current date.<br />" ;
+             rtnValue =false;
+         }
 	 }
 
     if(FormUtil.checkReqValue($("#appTime"))){
        // rtnMsg  +="Please select the appTime <br/>" ;
-       // rtnValue =false; 
+       // rtnValue =false;
     }
-    
+
     if($("#errorCode").val() == ""){
         rtnMsg += "* Please select the error code.<br />";
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
+
     if($("#errorDesc").val() == ""){
         rtnMsg += "* Please select the errorDesc.<br />";
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
+
     if($("#errorCode").val() == ""){
         rtnMsg += "* Please select the error code.<br />";
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
+
     if($("#errorCode").val() == ""){
         rtnMsg += "* Please select the error code.<br />";
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
-    
+
+
     if($("#branchDSC").val() == ""){
          rtnMsg += "* Please select the DSC branch. <br />";
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
+
     /*
     if($("#CTGroup").val() == ""){
         rtnMsg += "* Please select the CTGroup. <br />";
-        rtnValue =false; 
+        rtnValue =false;
     }
     */
     if($("#CTCode").val() == ""){
         rtnMsg += "* Please select the CTCode. <br />";
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
+
 
     if($("#CTID").val() == ""){
         rtnMsg += "* Please select the CTID. <br />";
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
+
     if($("#requestor").val() == ""){
         rtnMsg += "* Please select the requestor. <br />";
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
+
     if($("#checkSms").prop("checked")){
         if($("#CTCode").val() != ""){
-        	
+
         	 if($("#mobileNo").val() != ""){
-                 //모바일 번호 vaild 체크 
+                 //모바일 번호 vaild 체크
              }else{
             	 rtnMsg += "* The CT does not has mobile number. SMS is disallowed.<br/>";
-                 rtnValue =false; 
+                 rtnValue =false;
              }
         }
     }
-    
-    
+
+
 
     if( rtnValue ==false ){
         Common.alert("Save Quotation Summary" +DEFAULT_DELIMITER +rtnMsg );
     }
-    
+
     return  rtnValue;
-    
-    
+
+
 	/*
-	
+
 	 Boolean valid = true;
      string Mesage = "";
      if (string.IsNullOrEmpty(dpRequestDate.SelectedDate.ToString()))
@@ -832,25 +837,25 @@ function fn_validRequiredField_Save(){
          RadWindowManager1.RadAlert("<b>" + Mesage + "</b>", 450, 160, "Save Summary", "callBackFn", null);
      return valid;
      */
-	
-	return rtnValue; 
+
+	return rtnValue;
 }
 
 
 
 function   fn_mobilesmschange(_obj){
-	
+
 	if(_obj.checked){
-		$("#perContact").attr("disabled", false); 
-        $("#perIncharge").attr("disabled", false);        
+		$("#perContact").attr("disabled", false);
+        $("#perIncharge").attr("disabled", false);
         $('#perIncharge').val('').removeAttr("readonly").removeClass("readonly");
-        $('#perContact').val('').removeAttr("readonly").removeClass("readonly");       
-        
+        $('#perContact').val('').removeAttr("readonly").removeClass("readonly");
+
         fn_getCustAddressInfo();
-        
+
     }else{
-	    $("#perContact").attr("disabled", true); 
-	    $("#perIncharge").attr("disabled", true); 
+	    $("#perContact").attr("disabled", true);
+	    $("#perIncharge").attr("disabled", true);
 	}
 }
 
@@ -860,30 +865,30 @@ function   fn_mobilesmschange(_obj){
 
 
 function fn_changetxtRequestor (_obj){
-    
+
     if(_obj.value !=""){
          if(! FormUtil.checkNum($("#txtRequestor"))){
           }else{
               Common.alert("Warning" +DEFAULT_DELIMITER +"<b>Only Digit available for txtRequestor  number</b>" );
-              $("#txtRequestor").val(""); 
+              $("#txtRequestor").val("");
           }
     }
 }
 
 
 function fn_changeRequestorCont (_obj){
-	
+
 	if(_obj.value !=""){
 		 if(! FormUtil.checkNum($("#requestorCont"))){
-			 $("#checkSms1").attr("disabled", false); 
-			 
+			 $("#checkSms1").attr("disabled", false);
+
 	      }else{
 	    	  Common.alert("Warning" +DEFAULT_DELIMITER +"<b>Only Digit available for Requestor SMS number</b>" );
-	    	  $("#checkSms1").attr("disabled", true); 
+	    	  $("#checkSms1").attr("disabled", true);
 	    	  $("#checkSms1").attr("checked",false);
 	      }
     }else{
-    	  $("#checkSms1").attr("disabled", true); 
+    	  $("#checkSms1").attr("disabled", true);
           $("#checkSms1").attr("checked",false);
     }
 }
@@ -891,18 +896,18 @@ function fn_changeRequestorCont (_obj){
 
 
 function fn_changeAdditionalCont (_obj){
-	
+
     if(_obj.value !=""){
          if(! FormUtil.checkNum($("#additionalCont"))){
-             $("#checkSms2").attr("disabled", false); 
-             
+             $("#checkSms2").attr("disabled", false);
+
           }else{
               Common.alert("Warning" +DEFAULT_DELIMITER +"<b>Only Digit available for AdditionalCont SMS number</b>" );
-              $("#checkSms2").attr("disabled", true); 
+              $("#checkSms2").attr("disabled", true);
               $("#checkSms2").attr("checked",false);
           }
     }else{
-    	   $("#checkSms2").attr("disabled", true); 
+    	   $("#checkSms2").attr("disabled", true);
            $("#checkSms2").attr("checked",false);
   }
 }
@@ -1013,7 +1018,7 @@ function fn_addRemark(){
 <article class="tap_area"><!-- tap_area start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-   <div id="ashistory_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>  
+   <div id="ashistory_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -1023,7 +1028,7 @@ function fn_addRemark(){
 <article class="tap_area"><!-- tap_area start -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-   <div id="bshistory_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>  
+   <div id="bshistory_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </article><!-- tap_area end -->
@@ -1055,13 +1060,13 @@ function fn_addRemark(){
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="requestDate" name="requestDate" onChange="fn_doAllaction()"/>
     </td>
-    
+
     <th scope="row">Appointment Date<span class="must">*</span></th>
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p readonly"  readonly="readonly"   id="appDate" name="appDate" />
     </td>
-    
-    
+
+
     <th scope="row">Appointment <br> Sessione <span class="must">*</span></th>
     <td>
     <input type="text" title="" placeholder=""  id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p"    readonly="readonly"  />
@@ -1097,7 +1102,7 @@ function fn_addRemark(){
     </div><!-- time_picker end -->
 
     </td>
-   
+
     <th scope="row"></th>
     <td>
 
@@ -1137,7 +1142,7 @@ function fn_addRemark(){
 <tr>
     <th scope="row">Error Code<span class="must">*</span></th>
     <td colspan="3">
-    <select class="w100p" id="errorCode" name="errorCode"  onChange="fn_errMst_SelectedIndexChanged()"> 
+    <select class="w100p" id="errorCode" name="errorCode"  onChange="fn_errMst_SelectedIndexChanged()">
     </select>
     </td>
     <th scope="row">Error Description<span class="must">*</span></th>
@@ -1151,7 +1156,7 @@ function fn_addRemark(){
     <td colspan="3">
        <!--  <input type="text" title="" placeholder="" class="w100p" id="branchDSC" name="branchDSC"  disabled="disabled" /> -->
      <select class="w100p" id="branchDSC" name="branchDSC"  class="readonly"  readonly="readonly" disabled="disabled">
-    </select> 
+    </select>
     </td>
     <th scope="row">CT Group </th>
     <td>  <input type="text" title="" placeholder="" class="w100p" id="CTGroup" name="CTGroup"/>
@@ -1163,7 +1168,7 @@ function fn_addRemark(){
 </tr>
 <tr>
     <th scope="row">Assign CT<span class="must">*</span></th>
-    <td colspan="3">  
+    <td colspan="3">
            <input type="text" title="" placeholder="" id="CTCode" name="CTCode"   class="readonly"  readonly="readonly"   onchange="fn_changeCTCode(this)"/>
     </td>
     <th scope="row">Mobile No</th>
@@ -1207,7 +1212,7 @@ function fn_addRemark(){
     <th scope="row">Additional Contact</th>
     <td>
     <input type="text" title="" placeholder="" class="w100p" id="additionalCont" name="additionalCont"  onchange="fn_changeAdditionalCont(this)"/>
-    
+
     </td>
     <th scope="row">SMS</th>
     <td>
@@ -1230,8 +1235,8 @@ function fn_addRemark(){
                 <textarea  id='callRem' name='callRem'   rows='5' placeholder=""  class="w100p" ></textarea>
         </td>
     </tr>
-    
-    
+
+
 
 <!--  <c:if test="${MOD eq 'VIEW'}">  -->
 <tr>
@@ -1240,9 +1245,9 @@ function fn_addRemark(){
 </tr>
 <!-- </c:if>  -->
 <!-- <c:if test="${MOD eq ''}"> -->
-  
+
  <!--</c:if>   -->
-    
+
 </tbody>
 </table><!-- table end -->
 
@@ -1250,7 +1255,7 @@ function fn_addRemark(){
 		<aside class="title_line">
 		<h2>AS Call-Log Transaction</h2>
 		</aside><!-- title_line end -->
-		
+
 		<article class="grid_wrap"><!-- grid_wrap start -->
 		      <div id="ascallLog_grid_wrap" style="width:100%; height:200px; margin:0 auto;"></div>
 		</article><!-- grid_wrap end -->
