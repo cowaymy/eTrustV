@@ -263,6 +263,10 @@
     function fn_productReturnRaw(){
         Common.popupDiv("/sales/order/orderCancelProductReturnRawPop.do", null, null, true);
     }
+
+    function fn_productReturnLogBookList(){
+        Common.popupDiv("/sales/order/orderCancelProductReturnLogBookListingPop.do", null, null, true);
+    }
 </script>
 
 
@@ -418,6 +422,9 @@
     </c:if>
         <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onClick="fn_productReturnRaw()">Product Return Raw</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+        <li><p class="link_btn type2"><a href="#" onClick="fn_productReturnLogBookList()">Product Return Log Book Listing</a></p></li>
     </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
