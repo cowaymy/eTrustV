@@ -113,9 +113,10 @@
 		          ('06')
 		          </when>
 		          <otherwise>
-		          ('01', '05')
+		          ('01', '05', '07')
 		          </otherwise>
 		      </choose>
+		      AND WH_LOC_DESC  not LIKE ('%_B')
 	      ORDER BY WH_LOC_ID
 	</select>
  <select id="receiptList" parameterType="Map" resultType="EgovMap">
