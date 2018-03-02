@@ -359,17 +359,17 @@ function btnGenerateExcel_Click(){
         if(date.toString().length == 1){
             date = "0" + date;
         }
-        $("#reportDownFileName").val("SalesYSListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-        $("#viewType").val("EXCEL");
-        $("#reportFileName").val("/sales/SalesYSListing_Excel.rpt");
+        $("#form #reportDownFileName").val("SalesYSListing"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#form #viewType").val("EXCEL");
+        $("#form #reportFileName").val("/sales/SalesYSListing_Excel.rpt");
 
-        $("#V_WHERESQL").val(whereSQL);
-        $("#V_USERNAME").val(userName);
-        $("#V_MEMBERTYPE").val(memberType);
-        $("#V_ORGCODE").val(orgCode);
-        $("#V_GRPCODE").val(grpCode);
-        $("#V_DEPTCODE").val(deptCode);
-        $("#V_DATE").val(installDate);
+        $("#form #V_WHERESQL").val(whereSQL);
+        $("#form #V_USERNAME").val(userName);
+        $("#form #V_MEMBERTYPE").val(memberType);
+        $("#form #V_ORGCODE").val(orgCode);
+        $("#form #V_GRPCODE").val(grpCode);
+        $("#form #V_DEPTCODE").val(deptCode);
+        $("#form #V_DATE").val(installDate);
 
         // 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
         var option = {
