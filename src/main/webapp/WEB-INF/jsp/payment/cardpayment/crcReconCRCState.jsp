@@ -221,17 +221,59 @@ var crcStateLayout = [
 
 	
 	function fn_getCrcReconStateList(ordNo, ordId){
+		
+		if($("#bankAcc").val() == ''){
+
+	           Common.alert("Select Bank Account.");       
+		  
+			return;
+		}
 		  
 		if($("#transDateFr").val() != '' && $("#transDateTo").val() != ''){
 			
-			Common.ajax("GET","/payment/selectCrcReconCRCStateInfo.do", $("#searchForm").serialize(), function(result){
-		          console.log(result);
-
-		          AUIGrid.setGridData(mappingGridId, result.mappingList);
-		          AUIGrid.setGridData(crcKeyInGridId, result.keyInList);
-		          AUIGrid.setGridData(crcStateGridId, result.stateList);
-		          
-		      });
+			
+			var fdate = $("#transDateFr").val();
+            var fday = fdate.slice(0 , 2);
+            var fmonth =  fdate.slice(3 , 5) ;
+            var fyear = fdate.slice(6 , 11);
+              
+               
+             var frdate = new Date(fyear , fmonth   , fday);
+              console.log(frdate );
+              fmonth = frdate.getMonth() + 1; 
+               frdate = new Date(fyear , fmonth   , fday);
+               
+               
+              var tdate = $("#transDateTo").val();
+              var tday = tdate.slice(0 , 2);
+              var tmonth =  tdate.slice(3 , 5);
+              var tyear = tdate.slice(6 , 11);
+                   
+                   
+               var todate = new Date(tyear , tmonth  , tday);
+                   
+                   
+               console.log(frdate );
+               console.log(todate );
+               console.log(todate <= frdate );
+		
+			if(todate <= frdate) {
+				Common.ajax("GET","/payment/selectCrcReconCRCStateInfo.do", $("#searchForm").serialize(), function(result){
+			          console.log(result);
+	
+			          AUIGrid.setGridData(mappingGridId, result.mappingList);
+			          AUIGrid.setGridData(crcKeyInGridId, result.keyInList);
+			          AUIGrid.setGridData(crcStateGridId, result.stateList);
+			          
+			      });
+			
+			
+			}
+			else{
+				Common.alert("Please Select  Date  within a month.");
+				
+			}
+			
 		}else{
 			Common.alert("Select Transaction Date.");
 		}
