@@ -231,13 +231,55 @@
     
     function fn_searchListAjax(){
 
+    	/*    
         if( $("#netSalesMonth").val() ==""  &&  $("#createStDate").val() ==""  &&  $("#createEnDate").val() ==""  ){
         	if($("#ordNo").val() == "" && $("#custName").val() == "" && $("#custIc").val() == "" && $("#salesmanCode").val() == "" && $("#contactNum").val() == "" && $("#promoCode").val() == ""){
         		Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
                 return ;
         	}
          }
+        */
         
+        //  lev 1  Order Date    Order Date    
+        //  lev 2   netSalesMonth
+         
+        
+        if (  $("#netSalesMonth").val() ==""   &&   $("#createStDate").val()  =="" ){
+        	Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
+            return ;
+        } 
+        
+        if (  ($("#createStDate").val()  ==""  &&   $("#createEnDate").val()  =="")     &&  $("#netSalesMonth").val() ==""   ){
+            Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
+            return ;
+        } 
+        
+        if (   $("#netSalesMonth").val() ==""   ){
+        	 if( $("#createStDate").val()  ==""  ||    $("#createEnDate").val()  ==""  ){
+        		 Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
+                 return ;
+        	 }
+        	  var startDate = $('#createStDate').val();
+              var endDate = $('#createEnDate').val();
+              if( fn_getDateGap(startDate , endDate) > 31){
+                  Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
+                  return;
+              }
+        } 
+        
+       if( $("#createStDate").val()  !=""  &&   $("#createEnDate").val()  !=""  ){
+            
+            var startDate = $('#createStDate').val();
+            var endDate = $('#createEnDate').val();
+            if( fn_getDateGap(startDate , endDate) > 31){
+                Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
+                return;
+            }
+        }
+        
+        
+        /*
+       
         //Search Condition max 31Days -- add by Lee seok hee
         if(($("#createStDate").val() != null && $("#createStDate").val() != '') || ($("#createEnDate").val() != null && $("#createEnDate").val() != '')){
         	
@@ -258,9 +300,11 @@
                 Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
                 return;
             }
+            
+         
         }
         
-        
+           */
          
         Common.ajax("GET", "/sales/order/orderColorGridJsonList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
