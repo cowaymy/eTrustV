@@ -16,8 +16,8 @@ function fn_searchASManagement(){
     var endDate = $('#createEndDate').val();
     
     
-    if( fn_getDateGap(startDate , endDate) > 90){
-        Common.alert('Start date can not be more than 90 days before the end date.');
+    if( fn_getDateGap(startDate , endDate) > 180){
+        Common.alert('Start date can not be more than 180 days before the end date.');
         //
         return;
     }
