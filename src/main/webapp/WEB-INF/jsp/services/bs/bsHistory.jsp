@@ -197,6 +197,12 @@ var gridPros = {
 
 function fn_orderSearch(){
 	
+   if($("#orderNumber").val() == ''){
+	   
+	   Common.alert("Please key in the  Order No ");
+        return false;
+    }
+	
     Common.ajax("GET", "/services/bs/bsHistorySearch", $("#searchForm").serialize(), function(orderList) {
     	if(orderList.length>0){
 	        console.log("성공.");
