@@ -749,8 +749,8 @@
 					   SET STUS_ID = #{stusId},
 					       UPD_DT = SYSDATE,
 					       UPD_USER_ID = #{updUserId},
-					       DEPT_CODE_TO = #{deptCode},
-					       BRNCH_ID        = #{branchId},
+					       <!-- DEPT_CODE_TO = #{deptCode},
+					       BRNCH_ID        = #{branchId}, -->
 					       EVT_APPLY_DT = TO_DATE(#{evtApplyDate},'dd/mm/yyyy' )
 					 WHERE  ( PROMO_ID = #{promoId} )           
         </update>

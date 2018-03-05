@@ -4212,11 +4212,11 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 						AND STATUS_ID = 1
       </select>
       
-      <select id="SP_SVC_LOG_SYS0028M" parameterType="Map"  statementType="CALLABLE" >
+      <update id="SP_SVC_LOG_SYS0028M" parameterType="Map"  statementType="CALLABLE" >
       {
             call SP_SVC_LOG_SYS0028M( #{P_MEM_CODE} )
       }
-     </select>
+     </update>
      
      <select id="selectAllBranchCode" parameterType="Map" resultType="egovMap">
         SELECT

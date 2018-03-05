@@ -547,12 +547,16 @@ public class ServiceApiController {
         					}
         					
         					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+        					
+        					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+        						MSvcLogApiService.updateSuccessStatus(transactionId);
+        					}
         				}
         				
 				}else{
-					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-						MSvcLogApiService.updateSuccessStatus(transactionId);
-					}
+//					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+//						MSvcLogApiService.updateSuccessStatus(transactionId);
+//					}
 				}
 				 
 //					//>>>>>>>>>>>>>>>>>logs call
