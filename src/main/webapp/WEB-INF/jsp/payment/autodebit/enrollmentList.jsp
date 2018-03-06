@@ -12,11 +12,11 @@
 //AUIGrid 그리드 객체
 var myGridID;
 var myGridID2;
-var selectedGridValue; 
+var selectedGridValue;
 var gridPros = {
         // 편집 가능 여부 (기본값 : false)
         editable : false,
-        
+
         // 상태 칼럼 사용
         showStateColumn : false
 };
@@ -26,17 +26,17 @@ $(document).ready(function(){
 
      // 그리드 생성
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	
+
 	// Master Grid 셀 클릭시 이벤트
-    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+    AUIGrid.bind(myGridID, "cellClick", function( event ){
         selectedGridValue = event.rowIndex;
     });
-    
+
 });
- 
+
 
 // AUIGrid 칼럼 설정
-var columnLayout = [ 
+var columnLayout = [
     {
         dataField : "enrlid",
         headerText : "<spring:message code='pay.head.enrollId'/>",
@@ -57,9 +57,9 @@ var columnLayout = [
         editable : false,
         width : 250
     }];
-    
+
 //AUIGrid 칼럼 설정
-var columnLayout2 = [ 
+var columnLayout2 = [
     {
         dataField : "salesOrdNo",
         headerText : "<spring:message code='pay.head.orderNo'/>",
@@ -82,7 +82,7 @@ var columnLayout2 = [
         editable : false,
         width : 200
     }];
-    
+
     // ajax list 조회.
     function searchList()
     {      selectedGridValue = undefined;//그리드 value값 초기화
@@ -90,14 +90,14 @@ var columnLayout2 = [
     		AUIGrid.setGridData(myGridID, result);
     	});
     }
-    
+
     view_Enrollment = function() {
         var enrollId;
-        
+
         if(selectedGridValue !=  undefined){
-        	 
+
         	 enrollId=AUIGrid.getCellValue(myGridID, selectedGridValue, "enrlid");
-        	 
+
         	 Common.ajax("GET", "/payment/selectViewEnrollment.do",{"enrollId":enrollId}, function(result) {
         		 $("#popup_wrap").show();
                  $('#enrlId').text(result.enrollInfo.enrlId);
@@ -106,30 +106,30 @@ var columnLayout2 = [
                  $('#c1').text(result.enrollInfo.c1);
                  $('#debtDtFrom').text(result.enrollInfo.debtDtFrom);
                  $('#debtDtTo').text(result.enrollInfo.debtDtTo);
-                 
+
                  myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,gridPros);
                  AUIGrid.setGridData(myGridID2, result.resultList);
 
              },function(jqXHR, textStatus, errorThrown) {
                  Common.alert("<spring:message code='pay.alert.fail'/>");
              });
-        	 
+
         }else{
         	$("#popup_wrap").hide();
         	Common.alert("<spring:message code='pay.alert.noEnrollment'/>");
             return;
         }
     }
-    
+
     new_Enrollment = function() {
     	$("#popup_wrap").hide();
         $("#popup_wrap2").show();
         $("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
     }
-    
+
     //Save Data
     function fn_saveEnroll() {
-    	
+
     	if (validation()) {
     	    Common.ajax("GET", "/payment/saveEnroll.do",  $("#enrollForm").serialize() , function(result) {
 	    		var msg = result.message;
@@ -138,39 +138,39 @@ var columnLayout2 = [
             }, function(jqXHR, textStatus, errorThrown) {
             	Common.alert("<spring:message code='pay.alert.fail'/>");
             });
-    	    
+
         }
     }
-        
+
     function validation() {
         var result = true;
         var message = "";
-        
+
         if($("#cmbIssueBank2 option:selected").val() ==""){
-        	
+
         	Common.alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
         	return;
-        	
+
         }else if($("#rdpCreateDateFr2").val() ==""){
-        	
+
         	Common.alert("<spring:message code='pay.alert.insertDate'/>");
         	return;
-        	
+
         }else if($("#cmbIssueBank2 option:selected").val() =="7"){
-        	
+
         	if($("#rdpCreateDateTo2").val() ==""){
         		Common.alert("<spring:message code='pay.alert.debitDateTo'/>");
                 return;
-                
+
         	}else{
-        		
+
         		var startDate = $('#rdpCreateDateFr2').val();
                 var startDateArr = startDate.split('/');
                 var endDate = $('#rdpCreateDateTo2').val();
                 var endDateArr = endDate.split('/');
                 var startDateCompare = new Date(startDateArr[2], parseInt(startDateArr[1])-1, startDateArr[0]);
                 var endDateCompare = new Date(endDateArr[2], parseInt(endDateArr[1])-1, endDateArr[0]);
-        		
+
         		if($("#rdpCreateDateFr2").val() != ""){
         			if(startDateCompare.getTime() > endDateCompare.getTime()) {
         				 Common.alert("<spring:message code='pay.alert.debitDateFromTo'/>");
@@ -179,14 +179,14 @@ var columnLayout2 = [
         		}
         	}
         }
-        
+
         return result;
     }
-    
+
     function fn_IssueBank() {
 		var issueBankVal = $("#cmbIssueBank2 option:selected").val();
 		var issueMsg = "";
-		
+
 		//초기화
 		$("#issueBankMsg").text("");
         $("#rdpCreateDateFr2").val("");
@@ -199,21 +199,21 @@ var columnLayout2 = [
 			//ALB
 			issueMsg = "+1 Day Send Same Day";
 			 $("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
-			$("#issueBankMsg").text(issueMsg); 
+			$("#issueBankMsg").text(issueMsg);
 			$("#issueBankMsg").css("color","red");
 			break;
-			
+
 		case "3":
 			//CIMB
             //txtRemark.Text = "Same Day";
-			$("#issueBankMsg").text(issueMsg); 
+			$("#issueBankMsg").text(issueMsg);
 			break;
-		
+
 		case "5":
 			//HLBB
-			$("#issueBankMsg").text(issueMsg); 
+			$("#issueBankMsg").text(issueMsg);
             break;
-         
+
 		case "21":
 			//MBB
 			issueMsg = "+2 Days";
@@ -221,13 +221,13 @@ var columnLayout2 = [
             $("#issueBankMsg").text(issueMsg);
             $("#issueBankMsg").css("color","red");
             break;
-            
+
 		case "6":
 			//PBB
             //txtRemark.Text = "Same Day";
-			$("#issueBankMsg").text(issueMsg); 
+			$("#issueBankMsg").text(issueMsg);
             break;
-            
+
 		case "7":
 			//RHB
 			issueMsg = "Current Date";
@@ -236,13 +236,13 @@ var columnLayout2 = [
             $("#rdpCreateDateFr2").attr("disabled",false).attr("readonly",false);
             $("#rdpCreateDateTo2").attr("disabled",false).attr("readonly",false);
             break;
-            
+
 		case "9":
 			//BSN
-			$("#issueBankMsg").text(issueMsg); 
+			$("#issueBankMsg").text(issueMsg);
 			 $("#rdpCreateDateTo2").attr("disabled",true).attr("readonly",false);
             break;
-            
+
 
 		default:
 		   $("#issueBankMsg").text(issueMsg);
@@ -251,12 +251,12 @@ var columnLayout2 = [
 			break;
 		}
 	}
-    
+
     function fn_close() {
     	$('#popup_wrap').hide();
-    	AUIGrid.destroy(myGridID2); 
+    	AUIGrid.destroy(myGridID2);
 	}
-    
+
     function fn_close2() {
         $('#popup_wrap2').hide();
         $("#cmbIssueBank2").val('');
@@ -266,10 +266,16 @@ var columnLayout2 = [
         $("#rdpCreateDateFr2").attr("disabled",false).attr("readonly",false);
         $("#rdpCreateDateTo2").attr("disabled",false).attr("readonly",false);
     }
-    
+
     function fn_clear(){
         $("#searchForm")[0].reset();
     }
+
+    function fn_H2HEnrollment(){
+        window.open("/payment/enrollmentH2H.do",'_self');
+
+    }
+
 </script>
 
 <!-- content start -->
@@ -277,17 +283,17 @@ var columnLayout2 = [
         <ul class="path">
             <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
         </ul>
-        
+
         <!-- title_line start -->
         <aside class="title_line">
             <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
-            <h2>Enrollment</h2>   
+            <h2>Enrollment</h2>
             <ul class="right_btns">
                <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                 <li><p class="btn_blue"><a href="#" onClick="searchList()"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
                </c:if>
                 <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
-            </ul>    
+            </ul>
         </aside>
         <!-- title_line end -->
 
@@ -350,14 +356,13 @@ var columnLayout2 = [
                     <dt>Link</dt>
                     <dd>
                         <ul class="btns">
-                      
                             <li><p class="link_btn"><a href="javascript:view_Enrollment()"><spring:message code='pay.btn.link.viewEnrollment'/></a></p></li>
-                       
+                       </ul>
+                        <ul class="btns">
+                            <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()"><spring:message code='pay.btn.link.enrollment'/></a></p></li>
                         </ul>
-                        <ul class="btns"> 
-                                                
-                            <li><p class="link_btn type2"><a href="#" onclick="javascript:new_Enrollment()"><spring:message code='pay.btn.link.enrollment'/></a></p></li>                            
-                      
+                        <ul class="btns">
+                            <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_H2HEnrollment()">H2H Enrollment</a></p></li>
                         </ul>
                         <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
@@ -416,7 +421,7 @@ var columnLayout2 = [
                     </tr>
                 </tbody>
             </table>
-            
+
             <!-- search_result start -->
             <section class="search_result">
                 <article class="grid_wrap"  id="grid_wrap2" style="width  : 100%;"></article>
@@ -463,17 +468,17 @@ var columnLayout2 = [
                                 <!-- <option value="6">Public Bank</option> -->
                                 <option value="7">RHB Bank</option>
                                 <option value="9">BSN Bank</option>
-                            </select>    
+                            </select>
                         </td>
                     </tr>
                     <tr>
                         <th scope="row">Debit Date<span class="must">*</span></th>
                         <td colspan="3">
-                            <div class="date_set w105p"><!-- date_set start -->   
+                            <div class="date_set w105p"><!-- date_set start -->
                             <p><input id="rdpCreateDateFr2" name="rdpCreateDateFr2" type="text" title="rdpCreateDateFr2" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
                             <span>~</span>
                             <p><input id="rdpCreateDateTo2" name="rdpCreateDateTo2"  type="text" title="rdpCreateDateTo2" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
-                            </div>   
+                            </div>
                             <p><span id="issueBankMsg"></span><p>
                         </td>
 
