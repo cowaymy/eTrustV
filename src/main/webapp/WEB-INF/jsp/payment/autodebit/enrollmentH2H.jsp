@@ -213,7 +213,7 @@ function fn_createFile(){
     var enrollId = AUIGrid.getCellValue(myGridID, selectedGridValue, "enrollmentId");
 
     Common.ajax("GET", "/payment/createEEnrollment.do", {"enrollmentId":enrollId},function(result) {
-                 Common.alert("<b>eEnrollment file has successfully created.</b> Batch Id : " + enrollId);
+                 Common.alert("<b>eEnrollment file has successfully created. <br /> Batch Id : " + enrollId + "</b>");
 
            },
            function(result) {
