@@ -52,13 +52,15 @@ public interface MembershipConvSaleMapper {
 	
 	
 	
-	
 	int  getTaxRate(Map<String, Object> params);
 	EgovMap  getHasBill(Map<String, Object> params);
 	
 	
 	int update_SAL0090D_Stus(Map<String, Object> params);
 	int update_SAL0093D_Stus(Map<String, Object> params);
+	int PAY0031D_INVC_ITM_UPDATE(Map<String, Object> params);
+	
+	
 	
 	
 	

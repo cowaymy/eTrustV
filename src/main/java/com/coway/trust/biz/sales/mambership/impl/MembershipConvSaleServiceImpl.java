@@ -35,6 +35,9 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 	@Resource(name = "membershipConvSaleMapper")
 	private MembershipConvSaleMapper membershipConvSaleMapper;
 	
+	@Resource(name = "membershipRentalQuotationMapper")
+	private MembershipRentalQuotationMapper membershipRentalQuotationMapper;
+	
 	
 	@Resource(name = "posMapper")
 	private PosMapper posMapper;
@@ -252,9 +255,11 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 			  int  pay0007dMapCnt =membershipConvSaleMapper.PAY0007D_insert(pay0007dMap);   
 		     logger.debug("package pay0007dMapCnt  ==>"+pay0007dMapCnt);
 		     
+		     
+		     
 		     ////////////////////Invoice  sum////////////////////
-		     totalCharges       =totalCharges + (packageCharge  -  (packageCharge) - (packageCharge  *  100 / 106));
-		     totalTaxes          = totalTaxes   +  (packageCharge - (packageCharge  *  100 / 106));
+		     totalCharges       =totalCharges +   packageCharge  -   ( packageCharge - (packageCharge  *  100 / 106));
+		     totalTaxes          = totalTaxes   +   (packageCharge  -  (packageCharge  *  100 / 106));
 		     totalAmountDue  = totalAmountDue + packageCharge ;
 		     ////////////////////Invoice  sum////////////////////
 		     
@@ -308,7 +313,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
       	    pay0016dMap.put("accBillCrtUserId",params.get("updator")); 
       	    pay0016dMap.put("accBillGrpId","0"); 
       	    
-      	    pay0016dMap.put("accBillTaxCodeId",TAXRATE == 0 ? 28 : 39); 
+      	    pay0016dMap.put("accBillTaxCodeId",TAXRATE == 0 ?  39 : 32); 
       	    pay0016dMap.put("accBillTaxRate",TAXRATE); 
       	    
       	    if(TAXRATE ==6){
@@ -378,8 +383,13 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 		     
 		     
 		     
+	         
+		     
+		     
+		     
 		     ////////////////////Invoice  sum////////////////////
-		     if(TAXRATE  !=0){
+		    
+		     /*if(TAXRATE  !=0){
 		    	 totalCharges       = totalCharges + filterCharge ;
 			     totalTaxes          = 0;
 			     totalAmountDue  = totalAmountDue + filterCharge ;
@@ -387,7 +397,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
 		    	     totalCharges       = totalCharges +    ( (filterCharge) - (filterCharge  *  100 / 106));
 				     totalTaxes          = totalTaxes    +     ((filterCharge)  - (filterCharge  *  100 / 106));
 				     totalAmountDue  = totalAmountDue + filterCharge ;
-			 }
+			 }*/
 		     ////////////////////Invoice  sum////////////////////
 		     		     
 		       
@@ -438,7 +448,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
      	    pay0016dMap.put("accBillCrtUserId",params.get("updator")); 
      	    pay0016dMap.put("accBillGrpId","0"); 
      	    
-     	    pay0016dMap.put("accBillTaxCodeId",TAXRATE == 0 ? 28 : 39); 
+     	    pay0016dMap.put("accBillTaxCodeId",TAXRATE == 0 ? 39 : 32); 
      	    pay0016dMap.put("accBillTaxRate",TAXRATE); 
      	    
      	    if(TAXRATE ==6){
@@ -515,6 +525,46 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
      	     logger.debug("in Invoice master   Cnt  ==>"+masterCnt);
      	     
      	     
+     	    String zeroRatYn = "Y";
+    		String eurCertYn = "Y";
+    		
+            params.put("srvSalesOrderId", params.get("srvSalesOrdId"));
+    	       
+    		int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
+    		if(zeroRat > 0 ){
+    			zeroRatYn = "N";
+    		}	
+    		
+    		int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(params);
+    		if(EURCert > 0 ){
+    			eurCertYn = "N";
+    		}	
+    		
+    		if(zeroRatYn.equals("Y") || eurCertYn.equals("Y") ){
+    			TAXRATE = 6;
+    		}else{
+    			TAXRATE = 0;
+    		}
+    			
+             logger.debug("zeroRat ==========================>>  " + zeroRatYn);
+             logger.debug("EURCert ==========================>>  " + eurCertYn);
+     
+     	     
+     	     
+     	     Map<String, Object>  pay31dMap_update = new HashMap<String, Object>();
+     	     pay31dMap_update.put("V_INVC_ITM_CHRG", totalCharges);
+     	     pay31dMap_update.put("V_INVC_ITM_GST_TXS", totalTaxes);
+     	     pay31dMap_update.put("V_INVC_ITM_AMT_DUE", totalAmountDue);
+     	     
+     	     pay31dMap_update.put("taxRate", TAXRATE);
+     	     pay31dMap_update.put("srvMemQuotId", params.get("srvMemQuotId"));
+     	     pay31dMap_update.put("taxInvcId", taxInvcId);
+     	    
+     	     logger.debug(" in Invoice master   ==>"+pay31dMap.toString());
+     		 int UPCnt =membershipConvSaleMapper.PAY0031D_INVC_ITM_UPDATE(pay31dMap_update);   
+     	     logger.debug("in Invoice master   Cnt  ==>"+masterCnt);
+     	    
+     	     
      	     //detail 
      	     if(masterCnt >0){
          	         double srvMemBsAmt   =  Double.parseDouble(CommonUtils.nvl(params.get("srvMemBsAmt")));
@@ -566,7 +616,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
         	    		 Map<String, Object>  selMap = new HashMap<String, Object>();
         	    		 
         	    		 selMap.put("taxInvcId", taxInvcId);
-        	    		 selMap.put("srvSalesOrdId", params.get("srvSalesOrdId"));
+        	    		 selMap.put("srvSalesOrdNo", params.get("srvSalesOrdNo"));
         	    		 selMap.put("taxRate", TAXRATE);
         	    		 selMap.put("srvMemQuotId", params.get("srvMemQuotId"));
         	    		 List<EgovMap>  list =	membershipConvSaleMapper.getFilterListData(selMap);
