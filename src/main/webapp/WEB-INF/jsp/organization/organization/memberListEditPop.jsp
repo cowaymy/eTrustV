@@ -16,14 +16,14 @@ function fn_memberSave(){
 	            $("#searchSt1").val(insAddressForm.searchSt.value);
                 $("#traineeType").val(($("#traineeType").value));
                 $("#spouseDob").val($.trim($("#spouseDob").val()));
-                
+
                 $("#memberType").attr("disabled",false);
                 var jsonObj =  GridCommon.getEditData(myGridID_Doc);
                 jsonObj.form = $("#memberAddForm").serializeJSON();
                 Common.ajax("POST", "/organization/memberUpdate",  jsonObj, function(result) {
                 console.log("message : " + result.message );
                 Common.alert(result.message,fn_close);
-                
+
 				});
                 $("#memberType").attr("disabled",true);
 }
@@ -36,12 +36,12 @@ function fn_saveConfirm(){
         Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
         /*
         Common.ajax("GET","/organization/memberListUpdate.do", $("#memberAddForm").serialize(), function(result){
-            console.log(result);              
+            console.log(result);
             Common.alert("Member Save successfully.",fn_close);
-            
+
         });
         */
-        
+
     }
 }
 function fn_docSubmission(){
@@ -51,13 +51,13 @@ function fn_docSubmission(){
 		console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID_Doc, result);
-        AUIGrid.resize(myGridID_Doc,1000,400); 
+        AUIGrid.resize(myGridID_Doc,1000,400);
         $("#memberType").attr("disabled",true);
     });
 }
 
 function fn_departmentCode(value){
-	console.log("fn_departmentCode"); 
+	console.log("fn_departmentCode");
 	if($("#memberType").val() != 2){
 	        $("#hideContent").hide();
 	    }else{
@@ -83,7 +83,7 @@ function fn_departmentCode(value){
         };
            //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
            //doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
-           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
+           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
 	   case 3 :
 		   $("#groupCode[memberLvl]").val(3);
@@ -94,9 +94,9 @@ function fn_departmentCode(value){
         };
            //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
            //doGetComboSepa("/common/selectBranchCodeList.do",2 , '-',''   , 'branch' , 'S', '');
-           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
+           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
-           
+
 	   case 4 :
 		   $("#groupCode[memberLvl]").val(100);
            $("#groupCode[flag]").val("-");
@@ -106,7 +106,7 @@ function fn_departmentCode(value){
         };
            //doGetComboSepa("/common/selectBranchCodeList.do",100 , '-',''   , 'branch' , 'S', '');
            break;
-           
+
 	   case 5 :
 		   $("#groupCode[memberLvl]").val(3);
            $("#groupCode[flag]").val("%CCS%");
@@ -116,7 +116,7 @@ function fn_departmentCode(value){
         };
            //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
            //doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
-           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , ''); 
+           doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
            break;
 	}
 }
@@ -125,7 +125,7 @@ function fn_departmentCode(value){
 $("#cmbRace").load(function() {
 	var race = "${memberView.c40}";
     var race_no = "${memberView.c61}";
-    
+
     alert(race_no);
     $("#cmbRace option[value="+ race_no +"]").attr("selected", true);
     //$("#cmbRace").val(race).attr("selected", true);
@@ -134,47 +134,47 @@ $("#cmbRace").load(function() {
 */
 
 $(document).ready(function() {
-	
+
 	//doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
-	  
+
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
-    
+
     doGetCombo('/sales/customer/getNationList', '338' , '' ,'country' , 'S');
-    doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S'); 
+    doGetCombo('/sales/customer/getNationList', '338' , '' ,'national' , 'S');
     doGetCombo('/common/selectCodeList.do', '2', '','cmbRace', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '4', '','marrital', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '3', '','language', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
-    
+
     if($("#traineeType").val() == "2" || $("#traineeType").val() == "3"){
-     var groupCode  = {groupCode : $("#traineeType").val()}; 
+     var groupCode  = {groupCode : $("#traineeType").val()};
                    Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
-        
+
                         $("#course").find('option').each(function() {
                             $(this).remove();
-                        });                     
+                        });
                          console.log("-------------------------" + JSON.stringify(result));
                          if (result!= null) {
                          $("#course").append("<option value=''>Choose One</option>");
                             for( var i=0; i< result.length; i++) {
                              $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
                             }
-                         }  
-                     });    
+                         }
+                     });
     }
     doGetCombo('/organization/selectBusinessType.do', '', '','businessType', 'S' , '');
     /*fill edit field*/
     /*
     var memberType = "${memberView.memType}";
     var gender = "${memberView.gender}";
-    
+
     $("#memberType option[value="+ memberType +"]").attr("selected", true);
-    
+
     var race_no = "${memberView.c61}";
     alert(race_no);
     $("#cmbRace option[value="+ race_no +"]").attr("selected", true);
-    
+
     if(gender=="F"){
         $("#gender_f").prop("checked", true)
     }
@@ -188,35 +188,35 @@ $(document).ready(function() {
     //$("#cmbRace option:contains("+race+")").attr('selected',true);
     //$("#cmbRace").val(race_no).attr("selected", true);
     /**/
-    
+
     /*
     $("#deptCd").change(function (){
     	doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
     */
-    
+
 	createAUIGridDoc();
 	fn_docSubmission();
 	//fn_departmentCode();
 	$("#state").change(function (){
 		var state = $("#state").val();
-		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');  
+		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');
 	});
 	$("#area").change(function (){
         var area = $("#area").val();
-        doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');  
+        doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');
     });
-	
+
 	/* $("#memberType").change(function (){
         var memberType = $("#memberType").val();
         //fn_departmentCode(memberType);
      }); */
-	
-	
+
+
 	fn_getMemInfo();
 
     $("#searchdepartment").change(function(){
-        doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  ''); 
+        doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  '');
     });
 });
 
@@ -244,14 +244,14 @@ function fn_setMemInfo(data){
 		$("#memberType option[value="+ data.memType +"]").attr("selected", true);
 		console.log("1 : " +data.memType);
 		fn_departmentCode(data.memType);
-	
-	
-	
+
+
+
 	/* var memType = "${memberView.memType}";
     alert("memType : " + memType);
     $("#memberType option:eq("+memType+")").attr("selected", true);
     $("#memberType").attr("disabled", true); */
-	
+
 	var jsonObj =  GridCommon.getEditData(myGridID_Doc);
     //doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
     //doGetComboSepa("/common/selectBranchCodeList.do",4 , '-',''   , 'branch' , 'S', '');
@@ -265,42 +265,42 @@ function fn_setMemInfo(data){
     }
 
     $("#cmbRace option[value="+ data.c61 +"]").attr("selected", true);
-    
-    
+
+
     //$("#national option[value="+ data.c35 +"]").attr("selected", true);
-    
+
     $("#nric").val(data.nric);
-    
+
     $("#fullName").val(data.c65);
-    
+
     $("#marrital option[value="+ data.c27 +"]").attr("selected", true);
-    
+
     $("#email").val(data.email);
-    
+
     $("#mobileNo").val(data.telMobile);
-    
+
     $("#officeNo").val(data.telOffice);
-    
+
     $("#residenceNo").val(data.telHuse);
-    
+
     $("#sponsorCd").val(data.c51);
-    
+
     $("#sponsorNm").val(data.c52);
-    
+
     $("#sponsorNric").val(data.c53);
     //alert(data.c68);
     $("#searchSt").val(data.area);
-    
+
     $("#areaId").val(data.areaId);
-    
+
     if(data.areaId!=null&&jQuery.trim(data.areaId).length>0){
     	Common.ajax("GET", "/organization/selectAreaInfo.do", {areaId : data.areaId}, function(result) {
-            
+
             fn_addMaddr(result.area, result.city, result.postcode, result.state, result.areaId, result.iso);
-           
+
        });
     }
-    
+
     /*
     if(data.c4!=null&&jQuery.trim(data.c4).length>0){
         $("#branch option[value="+ data.c4 +"]").attr("selected", true);
@@ -309,90 +309,90 @@ function fn_setMemInfo(data){
     if(data.c41!=null&&jQuery.trim(data.c41).length>0){
         $("#deptCd option[value="+ data.c41 +"]").attr("selected", true);
     }
-    
+
     if(data.c62!=null&&jQuery.trim(data.c62).length>0){
         //$("#transportCd option[value="+ data.c62 +"]").attr("selected", true);
-        doGetCombo('/common/selectCodeList.do', '7', data.c62,'transportCd', 'S' , ''); 
+        doGetCombo('/common/selectCodeList.do', '7', data.c62,'transportCd', 'S' , '');
     }
-    
+
     if(data.bank!=null&&jQuery.trim(data.bank).length>0){
         $("#issuedBank option[value="+ data.bank +"]").attr("selected", true);
     }
-    
+
     $("#bankAccNo").val(data.bankAccNo);
-    
+
     if(data.c8!=null&&jQuery.trim(data.c8).length>0){
         $("#educationLvl option[value="+ data.c8 +"]").attr("selected", true);
     }
-    
+
     if(data.c10!=null&&jQuery.trim(data.c10).length>0){
         $("#language option[value="+ data.c10 +"]").attr("selected", true);
     }
-    
+
     if(data.religion!=null&&jQuery.trim(data.religion).length>0){
         $("#religion option[value="+ data.religion +"]").attr("selected", true);
     }
-    
+
     $("#trNo").val(data.trNo);
-    
+
     $("#userId").val(data.c64);
-    
-    
-    
-    
+
+
+
+
     $("#searchdepartment option[value='"+ data.mainDept +"']").attr("selected", true);
-    
+
     $("#inputSubDept option[value='"+ data.subDept +"']").attr("selected", true);
-    
+
     $("#course option[value='"+ data.course +"']").attr("selected", true);
-    
+
     $("#selectBranch option[value='"+ data.c3 +"']").attr("selected", true);
-    
-    
+
+
     }
 	else{
 		  $("#memberType option[value="+ data.memType +"]").attr("selected", true);
 	        console.log("1 : " +data.memType);
 	        fn_departmentCode(data.memType);
-	        
+
 	        $("#memberNm").val(data.memName);
 	        $("#nric").val(data.nric);
-	        
+
 	        if(data.gender=="F"){
 	            $("#gender_f").prop("checked", true)
 	        }
 	        if(data.gender=="M"){
 	            $("#gender_m").prop("checked", true)
 	        }
-	        
+
 	        $("#email").val(data.email);
-	        
+
 	        $("#mobileNo").val(data.telMobile);
-	        
+
 	        $("#officeNo").val(data.telOffice);
-	        
+
 	        $("#sponsorCd").val(data.sponCd);
-	        
+
 	        $("#residenceNo").val(data.telHuse);
-	        
+
 	        if(data.bank !=null){
 	            $("#issuedBank option[value="+ data.bank +"]").attr("selected", true);
-	            $("#issuedBank").val(data.bank);	        
+	            $("#issuedBank").val(data.bank);
 	         }
-	        
+
 	        $("#marrital option[value="+ data.marrital +"]").attr("selected", true);
 	        $("#cmbRace").val(data.aplicntRace);
 	        $("#bankAccNo").val(data.bankAccNo);
 	        $("#statusID").val(data.stusId);
-	        
-		
+
+
 	}
-	
-	
-	
+
+
+
     //doGetCombo('/common/selectCodeList.do', '7', '','transportCd', 'S' , '');
-    
-    
+
+
 }
 
 
@@ -404,7 +404,7 @@ function createAUIGridDoc() {
 		    headerText : "DocumentId",
 		    editable : false,
 		    width : 0
-		}                 
+		}
        ,{
         dataField : "codeName",
         headerText : "Document",
@@ -424,14 +424,14 @@ function createAUIGridDoc() {
          // 체크박스 Visible 함수
             checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
             	if(item.docQty == 0){
-	            	AUIGrid.updateRow(myGridID_Doc, { 
-	            		 "docQty" : "1" 
-	            		   
-	            		}, rowIndex); 
+	            	AUIGrid.updateRow(myGridID_Doc, {
+	            		 "docQty" : "1"
+
+	            		}, rowIndex);
             	}
                 return true;
             }
-            
+
         }
     }, {
         dataField : "docQty",
@@ -444,90 +444,90 @@ function createAUIGridDoc() {
             step : 1,
             textEditable : true
         },
-        width : 130, 
+        width : 130,
         checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
             if(item.docQty != 0){
-                AUIGrid.updateRow(myGridID_Doc, { 
-                      "submission" : "1" 
-                       
-                    }, rowIndex); 
+                AUIGrid.updateRow(myGridID_Doc, {
+                      "submission" : "1"
+
+                    }, rowIndex);
             }else{
-                AUIGrid.updateRow(myGridID_Doc, { 
-                    "submission" : "0" 
-                  }, rowIndex); 
+                AUIGrid.updateRow(myGridID_Doc, {
+                    "submission" : "0"
+                  }, rowIndex);
             }
             return true;
         }
-        
+
     }
 
     ];
      // 그리드 속성 설정
     var gridPros = {
-        
-        // 페이징 사용       
+
+        // 페이징 사용
         usePaging : true,
-        
+
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
+
         editable : true,
-        
-        showStateColumn : true, 
-        
+
+        showStateColumn : true,
+
         displayTreeOpen : true,
-        
-        
+
+
         headerHeight : 30,
-        
+
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
+
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
+
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : false,
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID_Doc = AUIGrid.create("#grid_wrap_doc", columnLayout, gridPros);
-    
+
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false,
-    
+
 };
 
 //Validation Check
@@ -545,9 +545,9 @@ function fn_saveValidation(){
         message += "* Please select equal or bigger than today date.<br />";
     }
 	*/
-	if($("#joinDate").val() == ''){    
+	if($("#joinDate").val() == ''){
         valid = false;
-        message += "* Please select joined date.<br/>";        
+        message += "* Please select joined date.<br/>";
     }
 	if($("#memberNm").val() == ''){
         valid = false;
@@ -577,7 +577,7 @@ function fn_saveValidation(){
         valid = false;
         message += "* Please select race.<br/> ";
     }
-	//if($("#marrital").index(this) <=-1){    
+	//if($("#marrital").index(this) <=-1){
 	if($("#marrital").val()==""){
         valid = false;
         message += "* Please select marrital.<br/> ";
@@ -644,7 +644,7 @@ function fn_saveValidation(){
             }
         }
     }
-    
+
     if($("#areaId").val() == ''){
         message += "* Please key in the address.<br/>";
         valid = false;
@@ -663,8 +663,8 @@ function fn_saveValidation(){
     {
         if (jQuery.trim($("#officeNo").val()).length>0)
         {
-        	
-            if(!jQuery.isNumeric(jQuery.trim($("#mobileNo").val())))            
+
+            if(!jQuery.isNumeric(jQuery.trim($("#mobileNo").val())))
             {
                 valid = false;
                 message += "* Invalid telephone number (Mobile).<br/>";
@@ -687,7 +687,7 @@ function fn_saveValidation(){
             }
         }
     }
-    
+
     if ((jQuery.trim($("#spouseContat").val())).length>0)
     {
     	if(!jQuery.isNumeric(jQuery.trim($("#spouseContat").val())))
@@ -724,7 +724,7 @@ function fn_saveValidation(){
                 valid = false;
                 message += "* Please key in the bank account no.<br/>";
             }
-        	
+
             //if (cmbMemDepCode.SelectedIndex <= -1)
             //{
             //    valid = false;
@@ -747,7 +747,7 @@ function fn_saveValidation(){
                 valid = false;
                 message += "* Please select the transport code. \n ";
             } */
-        	
+
             //if (cmbMemDepCode.SelectedIndex <= -1)
             //{
             //    valid = false;
@@ -755,7 +755,7 @@ function fn_saveValidation(){
             //}
             break;
         case "3":
-        
+
             //if (cmbMemDepCode.SelectedIndex <= -1)
             //{
             //    valid = false;
@@ -764,7 +764,7 @@ function fn_saveValidation(){
             break;
         case "4":
 
-        	
+
             break;
         default:
             break;
@@ -774,7 +774,7 @@ function fn_saveValidation(){
     //region Document Submission
     /*
     if(action !="1"){
-    	
+
     }else
     {
         RadNumericTextBox RadNumtxt = new RadNumericTextBox();
@@ -824,7 +824,7 @@ function fn_saveValidation(){
         //RadWindowManager1.RadAlert("<b>" + message + "</b>", 450, 160, "Save Member Summary", "callBackFn", null);
         Common.alert(message);
     }
-    
+
 	return valid;
 }
 
@@ -836,28 +836,28 @@ function fn_addrSearch(){
     Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
 }
 function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
-    
+
     if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
-        
+
         $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
         $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
         $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
         $("#mState").attr({"disabled" : false  , "class" : "w100p"});
-        
+
         //Call Ajax
-       
+
         CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
-        
+
         var cityJson = {state : mstate}; //Condition
         CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
-        
+
         var postCodeJson = {state : mstate , city : mcity}; //Condition
         CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
-        
+
         var areaJson = {groupCode : mpostcode};
         var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
         CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
-        
+
         $("#areaId").val(areaid);
         $("#_searchDiv").remove();
     }else{
@@ -866,106 +866,106 @@ function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
 }
 //Get Area Id
 function fn_getAreaId(){
-    
+
     var statValue = $("#mState").val();
     var cityValue = $("#mCity").val();
     var postCodeValue = $("#mPostCd").val();
     var areaValue = $("#mArea").val();
-    
-    
-    
+
+
+
     if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
-        
+
         var jsonObj = { statValue : statValue ,
                               cityValue : cityValue,
                               postCodeValue : postCodeValue,
                               areaValue : areaValue
                             };
         Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
-            
+
              $("#areaId").val(result.areaId);
-            
+
         });
-        
+
     }
-    
+
 }
 
 function fn_selectCity(selVal){
-    
+
     var tempVal = selVal;
-    
+
     if('' == selVal || null == selVal){
-       
+
          $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
          $('#mPostCd').val('');
          $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
          $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
          $('#mArea').val('');
          $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
     }else{
-        
+
         $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
-        
+
         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
         $('#mArea').val('');
         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
         //Call ajax
         var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
         CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
     }
-    
+
 }
 
 function fn_selectPostCode(selVal){
-    
+
     var tempVal = selVal;
-    
+
     if('' == selVal || null == selVal){
-       
+
         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
         $('#mArea').val('');
         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
     }else{
-        
+
         $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
-        
+
         //Call ajax
         var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
         CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
     }
-    
+
 }
 
 function fn_selectState(selVal){
-    
+
     var tempVal = selVal;
-    
+
     if('' == selVal || null == selVal){
         //전체 초기화
-        fn_initAddress();   
-        
+        fn_initAddress();
+
     }else{
-        
+
         $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
-        
+
         $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
         $('#mPostCd').val('');
         $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
         $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
         $('#mArea').val('');
         $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-        
+
         //Call ajax
         var cityJson = {state : tempVal}; //Condition
         CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
     }
-    
+
 }
 
 
@@ -981,9 +981,9 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     $("#sponsorCd").val(msponsorCd);
     $("#sponsorNm").val(msponsorNm);
     $("#sponsorNric").val(msponsorNric);
-    
+
     $("#_searchSponDiv").remove();
-    
+
 }
 
 
@@ -1020,7 +1020,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
 <input type="hidden"   id="groupCode[memberLvl]" name="groupCode[memberLvl]"/>
 <input type="hidden"   id="groupCode[flag]" name="groupCode[flag]"/>
 
- 
+
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -1076,7 +1076,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     </td>
     <th scope="row">Joined Date<span class="must">*</span></th>
     <td>
-    <input type="text" title="Create start Date" id="joinDate" name="joinDate" placeholder="DD/MM/YYYY" class="j_date"  value="<c:out value="${memberView.c30}"/>"/>
+    <input type="text" title="Create start Date" id="joinDate" name="joinDate" placeholder="DD/MM/YYYY" class="j_date"  disabled="disabled"  value="<c:out value="${memberView.c30}"/>"/>
     </td>
 </tr>
 <tr>
@@ -1099,7 +1099,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     <th scope="row">Nationality<span class="must">*</span></th>
     <td>
     <span><c:out value="${memberView.c36} " /></span>
-    <!-- 
+    <!--
     <select class="w100p" id="national" name="national">
     </select>
      -->
@@ -1147,7 +1147,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     <th scope="row">Area<span class="must">*</span></th>
     <td>
     <select class="w100p" id="area" name="area">
-        
+
     </select>
     </td>
 </tr>
@@ -1211,7 +1211,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
         </c:forEach>
     </select>
     </td>
-    <!-- 
+    <!--
     <td>
     <select class="w100p" id="branch" name="branch">
     </select>
@@ -1230,7 +1230,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
      <span><c:out value="${memberView.c41}"/></span>
      <!-- <span><c:out value="${memberView.c41} - ${memberView.c22} - ${memberView.c23} "/></span> -->
     </td>
-    <!-- 
+    <!--
     <td>
     <select class="w100p" id="deptCd" name="deptCd">
     </select>
@@ -1255,7 +1255,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
             <option value="">Choose One</option>
         <c:forEach var="list" items="${Religion}" varStatus="status">
             <option value="${list.detailcodeid}">${list.detailcodename } </option>
-        </c:forEach>        
+        </c:forEach>
     </select>
     </td>
     <th scope="row">e-Approval Status</th>
@@ -1303,7 +1303,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
         <option selected>Choose One</option>
          <c:forEach var="list" items="${mainDeptList}" varStatus="status">
              <option value="${list.deptId}">${list.deptName } </option>
-        </c:forEach>  
+        </c:forEach>
     </select>
     </td>
     <th scope="row">Sub Department</th>
@@ -1312,10 +1312,10 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
         <option selected>Choose One</option>
         <c:forEach var="list" items="${subDeptList}" varStatus="status">
              <option value="${list.codeId}">${list.codeName } </option>
-        </c:forEach>  
+        </c:forEach>
     </select>
     </td>
-</tr>   
+</tr>
 <tr>
 <th scope="row">Businesses Type</th>
       <td>
@@ -1326,8 +1326,8 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
 <td>
     <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck"/></span>
  </td>
- 
- 
+
+
  <td>
  </td>
 </tr>
@@ -1425,7 +1425,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     <th scope="row"  class="hideContent">Cody PA Expiry<span class="must">*</span></th>
     <td  class="hideContent">
     <%-- <span><span><c:out value="${PAExpired.agExprDt}"/></span></span>  --%>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"  value="${PAExpired.agExprDt}"/> 
+    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date" id="codyPaExpr" name="codyPaExpr"  value="${PAExpired.agExprDt}"/>
     </td>
 </tr>
 </tbody>
@@ -1507,7 +1507,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
 </aside><!-- title_line end -->
 
 <form id="insAddressForm" name="insAddressForm" method="POST">
-    
+
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -1538,13 +1538,13 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
             <tr>
                <th scope="row">Area(4)<span class="must">*</span></th>
                 <td colspan="3">
-                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
+                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
                 </td>
             </tr>
             <tr>
                  <th scope="row">City(2)<span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
+                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
                 </td>
                 <th scope="row">PostCode(3)<span class="must">*</span></th>
                 <td>
