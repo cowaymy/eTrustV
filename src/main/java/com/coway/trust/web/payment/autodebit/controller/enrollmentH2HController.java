@@ -173,7 +173,7 @@ public class enrollmentH2HController {
 				+ ".txt";
 
 		// 파일 디렉토리
-		File file = new File(filePath + "/WebShare/FTP Folder/H2H eEnrollment/CIMB/" + sFile);
+		File file = new File(filePath + "/FTP Folder/H2H eEnrollment/CIMB/" + sFile);
 
 		// 디렉토리 생성
 		if (!file.getParentFile().exists()) {
