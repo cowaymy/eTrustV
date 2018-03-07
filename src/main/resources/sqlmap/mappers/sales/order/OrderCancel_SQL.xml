@@ -76,7 +76,11 @@
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END UPD_DT,
                    A.TYPE_ID,
                    A.DOC_ID,
-                   A.REF_ID  
+                   A.REF_ID,
+                  ( SELECT   CODE  
+                    FROM SYS0038M 
+                    WHERE STUS_CODE_ID =  A.RSO_STUS
+                   ) RSO_STUS
 			    FROM ( SELECT V.REQ_ID  ,
 			              V.REQ_NO  ,
 			              V.ORD_ID  ,
@@ -132,7 +136,8 @@
 			              V.ATTACH,
 			              V.TYPE_ID,
 			              V.DOC_ID,
-			              V.REF_ID   
+			              V.REF_ID,
+			              V.RSO_STUS   
 			       FROM SAL1007V V) A
 			 WHERE 1=1 
 			 <if test="typeIdList != null and typeIdList != ''">
@@ -189,6 +194,7 @@
             <if test="endRecallDt != null and endRecallDt != '' ">           
                 AND CALL_RECALL_DT <![CDATA[   <=   ]]>  TO_DATE(#{endRecallDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
             </if>
+               
     </select>
     
     <select id="dscBranch" parameterType="Map" resultType="egovMap">
@@ -203,7 +209,7 @@
     </select>
     
     <select id="cancelReqInfo" parameterType="Map" resultType="egovMap">
-        SELECT A.REQ_ID ,
+        SELECT distinct A.REQ_ID ,
 			       A.REQ_NO ,
 			       A.ORD_ID ,
 			       A.REQ_STUS_ID ,
