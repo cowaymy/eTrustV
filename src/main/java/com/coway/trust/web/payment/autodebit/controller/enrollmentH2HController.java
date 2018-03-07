@@ -169,7 +169,7 @@ public class enrollmentH2HController {
 	public void createEnrollmentH2HFileCIMB(EgovMap enrollH2HMap, List<EgovMap> enrollH2HDetailList) throws Exception {
 
 		String sFile = "MANDATE_ORG2120_"
-				+ CommonUtils.changeFormat(String.valueOf(enrollH2HMap.get("debtDt")), "dd/MM/yyyy", "yyyyMMdd")
+				+ CommonUtils.changeFormat(String.valueOf(enrollH2HMap.get("debtDt")), "dd/MM/yyyy", "MMddyy")
 				+ ".txt";
 
 		// 파일 디렉토리
@@ -202,6 +202,8 @@ public class enrollmentH2HController {
 		BigDecimal amount = null;
 		BigDecimal hunred = new BigDecimal(100);
 
+		String fixLimit = null;
+
 		if (enrollH2HDetailList.size() > 0) {
 			for (int i = 0; i < enrollH2HDetailList.size(); i++) {
 				Map<String, Object> map = (Map<String, Object>) enrollH2HDetailList.get(i);
@@ -214,7 +216,8 @@ public class enrollmentH2HController {
 				// sLimit = String.valueOf(((java.math.BigDecimal) map.get("billAmt")).longValue() * 100);
 				// 금액 계산
 				amount = (BigDecimal) map.get("billAmt");
-				sLimit = String.valueOf(amount.multiply(hunred).longValue());
+				sLimit = String.valueOf((amount.multiply(hunred).longValue()));
+								fixLimit = StringUtils.leftPad(sLimit, 14, '0');
 
 				sDocno = (String.valueOf(map.get("cntrctNOrdNo"))).trim().length() > 30
 						? (String.valueOf(map.get("cntrctNOrdNo"))).trim().substring(0, 30)
@@ -222,11 +225,11 @@ public class enrollmentH2HController {
 				sDrName = (String.valueOf(map.get("accName"))).trim().length() > 20
 						? (String.valueOf(map.get("accName"))).trim().substring(0, 20)
 						: StringUtils.rightPad((String.valueOf(map.get("accName"))).trim(), 20, " ");
-				sNRIC = (String.valueOf(map.get("accNric"))).trim().length() > 12
+				/*sNRIC = (String.valueOf(map.get("accNric"))).trim().length() > 12
 						? (String.valueOf(map.get("accNric"))).trim().substring(0, 12)
-						: StringUtils.rightPad((String.valueOf(map.get("accNric"))).trim(), 12, " ");
+						: StringUtils.rightPad((String.valueOf(map.get("accNric"))).trim(), 12, " ");*/
 
-				stextDetails = sRcdType + sDrAccNo + sOrgCode + sDrName + sLimit + sFixAmt + sDocno + sNRIC + sfreq
+				stextDetails = sRcdType + sDrAccNo + sOrgCode + sDrName + fixLimit + sFixAmt + sDocno + sNRIC + sfreq
 						+ sfreql + sReserve;
 
 				out.write(stextDetails);
