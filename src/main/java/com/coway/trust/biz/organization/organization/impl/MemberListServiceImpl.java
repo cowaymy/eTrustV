@@ -1370,8 +1370,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		    vacationEntry.put("promoId", 0);
 			vacationEntry.put("requestNo", "");
 			vacationEntry.put("statusId", 60);
-			vacationEntry.put("memTypeId",params.get("memtype"));
-			vacationEntry.put("memberId", params.get("memberId"));
+			vacationEntry.put("memTypeId",params.get("requestMemberType"));
+			vacationEntry.put("memberId", params.get("requestMemberId"));
 			vacationEntry.put("created", new Date());
 			vacationEntry.put("creator", userId);
 			vacationEntry.put("updated", new Date());

@@ -11,6 +11,7 @@ var myGridID_Doc;
 function fn_memberSave(){
 
                 $("#memberType").attr("disabled",false);
+                $("#nric").attr("disabled",false);
 	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
 	            $("#searchSt1").val(insAddressForm.searchSt.value);
@@ -26,6 +27,7 @@ function fn_memberSave(){
 
 				});
                 $("#memberType").attr("disabled",true);
+                $("#nric").attr("disabled",true);
 }
 
 function fn_close(){
@@ -1106,7 +1108,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     </td>
     <th scope="row">NRIC (New)<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p" />
+    <input type="text" title="" placeholder="NRIC (New)" id="nric" name="nric" class="w100p" disabled="true"/>
     </td>
     <th scope="row">Marrital Status<span class="must">*</span></th>
     <td>

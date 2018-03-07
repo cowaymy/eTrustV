@@ -1020,6 +1020,7 @@ function fn_winClose(){
 <div id="requestVacationPop" style="">
 <form  id="requestVacationForm" method="post">
 <input type="hidden" value="<c:out value="${memberView.memId}"/>" id="requestMemberId" name="requestMemberId"/>
+<input type="hidden" value="<c:out value="${memberView.memType}"/>" id="requestMemberType" name="requestMemberType"/>
 <%-- <input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue" name="codeValue"/>
  --%>
  <aside class="title_line"><!-- title_line start -->

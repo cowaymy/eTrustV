@@ -2303,7 +2303,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
           VALUES (
           ORG0007D_PROMO_ID_SEQ.NEXTVAL
            , #{requestNo}
-           , 4
+           , #{statusId}
            , 2740
            , #{memTypeId}
            , #{memberId}
@@ -2404,7 +2404,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                          Extent1.DEPT_CODE || ' - ' || Extent2.NAME C2
          FROM ORG0005D Extent1
                 JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
-          WHERE  ( Extent1.MEM_LVL = #{memberLvl} or Extent1.MEM_LVL = '2')
+          WHERE  ( Extent1.MEM_LVL = #{memberLvl} <!-- or Extent1.MEM_LVL = '2' -->)
                    AND (Extent1.BRNCH_ID = #{branchVal})
                    AND ( Extent1.DEPT_CODE LIKE #{flag})
                    AND ( 1 = Extent1.ORG_STUS_CODE_ID ) ) Distinct1  ORDER BY  Distinct1.C2

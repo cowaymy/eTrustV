@@ -363,6 +363,12 @@ $(document).ready(function() {
 	$("#memberType").change(function (){
 		$("#nric").val('');
 		  fn_docSubmission();
+		  if ($("#memberType").val() == "4") {
+			  $("#memberCd").attr("disabled", false);
+		  } else {
+			  $("#memberCd").attr("disabled", true);
+		  }
+		  
     });
 
 	$("#memberType").click(function (){
@@ -403,6 +409,9 @@ $(document).ready(function() {
      $('#nric').blur(function() {
     	 if ($('#nric').val().length > 0) {
     		 checkNRIC();
+    		 if ($('#nric').val().length == 12) {
+    			 autofilledbyNRIC();
+    		 }
          }
      });
      
@@ -411,6 +420,12 @@ $(document).ready(function() {
     		 fn_sponsorCd();
     	 }
      });
+     
+     if ($("#memberType").val() == "4") {
+         $("#memberCd").attr("disabled", false);
+     } else {
+         $("#memberCd").attr("disabled", true);
+     }
 
 });
 function createAUIGridDoc() {
@@ -908,6 +923,31 @@ function checkNRIC(){
     return returnValue;
     
 }
+
+function autofilledbyNRIC(){
+    
+    //if ($("#memberType").val() == '4') {
+    	var nric = $("#nric").val().replace('-', '');
+    	var autoGender = nric.substr(11,1);
+    	//var autoDOB = nric.substr(0,6);
+    	var autoDOB_year = nric.substr(0,2);
+    	var autoDOB_month = nric.substr(2,2);
+    	var autoDOB_date = nric.substr(4,2);
+    	
+    	if (parseInt(autoGender)%2 == 0) {
+    		$("input:radio[name='gender']:radio[value='F']").prop("checked", true);
+    	} else {
+    		$("input:radio[name='gender']:radio[value='M']").prop("checked", true);
+    	}
+    	
+    	if (parseInt(autoDOB_year) < 20) {
+            $("#Birth").val(autoDOB_date+"/"+autoDOB_month+"/"+"20"+autoDOB_year);
+        } else {
+        	$("#Birth").val(autoDOB_date+"/"+autoDOB_month+"/"+"19"+autoDOB_year);
+        }
+    //}
+    
+}
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -977,6 +1017,12 @@ function checkNRIC(){
     <col style="width:*" />
 </colgroup>
 <tbody>
+<!-- <tr>
+    <th scope="row">Member Code</th>
+    <td colspan="5">
+    <input type="text" title="" id="memberCd" name="memberCd" placeholder="Member Code" class="w100p" disabled="disabled" />
+    </td>
+</tr> -->
 <tr>
     <th scope="row">Member Name<span class="must">*</span></th>
     <td colspan="3">
