@@ -11,6 +11,8 @@ public interface SalesTrBookMapper {
 
 	List<EgovMap> selectTrBookList(Map<String, Object> params);
 
+	List<EgovMap> selectTrBookListByMem(Map<String, Object> params);
+
 	EgovMap selectTrBookDetailInfo(Map<String, Object> params);
 
 	List<EgovMap> selectTrBookDetailList(Map<String, Object> params);
@@ -73,9 +75,9 @@ public interface SalesTrBookMapper {
 
 
 	List<EgovMap> getOrgCodeListByMemTypeStaff(Map<String, Object> params);
-	
+
 	List<EgovMap> getOrgCodeListByMemType(Map<String, Object> params);
-	
+
 	List<EgovMap> getCreateByList() throws Exception;
 
 	List<EgovMap> selelctRequestBahchList(Map<String, Object> params);

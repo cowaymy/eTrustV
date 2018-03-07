@@ -47,15 +47,15 @@ public interface SalesTrBookService {
 	String saveTranSingle(Map<String, Object> params);
 
 	List<EgovMap> getOrganizationCodeList(Map<String, Object> params);
-	
+
 	String saveTranBulk(Map<String, Object> params);
 
 	List<EgovMap> selectTransitInfoList(Map<String, Object> params);
 
 	List<EgovMap> getCreateByList() throws Exception;
-	
+
 	List<EgovMap> selelctRequestBahchList(Map<String, Object> params);
-	
+
 	EgovMap selelctRequestBahchInfo(Map<String, Object> params);
 
 	void updateBkReqStus(Map<String, Object> params);
@@ -77,4 +77,7 @@ public interface SalesTrBookService {
 	void insertKeepIntoBox(Map<String, Object> params);
 
 	String insertKeepIntoNewBox(Map<String, Object> params);
+
+	List<EgovMap> selectTrBookListByMem(Map<String, Object> params);
+
 }
