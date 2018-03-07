@@ -72,7 +72,7 @@
         L56.STK_TYPE_ID PARTS_TYPE,
         L56.STK_CTGRY_ID,
         <!-- QTY STOCK_QTY, -->
-        (case when L63.SERIAL_NO is not null then 1 else QTY end) STOCK_QTY,
+        nvl((CASE WHEN L63.SERIAL_NO IS NOT NULL THEN 1 ELSE QTY END),0)STOCK_QTY,
         WH_LOC_DESC,
         L63.SERIAL_NO SERIAL_NO,
         T1.REF_DOC_NO SERVICE_NO,
