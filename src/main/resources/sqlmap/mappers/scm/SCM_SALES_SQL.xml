@@ -2277,7 +2277,7 @@ SELECT STK_ID
     </select>
 
     <select id="selectBeforeOrdCnt" parameterType="Map" resultType="int">
-			SELECT ORD_CNT FROM SCM0030S WHERE SCM_YEAR = #{scmYearCbBox}, SCM_WEEK_TH= #{scmPeriodCbBoxBefore}, STOCK_CODE = #{stockCode}, CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+			SELECT ORD_CNT FROM SCM0030S WHERE SCM_YEAR = #{scmYearCbBox} AND SCM_WEEK_TH= #{scmPeriodCbBoxBefore} AND STOCK_CODE = #{stockCode} AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
     </select>
 
     <select id="selectSafetyStock" parameterType="Map" resultType="int">
