@@ -74,7 +74,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_NonRentOutIns" + CommonUtils.getNowDate() + ".xls");
+				"ColorGrid" + File.separator + "ColorGrid_NonRentOutIns" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
@@ -89,7 +89,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_NonRentOutIns_S" + CommonUtils.getNowDate() + ".xls");
+				"ColorGrid" + File.separator + "ColorGrid_NonRentOutIns_S" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel_S...");
@@ -104,7 +104,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_Daily_2017_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2017_Jan_Dec_S" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
@@ -149,7 +149,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"RCM" + File.separator + "RCM_Daily_S" + CommonUtils.getNowDate() + ".xls");
+				"RCM" + File.separator + "RCM_Daily_S" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] RCM_Daily_2015_S...");
@@ -164,7 +164,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"RCM" + File.separator + "RCM_Daily_S_2" + CommonUtils.getNowDate() + ".xls");
+				"RCM" + File.separator + "RCM_Daily_S_2" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] RCM_Daily_2015_S_2...");
@@ -179,7 +179,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "ColorGrid_Simplification" + File.separator
-				+ "ColorGrid_Simplification_2014_2015" + CommonUtils.getNowDate() + ".xls");
+				+ "ColorGrid_Simplification_2014_2015" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] ColorGrid_Simplification_2014_2015...");
@@ -194,7 +194,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_2006-2012_S" + CommonUtils.getNowDate() + ".xls");
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_2006-2012_S" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] ColorGrid_Daily_2015_2006-2012_S...");
@@ -209,7 +209,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_2013-2014_S" + CommonUtils.getNowDate() + ".xls");
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_2013-2014_S" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] ColorGrid_Daily_2015_2013-2014_S...");
@@ -224,7 +224,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_Jan_April_S" + CommonUtils.getNowDate() + ".xls");
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_Jan_April_S" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] ColorGrid_Daily_2015_Jan_April_S...");
@@ -239,7 +239,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_May_Dec_S" + CommonUtils.getNowDate() + ".xls");
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2015_May_Dec_S" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] ColorGrid_Daily_2015_May_Dec_S...");
@@ -254,7 +254,7 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"ColorGrid" + File.separator + "ColorGrid_Daily_2016_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2016_Jan_Dec_S" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] ColorGrid_Daily_2016_Jan_Dec_S...");
@@ -449,7 +449,7 @@ public class ReportBatchController {
 		params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_Simplified.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"RCM" + File.separator + "RCM_Daily_Simplified" + CommonUtils.getNowDate() + ".xls");
+				"Simplified_RCM" + File.separator + "RCM_Daily_Simplified" + CommonUtils.getNowDate() + ".xlsx");
 
 		this.view(null, null, params);
 		LOGGER.info("[END] RCM_Daily_Simplified...");
