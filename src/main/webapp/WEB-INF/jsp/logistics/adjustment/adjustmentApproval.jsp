@@ -371,7 +371,7 @@ Common.ajax("GET" , url , param , function(result){
 </aside><!-- title_line end -->
 <ul class="left_btns">
 
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
     <li><p class="btn_blue"><a id="approve"><span class="approve"></span>Approve</a></p></li>
   <li><p class="btn_blue"><a id="reject"><span class="reject"> </span>Reject</a></p></li>
     <li><p class="btn_blue"><a id="approve2"><span class="approve2"></span> Approve</a></p></li>
@@ -381,7 +381,7 @@ Common.ajax("GET" , url , param , function(result){
                                 </div>
     </p></li>
   <li><p class="btn_blue"><a id="complete"><span class="complete"></span>Complete</a></p></li>
-</c:if>  
+<%-- </c:if>   --%>
 </ul>
 <section class="search_table"><!-- search_table start -->
 <form id="searchForm" name="searchForm" >
