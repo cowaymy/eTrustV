@@ -337,6 +337,17 @@ public class OrderCancelController {
 		return "sales/order/orderCancelProductReturnRawPop";
 	}
 
+	@RequestMapping(value="/orderCancelProductReturnLogBookListingPop.do")
+	public String orderCancelProductReturnLogBookListingPop(){
+
+		return "sales/order/orderCancelProductReturnLogBookListingPop";
+	}
+
+	@RequestMapping(value="/orderCancelProductReturnYellowSheetPop.do")
+	public String orderCancelProductReturnYellowSheetPop(){
+
+		return "sales/order/orderCancelProductReturnYellowSheetPop";
+	}
 	@RequestMapping(value="/ctAssignBulkPop.do")
 	public String ctAssignBulkPop(@RequestParam Map<String, Object>params, ModelMap model){
 
