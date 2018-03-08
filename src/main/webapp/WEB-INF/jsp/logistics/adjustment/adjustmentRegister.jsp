@@ -517,9 +517,9 @@ function fn_ReqAdjLocList(){
     </td>
     <td>
     <ul class="left_btns">
-<c:if test="${PAGE_AUTH.funcView == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
         <li><p class="btn_blue2"><a id="search">Search</a></p></li>
-</c:if>    
+<%-- </c:if>     --%>
     </ul>
     </td><td colspan="2"/>
 </tr>
