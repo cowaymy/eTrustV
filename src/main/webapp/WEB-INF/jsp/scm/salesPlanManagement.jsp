@@ -48,7 +48,7 @@ var gplanMasterId = "";
 var insertVisibleFields = ["scmGrYear","scmGrWeek","preM3AvgOrded","preM3AvgIssu","newStockTypeId","newStockCode","m1Ord", "m2Ord"  ,"m3Ord" ,"m33" ,"m22",  "m11" ,"m0Plan"  ,"m0Ord" ] ;
 var gAddrowCnt = 0;
 
-$(function() 
+$(function()
 {
  //stock type
 	fnSelectStockTypeComboList('15');
@@ -58,22 +58,22 @@ $(function()
   fnSelectPeriodReset();
  //setting scm teamCode ComboBox
 	fnSetSCMTeamComboBox();
- //setting StockCategoryCode ComboBox	
-	fnSetStockCategoryComboBox(); 
- //setting StockCode ComboBox	
-	fnSetStockComboBox(); 
+ //setting StockCategoryCode ComboBox
+	fnSetStockCategoryComboBox();
+ //setting StockCode ComboBox
+	fnSetStockComboBox();
 
 });
 
 /*********************************/
- var mstColumnLayout = 
-    [ 
-        {    
+ var mstColumnLayout =
+    [
+        {
             dataField : "codeMasterId",
             headerText : "<spring:message code='sys.generalCode.grid1.MASTER_ID' />",
             width : "8%",
         }, {
-            dataField : "codeMasterName", 
+            dataField : "codeMasterName",
             headerText : "<spring:message code='sys.generalCode.grid1.MASTER_NAME' />",
             style : "aui-grid-left-column",
             width : "25%",
@@ -102,7 +102,7 @@ $(function()
                 showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                 listFunction : function(rowIndex, columnIndex, item, dataField) {
                    var list = getDisibledComboList();
-                   return list;                 
+                   return list;
                 },
                 keyField : "id"
             }
@@ -118,31 +118,31 @@ var options = {
                   useGroupingPanel : false,
                   showRowNumColumn : false, // 순번 칼럼 숨김
                 };
-    
+
     // AUIGrid 그리드를 생성합니다.
     gInsertGridID = GridCommon.createAUIGrid("insertGridDivID", mstColumnLayout,"codeMasterId", options);
 
     // 푸터 객체 세팅
     //AUIGrid.setFooter(myGridID, footerObject);
-    
+
     // 에디팅 시작 이벤트 바인딩
     AUIGrid.bind(gInsertGridID, "cellEditBegin", auiCellEditignHandler);
-    
+
     // 에디팅 정상 종료 이벤트 바인딩
     AUIGrid.bind(gInsertGridID, "cellEditEnd", auiCellEditignHandler);
-    
+
     // 에디팅 취소 이벤트 바인딩
     AUIGrid.bind(gInsertGridID, "cellEditCancel", auiCellEditignHandler);
-    
-    // 행 추가 이벤트 바인딩 
+
+    // 행 추가 이벤트 바인딩
     AUIGrid.bind(gInsertGridID, "addRow", auiAddRowHandler);
-    
-    // 행 삭제 이벤트 바인딩 
+
+    // 행 삭제 이벤트 바인딩
     AUIGrid.bind(gInsertGridID, "removeRow", auiRemoveRowHandler);
 
 
     // cellClick event.
-    AUIGrid.bind(gInsertGridID, "cellClick", function( event ) 
+    AUIGrid.bind(gInsertGridID, "cellClick", function( event )
     {
         //console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
         gSelRowIdx = event.rowIndex;
@@ -151,19 +151,19 @@ var options = {
                 || String(event.value).length < 1)
             {
               return false;
-            } 
+            }
 
             $("#mstCdId").val( event.value);
-            
+
             fn_getDetailCode(gInsertGridID, event.rowIndex);
-        
+
     });
 
  // 셀 더블클릭 이벤트 바인딩
-    AUIGrid.bind(gInsertGridID, "cellDoubleClick", function(event) 
+    AUIGrid.bind(gInsertGridID, "cellDoubleClick", function(event)
     {
       console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-    });   
+    });
 
 
     /**********************/
@@ -183,111 +183,111 @@ function fnHideGrid()
   $("#insertGridDivID").hide();
   $("#dynamic_DetailGrid_wrap").show();
 }
- 
+
 /********************************/
 
 function fnSelectPeriodReset()
 {
    CommonCombo.initById("scmPeriodCbBox");  // reset...
    var periodCheckBox = document.getElementById("scmPeriodCbBox");
-       periodCheckBox.options[0] = new Option("Select a YEAR","");  
+       periodCheckBox.options[0] = new Option("Select a YEAR","");
 }
 
 function fnConfirm(flag)
 {
-	  if ($("#scmYearCbBox").val().length < 1) 
+	  if ($("#scmYearCbBox").val().length < 1)
 	  {
 	    Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
 	    return false;
-	  } 
+	  }
 
-	  if ($("#scmPeriodCbBox").val().length < 1) 
+	  if ($("#scmPeriodCbBox").val().length < 1)
 	  {
 	    Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
 	    return false;
 	  }
 
-	  if ($("#scmTeamCbBox").val().length < 1) 
+	  if ($("#scmTeamCbBox").val().length < 1)
 	  {
 	    Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
 	    return false;
 	  }
-    
+
 	  Common.ajax("POST"
 			        , "/scm/updateSalesPlanConfirm.do"
-	            , $("#MainForm").serializeJSON()    
-	            , function(result) 
+	            , $("#MainForm").serializeJSON()
+	            , function(result)
 	              {
 	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	                fnSearchBtnList();
 	                console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
-	              } 
-	            , function(jqXHR, textStatus, errorThrown) 
+	              }
+	            , function(jqXHR, textStatus, errorThrown)
 	              {
-		              try 
+		              try
 		              {
 		                console.log("Fail Status : " + jqXHR.status);
 		                console.log("code : "        + jqXHR.responseJSON.code);
 		                console.log("message : "     + jqXHR.responseJSON.message);
 		                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-		              } 
-		              catch (e) 
+		              }
+		              catch (e)
 		              {
 		                console.log(e);
 		              }
-	
+
 		              Common.alert("Fail : " + jqXHR.responseJSON.message);
-		              
-	              }); 
-} 
+
+	              });
+}
 
 function fnUnConfirm(obj)
 {
-	  if ($("#scmYearCbBox").val().length < 1) 
+	  if ($("#scmYearCbBox").val().length < 1)
 	  {
 	    Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
 	    return false;
-	  } 
+	  }
 
-	  if ($("#scmPeriodCbBox").val().length < 1) 
+	  if ($("#scmPeriodCbBox").val().length < 1)
 	  {
 	    Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
 	    return false;
 	  }
 
-	  if ($("#scmTeamCbBox").val().length < 1) 
+	  if ($("#scmTeamCbBox").val().length < 1)
 	  {
 	    Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
 	    return false;
 	  }
-	    
+
 	  Common.ajax("POST"
 			        , "/scm/updateSalesPlanUnConfirm.do"
-	            , $("#MainForm").serializeJSON()    
-	            , function(result) 
+	            , $("#MainForm").serializeJSON()
+	            , function(result)
 	              {
 	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	                fnSearchBtnList();
 	                console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
-	              } 
-	            , function(jqXHR, textStatus, errorThrown) 
+	              }
+	            , function(jqXHR, textStatus, errorThrown)
 	              {
-		              try 
+		              try
 		              {
 		                console.log("Fail Status : " + jqXHR.status);
 		                console.log("code : "        + jqXHR.responseJSON.code);
 		                console.log("message : "     + jqXHR.responseJSON.message);
 		                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-		              } 
-		              catch (e) 
+		              }
+		              catch (e)
 		              {
 		                console.log(e);
 		              }
-	
+
 		              Common.alert("Fail : " + jqXHR.responseJSON.message);
-		              
-	              }); 
-} 
+
+	              });
+}
 
 
 function fnDelete(obj)
@@ -295,7 +295,7 @@ function fnDelete(obj)
 	  var data = {};
 	  var checkedItemsList = AUIGrid.getCheckedRowItemsAll(myGridID); // 접혀진 자식들이 체크된 경우 모두 얻기
 
-	  if(checkedItemsList.length <= 0) 
+	  if(checkedItemsList.length <= 0)
 	  {
 	    Common.alert("<spring:message code='expense.msg.NoData' htmlEscape='false'/>");
 	    return false;
@@ -312,125 +312,85 @@ function fnDelete(obj)
 	    Common.ajax("POST"
 	               ,"/scm/deleteStockCodeList.do"
 	               , data
-	               , function(result) 
+	               , function(result)
 	                 {
 	                   Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	                   fnSearchBtnList() ;
-	                     
+
 	                   console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
-	                 } 
-	              ,  function(jqXHR, textStatus, errorThrown) 
+	                 }
+	              ,  function(jqXHR, textStatus, errorThrown)
 	                 {
-	                   try 
+	                   try
 	                   {
 	                     console.log("Fail Status : " + jqXHR.status);
 	                     console.log("code : "        + jqXHR.responseJSON.code);
 	                     console.log("message : "     + jqXHR.responseJSON.message);
 	                     console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	                   } 
-	                   catch (e) 
+	                   }
+	                   catch (e)
 	                   {
 	                     console.log(e);
 	                   }
-	                   
+
 	                   Common.alert("Fail : " + jqXHR.responseJSON.message);
 	                })
 	  }
-}  
+}
 
 function fnCreate(obj)
 {
-  if ($("#scmYearCbBox").val().length < 1) 
+  if ($("#scmYearCbBox").val().length < 1)
   {
     Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
     return false;
-  } 
+  }
 
-  if ($("#scmPeriodCbBox").val().length < 1) 
+  if ($("#scmPeriodCbBox").val().length < 1)
   {
     Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
     return false;
   }
 
-  if ($("#scmTeamCbBox").val().length < 1) 
+  if ($("#scmTeamCbBox").val().length < 1)
   {
     Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
     return false;
   }
-	  
+
 	Common.ajax("POST", "/scm/insertSalesPlanMaster.do"
-	          , $("#MainForm").serializeJSON()    
-	          , function(result) 
+	          , $("#MainForm").serializeJSON()
+	          , function(result)
 	           {
 	              Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 	              fnSettiingHeader();
 	              console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
-	           } 
-	         , function(jqXHR, textStatus, errorThrown) 
+	           }
+	         , function(jqXHR, textStatus, errorThrown)
 	          {
-	            try 
+	            try
 	            {
 	              console.log("Fail Status : " + jqXHR.status);
 	              console.log("code : "        + jqXHR.responseJSON.code);
 	              console.log("message : "     + jqXHR.responseJSON.message);
 	              console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	            } 
-	            catch (e) 
+	            }
+	            catch (e)
 	            {
 	              console.log(e);
 	            }
 	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	          }); 
+	          });
 
 }
 
-function fnCreateNewSupplyPlan(obj)
-{
-    if ($("#scmYearCbBox").val().length < 1) 
-    {
-      Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
-      return false;
-    } 
 
-    if ($("#scmPeriodCbBox").val().length < 1) 
-    {
-      Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
-      return false;
-    }
-
-    // SP_SCM_PLAN_BY_CDC_INS Call
-    Common.ajax("POST"
-              , "/scm/insertOrderSummarySPCall.do"
-              , $("#MainForm").serializeJSON()    
-              , function(result) 
-               {              
-                 if (result.data.split('_')[0] == "OkSP")
-                   Common.alert("[ " +result.data.split('_')[1] +" Month ] " + "<spring:message code='sys.scm.planByCdc.creation'/>" + " " + "<spring:message code='pay.head.success'/>");
-                 else if (result.data == "FailSP")
-                   Common.alert("[ " +result.data.split('_')[1] +" Month ] " + "<spring:message code='sys.scm.planByCdc.creation'/>" + " " + "<spring:message code='pay.head.fail'/>");
-               } 
-             , function(jqXHR, textStatus, errorThrown) 
-              {
-                try 
-                {
-                  console.log("Fail Status : " + jqXHR.status);
-                  console.log("code : "        + jqXHR.responseJSON.code);
-                  console.log("message : "     + jqXHR.responseJSON.message);
-                  console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-                } 
-                catch (e) 
-                {
-                  console.log(e);
-                }
-                Common.alert("Fail : " + jqXHR.responseJSON.message);
-              }); 
-}
 
 function fnNumberCheck(inputs)
 {
-		if(/[^0123456789]/g.test(inputs)) 
+		if(/[^0123456789]/g.test(inputs))
 		{
-		  Common.alert("<spring:message code='sys.common.alert.validationNumber' />");  
+		  Common.alert("<spring:message code='sys.common.alert.validationNumber' />");
 		  inputs = "";
 		  return false;
 		}
@@ -438,7 +398,7 @@ function fnNumberCheck(inputs)
 			return true;
 }
 
-function getTimeStamp() 
+function getTimeStamp()
 {
   function leadingZeros(n, digits) {
       var zero = '';
@@ -459,72 +419,72 @@ function getTimeStamp()
 
 //excel export
 function fnExcelExport(Obj,fileNm)
-{   // 1. grid ID 
+{   // 1. grid ID
     // 2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     // 3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
    if ($(Obj).parents().hasClass("btn_disabled") == true)
      return false;
-   
-   GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileNm+'_'+getTimeStamp() ); 
+
+   GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileNm+'_'+getTimeStamp() );
 }
 
 function fnSelectStockTypeComboList(codeId)
 {
     CommonCombo.make("scmStockType"
-              , "/scm/selectComboSupplyCDC.do"  
-              , { codeMasterId: codeId }       
-              , ""                         
-              , {  
-                  id  : "codeId",     // use By query's parameter values(real value)               
+              , "/scm/selectComboSupplyCDC.do"
+              , { codeMasterId: codeId }
+              , ""
+              , {
+                  id  : "codeId",     // use By query's parameter values(real value)
                   name: "codeName",   // display
                   type: "M",
                   chooseMessage: "All"
                  }
-              , "");     
+              , "");
 }
 
 function fnSelectExcuteYear()
 {
     // Call Back
-    var fnSelectScmPeriodCallBack = function () 
+    var fnSelectScmPeriodCallBack = function ()
         {
           $('#scmYearCbBox').on("change", function () //  When 'scmYearCbBox' Change Event Excute.
           {
             var $this = $(this);  // selected item , will use scmPeriodCbBox's input-parameter.
 
             //console.log("period_values: " + $this.val());
-                
-            CommonCombo.initById("scmPeriodCbBox");  // reset... 
 
-            if (FormUtil.isNotEmpty($this.val())) 
+            CommonCombo.initById("scmPeriodCbBox");  // reset...
+
+            if (FormUtil.isNotEmpty($this.val()))
             {
                 CommonCombo.make("scmPeriodCbBox"
-                        , "/scm/selectPeriodByYear.do"  
-                        , { year: $this.val() }       
-                        , ""                         
-                        , {  
-                            id  : "weekTh",          
+                        , "/scm/selectPeriodByYear.do"
+                        , { year: $this.val() }
+                        , ""
+                        , {
+                            id  : "weekTh",
                             name: "scmPeriod",
                             chooseMessage: "Select a WEEK"
                            }
                         , "");
             }
             else
-            { 
+            {
             	fnSelectPeriodReset();
             }
-            
+
           });
         };
-	
+
 	  CommonCombo.make("scmYearCbBox"
                    , "/scm/selectExcuteYear.do" // url
                    , ""                         // input Param
                    , ""                         // selectData
-                   , {  
+                   , {
                 	     id  : "year",
                        name: "year",            // option
-                       chooseMessage: "Year" 
+                       chooseMessage: "Year"
                      }
                    , fnSelectScmPeriodCallBack); // callback
 }
@@ -534,23 +494,23 @@ function fnSetSCMTeamComboBox()
     CommonCombo.make("scmTeamCbBox"
     	             , "/scm/selectScmTeamCode.do"
     	             , {codeMasterId: 337}
-    	             , "" 
-    	             , {  
+    	             , ""
+    	             , {
 							         id  : "code",
 							         name: "codeName",
-							         chooseMessage: "ALL"  
+							         chooseMessage: "ALL"
 							       }
-				           , "");  
+				           , "");
 }
 
 function fnSetStockComboBox()
 {
     CommonCombo.make("stockCodeCbBox"
-                   , "/scm/selectStockCode.do"  
-                   , ""                         
-                   , ""                         
-                   , {  
-                       id  : "stkCode",          
+                   , "/scm/selectStockCode.do"
+                   , ""
+                   , ""
+                   , {
+                       id  : "stkCode",
                        name: "stkDesc",
                        type: "M"
                      }
@@ -560,26 +520,26 @@ function fnSetStockComboBox()
 function fnSetStockCategoryComboBox()
 {
 	  // Call Back
-    var stockCodeCallBack = function () 
+    var stockCodeCallBack = function ()
         {
-        
-    	    $('#stockCategoryCbBox').on("change", function () 
+
+    	    $('#stockCategoryCbBox').on("change", function ()
           {
             var $this = $(this);
 
             //console.log("values: " + $this.val());
-    	          
+
             CommonCombo.initById("stockCodeCbBox");
 
-            if (FormUtil.isNotEmpty($this.val())) 
+            if (FormUtil.isNotEmpty($this.val()))
             {
                 CommonCombo.make("stockCodeCbBox"
-				                        , "/scm/selectStockCode.do"  
-				                        , { codeIds: $this.val() + "" }  //       
-				                        , ""                         
-				                        , {  
-				                        	  id  : "stkCode",          
-									                  name: "stkDesc",  
+				                        , "/scm/selectStockCode.do"
+				                        , { codeIds: $this.val() + "" }  //
+				                        , ""
+				                        , {
+				                        	  id  : "stkCode",
+									                  name: "stkDesc",
 									                  type: "M"
 									                }
 						                    , "");
@@ -588,30 +548,30 @@ function fnSetStockCategoryComboBox()
             { // ALL
             	fnSetStockComboBox();
             }
-            
+
           });
         };
-        
+
     CommonCombo.make("stockCategoryCbBox"
     	             , "/scm/selectStockCategoryCode.do"
-    	             , "" 
-    	             , "" 
-    	             , { 
-                         id  : "codeId",          
-                         name: "codeName",  
+    	             , ""
+    	             , ""
+    	             , {
+                         id  : "codeId",
+                         name: "codeName",
                          type: "M"
-        	           }  
+        	           }
 				           , stockCodeCallBack  // callback
-				            );  
+				            );
 }
 
-function getDealerComboListAjax(callBack) 
+function getDealerComboListAjax(callBack)
 {
     Common.ajaxSync("GET", "/common/selectGSTExportDealerList.do"
                  , $("#MainForm").serialize()
-                 , function(result) 
+                 , function(result)
                  {
-                    for (var i = 0; i < result.length; i++) 
+                    for (var i = 0; i < result.length; i++)
                     {
                       var list = new Object();
                           list.id = result[i].dealerId;
@@ -621,39 +581,39 @@ function getDealerComboListAjax(callBack)
                     }
 
                     //if you need callBack Function , you can use that function
-                    if (callBack) 
+                    if (callBack)
                     {
                       callBack(dealerComboBoxList);
                     }
-                    
+
                   });
     return dealerComboBoxList;
   }
 
 //AUIGrid 메소드
 //컬럼 선택시 상세정보 세팅.
-function fnSetSelectedColumn(selGrdidID, rowIdx)  
-{     
+function fnSetSelectedColumn(selGrdidID, rowIdx)
+{
  $("#selAuthId").val(AUIGrid.getCellValue(selGrdidID, rowIdx, "zreExptId"));
-  
- //console.log("selAuthId: "+ $("#selAuthId").val() + " dealerName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "dealerName") );                
+
+ //console.log("selAuthId: "+ $("#selAuthId").val() + " dealerName: " + AUIGrid.getCellValue(selGrdidID, rowIdx, "dealerName") );
 }
 
-function auiCellEditignHandler(event) 
+function auiCellEditignHandler(event)
 {
-  if(event.type == "cellEditBegin") 
+  if(event.type == "cellEditBegin")
   {
       console.log("에디팅 시작(cellEditBegin) : (rowIdx: " + event.rowIndex + ",columnIdx: " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
-  } 
-  else if(event.type == "cellEditEnd") 
+  }
+  else if(event.type == "cellEditEnd")
   {
       console.log("에디팅 종료(cellEditEnd) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value );
-      
+
       if (fnNumberCheck(event.value) == false)
       AUIGrid.setCellValue(myGridID, event.rowIndex , event.columnIndex, "");
-          
-  } 
-  else if(event.type == "cellEditCancel") 
+
+  }
+  else if(event.type == "cellEditCancel")
   {
       console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
   }
@@ -661,7 +621,7 @@ function auiCellEditignHandler(event)
 }
 
 //행 추가 이벤트 핸들러
-function auiAddRowHandler(event) 
+function auiAddRowHandler(event)
 {
   console.log(event.type + " 이벤트\r\n" + "삽입된 행 인덱스 : " + event.rowIndex + "\r\n삽입된 행 개수 : " + event.items.length);
 }
@@ -670,66 +630,66 @@ function fnCancel(Obj)
 {
 	if ($(Obj).parents().hasClass("btn_disabled") == true)
 	  return false;
-	
+
 	AUIGrid.hideColumnByDataField(myGridID, insertVisibleFields );
 	fnSearchBtnList();
 }
 
 //MstGrid 행 추가, 삽입
-function fnInsertAddRow(Obj) 
+function fnInsertAddRow(Obj)
 {
 	if ($(Obj).parents().hasClass("btn_disabled") == true)
 	  return false;
-	    
+
   if (gAddrowCnt >= 1)
   {
 	  Common.alert("<spring:message code='sys.msg.limitMore' arguments='AddRowCount ; 1' htmlEscape='false' argumentSeparator=';'/>");
 	  return false;
   }
 
-	if ($("#scmYearCbBox").val().length < 1) 
+	if ($("#scmYearCbBox").val().length < 1)
   {
     Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
     return false;
-  } 
+  }
 
-  if ($("#scmPeriodCbBox").val().length < 1) 
+  if ($("#scmPeriodCbBox").val().length < 1)
   {
     Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
     return false;
   }
 
-  if ($("#scmTeamCbBox").val().length < 1) 
+  if ($("#scmTeamCbBox").val().length < 1)
   {
     Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
     return false;
   }
 
-  if ($("#stockCategoryCbBox").val().length < 1) 
+  if ($("#stockCategoryCbBox").val().length < 1)
   {
     Common.alert("<spring:message code='sys.msg.necessary' arguments='Stock Category' htmlEscape='false'/>");
     return false;
   }
 
   AUIGrid.showColumnByDataField(myGridID, insertVisibleFields );
-	
-	var addStockCode = $("#stockCodeCbBox").val();   
-	
-  var item = new Object();
-  
-  item.scmGrYear     = $("#scmYearCbBox").val() ;   
-  item.scmGrWeek     = $("#scmPeriodCbBox").val() ;    
-  item.team            = $("#scmTeamCbBox").val() ; 
-  item.code            = "" ; 
 
-  item.category        = "" ;  
-  
+	var addStockCode = $("#stockCodeCbBox").val();
+
+  var item = new Object();
+
+  item.scmGrYear     = $("#scmYearCbBox").val() ;
+  item.scmGrWeek     = $("#scmPeriodCbBox").val() ;
+  item.team            = $("#scmTeamCbBox").val() ;
+  item.code            = "" ;
+
+  item.category        = "" ;
+
   item.preM3AvgOrded   ="" ;
   item.preM3AvgIssu    ="" ;
   item.newStockTypeId  = "";
   item.newStockCode    = "";
-  
-  item.m1Ord          ="0" ;   
+
+  item.m1Ord          ="0" ;
   item.m2Ord          ="" ;
   item.m3Ord          ="" ;
   item.m3             ="" ;
@@ -797,71 +757,71 @@ function fnInsertAddRow(Obj)
 
 
 //행 삭제 이벤트 핸들러
-function auiRemoveRowHandler(event) 
+function auiRemoveRowHandler(event)
 {
   console.log (event.type + " 이벤트 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
   gAddrowCnt = 0;
 }
 
 //행 삭제 이벤트 핸들러
-function auiRemoveRowHandlerDetail(event) 
+function auiRemoveRowHandlerDetail(event)
 {
   console.log (event.type + " 이벤트상세 :  " + ", 삭제된 행 개수 : " + event.items.length + ", softRemoveRowMode : " + event.softRemoveRowMode);
   gAddrowCnt = 0;
 }
 
 //행 삭제 메소드
-function fnRemoveRow() 
+function fnRemoveRow()
 {
   AUIGrid.removeRow(myGridID,"selectedIndex");
 }
 
-function fnSearchRolePopUp() 
+function fnSearchRolePopUp()
 {
    var popUpObj = Common.popupDiv("/authorization/searchRolePop.do"
        , $("#MainForm").serializeJSON()
        , null
-       , true  
+       , true
        , "SearchRolePop"
        );
-        
+
 }
 
 function fnSetParamAuthCd(myGridID, rowIndex)
 {
   $("#zreExptId").val(AUIGrid.getCellValue(myGridID, rowIndex, "zreExptId"));
   $("#dealerName").val(AUIGrid.getCellValue(myGridID, rowIndex, "dealerName"));
-   
-  //console.log("zreExptId: "+ $("#zreExptId").val() + "dealerName: "+ $("#dealerName").val() );     
+
+  //console.log("zreExptId: "+ $("#zreExptId").val() + "dealerName: "+ $("#dealerName").val() );
 }
 
 function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
 {
   var dynamicSummaryLayout = [];
-  var dynamicSummaryOption = {}; 
+  var dynamicSummaryOption = {};
   var dynamicSummaryFooterLayout = [];
   var dynamicSummaryHeadList = {};
   var dynamicSummaryHeadList2 = {};
 
 	// 이전에 그리드가 생성되었다면 제거함.
-  if(AUIGrid.isCreated(summaryGridID)) 
+  if(AUIGrid.isCreated(summaryGridID))
 	{
       AUIGrid.destroy(summaryGridID);
   }
 
-  dynamicSummaryHeadList = summaryHeadList; 
-  dynamicSummaryHeadList2 = summaryHeadList2; 
+  dynamicSummaryHeadList = summaryHeadList;
+  dynamicSummaryHeadList2 = summaryHeadList2;
 
 	dynamicSummaryOption = {
 										       // 푸터 보이게 설정
-							             showFooter : true,            
+							             showFooter : true,
 									         showRowNumColumn : false, //순번 칼럼 숨김
 							             // editable : true,
 							             showStateColumn : false, // 행 상태 칼럼 보이기
 							             showEditedCellMarker : false,                  // 셀 병합 실행
 							             enableCellMerge : false,
-							             selectionMode       : "singleRow",  //"multipleCells",    
-							             fixedColumnCount    : 1, 
+							             selectionMode       : "singleRow",  //"multipleCells",
+							             fixedColumnCount    : 2,
 							             headerHeight : 35
 	                       };
 
@@ -869,7 +829,7 @@ function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
     // footer
    dynamicSummaryFooterLayout= [ {
 																   labelText : "∑",
-																   positionField : dynamicSummaryHeadList.categoryH1 
+																   positionField : dynamicSummaryHeadList.categoryH1
 		                             }
 														   , {  // m+1
 														        dataField : dynamicSummaryHeadList.m1H2,
@@ -877,7 +837,7 @@ function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
 														        operation : "SUM",
 														        formatString : "#,##0",
                                     dataType : "numeric",
-                                    style : "my-column", 
+                                    style : "my-column",
 														     }
 														   , {  // m+2
 														        dataField : dynamicSummaryHeadList.m2H2,
@@ -885,7 +845,7 @@ function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
 														        operation : "SUM",
 														        formatString : "#,##0",
                                     dataType : "numeric",
-                                    style : "my-column", 														        
+                                    style : "my-column",
 														     }
 														   , {  // m+3
 														        dataField : dynamicSummaryHeadList.m3H3,
@@ -903,21 +863,21 @@ function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
 														        dataType : "numeric",
 							                      style : "my-column",
 														     }
-														     
-                                ]  
+
+                                ]
    var iSummaryLoopCnt = 1;
    var iSummaryLoopFieldCnt = 0;
    var intToStrSummaryFieldCnt ="";
-   
-   for (var i=0; i < 31; i++) 
+
+   for (var i=0; i < 31; i++)
    {
 	   intToStrSummaryFieldCnt = iSummaryLoopFieldCnt.toString();
-     
+
      if (intToStrSummaryFieldCnt.length == 1)
      {
     	 intToStrSummaryFieldCnt =  "0" + iSummaryLoopFieldCnt;
      }
-      
+
      dynamicSummaryFooterLayout.push({
 			                                   dataField : "w"+intToStrSummaryFieldCnt,
 			                                   positionField : "w"+intToStrSummaryFieldCnt,
@@ -925,128 +885,133 @@ function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
 			                                   formatString : "#,##0",
 			                                   dataType : "numeric",
 			                                   style : "my-column",
-			                                }); 
+			                                });
      iSummaryLoopCnt++;
      iSummaryLoopFieldCnt++;
    }
 
 	  if(dynamicSummaryHeadList != null )
     {
-        dynamicSummaryLayout.push(  {                            
+        dynamicSummaryLayout.push(   {
 	                                    dataField : dynamicSummaryHeadList.categoryH1  // category
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
 	                                    ,editable : true
 	                                  }
-	                                 ,{                            
+	                                 ,{
+	                                    dataField : dynamicSummaryHeadList.stkTypeIdH1  // stkType
+	                                    ,headerText : "<spring:message code='sys.scm.salesplan.Stk_Type' />"
+	                                    ,editable : true
+	                                  }
+	                                 ,{
 	                                     dataField : dynamicSummaryHeadList.isuueorderH
 	                                     ,headerText : "<spring:message code='sys.scm.salesplan.M3_AVG_IssueOrder' />"
 	                                     ,editable : true
 	                                  }
-	                                , {     //m1_Issue_Order   
+	                                , {     //m1_Issue_Order
 	                                    dataField : dynamicSummaryHeadList.beforeDayH2
-	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M1_issue_IssueOrder_summery' />"   
+	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M1_issue_IssueOrder_summery' />"
 	                                    ,editable : true
 	                                  }
-	                                , {                            
+	                                , {
 	                                    dataField : dynamicSummaryHeadList.todayH2
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M0_PLN_ORD' />"
 	                                    ,editable : true
 	                                  }
-	
-	                                , {                            
+
+	                                , {
 	                                    dataField : dynamicSummaryHeadList.m1H2
-	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M1' />" 
+	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M1' />"
 	                                    ,dataType : "numeric"
 	                                    ,formatString : "#,##0"
 		                                  ,style : "my-column"
 	                                    ,editable : true
 	                                  }
-	                                , {                            
+	                                , {
 	                                    dataField : dynamicSummaryHeadList.m2H2
-	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
+	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M2' />"
 	                                    ,dataType : "numeric"
 	                                    ,formatString : "#,##0"
 	                                    ,style : "my-column"
 	                                    ,editable : true
 	                                  }
-	                                , {                            
+	                                , {
 	                                    dataField : dynamicSummaryHeadList.m3H3
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
 	                                    ,dataType : "numeric"
 	                                    ,formatString : "#,##0"
-	                                    ,style : "my-column"                                        
+	                                    ,style : "my-column"
 	                                    ,editable : true
 	                                  }
-	                                , {                            
+	                                , {
 	                                    dataField : dynamicSummaryHeadList.m4H4
 	                                    ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
 	                                    ,dataType : "numeric"
 	                                    ,formatString : "#,##0"
-		                                  ,style : "my-column"                                        
+		                                  ,style : "my-column"
 	                                    ,editable : true
 	                                  }
                                 ) //push
-                                
+
         var iLootCnt = 1;
         var iLootCnt2 = 1;
         var nextRowFlag = "";
         var fieldStr = "";
         var iLootDataFieldCnt = 0;
         var intToStrFieldCnt ="";
-        
-        
-        for (var i=0; i < 31; i++) 
+
+
+        for (var i=0; i < 31; i++)
         {
           //2016 41 DST WP
-           
+
           if (nextRowFlag == "R2")
 			    {
-            fieldStr = "w" + iLootCnt2 + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
-            
+            fieldStr = "w" + iLootCnt2 + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
+
             intToStrFieldCnt = iLootDataFieldCnt.toString();
-            
+
             if (intToStrFieldCnt.length == 1)
             {
               intToStrFieldCnt =  "0" + intToStrFieldCnt;
             }
 
-           // console.log("summary_fieldStr222222: " + fieldStr + " /headerText: " + dynamicSummaryHeadList2[fieldStr]  +" /dataField: " + "w"+intToStrFieldCnt);            
-			    
+           // console.log("summary_fieldStr222222: " + fieldStr + " /headerText: " + dynamicSummaryHeadList2[fieldStr]  +" /dataField: " + "w"+intToStrFieldCnt);
+
         	  dynamicSummaryLayout.push({
-                  dataField : "w"+intToStrFieldCnt,   
+                  dataField : "w"+intToStrFieldCnt,
                   headerText : dynamicSummaryHeadList2[fieldStr],  // "w00"
                   editable: false,
                   dataType : "numeric",
                   formatString : "#,##0",
-                  style : "my-column"   
-              }); 
-              
-			      iLootCnt2++;                  
+                  style : "my-column"
+              });
+
+			      iLootCnt2++;
 			    }
-			    else 
+			    else
           {
 
-            fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
-            
+            fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
+
             intToStrFieldCnt = iLootDataFieldCnt.toString();
-            
+
             if (intToStrFieldCnt.length == 1)
             {
               intToStrFieldCnt =  "0" + intToStrFieldCnt;
             }
-		                   
+
             dynamicSummaryLayout.push({
-				                                  dataField : "w"+intToStrFieldCnt,   
+				                                  dataField : "w"+intToStrFieldCnt,
 				                                  headerText : dynamicSummaryHeadList[fieldStr],  // "w00"
 				                                  editable: false,
 			                                    dataType : "numeric",
-			                                    formatString : "#,##0",  
+			                                    formatString : "#,##0",
                                           style : "my-column"
-				                              }); 
+				                              });
 
            iLootCnt++;
           }
-           
+
           if (dynamicSummaryHeadList[fieldStr] == "W52")
           {
                nextRowFlag = "R2";
@@ -1054,34 +1019,34 @@ function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
 
            iLootDataFieldCnt++;
         }
-        
+
         //Dynamic Grid Event Biding
         summaryGridID = AUIGrid.create("#dynamic_SummaryGrid_wrap", dynamicSummaryLayout,dynamicSummaryOption);
 
         // 푸터 객체 세팅
         AUIGrid.setFooter(summaryGridID, dynamicSummaryFooterLayout);
-                       
-    }// if 
 
-       
+    }// if
+
+
 }  // fnSelectSummaryHeadList
 
 function fnSettiingHeader()
 {
-	if ($("#scmYearCbBox").val().length < 1) 
+	if ($("#scmYearCbBox").val().length < 1)
   {
 		Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
 	  return false;
-	} 
+	}
 
-	if ($("#scmPeriodCbBox").val().length < 1) 
+	if ($("#scmPeriodCbBox").val().length < 1)
   {
 		Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK_TH' htmlEscape='false'/>");
 	  return false;
 	}
 
 	var dynamicLayout = [];
-	var dynamicOption = {}; 
+	var dynamicOption = {};
 
  // 이전에 그리드가 생성되었다면 제거함.
   if(AUIGrid.isCreated(myGridID)) {
@@ -1101,10 +1066,10 @@ function fnSettiingHeader()
 	                  enableRestore : true,
 	                  softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
 	                  // 체크박스 표시 설정
-	                  showRowCheckColumn : true,              
+	                  showRowCheckColumn : true,
 	                  // 전체 선택 체크박스가 독립적인 역할을 할지 여부
 	                  independentAllCheckBox : true,
-	                  rowCheckableFunction : function(rowIndex, isChecked, item) 
+	                  rowCheckableFunction : function(rowIndex, isChecked, item)
 	                  {
 	                    if(item.checkFlag == 4) { //Confirm인 경우 사용자 체크 못하게 함.
 	                      return false;
@@ -1112,21 +1077,21 @@ function fnSettiingHeader()
 
 	                    return true;
 	                  }
-                  , rowCheckDisabledFunction : function(rowIndex, isChecked, item) 
+                  , rowCheckDisabledFunction : function(rowIndex, isChecked, item)
 	                  {
 	                    if(item.checkFlag == 4) { //Confirm
 	                       return false; // false 반환하면 disabled 처리됨
 	                    }
-	                    
+
 	                    return true;
-	                  }                
+	                  }
 		              };
 
-  
+
   Common.ajax("POST", "/scm/selectCalendarHeader.do"
            , $("#MainForm").serializeJSON()
-           , function(result) 
-           {     
+           , function(result)
+           {
 	           if(result.planInfo != null && result.planInfo.length > 0)
 		         {
 	              $("#planYear").text(result.planInfo[0].planYear);
@@ -1140,7 +1105,7 @@ function fnSettiingHeader()
 	          // console.log("seperaionInfo: " + result.seperaionInfo.length + " /getChildField: " + result.getChildField.length );
 
              if( (result.planInfo == null || result.planInfo.length < 1)
-                || (result.seperaionInfo == null || result.seperaionInfo.length < 1) 
+                || (result.seperaionInfo == null || result.seperaionInfo.length < 1)
                 || (result.getChildField == null || result.getChildField.length < 1))
              {
             	 Common.alert("<spring:message code='expense.msg.NoData' />");
@@ -1157,226 +1122,226 @@ function fnSettiingHeader()
            	   $("#planWeek").text("");
            	   $("#planTeam").text("");
            	   $("#planStatus").text("");
-           	   $("#planCreatedAt").text(""); 
+           	   $("#planCreatedAt").text("");
 
-            	 return false;  
+            	 return false;
              }
 
               if(result.header != null && result.header.length > 0)
               {
-		            	  dynamicLayout.push({ 
+		            	  dynamicLayout.push({
 		                			                 headerText : "Stock"
 		                			               , children : [
-																													 { 
-																													    dataField : result.header[0].planMasterIdH
-																													   ,headerText :"<spring:message code='sys.scm.salesplan.PlanMasterId' />"
-																													   ,editable : true
-																													   ,visible : true
-																													   ,width : 0
-																													  } 
-																													, { 
-																													    dataField : result.header[0].checkFlag 
-																													   ,headerText : "chk"
-																													   ,editable : true
-																													   ,visible : false
-	                                                           
-																													  }
-																													, { 
-																													    dataField : result.header[0].teamH1
-																													   ,headerText : "<spring:message code='sys.scm.salesplan.Team' />"
-																													   ,editable : true
-	                                                           
-																													  }
-																													, { 
-																													    dataField : result.header[0].stkTypeIdH1
-																													   ,headerText : "<spring:message code='sys.scm.interface.stockType' />"
-																													   ,editable : true
-																													  } 
-																													, {                            
-																													    dataField : result.header[0].categoryH1
-																													    ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
-																													    ,editable : true
-																													  }
-																													, {                            
-																													    dataField : result.header[0].codeH1
-																													    ,headerText : "<spring:message code='sys.scm.salesplan.Code' />" 
-																													    ,editable : true
-																													  }
-																													, {                            
-																													    dataField : result.header[0].nameH1
-																													    ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
-																													    ,editable : true
-																													  }
-		
+																 {
+																    dataField : result.header[0].planMasterIdH
+																   ,headerText :"<spring:message code='sys.scm.salesplan.PlanMasterId' />"
+																   ,editable : true
+																   ,visible : true
+																   ,width : 0
+																  }
+																, {
+																    dataField : result.header[0].checkFlag
+																   ,headerText : "chk"
+																   ,editable : true
+																   ,visible : false
+
+																  }
+																, {
+																    dataField : result.header[0].teamH1
+																   ,headerText : "<spring:message code='sys.scm.salesplan.Team' />"
+																   ,editable : true
+
+																  }
+																, {
+																    dataField : result.header[0].stkTypeIdH1
+																   ,headerText : "<spring:message code='sys.scm.interface.stockType' />"
+																   ,editable : true
+																  }
+																, {
+																    dataField : result.header[0].categoryH1
+																    ,headerText : "<spring:message code='sys.scm.salesplan.Category' />"
+																    ,editable : true
+																  }
+																, {
+																    dataField : result.header[0].codeH1
+																    ,headerText : "<spring:message code='sys.scm.salesplan.Code' />"
+																    ,editable : true
+																  }
+																, {
+																    dataField : result.header[0].nameH1
+																    ,headerText : "<spring:message code='sys.scm.salesplan.Name' />"
+																    ,editable : true
+																  }
+
 		                              			              ]
 		                        			       }
 		                        			       // M-3 AVG Issue/Order
-		       			                        ,{                            
+		       			                        ,{
 		                                          dataField : result.header[0].isuueorderH
 		                                          ,headerText : "<spring:message code='sys.scm.salesplan.M3_AVG_IssueOrder' />"
 		                                          ,editable : false
 		                                     }
-		                                            
+
 		                                  // Monthly
-		                                   , { 
+		                                   , {
 		                                       headerText : "Monthly"
 			                                  // , width : 15
 		                                     , children : [
-		      		                                     // for insert  
-		                                                     {                            
+		      		                                     // for insert
+		                                                     {
 		                                                        dataField : "scmGrYear"
-		                                                        ,headerText : "<spring:message code='budget.Year' />"   
+		                                                        ,headerText : "<spring:message code='budget.Year' />"
 		                                                        ,editable : false
 		                                                        ,width : 0
 		                                                        ,visible: false
 		                                                      }
-		                                                    , {                            
+		                                                    , {
 		                                                        dataField : "scmGrWeek"
-		                                                        ,headerText : "<spring:message code='sys.scm.pomngment.EstWeek' />"   
+		                                                        ,headerText : "<spring:message code='sys.scm.pomngment.EstWeek' />"
 		                                                        ,editable : false
 		                                                        ,width : 0
 		                                                        ,visible: false
 		                                                      }
-		                                                    , {                            
+		                                                    , {
 		                                                        dataField : "preM3AvgOrded"
-		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.preM3AvgOrded' />"   
+		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.preM3AvgOrded' />"
 		                                                        ,editable : true
 		                                                        ,width : "13%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 
+		                                                        ,style : "my-editable"
 		                                                      }
-		                                                    , {                            
+		                                                    , {
 		                                                        dataField : "preM3AvgIssu"
 		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.preM3AvgIssu' />"
 		                                                        ,editable : true
 		                                                        ,width : "13%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 
-		                                                      }  
-		                                                    , {                            
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                    , {
 		                                                        dataField : "newStockTypeId"
 		                                                        ,headerText : "NEW_STOCK_TYPE_ID"
 		                                                        ,editable : true
 		                                                        ,width : "13%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 
-		                                                      }  
-		                                                    , {                            
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                    , {
 		                                                        dataField : "newStockCode"
 		                                                        ,headerText : "NEW_STOCK_CODE"
 		                                                        ,editable : true
 		                                                        ,width : "13%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 
-		                                                      }  
-		                                                    , {                            
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                    , {
 		                                                        dataField : "m1Ord"
 		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.m1Ord' />"
 		                                                        ,editable : true
 		                                                        ,width : "5%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 		                                                        
-		                                                      }  
-		                                                    , {                            
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                    , {
 		                                                        dataField : "m2Ord"
 		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.m2Ord' />"
 		                                                        ,editable : true
 		                                                        ,width : "5%"
-		                                                        ,visible: false  
-		                                                        ,style : "my-editable"     
-		                                                      }  
-		                                                    , {                            
+		                                                        ,visible: false
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                    , {
 		                                                        dataField : "m3Ord"
 		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.m3Ord' />"
 		                                                        ,editable : true
 		                                                        ,width : "5%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 
-		                                                      }  
-		                                                    , {                            
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                    , {
 		                                                        dataField : "m33"  //M_3
 		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.m33' />"
 		                                                        ,editable : true
 		                                                        ,width : "5%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 
-		                                                      }  
-		                                                    , {                            
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                    , {
 		                                                        dataField : "m22"  //M_2
 		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.m22' />"
 		                                                        ,editable : true
 		                                                        ,width : "5%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 
-		                                                      }  
-		                                                    , {                            
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                    , {
 		                                                        dataField : "m11"  //M_1
 		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.m11' />"
 		                                                        ,editable : true
 		                                                        ,width : "5%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 
-		                                                      }  
-		                                                    , {                            
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                    , {
 		                                                        dataField : "m0Plan"
 		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.m0Plan' />"
 		                                                        ,editable : true
 		                                                        ,width : "5%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 
-		                                                      }  
-		                                                    , {                            
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                    , {
 		                                                        dataField : "m0Ord"
 		                                                        ,headerText : "<spring:message code='sys.scm.salesplan.m0Ord' />"
 		                                                        ,editable : true
 		                                                        ,width : "5%"
 		                                                        ,visible: false
-		                                                        ,style : "my-editable" 
-		                                                      }  
-		                                                // for insert end. 
-		                                                
-		                                                    , {                            
+		                                                        ,style : "my-editable"
+		                                                      }
+		                                                // for insert end.
+
+		                                                    , {
 		                                                         dataField : result.header[0].beforeDayH2
-		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M1_issue_IssueOrder' />"   
+		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M1_issue_IssueOrder' />"
 		                                                         ,editable : false
 		                                                       }
-		                                                     , {                            
+		                                                     , {
 		                                                         dataField : result.header[0].todayH2
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M0_PLN_ORD' />"
 		                                                         ,editable : false
 		                                                       }
-		                                                     , {                            
+		                                                     , {
 		                                                         dataField : result.header[0].m1H2
-		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M1' />" 
+		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M1' />"
 		                                                         ,editable : true
 		                                                       }
-		                                                     , {                            
+		                                                     , {
 		                                                         dataField : result.header[0].m2H2
-		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M2' />" 
+		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M2' />"
 		                                                         ,editable : true
 		                                                       }
-		                                                     , {                            
+		                                                     , {
 		                                                         dataField : result.header[0].m3H3
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M3' />"
 		                                                         ,editable : true
 		                                                       }
-		                                                     , {                            
+		                                                     , {
 		                                                         dataField : result.header[0].m4H4
 		                                                         ,headerText : "<spring:message code='sys.scm.salesplan.M4' />"
 		                                                         ,editable : true
 		                                                       }
-		                                                     ] // child                  	  
+		                                                     ] // child
 		                                    }
-		    
+
 		                      	          ) //push
 		                      	        ;
 
 
-                    var iM0TotCnt =   parseInt(result.seperaionInfo[0].m0TotCnt);   
-                    var iM1TotCnt =   parseInt(result.seperaionInfo[0].m1TotCnt);   
-                    var iM2TotCnt =   parseInt(result.seperaionInfo[0].m2TotCnt);   
-                    var iM3TotCnt =   parseInt(result.seperaionInfo[0].m3TotCnt);   
-				            
+                    var iM0TotCnt =   parseInt(result.seperaionInfo[0].m0TotCnt);
+                    var iM1TotCnt =   parseInt(result.seperaionInfo[0].m1TotCnt);
+                    var iM2TotCnt =   parseInt(result.seperaionInfo[0].m2TotCnt);
+                    var iM3TotCnt =   parseInt(result.seperaionInfo[0].m3TotCnt);
+
 							      var iLootCnt = 1;
 							      var iLootCnt2 = 1; //Next Year
 							      var nextRowFlag = "";
@@ -1384,28 +1349,28 @@ function fnSettiingHeader()
 										var intToStrFieldCnt ="";
 										var fieldStr ="";
 										var strWeekTh = "W"
-				
+
 				            // M+0   : 당월    remainCnt
 		                var groupM_0 = {
 		                   headerText : "<spring:message code='sys.scm.salesplan.M0' />",
 		                   children : []
 		                }
-		                
-		               for(var i=0; i < 5; i++) 
+
+		               for(var i=0; i < 5; i++)
 		               {
 		                  /* console.log("loop_i_value: " + i  +" M0_TotCnt: " + iM0TotCnt
-		                             +" / fieldStr: " +  fieldStr  
-		                             +" / field_Name_with: " +  result.header[0][fieldStr]  
+		                             +" / fieldStr: " +  fieldStr
+		                             +" / field_Name_with: " +  result.header[0][fieldStr]
 		                             +" / field_name_sel: " + "w0"+result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn  // == result.header[0].w1WeekSeq
 		                             +" / WEEK_TH: " + result.getChildField[i].weekTh);  // == result.header[0].w1WeekSeq
 		                  */
 		                  intToStrFieldCnt = iLootDataFieldCnt.toString();
-		                           
+
 		                  if (intToStrFieldCnt.length == 1)
 		                  {
 		               	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
 		                  }
-		
+
 		                  if (parseInt(result.getChildField[i].weekTh) <  parseInt(gWeekThValue))
 		                  {
 		                    if (result.getChildField[i].weekTh.toString().length < 2)
@@ -1417,7 +1382,7 @@ function fnSettiingHeader()
 		                      strWeekTh = "W"
 		                    }
 
-		                    sumWeekThStr = "bef" + (i+1) + "WeekTh";  //w1WeekSeq   result.header[0].w1WeekSeq 
+		                    sumWeekThStr = "bef" + (i+1) + "WeekTh";  //w1WeekSeq   result.header[0].w1WeekSeq
 
 		                 	  groupM_0.children.push({
 														                     dataField :  sumWeekThStr,   // bef1WeekTh
@@ -1426,8 +1391,8 @@ function fnSettiingHeader()
 							                                   formatString : "#,##0",
 														                     editable: false,
 														                     style : "my-backColumn1"
-														                  }); 
-		
+														                  });
+
 		                    continue;
 			                }
 		                  else if (parseInt(result.getChildField[i].weekTh) ==  parseInt(gWeekThValue))
@@ -1435,42 +1400,42 @@ function fnSettiingHeader()
 		                    if (nextRowFlag == "R2")
 		                    {
 		                    	 fieldStr = "w" + iLootCnt2 + "WeekSeq";
-		                    	
+
 	                         groupM_0.children.push({
 									                                  dataField : "w" + intToStrFieldCnt,   // "w00"
 									                                  headerText :result.header[1][fieldStr],
 									                                  dataType : "numeric",
 									                                  formatString : "#,##0",
 									                                  editable: false,
-									                                  style : "my-backColumn2"   
+									                                  style : "my-backColumn2"
 									                               });
 
 	                         iLootCnt2++;
 				                }
 		                	  else
 			                	{
-		                		  fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
-		                		  
+		                		  fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
+
                           groupM_0.children.push({
 								                                    dataField : "w" + intToStrFieldCnt,   // "w00"
 								                                    headerText :result.header[0][fieldStr],
-								                                    dataType : "numeric", 
+								                                    dataType : "numeric",
 								                                    formatString : "#,##0",
 								                                    editable: false,
-								                                    style : "my-backColumn2"  
+								                                    style : "my-backColumn2"
 								                                });
-                          
+
                           iLootCnt++;
 				                }
 
 		                  }
-			                else 
-			                { 
+			                else
+			                {
 
                         if (nextRowFlag == "R2")
                         {
                            fieldStr = "w" + iLootCnt2 + "WeekSeq";
-                          
+
                            groupM_0.children.push({
 										                               dataField : "w" + intToStrFieldCnt,   // "w00"
 										                               headerText :result.header[1][fieldStr] ,
@@ -1483,14 +1448,14 @@ function fnSettiingHeader()
                         }
                         else
 				                {
-                        	fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq 
+                        	fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
 
                           groupM_0.children.push({
 														                       dataField : "w" + intToStrFieldCnt,   // "w00"
 														                       headerText :result.header[0][fieldStr],
 														                       dataType : "numeric",
 														                       formatString : "#,##0",
-														                       style : "my-column", 
+														                       style : "my-column",
 													  	                  });
                           iLootCnt++;
 				                }
@@ -1499,22 +1464,22 @@ function fnSettiingHeader()
                       if (result.header[0][fieldStr] == "W52")
                       {
                         nextRowFlag = "R2";
-                      } 
+                      }
 
 		                  iLootDataFieldCnt++;
 		               }
 		               dynamicLayout.push(groupM_0);
-		
+
 
 	                 /////////////////////////////////
-			             
+
 		                // M+1
 		               var groupM_1 = {
 		                   headerText : "M+1",
 		                   children : []
 		               }
-		
-		               for(var i=0; i<iM1TotCnt ; i++) 
+
+		               for(var i=0; i<iM1TotCnt ; i++)
 		               {
 		                  //M+1_header_Push: w03 /fieldStr: W48-2
 		                  intToStrFieldCnt = iLootDataFieldCnt.toString();
@@ -1523,31 +1488,31 @@ function fnSettiingHeader()
                       {
                         intToStrFieldCnt =  "0" + intToStrFieldCnt;
                       }
-		                  		                  
+
 		                  if (nextRowFlag == "R2")
                       {
-                        fieldStr = "w" + iLootCnt2 + "WeekSeq";  
-                        
+                        fieldStr = "w" + iLootCnt2 + "WeekSeq";
+
                         groupM_1.children.push({
 									                                dataField : "w" + intToStrFieldCnt,
 									                                headerText :  result.header[1][fieldStr],
 									                                dataType : "numeric",
 									                                formatString : "#,##0",
 									                                style : "my-column",
-									                             });   
-                        iLootCnt2 ++;                  
+									                             });
+                        iLootCnt2 ++;
                       }
 		                  else
 			                {
 
-		                    fieldStr = "w" + iLootCnt + "WeekSeq";  
-				                
+		                    fieldStr = "w" + iLootCnt + "WeekSeq";
+
 		                    groupM_1.children.push({
 														                   dataField : "w" + intToStrFieldCnt,
 														                   headerText :  result.header[0][fieldStr],
 														                   dataType : "numeric",
 														                   formatString : "#,##0",
-														                   style : "my-column", 
+														                   style : "my-column",
 														                  });
 
 		                    iLootCnt ++;
@@ -1560,24 +1525,24 @@ function fnSettiingHeader()
                       {
                           nextRowFlag = "R2";
                       }
-		                 
+
 		                  iLootDataFieldCnt++;
 		                }
 		                dynamicLayout.push(groupM_1);
-		
+
 
                     /////////////////////////////////
-		                
+
 		                // M+2
 		                var groupM_2 = {
 		                   headerText : "M+2",
 		                   children : []
 		                }
-		                
-		               for(var i=0; i<iM2TotCnt ; i++) 
+
+		               for(var i=0; i<iM2TotCnt ; i++)
 		               {
 		                 intToStrFieldCnt = iLootDataFieldCnt.toString();
-		                    
+
 		                 if (intToStrFieldCnt.length == 1)
 		                 {
 		                   intToStrFieldCnt =  "0" + intToStrFieldCnt;
@@ -1592,20 +1557,20 @@ function fnSettiingHeader()
 											                          dataType : "numeric",
 											                          formatString : "#,##0",
 											                          style : "my-column",
-                          });   
-                       
-                       iLootCnt2 ++;                  
+                          });
+
+                       iLootCnt2 ++;
 	                   }
 	                   else
 		                 {
-	                	   fieldStr = "w" + iLootCnt + "WeekSeq";  
-	                	   
+	                	   fieldStr = "w" + iLootCnt + "WeekSeq";
+
 		                   groupM_2.children.push({
 											                          dataField : "w" + intToStrFieldCnt,
 											                          headerText :  result.header[0][fieldStr],
 											                          dataType : "numeric",
 											                          formatString : "#,##0",
-											                          style : "my-column", 
+											                          style : "my-column",
 														                 });
 		                   iLootCnt++;
 		                 }
@@ -1614,23 +1579,23 @@ function fnSettiingHeader()
                      {
                        nextRowFlag = "R2";
                      }
-		                 
+
 		                 iLootDataFieldCnt++;
 		              }
 		               dynamicLayout.push(groupM_2);
 
 	                /////////////////////////////////
-		
+
 		               // M+3
 		               var groupM_3 = {
 		                  headerText : "M+3",
 		                  children : []
 		               }
-		               
-		                for(var i=0; i< iM3TotCnt ; i++) 
+
+		                for(var i=0; i< iM3TotCnt ; i++)
 		               {
 			                intToStrFieldCnt = iLootDataFieldCnt.toString();
-			                    
+
 			                if (intToStrFieldCnt.length == 1)
 			                {
 			                  intToStrFieldCnt =  "0" + intToStrFieldCnt;
@@ -1644,15 +1609,15 @@ function fnSettiingHeader()
 											                           headerText :  result.header[1][fieldStr],
 											                           dataType : "numeric",
 											                           formatString : "#,##0",
-											                           style : "my-column", 
-											                         });   
-	                       
-	                      iLootCnt2 ++;                  
+											                           style : "my-column",
+											                         });
+
+	                      iLootCnt2 ++;
 	                    }
 	                    else
 		                  {
-	                    	 fieldStr = "w" + iLootCnt + "WeekSeq";  
-	                    	
+	                    	 fieldStr = "w" + iLootCnt + "WeekSeq";
+
 	                       groupM_3.children.push({
 									                                dataField : "w" + intToStrFieldCnt,
 									                                headerText :  result.header[0][fieldStr],
@@ -1660,65 +1625,65 @@ function fnSettiingHeader()
 									                                formatString : "#,##0",
 									                                style : "my-column",
 									                             });
-                            
+
 	                       iLootCnt ++;
 			                }
 
                      if (result.header[0][fieldStr] == "W52")
                      {
                        nextRowFlag = "R2";
-                     }		                 
-			
-			               iLootDataFieldCnt++;					                         
+                     }
+
+			               iLootDataFieldCnt++;
 		               }
 		              dynamicLayout.push(groupM_3);
-		
+
 		          	  //Dynamic Grid Event Biding
 		          	  myGridID = AUIGrid.create("#dynamic_DetailGrid_wrap", dynamicLayout, dynamicOption);
-		
+
 		          	  // 에디팅 시작 이벤트 바인딩
 		         	    AUIGrid.bind(myGridID, "cellEditBegin", auiCellEditignHandler);
-		         	    
+
 		         	    // 에디팅 정상 종료 이벤트 바인딩
 		         	    AUIGrid.bind(myGridID, "cellEditEnd", auiCellEditignHandler);
-		         	    
+
 		         	    // 에디팅 취소 이벤트 바인딩
 		         	    AUIGrid.bind(myGridID, "cellEditCancel", auiCellEditignHandler);
-		         	    
-		         	    // 행 추가 이벤트 바인딩 
+
+		         	    // 행 추가 이벤트 바인딩
 		         	    AUIGrid.bind(myGridID, "addRow", auiAddRowHandler);
-		         	    
-		         	    // 행 삭제 이벤트 바인딩 
+
+		         	    // 행 삭제 이벤트 바인딩
 		         	    AUIGrid.bind(myGridID, "removeRow", auiRemoveRowHandler);
-		
-		
+
+
 		         	    // cellClick event.
-		         	    AUIGrid.bind(myGridID, "cellClick", function( event ) 
+		         	    AUIGrid.bind(myGridID, "cellClick", function( event )
 		         	    {
 		         	        gSelMainRowIdx = event.rowIndex;
-		         	        
-		         	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedAuthId: " + $("#selAuthId").val() );        
+
+		         	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clickedAuthId: " + $("#selAuthId").val() );
 		         	    });
-		
+
 		         	 // 셀 더블클릭 이벤트 바인딩
-		         	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event) 
+		         	    AUIGrid.bind(myGridID, "cellDoubleClick", function(event)
 		         	    {
 		         	        console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );
-		         	    }); 
+		         	    });
 
 		         	   // 전체 체크박스 클릭 이벤트 바인딩
-		         	   AUIGrid.bind(myGridID, "rowAllChkClick", function( event ) 
+		         	   AUIGrid.bind(myGridID, "rowAllChkClick", function( event )
 				         {
-		         	     if(event.checked) 
+		         	     if(event.checked)
 			         	   {
 		         	       var uniqueValues = AUIGrid.getColumnDistinctValues(event.pid, "checkFlag");
 		         	       AUIGrid.setCheckedRowsByValue(event.pid, "checkFlag", 1);
-		         	     } 
-		         	     else 
+		         	     }
+		         	     else
 			         	   {
 		         	       AUIGrid.setCheckedRowsByValue(event.pid, "checkFlag", 0);
 		         	     }
-		         	   });  
+		         	   });
 
 		       		//////////////////////////////////////////////////////////////////
 			            fnSearchBtnList();
@@ -1726,107 +1691,107 @@ function fnSettiingHeader()
 		         	    fnSelectSummaryHeadList(result.header[0], result.header[1]);
 		              // summary Data Select
 		         	    selectStockCtgrySummaryList();
-		         	  
+
 		          }
            }
-				 ,function(jqXHR, textStatus, errorThrown) 
+				 ,function(jqXHR, textStatus, errorThrown)
 				  {
-				    try 
+				    try
 				    {
 				      console.log("HeaderFail Status : " + jqXHR.status);
 				      console.log("code : "        + jqXHR.responseJSON.code);
 				      console.log("message : "     + jqXHR.responseJSON.message);
 				      console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-				    } 
-				    catch (e) 
+				    }
+				    catch (e)
 				    {
 				      console.log(e);
 				    }
-				    
+
 				    Common.alert("Fail : " + jqXHR.responseJSON.message);
-				    
-				  }); 
-  
+
+				  });
+
 }
 
 function fnInsertSave(Obj)
 {
 	 if ($(Obj).parents().hasClass("btn_disabled") == true)
 	   return false;
-	
+
    if (fnValidationCheck("Add") == false)
    {
      return false;
-   } 
+   }
 
    Common.ajax("POST"
 	        , "/scm/saveInsScmSalesPlan.do"
 	        , GridCommon.getEditData(myGridID)
-	       
-	        , function(result) 
+
+	        , function(result)
 	          {
 	            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	            
+
 	            AUIGrid.hideColumnByDataField(myGridID, insertVisibleFields );
 	            AUIGrid.clearGridData(myGridID);
 	            fnSearchBtnList() ;
-	            
+
 	            console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
 	          }
-	             
-	        , function(jqXHR, textStatus, errorThrown) 
+
+	        , function(jqXHR, textStatus, errorThrown)
 	          {
-	            try 
+	            try
 	            {
 	              console.log("Fail Status : " + jqXHR.status);
 	              console.log("code : "        + jqXHR.responseJSON.code);
 	              console.log("message : "     + jqXHR.responseJSON.message);
 	              console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	            } 
-	            catch (e) 
+	            }
+	            catch (e)
 	            {
 	              console.log(e);
 	            }
-	            
+
 	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-	            
-	          });    
+
+	          });
 
 }
 
-function fnSaveScmSalesPlan(Obj) 
+function fnSaveScmSalesPlan(Obj)
 {
 	//console.log($(Obj).parents().hasClass("btn_disabled"))
-	
+
 	if ($(Obj).parents().hasClass("btn_disabled") == true)
     return false;
-	
+
   if (fnValidationCheck("Upd") == false)
   {
     return false;
-  } 
-  
+  }
+
 /*
   // Team으로 Master정보 조회
   if ($("#scmTeamCbBox").val().length != 0)
-	{  
+	{
 	  fnCheckPlanMsterInfoByTeam();
 
-	  if (gPlanId == null )  // 생성일정이 없다면 
-		{  
+	  if (gPlanId == null )  // 생성일정이 없다면
+		{
 		  //   테스트할 수 있는 데이타 필요.
       //  int mid = this.CreateSalesPlan(year, week, team, month);
 	    //  spc.UpdateDetailSummaries(mid);
 	    //  spc.UpdateInstallSummary(mid);
 	    //  spc.UpdatePreM3AvgOrder(mid);
-	    //  spc.UpdateM0Data(mid); 
+	    //  spc.UpdateM0Data(mid);
 	    Common.alert( "<spring:message code='sys.scm.salesplanMnge.notSaveExistsTeam'/>");
 		  return false;
 		}
 	  else
 		{
-		  if (gPlanId == "4" || $("#scmYearCbBox").val().length == 0 || $("#scmPeriodCbBox").val().length == "0" 
-			    || $("#scmTeamCbBox").val().length != 0)  
+		  if (gPlanId == "4" || $("#scmYearCbBox").val().length == 0 || $("#scmPeriodCbBox").val().length == "0"
+			    || $("#scmTeamCbBox").val().length != 0)
 			{
 	           //ConfirmButton.Enabled = false;
 	           //UnconfirmButton.Enabled = false;
@@ -1845,69 +1810,69 @@ function fnSaveScmSalesPlan(Obj)
   Common.ajax("POST"
 		    , "/scm/saveScmSalesPlan.do"
 		    , GridCommon.getEditData(myGridID)
-		   
-        , function(result) 
+
+        , function(result)
           {
             Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
             fnSearchBtnList() ;
-            
+
             console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
           }
-	           
-        , function(jqXHR, textStatus, errorThrown) 
+
+        , function(jqXHR, textStatus, errorThrown)
           {
-            try 
+            try
             {
               console.log("Fail Status : " + jqXHR.status);
               console.log("code : "        + jqXHR.responseJSON.code);
               console.log("message : "     + jqXHR.responseJSON.message);
               console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-            } 
-            catch (e) 
+            }
+            catch (e)
             {
               console.log(e);
             }
-            
+
             Common.alert("Fail : " + jqXHR.responseJSON.message);
-            
-          }); 
+
+          });
   }
 
 //삭제해서 마크 된(줄이 그어진) 행을 복원 합니다.(삭제 취소)
-function removeAllCancel() 
+function removeAllCancel()
 {
   $("#delCancel").hide();
-  
-  AUIGrid.restoreSoftRows(myGridID, "all"); 
+
+  AUIGrid.restoreSoftRows(myGridID, "all");
 }
 
-function fnValidationCheck(params) 
+function fnValidationCheck(params)
 {
    var result = true;
-   
+
    if (params == "Add")
 	 {
 	   var addList = AUIGrid.getAddedRowItems(myGridID);
-	   if (addList.length == 0   )  
+	   if (addList.length == 0   )
 	   {
 	     Common.alert("No Change");
 	     return false;
 	   }
 
-	   for (var i = 0; i < addList.length; i++) 
-	   {  
-	      var newStockCode      = addList[i].newStockCode;  
+	   for (var i = 0; i < addList.length; i++)
+	   {
+	      var newStockCode      = addList[i].newStockCode;
 	      var team              = addList[i].team;
 	      var newStkTypeId      = addList[i].newStockTypeId;
 
-	      if (newStockCode == "" || newStockCode.length == 0) 
+	      if (newStockCode == "" || newStockCode.length == 0)
 	      {
 	        result = false;
 	        Common.alert("<spring:message code='sys.msg.necessary' arguments='NEW_STOCK_CODE' htmlEscape='false'/>");
 	        break;
 	      }
 
-	      if (newStkTypeId == "" || newStkTypeId.length == 0) 
+	      if (newStkTypeId == "" || newStkTypeId.length == 0)
 	      {
 	        result = false;
 	        Common.alert("<spring:message code='sys.msg.necessary' arguments='NEW_STOCK_TYPE_ID' htmlEscape='false'/>");
@@ -1920,35 +1885,35 @@ function fnValidationCheck(params)
 	          Common.alert("<spring:message code='sys.msg.necessary' arguments='Corrected STOCK_CODE or STOCK_TYPE_ID' htmlEscape='false'/>");
 	          break;
 	      }
-	      
 
-	      if (team == "" || team.length == 0) 
+
+	      if (team == "" || team.length == 0)
 	      {
 	        result = false;
 	        Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
 	        break;
 	      }
-	      
+
 	   }  // addlist
-	   
+
 	 }
    else if (params == "Upd")
 	 {
 	   var udtList = AUIGrid.getEditedRowItems(myGridID);
 
-	   if (udtList.length == 0 )  
+	   if (udtList.length == 0 )
      {
       Common.alert("No Change");
       return false;
      }
-	    
+
 	 }
-  
+
     return result;
   }
 
 //trim
-String.prototype.fnTrim = function() 
+String.prototype.fnTrim = function()
 {
     return this.replace(/(^\s*)|(\s*$)/gi, "");
 }
@@ -1956,18 +1921,18 @@ String.prototype.fnTrim = function()
 function fnSelectStockIdByStCode(paramStockCode, paramStockTypeId)
 {
 	var stkId = "";
-	
+
    Common.ajaxSync("GET", "/scm/selectStockIdByStCode.do"
            , {  newStockCode   : paramStockCode
               , newStockTypeId : paramStockTypeId
              }
-           , function(result) 
+           , function(result)
            {
               if(result.selectStockIdByStCode.length > 0)
               {
-            	  stkId = String(result.selectStockIdByStCode[0].stkId); 
+            	  stkId = String(result.selectStockIdByStCode[0].stkId);
               }
-              
+
            });
 
    return stkId;
@@ -1977,11 +1942,11 @@ function fnGetDetailAndSeqMstId()
 {
    Common.ajax("GET", "/scm/selectPlanMstIdDetailSeqForIns.do"
            , $("#MainForm").serialize()
-           , function(result) 
+           , function(result)
            {
               var gplanDtlIdSeq = parseInt(result.selectPlanDetailIdSeq[0].scm0002dPlanDtlIdSeq);  // seq
               var gplanMasterId = parseInt(result.selectPlanMasterId[0].planMasterId);
-              
+
               if(result != null && result.length > 0)
               {
             	  //console.log("성공 SearchBtnData_dtlSeq : " + gplanDtlIdSeq);
@@ -1993,7 +1958,7 @@ function fnGetMonthInfo()
 {
    Common.ajax("GET", "/scm/selectPlanId.do"
            , $("#MainForm").serialize()
-           , function(result) 
+           , function(result)
            {
               //console.log("성공 SearchBtnData_planId : " + result.planMonth);
               if(result != null && result.length > 0)
@@ -2013,11 +1978,11 @@ function selectStockCtgrySummaryList()
 		      };
 
 	 params = $.extend($("#MainForm").serializeJSON(), params);
-		  
+
    Common.ajax("POST"
 			       , "/scm/selectStockCtgrySummary.do"
 	           , params
-	           , function(result) 
+	           , function(result)
 	           {
 	              //console.log("성공 selectStockCtgrySummary: " + result.selectSalesSummaryList);
 	              AUIGrid.setGridData(summaryGridID, result.selectSalesSummaryList);
@@ -2025,7 +1990,7 @@ function selectStockCtgrySummaryList()
 	              {
 	              }
 	           });
-   
+
 }
 
 function fnSearchBtnList()
@@ -2040,7 +2005,7 @@ function fnSearchBtnList()
 
   Common.ajax("POST", "/scm/selectSalesPlanMngmentSearch.do"
 	           , params
-	           , function(result) 
+	           , function(result)
 	           {
 	              console.log("성공 fnSearchBtnList: " + result.length);
 	              AUIGrid.setGridData(myGridID, result.salesPlanMainList);
@@ -2061,21 +2026,19 @@ function fnSearchBtnList()
 	            	  $('#btnUpdate').addClass("btn_disabled");
 	            	  $('#btnInsert').addClass("btn_disabled");
 	            	  $('#btnDelete').addClass("btn_disabled");
-	            	  
-	            	  Common.alert("<spring:message code='sys.scm.SalesPlan.runCreation'/>");
 	              }
-	
+
 	              gAddrowCnt = 0;
-	                  
+
 	           });
-   
+
 }
 
 function fnSelectSalesCnt(inputCode)
 {
    Common.ajax("GET", "/scm/selectSalesCnt.do"
-           , { stockCode: inputCode }  
-           , function(result) 
+           , { stockCode: inputCode }
+           , function(result)
            {
               //console.log("성공 selectSalesCnt: " + result[0].saleCnt );
               if(result != null && result.length > 0)
@@ -2097,30 +2060,30 @@ var myGridID , summaryGridID;
 $(document).ready(function()
 {
     $("#zreExptId").focus();
-    
-    $("#zreExptId").keydown(function(key) 
+
+    $("#zreExptId").keydown(function(key)
     {
-       if (key.keyCode == 13) 
+       if (key.keyCode == 13)
        {
          fnSearchBtnList();
        }
 
     });
 
-    $("#zreExptId").bind("keyup", function() 
+    $("#zreExptId").bind("keyup", function()
     {
       $(this).val($(this).val().toUpperCase());
     });
-    
-    $("#dealerName").keydown(function(key) 
+
+    $("#dealerName").keydown(function(key)
     {
-       if (key.keyCode == 13) 
+       if (key.keyCode == 13)
        {
          fnSearchBtnList();
        }
     });
 
-    $("#dealerName").bind("keyup", function() 
+    $("#dealerName").bind("keyup", function()
     {
       $(this).val($(this).val().toUpperCase());
     });
@@ -2144,7 +2107,7 @@ $(document).ready(function()
 <p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
 <h2>Sales Plan Management</h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a onclick="fnSettiingHeader();"><span class="search"></span>Search</a></p></li> 
+	<li><p class="btn_blue"><a onclick="fnSettiingHeader();"><span class="search"></span>Search</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -2153,7 +2116,7 @@ $(document).ready(function()
 <form id="MainForm" method="get" action="">
   <input type ="hidden" id="planMasterId" name="planMasterId" value=""/>
   <input type ="hidden" id="selectPlanMonth" name="selectPlanMonth" value=""/>
-  
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -2176,7 +2139,7 @@ $(document).ready(function()
 	<div class="date_set w100p"><!-- date_set start -->
 		<select class="sel_year" id="scmYearCbBox" name="scmYearCbBox">
 		</select>
-	
+
 	<select class="sel_date" id="scmPeriodCbBox" name="scmPeriodCbBox" onchange="fnChangeEventPeriod(this);">
 	</select>
 	</div><!-- date_set end -->
@@ -2203,7 +2166,7 @@ $(document).ready(function()
 	<!-- Stock Type 추가 -->
   <th scope="row">Stock Type</th>
   <td>
-  <select class="w100p" multiple="multiple" id="scmStockType" name="scmStockType"> 
+  <select class="w100p" multiple="multiple" id="scmStockType" name="scmStockType">
   </select>
   </td>
 </tr>
@@ -2249,7 +2212,7 @@ $(document).ready(function()
 <ul class="right_btns">
 	<li>
 	 <p class="btn_grid">
-	  <a onclick="fnCreate(this);">Create Previous-Weekly</a>
+	  <a onclick="fnCreate(this);">Create</a>
 	 </p>
 	</li>
 <!-- 	<li>
@@ -2257,25 +2220,19 @@ $(document).ready(function()
 	  <a onclick="fnDelete(this);">Delete</a>
 	 </p>
 	</li> -->
-  
-  <li>
-   <p class="btn_grid">
-     <a onclick="fnCreateNewSupplyPlan(this);">Create New-Monthly</a>
-   </p>
-  </li>
-  	
+
 	<li>
 	 <p class="btn_grid">
 	 <a onclick="fnConfirm(this);">Confirm</a>
 	 </p>
 	</li>
-	
+
 	<li>
 	 <p class="btn_grid">
-	   <a onclick="fnUnConfirm(this);">UnConfirm</a> 
+	   <a onclick="fnUnConfirm(this);">UnConfirm</a>
 	 </p>
 	</li>
-	
+
 	<li>
 	 <p class="btn_grid">
 	   <!-- <a href="javascript:void(0);">Update M0 Data</a> -->
@@ -2312,17 +2269,17 @@ $(document).ready(function()
 	</td>
 	<th scope="row">Week</th>
 	<td>
-   <span id="planWeek"></span>	
+   <span id="planWeek"></span>
 	</td>
 	<th scope="row">Team</th>
 	<td>
-   <span id="planTeam"></span>	
-	</td>	
+   <span id="planTeam"></span>
+	</td>
 	<th scope="row">Status</th>
 	<td id="planStatus">
-	</td>	
+	</td>
 	<th scope="row">Created At</th>
-	<td id="planCreatedAt">	
+	<td id="planCreatedAt">
 	</td>
 </tr>
 </tbody>
@@ -2335,11 +2292,11 @@ $(document).ready(function()
 <div class="side_btns">
   <ul class="right_btns">
   <!--   <li><p id='show'   class="btn_grid "><a onclick="fnShowGrid();">show</a></p></li> -->
-    <li><p id='btnDelete' class="btn_grid btn_disabled"><a onclick="fnDelete(this)">Delete</a></p></li> 
+    <li><p id='btnDelete' class="btn_grid btn_disabled"><a onclick="fnDelete(this)">Delete</a></p></li>
     <li><p id='btnUpdate' class="btn_grid btn_disabled"><a onclick="fnSaveScmSalesPlan(this);">Update</a></p></li>
     <li><p id='btnAddrow' class="btn_grid btn_disabled"><a onclick="fnInsertAddRow(this);">AddRow</a></p></li>
     <li><p id='btnInsert' class="btn_grid btn_disabled"><a onclick="fnInsertSave(this);">Insert</a></p></li>
-    <li><p id='btnCancel' class="btn_grid btn_disabled"><a onclick="fnCancel(this);">Cancel</a></p></li> 
+    <li><p id='btnCancel' class="btn_grid btn_disabled"><a onclick="fnCancel(this);">Cancel</a></p></li>
     <li><p id='btnExcel'  class="btn_grid btn_disabled"><a onclick="fnExcelExport(this,'SalesPlanManagement');">Download</a></p>
     </li>
   </ul>
@@ -2349,12 +2306,12 @@ $(document).ready(function()
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 그리드 영역 2-->
- <div id="dynamic_DetailGrid_wrap" style="height:280px;"></div> 
+ <div id="dynamic_DetailGrid_wrap" style="height:280px;"></div>
 </article><!-- grid_wrap end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 입력을위한 그리드 -->
- <div id="insertGridDivID" style="height:280px;"></div> 
+ <div id="insertGridDivID" style="height:280px;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">

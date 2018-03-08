@@ -1,41 +1,41 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.coway.trust.biz.scm.impl.PoMngementMapper"> 
+<mapper namespace="com.coway.trust.biz.scm.impl.PoMngementMapper">
 
 <!-- OTD Status Viewer -->
 <select id="selectOtdStatusView" parameterType="Map" resultType="egovMap">
-    SELECT 
-           PO_NO   
+    SELECT
+           PO_NO
           ,TO_CHAR(TO_DATE(PO_ISSUE_DT,'YYYY/MM/DD'),'DD/MM/YYYY')  PO_ISSUE_DT
-          ,STOCK_CODE              
-          ,STOCK_DESC 
+          ,STOCK_CODE
+          ,STOCK_DESC
           ,STOCK_TYPE
           ,TO_CHAR(TO_DATE(GR_DT,'YYYY/MM/DD'),'DD/MM/YYYY')  GR_DT
-          ,PO_QTY    
+          ,PO_QTY
           ,DECODE(PO_STUS,'1','Approved','Active') PO_STUS
-          
-          /*SO*/   
-          ,SO_QTY   
+
+          /*SO*/
+          ,SO_QTY
           ,TO_CHAR(TO_DATE(SO_DT,'YYYY/MM/DD'),'DD/MM/YYYY')  SO_DT
-          
+
           /*PP*/
-          ,PP_PLAN_QTY   
-          ,PP_PROD_QTY    
-          ,PP_PROD_START_DT   
+          ,PP_PLAN_QTY
+          ,PP_PROD_QTY
+          ,PP_PROD_START_DT
           ,PP_PROD_END_DT
-               
+
           /*GI*/
-          ,GI_QTY 
+          ,GI_QTY
           ,TO_CHAR(TO_DATE(GI_DT,'YYYY/MM/DD'),'DD/MM/YYYY')  GI_DT
-          
+
           /*SBO*/
-          ,SBO_PO_QTY   
-          ,SBO_AP_QTY   
-          ,SBO_GR_QTY  
-     FROM SCM0039M 
+          ,SBO_PO_QTY
+          ,SBO_AP_QTY
+          ,SBO_GR_QTY
+     FROM SCM0039M
     WHERE 1 = 1
      <if test='startDate != null and startDate !=""  and endDate != null and endDate !="" '>
-      AND PO_ISSUE_DT <![CDATA[ >= ]]>   TO_CHAR(TO_DATE(#{startDate},'DD/MM/YYYY'),'YYYYMMDD') 
+      AND PO_ISSUE_DT <![CDATA[ >= ]]>   TO_CHAR(TO_DATE(#{startDate},'DD/MM/YYYY'),'YYYYMMDD')
       AND PO_ISSUE_DT <![CDATA[ <= ]]>   TO_CHAR(TO_DATE(#{endDate},'DD/MM/YYYY'),'YYYYMMDD')
      </if>
      <if test='poNoTxt != null and poNoTxt !="" '>
@@ -51,70 +51,70 @@
                #{item}
            </foreach>
        </when>
-     </choose> 
-    
+     </choose>
+
 </select>
 
 <select id="selectOtdSOGIDetailPop" parameterType="Map" resultType="egovMap">
- SELECT  SCM39M.PO_NO 
-        ,SCM39M.STOCK_CODE  
-        ,SCM39M.STOCK_DESC 
-        ,SCM39M.STOCK_TYPE 
+ SELECT  SCM39M.PO_NO
+        ,SCM39M.STOCK_CODE
+        ,SCM39M.STOCK_DESC
+        ,SCM39M.STOCK_TYPE
         ,NVL(SCM39M.PO_QTY,0)  PO_QTY
         ,NVL(SCM39M.SO_QTY,0)  SO_QTY
         ,NVL(SCM39M.SBO_AP_QTY,0)  GI_QTY
         ,NVL2(SCM39M.SO_DT, TO_CHAR(TO_DATE(SCM39M.SO_DT,'YYYY/MM/DD'),'DD/MM/YYYY'),'')  SO_DATE
         ,NVL2(SCM39M.GI_DT, TO_CHAR(TO_DATE(SCM39M.GI_DT,'YYYY/MM/DD'),'DD/MM/YYYY'),'') GI_DATE
         ,TO_CHAR(TO_DATE(SCM39M.PO_ISSUE_DT,'YYYY/MM/DD'),'DD/MM/YYYY') PO_ISSUE_DATE
-        ,( SELECT SO_NO FROM SCM0042M SCM42M WHERE SCM42M.PO_NO = SCM39M.PO_NO AND ROWNUM =1 )   SO_NO    
+        ,( SELECT SO_NO FROM SCM0042M SCM42M WHERE SCM42M.PO_NO = SCM39M.PO_NO AND ROWNUM =1 )   SO_NO
    FROM SCM0039M SCM39M
   WHERE SCM39M.PO_NO = #{poNo}
    <if test='startDate != null and startDate !=""  and endDate != null and endDate !="" '>
-    AND SCM39M.PO_ISSUE_DT <![CDATA[ >= ]]>   TO_CHAR(TO_DATE(#{startDate},'DD/MM/YYYY'),'YYYYMMDD') 
+    AND SCM39M.PO_ISSUE_DT <![CDATA[ >= ]]>   TO_CHAR(TO_DATE(#{startDate},'DD/MM/YYYY'),'YYYYMMDD')
     AND SCM39M.PO_ISSUE_DT <![CDATA[ <= ]]>   TO_CHAR(TO_DATE(#{endDate},'DD/MM/YYYY'),'YYYYMMDD')
    </if>
 </select>
 
 <select id="selectOtdSOPPDetailPop" parameterType="Map" resultType="egovMap">
- SELECT DISTINCT 
+ SELECT DISTINCT
         SCM39M.PO_NO
        ,SCM39M.STOCK_CODE
-       ,SCM39M.STOCK_DESC 
-       ,SCM39M.STOCK_TYPE 
+       ,SCM39M.STOCK_DESC
+       ,SCM39M.STOCK_TYPE
        ,SCM39M.PO_QTY
-       ,SCM42M.SO_NO  
-       ,SCM39M.SO_QTY SO_QTY 
+       ,SCM42M.SO_NO
+       ,SCM39M.SO_QTY SO_QTY
        ,SCM42M.PLAN_QTY
        ,NVL2(SCM42M.PLAN_DT, TO_CHAR(TO_DATE(SCM42M.PLAN_DT,'YYYY/MM/DD'),'DD/MM/YYYY'),'') PLAN_DT
-       ,SCM42M.PROD_QTY RESULT_QTY 
+       ,SCM42M.PROD_QTY RESULT_QTY
        ,NVL2(SCM42M.RESULT_DT, TO_CHAR(TO_DATE(SCM42M.RESULT_DT,'YYYY/MM/DD'),'DD/MM/YYYY'),'') RESULT_DT
-  FROM SCM0039M SCM39M 
-      ,SCM0042M SCM42M 
+  FROM SCM0039M SCM39M
+      ,SCM0042M SCM42M
  WHERE SCM39M.PO_NO = #{poNo}
    AND SCM42M.PO_NO(+) = SCM39M.PO_NO
   <if test='startDate != null and startDate !=""  and endDate != null and endDate !="" '>
-   AND SCM39M.PO_ISSUE_DT <![CDATA[ >= ]]>   TO_CHAR(TO_DATE(#{startDate},'DD/MM/YYYY'),'YYYYMMDD') 
+   AND SCM39M.PO_ISSUE_DT <![CDATA[ >= ]]>   TO_CHAR(TO_DATE(#{startDate},'DD/MM/YYYY'),'YYYYMMDD')
    AND SCM39M.PO_ISSUE_DT <![CDATA[ <= ]]>   TO_CHAR(TO_DATE(#{endDate},'DD/MM/YYYY'),'YYYYMMDD')
-  </if>   
-          
+  </if>
+
 </select>
 
 
 <select id="selectOtdSOGIDetailPop_TMP" parameterType="Map" resultType="egovMap">
-		   SELECT  T0.PO_NO 
-				      ,T1.STOCK_CODE  
-				      ,STK.STK_DESC 
+		   SELECT  T0.PO_NO
+				      ,T1.STOCK_CODE
+				      ,STK.STK_DESC
 				      ,NVL(T1.QTY,0)  PO_QTY
 				      ,NVL(T2.SO_QTY,0)  SO_QTY
-				      ,NVL(T3.GI_QTY,0)  GI_QTY 
+				      ,NVL(T3.GI_QTY,0)  GI_QTY
 				      ,T2.SO_DT SO_DATE
 				      ,T3.GI_DT GI_DATE
 				      ,T0.PO_ISSU_DT  PO_ISSUE_DATE
-				      ,T2.SO_NO   
-				 FROM SCM0009M T0 LEFT JOIN SCM0010D T1 ON T1.PO_NO = T0.PO_NO 
-				                  LEFT JOIN SCM0015D T2 ON T2.PO_NO=T1.PO_NO AND T2.STOCK_CODE=T1.STOCK_CODE 
-				                  LEFT JOIN SCM0013D T3 ON T3.SO_NO=T2.SO_NO AND T3.STOCK_CODE=T2.STOCK_CODE 
-				             JOIN SYS0026M STK ON STK.STK_CODE=T1.STOCK_CODE 
+				      ,T2.SO_NO
+				 FROM SCM0009M T0 LEFT JOIN SCM0010D T1 ON T1.PO_NO = T0.PO_NO
+				                  LEFT JOIN SCM0015D T2 ON T2.PO_NO=T1.PO_NO AND T2.STOCK_CODE=T1.STOCK_CODE
+				                  LEFT JOIN SCM0013D T3 ON T3.SO_NO=T2.SO_NO AND T3.STOCK_CODE=T2.STOCK_CODE
+				             JOIN SYS0026M STK ON STK.STK_CODE=T1.STOCK_CODE
 				 WHERE T0.PO_NO= #{poNo}
 </select>
 
@@ -123,23 +123,23 @@
 <!-- Interface -->
 
 <select id="selectInterfaceList" parameterType="Map" resultType="egovMap">
-	 SELECT 
-	        SPMON   
-	      , MATNR   
-	      , MATNR_NM   
-	      , STOCK_TYPE 
-	      , STK_TYPE_ID  
-	      , CTGRY   
-	      , MEASURE   
-	      , AMT_K   
-	      , WAERS_KRW   
-	      , TO_CHAR(AMT_SUB, 'fm999,999,999,999.00')  AMT_SUB     
-	      , WAERS_SUB   
-	      , CNT   
-	      , MEINS   
-	      , AMT_USD   
-	      , WAERS_USD   
-	  FROM SCM0045V  
+	 SELECT
+	        SPMON
+	      , MATNR
+	      , MATNR_NM
+	      , STOCK_TYPE
+	      , STK_TYPE_ID
+	      , CTGRY
+	      , MEASURE
+	      , AMT_K
+	      , WAERS_KRW
+	      , TO_CHAR(AMT_SUB, 'fm999,999,999,999.00')  AMT_SUB
+	      , WAERS_SUB
+	      , CNT
+	      , MEINS
+	      , AMT_USD
+	      , WAERS_USD
+	  FROM SCM0045V
 	 WHERE SPMON = #{targetDateCbBox}
   <choose>
     <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
@@ -148,41 +148,41 @@
             #{item}
         </foreach>
     </when>
-  </choose>	 
-   
+  </choose>
+
 	 ORDER BY MATNR DESC
-	 
+
 </select>
 
 <select id="selectInterfaceLastState" parameterType="Map" resultType="egovMap">
 	 SELECT TO_CHAR(IF_DT,'mm/dd/yyyy hh12:mm:ss AM') ||' '|| MSG_FROM_HQ LAST_STATE
-		 FROM ( 
-					 SELECT 
-					        SN 
-					      , TRGET_YEAR 
-					      , IF_STUS 
-					      , IF_DT                 
-					      , MSG_FROM_HQ  
-					    FROM SCM0025D 
+		 FROM (
+					 SELECT
+					        SN
+					      , TRGET_YEAR
+					      , IF_STUS
+					      , IF_DT
+					      , MSG_FROM_HQ
+					    FROM SCM0025D
 					   WHERE  TRGET_YEAR = #{targetDateCbBox}
 					   ORDER BY SN DESC
 				  )
 		  WHERE ROWNUM = 1
 </select>
- 
-<!-- PO Issue --> 
+
+<!-- PO Issue -->
 
 <select id="selectScmPrePoItemView" parameterType="Map" resultType="egovMap">
 
-  SELECT   
+  SELECT
          SCM08M.STOCK_CODE
         ,SYS26M.STK_DESC  STOCK_NAME
         ,(SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 15 AND CODE_ID = STK_TYPE_ID) STK_TYPE_NAME
         ,SCM11D.PRE_QTY PLAN_QTY
-        ,NVL(SCM11D.PO_QTY,0) PO_QTY  
-        ,SCM17M.MOQ   
+        ,NVL(SCM11D.PO_QTY,0) PO_QTY
+        ,SCM17M.MOQ
         ,SYS26M.STK_CTGRY_ID
-        
+
         ,#{scmYearCbBox} PRE_YEAR
         ,(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN='1') PRE_MONTH
         ,#{scmPeriodCbBox} PRE_WEEK_TH
@@ -190,10 +190,10 @@
         ,SYS26M.STK_TYPE_ID
    FROM SCM0008M SCM08M
 		    LEFT JOIN SCM0017M SCM17M  ON SCM17M.STOCK_CODE = SCM08M.STOCK_CODE AND SCM17M.CDC_CODE =  DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
-		    LEFT JOIN SCM0011D SCM11D  ON SCM11D.PRE_STOCK_CODE = SCM08M.STOCK_CODE 
-			                            AND SCM11D.PRE_YEAR = #{scmYearCbBox} 
+		    LEFT JOIN SCM0011D SCM11D  ON SCM11D.PRE_STOCK_CODE = SCM08M.STOCK_CODE
+			                            AND SCM11D.PRE_YEAR = #{scmYearCbBox}
 			                            AND SCM11D.PRE_MONTH IN (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN='1' )
-			                            AND PRE_WEEK_TH = #{scmPeriodCbBox} 
+			                            AND PRE_WEEK_TH = #{scmPeriodCbBox}
 			                            AND PRE_CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
 			  LEFT JOIN SYS0026M SYS26M  ON SYS26M.STK_CODE = SCM08M.STOCK_CODE
    WHERE 1 = 1
@@ -205,7 +205,7 @@
        </foreach>
    </when>
   </choose>
-                                                                    
+
   <choose>
    <when test='stkCodes != null and !stkCodes.isEmpty '>
     AND  SCM08M.STOCK_CODE IN
@@ -213,51 +213,51 @@
            #{item}
        </foreach>
    </when>
-  </choose>    
-     
+  </choose>
+
 </select>
- 
+
 <select id="selectScmPoView" parameterType="Map" resultType="egovMap">
 		SELECT
 	       'PDF'||'/ EXCEL' PDF
 	       ,ROWNUM NO
 	       ,PO_NO
-	       ,PO_ITM_NO  
-	       ,EST_WEEK 
-	       ,GR_WEEK        
-	       ,TO_CHAR(PO_ISSU_DT,'dd-mm-YYYY') PO_ISSU_DT  
-	       ,STOCK_CODE         
+	       ,PO_ITM_NO
+	       ,EST_WEEK
+	       ,GR_WEEK
+	       ,TO_CHAR(PO_ISSU_DT,'dd-mm-YYYY') PO_ISSU_DT
+	       ,STOCK_CODE
 	       ,STK_DESC  STOCK_NAME
-	       ,QTY 
-	       ,TO_CHAR(FOB_AMT, 'fm999,999,999,999.00')  FOB_AMT  
-	       ,CDC  
-	       ,RTPGR_WEEK         
-	       ,PO_APPV_STUS  
-	                     
-	       ,PO_ID          
-	       ,BAS_YEAR   
-	       ,PO_STUS   
-	       ,CRT_DT   
-	       ,CRT_USER_ID   
-	       ,UPD_DT   
-	       ,UPD_USER_ID   
-	       ,IF_DT   
-	       ,GR_YEAR   
-	       ,GR_MONTH   
-	       ,SN   
-	       ,STOCK_CTGRY   
-	       ,STOCK_ID  
+	       ,QTY
+	       ,TO_CHAR(FOB_AMT, 'fm999,999,999,999.00')  FOB_AMT
+	       ,CDC
+	       ,RTPGR_WEEK
+	       ,PO_APPV_STUS
+
+	       ,PO_ID
+	       ,BAS_YEAR
+	       ,PO_STUS
+	       ,CRT_DT
+	       ,CRT_USER_ID
+	       ,UPD_DT
+	       ,UPD_USER_ID
+	       ,IF_DT
+	       ,GR_YEAR
+	       ,GR_MONTH
+	       ,SN
+	       ,STOCK_CTGRY
+	       ,STOCK_ID
 	       ,STK_TYPE_ID
-	       ,PO_ITM_APPV_STUS   
-	       ,GR_DT   
+	       ,PO_ITM_APPV_STUS
+	       ,GR_DT
 	       ,(DECODE(PO_APPV_STUS,'Active',1,5)) CB_BOX_FLAG
-	   FROM SCM0041V 
-	  WHERE BAS_YEAR = #{scmYearCbBox}  
+	   FROM SCM0041V
+	  WHERE BAS_YEAR = #{scmYearCbBox}
 	    AND EST_WEEK = #{scmPeriodCbBox}
-	   <if test='cdcCbBox != null and cdcCbBox !="" '>  
+	   <if test='cdcCbBox != null and cdcCbBox !="" '>
 	    AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
 	   </if>
-	   
+
 	    <choose>
       <when test='stkCodes != null and !stkCodes.isEmpty '>
        AND  STOCK_CODE IN
@@ -266,7 +266,7 @@
           </foreach>
       </when>
     </choose>
-    
+
     <choose>
       <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
        AND  STK_TYPE_ID IN
@@ -278,7 +278,7 @@
 
       ORDER BY PO_NO DESC, PO_ITM_NO
 </select>
- 
+
 <select id="selectPoRightMove" parameterType="Map" resultType="egovMap">
      SELECT STOCK_CODE
           , STOCK_NAME
@@ -300,7 +300,7 @@
           (
               SELECT MATRL_MST STOCK_CODE
                     , (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{inStockCode} AND STK_CTGRY_ID = #{inStkCtgryId} AND STK_TYPE_ID = #{inStkTypeId}) STOCK_NAME
-                    , (#{inPlanQty}) PLAN_QTY   
+                    , (#{inPlanQty}) PLAN_QTY
                     , #{inMoq} MOQ
                     , CEIL (#{inPlanQty}  )  ROUND_UP_MOQ
                     , CEIL (#{inPlanQty}  )  CALCUL_PO_QTY
@@ -315,107 +315,101 @@
                     , #{inPreYear} PRE_Year
                     , #{inPreWeekTh} PRE_WEEK_TH
                     , ROW_NUMBER() OVER (PARTITION BY VENDOR, MATRL_MST, PURCHS_ORG ORDER BY SEQ_NO DESC) RANK_NO
-               FROM LOG0078M LOG78M 
-              WHERE MATRL_MST = #{inStockCode} 
-              
-          ) WHERE RANK_NO = 1  
+               FROM LOG0078M LOG78M
+              WHERE MATRL_MST = #{inStockCode}
+
+          ) WHERE RANK_NO = 1
 </select>
 
 <select id="selectScmPoStatusCnt" parameterType="Map" resultType="egovMap">
-          SELECT  
+          SELECT
 				        (
-				          SELECT COUNT(1) 
+				          SELECT COUNT(1)
 				            FROM SCM0011D
-				           WHERE PRE_YEAR    = #{scmYearCbBox}  
-				             AND PRE_WEEK_TH = #{scmPeriodCbBox}  
+				           WHERE PRE_YEAR    = #{scmYearCbBox}
+				             AND PRE_WEEK_TH = #{scmPeriodCbBox}
 				             AND PRE_CDC     = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
 				             AND (PRE_QTY - PO_QTY) <![CDATA[ > ]]> 0
 				        ) PRE_POITEM_CNT
 				       ,(
-				           SELECT COUNT(1) 
-				             FROM SCM0009M 
-				            WHERE BAS_YEAR = #{scmYearCbBox}  
-				              AND EST_WEEK = #{scmPeriodCbBox}   
+				           SELECT COUNT(1)
+				             FROM SCM0009M
+				            WHERE BAS_YEAR = #{scmYearCbBox}
+				              AND EST_WEEK = #{scmPeriodCbBox}
 				              AND CDC      = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
-				              AND PO_STUS <![CDATA[ <> ]]> 5 
+				              AND PO_STUS <![CDATA[ <> ]]> 5
 				        )  SCMPOMASTER_CNT
-				   FROM DUAL   
+				   FROM DUAL
 
 </select>
 
-<update id="updatePOIssuItem" parameterType="Map"> 
-MERGE INTO SCM0011D 
+<update id="updatePOIssuItem" parameterType="Map">
+MERGE INTO SCM0011D
       USING DUAL
          ON (PRE_YEAR = #{preYear} AND PRE_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1')
-             AND  PRE_WEEK_TH = #{preWeekTh} AND PRE_STOCK_CODE = #{stockCode} AND PRE_CDC  = #{preCdc} 
+             AND  PRE_WEEK_TH = #{preWeekTh} AND PRE_STOCK_CODE = #{stockCode} AND PRE_CDC  = #{preCdc}
             )
-           
+
          WHEN MATCHED THEN
-              UPDATE 
+              UPDATE
                  SET PO_QTY      = (PO_QTY + #{poQty})
                WHERE PRE_YEAR    = #{preYear}
                  AND PRE_MONTH   = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1' )
                  AND PRE_WEEK_TH = #{preWeekTh}
                  AND PRE_STOCK_CODE = #{stockCode}
-                 AND PRE_CDC        = #{preCdc} 
+                 AND PRE_CDC        = #{preCdc}
 
           WHEN NOT MATCHED THEN
                INSERT
                   (
-                    PRE_YEAR           
-                   ,PRE_MONTH         
-                   ,PRE_WEEK_TH       
-                   ,PRE_STOCK_CODE    
-                   ,PRE_CDC           
-                   ,PO_QTY           
+                    PRE_YEAR
+                   ,PRE_MONTH
+                   ,PRE_WEEK_TH
+                   ,PRE_STOCK_CODE
+                   ,PRE_CDC
+                   ,PO_QTY
                   )
               VALUES
-                 ( 
+                 (
                    #{preYear}
                   ,(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1' )
                   ,#{preWeekTh}
                   ,#{stockCode}
-                  ,#{preCdc} 
-                  ,#{poQty} 
-                 ) 			                        
+                  ,#{preCdc}
+                  ,#{poQty}
+                 )
 </update>
 
-<delete id="deletePOMaster" parameterType="Map"> 
+<delete id="deletePOMaster" parameterType="Map">
  DELETE FROM SCM0009M WHERE PO_NO = #{poNo}
 </delete>
 
-<delete id="deletePODetail" parameterType="Map"> 
- DELETE FROM SCM0010D WHERE PO_NO = #{poNo} AND PO_ITM_NO= #{poItmNo} AND STOCK_CODE= #{stockCode} 
+<delete id="deletePODetail" parameterType="Map">
+ DELETE FROM SCM0010D WHERE PO_NO = #{poNo} AND PO_ITM_NO= #{poItmNo} AND STOCK_CODE= #{stockCode}
 </delete>
 
-<update id="updatePOQtinty" parameterType="Map"> 
- UPDATE SCM0011D 
+<update id="updatePOQtinty" parameterType="Map">
+ UPDATE SCM0011D
     SET PO_QTY    = ( PO_QTY - #{qty} )
-  WHERE PRE_YEAR  = #{basYear} 
+  WHERE PRE_YEAR  = #{basYear}
     AND PRE_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{basYear} AND WEEK_TH= #{estWeek} AND WEEK_TH_SN='1' )
     AND PRE_WEEK_TH    = #{estWeek}
-    AND PRE_STOCK_CODE = #{stockCode} 
-    AND PRE_CDC = #{cdc} 
+    AND PRE_STOCK_CODE = #{stockCode}
+    AND PRE_CDC = #{cdc}
 </update>
 
 <select id="selectPOIssueNewPoNo" parameterType="Map" resultType="egovMap">
-    SELECT 'MY' || DECODE(#{preCdc},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{preCdc})
-                || SUBSTR(EXTRACT(year FROM SYSDATE),-2)  ||  LPAD(EXTRACT(month FROM SYSDATE),2,'0')
-                || LPAD(EXTRACT(DAY FROM SYSDATE),2,'0')  || 'A' || DECODE(AA.PO_NO,NULL,'001',(SUBSTR(AA.PO_NO,-3) +1 ) )  NEW_PONO
-      FROM (
-             SELECT PO_ID,PO_NO,ROW_NUMBER()  OVER ( ORDER BY PO_ID DESC) RK   
-               FROM SCM0009M WHERE PO_NO NOT LIKE '%WJ%' AND TO_CHAR(CRT_DT,'YYYY') = #{preYear}
-           ) AA
-      WHERE AA.RK = 1    
+	SELECT FN_GET_PONO(#{preCdc}) NEW_PONO
+	FROM DUAL
 </select>
 
 <insert id="insertPOIssueDetail" parameterType="Map">
         <selectKey keyProperty="poDetailSeq" resultType="int" order="BEFORE">
             SELECT SCM0010D_SN_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-         
-            INSERT INTO SCM0010D  
-                  ( 
+
+            INSERT INTO SCM0010D
+                  (
                      SN
                    , PO_NO
                    , PO_ITM_NO
@@ -431,17 +425,17 @@ MERGE INTO SCM0011D
                    , UPD_USER_ID
                    , GR_QTY
                   )
-            VALUES 
-                  (  
+            VALUES
+                  (
                      #{poDetailSeq}
                    , #{newPono}
                    , #{poItemNo}
                    , #{stockCode}
                    , #{poQty}
-                   , #{fobAmount} 
-                   , #{condiPrcUnit} 
-                   , #{purchsPrc}  
-                   , 1  
+                   , #{fobAmount}
+                   , #{condiPrcUnit}
+                   , #{purchsPrc}
+                   , 1
                    , SYSDATE
                    , NVL(#{crtUserId},'')
                    , SYSDATE
@@ -454,7 +448,7 @@ MERGE INTO SCM0011D
         <selectKey keyProperty="poMasterIdSeq" resultType="int" order="BEFORE">
             SELECT SCM0009M_PO_ID_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-         
+
          INSERT INTO SCM0009M
          (
            BAS_YEAR
@@ -477,14 +471,14 @@ MERGE INTO SCM0011D
          VALUES
          (
            #{preYear}
-         , #{preCdc} 
+         , #{preCdc}
          , SYSDATE
          , #{crtUserId}
          , #{preWeekTh}
-         , NULL  
+         , NULL
          , ( CASE WHEN (#{preWeekTh} + ( SELECT LEAD_TM FROM SCM0008M WHERE STOCK_CODE = #{stockCode} AND ROWNUM =1)) > 52 THEN  ((#{preWeekTh} + ( SELECT LEAD_TM FROM SCM0008M WHERE STOCK_CODE = #{stockCode} AND ROWNUM =1)) - 52) ELSE (#{preWeekTh} + ( SELECT LEAD_TM FROM SCM0008M WHERE STOCK_CODE = #{stockCode} AND ROWNUM =1) ) END )
-         , ( CASE WHEN (#{preWeekTh} + ( SELECT LEAD_TM FROM SCM0008M WHERE STOCK_CODE = #{stockCode} AND ROWNUM =1)) > 52 THEN  (TO_NUMBER(#{preYear}) + 1) ELSE TO_NUMBER(#{preYear})  END    )   
-         , NULL 
+         , ( CASE WHEN (#{preWeekTh} + ( SELECT LEAD_TM FROM SCM0008M WHERE STOCK_CODE = #{stockCode} AND ROWNUM =1)) > 52 THEN  (TO_NUMBER(#{preYear}) + 1) ELSE TO_NUMBER(#{preYear})  END    )
+         , NULL
          , #{poMasterIdSeq}
          , SYSDATE
          , #{newPono}
@@ -494,20 +488,20 @@ MERGE INTO SCM0011D
          , #{updUserId}
          )
 </insert>
-  
+
   <!-- PO Approval -->
- 
+
 <select id="selectPoApprovalSummary" parameterType="Map" resultType="egovMap">
 WITH PO_APPROVAL_SUMMARY
    AS
    (
-      SELECT 
+      SELECT
              NVL(STOCK_CTGRY,'ZZ_SUM') STOCK_CTGRY
            , NVL(PRE_CDC,'ALL_SUM') CDC
            , SUM(QTY) QTY
            , SUM(FOB_AMT) FOB_AMT
        FROM SCM0043V
-      WHERE PRE_SCM_YEAR = #{scmYearCbBox} 
+      WHERE PRE_SCM_YEAR = #{scmYearCbBox}
         AND PRE_EST_WEEK = #{scmPeriodCbBox}
       <choose>
        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
@@ -541,14 +535,14 @@ WITH PO_APPROVAL_SUMMARY
 
 <select id="selectPoApprovalSummaryHidden" parameterType="Map" resultType="egovMap">
   SELECT CODE
-    FROM SYS0013M 
+    FROM SYS0013M
    WHERE CODE_MASTER_ID = 349
    MINUS
- SELECT CDC 
-   FROM SCM0043V 
+ SELECT CDC
+   FROM SCM0043V
   WHERE BAS_YEAR = #{scmYearCbBox}
-    AND EST_WEEK = #{scmPeriodCbBox} 
-    
+    AND EST_WEEK = #{scmPeriodCbBox}
+
    <choose>
      <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
       AND  STK_TYPE_ID IN
@@ -556,51 +550,51 @@ WITH PO_APPROVAL_SUMMARY
              #{item}
          </foreach>
      </when>
-   </choose>    
- 
+   </choose>
+
   GROUP BY CDC
 </select>
- 
+
 <select id="selectPoApprovalMainList" parameterType="Map" resultType="egovMap">
 SELECT DISTINCT
-       PO_ITM_APPV_STUS  
-     , STK_TYPE_ID 
-     , S43V.PO_NO 
-     , S43V.PO_ITM_NO   
-     , IF56.EBELN   ECC_PO_NO 
-     , GR_WEEK    
+       PO_ITM_APPV_STUS
+     , STK_TYPE_ID
+     , S43V.PO_NO
+     , S43V.PO_ITM_NO
+     , IF56.EBELN   ECC_PO_NO
+     , GR_WEEK
      , TO_CHAR(PO_ISSU_DT,'DD-MM-YYYY') PO_ISSU_DT
-     , STOCK_CTGRY   
-     , STOCK_CODE       
-     , STK_DESC   
-     , QTY   
-     , FOB_AMT       
-     , CDC     
+     , STOCK_CTGRY
+     , STOCK_CODE
+     , STK_DESC
+     , QTY
+     , FOB_AMT
+     , CDC
      , TO_CHAR(IF_DT ,'DD-MM-YYYY') IF_DT
-              
-     , PRE_SCM_YEAR   
-     , PRE_EST_WEEK   
-     , PRE_CDC   
-     , PRE_STOCK_CODE   
-     , PRE_STOCK_DESC   
-     , PRE_QTY   
-     , PRE_FOB_PRC   
-     , S43V.PO_ID              
-     , BAS_YEAR   
-     , EST_WEEK   
-     , RTPGR_WEEK   
-     , PO_STUS   
-     , CRT_DT   
-     , CRT_USER_ID   
-     , UPD_DT   
-     , UPD_USER_ID   
-     , SN   
-     , STOCK_ID   
-     , PO_APPV_STUS 
+
+     , PRE_SCM_YEAR
+     , PRE_EST_WEEK
+     , PRE_CDC
+     , PRE_STOCK_CODE
+     , PRE_STOCK_DESC
+     , PRE_QTY
+     , PRE_FOB_PRC
+     , S43V.PO_ID
+     , BAS_YEAR
+     , EST_WEEK
+     , RTPGR_WEEK
+     , PO_STUS
+     , CRT_DT
+     , CRT_USER_ID
+     , UPD_DT
+     , UPD_USER_ID
+     , SN
+     , STOCK_ID
+     , PO_APPV_STUS
      , DECODE(PO_ITM_APPV_STUS,'Approved',5,1) CB_BOX_FLAG
  FROM SCM0043V S43V
      ,ITF0156M IF56
-WHERE S43V.BAS_YEAR = #{scmYearCbBox} 
+WHERE S43V.BAS_YEAR = #{scmYearCbBox}
   AND S43V.EST_WEEK = #{scmPeriodCbBox}
   AND S43V.PO_NO = IF56.PO_NO(+)
 	<choose>
@@ -610,14 +604,14 @@ WHERE S43V.BAS_YEAR = #{scmYearCbBox}
 	          #{item}
 	      </foreach>
 	  </when>
-	</choose>     
+	</choose>
    ORDER BY PO_NO DESC, PO_ITM_NO
 </select>
 
 <update id="updatePoApprovalDetail" parameterType="Map">
    UPDATE SCM0010D
       SET PO_ITM_APPV_STUS = 5
-    WHERE PO_NO      = #{poNo}    
+    WHERE PO_NO      = #{poNo}
       AND PO_ITM_NO  = #{poItmNo}
       AND STOCK_CODE = #{stockCode}
 </update>
@@ -625,7 +619,7 @@ WHERE S43V.BAS_YEAR = #{scmYearCbBox}
 <update id="updatePoIssueStatus" parameterType="Map">
    UPDATE SCM0009M
       SET PO_STUS = 5
-    WHERE PO_NO   = #{poNo}    
+    WHERE PO_NO   = #{poNo}
 </update>
 
 <resultMap id="poIssueMap" type="egovMap"></resultMap>
@@ -639,6 +633,6 @@ WHERE S43V.BAS_YEAR = #{scmYearCbBox}
                                   , #{retValue, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=poIssueMap})
     }
 </select>
- 
-  
+
+
 </mapper>

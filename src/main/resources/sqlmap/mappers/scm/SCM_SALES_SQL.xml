@@ -1,80 +1,83 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.coway.trust.biz.scm.impl.SalesPlanMngementMapper"> 
+<mapper namespace="com.coway.trust.biz.scm.impl.SalesPlanMngementMapper">
 
 <select id="selectStockCtgrySummary" parameterType="Map" resultType="egovMap">
 WITH SALES_PLAN_SUMMARY
   AS
   (
-    SELECT 
-           SAILS_MAIN.PLAN_ID PLAN_MASTER_ID ,SAILS_MAIN.TEAM ,SYS26M.STK_TYPE_ID,SYS13M.CODE CATEGORY ,SAILS_MAIN.STOCK_CODE CODE,SYS26M.STK_DESC NAME 
-          ,SAILS_MAIN.M0_PLAN ,SAILS_MAIN.M0_ORD ,SAILS_MAIN.M1 ,SAILS_MAIN.M2 ,SAILS_MAIN.M3 ,SAILS_MAIN.M4 ,SAILS_MAIN.M1_ORD ,SAILS_MAIN.M2_ORD 
-          ,SAILS_MAIN.M3_ORD ,SAILS_MAIN.M_3 ,SAILS_MAIN.M_2 ,SAILS_MAIN.M_1 
-        
+    SELECT
+          SYS26M.STK_TYPE_ID,SYS13M2.CODE_NAME STK_TYPE_NM,SYS13M.CODE CATEGORY ,SCM02D.STOCK_CODE CODE,SYS26M.STK_DESC NAME
+          ,SAILS_MAIN.M0_PLAN ,SAILS_MAIN.M0_ORD ,SCM02D.M1 ,SCM02D.M2 ,SCM02D.M3 ,SCM02D.M4 ,SAILS_MAIN.M1_ORD ,SAILS_MAIN.M2_ORD
+          ,SAILS_MAIN.M3_ORD ,SAILS_MAIN.M_3 ,SAILS_MAIN.M_2 ,SAILS_MAIN.M_1
           ,SCM02D.W00 ,SCM02D.W01 ,SCM02D.W02 ,SCM02D.W03 ,SCM02D.W04 ,SCM02D.W05 ,SCM02D.W06 ,SCM02D.W07 ,SCM02D.W08 ,SCM02D.W09 ,SCM02D.W10 ,SCM02D.W11 ,SCM02D.W12 ,SCM02D.W13 ,SCM02D.W14
           ,SCM02D.W15 ,SCM02D.W16 ,SCM02D.W17 ,SCM02D.W18 ,SCM02D.W19 ,SCM02D.W20 ,SCM02D.W21 ,SCM02D.W22 ,SCM02D.W23 ,SCM02D.W24 ,SCM02D.W25 ,SCM02D.W26 ,SCM02D.W27 ,SCM02D.W28 ,SCM02D.W29
-          ,SCM02D.W30 ,SCM02D.WS1 ,SCM02D.WS2 ,SCM02D.WS3 ,SCM02D.WS4 ,SCM02D.WS5  
-                        
-          ,SAILS_MAIN.PRE_M3_AVG_ORDED ,SAILS_MAIN.PRE_M3_AVG_ISSU ,SAILS_MAIN.SCM_YEAR ,SAILS_MAIN.SCM_MONTH ,SAILS_MAIN.SCM_WEEK_TH ,SAILS_MAIN.SCM_WEEK_TH_SN   
-          ,SAILS_MAIN.PRE_M3_AVG_ORDED_RATE ,SAILS_MAIN.PRE_M3_AVG_ISSU_RATE  
+          ,SCM02D.W30 ,SCM02D.WS1 ,SCM02D.WS2 ,SCM02D.WS3 ,SCM02D.WS4 ,SCM02D.WS5
+          ,SAILS_MAIN.PRE_M3_AVG_ORDED ,SAILS_MAIN.PRE_M3_AVG_ISSU ,SCM02D.PLAN_YEAR SCM_YEAR ,SCM02D.PLAN_MONTH SCM_MONTH ,SCM02D.PLAN_WEEK SCM_WEEK_TH
+          ,SAILS_MAIN.PRE_M3_AVG_ORDED_RATE ,SAILS_MAIN.PRE_M3_AVG_ISSU_RATE
     FROM (
-          SELECT SCM01M.PLAN_ID ,SCM30S.SCM_YEAR ,SCM30S.SCM_MONTH ,SCM30S.SCM_WEEK_TH ,SCM30S.SCM_WEEK_TH_SN ,SCM30S.STOCK_CODE ,SCM30S.TEAM ,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
-                ,SUM(PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE ,SUM(PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED ,SUM(PRE_M3_AVG_ISSU) PRE_M3_AVG_ISSU ,SUM(M1_ORD) M1_ORD ,SUM(M2_ORD) M2_ORD
-                ,SUM(M3_ORD) M3_ORD ,SUM(M_3) M_3 ,SUM(M_2) M_2 ,SUM(M_1) M_1 ,SUM(M0_PLAN) M0_PLAN ,SUM(M0_ORD) M0_ORD ,SUM(M1) M1 ,SUM(M2) M2 ,SUM(M3) M3 ,SUM(M4) M4
+         SELECT SCM30S.SCM_YEAR ,SCM30S.SCM_MONTH ,SCM30S.SCM_WEEK_TH ,SCM30S.SCM_WEEK_TH_SN ,SCM30S.STOCK_CODE,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
+                ,SUM(SCM30S.PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE ,SUM(SCM30S.PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED ,SUM(SCM30S.PRE_M3_AVG_ISSU) PRE_M3_AVG_ISSU ,SUM(SCM30S.M1_ORD) M1_ORD ,SUM(SCM30S.M2_ORD) M2_ORD
+                ,SUM(SCM30S.M3_ORD) M3_ORD ,SUM(SCM30S.M_3) M_3 ,SUM(SCM30S.M_2) M_2 ,SUM(SCM30S.M_1) M_1 ,SUM(SCM30S.M0_PLAN) M0_PLAN ,SUM(SCM30S.M0_ORD) M0_ORD
             FROM SCM0030S SCM30S
-                ,SCM0001M SCM01M
            WHERE SCM30S.SCM_YEAR  = #{scmYearCbBox}
             <if test="selectPlanMonth != null and selectPlanMonth !=''">
              AND SCM30S.SCM_MONTH = #{selectPlanMonth}
             </if>
             <if test="scmPeriodCbBox != null and scmPeriodCbBox !=''">
-             AND SCM30S.SCM_WEEK_TH = #{scmPeriodCbBox} 
-             </if> 
-             AND SCM30S.SCM_YEAR    = SCM01M.PLAN_YEAR
-             AND SCM30S.SCM_MONTH   = SCM01M.PLAN_MONTH 
-             AND SCM30S.SCM_WEEK_TH = SCM01M.PLAN_WEEK
-             AND SCM30S.SCM_WEEK_TH_SN =1 
-             AND SCM30S.TEAM = SCM01M.TEAM
-             <if test="scmTeamCbBox != null and scmTeamCbBox !=''">
-             AND SCM01M.TEAM = #{scmTeamCbBox} 
+             AND SCM30S.SCM_WEEK_TH = #{scmPeriodCbBox}
              </if>
-           GROUP BY SCM01M.PLAN_ID
-                   ,SCM30S.SCM_YEAR
+             AND SCM30S.SCM_WEEK_TH_SN =1
+           GROUP BY SCM30S.SCM_YEAR
                    ,SCM30S.SCM_MONTH
                    ,SCM30S.SCM_WEEK_TH
                    ,SCM30S.SCM_WEEK_TH_SN
                    ,SCM30S.STOCK_CODE
-                   ,SCM30S.TEAM
-       ) SAILS_MAIN 
-         LEFT OUTER JOIN SCM0002D SCM02D ON SAILS_MAIN.TEAM = SCM02D.TEAM 
-                                         AND SAILS_MAIN.STOCK_CODE = SCM02D.STOCK_CODE 
-                                         AND SAILS_MAIN.PLAN_ID = SCM02D.PLAN_MASTER_ID
-         LEFT OUTER JOIN SYS0026M SYS26M ON SAILS_MAIN.STOCK_CODE = SYS26M.STK_CODE
-         LEFT OUTER JOIN SYS0013M SYS13M ON SYS26M.STK_CTGRY_ID = SYS13M.CODE_ID
+       ) SAILS_MAIN, SYS0026M SYS26M, SYS0013M SYS13M, SYS0013M SYS13M2,
+        (SELECT SCM01M.PLAN_YEAR, SCM01M.PLAN_MONTH, SCM01M.PLAN_WEEK, SCM02D.STOCK_CODE, SCM02D.M1 ,SCM02D.M2 ,SCM02D.M3 ,SCM02D.M4
+                ,SCM02D.W00 ,SCM02D.W01 ,SCM02D.W02 ,SCM02D.W03 ,SCM02D.W04 ,SCM02D.W05 ,SCM02D.W06 ,SCM02D.W07 ,SCM02D.W08 ,SCM02D.W09 ,SCM02D.W10 ,SCM02D.W11 ,SCM02D.W12 ,SCM02D.W13 ,SCM02D.W14
+                ,SCM02D.W15 ,SCM02D.W16 ,SCM02D.W17 ,SCM02D.W18 ,SCM02D.W19 ,SCM02D.W20 ,SCM02D.W21 ,SCM02D.W22 ,SCM02D.W23 ,SCM02D.W24 ,SCM02D.W25 ,SCM02D.W26 ,SCM02D.W27 ,SCM02D.W28 ,SCM02D.W29
+                ,SCM02D.W30 ,SCM02D.WS1 ,SCM02D.WS2 ,SCM02D.WS3 ,SCM02D.WS4 ,SCM02D.WS5
+           FROM SCM0001M SCM01M, SCM0002D SCM02D
+          WHERE SCM01M.PLAN_ID = SCM02D.PLAN_MASTER_ID
+            AND SCM01M.PLAN_YEAR  = #{scmYearCbBox}
+            <if test="selectPlanMonth != null and selectPlanMonth !=''">
+             AND SCM01M.PLAN_MONTH = #{selectPlanMonth}
+            </if>
+            <if test="scmPeriodCbBox != null and scmPeriodCbBox !=''">
+             AND SCM01M.PLAN_WEEK = #{scmPeriodCbBox}
+            </if>
+            <if test="scmTeamCbBox != null and scmTeamCbBox !=''">
+             AND SCM01M.TEAM = #{scmTeamCbBox}
+            </if>
+            ) SCM02D
+       WHERE SCM02D.STOCK_CODE = SAILS_MAIN.STOCK_CODE(+)
+         AND SCM02D.STOCK_CODE  = SYS26M.STK_CODE
+         AND SYS26M.STK_CTGRY_ID    = SYS13M.CODE_ID
+         AND SYS26M.STK_TYPE_ID = SYS13M2.CODE_ID
+         AND SYS13M2.code_master_id = '15'
   )
-  SELECT   
-           SALES_PLAN_SUMMARY.PLAN_MASTER_ID
-         , SALES_PLAN_SUMMARY.SCM_YEAR
+  SELECT
+          SALES_PLAN_SUMMARY.SCM_YEAR
          , SALES_PLAN_SUMMARY.SCM_MONTH
          , SALES_PLAN_SUMMARY.SCM_WEEK_TH
-         , SALES_PLAN_SUMMARY.TEAM
-         , SALES_PLAN_SUMMARY.STK_TYPE_ID
-         , SALES_PLAN_SUMMARY.CATEGORY  
+         , SALES_PLAN_SUMMARY.STK_TYPE_NM STK_TYPE_ID
+         , SALES_PLAN_SUMMARY.CATEGORY
          , ROUND(AVG(M_1 + M_2 + M_3)) ||'/'|| ROUND(AVG(M1_ORD + M2_ORD + M3_ORD)) M3_AVG_ISSUE_ORDER
          , ROUND(SUM(M_1)) ||'/'|| ROUND(SUM(M1_ORD)) M1_ISSUE_ORDER
-         , ROUND(SUM(M0_PLAN)) ||'/'|| ROUND(SUM(M0_ORD)) M0_PLAN_ORDER 
-         , SUM(M1) M1 
-         , SUM(M2) M2 
-         , SUM(M3) M3 
-         , SUM(M4) M4 
-         , SUM(W00)  AS W00 ,SUM(W01)  AS W01 ,SUM(W02)  AS W02 ,SUM(W03)  AS W03 ,SUM(W04)  AS W04 
-         , SUM(W05)  AS W05 ,SUM(W06)  AS W06 ,SUM(W07)  AS W07 ,SUM(W08)  AS W08 ,SUM(W09)  AS W09 
-         , SUM(W10)  AS W10 ,SUM(W11)  AS W11 ,SUM(W12)  AS W12 ,SUM(W13)  AS W13 ,SUM(W14)  AS W14  
-         , SUM(W15)  AS W15 ,SUM(W16)  AS W16 ,SUM(W17)  AS W17 ,SUM(W18)  AS W18 ,SUM(W19)  AS W19 
+         , ROUND(SUM(M0_PLAN)) ||'/'|| ROUND(SUM(M0_ORD)) M0_PLAN_ORDER
+         , SUM(M1) M1
+         , SUM(M2) M2
+         , SUM(M3) M3
+         , SUM(M4) M4
+         , SUM(W00)  AS W00 ,SUM(W01)  AS W01 ,SUM(W02)  AS W02 ,SUM(W03)  AS W03 ,SUM(W04)  AS W04
+         , SUM(W05)  AS W05 ,SUM(W06)  AS W06 ,SUM(W07)  AS W07 ,SUM(W08)  AS W08 ,SUM(W09)  AS W09
+         , SUM(W10)  AS W10 ,SUM(W11)  AS W11 ,SUM(W12)  AS W12 ,SUM(W13)  AS W13 ,SUM(W14)  AS W14
+         , SUM(W15)  AS W15 ,SUM(W16)  AS W16 ,SUM(W17)  AS W17 ,SUM(W18)  AS W18 ,SUM(W19)  AS W19
          , SUM(W20)  AS W20 ,SUM(W21)  AS W21 ,SUM(W22)  AS W22 ,SUM(W23)  AS W23 ,SUM(W24)  AS W24
          , SUM(W25)  AS W25 ,SUM(W26)  AS W26 ,SUM(W27)  AS W27 ,SUM(W28)  AS W28 ,SUM(W29)  AS W29 ,SUM(W30)  AS W30
-         , ROUND(AVG(M1_ORD + M2_ORD + M3_ORD)) AS PRE_M3_AVG_ORDERED 
-                     
+         , ROUND(AVG(M1_ORD + M2_ORD + M3_ORD)) AS PRE_M3_AVG_ORDERED
+
     FROM SALES_PLAN_SUMMARY
    WHERE 1 = 1
      <choose>
@@ -85,24 +88,24 @@ WITH SALES_PLAN_SUMMARY
           </foreach>
       </when>
     </choose>
-    
+
     <choose>
       <when test='stkCategories != null and !stkCategories.isEmpty  '>
-         AND SALES_PLAN_SUMMARY.CATEGORY IN (SELECT CODE FROM SYS0013M WHERE CODE_ID IN 
+         AND SALES_PLAN_SUMMARY.CATEGORY IN (SELECT CODE FROM SYS0013M WHERE CODE_ID IN
             <foreach item="item" collection="stkCategories" index="index" open="(" separator="," close=")">
                 #{item}
             </foreach>
             )
         </when>
-      </choose>   
-      
-    GROUP BY SALES_PLAN_SUMMARY.PLAN_MASTER_ID, SALES_PLAN_SUMMARY.SCM_YEAR ,SALES_PLAN_SUMMARY.SCM_MONTH
-           , SALES_PLAN_SUMMARY.SCM_WEEK_TH, SALES_PLAN_SUMMARY.TEAM, SALES_PLAN_SUMMARY.STK_TYPE_ID, SALES_PLAN_SUMMARY.CATEGORY  
-  ORDER BY SALES_PLAN_SUMMARY.CATEGORY    
+      </choose>
+
+    GROUP BY SALES_PLAN_SUMMARY.SCM_YEAR ,SALES_PLAN_SUMMARY.SCM_MONTH
+           , SALES_PLAN_SUMMARY.SCM_WEEK_TH, SALES_PLAN_SUMMARY.STK_TYPE_NM, SALES_PLAN_SUMMARY.CATEGORY
+  ORDER BY SALES_PLAN_SUMMARY.CATEGORY
 </select>
-    
+
     <select id="selectCalendarHeader" parameterType="Map" resultType="egovMap">
-			SELECT 
+			SELECT
              SCM_YEAR
             ,STOCK_PH1
             ,TEAM_H1
@@ -123,11 +126,11 @@ WITH SALES_PLAN_SUMMARY
             ,IS_SAVED
             ,DIV_ODD
             ,STK_TYPE_ID_H1
-            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W1_WEEK_SEQ ,1,5) ELSE SUBSTR(W1_WEEK_SEQ ,1,3) END) W1_WEEK_SEQ 
+            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W1_WEEK_SEQ ,1,5) ELSE SUBSTR(W1_WEEK_SEQ ,1,3) END) W1_WEEK_SEQ
             ,(CASE WHEN (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W2_WEEK_SEQ ,1,5) ELSE SUBSTR(W2_WEEK_SEQ ,1,3) END) W2_WEEK_SEQ
-            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W3_WEEK_SEQ ,1,5) ELSE SUBSTR(W3_WEEK_SEQ ,1,3) END) W3_WEEK_SEQ 
+            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W3_WEEK_SEQ ,1,5) ELSE SUBSTR(W3_WEEK_SEQ ,1,3) END) W3_WEEK_SEQ
             ,(CASE WHEN (FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W4_WEEK_SEQ ,1,5) ELSE SUBSTR(W4_WEEK_SEQ ,1,3) END) W4_WEEK_SEQ
-            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W5_WEEK_SEQ ,1,5) ELSE SUBSTR(W5_WEEK_SEQ ,1,3) END) W5_WEEK_SEQ 
+            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W5_WEEK_SEQ ,1,5) ELSE SUBSTR(W5_WEEK_SEQ ,1,3) END) W5_WEEK_SEQ
             ,(CASE WHEN (FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W6_WEEK_SEQ ,1,5) ELSE SUBSTR(W6_WEEK_SEQ ,1,3) END) W6_WEEK_SEQ
             ,(CASE WHEN (FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W7_WEEK_SEQ ,1,5) ELSE SUBSTR(W7_WEEK_SEQ ,1,3) END) W7_WEEK_SEQ
             ,(CASE WHEN (FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W8_WEEK_SEQ ,1,5) ELSE SUBSTR(W8_WEEK_SEQ ,1,3) END) W8_WEEK_SEQ
@@ -157,15 +160,15 @@ WITH SALES_PLAN_SUMMARY
           (
             WITH HEAD_DATA
               AS (
-                   SELECT  
+                   SELECT
                          SCM_YEAR
                         ,'STOCK' STOCK_PH1
                         ,'team' TEAM_H1
                         ,'planMasterId' PLAN_MASTER_ID_H
-                        ,'category' CATEGORY_H1  
+                        ,'category' CATEGORY_H1
                         ,'code' CODE_H1
                         ,'name' NAME_H1
-                        ,'m3AvgIssueOrder' ISUUEORDER_H  
+                        ,'m3AvgIssueOrder' ISUUEORDER_H
                         ,'MONTHLY' MONTHLY_PH2
                         ,'m1IssueOrder' BEFORE_DAY_H2
                         ,'m0PlanOrder' TODAY_H2
@@ -178,30 +181,26 @@ WITH SALES_PLAN_SUMMARY
                         ,'isSaved' IS_SAVED
                         ,'divOdd' DIV_ODD
                         ,'stkTypeId' STK_TYPE_ID_H1
-                        , DECODE(LEAD(WEEK_TH_SN) OVER(ORDER BY 'W'|| LPAD(WEEK_TH,2,0)||'-'||WEEK_TH_SN)  
+                        , DECODE(LEAD(WEEK_TH_SN) OVER(ORDER BY 'W'|| LPAD(WEEK_TH,2,0)||'-'||WEEK_TH_SN)
                                 ,NULL
                                 ,'W'|| LPAD(WEEK_TH,2,0)||'-'||WEEK_TH_SN ||'-'|| '9'
                                 ,'W'|| LPAD(WEEK_TH,2,0)||'-'||WEEK_TH_SN ||'-'|| LEAD(WEEK_TH_SN) OVER(ORDER BY 'W'|| LPAD(WEEK_TH,2,0)||'-'||WEEK_TH_SN))
                           WEEK_SEQ
                         , ROWNUM RNO
-                     FROM  SCM0018M
-                    WHERE (SCM_YEAR = #{scmYearCbBox}) 
-                      AND (WEEK_TH <![CDATA[ >= ]]> #{scmPeriodCbBox} ) 
-                      AND (WEEK_TH <![CDATA[ <= ]]> (#{scmPeriodCbBox} + 16) )   
-                      AND NVL(USE_YN,'Y')='Y'
+                     FROM  (select * from SCM0018M where to_char(week_th_sn_start,'YYYYMM') <![CDATA[ >= ]]>  #{calendarFrom} and to_char(week_th_sn_start,'YYYYMM') <![CDATA[ <= ]]> #{calendarTo})
               )
-              SELECT *      
-                FROM 
+              SELECT *
+                FROM
                     (
-                      SELECT 
+                      SELECT
                             SCM_YEAR
                           , STOCK_PH1
                           , TEAM_H1
                           , PLAN_MASTER_ID_H
-                          , CATEGORY_H1  
+                          , CATEGORY_H1
                           , CODE_H1
                           , NAME_H1
-                          , ISUUEORDER_H  
+                          , ISUUEORDER_H
                           , MONTHLY_PH2
                           , BEFORE_DAY_H2
                           , TODAY_H2
@@ -215,23 +214,23 @@ WITH SALES_PLAN_SUMMARY
                           , DIV_ODD
                           , STK_TYPE_ID_H1
                           , WEEK_SEQ
-                          , DECODE(RNO ,1 ,'1' ,2,'2',3,'3',4,'4' ,5,'5',6,'6',7,'7' ,8,'8',9,'9' ,10,'10',11,'11' ,12,'12',13,'13' ,14,'14',15,'15' ,16,'16' 
+                          , DECODE(RNO ,1 ,'1' ,2,'2',3,'3',4,'4' ,5,'5',6,'6',7,'7' ,8,'8',9,'9' ,10,'10',11,'11' ,12,'12',13,'13' ,14,'14',15,'15' ,16,'16'
                                        ,17,'17',18,'18',19,'19',20,'20',21,'21',22,'22',23,'23' ,24,'24',25,'25' ,26,'26',27,'27' ,28,'28',29,'29' ,30,'30'
                                   ) RNO
                          FROM HEAD_DATA
                     )
                     PIVOT
                    (
-                     MAX(WEEK_SEQ) WEEK_SEQ 
+                     MAX(WEEK_SEQ) WEEK_SEQ
                          FOR RNO IN ( 1 AS W1,2 AS W2,3 AS W3,4 AS W4,5 AS W5,6 AS W6,7 AS W7,8 AS W8,9 AS W9,10 AS W10,11 AS W11,12 AS W12,13 AS W13,14 AS W14,15 AS W15,16 AS W16
                                      ,17 AS W17,18 AS W18,19 AS W19,20 AS W20, 21 AS W21,22 AS W22,23 AS W23, 24 AS W24, 25 AS W25 ,26 AS W26,27 AS W27,28 AS W28,29 AS W29,30 AS W30
                          )
                    )
-        )  
-              
+        )
+
     UNION ALL
-              
-       SELECT 
+
+       SELECT
              SCM_YEAR
             ,STOCK_PH1
             ,TEAM_H1
@@ -252,11 +251,11 @@ WITH SALES_PLAN_SUMMARY
             ,IS_SAVED
             ,DIV_ODD
             ,STK_TYPE_ID_H1
-            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W1_WEEK_SEQ ,1,5) ELSE SUBSTR(W1_WEEK_SEQ ,1,3) END) W1_WEEK_SEQ 
+            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W1_WEEK_SEQ ,1,5) ELSE SUBSTR(W1_WEEK_SEQ ,1,3) END) W1_WEEK_SEQ
             ,(CASE WHEN (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W2_WEEK_SEQ ,1,5) ELSE SUBSTR(W2_WEEK_SEQ ,1,3) END) W2_WEEK_SEQ
-            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W3_WEEK_SEQ ,1,5) ELSE SUBSTR(W3_WEEK_SEQ ,1,3) END) W3_WEEK_SEQ 
+            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W3_WEEK_SEQ ,1,5) ELSE SUBSTR(W3_WEEK_SEQ ,1,3) END) W3_WEEK_SEQ
             ,(CASE WHEN (FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W4_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W4_WEEK_SEQ ,1,5) ELSE SUBSTR(W4_WEEK_SEQ ,1,3) END) W4_WEEK_SEQ
-            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W5_WEEK_SEQ ,1,5) ELSE SUBSTR(W5_WEEK_SEQ ,1,3) END) W5_WEEK_SEQ 
+            ,(CASE WHEN (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W5_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W5_WEEK_SEQ ,1,5) ELSE SUBSTR(W5_WEEK_SEQ ,1,3) END) W5_WEEK_SEQ
             ,(CASE WHEN (FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W6_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W6_WEEK_SEQ ,1,5) ELSE SUBSTR(W6_WEEK_SEQ ,1,3) END) W6_WEEK_SEQ
             ,(CASE WHEN (FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W7_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W7_WEEK_SEQ ,1,5) ELSE SUBSTR(W7_WEEK_SEQ ,1,3) END) W7_WEEK_SEQ
             ,(CASE WHEN (FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W8_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W8_WEEK_SEQ ,1,5) ELSE SUBSTR(W8_WEEK_SEQ ,1,3) END) W8_WEEK_SEQ
@@ -286,15 +285,15 @@ WITH SALES_PLAN_SUMMARY
           (
             WITH HEAD_DATA
               AS (
-                   SELECT  
+                   SELECT
                          SCM_YEAR
                         ,'STOCK' STOCK_PH1
                         ,'team' TEAM_H1
                         ,'planMasterId' PLAN_MASTER_ID_H
-                        ,'category' CATEGORY_H1  
+                        ,'category' CATEGORY_H1
                         ,'code' CODE_H1
                         ,'name' NAME_H1
-                        ,'m3AvgIssueOrder' ISUUEORDER_H  
+                        ,'m3AvgIssueOrder' ISUUEORDER_H
                         ,'MONTHLY' MONTHLY_PH2
                         ,'m1IssueOrder' BEFORE_DAY_H2
                         ,'m0PlanOrder' TODAY_H2
@@ -307,30 +306,26 @@ WITH SALES_PLAN_SUMMARY
                         ,'isSaved' IS_SAVED
                         ,'divOdd' DIV_ODD
                         ,'stkTypeId' STK_TYPE_ID_H1
-                        , DECODE(LEAD(WEEK_TH_SN) OVER(ORDER BY 'W'|| LPAD(WEEK_TH,2,0)||'-'||WEEK_TH_SN)  
+                        , DECODE(LEAD(WEEK_TH_SN) OVER(ORDER BY 'W'|| LPAD(WEEK_TH,2,0)||'-'||WEEK_TH_SN)
                                 ,NULL
                                 ,'W'|| LPAD(WEEK_TH,2,0)||'-'||WEEK_TH_SN ||'-'|| '9'
                                 ,'W'|| LPAD(WEEK_TH,2,0)||'-'||WEEK_TH_SN ||'-'|| LEAD(WEEK_TH_SN) OVER(ORDER BY 'W'|| LPAD(WEEK_TH,2,0)||'-'||WEEK_TH_SN))
                           WEEK_SEQ
                         , ROWNUM RNO
-                     FROM  SCM0018M
-                    WHERE (SCM_YEAR = (#{scmYearCbBox} +1) ) 
-                          AND (WEEK_TH <![CDATA[ >= ]]> 1 ) 
-                          AND (WEEK_TH <![CDATA[ <= ]]> (1 + 16) )
-                          AND NVL(USE_YN,'Y')='Y'
+                     FROM (select * from SCM0018M where to_char(week_th_sn_start,'YYYYMM') <![CDATA[ >= ]]>  #{calendarFrom} and to_char(week_th_sn_start,'YYYYMM') <![CDATA[ <= ]]> #{calendarTo})
               )
-              SELECT *      
-                FROM 
+              SELECT *
+                FROM
                     (
-                      SELECT 
+                      SELECT
                             SCM_YEAR
                           , STOCK_PH1
                           , TEAM_H1
                           , PLAN_MASTER_ID_H
-                          , CATEGORY_H1  
+                          , CATEGORY_H1
                           , CODE_H1
                           , NAME_H1
-                          , ISUUEORDER_H  
+                          , ISUUEORDER_H
                           , MONTHLY_PH2
                           , BEFORE_DAY_H2
                           , TODAY_H2
@@ -344,43 +339,43 @@ WITH SALES_PLAN_SUMMARY
                           , DIV_ODD
                           , STK_TYPE_ID_H1
                           , WEEK_SEQ
-                          , DECODE(RNO ,1 ,'1' ,2,'2',3,'3',4,'4' ,5,'5',6,'6',7,'7' ,8,'8',9,'9' ,10,'10',11,'11' ,12,'12',13,'13' ,14,'14',15,'15' ,16,'16' 
+                          , DECODE(RNO ,1 ,'1' ,2,'2',3,'3',4,'4' ,5,'5',6,'6',7,'7' ,8,'8',9,'9' ,10,'10',11,'11' ,12,'12' ,13,'13' ,14,'14',15,'15' ,16,'16'
                                        ,17,'17',18,'18',19,'19',20,'20',21,'21',22,'22',23,'23' ,24,'24',25,'25' ,26,'26',27,'27' ,28,'28',29,'29' ,30,'30'
                                   ) RNO
                          FROM HEAD_DATA
                     )
                     PIVOT
                    (
-                     MAX(WEEK_SEQ) WEEK_SEQ 
+                     MAX(WEEK_SEQ) WEEK_SEQ
                          FOR RNO IN ( 1 AS W1,2 AS W2,3 AS W3,4 AS W4,5 AS W5,6 AS W6,7 AS W7,8 AS W8,9 AS W9,10 AS W10,11 AS W11,12 AS W12,13 AS W13,14 AS W14,15 AS W15,16 AS W16
                                      ,17 AS W17,18 AS W18,19 AS W19,20 AS W20, 21 AS W21,22 AS W22,23 AS W23, 24 AS W24, 25 AS W25 ,26 AS W26,27 AS W27,28 AS W28,29 AS W29,30 AS W30
                          )
                    )
-        ) 
+        )
     </select>
-    
+
     <select id="selectSalesCnt" parameterType="Map" resultType="egovMap">
-		 SELECT  
-		       SUM(ORD_CNT) SALE_CNT 
-		  FROM SCM0030S 
+		 SELECT
+		       SUM(ORD_CNT) SALE_CNT
+		  FROM SCM0030S
 		  WHERE SCM_YEAR= #{scmYearCbBox}
 		    AND SCM_MONTH= #{selectPlanMonth}
 		    AND SCM_WEEK_TH = #{weekTh}
-		    AND TEAM=  #{scmTeamCbBox}   
+		    AND TEAM=  #{scmTeamCbBox}
 		    AND STOCK_CODE  = #{stockCode}
 		  GROUP BY SCM_YEAR, SCM_MONTH,SCM_WEEK_TH,TEAM
     </select>
-    
+
     <select id="selectRemainWeekTh" parameterType="Map" resultType="egovMap">
 		   SELECT SCM_YEAR
 		         ,WEEK_TH
-			  FROM SCM0018M 
+			  FROM SCM0018M
 			  WHERE SCM_YEAR =  #{scmYearCbBox}
 			   AND SCM_MONTH =  #{selectPlanMonth}
 			   AND WEEK_TH <![CDATA[ < ]]> #{scmPeriodCbBox}
 			   AND NVL(USE_YN,'Y')='Y'
     </select>
-    
+
     <select id="selectChildField" parameterType="Map" resultType="egovMap">
 		   SELECT SCM_YEAR
 		        ,SCM_MONTH
@@ -389,13 +384,13 @@ WITH SALES_PLAN_SUMMARY
 		        ,IS_SRPTD
 		        ,SCM_YYYYMM
 		        ,ROWNUM ROW_SEQ
-		  FROM SCM0018M 
+		  FROM SCM0018M
 		 WHERE SCM_YEAR =  #{scmYearCbBox}
 		   AND SCM_MONTH = #{selectPlanMonth}
 		   AND NVL(USE_YN,'Y')='Y'
 		 ORDER BY WEEK_TH
     </select>
-    
+
 <select id="selectWeekThSn" parameterType="Map" resultType="egovMap">
   SELECT SCM_YEAR
         ,SCM_MONTH
@@ -404,7 +399,7 @@ WITH SALES_PLAN_SUMMARY
         ,IS_SRPTD
         ,SCM_YYYYMM
         ,ROWNUM ROW_SEQ
-   FROM SCM0018M 
+   FROM SCM0018M
   WHERE SCM_YEAR =  #{scmYearCbBox}
     AND SCM_MONTH = #{selectPlanMonth}
     AND NVL(USE_YN,'Y')='Y'
@@ -423,9 +418,9 @@ WITH SALES_PLAN_SUMMARY
         ,W7_WEEK_TH W7
     FROM(
 				  WITH HEAD_DATA
-            AS 
+            AS
             (
-               SELECT  
+               SELECT
                       WEEK_TH
                     , ROWNUM RNO
                  FROM SCM0018M
@@ -434,14 +429,14 @@ WITH SALES_PLAN_SUMMARY
                   AND NVL(USE_YN,'Y')='Y'
                   AND WEEK_TH_SN = 1
             )
-            SELECT *      
+            SELECT *
               FROM HEAD_DATA
              PIVOT
                  (
                    MAX(WEEK_TH) WEEK_TH FOR RNO IN ( 1 AS W1,2 AS W2,3 AS W3,4 AS W4,5 AS W5,6 AS W6,7 AS W7)
                  )
         )
-</select> 
+</select>
 
 <select id="selectSeperation" parameterType="Map" resultType="egovMap">
 		 SELECT M0.SCM_YEAR
@@ -455,7 +450,7 @@ WITH SALES_PLAN_SUMMARY
 					  SELECT SCM_YEAR
 					        ,SCM_MONTH
 					        ,COUNT(SCM_YEAR) REC_CNT
-					  FROM SCM0018M 
+					  FROM SCM0018M
 					 WHERE SCM_YEAR =  #{scmYearCbBox}
 					   AND SCM_MONTH = #{selectPlanMonth}
 					   AND NVL(USE_YN,'Y')='Y'
@@ -468,15 +463,15 @@ WITH SALES_PLAN_SUMMARY
 					        ,COUNT(SCM_YEAR) REC_CNT
 					    FROM SCM0018M
       <choose>
-        <when test=' selectPlanMonth != null and (selectPlanMonth +1) > 12 '>	
+        <when test=' selectPlanMonth != null and (selectPlanMonth +1) > 12 '>
            WHERE SCM_YEAR =  (#{scmYearCbBox} +1)
-             AND SCM_MONTH = 1				  
+             AND SCM_MONTH = 1
         </when>
         <otherwise>
            WHERE SCM_YEAR =  #{scmYearCbBox}
              AND SCM_MONTH = (#{selectPlanMonth} +1)
         </otherwise>
-      </choose>					  
+      </choose>
  			       AND NVL(USE_YN,'Y')='Y'
 					 GROUP BY SCM_YEAR,SCM_MONTH
 					) M1
@@ -487,40 +482,41 @@ WITH SALES_PLAN_SUMMARY
 					        ,COUNT(SCM_YEAR) REC_CNT
 					    FROM SCM0018M
       <choose>
-        <when test=' selectPlanMonth != null and (selectPlanMonth +1) > 12 '> 
+        <when test=' selectPlanMonth != null and (selectPlanMonth +1) > 12 '>
            WHERE SCM_YEAR =  (#{scmYearCbBox} +1)
-             AND SCM_MONTH = 2          
+             AND SCM_MONTH = 2
         </when>
         <otherwise>
            WHERE SCM_YEAR =  #{scmYearCbBox}
              AND SCM_MONTH = (#{selectPlanMonth} +2)
         </otherwise>
-      </choose>   					   
+      </choose>
 					   AND NVL(USE_YN,'Y')='Y'
-					   GROUP BY SCM_YEAR,SCM_MONTH   
+					   GROUP BY SCM_YEAR,SCM_MONTH
 					) M2
 					,
 					(
 				    SELECT SCM_YEAR
 					        ,SCM_MONTH
 					        ,COUNT(SCM_YEAR) REC_CNT
-					   FROM SCM0018M 
+					   FROM SCM0018M
       <choose>
-        <when test=' selectPlanMonth != null and (selectPlanMonth +1) > 12 '> 
+        <when test=' selectPlanMonth != null and (selectPlanMonth +1) > 12 '>
            WHERE SCM_YEAR =  (#{scmYearCbBox} +1)
-             AND SCM_MONTH = 3          
+             AND SCM_MONTH = 3
         </when>
         <otherwise>
            WHERE SCM_YEAR =  #{scmYearCbBox}
              AND SCM_MONTH = (#{selectPlanMonth} +3)
         </otherwise>
-      </choose>  					  
+      </choose>
 					   AND NVL(USE_YN,'Y')='Y'
-					   GROUP BY SCM_YEAR,SCM_MONTH  
+					   GROUP BY SCM_YEAR,SCM_MONTH
 					) M3
 			WHERE ROWNUM = 1
     </select>
-    
+
+
     <select id="selectExcuteYear" parameterType="Map" resultType="egovMap">
 			SELECT TO_CHAR((SYSDATE-365),'YYYY') YEAR FROM DUAL
 			UNION
@@ -528,22 +524,22 @@ WITH SALES_PLAN_SUMMARY
     </select>
 
     <select id="selectMonthCombo" parameterType="Map" resultType="egovMap">
-      SELECT 
-             SCM_MONTH  
-        FROM SCM0018M 
+      SELECT
+             SCM_MONTH
+        FROM SCM0018M
        WHERE SCM_YEAR = #{scmYearCbBox}
-         AND WEEK_TH  = #{scmPeriodCbBox} 
+         AND WEEK_TH  = #{scmPeriodCbBox}
          AND WEEK_TH_SN = 1
          AND NVL(USE_YN,'Y')='Y'
     </select>
 
     <select id="selectPeriodByYear" parameterType="Map" resultType="egovMap">
-			SELECT SCM_YEAR   
-			     , WEEK_TH ||'-'|| WEEK_TH_SN ||decode(length(WEEK_TH),1,'  [','[')||TO_CHAR(WEEK_TH_SN_START,'YYYY-MM-DD') || ' ~ ' ||  WEEK_TH_SN_END ||']' SCM_PERIOD  
-			     , SCM_MONTH  
-			     , WEEK_TH  
-			  FROM SCM0018M 
-			 WHERE SCM_YEAR = #{year} 
+			SELECT SCM_YEAR
+			     , WEEK_TH ||'-'|| WEEK_TH_SN ||decode(length(WEEK_TH),1,'  [','[')||TO_CHAR(WEEK_TH_SN_START,'YYYY-MM-DD') || ' ~ ' ||  WEEK_TH_SN_END ||']' SCM_PERIOD
+			     , SCM_MONTH
+			     , WEEK_TH
+			  FROM SCM0018M
+			 WHERE SCM_YEAR = #{year}
 			   AND WEEK_TH_SN = 1
 			   AND NVL(USE_YN,'Y')='Y'
     </select>
@@ -553,18 +549,18 @@ WITH SALES_PLAN_SUMMARY
 	           ,CODE_NAME
 	      FROM SYS0013M
 	     WHERE CODE_MASTER_ID = #{codeMasterId}
-	     ORDER BY CODE_ID 
+	     ORDER BY CODE_ID
     </select>
 
     <select id="selectDefaultStockCode" parameterType="Map" resultType="egovMap">
 			SELECT STOCK_CODE AS STK_CODE
-			     , T1.STK_DESC AS STK_DESC  
+			     , T1.STK_DESC AS STK_DESC
         FROM SCM0008M T0 LEFT JOIN SYS0026M T1 ON T1.STK_CODE=T0.STOCK_CODE
     </select>
 
     <select id="selectStockCategoryCode" parameterType="Map" resultType="egovMap">
-	     SELECT CODE_ID 
-				    , CODE 
+	     SELECT CODE_ID
+				    , CODE
 				    , CODE CODE_NAME
 				  FROM
 				     (
@@ -574,32 +570,32 @@ WITH SALES_PLAN_SUMMARY
 				              Extent2.CODE CODE  ,
 				              Extent1.STK_DESC STK_DESC  ,
 				              Extent3.CODE_ID CODEID1  ,
-				              Extent3.CODE CODE1  
+				              Extent3.CODE CODE1
 				         FROM SYS0026M Extent1
 				               JOIN SYS0013M Extent2   ON Extent1.STK_CTGRY_ID = Extent2.CODE_ID
 				               JOIN SYS0013M Extent3   ON Extent1.STK_TYPE_ID = Extent3.CODE_ID
-				               JOIN SCM0008M Extent4   ON Extent1.STK_ID = Extent4.STOCK_ID     
-				    ) GROUP BY CODE_ID, CODE     
-				      ORDER BY CODE_ID, CODE   
+				               JOIN SCM0008M Extent4   ON Extent1.STK_ID = Extent4.STOCK_ID
+				    ) GROUP BY CODE_ID, CODE
+				      ORDER BY CODE_ID, CODE
 	  </select>
-   
+
     <select id="selectStockCode" parameterType="Map" resultType="egovMap">
-			SELECT SYS26M.STK_ID   
-			     , SYS26M.STK_CODE 
-			     , SYS26M.STK_CODE ||' - '|| SYS26M.STK_DESC  STK_DESC 
-			     , Extent2.CODE_ID   
-			     , Extent2.CODE CODE 
-			     , Extent3.CODE_ID CODE_ID2  
-			     , Extent3.CODE CODE2  
+			SELECT SYS26M.STK_ID
+			     , SYS26M.STK_CODE
+			     , SYS26M.STK_CODE ||' - '|| SYS26M.STK_DESC  STK_DESC
+			     , Extent2.CODE_ID
+			     , Extent2.CODE CODE
+			     , Extent3.CODE_ID CODE_ID2
+			     , Extent3.CODE CODE2
 			  FROM SYS0026M SYS26M
 			  JOIN SYS0013M Extent2   ON SYS26M.STK_CTGRY_ID = Extent2.CODE_ID
 			  JOIN SYS0013M Extent3   ON SYS26M.STK_TYPE_ID = Extent3.CODE_ID
 			<choose>
         <when test=' codeIds != null and codeIds != "" '>
-        WHERE EXISTS ( SELECT 1 C1  
+        WHERE EXISTS ( SELECT 1 C1
                          FROM SCM0008M Extent4
-                        WHERE  Extent4.STOCK_ID = SYS26M.STK_ID 
-                     ) 
+                        WHERE  Extent4.STOCK_ID = SYS26M.STK_ID
+                     )
 		     AND ( 1 = SYS26M.STUS_CODE_ID )
 		     AND ( 0 = TO_NUMBER(SYS26M.IS_NCV) )
          AND  Extent2.CODE_ID IN ( SELECT REGEXP_SUBSTR (#{codeIds}, '[^,]+', 1, LEVEL)
@@ -613,9 +609,9 @@ WITH SALES_PLAN_SUMMARY
       </choose>
 			 ORDER BY SYS26M.STK_DESC   ASC
     </select>
-    
+
     <select id="selectPlanId" parameterType="Map" resultType="egovMap">
-			SELECT 
+			SELECT
 			       PLAN_ID
 			      ,PLAN_YEAR
 			      ,PLAN_MONTH
@@ -627,230 +623,333 @@ WITH SALES_PLAN_SUMMARY
 			      ,CRT_USER_ID
 			 FROM SCM0001M
 			WHERE PLAN_YEAR = #{scmYearCbBox}
-			  AND PLAN_WEEK = #{scmPeriodCbBox} 
+			  AND PLAN_WEEK = #{scmPeriodCbBox}
      <if test="scmTeamCbBox != null and scmTeamCbBox !=''">
-        AND TEAM      = #{scmTeamCbBox}   
+        AND TEAM      = #{scmTeamCbBox}
      </if>
 			  AND ROWNUM    = 1
     </select>
-    
+
 <select id="selectSalesPlanMngmentList" parameterType="Map" resultType="egovMap">
-     SELECT SALES_PLAN_MAIN_LIST.*
-			    , FN_GET_COUNT_SCM_WEEK_TH(SALES_PLAN_MAIN_LIST.CODE,SALES_PLAN_MAIN_LIST.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -4) ) BEF_4_WEEK_TH
-			    , FN_GET_COUNT_SCM_WEEK_TH(SALES_PLAN_MAIN_LIST.CODE,SALES_PLAN_MAIN_LIST.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -3) ) BEF_3_WEEK_TH
-			    , FN_GET_COUNT_SCM_WEEK_TH(SALES_PLAN_MAIN_LIST.CODE,SALES_PLAN_MAIN_LIST.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -2) ) BEF_2_WEEK_TH
-			    , FN_GET_COUNT_SCM_WEEK_TH(SALES_PLAN_MAIN_LIST.CODE,SALES_PLAN_MAIN_LIST.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -1) ) BEF_1_WEEK_TH  
-			              
-			FROM (
-			        SELECT 
-			               SAILS_MAIN.CHECK_FLAG ,SAILS_MAIN.PLAN_ID PLAN_MASTER_ID ,SAILS_MAIN.TEAM ,SYS26M.STK_TYPE_ID,SYS13M.CODE CATEGORY ,SAILS_MAIN.STOCK_CODE CODE,SYS26M.STK_DESC NAME 
-			              ,ROUND(SAILS_MAIN.PRE_M3_AVG_ISSU)  ||'/'|| ROUND(SAILS_MAIN.PRE_M3_AVG_ORDED)  M3_AVG_ISSUE_ORDER ,ROUND(SAILS_MAIN.M_1)  ||'/'|| ROUND(SAILS_MAIN.M1_ORD)  M1_ISSUE_ORDER
-			              ,SAILS_MAIN.M0_PLAN ||'/'|| SAILS_MAIN.M0_ORD M0_PLAN_ORDER ,SAILS_MAIN.M1 ,SAILS_MAIN.M2 ,SAILS_MAIN.M3 ,SAILS_MAIN.M4
-			
-			              ,SCM02D.W00 ,SCM02D.W01 ,SCM02D.W02 ,SCM02D.W03 ,SCM02D.W04 ,SCM02D.W05 ,SCM02D.W06 ,SCM02D.W07 ,SCM02D.W08 ,SCM02D.W09 ,SCM02D.W10 ,SCM02D.W11 ,SCM02D.W12 ,SCM02D.W13 ,SCM02D.W14
-			              ,SCM02D.W15 ,SCM02D.W16 ,SCM02D.W17 ,SCM02D.W18 ,SCM02D.W19 ,SCM02D.W20 ,SCM02D.W21 ,SCM02D.W22 ,SCM02D.W23 ,SCM02D.W24 ,SCM02D.W25 ,SCM02D.W26 ,SCM02D.W27 ,SCM02D.W28 ,SCM02D.W29
-			              ,SCM02D.W30 ,SCM02D.WS1 ,SCM02D.WS2 ,SCM02D.WS3 ,SCM02D.WS4 ,SCM02D.WS5  
-			                
-			              ,SAILS_MAIN.PRE_M3_AVG_ORDED ,SAILS_MAIN.PRE_M3_AVG_ISSU ,SAILS_MAIN.M1_ORD  ,SAILS_MAIN.M2_ORD ,SAILS_MAIN.M3_ORD ,SAILS_MAIN.M_3 ,SAILS_MAIN.M_2 ,SAILS_MAIN.M_1   
-			              ,SAILS_MAIN.SCM_YEAR ,SAILS_MAIN.SCM_MONTH ,SAILS_MAIN.SCM_WEEK_TH ,SAILS_MAIN.SCM_WEEK_TH_SN   ,SAILS_MAIN.PRE_M3_AVG_ORDED_RATE ,SAILS_MAIN.PRE_M3_AVG_ISSU_RATE
-			                
-			          FROM (
-				                SELECT PLAN_STUS_ID CHECK_FLAG
-				                      ,SCM01M.PLAN_ID 
-				                      ,SCM30S.SCM_YEAR 
-				                      ,SCM30S.SCM_MONTH 
-				                      ,SCM30S.SCM_WEEK_TH 
-				                      ,SCM30S.SCM_WEEK_TH_SN 
-				                      ,SCM30S.STOCK_CODE 
-				                      ,SCM30S.TEAM 
-				                      ,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
-				                      ,SUM(PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE
-				                      ,SUM(PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED
-				                      ,SUM(PRE_M3_AVG_ISSU) PRE_M3_AVG_ISSU
-				                      ,SUM(M1_ORD) M1_ORD
-				                      ,SUM(M2_ORD) M2_ORD
-				                      ,SUM(M3_ORD) M3_ORD
-				                        
-				                      ,SUM(M_3) M_3
-				                      ,SUM(M_2) M_2
-				                      ,SUM(M_1) M_1               
-				                      ,SUM(M0_PLAN) M0_PLAN
-				                      ,SUM(M0_ORD) M0_ORD
-				                        
-				                      ,SUM(M1) M1
-				                      ,SUM(M2) M2
-				                      ,SUM(M3) M3
-				                      ,SUM(M4) M4                                          
-				                              
-				                  FROM SCM0030S SCM30S
-				                      ,SCM0001M SCM01M
-				                 WHERE SCM30S.SCM_YEAR  = #{scmYearCbBox}
-				                   AND SCM30S.SCM_MONTH = #{selectPlanMonth}
-				                   AND SCM30S.SCM_WEEK_TH = #{scmPeriodCbBox} 
-				                   AND SCM30S.SCM_YEAR    = SCM01M.PLAN_YEAR
-				                   AND SCM30S.SCM_MONTH   = SCM01M.PLAN_MONTH 
-				                   AND SCM30S.SCM_WEEK_TH = SCM01M.PLAN_WEEK
-				                   AND SCM30S.SCM_WEEK_TH_SN =1 
-				                   AND SCM30S.TEAM = SCM01M.TEAM
-				                  <if test='scmTeamCbBox != null and scmTeamCbBox !="" '>
-				                   AND SCM01M.TEAM = #{scmTeamCbBox}  
-				                  </if>
-				                 GROUP BY SCM01M.PLAN_STUS_ID 
-				                         ,SCM01M.PLAN_ID
-				                         ,SCM30S.SCM_YEAR
-				                         ,SCM30S.SCM_MONTH
-				                         ,SCM30S.SCM_WEEK_TH
-				                         ,SCM30S.SCM_WEEK_TH_SN
-				                         ,SCM30S.STOCK_CODE
-				                         ,SCM30S.TEAM
-			                         
-			              ) SAILS_MAIN 
-			               
-			                LEFT OUTER JOIN SCM0002D SCM02D ON SAILS_MAIN.TEAM = SCM02D.TEAM 
-			                                               AND SAILS_MAIN.STOCK_CODE = SCM02D.STOCK_CODE 
-			                                               AND SAILS_MAIN.PLAN_ID = SCM02D.PLAN_MASTER_ID
-			                LEFT OUTER JOIN SYS0026M SYS26M ON SAILS_MAIN.STOCK_CODE = SYS26M.STK_CODE
-			                LEFT OUTER JOIN SYS0013M SYS13M ON SYS26M.STK_CTGRY_ID = SYS13M.CODE_ID
-			               
-           ) SALES_PLAN_MAIN_LIST
-       WHERE 1 = 1                                                                                  
+      SELECT
+             (SELECT PLAN_STUS_ID
+                FROM SCM0001M
+               WHERE PLAN_ID = PLAN_MASTER_ID
+             ) CHECK_FLAG
+             , PLAN_MASTER_ID
+             , team
+             , STK_TYPE_ID
+             , category
+             , code
+             , name
+             , M3_AVG_Issue_Order
+             , M1_ISSUE_ORDER
+             , M0_PLAN ||'/'|| M0_ORD M0_PLAN_ORDER
+             , M1
+             , M2
+             , M3
+             , M4
+
+             , BEF_4_WEEK_TH
+             , BEF_3_WEEK_TH
+             , BEF_2_WEEK_TH
+             , BEF_1_WEEK_TH
+
+             , W00
+             , W01
+             , W02
+             , W03
+             , W04
+             , W05
+             , W06
+             , W07
+             , W08
+             , W09
+             , W10
+             , W11
+             , W12
+             , W13
+             , W14
+             , W15
+             , W16
+             , W17
+             , W18
+             , W19
+             , W20
+             , W21
+             , W22
+             , W23
+             , W24
+             , W25
+             , W26
+             , W27
+             , W28
+             , W29
+             , W30
+             , WS1
+             , WS2
+             , WS3
+             , WS4
+             , WS5
+             , SCM39V.name
+             , SCM39V.category
+    FROM
+    (
+      SELECT SCM39V.PLAN_DTL_ID
+             , SCM39V.PLAN_MASTER_ID
+             , SCM39V.TEAM team
+             , SCM39V.STK_TYPE_ID
+             , SCM39V.STOCK_CODE code
+             , SCM30S.PRE_M3_AVG_ORDED
+             , SCM30S.PRE_M3_AVG_ISSU
+             , ROUND(SCM30S.PRE_M3_AVG_ISSU)  ||'/'|| ROUND(SCM30S.PRE_M3_AVG_ORDED)  M3_AVG_Issue_Order
+             , ROUND(SCM30S.M_1)  ||'/'|| ROUND(SCM30S.M1_ORD)  M1_ISSUE_ORDER
+             , SCM30S.M1_ORD
+             , SCM30S.M2_ORD
+             , SCM30S.M3_ORD
+             , SCM30S.M_3
+             , SCM30S.M_2
+             , SCM30S.M_1
+             , SCM30S.M0_PLAN M0_PLAN
+             , SCM30S.M0_ORD M0_ORD
+             , SCM39V.M1
+             , SCM39V.M2
+             , SCM39V.M3
+             , SCM39V.M4
+
+             , FN_GET_COUNT_SCM_WEEK_TH(SCM39V.STOCK_CODE,SCM39V.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -4) ) BEF_4_WEEK_TH
+             , FN_GET_COUNT_SCM_WEEK_TH(SCM39V.STOCK_CODE,SCM39V.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -3) ) BEF_3_WEEK_TH
+             , FN_GET_COUNT_SCM_WEEK_TH(SCM39V.STOCK_CODE,SCM39V.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -2) ) BEF_2_WEEK_TH
+             , FN_GET_COUNT_SCM_WEEK_TH(SCM39V.STOCK_CODE,SCM39V.TEAM,#{scmYearCbBox},#{selectPlanMonth},(#{scmPeriodCbBox} -1) ) BEF_1_WEEK_TH
+
+             , SCM39V.W00
+             , SCM39V.W01
+             , SCM39V.W02
+             , SCM39V.W03
+             , SCM39V.W04
+             , SCM39V.W05
+             , SCM39V.W06
+             , SCM39V.W07
+             , SCM39V.W08
+             , SCM39V.W09
+             , SCM39V.W10
+             , SCM39V.W11
+             , SCM39V.W12
+             , SCM39V.W13
+             , SCM39V.W14
+             , SCM39V.W15
+             , SCM39V.W16
+             , SCM39V.W17
+             , SCM39V.W18
+             , SCM39V.W19
+             , SCM39V.W20
+             , SCM39V.W21
+             , SCM39V.W22
+             , SCM39V.W23
+             , SCM39V.W24
+             , SCM39V.W25
+             , SCM39V.W26
+             , SCM39V.W27
+             , SCM39V.W28
+             , SCM39V.W29
+             , SCM39V.W30
+             , SCM39V.WS1
+             , SCM39V.WS2
+             , SCM39V.WS3
+             , SCM39V.WS4
+             , SCM39V.WS5
+             , SCM39V.STOCK_NAME name
+             , SCM39V.STOCK_CTGRY category
+         FROM SCM0039V SCM39V,
+	         (SELECT SCM01M.PLAN_ID
+					                      ,SCM30S.SCM_YEAR
+					                      ,SCM30S.SCM_MONTH
+					                      ,SCM30S.SCM_WEEK_TH
+					                      ,SCM30S.SCM_WEEK_TH_SN
+					                      ,SCM30S.STOCK_CODE
+					                      ,SCM30S.TEAM
+					                      ,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
+					                      ,SUM(PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE
+					                      ,SUM(PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED
+					                      ,SUM(PRE_M3_AVG_ISSU) PRE_M3_AVG_ISSU
+					                      ,SUM(M1_ORD) M1_ORD
+					                      ,SUM(M2_ORD) M2_ORD
+					                      ,SUM(M3_ORD) M3_ORD
+
+					                      ,SUM(M_3) M_3
+					                      ,SUM(M_2) M_2
+					                      ,SUM(M_1) M_1
+					                      ,SUM(M0_PLAN) M0_PLAN
+					                      ,SUM(M0_ORD) M0_ORD
+
+					                      ,SUM(M1) M1
+					                      ,SUM(M2) M2
+					                      ,SUM(M3) M3
+					                      ,SUM(M4) M4
+
+					                  FROM SCM0030S SCM30S
+					                      ,SCM0001M SCM01M
+					                 WHERE SCM30S.SCM_YEAR    = SCM01M.PLAN_YEAR
+					                   AND SCM30S.SCM_MONTH   = SCM01M.PLAN_MONTH
+					                   AND SCM30S.SCM_WEEK_TH = SCM01M.PLAN_WEEK
+					                   AND SCM30S.SCM_WEEK_TH_SN =1
+					                   AND SCM30S.TEAM = SCM01M.TEAM
+					                 GROUP BY SCM01M.PLAN_STUS_ID
+					                         ,SCM01M.PLAN_ID
+					                         ,SCM30S.SCM_YEAR
+					                         ,SCM30S.SCM_MONTH
+					                         ,SCM30S.SCM_WEEK_TH
+					                         ,SCM30S.SCM_WEEK_TH_SN
+					                         ,SCM30S.STOCK_CODE
+					                         ,SCM30S.TEAM) SCM30S
+         WHERE  PLAN_MASTER_ID  IN ( SELECT PLAN_ID
+                                       FROM SCM0001M
+                                      WHERE PLAN_YEAR = #{scmYearCbBox}
+                                        AND PLAN_WEEK = #{scmPeriodCbBox}
+                                    <if test='scmTeamCbBox != null and scmTeamCbBox !="" '>
+                                        AND TEAM      = #{scmTeamCbBox}
+                                    </if>
+                                   )
       <choose>
         <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
-         AND  STK_TYPE_ID IN
+         AND  SCM39V.STK_TYPE_ID IN
             <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
                 #{item}
             </foreach>
 
         </when>
       </choose>
-                                                                         
+
       <choose>
         <when test='stkCodes != null and !stkCodes.isEmpty '>
-         AND CODE IN
+         AND  SCM39V.STOCK_CODE IN
             <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
                 #{item}
             </foreach>
         </when>
       </choose>
+		   AND SCM39V.PLAN_MASTER_ID = SCM30S.PLAN_ID(+)
+           AND SCM39V.STOCK_CODE = SCM30S.STOCK_CODE(+)
+           AND SCM39V.TEAM = SCM30S.TEAM(+)
+       ) SCM39V
+    </select>
 
-</select>
-    
     <select id="selectSalesPlanMngmentPeriod" parameterType="Map" resultType="egovMap">
 			SELECT SCM_YEAR   ,
 			       WEEK_TH ||'-'|| WEEK_TH_SN ||'['||TO_CHAR(WEEK_TH_SN_START,'YYYY-MM-DD') || ' ~ ' ||  WEEK_TH_SN_END ||']' SCM_PERIOD  ,
 			       SCM_MONTH  ,
-			       WEEK_TH  
-			  FROM SCM0018M 
-			 WHERE SCM_YEAR = #{year} 
+			       WEEK_TH
+			  FROM SCM0018M
+			 WHERE SCM_YEAR = #{year}
 			   AND WEEK_TH_SN = 1
 			   AND NVL(USE_YN,'Y')='Y'
     </select>
-    
+
     <update id="updateScmPlanMaster" parameterType="Map">
       UPDATE SCM0002D
-         SET PLAN_MASTER_ID = #{planMasterId} 
-      
+         SET PLAN_MASTER_ID = #{planMasterId}
+
          <if test='w00 != null and w00 !="" '>
-               , W00 = #{w00} 
+               , W00 = #{w00}
          </if>
          <if test='w01 != null and w01 !="" '>
-               , W01 = #{w01} 
+               , W01 = #{w01}
          </if>
          <if test='w02 != null and w02 !="" '>
-               , W02 = #{w02} 
+               , W02 = #{w02}
          </if>
          <if test='w03 != null and w03 !="" '>
-               , W03 = #{w03} 
+               , W03 = #{w03}
          </if>
          <if test='w04 != null and w04 !="" '>
-               , W04 = #{w04} 
+               , W04 = #{w04}
          </if>
          <if test='w05 != null and w05 !="" '>
-               , W05 = #{w05} 
+               , W05 = #{w05}
          </if>
-      
+
          <if test='w06 != null and w06 !="" '>
-               , W06 = #{w06} 
+               , W06 = #{w06}
          </if>
          <if test='w07 != null and w07 !="" '>
-               , W07 = #{w07} 
+               , W07 = #{w07}
          </if>
          <if test='w08 != null and w08 !="" '>
-               , W08 = #{w08} 
+               , W08 = #{w08}
          </if>
          <if test='w09 != null and w09 !="" '>
-               , W09 = #{w09} 
+               , W09 = #{w09}
          </if>
          <if test='w10 != null and w10 !="" '>
-               , W10 = #{w10} 
+               , W10 = #{w10}
          </if>
-         
+
          <if test='w11 != null and w11 !="" '>
-               , W11 = #{w11} 
-         </if>         
+               , W11 = #{w11}
+         </if>
          <if test='w12 != null and w12 !="" '>
-               , W12 = #{w12} 
+               , W12 = #{w12}
          </if>
          <if test='w13 != null and w13 !="" '>
-               , W13 = #{w13} 
+               , W13 = #{w13}
          </if>
          <if test='w14 != null and w14 !="" '>
-               , W14 = #{w14} 
+               , W14 = #{w14}
          </if>
          <if test='w15 != null and w15 !="" '>
-               , W15 = #{w15} 
+               , W15 = #{w15}
          </if>
          <if test='w16 != null and w16 !="" '>
-               , W16 = #{w16} 
+               , W16 = #{w16}
          </if>
          <if test='w17 != null and w17 !="" '>
-               , W17 = #{w17} 
+               , W17 = #{w17}
          </if>
          <if test='w18 != null and w18 !="" '>
-               , W18 = #{w18} 
+               , W18 = #{w18}
          </if>
          <if test='w19 != null and w19 !="" '>
-               , W19 = #{w19} 
+               , W19 = #{w19}
          </if>
          <if test='w20 != null and w20 !="" '>
-               , W20 = #{w20} 
+               , W20 = #{w20}
          </if>
-         
+
          <if test='w21 != null and w21 !="" '>
-               , W21 = #{w21} 
+               , W21 = #{w21}
          </if>
          <if test='w22 != null and w22 !="" '>
-               , W22 = #{w22} 
+               , W22 = #{w22}
          </if>
          <if test='w23 != null and w23 !="" '>
-               , W23 = #{w23} 
+               , W23 = #{w23}
          </if>
          <if test='w24 != null and w24 !="" '>
-               , W24 = #{w24} 
+               , W24 = #{w24}
          </if>
          <if test='w25 != null and w25 !="" '>
-               , W25 = #{w25} 
+               , W25 = #{w25}
          </if>
          <if test='w26 != null and w26 !="" '>
-               , W26 = #{w26} 
+               , W26 = #{w26}
          </if>
          <if test='w27 != null and w27 !="" '>
-               , W27 = #{w27} 
+               , W27 = #{w27}
          </if>
          <if test='w28 != null and w28 !="" '>
-               , W28 = #{w28} 
+               , W28 = #{w28}
          </if>
          <if test='w29 != null and w29 !="" '>
-               , W29 = #{w29} 
+               , W29 = #{w29}
          </if>
          <if test='w30 != null and w30 !="" '>
-               , W30 = #{w30} 
+               , W30 = #{w30}
          </if>
-       
-       WHERE PLAN_MASTER_ID = #{planMasterId} 
-         AND STOCK_CODE = #{code}  
-         AND TEAM  = #{team} 
-    </update>        
+
+       WHERE PLAN_MASTER_ID = #{planMasterId}
+         AND STOCK_CODE = #{code}
+         AND TEAM  = #{team}
+    </update>
 
 <select id="selectPlanDetailIdSeq" parameterType="Map" resultType="egovMap">
 SELECT SCM0002D_PLAN_DTL_ID_SEQ.NEXTVAL SCM0002D_PLAN_DTL_ID_SEQ
@@ -859,360 +958,360 @@ SELECT SCM0002D_PLAN_DTL_ID_SEQ.NEXTVAL SCM0002D_PLAN_DTL_ID_SEQ
 
 <select id="selectPlanMasterId" parameterType="Map" resultType="egovMap">
 SELECT PLAN_ID PLAN_MASTER_ID
-  FROM SCM0001M  
+  FROM SCM0001M
  WHERE PLAN_YEAR = #{scmYearCbBox}
    AND PLAN_WEEK = #{scmPeriodCbBox}
-   AND TEAM      = #{scmTeamCbBox}   
+   AND TEAM      = #{scmTeamCbBox}
 </select>
 
 <select id="selectStockIdByStCode" parameterType="Map" resultType="egovMap">
-SELECT STK_ID  
-  FROM SYS0026M  
+SELECT STK_ID
+  FROM SYS0026M
  WHERE STK_CODE    = #{newStockCode}
    AND STK_TYPE_ID = #{newStockTypeId}
-   AND ROWNUM = 1 
+   AND ROWNUM = 1
 </select>
 
 <insert id="insertSalesPlanDetail" parameterType="Map">
  <selectKey keyProperty="scm0002dPlanDtlIdSeq,getPlanMasterId" resultType="egovMap" order="BEFORE">
    SELECT SCM0002D_PLAN_DTL_ID_SEQ.NEXTVAL AS SCM0002D_PLAN_DTL_ID_SEQ
         ,(
-           SELECT PLAN_ID 
-						 FROM SCM0001M  
+           SELECT PLAN_ID
+						 FROM SCM0001M
 						WHERE PLAN_YEAR = #{scmGrYear}
 						  AND PLAN_WEEK = #{scmGrWeek}
-						  AND TEAM      = #{team}     
+						  AND TEAM      = #{team}
          ) GET_PLAN_MASTER_ID
   FROM DUAL
  </selectKey>
-                
+
  INSERT INTO SCM0002D
            (
-             PLAN_DTL_ID    
-            ,PLAN_MASTER_ID 
-            ,TEAM           
-            ,STOCK_CODE     
-            
+             PLAN_DTL_ID
+            ,PLAN_MASTER_ID
+            ,TEAM
+            ,STOCK_CODE
+
             <if test='preM3AvgOrded != null and preM3AvgOrded !="" '>
-            ,PRE_M3_AVG_ORDED 
-            </if>                
+            ,PRE_M3_AVG_ORDED
+            </if>
             <if test='preM3AvgIssu != null and preM3AvgIssu !="" '>
-            ,PRE_M3_AVG_ISSU  
-            </if>   
+            ,PRE_M3_AVG_ISSU
+            </if>
             <if test='m1Ord != null and m1Ord !="" '>
-            ,M1_ORD  
-            </if>   
+            ,M1_ORD
+            </if>
             <if test='m2Ord != null and m2Ord !="" '>
             ,M2_ORD
-            </if>   
+            </if>
             <if test='m3Ord != null and m3Ord !="" '>
             ,M3_ORD
-            </if>               
+            </if>
             <if test='m33 != null and m33 !="" '>
             ,M_3      /*m33*/
-            </if>                 
+            </if>
             <if test='m22 != null and m22 !="" '>
             ,M_2      /*m22*/
-            </if>                
+            </if>
             <if test='m11 != null and m11 !="" '>
             ,M_1      /*m11*/
-            </if>                
+            </if>
             <if test='m0Plan != null and m0Plan !="" '>
-            ,M0_PLAN 
-            </if>                
+            ,M0_PLAN
+            </if>
             <if test='m0Ord != null and m0Ord !="" '>
-            ,M0_ORD 
-            </if>                
-          
+            ,M0_ORD
+            </if>
+
             <if test='m1 != null and m1 !="" '>
-            ,M1     
-            </if>              
+            ,M1
+            </if>
             <if test='m2 != null and m2 !="" '>
-            ,M2     
-            </if>              
+            ,M2
+            </if>
             <if test='m3 != null and m3 !="" '>
-            ,M3     
-            </if>              
+            ,M3
+            </if>
             <if test='m4 != null and m4 !="" '>
-            ,M4     
+            ,M4
             </if>
 
             <if test='w00 != null and w00 !="" '>
             ,W00
-            </if>              
+            </if>
             <if test='w01 != null and w01 !="" '>
             ,W01
-            </if>              
+            </if>
             <if test='w02 != null and w02 !="" '>
             ,W02
-            </if>              
+            </if>
             <if test='w03 != null and w03 !="" '>
-            ,W03 
-            </if>              
+            ,W03
+            </if>
             <if test='w04 != null and w04 !="" '>
             ,W04
-            </if>              
+            </if>
             <if test='w05 != null and w05 !="" '>
-            ,W05 
-            </if>              
+            ,W05
+            </if>
             <if test='w06 != null and w06 !="" '>
             ,W06
-            </if>              
+            </if>
             <if test='w07 != null and w07 !="" '>
-            ,W07 
-            </if>              
+            ,W07
+            </if>
             <if test='w08 != null and w08 !="" '>
             ,W08
-            </if>              
+            </if>
             <if test='w09 != null and w09 !="" '>
             ,W09
-            </if>    
+            </if>
 
             <if test='w10 != null and w10 !="" '>
-            ,W10 
-            </if>            
+            ,W10
+            </if>
             <if test='w11 != null and w11 !="" '>
             ,W11
-            </if>            
+            </if>
             <if test='w12 != null and w12 !="" '>
-            ,W12 
-            </if>            
+            ,W12
+            </if>
             <if test='w13 != null and w13 !="" '>
-            ,W13 
-            </if>            
+            ,W13
+            </if>
             <if test='w14 != null and w14 !="" '>
             ,W14
-            </if>            
+            </if>
             <if test='w15 != null and w15 !="" '>
             ,W15
-            </if>            
+            </if>
             <if test='w16 != null and w16 !="" '>
-            ,W16 
-            </if>            
+            ,W16
+            </if>
             <if test='w17 != null and w17 !="" '>
-            ,W17 
-            </if>            
+            ,W17
+            </if>
             <if test='w18 != null and w18 !="" '>
-            ,W18 
-            </if>            
+            ,W18
+            </if>
             <if test='w19 != null and w19 !="" '>
-            ,W19 
-            </if>  
-            
+            ,W19
+            </if>
+
             <if test='w20 != null and w20 !="" '>
             ,W20
-            </if> 
+            </if>
             <if test='w21 != null and w21 !="" '>
-            ,W21 
-            </if>              
+            ,W21
+            </if>
             <if test='w22 != null and w22 !="" '>
-            ,W22 
-            </if>              
+            ,W22
+            </if>
             <if test='w23 != null and w23 !="" '>
-            ,W23  
-            </if>              
+            ,W23
+            </if>
             <if test='w24 != null and w24 !="" '>
-            ,W24  
-            </if>              
+            ,W24
+            </if>
             <if test='w25 != null and w25 !="" '>
-            ,W25  
-            </if>              
+            ,W25
+            </if>
             <if test='w26 != null and w26 !="" '>
-            ,W26 
-            </if>              
+            ,W26
+            </if>
             <if test='w27 != null and w27 !="" '>
-            ,W27  
-            </if>              
+            ,W27
+            </if>
             <if test='w28 != null and w28 !="" '>
-            ,W28  
-            </if>              
+            ,W28
+            </if>
             <if test='w29 != null and w29 !="" '>
-            ,W29  
-            </if>  
+            ,W29
+            </if>
             <if test='w30 != null and w30 !="" '>
             ,W30
-            </if>              
+            </if>
 
             <if test='ws1 != null and ws1 !="" '>
-            ,WS1 
+            ,WS1
             </if>
             <if test='ws2 != null and ws2 !="" '>
-            ,WS2 
+            ,WS2
             </if>
             <if test='ws3 != null and ws3 !="" '>
-            ,WS3 
+            ,WS3
             </if>
             <if test='ws4 != null and ws4 !="" '>
-            ,WS4 
+            ,WS4
             </if>
             <if test='ws5 != null and ws5 !="" '>
-            ,WS5 
+            ,WS5
             </if>
             )
       VALUES
            (
-             #{scm0002dPlanDtlIdSeq} 
-            ,#{getPlanMasterId} 
-            ,#{team}            
-            ,#{newStockCode}    
-            
+             #{scm0002dPlanDtlIdSeq}
+            ,#{getPlanMasterId}
+            ,#{team}
+            ,#{newStockCode}
+
             <if test='preM3AvgOrded != null and preM3AvgOrded !="" '>
-            ,#{preM3AvgOrded}  
-            </if>                
+            ,#{preM3AvgOrded}
+            </if>
             <if test='preM3AvgIssu != null and preM3AvgIssu !="" '>
-            ,#{preM3AvgIssu}  
-            </if>                
-            
+            ,#{preM3AvgIssu}
+            </if>
+
             <if test='m1Ord != null and m1Ord !="" '>
-            ,#{m1Ord}  
-            </if>                
+            ,#{m1Ord}
+            </if>
             <if test='m2Ord != null and m2Ord !="" '>
-            ,#{m2Ord}  
-            </if>                
+            ,#{m2Ord}
+            </if>
             <if test='m3Ord != null and m3Ord !="" '>
-            ,#{m3Ord}  
-            </if>                
-            
+            ,#{m3Ord}
+            </if>
+
             <if test='m33 != null and m33 !="" '>
-            ,#{m33}  
-            </if>                
+            ,#{m33}
+            </if>
             <if test='m22 != null and m22 !="" '>
-            ,#{m22}  
-            </if>                
+            ,#{m22}
+            </if>
             <if test='m11 != null and m11 !="" '>
-            ,#{m11}  
-            </if>                
-            
+            ,#{m11}
+            </if>
+
             <if test='m0Plan != null and m0Plan !="" '>
-            ,#{m0Plan}  
-            </if>                
+            ,#{m0Plan}
+            </if>
             <if test='m0Ord != null and m0Ord !="" '>
-            ,#{m0Ord}  
-            </if>                
-            
+            ,#{m0Ord}
+            </if>
+
             <if test='m1 != null and m1 !="" '>
-            ,#{m1}  
-            </if>              
+            ,#{m1}
+            </if>
             <if test='m2 != null and m2 !="" '>
-            ,#{m2} 
-            </if>              
+            ,#{m2}
+            </if>
             <if test='m3 != null and m3 !="" '>
-            ,#{m3} 
-            </if>              
+            ,#{m3}
+            </if>
             <if test='m4 != null and m4 !="" '>
-            ,#{m4} 
-            </if>              
-            
+            ,#{m4}
+            </if>
+
             <if test='w00 != null and w00 !="" '>
-            ,#{w00} 
-            </if>              
+            ,#{w00}
+            </if>
             <if test='w01 != null and w01 !="" '>
-            ,#{w01} 
-            </if>              
+            ,#{w01}
+            </if>
             <if test='w02 != null and w02 !="" '>
-            ,#{w02} 
-            </if>              
+            ,#{w02}
+            </if>
             <if test='w03 != null and w03 !="" '>
-            ,#{w03} 
-            </if>              
+            ,#{w03}
+            </if>
             <if test='w04 != null and w04 !="" '>
-            ,#{w04} 
-            </if>              
+            ,#{w04}
+            </if>
             <if test='w05 != null and w05 !="" '>
-            ,#{w05} 
-            </if>              
+            ,#{w05}
+            </if>
             <if test='w06 != null and w06 !="" '>
-            ,#{w06} 
-            </if>              
+            ,#{w06}
+            </if>
             <if test='w07 != null and w07 !="" '>
-            ,#{w07} 
-            </if>              
+            ,#{w07}
+            </if>
             <if test='w08 != null and w08 !="" '>
-            ,#{w08} 
-            </if>              
+            ,#{w08}
+            </if>
             <if test='w09 != null and w09 !="" '>
-            ,#{w09} 
-            </if>    
-                      
+            ,#{w09}
+            </if>
+
             <if test='w10 != null and w10 !="" '>
-            ,#{w10} 
-            </if>            
+            ,#{w10}
+            </if>
             <if test='w11 != null and w11 !="" '>
-            ,#{w11} 
-            </if>            
+            ,#{w11}
+            </if>
             <if test='w12 != null and w12 !="" '>
-            ,#{w12} 
-            </if>            
+            ,#{w12}
+            </if>
             <if test='w13 != null and w13 !="" '>
-            ,#{w13} 
-            </if>            
+            ,#{w13}
+            </if>
             <if test='w14 != null and w14 !="" '>
-            ,#{w14} 
-            </if>            
+            ,#{w14}
+            </if>
             <if test='w15 != null and w15 !="" '>
-            ,#{w15} 
-            </if>            
+            ,#{w15}
+            </if>
             <if test='w16 != null and w16 !="" '>
-            ,#{w16} 
-            </if>            
+            ,#{w16}
+            </if>
             <if test='w17 != null and w17 !="" '>
-            ,#{w17} 
-            </if>            
+            ,#{w17}
+            </if>
             <if test='w18 != null and w18 !="" '>
-            ,#{w18} 
-            </if>            
+            ,#{w18}
+            </if>
             <if test='w19 != null and w19 !="" '>
-            ,#{w19} 
-            </if>            
+            ,#{w19}
+            </if>
             <if test='w20 != null and w20 !="" '>
-            ,#{w20} 
-            </if>            
-            
+            ,#{w20}
+            </if>
+
             <if test='w21 != null and w21 !="" '>
-            ,#{w21} 
-            </if>              
+            ,#{w21}
+            </if>
             <if test='w22 != null and w22 !="" '>
-            ,#{w22}  
-            </if>              
+            ,#{w22}
+            </if>
             <if test='w23 != null and w23 !="" '>
-            ,#{w23}  
-            </if>              
+            ,#{w23}
+            </if>
             <if test='w24 != null and w24 !="" '>
-            ,#{w24}  
-            </if>              
+            ,#{w24}
+            </if>
             <if test='w25 != null and w25 !="" '>
-            ,#{w25}  
-            </if>              
+            ,#{w25}
+            </if>
             <if test='w26 != null and w26 !="" '>
-            ,#{w26}  
-            </if>              
+            ,#{w26}
+            </if>
             <if test='w27 != null and w27 !="" '>
-            ,#{w27}  
-            </if>              
+            ,#{w27}
+            </if>
             <if test='w28 != null and w28 !="" '>
-            ,#{w28}  
-            </if>              
+            ,#{w28}
+            </if>
             <if test='w29 != null and w29 !="" '>
-            ,#{w29}  
-            </if>              
+            ,#{w29}
+            </if>
             <if test='w30 != null and w30 !="" '>
-            ,#{w30}  
-            </if>              
+            ,#{w30}
+            </if>
 
             <if test='ws1 != null and ws1 !="" '>
-            ,#{ws1}  
+            ,#{ws1}
             </if>
             <if test='ws2 != null and ws2 !="" '>
-            ,#{ws2} 
+            ,#{ws2}
             </if>
             <if test='ws3 != null and ws3 !="" '>
-           ,#{ws3} 
+           ,#{ws3}
             </if>
             <if test='ws4 != null and ws4 !="" '>
-            ,#{ws4}  
+            ,#{ws4}
             </if>
             <if test='ws5 != null and ws5 !="" '>
-            ,#{ws5} 
+            ,#{ws5}
             </if>
            )
 
@@ -1223,12 +1322,12 @@ SELECT STK_ID
         <selectKey keyProperty="salesPlanMstSeq" resultType="int" order="BEFORE">
             SELECT SCM0001M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-         
+
             INSERT INTO SCM0001M
 				           (
 				             PLAN_ID
 				           , TEAM
-				           , PLAN_YEAR    
+				           , PLAN_YEAR
 				           , PLAN_MONTH
 				           , PLAN_WEEK
 				           , PLAN_STUS_ID
@@ -1246,40 +1345,40 @@ SELECT STK_ID
 				           , SYSDATE
 				           , #{crtUserId}
 				          )
-</insert> 
+</insert>
 
 <delete id="deleteStockCode" parameterType="Map">
-         
-    DELETE 
-      FROM SCM0002D 
-     WHERE PLAN_MASTER_ID = #{planMasterId}  
-       AND TEAM = #{team} 
-       AND STOCK_CODE = #{code} 
-       AND (SELECT PLAN_STUS_ID 
-             FROM SCM0001M  
+
+    DELETE
+      FROM SCM0002D
+     WHERE PLAN_MASTER_ID = #{planMasterId}
+       AND TEAM = #{team}
+       AND STOCK_CODE = #{code}
+       AND (SELECT PLAN_STUS_ID
+             FROM SCM0001M
             WHERE PLAN_ID = #{planMasterId}
-           ) <![CDATA[ <> ]]>  4 
-           
-</delete> 
+           ) <![CDATA[ <> ]]>  4
+
+</delete>
 
 <update id="updateSalesPlanUnConfirm" parameterType="Map">
-  UPDATE SCM0001M 
-     SET PLAN_STUS_ID = 1   
+  UPDATE SCM0001M
+     SET PLAN_STUS_ID = 1
    WHERE PLAN_YEAR = #{scmYearCbBox}
      AND PLAN_WEEK = #{scmPeriodCbBox}
      AND TEAM      = #{scmTeamCbBox}
-</update> 
+</update>
 
 <update id="updateSalesPlanConfirm" parameterType="Map">
-  UPDATE SCM0001M 
-     SET PLAN_STUS_ID = 4  
+  UPDATE SCM0001M
+     SET PLAN_STUS_ID = 4
    WHERE PLAN_YEAR = #{scmYearCbBox}
      AND PLAN_WEEK = #{scmPeriodCbBox}
      AND TEAM      = #{scmTeamCbBox}
-</update> 
+</update>
 
 <select id="selectAccuracyWeeklyDetail" parameterType="Map" resultType="egovMap">
-  SELECT * 
+  SELECT *
     FROM(
          SELECT
                #{scmMonthCbBox} MONTH
@@ -1288,20 +1387,20 @@ SELECT STK_ID
              , STOCK_NAME
              , STOCK_CTGRY
              , STK_TYPE_ID
-             
+
              ,TEAM
              ,SUM(W12_WEEK_00) W12
-             ,SUM(W11_WEEK_00) W11 
+             ,SUM(W11_WEEK_00) W11
              ,SUM(W10_WEEK_00) W10
-             ,SUM(W9_WEEK_00)  W9  
-             ,SUM(W8_WEEK_00)  W8  
-             ,SUM(W7_WEEK_00)  W7 
-             ,SUM(W6_WEEK_00)  W6   
-             ,SUM(W5_WEEK_00)  W5    
-             ,SUM(W4_WEEK_00)  W4  
-             ,SUM(W3_WEEK_00)  W3 
-             ,SUM(W2_WEEK_00)  W2  
-             ,SUM(W1_WEEK_00)  W1      
+             ,SUM(W9_WEEK_00)  W9
+             ,SUM(W8_WEEK_00)  W8
+             ,SUM(W7_WEEK_00)  W7
+             ,SUM(W6_WEEK_00)  W6
+             ,SUM(W5_WEEK_00)  W5
+             ,SUM(W4_WEEK_00)  W4
+             ,SUM(W3_WEEK_00)  W3
+             ,SUM(W2_WEEK_00)  W2
+             ,SUM(W1_WEEK_00)  W1
              ,SUM(ORD_VALUE) SALES_ORDER
              ,ROUND(AVG(SHORT_TERM_AVG))||'%' SHORT_TERM_AVG
              ,ROUND(AVG(MID_TERM_AVG))||'%'  MID_TERM_AVG
@@ -1309,18 +1408,18 @@ SELECT STK_ID
           FROM (
                 SELECT
                        TEAM,STOCK_CODE,STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID,ORD_VALUE
-                      ,W1_WEEK_00 ,W2_WEEK_00  ,W3_WEEK_00  ,W4_WEEK_00  ,W5_WEEK_00  ,W6_WEEK_00  
+                      ,W1_WEEK_00 ,W2_WEEK_00  ,W3_WEEK_00  ,W4_WEEK_00  ,W5_WEEK_00  ,W6_WEEK_00
                       ,W7_WEEK_00 ,W8_WEEK_00  ,W9_WEEK_00  ,W10_WEEK_00 ,W11_WEEK_00 ,W12_WEEK_00
                       ,DECODE(SHORT_TERM_CNT, 0 , 0,  ROUND(SHORT_TERM_SUM / SHORT_TERM_CNT) ) SHORT_TERM_AVG
-                      ,DECODE(MID_TERM_CNT, 0, 0,  ROUND(MID_TERM_SUM / MID_TERM_CNT) ) MID_TERM_AVG 
+                      ,DECODE(MID_TERM_CNT, 0, 0,  ROUND(MID_TERM_SUM / MID_TERM_CNT) ) MID_TERM_AVG
                   FROM
                   (
                    SELECT STEP5_DATA.*
                         ,(W1_RATTING + W2_RATTING + W3_RATTING + W4_RATTING + W5_RATTING + W6_RATTING + W7_RATTING +W8_RATTING) SHORT_TERM_SUM
                         ,(W9_RATTING + W10_RATTING + W11_RATTING + W12_RATTING ) MID_TERM_SUM
                         ,( CASE WHEN W1_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W2_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W3_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W4_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END
-                         + CASE WHEN W5_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W6_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W7_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W8_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END 
-                         ) SHORT_TERM_CNT 
+                         + CASE WHEN W5_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W6_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W7_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W8_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END
+                         ) SHORT_TERM_CNT
                         ,( CASE WHEN W9_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W10_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W11_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W12_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END) MID_TERM_CNT
                     FROM
                         (
@@ -1328,204 +1427,204 @@ SELECT STK_ID
                              AS
                                 (
                                   SELECT STEP3_DATA.*
-                                       , CASE WHEN ( STEP3_DATA.ORD_VALUE <![CDATA[<]]> STEP3_DATA.WEEK_00  ) 
-                                              THEN ROUND((STEP3_DATA.ORD_VALUE / STEP3_DATA.WEEK_00)*100) 
-                                              WHEN ( STEP3_DATA.WEEK_00   <![CDATA[<]]> STEP3_DATA.ORD_VALUE  ) 
-                                              THEN ROUND((STEP3_DATA.WEEK_00 / STEP3_DATA.ORD_VALUE)*100) 
+                                       , CASE WHEN ( STEP3_DATA.ORD_VALUE <![CDATA[<]]> STEP3_DATA.WEEK_00  )
+                                              THEN ROUND((STEP3_DATA.ORD_VALUE / STEP3_DATA.WEEK_00)*100)
+                                              WHEN ( STEP3_DATA.WEEK_00   <![CDATA[<]]> STEP3_DATA.ORD_VALUE  )
+                                              THEN ROUND((STEP3_DATA.WEEK_00 / STEP3_DATA.ORD_VALUE)*100)
                                          ELSE
                                             0
                                          END ACCURACY_RATTING
                                   FROM (
                                         SELECT STEP2_DATA.*
                                               ,(SELECT M0_ORD FROM SCM0052V SCM52V WHERE SCM52V.PLAN_YEAR = #{scmYearCbBox}  AND SCM52V.PLAN_MONTH = #{scmMonthCbBox} AND SCM52V.PLAN_WEEK = #{scmPeriodCbBox} AND SCM52V.TEAM = STEP2_DATA.TEAM AND SCM52V.STOCK_CODE = STEP2_DATA.STOCK_CODE) ORD_VALUE
-                                          FROM 
-                                              ( 
-                                                SELECT STEP1_DATA.*  
-                                                  FROM 
+                                          FROM
+                                              (
+                                                SELECT STEP1_DATA.*
+                                                  FROM
                                                       (
                                                         SELECT   1 SEQ
                                                                ,TEAM
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
+
+                                                           FROM SCM0052V
                                                           WHERE PLAN_YEAR = #{year1}
                                                             AND PLAN_WEEK = #{weekTh1}
-                                                                
+
                                                         UNION ALL
-                                                                
+
                                                         SELECT  2 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
+
+                                                           FROM SCM0052V
                                                           WHERE PLAN_YEAR = #{year2}
-                                                            AND PLAN_WEEK = #{weekTh2} 
-                                                                    
+                                                            AND PLAN_WEEK = #{weekTh2}
+
                                                           UNION ALL
-                                                                
+
                                                         SELECT  3 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
+
+                                                           FROM SCM0052V
                                                           WHERE PLAN_YEAR = #{year3}
-                                                            AND PLAN_WEEK = #{weekTh3}  
-                                                                        
+                                                            AND PLAN_WEEK = #{weekTh3}
+
                                                           UNION ALL
-                                                                
+
                                                         SELECT  4 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
+
+                                                           FROM SCM0052V
                                                           WHERE PLAN_YEAR = #{year4}
-                                                            AND PLAN_WEEK = #{weekTh4}  
-                                                                    
+                                                            AND PLAN_WEEK = #{weekTh4}
+
                                                           UNION ALL
-                                                                
+
                                                         SELECT  5 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
-                                                          WHERE PLAN_YEAR = #{year5}  
-                                                            AND PLAN_WEEK = #{weekTh5}  
-                                                                    
+
+                                                           FROM SCM0052V
+                                                          WHERE PLAN_YEAR = #{year5}
+                                                            AND PLAN_WEEK = #{weekTh5}
+
                                                           UNION ALL
-                                                                
+
                                                         SELECT  6 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
-                                                          WHERE PLAN_YEAR = #{year6}   
+
+                                                           FROM SCM0052V
+                                                          WHERE PLAN_YEAR = #{year6}
                                                             AND PLAN_WEEK = #{weekTh6}
-                                                                    
+
                                                           UNION ALL
-                                                                
+
                                                         SELECT  7 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
-                                                          WHERE PLAN_YEAR = #{year7}   
-                                                            AND PLAN_WEEK = #{weekTh7} 
-                                                                    
+
+                                                           FROM SCM0052V
+                                                          WHERE PLAN_YEAR = #{year7}
+                                                            AND PLAN_WEEK = #{weekTh7}
+
                                                           UNION ALL
-                                                                
+
                                                         SELECT  8 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
-                                                          WHERE PLAN_YEAR = #{year8}  
-                                                            AND PLAN_WEEK = #{weekTh8}           
-                                                                    
+
+                                                           FROM SCM0052V
+                                                          WHERE PLAN_YEAR = #{year8}
+                                                            AND PLAN_WEEK = #{weekTh8}
+
                                                           UNION ALL
-                                                                
+
                                                         SELECT  9 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
-                                                          WHERE PLAN_YEAR = #{year9}   
-                                                            AND PLAN_WEEK = #{weekTh9} 
-                                                                    
+
+                                                           FROM SCM0052V
+                                                          WHERE PLAN_YEAR = #{year9}
+                                                            AND PLAN_WEEK = #{weekTh9}
+
                                                           UNION ALL
-                                                                
+
                                                         SELECT  10 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
-                                                          WHERE PLAN_YEAR = #{year10}  
-                                                            AND PLAN_WEEK = #{weekTh10}    
-                                                                    
+
+                                                           FROM SCM0052V
+                                                          WHERE PLAN_YEAR = #{year10}
+                                                            AND PLAN_WEEK = #{weekTh10}
+
                                                           UNION ALL
-                                                                
+
                                                         SELECT  11 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
-                                                          WHERE PLAN_YEAR = #{year11}  
-                                                            AND PLAN_WEEK = #{weekTh11} 
-                                                                    
+
+                                                           FROM SCM0052V
+                                                          WHERE PLAN_YEAR = #{year11}
+                                                            AND PLAN_WEEK = #{weekTh11}
+
                                                           UNION ALL
-                                                                
+
                                                         SELECT  12 SEQ
-                                                               ,TEAM  
-                                                               ,STOCK_CODE  
-                                                               ,STOCK_NAME  
+                                                               ,TEAM
+                                                               ,STOCK_CODE
+                                                               ,STOCK_NAME
                                                                ,STOCK_CTGRY
-                                                               ,STK_TYPE_ID  
+                                                               ,STK_TYPE_ID
                                                                ,W00 WEEK_00
-                                                                       
-                                                           FROM SCM0052V  
-                                                          WHERE PLAN_YEAR = #{year12}  
-                                                            AND PLAN_WEEK = #{weekTh12}   
+
+                                                           FROM SCM0052V
+                                                          WHERE PLAN_YEAR = #{year12}
+                                                            AND PLAN_WEEK = #{weekTh12}
                                                       )  STEP1_DATA
-                                               
+
                                               )  STEP2_DATA
                                         ) STEP3_DATA
-                                ) 
+                                )
                                 SELECT *
                                   FROM STEP4_DATA
-                                    
+
                                   PIVOT
                                        (
                                          MAX(WEEK_00) WEEK_00 ,  MAX(ACCURACY_RATTING) RATTING
-                                             FOR SEQ IN ( 1 AS W1  ,2 AS W2 ,3 AS W3 , 4 AS W4  , 5 AS W5  , 6 AS W6  
+                                             FOR SEQ IN ( 1 AS W1  ,2 AS W2 ,3 AS W3 , 4 AS W4  , 5 AS W5  , 6 AS W6
                                                          ,7 AS W7  ,8 AS W8 ,9 AS W9 ,10 AS W10 ,11 AS W11 ,12 AS W12
                                                         )
-                                       )  
-                                        
+                                       )
+
                         ) STEP5_DATA
-                      
+
                   )STEP6_DATA
 
                ) STEP7_DATA
@@ -1535,7 +1634,7 @@ SELECT STK_ID
 		            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
 		                #{item}
 		            </foreach>
-		
+
 		        </when>
 		      </choose>
           GROUP BY  TEAM ,STOCK_CODE,STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID
@@ -1552,95 +1651,95 @@ SELECT STK_ID
                , STOCK_NAME
                , STOCK_CTGRY
                , STK_TYPE_ID
-            
+
                ,'ALL' TEAM
                ,ALL_W12_WEEK_00 W12
                ,ALL_W11_WEEK_00 W11
-               ,ALL_W10_WEEK_00 W10 
-               ,ALL_W9_WEEK_00  W9 
-               ,ALL_W8_WEEK_00  W8 
-               ,ALL_W7_WEEK_00  W7     
-               ,ALL_W6_WEEK_00  W6        
-               ,ALL_W5_WEEK_00  W5 
-               ,ALL_W4_WEEK_00  W4                     
-               ,ALL_W3_WEEK_00  W3 
-               ,ALL_W2_WEEK_00  W2                     
-               ,ALL_W1_WEEK_00  W1 
+               ,ALL_W10_WEEK_00 W10
+               ,ALL_W9_WEEK_00  W9
+               ,ALL_W8_WEEK_00  W8
+               ,ALL_W7_WEEK_00  W7
+               ,ALL_W6_WEEK_00  W6
+               ,ALL_W5_WEEK_00  W5
+               ,ALL_W4_WEEK_00  W4
+               ,ALL_W3_WEEK_00  W3
+               ,ALL_W2_WEEK_00  W2
+               ,ALL_W1_WEEK_00  W1
                ,ORD_VALUE SALES_ORDER
-               , CASE WHEN ALL_SHORT_CNT <![CDATA[>]]> 0 THEN ROUND(( (ALL_W8_RATTING + ALL_W7_RATTING + ALL_W6_RATTING + ALL_W5_RATTING 
+               , CASE WHEN ALL_SHORT_CNT <![CDATA[>]]> 0 THEN ROUND(( (ALL_W8_RATTING + ALL_W7_RATTING + ALL_W6_RATTING + ALL_W5_RATTING
                                                         + ALL_W4_RATTING + ALL_W3_RATTING + ALL_W2_RATTING + ALL_W1_RATTING) / ALL_SHORT_CNT ))
                                             ELSE 0 END  ||'%'
-                 SHORT_TERM_AVG 
-               , CASE WHEN ALL_MID_CNT <![CDATA[>]]> 0 THEN ROUND(((ALL_W12_RATTING + ALL_W11_RATTING + ALL_W10_RATTING + ALL_W9_RATTING ) / ALL_MID_CNT )) 
+                 SHORT_TERM_AVG
+               , CASE WHEN ALL_MID_CNT <![CDATA[>]]> 0 THEN ROUND(((ALL_W12_RATTING + ALL_W11_RATTING + ALL_W10_RATTING + ALL_W9_RATTING ) / ALL_MID_CNT ))
                                            ELSE 0 END  ||'%'
                  MID_TERM_AVG
 
           FROM (
                   /* ALL_RATING_AVG */
                   SELECT SUM_TEMP2.*
-                        
+
                         ,( CASE WHEN ALL_W1_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN ALL_W2_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN ALL_W3_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN ALL_W4_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END
                          + CASE WHEN ALL_W5_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN ALL_W6_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN ALL_W7_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN ALL_W8_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END
                          ) ALL_SHORT_CNT
                         ,( CASE WHEN ALL_W9_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN ALL_W10_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN ALL_W11_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN ALL_W12_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END
-                         ) ALL_MID_CNT   
+                         ) ALL_MID_CNT
 
                    FROM (
-                            SELECT TEAM, STOCK_CODE, STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID, ORD_VALUE 
-                                  ,ALL_W1_WEEK_00  ,ALL_W2_WEEK_00 ,ALL_W3_WEEK_00 ,ALL_W4_WEEK_00 ,ALL_W5_WEEK_00 ,ALL_W6_WEEK_00 
+                            SELECT TEAM, STOCK_CODE, STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID, ORD_VALUE
+                                  ,ALL_W1_WEEK_00  ,ALL_W2_WEEK_00 ,ALL_W3_WEEK_00 ,ALL_W4_WEEK_00 ,ALL_W5_WEEK_00 ,ALL_W6_WEEK_00
                                   ,ALL_W7_WEEK_00  ,ALL_W8_WEEK_00 ,ALL_W9_WEEK_00 ,ALL_W10_WEEK_00 ,ALL_W11_WEEK_00 ,ALL_W12_WEEK_00
-                                  ,CASE WHEN ALL_W12_WEEK_00   <![CDATA[<]]> ALL_W12_ORD_VALUE THEN ROUND((ALL_W12_WEEK_00 / ALL_W12_ORD_VALUE )*100) 
-                                        WHEN ALL_W12_ORD_VALUE <![CDATA[<]]> ALL_W12_WEEK_00 THEN ROUND((ALL_W12_ORD_VALUE / ALL_W12_WEEK_00 )*100) 
+                                  ,CASE WHEN ALL_W12_WEEK_00   <![CDATA[<]]> ALL_W12_ORD_VALUE THEN ROUND((ALL_W12_WEEK_00 / ALL_W12_ORD_VALUE )*100)
+                                        WHEN ALL_W12_ORD_VALUE <![CDATA[<]]> ALL_W12_WEEK_00 THEN ROUND((ALL_W12_ORD_VALUE / ALL_W12_WEEK_00 )*100)
                                         ELSE 0
                                    END ALL_W12_RATTING
-                                  ,CASE WHEN ALL_W11_WEEK_00   <![CDATA[<]]> ALL_W11_ORD_VALUE THEN ROUND((ALL_W11_WEEK_00 / ALL_W11_ORD_VALUE )*100) 
-                                        WHEN ALL_W11_ORD_VALUE <![CDATA[<]]> ALL_W11_WEEK_00 THEN ROUND((ALL_W11_ORD_VALUE / ALL_W11_WEEK_00 )*100) 
+                                  ,CASE WHEN ALL_W11_WEEK_00   <![CDATA[<]]> ALL_W11_ORD_VALUE THEN ROUND((ALL_W11_WEEK_00 / ALL_W11_ORD_VALUE )*100)
+                                        WHEN ALL_W11_ORD_VALUE <![CDATA[<]]> ALL_W11_WEEK_00 THEN ROUND((ALL_W11_ORD_VALUE / ALL_W11_WEEK_00 )*100)
                                         ELSE 0
                                    END ALL_W11_RATTING
-                                  ,CASE WHEN ALL_W10_WEEK_00   <![CDATA[<]]> ALL_W10_ORD_VALUE THEN ROUND((ALL_W10_WEEK_00 / ALL_W10_ORD_VALUE )*100) 
-                                        WHEN ALL_W10_ORD_VALUE <![CDATA[<]]> ALL_W10_WEEK_00 THEN ROUND((ALL_W10_ORD_VALUE / ALL_W10_WEEK_00 )*100) 
+                                  ,CASE WHEN ALL_W10_WEEK_00   <![CDATA[<]]> ALL_W10_ORD_VALUE THEN ROUND((ALL_W10_WEEK_00 / ALL_W10_ORD_VALUE )*100)
+                                        WHEN ALL_W10_ORD_VALUE <![CDATA[<]]> ALL_W10_WEEK_00 THEN ROUND((ALL_W10_ORD_VALUE / ALL_W10_WEEK_00 )*100)
                                         ELSE 0
                                    END ALL_W10_RATTING
-                                  ,CASE WHEN ALL_W9_WEEK_00   <![CDATA[<]]> ALL_W9_ORD_VALUE THEN ROUND((ALL_W9_WEEK_00 / ALL_W9_ORD_VALUE )*100) 
-                                        WHEN ALL_W9_ORD_VALUE <![CDATA[<]]> ALL_W9_WEEK_00 THEN ROUND((ALL_W9_ORD_VALUE / ALL_W9_WEEK_00 )*100) 
+                                  ,CASE WHEN ALL_W9_WEEK_00   <![CDATA[<]]> ALL_W9_ORD_VALUE THEN ROUND((ALL_W9_WEEK_00 / ALL_W9_ORD_VALUE )*100)
+                                        WHEN ALL_W9_ORD_VALUE <![CDATA[<]]> ALL_W9_WEEK_00 THEN ROUND((ALL_W9_ORD_VALUE / ALL_W9_WEEK_00 )*100)
                                         ELSE 0
                                    END ALL_W9_RATTING
-                                  ,CASE WHEN ALL_W8_WEEK_00   <![CDATA[<]]> ALL_W8_ORD_VALUE THEN ROUND((ALL_W8_WEEK_00 / ALL_W8_ORD_VALUE )*100) 
-                                        WHEN ALL_W8_ORD_VALUE <![CDATA[<]]> ALL_W8_WEEK_00 THEN ROUND((ALL_W8_ORD_VALUE / ALL_W8_WEEK_00 )*100) 
+                                  ,CASE WHEN ALL_W8_WEEK_00   <![CDATA[<]]> ALL_W8_ORD_VALUE THEN ROUND((ALL_W8_WEEK_00 / ALL_W8_ORD_VALUE )*100)
+                                        WHEN ALL_W8_ORD_VALUE <![CDATA[<]]> ALL_W8_WEEK_00 THEN ROUND((ALL_W8_ORD_VALUE / ALL_W8_WEEK_00 )*100)
                                         ELSE 0
                                    END ALL_W8_RATTING
-                                  ,CASE WHEN ALL_W7_WEEK_00   <![CDATA[<]]> ALL_W7_ORD_VALUE THEN ROUND((ALL_W7_WEEK_00 / ALL_W7_ORD_VALUE )*100) 
-                                        WHEN ALL_W7_ORD_VALUE <![CDATA[<]]> ALL_W7_WEEK_00 THEN ROUND((ALL_W7_ORD_VALUE / ALL_W7_WEEK_00 )*100) 
+                                  ,CASE WHEN ALL_W7_WEEK_00   <![CDATA[<]]> ALL_W7_ORD_VALUE THEN ROUND((ALL_W7_WEEK_00 / ALL_W7_ORD_VALUE )*100)
+                                        WHEN ALL_W7_ORD_VALUE <![CDATA[<]]> ALL_W7_WEEK_00 THEN ROUND((ALL_W7_ORD_VALUE / ALL_W7_WEEK_00 )*100)
                                         ELSE 0
-                                   END ALL_W7_RATTING                     
-                                  ,CASE WHEN ALL_W6_WEEK_00   <![CDATA[<]]> ALL_W6_ORD_VALUE THEN ROUND((ALL_W6_WEEK_00 / ALL_W6_ORD_VALUE )*100) 
-                                        WHEN ALL_W6_ORD_VALUE <![CDATA[<]]> ALL_W6_WEEK_00 THEN ROUND((ALL_W6_ORD_VALUE / ALL_W6_WEEK_00 )*100) 
+                                   END ALL_W7_RATTING
+                                  ,CASE WHEN ALL_W6_WEEK_00   <![CDATA[<]]> ALL_W6_ORD_VALUE THEN ROUND((ALL_W6_WEEK_00 / ALL_W6_ORD_VALUE )*100)
+                                        WHEN ALL_W6_ORD_VALUE <![CDATA[<]]> ALL_W6_WEEK_00 THEN ROUND((ALL_W6_ORD_VALUE / ALL_W6_WEEK_00 )*100)
                                         ELSE 0
                                    END ALL_W6_RATTING
-                                  ,CASE WHEN ALL_W5_WEEK_00   <![CDATA[<]]> ALL_W5_ORD_VALUE THEN ROUND((ALL_W5_WEEK_00 / ALL_W5_ORD_VALUE )*100) 
-                                        WHEN ALL_W5_ORD_VALUE <![CDATA[<]]> ALL_W5_WEEK_00 THEN ROUND((ALL_W5_ORD_VALUE / ALL_W5_WEEK_00 )*100) 
+                                  ,CASE WHEN ALL_W5_WEEK_00   <![CDATA[<]]> ALL_W5_ORD_VALUE THEN ROUND((ALL_W5_WEEK_00 / ALL_W5_ORD_VALUE )*100)
+                                        WHEN ALL_W5_ORD_VALUE <![CDATA[<]]> ALL_W5_WEEK_00 THEN ROUND((ALL_W5_ORD_VALUE / ALL_W5_WEEK_00 )*100)
                                         ELSE 0
                                    END ALL_W5_RATTING
-                                  ,CASE WHEN ALL_W4_WEEK_00   <![CDATA[<]]> ALL_W4_ORD_VALUE THEN ROUND((ALL_W4_WEEK_00 / ALL_W4_ORD_VALUE )*100) 
-                                        WHEN ALL_W4_ORD_VALUE <![CDATA[<]]> ALL_W4_WEEK_00 THEN ROUND((ALL_W4_ORD_VALUE / ALL_W4_WEEK_00 )*100) 
+                                  ,CASE WHEN ALL_W4_WEEK_00   <![CDATA[<]]> ALL_W4_ORD_VALUE THEN ROUND((ALL_W4_WEEK_00 / ALL_W4_ORD_VALUE )*100)
+                                        WHEN ALL_W4_ORD_VALUE <![CDATA[<]]> ALL_W4_WEEK_00 THEN ROUND((ALL_W4_ORD_VALUE / ALL_W4_WEEK_00 )*100)
                                         ELSE 0
                                    END ALL_W4_RATTING
-                                  ,CASE WHEN ALL_W3_WEEK_00   <![CDATA[<]]> ALL_W3_ORD_VALUE THEN ROUND((ALL_W3_WEEK_00 / ALL_W3_ORD_VALUE )*100) 
-                                        WHEN ALL_W3_ORD_VALUE <![CDATA[<]]> ALL_W3_WEEK_00 THEN ROUND((ALL_W3_ORD_VALUE / ALL_W3_WEEK_00 )*100) 
+                                  ,CASE WHEN ALL_W3_WEEK_00   <![CDATA[<]]> ALL_W3_ORD_VALUE THEN ROUND((ALL_W3_WEEK_00 / ALL_W3_ORD_VALUE )*100)
+                                        WHEN ALL_W3_ORD_VALUE <![CDATA[<]]> ALL_W3_WEEK_00 THEN ROUND((ALL_W3_ORD_VALUE / ALL_W3_WEEK_00 )*100)
                                         ELSE 0
-                                   END ALL_W3_RATTING                                  
+                                   END ALL_W3_RATTING
                                   ,CASE WHEN ALL_W2_WEEK_00   <![CDATA[<]]> ALL_W2_ORD_VALUE THEN ROUND((ALL_W2_WEEK_00 / ALL_W2_ORD_VALUE )*100)
-                                        WHEN ALL_W2_ORD_VALUE <![CDATA[<]]> ALL_W2_WEEK_00   THEN ROUND((ALL_W2_ORD_VALUE / ALL_W2_WEEK_00 )*100) 
-                                        ELSE 0                     
-                                   END ALL_W2_RATTING
-                                  ,CASE WHEN ALL_W1_WEEK_00   <![CDATA[<]]> ALL_W1_ORD_VALUE THEN ROUND((ALL_W1_WEEK_00 / ALL_W1_ORD_VALUE )*100) 
-                                        WHEN ALL_W1_ORD_VALUE <![CDATA[<]]> ALL_W1_WEEK_00   THEN ROUND((ALL_W1_ORD_VALUE / ALL_W1_WEEK_00 )*100) 
+                                        WHEN ALL_W2_ORD_VALUE <![CDATA[<]]> ALL_W2_WEEK_00   THEN ROUND((ALL_W2_ORD_VALUE / ALL_W2_WEEK_00 )*100)
                                         ELSE 0
-                                   END ALL_W1_RATTING      
-                                              
+                                   END ALL_W2_RATTING
+                                  ,CASE WHEN ALL_W1_WEEK_00   <![CDATA[<]]> ALL_W1_ORD_VALUE THEN ROUND((ALL_W1_WEEK_00 / ALL_W1_ORD_VALUE )*100)
+                                        WHEN ALL_W1_ORD_VALUE <![CDATA[<]]> ALL_W1_WEEK_00   THEN ROUND((ALL_W1_ORD_VALUE / ALL_W1_WEEK_00 )*100)
+                                        ELSE 0
+                                   END ALL_W1_RATTING
+
                                   FROM
                                       (
-                                        SELECT 'ALL' TEAM, STOCK_CODE, STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID 
+                                        SELECT 'ALL' TEAM, STOCK_CODE, STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID
 				                                       ,SUM(ORD_VALUE) ORD_VALUE
 				                                       ,SUM(W1_WEEK_00) ALL_W1_WEEK_00 ,SUM(ORD_VALUE) ALL_W1_ORD_VALUE
 				                                       ,SUM(W2_WEEK_00) ALL_W2_WEEK_00 ,SUM(ORD_VALUE) ALL_W2_ORD_VALUE
@@ -1653,22 +1752,22 @@ SELECT STK_ID
 				                                       ,SUM(W9_WEEK_00) ALL_W9_WEEK_00 ,SUM(ORD_VALUE) ALL_W9_ORD_VALUE
 				                                       ,SUM(W10_WEEK_00) ALL_W10_WEEK_00 ,SUM(ORD_VALUE) ALL_W10_ORD_VALUE
 				                                       ,SUM(W11_WEEK_00) ALL_W11_WEEK_00 ,SUM(ORD_VALUE) ALL_W11_ORD_VALUE
-				                                       ,SUM(W12_WEEK_00) ALL_W12_WEEK_00 ,SUM(ORD_VALUE) ALL_W12_ORD_VALUE   
+				                                       ,SUM(W12_WEEK_00) ALL_W12_WEEK_00 ,SUM(ORD_VALUE) ALL_W12_ORD_VALUE
                                   FROM (
-                                        SELECT  
+                                        SELECT
                                              TEAM,STOCK_CODE, STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID,ORD_VALUE
-                                              ,W1_WEEK_00 ,W1_RATTING  ,W2_WEEK_00 ,W2_RATTING  ,W3_WEEK_00,W3_RATTING  ,W4_WEEK_00,W4_RATTING   ,W5_WEEK_00,W5_RATTING   ,W6_WEEK_00  ,W6_RATTING  
-                                              ,W7_WEEK_00 ,W7_RATTING  ,W8_WEEK_00,W8_RATTING   ,W9_WEEK_00,W9_RATTING  ,W10_WEEK_00,W10_RATTING ,W11_WEEK_00,W11_RATTING ,W12_WEEK_00 ,W12_RATTING  
+                                              ,W1_WEEK_00 ,W1_RATTING  ,W2_WEEK_00 ,W2_RATTING  ,W3_WEEK_00,W3_RATTING  ,W4_WEEK_00,W4_RATTING   ,W5_WEEK_00,W5_RATTING   ,W6_WEEK_00  ,W6_RATTING
+                                              ,W7_WEEK_00 ,W7_RATTING  ,W8_WEEK_00,W8_RATTING   ,W9_WEEK_00,W9_RATTING  ,W10_WEEK_00,W10_RATTING ,W11_WEEK_00,W11_RATTING ,W12_WEEK_00 ,W12_RATTING
                                               ,DECODE(SHORT_TERM_CNT, 0, 0,  ROUND(SHORT_TERM_SUM / SHORT_TERM_CNT) ) SHORT_TERM_AVG
-                                              ,DECODE(MID_TERM_CNT  , 0, 0,  ROUND(MID_TERM_SUM   / MID_TERM_CNT) ) MID_TERM_AVG 
+                                              ,DECODE(MID_TERM_CNT  , 0, 0,  ROUND(MID_TERM_SUM   / MID_TERM_CNT) ) MID_TERM_AVG
                                           FROM
                                           (
                                            SELECT STEP5_DATA.*
                                                 ,(W1_RATTING + W2_RATTING + W3_RATTING + W4_RATTING + W5_RATTING + W6_RATTING + W7_RATTING +W8_RATTING) SHORT_TERM_SUM
                                                 ,(W9_RATTING + W10_RATTING + W11_RATTING + W12_RATTING ) MID_TERM_SUM
                                                 ,( CASE WHEN W1_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W2_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W3_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W4_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END
-                                                 + CASE WHEN W5_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W6_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W7_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W8_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END 
-                                                 ) SHORT_TERM_CNT 
+                                                 + CASE WHEN W5_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W6_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W7_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W8_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END
+                                                 ) SHORT_TERM_CNT
                                                 ,( CASE WHEN W9_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W10_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W11_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END + CASE WHEN W12_RATTING <![CDATA[>]]> 0 THEN 1 ELSE 0 END) MID_TERM_CNT
                                             FROM
                                                 (
@@ -1676,213 +1775,213 @@ SELECT STK_ID
                                                      AS
                                                         (
                                                           SELECT STEP3_DATA.*
-                                                               , CASE WHEN ( STEP3_DATA.ORD_VALUE <![CDATA[<]]> STEP3_DATA.WEEK_00  ) 
-                                                                      THEN ROUND((STEP3_DATA.ORD_VALUE / STEP3_DATA.WEEK_00)*100) 
-                                                                      WHEN ( STEP3_DATA.WEEK_00   <![CDATA[<]]> STEP3_DATA.ORD_VALUE  ) 
-                                                                      THEN ROUND((STEP3_DATA.WEEK_00 / STEP3_DATA.ORD_VALUE)*100) 
+                                                               , CASE WHEN ( STEP3_DATA.ORD_VALUE <![CDATA[<]]> STEP3_DATA.WEEK_00  )
+                                                                      THEN ROUND((STEP3_DATA.ORD_VALUE / STEP3_DATA.WEEK_00)*100)
+                                                                      WHEN ( STEP3_DATA.WEEK_00   <![CDATA[<]]> STEP3_DATA.ORD_VALUE  )
+                                                                      THEN ROUND((STEP3_DATA.WEEK_00 / STEP3_DATA.ORD_VALUE)*100)
                                                                  ELSE
                                                                     0
                                                                  END ACCURACY_RATTING
                                                           FROM (
                                                                 SELECT STEP2_DATA.*
                                                                       ,(SELECT M0_ORD FROM SCM0052V SCM52V WHERE SCM52V.PLAN_YEAR = #{scmYearCbBox}  AND SCM52V.PLAN_MONTH = #{scmMonthCbBox} AND SCM52V.PLAN_WEEK = #{scmPeriodCbBox} AND SCM52V.TEAM = STEP2_DATA.TEAM AND SCM52V.STOCK_CODE = STEP2_DATA.STOCK_CODE) ORD_VALUE
-                                                                  FROM 
-                                                                      ( 
-                                                                        SELECT STEP1_DATA.*  
-                                                                          FROM 
+                                                                  FROM
+                                                                      (
+                                                                        SELECT STEP1_DATA.*
+                                                                          FROM
                                                                               (
                                                                                 SELECT   1 SEQ
                                                                                        ,TEAM
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year1}  
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year1}
                                                                                     AND PLAN_WEEK = #{weekTh1}
-                                                                                          
+
                                                                                 UNION ALL
-                                                                                          
+
                                                                                 SELECT  2 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year2}  
-                                                                                    AND PLAN_WEEK = #{weekTh2} 
-                                                                                              
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year2}
+                                                                                    AND PLAN_WEEK = #{weekTh2}
+
                                                                                   UNION ALL
-                                                                                          
+
                                                                                 SELECT  3 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year3}  
-                                                                                    AND PLAN_WEEK = #{weekTh3} 
-                                                                                                  
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year3}
+                                                                                    AND PLAN_WEEK = #{weekTh3}
+
                                                                                   UNION ALL
-                                                                                          
+
                                                                                 SELECT  4 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year4}  
-                                                                                    AND PLAN_WEEK = #{weekTh4} 
-                                                                                              
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year4}
+                                                                                    AND PLAN_WEEK = #{weekTh4}
+
                                                                                   UNION ALL
-                                                                                          
+
                                                                                 SELECT  5 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year5}  
-                                                                                    AND PLAN_WEEK = #{weekTh5}  
-                                                                                              
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year5}
+                                                                                    AND PLAN_WEEK = #{weekTh5}
+
                                                                                   UNION ALL
-                                                                                          
+
                                                                                 SELECT  6 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year6}   
-                                                                                    AND PLAN_WEEK = #{weekTh6} 
-                                                                                              
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year6}
+                                                                                    AND PLAN_WEEK = #{weekTh6}
+
                                                                                   UNION ALL
-                                                                                          
+
                                                                                 SELECT  7 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year7}   
-                                                                                    AND PLAN_WEEK = #{weekTh7} 
-                                                                                              
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year7}
+                                                                                    AND PLAN_WEEK = #{weekTh7}
+
                                                                                   UNION ALL
-                                                                                          
+
                                                                                 SELECT  8 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year8}  
-                                                                                    AND PLAN_WEEK = #{weekTh8}           
-                                                                                              
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year8}
+                                                                                    AND PLAN_WEEK = #{weekTh8}
+
                                                                                   UNION ALL
-                                                                                          
+
                                                                                 SELECT  9 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year9}   
-                                                                                    AND PLAN_WEEK = #{weekTh9} 
-                                                                                              
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year9}
+                                                                                    AND PLAN_WEEK = #{weekTh9}
+
                                                                                   UNION ALL
-                                                                                          
+
                                                                                 SELECT  10 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year10}  
-                                                                                    AND PLAN_WEEK = #{weekTh10}    
-                                                                                              
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year10}
+                                                                                    AND PLAN_WEEK = #{weekTh10}
+
                                                                                   UNION ALL
-                                                                                          
+
                                                                                 SELECT  11 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year11}  
-                                                                                    AND PLAN_WEEK = #{weekTh11} 
-                                                                                              
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year11}
+                                                                                    AND PLAN_WEEK = #{weekTh11}
+
                                                                                   UNION ALL
-                                                                                          
+
                                                                                 SELECT  12 SEQ
-                                                                                       ,TEAM  
-                                                                                       ,STOCK_CODE  
-                                                                                       ,STOCK_NAME  
+                                                                                       ,TEAM
+                                                                                       ,STOCK_CODE
+                                                                                       ,STOCK_NAME
                                                                                        ,STOCK_CTGRY
-                                                                                       ,STK_TYPE_ID  
+                                                                                       ,STK_TYPE_ID
                                                                                        ,W00 WEEK_00
-                                                                                                 
-                                                                                   FROM SCM0052V  
-                                                                                  WHERE PLAN_YEAR = #{year12}  
-                                                                                    AND PLAN_WEEK = #{weekTh12}   
+
+                                                                                   FROM SCM0052V
+                                                                                  WHERE PLAN_YEAR = #{year12}
+                                                                                    AND PLAN_WEEK = #{weekTh12}
                                                                               )  STEP1_DATA
                                                                       )  STEP2_DATA
                                                                 ) STEP3_DATA
-                                                        ) 
+                                                        )
                                                         SELECT *
                                                           FROM STEP4_DATA
-                                                              
+
                                                           PIVOT
                                                                (
                                                                  MAX(WEEK_00) WEEK_00 ,  MAX(ACCURACY_RATTING) RATTING
-                                                                     FOR SEQ IN ( 1 AS W1  ,2 AS W2 ,3 AS W3 ,4 AS W4   ,5 AS W5   ,6 AS W6  
+                                                                     FOR SEQ IN ( 1 AS W1  ,2 AS W2 ,3 AS W3 ,4 AS W4   ,5 AS W5   ,6 AS W6
                                                                                  ,7 AS W7  ,8 AS W8 ,9 AS W9 ,10 AS W10 ,11 AS W11 ,12 AS W12
                                                                                 )
-                                                               )  
-                                                                  
+                                                               )
+
                                                 ) STEP5_DATA
-                                                
+
                                           )STEP6_DATA
 
                                        ) STEP7_DATA
                                        GROUP BY STOCK_CODE,STOCK_NAME,STOCK_CTGRY,STK_TYPE_ID
                                       ) SUM_TEMP1
-                       
+
                          ) SUM_TEMP2
-          
+
            ) SUM_TEMP3
-           
+
       ) WEEKLY_DETAIL
        <choose>
         <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
@@ -1893,13 +1992,13 @@ SELECT STK_ID
 
         </when>
       </choose>
-  ORDER BY STOCK_CODE, DECODE(TEAM,'CODY',1,'DST',2 ,3)   
-  
-</select> 
+  ORDER BY STOCK_CODE, DECODE(TEAM,'CODY',1,'DST',2 ,3)
+
+</select>
 
 <select id="selectAccuracyMonthlyReport" parameterType="Map" resultType="egovMap">
   WITH HEAD_MONTHLY1
-  AS 
+  AS
     (
 	     SELECT AB.*
 	       FROM (
@@ -1916,13 +2015,13 @@ SELECT STK_ID
 												            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
 												                #{item}
 												            </foreach>
-												
+
 												        </when>
-												      </choose> 
+												      </choose>
 		                             GROUP BY TEAM,WEEK
-		                              
+
 		                            UNION ALL
-		                              
+
 		                            SELECT 'SHORT' GBN,  TEAM,WEEK, SUM(SHORT_TERM_AVG) TERM_AVG, COUNT(*) TERM_AVG_CNT
 		                              FROM GBL_TEMP_ACCURACY
 		                             WHERE (SHORT_TERM_AVG > 0 )
@@ -1932,33 +2031,33 @@ SELECT STK_ID
                                     <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
                                         #{item}
                                     </foreach>
-                        
+
                                 </when>
-                              </choose> 		                              
+                              </choose>
 		                             GROUP BY TEAM,WEEK
 	                           )
 	                    )
-	                        
+
 	                      PIVOT
 	                            (
-	                              MAX(ACCRU_RAT) 
+	                              MAX(ACCRU_RAT)
 	                                 FOR WEEK IN (   1 AS W1  , 2 AS W2   ,3 AS W3   ,4 AS W4   ,5 AS W5   ,6 AS W6   ,7 AS W7   ,8 AS W8   ,9 AS W9   ,10 AS W10
 	                                               ,11 AS W11 ,12 AS W12 ,13 AS W13 ,14 AS W14 ,15 AS W15 ,16 AS W16 ,17 AS W17 ,18 AS W18 ,19 AS W19 ,20 AS W20
-	                                               ,21 AS W21 ,22 AS W22 ,23 AS W23 ,24 AS W24 ,25 AS W25 ,26 AS W26 ,27 AS W27 ,28 AS W28 ,29 AS W29 ,30 AS W30 
-	                                               ,31 AS W31 ,32 AS W32 ,33 AS W33 ,34 AS W34 ,35 AS W35 ,36 AS W36 ,37 AS W37 ,38 AS W38 ,39 AS W39 ,40 AS W40 
-	                                               ,41 AS W41 ,42 AS W42 ,43 AS W43 ,44 AS W44 ,45 AS W45 ,46 AS W46 ,47 AS W47 ,48 AS W48 ,49 AS W49 ,50 AS W50 
+	                                               ,21 AS W21 ,22 AS W22 ,23 AS W23 ,24 AS W24 ,25 AS W25 ,26 AS W26 ,27 AS W27 ,28 AS W28 ,29 AS W29 ,30 AS W30
+	                                               ,31 AS W31 ,32 AS W32 ,33 AS W33 ,34 AS W34 ,35 AS W35 ,36 AS W36 ,37 AS W37 ,38 AS W38 ,39 AS W39 ,40 AS W40
+	                                               ,41 AS W41 ,42 AS W42 ,43 AS W43 ,44 AS W44 ,45 AS W45 ,46 AS W46 ,47 AS W47 ,48 AS W48 ,49 AS W49 ,50 AS W50
 	                                               ,51 AS W51 ,52 AS W52)
 	                            )
 	            )  AB
     )
-    
+
   , HEAD_MONTHLY2
     AS
     (
-      SELECT 
+      SELECT
              TEAM
             ,GBN||'_TERM' GBN
-            ,ROUND(SUM(ACCRU_RAT) / ( SELECT COUNT(1) CNT FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND SCM_MONTH = #{scmMonthCbBox} AND WEEK_TH_SN = 1) ) MONTHLY_ACCRURAY 
+            ,ROUND(SUM(ACCRU_RAT) / ( SELECT COUNT(1) CNT FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND SCM_MONTH = #{scmMonthCbBox} AND WEEK_TH_SN = 1) ) MONTHLY_ACCRURAY
         FROM(
 	             SELECT GBN, TEAM,WEEK, ROUND((SUM_TERM_AVG/TERM_AVG_CNT)) ACCRU_RAT
 	               FROM (
@@ -1971,13 +2070,13 @@ SELECT STK_ID
                             <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
                                 #{item}
                             </foreach>
-                
+
                         </when>
-                      </choose> 		                      
+                      </choose>
 		                     GROUP BY TEAM,WEEK
-		                    
+
 		                    UNION ALL
-		                    
+
 		                    SELECT 'SHORT' GBN, TEAM,WEEK, SUM(SHORT_TERM_AVG) SUM_TERM_AVG, COUNT(*) TERM_AVG_CNT
 		                      FROM GBL_TEMP_ACCURACY
 		                     WHERE (SHORT_TERM_AVG > 0 )
@@ -1987,26 +2086,26 @@ SELECT STK_ID
                             <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
                                 #{item}
                             </foreach>
-                
+
                         </when>
-                      </choose>   		                      
+                      </choose>
 		                     GROUP BY TEAM,WEEK
 	                   )
-            ) 
+            )
       GROUP BY ROLLUP ( GBN ,TEAM )
       HAVING  TEAM IS NOT NULL
-    )    
+    )
      SELECT  H1.TEAM
-            ,H1.GBN TERM 
+            ,H1.GBN TERM
             ,H2.MONTHLY_ACCRURAY
             ,H1.*
        FROM HEAD_MONTHLY1 H1
            ,HEAD_MONTHLY2 H2
-      WHERE H1.GBN  = H2.GBN  
+      WHERE H1.GBN  = H2.GBN
         AND H1.TEAM = H2.TEAM
-      ORDER BY DECODE(H1.TEAM,'ALL',1,'DST',2,3), DECODE(TERM,'SHORT_TERM',1,2)  
-  
-</select> 
+      ORDER BY DECODE(H1.TEAM,'ALL',1,'DST',2,3), DECODE(TERM,'SHORT_TERM',1,2)
+
+</select>
 
 <resultMap id="salePlanDetailInsertMap" type="egovMap"></resultMap>
 <select id="callSpCreateSalesPlanDetail" statementType="CALLABLE" parameterType="Map">
@@ -2028,5 +2127,269 @@ SELECT STK_ID
                                 , #{rtnVal,  mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=salePlanAccuracyInsertMap})
     }
 </select>
-  
+
+
+	<select id="selectSeperation2" parameterType="Map" resultType="egovMap">
+		 SELECT
+	               M0.REC_CNT M0_TOT_CNT,
+			       M1.REC_CNT M1_TOT_CNT,
+			       M2.REC_CNT M2_TOT_CNT,
+			       M3.REC_CNT M3_TOT_CNT,
+			       M4.REC_CNT M4_TOT_CNT
+			       FROM (  SELECT COUNT (SCM_YEAR) REC_CNT
+			       FROM SCM0018M
+			       WHERE to_char(week_th_sn_end,'YYYYMM') = #{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0)    AND NVL (USE_YN, 'Y') = 'Y'
+			      ) M0,
+			     (  SELECT  COUNT (SCM_YEAR) REC_CNT
+			     FROM SCM0018M
+			     WHERE    to_char(week_th_sn_end,'YYYYMM')=(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0),'YYYYMM'),1),'YYYYMM') FROM DUAL)
+			     AND NVL (USE_YN, 'Y') = 'Y'
+			     ) M1,
+			     (  SELECT  COUNT (SCM_YEAR) REC_CNT
+			     FROM SCM0018M
+			     WHERE     to_char(week_th_sn_end,'YYYYMM')=(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0),'YYYYMM'),2),'YYYYMM') FROM DUAL)
+			      AND NVL (USE_YN, 'Y') = 'Y'
+			      ) M2,
+			     (  SELECT  COUNT (SCM_YEAR) REC_CNT
+			     FROM SCM0018M
+			     WHERE     to_char(week_th_sn_end,'YYYYMM')=(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0),'YYYYMM'),3),'YYYYMM') FROM DUAL)
+			     AND NVL (USE_YN, 'Y') = 'Y'
+			     ) M3,
+			     (  SELECT  COUNT (SCM_YEAR) REC_CNT
+			      FROM SCM0018M
+			      WHERE     to_char(week_th_sn_end,'YYYYMM')=(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0),'YYYYMM'),4),'YYYYMM') FROM DUAL)
+			        AND NVL (USE_YN, 'Y') = 'Y'
+			      ) M4
+			     WHERE ROWNUM = 1
+    </select>
+
+    <select id="selectSupplyPlanListByCdc" parameterType="Map" resultType="egovMap">
+			SELECT STOCK_CODE, NVL(MOQ,0) MOQ FROM SCM0017M
+			 WHERE CDC_CODE = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+		  	   AND IS_TRGET = '1'
+    </select>
+
+    <select id="selectSalesPlanByStockCode" parameterType="Map" resultType="egovMap">
+			SELECT WEEKSUM.STOCK_CODE,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W00 / RATING),0) END AS W00,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W01 / RATING),0) END AS W01,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W02 / RATING),0) END AS W02,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W03 / RATING),0) END AS W03,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W04 / RATING),0) END AS W04,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W05 / RATING),0) END AS W05,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W06 / RATING),0) END AS W06,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W07 / RATING),0) END AS W07,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W08 / RATING),0) END AS W08,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W09 / RATING),0) END AS W09,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W10 / RATING),0) END AS W10,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W11 / RATING),0) END AS W11,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W12 / RATING),0) END AS W12,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W13 / RATING),0) END AS W13,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W14 / RATING),0) END AS W14,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W15 / RATING),0) END AS W15,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W16 / RATING),0) END AS W16,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W17 / RATING),0) END AS W17,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W18 / RATING),0) END AS W18,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W19 / RATING),0) END AS W19,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W20 / RATING),0) END AS W20,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W21 / RATING),0) END AS W21,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W22 / RATING),0) END AS W22,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W23 / RATING),0) END AS W23,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W24 / RATING),0) END AS W24,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W25 / RATING),0) END AS W25,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W26 / RATING),0) END AS W26,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W27 / RATING),0) END AS W27,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W28 / RATING),0) END AS W28,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W29 / RATING),0) END AS W29,
+			       CASE WHEN RATING = 0 THEN 0 ELSE NVL(ROUND(W30 / RATING),0) END AS W30 FROM
+			(SELECT STOCK_CODE, SUM(W00) AS W00 ,SUM(W01)  AS W01 ,SUM(W02)  AS W02 ,SUM(W03)  AS W03 ,SUM(W04)  AS W04
+			     , SUM(W05)  AS W05 ,SUM(W06)  AS W06 ,SUM(W07)  AS W07 ,SUM(W08)  AS W08 ,SUM(W09)  AS W09
+			     , SUM(W10)  AS W10 ,SUM(W11)  AS W11 ,SUM(W12)  AS W12 ,SUM(W13)  AS W13 ,SUM(W14)  AS W14
+			     , SUM(W15)  AS W15 ,SUM(W16)  AS W16 ,SUM(W17)  AS W17 ,SUM(W18)  AS W18 ,SUM(W19)  AS W19
+			     , SUM(W20)  AS W20 ,SUM(W21)  AS W21 ,SUM(W22)  AS W22 ,SUM(W23)  AS W23 ,SUM(W24)  AS W24
+			     , SUM(W25)  AS W25 ,SUM(W26)  AS W26 ,SUM(W27)  AS W27 ,SUM(W28)  AS W28 ,SUM(W29)  AS W29 ,SUM(W30)  AS W30
+			  FROM SCM0001M SCM01M, SCM0002D SCM02D
+			 WHERE SCM01M.PLAN_ID = SCM02D.PLAN_MASTER_ID
+			   AND SCM01M.PLAN_YEAR = #{scmYearCbBox}
+			   AND SCM01M.PLAN_WEEK = #{scmPeriodCbBox}
+			   AND SCM02D.STOCK_CODE = #{stockCode}
+			   GROUP BY STOCK_CODE) WEEKSUM,
+			(WITH ALIST
+			             AS(
+			                SELECT STOCK_CODE,STOCK_NAME,CDC,M3,M2,M1,ROUND(((M3+M2+M1)/3),0) AVG
+			                FROM(
+			                      SELECT DECODE(CDC,'ALL','TOT',STOCK_CODE) STOCK_CODE
+			                            ,STOCK_NAME
+			                            ,NVL(CDC,'ALL') CDC
+			                            ,SUM(M_3) M3
+			                            ,SUM(M_2) M2
+			                            ,SUM(M_1) M1
+			                      FROM(
+			                            SELECT T0.STOCK_CODE
+			                                 ,STK.STK_DESC AS STOCK_NAME
+			                                 ,T0.CDC
+			                                 ,NVL(T3.M3_TOTAL,0) AS M_3
+			                                 ,NVL(T2.M2_TOTAL,0) AS M_2
+			                                 ,NVL(T1.M1_TOTAL,0) AS M_1
+			                             FROM (
+			                                     SELECT DISTINCT T0.CDC_CODE AS CDC,T1.STOCK_CODE
+			                                     FROM SCM0016M T0
+			                                     CROSS JOIN SCM0008M T1
+			                                     CROSS JOIN (SELECT DISTINCT SCM_YEAR, SCM_MONTH FROM SCM0031S T1
+			                                                  WHERE (T1.SCM_YEAR= EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-1))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-1))))
+			                                                     OR (T1.SCM_YEAR= EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-2))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-2))))
+			                                                     OR (T1.SCM_YEAR= EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-3))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-3))))
+			                                                ) T2
+			                                  ) T0
+			                             LEFT JOIN (
+			                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,SUM(INSTALL_CNT) AS M1_TOTAL
+			                                 FROM SCM0031S T1
+			                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-1))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-1)))
+			                                 GROUP BY SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE
+			                             ) T1 ON T1.CDC=T0.CDC AND T1.STOCK_CODE=T0.STOCK_CODE
+			                             LEFT JOIN (
+			                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,SUM(INSTALL_CNT) AS M2_TOTAL
+			                                 FROM SCM0031S T1
+			                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-2))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-2)))
+			                                 GROUP BY SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE
+			                             ) T2 ON T2.CDC=T0.CDC AND T2.STOCK_CODE=T0.STOCK_CODE
+			                             LEFT JOIN (
+			                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,SUM(INSTALL_CNT) AS M3_TOTAL
+			                                 FROM SCM0031S T1
+			                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-3))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE((SELECT SCM_YYYYMM FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'),'YYYYMM'),-3)))
+			                                 GROUP BY SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE
+			                             ) T3 ON T3.CDC=T0.CDC AND T3.STOCK_CODE=T0.STOCK_CODE
+			                             JOIN SYS0026M STK ON STK.STK_CODE=T0.STOCK_CODE
+			                             WHERE T0.STOCK_CODE= #{stockCode}
+			                       )
+			                       GROUP BY ROLLUP (STOCK_CODE,STOCK_NAME,CDC)
+			                       HAVING GROUPING(STOCK_CODE) = 0 AND STOCK_NAME IS NOT NULL
+			                      )
+			              )
+			              SELECT STOCK_CODE, DECODE(A.AVG,0,0,ROUND(((A.AVG / (SELECT  B.AVG FROM ALIST B WHERE A.STOCK_CODE = B.STOCK_CODE AND CDC ='ALL')) * 100),2)) RATING
+			                FROM ALIST A
+			               WHERE CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})) RATINGLIST
+						   WHERE WEEKSUM.STOCK_CODE = RATINGLIST.STOCK_CODE(+)
+    </select>
+
+    <select id="selectCountasIn" parameterType="Map" resultType="int">
+			SELECT COUNT(1) CNT FROM SCM0018M WHERE SCM_YEAR= #{scmYearCbBox} AND SCM_MONTH = #{selectPlanMonth} AND WEEK_TH  <![CDATA[ < ]]>  #{scmPeriodCbBox}
+    </select>
+
+    <select id="selectBeforeOrdCnt" parameterType="Map" resultType="int">
+			SELECT ORD_CNT FROM SCM0030S WHERE SCM_YEAR = #{scmYearCbBox}, SCM_WEEK_TH= #{scmPeriodCbBoxBefore}, STOCK_CODE = #{stockCode}, CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+    </select>
+
+    <select id="selectSafetyStock" parameterType="Map" resultType="int">
+			SELECT SAFETY_STOCK FROM SCM0008M WHERE STOCK_CODE = #{stockCode}
+    </select>
+
+    <select id="selectLeadTimeByCdc" parameterType="Map" resultType="egovMap">
+			SELECT LEAD_TM FROM SCM0008M WHERE STOCK_CODE = #{stockCode}
+    </select>
+
+    <select id="selectEndingInventory" parameterType="Map" resultType="int">
+			SELECT NVL(SUM(QTY),0) QTY
+			  FROM LOG0088M LOG88M, SYS0028M SYS28M
+			 WHERE SYS28M.WH_LOC_ID  = LOG88M.LOG_ID
+			   AND SYS28M.CDC_CODE = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+			   AND LOG88M.ZMONTH = (#{selectYearBefore} || LPAD(#{selectPlanMonthBefore},2,0))
+			   AND LOG88M.STK_CODE = #{stockCode}
+    </select>
+
+    <select id="selectBeforeWeekYear" parameterType="Map" resultType="int">
+			SELECT MAX(WEEK_TH) FROM SCM0018M WHERE SCM_YEAR = #{selectYearBeforeWeekParam}
+    </select>
+
+    <select id="selectBeforePoCnt" parameterType="Map" resultType="int">
+			SELECT NVL(SUM(QTY),0) QTY FROM
+				(SELECT SCM10D.STOCK_CODE, SCM10D.PO_ITM_APPV_STUS, NVL(SCM10D.QTY,0) QTY, SCM09M.BAS_YEAR, SCM09M.EST_WEEK, SCM09M.GR_WEEK
+				   FROM SCM0009M SCM09M, SCM0010D SCM10D
+				  WHERE SCM09M.PO_NO = SCM10D.PO_NO
+				    AND SCM10D.PO_ITM_APPV_STUS = '5'
+				    AND SCM09M.CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+				    AND BAS_YEAR = #{scmYearCbBox}
+		            AND EST_WEEK = #{scmPeriodCbBoxBefore}
+				  ) A, SCM0008M SCM08M
+				WHERE SCM08M.STOCK_CODE = A.STOCK_CODE(+)
+				  AND SCM08M.STOCK_CODE = #{stockCode}
+    </select>
+
+    <select id="selectAfterPoCnt" parameterType="Map" resultType="int">
+    SELECT NVL(SUM(QTY),0) QTY FROM
+		(SELECT SCM10D.STOCK_CODE, SCM10D.PO_ITM_APPV_STUS, NVL(SCM10D.QTY,0) QTY, SCM09M.BAS_YEAR, SCM09M.EST_WEEK, SCM09M.GR_WEEK
+		   FROM SCM0009M SCM09M, SCM0010D SCM10D
+		  WHERE SCM09M.PO_NO = SCM10D.PO_NO
+		    AND SCM10D.PO_ITM_APPV_STUS = '5'
+		    AND SCM09M.CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+		    AND BAS_YEAR = FN_GET_CALYEAR(#{scmYearCbBox},#{selectPlanMonth},#{scmPeriodCbBox},#{scmPeriodCbBoxAfter})
+			AND EST_WEEK =  FN_GET_CALWEEK(#{scmYearCbBox},#{selectPlanMonth},#{scmPeriodCbBox},#{scmPeriodCbBoxAfter})
+		  ) A, SCM0008M SCM08M
+		WHERE SCM08M.STOCK_CODE = A.STOCK_CODE(+)
+		  AND SCM08M.STOCK_CODE = #{stockCode}
+    </select>
+
+    <select id="selectScmMonth" parameterType="Map" resultType="egovMap">
+			SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'
+    </select>
+
+    <insert id="insertSalesCdcDetailNew" parameterType="Map">
+    INSERT INTO SCM0006D
+            ( PLAN_DTL_ID ,PLAN_MASTER_ID ,PSI_ID ,STOCK_CODE ,CMPLT ,PSI_NAME, STOCK_CTGRY ,STOCK_NAME
+             ,M0_PLAN ,M1  ,M2  ,M3  ,M4 ,OVERDUE  ,WS0 ,WS1 ,WS2 ,WS3
+             ,W00 ,W01 ,W02 ,W03 ,W04 ,W05 ,W06 ,W07 ,W08 ,W09 ,W10 ,W11 ,W12 ,W13 ,W14 ,W15
+             ,W16 ,W17 ,W18 ,W19 ,W20 ,W21 ,W22 ,W23 ,W24 ,W25 ,W26 ,W27 ,W28 ,W29 ,W30
+            )
+    SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL,
+    	   #{salesPlanMstCdcSeq},
+    	   #{psiId},
+    	   #{stockCode},
+    	   '1',
+    	   #{psiName},
+    	   (SELECT A.CODE FROM SYS0013M A, SYS0026M B WHERE A.CODE_ID = B.STK_CTGRY_ID AND B.STK_CODE = #{stockCode}),
+    	   (SELECT STK_DESC FROM SYS0026M WHERE STK_CODE = #{stockCode}),
+    	   NVL(#{m0},0),
+    	   NVL(#{m1},0),
+    	   NVL(#{m2},0),
+    	   NVL(#{m3},0),
+    	   NVL(#{m4},0),
+    	   0,
+    	   NVL(#{ws0},0),
+    	   NVL(#{ws1},0),
+    	   NVL(#{ws2},0),
+    	   NVL(#{ws3},0),
+    	   NVL(#{w00},0),
+		   NVL(#{w01},0),
+    	   NVL(#{w02},0),
+		   NVL(#{w03},0),
+		   NVL(#{w04},0),
+		   NVL(#{w05},0),
+		   NVL(#{w06},0),
+			NVL(#{w07},0),
+			NVL(#{w08},0),
+			NVL(#{w09},0),
+			NVL(#{w10},0),
+			NVL(#{w11},0),
+			NVL(#{w12},0),
+			NVL(#{w13},0),
+			NVL(#{w14},0),
+			NVL(#{w15},0),
+			NVL(#{w16},0),
+			NVL(#{w17},0),
+			NVL(#{w18},0),
+			NVL(#{w19},0),
+			NVL(#{w20},0),
+			NVL(#{w21},0),
+			NVL(#{w22},0),
+			NVL(#{w23},0),
+			NVL(#{w24},0),
+			NVL(#{w25},0),
+			NVL(#{w26},0),
+			NVL(#{w27},0),
+			NVL(#{w28},0),
+			NVL(#{w29},0),
+			NVL(#{w30},0)
+		FROM DUAL
+    </insert>
+
 </mapper>
