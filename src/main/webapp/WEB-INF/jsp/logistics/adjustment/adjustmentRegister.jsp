@@ -559,10 +559,10 @@ function fn_ReqAdjLocList(){
 <div class="border_box" style="height:340px;"><!-- border_box start -->
 
 <ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
     <!--<li><p class="btn_grid"><a id="reqadd">ADD</a></p></li> -->
     <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
@@ -580,9 +580,9 @@ function fn_ReqAdjLocList(){
 </div><!-- divine_auto end -->
 
  <ul class="center_btns mt20">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
     <li><p class="btn_blue2 big"><a id="save">Save</a></p></li>
-</c:if> 
+<%-- </c:if>  --%>
 </ul> 
 
 </section><!-- search_result end -->
