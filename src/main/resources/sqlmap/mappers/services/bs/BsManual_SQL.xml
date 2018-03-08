@@ -2978,7 +2978,8 @@
                       <update id="saveFilterUpdate" parameterType="Map">
 
                              UPDATE SAL0087D
-                               SET SRV_FILTER_UPD_DT = to_date(#{SRV_FILTER_UPD_DT},'yyyymmdd'),
+                               SET SRV_FILTER_UPD_DT = sysdate,
+                                   SRV_FILTER_PRV_CHG_DT = to_date(#{SRV_FILTER_PRV_CHG_DT},'yyyymmdd'),
                                    SRV_FILTER_UPD_USER_ID = #{updator}
                              WHERE   SRV_FILTER_ID = #{SRV_FILTER_ID}
 
