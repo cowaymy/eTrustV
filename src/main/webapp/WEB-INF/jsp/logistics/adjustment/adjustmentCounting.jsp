@@ -816,9 +816,9 @@ function fn_confirm(){
 <h3>Header Info</h3>
 <ul class="right_btns">
     <li><p class="btn_blue"><a id="list"><span class="list"></span>List</a></p></li>
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
   <li><p class="btn_blue"><a id="confirm"><span class="confirm"></span>Confirm</a></p></li>  
-</c:if>    
+<%-- </c:if>     --%>
 </ul>
 </aside><!-- title_line end -->
 
@@ -900,15 +900,15 @@ function fn_confirm(){
 </form>
 </section><!-- search_table end -->
 	<ul class="right_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
 		<li><p class="btn_grid">
 				<a id="excelUp"><spring:message code='sys.btn.excel.up' /></a>
 			</p></li>
-</c:if>
-<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+<%-- </c:if> --%>
+<%-- <c:if test="${PAGE_AUTH.funcPrint == 'Y'}"> --%>
 		<li><p class="btn_grid">
 				<a id="excelDown"><spring:message code='sys.btn.excel.dw' /></a></p>
-</c:if>
+<%-- </c:if> --%>
 	</ul>
 	<section class="search_result"><!-- search_result start -->
 
@@ -920,9 +920,9 @@ function fn_confirm(){
 </article>
 
  <ul class="center_btns mt20">
- <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%--  <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
     <li><p class="btn_blue2 big"><a id="save">Save</a></p></li>
-</c:if>
+<%-- </c:if> --%>
 </ul> 
 
 </section><!-- search_result end -->
@@ -980,17 +980,17 @@ function fn_confirm(){
             </table>
 			<ul class="right_btns">
 			<!--     <li><p class="btn_grid"><a id="reqadd">ADD</a></p></li> -->
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
 			    <li><p class="btn_grid"><a id="reqdel">DELETE</a></p></li>
-</c:if>			
+<%-- </c:if>			 --%>
 			</ul>
             <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="serial_grid_wrap" class="mt10" style="width:100%;"></div>
             </article><!-- grid_wrap end -->
             <ul class="center_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
                 <li><p class="btn_blue2 big"><a id="savePop">Save</a></p></li>
-</c:if>            
+<%-- </c:if>             --%>
             </ul>
             </form>
         
@@ -1009,20 +1009,20 @@ function fn_confirm(){
 <section class="pop_body"><!-- pop_body start -->
 <ul class="right_btns">
     <!-- <li><p class="btn_blue"><a id="add">Add</a></p></li> -->
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
     <li><p class="btn_blue"><div class="auto_file"><!-- auto_file start -->
                                     <input type="file" id="fileSelector" title="file add" accept=".xlsx"/>
                                 </div>
     </p></li>
-</c:if>    
+<%-- </c:if>     --%>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
        <div id="popup_wrap_excel"></div>
 </article><!-- grid_wrap end -->
             <ul class="center_btns">
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+<%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
                 <li><p class="btn_blue2 big"><a id="saveExcel">SAVE</a></p></li>
-</c:if>            
+<%-- </c:if>             --%>
                 <li><p class="btn_blue2 big"><a id="cancel">CANCEL</a></p></li>
             </ul>
 </section><!-- pop_body end -->
