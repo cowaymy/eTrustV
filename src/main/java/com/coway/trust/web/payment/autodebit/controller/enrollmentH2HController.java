@@ -169,7 +169,7 @@ public class enrollmentH2HController {
 	public void createEnrollmentH2HFileCIMB(EgovMap enrollH2HMap, List<EgovMap> enrollH2HDetailList) throws Exception {
 
 		String sFile = "MANDATE_ORG2120_"
-				+ CommonUtils.changeFormat(String.valueOf(enrollH2HMap.get("debtDt")), "dd/MM/yyyy", "MMddyy")
+				+ CommonUtils.changeFormat(String.valueOf(enrollH2HMap.get("debtDt")), "dd/MM/yyyy", "ddMMyy")
 				+ ".txt";
 
 		// 파일 디렉토리
