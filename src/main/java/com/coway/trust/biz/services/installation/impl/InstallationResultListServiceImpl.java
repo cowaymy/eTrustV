@@ -20,6 +20,7 @@ import org.springframework.transaction.annotation.Transactional;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.organization.organization.impl.MemberListMapper;
 import com.coway.trust.biz.sales.mambership.impl.MembershipConvSaleMapper;
+import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
 import com.coway.trust.biz.services.as.impl.ServicesLogisticsPFCMapper;
 import com.coway.trust.biz.services.installation.InstallationResultListService;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -52,6 +53,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 	@Resource(name = "installationReversalMapper")
 	private InstallationReversalMapper installationReversalMapper;
+	
+
+	@Resource(name = "membershipRentalQuotationMapper")
+	private MembershipRentalQuotationMapper membershipRentalQuotationMapper;
+	
 
 
 	@Override
@@ -1477,11 +1483,43 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 
     		///////////////////////add by hgham     get taxRate  //////////////////
-    		int  TAXRATE   =0;
+    		     //int  TAXRATE   =0;
 
-    		  	  params.put("srvSalesOrderId", CommonUtils.nvl( params.get("hidSalesOrderId")).toString());
-    		      TAXRATE = membershipConvSaleMapper.getTaxRate(params);
+    		  	//  params.put("srvSalesOrderId", CommonUtils.nvl( params.get("hidSalesOrderId")).toString());
+    		    //  TAXRATE = membershipConvSaleMapper.getTaxRate(params);
+    		    //2018-03-08 수정 
+    		  	
+    		     String zeroRatYn = "Y";
+    	 		 String eurCertYn = "Y";
+    	 		
+    	         params.put("srvSalesOrderId", params.get("hidSalesOrderId"));
+    	 		 
+    	         int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
+    	 		 int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(params);
+    	 		 
+    	 		 
+    	 		 int  filter_TAXRATE  =6;
+    	 		 int  filter_TAXCODE =32;
+    	 		
+    	 		 
+    	 		 //FILTER 
+    	 		 if(EURCert > 0 ) {
+    	 			filter_TAXRATE =0 ;
+    	 			filter_TAXCODE =28 ;
+    	 		 }
+    	 		
+    	 		 if(zeroRat > 0 ){
+    	 			filter_TAXRATE =0 ;
+    	 			filter_TAXCODE =39 ;
+    	 		 }
+    	 		 
+    	 		 	
+    	          logger.debug("zeroRat ==========================>>  " + zeroRatYn);
+    	          logger.debug("EURCert ==========================>>  " + eurCertYn);
+    		  
     		///////////////////////add by hgham     get taxRate  //////////////////
+    		      
+    		      
 
 
     		if(ApptypeID.equals("66") ){
@@ -1597,8 +1635,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	        		taxInvoiceOutright.put("TAX_INVC_CRT_DT",CommonUtils.getNowDate());
         	        		taxInvoiceOutright.put("TAX_INVC_REM",params.get("hidTradeLedger_InstallNo"));
 
-
-        	        		 if (TAXRATE > 0)  {
+        	        		 if (filter_TAXRATE > 0)  {
         	        			 taxInvoiceOutright.put("TAX_INVC_CHRG",outrightBalance * 100 / 106 );
         	                 }else {
         	             		taxInvoiceOutright.put("TAX_INVC_CHRG",outrightBalance);
@@ -1621,10 +1658,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	            		taxInvoiceOutrightSub.put("TAX_INVC_ID",TAX_INVC_ID);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_ORD_NO",CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PO_NO","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE",TAXRATE);
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE",filter_TAXRATE);
 
 
-        	            		if(TAXRATE > 0){
+        	            		if(filter_TAXRATE > 0){
         	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", Double.toString( outrightBalance - ( outrightBalance  * 100 / 106)));
         	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",Double.toString(outrightBalance  * 100 / 106 ));
         	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS",outrightSubProcessing - ( outrightSubProcessing  * 100 / 106));
@@ -1664,10 +1701,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	    				taxInvoiceOutrightSub.put("TAX_INVC_ID",TAX_INVC_ID);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_ORD_NO",CommonUtils.nvl(params.get("hidTaxInvDSalesOrderNo")));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PO_NO","");
-        	            		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE",TAXRATE);
+        	            		taxInvoiceOutrightSub.put("INVC_ITM_GST_RATE",filter_TAXRATE);
 
 
-        	            		if(TAXRATE > 0){
+        	            		if(filter_TAXRATE > 0){
         	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", Double.toString( outrightBalance - ( outrightBalance  * 100 / 106)));
         	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightBalance  * 100 / 106);
 
@@ -1745,10 +1782,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	    			AccOrderBill.put("ACC_BILL_CRT_DT", CommonUtils.getNowDate());
         	    			AccOrderBill.put("ACC_BILL_CRT_USER_ID", sessionVO.getUserId());
         	    			AccOrderBill.put("ACC_BILL_GRP_ID", 0);
-        	    			AccOrderBill.put("ACC_BILL_TAX_CODE_ID", TAXRATE == 0 ? 28 : 39);
-        	    			AccOrderBill.put("ACC_BILL_TAX_RATE", TAXRATE);
+        	    			AccOrderBill.put("ACC_BILL_TAX_CODE_ID", filter_TAXCODE);
+        	    			AccOrderBill.put("ACC_BILL_TAX_RATE", filter_TAXRATE);
 
-        	    			if(TAXRATE ==6){
+        	    			if(filter_TAXRATE ==6){
         	      	    		 AccOrderBill.put("ACC_BILL_TXS_AMT", Double.toString( outrightBalance -( outrightBalance  * 100 / 106)));
         	    			}else{
         	    				AccOrderBill.put("ACC_BILL_TXS_AMT", 0);

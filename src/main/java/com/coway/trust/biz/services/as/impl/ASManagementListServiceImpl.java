@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.sales.customer.impl.CustomerServiceImpl;
+import com.coway.trust.biz.sales.mambership.impl.MembershipRentalQuotationMapper;
 import com.coway.trust.biz.sales.pos.impl.PosMapper;
 import com.coway.trust.biz.services.as.ASManagementListService;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -36,6 +37,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
 	@Resource(name = "servicesLogisticsPFCMapper")
 	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
+	
+
+	@Resource(name = "membershipRentalQuotationMapper")
+	private MembershipRentalQuotationMapper membershipRentalQuotationMapper;
+	
+	
+	
 	
 	@Resource(name = "posMapper")
 	private PosMapper posMapper;
@@ -938,16 +946,25 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			}
 			
 		// tax invoice ,
-		EgovMap taxPersonInfo =	 ASManagementListMapper.selectTaxInvoice(params); 
-			
+		   EgovMap taxPersonInfo =   ASManagementListMapper.selectTaxInvoice(params); 
+			   
 			
     	   pay31dMap.put("taxInvcId",params.get("taxInvcId")); 
     	   pay31dMap.put("taxInvcRefNo",params.get("taxInvcRefNo")); 
     	   pay31dMap.put("taxInvcRefDt","");
     	   pay31dMap.put("taxInvcSvcNo",params.get("AS_RESULT_NO")); 
     	   pay31dMap.put("taxInvcType","118"); 
-    	   pay31dMap.put("taxInvcCustName",taxPersonInfo.get("taxInvoiceCustName"));    
-    	   pay31dMap.put("taxInvcCntcPerson",taxPersonInfo.get("taxInvoiceContPers")); 
+    	   
+    	   try{
+    		   pay31dMap.put("taxInvcCustName",   taxPersonInfo.get("taxInvoiceCustName")  );    
+        	   pay31dMap.put("taxInvcCntcPerson", taxPersonInfo.get("taxInvoiceContPers") ); 
+    	   }catch (Exception e){
+
+    		   pay31dMap.put("taxInvcCustName",   ""  );    
+        	   pay31dMap.put("taxInvcCntcPerson", "" ); 
+    		   
+    	   }
+    	  
     	   pay31dMap.put("taxInvcAddr1",""); 
     	   pay31dMap.put("taxInvcAddr2",""); 
     	   pay31dMap.put("taxInvcAddr3",""); 
@@ -1122,11 +1139,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
        	   pay0016dMap.put("accBillCrtDt",new Date()); 
        	   pay0016dMap.put("accBillCrtUserId",params.get("updator")); 
        	   pay0016dMap.put("accBillGrpId","0"); 
-       	   pay0016dMap.put("accBillTaxCodeId","32"); 
-       	   pay0016dMap.put("accBillTaxRate","6"); 
+       	   pay0016dMap.put("accBillTaxCodeId",params.get("package_TAXCODE") ); 
+       	   pay0016dMap.put("accBillTaxRate",params.get("package_TAXRATE") ); 
        	   pay0016dMap.put("accBillAcctCnvr","0"); 
        	   pay0016dMap.put("accBillCntrctId","0");
-           	   
+       	   
 	   
 		  a=  ASManagementListMapper.insert_Pay0016d(pay0016dMap);
 
@@ -1376,7 +1393,52 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		svc0004dmap.put("updator",params.get("updator"));
 		
 		
+		   
+        
+        String zeroRatYn = "Y";
+		String eurCertYn = "Y";
 		
+		
+		
+		Map tm = new HashMap();
+		tm.put("srvSalesOrderId", svc0004dmap.get("AS_SO_ID"));
+		 
+          int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(tm);
+		 int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(tm);
+		 
+		 LOGGER.debug("tm==>" +tm.toString());
+		 
+		 int package_TAXRATE  =0;
+		 int package_TAXCODE = 0;
+		 
+		 int  filter_TAXRATE  =6;
+		 int  filter_TAXCODE =32;
+		 
+		 
+		 //package 
+		 if(EURCert > 0 ) {
+			package_TAXRATE =0 ;
+			package_TAXCODE =28 ;
+			
+		 }else {
+			package_TAXRATE =6 ;
+			package_TAXCODE =32 ;
+		 }
+		 
+		 
+		 //FILTER 
+		 if(EURCert > 0 ) {
+			filter_TAXRATE =0 ;
+			filter_TAXCODE =28 ;
+		 }
+		
+		 if(zeroRat > 0 ){
+			filter_TAXRATE =0 ;
+			filter_TAXCODE =39 ;
+		 }
+		 
+		 	
+      
 		//인하우스  oepen close 
 		if(chkInHouseOpenComp(svc0004dmap)){
 			
@@ -1481,10 +1543,15 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     		LOGGER.debug("									===> sumLeftMap  select ["+sumLeftMap+"]");		
 			
 			
+    		
+    		
 			  if(  Double.parseDouble((String)svc0004dmap.get("AS_WORKMNSH")) > 0 ){   //txtLabourCharge
 				  
 				    double txtLabourCharge  =  Double.parseDouble((String)svc0004dmap.get("AS_WORKMNSH"));
-			        double t_SpareCharges = (txtLabourCharge *100/106);
+				    double t_SpareCharges =0.00;
+				    if(package_TAXRATE > 0){
+				    	  t_SpareCharges = (txtLabourCharge *100/106);
+				    }
 					double t_SpareTaxes =    txtLabourCharge - t_SpareCharges ;
 					
 			     	LOGGER.debug("txtLabourCharge["+txtLabourCharge+"]");
@@ -1505,22 +1572,24 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 					vo_1261.setSpareCharges(Double.toString(t_SpareCharges) );   //
 					vo_1261.setSpareTaxes(Double.toString(t_SpareTaxes));
 					vo_1261.setSpareAmountDue(Double.toString(txtLabourCharge));   
-					vo_1261.setGstRate("6");
-					vo_1261.setGstCode("32");
+					vo_1261.setGstRate(Integer.toString(package_TAXRATE));   
+					vo_1261.setGstCode(Integer.toString(package_TAXCODE));
 					vewList.add(vo_1261);
 			  }
 			
 			
-			 boolean isTaxCode_0 =this.geGST_CHK(svc0004dmap) ; //1   0 구분 
-			 isTaxCode_0 =false;
+			// boolean isTaxCode_0 =this.geGST_CHK(svc0004dmap) ; //1   0 구분 
+			// isTaxCode_0 =   false;
 		
+			 
+			 boolean isTaxCode_0  =  filter_TAXRATE ==0 ? true: false ;
 			 
 			 //isTaxCode  0
 			 if(isTaxCode_0){
 
 				 //호출후 값 세팅 하기 
-				 svc0004dmap.put("TaxCode", "39");
-				 svc0004dmap.put("TaxRate", "0");
+				 svc0004dmap.put("TaxCode", filter_TAXCODE);
+				 svc0004dmap.put("TaxRate", filter_TAXRATE );
 				 
             			 if(  Double.parseDouble( String.valueOf(svc0004dmap.get("AS_FILTER_AMT"))) > 0 ){   //txtFilterCharge
             				  if (addItemList.size() > 0) {  
@@ -1569,8 +1638,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                 								vo_filter.setSpareCharges(Double.toString(ft) );   //
                 								vo_filter.setSpareTaxes("0");
                 								vo_filter.setSpareAmountDue(Double.toString(ft));   
-                								vo_filter.setGstRate("0");
-                								vo_filter.setGstCode("0");
+                								vo_filter.setGstRate(Integer.toString(filter_TAXRATE));
+                								vo_filter.setGstCode(Integer.toString(filter_TAXCODE));
+                								
                 								vewList.add(vo_filter);   //   view.GSTCode = ZRLocationID.ToString() == "0" ? ZRLocationID.ToString() : ZRLocationID.ToString();
                 						}
             						}
@@ -1580,9 +1650,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			 //tax 32 
 			 }else {
 				 
-				 //호출후 값 세팅 하기 
-				 svc0004dmap.put("TaxCode", "32");
-				 svc0004dmap.put("TaxRate", "6");
+				 svc0004dmap.put("TaxCode", filter_TAXCODE);
+				 svc0004dmap.put("TaxRate", filter_TAXRATE );
+				 
 				 
     				 if(  Double.parseDouble(String.valueOf(svc0004dmap.get("AS_FILTER_AMT"))) > 0 ){   //txtFilterCharge
     					 if (addItemList.size() > 0) {  
@@ -1638,8 +1708,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
            								vo_filter32.setSpareCharges(Double.toString(t_SpareCharges) );   //
            								vo_filter32.setSpareTaxes(Double.toString(t_SpareTaxes));
            								vo_filter32.setSpareAmountDue(Double.toString(ft));   
-           								vo_filter32.setGstRate("6");
-           								vo_filter32.setGstCode("32");
+           								vo_filter32.setGstRate( Integer.toString(filter_TAXRATE));
+           								vo_filter32.setGstCode(Integer.toString(filter_TAXCODE));
+           							 
            								vewList.add(vo_filter32);   //   view.GSTCode = ZRLocationID.ToString() == "0" ? ZRLocationID.ToString() : ZRLocationID.ToString();
            						}
        						}
@@ -1689,6 +1760,9 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	     	
 	     	
 	     	if (labourAmountDue > 0){
+	     		
+	     		 svc0004dmap.put("package_TAXRATE", package_TAXRATE);
+	    		 svc0004dmap.put("package_TAXCODE", package_TAXCODE);
 	     		this.setPay16dLabourData(vewList ,svc0004dmap);
 	     	} 
 	     	
