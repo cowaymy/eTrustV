@@ -466,7 +466,7 @@ public class WebInvoiceController {
 			
 			int returnData = webInvoiceService.selectAppvStus(param);
 			
-			if(returnData == 0) {
+			if(returnData > 0) {
 				result = false;
 				clmNoArray.add(String.valueOf(invoAppvInfo.get("clmNo")));
 			}
@@ -526,7 +526,7 @@ public class WebInvoiceController {
 			
 			int returnData = webInvoiceService.selectAppvStus(param);
 			
-			if(returnData == 0) {
+			if(returnData > 0) {
 				result = false;
 				clmNoArray.add(String.valueOf(invoAppvInfo.get("clmNo")));
 			}

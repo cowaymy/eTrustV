@@ -326,7 +326,10 @@
 					       Limit1.C8 C8  ,
 					       Limit1.C9 C9  ,
 					       to_char(Limit1.EVT_APPLY_DT,'dd/MM/yyyy') EVT_APPLY_DT,
-					      Limit1.BRDESC
+					      Limit1.BRDESC,
+					      Limit1.VACT_REPL_CT, 
+						  Limit1.VACT_STD_DT,
+						  Limit1.VACT_END_DT
 					  FROM ( SELECT Extent1.PROMO_ID PROMO_ID  ,
 					                Extent1.REQST_NO REQST_NO  ,
 					                Extent1.STUS_ID STUS_ID  ,
@@ -383,21 +386,25 @@
 					                ELSE '1900-01-01 00:00:00'
 					                   END C9  ,
 					                 Extent1.EVT_APPLY_DT ,
-					                 Extent12.CODE||'-'|| Extent12.NAME   BRDESC 
+					                 Extent12.CODE||'-'|| Extent12.NAME   BRDESC ,
+					                 Extent13.MEM_CODE VACT_REPL_CT,
+									 TO_CHAR(Extent1.VACT_STD_DT, 'DD/MM/YYYY') VACT_STD_DT,
+									 TO_CHAR(Extent1.VACT_END_DT, 'DD/MM/YYYY') VACT_END_DT
 					         FROM ORG0007D Extent1
 					                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
 					                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PROMO_TYPE_ID
 					                JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.MEM_TYPE_ID
 					                JOIN ORG0001D Extent5   ON Extent5.MEM_ID = Extent1.MEM_ID
-					                JOIN ORG0012D Extent6   ON ( Extent6.MEM_TYPE_ID = Extent1.MEM_TYPE_ID )
+					                LEFT JOIN ORG0012D Extent6   ON ( Extent6.MEM_TYPE_ID = Extent1.MEM_TYPE_ID )
 					                AND ( Extent6.MEM_ORG_LVL = Extent1.MEM_LVL_FROM )
-					                JOIN ORG0012D Extent7   ON ( Extent7.MEM_TYPE_ID = Extent1.MEM_TYPE_ID )
+					                LEFT JOIN ORG0012D Extent7   ON ( Extent7.MEM_TYPE_ID = Extent1.MEM_TYPE_ID )
 					                AND ( Extent7.MEM_ORG_LVL = Extent1.MEM_LVL_TO )
-					                JOIN ORG0001D Extent8   ON Extent8.MEM_ID = Extent1.PARENT_ID_FROM
-					                JOIN ORG0001D Extent9   ON Extent9.MEM_ID = Extent1.PARENT_ID_TO
+					                LEFT JOIN ORG0001D Extent8   ON Extent8.MEM_ID = Extent1.PARENT_ID_FROM
+					                LEFT JOIN ORG0001D Extent9   ON Extent9.MEM_ID = Extent1.PARENT_ID_TO
 					                LEFT JOIN SYS0047M Extent10   ON Extent10.USER_ID = Extent1.CRT_USER_ID
 					                LEFT JOIN SYS0047M Extent11   ON Extent11.USER_ID = Extent1.UPD_USER_ID
 					                LEFT JOIN SYS0005M Extent12   ON Extent12.BRNCH_ID = Extent1.BRNCH_ID
+					                LEFT JOIN ORG0001D Extent13   ON Extent1.VACT_REPL_CT = Extent13.MEM_ID
 		               <![CDATA[  WHERE  Extent1.PROMO_ID = #{promoId} AND ROWNUM <= 1 ) Limit1 ]]>
 		               
         </select>
@@ -748,10 +755,10 @@
                     UPDATE ORG0007D
 					   SET STUS_ID = #{stusId},
 					       UPD_DT = SYSDATE,
-					       UPD_USER_ID = #{updUserId},
+					       UPD_USER_ID = #{updUserId}
 					       <!-- DEPT_CODE_TO = #{deptCode},
-					       BRNCH_ID        = #{branchId}, -->
-					       EVT_APPLY_DT = TO_DATE(#{evtApplyDate},'dd/mm/yyyy' )
+					       BRNCH_ID        = #{branchId},
+					       EVT_APPLY_DT = TO_DATE(#{evtApplyDate},'dd/mm/yyyy' ) -->
 					 WHERE  ( PROMO_ID = #{promoId} )           
         </update>
         

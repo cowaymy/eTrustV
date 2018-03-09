@@ -115,7 +115,9 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 				newDeptCode = memberEventMapper.getMemberOrganizations(formList);
 				logger.debug("newDeptCode::::" + newDeptCode );
 				
-			}else {
+			} else if (formList.get("memLvlTo").toString().equals("0")) {
+				// request vacation
+			} else {
 				//Get New Dept Code
 				int docNoID = getNewDeptCodeDocNoId(vMemTypeId ,vMemLvlTo );
 				logger.debug("DocNoID::::" + docNoID );
@@ -197,7 +199,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			Map<String, Object> updateValue = new HashMap<String, Object>(); // ORG0001D BRNCH_ID UPDATE
 			updateValue.put("brnchId", deptCode.get("brnchId"));
 			updateValue.put("memId", params.get("memId"));
-			memberEventMapper.updateMemberBranch(updateValue);
+//			memberEventMapper.updateMemberBranch(updateValue);
 			
 			
 			
@@ -221,7 +223,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mPromoEntry.put("updUserId", formList.get("updUserId"));
 			mPromoEntry.put("promoId", params.get("promoId"));
 			mPromoEntry.put("branchId", params.get("branchId"));
-			mPromoEntry.put("evtApplyDate", params.get("evtApplyDate"));
+//			mPromoEntry.put("evtApplyDate", params.get("evtApplyDate"));
 			
 			logger.debug("mPromoEntry::::" + mPromoEntry);
             memberEventMapper.updateMemberPromoEntry(mPromoEntry);

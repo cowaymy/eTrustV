@@ -217,7 +217,7 @@ public class MemberEventListController {
 			approveMap.put("promoId" , approveMap.get("promoId").toString() );
 			approveMap.put("confirmStatus", "4");
 			approveMap.put("memId" , approveMap.get("memberid").toString() );
-			approveMap.put("evtApplyDate" , approveMap.get("eventdt").toString() );
+//			approveMap.put("evtApplyDate" , approveMap.get("eventdt").toString() );
 			if(approveMap.get("branchid") != null){
 				approveMap.put("branchId" , approveMap.get("branchid").toString() );
 			}
@@ -250,7 +250,7 @@ public class MemberEventListController {
 			approveMap.put("promoId" , approveMap.get("promoId").toString() );
 			approveMap.put("confirmStatus", "10");
 			approveMap.put("memId" , approveMap.get("memberid").toString() );
-			approveMap.put("evtApplyDate" , approveMap.get("eventdt").toString() );
+//			approveMap.put("evtApplyDate" , approveMap.get("eventdt").toString() );
 			if(approveMap.get("branchid") != null){
 				approveMap.put("branchId" , approveMap.get("branchid").toString() );
 			}

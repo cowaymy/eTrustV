@@ -11,6 +11,7 @@ var myGridID_Doc;
 function fn_memberSave(){
 
                 $("#memberType").attr("disabled",false);
+                $("#joinDate").attr("disabled",false);
                 $("#nric").attr("disabled",false);
 	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
@@ -27,6 +28,7 @@ function fn_memberSave(){
 
 				});
                 $("#memberType").attr("disabled",true);
+                $("#joinDate").attr("disabled",true);
                 $("#nric").attr("disabled",true);
 }
 
@@ -559,10 +561,10 @@ function fn_saveValidation(){
         valid = false;
         message += "* Please select the nationality.<br/>";
     }
-	if($("#nric").val() == ''){
+	/* if($("#nric").val() == ''){
         valid = false;
         message += "* Please key in the NRIC.<br/> ";
-    }
+    } */
     //else
     //{
     //    if (this.IsExistingMember())

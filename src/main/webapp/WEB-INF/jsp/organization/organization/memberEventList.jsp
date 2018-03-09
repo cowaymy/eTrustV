@@ -9,12 +9,37 @@
     }
 
     function fn_confirmPopup(){
-    	 if(stusId == 60){//in progress 일때만 confirm event open
+    	
+    	var activeItems = AUIGrid.getCheckedRowItems(myGridID);
+    	
+    	if (activeItems.length > 1) {
+    		Common.alert("Please choose only one request.");
+    		return;
+    	} else if (activeItems.length == 0) {
+    		if(stusId != 60  ){
+                Common.alert("Only event [In Progress] status is allowed.");
+                return;
+            } else {
+            	Common.popupDiv("/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + promoId, "");
+            }
+        }
+
+    	for(var i in activeItems){
+    		if(activeItems[i].item.stusId != 60  ){
+    			Common.alert("Only event [In Progress] status is allowed.");
+    			return;
+    		} else {
+    			Common.popupDiv("/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + activeItems[0].item.promoId, "");
+    		}
+    	}
+
+    	
+    	 /* if(stusId == 60){//in progress 일때만 confirm event open
 //           fn_setDetail(myGridID, event.rowIndex);
     		 Common.popupDiv("/organization/getMemberEventDetailPop.do?isPop=true&promoId=" + promoId, "");
            }else{
                Common.alert("Only event [In Progress] status is allowed.");
-           }
+           } */
     }
 
  // AUIGrid 생성 후 반환 ID

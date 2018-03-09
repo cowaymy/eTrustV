@@ -18,6 +18,11 @@
     $(document).ready(function() {
         //createAUIGrid1();
         //fn_confirm();
+        if ("${promoInfo.codename1}" == "Vacation") {
+        	$("#evtApplyDate").attr("disabled",true);
+        } else {
+        	$("#evtApplyDate").attr("disabled",false);
+        }
 
     });
 
@@ -59,9 +64,25 @@
     
         Common.ajax("GET", "/organization/selectMemberPromoEntries" ,  $("#myForm").serialize() , function(result) {
             AUIGrid.setGridData(newGridID, result);
+            $("#popup_wrap").remove();
             Common.alert(result.message,fn_parentReload);
         });
     }
+     
+     function fn_confirmMemberEventVacation(val){
+         
+         var jsonObj = {
+           PromoID : $("#promoId").val(),
+           memCode : $("#memCode").val()
+        
+         };
+     
+         Common.ajax("GET", "/organization/selectMemberPromoEntries" ,  $("#myForm").serialize() , function(result) {
+             AUIGrid.setGridData(newGridID, result);
+             $("#popup_wrap").remove();
+             Common.alert(result.message,fn_parentReload);
+         });
+     }
 
 
 
@@ -148,6 +169,8 @@
                  fn_confirmMemberEventPromote(vPromoId);
              } else if (vPromoTypeId == 758){   // Resign
                  fn_confirmMemberEventPromote(vPromoId);
+             } else if (vPromoTypeId == 2740) { //vacation
+            	 fn_confirmMemberEventVacation(vPromoId);
              }
         }
     } 
@@ -322,13 +345,35 @@
 </tr>
 <tr>
     <th scope="row">Level</th>
-    <td colspan="3"><span> <c:out value="( ${promoInfo.memLvlFrom}    -  ${promoInfo.memOrgDesc}) To ( ${promoInfo.memLvlTo}    - ${promoInfo.memorgdescription1} )"/> </span></td>
+    <td colspan="3">
+        <span>
+         <c:choose>
+            <c:when test="${promoInfo.memLvlFrom == '0' && promoInfo.memLvlTo == '0'}">
+                <c:out value="N/A"/>
+            </c:when>
+            <c:otherwise>
+                <c:out value="( ${promoInfo.memLvlFrom}    -  ${promoInfo.memOrgDesc}) To ( ${promoInfo.memLvlTo}    - ${promoInfo.memorgdescription1} )"/>
+            </c:otherwise>
+          </c:choose>
+        </span>
+    </td>
     <th scope="row">Update At</th>
     <td><c:out value="${promoInfo.c5}"/></td>
 </tr>
 <tr>
     <th scope="row">Superior</th>
-    <td colspan="3"><span><c:out value="( ${promoInfo.parentDeptCodeFrom}    - ${promoInfo.c3} ) To ( ${ promoInfo.parentDeptCodeTo}   - ${promoInfo.c4} )"/> </span></td>
+    <td colspan="3">
+        <span>
+         <c:choose>
+            <c:when test="${promoInfo.parentDeptCodeFrom == null && promoInfo.parentDeptCodeTo == null}">
+                <c:out value="N/A"/>
+            </c:when>
+            <c:otherwise>
+                <c:out value="( ${promoInfo.parentDeptCodeFrom}    - ${promoInfo.c3} ) To ( ${ promoInfo.parentDeptCodeTo}   - ${promoInfo.c4} )"/>
+            </c:otherwise>
+         </c:choose>
+        </span>
+    </td>
     <th scope="row">Update By</th>
     <td><span><c:out value="${promoInfo.c6}"/></span></td>
 </tr>
@@ -349,6 +394,47 @@
 <tr>
     <th scope="row">Branch(To)</th>
     <td colspan="5"> <span><c:out value="${promoInfo.brdesc} "/></span> </td>
+</tr>
+<tr>
+    <th scope="row">Vacation Start Date</th>
+    <td>
+	    <span>
+	     <c:choose>
+            <c:when test="${promoInfo.vactStdDt == null}">
+                <c:out value="N/A"/>
+            </c:when>
+            <c:otherwise>
+                <c:out value="${promoInfo.vactStdDt}"/>
+            </c:otherwise>
+         </c:choose>
+	    </span>
+    </td>
+    <th scope="row">Vacation End Date</th>
+    <td>
+        <span>
+         <c:choose>
+            <c:when test="${promoInfo.vactEndDt == null}">
+                <c:out value="N/A"/>
+            </c:when>
+            <c:otherwise>
+                <c:out value="${promoInfo.vactEndDt}"/>
+            </c:otherwise>
+         </c:choose>
+        </span>
+    </td>
+    <th scope="row">Replacement CT</th>
+    <td>
+        <span>
+         <c:choose>
+            <c:when test="${promoInfo.vactReplCt == null}">
+                <c:out value="N/A"/>
+            </c:when>
+            <c:otherwise>
+                <c:out value="${promoInfo.vactReplCt}"/>
+            </c:otherwise>
+         </c:choose>
+        </span>
+    </td>
 </tr>
 <tr> 
     
@@ -394,7 +480,7 @@
     
      <th scope="row">Event Apply Date</th>
     <td>
-        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="evtApplyDate"  name="evtApplyDate" value="${promoInfo.evtApplyDt}" /> 
+        <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="evtApplyDate"  name="evtApplyDate" value="${promoInfo.evtApplyDt}" disabled = "disabled"'/> 
     </td>
     
 </tr>
