@@ -121,6 +121,7 @@
 					WHERE  1=1 
 					    AND   MEM_ID  =#{vactReplCt}
 					    AND TO_CHAR( TO_DATE(#{rDate},'YYYY-MM-DD'),'YYYY-MM-DD')  BETWEEN  TO_CHAR(VACT_STD_DT,'YYYY-MM-DD')   AND  TO_CHAR(VACT_END_DT,'YYYY-MM-DD') 
+					    AND STUS_ID = 4
 		       ]]>
     </select>
     
