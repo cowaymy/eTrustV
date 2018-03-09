@@ -174,7 +174,7 @@
 <tr>
     <th scope="row" ><spring:message code='service.title.InstallationAddress'/></th>
     <td colspan="3">
-    <textarea cols="20" rows="5" id="entry_address" name="entry_address" placeholder="" class="readonly " readonly="readonly">${hsMonthlyConfigOldInfo.orderInstallationInfo.instAddrDtl} , ${hsMonthlyConfigOldInfo.orderInstallationInfo.instPostcode}, ${hsMonthlyConfigOldInfo.orderInstallationInfo.instArea}, ${hsMonthlyConfigOldInfo.orderInstallationInfo.instState}, ${hsMonthlyConfigOldInfo.orderInstallationInfo.instCountry}
+    <textarea cols="20" rows="5" id="entry_address" name="entry_address" placeholder="" class="readonly " readonly="readonly">${hsMonthlyConfigOldInfo.orderInstallationInfo.instAddrDtl} , ${hsMonthlyConfigOldInfo.orderInstallationInfo.instStreet} , ${hsMonthlyConfigOldInfo.orderInstallationInfo.instArea}, ${hsMonthlyConfigOldInfo.orderInstallationInfo.instPostcode},  ${hsMonthlyConfigOldInfo.orderInstallationInfo.instState}, ${hsMonthlyConfigOldInfo.orderInstallationInfo.instCountry}
     </textarea>
     </td>
 </tr>
