@@ -73,4 +73,6 @@ public interface WebInvoiceService {
 	
 	String selectHrCodeOfUserId(String userId);
 	
+	int selectAppvStus(Map<String, Object> param);
+	
 }

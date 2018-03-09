@@ -477,6 +477,12 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectHrCodeOfUserId(userId);
 	}
+
+	@Override
+	public int selectAppvStus(Map<String, Object> param) {
+		// TODO Auto-generated method stub
+		return webInvoiceMapper.selectAppvStus(param);
+	}
 	
 	
 	

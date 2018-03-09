@@ -1,6 +1,8 @@
 package com.coway.trust.web.eAccounting.invoice;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -442,17 +444,60 @@ public class WebInvoiceController {
 	
 	@RequestMapping(value = "/approvalSubmit.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> approvalSubmit(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-		
+				
 		LOGGER.debug("params =====================================>>  " + params);
 		
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		
-		webInvoiceService.updateApprovalInfo(params);
+		List<String> clmNoArray = new ArrayList<String>();
+		boolean result = true;
+		
+		String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+		memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+		
+		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
+		for (int i = 0; i < invoAppvGridList.size(); i++) {
+			Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
+			String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("appvPrcssNo", appvPrcssNo);
+			param.put("memCode", memCode);
+			
+			int returnData = webInvoiceService.selectAppvStus(param);
+			
+			if(returnData == 0) {
+				result = false;
+				clmNoArray.add(String.valueOf(invoAppvInfo.get("clmNo")));
+			}
+		}
 		
 		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		if(result) {
+			webInvoiceService.updateApprovalInfo(params);
+			
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(params);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			String linesArr = "<br><br>";
+			int count = 0;
+			for (String clmNoArr : clmNoArray) {
+				linesArr += clmNoArr + ", ";
+				count++;
+				if(count%3 == 0) {
+					linesArr += "<br>";
+				}
+			}
+			linesArr = linesArr.substring(0, linesArr.lastIndexOf(", "));
+			
+			params.put("clmNoArr", linesArr);
+			
+			message.setCode(AppConstants.FAIL);
+			message.setData(params);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
 		
 		return ResponseEntity.ok(message);
 	}
@@ -464,12 +509,55 @@ public class WebInvoiceController {
 		
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		
-		webInvoiceService.updateRejectionInfo(params);
+		List<String> clmNoArray = new ArrayList<String>();
+		boolean result = true;
+		
+		String memCode = webInvoiceService.selectHrCodeOfUserId(String.valueOf(sessionVO.getUserId()));
+		memCode = CommonUtils.isEmpty(memCode) ? "0" : memCode;
+		
+		List<Object> invoAppvGridList = (List<Object>) params.get("invoAppvGridList");
+		for (int i = 0; i < invoAppvGridList.size(); i++) {
+			Map<String, Object> invoAppvInfo = (Map<String, Object>) invoAppvGridList.get(i);
+			String appvPrcssNo = (String) invoAppvInfo.get("appvPrcssNo");
+			
+			Map<String, Object> param = new HashMap<String, Object>();
+			param.put("appvPrcssNo", appvPrcssNo);
+			param.put("memCode", memCode);
+			
+			int returnData = webInvoiceService.selectAppvStus(param);
+			
+			if(returnData == 0) {
+				result = false;
+				clmNoArray.add(String.valueOf(invoAppvInfo.get("clmNo")));
+			}
+		}
 		
 		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(params);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		if(result) {
+			webInvoiceService.updateRejectionInfo(params);
+			
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(params);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			String linesArr = "";
+			int count = 0;
+			for (String clmNoArr : clmNoArray) {
+				linesArr = clmNoArr + ", ";
+				count++;
+				if(count%3 == 0) {
+					linesArr += "<br>";
+				}
+			}
+			linesArr = linesArr.substring(0, linesArr.lastIndexOf(", "));
+			
+			params.put("clmNoArr", linesArr);
+			
+			message.setCode(AppConstants.FAIL);
+			message.setData(params);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
 		
 		return ResponseEntity.ok(message);
 	}

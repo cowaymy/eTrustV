@@ -1215,4 +1215,10 @@ WHERE  M.APPV_PRCSS_NO IN
 SELECT HR_CODE AS MEM_CODE FROM SYS0047M WHERE USER_ID = #{userId}
 </select>
 
+<select id="selectAppvStus"  parameterType="Map" resultType="int">
+SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
+  FROM FCM0005D
+ WHERE APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_USER_ID = #{memCode}
+</select>
+
 </mapper>

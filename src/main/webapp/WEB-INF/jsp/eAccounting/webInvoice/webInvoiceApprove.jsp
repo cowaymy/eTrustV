@@ -413,10 +413,16 @@ function fn_appvRejctSubmit(type, rejctResn) {
         console.log(url);
         Common.ajax("POST", url, data, function(result) {
             console.log(result);
-            if(type == "appv") {
-            	Common.popupDiv("/eAccounting/webInvoice/approveComplePop.do", null, null, true, "approveComplePop");
-            }else if(type == 'rejct') {
-            	Common.popupDiv("/eAccounting/webInvoice/rejectComplePop.do", null, null, true, "rejectComplePop");
+            if(result.code == "99") {
+            	console.log(result.message);
+            	Common.alert("The claim No is a document that has been approved or rejected. Please check and select again." + result.data.clmNoArr);
+            } else {
+            	console.log(result.message);
+            	if(type == "appv") {
+                    Common.popupDiv("/eAccounting/webInvoice/approveComplePop.do", null, null, true, "approveComplePop");
+                }else if(type == 'rejct') {
+                    Common.popupDiv("/eAccounting/webInvoice/rejectComplePop.do", null, null, true, "rejectComplePop");
+                }
             }
         });
     }

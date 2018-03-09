@@ -107,4 +107,6 @@ public interface WebInvoiceMapper {
 	
 	String selectHrCodeOfUserId(String userId);
 	
+	int selectAppvStus(Map<String, Object> param);
+	
 }
