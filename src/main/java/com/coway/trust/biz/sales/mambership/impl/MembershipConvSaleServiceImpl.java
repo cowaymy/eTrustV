@@ -186,8 +186,8 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
          int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
  		 int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(params);
  		 
- 		 int package_TAXRATE  =0;
- 		 int package_TAXCODE = 0;
+ 		 int package_TAXRATE  =6;
+ 		 int package_TAXCODE = 32;
  		 
  		 int  filter_TAXRATE  =6;
  		 int  filter_TAXCODE =32;
@@ -198,22 +198,21 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
  			package_TAXRATE =0 ;
  			package_TAXCODE =28 ;
  			
- 		 }else {
- 			package_TAXRATE =6 ;
- 			package_TAXCODE =32 ;
  		 }
  		 
  		 
  		 //FILTER 
+ 		 if(zeroRat > 0 ){
+  			filter_TAXRATE =0 ;
+  			filter_TAXCODE =39 ;
+  		 }
+ 		 
  		 if(EURCert > 0 ) {
  			filter_TAXRATE =0 ;
  			filter_TAXCODE =28 ;
  		 }
  		
- 		 if(zeroRat > 0 ){
- 			filter_TAXRATE =0 ;
- 			filter_TAXCODE =39 ;
- 		 }
+ 		
  		 
  		 	
           logger.debug("zeroRat ==========================>>  " + zeroRatYn);

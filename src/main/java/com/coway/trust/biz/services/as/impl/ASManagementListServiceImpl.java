@@ -1407,36 +1407,32 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		 int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(tm);
 		 
 		 LOGGER.debug("tm==>" +tm.toString());
-		 
-		 int package_TAXRATE  =0;
-		 int package_TAXCODE = 0;
-		 
-		 int  filter_TAXRATE  =6;
-		 int  filter_TAXCODE =32;
-		 
-		 
-		 //package 
-		 if(EURCert > 0 ) {
-			package_TAXRATE =0 ;
-			package_TAXCODE =28 ;
-			
-		 }else {
-			package_TAXRATE =6 ;
-			package_TAXCODE =32 ;
-		 }
-		 
-		 
-		 //FILTER 
-		 if(EURCert > 0 ) {
-			filter_TAXRATE =0 ;
-			filter_TAXCODE =28 ;
-		 }
 		
-		 if(zeroRat > 0 ){
-			filter_TAXRATE =0 ;
-			filter_TAXCODE =39 ;
-		 }
-		 
+		 int package_TAXRATE  =6;
+ 		 int package_TAXCODE = 32;
+ 		 
+ 		 int  filter_TAXRATE  =6;
+ 		 int  filter_TAXCODE =32;
+ 		 
+ 		 
+ 		 //package 
+ 		 if(EURCert > 0 ) {
+ 			package_TAXRATE =0 ;
+ 			package_TAXCODE =28 ;
+ 			
+ 		 }
+ 		 //FILTER 
+ 		 if(zeroRat > 0 ){
+  			filter_TAXRATE =0 ;
+  			filter_TAXCODE =39 ;
+  		 }
+ 		 
+ 		 if(EURCert > 0 ) {
+ 			filter_TAXRATE =0 ;
+ 			filter_TAXCODE =28 ;
+ 		 }
+ 		
+ 
 		 	
       
 		//인하우스  oepen close 

@@ -1503,16 +1503,18 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     	 		
     	 		 
     	 		 //FILTER 
-    	 		 if(EURCert > 0 ) {
-    	 			filter_TAXRATE =0 ;
-    	 			filter_TAXCODE =28 ;
-    	 		 }
-    	 		
+
     	 		 if(zeroRat > 0 ){
     	 			filter_TAXRATE =0 ;
     	 			filter_TAXCODE =39 ;
     	 		 }
     	 		 
+    	 		 
+    	 		 if(EURCert > 0 ) {
+    	 			filter_TAXRATE =0 ;
+    	 			filter_TAXCODE =28 ;
+    	 		 }
+    	 		
     	 		 	
     	          logger.debug("zeroRat ==========================>>  " + zeroRatYn);
     	          logger.debug("EURCert ==========================>>  " + eurCertYn);
