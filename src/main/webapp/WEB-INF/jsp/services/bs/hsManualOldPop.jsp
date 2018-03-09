@@ -165,7 +165,7 @@
 <tr>
     <th scope="row" ><spring:message code='service.title.InstallationAddress'/></th>
     <td colspan="3">
-    <textarea cols="20" rows="5" id="entry_address" name="entry_address" placeholder="" class="readonly " readonly="readonly">${configBasicOldInfo.orderInstallationInfo.instAddrDtl} , ${configBasicOldInfo.orderInstallationInfo.instPostcode}, ${configBasicOldInfo.orderInstallationInfo.instArea}, ${configBasicOldInfo.orderInstallationInfo.instState}, ${configBasicOldInfo.orderInstallationInfo.instCountry}
+    <textarea cols="20" rows="5" id="entry_address" name="entry_address" placeholder="" class="readonly " readonly="readonly">${configBasicOldInfo.orderInstallationInfo.instAddrDtl} , ${configBasicOldInfo.orderInstallationInfo.instStreet} ,  ${configBasicOldInfo.orderInstallationInfo.instArea} , ${configBasicOldInfo.orderInstallationInfo.instPostcode}, ${configBasicOldInfo.orderInstallationInfo.instState}, ${configBasicOldInfo.orderInstallationInfo.instCountry}
     </textarea>
     </td>
 </tr>
