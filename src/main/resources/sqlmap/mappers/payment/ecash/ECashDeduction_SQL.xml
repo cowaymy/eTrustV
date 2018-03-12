@@ -103,7 +103,7 @@
                     som.STUS_CODE_ID <![CDATA[   <> ]]>  10
                     AND rs.MODE_ID = 131
                     AND som.APP_TYPE_ID = 66
-                    AND rs.BANK_ID IN (19,34,17,28)
+                    AND rs.BANK_ID IN (19,34,17,28,18,31,16)
                     AND som.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
                     AND ROWNUM = 1
                 ) AS FILE_ITM_ACC_EXPR,
