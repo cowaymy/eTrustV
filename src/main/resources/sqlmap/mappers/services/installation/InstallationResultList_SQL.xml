@@ -4002,6 +4002,12 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
      </select>
 
 
+    <select id="selectPrevAssignCt" parameterType="Map" resultType="String">
+        SELECT CT_ID
+		FROM SAL0046D
+		WHERE INSTALL_ENTRY_NO = #{installEntryNo}
+     </select>
+
      <insert id="updateAssignCT" parameterType="Map" >
                          UPDATE  SAL0046D
 						  SET CT_ID =   #{insstallCtId} ,

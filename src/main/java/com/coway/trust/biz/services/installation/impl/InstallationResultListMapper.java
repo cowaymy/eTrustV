@@ -214,7 +214,9 @@ public interface InstallationResultListMapper {
 
 	EgovMap checkExchangeCollLog(Map<String, Object> orderLog);
 
-	EgovMap getCheckMonthInstallDt(Map<String, Object> params); 
+	EgovMap getCheckMonthInstallDt(Map<String, Object> params);
+
+	String selectPrevAssignCt(Map<String, Object> updateMap);
 
 	
 	
