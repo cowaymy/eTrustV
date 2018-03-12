@@ -1029,7 +1029,7 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 
 	@Override
 	public List<EgovMap> selectSeperation(Map<String, Object> params) {
-		return salesPlanMngementMapper.selectSeperation(params);
+		return salesPlanMngementMapper.selectSeperation2(params);
 	}
 
 	@Override
