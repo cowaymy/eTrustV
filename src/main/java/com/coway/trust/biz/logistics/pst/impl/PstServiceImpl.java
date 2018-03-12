@@ -308,7 +308,11 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			int docno = 129;
 			String invoiceno    = pst.invoiceDocNoSelect(docno);
 			
-			ordMap.put("schaount", charge + taxed);
+			taxed = incharge*0.06;
+			
+			//ordMap.put("schaount", charge + taxed);
+			ordMap.put("schaount", incharge + taxed);
+			//ordMap.put("billnet", taxed);
 			ordMap.put("billnet", taxed);
 			ordMap.put("taxrate", taxrate);
 			ordMap.put("taxcodeid", taxcodeid);
@@ -320,7 +324,7 @@ public class PstServiceImpl extends EgovAbstractServiceImpl implements PstServic
 			taxed = incharge*0.06;
 			ordMap.put("billnet", taxed);
 			ordMap.put("charges", incharge);
-			ordMap.put("ammount", incharge+taxed);
+			ordMap.put("ammount", incharge+taxed);//dddd
 			
 			ordMap.put("reqstno", reqstSeq);
 			
