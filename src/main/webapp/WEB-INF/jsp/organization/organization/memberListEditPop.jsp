@@ -222,6 +222,12 @@ $(document).ready(function() {
     $("#searchdepartment").change(function(){
         doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  '');
     });
+    
+    if ($("#joinDate").val() == "") {
+    	$("#joinDate").attr("disabled", false);
+    } else {
+    	$("#joinDate").attr("disabled", true);
+    }
 });
 
 
