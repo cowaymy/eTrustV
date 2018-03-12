@@ -883,7 +883,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 			         WHEN ( Extent27.CODE_NAME IS NULL ) THEN ''
 			      ELSE Extent27.CODE_NAME
 			    END RELIGION,
-			    CASE -- 추가
+			    CASE
 			         WHEN ( Extent28.CNFM_DT IS NULL ) THEN ''
 			      ELSE TO_CHAR(Extent28.CNFM_DT,'yyyy-mm-dd')
 			    END CNFM_DT,

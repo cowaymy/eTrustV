@@ -1067,11 +1067,11 @@ function fn_winClose(){
 </tr>
 <tr>
     <th scope="row">Mobile No</th>
-    <td><span><c:out value="${memberView.telMobile}"/></span></td>
+    <td><span><c:out value="${memberView.c24}"/></span></td>
     <th scope="row">Residence No</th>
-    <td><span><c:out value="${memberView.telHuse}"/></span></td>
+    <td><span><c:out value="${memberView.c26}"/></span></td>
     <th scope="row">Office No</th>
-    <td><span><c:out value="${memberView.telOffice}"/></span></td>
+    <td><span><c:out value="${memberView.c25}"/></span></td>
 </tr>
 <tr>
     <th scope="row">Senior Manager</th>
