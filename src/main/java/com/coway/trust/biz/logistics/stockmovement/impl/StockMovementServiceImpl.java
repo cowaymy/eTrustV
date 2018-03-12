@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.stockmovement.StockMovementService;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
+import com.coway.trust.cmmn.exception.PreconditionException;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -359,6 +360,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		int iCnt = 0;
 		String tmpdelCd = "";
 		String delyCd = "";
+		String delyno="";
 		if (checklist.size() > 0) {
 			for (int i = 0; i < checklist.size(); i++) {
 				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
@@ -367,6 +369,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 				imap = (Map<String, Object>) map.get("item");
 
 				String delCd = (String) imap.get("delyno");
+				delyno = (String) imap.get("delyno");
 				if (delCd != null && !(tmpdelCd.equals(delCd))) {
 					tmpdelCd = delCd;
 					if (iCnt == 0) {
@@ -378,50 +381,67 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 				}
 			}
 		}
-
-		String[] delvcd = delyCd.split("∈");
-
-		formMap.put("parray", delvcd);
-		formMap.put("userId", params.get("userId"));
-		// formMap.put("prgnm", params.get("prgnm"));
-		formMap.put("refdocno", "");
-		formMap.put("salesorder", "");
-		logger.debug("formMap : {}", formMap);
-		if ("RC".equals(formMap.get("gtype"))) {
-			// for (int i = 0 ; i < delvcd.length ; i ++){
-			// String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
-			// if (receiptFlag != null && "Y".equals(receiptFlag)){
-			// formMap.put("retMsg" , "fail");
-			// return formMap;
-			// }
-			// }
-			stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
-		} else {
-			Map<String, Object> grade = (Map<String, Object>) params.get("grade");
-			logger.info(" grade : {}", grade);
-			if ("GR".equals(formMap.get("gtype")) & null != grade) {
-				List<Object> gradelist = (List<Object>) grade.get(AppConstants.AUIGRID_UPDATE);
-				logger.info(" gradelist : {}", gradelist);
-				logger.info(" gradelist size : {}", gradelist.size());
-				for (int i = 0; i < gradelist.size(); i++) {
-					Map<String, Object> getmap = (Map<String, Object>) gradelist.get(i);
-					logger.info(" getmap: {}", getmap);
-					logger.info(" getmap delvryNo: {}", getmap.get("delvryNo"));
-					Map<String, Object> setmap = new HashMap();
-					setmap.put("delvryNo", getmap.get("delvryNo"));
-					setmap.put("serialNo", getmap.get("serialNo"));
-					setmap.put("grade", getmap.get("grade"));
-					setmap.put("userId", params.get("userId"));
-					stockMoveMapper.insertReturnGrade(setmap);
-					logger.info(" setmap: {}", setmap);
-				}
-			}
-
-			stockMoveMapper.StockMovementIssue(formMap);
+		
+		Map<String, Object> grlist = stockMoveMapper.selectDelvryGRcmplt(delyno);
+		
+		if(null == grlist){
+			
 		}
-		formMap.put("retMsg", "succ");
-		// }
+		
+		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
+		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
+		
+		if ( "Y".equals(grmplt) || "N".equals(gimplt)){
+		
+			formMap.put("failMsg", "Already processed.");
+		
+		}else{
+			
+			String[] delvcd = delyCd.split("∈");
 
+			formMap.put("parray", delvcd);
+			formMap.put("userId", params.get("userId"));
+			// formMap.put("prgnm", params.get("prgnm"));
+			formMap.put("refdocno", "");
+			formMap.put("salesorder", "");
+			logger.debug("formMap : {}", formMap);
+			if ("RC".equals(formMap.get("gtype"))) {
+				// for (int i = 0 ; i < delvcd.length ; i ++){
+				// String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
+				// if (receiptFlag != null && "Y".equals(receiptFlag)){
+				// formMap.put("retMsg" , "fail");
+				// return formMap;
+				// }
+				// }
+				stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
+			} else {
+				Map<String, Object> grade = (Map<String, Object>) params.get("grade");
+				logger.info(" grade : {}", grade);
+				if ("GR".equals(formMap.get("gtype")) & null != grade) {
+					List<Object> gradelist = (List<Object>) grade.get(AppConstants.AUIGRID_UPDATE);
+					logger.info(" gradelist : {}", gradelist);
+					logger.info(" gradelist size : {}", gradelist.size());
+					for (int i = 0; i < gradelist.size(); i++) {
+						Map<String, Object> getmap = (Map<String, Object>) gradelist.get(i);
+						logger.info(" getmap: {}", getmap);
+						logger.info(" getmap delvryNo: {}", getmap.get("delvryNo"));
+						Map<String, Object> setmap = new HashMap();
+						setmap.put("delvryNo", getmap.get("delvryNo"));
+						setmap.put("serialNo", getmap.get("serialNo"));
+						setmap.put("grade", getmap.get("grade"));
+						setmap.put("userId", params.get("userId"));
+						stockMoveMapper.insertReturnGrade(setmap);
+						logger.info(" setmap: {}", setmap);
+					}
+				}
+
+				stockMoveMapper.StockMovementIssue(formMap);
+			}
+			formMap.put("retMsg", "succ");
+			// }		
+		}
+		
+		
 		return formMap;
 
 	}

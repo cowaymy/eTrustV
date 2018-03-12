@@ -416,6 +416,12 @@ public class StockMovementController {
     		message.setCode(AppConstants.SUCCESS);
     		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		}
+		
+		if ("Already processed.".equals((String)rmap.get("failMsg"))){
+			logger.debug(" :::: 듑체크 통과!!!!!" );
+			message.setCode(AppConstants.FAIL);
+    		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
 
 		rmap.put("message", message);
 
