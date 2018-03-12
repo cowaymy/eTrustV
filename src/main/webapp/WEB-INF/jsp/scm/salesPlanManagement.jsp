@@ -953,7 +953,6 @@ function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
                                 ) //push
 
         var iLootCnt = 1;
-        var iLootCnt2 = 1;
         var nextRowFlag = "";
         var fieldStr = "";
         var iLootDataFieldCnt = 0;
@@ -964,32 +963,6 @@ function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
         {
           //2016 41 DST WP
 
-          if (nextRowFlag == "R2")
-			    {
-            fieldStr = "w" + iLootCnt2 + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
-
-            intToStrFieldCnt = iLootDataFieldCnt.toString();
-
-            if (intToStrFieldCnt.length == 1)
-            {
-              intToStrFieldCnt =  "0" + intToStrFieldCnt;
-            }
-
-           // console.log("summary_fieldStr222222: " + fieldStr + " /headerText: " + dynamicSummaryHeadList2[fieldStr]  +" /dataField: " + "w"+intToStrFieldCnt);
-
-        	  dynamicSummaryLayout.push({
-                  dataField : "w"+intToStrFieldCnt,
-                  headerText : dynamicSummaryHeadList2[fieldStr],  // "w00"
-                  editable: false,
-                  dataType : "numeric",
-                  formatString : "#,##0",
-                  style : "my-column"
-              });
-
-			      iLootCnt2++;
-			    }
-			    else
-          {
 
             fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
 
@@ -1010,12 +983,6 @@ function fnSelectSummaryHeadList(summaryHeadList, summaryHeadList2)
 				                              });
 
            iLootCnt++;
-          }
-
-          if (dynamicSummaryHeadList[fieldStr] == "W52")
-          {
-               nextRowFlag = "R2";
-          }
 
            iLootDataFieldCnt++;
         }
@@ -1342,13 +1309,12 @@ function fnSettiingHeader()
                     var iM2TotCnt =   parseInt(result.seperaionInfo[0].m2TotCnt);
                     var iM3TotCnt =   parseInt(result.seperaionInfo[0].m3TotCnt);
 
-							      var iLootCnt = 1;
-							      var iLootCnt2 = 1; //Next Year
-							      var nextRowFlag = "";
-							      var iLootDataFieldCnt = 0;
-										var intToStrFieldCnt ="";
-										var fieldStr ="";
-										var strWeekTh = "W"
+				    var iLootCnt = 1;
+				    var iLootDataFieldCnt = 0;
+					var intToStrFieldCnt ="";
+					var fieldStr ="";
+					var startCnt = 0;
+					var strWeekTh = "W"
 
 				            // M+0   : 당월    remainCnt
 		                var groupM_0 = {
@@ -1356,7 +1322,7 @@ function fnSettiingHeader()
 		                   children : []
 		                }
 
-		               for(var i=0; i < 5; i++)
+		               for(var i=0; i < iM0TotCnt; i++)
 		               {
 		                  /* console.log("loop_i_value: " + i  +" M0_TotCnt: " + iM0TotCnt
 		                             +" / fieldStr: " +  fieldStr
@@ -1364,6 +1330,7 @@ function fnSettiingHeader()
 		                             +" / field_name_sel: " + "w0"+result.getChildField[i].weekTh +'-'+ result.getChildField[i].weekThSn  // == result.header[0].w1WeekSeq
 		                             +" / WEEK_TH: " + result.getChildField[i].weekTh);  // == result.header[0].w1WeekSeq
 		                  */
+
 		                  intToStrFieldCnt = iLootDataFieldCnt.toString();
 
 		                  if (intToStrFieldCnt.length == 1)
@@ -1371,9 +1338,15 @@ function fnSettiingHeader()
 		               	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
 		                  }
 
-		                  if (parseInt(result.getChildField[i].weekTh) <  parseInt(gWeekThValue))
+		                  if( i == 0 ){
+		                	 startCnt = parseInt(result.getChildField[i].weekTh);
+		                  } else {
+		                	 startCnt = startCnt + 1;
+		                  }
+
+		                  if (startCnt <  parseInt(gWeekThValue))
 		                  {
-		                    if (result.getChildField[i].weekTh.toString().length < 2)
+		                    if (startCnt.toString().length < 2)
 		                    {
 		                      strWeekTh = "W0"
 		                    }
@@ -1384,37 +1357,24 @@ function fnSettiingHeader()
 
 		                    sumWeekThStr = "bef" + (i+1) + "WeekTh";  //w1WeekSeq   result.header[0].w1WeekSeq
 
+		                    fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
+
 		                 	  groupM_0.children.push({
 														                     dataField :  sumWeekThStr,   // bef1WeekTh
-														                     headerText : strWeekTh + result.getChildField[i].weekTh,
+														                     headerText : result.header[0][fieldStr],
 														                     dataType : "numeric",
 							                                   formatString : "#,##0",
 														                     editable: false,
 														                     style : "my-backColumn1"
 														                  });
+		                    iLootCnt++;
 
 		                    continue;
 			                }
-		                  else if (parseInt(result.getChildField[i].weekTh) ==  parseInt(gWeekThValue))
+		                  else if (startCnt ==  parseInt(gWeekThValue))
 		                  {
-		                    if (nextRowFlag == "R2")
-		                    {
-		                    	 fieldStr = "w" + iLootCnt2 + "WeekSeq";
 
-	                         groupM_0.children.push({
-									                                  dataField : "w" + intToStrFieldCnt,   // "w00"
-									                                  headerText :result.header[1][fieldStr],
-									                                  dataType : "numeric",
-									                                  formatString : "#,##0",
-									                                  editable: false,
-									                                  style : "my-backColumn2"
-									                               });
-
-	                         iLootCnt2++;
-				                }
-		                	  else
-			                	{
-		                		  fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
+                		  fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
 
                           groupM_0.children.push({
 								                                    dataField : "w" + intToStrFieldCnt,   // "w00"
@@ -1426,45 +1386,23 @@ function fnSettiingHeader()
 								                                });
 
                           iLootCnt++;
-				                }
-
 		                  }
 			                else
 			                {
 
-                        if (nextRowFlag == "R2")
-                        {
-                           fieldStr = "w" + iLootCnt2 + "WeekSeq";
 
-                           groupM_0.children.push({
-										                               dataField : "w" + intToStrFieldCnt,   // "w00"
-										                               headerText :result.header[1][fieldStr] ,
-										                               dataType : "numeric",
-										                               formatString : "#,##0",
-										                               style : "my-column",
-										                             });
-
-                           iLootCnt2++;
-                        }
-                        else
-				                {
                         	fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
 
-                          groupM_0.children.push({
+                            groupM_0.children.push({
 														                       dataField : "w" + intToStrFieldCnt,   // "w00"
 														                       headerText :result.header[0][fieldStr],
 														                       dataType : "numeric",
 														                       formatString : "#,##0",
 														                       style : "my-column",
 													  	                  });
-                          iLootCnt++;
-				                }
-			                }
+                            iLootCnt++;
 
-                      if (result.header[0][fieldStr] == "W52")
-                      {
-                        nextRowFlag = "R2";
-                      }
+			                }
 
 		                  iLootDataFieldCnt++;
 		               }
@@ -1489,21 +1427,6 @@ function fnSettiingHeader()
                         intToStrFieldCnt =  "0" + intToStrFieldCnt;
                       }
 
-		                  if (nextRowFlag == "R2")
-                      {
-                        fieldStr = "w" + iLootCnt2 + "WeekSeq";
-
-                        groupM_1.children.push({
-									                                dataField : "w" + intToStrFieldCnt,
-									                                headerText :  result.header[1][fieldStr],
-									                                dataType : "numeric",
-									                                formatString : "#,##0",
-									                                style : "my-column",
-									                             });
-                        iLootCnt2 ++;
-                      }
-		                  else
-			                {
 
 		                    fieldStr = "w" + iLootCnt + "WeekSeq";
 
@@ -1516,15 +1439,11 @@ function fnSettiingHeader()
 														                  });
 
 		                    iLootCnt ++;
-			                }
+
 
 		                /*   console.log("M+1_header_DataField: " + "w" + intToStrFieldCnt + " /fieldStr: " + fieldStr
 		                             +" /Main_Result.header: " + result.header[0][fieldStr]); */
 
-                      if (result.header[0][fieldStr] == "W52")
-                      {
-                          nextRowFlag = "R2";
-                      }
 
 		                  iLootDataFieldCnt++;
 		                }
@@ -1548,21 +1467,7 @@ function fnSettiingHeader()
 		                   intToStrFieldCnt =  "0" + intToStrFieldCnt;
 		                 }
 
-	                   if (nextRowFlag == "R2")
-	                   {
-                       fieldStr = "w" + iLootCnt2 + "WeekSeq";
-                       groupM_2.children.push({
-											                          dataField : "w" + intToStrFieldCnt,
-											                          headerText :  result.header[1][fieldStr],
-											                          dataType : "numeric",
-											                          formatString : "#,##0",
-											                          style : "my-column",
-                          });
 
-                       iLootCnt2 ++;
-	                   }
-	                   else
-		                 {
 	                	   fieldStr = "w" + iLootCnt + "WeekSeq";
 
 		                   groupM_2.children.push({
@@ -1573,12 +1478,6 @@ function fnSettiingHeader()
 											                          style : "my-column",
 														                 });
 		                   iLootCnt++;
-		                 }
-
-                     if (result.header[0][fieldStr] == "W52")
-                     {
-                       nextRowFlag = "R2";
-                     }
 
 		                 iLootDataFieldCnt++;
 		              }
@@ -1601,21 +1500,7 @@ function fnSettiingHeader()
 			                  intToStrFieldCnt =  "0" + intToStrFieldCnt;
 			                }
 
-	                    if (nextRowFlag == "R2")
-	                    {
-	                      fieldStr = "w" + iLootCnt2 + "WeekSeq";
-	                      groupM_3.children.push({
-											                           dataField : "w" + intToStrFieldCnt,
-											                           headerText :  result.header[1][fieldStr],
-											                           dataType : "numeric",
-											                           formatString : "#,##0",
-											                           style : "my-column",
-											                         });
 
-	                      iLootCnt2 ++;
-	                    }
-	                    else
-		                  {
 	                    	 fieldStr = "w" + iLootCnt + "WeekSeq";
 
 	                       groupM_3.children.push({
@@ -1627,12 +1512,7 @@ function fnSettiingHeader()
 									                             });
 
 	                       iLootCnt ++;
-			                }
 
-                     if (result.header[0][fieldStr] == "W52")
-                     {
-                       nextRowFlag = "R2";
-                     }
 
 			               iLootDataFieldCnt++;
 		               }

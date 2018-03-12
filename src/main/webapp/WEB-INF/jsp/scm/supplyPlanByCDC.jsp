@@ -741,11 +741,10 @@ function fnByCdcSettiingHeader()
                   var iM3TotCnt =   parseInt(result.seperaionInfo[0].m3TotCnt);
 
                   var iLootCnt = 1;
-                  var iLootCnt2 = 1; //Next Year
-                  var nextRowFlag = "";
                   var iLootDataFieldCnt = 0;
                   var intToStrFieldCnt ="";
                   var fieldStr ="";
+				  var startCnt = 0;
                   var strWeekTh = "W"
                   var leadTime= 8;
 
@@ -762,7 +761,7 @@ function fnByCdcSettiingHeader()
                      children : []
                   }
 
-                 for(var i=0; i < 5; i++)
+                 for(var i=0; i < iM0TotCnt; i++)
                  {
                     // console.log("loop_i_value: " + i  +" M0_TotCnt: " + iM0TotCnt
                     //           +" / fieldStr: " +  fieldStr
@@ -777,9 +776,15 @@ function fnByCdcSettiingHeader()
                      intToStrFieldCnt =  "0" + intToStrFieldCnt;
                     }
 
-                    if (parseInt(result.getChildField[i].weekTh) <  parseInt(gWeekThValue))
+                    if( i == 0 ){
+                 	  startCnt = parseInt(result.getChildField[i].weekTh);
+                    } else {
+                 	  startCnt = startCnt + 1;
+                    }
+
+                    if (startCnt <  parseInt(gWeekThValue))
                     {
-                      if (result.getChildField[i].weekTh.toString().length < 2)
+                      if (startCnt.length < 2)
                       {
                         strWeekTh = "W0"
                       }
@@ -790,62 +795,38 @@ function fnByCdcSettiingHeader()
 
                       sumWeekThStr = "bef" + (i+1) + "WeekTh";  //w1WeekSeq   result.header[0].w1WeekSeq
 
+                  	  fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
+
                       groupM_0.children.push(
                       {
                            dataField :  sumWeekThStr,   // bef1WeekTh
-                           headerText : strWeekTh + result.getChildField[i].weekTh,
+                           headerText : result.header[0][fieldStr],
                            editable: false,
                            style : "my-backColumn2"
                       });
 
+                      iLootCnt++;
+
                       continue;
                     }
-                    else if (parseInt(result.getChildField[i].weekTh) ==  parseInt(gWeekThValue))
+                    else if (startCnt ==  parseInt(gWeekThValue))
                     {
-                        if (nextRowFlag == "R2")
-                        {
-                           fieldStr = "w" + iLootCnt2 + "WeekSeq";
 
-                           groupM_0.children.push({
-											                              dataField : "w" + intToStrFieldCnt,   // "w00"
-											                              headerText :result.header[1][fieldStr],
-											                              editable: false,
-											                              style : "my-backColumn3"
-											                           });
+                       	fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
 
-                           iLootCnt2++;
-                        }
-                        else
-                        {
-                        	fieldStr = "w" + iLootCnt + "WeekSeq";  //w1WeekSeq   result.header[0].w1WeekSeq
+                         groupM_0.children.push({
+										                             dataField : "w" + intToStrFieldCnt,   // "w00"
+										                             headerText :result.header[0][fieldStr],
+										                             editable: false,
+										                             style : "my-backColumn3"
+										                          });
+                         iLootCnt++;
 
-                          groupM_0.children.push({
-											                             dataField : "w" + intToStrFieldCnt,   // "w00"
-											                             headerText :result.header[0][fieldStr],
-											                             editable: false,
-											                             style : "my-backColumn3"
-											                          });
-                          iLootCnt++;
-                        }
                     }
                     else
                     {
-                        if (nextRowFlag == "R2")
-                        {
-                           fieldStr = "w" + iLootCnt2 + "WeekSeq";
 
-                           groupM_0.children.push({
-                                                    dataField : "w" + intToStrFieldCnt,   // "w00"
-                                                    headerText :result.header[1][fieldStr],
-                                                    editable : false,
-                                                    style : "my-backColumn3"
-                                                  });
-
-                           iLootCnt2++;
-                        }
-                        else
-                        {
-                        	fieldStr = "w" + iLootCnt + "WeekSeq";
+                          fieldStr = "w" + iLootCnt + "WeekSeq";
 
                           groupM_0.children.push({
 										                                 dataField : "w" + intToStrFieldCnt,   // "w00"
@@ -854,13 +835,9 @@ function fnByCdcSettiingHeader()
 										                                 style : "my-backColumn3"
 										                            });
                           iLootCnt++;
-                        }
+
                     }
 
-                    if (result.header[0][fieldStr] == "W52")
-                    {
-                      nextRowFlag = "R2";
-                    }
 
                     iLootDataFieldCnt++;
                  }
@@ -884,19 +861,7 @@ function fnByCdcSettiingHeader()
                       intToStrFieldCnt =  "0" + intToStrFieldCnt;
                     }
 
-                    if (nextRowFlag == "R2")
-                    {
-                      fieldStr = "w" + iLootCnt2 + "WeekSeq";
-
-                      groupM_1.children.push({
-								                               dataField : "w" + intToStrFieldCnt,
-								                               headerText :  result.header[1][fieldStr],
-								                               editable : false,
-								                               style : "my-backColumn3"
-								                            });
-
-                      iLootCnt2 ++;
-                    }else if(iLootDataFieldCnt == leadTime){
+                   if(iLootDataFieldCnt == leadTime || iLootDataFieldCnt > leadTime){
                     	fieldStr = "w" + iLootCnt + "WeekSeq";
 
 	                    groupM_1.children.push({
@@ -920,11 +885,6 @@ function fnByCdcSettiingHeader()
 	                                          });
 
 	                    iLootCnt++;
-                    }
-
-                    if (result.header[0][fieldStr] == "W52")
-                    {
-                        nextRowFlag = "R2";
                     }
 
                     iLootDataFieldCnt++;
@@ -951,37 +911,31 @@ function fnByCdcSettiingHeader()
                      intToStrFieldCnt =  "0" + intToStrFieldCnt;
                    }
 
-                   if (nextRowFlag == "R2")
-                   {
-                     fieldStr = "w" + iLootCnt2 + "WeekSeq";
+                     if(iLootDataFieldCnt == leadTime || iLootDataFieldCnt > leadTime){
+                     	fieldStr = "w" + iLootCnt + "WeekSeq";
 
-                     groupM_2.children.push({
-											                         dataField : "w" + intToStrFieldCnt,
-											                         headerText :  result.header[1][fieldStr],
-											                         style : "my-backColumn1",
-											                         editable: true,
-											                      });
+                     	groupM_2.children.push({
+ 	                                             dataField : "w" + intToStrFieldCnt,
+ 	                                             headerText :  result.header[0][fieldStr],
+ 	                                             editable : true,
+ 	                                             style : "my-backColumn1"
+ 	                                          });
 
-                     iLootCnt2 ++;
-                   }
-                   else
-                   {
-                	   fieldStr = "w" + iLootCnt + "WeekSeq";
+ 	                    iLootCnt++;
+                     }
+                     else
+                     {
+                     	fieldStr = "w" + iLootCnt + "WeekSeq";
 
-                     groupM_2.children.push({
-				                                      dataField : "w" + intToStrFieldCnt,
-				                                      headerText :  result.header[0][fieldStr],
-				                                      style : "my-backColumn1",
-				                                      editable: true,
-                                           });
+                     	groupM_2.children.push({
+ 	                                             dataField : "w" + intToStrFieldCnt,
+ 	                                             headerText :  result.header[0][fieldStr],
+ 	                                             editable : false,
+ 	                                             style : "my-backColumn3"
+ 	                                          });
 
-                     iLootCnt ++;
-                   }
-
-                   if (result.header[0][fieldStr] == "W52")
-                   {
-                     nextRowFlag = "R2";
-                   }
+ 	                    iLootCnt++;
+                     }
 
                    iLootDataFieldCnt++;
                 }
@@ -1005,21 +959,7 @@ function fnByCdcSettiingHeader()
 	                    intToStrFieldCnt =  "0" + intToStrFieldCnt;
 	                  }
 
-	                  if (nextRowFlag == "R2")
-	                  {
-	                    fieldStr = "w" + iLootCnt2 + "WeekSeq";
 
-	                    groupM_3.children.push({
-									                              dataField : "w" + intToStrFieldCnt,
-									                              headerText :  result.header[1][fieldStr],
-									                              style : "my-backColumn1",
-									                              editable: true,
-									                          });
-
-	                    iLootCnt2++;
-	                  }
-	                  else
-	                  {
 	                	  fieldStr = "w" + iLootCnt + "WeekSeq";
 
 		                  groupM_3.children.push({
@@ -1030,12 +970,7 @@ function fnByCdcSettiingHeader()
 		                                         });
 
 		                  iLootCnt++;
-	                  }
 
-	                  if (result.header[0][fieldStr] == "W52")
-	                  {
-	                    nextRowFlag = "R2";
-	                  }
 
 	                  iLootDataFieldCnt++;
                  }
