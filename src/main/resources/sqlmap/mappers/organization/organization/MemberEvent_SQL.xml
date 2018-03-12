@@ -754,11 +754,13 @@
         <update id="updateMemberPromoEntry" parameterType="Map">
                     UPDATE ORG0007D
 					   SET STUS_ID = #{stusId},
+					       <if test="evtApplyDate != null and evtApplyDate != '' " >    
+		                       EVT_APPLY_DT = TO_DATE(#{evtApplyDate},'dd/mm/yyyy' ),
+		                   </if>
 					       UPD_DT = SYSDATE,
 					       UPD_USER_ID = #{updUserId}
 					       <!-- DEPT_CODE_TO = #{deptCode},
-					       BRNCH_ID        = #{branchId},
-					       EVT_APPLY_DT = TO_DATE(#{evtApplyDate},'dd/mm/yyyy' ) -->
+					       BRNCH_ID        = #{branchId}, -->
 					 WHERE  ( PROMO_ID = #{promoId} )           
         </update>
         

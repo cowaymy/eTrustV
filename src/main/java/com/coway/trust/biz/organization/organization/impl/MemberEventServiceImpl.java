@@ -15,6 +15,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.coway.trust.biz.organization.organization.MemberEventService;
+import com.coway.trust.util.CommonUtils;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -223,7 +224,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mPromoEntry.put("updUserId", formList.get("updUserId"));
 			mPromoEntry.put("promoId", params.get("promoId"));
 			mPromoEntry.put("branchId", params.get("branchId"));
-//			mPromoEntry.put("evtApplyDate", params.get("evtApplyDate"));
+			mPromoEntry.put("evtApplyDate", CommonUtils.isEmpty(params.get("evtApplyDate")) ? null : params.get("evtApplyDate"));
 			
 			logger.debug("mPromoEntry::::" + mPromoEntry);
             memberEventMapper.updateMemberPromoEntry(mPromoEntry);
