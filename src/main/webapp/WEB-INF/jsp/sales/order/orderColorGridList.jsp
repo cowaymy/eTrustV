@@ -24,43 +24,43 @@
 <script type="text/javaScript">
 	//AUIGrid 생성 후 반환 ID
 	var myGridID;
-	
+
 	$(document).ready(function() {
 
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
 
       //AUIGrid.setSelectionMode(myGridID, "singleRow");
-        
+
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
             $("#salesOrderId").val(event.item.ordId);
             Common.popupDiv("/sales/order/orderDetailPop.do", $("#searchForm").serializeJSON(), null, true, 'dtPop');
         });
-        
+
         if($("#memType").val() == 1 || $("#memType").val() == 2){
         	if("${SESSION_INFO.memberLevel}" =="1"){
 
                 $("#orgCode").val("${orgCode}");
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
-                
+
             }else if("${SESSION_INFO.memberLevel}" =="2"){
 
                 $("#orgCode").val("${orgCode}");
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
-                
+
                 $("#grpCode").val("${grpCode}");
                 $("#grpCode").attr("class", "w100p readonly");
                 $("#grpCode").attr("readonly", "readonly");
-                            
+
             }else if("${SESSION_INFO.memberLevel}" =="3"){
 
                 $("#orgCode").val("${orgCode}");
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
-                
+
                 $("#grpCode").val("${grpCode}");
                 $("#grpCode").attr("class", "w100p readonly");
                 $("#grpCode").attr("readonly", "readonly");
@@ -68,13 +68,13 @@
                 $("#deptCode").val("${deptCode}");
                 $("#deptCode").attr("class", "w100p readonly");
                 $("#deptCode").attr("readonly", "readonly");
-                            
+
             }else if("${SESSION_INFO.memberLevel}" =="4"){
-                
+
                 $("#orgCode").val("${orgCode}");
                 $("#orgCode").attr("class", "w100p readonly");
                 $("#orgCode").attr("readonly", "readonly");
-                 
+
                 $("#grpCode").val("${grpCode}");
                 $("#grpCode").attr("class", "w100p readonly");
                 $("#grpCode").attr("readonly", "readonly");
@@ -88,15 +88,15 @@
                 $("#memCode").attr("readonly", "readonly");
             }
         }
-        
+
         CommonCombo.make('cmbAppType', '/common/selectCodeList.do', {groupCode : 10} , '', {type: 'M'});
         doGetComboWh('/sales/order/colorGridProductList.do', '', '', 'cmbProduct', '', '');
 
     });
-	
+
 	function createAUIGrid() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
@@ -202,14 +202,14 @@
 
      // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
             editable : true,
             fixedColumnCount : 1,
-            showStateColumn : false, 
+            showStateColumn : false,
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -221,17 +221,17 @@
             wrapSelectionMove : true,
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : false,
-        
+
             groupingMessage : "Here groupping"
         };
-        
+
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
     }
-    
+
     function fn_searchListAjax(){
 
-    	/*    
+    	/*
         if( $("#netSalesMonth").val() ==""  &&  $("#createStDate").val() ==""  &&  $("#createEnDate").val() ==""  ){
         	if($("#ordNo").val() == "" && $("#custName").val() == "" && $("#custIc").val() == "" && $("#salesmanCode").val() == "" && $("#contactNum").val() == "" && $("#promoCode").val() == ""){
         		Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
@@ -239,36 +239,36 @@
         	}
          }
         */
-        
-        //  lev 1  Order Date    Order Date    
+
+        //  lev 1  Order Date    Order Date
         //  lev 2   netSalesMonth
-         
-        
+
+
         if (  $("#netSalesMonth").val() ==""   &&   $("#createStDate").val()  =="" ){
         	Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
             return ;
-        } 
-        
+        }
+
         if (  ($("#createStDate").val()  ==""  &&   $("#createEnDate").val()  =="")     &&  $("#netSalesMonth").val() ==""   ){
             Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
             return ;
-        } 
-        
+        }
+
         if (   $("#netSalesMonth").val() ==""   ){
         	 if( $("#createStDate").val()  ==""  ||    $("#createEnDate").val()  ==""  ){
         		 Common.alert("<spring:message code='sal.alert.msg.youMustKeyInatLeastOrdDateNetSales' />");
                  return ;
         	 }
-        	  var startDate = $('#createStDate').val();
+        	  /* var startDate = $('#createStDate').val();
               var endDate = $('#createEnDate').val();
               if( fn_getDateGap(startDate , endDate) > 31){
                   Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
                   return;
-              }
-        } 
-        
+              } */
+        }
+
        if( $("#createStDate").val()  !=""  &&   $("#createEnDate").val()  !=""  ){
-            
+
             var startDate = $('#createStDate').val();
             var endDate = $('#createEnDate').val();
             if( fn_getDateGap(startDate , endDate) > 31){
@@ -276,39 +276,39 @@
                 return;
             }
         }
-        
-        
+
+
         /*
-       
+
         //Search Condition max 31Days -- add by Lee seok hee
         if(($("#createStDate").val() != null && $("#createStDate").val() != '') || ($("#createEnDate").val() != null && $("#createEnDate").val() != '')){
-        	
+
         	if($("#createStDate").val() == null || $("#createStDate").val() == ''){
         		Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInStartDate' />");
         		return;
         	}
-        	
+
         	if($("#createEnDate").val() == null || $("#createEnDate").val() == ''){
         		Common.alert("<spring:message code='sal.alert.msg.pleaseKeyInEndDate' />");
         		return;
         	}
-        	
+
         	var startDate = $('#createStDate').val();
             var endDate = $('#createEnDate').val();
-            
+
             if( fn_getDateGap(startDate , endDate) > 31){
                 Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
                 return;
             }
-            
-         
+
+
         }
-        
+
            */
-         
+
         Common.ajax("GET", "/sales/order/orderColorGridJsonList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
-            
+
             AUIGrid.setProp(myGridID, "rowStyleFunction", function(rowIndex, item) {
                 if(item.stusId == 4) {
                 	if(item.isNet == 1){
@@ -316,41 +316,41 @@
                 	}else{
                 		return "my-yellow-style";
                 	}
-                       
+
                 }else if(item.stusId == 10){
                 	return "my-pink-style";
                 }else{
                 	return "";
                 }
 
-             }); 
+             });
 
              // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
              AUIGrid.update(myGridID);
         });
     }
-    
+
     function fn_getDateGap(sdate, edate){
-        
+
         var startArr, endArr;
-        
+
         startArr = sdate.split('/');
         endArr = edate.split('/');
-        
+
         var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
         var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
-        
+
         var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
-        
+
 //        console.log("gap : " + gap);
-        
+
         return gap;
     }
-    
+
 
     //def Combo(select Box OptGrouping)
     function doGetComboWh(url, groupCd , selCode, obj , type, callbackFn){
-      
+
       $.ajax({
           type : "GET",
           url : url,
@@ -359,7 +359,7 @@
           contentType : "application/json;charset=UTF-8",
           success : function(data) {
              var rData = data;
-             Common.showLoader(); 
+             Common.showLoader();
              fn_otpGrouping(rData, obj)
           },
           error: function(jqXHR, textStatus, errorThrown){
@@ -368,34 +368,34 @@
           complete: function(){
               Common.removeLoader();
           }
-      }); 
+      });
    } ;
 
    function fn_otpGrouping(data, obj){
 
        var targetObj = document.getElementById(obj);
-       
+
        for(var i=targetObj.length-1; i>=0; i--) {
               targetObj.remove( i );
        }
-       
+
        obj= '#'+obj;
-       
+
        // grouping
        var count = 0;
        $.each(data, function(index, value){
-           
+
            if(index == 0){
               $("<option />", {value: "", text: 'Choose One'}).appendTo(obj);
            }
-           
+
            if(index > 0 && index != data.length){
                if(data[index].groupCd != data[index -1].groupCd){
                    $(obj).append('</optgroup>');
                    count = 0;
                }
            }
-           
+
            if(data[index].codeId == null  && count == 0){
                $(obj).append('<optgroup label="">');
                count++;
@@ -427,17 +427,17 @@
            }
 
            $('<option />', {value : data[index].codeId, text: data[index].codeName}).appendTo(obj); // WH_LOC_ID
-           
-           
+
+
            if(index == data.length){
                $(obj).append('</optgroup>');
            }
        });
        //optgroup CSS
        $("optgroup").attr("class" , "optgroup_text");
-       
+
    }
-   
+
     $.fn.clearForm = function() {
         return this.each(function() {
             var type = this.type, tag = this.tagName.toLowerCase();
@@ -569,7 +569,7 @@
     <th scope="row"><spring:message code="sal.text.promotionCode" /></th>
     <td>
     <input type="text" title="" id="promoCode" name="promoCode" placeholder="Promotion Code" class="w100p" />
-    </td>       
+    </td>
     <th scope="row"></th>
     <td></td>
 </tr>
@@ -620,7 +620,7 @@
 </ul>
 
 <section class="search_result"><!-- search_result start -->
-<!-- 
+<!--
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
