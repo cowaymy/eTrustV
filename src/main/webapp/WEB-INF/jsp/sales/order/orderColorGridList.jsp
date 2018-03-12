@@ -267,7 +267,7 @@
               } */
         }
 
-       if( $("#createStDate").val()  !=""  &&   $("#createEnDate").val()  !=""  ){
+       /* if( $("#createStDate").val()  !=""  &&   $("#createEnDate").val()  !=""  ){
 
             var startDate = $('#createStDate').val();
             var endDate = $('#createEnDate').val();
@@ -275,7 +275,7 @@
                 Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
                 return;
             }
-        }
+        } */
 
 
         /*
