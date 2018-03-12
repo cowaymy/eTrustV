@@ -135,6 +135,10 @@
 
          // 리스트 조회.
         function fn_getBasicListAjax() {
+        	 if ($("#instState").val() == '' || $("#instState").val() == null) {
+                 Common.alert("Please Select 'Install State'");
+                 return false;
+             }
 
                 Common.ajax("GET", "/services/bs/selectHsMnthlyMaintainOldList.do", $("#searchForm").serialize(), function(result) {
                     AUIGrid.setGridData(myGridID, result);
@@ -148,8 +152,7 @@
 
         	if (selectedItem[0] > -1){
         		if (stusCode == 'ACT'){
-        			//if(day < 13){
-        			if(day <= 28){
+        			if(day < 13){
         			  Common.popupDiv("/services/bs/hsMnthlyMaintainOldPop.do?&schdulId="+schdulId+"&salesOrdId="+salesOrdId, null, null , true , '_ConfigBasicPop');
         			}else{
         				Common.alert("<b>Current month BS setting for this month has closed.</b>");
@@ -247,7 +250,7 @@
                 </td>
             </tr>
             <tr>
-                <th scope="row">Install State</th>
+                <th scope="row">Install State<span class="must">*</span></th>
                 <td>
                     <select id="instState" name = "instState"></select>
                 </td>
