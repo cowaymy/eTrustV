@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.biz.sales.order;
 
@@ -48,5 +48,7 @@ public interface OrderRequestService {
 	EgovMap selectObligtPriod(Map<String, Object> params);
 
 	EgovMap selectPenaltyAmt(Map<String, Object> params);
+
+	EgovMap checkeAutoDebitDeduction(Map<String, Object> params);
 
 }

@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.order.impl.OrderRequestMapper">
-    
+
     <select id="selectResnCodeList" parameterType="Map" resultType="egovMap">
 		SELECT T1.RESN_ID CODE
 		     , T1.CODE || ' - ' || T1.RESN_DESC CODE_NAME
@@ -12,7 +12,7 @@
 		 </if>
 		 ORDER BY T1.RESN_ID
     </select>
-    
+
     <select id="selectOrderLastRentalBillLedger1" parameterType="Map" resultType="egovMap">
     <![CDATA[
 		SELECT T.RENT_RUN_ID
@@ -60,13 +60,13 @@
 		 WHERE ROWNUM <= 1
     ]]>
     </select>
-    
+
     <insert id="insertSalesReqCancel" parameterType="salesReqCancelVO">
       <selectKey keyProperty="soReqId" resultType="Integer" order="BEFORE">
         SELECT SAL0020D_SO_REQ_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
         INSERT
-		  INTO SAL0020D 
+		  INTO SAL0020D
 		     ( SO_REQ_ID
 		     , SO_REQ_SO_ID
 		     , SO_REQ_STUS_ID
@@ -99,7 +99,7 @@
 		     , SO_REQ_ISS_BANK
 		     , SO_REQ_ACC_NAME
 		     , SO_REQ_ATTACH
-		     ) 
+		     )
 		VALUES
 		     ( #{soReqId}
 		     , #{soReqSoId}
@@ -135,7 +135,7 @@
 		     , #{soReqAttach}
              )
      </insert>
-     
+
     <select id="selectSalesOrderD" parameterType="Map" resultType="egovMap">
 	    SELECT EDIT_TYPE_ID
 	         , T1.ITM_CALL_ENTRY_ID
@@ -154,7 +154,7 @@
 	      FROM SAL0002D T1
 	     WHERE T1.SALES_ORD_ID = #{salesOrdId}
     </select>
-    
+
     <select id="selectInstallEntry" parameterType="Map" resultType="egovMap">
         SELECT T.INSTALL_ENTRY_ID
              , T.INSTALL_ENTRY_NO
@@ -209,7 +209,7 @@
              ) T
          WHERE ROWNUM = 1
     </select>
-    
+
     <select id="selectCallEntry" parameterType="Map" resultType="egovMap">
         SELECT T.CALL_ENTRY_ID
              , T.SALES_ORD_ID
@@ -283,7 +283,7 @@
           FROM CCR0006D T1
          WHERE T1.CALL_ENTRY_ID = #{callEntryId}
     </select>
-    
+
     <update id="updateCallEntry" parameterType="callEntryVO">
         UPDATE CCR0006D
            SET RESULT_ID     = #{resultId}
@@ -325,7 +325,7 @@
              , DISC_RNT_FEE         = #{discRntFee}
          WHERE SALES_ORD_ID         = #{salesOrdId}
     </update>
-    
+
     <update id="updateSalesOrderMSchem" parameterType="salesOrderMVO">
         UPDATE SAL0001D
            SET TOT_AMT        = #{totAmt}
@@ -336,7 +336,7 @@
              , CNVR_SCHEME_ID = #{cnvrSchemeId}
          WHERE SALES_ORD_ID   = #{salesOrdId}
     </update>
-    
+
     <update id="updateSalesOrderMOtran" parameterType="salesOrderMVO">
 		UPDATE SAL0001D
 		   SET CUST_ID      = #{custId}
@@ -421,7 +421,7 @@
 		   AND TO_CHAR(T1.AS_APPNT_DT, 'YYYYMM') = TO_CHAR(SYADATE, 'YYYYMM')
 		   AND ROWNUM = 1
     </select>
-    
+
     <insert id="insertSalesOrderExchange" parameterType="salesOrderExchangeVO">
       <selectKey keyProperty="soExchgId" resultType="Integer" order="BEFORE">
         SELECT SAL0004D_SO_EXCHG_ID_SEQ.NEXTVAL FROM DUAL
@@ -466,7 +466,7 @@
 		     , SO_EXCHG_OLD_CUST_ID
 		     , SO_EXCHG_NW_CUST_ID
 		     , SO_EXCHG_FORM_NO
-		     ) 
+		     )
 		VALUES
 		     ( #{soExchgId}
 		     , #{soId}
@@ -508,7 +508,7 @@
 		     , #{soExchgFormNo}
 		     )
     </insert>
-    
+
     <select id="selecLastInstall" parameterType="Map" resultType="egovMap">
         SELECT T.INSTALL_ENTRY_ID
              , T.INSTALL_DT
@@ -526,7 +526,7 @@
              ) T
          WHERE ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectSrvConfiguration" parameterType="Map" resultType="egovMap">
         SELECT T1.SRV_CONFIG_ID
           FROM SAL0090D T1
@@ -534,7 +534,7 @@
            AND T1.SRV_STUS_ID = 1
            AND ROWNUM = 1
     </select>
-    
+
     <select id="selectSrvConfiguration2" parameterType="Map" resultType="egovMap">
         SELECT T1.SRV_CONFIG_ID
           FROM SAL0090D T1
@@ -548,14 +548,14 @@
          WHERE T1.SRV_CONFIG_ID = #{srvConfigId}
            AND T1.SRV_PRD_STUS_ID = 1
     </select>
-    
+
     <select id="selectSrvConfigSetting" parameterType="Map" resultType="egovMap">
         SELECT T1.SRV_SETT_ID
           FROM SAL0089D T1
          WHERE T1.SRV_CONFIG_ID = #{srvConfigId}
            AND T1.SRV_SETT_STUS_ID = 1
     </select>
-    
+
     <select id="selectSrvConfigFilter" parameterType="Map" resultType="egovMap">
         SELECT T1.SRV_FILTER_ID
           FROM SAL0087D T1
@@ -586,15 +586,15 @@
     </select>
 
     <select id="selectServiceConfigPeriodEffectiveList" parameterType="Map" resultType="egovMap">
-		SELECT T2.SRV_PRD_ID         
-		     , T2.SRV_CONFIG_ID      
-		     , T2.SRV_MBRSH_ID       
-		     , T2.SRV_PRD_START_DT   
-		     , T2.SRV_PRD_EXPR_DT    
-		     , T2.SRV_PRD_DUR        
-		     , T2.SRV_PRD_STUS_ID    
-		     , T2.SRV_PRD_REM        
-		     , T2.SRV_PRD_CRT_DT     
+		SELECT T2.SRV_PRD_ID
+		     , T2.SRV_CONFIG_ID
+		     , T2.SRV_MBRSH_ID
+		     , T2.SRV_PRD_START_DT
+		     , T2.SRV_PRD_EXPR_DT
+		     , T2.SRV_PRD_DUR
+		     , T2.SRV_PRD_STUS_ID
+		     , T2.SRV_PRD_REM
+		     , T2.SRV_PRD_CRT_DT
 		     , T2.SRV_PRD_CRT_USER_ID
 		     , T2.SRV_PRD_UPD_DT
 		  FROM SAL0090D T1
@@ -603,36 +603,36 @@
 		   AND T1.SRV_STUS_ID = 1
 		   AND T2.SRV_PRD_STUS_ID = 1
 		   AND T2.SRV_CONFIG_ID = T1.SRV_CONFIG_ID
-		   AND ((TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN TO_CHAR(T2.SRV_PRD_START_DT, 'YYYYMMDD') AND TO_CHAR(T2.SRV_PRD_EXPR_DT, 'YYYYMMDD')) 
-		     OR (TO_CHAR(T2.SRV_PRD_START_DT, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')))		   
+		   AND ((TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN TO_CHAR(T2.SRV_PRD_START_DT, 'YYYYMMDD') AND TO_CHAR(T2.SRV_PRD_EXPR_DT, 'YYYYMMDD'))
+		     OR (TO_CHAR(T2.SRV_PRD_START_DT, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')))
     </select>
-    
+
     <insert id="insertSalesOrderExchangeBUSrvConfig" parameterType="salesOrderExchangeBUSrvConfigVO">
         INSERT
           INTO SAL0005D
              ( BU_SRV_CONFIG_ID
              , SO_EXCHG_ID
              , SRV_CONFIG_ID
-             ) 
+             )
         VALUES
              ( SAL0005D_BU_SRV_CONFIG_ID_SEQ.NEXTVAL
              , #{soExchgId}
              , #{srvConfigId}
              )
     </insert>
-    
+
 	<insert id="insertSalesOrderExchangeBUSrvPeriod" parameterType="salesOrderExchangeBUSrvPeriodVO">
 		INSERT
-		  INTO SAL0007D 
+		  INTO SAL0007D
 		     ( BU_SRV_PRIOD_ID
 		     , SO_EXCHG_ID
 		     , SRV_PRD_ID
-		     ) 
+		     )
 		VALUES
 		     ( SAL0007D_BU_SRV_PRIOD_ID_SEQ.NEXTVAL
 		     , #{soExchgId}
 		     , #{srvPrdId}
-		     ) 
+		     )
     </insert>
 
     <insert id="insertSalesOrderExchangeBUSrvSetting" parameterType="salesOrderExchangeBUSrvSettingVO">
@@ -641,28 +641,28 @@
 		     ( BU_SRV_SETNG_ID
 		     , SO_EXCHG_ID
 		     , SRV_SETT_ID
-		     ) 
+		     )
 		VALUES
 		     ( SAL0008D_BU_SRV_SETNG_ID_SEQ.NEXTVAL
 		     , #{soExchgId}
 		     , #{srvSettId}
-		     ) 
+		     )
     </insert>
-    
+
     <insert id="insertSalesOrderExchangeBUSrvFilter" parameterType="salesOrderExchangeBUSrvFilterVO">
 		INSERT
 		  INTO SAL0006D
 		     ( BU_SRV_FILTER_ID
 		     , SO_EXCHG_ID
 		     , SRV_FILTER_ID
-		     ) 
+		     )
 		VALUES
 		     ( SAL0006D_BU_SRV_FILTER_ID_SEQ.NEXTVAL
 		     , #{soExchgId}
 		     , #{srvFilterId}
 		     )
     </insert>
-    
+
     <insert id="insertInvStkMovement" parameterType="invStkMovementVO">
       <selectKey keyProperty="movId" resultType="Integer" order="BEFORE">
         SELECT LOG0013D_MOV_ID_SEQ.NEXTVAL FROM DUAL
@@ -683,7 +683,7 @@
 		     , STK_CRD_POST
 		     , STK_CRD_POST_DT
 		     , STK_CRD_POST_TO_WEB_ON_TM
-		     ) 
+		     )
 		VALUES
 		     ( #{movId}
 		     , #{installEntryId}
@@ -701,13 +701,13 @@
 		     , #{stkCrdPostToWebOnTm}
 		     )
     </insert>
-    
+
     <update id="updateSoExchgStkRetMovId" parameterType="salesOrderExchangeVO">
 		UPDATE SAL0004D
 		   SET SO_EXCHG_STK_RET_MOV_ID = #{soExchgStkRetMovId}
 		 WHERE SO_EXCHG_ID             = #{soExchgId}
     </update>
-    
+
     <insert id="insertStkReturnEntry" parameterType="stkReturnEntryVO">
       <selectKey keyProperty="stkRetnId" resultType="Integer" order="BEFORE">
         SELECT LOG0038D_STK_RETN_ID_SEQ.NEXTVAL FROM DUAL
@@ -733,7 +733,7 @@
              , CT_GRP
              , CALL_ENTRY_ID
              , RT_SESION_CODE
-             ) 
+             )
         VALUES
              ( #{stkRetnId}
              , #{stusCodeId}
@@ -759,7 +759,7 @@
 
     <select id="selectSalesOrderSchemeList" parameterType="Map" resultType="egovMap">
 		SELECT T1.SCHEME_ID AS CODE_ID
-		     , T1.SCHEME_NAME AS CODE_NAME  
+		     , T1.SCHEME_NAME AS CODE_NAME
 		  FROM SAL0012M T1
 		 WHERE T1.SCHEME_APP_TYPE_ID = #{schemeAppTypeId}
 		 ORDER
@@ -789,7 +789,7 @@
          WHERE T1.SCHEME_PROMO_ID = #{schemePromoId}
            AND T1.SCHEME_STOCK_ID = #{schemeStockId}
     </select>
-    
+
     <select id="selectSchemePartSettingBySchemeIDList" parameterType="Map" resultType="egovMap">
         SELECT T1.SCHEME_PART_SET_ID
              , T1.SCHEME_ID
@@ -811,7 +811,7 @@
          ORDER
             BY T2.STK_CODE
     </select>
-    
+
     <select id="selectRentalInstStartMonth" parameterType="Map" resultType="egovMap">
 		SELECT T1.SALES_ORD_ID
 		     , T1.RENT_INST_NO
@@ -832,7 +832,7 @@
 		   AND TO_CHAR(T1.RENT_INST_DT, 'YYYYMMDD') = TO_CHAR(ADD_MONTHS(SYSDATE, 1), 'YYYYMM')||'01'
 		   AND ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectSrvMembershipSaleList" parameterType="Map" resultType="egovMap">
         SELECT T1.SRV_MEM_ID
              , T1.SRV_MEM_QUOT_ID
@@ -845,34 +845,34 @@
              , T1.SRV_MEM_PV
              , T1.SRV_FREQ
              , T1.SRV_START_DT
-             , T1.SRV_EXPR_DT        
-             , T1.SRV_DUR        
-             , T1.SRV_STUS_CODE_ID        
-             , T1.SRV_REM        
-             , T1.SRV_CRT_DT        
-             , T1.SRV_CRT_USER_ID        
-             , T1.SRV_UPD_DT        
-             , T1.SRV_UPD_USER_ID        
-             , T1.SRV_MEM_BS12_AMT        
-             , T1.SRV_MEM_IS_SYNCH        
-             , T1.SRV_MEM_SALES_MEM_ID        
-             , T1.SRV_MEM_CUST_CNT_ID        
-             , T1.SRV_MEM_QTY        
-             , T1.SRV_BS_QTY        
-             , T1.SRV_MEM_PROMO_ID        
-             , T1.SRV_MEM_PV_MONTH        
-             , T1.SRV_MEM_PV_YEAR        
-             , T1.SRV_MEM_IS_MNL        
-             , T1.SRV_MEM_BRNCH_ID        
-             , T1.SRV_MEM_PAC_PROMO_ID        
-             , T1.SRV_MEM_FORM_NO        
+             , T1.SRV_EXPR_DT
+             , T1.SRV_DUR
+             , T1.SRV_STUS_CODE_ID
+             , T1.SRV_REM
+             , T1.SRV_CRT_DT
+             , T1.SRV_CRT_USER_ID
+             , T1.SRV_UPD_DT
+             , T1.SRV_UPD_USER_ID
+             , T1.SRV_MEM_BS12_AMT
+             , T1.SRV_MEM_IS_SYNCH
+             , T1.SRV_MEM_SALES_MEM_ID
+             , T1.SRV_MEM_CUST_CNT_ID
+             , T1.SRV_MEM_QTY
+             , T1.SRV_BS_QTY
+             , T1.SRV_MEM_PROMO_ID
+             , T1.SRV_MEM_PV_MONTH
+             , T1.SRV_MEM_PV_YEAR
+             , T1.SRV_MEM_IS_MNL
+             , T1.SRV_MEM_BRNCH_ID
+             , T1.SRV_MEM_PAC_PROMO_ID
+             , T1.SRV_MEM_FORM_NO
           FROM SAL0095D T1
          WHERE T1.SRV_SALES_ORD_ID = #{salesOrdId}
            AND T1.SRV_STUS_CODE_ID = 4
            AND ((TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN TO_CHAR(T1.SRV_START_DT, 'YYYYMMDD') AND TO_CHAR(T1.SRV_EXPR_DT, 'YYYYMMDD'))
              OR (TO_CHAR(T1.SRV_START_DT, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')))
     </select>
-    
+
     <select id="selectPurchaseMembershipList" parameterType="Map" resultType="egovMap">
         SELECT T1.SRV_MEM_ID
              , T1.SRV_MEM_QUOT_ID
@@ -885,27 +885,27 @@
              , T1.SRV_MEM_PV
              , T1.SRV_FREQ
              , T1.SRV_START_DT
-             , T1.SRV_EXPR_DT        
-             , T1.SRV_DUR        
-             , T1.SRV_STUS_CODE_ID        
-             , T1.SRV_REM        
-             , T1.SRV_CRT_DT        
-             , T1.SRV_CRT_USER_ID        
-             , T1.SRV_UPD_DT        
-             , T1.SRV_UPD_USER_ID        
-             , T1.SRV_MEM_BS12_AMT        
-             , T1.SRV_MEM_IS_SYNCH        
-             , T1.SRV_MEM_SALES_MEM_ID        
-             , T1.SRV_MEM_CUST_CNT_ID        
-             , T1.SRV_MEM_QTY        
-             , T1.SRV_BS_QTY        
-             , T1.SRV_MEM_PROMO_ID        
-             , T1.SRV_MEM_PV_MONTH        
-             , T1.SRV_MEM_PV_YEAR        
-             , T1.SRV_MEM_IS_MNL        
-             , T1.SRV_MEM_BRNCH_ID        
-             , T1.SRV_MEM_PAC_PROMO_ID        
-             , T1.SRV_MEM_FORM_NO        
+             , T1.SRV_EXPR_DT
+             , T1.SRV_DUR
+             , T1.SRV_STUS_CODE_ID
+             , T1.SRV_REM
+             , T1.SRV_CRT_DT
+             , T1.SRV_CRT_USER_ID
+             , T1.SRV_UPD_DT
+             , T1.SRV_UPD_USER_ID
+             , T1.SRV_MEM_BS12_AMT
+             , T1.SRV_MEM_IS_SYNCH
+             , T1.SRV_MEM_SALES_MEM_ID
+             , T1.SRV_MEM_CUST_CNT_ID
+             , T1.SRV_MEM_QTY
+             , T1.SRV_BS_QTY
+             , T1.SRV_MEM_PROMO_ID
+             , T1.SRV_MEM_PV_MONTH
+             , T1.SRV_MEM_PV_YEAR
+             , T1.SRV_MEM_IS_MNL
+             , T1.SRV_MEM_BRNCH_ID
+             , T1.SRV_MEM_PAC_PROMO_ID
+             , T1.SRV_MEM_FORM_NO
           FROM SAL0095D T1
          WHERE T1.SRV_SALES_ORD_ID = #{salesOrdId}
            AND T1.SRV_STUS_CODE_ID = 4
@@ -914,7 +914,7 @@
          ORDER
             BY T1.SRV_START_DT
     </select>
-    
+
 <!--<select id="selectSubAuthInfo" parameterType="Map" resultType="loginSubAuthVO">
     <select id="selectSrvMembershipSaleList" parameterType="Map" resultType="srvMembershipSalesVO">
         SELECT T1.SRV_MEM_ID
@@ -928,27 +928,27 @@
 		     , T1.SRV_MEM_PV
 		     , T1.SRV_FREQ
 		     , T1.SRV_START_DT
-		     , T1.SRV_EXPR_DT        
-		     , T1.SRV_DUR        
-		     , T1.SRV_STUS_CODE_ID        
-		     , T1.SRV_REM        
-		     , T1.SRV_CRT_DT        
-		     , T1.SRV_CRT_USER_ID        
-		     , T1.SRV_UPD_DT        
-		     , T1.SRV_UPD_USER_ID        
-		     , T1.SRV_MEM_BS12_AMT        
-		     , T1.SRV_MEM_IS_SYNCH        
-		     , T1.SRV_MEM_SALES_MEM_ID        
-		     , T1.SRV_MEM_CUST_CNT_ID        
-		     , T1.SRV_MEM_QTY        
-		     , T1.SRV_BS_QTY        
-		     , T1.SRV_MEM_PROMO_ID        
-		     , T1.SRV_MEM_PV_MONTH        
-		     , T1.SRV_MEM_PV_YEAR        
-		     , T1.SRV_MEM_IS_MNL        
-		     , T1.SRV_MEM_BRNCH_ID        
-		     , T1.SRV_MEM_PAC_PROMO_ID        
-		     , T1.SRV_MEM_FORM_NO        
+		     , T1.SRV_EXPR_DT
+		     , T1.SRV_DUR
+		     , T1.SRV_STUS_CODE_ID
+		     , T1.SRV_REM
+		     , T1.SRV_CRT_DT
+		     , T1.SRV_CRT_USER_ID
+		     , T1.SRV_UPD_DT
+		     , T1.SRV_UPD_USER_ID
+		     , T1.SRV_MEM_BS12_AMT
+		     , T1.SRV_MEM_IS_SYNCH
+		     , T1.SRV_MEM_SALES_MEM_ID
+		     , T1.SRV_MEM_CUST_CNT_ID
+		     , T1.SRV_MEM_QTY
+		     , T1.SRV_BS_QTY
+		     , T1.SRV_MEM_PROMO_ID
+		     , T1.SRV_MEM_PV_MONTH
+		     , T1.SRV_MEM_PV_YEAR
+		     , T1.SRV_MEM_IS_MNL
+		     , T1.SRV_MEM_BRNCH_ID
+		     , T1.SRV_MEM_PAC_PROMO_ID
+		     , T1.SRV_MEM_FORM_NO
 		  FROM SAL0095D T1
 		 WHERE T1.SRV_SALES_ORD_ID = #{salesOrdId}
 		   AND T1.SRV_STUS_CODE_ID = 4
@@ -982,7 +982,7 @@
              , CNVR_CRT_DT
              , CNVR_UPD_DT
              , CNVR_UPD_USER_ID
-             ) 
+             )
         VALUES
              ( #{cnvrId}
              , #{salesOrdId}
@@ -1005,7 +1005,7 @@
              , #{cnvrUpdUserId}
              )
     </insert>
-    
+
     <update id="updateSrvMembershipSales" parameterType="Map">
         UPDATE SAL0095D
            SET SRV_FREQ        = #{srvFreq}
@@ -1013,7 +1013,7 @@
              , SRV_UPD_USER_ID = #{srvUpdUserId}
          WHERE SRV_MEM_ID      = #{srvMemId}
     </update>
-    
+
     <update id="updateSrvMembershipSalesAexc" parameterType="srvMembershipSalesVO">
         UPDATE SAL0095D
            SET SRV_STUS_CODE_ID = 8
@@ -1024,7 +1024,7 @@
            AND SRV_STUS_CODE_ID = 4
            AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN TO_CHAR(SRV_START_DT, 'YYYYMMDD') AND TO_CHAR(SRV_EXPR_DT, 'YYYYMMDD')
     </update>
-        
+
     <update id="updateSrvMembershipSalesAexc2" parameterType="srvMembershipSalesVO">
 		UPDATE SAL0095D
 		   SET SRV_START_DT    = #{srvStartDt}
@@ -1034,7 +1034,7 @@
 		     , SRV_UPD_USER_ID = #{srvUpdUserId}
 		 WHERE SRV_MEM_ID      = #{srvMemId}
     </update>
-    
+
     <update id="updateSrvConfigPeriod" parameterType="Map">
 		UPDATE SAL0088D
 		   SET SRV_PRD_DUR         = #{srvPrdDur}
@@ -1042,16 +1042,16 @@
 		     , SRV_PRD_UPD_DT      = SYSDATE
 		     , SRV_PRD_UPD_USER_ID = #{srvPrdUpdUserId}
 	 	 WHERE SRV_PRD_ID          = #{srvPrdId}
-    </update>    
+    </update>
 
     <update id="updateDiscountEntryStatus" parameterType="Map">
-        UPDATE PAY0054D   
+        UPDATE PAY0054D
            SET UPD_DT      = SYSDATE
              , UPD_USER_ID = #{updUserId}
              , DC_STUS_ID  = #{dcStusId}
          WHERE ORD_ID      = #{salesOrdId}
     </update>
-    
+
     <insert id="insertDiscountEntry" parameterType="discountEntryVO">
 		INSERT
 		  INTO PAY0054D
@@ -1085,7 +1085,7 @@
 		     , #{cntrctId}
 		     )
     </insert>
-    
+
     <update id="updateSrvConfigFilter" parameterType="Map">
 		UPDATE SAL0087D
 		   SET SRV_FILTER_PRIOD       = #{srvFilterPriod}
@@ -1094,7 +1094,7 @@
 		     , SRV_FILTER_UPD_USER_ID = #{srvFilterUpdUserId}
 		 WHERE SRV_FILTER_ID          = #{srvFilterId}
     </update>
-    
+
     <update id="updateSalesOrderMAexc" parameterType="salesOrderMVO">
 		UPDATE SAL0001D
 		   SET APP_TYPE_ID  = #{appTypeId}
@@ -1139,7 +1139,7 @@
              , TO_DATE(#{srvFilterExprDt}, 'DD/MM/YYYY')
              )
     </insert>
-    
+
     <select id="selectOrderSimulatorViewByOrderNo" parameterType="Map" resultType="egovMap">
         SELECT T1.SALES_ORD_ID
              , T1.SALES_ORD_NO
@@ -1160,7 +1160,7 @@
          WHERE T1.SALES_ORD_NO = #{salesOrdNo}
            AND ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectRentalInst" parameterType="Map" resultType="egovMap">
         SELECT SALES_ORD_ID
              , RENT_INST_NO
@@ -1198,7 +1198,7 @@
              )
          WHERE ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectRentalInst2" parameterType="Map" resultType="egovMap">
         SELECT T1.SALES_ORD_ID
              , T1.RENT_INST_NO
@@ -1219,7 +1219,7 @@
            AND TO_CHAR(T1.RENT_INST_DT, 'YYYYMM') = TO_CHAR(SYSDATE, 'YYYYMM')
            AND ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectInstallResult" parameterType="Map" resultType="egovMap">
 		SELECT T.INSTALL_ENTRY_ID
              , T.INSTALL_DT
@@ -1237,7 +1237,7 @@
 		     ) T
          WHERE ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectPromoD" parameterType="Map" resultType="egovMap">
 		SELECT T1.PROMO_ITM_ID
 		     , T1.PROMO_ID
@@ -1257,14 +1257,14 @@
 		   AND T1.PROMO_ITM_STUS_ID = 1
 		   AND ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectAccRentLedger" parameterType="Map" resultType="egovMap">
         SELECT COUNT(1) AS CNT
              , SUM(RENT_AMT) AS RENT_AMT
           FROM PAY0022D T1
          WHERE T1.RENT_SO_ID = #{salesOrdId}
     </select>
-    
+
     <select id="selectAccRentLedger2" parameterType="Map" resultType="egovMap">
         SELECT COUNT(1) AS CNT
              , SUM(RENT_AMT) AS RENT_AMT
@@ -1275,7 +1275,7 @@
            AND 160 != T1.RENT_DOC_TYPE_ID
            AND T1.RENT_AMT > 0
     </select>
-    
+
     <select id="selectAccRentLedger3" parameterType="Map" resultType="egovMap">
         SELECT COUNT(1) AS CNT
              , SUM(RENT_AMT) AS RENT_AMT
@@ -1284,55 +1284,55 @@
            AND 161 = T1.RENT_DOC_TYPE_ID
            AND T1.RENT_AMT > 0
     </select>
-    
+
     <select id="selectTotalDNBill" parameterType="Map" resultType="egovMap">
         SELECT COUNT(D1.C1) AS CNT
-             , SUM(D1.RENT_AMT) AS RENT_AMT 
-          FROM 
-             ( SELECT DISTINCT U1.C1 C1  
-                    , U1.RENT_AMT  
-                 FROM 
-                    ( SELECT 1 C1  
-                           , T1.RENT_AMT RENT_AMT  
+             , SUM(D1.RENT_AMT) AS RENT_AMT
+          FROM
+             ( SELECT DISTINCT U1.C1 C1
+                    , U1.RENT_AMT
+                 FROM
+                    ( SELECT 1 C1
+                           , T1.RENT_AMT RENT_AMT
                         FROM PAY0022D T1
                         JOIN PAY0002D T2 ON T2.ADJ_ENTRY_NOTE_NO = T1.RENT_DOC_NO
                          AND 43 != T2.ADJ_ENTRY_DR_ACC_ID
                        WHERE T1.RENT_SO_ID = #{salesOrdId}
                          AND 157 = T1.RENT_DOC_TYPE_ID
                          AND T1.RENT_AMT > 0
-                       UNION ALL 
-                      SELECT 1 C1  
+                       UNION ALL
+                      SELECT 1 C1
                            , T4.MEMO_ADJ_TOT_AMT
                         FROM PAY0022D T3
                         JOIN PAY0011D T4 ON T4.MEMO_ADJ_INVC_NO = T3.RENT_DOC_NO
                          AND 1294 = T4.MEMO_ADJ_TYPE_ID
                          AND 4 = T4.MEMO_ADJ_STUS_ID
                        WHERE T3.RENT_SO_ID = #{salesOrdId}
-                         AND 161 != T3.RENT_DOC_TYPE_ID 
-                         AND 157 != T3.RENT_DOC_TYPE_ID 
-                         AND 155 != T3.RENT_DOC_TYPE_ID 
-                         AND 160 != T3.RENT_DOC_TYPE_ID 
+                         AND 161 != T3.RENT_DOC_TYPE_ID
+                         AND 157 != T3.RENT_DOC_TYPE_ID
+                         AND 155 != T3.RENT_DOC_TYPE_ID
+                         AND 160 != T3.RENT_DOC_TYPE_ID
                          AND T3.RENT_AMT > 0
                     ) U1 ) D1
     </select>
-    
+
     <select id="selectTotalDNBill2" parameterType="Map" resultType="egovMap">
         SELECT COUNT(D1.C1) AS CNT
-             , SUM(D1.RENT_AMT) AS RENT_AMT 
-          FROM 
-             ( SELECT DISTINCT U1.C1 C1  
-                    , U1.RENT_AMT  
-                 FROM 
-                    ( SELECT 1 C1  
-                           , T1.RENT_AMT RENT_AMT  
+             , SUM(D1.RENT_AMT) AS RENT_AMT
+          FROM
+             ( SELECT DISTINCT U1.C1 C1
+                    , U1.RENT_AMT
+                 FROM
+                    ( SELECT 1 C1
+                           , T1.RENT_AMT RENT_AMT
                         FROM PAY0022D T1
                         JOIN PAY0002D T2 ON T2.ADJ_ENTRY_NOTE_NO = T1.RENT_DOC_NO
                          AND 43 = T2.ADJ_ENTRY_DR_ACC_ID
                        WHERE T1.RENT_SO_ID = #{salesOrdId}
                          AND 157 = T1.RENT_DOC_TYPE_ID
                          AND T1.RENT_AMT > 0
-                       UNION ALL 
-                      SELECT 1 C1  
+                       UNION ALL
+                      SELECT 1 C1
                            , T4.MEMO_ADJ_TOT_AMT
                         FROM PAY0022D T3
                         JOIN PAY0011D T4 ON T4.MEMO_ADJ_INVC_NO = T3.RENT_DOC_NO
@@ -1343,18 +1343,18 @@
                          AND T3.RENT_AMT > 0
                     ) U1 ) D1
     </select>
-            
+
     <select id="selectTotalCNBill" parameterType="Map" resultType="egovMap">
         SELECT COUNT(D1.C1) AS CNT
              , SUM(D1.CN_AMOUNT) AS CN_AMOUNT
-          FROM  
-             ( SELECT DISTINCT U1.C1 C1  
-                    , U1.C2 C2  
+          FROM
+             ( SELECT DISTINCT U1.C1 C1
+                    , U1.C2 C2
                     , U1.CN_AMOUNT
                  FROM
-                    ( SELECT 1 C1  
-                           , 0 C2  
-                           , T1.RENT_AMT * -1 AS CN_AMOUNT  
+                    ( SELECT 1 C1
+                           , 0 C2
+                           , T1.RENT_AMT * -1 AS CN_AMOUNT
                         FROM PAY0022D T1
                         JOIN PAY0002D T2
                           ON ((T2.ADJ_ENTRY_NOTE_NO = T1.RENT_DOC_NO )
@@ -1365,12 +1365,12 @@
                        WHERE (T1.RENT_SO_ID = #{salesOrdId} )
                          AND (155 = T1.RENT_DOC_TYPE_ID )
                          AND (T1.RENT_AMT &lt; 0 )
-                       UNION ALL 
-                      SELECT 1 C1  
-                           , T4.MEMO_ADJ_ID MEMO_ADJ_ID  
-                           , T4.MEMO_ADJ_TOT_AMT AS CN_AMOUNT  
+                       UNION ALL
+                      SELECT 1 C1
+                           , T4.MEMO_ADJ_ID MEMO_ADJ_ID
+                           , T4.MEMO_ADJ_TOT_AMT AS CN_AMOUNT
                         FROM PAY0022D T3
-                        JOIN PAY0011D T4   
+                        JOIN PAY0011D T4
                           ON T4.MEMO_ADJ_INVC_NO = T3.RENT_DOC_NO
                          AND 1293 = T4.MEMO_ADJ_TYPE_ID
                          AND 4 = T4.MEMO_ADJ_STUS_ID
@@ -1379,22 +1379,22 @@
                          AND ( 157 != T3.RENT_DOC_TYPE_ID )
                          AND ( 155 != T3.RENT_DOC_TYPE_ID )
                          AND ( 160 != T3.RENT_DOC_TYPE_ID )
-                         AND ( T3.RENT_AMT > 0 ) 
+                         AND ( T3.RENT_AMT > 0 )
                     ) U1
              ) D1
     </select>
-    
+
     <select id="selectTotalCNBill2" parameterType="Map" resultType="egovMap">
         SELECT COUNT(D1.C1) AS CNT
              , SUM(D1.CN_AMOUNT) AS CN_AMOUNT
-          FROM  
-             ( SELECT DISTINCT U1.C1 C1  
-                    , U1.C2 C2  
+          FROM
+             ( SELECT DISTINCT U1.C1 C1
+                    , U1.C2 C2
                     , U1.CN_AMOUNT
                  FROM
-                    ( SELECT 1 C1  
-                           , 0 C2  
-                           , T1.RENT_AMT * -1 AS CN_AMOUNT  
+                    ( SELECT 1 C1
+                           , 0 C2
+                           , T1.RENT_AMT * -1 AS CN_AMOUNT
                         FROM PAY0022D T1
                         JOIN PAY0002D T2
                           ON ((T2.ADJ_ENTRY_NOTE_NO = T1.RENT_DOC_NO )
@@ -1405,64 +1405,64 @@
                        WHERE (T1.RENT_SO_ID = #{salesOrdId} )
                          AND (155 = T1.RENT_DOC_TYPE_ID )
                          AND (T1.RENT_AMT &lt; 0 )
-                       UNION ALL 
-                      SELECT 1 C1  
-                           , T4.MEMO_ADJ_ID MEMO_ADJ_ID  
-                           , T4.MEMO_ADJ_TOT_AMT AS CN_AMOUNT  
+                       UNION ALL
+                      SELECT 1 C1
+                           , T4.MEMO_ADJ_ID MEMO_ADJ_ID
+                           , T4.MEMO_ADJ_TOT_AMT AS CN_AMOUNT
                         FROM PAY0022D T3
-                        JOIN PAY0011D T4   
+                        JOIN PAY0011D T4
                           ON T4.MEMO_ADJ_INVC_NO = T3.RENT_DOC_NO
                          AND 1293 = T4.MEMO_ADJ_TYPE_ID
                          AND 4 = T4.MEMO_ADJ_STUS_ID
                        WHERE ( T3.RENT_SO_ID = #{salesOrdId} )
                          AND ( 161 = T3.RENT_DOC_TYPE_ID )
-                         AND ( T3.RENT_AMT > 0 ) 
+                         AND ( T3.RENT_AMT > 0 )
                     ) U1
              ) D1
     </select>
-    
+
     <select id="selectLastBill" parameterType="Map" resultType="egovMap">
-		SELECT T.RENT_RUN_ID   
-		     ,  T.RENT_ID   
-		     ,  T.RENT_SO_ID   
-		     ,  T.RENT_DOC_NO   
-		     ,  T.RENT_DOC_TYPE_ID   
-		     ,  T.RENT_DT_TM   
-		     ,  T.RENT_AMT   
-		     ,  T.RENT_BATCH_NO   
-		     ,  T.RENT_INST_NO   
-		     ,  T.RENT_UPD_USER_ID   
-		     ,  T.RENT_UPD_DT   
-		     ,  T.RENT_IS_SYNC   
-		     ,  T.RENT_BILL_RUNNG_TOT   
+		SELECT T.RENT_RUN_ID
+		     ,  T.RENT_ID
+		     ,  T.RENT_SO_ID
+		     ,  T.RENT_DOC_NO
+		     ,  T.RENT_DOC_TYPE_ID
+		     ,  T.RENT_DT_TM
+		     ,  T.RENT_AMT
+		     ,  T.RENT_BATCH_NO
+		     ,  T.RENT_INST_NO
+		     ,  T.RENT_UPD_USER_ID
+		     ,  T.RENT_UPD_DT
+		     ,  T.RENT_IS_SYNC
+		     ,  T.RENT_BILL_RUNNG_TOT
 		     ,  T.R01 R01
-		     ,  T.R02 R02  
-		  FROM 
-		     ( SELECT T1.RENT_RUN_ID   
-		            , T1.RENT_ID   
-		            , T1.RENT_SO_ID   
-		            , T1.RENT_DOC_NO   
-		            , T1.RENT_DOC_TYPE_ID   
-		            , T1.RENT_DT_TM   
-		            , T1.RENT_AMT   
-		            , T1.RENT_BATCH_NO   
-		            , T1.RENT_INST_NO   
-		            , T1.RENT_UPD_USER_ID   
-		            , T1.RENT_UPD_DT   
-		            , T1.RENT_IS_SYNC   
-		            , T1.RENT_BILL_RUNNG_TOT   
-		            , T1.R01   
-		            , T1.R02   
+		     ,  T.R02 R02
+		  FROM
+		     ( SELECT T1.RENT_RUN_ID
+		            , T1.RENT_ID
+		            , T1.RENT_SO_ID
+		            , T1.RENT_DOC_NO
+		            , T1.RENT_DOC_TYPE_ID
+		            , T1.RENT_DT_TM
+		            , T1.RENT_AMT
+		            , T1.RENT_BATCH_NO
+		            , T1.RENT_INST_NO
+		            , T1.RENT_UPD_USER_ID
+		            , T1.RENT_UPD_DT
+		            , T1.RENT_IS_SYNC
+		            , T1.RENT_BILL_RUNNG_TOT
+		            , T1.R01
+		            , T1.R02
 		         FROM PAY0022D T1
 		        WHERE T1.RENT_SO_ID = #{salesOrdId}
 		          AND T1.RENT_DOC_TYPE_ID IN (158, 159)
 		          AND T1.RENT_AMT >= 0
-		          AND T1.RENT_INST_NO > 0 
+		          AND T1.RENT_INST_NO > 0
 		        ORDER BY T1.RENT_INST_NO DESC
 		     ) T
 		 WHERE ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectInstallResultsBySalesOrderID" parameterType="Map" resultType="egovMap">
 		SELECT T1.INSTALL_ENTRY_ID
 		     , T1.INSTALL_ENTRY_NO
@@ -1492,10 +1492,10 @@
 		 ORDER
 		    BY T2.RESULT_ID ASC
     </select>
-    
+
     <update id="updateSrvConfigPeriodAexc" parameterType="srvConfigPeriodVO">
 		UPDATE SAL0088D
-		   SET SRV_PRD_EXPR_DT     = ADD_MONTHS(SRV_PRD_START_DT, 12) 
+		   SET SRV_PRD_EXPR_DT     = ADD_MONTHS(SRV_PRD_START_DT, 12)
 		     , SRV_PRD_UPD_DT      = SYSDATE
 		     , SRV_PRD_UPD_USER_ID = #{srvPrdUpdUserId}
 		 WHERE SRV_CONFIG_ID       = #{srvConfigId}
@@ -1576,7 +1576,7 @@
              , #{srvMemFormNo}
              )
     </insert>
-    
+
     <insert id="insertAccTradeLedger" parameterType="accTradeLedgerVO">
         INSERT
           INTO PAY0035D
@@ -1593,7 +1593,7 @@
              , TRADE_UPD_DT
              , TRADE_IS_SYNC
              , R01
-             ) 
+             )
         VALUES
              ( PAY0035D_SEQ.NEXTVAL
              , #{tradeId}
@@ -1638,7 +1638,7 @@
 		     , ACC_BILL_TAX_RATE
 		     , ACC_BILL_ACCT_CNVR
 		     , ACC_BILL_CNTRCT_ID
-		     ) 
+		     )
 		VALUES
 		     ( PAY0016D_SEQ.NEXTVAL
 		     , #{accBillTaskId}
@@ -1666,7 +1666,7 @@
 		     , #{accBillCntrctId}
 		     )
     </insert>
-    
+
     <insert id="insertAccTaxInvoiceOutright" parameterType="accTaxInvoiceOutrightVO">
       <selectKey keyProperty="taxInvcId" resultType="Integer" order="BEFORE">
         SELECT PAY0033D_TAX_INVC_ID_SEQ.NEXTVAL FROM DUAL
@@ -1695,7 +1695,7 @@
 		     , AREA_ID
 		     , ADDR_DTL
 		     , STREET
-		     ) 
+		     )
 		VALUES
 		     ( #{taxInvcId}
 		     , #{taxInvcRefNo}
@@ -1721,7 +1721,7 @@
 		     , #{street}
 		     )
     </insert>
-    
+
     <insert id="insertAccTaxInvoiceOutright_Sub" parameterType="accTaxInvoiceOutright_SubVO">
 		INSERT
 		  INTO PAY0034D
@@ -1775,7 +1775,7 @@
 		     , #{street}
 		     )
     </insert>
-    
+
     <select id="selectInstallationAddress" parameterType="Map" resultType="egovMap">
         SELECT T2.AREA_ID
              , T2.ADDR_DTL
@@ -1787,7 +1787,7 @@
            AND T1.STUS_CODE_ID != 8
            AND ROWNUM &lt;= 1
     </select>
-    
+
     <update id="updateInstallationOtran" parameterType="installationVO">
         UPDATE SAL0045D
            SET ADD_ID       = #{addId}
@@ -1828,7 +1828,7 @@
                                    WHERE T1.SALES_ORD_ID = #{salesOrdId}
                                      AND ROWNUM = 1)
     </update>
-    
+
     <select id="selectSalesOrderMOtran" parameterType="Map" resultType="egovMap">
         SELECT T1.SALES_ORD_ID
 		     , T1.SALES_ORD_NO
@@ -1897,7 +1897,7 @@
 		   AND T1.CUST_ID = #{custId}
            AND ROWNUM &lt;= 1
     </select>
-    
+
     <update id="updateCustBillMasterOtran" parameterType="custBillMasterVO">
 		UPDATE SAL0024D
 		   SET CUST_BILL_SO_ID       = #{custBillSoId}
@@ -1905,13 +1905,13 @@
 		     , CUST_BILL_UPD_DT      = SYSDATE
 		 WHERE CUST_BILL_ID          = #{custBillId}
 	</update>
-	
+
     <select id="selectObligtPriod" parameterType="Map" resultType="egovMap">
 		SELECT CNTRCT_OBLIGT_PRIOD AS OBLIGT_PRIOD
 		  FROM SAL0003D
 		 WHERE CNTRCT_SALES_ORD_ID = #{salesOrdId}
     </select>
-    
+
     <select id="selectPenaltyAmt" parameterType="Map" resultType="egovMap">
     <![CDATA[
 		SELECT SUM(T1.RENT_INST_AMT)/2 AS PENALTY_AMT
@@ -1920,6 +1920,24 @@
 		   AND T1.RENT_INST_NO != 0
 		   AND T1.RENT_INST_NO >  #{usedMnth}
 		   AND T1.RENT_INST_NO <= #{obPeriod}
+    ]]>
+    </select>
+
+    <select id="selectCcpDecisionMById" parameterType="Map" resultType="int">
+    <![CDATA[
+        SELECT COUNT(*) AS ccpOrder
+          FROM SAL0102D
+         WHERE CCP_SALES_ORD_ID = #{salesOrdId}
+         AND CCP_STUS_ID <> 5
+    ]]>
+    </select>
+
+    <select id="selectECashDeductionItemById" parameterType="Map" resultType="int">
+    <![CDATA[
+        SELECT COUNT(*) AS eCashActiveOrder
+          FROM SAL0152M
+         WHERE FILE_ITM_ORD_ID = #{salesOrdId}
+         AND FILE_ITM_STUS_ID = '1'
     ]]>
     </select>
 
