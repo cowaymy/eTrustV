@@ -407,11 +407,11 @@ $(document).ready(function() {
      $('#memberType').trigger('click'); 
      
      $('#nric').blur(function() {
-    	 if ($('#nric').val().length > 0) {
+    	 if ($('#nric').val().length == 12) {
     		 checkNRIC();
-    		 if ($('#nric').val().length == 12) {
+    		 /* if ($('#nric').val().length == 12) {
     			 autofilledbyNRIC();
-    		 }
+    		 } */
          }
      });
      
@@ -907,6 +907,7 @@ function checkNRIC(){
 	                               return false;
 	                           } else {    // 조건3 통과 -> 끝
 	                           	//Common.alert("Available NRIC");
+	                           	autofilledbyNRIC();
 	                           	returnValue = true;
 	                               return true;
 	                           }
@@ -917,6 +918,8 @@ function checkNRIC(){
 	           	});
 	           }
 	       });
+   	} else {
+   		autofilledbyNRIC();
    	}
    	
     
