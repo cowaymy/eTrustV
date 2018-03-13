@@ -493,4 +493,11 @@ public class StockTransferServiceImpl extends EgovAbstractServiceImpl implements
 	}
 	
 	
+	@Override
+	public Map<String, Object> selectDelvryGRcmplt(String delyno) {
+		// TODO Auto-generated method stub
+		return stocktran.selectDelvryGRcmplt(delyno);
+	}
+	
+	
 }

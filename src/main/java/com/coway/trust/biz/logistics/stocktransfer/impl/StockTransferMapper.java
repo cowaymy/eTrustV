@@ -76,4 +76,6 @@ public interface StockTransferMapper {
 	
 	int selectAvaliableStockQty(Map<String, Object> param);
 	
+	Map<String, Object> selectDelvryGRcmplt(String delyno);
+	
 }

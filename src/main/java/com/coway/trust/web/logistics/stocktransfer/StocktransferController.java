@@ -30,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.stocktransfer.StockTransferService;
+import com.coway.trust.cmmn.exception.PreconditionException;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
@@ -448,22 +449,166 @@ public class StocktransferController {
 	public ResponseEntity<ReturnMessage> StocktransferGoodIssue(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVo) throws Exception {
 		int userId = sessionVo.getUserId();
+		String delyno = "";
 		
-		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-		
-		params.put("userId", userId);
-		params.put("add", serialList);
-		String reVal = stock.StockTransferDeliveryIssue(params);
-
-		// 결과 만들기 예.
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(reVal);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
+		
+		String gtype= (String) formMap.get("gtype");
+		
+		logger.debug("gtype @@@@@@@: {}", gtype);
+		
+		if("RC".equals(gtype)){
+			
+			List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+    		
+    		params.put("userId", userId);
+    		params.put("add", serialList);
+    		
+    		String reVal = stock.StockTransferDeliveryIssue(params);
+    
+    		// 결과 만들기 예.
+    		
+    		message.setCode(AppConstants.SUCCESS);
+    		message.setData(reVal);
+    		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			
+		}else{
+			
+    		if (checklist.size() > 0) {
+    			for (int i = 0; i < checklist.size(); i++) {
+    				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
+    
+    				Map<String, Object> imap = new HashMap();
+    				imap = (Map<String, Object>) map.get("item");
+    
+    				delyno = (String) imap.get("delyno");
+    			
+    			}
+    		}
+    		
+    		logger.debug("delyno ??????: {}", delyno);
+    		
+    		Map<String, Object> grlist = stock.selectDelvryGRcmplt(delyno);
+    		
+    		if(null == grlist){
+    			throw new PreconditionException(AppConstants.FAIL, "DelvryNO does not exist.");
+    		}
+    		
+    		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
+    		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
+    		
+    		logger.debug("grmplt    값 : {}", grmplt);
+    		logger.debug("gimplt    값 : {}", gimplt);
+    		
+    		
+    		if ("Y".equals(gimplt)){
+    			message.setCode(AppConstants.FAIL);
+    			message.setMessage("Already processed.");
+    		}else{
+    			
+        		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+        		
+        		params.put("userId", userId);
+        		params.put("add", serialList);
+        		
+        		String reVal = stock.StockTransferDeliveryIssue(params);
+        
+        		// 결과 만들기 예.
+        		
+        		message.setCode(AppConstants.SUCCESS);
+        		message.setData(reVal);
+        		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}		
+	}		
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/StocktransferGRGoodIssue.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> StocktransferGRGoodIssue(@RequestBody Map<String, Object> params, Model model,
+			SessionVO sessionVo) throws Exception {
+		int userId = sessionVo.getUserId();
+		String delyno = "";
+		
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		ReturnMessage message = new ReturnMessage();
+		String gtype= (String) formMap.get("gtype");
+		
+		logger.debug("gtype @@@@@@@: {}", gtype);
+		
+		
+		if("RC".equals(gtype)){
+			
+			List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+    		
+    		params.put("userId", userId);
+    		params.put("add", serialList);
+    		
+    		String reVal = stock.StockTransferDeliveryIssue(params);
+    
+    		// 결과 만들기 예.
+    		
+    		message.setCode(AppConstants.SUCCESS);
+    		message.setData(reVal);
+    		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+				
+		}else{
+			
+		if (checklist.size() > 0) {
+			for (int i = 0; i < checklist.size(); i++) {
+				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
+
+				Map<String, Object> imap = new HashMap();
+				imap = (Map<String, Object>) map.get("item");
+
+				delyno = (String) imap.get("delyno");
+			
+			}
+		}
+		
+		logger.debug("delyno ??????: {}", delyno);
+		
+		Map<String, Object> grlist = stock.selectDelvryGRcmplt(delyno);
+		
+		if(null == grlist){
+			throw new PreconditionException(AppConstants.FAIL, "DelvryNO does not exist.");
+		}
+		
+		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
+		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
+		
+		logger.debug("grmplt    값 : {}", grmplt);
+		logger.debug("gimplt    값 : {}", gimplt);
+		
+		
+		
+		if ("Y".equals(grmplt)){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("Already processed.");
+		}else{
+			
+    		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+    		
+    		params.put("userId", userId);
+    		params.put("add", serialList);
+    		
+    		String reVal = stock.StockTransferDeliveryIssue(params);
+    
+    		// 결과 만들기 예.
+    		
+    		message.setCode(AppConstants.SUCCESS);
+    		message.setData(reVal);
+    		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		}
+}		
+		
+		return ResponseEntity.ok(message);
+	
+	}
+		
 	@RequestMapping(value = "/StocktransferDeliveryDelete.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> StocktransferDeliveryDelete(@RequestBody Map<String, Object> params,
 			Model mode, SessionVO sessionVo) {

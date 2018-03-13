@@ -575,4 +575,19 @@
 		AND L56.STK_CODE = #{itmcd}
 		AND L56.LOC_ID = #{tlocation}
     </select>
+    
+  <select id="selectDelvryGRcmplt" parameterType="String" resultType="Map">
+    SELECT 
+    DELVRY_NO,
+    DELVRY_DT,
+    DELVRY_GI_DT,
+    DELVRY_GR_DT,
+    NVL(DELVRY_CMPLT,'N') DEL_CMPLT,
+    NVL(DELVRY_GI_CMPLT,'N') DEL_GI_CMPLT,
+    NVL(DELVRY_GR_CMPLT,'N') DEL_GR_CMPLT
+    FROM LOG0054M 
+    WHERE DELVRY_NO=#{delyno}
+    </select>
+    
+    
 </mapper>

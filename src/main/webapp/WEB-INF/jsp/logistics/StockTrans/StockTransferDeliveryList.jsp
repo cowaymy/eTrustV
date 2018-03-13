@@ -597,7 +597,14 @@ function giFunc(){
 
 	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
 
-		 Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);
+		var message =result.message;
+		
+		if("Already processed."== message){
+		 Common.alert(result.message);    	
+		}else{
+		 Common.alert(result.message + " <br/>"+ "MaterialDocumentNo : " + result.data);		
+		}
+		
 //         AUIGrid.setGridData(listGrid, result.data);
         $("#giptdate").val("");
         $("#gipfdate").val("");

@@ -446,9 +446,16 @@ function grFunc(){
 	data.checked = check;
 
 	data.form    = $("#grForm").serializeJSON();
-	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGoodIssue.do", data, function(result) {
+	Common.ajax("POST", "/logistics/stocktransfer/StocktransferGRGoodIssue.do", data, function(result) {
 
-        Common.alert(result.message + "<br/>MDN NO : " + result.data );
+	      var message =result.message;
+	        
+	        if("Already processed."== message){
+	         Common.alert(result.message);      
+	        }else{
+	            Common.alert(result.message + "<br/>MDN NO : " + result.data );  
+	        }
+
 //         AUIGrid.setGridData(listGrid, result.data);
 
        	$("#giptdate").val("");
