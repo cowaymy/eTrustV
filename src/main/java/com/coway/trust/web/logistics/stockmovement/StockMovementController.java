@@ -398,16 +398,19 @@ public class StockMovementController {
 		return "logistics/stockMovement/stockMovementReceiptList";
 	}
 
+	
 	@RequestMapping(value = "/StockMovementGoodIssue.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> stockMovementGoodIssue(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVO) throws Exception {
 
 		int loginId = sessionVO.getUserId();
 		params.put("userId", loginId);
-		Map<String, Object> rmap = stockMovementService.stockMovementDeliveryIssue(params);
+		Map<String, Object> rmap = new HashMap<>();
+		ReturnMessage message = new ReturnMessage();
+
+		rmap = stockMovementService.stockMovementDeliveryIssue(params);
 
 		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
 		logger.debug(" :::: {} " , rmap);
 		if ("fail".equals((String)rmap.get("retMsg"))){
 			message.setCode(AppConstants.FAIL);
@@ -422,11 +425,38 @@ public class StockMovementController {
 			message.setCode(AppConstants.FAIL);
     		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		}
-
 		rmap.put("message", message);
 
 		return ResponseEntity.ok(rmap);
 	}
+	
+	
+	
+	//백업
+//	@RequestMapping(value = "/StockMovementGoodIssue.do", method = RequestMethod.POST)
+//	public ResponseEntity<Map> stockMovementGoodIssue(@RequestBody Map<String, Object> params, Model model,
+//			SessionVO sessionVO) throws Exception {
+//
+//		int loginId = sessionVO.getUserId();
+//		params.put("userId", loginId);
+//		Map<String, Object> rmap = stockMovementService.stockMovementDeliveryIssue(params);
+//
+//		// 결과 만들기 예.
+//		ReturnMessage message = new ReturnMessage();
+//		logger.debug(" :::: {} " , rmap);
+//		if ("fail".equals((String)rmap.get("retMsg"))){
+//			message.setCode(AppConstants.FAIL);
+//    		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+//		}else{
+//    		message.setCode(AppConstants.SUCCESS);
+//    		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+//		}
+//
+//		rmap.put("message", message);
+//
+//		return ResponseEntity.ok(rmap);
+//	}
+	
 
 	@RequestMapping(value = "/StockMoveSearchDeliveryList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> StocktransferSearchDeliveryList(@RequestBody Map<String, Object> params, Model model)

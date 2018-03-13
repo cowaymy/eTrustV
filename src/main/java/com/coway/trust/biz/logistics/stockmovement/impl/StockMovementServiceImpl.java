@@ -356,7 +356,8 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 	public Map<String, Object> stockMovementDeliveryIssue(Map<String, Object> params) {
 		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-
+		
+		String gtype= (String) formMap.get("gtype");
 		int iCnt = 0;
 		String tmpdelCd = "";
 		String delyCd = "";
@@ -382,6 +383,32 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}
 		
+		
+		if("RC".equals(gtype)){
+			
+			String[] delvcd = delyCd.split("∈");
+
+			formMap.put("parray", delvcd);
+			formMap.put("userId", params.get("userId"));
+			// formMap.put("prgnm", params.get("prgnm"));
+			formMap.put("refdocno", "");
+			formMap.put("salesorder", "");
+			logger.debug("formMap : {}", formMap);
+			if ("RC".equals(formMap.get("gtype"))) {
+				// for (int i = 0 ; i < delvcd.length ; i ++){
+				// String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
+				// if (receiptFlag != null && "Y".equals(receiptFlag)){
+				// formMap.put("retMsg" , "fail");
+				// return formMap;
+				// }
+				// }
+				stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
+			} 
+			
+			formMap.put("retMsg", "succ");
+			
+		}else{
+			
 		Map<String, Object> grlist = stockMoveMapper.selectDelvryGRcmplt(delyno);
 		
 		if(null == grlist){
@@ -391,7 +418,7 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
 		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
 		
-		if ( "Y".equals(grmplt) || "N".equals(gimplt)){
+		if ( "Y".equals(grmplt)){
 		
 			formMap.put("failMsg", "Already processed.");
 		
@@ -440,12 +467,90 @@ public class StockMovementServiceImpl extends EgovAbstractServiceImpl implements
 			formMap.put("retMsg", "succ");
 			// }		
 		}
-		
+	}	
 		
 		return formMap;
 
 	}
-
+	
+	
+	//백업
+	
+//	@Override
+//	public Map<String, Object> stockMovementDeliveryIssue(Map<String, Object> params) {
+//		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+//		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+//
+//		int iCnt = 0;
+//		String tmpdelCd = "";
+//		String delyCd = "";
+//		if (checklist.size() > 0) {
+//			for (int i = 0; i < checklist.size(); i++) {
+//				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
+//
+//				Map<String, Object> imap = new HashMap();
+//				imap = (Map<String, Object>) map.get("item");
+//
+//				String delCd = (String) imap.get("delyno");
+//				if (delCd != null && !(tmpdelCd.equals(delCd))) {
+//					tmpdelCd = delCd;
+//					if (iCnt == 0) {
+//						delyCd = delCd;
+//					} else {
+//						delyCd += "∈" + delCd;
+//					}
+//					iCnt++;
+//				}
+//			}
+//		}
+//
+//		String[] delvcd = delyCd.split("∈");
+//
+//		formMap.put("parray", delvcd);
+//		formMap.put("userId", params.get("userId"));
+//		// formMap.put("prgnm", params.get("prgnm"));
+//		formMap.put("refdocno", "");
+//		formMap.put("salesorder", "");
+//		logger.debug("formMap : {}", formMap);
+//		if ("RC".equals(formMap.get("gtype"))) {
+//			// for (int i = 0 ; i < delvcd.length ; i ++){
+//			// String receiptFlag = stockMoveMapper.getReceiptFlag(delvcd[i]);
+//			// if (receiptFlag != null && "Y".equals(receiptFlag)){
+//			// formMap.put("retMsg" , "fail");
+//			// return formMap;
+//			// }
+//			// }
+//			stockMoveMapper.StockMovementCancelIssue(formMap); // movement receipt cancel
+//		} else {
+//			Map<String, Object> grade = (Map<String, Object>) params.get("grade");
+//			logger.info(" grade : {}", grade);
+//			if ("GR".equals(formMap.get("gtype")) & null != grade) {
+//				List<Object> gradelist = (List<Object>) grade.get(AppConstants.AUIGRID_UPDATE);
+//				logger.info(" gradelist : {}", gradelist);
+//				logger.info(" gradelist size : {}", gradelist.size());
+//				for (int i = 0; i < gradelist.size(); i++) {
+//					Map<String, Object> getmap = (Map<String, Object>) gradelist.get(i);
+//					logger.info(" getmap: {}", getmap);
+//					logger.info(" getmap delvryNo: {}", getmap.get("delvryNo"));
+//					Map<String, Object> setmap = new HashMap();
+//					setmap.put("delvryNo", getmap.get("delvryNo"));
+//					setmap.put("serialNo", getmap.get("serialNo"));
+//					setmap.put("grade", getmap.get("grade"));
+//					setmap.put("userId", params.get("userId"));
+//					stockMoveMapper.insertReturnGrade(setmap);
+//					logger.info(" setmap: {}", setmap);
+//				}
+//			}
+//
+//			stockMoveMapper.StockMovementIssue(formMap);
+//		}
+//		formMap.put("retMsg", "succ");
+//		// }
+//
+//		return formMap;
+//
+//	}
+	
 	@Override
 	public List<EgovMap> selectStockMovementDeliverySerial(Map<String, Object> params) {
 		// TODO Auto-generated method stub
