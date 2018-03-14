@@ -1336,6 +1336,49 @@ public class ASManagementListController {
 	}
 	
 	
+	
+	
+	
 
+	
+	@RequestMapping(value = "/getAPILogList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getAPILogList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		
+		String logType = (String)params.get("LOGTYPE");
+		
+		List<EgovMap> list  = null; 
+		
+		if("HS".equals(logType)){
+			list  = 	ASManagementListService.selectSVC0023T(params);
+			
+		}else if("AS".equals(logType)){
+			
+			list  = 	ASManagementListService.selectSVC0024T(params);
+			
+		}else if("INS".equals(logType)){
+			
+			list  = 	ASManagementListService.selectSVC0025T(params);
+			
+		}else if("PR".equals(logType)){
+			
+			list  = 	ASManagementListService.selectSVC0026T(params);
+		}	
+		
+		
+		logger.debug("list  {}", list);
+		
+		return ResponseEntity.ok(list);
+	}
+	
+	
+	
+	@RequestMapping(value = "/initAPILog.do")
+	public String initAPILog(@RequestParam Map<String, Object> params, ModelMap model) {
+		// 호출될 화면
+		return "services/as/apiLogList";
+	}
+	
+	
 	
 }

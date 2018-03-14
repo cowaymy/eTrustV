@@ -4432,6 +4432,16 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
      </select>
          
     
+     <select id="insResultSync" parameterType="Map" resultType="java.lang.Integer">
+        <![CDATA[        
+               SELECT   COUNT(*) CNT 
+             FROM SAL0046D  A,  
+                  ORG0001D  B 
+             WHERE  A.INSTALL_ENTRY_NO     =#{serviceNo}
+                AND A.CT_ID =B.MEM_ID
+                AND B.MEM_CODE  =#{userId}
+        ]]>
+    </select>
     
     
     </mapper>

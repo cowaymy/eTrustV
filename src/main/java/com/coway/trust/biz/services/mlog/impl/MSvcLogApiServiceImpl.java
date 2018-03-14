@@ -31,7 +31,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("MSvcLogApiService")
 public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MSvcLogApiService {
-
+  
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
 	@Resource(name = "MSvcLogApiMapper")
 	private MSvcLogApiMapper MSvcLogApiMapper;
@@ -99,6 +99,16 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		MSvcLogApiMapper.updateSuccessStatus(transactionId);
 		
 	}
+	
+	@Override
+	public void updateErrStatus(String transactionId) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.updateErrStatus(transactionId);
+	}   
+	  
+	
+	
+	
 
 	@Override
 	public List<EgovMap> heartServiceParts(Map<String, Object> params) {
@@ -364,18 +374,63 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 	}
 	
 	
+	@Override
+	public  void   insert_SVC0026T(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+
+			MSvcLogApiMapper.insert_SVC0026T(params);			
+
+	}
+
+	@Override
+	public int  prdResultSync(Map<String, Object> params) {
+		return MSvcLogApiMapper.prdResultSync(params);
+	} 
+	
+	
 	
 	@Override
 	public void updateSuccessASStatus(String transactionId) {
 		// TODO Auto-generated method stub
 		MSvcLogApiMapper.updateSuccessASStatus(transactionId);
 	}
+	
+	
+	@Override
+	public void updateASErrStatus(String transactionId) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.updateASErrStatus(transactionId);
+	}
+	
+	@Override
+	public void updatePRStatus(String transactionId) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.updatePRStatus(transactionId);
+	}
+	
+	
+	
+	@Override
+	public void updatePRErrStatus(String transactionId) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.updatePRErrStatus(transactionId);
+	}
+	
 
 	@Override
 	public void updateSuccessInstallStatus(String transactionId) {
 		// TODO Auto-generated method stub
 		MSvcLogApiMapper.updateSuccessInstallStatus(transactionId);
 	}
+	
+	
+	@Override
+	public void updateSuccessErrInstallStatus(String transactionId) {
+		// TODO Auto-generated method stub
+		MSvcLogApiMapper.updateSuccessErrInstallStatus(transactionId);
+	}
+	
+	
 
 	@Override
 	public List<EgovMap> getRentalCustomerList(Map<String, Object> params) {
@@ -394,11 +449,7 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		//lev 3   =>  물류 return 
 		//lev 4   =>   xxxx....
 		
-		logger.debug("insert_SVC0026T==>" +params.toString());
-		int  log26Tcnt  = MSvcLogApiMapper.insert_SVC0026T(params);
-		logger.debug("log26Tcnt==>" +log26Tcnt);
-		
-		
+
 		logger.debug("insert_LOG0039D==>" +params.toString());
 		int  log39cnt  = MSvcLogApiMapper.insert_LOG0039D(params);
 		logger.debug("log39cnt==>" +log39cnt);
@@ -765,7 +816,10 @@ public class MSvcLogApiServiceImpl extends EgovAbstractServiceImpl implements MS
 		return MSvcLogApiMapper.getInstallDate(insApiresult);
 	}
 
-
+	@Override
+	public int  insert_SVC0066T(Map<String, Object> params) {
+		return MSvcLogApiMapper.insert_SVC0066T(params);
+	}
 
 	   
 /*	@Override

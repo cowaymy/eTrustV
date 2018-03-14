@@ -218,6 +218,10 @@ public interface InstallationResultListMapper {
 
 	String selectPrevAssignCt(Map<String, Object> updateMap);
 
+	int insResultSync(Map<String, Object> params);
+	
+	
+	
 	
 	
 	

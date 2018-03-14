@@ -3890,4 +3890,87 @@
 	   ) search
 	   where search.rcnt_info = 1
       </select>
+      
+      
+        
+     <select id="asResultSync" parameterType="Map" resultType="java.lang.Integer">
+        <![CDATA[     
+               
+		           SELECT   COUNT(*) CNT 
+		              FROM SVC0001D  A,  
+		                  ORG0001D  B 
+		             WHERE  A.AS_NO     =#{serviceNo}
+		                AND A.AS_MEM_ID =B.MEM_ID
+		                AND B.MEM_CODE  =#{userId}
+        ]]>
+    </select>
+         
+      
+     <select id="selectSVC0023T" parameterType="Map" resultType="egovMap">
+			SELECT  /*+ INDEX (A SVC0023T_IDX1) */   
+			       'HS' AS APP_TYPE
+			       ,A.SALES_ORD_ID 
+			       ,A.CRT_DT 
+			       ,A.SVC_NO
+			       ,B.ERR_MSG
+			       ,A.TRAN_STUS_CD
+			  FROM  SVC0023T A 
+			       ,SVC0066T B  
+			WHERE  A.SVC_NO  = B.SVC_NO(+)
+            AND    A.CRT_DT   BETWEEN  TO_DATE ( #{S_DATE} || '010101' ,'DD/MM/YYYY hh24miss')  AND  TO_DATE ( #{E_DATE} ||'010101' ,'DD/MM/YYYY  hh24miss')   
+			AND    A.TRAN_STUS_CD =#{TRAN_STUS_CD}
+			AND    B.APP_TYPE(+)  = 'HS'
+      </select>
+      
+      
+       <select id="selectSVC0024T" parameterType="Map" resultType="egovMap">
+            SELECT  /*+ INDEX (A SVC0024T_IDX1) */   
+                   'AS' AS APP_TYPE
+                   ,A.SALES_ORD_ID 
+                   ,A.CRT_DT 
+                   ,A.SVC_NO
+                   ,B.ERR_MSG
+                   ,A.TRAN_STUS_CD 
+              FROM  SVC0024T A 
+                   ,SVC0066T B  
+            WHERE  A.SVC_NO  = B.SVC_NO(+)
+            AND    A.CRT_DT   BETWEEN  TO_DATE ( #{S_DATE} || '010101' ,'DD/MM/YYYY hh24miss')  AND  TO_DATE ( #{E_DATE} ||'010101' ,'DD/MM/YYYY  hh24miss')   
+            AND    A.TRAN_STUS_CD =#{TRAN_STUS_CD}
+            AND    B.APP_TYPE(+)  = 'AS'
+      </select>
+      
+      
+       <select id="selectSVC0025T" parameterType="Map" resultType="egovMap">
+            SELECT  /*+ INDEX (A SVC0025T_IDX1) */   
+                   'INS' AS APP_TYPE
+                   ,A.SALES_ORD_ID 
+                   ,A.CRT_DT 
+                   ,A.SVC_NO
+                   ,B.ERR_MSG
+                   ,A.TRAN_STUS_CD 
+              FROM  SVC0025T A 
+                   ,SVC0066T B  
+            WHERE  A.SVC_NO  = B.SVC_NO(+)
+            AND    A.CRT_DT   BETWEEN  TO_DATE ( #{S_DATE} || '010101' ,'DD/MM/YYYY hh24miss')  AND  TO_DATE ( #{E_DATE} ||'010101' ,'DD/MM/YYYY  hh24miss')   
+            AND    A.TRAN_STUS_CD =#{TRAN_STUS_CD}
+            AND    B.APP_TYPE(+)  = 'INS'
+      </select>
+      
+      
+       <select id="selectSVC0026T" parameterType="Map" resultType="egovMap">
+            SELECT  /*+ INDEX (A SVC0026T_IDX1) */   
+                   'PR' AS APP_TYPE
+                   ,A.SALES_ORD_ID 
+                   ,A.CRT_DT 
+                   ,A.SVC_NO
+                   ,B.ERR_MSG
+                   ,A.TRAN_STUS_CD 
+              FROM  SVC0026T A 
+                   ,SVC0066T B  
+            WHERE  A.SVC_NO  = B.SVC_NO(+)
+            AND    A.CRT_DT   BETWEEN  TO_DATE ( #{S_DATE} || '010101' ,'DD/MM/YYYY hh24miss')  AND  TO_DATE ( #{E_DATE} ||'010101' ,'DD/MM/YYYY  hh24miss')   
+            AND    A.TRAN_STUS_CD =#{TRAN_STUS_CD}
+            AND    B.APP_TYPE(+)  = 'PR'
+      </select>
+      
 </mapper>

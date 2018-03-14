@@ -517,7 +517,7 @@ public class HsManualController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/addIHsResult.do",method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> addIHsResult(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
+	public ResponseEntity<ReturnMessage> addIHsResult(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws Exception  {
 		ReturnMessage message = new ReturnMessage();
 		logger.debug("params : {}", params);
 

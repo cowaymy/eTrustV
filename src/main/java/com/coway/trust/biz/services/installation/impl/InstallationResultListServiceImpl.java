@@ -182,6 +182,13 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 	public List<EgovMap> selectSalesPromoMs(int promotionId) {
 		return installationResultListMapper.selectSalesPromoMs(promotionId);
 	}
+	
+	
+	@Override
+	public int  insResultSync(Map<String, Object> params) {
+		return installationResultListMapper.insResultSync(params);
+	} 
+	
 
 	/*@Override
 	public EgovMap getPromoPriceAndPV(int promotionId, int productId) {

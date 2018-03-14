@@ -175,6 +175,7 @@ public interface ASManagementListMapper {
 
 	//add by hgham  mobile 중복 처리 
 	int isAsAlreadyResult (Map<String, Object> params);
+	int asResultSync (Map<String, Object> params);
 	
 	int isInHouseB8Update (Map<String, Object> params);
 	 
@@ -187,5 +188,11 @@ public interface ASManagementListMapper {
 	EgovMap selectTaxInvoice(Map<String, Object> params);
 	void updateInHouseNOReplaceMentSVC0004D(Map<String, Object> params);
 	
+
 	
+	List<EgovMap> selectSVC0023T(Map<String, Object> params);
+	List<EgovMap> selectSVC0024T(Map<String, Object> params);
+	List<EgovMap> selectSVC0025T(Map<String, Object> params);
+	List<EgovMap> selectSVC0026T(Map<String, Object> params);
+
 }

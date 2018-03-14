@@ -53,6 +53,8 @@ public interface MSvcLogApiMapper {
 	void updateSuccessASStatus(String transactionId);
 	
 	void updateSuccessInstallStatus(String transactionId);
+	
+	void updateSuccessErrInstallStatus(String transactionId);
 
 	void insertInstallServiceLog(Map<String, Object> params);
 
@@ -187,5 +189,15 @@ public interface MSvcLogApiMapper {
 	void insert_CCR0007D(Map<String, Object> params);
 
 	void updateFailed_SAL0020D(Map<String, Object> params);
+	
+	
+	void   updateErrStatus(String transactionId);
+	void   updateASErrStatus(String transactionId);
+	void   updatePRErrStatus(String transactionId);
+	void   updatePRStatus(String transactionId);
+	
+	int insert_SVC0066T(Map<String, Object> params);
+	int prdResultSync(Map<String, Object> params);
+
 	
 }

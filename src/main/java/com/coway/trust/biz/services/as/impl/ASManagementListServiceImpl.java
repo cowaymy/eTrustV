@@ -222,6 +222,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	
 
 	@Override
+	public int  asResultSync(Map<String, Object> params) {
+		return ASManagementListMapper.asResultSync(params);
+	} 
+	
+	
+	
+	@Override
 	public String   getCustAddressInfo(Map<String, Object> params) {
 		return ASManagementListMapper.getCustAddressInfo(params);
 	} 
@@ -2687,4 +2694,26 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		// TODO Auto-generated method stub
 		return ASManagementListMapper.getAsEventInfo(params);
 	}
+	
+	
+
+	@Override 
+	public List<EgovMap> selectSVC0023T(Map<String, Object> params) {
+		return ASManagementListMapper.selectSVC0023T(params);
+	}	
+
+	@Override 
+	public List<EgovMap> selectSVC0024T(Map<String, Object> params) {
+		return ASManagementListMapper.selectSVC0024T(params);
+	}	
+
+	@Override 
+	public List<EgovMap> selectSVC0025T(Map<String, Object> params) {
+		return ASManagementListMapper.selectSVC0025T(params);
+	}	
+
+	@Override 
+	public List<EgovMap> selectSVC0026T(Map<String, Object> params) {
+		return ASManagementListMapper.selectSVC0026T(params);
+	}	
 }

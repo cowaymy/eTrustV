@@ -35,6 +35,7 @@ public interface MSvcLogApiService {
 	void saveInstallServiceLogs(Map<String, Object> params);
 
 	void updateSuccessInstallStatus(String transactionId);
+	void updateSuccessErrInstallStatus(String transactionId);
 
 	void insertInstallationResult(Map<String, Object> params);
 	
@@ -147,5 +148,15 @@ public interface MSvcLogApiService {
 
 	String getInstallDate(Map<String, Object> insApiresult);
 	
+	void updateErrStatus(String transactionId);  
+	void updateASErrStatus(String transactionId);  
+	void updatePRErrStatus(String transactionId);  
+	void updatePRStatus(String transactionId);  
+	
+	
+	int insert_SVC0066T(Map<String, Object> params);
+	void  insert_SVC0026T(Map<String, Object> params);
+	
+	int prdResultSync(Map<String, Object> params);
 
 }

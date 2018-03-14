@@ -1791,16 +1791,35 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
        </update>
 
 
+       <update id="updateErrStatus" parameterType="string">
+          UPDATE SVC0023T SET   TRAN_STUS_CD = 'E' WHERE TRNSC_ID = #{transactionId}
+       </update>
+
+
+       <update id="updateASErrStatus" parameterType="string">
+          UPDATE SVC0024T SET   TRAN_STUS_CD = 'E' WHERE TRNSC_ID = #{transactionId}
+       </update>
+       
        <update id="updateSuccessASStatus" parameterType="string">
           UPDATE SVC0024T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
        </update>
 
-
+        <update id="updatePRErrStatus" parameterType="string">
+          UPDATE SVC0026T SET   TRAN_STUS_CD = 'E' WHERE TRNSC_ID = #{transactionId}
+       </update>
+       
+       
+        <update id="updatePRStatus" parameterType="string">
+          UPDATE SVC0026T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
+       </update>
 
        <update id="updateSuccessInstallStatus" parameterType="string">
           UPDATE SVC0025T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
        </update>
-
+        
+        <update id="updateSuccessErrInstallStatus" parameterType="string">
+          UPDATE SVC0025T SET   TRAN_STUS_CD = 'E' WHERE TRNSC_ID = #{transactionId}
+       </update>
 
        <update id="updateSuccessHsReStatus" parameterType="string">
           UPDATE SVC0036T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
@@ -3674,7 +3693,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 				       ,SYSDATE
 				       ,#{signRegTm}
 				       ,#{transactionId}
-				       ,'Y'
+				       ,'N'
 				       ,#{checkinDt}
 				       ,#{checkinTm}
 				       ,#{checkinGps}
@@ -3891,6 +3910,37 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
       }
      </select>     
      
+     
+     
+     
+    <insert id="insert_SVC0066T" parameterType="Map">
+    
+INSERT INTO SVC0066T (
+   SEQ, APP_TYPE, SVC_NO, 
+   ERR_CODE, ERR_MSG ,TRNSC_ID) 
+VALUES ( 
+              SVC0066T_SEQ.NEXTVAL  
+              ,#{APP_TYPE} 
+              ,#{SVC_NO}
+              ,#{ERR_CODE}
+              ,#{ERR_MSG}
+              ,#{TRNSC_ID}
+             )
+    
+    </insert>
+     
 
+    
+     <select id="prdResultSync" parameterType="Map" resultType="java.lang.Integer">
+        <![CDATA[        
+               SELECT   COUNT(*) CNT 
+             FROM log0038d  A,  
+                  ORG0001D  B 
+             WHERE  A.RETN_NO     =#{serviceNo}
+                AND A.CT_ID =B.MEM_ID
+                AND B.MEM_CODE  =#{userId}
+        ]]>
+    </select>
+    
                     
 </mapper>

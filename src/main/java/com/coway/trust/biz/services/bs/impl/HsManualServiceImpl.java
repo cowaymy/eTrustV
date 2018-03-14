@@ -31,7 +31,7 @@ import com.coway.trust.web.organization.organization.MemberEventListController;
 import com.ibm.icu.util.StringTokenizer;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
-import egovframework.rte.psl.dataaccess.util.EgovMap;
+import egovframework.rte.psl.dataaccess.util.EgovMap;  
 
 @Service("hsManualService")
 public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsManualService {
@@ -86,7 +86,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 		return hsManualMapper.selectHsConfigList(params);
 	}
-
+  
 	@Override
 	public List<EgovMap> selectHsManualList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -337,7 +337,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 	@Override
 	@Transactional
-	public Map<String, Object> addIHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException {
+	public Map<String, Object> addIHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws Exception   {
 
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
@@ -374,7 +374,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	}
 
 
-	private Map<String, Object> SaveResult(boolean isfreepromo,Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException{
+	private Map<String, Object> SaveResult(boolean isfreepromo,Map<String, Object> params, List<Object> docType, SessionVO sessionVO) {
 
 		int schdulId =  Integer.parseInt(params.get("hidschdulId").toString());
 		String docNo= commonMapper.selectDocNo("11");
@@ -787,7 +787,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 	@Override
 	@Transactional
-	public Map<String, Object> UpdateHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) throws ParseException {
+	public Map<String, Object> UpdateHsResult(Map<String, Object> params, List<Object> docType, SessionVO sessionVO)  {
 
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
@@ -1706,6 +1706,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	public List<EgovMap> selectCMList(Map<String, Object> params) {
 		return hsManualMapper.selectCMList(params);
 	}
+	
+	
+	@Override
+	public int  hsResultSync(Map<String, Object> params) {
+		return hsManualMapper.hsResultSync(params);
+	}
+	 
 	
 	
 }

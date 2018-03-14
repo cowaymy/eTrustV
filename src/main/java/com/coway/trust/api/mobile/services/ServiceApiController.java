@@ -417,163 +417,189 @@ public class ServiceApiController {
 	@RequestMapping(value = "/heartServiceResult", method = RequestMethod.POST)
 	public ResponseEntity<HeartServiceResultDto> hsRegistration (@RequestBody List<HeartServiceResultForm> heartForms) throws Exception {
 
-		String transactionId = "";
-		List<Map<String, Object>> heartLogs = null;
-		List<Map<String, Object>> hsTransLogs1 = null;
-		SessionVO sessionVO = new SessionVO();
-		
-		Calendar cal = Calendar.getInstance();
-		 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
-        String strToday = sdf.format(cal.getTime());
+        		String transactionId = "";
+        		List<Map<String, Object>> heartLogs = null;
+        		List<Map<String, Object>> hsTransLogs1 = null;
+        		SessionVO sessionVO = new SessionVO();
+        		
+        		Calendar cal = Calendar.getInstance();
+        		 
+        		SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
+                String strToday = sdf.format(cal.getTime());
+                
+        		//현재 년도, 월, 일
+        	    StringBuffer today2 = new StringBuffer();
+                today2.append(String.format("%02d", cal.get(cal.DATE)));
+        	    today2.append(String.format("%02d", cal.get(cal.MONTH) + 1));
+        	    today2.append(String.format("%04d", cal.get(cal.YEAR)));
+        	    
+        	    String toSetlDt = today2.toString(); 
+        	    
+        	    
+        		int year = cal.get ( cal.YEAR );
+        		int month = cal.get ( cal.MONTH ) + 1 ;
+        		int date = cal.get ( cal.DATE ) ;
+        		
+        		String todate2 = (String.valueOf(date) +String.valueOf(month) + String.valueOf(year));
+        		
+        		// mobile 에서 받은 데이터를 로그 테이블에 insert......
+        		LOGGER.debug("### INSERT_HEART_LOG : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
+        		LOGGER.debug("### TransactionId : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
+        		LOGGER.debug("### heartForms : {}", heartForms);
+        		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
         
-		//현재 년도, 월, 일
-	    StringBuffer today2 = new StringBuffer();
-        today2.append(String.format("%02d", cal.get(cal.DATE)));
-	    today2.append(String.format("%02d", cal.get(cal.MONTH) + 1));
-	    today2.append(String.format("%04d", cal.get(cal.YEAR)));
-	    
-	    String toSetlDt = today2.toString(); 
-	    
-	    
-		int year = cal.get ( cal.YEAR );
-		int month = cal.get ( cal.MONTH ) + 1 ;
-		int date = cal.get ( cal.DATE ) ;
-		
-		String todate2 = (String.valueOf(date) +String.valueOf(month) + String.valueOf(year));
-		
-		// mobile 에서 받은 데이터를 로그 테이블에 insert......
-		LOGGER.debug("### INSERT_HEART_LOG : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
-		LOGGER.debug("### TransactionId : {}", RegistrationConstants.IS_INSERT_HEART_LOG);
-		LOGGER.debug("### heartForms : {}", heartForms);
-		if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-
-			heartLogs = new ArrayList<>();
-			for (HeartServiceResultForm heart : heartForms) {
-				heartLogs.addAll(heart.createMaps(heart));
-			}
-
-			// List<Map<String, Object>> heartLogs = heartForms.stream().flatMap(r -> r.createMaps(r))
-			// .collect(Collectors.toList());
-			MSvcLogApiService.saveHearLogs(heartLogs);
-
-			transactionId = heartForms.get(0).getTransactionId();
-		}
-
-		hsTransLogs1 = new ArrayList<>();
-		for(HeartServiceResultForm hsService1 : heartForms) {
-			hsTransLogs1.addAll(hsService1.createMaps1(hsService1)); 
-		}
-		
-		if(hsTransLogs1.size()> 0) {  
-			for(int i=0 ; i < hsTransLogs1.size() ; i++ ){
-				  
-				LOGGER.debug("hsTransLogs11111 값 : {}", hsTransLogs1.get(i));
-				
-				Map<String, Object>   hfterServiceDetail = null;
-				List<Map<String, Object>> paramsDetail = HeartServiceResultDetailForm.createMaps((List<HeartServiceResultDetailForm>) hsTransLogs1.get(i).get("heartDtails"));
-				List<Object> paramsDetailList =                   HeartServiceResultDetailForm.createMaps1((List<HeartServiceResultDetailForm>) hsTransLogs1.get(i).get("heartDtails"));
-				
-				List<Object> paramsDetailObj = (List<Object>) hsTransLogs1.get(i).get("heartDtails");
-
-				Map<String, Object> params = hsTransLogs1.get(i);  
-				params.put("updList", paramsDetail);
-				
-				
-				//result 체크 
-				 int  isHsCnt =	hsManualService.isHsAlreadyResult(params);
-				 
-				 
-				 //결과가 없을 경우 
-				 if(isHsCnt ==  0){
-					 
-        				String userId = MSvcLogApiService.getUseridToMemid(params);
-        				sessionVO.setUserId(Integer.parseInt(userId));
-        				
-        				
-        				Map<String, Object> getHsBasic = MSvcLogApiService.getHsBasic(params);
-        				//api setting
-        				params.put("hidschdulId", getHsBasic.get("schdulId"));
-        				params.put("hidSalesOrdId", String.valueOf(getHsBasic.get("salesOrdId")));
-        				params.put("hidCodyId", (String)userId);
-        //				params.put("settleDate", todate2);
-        				params.put("settleDate", toSetlDt);
-        				params.put("resultIsSync", '0');
-        				params.put("resultIsEdit", '0');
-        				params.put("resultStockUse", '1');
-        				params.put("resultIsCurr", '1');
-        				params.put("resultMtchId", '0');
-        				params.put("resultIsAdj", '0');
-        				params.put("cmbStatusType","4");
-        				params.put("renColctId", "0");
+            			heartLogs = new ArrayList<>();
+            			for (HeartServiceResultForm heart : heartForms) {
+            				heartLogs.addAll(heart.createMaps(heart));
+            			}
+            
+            			// List<Map<String, Object>> heartLogs = heartForms.stream().flatMap(r -> r.createMaps(r))
+            			// .collect(Collectors.toList());
+            			
+            			
+            		    MSvcLogApiService.saveHearLogs(heartLogs);
+            		
+            			
+            			transactionId = heartForms.get(0).getTransactionId();
+        		}
         
-        				//			api 넘어온거				
-        				params.put("remark",hsTransLogs1.get(i).get("resultRemark"));
-        				params.put("cmbCollectType",String.valueOf(hsTransLogs1.get(i).get("rcCode")));
-        				
-        //				api 추가된거	
-        				params.put("temperateSetng",String.valueOf(hsTransLogs1.get(i).get("temperatureSetting")));
-        				params.put("nextAppntDt",hsTransLogs1.get(i).get("nextAppointmentDate"));
-        				params.put("nextAppointmentTime",String.valueOf(hsTransLogs1.get(i).get("nextAppointmentTime")));
-        				params.put("ownerCode",String.valueOf(hsTransLogs1.get(i).get("ownerCode")));
-        				params.put("resultCustName",hsTransLogs1.get(i).get("resultCustName"));
-        				params.put("resultMobileNo",String.valueOf(hsTransLogs1.get(i).get("resultIcMobileNo")));
-        				params.put("resultRptEmailNo",String.valueOf(hsTransLogs1.get(i).get("resultReportEmailNo")));
-        				params.put("resultAceptName",hsTransLogs1.get(i).get("resultAcceptanceName"));
-        				params.put("sgnDt",hsTransLogs1.get(i).get("signData"));
-        //				params.put("remark",hsTransLogs1.get(i).get("signRegDate"));
-        //				params.put("remark",hsTransLogs1.get(i).get("signRegTime"));
-        //				params.put("remark",hsTransLogs1.get(i).get("transactionId"));
-        				
-        				
-        				
-        				LOGGER.debug("params22222 값 : {}", params);
-        
-        				
-        // service to value setting				
-        				Map<String, Object>   asResultInsert = new HashMap();
-        				LOGGER.debug("hsResultInsert1111111111 값 : {}", asResultInsert);
-        				
-        				Map  rtnValue  = hsManualService.addIHsResult(params,paramsDetailList,sessionVO);
-        				
-        				
-        
-        				if( null !=rtnValue){
-        					HashMap   spMap =(HashMap)rtnValue.get("spMap");
-        					LOGGER.debug("spMap :"+ spMap.toString());   
-        					if(! "000".equals(spMap.get("P_RESULT_MSG"))){
-        						rtnValue.put("logerr","Y");
-        						
-        					}
-        					
-        					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-        					
-        					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-        						MSvcLogApiService.updateSuccessStatus(transactionId);
-        					}
-        				}
-        				
-				}else{
-//					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
-//						MSvcLogApiService.updateSuccessStatus(transactionId);
-//					}
-				}
-				 
-//					//>>>>>>>>>>>>>>>>>logs call
-//					LOGGER.info(" serviceNo>>>>>> : {}", hsTransLogs1.get(i).get("serviceNo").toString());
-//					returnUsedPartsService.returnPartsInsert(hsTransLogs1.get(i).get("serviceNo").toString());
-			}
-
-			
-		}
+        		hsTransLogs1 = new ArrayList<>();
+        		for(HeartServiceResultForm hsService1 : heartForms) {
+        			hsTransLogs1.addAll(hsService1.createMaps1(hsService1)); 
+        		}
+        		
+        		if(hsTransLogs1.size()> 0) {  
+                			for(int i=0 ; i < hsTransLogs1.size() ; i++ ){
+                				  
+                    				LOGGER.debug("hsTransLogs11111 값 : {}", hsTransLogs1.get(i));
+                    				
+                    				Map<String, Object>   hfterServiceDetail = null;
+                    				List<Map<String, Object>> paramsDetail = HeartServiceResultDetailForm.createMaps((List<HeartServiceResultDetailForm>) hsTransLogs1.get(i).get("heartDtails"));
+                    				List<Object> paramsDetailList =                   HeartServiceResultDetailForm.createMaps1((List<HeartServiceResultDetailForm>) hsTransLogs1.get(i).get("heartDtails"));
+                    				
+                    				List<Object> paramsDetailObj = (List<Object>) hsTransLogs1.get(i).get("heartDtails");
+                    
+                    				Map<String, Object> params = hsTransLogs1.get(i);  
+                    				params.put("updList", paramsDetail);
+                    				
+                    				
+                    				//svc0008d mem_code 와 svc0006d  mem_code 같은지 체크 
+                    			    int hsResultMemId = hsManualService.hsResultSync(params);
+                    			    
+                    			    if(hsResultMemId  >  0){
+                    			    	
+                            			    	 //result 체크 
+                            					 int  isHsCnt =	hsManualService.isHsAlreadyResult(params);
+                            					 
+                            					 
+                            					 //결과가 없을 경우 
+                            					 if(isHsCnt ==  0){
+                            							
+                         	        				Map  rtnValue = null;   
+                         	        				
+                         	        				try{
+                                	        				String userId = MSvcLogApiService.getUseridToMemid(params);
+                                	        				sessionVO.setUserId(Integer.parseInt(userId));
+                                	        				
+                                	        				
+                                	        				Map<String, Object> getHsBasic = MSvcLogApiService.getHsBasic(params);
+                                	        				
+                                	        				//api setting
+                                	        				params.put("hidschdulId", getHsBasic.get("schdulId"));
+                                	        				params.put("hidSalesOrdId", String.valueOf(getHsBasic.get("salesOrdId")));
+                                	        				params.put("hidCodyId", (String)userId);
+                                	        //				params.put("settleDate", todate2);
+                                	        				params.put("settleDate", toSetlDt);
+                                	        				params.put("resultIsSync", '0');
+                                	        				params.put("resultIsEdit", '0');
+                                	        				params.put("resultStockUse", '1');
+                                	        				params.put("resultIsCurr", '1');
+                                	        				params.put("resultMtchId", '0');
+                                	        				params.put("resultIsAdj", '0');
+                                	        				params.put("cmbStatusType","4");
+                                	        				params.put("renColctId", "0");
+                                	        
+                                	        				//			api 넘어온거				
+                                	        				params.put("remark",hsTransLogs1.get(i).get("resultRemark"));
+                                	        				params.put("cmbCollectType",String.valueOf(hsTransLogs1.get(i).get("rcCode")));
+                                	        				
+                                	        //				api 추가된거	
+                                	        				params.put("temperateSetng",String.valueOf(hsTransLogs1.get(i).get("temperatureSetting")));
+                                	        				params.put("nextAppntDt",hsTransLogs1.get(i).get("nextAppointmentDate"));
+                                	        				params.put("nextAppointmentTime",String.valueOf(hsTransLogs1.get(i).get("nextAppointmentTime")));
+                                	        				params.put("ownerCode",String.valueOf(hsTransLogs1.get(i).get("ownerCode")));
+                                	        				params.put("resultCustName",hsTransLogs1.get(i).get("resultCustName"));
+                                	        				params.put("resultMobileNo",String.valueOf(hsTransLogs1.get(i).get("resultIcMobileNo")));
+                                	        				params.put("resultRptEmailNo",String.valueOf(hsTransLogs1.get(i).get("resultReportEmailNo")));
+                                	        				params.put("resultAceptName",hsTransLogs1.get(i).get("resultAcceptanceName"));
+                                	        				params.put("sgnDt",hsTransLogs1.get(i).get("signData"));
+                                	        //				params.put("remark",hsTransLogs1.get(i).get("signRegDate"));
+                                	        //				params.put("remark",hsTransLogs1.get(i).get("signRegTime"));
+                                	        //				params.put("remark",hsTransLogs1.get(i).get("transactionId"));
+                                	        				
+                                	        				
+                                	        				
+                                	        				LOGGER.debug("params22222 값 : {}", params);
+                                	        				
+                                	        				// service to value setting				
+                                	        				Map<String, Object>   asResultInsert = new HashMap();
+                                	        				LOGGER.debug("hsResultInsert1111111111 값 : {}", asResultInsert);
+                                	        				
+                                	        			
+                        	        					    rtnValue  = hsManualService.addIHsResult(params,paramsDetailList,sessionVO);
+                        	        					  
+                        	        						if( null !=rtnValue){
+                                	        					HashMap   spMap =(HashMap)rtnValue.get("spMap");
+                                	        					LOGGER.debug("spMap :"+ spMap.toString());   
+                                	        					if(! "000".equals(spMap.get("P_RESULT_MSG"))){
+                                	        						rtnValue.put("logerr","Y");
+                                	        						
+                                	        					}
+                                	        					
+                                	        					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+                                	        					
+                                	        					if (RegistrationConstants.IS_INSERT_HEART_LOG) {
+                                	        						MSvcLogApiService.updateSuccessStatus(transactionId);
+                                	        					}
+                                	        				}
+                                	        						
+                            	        						
+                            	        				}catch(Exception e){
+                            	        					
+                            	        					//count 0 
+                                        			    	MSvcLogApiService.updateErrStatus(transactionId);
+                                        			    	
+                                        			    	Map<String, Object>   m = new HashMap();
+                                        			    	m.put("APP_TYPE", "HS");
+                                        			    	m.put("SVC_NO", params.get("serviceNo"));
+                                        			    	m.put("ERR_CODE", "02");
+                                        			    	m.put("ERR_MSG", "[API]"+e.toString());
+                                        			    	m.put("TRNSC_ID", transactionId);
+                                        			    			
+                                        			    	MSvcLogApiService.insert_SVC0066T(m);
+                            	        				}
+                            	        				
+                            					}else{}
+                    			    	
+                    			    }else{
+                    			    	
+                    			    	//count 0 
+                    			    	MSvcLogApiService.updateErrStatus(transactionId);
+                    			    	
+                    			    	Map<String, Object>   m = new HashMap();
+                    			    	m.put("APP_TYPE", "HS");
+                    			    	m.put("SVC_NO", params.get("serviceNo"));
+                    			    	m.put("ERR_CODE", "01");
+                    			    	m.put("ERR_MSG", "[API] ["+params.get("userId")+"]  It is not  assigned ct code ");
+                    			    	m.put("TRNSC_ID", transactionId);
+                    			    			
+                    			    	MSvcLogApiService.insert_SVC0066T(m);
+                    			    }
+                			}
+        		}
 		
 		
 
-		
-		
-		
-//***************///
-		
 		
 
 
@@ -667,483 +693,438 @@ public class ServiceApiController {
 				
 				
 				Map<String, Object> alreadyP = asTransLogs1.get(i);  
-
-				//result 체크 
-				 int  isAsCnt =	ASManagementListService.isAsAlreadyResult(alreadyP);
-				 
-				 
-				 //결과가 없을 경우 
-				 if(isAsCnt == 0){
-					 
-					 				Map<String, Object>   afterServiceDetail = null;
-                     				
-                     				List<Map<String, Object>> paramsDetail = AfterServiceResultDetailForm.createMaps((List<AfterServiceResultDetailForm>) asTransLogs1.get(i).get("partList"));
-                     
-                     				
-                     				LOGGER.debug("asTransLogs11111 {}" +paramsDetail);
-                     				 
-                     				List<Map<String, Object>>    paramsDetailCvt =  new ArrayList<Map<String, Object>>() ;
-                     				
-                     				long  totPrc = 0;
-                     				
-                     				for(int x=0 ; x < paramsDetail.size(); x++){
-                     					  
-                     					Map<String, Object> map = new HashMap<String, Object>();
-                     					
-                     					map.put("filterDesc", "API"); 
-                     					if(paramsDetail.get(x).get("filterCode")== null || "".equals(paramsDetail.get(x).get("filterCode"))){
-                     						map.put("filterID", paramsDetail.get(x).get("filterCode") );
-                     					}else{
-                     						map.put("filterID", paramsDetail.get(x).get("filterCode") );
-                     					}
-                     					
-                     					
-                     					if(paramsDetail.get(x).get("exchangeId")==null){
-                     						map.put("filterExCode", 0);
-                     					}else{
-                     						map.put("filterExCode", paramsDetail.get(x).get("exchangeId"));
-                     					}
-                     					
-                     					if(paramsDetail.get(x).get("filterChangeQty")==null){
-                     						map.put("filterQty", 0);
-                     					}else{
-                     						map.put("filterQty", String.valueOf(paramsDetail.get(x).get("filterChangeQty")));
-                     					}
-                     					
-                     					if(paramsDetail.get(x).get("salesPrice")==null){
-                     						map.put("filterPrice", 0);
-                     					}else{
-                     						map.put("filterPrice", paramsDetail.get(x).get("salesPrice"));
-                     					}
-                     					
-                     					
-                     					int foc =  CommonUtils.intNvl(paramsDetail.get(x).get("chargesFoc"));
-                     					
-                     					if(foc ==1){
-                     						map.put("filterType", "FOC");
-                     					}else{
-                     						map.put("filterType", String.valueOf(paramsDetail.get(x).get("chargesFoc")));
-                     					}
-                     					
-                     					
-                     					
-                     					if(paramsDetail.get(x).get("filterBarcdSerialNo")==null){
-                     						map.put("srvFilterLastSerial", "");
-                     					}else{
-                     						map.put("srvFilterLastSerial", paramsDetail.get(x).get("filterBarcdSerialNo"));
-                     					}
-                     					
-                     					
-                     					int qty                 = Integer.parseInt(String.valueOf(paramsDetail.get(x).get("filterChangeQty")));
-                     					long  filterPrice    = Long.parseLong(String.valueOf(paramsDetail.get(x).get("salesPrice")));
-                     					
-                     					long amt  =0;
-                     					
-                     					if(foc==0){
-                         					amt = qty * filterPrice;
-                         					totPrc = totPrc +amt ;
-                         				}
-                     					
-                     					map.put("filterRemark", "");
-                     					map.put("filterTotal",amt);
-                     					
-                     					paramsDetailCvt.add(map);
-                     					 
-                     				} 
-                     				
-                     				
-                     				/*
-                     				Map<String , Object> paramsFilter = paramsDetail.get(i);
-                     				paramsDetail.get(i).put("filterType", String.valueOf(paramsDetail.get(i).get("partsType")));
-                     				paramsDetail.get(i).put("filterDesc", "API"); 
-                     				
-                     				if(paramsDetail.get(i).get("filterCode")== null || "".equals(paramsDetail.get(i).get("filterCode"))){
-                     					paramsDetail.get(i).put("filterExCode", 0);
-                     				}else{
-                     					paramsDetail.get(i).put("filterExCode", paramsDetail.get(i).get("filterCode"));
-                     				}
-                     				
-                     				if(paramsDetail.get(i).get("filterChangeQty")==null){
-                     					paramsDetail.get(i).put("filterQty", 0);
-                     				}else{
-                     					paramsDetail.get(i).put("filterQty", String.valueOf(paramsDetail.get(i).get("filterChangeQty")));
-                     				}
-                     				
-                     				if(paramsDetail.get(i).get("salesPrice")==null){
-                     					paramsDetail.get(i).put("filterPrice", 0);
-                     				}else{
-                     					paramsDetail.get(i).put("filterPrice", paramsDetail.get(i).get("salesPrice"));
-                     				}
-                     				
-                     				paramsDetail.get(i).put("filterRemark", "");
-                     				paramsDetail.get(i).put("filterID", paramsDetail.get(i).get("filterCode") );
-                     				paramsDetail.get(i).put("filterTotal", "1");
-                     				*/
-                     				
-                     				Map<String, Object> params = asTransLogs1.get(i);  
-                     //				Map<String, Object> servasMasterMap = asTransLogs.get(i);
-                     				
-                     				
-                     				Map<String, Object> getAsBasic = MSvcLogApiService.getAsBasic(params);
-                     				
-                     				if(getAsBasic.get("asSoId")!=null){
-                     					params.put("AS_SO_ID", String.valueOf(getAsBasic.get("asSoId")));
-                     				}else{
-                     					params.put("AS_SO_ID", "");
-                     				}
-                     				
-                     				if(getAsBasic.get("userId") !=null){		
-                     					params.put("AS_CT_ID", String.valueOf(getAsBasic.get("userId")));
-                     				}else{
-                     					params.put("AS_CT_ID", "");
-                     				}
-                     				
-                     				params.put("AS_RESULT_STUS_ID", '4');
-                     
-                     				
-                     				
-                     				
-                     //				params.put("AS_FAIL_RESN_ID", getAsBasic.get("as_failResnId"));
-                     				params.put("AS_REN_COLCT_ID", 0);
-                     				
-                     				if(getAsBasic.get("asCmms")!=null){		
-                     					params.put("AS_CMMS", "1");
-                     				}else{
-                     					params.put("AS_CMMS", "1");
-                     				}
-                     				
-                     				if(getAsBasic.get("asBrnchId")!=null){		
-                     					params.put("AS_BRNCH_ID", String.valueOf(getAsBasic.get("asBrnchId")));
-                     				}else{
-                     					params.put("AS_BRNCH_ID", "");
-                     				}
-                     				
-                     				if(getAsBasic.get("asWhId")!=null){						
-                     					params.put("AS_WH_ID", String.valueOf(getAsBasic.get("asWhId")));
-                     				}else{
-                     					params.put("AS_WH_ID", "");
-                     				}
-                     				
-                     				
-                     //				params.put("AS_RESULT_REM", getAsBasic.get("resultRemark"));
-                     				
-                     				if(getAsBasic.get("asMalfuncId")!=null){						
-                     					params.put("AS_MALFUNC_ID", String.valueOf(getAsBasic.get("asMalfuncId")));
-                     				}else{
-                     					params.put("AS_MALFUNC_ID", "");
-                     				}
-                     				
-                     				if(getAsBasic.get("asMalfuncResnId")!=null){					
-                     					params.put("AS_MALFUNC_RESN_ID", String.valueOf(getAsBasic.get("asMalfuncResnId")));
-                     				}else{
-                     					params.put("AS_MALFUNC_RESN_ID", "");
-                     				}
-                     				
-                     				params.put("AS_DEFECT_GRP_ID", 0);
-                     				params.put("AS_DEFECT_PART_GRP_ID", 0);
-                     //				params.put("AS_WORKMNSH", getAsBasic.get("asWorkmnsh"));
-                     
-                     				
-                     				params.put("AS_ACSRS_AMT", 0);
-                     			
-                     				
-                     				params.put("AS_FILTER_AMT",totPrc);
-                     				
-                     				
-                     				long totamt =0;
-                     			    try{
-                         				totamt  =Long.parseLong(String.valueOf(asTransLogs1.get(i).get("labourCharge")));
-                     			    }catch(Exception e){
-                     			    	totamt =0;
-                     			    }		
-                     						
-                     				params.put("AS_TOT_AMT", totPrc +totamt);   
-                     				
-                     				params.put("AS_RESULT_IS_SYNCH", 0);
-                     				params.put("AS_RCALL", 0);
-                     				
-                     				if(getAsBasic.get("asResultStockUse")!=null){							
-                     					params.put("AS_RESULT_STOCK_USE", String.valueOf(getAsBasic.get("asResultStockUse")));
-                     				}else{
-                     					params.put("AS_RESULT_STOCK_USE", "");
-                     				}
-                     				
-                     				params.put("AS_RESULT_TYPE_ID", 457);
-                     				params.put("AS_RESULT_IS_CURR", 1);
-                     				params.put("AS_RESULT_MTCH_ID", 0);
-                     				params.put("AS_RESULT_NO_ERR", "");
-                     				params.put("AS_ENTRY_POINT", 0);
-                     				params.put("AS_WORKMNSH_TAX_CODE_ID", 0);
-                     				params.put("AS_WORKMNSH_TXS", 0);
-                     				params.put("AS_RESULT_MOBILE_ID", 0);
-                     				
-                     				
-                     				
-                     				if(!"".equals(getAsBasic.get("asResultNo"))){
-                     					params.put("AS_RESULT_NO", String.valueOf(getAsBasic.get("asResultNo")));
-                     				}else{
-                     					params.put("AS_RESULT_NO", "");
-                     				}
-                     				
-                     				if(getAsBasic.get("asResultId")!=null){						
-                     					params.put("AS_RESULT_ID", String.valueOf(getAsBasic.get("asResultId")));
-                     				}else{
-                     					params.put("AS_RESULT_ID", "");
-                     				}
-                     				
-                     				if(getAsBasic.get("asno")!=null){								
-                     					params.put("AS_NO", String.valueOf(getAsBasic.get("asno")));
-                     				}else{
-                     					params.put("AS_NO", "");
-                     				}
-                     				
-                     				params.put("HC_REM", " ");
-                     				
-                     				//004
-                     				
-                     				if(getAsBasic.get("asId")!=null){								
-                     					params.put("AS_ENTRY_ID", String.valueOf(getAsBasic.get("asId")));
-                     				}else{
-                     					params.put("AS_ENTRY_ID", "");
-                     				}
-                     				
-                     				if(asTransLogs1.get(i).get("serviceNo")!=null){								
-                     					params.put("AS_NO", String.valueOf(asTransLogs1.get(i).get("serviceNo")));
-                     				}else{
-                     					params.put("AS_NO", "");
-                     				}
-                     				
-                     				
-                     				if(asTransLogs1.get(i).get("defectTypeId")!=null){								
-                     					params.put("AS_DEFECT_TYPE_ID", String.valueOf(asTransLogs1.get(i).get("defectTypeId")));
-                     				}else{
-                     					params.put("AS_DEFECT_TYPE_ID", "");
-                     				}
-                     				
-                     				if(asTransLogs1.get(i).get("defectId")!=null){						
-                     					params.put("AS_DEFECT_ID", String.valueOf(asTransLogs1.get(i).get("defectId")));
-                     				}else{
-                     					params.put("AS_DEFECT_ID", "");
-                     				}
-                     				
-                     				if(asTransLogs1.get(i).get("defectPartId")!=null){						
-                     					params.put("AS_DEFECT_PART_ID", String.valueOf(asTransLogs1.get(i).get("defectPartId")));
-                     				}else{
-                     					params.put("AS_DEFECT_PART_ID", "");
-                     				}
-                     				
-                     				
-                     				if(asTransLogs1.get(i).get("defectDetailReasonId")!=null){						
-                     					params.put("AS_DEFECT_DTL_RESN_ID", String.valueOf(asTransLogs1.get(i).get("defectDetailReasonId")));
-                     				}else{
-                     					params.put("AS_DEFECT_DTL_RESN_ID", "");
-                     				}
-                     				
-                     				if(asTransLogs1.get(i).get("solutionReasonId")!=null){						
-                     					params.put("AS_SLUTN_RESN_ID", String.valueOf(asTransLogs1.get(i).get("solutionReasonId")));
-                     				}else{
-                     					params.put("AS_SLUTN_RESN_ID", "");
-                     				}
-                     				
-                     //				params.put("AS_SETL_DT", todate2);
-                     				params.put("AS_SETL_DT", toSetlDt);
-                     				params.put("AS_SETL_TM", curTime);
-                     				
-                     				
-                     				if(asTransLogs1.get(i).get("labourCharge")!=null){									
-                     					params.put("AS_WORKMNSH", String.valueOf(asTransLogs1.get(i).get("labourCharge")));
-                     				}else{
-                     					params.put("AS_WORKMNSH", "");
-                     				}
-                     				
-                     				params.put("AS_RESULT_REM", asTransLogs1.get(i).get("resultRemark"));
-                     				
-                     				//
-                     				if(asTransLogs1.get(i).get("inHouseRepairRemark")!=null){									
-                     					params.put("IN_HUSE_REPAIR_REM", String.valueOf(asTransLogs1.get(i).get("inHouseRepairRemark")));
-                     				}else{
-                     					params.put("IN_HUSE_REPAIR_REM", "");
-                     				}
-                     				
-                     				if(asTransLogs1.get(i).get("inHouseRepairReplacementYN")!=null){									
-                     					params.put("IN_HUSE_REPAIR_REPLACE_YN", String.valueOf(asTransLogs1.get(i).get("inHouseRepairReplacementYN")));
-                     				}else{
-                     					params.put("IN_HUSE_REPAIR_REPLACE_YN", "");
-                     				}
-                     				
-                     				Date inHouseRepairPromisedDate ;
-                     				String inHouseRepairPromisedDate1="";
-                     				
-                     				if(!"".equals(asTransLogs1.get(i).get("inHouseRepairPromisedDate"))){
-                     					inHouseRepairPromisedDate = transFormatYY.parse(String.valueOf(asTransLogs1.get(i).get("inHouseRepairPromisedDate")));
-                     					inHouseRepairPromisedDate1 = transFormat1.format(inHouseRepairPromisedDate);
-                     				}
-                     				
-                     				params.put("IN_HUSE_REPAIR_PROMIS_DT", inHouseRepairPromisedDate1);//asTransLogs
-                     				
-                     				
-                     				if(asTransLogs1.get(i).get("inHouseRepairProductGroupCode")!=null){	
-                     					params.put("IN_HUSE_REPAIR_GRP_CODE", String.valueOf(asTransLogs1.get(i).get("inHouseRepairProductGroupCode")));
-                     				}else{
-                     					params.put("IN_HUSE_REPAIR_GRP_CODE", "");
-                     				}
-                     				
-                     				if(asTransLogs1.get(i).get("inHouseRepairProductCode")!=null){	
-                     					params.put("IN_HUSE_REPAIR_PRODUCT_CODE", String.valueOf(asTransLogs1.get(i).get("inHouseRepairProductCode")));
-                     				}else{
-                     					params.put("IN_HUSE_REPAIR_PRODUCT_CODE", "");
-                     				}
-                     				
-                     				if(asTransLogs1.get(i).get("inHouseRepairSerialNo")!=null){	
-                     					params.put("IN_HUSE_REPAIR_SERIAL_NO", String.valueOf(asTransLogs1.get(i).get("inHouseRepairSerialNo")));
-                     				}else{
-                     					params.put("IN_HUSE_REPAIR_SERIAL_NO", "");
-                     				}
-                     				
-                     				params.put("RESULT_CUST_NAME", asTransLogs1.get(i).get("resultCustName"));//asTransLogs
-                     				
-                     				
-                     				if(asTransLogs1.get(i).get("resultIcMobileNo")!=null){	
-                     					params.put("RESULT_MOBILE_NO", String.valueOf(asTransLogs1.get(i).get("resultIcMobileNo")));
-                     				}else {
-                     					params.put("RESULT_MOBILE_NO", "");
-                     				}
-                     				
-                     				if(asTransLogs1.get(i).get("resultReportEmailNo")!=null){	
-                     					params.put("RESULT_REP_EMAIL_NO", String.valueOf(asTransLogs1.get(i).get("resultReportEmailNo")));
-                     				}else {
-                     					params.put("RESULT_REP_EMAIL_NO", "");
-                     				}
-                     				
-                     				if(asTransLogs1.get(i).get("resultAcceptanceName")!=null){	
-                     					params.put("RESULT_ACEPT_NAME", String.valueOf(asTransLogs1.get(i).get("resultAcceptanceName")));
-                     				}else {
-                     					params.put("RESULT_ACEPT_NAME", "");
-                     				}
-                     				
-                     				params.put("SGN_DT", asTransLogs1.get(i).get("signData"));//asTransLogs
-                     				
-                     				LOGGER.debug("params22222 값 : {}", params);
-                     				
-                     				Map<String, Object>   asResultInsert = new HashMap();
-                     				
-                     				asResultInsert.put("asResultM", params);
-                     				asResultInsert.put("updator",getAsBasic.get("userId"));
-                     				asResultInsert.put("add", paramsDetailCvt);				 
-                     		
-                     				LOGGER.debug("asResultInsert1111111111 값 : {}", asResultInsert);
-                     				
-                     				
-                     				EgovMap  rtnValue = ASManagementListService.asResult_insert(asResultInsert);
-                     
-                     				if( null !=rtnValue){
-                     					HashMap   spMap =(HashMap)rtnValue.get("spMap");
-                     					LOGGER.debug("spMap :"+ spMap.toString());   
-                     					if(!"000".equals(spMap.get("P_RESULT_MSG"))){
-                     						rtnValue.put("logerr","Y");
-                     					}
-                     					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-                     				}
-				 }
 				
+				
+				//svc0001d  mem_code 와   mem_code 같은지 체크 
+			     int asResultMemId = ASManagementListService.asResultSync(alreadyP);
+		
+			    
+			     if( asResultMemId > 0){
+			    	 
+			    	//result 체크 
+					 int  isAsCnt =	ASManagementListService.isAsAlreadyResult(alreadyP);
+					 
+					 
+					 //결과가 없을 경우 
+					 if(isAsCnt == 0){
+						 
+						 				Map<String, Object>   afterServiceDetail = null;
+	                     				
+	                     				List<Map<String, Object>> paramsDetail = AfterServiceResultDetailForm.createMaps((List<AfterServiceResultDetailForm>) asTransLogs1.get(i).get("partList"));
+	                     
+	                     				
+	                     				LOGGER.debug("asTransLogs11111 {}" +paramsDetail);
+	                     				 
+	                     				List<Map<String, Object>>    paramsDetailCvt =  new ArrayList<Map<String, Object>>() ;
+	                     				
+	                     				long  totPrc = 0;
+	                     				
+	                     				for(int x=0 ; x < paramsDetail.size(); x++){
+	                     					  
+	                     					Map<String, Object> map = new HashMap<String, Object>();
+	                     					
+	                     					map.put("filterDesc", "API"); 
+	                     					if(paramsDetail.get(x).get("filterCode")== null || "".equals(paramsDetail.get(x).get("filterCode"))){
+	                     						map.put("filterID", paramsDetail.get(x).get("filterCode") );
+	                     					}else{
+	                     						map.put("filterID", paramsDetail.get(x).get("filterCode") );
+	                     					}
+	                     					
+	                     					
+	                     					if(paramsDetail.get(x).get("exchangeId")==null){
+	                     						map.put("filterExCode", 0);
+	                     					}else{
+	                     						map.put("filterExCode", paramsDetail.get(x).get("exchangeId"));
+	                     					}
+	                     					
+	                     					if(paramsDetail.get(x).get("filterChangeQty")==null){
+	                     						map.put("filterQty", 0);
+	                     					}else{
+	                     						map.put("filterQty", String.valueOf(paramsDetail.get(x).get("filterChangeQty")));
+	                     					}
+	                     					
+	                     					if(paramsDetail.get(x).get("salesPrice")==null){
+	                     						map.put("filterPrice", 0);
+	                     					}else{
+	                     						map.put("filterPrice", paramsDetail.get(x).get("salesPrice"));
+	                     					}
+	                     					
+	                     					
+	                     					int foc =  CommonUtils.intNvl(paramsDetail.get(x).get("chargesFoc"));
+	                     					
+	                     					if(foc ==1){
+	                     						map.put("filterType", "FOC");
+	                     					}else{
+	                     						map.put("filterType", String.valueOf(paramsDetail.get(x).get("chargesFoc")));
+	                     					}
+	                     					
+	                     					
+	                     					
+	                     					if(paramsDetail.get(x).get("filterBarcdSerialNo")==null){
+	                     						map.put("srvFilterLastSerial", "");
+	                     					}else{
+	                     						map.put("srvFilterLastSerial", paramsDetail.get(x).get("filterBarcdSerialNo"));
+	                     					}
+	                     					
+	                     					
+	                     					int qty                 = Integer.parseInt(String.valueOf(paramsDetail.get(x).get("filterChangeQty")));
+	                     					long  filterPrice    = Long.parseLong(String.valueOf(paramsDetail.get(x).get("salesPrice")));
+	                     					
+	                     					long amt  =0;
+	                     					
+	                     					if(foc==0){
+	                         					amt = qty * filterPrice;
+	                         					totPrc = totPrc +amt ;
+	                         				}
+	                     					
+	                     					map.put("filterRemark", "");
+	                     					map.put("filterTotal",amt);
+	                     					
+	                     					paramsDetailCvt.add(map);
+	                     					 
+	                     				} 
+	                     				
+	                     				
+	                     				/*
+	                     				Map<String , Object> paramsFilter = paramsDetail.get(i);
+	                     				paramsDetail.get(i).put("filterType", String.valueOf(paramsDetail.get(i).get("partsType")));
+	                     				paramsDetail.get(i).put("filterDesc", "API"); 
+	                     				
+	                     				if(paramsDetail.get(i).get("filterCode")== null || "".equals(paramsDetail.get(i).get("filterCode"))){
+	                     					paramsDetail.get(i).put("filterExCode", 0);
+	                     				}else{
+	                     					paramsDetail.get(i).put("filterExCode", paramsDetail.get(i).get("filterCode"));
+	                     				}
+	                     				
+	                     				if(paramsDetail.get(i).get("filterChangeQty")==null){
+	                     					paramsDetail.get(i).put("filterQty", 0);
+	                     				}else{
+	                     					paramsDetail.get(i).put("filterQty", String.valueOf(paramsDetail.get(i).get("filterChangeQty")));
+	                     				}
+	                     				
+	                     				if(paramsDetail.get(i).get("salesPrice")==null){
+	                     					paramsDetail.get(i).put("filterPrice", 0);
+	                     				}else{
+	                     					paramsDetail.get(i).put("filterPrice", paramsDetail.get(i).get("salesPrice"));
+	                     				}
+	                     				
+	                     				paramsDetail.get(i).put("filterRemark", "");
+	                     				paramsDetail.get(i).put("filterID", paramsDetail.get(i).get("filterCode") );
+	                     				paramsDetail.get(i).put("filterTotal", "1");
+	                     				*/
+	                     				
+	                     				Map<String, Object> params = asTransLogs1.get(i);  
+	                     //				Map<String, Object> servasMasterMap = asTransLogs.get(i);
+	                     				
+	                     				
+	                     				Map<String, Object> getAsBasic = MSvcLogApiService.getAsBasic(params);
+	                     				
+	                     				if(getAsBasic.get("asSoId")!=null){
+	                     					params.put("AS_SO_ID", String.valueOf(getAsBasic.get("asSoId")));
+	                     				}else{
+	                     					params.put("AS_SO_ID", "");
+	                     				}
+	                     				
+	                     				if(getAsBasic.get("userId") !=null){		
+	                     					params.put("AS_CT_ID", String.valueOf(getAsBasic.get("userId")));
+	                     				}else{
+	                     					params.put("AS_CT_ID", "");
+	                     				}
+	                     				
+	                     				params.put("AS_RESULT_STUS_ID", '4');
+	                     
+	                     				
+	                     				
+	                     				
+	                     //				params.put("AS_FAIL_RESN_ID", getAsBasic.get("as_failResnId"));
+	                     				params.put("AS_REN_COLCT_ID", 0);
+	                     				
+	                     				if(getAsBasic.get("asCmms")!=null){		
+	                     					params.put("AS_CMMS", "1");
+	                     				}else{
+	                     					params.put("AS_CMMS", "1");
+	                     				}
+	                     				
+	                     				if(getAsBasic.get("asBrnchId")!=null){		
+	                     					params.put("AS_BRNCH_ID", String.valueOf(getAsBasic.get("asBrnchId")));
+	                     				}else{
+	                     					params.put("AS_BRNCH_ID", "");
+	                     				}
+	                     				
+	                     				if(getAsBasic.get("asWhId")!=null){						
+	                     					params.put("AS_WH_ID", String.valueOf(getAsBasic.get("asWhId")));
+	                     				}else{
+	                     					params.put("AS_WH_ID", "");
+	                     				}
+	                     				
+	                     				
+	                     //				params.put("AS_RESULT_REM", getAsBasic.get("resultRemark"));
+	                     				
+	                     				if(getAsBasic.get("asMalfuncId")!=null){						
+	                     					params.put("AS_MALFUNC_ID", String.valueOf(getAsBasic.get("asMalfuncId")));
+	                     				}else{
+	                     					params.put("AS_MALFUNC_ID", "");
+	                     				}
+	                     				
+	                     				if(getAsBasic.get("asMalfuncResnId")!=null){					
+	                     					params.put("AS_MALFUNC_RESN_ID", String.valueOf(getAsBasic.get("asMalfuncResnId")));
+	                     				}else{
+	                     					params.put("AS_MALFUNC_RESN_ID", "");
+	                     				}
+	                     				
+	                     				params.put("AS_DEFECT_GRP_ID", 0);
+	                     				params.put("AS_DEFECT_PART_GRP_ID", 0);
+	                     //				params.put("AS_WORKMNSH", getAsBasic.get("asWorkmnsh"));
+	                     
+	                     				
+	                     				params.put("AS_ACSRS_AMT", 0);
+	                     			
+	                     				
+	                     				params.put("AS_FILTER_AMT",totPrc);
+	                     				
+	                     				
+	                     				long totamt =0;
+	                     			    try{
+	                         				totamt  =Long.parseLong(String.valueOf(asTransLogs1.get(i).get("labourCharge")));
+	                     			    }catch(Exception e){
+	                     			    	totamt =0;
+	                     			    }		
+	                     						
+	                     				params.put("AS_TOT_AMT", totPrc +totamt);   
+	                     				
+	                     				params.put("AS_RESULT_IS_SYNCH", 0);
+	                     				params.put("AS_RCALL", 0);
+	                     				
+	                     				if(getAsBasic.get("asResultStockUse")!=null){							
+	                     					params.put("AS_RESULT_STOCK_USE", String.valueOf(getAsBasic.get("asResultStockUse")));
+	                     				}else{
+	                     					params.put("AS_RESULT_STOCK_USE", "");
+	                     				}
+	                     				
+	                     				params.put("AS_RESULT_TYPE_ID", 457);
+	                     				params.put("AS_RESULT_IS_CURR", 1);
+	                     				params.put("AS_RESULT_MTCH_ID", 0);
+	                     				params.put("AS_RESULT_NO_ERR", "");
+	                     				params.put("AS_ENTRY_POINT", 0);
+	                     				params.put("AS_WORKMNSH_TAX_CODE_ID", 0);
+	                     				params.put("AS_WORKMNSH_TXS", 0);
+	                     				params.put("AS_RESULT_MOBILE_ID", 0);
+	                     				
+	                     				
+	                     				
+	                     				if(!"".equals(getAsBasic.get("asResultNo"))){
+	                     					params.put("AS_RESULT_NO", String.valueOf(getAsBasic.get("asResultNo")));
+	                     				}else{
+	                     					params.put("AS_RESULT_NO", "");
+	                     				}
+	                     				
+	                     				if(getAsBasic.get("asResultId")!=null){						
+	                     					params.put("AS_RESULT_ID", String.valueOf(getAsBasic.get("asResultId")));
+	                     				}else{
+	                     					params.put("AS_RESULT_ID", "");
+	                     				}
+	                     				
+	                     				if(getAsBasic.get("asno")!=null){								
+	                     					params.put("AS_NO", String.valueOf(getAsBasic.get("asno")));
+	                     				}else{
+	                     					params.put("AS_NO", "");
+	                     				}
+	                     				
+	                     				params.put("HC_REM", " ");
+	                     				
+	                     				//004
+	                     				
+	                     				if(getAsBasic.get("asId")!=null){								
+	                     					params.put("AS_ENTRY_ID", String.valueOf(getAsBasic.get("asId")));
+	                     				}else{
+	                     					params.put("AS_ENTRY_ID", "");
+	                     				}
+	                     				
+	                     				if(asTransLogs1.get(i).get("serviceNo")!=null){								
+	                     					params.put("AS_NO", String.valueOf(asTransLogs1.get(i).get("serviceNo")));
+	                     				}else{
+	                     					params.put("AS_NO", "");
+	                     				}
+	                     				
+	                     				
+	                     				if(asTransLogs1.get(i).get("defectTypeId")!=null){								
+	                     					params.put("AS_DEFECT_TYPE_ID", String.valueOf(asTransLogs1.get(i).get("defectTypeId")));
+	                     				}else{
+	                     					params.put("AS_DEFECT_TYPE_ID", "");
+	                     				}
+	                     				
+	                     				if(asTransLogs1.get(i).get("defectId")!=null){						
+	                     					params.put("AS_DEFECT_ID", String.valueOf(asTransLogs1.get(i).get("defectId")));
+	                     				}else{
+	                     					params.put("AS_DEFECT_ID", "");
+	                     				}
+	                     				
+	                     				if(asTransLogs1.get(i).get("defectPartId")!=null){						
+	                     					params.put("AS_DEFECT_PART_ID", String.valueOf(asTransLogs1.get(i).get("defectPartId")));
+	                     				}else{
+	                     					params.put("AS_DEFECT_PART_ID", "");
+	                     				}
+	                     				
+	                     				
+	                     				if(asTransLogs1.get(i).get("defectDetailReasonId")!=null){						
+	                     					params.put("AS_DEFECT_DTL_RESN_ID", String.valueOf(asTransLogs1.get(i).get("defectDetailReasonId")));
+	                     				}else{
+	                     					params.put("AS_DEFECT_DTL_RESN_ID", "");
+	                     				}
+	                     				
+	                     				if(asTransLogs1.get(i).get("solutionReasonId")!=null){						
+	                     					params.put("AS_SLUTN_RESN_ID", String.valueOf(asTransLogs1.get(i).get("solutionReasonId")));
+	                     				}else{
+	                     					params.put("AS_SLUTN_RESN_ID", "");
+	                     				}
+	                     				
+	                     //				params.put("AS_SETL_DT", todate2);
+	                     				params.put("AS_SETL_DT", toSetlDt);
+	                     				params.put("AS_SETL_TM", curTime);
+	                     				
+	                     				
+	                     				if(asTransLogs1.get(i).get("labourCharge")!=null){									
+	                     					params.put("AS_WORKMNSH", String.valueOf(asTransLogs1.get(i).get("labourCharge")));
+	                     				}else{
+	                     					params.put("AS_WORKMNSH", "");
+	                     				}
+	                     				
+	                     				params.put("AS_RESULT_REM", asTransLogs1.get(i).get("resultRemark"));
+	                     				
+	                     				//
+	                     				if(asTransLogs1.get(i).get("inHouseRepairRemark")!=null){									
+	                     					params.put("IN_HUSE_REPAIR_REM", String.valueOf(asTransLogs1.get(i).get("inHouseRepairRemark")));
+	                     				}else{
+	                     					params.put("IN_HUSE_REPAIR_REM", "");
+	                     				}
+	                     				
+	                     				if(asTransLogs1.get(i).get("inHouseRepairReplacementYN")!=null){									
+	                     					params.put("IN_HUSE_REPAIR_REPLACE_YN", String.valueOf(asTransLogs1.get(i).get("inHouseRepairReplacementYN")));
+	                     				}else{
+	                     					params.put("IN_HUSE_REPAIR_REPLACE_YN", "");
+	                     				}
+	                     				
+	                     				Date inHouseRepairPromisedDate ;
+	                     				String inHouseRepairPromisedDate1="";
+	                     				
+	                     				if(!"".equals(asTransLogs1.get(i).get("inHouseRepairPromisedDate"))){
+	                     					inHouseRepairPromisedDate = transFormatYY.parse(String.valueOf(asTransLogs1.get(i).get("inHouseRepairPromisedDate")));
+	                     					inHouseRepairPromisedDate1 = transFormat1.format(inHouseRepairPromisedDate);
+	                     				}
+	                     				
+	                     				params.put("IN_HUSE_REPAIR_PROMIS_DT", inHouseRepairPromisedDate1);//asTransLogs
+	                     				
+	                     				
+	                     				if(asTransLogs1.get(i).get("inHouseRepairProductGroupCode")!=null){	
+	                     					params.put("IN_HUSE_REPAIR_GRP_CODE", String.valueOf(asTransLogs1.get(i).get("inHouseRepairProductGroupCode")));
+	                     				}else{
+	                     					params.put("IN_HUSE_REPAIR_GRP_CODE", "");
+	                     				}
+	                     				
+	                     				if(asTransLogs1.get(i).get("inHouseRepairProductCode")!=null){	
+	                     					params.put("IN_HUSE_REPAIR_PRODUCT_CODE", String.valueOf(asTransLogs1.get(i).get("inHouseRepairProductCode")));
+	                     				}else{
+	                     					params.put("IN_HUSE_REPAIR_PRODUCT_CODE", "");
+	                     				}
+	                     				
+	                     				if(asTransLogs1.get(i).get("inHouseRepairSerialNo")!=null){	
+	                     					params.put("IN_HUSE_REPAIR_SERIAL_NO", String.valueOf(asTransLogs1.get(i).get("inHouseRepairSerialNo")));
+	                     				}else{
+	                     					params.put("IN_HUSE_REPAIR_SERIAL_NO", "");
+	                     				}
+	                     				
+	                     				params.put("RESULT_CUST_NAME", asTransLogs1.get(i).get("resultCustName"));//asTransLogs
+	                     				
+	                     				
+	                     				if(asTransLogs1.get(i).get("resultIcMobileNo")!=null){	
+	                     					params.put("RESULT_MOBILE_NO", String.valueOf(asTransLogs1.get(i).get("resultIcMobileNo")));
+	                     				}else {
+	                     					params.put("RESULT_MOBILE_NO", "");
+	                     				}
+	                     				
+	                     				if(asTransLogs1.get(i).get("resultReportEmailNo")!=null){	
+	                     					params.put("RESULT_REP_EMAIL_NO", String.valueOf(asTransLogs1.get(i).get("resultReportEmailNo")));
+	                     				}else {
+	                     					params.put("RESULT_REP_EMAIL_NO", "");
+	                     				}
+	                     				
+	                     				if(asTransLogs1.get(i).get("resultAcceptanceName")!=null){	
+	                     					params.put("RESULT_ACEPT_NAME", String.valueOf(asTransLogs1.get(i).get("resultAcceptanceName")));
+	                     				}else {
+	                     					params.put("RESULT_ACEPT_NAME", "");
+	                     				}
+	                     				
+	                     				params.put("SGN_DT", asTransLogs1.get(i).get("signData"));//asTransLogs
+	                     				
+	                     				LOGGER.debug("params22222 값 : {}", params);
+	                     				
+	                     				Map<String, Object>   asResultInsert = new HashMap();
+	                     				
+	                     				asResultInsert.put("asResultM", params);
+	                     				asResultInsert.put("updator",getAsBasic.get("userId"));
+	                     				asResultInsert.put("add", paramsDetailCvt);				 
+	                     		
+	                     				LOGGER.debug("asResultInsert1111111111 값 : {}", asResultInsert);
+	                     				
+	                     				
+	                     			 try{
+    	                     					EgovMap  rtnValue = ASManagementListService.asResult_insert(asResultInsert);
+    		                     			 	if( null !=rtnValue){
+    		                     					HashMap   spMap =(HashMap)rtnValue.get("spMap");
+    		                     					LOGGER.debug("spMap :"+ spMap.toString());   
+    		                     					if(!"000".equals(spMap.get("P_RESULT_MSG"))){
+    		                     						rtnValue.put("logerr","Y");
+    		                     					}
+    		                     					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+    		                     				}
+    
+    		                     				if (RegistrationConstants.IS_INSERT_AS_LOG) {
+    		                     					MSvcLogApiService.updateSuccessASStatus(transactionId);
+    		                     				}	
+    		                     				
+	                     				}catch(Exception eee){
+            	        					//count 0 
+                        			    	MSvcLogApiService.updateASErrStatus(transactionId);
+                        			    	
+                        			    	Map<String, Object>   m = new HashMap();
+                        			    	m.put("APP_TYPE", "AS");
+                        			    	m.put("SVC_NO", asTransLogs1.get(i).get("serviceNo"));
+                        			    	m.put("ERR_CODE", "02");
+                        			    	m.put("ERR_MSG", "[API]"+eee.toString());
+                        			    	m.put("TRNSC_ID", transactionId);
+                        			    	MSvcLogApiService.insert_SVC0066T(m);
+	                     				}
+	                     			 
+	                     			 //결과 존재시 상태 y로 업데이트 
+					 			}else{
+					 				if (RegistrationConstants.IS_INSERT_AS_LOG) {
+                     					MSvcLogApiService.updateSuccessASStatus(transactionId);
+                     				}	
+					 			}
+			     }else{
+			    	 
+			    	 
+			    	//count 0 
+ 			    	MSvcLogApiService.updateASErrStatus(transactionId);
+ 			    	
+ 			    	Map<String, Object>   m = new HashMap();
+ 			    	m.put("APP_TYPE", "AS");
+ 			    	m.put("SVC_NO", asTransLogs1.get(i).get("serviceNo"));
+ 			    	m.put("ERR_CODE", "01");
+ 			    	m.put("ERR_MSG", "[API] ["+asTransLogs1.get(i).get("userId")+"]  It is not  assigned ct code ");
+ 			    	m.put("TRNSC_ID", transactionId);
+ 			    			
+ 			    	MSvcLogApiService.insert_SVC0066T(m);
+ 			    	
+			     }
 			}
 		}   
-		
-//		LinkedHashMap  asResultM = (LinkedHashMap)  params.get("asResultM");
-//		List<EgovMap>  add			= (List<EgovMap>)  params.get("add");
-//		EgovMap  rtnValue = ASManagementListService.asResult_insert(params);  
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		// TODO : 리턴할 dto 구현.
-
-		if (RegistrationConstants.IS_INSERT_AS_LOG) {
-			MSvcLogApiService.updateSuccessASStatus(transactionId);
-		}
 
 		return ResponseEntity.ok(AfterServiceResultDto.create(transactionId));
 	}
 	
 	
 	
-//	@ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-//	@RequestMapping(value = "/installationResult", method = RequestMethod.POST)
-//	public ResponseEntity<InstallationResultDto> installationResult(@RequestBody  List<InstallationResultForm> installationResultForms)
-//			throws Exception {		
-//		
-//		String transactionId = "";
-//		List<Map<String, Object>> installTransLogs = null;
-//		
-//		if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-//			
-//			installTransLogs = new ArrayList<>();
-//			for(InstallationResultForm installService : installationResultForms){
-//				installTransLogs.addAll(installService.createMap(installService));
-//			}
-//			
-//			MSvcLogApiService.saveInstallServiceLogs(installTransLogs);
-//			transactionId = MSvcLogApiService.get(0).getTransactionId();
-//		}
-//		
-//
-//		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
-//		
-//							
-//	}
-	
-	
-	
-	
-/*	@ApiOperation(value = "Installation Result Registration", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
-	@RequestMapping(value = "/installationResult", method = RequestMethod.POST)
-	public ResponseEntity<InstallationResultDto> installationResult(@RequestBody List<InstallationResultForm> installationResultForms)
-			throws Exception {		
-		String transactionId = "";
-		List<Map<String, Object>> insTransLogs = null;
-		
-		
-		insTransLogs = new ArrayList<>();
-		for (InstallationResultForm insService : installationResultForms) {
-			insTransLogs.addAll(insService.createMaps(insService));
-		}
-		
-		
-		for(int i=0 ; i < insTransLogs.size() ; i++ ){
-			
-			LOGGER.debug("asTransLogs11111 값 : {}", insTransLogs.get(i));
-			Map<String, Object> params = insTransLogs.get(i);  
-			
-			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-				MSvcLogApiService.saveInstallServiceLogs(params);
-				
-			}
-
-			// business service....
-//			// TODO : installResult 구현 필요.....
-			MSvcLogApiService.insertInstallationResult(params);	
-		
-			// TODO : 리턴할 dto 구현.
-//			transactionId = installationResultForms.getTransactionId();
-			transactionId = (String) params.get("transactionId");
-			
-			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-				MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-			}
-			
-		}	
-	
-		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
-
-	}*/
-
-
 	
 	
 	
@@ -1167,119 +1148,155 @@ public class ServiceApiController {
 		insTransLogs = new ArrayList<>();
 		for (InstallationResultForm insService : installationResultForms) {
 			insTransLogs.addAll(insService.createMaps(insService));
-		}
+			
+			transactionId = insService.getTransactionId();
+		}			
+		
+	
 		
 		
 		for(int i=0 ; i < insTransLogs.size() ; i++ ){
 			
 			LOGGER.debug("asTransLogs11111 값 : {}", insTransLogs.get(i));
+			
+			
+			
 			Map<String, Object> insApiresult = insTransLogs.get(i);  
+			
+		
 			
 			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
 				MSvcLogApiService.saveInstallServiceLogs(insApiresult);
 			}
 			
-			
-			
-			
-			
-	
-			
-			// business service....
-//			// TODO : installResult 구현 필요.....
-
 			Map<String, Object> params = insTransLogs.get(i);  
 			
-		   int  isInsCnt =	installationResultListService.isInstallAlreadyResult(params);
+			transactionId =String.valueOf(params.get("transactionId"));
 			
-		   
-		   //이미 처리 되었는지 확인 
-		   if(isInsCnt ==0 ){
-			   
-        			//api setting 
-        			String statusId = "4"; //installStatus
-        			
-        			EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
-        			params.put("installEntryId", installResult.get("installEntryId"));
-        			
-        			try{
-        				
-            			params.put("hidInstallation_AddDtl", installResult.get("addrDtl"));
-            			params.put("hidInstallation_AreaID", installResult.get("areaId"));
-            			
-        			}catch(Exception e){
-        				e.printStackTrace();
-        			}
-        	           
-        			EgovMap orderInfo = installationResultListService.getOrderInfo(params);
-        			
-        			String userId = MSvcLogApiService.getUseridToMemid(params);
-        			String installDate    = MSvcLogApiService.getInstallDate(insApiresult);
-        			
-        			sessionVO1.setUserId(Integer.parseInt(userId));
-        			
-        			params.put("installStatus",String.valueOf(statusId));//4
-        			params.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
-        			params.put("hidEntryId",String.valueOf(installResult.get("installEntryId")));
-        			params.put("hidCustomerId",String.valueOf(installResult.get("custId")));
-        			params.put("hidSalesOrderId",String.valueOf(installResult.get("salesOrdId")));
-        			params.put("hidTaxInvDSalesOrderNo",String.valueOf(installResult.get("salesOrdNo"))); 
-        			params.put("hidStockIsSirim",String.valueOf(installResult.get("isSirim")));
-        			params.put("hidStockGrade",installResult.get("stkGrad"));
-        			params.put("hidSirimTypeId",String.valueOf(installResult.get("stkCtgryId")));
-        			params.put("hiddeninstallEntryNo",String.valueOf(installResult.get("installEntryNo")));
-        			params.put("hidTradeLedger_InstallNo",String.valueOf(installResult.get("installEntryNo")));
-        			
-        			params.put("installDate" , installDate );
-        			LOGGER.debug("installDate 값 : " + installDate);
-        			params.put("CTID",String.valueOf(userId));
-        			params.put("updator", String.valueOf(userId)); 
-        			params.put("nextCallDate","01-01-1999"); 
-        			params.put("refNo1","0"); 
-        			params.put("refNo2","0"); 
-        			params.put("codeId",String.valueOf(installResult.get("257")));
-        			params.put("checkCommission", 1);
-        			
-        			if(orderInfo !=null){	
-        				params.put("hidOutright_Price",CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
-        			}else {
-        				params.put("hidOutright_Price", "0");
-        			}
-        			
-        			params.put("hidAppTypeId",installResult.get("codeId"));
-        			
-        			//API in
-        			params.put("hidStockIsSirim",String.valueOf(insTransLogs.get(i).get("sirimNo")));
-        			params.put("hidSerialNo",String.valueOf(insTransLogs.get(i).get("serialNo")));
-        			params.put("remark",insTransLogs.get(i).get("resultRemark"));
-        			
-        			LOGGER.debug("params11111 값 : {}", params);
-        			Map rtnValue  =installationResultListService.insertInstallationResult(params,sessionVO1 );	
-        			
-        			
-            			if( null !=rtnValue){
-            				HashMap   spMap =(HashMap)rtnValue.get("spMap");
-            				LOGGER.debug("spMap :"+ spMap.toString());   
-            				if(!"000".equals(spMap.get("P_RESULT_MSG"))){
-            					rtnValue.put("logerr","Y");
-            				}else{
-            						
-            					
-            						if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-            							MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-            						}
-            					
-            				}
-            				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-            			}
-            			
-            			
-    		}else{
-    			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-					MSvcLogApiService.updateSuccessInstallStatus(String.valueOf(params.get("transactionId")));
-				}
-    		}	
-		   
+			int  isInsMemIdCnt =	installationResultListService.insResultSync(params);
+			
+			
+			if(isInsMemIdCnt > 0){
+    				int  isInsCnt =	installationResultListService.isInstallAlreadyResult(params);
+         		   //이미 처리 되었는지 확인 
+         		   if(isInsCnt ==0 ){
+         			   
+                 			//api setting 
+                 			String statusId = "4"; //installStatus
+                 			
+                 			EgovMap installResult = MSvcLogApiService.getInstallResultByInstallEntryID(params);
+                 			params.put("installEntryId", installResult.get("installEntryId"));
+                 			
+                 			try{
+                 				
+                     			params.put("hidInstallation_AddDtl", installResult.get("addrDtl"));
+                     			params.put("hidInstallation_AreaID", installResult.get("areaId"));
+                     			
+                 			}catch(Exception e){
+                 				e.printStackTrace();
+                 			}
+                 	           
+                 			EgovMap orderInfo = installationResultListService.getOrderInfo(params);
+                 			
+                 			String userId = MSvcLogApiService.getUseridToMemid(params);
+                 			String installDate    = MSvcLogApiService.getInstallDate(insApiresult);
+                 			
+                 			sessionVO1.setUserId(Integer.parseInt(userId));
+                 			
+                 			params.put("installStatus",String.valueOf(statusId));//4
+                 			params.put("statusCodeId", Integer.parseInt(params.get("installStatus").toString()));
+                 			params.put("hidEntryId",String.valueOf(installResult.get("installEntryId")));
+                 			params.put("hidCustomerId",String.valueOf(installResult.get("custId")));
+                 			params.put("hidSalesOrderId",String.valueOf(installResult.get("salesOrdId")));
+                 			params.put("hidTaxInvDSalesOrderNo",String.valueOf(installResult.get("salesOrdNo"))); 
+                 			params.put("hidStockIsSirim",String.valueOf(installResult.get("isSirim")));
+                 			params.put("hidStockGrade",installResult.get("stkGrad"));
+                 			params.put("hidSirimTypeId",String.valueOf(installResult.get("stkCtgryId")));
+                 			params.put("hiddeninstallEntryNo",String.valueOf(installResult.get("installEntryNo")));
+                 			params.put("hidTradeLedger_InstallNo",String.valueOf(installResult.get("installEntryNo")));
+                 			
+                 			params.put("installDate" , installDate );
+                 			LOGGER.debug("installDate 값 : " + installDate);
+                 			params.put("CTID",String.valueOf(userId));
+                 			params.put("updator", String.valueOf(userId)); 
+                 			params.put("nextCallDate","01-01-1999"); 
+                 			params.put("refNo1","0"); 
+                 			params.put("refNo2","0"); 
+                 			params.put("codeId",String.valueOf(installResult.get("257")));
+                 			params.put("checkCommission", 1);
+                 			
+                 			if(orderInfo !=null){	
+                 				params.put("hidOutright_Price",CommonUtils.nvl(String.valueOf(orderInfo.get("c5"))));
+                 			}else {
+                 				params.put("hidOutright_Price", "0");
+                 			}
+                 			
+                 			params.put("hidAppTypeId",installResult.get("codeId"));
+                 			
+                 			//API in
+                 			params.put("hidStockIsSirim",String.valueOf(insTransLogs.get(i).get("sirimNo")));
+                 			params.put("hidSerialNo",String.valueOf(insTransLogs.get(i).get("serialNo")));
+                 			params.put("remark",insTransLogs.get(i).get("resultRemark"));
+                 			
+                 			LOGGER.debug("params11111 값 : {}", params);
+                 			
+                 			
+                 			try{
+                     				Map rtnValue  =installationResultListService.insertInstallationResult(params,sessionVO1 );	
+                         			
+                     				if( null !=rtnValue){
+                         				HashMap   spMap =(HashMap)rtnValue.get("spMap");
+                         				LOGGER.debug("spMap :"+ spMap.toString());   
+                         				if(!"000".equals(spMap.get("P_RESULT_MSG"))){
+                         					rtnValue.put("logerr","Y");
+                         				}else{
+                         						if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+                         							MSvcLogApiService.updateSuccessInstallStatus(transactionId);
+                         						}
+                         				}
+                         				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+                         			}
+                     				
+                 			}catch(Exception e){
+                 				
+                 				//count 0 
+            			    	MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+            			    	
+            			    	Map<String, Object>   m = new HashMap();
+            			    	m.put("APP_TYPE", "INS");
+            			    	m.put("SVC_NO", insTransLogs.get(i).get("serviceNo"));
+            			    	m.put("ERR_CODE", "02");
+            			    	m.put("ERR_MSG", "[API] "+ e.toString());
+            			    	m.put("TRNSC_ID", transactionId);
+            			    			
+            			    	MSvcLogApiService.insert_SVC0066T(m);
+            			    	
+                 			}	
+                     			
+             		}else{
+             			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
+         					MSvcLogApiService.updateSuccessInstallStatus(String.valueOf(params.get("transactionId")));
+         				}
+             		}	
+			
+         		   
+            // MEM COUNT   EOF 
+			}else{
+				
+					//count 0 
+			    	MSvcLogApiService.updateSuccessErrInstallStatus(transactionId);
+			    	
+			    	Map<String, Object>   m = new HashMap();
+			    	m.put("APP_TYPE", "INS");
+			    	m.put("SVC_NO", insTransLogs.get(i).get("serviceNo"));
+			    	m.put("ERR_CODE", "01");
+			    	m.put("ERR_MSG", "[API] ["+insTransLogs.get(i).get("userId")+"]  It is not  assigned ct code ");
+			    	m.put("TRNSC_ID", transactionId);
+			    			
+			    	MSvcLogApiService.insert_SVC0066T(m);
+			}
+			
+			
 		}
 		return ResponseEntity.ok(InstallationResultDto.create(transactionId));
 
@@ -1330,6 +1347,9 @@ public class ServiceApiController {
 			prTransLogs.addAll(prService.createMaps(prService));
 		}
 		
+	
+		
+		
 		for(int i=0 ; i < prTransLogs.size() ; i++ ){
 			
 			LOGGER.debug("prTransLogs 값 : {}", prTransLogs.get(i));
@@ -1362,28 +1382,76 @@ public class ServiceApiController {
 	    	cvMp.put("serviceNo",  String.valueOf(paramsTran.get("serviceNo"))); 
 	    	cvMp.put("transactionId",  String.valueOf(paramsTran.get("transactionId"))); 
 	    	
-			
-	    	EgovMap  rtnValue = MSvcLogApiService.productReturnResult(cvMp);
-			
-			if( null !=rtnValue){
-				HashMap   spMap =(HashMap)rtnValue.get("spMap");
-				LOGGER.debug("spMap :"+ spMap.toString());   
-				if(!"000".equals(spMap.get("P_RESULT_MSG"))){
-					rtnValue.put("logerr","Y");
-				}
-				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+	    	transactionId = String.valueOf(paramsTran.get("transactionId"));
+	    	
+			try{
+        	    	 //log create 
+        			 MSvcLogApiService.insert_SVC0026T(cvMp);
+        		
+			}catch(Exception e){
+				//count 0 
+		    	MSvcLogApiService.updatePRErrStatus(transactionId);
+		    	
+		    	Map<String, Object>   m = new HashMap();
+		    	m.put("APP_TYPE", "PR");
+		    	m.put("SVC_NO", cvMp.get("serviceNo"));
+		    	m.put("ERR_CODE", "02");
+		    	m.put("ERR_MSG", "[API] "+ e.toString());
+		    	m.put("TRNSC_ID", transactionId);
+		    			
+		    	MSvcLogApiService.insert_SVC0066T(m);
+		    	
+		    	return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
 			}
 			
-		    /*
-			transactionId = String.valueOf(params.get("transactionId"));
-			
-			if (RegistrationConstants.IS_INSERT_INSTALL_LOG) {
-				MSvcLogApiService.updateSuccessInstallStatus(transactionId);
-			}
-			*/
-			
+			 //	//MEM_ID CHECK   
+   			int  memCnt = MSvcLogApiService.prdResultSync(cvMp);
+   			
+   			if( memCnt >0 ){
+   				
+   				try{
+   					EgovMap  rtnValue = MSvcLogApiService.productReturnResult(cvMp);
+   	   				
+   	   				if( null !=rtnValue){
+   	   					HashMap   spMap =(HashMap)rtnValue.get("spMap");
+   	   					LOGGER.debug("spMap :"+ spMap.toString());   
+   	   					if(!"000".equals(spMap.get("P_RESULT_MSG"))){
+   	   						rtnValue.put("logerr","Y");
+   	   					}
+   	   					servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+   	   				}
+   				}catch (Exception ee){
+   					//count 0 
+   			    	MSvcLogApiService.updatePRErrStatus(transactionId);
+   			    	
+   			    	Map<String, Object>   m = new HashMap();
+   			    	m.put("APP_TYPE", "PR");
+   			    	m.put("SVC_NO", cvMp.get("serviceNo"));
+   			    	m.put("ERR_CODE", "02");
+   			    	m.put("ERR_MSG", "[API] "+ ee.toString());
+   			    	m.put("TRNSC_ID", transactionId);
+   			    			
+   			    	MSvcLogApiService.insert_SVC0066T(m);
+   			    	return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
+   				}
+   		    
+   			}else{
+   			//count 0 
+    	    	MSvcLogApiService.updatePRErrStatus(transactionId);
+    	     	Map<String, Object>   m = new HashMap();
+		    	m.put("APP_TYPE", "PR");
+		    	m.put("SVC_NO", cvMp.get("serviceNo"));
+		    	m.put("ERR_CODE", "01");
+		    	m.put("ERR_MSG", "[API] ["+cvMp.get("userId")+"]  It is not  assigned ct code ");
+		    	m.put("TRNSC_ID", transactionId);
+		    			
+		    	MSvcLogApiService.insert_SVC0066T(m);
+				return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
+   			}
+
+   			
+   			MSvcLogApiService.updatePRStatus(transactionId);
 		}
-		
 		
 		return ResponseEntity.ok(ProductReturnResultDto.create(transactionId));
 	}

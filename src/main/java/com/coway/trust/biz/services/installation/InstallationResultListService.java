@@ -76,6 +76,8 @@ public interface InstallationResultListService {
 
 	//add by hgham  mobile 중복 처리
 	int isInstallAlreadyResult (Map<String, Object> params);
+	
+	int insResultSync (Map<String, Object> params);
 
 	EgovMap validationInstallationResult(Map<String, Object> params);
 	
@@ -86,5 +88,8 @@ public interface InstallationResultListService {
 	List<EgovMap> viewInstallationResult(Map<String, Object> params);
 
 	EgovMap checkMonthInstallDate(Map<String, Object> params);
+	
+	
+	
 
 }

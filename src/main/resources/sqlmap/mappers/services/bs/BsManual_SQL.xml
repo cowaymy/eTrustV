@@ -1639,7 +1639,7 @@
                   <update id="updateHsScheduleM" parameterType="Map">
                         UPDATE SVC0008D
                            SET STUS_CODE_ID = #{resultStusCodeId}
-                                ,ACTN_MEM_ID = #{actnMemId}
+                                ,ACTN_MEM_ID  = #{actnMemId}
                                 ,CODY_ID = #{actnMemId}
                          WHERE   SCHDUL_ID = #{hidschdulId}
 
@@ -3696,6 +3696,20 @@
 	AND A.BRNCH_ID   = #{groupCode}
 	AND B.STUS       = '1'
 	ORDER BY b.MEM_CODE
+    </select>
+    
+    
+    
+    
+     <select id="hsResultSync" parameterType="Map" resultType="java.lang.Integer">
+        <![CDATA[        
+				 SELECT   COUNT(*) CNT 
+				 FROM SVC0008D  A,  
+				      ORG0001D B 
+				 WHERE  NO =#{serviceNo}
+				    AND A.CODY_ID = B.MEM_ID
+				    AND B.MEM_CODE =#{userId}
+        ]]>
     </select>
 
 </mapper>

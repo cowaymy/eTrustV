@@ -100,7 +100,10 @@ public interface ASManagementListService {
 
 	//add by hgham  mobile 중복 처리 
 	int isAsAlreadyResult (Map<String, Object> params);
-	
+	//add by hgham  mobile 중복 처리 
+	int asResultSync (Map<String, Object> params);
+		
+		
 	
 	String  getCustAddressInfo (Map<String, Object> params);
 
@@ -111,6 +114,14 @@ public interface ASManagementListService {
 	EgovMap   getMemberByMemberIdCode(Map<String, Object> params);
 
 	EgovMap getAsEventInfo(Map<String, Object> params);
+	
+	
+	List<EgovMap> selectSVC0023T(Map<String, Object> params);
+	List<EgovMap> selectSVC0024T(Map<String, Object> params);
+	List<EgovMap> selectSVC0025T(Map<String, Object> params);
+	List<EgovMap> selectSVC0026T(Map<String, Object> params);
+
+	
 	
 	
 	

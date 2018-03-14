@@ -242,5 +242,8 @@ public interface HsManualMapper {
 
 	List<EgovMap> selectCMList(Map<String, Object> params);
 		
+	int hsResultSync(Map<String, Object> params);
 
+	
+	
 }
