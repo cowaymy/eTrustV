@@ -3920,6 +3920,7 @@
             AND    A.CRT_DT   BETWEEN  TO_DATE ( #{S_DATE} || '010101' ,'DD/MM/YYYY hh24miss')  AND  TO_DATE ( #{E_DATE} ||'235959' ,'DD/MM/YYYY  hh24miss')   
 			AND    A.TRAN_STUS_CD =#{TRAN_STUS_CD}
 			AND    B.APP_TYPE(+)  = 'HS'
+			AND   A.TRNSC_ID = B.TRNSC_ID(+)
       </select>
       
       
@@ -3937,6 +3938,7 @@
             AND    A.CRT_DT   BETWEEN  TO_DATE ( #{S_DATE} || '010101' ,'DD/MM/YYYY hh24miss')  AND  TO_DATE ( #{E_DATE} ||'235959' ,'DD/MM/YYYY  hh24miss')   
             AND    A.TRAN_STUS_CD =#{TRAN_STUS_CD}
             AND    B.APP_TYPE(+)  = 'AS'
+            AND   A.TRNSC_ID = B.TRNSC_ID(+)
       </select>
       
       
@@ -3954,6 +3956,7 @@
             AND    A.CRT_DT   BETWEEN  TO_DATE ( #{S_DATE} || '010101' ,'DD/MM/YYYY hh24miss')  AND  TO_DATE ( #{E_DATE} ||'235959' ,'DD/MM/YYYY  hh24miss')   
             AND    A.TRAN_STUS_CD =#{TRAN_STUS_CD}
             AND    B.APP_TYPE(+)  = 'INS'
+            AND   A.TRNSC_ID = B.TRNSC_ID(+)
       </select>
       
       
@@ -3971,6 +3974,7 @@
             AND    A.CRT_DT   BETWEEN  TO_DATE ( #{S_DATE} || '010101' ,'DD/MM/YYYY hh24miss')  AND  TO_DATE ( #{E_DATE} ||'235959' ,'DD/MM/YYYY  hh24miss')   
             AND    A.TRAN_STUS_CD =#{TRAN_STUS_CD}
             AND    B.APP_TYPE(+)  = 'PR'
+            AND   A.TRNSC_ID = B.TRNSC_ID(+)
       </select>
       
 </mapper>
