@@ -590,7 +590,7 @@ public class ServiceApiController {
                     			    	m.put("APP_TYPE", "HS");
                     			    	m.put("SVC_NO", params.get("serviceNo"));
                     			    	m.put("ERR_CODE", "01");
-                    			    	m.put("ERR_MSG", "[API] ["+params.get("userId")+"]  It is not  assigned ct code ");
+                    			    	m.put("ERR_MSG", "[API] ["+params.get("userId")+"]  It is not  assigned cody code ");
                     			    	m.put("TRNSC_ID", transactionId);
                     			    			
                     			    	MSvcLogApiService.insert_SVC0066T(m);

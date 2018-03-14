@@ -200,7 +200,7 @@ function fn_getDateGap(sdate, edate){
 
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_wrap_asList" style="width: 100%; height: 400px; margin: 0 auto;"></div>
+<div id="grid_wrap_asList" style="width: 100%; height: 500px; margin: 0 auto;"></div>
 </article><!-- grid_wrap end -->
 
 </form>
