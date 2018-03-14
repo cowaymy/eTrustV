@@ -556,6 +556,20 @@ public class ReportBatchController {
 		LOGGER.info("[END] BSRawCurrent_S1...");
 	}
 
+	@RequestMapping(value = "/BSRawPrevious_S1.do")
+	//@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
+	public void bsRawPreviousS1() throws IOException {
+		LOGGER.info("[START] BSRawPrevious_S1...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/BSRawPrevious_S1.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"BSRaw" + File.separator + "BSRawPrevious_S1" + CommonUtils.getNowDate() + ".xls");
+
+		this.view(null, null, params);
+		LOGGER.info("[END] BSRawPrevious_S1...");
+	}
+
 	@RequestMapping(value = "/BSRawCurrent_S.do")
 	//@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
 	public void bsRawCurrentS() throws IOException {
