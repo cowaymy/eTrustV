@@ -42,7 +42,7 @@ function createAUIGrid() {
         width : 300
     }, {
         dataField : "tranStusCd",
-        headerText : "LOG Status",
+        headerText : "Status",
         editable : false,
         width : 100
     }
@@ -167,7 +167,7 @@ function fn_getDateGap(sdate, edate){
 	
 	
 	</td>
-	<th scope="row">LOG Status</th>
+	<th scope="row"> Status</th>
 	<td>
 	<select  class="w100p" id="TRAN_STUS_CD" name="TRAN_STUS_CD"  >
 		<option value="Y">Y</option>
