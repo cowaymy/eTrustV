@@ -3914,6 +3914,7 @@
 			       ,A.SVC_NO
 			       ,B.ERR_MSG
 			       ,A.TRAN_STUS_CD
+			       ,A.TRNSC_ID
 			  FROM  SVC0023T A 
 			       ,SVC0066T B  
 			WHERE  A.SVC_NO  = B.SVC_NO(+)
@@ -3932,6 +3933,7 @@
                    ,A.SVC_NO
                    ,B.ERR_MSG
                    ,A.TRAN_STUS_CD 
+                   ,A.TRNSC_ID
               FROM  SVC0024T A 
                    ,SVC0066T B  
             WHERE  A.SVC_NO  = B.SVC_NO(+)
@@ -3950,6 +3952,7 @@
                    ,A.SVC_NO
                    ,B.ERR_MSG
                    ,A.TRAN_STUS_CD 
+                   ,A.TRNSC_ID
               FROM  SVC0025T A 
                    ,SVC0066T B  
             WHERE  A.SVC_NO  = B.SVC_NO(+)
@@ -3968,6 +3971,7 @@
                    ,A.SVC_NO
                    ,B.ERR_MSG
                    ,A.TRAN_STUS_CD 
+                   ,A.TRNSC_ID
               FROM  SVC0026T A 
                    ,SVC0066T B  
             WHERE  A.SVC_NO  = B.SVC_NO(+)

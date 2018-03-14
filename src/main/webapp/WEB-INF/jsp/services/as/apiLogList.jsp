@@ -17,17 +17,17 @@ function createAUIGrid() {
 	  //AUIGrid 칼럼 설정
     var columnLayout = [ {
         dataField : "appType",
-        headerText : "appType",
+        headerText : "AppType",
         editable : false,
         width : 100
     }, {
         dataField : "salesOrdId",
-        headerText : "salesOrdNo",
+        headerText : "SalesOrdNo",
         editable : false,
         width : 100
     }, {
         dataField : "svcNo",
-        headerText : "svcNo",
+        headerText : "SvcNo",
         editable : false,
         width : 100
     } , {
@@ -37,10 +37,18 @@ function createAUIGrid() {
         width : 110 , dataType : "date", formatString : "dd/mm/yyyy"
     }, {
         dataField : "errMsg",
-        headerText : "errMsg",
+        headerText : "ErrMsg",
         editable : false,
         width : 300
-    }, {
+    }
+    , {
+        dataField : "trnscId",  
+        headerText : "Trnsc_Id",
+        editable : false,
+        width : 100
+    }
+    
+    , {
         dataField : "tranStusCd",
         headerText : "Status",
         editable : false,
