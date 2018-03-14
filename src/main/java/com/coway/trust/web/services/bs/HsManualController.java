@@ -805,7 +805,12 @@ public class HsManualController {
 		public ResponseEntity<ReturnMessage> doSaveDeactivateFilter(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws ParseException {
 			ReturnMessage message = new ReturnMessage();
 			params.put("updator", sessionVO.getUserId());
-			params.put("srvFilterStusId", 8);
+			if( params.get("SRV_FILTER_IS_ACTIVE").toString().equals("1") )
+			{
+			params.put("srvFilterStusId", 1);
+			}
+			else
+			{params.put("srvFilterStusId", 8);}
 
 			logger.debug("params : {}", params);
 
