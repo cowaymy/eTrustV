@@ -57,7 +57,13 @@
 
                             AUIGrid.addRow(myDetailGridIDActive, SendItem, 'last');
 
-                            Common.ajax("POST", "/services/bs/doSaveFilterUpdate.do", {SRV_FILTER_ID : item.srvFilterId}, function(result) {
+                            var srvFilterDeActForm = {
+                                    "SRV_FILTER_ID" : item.srvFilterId,
+                                    "SRV_FILTER_IS_ACTIVE" : "1"
+
+                                   }
+                            //Common.ajax("POST", "/services/bs/doSaveFilterUpdate.do", {SRV_FILTER_ID : item.srvFilterId}, function(result) {
+                            Common.ajax("POST", "/services/bs/doSaveDeactivateFilter.do", srvFilterDeActForm, function(result) {
                                 console.log(result);
 
                                 if(result.code = "00"){
@@ -346,10 +352,9 @@
 	              return false;
 	          }
 
-
-
 	        var srvFilterForm = {
-	         "SRV_FILTER_ID" : $("#SRV_FILTER_ID").val()
+	         "SRV_FILTER_ID" : $("#SRV_FILTER_ID").val(),
+	         "SRV_FILTER_IS_ACTIVE" : "8"
 	        }
 
 	        Common.ajax("POST", "/services/bs/doSaveDeactivateFilter.do", srvFilterForm, function(result) {
