@@ -26,4 +26,14 @@ public interface OrderListService {
 	EgovMap getMemberOrgInfo(Map<String, Object> params);
 	
 	List<EgovMap> getBankCodeList(Map<String, Object> params);
+
+	EgovMap selectInstallParam(Map<String, Object> params);
+
+	List<EgovMap> selectProductReturnView(Map<String, Object> params);
+
+	EgovMap getPReturnParam(Map<String, Object> params);
+
+	EgovMap productReturnResult(Map<String, Object> params);
+
+	void setPRFailJobRequest(Map<String, Object> params);
 }

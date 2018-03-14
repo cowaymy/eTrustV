@@ -39,4 +39,38 @@ public interface OrderListMapper {
 	List<EgovMap> getBankCodeList(Map<String, Object> params);
 	
 	List<EgovMap> getOderLdgr(Map<String, Object> params);
+
+	EgovMap selectInstallParam(Map<String, Object> params);
+
+	List<EgovMap> selectProductReturnView(Map<String, Object> params);
+
+	EgovMap selectPReturnParam(Map<String, Object> params);
+
+	int insert_LOG0039D(Map<String, Object> params);
+
+	int updateState_LOG0038D(Map<String, Object> params);
+
+	int insert_SAL0009D(Map<String, Object> params);
+
+	int updateState_SAL0020D(Map<String, Object> params);
+
+	int updateState_SAL0071D(Map<String, Object> params);
+
+	void SP_RETURN_BILLING_EARLY_TERMI(Map<String, Object> params);
+
+	int updateState_SAL0001D(Map<String, Object> params);
+
+	String select_SeqCCR0006D(Map<String, Object> params);
+
+	String select_SeqCCR0007D(Map<String, Object> params);
+
+	void insert_CCR0006D(Map<String, Object> params);
+
+	void insert_CCR0007D(Map<String, Object> params);
+
+	int updateFailed_LOG0038D(Map<String, Object> params);
+
+	void updateFailed_SAL0020D(Map<String, Object> params);
+
+	int insertFailed_LOG0039D(Map<String, Object> params);
 }

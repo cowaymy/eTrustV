@@ -48,7 +48,9 @@
             $("#paramReqStusCode").val(event.item.reqStusCode);
             $("#paramReqStusName").val(event.item.reqStusName);
             $("#paramReqStageId").val(event.item.reqStageId);
-
+            $("#paramRsoStusId").val(event.item.rsoStus);
+            $("#paramSalesOrdNo").val(event.item.ordNo);
+            
             gridValue =  AUIGrid.getCellValue(myGridID, event.rowIndex, $("#detailForm").serializeJSON());
         });
 
@@ -102,6 +104,12 @@
                 dataType : "date",
                 formatString : "dd-mm-yyyy" ,
                 editable : false
+            },{
+            	dataField : 'rsoStus' ,
+            	headerText : 'RSO Status' ,
+            	  width : 100,
+            	editable : false
+            	
             },{
                 dataField : "callEntryId",
                 visible : false
@@ -214,6 +222,25 @@
     	//}
 
     }
+    
+    
+    function fn_newRsoResult(){
+    	
+    	if(detailForm.reqId.value == ""){
+            Common.alert("No cancellation request selected.");
+            return false;
+        }
+    	if(detailForm.paramRsoStusId.value != 'ACT'){
+    		 Common.alert("Only available to use this function  in case of Return Service Order Status in ‘ACT’");
+             return false;
+    	}
+    	
+    	var salesOrdId1 = detailForm.salesOrdId.value;
+    	var salesOrdNo1 = detailForm.paramSalesOrdNo.value;
+    	
+        Common.popupDiv("/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId="+salesOrdId1 + "&salesOrderNO=" + salesOrdNo1 , $("#detailForm").serializeJSON(), null, "false", "addInstallationPopupId");
+    	
+    }
 
     	$.fn.clearForm = function() {
             return this.each(function() {
@@ -284,6 +311,9 @@
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newLogResult()"><spring:message code="sal.btn.newLogResult" /></a></p></li>
     </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_newRsoResult()">Add PR Result</a></p></li>
+    </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_ctAssignment()"><spring:message code="sal.btn.ctAssignment" /></a></p></li>
     </c:if>
@@ -303,6 +333,7 @@
     <input type="hidden" id="reqId" name="reqId">
     <input type="hidden" id="callEntryId" name="callEntryId">
     <input type="hidden" id="salesOrdId" name="salesOrdId">
+    <input type="hidden" id="paramSalesOrdNo" name="paramSalesOrdNo">
     <input type="hidden" id="typeId" name="typeId">
     <input type="hidden" id="docId" name="docId">
     <input type="hidden" id="refId" name="refId">
@@ -313,6 +344,7 @@
     <input type="hidden" id="paramReqStusCode" name="paramReqStusCode">
     <input type="hidden" id="paramReqStusName" name="paramReqStusName">
     <input type="hidden" id="paramReqStageId" name="paramReqStageId">
+    <input type="hidden" id="paramRsoStusId" name="paramRsoStusId">
 </form>
 <form id="searchForm" name="searchForm" method="post">
 
@@ -408,6 +440,8 @@
     <input type="text" title="" id="custIc" name="custIc" placeholder="NRIC/Company Number" class="w100p" />
     </td>
 </tr>
+
+
 </tbody>
 </table><!-- table end -->
 

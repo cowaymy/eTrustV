@@ -288,4 +288,232 @@
     </select>
     
     
+      <select id="selectInstallParam" parameterType="Map" resultType="egovMap">
+			select max(INSTALL_ENTRY_ID) INSTALL_ENTRY_ID
+			from sal0046d
+			where STUS_CODE_ID  = 4 
+			and SALES_ORD_ID = #{salesOrderId}
+			group by SALES_ORD_ID
+    </select>
+    
+          <select id="selectProductReturnView" parameterType="Map" resultType="egovMap">
+    
+            
+			SELECT A.RETN_NO, C.CODE, to_char(A.REQST_DT , 'YYYY/MM/DD' ) REQST_DT, D.MEM_CODE, D.NAME 
+			FROM LOG0038D A,SAL0001D B, SYS0038M C,    ORG0001D D
+		   WHERE A.SALES_ORD_ID = B.SALES_ORD_ID 
+		    AND A.STUS_CODE_ID = C.STUS_CODE_ID 
+            AND A.CT_ID = D.MEM_ID 
+             AND B.SALES_ORD_NO = #{salesOrdNo}
+            
+    
+    
+    
+    
+        </select>
+        
+        
+        <select id="selectPReturnParam" parameterType="Map" resultType="egovMap">
+    
+            
+          select  a.SO_REQ_RESN_ID ,  b.RETN_NO 
+          from sal0020d a  , log0038d b
+		  where 1=1
+		  and a.SO_REQ_CUR_CALL_ENTRY_ID = b.CALL_ENTRY_ID
+		  and STUS_CODE_ID = 1
+		  and b.CALL_ENTRY_ID = #{callEntryId}
+   
+    
+        </select>
+        
+        
+          <insert  id="insert_LOG0039D" parameterType="Map">
+                INSERT INTO LOG0039D (
+                               STK_RETN_RESULT_ID, STK_RETN_ID, STK_RETN_STUS_ID, 
+                               STK_RETN_STK_IS_RET, STK_RETN_DT, STK_RETN_REM, 
+                               STK_RETN_RESN_ID, STK_RETN_CC_ID, STK_RETN_CRT_DT, 
+                               STK_RETN_CRT_USER_ID, STK_RETN_UPD_DT, STK_RETN_UPD_USER_ID, 
+                               STK_RETN_RESULT_IS_SYNCH, STK_RETN_ALLOW_COMM, STK_RETN_CT_MEM_ID, 
+                               CHECKIN_DT, CHECKIN_TM, CHECKIN_GPS, 
+                               SIGN_DATA, SIGN_REG_DT, SIGN_REG_TM, 
+                               OWNER_CODE, RESULT_CUST_NAME, RESULT_ICMOBILE_NO, 
+                               RESULT_RPT_EMAIL_NO, RESULT_ACEPT_NAME) 
+                            VALUES (
+                                           LOG0039D_STK_RETN_RESULT_ID.nextval, 
+                                           (select  STK_RETN_ID  from LOG0038D where  retn_no =#{serviceNo}), 
+                                           #{stkRetnStusId}, 
+                                           #{stkRetnStkIsRet}, 
+                                           sysdate, 
+                                           #{stkRetnRem}, 
+                                           #{stkRetnResnId}, 
+                                           #{stkRetnCcId}, 
+                                           sysdate, 
+                                         #{stkRetnCrtUserId} , 
+                                           sysdate, 
+                                        #{stkRetnCrtUserId} , 
+                                           #{stkRetnResultIsSynch}, 
+                                           #{stkRetnAllowComm}, 
+                                          #{stkRetnCrtUserId}, 
+                                           to_char( to_date(#{checkinDt},'DD/MM/YYYY') ,'yyyymmdd'), 
+                                           #{checkinTm}, 
+                                           #{checkinGps}, 
+                                           #{signData},   
+                                           to_char( to_date( #{signRegDt},'DD/MM/YYYY') ,'yyyymmdd'), 
+                                           #{signRegTm}, 
+                                           #{ownerCode}, 
+                                           #{resultCustName},    
+                                           #{resultIcmobileNo}, 
+                                           #{resultRptEmailNo},    
+                                           #{resultAceptName}
+                               )
+       </insert>
+       
+       
+            <update id="updateState_LOG0038D" parameterType="Map">
+                UPDATE  LOG0038D
+                    SET    STUS_CODE_ID   = '4',
+                             UPD_DT             = sysdate,
+                             UPD_USER_ID     =  #{userId}
+                WHERE  retn_no   = #{serviceNo}
+       </update>
+		<insert  id="insert_SAL0009D" parameterType="Map">
+		                INSERT INTO SAL0009D (
+		                                                LOG_ID,
+		                                                SALES_ORD_ID,
+		                                                PRGRS_ID,
+		                                                LOG_DT,
+		                                                REF_ID,
+		                                                IS_LOK,
+		                                                LOG_CRT_USER_ID,
+		                                                LOG_CRT_DT )
+		                VALUES (
+		                            SAL0009D_LOG_ID_SEQ.NEXTVAL,
+		                            (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{salesOrderNo}),
+		                            '13',
+		                            SYSDATE,
+		                            '0',
+		                            '0',
+		                             #{userId},
+		                            SYSDATE ) 
+		       </insert>
+		       
+		       <update id="updateState_SAL0020D" parameterType="Map">
+                UPDATE SAL0020D
+                SET SO_REQ_STUS_ID = '32'
+                WHERE SO_REQ_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D
+                                                    WHERE SALES_ORD_NO = #{salesOrderNo})
+                </update>
+                
+                <update id="updateState_SAL0071D" parameterType="Map">
+                UPDATE SAL0071D
+                SET STUS_CODE_ID = 'TER'
+                WHERE SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D
+                                                   WHERE SALES_ORD_NO = #{salesOrderNo})
+       </update>
+       
+             <select id="SP_RETURN_BILLING_EARLY_TERMI" parameterType="Map"  statementType="CALLABLE" >
+      {
+            call SP_RETURN_BILLING_EARLY_TERMI( #{P_SALES_ORD_NO},#{P_USER_ID},#{P_RETN_NO})
+      }
+     </select>
+     
+     <update id="updateState_SAL0001D" parameterType="Map">
+                UPDATE SAL0001D A
+                SET STUS_CODE_ID = '10'
+                WHERE A.SALES_ORD_NO = #{salesOrderNo}
+       </update>     
+       
+          
+   <select id="select_SeqCCR0006D" parameterType="Map" resultType="java.lang.String">
+   
+    select CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL
+   From dual
+   
+   </select>
+   <select id="select_SeqCCR0007D" parameterType="Map" resultType="java.lang.String">
+   
+    select CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL 
+   From dual
+   
+   </select>
+   
+    <insert id="insert_CCR0006D" parameterType="Map">
+       INSERT INTO CCR0006D 
+      ( CALL_ENTRY_ID , SALES_ORD_ID , TYPE_ID 
+      , STUS_CODE_ID , RESULT_ID , DOC_ID
+       , CRT_USER_ID , CRT_DT , CALL_DT 
+       , IS_WAIT_FOR_CANCL , HAPY_CALLER_ID 
+       , UPD_DT , UPD_USER_ID , ORI_CALL_DT ) 
+       VALUES (
+        #{callEntryID} ,  (SELECT  SALES_ORD_ID  FROM SAL0001D WHERE  SALES_ORD_NO  =#{salesOrderNo}) , 259
+       ,19 , #{callResultID} , 0
+       ,#{userId}, SYSDATE , to_date (#{nextCallDate} , 'DD/MM/YYYY')
+       ,0 , 0 
+       ,SYSDATE , #{userId}  , to_date (#{nextCallDate} , 'DD/MM/YYYY')
+       )
+   
+       </insert>
+       
+             <insert id="insert_CCR0007D" parameterType="Map">
+       INSERT INTO CCR0007D 
+      (CALL_RESULT_ID , CALL_ENTRY_ID , CALL_STUS_ID 
+      , CALL_DT , CALL_ACTN_DT , CALL_FDBCK_ID 
+      , CALL_CT_ID , CALL_REM , CALL_CRT_USER_ID 
+      , CALL_CRT_DT , CALL_CRT_USER_ID_DEPT
+       , CALL_HC_ID , CALL_ROS_AMT 
+       , CALL_SMS , CALL_SMS_REM  ) 
+       VALUES (
+       #{callResultID}, #{callEntryID} ,  19
+       , to_date (#{nextCallDate} , 'DD/MM/YYYY') , to_date('1900/01/01', 'YYYY/MM/DD' ) , 0 
+       , 0 , ' ' ,  #{userId}
+       , SYSDATE , 0 
+       , 0 , 0 
+       , 0 , ' '
+       )
+       </insert>
+          <insert id="insertFailed_LOG0039D" parameterType="Map">
+       
+             INSERT INTO LOG0039D (
+                       STK_RETN_RESULT_ID, 
+                       STK_RETN_ID, 
+                       STK_RETN_STUS_ID, 
+                       STK_RETN_CT_MEM_ID,
+                       STK_RETN_CRT_DT, 
+                       STK_RETN_CRT_USER_ID) 
+                    VALUES ( 
+                       LOG0039D_STK_RETN_RESULT_ID.nextval, 
+                       (select  STK_RETN_ID  from LOG0038D where  retn_no =#{serviceNo}) , 
+                       '21', 
+                      #{userId},
+                       sysdate, 
+                     #{userId}
+                     )
+       </insert>
+         
+          
+       <update id="updateFailed_LOG0038D" parameterType="Map">
+                UPDATE  LOG0038D
+                    SET    STUS_CODE_ID   = '21',
+                             UPD_DT             = sysdate,
+                             UPD_USER_ID     = #{userId},
+                             FAIL_RESN_ID     =#{failReasonCode},
+                             CALL_ENTRY_ID = #{callEntryID}
+                WHERE  retn_no = #{serviceNo}
+       </update>
+       
+       
+
+         <update id="updateFailed_SAL0020D" parameterType="Map">
+         
+         update sal0020d  
+         set SO_REQ_UPD_USER_ID =  #{userId}
+              , SO_REQ_UPD_DT = sysdate 
+              , SO_REQ_STUS_ID = 1
+              , SO_REQ_CUR_CALL_ENTRY_ID = #{callEntryID}
+         
+          where   SO_REQ_SO_ID  =  (SELECT  SALES_ORD_ID  FROM SAL0001D WHERE  SALES_ORD_NO  =#{salesOrderNo})
+         </update>
+     
+       
+    
 </mapper>
