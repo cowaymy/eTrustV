@@ -41,8 +41,8 @@ function createAUIGrid() {
         editable : false,
         width : 300
     }, {
-        dataField : "trnscId",
-        headerText : "trnscId",
+        dataField : "tranStusCd",
+        headerText : "LOG Status",
         editable : false,
         width : 100
     }
