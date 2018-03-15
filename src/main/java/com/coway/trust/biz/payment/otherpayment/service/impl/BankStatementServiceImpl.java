@@ -71,7 +71,7 @@ public class BankStatementServiceImpl extends EgovAbstractServiceImpl implements
     			hm.put("uploadBankAccount", codeMap.get("accCode"));	//Interface 정보 Bank Account Code
     			
     			//Interface Table Insert
-    			bankStatementMapper.insertBankStatementITF(hm);
+//    			bankStatementMapper.insertBankStatementITF(hm);
     			
     		}
     	}  
