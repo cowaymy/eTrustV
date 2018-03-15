@@ -696,10 +696,10 @@ public class ServiceApiController {
 				
 				
 				//svc0001d  mem_code 와   mem_code 같은지 체크 
-			    // int asResultMemId = ASManagementListService.asResultSync(alreadyP);
+			     int asResultMemId = ASManagementListService.asResultSync(alreadyP);
 			     
 			     
-			     int asResultMemId =1  ;//ASManagementListService.asResultSync(alreadyP);
+			    // int asResultMemId =1  ;//ASManagementListService.asResultSync(alreadyP);
  
 		
 			    
@@ -1177,8 +1177,8 @@ public class ServiceApiController {
 			
 			transactionId =String.valueOf(params.get("transactionId"));
 			
-			//int  isInsMemIdCnt =	installationResultListService.insResultSync(params);
-			int  isInsMemIdCnt =	1;
+			int  isInsMemIdCnt =	installationResultListService.insResultSync(params);
+			//int  isInsMemIdCnt =	1;
 			
 			
 			if(isInsMemIdCnt > 0){
@@ -1410,9 +1410,9 @@ public class ServiceApiController {
 			}
 			
 			 //	//MEM_ID CHECK   
-   			//int  memCnt = MSvcLogApiService.prdResultSync(cvMp);
+   			int  memCnt = MSvcLogApiService.prdResultSync(cvMp);
    			
-   			int  memCnt = 1;
+   			//int  memCnt = 1;
    			
    			
    			if( memCnt >0 ){
