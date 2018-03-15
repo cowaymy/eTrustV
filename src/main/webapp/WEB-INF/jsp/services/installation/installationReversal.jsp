@@ -25,6 +25,11 @@ $(document).ready(function() {
         selectrow(installEntryNo,salesOrdNo,installEntryId);
     });
     
+    //
+ 
+   
+    
+    
 });
 
 function selectrow(installEntryNo,salesOrdNo){
@@ -48,18 +53,19 @@ function selectrow(installEntryNo,salesOrdNo){
 	         console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
 	         
 	     });
+	
 
 }
 function fn_setdetail(result){
 	
 	
 	$("#spanOrdNo").text(result.list1.salesOrdNo);
-	$("#spanAppType").text(result.list1.codeName2);
+	$("#spanAppType").text(result.list1.codeName);
 	$("#spanCustomerId").text(result.list1.custId);
 	$("#spanCustomerName").text(result.list1.name);
 	$("#spanNric").text(result.list1.nric);
 	$("#spanInstallationNo").text(result.list1.installEntryNo);
-	$("#spanInstallationType").text(result.list1.codeName1);
+	$("#spanInstallationType").text(result.list1.codename1);
 	$("#spanInstallationStatus").text(result.list1.name1);
 	$("#spanActInsDate").html(result.list1.c1);
 	$("#spanInCharedCt").text(result.list1.name2);
@@ -106,10 +112,15 @@ function fn_setdetail(result){
  }
 	//$("#retWarehouseID").text(result.list1.brnchId);
 	String.prototype.zf = function(len){return "0".string(len - this.length) + this;};
-
+    var errorM = "";
 	var date = new Date();
+
     var year = date.getFullYear() % 1000;
     var month = date.getMonth()+1;
+    var day = date.getDate();
+    if(date.getDate() < 10){
+        day = "0"+date.getDate();
+    }
     if(date.getMonth()+1 < 10){
         month = "0"+date.getMonth()+1;
     }
@@ -127,17 +138,30 @@ function fn_setdetail(result){
 			$("#lblErrorMessage").text("* No installation record found for this order.");
 			$("#divResultReversal").hide();
 		}
-		if(result.list1.c3.substr(0,5)==(year+'/'+month)){
-		//if(result.list1.c9==result.list1.c8){
-			$("#lblErrorMessage").text("");
+		if("${SESSION_INFO.userId}" != "19872")
+	 	if(result.list1.c3==(year+'/'+month +'/'+ day)){
+			console.log(result.list1.c3);
+			errorM = "";
+			$("#lblErrorMessage").text(errorM);
 			$("#lblErrorMessage").hide();
 			$("#btnReverse").show();
 			$("#divResultReversal").show();			
 		}else{
+		    console.log(result.list1.c3);
+			errorM ="* This installation is past day. Reversal is disallowed.";
 			$("#lblErrorMessage").show();
-			$("#lblErrorMessage").text("* This installation is past day. Reversal is disallowed.");
+			$("#lblErrorMessage").text(errorM);
 			$("#btnReverse").hide();
             $("#divResultReversal").hide();
+		} 
+		if(result.list1.codeId == '67'){
+			
+			errorM =   errorM + " OutRight Type is disallowed." ;
+			  $("#lblErrorMessage").show();
+	          $("#lblErrorMessage").text(errorM);
+	          $("#btnReverse").hide();
+	          $("#divResultReversal").hide();
+		
 		}
 		
 	}else{
