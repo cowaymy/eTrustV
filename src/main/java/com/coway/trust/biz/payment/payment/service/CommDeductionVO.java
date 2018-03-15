@@ -6,17 +6,18 @@ public class CommDeductionVO {
 	private int orderNo;
 	private String mCode;
 	private double amount;
-	private int paidMonth;
-	
+	private String paidMonth;
+
 	public static CommDeductionVO create(CSVRecord CSVRecord) {
 		CommDeductionVO vo = new CommDeductionVO();
 		vo.setOrderNo(Integer.parseInt(CSVRecord.get(0)));
 		vo.setmCode(CSVRecord.get(1));
 		vo.setAmount(Double.parseDouble(CSVRecord.get(2)));
-		vo.setPaidMonth(Integer.parseInt(CSVRecord.get(3)));
+		vo.setPaidMonth(CSVRecord.get(3));
+
 		return vo;
 	}
-	
+
 	public int getOrderNo() {
 		return orderNo;
 	}
@@ -35,12 +36,12 @@ public class CommDeductionVO {
 	public void setAmount(double amount) {
 		this.amount = amount;
 	}
-	public int getPaidMonth() {
+	public String getPaidMonth() {
 		return paidMonth;
 	}
-	public void setPaidMonth(int paidMonth) {
+	public void setPaidMonth(String paidMonth) {
 		this.paidMonth = paidMonth;
 	}
-	
-	
+
+
 }
