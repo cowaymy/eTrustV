@@ -13,8 +13,13 @@ public class CommDeductionVO {
 		vo.setOrderNo(Integer.parseInt(CSVRecord.get(0)));
 		vo.setmCode(CSVRecord.get(1));
 		vo.setAmount(Double.parseDouble(CSVRecord.get(2)));
-		vo.setPaidMonth(Integer.parseInt(CSVRecord.get(3)));
 
+		if(CSVRecord.get(3).isEmpty()){
+			vo.setPaidMonth(0);
+		}
+		else {
+		vo.setPaidMonth(Integer.parseInt(CSVRecord.get(3)));
+		}
 		return vo;
 	}
 
