@@ -77,7 +77,7 @@
 
 <select id="selectSupplyCdcMainList" parameterType="Map" resultType="egovMap">
 	     SELECT
-	               MOD( DENSE_RANK() OVER ( ORDER BY STOCK_CTGRY ,SUPPLY_BY_CDC.CODE),2) DIV_ODD
+	               MOD( DENSE_RANK() OVER ( ORDER BY STOCK_CTGRY ,SCM06D.STOCK_CODE),2) DIV_ODD
 	             , CMPLT IS_SAVED
 	             , LAST_UPD_COLUMN
 	             , PSI_ID
@@ -130,50 +130,23 @@
 	             , ROUND(W30) W30
 
          FROM (
-               SELECT  SCM05M.PLAN_STUS ,SCM05M.PLAN_ID ,SCM30S.SCM_YEAR ,SCM30S.SCM_MONTH ,SCM30S.SCM_WEEK_TH ,SCM30S.STOCK_CODE CODE ,SCM30S.CDC
-                      ,SUM(PRE_M3_AVG_ORDED_RATE) PRE_M3_AVG_ORDED_RATE
-                      ,SUM(PRE_M3_AVG_ISSU_RATE) PRE_M3_AVG_ISSU_RATE
-                      ,SUM(PRE_M3_AVG_ORDED) PRE_M3_AVG_ORDED
-                      ,SUM(PRE_M3_AVG_ISSU) M3_ISSU_AVG
-                      ,SUM(M1_ORD) M1_ORD
-                      ,SUM(M2_ORD) M2_ORD
-                      ,SUM(M3_ORD) M3_ORD
-
-                      ,SUM(M_3) M_3
-                      ,SUM(M_2) M_2
-                      ,SUM(M_1) M_1
-                  FROM SCM0030S SCM30S
-                      ,SCM0005M SCM05M
-                 WHERE SCM30S.SCM_YEAR  = #{scmYearCbBox}
-                   AND SCM30S.SCM_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1 )
-                   AND SCM30S.SCM_WEEK_TH = #{scmPeriodCbBox}
-                   AND SCM30S.CDC         = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
-                   AND SCM30S.SCM_YEAR    = SCM05M.PLAN_YEAR
-                   AND SCM30S.SCM_MONTH   = SCM05M.PLAN_MONTH
-                   AND SCM30S.SCM_WEEK_TH = SCM05M.PLAN_WEEK
-                   AND SCM30S.SCM_WEEK_TH_SN = 1
-                   AND SCM30S.CDC = SCM05M.CDC
-
-                 GROUP BY SCM05M.PLAN_STUS
-                         ,SCM05M.PLAN_ID
-                         ,SCM30S.SCM_YEAR
-                         ,SCM30S.SCM_MONTH
-                         ,SCM30S.SCM_WEEK_TH
-                         ,SCM30S.STOCK_CODE
-                         ,SCM30S.CDC
-
+               SELECT  *
+                  FROM SCM0005M SCM05M
+                 WHERE SCM05M.PLAN_YEAR  = #{scmYearCbBox}
+                   AND SCM05M.PLAN_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1 )
+                   AND SCM05M.PLAN_WEEK = #{scmPeriodCbBox}
+                   AND SCM05M.CDC         = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
             ) SUPPLY_BY_CDC
 
-            LEFT OUTER JOIN SCM0006D SCM06D ON SUPPLY_BY_CDC.CODE = SCM06D.STOCK_CODE
-                                            AND SUPPLY_BY_CDC.PLAN_ID = SCM06D.PLAN_MASTER_ID
-            LEFT OUTER JOIN SYS0026M SYS26M ON SUPPLY_BY_CDC.CODE  = SYS26M.STK_CODE
+            LEFT OUTER JOIN SCM0006D SCM06D ON SUPPLY_BY_CDC.PLAN_ID = SCM06D.PLAN_MASTER_ID
+            LEFT OUTER JOIN SYS0026M SYS26M ON SCM06D.STOCK_CODE  = SYS26M.STK_CODE
             LEFT OUTER JOIN SYS0013M SYS13M ON SYS26M.STK_CTGRY_ID = SYS13M.CODE_ID
 
       WHERE 1 = 1
 
      <choose>
        <when test='stkCodes != null and !stkCodes.isEmpty '>
-        AND SUPPLY_BY_CDC.CODE IN
+        AND SCM06D.STOCK_CODE IN
            <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
                #{item}
            </foreach>
@@ -190,7 +163,7 @@
      </choose>
 
      ORDER BY STOCK_CTGRY
-             ,SUPPLY_BY_CDC.CODE
+             ,SCM06D.STOCK_CODE
              ,PSI_ID
 </select>
 
