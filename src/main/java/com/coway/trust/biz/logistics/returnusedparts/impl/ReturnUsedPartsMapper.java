@@ -23,4 +23,6 @@ public interface ReturnUsedPartsMapper {
 	
 	int validMatCodeSearch(String matcode);
 	
+	int returnPartsdupchek(Map<String, Object> insMap);
+	
 }

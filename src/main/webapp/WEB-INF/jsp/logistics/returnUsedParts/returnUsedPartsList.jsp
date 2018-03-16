@@ -65,7 +65,8 @@ today = (dd + '/' + mm + '/' + yyyy);
 
 
                       
-var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},                          
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},        
+                     {dataField: "seq",headerText :"seq"      ,width:120    ,height:30, visible:false },  
                      {dataField: "serviceOrder",headerText :"<spring:message code='log.head.serviceorder'/>"      ,width:120    ,height:30, editable:false },                        
                      {dataField: "customer",headerText :"<spring:message code='log.head.customer'/>"      ,width:120    ,height:30, editable:false },                        
                      {dataField: "customerName",headerText :"<spring:message code='log.head.customername'/>"           ,width:120    ,height:30, editable:false },                       
@@ -278,7 +279,13 @@ $(document).ready(function(){
 	                    //   chkfalg="Y";
 	                   //    break;
 	                  // }else{
-	                	   chkfalg="N";
+	                  if (checkedItems[i].returnComplete =="Y"){
+	                	  chkfalg="Y";
+	                	  Common.alert('Already processed.');
+	                  }else{
+	                	   chkfalg="N";     	  
+	                  }
+
 	                 //  }   
 	                   
 	                   if (checkedItems[i].materialCode =="" || checkedItems[i].materialCode == undefined){
@@ -448,9 +455,12 @@ $(document).ready(function(){
 		data.checked = checkdata;
 
 		Common.ajax("POST","/logistics/returnusedparts/returnPartsUpdate.do", data, function(result) {
-			
-					Common.alert(result.message);
-					$("#search").click();
+			if(result.data==0 ){
+				Common.alert(result.message);
+			   $("#search").click();
+			}else{
+				Common.alert('Already processed.');
+			}
 
 		})
 	 }		

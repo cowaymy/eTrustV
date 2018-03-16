@@ -207,5 +207,11 @@
 <!--           and to_char(l82.CMPLT_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{returnedt},'dd/mm/yyyy'),'yyyymmdd') -->
 <!--        </if>     -->
 <!--     </select> -->
+        
+        <select id="returnPartsdupchek" parameterType="Map" resultType="integer">
+           select count(*) from log0082m where seq = #{seq} and CMPLT_YN ='Y'
+        </select>
+   
+   
    
 </mapper>

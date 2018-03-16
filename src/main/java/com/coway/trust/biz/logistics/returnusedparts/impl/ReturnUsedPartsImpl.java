@@ -92,5 +92,11 @@ public class ReturnUsedPartsImpl extends EgovAbstractServiceImpl implements Retu
 	}
 	
 	
-
+	@Override
+	public int returnPartsdupchek(Map<String, Object> insMap) {
+		// TODO Auto-generated method stub
+		return returnUsedPartsMapper.returnPartsdupchek(insMap);
+		
+	}
+	
 }

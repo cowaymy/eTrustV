@@ -148,8 +148,29 @@ public class ReturnUsedPartsController {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
 		 logger.debug("loginId@@@@@: {}", loginId);
-
-		 returnUsedPartsService.returnPartsUpdate(params,loginId);
+	
+		 
+		 List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		 Map<String, Object> insMap = new HashMap<>();
+		 int dupCnt =0;
+		 
+		 
+			for (int i = 0; i < checkList.size(); i++) {
+				logger.debug("checkList    값 : {}", checkList.get(i));
+			}
+			
+			if (checkList.size() > 0) {
+				for (int i = 0; i < checkList.size(); i++) {
+					 insMap = (Map<String, Object>) checkList.get(i);
+				}
+				 dupCnt = returnUsedPartsService.returnPartsdupchek(insMap);		
+			}
+			
+			logger.debug("dupCnt %$%$%$%$%$%$ ??????: {}", dupCnt);
+			
+		 if(dupCnt == 0){
+			 returnUsedPartsService.returnPartsUpdate(params,loginId);
+		 }
 
 		
 
@@ -157,6 +178,7 @@ public class ReturnUsedPartsController {
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(dupCnt);
 
 		return ResponseEntity.ok(message);
 	}
