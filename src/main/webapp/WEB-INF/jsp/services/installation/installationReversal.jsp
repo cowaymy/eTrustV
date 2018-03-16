@@ -322,6 +322,13 @@ function fn_orderSearch(){
 
 }
 
+function save_confirm(){
+	
+
+    Common.confirm("Related Billing & Payment Data should be adjusted manually"  , fn_save );
+}
+
+
 function fn_save(){
 	
 	/*if(fn_saveValidation()){
@@ -675,7 +682,7 @@ function fn_close(){
 </tbody>
 </table>
 <ul class="center_btns">
-    <li><p class="btn_blue2 big" id="btnReverse"><a href="#" onclick="javascript:fn_save()"><spring:message code='service.btn.ConfirmToReverse'/></a></p></li>
+    <li><p class="btn_blue2 big" id="btnReverse"><a href="#" onclick="javascript:save_confirm()"><spring:message code='service.btn.ConfirmToReverse'/></a></p></li>
 </ul>
 </form>
 </div>
