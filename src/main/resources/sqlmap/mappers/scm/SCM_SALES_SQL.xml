@@ -2093,12 +2093,13 @@ SELECT STK_ID
 			SELECT NVL(ORD_CNT,0) ORD_CNT
 			  FROM SCM0008M SCM08M,
 			  (SELECT ORD_CNT, STOCK_CODE
-			     FROM SCM0030S
+			     FROM SCM0044S
 			    WHERE SCM_YEAR = #{scmYearCbBox}
 			      AND SCM_WEEK_TH= #{scmPeriodCbBoxBefore}
 			      AND STOCK_CODE = #{stockCode}
 			      AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})) SCM30S
 			 WHERE SCM08M.STOCK_CODE = SCM30S.STOCK_CODE(+)
+			   AND SCM08M.STOCK_CODE = #{stockCode}
     </select>
 
     <select id="selectSafetyStock" parameterType="Map" resultType="int">
