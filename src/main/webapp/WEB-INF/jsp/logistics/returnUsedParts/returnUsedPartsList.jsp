@@ -32,9 +32,38 @@ var userCode;
 var comboData = [{"codeId": "N","codeName": "Not yet"},{"codeId": "Y","codeName": "Done"}];
 var comboData1 = [{"codeId": "62","codeName": "Filter"},{"codeId": "63","codeName": "Spare Part"}];
 var comboData2 = [{"codeId": "03","codeName": "CT"},{"codeId": "04","codeName": "CODY"}];
+var comboData3 = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
 var uomlist = f_getTtype('364' , ''); 
 var oldQty;
 var oldSerial;
+
+
+/* Required Date 초기화 */
+var today = new Date();
+today.setDate(today.getDate() -7); 
+var dd = today.getDate();
+var mm = today.getMonth()+1;
+var yyyy = today.getFullYear();
+
+if(dd<10) { dd='0'+dd; }
+
+if(mm<10) { mm='0'+mm; }
+
+today = (dd + '/' + mm + '/' + yyyy);
+
+// var nextDate = new Date();
+// nextDate.setDate(nextDate.getDate() +6);
+// var dd2 = nextDate.getDate();
+// var mm2 = nextDate.getMonth() + 1;
+// var yyyy2 = nextDate.getFullYear();
+
+// if(dd2 < 10) { dd2 = '0' + dd2; }
+
+// if(mm2 < 10) { mm2 ='0' + mm2; }
+
+// nextDate = (dd2 + '/' + mm2 + '/' + yyyy2);
+
+
                       
 var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},                          
                      {dataField: "serviceOrder",headerText :"<spring:message code='log.head.serviceorder'/>"      ,width:120    ,height:30, editable:false },                        
@@ -112,6 +141,7 @@ var subgridpros = {
         };
        
 var paramdata;
+
 $(document).ready(function(){
     
     /**********************************
@@ -123,8 +153,13 @@ $(document).ready(function(){
     
     
     doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
-    doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'searchlocgrade', 'A','');
+    //doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE' , Codeval : 'A'}, '', 'searchlocgrade', 'S','');
    // doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
+   $("#servicesdt").val(today);
+    doSysdate(0 , 'serviceedt');  
+    doDefCombo(comboData3, 'A' ,'searchlocgrade', 'S', '');
+    
+
     
     
     
@@ -525,7 +560,8 @@ $(document).ready(function(){
                    </td>
                    <th scope="row">Location</th>
                    <td>
-                       <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select>
+<!--                        <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select> -->
+                       <select class="w100p" id="searchLoc" name="searchLoc"></select>
                    </td>              
                 </tr>
                 <tr>
