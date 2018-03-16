@@ -36,4 +36,6 @@ public interface OrderListService {
 	EgovMap productReturnResult(Map<String, Object> params);
 
 	void setPRFailJobRequest(Map<String, Object> params);
+
+	EgovMap getPrCTInfo(Map<String, Object> params);
 }

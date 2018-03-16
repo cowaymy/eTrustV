@@ -288,7 +288,7 @@ public class OrderListController {
 		EgovMap installationContract = installationResultListService.getInstallContactByContactID(installation);
 		EgovMap salseOrder = installationResultListService.getSalesOrderMBySalesOrderID(installResult);
 		EgovMap hpMember= installationResultListService.getMemberFullDetailsByMemberIDCode(salseOrder);
-
+		EgovMap pRCtInfo =orderListService.getPrCTInfo(params);
 		//if(params.get("codeId").toString().equals("258")){
 
 		//}
@@ -325,7 +325,9 @@ public class OrderListController {
 		model.addAttribute("sirimLoc", sirimLoc);
 		model.addAttribute("CheckCurrentPromo", CheckCurrentPromo);
 		model.addAttribute("promotionView", promotionView);
+		model.addAttribute("pRCtInfo", pRCtInfo);
 		model.addAttribute("callEntryId" , params.get("callEntryId"));
+		
 		// 호출될 화면
 		return "sales/order/addProductReturnResultPop";
 	}
@@ -389,6 +391,7 @@ public class OrderListController {
 				}
 				servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 			}
+			message.setMessage("Success : Product Return is Complete");
         	
 		}
 
@@ -402,7 +405,7 @@ public class OrderListController {
 			
 			
 			orderListService.setPRFailJobRequest(params);		
-			
+			message.setMessage("Success : Product Return is Fail");
 			
 		}
 	

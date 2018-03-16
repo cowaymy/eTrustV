@@ -86,11 +86,18 @@ $(document).ready(function() {
         if($("#addInstallForm #installStatus").val() == 4){
     
                 $("#checkCommission").prop("checked",true);
-
+                $("#addInstallForm #installDate").prop("readonly" , false);
+                $("#addInstallForm #installDate").attr("class" , "j_date w100p hasDatepicker");
+                $("#addInstallForm #installDate").attr("placeholder" , "DD/MM/YYYY");
         }
         else{
         	
             $("#checkCommission").prop("checked",false);
+            $("#addInstallForm #installDate").val("");
+            $("#addInstallForm #installDate").prop("readonly" , true);
+            $("#addInstallForm #installDate").attr("readonly" , true);
+            $("#addInstallForm #installDate").attr("class" , "disabled");
+            $("#addInstallForm #installDate").attr("placeholder" , "only complete case");
         }      
     
     });
@@ -132,6 +139,13 @@ function fn_saveInstall(){
 	 if($("#addInstallForm #installStatus").val() == 21){  // Failed
 	        if( $("#failReason").val() == 0 || $("#nextCallDate").val() == '' ){
 	        	Common.alert("Please insert 'Failed Reason', 'Next Call Date'<br/>in fail status");
+	     
+	            return;
+	        }
+	 
+	        if ( $("#addInstallForm #installDate").val() != ''  || 
+	                $("#addInstallForm #custName").val() != '' ) {
+	            Common.alert("Not allowed to choose 'Actual Product Return Date', 'Acctance Name' <br/>in fail status");
 	            return;
 	        }
 	}
@@ -149,6 +163,7 @@ function fn_saveInstall(){
 
 function fn_saveclose(){
 	addInstallationPopupId.remove();
+	fn_orderCancelListAjax();
 }
 function fn_viewInstallResultSearch(){
     var jsonObj = {
@@ -767,8 +782,8 @@ var gridPros = {
 </tr>
 <tr>
     <th scope="row"><spring:message code='service.title.CTCode'/></th>
-    <td colspan="3"><input type="text" title="" value="<c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/>" placeholder="" class="readonly" style="width:100%;" id="ctCode"  readonly="readonly" name="ctCode" />
-    <input type="hidden" title="" value="${installResult.ctId}" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
+    <td colspan="3"><input type="text" title="" value="<c:out value="(${pRCtInfo.memCode}) ${pRCtInfo.name}"/>" placeholder="" class="readonly" style="width:100%;" id="ctCode"  readonly="readonly" name="ctCode" />
+    <input type="hidden" title="" value="${pRCtInfo.memId}" placeholder="" class="" style="width:200px;" id="CTID" name="CTID" />
     <!-- <p class="btn_sky"><a href="#">Search</a></p></td> -->
     <%-- <th scope="row"><spring:message code='service.title.CTName'/></th>
     <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="ctName" name="ctName"/></td> --%>

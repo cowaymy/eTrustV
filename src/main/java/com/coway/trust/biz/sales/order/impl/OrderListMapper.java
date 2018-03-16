@@ -73,4 +73,6 @@ public interface OrderListMapper {
 	void updateFailed_SAL0020D(Map<String, Object> params);
 
 	int insertFailed_LOG0039D(Map<String, Object> params);
+
+	EgovMap getPrCTInfo(Map<String, Object> params);
 }

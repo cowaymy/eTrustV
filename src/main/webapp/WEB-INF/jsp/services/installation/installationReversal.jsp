@@ -42,7 +42,12 @@ function selectrow(installEntryNo,salesOrdNo){
 	   Common.ajax("POST", "/services/installationReversalSearchDetail", $("#searchForm").serializeJSON() , function(result) {
 	        
 	        //console.log(result);
-	        
+	   
+	        $("#instalStrlDate").val("");
+	        $("#reverseReason").val("");
+	        $("#failReason").val("");
+	        $("#nextCallStrlDate").val("");
+	        $("#reverseReasonText").val("");
 	        fn_setdetail(result);
 
 	     }, function(jqXHR, textStatus, errorThrown) {
@@ -633,7 +638,7 @@ function fn_close(){
         <p><input type="text" title="Install Date" placeholder="DD/MM/YYYY" class="j_date" id="instalStrlDate" name="instalStrlDate"/></p>
         </div>
     </td>
-    
+ 
 </tr>
 <tr>
     <th scope="row"><spring:message code='service.title.ReverseReason'/></th>    

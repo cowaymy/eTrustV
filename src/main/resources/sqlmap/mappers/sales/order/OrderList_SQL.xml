@@ -326,7 +326,16 @@
     
         </select>
         
+                <select id="getPrCTInfo" parameterType="Map" resultType="egovMap">
+						 select distinct   b.mem_id, b.mem_code , b.NAME 
+						from log0038d a , org0001d b
+						where CT_ID = mem_id
+						and a.CALL_ENTRY_ID = '8332868' 
+						and STUS_CODE_ID = 1
+
+ 
         
+                </select>
           <insert  id="insert_LOG0039D" parameterType="Map">
                 INSERT INTO LOG0039D (
                                STK_RETN_RESULT_ID, STK_RETN_ID, STK_RETN_STUS_ID, 
