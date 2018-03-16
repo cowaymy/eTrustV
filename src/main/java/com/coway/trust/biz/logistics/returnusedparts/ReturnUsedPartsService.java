@@ -18,4 +18,6 @@ public interface ReturnUsedPartsService {
 	
 	void returnPartsdelete(String param);
 	
+	int validMatCodeSearch(String matcode);
+	
 }

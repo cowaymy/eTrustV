@@ -43,6 +43,7 @@ public class ReturnUsedPartsImpl extends EgovAbstractServiceImpl implements Retu
 				insMap.put("userId", loginId);
 
 				returnUsedPartsMapper.upReturnParts(insMap);
+				logger.debug("insMap :????????????????????    값 : {}", insMap);
 			}
 		}
 
@@ -80,6 +81,13 @@ public class ReturnUsedPartsImpl extends EgovAbstractServiceImpl implements Retu
 	public void returnPartsdelete(String param) {
 		// TODO Auto-generated method stub
 		returnUsedPartsMapper.returnPartsdelete(param);
+		
+	}
+	
+	@Override
+	public int validMatCodeSearch(String matcode) {
+		// TODO Auto-generated method stub
+		return returnUsedPartsMapper.validMatCodeSearch(matcode);
 		
 	}
 	

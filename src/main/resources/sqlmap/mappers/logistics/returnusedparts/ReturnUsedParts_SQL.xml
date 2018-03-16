@@ -39,11 +39,14 @@
 		s29.NAME customer_name,
 		<!-- TO_CHAR(l82.SVC_DT,'DD/MM/YYYY') service_date, -->
 		TO_CHAR(l82.SVC_DT,'YYYY/MM/DD') service_date,
-		s26.STK_CODE material_code,
+		<!-- s26.STK_CODE material_code, -->
+		(select STK_CODE from sys0026m where STK_ID=l82.STK_ID) material_code,
+		s26.STK_CODE material_code_actual,
 		s26.STK_DESC material_name,
 		l82.STK_ID,
 		l82.OLD_SERIAL serial_number,
-		l82.NEW_SERIAL serial,
+<!-- 		l82.OLD_SERIAL serial, -->
+ 		l82.NEW_SERIAL serial, 
 		l82.QTY qty,
 		l82.COMMENTS text,
 		l82.CMPLT_YN return_complete,
@@ -57,11 +60,13 @@
 		l82.UPD_DT,
 		l82.UPD_USER_ID,
 		S26.SERIAL_CHK,
-		S26.STK_TYPE_ID 
-		from LOG0082M l82,sal0029d s29,sys0026m s26
+		S26.STK_TYPE_ID,
+		l82.STK_ID_NEW  
+		from LOG0082M l82,sal0029d s29,sys0026m s26, org0001d o01
 		where 1=1
 		AND l82.CUST_ID=s29.CUST_ID
 		AND l82.STK_ID=s26.STK_ID
+		AND l82.MEM_ID = o01.MEM_ID(+)
 	   <if test="searchOder != null and searchOder !=''">
            AND l82.SVC_ORD_ID = #{searchOder}
        </if>
@@ -89,19 +94,30 @@
        <if test="returnedt !=null and returnedt !=''">
           and to_char(l82.CMPLT_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{returnedt},'dd/mm/yyyy'),'yyyymmdd')
        </if>	
+        <if test="searchLoc != null and searchLoc !=''">
+        and o01.MEM_CODE in
+        <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
+         #{item}
+         </foreach>
+     </if>
 	</select>
 
 	<update id="upReturnParts" parameterType="Map">
 		UPDATE LOG0082M
 		SET
-		NEW_SERIAL=#{serial},
+<!-- 		NEW_SERIAL=#{serial}, -->
+		OLD_SERIAL=#{serialNumber},
 		QTY =#{qty},
 		RESN_CODE=#{noPartsReturn},
 		COMMENTS=#{text},
+		STK_ID=(select STK_ID from sys0026m where STK_CODE=#{materialCode}),
+<!-- 		STK_ID_NEW=(select STK_ID from sys0026m where STK_CODE=#{materialCodeActual}), -->
 		CMPLT_YN ='Y',
 		CMPLT_DT=SYSDATE,
 		UPD_DT = SYSDATE,
-        UPD_USER_ID=#{userId}
+        UPD_USER_ID=#{userId},
+        CRT_DT = SYSDATE,
+        CRT_USER_ID=#{userId}
 		WHERE SEQ =#{seq}
 	</update> 
 	
@@ -115,7 +131,74 @@
         WHERE SVC_ORD_ID =#{param}
    </delete>
    
-
-     
-
+   
+   <select id="validMatCodeSearch" parameterType="String" resultType="integer">
+     select count(*) from sys0026m where STK_CODE= #{matcode} 
+   </select>
+   
+   
+<!--     <select id="returnPartsList" parameterType="Map" resultType="egovMap"> -->
+<!--         SELECT -->
+<!--         ROWNUM rnum, -->
+<!--         l82.SEQ, -->
+<!--         l82.SVC_ORD_ID service_order, -->
+<!--         l82.CUST_ID customer, -->
+<!--         s29.NAME customer_name, -->
+<!--         TO_CHAR(l82.SVC_DT,'DD/MM/YYYY') service_date, -->
+<!--         TO_CHAR(l82.SVC_DT,'YYYY/MM/DD') service_date, -->
+<!--         s26.STK_CODE material_code, -->
+<!--         s26.STK_CODE material_code_actual, -->
+<!--         s26.STK_DESC material_name, -->
+<!--         l82.STK_ID, -->
+<!--         l82.OLD_SERIAL serial_number, -->
+<!--         l82.OLD_SERIAL serial,  -->
+<!--         l82.NEW_SERIAL serial,  -->
+<!--         l82.QTY qty, -->
+<!--         l82.COMMENTS text, -->
+<!--         l82.CMPLT_YN return_complete, -->
+<!--         TO_CHAR(l82.CMPLT_DT,'DD/MM/YYYY') return_complete_date, -->
+<!--         TO_CHAR(l82.CMPLT_DT,'YYYY/MM/DD') return_complete_date, -->
+<!--         l82.CMPLT_DT return_complete_date, -->
+<!--         (SELECT CODE FROM SYS0013M WHERE CODE=l82.RESN_CODE AND  CODE_MASTER_ID='364')  no_parts_return, -->
+<!--         l82.RESN_CODE no_parts_return, -->
+<!--         l82.CRT_DT, -->
+<!--         l82.CRT_USER_ID, -->
+<!--         l82.UPD_DT, -->
+<!--         l82.UPD_USER_ID, -->
+<!--         S26.SERIAL_CHK, -->
+<!--         S26.STK_TYPE_ID, -->
+<!--         l82.STK_ID_NEW   -->
+<!--         from LOG0082M l82,sal0029d s29,sys0026m s26 -->
+<!--         where 1=1 -->
+<!--         AND l82.CUST_ID=s29.CUST_ID -->
+<!--         AND l82.STK_ID=s26.STK_ID -->
+<!--        <if test="searchOder != null and searchOder !=''"> -->
+<!--            AND l82.SVC_ORD_ID = #{searchOder} -->
+<!--        </if> -->
+<!--        <if test="searchCustomer != null and searchCustomer !=''"> -->
+<!--            AND s29.NAME = #{searchCustomer} -->
+<!--        </if> -->
+<!--        <if test="searchMaterialCode != null and searchMaterialCode !=''"> -->
+<!--            AND s26.STK_CODE = #{searchMaterialCode} -->
+<!--        </if> -->
+<!--        <if test="searchMaterialType != null and searchMaterialType !=''"> -->
+<!--            AND S26.STK_TYPE_ID = #{searchMaterialType} -->
+<!--        </if> -->
+<!--        <if test="searchComplete != null and searchComplete !=''"> -->
+<!--            AND l82.CMPLT_YN= #{searchComplete} -->
+<!--        </if> -->
+<!--        <if test="servicesdt !=null and servicesdt !=''"> -->
+<!--            and to_char(l82.SVC_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{servicesdt},'dd/mm/yyyy'),'yyyymmdd') -->
+<!--        </if> -->
+<!--        <if test="serviceedt !=null and serviceedt !=''"> -->
+<!--           and to_char(l82.SVC_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{serviceedt},'dd/mm/yyyy'),'yyyymmdd') -->
+<!--        </if> -->
+<!--         <if test="returnsdt !=null and returnsdt !=''"> -->
+<!--           and to_char(l82.CMPLT_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{returnsdt},'dd/mm/yyyy'),'yyyymmdd') -->
+<!--        </if> -->
+<!--        <if test="returnedt !=null and returnedt !=''"> -->
+<!--           and to_char(l82.CMPLT_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{returnedt},'dd/mm/yyyy'),'yyyymmdd') -->
+<!--        </if>     -->
+<!--     </select> -->
+   
 </mapper>

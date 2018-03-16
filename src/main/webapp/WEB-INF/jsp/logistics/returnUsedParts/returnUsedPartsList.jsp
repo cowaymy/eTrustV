@@ -31,6 +31,7 @@ var subGrid;
 var userCode;
 var comboData = [{"codeId": "N","codeName": "Not yet"},{"codeId": "Y","codeName": "Done"}];
 var comboData1 = [{"codeId": "62","codeName": "Filter"},{"codeId": "63","codeName": "Spare Part"}];
+var comboData2 = [{"codeId": "03","codeName": "CT"},{"codeId": "04","codeName": "CODY"}];
 var uomlist = f_getTtype('364' , ''); 
 var oldQty;
 var oldSerial;
@@ -40,10 +41,12 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                      {dataField: "customer",headerText :"<spring:message code='log.head.customer'/>"      ,width:120    ,height:30, editable:false },                        
                      {dataField: "customerName",headerText :"<spring:message code='log.head.customername'/>"           ,width:120    ,height:30, editable:false },                       
                      {dataField: "serviceDate",headerText :"<spring:message code='log.head.servicedate'/>"                 ,width:120    ,height:30, editable:false},                        
-                     {dataField: "materialCode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:120    ,height:30, editable:false},                        
+                     {dataField: "materialCode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:120    ,height:30, editable:true},    
+//                      {dataField: "materialCodeActual",headerText :"Material Code Actual"           ,width:150    ,height:30, editable:true},
+//                      {dataField: "stkIdNew",headerText :"New STK_ID"           ,width:150    ,height:30, editable:true},
                      {dataField: "materialName",headerText :"<spring:message code='log.head.materialname'/>"     ,width:120    ,height:30, editable:false},                          
-                     {dataField: "serialNumber",headerText :"<spring:message code='log.head.serialnumber(system)'/>"                ,width:120    ,height:30, editable:false},                       
-                     {dataField: "serial",headerText :"<spring:message code='log.head.serial(actual)'/>"     ,width:120    ,height:30                },                          
+                     {dataField: "serialNumber",headerText :"<spring:message code='log.head.serialnumber(system)'/>"                ,width:120    ,height:30, editable:true},                       
+//                      {dataField: "serial",headerText :"<spring:message code='log.head.serial(actual)'/>"     ,width:120    ,height:30                },     
                      {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"          ,width:120    ,height:30                },                       
                      /* {dataField:  "noPartsReturn",headerText :"<spring:message code='log.head.nopartsreturn'/>"        ,width:120    ,height:30 },  */                        
                      {dataField: "noPartsReturn",headerText :"<spring:message code='log.head.nopartsreturn'/>"               ,width:120    ,height:30 
@@ -116,6 +119,12 @@ $(document).ready(function(){
     **********************************/
     doDefCombo(comboData1, '' ,'searchMaterialType', 'S', '');
     doDefCombo(comboData, '' ,'searchComplete', 'S', '');
+    doDefCombo(comboData2, '' ,'searchlocgb', 'S', '');
+    
+    
+    doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
+    doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE'}, '', 'searchlocgrade', 'A','');
+   // doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
     
     
     
@@ -141,39 +150,55 @@ $(document).ready(function(){
       var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
          if(checkedItems.length <= 0) {
              Common.alert('No data selected.');
-             $("#search").click();
+             //$("#search").click();
              return false;
          }else{
+        	 
+         if(event.dataField == "materialCode"){	 
+          var matcode = AUIGrid.getCellValue(listGrid, event.rowIndex, "materialCode") ;
+          
+          if(matcode.length > 15){
+        	  Common.alert('matcode is greater than 15 characters.');
+        	  AUIGrid.setCellValue(listGrid , event.rowIndex , "materialCode" , "" );
+        	  return false;
+          }
+            
+          var indexnum =event.rowIndex;
+          validMatCodeAjax(matcode,indexnum);
 
-        if(event.dataField == "serial"){
-            if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") =="Y"){
-                AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", 1);
-                return false;
-            }
+         }
+
+          
+
+//         if(event.dataField == "serial"){
+//             if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") =="Y"){
+//                 AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", 1);
+//                 return false;
+//             }
             
-            if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") !="Y"){
-            	Common.alert("No Enter Serial");
-            	AUIGrid.setCellValue(listGrid, event.rowIndex, "serial", "");
-                return false;
-            }            
+//             if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") !="Y"){
+//             	Common.alert("No Enter Serial");
+//             	AUIGrid.setCellValue(listGrid, event.rowIndex, "serial", "");
+//                 return false;
+//             }            
             
-        }
-        if(event.dataField == "qty"){
-        	if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") !="Y"){
-        		if(AUIGrid.getCellValue(listGrid, event.rowIndex, "qty") >  oldQty){
-        			Common.alert('The requested quantity is up to '+oldQty+'.');
-        			AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", oldQty);
-        			return false;
-        			 }        		
-        		 }        	
-        	 if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") =="Y"){
-                 if(AUIGrid.getCellValue(listGrid, event.rowIndex, "qty") >  1){
-                     Common.alert('only qty count 1.');
-                     AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", 1);  
-                     return false;
-                      }              
-                  }       
-        	    }
+//         }
+//         if(event.dataField == "qty"){
+//         	if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") !="Y"){
+//         		if(AUIGrid.getCellValue(listGrid, event.rowIndex, "qty") >  oldQty){
+//         			Common.alert('The requested quantity is up to '+oldQty+'.');
+//         			AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", oldQty);
+//         			return false;
+//         			 }        		
+//         		 }        	
+//         	 if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") =="Y"){
+//                  if(AUIGrid.getCellValue(listGrid, event.rowIndex, "qty") >  1){
+//                      Common.alert('only qty count 1.');
+//                      AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", 1);  
+//                      return false;
+//                       }              
+//                   }       
+//         	    }
          }
         
     });
@@ -211,13 +236,19 @@ $(document).ready(function(){
 		        }else{
 		       if(checkedItems.length <= 1){
 	        	   for (var i = 0 ; i < checkedItems.length ; i++){
-	                   if (checkedItems[i].serialChk == 'Y' && checkedItems[i].serial =="" || checkedItems[i].serial == undefined){
+	                  // if (checkedItems[i].serialChk == 'Y' && checkedItems[i].serial =="" || checkedItems[i].serial == undefined){
+	                   if (checkedItems[i].serial =="" || checkedItems[i].serial == undefined){
 	                	   Common.alert("Please Enter Serial");
 	                       chkfalg="Y";
 	                       break;
 	                   }else{
 	                	   chkfalg="N";
-	                   }     
+	                   }   
+	                   
+	                   if (checkedItems[i].materialCode =="" || checkedItems[i].materialCode == undefined){
+	                	   Common.alert("Please Enter materialCode");
+	                	   return false;
+	                   }
 	                 } 	        	   
 	        	   }else{
 	        		   Common.alert("only one data selected.");
@@ -241,8 +272,72 @@ $(document).ready(function(){
 		cancleReturnParts();
 
 		});
+	
+    $('#searchBranch').change(function(){
+    	if ($('#searchBranch').val() != null && $('#searchBranch').val() != "" ){	
+        var searchlocgb = $('#searchlocgb').val();
+        var searchBranch = $('#searchBranch').val();
+        //alert("searchBranch :  "+searchBranch);
+//         var locgbparam = "";
+//         for (var i = 0 ; i < searchlocgb.length ; i++){
+//             if (locgbparam == ""){
+//                 locgbparam = searchlocgb[i];
+//             }else{
+//                 locgbparam = searchlocgb[i];
+//             }
+//         }
+        //alert("searchlocgb :  "+searchlocgb);
+        if ($('#searchlocgb').val() == null || $('#searchlocgb').val() == "" ){   
+        	Common.alert("Please select Location Type");
+        	doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
+        	return false;
+        }
 
-	});
+        var param = {searchlocgb:searchlocgb , grade:$('#searchlocgrade').val() , searchBranch:searchBranch     }
+        doGetComboData('/common/selectStockLocationList3.do', param , '', 'searchLoc', 'M','f_multiComboType');
+    	}
+    	
+    });
+	
+	
+	
+    $('#searchlocgrade').change(function(){
+        var searchlocgb = $('#searchlocgb').val();
+
+//         var locgbparam = "";
+//         for (var i = 0 ; i < searchlocgb.length ; i++){
+//             if (locgbparam == ""){
+//                 locgbparam = searchlocgb[i];
+//             }else{
+//                 locgbparam = searchlocgb[i];
+//             }
+//         }
+
+        var param = {searchlocgb:searchlocgb , grade:$('#searchlocgrade').val()}
+        doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+    });
+	
+	
+    $('#searchlocgb').change(function() {
+        console.log('1');
+        if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
+             var searchlocgb = $('#searchlocgb').val();
+             //alert("searchlocgb :  "+searchlocgb);
+
+//                 var locgbparam = "";
+//                 for (var i = 0 ; i < searchlocgb.length ; i++){
+//                     if (locgbparam == ""){
+//                         locgbparam = searchlocgb[i];
+//                     }else{
+//                         locgbparam = searchlocgb[i];
+//                     }
+//                 }
+                var param = {searchlocgb:searchlocgb , grade:$('#searchlocgrade').val()}
+                doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
+        }
+        });
+	
+});
 
 	function testFunc() {
 		var url = "/logistics/returnusedparts/ReturnUsedPartsTest.do";
@@ -349,6 +444,30 @@ $(document).ready(function(){
 			return true;
 		}
 	}
+	
+	   function validMatCodeAjax(matcode,indexnum) {
+	        var url = "/logistics/returnusedparts/validMatCodeSearch.do";
+	        var param = {"matcode":matcode};
+	     
+	        Common.ajax("GET", url, param, function(data) {
+	     
+	        	if(data.data == 0){
+	        		Common.alert("The product code is incorrect.");
+	        		AUIGrid.setCellValue(listGrid , indexnum , "materialCode" , "" );	        		
+	        	}
+	        	//$("#search").click();
+	        });
+	    }
+	   
+	   function f_multiComboType() {
+		    $(function() {
+		        $('#searchLoc').change(function() {
+		        }).multipleSelect({
+		            selectAll : true
+		        });
+		    });
+		}
+	
 </script>
 
 <section id="content"><!-- content start -->
@@ -395,7 +514,25 @@ $(document).ready(function(){
                 <col style="width:*" />
             </colgroup>
             <tbody>
+                 <tr>
+                   <th scope="row">Location Type</th>
+                   <td>
+                        <select class="w100p" id="searchlocgb" name="searchlocgb"></select>
+                   </td>
+                    <th scope="row">Location Grade</th>
+                   <td>
+                        <select class="w100p" id="searchlocgrade" name="searchlocgrade"></select>
+                   </td>
+                   <th scope="row">Location</th>
+                   <td>
+                       <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select>
+                   </td>              
+                </tr>
                 <tr>
+                    <th scope="row">Branch</th>
+                   <td>
+                        <select class="w100p" id="searchBranch"  name="searchBranch"></select>
+                   </td> 
                    <th scope="row">Oder</th>
                    <td>
                         <INPUT type="text"   class="w100p" id="searchOder" name="searchOder">
@@ -403,11 +540,7 @@ $(document).ready(function(){
                    <th scope="row">Customer</th>
                    <td>
                         <INPUT type="text"   class="w100p" id="searchCustomer" name="searchCustomer">
-                   </td>
-                   <th scope="row">Material Code</th>
-                   <td>
-                       <INPUT type="text"   class="w100p" id="searchMaterialCode" name="searchMaterialCode">
-                   </td>              
+                   </td>         
                 </tr>
                 <tr>
                     <th scope="row">Service date</th>
@@ -431,6 +564,10 @@ $(document).ready(function(){
                     </td>         
                 </tr>
                 <tr>
+                    <th scope="row">Material Code</th>
+                   <td>
+                       <INPUT type="text"   class="w100p" id="searchMaterialCode" name="searchMaterialCode">
+                   </td>  
                    <th scope="row">Material Type</th>
                    <td >
                       <select class="w100p" id="searchMaterialType" name="searchMaterialType"></select>
@@ -439,9 +576,6 @@ $(document).ready(function(){
                    <td>
                        <select class="w100p" id="searchComplete" name="searchComplete"></select>
                    </td>
-                   <th scope="row"></th>
-                   <td>
-                   </td>    
                 </tr>
                              
             </tbody>

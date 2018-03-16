@@ -100,6 +100,7 @@ public class ReturnUsedPartsController {
 		String returnedt = request.getParameter("returnedt");
 		String searchMaterialType   = request.getParameter("searchMaterialType");
 		String searchComplete = request.getParameter("searchComplete");
+		String[] searchLoc = request.getParameterValues("searchLoc");
 		
 		logger.debug("searchOder    값 : {}", searchOder);
 		logger.debug("searchCustomer    값 : {}", searchCustomer);
@@ -110,6 +111,7 @@ public class ReturnUsedPartsController {
 		logger.debug("returnedt    값 : {}", returnedt);
 		logger.debug("searchMaterialType    값 : {}", searchMaterialType);
 		logger.debug("searchComplete    값 : {}", searchComplete);
+		logger.debug("searchLoc  !!!!!  값 : {}", searchLoc);
 		
 		
 		Map<String, Object> smap = new HashMap();
@@ -123,6 +125,7 @@ public class ReturnUsedPartsController {
 		smap.put("returnedt", returnedt);
 		smap.put("searchMaterialType", searchMaterialType);
 		smap.put("searchComplete", searchComplete);
+		smap.put("searchLoc", searchLoc);
 		
 		logger.debug("smap    값 : {}", smap);
 		
@@ -172,6 +175,30 @@ public class ReturnUsedPartsController {
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
+	}
+	
+	
+	
+	@RequestMapping(value = "/validMatCodeSearch.do" ,method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> validMatCodeSearch(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+		
+		String matcode = request.getParameter("matcode");
+		
+		 logger.debug("matcode@@@@@@@@: {}", matcode);
+		
+		int matcodeCnt = returnUsedPartsService.validMatCodeSearch(matcode);
+		
+		logger.debug("matcodeCnt %$%$%$%$%$%$: {}", matcodeCnt);
+		
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(matcodeCnt);
+		
+		return ResponseEntity.ok(message);
+		
 	}
 	
 	

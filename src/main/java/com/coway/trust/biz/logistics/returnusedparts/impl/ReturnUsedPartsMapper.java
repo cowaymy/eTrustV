@@ -21,4 +21,6 @@ public interface ReturnUsedPartsMapper {
 	
 	void returnPartsdelete(String params);
 	
+	int validMatCodeSearch(String matcode);
+	
 }
