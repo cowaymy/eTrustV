@@ -185,7 +185,8 @@ $(document).ready(function(){
       var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
          if(checkedItems.length <= 0) {
              Common.alert('No data selected.');
-             //$("#search").click();
+             $("#search").click();
+          
              return false;
          }else{
         	 
@@ -272,13 +273,13 @@ $(document).ready(function(){
 		       if(checkedItems.length <= 1){
 	        	   for (var i = 0 ; i < checkedItems.length ; i++){
 	                  // if (checkedItems[i].serialChk == 'Y' && checkedItems[i].serial =="" || checkedItems[i].serial == undefined){
-	                   if (checkedItems[i].serial =="" || checkedItems[i].serial == undefined){
-	                	   Common.alert("Please Enter Serial");
-	                       chkfalg="Y";
-	                       break;
-	                   }else{
+	                   //if (checkedItems[i].serialNumber =="" || checkedItems[i].serialNumber == undefined){
+	                	//   Common.alert("Please Enter Serial");
+	                    //   chkfalg="Y";
+	                   //    break;
+	                  // }else{
 	                	   chkfalg="N";
-	                   }   
+	                 //  }   
 	                   
 	                   if (checkedItems[i].materialCode =="" || checkedItems[i].materialCode == undefined){
 	                	   Common.alert("Please Enter materialCode");

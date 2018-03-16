@@ -80,7 +80,14 @@
            AND S26.STK_TYPE_ID = #{searchMaterialType}
        </if>
        <if test="searchComplete != null and searchComplete !=''">
-           AND l82.CMPLT_YN= #{searchComplete}
+         <choose>
+         <when test='searchComplete == "Y" '>
+             AND l82.CMPLT_YN= #{searchComplete}
+         </when>
+         <otherwise>
+         AND l82.CMPLT_YN is null
+         </otherwise>
+       </choose>
        </if>
 	   <if test="servicesdt !=null and servicesdt !=''">
            and to_char(l82.SVC_DT , 'yyyymmdd') <![CDATA[>=]]> to_char(to_date(#{servicesdt},'dd/mm/yyyy'),'yyyymmdd')
