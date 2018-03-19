@@ -158,7 +158,7 @@ public class OrderCallListController {
 	public ResponseEntity<ReturnMessage>  insertCallResult(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		boolean success = false;
-		//logger.debug("params : {}", params);
+		logger.debug("params : {}", params);
 		String installationNo = "";
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 		resultValue = orderCallListService.insertCallResult(params,sessionVO);
@@ -241,5 +241,30 @@ public class OrderCallListController {
 		model.addAttribute("orderRdcInCdc", rdcincdc);
 		return "services/orderCall/viewCallLogResultPop";
 	}
+	@RequestMapping(value = "/changeStock.do" , method = RequestMethod.POST)
+	public ResponseEntity<EgovMap> changeStockAction(@RequestBody Map<String, Object> params, ModelMap model ,SessionVO sessionVO) throws Exception {
+		EgovMap rtnMap = new EgovMap();
+		logger.debug("params : {}", params);
+		
+		EgovMap orderCall = orderCallListService.getOrderCall(params);
+		orderCall.put("stock", params.get("stock"));
+		logger.debug("orderCall : {}", orderCall);
+		EgovMap rdcincdc = orderCallListService.getRdcInCdc(orderCall);
+		String productCode = orderCall.get("productCode").toString();
+		params.put("productCode", productCode);
+		
+		EgovMap cdcAvaiableStock = orderCallListService.selectCdcAvaiableStock(params);
+		EgovMap  rdcStock = orderCallListService.selectRdcStock(params);
+		
+		rtnMap.put("cdcAvaiableStock", cdcAvaiableStock);
+		rtnMap.put("rdcStock", rdcStock);
+		rtnMap.put("rdcincdc", rdcincdc);
+		
+		logger.debug("rtnMap : {}", rtnMap);
+		
+		
+		return ResponseEntity.ok(rtnMap);
+	}
+	
 	
 }

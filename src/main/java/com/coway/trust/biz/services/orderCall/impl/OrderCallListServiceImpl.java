@@ -258,6 +258,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		installMaster.put("updated", new Date());
 		installMaster.put("updator",sessionVO.getUserId());
 		installMaster.put("revId",0);
+		installMaster.put("stock", params.get("stock"));
 		logger.debug("installMaster : {}", installMaster);
 		return installMaster;
 	}

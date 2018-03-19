@@ -371,6 +371,7 @@
 		  , REV_ID
 		  , APPNT_DT
 		  ,SESION_CODE
+		  ,GRADE
 		   )
 		  VALUES (
 		   SAL0046D_INSTALL_ENTRY_ID_SEQ.NEXTVAL
@@ -392,6 +393,7 @@
 		  , #{revId}
 		  , TO_DATE(#{appDate},'dd-mm-yyyy')
 		  ,#{CTSSessionCode}
+		  , #{stock}
 		  )
         </insert>
         <select id="selectCallStatus" parameterType="Map" resultType="egovMap">
@@ -598,7 +600,15 @@
           and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D
 -->
                       and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)
-                      and s28.WH_LOC_STK_GRAD = 'A'
+          <choose>  
+                <when test="stock eq 'B'.toString()">
+                    and s28.WH_LOC_STK_GRAD = 'B'
+                  </when>
+                  <otherwise>
+                   and s28.WH_LOC_STK_GRAD = 'A'
+                  </otherwise>
+      </choose>
+                     
                        and s28.WH_LOC_GB in ( '02' ,'05')
           and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D
 
@@ -637,8 +647,19 @@
 
 
         <select id="getRdcInCdc" parameterType="Map" resultType="egovMap">
-      <![CDATA[
-      WITH L AS  (SELECT WH_LOC_ID  RDC , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = A.CDC_CODE ) CDC FROM SYS0028M A , SYS0005M T WHERE T.BRNCH_ID IN (A.WH_LOC_BRNCH_ID , A.WH_LOC_BRNCH_ID2 , A.WH_LOC_BRNCH_ID3)  AND T.BRNCH_ID =#{dscBrnchId}  AND WH_LOC_GB in ('02','05') AND WH_LOC_STK_GRAD = 'A')
+     
+      WITH L AS  (SELECT WH_LOC_ID  RDC , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = A.CDC_CODE ) CDC FROM SYS0028M A , SYS0005M T WHERE T.BRNCH_ID IN (A.WH_LOC_BRNCH_ID , A.WH_LOC_BRNCH_ID2 , A.WH_LOC_BRNCH_ID3)  AND T.BRNCH_ID =#{dscBrnchId}  AND WH_LOC_GB in ('02','05') 
+      <choose>  
+                <when test="stock eq 'B'.toString()">
+                      AND WH_LOC_STK_GRAD = 'B'
+                  </when>
+                  <otherwise>
+                    AND WH_LOC_STK_GRAD = 'A'
+                  </otherwise>
+      </choose>
+      
+      )
+       <![CDATA[
         SELECT MAX(STK_CODE) stk_code , MAX(STK_DESC) stk_desc, MAX(RDC ) rdc , MAX(RAQTY) raqty, MAX(RINQTY) rinqty, MAX(CDC) cdc, MAX(CAQTY) caqty FROM (
         SELECT STK_CODE , STK_DESC ,  L.RDC , (QTY - NVL(BOOKQTY , 0) ) RAQTY , NVL(B.MOV_QTY,0) RINQTY  ,  0 CDC  , 0 CAQTY  
           FROM LOG0056M  B,L , (  SELECT LOC_ID,

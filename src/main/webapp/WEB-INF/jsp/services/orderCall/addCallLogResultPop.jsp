@@ -63,6 +63,63 @@ $(document).ready(function() {
 	callLogTranGrid();
 	fn_callLogTransaction();
 	
+	$("#stock").change( function() {
+		if($("#stock").val() == 'B'){
+			console.log($("#addCallForm").serializeJSON());
+			Common.ajax("POST", "/callCenter/changeStock.do", $("#addCallForm").serializeJSON(), function(result) {
+		        console.log("성공.");
+		        console.log("data : " + result.rtnMap);
+		        console.log("data : " + result.rtnmap);
+		        console.log("data : " + result.cdcAvaiableStock);
+		        console.log("data : " + result.rdcstock);
+		        console.log("data : " + result.rdcincdc);
+		        
+		        Common.alert(result.message);
+		        if(result.rdcincdc != null){
+			        $("#rdc").text(result.rdcincdc.raqty);
+	                $("#rdcInCdc").text(result.rdcincdc.rinqty);
+	                $("#cdc").text("0");
+		        }
+		        else {
+		        	 $("#rdc").text("0");
+	                  $("#rdcInCdc").text("0");
+	                  $("#cdc").text("0");
+		        }
+		    });
+			
+		}
+		else{
+			
+			 console.log($("#addCallForm").serializeJSON());
+	            Common.ajax("POST", "/callCenter/changeStock.do", $("#addCallForm").serializeJSON(), function(result) {
+	                console.log("성공.");
+	                console.log("data : " + result);
+	                console.log("data : " + result.data);
+	                console.log("data : " + result.data);
+	                console.log("data : " + result.data);
+	          
+	                if(result.rdcincdc != null){
+		                $("#rdc").text(result.rdcincdc.raqty);
+		                $("#rdcInCdc").text(result.rdcincdc.rinqty);
+		                $("#cdc").text(result.rdcincdc.caqty);
+		               
+	                }
+	                else {
+	                     $("#rdc").text("0");
+	                     $("#rdcInCdc").text("0");
+	                     $("#cdc").text("0");
+	                }
+	                
+	            });
+			
+			
+			
+		}
+		
+		
+		
+	});
+	
 });
 
 var callLogTranID;
@@ -232,19 +289,19 @@ function fn_doAllaction(){
       <tr>
         <th scope="row"><spring:message code='service.title.RDCAvailableQty'/></th>
         <td>
-            <span><c:out value="${orderRdcInCdc.raqty}"/></span>
+            <span id="rdc"><c:out value="${orderRdcInCdc.raqty}"/></span>
         </td>
         <th scope="row"><spring:message code='service.title.InTransitQty'/></th>
         <td>
-           <span><c:out value="${orderRdcInCdc.rinqty}"/></span>
+           <span id= "rdcInCdc"><c:out value="${orderRdcInCdc.rinqty}"/></span>
         </td>
         <th scope="row"><spring:message code='service.title.CDCAvailableQty'/></th>
         <td>
             <c:if test="${orderRdcInCdc.rdc== orderRdcInCdc.cdc }">
-                <span>0</span>
+                <span id ="cdc">0</span>
             </c:if>
-            <c:if test="${orderRdcInCdc.rdc!= orderRdcInCdc.cdc }">
-                <span><c:out value="${orderRdcInCdc.caqty}"/></span>
+            <c:if test="${orderRdcInCdc.rdc != orderRdcInCdc.cdc }">
+                <span id="cdc"><c:out value="${orderRdcInCdc.caqty}"/></span>
             </c:if>
      <!-- 
         <th scope="row"><spring:message code='service.title.RDCAvailableQty'/></th>
@@ -417,9 +474,20 @@ function fn_doAllaction(){
 
     </td>
     <th scope="row"><spring:message code='service.title.CTName'/></th>    
-    <td colspan="5">
+    <td colspan="3">
     <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="CTName" name="CTName"/>
     </td>
+    
+     <th scope="row">Grade A - B</th>    
+    <td colspan="1">
+          <select class="w100p"  id="stock" name="stock">
+            <option value="A">A</option>
+            <option value="B">B</option>
+          </select>
+    </td>
+    
+    
+    
 </tr>
 <tr>
     <th scope="row"><spring:message code='service.title.Remark'/></th>
