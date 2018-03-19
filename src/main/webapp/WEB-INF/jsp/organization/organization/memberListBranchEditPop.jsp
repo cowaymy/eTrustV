@@ -1099,6 +1099,7 @@ function fn_selectState(selVal){
     <td>
      <!-- <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>-->
      <select class="w100p"  id="selectBranch" name="selectBranch" >
+        <option value="0">Choose One</option>
         <c:forEach var="list" items="${branch}" varStatus="status">
            <option value="${list.brnchId}">${list.branchCode} - ${list.branchName}</option>
         </c:forEach>

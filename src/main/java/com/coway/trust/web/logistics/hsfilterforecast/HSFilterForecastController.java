@@ -67,7 +67,7 @@ public class HSFilterForecastController {
 	public ResponseEntity<Map> selectHSFilterForecastList(@RequestBody Map<String, Object> params, Model model)
 	throws Exception
 	{
-		if("".equals(params.get("fcastDate")) || null == params.get("fcastDate"))
+		/*if("".equals(params.get("fcastDate")) || null == params.get("fcastDate"))
 		{
 			DateTimeFormatter dtf = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 			LocalDate localDate = LocalDate.now();
@@ -84,7 +84,7 @@ public class HSFilterForecastController {
 			{
 				params.replace("mth" + i.toString(), i);
 			}
-		}
+		}*/
 
 		List<EgovMap> list = hsFilterForecastService.selectHSFilterForecastList(params);
 

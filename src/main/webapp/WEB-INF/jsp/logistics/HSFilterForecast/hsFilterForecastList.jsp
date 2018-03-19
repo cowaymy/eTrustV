@@ -29,20 +29,12 @@
     var pagestate="";
 
     var columnLayout = [
-				                        {dataField:"stkcode", headerText:"Filter Code", width:"9%", height:30},
-				                        {dataField:"stkdesc", headerText:"Filter Description", width:"25%", height:30},
-				                        {dataField:"mth1", headerText:"1st Month", width:"8%", height:30},
-				                        {dataField:"mth2", headerText:"2nd Month", width:"8%", height:30},
-				                        {dataField:"mth3", headerText:"3rd Month", width:"8%", height:30},
-				                        {dataField:"mth4", headerText:"4th Month", width:"8%", height:30},
-				                        {dataField:"mth5", headerText:"5th Month", width:"8%", height:30},
-				                        {dataField:"mth6", headerText:"6th Month", width:"8%", height:30},
-				                        {dataField:"mth7", headerText:"7th Month", width:"8%", height:30},
-				                        {dataField:"mth8", headerText:"8th Month", width:"8%", height:30},
-				                        {dataField:"mth9", headerText:"9th Month", width:"8%", height:30},
-				                        {dataField:"mth10", headerText:"10th Month", width:"9%", height:30},
-				                        {dataField:"mth11", headerText:"11th Month", width:"9%", height:30},
-				                        {dataField:"mth12", headerText:"12th Month", width:"9%", height:30},
+				                        {dataField:"stkcode", headerText:"Filter Code", width:"15%", height:30},
+				                        {dataField:"stkdesc", headerText:"Filter Description", width:"35%", height:30},
+				                        {dataField:"mth0", headerText:"M+0", width:"12.5%", height:30},
+				                        {dataField:"mth1", headerText:"M+1", width:"12.5%", height:30},
+				                        {dataField:"mth2", headerText:"M+2", width:"12.5%", height:30},
+				                        {dataField:"mth3", headerText:"M+3", width:"12.5%", height:30}
 			                        ];
 
     var gridoptions = {
@@ -298,17 +290,24 @@
 	            <tbody>
 	                <tr>
 		                <th scope="row">Filter Code</th>
-				        <td colspan="2">
+				        <td>
 				            <input type="hidden"  id="itmCode" name="itmCode">
 				            <input type="text" id="srchCode" name="srchCode" placeholder="Press 'Enter' to Search" class="w100p" />
 				        </td>
-
-                        <th scope="row">Forecast Start Date</th>
+				        
+				        <th scope="row">Forecast Start Date</th>
                         <td>
-                           <input id="fcastDate"  name="fcastDate" type="text" title="Forecast Start Date" placeholder="DD/MM/YYYY" class="j_date">
+                           <!-- <input id="fcastDate"  name="fcastDate" type="text" title="Forecast Start Date" placeholder="DD/MM/YYYY" class="j_date"> -->
+                           <input id="fcastDate" name="fcastDate" type="text" title="Forecast Start Date" placeholder="MM/YYYY" class="j_date2 w100p"  />
+                        </td>
+				        
+				        <th scope="row">Filter Category</th>
+                        <td>
+                            <select class="w100p" id="searchCtgry"  name="searchCtgry"></select>
                         </td>
 
-                       <th scope="row">No. of Months</th>
+                     </tr>
+                       <!-- <th scope="row">No. of Months</th>
                         <td >
                             <select class="w100p"  id="mthCount" name="mthCount">
                             <option value="1">1 Month</option>
@@ -324,16 +323,14 @@
                             <option value="11">11 Months</option>
                             <option value="12">12 Months</option>
                             </select>
-                        </td>
-			        </tr>
-	                <tr>
+                        </td> -->
+			         
+	                <!-- <tr>
                         <th scope="row">Filter Category</th>
-                        <td colspan="2">
+                        <td>
                             <select class="w100p" id="searchCtgry"  name="searchCtgry"></select>
                         </td>
-
-                        <td colspan="4"></td>
-				    </tr>
+				    </tr> -->
 			    </tbody>
 		    </table><!-- table end -->
 	    </form>
