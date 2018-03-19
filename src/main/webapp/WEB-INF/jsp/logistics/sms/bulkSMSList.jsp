@@ -37,7 +37,7 @@
 var columnLayout = [
 {dataField: "smsUploadId",headerText :"<spring:message code='log.head.smsid'/>"              ,width:  "5%"     ,height:30 , visible:false},
 {dataField: "smsUploadRefNo",headerText :"<spring:message code='log.head.refno'/>"     ,width: "20%"    ,height:30 , visible:true},
-{dataField: "totalSms",headerText :"<spring:message code='log.head.status'/>"     ,width: "10%"    ,height:30 , visible:true},
+{dataField: "totalSms",headerText :"<spring:message code='log.head.totalSms'/>"     ,width: "10%"    ,height:30 , visible:true},
 {dataField: "smsExprDt",headerText :"<spring:message code='log.head.exprDt'/>"     ,width: "25%"    ,height:30 , visible:true},
 {dataField: "userFullName",headerText :"<spring:message code='log.head.creator'/>"     ,width: "20%"    ,height:30 , visible:true},
 {dataField: "smsUploadCrtDt",headerText :"<spring:message code='log.head.createdate'/>"     ,width: "25%"    ,height:30 , visible:true}
