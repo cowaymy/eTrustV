@@ -67,9 +67,11 @@ today = (dd + '/' + mm + '/' + yyyy);
                       
 var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},        
                      {dataField: "seq",headerText :"seq"      ,width:120    ,height:30, visible:false },  
-                     {dataField: "serviceOrder",headerText :"<spring:message code='log.head.serviceorder'/>"      ,width:120    ,height:30, editable:false },                        
-                     {dataField: "customer",headerText :"<spring:message code='log.head.customer'/>"      ,width:120    ,height:30, editable:false },                        
-                     {dataField: "customerName",headerText :"<spring:message code='log.head.customername'/>"           ,width:120    ,height:30, editable:false },                       
+                     {dataField: "serviceOrder",headerText :"<spring:message code='log.head.serviceorder'/>"      ,width:120    ,height:30, editable:false },    
+                     {dataField: "code",headerText :"Branch Code"      ,width:120    ,height:30, editable:false },
+                     {dataField: "brnchName",headerText :"Branch Name"      ,width:120    ,height:30, editable:false },    
+                     {dataField: "memCode",headerText :"CtAndCody Code"           ,width:120    ,height:30, editable:false },
+                     {dataField: "name",headerText :"CtAndCody Name"           ,width:120    ,height:30, editable:false },      
                      {dataField: "serviceDate",headerText :"<spring:message code='log.head.servicedate'/>"                 ,width:120    ,height:30, editable:false},                        
                      {dataField: "materialCode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:120    ,height:30, editable:true},    
 //                      {dataField: "materialCodeActual",headerText :"Material Code Actual"           ,width:150    ,height:30, editable:true},
@@ -102,7 +104,9 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                       {dataField: "text",headerText :"<spring:message code='log.head.text'/>"      ,width:120    ,height:30                },                         
                       {dataField: "returnComplete",headerText :"<spring:message code='log.head.returncomplete'/>"      ,width:120    ,height:30, editable:false},                         
                       {dataField: "returnCompleteDate",headerText :"<spring:message code='log.head.returncompletedate'/>"      ,width:120    ,height:30, editable:false},                         
-                      {dataField: "serialChk",headerText :"<spring:message code='log.head.serialchk'/>"        ,width:120    ,height:30, editable:false}  
+                      {dataField: "serialChk",headerText :"<spring:message code='log.head.serialchk'/>"        ,width:120    ,height:30, editable:false}, 
+                      {dataField: "customer",headerText :"<spring:message code='log.head.customer'/>"      ,width:120    ,height:30, editable:false },                        
+                      {dataField: "customerName",headerText :"<spring:message code='log.head.customername'/>"           ,width:120    ,height:30, editable:false }       
                       ];                     
  
 var subgridpros = {
@@ -185,9 +189,7 @@ $(document).ready(function(){
     AUIGrid.bind(listGrid, "cellEditEnd", function (event){
       var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
          if(checkedItems.length <= 0) {
-             Common.alert('No data selected.');
-             $("#search").click();
-          
+             Common.alert('No data selected.');          
              return false;
          }else{
         	 
@@ -247,9 +249,10 @@ $(document).ready(function(){
 	$(function() {
 	
 	$('#search').click(function() {
-		
-			SearchListAjax();
-
+		if(validation()) {
+			SearchListAjax();		
+		}
+			
 		});
 		$('#clear').click(function() {
 
@@ -512,6 +515,15 @@ $(document).ready(function(){
 		            selectAll : true
 		        });
 		    });
+		}
+	   
+	   function validation() {
+		    if ($("#searchLoc").val() == '' ||$("#searchLoc").val() == undefined){
+		        Common.alert('Please Location selected.');
+		        return false;
+		    } else {
+		        return true;
+		    }
 		}
 	
 </script>

@@ -61,7 +61,12 @@
 		l82.UPD_USER_ID,
 		S26.SERIAL_CHK,
 		S26.STK_TYPE_ID,
-		l82.STK_ID_NEW  
+		l82.STK_ID_NEW,  
+		o01.BRNCH,
+	    o01.MEM_CODE,
+        o01.NAME,
+       (select CODE from SYS0005M where BRNCH_ID = o01.BRNCH ) code,
+       (select NAME from SYS0005M where BRNCH_ID = o01.BRNCH ) brnch_name  
 		from LOG0082M l82,sal0029d s29,sys0026m s26, org0001d o01
 		where 1=1
 		AND l82.CUST_ID=s29.CUST_ID
