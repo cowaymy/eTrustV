@@ -311,7 +311,7 @@
                                 and (lAST_brm.result_ID IS NULL OR lAST_brm.result_ID = (select Max(result_ID) from SVC0006D where HSM.SCHDUL_ID = SCHDUL_ID and result_stus_code_id = 4))
                                 AND SC.SRV_SO_ID(+) = SOM.SALES_ORD_ID
                                 AND SC.SRV_CONFIG_ID =SCP.SRV_CONFIG_ID(+)
-                                AND( scp.srv_prd_id is null or scp.srv_prd_id = (SELECT MAX(srv_prd_id)FROM sal0088d WHERE srv_config_id = sc.srv_config_id AND scp.srv_prd_stus_id = 1))
+                                AND( scp.srv_prd_id is null or scp.srv_prd_id = (SELECT MAX(srv_prd_id)FROM sal0088d WHERE srv_config_id = sc.srv_config_id AND srv_prd_stus_id <!-- 20180320 Edit by Sun HanYi scp.srv_prd_stus_id --> = 1))
                                 AND STUS.STUS_CODE_ID(+) = LAST_BRM.RESULT_STUS_CODE_ID
                                and mem.mem_id(+) = HSM.CODY_ID
                                and Stus1.STUS_CODE_ID(+) = mem.stus
