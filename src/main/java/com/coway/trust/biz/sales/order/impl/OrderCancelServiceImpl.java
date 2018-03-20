@@ -352,6 +352,10 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
 		return orderCancelMapper.getRetReasonList(params);
 	}
 
+	public List<EgovMap> getBranchList(Map<String, Object> params) {
+		return orderCancelMapper.getBranchList(params);
+	}
+
 	@Override
 	public void updateCancelSAL0071D(Map<String, Object> params) {
 		// TODO Auto-generated method stub
