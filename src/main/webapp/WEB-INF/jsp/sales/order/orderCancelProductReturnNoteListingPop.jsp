@@ -34,7 +34,8 @@
 	    }, '', 'cmbDscCode', 'S'); //Branch Code
 
 	$.fn.clearForm = function() {
-		$("#cmbProductRetType").multipleSelect("checkAll");
+
+		//$("#cmbProductRetType").multipleSelect("checkAll");
 		$("#cmbAppType").multipleSelect("checkAll");
 		$("#cmbProductRetStatus").multipleSelect("checkAll");
 		$("#form")[0].reset();
