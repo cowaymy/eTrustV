@@ -121,14 +121,14 @@
         INSERT INTO PAY0037D (REF_NO,REF_CODE,ID,ITM_ID)
         <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
         SELECT
-            #{item.refNo},            
+            #{item.refNo},
             #{item.refCode},
             #{item.id},
             #{item.itemId}
         FROM DUAL
         </foreach>
     </insert>
-    
+
     <!--Auto Debit - Claim Result Update : 아이템 등록 -->
     <update id="updateClaimResultItemArrange" parameterType="Map">
         UPDATE PAY0037D SET
@@ -140,7 +140,7 @@
                     WHEN REF_CODE IS NULL THEN REF_CODE
                     WHEN REF_CODE = 'A' THEN LPAD(REF_CODE,3,'0')
                     WHEN LENGTH(REF_CODE) <![CDATA[   < ]]> 2 THEN  LPAD(REF_CODE,2,'0')
-                    ELSE REF_CODE END)        
+                    ELSE REF_CODE END)
         WHERE
             ID = #{ctrlId}
     </update>
@@ -231,7 +231,7 @@
             TO_CHAR(Extent1.BANK_DTL_DR_DT,'YYYY-MM-DD') AS BANK_DTL_DR_DT,
             Extent1.BANK_DTL_DR_BANK_TYPE_ID,
             Extent1.BANK_DTL_DR_ACC_NO AS BANK_DTL_DR_ACC_NO,
-            Extent1.BANK_DTL_DR_NAME ,
+            regexp_substr (Extent1.BANK_DTL_DR_NAME, '[^[:cntrl:]]+') BANK_DTL_DR_NAME,
             Extent1.BANK_DTL_AMT ,
             Extent1.BANK_DTL_APPR_CODE AS BANK_DTL_APPR_CODE  ,
             Extent1.BANK_DTL_OR_NO ,
@@ -599,18 +599,18 @@
         WHERE
             SCHDUL_ID = #{schdulId}
     </update>
-    
+
      <!--Auto Debit -  -->
     <delete id="deleteClaimFileDownloadInfo" parameterType="Map" >
         DELETE FROM PAY0267M WHERE CTRL_ID = #{ctrlId}
     </delete>
-    
+
     <!--Auto Debit -  -->
     <insert id="insertClaimFileDownloadInfo" parameterType="Map" >
         INSERT INTO PAY0267M (CTRL_ID, FILE_NO, FILE_PATH,FILE_NAME)
         VALUES (#{ctrlId},#{fileNo},#{filePath},#{fileName})
     </insert>
-    
+
     <!--클레임 파일 다운로드 리스트   -->
     <select id="selectClaimFileDown" parameterType="Map" resultType="egovMap">
         SELECT
@@ -622,6 +622,6 @@
         FROM
             PAY0267M
         WHERE
-            CTRL_ID = #{ctrlId}   
+            CTRL_ID = #{ctrlId}
     </select>
 </mapper>
