@@ -139,10 +139,10 @@
 			ctGroup = "AND re.CT_GRP = '" + $("#CTGroup").val() + "' ";
 		}
 
-		if ($("#dscCode :selected").index() > 0) {
+		if ($("#cmbDscCode :selected").index() > 0) {
 
-			dscBranch = "AND i.BRNCH_ID = " + $("#dscCode").val() + " ";
-			dscBranchCode = $("#dscCode").val();
+			dscBranch = "AND i.BRNCH_ID = " + $("#cmbDscCode").val() + " ";
+			dscBranchCode = $("#cmbDscCode").val();
 
 		}
 
