@@ -96,6 +96,8 @@ public interface OrderCancelService {
 
 	List<EgovMap> getRetReasonList(Map<String, Object> params);
 
+	List<EgovMap> getBranchList(Map<String, Object> params);
+
 	void saveCtAssignment(Map<String, Object> params);
 
 
