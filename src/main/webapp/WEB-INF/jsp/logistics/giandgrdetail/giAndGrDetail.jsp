@@ -68,10 +68,20 @@
 		height : 30
 	}, {
 		dataField : "qtyy",
-		headerText : "(B-E)Qty",
+		headerText : "END Qty",
 		width : 100,
 		height : 30
 	}, {
+        dataField : "movbase",
+        headerText : "MOVBASE",
+        width : 70,
+        height : 30
+    }, {
+        dataField : "movbaseQty",
+        headerText : "Tran_End Qty",
+        width : 70,
+        height : 30
+    }, {
 		dataField : "itmtype",
 		headerText : "Mat. Type",
 		width : 110,
@@ -88,20 +98,35 @@
 		height : 30
 	}, {
 		dataField : "ztyyyy",
-		headerText : "In_Move",
+		headerText : "Move_Out",
 		width : 70,
 		height : 30
 	}, {
 		dataField : "ktyzzz",
-		headerText : "In_Trns",
+		headerText : "Move_In",
 		width : 70,
 		height : 30
 	}, {
 		dataField : "finalqty",
-		headerText : "FINALQty",
+		headerText : "Move_Total",
 		width : 70,
 		height : 30
 	}, {
+        dataField : "usztyyyy",
+        headerText : "Tran_Out",
+        width : 70,
+        height : 30
+    }, {
+        dataField : "usktyzzz",
+        headerText : "Tran_In",
+        width : 70,
+        height : 30
+    },  {
+        dataField : "usfinalqty",
+        headerText : "Tran_Total",
+        width : 70,
+        height : 30
+    }, {
 		dataField : "poGrQty",
 		headerText : "PO_GR_Qty",
 		width : 70,
@@ -132,6 +157,11 @@
 		width : 70,
 		height : 30
 	}, {
+        dataField : "pstExp",
+        headerText : "PST_EXP",
+        width : 70,
+        height : 30
+    },{
 		dataField : "otherGiQty",
 		headerText : "OTHER_GI_Qty",
 		width : 70,
@@ -144,11 +174,6 @@
 	}, {
 		dataField : "transMoveQty",
 		headerText : "TRANS_MOVE_Qty",
-		width : 70,
-		height : 30
-	}, {
-		dataField : "movbaseQty",
-		headerText : "MOVBASE_Qty",
 		width : 70,
 		height : 30
 	}, {
