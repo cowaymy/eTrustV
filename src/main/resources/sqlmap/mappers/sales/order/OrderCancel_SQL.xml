@@ -706,6 +706,21 @@ SELECT TT.CODE_ID
              ) TT ORDER BY CODE_NAME
     </select>
 
+            <select id="getBranchList" parameterType="Map" resultType="egovMap">
+             SELECT
+                      T.CODE_ID
+                    , T.CODE_NAME
+                 FROM
+                    ( SELECT
+                             BRNCH_ID CODE_ID
+                           , CODE ||'-'|| NAME AS CODE_NAME
+                        FROM SYS0005M
+                       WHERE TYPE_ID IN (#{typeId})
+                         AND 1 = STUS_ID
+                    ) T
+         ORDER BY CODE_NAME
+    </select>
+
     <update id="updateCancelCCR0006D" parameterType="Map">
         UPDATE CCR0006D
 		     SET STUS_CODE_ID = #{callStusId},
