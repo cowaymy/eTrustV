@@ -324,6 +324,13 @@ public class OrderCancelController {
 		return ResponseEntity.ok(codeList);
 	}
 
+	@RequestMapping(value = "/getBranchList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getBranchList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = orderCancelService.getBranchList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
+
 
 	@RequestMapping(value = "/ctSearchPop.do")
 	public String memberPop(@RequestParam Map<String, Object> params, ModelMap model) {
