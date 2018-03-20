@@ -115,7 +115,7 @@
 				  FROM SYS0005M
 				 WHERE  1 = STUS_ID
 				    <if test ="branchId != null and branchId !='' ">
-				     AND BRNCH_ID IN ( #{branchId},63,64,65,96,100,101,103 )
+				     AND BRNCH_ID IN ( #{branchId},63,64,65,96,100,101,103, 112, 113, 114, 142, 143, 144 )
 				     </if>
 				  ORDER BY CODE ASC
   </select>
