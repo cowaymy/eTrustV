@@ -208,4 +208,6 @@ public interface OrderCancelMapper {
 
 
 	List<EgovMap> getRetReasonList(Map<String, Object> params);
+
+	List<EgovMap> getBranchList(Map<String, Object> params);
 }
