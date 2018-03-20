@@ -2,12 +2,12 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.order.impl.OrderCancelMapper">
 
-    <!-- 
+    <!--
         CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
          <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
           resultMap="clobMap" 을 사용해야 함.
     -->
-    
+
     <select id="orderCancellationList" parameterType="Map" resultType="egovMap">
         SELECT A.REQ_ID REQ_ID  ,
 			       A.REQ_NO REQ_NO  ,
@@ -56,29 +56,29 @@
 			       A.ISS_BANK ISS_BANK  ,
 			       A.ACC_NAME ACC_NAME  ,
 			       A.ATTACH ATTACH  ,
-			       CASE 
+			       CASE
 			            WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL ) THEN A.ACTUAL_CANCL_DT
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END ACTUAL_CANCL_DT  ,
-			       CASE 
+			       CASE
 			            WHEN ( A.APP_RETN_DT IS NOT NULL ) THEN A.APP_RETN_DT
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END APP_RETN_DT  ,
-			       CASE 
+			       CASE
 			            WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN TO_CHAR(A.CALL_RECALL_DT,'dd-MM-YYYY')
 			       ELSE '1900-01-01' END CALL_RECALL_DT  ,
-			       CASE 
+			       CASE
 			            WHEN ( A.CRT_DT IS NOT NULL ) THEN A.CRT_DT
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CRT_DT  ,
-			       CASE 
+			       CASE
 			            WHEN ( A.DSC_BRNCH_ID IS NOT NULL ) THEN A.DSC_BRNCH_ID
 			       ELSE 0 END DSC_BRNCH_ID  ,
-			       CASE 
+			       CASE
 			            WHEN ( A.UPD_DT IS NOT NULL ) THEN A.UPD_DT
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END UPD_DT,
                    A.TYPE_ID,
                    A.DOC_ID,
                    A.REF_ID,
-                  ( SELECT   CODE  
-                    FROM SYS0038M 
+                  ( SELECT   CODE
+                    FROM SYS0038M
                     WHERE STUS_CODE_ID =  A.RSO_STUS
                    ) RSO_STUS
 			    FROM ( SELECT V.REQ_ID  ,
@@ -137,9 +137,9 @@
 			              V.TYPE_ID,
 			              V.DOC_ID,
 			              V.REF_ID,
-			              V.RSO_STUS   
+			              V.RSO_STUS
 			       FROM SAL1007V V) A
-			 WHERE 1=1 
+			 WHERE 1=1
 			 <if test="typeIdList != null and typeIdList != ''">
 			     AND A.APP_TYPE_ID IN
 			     <foreach item="item" collection="typeIdList" index="index" open="(" separator="," close=")">
@@ -183,31 +183,31 @@
                  AND UPPER(A.CUST_IC) = UPPER(#{custIc})
              </if>
              <if test="startCrtDt != null and startCrtDt != '' ">
-                AND CRT_DT <![CDATA[   >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') 
+                AND CRT_DT <![CDATA[   >= ]]>  TO_DATE(#{startCrtDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
              </if>
-             <if test="endCrtDt != null and endCrtDt != ''">                              
+             <if test="endCrtDt != null and endCrtDt != ''">
                 AND CRT_DT <![CDATA[   <=   ]]>  TO_DATE(#{endCrtDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
             </if>
             <if test="startRecallDt != null and startRecallDt != '' ">
-                AND CALL_RECALL_DT <![CDATA[   >= ]]>  TO_DATE(#{startRecallDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS') 
+                AND CALL_RECALL_DT <![CDATA[   >= ]]>  TO_DATE(#{startRecallDt}||' 00:00:00', 'DD/MM/YYYY HH24:MI:SS')
             </if>
-            <if test="endRecallDt != null and endRecallDt != '' ">           
+            <if test="endRecallDt != null and endRecallDt != '' ">
                 AND CALL_RECALL_DT <![CDATA[   <=   ]]>  TO_DATE(#{endRecallDt} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
             </if>
-               
+
     </select>
-    
+
     <select id="dscBranch" parameterType="Map" resultType="egovMap">
           SELECT Project1.BRNCH_ID, Project1.BRNCH_NAME
 		    FROM ( SELECT Extent1.BRNCH_ID,
-				                  Extent1.CODE || ' - ' || Extent1.NAME BRNCH_NAME  
+				                  Extent1.CODE || ' - ' || Extent1.NAME BRNCH_NAME
 				         FROM SYS0005M Extent1
 				        WHERE  ( 1 = Extent1.STUS_ID )
 				                   AND ( Extent1.TYPE_ID IN ( 40,43 )
 				                  ) ) Project1
 		  ORDER BY Project1.BRNCH_NAME ASC
     </select>
-    
+
     <select id="cancelReqInfo" parameterType="Map" resultType="egovMap">
         SELECT distinct A.REQ_ID ,
 			       A.REQ_NO ,
@@ -256,24 +256,24 @@
 			       A.ISS_BANK ,
 			       A.ACC_NAME ,
 			       A.ATTACH ,
-			       CASE 
+			       CASE
                          WHEN ( A.ACTUAL_CANCL_DT IS NOT NULL ) THEN TO_CHAR(A.ACTUAL_CANCL_DT, 'DD/MM/YYYY')
                    ELSE '01/01/1900' END ACTUAL_CANCL_DT  ,
-                   CASE 
+                   CASE
                          WHEN ( A.APP_RETN_DT IS NOT NULL ) THEN TO_CHAR(A.APP_RETN_DT, 'DD/MM/YYYY')
                    ELSE '01/01/1900' END APP_RETN_DT  ,
-                   CASE 
+                   CASE
                          WHEN ( A.CALL_RECALL_DT IS NOT NULL ) THEN TO_CHAR(A.CALL_RECALL_DT, 'DD/MM/YYYY')
                    ELSE '01/01/1900' END CALL_RECALL_DT  ,
-			       CASE 
+			       CASE
 			             WHEN ( A.CRT_DT IS NOT NULL ) THEN A.CRT_DT
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CRT_DT  ,
-			       CASE 
+			       CASE
 			             WHEN ( A.DSC_BRNCH_ID IS NOT NULL ) THEN A.DSC_BRNCH_ID
 			       ELSE 0 END DSC_BRNCH_ID  ,
-			       CASE 
+			       CASE
 			             WHEN ( A.UPD_DT IS NOT NULL ) THEN A.UPD_DT
-			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END UPD_DT     
+			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END UPD_DT
 			  FROM ( SELECT V.REQ_ID ,
 					                V.REQ_NO ,
 					                V.ORD_ID ,
@@ -326,11 +326,11 @@
 					                V.BANK_ACC ,
 					                V.ISS_BANK ,
 					                V.ACC_NAME ,
-					                V.ATTACH 
+					                V.ATTACH
 					        FROM SAL1007V V ) A
-			 WHERE  A.REQ_ID = #{reqId} 
+			 WHERE  A.REQ_ID = #{reqId}
     </select>
-    
+
     <select id="cancelLogTransctionList" parameterType="Map" resultType="egovMap">
          SELECT Filter1.CALL_ENTRY_ID ,
 			        Filter1.SALES_ORD_ID ,
@@ -347,21 +347,21 @@
 			        Filter1.NAME ,
 			        Filter1.CODE3 CODE1  ,
 			        Filter1.CODE_NAME ,
-			        CASE 
+			        CASE
 			             WHEN ( Filter1.CALL_DT IS NOT NULL ) THEN Filter1.CALL_DT
 			        ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END CALL_DT  ,
-			        CASE 
+			        CASE
 			             WHEN ( Filter1.USER_ID IS NOT NULL ) THEN Filter1.USER_NAME
 			        ELSE '' END CALLENTRY_USER_NAME  ,
-			        CASE 
+			        CASE
 			             WHEN ( Filter1.HAPY_CALLER_ID IS NOT NULL ) THEN Filter1.HAPY_CALLER_ID
 			        ELSE 0 END HAPY_CALLER_ID  ,
-			        CASE 
+			        CASE
 			             WHEN ( Filter1.ORI_CALL_DT IS NOT NULL ) THEN Filter1.ORI_CALL_DT
 			        ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd') END ORI_CALL_DT  ,
-			        CASE 
+			        CASE
 			             WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
-			        ELSE '' END USER_NAME  
+			        ELSE '' END USER_NAME
 			FROM ( SELECT Extent1.CALL_ENTRY_ID ,
 				                 Extent1.SALES_ORD_ID ,
 				                 Extent1.TYPE_ID ,
@@ -381,23 +381,23 @@
 				                 Extent3.CODE CODE3  ,
 				                 Extent3.CODE_NAME ,
 				                 Extent4.USER_ID ,
-				                 Extent4.USER_NAME  
+				                 Extent4.USER_NAME
 				           FROM CCR0006D Extent1
-				            JOIN SYS0038M Extent2   
+				            JOIN SYS0038M Extent2
 				              ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
-				            JOIN SYS0013M Extent3   
+				            JOIN SYS0013M Extent3
 				              ON Extent3.CODE_ID = Extent1.TYPE_ID
-				            LEFT JOIN SYS0047M Extent4   
+				            LEFT JOIN SYS0047M Extent4
 				              ON Extent4.USER_ID = Extent1.CRT_USER_ID
 				      <![CDATA[
 				         WHERE  8 <> Extent1.STUS_CODE_ID ) Filter1
 				      ]]>
-			     LEFT JOIN SYS0047M Extent5   
+			     LEFT JOIN SYS0047M Extent5
 			       ON Extent5.USER_ID = Filter1.UPD_USER_ID
 			  WHERE  Filter1.DOC_ID = #{docId}
 			      AND  Filter1.TYPE_ID = #{typeId}
     </select>
-    
+
     <select id="productReturnTransctionList" parameterType="Map" resultType="egovMap">
         SELECT Filter1.STK_RETN_ID ,
 				       Filter1.STATUSCODEID1 STUS_CODE_ID  ,
@@ -417,59 +417,59 @@
 				       Filter1.NAME1 NAME  ,
 				       Filter1.STK_CODE ,
 				       Filter1.STK_DESC ,
-				       Filter1.CODE_DESC, 
-				       CASE 
+				       Filter1.CODE_DESC,
+				       CASE
 				            WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.MEM_CODE
 				       ELSE ''
 				          END MEM_CODE  ,
-				       CASE 
+				       CASE
 				            WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.NAME2
 				       ELSE ''
 				          END NAME2  ,
-				       CASE 
+				       CASE
 				            WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.MEM_CODE || ' - ' || Filter1.NAME2
 				       ELSE ''
 				          END MEM_CODE_NAME2  ,
-				       CASE 
+				       CASE
 				            WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.NRIC
 				       ELSE ''
 				          END NRIC  ,
-				       CASE 
+				       CASE
 				            WHEN (Filter1.CREATED1 IS NOT NULL) THEN TO_CHAR(Filter1.CREATED1, 'DD/MM/YYYY')
 				       ELSE '01/01/1900'
 				          END CREATED1  ,
-				       CASE 
+				       CASE
 				            WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
 				       ELSE ''
 				          END USERNAME1  ,
-				       CASE 
+				       CASE
 				            WHEN ( Filter1.REQST_DT IS NOT NULL ) THEN Filter1.REQST_DT
 				       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 				          END REQST_DT  ,
-				       CASE 
+				       CASE
 				            WHEN ( Filter1.UPDATED1 IS NOT NULL ) THEN Filter1.UPDATED1
 				       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 				          END UPDATED1  ,
-				       CASE 
+				       CASE
 				            WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
 				       ELSE ''
 				          END USERNAME2  ,
-				       CASE 
+				       CASE
 				            WHEN ( Filter1.MOV_ID1 IS NOT NULL ) THEN Filter1.MOV_TO_LOC_ID
 				       ELSE 0
 				          END MOV_TO_LOC_ID  ,
-				       CASE 
+				       CASE
 				            WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_CODE
 				       ELSE ''
 				          END WH_LOC_CODE  ,
-				       CASE 
+				       CASE
 				            WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_DESC
 				       ELSE null
 				          END WH_LOC_DESC  ,
-				       CASE 
+				       CASE
 				            WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_CODE || ' - ' || Extent9.WH_LOC_DESC
 				       ELSE null
-				          END WH_LOC_CODE_DESC  
+				          END WH_LOC_CODE_DESC
 				  FROM ( SELECT Extent1.STK_RETN_ID ,
 				                Extent1.STUS_CODE_ID STATUSCODEID1  ,
 				                Extent1.TYPE_ID ,
@@ -501,7 +501,7 @@
 				                Extent7.USER_ID USERID2  ,
 				                Extent7.USER_NAME USERNAME2  ,
 				                Extent8.MOV_ID MOV_ID8,
-				                Extent8.MOV_TO_LOC_ID   
+				                Extent8.MOV_TO_LOC_ID
 				         FROM LOG0038D Extent1
 				                JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
 				                JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent1.STOCK_ID
@@ -516,7 +516,7 @@
 				          WHERE  8 <> Extent1.STUS_CODE_ID ) Filter1
 				          ]]>
 				         LEFT JOIN SYS0028M Extent9   ON Extent9.WH_LOC_ID = Filter1.MOV_TO_LOC_ID
-				        WHERE  Filter1.TYPE_ID = #{typeId} 
+				        WHERE  Filter1.TYPE_ID = #{typeId}
 				          AND  Filter1.REF_ID = #{refId}
     </select>
 
@@ -541,58 +541,58 @@
 			       Filter1.STK_DESC ,
 			       Filter1.CODE_DESC ,
 			       Filter1.MEM_ID,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.MEM_CODE
 			       ELSE ''
 			            END MEM_CODE  ,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.NAME2
 			       ELSE ''
 			            END MEM_NAME  ,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.MEM_CODE || ' - ' || Filter1.NAME2
 			       ELSE ''
 			            END MEM_CODE_NAME  ,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.MEM_ID IS NOT NULL ) THEN Filter1.NRIC
 			       ELSE ''
 			            END NRIC  ,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.CREATED1 IS NOT NULL ) THEN Filter1.CREATED1
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 			            END CREATED1  ,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
 			       ELSE ''
 			            END USERNAME1  ,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.REQST_DT IS NOT NULL ) THEN Filter1.REQST_DT
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 			            END REQST_DT  ,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.UPDATED1 IS NOT NULL ) THEN Filter1.UPDATED1
 			       ELSE TO_DATE('1900-01-01', 'yyyy-MM-dd')
 			            END UPDATED1  ,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
 			       ELSE ''
 			          END USERNAME2  ,
-			       CASE 
+			       CASE
 			            WHEN ( Filter1.MOV_ID1 IS NOT NULL ) THEN Filter1.MOV_TO_LOC_ID
 			       ELSE 0
 			            END MOV_TO_LOC_ID  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_CODE
 			       ELSE ''
 			            END WH_LOC_CODE  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_DESC
 			       ELSE null
 			            END WH_LOC_DESC  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent9.WH_LOC_ID IS NOT NULL ) THEN Extent9.WH_LOC_CODE || ' - ' || Extent9.WH_LOC_DESC
 			       ELSE null
-			            END WH_LOC_CODE_DESC  
+			            END WH_LOC_CODE_DESC
 			  FROM ( SELECT Extent1.STK_RETN_ID ,
 					                Extent1.STUS_CODE_ID STATUSCODEID1  ,
 					                Extent1.TYPE_ID ,
@@ -624,7 +624,7 @@
 					                Extent7.USER_ID USERID2  ,
 					                Extent7.USER_NAME USERNAME2  ,
 					                Extent8.MOV_ID MOV_ID8,
-					                Extent8.MOV_TO_LOC_ID   
+					                Extent8.MOV_TO_LOC_ID
 					       FROM LOG0038D Extent1
 					               JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
 					               JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent1.STOCK_ID
@@ -639,14 +639,14 @@
 					          WHERE  8 <> Extent1.STUS_CODE_ID ) Filter1
 					          ]]>
 			         LEFT JOIN SYS0028M Extent9   ON Extent9.WH_LOC_ID = Filter1.MOV_TO_LOC_ID
-			 WHERE  Filter1.TYPE_ID = #{typeId} 
+			 WHERE  Filter1.TYPE_ID = #{typeId}
                  AND  Filter1.REF_ID = #{refId}
                <if test='stusCodeId != null and stusCodeId !=""'>
-                 AND  Filter1.STATUSCODEID1 = #{stusCodeId} 
+                 AND  Filter1.STATUSCODEID1 = #{stusCodeId}
                </if>
                  AND ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectAssignCT" parameterType="Map" resultType="egovMap">
           SELECT MEM_ID ,
                      MEM_ID AS MEM_ID_COMBO,
@@ -658,16 +658,54 @@
 		   WHERE STUS = 1
 			   AND MEM_TYPE = 3
     </select>
-    
+
     <select id="selectFeedback" parameterType="Map" resultType="egovMap">
           SELECT RESN_ID ,
 		             CODE ,
-		             CODE || ' - ' || RESN_DESC CODE_RESN_DESC  
+		             CODE || ' - ' || RESN_DESC CODE_RESN_DESC
 		     FROM SYS0032M
 		   WHERE RESN_TYPE_ID = 537
 		       AND STUS_CODE_ID = 1
     </select>
-    
+
+        <select id="getRetReasonList" parameterType="Map" resultType="egovMap">
+SELECT TT.CODE_ID
+             , TT.CODE_NAME
+          FROM
+             ( SELECT DISTINCT T.C1
+                    , T.CODE_ID
+                    , T.CODE_NAME
+                 FROM
+                    ( SELECT 1 C1
+                           , T1.RESN_ID CODE_ID
+                           , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                       WHERE T1.RESN_TYPE_ID IN (#{typeId})
+                         AND 1 = T1.STUS_CODE_ID
+                       UNION ALL
+                       SELECT 1 C1
+                           , T1.RESN_ID CODE_ID
+                           , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                       WHERE T1.RESN_TYPE_ID IN (#{typeId1})
+                         AND 1 = T1.STUS_CODE_ID
+                       UNION ALL
+                       SELECT 1 C1
+                           , T1.RESN_ID CODE_ID
+                           , T1.CODE ||'-'|| T1.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T1
+                       WHERE T1.RESN_TYPE_ID IN (#{typeId2})
+                         AND 1 = T1.STUS_CODE_ID
+                       UNION ALL
+                      SELECT 1 C1
+                           , T2.RESN_ID CODE_ID
+                           , T2.CODE || ' - ' || T2.RESN_DESC AS CODE_NAME
+                        FROM SYS0032M T2
+                       WHERE T2.RESN_ID = #{inputId}
+                    ) T
+             ) TT ORDER BY CODE_NAME
+    </select>
+
     <update id="updateCancelCCR0006D" parameterType="Map">
         UPDATE CCR0006D
 		     SET STUS_CODE_ID = #{callStusId},
@@ -677,7 +715,7 @@
 		           UPD_USER_ID = #{callCrtUserId}
 		 WHERE CALL_ENTRY_ID = #{callEntryId}
     </update>
-    
+
     <select id="newSearchCancelSAL0020D" parameterType="Map" resultType="egovMap">
           SELECT Extent1.SO_REQ_ID SO_REQ_ID  ,
 				     Extent1.SO_REQ_SO_ID SO_REQ_SO_ID  ,
@@ -710,14 +748,14 @@
 				     Extent1.SO_REQ_BANK_ACC SO_REQ_BANK_ACC  ,
 				     Extent1.SO_REQ_ISS_BANK SO_REQ_ISS_BANK  ,
 				     Extent1.SO_REQ_ACC_NAME SO_REQ_ACC_NAME  ,
-				     Extent1.SO_REQ_ATTACH SO_REQ_ATTACH  
+				     Extent1.SO_REQ_ATTACH SO_REQ_ATTACH
 			 FROM SAL0020D Extent1
-		   WHERE Extent1.SO_REQ_ID = #{soReqId} 
+		   WHERE Extent1.SO_REQ_ID = #{soReqId}
 		       <![CDATA[
 		       AND ROWNUM <= 1
 		       ]]>
     </select>
-    
+
     <update id="updateCancelSAL0020D" parameterType="Map">
         UPDATE SAL0020D
 			 SET SO_REQ_UPD_DT = SYSDATE,
@@ -727,7 +765,7 @@
                    SO_REQ_UPD_USER_ID = #{callCrtUserId}
 		 WHERE SO_REQ_ID = #{soReqId}
     </update>
-    
+
     <update id="updReservalCancelSAL0020D" parameterType="Map">
         UPDATE SAL0020D
              SET SO_REQ_UPD_DT = SYSDATE,
@@ -735,7 +773,7 @@
                    SO_REQ_STUS_ID = #{callStusId}
          WHERE SO_REQ_ID = #{soReqId}
     </update>
-    
+
     <select id="newSearchCancelSAL0001D" parameterType="Map" resultType="egovMap">
           SELECT Extent1.SALES_ORD_ID SALES_ORD_ID  ,
 				     Extent1.SALES_ORD_NO SALES_ORD_NO  ,
@@ -783,14 +821,14 @@
 				     Extent1.SALES_GM_ID SALES_GM_ID  ,
 				     Extent1.ADV_BILL ADV_BILL  ,
 				     Extent1.CNVR_SCHEME_ID CNVR_SCHEME_ID  ,
-				     Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID  
+				     Extent1.CUST_CARE_CNT_ID CUST_CARE_CNT_ID
 			 FROM SAL0001D Extent1
 		   WHERE Extent1.SALES_ORD_ID = #{salesOrdId}
                <![CDATA[
                AND ROWNUM <= 1
                ]]>
     </select>
-    
+
     <select id="newSearchCancelSAL0046D" parameterType="Map" resultType="egovMap">
           SELECT Extent1.INSTALL_ENTRY_ID   ,
 				     Extent1.INSTALL_ENTRY_NO   ,
@@ -808,7 +846,7 @@
 				     Extent1.CT_GRP   ,
 				     Extent1.UPD_DT UP_DT  ,
 				     Extent1.UPD_USER_ID   ,
-				     Extent1.REV_ID   
+				     Extent1.REV_ID
 			 FROM SAL0046D Extent1
 		   WHERE Extent1.CALL_ENTRY_ID = #{callEntryId}
 		       AND 4 = Extent1.STUS_CODE_ID
@@ -816,7 +854,7 @@
                AND ROWNUM <= 1
                ]]>
     </select>
-    
+
     <update id="updateCancelSAL0001D" parameterType="Map">
         UPDATE SAL0001D
 			 SET REM = #{callRem},
@@ -825,18 +863,18 @@
 			       UPD_USER_ID = #{userId}
 		 WHERE SALES_ORD_ID = #{salesOrdId}
     </update>
-    
+
     <update id="updateCancelSAL0071D" parameterType="Map">
         UPDATE SAL0071D
              SET STUS_CODE_ID = #{rentalSchemeStusId},
                    REN_SCH_DT = SYSDATE
          WHERE REN_SCH_ID = #{renSchId}
     </update>
-    
+
     <select id="crtSeqLOG0031D"  resultType="java.lang.String">
         SELECT LOG0013D_MOV_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertCancelLOG0013D" parameterType="Map">
         INSERT INTO LOG0013D (MOV_ID,
 					                      INSTALL_ENTRY_ID,
@@ -867,11 +905,11 @@
 					                      TO_DATE(#{stkCrdPostDt}, 'DD/MM/YYYY'),
 					                      #{stkCrdPostToWebOnTm})
     </insert>
-    
+
     <select id="crtSeqLOG0038D"  resultType="java.lang.String">
         SELECT LOG0038D_STK_RETN_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertCancelLOG0038D" parameterType="Map">
         INSERT INTO LOG0038D (STK_RETN_ID,
 					                      STUS_CODE_ID,
@@ -914,7 +952,7 @@
 					                       #{cTSSessionCode}
 					                        )
     </insert>
-    
+
     <insert id="insertCancelCCR0006D" parameterType="Map">
         INSERT INTO CCR0006D
                   ( CALL_ENTRY_ID, SALES_ORD_ID, TYPE_ID, STUS_CODE_ID, RESULT_ID
@@ -924,18 +962,18 @@
                   , #{docId}, #{callCrtUserId}, SYSDATE, TO_DATE(#{callDt}, 'DD/MM/YYYY'), #{isWaitForCancl}
                   , #{hapyCallerId}, SYSDATE, #{callCrtUserId}, TO_DATE(#{callDt}, 'DD/MM/YYYY') )
     </insert>
-    
+
     <select id="crtSeqLOG0037D"  resultType="java.lang.String">
         SELECT LOG0037D_STK_RETN_CT_SEQ_ID.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertCancelLOG0037D" parameterType="Map">
         INSERT INTO LOG0037D
 			  ( STK_RETN_CT_EXCHG_SEQ_ID, STK_RETN_ID, STK_RETN_CT_FROM, STK_RETN_CT_TO, STK_RETN_CT_EXCHG_CRT_DT
 			  , STK_RETN_CT_EXCHG_CRT_USER_ID, STK_RETN_CT_GRP_TO, STK_RETN_CT_GRP_FROM )
 	    VALUES ( #{crtSeqLOG0037D}, #{stkRetnId}, #{stkRetnCtFrom}, #{salesmanId}, SYSDATE, #{userId}, #{saveCtGroup}, #{stkRetnCtGrpFrom} )
     </insert>
-    
+
     <update id="updateCancelLOG0038D" parameterType="Map">
         UPDATE LOG0038D
 			 SET UPD_DT = SYSDATE,
@@ -944,7 +982,7 @@
 			       CT_GRP = #{saveCtGroup}
 		 WHERE STK_RETN_ID = #{stkRetnId}
     </update>
-    
+
     <select id="cancelCtLOG0038D" parameterType="Map" resultType="egovMap">
           SELECT Extent1.STK_RETN_ID   ,
 			         Extent1.STUS_CODE_ID   ,
@@ -963,14 +1001,14 @@
 			         Extent1.APP_DT   ,
 			         Extent1.CT_ID   ,
 			         Extent1.CT_GRP   ,
-			         Extent1.CALL_ENTRY_ID   
+			         Extent1.CALL_ENTRY_ID
 			 FROM LOG0038D Extent1
 		   WHERE Extent1.STK_RETN_ID = #{stkRetnId}
 		      <![CDATA[
                AND ROWNUM <= 1
                ]]>
     </select>
-    
+
     <select id="ctAssignBulkList" parameterType="Map" resultType="egovMap">
           SELECT Filter2.STK_RETN_ID STK_RETN_ID  ,
 	                Filter2.STATUSCODEID1 STUS_CODE_ID  ,
@@ -996,39 +1034,39 @@
 	                Filter2.APP_TYPE_ID APP_TYPE_ID  ,
 	                Filter2.BRANCHID1 BRNCH_ID  ,
 	                Extent15.NAME NAME1  ,
-	                CASE 
+	                CASE
 	                     WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.MEM_CODE
 	                ELSE ' '
 	                   END MEM_CODE  ,
-	                CASE 
+	                CASE
 	                     WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.NAME2
 	                ELSE ' '
 	                   END MEM_ID_NAME  ,
-	                CASE 
+	                CASE
 	                     WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.MEM_CODE || ' - ' || Filter2.NAME2
 	                ELSE ' '
 	                   END MEM_CODE_NAME  ,
-	                CASE 
+	                CASE
 	                     WHEN ( Filter2.MEMBERID1 IS NOT NULL ) THEN Filter2.NRIC
 	                ELSE ' '
 	                   END NRIC  ,
-	                CASE 
+	                CASE
 	                     WHEN ( Filter2.MOV_ID13 IS NOT NULL ) THEN Filter2.MOV_TO_LOC_ID
 	                ELSE 0
 	                   END MOV_TO_LOC_ID  ,
-	                CASE 
+	                CASE
 	                     WHEN ( Filter2.WH_LOC_ID IS NOT NULL ) THEN Filter2.WH_LOC_CODE
 	                ELSE ' '
 	                   END WH_LOC_CODE  ,
-	                CASE 
+	                CASE
 	                     WHEN ( Filter2.WH_LOC_ID IS NOT NULL ) THEN Filter2.WH_LOC_DESC
 	                ELSE ' '
 	                   END WH_LOC_DESC  ,
-	                CASE 
+	                CASE
 	                     WHEN ( Filter2.WH_LOC_ID IS NOT NULL ) THEN Filter2.WH_LOC_CODE || ' - ' || Filter2.WH_LOC_DESC
 	                ELSE ' '
 	                   END WH_LOC_CODE_DESC,
-	                   Filter2.CUST_ID       
+	                   Filter2.CUST_ID
 	         FROM ( SELECT Filter1.STK_RETN_ID ,
 			                       Filter1.STATUSCODEID1 ,
 			                       Filter1.TYPEID1 ,
@@ -1061,7 +1099,7 @@
 			                       Extent12.SALES_ORD_NO SALES_ORD_NO  ,
 			                       Extent12.CUST_ID CUST_ID  ,
 			                       Extent12.APP_TYPE_ID APP_TYPE_ID  ,
-			                       Extent13.BRNCH_ID BRANCHID1  
+			                       Extent13.BRNCH_ID BRANCHID1
 			                FROM ( SELECT Extent1.STK_RETN_ID STK_RETN_ID  ,
 					                              Extent1.STUS_CODE_ID STATUSCODEID1  ,
 					                              Extent1.TYPE_ID TYPEID1  ,
@@ -1081,7 +1119,7 @@
 					                              Extent3.STK_CODE STK_CODE  ,
 					                              Extent3.STK_DESC STK_DESC  ,
 					                              Extent4.CODE CODE3  ,
-					                              Extent4.CODE_DESC CODE_DESC  
+					                              Extent4.CODE_DESC CODE_DESC
 					                      FROM LOG0038D Extent1
 					                              JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_CODE_ID
 					                              JOIN SYS0026M Extent3   ON Extent3.STK_ID = Extent1.STOCK_ID
@@ -1095,7 +1133,7 @@
 		                                     </foreach>
 		                                 </if>
 			                                AND 25 = Extent5.SO_REQ_CUR_STUS_ID
-			                                AND 1 = Extent5.SO_REQ_STUS_ID 
+			                                AND 1 = Extent5.SO_REQ_STUS_ID
 			                            ) Filter1
 				                       JOIN CCR0006D Extent6   ON Extent6.CALL_ENTRY_ID = Filter1.CALLENTRYID1
 				                       LEFT JOIN ORG0001D Extent7   ON Extent7.MEM_ID = Filter1.CT_ID
@@ -1140,9 +1178,9 @@
              <if test="sortBy == 3">
                  ORDER BY Filter2.MEM_CODE, Filter2.SALES_ORD_NO ASC
              </if>
-			  
+
     </select>
-    
+
     <update id="updateBulkLOG0038D" parameterType="Map">
         UPDATE LOG0038D
              SET UPD_DT = SYSDATE,
@@ -1150,12 +1188,12 @@
                    CT_ID = #{salesmanId}
          WHERE STK_RETN_ID = #{stkRetnId}
     </update>
-    
+
     <insert id="insertBulkLOG0037D" parameterType="Map">
         INSERT INTO LOG0037D
               ( STK_RETN_CT_EXCHG_SEQ_ID, STK_RETN_ID, STK_RETN_CT_FROM, STK_RETN_CT_TO, STK_RETN_CT_EXCHG_CRT_DT
               , STK_RETN_CT_EXCHG_CRT_USER_ID, STK_RETN_CT_GRP_TO, STK_RETN_CT_GRP_FROM )
         VALUES ( LOG0037D_STK_RETN_CT_SEQ_ID.NEXTVAL, #{stkRetnId}, #{stockId}, #{salesmanId}, SYSDATE, #{userId}, #{ctGrp}, #{ctGrp} )
     </insert>
-    
+
 </mapper>
