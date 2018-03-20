@@ -11,8 +11,10 @@
 		width : '100%'
 	});
 
-	doGetComboSepa("/common/selectBranchCodeList.do", '5', '-', '', 'dscCode',
-			'S', '');
+	/* doGetComboSepa("/common/selectBranchCodeList.do", '5', '-', '', 'dscCode',
+			'S', ''); */
+
+
 	CommonCombo.make('cmbAppType', '/sales/order/getApplicationTypeList', {
 		codeId : 10
 	}, '', {
@@ -25,6 +27,11 @@
 		inputId : 1,
 		separator : '-'
 	}, '', 'cmbRetReason', 'S'); //Reason Code
+
+	   doGetComboCodeId('/sales/order/getBranchList', {
+		   typeId : 43,
+	        separator : '-'
+	    }, '', 'cmbDscCode', 'S'); //Branch Code
 
 	$.fn.clearForm = function() {
 		$("#cmbProductRetType").multipleSelect("checkAll");
@@ -492,9 +499,14 @@
 						</tr>
 
 						<tr>
-							<th scope="row"><spring:message code='service.title.DSCCode' /></th>
+<%-- 							<th scope="row"><spring:message code='service.title.DSCCode' /></th>
 							<td><select class="w100p" id="dscCode" name="dscCode">
 							</select></td>
+							 --%>
+							 <th scope="row">DSC Code</th>
+                            <td><select class="w100p" id="cmbDscCode"
+                                name="cmbDscCode"></select></td>
+
 							<th scope="row">Sort By</th>
 							<td><select class="w100p" id="SortBy">
 									<option value="" selected>Choose One</option>
