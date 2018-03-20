@@ -318,6 +318,12 @@ public class OrderCancelController {
 		return ResponseEntity.ok(map);
 	}
 
+	@RequestMapping(value = "/getRetReasonList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getRetReasonList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> codeList = orderCancelService.getRetReasonList(params);
+		return ResponseEntity.ok(codeList);
+	}
+
 
 	@RequestMapping(value = "/ctSearchPop.do")
 	public String memberPop(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -341,6 +347,12 @@ public class OrderCancelController {
 	public String orderCancelProductReturnLogBookListingPop(){
 
 		return "sales/order/orderCancelProductReturnLogBookListingPop";
+	}
+
+	@RequestMapping(value="/orderCancelProductReturnNoteListingPop.do")
+	public String orderCancelProductReturnNoteListingPop(){
+
+		return "sales/order/orderCancelProductReturnNoteListingPop";
 	}
 
 	@RequestMapping(value="/orderCancelProductReturnYellowSheetPop.do")
