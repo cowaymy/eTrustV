@@ -106,6 +106,8 @@ $(document).ready(function() {
         });
              
     });
+    
+    
 
 });
 
@@ -384,8 +386,12 @@ var gridPros = {
         <span><c:out value="${orderInfo.c13}"/></span>
         </td>
     </c:if>
-    <th scope="row"></th>
+    <th scope="row">Grade</th>
     <td>
+        <span> <c:if test="${installResult.grade == null}">A</c:if>
+        
+        <c:if test="${installResult.grade != null}"><c:out value="${installResult.grade}"/></c:if>
+        </span>
     </td>
 </tr>
 </tbody>
