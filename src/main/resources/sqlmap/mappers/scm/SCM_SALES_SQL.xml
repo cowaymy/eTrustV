@@ -2096,7 +2096,7 @@ SELECT STK_ID
     </select>
 
     <select id="selectBeforeOrdCnt" parameterType="Map" resultType="int">
-			SELECT NVL(ORD_CNT,0) ORD_CNT
+			SELECT NVL(SUM(ORD_CNT),0) ORD_CNT
 			  FROM SCM0008M SCM08M,
 			  (SELECT ORD_CNT, STOCK_CODE
 			     FROM SCM0044S

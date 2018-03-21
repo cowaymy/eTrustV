@@ -1193,7 +1193,7 @@ $(document).ready(function()
 <ul class="right_btns">
   <li>
    <p class="btn_grid">
-    <a onclick="fnCreatePreviousSupplyPlan(this);">Create Previous-Weekly</a>
+    <a onclick="fnCreatePreviousSupplyPlan(this);">Create</a>
    </p>
   </li>
 
