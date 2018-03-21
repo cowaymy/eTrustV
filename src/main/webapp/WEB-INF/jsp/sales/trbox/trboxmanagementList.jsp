@@ -29,7 +29,7 @@
                         {dataField:"crtname"   ,headerText:'<spring:message code="sal.text.createBy" />'  ,width:"15%" ,height:30 , visible:true },
                         {dataField:"crtuser"   ,headerText:'<spring:message code="sal.title.text.createId" />'  ,width:120   ,height:30 , visible:false}
                        ];
-    
+
     var subculomnlayout = [
                         {dataField:"trbid"     ,headerText:'<spring:message code="sal.title.text.bookId" />'     ,width:100   ,height:30 , visible:false},
                         {dataField:"trbno"     ,headerText:'<spring:message code="sal.title.bookNo" />'     ,width:"20%" ,height:30 , visible:true},
@@ -38,7 +38,7 @@
                         {dataField:"crtnm"     ,headerText:'<spring:message code="sal.title.text.keepBy" />'     ,width:"20%" ,height:30 , visible:true},
                         {dataField:"crtdt"     ,headerText:'<spring:message code="sal.title.text.keepDate" />'   ,width:"20%" ,height:30 , dataType : "date", formatString : "dd/mm/yyyy" ,visible:true}
                        ];
-    
+
     var keepculomnlayout = [
                            {dataField:"trbdetid"  ,headerText:'<spring:message code="sal.title.text.detId" />'      ,width:100   ,height:30 , visible:false},
                            {dataField:"trbid"     ,headerText:'<spring:message code="sal.title.text.bookId" />'     ,width:100   ,height:30 , visible:false},
@@ -59,9 +59,9 @@
                                }
                            }
                           ];
-    
+
     var gridoptions = {showStateColumn : true , editable : false, pageRowCount : 20, usePaging : true, useGroupingPanel : false };
-    
+
     $(document).ready(function(){
     	listGrid = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         viewGrid = GridCommon.createAUIGrid("view_grid_wrap", subculomnlayout,"", gridoptions);
@@ -71,12 +71,12 @@
     	doGetComboSepa('/common/selectBranchCodeList.do', '9' , ' - ' , '','branchid', 'S' , '');
     	//doGetComboSepa('/misc/TRBox/selectTransferCodeList.do', 'branch' , ' - ' , '','branchid', 'S' , '');
         doDefCombo(statusList, '1' ,'status', 'M', 'f_multiCombo');
-        
+
         AUIGrid.bind(listGrid, "cellClick", function( event )
         {
-            
+
         });
-        
+
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
             getViewListAjax(event.item , 'v');
@@ -89,31 +89,31 @@
             $("#vexpirydt").text(itm.scrapdt2);
             $("#vtotalbook").text(itm.bookqty);
             $("#popup_wrap").show();
-            
+
         });
-        
+
     });
-    
+
     function f_multiCombo(){
         $(function() {
             $('#status').change(function() {
-            
+
             }).multipleSelect({
-                selectAll: true, // 전체선택 
+                selectAll: true, // 전체선택
                 width: '80%'
             });
         });
     }
-    
+
     function getSearchListAjax(){
     	var url = "/misc/TRBox/getSearchTrboxManagementList.do";
         var param = $('#searchForm').serialize();
         Common.ajax("GET" , url , param , function(data){
             AUIGrid.setGridData(listGrid, data.data);
-            
+
         });
     }
-    
+
     function getViewListAjax(itm , str){
     	var url = "/misc/TRBox/getSelectTrboxManageDetailList.do";
         var param = "trboxid="+itm.boxid;
@@ -123,7 +123,7 @@
         	}else if (str == 'k'){
         		AUIGrid.setGridData(keepGrid, data.data);
         	}
-            
+
             if (str == 'v'){
             	AUIGrid.resize(viewGrid);
             }else if (str == 'k'){
@@ -131,7 +131,7 @@
             }
         });
     }
-    
+
     function getKeepRemoveAjax(row , itm){
         var url = "/misc/TRBox/getUpdateKeepReleaseRemove.do";
         console.log(itm);
@@ -143,7 +143,7 @@
             AUIGrid.removeSoftRows(keepGrid);
         });
     }
-    
+
     // Report Download
     function fn_downloadReport(method){
     	//Validation
@@ -153,37 +153,37 @@
             Common.alert("* No Data Selected. ");
             return;
         }
-    	
+
     	var boxId = gridObj[0].item.boxid;
     	var boxno = gridObj[0].item.boxno;
-    	
+
     	//VIEW
         if(method == "PDF"){
-            $("#viewType").val("PDF");//method  
+            $("#viewType").val("PDF");//method
         }
         if(method == "EXCEL"){
             $("#viewType").val("EXCEL");//method
         }
-        
-        //CURRENT DATE 
+
+        //CURRENT DATE
         var date = new Date().getDate();
         if(date.toString().length == 1){
             date = "0" + date;
         }
         //Report Params
         //Essen
-        $("#reportFileName").val("/sales/BoxTRBookListing_Excel.rpt"); //File Name   
+        $("#reportFileName").val("/sales/BoxTRBookListing_Excel.rpt"); //File Name
         $("#reportDownFileName").val(boxno+"_"+date+(new Date().getMonth()+1)+new Date().getFullYear()); ////DOWNLOAD FILE NAME
         //params
         $("#BoxID").val(boxId);
         var option = {
                 isProcedure : false // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
         };
-        
+
         Common.report("dataForm", option);
-    	
+
     }
-    
+
     $(function(){
 	    $("#btnSrch").click(function(){
 	        getSearchListAjax();
@@ -213,18 +213,18 @@
 	    	var url = "/misc/TRBox/postNewTrboxManagementSave.do";
 	        var param = $('#insForm').serializeJSON();
 	        console.log(param);
-// 	        Common.ajax("POST" , url , param , function(data){
-// 				console.log(data);
-// 	            if (data.trboxno == "")
-// 	            {
-// 					Common.alert('Failed to save. Please try again later.');
-// 	            }else{
-// 					Common.alert('New box saved.<br /> Box Number :' + data.trboxno);
-// 					$("#btnSrch").click();
-// 					$("#insClose").click();
-// 				}
-	            
-// 	        });
+ 	        Common.ajax("POST" , url , param , function(data){
+				console.log(data);
+ 	            if (data.trboxno == "")
+ 	            {
+ 					Common.alert('Failed to save. Please try again later.');
+ 	            }else{
+ 					Common.alert('New box saved.<br /> Box Number :' + data.trboxno);
+ 					$("#btnSrch").click();
+ 					$("#insClose").click();
+ 				}
+
+ 	        });
         });
 	    $("#btnKeep").click(function(){
 	    	var selectedItems = AUIGrid.getSelectedItems(listGrid);
@@ -287,28 +287,28 @@
                 $("#cexpirydt").text(itm.scrapdt2);
                 $("#ctotalbook").text(itm.bookqty);
                 $("#csboxid").val(itm.boxid);
-                
+
                 if (itm.statusid == '1'){
                 	$("#closeBtn").text("Close Box");
                 }else if (itm.statusid == '36'){
                 	$("#closeBtn").text("Reopen Box");
                 }
             }
-	    	
+
 	    });
 	    $("#closeBtn").click(function(){
             var selectedItems = AUIGrid.getSelectedItems(listGrid);
             var itm = selectedItems[0].item;
             var url = "/misc/TRBox/getCloseReopn.do";
-            
+
             var param = "trboxid="+itm.boxid;
-            
+
             if ($("#closeBtn").text() == "Close Box"){
                 param += "&statusid=36";
             }else if ($("#closeBtn").text() == "Reopen Box"){
             	param += "&statusid=1";
             }
-            
+
             //$("#filterForm").serialize();
             Common.ajax("GET" , url , param , function(data){
                 if ($("#closeBtn").text() == "Close Box"){
@@ -347,7 +347,7 @@
                 $("#uexpirydt").text(itm.scrapdt2);
                 $("#utotalbook").text(itm.bookqty);
                 $("#usboxid").val(itm.boxid);
-                
+
                 $("#uscrapdt").val(itm.scrapdt2);
             }
         });
@@ -355,9 +355,9 @@
 	    	var selectedItems = AUIGrid.getSelectedItems(listGrid);
             var itm = selectedItems[0].item;
             var url = "/misc/TRBox/getUpdateTrBoxInfo.do";
-            
+
             var param = "trboxid="+itm.boxid + "&scrapdt="+$("#uscrapdt").val();
-            
+
 	    	Common.ajax("GET" , url , param , function(data){
                 var itm = data.data[0];
                 $("#uboxno").text(itm.boxno);
@@ -369,7 +369,7 @@
                 $("#uexpirydt").text(itm.scrapdt2);
                 $("#utotalbook").text(itm.bookqty);
                 $("#usboxid").val(itm.boxid);
-                
+
                 $("#uscrapdt").val(itm.scrapdt2);
             });
 	    });
@@ -380,10 +380,10 @@
                 return false;
             }else{
 		    	var itm = selectedItems[0].item;
-	            
+
 		    	doGetComboSepa('/misc/TRBox/selectTransferCodeList.do', 'branch' , ' - ' , '','tbrnch', 'S' , '');
-                doGetComboSepa('/misc/TRBox/selectTransferCodeList.do', 'courier' , ' - ' , '','tcourier', 'S' , ''); 
-                
+                doGetComboSepa('/misc/TRBox/selectTransferCodeList.do', 'courier' , ' - ' , '','tcourier', 'S' , '');
+
 	            $("#tboxno").text(itm.boxno);
 	            $("#tcrtdt").text(itm.crtdt2);
 	            $("#tcrtuser").text(itm.crtname);
@@ -394,14 +394,14 @@
 	            $("#texpirydt").text(itm.scrapdt2);
 	            $("#ttotalbook").text(itm.bookqty);
 	            $("#tranboxid").val(itm.boxid);
-	            
+
 	            $("#singletran_popup_wrap").show();
 	            $("#tranSaveBtn").show();
             }
 	    });
 	    $("#tranSaveBtn").click(function(){
 	        var url = "/misc/TRBox/getTrBoxSingleTransfer.do";
-            
+
             var param = $("#singletranform").serialize();
             console.log(param);
             Common.ajax("GET" , url , param , function(data){
@@ -409,11 +409,11 @@
             	$("#tranSaveBtn").hide();
             });
 	    });
-	    
+
     });
 
 </script>
-        
+
 <!--****************************************************************************
     CONTENT START
 *****************************************************************************-->
@@ -422,10 +422,10 @@
     <!-- essential -->
     <input type="hidden" id="reportFileName" name="reportFileName"  />
     <input type="hidden" id="viewType" name="viewType" />
-    
+
     <!--param  -->
     <input type="hidden" id="BoxID" name="BoxID"  />
-    
+
     <!--common param  -->
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" />
 </form>
@@ -535,7 +535,7 @@
     </article><!-- grid_wrap end -->
 
     </section><!-- search_result end -->
-    
+
     <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 		<header class="pop_header"><!-- pop_header start -->
@@ -545,11 +545,11 @@
 		</ul>
 		</header><!-- pop_header end -->
 		<section class="pop_body"><!-- pop_body start -->
-		
+
 		<aside class="title_line"><!-- title_line start -->
 		<h2><spring:message code="sal.title.text.trBoxInformation" /></h2>
 		</aside><!-- title_line end -->
-		
+
 		<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
@@ -587,19 +587,19 @@
 		</tr>
 		</tbody>
 		</table><!-- table end -->
-		
+
 		<aside class="title_line"><!-- title_line start -->
 		<h2><spring:message code="sal.title.text.booksInBox" /></h2>
 		</aside><!-- title_line end -->
-		
+
 		<article class="grid_wrap"><!-- grid_wrap start -->
             <div id="view_grid_wrap" style="height:230px"></div>
 		</article><!-- grid_wrap end -->
 		</section><!-- pop_body end -->
-		
+
 	</div><!-- popup_wrap end -->
-	
-	
+
+
 	<div id="edit_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 	    <form id="insForm" name="insForm">
 	      <input type="hidden" id="loginbranchid" name="loginbranchid"/>
@@ -610,9 +610,9 @@
 	            <li><p class="btn_blue2"><a id="insClose"><spring:message code="sal.btn.close" /></a></p></li>
 	        </ul>
 	    </header><!-- pop_header end -->
-	
+
 	    <section class="pop_body"><!-- pop_body start -->
-	
+
 	    <table class="type1"><!-- table start -->
 	        <caption>table</caption>
 	        <colgroup>
@@ -628,15 +628,15 @@
 	            </tr>
 	        </tbody>
 	    </table><!-- table end -->
-	
+
 	    <ul class="center_btns">
 	        <li><p class="btn_blue2 big"><a id="insSave"><spring:message code="sal.btn.save" /></a></p></li>
 	    </ul>
-	
+
 	    </section><!-- pop_body end -->
 	  </form>
 	</div><!-- popup_wrap end -->
-	
+
 	<div id="keep_popup_wrap" class="popup_wrap" ><!-- popup_wrap start -->
 
         <header class="pop_header"><!-- pop_header start -->
@@ -646,11 +646,11 @@
         </ul>
         </header><!-- pop_header end -->
         <section class="pop_body"><!-- pop_body start -->
-        
+
         <aside class="title_line"><!-- title_line start -->
         <h2><spring:message code="sal.title.text.trBoxInformation" /></h2>
         </aside><!-- title_line end -->
-        
+
         <table class="type1"><!-- table start -->
 			<caption>table</caption>
 			<colgroup>
@@ -687,24 +687,24 @@
 	            <td id="ktotalbook"></td>
 	        </tr>
 		</table><!-- table end -->
-        
+
         <aside class="title_line"><!-- title_line start -->
         <h2><spring:message code="sal.title.text.booksInBox" /></h2>
         </aside><!-- title_line end -->
-        
+
         <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="keep_grid_wrap" style="height:230px"></div>
         </article><!-- grid_wrap end -->
-        
+
         <ul class="left_btns">
 		    <li><p class="btn_blue2"><a id="filterBtn"><spring:message code="sal.title.text.filterList" /></a></p></li>
 		    <li><p class="btn_blue2"><a id="showallBtn"><spring:message code="sal.title.text.showAll" /></a></p></li>
 		</ul>
 
         </section><!-- pop_body end -->
-        
+
     </div><!-- popup_wrap end -->
-        
+
     <div id="filter_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
 
 		<header class="pop_header"><!-- pop_header start -->
@@ -713,10 +713,10 @@
 		    <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 		</ul>
 		</header><!-- pop_header end -->
-		
+
 		<section class="pop_body"><!-- pop_body start -->
 		<form id="filterForm" name="filterForm">
-		<input type="hidden" id="ksboxid" name="ksboxid" />  
+		<input type="hidden" id="ksboxid" name="ksboxid" />
 		<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
@@ -750,7 +750,7 @@
 		    <li><p class="btn_blue2 big"><a id="keepBtnclr"><spring:message code="sal.btn.clear" /></a></p></li>
 		</ul>
 		</section><!-- pop_body end -->
-	
+
 	</div><!-- popup_wrap end -->
 	<div id="close_popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
@@ -760,13 +760,13 @@
 		    <li><p class="btn_blue2"><a id="closePopupCloBtn"><spring:message code="sal.btn.close" /></a></p></li>
 		</ul>
 		</header><!-- pop_header end -->
-		
+
 		<section class="pop_body"><!-- pop_body start -->
-		
+
 		<aside class="title_line"><!-- title_line start -->
 		<h2><spring:message code="sal.title.text.trBoxInformation" /></h2>
 		</aside><!-- title_line end -->
-		
+
 		<table class="type1"><!-- table start -->
            <caption>table</caption>
            <colgroup>
@@ -804,15 +804,15 @@
            </tr>
            </tbody>
            </table><!-- table end -->
-           
-		
+
+
 		<ul class="center_btns">
 		    <li><p class="btn_blue2 big"><a id="closeBtn"><spring:message code="sal.title.text.closeBox" /></a></p></li>
 		</ul>
 		</section><!-- pop_body end -->
-		
+
 		</div><!-- popup_wrap end -->
-			
+
 		<div id="update_popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
 			<header class="pop_header"><!-- pop_header start -->
@@ -821,13 +821,13 @@
 			    <li><p class="btn_blue2"><a id="updateCloseBtn"><spring:message code="sal.btn.close" /></a></p></li>
 			</ul>
 			</header><!-- pop_header end -->
-			
+
 			<section class="pop_body"><!-- pop_body start -->
-			
+
 			<aside class="title_line"><!-- title_line start -->
 			<h2><spring:message code="sal.title.text.trBoxInformation" /></h2>
 			</aside><!-- title_line end -->
-			
+
 			<table class="type1"><!-- table start -->
            <caption>table</caption>
            <colgroup>
@@ -865,11 +865,11 @@
            </tr>
            </tbody>
         </table><!-- table end -->
-			
+
 		<aside class="title_line"><!-- title_line start -->
 		<h2><spring:message code="sal.alert.msg.transferInformation" /></h2>
 		</aside><!-- title_line end -->
-		
+
 		<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
@@ -885,15 +885,15 @@
 		</tr>
 		</tbody>
 		</table><!-- table end -->
-		
-		
+
+
 		<ul class="center_btns">
 		    <li><p class="btn_blue2 big"><a id="updSaveBtn">Save</a></p></li>
 		</ul>
 		</section><!-- pop_body end -->
-		
+
    	</div><!-- popup_wrap end -->
-   	
+
    	<div id="singletran_popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
        <header class="pop_header"><!-- pop_header start -->
@@ -902,9 +902,9 @@
            <li><p class="btn_blue2"><a id="transferCloseBtn"><spring:message code="sal.btn.close" /></a></p></li>
        </ul>
        </header><!-- pop_header end -->
-       
+
        <section class="pop_body"><!-- pop_body start -->
-       
+
        <aside class="title_line"><!-- title_line start -->
        <h2><spring:message code="sal.title.text.trBoxInformation" /></h2>
        </aside><!-- title_line end -->
@@ -948,11 +948,11 @@
            </tr>
            </tbody>
         </table><!-- table end -->
-            
+
         <aside class="title_line"><!-- title_line start -->
         <h2><spring:message code="sal.alert.msg.transferInformation" /></h2>
         </aside><!-- title_line end -->
-        
+
         <table class="type1"><!-- table start -->
         <caption>table</caption>
         <colgroup>
@@ -975,12 +975,12 @@
         </tbody>
         </table><!-- table end -->
         </form>
-        
+
         <ul class="center_btns">
             <li><p class="btn_blue2 big"><a id="tranSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
         </ul>
         </section><!-- pop_body end -->
-        
+
     </div><!-- popup_wrap end -->
 
 </section><!-- content end -->
