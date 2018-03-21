@@ -1,27 +1,27 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript" language="javascript">
-$(document).ready(function(){      
-    
+$(document).ready(function(){
+
     CommonCombo.make("bulkBranch", "/sales/trBook/selectBranch", "", "${branch}", {
         id: "brnchId",
         name: "name"
     });
-    
-    
+
+
     $("#btnAddBulkSave").hide();
     $("#btnReKey").hide();
 });
 
 function fn_numChk(event){
     var code = window.event.keyCode;
-    
+
     if ((code > 34 && code < 41) || (code > 47 && code < 58) || (code > 95 && code < 106) ||code==110 ||code==190 ||code == 8 || code == 9 || code == 13 || code == 46)
     {
 	     window.event.returnValue = true;
 	     return;
     }
-    
+
     window.event.returnValue = false;
     return false;
 }
@@ -35,13 +35,13 @@ function fn_Generate(){
 
         $("#trBookPage").prop("readonly", true);
         $("#trBookPage").attr("class", "readonly");
-        
+
         $("#trBookNoStart").prop("readonly", true);
         $("#trBookNoStart").attr("class", "readonly");
-        
+
         $("#trBookNoEnd").prop("readonly", true);
         $("#trBookNoEnd").attr("class", "readonly");
-        
+
         $("#btnAddBulkSave").show();
         $("#btnReKey").show();
     }
@@ -64,28 +64,28 @@ function fn_Generate(){
         valid = false;
         Message += "<spring:message code="sal.alert.msg.page" /><br />";
     }
-    
+
     if ($("#trBookNoStart").val() == "")
     {
         valid = false;
         Message += "<spring:message code="sal.alert.msg.start" /><br />";
     }
     else
-    {                        
+    {
          if (isNaN($("#trBookNoStart").val().substring(0,1)))
          {
              valid = false;
              Message += "<spring:message code="sal.alert.msg.notNumber" /><br />";
-            }     
+            }
     }
-    
+
     if($("#trBookNoStart").val() != "" && $("#trBookQuan").val() != "" && $("#trBookPage").val() != "" )
     {
         var quantity = parseInt($("#trBookPage").val()) * parseInt( $("#trBookQuan").val());
         var lNo = "";
-        
+
         lNo = fn_getTRLastNo($("#trBookNoStart").val(), quantity);
-        
+
         if (lNo.length > $("#trBookNoStart").val().length)
         {
             valid = false;
@@ -96,8 +96,8 @@ function fn_Generate(){
             $("#trBookNoEnd").val( lNo );
         }
     }
-    
-    if (!valid)     
+
+    if (!valid)
          Common.alert("<spring:message code="sal.alert.title.generateEndNumSummary" />"+DEFAULT_DELIMITER + Message);
 
     return valid;
@@ -109,13 +109,13 @@ function fn_getTRLastNo(inputNo, quantity)
 
     var firstNoInt = 0;
     var lastNoInt = 0;
-    
+
     firstNoInt = parseInt(inputNo);
     lastNoInt = firstNoInt + (quantity - 1);
 
     retLastNo = lastNoInt + "";
-    
-    
+
+
     if (inputNo.length > retLastNo.length)
     {
         var lengthToRun = (inputNo.length - retLastNo.length);
@@ -125,10 +125,10 @@ function fn_getTRLastNo(inputNo, quantity)
         }
     }
     return retLastNo;
-} 
+}
 
 function fn_ReKey(){
-    
+
     $("#trBookQuan").prop("readonly", false);
     $("#trBookQuan").attr("class", "");
     $("#trBookQuan").val("");
@@ -136,15 +136,15 @@ function fn_ReKey(){
     $("#trBookPage").prop("readonly", false);
     $("#trBookPage").attr("class", "");
     $("#trBookPage").val("");
-    
+
     $("#trBookNoStart").prop("readonly", false);
     $("#trBookNoStart").attr("class", "");
     $("#trBookNoStart").val("");
-    
+
     $("#trBookNoEnd").prop("readonly", false);
     $("#trBookNoEnd").attr("class", "");
     $("#trBookNoEnd").val("");
-    
+
 
     $("#btnAddBulkSave").hide();
     $("#btnReKey").hide();
@@ -182,7 +182,7 @@ function validRequiredField_Save_Add()
         valid = false;
         Message += "<spring:message code="sal.alert.msg.keyInPagePerBook" /><br />";
     }
-    
+
     if ($("#trBookNoStart").val() == "")
     {
         valid = false;
@@ -199,24 +199,24 @@ function validRequiredField_Save_Add()
 
         $("#trNoFrom").val($("#prefix").val()  + $("#trBookNoStart").val());
         $("#trNoTo").val($("#prefix").val()  + $("#trBookNoEnd").val());
-        
-        
+
+
         Common.ajax("GET", "/sales/trBook/selectTrBookDup", $("#saveAddBulkForm").serialize(), function(result) {
-            
+
             console.log("성공.");
             console.log( result);
-            
+
             if (result.data)
             {
                 valid = false;
                 Message += "<spring:message code="sal.alert.msg.existTrBook" /><br />";
             }else{
-            	
+
             	Common.ajax("GET", "/sales/trBook/selectTrBookDupBulk", $("#saveAddBulkForm").serialize(), function(result) {
-                    
+
                     console.log("성공.");
                     console.log( result);
-                    
+
                     if (result.data)
                     {
                         valid = false;
@@ -230,32 +230,51 @@ function validRequiredField_Save_Add()
 
     }
 
-    if (!valid)       
+    if (!valid)
         Common.alert("<spring:message code="sal.alert.title.addTrBookSummary" />"+DEFAULT_DELIMITER + Message);
-    
+
     return valid;
 }
 
 function fn_save(){
-    
+
      if (validRequiredField_Save_Add())
      {
-         if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){     
-             
+         if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
+
              $("#prefix").attr("disabled", false);
-             
+
             Common.ajax("POST", "/sales/trBook/saveNewTrBookBulk", $("#saveAddBulkForm").serializeJSON(), function(result){
-    
+
                 console.log("성공." + JSON.stringify(result));
                 console.log("data : " + result.data);
-                
+
+               // $("#btnAddBulkSave").hide();
+               // $("#btnReKey").hide();
+
+               // $("#trBookAddBulkPop").hide();
+                $("#trBookQuan").prop("readonly", false);
+                $("#trBookQuan").attr("class", "");
+                $("#trBookQuan").val("");
+
+                $("#trBookPage").prop("readonly", false);
+                $("#trBookPage").attr("class", "");
+                $("#trBookPage").val("");
+
+                $("#trBookNoStart").prop("readonly", false);
+                $("#trBookNoStart").attr("class", "");
+                $("#trBookNoStart").val("");
+
+                $("#trBookNoEnd").prop("readonly", false);
+                $("#trBookNoEnd").attr("class", "");
+                $("#trBookNoEnd").val("");
+
+
                 $("#btnAddBulkSave").hide();
                 $("#btnReKey").hide();
-                
-                $("#trBookAddBulkPop").hide();
                 //fn_selectCancellReqInfoAjax();
                 Common.alert("<spring:message code="sal.alert.title.bulkBatchSave" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.bulkBatchSave" />" + result.data );
-              
+
             }
             , function(jqXHR, textStatus, errorThrown){
                 try {
@@ -269,13 +288,13 @@ function fn_save(){
                   console.log(e);
                 }
                 //alert("Fail : " + jqXHR.responseJSON.message);
-    
+
                 Common.alert("<spring:message code="sal.alert.title.saveFail" />" + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.saveFailBulkBatch" />");
             });
 
         }));
      }
-    
+
 }
 
 
@@ -294,7 +313,7 @@ function fn_save(){
 <form action="#" method="post" id="saveAddBulkForm" name="saveAddBulkForm">
 	<input type="hidden" id="trNoTo" name="trNoTo" />
 	<input type="hidden" id="trNoFrom" name="trNoFrom" />
-	
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
