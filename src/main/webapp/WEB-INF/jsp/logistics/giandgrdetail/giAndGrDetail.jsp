@@ -376,7 +376,7 @@
 				function() {
 
 					GridCommon.exportTo("main_grid_wrap", 'xlsx',
-							"Stock Balance Card List");
+							"GI/GR Detail Report List");
 				});
 
 		$("#searchTrcType").change(
@@ -681,11 +681,11 @@
 	<section class="search_result">
 
 		<ul class="right_btns">
-			<c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+			
 				<li><p class="btn_grid">
 						<a id="download"><spring:message code='sys.btn.excel.dw' /></a>
 					</p></li>
-			</c:if>
+			
 		</ul>
 
 		<div id="main_grid_wrap" class="mt10" style="height: 400px"></div>
