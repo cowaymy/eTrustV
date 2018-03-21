@@ -22,6 +22,19 @@ function fn_saveValidation(){
         Common.alert("<spring:message code='service.msg.feedback'/> ");
         return false;
     }
+	
+	if($("#callStatus").val() == '20' ){
+		
+		if($("#requestDate").val() == ''){
+			Common.alert(" plz Input Request Date  in ready to install ");
+		     return false;
+		}
+		
+		
+	}
+	
+	
+	
     return true;
 }
 
