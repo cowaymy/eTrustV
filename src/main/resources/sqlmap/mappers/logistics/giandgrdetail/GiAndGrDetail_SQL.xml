@@ -70,8 +70,8 @@
                  0 trans,
                  0 mov_base,
                  0 USZQTY,
-                 0 USKQTY ,
-                 0 PSTEXPORTQTY                                               
+                 0 USKQTY,
+                 0 PSTEXPORTQTY                              
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -91,7 +91,8 @@
                             locate,
                          STORG_LOC,
                          RCIV_ISSU_STORG_LOC,
-                         qty
+                         qty,
+                         doc_postng_dt
                     FROM log0060d
                    WHERE doc_postng_dt BETWEEN #{basedt} AND to_char(to_date(#{reqcrtdate},'DD/MM/YYYY'),'YYYYMMDD') AND auto_crt_itm = 'M'),
                  SYS0026M S26
@@ -125,7 +126,7 @@
                 0 mov_base,
                 0 USZQTY,
                 0 USKQTY,
-                0 PSTEXPORTQTY      
+                0 PSTEXPORTQTY     
           FROM SYS0026M S26, LOG0088M L88
          WHERE S26.STK_CODE = L88.STK_CODE(+)
          AND L88.ZMONTH = TO_CHAR (ADD_MONTHS (TO_DATE (#{basedt},    'YYYYMMDD'), -1), 'YYYYMM')
@@ -157,7 +158,7 @@
                      0 mov_base,
                      0 USZQTY,
                      0 USKQTY,
-                     0 PSTEXPORTQTY      
+                     0 PSTEXPORTQTY     
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -168,7 +169,7 @@
                                     ('PO', 'OG', 'AD')
                             THEN
                                CASE
-                                  WHEN invntry_mov_type in('UM93','UM03','US03','US93','UM94','UM04','US04','US94') THEN  STORG_LOC
+                                  WHEN invntry_mov_type in('UM93','UM03','UM94','UM04') THEN  STORG_LOC
                                   ELSE RCIV_ISSU_STORG_LOC
                                END
                             ELSE
@@ -179,7 +180,7 @@
                          RCIV_ISSU_STORG_LOC,
                          qty
                     FROM log0060d
-                   WHERE doc_postng_dt BETWEEN #{basedt} AND to_char(to_date(#{reqcrtdate},'DD/MM/YYYY'),'YYYYMMDD')  AND auto_crt_itm = 'A'  ),
+                   WHERE doc_postng_dt BETWEEN #{basedt} AND to_char(to_date(#{reqcrtdate},'DD/MM/YYYY'),'YYYYMMDD')AND auto_crt_itm = 'A' AND invntry_mov_type in('UM93','UM03','UM94','UM04') ),
                  SYS0026M S26
            WHERE S26.STK_CODE = MATRL_NO
         GROUP BY locate,
@@ -216,7 +217,7 @@
                      0 mov_base,
                      0 USZQTY,
                      0 USKQTY,
-                     0 PSTEXPORTQTY                          
+                     0 PSTEXPORTQTY                         
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -227,7 +228,7 @@
                                     ('PO', 'OG', 'AD')
                             THEN
                                CASE
-                                  WHEN  invntry_mov_type in('UM05','UM95','US05','US95','UM06','UM96','US06','US96')  THEN STORG_LOC
+                                  WHEN  invntry_mov_type in('UM05','UM95','UM06','UM96')  THEN STORG_LOC
                                   ELSE RCIV_ISSU_STORG_LOC
                                END
                             ELSE
@@ -238,7 +239,7 @@
                          RCIV_ISSU_STORG_LOC,
                          qty
                     FROM log0060d
-                   WHERE doc_postng_dt BETWEEN #{basedt} AND to_char(to_date(#{reqcrtdate},'DD/MM/YYYY'),'YYYYMMDD') AND auto_crt_itm = 'M' AND  invntry_mov_type in('UM05','UM95','US05','US95','UM06','UM96','US06','US96')),
+                   WHERE doc_postng_dt BETWEEN #{basedt} AND to_char(to_date(#{reqcrtdate},'DD/MM/YYYY'),'YYYYMMDD') AND auto_crt_itm = 'M' AND  invntry_mov_type in ('UM05','UM95','UM06','UM96')),
                  SYS0026M S26 
            WHERE S26.STK_CODE = MATRL_NO
         GROUP BY locate,
@@ -275,7 +276,7 @@
                      0 mov_base,
                      0 USZQTY,
                      0 USKQTY,
-                     0 PSTEXPORTQTY     
+                     0 PSTEXPORTQTY    
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -334,7 +335,7 @@
                     0 mov_base,
                     0 USZQTY,
                     0 USKQTY,
-                    0 PSTEXPORTQTY      
+                    0 PSTEXPORTQTY     
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -393,7 +394,7 @@
                    0 mov_base,
                    0 USZQTY,
                    0 USKQTY,
-                   0 PSTEXPORTQTY      
+                   0 PSTEXPORTQTY   
              FROM  (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -452,7 +453,7 @@
                      0 mov_base,
                      0 USZQTY,
                      0 USKQTY,
-                     0 PSTEXPORTQTY      
+                     0 PSTEXPORTQTY     
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -511,7 +512,7 @@
                      0 mov_base,
                      0 USZQTY,
                      0 USKQTY,
-                     0 PSTEXPORTQTY         
+                     0 PSTEXPORTQTY        
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -570,7 +571,7 @@
                      0 mov_base,
                      0 USZQTY,
                      0 USKQTY,
-                     0 PSTEXPORTQTY    
+                     0 PSTEXPORTQTY   
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -592,7 +593,7 @@
                          RCIV_ISSU_STORG_LOC,
                          qty
                     FROM log0060d
-                   WHERE doc_postng_dt BETWEEN #{basedt} AND to_char(to_date(#{reqcrtdate},'DD/MM/YYYY'),'YYYYMMDD')  AND auto_crt_itm = 'M' AND  invntry_mov_type in('OD03','OD04')),
+                   WHERE doc_postng_dt BETWEEN #{basedt} AND to_char(to_date(#{reqcrtdate},'DD/MM/YYYY'),'YYYYMMDD') AND auto_crt_itm = 'M' AND  invntry_mov_type in('OD03','OD04')),
                  SYS0026M S26 
            WHERE S26.STK_CODE = MATRL_NO
         GROUP BY locate,
@@ -629,7 +630,7 @@
                     0 mov_base,
                     0 USZQTY,
                     0 USKQTY,
-                    0 PSTEXPORTQTY    
+                    0 PSTEXPORTQTY   
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -747,7 +748,7 @@
                     0 mov_base,
                     0 USZQTY,
                     0 USKQTY,
-                    0 PSTEXPORTQTY    
+                    0 PSTEXPORTQTY   
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -756,7 +757,7 @@
                                     FROM log0046m
                                    WHERE mov_type = log0060d.INVNTRY_MOV_TYPE) IN
                                     ('PO', 'OG', 'AD')
-                            THEN
+                           THEN
                                CASE
                                   WHEN  invntry_mov_type like 'UM%' or invntry_mov_type like 'US%'  THEN STORG_LOC
                                   ELSE RCIV_ISSU_STORG_LOC
@@ -801,11 +802,11 @@
               nvl(MOV_QTY,0) mov_base,
               0 USZQTY,
               0 USKQTY,
-              0 PSTEXPORTQTY    
+              0 PSTEXPORTQTY   
           FROM SYS0026M S26, LOG0088M L88
          WHERE S26.STK_CODE = L88.STK_CODE(+)
          AND L88.ZMONTH = TO_CHAR (ADD_MONTHS (TO_DATE (#{basedt},    'YYYYMMDD'), -1), 'YYYYMM') 
-         UNION ALL
+        UNION ALL
          SELECT TO_NUMBER (locate) locate,
                  STK_CODE,
                  STK_DESC,
@@ -832,7 +833,7 @@
                        ELSE qty * -1
                     END)  USZQTY, 
                  0 USKQTY,
-                 0 PSTEXPORTQTY     
+                 0 PSTEXPORTQTY    
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -892,7 +893,7 @@
                        ELSE qty * -1
                  END)
                  USKQTY,
-                 0 PSTEXPORTQTY  
+                 0 PSTEXPORTQTY 
             FROM (SELECT INVNTRY_MOV_TYPE,
                          DEBT_CRDIT_INDICT,
                          MATRL_NO,
@@ -924,9 +925,8 @@
                  STK_DESC,
                  STK_TYPE_ID,
                  STK_CTGRY_ID,
-                 UOM 
-                 
-          UNION ALL
+                 UOM          
+         UNION ALL
          SELECT TO_NUMBER (locate) locate,
                  STK_CODE,
                  STK_DESC,
@@ -976,7 +976,7 @@
                          RCIV_ISSU_STORG_LOC,
                          qty
                     FROM log0060d
-                   WHERE doc_postng_dt BETWEEN '20180201' AND '20180228' AND auto_crt_itm = 'M'
+                   WHERE doc_postng_dt BETWEEN #{basedt} AND to_char(to_date(#{reqcrtdate},'DD/MM/YYYY'),'YYYYMMDD') AND auto_crt_itm = 'M'
                     and invntry_mov_type in('OD17','OD18','OD19','OD20') 
                    ),
                  SYS0026M S26 
@@ -986,10 +986,10 @@
                  STK_DESC,
                  STK_TYPE_ID,
                  STK_CTGRY_ID,
-                 UOM                       
+                 UOM                                                     
              ) t1,
                sys0028m s28m,SYS0013M TYPE,SYS0013M ctgry,SYS0013M um 
-               WHERE t1.LOCATE IS NOT NULL and s28m.wh_loc_id=t1.LOCATE AND TYPE.CODE_ID = t1.STK_TYPE_ID AND ctgry.CODE_ID = t1.STK_CTGRY_ID AND um.CODE_ID = t1.UOM 
+               WHERE t1.LOCATE IS NOT NULL and s28m.wh_loc_id=t1.LOCATE AND TYPE.CODE_ID = t1.STK_TYPE_ID AND ctgry.CODE_ID = t1.STK_CTGRY_ID AND um.CODE_ID = t1.UOM
          <if test="loctype !=null and loctype !=''">
             AND s28m.WH_LOC_GB IN
             <foreach item="item" collection="loctype" index="index" open="(" separator="," close=")">
