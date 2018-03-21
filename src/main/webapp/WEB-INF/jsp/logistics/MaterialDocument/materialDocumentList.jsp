@@ -48,6 +48,8 @@ var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log
 							{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"                   ,width:120    ,height:30 , visible:true},
 							{dataField: "refDocNo",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30 , visible:true},
 							{dataField: "stockTrnsfrReqst",headerText :"<spring:message code='log.head.requestno'/>"                    ,width:120    ,height:30 , visible:true},
+							{dataField: "rcivCdcRdc",headerText :"Req_F_Loc"                    ,width:120    ,height:30 , visible:true},
+							{dataField: "reqstCdcRdc",headerText :"Req_T_Loc"                    ,width:120    ,height:30 , visible:true},
 							{dataField: "debtCrditIndict",headerText :"<spring:message code='log.head.debit/credit'/>"                 ,width:120    ,height:30 , visible:true},
 							{dataField: "autoCrtItm",headerText :"<spring:message code='log.head.auto/manual'/>"                    ,width:120    ,height:30 , visible:true},
 							{dataField: "codeName",headerText :"<spring:message code='log.head.uom'/>"                ,width: "15%"     ,height:30 , visible:true},
@@ -175,7 +177,10 @@ $(document).ready(function(){
 
 $(function(){
     $("#search").click(function() {
+    	if (valiedcheck()) {
         SearchListAjax();
+    	}
+    	
     });
     $("#clear").click(function() {
 
@@ -346,6 +351,26 @@ function f_multiCombos() {
 			});
 		}
 	}
+	
+	function valiedcheck() {
+
+        if (!$("#mainloc").val() == "" || $("#mainloc").val() == null) {
+        	
+        	if($("#sfrLoctype").val() != null || $("#stoLoctype").val() != null ){
+        		//Common.alert("181818");
+        		Common.alert("When choosing Main Location, do not select From Location Type or To Location Type.");
+        		return false;
+        	}
+
+        }
+
+        return true;
+
+    }
+	
+	
+	
+	
 </script>
 
 <section id="content"><!-- content start -->
@@ -486,9 +511,9 @@ function f_multiCombos() {
                     <td>
                         <input type="text" id="sordno" name="sordno" title="" placeholder="Material Document No" class="w100p" />
                     </td>
-                    <th scope="row"></th>
+                    <th scope="row">Main Location</th>
                     <td>
-                        
+                        <input type="text" id="mainloc" name="mainloc" title="" placeholder="Location Code" class="w100p" />
                     </td>
                     <th scope="row"></th>
                     <td>

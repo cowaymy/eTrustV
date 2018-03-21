@@ -53,6 +53,8 @@
         ,l59.CRT_DT
         ,l60.sales_ord_no sales_ord_no
         , NVL((SELECT USER_NAME FROM SYS0047M WHERE USER_ID = l59.CRT_USER_ID),l59.CRT_USER_ID) user_Name
+        , (select RCIV_CDC_RDC From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) RCIV_CDC_RDC
+        , (select REQST_CDC_RDC From log0047m where REQST_NO= l60.STOCK_TRNSFR_REQST) REQST_CDC_RDC
         from log0059m l59
         , log0060d l60
         , sys0026m s26
@@ -157,6 +159,9 @@
         </if>
         <if test="sordno !=null and sordno !=''">
             and l60.SALES_ORD_NO = #{sordno}
+        </if>
+         <if test="mainloc !=null and mainloc !=''">
+            and (select WH_LOC_ID from sys0028m where WH_LOC_CODE =#{mainloc}) in(STORG_LOC,RCIV_ISSU_STORG_LOC) 
         </if>
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
     </select>
