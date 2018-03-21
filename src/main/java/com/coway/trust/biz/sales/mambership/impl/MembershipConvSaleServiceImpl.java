@@ -327,12 +327,14 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
               pay0024dMap.put("srvMemDtTm",new Date()); 
               pay0024dMap.put("srvMemAmt",packageCharge); 
               pay0024dMap.put("srvMemInstNo","0"); 
-              pay0024dMap.put("srvMemBatchNo",""); 
+              pay0024dMap.put("srvMemBatchNo",invoiceNum);   //srvMemBatchNo
               pay0024dMap.put("srvMemUpdUserId",params.get("userId")); 
               pay0024dMap.put("srvMemUpdDt",""); 
               pay0024dMap.put("srvMemOrdId",sal0093dData.get("srvSalesOrdId"));   
               pay0024dMap.put("srvMemQotatId",sal0093dData.get("srvMemQuotId")); 
               pay0024dMap.put("r01","");
+              
+              
               
               
               logger.debug("package  pay0024dMapCnt  ==>"+pay0024dMap.toString());
@@ -462,7 +464,7 @@ public class MembershipConvSaleServiceImpl extends EgovAbstractServiceImpl imple
               pay0024dMap.put("srvMemDtTm",new Date()); 
               pay0024dMap.put("srvMemAmt",filterCharge); 
               pay0024dMap.put("srvMemInstNo","0"); 
-              pay0024dMap.put("srvMemBatchNo",""); 
+              pay0024dMap.put("srvMemBatchNo",invoiceNum); 
               pay0024dMap.put("srvMemUpdUserId",params.get("userId")); 
               pay0024dMap.put("srvMemUpdDt",""); 
               pay0024dMap.put("srvMemOrdId",sal0093dData.get("srvSalesOrdId"));   
