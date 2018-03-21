@@ -412,7 +412,8 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			psi1Params.put("w30", Integer.parseInt(salesPlanList.get(0).get("w30").toString()));
 
 			for(int j=0; j  < countBef; j++ ){
-				int beforeWeek = Integer.parseInt(params.get("scmPeriodCbBox").toString()) - j;
+				int k = j+1;
+				int beforeWeek = Integer.parseInt(params.get("scmPeriodCbBox").toString()) - k;
 				params.put("scmPeriodCbBoxBefore", beforeWeek);
 				int befOrdCnt = salesPlanMngementMapper.selectBeforeOrdCnt(params);
 				psi1Params.put("ws" + j, befOrdCnt);
@@ -648,7 +649,6 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			 psi2Params.put("w08",(safetyStock*Integer.parseInt(psi2Params.get("w08").toString()))/30);
 			 psi2Params.put("w09",(safetyStock*Integer.parseInt(psi2Params.get("w09").toString()))/30);
 			 psi2Params.put("w10",(safetyStock*Integer.parseInt(psi2Params.get("w10").toString()))/30);
-			 psi2Params.put("w11",(safetyStock*Integer.parseInt(psi2Params.get("w11").toString()))/30);
 			 psi2Params.put("w11",(safetyStock*Integer.parseInt(psi2Params.get("w11").toString()))/30);
 			 psi2Params.put("w12",(safetyStock*Integer.parseInt(psi2Params.get("w12").toString()))/30);
 			 psi2Params.put("w13",(safetyStock*Integer.parseInt(psi2Params.get("w13").toString()))/30);
@@ -1083,6 +1083,225 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			out.append(st.nextToken() + newChar);
 		}
 		return out.toString();
+	}
+
+	@Override
+	public int updateSalesPlanMasterMonthly(Map<String, Object> params, SessionVO sessionVO)
+	{
+
+		List<EgovMap> salesList = salesPlanMngementMapper.selectSalesPlanList(params);
+
+		List<EgovMap> monthList = salesPlanMngementMapper.selectScmMonth(params);
+
+		String planMonth = monthList.get(0).get("scmMonth").toString();
+
+		params.put("selectPlanMonth", planMonth);
+
+		List<EgovMap> chield = salesPlanMngementMapper.selectChildField(params);
+
+		List<EgovMap> seperaionMap = salesPlanMngementMapper.selectSeperation2(params);
+
+		int countBef = salesPlanMngementMapper.selectCountasIn(params);
+
+		params.put("crtUserId", sessionVO.getUserId());
+
+		for(int i=0 ; i < salesList.size(); i++){
+			String stockCode = salesList.get(i).get("stockCode").toString();
+			params.put("stockCode", stockCode);
+
+			List<EgovMap> salesWeekCnt = salesPlanMngementMapper.selectSalesPlanWeekCnt(params);
+
+			params.put("w00", Integer.parseInt(salesWeekCnt.get(0).get("w00").toString()));
+			params.put("w01", Integer.parseInt(salesWeekCnt.get(0).get("w01").toString()));
+			params.put("w02", Integer.parseInt(salesWeekCnt.get(0).get("w02").toString()));
+			params.put("w03", Integer.parseInt(salesWeekCnt.get(0).get("w03").toString()));
+			params.put("w04", Integer.parseInt(salesWeekCnt.get(0).get("w04").toString()));
+			params.put("w05", Integer.parseInt(salesWeekCnt.get(0).get("w05").toString()));
+			params.put("w06", Integer.parseInt(salesWeekCnt.get(0).get("w06").toString()));
+			params.put("w07", Integer.parseInt(salesWeekCnt.get(0).get("w07").toString()));
+			params.put("w08", Integer.parseInt(salesWeekCnt.get(0).get("w08").toString()));
+			params.put("w09", Integer.parseInt(salesWeekCnt.get(0).get("w09").toString()));
+			params.put("w10", Integer.parseInt(salesWeekCnt.get(0).get("w10").toString()));
+			params.put("w11", Integer.parseInt(salesWeekCnt.get(0).get("w11").toString()));
+			params.put("w12", Integer.parseInt(salesWeekCnt.get(0).get("w12").toString()));
+			params.put("w13", Integer.parseInt(salesWeekCnt.get(0).get("w13").toString()));
+			params.put("w14", Integer.parseInt(salesWeekCnt.get(0).get("w14").toString()));
+			params.put("w15", Integer.parseInt(salesWeekCnt.get(0).get("w15").toString()));
+			params.put("w16", Integer.parseInt(salesWeekCnt.get(0).get("w16").toString()));
+			params.put("w17", Integer.parseInt(salesWeekCnt.get(0).get("w17").toString()));
+			params.put("w18", Integer.parseInt(salesWeekCnt.get(0).get("w18").toString()));
+			params.put("w19", Integer.parseInt(salesWeekCnt.get(0).get("w19").toString()));
+			params.put("w20", Integer.parseInt(salesWeekCnt.get(0).get("w20").toString()));
+			params.put("w21", Integer.parseInt(salesWeekCnt.get(0).get("w21").toString()));
+			params.put("w22", Integer.parseInt(salesWeekCnt.get(0).get("w22").toString()));
+			params.put("w23", Integer.parseInt(salesWeekCnt.get(0).get("w23").toString()));
+			params.put("w24", Integer.parseInt(salesWeekCnt.get(0).get("w24").toString()));
+			params.put("w25", Integer.parseInt(salesWeekCnt.get(0).get("w25").toString()));
+			params.put("w26", Integer.parseInt(salesWeekCnt.get(0).get("w26").toString()));
+			params.put("w27", Integer.parseInt(salesWeekCnt.get(0).get("w27").toString()));
+			params.put("w28", Integer.parseInt(salesWeekCnt.get(0).get("w28").toString()));
+			params.put("w29", Integer.parseInt(salesWeekCnt.get(0).get("w29").toString()));
+			params.put("w30", Integer.parseInt(salesWeekCnt.get(0).get("w30").toString()));
+
+			String iM0TotCnt = seperaionMap.get(0).get("m0TotCnt").toString();
+			String iM1TotCnt = seperaionMap.get(0).get("m1TotCnt").toString();
+			String iM2TotCnt = seperaionMap.get(0).get("m2TotCnt").toString();
+			String iM3TotCnt = seperaionMap.get(0).get("m3TotCnt").toString();
+			String iM4TotCnt = seperaionMap.get(0).get("m4TotCnt").toString();
+
+			String weekth = params.get("scmPeriodCbBox").toString();
+
+			int m0Sum = 0;
+			int m1Sum = 0;
+			int m2Sum = 0;
+			int m3Sum = 0;
+			int m4Sum = 0;
+
+			String intToStrFieldCnt ="";
+		    int iLootDataFieldCnt = 0;
+
+			for(int m1=0;m1<Integer.parseInt(iM0TotCnt);m1++){
+				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
+
+	            if (intToStrFieldCnt.length() == 1)
+	            {
+	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	            }
+
+		        if (Integer.parseInt(chield.get(m1).get("weekTh").toString()) <  Integer.parseInt(weekth) && m1 != Integer.parseInt(iM0TotCnt)-1 ){
+		        } else {
+		        	m0Sum = m0Sum+Integer.parseInt(getReplaceStr(params.get("w"+intToStrFieldCnt).toString(),",",""));
+		        	iLootDataFieldCnt++;
+	            }
+			}
+
+			String intToStrFieldCnt2 ="";
+			int iLootDataFieldCnt2 = 0;
+
+			for(int m1=0;m1<Integer.parseInt(iM0TotCnt);m1++){
+				intToStrFieldCnt2 = String.valueOf(iLootDataFieldCnt2);
+
+	            if (intToStrFieldCnt2.length() == 1)
+	            {
+	         	   intToStrFieldCnt2 =  "0" + intToStrFieldCnt2;
+	            }
+
+		        if (Integer.parseInt(chield.get(m1).get("weekTh").toString()) <  Integer.parseInt(weekth) && m1 != Integer.parseInt(iM0TotCnt)-1 ){
+
+		        } else {
+		        	params.put("m0", m0Sum);
+		        	iLootDataFieldCnt2++;
+		        }
+
+			}
+
+			for(int m1=0;m1<Integer.parseInt(iM1TotCnt);m1++){
+
+				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
+
+	            if (intToStrFieldCnt.length() == 1)
+	            {
+	            	intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	            }
+
+	            m1Sum = m1Sum+Integer.parseInt(getReplaceStr(params.get("w"+intToStrFieldCnt).toString(),",",""));
+	            iLootDataFieldCnt++;
+		 	}
+
+			for(int m1=0;m1<Integer.parseInt(iM1TotCnt);m1++){
+
+				intToStrFieldCnt2 = String.valueOf(iLootDataFieldCnt2);
+
+	            if (intToStrFieldCnt2.length() == 1)
+	            {
+	         	   intToStrFieldCnt2 =  "0" + intToStrFieldCnt2;
+	            }
+	            params.put("m1", m1Sum);
+				iLootDataFieldCnt2++;
+			}
+
+			for(int m2=0;m2<Integer.parseInt(iM2TotCnt);m2++){
+
+				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
+
+	            if (intToStrFieldCnt.length() == 1)
+	            {
+	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	            }
+
+	            m2Sum = m2Sum+Integer.parseInt(getReplaceStr(params.get("w"+intToStrFieldCnt).toString(),",",""));
+	            iLootDataFieldCnt++;
+			}
+
+			for(int m2=0;m2<Integer.parseInt(iM2TotCnt);m2++){
+
+				intToStrFieldCnt2 = String.valueOf(iLootDataFieldCnt2);
+
+	            if (intToStrFieldCnt2.length() == 1)
+	            {
+	         	   intToStrFieldCnt2 =  "0" + intToStrFieldCnt2;
+	            }
+	            params.put("m2", m2Sum);
+				iLootDataFieldCnt2++;
+			}
+
+			for(int m3=0;m3<Integer.parseInt(iM3TotCnt);m3++){
+
+				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
+
+	            if (intToStrFieldCnt.length() == 1)
+	            {
+	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	            }
+
+	            m3Sum = m3Sum+Integer.parseInt(getReplaceStr(params.get("w"+intToStrFieldCnt).toString(),",",""));
+	            iLootDataFieldCnt++;
+			}
+
+			for(int m3=0;m3<Integer.parseInt(iM3TotCnt);m3++){
+				intToStrFieldCnt2 = String.valueOf(iLootDataFieldCnt2);
+
+	            if (intToStrFieldCnt2.length() == 1)
+	            {
+	         	   intToStrFieldCnt2 =  "0" + intToStrFieldCnt2;
+	            }
+	            params.put("m3", m3Sum);
+			    iLootDataFieldCnt2++;
+			}
+
+			for(int m4=0;m4<Integer.parseInt(iM4TotCnt);m4++){
+
+				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt-1);
+
+
+	            if (intToStrFieldCnt.length() == 1)
+	            {
+	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	            }
+
+	            m4Sum = m4Sum+Integer.parseInt(getReplaceStr(params.get("w"+intToStrFieldCnt).toString(),",",""));
+	            iLootDataFieldCnt++;
+			}
+
+			for(int m4=0;m4<Integer.parseInt(iM4TotCnt);m4++){
+
+				intToStrFieldCnt2 = String.valueOf(iLootDataFieldCnt2);
+
+	            if (intToStrFieldCnt2.length() == 1)
+	            {
+	         	   intToStrFieldCnt2 =  "0" + intToStrFieldCnt2;
+	            }
+	            params.put("m4", m4Sum);
+			    iLootDataFieldCnt2++;
+			}
+
+			salesPlanMngementMapper.updateSalesPlanDetailMonthly(params);
+
+		}
+
+		LOGGER.debug(" return_Params : {} , SaveCnt: {} ", params.toString());
+
+		return 0;
 	}
 
 }

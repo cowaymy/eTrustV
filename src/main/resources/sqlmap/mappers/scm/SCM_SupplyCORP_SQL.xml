@@ -82,6 +82,7 @@
 	             , LAST_UPD_COLUMN
 	             , PSI_ID
 	             , PSI_NAME   PSI
+	             , SYS26m.STK_CODE CODE
 	             , STOCK_CTGRY CATEGORY
 	             , STOCK_NAME  NAME
 	             , SYS26M.STK_TYPE_ID

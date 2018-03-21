@@ -381,9 +381,11 @@ public class SalesPlanManagementController {
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		int tmpCnt = 0;
 		int totCnt = 0;
+		int resCnt = 0;
 
 
 	    tmpCnt = salesPlanMngementService.insertSalesPlanMaster(params, sessionVO);
+	    resCnt = salesPlanMngementService.updateSalesPlanMasterMonthly(params, sessionVO);
 		totCnt = totCnt + tmpCnt;
 
 		// 결과 만들기 예.
