@@ -55,7 +55,7 @@ var columnLayout = [
 
 var columnLayout2= [
     {dataField : "stusName", headerText : "Status"},
-    {dataField : "salesOrderId", headerText : "Order No"},
+    {dataField : "salesOrdId", headerText : "Order No"},
     {dataField : "accName", headerText : "Customer Name"},
     {dataField : "accNric", headerText : "NRIC"},
     {dataField : "limitAmt", headerText : "Amount Limit"},
@@ -436,7 +436,7 @@ function fn_deactivate(){
                 <ul class="center_btns" id="center_btns1">
                     <li><p class="btn_blue2"><a href="javascript:fn_deactivate();">Deactivate</a></p></li>
 
-                    <li><p class="btn_blue2"><a href="javascript:fn_createFile();">Generate File</a></p></li>
+                    <li><p class="btn_blue2"><a href="javascript:fn_createFile();">Re-Generate File</a></p></li>
                 </ul>
 
             </article>
