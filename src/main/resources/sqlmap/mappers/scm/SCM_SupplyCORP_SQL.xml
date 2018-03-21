@@ -205,22 +205,19 @@
                                                 ) T2
                                   ) T0
                              LEFT JOIN (
-                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,SUM(INSTALL_CNT) AS M1_TOTAL
-                                 FROM SCM0031S T1
-                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-1))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-1)))
-                                 GROUP BY SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE
+                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,M_1 AS M1_TOTAL
+                                 FROM SCM0030S T1
+                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0)))
                              ) T1 ON T1.CDC=T0.CDC AND T1.STOCK_CODE=T0.STOCK_CODE
                              LEFT JOIN (
-                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,SUM(INSTALL_CNT) AS M2_TOTAL
-                                 FROM SCM0031S T1
-                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-2))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-2)))
-                                 GROUP BY SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE
+                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,M_2 AS M2_TOTAL
+                                 FROM SCM0030S T1
+                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0)))
                              ) T2 ON T2.CDC=T0.CDC AND T2.STOCK_CODE=T0.STOCK_CODE
                              LEFT JOIN (
-                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,SUM(INSTALL_CNT) AS M3_TOTAL
-                                 FROM SCM0031S T1
-                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-3))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),-3)))
-                                 GROUP BY SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE
+                                 SELECT SCM_YEAR,SCM_MONTH,CDC,STOCK_CODE,M_3 AS M3_TOTAL
+                                 FROM SCM0030S T1
+                                 WHERE T1.SCM_YEAR=EXTRACT(YEAR FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0))) AND T1.SCM_MONTH=EXTRACT(MONTH FROM(ADD_MONTHS(TO_DATE(#{planDate},'YYYYMMDD'),0)))
                              ) T3 ON T3.CDC=T0.CDC AND T3.STOCK_CODE=T0.STOCK_CODE
                              JOIN SYS0026M STK ON STK.STK_CODE=T0.STOCK_CODE
                              WHERE T0.STOCK_CODE= #{paramStockCode}
