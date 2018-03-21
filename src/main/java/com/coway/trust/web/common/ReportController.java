@@ -1,8 +1,13 @@
 package com.coway.trust.web.common;
 
-import static com.coway.trust.AppConstants.*;
+import static com.coway.trust.AppConstants.MSG_NECESSARY;
+import static com.coway.trust.AppConstants.REPORT_CLIENT_DOCUMENT;
+import static com.coway.trust.AppConstants.REPORT_DOWN_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_FILE_NAME;
+import static com.coway.trust.AppConstants.REPORT_VIEW_TYPE;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Map;
 
 import javax.servlet.ServletContext;
@@ -18,11 +23,15 @@ import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.config.handler.SessionHandler;
-import com.coway.trust.cmmn.CRJavaHelper;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.util.Precondition;
 import com.coway.trust.util.ReportUtils;
@@ -100,6 +109,22 @@ public class ReportController {
 			clientDoc.setReportAppServer(ra.getReportAppServer());
 			clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
 
+			
+			ArrayList<String> plist = new ArrayList<String>(); 
+			plist.add("/services/BSFilterReplacement.rpt");
+			plist.add("/services/BSReport_ByBSNo.rpt");
+			
+			LOGGER.debug(" reportName  ================================> ]"+reportName +"]["+plist.contains(reportFile));
+			LOGGER.debug(" open reportUserName]"+reportUserName +"]reportPassword["+reportPassword+"]");
+			
+			
+			if(plist.contains(reportFile)){
+				 reportUserName ="GBSLCVAPL1";
+				 reportPassword = "GBSLCVD#2017#";
+			}
+			
+			LOGGER.debug(" close  reportUserName]"+reportUserName +"]reportPassword["+reportPassword+"]");
+			
 			clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
 
 			ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
@@ -160,11 +185,27 @@ public class ReportController {
 					String jndiName = "";
 					String userName = reportUserName;
 					String password = reportPassword;
-
+					
+					ArrayList<String> plist = new ArrayList<String>(); 
+					plist.add("/services/BSFilterReplacement.rpt");
+					plist.add("/services/BSReport_ByBSNo.rpt");
+					
+					LOGGER.debug(" reportName  ================================> "+reportName);
+					
+					
+					if(plist.contains(reportName)){
+						 connectString = "jdbc:oracle:thin:@10.201.32.216:1521:gbslcvd";
+						 driverName = "oracle.jdbc.OracleDriver";
+						 jndiName = "";
+						 userName ="GBSLCVAPL1";
+						 password = "GBSLCVD#2017##";
+					}
+					
 					// Switch all tables on the main report and sub reports
 					CRJavaHelper.changeDataSource(clientDoc, userName, password, connectString, driverName, jndiName);
 					// logon to database
 					CRJavaHelper.logonDataSource(clientDoc, userName, password);
+					
 				}
 				// Store the report document in session
 				// session.setAttribute(reportName, clientDoc);
@@ -244,4 +285,5 @@ public class ReportController {
 		void export(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment,
 				String downFileName) throws ReportSDKExceptionBase, IOException;
 	}
+	
 }
