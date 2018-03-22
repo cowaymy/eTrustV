@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.order.impl.OrderRegisterMapper">
-    
+
     <select id="selectDocNo" parameterType="Integer" resultType="String">
         SELECT FN_GET_DOCNO(#{value}) from dual
-    </select> 
+    </select>
 
     <select id="selectDocNoS" parameterType="Map" resultType="String">
         SELECT FN_GET_DOCNOS(#{docNoId}, #{copyQty}) from dual
-    </select> 
-    
+    </select>
+
     <select id="selectSrvCntcInfo" parameterType="Map" resultType="egovMap">
         SELECT T1.CUST_CARE_CNT_ID
              , T1.CUST_ID
@@ -32,7 +32,7 @@
     </select>
 
     <select id="selectOldOrderId" parameterType="string" resultType="egovMap">
-        SELECT T1.SALES_ORD_ID  
+        SELECT T1.SALES_ORD_ID
           FROM SAL0001D T1
          WHERE T1.SALES_ORD_NO = #{value}
            AND ROWNUM &lt;= 1
@@ -291,7 +291,7 @@
              ) T
          ORDER BY T.TYPE_DT_SEQ ASC
     </select>
-    
+
     <select id="selectPromotionByAppTypeStock" parameterType="Map" resultType="egovMap">
         SELECT T.PROMO_ID CODE
              , T.PROMO_DESC CODE_NAME
@@ -369,7 +369,7 @@
            AND 1 = T1.PROMO_ITM_STUS_ID
            AND ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectProductPromotionPriceByPromoStockIDNew" parameterType="Map" resultType="egovMap">
         SELECT T1.PROMO_ITM_ID
              , T1.PROMO_ID
@@ -402,7 +402,7 @@
            AND T1.PROMO_ITM_STK_ID = #{stkId}
            AND ROWNUM = 1
     </select>
-    
+
     <select id="selectTrialNo" parameterType="Map" resultType="egovMap">
         SELECT T1.SALES_ORD_ID
              , T1.SALES_ORD_NO
@@ -460,7 +460,7 @@
            AND T1.SALES_ORD_NO = #{salesOrdNo}
            AND ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectMemberByMemberIDCode" parameterType="Map" resultType="egovMap">
 		SELECT T.MEM_ID
 		     , T.MEM_CODE
@@ -607,7 +607,7 @@
               </if>
 		        AND ROWNUM &lt;= 1 ) T
     </select>
-    
+
     <select id="selectMemberList" parameterType="Map" resultType="egovMap">
 		SELECT TT.MEM_ID
 		     , TT.MEM_CODE
@@ -692,7 +692,7 @@
 		              ) T
 		       ) TT ORDER BY MEM_CODE ASC
     </select>
-    
+
     <select id="selectBOMList" parameterType="Map" resultType="egovMap">
 		SELECT T1.BOM_ID
 		     , T1.BOM_STK_ID
@@ -726,7 +726,7 @@
 		 WHERE T1.BOM_STK_ID = #{bomStkId}
 		   AND T1.BOM_PART_PRIOD &gt; 0
     </select>
-    
+
     <insert id="insertSalesOrderM" parameterType="salesOrderMVO">
       <selectKey keyProperty="salesOrdId" resultType="Integer" order="BEFORE">
         SELECT SAL0001D_SALES_ORD_ID_SEQ.NEXTVAL FROM DUAL
@@ -860,7 +860,7 @@
            SET CUST_BILL_ID = #{custBillId}
          WHERE SALES_ORD_ID = #{salesOrdId}
     </update>
-    
+
     <insert id="insertSalesOrderD" parameterType="salesOrderDVO">
 		INSERT
 		  INTO SAL0002D
@@ -941,7 +941,7 @@
 		     , #{vrifyRem}
 		     )
     </insert>
-    
+
     <insert id="insertRentPaySet" parameterType="rentPaySetVO">
       <selectKey keyProperty="rentPayId" resultType="Integer" order="BEFORE">
         SELECT SAL0074D_RENT_PAY_ID_SEQ.NEXTVAL FROM DUAL
@@ -1061,7 +1061,7 @@
 		     , #{custBillCustCareCntId}
 		     )
     </insert>
-    
+
     <insert id="insertEStatementReq" parameterType="eStatementReqVO">
       <selectKey keyProperty="reqId" resultType="Integer" order="BEFORE">
         SELECT PAY0060D_REQ_ID_SEQ.NEXTVAL FROM DUAL
@@ -1100,7 +1100,7 @@
 		     , #{emailAdd}
              )
      </insert>
-     
+
     <insert id="insertAccClaimAdt" parameterType="accClaimAdtVO">
 		INSERT
 		  INTO PAY0008M
@@ -1168,7 +1168,7 @@
 		     , SYSDATE
 		     )
     </insert>
-    
+
     <insert id="insertRentalScheme" parameterType="rentalSchemeVO">
       <selectKey keyProperty="renSchId" resultType="Integer" order="BEFORE">
         SELECT SAL0071D_REN_SCH_ID_SEQ.NEXTVAL FROM DUAL
@@ -1191,7 +1191,7 @@
 		     , #{isSync}
 		     )
     </insert>
-    
+
     <select id="selectBankById" parameterType="Map" resultType="egovMap">
         SELECT T1.BANK_ID
              , T1.CODE
@@ -1204,7 +1204,7 @@
           FROM SYS0004M T1
          WHERE T1.BANK_ID = #{bankId}
     </select>
-    
+
     <insert id="insertCcpDecisionM" parameterType="ccpDecisionMVO">
       <selectKey keyProperty="ccpId" resultType="Integer" order="BEFORE">
         SELECT SAL0102D_CCP_ID_SEQ.NEXTVAL FROM DUAL
@@ -1259,7 +1259,7 @@
 		     , #{ccpCtosBatchNo}
 		     )
     </insert>
-    
+
     <insert id="insertDocSubmission" parameterType="docSubmissionVO">
       <selectKey keyProperty="docSubId" resultType="Integer" order="BEFORE">
         SELECT ORG0010D_DOC_SUB_ID_SEQ.NEXTVAL FROM DUAL
@@ -1296,7 +1296,7 @@
 		     , #{docSubBatchId}
 		     )
     </insert>
-    
+
     <insert id="insertSrvMembershipSales" parameterType="srvMembershipSalesVO">
       <selectKey keyProperty="srvMemId" resultType="Integer" order="BEFORE">
         SELECT SAL0095D_SRV_MEM_ID_SEQ.NEXTVAL FROM DUAL
@@ -1371,7 +1371,7 @@
 		     , #{srvMemFormNo}
 		     )
     </insert>
-    
+
     <insert id="insertSrvConfiguration" parameterType="srvConfigurationVO">
       <selectKey keyProperty="srvConfigId" resultType="Integer" order="BEFORE">
         SELECT SAL0090D_SRV_CONFIG_ID_SEQ.NEXTVAL FROM DUAL
@@ -1406,7 +1406,7 @@
 		     , #{srvBsWeek}
 		     )
     </insert>
-    
+
     <insert id="insertSrvConfigSetting" parameterType="srvConfigSettingVO">
       <selectKey keyProperty="srvSettId" resultType="Integer" order="BEFORE">
         SELECT SAL0089D_SRV_SETT_ID_SEQ.NEXTVAL FROM DUAL
@@ -1468,7 +1468,7 @@
 		     , #{srvPrdCntrctId}
 		     )
     </insert>
-    
+
     <insert id="insertSrvConfigFilter" parameterType="srvConfigFilterVO">
       <selectKey keyProperty="srvFilterId" resultType="Integer" order="BEFORE">
         SELECT SAL0087D_SRV_FILTER_ID_SEQ.NEXTVAL FROM DUAL
@@ -1503,8 +1503,8 @@
 		     , TO_DATE(#{srvFilterExprDt}, 'DD/MM/YYYY')
 		     )
     </insert>
-    
-    <insert id="insertCallEntry" parameterType="callEntryVO">
+
+<!--     <insert id="insertCallEntry" parameterType="callEntryVO">
       <selectKey keyProperty="callEntryId" resultType="Integer" order="BEFORE">
         SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
@@ -1541,7 +1541,7 @@
 		     , #{updUserId}
 		     , TO_DATE(#{callDt}, 'DD/MM/YYYY')
 		     )
-    </insert>
+    </insert> -->
 
     <insert id="insertCallResult" parameterType="callResultVO">
       <selectKey keyProperty="callResultId" resultType="Integer" order="BEFORE">
@@ -1583,7 +1583,7 @@
 		     , #{callSmsRem}
 		     )
     </insert>
-    
+
     <insert id="insertInstallEntry" parameterType="installEntryVO">
       <selectKey keyProperty="installEntryId" resultType="Integer" order="BEFORE">
         SELECT SAL0046D_INSTALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
@@ -1710,7 +1710,7 @@
 		     , SYSDATE
 		     )
     </insert>
-    
+
     <insert id="insertGSTEURCertificate" parameterType="gSTEURCertificateVO">
       <selectKey keyProperty="eurcId" resultType="Integer" order="BEFORE">
         SELECT SAL0042D_EURC_ID_SEQ.NEXTVAL FROM DUAL
@@ -1753,7 +1753,7 @@
              , #{atchFileGrpId}
 		     )
     </insert>
-    
+
     <insert id="insertSalesOrderContract" parameterType="salesOrderContractVO">
       <selectKey keyProperty="cntrctId" resultType="Integer" order="BEFORE">
         SELECT SAL0003D_CNTRCT_ID_SEQ.NEXTVAL FROM DUAL
@@ -1831,7 +1831,7 @@
            AND TO_CHAR(USR.USER_VAL_ID_TO,'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
            AND ROWNUM = 1
     </select>
-    
+
     <select id="selectCheckAccessRight" parameterType="Map" resultType="egovMap">
 		SELECT T2.AC_LID
 		     , T2.BIZ_ROLE_ID
@@ -1850,7 +1850,7 @@
 		   AND T1.USER_ID = #{userId}
 		   AND T2.MODULE_UNIT_ID = #{moduleUnitId}
     </select>
-    
+
     <!--Product 정보 조회 -->
     <select id="selectProductCodeList" parameterType="Map" resultType="egovMap">
         SELECT STK_ID
@@ -1862,7 +1862,7 @@
                SELECT DISTINCT T1.STK_ID
                     , T1.STK_CODE ||' - '||T1.STK_DESC C1
                     , CASE WHEN T2.DISCONTINUE = '1' THEN T3.CODE_NAME ||' ('||T5.CODE_NAME||')'
-                           ELSE T3.CODE_NAME 
+                           ELSE T3.CODE_NAME
                       END CODE_NAME
                     , T2.DISCONTINUE
                  FROM SYS0026M T1
@@ -1882,7 +1882,7 @@
                 SELECT DISTINCT T1.STK_ID
                     , T1.STK_CODE ||' - '||T1.STK_DESC C1
                     , CASE WHEN T2.DISCONTINUE = '1' THEN T3.CODE_NAME ||' ('||T5.CODE_NAME||')'
-                           ELSE T3.CODE_NAME 
+                           ELSE T3.CODE_NAME
                       END CODE_NAME
                     , T2.DISCONTINUE
                  FROM SYS0026M T1
@@ -1902,7 +1902,7 @@
              )
          ORDER BY DISCONTINUE, CODE_NAME ASC, STK_ID ASC
     </select>
-    
+
     <!--ServicePackage 정보 조회 -->
     <select id="selectServicePackageList" parameterType="Map" resultType="egovMap">
         SELECT CODE
@@ -1911,8 +1911,8 @@
              (
             <if test='pType != null and pType == "1"'>
 			   SELECT CODE_ID
-			        , CODE 
-				    , CODE_NAME 
+			        , CODE
+				    , CODE_NAME
 				    , DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
 				 FROM SYS0013M T1
 				    , SAL0081D T2
@@ -1923,8 +1923,8 @@
             </if>
             <if test='pType != null and pType == "2"'>
                SELECT CODE_ID
-                    , CODE 
-                    , CODE_NAME 
+                    , CODE
+                    , CODE_NAME
                     , DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
                  FROM SYS0013M T1
                     , SAL0091M T2
@@ -1936,7 +1936,7 @@
              )
          ORDER BY CODE_NAME ASC
     </select>
-    
+
     <select id="selectServiceContractPackage" parameterType="Map" resultType="egovMap">
         SELECT T1.SRV_CNTRCT_PAC_ID
              , T1.SRV_CNTRCT_PAC_CODE
@@ -1953,7 +1953,7 @@
          WHERE T1.SRV_CNTRCT_PAC_ID = #{srvCntrctPacId}
            AND T1.SRV_CNTRCT_PAC_STUS_ID = 1
     </select>
-    
+
     <select id="selectPrevOrderNoList" parameterType="Map" resultType="egovMap">
 		SELECT T1.SALES_ORD_NO
 		     , T4.CODE_NAME AS APP_TYPE
