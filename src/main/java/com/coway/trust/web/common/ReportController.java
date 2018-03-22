@@ -119,13 +119,15 @@ public class ReportController {
 			
 			
 			if(plist.contains(reportFile)){
-				 reportUserName ="GBSLCVAPL1";
+				 reportUserName ="GBSLCVAPL1";  
 				 reportPassword = "GBSLCVD#2017#";
 			}
-			
+			  
 			LOGGER.debug(" close  reportUserName]"+reportUserName +"]reportPassword["+reportPassword+"]");
 			
 			clientDoc.getDatabaseController().logon(reportUserName, reportPassword);
+			
+			LOGGER.debug(" clientDoc ========>"+clientDoc.toString());
 
 			ParameterFieldController paramController = clientDoc.getDataDefController().getParameterFieldController();
 			Fields fields = clientDoc.getDataDefinition().getParameterFields();
