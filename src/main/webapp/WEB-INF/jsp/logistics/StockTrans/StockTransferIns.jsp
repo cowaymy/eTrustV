@@ -67,12 +67,12 @@ $(document).ready(function(){
     //paramdata = {locgb:'010205', grade:$("#locationType").val() }; // session 정보 등록
      doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
     */
-    paramdata = {stoIn:'01,02,05,07', grade:$("#locationType").val() }; //김덕호 파트너/G.Trust (2018-01-03)  요청 창고 타입  01, 02, 05, 07 열어 주세요.
+    paramdata = {stoIn:'01,02,05,06,07', grade:$("#locationType").val() }; //김덕호 파트너/G.Trust (2018-01-03)  요청 창고 타입  01, 02, 05, 07 열어 주세요.
     doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '11', '','catetype', 'M' , 'f_multiCombo');
     doGetCombo('/common/selectCodeList.do', '15', '', 'cType', 'M','f_multiCombo');
-    
-    //doDefCombo(amdata, 'M' ,'sam', 'S', '');  Change Select condition From Manual to Auto  to avoid 
+
+    //doDefCombo(amdata, 'M' ,'sam', 'S', '');  Change Select condition From Manual to Auto  to avoid
     doDefCombo(amdata, 'A' ,'sam', 'S', '');
     $("#cancelTr").hide();
     /**********************************
@@ -198,7 +198,7 @@ $(function(){
 		                	   Common.alert(""+result.message+"</br> Created : "+result.data, locationList);
 		                	   AUIGrid.resetUpdatedItems(reqGrid, "all");
 		                }
-			            
+
 			        },  function(jqXHR, textStatus, errorThrown) {
 			            try {
 			            } catch (e) {
@@ -272,7 +272,7 @@ function fn_changeLocation() {
 	 /*paramdata = {locgb:'010205', grade:$("#locationType").val() }; // session 정보 등록
 	 doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , 'tlocationFunc');
 	 */
-	 paramdata = {stoIn:'01,02,05,07', grade:$("#locationType").val() }; // session 정보 등록
+	 paramdata = {stoIn:'01,02,05,06,07', grade:$("#locationType").val() }; // session 정보 등록
 	 doGetComboCodeId('/common/selectStockLocationList.do', paramdata, '','tlocation', 'S' , '');
 }
 function locationList(){
@@ -301,7 +301,7 @@ function f_validatation(v){
     }
 
     if (v == 'save'){
-   	
+
     	if ($("#reqcrtdate").val() == null || $("#reqcrtdate").val() == undefined || $("#reqcrtdate").val() == ""){
     		Common.alert("Please enter Document Date.");
     		return false;
@@ -310,8 +310,8 @@ function f_validatation(v){
             Common.alert("Header Text can be up to 50 digits.");
             return false;
         }
-    	
-    	
+
+
     }
 
     return true;
