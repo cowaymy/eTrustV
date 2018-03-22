@@ -3,14 +3,14 @@ package com.coway.trust.biz.payment.payment.service;
 import org.apache.commons.csv.CSVRecord;
 
 public class CommDeductionVO {
-	private String orderNo;
+	private int orderNo;
 	private String mCode;
 	private double amount;
 	private int paidMonth;
 
 	public static CommDeductionVO create(CSVRecord CSVRecord) {
 		CommDeductionVO vo = new CommDeductionVO();
-		vo.setOrderNo(CSVRecord.get(0));
+		vo.setOrderNo(Integer.parseInt(CSVRecord.get(0)));
 		vo.setmCode(CSVRecord.get(1));
 		vo.setAmount(Double.parseDouble(CSVRecord.get(2)));
 
@@ -23,10 +23,10 @@ public class CommDeductionVO {
 		return vo;
 	}
 
-	public String getOrderNo() {
+	public int getOrderNo() {
 		return orderNo;
 	}
-	public void setOrderNo(String orderNo) {
+	public void setOrderNo(int orderNo) {
 		this.orderNo = orderNo;
 	}
 	public String getmCode() {
