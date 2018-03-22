@@ -200,4 +200,8 @@ public interface OrderRequestMapper {
 
 	int selectECashDeductionItemById(Map<String, Object> params);
 
+	void updateSalesOrderLog(Map<String, Object> params);
+
+	void updateSalesOrderMCanc(Map<String, Object> params);
+
 }

@@ -1941,4 +1941,19 @@
     ]]>
     </select>
 
+     <update id="updateSalesOrderLog" parameterType="Map">
+        UPDATE SAL0009D
+           SET REF_ID = 0,
+                 PRGRS_ID = 13
+         WHERE SALES_ORD_ID = #{salesOrdId}
+    </update>
+
+    <update id="updateSalesOrderMCanc" parameterType="Map">
+        UPDATE SAL0001D
+           SET STUS_CODE_ID = 10,
+                 UPD_DT = SYSDATE,
+                 UPD_USER_ID = #{updator}
+         WHERE SALES_ORD_ID = #{salesOrdId}
+    </update>
+
 </mapper>
