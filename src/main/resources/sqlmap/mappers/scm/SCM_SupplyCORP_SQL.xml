@@ -670,5 +670,32 @@ INSERT INTO SCM0006D
 
 </select>
 
+<insert id="insConfirmPlanByCDC" parameterType="Map" >
+        INSERT INTO SCM0011D(
+                PRE_YEAR,
+                PRE_MONTH,
+                PRE_WEEK_TH,
+                PRE_STOCK_CODE,
+                PRE_CDC,
+                PRE_QTY,
+                PRE_CRT_DT,
+                PRE_PO_ITM_STUS,
+                PRE_PO_ITM_STUS_DT,
+                PO_QTY
+                )
+        VALUES (
+                #{scmYearCbBox},
+                 (select SCM_MONTH from scm0018m where scm_year =#{scmYearCbBox} and week_th = #{scmPeriodCbBox} and week_th_sn ='1'),
+                 #{scmPeriodCbBox},
+                 #{code},
+                 (select DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC') from dual),
+                 #{w08},
+                 TO_DATE(TO_CHAR(SYSDATE,'YYYY/MM/DD'),'YYYY/MM/DD'),
+                 1,
+                 TO_DATE(TO_CHAR(SYSDATE,'YYYY/MM/DD'),'YYYY/MM/DD'),
+                0
+                )
+    </insert>
+
 
 </mapper>

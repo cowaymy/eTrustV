@@ -30,6 +30,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.SalesPlanMngementService;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.crystaldecisions.jakarta.poi.util.StringUtil;
@@ -1303,5 +1304,40 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 
 		return 0;
 	}
+	
+	
+	
+	@Override
+	public void saveConfirmPlanByCDC(Map<String, Object> params) {
 
+		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+
+		 for (int i = 0; i < checkList.size(); i++) {
+			 LOGGER.debug("checkList 값 ::::::::::: : {}", checkList.get(i));
+		 }
+		
+
+		LOGGER.debug(" formMap ???????????  : {} ", formMap);
+	
+
+		if (checkList.size() > 0) {
+			for (int i = 0; i < checkList.size(); i++) {
+			
+				Map<String, Object> insMap = (Map<String, Object>) checkList.get(i);
+				 insMap.put("scmYearCbBox", formMap.get("scmYearCbBox"));
+				 insMap.put("scmPeriodCbBox", formMap.get("scmPeriodCbBox"));
+				 insMap.put("cdcCbBox", formMap.get("cdcCbBox"));
+				 
+				 if("PO & FCST".equals(insMap.get("psi"))){
+					 LOGGER.debug(" psi 통과1111111 ???????????  : {} ");
+					 salesPlanMngementMapper.insConfirmPlanByCDC(insMap);
+				 }
+
+			}
+		}
+	
+		
+	}
+	
 }

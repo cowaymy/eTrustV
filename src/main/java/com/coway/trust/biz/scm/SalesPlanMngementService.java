@@ -61,5 +61,7 @@ public interface SalesPlanMngementService
 	List<EgovMap> selectAccuracyWeeklyDetail(Map<String, Object> params);
 	List<EgovMap> selectAccuracyMonthlyReport(Map<String, Object> params);
 	int updateSalesPlanMasterMonthly(Map<String, Object> params, SessionVO sessionVO);
-
+	
+	void saveConfirmPlanByCDC(Map<String, Object> params); 
+	
 }

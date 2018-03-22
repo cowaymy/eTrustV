@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -189,5 +190,30 @@ public class SupplyCorpController {
 		
 		return ResponseEntity.ok(message);
 	}
+	
+	
+	@RequestMapping(value = "/saveConfirmPlanByCDC.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveConfirmPlanByCDC(@RequestBody Map<String, Object> params, Model model) {
+
+		//SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		//int loginId = sessionVO.getUserId();
+		//params.put("userId", loginId);
+
+		salesPlanMngementService.saveConfirmPlanByCDC(params);
+
+		Map<String, Object> rmap = new HashMap();
+		//rmap.put("data", posSeq);
+
+		// logger.debug("posSeq@@@@@: {}", posSeq);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		//message.setData(posSeq);
+
+		return ResponseEntity.ok(message);
+	}
+	
 
 }

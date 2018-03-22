@@ -224,6 +224,45 @@ function fnUpdateSave(Obj)
 
 }
 
+function fnConfirmSave(Obj)
+{
+  if ($(Obj).parents().hasClass("btn_disabled") == true)
+     return false;
+
+  setAllCheckedRows();
+  
+  var data = {};
+  var checkdata = AUIGrid.getCheckedRowItemsAll(myGridID);
+  
+  data.checked = checkdata;
+  data.form = $("#MainForm").serializeJSON();
+   
+  Common.ajax("POST", "/scm/saveConfirmPlanByCDC.do", data, function(result) {
+
+      Common.alert(result.message);
+
+
+  }, function(jqXHR, textStatus, errorThrown) {
+      try {
+      } catch (e) {
+      }
+      Common.alert("Fail : " + jqXHR.responseJSON.message);
+  });
+  
+  
+ 
+
+}
+
+
+var allChecked = false;
+function setAllCheckedRows() {
+    allChecked = !allChecked;
+    AUIGrid.setAllCheckedRows(myGridID, allChecked);
+};
+
+
+
 function fnSetStockComboBox()
 {
     CommonCombo.make("stockCodeCbBox"
@@ -1207,6 +1246,13 @@ $(document).ready(function()
 	<li>
 	 <p id='updSaveBtn' class="btn_grid btn_disabled">
    <a onclick="fnUpdateSave(this);">Save</a></p></li>
+   
+   <li>
+   <p class="btn_grid">
+    <a onclick="fnConfirmSave(this);">Confirm</a>
+   </p>
+  </li>
+
 </ul>
 </div><!-- side_btns end -->
 
