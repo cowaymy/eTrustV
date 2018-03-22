@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.biz.sales.order.impl;
 
@@ -70,7 +70,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements OrderRegisterService{
 
 	private static Logger logger = LoggerFactory.getLogger(OrderRegisterServiceImpl.class);
-	
+
 	@Resource(name = "orderRegisterMapper")
 	private OrderRegisterMapper orderRegisterMapper;
 
@@ -79,25 +79,25 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Resource(name = "preOrderMapper")
 	private PreOrderMapper preOrderMapper;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
-	
+
 	@Override
 	public EgovMap selectSrvCntcInfo(Map<String, Object> params) {
-		
+
 		EgovMap custAddInfo = orderRegisterMapper.selectSrvCntcInfo(params);
-		
+
 		return custAddInfo;
 	}
-	
+
 	@Override
 	public EgovMap selectStockPrice(Map<String, Object> params) {
-		
+
 		EgovMap priceInfo = orderRegisterMapper.selectStockPrice(params);
-		
+
 		BigDecimal orderPrice, orderPV, orderRentalFees;
-		
+
 		if(SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer.parseInt(String.valueOf(params.get("appTypeId")))) {
 //			orderPrice      = "₩" + ((BigDecimal)priceInfo.get("rentalDeposit")).toString();
 //			orderPV         = "₩" + ((BigDecimal)priceInfo.get("pv")).toString();
@@ -113,51 +113,51 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			orderPV         = (BigDecimal)priceInfo.get("pv");
 			orderRentalFees = BigDecimal.ZERO;
 		}
-		
+
 		priceInfo.put("orderPrice", new DecimalFormat("0.00").format(orderPrice));
 		priceInfo.put("orderPV", new DecimalFormat("0.00").format(orderPV));
 		priceInfo.put("orderRentalFees", new DecimalFormat("0.00").format(orderRentalFees));
-		
+
 		return priceInfo;
 	}
-	
+
 	@Override
 	public List<EgovMap> selectDocSubmissionList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return orderRegisterMapper.selectDocSubmissionList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectPromotionByAppTypeStock(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		
+
 		params.put("appTypeId", CommonUtils.changePromoAppTypeId(Integer.parseInt((String) params.get("appTypeId"))));
-		
+
 		return orderRegisterMapper.selectPromotionByAppTypeStock(params);
 	}
-	
+
 	@Override
 	public EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params) {
 
 		BigDecimal orderPricePromo = BigDecimal.ZERO, orderPVPromo = BigDecimal.ZERO, orderPVPromoGST = BigDecimal.ZERO, orderRentalFeesPromo = BigDecimal.ZERO, normalRentalFees = BigDecimal.ZERO;
-		
+
 		EgovMap priceInfo = null;
-		
+
 		if(!StringUtils.isEmpty(params.get("promoId"))) {
     		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(Integer.parseInt((String)params.get("promoId")));
-    		
+
     		int isNew = CommonUtils.intNvl(promoMap.get("isNew"));
-    		
+
     		if(isNew == 1) {
     			priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockIDNew(params); //New Data(2018.01.01~)
-    			
+
     			if(priceInfo != null) {
         			if(SalesConstants.PROMO_APP_TYPE_CODE_ID_REN == Integer.parseInt(String.valueOf((BigDecimal)priceInfo.get("promoAppTypeId")))) { //Rental
         				orderPricePromo      = (BigDecimal)priceInfo.get("promoPrcRpf");
         				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
         				orderPVPromoGST      = (BigDecimal)priceInfo.get("promoItmPvGst");
         				orderRentalFeesPromo = (BigDecimal)priceInfo.get("promoAmt");
-        				
+
         				normalRentalFees = (BigDecimal)priceInfo.get("amt");
         			}
         			else {
@@ -165,10 +165,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         				orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
         				orderPVPromoGST      = (BigDecimal)priceInfo.get("promoItmPvGst");
         				orderRentalFeesPromo = BigDecimal.ZERO;
-    
+
         				normalRentalFees = BigDecimal.ZERO;
         			}
-        			
+
         			priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
         			priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
         			priceInfo.put("orderPVPromoGST", new DecimalFormat("0.00").format(orderPVPromoGST));
@@ -180,12 +180,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     		}
     		else {
     			priceInfo = orderRegisterMapper.selectProductPromotionPriceByPromoStockID(params); //AS-IS Data(~2017.12.31)
-    			
+
     			if(priceInfo != null) {
         			orderPricePromo      = (BigDecimal)priceInfo.get("promoItmPrc");
         			orderPVPromo         = (BigDecimal)priceInfo.get("promoItmPv");
         			orderRentalFeesPromo = ((BigDecimal)priceInfo.get("promoItmRental")).compareTo(BigDecimal.ZERO) > 0 ? (BigDecimal)priceInfo.get("promoItmRental") : BigDecimal.ZERO;
-        			
+
         			priceInfo.put("orderPricePromo", new DecimalFormat("0.00").format(orderPricePromo));
         			priceInfo.put("orderPVPromo", new DecimalFormat("0.00").format(orderPVPromo));
         			priceInfo.put("orderRentalFeesPromo", new DecimalFormat("0.00").format(orderRentalFeesPromo));
@@ -195,46 +195,46 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     			}
     		}
 		}
-		
+
 		return priceInfo;
 	}
-	
+
 	@Override
 	public EgovMap selectOldOrderId(Map<String, Object> params) {
 		return orderRegisterMapper.selectOldOrderId((String)params.get("salesOrdNo"));
 	}
-	
+
 	@Override
 	public EgovMap checkOldOrderId(Map<String, Object> params) {
-				
+
 		int getOldOrderID = 0;
 		int custId = 0, promoId = 0;
 		String ROOT_STATE = "", isInValid = "", msg = "", txtInstSpecialInstruction = "";
-				
+
 		logger.info("!@#### custId:"+(String)params.get("custId"));
 		logger.info("!@#### salesOrdNo:"+(String)params.get("salesOrdNo"));
-		
+
 		custId = Integer.parseInt((String)params.get("custId"));
 		promoId = Integer.parseInt((String)params.get("promoId"));
 
 		EgovMap RESULT = new EgovMap();
 		EgovMap ordInfo = orderRegisterMapper.selectOldOrderId((String)params.get("salesOrdNo"));
-		
+
 		if(ordInfo != null) {
 			getOldOrderID = CommonUtils.intNvl(Integer.parseInt(String.valueOf(ordInfo.get("salesOrdId"))));
 		}
-		
+
 		EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(getOldOrderID);
-		
+
         if (getOldOrderID <= 0) {
         	ROOT_STATE = "ROOT_1";
         }
         else {
         	if(this.isVerifyOldSalesOrderNoValidity(getOldOrderID)) {
-        		
+
         		EgovMap resultMap = this.selectSalesOrderM(getOldOrderID, SalesConstants.APP_TYPE_CODE_ID_SERVICE);
         		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(promoId);
-        		
+
             	if(resultMap != null) { //if(so.VerifyOldSalesOrderNotServiceType(getOldOrderID)
                 	ROOT_STATE = "ROOT_2";
             	}
@@ -243,46 +243,46 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                     	ROOT_STATE = "ROOT_3";
             		}
             		else {
-            			
+
             			Calendar calNow = Calendar.getInstance();
-            			
+
             			int nowYear = calNow.YEAR;
             			int nowMonth = calNow.MONTH + 1;
             			int nowDate = calNow.DATE;
-            			
+
             			logger.info("!@#### nowYear :"+nowYear);
             			logger.info("!@#### nowMonth:"+nowMonth);
             			logger.info("!@#### nowDate :"+nowDate);
-            			
+
             			Date srvPrdExprDt = (Date)GetExpDate.get("srvPrdExprDt");
 
             			Calendar calExt = Calendar.getInstance();
-            			
+
             			calExt.setTime(srvPrdExprDt);
-            			
+
             			int expYear = calExt.YEAR;
             			int expMonth = calExt.MONTH + 1;
 
             			calExt.add(Calendar.MONTH, -4);
 
             			msg = "-SVM End Date : <b>" + (String)GetExpDate.get("srvPrdExprDtMmyy") + "</b> <br/>";
-            			
+
               			if(expYear <= nowYear || (expYear == nowYear && (expMonth - 4) <= nowMonth) || (calExt.compareTo(calNow) <= 0)) {
             				logger.debug("@####:not InValid");
             			}
               			else {
               				logger.debug("@####:InValid");
-              				
+
               				isInValid = "InValid";
               			}
-              			
+
               			EgovMap validateRentOutright = this.selectSalesOrderM(getOldOrderID, 0);
-              			
+
               			//Renatal
               			if(SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) {
-              				
+
               				if(this.isVerifyOldSalesOrderRentalScheme(getOldOrderID)) { //chia chia --18/01/2016 --ex-trade only allow rental status REG || INV || SUS
-              					
+
               					BigDecimal valiOutStanding = (BigDecimal)orderRegisterMapper.selectRentAmt(getOldOrderID);
               					valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
 
@@ -290,22 +290,22 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
                                     msg = msg + " -With Outstanding payment not allowed for Ex-Trade promo. <br/>";
                                     isInValid = "InValid";
               					}
-              					
+
               					EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
-              					
+
               					if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < 57) { //Ex-Trade can be done 4 month early
                                     msg = msg + " -Below 57th months not allowed to entitle Ex-Trade Promo. <br/>";
                                     isInValid = "InValid";
               					}
-              					
+
               					if(custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
                                     msg = msg + " -Different Customer is not allowed.";
                                     isInValid = "InValid";
               					}
-              					
+
               					ROOT_STATE = "ROOT_4";
-              					
-              					txtInstSpecialInstruction = "(Old order No.)" + (String)params.get("salesOrdNo") + " , " + (String)promoMap.get("promoDesc") 
+
+              					txtInstSpecialInstruction = "(Old order No.)" + (String)params.get("salesOrdNo") + " , " + (String)promoMap.get("promoDesc")
               					                        + " , SVM expired : " + (String)GetExpDate.get("srvPrdExprDtMmyy");
               				}
               				else {
@@ -314,25 +314,25 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
               			}
               			else if(SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
               					|| SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) { //outright,Installment
-              				
+
               				msg = "-SVM End Date : <b>" + (String)GetExpDate.get("srvPrdExprDtMmyy") + "</b>  SVM Expired Date : <b>" + (String)GetExpDate.get("srvPrdExprDtMmyyAdd") + "</b> <br/>";
-              				
+
               				if(custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
                                 msg = msg + " -Different Customer is not allowed.";
                                 isInValid = "InValid";
               				}
-              				
+
           					ROOT_STATE = "ROOT_6";
-          					
-          					txtInstSpecialInstruction = "(Old order No.)" + (String)params.get("salesOrdNo") + " , " + (String)promoMap.get("promoDesc") 
+
+          					txtInstSpecialInstruction = "(Old order No.)" + (String)params.get("salesOrdNo") + " , " + (String)promoMap.get("promoDesc")
 		                        + " , SVM expired : " + (String)GetExpDate.get("srvPrdExprDtMmyy");
               			}
               			else {
           					ROOT_STATE = "ROOT_7";
-          					
-          					txtInstSpecialInstruction = "(Old order No.)" + (String)params.get("salesOrdNo") + " , " + (String)promoMap.get("promoDesc") 
+
+          					txtInstSpecialInstruction = "(Old order No.)" + (String)params.get("salesOrdNo") + " , " + (String)promoMap.get("promoDesc")
 		                        + " , SVM expired : " + (String)GetExpDate.get("srvPrdExprDtMmyy");
-          					
+
               			}
             		}
             	}
@@ -341,72 +341,72 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         		ROOT_STATE = "ROOT_8";
         	}
         }
-		
+
         RESULT.put("ROOT_STATE", ROOT_STATE);
         RESULT.put("IS_IN_VALID", isInValid);
         RESULT.put("MSG", msg);
         RESULT.put("OLD_ORDER_ID", getOldOrderID);
         RESULT.put("INST_SPEC_INST", txtInstSpecialInstruction);
-		        
-        
+
+
 		return RESULT;
 	}
-	
+
 	private boolean isVerifyOldSalesOrderNoValidity(int getOldOrderID) {
 		EgovMap result = orderRegisterMapper.selectVerifyOldSalesOrderNoValidity(getOldOrderID);
 		return result == null ? true : false;
 	}
-	
+
 	private boolean isVerifyOldSalesOrderRentalScheme(int getOldOrderID) {
 		EgovMap result = orderRegisterMapper.selectSalesOrderRentalScheme(getOldOrderID);
 		return result != null ? true : false;
 	}
-	
+
 	private EgovMap selectSalesOrderM(int getOldOrderID, int appTypeId) {
 		Map<String, Object> params = new HashMap<String, Object>();
-		
+
 		params.put("salesOrdId", getOldOrderID);
 		params.put("appTypeId", appTypeId);
-		
+
 		EgovMap result = orderRegisterMapper.selectSalesOrderM(params);
-		
+
 		return result;
 	}
-	
+
 	@Override
 	public EgovMap selectTrialNo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return orderRegisterMapper.selectTrialNo(params);
 	}
-	
+
 	@Override
 	public EgovMap selectLoginInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		EgovMap map = new EgovMap();
-		
+
 		map.put("userName", (String)params.get("loginUserName"));
 		map.put("userPassWord", (String)params.get("userPassword"));
-		
+
 		return orderRegisterMapper.selectLoginInfo(map);
 	}
-	
+
 	@Override
 	public EgovMap selectCheckAccessRight(Map<String, Object> params, SessionVO sessionVO) {
 		return orderRegisterMapper.selectCheckAccessRight(params);
 	}
-	
+
 	@Override
 	public EgovMap selectMemberByMemberIDCode(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return orderRegisterMapper.selectMemberByMemberIDCode(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectMemberList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		return orderRegisterMapper.selectMemberList(params);
 	}
-	
+
 	private void preprocSalesOrderMaster(SalesOrderMVO salesOrderMVO, SessionVO sessionVO) {
 
 		salesOrderMVO.setSalesOrdId(0);
@@ -435,7 +435,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         salesOrderMVO.setRefDocId(0);
         salesOrderMVO.setRentPromoId(0);
 	}
-	
+
 	private void preprocSalesOrderDetails(SalesOrderDVO salesOrderDVO, SessionVO sessionVO) {
 
 		salesOrderDVO.setSalesOrdId(0);
@@ -453,15 +453,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		salesOrderDVO.setItmId(0);
 		salesOrderDVO.setItmCallEntryId(0);
 	}
-	
+
 	private String convert24Tm(String TM) {
 		String ampm = "", HH = "", MI = "", cvtTM = "";
-		
+
 		if(CommonUtils.isNotEmpty(TM)) {
 			ampm = CommonUtils.right(TM, 2);
 			HH = CommonUtils.left(TM, 2);
 			MI = TM.substring(3, 5);
-			
+
 			if("PM".equals(ampm)) {
 				cvtTM = String.valueOf(Integer.parseInt(HH) + 12) + ":" + MI + ":00";
 			}
@@ -471,11 +471,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		}
 		return cvtTM;
 	}
-	
+
 	private void preprocInstallationMaster(InstallationVO installationVO, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocInstallationMaster START ");
-		
+
 		installationVO.setInstallId(0);
 		installationVO.setSalesOrdId(0);
 		installationVO.setPreTm(this.convert24Tm(installationVO.getPreTm()));
@@ -484,7 +484,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		installationVO.setStusCodeId(1);
 		installationVO.setUpdUserId(sessionVO.getUserId());
 		installationVO.setEditTypeId(0);
-		installationVO.setInstallId(0);		
+		installationVO.setInstallId(0);
 /*
 		installationMaster.InstalltionID = 0;
         installationMaster.SalesOrderID = 0;
@@ -504,7 +504,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         installationMaster.IsTradeIn = false;
 */
 	}
-	
+
 	private void preprocRentPaySetMaster(RentPaySetVO rentPaySetVO, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocRentPaySetMaster START ");
@@ -519,7 +519,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		rentPaySetVO.setRem("");
 		rentPaySetVO.setLastApplyUser(sessionVO.getUserId());
 		rentPaySetVO.setPayTrm(0);
-		
+
 /*
         rentPaySetMaster.RentPayID = 0;
         rentPaySetMaster.SalesOrderID = 0;
@@ -587,11 +587,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         customerBillMaster.CustBillCustCareCntID = string.IsNullOrEmpty(txtHiddenBPCareID.Text) ? 0 : int.Parse(txtHiddenBPCareID.Text.Trim());
 */
 	}
-	
+
 	private void preprocRentalSchemeMaster(RentalSchemeVO rentalSchemeVO, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocRentalSchemeMaster START ");
-		
+
 		rentalSchemeVO.setRenSchId(0);
 		rentalSchemeVO.setSalesOrdId(0);
 		rentalSchemeVO.setStusCodeId(SalesConstants.STATUS_CODE_NAME_ACT);
@@ -606,21 +606,21 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         rentalSchemeMaster.IsSync = false;
 */
 	}
-	
+
 	private void preprocClaimAdtMaster(AccClaimAdtVO accClaimAdtVO, RentPaySetVO rentPaySetVO, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocRentalSchemeMaster START ");
 
 		int issueBankId = rentPaySetVO.getBankId();
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("bankId", issueBankId);		
+		params.put("bankId", issueBankId);
 		EgovMap bankInfo = null;
-		
+
 		if(issueBankId > 0) {
 			bankInfo = orderRegisterMapper.selectBankById(params);
 		}
-		
+
 		accClaimAdtVO.setAccClSoId(0);
 		accClaimAdtVO.setAccClSvcCntrctId(0); //TODO 소스상에 없음. 확인필요
 		accClaimAdtVO.setAccClPromo(0);
@@ -669,7 +669,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         claimAdtMaster.AccCLInsertDate = DateTime.Now;
 */
 	}
-	
+
 	private void preprocEStatementRequest(EStatementReqVO eStatementReqVO, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocEStatementRequest START ");
@@ -683,7 +683,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		eStatementReqVO.setEmailFailInd(0);
 		eStatementReqVO.setEmailFailDesc("");
 		eStatementReqVO.setRefNo("");
-		
+
 /*
         EStatementRequest.ReqID = 0;
         EStatementRequest.StatusCodeID = 5;
@@ -701,22 +701,22 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         EStatementRequest.RefNo = ""; //Update later
 */
 	}
-	
+
 	private void preprocCcpMaster(CcpDecisionMVO ccpDecisionMVO, int custTypeId, int custRaceId, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocCcpMaster START ");
 
         int statusId = 1, ccpSchemeTypeId;
         String remark = "";
-        
+
         if(custTypeId == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14) {
             // KOREAN --> PASSED CCP
         	statusId = 5;
         	remark = "CCP Korean bypass.";
         }
-        
+
         ccpSchemeTypeId = custTypeId == SalesConstants.CUST_TYPE_CODE_ID_IND ? SalesConstants.CCP_SCHEME_TYPE_CODE_ID_ICS : SalesConstants.CCP_SCHEME_TYPE_CODE_ID_CCS;
-        
+
         ccpDecisionMVO.setCcpId(5);
         ccpDecisionMVO.setCcpSalesOrdId(0);
         ccpDecisionMVO.setCcpSchemeTypeId(ccpSchemeTypeId);
@@ -734,7 +734,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         ccpDecisionMVO.setCcpPncRem("");
         ccpDecisionMVO.setCcpHasGrnt(SalesConstants.IS_FALSE);
         ccpDecisionMVO.setCcpIsHold(SalesConstants.IS_FALSE);
-        
+
 /*
         CcpMaster.CcpID = 0;
         CcpMaster.CcpSalesOrderID = 0;
@@ -756,15 +756,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         CcpMaster.CcpIshold = false;
 */
 	}
-	
+
 	private void preprocSalesOrderContract(SalesOrderContractVO salesOrderContractVO, SalesOrderMVO salesOrderMVO, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocSalesOrderContract START ");
-		
+
 		EgovMap inMap = new EgovMap();
-		
+
 		inMap.put("srvCntrctPacId", salesOrderMVO.getSrvPacId());
-		
+
 		EgovMap outMap = orderRegisterMapper.selectServiceContractPackage(inMap);
 
         salesOrderContractVO.setCntrctId(0);
@@ -790,15 +790,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         salesOrderContract.ContractUpdator = li.UserID;
 */
 	}
-	
+
 	private void preprocDocumentList(List<DocSubmissionVO> updateDocList, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocDocumentList START ");
 
 		for(int i = updateDocList.size() - 1; i >= 0; i--) {
-			
+
 			DocSubmissionVO docVO = updateDocList.get(i);
-			
+
 			if(docVO.getChkfield() == 1) {
     			docVO.setDocSubId(0);
     			docVO.setDocSubTypeId(SalesConstants.CCP_DOC_SUB_CODE_ID_ICS);
@@ -816,7 +816,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			}
 		}
 	}
-	
+
 	private void preprocCallEntryMaster(CallEntryVO callEntryVO, int orderAppType, String installDate, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocCallEntryMaster START ");
@@ -832,11 +832,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         else {
         	callDate = CommonUtils.getAddDay(callDate, -1, SalesConstants.DEFAULT_DATE_FORMAT1);
         }
-        
+
         logger.debug("@#### callDate2:"+callDate);
-        
+
 //      callDate = CommonUtils.changeFormat(callDate, SalesConstants.DEFAULT_DATE_FORMAT1, SalesConstants.DEFAULT_DATE_FORMAT2);
-        
+
         callEntryVO.setCallEntryId(0);
         callEntryVO.setSalesOrdId(0);
         callEntryVO.setTypeId(257);
@@ -849,7 +849,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         callEntryVO.setHapyCallerId(0);
         callEntryVO.setUpdUserId(sessionVO.getUserId());
         callEntryVO.setOriCallDt(callDate);
-        
+
 /*
         callEntryMaster.CallEntryID = 0;
         callEntryMaster.SalesOrderID = 0;
@@ -867,11 +867,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         callEntryMaster.OriCallDate = CallDate;
 */
 	}
-	
+
 	private void preprocCallResultDetails(CallResultVO callResultVO, String dInstallDate, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocCallResultDetails START ");
-		
+
 		callResultVO.setCallResultId(0);
 		callResultVO.setCallEntryId(0);
 		callResultVO.setCallStusId(20);
@@ -903,7 +903,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         CallResultDetails.CallSMSRemark = "";
 */
 	}
-	
+
 	private void preprocInstallEntryMaster(InstallEntryVO installEntryVO, String dInstallDate, int itmStkId, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocInstallEntryMaster START ");
@@ -941,7 +941,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         InstallEntryMaster.RevID = 0;
 */
 	}
-	
+
 	private void preprocInstallResultDetails(InstallResultVO installResultVO, String dInstallDate, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocInstallResultDetails START ");
@@ -963,8 +963,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		installResultVO.setDocRefNo1("");
 		installResultVO.setDocRefNo2("");
 		installResultVO.setUpdUserId(sessionVO.getUserId());
-		installResultVO.setAdjAmt(BigDecimal.ZERO);		
-		
+		installResultVO.setAdjAmt(BigDecimal.ZERO);
+
 /*
         InstallResultDetails.ResultID = 0;
         InstallResultDetails.EntryID = 0;
@@ -989,11 +989,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         InstallResultDetails.AdjAmount = 0;
 */
 	}
-	
+
 	private void preprocMembershipSalesMaster(SrvMembershipSalesVO srvMembershipSalesVO, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocMembershipSalesMaster START ");
-		
+
 		srvMembershipSalesVO.setSrvMemId(0);
 		srvMembershipSalesVO.setSrvMemQuotId(0);
 		srvMembershipSalesVO.setSrvSalesOrdId(0);
@@ -1054,11 +1054,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         MembershipSalesMaster.SrvMemBranchID = li.BranchID;
  */
 	}
-	
+
 	private void preprocConfigMaster(SrvConfigurationVO srvConfigurationVO, String dInstallDate, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocConfigMaster START ");
-		
+
 		srvConfigurationVO.setSrvConfigId(0);
 		srvConfigurationVO.setSrvSoId(0);
 		srvConfigurationVO.setSrvCodyId(0);
@@ -1069,7 +1069,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		srvConfigurationVO.setSrvUpdUserId(sessionVO.getUserId());
 		srvConfigurationVO.setSrvStusId(1);
 		srvConfigurationVO.setSrvBsWeek(0);
-		
+
 /*
         ConfigMaster.SrvConfigID = 0;
         ConfigMaster.SrvSOID = 0;
@@ -1085,31 +1085,31 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         ConfigMaster.SrvBSWeek = 0;
  */
 	}
-	
+
 	private void preprocConfigSettingList(List<SrvConfigSettingVO> srvConfigSettingVOList, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocConfigSettingList START ");
-		
+
 		SrvConfigSettingVO cnfigSetVO = null;
-		
+
 		for(int i = 279; i <= 280; i++) {
 			cnfigSetVO = new SrvConfigSettingVO();
-			
+
 			cnfigSetVO.setSrvSettId(0);
 			cnfigSetVO.setSrvConfigId(0);
 			cnfigSetVO.setSrvSettTypeId(i);
 			cnfigSetVO.setSrvSettStusId(1);
 			cnfigSetVO.setSrvSettRem("");
 			cnfigSetVO.setSrvSettCrtUserId(sessionVO.getUserId());
-			
+
 			srvConfigSettingVOList.add(cnfigSetVO);
 		}
 	}
-	
+
 	private void preprocConfigPeriod(SrvConfigPeriodVO srvConfigPeriodVO, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocConfigPeriod START ");
-		
+
 		srvConfigPeriodVO.setSrvPrdId(0);
 		srvConfigPeriodVO.setSrvConfigId(0);
 		srvConfigPeriodVO.setSrvMbrshId(0);
@@ -1118,7 +1118,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		srvConfigPeriodVO.setSrvPrdRem("");
 		srvConfigPeriodVO.setSrvPrdCrtUserId(sessionVO.getUserId());
 		srvConfigPeriodVO.setSrvPrdUpdUserId(sessionVO.getUserId());
-		
+
 /*
         ConfigPeriod.SrvPrdID = 0;
         ConfigPeriod.SrvConfigID = 0;
@@ -1134,26 +1134,26 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         ConfigPeriod.SrvPrdUpdateBy = li.UserID;
  */
 	}
-	
+
 	private List<SrvConfigFilterVO> preprocConfigFilterList(String dInstallDate, int itmStkId, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocConfigFilterList START ");
-		
+
 		List<SrvConfigFilterVO> srvConfigFilterVOList = null;
 		SrvConfigFilterVO srvConfigFilterVO = null;
-		
+
 		Map<String, Object> params = new HashMap<String, Object>();
-		params.put("bomStkId", itmStkId);		
+		params.put("bomStkId", itmStkId);
 		List<EgovMap> bomInfoList = orderRegisterMapper.selectBOMList(params);
-		
+
 		if(bomInfoList != null && bomInfoList.size() > 0) {
-			
+
 			srvConfigFilterVOList = new ArrayList<SrvConfigFilterVO>();
-			
+
 			for(EgovMap bomInfo : bomInfoList) {
-				
+
 				srvConfigFilterVO = new SrvConfigFilterVO();
-			
+
 				srvConfigFilterVO.setSrvFilterId(0);
 				srvConfigFilterVO.setSrvConfigId(0);
 				srvConfigFilterVO.setSrvFilterStkId(Integer.parseInt(String.valueOf((BigDecimal)bomInfo.get("bomPartId"))));
@@ -1163,23 +1163,23 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 				srvConfigFilterVO.setSrvFilterRem("");
 				srvConfigFilterVO.setSrvFilterCrtUserId(sessionVO.getUserId());
 				srvConfigFilterVO.setSrvFilterUpdUserId(sessionVO.getUserId());
-				
+
 				srvConfigFilterVOList.add(srvConfigFilterVO);
 			}
 		}
 
 		return srvConfigFilterVOList;
 	}
-	
+
 	private void preprocOrderLog(List<SalesOrderLogVO> salesOrderLogVOList, int orderAppType, int custTypeId, int custRaceId, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocOrderLogList START ");
-		
+
 		SalesOrderLogVO salesOrderLogVO = new SalesOrderLogVO();
-		
+
 		int progressId = 0;
 		int isLock = SalesConstants.IS_TRUE;
-		
+
 		if((orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL)
 		|| (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)) {
 
@@ -1199,46 +1199,46 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		else {
             //APP TYPE == RENTAL && RACE!= KOREAN
             //PROGRESS : CCP RESULT
-			progressId = 1; 
+			progressId = 1;
 		}
-		
+
 		salesOrderLogVO.setLogId(0);
 		salesOrderLogVO.setSalesOrdId(0);
 		salesOrderLogVO.setPrgrsId(progressId);
 		salesOrderLogVO.setRefId(0);
 		salesOrderLogVO.setIsLok(isLock);
 		salesOrderLogVO.setLogCrtUserId(sessionVO.getUserId());
-		
+
 		salesOrderLogVOList.add(salesOrderLogVO);
 	}
 
 	private void preprocGSTCertificate(GSTEURCertificateVO gSTEURCertificateVO, int orderAppType, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### preprocGSTCertificate START ");
-		
+
 		int reliefTypeId = 0;
-		
+
 		if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
 			reliefTypeId = 1374; //Foreign Mission And International Organization
 		}
 		else if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT || orderAppType == SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
 			reliefTypeId = 1373; //Government Sector
 		}
-		
+
 		gSTEURCertificateVO.setEurcRliefTypeId(reliefTypeId);
 		gSTEURCertificateVO.setEurcRliefAppTypeId(orderAppType);
 		gSTEURCertificateVO.setEurcStusCodeId(SalesConstants.STATUS_ACTIVE);
 		gSTEURCertificateVO.setEurcCrtUserId(sessionVO.getUserId());
 		gSTEURCertificateVO.setEurcUpdUserId(sessionVO.getUserId());
 	}
-	
+
 	@Override
 	public void registerOrder(OrderVO orderVO, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### OrderRegisterServiceImpl.registerOrder");
-		
+
 		OrderVO regOrderVO = new OrderVO();
-		
+
 		SalesOrderMVO 		 salesOrderMVO 		  = orderVO.getSalesOrderMVO();
 		SalesOrderDVO 		 salesOrderDVO 	      = orderVO.getSalesOrderDVO(); 		//SALES ORDER DETAILS
 		InstallationVO 		 installationVO 	  = orderVO.getInstallationVO(); 		//INSTALLATION MASTER
@@ -1246,11 +1246,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		CustBillMasterVO 	 custBillMasterVO 	  = orderVO.getCustBillMasterVO(); 		//CUSTOMER BILL MASTER
 		RentalSchemeVO   	 rentalSchemeVO 	  = orderVO.getRentalSchemeVO(); 		//RENTAL SCHEME
 		AccClaimAdtVO        accClaimAdtVO 		  = orderVO.getAccClaimAdtVO(); 		//CLAIM ADT
-		
+
 		EStatementReqVO      eStatementReqVO      = orderVO.geteStatementReqVO(); 		//CCP DETAILS
 
 		GSTEURCertificateVO  gSTEURCertificateVO   = orderVO.getgSTEURCertificateVO();
-		
+
 		GridDataSet<DocSubmissionVO>    documentList     = orderVO.getDocSubmissionVOList();
 
 		List<DocSubmissionVO> docSubVOList = documentList.getUpdate(); // 수정 리스트 얻기
@@ -1261,34 +1261,34 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		String billGrp   = orderVO.getBillGrp(); //new, exist
 		String sInstallDate = installationVO.getPreDt();
 		int itmStkId   = salesOrderDVO.getItmStkId();
-		
-		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");		
+
+		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 //		Date dInstallDate = (Date)formatter.parse(sInstallDate);
 		String dInstallDate = sInstallDate;
-		
+
 		regOrderVO.setOrderAppType(orderAppType);
 		regOrderVO.setCustTypeId(custTypeId);
 		regOrderVO.setRaceId(custRaceId);
 		regOrderVO.setsInstallDate(sInstallDate);
 		regOrderVO.setdInstallDate(dInstallDate);
-		
+
 		this.preprocSalesOrderMaster(salesOrderMVO, sessionVO);
 		this.preprocSalesOrderDetails(salesOrderDVO, sessionVO);
 		this.preprocInstallationMaster(installationVO, sessionVO);
-		
+
 		//------------------------------------------------------------------------------
 		// START
 		//------------------------------------------------------------------------------
         logger.debug("@#### salesOrderMVO.getTotAmt()    :"+salesOrderMVO.getTotAmt());
         logger.debug("@#### salesOrderMVO.getMthRentAmt():"+salesOrderMVO.getMthRentAmt());
         logger.debug("@#### salesOrderMVO.getTotPv()     :"+salesOrderMVO.getTotPv());
-        
+
         int promoId = CommonUtils.intNvl(salesOrderMVO.getPromoId());
-        
+
         if(promoId > 0) {
 
             Map<String, Object> iMap = new HashMap<String, Object>();
-            
+
             iMap.put("promoId", Integer.toString(promoId));
             iMap.put("stkId", salesOrderDVO.getItmStkId());
 
@@ -1297,21 +1297,21 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             BigDecimal totAmt = new BigDecimal((String)oMap.get("orderPricePromo"));
             BigDecimal mthRentAmt = new BigDecimal((String)oMap.get("orderRentalFeesPromo"));
             BigDecimal totPv = new BigDecimal((String)oMap.get("orderPVPromo"));
-            
-            if(CommonUtils.intNvl(salesOrderMVO.getGstChk()) == 1) {            	
+
+            if(CommonUtils.intNvl(salesOrderMVO.getGstChk()) == 1) {
             	totAmt = totAmt.multiply(new BigDecimal(1/1.06)).setScale(0, BigDecimal.ROUND_FLOOR);
             	mthRentAmt = mthRentAmt.multiply(new BigDecimal(1/1.06)).setScale(0, BigDecimal.ROUND_FLOOR);
             	totPv = new BigDecimal((String)oMap.get("orderPVPromoGST"));
-            	
+
             	if(orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
             		totAmt = totAmt.divide(new BigDecimal(10), 0, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10));
             	}
             }
-            
+
             logger.debug("@#### totAmt    :"+totAmt);
             logger.debug("@#### mthRentAmt:"+mthRentAmt);
             logger.debug("@#### totPv     :"+totPv);
-            
+
             salesOrderMVO.setTotAmt(totAmt);
             salesOrderMVO.setMthRentAmt(mthRentAmt);
             salesOrderMVO.setDscntAmt(mthRentAmt);
@@ -1319,28 +1319,28 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		//------------------------------------------------------------------------------
 		// END
 		//------------------------------------------------------------------------------
-        
+
 		//regOrderVO.setSalesOrderMVO(salesOrderMVO);
 		regOrderVO.setSalesOrderDVO(salesOrderDVO);
 		regOrderVO.setInstallationVO(installationVO);
-		
+
 //		this.preprocCustomerBillMaster(custBillMasterVO, sessionVO);
-				
-		if("new".equals(billGrp)) {			
+
+		if("new".equals(billGrp)) {
 			this.preprocCustomerBillMaster(custBillMasterVO, sessionVO);
 			regOrderVO.setCustBillMasterVO(custBillMasterVO);
-			
-			this.preprocEStatementRequest(eStatementReqVO, sessionVO);					
+
+			this.preprocEStatementRequest(eStatementReqVO, sessionVO);
 			regOrderVO.seteStatementReqVO(eStatementReqVO);
 		}
-		
+
 		if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL || orderAppType == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS) {
-			
+
 			this.preprocRentPaySetMaster(rentPaySetVO, sessionVO);
 			regOrderVO.setRentPaySetVO(rentPaySetVO);
-			
+
 			if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
-				this.preprocRentalSchemeMaster(rentalSchemeVO, sessionVO);				
+				this.preprocRentalSchemeMaster(rentalSchemeVO, sessionVO);
 				regOrderVO.setRentalSchemeVO(rentalSchemeVO);
 			}
 
@@ -1352,7 +1352,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			CcpDecisionMVO ccpDecisionMVO = new CcpDecisionMVO();
 			this.preprocCcpMaster(ccpDecisionMVO, custTypeId, custRaceId, sessionVO);
 			regOrderVO.setCcpDecisionMVO(ccpDecisionMVO);
-			
+
 			if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
     			//SALES ORDER CONTRACT
     			SalesOrderContractVO salesOrderContractVO = new SalesOrderContractVO();
@@ -1360,10 +1360,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     			regOrderVO.setSalesOrderContractVO(salesOrderContractVO);
 			}
 		}
-		
+
 		this.preprocDocumentList(docSubVOList, sessionVO);
 		regOrderVO.setDocSubVOList(docSubVOList);
-		
+
 		if((orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL && orderAppType != SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS)
 		|| (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)) {
 
@@ -1371,48 +1371,48 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			this.preprocCallEntryMaster(callEntryVO, orderAppType, sInstallDate, sessionVO);
 			regOrderVO.setCallEntryVO(callEntryVO);
 		}
-		
+
 		if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
 
 			CallResultVO callResultVO = new CallResultVO();
 			this.preprocCallResultDetails(callResultVO, dInstallDate, sessionVO);
 			regOrderVO.setCallResultVO(callResultVO);
-			
+
 			InstallEntryVO installEntryVO = new InstallEntryVO();
 			this.preprocInstallEntryMaster(installEntryVO, dInstallDate, itmStkId, sessionVO);
 			regOrderVO.setInstallEntryVO(installEntryVO);
-			
+
 			InstallResultVO installResultVO = new InstallResultVO();
 			this.preprocInstallResultDetails(installResultVO, dInstallDate, sessionVO);
 			regOrderVO.setInstallResultVO(installResultVO);
-			
+
 			SrvMembershipSalesVO srvMembershipSalesVO = new SrvMembershipSalesVO();
 			this.preprocMembershipSalesMaster(srvMembershipSalesVO, sessionVO);
 			regOrderVO.setSrvMembershipSalesVO(srvMembershipSalesVO);
-			
+
 			SrvConfigurationVO srvConfigurationVO = new SrvConfigurationVO();
 			this.preprocConfigMaster(srvConfigurationVO, dInstallDate, sessionVO);
 			regOrderVO.setSrvConfigurationVO(srvConfigurationVO);
-			
+
 			List<SrvConfigSettingVO> srvConfigSettingVOList = new ArrayList<SrvConfigSettingVO>();
 			this.preprocConfigSettingList(srvConfigSettingVOList, sessionVO);
 			regOrderVO.setSrvConfigSettingVOList(srvConfigSettingVOList);
-			
+
 			SrvConfigPeriodVO srvConfigPeriodVO = new SrvConfigPeriodVO();
 			this.preprocConfigPeriod(srvConfigPeriodVO, sessionVO);
 			regOrderVO.setSrvConfigPeriodVO(srvConfigPeriodVO);
-						
+
 			List<SrvConfigFilterVO> srvConfigFilterVOList = this.preprocConfigFilterList(dInstallDate, itmStkId, sessionVO);
 			regOrderVO.setSrvConfigFilterVOList(srvConfigFilterVOList);
 		}
-		
+
 		//SALES ORDER LOG
 		List<SalesOrderLogVO> salesOrderLogVOList = new ArrayList<SalesOrderLogVO>();
 		this.preprocOrderLog(salesOrderLogVOList, orderAppType, custTypeId, custRaceId, sessionVO);
 		regOrderVO.setSalesOrderLogVOList(salesOrderLogVOList);
-		
+
 		//GST CERTIFICATE
-		if(gSTEURCertificateVO != null && gSTEURCertificateVO.getAtchFileGrpId() > 0) { 
+		if(gSTEURCertificateVO != null && gSTEURCertificateVO.getAtchFileGrpId() > 0) {
 			this.preprocGSTCertificate(gSTEURCertificateVO, orderAppType, sessionVO);
 			regOrderVO.setgSTEURCertificateVO(gSTEURCertificateVO);
 		}
@@ -1421,11 +1421,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         String salesOrdNo = "";
         String newOrdNoFirst = "";
         int copyQty = orderVO.getCopyQty();
-        
+
         if("Y".equals(orderVO.getCopyOrderBulkYN())) {
-        	
+
         	logger.debug("Multi Order Create Start!!!");
-        	
+
     		Map<String, Object> pMap = new HashMap<String, Object>();
 
         	pMap.put("copyQty", orderVO.getCopyQty());
@@ -1436,22 +1436,22 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             else {
             	pMap.put("docNoId", DocTypeConstants.SALES_NO);
             }
-            
+
             salesOrdNo = orderRegisterMapper.selectDocNoS(pMap);
-            
+
             int newOrdNo = 0;
-            
+
         	for(int i = 0; i < copyQty; i++) {
         		newOrdNo = Integer.valueOf(salesOrdNo) - copyQty + i;
-        		
+
         		if(i == 0) newOrdNoFirst = String.valueOf(newOrdNo);
-        		
+
         		logger.debug("newOrdNo:"+CommonUtils.intNvl(newOrdNo));
-        		
+
         		salesOrderMVO.setSalesOrdNo(Integer.toString(newOrdNo));
-        		
+
         		regOrderVO.setSalesOrderMVO(salesOrderMVO);
-        		
+
         		this.doSaveOrder(regOrderVO);
         	}
 
@@ -1459,40 +1459,40 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         }
         else {
         	logger.debug("Sigle Order Create Start!!!");
-        	
+
             if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
             	salesOrdNo = orderRegisterMapper.selectDocNo(DocTypeConstants.CSALES_NO);
             }
             else {
             	salesOrdNo = orderRegisterMapper.selectDocNo(DocTypeConstants.SALES_NO);
             }
-            
-            salesOrderMVO.setSalesOrdNo(salesOrdNo);        
-            
+
+            salesOrderMVO.setSalesOrdNo(salesOrdNo);
+
             logger.info("!@#### GET NEW ORDER_NO  :"+salesOrdNo);
-            
+
             regOrderVO.setSalesOrderMVO(salesOrderMVO);
-            
+
             this.doSaveOrder(regOrderVO);
         }
-        
+
         if("Y".equals(orderVO.getPreOrderYN())) {
         	PreOrderVO preOrderVO = new PreOrderVO();
-        	
+
         	preOrderVO.setPreOrdId(orderVO.getPreOrdId());
         	preOrderVO.setUpdUserId(sessionVO.getUserId());
         	preOrderVO.setStusId(SalesConstants.STATUS_COMPLETED);
-        	
+
         	preOrderMapper.updatePreOrderStatus(preOrderVO);
         }
 
 		logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdId() : {}"+regOrderVO.getSalesOrderMVO().getSalesOrdId());
 		logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdNo() : {}"+regOrderVO.getSalesOrderMVO().getSalesOrdNo());
-		
+
 	}
-	
+
 	private void doSaveOrder(OrderVO orderVO) {
-		
+
 		logger.info("!@###### OrderRegisterServiceImpl.doSaveOrder");
 
 		SalesOrderMVO 			 salesOrderMVO 			= orderVO.getSalesOrderMVO();
@@ -1517,51 +1517,51 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		List<SalesOrderLogVO> 	 salesOrderLogVOList 	= orderVO.getSalesOrderLogVOList();
 		GSTEURCertificateVO 	 gSTEURCertificateVO 	= orderVO.getgSTEURCertificateVO();
 		SalesOrderContractVO     salesOrderContractVO   = orderVO.getSalesOrderContractVO();
-		
+
 		int orderAppType = orderVO.getOrderAppType();
 
         int salesOrdId = 0;
-        
+
         //SALES ORDER MASTER
-        logger.info("!@#### ORDER_ID  :"+salesOrderMVO.getSalesOrdId());        
-        orderRegisterMapper.insertSalesOrderM(salesOrderMVO);        
+        logger.info("!@#### ORDER_ID  :"+salesOrderMVO.getSalesOrdId());
+        orderRegisterMapper.insertSalesOrderM(salesOrderMVO);
         logger.info("!@#### GET NEW ORDER_ID  :"+salesOrderMVO.getSalesOrdId());
-        
+
         salesOrdId = (int)salesOrderMVO.getSalesOrdId();
 
         //SALES ORDER DETAILS
         salesOrderDVO.setSalesOrdId(salesOrdId);
         orderRegisterMapper.insertSalesOrderD(salesOrderDVO);
-        
+
         //INSTALLATION
         installationVO.setSalesOrdId(salesOrdId);
         orderRegisterMapper.insertInstallation(installationVO);
-    	
+
     	//CUSTOMER BILL MASTER
     	if(custBillMasterVO != null && custBillMasterVO.getCustBillCustId() > 0) {
     		String billGroupNo = orderRegisterMapper.selectDocNo(DocTypeConstants.BILLGROUP_NO);
-    		
+
     		custBillMasterVO.setCustBillGrpNo(billGroupNo);
     		custBillMasterVO.setCustBillSoId(salesOrdId);
     		orderRegisterMapper.insertCustBillMaster(custBillMasterVO);
-    		
+
     		logger.info("!@#### GET NEW CUST_BILL_ID  :"+custBillMasterVO.getCustBillId());
-    		
+
     		salesOrderMVO.setCustBillId(custBillMasterVO.getCustBillId());
     		orderRegisterMapper.updateCustBillId(salesOrderMVO);
     	}
 
     	if(eStatementReqVO != null && eStatementReqVO.getStusCodeId() > 0) {
     		String eStatementReqNo = orderRegisterMapper.selectDocNo(DocTypeConstants.ESTATEMENT_REQ);
-    		
+
     		eStatementReqVO.setRefNo(eStatementReqNo);
     		eStatementReqVO.setCustBillId(salesOrderMVO.getCustBillId());
     		orderRegisterMapper.insertEStatementReq(eStatementReqVO);
     	}
-    	
+
         //APP TYPE = RENTAL
         if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
-        	
+
         	//RENTAL PAY SETTING
         	if(rentPaySetVO != null && rentPaySetVO.getModeId() > 0) {
         		rentPaySetVO.setSalesOrdId(salesOrdId);
@@ -1573,26 +1573,26 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         		accClaimAdtVO.setAccClSoId(salesOrdId);
         		orderRegisterMapper.insertAccClaimAdt(accClaimAdtVO);
         	}
-        	
+
         	//RENTAL SCHEME
         	if(rentalSchemeVO != null && CommonUtils.isNotEmpty(rentalSchemeVO.getStusCodeId())) {
         		rentalSchemeVO.setSalesOrdId(salesOrdId);
         		orderRegisterMapper.insertRentalScheme(rentalSchemeVO);
         	}
-        	
+
         	//CCP DECISION MASTER
         	if(ccpDecisionMVO != null && ccpDecisionMVO.getCcpStusId() > 0) {
         		ccpDecisionMVO.setCcpSalesOrdId(salesOrdId);
         		orderRegisterMapper.insertCcpDecisionM(ccpDecisionMVO);
         	}
-        	
+
         	//SALES ORDER CONTRACT
         	if(salesOrderContractVO != null && salesOrderContractVO.getCntrctStusId() > 0) {
         		salesOrderContractVO.setCntrctSalesOrdId(salesOrdId);
         		orderRegisterMapper.insertSalesOrderContract(salesOrderContractVO);
         	}
         }
-        
+
         //DOCUMENT SUBMISSION
         if(docSubVOList != null && docSubVOList.size() > 0) {
         	for(DocSubmissionVO docSubVO : docSubVOList) {
@@ -1600,59 +1600,59 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         		orderRegisterMapper.insertDocSubmission(docSubVO);
         	}
         }
-        
-        //CALL ENTRY MASTER
+
+/*        //CALL ENTRY MASTER
         if(callEntryVO != null && (int)callEntryVO.getStusCodeId() > 0) {
         	callEntryVO.setSalesOrdId(salesOrdId);
         	callEntryVO.setDocId(salesOrdId);
         	orderRegisterMapper.insertCallEntry(callEntryVO);
-        }
-        
+        }*/
+
         //APP TYPE = SERVICE
         if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
         	//CALL RESULT
         	if(callResultVO != null && callResultVO.getCallStusId() > 0) {
         		callResultVO.setCallEntryId(callEntryVO.getCallEntryId());
         		orderRegisterMapper.insertCallResult(callResultVO);
-        		
+
         		callEntryVO.setResultId(callResultVO.getCallResultId());
         		//TODO callEntryVO UPDATE
         	}
-        	
+
             //INSTALL ENTRY
         	if(installEntryVO != null && installEntryVO.getStusCodeId() > 0) {
         		String installNo = orderRegisterMapper.selectDocNo(DocTypeConstants.INSTALL_NO);
-        		
+
         		installEntryVO.setCallEntryId(callEntryVO.getCallEntryId());
         		installEntryVO.setInstallEntryNo(installNo);
         		installEntryVO.setSalesOrdId(salesOrdId);
         		orderRegisterMapper.insertInstallEntry(installEntryVO);
         	}
-        	
+
         	//INSTALL RESULT
         	if(installResultVO != null && installResultVO.getStusCodeId() > 0) {
         		installResultVO.setEntryId(installEntryVO.getInstallEntryId());
         		orderRegisterMapper.insertInstallResult(installResultVO);
-        		
+
         		installEntryVO.setInstallResultId(installResultVO.getResultId());
         		//TODO installEntryVO UPDATE
         	}
-        	
+
         	//MEMBERSHIP SALES
         	if(srvMembershipSalesVO != null && srvMembershipSalesVO.getSrvStusCodeId() > 0) {
         		String membershipNo = orderRegisterMapper.selectDocNo(DocTypeConstants.MEMBERSHIP_NO);
-        		
+
         		srvMembershipSalesVO.setSrvMemNo(membershipNo);
         		srvMembershipSalesVO.setSrvSalesOrdId(salesOrdId);
         		orderRegisterMapper.insertSrvMembershipSales(srvMembershipSalesVO);
         	}
-        	
+
         	//CONFIGURATION
         	if(srvConfigurationVO != null && srvConfigurationVO.getSrvStusId() > 0) {
         		srvConfigurationVO.setSrvSoId(salesOrdId);
         		orderRegisterMapper.insertSrvConfiguration(srvConfigurationVO);
         	}
-        	
+
         	//CONFIG SETTING
             if(srvConfigSettingVOList != null && srvConfigSettingVOList.size() > 0) {
             	for(SrvConfigSettingVO srvConfigSettingVO : srvConfigSettingVOList) {
@@ -1660,23 +1660,23 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             		orderRegisterMapper.insertSrvConfigSetting(srvConfigSettingVO);
             	}
             }
-            
+
             // CONFIG PERIOD
             if(srvConfigPeriodVO != null && srvConfigPeriodVO.getSrvPrdStusId() > 0) {
             	srvConfigPeriodVO.setSrvConfigId(srvConfigurationVO.getSrvConfigId());
             	orderRegisterMapper.insertSrvConfigPeriod(srvConfigPeriodVO);
             }
-            
+
             //CONFIG FILTER
             if(srvConfigFilterVOList != null && srvConfigFilterVOList.size() > 0) {
             	for(SrvConfigFilterVO srvConfigFilterVO : srvConfigFilterVOList) {
             		srvConfigFilterVO.setSrvConfigId(srvConfigurationVO.getSrvConfigId());
             		orderRegisterMapper.insertSrvConfigFilter(srvConfigFilterVO);
             	}
-            	
+
             }
         }
-        
+
         //INSERT ORDER LOG >> OWNERSHIP TRANSFER REQUEST
         if(salesOrderLogVOList != null && salesOrderLogVOList.size() > 0) {
         	for(SalesOrderLogVO salesOrderLogVO : salesOrderLogVOList) {
@@ -1693,12 +1693,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         		}
         		else if(salesOrderLogVO.getPrgrsId() == 5) {
         			salesOrderLogVO.setRefId(installEntryVO.getInstallEntryId());
-        		}        		
+        		}
         		salesOrderLogVO.setSalesOrdId(salesOrdId);
         		orderRegisterMapper.insertSalesOrderLog(salesOrderLogVO);
         	}
         }
-        
+
         //INSERT GST CERTIFICATE
         if(gSTEURCertificateVO != null) {
         	gSTEURCertificateVO.setEurcSalesOrdId(salesOrdId);
@@ -1708,19 +1708,19 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public List<EgovMap> selectProductCodeList(Map<String, Object> params) {
-		// TODO ProductCodeList 호출시 error남 
+		// TODO ProductCodeList 호출시 error남
 		return orderRegisterMapper.selectProductCodeList(params);
 	}
 
 	@Override
 	public List<EgovMap> selectServicePackageList(Map<String, Object> params) {
-		// TODO ProductCodeList 호출시 error남 
+		// TODO ProductCodeList 호출시 error남
 		return orderRegisterMapper.selectServicePackageList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectPrevOrderNoList(Map<String, Object> params) {
-		// TODO ProductCodeList 호출시 error남 
+		// TODO ProductCodeList 호출시 error남
 		return orderRegisterMapper.selectPrevOrderNoList(params);
 	}
 
