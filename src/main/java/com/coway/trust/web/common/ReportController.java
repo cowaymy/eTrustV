@@ -198,7 +198,7 @@ public class ReportController {
 						 driverName = "oracle.jdbc.OracleDriver";
 						 jndiName = "";
 						 userName ="GBSLCVAPL1";
-						 password = "GBSLCVD#2017##";
+						 password = "GBSLCVD#2017#";
 					}
 					
 					// Switch all tables on the main report and sub reports
