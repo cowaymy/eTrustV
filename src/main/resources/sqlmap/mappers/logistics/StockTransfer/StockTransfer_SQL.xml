@@ -13,7 +13,8 @@
     </select>
     <select id="selectStockTransferMainList" parameterType="Map" resultType="egovMap">
         select ROWNUM rnum , l47.REQST_STUS     status
-		     , reqs.code_name     staname
+            ,(case when l48.FINAL_CMPLT = 'Y' then 'Complete' else 'Open' end) staname
+		     <!-- , reqs.code_name     staname -->
 		     , l47.reqst_no       reqstno
 		     , l48.reqst_no_itm   reqitmno
 		     , l47.trnsc_type     ttype
