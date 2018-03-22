@@ -239,8 +239,8 @@ function fnConfirmSave(Obj)
    
   Common.ajax("POST", "/scm/saveConfirmPlanByCDC.do", data, function(result) {
 
+      fnByCdcSettiingHeader();
       Common.alert(result.message);
-
 
   }, function(jqXHR, textStatus, errorThrown) {
       try {
