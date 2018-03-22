@@ -680,6 +680,7 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 				int befPoCnt = salesPlanMngementMapper.selectBeforePoCnt(params);
 				psi3Params.put("ws" + psi5, befPoCnt);
 				if(psi5 == 0){
+					endingInventory = endingInventory - Integer.parseInt(psi1Params.get("ws" + psi5).toString()) + befPoCnt;
 					psi5Params.put("ws" + psi5, endingInventory);
 				} else {
 					endingInventory = endingInventory - Integer.parseInt(psi1Params.get("ws" + psi5).toString()) + befPoCnt;
@@ -1304,9 +1305,9 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 
 		return 0;
 	}
-	
-	
-	
+
+
+
 	@Override
 	public void saveConfirmPlanByCDC(Map<String, Object> params) {
 
@@ -1316,19 +1317,19 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		 for (int i = 0; i < checkList.size(); i++) {
 			 LOGGER.debug("checkList 값 ::::::::::: : {}", checkList.get(i));
 		 }
-		
+
 
 		LOGGER.debug(" formMap ???????????  : {} ", formMap);
-	
+
 
 		if (checkList.size() > 0) {
 			for (int i = 0; i < checkList.size(); i++) {
-			
+
 				Map<String, Object> insMap = (Map<String, Object>) checkList.get(i);
 				 insMap.put("scmYearCbBox", formMap.get("scmYearCbBox"));
 				 insMap.put("scmPeriodCbBox", formMap.get("scmPeriodCbBox"));
 				 insMap.put("cdcCbBox", formMap.get("cdcCbBox"));
-				 
+
 				 if("PO & FCST".equals(insMap.get("psi"))){
 					 LOGGER.debug(" psi 통과1111111 ???????????  : {} ");
 					 salesPlanMngementMapper.insConfirmPlanByCDC(insMap);
@@ -1336,8 +1337,8 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 
 			}
 		}
-	
-		
+
+
 	}
-	
+
 }

@@ -2114,10 +2114,10 @@ SELECT STK_ID
     </select>
 
     <select id="selectEndingInventory" parameterType="Map" resultType="int">
-			SELECT NVL(SUM(QTY),0) QTY
+			SELECT NVL(SUM(QTY)+SUM(MOV_QTY),0) QTY
 			  FROM LOG0088M LOG88M, SYS0028M SYS28M
 			 WHERE SYS28M.WH_LOC_ID  = LOG88M.LOG_ID
-			   AND SYS28M.CDC_CODE = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+			   AND SYS28M.CDC_CODE = #{cdcCbBox}
 			   AND LOG88M.ZMONTH = (#{selectYearBefore} || LPAD(#{selectPlanMonthBefore},2,0))
 			   AND LOG88M.STK_CODE = #{stockCode}
     </select>

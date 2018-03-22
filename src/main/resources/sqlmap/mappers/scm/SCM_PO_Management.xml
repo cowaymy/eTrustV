@@ -92,6 +92,7 @@
       ,SCM0042M SCM42M
  WHERE SCM39M.PO_NO = #{poNo}
    AND SCM42M.PO_NO(+) = SCM39M.PO_NO
+   AND SCM42M.STOCK_CODE(+) = SCM39M.STOCK_CODE
   <if test='startDate != null and startDate !=""  and endDate != null and endDate !="" '>
    AND SCM39M.PO_ISSUE_DT <![CDATA[ >= ]]>   TO_CHAR(TO_DATE(#{startDate},'DD/MM/YYYY'),'YYYYMMDD')
    AND SCM39M.PO_ISSUE_DT <![CDATA[ <= ]]>   TO_CHAR(TO_DATE(#{endDate},'DD/MM/YYYY'),'YYYYMMDD')
