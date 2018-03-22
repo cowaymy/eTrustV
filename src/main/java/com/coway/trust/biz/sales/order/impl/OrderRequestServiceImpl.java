@@ -1757,47 +1757,59 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
 		orderRequestMapper.insertSalesReqCancel(salesReqCancelVO);
 
-		//PREVIOUS CALL LOG
-		if(stusCodeId == SalesConstants.STATUS_ACTIVE) {
-			EgovMap ccleMap = orderRequestMapper.selectCallEntryByEntryId(params);
+		// Added eCash validation - Kit - 2018/03/15
+		if(LatestOrderCallEntryID != 0){
 
-			cancCallResultVO.setCallEntryId(CommonUtils.intNvl(String.valueOf((BigDecimal)ccleMap.get("callEntryId"))));
+    		//PREVIOUS CALL LOG
+    		if(stusCodeId == SalesConstants.STATUS_ACTIVE) {
+    			EgovMap ccleMap = orderRequestMapper.selectCallEntryByEntryId(params);
 
-			orderRegisterMapper.insertCallResult(cancCallResultVO);
+    			cancCallResultVO.setCallEntryId(CommonUtils.intNvl(String.valueOf((BigDecimal)ccleMap.get("callEntryId"))));
 
-			ccleMap.put("stusCodeId", cancCallResultVO.getCallStusId());
-			ccleMap.put("resultId",   cancCallResultVO.getCallResultId());
-			ccleMap.put("updUserId",  cancCallResultVO.getCallCrtUserId());
+    			orderRegisterMapper.insertCallResult(cancCallResultVO);
 
-			orderRequestMapper.updateCallEntry2(ccleMap);
+    			ccleMap.put("stusCodeId", cancCallResultVO.getCallStusId());
+    			ccleMap.put("resultId",   cancCallResultVO.getCallResultId());
+    			ccleMap.put("updUserId",  cancCallResultVO.getCallCrtUserId());
+
+    			orderRequestMapper.updateCallEntry2(ccleMap);
+    		}
+
+    		//CANCELLATION CALL LOG
+    		callEntryMasterVO.setDocId(salesReqCancelVO.getSoReqId());
+
+    		//orderRegisterMapper.insertCallEntry(callEntryMasterVO);
+
+    		callResultVO.setCallEntryId(callEntryMasterVO.getCallEntryId());
+
+    		orderRegisterMapper.insertCallResult(callResultVO);
+
+    		Map<String, Object> tempMap = new HashMap<String, Object>();
+
+    		tempMap.put("soReqSeq", salesReqCancelVO.getSoReqId());
+    		tempMap.put("updCallEntryId", callResultVO.getCallEntryId());
+
+    		ccpCalculateMapper.updateOrderRequest(tempMap);
+
+    		callEntryMasterVO.setResultId(callResultVO.getCallResultId());
+
+    		orderRequestMapper.updateCallEntry(callEntryMasterVO);
+		}else{
+			params.put("updator",sessionVO.getUserId());
+			//INSERT ORDER LOG >> CANCELLATION CALL LOG
+			orderRequestMapper.updateSalesOrderLog(params);
+			//UPDATE SALESORDERM STATUS TO CANCEL
+			orderRequestMapper.updateSalesOrderMCanc(params);
 		}
-
-		//CANCELLATION CALL LOG
-		callEntryMasterVO.setDocId(salesReqCancelVO.getSoReqId());
-
-		//orderRegisterMapper.insertCallEntry(callEntryMasterVO);
-
-		callResultVO.setCallEntryId(callEntryMasterVO.getCallEntryId());
-
-		orderRegisterMapper.insertCallResult(callResultVO);
-
-		Map<String, Object> tempMap = new HashMap<String, Object>();
-
-		tempMap.put("soReqSeq", salesReqCancelVO.getSoReqId());
-		tempMap.put("updCallEntryId", callResultVO.getCallEntryId());
-
-		ccpCalculateMapper.updateOrderRequest(tempMap);
-
-		callEntryMasterVO.setResultId(callResultVO.getCallResultId());
-
-		orderRequestMapper.updateCallEntry(callEntryMasterVO);
 
         //RENTAL SCHEME
         if(appTypeId == 66) {
         	EgovMap stsMap = ccpCalculateMapper.rentalSchemeStatusByOrdId(params);
 
         	if(stsMap != null) {
-            	stsMap.put("stusCodeId", "RET");
+				String stus = LatestOrderCallEntryID != 0 ? "RET" : "CAN";
+
+            	stsMap.put("stusCodeId", stus);
             	stsMap.put("isSync", SalesConstants.IS_FALSE);
             	stsMap.put("salesOrdId", params.get("salesOrdId"));
 
@@ -1809,7 +1821,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         SalesOrderLogVO salesOrderLogVO = new SalesOrderLogVO();
 
         this.preprocSalesOrderLog(salesOrderLogVO, params, sessionVO, SalesConstants.ORDER_REQ_TYPE_CD_CANC);
-
+        if(LatestOrderCallEntryID == 0 ) salesOrderLogVO.setPrgrsId(13);
         salesOrderLogVO.setRefId(callEntryMasterVO.getCallEntryId());
 
         orderRegisterMapper.insertSalesOrderLog(salesOrderLogVO);
@@ -1986,10 +1998,10 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		salesReqCancelVO.setSoReqCurrAmt(BigDecimal.ZERO);
 		salesReqCancelVO.setSoReqActualCanclDt(SalesConstants.DEFAULT_DATE);
 
-		BigDecimal bdTotalAmount = (params.get("txtTotalAmount") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtTotalAmount"));
-		BigDecimal bdPenaltyCharge = (params.get("txtPenaltyCharge") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtPenaltyCharge"));
-		BigDecimal bdPenaltyAdj = (params.get("txtPenaltyAdj") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtPenaltyAdj"));
-		BigDecimal bdCurrentOutstanding = (params.get("txtCurrentOutstanding") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtCurrentOutstanding"));
+		BigDecimal bdTotalAmount = (params.get("txtTotalAmount") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtTotalAmount").toString().replace(",", ""));
+		BigDecimal bdPenaltyCharge = (params.get("txtPenaltyCharge") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtPenaltyCharge").toString().replace(",", ""));
+		BigDecimal bdPenaltyAdj = (params.get("txtPenaltyAdj") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtPenaltyAdj").toString().replace(",", ""));
+		BigDecimal bdCurrentOutstanding = (params.get("txtCurrentOutstanding") == null) ? BigDecimal.ZERO : new BigDecimal((String)params.get("txtCurrentOutstanding").toString().replace(",", ""));
 
 		logger.debug("bdTotalAmount : "+bdTotalAmount);
 		logger.debug("bdPenaltyCharge : "+bdPenaltyCharge);
