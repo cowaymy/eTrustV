@@ -139,6 +139,12 @@
         Common.alert("Please key in the state.");
         return false;
     }
+    
+    if($("#costCenter").val() == ''){
+        Common.alert("Please key in Cost Center.");
+        return false;
+    }
+    
     return true;
     }
 
@@ -424,7 +430,7 @@
     <td>
      <input id="closingDate" name="closingDate" placeholder="DD/MM/YYYY" class="j_date" type="text" title="" />
     </td>
-    <th scope="row">Cost Center</th>
+    <th scope="row">Cost Center<span class="must">*</span></th>
     <td>
      <input id="costCenter" name="costCenter" type="text" title="" placeholder="Cost Center" class="w100p"  value= "${branchDetail.costCentr}" />
     </td>
