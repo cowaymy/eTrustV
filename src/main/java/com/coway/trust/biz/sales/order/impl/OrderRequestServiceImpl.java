@@ -1754,6 +1754,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		salesReqCancelVO.setSoReqCurPv((BigDecimal)somMap.get("totPv"));
 		salesReqCancelVO.setSoReqCurrAmt((BigDecimal)somMap.get("mthRentAmt"));
 		salesReqCancelVO.setSoReqNo(reqNo);
+		if(LatestOrderCallEntryID == 0) salesReqCancelVO.setSoReqStusId(32);
 
 		orderRequestMapper.insertSalesReqCancel(salesReqCancelVO);
 
