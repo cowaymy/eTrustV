@@ -367,6 +367,7 @@ function fnSearchBtnList()
                 }
 
                 $('#updSaveBtn').removeClass("btn_disabled");
+                $('#confirmSaveBtn').removeClass("btn_disabled");
               }
 
            }
@@ -1248,7 +1249,8 @@ $(document).ready(function()
    <a onclick="fnUpdateSave(this);">Save</a></p></li>
    
    <li>
-   <p class="btn_grid">
+<!--    <p class="btn_grid"> -->
+    <p id='confirmSaveBtn' class="btn_grid btn_disabled">
     <a onclick="fnConfirmSave(this);">Confirm</a>
    </p>
   </li>
