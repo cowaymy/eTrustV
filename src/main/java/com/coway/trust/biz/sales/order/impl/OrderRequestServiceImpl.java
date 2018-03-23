@@ -1754,26 +1754,31 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		salesReqCancelVO.setSoReqCurPv((BigDecimal)somMap.get("totPv"));
 		salesReqCancelVO.setSoReqCurrAmt((BigDecimal)somMap.get("mthRentAmt"));
 		salesReqCancelVO.setSoReqNo(reqNo);
-		if(LatestOrderCallEntryID == 0) salesReqCancelVO.setSoReqStusId(32);
+//		if(LatestOrderCallEntryID == 0) salesReqCancelVO.setSoReqStusId(32);
 
 		orderRequestMapper.insertSalesReqCancel(salesReqCancelVO);
 
 		// Added eCash validation - Kit - 2018/03/15
-		if(LatestOrderCallEntryID != 0){
+//		if(LatestOrderCallEntryID != 0){
 
     		//PREVIOUS CALL LOG
     		if(stusCodeId == SalesConstants.STATUS_ACTIVE) {
     			EgovMap ccleMap = orderRequestMapper.selectCallEntryByEntryId(params);
 
-    			cancCallResultVO.setCallEntryId(CommonUtils.intNvl(String.valueOf((BigDecimal)ccleMap.get("callEntryId"))));
+    			if(LatestOrderCallEntryID != 0){
+    				cancCallResultVO.setCallEntryId(LatestOrderCallEntryID);
+        			cancCallResultVO.setCallEntryId(CommonUtils.intNvl(String.valueOf((BigDecimal)ccleMap.get("callEntryId"))));
+        			orderRegisterMapper.insertCallResult(cancCallResultVO);
 
-    			orderRegisterMapper.insertCallResult(cancCallResultVO);
+        			ccleMap.put("stusCodeId", cancCallResultVO.getCallStusId());
+        			ccleMap.put("resultId",   cancCallResultVO.getCallResultId());
+        			ccleMap.put("updUserId",  cancCallResultVO.getCallCrtUserId());
 
-    			ccleMap.put("stusCodeId", cancCallResultVO.getCallStusId());
-    			ccleMap.put("resultId",   cancCallResultVO.getCallResultId());
-    			ccleMap.put("updUserId",  cancCallResultVO.getCallCrtUserId());
-
-    			orderRequestMapper.updateCallEntry2(ccleMap);
+        			orderRequestMapper.updateCallEntry2(ccleMap);
+    			}else{
+    				cancCallResultVO.setCallEntryId(LatestOrderCallEntryID);
+        			orderRegisterMapper.insertCallResult(cancCallResultVO);
+    			}
     		}
 
     		//CANCELLATION CALL LOG
@@ -1795,22 +1800,22 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     		callEntryMasterVO.setResultId(callResultVO.getCallResultId());
 
     		orderRequestMapper.updateCallEntry(callEntryMasterVO);
-		}else{
-			params.put("updator",sessionVO.getUserId());
-			//INSERT ORDER LOG >> CANCELLATION CALL LOG
-			orderRequestMapper.updateSalesOrderLog(params);
-			//UPDATE SALESORDERM STATUS TO CANCEL
-			orderRequestMapper.updateSalesOrderMCanc(params);
-		}
+//		}else{
+//			params.put("updator",sessionVO.getUserId());
+//			//INSERT ORDER LOG >> CANCELLATION CALL LOG
+//			orderRequestMapper.updateSalesOrderLog(params);
+//			//UPDATE SALESORDERM STATUS TO CANCEL
+//			orderRequestMapper.updateSalesOrderMCanc(params);
+//		}
 
         //RENTAL SCHEME
         if(appTypeId == 66) {
         	EgovMap stsMap = ccpCalculateMapper.rentalSchemeStatusByOrdId(params);
 
         	if(stsMap != null) {
-				String stus = LatestOrderCallEntryID != 0 ? "RET" : "CAN";
+//				String stus = LatestOrderCallEntryID != 0 ? "RET" : "CAN";
 
-            	stsMap.put("stusCodeId", stus);
+            	stsMap.put("stusCodeId", "RET");
             	stsMap.put("isSync", SalesConstants.IS_FALSE);
             	stsMap.put("salesOrdId", params.get("salesOrdId"));
 
@@ -1822,7 +1827,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         SalesOrderLogVO salesOrderLogVO = new SalesOrderLogVO();
 
         this.preprocSalesOrderLog(salesOrderLogVO, params, sessionVO, SalesConstants.ORDER_REQ_TYPE_CD_CANC);
-        if(LatestOrderCallEntryID == 0 ) salesOrderLogVO.setPrgrsId(13);
+//        if(LatestOrderCallEntryID == 0 ) salesOrderLogVO.setPrgrsId(13);
         salesOrderLogVO.setRefId(callEntryMasterVO.getCallEntryId());
 
         orderRegisterMapper.insertSalesOrderLog(salesOrderLogVO);
