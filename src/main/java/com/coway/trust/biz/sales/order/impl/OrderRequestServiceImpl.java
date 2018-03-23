@@ -1678,7 +1678,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
         }
 
         callEntryMasterVO.setDocId(orderExchangeMasterVO.getSoExchgId());
-        //orderRegisterMapper.insertCallEntry(callEntryMasterVO);
+        orderRegisterMapper.insertCallEntry(callEntryMasterVO);
 
         orderExchangeMasterVO.setSoExchgNwCallEntryId(callEntryMasterVO.getCallEntryId());
 
@@ -1779,7 +1779,11 @@ public class OrderRequestServiceImpl implements OrderRequestService {
     		//CANCELLATION CALL LOG
     		callEntryMasterVO.setDocId(salesReqCancelVO.getSoReqId());
 
+<<<<<<< .mine
+    		orderRegisterMapper.insertCallEntry(callEntryMasterVO);
+=======
     		//orderRegisterMapper.insertCallEntry(callEntryMasterVO);
+>>>>>>> .r8832
 
     		callResultVO.setCallEntryId(callEntryMasterVO.getCallEntryId());
 
