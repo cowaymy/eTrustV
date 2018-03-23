@@ -11,13 +11,13 @@
             fn_doConfirm();
         }
     });
-    
+
     $(function(){
         $('#btnConfirmSimul').click(function() {
             fn_doConfirm();
         });
-        $('#txtOrderNo').keydown(function (event) {  
-            if (event.which === 13) {    //enter  
+        $('#txtOrderNo').keydown(function (event) {
+            if (event.which === 13) {    //enter
                 fn_doConfirm();
                 return false;
             }
@@ -30,9 +30,9 @@
         $('#btnPrintSimul').click(function() {
             //Common.alert('<b>The program is under development.</b>');
             fn_generateReport();
-            
+
         });
-        
+
         $('#cmbPercentageInd').change(function(event) {
             fn_calcConvAmount();
         });
@@ -45,8 +45,8 @@
             }
             fn_calcConvAmount();
         });
-        $('#txtPercentage').keydown(function (event) {  
-            if (event.which === 13) {    //enter  
+        $('#txtPercentage').keydown(function (event) {
+            if (event.which === 13) {    //enter
                 fn_calcConvAmount();
                 return false;
             }
@@ -57,32 +57,32 @@
             }
             fn_calcConvAmount();
         });
-        $('#txtFixAmount').keydown(function (event) {  
-            if (event.which === 13) {    //enter  
+        $('#txtFixAmount').keydown(function (event) {
+            if (event.which === 13) {    //enter
                 fn_calcConvAmount();
                 return false;
             }
         });
     });
-    
+
     //Print Report Start
     function fn_generateReport(){
-    	
+
     	//Essential Params
     	$("#reportFileName").val('/sales/RentalToOutrightSimulatorForm.rpt');
     	$("#viewType").val('PDF');
-    	
+
     	    //File Title
     	var date = new Date().getDate();
     	if(date.toString().length == 1){
     	    date = "0" + date;
-    	} 
+    	}
     	var downFileName = "RentalToOutright_"+$("#txtOrderNo").val().trim() + " _ " +  date+(new Date().getMonth()+1)+new Date().getFullYear();
     	$("#downFileName").val(downFileName);
-    	
-    	
+
+
     	console.log("reportFileName : " + $("#reportFileName").val());
-    	
+
     	console.log("_printOrdId : " + $("#hiddenOrderID").val());
     	console.log("_printUserName : " + '${userName}');
     	console.log("_printBranchCode : " + '${brnchCode}');
@@ -97,9 +97,9 @@
     	console.log("_printAdjFixInd : " + $("#hiddenAdjFixInd").val());
     	console.log("_printConversionAmt : " + $("#txtConvertAmt").val());
     	console.log("_printTotalAmt : " + $("#txtTotalAmt").val());
-    	
+
     	//Params Setting
-    	
+
     	$("#_printOrdId").val($("#hiddenOrderID").val());  // int OrderID = int.Parse(hiddenOrderID.Value);
     	$("#_printUserName").val('${userName}');  // string Username = li.LoginID;
     	$("#_printBranchCode").val('${brnchCode}');  //string BranchCode = li.BranchCode;
@@ -111,48 +111,48 @@
     	$("#_printAdjPercentAmt").val($("#hiddenAdjPercentAmt").val()); //decimal AdjPercentAmt = decimal.Parse(hiddenAdjPercentAmt.Value);
     	$("#_printAdjFixAmt").val($("#hiddenAdjFixAmt").val());  //decimal AdjFixAmt = decimal.Parse(hiddenAdjFixAmt.Value);
     	$("#_printAdjPercentInd").val($("#hiddenAdjPercentInd").val());  //string AdjPercentInd = hiddenAdjPercentInd.Value;
-    	$("#_printAdjFixInd").val($("#hiddenAdjFixInd").val());  //string AdjFixInd = hiddenAdjFixInd.Value; 
+    	$("#_printAdjFixInd").val($("#hiddenAdjFixInd").val());  //string AdjFixInd = hiddenAdjFixInd.Value;
     	$("#_printConversionAmt").val($("#txtConvertAmt").val());  //decimal ConversionAmt = decimal.Parse(txtConvertAmt.Text.Trim());
     	$("#_printTotalAmt").val($("#txtTotalAmt").val());  //decimal TotalAmt = decimal.Parse(txtTotalAmt.Text.Trim()); */
-        
+
         //Generate Report
     	var option = { isProcedure : false};
     	Common.report("_printForm", option);
-    	
+
     }
-    
-    
-    
+
+
+
     function fn_doConfirm() {
-        
+
         if(!FormUtil.checkReqValue($('#txtOrderNo'))) {
-                
+
                 Common.ajax("GET", "/sales/order/selectOrderSimulatorViewByOrderNo.do", {salesOrdNo : $('#txtOrderNo').val()}, function(result) {
                     if(fn_validInfoSimul()) {
-                        
+
                         var installdate = result.installdate;
-                        var today = '${toDay}';                        
+                        var today = '${toDay}';
                       //var today = Number(todayYMD.substr(0, 4)) * 12;
-                        
+
                         console.log('installdate:'+installdate);
                         console.log('today:'+today);
-                        
+
                         var monthDiff = ((Number(today.substr(0, 4)) * 12) + Number(today.substr(4, 2))) - ((Number(installdate.substr(0, 4)) * 12) + Number(installdate.substr(4, 2)));
                         var totalBillAmt;
-                        
+
                         console.log('monthDiff:'+monthDiff);
-                        
+
                         if(monthDiff >= 1) {
                             totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill);
                         }
                         else {
-                            totalBillAmt = (result.TotalBillAmt + result.TotalDNBill - result.TotalCNBill) + (result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
+                            totalBillAmt = (result.totalbillamt + result.totaldnbill - result.totalcnbill) + (result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
                         }
-                        
+
                         console.log('result.totalbillrpf:'+result.totalbillrpf);
                         console.log('result.totaldnrpf:'+result.totaldnrpf);
                         console.log('result.totalcnrpf:'+result.totalcnrpf);
-                        
+
                         $('#hiddenOrderID').val(result.salesOrdId);
                         $('#hiddenStockID').val(result.itmStkId);
                         $('#hiddenOrderDate').val(result.ordDt2);
@@ -160,25 +160,25 @@
                         $('#hiddenTotalBillRPF').val(result.totalbillrpf + result.totaldnrpf - result.totalcnrpf);
                         $('#hiddenLastBillMth').val(result.lastbillmth);
                         $('#hiddenDiffInstallMonth').val(monthDiff);
-                        
+
                         $('#txtOutrightPrice').val(result.outrightprice);
                         $('#txtTotalBillAmt').val(totalBillAmt);
                         $('#txtCurrentBillMth').val(result.currentbillmth);
                         $('#txtCurrentOutstanding').val(result.totaloutstanding);
-                        
+
                         $('#cmbPercentageInd').removeAttr("disabled");
                         $('#txtPercentage').val('0');
                         $('#txtPercentage').removeAttr("disabled");
                         $('#cmbFixAmountInd').removeAttr("disabled");
                         $('#txtFixAmount').val('0');
                         $('#txtFixAmount').removeAttr("disabled");
-                        
+
                         $('#txtOrderNo').prop("disabled", true);
                         $('#btnConfirmSimul').addClass("blind");
                         $('#btnReselectSimul').removeClass("blind");
                         $('#btnViewLedgerSimul').removeClass("blind");
                         $('#btnPrintSimul').removeClass("blind");
-                        
+
                         fn_calcConvAmount();
                     }
                 });
@@ -187,14 +187,14 @@
             Common.alert("Order Number Required" + DEFAULT_DELIMITER + "<b>Please key in the order number.</b>");
         }
     }
-    
+
     function fn_reselect() {
 
         $('#btnConfirmSimul').removeClass("blind");
         $('#btnReselectSimul').addClass("blind");
         $('#btnViewLedgerSimul').addClass("blind");
         $('#btnPrintSimul').addClass("blind");
-        
+
         $('#txtOrderNo').val('').removeAttr("disabled");
 
         $('#hiddenOrderID').val('');
@@ -222,13 +222,13 @@
         $('#cmbFixAmountInd option:eq(0)').attr("selected", true);
         $('#cmbFixAmountInd').prop("disabled", true);
         $('#txtFixAmount').val('').prop("disabled", true);
-        
+
         $('#txtConvertAmt').val('');
         $('#txtTotalAmt').val('');
     }
-    
+
     function fn_calcConvAmount() {
-        
+
         var conversionAmt = 0;
         var monthDiff = Number($('#hiddenDiffInstallMonth').val());
         var OutrightPrice = Number($('#txtOutrightPrice').val());
@@ -236,47 +236,47 @@
         var totalOutstanding = Number($('#txtCurrentOutstanding').val());
         var adjPercentAmt = 0;
         var adjFixAmt = 0;
-        
+
         if(Number($('#txtPercentage').val()) > 0) {
             adjPercentAmt = OutrightPrice * (Number($('#txtPercentage').val()) / 100);
             if ($("#cmbPercentageInd").val() == "-") {
                 adjPercentAmt = -1 * adjPercentAmt;
             }
         }
-        
+
         $('#hiddenAdjPercentInd').val($('#cmbPercentageInd').val());
         $('#hiddenAdjPercent').val($('#txtPercentage').val());
         $('#hiddenAdjPercentAmt').val(adjPercentAmt);
 
         if(Number($('#txtFixAmount').val()) > 0) {
             adjFixAmt = Number($('#txtFixAmount').val());
-            
+
             if($('#cmbFixAmountInd').val() == "-") {
                 adjFixAmt = -1 * adjFixAmt;
             }
         }
-        
+
         $('#hiddenAdjFixInd').val($('#cmbFixAmountInd').val());
         $('#hiddenAdjFixAmt').val(adjFixAmt);
-        
+
         if (monthDiff >= 1) { //Formula 2
             conversionAmt = (OutrightPrice + adjPercentAmt + adjFixAmt) - (totalBill / 2);
         }
         else { // Formula 1
             conversionAmt = (OutrightPrice + adjPercentAmt + adjFixAmt) - (totalBill);
         }
-        
+
         //Ben
         $('#txtConvertAmt').val(Math.floor(conversionAmt));
         $('#txtTotalAmt').val(Math.floor((conversionAmt + totalOutstanding) / 1));
     }
-    
+
     function fn_validInfoSimul() {
-        
+
         var valid = '';
         var msgT = '';
         var msg = '';
-        
+
         Common.ajaxSync("GET", "/sales/order/selectValidateInfoSimul.do", {salesOrdNo : $('#txtOrderNo').val()}, function(rsltInfo) {
             if(rsltInfo != null) {
                 valid = rsltInfo.isInValid;
@@ -289,7 +289,7 @@
             Common.alert(msgT + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
             return false;
         }
-        
+
         return true;
     }
 </script>
@@ -301,7 +301,7 @@
     <input type="hidden" id="reportFileName" name="reportFileName" value="/sales/RentalToOutrightSimulatorForm.rpt" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <input type="hidden" id="downFileName" name="reportDownFileName" value="" /> <!-- Download Name -->
-    
+
     <!-- params -->
     <input type="hidden" id="_printOrdId" name="OrderID" />
     <input type="hidden" id="_printUserName" name="Username">
@@ -312,7 +312,7 @@
     <input type="hidden" id="_printTotalOutstanding" name="TotalOutstanding">
     <input type="hidden" id="_printAdjPercent" name="AdjPercent">
     <input type="hidden" id="_printAdjPercentAmt" name="AdjPercentAmt">
-    <input type="hidden" id="_printAdjFixAmt" name="AdjFixAmt"> 
+    <input type="hidden" id="_printAdjFixAmt" name="AdjFixAmt">
     <input type="hidden" id="_printAdjPercentInd" name="AdjPercentInd">
     <input type="hidden" id="_printAdjFixInd" name="AdjFixInd">
     <input type="hidden" id="_printConversionAmt" name="ConversionAmt">
@@ -330,7 +330,7 @@
 
 <section class="pop_body"><!-- pop_body start -->
 <form id="formApprv" action="#" method="post">
-    
+
 <input id="hiddenOrderID" name="ordId" type="hidden" />
 <input id="hiddenStockID"           type="hidden" />
 <input id="hiddenOrderDate"         type="hidden" />
@@ -343,7 +343,7 @@
 <input id="hiddenAdjFixAmt"         type="hidden" />
 <input id="hiddenAdjFixInd"         type="hidden" />
 <input id="hiddenDiffInstallMonth"  type="hidden" />
-    
+
 <aside class="title_line"><!-- title_line start -->
 <h3>Order Information</h3>
 </aside><!-- title_line end -->
