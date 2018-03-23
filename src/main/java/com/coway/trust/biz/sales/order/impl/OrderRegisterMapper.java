@@ -113,7 +113,7 @@ public interface OrderRegisterMapper {
 
 	void insertSrvConfigFilter(SrvConfigFilterVO srvConfigFilterVO);
 
-	//void insertCallEntry(CallEntryVO callEntryVO);
+	void insertCallEntry(CallEntryVO callEntryVO);
 
 	void insertCallResult(CallResultVO callResultVO);
 
