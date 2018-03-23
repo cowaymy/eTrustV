@@ -1504,7 +1504,7 @@
 		     )
     </insert>
 
-<!--     <insert id="insertCallEntry" parameterType="callEntryVO">
+     <insert id="insertCallEntry" parameterType="callEntryVO">
       <selectKey keyProperty="callEntryId" resultType="Integer" order="BEFORE">
         SELECT CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
@@ -1541,7 +1541,7 @@
 		     , #{updUserId}
 		     , TO_DATE(#{callDt}, 'DD/MM/YYYY')
 		     )
-    </insert> -->
+    </insert>
 
     <insert id="insertCallResult" parameterType="callResultVO">
       <selectKey keyProperty="callResultId" resultType="Integer" order="BEFORE">
