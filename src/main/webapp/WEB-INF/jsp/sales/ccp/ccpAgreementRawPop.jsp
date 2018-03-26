@@ -6,7 +6,7 @@
 var date = new Date().getDate();
 if(date.toString().length == 1){
     date = "0" + date;
-} 
+}
 $("#dpDateFr").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
 $("#dpDateTo").val(date+"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
 
@@ -29,17 +29,17 @@ $.fn.clearForm = function() {
 };
 
 function fn_report(){
-	
+
 	$("#V_WHERESQL").val("");
     var whereSQL = "";
-	
+
     if(!($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0)){
         whereSQL += " AND ArgM.GOV_AG_START_DT >= TO_DATE('"+$("#dpDateFr").val()+"', 'dd/MM/yy')";
     }
     if(!($("#dpDateTo").val() == null || $("#dpDateTo").val().length == 0)){
     	whereSQL += " AND ArgM.GOV_AG_START_DT <= TO_DATE('"+$("#dpDateTo").val()+"', 'dd/MM/yy')";
     }
-    
+
     if(!($("#txtAgrNoFrom").val() == null || $("#txtAgrNoFrom").val().length == 0) && !($("#txtAgrNoTo").val() == null || $("#txtAgrNoTo").val().length == 0)){
     	whereSQL += " AND (ArgM.GOV_AG_BATCH_NO BETWEEN '"+txtOrderNo1.replace("'", "''")+"' AND '"+txtOrderNo2.replace("'", "''")+"')";
     }
@@ -52,16 +52,16 @@ function fn_report(){
     if(!($("#txtCreator").val() == null || $("#txtCreator").val().length == 0)){
     	whereSQL += " AND Usr1.USER_NAME = '"+$("#txtCreator").val()+"'";
     }
-    	
+
 	var date = new Date().getDate();
     if(date.toString().length == 1){
         date = "0" + date;
-    } 
-    $("#viewType").val("EXCEL");
-    $("#reportFileName").val("/sales/GovContratAgrRaw.rpt");
-    $("#reportDownFileName").val("AgreementRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+    }
+    $("#form #viewType").val("EXCEL");
+    $("#form #reportFileName").val("/sales/GovContratAgrRaw.rpt");
+    $("#form #reportDownFileName").val("AgreementRaw_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
     $("#V_WHERESQL").val(whereSQL);
-	
+
 	// 프로시져로 구성된 경우 꼭 아래 option을 넘겨야 함.
     var option = {
         isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
@@ -73,7 +73,7 @@ function fn_report(){
 function ValidRequiredField(){
 	var valid = true;
 	var message = "";
-	
+
 	if($("#dpDateFr").val() == null || $("#dpDateFr").val().length == 0){
 		valid = false;
 		message += "* Please key in the Agreement Start Date.\n";
@@ -178,7 +178,7 @@ function ValidRequiredField(){
 
 
 </section><!-- content end -->
-     
+
 </section><!-- container end -->
 
 </div><!-- popup_wrap end -->
