@@ -2,37 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.services.bs.impl.BsResultAnalysisMapper">
 
-	<select id="selectAnalysisList" parameterType="Map" resultType="egovMap">
+    <select id="selectAnalysisList" parameterType="Map" resultType="egovMap">
+    <![CDATA[
         select
-            BS_RATE_ROW_ID,
-            ORG_CODE,
-            GRP_CODE,
-            DEPT_CODE,
-            MEM_CODE,
-            TOT_BS,
-            ACT,
-            FAIL,
-            CANCL,
-            CMPLT,
-            CMPLT_OWN,
-            CMPLT_OTR,
-            BS_TRGET_WEEK1,
-            BS_SUCCES_CNT_WEEK1,
-            BS_SUCCES_RATE_WEEK1,
-            BS_SUCCES_BALNC_WEEK1,
-            BS_TRGET_WEEK2,
-            BS_SUCCES_CNT_WEEK2,
-            BS_SUCCES_RATE_WEEK2,
-            BS_SUCCES_BALNC_WEEK2,
-            BS_TRGET_WEEK3,
-            BS_SUCCES_CNT_WEEK3,
-            BS_SUCCES_RATE_WEEK3,
-            BS_SUCCES_BALNC_WEEK3,
-            BS_TRGET_WEEK4,
-            BS_SUCCES_CNT_WEEK4,
-            BS_SUCCES_RATE_WEEK4,
-            BS_SUCCES_BALNC_WEEK4
-        from REP0008S
+            a.BS_RATE_ROW_ID,
+            CASE WHEN l.MEM_LVL <> 1 THEN '' ELSE A.ORG_CODE END AS ORG_CODE,
+            CASE WHEN (l.MEM_LVL <> 1 OR l.MEM_LVL <> 2) THEN '' ELSE A.GRP_CODE END AS GRP_CODE,
+            CASE WHEN l.MEM_LVL = 4 THEN '' ELSE A.DEPT_CODE END AS DEPT_CODE,
+            a.MEM_CODE,
+            a.TOT_BS,
+            a.ACT,
+            a.FAIL,
+            a.CANCL,
+            a.CMPLT,
+            a.CMPLT_OWN,
+            a.CMPLT_OTR,
+            a.BS_TRGET_WEEK1,
+            a.BS_SUCCES_CNT_WEEK1,
+            a.BS_SUCCES_RATE_WEEK1,
+            a.BS_SUCCES_BALNC_WEEK1,
+            a.BS_TRGET_WEEK2,
+            a.BS_SUCCES_CNT_WEEK2,
+            a.BS_SUCCES_RATE_WEEK2,
+            a.BS_SUCCES_BALNC_WEEK2,
+            a.BS_TRGET_WEEK3,
+            a.BS_SUCCES_CNT_WEEK3,
+            a.BS_SUCCES_RATE_WEEK3,
+            a.BS_SUCCES_BALNC_WEEK3,
+            a.BS_TRGET_WEEK4,
+            a.BS_SUCCES_CNT_WEEK4,
+            a.BS_SUCCES_RATE_WEEK4,
+            a.BS_SUCCES_BALNC_WEEK4
+        ]]>
+        from REP0008S a
+        join (
+            select
+                c.MEM_LVL,
+                c.LAST_ORG_CODE
+            from SYS0047M a
+            inner join ORG0001D b
+                on b.MEM_CODE = a.USER_NAME
+            inner join ORG0005D c
+                on c.MEM_ID = b.MEM_ID
+            where a.USER_ID = #{userId}
+        ) l
+            on l.LAST_ORG_CODE = a.ORG_CODE
         where
             1=1
             AND ORG_CODE = #{orgCode}
@@ -50,14 +64,15 @@
 
     <select id="getUserInfo" parameterType="Map" resultType="egovMap">
         select
-            b.LAST_ORG_CODE,
-            b.LAST_GRP_CODE,
-            b.DEPT_CODE,
-            a.MEM_CODE
-        from ORG0001D a
-        join ORG0005D b
-            on a.MEM_ID = b.MEM_ID
-        where a.MEM_ID = #{userId}
+            c.LAST_ORG_CODE,
+            c.LAST_GRP_CODE,
+            c.DEPT_CODE
+        from SYS0047M a
+        inner join ORG0001D b
+            on b.MEM_CODE = a.USER_NAME
+        inner join ORG0005D c
+            on c.MEM_ID = b.MEM_ID
+        where a.USER_ID =  #{userId}
     </select>
 
     <select id="selResultAnalysisByMember" parameterType="Map" resultType="egovMap">

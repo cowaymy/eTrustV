@@ -58,6 +58,8 @@ public class BsResultAnalysisController {
         logger.debug("                    " + params.toString());
         logger.debug("            param set end  ");
 
+        params.put("userId", sessionVO.getUserId());
+
         List<EgovMap> list = bsResultAnalysisService.selectAnalysisList(params);
 
         return ResponseEntity.ok(list);

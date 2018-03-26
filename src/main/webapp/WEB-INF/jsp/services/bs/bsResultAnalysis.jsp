@@ -142,9 +142,18 @@
       }
 
     function fn_clear(){
-        $("#grpCode").val("");
-        $("#deptCode").val("");
-        $("#memCode").val("");
+    	if("${memLvl}" == "4") {
+    		$('#clear').hide();
+    	} else if("${memLvl}" == "3") {
+            $("#memCode").val("");
+    	} else if("${memLvl}" == "2") {
+            $("#deptCode").val("");
+            $("#memCode").val("");
+    	} else if("${memLvl}" == "1") {
+    		$("#grpCode").val("");
+            $("#deptCode").val("");
+            $("#memCode").val("");
+    	}
     }
 
     function fn_openDivPop(val) {
@@ -199,7 +208,7 @@
             <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                 <li><p class="btn_blue"><a id="search" href="#" onClick="javascript:fn_selectListAjax();"><span class="search"></span><spring:message code="sys.btn.search"/></a></p></li>
             </c:if>
-            <li><p class="btn_blue"><a href="#" onclick="javascript:fn_clear()"><span class="clear"></span><spring:message code="sys.btn.clear" /></a></p></li>
+            <li><p class="btn_blue"><a id="clear" href="#" onclick="javascript:fn_clear()"><span class="clear"></span><spring:message code="sys.btn.clear" /></a></p></li>
         </ul>
     </aside>
     <!-- title_line end -->
