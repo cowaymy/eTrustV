@@ -1365,8 +1365,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		regOrderVO.setDocSubVOList(docSubVOList);
 
 		if((orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL && orderAppType != SalesConstants.APP_TYPE_CODE_ID_OUTRIGHTPLUS)
-		|| (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)) {
-
+//		|| (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)
+	    ) {
 			CallEntryVO callEntryVO = new CallEntryVO();
 			this.preprocCallEntryMaster(callEntryVO, orderAppType, sInstallDate, sessionVO);
 			regOrderVO.setCallEntryVO(callEntryVO);
@@ -1601,14 +1601,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         	}
         }
 
-        //CALL ENTRY MASTER
-        if(orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL){
-            if(callEntryVO != null && (int)callEntryVO.getStusCodeId() > 0) {
-            	callEntryVO.setSalesOrdId(salesOrdId);
-            	callEntryVO.setDocId(salesOrdId);
-            	orderRegisterMapper.insertCallEntry(callEntryVO);
-            }
-        }
+		// CALL ENTRY MASTER
+		if (callEntryVO != null && (int) callEntryVO.getStusCodeId() > 0) {
+			callEntryVO.setSalesOrdId(salesOrdId);
+			callEntryVO.setDocId(salesOrdId);
+			orderRegisterMapper.insertCallEntry(callEntryVO);
+		}
 
         //APP TYPE = SERVICE
         if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
