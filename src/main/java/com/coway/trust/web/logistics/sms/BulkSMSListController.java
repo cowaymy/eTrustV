@@ -95,6 +95,12 @@ public class BulkSMSListController {
 		return ResponseEntity.ok(map);
 	}
 
+	@RequestMapping(value="/smsRawDataPop.do")
+	public String orderSalesYSListingPop(){
+
+		return "logistics/sms/smsRawDataPop";
+	}
+
 	@RequestMapping(value = "/uploadSmsBatch.do", method = RequestMethod.POST)
     public ResponseEntity<ReturnMessage> uploadSmsBatch(@RequestBody Map<String, ArrayList<Object>> params,
     		Model model, SessionVO sessionVO) throws Exception {

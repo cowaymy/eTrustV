@@ -240,6 +240,10 @@ var updResultColLayout = [
         $("#bulkSMSUpload").click(function(){
             $("#smsBatchReq_wrap").show();
         });
+
+        $("#smsRawData").click(function(){
+        	Common.popupDiv("/logistics/sms/smsRawDataPop.do", null, null, true);
+        });
     });
 
     function fn_validSearchList() {
@@ -434,7 +438,8 @@ var updResultColLayout = [
 
 <ul class="right_btns">
    <%-- <c:if test="${PAGE_AUTH.funcChange == 'Y'}"> --%>
-            <li><p class="btn_grid"><a id="bulkSMSUpload">Bulk SMS Upload</a></p></li>
+   <li><p class="btn_grid"><a id="smsRawData">SMS Raw Data</a></p></li>
+   <li><p class="btn_grid"><a id="bulkSMSUpload">Bulk SMS Upload</a></p></li>
     <%-- </c:if> --%>
 </ul>
 
