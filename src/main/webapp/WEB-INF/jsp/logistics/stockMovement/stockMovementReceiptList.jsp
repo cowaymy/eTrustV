@@ -504,11 +504,14 @@ function grFunc(){
 	var addedItems = AUIGrid.getColumnValues(gradeGrid,"grade");
 	var getRow = AUIGrid.getRowCount(gradeGrid);
 
-
 	var gradchk=false;
 	for(var i = 0 ; i < check.length ; i++){
+		var docno  = check[i].item.docno;
+		//alert("docno : "+docno);
+		docno = docno.substring(0, 3);
+        //alert("docno after : "+docno);
         //if(check[i].item.mtype =="UM93" ){
-        if(check[i].item.mtype =="UM93" && check[i].item.serialcheck=="Y" ){
+        if(check[i].item.mtype =="UM93" && check[i].item.serialcheck=="Y" && docno =="RET" ){
         	gradchk=true;
         }
    }

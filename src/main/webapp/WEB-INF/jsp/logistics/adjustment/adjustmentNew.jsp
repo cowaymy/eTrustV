@@ -33,9 +33,9 @@ var reqGrid;
 var columnLayout=[
 					{dataField: "invntryNo",headerText :"<spring:message code='log.head.stockauditno'/>"    ,width: "20%"    ,height:30},               
 					{dataField: "baseDt",headerText :"<spring:message code='log.head.basedate'/>"   ,width: "20%"    ,height:30},               
-					{dataField: "cnfm1",headerText :"<spring:message code='log.head.cnfm1'/>"   ,width:120 ,height:30, visible:false},                          
+					{dataField: "cnfm1",headerText :"<spring:message code='log.head.cnfm1'/>"   ,width:120 ,height:30 },                          
 					{dataField: "cnfm1Dt",headerText :"<spring:message code='log.head.cnfm1dt'/>"   ,width:120 ,height:30, visible:false},                          
-					{dataField: "cnfm2",headerText :"<spring:message code='log.head.cnfm2'/>"   ,width:120 ,height:30, visible:false},                          
+					{dataField: "cnfm2",headerText :"<spring:message code='log.head.cnfm2'/>"   ,width:120 ,height:30},                          
 					{dataField: "cnfm2Dt",headerText :"<spring:message code='log.head.cnfm2dt'/>"   ,width:120 ,height:30, visible:false},                          
 					{dataField: "fileLoc",headerText :"<spring:message code='log.head.fileloc'/>"   ,width:120 ,height:30, visible:false},                          
 					{dataField: "fileName",headerText :"<spring:message code='log.head.filename'/>" ,width:120 ,height:30, visible:false},                          
