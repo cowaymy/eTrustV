@@ -1025,10 +1025,10 @@
            AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN TO_CHAR(SRV_START_DT, 'YYYYMMDD') AND TO_CHAR(SRV_EXPR_DT, 'YYYYMMDD')
     </update>
 
-    <update id="updateSrvMembershipSalesAexc2" parameterType="srvMembershipSalesVO">
+    <update id="updateSrvMembershipSalesAexc2" parameterType="Map">
 		UPDATE SAL0095D
-		   SET SRV_START_DT    = #{srvStartDt}
-		     , SRV_EXPR_DT     = #{srvExprDt}
+		   SET SRV_START_DT    = TO_DATE(#{srvStartDt},'YYYYMMDD')
+		     , SRV_EXPR_DT     = TO_DATE(#{srvExprDt},'YYYYMMDD')
 		     , SRV_REM         = #{srvRem}
 		     , SRV_UPD_DT      = SYSDATE
 		     , SRV_UPD_USER_ID = #{srvUpdUserId}
