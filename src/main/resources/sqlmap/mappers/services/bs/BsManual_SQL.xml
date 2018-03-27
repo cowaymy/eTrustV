@@ -656,9 +656,10 @@
 								            INNER JOIN sal0029d cu ON cu.cust_id = so.cust_id
 								            left JOIN org0001d cd ON cd.mem_id = hs.cody_id
 								            left JOIN sys0038m STUS ON STUS.stus_code_id = cd.stus
-								            LEFT JOIN org0001d ac ON ac.mem_id = hs.CODY_ID
+								            LEFT JOIN org0001d ac ON ac.mem_id = hs.ACTN_MEM_ID
 								            LEFT JOIN sys0005m br ON br.brnch_id = ac.brnch
 								            LEFT JOIN org0005d og ON og.MEM_ID = CD.MEM_ID
+								            LEFT JOIN sys0005m IBRNCH ON IBRNCH.CODE = MG.CODY_BRNCH_CODE
 								                                             WHERE HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
 								                                                 AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
 								                                           <if test="txtAssigncodyCode != null and txtAssigncodyCode != ''">
@@ -687,7 +688,7 @@
 								                                                    AND SO.CUST_ID  = #{txtCustomer}
 								                                             </if>
 								                                              <if test="cmdBranchCode != null and cmdBranchCode != ''">
-								                                                     AND ( br.BRNCH_id = #{cmdBranchCode})
+								                                                     AND ( IBRNCH.BRNCH_id = #{cmdBranchCode})
 								                                              </if>
 								                                              <if test="cmdCdManager != null and cmdCdManager != ''">
 								                                                     AND OG.DEPT_CODE = (SELECT DEPT_CODE FROM ORG0005D WHERE MEM_ID = #{cmdCdManager} )
@@ -3700,15 +3701,15 @@
 	AND B.STUS       = '1'
 	ORDER BY b.MEM_CODE
     </select>
-    
-    
-    
-    
+
+
+
+
      <select id="hsResultSync" parameterType="Map" resultType="java.lang.Integer">
-        <![CDATA[        
-				 SELECT   COUNT(*) CNT 
-				 FROM SVC0008D  A,  
-				      ORG0001D B 
+        <![CDATA[
+				 SELECT   COUNT(*) CNT
+				 FROM SVC0008D  A,
+				      ORG0001D B
 				 WHERE  NO =#{serviceNo}
 				    AND A.CODY_ID = B.MEM_ID
 				    AND B.MEM_CODE =#{userId}
