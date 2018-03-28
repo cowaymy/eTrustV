@@ -21,7 +21,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("trboxService")
 public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxService {
 	private final Logger logger = LoggerFactory.getLogger(this.getClass());
-	
+
 	@Resource(name = "trboxMapper")
 	private TrboxMapper trboxMapper;
 
@@ -51,10 +51,10 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 			params.put("boxno", trboxno);
 			params.put("boxid", (String)map.get("trboxid"));
 			trboxMapper.newTrboxManageInsert(params);
-			
+
 			params.put("trrecordid" , (String)map.get("trrcordid"));
 			trboxMapper.newTrboxRecordCardInsert(params);
-			
+
 			trboxMapper.trboxdocnoUpdate(map);
 		}
 		return trboxno;
@@ -63,7 +63,7 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 	@Override
 	public void getUpdateKeepReleaseRemove(Map<String, Object> params) throws Exception {
 		trboxMapper.getUpdateKeepReleaseRemove(params);
-		
+
 	}
 
 	@Override
@@ -78,17 +78,17 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 		trboxMapper.updateTrboxInfo(params);
 		return trboxMapper.selectTrboxManagementList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectTransferCodeList(Map<String, Object> params) {
-		
+
 		List<EgovMap> list = null;
 		if ("branch".equals((String)params.get("groupCode"))){
-			list = trboxMapper.selectBranchList(params); 
+			list = trboxMapper.selectBranchList(params);
 		}else if ("courier".equals((String)params.get("groupCode"))){
-			list = trboxMapper.selectCourierList(params); 
+			list = trboxMapper.selectCourierList(params);
 		}
-		
+
 		return list;
 	}
 
@@ -96,12 +96,12 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 	public String getTrBoxSingleTransfer(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
 		//MSC0034D Table insert
-		
+
 		String transitNo = "";
 		Map<String, Object> map = trboxMapper.selectTrboxManageBoxNo("76");
-		
+
 		transitNo = (String)map.get("docfullno");
-				
+
 		String trsnid = (String)trboxMapper.selectTransferId();
 		Map<String, Object> tranM = params;
 		tranM.put("trsnid"  , trsnid);
@@ -109,17 +109,17 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 		tranM.put("statusid", 1);
 		tranM.put("closedt" , "19000101");
 		tranM.put("refno"   , (String)map.get("docfullno"));
-		
+
 		trboxMapper.transferMaterInsert(tranM);
-		
+
 		Map<String, Object> tranD = params;
 		tranD.put("trsnid"    , trsnid);
 		tranD.put("statusid"  , 1);
 		tranD.put("restatusid", 44);
 		tranD.put("closedt"    , "19000101");
-		
+
 		trboxMapper.transferDetailInsert(tranD);
-		
+
 		Map<String, Object> trancard = params;
 		trancard.put("refno"   , (String)map.get("docfullno"));
 		trancard.put("typeid"  , 769);
@@ -127,7 +127,7 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 		trancard.put("qty", -1);
 		trancard.put("locid", (String)params.get("tbrnch"));
 		trboxMapper.transferRecordCardInsert(trancard);
-		
+
 		Map<String, Object> tranpos = params;
 		tranpos.put("refno"   , (String)map.get("docfullno"));
 		tranpos.put("typeid"  , 769);
@@ -135,18 +135,18 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 		tranpos.put("qty", 1);
 		tranpos.put("locid", (String)params.get("tcourier"));
 		trboxMapper.transferRecordCardInsert(tranpos);
-				
+
 		trboxMapper.trboxdocnoUpdate(map);
-		
+
 		return transitNo;
 	}
-	
+
 	@Override
 	public List<EgovMap> selectTrboxReceiveList(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
 		return trboxMapper.selectTrboxReceiveList(params);
 	}
-	
+
 	@Override
 	public Map<String, Object> selectReceiveViewData(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
@@ -170,21 +170,21 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 	public Map<String, Object> postTrboxReceiveInsertData(Map<String, Object> params) throws Exception {
 		// TODO Auto-generated method stub
 		// postTrboxReceiveInsertData
-		
+
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
 		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 		int userid = (int)params.get("userid");
-		
+
 		Map<String, Object> form = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
+
 		String targetLocation = "";
 		if ("4".equals((String)form.get("utrnstatuslist"))){
 			targetLocation = (String)form.get("receiver");
 		}else{
 			targetLocation = (String)form.get("sender");
 		}
-		
+
 		for (int i = 0 ; i < insList.size() ; i++){
 			Map<String, Object> imap = (Map<String, Object>) insList.get(i);
 			logger.debug(" ::: {}" ,  imap);
@@ -196,26 +196,26 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 			pmap.put("userid", userid);
 			pmap.put("trqty", 1);
 			pmap.put("refno", form.get("transitno"));
-			
+
 			trboxMapper.receiveTrboxRecordCardInsert(pmap);
-			
+
 			pmap.put("trlocation", form.get("courier"));
 			pmap.put("trqty", 1);
-			
+
 			trboxMapper.receiveTrboxRecordCardInsert(pmap);
-			
+
 			pmap.put("transitditid", imap.get("TTDI"));
 			pmap.put("resultstaus", form.get("utrnstatuslist"));
-			
+
 			trboxMapper.updateTrboxTransitDetail(pmap);
-			
+
 		}
-		
+
 		int cnt = trboxMapper.selectTrBoxTransitDsCnt((String)form.get("transitid"));
 		Map<String, Object> pmap = new HashMap();
 		pmap.put("userid", userid);
 		pmap.put("trnsitid", form.get("transitid"));
-		
+
 		if (cnt == 0 ){
 			if (!"36".equals((String)form.get("transitstatus"))){
 				pmap.put("status", 36);
@@ -237,13 +237,13 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
 		int userid = (int)params.get("userid");
 		Map<String, Object> form = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		
+
 		String transitNo = "";
 		// DOC NO
 		Map<String, Object> map = trboxMapper.selectTrboxManageBoxNo("76");
-		
+
 		transitNo = (String)map.get("docfullno");
-		
+
 		String trsnid = (String)trboxMapper.selectTransferId();
 		Map<String, Object> tranM = new HashMap();
 		tranM.put("trsnid"     , trsnid);
@@ -255,11 +255,11 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 		tranM.put("tcourier"   , form.get("courier"));
 		tranM.put("refno"      , (String)map.get("docfullno"));
 		tranM.put("userid"     , userid);
-		
+
 		trboxMapper.transferMaterInsert(tranM);
-		
+
 		for (int i = 0 ; i < insList.size(); i++){
-			Map<String, Object> ins = (Map<String, Object>)insList.get(i); 
+			Map<String, Object> ins = (Map<String, Object>)insList.get(i);
 			Map<String, Object> tranD = new HashMap();
 			tranD.put("trsnid"     , trsnid);
 			tranD.put("tranboxid"  , ins.get("boxid"));
@@ -267,9 +267,9 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 			tranD.put("restatusid" , 44);
 			tranD.put("closedt"    , "19000101");
 			tranD.put("userid"     , userid);
-			
+
 			trboxMapper.transferDetailInsert(tranD);
-			
+
 			Map<String, Object> trancard = new HashMap();
 			trancard.put("tranboxid"  , ins.get("boxid"));
 			trancard.put("refno"   , map.get("docfullno"));
@@ -279,17 +279,29 @@ public class TrboxServiceImpl extends EgovAbstractServiceImpl implements TrboxSe
 			trancard.put("locid"   , form.get("sender"));
 			trancard.put("userid"  , userid);
 			trboxMapper.transferRecordCardInsert(trancard);
-			
+
 			trancard.put("qty"     , 1);
 			trancard.put("locid"   , form.get("receiver"));
-			
+
 			trboxMapper.transferRecordCardInsert(trancard);
-			
+
 		}
-		
+
 		trboxMapper.trboxdocnoUpdate(map);
 		map.put("code", "000");
 		return map;
+	}
+
+	@Override
+	public List<EgovMap> selectUnkeepTRBookList(Map<String, Object> params) throws Exception {
+		// TODO Auto-generated method stub
+		return trboxMapper.selectUnkeepTRBookList(params);
+	}
+
+	@Override
+	public void KeepAddTRBookInsert(Map<String, Object> params) throws Exception {
+		trboxMapper.KeepAddTRBookInsert(params);
+
 	}
 
 }
