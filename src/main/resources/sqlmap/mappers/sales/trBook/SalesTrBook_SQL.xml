@@ -155,7 +155,7 @@
 
     <insert id="insertTrBookM" parameterType="Map">
         <selectKey keyProperty="trBookId" resultType="int" order="BEFORE">
-            SELECT MSC0028D_TR_BOOK_ID_SEQ.NEXTVAL FROM DUAL
+            (SELECT DECODE(COUNT(TR_BOOK_ID),0 , 1 , MAX(TR_BOOK_ID)+1) FROM MSC0028D )
         </selectKey>
  		INSERT INTO MSC0028D (
  		         TR_BOOK_ID,
