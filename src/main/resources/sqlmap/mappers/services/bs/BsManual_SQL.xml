@@ -658,7 +658,7 @@
 								            left JOIN sys0038m STUS ON STUS.stus_code_id = cd.stus
 								            LEFT JOIN org0001d ac ON ac.mem_id = hs.ACTN_MEM_ID
 								            LEFT JOIN sys0005m br ON br.brnch_id = ac.brnch
-								            LEFT JOIN org0005d og ON og.MEM_ID = CD.MEM_ID
+								            LEFT JOIN org0005d og ON og.DEPT_CODE = mg.CODY_MANGR_USER_ID
 								            LEFT JOIN sys0005m IBRNCH ON IBRNCH.CODE = MG.CODY_BRNCH_CODE
 								                                             WHERE HS.YEAR = TO_CHAR(to_date(#{myBSMonth} ,'MM/YYYY'),'YYYY')
 								                                                 AND HS.MONTH = TO_CHAR(to_date(#{myBSMonth},'MM/YYYY'),'MM')
