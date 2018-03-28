@@ -66,7 +66,9 @@
                                      RCIV_ISSU_STORG_LOC,
                                      QTY
                                  FROM LOG0060D
-                                 WHERE DOC_POSTNG_DT BETWEEN '20180101' AND '20180228' AND AUTO_CRT_ITM = 'M' ),
+                                 WHERE DOC_POSTNG_DT BETWEEN TO_CHAR(ADD_MONTHS((LAST_DAY(SYSDATE)+1),-1), 'YYYYMMDD')
+                                 AND TO_CHAR(LAST_DAY(SYSDATE), 'YYYYMMDD')
+                                 AND AUTO_CRT_ITM = 'M' ),
                                  SYS0026M s26
                                  WHERE s26.STK_CODE = MATRL_NO (+)
                                  GROUP BY locate, STK_CODE, STK_DESC, STK_TYPE_ID, STK_CTGRY_ID, UOM
@@ -126,7 +128,8 @@
                         RCIV_ISSU_STORG_LOC,
                         QTY
                     FROM LOG0060D
-                    WHERE DOC_POSTNG_DT BETWEEN '20180101' AND '20180228' AND AUTO_CRT_ITM = 'A'
+                    WHERE DOC_POSTNG_DT BETWEEN TO_CHAR(ADD_MONTHS((LAST_DAY(SYSDATE)+1),-1), 'YYYYMMDD')
+                    AND TO_CHAR(LAST_DAY(SYSDATE), 'YYYYMMDD') AND AUTO_CRT_ITM = 'A'
                     AND INVNTRY_MOV_TYPE IN ('UM93', 'UM03', 'UM94', 'UM04') ),
                     SYS0026M s26
                     WHERE s26.STK_CODE = MATRL_NO
@@ -166,7 +169,9 @@
                         RCIV_ISSU_STORG_LOC,
                         QTY
                     FROM LOG0060D
-                    WHERE DOC_POSTNG_DT BETWEEN '20180101' AND '20180228' AND AUTO_CRT_ITM = 'M'
+                    WHERE DOC_POSTNG_DT BETWEEN TO_CHAR(ADD_MONTHS((LAST_DAY(SYSDATE)+1),-1), 'YYYYMMDD')
+                    AND TO_CHAR(LAST_DAY(SYSDATE), 'YYYYMMDD')
+                    AND AUTO_CRT_ITM = 'M'
                     AND INVNTRY_MOV_TYPE IN ('UM05', 'UM95', 'UM06', 'UM96') ),
                     SYS0026M s26
                     WHERE s26.STK_CODE = MATRL_NO
@@ -206,7 +211,9 @@
                         RCIV_ISSU_STORG_LOC,
                         QTY
                     FROM LOG0060D
-                    WHERE DOC_POSTNG_DT BETWEEN '20180101' AND '20180228' AND AUTO_CRT_ITM = 'A'
+                    WHERE DOC_POSTNG_DT BETWEEN TO_CHAR(ADD_MONTHS((LAST_DAY(SYSDATE)+1),-1), 'YYYYMMDD')
+                    AND TO_CHAR(LAST_DAY(SYSDATE), 'YYYYMMDD')
+                    AND AUTO_CRT_ITM = 'A'
                     AND INVNTRY_MOV_TYPE IN ('US03', 'US93', 'US04', 'US94')  ),
                     SYS0026M s26
                     WHERE s26.STK_CODE = MATRL_NO
@@ -248,7 +255,9 @@
                         RCIV_ISSU_STORG_LOC,
                         QTY
                     FROM LOG0060D
-                    WHERE DOC_POSTNG_DT BETWEEN '20180101' AND '20180228' AND AUTO_CRT_ITM = 'M'
+                    WHERE DOC_POSTNG_DT BETWEEN TO_CHAR(ADD_MONTHS((LAST_DAY(SYSDATE)+1),-1), 'YYYYMMDD')
+                    AND TO_CHAR(LAST_DAY(SYSDATE), 'YYYYMMDD')
+                    AND AUTO_CRT_ITM = 'M'
                     AND INVNTRY_MOV_TYPE IN ('US05', 'US95', 'US06', 'US96') ),
                     SYS0026M s26
                     WHERE s26.STK_CODE = MATRL_NO
@@ -263,6 +272,42 @@
                              AND type.CODE_ID = t1.STK_TYPE_ID
                              AND ctgry.CODE_ID = t1.STK_CTGRY_ID
                              AND um.CODE_ID = t1.UOM
+
+        <if test="loctype !=null and loctype !=''">
+            AND s28m.WH_LOC_GB IN
+            <foreach item="item" collection="loctype" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="locgrade !=null and locgrade !=''">
+            AND s28m.WH_LOC_STK_GRAD = #{locgrade}
+        </if>
+
+        <if test="locname !=null and locname !=''">
+            AND s28m.WH_LOC_CODE IN
+             <foreach item="item" collection="locname" index="index" open="(" separator="," close=")">
+                #{item}
+             </foreach>
+        </if>
+
+        <if test="materialcode !=null and materialcode !=''">
+            AND STK_CODE = #{materialcode}
+        </if>
+
+        <if test="smattype !=null and smattype !=''">
+            AND t1.STK_TYPE_ID IN
+            <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
+
+        <if test="smatcate !=null and smatcate !=''">
+            AND t1.STK_CTGRY_ID IN
+            <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
+                #{item}
+            </foreach>
+        </if>
                   GROUP BY LOCATE, STK_CODE, STK_DESC, s28m.WH_LOC_DESC,
                                   TYPE.CODE_NAME, ctgry.CODE_NAME, um.CODE_NAME,
                                   s28m.WH_LOC_CODE
@@ -291,41 +336,7 @@
 
         WHERE l88.ZMONTH = #{basedt}
 
-        <if test="loctype !=null and loctype !=''">
-            AND s28.WH_LOC_GB IN
-            <foreach item="item" collection="loctype" index="index" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
 
-        <if test="locgrade !=null and locgrade !=''">
-            AND s28.WH_LOC_STK_GRAD = #{locgrade}
-        </if>
-
-        <if test="locname !=null and locname !=''">
-            AND s28.WH_LOC_CODE IN
-             <foreach item="item" collection="locname" index="index" open="(" separator="," close=")">
-                #{item}
-             </foreach>
-        </if>
-
-        <if test="materialcode !=null and materialcode !=''">
-            AND l88.STK_CODE = #{materialcode}
-        </if>
-
-        <if test="smattype !=null and smattype !=''">
-            AND s26.STK_TYPE_ID IN
-            <foreach item="item" collection="smattype" index="index" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
-
-        <if test="smatcate !=null and smatcate !=''">
-            AND s26.STK_CTGRY_ID IN
-            <foreach item="item" collection="smatcate" index="index" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </if>
 
         GROUP BY s28.WH_LOC_CODE,
 				         s28.WH_LOC_DESC,
