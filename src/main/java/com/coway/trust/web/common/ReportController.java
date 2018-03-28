@@ -108,17 +108,12 @@ public class ReportController {
 			ReportClientDocument clientDoc = new ReportClientDocument();
 			clientDoc.setReportAppServer(ra.getReportAppServer());
 			clientDoc.open(reportName, OpenReportOptions._openAsReadOnly);
-
-			
-			ArrayList<String> plist = new ArrayList<String>(); 
-			plist.add("/services/BSFilterReplacement.rpt");
-			plist.add("/services/BSReport_ByBSNo.rpt");
-			
-			LOGGER.debug(" reportName  ================================> ]"+reportName +"]["+plist.contains(reportFile));
+	
+			LOGGER.debug(" reportName  ================================> ]"+reportName +"]["+this.getRList().contains(reportFile));
 			LOGGER.debug(" open reportUserName]"+reportUserName +"]reportPassword["+reportPassword+"]");
 			
 			
-			if(plist.contains(reportFile)){
+			if(this.getRList().contains(reportFile)){
 				 reportUserName ="GBSLCVAPL1";  
 				 reportPassword = "GBSLCVD#2017#";
 			}
@@ -188,14 +183,10 @@ public class ReportController {
 					String userName = reportUserName;
 					String password = reportPassword;
 					
-					ArrayList<String> plist = new ArrayList<String>(); 
-					plist.add("/services/BSFilterReplacement.rpt");
-					plist.add("/services/BSReport_ByBSNo.rpt");
-					
 					LOGGER.debug(" reportName  ================================> "+reportName);
 					
 					
-					if(plist.contains(reportName)){
+					if(this.getRList().contains(reportName)){
 						 connectString = "jdbc:oracle:thin:@10.201.32.216:1521:gbslcvd";
 						 driverName = "oracle.jdbc.OracleDriver";
 						 jndiName = "";
@@ -287,5 +278,28 @@ public class ReportController {
 		void export(ReportClientDocument clientDoc, HttpServletResponse response, boolean attachment,
 				String downFileName) throws ReportSDKExceptionBase, IOException;
 	}
+	
+	
+	/**
+	 * 임시적으로 리포트 db변경 파일 리스트 
+	 * @author hamhg
+	 * @return getRList  임시 리포트 파일리스트 
+	 */
+	public ArrayList<String>  getRList(){
+		
+		ArrayList<String> list = new ArrayList<String>();
+		list.add("/services/BSFilterReplacement.rpt");
+		list.add("/services/BSReport_ByBSNo.rpt");
+		
+		list.add("/services/ASRawData.rpt");
+		list.add("/services/InstallationRawData_Excel.rpt");
+		list.add("/services/BSSummaryList.rpt");
+		list.add("/sales/RentPaySetLastUpdateList.rpt");
+		list.add("/sales/CowayDailySalesStatusHP_Adv.rpt");
+		
+		
+		return list;
+		
+	} 
 	
 }
