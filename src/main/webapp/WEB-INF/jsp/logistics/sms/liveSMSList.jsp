@@ -131,10 +131,10 @@ var columnLayout = [
 
 	    if(valid != false && msg != ""){
 		    for(i = 0; i < recipients.length; i ++){
-		        /* Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:recipients[i] , msg :msg} , function(result) {
-		            console.log("sms.");
-		            console.log( result);
-		            }); */
+		        Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:recipients[i] , msg :msg} , function(result) {
+		           console.log("sms.");
+		           console.log( result);
+		        });
 		    }
 
 		    Common.alert("SMS has successfully added into SMS queue list.<br />" ,function (){
