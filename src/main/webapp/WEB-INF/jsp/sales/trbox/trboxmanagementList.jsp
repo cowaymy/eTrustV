@@ -7,6 +7,7 @@
     var listGrid;
     var viewGrid;
     var keepGrid;
+    var addTRGrid;
     var statusList = [{"codeId": "1","codeName": "Active"},{"codeId": "36","codeName": "Closed"}];
  // AUIGrid 칼럼 설정                                                                            visible : false
     var columnLayout = [{dataField:"rnum"      ,headerText:'<spring:message code="sal.title.text.rownum" />'     ,width:50    ,height:30 , visible:false},
@@ -60,14 +61,40 @@
                            }
                           ];
 
+    var addTRculomnlayout = [
+                            {dataField:"trbookid"     ,headerText:'Book ID'    ,width:100   ,height:30 , visible:false},
+                            {dataField:"trbookno"     ,headerText:'Book No'     ,width:100 ,height:30 , visible:true},
+                            {dataField:"trprefixno"     ,headerText:'Prefix No'     ,width:100 ,height:30 , visible:true},
+                            {dataField:"receiptnofrom" ,headerText:'From'        ,width:100 ,height:30 , visible:true},
+                            {dataField:"receiptnoto" ,headerText:'To'          ,width:100 ,height:30 , visible:true},
+                            {dataField:"trbookpage"     ,headerText:'Total Sheet(s)'     ,width:100 ,height:30 , visible:true},
+                            {dataField:"statuscode"     ,headerText:'Status'   ,width:100 ,height:30 ,visible:true},
+                            {dataField:"trholder"     ,headerText:'Holder'   ,width:100 ,height:30 ,visible:true},
+                            {
+                                dataField : "undefined",
+                                headerText : " ",
+                                renderer : {
+                                    type : "ButtonRenderer",
+                                    labelText : "Add",
+                                    onclick : function(rowIndex, columnIndex, value, item) {
+                                        getKeepInsertAjax(rowIndex , item);
+                                    }
+                                }
+                            }
+                           ];
+
     var gridoptions = {showStateColumn : true , editable : false, pageRowCount : 20, usePaging : true, useGroupingPanel : false };
 
     $(document).ready(function(){
     	listGrid = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
         viewGrid = GridCommon.createAUIGrid("view_grid_wrap", subculomnlayout,"", gridoptions);
         keepGrid = GridCommon.createAUIGrid("keep_grid_wrap", keepculomnlayout,"", gridoptions);
+        addTRGrid = GridCommon.createAUIGrid("addTR_grid_wrap", addTRculomnlayout,"", gridoptions);
+        //AUIGrid.resize(addTRGrid,945, $(".grid_wrap").innerHeight());
+        AUIGrid.resize(addTRGrid,1000, 300 );
         $("#popup_wrap").hide();
         $("#keep_popup_wrap").hide();
+        $("#addTR_popup_wrap").hide();
     	doGetComboSepa('/common/selectBranchCodeList.do', '9' , ' - ' , '','branchid', 'S' , '');
     	//doGetComboSepa('/misc/TRBox/selectTransferCodeList.do', 'branch' , ' - ' , '','branchid', 'S' , '');
         doDefCombo(statusList, '1' ,'status', 'M', 'f_multiCombo');
@@ -141,6 +168,36 @@
             Common.alert('<spring:message code="sal.alert.msg.successfullyRemoved" arguments="'+itm.trbno+'"/>');
             AUIGrid.removeRow(keepGrid, "selectedIndex");
             AUIGrid.removeSoftRows(keepGrid);
+        });
+    }
+
+    function getKeepInsertAjax(row , itm){
+    	var selectedItems = AUIGrid.getSelectedItems(addTRGrid);
+        var itm = selectedItems[0].item;
+        if (itm.statuscode == "ACT")
+        {
+        	Common.alert("* This book is not close yet. Book keeping is disallowed. ");
+            return;
+        }
+        var url = "/misc/TRBox/KeepAddTRBookInsert.do";
+        console.log(itm);
+        var param = "trboxid="+$("#ksboxid").val()+"&trbookid="+itm.trbookid;
+        //var param2 = "trbookid="+itm.trbookid;
+
+        Common.ajax("GET" , url , param , function(data){
+            Common.alert("[" + itm.trbookno + "] successfully added into the box.");
+            //Common.alert('<spring:message code="sal.alert.msg.successfullyRemoved" arguments="'+itm.trbno+'"/>');
+            AUIGrid.removeRow(addTRGrid, "selectedIndex");
+            AUIGrid.removeSoftRows(addTRGrid);
+        });
+    }
+
+    function getUnkeepTRBookSearchListAjax(){
+        var url = "/misc/TRBox/getSearchUnkeepTRBookList.do";
+        var param = $('#addTRForm').serialize();
+        Common.ajax("GET" , url , param , function(data){
+            AUIGrid.setGridData(addTRGrid, data.data);
+
         });
     }
 
@@ -259,6 +316,11 @@
 	    $("#filterBtn").click(function(){
             $("#filter_popup_wrap").show();
         });
+
+	    $("#addBtn").click(function(){
+            $("#addTR_popup_wrap").show();
+        });
+
 	    $("#showallBtn").click(function(){
 	    	var url = "/misc/TRBox/getSelectTrboxManageDetailList.do";
             //
@@ -409,6 +471,17 @@
             	$("#tranSaveBtn").hide();
             });
 	    });
+
+	    $("#addTRBtnsrch").click(function(){
+	    	getUnkeepTRBookSearchListAjax();
+        });
+
+	    $("#addTRClose").click(function(){
+            $("#addTR_popup_wrap").hide();
+            $("#addTRbookno").text('');
+            $("#addTRreceiptNo").text('');
+            AUIGrid.setGridData(addTRGrid, []);
+        });
 
     });
 
@@ -692,6 +765,9 @@
         <h2><spring:message code="sal.title.text.booksInBox" /></h2>
         </aside><!-- title_line end -->
 
+        <ul class="left_btns">
+            <li><p class="btn_blue2"><a id="addBtn">Add Book</a></p></li>
+        </ul>
         <article class="grid_wrap"><!-- grid_wrap start -->
             <div id="keep_grid_wrap" style="height:230px"></div>
         </article><!-- grid_wrap end -->
@@ -717,6 +793,7 @@
 		<section class="pop_body"><!-- pop_body start -->
 		<form id="filterForm" name="filterForm">
 		<input type="hidden" id="ksboxid" name="ksboxid" />
+		<input type="hidden" id="trbookid" name="trbookid" />
 		<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
@@ -752,6 +829,67 @@
 		</section><!-- pop_body end -->
 
 	</div><!-- popup_wrap end -->
+
+	<div id="addTR_popup_wrap" class="popup_wrap" style="display:none;"><!-- popup_wrap start -->
+
+        <header class="pop_header"><!-- pop_header start -->
+        <h1>Add Book Into Box</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a id="addTRClose"><spring:message code="sal.btn.close" /></a></p></li>
+        </ul>
+        </header><!-- pop_header end -->
+
+        <section class="pop_body"><!-- pop_body start -->
+        <form id="addTRForm" name="addTRForm">
+        <input type="hidden" id="ksboxid" name="ksboxid" />
+        <table class="type1"><!-- table start -->
+        <caption>table</caption>
+        <colgroup>
+            <col style="width:110px" />
+            <col style="width:*" />
+            <col style="width:110px" />
+            <col style="width:*" />
+            <col style="width:110px" />
+            <col style="width:*" />
+        </colgroup>
+        <tbody>
+        <tr>
+            <th scope="row"><spring:message code="sal.text.bookNo" /></th>
+            <td>
+            <input type="text" title="" id="addTRbookno" name="addTRbookno" placeholder="" class="w100p" />
+            </td>
+            <th scope="row"><spring:message code="sal.title.receiptNo" /></th>
+            <td>
+            <input type="text" title="" id="addTRreceiptNo" name="addTRreceiptNo" placeholder="" class="w100p" />
+            </td>
+            <th scope="row">Book Status</th>
+            <td>
+               <select class="w100p" id="status" name="status" >
+                   <option value="1">Active</option>
+                   <option value="36">Closed</option>
+                   <option value="68">Closed With Lost </option>
+               </select>
+            </td>
+        </tr>
+        </tbody>
+        </table><!-- table end -->
+
+        </form>
+
+        <ul class="right_btns">
+            <li><p class="btn_blue2 big"><a id="addTRBtnsrch"><spring:message code="sal.btn.search" /></a></p></li>
+            <li><p class="btn_blue2 big"><a id="addTRBtnclr"><spring:message code="sal.btn.clear" /></a></p></li>
+        </ul>
+
+        <article class="grid_wrap"><!-- grid_wrap start -->
+            <div id="addTR_grid_wrap" style="height:300px"></div>
+        </article><!-- grid_wrap end -->
+
+
+        </section><!-- pop_body end -->
+
+    </div><!-- popup_wrap end -->
+
 	<div id="close_popup_wrap" class="popup_wrap" style="display:none"><!-- popup_wrap start -->
 
 		<header class="pop_header"><!-- pop_header start -->
