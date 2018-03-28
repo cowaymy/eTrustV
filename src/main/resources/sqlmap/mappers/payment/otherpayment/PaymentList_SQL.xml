@@ -3,7 +3,7 @@
 <mapper namespace="com.coway.trust.biz.payment.otherpayment.service.impl.PaymentListMapper">
     
     <select id="selectGroupPaymentList" parameterType="Map" resultType="egovMap">
-        SELECT
+        SELECT  /*+ leading(E F) */ 
             A.GROUP_SEQ,
             (CASE 
                 WHEN A.LDGR_TYPE = 1 THEN 'RENTAL'
@@ -93,7 +93,7 @@
     </select>
     
     <select id="selectPaymentListByGroupSeq" parameterType="Map" resultType="egovMap">
-        SELECT
+        SELECT  /*+ leading(E F) */ 
             A.GROUP_SEQ,
             (CASE 
                 WHEN A.LDGR_TYPE = 1 THEN 'RENTAL'
@@ -156,7 +156,7 @@
     </select>
     
     <select id="selectRequestDCFByGroupSeq" parameterType="Map" resultType="egovMap">
-        SELECT
+        SELECT   /*+ leading(E F) */ 
             A.GROUP_SEQ,
             (CASE 
                 WHEN A.LDGR_TYPE = 1 THEN 'RENTAL'
@@ -324,7 +324,7 @@
     
     
     <select id="selectFTOldData" parameterType="Map" resultType="egovMap">
-        SELECT
+        SELECT  /*+ leading(E F) */ 
             A.GROUP_SEQ,
             (CASE 
                 WHEN A.LDGR_TYPE = 1 THEN 'RENTAL'
