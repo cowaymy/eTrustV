@@ -48,6 +48,8 @@ public class InterfaceManagementServiceImpl implements InterfaceManagementServic
     			map.put("crtUserId", loginId);
 
     			interfaceManagementMapper.insertInterfaceManagementList(map);
+
+    			interfaceManagementMapper.insertInterfaceItfKey(map);
     		}
 
     		for (Object list : updateList){

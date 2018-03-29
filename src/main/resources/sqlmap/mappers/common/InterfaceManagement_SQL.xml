@@ -54,6 +54,21 @@
 	)
 </insert>
 
+<insert id="insertInterfaceItfKey" parameterType="Map">
+	INSERT INTO ITF0002S
+	(
+	    IF_TYPE
+	    , IF_KEY
+	    , IF_DATE
+	)
+	VALUES
+	(
+	    #{ifType}
+	    , #{ifType}||TO_CHAR(SYSDATE,'YYMMDD')||'_0000000'
+	    , TO_CHAR(SYSDATE,'YYMMDD')
+	)
+</insert>
+
 <update id="updateInterfaceManagementList" parameterType="Map">
 	UPDATE ITF0001M
 	     SET if_type_nm = #{ifTypeNm}

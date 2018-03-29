@@ -14,16 +14,27 @@ var grdIfKey = "";
 /****************************Transaction Start********************************/
 
 function fn_searchKeyPop(){
-   var selectedRow = AUIGrid.getSelectedItems(grdIfDtm);
 
+   var selectedMasterRow = AUIGrid.getSelectedItems(grdIf);
+
+   var changeDate = "";
+   var param = "";
+
+   changeDate = $("#searchDate").val().replace("/","");
+   changeDate = changeDate.substring(2,8) + changeDate.substring(0,2) ;
+
+   if(selectedMasterRow[0].item.ifType == "110" || selectedMasterRow[0].item.ifType == "771"){
+       param = "searchDate="+changeDate+"&ifType="+selectedMasterRow[0].item.ifType+"&tranStatusCd="+$("#tranStatusCd").val();
+   }else{
+	   var selectedRow = AUIGrid.getSelectedItems(grdIfDtm);
+	   param = "searchDate="+changeDate+"&searchParam="+selectedRow[0].item.bizCol+"&ifType="+selectedMasterRow[0].item.ifType+"&tranStatusCd="+$("#tranStatusCd").val();
+   }
    Common.ajax(
            "GET",
 
            "/common/selectInterfaceMonitoringKeyList.do",
 
-           "fromTable=GBSLCVD.ITF0001D_TEMP&toTable=ZCOMT_IF000"+
-           "&selectDate="+selectedRow[0].item.rgstDt.replace(/-/g,"")+
-           "&ifType="+selectedRow[0].item.ifType,
+           param,
 
            function(data, textStatus, jqXHR){ // Success
                AUIGrid.clearGridData(grdIfKey);
@@ -38,270 +49,68 @@ function fn_searchKeyPop(){
 /****************************Transaction End********************************/
 /**************************** Grid setting Start ********************************/
 var gridIfKeyColumnLayout =
-    [
-     /* PK , rowid 용 칼럼*/
-     {
-         dataField : "rowId",
-         dataType : "string",
-          visible : false
-     },
-     {
-         dataField : "ifType",
-         headerText : "IF TYPE",
-         width:"7%",
-         editRenderer : {
-             type : "InputEditRenderer",
-
-             // 에디팅 유효성 검사
-             validator : function(oldValue, newValue, item, dataField) {
-                 var isValid = false;
-
-                 if(newValue.length <= 5) {
-                     isValid = true;
-                 }
-
-                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                 return { "validate" : isValid, "message"  : "The maximum of characters is 5 "};
-             }
-         }
-     },
-     {
-         dataField : "ifKey",
-         headerText : "IF KEY",
-         width:"18%",
-         editRenderer : {
-             type : "InputEditRenderer",
-
-             // 에디팅 유효성 검사
-             validator : function(oldValue, newValue, item, dataField) {
-                 var isValid = false;
-
-                 if(newValue.length <= 5) {
-                     isValid = true;
-                 }
-
-                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                 return { "validate" : isValid, "message"  : "The maximum of characters is 5 "};
-             }
-         }
-     },
-     {
-         dataField : "seq",
-         headerText : "SEQ",
-         width:"5%",
-         editRenderer : {
-             type : "InputEditRenderer",
-
-             // 에디팅 유효성 검사
-             validator : function(oldValue, newValue, item, dataField) {
-                 var isValid = false;
-
-                 if(newValue.length <= 5) {
-                     isValid = true;
-                 }
-
-                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                 return { "validate" : isValid, "message"  : "The maximum of characters is 5 "};
-             }
-         }
-     },
-     {
-         dataField : "rgstDt",
-         headerText : "Regist Date",
-         width:"20%",
-         editRenderer : {
-             type : "InputEditRenderer",
-
-             // 에디팅 유효성 검사
-             validator : function(oldValue, newValue, item, dataField) {
-                 var isValid = false;
-
-                 if(newValue.length <= 5) {
-                     isValid = true;
-                 }
-
-                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                 return { "validate" : isValid, "message"  : "The maximum of characters is 5 "};
-             }
-         }
-     },
-     {
-         dataField : "errCd",
-         headerText : "Error",
-         width:"7%",
-         editRenderer : {
-             type : "InputEditRenderer",
-
-             // 에디팅 유효성 검사
-             validator : function(oldValue, newValue, item, dataField) {
-                 var isValid = false;
-
-                 if(newValue.length <= 5) {
-                     isValid = true;
-                 }
-
-                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                 return { "validate" : isValid, "message"  : "The maximum of characters is 5 "};
-             }
-         }
-     },
-     {
-        dataField : "errMsg",
-        headerText : "Error Msg",
-        width : "20%",
-        style : "aui-grid-user-custom-left",
-        editRenderer : {
-            type : "InputEditRenderer",
-
-            // 에디팅 유효성 검사
-            validator : function(oldValue, newValue, item, dataField) {
-                var isValid = false;
-
-                if(newValue.length <= 200) {
-                    isValid = true;
-                }
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
-            }
-        }
-    },
-     {
-         dataField : "chkCol",
-         headerText : "Check Col",
-         width:"7%",
-         editRenderer : {
-             type : "InputEditRenderer",
-
-             // 에디팅 유효성 검사
-             validator : function(oldValue, newValue, item, dataField) {
-                 var isValid = false;
-
-                 if(newValue.length <= 5) {
-                     isValid = true;
-                 }
-
-                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                 return { "validate" : isValid, "message"  : "The maximum of characters is 5 "};
-             }
-         }
-     },
-    {
-       dataField : "tranStatusCd",
-       headerText : "Status",
-       width : "8%",
-       editRenderer : {
-           type : "InputEditRenderer",
-
-           // 에디팅 유효성 검사
-           validator : function(oldValue, newValue, item, dataField) {
-               var isValid = false;
-
-               if(newValue.length <= 30) {
-                   isValid = true;
-               }
-               // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-               return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
-           }
-       }
-   },
-   {
-      dataField : "tranStatusNm",
-      headerText : "Status Name",
-      width : "12%",
-      style : "aui-grid-user-custom-left",
-      editRenderer : {
-          type : "InputEditRenderer",
-
-          // 에디팅 유효성 검사
-          validator : function(oldValue, newValue, item, dataField) {
-              var isValid = false;
-
-              if(newValue.length <= 30) {
-                  isValid = true;
-              }
-              // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-              return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
-          }
-      }
-  },
-   {
-      dataField : "sndChkVal",
-      headerText : "Send Check Value",
-      width : "15%",
-      style : "aui-grid-user-custom-right",
-      editRenderer : {
-          type : "InputEditRenderer",
-
-          // 에디팅 유효성 검사
-          validator : function(oldValue, newValue, item, dataField) {
-              var isValid = false;
-
-              if(newValue.length <= 30) {
-                  isValid = true;
-              }
-              // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-              return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
-          }
-      }
-    },
-    {
-        dataField : "rcvChkVal",
-        headerText : "Receive Check Value",
-        width : "15%",
-        style : "aui-grid-user-custom-right",
-        editRenderer : {
-            type : "InputEditRenderer",
-
-            // 에디팅 유효성 검사
-            validator : function(oldValue, newValue, item, dataField) {
-                var isValid = false;
-
-                if(newValue.length <= 30) {
-                    isValid = true;
-                }
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
-            }
-        }
-      },
-    {
-        dataField : "bizCol",
-        headerText : "BIZ Column",
-        width : "10%",
-        editRenderer : {
-            type : "InputEditRenderer",
-
-            // 에디팅 유효성 검사
-            validator : function(oldValue, newValue, item, dataField) {
-                var isValid = false;
-
-                if(newValue.length <= 30) {
-                    isValid = true;
-                }
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : "The maximum of characters is 30 "};
-            }
-        }
-    },
-    {
-        dataField : "bizVal",
-        headerText : "Biz Value",
-        style : "aui-grid-user-custom-right",
-        editRenderer : {
-            type : "InputEditRenderer",
-
-            // 에디팅 유효성 검사
-            validator : function(oldValue, newValue, item, dataField) {
-                var isValid = false;
-
-                if(newValue.length <= 100) {
-                    isValid = true;
-                }
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : "The maximum of characters is 100 "};
-            }
-        }
-    }
+[
+ /* PK , rowid 용 칼럼*/
+ {
+     dataField : "rowId",
+     dataType : "string",
+     visible : false
+ },
+ {
+     dataField : "ifType",
+     headerText : "IF Type",
+     width:"5%"
+ },
+ {
+     dataField : "ifTypeNm",
+     headerText : "IF Type Name",
+     style : "aui-grid-user-custom-left",
+     width:"12%"
+ },
+ {
+     dataField : "rgstDt",
+     headerText : "Regist Date",
+     width:"10%"
+ },
+ {
+     dataField : "tranStatusCd",
+     headerText : "Tran Status CD",
+     width:"5%"
+ },
+ {
+     dataField : "bizCol",
+     headerText : "Biz Col",
+     width:"10%"
+ },
+{
+    dataField : "sndChkCol",
+    headerText : "Send ChkCol",
+    width : "12%",
+    style : "aui-grid-user-custom-left"
+},
+{
+    dataField : "rcvChkCol",
+    headerText : "Receive ChkCol",
+    width : "12%",
+    style : "aui-grid-user-custom-left"
+},
+{
+    dataField : "chkCol",
+    headerText : "Check Col",
+    width:"10%"
+},
+{
+   dataField : "sndChkVal",
+   headerText : "Send Check Value",
+   width : "18%",
+   style : "aui-grid-user-custom-right"
+},
+{
+    dataField : "rcvChkVal",
+    headerText : "Receive Check Value",
+    width : "18%",
+    style : "aui-grid-user-custom-right"
+}
 ];
 
 //selectionMode (String) : 설정하고자 하는 selectionMode(유효값 : singleCell, singleRow, multipleCells, multipleRows, none)

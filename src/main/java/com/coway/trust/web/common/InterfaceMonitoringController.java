@@ -59,4 +59,10 @@ public class InterfaceMonitoringController {
 	public ResponseEntity<List<EgovMap>> selectCommonCodeStatusList(@RequestParam Map<String, Object> params, ModelMap model) {
 		return ResponseEntity.ok(interfaceMonitoringService.selectCommonCodeStatusList(params));
 	}
+
+	@RequestMapping(value = "/selectInterfaceTypeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectInterfaceTypeList(@RequestParam Map<String, Object> params, ModelMap model) {
+		return ResponseEntity.ok(interfaceMonitoringService.selectInterfaceTypeList(params));
+	}
+
 }

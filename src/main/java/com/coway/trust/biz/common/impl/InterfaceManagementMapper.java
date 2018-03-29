@@ -11,6 +11,8 @@ public interface InterfaceManagementMapper {
 
 	void insertInterfaceManagementList(Map<String, Object> params);
 
+	void insertInterfaceItfKey(Map<String, Object> params);
+
 	void updateInterfaceManagementList(Map<String, Object> params);
 
 	void deleteInterfaceManagementList(Map<String, Object> params);

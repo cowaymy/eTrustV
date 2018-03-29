@@ -83,12 +83,21 @@ function lpad(param, length, str) {
 /****************************Transaction Start********************************/
 
 function fn_search(){
+
+	var changeDate = "";
+	var param = "";
+
+    changeDate = $("#searchDate").val().replace("/","");
+    changeDate = changeDate.substring(2,8) + changeDate.substring(0,2) ;
+
+    param = "ifType="+$("#ifType").val()+"&tranStatusCd="+$("#tranStatusCd").val()+"&searchDate="+changeDate;
+
 	Common.ajax(
 		    "GET",
 		    "/common/selectInterfaceMonitoringList.do",
-		    $("#searchForm").serialize(),
+		    param,
 		    function(data, textStatus, jqXHR){ // Success
-		    	AUIGrid.clearGridData(grdIf);
+		    	//AUIGrid.clearGridData(grdIf);
 		    	AUIGrid.setGridData(grdIf, data);
 		    },
 		    function(jqXHR, textStatus, errorThrown){ // Error
@@ -145,6 +154,22 @@ function fn_commCodesearch(){
             }
     )
 };
+
+function fn_commItfTypeSearch(){
+    Common.ajax(
+            "GET",
+            "/common/selectInterfaceTypeList.do",
+            $("#searchForm").serialize(),
+            function(data, textStatus, jqXHR){ // Success
+                 for(var idx = 0 ; idx < data.length ; idx++){
+                     $("#ifType").append("<option value='"+data[idx].ifType+"'>"+data[idx].ifTypeNm+"</option>");
+                 }
+            },
+            function(jqXHR, textStatus, errorThrown){ // Error
+                alert("Fail : " + jqXHR.responseJSON.message);
+            }
+    )
+};
 /****************************Transaction End**********************************/
 /**************************** Grid setting Start ********************************/
 
@@ -158,162 +183,44 @@ var gridIfColumnLayout =
 	 },
 	 {
          dataField : "ifType",
-         headerText : "IF TYPE",
-         width:"10%",
-         editRenderer : {
-             type : "InputEditRenderer",
-
-             // 에디팅 유효성 검사
-             validator : function(oldValue, newValue, item, dataField) {
-                 var isValid = false;
-
-                 if(newValue.length <= 5) {
-                     isValid = true;
-                 }
-
-                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                 return { "validate" : isValid, "message"  : "The maximum of characters is 5 "};
-             }
-         }
+         headerText : "IF Type",
+         width:"10%"
+     },
+     {
+         dataField : "ifTypeNm",
+         headerText : "IF Type Name",
+         style : "aui-grid-user-custom-left",
+         width:"10%"
      },
      {
          dataField : "chkCol",
          headerText : "Check Col",
-         width:"10%",
-         editRenderer : {
-             type : "InputEditRenderer",
-
-             // 에디팅 유효성 검사
-             validator : function(oldValue, newValue, item, dataField) {
-                 var isValid = false;
-
-                 if(newValue.length <= 5) {
-                     isValid = true;
-                 }
-
-                 // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                 return { "validate" : isValid, "message"  : "The maximum of characters is 5 "};
-             }
-         }
+         width:"10%"
      },
 	 {
         dataField : "sndCnt",
         headerText : "Send Cnt",
         width : "12%",
-        style : "aui-grid-user-custom-right",
-        editRenderer : {
-            type : "InputEditRenderer",
-
-            // 에디팅 유효성 검사
-            validator : function(oldValue, newValue, item, dataField) {
-                var isValid = false;
-
-                if(newValue.length <= 200) {
-                    isValid = true;
-                }
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
-            }
-        }
+        style : "aui-grid-user-custom-right"
 	},
     {
        dataField : "rcvCnt",
        headerText : "Receive Cnt",
        width : "12%",
-       style : "aui-grid-user-custom-right",
-       editRenderer : {
-           type : "InputEditRenderer",
-
-           // 에디팅 유효성 검사
-           validator : function(oldValue, newValue, item, dataField) {
-               var isValid = false;
-
-               if(newValue.length <= 30) {
-                   isValid = true;
-               }
-               // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-               return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
-           }
-       }
+       style : "aui-grid-user-custom-right"
    },
    {
       dataField : "sndChkVal",
       headerText : "Send Check Value",
       width : "18%",
-      style : "aui-grid-user-custom-right",
-      editRenderer : {
-          type : "InputEditRenderer",
-
-          // 에디팅 유효성 검사
-          validator : function(oldValue, newValue, item, dataField) {
-              var isValid = false;
-
-              if(newValue.length <= 30) {
-                  isValid = true;
-              }
-              // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-              return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
-          }
-      }
+      style : "aui-grid-user-custom-right"
     },
     {
         dataField : "rcvChkVal",
         headerText : "Receive Check Value",
         width : "18%",
-        style : "aui-grid-user-custom-right",
-        editRenderer : {
-            type : "InputEditRenderer",
-
-            // 에디팅 유효성 검사
-            validator : function(oldValue, newValue, item, dataField) {
-                var isValid = false;
-
-                if(newValue.length <= 30) {
-                    isValid = true;
-                }
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : "The maximum of characters is 200 "};
-            }
-        }
-      },
-    {
-        dataField : "bizCol",
-        headerText : "BIZ Column",
-        width : "10%",
-        editRenderer : {
-            type : "InputEditRenderer",
-
-            // 에디팅 유효성 검사
-            validator : function(oldValue, newValue, item, dataField) {
-                var isValid = false;
-
-                if(newValue.length <= 30) {
-                    isValid = true;
-                }
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : "The maximum of characters is 30 "};
-            }
-        }
-    },
-    {
-        dataField : "bizCnt",
-        headerText : "Biz Cnt",
-        style : "aui-grid-user-custom-right",
-        editRenderer : {
-            type : "InputEditRenderer",
-
-            // 에디팅 유효성 검사
-            validator : function(oldValue, newValue, item, dataField) {
-                var isValid = false;
-
-                if(newValue.length <= 100) {
-                    isValid = true;
-                }
-                // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-                return { "validate" : isValid, "message"  : "The maximum of characters is 100 "};
-            }
-        }
-    }
+        style : "aui-grid-user-custom-right"
+     }
 ];
 
 var detailOptions =
@@ -336,14 +243,26 @@ $(document).ready(function(){
 
     grdIf = GridCommon.createAUIGrid("grdIf", gridIfColumnLayout,"", detailOptions);
     AUIGrid.bind(grdIf, ["cellDoubleClick"], function(event) {
-    	var popUpObj = Common.popupDiv
-        (
-             "/common/interfaceMonitoringDtm.do"
-             , ""
-             , null
-             , "false"
-             , "interfaceMonitoringDtm"
-        );
+        if(event.item.ifType == "110" || event.item.ifType == "771"){
+            var popUpObj = Common.popupDiv
+            (
+                 "/common/interfaceMonitoringKey.do"
+                 , ""
+                 , null
+                 , "false"
+                 , "interfaceMonitoringKey"
+            );
+        }
+    	else {
+	    	var popUpObj = Common.popupDiv
+	        (
+	             "/common/interfaceMonitoringDtm.do"
+	             , ""
+	             , null
+	             , "false"
+	             , "interfaceMonitoringDtm"
+	        );
+    	}
     });
 
     AUIGrid.bind(grdIf, "ready", function(event) {
@@ -358,22 +277,20 @@ $(document).ready(function(){
     //AUIGrid.bind(grdIf, "headerClick", headerClickHandler);
 
     AUIGrid.clearGridData(grdIf);
-
+/*
     var currentFullDt = new Date();
-    currentFullDt.setMonth(currentFullDt.getMonth());
+    currentFullDt.setMonth(currentFullDt.getMonth()); */
     var beforeFullDt = new Date();
     beforeFullDt.setMonth(beforeFullDt.getMonth() - 1);
 
-    beforeFullDt.setDate(beforeFullDt.getDate() - 7);
+//    var currentDt = lpad(currentFullDt.getDate(),2,"0")+"/"+lpad(currentFullDt.getMonth()+1,2,"0")+"/"+currentFullDt.getFullYear();
+    var beforeDt = lpad(beforeFullDt.getMonth(),2,"0")+"/"+beforeFullDt.getFullYear();
 
-    var currentDt = lpad(currentFullDt.getDate(),2,"0")+"/"+lpad(currentFullDt.getMonth()+1,2,"0")+"/"+currentFullDt.getFullYear();
-    var beforeDt = lpad(beforeFullDt.getDate(),2,"0")+"/"+lpad(beforeFullDt.getMonth()+1,2,"0")+"/"+beforeFullDt.getFullYear();
-
-    $("#frDate").val(beforeDt);
-    $("#toDate").val(currentDt);
+    $("#searchDate").val(beforeDt);
+//    $("#toDate").val(currentDt);
     //공통코드 조회
     fn_commCodesearch();
-
+    fn_commItfTypeSearch();
 
 });
 /****************************Program Init End********************************/
@@ -425,7 +342,10 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Type</th>
     <td>
-    <input id="ifType" name="ifType" type="text" title="" value=""  placeholder="Type Code" class="" />
+<!--     <input id="ifType" name="ifType" type="text" title="" value=""  placeholder="Type Code" class="" /> -->
+    <select class="" style="width:130px;" id="ifType" name="ifType">
+        <option value="">- All -</option>
+    </select>
     </td>
     <th scope="row">Status</th>
     <td>
@@ -438,9 +358,10 @@ $(document).ready(function(){
     <th scope="row">Search Date</th>
     <td colspan="3">
 	    <div class="date_set"><!-- date_set start -->
-		    <p><input id="frDate" name="frDate" type="text" title="" placeholder="DD/MM/YYYY" class="j_date" readonly /></p>
-		    <span>~</span>
+		    <p><input id="searchDate" name="searchDate" type="text" title="" placeholder="MM/YYYY" class="j_date2" readonly /></p>
+		    <!--<span>~</span>
 		    <p><input id="toDate" name="toDate"  type="text" title="" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
+		     -->
 	    </div><!-- date_set end -->
     </td>
 </tr>

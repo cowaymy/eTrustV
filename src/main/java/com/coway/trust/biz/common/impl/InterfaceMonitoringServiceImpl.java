@@ -30,4 +30,9 @@ public class InterfaceMonitoringServiceImpl implements InterfaceMonitoringServic
 	public List<EgovMap> selectCommonCodeStatusList(Map<String, Object> params) {
 		return interfaceMonitoringMapper.selectCommonCodeStatusList(params);
 	}
+
+	@Override
+	public List<EgovMap> selectInterfaceTypeList(Map<String, Object> params) {
+		return interfaceMonitoringMapper.selectInterfaceTypeList(params);
+	}
 }

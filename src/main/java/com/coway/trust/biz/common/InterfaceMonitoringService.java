@@ -13,4 +13,7 @@ public interface InterfaceMonitoringService {
 	List<EgovMap> selectInterfaceMonitoringKeyList(Map<String, Object> params);
 
 	List<EgovMap> selectCommonCodeStatusList(Map<String, Object> params);
+
+	List<EgovMap> selectInterfaceTypeList(Map<String, Object> params);
+
 }
