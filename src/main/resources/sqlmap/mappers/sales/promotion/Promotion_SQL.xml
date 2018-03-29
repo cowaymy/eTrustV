@@ -72,7 +72,7 @@
              , PROMO_UPD_USER_ID = #{promoUpdUserId}
          WHERE PROMO_ID = #{promoId}
     </update>
-    
+
     <select id="selectMembershipPkg" parameterType="Map" resultType="egovMap">
 		SELECT CODE_ID
 		     , CODE_NAME
@@ -147,7 +147,7 @@
 		     )
 		 ORDER BY CODE_ID
     </select>
-    
+
     <select id="selectPriceInfo" parameterType="Map" resultType="egovMap">
         SELECT T1.PRC_ID
              , T1.MEM_PAC_ID
@@ -176,7 +176,7 @@
            AND T1.STUS_CODE_ID = 1
            AND ROWNUM = 1
     </select>
-    
+
     <select id="selectRentMemPriceInfo" parameterType="Map" resultType="egovMap">
         SELECT T1.SRV_PAC_ITM_ID
              , T1.SRV_CNTRCT_PAC_ID
@@ -217,7 +217,7 @@
 		   AND T1.SRV_MEM_ITM_STUS_ID = 1
 		   AND ROWNUM = 1
     </select>
-    
+
     <select id="selectFilterPriceInfo" parameterType="Map" resultType="egovMap">
         SELECT T1.PRC_ID
              , T1.MEM_PAC_ID
@@ -247,13 +247,13 @@
            AND T1.STUS_CODE_ID = 1
            AND ROWNUM = 1
     </select>
-    
+
     <insert id="insertSalesPromoM" parameterType="salesPromoMVO">
       <selectKey keyProperty="promoId" resultType="Integer" order="BEFORE">
         SELECT SAL0017D_PROMO_ID_SEQ.NEXTVAL FROM DUAL
       </selectKey>
         INSERT
-          INTO SAL0017D 
+          INTO SAL0017D
              ( PROMO_ID
              , PROMO_MTCH_ID
              , PROMO_CODE
@@ -336,7 +336,7 @@
              , UPD_USER_ID
              , UPD_DT
              , PROMO_ITM_PV_GST
-             ) 
+             )
         VALUES
              ( #{promoItmId}
              , #{promoId}
@@ -353,7 +353,7 @@
              , #{promoItmPvGst}
              )
     </insert>
-    
+
     <insert id="insertSalesPromoFreeGift" parameterType="salesPromoFreeGiftVO">
       <selectKey keyProperty="promoFreeGiftId" resultType="Integer" order="BEFORE">
         SELECT SAL0019D_FREE_GIFT_ID_SEQ.NEXTVAL FROM DUAL
@@ -380,7 +380,7 @@
              , SYSDATE
              , #{promoFreeGiftQty})
     </insert>
-     
+
     <select id="selectPromotionDetail" parameterType="Map" resultType="egovMap">
         SELECT T1.PROMO_ID
              , T1.PROMO_MTCH_ID
@@ -495,7 +495,7 @@
            AND T1.PROMO_ITM_STUS_ID = 1
          ORDER BY PROMO_ITM_ID ASC
     </select>
-    
+
     <select id="selectOutMemPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
         SELECT T1.PROMO_ITM_ID
              , T1.PROMO_ID
@@ -525,7 +525,7 @@
            AND T1.PROMO_ITM_STUS_ID = 1
          ORDER BY PROMO_ITM_ID ASC
     </select>
-    
+
     <select id="selectFilterPromotionPrdWithPriceList" parameterType="Map" resultType="egovMap">
         SELECT T1.PROMO_ITM_ID
              , T1.PROMO_ID
@@ -577,10 +577,11 @@
          WHERE T1.PROMO_FREE_GIFT_PROMO_ID = #{promoId}
            AND T1.PROMO_FREE_GIFT_STUS_ID = 1
     </select>
-    
+
     <update id="updateSalesPromoM" parameterType="salesPromoMVO">
         UPDATE SAL0017D
            SET PROMO_DESC              = #{promoDesc}
+             , PROMO_SRV_MEM_PAC_ID        = #{promoSrvMemPacId}
              , PROMO_DT_FROM           = TO_DATE(#{promoDtFrom}, 'YYYY-MM-DD')
              , PROMO_DT_END            = TO_DATE(#{promoDtEnd}, 'YYYY-MM-DD')
              , PROMO_UPD_DT            = SYSDATE
@@ -602,7 +603,7 @@
              , MEGA_DEAL               = #{megaDeal}
          WHERE PROMO_ID                = #{promoId}
     </update>
-    
+
     <update id="updateSalesPromoD" parameterType="salesPromoDVO">
         UPDATE SAL0018D
            SET PROMO_ITM_PV          = #{promoItmPv}
@@ -611,7 +612,7 @@
              , PROMO_ITM_UPD_DT      = SYSDATE
          WHERE PROMO_ITM_ID          = #{promoItmId}
     </update>
-    
+
     <update id="updateSalesPromoFreeGift" parameterType="salesPromoFreeGiftVO">
         UPDATE SAL0019D
            SET PROMO_FREE_GIFT_STUS_ID = #{promoFreeGiftStusId}
@@ -713,7 +714,7 @@
        </if>
        <if test="sname != null and sname !=''">
            AND itemname LIKE '%'|| #{sname} ||'%'
-       </if>                
+       </if>
        <if test="cateid != null and cateid !=''">
            AND cateid =  #{cateid}
        </if>
@@ -722,7 +723,7 @@
        </if>
          ORDER BY itemname ASC
     </select>
-    
+
     <!--Free Gift 정보 조회 -->
     <select id="selectFreeGiftCodeList" parameterType="Map" resultType="egovMap">
         SELECT itemid
@@ -760,7 +761,7 @@
        </if>
        <if test="sname != null and sname !=''">
            AND itemname LIKE '%'|| #{sname} ||'%'
-       </if>                
+       </if>
        <if test="cateid != null and cateid !=''">
            AND cateid =  #{cateid}
        </if>
