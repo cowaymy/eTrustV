@@ -170,6 +170,19 @@ function fn_roleCodesearch(roleLev,parentRole){
 	    )
 };
 
+function fn_openMemberPopup(){
+	var popUpObj = Common.popupDiv
+	(
+	     "/common/userManagement/memberCodePop.do"
+	     , ""
+	     , null
+	     , "false"
+	     , "memberCodePop"
+	);
+}
+function popupMemberCallback(result){
+    $("#hrCode").val(result.memCode);
+};
 
 function fn_save(){
 
@@ -268,6 +281,7 @@ function fn_save(){
     if($("#saveForm input[id=userIsPartTm]").is(":checked")) userIsPartTm = 1;
     if($("#saveForm input[id=userIsExtrnl]").is(":checked")) userIsExtrnl = 1;
 
+    debugger;
     Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
         Common.ajax(
                 "GET",
@@ -413,6 +427,21 @@ $(document).ready(function(){
     <th scope="row">Contact (Mobile)</th>
     <td>
     <input id="userMobileNo" type="text" name="userMobileNo" title="" placeholder="Contact (Mobile)" class="w100p" maxlength="15"/>
+    </td>
+</tr>
+<tr>
+    <th scope="row">CallCenter</th>
+    <td>
+    <select id="callcenterUseYn" name="callCenterUseYn" class="w100p">
+        <option value="N">No</option>
+        <option value="Y">Yes</option>
+    </select>
+    <!-- <input id="callCenterYn" type="text" name=""callCenterYn"" title="" placeholder="CallCenter Use Y/N" class="w100p" maxlength="15" /> -->
+    </td>
+    <th scope="row">Member Code</th>
+    <td>
+    <input id="hrCode" type="text" name="hrCode" title="" placeholder="Member Code" class="w50p" maxlength="30"/>
+    <a href="#" class="search_btn" onclick="javascript:fn_openMemberPopup()"><img src="/resources/images/common/normal_search.gif" alt="search"></a>
     </td>
 </tr>
 <tr>

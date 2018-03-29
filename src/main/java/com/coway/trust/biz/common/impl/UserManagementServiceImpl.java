@@ -51,6 +51,11 @@ public class UserManagementServiceImpl implements UserManagementService {
 	}
 
 	@Override
+	public List<EgovMap> selectMemberList(Map<String, Object> params) {
+		return userManagementMapper.selectMemberList(params);
+	}
+
+	@Override
 	public void saveUserManagementList(Map<String,Object> params, SessionVO sessionVO) {
 		int loginId = 0;
 		if(sessionVO != null){

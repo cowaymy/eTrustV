@@ -39,6 +39,8 @@
 	        , a.user_is_extrnl
 	        , b.role_id
 	        , c.role_code
+	        , a.callcenter_use_yn
+	        , a.hr_code
 	 FROM SYS0047M a /* User */
 	        , SYS0045M b /* SystemRoleUser */
 	        , SYS0044M c /* SystemRole */
@@ -95,6 +97,9 @@
 	    <if test="userIsExtrnl != null and userIsExtrnl !=''">
 	    AND a.user_is_extrnl  = #{userIsExtrnl}
 	    </if>
+	    <if test="callcenterUseYn != null and callcenterUseYn !=''">
+        AND a.callcenter_use_yn  = #{callcenterUseYn}
+        </if>
 </select>
 
 <select id="selectBranchList" parameterType="Map" resultType="egovMap">
@@ -167,6 +172,16 @@
      ORDER BY a.role_lev
 </select>
 
+<select id="selectMemberList" parameterType="Map" resultType="egovMap">
+	SELECT mem_code as row_id,
+	           mem_code,
+	           name
+	  FROM ORG0001D
+	WHERE 1=1
+    <if test="popMemberCode != '' and popMemberCode != null">
+        AND ( UPPER(mem_code) like UPPER(#{popMemberCode}) || '%' or UPPER(name) like '%' || UPPER(#{popMemberCode}) || '%' )
+    </if>
+</select>
 
 <select id="createUserId" resultType="egovMap">
     SELECT SYS0047M_USER_ID_SEQ.NEXTVAL AS user_id FROM DUAL
@@ -202,6 +217,9 @@ MERGE INTO SYS0047M a
 				, #{userDeptId1} AS user_dept_id1
 				, #{userIsPartTm} AS user_is_part_tm
 				, #{userIsExtrnl} AS user_is_extrnl
+
+				, #{callcenterUseYn} AS callcenter_use_yn
+                , #{hrCode} AS hr_code
           FROM dual
   ) b
      ON ( a.user_id = b.user_id )
@@ -283,6 +301,13 @@ MERGE INTO SYS0047M a
 	          <if test="userIsExtrnl != null and userIsExtrnl !=''">
 	          , a.user_is_extrnl          = b.user_is_extrnl
 	          </if>
+
+	          <if test="callcenterUseYn != null and callcenterUseYn !=''">
+              , a.callcenter_use_yn       = b.callcenter_use_yn
+              </if>
+              <if test="hrCode != null and hrCode !=''">
+              , a.hr_code          = b.hr_code
+              </if>
    WHEN NOT MATCHED THEN
         INSERT
         (
@@ -313,6 +338,9 @@ MERGE INTO SYS0047M a
 		  , a.user_dept_id1
 		  , a.user_is_part_tm
 		  , a.user_is_extrnl
+
+          , a.callcenter_use_yn
+          , a.hr_code
         )
         VALUES
         (
@@ -343,6 +371,9 @@ MERGE INTO SYS0047M a
           , b.user_dept_id1
           , b.user_is_part_tm
           , b.user_is_extrnl
+
+          , b.callcenter_use_yn
+          , b.hr_code
         )
 </update>
 

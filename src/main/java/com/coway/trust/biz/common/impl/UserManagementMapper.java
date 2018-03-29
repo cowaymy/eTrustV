@@ -22,6 +22,8 @@ public interface UserManagementMapper {
 
 	List<EgovMap> selectUserTypeList(Map<String, Object> params);
 
+	List<EgovMap> selectMemberList(Map<String, Object> params);
+
 	void saveUserManagementList(Map<String, Object> params);
 
 	EgovMap createUserId();

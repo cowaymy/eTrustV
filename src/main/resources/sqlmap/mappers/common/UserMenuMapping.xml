@@ -140,7 +140,7 @@
 						                      , null as valid_dt_from
 						                      , null as valid_dt_to
 						                      , e.func_yn
-						                      , CASE WHEN f.own_user_id IS NULL AND e.func_yn = 'Y'
+						                      , CASE WHEN /* f.own_user_id IS NULL AND */ e.func_yn = 'Y'
 					                             THEN 'Y'
 					                             ELSE 'N' END AS exist_yn
 					                  FROM SYS0056M e

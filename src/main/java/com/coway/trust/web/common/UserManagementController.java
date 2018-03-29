@@ -51,6 +51,12 @@ public class UserManagementController {
 		return "common/userManagementEditBrnchPop";
 	}
 
+	@RequestMapping(value = "/memberCodePop.do")
+	public String memberCodePop(@RequestParam Map<String, Object> params, SessionVO sessionVO,
+			ModelMap model) {
+		return "common/memberCodePop";
+	}
+
 	@RequestMapping(value = "/selectUserList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectUserList(@RequestParam Map<String, Object> params, ModelMap model) {
 		return ResponseEntity.ok(userManagementsService.selectUserList(params));
@@ -84,6 +90,11 @@ public class UserManagementController {
 	@RequestMapping(value = "/selectUserTypeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectUserTypeList(@RequestParam Map<String, Object> params, ModelMap model) {
 		return ResponseEntity.ok(userManagementsService.selectUserTypeList(params));
+	}
+
+	@RequestMapping(value = "/selectMemberList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMemberList(@RequestParam Map<String, Object> params, ModelMap model) {
+		return ResponseEntity.ok(userManagementsService.selectMemberList(params));
 	}
 
 	@RequestMapping(value = "/saveUserManagementList.do", method = RequestMethod.GET)

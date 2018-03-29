@@ -23,6 +23,8 @@ public interface UserManagementService {
 
 	List<EgovMap> selectUserTypeList(Map<String, Object> params);
 
+	List<EgovMap> selectMemberList(Map<String, Object> params);
+
 	void saveUserManagementList(Map<String, Object> params, SessionVO sessionVO);
 
 	void editUserManagementList(Map<String, Object> params, SessionVO sessionVO);

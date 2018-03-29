@@ -190,6 +190,20 @@ function fn_userRoleList(_userId){
     )
 };
 
+function fn_openMemberPopup(){
+    var popUpObj = Common.popupDiv
+    (
+         "/common/userManagement/memberCodePop.do"
+         , ""
+         , null
+         , "false"
+         , "memberCodePop"
+    );
+}
+
+function popupMemberCallback(result){
+	$("#hrCode").val(result.memCode);
+};
 
 function fn_editUser(){
 
@@ -263,7 +277,7 @@ function fn_editUser(){
     }else{
     	saveParam = $("#userEditForm").serialize()+"&userIsPartTm="+userIsPartTm+"&userIsExtrnl="+userIsExtrnl;
     }
-
+debugger;
 
     Common.confirm("<spring:message code='sys.common.alert.save'/>",function(){
         Common.ajax(
@@ -377,7 +391,7 @@ function fn_searchUser(_userId){
             "/common/userManagement/selectUserList.do",
             "userIdForEdit="+_userId,
             function(data, textStatus, jqXHR){ // Success
-
+                debugger;
                 $("#userEditForm #userId").val(data[0].userId);
                 $("#userEditForm #userStusId").val(data[0].userStusId);
 
@@ -392,8 +406,8 @@ function fn_searchUser(_userId){
 
                 $("#userEditForm #userTypeId").val(data[0].userTypeId);
                 $("#userEditForm #userFullName").val(data[0].userFullName);
-                $("#userEditForm #userBrnchId").val(data[0].userBrnchId);
-                $("#userEditForm #userDeptId").val(data[0].userDeptId);
+                $("#userEditForm #userBrnchId").val(data[0].brnch);
+                $("#userEditForm #userDeptId").val(data[0].userDeptCd);
                 $("#userEditForm #userValIdFrom").val(data[0].userValIdFrom);
                 $("#userEditForm #userValIdTo").val(data[0].userValIdTo);
                 $("#userEditForm #userDeptId1").val(data[0].userDeptId1);
@@ -403,6 +417,9 @@ function fn_searchUser(_userId){
                 $("#userEditForm #userExtNo").val(data[0].userExtNo);
                 $("#userEditForm #userWorkNo").val(data[0].userWorkNo);
                 $("#userEditForm #userMobileNo").val(data[0].userMobileNo);
+
+                $("#userEditForm #callcenterUseYn").val(data[0].callcenterUseYn);
+                $("#userEditForm #hrCode").val(data[0].hrCode);
 
                 if($("#userEditForm #userStusId").val() == "8"){
                     $("#roleEditForm").find("input, textarea, button, select").attr("disabled",true);
@@ -584,6 +601,21 @@ $(document).ready(function(){
     <th scope="row">Contact (Mobile)</th>
     <td>
     <input id="userMobileNo" type="text" name="userMobileNo" title="" placeholder="Contact (Mobile)" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row">CallCenter</th>
+    <td>
+    <select id="callcenterUseYn" name="callcenterUseYn" class="w100p">
+        <option value="N">No</option>
+        <option value="Y">Yes</option>
+    </select>
+    <!-- <input id="callCenterYn" type="text" name=""callCenterYn"" title="" placeholder="CallCenter Use Y/N" class="w100p" maxlength="15" /> -->
+    </td>
+    <th scope="row">Member Code</th>
+    <td>
+    <input id="hrCode" type="text" name="hrCode" title="" placeholder="Member Code" class="w100p" maxlength="30"/>
+    <a href="#" class="search_btn" onclick="javascript:fn_openMemberPopup()"><img src="/resources/images/common/normal_search.gif" alt="search"></a>
     </td>
 </tr>
 <tr>

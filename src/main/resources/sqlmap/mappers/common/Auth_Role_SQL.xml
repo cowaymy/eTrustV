@@ -386,6 +386,9 @@ WITH AUTH_ROLE
      <if test='authName !=null and authName != "" '>
          AND UPPER(AUTH_NAME) LIKE '%' || UPPER(#{authName}) || '%'
      </if>
+     <if test='authCodeName !=null and authCodeName != "" '>
+         AND (UPPER(AUTH_CODE) LIKE UPPER(#{authCodeName}) || '%' OR UPPER(AUTH_NAME) LIKE '%' || UPPER(#{authCodeName}) || '%')
+     </if>
 </select>
 
 <insert id="insertAuth" parameterType="Map">
