@@ -22,7 +22,6 @@
 		<c:otherwise>
 		<ul class="left_opt">
         <li><a href="javascript:void(0);"><span id="header_refresh"><img src="${pageContext.request.contextPath}/resources/images/common/icon_refresh.png" alt="Refresh" /></span></a></li>
-        <li>Neo(Mega Deal): <a href="javascript:void(0);"><span id="header_neo">-</span></a></li>
         <li>Sales(Key In): <a href="javascript:void(0);"><span id="header_sales">-</span></a></li>
       <!--   <li>Net Qty[<a href="javascript:void(0);"><span id="header_netQty"></span></a></li> -->
         <li>Net Qty [Outright : <a href="javascript:void(0);"><span id="header_outRight">-</span></a></li>
@@ -30,7 +29,7 @@
         <li>Rental: <a href="javascript:void(0);"><span id="header_rental">-</span></a></li>
         <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li>
         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><span >Accumulated Active Account:</span> <a href="javascript:void(0);"><span class="red_text" id="header_acc_act_account">-</span></a></li>
+        <li><span >Accumulated Account:</span> <a href="javascript:void(0);"><span class="red_text" id="header_acc_act_account">-</span></a></li>
         </ul>
 		</c:otherwise>
 	</c:choose>
