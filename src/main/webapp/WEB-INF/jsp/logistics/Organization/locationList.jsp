@@ -458,7 +458,10 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
         item.plant   = $("#plant").val();
         item.slplant = $("#slplant").val();
         
-        AUIGrid.updateRow(myGridID, item, selectedItem[0]);
+        if(f_validatation()){
+        AUIGrid.updateRow(myGridID, item, selectedItem[0]);	
+        }
+        
     }
     
     function fn_locDetail(locid){
@@ -584,6 +587,27 @@ var detailLayout = [{dataField: "stkid",headerText :"<spring:message code='log.h
         });
         
     }
+    
+    
+    function f_validatation(){
+        
+       
+     if ($("#plant").val() == null || $("#plant").val() == undefined || $("#plant").val() == ""){
+         Common.alert("Plant in ECC Please enter.");
+         return false;
+     }
+     
+     if ($("#slplant").val() == null || $("#slplant").val() == undefined || $("#slplant").val() == ""){
+         Common.alert("S/L in ECC Please enter.");
+         return false;
+     }   
+
+ 
+
+        return true;  
+    }
+    
+    
  
 </script>
 </head>
