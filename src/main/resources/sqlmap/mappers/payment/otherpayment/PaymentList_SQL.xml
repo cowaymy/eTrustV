@@ -54,7 +54,7 @@
                     LEFT JOIN SAL0001D F ON E.BILL_SO_ID = F.SALES_ORD_ID                
                 WHERE 1=1
                     <if test="ordNo != '' ">
-                    AND (D.SALES_ORD_NO = #{ordNo} OR F.SALES_ORD_NO = #{ordNo})
+                    AND (D.SALES_ORD_NO = #{ordNo} )
                     </if>
                     <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
                     AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY') 
@@ -66,7 +66,32 @@
                     </if>
                     <if test="orNo != null and orNo != '' ">
                     AND B.OR_NO = #{orNo}
-            </if>   
+                    </if>   
+                    UNION
+                      SELECT 
+	                    DISTINCT A.GROUP_SEQ
+	                FROM 
+	                    PAY0252T A
+	                    JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID                    
+	                    JOIN PAY0065D C ON A.PAY_ITM_ID = C.PAY_ITM_ID
+	                    LEFT JOIN SAL0001D D ON B.SALES_ORD_ID = D.SALES_ORD_ID                    
+	                    LEFT JOIN PAY0007D E ON B.BILL_ID = E.BILL_ID
+	                    LEFT JOIN SAL0001D F ON E.BILL_SO_ID = F.SALES_ORD_ID                
+	                WHERE 1=1
+	                    <if test="ordNo != '' ">
+	                    AND ( F.SALES_ORD_NO = #{ordNo})
+	                    </if>
+	                    <if test="tranDateFr != null and tranDateTo != null and tranDateFr != '' and tranDateTo != '' ">
+	                    AND C.PAY_ITM_REF_DT <![CDATA[   >= ]]> TO_DATE(#{tranDateFr},'DD/MM/YYYY') 
+	                    AND C.PAY_ITM_REF_DT <![CDATA[   < ]]> TO_DATE(#{tranDateTo},'DD/MM/YYYY') + 1
+	                    </if>
+	                    <if test="payDtFr != null and payDtTo != null and payDtFr != '' and payDtTo != '' ">
+	                    AND B.PAY_DATA <![CDATA[   >= ]]> TO_DATE(#{payDtFr},'DD/MM/YYYY') 
+	                    AND B.PAY_DATA <![CDATA[   < ]]> TO_DATE(#{payDtTo},'DD/MM/YYYY') + 1
+	                    </if>
+	                    <if test="orNo != null and orNo != '' ">
+	                    AND B.OR_NO = #{orNo}
+                        </if>   
             )             
         GROUP BY 
             A.GROUP_SEQ,
