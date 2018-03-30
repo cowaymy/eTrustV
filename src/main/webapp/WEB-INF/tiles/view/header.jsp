@@ -30,7 +30,7 @@
         <li>Rental: <a href="javascript:void(0);"><span id="header_rental">-</span></a></li>
         <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li>
         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
-        <li><span >Accumulated Active Account:</span> <a href="javascript:void(0);"><span id="header_acc_act_account">-</span></a></li>
+        <li><span >Accumulated Active Account:</span> <a href="javascript:void(0);"><span class="red_text" id="header_acc_act_account">-</span></a></li>
         </ul>
 		</c:otherwise>
 	</c:choose>
