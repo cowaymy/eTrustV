@@ -102,12 +102,16 @@ var gridIfKeyColumnLayout =
 {
    dataField : "sndChkVal",
    headerText : "BIZ Check Value",
+   dataType : "numeric",
+   formatString : "#,##0",
    width : "18%",
    style : "aui-grid-user-custom-right"
 },
 {
     dataField : "rcvChkVal",
     headerText : "ITF Check Value",
+    dataType : "numeric",
+    formatString : "#,##0",
     width : "18%",
     style : "aui-grid-user-custom-right"
 }

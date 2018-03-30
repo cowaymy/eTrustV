@@ -200,24 +200,32 @@ var gridIfColumnLayout =
 	 {
         dataField : "sndCnt",
         headerText : "BIZ Cnt",
+        dataType : "numeric",
+        formatString : "#,##0",
         width : "12%",
         style : "aui-grid-user-custom-right"
 	},
     {
        dataField : "rcvCnt",
        headerText : "ITF Cnt",
+       dataType : "numeric",
+       formatString : "#,##0",
        width : "12%",
        style : "aui-grid-user-custom-right"
    },
    {
       dataField : "sndChkVal",
-      headerText : "BIZ Check Value",
+      headerText : "BIZ Check Value",\
+      dataType : "numeric",
+      formatString : "#,##0",
       width : "18%",
       style : "aui-grid-user-custom-right"
     },
     {
         dataField : "rcvChkVal",
         headerText : "ITF Check Value",
+        dataType : "numeric",
+        formatString : "#,##0",
         width : "18%",
         style : "aui-grid-user-custom-right"
      }
