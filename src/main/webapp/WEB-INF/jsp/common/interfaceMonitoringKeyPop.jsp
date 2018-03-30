@@ -79,18 +79,18 @@ var gridIfKeyColumnLayout =
  },
  {
      dataField : "bizCol",
-     headerText : "Biz Col",
+     headerText : "BIZ Col",
      width:"10%"
  },
 {
     dataField : "sndChkCol",
-    headerText : "Send ChkCol",
+    headerText : "BIZ ChkCol",
     width : "12%",
     style : "aui-grid-user-custom-left"
 },
 {
     dataField : "rcvChkCol",
-    headerText : "Receive ChkCol",
+    headerText : "ITF ChkCol",
     width : "12%",
     style : "aui-grid-user-custom-left"
 },
@@ -101,13 +101,13 @@ var gridIfKeyColumnLayout =
 },
 {
    dataField : "sndChkVal",
-   headerText : "Send Check Value",
+   headerText : "BIZ Check Value",
    width : "18%",
    style : "aui-grid-user-custom-right"
 },
 {
     dataField : "rcvChkVal",
-    headerText : "Receive Check Value",
+    headerText : "ITF Check Value",
     width : "18%",
     style : "aui-grid-user-custom-right"
 }

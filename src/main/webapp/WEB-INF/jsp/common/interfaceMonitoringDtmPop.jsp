@@ -52,25 +52,25 @@ var gridIfDtmColumnLayout =
 	 },
 	{
 	    dataField : "sndCnt",
-	    headerText : "Send Cnt",
+	    headerText : "BIZ Cnt",
 	    width : "12%",
 	    style : "aui-grid-user-custom-right"
 	},
 	{
 	    dataField : "rcvCnt",
-	    headerText : "Receive Cnt",
+	    headerText : "ITF Cnt",
 	    width : "12%",
 	    style : "aui-grid-user-custom-right"
 	},
 	{
 	   dataField : "sndChkVal",
-	   headerText : "Send Check Value",
+	   headerText : "BIZ Check Value",
 	   width : "18%",
 	   style : "aui-grid-user-custom-right"
 	},
 	{
 	    dataField : "rcvChkVal",
-	    headerText : "Receive Check Value",
+	    headerText : "ITF Check Value",
 	    width : "18%",
 	    style : "aui-grid-user-custom-right"
 	}
