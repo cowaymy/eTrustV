@@ -2171,10 +2171,10 @@ $(document).ready(function()
 </article><!-- grid_wrap end -->
 <div class="side_btns">
   <ul class="right_btns">
-  <!--   <li><p id='show'   class="btn_grid "><a onclick="fnShowGrid();">show</a></p></li> -->
-    <!-- <li><p id='btnDelete' class="btn_grid btn_disabled"><a onclick="fnDelete(this)">Delete</a></p></li>
-    <li><p id='btnUpdate' class="btn_grid btn_disabled"><a onclick="fnSaveScmSalesPlan(this);">Update</a></p></li>
-    <li><p id='btnAddrow' class="btn_grid btn_disabled"><a onclick="fnInsertAddRow(this);">AddRow</a></p></li>
+  <!--   <li><p id='show'   class="btn_grid "><a onclick="fnShowGrid();">show</a></p></li>
+     <li><p id='btnDelete' class="btn_grid btn_disabled"><a onclick="fnDelete(this)">Delete</a></p></li> -->
+    <li><p id='btnUpdate' class="btn_grid btn_disabled"><a onclick="fnSaveScmSalesPlan(this);">Save</a></p></li>
+    <!--<li><p id='btnAddrow' class="btn_grid btn_disabled"><a onclick="fnInsertAddRow(this);">AddRow</a></p></li>
     <li><p id='btnInsert' class="btn_grid btn_disabled"><a onclick="fnInsertSave(this);">Insert</a></p></li>
     <li><p id='btnCancel' class="btn_grid btn_disabled"><a onclick="fnCancel(this);">Cancel</a></p></li> -->
     <li><p id='btnExcel'  class="btn_grid btn_disabled"><a onclick="fnExcelExport(this,'SalesPlanManagement');">Download</a></p>
