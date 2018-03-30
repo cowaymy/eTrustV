@@ -1068,7 +1068,19 @@ function fnSettiingHeader()
 	              $("#planStatus").text(result.planInfo[0].planStusNm);
 	              $("#planCreatedAt").text(result.planInfo[0].crtDt);
 			       }
+	          // alert(result.planInfo[0].planStusId);
+	           if(result.planInfo[0].planStusId == "1"){
 
+ 	        	$("#UnConfirmBtn").css("display","none");
+ 	        	$("#ConfirmBtn").css("display","");
+
+	           }else if(result.planInfo[0].planStusId == "4"){
+	        	   $("#ConfirmBtn").css("display","none");
+	        	   $("#UnConfirmBtn").css("display","");
+
+	           }
+	           
+	           
 	          // console.log("seperaionInfo: " + result.seperaionInfo.length + " /getChildField: " + result.getChildField.length );
 
              if( (result.planInfo == null || result.planInfo.length < 1)
@@ -2102,13 +2114,13 @@ $(document).ready(function()
 	</li> -->
 
 	<li>
-	 <p class="btn_grid">
+	 <p id='ConfirmBtn' class="btn_grid">
 	 <a onclick="fnConfirm(this);">Confirm</a>
 	 </p>
 	</li>
 
 	<li>
-	 <p class="btn_grid">
+	 <p id='UnConfirmBtn'  class="btn_grid">
 	   <a onclick="fnUnConfirm(this);">UnConfirm</a>
 	 </p>
 	</li>

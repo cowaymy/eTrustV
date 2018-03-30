@@ -476,6 +476,7 @@ WITH SALES_PLAN_SUMMARY
 			      ,TO_CHAR(CRT_DT,'YYYY/MM/DD HH24:MI:SS') CRT_DT
 			      ,STUS_DT
 			      ,CRT_USER_ID
+			      ,PLAN_STUS_ID
 			 FROM SCM0001M
 			WHERE PLAN_YEAR = #{scmYearCbBox}
 			  AND PLAN_WEEK = #{scmPeriodCbBox}
