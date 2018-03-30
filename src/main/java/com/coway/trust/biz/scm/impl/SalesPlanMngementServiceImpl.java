@@ -196,6 +196,169 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 
+
+			List<EgovMap> yearMonthList = salesPlanMngementMapper.selectScmYearMonthWeek((Map<String, Object>) obj);
+
+			String planYear = yearMonthList.get(0).get("planYear").toString();
+			String planMonth = yearMonthList.get(0).get("planMonth").toString();
+			String weekth = yearMonthList.get(0).get("planWeek").toString();
+
+			((Map<String, Object>) obj).put("scmYearCbBox", planYear);
+			((Map<String, Object>) obj).put("selectPlanMonth", planMonth);
+
+			List<EgovMap> seperaionMap = salesPlanMngementMapper.selectSeperation2((Map<String, Object>) obj);
+			List<EgovMap> chield = salesPlanMngementMapper.selectChildField((Map<String, Object>) obj);
+
+			//Safety Stock 구하기
+			String iM0TotCnt = seperaionMap.get(0).get("m0TotCnt").toString();
+			String iM1TotCnt = seperaionMap.get(0).get("m1TotCnt").toString();
+			String iM2TotCnt = seperaionMap.get(0).get("m2TotCnt").toString();
+			String iM3TotCnt = seperaionMap.get(0).get("m3TotCnt").toString();
+			String iM4TotCnt = seperaionMap.get(0).get("m4TotCnt").toString();
+
+			String intToStrFieldCnt ="";
+		    int iLootDataFieldCnt = 0;
+		    int m0Sum = 0;
+		    int m1Sum = 0;
+		    int m2Sum = 0;
+		    int m3Sum = 0;
+		    int m4Sum = 0;
+
+			for(int m1=0;m1<Integer.parseInt(iM0TotCnt);m1++){
+				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
+
+	            if (intToStrFieldCnt.length() == 1)
+	            {
+	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	            }
+
+		        if (Integer.parseInt(chield.get(m1).get("weekTh").toString()) <  Integer.parseInt(weekth) && m1 != Integer.parseInt(iM0TotCnt)-1 ){
+		        } else {
+		        	m0Sum = m0Sum+Integer.parseInt(getReplaceStr(((Map<String, Object>) obj).get("w"+intToStrFieldCnt).toString(),",",""));
+		        	iLootDataFieldCnt++;
+	            }
+			}
+
+			String intToStrFieldCnt2 ="";
+			int iLootDataFieldCnt2 = 0;
+
+			for(int m1=0;m1<Integer.parseInt(iM0TotCnt);m1++){
+				intToStrFieldCnt2 = String.valueOf(iLootDataFieldCnt2);
+
+	            if (intToStrFieldCnt2.length() == 1)
+	            {
+	         	   intToStrFieldCnt2 =  "0" + intToStrFieldCnt2;
+	            }
+
+		        if (Integer.parseInt(chield.get(m1).get("weekTh").toString()) <  Integer.parseInt(weekth) && m1 != Integer.parseInt(iM0TotCnt)-1 ){
+
+		        } else {
+		        	((Map<String, Object>) obj).put("m0", m0Sum);
+		        	iLootDataFieldCnt2++;
+		        }
+
+			}
+
+			for(int m1=0;m1<Integer.parseInt(iM1TotCnt);m1++){
+
+				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
+
+	            if (intToStrFieldCnt.length() == 1)
+	            {
+	            	intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	            }
+
+	            m1Sum = m1Sum+Integer.parseInt(getReplaceStr(((Map<String, Object>) obj).get("w"+intToStrFieldCnt).toString(),",",""));
+	            iLootDataFieldCnt++;
+		 	}
+
+			for(int m1=0;m1<Integer.parseInt(iM1TotCnt);m1++){
+
+				intToStrFieldCnt2 = String.valueOf(iLootDataFieldCnt2);
+
+	            if (intToStrFieldCnt2.length() == 1)
+	            {
+	         	   intToStrFieldCnt2 =  "0" + intToStrFieldCnt2;
+	            }
+	            ((Map<String, Object>) obj).put("m1", m1Sum);
+				iLootDataFieldCnt2++;
+			}
+
+			for(int m2=0;m2<Integer.parseInt(iM2TotCnt);m2++){
+
+				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
+
+	            if (intToStrFieldCnt.length() == 1)
+	            {
+	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	            }
+
+	            m2Sum = m2Sum+Integer.parseInt(getReplaceStr(((Map<String, Object>) obj).get("w"+intToStrFieldCnt).toString(),",",""));
+	            iLootDataFieldCnt++;
+			}
+
+			for(int m2=0;m2<Integer.parseInt(iM2TotCnt);m2++){
+
+				intToStrFieldCnt2 = String.valueOf(iLootDataFieldCnt2);
+
+	            if (intToStrFieldCnt2.length() == 1)
+	            {
+	         	   intToStrFieldCnt2 =  "0" + intToStrFieldCnt2;
+	            }
+	            ((Map<String, Object>) obj).put("m2", m2Sum);
+				iLootDataFieldCnt2++;
+			}
+
+			for(int m3=0;m3<Integer.parseInt(iM3TotCnt);m3++){
+
+				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
+
+	            if (intToStrFieldCnt.length() == 1)
+	            {
+	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	            }
+
+	            m3Sum = m3Sum+Integer.parseInt(getReplaceStr(((Map<String, Object>) obj).get("w"+intToStrFieldCnt).toString(),",",""));
+	            iLootDataFieldCnt++;
+			}
+
+			for(int m3=0;m3<Integer.parseInt(iM3TotCnt);m3++){
+				intToStrFieldCnt2 = String.valueOf(iLootDataFieldCnt2);
+
+	            if (intToStrFieldCnt2.length() == 1)
+	            {
+	         	   intToStrFieldCnt2 =  "0" + intToStrFieldCnt2;
+	            }
+	            ((Map<String, Object>) obj).put("m3", m3Sum);
+			    iLootDataFieldCnt2++;
+			}
+
+			for(int m4=0;m4<Integer.parseInt(iM4TotCnt);m4++){
+
+				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt-1);
+
+
+	            if (intToStrFieldCnt.length() == 1)
+	            {
+	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
+	            }
+
+	            m4Sum = m4Sum+Integer.parseInt(getReplaceStr(((Map<String, Object>) obj).get("w"+intToStrFieldCnt).toString(),",",""));
+	            iLootDataFieldCnt++;
+			}
+
+			for(int m4=0;m4<Integer.parseInt(iM4TotCnt);m4++){
+
+				intToStrFieldCnt2 = String.valueOf(iLootDataFieldCnt2);
+
+	            if (intToStrFieldCnt2.length() == 1)
+	            {
+	         	   intToStrFieldCnt2 =  "0" + intToStrFieldCnt2;
+	            }
+	            ((Map<String, Object>) obj).put("m4", m4Sum);
+			    iLootDataFieldCnt2++;
+			}
+
 			LOGGER.debug(" >>>>> updateSCMPlanMaster ");
 			LOGGER.debug(" userId : {}", ((Map<String, Object>) obj).get("crtUserId"));
 
@@ -621,7 +784,7 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 				 if(weekThSn.equals("2")){
 					 leadTime = leadTime + 1;
 				 }
-			}
+			 }
 
 			 /**
 			  *  safestock 공식  = (safestock * 해당 주차가 속한 월의 판매계획들의  합)/30
@@ -1332,13 +1495,23 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 
 				 if("PO & FCST".equals(insMap.get("psi"))){
 					 LOGGER.debug(" psi 통과1111111 ???????????  : {} ");
-					 salesPlanMngementMapper.insConfirmPlanByCDC(insMap);
-				 }
+					 insMap.put("selectPlanMonth", insMap.get("planMonth"));
 
+					 List<EgovMap> chield = salesPlanMngementMapper.selectChildField(insMap);
+
+					 for(int sn=0; sn < chield.size(); sn++){
+						 String weekThSn = chield.get(sn).get("weekThSn").toString();
+						 if(weekThSn.equals("2")){
+							 insMap.put("w08",insMap.get("w09"));
+							 break;
+						 }
+					 }
+
+					 if(Integer.parseInt(insMap.get("w08").toString()) != 0){
+						 salesPlanMngementMapper.insConfirmPlanByCDC(insMap);
+					 }
+				 }
 			}
 		}
-
-
 	}
-
 }

@@ -83,10 +83,11 @@ public interface SalesPlanMngementMapper {
 	List<EgovMap> selectSalesPlanByStockCode(Map<String, Object> params);
 	List<EgovMap> selectLeadTimeByCdc(Map<String, Object> params);
 	List<EgovMap> selectScmMonth(Map<String, Object> params);
+	List<EgovMap> selectScmYearMonthWeek(Map<String, Object> params);
 
 	void insertSalesCdcDetailNew(Map<String, Object> params);
 	void updateSalesPlanDetailMonthly(Map<String, Object> params);
-	
+
 	void insConfirmPlanByCDC(Map<String, Object> params);
 
 }

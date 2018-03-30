@@ -659,101 +659,115 @@ WITH SALES_PLAN_SUMMARY
     <update id="updateScmPlanMaster" parameterType="Map">
       UPDATE SCM0002D
          SET PLAN_MASTER_ID = #{planMasterId}
-
-         <if test='w00 != null and w00 !="" '>
+		 <if test='m0 != null'>
+               , m0_plan = #{m0}
+         </if>
+         <if test='m1 != null'>
+               , m1 = #{m1}
+         </if>
+         <if test='m2 != null'>
+               , m2 = #{m2}
+         </if>
+         <if test='m3 != null'>
+               , m3 = #{m3}
+         </if>
+         <if test='m4 != null'>
+               , m4 = #{m4}
+         </if>
+         <if test='w00 != null'>
                , W00 = #{w00}
          </if>
-         <if test='w01 != null and w01 !="" '>
+         <if test='w01 != null'>
                , W01 = #{w01}
          </if>
-         <if test='w02 != null and w02 !="" '>
+         <if test='w02 != null'>
                , W02 = #{w02}
          </if>
-         <if test='w03 != null and w03 !="" '>
+         <if test='w03 != null'>
                , W03 = #{w03}
          </if>
-         <if test='w04 != null and w04 !="" '>
+         <if test='w04 != null'>
                , W04 = #{w04}
          </if>
-         <if test='w05 != null and w05 !="" '>
+         <if test='w05 != null'>
                , W05 = #{w05}
          </if>
 
-         <if test='w06 != null and w06 !="" '>
+         <if test='w06 != null'>
                , W06 = #{w06}
          </if>
-         <if test='w07 != null and w07 !="" '>
+         <if test='w07 != null'>
                , W07 = #{w07}
          </if>
-         <if test='w08 != null and w08 !="" '>
+         <if test='w08 != null'>
                , W08 = #{w08}
          </if>
-         <if test='w09 != null and w09 !="" '>
+         <if test='w09 != null'>
                , W09 = #{w09}
          </if>
-         <if test='w10 != null and w10 !="" '>
+         <if test='w10 != null'>
                , W10 = #{w10}
          </if>
 
-         <if test='w11 != null and w11 !="" '>
+         <if test='w11 != null'>
                , W11 = #{w11}
          </if>
-         <if test='w12 != null and w12 !="" '>
+         <if test='w12 != null'>
                , W12 = #{w12}
          </if>
-         <if test='w13 != null and w13 !="" '>
+         <if test='w13 != null'>
                , W13 = #{w13}
          </if>
-         <if test='w14 != null and w14 !="" '>
+         <if test='w14 != null'>
                , W14 = #{w14}
          </if>
-         <if test='w15 != null and w15 !="" '>
+         <if test='w15 != null'>
                , W15 = #{w15}
          </if>
-         <if test='w16 != null and w16 !="" '>
+         <if test='w16 != null'>
                , W16 = #{w16}
          </if>
-         <if test='w17 != null and w17 !="" '>
+         <if test='w17 != null'>
                , W17 = #{w17}
          </if>
-         <if test='w18 != null and w18 !="" '>
+         <if test='w18 != null'>
                , W18 = #{w18}
          </if>
-         <if test='w19 != null and w19 !="" '>
+         <if test='w19 != null'>
                , W19 = #{w19}
          </if>
-         <if test='w20 != null and w20 !="" '>
+         <if test='w20 != null'>
                , W20 = #{w20}
          </if>
 
-         <if test='w21 != null and w21 !="" '>
+         <if test='w21 != null'>
                , W21 = #{w21}
          </if>
-         <if test='w22 != null and w22 !="" '>
+         <if test='w22 != null'>
                , W22 = #{w22}
          </if>
-         <if test='w23 != null and w23 !="" '>
+         <if test='w23 != null'>
                , W23 = #{w23}
          </if>
-         <if test='w24 != null and w24 !="" '>
+         <if test='w24 != null'>
                , W24 = #{w24}
          </if>
-         <if test='w25 != null and w25 !="" '>
+         <if test='w25 != null'>
                , W25 = #{w25}
          </if>
-         <if test='w26 != null and w26 !="" '>
+         <if test='w26 != null'>
                , W26 = #{w26}
          </if>
-         <if test='w27 != null and w27 !="" '>
+         <if test='w27 != null'>
                , W27 = #{w27}
          </if>
-         <if test='w28 != null and w28 !="" '>
+         <if test='w28 != null'>
                , W28 = #{w28}
          </if>
-         <if test='w29 != null and w29 !="" '>
+         <if test='w29 != null'>
                , W29 = #{w29}
          </if>
-         <if test='w30 != null and w30 !="" '>
+         <if test='w30 != null'>
                , W30 = #{w30}
          </if>
 
@@ -2156,6 +2170,10 @@ SELECT STK_ID
 
     <select id="selectScmMonth" parameterType="Map" resultType="egovMap">
 			SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = '1'
+    </select>
+
+    <select id="selectScmYearMonthWeek" parameterType="Map" resultType="egovMap">
+			SELECT PLAN_YEAR, PLAN_MONTH, PLAN_WEEK FROM SCM0001M WHERE plan_id = #{planMasterId}
     </select>
 
     <select id="selectSalesPlanWeekCnt" parameterType="Map" resultType="egovMap">
