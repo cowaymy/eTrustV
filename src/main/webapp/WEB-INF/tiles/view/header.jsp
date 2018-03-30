@@ -29,6 +29,8 @@
         <li>Instalment: <a href="javascript:void(0);"><span id="header_installment">-</span></a></li>
         <li>Rental: <a href="javascript:void(0);"><span id="header_rental">-</span></a></li>
         <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li>
+        <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
+        <li><span >Accumulated Active Account:</span> <a href="javascript:void(0);"><span id="header_acc_act_account">-</span></a></li>
         </ul>
 		</c:otherwise>
 	</c:choose>
@@ -107,6 +109,7 @@
         $("#header_installment").text(inintV);
         $("#header_rental").text(inintV);
         $("#header_total").text(inintV);
+        $("#header_acc_act_account").text(inintV);
 
         Common.ajax("GET", "/common/selectDailyCount.do"
             , null
@@ -122,6 +125,7 @@
                     $("#header_rental").text(result[0].rental);
 
                     $("#header_total").text(result[0].total);
+                    $("#header_acc_act_account").text(result[0].accActAccount);
                 }
             }, null, {
                 isShowLoader : false
