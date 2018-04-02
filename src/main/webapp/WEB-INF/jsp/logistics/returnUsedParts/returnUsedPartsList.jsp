@@ -133,11 +133,11 @@ var subgridpros = {
             for (var i = 0; i < checkedItems.length; i++) {
 //             	oldQty=checkedItems[i].qty;
 //             	alert("oldQty?? : "+oldQty);
-            	if(i != rowIndex){
-            		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);  
-            	}else{
-            		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);           		
-            	}
+//             	if(i != rowIndex){
+//             		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);  
+//             	}else{
+//             		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);           		
+//             	}
             		
 			}
                              
@@ -187,11 +187,11 @@ $(document).ready(function(){
     
     
     AUIGrid.bind(listGrid, "cellEditEnd", function (event){
-      var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+     var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
          if(checkedItems.length <= 0) {
              Common.alert('No data selected.');          
              return false;
-         }else{
+        }else{
         	 
          if(event.dataField == "materialCode"){	 
           var matcode = AUIGrid.getCellValue(listGrid, event.rowIndex, "materialCode") ;
@@ -208,7 +208,41 @@ $(document).ready(function(){
          }
 
           
+//          var serialNo = AUIGrid.getCellValue(listGrid, event.rowIndex, "serialNumber");
+//          var selectedItem = AUIGrid.getEditedRowItems(listGrid);
 
+//          console.log(selectedItem);
+         
+         
+//          alert("serialNo :   "+serialNo);
+         
+//          alert("길이 :: "+selectedItem.length);
+         
+//         	 for (var i = 0 ; i < selectedItem.length ; i++){
+        	
+//         	 if (selectedItem[i].serialNumber != null || selectedItem[i].serialNumber !=""){
+//         		 alert("체크 인덱스: "+selectedItem[i].rnum);
+//         		 AUIGrid.addCheckedRowsByIds(listGrid, selectedItem[i].rnum);    
+//         	 }
+        	 
+        	 	 
+// 		}
+         
+//          	 var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        	 
+//         	 if(checkedItems.length > 0) {
+        		 
+//         		 for (var j = 0 ; j < checkedItems.length ; j++){
+//         			 if (checkedItems[j].serialNumber == null || checkedItems[j].serialNumber ==""){
+//         			 alert("언체크 인덱스: "+checkedItems[j].rnum);
+//         				 AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[j].rnum); 
+//         			 }
+        			 		 
+//         		 }
+        		 
+//         	 }
+         
+         
 //         if(event.dataField == "serial"){
 //             if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") =="Y"){
 //                 AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", 1);
@@ -274,14 +308,11 @@ $(document).ready(function(){
 		            Common.alert('No data selected.');
 		            return false;
 		        }else{
-		       if(checkedItems.length <= 1){
+		        	
+	
+		       if(checkedItems.length > 0){
 	        	   for (var i = 0 ; i < checkedItems.length ; i++){
-	                  // if (checkedItems[i].serialChk == 'Y' && checkedItems[i].serial =="" || checkedItems[i].serial == undefined){
-	                   //if (checkedItems[i].serialNumber =="" || checkedItems[i].serialNumber == undefined){
-	                	//   Common.alert("Please Enter Serial");
-	                    //   chkfalg="Y";
-	                   //    break;
-	                  // }else{
+
 	                  if (checkedItems[i].returnComplete =="Y"){
 	                	  chkfalg="Y";
 	                	  Common.alert('Already processed.');
@@ -289,24 +320,20 @@ $(document).ready(function(){
 	                	   chkfalg="N";     	  
 	                  }
 
-	                 //  }   
-	                   
 	                   if (checkedItems[i].materialCode =="" || checkedItems[i].materialCode == undefined){
 	                	   Common.alert("Please Enter materialCode");
 	                	   return false;
 	                   }
 	                 } 	        	   
-	        	   }else{
-	        		   Common.alert("only one data selected.");
-	        		    AUIGrid.setAllCheckedRows(listGrid, allChecked);
-	        	   }
-		        }       
+		          }    
+		       
 		        if(chkfalg=="N"){
 		        if(f_validatation('save')){
 		        	upReturnParts();		        		
 		        	}
 		        //업데이트 쿼리 	
-		        }		        
+		        }		 
+		   }
 		});
         
         $("#download").click(function() {
