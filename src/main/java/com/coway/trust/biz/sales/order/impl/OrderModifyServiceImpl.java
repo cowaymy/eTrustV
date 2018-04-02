@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.biz.sales.order.impl;
 
@@ -78,7 +78,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements OrderModifyService{
 
 	private static Logger logger = LoggerFactory.getLogger(PSTRequestDOServiceImpl.class);
-	
+
 	@Resource(name = "orderModifyMapper")
 	private OrderModifyMapper orderModifyMapper;
 
@@ -90,7 +90,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 
 	@Resource(name = "customerMapper")
 	private CustomerMapper customerMapper;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
@@ -100,14 +100,14 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		logger.info("!@###### OrderModifyServiceImpl.updateOrderBasinInfo");
 
 		params.put("updUserId", sessionVO.getUserId());
-		
+
 		if(Integer.valueOf((String)params.get("appTypeId")) != SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
 			params.put("installDur", 0);
 		}
 
 		orderModifyMapper.updateSalesOrderM(params);
 	}
-	
+
 	@Override
 	public EgovMap selectBillGrpMailingAddr(Map<String, Object> params) throws Exception {
 
@@ -116,36 +116,36 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		params.put("custBillId", orderInfo.get("custBillId"));
 
 		EgovMap billGrpInfo = orderModifyMapper.selectBillGroupByBillGroupID(params);
-		
+
 		List<EgovMap> billGrpOrd  = orderModifyMapper.selectBillGroupOrder(params);
 
 		if(billGrpOrd != null && billGrpOrd.size() > 0) {
     		billGrpInfo.put("totOrder", billGrpOrd.size());
 		}
-		
+
 		if(billGrpInfo != null) {
     		params.put("custAddId", billGrpInfo.get("custBillAddId"));
-    
+
     		EgovMap mailAddrInfo = customerMapper.selectCustomerViewMainAddress(params);
-    		
+
     		if(mailAddrInfo != null) {
     			billGrpInfo.put("fullAddress", mailAddrInfo.get("fullAddress"));
     		}
 		}
-		
+
 		return billGrpInfo;
 	}
-	
+
 	@Override
 	public EgovMap checkNricEdit(Map<String, Object> params) throws Exception {
 
 		int checkNricCnt  = orderModifyMapper.selectNricCheckCnt(params);
 		int checkNricCnt2 = orderModifyMapper.selectNricCheckCnt2(params);
-		
+
 		boolean isEditable = checkNricCnt == checkNricCnt2 ? true : false;
-		
+
 		EgovMap outMap = new EgovMap();
-		
+
 		outMap.put("isEditable", isEditable);
 
 		return outMap;
@@ -163,31 +163,31 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 	public EgovMap selectBillGrpCntcPerson(Map<String, Object> params) throws Exception {
 
 		EgovMap orderInfo = orderRegisterMapper.selectSalesOrderM(params);
-		
+
 		logger.info("!@###### custBillId:"+orderInfo.get("custBillId"));
-		
+
 		params.put("custBillId", orderInfo.get("custBillId"));
 
 		EgovMap billGrpInfo = orderModifyMapper.selectBillGroupByBillGroupID(params);
-		
+
 		List<EgovMap> billGrpOrd  = orderModifyMapper.selectBillGroupOrder(params);
-		
+
 		//logger.info("!@###### billGrpOrd.size():"+billGrpOrd.size());
 		if(billGrpOrd != null && billGrpOrd.size() > 0) {
 			billGrpInfo.put("totOrder", billGrpOrd.size());
 		}
-		
+
 		if(billGrpInfo != null) {
 			params.put("custCntcId", billGrpInfo.get("custBillCntId"));
 
 			EgovMap custAddInfo = customerMapper.selectCustomerViewMainContact(params);
-			
+
 			custAddInfo.put("code",	CommonUtils.isEmpty(custAddInfo.get("code")) ? "" : custAddInfo.get("code"));
 			custAddInfo.put("name1",	CommonUtils.isEmpty(custAddInfo.get("name1")) ? "" : custAddInfo.get("name1"));
-			
+
 			billGrpInfo.put("custAddInfo", custAddInfo);
 		}
-		
+
 		return billGrpInfo;
 	}
 
@@ -197,58 +197,58 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		logger.info("!@###### OrderModifyServiceImpl.updateOrderMailingAddress");
 
 		CustBillMasterHistoryVO custBillMasterHistoryVO = new CustBillMasterHistoryVO();
-		
+
 		this.preprocBillMasterHistory(custBillMasterHistoryVO, params, sessionVO, SalesConstants.ORDER_EDIT_TYPE_CD_MAL);
-		
+
 		orderModifyMapper.insertCustBillMasterHistory(custBillMasterHistoryVO);
 
 		Map<String, Object> inMap = new HashMap<String, Object>();
-		
+
 		inMap.put("custBillAddId", params.get("custAddId"));
 		inMap.put("updUserId", sessionVO.getUserId());
 		inMap.put("custBillId", params.get("billGroupId"));
 		inMap.put("salesOrdId", params.get("salesOrdId"));
 
 		orderModifyMapper.updateCustBillMaster(inMap);
-		
+
 		orderModifyMapper.updateCustAddId(inMap);
 	}
-	
+
 	@Override
 	public void updateCntcPerson(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 
 		logger.info("!@###### OrderModifyServiceImpl.updateOrderMailingAddress");
 
 		CustBillMasterHistoryVO custBillMasterHistoryVO = new CustBillMasterHistoryVO();
-		
+
 		this.preprocBillMasterHistory(custBillMasterHistoryVO, params, sessionVO, SalesConstants.ORDER_EDIT_TYPE_CD_CNT);
-		
+
 		orderModifyMapper.insertCustBillMasterHistory(custBillMasterHistoryVO);
 
 		Map<String, Object> inMap = new HashMap<String, Object>();
-		
+
 		inMap.put("custBillCntId", params.get("custCntcId"));
 		inMap.put("updUserId", sessionVO.getUserId());
 		inMap.put("custBillId", params.get("billGroupId"));
 		inMap.put("salesOrdId", params.get("salesOrdId"));
 
 		orderModifyMapper.updateCustBillMaster(inMap);
-		
+
 		orderModifyMapper.updateCustAddId(inMap);
 	}
-	
+
 	@Override
 	public void updateOrderMailingAddress2(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 
 		Map<String, Object> inMap = new HashMap<String, Object>();
-		
+
 		inMap.put("custBillAddId", params.get("custAddId"));
 		inMap.put("updUserId", sessionVO.getUserId());
 		inMap.put("salesOrdId", params.get("salesOrdId"));
 
 		orderModifyMapper.updateCustAddId(inMap);
 	}
-	
+
 	@Override
 	public void updateNric(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 
@@ -263,60 +263,60 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 	public void saveDocSubmission(OrderVO orderVO, SessionVO sessionVO) throws Exception {
 
 		logger.info("!@###### OrderModifyServiceImpl.saveDocSubmission");
-		
+
 		GridDataSet<DocSubmissionVO>    documentList     = orderVO.getDocSubmissionVOList();
 
 		List<DocSubmissionVO> docSubVOList = documentList.getUpdate(); // 수정 리스트 얻기
-		
+
 		int salesOrdId = orderVO.getSalesOrdId();
-		
+
 		for(DocSubmissionVO docSubVO : docSubVOList) {
 			if(docSubVO.getChkfield() == 1) {
-				
+
 				docSubVO.setDocSoId(salesOrdId);
 				docSubVO.setDocSubTypeId(SalesConstants.CCP_DOC_SUB_CODE_ID_ICS);
 				docSubVO.setDocMemId(0);
 				docSubVO.setCrtUserId(sessionVO.getUserId());
 				docSubVO.setUpdUserId(sessionVO.getUserId());
-				
+
 				orderModifyMapper.saveDocSubmission(docSubVO);
 			}
 			else {
-				
+
 				docSubVO.setUpdUserId(sessionVO.getUserId());
-				
+
 				orderModifyMapper.updateDocSubmissionDel(docSubVO);
 			}
 		}
 	}
-	
+
 	@Override
 	public void updatePaymentChannel(Map<String, Object> params, SessionVO sessionVO) throws Exception {
 
 		logger.info("!@###### OrderModifyServiceImpl.updatePaymentChannel");
-		
+
 		RentPaySetVO rentPaySetVO = new RentPaySetVO();
-		
+
 		this.preprocRentPaySet(rentPaySetVO, params, sessionVO);
 
 		orderModifyMapper.updatePaymentChannel(rentPaySetVO);
-		
+
 		SalesOrderMVO salesOrderMVO = new SalesOrderMVO();
-		
-		salesOrderMVO.setSalesOrdId(Long.parseLong((String)params.get("salesOrdId")));		
+
+		salesOrderMVO.setSalesOrdId(Long.parseLong((String)params.get("salesOrdId")));
 		salesOrderMVO.setUpdUserId(sessionVO.getUserId());
 		salesOrderMVO.setEcash(rentPaySetVO.getModeId() == 131 ? 1 : 0);
-		
+
 		orderModifyMapper.updateECashInfo(salesOrderMVO);
 	}
-	
+
 	private void preprocRentPaySet(RentPaySetVO rentPaySetVO, Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 		logger.info("!@###### preprocRentPaySet START ");
-		
+
 		int iRentPayMode = Integer.parseInt((String) params.get("rentPayMode"));
 
 		String sIssuNric = "";
-		
+
 		if(CommonUtils.isNotEmpty(((String) params.get("rentPayIC")).trim())) {
 			sIssuNric = (String) params.get("rentPayIC");
 			logger.info("!@###### 000");
@@ -329,7 +329,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 			sIssuNric = (String) params.get("custNric");
 			logger.info("!@###### 222");
 		}
-		
+
 		rentPaySetVO.setRentPayId(Integer.parseInt((String) params.get("rentPayId")));
 //		rentPaySetVO.setSalesOrdId(Integer.parseInt((String) params.get("salesOrdId")));
 		rentPaySetVO.setModeId(iRentPayMode);
@@ -341,8 +341,8 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		rentPaySetVO.setDdStartDt(CommonUtils.isNotEmpty(params.get("startDate")) ? (String) params.get("startDate") : SalesConstants.DEFAULT_DATE );
 		rentPaySetVO.setDdRejctDt(CommonUtils.isNotEmpty(params.get("rejectDate")) ? (String) params.get("rejectDate") : SalesConstants.DEFAULT_DATE );
 		rentPaySetVO.setFailResnId("1".equals((String) params.get("chkRejectDate")) ? Integer.parseInt((String) params.get("rejectReason")) : 0);
-		rentPaySetVO.setUpdUserId(sessionVO.getUserId());		
-//		rentPaySetVO.setStusCodeId(1);		
+		rentPaySetVO.setUpdUserId(sessionVO.getUserId());
+//		rentPaySetVO.setStusCodeId(1);
 		rentPaySetVO.setIs3rdParty("1".equals((String) params.get("thrdParty")) ? 1 : 0);
 		rentPaySetVO.setCustId("1".equals((String) params.get("thrdParty")) ? Integer.parseInt((String) params.get("hiddenThrdPartyId")) : 0);
 //		rentPaySetVO.setEditTypeId(0);
@@ -353,10 +353,10 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		rentPaySetVO.setLastApplyUser(sessionVO.getUserId());
 		rentPaySetVO.setPayTrm(Integer.parseInt((String) params.get("payTerm")));
 	}
-	
+
 	private void preprocBillMasterHistory(CustBillMasterHistoryVO custBillMasterHistoryVO, Map<String, Object> params, SessionVO sessionVO, String ordEditType) throws ParseException {
 		logger.info("!@###### preprocBillMasterHistory START ");
-		
+
 		custBillMasterHistoryVO.setCustBillId(Integer.parseInt((String) params.get("billGroupId")));
 		custBillMasterHistoryVO.setHistCrtUserId(sessionVO.getUserId());
 		custBillMasterHistoryVO.setSysHistRem("");
@@ -380,7 +380,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		custBillMasterHistoryVO.setIsPostOld(0);
 		custBillMasterHistoryVO.setIsPostNw(0);
 		custBillMasterHistoryVO.setTypeId(0);
-		
+
 		if(SalesConstants.ORDER_EDIT_TYPE_CD_MAL.equals(ordEditType)) {
 			custBillMasterHistoryVO.setSysHistRem("[System] Change Mailing Address");
 			custBillMasterHistoryVO.setAddrIdOld(Integer.parseInt((String) params.get("custAddIdOld")));
@@ -394,7 +394,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 			custBillMasterHistoryVO.setTypeId(1043);
 		}
 	}
-	
+
 	@Override
 	public EgovMap selectCustomerInfo(Map<String, Object> params) throws Exception {
 
@@ -402,26 +402,26 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 
 		return outMap;
 	}
-	
+
 	@Override
 	public EgovMap selectInstallInfo(Map<String, Object> params) throws Exception {
 
 		EgovMap instMap = orderDetailMapper.selectOrderInstallationInfoByOrderID(params);
-		
+
 		String TM = this.convert12Tm((String) instMap.get("preferInstTm"));
-		
+
 		instMap.put("preferInstTm", TM);
-		
+
 		return instMap;
 	}
-	
+
 	private String convert12Tm(String TM) {
 		String HH = "", MI = "", cvtTM = "";
-		
+
 		if(CommonUtils.isNotEmpty(TM)) {
 			HH = CommonUtils.left(TM, 2);
 			MI = TM.substring(3, 5);
-			
+
 			if(Integer.parseInt(HH) > 12) {
 				cvtTM = CommonUtils.getFillString(String.valueOf(Integer.parseInt(HH) - 12), "0", 2) + ":" + String.valueOf(MI) + " PM";
 			}
@@ -431,15 +431,15 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		}
 		return cvtTM;
 	}
-	
+
 	private String convert24Tm(String TM) {
 		String ampm = "", HH = "", MI = "", cvtTM = "";
-		
+
 		if(CommonUtils.isNotEmpty(TM)) {
 			ampm = CommonUtils.right(TM, 2);
 			HH = CommonUtils.left(TM, 2);
 			MI = TM.substring(3, 5);
-			
+
 			if("PM".equals(ampm)) {
 				cvtTM = String.valueOf(Integer.parseInt(HH) + 12) + ":" + MI + ":00";
 			}
@@ -449,7 +449,7 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		}
 		return cvtTM;
 	}
-	
+
 	@Override
 	public EgovMap selectInstallAddrInfo(Map<String, Object> params) throws Exception {
 
@@ -457,39 +457,39 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 
 		return addrMap;
 	}
-	
+
 	@Override
 	public EgovMap selectInstallCntcInfo(Map<String, Object> params) throws Exception {
 
 		EgovMap cnctMap = customerMapper.selectCustomerViewMainContact(params);
-		
+
 		return cnctMap;
 	}
-	
+
 	@Override
 	public EgovMap selectInstRsltCount(Map<String, Object> params) throws Exception {
 
 		EgovMap cnctMap = orderModifyMapper.selectInstRsltCount(params);
-		
+
 		return cnctMap;
 	}
-	
+
 	@Override
 	public EgovMap selectGSTZRLocationCount(Map<String, Object> params) throws Exception {
 
 		EgovMap cnctMap = orderModifyMapper.selectGSTZRLocationCount(params);
-		
+
 		return cnctMap;
 	}
-	
+
 	@Override
 	public EgovMap selectGSTZRLocationByAddrIdCount(Map<String, Object> params) throws Exception {
 
 		EgovMap cnctMap = orderModifyMapper.selectGSTZRLocationByAddrIdCount(params);
-		
+
 		return cnctMap;
 	}
-	
+
 	@Override
 	public void updateInstallInfo(Map<String, Object> params, SessionVO sessionVO) throws ParseException {
 
@@ -502,35 +502,35 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 
 		orderModifyMapper.updateInstallUpdateInfo(params);
 	}
-	
+
 	@Override
 	public EgovMap selectRentPaySetInfo(Map<String, Object> params) throws Exception {
 
 		EgovMap cnctMap = orderDetailMapper.selectOrderRentPaySetInfoByOrderID(params);
-		
+
 		return cnctMap;
 	}
-	
+
 	@Override
 	public List<EgovMap> selectReferralList(Map<String, Object> params) {
 		return orderModifyMapper.selectReferralList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectStateCodeList(Map<String, Object> params) {
 		return orderModifyMapper.selectStateCodeList(params);
 	}
-	
+
 	@Override
 	public void saveReferral(OrderModifyVO orderModifyVO, SessionVO sessionVO) throws Exception {
 
 		GridDataSet<ReferralVO> gridReferralVOList  = orderModifyVO.getGridReferralVOList();
-		
+
 		List<ReferralVO> addList = gridReferralVOList.getAdd();
 		List<ReferralVO> udtList = gridReferralVOList.getUpdate();
 
 		for(ReferralVO addVO : addList) {
-			
+
 			if(CommonUtils.isEmpty(addVO.getRefCntc().trim())) {
 				throw new ApplicationException(AppConstants.FAIL, "Please key-in Contact number.");
 			}
@@ -543,16 +543,16 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 			if(addVO.getRefCntc().trim().length() >= 12) {
 				throw new ApplicationException(AppConstants.FAIL, "Contact number exceed valid digit.");
 			}
-			
+
 			addVO.setSalesOrdId(orderModifyVO.getSalesOrdId());
 			addVO.setCrtUserId(sessionVO.getUserId());
 			addVO.setStusCode(1);
-			
+
 			orderModifyMapper.insertReferral(addVO);
 		}
-		
+
 		for(ReferralVO udtVO : udtList) {
-			
+
 			if(CommonUtils.isEmpty(udtVO.getRefCntc().trim())) {
 				throw new ApplicationException(AppConstants.FAIL, "Please key-in Contact number.");
 			}
@@ -575,6 +575,8 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 
 		logger.info("!@###### OrderModifyServiceImpl.updatePromoPriceInfo");
 
+		salesOrderMVO.setUpdUserId(sessionVO.getUserId());
+
 		orderModifyMapper.updatePromoPriceInfo(salesOrderMVO);
 	}
 
@@ -592,24 +594,24 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
             orderRegisterMapper.insertGSTEURCertificate(gSTEURCertificateVO); //INSERT GST CERTIFICATE
 		}
 	}
-	
+
 	private void preprocGSTCertificate(GSTEURCertificateVO gSTEURCertificateVO, SessionVO sessionVO) {
 
 		logger.info("!@###### preprocGSTCertificate START ");
-		
+
 		int reliefTypeId = 0;
-		
+
 		if(gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
 			reliefTypeId = 1374; //Foreign Mission And International Organization
 		}
 		else if(gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT || gSTEURCertificateVO.getEurcRliefAppTypeId() == SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT) {
 			reliefTypeId = 1373; //Government Sector
 		}
-		
+
 		gSTEURCertificateVO.setEurcRliefTypeId(reliefTypeId);
 		gSTEURCertificateVO.setEurcStusCodeId(SalesConstants.STATUS_ACTIVE);
 		gSTEURCertificateVO.setEurcCrtUserId(sessionVO.getUserId());
 		gSTEURCertificateVO.setEurcUpdUserId(sessionVO.getUserId());
 	}
-	
+
 }
