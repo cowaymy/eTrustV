@@ -207,9 +207,10 @@ function fnConfirm(flag)
 	    return false;
 	  }
 
-	  if ($("#scmTeamCbBox").val().length < 1)
+	  if ($("#scmTeamCbBox").val().length >1)
 	  {
-	    Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
+		Common.alert("Please Select Team ALL.");
+	    /* Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>"); */
 	    return false;
 	  }
 
@@ -1067,6 +1068,10 @@ function fnSettiingHeader()
 	              $("#planTeam").text(result.planInfo[0].team);
 	              $("#planStatus").text(result.planInfo[0].planStusNm);
 	              $("#planCreatedAt").text(result.planInfo[0].crtDt);
+	              
+	              $("#planId").val(result.planInfo[0].planId);
+	              
+	              
 			       }
 	          // alert(result.planInfo[0].planStusId);
 	           if(result.planInfo[0].planStusId == "1"){
@@ -2008,6 +2013,9 @@ $(document).ready(function()
 <form id="MainForm" method="get" action="">
   <input type ="hidden" id="planMasterId" name="planMasterId" value=""/>
   <input type ="hidden" id="selectPlanMonth" name="selectPlanMonth" value=""/>
+  
+  <input type ="hidden" id="planId" name="planId" value=""/>
+  
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

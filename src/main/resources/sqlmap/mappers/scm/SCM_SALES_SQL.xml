@@ -1200,7 +1200,8 @@ SELECT STK_ID
      SET PLAN_STUS_ID = 4
    WHERE PLAN_YEAR = #{scmYearCbBox}
      AND PLAN_WEEK = #{scmPeriodCbBox}
-     AND TEAM      = #{scmTeamCbBox}
+     AND PLAN_ID      = #{planId}
+     <!-- AND TEAM      = #{scmTeamCbBox} -->
 </update>
 
 <select id="selectAccuracyWeeklyDetail" parameterType="Map" resultType="egovMap">
@@ -2281,5 +2282,154 @@ SELECT STK_ID
       WHERE PLAN_MASTER_ID = (SELECT PLAN_ID FROM SCM0001M WHERE PLAN_YEAR = #{scmYearCbBox} AND PLAN_WEEK = #{scmPeriodCbBox} AND TEAM = #{scmTeamCbBox})
         AND STOCK_CODE = #{stockCode}
     </insert>
+    
+    
+   <insert id="insertITF189" parameterType="Map">
+      INSERT INTO itf0189m (IF_KEY,
+                      SEQ,
+                      IF_TYPE,
+                      TRAN_STATUS_CD,
+                      ERR_CD,
+                      ERR_MSG,
+                      TRAN_DT,
+                      TRAN_TM,
+                      RGST_DT,
+                      RGST_TM,
+                      RGST_ID,
+                      PLAN_YEAR,
+                      PLAN_MONTH,
+                      PLAN_WEEK,
+                      TEAM,
+                      STOCK_CODE,
+                      PRE_M3_AVG_ORDED,
+                      PRE_M3_AVG_ISSU,
+                      M1_ORD,
+                      M2_ORD,
+                      M3_ORD,
+                      M_3,
+                      M_2,
+                      M_1,
+                      M0_PLAN,
+                      M0_ORD,
+                      M1,
+                      M2,
+                      M3,
+                      M4,
+                      W00,
+                      W01,
+                      W02,
+                      W03,
+                      W04,
+                      W05,
+                      W06,
+                      W07,
+                      W08,
+                      W09,
+                      W10,
+                      W11,
+                      W12,
+                      W13,
+                      W14,
+                      W15,
+                      W16,
+                      W17,
+                      W18,
+                      W19,
+                      W20,
+                      W21,
+                      W22,
+                      W23,
+                      W24,
+                      W25,
+                      W26,
+                      W27,
+                      W28,
+                      W29,
+                      W30,
+                      WS1,
+                      WS2,
+                      WS3,
+                      WS4,
+                      WS5)     
+     SELECT 
+     FN_CRT_IFKEY('189'),
+      1,
+      '189',
+      '',
+      '',
+      '',
+      TO_CHAR(SYSDATE,'YYYYMMDD') AS TRAN_DT,
+      TO_CHAR(SYSDATE,'HH24MISS') AS TRAN_TM,
+      TO_CHAR(SYSDATE,'YYYYMMDD') AS RGST_DT,
+      TO_CHAR(SYSDATE,'HH24MISS') AS RGST_TM,
+      '',
+      a.PLAN_YEAR,
+      a.PLAN_MONTH,
+      a.PLAN_WEEK,
+      a.TEAM,
+       STOCK_CODE,
+       PRE_M3_AVG_ORDED,
+       PRE_M3_AVG_ISSU,
+       M1_ORD,
+       M2_ORD,
+       M3_ORD,
+       M_3,
+       M_2,
+       M_1,
+       M0_PLAN,
+       M0_ORD,
+       M1,
+       M2,
+       M3,
+       M4,
+       W00,
+       W01,
+       W02,
+       W03,
+       W04,
+       W05,
+       W06,
+       W07,
+       W08,
+       W09,
+       W10,
+       W11,
+       W12,
+       W13,
+       W14,
+       W15,
+       W16,
+       W17,
+       W18,
+       W19,
+       W20,
+       W21,
+       W22,
+       W23,
+       W24,
+       W25,
+       W26,
+       W27,
+       W28,
+       W29,
+       W30,
+       WS1,
+       WS2,
+       WS3,
+       WS4,
+       WS5
+  FROM SCM0001M a ,SCM0002D b
+ WHERE 
+ a.PLAN_ID=b.PLAN_MASTER_ID
+ AND a.PLAN_STUS_ID ='4'
+ AND b.PLAN_MASTER_ID =  #{planId}
+ <!-- AND b.STOCK_CODE = '112110'; -->
+ </insert>
+    
+    
+    
+    
+    
+    
 
 </mapper>

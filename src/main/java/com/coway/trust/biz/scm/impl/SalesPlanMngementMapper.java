@@ -89,5 +89,7 @@ public interface SalesPlanMngementMapper {
 	void updateSalesPlanDetailMonthly(Map<String, Object> params);
 
 	void insConfirmPlanByCDC(Map<String, Object> params);
-
+	
+	void insertITF189(Map<String, Object> params);
+	
 }

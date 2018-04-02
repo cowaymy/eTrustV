@@ -1170,7 +1170,9 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		params.put("updateSalesPlanConfirm_Params", params.toString() );
 
 		saveCnt = salesPlanMngementMapper.updateSalesPlanConfirm(params);
-
+		
+		salesPlanMngementMapper.insertITF189(params);
+			
 		totCnt = totCnt + saveCnt;
 
 		return totCnt;
