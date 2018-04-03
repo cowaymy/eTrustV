@@ -55,11 +55,11 @@ $(document).ready(function(){
     	    AUIGrid.forceEditingComplete(myGridID2, null, false);
 
           if (validation_copy()) {
-        	  /* if (("${popAreaId}").length == 10){
+        	  if (("${popAreaId}").length == 10){
         		  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_copy);
               } else {
             	  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_copyOther);
-              } */
+              }
            }
       });
 
