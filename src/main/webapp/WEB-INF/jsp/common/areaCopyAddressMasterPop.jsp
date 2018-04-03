@@ -4,11 +4,12 @@
 var myGridID2;
 
 var cArea = '<spring:message code="sys.area" />';
+var cCity  = '<spring:message code="sys.city" />';
 
 //Grid에서 선택된 RowID
 var selectedGridValue;
 
-var columnLayout2=[             
+var columnLayout2=[
  {dataField:"areaId", headerText:'<spring:message code="sys.areaId" />', width: 120, editable : false},
  {dataField:"area", headerText:'<spring:message code="sys.area" />', width: 200, editable : true},
  {dataField:"postcode", headerText:'<spring:message code="sys.title.postcode" />', width: 100, editable : false },
@@ -21,23 +22,23 @@ var columnLayout2=[
 ];
 
 $(document).ready(function(){
-	  
+
 	  var item = { "areaId" :  "${popPostcode}-xxxx", "area" : "", "postcode" :  "${popPostcode}", "city" :  "${popCity}", "state" :  "${popState}", "country" :  "${popCountry}", "statusId" :  "${popStatusId}", "id" :  "${popId}", "key" :  "${popAreaId}"}; //row 추가
 	  var item_other = { "areaId" :  ("${popAreaId}").substring(0,2)+"-xxxx", "area" : "", "postcode" :  "${popPostcode}", "city" :  "${popCity}", "state" :  "${popState}", "country" :  "${popCountry}", "statusId" :  "${popStatusId}", "id" :  "${popId}", "key" :  "${popAreaId}"}; //row 추가
-      
-	  
-      myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,"");  
-	  
+
+
+      myGridID2 = GridCommon.createAUIGrid("grid_wrap2", columnLayout2,null,"");
+
       AUIGrid.hideColumnByDataField(myGridID2, "key");
       if (("${popAreaId}").length == 10){
     	  AUIGrid.addRow(myGridID2, item, "last"); //row 추가
       } else {
           AUIGrid.addRow(myGridID2, item_other, "last"); //row 추가
       }
-      
-       
+
+
       //아이템 grid 행 추가
-      $("#addRow").click(function() { 
+      $("#addRow").click(function() {
 
     	  if (("${popAreaId}").length == 10){
               AUIGrid.addRow(myGridID2, item, "last"); //row 추가
@@ -46,21 +47,21 @@ $(document).ready(function(){
           }
 
       });
-      
+
       //save
       $("#save_copy").click(function() {
-    	  
+
     	    // 버튼 클릭시 cellEditCancel  이벤트 발생 제거. => 편집모드(editable=true)인 경우 해당 input 의 값을 강제적으로 편집 완료로 변경.
     	    AUIGrid.forceEditingComplete(myGridID2, null, false);
-    	  
+
           if (validation_copy()) {
-        	  if (("${popAreaId}").length == 10){
+        	  /* if (("${popAreaId}").length == 10){
         		  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_copy);
               } else {
             	  Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData_copyOther);
-              }
+              } */
            }
-      }); 
+      });
 
 }); //Ready
 
@@ -79,9 +80,9 @@ function fn_saveGridData_copy(){
         } catch (e) {
             console.log(e);
         }
-        Common.alert("Fail : " + jqXHR.responseJSON.message);             
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
-} 
+}
 
 function fn_saveGridData_copyOther(){
     Common.ajax("POST", "/common/saveCopyOtherAddressMaster.do", GridCommon.getEditData(myGridID2), function(result) {
@@ -98,9 +99,9 @@ function fn_saveGridData_copyOther(){
         } catch (e) {
             console.log(e);
         }
-        Common.alert("Fail : " + jqXHR.responseJSON.message);             
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
-} 
+}
 
 /*  validation */
 function validation_copy() {
@@ -111,34 +112,41 @@ function validation_copy() {
       Common.alert("<spring:message code='sys.common.alert.noChange'/>");
       return false;
     }
-    
+
     if(!validationCom_copy(addList)){
         return false;
-   }      
-    
+   }
+
     return result;
-}  
+}
 
 
 function validationCom_copy(list){
     var result = true;
     for (var i = 0; i < list.length; i++) {
            var area = list[i].area;
+           var city = list[i].city;
+
            if (area == "") {
              result = false;
              Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + cArea + "' htmlEscape='false'/>");
              break;
            }
+           if (city == "") {
+               result = false;
+               Common.alert("<spring:message code='sys.common.alert.validation' arguments='" + cCity + "' htmlEscape='false'/>");
+               break;
+             }
     }
     return result;
 }
 
 
-function removeRowDetail() 
+function removeRowDetail()
 {
 	AUIGrid.removeRow(myGridID2, "selectedIndex");
 }
-</script>   
+</script>
 
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -161,7 +169,7 @@ function removeRowDetail()
     <input type="hidden" id = "pCountry" name="pCountry" />
     <input type="hidden" id = "pStatusId" name="pStatusId" />
     <input type="hidden" id = "pId" name="pId" />
-</form>   
+</form>
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" id="addRow"><spring:message code='sys.btn.add'/></a></p></li>
     <li><p class="btn_grid"><a href="#" onclick="removeRowDetail();"><spring:message code='sys.btn.del'/></a></p></li>
