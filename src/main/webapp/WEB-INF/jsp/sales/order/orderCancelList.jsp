@@ -35,7 +35,7 @@
 
         // 셀 클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellClick", function(event) {
-        	$("#reqId").val(event.item.reqId);
+            $("#reqId").val(event.item.reqId);
             $("#callEntryId").val(event.item.callEntryId);
             $("#salesOrdId").val(event.item.ordId);
             $("#typeId").val(event.item.typeId);
@@ -50,7 +50,7 @@
             $("#paramReqStageId").val(event.item.reqStageId);
             $("#paramRsoStusId").val(event.item.rsoStus);
             $("#paramSalesOrdNo").val(event.item.ordNo);
-            
+
             gridValue =  AUIGrid.getCellValue(myGridID, event.rowIndex, $("#detailForm").serializeJSON());
         });
 
@@ -105,11 +105,11 @@
                 formatString : "dd-mm-yyyy" ,
                 editable : false
             },{
-            	dataField : 'rsoStus' ,
-            	headerText : 'RSO Status' ,
-            	  width : 100,
-            	editable : false
-            	
+                dataField : 'rsoStus' ,
+                headerText : 'RSO Status' ,
+                  width : 100,
+                editable : false
+
             },{
                 dataField : "callEntryId",
                 visible : false
@@ -203,46 +203,46 @@
     }
 
     function fn_newLogResult() {
-    	if(detailForm.reqId.value == ""){
-    		Common.alert("No cancellation request selected.");
-    		return false;
-    	}//else{test--------
-    	//	if(detailForm.paramCallStusId.value != '1' && detailForm.paramCallStusId.value != '19'){
-    	//		Common.alert("Cancellation request [" +detailForm.paramReqNo.value+ "] is under call status ["
-    	//		                  +detailForm.paramCallStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
-    	//		return false;
-    	//	}else{
-    	//		if(detailForm.paramReqStusId.value != '1' && detailForm.paramReqStusId.value != '19'){
+        if(detailForm.reqId.value == ""){
+            Common.alert("No cancellation request selected.");
+            return false;
+        }//else{test--------
+        //  if(detailForm.paramCallStusId.value != '1' && detailForm.paramCallStusId.value != '19'){
+        //      Common.alert("Cancellation request [" +detailForm.paramReqNo.value+ "] is under call status ["
+        //                        +detailForm.paramCallStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
+        //      return false;
+        //  }else{
+        //      if(detailForm.paramReqStusId.value != '1' && detailForm.paramReqStusId.value != '19'){
         //            Common.alert("Cancellation request [" +detailForm.paramReqNo.value+ "] is under call status ["
-        //            		          +detailForm.paramReqStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
+        //                            +detailForm.paramReqStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
         //            return false;
-    	//		}
-    	//	}
-    		Common.popupDiv("/sales/order/cancelNewLogResultPop.do", $("#detailForm").serializeJSON(), null , true, '_newDiv');
-    	//}
+        //      }
+        //  }
+            Common.popupDiv("/sales/order/cancelNewLogResultPop.do", $("#detailForm").serializeJSON(), null , true, '_newDiv');
+        //}
 
     }
-    
-    
+
+
     function fn_newRsoResult(){
-    	
-    	if(detailForm.reqId.value == ""){
+
+        if(detailForm.reqId.value == ""){
             Common.alert("No cancellation request selected.");
             return false;
         }
-    	if(detailForm.paramRsoStusId.value != 'ACT'){
-    		 Common.alert("Only available to use this function  in case of Return Service Order Status in ‘ACT’");
+        if(detailForm.paramRsoStusId.value != 'ACT'){
+             Common.alert("Only available to use this function  in case of Return Service Order Status in ‘ACT’");
              return false;
-    	}
-    	
-    	var salesOrdId1 = detailForm.salesOrdId.value;
-    	var salesOrdNo1 = detailForm.paramSalesOrdNo.value;
-    	
+        }
+
+        var salesOrdId1 = detailForm.salesOrdId.value;
+        var salesOrdNo1 = detailForm.paramSalesOrdNo.value;
+
         Common.popupDiv("/sales/order/addProductReturnPopup.do?isPop=true&salesOrderId="+salesOrdId1 + "&salesOrderNO=" + salesOrdNo1 , $("#detailForm").serializeJSON(), null, "false", "addInstallationPopupId");
-    	
+
     }
 
-    	$.fn.clearForm = function() {
+        $.fn.clearForm = function() {
             return this.each(function() {
                 var type = this.type, tag = this.tagName.toLowerCase();
                 if (tag === 'form'){
@@ -262,29 +262,29 @@
         };
 
     function fn_ctAssignment(){
-    	if(detailForm.reqId.value == ""){
+        if(detailForm.reqId.value == ""){
             Common.alert("<spring:message code='sal.alert.msg.noCancelRequestSelected' />.");
             return false;
         }else{
-        	if(detailForm.paramReqStageId.value == '24'){
+            if(detailForm.paramReqStageId.value == '24'){
                 Common.alert("[" +detailForm.paramReqNo.value+ "<spring:message code='sal.alert.msg.onlyRequestAfterInstallIsAllow' />.");
                 return false;
             }
-        	if(detailForm.paramCallStusId.value == '1' || detailForm.paramCallStusId.value == '19'){
+            if(detailForm.paramCallStusId.value == '1' || detailForm.paramCallStusId.value == '19'){
                 Common.alert("[" +detailForm.paramReqNo.value+ "] is under status ["+detailForm.paramReqStusName.value+"] </br> <spring:message code='sal.alert.msg.reassignCtIsDisallowed' />.");
                 return false;
             }
-        	Common.popupDiv("/sales/order/ctAssignmentInfoPop.do", $("#detailForm").serializeJSON(), null , true, '_CTDiv');
+            Common.popupDiv("/sales/order/ctAssignmentInfoPop.do", $("#detailForm").serializeJSON(), null , true, '_CTDiv');
         }
 
     }
 
     function fn_CTBulk(){
-    	Common.popupDiv("/sales/order/ctAssignBulkPop.do", $("#detailForm").serializeJSON(), null , true, '_bulkDiv');
+        Common.popupDiv("/sales/order/ctAssignBulkPop.do", $("#detailForm").serializeJSON(), null , true, '_bulkDiv');
     }
 
     function fn_rawData(){
-    	Common.popupDiv("/sales/order/orderCancelRequestRawDataPop.do", null, null, true);
+        Common.popupDiv("/sales/order/orderCancelRequestRawDataPop.do", null, null, true);
     }
 
     function fn_productReturnRaw(){
@@ -295,9 +295,16 @@
         Common.popupDiv("/sales/order/orderCancelProductReturnLogBookListingPop.do", null, null, true);
     }
 
-    function fn_productReturnNoteList(){
-    	Common.popupDiv("/sales/order/orderCancelProductReturnNoteListingPop.do", null, null, true);
+
+    function fn_productReturnYSList(){
+        Common.popupDiv("/sales/order/orderCancelProductReturnYellowSheetPop.do", null, null, true);
     }
+
+
+    function fn_productReturnNoteList(){
+        Common.popupDiv("/sales/order/orderCancelProductReturnNoteListingPop.do", null, null, true);
+    }
+
 
 </script>
 
@@ -464,6 +471,9 @@
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onClick="fn_productReturnLogBookList()">Product Return Log Book Listing</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+        <li><p class="link_btn type2"><a href="#" onClick="fn_productReturnYSList()">Product Return YS Listing</a></p></li>
     </c:if>
       <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onClick="fn_productReturnNoteList()">Product Return Note</a></p></li>
