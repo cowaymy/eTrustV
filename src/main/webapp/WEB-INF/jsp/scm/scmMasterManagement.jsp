@@ -1,13 +1,6 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
 <style type="text/css">
-/* 칼럼 스타일 전체 재정의 */
-.aui-grid-right-column {
-  text-align:right;
-}
-.aui-grid-left-column {
-  text-align:right;
-}
 
 /* 커스텀 칼럼 스타일 정의 */
 .my-column {  
@@ -15,6 +8,12 @@
     margin-top:-20px;
 }
 
+.aui-grid-drop-list-ul {
+   text-align:left;
+}
+ 
+ 
+ 
 </style>
 
 <script type="text/javaScript">
@@ -89,7 +88,8 @@ function fnSetStockDropDownList()
                     {
                       var list = new Object();
                           list.id = result[i].stkCode ;  // display 
-                          list.value = result[i].stkDesc;  // true value
+                          list.value =  result[i].stkDesc;  // true value
+                          
                           keyValueList.push(list);
                     }
 
@@ -371,13 +371,11 @@ var masterManagerLayout =
 		                        {
 		                            type : "DropDownListRenderer",
 		                            showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
-		                            
-		                            listFunction : function(rowIndex, columnIndex, item, dataField)
-		                            {
+		                            listFunction : function(rowIndex, columnIndex, item, dataField)  {
 		                              return keyValueList;
 		                            },
 		                            keyField : "id",       
-	                              valueField : "value",  
+	                                valueField : "value",  
 		                        }
 		                       ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item )
 	                            {  // as click excute.
@@ -389,17 +387,18 @@ var masterManagerLayout =
 	                               
 	                               for(var iLoop = 0; iLoop < iCnt; iLoop++)
 	                               {
+	                            	   
 	                                 if(keyValueList[iLoop]["id"] == value)
 	                                 {
 	                                   console.log("Loop_ID[0] : " + keyValueList[iLoop]["id"])  // id == value(display) == view.
 	                                   console.log("Loop_value[0] : " + keyValueList[iLoop]["value"])  // 실질적인 값
 	                                     
-	                                   retStr = keyValueList[iLoop]["value"]; // 실질적인값.
+	                                   retStr =  keyValueList[iLoop]["value"]; // 실질적인값.
 	                                   console.log("Break__: " + retStr);
 	                                   break;
 	                                 }
 	                               }
-	                               console.log("retStrL " + retStr);
+	                               console.log("retStrL ===> " + retStr);
 	                               return retStr;
 	                            } 
                          }

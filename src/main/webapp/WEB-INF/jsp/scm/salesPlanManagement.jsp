@@ -1060,6 +1060,12 @@ function fnSettiingHeader()
            , $("#MainForm").serializeJSON()
            , function(result)
            {
+	    console.log (result);
+	           if( null  == result.planInfo){
+	        	   Common.alert("no data found!!");
+	        	   return ;
+	           }
+	  
 	           if(result.planInfo != null && result.planInfo.length > 0)
 		         {
 	              $("#planYear").text(result.planInfo[0].planYear);
@@ -1905,6 +1911,9 @@ function fnSearchBtnList()
 	           , function(result)
 	           {
 	              console.log("성공 fnSearchBtnList: " + result.length);
+	              
+	              console.log(result);
+                  
 	              AUIGrid.setGridData(myGridID, result.salesPlanMainList);
 	              if(result != null && result.salesPlanMainList.length > 0)
 	              {
@@ -2208,7 +2217,6 @@ $(document).ready(function()
 <!-- 그리드 영역 2-->
  <div id="dynamic_DetailGrid_wrap" style="height:280px;"></div>
 </article><!-- grid_wrap end -->
-
 <article class="grid_wrap"><!-- grid_wrap start -->
 <!-- 입력을위한 그리드 -->
  <div id="insertGridDivID" style="height:280px;"></div>

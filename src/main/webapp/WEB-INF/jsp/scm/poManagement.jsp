@@ -218,7 +218,7 @@ function fnCreatePO()
 	//  AUIGrid.updateRow(myGridID2, { "checkFlag" : 1 }, i);
 
 	if ( parseInt(AUIGrid.getCellValue(myGridID2, 0, "fobAmount")) > 500000 
-			&&  parseInt(AUIGrid.getCellValue(myGridID2, 0, "vendor")) == 20000000 )
+			&&  parseInt(AUIGrid.getCellValue(myGridID2, 0, "vendor")) == 9200000 )
 	{
 	   Common.alert("<spring:message code='sys.scm.planByCdc.amountExceeds'/> ");
 	   return false;  
