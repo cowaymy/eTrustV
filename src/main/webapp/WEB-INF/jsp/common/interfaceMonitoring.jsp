@@ -215,7 +215,7 @@ var gridIfColumnLayout =
    },
    {
       dataField : "sndChkVal",
-      headerText : "BIZ Check Value",\
+      headerText : "BIZ Check Value",
       dataType : "numeric",
       formatString : "#,##0",
       width : "18%",
