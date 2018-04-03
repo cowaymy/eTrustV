@@ -75,7 +75,7 @@ public class SmsServiceImpl implements SmsService
 		//smsVO.setUserId(sessionVO.getUserId());
 		smsVO.setUserName(sessionVO.getUserName());
 		smsVO.setBulkUploadId(0);
-		smsVO.setVendorId(3);
+		smsVO.setVendorId(2);
 
 		logger.debug("@#### preprocSmsDetails END");
 
