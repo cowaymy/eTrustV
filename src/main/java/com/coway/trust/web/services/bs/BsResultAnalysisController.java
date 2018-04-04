@@ -40,10 +40,11 @@ public class BsResultAnalysisController {
         params.put("userId", sessionVO.getUserId());
 
         EgovMap result = bsResultAnalysisService.getUserInfo(params);
+        model.put("roleId", result.get("roleId"));
+        model.put("memCode", result.get("memCode"));
         model.put("orgCode", result.get("lastOrgCode"));
         model.put("grpCode", result.get("lastGrpCode"));
         model.put("deptCode", result.get("deptCode"));
-        model.put("memCode", result.get("memCode"));
         model.put("memLvl", sessionVO.getMemberLevel());
 
         return "services/bs/bsResultAnalysis";

@@ -14,46 +14,51 @@
             $("#table1").show();
         }
 
-        if("${memLvl}" == "2") {
+        $("#roleRow").removeAttr("style").hide();
 
-            $("#orgCode").attr("class", "w100p readonly");
-            $("#orgCode").attr("readonly", "readonly");
+        if("${roleId}" != "128" || "${roleId}" != "129" || "${roleId}" != "130" || "${roleId}" != "137") {
+            if("${memLvl}" == "2") {
 
-            $("#grpCode").val("${grpCode}");
-            $("#grpCode").attr("class", "w100p readonly");
-            $("#grpCode").attr("readonly", "readonly");
+                $("#orgCode").attr("class", "w100p readonly");
+                $("#orgCode").attr("readonly", "readonly");
 
-        } else if("${memLvl}" == "3") {
+                $("#grpCode").val("${grpCode}");
+                $("#grpCode").attr("class", "w100p readonly");
+                $("#grpCode").attr("readonly", "readonly");
 
-            $("#orgCode").attr("class", "w100p readonly");
-            $("#orgCode").attr("readonly", "readonly");
+            } else if("${memLvl}" == "3") {
 
-            $("#grpCode").val("${grpCode}");
-            $("#grpCode").attr("class", "w100p readonly");
-            $("#grpCode").attr("readonly", "readonly");
+                $("#orgCode").attr("class", "w100p readonly");
+                $("#orgCode").attr("readonly", "readonly");
 
-            $("#deptCode").val("${deptCode}");
-            $("#deptCode").attr("class", "w100p readonly");
-            $("#deptCode").attr("readonly", "readonly");
+                $("#grpCode").val("${grpCode}");
+                $("#grpCode").attr("class", "w100p readonly");
+                $("#grpCode").attr("readonly", "readonly");
 
-        } else if("${memLvl}" == "4") {
+                $("#deptCode").val("${deptCode}");
+                $("#deptCode").attr("class", "w100p readonly");
+                $("#deptCode").attr("readonly", "readonly");
 
-            $("#orgCode").attr("class", "w100p readonly");
-            $("#orgCode").attr("readonly", "readonly");
+            } else if("${memLvl}" == "4") {
 
-            $("#grpCode").val("${grpCode}");
-            $("#grpCode").attr("class", "w100p readonly");
-            $("#grpCode").attr("readonly", "readonly");
+                $("#orgCode").attr("class", "w100p readonly");
+                $("#orgCode").attr("readonly", "readonly");
 
-            $("#deptCode").val("${deptCode}");
-            $("#deptCode").attr("class", "w100p readonly");
-            $("#deptCode").attr("readonly", "readonly");
+                $("#grpCode").val("${grpCode}");
+                $("#grpCode").attr("class", "w100p readonly");
+                $("#grpCode").attr("readonly", "readonly");
 
-            $("#memCode").val("${memCode}");
-            $("#memCode").attr("class", "w100p readonly");
-            $("#memCode").attr("readonly", "readonly");
+                $("#deptCode").val("${deptCode}");
+                $("#deptCode").attr("class", "w100p readonly");
+                $("#deptCode").attr("readonly", "readonly");
 
+                $("#memCode").val("${memCode}");
+                $("#memCode").attr("class", "w100p readonly");
+                $("#memCode").attr("readonly", "readonly");
+
+            }
         }
+
 
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPos);
         listByMemberGridID = GridCommon.createAUIGrid("#listByMember_grid_wrap", memberListingColumnLayout, "", gridPos);
@@ -223,6 +228,12 @@
                     <col style="width:*" />
                 </colgroup>
                 <tbody>
+                    <tr id="roleRow" >
+                        <th scope="row">Role ID</th>
+                        <td>
+                            <input type="text" title="" id="roleId" name="roleId" placeholder="Role ID" class="w100p" value="${roleId}" />
+                        </td>
+                    </tr>
                     <tr>
                         <th scope="row">Organization Code</th>
                         <td >
