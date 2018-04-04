@@ -22,22 +22,22 @@
 			        Filter1.NAME2 NAME  ,
 			        Filter1.CODE3 CODE1  ,
 			        Filter1.NAME3 NAME1  ,
-			        CASE 
+			        CASE
 			             WHEN ( Filter1.USERID1 IS NOT NULL ) THEN Filter1.USERNAME1
 			        ELSE ' '
 			           END RS_CNVR_CNFM_USER_NAME  ,
-			        CASE 
+			        CASE
 			             WHEN ( Filter1.USERID2 IS NOT NULL ) THEN Filter1.USERNAME2
 			        ELSE ' '
 			           END RS_CNVR_USER_NAME  ,
-			        CASE 
+			        CASE
 			             WHEN ( Filter1.USERID3 IS NOT NULL ) THEN Filter1.USERNAME3
 			        ELSE ' '
 			           END RS_CNVR_CRT_USER_NAME  ,
-			        CASE 
+			        CASE
 			             WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME
 			        ELSE ' '
-			           END RS_CNVR_UPD_USER_NAME  
+			           END RS_CNVR_UPD_USER_NAME
 			FROM ( SELECT Extent1.RS_CNVR_ID   ,
 					              Extent1.RS_STUS_ID   ,
 					              Extent1.RS_CNVR_STUS_ID   ,
@@ -63,7 +63,7 @@
 					              Extent5.USER_ID USERID2  ,
 					              Extent5.USER_NAME USERNAME2  ,
 					              Extent6.USER_ID USERID3  ,
-					              Extent6.USER_NAME USERNAME3  
+					              Extent6.USER_NAME USERNAME3
 			             FROM SAL0072D Extent1
 					              JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.RS_STUS_ID
 					              JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.RS_CNVR_STUS_ID
@@ -127,7 +127,7 @@
                  </if>
 		ORDER BY Filter1.RS_CNVR_NO ASC
     </select>
-    
+
     <select id="orderConversionView" parameterType="Map" resultType="egovMap">
         SELECT Extent1.RS_CNVR_ID   ,
 			       Extent1.RS_STUS_ID   ,
@@ -139,9 +139,9 @@
 			       Extent1.RS_CNVR_UPD_USER_ID   ,
 			       Extent1.RS_CNVR_UPD_DT   ,
 			       Extent1.RS_CNVR_CNFM_USER_ID   ,
-			       TO_CHAR(Extent1.RS_CNVR_CNFM_DT, 'dd-mm-yyyy') RS_CNVR_CNFM_DT, 
+			       TO_CHAR(Extent1.RS_CNVR_CNFM_DT, 'dd-mm-yyyy') RS_CNVR_CNFM_DT,
 			       Extent1.RS_CNVR_USER_ID   ,
-			       TO_CHAR(Extent1.RS_CNVR_DT, 'dd-mm-yyyy') RS_CNVR_DT, 
+			       TO_CHAR(Extent1.RS_CNVR_DT, 'dd-mm-yyyy') RS_CNVR_DT,
 			       Extent1.RS_CNVR_NO   ,
 			       Extent1.RS_CNVR_REACT_FEES_APPLY   ,
 			       Extent1.RS_CNVR_REM   ,
@@ -149,22 +149,22 @@
 			       Extent2.NAME NAME  ,
 			       Extent3.CODE CODE1  ,
 			       Extent3.NAME NAME1  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME
 			       ELSE ' '
 			          END RS_CNVR_CNFM_USER_NAME  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
 			       ELSE ' '
 			          END RS_CNVR_USER_NAME  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
 			       ELSE ' '
 			          END RS_CNVR_CRT_USER_NAME  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME
 			       ELSE ' '
-			          END RS_CNVR_UPD_USER_NAME  
+			          END RS_CNVR_UPD_USER_NAME
 			  FROM SAL0072D Extent1
 			         JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.RS_STUS_ID
 			         JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.RS_CNVR_STUS_ID
@@ -176,7 +176,7 @@
 			          AND Extent1.RS_CNVR_ID = #{rsCnvrId}
 			          AND ROWNUM <![CDATA[ <= ]]> 1
     </select>
-    
+
     <select id="orderConversionViewItmList" parameterType="Map" resultType="egovMap">
         SELECT Extent1.RS_ITM_ID   ,
 			       Extent1.RS_CNVR_ID   ,
@@ -197,22 +197,22 @@
 			       Extent2.CODE CODE  ,
 			       Extent3.CODE CODE1  ,
 			       Extent3.NAME NAME  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent4.CODE_ID IS NOT NULL ) THEN Extent4.CODE
 			       ELSE ' '
 			          END RS_SYS_APP_TYPE_CODE  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
 			       ELSE ' '
 			          END RS_ITM_CNVR_USER_NAME  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
 			       ELSE ' '
 			          END RS_ITM_CRT_USER_NAME  ,
-			       CASE 
+			       CASE
 			            WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME
 			       ELSE ' '
-			          END RS_ITM_UPD_USER_NAME  
+			          END RS_ITM_UPD_USER_NAME
 			  FROM SAL0073D Extent1
 			         JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.RS_ITM_CNVR_STUS_ID
 			         JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.RS_ITM_VALID_STUS
@@ -230,7 +230,7 @@
              </if>
 			  ORDER BY Extent1.RS_ITM_ID ASC
     </select>
-    
+
     <select id="orderCnvrValidItmList" parameterType="Map" resultType="egovMap">
         SELECT Extent1.RS_ITM_ID   ,
                    Extent1.RS_CNVR_ID   ,
@@ -251,22 +251,22 @@
                    Extent2.CODE CODE  ,
                    Extent3.CODE CODE1  ,
                    Extent3.NAME NAME  ,
-                   CASE 
+                   CASE
                         WHEN ( Extent4.CODE_ID IS NOT NULL ) THEN Extent4.CODE
                    ELSE ' '
                       END RS_SYS_APP_TYPE_CODE  ,
-                   CASE 
+                   CASE
                         WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
                    ELSE ' '
                       END RS_ITM_CNVR_USER_NAME  ,
-                   CASE 
+                   CASE
                         WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
                    ELSE ' '
                       END RS_ITM_CRT_USER_NAME  ,
-                   CASE 
+                   CASE
                         WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME
                    ELSE ' '
-                      END RS_ITM_UPD_USER_NAME  
+                      END RS_ITM_UPD_USER_NAME
               FROM SAL0073D Extent1
                      JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.RS_ITM_CNVR_STUS_ID
                      JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.RS_ITM_VALID_STUS
@@ -279,7 +279,7 @@
                  AND ( Extent1.RS_ITM_VALID_STUS = 4 )
               ORDER BY Extent1.RS_ITM_ID ASC
     </select>
-    
+
     <select id="orderCnvrInvalidItmList" parameterType="Map" resultType="egovMap">
         SELECT Extent1.RS_ITM_ID   ,
                    Extent1.RS_CNVR_ID   ,
@@ -300,22 +300,22 @@
                    Extent2.CODE CODE  ,
                    Extent3.CODE CODE1  ,
                    Extent3.NAME NAME  ,
-                   CASE 
+                   CASE
                         WHEN ( Extent4.CODE_ID IS NOT NULL ) THEN Extent4.CODE
                    ELSE ' '
                       END RS_SYS_APP_TYPE_CODE  ,
-                   CASE 
+                   CASE
                         WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME
                    ELSE ' '
                       END RS_ITM_CNVR_USER_NAME  ,
-                   CASE 
+                   CASE
                         WHEN ( Extent6.USER_ID IS NOT NULL ) THEN Extent6.USER_NAME
                    ELSE ' '
                       END RS_ITM_CRT_USER_NAME  ,
-                   CASE 
+                   CASE
                         WHEN ( Extent7.USER_ID IS NOT NULL ) THEN Extent7.USER_NAME
                    ELSE ' '
-                      END RS_ITM_UPD_USER_NAME  
+                      END RS_ITM_UPD_USER_NAME
               FROM SAL0073D Extent1
                      JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.RS_ITM_CNVR_STUS_ID
                      JOIN SYS0038M Extent3   ON Extent3.STUS_CODE_ID = Extent1.RS_ITM_VALID_STUS
@@ -328,7 +328,7 @@
                  AND ( Extent1.RS_ITM_VALID_STUS = 21 )
               ORDER BY Extent1.RS_ITM_ID ASC
     </select>
-    
+
     <update id="delCnvrItmSAL0073D">
         UPDATE SAL0073D
 		     SET RS_ITM_STUS_ID = #{rsItmStusId},
@@ -336,7 +336,7 @@
 			       RS_ITM_UPD_DT = SYSDATE
 		 WHERE RS_ITM_ID = #{rsItmId}
     </update>
-    
+
     <update id="updCnvrConfirm">
         UPDATE SAL0072D
 			 SET RS_STUS_ID = #{rsStusId},
@@ -346,7 +346,7 @@
 			       RS_CNVR_CNFM_DT = SYSDATE
 		 WHERE RS_CNVR_ID = #{rsCnvrId}
     </update>
-    
+
     <update id="updCnvrDeactive">
         UPDATE SAL0072D
 		     SET RS_STUS_ID = #{rsStusId},
@@ -354,32 +354,32 @@
 			       RS_CNVR_UPD_DT = SYSDATE
 		 WHERE RS_CNVR_ID = #{rsCnvrId}
     </update>
-    
+
     <select id="orderCnvrInfo" parameterType="Map" resultType="egovMap">
-        SELECT ORD_ID, ORD_NO, ORD_STUS_ID, ORD_STUS_CODE, APP_TYPE_ID, APP_TYPE_CODE, RENTAL_STUS 
+        SELECT ORD_ID, ORD_NO, ORD_STUS_ID, ORD_STUS_CODE, APP_TYPE_ID, APP_TYPE_CODE, RENTAL_STUS
 		  FROM SAL1006V
-		 WHERE ORD_NO = #{ordNo}    
+		 WHERE ORD_NO = #{ordNo}
     </select>
-    
+
     <select id="crtSeqSAL0072D" resultType="Integer">
-        SELECT SAL0072D_RS_CNVR_ID_SEQ.NEXTVAL FROM DUAL    
+        SELECT SAL0072D_RS_CNVR_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertCnvrSAL0072D">
         INSERT INTO SAL0072D
 			  ( RS_CNVR_ID, RS_STUS_ID, RS_CNVR_STUS_ID, RS_CNVR_STUS_FROM, RS_CNVR_STUS_TO
 			  , RS_CNVR_CRT_USER_ID, RS_CNVR_CRT_DT, RS_CNVR_UPD_USER_ID, RS_CNVR_UPD_DT
 			  , RS_CNVR_CNFM_USER_ID, RS_CNVR_CNFM_DT, RS_CNVR_USER_ID, RS_CNVR_DT
 			  , RS_CNVR_NO, RS_CNVR_ATTACH_URL, RS_CNVR_REACT_FEES_APPLY, RS_CNVR_REM, RS_CNVR_TYPE_ID )
-	    VALUES 
+	    VALUES
 	          ( #{rsCnvrId}, #{rsStusId}, #{rsCnvrStusId}, #{stusFrom}, #{stusTo}
 	          , #{userId}, SYSDATE, #{userId}, SYSDATE, #{rsCnvrCnfmUserId}
 	          , TO_DATE(#{rsCnvrCnfmDt}, 'DD/MM/YYYY'), #{rsCnvrUserId}, TO_DATE(#{rsCnvrDt}, 'DD/MM/YYYY')
-	          , #{rsCnvrNo}, #{rsCnvrAttachUrl}, #{rsCnvrReactFeesApply}, #{rsCnvrRem}, #{rsCnvrTypeId} )
+	          , #{rsCnvrNo}, #{rsCnvrAttachUrl}, NVL(#{rsCnvrReactFeesApply},0), #{rsCnvrRem}, #{rsCnvrTypeId} )
      </insert>
-     
+
      <insert id="insertCnvrSAL0073D" parameterType="Map">
-        INSERT INTO SAL0073D 
+        INSERT INTO SAL0073D
             (
                 RS_ITM_ID,
                 RS_CNVR_ID,
@@ -400,7 +400,7 @@
                 RS_ITM_CNTRCT_ID,
                 RS_ITM_CNTRCT_NO
              )
-             VALUES 
+             VALUES
              (
                  SAL0073D_RS_ITM_ID_SEQ.NEXTVAL ,
                  #{rsCnvrId},
@@ -421,10 +421,10 @@
                  #{rsItmCntrctId}, /* RS_ITM_CNTRCT_ID */
                  #{rsItmCntrctNo}
              )
-    </insert> 
-     
+    </insert>
+
      <select id="insertCnvrList" statementType="CALLABLE" parameterType="Map">
-        { 
+        {
             CALL SP_RENTAL_STUS_CNVR_DET_VERIFY(#{batchId})
         }
       </select>
