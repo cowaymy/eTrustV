@@ -171,7 +171,7 @@
 
 			         row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
 
-			         FROM ( SELECT DISTINCT 
+			         FROM ( SELECT DISTINCT
 			        GroupBy1.A1 C1,
 			        Extent1.MEM_ID MEM_ID,
 			        Extent1.MEM_CODE MEM_CODE,
@@ -581,7 +581,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.HSPTLZ HSPTLZ  ,
                 Extent1.TRAINEE_TYPE,
                 Extent2.NAME NAME1  ,
-                
+
                 Extent3.CODE_NAME CODE_NAME   ,
                 CASE
                      WHEN ( Extent1.BRNCH IS NOT NULL ) THEN TO_NUMBER(Extent1.BRNCH,99999.99)
@@ -2931,7 +2931,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
      <![CDATA[
         UPDATE SYS0047M
 
-            SET USER_UPD_USER_ID = #{user_id}, 
+            SET USER_UPD_USER_ID = #{user_id},
                   USER_UPD_DT = SYSDATE,
                   USER_BRNCH_ID = #{selectBranch}
 
@@ -3066,7 +3066,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		,SPUSE_CODE 		,SPOUSE_NAME 		,SPOUSE_NRIC 		,SPOUSE_OCPAT 		,SPOUSE_TEL_CNTC
 		,SPOUSE_DOB 		,EDC_LEV 		,LANG 		,BANK 		,BANK_ACC_NO
 		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus, APLICNT_ID
-		,MAIN_DEPT , SUB_DEPT, JOIN_DT , AREA_ID, ADDR_DTL, STREET
+		,MAIN_DEPT , SUB_DEPT, JOIN_DT , AREA_ID, ADDR_DTL, STREET, BRNCH
 		)
 		select
 		        #{memId},
@@ -3106,7 +3106,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        SYSDATE UPD_DT,
 		        UPD_USER_ID,  '1' AS stus, APLCTN_ID
 		        ,MAIN_DEPT , SUB_DEPT
-		        ,SYSDATE JOIN_DT, AREA_ID, ADDR_DTL, STREET
+		        ,SYSDATE JOIN_DT, AREA_ID, ADDR_DTL, STREET,
+		        #{branchId}
 		from ORG0003D   d
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>
@@ -3994,11 +3995,11 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
           MERGE INTO ORG0002D
 		  USING DUAL
 		    ON (MEM_ID = #{MemberID} AND AG_STUS_ID = '1')
-		  WHEN MATCHED THEN 
+		  WHEN MATCHED THEN
 		    UPDATE SET AG_EXPR_DT = TO_DATE(#{codyPaExpr}, 'DD/MM/YYYY')
 		               , AG_UPD_USER_ID = #{user_id}
 		               , AG_UPD_DT = SYSDATE
-		  WHEN NOT MATCHED THEN 
+		  WHEN NOT MATCHED THEN
 		    INSERT (AG_ID, MEM_ID, AG_TYPE_ID, AG_STUS_ID, AG_START_DT, AG_EXPR_DT, AG_CRT_USER_ID, AG_CRT_DT, AG_UPD_USER_ID, AG_UPD_DT)
 		    VALUES (ORG0002D_AG_ID_SEQ.NEXTVAL, #{MemberID}, '1416', '1', SYSDATE, TO_DATE(#{codyPaExpr}, 'DD/MM/YYYY'), #{user_id}, SYSDATE, #{user_id}, SYSDATE)
        </update>
@@ -4181,14 +4182,14 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
 
     <resultMap id="memrtnCode" type="egovMap"></resultMap>
-    <resultMap id="memrtnMsg" type="egovMap"></resultMap>    
-    
+    <resultMap id="memrtnMsg" type="egovMap"></resultMap>
+
     <select id="SP_DAY_USER_CRT" parameterType="Map"  statementType="CALLABLE" >
       {
             call SP_DAY_USER_CRT( #{IN_MEMCODE},#{p1 , mode=OUT , jdbcType=INTEGER , javaType=int , resultMap=memrtnCode}, #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=memrtnMsg} )
       }
      </select>
-     
+
      <select id="selectAreaInfo" parameterType="Map" resultType="egovMap">
                SELECT AREA_ID,
 						  ISO,
@@ -4211,13 +4212,13 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 						AND AREA_ID = #{areaId}
 						AND STATUS_ID = 1
       </select>
-      
+
       <update id="SP_SVC_LOG_SYS0028M" parameterType="Map"  statementType="CALLABLE" >
       {
             call SP_SVC_LOG_SYS0028M( #{P_MEM_CODE} )
       }
      </update>
-     
+
      <select id="selectAllBranchCode" parameterType="Map" resultType="egovMap">
         SELECT
 			Project1.BranchID AS CODE_ID,
