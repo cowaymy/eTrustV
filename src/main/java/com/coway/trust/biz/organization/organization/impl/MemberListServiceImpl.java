@@ -173,7 +173,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("applicantTelHouse",params.get("residenceNo").toString().trim()!=null ? params.get("residenceNo").toString().trim() : "");
 			MemApp.put("applicantTelMobile",params.get("mobileNo").toString().trim()!=null ? params.get("mobileNo").toString().trim() : "");
 			MemApp.put("applicantEmail",params.get("email").toString().trim()!=null ? params.get("email").toString().trim() : "");
-			
+
 			MemApp.put("applicantSpouseCode",params.get("spouseCode").toString().trim()!=null ? params.get("spouseCode").toString().trim() : "");
 			MemApp.put("applicantSpouseName",params.get("spouseName").toString().trim()!=null ? params.get("spouseName").toString().trim() : "");
 			MemApp.put("applicantSpouseNRIC",params.get("spouseNric").toString().trim()!=null ? params.get("spouseNric").toString().trim() : "");
@@ -200,12 +200,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("areaId",params.get("areaId").toString());
 			MemApp.put("streetDtl",params.get("streetDtl")!= null ?params.get("streetDtl").toString() : "");
 			MemApp.put("addrDtl",params.get("addrDtl")!= null ? params.get("addrDtl").toString() : "");
-			
+
 			//Department
 			//MemApp.put("searchdepartment",  params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
 			MemApp.put("searchdepartment",   "");
 			MemApp.put("searchSubDept"		,  "");
-			
+
 			logger.debug("MemApp : {}",MemApp);
 			EgovMap appNo = getDocNo("145");
 			MemApp.put("applicantCode", appNo.get("docNo"));
@@ -299,7 +299,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("areaId",params.get("areaId").toString());
 		params.put("streetDtl",params.get("streetDtl")!= null ?params.get("streetDtl").toString() : "");
 		params.put("addrDtl",params.get("addrDtl")!= null ? params.get("addrDtl").toString() : "");
-		
+
 		//Department
 		params.put("searchdepartment",params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
 		params.put("searchSubDept"		,params.get("subDept").toString().trim()!=null ? params.get("subDept").toString().trim() : "");
@@ -450,10 +450,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}else{
 			System.out.println("들어와얗ㅁ");
 			docNoLength = docNo.length();
-			
+
 			if ( prefixNo.equals("TR")) {
 				docNo = docNo.replace(prefixNo, "");
-				
+
 				docNo.substring(2);
 				logger.debug(">>>>>>>>>docNo >>>>>>>>>>>>>>>>>>>>>>>>" +docNo );
 				logger.debug(">>>>>>>>>docNo >>>>>>>>>>>>>>>>>>>>>>>>" +docNo.substring(2) );
@@ -461,7 +461,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		}
 
 		logger.debug(">>>>>>>>>docNo >>>>>>>>>>>>>>>>>>>>>>>>" +docNo );
-		
+
 		int nextNo = Integer.parseInt(docNo) + 1;
 		nextDocNo = String.format("%0"+docNoLength+"d", nextNo);
 		logger.debug("nextDocNo : {}",nextDocNo);
@@ -537,9 +537,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				selectMemberCode = getDocNo("155");
         		memberCode = selectMemberCode.get("docNo").toString();
         		params.put("memberCode", memberCode);
-        		
+
         		params.put("traineeType", params.get("traineeType1").toString());
-        		
+
         		ID=155;
         		nextDocNo = getNextDocNo("TR",selectMemberCode.get("docNo").toString());
         		logger.debug("nextDocNo : {}",nextDocNo);
@@ -958,21 +958,21 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("invWH : {}",invWH);
 				memberListMapper.insertinvWH(invWH);
 			}
-			
+
 			if(params.get("memberType").toString().equals("5")  &&  !params.get("course").equals("")) {
 				if (params.get("traineeType1").toString().equals("2") || params.get("traineeType1").toString().equals("3") ){
-			
+
     					logger.debug("=============================================================================================================");
     					logger.debug("=====================  memberType {}  traineeType {} ", params.get("memberType").toString(), params.get("traineeType").toString() );
     					logger.debug("=============================================================================================================");
-					
+
 						params.put("MemberId", MemberId);
-					
+
 						memberListMapper.traineeInsertInfor(params);
 				}
 			}
-			
-			
+
+
 			success=true;
 			String memCode = "";
 
@@ -1044,14 +1044,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				EgovMap selectOrganization_new = memberListMapper.selectOrganization(params);
 				logger.debug("selectOrganization_new : {}",selectOrganization_new);
 				promoEntry.put("requestNo", eventCode.get("docNo").toString());
-				
+
 				//promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
 				/*if (params.get("lvlTo") .equals("2") || params.get("lvlTo") .equals("3") || params.get("lvlTo") .equals("4") ) {
 					promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
     			} else if (params.get("lvlTo") .equals("1") ) {
     				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("grpCode"));
     			}*/
-				
+
 				if (params.get("memberLvl") .equals("3") || params.get("memberLvl") .equals("4") ) {
 					promoEntry.put("deptCodeFrom", selectMemberOrgs.get("deptCode"));
     			} else if (params.get("memberLvl") .equals("2") ) {
@@ -1059,7 +1059,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     			} else if (params.get("memberLvl") .equals("1") ) {
     				promoEntry.put("deptCodeFrom", selectMemberOrgs.get("orgCode"));
     			}
-				
+
 				EgovMap deptCode = null;
 				logger.debug("params : {}", params);
 				// Promote
@@ -1070,7 +1070,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 						deptCode = getDocNo("64");
 					} else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
 						deptCode = getDocNo("65");
-					} 
+					}
 				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 1) {
 					if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
 						deptCode = getDocNo("60");
@@ -1078,7 +1078,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 						deptCode = getDocNo("61");
 					} else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
 						deptCode = getDocNo("62");
-					} 
+					}
 				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 3) {
 					if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
 						deptCode = getDocNo("105");
@@ -1086,31 +1086,31 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 						deptCode = getDocNo("104");
 					} else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
 						deptCode = getDocNo("103");
-					} 
+					}
 				}
-				
+
 				// Demote
 				if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 2) {
 					if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("3")) {
 						deptCode = getDocNo("63");
 					} else if (params.get("memberLvl").equals("1") && params.get("lvlTo").equals("2")) {
 						deptCode = getDocNo("64");
-					} 
+					}
 				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 1) {
 					if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("3")) {
 						deptCode = getDocNo("60");
 					} else if (params.get("memberLvl").equals("1") && params.get("lvlTo").equals("2")) {
 						deptCode = getDocNo("61");
-					} 
+					}
 				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 3) {
 					if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("3")) {
 						deptCode = getDocNo("105");
 					} else if (params.get("memberLvl").equals("1") && params.get("lvlTo").equals("2")) {
 						deptCode = getDocNo("104");
-					} 
+					}
 				}
-				
-				
+
+
 				if (params.get("lvlTo").equals("4")) {
 					promoEntry.put("deptCodeTo", selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
 				} else {
@@ -1122,7 +1122,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					memberListMapper.updateDocNo(deptCode);
 					promoEntry.put("deptCodeTo", deptCode.get("docNo"));
 				}
-				
+
 				/*Map<String, Object>  superiorEntry = new HashMap<String, Object>();
 				logger.debug("params : {}", params);
 				superiorEntry.put("memberLvl", Integer.parseInt(params.get("memberLvl").toString())-2);
@@ -1133,9 +1133,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				List<EgovMap> selectSuperiorTeam = memberListMapper.selectSuperiorTeam(superiorEntry);
 				logger.debug("selectSuperiorTeam : {}",selectSuperiorTeam);
 				promoEntry.put("deptCodeTo", selectSuperiorTeam.get(0).get("deptCode"));*/
-				
+
 //				promoEntry.put("parentIdFrom", selectMemberOrgs.get("memUpId") != null ? Integer.parseInt(selectMemberOrgs.get("memUpId").toString()) : 0);
-				
+
 				Map<String, Object>  parentEntry = new HashMap<String, Object>();
 //				parentEntry.put("deptCode", selectOrganization_new.get("deptCode"));
 //				parentEntry.put("lvlTo", (Integer.parseInt(params.get("lvlTo").toString())-1 > 0) ? Integer.parseInt(params.get("lvlTo").toString())-1 : "1" );
@@ -1143,7 +1143,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				logger.debug("parentEntry : {}",parentEntry);
 				List<EgovMap> selectParentIdFrom = memberListMapper.selectParentIdFrom(parentEntry);
 				promoEntry.put("parentIdFrom", (selectParentIdFrom.size() > 0) ? selectParentIdFrom.get(0).get("memUpId").toString() : "");
-				
+
 				if ( params.get("memberLvl").toString().equals("4") ) {
 					promoEntry.put("parentDeptCodeFrom", promoEntry.get("deptCodeFrom"));
 					promoEntry.put("PRCode", promoEntry.get("deptCodeFrom"));
@@ -1155,12 +1155,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					promoEntry.put("parentDeptCodeFrom", (selectParentDCFrom.size() > 0) ? selectParentDCFrom.get(0).get("deptCode").toString() : "");
 					promoEntry.put("PRCode", (selectParentDCFrom.size() > 0) ? selectParentDCFrom.get(0).get("deptCode").toString() : "");
 				}
-				
+
 				promoEntry.put("parentDeptCodeTo",  selectOrganization_new.get("deptCode").toString() != null && selectOrganization_new.get("deptCode") !="" ? selectOrganization_new.get("deptCode").toString() : "");
 //				promoEntry.put("PRCode", selectOrganization.get("lastGrpCode").toString() != null ? selectOrganization.get("lastGrpCode").toString() : "");
-				
+
 				if ( params.get("action1").equals("747") ) {	// promote
-					if ( params.get("lvlTo") .equals("3") ) {	
+					if ( params.get("lvlTo") .equals("3") ) {
 						promoEntry.put("lastDeptCode", deptCode.get("docNo"));
 						promoEntry.put("lastGrpCode", selectOrganization_new.get("lastGrpCode"));
 						promoEntry.put("lastOrgCode", selectOrganization_new.get("lastOrgCode"));
@@ -1174,7 +1174,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 						promoEntry.put("branchId", 0);
 					}
 				} else {		// demote
-					if ( params.get("lvlTo") .equals("4") ) {	
+					if ( params.get("lvlTo") .equals("4") ) {
 						Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
 						lastCodeEntry.put("deptCodeTo", promoEntry.get("deptCodeTo"));
 						lastCodeEntry.put("memberLvl", params.get("memberLvl"));
@@ -1184,9 +1184,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 						promoEntry.put("lastGrpCode", selectLastCode.get("lastGrpCode"));
 						promoEntry.put("lastOrgCode", selectLastCode.get("lastOrgCode"));
 						promoEntry.put("branchId", (selectOrganization_new != null) ? selectOrganization_new.get("brnchId") : 0);
-					} else if ( params.get("lvlTo") .equals("3") ) {	
+					} else if ( params.get("lvlTo") .equals("3") ) {
 						promoEntry.put("lastDeptCode", deptCode.get("docNo"));
-						
+
 						Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
 						lastCodeEntry.put("deptCodeTo", promoEntry.get("parentDeptCodeTo"));
 						lastCodeEntry.put("memberLvl", params.get("memberLvl"));
@@ -1197,7 +1197,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 						promoEntry.put("branchId", (selectOrganization_new != null) ? selectOrganization_new.get("brnchId") : 0);
 					} else  if ( params.get("lvlTo") .equals("2") ) {
 						promoEntry.put("lastGrpCode", deptCode.get("docNo"));
-						
+
 						Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
 						lastCodeEntry.put("deptCodeTo", promoEntry.get("parentDeptCodeTo"));
 						lastCodeEntry.put("memberLvl", params.get("memberLvl"));
@@ -1207,20 +1207,20 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 						promoEntry.put("branchId", params.get("branchCode"));
 					}
 				}
-				
+
 				Map<String, Object>  lastCodeEntry = new HashMap<String, Object>();
 				lastCodeEntry.put("deptCodeTo", promoEntry.get("deptCodeTo"));
-				lastCodeEntry.put("memberLvl", Integer.parseInt(params.get("memberLvl").toString())-2);	
+				lastCodeEntry.put("memberLvl", Integer.parseInt(params.get("memberLvl").toString())-2);
 				logger.debug("lastCodeEntry : {}",lastCodeEntry);
 				EgovMap selectLastCode = memberListMapper.selectLastCode(lastCodeEntry);
 				logger.debug("selectLastCode : {}",selectLastCode);
-				
-//				promoEntry.put("branchId", (selectLastCode != null) ? selectLastCode.get("brnchId") : 0);	
-				
+
+//				promoEntry.put("branchId", (selectLastCode != null) ? selectLastCode.get("brnchId") : 0);
+
 				promoEntry.put("PRmemId",promoEntry.get("promoTypeId").toString().equals("747") ? selectMemberOrgs.get("memUpId").toString() : 0);
 				logger.debug("promoEntry : {}",promoEntry);
 				memberListMapper.insertPromoEntry(promoEntry);
-				
+
 				if(params.get("action1").toString().equals("747") ){
     				resultValue.put("message", "Promote request successfully saved.<br />"
     				+ " Request number : " + eventCode.get("docNo").toString() + "<br /><br />");
@@ -1442,10 +1442,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 		// CT, CD 코드 생성
     	int a =memberListMapper.traineeUpdate(params);
-    	
+
     	if(a> 0){
     		resultValue =	memberListMapper.afterSelTrainee(params);
-    		
+
     		// SP_DAY_USER_CRT 프로시저 호출
     		Map<String, Object>  userPram = new HashMap<String, Object>();
     		userPram.put("IN_MEMCODE", resultValue.get("memCode"));
@@ -1453,7 +1453,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     		memberListMapper.SP_DAY_USER_CRT(userPram);
     		userPram.put("P_STATUS", userPram.get("p1"));
     		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
-    		
+
     		// SP_SVC_LOG_SYS0028M(P_MEM_CODE) 프로시저 호출
     		Map<String, Object>  logPram = new HashMap<String, Object>();
     		logPram.put("P_MEM_CODE", resultValue.get("memCode"));
@@ -1461,7 +1461,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     		memberListMapper.SP_SVC_LOG_SYS0028M(logPram);
 //    		logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 결과 ===>" +logPram);
     	}
-    	
+
 		return resultValue;
 	}
 
@@ -1479,7 +1479,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public  int    memberListUpdate_memorg(Map<String, Object> params) {
 		return memberListMapper.memberListUpdate_memorg(params);
 	}
-	
+
 	@Override
 	public  int    memberListUpdate_memorg2(Map<String, Object> params) {
 		return memberListMapper.memberListUpdate_memorg2(params);
@@ -1489,26 +1489,26 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public  int    memberListUpdate_member(Map<String, Object> params) {
 		return memberListMapper.memberListUpdate_member(params);
 	}
-	
+
 	@Override
 	public int traineeUpdateInfo(Map<String, Object> params,SessionVO sessionVO) {
 
 		int result = 0;
-		
+
 		if ( !params.get("course").equals("")) {
-		
+
     		memberListMapper.traineeUpdateInfo(params);
-    		
+
     		params.put("creator", params.get("user_id"));
     		params.put("MemberId", params.get("MemberID"));
-    		
+
     		memberListMapper.traineeInsertInfor(params);
-		
+
 		}
-		
+
 		return result;
 	}
-	
+
 
 	@Transactional
 	@Override
@@ -1689,36 +1689,37 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		EgovMap nricCheck = null;
 		nricCheck = memberListMapper.selectNricExist(params);
 		logger.debug("nricCheck : {}", nricCheck);
-		
+
 		if (nricCheck == null) {
 			// 실행
 			EgovMap selectMemberCode = null; // 각가 docNo, docNoId, prefix구함
-			
+
 			//nextDocNo = getNextDocNo("",selectMemberCode.get("docNo").toString());
 			//selectMemberCode = getDocNo("1");
-			
+
 			//edit  hgham 25-12-2017
 			Map mp = new HashMap();
 			mp.put("docNo", "1");
 			selectMemberCode = memberListMapper.getDocNo(mp);
-			
+
 			String memberCode = selectMemberCode.get("docNo").toString();
 			params.put("memberCode", memberCode);
-			
-			
+
+			params.put("branchId", sessionVO.getUserBranchId());
+
 			String   memId_seq =  String.valueOf(memberListMapper.getORG0001D_SEQ(params));
-			
+
 			params.put("memId" ,memId_seq );
 			int a =memberListMapper.hpMemRegister(params);
-			
+
 			EgovMap selectOrganization = null;
 			if(a> 0){
-				
+
 				Map<String, Object> memOrg = new HashMap<String, Object>();
 				CodeMap.put("code", "mem");
 				String MemberId =    memId_seq; //memberListMapper.selectMemberId(CodeMap);//asis 어떻게 가져오는지 확인 다시해봐
 
-			
+
 				selectOrganization = memberListMapper.selectHpOranization(params);//deptCode 가져가서 select
 				logger.debug("selectOrganization : {}",selectOrganization);
 				String deptParentID="", lastGroupCode="", lastOrgCode = "";
@@ -1726,10 +1727,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 				if(selectOrganization.get("memLvl").toString().equals("3")){
 					deptParentID = selectOrganization.get("memId").toString();
 				}
-				
+
 				logger.debug("in...... hpMemRegister");
 				logger.debug("selectOrganization : {}", selectOrganization);
-				
+
 				if(selectOrganization.get("memId").toString() != null){
 
 					memOrg.put("memberId",MemberId);
@@ -1751,22 +1752,22 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					memOrg.put("lastGrpCode",lastGroupCode);
 					memOrg.put("lastOrgCode",lastOrgCode);
 					memOrg.put("lastTopOrgCode","");
-					memOrg.put("branchId",0);				
+					memOrg.put("branchId",0);
 
 
 					logger.debug("memOrg : {}",memOrg);
 
 					memberListMapper.insertOrganization(memOrg);
 
-				} 
-				
+				}
+
 				EgovMap selectHpBillNo = null;
 				String hpBillNo="";
 				EgovMap selectInvoiceNo = null;
 				//AcBilling Save (for Hp)
-				
+
 				int userId = sessionVO.getUserId();
-				
+
 				params.put("creator", userId);
 				params.put("updator", userId);
 
@@ -1842,14 +1843,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    			//GST 2015-01-06
 	    			selectInvoiceNo = getDocNoNumber("130");
 	    			updateDocNoNumber("130");
-	    			
+
 	    			EgovMap org001dInfo = null;
 	    			org001dInfo = memberListMapper.selectORG001DInfo(MemberId) ;
-	    			
+
 	    			if (org001dInfo != null) {
-	    				
+
 	    				logger.debug("org001dInfo : {}",org001dInfo);
-	    				
+
 	    				Map<String, Object> selectMiscValue = new HashMap<String, Object>();
 	    				selectMiscValue.put("memberId", MemberId);
 	    				selectMiscValue.put("memberName", org001dInfo.get("memberNm"));
@@ -1859,14 +1860,14 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    				selectMiscValue.put("address3", org001dInfo.get("address3"));
 	    				selectMiscValue.put("address4", org001dInfo.get("address4"));
 	    				selectMiscValue.put("memberNirc", org001dInfo.get("nric"));
-	    				
-	    				
+
+
 	    				EgovMap selectMiscList = null;
 	    				selectMiscList = memberListMapper.selectMiscList(selectMiscValue) ;
-	    				
+
 	    				if(selectMiscList != null){
 	    					Map<String, Object>  InvMISC = new HashMap<String, Object>();
-	    					
+
 	    					InvMISC.put("taxInvoiceRefNo", selectInvoiceNo.get("docNo"));
 	    					InvMISC.put("taxInvoiceRefDate", new Date());
 	    					InvMISC.put("taxInvoiceServiceNo",memberCode);
@@ -1890,10 +1891,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    					InvMISC.put("addrDtl",selectMiscList.get("addrDtl"));
 	    					InvMISC.put("street",selectMiscList.get("street"));
 	    					InvMISC.put("taxInvoiceCreator",Integer.parseInt(params.get("creator").toString()));
-	    					
+
 	    					logger.debug("InvMISC : {}",InvMISC);
 	    					memberListMapper.insertInvMISC(InvMISC);
-	    					
+
 	    					CodeMap.put("code", "tax");
 	    					String taxInvId = memberListMapper.selectMemberId(CodeMap);
 	    					Map<String, Object>  InvMISCD = new HashMap<String, Object>();
@@ -1920,25 +1921,25 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    					InvMISCD.put("areaId",selectMiscList.get("areaId"));
 	    					InvMISCD.put("addrDtl",selectMiscList.get("addrDtl"));
 	    					InvMISCD.put("street",selectMiscList.get("street"));
-	    					
+
 	    					logger.debug("InvMISCD : {}",InvMISCD);
 	    					memberListMapper.insertInvMISCD(InvMISCD);
-	    					
-	    					
+
+
 	    					accOrderBill.put("accBillRemark",selectInvoiceNo.get("docNo"));
 	    					memberListMapper.updateBillRem(accOrderBill);
-	    				}			
+	    				}
 	    				//}
-	    				
+
 	    				params.put("updUserId", sessionVO.getUserId());
-	    				
+
 	    				memberListMapper.updateHpApproval(params);
-	    				
+
 	    				params.put("memberId", MemberId);
-	    				
+
 	    				// resultValue.put("memCode", afterSelTrainee 결과)
 	    				resultValue =	memberListMapper.afterSelTrainee(params);
-	    				
+
 	    				// SP_DAY_USER_CRT 프로시저 호출
 	    	    		Map<String, Object>  userPram = new HashMap<String, Object>();
 	    	    		userPram.put("IN_MEMCODE", resultValue.get("memCode"));
@@ -1946,86 +1947,86 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    	    		memberListMapper.SP_DAY_USER_CRT(userPram);
 	    	    		userPram.put("P_STATUS", userPram.get("p1"));
 	    	    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
-	    				
+
 	    			}
-	    			
+
 			}
-			
+
 		} else {
 			// 실행 안함
 			resultValue.put("duplicMemCode", nricCheck.get("memCode"));
 		}
-		
+
 
 		logger.debug("resultValue : {}", resultValue);
 		return resultValue;
 	}
-	
+
 	@Override
 	public List<EgovMap> getMainDeptList() {
 		// TODO Auto-generated method stub
 		return memberListMapper.selectMainDept();
-	}	
-	
+	}
+
 	@Override
 	public List<EgovMap> getSubDeptList(Map<String, Object> params) {
-		
+
 		 String isEmpty =(String) params.get("groupCode");
 		 if(isEmpty != null ){
 			 if(isEmpty.equals("Choose One")){
 				 params.put("groupCode", null);
 			 }
 		 }
-		 
+
 		return memberListMapper.selectSubDept(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> getDeptCdListList(Map<String, Object> params) {
-		
+
 		return memberListMapper.getDeptCdListList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> getSpouseInfoView(Map<String, Object> params) {
 		return memberListMapper.getSpouseInfoView(params);
 	}
-	
+
 	@Override
 	public EgovMap selectHPMemberListView(Map<String, Object> params) {
 		return memberListMapper.getHPMemberListView(params);
 	}
 	@Override
 	public List<EgovMap>  selectCoureCode(Map<String, Object> params) {
-		return memberListMapper.selectCoureCode(params); 
-	}	
+		return memberListMapper.selectCoureCode(params);
+	}
 
 	public String selectTypeGroupCode(Map<String,Object> params){
 		return memberListMapper.selectTypeGroupCode(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectDepartmentCodeLit(Map<String, Object> params) {
-		
+
 		return memberListMapper.selectDepartmentCodeLit(params);
-	}	
-	
+	}
+
 	@Override
 	public List<EgovMap> selectBranchCodeLit(Map<String, Object> params) {
-		
+
 		return memberListMapper.selectBranchCodeLit(params);
-	}	
-	
+	}
+
 	@Override
 	public List<EgovMap> checkNRIC1(Map<String, Object> params) {
 		return memberListMapper.checkNRIC1(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> checkNRIC2(Map<String, Object> params) {
 		return memberListMapper.checkNRIC2(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> checkNRIC3(Map<String, Object> params) {
 		// add jgkim
@@ -2038,7 +2039,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			return new ArrayList<EgovMap>();
 		}
 	}
-	
+
 	// modify jgkim
 	@Override
 	public EgovMap checkSponsor(Map<String, Object> params) {
@@ -2047,7 +2048,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	@Override
 	public List<EgovMap> selectBusinessType() {
-		
+
 		return memberListMapper.selectBusinessType();
 	}
 
@@ -2068,86 +2069,86 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		memberListMapper.updateHpMember(formMap);
 		return 0;
 	}
-	
+
 	@Override
 	public List<EgovMap> branch() {
 		return memberListMapper.branch();
 	}
-	
+
 	@Override
 	public void updateMemberBranch(Map<String, Object> params) throws Exception {
-		
+
 		memberListMapper.updateMemberBranch(params);
-		
-		
+
+
 	}
-	
+
 	@Override
 	public void updateMemberBranch2(Map<String, Object> params) throws Exception {
-		
+
 		memberListMapper.updateMemberBranch2(params);
-		
-		
+
+
 	}
 
 	@Override
 	public void updateDocSub(List<Object> updList, String memId, int userId,  String memType) {
-	
+
 		if(updList !=null){
     		for(int i=0 ; i < updList.size(); i++ ){
-    			 //udtList : [{codeId=1414, codeName=Cody PA Copy, typeId=1414, typeDtSeq=4, docQty=0 , 
-    			//하나씩 받아와서 
+    			 //udtList : [{codeId=1414, codeName=Cody PA Copy, typeId=1414, typeDtSeq=4, docQty=0 ,
+    			//하나씩 받아와서
     			Map<String, Object> oneDocSub = (Map<String, Object>) updList.get(i);
     			oneDocSub.put("memId", memId);
     			oneDocSub.put("userId", userId);
     			oneDocSub.put("memType", memType);
     			//이미들어가있나 확인
     			EgovMap isCheckDoc = memberListMapper.selectOneDocSub(oneDocSub);
-    			
+
     			int docQty= Integer.parseInt(String.valueOf( oneDocSub.get("docQty") ) );
-    			
+
     			if (  docQty != 0 ){// doc가 0이아니면
-    				//있으면 인서트 없으면 업데이트 
+    				//있으면 인서트 없으면 업데이트
     				if(isCheckDoc != null){
     					memberListMapper.updateDocSub(oneDocSub);
     				}
-    				
+
     				else{
-    				
-    					
+
+
     					if(memType.equals("2")){
-    						oneDocSub.put("subTypeId", 1417);	
+    						oneDocSub.put("subTypeId", 1417);
     					}else if(memType.equals("5")){
     						//trainee type
     					EgovMap getTrainType= memberListMapper.selectTrainType(oneDocSub);
     					String trainType = String.valueOf(getTrainType.get("train"));
     						if(trainType.equals("2")){
-    							oneDocSub.put("subTypeId", 1417);	
+    							oneDocSub.put("subTypeId", 1417);
     						}
     						else{
-    							oneDocSub.put("subTypeId", 247);	
+    							oneDocSub.put("subTypeId", 247);
     						}
 
     					}
     					else{
-    						oneDocSub.put("subTypeId", 247);	
+    						oneDocSub.put("subTypeId", 247);
     					}
-    					
+
     					memberListMapper.insertDocSub(oneDocSub);
     				}
     			}
-    			
+
     			else{//docQty가 0이면 delete
     				if( isCheckDoc != null){
     					memberListMapper.deleteDocSub(oneDocSub);
-    					
+
     				}
-    				
-    				
-    			} 
-    			
-    			
-    			
+
+
+    			}
+
+
+
     		}
 		}
 	}
@@ -2155,7 +2156,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Override
 	public void memberCodyPaUpdate(Map<String, Object> params) {
 		memberListMapper.updateCodyPaDate(params);
-		
+
 	}
 
 	@Override
@@ -2163,8 +2164,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		// TODO Auto-generated method stub
 		return memberListMapper.updateHpApprovalReject(params) > 0;
 	}
-	
-	
+
+
 	@Override
 	public List<EgovMap> selectMemberType(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -2191,32 +2192,32 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		getMap.put("memCode", memCode);
 		//memId 가져오기
 		EgovMap getMemId = memberListMapper.getMemIdwithCode(getMap);
-		
+
 		if(updList !=null){
     		for(int i=0 ; i < updList.size(); i++ ){
-    			 //udtList : [{codeId=1414, codeName=Cody PA Copy, typeId=1414, typeDtSeq=4, docQty=0 , 
-    			//하나씩 받아와서 
+    			 //udtList : [{codeId=1414, codeName=Cody PA Copy, typeId=1414, typeDtSeq=4, docQty=0 ,
+    			//하나씩 받아와서
     			Map<String, Object> oneDocSub = (Map<String, Object>) updList.get(i);
     			oneDocSub.put("memCode", memCode);
     			oneDocSub.put("userId", userId);
     			oneDocSub.put("memType", memberType);
     			oneDocSub.put("memId", String.valueOf(getMemId.get("memId")));
-    			
+
 
     			int docQty= Integer.parseInt(String.valueOf( oneDocSub.get("docQty") ) );
-    			
+
     			if (  docQty != 0 ){// doc가 0이아니면
     				if(trainType.equals("2")){
-						oneDocSub.put("subTypeId", 1417);	
+						oneDocSub.put("subTypeId", 1417);
 					}
 					else{
-						oneDocSub.put("subTypeId", 247);	
+						oneDocSub.put("subTypeId", 247);
 					}
     				memberListMapper.insertDocSub(oneDocSub);
     			}
     		}
-		
-	}	
+
+	}
 }
 
 	@Override
@@ -2229,11 +2230,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public void updateDocSubWhenAppr(Map<String, Object> params, SessionVO sessionVO) {
 		int userId = sessionVO.getUserId();
 		params.put("userId",userId);
-		
+
 		memberListMapper.updateDocSubWhenApproval(params);
-		
+
 	}
-	
+
 	@Override
 	public EgovMap selectAreaInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -2245,5 +2246,5 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		// TODO Auto-generated method stub
 		return memberListMapper.selectAllBranchCode();
 	}
-	
+
 }
