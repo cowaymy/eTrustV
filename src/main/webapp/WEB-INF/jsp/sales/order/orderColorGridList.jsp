@@ -156,7 +156,8 @@
                 editable : false,
                 style: 'left_style'
             }, {
-                dataField : "rsCnvrCnfmDt",
+                //dataField : "rsCnvrCnfmDt",
+                dataField : "netMonth",
                 headerText : "<spring:message code='sal.title.text.netMonth' />",
                 width : 100,
                 editable : false,
