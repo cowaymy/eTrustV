@@ -3,38 +3,38 @@
 <script type="text/javaScript">
 
 function fn_saveValidation(){
-	
+
 	if($("#callStatus").val() == 20 ){
 		if   ('${orderRdcInCdc.raqty}'   == ''  || '${orderRdcInCdc.raqty}'  =="0"  || '${orderRdcInCdc.raqty}' == " " ){
-	       
+
 			Common.alert("There is no available inventory in RDC to create installation order ");
 	        return false;
 	    }
 	}
-	
-	
+
+
 	if($("#callStatus").val() == ''){
         Common.alert("<spring:message code='service.msg.callLog'/> ");
         return false;
     }
-	
+
 	if($("#feedBackCode").val() == ''){
         Common.alert("<spring:message code='service.msg.feedback'/> ");
         return false;
     }
-	
+
 	if($("#callStatus").val() == '20' ){
-		
+
 		if($("#requestDate").val() == ''){
 			Common.alert(" plz Input Request Date  in ready to install ");
 		     return false;
 		}
-		
-		
+
+
 	}
-	
-	
-	
+
+
+
     return true;
 }
 
@@ -51,17 +51,21 @@ function fn_addCallSave(){
 	Common.ajax("POST", "/callCenter/addCallLogResult.do", $("#addCallForm").serializeJSON(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
-        Common.alert(result.message);
-        
 
+        fn_orderCallList();
         $("#hideContent").hide();
         $("#hideContent1").hide();
         $("#hideContent3").hide();
         $("#hideContent4").hide();
         $("#hiddenBtn").hide();
         $("#sav_div").attr("style","display:none");
-        
+
+        Common.alert(result.message);
     });
+}
+
+function fn_success(){
+
 }
 
 function fn_callLogTransaction(){
@@ -75,7 +79,7 @@ function fn_callLogTransaction(){
 $(document).ready(function() {
 	callLogTranGrid();
 	fn_callLogTransaction();
-	
+
 	$("#stock").change( function() {
 		if($("#stock").val() == 'B'){
 			console.log($("#addCallForm").serializeJSON());
@@ -86,7 +90,7 @@ $(document).ready(function() {
 		        console.log("data : " + result.cdcAvaiableStock);
 		        console.log("data : " + result.rdcstock);
 		        console.log("data : " + result.rdcincdc);
-		        
+
 		        Common.alert(result.message);
 		        if(result.rdcincdc != null){
 			        $("#rdc").text(result.rdcincdc.raqty);
@@ -99,10 +103,10 @@ $(document).ready(function() {
 	                  $("#cdc").text("0");
 		        }
 		    });
-			
+
 		}
 		else{
-			
+
 			 console.log($("#addCallForm").serializeJSON());
 	            Common.ajax("POST", "/callCenter/changeStock.do", $("#addCallForm").serializeJSON(), function(result) {
 	                console.log("성공.");
@@ -110,29 +114,29 @@ $(document).ready(function() {
 	                console.log("data : " + result.data);
 	                console.log("data : " + result.data);
 	                console.log("data : " + result.data);
-	          
+
 	                if(result.rdcincdc != null){
 		                $("#rdc").text(result.rdcincdc.raqty);
 		                $("#rdcInCdc").text(result.rdcincdc.rinqty);
 		                $("#cdc").text(result.rdcincdc.caqty);
-		               
+
 	                }
 	                else {
 	                     $("#rdc").text("0");
 	                     $("#rdcInCdc").text("0");
 	                     $("#cdc").text("0");
 	                }
-	                
+
 	            });
-			
-			
-			
+
+
+
 		}
-		
-		
-		
+
+
+
 	});
-	
+
 });
 
 var callLogTranID;
@@ -150,32 +154,32 @@ function callLogTranGrid() {
         width : 100
     }, {
         dataField : "c2",
-        headerText : '<spring:message code="service.grid.ActionDate" />',        
+        headerText : '<spring:message code="service.grid.ActionDate" />',
         editable : false,
         width : 130
     }, {
         dataField : "c9",
-        headerText : '<spring:message code="service.grid.Feedback" />',        
+        headerText : '<spring:message code="service.grid.Feedback" />',
         editable : false,
         width : 150
     }, {
         dataField : "c5",
-        headerText : '<spring:message code="service.grid.AssignCT" />',        
+        headerText : '<spring:message code="service.grid.AssignCT" />',
         editable : false,
         style : "my-column",
         width : 100
     }, {
         dataField : "callRem",
         headerText : "Remark",
-        headerText : '<spring:message code="service.grid.Remark" />',               
+        headerText : '<spring:message code="service.grid.Remark" />',
         editable : false,
         width : 180
     }, {
         dataField : "c3",
-        headerText : '<spring:message code="service.grid.KeyBy" />',            
+        headerText : '<spring:message code="service.grid.KeyBy" />',
         editable : false,
         width : 180
-        
+
     }, {
         dataField : "callCrtDt",
         headerText : '<spring:message code="service.grid.KeyAt" />',
@@ -183,33 +187,33 @@ function callLogTranGrid() {
     }];
      // 그리드 속성 설정
     var gridPros = {
-        
-        // 페이징 사용       
+
+        // 페이징 사용
         usePaging : true,
-        
+
         // 한 화면에 출력되는 행 개수 20(기본값:20)
         pageRowCount : 20,
-        
+
         editable : false,
-        
-        showStateColumn : true, 
-        
+
+        showStateColumn : true,
+
         displayTreeOpen : true,
-        
-        
+
+
         headerHeight : 30,
-        
+
         // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         skipReadonlyColumns : true,
-        
+
         // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
         wrapSelectionMove : true,
-        
+
         // 줄번호 칼럼 렌더러 출력
         showRowNumColumn : true
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     callLogTranID = AUIGrid.create("#grid_wrap_callLogList", columnLayout, gridPros);
 }
@@ -218,8 +222,8 @@ function fn_doAllaction(){
     var ord_id = $("#salesOrdId").val();
     var  vdte   = $("#requestDate").val();
     var rdcStock = $("#rdcStock").text();
-    
-   
+
+
     if(rdcStock != '0'){
         Common.popupDiv("/organization/allocation/allocation.do" ,{ORD_ID:ord_id  , S_DATE:vdte ,TYPE:'INS'}, null , true , '_doAllactionDiv');
     }
@@ -244,7 +248,7 @@ function fn_doAllaction(){
 <dl>
     <dt class="click_add_on on"><a href="#"><spring:message code='service.title.CallLogInformationTransaction'/></a></dt>
     <dd>
-    
+
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -278,9 +282,9 @@ function fn_doAllaction(){
         <span>Yes</span>
         </td>
          </c:if>
-    
-    
-        <th scope="row"><spring:message code='service.title.Creator'/></th>        
+
+
+        <th scope="row"><spring:message code='service.title.Creator'/></th>
         <td>
         <span><c:out value="${orderCall.crtUserId}"/></span>
         </td>
@@ -288,11 +292,11 @@ function fn_doAllaction(){
         <td></td>
     </tr>
     <tr>
-        <th scope="row"><spring:message code='service.title.ProductToInstall'/></th>              
+        <th scope="row"><spring:message code='service.title.ProductToInstall'/></th>
         <td>
         <span><c:out value="${orderCall.productCode}"/> - <c:out value="${orderCall.productName}"/></span>
         </td>
-        <th scope="row"><spring:message code='service.title.CallLogStatus'/></th>        
+        <th scope="row"><spring:message code='service.title.CallLogStatus'/></th>
         <td>
            <span><c:out value="${orderCall.callStusCode}"/></span>
         </td>
@@ -316,9 +320,9 @@ function fn_doAllaction(){
             <c:if test="${orderRdcInCdc.rdc != orderRdcInCdc.cdc }">
                 <span id="cdc"><c:out value="${orderRdcInCdc.caqty}"/></span>
             </c:if>
-     <!-- 
+     <!--
         <th scope="row"><spring:message code='service.title.RDCAvailableQty'/></th>
-                
+
        <c:if test= "${rdcStock.availQty != null }" >
        <td>
          <span id='rdcStock'><c:out value="${rdcStock.availQty}"/></span>
@@ -329,8 +333,8 @@ function fn_doAllaction(){
          <span id='rdcStock'>0</span>
        </td>
        </c:if>
-        
-        <th scope="row"><spring:message code='service.title.InTransitQty'/></th>        
+
+        <th scope="row"><spring:message code='service.title.InTransitQty'/></th>
          <c:if test= "${rdcStock.intransitQty != null }" >
         <td>
         <span><c:out value="${rdcStock.intransitQty}"/></span>
@@ -341,8 +345,8 @@ function fn_doAllaction(){
         <span>0</span>
         </td>
         </c:if>
-        
-        <th scope="row"><spring:message code='service.title.CDCAvailableQty'/></th>        
+
+        <th scope="row"><spring:message code='service.title.CDCAvailableQty'/></th>
          <c:if test= "${cdcAvaiableStock.availQty  == null }" >
         <td>
         <span>0</span>
@@ -357,7 +361,7 @@ function fn_doAllaction(){
     </tr>
     </tbody>
     </table><!-- table end -->
-    
+
     <article class="grid_wrap mt20"><!-- grid_wrap start -->
     <div id="grid_wrap_callLogList" style="width: 100%; height: 250px; margin: 0 auto;"></div>
     </article><!-- grid_wrap end -->
@@ -377,7 +381,7 @@ function fn_doAllaction(){
 </article><!-- acodi_wrap end -->
 
 <aside class="title_line mt20" id="hideContent3"><!-- title_line start -->
-<h2><spring:message code='service.title.DSCVerificationRemark'/></h2> 
+<h2><spring:message code='service.title.DSCVerificationRemark'/></h2>
 </aside><!-- title_line end -->
 
 <table class="type1" id="hideContent"><!-- table start -->
@@ -434,14 +438,14 @@ function fn_doAllaction(){
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="recallDate" name="recallDate"/>
     </td>
-    
+
     <th scope="row"><spring:message code='service.title.RequestDate'/></th>
     <td>
     <input type="text" title="Request Date" placeholder="DD/MM/YYYY" class="j_date w100p"  id="requestDate" name="requestDate" onchange="javascript:fn_doAllaction()"/>
     </td>
-    
-    
-    <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>    
+
+
+    <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>
     <td>
     <input type="text" title="Create start Date" placeholder="DD/MM/YYYY"  readonly="readonly"  class="readonly j_date w100p"  id="appDate" name="appDate" />
     </td>
@@ -449,22 +453,22 @@ function fn_doAllaction(){
 <tr>
     <th scope="row"><spring:message code='service.title.CTGroup'/></th>
     <td>
-    
+
     <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="CTgroup" name="CTgroup"/>
-    
+
    <!--  <select class="w100p" id="CTgroup"  name="CTgroup" >
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>CT Code
     </select> -->
     </td>
-    <th scope="row"><spring:message code='service.title.AppointmentSessione'/></th>       
+    <th scope="row"><spring:message code='service.title.AppointmentSessione'/></th>
     <td>
         <input type="text" title="" placeholder=""  readonly="readonly"    id="CTSSessionCode" name="CTSSessionCode" class="readonly w100p"/>
     </td>
-    
-    
-    
+
+
+
     <th scope="row"><spring:message code='service.title.FeedbackCode'/><span class="must">*</span></th>
     <td colspan="3">
     <select class="w100p"  id="feedBackCode" name="feedBackCode">
@@ -486,21 +490,21 @@ function fn_doAllaction(){
     </div><!-- search_100p end -->
 
     </td>
-    <th scope="row"><spring:message code='service.title.CTName'/></th>    
+    <th scope="row"><spring:message code='service.title.CTName'/></th>
     <td colspan="3">
     <input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="CTName" name="CTName"/>
     </td>
-    
-     <th scope="row">Grade A - B</th>    
+
+     <th scope="row">Grade A - B</th>
     <td colspan="1">
           <select class="w100p"  id="stock" name="stock">
             <option value="A">A</option>
             <option value="B">B</option>
           </select>
     </td>
-    
-    
-    
+
+
+
 </tr>
 <tr>
     <th scope="row"><spring:message code='service.title.Remark'/></th>

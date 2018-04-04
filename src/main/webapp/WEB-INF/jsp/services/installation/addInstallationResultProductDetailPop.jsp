@@ -14,7 +14,7 @@
 			$("#nextCallDate").val("");
 			$("#remark").val("");
 		}); */
-		
+
 		var callType = "${callType.typeId}";
 	    console.log(callType);
 	    if(callType == 0){
@@ -84,15 +84,15 @@
 	    $("#addInstallForm #installStatus").change(function (){
 	        console.log($("#addInstallForm #installStatus").val());
 	        if($("#addInstallForm #installStatus").val() == 4){
-	    
+
 	                $("#checkCommission").prop("checked",true);
 
 	        }
 	        else{
-	            
+
 	            $("#checkCommission").prop("checked",false);
-	        }      
-	    
+	        }
+
 	    });
 	});
 
@@ -103,21 +103,21 @@
 
 		});
 	}
-	
+
 	function fn_saveInstall(){
 	     if($("#addInstallForm #installStatus").val() == 4){   // Completed
 	        if( $("#failReason").val() != 0 || $("#nextCallDate").val() != ''){
 	            Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
 	            return;
 	        }
-	     
-	        if ( $("#addInstallForm #installDate").val() == '' ||  $("#addInstallForm #sirimNo").val() == '' || 
+
+	        if ( $("#addInstallForm #installDate").val() == '' ||  $("#addInstallForm #sirimNo").val() == '' ||
 	                $("#addInstallForm #serialNo").val() == '' ) {
 	            Common.alert("Please insert 'Actual Install Date', 'SIRIM No',  'Serial No' <br/>in complete status");
 	            return;
 	        }
 	     }
-	     
+
 	     if($("#addInstallForm #installStatus").val() == 21){  // Failed
 	            if( $("#failReason").val() == 0 || $("#nextCallDate").val() == '' ){
 	                Common.alert("Please insert 'Failed Reason', 'Next Call Date'<br/>in fail status");
@@ -128,7 +128,9 @@
 	    Common.ajax("POST", "/services/addInstallation.do", $("#addInstallForm").serializeJSON(), function(result) {
 	        console.log(result);
 	        Common.alert(result.message,fn_saveDetailclose);
-	        
+
+	        $("#popup_wrap").remove();
+            fn_installationListSearch();
 	        /* if (result.code == 'Y') {
 	            $("#popup_wrap").remove();
 	            fn_installationListSearch();
@@ -1299,7 +1301,7 @@
 									<option value="21">Failed</option>
 
 
-							</select> <!-- 
+							</select> <!--
         <c:forEach var="list" items="${installStatus }" varStatus="status">
            <option value="${list.codeId}">${list.codeName}</option>
         </c:forEach> --></td>

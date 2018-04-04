@@ -78,36 +78,36 @@ $(document).ready(function() {
     $("#addInstallForm #installStatus").change(function (){
         console.log($("#addInstallForm #installStatus").val());
         if($("#addInstallForm #installStatus").val() == 4){
-    
+
                 $("#checkCommission").prop("checked",true);
 
         }
         else{
-        	
+
             $("#checkCommission").prop("checked",false);
-        }      
-    
+        }
+
     });
-    
-    
-    
+
+
+
     $("#installDate").change(function(){
         var checkMon =   $("#installDate").val();
-    
-        
+
+
         Common.ajax("GET", "/services/checkMonth.do?intallDate=" + checkMon, ' ', function(result) {
              console.log("성공.");
              console.log("data : " + result);
              if(result.message == "Please choose this month only"){
                  Common.alert(result.message);
                  $("#installDate").val('');
-                 
+
              }
         });
-             
+
     });
-    
-    
+
+
 
 });
 
@@ -117,14 +117,14 @@ function fn_saveInstall(){
 			Common.alert("Not allowed to choose a reason for fail or recall date in complete status");
 			return;
 		}
-	 
-		if ( $("#addInstallForm #installDate").val() == '' ||  $("#addInstallForm #sirimNo").val() == '' || 
+
+		if ( $("#addInstallForm #installDate").val() == '' ||  $("#addInstallForm #sirimNo").val() == '' ||
 				$("#addInstallForm #serialNo").val() == '' ) {
 			Common.alert("Please insert 'Actual Install Date', 'SIRIM No',  'Serial No' <br/>in complete status");
             return;
         }
 	 }
-	 
+
 	 if($("#addInstallForm #installStatus").val() == 21){  // Failed
 	        if( $("#failReason").val() == 0 || $("#nextCallDate").val() == '' ){
 	        	Common.alert("Please insert 'Failed Reason', 'Next Call Date'<br/>in fail status");
@@ -135,7 +135,9 @@ function fn_saveInstall(){
 	Common.ajax("POST", "/services/addInstallation.do", $("#addInstallForm").serializeJSON(), function(result) {
         console.log(result);
         Common.alert(result.message,fn_saveclose);
-        
+
+        $("#popup_wrap").remove();
+        fn_installationListSearch();
         /* if (result.code == 'Y') {
         	$("#popup_wrap").remove();
         	fn_installationListSearch();
@@ -389,7 +391,7 @@ var gridPros = {
     <th scope="row">Grade</th>
     <td>
         <span> <c:if test="${installResult.grade == null}">A</c:if>
-        
+
         <c:if test="${installResult.grade != null}"><c:out value="${installResult.grade}"/></c:if>
         </span>
     </td>
@@ -750,13 +752,13 @@ var gridPros = {
     <th scope="row"><spring:message code='service.title.InstallStatust'/></th>
     <td>
     <select class="w100p" id="installStatus" name="installStatus">
-    
+
            <option value="4">Completed</option>
            <option value="21">Failed</option>
-           
-        
+
+
     </select>
-    <!-- 
+    <!--
         <c:forEach var="list" items="${installStatus }" varStatus="status">
            <option value="${list.codeId}">${list.codeName}</option>
         </c:forEach> -->
