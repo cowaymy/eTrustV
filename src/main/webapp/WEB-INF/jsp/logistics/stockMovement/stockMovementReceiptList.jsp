@@ -505,15 +505,29 @@ function grFunc(){
 	var getRow = AUIGrid.getRowCount(gradeGrid);
 
 	var gradchk=false;
+	var delychek = check[0].item.delyno;
+      
+      //alert("delychek    :      "+delychek);
+	
 	for(var i = 0 ; i < check.length ; i++){
 		var docno  = check[i].item.docno;
 		//alert("docno : "+docno);
-		docno = docno.substring(0, 3);
+		 if(docno !=null && docno != ""){
+			docno = docno.substring(0, 3);		 
+		 }
         //alert("docno after : "+docno);
         //if(check[i].item.mtype =="UM93" ){
+
         if(check[i].item.mtype =="UM93" && check[i].item.serialcheck=="Y" && docno =="RET" ){
         	gradchk=true;
         }
+ 
+       if(delychek != check[i].item.delyno){
+    	   Common.alert("Deliveryno Is Different.");
+    	   return false;
+       }
+   
+        
    }
 	var graddata;
 	if(gradchk){
@@ -563,8 +577,6 @@ function grFunc(){
 	data.grade    = graddata;
 
 	data.form    = $("#grForm").serializeJSON();
-
-
 
 	Common.ajaxSync("POST", "/logistics/stockMovement/StockMovementGoodIssue.do", data, function(result) {
 
