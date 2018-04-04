@@ -166,4 +166,9 @@ public class SmsServiceImpl implements SmsService
 		return nextDocNo;
 	}
 
+	@Override
+	public List<EgovMap> selectEnrolmentFilter(Map<String, Object> params) {
+		return smsMapper.selectEnrolmentFilter(params);
+	}
+
 }

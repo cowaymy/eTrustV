@@ -219,4 +219,10 @@ WHERE
         INSERT INTO MSC0014D values
         (#{batchUploadId},#{smsUploadRefNo},#{creator},SYSDATE)
     </insert>
+
+    <select id="selectEnrolmentFilter" parameterType="Map" resultType="EgovMap">
+        SELECT 1 as CODE_ID, '1' as CODE, 'True (reject with date)' as CODE_NAME, 'True (reject with date)' as DESCRIPTION FROM DUAL
+        UNION ALL
+        SELECT 2 as CODE_ID, '2' as CODE, 'False (no reject date)' as CODE_NAME, 'False (no reject date)' as DESCRIPTION FROM DUAL
+    </select>
 </mapper>

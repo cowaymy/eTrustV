@@ -26,4 +26,6 @@ public interface SmsService {
 	void deleteSmsTemp()  throws Exception;
 
 	void createBulkSmsBatch(Map<String, Object> params, SessionVO sessionVO)  throws Exception;
+
+	List<EgovMap> selectEnrolmentFilter(Map<String, Object> params);
 }

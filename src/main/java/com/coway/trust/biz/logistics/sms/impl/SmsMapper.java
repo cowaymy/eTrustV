@@ -37,5 +37,5 @@ public interface SmsMapper
 
 	int getSmsUploadId();
 
-
+	List<EgovMap> selectEnrolmentFilter(Map<String, Object> params);
 }

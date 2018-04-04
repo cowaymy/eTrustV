@@ -185,4 +185,11 @@ public class BulkSMSListController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value="/selectEnrolmentFilter.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectEnrolmentFilter(@RequestParam Map<String, Object> params) {
+
+		List<EgovMap> codeList = smsService.selectEnrolmentFilter(params);
+		return ResponseEntity.ok(codeList);
+	}
+
 }
