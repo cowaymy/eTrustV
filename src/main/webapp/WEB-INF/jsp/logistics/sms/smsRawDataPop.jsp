@@ -71,7 +71,7 @@ function fn_report(viewType){
     }
 
     // Deduction Status
-    if($("#deductionStus").val() >= 0) {
+    if($("#deductionStus").is(":checked")) {
         whereSQL2 += "AND t2.DeductionStatusID = " + $("#deductionStus").val() + " ";
     }
 
