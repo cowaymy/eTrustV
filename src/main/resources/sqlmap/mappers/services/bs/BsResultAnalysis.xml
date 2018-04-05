@@ -7,9 +7,9 @@
         select
             a.BS_RATE_ROW_ID,
             CASE WHEN l.MEM_LVL <> 1 THEN '' ELSE A.ORG_CODE END AS ORG_CODE,
-            CASE WHEN (l.MEM_LVL <> 1 OR l.MEM_LVL <> 2) THEN '' ELSE A.GRP_CODE END AS GRP_CODE,
-            CASE WHEN l.MEM_LVL = 4 THEN '' ELSE A.DEPT_CODE END AS DEPT_CODE,
-            a.MEM_CODE,
+            CASE WHEN ( CASE WHEN ( l.MEM_LVL <> 1 AND l.MEM_LVL <> 2 ) THEN '' ELSE a.GRP_CODE END ) = '0' THEN '' ELSE ( CASE WHEN ( l.MEM_LVL <> 1 AND l.MEM_LVL <> 2 ) THEN '' ELSE a.GRP_CODE END) END AS GRP_CODE,
+            CASE WHEN ( CASE WHEN l.MEM_LVL = 4 THEN '' ELSE a.DEPT_CODE END ) = '0' THEN '' ELSE ( CASE WHEN l.MEM_LVL = 4 THEN '' ELSE a.DEPT_CODE END ) END AS DEPT_CODE,
+            CASE WHEN a.MEM_CODE = '0' then '' else a.MEM_CODE END AS MEM_CODE,
             a.TOT_BS,
             a.ACT,
             a.FAIL,
