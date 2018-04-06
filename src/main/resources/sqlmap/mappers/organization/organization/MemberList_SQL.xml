@@ -242,14 +242,9 @@
                          <if test="keyBranch != null and keyBranch != ''">
                            AND  Extent4.BRNCH =  #{keyBranch}
                          </if>
-                          <if test="createDate != '' and endDate == '' ">
-                            <![CDATA[ AND  Extent4.CRT_DT  >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
-                         </if>
-                          <if test="endDate !='' and createDate == '' ">
-                            <![CDATA[  AND Extent4.CRT_DT <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
-                         </if>
-                          <if test="createDate != '' and endDate != '' ">
-                            <![CDATA[  AND Extent4.CRT_DT  between TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+
+                         <if test="createDate != '' and endDate != '' ">
+                            <![CDATA[  AND TO_DATE(Extent4.CRT_DT)  between TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
                          </if>
                          <if test="contact != null and contact != ''">
                             AND (( Extent4.TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent4.TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent4.TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent4.TEL_MOBILE = #{contact} OR Extent4.TEL_HUSE = #{contact} OR Extent4.TEL_OFFICE = #{contact})
@@ -314,14 +309,9 @@
                          <if test="keyBranch != null and keyBranch != ''">
                            AND  TO_NUMBER(Extent1.BRNCH,99999.99) =  #{keyBranch}
                          </if>
-                         <if test="createDate != '' and endDate == '' ">
-                            <![CDATA[ AND  TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD') >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
-                         </if>
-                          <if test="endDate != '' and createDate == '' ">
-                            <![CDATA[  AND TO_DATE(TO_CHAR(Extent1.CRT_DT,'YYYY-MM-DD'),'YYYY-MM-DD')   <=  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
-                         </if>
+
                           <if test="createDate != '' and endDate != '' ">
-                            <![CDATA[  AND Extent1.CRT_DT  between TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
+                            <![CDATA[  AND TO_DATE(Extent1.CRT_DT)  between TO_DATE(#{createDate}, 'DD/MM/YYYY') and  TO_DATE(#{endDate}, 'DD/MM/YYYY') ]]>
                          </if>
                           <if test="contact != null and contact != ''">
                             AND  ((Extent1.TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent1.TEL_MOBILE = #{contact} OR Extent1.TEL_HUSE = #{contact} OR Extent1.TEL_OFFICE = #{contact})
