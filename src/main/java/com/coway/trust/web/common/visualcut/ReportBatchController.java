@@ -803,6 +803,21 @@ public class ReportBatchController {
 		LOGGER.info("[END] OutrightPlusAging...");
 	}
 
+	@RequestMapping(value = "/RentalInstallationReport.do")
+	//@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am) /*monthly - end of month eg 31 @ 28 ...
+	public void RentalInstallationReport() {
+		LOGGER.info("[START] RentalInstallationReport...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/RentalInstallDate.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"Finance" + File.separator + "RentalStatus_InstallationDate_" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] RentalInstallationReport...");
+	}
+
 	private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
 			throws IOException {
 		checkArgument(params);
