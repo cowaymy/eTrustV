@@ -7,38 +7,38 @@
 var rosGridID;
 
 var optionModule = {
-        type: "M",     
+        type: "M",
         isCheckAll: false,
-        isShowChoose: false  
+        isShowChoose: false
 };
 
 var gridPros = {
         usePaging           : true,         //페이징 사용
-        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-        editable            : false,            
-        fixedColumnCount    : 0,            
-        showStateColumn     : true,             
-        displayTreeOpen     : false,            
-   //     selectionMode       : "singleRow",  //"multipleCells",            
-        headerHeight        : 30,       
+        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+        editable            : false,
+        fixedColumnCount    : 0,
+        showStateColumn     : true,
+        displayTreeOpen     : false,
+   //     selectionMode       : "singleRow",  //"multipleCells",
+        headerHeight        : 30,
         useGroupingPanel    : false,        //그룹핑 패널 사용
         skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
         wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
         noDataMessage       : "No order found.",
         groupingMessage     : "Here groupping"
     };
-    
+
 $(document).ready(function() {/////////////////////////////////////////////////////////////// Document Ready Func Start
-	
+
 	createRosCallGrid();
-	
-	CommonCombo.make("_appType", "/sales/rcms/getAppTypeList", {codeMasterId : '10'}, "66", optionModule);
-	
-	
+
+	CommonCombo.make("_appType", "/sales/rcms/getAppTypeList", {codeMasterId : '10'}, "66|!|1412", optionModule);
+
+
 	//Search
 	$("#_searchBtn").click(function() {
-		
+
 		Common.ajax("GET","/sales/rcms/selectRosCallLogList" , $("#_searchForm").serialize(),function(result){
 			//set Grid Data
 			AUIGrid.setGridData(rosGridID, result);
@@ -100,7 +100,7 @@ function chgGridTab(tabNm) {
         	AUIGrid.resize(agmHistoryGridID, 940, 180);
             AUIGrid.resize(billingGroupLatestSummaryGridID, 940, 180);
             AUIGrid.resize(agreementGridID, 940, 180);
-            break;    
+            break;
     };
 }
 
@@ -114,42 +114,42 @@ function fn_orderUloadBatch(){
 
 
 function createRosCallGrid(){
-	 var rosColumnLayout =  [ 
-	                            {dataField : "ordNo", headerText : '<spring:message code="sal.text.ordNo" />', width : '10%' , editable : false}, 
+	 var rosColumnLayout =  [
+	                            {dataField : "ordNo", headerText : '<spring:message code="sal.text.ordNo" />', width : '10%' , editable : false},
 	                            {dataField : "ordDt", headerText : '<spring:message code="sal.text.ordDate" />', width : '10%', editable : false},
 	                            {dataField : "appTypeCode", headerText : '<spring:message code="sal.title.text.appType" />', width : '10%' , editable : false},
 	                            {dataField : "stockDesc", headerText : '<spring:message code="sal.title.text.product" />', width : '20%' , editable : false},
 	                            {dataField : "custName", headerText : '<spring:message code="sal.text.custName" />', width : '20%' , editable : false},
-	                            {dataField : "custNric", headerText : '<spring:message code="sal.title.text.nricCompNo" />', width : '20%' , editable : false}, 
+	                            {dataField : "custNric", headerText : '<spring:message code="sal.title.text.nricCompNo" />', width : '20%' , editable : false},
 	                            {dataField : "rentalStus", headerText : '<spring:message code="sal.text.rentalStatus" />', width : '10%' , editable : false},
 	                            {dataField : "ordId", visible : false},
 	                            {dataField : "custId", visible : false},
 	                            {dataField : "custBillId", visible : false}
 	                           ];
-	    
+
 	    //그리드 속성 설정
 	    var gridPros = {
-	            
+
 	            usePaging           : true,         //페이징 사용
-	            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-	            fixedColumnCount    : 1,            
-	            showStateColumn     : true,             
-	            displayTreeOpen     : false,            
-	//            selectionMode       : "singleRow",  //"multipleCells",            
-	            headerHeight        : 30,       
+	            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+	            fixedColumnCount    : 1,
+	            showStateColumn     : true,
+	            displayTreeOpen     : false,
+	//            selectionMode       : "singleRow",  //"multipleCells",
+	            headerHeight        : 30,
 	            useGroupingPanel    : false,        //그룹핑 패널 사용
 	            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-	            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+	            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
 	            noDataMessage       : "No Ros Call found.",
 	            groupingMessage     : "Here groupping"
 	    };
-	    
+
 	    rosGridID = GridCommon.createAUIGrid("#rosCall_grid_wrap", rosColumnLayout,'', gridPros);  // address list
 }
 
 function fn_newROSCall(){
-	
+
 	//Validation
 	var selectedItem = AUIGrid.getSelectedItems(rosGridID);
     if(selectedItem.length <= 0){
@@ -161,7 +161,7 @@ function fn_newROSCall(){
 }
 
 function fn_chargeOrderBillingType(){
-	
+
 	//Validation
     var selectedItem = AUIGrid.getSelectedItems(rosGridID);
     if(selectedItem.length <= 0){
@@ -170,7 +170,7 @@ function fn_chargeOrderBillingType(){
     }
     //Popup
 	Common.popupDiv('/payment/initChangeBillingTypePop.do', {custBillId : selectedItem[0].item.custBillId , callPrgm : "BILLING_GROUP"}, null , true);
-	
+
 }
 
 function searchList(){
@@ -223,7 +223,7 @@ function fn_feedbackList(){
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a id="_searchBtn"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
     </c:if>
-    <li><p class="btn_blue"><a onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li> 
+    <li><p class="btn_blue"><a onclick="javascript:$('#_searchForm').clearForm();"><span class="clear"></span><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -289,7 +289,7 @@ function fn_feedbackList(){
     <dd>
     <ul class="btns">
         <li><p class="link_btn"><a onclick="javascript:fn_feedbackList()"><spring:message code="sal.title.text.feedbackList" /></a></p></li>
-        <%-- <li><p class="link_btn"><a href="${pageContext.request.contextPath}/payment/initInvoiceIssue.do">Invoice</a></p></li>  --%> 
+        <%-- <li><p class="link_btn"><a href="${pageContext.request.contextPath}/payment/initInvoiceIssue.do">Invoice</a></p></li>  --%>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
