@@ -11,15 +11,16 @@
     SELECT  'PST'  ||TO_CHAR (SYSDATE, 'YYMMDD') ||LPAD(PST_SEQ.NEXTVAL, 5, '0') FROM  DUAL
 </select>
 <select id="PstSearchList" parameterType="Map" resultType="egovMap">
-	SELECT ROWNUM rnum , S62.PST_SALES_ORD_ID psoid, S62.PST_REF_NO psono, S62.PST_STUS_ID pststus, S62.CRT_DT crtdt , TO_CHAR(S62.CRT_DT , 'YYYYMMDDhh24miss') crtdt1 
-	     , S62.PST_DEALER_ID dealerid , S62.PST_TYPE psttypeid , PTYPE.CODE_NAME psttype 
-	     , S62.PST_CUST_PO pstpo , S62.PIC pic , S38.CODE pststuscd , S38.NAME pststusnm  
+	SELECT ROWNUM rnum , S62.PST_SALES_ORD_ID psoid, S62.PST_REF_NO psono, S62.PST_STUS_ID pststus, S62.CRT_DT crtdt , TO_CHAR(S62.CRT_DT , 'YYYYMMDDhh24miss') crtdt1
+	     , S62.PST_DEALER_ID dealerid , S62.PST_TYPE psttypeid , PTYPE.CODE_NAME psttype
+	     , S62.PST_CUST_PO pstpo , S62.PIC pic , S38.CODE pststuscd , S38.NAME pststusnm
 	     , S30.DEALER_NAME dealernm , S30.DEALER_NRIC nric, S30.DEALER_TYPE dtype
 	     , S62.PST_LOC_ID pstlocid  , S28.WH_LOC_ID locid , S28.WH_LOC_CODE loccode , S28.WH_LOC_DESC locnm
 	     , S63.PST_ITM_STK_ID itmid , S26.STK_CODE itmcd , s26.STK_DESC itmnm , S26.UOM uom , UOM.CODE uomcd
-	     , S63.PST_ITM_REQ_QTY qty  , S63.PST_ITM_DO_QTY doqty, S63.PST_ITM_BAL_QTY balqty , S63.PST_ITM_PRC itmprc 
+	     , S63.PST_ITM_REQ_QTY qty  , S63.PST_ITM_DO_QTY doqty, S63.PST_ITM_BAL_QTY balqty , S63.PST_ITM_PRC itmprc
 	     , 0 reqqty , S62.CRT_USER_ID userid , S26.SERIAL_CHK serialchk , S62.PST_CUR_RATE pcr
 	     , S62.PST_CUR_TYPE_ID pcti, CUR.CODE pctcd , S32.CNT_NAME cntname
+	     , S59.PST_DO_REF_NO pstno
 	  FROM SAL0062D S62
 	     , SAL0063D S63
 	     , SYS0038M S38
@@ -30,6 +31,7 @@
 	     , (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 358) PTYPE
 	     , (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 42) UOM
 	     , (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 94) CUR
+	     , SAL0059D S59
 	 WHERE 1 = 1
 	   AND S62.PST_LOC_ID       = S28.WH_LOC_ID
 	   AND S26.UOM              = UOM.CODE_ID
@@ -40,6 +42,7 @@
 	   AND S62.PST_DEALER_ID    = S30.DEALER_ID
 	   AND S62.PST_STUS_ID      = S38.STUS_CODE_ID
 	   AND S62.PST_SALES_ORD_ID = S63.PST_SALES_ORD_ID
+	   AND S62.PST_SALES_ORD_ID = S59.PST_SALES_ORD_ID
 	   <if test="pstno != null and pstno != ''">
 	       AND S62.PST_REF_NO = #{pstno}
 	   </if>
@@ -51,7 +54,7 @@
 	   </if>
 	   <if test="crtdtfr != null and crtdtfr != '' and crtdtto != null and crtdtto != '' ">
 	       AND S62.CRT_DT between to_date(#{crtdtfr}||'000000' , 'dd/mm/yyyyhh24miss') and to_date(#{crtdtto}||'235959' , 'dd/mm/yyyyhh24miss')
-       </if> 
+       </if>
        <if test="dealerid != null and dealerid != ''">
            AND S62.PST_DEALER_ID = #{dealerid}
        </if>
@@ -62,7 +65,7 @@
            AND S30.DEALER_NRIC = #{nricno}
        </if>
        <if test="psttype != null and psttype != ''">
-           AND S62.PST_TYPE IN 
+           AND S62.PST_TYPE IN
            <foreach item="item" collection="psttype" index="index" open="(" separator="," close=")">
               #{item}
            </foreach>
@@ -73,7 +76,7 @@
        <if test="pic != null and pic != ''">
            AND S62.PIC = #{pic}
        </if>
- order by psoid desc       
+ order by psoid desc
   </select>
   <insert id="pstRequestInsert" parameterType="Map">
     INSERT INTO LOG0047M (REQST_NO, TRNSC_TYPE, TRNSC_TYPE_DTL, PRIDIC_FRQNCY, REQST_CRT_DT, REQST_REQUIRE_DT,REF_DOC_NO ,DOC_HDER_TXT
@@ -81,12 +84,12 @@
                         , CRT_USER_ID, CRT_DT, REQST_STUS, REQST_TYPE, REQST_TYPE_DTL)
                   VALUES (#{reqno}, 'OD' , #{movetype} ,'M' , to_date(#{crtdt1} , 'YYYYMMDDhh24miss') , sysdate , #{psono} ,#{htext}, #{locid} , #{userid} , sysdate , 'C', 'OD' , #{movetype} )
   </insert>
-  
+
   <insert id="insertMovementSerial" parameterType="Map">
     INSERT INTO LOG0061D (SERIAL_NO, DELVRY_NO, PDELVRY_NO_ITM, TTYPE, CRT_DT, CRT_USER_ID)
              VALUES  (#{serial} , #{reqstno} , 1 , 'OD' , SYSDATE , #{userid})
   </insert>
-  
+
   <insert id="pstRequestInsertDetail" parameterType="Map">
     INSERT into LOG0048D( REQST_NO, REQST_NO_ITM
                         ,ITM_CODE, ITM_NAME, REQST_QTY, UOM, FINAL_CMPLT ,  CRT_USER_ID, CRT_DT)
@@ -147,47 +150,47 @@
                       #{userid}, #{REQEDDT} , sysdate , #{REFDOCNO}, #{psoid})
 
  </insert>
- 
+
  <update id="pstMaterialStockBalance" parameterType="Map">
     UPDATE LOG0056M
        SET QTY      =
-       <if test='DEBIT == "S"'> 
+       <if test='DEBIT == "S"'>
        QTY + #{REQQTY}
        </if>
-       <if test='DEBIT == "H"'> 
+       <if test='DEBIT == "H"'>
        QTY - #{REQQTY}
        </if>
      WHERE LOC_ID   = #{FRLOCID}
        AND STK_CODE = #{ITMCD}
  </update>
- 
+
  <delete id="pstMaterialStockSerialDelete"  parameterType="Map">
     DELETE FROM LOG0063D WHERE MATNR = #{ITMCD} AND LOC_ID = #{FRLOCID} AND SERIAL_NO IN (SELECT SERIAL_NO FROM LOG0061D WHERE DELVRY_NO = #{REQNO} )
  </delete>
- 
+
  <insert id="pstMaterialStockSerialInsert"  parameterType="Map">
     INSERT INTO LOG0063D (SERIAL_NO, MATNR, LOC_ID, GLTRI, LWEDT, SWAOK, CRT_DT, CRT_USER_ID)
-     SELECT SERIAL_NO , #{ITMCD} , #{FRLOCID} , to_char(sysdate,'yyyymmdd') , to_char(sysdate,'yyyymmdd') , 'Y' , sysdate , #{userid} 
+     SELECT SERIAL_NO , #{ITMCD} , #{FRLOCID} , to_char(sysdate,'yyyymmdd') , to_char(sysdate,'yyyymmdd') , 'Y' , sysdate , #{userid}
        FROM LOG0061D L61, LOG0048D L48
 	  WHERE L61.DELVRY_NO      = L48.REQST_NO
 	    AND L61.PDELVRY_NO_ITM = L48.REQST_NO_ITM
-	    AND L48.ITM_CODE       = #{ITMCD} 
+	    AND L48.ITM_CODE       = #{ITMCD}
 	    AND L61.DELVRY_NO      = #{REQNO}
  </insert>
  <update id="updatePSTsalesDetail" parameterType="Map">
     update SAL0063D
 	   set PST_ITM_DO_QTY   = #{reqqty}
-	     , PST_ITM_BAL_QTY  = PST_ITM_BAL_QTY - #{reqqty} 
+	     , PST_ITM_BAL_QTY  = PST_ITM_BAL_QTY - #{reqqty}
 	 where PST_SALES_ORD_ID = #{psoid}
 	   and PST_ITM_STK_ID   = #{itmid}
  </update>
- 
+
  <update id="updatePSTsalesMaster" parameterType="Map">
-    UPDATE SAL0062D 
+    UPDATE SAL0062D
 	   SET PST_STUS_ID      = #{pststatusid}
 	 WHERE PST_SALES_ORD_ID = #{psoid}
  </update>
- 
+
  <insert id="insertPSTsalesLog" parameterType="Map">
     INSERT
           INTO SAL0061D
@@ -210,16 +213,16 @@
              , #{userid})
  </insert>
  <select id="selectPstSalseDoMasterId" resultType="int">
-    SELECT DECODE((SELECT COUNT(PST_DO_ID) FROM SAL0059D) , 0 , 1 , (SELECT MAX(PST_DO_ID)+1 FROM SAL0059D) ) FROM DUAL 
+    SELECT DECODE((SELECT COUNT(PST_DO_ID) FROM SAL0059D) , 0 , 1 , (SELECT MAX(PST_DO_ID)+1 FROM SAL0059D) ) FROM DUAL
  </select>
  <insert id="insertPSTsalesDOM" parameterType="Map">
  INSERT INTO SAL0059D (PST_DO_ID, PST_DO_REF_NO, PST_SALES_ORD_ID, PST_DO_STK_TRANS_LOC_FROM_ID, PST_DO_TOT_AMT, PST_DO_REM, PST_DO_STUS_ID, PST_DO_TYPE_ID, CRT_DT, CRT_USER_ID, INVC_NO)
               VALUES (#{pstdoid}
                      , #{reqstno}, #{psoid}, #{locid}, #{totalprice}, #{htext}, #{dostatusid}, #{psttype}, SYSDATE, #{userid}, 'PST'||LPAD((select max(PST_DO_ID)+1 from SAL0059D) , 7 , 0))
  </insert>
- 
+
  <select id="selectPstSalseDetailId" resultType="int">
-   SELECT DECODE((SELECT COUNT(PST_DOD_ITM_ID) FROM SAL0060D) , 0 , 1 , (SELECT MAX(PST_DOD_ITM_ID)+1 FROM SAL0060D) ) FROM DUAL 
+   SELECT DECODE((SELECT COUNT(PST_DOD_ITM_ID) FROM SAL0060D) , 0 , 1 , (SELECT MAX(PST_DOD_ITM_ID)+1 FROM SAL0060D) ) FROM DUAL
  </select>
  <insert id="insertPSTsalesDOMD" parameterType="Map">
  INSERT INTO SAL0060D (PST_DOD_ITM_ID,PST_DO_ID,PST_DOD_ITM_STK_ID,PST_DOD_ITM_QTY,CRT_DT,CRT_USER_ID,PST_DO_ITM_TAX_CODE_ID,PST_DO_ITM_TXS)
@@ -230,22 +233,22 @@
 		        round((#{itmprc} * #{reqqty})*0.06 , 2)
 		       </when>
 		       <otherwise>
-		        0  
+		        0
 		       </otherwise>
             </choose>
                      )
  </insert>
- 
- 
- 
- 
+
+
+
+
  <select id="getZrExportationIDByPOSID" parameterType="int" resultType="int">
 	 SELECT ZRE_EXPT_ID zei FROM SAL0062D S62 , SYS0067M S67
 	  WHERE S62.PST_DEALER_ID = S67.ZRE_EXPT_DEALER_ID
 	    AND S67.ZRE_EXPT_STUS_ID = 1
 	    AND S62.PST_SALES_ORD_ID = #{psoid}
  </select>
- 
+
  <insert id="BillOrderInsert" parameterType="Map">
     insert into PAY0016D ( ACC_BILL_ID,ACC_BILL_TASK_ID,ACC_BILL_REF_DT,ACC_BILL_REF_NO,
                        ACC_BILL_ORD_ID,ACC_BILL_ORD_NO,ACC_BILL_TYPE_ID,ACC_BILL_MODE_ID,
@@ -254,22 +257,22 @@
                        ACC_BILL_REM,ACC_BILL_CRT_DT,ACC_BILL_CRT_USER_ID,ACC_BILL_GRP_ID,
                        ACC_BILL_TAX_RATE,ACC_BILL_TAX_CODE_ID)
    values ( PAY0016D_SEQ.NEXTVAL ,0 ,sysdate,'1000',
-            0 , '' , 1159 , 1271 , 
-            0 , 0 , 0 , #{schaount} , 
-            0 , #{billnet} ,#{schaount} , 1 , 
+            0 , '' , 1159 , 1271 ,
+            0 , 0 , 0 , #{schaount} ,
+            0 , #{billnet} ,#{schaount} , 1 ,
             #{invoiceno} , sysdate , #{userid} , 0 ,
             #{taxrate} , #{taxcodeid})
  </insert>
- 
+
  <select id="selectinvoiceTaxId" resultType="String">
     select PAY0031D_SEQ.NEXTVAL from dual
  </select>
  <insert id="InvoiceMListInsert" parameterType="Map">
-    insert into PAY0031D( TAX_INVC_ID, TAX_INVC_REF_NO, TAX_INVC_REF_DT, TAX_INVC_SVC_NO, TAX_INVC_TYPE, 
-	       TAX_INVC_CUST_NAME, TAX_INVC_CNTC_PERSON, 
-	       TAX_INVC_ADDR1,TAX_INVC_ADDR2, TAX_INVC_ADDR3, TAX_INVC_ADDR4, TAX_INVC_POST_CODE,TAX_INVC_STATE_NAME, TAX_INVC_CNTY, 
-	       TAX_INVC_TASK_ID, TAX_INVC_REM, 
-	       TAX_INVC_CHRG, TAX_INVC_TXS, TAX_INVC_AMT_DUE, TAX_INVC_CRT_DT, 
+    insert into PAY0031D( TAX_INVC_ID, TAX_INVC_REF_NO, TAX_INVC_REF_DT, TAX_INVC_SVC_NO, TAX_INVC_TYPE,
+	       TAX_INVC_CUST_NAME, TAX_INVC_CNTC_PERSON,
+	       TAX_INVC_ADDR1,TAX_INVC_ADDR2, TAX_INVC_ADDR3, TAX_INVC_ADDR4, TAX_INVC_POST_CODE,TAX_INVC_STATE_NAME, TAX_INVC_CNTY,
+	       TAX_INVC_TASK_ID, TAX_INVC_REM,
+	       TAX_INVC_CHRG, TAX_INVC_TXS, TAX_INVC_AMT_DUE, TAX_INVC_CRT_DT,
 	       TAX_INVC_CRT_USER_ID)
 	   values (#{invoicetaxid} , #{invoiceno} , SYSDATE , 'PST'||LPAD((select max(PST_DO_ID) from SAL0059D) , 7 , 0) , 123 ,
 	           #{dealernm} , #{cntname} ,
@@ -285,35 +288,35 @@
     select PAY0031D_SEQ.NEXTVAL from dual
  </select>
  <insert id="InvoiceDListInsert" parameterType="Map">
-    insert into PAY0032D( INVC_ITM_ID, TAX_INVC_ID, INVC_ITM_TYPE, INVC_ITM_ORD_NO, INVC_ITM_PO_NO, 
-       INVC_ITM_CODE, INVC_ITM_DESC1, INVC_ITM_DESC2, INVC_ITM_SERIAL_NO, INVC_ITM_QTY,        
-       INVC_ITM_UNIT_PRC, INVC_ITM_GST_RATE, INVC_ITM_GST_TXS, INVC_ITM_CHRG, INVC_ITM_AMT_DUE) 
+    insert into PAY0032D( INVC_ITM_ID, TAX_INVC_ID, INVC_ITM_TYPE, INVC_ITM_ORD_NO, INVC_ITM_PO_NO,
+       INVC_ITM_CODE, INVC_ITM_DESC1, INVC_ITM_DESC2, INVC_ITM_SERIAL_NO, INVC_ITM_QTY,
+       INVC_ITM_UNIT_PRC, INVC_ITM_GST_RATE, INVC_ITM_GST_TXS, INVC_ITM_CHRG, INVC_ITM_AMT_DUE)
   values (
-       #{invoiceitmid} , #{taxinvoidid} , #{itemtype} , #{itemordno} , #{pstpo} , 
+       #{invoiceitmid} , #{taxinvoidid} , #{itemtype} , #{itemordno} , #{pstpo} ,
        #{itmcd} , #{itmnm1} , #{itmnm2} , #{serialno} , #{reqqty},
        #{itmprc} , #{gstrate} ,
        <choose>
        <when test='gstrate > 0'>
-        round((#{itmprc} * #{reqqty})*0.06 , 2) ,round((#{itmprc} * #{reqqty}) , 2) , round(((#{itmprc} * #{reqqty})+((#{itmprc} * #{reqqty})*0.06)) , 2)  
+        round((#{itmprc} * #{reqqty})*0.06 , 2) ,round((#{itmprc} * #{reqqty}) , 2) , round(((#{itmprc} * #{reqqty})+((#{itmprc} * #{reqqty})*0.06)) , 2)
        </when>
        <otherwise>
-        0 , round((#{itmprc} * #{reqqty}) , 2) , round((#{itmprc} * #{reqqty}) , 2) 
+        0 , round((#{itmprc} * #{reqqty}) , 2) , round((#{itmprc} * #{reqqty}) , 2)
        </otherwise>
        </choose>
   )
  </insert>
- 
+
  <insert id="insertStockCardList" parameterType="Map">
-    INSERT INTO LOG0014D( SR_CARD_ID, LOC_ID, STOCK_ID, ENTRY_DT, TYPE_ID, 
-                REF_NO, SALES_ORD_ID, ITM_NO, SRC_ID, PRJCT_ID, 
-                BATCH_NO, QTY, CURR_ID, CURR_RATE, COST, 
-                PRC, REM, SERIAL_NO, INSTALL_NO, COST_DT, 
-                APP_TYPE_ID, STK_GRAD, INSTALL_FAIL, IS_SYNCH, ENTRY_MTH_ID, 
+    INSERT INTO LOG0014D( SR_CARD_ID, LOC_ID, STOCK_ID, ENTRY_DT, TYPE_ID,
+                REF_NO, SALES_ORD_ID, ITM_NO, SRC_ID, PRJCT_ID,
+                BATCH_NO, QTY, CURR_ID, CURR_RATE, COST,
+                PRC, REM, SERIAL_NO, INSTALL_NO, COST_DT,
+                APP_TYPE_ID, STK_GRAD, INSTALL_FAIL, IS_SYNCH, ENTRY_MTH_ID,
                 ORGN)
            VALUES (
            LOG0014D_SR_CARD_ID_SEQ.NEXTVAL , #{locid}, #{itmid} , SYSDATE , 1156 ,
-           #{reqno}, 0 , #{itemNo}  , 0 , 0 , 
-           0 , (-1*#{reqqty}) , 0 , 0 , 0 , 
+           #{reqno}, 0 , #{itemNo}  , 0 , 0 ,
+           0 , (-1*#{reqqty}) , 0 , 0 , 0 ,
            0 , #{htext} , '' , '' , SYSDATE ,
            0 , '' , 0 , 1 , 764 ,
            '')
@@ -325,11 +328,11 @@
 	   AND rownum=1
 	   AND A.DEALER_ID = #{dealerid}
  </select>
- 
+
  <select id="PstMaterialDocViewList" parameterType="Map" resultType="egovMap">
     select
         rownum rnum
-        , l59.matrl_doc_no 
+        , l59.matrl_doc_no
         , l59.matrl_doc_year
         , l59.trnsc_type_code
         , l60.MATRL_DOC_ITM
@@ -360,7 +363,7 @@
         and l60.matrl_no = s26.STK_CODE(+)
         and l60.measure_bas_unit = ut.code_id(+)
         and l59.trnsc_type_code = tt.code
-        and l60.INVNTRY_MOV_TYPE = mt.code 
+        and l60.INVNTRY_MOV_TYPE = mt.code
         and l59.REF_DOC_NO = #{psono}
         and l59.matrl_doc_no = l60.matrl_doc_no
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
