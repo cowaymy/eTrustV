@@ -453,4 +453,10 @@ public class ECashDeductionController {
 		adaptorService.sendEmail(email, false);
 
 	}
+
+	@RequestMapping(value="/failedDeductionListPop.do")
+	public String orderSalesYSListingPop(){
+
+		return "payment/ecash/failedDeductionListPop";
+	}
 }

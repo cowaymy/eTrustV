@@ -431,6 +431,11 @@ function fn_getItmStatus(val){
         AUIGrid.setGridData(batchDeductionItemId, result);
     });
 }
+
+function fn_openFailedeCash() {
+    Common.popupDiv("/payment/failedDeductionListPop.do", null, null, true);
+}
+
 </script>
 
 <!-- content start -->
@@ -530,6 +535,7 @@ function fn_getItmStatus(val){
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('NEW');">New eDeduction</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');">eDeduction Result</a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');">Re-Generate Claim File</a></p></li>
+                        <li><p class="link_btn"><a href="javascript:fn_openFailedeCash('VIEW');">Failed eCash Listing</a></p></li>
                     </ul>
                     <ul class="btns">
                     </ul>
