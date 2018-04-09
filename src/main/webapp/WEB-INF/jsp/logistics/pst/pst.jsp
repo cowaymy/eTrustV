@@ -6,40 +6,40 @@
 	    font-weight:bold;
 	    color:#22741C;
 	}
-	    
+
 </style>
 <script type="text/javaScript" language="javascript">
-
-var optionUnit = { 
+var date = new Date().getDate();
+var optionUnit = {
 isShowChoose: false,
 type : 'M'
 };
 
 var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName":"Completed"},{"codeId":"10","codeName":"Cancel"}];
-	
+
     //AUIGrid 생성 후 반환 ID
     var listGrid;
     var serialGrid;
     var serialchk = false;
     var mdcGrid;
     var gridValue;
-    
+
     var decedata = [{"code":"H","codeName":"Credit"},{"code":"S","codeName":"Debit"}];
-    
+
     $(document).ready(function(){
-    
+
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-        
+
         AUIGrid.setSelectionMode(listGrid, "singleRow");
-        
+
         // 셀 더블클릭 이벤트 바인딩
-        
+
         //$('#pstStusId').multipleSelect("checkAll");
         doGetCombo('/common/selectCodeList.do', '357', '','cmbDealerType', 'S' , '');     // Dealer Type Combo Box
         doDefCombo(pststatuslist, '' ,'pstStusIds', 'M', 'f_multiCombo');
-        
-        
+
+
         AUIGrid.bind(listGrid, "cellEditBegin", function (event){
             if (event.item.balqty < 1){
                 return false;
@@ -52,9 +52,9 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                 }
             }
         });
-        
+
         AUIGrid.bind(listGrid, "cellEditEnd", function (event){
-        	
+
         	if (event.item.balqty < event.value){
         		Common.alert('The quantity you entered is too large.');
         		AUIGrid.setCellValue(listGrid, event.rowIndex, event.columnIndex, 0);
@@ -65,13 +65,13 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
         		AUIGrid.setCellValue(listGrid, event.rowIndex, event.columnIndex, 0);
         	}
         });
-        
+
         AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
             console.log(event);
             if (event.dataField == "psono"){
             	var param = "psono="+AUIGrid.getCellValue(listGrid, event.rowIndex, "psono");
             	Common.ajax("GET", "/logistics/pst/PstMaterialDocView.do", param , function(result) {
-                    
+
                     AUIGrid.setGridData(mdcGrid, result.data);
                     $("#mdc_grid").show();
                 });
@@ -80,9 +80,9 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
             document.searchForm.action = '/logistics/pos/PosView.do';
             document.searchForm.submit();*/
         });
-        
+
         AUIGrid.bind(serialGrid, "cellEditBegin", function(event) {
-            
+
             if (event.item.scanno != ""){
                 return false;
             }else{
@@ -108,7 +108,7 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                        }
                    }
                }
-               
+
                if (tvalue){
                    fn_serialChck(event.rowIndex ,event.item , serial)
                }else{
@@ -120,37 +120,38 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                    });
                    AUIGrid.update(serialGrid);
                }
-              
+
               if($("#serialqty").val() > AUIGrid.getRowCount(serialGrid)){
-                 f_addrow();      
+                 f_addrow();
               }
-              
+
            }
         });
-        
+
     });
-    
+
     // 조회조건 combo box
     function f_multiCombo(){
         $(function() {
             $('#pstStusIds').change(function() {
-                
+
             }).multipleSelect({
-               selectAll: true, // 전체선택 
+               selectAll: true, // 전체선택
                 width: '80%'
             });
             $('#pstStusIds').multipleSelect("checkAll");
         });
     }
-    
+
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout =[ { dataField : "rnum"      , headerText : "<spring:message code='log.head.psono'/>"                     , width : 140, editable : false, visible: false },
                             { dataField : "psoid"     , headerText : "<spring:message code='log.head.psono'/>"                     , width : 140, editable : false, visible: false },
                             { dataField : "psono"     , headerText : "<spring:message code='log.head.psono'/>"                     , width : 140, editable : false, visible: true  },
+                            { dataField : "pstno"     , headerText : "PST No", width : 140, editable : false, visible: true  },
                             { dataField : "dtype"     , headerText : "<spring:message code='sys.gstexportation.grid1.dealerid'/>"  , width : 140, editable : false, visible: false },
                             { dataField : "dealerid"  , headerText : "<spring:message code='sys.gstexportation.grid1.dealerid'/>"  , width : 140, editable : false, visible: false },
                             { dataField : "dealernm"  , headerText : "<spring:message code='sys.gstexportation.grid1.dealername'/>", width : 140, editable : false, visible: true  },
@@ -185,29 +186,29 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                             { dataField : "pcti"      , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false },
                             { dataField : "pctcd"     , headerText : "<spring:message code='log.head.pic'/>"                       , width : 140, editable : false, visible: false }
                           ];
-        var serialcolumn =[ {dataField:"itmcd"        , headerText : "<spring:message code='log.head.materialcode'/>" ,width:"20%" ,height:30 },               
-                            {dataField:"itmname"      , headerText : "<spring:message code='log.head.materialname'/>" ,width:"25%" ,height:30 },               
-                            {dataField:"serial"       , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,editable:true },                 
-                            {dataField:"cnt61"        , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },                 
-                            {dataField:"cnt62"        , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },                 
-                            {dataField:"cnt63"        , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },                 
+        var serialcolumn =[ {dataField:"itmcd"        , headerText : "<spring:message code='log.head.materialcode'/>" ,width:"20%" ,height:30 },
+                            {dataField:"itmname"      , headerText : "<spring:message code='log.head.materialname'/>" ,width:"25%" ,height:30 },
+                            {dataField:"serial"       , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,editable:true },
+                            {dataField:"cnt61"        , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },
+                            {dataField:"cnt62"        , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },
+                            {dataField:"cnt63"        , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false },
                             {dataField:"statustype"   , headerText : "<spring:message code='log.head.status'/>"       ,width:"30%" ,height:30,visible:false },
                             {dataField:"scanno"       , headerText : "<spring:message code='log.head.serial'/>"       ,width:"30%" ,height:30,visible:false }
                            ];
-        
+
         var mtrcolumnLayout = [
-                               {dataField:  "matrlDocNo",headerText :"<spring:message code='log.head.matrl_doc_no'/>"    ,width:200    ,height:30},                         
-                               {dataField: "matrlDocItm",headerText :"<spring:message code='log.head.matrldocitm'/>"    ,width:100    ,height:30},                         
-                               {dataField: "invntryMovType",headerText :"<spring:message code='log.head.move_type'/>"   ,width:100    ,height:30},                                             
-                               {dataField: "movtype",headerText :"<spring:message code='log.head.move_text'/>"  ,width:120    ,height:30},                                                     
-                               {dataField: "reqStorgNm",headerText :"<spring:message code='log.head.reqloc'/>"  ,width:150    ,height:30},                         
-                               {dataField: "matrlNo",headerText :"<spring:message code='log.head.matrl_code'/>"     ,width:120    ,height:30},                         
-                               {dataField: "stkDesc",headerText :"<spring:message code='log.head.matrlname'/>"  ,width:300    ,height:30},                         
+                               {dataField:  "matrlDocNo",headerText :"<spring:message code='log.head.matrl_doc_no'/>"    ,width:200    ,height:30},
+                               {dataField: "matrlDocItm",headerText :"<spring:message code='log.head.matrldocitm'/>"    ,width:100    ,height:30},
+                               {dataField: "invntryMovType",headerText :"<spring:message code='log.head.move_type'/>"   ,width:100    ,height:30},
+                               {dataField: "movtype",headerText :"<spring:message code='log.head.move_text'/>"  ,width:120    ,height:30},
+                               {dataField: "reqStorgNm",headerText :"<spring:message code='log.head.reqloc'/>"  ,width:150    ,height:30},
+                               {dataField: "matrlNo",headerText :"<spring:message code='log.head.matrl_code'/>"     ,width:120    ,height:30},
+                               {dataField: "stkDesc",headerText :"<spring:message code='log.head.matrlname'/>"  ,width:300    ,height:30},
                                {dataField: "debtCrditIndict",headerText :"<spring:message code='log.head.debit/credit'/>"   ,width:120    ,height:30
-                             ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) { 
-                                   
+                             ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
+
                                    var retStr = "";
- 
+
                                    for(var i=0,len=decedata.length; i<len; i++) {
 
                                        if(decedata[i]["code"] == value) {
@@ -216,64 +217,64 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                                        }
                                    }
                                    return retStr == "" ? value : retStr;
-                               },editRenderer : 
+                               },editRenderer :
                                {
                                   type : "ComboBoxRenderer",
                                   showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                                   list : decedata,
                                   keyField : "code",
                                   valueField : "code"
-                               }   
-                         
+                               }
+
                            },
-                           {dataField:    "autoCrtItm" ,headerText:    ""   ,width:100    ,height:30},                         
-                           {dataField:    "qty",headerText :"<spring:message code='log.head.qty'/>"    ,width:120    ,height:30},                         
-                           {dataField:    "trantype",headerText :"<spring:message code='log.head.tran_type'/>"     ,width:120    ,height:30},                         
-                           {dataField:    "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"    ,width:120    ,height:30},                                                     
-                           {dataField:    "codeName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120    ,height:30}          
-              ];   
-        
+                           {dataField:    "autoCrtItm" ,headerText:    ""   ,width:100    ,height:30},
+                           {dataField:    "qty",headerText :"<spring:message code='log.head.qty'/>"    ,width:120    ,height:30},
+                           {dataField:    "trantype",headerText :"<spring:message code='log.head.tran_type'/>"     ,width:120    ,height:30},
+                           {dataField:    "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"    ,width:120    ,height:30},
+                           {dataField:    "codeName",headerText :"<spring:message code='log.head.uom'/>"   ,width:120    ,height:30}
+              ];
+
         // 그리드 속성 설정
         var gridPros = {rowIdField : "rnum",usePaging : true,pageRowCount : 20,editable : true,fixedColumnCount : 16,showStateColumn : false,
         		        selectionMode : "multipleCells",headerHeight : 30,useGroupingPanel : false,skipReadonlyColumns : true,wrapSelectionMove : true,
         		        showRowCheckColumn : true ,showBranchOnGrouping : false
         		        };
-        
+
         var serialop = {editable : true};
-        
+
         var options = {
                 usePaging : false,
                 editable : false,
                 useGroupingPanel : false,
-                showStateColumn : false 
+                showStateColumn : false
                 };
-        
+
         //listGrid = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         listGrid = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
-        
+
         serialGrid = AUIGrid.create("#serial_grid_wrap", serialcolumn, serialop);
-        
+
         mdcGrid  = GridCommon.createAUIGrid("#mdc_grid", mtrcolumnLayout ,"", options);
-        
+
         $("#mdc_grid").hide();
     }
-    
+
     // 리스트 조회.
     function SearchListAjax(){
     	Common.ajax("GET", "/logistics/pst/PstSearchList.do", $("#searchForm").serialize(), function(result) {
-    		
+
             AUIGrid.setGridData(listGrid, result.data);
         });
     }
-    
+
     // 리스트 조회.
-    function fn_selectPstRequestDOListAjax() {        
+    function fn_selectPstRequestDOListAjax() {
         Common.ajax("GET", "/sales/pst/selectPstRequestDOJsonList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(listGrid, result);
         }
         );
     }
-    
+
 //     $.fn.clearForm = function() {
 //         return this.each(function() {
 //             var type = this.type, tag = this.tagName.toLowerCase();
@@ -289,23 +290,23 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
 //             }
 //         });
 //     };
-    
+
     function fn_dealerToPst(){
-        
+
         if(searchForm.cmbDealerType.value == 0){
             return false;
         }
-        
+
 //      doGetCombo('/common/selectCodeList.do', '358', $("#cmbDealerType").val(),'cmbPstType', 'M' , '');         // PST Type Combo Box
 //      CommonCombo.make('cmbPstType', '/common/selectCodeList.do', {codeId : $("#cmbDealerType").val()} , '', {type: 'M'});
         CommonCombo.make("cmbPstType", "/sales/pst/pstTypeCmbJsonList", {groupCode : $("#cmbDealerType").val()} , '' , optionUnit); //Status
     }
-    
+
     $(function(){
     	$('#delivery').click(function(){
-            var checkDelqty= false; 
+            var checkDelqty= false;
             var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-            
+
             if(checkedItems.length <= 0) {
                 Common.alert('No data selected.');
                 return false;
@@ -324,14 +325,14 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                     }/*else{
                         serialchk = false;
                     }*/
-                    
+
                 }
                 if(checkDelqty){
                     var option = {
                         content : str,
                         isBig:true
                     };
-                    Common.alertBase(option); 
+                    Common.alertBase(option);
                 }else{
                     $("#giopenwindow").show();
                     $("#giptdate").val("");
@@ -351,12 +352,12 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                         $("#serial_grid_wrap_div").hide();
                         $("#ascall").hide();
                     }
-                    
+
                 }
             }
-            
+
         });
-    	
+
     	$("#sampleclick").click(function(){
     		$.ajax({
     	        type : "GET",
@@ -364,42 +365,46 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
     	        dataType : "json",
     	        contentType : "application/json;charset=UTF-8",
     	        success : function(data) {
-    	            
+
     	        },
     	        error: function(jqXHR, textStatus, errorThrown){
-    	            
+
     	        },
     	        complete: function(){
     	        }
     	    });
     	});
     });
-    
+
+
+
+
+
     function fn_itempopList_T(data){
         var itm_temp = "";
         var itm_qty  = 0;
         var itmdata = [];
-        
+
         for (var i = 0 ; i < data.length ; i++){
             if (data[i].item.serialchk == 'Y'){
             	console.log(" 11 " + data[i].item.reqqty);
-	            itm_qty = itm_qty + Number(data[i].item.reqqty);	            
+	            itm_qty = itm_qty + Number(data[i].item.reqqty);
             }
         }
         console.log(itm_qty)
-        $("#serialqty").val(itm_qty);       
-        
+        $("#serialqty").val(itm_qty);
+
         f_addrow();
     }
 
     function f_addrow(){
         var rowPos = "last";
         var item = new Object();
-        item = {"itmcd":"","itmname":"","serial":"","cnt61":"","cnt62":"","cnt63":"","statustype":"","scanno":""};    
+        item = {"itmcd":"","itmname":"","serial":"","cnt61":"","cnt62":"","cnt63":"","statustype":"","scanno":""};
         AUIGrid.addRow(serialGrid, item, rowPos);
         return false;
     }
-    
+
     function giFunc(){
         var data = {};
         var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
@@ -432,14 +437,14 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
         data.checked = check;
         data.add     = serials;
         data.form    = $("#giForm").serializeJSON();
-        
+
         console.log(data);
 
         Common.ajax("POST", "/logistics/pst/pstMovementReqDelivery.do", data, function(result) {
         	console.log(result);
             //var msg = result.message + "<br>MDN NO : "+result.data[1];
             Common.alert(result.message , SearchListAjax);
-            AUIGrid.resetUpdatedItems(listGrid, "all");    
+            AUIGrid.resetUpdatedItems(listGrid, "all");
             $("#giopenwindow").hide();
             $('#search').click();
 
@@ -455,13 +460,13 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
 
         serialchk = false;
     }
-    
+
     function fn_serialChck(rowindex , rowitem , str){
         var schk = true;
         var ichk = true;
         var slocid = '';//session.locid;
         var checkdata = AUIGrid.getCheckedRowItemsAll(listGrid);
-        
+
         var data = { serial : str , locid : slocid};
         Common.ajaxSync("GET", "/logistics/stockMovement/StockMovementSerialCheck.do", data, function(result) {
             if (result.data[0] == null){
@@ -470,25 +475,25 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                 AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , 0 );
                 AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , 0 );
                 AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , 0 );
-                
+
                 schk = false;
                 ichk = false;
-                
+
             }else{
                  AUIGrid.setCellValue(serialGrid , rowindex , "itmcd" , result.data[0].STKCODE );
                  AUIGrid.setCellValue(serialGrid , rowindex , "itmname" , result.data[0].STKDESC );
                  AUIGrid.setCellValue(serialGrid , rowindex , "cnt61" , result.data[0].L61CNT );
                  AUIGrid.setCellValue(serialGrid , rowindex , "cnt62" , result.data[0].L62CNT );
                  AUIGrid.setCellValue(serialGrid , rowindex , "cnt63" , result.data[0].L63CNT );
-                 
+
                  if (result.data[0].L61CNT > 0 || result.data[0].L62CNT == 0){//} || result.data[0].L63CNT > 0){
                      schk = false;
                  }else{
                      schk = true;
                  }
-                 
+
                  var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-                 
+
                  for (var i = 0 ; i < checkedItems.length ; i++){
                      if (result.data[0].STKCODE == checkedItems[i].itmcd){
                          //AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
@@ -499,32 +504,77 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
                      }
                  }
             }
-             
+
              if (schk && ichk){
                  AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'Y' );
              }else{
                  AUIGrid.setCellValue(serialGrid , rowindex , "statustype" , 'N' );
              }
-              
+
               //Common.alert("Input Serial Number does't exist. <br /> Please inquire a person in charge. " , function(){AUIGrid.setSelectionByIndex(serialGrid, AUIGrid.getRowCount(serialGrid) - 1, 2);});
               AUIGrid.setProp(serialGrid, "rowStyleFunction", function(rowIndex, item) {
-                  
+
                   if (item.statustype  == 'N'){
                       return "my-row-style";
                   }
               });
               AUIGrid.update(serialGrid);
-                 
+
         },  function(jqXHR, textStatus, errorThrown) {
             try {
             } catch (e) {
             }
             Common.alert("Fail : " + jqXHR.responseJSON.message);
-           
+
         });
     }
-</script>
 
+    function fn_pstreportGenerate(){
+    	 var reportDownFileName = ""; //download report name
+         var reportFileName = ""; //reportFileName
+         var reportViewType = ""; //viewType
+         $("#reportForm").append('<input type="hidden" id="reportFileName" name="reportFileName"  /> ');//report file name
+         $("#reportForm").append('<input type="hidden" id="reportDownFileName" name="reportDownFileName" /> '); // download report name
+         $("#reportForm").append('<input type="hidden" id="viewType" name="viewType" /> '); // download report  type
+         var option = {
+                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+               };
+        var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
+        for(var i=0, len = checkedItems.length; i<len; i++) {
+            rowItem = checkedItems[i];
+
+        if(checkedItems.length <= 0) {
+            Common.alert('No data selected.');
+            return false;
+        }
+        else{
+            var checkedItems = AUIGrid.getCheckedRowItems(listGrid);
+            var rowItem;
+            rowItem = checkedItems[0];
+            var pstno = rowItem.item.pstno;
+         console.log("pstno : " + pstno);
+         reportFileName = "/logistics/DO_PST_PDF.rpt"; //reportFileName
+         $("#reportForm").append('<input type="hidden" id="V_DONO" name="V_DONO" value="" /> ');
+         reportDownFileName = pstno +"_" +date+(new Date().getMonth()+1)+new Date().getFullYear(); //report name
+         reportViewType = "PDF"; //viewType
+
+         $("#V_DONO").val(pstno);
+
+         $("#reportForm #reportFileName").val(reportFileName);
+         $("#reportForm #reportDownFileName").val(reportDownFileName);
+         $("#reportForm #viewType").val(reportViewType);
+
+         //  report 호출
+
+         Common.report("reportForm", option);
+
+         }
+        }
+
+    }
+
+</script>
+<form name="reportForm" id="reportForm"></form>
 <section id="content"><!-- content start -->
 <ul class="path">
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
@@ -620,7 +670,7 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
 
 </section><!-- search_table end -->
 
-<section class="search_result"><!-- search_result start 
+<section class="search_result"><!-- search_result start
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EXCEL UP</a></p></li>
@@ -634,7 +684,8 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
     <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
 </c:if>
-    <li><p class="btn_grid"><a id="delivery">DELIVERY</a></p></li>                        
+    <li><p class="btn_grid"><a id="delivery">DELIVERY</a></p></li>
+     <li><p class="btn_grid"><a onclick="javascript:fn_pstreportGenerate();">PST DO REPORT</a></p></li>
 </ul>
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width:100%; height:350px; margin:0 auto;"></div>
@@ -649,7 +700,7 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
              <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
          </ul>
      </header><!-- pop_header end -->
-     
+
      <section class="pop_body"><!-- pop_body start -->
          <form id="giForm" name="giForm" method="POST">
          <input type="hidden" name="gtype"     id="gtype" value="GI"/>
@@ -668,11 +719,11 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
          <tbody>
              <tr>
                  <th scope="row">GI Posting Date</th>
-                 <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" value="" readonly/></td>    
+                 <td ><input id="giptdate" name="giptdate" type="text" title="Create start Date" value="" readonly/></td>
                  <th scope="row">GI Doc Date</th>
-                 <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>    
+                 <td ><input id="gipfdate" name="gipfdate" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
              </tr>
-             <tr>    
+             <tr>
                  <th scope="row">Header Text</th>
                  <td colspan='3'><input type="text" name="doctext" id="doctext" class="w100p"/></td>
 <!--                  <td><p class="btn_blue"><a id="ascall"><span class="search"></span>Auto Serial Call</a></p></td> -->
@@ -695,22 +746,22 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
          </c:if>
          </ul>
          </form>
-     
+
      </section>
  </div>
  <section class="tap_wrap"><!-- tap_wrap start -->
         <ul class="tap_type1">
             <li><a href="#" class="on">Compliance Remark</a></li>
         </ul>
-        
+
         <article class="tap_area"><!-- tap_area start -->
-        
+
             <article class="grid_wrap"><!-- grid_wrap start -->
                   <div id="mdc_grid" class="mt10" style="height:150px"></div>
             </article><!-- grid_wrap end -->
-        
+
         </article><!-- tap_area end -->
-            
-        
+
+
     </section>
 </section><!-- content end -->
