@@ -9,20 +9,20 @@
 var  channelGridID;
 var  resultPaysetInfo;
 var  resultCustBasicinfo;
-var  resultCardInfo; 
-var  resultBankAccInfo; 
+var  resultCardInfo;
+var  resultBankAccInfo;
 
 $(document).ready(function(){
-	
+
 	  $("#Third_Party").attr("style" ,"display:none");
 	  $("#Credit_Card").attr("style" ,"display:none");
 	  $("#Direct_Debit").attr("style" ,"display:none");
-	  
-	  
-	  doGetCombo('/common/selectCodeList.do', '19', '','cmbRentPaymode', 'S' , 'f_ComboAct');  
+
+
+	  doGetCombo('/common/selectCodeList.do', '19', '','cmbRentPaymode', 'S' , 'f_ComboAct');
 	  fn_selectPatsetListAjax();
-	  
-	  
+
+
 });
 
 
@@ -30,12 +30,12 @@ $(document).ready(function(){
 
 
 function f_ComboAct(){
-	
+
     $(function() {
         $('#cmbRentPaymode').change(function() {
         	fn_cmbRentPaymodeEvt();
         });
-        
+
     });
 }
 
@@ -46,40 +46,41 @@ function f_ComboAct(){
 
 
 
-function  fn_selectCustomerCreditCardJsonList(_custId) {        //SCS00000003 
+function  fn_selectCustomerCreditCardJsonList(_custId) {        //SCS00000003
     Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList",{  custId:_custId}, function(result) {
-	
+
     console.log("fn_selectCustomerCreditCardJsonList start...==>");
     console.log(result);
     console.log("fn_selectCustomerCreditCardJsonList end...==>");
-    
+
+    resultCardInfo ={};
     if( result !=null ){
-    	
-    	    resultCardInfo ={};
+
+
     	    resultCardInfo = result[0];
-    	    
-    	    $("#txtRentPayCRCNo").val(resultCardInfo.custCrcNo);
+
+    	    $("#txtRentPayCRCNo").val(resultCardInfo.custOriCrcNo);
     	    $("#txtRentPayCRCType").val(resultCardInfo.codeName1);
     	    $("#txtRentPayCRCName").val(resultCardInfo.custCrcOwner);
     	    $("#txtRentPayCRCExpiry").val(resultCardInfo.custCrcExpr);
     	    $("#txtRentPayCRCBank").val(resultCardInfo.bankCode +" - "+resultCardInfo.bankName);
     	    $("#txtRentPayCRCCardType").val(resultCardInfo.codeName);
     }
-   
-    
+
+
 });
 }
 
 
 
-function  fn_selectCustomerBankAccJsonList(_custId) {        //SCS00000039 
+function  fn_selectCustomerBankAccJsonList(_custId) {        //SCS00000039
 Common.ajax("GET", "/sales/customer/selectCustomerBankAccJsonList",{  custId:_custId}, function(result) {
 	console.log("fn_selectCustomerBankAccJsonList start...==>");
     console.log(result);
      console.log("fn_selectCustomerBankAccJsonList end...==>");
-     
+
 	resultBankAccInfo ={};
-	
+
 	if( result != null){
 		resultBankAccInfo = result[0];
 
@@ -88,88 +89,88 @@ Common.ajax("GET", "/sales/customer/selectCustomerBankAccJsonList",{  custId:_cu
 		$("#txtRentPayBankAccName").val( resultBankAccInfo.custAccOwner);
 		$("#txtRentPayBankAccBankBranch").val(resultBankAccInfo.custAccBankBrnch);
 		$("#txtRentPayBankAccBank").val(resultBankAccInfo.bankCode + " - " + resultBankAccInfo.bankName);
-	    
+
 	}
- 
-    
+
+
 });
 }
 
 
 
 //리스트 조회.
-function fn_selectPatsetListAjax() {        
+function fn_selectPatsetListAjax() {
 Common.ajax("GET", "/sales/membershipRentalChannel/selectPatsetInfo", {  SRV_CNTRCT_ID:'${srvCntrctId}'   ,   ORD_ID:'${srvCntrctOrdId}' } , function(result) {
 	console.log(result);
-	
+
 	resultPaysetInfo={};
 	resultCustBasicinfo ={};
-	
+
 	if( result.paysetInfo  != null){
 		   resultPaysetInfo = result.paysetInfo;
-		
+
 		   if(resultPaysetInfo.is3rdParty !=0 ){
 				resultCustBasicinfo = result.custBasicinfo;
 
-                $("#Third_Party").attr("style" ,"display:inline"); 
+                $("#Third_Party").attr("style" ,"display:inline");
                 $("#Credit_Card").attr("style" ,"display:none");
                 $("#Direct_Debit").attr("style" ,"display:none");
-				$("#paybyCk").attr("checked" ,"true"); 
-				
+				$("#paybyCk").attr("checked" ,"true");
+
 	            fn_custInit( 1);
-	            
+
            }
-		
+
 		  $("#cmbRentPaymode").val(resultPaysetInfo.modeId);
-		
+
 		  if(null != resultPaysetInfo.nricOld)
 			    $("#txtRentPayIC").val(resultPaysetInfo.nricOld);
-         
+
 	      if(resultPaysetInfo.modeId == '131'){
 
-              $("#Third_Party").attr("style" ,"display:none"); 
+              $("#Third_Party").attr("style" ,"display:none");
               $("#Credit_Card").attr("style" ,"display:inline");
               $("#Direct_Debit").attr("style" ,"display:none");
-              
-              fn_selectCustomerCreditCardJsonList(resultPaysetInfo.custId);
-	              
-	      }else if(resultPaysetInfo.modeId == '132'){
-	                
 
-              $("#Third_Party").attr("style" ,"display:none"); 
+              fn_selectCustomerCreditCardJsonList(resultPaysetInfo.custId);
+
+	      }else if(resultPaysetInfo.modeId == '132'){
+
+
+              $("#Third_Party").attr("style" ,"display:none");
               $("#Credit_Card").attr("style" ,"display:none");
               $("#Direct_Debit").attr("style" ,"display:inline");
-              
+
 	          fn_selectCustomerBankAccJsonList (resultPaysetInfo.custId);
 	      }
-	      
-		
+
+
 	      var defaultDate ='19000101';
-	      
-          
+
+
 	      if(resultPaysetInfo.cvDdApplyDt > defaultDate ){
-	    	    $("#dpApplyDate").val(resultPaysetInfo.ddApplyDt); 
+	    	    $("#dpApplyDate").val(resultPaysetInfo.ddApplyDt);
 	      }
-	      
+
 	      if(resultPaysetInfo.cvDdSubmitDt > defaultDate ){
 	    	  $("#dpSubmitDate").val(resultPaysetInfo.ddSubmitDt);
           }
-		
+
 	      if(resultPaysetInfo.cvDdStartDt > defaultDate ){
 	    	  $("#dpStartDate").val(resultPaysetInfo.ddStartDt);
           }
-	      
+
 	      if(resultPaysetInfo.cvDdRejctDt > defaultDate ){
 	    	   $("#dpRejectDate").val(resultPaysetInfo.ddRejctDt);
 	    	   $("#dpRejectDate").attr("class","");
-	    	   
+
 	    	   $("#dpStartDate").attr("disabled" ,"disabled");
 	    	  // this.lblRentPayCompulsory6.Visible = true;
               //this.lblRentPayCompulsory7.Visible = true;
-              
+
               $("#cmbRejectReason").removeAttr("disabled");
           }
-	    
+
 	      $("#cmbPayTerm").val(resultPaysetInfo.payTerm == "" ? resultPaysetInfo.payTerm  :0);
 	      fn_LoadRejectReasonList(resultPaysetInfo.modeId ,  resultPaysetInfo.failResnId);
 	}
@@ -179,16 +180,16 @@ Common.ajax("GET", "/sales/membershipRentalChannel/selectPatsetInfo", {  SRV_CNT
 
 
 function fn_LoadRejectReasonList( paymodeID,  failReasonID ){
-	
+
 	var typeId  = 0 ;
-	  
+
     if (paymodeID == 131){
     	typeId = 168;
     }else if (paymodeID == 132){
     	typeId = 170;
     }
-    
-    doGetComboAddr('/sales/membershipRentalChannel/getLoadRejectReasonList', {RESN_TYPE_ID: typeId, RESN_ID : failReasonID}, '','cmbRejectReason', 'S' , 'fn_cmbRejectReasonEvt');     
+
+    doGetComboAddr('/sales/membershipRentalChannel/getLoadRejectReasonList', {RESN_TYPE_ID: typeId, RESN_ID : failReasonID}, '','cmbRejectReason', 'S' , 'fn_cmbRejectReasonEvt');
 }
 
 
@@ -196,9 +197,9 @@ function  fn_cmbRejectReasonEvt (){}
 
 
 function fn_custInit(method ){
-	
+
 	 if( resultCustBasicinfo  !=null ){
-		 
+
 		 $("#hiddenThirdPartyID").val(resultCustBasicinfo.custId);  //custId
          $("#txtThirdPartyID").val(resultCustBasicinfo.custId);
          $("#txtThirdPartyType").val(resultCustBasicinfo.codeName1);
@@ -226,7 +227,7 @@ function fn_ClearField_RentPaySet_CRC(){
 
 
 function fn_ClearField_RentPaySet_ThirdParty(){
-	
+
     $("#Third_Party").attr("style" ,"display:none");
 	$("#txtThirdPartyID").val("");
     $("#hiddenThirdPartyID").val("");
@@ -245,70 +246,70 @@ function fn_ClearField_RentPaySet_DD(){
     $("#txtRentPayBankAccName").val("");
     $("#txtRentPayBankAccBankBranch").val("");
     $("#txtRentPayBankAccBank").val("");
-    
+
 }
 
 function fn_ClearField_Reject(){
-	
-	//$("#rejectChbox").attr("checked" ,"false"); 
-	
+
+	//$("#rejectChbox").attr("checked" ,"false");
+
 	$("#dpStartDate").val("");
 	$("#dpStartDate").removeAttr("disabled");
 	$("#dpStartDate").attr("class" ,"j_date w100p");
-	
+
 	$("#dpRejectDate").val("");
 	$("#dpRejectDate").attr("disabled" ,"disabled");
-	
+
 	$("#cmbRejectReason").val("");
 	$("#cmbRejectReason").attr("disabled" ,"disabled");
-	
+
 }
 
 
 function  fn_cmbRentPaymodeEvt(){
-	
+
 	fn_ClearField_RentPaySet_CRC();
 	fn_ClearField_RentPaySet_DD();
 	fn_ClearField_Reject();
-	
+
     doSysdate(0 , 'dpApplyDate');
     $("#dpSubmitDate").val("");
     $("#dpStartDate").val("");
-    
+
     if($("#cmbRentPaymode").val() !=""){
-    	
-    	
+
+
     	var sText    = $("#cmbRentPaymode option:selected").text();
-    	
+
     	if($("#cmbRentPaymode").val() =='133'  || $("#cmbRentPaymode").val() =='134'  ){
             Common.alert("Rental Paymode Restriction  "+DEFAULT_DELIMITER+"<b>Currently we are not provide [" + sText + "] service.</b>");
             $("#cmbRentPaymode").val("");
     	}else {
-    		
-    		 if($("#cmbRentPaymode").val() =='131' ){ //card 
-    			 
+
+    		 if($("#cmbRentPaymode").val() =='131' ){ //card
+
     			 if($('#paybyCk').is(':checked')){
     				 if( null == resultCustBasicinfo.custId  ||  ""== resultCustBasicinfo.custId   || null ==resultCustBasicinfo  ){
     					 Common.alert("<b> Third Party Required </b>"+DEFAULT_DELIMITER+"<b>Please select the third party first..</b>");
     				 }else{
     					 $("#Credit_Card").attr("style" ,"display:inline");
     				 }
-    				 
+
     			 }else{
     				 $("#Credit_Card").attr("style" ,"display:inline");
     			 }
-    			 
+
     		 }else if($("#cmbRentPaymode").val() =='132' ){  //Direct Debit
-    			 
-    			 
+
+
     		     if($('#paybyCk').is(':checked')){
-    		    	 
+
     		    	 if( null == resultCustBasicinfo.custId  ||  ""==  resultCustBasicinfo.custId   || null ==resultCustBasicinfo  ){
                          Common.alert("<b> Third Party Required </b>"+ DEFAULT_DELIMITER +"<b>Please select the third party first..</b>");
                      }else{
                          $("#Direct_Debit").attr("style" ,"display:inline");
                      }
-    		    	 
+
     		     }else{
     	              $("#Direct_Debit").attr("style" ,"display:inline");
     		     }
@@ -320,8 +321,8 @@ function  fn_cmbRentPaymodeEvt(){
 
 
 function fn_isPanelThirdPartyEvt(v){
-	
-	
+
+
 	fn_ClearField_RentPaySet_CRC();
 	fn_ClearField_RentPaySet_ThirdParty();
 	fn_ClearField_RentPaySet_DD();
@@ -332,27 +333,27 @@ function fn_isPanelThirdPartyEvt(v){
 
    if(v.checked){
        $("#Third_Party").attr("style" ,"display:inline");
-       
+
     }else{
     	$("#Third_Party").attr("style" ,"display:none");
     }
-   
+
 }
 
 function fn_rejectCkEvt(v){
-	
+
 	 fn_ClearField_Reject();
-	 
+
 	 if(v.checked){
-          
+
 		  if($("#cmbRentPaymode").val() ==""){
-	          $("#rejectChbox").attr("checked" ,"false"); 
+	          $("#rejectChbox").attr("checked" ,"false");
 	          Common.alert("Rental Paymode Required "+DEFAULT_DELIMITER+"<b>Please select the rental payment mode first.</b>");
 	          return ;
 	     }else{
-	    	 
+
 	     }
-		  
+
 		  /*this.lblRentPayCompulsory6.Visible = true;
           this.lblRentPayCompulsory7.Visible = true;
           this.dpStartDate.Enabled = false;
@@ -360,27 +361,27 @@ function fn_rejectCkEvt(v){
           this.cmbRejectReason.Enabled = true;
           */
           $("#dpStartDate").attr("disabled" ,"disabled");
-          
+
           $("#dpRejectDate").attr("class","j_date w100p");
           $("#dpRejectDate").removeAttr("disabled");
-          
+
           $("#cmbRejectReason").attr("class","");
           $("#cmbRejectReason").removeAttr("disabled");
-          
+
      }
 }
 
 
 
 function fn_doViewHistory_Click(){
-	
+
 	 var SRV_CNTRCT_ID= '${srvCntrctId}'   ;
 	 var ORD_ID ='${srvCntrctOrdId}' ;
-	 
-	 var pram  ="?srvCntrctId="+SRV_CNTRCT_ID+"&ordId="+ORD_ID; 
-	 
+
+	 var pram  ="?srvCntrctId="+SRV_CNTRCT_ID+"&ordId="+ORD_ID;
+
 	 Common.popupDiv("/sales/membershipRental/paymentViewHistoryPop.do"+pram ,null, null , true , '_ViewHistoryDiv1');
-	      
+
 }
 
 
@@ -397,8 +398,8 @@ function fn_doCustSearch_Click(){
 
 
 function fn_doAddNewCard_Click(){
-	
-	var _custId; 
+
+	var _custId;
     if($('#paybyCk').is(':checked')){
     	_custId = $("#hiddenThirdPartyID").val();
     }else{
@@ -410,35 +411,35 @@ function fn_doAddNewCard_Click(){
 
 
 function fn_doSelectCard_Click(){
-    
-    var _custId; 
+
+    var _custId;
     if($('#paybyCk').is(':checked')){
     	_custId = $("#hiddenThirdPartyID").val();
     }else{
     	_custId = $("#txtThirdPartyID").val();
     }
-    
+
     Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : _custId, callPrgm : "ORD_REQUEST_PAY"}, null, true ,'_SelectCardDiv1');
 }
 
 
 function fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName){
-	
-	$("#txtRentPayCRCNo") .val(custCrcNo);
+
+	$("#txtRentPayCRCNo") .val(custOriCrcNo);
 	$("#txtRentPayCRCType").val(codeName1);
 	$("#txtRentPayCRCName").val(custCrcOwner);
 	$("#txtRentPayCRCExpiry").val(custCrcExpr);
 	$("#txtRentPayCRCBank").val(bankName);
 	$("#txtRentPayCRCCardType").val(codeName);
 	$("#_custOriCrcNo").val(custOriCrcNo);
-	
+
 }
 
 
 
 function fn_doAddNewBank_Click(){
-    
-    var _custId; 
+
+    var _custId;
     if($('#paybyCk').is(':checked')){
         _custId = $("#hiddenThirdPartyID").val();
     }else{
@@ -450,8 +451,8 @@ function fn_doAddNewBank_Click(){
 
 
 function fn_doSelectBank_Click(){
-    
-    var _custId; 
+
+    var _custId;
     if($('#paybyCk').is(':checked')){
         _custId = $("#hiddenThirdPartyID").val();
     }else{
@@ -466,7 +467,7 @@ function fn_loadBankAccountPop(bankAccId) {
 //  fn_clearRentPaySetDD();
 
   fn_loadBankAccount(bankAccId);
-  
+
   $('#sctDirectDebit').removeClass("blind");
 
   if(!FormUtil.IsValidBankAccount($('#hiddenRentPayBankAccID').val(), $('#txtRentPayBankAccNo').val())) {
@@ -478,12 +479,12 @@ function fn_loadBankAccountPop(bankAccId) {
 
 function fn_loadBankAccount(bankAccId) {
   console.log("fn_loadBankAccount START");
-  
+
   Common.ajax("GET", "/sales/order/selectCustomerBankDetailView.do", {getparam : bankAccId}, function(rsltInfo) {
 
       if(rsltInfo != null) {
           console.log("fn_loadBankAccount Setting");
-          
+
           $("#hiddenRentPayBankAccID").val(rsltInfo.custAccId);
           $("#txtRentPayBankAccNo").val(rsltInfo.custAccNo);
 //          $("#rentPayBankAccNoEncrypt").val(rsltInfo.custEncryptAccNo);
@@ -497,20 +498,20 @@ function fn_loadBankAccount(bankAccId) {
 }
 
 function fn_loadBankCard(){
-    
-    
+
+
 }
 
 
 function fn_custResult(item){
 	console.log(item);
-	
+
     $("#txtThirdPartyNRIC").val(item.nric);
 	$("#txtThirdPartyName").val(item.name);
 	$("#txtThirdPartyType").val(item.codeName1);
 	$("#txtThirdPartyID").val(item.custId);
-	
-	
+
+
 }
 
 
@@ -522,32 +523,32 @@ function fn_createEvent(objId, eventType) {
 
 
 function fn_doSave(){
-	
 
-	
+
+
 	if(fn_ValidRequiredField()){
-	    fn_setSaveForm();	
+	    fn_setSaveForm();
 	}
-	
+
 }
 
 
 function fn_setSaveForm(){
-	
+
 	var defaultDate  ="01/01/1900";
-	
+
 	var _bankID =0;
 	var _custCRCID=0;
 	var _custAccID=0;
 	var _issuedNRIC=0;
-	
+
 	if($("#cmbRentPaymode").val()  == 131 ){
-		_bankID = resulresultCardInfo.custAccId ;  
-		_custCRCID = resulresultCardInfo.custCrcId;
+		_bankID = resultCardInfo.custAccId ;
+		_custCRCID = resultCardInfo.custCrcId;
 	}else if($("#cmbRentPaymode").val()  == 132 ){
 		 _bankID = resultBankAccInfo.custAccBankId;
 	}
-	
+
 	if($("#txtRentPayIC").val() !="" ){
 		if( $('#paybyCk').is(':checked')){
 			_issuedNRIC =	$("#txtRentPayIC").val();
@@ -555,7 +556,7 @@ function fn_setSaveForm(){
 			_issuedNRIC = vmrOrderResultObj.orderInfo.custNric;
 		}
 	}
-	
+
 	var rentalChannelSaveForm ={
 			salesOrderID:'${srvCntrctOrdId}' ,
 		    modeID:$("#cmbRentPaymode").val(),
@@ -568,7 +569,7 @@ function fn_setSaveForm(){
 		    ddRejectDate:$("#dpRejectDate").val() != ""?$("#dpRejectDate").val()  : defaultDate,
 		    statusCodeID:1,
 		    is3rdParty:$('#paybyCk').is(':checked')?1 : 0 ,
-		    customerID:$('#paybyCk').is(':checked')?$("#hiddenThirdPartyID").val() :$("#txtThirdPartyID").val()  , 
+		    customerID:$('#paybyCk').is(':checked')?$("#hiddenThirdPartyID").val() :$("#txtThirdPartyID").val()  ,
 		    editTypeID:0,     // what is this?
 		    nRICOld:$("#txtRentPayIC").val()!=""?$("#txtRentPayIC").val()   : "" ,
 		    failReasonID:$('#rejectChbox').is(':checked')?$("#cmbRentPaymode").val()  : 0,
@@ -576,53 +577,53 @@ function fn_setSaveForm(){
 		    aeonConvert:false,    // What is this?
 		    remark :  "",     //remark 없음
 		    payTerm : $("#cmbPayTerm").val(),
-		    serviceContractID :  '${srvCntrctId}'  
-		     
+		    serviceContractID :  '${srvCntrctId}'
+
 	};
-	
+
    Common.ajax("POST", "/sales/membershipRentalChannel/insertRentalChannel.do", rentalChannelSaveForm, function(result) {
-	   
+
           Common.alert(result.message);
           fn_selectListAjax();
 
 //         $("# _PayChannelDiv1").remove();
-          
-          
+
+
       }, function(jqXHR, textStatus, errorThrown) {
           Common.alert("실패하였습니다.");
           console.log("실패하였습니다.");
           console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-          
+
           alert(jqXHR.responseJSON.message);
           console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-          
+
       });
-  
-	   
+
+
 	console.log(rentalChannelSaveForm);
 }
 
 
 function fn_ValidRequiredField(){
-	
+
 	var   rV=true;
 	var   rMessage="";
-	
-	
-	   
+
+
+
     /********************/
     /*    paybyCk     */
     /********************/
-	
+
 	if( $('#paybyCk').is(':checked')){
 		if($("#txtRentPayIC").val() =="" ){
 			rV = false;
 		    rMessage += "* Please select the third party.<br />";
 		}
 	}
-	
-	
-	
+
+
+
 	/********************/
 	/*    cmbRentPaymode     */
 	/********************/
@@ -632,45 +633,45 @@ function fn_ValidRequiredField(){
 		rV = false;
         rMessage += "* Please select the rental paymode.<br />";
 //        return false;
-        
+
     } else {
     	 if ($("#cmbRentPaymode").val() == "131") {              //Credit Car
     		 console.log(" 131  CreditCredit valid  start...===>");
-    	 
-    	     if( null  == resulresultCardInfo){
+
+    	     if( null  == resultCardInfo){
     	    	   rV = false;
                    rMessage += "* Please select a credit card.<br />";
-    	     } 
-    		 
-             
-             console.log(" resulresultCardInfo.custCrcId ["+resulresultCardInfo.custCrcId +"]");
-             console.log(" resulresultCardInfo.custCrcBankId["+resulresultCardInfo.custCrcBankId+"]");
-             
-    		  
-	    		 if (resulresultCardInfo.custCrcId  ==""   ||  resulresultCardInfo.custCrcId == null  ||  resulresultCardInfo.custCrcId == 0 ) {
+    	     }
+
+
+             console.log(" resultCardInfo.custCrcId ["+resultCardInfo.custCrcId +"]");
+             console.log(" resultCardInfo.custCrcBankId["+resultCardInfo.custCrcBankId+"]");
+
+
+	    		 if (resultCardInfo.custCrcId  ==""   ||  resultCardInfo.custCrcId == null  ||  resultCardInfo.custCrcId == 0 ) {
 	    			   rV = false;
 		               rMessage += "* Please select a credit card.<br />";
 	             }else {
-	                 if (resulresultCardInfo.custCrcBankId  ==""  || resulresultCardInfo.custCrcBankId == null || resulresultCardInfo.custCrcBankId ==0 )   {
+	                 if (resultCardInfo.custCrcBankId  ==""  || resultCardInfo.custCrcBankId == null || resultCardInfo.custCrcBankId ==0 )   {
 	                	 rV = false;
 	                     rMessage += "* Invalid credit card issue bank.<br />";
 	                 }
 	             }
-    		 
-	    		 
+
+
 	    	 console.log(" 131  Direct Debit  valid  end ...===>");
-    		 
+
     	 }else if($("#cmbRentPaymode").val() == "132"){       //Direct Debit
-    		 
+
     		 console.log(" 132  Direct Debit  valid  start...===>");
     	     if( null  == resultBankAccInfo){
                  rV = false;
                  rMessage += "* Please select a credit card.<br />";
-           } 
-    	     
+           }
+
     		 console.log(" resultBankAccInfo.custAccId["+resultBankAccInfo.custAccId+"]");
     		 console.log(" resultBankAccInfo.custAccBankId["+resultBankAccInfo.custAccBankId+"]");
-    		
+
     		 if (resultBankAccInfo.custAccId   ==""   ||  resultBankAccInfo.custAccId == null  ||  resultBankAccInfo.custAccId  == 0 ) {
                  rV = false;
                  rMessage += "* Please select a bank account.<br />";
@@ -680,36 +681,36 @@ function fn_ValidRequiredField(){
 	                   rMessage += "* Invalid credit card issue bank.<br />";
 	               }
 	         }
-    		 
+
     		 console.log(" 132  Direct Debit  valid  end ...===>");
     	 }
     }
-	
+
 
     /********************/
-    /*    dpApplyDate            */ 
+    /*    dpApplyDate            */
     /********************/
     console.log(" dpApplyDate valid  start...===>");
     console.log(" dpApplyDate ["+FormUtil.isEmpty($('#dpApplyDate').val())+"] val["+$('#dpApplyDate').val()+"]");
    if(FormUtil.isEmpty($('#dpApplyDate').val())) {
 		   rV = false;
 		   rMessage += "* Apply date is required.<br />";
-     
+
     }else {
-    	
+
         console.log("{}"+$('#dpSubmitDate').val());
     	if($('#dpSubmitDate').val()  != ""){
-    		
-            
+
+
     		var  dpSubmitDateCVTArry =   $('#dpSubmitDate').val().split("/");
-    		var  dpSubmitDateCVT = dpSubmitDateCVTArry[2]+""+dpSubmitDateCVTArry[1]+""+dpSubmitDateCVTArry[0]; 
+    		var  dpSubmitDateCVT = dpSubmitDateCVTArry[2]+""+dpSubmitDateCVTArry[1]+""+dpSubmitDateCVTArry[0];
     		var  dpApplyDateCVTArry =   $('#dpApplyDate').val().split("/");
-            var  dpApplyDateCVT = dpApplyDateCVTArry[2]+""+dpApplyDateCVTArry[1]+""+dpApplyDateCVTArry[0]; 
-            
+            var  dpApplyDateCVT = dpApplyDateCVTArry[2]+""+dpApplyDateCVTArry[1]+""+dpApplyDateCVTArry[0];
+
 
             console.log(" dpSubmitDateCVT ["+dpSubmitDateCVT+"]");
             console.log(" dpApplyDateCVT["+dpApplyDateCVT+"]");
-            
+
 
             if( parseInt(dpSubmitDateCVT,10 )  < parseInt(dpApplyDateCVT,10 )){
             	rV = false;
@@ -717,38 +718,38 @@ function fn_ValidRequiredField(){
             }
 
             console.log(" dpApplyDate valid  end...===>");
-    	}  
+    	}
     }
-    
+
    /********************/
-   /*    dpStartDate            */ 
+   /*    dpStartDate            */
    /********************/
    if( $('#dpSubmitDate').val() !="" ){
-	   
+
 	   if( $('#dpSubmitDate').val() ==""){
 		   rV = false;
 		   rMessage += "* Submit date is required.<br />";
-		   
+
 	   } else{
-		   
+
            console.log(" dpStartDate valid  start...===>");
-           
-           
+
+
 		   var  dpStartDateCVTArry =   $('#dpStartDate').val().split("/");
-           var  dpStartDateCVT = dpStartDateCVTArry[2]+""+dpStartDateCVTArry[1]+""+dpStartDateCVTArry[0]; 
-           
+           var  dpStartDateCVT = dpStartDateCVTArry[2]+""+dpStartDateCVTArry[1]+""+dpStartDateCVTArry[0];
+
            var  dpSubmitDateCVTArry =   $('#dpSubmitDate').val().split("/");
-           var  dpSubmitDateCVT = dpSubmitDateCVTArry[2]+""+dpSubmitDateCVTArry[1]+""+dpSubmitDateCVTArry[0]; 
+           var  dpSubmitDateCVT = dpSubmitDateCVTArry[2]+""+dpSubmitDateCVTArry[1]+""+dpSubmitDateCVTArry[0];
 
 
            console.log(" dpStartDateCVT ["+dpStartDateCVT+"]");
            console.log(" dpSubmitDateCVT["+dpSubmitDateCVT+"]");
-           
+
            if( parseInt(dpStartDateCVT,10 )  < parseInt(dpSubmitDateCVT,10 )){
                rV = false;
                rMessage += "*Start date must later than submit date.<br />";
            }
-           
+
            console.log(" dpStartDate valid  end...===>");
        }
    }
@@ -756,37 +757,37 @@ function fn_ValidRequiredField(){
 
 
    /********************/
-   /*    rejectChbox            */ 
+   /*    rejectChbox            */
    /********************/
     if( $('#rejectChbox').is(':checked')){
-    	
+
     	  if( $('#dpRejectDate').val() =="" ){
-    		  
+
     		  rV = false;
     		  rMessage += "* Reject date is required.<br />";
-              
+
     	  }else {
     		  if($('#dpSubmitDate').val() ==""){
     			  rV = false;
     			  rMessage += "* Submit date is required.<br />";
     		  }else{
-    			  
+
 
     	            console.log(" dpRejectDate valid  start...===>");
-    	            
+
     			  var  dpRejectDateCVTArry =   $('#dpRejectDate').val().split("/");
-    	          var dpRejectDateCVT = dpRejectDateCVTArry[2]+""+dpRejectDateCVTArry[1]+""+dpRejectDateCVTArry[0]; 
+    	          var dpRejectDateCVT = dpRejectDateCVTArry[2]+""+dpRejectDateCVTArry[1]+""+dpRejectDateCVTArry[0];
     			  var  dpSubmitDateCVTArry =   $('#dpSubmitDate').val().split("/");
-    	          var  dpSubmitDateCVT = dpSubmitDateCVTArry[2]+""+dpSubmitDateCVTArry[1]+""+dpSubmitDateCVTArry[0]; 
+    	          var  dpSubmitDateCVT = dpSubmitDateCVTArry[2]+""+dpSubmitDateCVTArry[1]+""+dpSubmitDateCVTArry[0];
 
                   console.log(" dpRejectDateCVT ["+dpRejectDateCVT+"]");
                   console.log(" dpSubmitDateCVT["+dpSubmitDateCVT+"]");
-                  
+
     	          if( parseInt(dpRejectDateCVT,10 )  < parseInt(dpSubmitDateCVT,10 )){
     	               rV = false;
     	               rMessage += "*Reject date must later than submit date.<br />";
     	          }
-    	          
+
     	          console.log(" dpRejectDate valid  end...===>");
     		  }
     	  }
@@ -795,19 +796,19 @@ function fn_ValidRequiredField(){
     	        rMessage += "* Reject select the reject reason.<br />";
     	 }
     }
-   
-   
+
+
 	if( rV==false)
         Common.alert("Rent Pay Setting Update Summary "+DEFAULT_DELIMITER + rMessage);
 
-	
+
 	return rV;
 }
 
 
 
 function  fn_DisableControl(){
-	    
+
 	    $("#txtThirdPartyID").attr("disabled" ,"disabled");
 	    $("#paybyCk").attr("disabled" ,"disabled");
 	    $("#btnAddThirdParty").attr("disabled" ,"disabled");
@@ -824,7 +825,7 @@ function  fn_DisableControl(){
 	    $("#cmbPayTerm").attr("disabled" ,"disabled");
 	    $("#cmbRejectReason").attr("disabled" ,"disabled");
 	    $("#save_bt").attr("disabled" ,"disabled");
-	    
+
 }
 
 
@@ -843,11 +844,11 @@ function  fn_DisableControl(){
 
 
 <form  id='hForm' name='hForm'>
-<div style="display:none"> 
+<div style="display:none">
     <input type="text" name='hiddenThirdPartyID' id='hiddenThirdPartyID' >
     <input type="text" name='custOriCrcNo' id='_custOriCrcNo' >
-    
-    
+
+
 </div>
 </form>
 
@@ -871,12 +872,12 @@ function  fn_DisableControl(){
 
 
 <!-- inc_membershipInfo  tab  start...-->
-    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRMerInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mRMerInfo.do'/>
 <!--  inc_membershipInfotab  end...-->
 
 
 <!-- inc_orderInfo  tab  start...-->
-    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mROrderInfo.do'/> 
+    <jsp:include page ='${pageContext.request.contextPath}/sales/membershipRental/inc_mROrderInfo.do'/>
 <!--  inc_orderInfo  end...-->
 
 
@@ -888,16 +889,16 @@ function  fn_DisableControl(){
 
 <section class="search_table"><!-- search_table start -->
 	<form action="#" method="post">
-	
+
 	<aside class="title_line"><!-- title_line start -->
 	<h2>Payment Channel</h2>
 	<ul class="right_btns mb10">
 	    <li><p class="btn_blue2"><a href="#"  onclick="fn_doViewHistory_Click()">View History</a></p></li>
 	</ul>
 	</aside><!-- title_line end -->
-	
-	
-	
+
+
+
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
@@ -918,10 +919,10 @@ function  fn_DisableControl(){
 
 
 <form action="#" method="post">
-	
+
 <section class="search_table"><!-- search_table start -->
-	
-	
+
+
 	<div  id="Third_Party">
 	<aside class="title_line"><!-- title_line start -->
     <h2>Third Party</h2>
@@ -929,9 +930,9 @@ function  fn_DisableControl(){
         <li><p class="btn_blue2"><a href="#"  id='btnAddThirdParty'  onclick="javascript:fn_doAddThirdParty_Click()">Add New Third Party</a></p></li>
     </ul>
     </aside><!-- title_line end -->
-    
-	
-	
+
+
+
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
@@ -980,9 +981,9 @@ function  fn_DisableControl(){
     </tbody>
     </table><!-- table end -->
 </section>
-    
 
-<section class="search_table"><!-- search_table start --> 
+
+<section class="search_table"><!-- search_table start -->
 <div  id="Credit_Card">
 <aside class="title_line"><!-- title_line start -->
 <h2>Credit Card</h2>
@@ -1002,7 +1003,7 @@ function  fn_DisableControl(){
     <col style="width:*" />
 </colgroup>
 <tbody>
-<tr> 
+<tr>
 
     <th scope="row">Credit Card Number<span class="must">*</span></th>
     <td><input type="text" title="" placeholder="Credit Card Number" readonly class="w100p" id='txtRentPayCRCNo' name='txtRentPayCRCNo' /></td>
@@ -1027,20 +1028,20 @@ function  fn_DisableControl(){
 </section>
 
 
-<section class="search_table"><!-- search_table start --> 
+<section class="search_table"><!-- search_table start -->
 <div id="Direct_Debit">
         <aside class="title_line"><!-- title_line start -->
 		<h2>Direct Debit</h2>
 		</aside><!-- title_line end -->
-		
+
 		<ul class="right_btns mb10">
 		    <li><p class="btn_blue2"><a href="#"  id='btnAddBankAccount' onclick ="javascript:fn_doAddNewBank_Click()" >Add New Bank Account</a></p></li>
 		    <li><p class="btn_blue2"><a href="#"  id ='btnSelectBankAccount' onclick ="javascript:fn_doSelectBank_Click()">Select Another Bank Account</a></p></li>
 		</ul>
-		
-		
-		
-		
+
+
+
+
 		<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
@@ -1050,7 +1051,7 @@ function  fn_DisableControl(){
 		    <col style="width:*" />
 		</colgroup>
 		<tbody>
-		
+
 		<tr>
 		    <th scope="row">Account Number<span class="must">*</span></th>
 		    <td><input type="text" title="" placeholder= "Bank Account Number " readonly class="w100p"  id='txtRentPayBankAccNo' name='txtRentPayBankAccNo'/>
@@ -1074,7 +1075,7 @@ function  fn_DisableControl(){
 <div>
 </section>
 
-<section class="search_table"><!-- search_table start --> 
+<section class="search_table"><!-- search_table start -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1112,7 +1113,7 @@ function  fn_DisableControl(){
     <th scope="row">Reject Reason</th>
     <td>
     <select class="disabled w100p" disabled="disabled" id='cmbRejectReason'  name='cmbRejectReason'>
-     
+
     </select>
     </td>
 </tr>
@@ -1133,25 +1134,25 @@ function  fn_DisableControl(){
 
 
 <script>
-        
+
           var ord_id;
           var moption = {
                     srvCntrctId :'${srvCntrctId}',
                     callbackFun : 'fn_setMRentalOrderInfoData(vmrMemResultObj.srvCntrctOrdId)',
                     showViewLeder : false,
                     showQuotationInfo:false
-          };                     
-         
+          };
+
          ord_id = fn_setMRentalMembershipInfoData(moption);
-          
-          
+
+
          if(ord_id !=""){
-        	 setTimeout(function(){ 
+        	 setTimeout(function(){
         		 $("#txtThirdPartyID").val(vmrOrderResultObj.orderInfo.custId);
         	 }, 2000);
          }
-        	 
-          
-          
-          
+
+
+
+
 </script>
