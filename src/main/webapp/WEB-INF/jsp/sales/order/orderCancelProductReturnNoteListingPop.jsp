@@ -111,7 +111,7 @@
 				|| $("#dpAppointmentDtFrom").val().length == 0
 				|| $("#dpAppointmentDtTo").val() == null || $(
 				"#dpAppointmentDtTo").val().length == 0)) {
-			appDate = "AND re.APP_DT between '"
+			appDate = "AND (TO_CHAR(re.APP_DT,'DD/MM/YYYY') between '"
 					+ $("#dpAppointmentDtFrom").val() + "' AND '"
 					+ $("#dpAppointmentDtTo").val() + "') ";
 
@@ -151,11 +151,11 @@
 				|| $("#dpReqDtFrom").val().length == 0
 				|| $("#dpReqDtTo").val() == null || $("#dpReqDtTo").val().length == 0)) {
 			if (retType == 296) {
-				reqDate = " AND (rc.SO_REQ_CRT_DT between '"
+				reqDate = " AND (TO_CHAR(rc.SO_REQ_CRT_DT,'DD/MM/YYYY') between '"
 						+ $("#dpReqDtFrom").val() + "' AND '"
 						+ $("#dpReqDtTo").val() + "') ";
 			} else if (retType == 297) {
-				reqDate = " AND (soe.SO_EXCHG_CRT_DT between '"
+				reqDate = " AND (TO_CHAR(soe.SO_EXCHG_CRT_DT,'DD/MM/YYYY') between '"
 						+ $("#dpReqDtFrom").val() + "' AND '"
 						+ $("#dpReqDtTo").val() + "') ";
 			}
@@ -204,7 +204,7 @@
 				|| $("#dpRetDtFrom").val().length == 0
 				|| $("#dpRetDtTo").val() == null || $("#dpRetDtTo").val().length == 0)) {
 
-			retDate = "AND rr.STK_RETN_DT between '" + $("#dpRetDtFrom").val()
+			retDate = "AND (TO_CHAR(rr.STK_RETN_DT,'DD/MM/YYYY') between '" + $("#dpRetDtFrom").val()
 					+ "' AND '" + $("#dpRetDtTo").val() + "') ";
 		}
 
