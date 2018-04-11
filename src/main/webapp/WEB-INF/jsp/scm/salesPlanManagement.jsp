@@ -1057,6 +1057,8 @@ function fnSettiingHeader()
 	                  showRowCheckColumn : true,
 	                  // 전체 선택 체크박스가 독립적인 역할을 할지 여부
 	                  independentAllCheckBox : true,
+	                  //페이징처리 설정
+	                  usePaging : false,
 	                  rowCheckableFunction : function(rowIndex, isChecked, item)
 	                  {
 	                    if(item.checkFlag == 4) { //Confirm인 경우 사용자 체크 못하게 함.
