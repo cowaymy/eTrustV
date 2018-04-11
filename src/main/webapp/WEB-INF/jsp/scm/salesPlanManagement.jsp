@@ -256,20 +256,33 @@ function fnUnConfirm(obj)
 	    return false;
 	  }
 
-	  if ($("#scmTeamCbBox").val().length < 1)
-	  {
-	    Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
-	    return false;
-	  }
-
+// 	  if ($("#scmTeamCbBox").val().length < 1)
+// 	  {
+// 	    Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>");
+// 	    return false;
+// 	  }
+	  
+	  if ($("#scmTeamCbBox").val().length >1)
+      {
+        Common.alert("Please Select Team ALL.");
+        /* Common.alert("<spring:message code='sys.msg.necessary' arguments='TEAM' htmlEscape='false'/>"); */
+        return false;
+      }
+	  
 	  Common.ajax("POST"
 			        , "/scm/updateSalesPlanUnConfirm.do"
 	            , $("#MainForm").serializeJSON()
 	            , function(result)
 	              {
-	                Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	                fnSearchBtnList();
-	                console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
+
+	                if(result.code==99){
+	                    Common.alert("Already Created supply Plan.");
+	                }else{
+	                	Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	                	fnSearchBtnList();
+	                	console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
+	                }
+	                
 	              }
 	            , function(jqXHR, textStatus, errorThrown)
 	              {
@@ -363,9 +376,16 @@ function fnCreate(obj)
 	          , $("#MainForm").serializeJSON()
 	          , function(result)
 	           {
-	              Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	              fnSettiingHeader();
-	              console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
+		       
+		        if(result.code==99){
+		        	Common.alert("Already Created Sales Plan.");
+		        }else{
+		            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+	                fnSettiingHeader();
+	                console.log("성공." + JSON.stringify(result) + " /data : " + result.data);
+		        }
+		
+	          
 	           }
 	         , function(jqXHR, textStatus, errorThrown)
 	          {

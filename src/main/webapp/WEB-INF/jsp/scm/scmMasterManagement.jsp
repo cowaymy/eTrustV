@@ -690,7 +690,8 @@ $(document).ready(function()
             enableRestore : true,
             softRemovePolicy : "exceptNew", //사용자추가한 행은 바로 삭제
             // 한 화면에 출력되는 행 개수 30개로 지정
-            pageRowCount : 20,
+            //pageRowCount : 20,
+            usePaging : false,
             fixedColumnCount    : 5, 
           };
 

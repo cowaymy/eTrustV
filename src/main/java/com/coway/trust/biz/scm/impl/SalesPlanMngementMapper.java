@@ -92,4 +92,8 @@ public interface SalesPlanMngementMapper {
 	
 	void insertITF189(Map<String, Object> params);
 	
+	int selectCreateCount(Map<String, Object> params);
+	
+	int selectUnConfirmCnt(Map<String, Object> params);
+	
 }

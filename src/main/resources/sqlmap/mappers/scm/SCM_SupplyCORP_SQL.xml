@@ -88,7 +88,8 @@
 	             , SYS26M.STK_TYPE_ID
 	             , PLAN_MASTER_ID
 	             , SUPPLY_BY_CDC.*
-	             , ROUND(OVERDUE) OVERDUE
+	             <!-- , ROUND(OVERDUE) OVERDUE -->
+	             ,(case when PSI_ID=1 then nvl((select qty from SCM0028S scm28s where scm28s.CLOS_YEAR=SUPPLY_BY_CDC.PLAN_YEAR and SUPPLY_BY_CDC.PLAN_MONTH = SCM28S.CLOS_MONTH and SUPPLY_BY_CDC.CDC = SCM28S.CDC and SCM28S.STOCK_CODE=SYS26m.STK_CODE),0) else 0 end) OVERDUE
 	             , ROUND(WS0) BEF_1_WEEK_TH
 	             , ROUND(WS1) BEF_2_WEEK_TH
 	             , ROUND(WS2) BEF_3_WEEK_TH

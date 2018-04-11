@@ -110,7 +110,7 @@
                      (
                        #{stkId} 
                       ,#{cdcCode} 
-                      ,NULL
+                      ,#{stockCodeTxt} 
                       ,#{cdcIsTarget} 
                       ,NULL
                      )
@@ -148,7 +148,7 @@
                      , #{supplyPlanLTtxt} 
                      , #{supplyPlanMoqTxt} 
                      , #{supplyPlanLoadingQtyTxt} 
-                     , NULL 
+                     , 1 
                      , NULL
                      )
 </insert>    

@@ -377,23 +377,33 @@ public class SalesPlanManagementController {
 
 		LOGGER.debug("insertSalesPlanMaster_params : {}", params);
 
-
+		int createCnt =salesPlanMngementService.selectCreateCount(params);
+		
+		LOGGER.info("salesPlan Create카운트 ?????    : {}", createCnt);
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		int tmpCnt = 0;
 		int totCnt = 0;
 		int resCnt = 0;
 
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		
+		if(createCnt > 0){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 
+		}else{
+		
 	    tmpCnt = salesPlanMngementService.insertSalesPlanMaster(params, sessionVO);
 	    resCnt = salesPlanMngementService.updateSalesPlanMasterMonthly(params, sessionVO);
 		totCnt = totCnt + tmpCnt;
-
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
+	
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
+		
+		}
+		
 		return ResponseEntity.ok(message);
 	}
 
@@ -449,20 +459,30 @@ public class SalesPlanManagementController {
 
 		LOGGER.debug("updateSalesPlanUnConfirm_params : {}", params);
 
+		
+		int unConfirmCnt =salesPlanMngementService.selectUnConfirmCnt(params);
+		LOGGER.info("salesPlan unConfirm 카운트 ?????    : {}", unConfirmCnt);
 
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
 		int tmpCnt = 0;
 		int totCnt = 0;
-
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		
+		if(unConfirmCnt > 0){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}else{
+		
 		tmpCnt = salesPlanMngementService.updateSalesPlanUnConfirm(params, sessionVO);
 		totCnt = totCnt + tmpCnt;
 
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
+		}
+		
 		return ResponseEntity.ok(message);
 	}
 

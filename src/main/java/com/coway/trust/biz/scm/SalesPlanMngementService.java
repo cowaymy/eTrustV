@@ -64,4 +64,9 @@ public interface SalesPlanMngementService
 	
 	void saveConfirmPlanByCDC(Map<String, Object> params); 
 	
+	int selectCreateCount(Map<String, Object> params); 
+	
+	int selectUnConfirmCnt(Map<String, Object> params); 
+
+	
 }

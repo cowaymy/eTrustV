@@ -542,7 +542,9 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 
 			//Sales Plan 값 구하기
 			List<EgovMap> salesPlanList = salesPlanMngementMapper.selectSalesPlanByStockCode(params);
-
+			
+			if(salesPlanList.size() > 0){
+			
 			psi1Params.put("w00", Integer.parseInt(salesPlanList.get(0).get("w00").toString()));
 			psi1Params.put("w01", Integer.parseInt(salesPlanList.get(0).get("w01").toString()));
 			psi1Params.put("w02", Integer.parseInt(salesPlanList.get(0).get("w02").toString()));
@@ -574,7 +576,9 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			psi1Params.put("w28", Integer.parseInt(salesPlanList.get(0).get("w28").toString()));
 			psi1Params.put("w29", Integer.parseInt(salesPlanList.get(0).get("w29").toString()));
 			psi1Params.put("w30", Integer.parseInt(salesPlanList.get(0).get("w30").toString()));
-
+			
+			}
+			
 			for(int j=0; j  < countBef; j++ ){
 				int k = j+1;
 				int beforeWeek = Integer.parseInt(params.get("scmPeriodCbBox").toString()) - k;
@@ -1516,4 +1520,18 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			}
 		}
 	}
+	
+	
+	@Override
+	public int selectCreateCount(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectCreateCount(params);
+	}
+	
+	
+	@Override
+	public int selectUnConfirmCnt(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectUnConfirmCnt(params);
+	}
+	
+	
 }

@@ -420,9 +420,9 @@ function fnTabClick(flag)
 		{
 			  if(!AUIGrid.isCreated(gMonthlyGridID)) 
 				{
-				  Common.ajax("GET"
+				  Common.ajax("POST"
 			               , "/scm/selectPSDashSearchBtnList.do"
-			               , $("#MainForm").serialize()
+			               , $("#MainForm").serializeJSON()
 			               , function(result) 
 			                 {
 			                    fnMonthlyGridCreate();
@@ -455,9 +455,9 @@ function fnTabClick(flag)
 		{   // quarter
 	        if(!AUIGrid.isCreated(gQuarterGridID)) 
 	        {
-	          Common.ajax("GET"
+	          Common.ajax("POST"
 	                     , "/scm/selectPSDashSearchBtnList.do"
-	                     , $("#MainForm").serialize()
+	                     , $("#MainForm").serializeJSON()
 	                     , function(result) 
 	                       {
 	                    	   fnQuarterGridCreate();

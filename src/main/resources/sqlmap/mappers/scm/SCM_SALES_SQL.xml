@@ -1181,7 +1181,10 @@ SELECT STK_ID
      SET PLAN_STUS_ID = 1
    WHERE PLAN_YEAR = #{scmYearCbBox}
      AND PLAN_WEEK = #{scmPeriodCbBox}
-     AND TEAM      = #{scmTeamCbBox}
+     AND PLAN_MONTH= (SELECT SCM_MONTH
+           FROM SCM0018M
+          WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1)
+     <!-- AND TEAM      = #{scmTeamCbBox} -->
 </update>
 
 <update id="updateSalesPlanConfirm" parameterType="Map">
@@ -1189,7 +1192,10 @@ SELECT STK_ID
      SET PLAN_STUS_ID = 4
    WHERE PLAN_YEAR = #{scmYearCbBox}
      AND PLAN_WEEK = #{scmPeriodCbBox}
-     AND PLAN_ID      = #{planId}
+     AND PLAN_MONTH= (SELECT SCM_MONTH
+                FROM SCM0018M
+               WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1)
+     <!-- AND PLAN_ID      = #{planId} -->
      <!-- AND TEAM      = #{scmTeamCbBox} -->
 </update>
 
@@ -2344,11 +2350,13 @@ SELECT STK_ID
      FN_CRT_IFKEY('189'),
       1,
       '189',
+      '10',
       '',
       '',
-      '',
-      TO_CHAR(SYSDATE,'YYYYMMDD') AS TRAN_DT,
-      TO_CHAR(SYSDATE,'HH24MISS') AS TRAN_TM,
+      null,
+      null,
+<!--       TO_CHAR(SYSDATE,'YYYYMMDD') AS TRAN_DT,
+      TO_CHAR(SYSDATE,'HH24MISS') AS TRAN_TM, -->
       TO_CHAR(SYSDATE,'YYYYMMDD') AS RGST_DT,
       TO_CHAR(SYSDATE,'HH24MISS') AS RGST_TM,
       '',
@@ -2416,7 +2424,13 @@ SELECT STK_ID
  </insert>
     
     
-    
+<select id="selectCreateCount" parameterType="Map" resultType="int">
+        select count(*) From SCM0001M where PLAN_YEAR= #{scmYearCbBox} and PLAN_WEEK= #{scmPeriodCbBox} and TEAM= #{scmTeamCbBox}
+</select>
+
+<select id="selectUnConfirmCnt" parameterType="Map" resultType="int">
+        select count(*) From scm0005m where PLAN_YEAR=#{scmYearCbBox}and PLAN_WEEK=#{scmPeriodCbBox} and PLAN_MONTH=(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox}  AND WEEK_TH_SN = 1)
+</select>
     
     
     
