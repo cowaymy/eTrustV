@@ -151,11 +151,11 @@
 				|| $("#dpReqDtFrom").val().length == 0
 				|| $("#dpReqDtTo").val() == null || $("#dpReqDtTo").val().length == 0)) {
 			if (retType == 296) {
-				reqDate = "AND rc.SO_REQ_CRT_DT between '"
+				reqDate = " AND (rc.SO_REQ_CRT_DT between '"
 						+ $("#dpReqDtFrom").val() + "' AND '"
 						+ $("#dpReqDtTo").val() + "') ";
 			} else if (retType == 297) {
-				reqDate = "AND soe.SO_EXCHG_CRT_DT between '"
+				reqDate = " AND (soe.SO_EXCHG_CRT_DT between '"
 						+ $("#dpReqDtFrom").val() + "' AND '"
 						+ $("#dpReqDtTo").val() + "') ";
 			}
