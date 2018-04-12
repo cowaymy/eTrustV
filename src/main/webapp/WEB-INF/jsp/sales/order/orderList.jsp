@@ -535,7 +535,7 @@
 </c:if>
 <c:if test="${SESSION_INFO.userIsExternal == '1'}">
 	<!-- <select id="listAppType" name="appType" class="w100p" disabled></select> -->
-	   <select id="listAppType" name="appType" class="multy_select w100p" multiple="multiple">
+	   <select id="listAppType" name="appType">
         <option value="66">Rental</option>
         <option value="1412">Outright</option>
         </select>
