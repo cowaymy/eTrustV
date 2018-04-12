@@ -30,9 +30,9 @@
         if(IS_3RD_PARTY == '0') {
             doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType', 'M', 'fn_multiCombo2'); //Common Code
         }
-        else {
+   /*      else {
             doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '66', 'listAppType',  'S'); //Common Code
-        }
+        } */
 
         //doGetCombo('/common/selectCodeList.do',       '10', '',   'listAppType', 'M', 'fn_multiCombo'); //Common Code
         doGetComboAndGroup2('/common/selectProductCodeList.do', '', '', 'listProductId', 'S', 'fn_setOptGrpClass');//product 생성
@@ -56,13 +56,13 @@
     // 리스트 조회.
     function fn_selectListAjax() {
 
-        if(IS_3RD_PARTY == '1') $("#listAppType").removeAttr("disabled");
+        //if(IS_3RD_PARTY == '1') $("#listAppType").removeAttr("disabled");
 
         Common.ajax("GET", "/sales/order/selectOrderJsonList", $("#listSearchForm").serialize(), function(result) {
             AUIGrid.setGridData(listMyGridID, result);
         });
 
-        if(IS_3RD_PARTY == '1') $("#listAppType").prop("disabled", true);
+        //if(IS_3RD_PARTY == '1') $("#listAppType").prop("disabled", true);
     }
 
     function fn_copyChangeOrderPop() {
@@ -534,7 +534,11 @@
 	<select id="listAppType" name="appType" class="multy_select w100p" multiple="multiple"></select>
 </c:if>
 <c:if test="${SESSION_INFO.userIsExternal == '1'}">
-	<select id="listAppType" name="appType" class="w100p" disabled></select>
+	<!-- <select id="listAppType" name="appType" class="w100p" disabled></select> -->
+	   <select id="listAppType" name="appType" class="multy_select w100p" multiple="multiple">
+        <option value="66">Rental</option>
+        <option value="1412">Outright</option>
+        </select>
 </c:if>
 	</td>
 	<th scope="row"><spring:message code='sales.ordDt'/></th>
