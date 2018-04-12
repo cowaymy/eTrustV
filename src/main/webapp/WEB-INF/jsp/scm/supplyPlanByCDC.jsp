@@ -202,15 +202,6 @@ function fnUpdateSave(Obj)
   if ($(Obj).parents().hasClass("btn_disabled") == true)
      return false;
 
-  var data = {};
-  data.form = $("#MainForm").serializeJSON();
-  
-  Common.ajax("POST", "/scm/supplyPlancheck.do", data, function(result) {
-	
-      if(result.code==99){
-          Common.alert("Already Created supply Plan.");
-      }else{
-            
     	  Common.ajax("POST"
    	          , "/scm/saveUpdatePlanByCDC.do"
    	           , GridCommon.getEditData(myGridID) 
@@ -239,15 +230,7 @@ function fnUpdateSave(Obj)
 
    	            });
     	   	  
-      }   
- 
-  }, function(jqXHR, textStatus, errorThrown) {
-      try {
-      } catch (e) {
-      }
-      Common.alert("Fail : " + jqXHR.responseJSON.message);
-  });
-  
+       
 }
 
 function fnConfirmSave(Obj)

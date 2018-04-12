@@ -89,7 +89,22 @@
 	             , PLAN_MASTER_ID
 	             , SUPPLY_BY_CDC.*
 	             <!-- , ROUND(OVERDUE) OVERDUE -->
-	             ,(case when PSI_ID=1 then nvl((select qty from SCM0028S scm28s where scm28s.CLOS_YEAR=SUPPLY_BY_CDC.PLAN_YEAR and SUPPLY_BY_CDC.PLAN_MONTH = SCM28S.CLOS_MONTH and SUPPLY_BY_CDC.CDC = SCM28S.CDC and SCM28S.STOCK_CODE=SYS26m.STK_CODE),0) else 0 end) OVERDUE
+<!-- 	             ,(case when PSI_ID=1 then nvl((select qty from SCM0028S scm28s where scm28s.CLOS_YEAR=SUPPLY_BY_CDC.PLAN_YEAR and SUPPLY_BY_CDC.PLAN_MONTH = SCM28S.CLOS_MONTH and SUPPLY_BY_CDC.CDC = SCM28S.CDC and SCM28S.STOCK_CODE=SYS26m.STK_CODE),0) else 0 end) OVERDUE -->
+                 ,(CASE
+		             WHEN PSI_ID =1
+		             THEN
+		                NVL (
+		                   (SELECT qty
+		                      FROM SCM0028S scm28s
+		                    WHERE    1=1
+		                             AND to_char( add_months(to_date(SUPPLY_BY_CDC.PLAN_YEAR||SUPPLY_BY_CDC.PLAN_MONTH,'YYYYMM'),-1),'YYYYMM')  =  to_char(to_date(scm28s.CLOS_YEAR||SCM28S.CLOS_MONTH,'YYYYMM'),'YYYYMM')
+		                             AND SUPPLY_BY_CDC.CDC = SCM28S.CDC
+		                             AND SCM28S.STOCK_CODE = SYS26m.STK_CODE
+		                           ) , 0)                       
+			             ELSE
+			                0
+			          END)
+		            OVERDUE
 	             , ROUND(WS0) BEF_1_WEEK_TH
 	             , ROUND(WS1) BEF_2_WEEK_TH
 	             , ROUND(WS2) BEF_3_WEEK_TH
