@@ -697,6 +697,16 @@ INSERT INTO SCM0006D
                 0
                 )
     </insert>
+    
+    
+    <select id="supplyPlancheck" parameterType="Map" resultType="int">
+        select count(*) From scm0005m where PLAN_YEAR=#{scmYearCbBox}and PLAN_WEEK=#{scmPeriodCbBox} and PLAN_MONTH=(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox}  AND WEEK_TH_SN = 1)
+    </select>
+    
+     <select id="SelectConfirmPlanCheck" parameterType="Map" resultType="int">
+        select count(*) from SCM0011D where PRE_YEAR=#{planYear} and PRE_MONTH=#{planMonth} and PRE_WEEK_TH=#{planWeek} and PRE_STOCK_CODE=#{code} and PRE_CDC=(select DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC') from dual)
+    </select>
+    
 
 
 </mapper>

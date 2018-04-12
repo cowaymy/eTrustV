@@ -416,19 +416,38 @@ public class SalesPlanManagementController {
 		int totCnt = 0;
 
         List<EgovMap> planByCdcInfo = salesPlanMngementService.selectPlanIdByCdc(params);
-
+        
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+        
         // SCMSupplyPlanMaster(SCM0005M) Creation Check.
 		if (!planByCdcInfo.isEmpty())
 		{
 		  String selectPlanIdSeq = String.valueOf(planByCdcInfo.get(0).get("planId"));
+		  
+		  String selectPlanStus = String.valueOf(planByCdcInfo.get(0).get("planStus"));
+		  
+		  LOGGER.debug("selectPlanStus  **** : {}", selectPlanStus);
 
 		  ((Map<String, Object>) params).put("salesPlanMstCdcSeq", selectPlanIdSeq);
 
 		  LOGGER.debug("supplyPlanMst_Params : {}", params.toString());
+		  
+			if (!"4".equals(selectPlanStus)) {
+				// SCMSupplyPlanDetail Insert (SCM0006D)
+				tmpCnt = salesPlanMngementService.insertSalesCdcDetail(params, sessionVO);
+				totCnt = totCnt + tmpCnt;
 
-		  //SCMSupplyPlanDetail Insert (SCM0006D)
-		  tmpCnt = salesPlanMngementService.insertSalesCdcDetail(params, sessionVO);
-		  totCnt = totCnt + tmpCnt;
+				message.setCode(AppConstants.SUCCESS);
+				message.setData(totCnt);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+			} else {
+				message.setCode(AppConstants.FAIL);
+				message.setData(totCnt);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			}
+
 		}
 		else
 		{
@@ -443,13 +462,13 @@ public class SalesPlanManagementController {
 		   totCnt = totCnt + tmpCnt;
 		   /*Precondition.checkNotNull(params.get("planId"),
 		   messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "planId" }));*/
+		   
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(totCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		   
+		   
 		}
-
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
 	}

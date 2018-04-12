@@ -175,6 +175,33 @@ public class SupplyCorpController {
 		return ResponseEntity.ok(message);
 	}
 	
+	@RequestMapping(value = "/supplyPlancheck.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> supplyPlancheck(@RequestBody Map<String, Object> params,	SessionVO sessionVO)
+	{
+        
+		Map<String, Object> checkMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		
+		LOGGER.info("checkMap 값??????? : {}", checkMap);
+		
+		int supplyPlanCnt = salesPlanMngementService.supplyPlancheck(checkMap);
+		
+		LOGGER.info("supplyPlanCnt@@@@@@@@ : {}", supplyPlanCnt);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		
+		if(supplyPlanCnt > 0){
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}else{
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}
+
+		return ResponseEntity.ok(message);
+	}
+	
+	
 	/* Stored Procedure Call (SP_SCM_PLAN_BY_CDC_INS) */
 	@RequestMapping(value = "/insertOrderSummarySPCall.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertOrderSummarySPCall(@RequestBody Map<String, Object> params,SessionVO sessionVO) 
@@ -198,18 +225,52 @@ public class SupplyCorpController {
 		//SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		//int loginId = sessionVO.getUserId();
 		//params.put("userId", loginId);
-
-		salesPlanMngementService.saveConfirmPlanByCDC(params);
+		
+		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+		List<Object> checkList = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
+		
+		int selectCnt =0;
+		int totalCnt=0;
+		
+		LOGGER.debug("checkList.size() vvvvvvvvv : {}", checkList.size());
+		
+		if (checkList.size() > 0) {
+			
+			for (int i = 0; i < checkList.size(); i++) {
+				
+				Map<String, Object> checkMap = (Map<String, Object>) checkList.get(i);
+				checkMap.put("scmYearCbBox", formMap.get("scmYearCbBox"));
+				checkMap.put("scmPeriodCbBox", formMap.get("scmPeriodCbBox"));
+				checkMap.put("cdcCbBox", formMap.get("cdcCbBox"));
+				
+				 if("PO & FCST".equals(checkMap.get("psi"))){
+					selectCnt=salesPlanMngementService.SelectConfirmPlanCheck(checkMap);	
+					if(selectCnt > 0){
+						totalCnt=1;
+					}
+				}
+		
+			}	
+		}
+		
+		LOGGER.debug("totalCnt ????::::@@@@ : {}", totalCnt);
+		
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		
+		if(totalCnt == 0){
+			salesPlanMngementService.saveConfirmPlanByCDC(params);
+			message.setCode(AppConstants.SUCCESS);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		}else{
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
 
 		Map<String, Object> rmap = new HashMap();
 		//rmap.put("data", posSeq);
 
 		// logger.debug("posSeq@@@@@: {}", posSeq);
-
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		//message.setData(posSeq);
 
 		return ResponseEntity.ok(message);

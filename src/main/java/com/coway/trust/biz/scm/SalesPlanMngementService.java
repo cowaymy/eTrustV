@@ -67,6 +67,10 @@ public interface SalesPlanMngementService
 	int selectCreateCount(Map<String, Object> params); 
 	
 	int selectUnConfirmCnt(Map<String, Object> params); 
+	
+	int supplyPlancheck(Map<String, Object> params); 
+	
+	int SelectConfirmPlanCheck(Map<String, Object> params); 
 
 	
 }

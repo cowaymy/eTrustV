@@ -33,6 +33,7 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.SalesPlanMngementService;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.util.CommonUtils;
 import com.crystaldecisions.jakarta.poi.util.StringUtil;
 
 import antlr.StringUtils;
@@ -541,7 +542,7 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			int endingInventory = salesPlanMngementMapper.selectEndingInventory(params);
 
 			//Sales Plan 값 구하기
-			List<EgovMap> salesPlanList = salesPlanMngementMapper.selectSalesPlanByStockCode(params);
+			List<EgovMap> salesPlanList =   salesPlanMngementMapper.selectSalesPlanByStockCode(params);
 			
 			if(salesPlanList.size() > 0){
 			
@@ -577,7 +578,6 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			psi1Params.put("w29", Integer.parseInt(salesPlanList.get(0).get("w29").toString()));
 			psi1Params.put("w30", Integer.parseInt(salesPlanList.get(0).get("w30").toString()));
 			
-			}
 			
 			for(int j=0; j  < countBef; j++ ){
 				int k = j+1;
@@ -634,7 +634,7 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 
 		    String intToStrFieldCnt ="";
 		    int iLootDataFieldCnt = 0;
-
+		    
 			for(int m1=0;m1<Integer.parseInt(iM0TotCnt);m1++){
 				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
 
@@ -1065,7 +1065,7 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			salesPlanMngementMapper.insertSalesCdcDetailNew(psi4Params);
 			salesPlanMngementMapper.insertSalesCdcDetailNew(psi5Params);
 		}
-
+	}
 
 		// SCM0006D Insert
 		//salesPlanMngementMapper.insertSalesCdcDetail(params);
@@ -1531,6 +1531,16 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	@Override
 	public int selectUnConfirmCnt(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectUnConfirmCnt(params);
+	}
+	
+	@Override
+	public int supplyPlancheck(Map<String, Object> params) {
+		return salesPlanMngementMapper.supplyPlancheck(params);
+	}
+	
+	@Override
+	public int SelectConfirmPlanCheck(Map<String, Object> params) {
+		return salesPlanMngementMapper.SelectConfirmPlanCheck(params);
 	}
 	
 	

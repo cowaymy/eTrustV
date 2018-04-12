@@ -91,7 +91,12 @@ function fnCreatePreviousSupplyPlan(obj)
 	            , $("#MainForm").serializeJSON()
 	            , function(result)
 	             {
-	                fnByCdcSettiingHeader();
+			        	
+	        	   if(result.code==99){
+                        Common.alert("Already Created supply Plan.");
+                    }else{
+                    	  fnByCdcSettiingHeader();
+                    }	
 	             }
 	           , function(jqXHR, textStatus, errorThrown)
 	            {
@@ -188,40 +193,61 @@ function fnChangeEventPeriod(object)
   gWeekThValue = object.value;
 }
 
+
+
+
+
 function fnUpdateSave(Obj)
 {
   if ($(Obj).parents().hasClass("btn_disabled") == true)
      return false;
 
+  var data = {};
+  data.form = $("#MainForm").serializeJSON();
+  
+  Common.ajax("POST", "/scm/supplyPlancheck.do", data, function(result) {
+	
+      if(result.code==99){
+          Common.alert("Already Created supply Plan.");
+      }else{
+            
+    	  Common.ajax("POST"
+   	          , "/scm/saveUpdatePlanByCDC.do"
+   	           , GridCommon.getEditData(myGridID) 
 
-  Common.ajax("POST"
-	        , "/scm/saveUpdatePlanByCDC.do"
-	        , GridCommon.getEditData(myGridID)
+   	          , function(result)
+   	            {
+   	              Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+   	              fnSearchBtnList() ;
+   	            }
 
-	        , function(result)
-	          {
-	            Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-	            fnSearchBtnList() ;
-	          }
+   	          , function(jqXHR, textStatus, errorThrown)
+   	            {
+   	              try
+   	              {
+   	                console.log("Fail Status : " + jqXHR.status);
+   	                console.log("code : "        + jqXHR.responseJSON.code);
+   	                console.log("message : "     + jqXHR.responseJSON.message);
+   	                console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+   	              }
+   	              catch (e)
+   	              {
+   	                console.log(e);
+   	              }
 
-	        , function(jqXHR, textStatus, errorThrown)
-	          {
-	            try
-	            {
-	              console.log("Fail Status : " + jqXHR.status);
-	              console.log("code : "        + jqXHR.responseJSON.code);
-	              console.log("message : "     + jqXHR.responseJSON.message);
-	              console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
-	            }
-	            catch (e)
-	            {
-	              console.log(e);
-	            }
+   	              Common.alert("Fail : " + jqXHR.responseJSON.message);
 
-	            Common.alert("Fail : " + jqXHR.responseJSON.message);
-
-	          });
-
+   	            });
+    	   	  
+      }   
+ 
+  }, function(jqXHR, textStatus, errorThrown) {
+      try {
+      } catch (e) {
+      }
+      Common.alert("Fail : " + jqXHR.responseJSON.message);
+  });
+  
 }
 
 function fnConfirmSave(Obj)
@@ -239,8 +265,13 @@ function fnConfirmSave(Obj)
    
   Common.ajax("POST", "/scm/saveConfirmPlanByCDC.do", data, function(result) {
 
-      fnByCdcSettiingHeader();
-      Common.alert(result.message);
+      if(result.code==99){
+          Common.alert("It is already Confirm.");
+      }else{
+          fnByCdcSettiingHeader();
+          Common.alert(result.message);
+      }
+
 
   }, function(jqXHR, textStatus, errorThrown) {
       try {

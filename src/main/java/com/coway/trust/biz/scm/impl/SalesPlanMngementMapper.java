@@ -96,4 +96,8 @@ public interface SalesPlanMngementMapper {
 	
 	int selectUnConfirmCnt(Map<String, Object> params);
 	
+	int supplyPlancheck(Map<String, Object> params);
+	
+	int SelectConfirmPlanCheck(Map<String, Object> params);
+	
 }
