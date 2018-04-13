@@ -136,6 +136,8 @@ public interface OrderRegisterMapper {
 	List<EgovMap> selectProductCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectServicePackageList(Map<String, Object> params);
+	
+	List<EgovMap> selectServicePackageList2(Map<String, Object> params);
 
 	EgovMap selectServiceContractPackage(Map<String, Object> params);
 
