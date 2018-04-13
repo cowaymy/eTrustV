@@ -1717,6 +1717,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO ProductCodeList 호출시 error남
 		return orderRegisterMapper.selectServicePackageList(params);
 	}
+	
+	@Override
+	public List<EgovMap> selectServicePackageList2(Map<String, Object> params) {
+		// TODO ProductCodeList 호출시 error남
+		return orderRegisterMapper.selectServicePackageList2(params);
+	}
 
 	@Override
 	public List<EgovMap> selectPrevOrderNoList(Map<String, Object> params) {
