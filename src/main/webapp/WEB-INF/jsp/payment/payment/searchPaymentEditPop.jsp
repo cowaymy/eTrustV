@@ -17,8 +17,8 @@ var reconLock;
 
 var payId = '${payId}';
 
-//Grid Properties 설정 
-var gridPros = {            
+//Grid Properties 설정
+var gridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false     // 상태 칼럼 사용
 };
@@ -26,28 +26,28 @@ var gridPros = {
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
     fn_openDivEditPop();
-    
+
     //EDIT POP Branch Combo 생성
     doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','edit_branchId', 'S' , '');
 });
 
-var popColumnLayout = [  
+var popColumnLayout = [
      { dataField:"history" ,
          width: 30,
-         headerText:" ", 
+         headerText:" ",
          renderer : {
              type : "IconRenderer",
              iconTableRef :  {
                  "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
-             },         
+             },
              iconWidth : 16,
              iconHeight : 16,
              onclick : function(rowIndex, columnIndex, value, item) {
                  showDetailHistory2(item.payItmId);
-                 
-             } 
+
+             }
           }
-     }, 
+     },
      { dataField:"payId" ,headerText:"",editable : false , visible : false },
      { dataField:"codeName" ,headerText:"<spring:message code='pay.head.mode'/>",editable : false},
      { dataField:"payItmRefNo" ,headerText:"<spring:message code='pay.head.refNo'/>",editable : false },
@@ -56,7 +56,7 @@ var popColumnLayout = [
      { dataField:"payItmCcExprDt" ,headerText:"<spring:message code='pay.head.CCExpiryDate'/>" ,editable : false },
      { dataField:"payItmCcNo" ,headerText:"<spring:message code='pay.head.CRCNo'/>" ,editable : false },
      { dataField:"payItmChqNo" ,headerText:"<spring:message code='pay.head.chequeNo'/>" ,editable : false },
-     { dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },                   
+     { dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },
      { dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false },
      { dataField:"c8" ,headerText:"<spring:message code='pay.head.CRCMode'/>" ,editable : false },
      { dataField:"accDesc" ,headerText:"<spring:message code='pay.head.bankAccount'/>" ,editable : false },
@@ -68,8 +68,8 @@ var popColumnLayout = [
      { dataField:"payItmBankChrgAmt" ,headerText:"<spring:message code='pay.head.bankCharge'/>" ,editable : false },
      { dataField:"payItmId" ,headerText:"<spring:message code='pay.head.payItemId'/>" ,editable : false, visible:false }
      ];
-     
-var popSlaveColumnLayout = [ 
+
+var popSlaveColumnLayout = [
     { dataField:"trxId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false},
     { dataField:"trxDt" ,headerText:"<spring:message code='pay.head.trxDate'/>",editable : false  },
     { dataField:"trxAmt" ,headerText:"<spring:message code='pay.head.trxTotal'/>",editable : false },
@@ -80,7 +80,7 @@ var popSlaveColumnLayout = [
     { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false },
     { dataField:"appTypeName" ,headerText:"<spring:message code='pay.head.appType'/>" ,editable : false },
     { dataField:"productDesc" ,headerText:"<spring:message code='pay.head.product'/>" ,editable : false },
-    { dataField:"custName" ,headerText:"<spring:message code='pay.head.customer'/>" ,editable : false },                   
+    { dataField:"custName" ,headerText:"<spring:message code='pay.head.customer'/>" ,editable : false },
     { dataField:"custIc" ,headerText:"<spring:message code='pay.head.ICCONo'/>" ,editable : false },
     { dataField:"keyinBrnchName" ,headerText:"<spring:message code='pay.head.branch'/>" ,editable : false },
     { dataField:"keyinUserName" ,headerText:"<spring:message code='pay.head.userName'/>" ,editable : false }
@@ -93,18 +93,18 @@ var viewHistoryLayout=[
     { dataField:"createdate" ,headerText:"<spring:message code='pay.head.updateDate'/>" ,editable : false, formatString : "dd-mm-yyyy" },
     { dataField:"creator" ,headerText:"<spring:message code='pay.head.updator'/>" ,editable : false }
     ];
-    
-var popEditColumnLayout = [    
+
+var popEditColumnLayout = [
 		{ dataField:"history" ,
 		    width: 30,
-		    headerText:" ", 
+		    headerText:" ",
 		    colSpan : 2,
-		   renderer : 
+		   renderer :
 		           {
 		          type : "IconRenderer",
 		          iconTableRef :  {
 		              "default" : "${pageContext.request.contextPath}/resources/images/common/search.png"// default
-		          },         
+		          },
 		          iconWidth : 16,
 		          iconHeight : 16,
 		         onclick : function(rowIndex, columnIndex, value, item) {
@@ -114,21 +114,21 @@ var popEditColumnLayout = [
 		},
 		{ dataField:"history" ,
 		    width: 30,
-		    headerText:" ", 
-		    colSpan : -1,        
-		    renderer : 
+		    headerText:" ",
+		    colSpan : -1,
+		    renderer :
 		           {
 		          type : "IconRenderer",
 		          iconTableRef :  {
 		              "default" : "${pageContext.request.contextPath}/resources/images/common/modified_icon.png"// default
-		          },         
+		          },
 		          iconWidth : 16, // icon 가로 사이즈, 지정하지 않으면 24로 기본값 적용됨
-		          iconHeight : 16,              
-		          onclick : function(rowIndex, columnIndex, value, item) {   
+		          iconHeight : 16,
+		          onclick : function(rowIndex, columnIndex, value, item) {
 		              showItemEdit(item.payItmId);
 		         }
 		       }
-		},    
+		},
 		{ dataField:"payId" ,headerText:" ",editable : false , visible : false },
 		{ dataField:"codeName" ,headerText:"<spring:message code='pay.head.mode'/>",editable : false},
 		{ dataField:"payItmRefNo" ,headerText:"<spring:message code='pay.head.refNo'/>",editable : false },
@@ -139,7 +139,7 @@ var popEditColumnLayout = [
 		{ dataField:"payItmCcExprDt" ,headerText:"<spring:message code='pay.head.CCExpiryDate'/>" ,editable : false },
 		{ dataField:"payItmCcNo" ,headerText:"<spring:message code='pay.head.CRCNo'/>" ,editable : false },
 		{ dataField:"payItmChqNo" ,headerText:"<spring:message code='pay.head.chequeNo'/>" ,editable : false },
-		{ dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },                   
+		{ dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },
 		{ dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false },
 		{ dataField:"c8" ,headerText:"<spring:message code='pay.head.CRCMode'/>" ,editable : false },
 		{ dataField:"accDesc" ,headerText:"<spring:message code='pay.head.bankAccount'/>" ,editable : false },
@@ -150,21 +150,21 @@ var popEditColumnLayout = [
 		{ dataField:"payItmRunngNo" ,headerText:"<spring:message code='pay.head.runningNo'/>" ,editable : false },
 		{ dataField:"payItmBankChrgAmt" ,headerText:"<spring:message code='pay.head.bankCharge'/>" ,editable : false },
 		{ dataField:"payItmId" ,headerText:"<spring:message code='pay.head.payItemId'/>" ,editable : false, visible:false }
-		];                             
+		];
 
 
 function fn_openDivEditPop(){
-          
+
           Common.ajax("GET", "/payment/selectPaymentDetailViewer.do", $("#editDetailForm").serialize(), function(result) {
         	  editPopGridID = GridCommon.createAUIGrid("editPopList_wrap", popEditColumnLayout, null, gridPros);
-              
+
               //Payment Information
               $('#edit_txtORNo').text(result.viewMaster.orNo);$("#edit_txtORNo").css("color","red");
               $('#edit_txtLastUpdator').text(result.viewMaster.lastUpdUserName);$("#edit_txtLastUpdator").css("color","red");
               $('#edit_txtKeyInUser').text(result.viewMaster.keyinUserName);$("#edit_txtKeyInUser").css("color","red");
               $('#edit_txtOrderNo').text(result.viewMaster.salesOrdNo);$("#edit_txtOrderNo").css("color","red");
               $('#edit_txtTRRefNo').val(result.viewMaster.trNo);$("#edit_txtTRRefNo").css("backgroundColor","#F5F6CE");
-              
+
               $("#edit_txtTRIssueDate").css("backgroundColor","#F5F6CE");
               var refDate = new Date(result.viewMaster.trIssuDt);
               var defaultDate = new Date("01/01/1900");
@@ -173,7 +173,7 @@ function fn_openDivEditPop(){
               }else{
                 $("#edit_txtTRIssueDate").val("");
               }
-              
+
               $('#edit_txtProductCategory').text(result.viewMaster.productCtgryName);
               $('#edit_txtProductName').text(result.viewMaster.productDesc);
               $('#edit_txtAppType').text(result.viewMaster.appTypeName);
@@ -189,42 +189,42 @@ function fn_openDivEditPop(){
               $('#edit_txtHPCode').text(result.viewMaster.hpId);
               $('#edit_txtHPName').text(result.viewMaster.orNo);
               $('#edit_txtBatchPaymentID').text(result.viewMaster.batchPayId);
-               
+
               //Collector Information
               $('#edit_txtSalesPerson').text(result.viewMaster.salesMemCode + "(" + result.viewMaster.salesMemName+")");
               $('#edit_txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
               $('#edit_txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
-              
+
               $('#edit_branchId').val(result.viewMaster.clctrBrnchId);
               $('#edit_txtCollectorCode').val(result.viewMaster.clctrCode);
               $('#edit_txtClctrName').text(result.viewMaster.clctrName);
               $('#edit_txtCollectorId').val(result.viewMaster.clctrId);
-              
+
               if(result.viewMaster.allowComm != "1"){
                 $("#btnAllowComm").prop('checked', false);
-                
+
               }else{
                 $("#btnAllowComm").prop('checked', true);
               }
-              
+
               if(result.passReconSize  > 0 ){
                 $("#edit_branchId").prop('disabled', true);
                 reconLock = 1;
                 $("#edit_branchId").css("backgroundColor","transparent");
-              
+
               }else{
                 $("#edit_branchId").prop('disabled', false);
                 $("#edit_branchId").css("backgroundColor","#F5F6CE");
               }
-               
+
               //팝업그리드 뿌리기
               AUIGrid.setGridData(editPopGridID, result.selectPaymentDetailView);
-              
+
           });
 }
 
 function showViewHistory_E(){
-	
+
 	Common.popupDiv('/payment/initViewHistoryPop.do', {"payId":payId}, null , true);
 }
 
@@ -237,22 +237,27 @@ function showItemEdit(payItemId){
 }
 
 function saveChanges() {
-    
+
     var payId = $("#payId").val();
     var trNo = $("#edit_txtTRRefNo").val();
     var branchId = $("#edit_branchId").val();
-    
+
     if($.trim(trNo).length > 10 ){
           Common.alert("<spring:message code='pay.alert.trNo'/>");
           return;
       }
-    
+
     if($.trim(branchId ) == ""){
       Common.alert("<spring:message code='pay.alert.selectBranch'/>");
       return;
     }
-    
+
     $("#hiddenPayId").val(payId);
+    $("#hiddenBranchId").val(branchId);
+
+    console.log("branchId :: " + branchId);
+    console.log("hiddenBranchId :: " + $("#hiddenBranchId").val(branchId));
+
     Common.ajax("POST", "/payment/saveChanges", $('#myForm').serializeJSON(), function(result) {
           Common.alert(result.message);
 
@@ -263,12 +268,12 @@ function saveChanges() {
 
 function fn_officialReceiptReport(){
       var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-      
-      if (selectedItem[0] > -1){    
-          var orNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "orNo");        
-          $("#reportPDFForm #v_ORNo").val(orNo);        
+
+      if (selectedItem[0] > -1){
+          var orNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "orNo");
+          $("#reportPDFForm #v_ORNo").val(orNo);
           Common.report("reportPDFForm");
-          
+
       }else{
           Common.alert("<spring:message code='pay.alert.noPay'/>");
      }
@@ -276,12 +281,12 @@ function fn_officialReceiptReport(){
 
 function  fn_goSalesPerson(){
 	  Common.popupDiv("/sales/membership/paymentCollecter.do?resultFun=S");
-} 
+}
 
 function fn_doSalesResult(item){
-      
+
       if (typeof (item) != "undefined"){
-              
+
              $("#edit_txtCollectorCode").val(item.memCode);
              $("#edit_txtClctrName").html(item.name);
              $("#edit_txtCollectorId").val(item.memId);
@@ -290,7 +295,7 @@ function fn_doSalesResult(item){
              //$("#sale_searchbt").attr("style" ,"display:none");
              //$("#sale_resetbt").attr("style" ,"display:inline");
              //$("#edit_txtCollectorCode").attr("class","readonly");
-             
+
       }else{
              $("#edit_txtCollectorCode").val("");
 			 $("#edit_txtClctrName").html("");
@@ -311,26 +316,26 @@ function fn_goSalesPersonReset(){
 }
 
 function fn_goSalesConfirm(){
-      
+
       if($("#edit_txtCollectorCode").val() =="") {
-               
+
                Common.alert("<spring:message code='pay.alert.salesPersonCode'/>");
                return ;
        }
-           
+
        Common.ajax("GET", "/sales/membership/paymentColleConfirm", { COLL_MEM_CODE:   $("#edit_txtCollectorCode").val() } , function(result) {
-                if(result.length > 0){                    
+                if(result.length > 0){
                     $("#edit_txtCollectorCode").val(result[0].memCode);
                     $("#edit_txtClctrName").html(result[0].name);
                     $("#edit_txtCollectorId").val(result[0].memId);
-                    
+
                     //$("#sale_confirmbt").attr("style" ,"display:none");
                     //$("#sale_searchbt").attr("style" ,"display:none");
                     //$("#sale_resetbt").attr("style" ,"display:inline");
                     //$("#edit_txtCollectorCode").attr("class","readonly");
-                    
+
                 }else {
-                    
+
 					Common.alert(" Unable to find [" +$("#edit_txtCollectorCode").val() +"] in system. <br>  Please ensure you key in the correct member code.   ");
 
 					$("#edit_txtCollectorCode").val("");
@@ -340,7 +345,7 @@ function fn_goSalesConfirm(){
 
                     return ;
                 }
-                
+
         });
 }
 </script>
@@ -394,14 +399,14 @@ function fn_goSalesConfirm(){
                           <td id="edit_txtProductCategory"></td>
                           <th scope="row">Product Name</th>
                           <td id="edit_txtProductName"></td>
-                          
+
                       </tr>
                       <tr>
                           <th scope="row">Application Type</th>
                           <td id="edit_txtAppType"></td>
                           <th scope="row">Customer Name</th>
                           <td id="edit_txtCustomerName"></td>
-                          
+
                       </tr>
                       <tr>
                           <th scope="row">Customer Type</th>
@@ -452,8 +457,8 @@ function fn_goSalesConfirm(){
                           <th scope="row">Collector Code</th>
                           <td id="">
                               <input type="text" name="edit_txtCollectorCode" id="edit_txtCollectorCode" style="width:80px">
-                              <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()"><spring:message code='pay.btn.confirm'/></a></p>    
-                              <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" ><spring:message code='sys.btn.search'/></a></p>  
+                              <p class="btn_sky"  id="sale_confirmbt" ><a href="#" onclick="javascript:fn_goSalesConfirm()"><spring:message code='pay.btn.confirm'/></a></p>
+                              <p class="btn_sky"  id="sale_searchbt"><a href="#" onclick="javascript:fn_goSalesPerson()" ><spring:message code='sys.btn.search'/></a></p>
                               <p class="btn_sky"  id="sale_resetbt"><a href="#" onclick="javascript:fn_goSalesPersonReset()" >Remove</a></p>
                            </td>
                           <th scope="row">HP Code/Dealer</th>
@@ -480,8 +485,9 @@ function fn_goSalesConfirm(){
       </section><!-- search_result end -->
   </section><!-- pop_body end -->
   <input type="hidden" name="hiddenPayId" id="hiddenPayId">
+  <input type="hidden" name="hiddenBranchId" id="hiddenBranchId">
   <input type="hidden" name="allowComm" id="allowComm">
-  <input type="hidden" name="edit_txtCollectorId"  id="edit_txtCollectorId" value="0"/> 
+  <input type="hidden" name="edit_txtCollectorId"  id="edit_txtCollectorId" value="0"/>
   </form>
 </div><!-- popup_wrap end -->
 
@@ -496,7 +502,7 @@ function fn_goSalesConfirm(){
     </header>
     <!-- pop_body start -->
     <section class="pop_body">
-       
+
         <!-- grid_wrap start -->
         <article id="grid_view_history" class="grid_wrap"></article>
         <!-- grid_wrap end -->
@@ -513,7 +519,7 @@ function fn_goSalesConfirm(){
     </header>
     <!-- pop_body start -->
     <section class="pop_body">
-       
+
         <!-- grid_wrap start -->
         <article id="grid_detail_history" class="grid_wrap"></article>
         <!-- grid_wrap end -->
@@ -525,4 +531,4 @@ function fn_goSalesConfirm(){
     <input type="hidden" name="payId" id="payId" value="${payId}" />
     <input type="hidden" name="salesOrdId" id="salesOrdId" value="${salesOrdId}" />
     <input type="hidden" name="callPrgm" id="callPrgm" value="${callPrgm}" />
-</form>      
+</form>

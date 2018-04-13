@@ -59,15 +59,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class SearchPaymentController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SearchPaymentController.class);
-	
+
 	@Resource(name = "searchPaymentService")
 	private SearchPaymentService searchPaymentService;
-	
+
 	/******************************************************
-	 * Search Payment  
-	 *****************************************************/	
+	 * Search Payment
+	 *****************************************************/
 	/**
-	 * SearchPayment초기화 화면 
+	 * SearchPayment초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -76,12 +76,12 @@ public class SearchPaymentController {
 	public String initSearchPayment(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/payment/searchPayment";
 	}
-	
+
 	/******************************************************
 	 * Search Payment  View Details POPUP
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * SearchPayment View Details 초기화 화면 
+	 * SearchPayment View Details 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -93,12 +93,12 @@ public class SearchPaymentController {
 		model.addAttribute("salesOrdId", params.get("salesOrdId"));
 		return "payment/payment/searchPaymentViewPop";
 	}
-	
+
 	/******************************************************
 	 * Search Payment  Edit Details POPUP
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * SearchPayment Edit Details 초기화 화면 
+	 * SearchPayment Edit Details 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -110,12 +110,12 @@ public class SearchPaymentController {
 		model.addAttribute("salesOrdId", params.get("salesOrdId"));
 		return "payment/payment/searchPaymentEditPop";
 	}
-	
+
 	/******************************************************
 	 * Search Payment  View History POPUP
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * SearchPayment View History 초기화 화면 
+	 * SearchPayment View History 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -125,12 +125,12 @@ public class SearchPaymentController {
 		model.addAttribute("payId", params.get("payId"));
 		return "payment/payment/viewHistoryPop";
 	}
-	
+
 	/******************************************************
 	 * Search Payment  View Detail History POPUP
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * SearchPayment View Detail History 초기화 화면 
+	 * SearchPayment View Detail History 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -140,12 +140,12 @@ public class SearchPaymentController {
 		model.addAttribute("payItemId", params.get("payItemId"));
 		return "payment/payment/detailHistoryPop";
 	}
-	
+
 	/******************************************************
 	 * Search Payment  Item Edit Cheque POPUP
-	 *****************************************************/	
+	 *****************************************************/
 	/**
-	 * SearchPayment Item Edit Cheque 초기화 화면 
+	 * SearchPayment Item Edit Cheque 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -155,7 +155,7 @@ public class SearchPaymentController {
 		model.addAttribute("payItemId", params.get("payItemId"));
 		return "payment/payment/itemEditChequePop";
 	}
-	
+
 	/**
 	 * SearchPayment Order List(Master Grid) 조회
 	 * @param searchVO
@@ -165,20 +165,20 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/selectOrderList", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectOrderList(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
-				, @RequestParam Map<String, Object> params, ModelMap model) {        
+				, @RequestParam Map<String, Object> params, ModelMap model) {
         // 조회.
         List<EgovMap> resultList = searchPaymentService.selectOrderList(params);
         int totalRowCount = searchPaymentService.selectOrderListCount(params);
-        
+
         Map<String, Object> result = new HashMap<String, Object>();
-        
-        
+
+
 		result.put("resultList", resultList);
 		result.put("totalRowCount", totalRowCount);
 
 		return ResponseEntity.ok(result);
 	}
-	
+
 	/**
 	 * SearchPayment Order List(Master Grid) 조회
 	 * @param searchVO
@@ -188,16 +188,16 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/selectOrderListPaging", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectOrderListPaging(@ModelAttribute("searchVO")ReconciliationSearchVO searchVO
-				, @RequestParam Map<String, Object> params, ModelMap model) {        
+				, @RequestParam Map<String, Object> params, ModelMap model) {
         // 조회.
         List<EgovMap> resultList = searchPaymentService.selectOrderList(params);
-        
+
         Map<String, Object> result = new HashMap<String, Object>();
 		result.put("resultList", resultList);
-		
+
 		return ResponseEntity.ok(result);
 	}
-	
+
 	/**
 	 * SearchPayment Payment List(Slave Grid) 조회
 	 * @param searchVO
@@ -210,15 +210,15 @@ public class SearchPaymentController {
 				, @RequestParam Map<String, Object> params, ModelMap model) {
 
 		//검색 파라미터 확인.(화면 Form객체 입력값)
-        LOGGER.debug("payId : {}", params.get("payId"));        
-        
+        LOGGER.debug("payId : {}", params.get("payId"));
+
         // 조회.
         List<EgovMap> resultList = searchPaymentService.selectPaymentList(params);
-        
+
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
 	}
-	
+
 	/**
 	 * SearchPayment PaymentItem 조회
 	 * @param params
@@ -228,17 +228,17 @@ public class SearchPaymentController {
 	@RequestMapping(value = "/selectPaymentItem", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectPaymentItem( @RequestParam Map<String, Object> params, ModelMap model) {
 		//검색 파라미터 확인.(화면 Form객체 입력값)
-        LOGGER.debug("payItemId : {}", params.get("payItemId"));        
+        LOGGER.debug("payItemId : {}", params.get("payItemId"));
 
 		List<EgovMap> resultList = searchPaymentService.selectPaymentItem(Integer.parseInt(params.get("payItemId").toString()));
 		LOGGER.debug("result : {}", resultList.get(0));
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
 	}
-	
+
 	/******************************************************
-	 * Search Payment (RC By Sales) 
-	 *****************************************************/	
+	 * Search Payment (RC By Sales)
+	 *****************************************************/
 	/**
 	 * SearchPayment초기 화면
 	 * @param params
@@ -249,7 +249,7 @@ public class SearchPaymentController {
 	public String initRentalCollectionBySales(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/payment/rentalCollectionBySales";
 	}
-	
+
 	/**
 	 * SearchPayment Payment List(Slave Grid) 조회
 	 * @param Map
@@ -262,15 +262,15 @@ public class SearchPaymentController {
 				 @RequestParam Map<String, Object> params, ModelMap model) {
 
         List<EgovMap> resultList = searchPaymentService.selectSalesList(params);
- 
+
         return ResponseEntity.ok(resultList);
 	}
-	
+
 	/******************************************************
-	 * RentalCollectionByBS  
-	 *****************************************************/	
+	 * RentalCollectionByBS
+	 *****************************************************/
 	/**
-	 * RentalCollectionByBS초기화 화면 
+	 * RentalCollectionByBS초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -279,7 +279,7 @@ public class SearchPaymentController {
 	public String initRentalCollectionByBS(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/payment/rentalCollectionByBS";
 	}
-	
+
 	/**
 	 * RentalCollectionByBS   조회
 	 * @param searchVO
@@ -290,14 +290,14 @@ public class SearchPaymentController {
 	@RequestMapping(value = "/selectRentalCollectionByBSList", method = RequestMethod.GET)
 	public ResponseEntity<List<RentalCollectionByBSSearchVO>> selectRentalCollectionByBSList(@ModelAttribute("searchVO")RentalCollectionByBSSearchVO searchVO
 				, @RequestParam Map<String, Object> params, ModelMap model) {
-        
+
         // 조회.
         List<RentalCollectionByBSSearchVO> resultList = searchPaymentService.searchRentalCollectionByBSList(searchVO);
-        
+
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);
 	}
-	
+
 	/**
 	 * SearchMaster 조회
 	 * @param SearchVO
@@ -307,10 +307,10 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value="selectViewHistoryList")
 	public ResponseEntity<List<EgovMap>> selectViewHistoryList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		List<EgovMap> result = null;
 		String payId = params.get("payId").toString();
-		
+
 		try {
 			if(CommonUtils.isNumCheck(payId)){
 				result = searchPaymentService.selectViewHistoryList(Integer.parseInt(payId));
@@ -322,10 +322,10 @@ public class SearchPaymentController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
+
 		return ResponseEntity.ok(result);
 	}
-	
+
 	/**
 	 * SearchDetail 조회
 	 * @param SearchVO
@@ -335,10 +335,10 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value="selectDetailHistoryList")
 	public ResponseEntity<List<EgovMap>> selectDetailHistoryList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		List<EgovMap> result = null;
 		String payItemId = params.get("payItemId").toString();
-		
+
 		try {
 			if(CommonUtils.isNumCheck(payItemId)){
 				result = searchPaymentService.selectDetailHistoryList(Integer.parseInt(payItemId));
@@ -350,10 +350,10 @@ public class SearchPaymentController {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-	
+
 		return ResponseEntity.ok(result);
 	}
-	
+
 	/**
 	 * PaymentDetailViewer 조회
 	 * @param SearchVO
@@ -363,22 +363,22 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/selectPaymentDetailViewer", method = RequestMethod.GET)
 	public ResponseEntity<Map> selectPaymentDetailViewer(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
         // 마스터조회
 		EgovMap viewMaster = searchPaymentService.selectPaymentDetailViewer(params);
-		
+
 		//주문진행상태 조회
 		EgovMap orderProgressStatus = searchPaymentService.selectOrderProgressStatus(params);
-		
+
 		//selectPaymentDetailView
 		List<EgovMap> selectPaymentDetailView = searchPaymentService.selectPaymentDetailView(params);
-		
+
 		//selectPaymentDetailSlaveList
 		List<EgovMap> selectPaymentDetailSlaveList = searchPaymentService.selectPaymentDetailSlaveList(params);
-		
+
 		//selectPaymentItemIsPassRecon
 		List<EgovMap> paymentItemIsPassRecon = searchPaymentService.selectPaymentItemIsPassRecon(params);
-		
+
 		Map<String, Object> resultMap = new HashMap<String, Object>();
 		resultMap.put("viewMaster", viewMaster);
 		resultMap.put("selectPaymentDetailView", selectPaymentDetailView);
@@ -388,7 +388,7 @@ public class SearchPaymentController {
 		}else{
 			resultMap.put("orderProgressStatus", "");
 		}
-		
+
 		int passReconSize = 0;
 		if(paymentItemIsPassRecon != null){
 			passReconSize = paymentItemIsPassRecon.size();
@@ -396,11 +396,11 @@ public class SearchPaymentController {
 		}else{
 			resultMap.put("passReconSize", passReconSize);
 		}
-        
+
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultMap);
 	}
-	
+
 	/**
 	 * PaymentCash 저장
 	 * @param params
@@ -409,40 +409,40 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/saveCash", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveCash(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-	
-		
+
+
 		int userId = sessionVO.getUserId();
 		String message = "";
-		
+
 		ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
-    	
+
 		if(userId > 0){
 		PayDVO payDet = new PayDVO();
     		LOGGER.debug("params : {}", params);
     		boolean valid = true;
-    		
+
     		String refNo = String.valueOf(params.get("txtReferenceNoCa")).trim();
     		String refDate = String.valueOf(params.get("txtRefDateCa")).trim();
     		String remark = String.valueOf(params.get("tareaRemarkCa")).trim();
     		String runNo = String.valueOf(params.get("txtRunNoCa")).trim();
     		String eftNo = "";
     		int payItemId = Integer.parseInt(params.get("payItemId").toString());
-    
+
     		if(refNo.length() > 20){
     			valid = false;
     			message += "* Reference number cannot exceed length of 20.<br>";
     		}
-    		
+
     		if(!valid){
     			msg.setMessage(message);
     			return ResponseEntity.ok(msg);
     		}
-    		
+
     		payDet = this.getSaveDataPayDet(payItemId, userId, refNo, 0, refDate, remark, "", "", 0, runNo, eftNo, 0);
-    
+
     		boolean result = searchPaymentService.doEditPaymentDetails(payDet);
-    		
+
     		if(result)
 				message = "Payment item successfully updated.";
 			else
@@ -450,11 +450,11 @@ public class SearchPaymentController {
 		}else{
 			message = "Your login session has expired. Please relogin to our system.";
 		}
-		
+
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);
 	}
-	
+
 	/**
 	 * PaymentCreditCard 저장
 	 * @param params
@@ -463,24 +463,24 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/saveCreditCard", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveCreditCard(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-	
+
 		int userId = sessionVO.getUserId();
 		String message = "";
-		
+
 		ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
-    	
+
 		boolean result = false;
 		boolean valid = true;
 
 		if(userId > 0){
-			LOGGER.debug("params : {}", params);        
+			LOGGER.debug("params : {}", params);
 			PayDVO payDet = new PayDVO();
-			
+
 			int payItemId = Integer.parseInt(String.valueOf(params.get("payItemIdCC")).trim());
-			
+
 			boolean isAOR = checkOrNoIsAorType(String.valueOf(payItemId));
-			
+
 			String refNo = String.valueOf(params.get("txtRefNoCC")).trim();
 			String refDate = "01/01/1900";
 			if(!(String.valueOf(params.get("txtRefDateCC")).trim().equals("")))
@@ -491,7 +491,7 @@ public class SearchPaymentController {
 			if(tempIssued > -1){
 				issuedBankId = tempIssued;
 			}
-		
+
 			String crcHolderName = String.valueOf(params.get("txtCCHolderName")).trim();
 			int cardTypeId = 0;
 			int tempCardType = String.valueOf(params.get("cmbCardTypeCC")).trim().equals("") ? -1 :  Integer.parseInt(String.valueOf(params.get("cmbCardTypeCC")).trim());
@@ -510,10 +510,10 @@ public class SearchPaymentController {
 				String temp[] = expiryDate.split("/");
 				crcExpiryDate = temp[1] + "/" + temp[2].substring(2, 4);
 			}
-			
+
 			String runNo = String.valueOf(params.get("txtRunningNoCC")).trim();
 			String eFTNo = "";
-		
+
 			//validation check
 			if(tempIssued <= -1){
 				valid = false;
@@ -557,17 +557,17 @@ public class SearchPaymentController {
 					message += "* Reference number cannot cxceed length of 20. <br />";
 				}
 			}
-			
+
 			if(!valid){
 				msg.setMessage(message);
     			return ResponseEntity.ok(msg);
 			}
-			
-			
+
+
 			payDet = this.getSaveDataPayDet(payItemId, userId, refNo, issuedBankId, refDate, remark, crcHolderName, crcExpiryDate, crcTypeId, runNo, eFTNo, cardTypeId);
-			
+
 			result = searchPaymentService.doEditPaymentDetails(payDet);
-			
+
 			if(result)
 				message = "Payment item successfully updated.";
 			else
@@ -575,11 +575,11 @@ public class SearchPaymentController {
 		}else{
 			message = "Your login session has expired. Please relogin to our system.";
 		}
-		
+
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);
 	}
-	
+
 	/**
 	 * PaymentCheque 저장
 	 * @param params
@@ -588,16 +588,16 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/saveCheque", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveCheque(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-	
+
 		int userId = sessionVO.getUserId();
 		String message="";
-		
+
 		ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
-    	
-		LOGGER.debug("params : {}", params);        
+
+		LOGGER.debug("params : {}", params);
 		int payItemId = Integer.parseInt(params.get("payItemIdCh").toString());
-		
+
 		if(userId > 0){
 			PayDVO payDet = new PayDVO();
 			String refNo = String.valueOf(params.get("txtRefNumberCh")).trim();
@@ -613,30 +613,30 @@ public class SearchPaymentController {
 			}
 			String runNo = String.valueOf(params.get("txtRunNoCh")).trim();
 			String eFTNo = "";
-			
+
 			boolean valid = true;
 			if(tempIssued <= -1){
 				valid = false;
 				message += "* Please select the issued bank. <br/>";
 			}
-			
+
 			if(String.valueOf(params.get("chequeNoCh")).trim().equals("")){
 				valid = false;
 				message += "* Please key in the cheque number.<br />";
 			}
-			
+
 			if(refNo.trim().length() > 20){
 				valid = false;
 				message += "* Reference number cannot exceed length of 20.<br />";
 			}
-			
+
 			if(!valid){
 				msg.setMessage(message);
     			return ResponseEntity.ok(msg);
 			}
 			payDet = this.getSaveDataPayDet(payItemId, userId, refNo, issuedBankId, refDate, remark, "", "", 0, runNo, eFTNo, 0);
 			boolean result = searchPaymentService.doEditPaymentDetails(payDet);
-			
+
 			if(result)
 				message = "Payment item successfully updated.";
 			else
@@ -647,7 +647,7 @@ public class SearchPaymentController {
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);
 	}
-	
+
 	/**
 	 * PaymentCheque 저장
 	 * @param params
@@ -656,20 +656,20 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/saveOnline", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> saveOnline(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-	
+
 		int userId = sessionVO.getUserId();
 		String message = "";
-		
+
 		ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
-    	
-		LOGGER.debug("params : {}", params);        
+
+		LOGGER.debug("params : {}", params);
 		int payItemId = Integer.parseInt(params.get("payItemIdOn").toString());
-		
-		
+
+
 		if(userId > 0){
 			PayDVO payDet = new PayDVO();
-			
+
 			String refNo = String.valueOf(params.get("txtRefNoOn")).trim();
 			String refDate = "01/01/1900";
 			if(!(String.valueOf(params.get("txtRefDateOn")).trim().equals(""))){
@@ -683,29 +683,29 @@ public class SearchPaymentController {
 			}
 			String runNo = String.valueOf(params.get("txtRunNoOn")).trim();
 			String eFTNo = String.valueOf(params.get("txtEFTNoOn")).trim();
-			
+
 			boolean valid = true;
-			
+
 			if(tempIssued <= -1){
 				valid = false;
 				message += "* Please select the issued bank.<br />";
 			}
-			
+
 			if(!(refNo.equals(""))){
 				if(refNo.length() > 20){
 					valid = false;
 					message += "* Reference number cannot exceed length of 20.<br/>";
 				}
 			}
-			
+
 			if(!valid){
 				msg.setMessage(message);
     			return ResponseEntity.ok(msg);
 			}
-			
+
 			payDet = this.getSaveDataPayDet(payItemId, userId, refNo, issuedBankId, refDate, remark, "", "", 0, runNo, eFTNo, 0);
 			boolean result = searchPaymentService.doEditPaymentDetails(payDet);
-			
+
 			if(result)
 				message = "Payment item successfully updated.";
 			else
@@ -716,24 +716,24 @@ public class SearchPaymentController {
 		msg.setMessage(message);
 		return ResponseEntity.ok(msg);
 	}
-	
+
 	private boolean checkOrNoIsAorType(String payItemId){
 		boolean isAor = false;
-		
+
 		String worno = String.valueOf(searchPaymentService.checkORNoIsAORType(payItemId));
-		
+
 		if(!(worno.equals("null")))
 			isAor = true;
-		else 
+		else
 			isAor = false;
-		
+
 		return isAor;
 	}
-	
+
 	private PayDVO getSaveDataPayDet(int payItemId, int userId, String refNo, int issuedBankId, String refDate, String remark, String crcHolderName, String crcExpiryDate, int crcTypeId, String runNo, String eftNo, int cardTypeId){
-		
+
 		PayDVO payDet = new PayDVO();
-		
+
 		payDet.setPayItemId(payItemId);
 		payDet.setPayItemRefNo(refNo);
 		payDet.setPayItemIssuedBankId(issuedBankId);
@@ -747,10 +747,10 @@ public class SearchPaymentController {
 		payDet.setPayItemRunningNo(runNo);
 		payDet.setPayItemEFTNo(eftNo);
 		payDet.setPayItemCardTypeId(cardTypeId);
-		
+
 		return payDet;
 	}
-	
+
 	/**
 	 * saveChanges
 	 * @param SearchVO
@@ -761,21 +761,21 @@ public class SearchPaymentController {
 	@RequestMapping(value = "/saveChanges", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveChanges(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
 		int userId = sessionVO.getUserId();
-		
+
         // 마스터조회
 		EgovMap viewMaster = searchPaymentService.selectPayMaster(params);
-		
+
 		//마스터조회값
 		String trNo = "";
 		String brnchId = "";
 		String collMemId = "";
 		String allowComm = "";
 		String trIssuDt = "";
-		
+
 		//화면에서 넘어온값
 		String hiddenCollMemId = params.get("edit_txtCollectorId").equals("0") ?  "0" : String.valueOf(params.get("edit_txtCollectorId"));
 		String btnAllowComm = params.get("btnAllowComm") != null ? "1" : "0"  ;
-		
+
 		if(viewMaster != null){
 			trNo = viewMaster.get("trNo") != null ? String.valueOf(viewMaster.get("trNo")) : ""  ;
 			brnchId = viewMaster.get("brnchId") != null ? String.valueOf(viewMaster.get("brnchId")) : "" ;
@@ -783,7 +783,7 @@ public class SearchPaymentController {
 			allowComm = viewMaster.get("allowComm") != null ? String.valueOf(viewMaster.get("allowComm")) : "";
 			trIssuDt = viewMaster.get("trIssuDt") != null ? String.valueOf(viewMaster.get("trIssuDt")) : "" ;
 		}
-		
+
 		LOGGER.debug("마스터조회값 trNo : {}", trNo);
 		LOGGER.debug("마스터조회값 brnchId : {}", brnchId);
 		LOGGER.debug("마스터조회값 collMemId : {}", collMemId);
@@ -797,10 +797,10 @@ public class SearchPaymentController {
 		Map<String, Object> collectorMap = new HashMap<String, Object>();
 		Map<String, Object> allowMap = new HashMap<String, Object>();
 		Map<String, Object> updMap = new HashMap<String, Object>();
-		
+
 		//1127 : TR Number
 		if(!trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")).trim())){
-			
+
             String typeID = "1127";
             String payID = String.valueOf(params.get("hiddenPayId"));
             String valueFr = trNo;
@@ -808,7 +808,7 @@ public class SearchPaymentController {
             String refIDFr = "0";
             String refIDTo = "0";
             int createBy = userId;
-            
+
             trMap.put("typeID", typeID);
             trMap.put("payID", payID);
             trMap.put("valueFr", valueFr);
@@ -816,43 +816,43 @@ public class SearchPaymentController {
             trMap.put("refIDFr", refIDFr);
             trMap.put("refIDTo", refIDTo);
             trMap.put("createBy", createBy);
-            
+
             searchPaymentService.saveChanges(trMap);
 		}
-		
-		//1128 : Key-In Branch		
-		if(params.get("edit_branchId") != null && !brnchId.equals(String.valueOf(params.get("edit_branchId")))){
-			
+
+		//1128 : Key-In Branch
+		if(params.get("hiddenBranchId") != null && !brnchId.equals(String.valueOf(params.get("edit_branchId")))){
+
 			Map<String, Object> frBranchIdMap = new HashMap<String, Object>();
 			Map<String, Object> toBranchIdMap = new HashMap<String, Object>();
 			String frBranchCode = "";
 			String toBranchCode = "";
 			frBranchIdMap.put("edit_branchId", brnchId);
-			toBranchIdMap.put("edit_branchId", String.valueOf(params.get("edit_branchId")));
+			toBranchIdMap.put("edit_branchId", String.valueOf(params.get("hiddenBranchId")));
 			EgovMap frCodeMap = searchPaymentService.selectBranchCode(frBranchIdMap);
 			EgovMap toCodeMap = searchPaymentService.selectBranchCode(toBranchIdMap);
-			
+
 			if(frCodeMap != null){
 				frBranchCode = String.valueOf(frCodeMap.get("code"));
 			}else{
 				frBranchCode = "";
 			}
-			
+
 			if(toCodeMap != null){
 				toBranchCode = String.valueOf(toCodeMap.get("code"));
 			}else{
 				toBranchCode = "";
 			}
-			
+
             String typeID = "1128";
             String payID = String.valueOf(params.get("hiddenPayId"));
             String valueFr = frBranchCode;
             String valueTo = toBranchCode;
             String refIDFr = brnchId;
-            String refIDTo = String.valueOf(params.get("edit_branchId"));
+            String refIDTo = String.valueOf(params.get("hiddenBranchId"));
             int createBy = userId;
-            
-            
+
+
             branchMap.put("typeID", typeID);
             branchMap.put("payID", payID);
             branchMap.put("valueFr", valueFr);
@@ -860,13 +860,13 @@ public class SearchPaymentController {
             branchMap.put("refIDFr", refIDFr);
             branchMap.put("refIDTo", refIDTo);
             branchMap.put("createBy", createBy);
-            
+
             searchPaymentService.saveChanges(branchMap);
 		}
-		
+
 		//1129 : Collector
 		if(!collMemId.equals(hiddenCollMemId)){
-			
+
 			Map<String, Object> frMemberIdMap = new HashMap<String, Object>();
 			Map<String, Object> toMemberIdMap = new HashMap<String, Object>();
 			String frMemberCode = "";
@@ -875,19 +875,19 @@ public class SearchPaymentController {
 			toMemberIdMap.put("edit_txtCollectorId", hiddenCollMemId);
 			EgovMap frCodeMap = searchPaymentService.selectMemCode(frMemberIdMap);
 			EgovMap toCodeMap = searchPaymentService.selectMemCode(toMemberIdMap);
-			
+
 			if(frCodeMap != null){
 				frMemberCode = String.valueOf(frCodeMap.get("memCode"));
 			}else{
 				frMemberCode = "";
 			}
-			
+
 			if(toCodeMap != null){
 				toMemberCode = String.valueOf(toCodeMap.get("memCode"));
 			}else{
 				toMemberCode = "";
 			}
-			
+
             String typeID = "1129";
             String payID = String.valueOf(params.get("hiddenPayId"));
             String valueFr = frMemberCode;//변경전 멤버코드
@@ -895,7 +895,7 @@ public class SearchPaymentController {
             String refIDFr = collMemId;//마스터멤버아이디(변경전데이터)
             String refIDTo = hiddenCollMemId;//인서트쳐야할 멤버아이디(변경후데이터)
             int createBy = userId;
-            
+
             collectorMap.put("typeID", typeID);
             collectorMap.put("payID", payID);
             collectorMap.put("valueFr", valueFr);
@@ -903,12 +903,12 @@ public class SearchPaymentController {
             collectorMap.put("refIDFr", refIDFr);
             collectorMap.put("refIDTo", refIDTo);
             collectorMap.put("createBy", createBy);
-            
+
             searchPaymentService.saveChanges(collectorMap);
 		}
 		//1137 : Allow Commission
 		if(!allowComm.equals(btnAllowComm)){
-			
+
             String typeID = "1137";
             String payID = String.valueOf(params.get("hiddenPayId"));
             String valueFr = allowComm.equals("0") ? "No":"Yes" ;
@@ -916,7 +916,7 @@ public class SearchPaymentController {
             String refIDFr = "0";
             String refIDTo = "0";
             int createBy = userId;
-            
+
             allowMap.put("typeID", typeID);
             allowMap.put("payID", payID);
             allowMap.put("valueFr", valueFr);
@@ -924,56 +924,56 @@ public class SearchPaymentController {
             allowMap.put("refIDFr", refIDFr);
             allowMap.put("refIDTo", refIDTo);
             allowMap.put("createBy", createBy);
-            
+
             searchPaymentService.saveChanges(allowMap);
 		}
-		
+
 		updMap.put("payId", String.valueOf(params.get("hiddenPayId")));
 		updMap.put("trNo", String.valueOf(params.get("edit_txtTRRefNo")).trim());
-		
+
 		/*
 		if(trNo.equals(String.valueOf(params.get("edit_txtTRRefNo")).trim())){
-			updMap.put("trNo", "");			
+			updMap.put("trNo", "");
 		}else {
 			updMap.put("trNo", String.valueOf(params.get("edit_txtTRRefNo")).trim());
 		}
 		*/
-		
-		updMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
-		
+
+		updMap.put("brnchId", String.valueOf(params.get("hiddenBranchId")));
+
 		List<EgovMap> payD = searchPaymentService.selectPayDs(params);
-		
+
 		EgovMap hm = null;
 		EgovMap glRoute = null;
 		if(payD.size() > 0){
 			for (int i=0; i< payD.size() ; i++) {
 				hm = (EgovMap) payD.get(i);
-				
+
 				glRoute = searchPaymentService.selectGlRoute(String.valueOf(hm.get("payItmId")));
-				
+
 				if(glRoute != null){
 					Map<String, Object> glRouteMap = new HashMap<String, Object>();
-					glRouteMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
+					glRouteMap.put("brnchId", String.valueOf(params.get("hiddenBranchId")));
 					glRouteMap.put("id", String.valueOf(glRoute.get("id")));
 					searchPaymentService.updGlReceiptBranchId(glRouteMap);//PAY0009D 테이블 GL_RECIPT_BRNCH_ID 업데이트
 				}
 			}
 		}
-		
+
 		/*
 		if(params.get("edit_branchId") != null && !brnchId.equals(String.valueOf(params.get("edit_branchId")))){
 			updMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
-			
+
 			List<EgovMap> payD = searchPaymentService.selectPayDs(params);
-			
+
 			EgovMap hm = null;
 			EgovMap glRoute = null;
 			if(payD.size() > 0){
 				for (int i=0; i< payD.size() ; i++) {
 					hm = (EgovMap) payD.get(i);
-					
+
 					glRoute = searchPaymentService.selectGlRoute(String.valueOf(hm.get("payItmId")));
-					
+
 					if(glRoute != null){
 						Map<String, Object> glRouteMap = new HashMap<String, Object>();
 						glRouteMap.put("brnchId", String.valueOf(params.get("edit_branchId")));
@@ -982,15 +982,15 @@ public class SearchPaymentController {
 					}
 				}
 			}
-			
-			
+
+
 		}else{
 			updMap.put("brnchId", "");
 		}
 		*/
-		
+
 		updMap.put("collMemId", hiddenCollMemId);
-		
+
 		/*
 		if(collMemId.equals(hiddenCollMemId)){
 			updMap.put("collMemId", "");
@@ -998,9 +998,9 @@ public class SearchPaymentController {
 			updMap.put("collMemId", hiddenCollMemId);
 		}
 		*/
-		
+
 		updMap.put("allowComm", btnAllowComm);
-		
+
 		/*
 		if(!allowComm.equals(btnAllowComm)){
 			updMap.put("allowComm", btnAllowComm);
@@ -1008,7 +1008,7 @@ public class SearchPaymentController {
 			updMap.put("allowComm", "");
 		}
 		*/
-		
+
 		String trIssueDate = CommonUtils.nvl(params.get("edit_txtTRIssueDate")).equals("") ? "01/01/1900" : CommonUtils.nvl(params.get("edit_txtTRIssueDate"));
 		updMap.put("trIssueDate", trIssueDate);
 		/*
@@ -1019,12 +1019,12 @@ public class SearchPaymentController {
 		}
 		*/
 		searchPaymentService.updChanges(updMap);//변경값들 마스터테이블에 업데이트.
-		
+
 		// 결과 만들기.
     	ReturnMessage message = new ReturnMessage();
     	message.setCode(AppConstants.SUCCESS);
     	message.setMessage("Payment successfully updated.");
-		
+
 		return ResponseEntity.ok(message);
 	}
 }
