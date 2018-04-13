@@ -173,6 +173,7 @@
           FROM SAL0016M T1
          WHERE T1.STK_ID = #{stkId}
            AND T1.APP_TYPE_ID = #{appTypeId}
+           AND MEM_PAC_ID = #{srvPacId}
            AND T1.STUS_CODE_ID = 1
            AND ROWNUM = 1
     </select>
