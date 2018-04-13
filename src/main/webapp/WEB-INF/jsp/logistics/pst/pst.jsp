@@ -620,8 +620,8 @@ var pststatuslist = [{"codeId":"1","codeName":"Active"},{"codeId":"4","codeName"
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">PST No</th>
-    <td><input type="text" title="" id=pstRefNo name="pstRefNo" placeholder="PST Number" class="w100p" /></td>
+    <th scope="row">PSO No</th>
+    <td><input type="text" title="" id=pstRefNo name="pstRefNo" placeholder="PSO Number" class="w100p" /></td>
     <th scope="row">PST Status</th>
     <td>
         <select class="multy_select w100p" id="pstStusIds" name="pstStusIds" multiple="multiple"></select>
