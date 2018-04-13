@@ -6,38 +6,38 @@ var myPopGridID;
 
 
 //AUIGrid 칼럼 설정
-var myPopLayout = [   
+var myPopLayout = [
     { dataField:"billItmType" ,headerText:"<spring:message code='pay.head.billType'/>",width: 200 , editable : false},
     { dataField:"billItmRefNo" ,headerText:"<spring:message code='pay.head.orderNumber'/>",width: 200 , editable : false},
     { dataField:"memoItmChrg" ,headerText:"<spring:message code='pay.head.amount'/>", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120},
     { dataField:"memoItmTxs" ,headerText:"<spring:message code='pay.head.gst'/>", editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
     { dataField:"memoItmAmt" ,headerText:"<spring:message code='pay.head.total'/>", editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120}
-    
+
     ];
-    
+
 //화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
-$(document).ready(function(){    
-    
-    //Grid Properties 설정 
-    var gridPros = {            
+$(document).ready(function(){
+
+    //Grid Properties 설정
+    var gridPros = {
             editable : false,                 // 편집 가능 여부 (기본값 : false)
             showStateColumn : false,     // 상태 칼럼 사용
             height : 200
     };
-    
+
     // Order 정보 (Master Grid) 그리드 생성
     myPopGridID = GridCommon.createAUIGrid("grid_Pop_wrap", myPopLayout,null,gridPros);
-    
-    //초기화면 로딩시 조회    
+
+    //초기화면 로딩시 조회
     selectAdjustmentDetailPop("${adjId}");
-    
+
     //모드에 따라 버튼 세팅
     if("${mode}" == "SEARCH"){
     	$("#centerBtn1").show();
     }else if("${mode}" == "APPROVAL"){
         $("#centerBtn2").show();
     }
-   
+
 });
 
 //report 조회 변수
@@ -48,14 +48,18 @@ var memoStatus;
 var memoAdjTypeId;
 var memoInvoiceNo;
 
-
+var totalChrg = "0.00";
+var totalGST = "0.00";
+var totalAmt = "0.00";
 //상세 팝업
 function selectAdjustmentDetailPop(adjId){
-    
-    //데이터 조회 (초기화면시 로딩시 조회)       
+
+
+
+    //데이터 조회 (초기화면시 로딩시 조회)
     Common.ajax("GET", "/payment/selectAdjustmentDetailPop.do", {"adjId":adjId}, function(result) {
         if(result != 'undefined'){
-           
+
             //Master데이터 출력
             memoAdjId = result.master.memoAdjId;
             invoiceType = result.master.memoAdjInvcTypeId;
@@ -63,14 +67,14 @@ function selectAdjustmentDetailPop(adjId){
             memoStatus = result.master.memoAdjStusId;
             memoAdjTypeId  = result.master.memoAdjTypeId;
             memoInvoiceNo = result.master.taxInvcRefNo;
-            
+
             $("#tRequestor").text(result.master.memoAdjCrtUserId);
             $("#tStatus").text(result.master.memoAdjStusNm);
             $("#tDept").text(result.master.deptName);
             $("#tRefNo").text(result.master.memoAdjRefNo);
             $("#tReportNo").text(result.master.memoAdjRptNo);
             $("#tType").text(result.master.memoAdjTypeNm);
-            $("#tReason").text(result.master.resnDesc);            
+            $("#tReason").text(result.master.resnDesc);
             $("#tInvoiceNo").text(result.master.taxInvcRefNo);
             $("#tInvoiceDt").text(result.master.taxInvcRefDt);
             $("#tGrpNo").text(result.master.taxInvcGrpNo);
@@ -83,24 +87,40 @@ function selectAdjustmentDetailPop(adjId){
 
             //Detail데이터 출력
             AUIGrid.setGridData(myPopGridID, result.detailList);
-            
+
             //History 데이터 출력
             $("#history").children().remove();
             $.each( result.histlList, function(key, value) {
             	$("#history").append("<li>  "+value.memoAdjRefNo+" - " + value.adjStusName+ " on " + value.adjCrtDt+ "</li>");
-            });            
+            });
+
+            $("#totalChrg").text("");
+            $("#totalGST").text("");
+            $("#totalAmt").text("");
+            $.each( result.detailList, function(key, value) {
+
+                totalChrg = parseFloat(totalChrg.toString()) +  parseFloat(value.memoItmChrg.toString());
+                totalGST  = parseFloat(totalGST.toString()) + parseFloat(value.memoItmTxs.toString());
+                totalAmt  = parseFloat(totalAmt.toString()) + parseFloat(value.memoItmAmt.toString());
+            });
+
+            $("#totalChrg").text("Total Charges: RM" + totalChrg.toFixed(2));
+            $("#totalGST").text("Total GST: RM" + totalGST.toFixed(2));
+            $("#totalAmt").text("Total Amount: RM" + totalAmt.toFixed(2));
         }
     });
+
 }
+
 
 //크리스탈 레포트
 function fn_generateReport(){
-	
+
 	if (memoStatus != 4){
 		Common.alert("<spring:message code='pay.alert.onlyComplete'/>");
         return;
 	}
-    
+
     if(invoiceType ==  126 || invoiceType == 127){
         $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF.rpt');
     }else{
@@ -122,10 +142,10 @@ function fn_generateReport(){
             $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF.rpt');
         }
     }
-    
+
     $("#reportPDFForm #v_adjid").val(memoAdjId);
     $("#reportPDFForm #v_type").val(invoiceType);
-    
+
     //report 호출
     var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
@@ -135,20 +155,20 @@ function fn_generateReport(){
 }
 
 function fn_approve(process){
-	var param = {"adjId":"${adjId}" , 
-			           "process" : process, 
-			           "invoiceType" : invoiceType, 
-			           "memoAdjTypeId" : memoAdjTypeId, 
+	var param = {"adjId":"${adjId}" ,
+			           "process" : process,
+			           "invoiceType" : invoiceType,
+			           "memoAdjTypeId" : memoAdjTypeId,
 			           "invoiceNo" : memoInvoiceNo};
-	
+
     Common.ajax("POST", "/payment/approvalAdjustment.do", param, function(result) {
         Common.alert("Invoice Adjustment successfully confirmed.<br />",function(){
-        	fn_getAdjustmentListAjax();    //메인 페이지 조회        	
+        	fn_getAdjustmentListAjax();    //메인 페이지 조회
         	$('#_adjustmentDetailPop').hide();
         });
-        
+
     });
-	
+
 }
 
 
@@ -240,13 +260,26 @@ function fn_approve(process){
         </aside>
         <article id="grid_Pop_wrap" class="grid_wrap"></article>
 
+        <section class="history-info">
+            <div class="tran_list fl_none w100p"><!-- tran_list start -->
+	            <table>
+		            <tr>
+		                <th colspan="2"></th>
+			            <th  id="totalChrg"></th>
+			            <th id="totalGST"></th>
+			            <th id="totalAmt"></th>
+		            </tr>
+	            </table>
+            </div><!-- tran_list end -->
+        </section>
+
         <aside class="title_line">
             <h2>History Information</h2>
         </aside>
 
         <section class="history-info">
             <div class="tran_list fl_none w100p"><!-- tran_list start -->
-                <ul id="history">				
+                <ul id="history">
                 </ul>
             </div><!-- tran_list end -->
         </section>
