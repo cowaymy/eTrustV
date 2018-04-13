@@ -8,67 +8,69 @@
 var  regGridID;
 
 $(document).ready(function(){
-    
+
     createAUIGrid();
-     
+
     fn_getASOrderInfo();
     fn_getASEvntsInfo();
     fn_getASHistoryInfo();
-    fn_selectASDataInfo();  
+    fn_selectASDataInfo();
 });
 
 
-   
+
 function createAUIGrid() {
-    
+
     var columnLayout = [
                         {dataField : "asNo",     headerText  : "Type" ,editable       : false  } ,
                         { dataField : "c2", headerText  : "ASR No",  width  : 80 , editable       : false ,dataType : "date", formatString : "dd/mm/yyyy"},
                         { dataField : "code", headerText  : "Status ",  width  : 80 },
-                        { dataField : "asReqstDt",       headerText  : "Request Date",  width  : 100 ,editable       : false  ,dataType : "date", formatString : "dd/mm/yyyy"},
-                        { dataField : "asSetlDt",       headerText  : "Settle Date",  width  : 100 ,editable       : false  ,dataType : "date", formatString : "dd/mm/yyyy"},
+                        //{ dataField : "asReqstDt",       headerText  : "Request Date",  width  : 100 ,editable       : false  ,dataType : "date", formatString : "dd/mm/yyyy"},
+                        //{ dataField : "asSetlDt",       headerText  : "Settle Date",  width  : 100 ,editable       : false  ,dataType : "date", formatString : "dd/mm/yyyy"},
+                        { dataField : "asReqstDt",       headerText  : "Request Date",  width  : 100 ,editable       : false  },
+                        { dataField : "asSetlDt",       headerText  : "Settle Date",  width  : 100 ,editable       : false  },
                         { dataField : "c3",     headerText  : "Error Code",  width          :150,    editable       : false },
                         { dataField : "c4",     headerText  : "Error Desc",  width          :150,    editable       : false },
                         { dataField : "c5",     headerText  : "CT Code",  width          :150,    editable       : false },
                         { dataField : "c6",     headerText  : "Solution",  width          :150,    editable       : false},
                         { dataField : "c7",     headerText  : "Amount",  width          :150,    dataType:"numeric", formatString : "#,##0.00" ,editable       : false  }
-   ];   
-   
-    
-    var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};  
+   ];
+
+
+    var gridPros = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};
     regGridID= GridCommon.createAUIGrid("reg_grid_wrap", columnLayout  ,"" ,gridPros);
 }
-   
 
 
-    
+
+
 var aSOrderInfo;
 function fn_getASOrderInfo(){
         Common.ajax("GET", "/services/as/getASOrderInfo.do", $("#resultASForm").serialize(), function(result) {
             console.log("fn_getASOrderInfo.");
-            
+
             console.log(result);
-            
+
             aSOrderInfo = result[0];
-            
-            
+
+
             $("#txtASNo").text($("#AS_NO").val());
             $("#txtOrderNo").text(result[0].ordNo);
             $("#txtAppType").text(result[0].appTypeCode);
             $("#txtCustName").text(result[0].custName);
             $("#txtCustIC").text(result[0].custNric);
             $("#txtContactPerson").text(result[0].instCntName);
-            
+
             $("#txtTelMobile").text(result[0].instCntTelM);
             $("#txtTelResidence").text(result[0].instCntTelR);
             $("#txtTelOffice").text(result[0].instCntTelO);
             $("#txtInstallAddress").text(result[0].instCntName);
-            
+
             $("#txtProductCode").text(result[0].stockCode);
             $("#txtProductName").text(result[0].stockDesc);
             $("#txtSirimNo").text(result[0].lastInstallSirimNo);
             $("#txtSerialNo").text(result[0].lastInstallSerialNo);
-            
+
             $("#txtCategory").text(result[0].c2);
             $("#txtInstallNo").text(result[0].lastInstallNo);
             $("#txtInstallDate").text(result[0].c1);
@@ -76,10 +78,10 @@ function fn_getASOrderInfo(){
             $("#txtInstruction").text(result[0].instct);
             $("#txtMembership").text(result[0].c5);
             $("#txtExpiredDate").text(result[0].c6);
-            
+
             var prdctCd=$("#txtProductCode").text();
-            doGetCombo('/services/as/getASFilterInfo.do?prdctCd='+prdctCd, '', '','ddlFilterCode', 'S' , '');     
-            
+            doGetCombo('/services/as/getASFilterInfo.do?prdctCd='+prdctCd, '', '','ddlFilterCode', 'S' , '');
+
         });
 }
 
@@ -88,36 +90,36 @@ function fn_getASEvntsInfo(){
     Common.ajax("GET", "/services/as/getASEvntsInfo.do", $("#resultASForm").serialize(), function(result) {
         console.log("getASEvntsInfo.");
         console.log( result);
-      
+
         $("#txtASStatus").text(result[0].code);
         $("#txtRequestDate").text(result[0].asReqstDt);
         $("#txtRequestTime").text(result[0].asReqstTm);
 
         $("#txtMalfunctionCode").text(result[0].asMalfuncId);
         $("#txtMalfunctionReason").text(result[0].asMalfuncResnId);
-        
+
         //$("#txtMalfunctionCode").text('에러코드 정의값');
         //$("#txtMalfunctionReason").text('에러코드 desc');
-        
+
         $("#txtDSCCode").text(result[0].c7 +"-" +result[0].c8 );
         $("#txtInchargeCT").text(result[0].c10 +"-" +result[0].c11 );
-        
+
         $("#txtRequestor").text(result[0].c3);
         $("#txtASKeyBy").text(result[0].c1);
-        $("#txtRequestorContact").text(result[0].asRemReqsterCntc); 
+        $("#txtRequestorContact").text(result[0].asRemReqsterCntc);
         $("#txtASKeyAt").text(result[0].asCrtDt);
-        
-        
+
+
     });
 }
 
 
 function fn_getASHistoryInfo(){
-    
+
     Common.ajax("GET", "/services/as/getASHistoryInfo.do", $("#resultASForm").serialize(), function(result) {
         console.log("fn_getASHistoryInfo.");
         console.log( result);
-        AUIGrid.setGridData(regGridID, result);        
+        AUIGrid.setGridData(regGridID, result);
     });
 }
 
@@ -127,76 +129,76 @@ function fn_getASHistoryInfo(){
 var asDataInfo={};
 
 function fn_selectASDataInfo(){
-    
+
     Common.ajax("GET", "/services/as/selectASDataInfo", $("#resultASForm").serialize(), function(result) {
         console.log("selectASDataInfo.");
         console.log( result);
         asDataInfo = result;
     });
-} 
+}
 
 
 
 
 function setPopData(){
-  
-    var options ={  
-            AS_ID : '${AS_ID}',  
-            AS_SO_ID:'${ORD_ID}', 
+
+    var options ={
+            AS_ID : '${AS_ID}',
+            AS_SO_ID:'${ORD_ID}',
             AS_RESULT_ID: '${AS_RESULT_ID}',
             AS_RESULT_NO:'${AS_RESULT_NO}',
-            MOD:   '${MOD}',  
-            ORD_NO :'${ORD_NO}'  
+            MOD:   '${MOD}',
+            ORD_NO :'${ORD_NO}'
    };
-   
+
    fn_setASDataInit(options);
    fn_asResult_editPageContral("RESULTEDIT");
-   
+
    if( '${MOD}' =="RESULTVIEW"){
        $("#btnSaveDiv").attr("style","display:none");
 
        $("#btnSaveDiv").attr("style","display:none");
        $("#addDiv").attr("style","display:none");
-       
-       $('#dpSettleDate').attr("disabled", true); 
-       $('#ddlFailReason').attr("disabled", true); 
-       $('#tpSettleTime').attr("disabled", true); 
-       $('#ddlDSCCode').attr("disabled", true); 
 
-       $('#ddlErrorCode').attr("disabled", true); 
-       $('#ddlCTCode').attr("disabled", true);   
+       $('#dpSettleDate').attr("disabled", true);
+       $('#ddlFailReason').attr("disabled", true);
+       $('#tpSettleTime').attr("disabled", true);
+       $('#ddlDSCCode').attr("disabled", true);
+
+       $('#ddlErrorCode').attr("disabled", true);
+       $('#ddlCTCode').attr("disabled", true);
        $('#ddlErrorDesc').attr("disabled", true);
-       $('#ddlWarehouse').attr("disabled", true); 
-       $('#txtRemark').attr("disabled", true); 
-       $("#iscommission").attr("disabled", true); 
-       $("#ddlFilterCode").attr("disabled", true); 
-       $("#ddlFilterQty").attr("disabled", true); 
-       $("#ddlFilterPayType").attr("disabled", true); 
-       $("#ddlFilterExchangeCode").attr("disabled", true); 
-       $("#txtFilterRemark").attr("disabled", true); 
-       $("#txtLabourCharge").attr("disabled", true); 
-       $("#txtFilterCharge").attr("disabled", true); 
+       $('#ddlWarehouse').attr("disabled", true);
+       $('#txtRemark').attr("disabled", true);
+       $("#iscommission").attr("disabled", true);
+       $("#ddlFilterCode").attr("disabled", true);
+       $("#ddlFilterQty").attr("disabled", true);
+       $("#ddlFilterPayType").attr("disabled", true);
+       $("#ddlFilterExchangeCode").attr("disabled", true);
+       $("#txtFilterRemark").attr("disabled", true);
+       $("#txtLabourCharge").attr("disabled", true);
+       $("#txtFilterCharge").attr("disabled", true);
 
        $('#def_type').attr("disabled", true) ;
-       $('#def_code').attr("disabled", true); 
-       $('#def_part').attr("disabled", true); 
-       $('#def_def').attr("disabled", true); 
-       
-       $('#def_type_text').attr("disabled", true); 
+       $('#def_code').attr("disabled", true);
+       $('#def_part').attr("disabled", true);
+       $('#def_def').attr("disabled", true);
+
+       $('#def_type_text').attr("disabled", true);
        $('#def_code_text').attr("disabled", true);
-       $('#def_part_text').attr("disabled", true); 
-       $('#def_def_text').attr("disabled", true); 
-       
-       $('#solut_code').attr("disabled", true); 
-       $('#solut_code_text').attr("disabled", true); 
-       
-         
+       $('#def_part_text').attr("disabled", true);
+       $('#def_def_text').attr("disabled", true);
+
+       $('#solut_code').attr("disabled", true);
+       $('#solut_code_text').attr("disabled", true);
+
+
    }
 };
-    
-</script> 
 
-  
+</script>
+
+
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <section id="content"><!-- content start -->
@@ -204,19 +206,19 @@ function setPopData(){
 
 <form id="resultASForm" method="post">
     <div  style="display:none">
-        <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>  
+        <input type="text" name="ORD_ID"  id="ORD_ID" value="${ORD_ID}"/>
         <input type="text" name="ORD_NO"   id="ORD_NO"  value="${ORD_NO}"/>
         <input type="text" name="AS_NO"   id="AS_NO"  value="${AS_NO}"/>
         <input type="text" name="AS_ID"   id="AS_ID"  value="${AS_ID}"/>
         <input type="text" name="MOD"   id="MOD"  value="${MOD}"/>
-        <input type="text" name="AS_RESULT_NO"   id="AS_RESULT_NO"  value="${AS_RESULT_NO}"/>  
-        <input type="text" name="AS_RESULT_ID"   id="AS_RESULT_ID"  value="${AS_RESULT_ID}"/>  
-           
+        <input type="text" name="AS_RESULT_NO"   id="AS_RESULT_NO"  value="${AS_RESULT_NO}"/>
+        <input type="text" name="AS_RESULT_ID"   id="AS_RESULT_ID"  value="${AS_RESULT_ID}"/>
+
     </div>
 </form>
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>    <spain id='title_spain'> 
+<h1>    <spain id='title_spain'>
     <c:if test="${MOD eq  'RESULTVIEW' }">   View AS Result Entry </c:if>
     <c:if test="${MOD eq  'RESULTEDIT' }"> Edit  AS Result Entry </c:if>
 </spain>  </h1>
@@ -256,13 +258,13 @@ function setPopData(){
         <span id="txtOrderNo"></span>
     </td>
     <th scope="row">Application Type</th>
-    <td>   
+    <td>
         <span id="txtAppType"></span>
     </td>
 </tr>
 <tr>
     <th scope="row">Customer Name</th>
-    <td colspan="3">   <span id="txtCustName"></span> </td> 
+    <td colspan="3">   <span id="txtCustName"></span> </td>
     <th scope="row">NRIC/Company Np</th>
     <td>   <span id="txtCustIC"></span> </td>
 </tr>
@@ -316,7 +318,7 @@ function setPopData(){
 <tr>
     <th scope="row">Product Code</th>
     <td>
-         <span id="txtProductCode"></span> 
+         <span id="txtProductCode"></span>
     </td>
     <th scope="row">Product Name</th>
     <td colspan="3">   <span id="txtProductName"></span>   </td>
@@ -379,7 +381,7 @@ function setPopData(){
 <tr>
     <th scope="row">Malfunction Code</th>
     <td>
-      <span id='txtMalfunctionCode'></span> 
+      <span id='txtMalfunctionCode'></span>
     </td>
     <th scope="row">Malfunction Reason</th>
     <td colspan="3"><span id='txtMalfunctionReason'></span>  </td>
@@ -387,7 +389,7 @@ function setPopData(){
 <tr>
     <th scope="row">DSC Code</th>
     <td>
-     <span id='txtDSCCode'></span> 
+     <span id='txtDSCCode'></span>
     </td>
     <th scope="row">Incharge Technician</th>
     <td colspan="3"><span id='txtInchargeCT'></span> </td>
@@ -416,18 +418,18 @@ function setPopData(){
 </aside><!-- title_line end -->
 
 
-      
+
 <!-- asResultInfo info tab  start...-->
-<jsp:include page ='${pageContext.request.contextPath}/services/as/asResultInfoEdit.do'/>  
-<!-- asResultInfo info tab  end...-->  
-      
+<jsp:include page ='${pageContext.request.contextPath}/services/as/asResultInfoEdit.do'/>
+<!-- asResultInfo info tab  end...-->
+
 
 <script>
 
- 
 
-       
-</script>   
+
+
+</script>
 
 
 </article><!-- acodi_wrap end -->
