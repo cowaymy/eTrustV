@@ -34,21 +34,21 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OrderExchangeController {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderExchangeController.class);
-	
+
 	@Resource(name = "orderExchangeService")
 	private OrderExchangeService orderExchangeService;
-	
+
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	@Autowired
 	private SessionHandler sessionHandler;
-	
+
 	/**
-	 * Order Exchange List 초기화 화면 
+	 * Order Exchange List 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -57,61 +57,61 @@ public class OrderExchangeController {
 	public String orderExchangeList(@RequestParam Map<String, Object> params, ModelMap model) {
 		String bfDay = CommonUtils.changeFormat(CommonUtils.getCalDate(-30), SalesConstants.DEFAULT_DATE_FORMAT3, SalesConstants.DEFAULT_DATE_FORMAT1);
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
-		
+
 		model.put("bfDay", bfDay);
 		model.put("toDay", toDay);
 		return "sales/order/orderExchangeList";
 	}
-	
-	
+
+
 	@RequestMapping(value = "/orderExchangeJsonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> orderExchangeList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
-		String[] arrExcType   = request.getParameterValues("cmbExcType"); 
-		String[] arrExcStatus = request.getParameterValues("cmbExcStatus"); 
+
+		String[] arrExcType   = request.getParameterValues("cmbExcType");
+		String[] arrExcStatus = request.getParameterValues("cmbExcStatus");
 		String[] arrAppType = request.getParameterValues("cmbAppType");		//Application Type
-		
+
 		params.put("arrExcType", arrExcType);
 		params.put("arrExcStatus", arrExcStatus);
-		params.put("arrAppType", arrAppType);		
-				
+		params.put("arrAppType", arrAppType);
+
 		List<EgovMap> orderExchangeList = orderExchangeService.orderExchangeList(params);
-		
-		
-		
+
+
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(orderExchangeList);
 	}
-	
-	
+
+
 	/**
 	 * Exchange Information. - Product Exchange Type
 	 */
 	@RequestMapping(value = "/orderExchangeDetailPop.do")
 	public String orderExchangeDetailPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO ) throws Exception {
-		
+
 		// order detail start
 		int prgrsId = 0;
 		EgovMap orderDetail = null;
 		params.put("prgrsId", prgrsId);
-	
+
 		params.put("salesOrderId", params.get("salesOrderId"));
         orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);
-		
+
 		model.put("orderDetail", orderDetail);
 		model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
 		// order detail end
-		
+
 		logger.info("##### cmbExcType #####" +params.get("exchgType"));
 		logger.info("##### exchgStus #####" +params.get("exchgStus"));
 		EgovMap exchangeDetailInfo = orderExchangeService.exchangeInfoProduct(params);
-		
+
 		params.put("soExchgOldCustId", exchangeDetailInfo.get("soExchgOldCustId"));
 		params.put("soExchgNwCustId", exchangeDetailInfo.get("soExchgNwCustId"));
-		
+
 		EgovMap exchangeInfoOwnershipFr = orderExchangeService.exchangeInfoOwnershipFr(params);
 		EgovMap exchangeInfoOwnershipTo = orderExchangeService.exchangeInfoOwnershipTo(params);
-		
+
 		model.addAttribute("exchangeDetailInfo", exchangeDetailInfo);
 		model.addAttribute("initType", params.get("exchgType"));
 		model.addAttribute("exchgStus", params.get("exchgStus"));
@@ -120,39 +120,39 @@ public class OrderExchangeController {
 		model.addAttribute("exchangeInfoOwnershipFr", exchangeInfoOwnershipFr);
 		model.addAttribute("exchangeInfoOwnershipTo", exchangeInfoOwnershipTo);
 
-		
+
 		return "sales/order/orderExchangeDetailPop";
-		
+
 	}
-	
-	
+
+
 	/**
 	 * Exchange Information. - Product Exchange Type
 	 */
 	@RequestMapping(value = "/orderExchangeRemPop.do")
 	public String orderExchangeRemPop(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
-				
+
 		model.addAttribute("initType", params.get("initType"));
 		model.addAttribute("exchgStus", params.get("exchgStus"));
 		model.addAttribute("exchgCurStusId", params.get("exchgCurStusId"));
-		model.addAttribute("salesOrderId", params.get("exchgCurStusId"));
+		model.addAttribute("salesOrderId", params.get("salesOrderId"));
 		model.addAttribute("soExchgIdDetail", params.get("soExchgIdDetail"));
 
-		
+
 		return "sales/order/orderExchangeRemPop";
-		
+
 	}
-	
-	
+
+
 	@RequestMapping(value = "/saveCancelReq.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> saveCancelReq(@RequestParam Map<String, Object> params, ModelMap mode)
 			throws Exception {
-		
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
-		
+
 		String retMsg = AppConstants.MSG_SUCCESS;
-		
+
 		Map<String, Object> map = new HashMap();
 
 			orderExchangeService.saveCancelReq(params);
@@ -161,11 +161,11 @@ public class OrderExchangeController {
 
 		return ResponseEntity.ok(map);
 	}
-	
+
 	@RequestMapping(value="/orderExchangeRawDataPop.do")
 	public String orderExchangeRawDataPop(){
-		
+
 		return "sales/order/orderExchangeRawDataPop";
 	}
-	
+
 }
