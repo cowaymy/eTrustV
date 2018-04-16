@@ -270,7 +270,6 @@
 		         JOIN SAL0016M T2
 		           ON T2.STK_ID = T1.STK_ID
 		          AND T2.APP_TYPE_ID = #{appTypeId}
-		          AND T2.MEM_PAC_ID = #{srvPacId}
 		        WHERE T1.STK_ID = #{stkId}
 		          AND 61 = T1.STK_TYPE_ID
 		          AND ROWNUM &lt;= 1 ) T
@@ -324,7 +323,6 @@
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
                   AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
-                  AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
                   AND T2.PROMO_TYPE_ID = 2282
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
                   AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
@@ -1925,40 +1923,6 @@
 				  AND T1.DISAB = 0
 				  AND T1.CODE = T2.SRV_CNTRCT_PAC_ID
 				  AND T2.PAC_TYPE = 0
-            </if>
-            <if test='pType != null and pType == "2"'>
-               SELECT CODE_ID
-                    , CODE
-                    , CODE_NAME
-                    , DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
-                 FROM SYS0013M T1
-                    , SAL0091M T2
-                WHERE T1.CODE_MASTER_ID = #{appSubType}
-                  AND T1.DISAB = 0
-                  AND T1.CODE = T2.SRV_MEM_PAC_ID
-                  AND T2.PAC_TYPE = 0
-            </if>
-             )
-         ORDER BY CODE_NAME ASC
-    </select>
-
-    <select id="selectServicePackageList2" parameterType="Map" resultType="egovMap">
-        SELECT CODE
-             , CODE_NAME
-          FROM
-             (
-            <if test='pType != null and pType == "1"'>
-               SELECT CODE_ID
-                    , CODE
-                    , CODE_NAME
-                    , DBMS_LOB.SUBSTR (CODE_DESC, 4000) DESCRIPTION
-                 FROM SYS0013M T1
-                    , SAL0081D T2
-                WHERE T1.CODE_MASTER_ID = #{appSubType}
-                  AND T1.DISAB = 0
-                  AND T1.CODE = T2.SRV_CNTRCT_PAC_ID
-                  AND T2.PAC_TYPE = 0
-                  AND T2.SRV_CNTRCT_PAC_ID != 3
             </if>
             <if test='pType != null and pType == "2"'>
                SELECT CODE_ID
