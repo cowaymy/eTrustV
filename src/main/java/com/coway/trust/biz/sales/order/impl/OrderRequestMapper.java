@@ -68,6 +68,8 @@ public interface OrderRequestMapper {
 
 	void insertSalesOrderExchange(SalesOrderExchangeVO salesOrderExchangeVO);
 
+	void updateSalesOrderExchangeNwCall(SalesOrderExchangeVO salesOrderExchangeVO);
+
 	void updateSoExchgStkRetMovId(SalesOrderExchangeVO salesOrderExchangeVO);
 
 	void updateSalesOrderM(SalesOrderMVO salesOrderMVO);
