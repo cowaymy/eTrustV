@@ -1682,6 +1682,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 
         orderExchangeMasterVO.setSoExchgNwCallEntryId(callEntryMasterVO.getCallEntryId());
 
+        orderRequestMapper.updateSalesOrderExchangeNwCall(orderExchangeMasterVO); //update new call entry
+
         //INSERT ORDER LOG >> OWNERSHIP TRANSFER REQUEST
         salesOrderLogVO.setRefId(callEntryMasterVO.getCallEntryId());
 
