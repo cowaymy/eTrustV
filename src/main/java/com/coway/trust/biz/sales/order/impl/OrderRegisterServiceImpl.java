@@ -404,6 +404,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public List<EgovMap> selectMemberList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
+		params.put("stus", 1);
 		return orderRegisterMapper.selectMemberList(params);
 	}
 
@@ -1717,7 +1718,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO ProductCodeList 호출시 error남
 		return orderRegisterMapper.selectServicePackageList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectServicePackageList2(Map<String, Object> params) {
 		// TODO ProductCodeList 호출시 error남

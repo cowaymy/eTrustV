@@ -607,6 +607,9 @@
               <if test='memCode != null and memCode !=""'>
                 AND T1.MEM_CODE = #{memCode}
               </if>
+              <if test='stus != null and stus !=""'>
+                AND T1.STUS = #{stus}
+              </if>
 		        AND ROWNUM &lt;= 1 ) T
     </select>
 

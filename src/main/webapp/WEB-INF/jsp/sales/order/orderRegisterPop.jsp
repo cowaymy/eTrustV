@@ -2089,7 +2089,7 @@
 
         fn_clearOrderSalesman();
 
-        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
+        Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1}, function(memInfo) {
 
             if(memInfo == null) {
 //              Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
