@@ -422,6 +422,10 @@
 		   AND ROWNUM = 1
     </select>
 
+    <update id="updateSalesOrderExchangeNwCall" parameterType="salesOrderExchangeVO">
+    UPDATE SAL0004D SET SO_EXCHG_NW_CALL_ENTRY_ID=#{soExchgNwCallEntryId} WHERE SO_EXCHG_ID = #{soExchgId}
+    </update>
+
     <insert id="insertSalesOrderExchange" parameterType="salesOrderExchangeVO">
       <selectKey keyProperty="soExchgId" resultType="Integer" order="BEFORE">
         SELECT SAL0004D_SO_EXCHG_ID_SEQ.NEXTVAL FROM DUAL
