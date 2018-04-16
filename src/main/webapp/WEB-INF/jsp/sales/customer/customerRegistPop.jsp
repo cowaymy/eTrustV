@@ -1,20 +1,20 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
-    
+
     //AUIGrid 그리드 객체
     var myGridID;          // credit card
     var myGridID1;        // bank account grid
-    
+
     //Choose Message
     var optionState = {chooseMessage: " 1.States "};
     var optionCity = {chooseMessage: "2. City"};
     var optionPostCode = {chooseMessage: "3. Post Code"};
     var optionArea = {chooseMessage: "4. Area"};
-    
+
     // 등록창
     var addBankDialog;
-    
+
     // popup 크기
     var option = {
             winName : "popup",
@@ -23,16 +23,16 @@
             resizable : "yes", // 창 사이즈 변경. (yes/no)(default : yes)
             scrollbars : "no" // 스크롤바. (yes/no)(default : yes)
     };
-    
+
     $(document).ready(function(){
-        
+
          //j_date
         var pickerOpts={
                 changeMonth:true,
                 changeYear:true,
                 dateFormat: "dd/mm/yy"
         };
-        
+
         $(".j_date").datepicker(pickerOpts);
 
         var monthOptions = {
@@ -43,140 +43,140 @@
         };
 
         $(".j_date2").monthpicker(monthOptions);
-        
+
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-        
+
   //      AUIGrid.setSelectionMode(myGridID, "singleRow");
-        
+
         // 셀 더블클릭 이벤트 바인딩
-        
+
         // 셀 클릭 이벤트 바인딩
-        
+
         //Magic Address
         fn_initAddress(); //init
         CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
          //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
         doGetCombo('/common/selectCodeList.do', '8', '','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
         doGetCombo('/sales/customer/getNationList', '338' , '' ,'_cmbNation_' , 'S');        // Nationality Combo Box
-        doGetCombo('/common/selectCodeList.do', '95', '','_cmbCorpTypeId_', 'S' , '');                      // Company Type Combo Box 
+        doGetCombo('/common/selectCodeList.do', '95', '','_cmbCorpTypeId_', 'S' , '');                      // Company Type Combo Box
         doGetCombo('/common/selectCodeList.do', '17', '','_cmbInitials_', 'S' , '');                             // Initials Combo Box
         doGetCombo('/common/selectCodeList.do', '2', '','_cmbRace_', 'S' , '');                                 // Race Combo Box
     //    doGetCombo('/common/selectCodeList.do', '20', '','cmbBankType', 'S' , '');                         // Add Bank Type Combo Box
        // getAddrRelay('mstate' , '1' , 'state', '');
-        
-    
+
+
         //Enter Event
-        $('#_searchSt_').keydown(function (event) {  
-            if (event.which === 13) {    //enter  
+        $('#_searchSt_').keydown(function (event) {
+            if (event.which === 13) {    //enter
                 fn_addrSearch();
-            }  
+            }
         });
-        
+
     });
- 
+
     function fn_initAddress(){
-        
+
            $('#_mCity_').append($('<option>', { value: '', text: '2. City' }));
            $('#_mCity_').val('');
            $("#_mCity_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-           
+
            $('#_mPostCd_').append($('<option>', { value: '', text: '3. Post Code' }));
            $('#_mPostCd_').val('');
            $("#_mPostCd_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-           
+
            $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
            $('#_mArea_').val('');
            $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-           
+
     }
-    
+
     /*####### Magic Address #########*/
     function fn_selectState(selVal){
-        
+
         var tempVal = selVal;
-        
+
         if('' == selVal || null == selVal){
             //전체 초기화
-            fn_initAddress();   
-            
+            fn_initAddress();
+
         }else{
-            
+
             $("#_mCity_").attr({"disabled" : false  , "class" : "w100p"});
-            
+
             $('#_mPostCd_').append($('<option>', { value: '', text: '3. Post Code' }));
             $('#_mPostCd_').val('');
             $("#_mPostCd_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
             $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
             $('#_mArea_').val('');
             $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
             //Call ajax
             var cityJson = {state : tempVal}; //Condition
             CommonCombo.make('_mCity_', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
         }
-        
+
     }
-    
+
     function fn_selectCity(selVal){
-        
+
         var tempVal = selVal;
-        
+
         if('' == selVal || null == selVal){
-           
+
              $('#_mPostCd_').append($('<option>', { value: '', text: '3. Post Code' }));
              $('#_mPostCd_').val('');
              $("#_mPostCd_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
              $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
              $('#_mArea_').val('');
              $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
         }else{
-            
+
             $("#_mPostCd_").attr({"disabled" : false  , "class" : "w100p"});
-            
+
             $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
             $('#_mArea_').val('');
             $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
             //Call ajax
             var postCodeJson = {state : $("#_mState_").val() , city : tempVal}; //Condition
             CommonCombo.make('_mPostCd_', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
         }
-        
+
     }
-    
-    
+
+
     function fn_selectPostCode(selVal){
-        
+
         var tempVal = selVal;
-        
+
         if('' == selVal || null == selVal){
-           
+
             $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
             $('#_mArea_').val('');
             $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-            
+
         }else{
-            
+
             $("#_mArea_").attr({"disabled" : false  , "class" : "w100p"});
-            
+
             //Call ajax
             var areaJson = {state : $("#_mState_").val(), city : $("#_mCity_").val() , postcode : tempVal}; //Condition
             CommonCombo.make('_mArea_', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
         }
-        
+
     }
-    
-    
+
+
     /*####### Magic Address #########*/
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
         // credit card
-        var columnLayout = [ 
-            {         
+        var columnLayout = [
+            {
                 dataField : "cardType",
                 headerText : '<spring:message code="sal.text.cardType" />',
                 width : 100,
@@ -209,10 +209,10 @@
                 headerText : '<spring:message code="sal.title.remark" />',
                 editable : true
             }];
-        
+
         // bank account
-        var columnLayout1 = [ 
-            {         
+        var columnLayout1 = [
+            {
                 dataField : "accTypeId",
                 headerText : '<spring:message code="sal.title.type" />',
                 width : 100,
@@ -245,31 +245,31 @@
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         myGridID = AUIGrid.create("#card_grid", columnLayout, "");
         myGridID1 = AUIGrid.create("#account_grid", columnLayout1, "");
-        
+
         // 그리드 최초에 빈 데이터 넣음.
         AUIGrid.setGridData(myGridID, []);
         AUIGrid.setGridData(myGridID1, []);
     }
-    
+
     // 조회조건 combo box
 //    function f_multiCombo(){
 //        $(function() {
 //            $('#_cmbTypeId_').change(function() {
-//            
+//
 //            }).multipleSelect({
-//                selectAll: true, // 전체선택 
+//                selectAll: true, // 전체선택
 //                width: '80%'
 //            });
 //            $('#_cmbCorpTypeId').change(function() {
-//                
+//
 //            }).multipleSelect({
-//                selectAll: true, // 전체선택 
+//                selectAll: true, // 전체선택
 //                width: '80%'
 //            });
-//           
+//
 //       });
 //    }
-    
+
     // Customer Type 선택시 Company Type 변경 (Basic Info)
     function onChangeCompanyType(val){
 
@@ -286,7 +286,7 @@
             $("select[name=cmbRace]").attr('disabled', 'disabled');
             $("#_dob_").val('');
 //            $("select[name=dob]").attr('readonly','readonly');
-            $("#_dob_").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'}); 
+            $("#_dob_").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'});
             $("#genderForm").attr('disabled',true);
             $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
             $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
@@ -304,7 +304,7 @@
             $("select[name=cmbRace]").removeClass("w100p disabled");
             $("select[name=cmbRace]").addClass("w100p");
             $("select[name=cmbRace]").removeAttr("disabled");
-            $("#_dob_").attr({'disabled' : false , 'class' : 'j_date3 w100p'}); 
+            $("#_dob_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
 //            $("select[name=dob]").removeAttr("readonly");
             $("#genderForm").removeAttr('disabled');
             $("input:radio[name='gender']").attr("disabled" , false);
@@ -327,30 +327,30 @@
             $("#_dob_").val('');
             $("#_dob_").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'});
         }
-        
+
     }
-    
+
     function fn_addCreditCardPop(){
        // Common.popupWin("insBasicForm", "/sales/customer/customerAddCreditCardPop.do", option);
         Common.popupDiv("/sales/customer/customerAddCreditCardPop.do", $("#insBasicForm").serializeJSON(), null, true, '_cardDiv');
     }
-    
+
     function fn_addBankAccountPop(){
        // Common.popupWin("insBasicForm", "/sales/customer/customerAddBankAccountPop.do", option);
        Common.popupDiv("/sales/customer/customerAddBankAccountPop.do", $("#insBasicForm").serializeJSON(), null, true, '_bankDiv');
     }
-    
-    
+
+
     // save confirm
     function fn_saveConfirm(){
-        
+
     	console.log("save click");
-    	
+
     	if(fn_saveValidationCheck()){
             Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_saveNewCustomer);
         }
     }
-    
+
     // save
     function fn_saveNewCustomer(){
 
@@ -378,24 +378,24 @@
                     telO : insBasicForm.telO.value,
                     ext : insBasicForm.ext.value,
                     rem : insBasicForm.rem.value,
-                    
+
                     addrDtl : insAddressForm.addrDtl.value,
                     areaId : insAddressForm.areaId.value,
                     streetDtl : insAddressForm.streetDtl.value,
                     addrRem : insAddressForm.addrRem.value,
-                    
+
                     asCustName : insContactForm.asCustName.value,
                     asTelM : insContactForm.asTelM.value,
                     asTelO : insContactForm.asTelO.value,
                     asTelR : insContactForm.asTelR.value,
                     asTelF : insContactForm.asTelF.value,
                     asExt : insContactForm.asExt.value,
-                    asEmail : insContactForm.asEmail.value                  
+                    asEmail : insContactForm.asEmail.value
                 }
             };
 
             Common.ajax("POST", "/sales/customer/insCustBasicInfo.do", customerForm, function(result) {
-                
+
             	if(result != null){
             		$("._custMakeBtn").css("display" , "none");
             	}else{
@@ -407,7 +407,7 @@
                 if('${callPrgm}' == 'ORD_REGISTER') {
                     $('#custId').val(result);
                     fn_selectCustInfo();
-                }           
+                }
                 if('${callPrgm}' == 'PRE_ORD') {
                     fn_loadCustomer(result, null);
                 }
@@ -416,25 +416,25 @@
                 }
                 if('${callPrgm}' == 'ORD_REGISTER_3PARTY') {
                     fn_loadThirdParty(result, 1);
-                }           
+                }
             }, function(jqXHR, textStatus, errorThrown) {
                 Common.alert("실패하였습니다.");
                 console.log("실패하였습니다.");
                 console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-                
+
                 alert(jqXHR.responseJSON.message);
                 console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-                
+
             });
-        
+
     }
-    
+
     function fn_winClose(){
-        
+
         //window.close();
         $("#_insCloseBtn").click();
     }
-    
+
     // Validation Check
     function fn_saveValidationCheck(){
     	console.log("1.  type Check");
@@ -530,35 +530,35 @@
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinAddr" />');
             return false;
         }
-        
+
         console.log("7.  area check");
         if($("#_mArea_").val() == ''){
                 Common.alert('<spring:message code="sal.alert.msg.plzKeyinArea" />');
                 return false;
         }
-        
+
         console.log("8.  city check");
         if($("#_mCity_").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinCity" />');
             return false;
         }
-        
+
         console.log("9.  postcode check");
         if($("#_mPostCd_").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinPostcode" />');
             return false;
         }
-        
+
         console.log("10.  state check");
         if($("#_mState_").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinState" />');
             return false;
         }
-        
+
         console.log("11.  cust name check");
         if($("#_asCustName_").val() == ''){
             $("#_contactTab").click();
-            
+
         	Common.alert('<spring:message code="sal.alert.msg.plzKeyinCustCntcName" />', fn_focusToCustName);
             return false;
         }
@@ -567,17 +567,17 @@
             Common.alert('<spring:message code="sal.msg.keyInContactNum" />');
             return false;
         }
-        
+
 //      if(!FormUtil.checkNum($("#ext").val())){
 //               alert("* Invalid extension number.");
 //        }
         return true;
     }
-    
+
     function fn_focusToCustName(){
-    	$("#_asCustName_").focus();	
-    } 
-    
+    	$("#_asCustName_").focus();
+    }
+
     function fn_copyCustInfo(){
         $("#_asCustName_").val($("#_custName_").val());
         $("#_asTelM_").val($("#_telM1_").val());
@@ -587,11 +587,11 @@
         $("#_asExt_").val($("#_ext_").val());
         $("#_asEmail_").val($("#email").val());
     }
-    
+
     function fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,cardRem){
-        
+
         var item = new Object();
-        
+
         if(ccType != "" && iBank != "" && cardNo != "" && expDate != "" && nameCard != "" && cType != ""){
             item.crcType = ccType;
             item.bank = iBank;
@@ -600,14 +600,14 @@
             item.nmCard = nameCard;
             item.cardType = cType;
             item.cardRem = cardRem;
-            AUIGrid.addRow(myGridID, item, "last"); 
+            AUIGrid.addRow(myGridID, item, "last");
         }
     }
-    
+
     function fn_addBankAccountInfo(accType,accBank,accNo,bankBranch,accOwner,accRem){
 
         var accItem = new Object();
-        
+
         if(accType != "" && accBank != "" && accNo != "" && accOwner != ""){
             accItem.accTypeId = accType;
             accItem.accBankId = accBank;
@@ -615,68 +615,68 @@
             accItem.bankBranch = bankBranch;
             accItem.accOwner = accOwner;
             accItem.accRem = accRem;
-            AUIGrid.addRow(myGridID1, accItem, "last"); 
+            AUIGrid.addRow(myGridID1, accItem, "last");
         }
     }
-    
+
     function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
-        
+
         if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
-            
+
             $("#_mArea_").attr({"disabled" : false  , "class" : "w100p"});
             $("#_mCity_").attr({"disabled" : false  , "class" : "w100p"});
             $("#_mPostCd_").attr({"disabled" : false  , "class" : "w100p"});
             $("#_mState_").attr({"disabled" : false  , "class" : "w100p"});
-            
+
             //Call Ajax
-           
+
             CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
-            
+
             var cityJson = {state : mstate}; //Condition
             CommonCombo.make('_mCity_', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
-            
+
             var postCodeJson = {state : mstate , city : mcity}; //Condition
             CommonCombo.make('_mPostCd_', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
-            
+
             var areaJson = {groupCode : mpostcode};
             var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
             CommonCombo.make('_mArea_', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
-            
+
             $("#areaId").val(areaid);
             $("#_searchDiv").remove();
         }else{
             Common.alert('<spring:message code="sal.alert.msg.addrCheck" />');
         }
     }
-    
+
     //Get Area Id
     function fn_getAreaId(){
-        
+
         var statValue = $("#_mState_").val();
         var cityValue = $("#_mCity_").val();
         var postCodeValue = $("#_mPostCd_").val();
         var areaValue = $("#_mArea_").val();
-        
-        
-        
+
+
+
         if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
-            
+
             var jsonObj = { statValue : statValue ,
                                   cityValue : cityValue,
                                   postCodeValue : postCodeValue,
                                   areaValue : areaValue
                                 };
             Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
-                
+
                  $("#areaId").val(result.areaId);
-                
+
             });
-            
+
         }
-        
+
     }
 //    function fn_nricDupChk(){
-//      
+//
 //      var url = "/sales/customer/nricDupChk.do";
 //      var param = {"nric" : insBasicForm.nric.value, "_cmbTypeId" : insBasicForm._cmbTypeId.value};
 //      $.ajax({
@@ -695,22 +695,22 @@
 //          if(result.dup > 0){
 //              Common.alert("This is existing customer.");
 //          }else{
-                
+
 //          }
 //            Common.alert(result.message);
 
-//        }, 
+//        },
 //        function(jqXHR, textStatus, errorThrown) {
 //            Common.alert("실패하였습니다.");
 //            console.log("실패하였습니다.");
 //            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
-//            
+//
 //            alert(jqXHR.responseJSON.message);
 //            console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-            
+
 //        });
 //    }
-    
+
     function emailCheck(){
         if($("#_email_").val() == ""){
             return
@@ -718,14 +718,14 @@
             if(FormUtil.checkEmail($("#_email_").val())){
 //              $("input[name='email']").focus();
                 Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
-                
+
                 $("#_email_").val('');
-                
+
                 return false;
             }
         }
     }
-    
+
     function asEmailCheck(){
         if(FormUtil.checkEmail($("#_asEmail_").val())){
             Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
@@ -734,7 +734,7 @@
             return false;
         }
     }
-    
+
     function chgTab(tabNm) {
         switch(tabNm) {
             case 'card' :
@@ -745,7 +745,7 @@
                 break;
         }
     }
-    
+
     function fn_addrSearch(){
         if($("#_searchSt_").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzSearch" />');
@@ -753,24 +753,24 @@
         }
         Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
     }
-    
+
     function fn_nricChkAndSuggDob(inputVal){
-        
-    	/* if($("#_cmbTypeId_").val() != '964'){
+
+    	if($("#_cmbTypeId_").val() != '964'){
     		return;
-    	} */
-    	
+    	}
+
     	//Dup Check
     	//Init Field
     	var nricObj = {cmbTypeId : $("#_cmbTypeId_").val() , nric : $("#_nric_").val()};
-    	
+
     	var ajaOtp = {
     			async : false
     	};
     	var isDup = false;
     	var msg = '';
     	Common.ajax("POST", "/sales/customer/nricDupChk.do", nricObj, function(result){
-    		
+
     		if(result != null){
     				msg += '<spring:message code="sal.alert.msg.existCustomerBrCustId" />' + result.custId;
     				isDup = true;
@@ -803,10 +803,10 @@
             rtnVal = '20' + inputVal.substring(0, 6);
         }
         //4. Available Date Check
-        var year = Number(rtnVal.substring(0, 4)); 
-        var month = Number(rtnVal.substring(4, 6));     
-        var day = Number(rtnVal.substring(6, 8)); 
-        
+        var year = Number(rtnVal.substring(0, 4));
+        var month = Number(rtnVal.substring(4, 6));
+        var day = Number(rtnVal.substring(6, 8));
+
         // Month Check
         if( month<1 || month>12 ) {
             console.log("month failed caused by  month is [: "  + month + "]");
@@ -818,20 +818,20 @@
         if( month==2 && ( year%4==0 && year%100!=0 || year%400==0 ) ) {
             maxDay = 29;
         }
-        // Day Check 
+        // Day Check
         if( day<=0 || day>maxDay ) {
             console.log("day failed caused by  day is [: "  + day + "]");
             return;
         }
-        
+
         /***** DOB ******/
         //Return
         year = year + '';
         month = month+'';
         day = day+'';
-        
+
         if(month.length < 2){
-            month = '0'+month; 
+            month = '0'+month;
         }
         if(day.length < 2){
             day = '0'+day;
@@ -839,18 +839,18 @@
         rtnVal = day + "/" + month + "/" + year;
         console.log(" create dob : " + rtnVal);
         $("#_dob_").val(rtnVal);
-        
-        
+
+
         /***** GENDER ******/
         var genderStr =  inputVal.substring(inputVal.length -1, inputVal.length);
         var genderNum = Number(genderStr);
-        
+
         if(genderNum % 2 == 0){
             //Female
             $('input:radio[name="gender"][value="F"]').prop('checked', true);
         }else{
             //Male
-            $('input:radio[name="gender"][value="M"]').prop('checked', true); 
+            $('input:radio[name="gender"][value="M"]').prop('checked', true);
         }
     }
 
@@ -1047,13 +1047,13 @@
             <tr>
                <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
                 <td colspan="3">
-                <select class="w100p" id="_mArea_"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
+                <select class="w100p" id="_mArea_"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
                 </td>
             </tr>
             <tr>
                  <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="_mCity_"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
+                <select class="w100p" id="_mCity_"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
                 </td>
                 <th scope="row"><spring:message code="sal.text.postCode3" /><span class="must">*</span></th>
                 <td>
