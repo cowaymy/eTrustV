@@ -166,7 +166,6 @@
                 $("#name").val(custInfo.name); //Name
                 $("#nric").val(custInfo.nric); //NRIC/Company No
                 $("#nationNm").val(custInfo.name2); //Nationality
-                $("#nation").val(custInfo.nation); //Nationality
                 $("#raceId").val(custInfo.raceId); //Nationality
                 $("#race").val(custInfo.codeName2); //
                 $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
@@ -341,10 +340,7 @@
                     var stkIdVal   = $("#ordProudct").val();
                     var promoIdVal = $("#ordPromo").val();
 
-                    var srvPacId = 0;
-
-
-                    fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
+                    fn_loadProductPrice(appTypeVal, stkIdVal);
                     if(FormUtil.isNotEmpty(promoIdVal)) {
                         fn_loadPromotionPrice(promoIdVal, stkIdVal);
                     }
@@ -765,14 +761,7 @@
                 var stkIdVal   = $("#ordProudct").val();
                 var promoIdVal = $("#ordPromo").val();
 
-                var srvPacId = 0;
-
-                if(appTypeVal == '66')
-                    {
-                        srvPacId   = $('#srvPacId').val();
-                    }
-
-                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
+                fn_loadProductPrice(appTypeVal, stkIdVal);
                 if(FormUtil.isNotEmpty(promoIdVal)) {
                     fn_loadPromotionPrice(promoIdVal, stkIdVal);
                 }
@@ -945,20 +934,9 @@
                     }
 
                     var pType = $("#appType").val() == '66' ? '1' : '2';
-                    var custTypeId  = $('#typeId').val();
-                    var nationalityId = $('#nation').val();
-
-
-                    if (custTypeId != '964' || (custTypeId == '964' && nationalityId != '1') )
-                    {
-                        doGetComboData('/sales/order/selectServicePackageList2.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
-
-                    }
-                    else
-                    {
                     //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
                     doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
-                    }
+
                     $('#ordProudct ').removeAttr("disabled");
                 }
             }
@@ -1032,16 +1010,8 @@
             var empChk     = $("#empChk").val();
             var exTrade    = $("#exTrade").val();
 
-            var srvPacId = 0;
-
-            if(appTypeVal == '66')
-            	{
-            	    srvPacId   = $('#srvPacId').val();
-            	}
-
-
             if(stkIdx > 0) {
-                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
+                fn_loadProductPrice(appTypeVal, stkIdVal);
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
         });
@@ -1164,13 +1134,6 @@
             var stkIdVal   = $("#ordProudct").val();
             var promoIdIdx = $("#ordPromo option:selected").index();
             var promoIdVal = $("#ordPromo").val();
-            var srvPacId = 0;
-
-            if(appTypeVal == '66')
-                {
-                    srvPacId   = $('#srvPacId').val();
-                }
-
 
             if(promoIdIdx > 0 && promoIdVal != '0') {
 /*
@@ -1185,7 +1148,7 @@
                 fn_loadPromotionPrice(promoIdVal, stkIdVal);
             }
             else {
-                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
+                fn_loadProductPrice(appTypeVal, stkIdVal);
             }
         });
         $('[name="ordSaveBtn"]').click(function() {
@@ -2176,10 +2139,9 @@
     }
 
     //LoadProductPrice
-    function fn_loadProductPrice(appTypeVal, stkId, srvPacId) {
+    function fn_loadProductPrice(appTypeVal, stkId) {
         console.log('fn_loadProductPrice --> appTypeVal:'+appTypeVal);
         console.log('fn_loadProductPrice --> stkId:'+stkId);
-        console.log('fn_loadProductPrice --> srvPacId:'+srvPacId);
 
         var appTypeId = 0;
 
@@ -2187,9 +2149,8 @@
 
         $("#searchAppTypeId").val(appTypeId);
         $("#searchStkId").val(stkId);
-        $("#searchSrvPacId").val(srvPacId);
 
-        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
+        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId}, function(stkPriceInfo) {
 
             if(stkPriceInfo != null) {
 
@@ -2476,9 +2437,7 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.nationality" /></th>
-    <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p" readonly/>
-        <input id="nation" name="nation" type="hidden"/>
-    </td>
+    <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p" readonly/></td>
     <th scope="row"><spring:message code="sal.text.race" /></th>
     <td><input id="race" name="race" type="text" title="" placeholder="Race" class="w100p" readonly/>
         <input id="raceId" name="raceId" type="hidden"/>
