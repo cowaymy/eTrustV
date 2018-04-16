@@ -780,7 +780,7 @@
 
         if(tabNm == 'BSC') {
             $('#scBI').removeClass("blind");
-            $('#aTabMI').click();
+            $('#aTabBI').click();
             fn_loadUpdateInfo(ORD_ID);
         } else {
             $('#scBI').addClass("blind");
@@ -816,21 +816,21 @@
         }
         if(tabNm == 'INS') {
             $('#scIN').removeClass("blind");
-            $('#aTabMI').click();
+            $('#aTabIns').click();
             fn_loadInstallInfo(ORD_ID);
         } else {
             $('#scIN').addClass("blind");
         }
         if(tabNm == 'PAY') {
             $('#scPC').removeClass("blind");
-            $('#aTabMI').click();
+            $('#aTabPay').click();
             fn_loadRentPaySetInfo(ORD_ID);
         } else {
             $('#scPC').addClass("blind");
         }
         if(tabNm == 'DOC') {
             $('#scDS').removeClass("blind");
-            $('#aTabMI').click();
+            $('#aTabDS').click();
             AUIGrid.resize(modDocGridID, 960, 380);
             fn_selectEditDocSubmList(ORD_ID);
         } else {
