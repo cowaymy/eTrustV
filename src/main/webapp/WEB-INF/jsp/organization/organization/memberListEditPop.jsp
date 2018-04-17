@@ -222,7 +222,7 @@ $(document).ready(function() {
     $("#searchdepartment").change(function(){
         doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','inputSubDept', 'S' ,  '');
     });
-    
+
     if ($("#joinDate").val() == "") {
     	$("#joinDate").attr("disabled", false);
     } else {
@@ -1335,7 +1335,7 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     </td>
   <th scope="row">Hospitalization</th>
 <td>
-    <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck"/></span>
+    <span><input type="checkbox" id="hsptlzCheck" name="hsptlzCheck" disabled = "disabled"/></span>
  </td>
 
 
