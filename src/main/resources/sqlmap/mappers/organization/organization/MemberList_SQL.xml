@@ -2996,7 +2996,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
             RELIGION = #{religion},
             </if>
 
-              <choose>
+            <!--  <choose>
              <when test="hsptlzCheck !=null and hsptlzCheck !='' ">
                hsptlz = 1,
              </when>
@@ -3004,6 +3004,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 hsptlz = 0,
              </otherwise>
              </choose>
+              -->
 
               EDC_LEV = TO_NUMBER(TRIM(#{educationLvl})),
               LANG = TO_NUMBER(TRIM(#{language})),
