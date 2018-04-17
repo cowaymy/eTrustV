@@ -111,9 +111,9 @@
 				|| $("#dpAppointmentDtFrom").val().length == 0
 				|| $("#dpAppointmentDtTo").val() == null || $(
 				"#dpAppointmentDtTo").val().length == 0)) {
-			appDate = "AND (TO_CHAR(re.APP_DT,'DD/MM/YYYY') between '"
-					+ $("#dpAppointmentDtFrom").val() + "' AND '"
-					+ $("#dpAppointmentDtTo").val() + "') ";
+			appDate = "AND (re.APP_DT between TO_DATE('"
+					+ $("#dpAppointmentDtFrom").val() + "','DD/MM/YYYY') AND TO_DATE('"
+					+ $("#dpAppointmentDtTo").val() + "','DD/MM/YYYY')) ";
 
 		}
 
@@ -151,13 +151,13 @@
 				|| $("#dpReqDtFrom").val().length == 0
 				|| $("#dpReqDtTo").val() == null || $("#dpReqDtTo").val().length == 0)) {
 			if (retType == 296) {
-				reqDate = " AND (TO_CHAR(rc.SO_REQ_CRT_DT,'DD/MM/YYYY') between '"
-						+ $("#dpReqDtFrom").val() + "' AND '"
-						+ $("#dpReqDtTo").val() + "') ";
+				reqDate = " AND (rc.SO_REQ_CRT_DT between TO_DATE('"
+						+ $("#dpReqDtFrom").val() + "','DD/MM/YYYY') AND TO_DATE('"
+						+ $("#dpReqDtTo").val() + "','DD/MM/YYYY')) ";
 			} else if (retType == 297) {
-				reqDate = " AND (TO_CHAR(soe.SO_EXCHG_CRT_DT,'DD/MM/YYYY') between '"
-						+ $("#dpReqDtFrom").val() + "' AND '"
-						+ $("#dpReqDtTo").val() + "') ";
+				reqDate = " AND (soe.SO_EXCHG_CRT_DT between TO_DATE('"
+						+ $("#dpReqDtFrom").val() + "','DD/MM/YYYY') AND TO_DATE('"
+						+ $("#dpReqDtTo").val() + "','DD/MM/YYYY')) ";
 			}
 
 		}
@@ -204,8 +204,8 @@
 				|| $("#dpRetDtFrom").val().length == 0
 				|| $("#dpRetDtTo").val() == null || $("#dpRetDtTo").val().length == 0)) {
 
-			retDate = "AND (TO_CHAR(rr.STK_RETN_DT,'DD/MM/YYYY') between '" + $("#dpRetDtFrom").val()
-					+ "' AND '" + $("#dpRetDtTo").val() + "') ";
+			retDate = "AND (rr.STK_RETN_DT between TO_DATE('" + $("#dpRetDtFrom").val()
+					+ "','DD/MM/YYYY') AND TO_DATE('" + $("#dpRetDtTo").val() + "','DD/MM/YYYY')) ";
 		}
 
 		if (!($("#txtActionCTFrom").val() == null
