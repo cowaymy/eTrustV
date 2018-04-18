@@ -6,9 +6,9 @@
 $(document).ready(function() {
 	// AUIGrid 그리드를 생성합니다.
     createAUIGrid();
-	
+
     AUIGrid.setSelectionMode(myGridID, "singleRow");
-    
+
     AUIGrid.bind(myGridID, "cellClick", function(event) {
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
         code =  AUIGrid.getCellValue(myGridID, event.rowIndex, "code");
@@ -21,15 +21,15 @@ $(document).ready(function() {
         installEntryId = AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId");
         salesOrdId = AUIGrid.getCellValue(myGridID, event.rowIndex, "salesOrdId");
         //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-        
+
         selectrow(installEntryNo,salesOrdNo,installEntryId);
     });
-    
+
     //
- 
-   
-    
-    
+
+
+
+
 });
 
 function selectrow(installEntryNo,salesOrdNo){
@@ -38,11 +38,11 @@ function selectrow(installEntryNo,salesOrdNo){
 	$("#installEntryId").val(installEntryId);
 	$("#salesOrdId").val(salesOrdId);
 	$("#einstallEntryNo").val(installEntryNo);
-    
+
 	   Common.ajax("POST", "/services/installationReversalSearchDetail", $("#searchForm").serializeJSON() , function(result) {
-	        
+
 	        //console.log(result);
-	   
+
 	        $("#instalStrlDate").val("");
 	        $("#reverseReason").val("");
 	        $("#failReason").val("");
@@ -51,19 +51,19 @@ function selectrow(installEntryNo,salesOrdNo){
 	        fn_setdetail(result);
 
 	     }, function(jqXHR, textStatus, errorThrown) {
-	         
+
 	         console.log("실패하였습니다.");
 	         console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
 
 	         console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
-	         
+
 	     });
-	
+
 
 }
 function fn_setdetail(result){
-	
-	
+
+
 	$("#spanOrdNo").text(result.list1.salesOrdNo);
 	$("#spanAppType").text(result.list1.codeName);
 	$("#spanCustomerId").text(result.list1.custId);
@@ -84,22 +84,22 @@ function fn_setdetail(result){
 	$("#spanRemark").text(result.list1.rem);
 	$("#spanResultKeyBy").text(result.list1.memCode);
 	$("#spanResultKeyAt").text(result.list1.c3);
-	
+
 	$("#lblCT").text("("+result.list1.memCode+")"+result.list1.name2 );
-	
-    
+
+
 	if(result.list1.allowComm==1){
-		$("#allowCom").prop("checked",true);	
+		$("#allowCom").prop("checked",true);
 	}
-	
+
 	if(result.list1.isTradeIn==1){
-        $("#isTrade").prop("checked",true);    
+        $("#isTrade").prop("checked",true);
     }
-	
+
 	if(result.list1.requireSms==1){
-        $("#reqSms").prop("checked",true);    
+        $("#reqSms").prop("checked",true);
     }
-	
+
 	$("#ectid").val(result.list1.c6);
 	$("#applicationTypeID").val(result.list1.codeId);
 	if(result.list5!=null){
@@ -111,7 +111,7 @@ function fn_setdetail(result){
 	}else{
 		$("#inChargeCTWHID").val(0);
 	}
-	
+
 	if(result.list1.installStkId!=null){
         $("#eProductID").val(result.list1.installStkId);
  }
@@ -120,15 +120,17 @@ function fn_setdetail(result){
     var errorM = "";
 	var date = new Date();
 
-    var year = date.getFullYear() % 1000;
+    //var year = date.getFullYear() % 1000;
+    var year = date.getFullYear();
     var month = date.getMonth()+1;
     var day = date.getDate();
     if(date.getDate() < 10){
         day = "0"+date.getDate();
     }
-    if(date.getMonth()+1 < 10){
-        month = "0"+date.getMonth()+1;
+    if(month < 10){
+        month = "0"+month;
     }
+
     if(month.length>2){
     	month = month.replace('0','');
     }
@@ -144,13 +146,13 @@ function fn_setdetail(result){
 			$("#divResultReversal").hide();
 		}
 		if("${SESSION_INFO.userId}" != "19872" || "${SESSION_INFO.userId}" != "40785" || "${SESSION_INFO.userId}" != "517")
-	 	if(result.list1.c3==(year+'/'+month +'/'+ day)){
+	 	if(result.list1.c3==(day+'/'+month+'/'+year)){
 			console.log(result.list1.c3);
 			errorM = "";
 			$("#lblErrorMessage").text(errorM);
 			$("#lblErrorMessage").hide();
 			$("#btnReverse").show();
-			$("#divResultReversal").show();			
+			$("#divResultReversal").show();
 		}else{
 		    console.log(result.list1.c3);
 			errorM ="* This installation is past day. Reversal is disallowed.";
@@ -158,28 +160,28 @@ function fn_setdetail(result){
 			$("#lblErrorMessage").text(errorM);
 			$("#btnReverse").hide();
             $("#divResultReversal").hide();
-		} 
+		}
 		if(result.list1.codeId == '67'){
-			
+
 			errorM =   errorM + " OutRight Type is disallowed." ;
 			  $("#lblErrorMessage").show();
 	          $("#lblErrorMessage").text(errorM);
 	          $("#btnReverse").hide();
 	          $("#divResultReversal").hide();
-		
+
 		}
-		
+
 	}else{
         $("#lblErrorMessage").show();
 		$("#lblErrorMessage").text("* Only installation complete result can be reverse.");
 		$("#btnReverse").hide();
         $("#divResultReversal").hide();
 	}
-	
+
 	$("#callTypeId").val(result.list1.codeid1);
-	$("#esalesDt").val(result.list1.salesDt);	
+	$("#esalesDt").val(result.list1.salesDt);
 	$("#eCustomerName").text(result.list1.name);
-    
+
 }
 
 function createAUIGrid() {
@@ -248,7 +250,7 @@ function createAUIGrid() {
         //headerText : "installentryid",
         headerText : '<spring:message code="service.grid.Installentryid" />',
         width : 0
-    },    
+    },
     {
         dataField : "salesOrdId",
         //headerText : "salesOrdId",
@@ -323,29 +325,29 @@ function fn_orderSearch(){
 }
 
 function save_confirm(){
-	
+
 
     Common.confirm("Related Billing & Payment Data should be adjusted manually"  , fn_save );
 }
 
 
 function fn_save(){
-	
+
 	/*if(fn_saveValidation()){
 		var result = false;
 		var callTypeId = $("#callTypeId").val();
-		
+
 		var data = GridCommon.getGridData(myGridID);
 	    data.form = $("#editForm").serializeJSON();
-	    
+
 		Common.ajax("POST", "/services/saveResaval",  data, function(result) {
 		console.log("message : " + result.message );
         Common.alert(result.message,fn_close);
         });
 		}
-	
+
 	*/
-	
+
 	$("#einstallEntryNo").val($("#installEntryNo").val());
     $("#esalesOrdNo").val($("#salesOrdNo").val());
     $("#einstallEntryId").val($("#installEntryId").val());
@@ -353,6 +355,7 @@ function fn_save(){
 	Common.ajax("POST", "/services/saveResaval",  $("#editForm").serializeJSON(), function(result) {
         console.log("message : " + result.message );
         Common.alert(result.message,fn_close);
+        location.reload(true);
         });
 }
 
@@ -362,7 +365,7 @@ function fn_saveValidation(){
 	var d = new Date();
 	var installDate = new Date();
 	var callDate = new Date();
-	
+
 	//instalStrlDate
     if ($("#instalStrlDate").val() == ""){
         valid = false;
@@ -381,7 +384,7 @@ function fn_saveValidation(){
             }
         }
     }
-	
+
     if($("#failReason").val()==""){
         valid=false;
         message += "* Please select the fail reason.<br />";
@@ -435,13 +438,13 @@ function fn_close(){
     <input type="hidden"  id="salesOrdNo" name="salesOrdNo"/>
     <input type="hidden"  id="installEntryId" name="installEntryId"/>
     <input type="hidden"  id="salesOrdId" name="salesOrdId"/>
-    
+
     <aside class="link_btns_wrap">
     <div id="divErrorMessage" style="width: 100%; height: 20px; margin: 0 auto;">
         <span style="color: #CC0000" ID="lblErrorMessage"></span>
     </div>
     </aside><!-- grid_wrap end -->
-    
+
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -461,7 +464,7 @@ function fn_close(){
 </table><!-- table end -->
 
 <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-<!-- 
+<!--
 <p class="show_btn"><a href="#"><img src="../images/common/btn_link.gif" alt="link show" /></a></p>
 <dl class="link_list">
     <dt>Link</dt>
@@ -492,7 +495,7 @@ function fn_close(){
 </aside> -->
 <!-- link_btns_wrap end -->
 
-<!-- 
+<!--
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
     <li><p class="btn_grid"><a href="#">NEW</a></p></li>
@@ -517,7 +520,7 @@ function fn_close(){
         Only the latest installation result will display.
     </div>
 </aside><!-- grid_wrap end -->
-    
+
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code='service.title.Details'/></h3>
 </aside><!-- title_line end -->
@@ -538,23 +541,23 @@ function fn_close(){
     <td><span id="spanOrdNo"></span></td>
     <th scope="row"><spring:message code='service.title.AppType'/></th>
     <td><span id="spanAppType"></span></td>
-    <th scope="row"><spring:message code='service.title.CustomerID'/></th>    
+    <th scope="row"><spring:message code='service.title.CustomerID'/></th>
     <td><span id="spanCustomerId"></span></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.CustomerName'/></th>    
+    <th scope="row"><spring:message code='service.title.CustomerName'/></th>
     <td><span id="spanCustomerName"></span></td>
-    <th scope="row"><spring:message code='service.title.NRIC_CompanyNo'/></th>    
+    <th scope="row"><spring:message code='service.title.NRIC_CompanyNo'/></th>
     <td><span id="spanNric"></span></td>
-    <th scope="row"><spring:message code='service.title.InstallationNo'/></th>    
+    <th scope="row"><spring:message code='service.title.InstallationNo'/></th>
     <td><span id="spanInstallationNo"></span></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.InstallationType'/></th>    
+    <th scope="row"><spring:message code='service.title.InstallationType'/></th>
     <td><span id="spanInstallationType"></span></td>
-    <th scope="row"><spring:message code='service.title.InstallationStatus'/></th>    
+    <th scope="row"><spring:message code='service.title.InstallationStatus'/></th>
     <td><span id="spanInstallationStatus"></span></td>
-    <th scope="row"><spring:message code='service.title.ActualInstalledDate'/></th>    
+    <th scope="row"><spring:message code='service.title.ActualInstalledDate'/></th>
     <td><span id="spanActInsDate"></span></td>
 </tr>
 <tr>
@@ -562,15 +565,15 @@ function fn_close(){
     <td><span id="spanInCharedCt"></span></td>
     <th scope="row"><spring:message code='service.title.InstallProduct'/></th>
     <td><span id="spanInstallProduct"></span></td>
-    <th scope="row"><spring:message code='service.title.DOWarehouse'/></th>    
+    <th scope="row"><spring:message code='service.title.DOWarehouse'/></th>
     <td><span id="spanDoWarehouse"></span></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code='service.title.DODate'/></th>
     <td><span id="spanDoDate"></span></td>
-    <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>    
+    <th scope="row"><spring:message code='service.title.SIRIMNo'/></th>
     <td><span id="spanSirimNo"></span></td>
-    <th scope="row"><spring:message code='service.title.SerialNo'/></th>    
+    <th scope="row"><spring:message code='service.title.SerialNo'/></th>
     <td><span id="spanSerialNo"></span></td>
 </tr>
 <tr>
@@ -639,16 +642,16 @@ function fn_close(){
     </td>
     <th scope="row"><spring:message code='service.title.InchargeCT'/></th>
     <td><span id="lblCT"></span></td>
-    <th scope="row"><spring:message code='service.title.InstallDate'/></th>    
+    <th scope="row"><spring:message code='service.title.InstallDate'/></th>
     <td>
         <div class="date_set w100p"><!-- date_set start -->
         <p><input type="text" title="Install Date" placeholder="DD/MM/YYYY" class="j_date" id="instalStrlDate" name="instalStrlDate"/></p>
         </div>
     </td>
- 
+
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.ReverseReason'/></th>    
+    <th scope="row"><spring:message code='service.title.ReverseReason'/></th>
     <td>
         <select class="w100p" id="reverseReason" name="reverseReason">
         <option value="" selected>Reverse Reason</option>
@@ -657,7 +660,7 @@ function fn_close(){
         </c:forEach>
         </select>
     </td>
-    <th scope="row"><spring:message code='service.title.FailedReason'/></th>    
+    <th scope="row"><spring:message code='service.title.FailedReason'/></th>
     <td>
         <select class="w100p" id="failReason" name="failReason">
         <option value="" selected>Fail Reason</option>
