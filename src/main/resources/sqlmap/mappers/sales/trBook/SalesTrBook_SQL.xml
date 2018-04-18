@@ -1098,7 +1098,8 @@
 
     <insert id="insertKeepIntoBoxD" parameterType="Map">
         <selectKey keyProperty="trBoxDetId" resultType="int" order="BEFORE">
-        SELECT MSC0032D_TR_BOX_DET_ID_SEQ.NEXTVAL FROM DUAL
+        <!--SELECT MSC0032D_TR_BOX_DET_ID_SEQ.NEXTVAL FROM DUAL  -->
+         (SELECT DECODE(COUNT(TR_BOX_DET_ID),0 , 1 , MAX(TR_BOX_DET_ID)+1) FROM MSC0032D )
         </selectKey>
 
             INSERT INTO MSC0032D
@@ -1129,7 +1130,8 @@
 
     <insert id="insertKeepIntoBox" parameterType="Map">
         <selectKey keyProperty="trBoxId" resultType="int" order="BEFORE">
-        SELECT MSC0031D_TR_BOX_ID_SEQ.NEXTVAL FROM DUAL
+        <!-- SELECT MSC0031D_TR_BOX_ID_SEQ.NEXTVAL FROM DUAL -->
+         (SELECT DECODE(COUNT(TR_BOX_ID),0 , 1 , MAX(TR_BOX_ID)+1) FROM MSC0031D )
         </selectKey>
 
 		INSERT INTO MSC0031D
@@ -1162,7 +1164,8 @@
 
      <insert id="insertKeepIntoBoxRcord" parameterType="Map">
         <selectKey keyProperty="trRcordId" resultType="int" order="BEFORE">
-        SELECT MSC0033D_TR_RCORD_ID_SEQ.NEXTVAL FROM DUAL
+        <!--SELECT MSC0033D_TR_RCORD_ID_SEQ.NEXTVAL FROM DUAL  -->
+        (SELECT DECODE(COUNT(TR_RCORD_ID),0 , 1 , MAX(TR_RCORD_ID)+1) FROM MSC0033D )
         </selectKey>
 
         INSERT INTO MSC0033D
