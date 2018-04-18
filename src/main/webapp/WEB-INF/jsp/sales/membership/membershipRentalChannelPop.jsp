@@ -132,7 +132,14 @@ Common.ajax("GET", "/sales/membershipRentalChannel/selectPatsetInfo", {  SRV_CNT
               $("#Credit_Card").attr("style" ,"display:inline");
               $("#Direct_Debit").attr("style" ,"display:none");
 
-              fn_selectCustomerCreditCardJsonList(resultPaysetInfo.custId);
+              $("#txtRentPayCRCNo").val(resultPaysetInfo.custCrcNo);
+              $("#txtRentPayCRCType").val(resultPaysetInfo.codeName1);
+              $("#txtRentPayCRCName").val(resultPaysetInfo.custCrcOwner);
+              $("#txtRentPayCRCExpiry").val(resultPaysetInfo.custCrcExpr);
+              $("#txtRentPayCRCBank").val(resultPaysetInfo.c9 + " - " + resultPaysetInfo.c10);
+              $("#txtRentPayCRCCardType").val(resultPaysetInfo.codeName);
+
+             // fn_selectCustomerCreditCardJsonList(resultPaysetInfo.custId);
 
 	      }else if(resultPaysetInfo.modeId == '132'){
 
@@ -141,7 +148,13 @@ Common.ajax("GET", "/sales/membershipRentalChannel/selectPatsetInfo", {  SRV_CNT
               $("#Credit_Card").attr("style" ,"display:none");
               $("#Direct_Debit").attr("style" ,"display:inline");
 
-	          fn_selectCustomerBankAccJsonList (resultPaysetInfo.custId);
+              $("#txtRentPayBankAccNo").val(resultPaysetInfo.custAccNo);
+              $("#txtRentPayBankAccType").val(resultPaysetInfo.codeName3);
+              $("#txtRentPayBankAccName").val( resultPaysetInfo.custAccOwner);
+              $("#txtRentPayBankAccBankBranch").val(resultPaysetInfo.custAccBankBrnch);
+              $("#txtRentPayBankAccBank").val(resultPaysetInfo.c9 + " - " + resultPaysetInfo.c10);
+
+	          //fn_selectCustomerBankAccJsonList (resultPaysetInfo.custId);
 	      }
 
 
@@ -425,6 +438,7 @@ function fn_doSelectCard_Click(){
 
 function fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCrcOwner, custCrcExpr, bankName, custCrcBankId, codeName){
 
+	$("#hiddenRentPayCRCID") .val(custCrcId);
 	$("#txtRentPayCRCNo") .val(custOriCrcNo);
 	$("#txtRentPayCRCType").val(codeName1);
 	$("#txtRentPayCRCName").val(custCrcOwner);
@@ -432,6 +446,7 @@ function fn_loadCreditCard(custCrcId, custOriCrcNo, custCrcNo, codeName1, custCr
 	$("#txtRentPayCRCBank").val(bankName);
 	$("#txtRentPayCRCCardType").val(codeName);
 	$("#_custOriCrcNo").val(custOriCrcNo);
+	$("#hiddenCRCBankId").val(custCrcBankId);
 
 }
 
@@ -543,10 +558,11 @@ function fn_setSaveForm(){
 	var _issuedNRIC=0;
 
 	if($("#cmbRentPaymode").val()  == 131 ){
-		_bankID = resultCardInfo.custAccId ;
-		_custCRCID = resultCardInfo.custCrcId;
+		_bankID = $("#hiddenCRCBankId").val();
+		_custCRCID = $("#hiddenRentPayCRCID").val();
 	}else if($("#cmbRentPaymode").val()  == 132 ){
-		 _bankID = resultBankAccInfo.custAccBankId;
+		 _bankID = $("#hiddenAccBankId").val();
+		 _custAccID = $("#hiddenRentPayBankAccID").val();
 	}
 
 	if($("#txtRentPayIC").val() !="" ){
@@ -608,6 +624,10 @@ function fn_ValidRequiredField(){
 
 	var   rV=true;
 	var   rMessage="";
+    var custCrcId = $("#hiddenRentPayCRCID") .val();
+    var custAccId = $("#hiddenRentPayBankAccID").val();
+    var custCrcBankId = $("#hiddenCRCBankId").val();
+    var custAccBankId = $("#hiddenAccBankId").val();
 
 
 
@@ -638,21 +658,21 @@ function fn_ValidRequiredField(){
     	 if ($("#cmbRentPaymode").val() == "131") {              //Credit Car
     		 console.log(" 131  CreditCredit valid  start...===>");
 
-    	     if( null  == resultCardInfo){
+    	     if(custCrcId == null){
     	    	   rV = false;
                    rMessage += "* Please select a credit card.<br />";
     	     }
 
 
-             console.log(" resultCardInfo.custCrcId ["+resultCardInfo.custCrcId +"]");
-             console.log(" resultCardInfo.custCrcBankId["+resultCardInfo.custCrcBankId+"]");
+             console.log(" resultCardInfo.custCrcId ["+custCrcId +"]");
+             console.log(" resultCardInfo.custCrcBankId["+custCrcId+"]");
 
 
-	    		 if (resultCardInfo.custCrcId  ==""   ||  resultCardInfo.custCrcId == null  ||  resultCardInfo.custCrcId == 0 ) {
+	    		 if (custCrcId  ==""   ||  custCrcId == null  ||  custCrcId == 0 ) {
 	    			   rV = false;
 		               rMessage += "* Please select a credit card.<br />";
 	             }else {
-	                 if (resultCardInfo.custCrcBankId  ==""  || resultCardInfo.custCrcBankId == null || resultCardInfo.custCrcBankId ==0 )   {
+	                 if (custCrcBankId  ==""  || custCrcBankId == null || custCrcBankId ==0 )   {
 	                	 rV = false;
 	                     rMessage += "* Invalid credit card issue bank.<br />";
 	                 }
@@ -664,19 +684,19 @@ function fn_ValidRequiredField(){
     	 }else if($("#cmbRentPaymode").val() == "132"){       //Direct Debit
 
     		 console.log(" 132  Direct Debit  valid  start...===>");
-    	     if( null  == resultBankAccInfo){
+    	     if( null  == custAccId){
                  rV = false;
                  rMessage += "* Please select a credit card.<br />";
            }
 
-    		 console.log(" resultBankAccInfo.custAccId["+resultBankAccInfo.custAccId+"]");
-    		 console.log(" resultBankAccInfo.custAccBankId["+resultBankAccInfo.custAccBankId+"]");
+    		 console.log(" resultBankAccInfo.custAccId["+custAccId+"]");
+    		 console.log(" resultBankAccInfo.custAccBankId["+custAccId+"]");
 
-    		 if (resultBankAccInfo.custAccId   ==""   ||  resultBankAccInfo.custAccId == null  ||  resultBankAccInfo.custAccId  == 0 ) {
+    		 if (custAccId   ==""   ||  custAccId == null  ||  custAccId  == 0 ) {
                  rV = false;
                  rMessage += "* Please select a bank account.<br />";
 	         }else {
-	               if (resultBankAccInfo.custAccBankId  ==""  || resultBankAccInfo.custAccBankId == null || resultBankAccInfo.custAccBankId ==0 )   {
+	               if (custAccBankId ==""  || custAccBankId == null ||custAccBankId ==0 )   {
 	                   rV = false;
 	                   rMessage += "* Invalid credit card issue bank.<br />";
 	               }
@@ -1006,7 +1026,9 @@ function  fn_DisableControl(){
 <tr>
 
     <th scope="row">Credit Card Number<span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="Credit Card Number" readonly class="w100p" id='txtRentPayCRCNo' name='txtRentPayCRCNo' /></td>
+    <td><input type="text" title="" placeholder="Credit Card Number" readonly class="w100p" id='txtRentPayCRCNo' name='txtRentPayCRCNo' />
+           <input id="hiddenRentPayCRCID" name="hiddenRentPayCRCID" type="hidden" />
+    </td>
     <th scope="row">Credit Card Type</th>
     <td><input type="text" title="" placeholder= " Credit Card Type" readonly class="w100p" id='txtRentPayCRCType' name='txtRentPayCRCType' /></td>
 </tr>
@@ -1018,7 +1040,9 @@ function  fn_DisableControl(){
 </tr>
 <tr>
     <th scope="row">Issue Bank</th>
-    <td><input type="text" title="Issue Ban " placeholder="" readonly class="w100p" id='txtRentPayCRCBank'  /></td>
+    <td><input type="text" title="Issue Ban " placeholder="" readonly class="w100p" id='txtRentPayCRCBank'  />
+           <input id="hiddenCRCBankId" name="hiddenCRCBankId" type="hidden" />
+    </td>
     <th scope="row">Card Type</th>
     <td><input type="text" title="" placeholder="Card Type"  readonly class="w100p" id='txtRentPayCRCCardType' /></td>
 </tr>
@@ -1055,7 +1079,7 @@ function  fn_DisableControl(){
 		<tr>
 		    <th scope="row">Account Number<span class="must">*</span></th>
 		    <td><input type="text" title="" placeholder= "Bank Account Number " readonly class="w100p"  id='txtRentPayBankAccNo' name='txtRentPayBankAccNo'/>
-		          <input id="hiddenRentPayBankAccID" name="hiddenRentPayBankAccID" type="hidden" /></td>
+		          <input id="hiddenRentPayBankAccID" name="hiddenRentPayBankAccID" type="hidden" />
 		    </td>
 		    <th scope="row">Account Type</th>
 		    <td><input type="text" title="" placeholder="Bank Account Type" readonly class="w100p"  id='txtRentPayBankAccType'  name='txtRentPayBankAccType' /></td>
@@ -1068,11 +1092,13 @@ function  fn_DisableControl(){
 		</tr>
 		<tr>
 		    <th scope="row">Issue Bank</th>
-		    <td colspan="3"><input type="text" title="" readonly  placeholder="Issue Bank" class="w100p"  id='txtRentPayBankAccBank'  /></td>
+		    <td colspan="3"><input type="text" title="" readonly  placeholder="Issue Bank" class="w100p"  id='txtRentPayBankAccBank'  />
+		                           <input id="hiddenAccBankId" name="hiddenAccBankId" type="hidden" />
+		    </td>
 		</tr>
 		</tbody>
 		</table><!-- table end -->
-<div>
+</div>
 </section>
 
 <section class="search_table"><!-- search_table start -->
@@ -1119,9 +1145,10 @@ function  fn_DisableControl(){
 </tr>
 </tbody>
 </table><!-- table end -->
+</section><!-- search_table end -->
 </form>
 
-</section><!-- search_table end -->
+
 
 <ul class="center_btns">
 	<li><p class="btn_blue2"><a href="#"  id='save_bt' onclick="javascript:fn_doSave()" >SAVE</a></p></li>
