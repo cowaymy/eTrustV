@@ -818,6 +818,51 @@ public class ReportBatchController {
 		LOGGER.info("[END] RentalInstallationReport...");
 	}
 
+	@RequestMapping(value = "/StockRecordMonthly.do")
+	//@Scheduled Monthly - 1st of the month
+	public void StockRecordMonthly() {
+		LOGGER.info("[START] StockRecordMonthly...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/Stock_Record_Monthly.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Logistics" + File.separator
+				+ "StockRecordMonthly_" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] StockRecordMonthly...");
+	}
+
+	@RequestMapping(value = "/FilterRecordMonthly.do")
+	//@Scheduled Monthly - 1st of the month
+	public void FilterRecordMonthly() {
+		LOGGER.info("[START] FilterRecordMonthly...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/Filter_Record_Monthly.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Logistics" + File.separator
+				+ "FilterRecordMonthly_" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] FilterRecordMonthly...");
+	}
+
+	@RequestMapping(value = "/SparePartRecordMonthly.do")
+	//@Scheduled Monthly - 1st of the month
+	public void SparePartRecordMonthly() {
+		LOGGER.info("[START] SparePartRecordMonthly...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/SparePart_RecordMonthly.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Logistics" + File.separator
+				+ "SparePartRecordMonthly_" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] SparePartRecordMonthly...");
+	}
+
 	private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
 			throws IOException {
 		checkArgument(params);
