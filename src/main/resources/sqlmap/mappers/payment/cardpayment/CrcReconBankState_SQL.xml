@@ -52,7 +52,7 @@
                     B.F_TRNSC_REF4,
                     B.F_TRNSC_DT,
                     D.CODE_ID ) SubBank
-        ON SubCrc.CRC_TRNSC_MID = SubBank.MID and SubCrc.NET_AMT = SubBank.CREDIT_AMT and SubCrc.CODE_ID = SubBank.CODE_ID
+        ON SubCrc.CRC_TRNSC_MID = SubBank.MID and SubCrc.NET_AMT = SubBank.CREDIT_AMT and SubCrc.CODE_ID = SubBank.CODE_ID  and SUBCRC.CRC_TRNSC_DT = SUBBANK.F_TRNSC_DT
         WHERE 1=1
 		<if test="tranDateFr != null and tranDateFr != '' and tranDateTo != null and tranDateTo != '' ">
 		      AND SubBank.F_TRNSC_DT BETWEEN TO_DATE(#{tranDateFr}, 'DD/MM/YYYY') AND TO_DATE(#{tranDateTo}, 'DD/MM/YYYY')
