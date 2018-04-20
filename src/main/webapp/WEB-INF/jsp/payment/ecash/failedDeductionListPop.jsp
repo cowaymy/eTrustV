@@ -119,7 +119,7 @@ doDefCombo(sortBy, '', 'sortBy', 'S', '');
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>SMS Raw Data</h1>
+<h1>Failed eCash Listing</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#"><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
