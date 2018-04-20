@@ -28,57 +28,57 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OrderColorGridController {
 
 	private static final Logger logger = LoggerFactory.getLogger(OrderColorGridController.class);
-	
+
 	@Resource(name = "orderColorGridService")
 	private OrderColorGridService orderColorGridService;
-	
+
 	@Resource(name = "salesCommonService")
-	private SalesCommonService salesCommonService; 
-	
+	private SalesCommonService salesCommonService;
+
 	@Autowired
 	private SessionHandler sessionHandler;
-	
+
 	/**
 	 * 화면 호출. order Color Grid
 	 */
 	@RequestMapping(value = "/orderColorGridList.do")
 	public String orderColorGridList(@RequestParam Map<String, Object>params, ModelMap model) {
-		
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		params.put("userId", sessionVO.getUserId());
-		
+
 		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
 			EgovMap getUserInfo = salesCommonService.getUserInfo(params);
 			model.put("memType", getUserInfo.get("memType"));
-			model.put("orgCode", getUserInfo.get("lastOrgCode"));
-			model.put("grpCode", getUserInfo.get("lastGrpCode"));
-			model.put("deptCode", getUserInfo.get("lastDeptCode"));
+			model.put("orgCode", getUserInfo.get("orgCode"));
+			model.put("grpCode", getUserInfo.get("grpCode"));
+			model.put("deptCode", getUserInfo.get("deptCode"));
 			model.put("memCode", getUserInfo.get("memCode"));
 			logger.info("memType ##### " + getUserInfo.get("memType"));
 		}
-		
+
 		return "sales/order/orderColorGridList";
 	}
-	
+
 	@RequestMapping(value = "/orderColorGridJsonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> orderColorGridJsonList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
+
 		logger.info("##################### params #####" +params.toString());
 		logger.info("##################### cmbCondition #####" +params.get("cmbCondition"));
-		
+
 		String[] cmbAppTypeList = request.getParameterValues("cmbAppType");
 		params.put("cmbAppTypeList", cmbAppTypeList);
-		
+
 		List<EgovMap> colorGridList = orderColorGridService.colorGridList(params);
-		
+
 		return ResponseEntity.ok(colorGridList);
 	}
-	
+
 	@RequestMapping(value = "/colorGridProductList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> colorGridCmbProduct(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
-		
+
 		List<EgovMap> colorGridProductList = orderColorGridService.colorGridCmbProduct();
-		
+
 		return ResponseEntity.ok(colorGridProductList);
 	}
 }
