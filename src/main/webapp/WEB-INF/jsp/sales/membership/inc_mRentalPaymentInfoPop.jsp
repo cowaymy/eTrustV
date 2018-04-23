@@ -75,18 +75,18 @@
 var vmrPayResultObj;
 
 function fn_setMRentalPayInfoData(options){
-    
-	
-	 Common.ajax("GET", "/sales/membershipRental/inc_mRPayListInfoData",{ORD_ID:options.ORD_ID , 
+
+
+	 Common.ajax("GET", "/sales/membershipRental/inc_mRPayListInfoData",{ORD_ID:options.ORD_ID ,
 		                                                                                             SRV_CNTRCT_ID:options.SRV_CNTRCT_ID}, function(result) {
-	        
+
 		    console.log(result);
-	        
+
 	        if(result.paysetInfo !="" ){
 	        	vmrPayResultObj = result;
 	              fn_setMRentalPayInfoSet();
 	        }
-	    
+
 	 });
 }
 
@@ -95,10 +95,10 @@ function fn_setMRentalPayInfoData(options){
 
 
 function fn_setMRentalPayThirdPartyInfoData(){
-    
-     Common.ajax("GET", "/sales/membershipRental/inc_mRPayThirdPartyInfoData",{CUST_ID:vmrPayResultObj.paysetInfo.custCrcId}, function(result) {
+
+     Common.ajax("GET", "/sales/membershipRental/inc_mRPayThirdPartyInfoData",{CUST_ID:vmrPayResultObj.paysetInfo.custId}, function(result) {
             console.log(result);
-            
+
             if(result.paysetThirdPartyInfo !="null"   ||  result.paysetThirdPartyInfo !=null ){
             	/*
                 $("#rP_txtPTDNRIC").html(result.paysetThirdPartyInfo.custNRIC);
@@ -106,6 +106,10 @@ function fn_setMRentalPayThirdPartyInfoData(){
                 $("#rP_txtPTType").html(result.paysetThirdPartyInfo.customerId);
                 $("#rP_txtPTName").html(result.paysetThirdPartyInfo.custType);
                 */
+            	 $("#rP_txtPTDNRIC").html(result.paysetThirdPartyInfo.nric);
+                 $("#rP_txtPTID").html(result.paysetThirdPartyInfo.custId);
+                 $("#rP_txtPTType").html(result.paysetThirdPartyInfo.c7);
+                 $("#rP_txtPTName").html(result.paysetThirdPartyInfo.name);
             }
      });
 }
@@ -115,38 +119,38 @@ function fn_setMRentalPayThirdPartyInfoData(){
 function fn_setMRentalPayInfoSet(){
 	var month = "<spring:message code="sales.month" />";
 
-    $("#rP_txtPayMode").html(vmrPayResultObj.paysetInfo.codeDesc);  
-    $("#rP_txtCrcName").html(vmrPayResultObj.paysetInfo.custCrcOwner);   
-    $("#rP_txtCrcNo").html(vmrPayResultObj.paysetInfo.custCrcNo);         
-    $("#rP_txtCrcCardType").html(vmrPayResultObj.paysetInfo.codeName); 
-    $("#rP_txtCrcExpiry").html(vmrPayResultObj.paysetInfo.custCrcExpr);     
-    $("#rP_txtBankAccNo").html(vmrPayResultObj.paysetInfo.custAccNo);  
-    $("#rP_txtIssueBank").html(vmrPayResultObj.paysetInfo.c10);  
-    $("#rP_txtAccName").html(vmrPayResultObj.paysetInfo.custAccOwner);  
-    $("#rP_txtApplyDate").html(vmrPayResultObj.paysetInfo.ddApplyDt);     
-    $("#rP_txtSubmitDate").html(vmrPayResultObj.paysetInfo.ddSubmitDt);   
-    $("#rP_txtStartDate").html(vmrPayResultObj.paysetInfo.ddStartDt);     
-    $("#rP_txtRejectDate").html(vmrPayResultObj.paysetInfo.ddRejctDt);    
-    $("#rP_txtRejectCode").html(vmrPayResultObj.paysetInfo.codeDesc); 
-    $("#rP_txtPayTerm").html(vmrPayResultObj.paysetInfo.payTrm +" " + month);        
-    
+    $("#rP_txtPayMode").html(vmrPayResultObj.paysetInfo.codeDesc);
+    $("#rP_txtCrcName").html(vmrPayResultObj.paysetInfo.custCrcOwner);
+    $("#rP_txtCrcNo").html(vmrPayResultObj.paysetInfo.custCrcNo);
+    $("#rP_txtCrcCardType").html(vmrPayResultObj.paysetInfo.codeName);
+    $("#rP_txtCrcExpiry").html(vmrPayResultObj.paysetInfo.custCrcExpr);
+    $("#rP_txtBankAccNo").html(vmrPayResultObj.paysetInfo.custAccNo);
+    $("#rP_txtIssueBank").html(vmrPayResultObj.paysetInfo.c10);
+    $("#rP_txtAccName").html(vmrPayResultObj.paysetInfo.custAccOwner);
+    $("#rP_txtApplyDate").html(vmrPayResultObj.paysetInfo.ddApplyDt2);
+    $("#rP_txtSubmitDate").html(vmrPayResultObj.paysetInfo.ddSubmitDt2);
+    $("#rP_txtStartDate").html(vmrPayResultObj.paysetInfo.ddStartDt2);
+    $("#rP_txtRejectDate").html(vmrPayResultObj.paysetInfo.ddRejctDt2);
+    $("#rP_txtRejectCode").html(vmrPayResultObj.paysetInfo.resnId);
+    $("#rP_txtPayTerm").html(vmrPayResultObj.paysetInfo.payTrm +" " + month);
+
     if(  vmrPayResultObj.paysetInfo.is3rdParty >0){
-        $("#rP_txtPTD").html("YES");       
+        $("#rP_txtPTD").html("YES");
         fn_setMRentalPayThirdPartyInfoData();
-        
+
     } else{
-    	$("#rP_txtPTD").html("NO");   
+    	$("#rP_txtPTD").html("NO");
     	$("#rP_txtPTDNRIC").html("-");
     }
-    
+
 }
 
 
 
 function fn_setMRentalPayInfoInit(){
-	
+
 	vmrPayResultObj ={};
-	
+
 	$("#rP_txtPayMode").html("");
 	$("#rP_txtCrcName").html("");
 	$("#rP_txtCrcNo").html("");
