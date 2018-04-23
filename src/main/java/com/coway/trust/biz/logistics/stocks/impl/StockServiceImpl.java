@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 /**
  * @author methree
@@ -84,7 +84,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 			stockMapper.updateSalePriceUOM(params);
 		}
 	}
-	
+
 	@Override
 	public void modifyServicePoint(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -120,10 +120,11 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 				smap2.put("pricepv", params.get("dPV"));
 				smap2.put("tradeinpv", params.get("dTradeInPV"));
 				smap2.put("pricerpf", params.get("dRentalDeposit"));
-				
+				smap2.put("srvpacid", params.get("srvPackageId"));
+
 				stockMapper.insertSalePriceInfoHistory(smap);
 				stockMapper.insertSalePriceInfoHistory(smap2);
-						
+
 				stockMapper.updateSalePriceInfo(smap);
 				stockMapper.updateSalePriceInfo(smap2);
 
@@ -137,7 +138,7 @@ public class StockServiceImpl extends EgovAbstractServiceImpl implements StockSe
 				smap.put("statuscodeid", 1);
 
 				stockMapper.insertSalePriceInfoHistory(smap);
-				
+
 				stockMapper.updateSalePriceInfo(smap);
 
 
