@@ -10,61 +10,61 @@
     var spareGrid;
     var serviceGrid;
     var imgGrid;
-    
+
     var priceHistoryGrid;
-    
+
     var comboData = [{"codeId": "1","codeName": "Active"},{"codeId": "7","codeName": "Obsolete"},{"codeId": "8","codeName": "Inactive"}];
-    
-    
+
+
     var srvMembershipList = new Array();
-    
+
     // 등록창
     var regDialog;
-    
+
     // 수정창
     var dialog;
-    
-    
+
+
     var gridNm;
     var chkNum;// 그리드 체크
-    
-    
+
+
     // AUIGrid 칼럼 설정
-    
-  var columnLayout = [{dataField:   "stkid",headerText :"<spring:message code='log.head.stockid'/>"            ,width:120 ,height:30, visible : false},                         
-							{dataField: "stkcode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:100 ,height:30},                        
-							{dataField: "stkdesc",headerText :"<spring:message code='log.head.materialname'/>"           ,width:350 ,height:30,style :  "aui-grid-user-custom-left" },                  
-							{dataField: "stkcategoryid",headerText :"<spring:message code='log.head.categoryid'/>"        ,width:120,height:30 , visible : false},                          
-							{dataField: "codename",headerText :"<spring:message code='log.head.category'/>"       ,width:140 ,height:30},                       
-							{dataField: "stktypeid",headerText :"<spring:message code='log.head.typeid'/>"            ,width:120 ,height:30, visible : false},                          
-							{dataField: "codename1",headerText :"<spring:message code='log.head.type'/>"              ,width:120 ,height:30},                       
-							{dataField: "name",headerText :"<spring:message code='log.head.status'/>"       ,width:120 ,height:30},                         
-							{dataField: "statuscodeid",headerText :"<spring:message code='log.head.statuscodeid'/>"     ,width:120 ,height:30 , visible : false},                       
-							{dataField: "issirim",headerText :"<spring:message code='log.head.issirim'/>"              ,width:90 ,height:30},                       
-							{dataField: "isncv",headerText :"<spring:message code='log.head.isncv'/>"                ,width:90 ,height:30},                         
-							{dataField: "serialchk",headerText :"<spring:message code='log.head.serialchk'/>"                ,width:90 ,height:30},                         
-							{dataField: "qtypercarton",headerText :"<spring:message code='log.head.qtypercarton'/>"  ,width:120 ,height:30},                        
-							{dataField: "netweight",headerText :"<spring:message code='log.head.netwgt'/>"           ,width:100 ,height:30},                        
-							{dataField: "grossweight",headerText :"<spring:message code='log.head.grosswgt'/>"         ,width:100 ,height:30},                          
-							{dataField: "measurementcbm",headerText :"<spring:message code='log.head.cbm'/>"        ,width:100 ,height:30},                         
-							{dataField: "stkgrade",headerText :"<spring:message code='log.head.grade'/>"            ,width:100 ,height:30},                         
-							{dataField: "c6",headerText :"<spring:message code='log.head.stk_comm_as'/>"            ,width:100 ,height:30},                         
-							{dataField: "c7",headerText :"<spring:message code='log.head.stk_comm_os_as'/>"         ,width:100 ,height:30},                         
-							{dataField: "c8",headerText :"<spring:message code='log.head.stk_comm_bs'/>"            ,width:100 ,height:30},                         
-							{dataField: "c9",headerText :"<spring:message code='log.head.stk_comm_os_bs'/>"         ,width:100 ,height:30},                         
-							{dataField: "c10",headerText :"<spring:message code='log.head.stk_comm_ins'/>"          ,width:100 ,height:30},                         
+
+  var columnLayout = [{dataField:   "stkid",headerText :"<spring:message code='log.head.stockid'/>"            ,width:120 ,height:30, visible : false},
+							{dataField: "stkcode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:100 ,height:30},
+							{dataField: "stkdesc",headerText :"<spring:message code='log.head.materialname'/>"           ,width:350 ,height:30,style :  "aui-grid-user-custom-left" },
+							{dataField: "stkcategoryid",headerText :"<spring:message code='log.head.categoryid'/>"        ,width:120,height:30 , visible : false},
+							{dataField: "codename",headerText :"<spring:message code='log.head.category'/>"       ,width:140 ,height:30},
+							{dataField: "stktypeid",headerText :"<spring:message code='log.head.typeid'/>"            ,width:120 ,height:30, visible : false},
+							{dataField: "codename1",headerText :"<spring:message code='log.head.type'/>"              ,width:120 ,height:30},
+							{dataField: "name",headerText :"<spring:message code='log.head.status'/>"       ,width:120 ,height:30},
+							{dataField: "statuscodeid",headerText :"<spring:message code='log.head.statuscodeid'/>"     ,width:120 ,height:30 , visible : false},
+							{dataField: "issirim",headerText :"<spring:message code='log.head.issirim'/>"              ,width:90 ,height:30},
+							{dataField: "isncv",headerText :"<spring:message code='log.head.isncv'/>"                ,width:90 ,height:30},
+							{dataField: "serialchk",headerText :"<spring:message code='log.head.serialchk'/>"                ,width:90 ,height:30},
+							{dataField: "qtypercarton",headerText :"<spring:message code='log.head.qtypercarton'/>"  ,width:120 ,height:30},
+							{dataField: "netweight",headerText :"<spring:message code='log.head.netwgt'/>"           ,width:100 ,height:30},
+							{dataField: "grossweight",headerText :"<spring:message code='log.head.grosswgt'/>"         ,width:100 ,height:30},
+							{dataField: "measurementcbm",headerText :"<spring:message code='log.head.cbm'/>"        ,width:100 ,height:30},
+							{dataField: "stkgrade",headerText :"<spring:message code='log.head.grade'/>"            ,width:100 ,height:30},
+							{dataField: "c6",headerText :"<spring:message code='log.head.stk_comm_as'/>"            ,width:100 ,height:30},
+							{dataField: "c7",headerText :"<spring:message code='log.head.stk_comm_os_as'/>"         ,width:100 ,height:30},
+							{dataField: "c8",headerText :"<spring:message code='log.head.stk_comm_bs'/>"            ,width:100 ,height:30},
+							{dataField: "c9",headerText :"<spring:message code='log.head.stk_comm_os_bs'/>"         ,width:100 ,height:30},
+							{dataField: "c10",headerText :"<spring:message code='log.head.stk_comm_ins'/>"          ,width:100 ,height:30},
 							{dataField: "c11",headerText :"<spring:message code='log.head.stk_comm_os_ins'/>"           ,width:100 ,height:30},
 							{dataField: "stkoldcd",headerText :"<spring:message code='log.head.stk_old_cd'/>"           ,width:100 ,height:30}
 
                        ];
 
-  var filtercolumn = [{dataField: "stockid",headerText :"<spring:message code='log.head.stockid'/>"          ,width:120 , visible : false},                       
-                      {dataField: "stockname",headerText :"<spring:message code='log.head.description'/>"    ,width:  "50%"   , editable : false,style :  "aui-grid-user-custom-left" },          
-                      {dataField: "stock",headerText :"<spring:message code='log.head.desc'/>"       ,width:  "20%"    , visible : false},                
-                      {dataField: "typeid",headerText :"<spring:message code='log.head.type'/>"             ,width:120 , visible : false},                        
-                      {dataField: "typenm",headerText :"<spring:message code='log.head.typename'/>"         ,width:   "10%"   , editable : false,style :  "aui-grid-user-custom-left" },          
-                      {dataField: "period",headerText :"<spring:message code='log.head.period'/>"         ,width: "10%"   , editable : false},                
-                      {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"              ,width:  "7%"    , editable : false}, 
+  var filtercolumn = [{dataField: "stockid",headerText :"<spring:message code='log.head.stockid'/>"          ,width:120 , visible : false},
+                      {dataField: "stockname",headerText :"<spring:message code='log.head.description'/>"    ,width:  "50%"   , editable : false,style :  "aui-grid-user-custom-left" },
+                      {dataField: "stock",headerText :"<spring:message code='log.head.desc'/>"       ,width:  "20%"    , visible : false},
+                      {dataField: "typeid",headerText :"<spring:message code='log.head.type'/>"             ,width:120 , visible : false},
+                      {dataField: "typenm",headerText :"<spring:message code='log.head.typename'/>"         ,width:   "10%"   , editable : false,style :  "aui-grid-user-custom-left" },
+                      {dataField: "period",headerText :"<spring:message code='log.head.period'/>"         ,width: "10%"   , editable : false},
+                      {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"              ,width:  "7%"    , editable : false},
                         {
                             dataField : "",
                             headerText : "",
@@ -80,9 +80,9 @@
                         , editable : false
                         }];
 
-  var sparecolumn = [{dataField:  "stockid",headerText :"<spring:message code='log.head.stockid'/>"          ,width:120 , visible : false},                       
-                     {dataField: "stockname",headerText :"<spring:message code='log.head.description'/>"    ,width:  "70%"   , editable : false,style :  "aui-grid-user-custom-left" },          
-                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"              ,width:  "20%"   , editable : false},  
+  var sparecolumn = [{dataField:  "stockid",headerText :"<spring:message code='log.head.stockid'/>"          ,width:120 , visible : false},
+                     {dataField: "stockname",headerText :"<spring:message code='log.head.description'/>"    ,width:  "70%"   , editable : false,style :  "aui-grid-user-custom-left" },
+                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"              ,width:  "20%"   , editable : false},
                         {
                             dataField : "",
                             headerText : "",
@@ -96,10 +96,10 @@
                                 }
                             }
                         , editable : false
-                        }]; 
-    
-  var servicecolumn = [{dataField:    "packageid",headerText :"<spring:message code='log.head.packageid'/>"        ,width:120 , visible : false},                         
-                       {dataField:    "packagename",headerText :"<spring:message code='log.head.description'/>"      ,width:  "70%"   ,  style :  "aui-grid-user-custom-left" ,   
+                        }];
+
+  var servicecolumn = [{dataField:    "packageid",headerText :"<spring:message code='log.head.packageid'/>"        ,width:120 , visible : false},
+                       {dataField:    "packagename",headerText :"<spring:message code='log.head.description'/>"      ,width:  "70%"   ,  style :  "aui-grid-user-custom-left" ,
                       labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
                      var retStr = "";
                      for (var i = 0, len = srvMembershipList.length; i < len; i++) {
@@ -109,7 +109,7 @@
                          }
                      }
                      return retStr == "" ? value : retStr;
-                 }, 
+                 },
                editRenderer : {
                    type : "ComboBoxRenderer",
                    showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
@@ -120,7 +120,7 @@
                    valueField : "cdname"
                                }
                      },
-                     {dataField:"chargeamt"           ,headerText:"Qty"           ,width:"15%"  
+                     {dataField:"chargeamt"           ,headerText:"Qty"           ,width:"15%"
                          ,dataType : "numeric",
                          editRenderer : {
                              type : "InputEditRenderer",
@@ -135,8 +135,8 @@
                                  // 리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
                                  return { "validate" : isValid, "message"  : "10,000 보다 큰 수를 입력하세요." };
                              }*/
-                         }    
-                     
+                         }
+
                      },
                      {
                          dataField : "",
@@ -152,16 +152,16 @@
                          }
                      , editable : false
                      }
-                    
-                     ];
-    
 
-  var stockimgcolumn =[{dataField :   "imgurl"  ,headerText:    ""  ,   prefix :    "/resources"    ,   
+                     ];
+
+
+  var stockimgcolumn =[{dataField :   "imgurl"  ,headerText:    ""  ,   prefix :    "/resources"    ,
                             renderer : { type : "ImageRenderer", imgHeight : 24//, // 이미지 높이, 지정하지 않으면 rowHeight에 맞게 자동 조절되지만 빠른 렌더링을 위해 설정을 추천합니다.
                             //altField : "country" // alt(title) 속성에 삽입될 필드명, 툴팁으로 출력됨
                           }},
-                          {dataField:    "codenm",headerText :"<spring:message code='log.head.angle'/>"       ,width:200 },                          
-                          {dataField :   "undefined" ,headerText :"<spring:message code='log.head.preview'/>"  ,   
+                          {dataField:    "codenm",headerText :"<spring:message code='log.head.angle'/>"       ,width:200 },
+                          {dataField :   "undefined" ,headerText :"<spring:message code='log.head.preview'/>"  ,
                             renderer : {
                                 type : "ButtonRenderer",
                                 labelText : "Show Image",
@@ -170,26 +170,26 @@
                                 }
                                 }
                           },
-                          {dataField:    "angeid",headerText :"<spring:message code='log.head.angeid'/>"     ,width:120 , visible : false},                          
-                          {dataField:    "scodeid",headerText :"<spring:message code='log.head.scodeid'/>"      ,width:120 , visible : false},                       
-                          {dataField:    "stkid",headerText :"<spring:message code='log.head.stkid'/>"        ,width:120 , visible : false},                         
-                          {dataField:    "imgid",headerText :"<spring:message code='log.head.imgid'/>"        ,width:120 , visible : false},                         
-                          {dataField:    "udate",headerText :"<spring:message code='log.head.udate'/>"        ,width:120 , visible : false},                         
-                          {dataField:    "uuser",headerText :"<spring:message code='log.head.uuser'/>"        ,width:120, visible : false},                          
-                          {dataField:    "cdate",headerText :"<spring:message code='log.head.cdate'/>"        ,width:120, visible : false},                          
+                          {dataField:    "angeid",headerText :"<spring:message code='log.head.angeid'/>"     ,width:120 , visible : false},
+                          {dataField:    "scodeid",headerText :"<spring:message code='log.head.scodeid'/>"      ,width:120 , visible : false},
+                          {dataField:    "stkid",headerText :"<spring:message code='log.head.stkid'/>"        ,width:120 , visible : false},
+                          {dataField:    "imgid",headerText :"<spring:message code='log.head.imgid'/>"        ,width:120 , visible : false},
+                          {dataField:    "udate",headerText :"<spring:message code='log.head.udate'/>"        ,width:120 , visible : false},
+                          {dataField:    "uuser",headerText :"<spring:message code='log.head.uuser'/>"        ,width:120, visible : false},
+                          {dataField:    "cdate",headerText :"<spring:message code='log.head.cdate'/>"        ,width:120, visible : false},
                           {dataField:    "cuser",headerText :"<spring:message code='log.head.cuser'/>"        ,width:120 , visible : false}];
-    
+
     var pricehiscolumn=[
-                        {dataField:    "rowNo"   ,headerText:    "SeqNo"     ,width:    "10%"    , visible : true},    
-                        {dataField:    "mrental"   ,headerText:    "<spring:message code='log.head.monthlyrental'/>"        ,width:    "10%"    , visible : true},                 
-                        {dataField:    "pricerpf"  ,headerText:    "<spring:message code='log.head.rentaldeposit'/>"        ,width:    "10%"    , visible : true},                 
-                        {dataField:    "penalty"   ,headerText:    "<spring:message code='log.head.penaltycharges'/>"       ,width:    "10%"    , visible : true},                 
-                        {dataField:    "tradeinpv" ,headerText:"<spring:message code='log.head.tradein(pv)value'/>"         ,width:    "10%"    , visible : true}, 
-                        {dataField:    "pricecost",headerText :"<spring:message code='log.head.cost'/>"                   ,width:  "10%"    , visible : true},                 
-                        {dataField:    "amt",headerText :"<spring:message code='log.head.normalprice'/>"        ,width:    "10%"    , visible : true},                 
-                        {dataField:    "pricepv"   ,headerText:    "<spring:message code='log.head.pointofvalue(pv)'/>"     ,width:    "10%"    , visible : true},                 
-                        {dataField:    "crtDt"   ,headerText:    "CREATE Date"     ,width:    "10%"    , visible : true},    
-                        {dataField:    "crtUserId"   ,headerText:    " CREATE User"     ,width:    "10%"    , visible : true}   
+                        {dataField:    "rowNo"   ,headerText:    "SeqNo"     ,width:    "10%"    , visible : true},
+                        {dataField:    "mrental"   ,headerText:    "<spring:message code='log.head.monthlyrental'/>"        ,width:    "10%"    , visible : true},
+                        {dataField:    "pricerpf"  ,headerText:    "<spring:message code='log.head.rentaldeposit'/>"        ,width:    "10%"    , visible : true},
+                        {dataField:    "penalty"   ,headerText:    "<spring:message code='log.head.penaltycharges'/>"       ,width:    "10%"    , visible : true},
+                        {dataField:    "tradeinpv" ,headerText:"<spring:message code='log.head.tradein(pv)value'/>"         ,width:    "10%"    , visible : true},
+                        {dataField:    "pricecost",headerText :"<spring:message code='log.head.cost'/>"                   ,width:  "10%"    , visible : true},
+                        {dataField:    "amt",headerText :"<spring:message code='log.head.normalprice'/>"        ,width:    "10%"    , visible : true},
+                        {dataField:    "pricepv"   ,headerText:    "<spring:message code='log.head.pointofvalue(pv)'/>"     ,width:    "10%"    , visible : true},
+                        {dataField:    "crtDt"   ,headerText:    "CREATE Date"     ,width:    "10%"    , visible : true},
+                        {dataField:    "crtUserId"   ,headerText:    " CREATE User"     ,width:    "10%"    , visible : true}
                                ];
 
  // 그리드 속성 설정
@@ -199,44 +199,44 @@
         showFooter : false,
         fixedColumnCount : 1,
         // 편집 가능 여부 (기본값 : false)
-        editable : false,                
+        editable : false,
         // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-        enterKeyColumnBase : true,                
+        enterKeyColumnBase : true,
         // 셀 선택모드 (기본값: singleCell)
-        selectionMode : "multipleCells",                
+        selectionMode : "multipleCells",
         // 컨텍스트 메뉴 사용 여부 (기본값 : false)
-        useContextMenu : true,                
+        useContextMenu : true,
         // 필터 사용 여부 (기본값 : false)
-        enableFilter : true,            
+        enableFilter : true,
         // 그룹핑 패널 사용
-        useGroupingPanel : true,                
+        useGroupingPanel : true,
         // 상태 칼럼 사용
-        showStateColumn : true,                
+        showStateColumn : true,
         // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
-        displayTreeOpen : true,                
-        noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",                
-        groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",                
+        displayTreeOpen : true,
+        noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+        groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
         //selectionMode : "multipleCells",
         //rowIdField : "stkid",
         enableSorting : true,
         showRowCheckColumn : true,
 
     };
-    
+
     var subgridpros = {
                         // 페이지 설정
-                        usePaging : true,                
-                        pageRowCount : 10,                
-                        editable : true,                
+                        usePaging : true,
+                        pageRowCount : 10,
+                        editable : true,
                         noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
                         enableSorting : true,
                         softRemoveRowMode:false
                         };
     var subgridpros2 = {
                         // 페이지 설정
-                        usePaging : true,                
-                        pageRowCount : 10,                
-                        editable : false,                
+                        usePaging : true,
+                        pageRowCount : 10,
+                        editable : false,
                         noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
                         enableSorting : true,
                         softRemoveRowMode:false,
@@ -256,20 +256,20 @@
         for (var i = 0 ; i < lisize ; i++){
             $("#subDiv > ul > li").eq(i).find("a").removeAttr("class");
         }
-        
+
         var r = $("#subDiv > .tap_area").size();
         for(var i = 0 ; i < r ; i++){
             $("#subDiv > .tap_area").eq(i).hide();
         }
-        
+
     }
 
     $(function(){
-    	
+
     	$("#download").click(function(){
     		GridCommon.exportTo("grid_wrap", 'xlsx',"Stocks List");
     	});
-    	
+
     	$("#stockIns").click(function(){
     		$("#editWindow").show();
     		doGetCombo('/common/selectCodeList.do', '42', '','insUom', 'S'); //청구처 리스트 조회
@@ -294,26 +294,48 @@
             $(this).find("a").attr("class","on");
             $("#stock_info_edit").text("EDIT");
         });
-        
+
         $("#price_info").click(function(){
-        	
+
             if($("#price_info_div").css("display") == "none"){
                 f_removeclass();
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                var srvPacId = $("#srvPacId :selected").val();
                 for(i=0; i<selectedItems.length; i++) {
-                    f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "P");
+                    f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
                 }
                 $("#price_info_div").show();
             }else{
                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                var srvPacId = $("#srvPacId :selected").val();
                 for(i=0; i<selectedItems.length; i++) {
-                    f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid, "P");
+                    f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
                 }
             }
             $(this).find("a").attr("class","on");
             $("#price_info_edit").text("EDIT");
         });
-        
+
+        $('#srvPacId').change(function() {
+        	 if($("#price_info_div").css("display") == "none"){
+                 f_removeclass();
+                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                 var srvPacId = $("#srvPacId :selected").val();
+                 for(i=0; i<selectedItems.length; i++) {
+                     f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
+                 }
+                 $("#price_info_div").show();
+             }else{
+                 var selectedItems = AUIGrid.getSelectedItems(myGridID);
+                 var srvPacId = $("#srvPacId :selected").val();
+                 for(i=0; i<selectedItems.length; i++) {
+                     f_view("/stock/PriceInfo.do?stkid="+selectedItems[i].item.stkid+"&typeid="+selectedItems[i].item.stktypeid+"&srvpacid="+srvPacId, "P");
+                 }
+             }
+             $(this).find("a").attr("class","on");
+             $("#price_info_edit").text("EDIT");
+        });
+
         $("#filter_info").click(function(){
             f_removeclass();
             $("#filter_info_div").show();
@@ -324,7 +346,7 @@
             }
             $(this).find("a").attr("class","on");
         });
-        
+
         $("#spare_info").click(function(){
             f_removeclass();
             $("#spare_info_div").show();
@@ -332,10 +354,10 @@
             for(i=0; i<selectedItems.length; i++) {
                 //f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkid+"&grid=spare", "R");
                 f_view("/stock/FilterInfo.do?stkid="+selectedItems[i].item.stkcode+"&grid=spare", "R");
-            }                
+            }
             $(this).find("a").attr("class","on");
         });
-        
+
         $("#service_info").click(function(){
             f_removeclass();
             $("#service_info_div").show();
@@ -346,7 +368,7 @@
             $(this).find("a").attr("class","on");
             $("#service_info_edit").text("EDIT");
         });
-        
+
         $("#service_point").click(function(){
             f_removeclass();
             $("#service_point_div").show();
@@ -360,7 +382,7 @@
             $("#osinstall").text(item.c11);
             $(this).find("a").attr("class","on");
         });
-        
+
         $("#stock_image").click(function(){
 
             if($("#stock_img_td").css("display") == "none"){
@@ -383,8 +405,8 @@
             f_removeclass();
             $("#stock_commisssion_div").show();
             var selectedItems = AUIGrid.getSelectedIndex(myGridID);
-            var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")  
-            var stusid = AUIGrid.getCellValue(myGridID, selectedItems[0], "statuscodeid")              
+            var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")
+            var stusid = AUIGrid.getCellValue(myGridID, selectedItems[0], "statuscodeid")
             if(stusid ==1){
                 $("#stock_comm_edit").show();
                 type="CE";
@@ -428,7 +450,7 @@
         });
 
         $("#price_info_edit").click(function(){
-            
+
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             for(i=0; i<selectedItems.length; i++) {
                 if ($("#price_info_edit").text() == "EDIT"){
@@ -443,27 +465,27 @@
                 }
             }
         });
-        
+
         //
         $("#service_info_edit").click(function(){
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
 
-            if($("#service_info_edit").text() == "EDIT"){ 
+            if($("#service_info_edit").text() == "EDIT"){
                 colShowHide(serviceGrid,"",true);
                 $("#service_info_edit").text("Add Service Charge") ;
             }else if ($("#service_info_edit").text() == "Add Service Charge"){
                 addRowSvr();
                 fn_srvMembershipList();
             }else if ($("#service_info_edit").text() == "SAVE"){
-                f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(serviceGrid),"service_info");  
+                f_info_save("/stock/modifyServiceInfo.do" , selectedItems[0].item.stkid ,GridCommon.getEditData(serviceGrid),"service_info");
             }
 
         });
         $("#service_point_edit").click(function(){
-        	
+
         	var selectedItems = AUIGrid.getSelectedItems(myGridID);
             var item = selectedItems[0].item;
-            
+
         	if($("#service_point_edit").text() == "EDIT"){
         		$("#as").html        ("<input type='text' class='w100p' id='ias'        name='ias'        value='"+item.c6 +"'>");
                 $("#osas").html      ("<input type='text' class='w100p' id='iosas'      name='iosas'      value='"+item.c7 +"'>");
@@ -476,10 +498,10 @@
         		f_info_save("/stock/modifyServicePoint.do" , item.stkid ,"servicepoint","service_point");
         	}
         });
-        
+
         $("#stock_comm_edit").click(function(){
             var selectedItems = AUIGrid.getSelectedIndex(myGridID);
-            var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")  
+            var stkid = AUIGrid.getCellValue(myGridID, selectedItems[0], "stkid")
             f_info_save("/stock/StockCommisionUpdate.do" , stkid , "commForm" ,"");
 
         });
@@ -504,8 +526,8 @@
                 Common.searchpopupWin("searchForm", "/common/searchPopList.do","stock");
             }
         });
-        
-        
+
+
         $('#txtNormalPrice').keypress(function() {
             if (event.which == '13') {
                 var findStr=".";
@@ -513,34 +535,34 @@
                 var prices = $("#dNormalPrice").val();
                 var priceslen=prices.length;
                 //alert("????"+prices.indexOf(findStr));
-                if (prices.indexOf(findStr) > 0) {  
+                if (prices.indexOf(findStr) > 0) {
                   sublen= prices.indexOf('.');
                   sublen=sublen+1;
                   var sums = priceslen - sublen;
                 //  alert("sums :  "+sums);
                   if(sums == 0 ){
-                      $("#dNormalPrice").val(prices+"00");  
+                      $("#dNormalPrice").val(prices+"00");
                   }else if(sums == 1 ){
-                      $("#dNormalPrice").val(prices+"0");  
+                      $("#dNormalPrice").val(prices+"0");
                   }else if(sums == 2){
-                        
+
                   }else{
                       Common.alert("Please enter only the second decimal place.");
                       $("#dNormalPrice").val("");
                   }
-                 
+
                   }else if(prices.indexOf(findStr) == 0){
                       Common.alert('You can not enter decimal numbers first.');
                       $("#dNormalPrice").val("");
                   }else{
                     //  alert('Not Found!!');
-                      $("#dNormalPrice").val($.number(prices,2));  
-                  } 
-    
+                      $("#dNormalPrice").val($.number(prices,2));
+                  }
+
             }
         });
-        
-        
+
+
         $('#txtCost').keypress(function() {
             if (event.which == '13') {
                 var findStr=".";
@@ -548,34 +570,34 @@
                 var prices = $("#dCost").val();
                 var priceslen=prices.length;
                 //alert("????"+prices.indexOf(findStr));
-                if (prices.indexOf(findStr) > 0) {  
+                if (prices.indexOf(findStr) > 0) {
                   sublen= prices.indexOf('.');
                   sublen=sublen+1;
                   var sums = priceslen - sublen;
                 //  alert("sums :  "+sums);
                   if(sums == 0 ){
-                      $("#dCost").val(prices+"00");  
+                      $("#dCost").val(prices+"00");
                   }else if(sums == 1 ){
-                      $("#dCost").val(prices+"0");  
+                      $("#dCost").val(prices+"0");
                   }else if(sums == 2){
-                        
+
                   }else{
                       Common.alert("Please enter only the second decimal place.");
                       $("#dCost").val("");
                   }
-                 
+
                   }else if(prices.indexOf(findStr) == 0){
                       Common.alert('You can not enter decimal numbers first.');
                       $("#dCost").val("");
                   }else{
                     //  alert('Not Found!!');
-                      $("#dCost").val($.number(prices,2));  
-                  } 
-    
+                      $("#dCost").val($.number(prices,2));
+                  }
+
             }
         });
     });
-    
+
     function f_info_save(url, key, v, f) {
         var fdata;
         if (f == "service_info" || f == "filter_info" || f == "spare_info") {
@@ -583,9 +605,9 @@
         } else {
             fdata = $("#" + v).serializeJSON();
         }
-        
+
         var keys = Object.keys(fdata);
-        
+
         if (v == "stockInfo") {
             if ($("#cbSirim").is(":checked") == true) {
                 $.extend(fdata, {
@@ -663,7 +685,7 @@
 
                 $("#" + _da.revalue).click();
         });
-        
+
 /*         console.log(_da);
 
         $.ajax({
@@ -726,7 +748,7 @@
                     $("#stock_info").find("a").attr("class", "on");
                     $("#stock_info_edit").text("EDIT");
                     /*if (){
-                        
+
                     }*/
                 });
     }
@@ -762,10 +784,10 @@
         	var gridData = data;
         	AUIGrid.setGridData(myGridID, gridData.data);
         });
-        
+
     }
 
-    
+
     function f_view(url, v) {
         f_clearForm();
         $.ajax({
@@ -774,11 +796,11 @@
             dataType : "json",
             contentType : "application/json;charset=UTF-8",
             success : function(_data) {
-	
+
             	if( 0 < _data.data.length){
             		f_info(_data, v);
             	}
-            	
+
             },
             error : function(jqXHR, textStatus, errorThrown) {
                 alert("실패하였습니다.");
@@ -789,7 +811,7 @@
     function f_info(_data, v) {
         var data = _data.data;
         var data2 = _data.data2;
-        
+
         if (v == 'S') {
             $("#txtStockType").empty();
             $("#txtStockCode").empty();
@@ -829,7 +851,7 @@
 
             $("#typeid").val(data[0].typeid);
         } else if (v == 'ES') {
-        	
+
             $("#cbNCV").prop("disabled", false);
             $("#cbSirim").prop("disabled", false);
             $("#cbSerial").prop("disabled", false);
@@ -841,10 +863,10 @@
             $("#stock_type").val(data[0].typeid);
 //             $("#txtStatus").text(data[0].statusname);
 //             $("#txtStatus").html("<select id='statusselect' name='statusselect' class='w100'></select>");
-//             doDefCombo(comboData,  data[0].statusname,'statusselect', 'S'); 
+//             doDefCombo(comboData,  data[0].statusname,'statusselect', 'S');
             $("#txtStatus").text(data[0].statusname);
             $("#txtStatus").html("<select id='statusselect' name='statusselect' class='w100'></select>");
-            doDefCombo(comboData,  data[0].statusid,'statusselect', 'S'); 
+            doDefCombo(comboData,  data[0].statusid,'statusselect', 'S');
             $("#txtStockCode")
                     .html(
                             "<input type='text' name='stock_code' id='stock_code' class='w100p' value='' disabled=true/>");
@@ -888,7 +910,7 @@
             }
             $("#typeid").val(data[0].typeid);
             $("#stock_info_edit").text("SAVE");
-            
+
         } else if (v == 'P') {
             $("#txtCost").empty();
             $("#txtNormalPrice").empty();
@@ -914,18 +936,20 @@
                 $("#txtRentalDeposit").text(data[0].pricerpf);
                 $("#txtPenaltyCharge").text(data[0].penalty);
                 $("#txtTradeInPV").text(data[0].tradeinpv);
-   	
+
             }
             destory(priceHistoryGrid);
             priceHistoryAUIGrid(pricehiscolumn);
-            AUIGrid.setGridData(priceHistoryGrid, data2); 
-            	
+            AUIGrid.setGridData(priceHistoryGrid, data2);
+
         } else if (v == 'EP') {
             var selectedItems = AUIGrid.getSelectedItems(myGridID);
             var typeid = "";
             for (i = 0; i < selectedItems.length; i++) {
                 typeid = selectedItems[i].item.stktypeid;
             }
+            var srvPacId = $("#srvPacId :selected").val();
+            $("#srvPackageId").val(srvPacId);
             $("#priceTypeid").val(typeid);
             if (typeid == '61') {
                 $("#txtPenaltyCharge")
@@ -956,7 +980,7 @@
                 $("#txtPV")
                         .html(
                                 "<input type='text' name='dPV' id='dPV' disabled=true value='' class='w100p numberAmt'/>"); //PricePV
-                
+
                 $("#dPV").val(data[0].pricepv);
                 $("#txtMonthlyRental")
                         .html(
@@ -983,8 +1007,8 @@
 
             destory(priceHistoryGrid);
             priceHistoryAUIGrid(pricehiscolumn);
-            AUIGrid.setGridData(priceHistoryGrid, data2);  
-            
+            AUIGrid.setGridData(priceHistoryGrid, data2);
+
         } else if (v == 'F') {
             destory(filterGrid);
             filterAUIGrid(filtercolumn)
@@ -1019,14 +1043,14 @@
           $("#txtOutRate_bs").text(decimalSetting(data[0].c9));
           $("#txtRate_install").text(decimalSetting(data[0].c10));
           $("#txtOutRate_install").text(decimalSetting(data[0].c11));
-        
+
       } else if (v == 'CE') {
     	    //TODO 숫자 포맷 및 입력 제한 해야함
           $("#txtStckCd").text(data[0].stkCode);
           $("#txtRate_as").append("<input type='hidden' name='stckcd' id='stckcd' value=''/>");
           $("#stckcd").val(data[0].stkCode);
           $("#txtStckCtgry").text(data[0].codeName);
-          $("#txtStckNm").text(data[0].stkDesc);        
+          $("#txtStckNm").text(data[0].stkDesc);
           $("#txtRate_as").html("<input type='text' name='rate_as' id='rate_as' value='' onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)' onclick='setRate(event)'/>");
           $("#txtOutRate_as").html("<input type='text' name='outrate_as' id='outrate_as' value='' onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'  onclick='setRate(event)'/>");
           $("#txtRate_bs").html("<input type='text' name='rate_bs' id='rate_bs' value='' onkeydown='return onlyNumber(event)' onkeyup='removeChar(event)'  onclick='setRate(event)'/>");
@@ -1039,18 +1063,18 @@
           $("#outrate_bs").val(decimalSetting(data[0].c9));
           $("#rate_install").val(decimalSetting(data[0].c10));
           $("#outrate_install").val(decimalSetting(data[0].c11));
-          
+
       }
-          
-          
+
+
     }
 
     function decimalSetting(str){
         var num=Number(str).toFixed(2);
         return num;
     }
-    
- 
+
+
     //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'S' , 'f_multiCombo'); //Single COMBO => Choose One
     //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'A' , 'f_multiCombo'); //Single COMBO => ALL
     //doGetCombo('/common/selectCodeList.do', '11', '','cmbCategory', 'M' , 'f_multiCombo'); //Multi COMBO
@@ -1064,7 +1088,7 @@
             $('#cmbCategory').change(function() {
 
             }).multipleSelect({
-                selectAll : true, // 전체선택 
+                selectAll : true, // 전체선택
                 width : '80%'
             });
             $('#cmbType').change(function() {
@@ -1120,11 +1144,11 @@
         }
     }
 
-    
+
     function onlyNumber(event){
         event = event || window.event;
         var keyID = (event.which) ? event.which : event.keyCode;
-            if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 || keyID == 110 || keyID == 190){ 
+            if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 || keyID == 110 || keyID == 190){
                 return;
         }else{
                 return false;
@@ -1140,7 +1164,7 @@
               event.target.value = event.target.value.replace(/[^.0-9]/g, "");
         }     //event.target.value =  event.target.value.replace(/[^0-9]([^0-9]|[\.]{1})[^0-9]{1,2}/g, "");
     }
-    
+
     function setRate(event){
         event = event || window.event;
         var tmp=event.target.value;
@@ -1149,12 +1173,12 @@
        }
         event.target.focus;
     }
-    
+
     function removeRow(rowIndex, gridNm, num) {
 
         AUIGrid.removeRow(gridNm, rowIndex);
         AUIGrid.removeSoftRows(gridNm);
-        
+
           if (num == 1) {
               $("#filter_info_edit").text("SAVE");
         } else if (num == 2) {
@@ -1180,13 +1204,13 @@
         item.qty = $("#quantityPop").val();
         AUIGrid.addRow(filterGrid, item, "last");
         $("#filter_info_edit").text("SAVE");
-         $("#regFilterWindow").hide(); 
+         $("#regFilterWindow").hide();
     }
-    
+
      function cancelRowFileter(){
-         $("#regFilterWindow").hide();  
+         $("#regFilterWindow").hide();
       }
-    
+
     function addRowSparePart(){
         var item = new Object();
         item.stockid = $("#sparecdPop").val();
@@ -1198,14 +1222,14 @@
         item.qty = $("#quantityPop_sp").val();
         AUIGrid.addRow(spareGrid, item, "last");
         $("#spare_info_edit").text("SAVE");
-        $("#regSpareWindow").hide();          
+        $("#regSpareWindow").hide();
     }
-    
+
        function cancelRowSparePart(){
-           $("#regSpareWindow").hide();  
+           $("#regSpareWindow").hide();
         }
-    
-    
+
+
     function fn_srvMembershipList() {
         Common.ajaxSync("GET", "/stock/srvMembershipList ", "",
                 function(result) {
@@ -1219,7 +1243,7 @@
                     }
                 });
     }
-    
+
     function destory(gridNm){
         AUIGrid.destroy(gridNm);
         $("#service_info_edit").text( "EDIT");
@@ -1232,9 +1256,9 @@
         $("#filtercdPop").attr("disabled",true);
         $("#spareForm")[0].reset();
         $("#sparecdPop").attr("disabled",true);
-        
+
     }
-    
+
     function colShowHide(gridNm,fied,checked){
           if(checked) {
                 AUIGrid.showColumnByDataField(gridNm, fied);
@@ -1242,14 +1266,14 @@
                 AUIGrid.hideColumnByDataField(gridNm, fied);
             }
     }
-    
+
     function fn_nonvalueItem(val){
     	if (val == '2'){
     		$("#editWindow").hide();
     	}else{
     		if (nonvalueValidationChk()){
     			fdata = $("#insForm").serializeJSON();
-    			
+
     			if ($("#insNCV").is(":checked") == true) {
    	                $.extend(fdata, {
    	                    'insNCV' : '1'
@@ -1278,7 +1302,7 @@
 	                });
 	            }
 	            var url = "/stock/nonvalueStockIns.do"
-	            
+
     	        Common.ajax("POST", url, fdata, function(data) {
     	        	console.log(data);
     	        	if (data.data != '0'){
@@ -1336,7 +1360,7 @@
         }
     	return true;
     }
-    
+
     function fn_itempopList(data){
     	console.log(data);
         $("#stkCd").val(data[0].item.itemcode);
@@ -1352,7 +1376,7 @@
         <li>Logistics</li>
         <li>Material Code</li>
     </ul>
-    
+
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>Material Code</h2>
@@ -1361,14 +1385,14 @@
         <c:if test="${PAGE_AUTH.funcView == 'Y'}">
 	            <li><p class="btn_blue"><a id="search"><span class="search"></span>Search</a></p></li>
 	    </c:if>
-            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li> 
+            <li><p class="btn_blue"><a id="clear"><span class="clear"></span>Clear</a></p></li>
         </ul>
     </aside><!-- title_line end -->
 
     <section class="search_table"><!-- search_table start -->
     <form id="searchForm" method="post" onsubmit="return false;">
         <input type="hidden" id="svalue" name="svalue"/>
-        <input type="hidden" id="sUrl"   name="sUrl"  />    
+        <input type="hidden" id="sUrl"   name="sUrl"  />
         <table summary="search table" class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
@@ -1406,7 +1430,7 @@
                     <th scope="row">Old Mat</th>
                     <td>
                         <input type=text name="oldstkcd" id="oldstkcd" class="w100p" value=""/>
-                    </td>                
+                    </td>
                 </tr>
             </tbody>
         </table><!-- table end -->
@@ -1432,7 +1456,7 @@
         <div id="grid_wrap" class="mt10" style="height:450px"></div>
 
         <section id="subDiv" style="display:none;" class="tap_wrap"><!-- tap_wrap start -->
-        
+
             <ul class="tap_type1">
                 <li id="stock_info"><a href="#"> Stock info </a></li>
                 <li id="price_info"><a href="#"> Price & Value Information</a></li>
@@ -1513,9 +1537,20 @@
                     <li><p class="btn_blue"><a id="price_info_edit">EDIT</a></p></li>
                     </c:if>
                 </ul>
+
                 </aside>
+                <aside class="title_line"><!-- title_line start -->
+                <h1>Rental Package</h1>
+                <ul class="left_opt">
+                    <select class="w100p" id="srvPacId">
+        <option value="2" selected>Basic (60 months)</option>
+        <option value="3">NEO (84 months)</option>
+    </select>
+    </ul>
+    </aside>
                 <form id='priceForm' name='priceForm' method='post'>
                 <input type="hidden" name="priceTypeid" id="priceTypeid" value=""/>
+                <input type="hidden" name="srvPackageId" id="srvPackageId" value=""/>
                 <table class="type1">
                     <caption>search table</caption>
                     <colgroup>
@@ -1547,7 +1582,7 @@
                         <th scope="row">Trade In (PV) Value</th>
                         <td colspan="5" ID="txtTradeInPV"></td>
                     </tr>
-                    
+
                      <tr>
                         <th scope="row">Cost</th>
                         <td colspan="5" ID="txtCost"></td>
@@ -1557,7 +1592,7 @@
                         <td colspan="5" ID="txtNormalPrice"></td>
                     </tr>
                     <tr>
-                        <th scope="row">Point of Value (PV)</th> 
+                        <th scope="row">Point of Value (PV)</th>
                         <td colspan="5" ID="txtPV"></td>
                     </tr>
                     </tbody>
@@ -1567,17 +1602,17 @@
                 <div style="width:1%;" >
                 </div>
                 <div style="width:49%;">
-                
+
                 <aside class="title_line"><!-- title_line start -->
                 <h3>Price & Value Information History</h3>
                 </aside><!-- title_line end -->
-                
+
                 <div id="priceHistory_div"></div>
                 </div>
-                
+
                 </div><!-- divine_auto end -->
             </article>
-            
+
             <article class="tap_area" id="filter_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
                     <h3 id="filterTab">Stock's Filter List</h3>
@@ -1586,7 +1621,7 @@
                     </ul> -->
                 </aside>
                 <div id="filter_grid" style="width:100%;">
-                </div>                
+                </div>
             </article>
             <article class="tap_area" id="spare_info_div" style="display:none;">
                 <aside class="title_line"><!-- title_line start -->
@@ -1666,7 +1701,7 @@
                         <td >&nbsp;</td>
                         <td id="imgShow"></td>
                     </tr>
-                </table>                        
+                </table>
             </article>
              <article class="tap_area" id="stock_commisssion_div" style="display:none;">
                  <div class="divine_auto"><!-- divine_auto start -->
@@ -1677,15 +1712,15 @@
                     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                     <li><p class="btn_blue"><a id="stock_comm_edit" style="display: none;"><spring:message code='sys.btn.save' /></a></p></li>
                     </c:if>
-                </ul> 
+                </ul>
                 </aside>
                 <form id='commForm' name='commForm' method='post'>
                 <!-- <input type="hidden" name="priceTypeid" id="priceTypeid" value=""/> -->
-                
+
                 <aside class="title_line"><!-- title_line start -->
                 <h3>Stock Information</h3>
                 </aside><!-- title_line end -->
-                
+
                     <table class="type1">
                         <caption>search table</caption>
                         <colgroup>
@@ -1707,11 +1742,11 @@
                             </tr>
                         </tbody>
                         </table>
-                        
+
                         <aside class="title_line"><!-- title_line start -->
                         <h3>Commission Setting - Installation</h3>
                         </aside><!-- title_line end -->
-                
+
                         <table class="type1">
                         <caption>search table</caption>
                         <colgroup>
@@ -1729,7 +1764,7 @@
                          </tr>
                          </tbody>
                         </table>
-                        
+
                         <aside class="title_line"><!-- title_line start -->
                         <h3>Commission Setting - Before Service (BS)</h3>
                         </aside><!-- title_line end -->
@@ -1751,11 +1786,11 @@
                          </tr>
                          </tbody>
                         </table>
-                        
+
                         <aside class="title_line"><!-- title_line start -->
                         <h3>Commission Setting - After Service (AS)</h3>
                         </aside><!-- title_line end -->
-                         
+
                         <table class="type1">
                         <caption>search table</caption>
                         <colgroup>
@@ -1764,7 +1799,7 @@
                             <col style="width: 160px" />
                             <col style="width: *" />
                         </colgroup>
-                        <tbody>          
+                        <tbody>
                          <tr>
                              <th scope="row">Rate</th>
                              <td ID="txtRate_as"></td>
@@ -1774,7 +1809,7 @@
                          </tbody>
                          </table>
                 </form>
-                            
+
                 </div>
                 </div><!-- divine_auto end -->
              </article>
@@ -1790,7 +1825,7 @@
             <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
         </ul>
     </header><!-- pop_header end -->
-<section class="pop_body"><!-- pop_body start -->  
+<section class="pop_body"><!-- pop_body start -->
             <!-- pop_body start -->
                 <form id="filterForm" name="filterForm" method="POST">
                     <table class="type1">
@@ -1834,18 +1869,18 @@
                         </tbody>
                     </table>
                     <!-- table end -->
-                    <ul class="center_btns">    
+                    <ul class="center_btns">
                     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-                        <li><p class="btn_blue2 big"><a onclick="javascript:addRowFileter();">SAVE</a></p></li> 
+                        <li><p class="btn_blue2 big"><a onclick="javascript:addRowFileter();">SAVE</a></p></li>
                     </c:if>
                         <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowFileter();">CANCEL</a></p></li>
                     </ul>
-                </form> 
-    </section>  
+                </form>
+    </section>
 </div>
-        
-        
-    
+
+
+
     <!-- register spare part-->
 <div class="popup_wrap" id="regSpareWindow" style="display:none"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -1854,7 +1889,7 @@
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
-<section class="pop_body"><!-- pop_body start -->          
+<section class="pop_body"><!-- pop_body start -->
     <form id="spareForm" name="spareForm" method="POST">
         <table class="type1">
             <caption>search table</caption>
@@ -1884,14 +1919,14 @@
         </table>
         <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
-            <li><p class="btn_blue2 big"><a onclick="javascript:addRowSparePart();">SAVE</a></p></li> 
-    </c:if>        
+            <li><p class="btn_blue2 big"><a onclick="javascript:addRowSparePart();">SAVE</a></p></li>
+    </c:if>
             <li><p class="btn_blue2 big"><a onclick="javascript:cancelRowSparePart();">CANCEL</a></p></li>
         </ul>
-    </form>       
- </section>     
-</div>      
-        
+    </form>
+ </section>
+</div>
+
 <!-- insert into -->
 <div class="popup_wrap" id="editWindow" style="display:none"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -1928,7 +1963,7 @@
 </tr>
 <tr>
     <th scope="row">Stock Code</th>
-    <td><input type="text" name="insStockCode" id="insStockCode" class="w100p"/></td>    
+    <td><input type="text" name="insStockCode" id="insStockCode" class="w100p"/></td>
     <th scope="row">UOM</th>
     <td>
         <select id="insUom" name="insUom" class="w100p"></select>
@@ -1942,7 +1977,7 @@
     <td><select id="insCate" name="insCate" class="w100p"></select></td>
 </tr>
 <tr>
-    <th scope="row" colspan="6">Price & Value Information</th>    
+    <th scope="row" colspan="6">Price & Value Information</th>
 </tr>
 <tr>
     <th scope="row">Old Material Number</th>
@@ -1991,7 +2026,7 @@
 
 </section>
 </div>
-        
+
     </section><!-- content end -->
 </div>
 
