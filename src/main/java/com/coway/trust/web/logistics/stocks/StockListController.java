@@ -65,7 +65,7 @@ public class StockListController {
 		String[] status = request.getParameterValues("cmbStatus");
 		String stkNm = request.getParameter("stkNm");
 		String stkCd = request.getParameter("stkCd");
-		
+
 		String oldstkcd = request.getParameter("oldstkcd");
 
 		Map<String, Object> smap = new HashMap();
@@ -106,10 +106,12 @@ public class StockListController {
 			throws Exception {
 		String stkid = CommonUtils.nvl(request.getParameter("stkid"));
 		String typeid = CommonUtils.nvl(request.getParameter("typeid"));
+		String srvpacid = CommonUtils.nvl(request.getParameter("srvpacid"));
 
 		Map<String, Object> smap = new HashMap();
 		smap.put("stockId", stkid);
 		smap.put("typeId", typeid);
+		smap.put("srvpacid", srvpacid);
 
 		List<EgovMap> info = stock.selectPriceInfo(smap);
 		List<EgovMap> infoHistory = stock.selectPriceHistoryInfo(smap);
@@ -202,7 +204,7 @@ public class StockListController {
 		} else {
 			loginId = sessionVO.getUserId();
 		}
-		
+
 		// loginId
 		params.put("upd_user", loginId);
 
@@ -227,7 +229,7 @@ public class StockListController {
 	}
 
 	/**
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -376,10 +378,10 @@ public class StockListController {
 
 		/*
 		 * //int cnt = 0;
-		 * 
+		 *
 		 * //if (!removeLIst.isEmpty()) { if (removeLIst.size() > 0) { cnt = stock.removeServiceInfoGrid(stockId,
 		 * removeLIst, loginId); }
-		 * 
+		 *
 		 * } else if (!addLIst.isEmpty()) { if (addLIst.size() > 0) { cnt = stock.addServiceInfoGrid(stockId, addLIst,
 		 * loginId); } }
 		 */
