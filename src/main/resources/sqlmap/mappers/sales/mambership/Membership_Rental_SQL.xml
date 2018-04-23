@@ -515,6 +515,10 @@
 												       to_char(S.DD_SUBMIT_DT,'dd/mm/yyyy' ) DD_SUBMIT_DT ,
 												       to_char(S.DD_START_DT,'dd/mm/yyyy' ) DD_START_DT   ,
 												       to_char(S.DD_REJCT_DT,'dd/mm/yyyy' ) DD_REJCT_DT   ,
+												       S.DD_APPLY_DT2  ,
+												       S.DD_SUBMIT_DT2  ,
+												       S.DD_START_DT2  ,
+												       S.DD_REJCT_DT2  ,
 												       S.FAIL_RESN_ID   ,
 												       S.RESN_ID   ,
 												       S.BANK_ID   ,
@@ -589,11 +593,51 @@
 											                   END
 											                      DD_REJCT_DT,
 											                CASE
+                                                                  WHEN ( (E1.DD_APPLY_DT IS NOT NULL)
+                                                                        AND (TO_CHAR (E1.DD_APPLY_DT, 'yyyymmdd') >
+                                                                                '19000101'))
+                                                                  THEN
+                                                                      TO_CHAR(E1.DD_APPLY_DT, 'dd/mm/yyyy')
+                                                                  ELSE
+                                                                     '-'
+                                                               END
+                                                                  DD_APPLY_DT2,
+                                                               CASE
+                                                                  WHEN ( (E1.DD_SUBMIT_DT IS NOT NULL)
+                                                                        AND (TO_CHAR (E1.DD_SUBMIT_DT, 'yyyymmdd') >
+                                                                                '19000101'))
+                                                                  THEN
+                                                                      TO_CHAR(E1.DD_SUBMIT_DT, 'dd/mm/yyyy')
+                                                                  ELSE
+                                                                      '-'
+                                                               END
+                                                                   DD_SUBMIT_DT2,
+                                                               CASE
+                                                                  WHEN ( (E1.DD_START_DT IS NOT NULL)
+                                                                        AND (TO_CHAR (E1.DD_START_DT, 'yyyymmdd') >
+                                                                                '19000101'))
+                                                                  THEN
+                                                                     TO_CHAR(E1.DD_START_DT, 'dd/mm/yyyy')
+                                                                  ELSE
+                                                                      '-'
+                                                               END
+                                                                  DD_START_DT2,
+                                                               CASE
+                                                                  WHEN ( (E1.DD_REJCT_DT IS NOT NULL)
+                                                                        AND (TO_CHAR (E1.DD_REJCT_DT, 'yyyymmdd') >
+                                                                                '19000101'))
+                                                                  THEN
+                                                                     TO_CHAR(E1.DD_REJCT_DT, 'dd/mm/yyyy')
+                                                                  ELSE
+                                                                     '-'
+                                                               END
+                                                                  DD_REJCT_DT2,
+											                CASE
 											                     WHEN ( E1.FAIL_RESN_ID IS NOT NULL ) THEN E1.FAIL_RESN_ID
 											                     ELSE 0
 											                END FAIL_RESN_ID  ,
 											                CASE
-											                     WHEN ( E4.RESN_ID IS NOT NULL ) THEN E4.CODE
+											                     WHEN ( E4.RESN_ID IS NOT NULL ) THEN E4.CODE||'-'||E4.RESN_DESC
 											                     ELSE ' '
 											                END RESN_ID  ,
 											                CASE
