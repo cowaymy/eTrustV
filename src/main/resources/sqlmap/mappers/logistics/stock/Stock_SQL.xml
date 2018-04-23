@@ -5,44 +5,44 @@
         <result property="cdname" column="cdname" jdbcType="CLOB"
             javaType="java.lang.String" />
     </resultMap> -->
-    
+
 	<select id="selectStockList" parameterType="Map" resultType="egovMap">
         <![CDATA[
-			SELECT 
-			    Project1.StkID AS StkID, 
-			    Project1.StkCode AS StkCode, 
-			    Project1.StkDesc AS StkDesc, 
-			    Project1.StkCategoryID AS StkCategoryID, 
-			    Project1.CodeName AS CodeName, 
-			    Project1.StkTypeID AS StkTypeID, 
-			    Project1.CodeName1 AS CodeName1, 
-			    Project1.StatusCodeID AS StatusCodeID, 
-			    Project1.Name AS Name, 
-			    Project1.IsSirim AS IsSirim, 
-			    Project1.IsNCV AS IsNCV, 
-			    Project1.serialchk AS serialchk, 
-			    Project1.QtyPerCarton AS QtyPerCarton, 
-			    Project1.Updator AS Updator, 
-			    Project1.C1 AS C1, 
-			    Project1.Updated AS Updated, 
-			    Project1.NetWeight AS NetWeight, 
-			    Project1.GrossWeight AS GrossWeight, 
-			    Project1.MeasurementCBM AS MeasurementCBM, 
-			    Project1.StkGrade AS StkGrade, 
-			    Project1.BSPoint AS BSPoint, 
-			    Project1.UnitValue AS UnitValue, 
+			SELECT
+			    Project1.StkID AS StkID,
+			    Project1.StkCode AS StkCode,
+			    Project1.StkDesc AS StkDesc,
+			    Project1.StkCategoryID AS StkCategoryID,
+			    Project1.CodeName AS CodeName,
+			    Project1.StkTypeID AS StkTypeID,
+			    Project1.CodeName1 AS CodeName1,
+			    Project1.StatusCodeID AS StatusCodeID,
+			    Project1.Name AS Name,
+			    Project1.IsSirim AS IsSirim,
+			    Project1.IsNCV AS IsNCV,
+			    Project1.serialchk AS serialchk,
+			    Project1.QtyPerCarton AS QtyPerCarton,
+			    Project1.Updator AS Updator,
+			    Project1.C1 AS C1,
+			    Project1.Updated AS Updated,
+			    Project1.NetWeight AS NetWeight,
+			    Project1.GrossWeight AS GrossWeight,
+			    Project1.MeasurementCBM AS MeasurementCBM,
+			    Project1.StkGrade AS StkGrade,
+			    Project1.BSPoint AS BSPoint,
+			    Project1.UnitValue AS UnitValue,
 			    Project1.StkOldCd as StkOldCd ,
-                Project1.C2 AS C2, 
-			    Project1.C3 AS C3, 
-			    Project1.C4 AS C4, 
-			    Project1.C5 AS C5, 
-			    Project1.C6 AS C6, 
-			    Project1.C7 AS C7, 
-			    Project1.C8 AS C8, 
-			    Project1.C9 AS C9, 
-			    Project1.C10 AS C10, 
+                Project1.C2 AS C2,
+			    Project1.C3 AS C3,
+			    Project1.C4 AS C4,
+			    Project1.C5 AS C5,
+			    Project1.C6 AS C6,
+			    Project1.C7 AS C7,
+			    Project1.C8 AS C8,
+			    Project1.C9 AS C9,
+			    Project1.C10 AS C10,
 			    Project1.C11 AS C11
-			    FROM ( 
+			    FROM (
 			SELECT stk.STK_ID AS StkID,
 			       stk.STK_CODE AS StkCode,
 			       stk.STK_DESC AS StkDesc,
@@ -145,19 +145,19 @@
 			    ]]>
 			    WHERE 1 = 1
 			        <if test="cateList != null and cateList != ''">
-			        AND stkCategoryID in 
+			        AND stkCategoryID in
 			        <foreach item="item" collection="cateList" index="index" open="(" separator="," close=")">
 			        #{item}
 			        </foreach>
 			</if>
 			<if test="typeList != null and typeList != ''">
-			AND StkTypeID in 
+			AND StkTypeID in
 			<foreach item="item" collection="typeList" index="index" open="(" separator="," close=")">
 			#{item}
 			</foreach>
 			</if>
 			<if test="statList != null and statList != ''">
-			AND StatusCodeID in 
+			AND StatusCodeID in
 			<foreach item="item" collection="statList" index="index" open="(" separator="," close=")">
 			#{item}
 			</foreach>
@@ -171,17 +171,17 @@
 			<if test="oldstkcd !=null and oldstkcd !=''">
 			AND StkOldCd = #{oldstkcd}
 			</if>
-		ORDER BY StkCode    			
+		ORDER BY StkCode
 	</select>
 	<select id="selectStockInfo" parameterType="Map" resultType="egovMap">
-	   
+
 	       SELECT
 	              <if test="mode !=null and mode == 'save'">
 	               (SELECT CODE_ID
 	                  FROM SYS0013M
 	                 WHERE CODE_ID = inv.STK_TYPE_ID)
 	                  typeid,
-	              </if> 
+	              </if>
 	             (SELECT CODE_NAME
 		          FROM SYS0013M
 		         WHERE CODE_ID = inv.STK_TYPE_ID)
@@ -193,14 +193,14 @@
 		        (SELECT STUS_CODE_ID
 		          FROM SYS0038M
 		         WHERE STUS_CODE_ID = INV.STUS_CODE_ID)
-		          statusid,		          
+		          statusid,
 		       inv.IS_SIRIM issirim,
 		       inv.IS_NCV isncv,
 		       nvl(inv.SERIAL_CHK,'N') serialchk,
 		       inv.STK_CODE stockcode,
 		       <choose>
                      <when test="mode !=null and mode == 'edit'">
-                       (SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=inv.UOM)  
+                       (SELECT CODE_ID FROM SYS0013M WHERE CODE_ID=inv.UOM)
                      </when>
                      <otherwise>
 					  (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID=inv.UOM)
@@ -225,11 +225,11 @@
 		       inv.STK_TYPE_ID typeid,
 		       inv.STK_OLD_CODE oldstkcd
 		  FROM SYS0026M inv
-		 WHERE inv.STK_ID = #{stockId}   
-	 
+		 WHERE inv.STK_ID = #{stockId}
+
 	</select>
 	<select id="selectPriceInfo" parameterType="Map" resultType="egovMap">
-	       select 
+	       select
 	               <if test="typeId !=null and typeId == '61'">
 	               <![CDATA[
 	               nvl(op.PRC_COSTING , 0) pricecost,
@@ -252,11 +252,11 @@
 	               0 as tradeinpv
 	               ]]>
 	               </if>
-	          from 
+	          from
 	              <if test="typeId !=null and typeId == '61'">
 	              <![CDATA[
 	               SYS0026M inv
-	             , (select * from SAL0016M where APP_TYPE_ID = 66 and MEM_PAC_ID  = 0) sp 
+	             , (select * from SAL0016M where APP_TYPE_ID = 66 and MEM_PAC_ID  = #{srvpacid}) sp
 	             , (select * from SAL0016M where APP_TYPE_ID = 67 and MEM_PAC_ID  = 0) op
 	             ]]>
 	             </if>
@@ -279,17 +279,17 @@
 	           </if>
         </select>
         <select id="selectPriceHistoryInfo" parameterType="Map" resultType="egovMap">
-           select 
-					op.ROW_NO, 
-					op.PRC_ID, 
-					op.MEM_PAC_ID, 
-					op.STK_ID,                     
-					op.UOM_ID, 
-					op.UOM_CONV, 
-					op.APP_TYPE_ID, 
+           select
+					op.ROW_NO,
+					op.PRC_ID,
+					op.MEM_PAC_ID,
+					op.STK_ID,
+					op.UOM_ID,
+					op.UOM_CONV,
+					op.APP_TYPE_ID,
 					NVL(op.PRIOD, 0) ,
-					op.STUS_CODE_ID, 
-					op.CRT_USER_ID, 
+					op.STUS_CODE_ID,
+					op.CRT_USER_ID,
 					<!-- op.CRT_DT, -->
 					to_char(op.CRT_DT,'YYYY/MM/DD') CRT_DT,
                    <if test="typeId !=null and typeId == '61'">
@@ -314,11 +314,11 @@
                    0 as tradeinpv
                    ]]>
                    </if>
-              from 
+              from
                   <if test="typeId !=null and typeId == '61'">
                   <![CDATA[
                    SYS0026M inv
-                 , (select * from LOG0058D where APP_TYPE_ID = 66 and MEM_PAC_ID  = 0) sp 
+                 , (select * from LOG0058D where APP_TYPE_ID = 66 and MEM_PAC_ID  = #{srvpacid}) sp
                  , (select * from LOG0058D where APP_TYPE_ID = 67 and MEM_PAC_ID  = 0) op
                  ]]>
                  </if>
@@ -339,9 +339,9 @@
                   and op.MEM_PAC_ID = 0
                   and op.STUS_CODE_ID = 1
                </if>
-               ORDER BY ROW_NO DESC             
+               ORDER BY ROW_NO DESC
         </select>
-        
+
 <!--         <select id="selectFilterInfo" parameterType="Map" resultType="egovMap">
         <![CDATA[
             SELECT BOM.BOM_PART_ID STOCKID
@@ -350,9 +350,9 @@
 			     , CD.CODE_NAME TYPENM
 			     , BOM.BOM_PART_PRIOD PERIOD
 			     , BOM.BOM_PART_QTY QTY
-			  FROM LOG0001M BOM , SYS0026M STK ,SYS0013M CD 
+			  FROM LOG0001M BOM , SYS0026M STK ,SYS0013M CD
 			 WHERE 1 = 1
-			 ]]> 
+			 ]]>
 			   AND BOM.BOM_STK_ID = #{stockId}
 			   AND BOM.BOM_PART_STUS_ID = 1
 			   <if test="grid !=null and grid == 'spare'">
@@ -363,11 +363,11 @@
                </if>
 			   AND BOM.BOM_PART_ID = STK.STK_ID
 			   AND BOM.BOM_PART_TYPE_ID = CD.CODE_ID
-			 order by STOCKNAME 
+			 order by STOCKNAME
         </select> -->
         <select id="selectFilterInfo" parameterType="Map" resultType="egovMap">
         <![CDATA[
-           SELECT 
+           SELECT
 		            SY26M.STK_ID STOCKID,
 					LG44D.BOM_COMPNT ||' - '|| SY26M.STK_DESC STOCKNAME,
 					SY26M.STK_TYPE_ID TYPEID,
@@ -375,12 +375,12 @@
 					LG44D.VALID_FROM_DT,
 					LG44D.VALID_TO_DT,
 					LG44D.COMPNT_QTY QTY
-			FROM LOG0043M LG43M, LOG0044D LG44D ,SYS0026M SY26M, SYS0013M SY13M 
+			FROM LOG0043M LG43M, LOG0044D LG44D ,SYS0026M SY26M, SYS0013M SY13M
 				WHERE 1=1
 					AND LG43M.BOM = LG44D.BOM
 					AND LG44D.BOM_COMPNT = SY26M.STK_CODE
 					AND SY26M.STK_TYPE_ID=SY13M .CODE_ID
-			 ]]> 
+			 ]]>
 			   <if test="grid !=null and grid == 'spare'">
 			   AND SY26M.STK_TYPE_ID=63
 			   </if>
@@ -390,23 +390,23 @@
                 AND LG43M.MATRL_NO =#{stockId}
                 ORDER BY SY26M.STK_ID
         </select>
-        
+
         <select id="selectServiceInfo" parameterType="Map" resultType="egovMap">
         <![CDATA[
 	        SELECT  SP.STK_ID STKID , SP.MEM_PAC_ID PACKAGEID
 			     , PM.SRV_MEM_CODE || ' - ' ||DBMS_LOB.SUBSTR (PM.SRV_MEM_DESC, 4000)  PACKAGENAME
 			     , NVL(SP.AMT , 0) CHARGEAMT
-			  FROM SAL0016M SP , 
+			  FROM SAL0016M SP ,
 			       SAL0091M PM
 			 WHERE 1 = 1
 		]]>
-			   AND SP.STK_ID = #{stockId} 
+			   AND SP.STK_ID = #{stockId}
 			   AND SP.APP_TYPE_ID = 67
 			   AND SP.MEM_PAC_ID <![CDATA[<>]]> 0
 			   AND SP.MEM_PAC_ID = PM.SRV_MEM_PAC_ID
 			 ORDER BY PACKAGENAME
 		</select>
-		
+
 		<select id="selectStockImgList" parameterType="Map" resultType="egovMap">
         <![CDATA[
 			SELECT CD.CODE_NAME codenm
@@ -428,8 +428,8 @@
 			   AND ISI.STK_ID = #{stockId}
 			  ORDER BY imgid
         </select>
-        
-        
+
+
         <update id="updateStockInfo" parameterType="Map">
             UPDATE SYS0026M
                SET STK_DESC     = #{stock_name}
@@ -445,8 +445,8 @@
                  , UPD_USER_ID  = #{upd_user}
             WHERE STK_ID        = #{stockId}
         </update>
-        
-        
+
+
         <update id="updateSalePriceUOM" parameterType="Map">
             UPDATE SAL0016M
 			   SET UOM_ID = #{stock_uom}
@@ -456,21 +456,21 @@
                                 AND APP_TYPE_ID = #{app_type_id}
                                 AND ROWNUM = 1)
         </update>
-        
-        
+
+
         <update id="updateSalePriceInfo" parameterType="Map">
            update SAL0016M
-			   set UPD_DT      = SYSDATE 
+			   set UPD_DT      = SYSDATE
 			       <if test="apptypeid !=null and apptypeid == '69'">
 			     , AMT         = TO_NUMBER (replace(#{amt},',', ''))
-			     , PRC_CHRG    = #{pricecharges}  
+			     , PRC_CHRG    = #{pricecharges}
 			     , PRC_COSTING = #{pricecosting}
 			       </if>
 			       <if test="apptypeid !=null and apptypeid == '66'">
 			     ,  AMT         = TO_NUMBER (replace(#{amt},',', ''))
-			     ,  PRC_RPF     = #{pricerpf} 
-			     ,  PRC_PV      = #{pricepv} 
-			     ,  TRADE_IN_PV = #{tradeinpv} 
+			     ,  PRC_RPF     = #{pricerpf}
+			     ,  PRC_PV      = #{pricepv}
+			     ,  TRADE_IN_PV = #{tradeinpv}
 			     ,  PRC_COSTING = #{pricecosting}
 			       </if>
 			       <if test="apptypeid !=null and apptypeid == '67'">
@@ -479,13 +479,13 @@
 			     ,  TRADE_IN_PV = #{tradeinpv}
 			     ,  PRC_COSTING = #{pricecosting}
 			       </if>
-			     ,  UPD_USER_ID = #{upd_user} 
+			     ,  UPD_USER_ID = #{upd_user}
 			 where PRC_ID      =  (SELECT PRC_ID FROM SAL0016M
 		                            WHERE STK_ID = #{stockid}
 		                              AND APP_TYPE_ID = #{apptypeid}
-		                              AND MEM_PAC_ID  = 0)
+		                              AND MEM_PAC_ID  = #{srvpacid})
         </update>
-        
+
         <select id="srvMembershipList" parameterType="Map" resultType="egovMap">
         SELECT   SRV_MEM_PAC_ID pacid
 	        ,SRV_MEM_CODE memcd
@@ -494,8 +494,8 @@
 	       WHERE SRV_MEM_STUS_ID = 1
 	       ORDER BY SRV_MEM_CODE
         </select>
-        
-        
+
+
        <insert id="addServiceInfoGrid" parameterType="Map">
            INSERT INTO SAL0016M
             (PRC_ID
@@ -551,32 +551,32 @@
             ,1
             )
         </insert>
-         
+
          <select id="selectPacId" parameterType="Map" resultType="Integer">
             SELECT NVL(MAX(PRC_ID),0)+1 FROM SAL0016M
          </select>
          <select id="selectBomId" parameterType="Map" resultType="Integer">
             SELECT NVL(MAX(BOM_ID),0)+1 FROM LOG0001M
          </select>
-         
+
 <!--          <update id="removeServiceInfoGrid" parameterType="Map">
             UPDATE SAL0016M
               SET MEM_PACT_ID  = 0
-              , UPD_USER_ID       = 
+              , UPD_USER_ID       =
               , UPD_DT               =
              WHERE 1=1
                AND STK_ID=
                AND MEM_PAC_ID
          </update> -->
-         
-         
+
+
          <delete id="removeServiceInfoGrid" parameterType="Map" >
             DELETE FROM SAL0016M
-            WHERE 
+            WHERE
                  MEM_PAC_ID = #{packageid}
                  AND STK_ID   = #{stockId}
          </delete>
-         
+
          <insert id="addFilterInfoGrid" parameterType="Map">
          INSERT INTO LOG0001M
 		   (
@@ -605,7 +605,7 @@
               , 0
             </otherwise>
             </choose>
-         <choose>  
+         <choose>
             <when test="bom_part_id !=null and bom_part_id >0">
 			, #{bom_part_id}
 			</when>
@@ -634,10 +634,10 @@
              ,548
              </when>
          </choose>
-		
+
 		)
          </insert>
-         
+
         <delete id="removeFilterInfoGrid" parameterType="Map" >
             DELETE FROM LOG0001M
             WHERE BOM_STK_ID    =#{stockId}
@@ -651,7 +651,7 @@
              </when>
          </choose>
          </delete>
-         
+
           <insert id="insertSalePriceInfoHistory" parameterType="Map">
           INSERT INTO LOG0058D
 						          (ROW_NO,
@@ -670,7 +670,7 @@
 									PRC_COSTING,
 									STUS_CODE_ID,
 									CRT_USER_ID,
-									CRT_DT) 
+									CRT_DT)
 			SELECT LOG0058D_ROW_NO.NEXTVAL,
 			                        PRC_ID,
                                     MEM_PAC_ID,
@@ -688,15 +688,15 @@
                                     STUS_CODE_ID,
                                     #{upd_user},
                                     SYSDATE
-               FROM  SAL0016M  
-                        WHERE PRC_ID      =  (SELECT PRC_ID 
+               FROM  SAL0016M
+                        WHERE PRC_ID      =  (SELECT PRC_ID
                                                                 FROM SAL0016M
                                                                 WHERE STK_ID = #{stockid}
                                                                 AND APP_TYPE_ID = #{apptypeid}
-                                                                AND MEM_PAC_ID  = 0)    
+                                                                AND MEM_PAC_ID  = #{srvpacid})
          </insert>
          <select id="selectStockCommisionSetting" parameterType="Map" resultType="egovMap">
-         <![CDATA[ 
+         <![CDATA[
            SELECT LIMIT1.STK_ID STK_ID
 		      ,LIMIT1.STK_CODE STK_CODE
 		      ,LIMIT1.STK_DESC STK_DESC
@@ -822,12 +822,12 @@
 		               LEFT JOIN SYS0013M EXTENT9
 		               ON (61 <> EXTENT1.STK_TYPE_ID)
 		             AND (EXTENT9.CODE_ID = EXTENT7.UOM_ID)
-		         WHERE EXTENT1.STK_ID = #{stockId} 
+		         WHERE EXTENT1.STK_ID = #{stockId}
 		           AND ROWNUM <= 1) LIMIT1
          ]]>
-         
+
          </select>
-         
+
          <update id="updateStockCommision"  parameterType="Map">
             UPDATE SYS0026M
 			   SET UPD_DT = SYSDATE,
@@ -840,7 +840,7 @@
 			       STK_COMM_INS =#{rate_install}
 			 WHERE  STK_ID = #{stockId}
          </update>
-         
+
          <insert id="nonvalueItemPriceins" parameterType="Map">
             INSERT INTO SAL0016M (PRC_ID, MEM_PAC_ID , STK_ID, AMT, UOM_ID, UOM_CONV, START_DT, END_DT, CNTY_ID , APP_TYPE_ID, CRT_USER_ID, CRT_DT)
                            VALUES((SELECT MAX(PRC_ID)+1 FROM SAL0016M),
@@ -855,11 +855,11 @@
                            VALUES(#{stkid} , #{insStockCode} , #{istocknm} , #{insCate} , #{istockType} , 1 ,#{oldStockNo} , #{insas} , #{insSirim}, #{insNCV} , #{loginId} , sysdate, #{insas} , #{insUom}
                                  )
          </insert>
-         
+
          <select id="nonvaluedItemCodeChk" parameterType="Map" resultType="String">
             select count(1) cnt from sys0026m where stk_code = #{insStockCode}
          </select>
-         
+
          <update id="modifyServicePoint" parameterType="Map">
             UPDATE SYS0026M
                SET STK_COMM_AS     = #{ias}
