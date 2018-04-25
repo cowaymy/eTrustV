@@ -89,6 +89,7 @@
 
 
       <select id="getCdUpMemList" parameterType="Map" resultType="egovMap">
+            SELECT * FROM (
             SELECT A.MEM_ID AS CODE_ID
             ,A.DEPT_CODE || '-' || B.NAME AS CODE_NAME
                     /*,B.MEM_CODE || '-' || B.NAME AS CODE_NAME*/
@@ -128,17 +129,37 @@
 				    AND B.MEM_CODE  = #{userName}
 	            </if>
             </if>
-            <if test="userType == '4'.toString()">
+            <if test="userType == '4'.toString() and groupCode != '151'.toString() ">
                     AND A.MEM_LVL = '3'
                     AND A.BRNCH_ID = #{groupCode}
                     AND B.STUS = '1'
             </if>
-            ORDER BY b.MEM_CODE
+            <if test = "userType == '4'.toString() and groupCode == '151'.toString() ">
+                    AND A.MEM_LVL = '3'
+                    AND A.BRNCH_ID = #{groupCode}
+                    AND B.STUS = '1'
+                UNION
+                     SELECT A.MEM_ID AS CODE_ID
+                    ,A.DEPT_CODE || '-' || B.NAME AS CODE_NAME
+                    /*,B.MEM_CODE || '-' || B.NAME AS CODE_NAME*/
+            FROM ORG0005D A
+                    ,ORG0001D B
+                    ,SYS0005M C
+            WHERE A.MEM_ID = B.MEM_ID
+                AND A.BRNCH_ID = C.BRNCH_ID
+                AND A.DEPT_CODE IS NOT NULL
+                AND A.BRNCH_ID = '151'
+                AND B.STUS = '1'
+            </if>
+
+           ) PROJECT
+           ORDER BY CODE_NAME
        </select>
 
 
 
         <select id="getCdDeptList" parameterType="Map" resultType="egovMap">
+          SELECT * FROM (
           SELECT A.MEM_ID AS CODE_ID
                     ,A.DEPT_CODE || '-' || B.NAME AS CODE_NAME
             FROM ORG0005D A
@@ -177,12 +198,31 @@
                     AND B.MEM_CODE  = #{userName}
                 </if>
             </if>
-            <if test="userType == '4'.toString()">
+            <if test="userType == '4'.toString() and groupCode != '151'.toString() ">
                     AND A.MEM_LVL = '3'
                     AND A.BRNCH_ID = #{groupCode}
                     AND B.STUS = '1'
             </if>
-            ORDER BY b.MEM_CODE
+
+             <if test = "userType == '4'.toString() and groupCode == '151'.toString() ">
+                    AND A.MEM_LVL = '3'
+                    AND A.BRNCH_ID = #{groupCode}
+                    AND B.STUS = '1'
+                UNION
+                     SELECT A.MEM_ID AS CODE_ID
+                    ,A.DEPT_CODE || '-' || B.NAME AS CODE_NAME
+                    /*,B.MEM_CODE || '-' || B.NAME AS CODE_NAME*/
+            FROM ORG0005D A
+                    ,ORG0001D B
+                    ,SYS0005M C
+            WHERE A.MEM_ID = B.MEM_ID
+                AND A.BRNCH_ID = C.BRNCH_ID
+                AND A.DEPT_CODE IS NOT NULL
+                AND A.BRNCH_ID = '151'
+                AND B.STUS = '1'
+            </if>
+            ) PROJECT
+            ORDER BY CODE_NAME
        </select>
 
            <select id="getCdList_1" parameterType="Map" resultType="egovMap">
@@ -223,6 +263,24 @@
 			           <foreach item="item" collection="deptListSpl" index="index" open="(" separator="," close=")">
 			            #{item}
 			           </foreach>
+
+			           <if test = "item == 'CTS2044'  ">
+			            UNION
+                    SELECT DISTINCT b.dept_code,
+                       b.mem_id,
+                       d.mem_code AS cody_id,
+                       d.name AS cody_name,
+                       d.stus
+                FROM sys0005m a,
+                       org0005d b,
+                       org0001d d,
+                       sys0038m extent2
+                 WHERE  a.brnch_id = d.brnch
+                    AND b.mem_id = d.mem_id
+                    AND d.stus = '1'
+                    AND a.brnch_id = '151'
+			           </if>
+
 			        </if>
                     ) a
                  ORDER BY DEPT_CODE ASC, CODY_ID ASC
@@ -3689,6 +3747,7 @@
 
 
     <select id="selectCMList" parameterType="Map" resultType="egovMap">
+    SELECT * FROM (
     SELECT A.DEPT_CODE AS CODE_ID, A.DEPT_CODE || '-' || B.NAME AS CODE_NAME
 	FROM ORG0005D A, ORG0001D B, SYS0005M C
 	WHERE A.MEM_ID   = B.MEM_ID
@@ -3698,7 +3757,24 @@
 	AND A.MEM_LVL    = '3'
 	AND A.BRNCH_ID   = #{groupCode}
 	AND B.STUS       = '1'
-	ORDER BY b.MEM_CODE
+
+	<if test = "groupCode == '151'.toString() ">
+               UNION
+                     SELECT A.DEPT_CODE AS CODE_ID
+                    ,A.DEPT_CODE || '-' || B.NAME AS CODE_NAME
+                    /*,B.MEM_CODE || '-' || B.NAME AS CODE_NAME*/
+            FROM ORG0005D A
+                    ,ORG0001D B
+                    ,SYS0005M C
+            WHERE A.MEM_ID = B.MEM_ID
+                AND A.BRNCH_ID = C.BRNCH_ID
+                AND A.DEPT_CODE IS NOT NULL
+                AND A.BRNCH_ID = '151'
+                AND B.STUS = '1'
+            </if>
+
+	) PROJECT
+	ORDER BY CODE_NAME
     </select>
 
 
