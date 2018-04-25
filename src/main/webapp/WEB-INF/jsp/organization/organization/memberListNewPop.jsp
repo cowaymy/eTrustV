@@ -9,32 +9,32 @@ var optionArea = {chooseMessage: "4. Area"};
 
 var myGridID_Doc;
 function fn_memberSave(){
-                
+
                 if( $("#userType").val() == "1") {
                     $('#memberType').attr("disabled", false);
                     $('#searchdepartment').attr("disabled", false);
                     $('#searchSubDept').attr("disabled", false);
-			    }    
-                
+			    }
+
 	            $("#streetDtl1").val(insAddressForm.streetDtl.value);
 	            $("#addrDtl1").val(insAddressForm.addrDtl.value);
 	            $("#traineeType").val(($("#traineeType1").value));
 	            $("#subDept").val(($("#searchSubDept").value));
 			    var jsonObj =  GridCommon.getEditData(myGridID_Doc);
 			    jsonObj.form = $("#memberAddForm").serializeJSON();
-			    
+
 			    console.log("-------------------------" + JSON.stringify(jsonObj));
 			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
 				console.log("message : " + result.message );
 				Common.alert(result.message,fn_close);
-		}); 
+		});
 }
 
 function fn_close(){
 	$("#popup_wrap").remove();
 }
 function fn_saveConfirm(){
-	
+
 	if(fn_saveValidation()){
         Common.confirm("<spring:message code='sys.common.alert.save'/>", fn_memberSave);
     }
@@ -59,40 +59,40 @@ function fn_departmentCode(value){
      }else{
         $("#trTrainee").hide();
      }
-     
+
      $("#joinDate").val($.datepicker.formatDate('dd/mm/yy', new Date()));
-     
+
      $("#joinDate").attr("readOnly", true);
-     
-     
-     
+
+
+
      if($("#memberType").val() == 2803){
-     
+
          var spouseCode = "${spouseInfoView[0].memCode}";
          var spouseName = "${spouseInfoView[0].name}";
          var spouseNric = "${spouseInfoView[0].nric}";
          var spouseDob = "${spouseInfoView[0].dob}";
          var spouseTel = "${spouseInfoView[0].telMobile}";
-     
+
         /* $('#sponsorCd').val(spouseCode);
         $('#sponsorNm').val(spouseName);
         $('#sponsorNric').val(spouseNric);  */
-        
+
 		$("#branch").find('option').each(function() {
 		    $(this).remove();
 		});
         $("#branch").append("<option value=''>Choose One</option>");
 
-        $("#branch").attr("disabled", true);       
-        $("#transportCd").attr("disabled", true);    
+        $("#branch").attr("disabled", true);
+        $("#transportCd").attr("disabled", true);
         $("#applicationStatus").attr("disabled", true);
         $("#searchdepartment").attr("disabled", true);
         $("#searchSubDept").attr("disabled", true);
-        
+
         /*
         $('#spouseCode').val(spouseCode);
         $('#spouseName').val(spouseName);
-        $('#spouseNRIC').val(spouseNric); 
+        $('#spouseNRIC').val(spouseNric);
         $('#spouseDOB').val(spouseDob);
         $('#spouseContat').val(spouseTel);
 
@@ -101,7 +101,7 @@ function fn_departmentCode(value){
         $('#spouseNRIC', '#memberAddForm').attr("readonly", true );
         $('#spouseDOB', '#memberAddForm').attr("readonly", true );
         $('#spouseContat', '#memberAddForm').attr("readonly",  true );
-        
+
         $('#spouseCode', '#memberAddForm').attr('class','w100p readonly ');
         $('#spouseName', '#memberAddForm').attr('class','w100p readonly ');
         $('#spouseNRIC', '#memberAddForm').attr('class','w100p readonly ');
@@ -111,31 +111,31 @@ function fn_departmentCode(value){
      } else {
         $('#spouseCode').val('');
         $('#spouseName').val('');
-        $('#spouseNric').val(''); 
+        $('#spouseNric').val('');
         $('#spouseDob').val('');
-        $('#spouseContat').val('');     
-        
+        $('#spouseContat').val('');
+
         $('#spouseCode', '#memberAddForm').attr("readonly", false);
         $('#spouseName', '#memberAddForm').attr("readonly", false);
         $('#spouseNric', '#memberAddForm').attr("readonly", false);
         $('#spouseDob', '#memberAddForm').attr("readonly", false);
         $('#spouseContat', '#memberAddForm').attr("readonly", false);
-        
+
         $('#spouseCode', '#memberAddForm').attr('class','w100p  ');
         $('#spouseName', '#memberAddForm').attr('class','w100p  ');
         $('#spouseNric', '#memberAddForm').attr('class','w100p  ');
         $('#spouseDob', '#memberAddForm').attr('class','w100p  ');
         $('#spouseContat', '#memberAddForm').attr('class','w100p  ');
-        
+
         $("#branch").attr("disabled", false);
         $("#transportCd").attr("disabled", false);
         $("#applicationStatus").attr("disabled", false);
         $("#searchdepartment").attr("disabled", false);
         $("#searchSubDept").attr("disabled", false);
-        
+
      }
-     
-     
+
+
 	var action = value;
 	console.log("fn_departmentCode >> " + action)
 	switch(action){
@@ -174,82 +174,82 @@ function fn_departmentCode(value){
            break;
 
 	   case "5" :
-	   
+
            $("#branch").find('option').each(function() {
                $(this).remove();
-           });	   
+           });
            $("#deptCd").find('option').each(function() {
                $(this).remove();
-           });    	   
-	   
+           });
+
            $("#traineeType1").change(function(){
 
         	   var traineeType =  $("#traineeType1").val();
-        	   
+
         	   fn_docSubmission()
         	   console.log("fn_departmentCode traineeType>> " + traineeType)
-        	   
+
         	   if( traineeType == '2'){
         		    doGetComboSepa("/common/selectBranchCodeList.do",'4' , '-',''   , 'branch' , 'S', '');
-        		    
+
 		           $("#branch").change(function(){
 		               var jsonObj = {
 		                       memberLvl : 3,
 		                       flag :  "%CCS%",
 		                       branchVal : $("#branch").val()
 		               };
-		
+
 		               doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-		           });   
-		           
-		           //Training Course ajax콜 위치     		    
+		           });
+
+		           //Training Course ajax콜 위치
 		           //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
-                   var groupCode  = {groupCode : traineeType}; 
+                   var groupCode  = {groupCode : traineeType};
 		           Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
-		
+
 			            $("#course").find('option').each(function() {
 			                $(this).remove();
-			            });			            
+			            });
 			             console.log("-------------------------" + JSON.stringify(result));
 			             if (result!= null) {
 			             $("#course").append("<option value=''>Choose One</option>");
 			                for( var i=0; i< result.length; i++) {
 			                 $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
 			                }
-			             }	
-		             });	           
-		           
+			             }
+		             });
+
         	   }
         	   else if(traineeType == '3'){
-        	   
+
 		           $("#branch").change(function(){
 		               var jsonObj = {
 		                       memberLvl : 3,
 		                       flag :  "%CTS%",
 		                       branchVal : $("#branch").val()
 		               };
-		
+
 		               doGetCombo("/organization/selectDeptCode", jsonObj , ''   , 'deptCd' , 'S', '');
-		           });   
-		                	   
+		           });
+
         		   doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'branch' , 'S', '');
-        		   
+
         		   //Training Course ajax콜 위치
         		   //doGetCombo("/organization/selectCoureCode.do", traineeType , ''   , 'course' , 'S', '');
-        		   var groupCode  = {groupCode : traineeType}; 
+        		   var groupCode  = {groupCode : traineeType};
                    Common.ajax("GET", "/organization/selectCoureCode.do", groupCode, function(result) {
-        
+
                         $("#course").find('option').each(function() {
                             $(this).remove();
-                        });                     
+                        });
                          console.log("-------------------------" + JSON.stringify(result));
                          if (result!= null) {
                          $("#course").append("<option value=''>Choose One</option>");
                             for( var i=0; i< result.length; i++) {
                              $("#course").append("<option value="+result[i].codeId+">"+result[i].codeName+"</option>");
                             }
-                         }  
-                     });    
+                         }
+                     });
         	   }
            });
 
@@ -257,74 +257,74 @@ function fn_departmentCode(value){
            break;
 
         case "2803" :
-        
-            
-	   
+
+
+
 	        if ( $("#userType").val() == "1" ) {
-		   
+
 	            Common.ajax("GET", "/organization/selectDeptCodeHp", null, function(result) {
-	
+
 					$("#deptCd").find('option').each(function() {
 					    $(this).remove();
 					});
-		           
+
 					console.log("------selectDeptCodeHp-------------------" + JSON.stringify(result));
 					if (result!= null) {
 					   $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
 					}
-	
+
 	            });
-	            
-	            
+
+
 	        } else {
 	           //doGetCombo('/organization/selectDepartmentCode', '', '','deptCd', '' , '');
-	           
+
                 Common.ajax("GET", "/organization/selectDepartmentCode", null, function(result) {
-    
+
                     $("#deptCd").find('option').each(function() {
                         $(this).remove();
                     });
-                   
+
                     console.log("------selectDepartmentCode-------------------" + JSON.stringify(result));
                     if (result!= null) {
                        $("#deptCd").append("<option value="+result[0].codeId+">"+result[0].codeId+"</option>");
                         for(var z=0; z< result.length;z++) {
                             $("#deptCd").append("<option value="+result[z].codeId+">"+result[z].codeName+"</option>");
-                       }                       
+                       }
                     }
-    
-                });	           
+
+                });
 	        }
 	        /*
 	        $("#branch").find('option').each(function() {
                     $(this).remove();
                 });
-                
+
                 //branch combo 다시 그림.
                 //doGetCombo('/organization/selectBranchCode', '', '','branch', '' , '');
-                
+
                 Common.ajax("GET", "/organization/selectBranchCode", null, function(result) {
-                   
+
                     console.log("-----selectBranchCode--------------------" +result.length + JSON.stringify(result));
                     if (result!= null) {
                         for(var z=0; z< result.length;z++) {
                             $("#branch").append("<option value="+result[z].codeId+">"+result[z].codeName+"</option>");
                        }
                     }
-    
+
                 });
-	           */  
+	           */
         break;
-           
-	/*     case "2803" :   // this is temp code  that   add by hgham    
-	    
+
+	/*     case "2803" :   // this is temp code  that   add by hgham
+
 	    	     $("#deptCd option").remove();
 	             $("#deptCd option").remove();
                  $("#deptCd").append("<option value='CRS3001'>CRS3001</option>");
             break; */
 	}
-	
-     
+
+
 }
 $(document).ready(function() {
 
@@ -343,13 +343,13 @@ $(document).ready(function() {
     //doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
 
     $("#deptCd").change(function (){
-    	//modify hgham 2017-12-25  주석 처리 
+    	//modify hgham 2017-12-25  주석 처리
     	//doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
 	createAUIGridDoc();
 	fn_docSubmission();
 	fn_departmentCode('2');  //modify  hgham 25-12 -2017    as is code  fn_departmentCode();
-	
+
 	$("#state").change(function (){
 		var state = $("#state").val();
 		doGetComboAddr('/common/selectAddrSelCodeList.do', 'area' ,state ,'area', 'S', '');
@@ -358,7 +358,7 @@ $(document).ready(function() {
         var area = $("#area").val();
         doGetComboAddr('/common/selectAddrSelCodeList.do', 'post' ,area ,'','postCode', 'S', '');
     });
-	
+
 	// Member Type 바꾸면 입력한 NRIC 비우기, doc 새로불러오기
 	$("#memberType").change(function (){
 		$("#nric").val('');
@@ -368,44 +368,44 @@ $(document).ready(function() {
 		  } else {
 			  $("#memberCd").attr("disabled", true);
 		  }
-		  
+
     });
 
 	$("#memberType").click(function (){
-	
+
 	console.log("================" +  $("#memberType").val());
         var memberType = $("#memberType").val();
-        
+
         if ( memberType ==  "2803") {
             $('#course').attr("disabled", true);
         } else {
-            $('#course').removeAttr('disabled'); 
+            $('#course').removeAttr('disabled');
         }
         fn_departmentCode(memberType);
-        
-        
+
+
      });
-     
+
      $("#searchdepartment").change(function(){
-             
-        doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','searchSubDept', 'S' ,  ''); 
-         
+
+        doGetCombo('/organization/selectSubDept.do',  $("#searchdepartment").val(), '','searchSubDept', 'S' ,  '');
+
      });
-     
+
     //var nationalStatusCd = "1";
     $("#national option[value=1]").attr('selected', 'selected');
-    
+
     //var cmbRacelStatusCd = "10";
     $("#cmbRace option[value=10]").attr('selected', 'selected');
-     
+
      if( $("#userType").val() == "1") {
         $("#memberType option[value=2803]").attr('selected', 'selected');
         $('#memberType').attr("disabled", true);
      }
-     
-     
-     $('#memberType').trigger('click'); 
-     
+
+
+     $('#memberType').trigger('click');
+
      $('#nric').blur(function() {
     	 if ($('#nric').val().length == 12) {
     		 checkNRIC();
@@ -414,13 +414,13 @@ $(document).ready(function() {
     		 } */
          }
      });
-     
+
      $('#sponsorCd').blur(function() {
     	 if ($('#sponsorCd').val().length > 0) {
     		 fn_sponsorCd();
     	 }
      });
-     
+
      if ($("#memberType").val() == "4") {
          $("#memberCd").attr("disabled", false);
      } else {
@@ -430,13 +430,13 @@ $(document).ready(function() {
 });
 function createAUIGridDoc() {
     //AUIGrid 칼럼 설정
-    var columnLayout = [ 
+    var columnLayout = [
         {
             dataField : "codeId",
             headerText : "DocumentId",
             editable : false,
             width : 0
-        }                 
+        }
        ,{
         dataField : "codeName",
         headerText : "Document",
@@ -456,14 +456,14 @@ function createAUIGridDoc() {
          // 체크박스 Visible 함수
             checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
                 if(item.docQty == 0){
-                    AUIGrid.updateRow(myGridID_Doc, { 
-                         "docQty" : "1" 
-                           
-                        }, rowIndex); 
+                    AUIGrid.updateRow(myGridID_Doc, {
+                         "docQty" : "1"
+
+                        }, rowIndex);
                 }
                 return true;
             }
-            
+
         }
     }, {
         dataField : "docQty",
@@ -476,21 +476,21 @@ function createAUIGridDoc() {
             step : 1,
             textEditable : true
         },
-        width : 130, 
+        width : 130,
         checkableFunction  : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
             if(item.docQty != 0){
-                AUIGrid.updateRow(myGridID_Doc, { 
-                      "submission" : "1" 
-                       
-                    }, rowIndex); 
+                AUIGrid.updateRow(myGridID_Doc, {
+                      "submission" : "1"
+
+                    }, rowIndex);
             }else{
-                AUIGrid.updateRow(myGridID_Doc, { 
-                    "submission" : "0" 
-                  }, rowIndex); 
+                AUIGrid.updateRow(myGridID_Doc, {
+                    "submission" : "0"
+                  }, rowIndex);
             }
             return true;
         }
-        
+
     }];
      // 그리드 속성 설정
     var gridPros = {
@@ -561,7 +561,7 @@ var gridPros = {
 
 //Validation Check
 function fn_saveValidation(){
-	
+
 	if($("#memberNm").val() == ''){
         Common.alert("Please key  in Member Name");
         return false;
@@ -571,7 +571,7 @@ function fn_saveValidation(){
         Common.alert("Please select Joined Date");
         return false;
     }
-	
+
 	if($("#sponsorCd").val() == ''){
         Common.alert("Please select 'Sponsor's Code'");
         return false;
@@ -614,7 +614,7 @@ function fn_saveValidation(){
 
     if (  $("#nric").val().length != 12 ) {
         Common.alert("NRIC should be in 12 digit");
-        return false;    
+        return false;
     }
 
 	if($("#marrital").val() == ''){
@@ -640,7 +640,7 @@ function fn_saveValidation(){
         Common.alert("Please key in the address.");
         return false;
     }
-	
+
 	if($("#addrDtl").val() == ''){
         Common.alert("Please key in the address detail.");
         return false;
@@ -678,7 +678,7 @@ function fn_saveValidation(){
     		   return false;
     	}
     }
-    
+
 	return true;
 }
 
@@ -732,9 +732,9 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     $("#sponsorCd").val(msponsorCd);
     $("#sponsorNm").val(msponsorNm);
     $("#sponsorNric").val(msponsorNric);
-    
+
     $("#_searchSponDiv").remove();
-    
+
 }
 
 
@@ -876,10 +876,10 @@ function checkNRICEnter(){
 
 function checkNRIC(){
 	var returnValue;
-	
+
    	var jsonObj = { "nric" : $("#nric").val() };
-   	
-   	if ($("#memberType").val() == '2803') {
+
+   	if ($("#memberType").val() == '2803' || $("#memberType").val() == '4' || $("#memberType").val() == '5') {
 	   	Common.ajax("GET", "/organization/checkNRIC1.do", jsonObj, function(result) {
 	           console.log("data : " + result);
 	           if (result.message != "pass") {
@@ -888,7 +888,7 @@ function checkNRIC(){
 	           	returnValue = false;
 	           	return false;
 	           } else {    // 조건1 통과 -> 조건2 수행
-	           	
+
 	           	Common.ajax("GET", "/organization/checkNRIC2.do", jsonObj, function(result) {
 	                   console.log("data : " + result);
 	                   if (result.message != "pass") {
@@ -897,7 +897,7 @@ function checkNRIC(){
 	                       returnValue = false;
 	                       return false;
 	                   } else {    // 조건2 통과 -> 조건3 수행
-	                   	
+
 	                   	Common.ajax("GET", "/organization/checkNRIC3.do", jsonObj, function(result) {
 	                           console.log("data : " + result);
 	                           if (result.message != "pass") {
@@ -911,24 +911,24 @@ function checkNRIC(){
 	                           	returnValue = true;
 	                               return true;
 	                           }
-	                           
+
 	                       });
 	                   }
-	                   
+
 	           	});
 	           }
 	       });
    	} else {
    		autofilledbyNRIC();
    	}
-   	
-    
+
+
     return returnValue;
-    
+
 }
 
 function autofilledbyNRIC(){
-    
+
     //if ($("#memberType").val() == '4') {
     	var nric = $("#nric").val().replace('-', '');
     	var autoGender = nric.substr(11,1);
@@ -936,20 +936,20 @@ function autofilledbyNRIC(){
     	var autoDOB_year = nric.substr(0,2);
     	var autoDOB_month = nric.substr(2,2);
     	var autoDOB_date = nric.substr(4,2);
-    	
+
     	if (parseInt(autoGender)%2 == 0) {
     		$("input:radio[name='gender']:radio[value='F']").prop("checked", true);
     	} else {
     		$("input:radio[name='gender']:radio[value='M']").prop("checked", true);
     	}
-    	
+
     	if (parseInt(autoDOB_year) < 20) {
             $("#Birth").val(autoDOB_date+"/"+autoDOB_month+"/"+"20"+autoDOB_year);
         } else {
         	$("#Birth").val(autoDOB_date+"/"+autoDOB_month+"/"+"19"+autoDOB_year);
         }
     //}
-    
+
 }
 </script>
 
@@ -1051,7 +1051,7 @@ function autofilledbyNRIC(){
     <select class="w100p" id="cmbRace" name="cmbRace">
         <c:forEach var="list" items="${race}" varStatus="status">
             <option value="${list.detailcodeid}">${list.detailcodename } </option>
-        </c:forEach>       
+        </c:forEach>
     </select>
     </td>
 </tr>
@@ -1061,7 +1061,7 @@ function autofilledbyNRIC(){
     <select class="w100p" id="national" name="national">
      <c:forEach var="list" items="${nationality}" varStatus="status">
              <option value="${list.countryid}">${list.name } </option>
-        </c:forEach>       
+        </c:forEach>
     </select>
     </td>
     <th scope="row">NRIC (New)<span class="must">*</span></th>
@@ -1177,8 +1177,8 @@ function autofilledbyNRIC(){
     <select class="w100p" id="deptCd" name="deptCd">
         <c:forEach var="list" items="${DeptCdList}" varStatus="status">
             <option value="${list.codeId}">${list.codeName } </option>
-        </c:forEach>    
-   
+        </c:forEach>
+
     </select>
     </td>
     <th scope="row">Transport Code</th>
@@ -1200,13 +1200,13 @@ function autofilledbyNRIC(){
             <option value="">Choose One</option>
         <c:forEach var="list" items="${Religion}" varStatus="status">
             <option value="${list.detailcodeid}">${list.detailcodename } </option>
-        </c:forEach>        
+        </c:forEach>
     </select>
     </td>
     <th scope="row">e-Approval Status</th>
     <td colspan="2">
     <select class="w100p">
-        <option value="">Choose One</option>    
+        <option value="">Choose One</option>
         <option value="">Pending</option>
         <option value="">Approved</option>
         <option value="">Rejected</option>
@@ -1228,7 +1228,7 @@ function autofilledbyNRIC(){
     <th scope="row">Application Status</th>
     <td colspan="2">
     <select class="w100p" id="applicationStatus">
-        <option value="">Choose One</option>    
+        <option value="">Choose One</option>
         <option value="">Register</option>
         <option value="">Training</option>
         <option value="">Result-fail</option>
@@ -1246,23 +1246,23 @@ function autofilledbyNRIC(){
     <th scope="row">Trainee Type </th>
     <td colspan="2">
         <select class= "w100p" id="traineeType1" name="traineeType1">
-        <option value="">Choose One</option>   
+        <option value="">Choose One</option>
         <option value= "2">Cody</option>
         <option value = "3">CT</option>
     </select>
     </td>
     <th scope="row"></th>
     <td colspan="2">
-    </td>    
+    </td>
 </tr>
 <tr>
     <th scope="row">Main Department</th>
     <td colspan="2">
     <select class="w100p" id="searchdepartment" name="searchdepartment"  >
-            <option value="">Choose One</option>    
+            <option value="">Choose One</option>
          <c:forEach var="list" items="${mainDeptList}" varStatus="status">
              <option value="${list.deptId}">${list.deptName } </option>
-        </c:forEach>  
+        </c:forEach>
     </select>
     </td>
     <th scope="row">Sub Department</th>
@@ -1274,7 +1274,7 @@ function autofilledbyNRIC(){
         </c:forEach>  --%>
     </select>
     </td>
-</tr>    
+</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -1395,7 +1395,7 @@ function autofilledbyNRIC(){
 <tbody>
 <tr>
     <th scope="row">MCode</th>
-    <td>  
+    <td>
     <input type="text" title="" placeholder="MCode" class="w100p readonly " id="spouseCode" readonly="readonly" name="spouseCode" value=""/>
     </td>
     <th scope="row">Spouse Name</th>
