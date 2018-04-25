@@ -2398,7 +2398,7 @@
     }
 
     function fn_setDefaultSrvPacId() {
-        if($('#srvPacId option').size() == 2) {
+        if($('#srvPacId option').size() >= 2) {
             $('#srvPacId option:eq(1)').attr('selected', 'selected');
 
             var stkType = $("#appType").val() == '66' ? '1' : '2';
