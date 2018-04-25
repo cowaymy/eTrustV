@@ -381,8 +381,9 @@
                                     LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.UPD_USER_ID
                                     LEFT JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent1.CUST_INITIAL
                                     LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent1.RACE_ID
-                      WHERE  ( 8 <> Extent1.STUS_CODE_ID )
-                          AND  ( Extent1.CUST_CNTC_ID = #{custCntcId} ) AND ROWNUM <= 1 ) Limit1
+                      WHERE
+                         ( Extent1.CUST_CNTC_ID = #{custCntcId} ) AND ROWNUM <= 1 ) Limit1
+                         -- AND  ( 8 <> Extent1.STUS_CODE_ID )
           ]]>
     </select>
    <!-- Ajax Call Address List  -->
