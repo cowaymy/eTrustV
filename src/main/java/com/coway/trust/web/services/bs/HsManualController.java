@@ -159,7 +159,9 @@ public class HsManualController {
 				String[] spl = deptList.split(",");
 				params.put("deptListSpl", spl);
 			}
+
 			logger.debug("params1 : {}", params);
+
 
 			//brnch to CodyList
 			List<EgovMap> resultList = hsManualService.getCdList_1(params);
@@ -269,6 +271,7 @@ public class HsManualController {
 		params.put("user_id", sessionVO.getUserId());
 		params.put("userType",  sessionVO.getUserTypeId());
 
+		logger.debug("userType :  " + sessionVO.getUserTypeId());
         // 조회.
 		List<EgovMap> hsAssiintList = hsManualService.selectHsAssiinlList(params);
 
@@ -281,7 +284,6 @@ public class HsManualController {
 
 		params.put("memLevl",sessionVO.getMemberLevel());
 		params.put("userName",sessionVO.getUserName());
-
 		params.put("userType",sessionVO.getUserTypeId());
 
 
@@ -1094,7 +1096,12 @@ public class HsManualController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/selectBrnchCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectBrnchCode(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+	public ResponseEntity<List<EgovMap>> selectBrnchCode(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model,SessionVO sessionVO) {
+
+		params.put("memberLevel",  sessionVO.getMemberLevel());
+		params.put("userName",  sessionVO.getUserName());
+		params.put("userType",  sessionVO.getUserTypeId());
+
 
 		List<EgovMap>  cmbBrnchCodeList = hsManualService.selectBranchList(params);
 		model.addAttribute("cmbBrnchCodeList", cmbBrnchCodeList);
