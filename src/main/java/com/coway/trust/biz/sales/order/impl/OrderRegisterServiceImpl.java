@@ -140,7 +140,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	public EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params) {
 
 		BigDecimal orderPricePromo = BigDecimal.ZERO, orderPVPromo = BigDecimal.ZERO, orderPVPromoGST = BigDecimal.ZERO, orderRentalFeesPromo = BigDecimal.ZERO, normalRentalFees = BigDecimal.ZERO;
-
+		logger.info("@@@@@@@@@@@@@@@@@@@@@@:: " + params.toString());
 		EgovMap priceInfo = null;
 
 		if(!StringUtils.isEmpty(params.get("promoId"))) {
@@ -1285,6 +1285,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         logger.debug("@#### salesOrderMVO.getTotPv()     :"+salesOrderMVO.getTotPv());
 
         int promoId = CommonUtils.intNvl(salesOrderMVO.getPromoId());
+        int srvPacId = CommonUtils.intNvl(salesOrderMVO.getSrvPacId());
 
         if(promoId > 0) {
 
@@ -1292,6 +1293,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
             iMap.put("promoId", Integer.toString(promoId));
             iMap.put("stkId", salesOrderDVO.getItmStkId());
+            iMap.put("srvPacId", Integer.toString(srvPacId));
 
             EgovMap oMap  = this.selectProductPromotionPriceByPromoStockID(iMap);
 
@@ -1718,7 +1720,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		// TODO ProductCodeList 호출시 error남
 		return orderRegisterMapper.selectServicePackageList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectServicePackageList2(Map<String, Object> params) {
 		// TODO ProductCodeList 호출시 error남
