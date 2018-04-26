@@ -99,7 +99,7 @@
             var stkIdVal   = $("#cmbOrderProduct").val();
 
             if($("#cmbOrderProduct option:selected").index() > 0) {
-                fn_loadProductPrice(APP_TYPE_ID, stkIdVal);
+                fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID);
                 fn_loadProductPromotion(APP_TYPE_ID, stkIdVal, EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
                 $('#btnCurrentPromo').removeAttr("disabled");
 
@@ -115,10 +115,10 @@
             var promoIdVal = $("#cmbPromotion").val();
 
             if(promoIdIdx > 0 && promoIdVal != '0') {
-                fn_loadPromotionPrice(promoIdVal, stkIdVal);
+                fn_loadPromotionPrice(promoIdVal, stkIdVal, SRV_PAC_ID);
             }
             else {
-                fn_loadProductPrice(APP_TYPE_ID, stkIdVal);
+                fn_loadProductPrice(APP_TYPE_ID, stkIdVal, SRV_PAC_ID);
             }
 
             if(GST_CHK == '1') {
@@ -138,17 +138,17 @@
                     //$('#cmbPromotion').text($('#hiddenCurrentPromotion').val());
                     $('#cmbPromotion option').remove();
                     $('#cmbPromotion').append("<option value=''>"+$('#hiddenCurrentPromotion').val()+"</option>");
-                    fn_loadPromotionPrice($("#hiddenCurrentPromotionID").val(), $("#cmbOrderProduct").val());
+                    fn_loadPromotionPrice($("#hiddenCurrentPromotionID").val(), $("#cmbOrderProduct").val(), SRV_PAC_ID);
                 }
                 else {
                     console.log('@#### 111');
-                    fn_loadProductPrice(APP_TYPE_ID, $("#cmbOrderProduct").val());
+                    fn_loadProductPrice(APP_TYPE_ID, $("#cmbOrderProduct").val(), SRV_PAC_ID);
                     fn_loadProductPromotion(APP_TYPE_ID, $("#cmbOrderProduct").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
                 }
             }
             else {
                 console.log('@#### 222');
-                fn_loadProductPrice(APP_TYPE_ID, $("#cmbOrderProduct").val());
+                fn_loadProductPrice(APP_TYPE_ID, $("#cmbOrderProduct").val(), SRV_PAC_ID);
                 fn_loadProductPromotion(APP_TYPE_ID, $("#cmbOrderProduct").val(), EMP_CHK, CUST_TYPE_ID, EX_TRADE, SRV_PAC_ID);
             }
 
@@ -1171,9 +1171,9 @@
         console.log('fn_loadPromotionPriceAexc totalAmount:'+totalAmount);
     }
 
-    function fn_loadPromotionPrice(promoId, stkId) {
+    function fn_loadPromotionPrice(promoId, stkId, srvPacId) {
 
-        Common.ajaxSync("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId}, function(promoPriceInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
 
             if(promoPriceInfo != null) {
 
@@ -1260,7 +1260,7 @@
     }
 
     //LoadProductPrice
-    function fn_loadProductPrice(appTypeVal, stkId) {
+    function fn_loadProductPrice(appTypeVal, stkId, srvPacId) {
         console.log('fn_loadProductPrice --> appTypeVal:'+appTypeVal);
         console.log('fn_loadProductPrice --> stkId:'+stkId);
 
@@ -1271,7 +1271,7 @@
         $("#searchAppTypeId").val(appTypeId);
         $("#searchStkId").val(stkId);
 */
-        Common.ajaxSync("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId}, function(stkPriceInfo) {
+        Common.ajaxSync("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
 
             if(stkPriceInfo != null) {
 
