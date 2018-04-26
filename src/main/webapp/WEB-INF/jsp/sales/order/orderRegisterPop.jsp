@@ -346,7 +346,7 @@
 
                     fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
                     if(FormUtil.isNotEmpty(promoIdVal)) {
-                        fn_loadPromotionPrice(promoIdVal, stkIdVal);
+                        fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId);
                     }
 
                     if(custInfo.gstChk == '1') {
@@ -774,7 +774,7 @@
 
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
                 if(FormUtil.isNotEmpty(promoIdVal)) {
-                    fn_loadPromotionPrice(promoIdVal, stkIdVal);
+                    fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId);
                 }
                 GST_MANNUAL = 'N';
             }
@@ -1182,7 +1182,7 @@
                     $('#trialNoChk').removeAttr("disabled");
                 }
 
-                fn_loadPromotionPrice(promoIdVal, stkIdVal);
+                fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId);
             }
             else {
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
@@ -2140,9 +2140,9 @@
         }
     }
 
-    function fn_loadPromotionPrice(promoId, stkId) {
+    function fn_loadPromotionPrice(promoId, stkId, srvPacId) {
 
-        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId}, function(promoPriceInfo) {
+        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
 
             if(promoPriceInfo != null) {
 
