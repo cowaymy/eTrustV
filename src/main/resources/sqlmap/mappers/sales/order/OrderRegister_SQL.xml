@@ -402,6 +402,7 @@
          WHERE T1.PROMO_ID = #{promoId}
            AND T1.PROMO_ITM_STUS_ID = 1
            AND T1.PROMO_ITM_STK_ID = #{stkId}
+           AND T4.MEM_PAC_ID = #{srvPacId}
            AND ROWNUM = 1
     </select>
 
