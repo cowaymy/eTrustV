@@ -2114,7 +2114,7 @@
 					                         Filter1.CODE CODE  ,
 					                         1 C1  ,
 					                         Filter1.MEM_CODE MEM_CODE  ,
-					                         Extent4.USER_NAME USER_NAME
+					                         Extent4.USER_FULL_NAME USER_NAME
 					         FROM ( SELECT Extent1.RESULT_ID RESULT_ID  ,
 					                       Extent1.NO NO  ,
 					                       Extent1.SCHDUL_ID SCHDUL_ID  ,
@@ -3691,7 +3691,7 @@
 							                Extent8.RESN_DESC REASONDESC1  ,
 							                Extent9.WH_LOC_CODE WH_LOC_CODE  ,
 							                Extent9.WH_LOC_DESC WH_LOC_DESC  ,
-							                Extent10.USER_NAME USER_NAME
+							                Extent10.USER_FULL_NAME USER_NAME
 							         FROM SVC0006D Extent1
 							                JOIN SVC0008D Extent2   ON Extent2.SCHDUL_ID = Extent1.SCHDUL_ID
 							                JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent2.SALES_ORD_ID
