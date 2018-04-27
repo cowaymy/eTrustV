@@ -1098,9 +1098,9 @@ public class HsManualController {
 	@RequestMapping(value = "/selectBrnchCode.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectBrnchCode(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model,SessionVO sessionVO) {
 
-		params.put("memberLevel",  sessionVO.getMemberLevel());
+/*		params.put("memberLevel",  sessionVO.getMemberLevel());
 		params.put("userName",  sessionVO.getUserName());
-		params.put("userType",  sessionVO.getUserTypeId());
+		params.put("userType",  sessionVO.getUserTypeId());*/
 
 
 		List<EgovMap>  cmbBrnchCodeList = hsManualService.selectBranchList(params);
