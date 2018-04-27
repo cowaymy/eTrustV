@@ -914,7 +914,10 @@
             $('#pBtnCal').addClass("blind");
         }
 
-        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId}, function(promoPriceInfo) {
+        if(APP_TYPE_ID != 66){
+        	SRV_PAC_ID = 0;
+        }
+        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : SRV_PAC_ID}, function(promoPriceInfo) {
 
             if(promoPriceInfo != null) {
 
@@ -959,7 +962,11 @@
                 $('#promoId').val(promoId);
                 $('#stkId').val(stkId);
 
-                doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:APP_TYPE_ID,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:SRV_PAC_ID}, promoId, 'ordPromo', 'S', ''); //Common Code
+                if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68){
+                    doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:APP_TYPE_ID,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:SRV_PAC_ID}, promoId, 'ordPromo', 'S', ''); //Common Code
+                }
+                else
+                    doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:APP_TYPE_ID,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:SRV_PAC_ID}, promoId, 'ordPromo', 'S', ''); //Common Code
             }
         });
     }
@@ -2003,7 +2010,10 @@
             $('#pBtnCal').addClass("blind");
         }
 
-        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : APP_TYPE_ID, stkId : stkId}, function(stkPriceInfo) {
+        if(APP_TYPE_ID != 66){
+        	SRV_PAC_ID = 0;
+        }
+        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : APP_TYPE_ID, stkId : stkId, srvPacId : SRV_PAC_ID}, function(stkPriceInfo) {
 
             if(stkPriceInfo != null) {
 
