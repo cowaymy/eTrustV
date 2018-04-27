@@ -2172,7 +2172,7 @@
 
         $('#ordPromo').removeAttr("disabled");
 
-        if(appTypeVal == 67){
+        if(appTypeVal == 67 || appTypeVal == 68){
             doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
         }
         else
