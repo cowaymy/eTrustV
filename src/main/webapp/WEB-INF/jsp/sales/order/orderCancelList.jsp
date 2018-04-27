@@ -206,7 +206,13 @@
         if(detailForm.reqId.value == ""){
             Common.alert("No cancellation request selected.");
             return false;
-        }//else{test--------
+        }
+
+        if(detailForm.paramCallStusCode.value == 'CC'){
+            Common.alert("not available to use this function when Call Log Status in ‘CC’");
+            return false;
+       }
+        //else{test--------
         //  if(detailForm.paramCallStusId.value != '1' && detailForm.paramCallStusId.value != '19'){
         //      Common.alert("Cancellation request [" +detailForm.paramReqNo.value+ "] is under call status ["
         //                        +detailForm.paramCallStusCode.value+ "] <br>" +"Key in new call result is disallowed.");
