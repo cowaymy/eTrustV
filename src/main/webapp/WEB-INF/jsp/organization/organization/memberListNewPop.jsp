@@ -25,8 +25,41 @@ function fn_memberSave(){
 
 			    console.log("-------------------------" + JSON.stringify(jsonObj));
 			    Common.ajax("POST", "/organization/memberSave",  jsonObj, function(result) {
-				console.log("message : " + result.message );
-				Common.alert(result.message,fn_close);
+			        console.log("message : " + result.message );
+
+			        // Only applicable to HP Applicant
+			        if($("#memberType").val() == "2803") {
+			            $("#aplcntNRIC").val($("#nric").val());
+			            $("#aplcntName").val($("#memberNm").val());
+			            $("#aplcntMobile").val($("#mobileNo").val());
+
+			            console.log("NRIC :: " + $("#aplcntNRIC").val());
+			            console.log("Name :: " + $("#aplcntName").val());
+			            console.log("Mobile :: " + $("#aplcntMobile").val());
+
+			            // Get ID and identification
+			            Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantDtls").serialize(), function(result) {
+			                console.log("saving member details");
+			                console.log(result);
+
+			                $("#aplcntId").val(result.id);
+			                $("#aplcntIdntfc").val(result.idntfc);
+
+			            });
+
+			            // Construct Agreement URL via SMS
+			            var cnfmSms = "RM0.00 COWAY: COMPULSORY click " +
+			                                 "http://etrust.my.coway.com/Organization/MemberID=" + $("#aplcntId").val() + "&UserTypeID=2803";
+
+			            $("#aplcntSMS").val(cnfmSms);
+
+			            // Send SMS to HP Applicant
+			            Common.ajax("GET", "/organization/applicantHpSms.do", $("applicantDtls").serialize(), function(result) {
+			                console.log(result);
+			            });
+			        }
+
+			            // End
 		});
 }
 
@@ -961,6 +994,17 @@ function autofilledbyNRIC(){
     <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
 </ul>
 </header><!-- pop_header end -->
+
+<form id="applicantDtls" method="post">
+    <div style="display:none">
+        <input type="text" name="aplcntNRIC"  id="aplcntNRIC"/>
+        <input type="text" name="aplcntIdntfc"  id="aplcntIdntfc"/>
+        <input type="text" name="aplcntId"  id="aplcntId"/>
+        <input type="text" name="aplcntName"  id="aplcntName"/>
+        <input type="text" name="aplcntMobile"  id="aplcntMobile"/>
+        <input type="text" name="aplcntSMS"  id="aplcntSMS"/>
+    </div>
+</form>
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" id="memberAddForm" method="post">
