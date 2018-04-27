@@ -137,6 +137,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	}
 
 	@Override
+	public List<EgovMap> selectPromotionByAppTypeStock2(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+
+		params.put("appTypeId", CommonUtils.changePromoAppTypeId(Integer.parseInt((String) params.get("appTypeId"))));
+
+		return orderRegisterMapper.selectPromotionByAppTypeStock2(params);
+	}
+
+	@Override
 	public EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params) {
 
 		BigDecimal orderPricePromo = BigDecimal.ZERO, orderPVPromo = BigDecimal.ZERO, orderPVPromoGST = BigDecimal.ZERO, orderRentalFeesPromo = BigDecimal.ZERO, normalRentalFees = BigDecimal.ZERO;
@@ -1293,7 +1302,13 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
             iMap.put("promoId", Integer.toString(promoId));
             iMap.put("stkId", salesOrderDVO.getItmStkId());
-            iMap.put("srvPacId", Integer.toString(srvPacId));
+            if(orderAppType == 67){
+            	iMap.put("srvPacId", 0);
+            }
+            else{
+            	iMap.put("srvPacId", Integer.toString(srvPacId));
+            }
+
 
             EgovMap oMap  = this.selectProductPromotionPriceByPromoStockID(iMap);
 
