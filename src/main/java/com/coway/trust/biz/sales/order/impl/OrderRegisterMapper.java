@@ -53,6 +53,8 @@ public interface OrderRegisterMapper {
 
 	List<EgovMap> selectPromotionByAppTypeStock(Map<String, Object> params);
 
+	List<EgovMap> selectPromotionByAppTypeStock2(Map<String, Object> params);
+
 	EgovMap selectProductPromotionPriceByPromoStockID(Map<String, Object> params);
 
 	EgovMap selectProductPromotionPriceByPromoStockIDNew(Map<String, Object> params);
@@ -136,7 +138,7 @@ public interface OrderRegisterMapper {
 	List<EgovMap> selectProductCodeList(Map<String, Object> params);
 
 	List<EgovMap> selectServicePackageList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectServicePackageList2(Map<String, Object> params);
 
 	EgovMap selectServiceContractPackage(Map<String, Object> params);
