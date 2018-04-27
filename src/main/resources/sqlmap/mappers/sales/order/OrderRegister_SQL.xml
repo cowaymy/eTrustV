@@ -352,6 +352,64 @@
          ORDER BY T.PROMO_DT_FROM DESC
     </select>
 
+    <select id="selectPromotionByAppTypeStock2" parameterType="Map" resultType="egovMap">
+        SELECT T.PROMO_ID CODE
+             , T.PROMO_DESC CODE_NAME
+          FROM
+             ( SELECT DISTINCT T2.PROMO_ID PROMO_ID
+                    , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
+                    , T2.PROMO_DT_FROM
+                 FROM SAL0018D T1
+                 JOIN SAL0017D T2
+                   ON T2.PROMO_ID = T1.PROMO_ID
+                  AND T2.PROMO_STUS_ID = 1
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
+                  AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
+                  AND 0 = T2.PROMO_IS_TRIAL_CNVR
+                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND T2.EMP_CHK = #{empChk}
+                  AND T2.EX_TRADE = #{exTrade}
+                  AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
+                WHERE T1.PROMO_ITM_STK_ID = #{stkId}
+                  AND T1.PROMO_ITM_STUS_ID = 1
+                UNION
+               SELECT DISTINCT T2.PROMO_ID PROMO_ID
+                    , T2.PROMO_CODE || '-' || T2.PROMO_DESC PROMO_DESC
+                    , T2.PROMO_DT_FROM
+                 FROM SAL0018D T1
+                 JOIN SAL0017D T2
+                   ON T2.PROMO_ID = T1.PROMO_ID
+                  AND T2.PROMO_STUS_ID = 1
+                  AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
+                  AND T2.PROMO_TYPE_ID = 2282
+                  AND 0 = T2.PROMO_IS_TRIAL_CNVR
+                  AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND T2.EMP_CHK = #{empChk}
+                  AND T2.EX_TRADE = #{exTrade}
+                  AND (T2.PROMO_CUST_TYPE = #{promoCustType} OR T2.PROMO_CUST_TYPE = 0 OR T2.PROMO_CUST_TYPE IS NULL)
+                 LEFT OUTER
+                 JOIN SAL0081D T3
+                   ON 2284 = #{appTypeId}
+                  AND T3.SRV_CNTRCT_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
+                  AND T3.SRV_CNTRCT_PAC_STUS_ID = '1'
+                  AND TO_CHAR(T3.SRV_CNTRCT_PAC_START_DT, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND TO_CHAR(T3.SRV_CNTRCT_PAC_END_DT,   'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
+                  AND T3.PAC_TYPE = '2'
+                 LEFT OUTER
+                 JOIN SAL0091M T4
+                   ON 2284 != #{appTypeId}
+                  AND T4.SRV_MEM_PAC_ID = T2.PROMO_SRV_MEM_PAC_ID
+                  AND T4.SRV_MEM_STUS_ID = '1'
+                  AND T4.PAC_TYPE = '2'
+                WHERE T1.PROMO_ITM_STK_ID = #{stkId}
+                  AND T1.PROMO_ITM_STUS_ID = 1
+             ) T
+         ORDER BY T.PROMO_DT_FROM DESC
+    </select>
+
     <select id="selectProductPromotionPriceByPromoStockID" parameterType="Map" resultType="egovMap">
         SELECT T1.PROMO_ITM_ID
              , T1.PROMO_ID
