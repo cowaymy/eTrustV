@@ -32,9 +32,17 @@ function fn_testAgreement(choice) {
 
     $("#choice").val(choice);
 
-    Common.ajax("POST", "/organization/updateHpCfm.do", $('#agreementChoice').serializeJSON(), function(result) {
-        Common.alert(result.message);
-    });
+    Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantValidateForm").serialize(), function(result) {
+        console.log(result);
+
+        if(result.cnfm == "0" && result.cnfm_dt == "1900-01-01") {
+        	Common.ajax("POST", "/organization/updateHpCfm.do", $('#agreementChoice').serializeJSON(), function(result) {
+                Common.alert(result.message);
+            });
+        } else {
+            Common.alert("Member has already accepted agreement.");
+        }
+    })
 }
 
 </script>
@@ -56,6 +64,12 @@ function fn_testAgreement(choice) {
 
 <form id="agreementChoice">
     <input type="hidden" id="choice" name="choice" value="">
+</form>
+
+<form id="applicantValidateForm" method="post">
+    <div style="display:none">
+        <input type="text" name="aplcntId"  id="aplcntId" value="${memberID}"/>
+    </div>
 </form>
 
 <iframe id="agreementFrame" name = "agreementFrame" width = 100% height = "450px" src = "/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf" frameborder = "10"></iframe>

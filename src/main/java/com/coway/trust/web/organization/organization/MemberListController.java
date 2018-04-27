@@ -1407,7 +1407,7 @@ public class MemberListController {
 		    return ResponseEntity.ok(aplicntStatus);
 		}
 
-		@RequestMapping(value = "/applicantHpSms.do", method = RequestMethod.GET)
+		@RequestMapping(value = "/applicantHpSms.do", method = RequestMethod.POST)
 		public ResponseEntity<EgovMap> sendSMS( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model , SessionVO session) {
 	        logger.debug("params {}", params);
 
@@ -1458,12 +1458,14 @@ public class MemberListController {
 	        model.addAttribute("userTypeID", params.get("UserTypeID"));
 	        model.addAttribute("status", status);
 	        model.addAttribute("message", message);
-
 	        return "organization/organization/memberHpAgreement";
 	    }
 
 		@RequestMapping(value = "/updateHpCfm.do")
 	    public ResponseEntity<ReturnMessage> updateAplicntInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+		    logger.debug("==================== updateHpCfm.do ====================");
+
 	        //Session
 	        SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 	        params.put("userId", sessionVO.getUserId());

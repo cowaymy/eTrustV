@@ -54,7 +54,7 @@ function fn_memberSave(){
 			            $("#aplcntSMS").val(cnfmSms);
 
 			            // Send SMS to HP Applicant
-			            Common.ajax("GET", "/organization/applicantHpSms.do", $("applicantDtls").serialize(), function(result) {
+			            Common.ajax("POST", "/organization/applicantHpSms.do", $("applicantDtls").serialize(), function(result) {
 			                console.log(result);
 			            });
 			        }
@@ -709,6 +709,13 @@ function fn_saveValidation(){
     	if($("#traineeType1").val() ==''){
     		   Common.alert("Please key in Trainee type");
     		   return false;
+    	}
+    }
+
+    if($("#memberType").val() == "2803") {
+    	if($("#mobileNo").val() == '') {
+    		Common.alert("Please key in Mobile No.");
+    		return false;
     	}
     }
 

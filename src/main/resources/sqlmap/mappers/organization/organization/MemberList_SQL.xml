@@ -4248,6 +4248,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             <if test="aplcntMobile != null and aplcntMobile != '' ">
                 and aplicnt.APLICNT_TEL_MOBILE = #{aplcntMobile}
             </if>
+            <if test="aplcntId != null and aplcntId != '' ">
+                and aplicnt.APLCTN_ID = #{aplcntId}
+            </if>
       </select>
 
      <update id="updateHpCfm" parameterType="Map">
