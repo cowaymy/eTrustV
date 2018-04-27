@@ -1459,7 +1459,7 @@ public class MemberListController {
 	        model.addAttribute("status", status);
 	        model.addAttribute("message", message);
 
-	        return "organization/memberHpAgreement";
+	        return "organization/organization/memberHpAgreement";
 	    }
 
 		@RequestMapping(value = "/updateHpCfm.do")
