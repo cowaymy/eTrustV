@@ -1302,7 +1302,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
             iMap.put("promoId", Integer.toString(promoId));
             iMap.put("stkId", salesOrderDVO.getItmStkId());
-            if(orderAppType == 67){
+            if(orderAppType == 67 || orderAppType == 68){
             	iMap.put("srvPacId", 0);
             }
             else{
