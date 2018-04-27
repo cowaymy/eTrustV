@@ -16,7 +16,7 @@ public interface LoginMapper {
 
 	/**
 	 * [WARNNING] : use only callcenter ........
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -37,4 +37,8 @@ public interface LoginMapper {
 	List<EgovMap> selectSecureResnList(Map<String, Object> params);
 
 	EgovMap selectUserByUserName(String userName);
+
+	EgovMap checkByPass(Map<String, Object> params);
+
+	LoginVO getAplcntInfo(Map<String, Object> params);
 }

@@ -1,5 +1,8 @@
 package com.coway.trust.cmmn.interceptor;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,6 +20,7 @@ import org.springframework.web.servlet.mvc.WebContentInterceptor;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AccessMonitoringService;
 import com.coway.trust.biz.common.MenuService;
+import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.cmmn.exception.AuthException;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
@@ -37,26 +41,72 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 	@Autowired
 	private AccessMonitoringService accessMonitoringService;
 
+	@Autowired
+	private LoginService loginService;
+
 	@Override
 	public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler)
 			throws ServletException {
+	    // Kit Wai - Start - 20180427
+	    LOGGER.debug("preHandle :: URI :: " + request.getRequestURI());
 
-		// check request to Callcenter
-		if (VerifyRequest.isNotCallCenterRequest(request)) {
-			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	    Map<String, Object> params = new HashMap<String, Object>();
 
-			if (sessionVO != null && sessionVO.getUserId() > 0) {
-				checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
-			} else {
-				LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(),
-						request.getRequestURI());
-				throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-			}
+	    // Request URI's as param
+	    String[] URI = ((String) request.getRequestURI()).split("/");
+        params.put("mainDo", URI[URI.length - 1]);
+        EgovMap item = new EgovMap();
 
-		}else{
-			LOGGER.info("[preHandle] this url is call by Callcenter.......");
-		}
+        item = (EgovMap) loginService.checkByPass(params);
 
+        /*
+         * Skip validation if value found in SYS0088M
+         * Param - URI .do
+         */
+        if(item == null) {
+            item = null;
+            SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+
+            // Reset param
+            params.clear();
+            // UserIDType as parameter
+            params.put("memTyp", sessionVO.getUserTypeId());
+            item = (EgovMap) loginService.checkByPass(params);
+
+            /*
+             * Skip validation if value found in SYS0088M
+             * Param - Member Type
+             */
+            if(item != null) {
+                String[] doListStr = ((String) item.get("bypassDoList")).split("\\|\\|\\|");
+
+                List<String> doList = Arrays.asList(doListStr);
+
+                /*
+                 * Only permits navigation/action within set URLs
+                 */
+                if(!doList.contains(request.getRequestURI())) {
+                    LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(), request.getRequestURI());
+                    throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+                }
+
+            } else {
+                if (VerifyRequest.isNotCallCenterRequest(request)) {
+
+                    if (sessionVO != null && sessionVO.getUserId() > 0) {
+                        checkAuthorized(sessionVO.getUserId(), request.getRequestURI());
+                    } else {
+                        LOGGER.debug("AuthenticInterceptor > AuthException [ URI : {}{}]", request.getContextPath(),
+                                request.getRequestURI());
+                        throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+                    }
+
+                }else{
+                    LOGGER.info("[preHandle] this url is call by Callcenter.......");
+                }
+            }
+        }
+        // Kit Wai - End - 20180427
 		return true;
 	}
 
@@ -87,36 +137,36 @@ public class AuthenticInterceptor extends WebContentInterceptor {
 			ModelAndView modelAndView) throws Exception {
 
 		// check request to Callcenter
-		if (VerifyRequest.isNotCallCenterRequest(request)) {
+        if (VerifyRequest.isNotCallCenterRequest(request)) {
 
-			SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+            SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 
-			if (sessionVO == null || sessionVO.getUserId() == 0) {
-				throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
-			}
+            if (sessionVO == null || sessionVO.getUserId() == 0) {
+                throw new AuthException(HttpStatus.UNAUTHORIZED, HttpStatus.UNAUTHORIZED.getReasonPhrase());
+            }
 
-			if (modelAndView != null) {
-				Map<String, Object> params = new HashMap<>();
-				params.put("userId", sessionVO.getUserId());
-				params.put("pgmPath", request.getRequestURI());
+            if (modelAndView != null) {
+                Map<String, Object> params = new HashMap<>();
+                params.put("userId", sessionVO.getUserId());
+                params.put("pgmPath", request.getRequestURI());
 
-				if (request.getRequestURI().endsWith(".do")) {
-					params.put("userName", sessionVO.getUserName());
-					params.put("systemId", AppConstants.LOGIN_WEB);
-					params.put("pgmCode", "-");
-					params.put("ipAddr", CommonUtils.getClientIp(request));
+                if (request.getRequestURI().endsWith(".do")) {
+                    params.put("userName", sessionVO.getUserName());
+                    params.put("systemId", AppConstants.LOGIN_WEB);
+                    params.put("pgmCode", "-");
+                    params.put("ipAddr", CommonUtils.getClientIp(request));
 
-					accessMonitoringService.insertAccessMonitoring(params);
-				}
+                    accessMonitoringService.insertAccessMonitoring(params);
+                }
 
-				// url 로 직접 접근시 menuCode 처리.
-				modelAndView.getModelMap().put(AppConstants.CURRENT_MENU_CODE, sessionVO.getMenuCode());
+                // url 로 직접 접근시 menuCode 처리.
+                modelAndView.getModelMap().put(AppConstants.CURRENT_MENU_CODE, sessionVO.getMenuCode());
 
-				modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
-				modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
-				modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));
-			}
-		}else{
+                modelAndView.getModelMap().put(AppConstants.PAGE_AUTH, menuService.getPageAuth(params));
+                modelAndView.getModelMap().put(AppConstants.MENU_KEY, menuService.getMenuList(sessionVO));
+                modelAndView.getModelMap().put(AppConstants.MENU_FAVORITES, menuService.getFavoritesList(sessionVO));
+            }
+        }else{
 			LOGGER.info("[postHandle] this url is call by Callcenter.......");
 		}
 	}

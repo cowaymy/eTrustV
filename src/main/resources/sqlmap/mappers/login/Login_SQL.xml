@@ -236,4 +236,35 @@
         WHERE USER_NAME = #{userName}
         AND ROWNUM = 1
     </select>
+
+    <select id="checkByPass" parameterType="Map" resultType="egovMap">
+        select
+            BYPASS_AREA,
+            BYPASS_MAIN_DO,
+            BYPASS_DO_LIST
+        from SYS0088m
+        <choose>
+            <when test="mainDo != null and mainDo != '' ">
+                where BYPASS_MAIN_DO = #{mainDo}
+            </when>
+            <otherwise>
+                where BYPASS_MEM_TYPE = #{memTyp}
+            </otherwise>
+        </choose>
+    </select>
+
+    <select id="getAplcntInfo" parameterType="Map" resultType="loginVO">
+        SELECT
+            APLCTN_ID USERID,
+            APLICNT_NAME USERNAME,
+            APLICNT_FULL_NAME USERFULLNAME,
+            APLICNT_EMAIL USEREMAIL,
+            STUS_ID USERSTATUSID,
+            APLICNT_TEL_MOBILE USERMOBILENO,
+            '2803' AS USERTYPEID
+        FROM ORG0003D
+        WHERE
+            APLCTN_ID = #{MemberID}
+    </select>
+
 </mapper>

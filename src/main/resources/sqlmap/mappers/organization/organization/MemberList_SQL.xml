@@ -4223,5 +4223,41 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 	    ORDER BY Project1.C1 ASC
     </select>
 
+     <select id="validateHpStatus" parameterType="Map" resultType="egovMap">
+        select
+            aplicnt.APLCTN_ID,
+            aplicnt.APLICNT_IDNTFC IDNTFC,
+            aplicnt.STUS_ID,
+            s.NAME STUS_NM,
+            aplicnt.CNFM,
+            TO_CHAR(aplicnt.CNFM_DT, 'YYYY-MM-DD') CNFM_DT
+        from ORG0003D aplicnt
+        inner join SYS0038M s
+            on aplicnt.STUS_ID = s.STUS_CODE_ID
+        where
+            1=1
+            <if test="aplcntCode != null and aplcntCode != '' ">
+                and aplicnt.APLICNT_CODE = #{aplcntCode}
+            </if>
+            <if test="aplcntNRIC != null and aplcntNRIC != '' ">
+                and aplicnt.APLICNT_NRIC = #{aplcntNRIC}
+            </if>
+            <if test="aplcntName != null and aplcntName != '' ">
+                and aplicnt.APLICNT_NAME = #{aplcntName}
+            </if>
+            <if test="aplcntMobile != null and aplcntMobile != '' ">
+                and aplicnt.APLICNT_TEL_MOBILE = #{aplcntMobile}
+            </if>
+      </select>
+
+     <update id="updateHpCfm" parameterType="Map">
+     <![CDATA[
+        UPDATE ORG0003D
+         SET CNFM = 1,
+               CNFM_DT = SYSDATE,
+               UPD_DT =  SYSDATE
+           WHERE  APLCTN_ID = #{userId}
+        ]]>
+     </update>
 
 </mapper>

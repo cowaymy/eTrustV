@@ -72,7 +72,7 @@ public interface MemberListService {
 	List<EgovMap> selectCourse();
 
 	Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO);
-	
+
 	Map<String, Object> hpMemRegister(Map<String, Object> params,SessionVO sessionVO);
 
 
@@ -81,11 +81,11 @@ public interface MemberListService {
 	int memberListUpdate_user(Map<String, Object> params);
 
 	int memberListUpdate_memorg(Map<String, Object> params);
-	
+
 	int memberListUpdate_memorg2(Map<String, Object> params);
 
 	int memberListUpdate_member(Map<String, Object> params);
-	
+
 	int traineeUpdateInfo(Map<String, Object> params,SessionVO sessionVO);
 
 	boolean updateMember(Map<String, Object> params, List<Object> docType,SessionVO sessionVO);
@@ -97,19 +97,19 @@ public interface MemberListService {
 	List<EgovMap> selectHPApplicantList(Map<String, Object> params);
 
 	List<EgovMap> getMainDeptList();
-	
+
 	List<EgovMap> getSubDeptList(Map<String, Object> params);
-	
-	List<EgovMap> getDeptCdListList(Map<String, Object> params);	
-	
+
+	List<EgovMap> getDeptCdListList(Map<String, Object> params);
+
 	List<EgovMap> getSpouseInfoView(Map<String, Object> params);
-	
+
 	List<EgovMap> selectCoureCode(Map<String, Object> params);
-	
+
 	String selectTypeGroupCode(Map<String, Object> params);
-	
+
 	List<EgovMap> selectDepartmentCodeLit(Map<String, Object> params);
-	
+
 	List<EgovMap> selectBranchCodeLit(Map<String, Object> params);
 
 	List<EgovMap> checkNRIC1(Map<String, Object> params);
@@ -128,9 +128,9 @@ public interface MemberListService {
 	EgovMap selectOneHPMember(Map<String, Object> params);
 
 	int hpMemberUpdate(Map<String, Object> formMap);
-	
+
 	List<EgovMap> branch();
-	
+
 	void updateMemberBranch(Map<String, Object> params) throws Exception;
 	void updateMemberBranch2(Map<String, Object> params) throws Exception;
 
@@ -155,5 +155,9 @@ public interface MemberListService {
 	EgovMap selectAreaInfo(Map<String, Object> params);
 
 	List<EgovMap> selectAllBranchCode();
+
+	EgovMap validateHpStatus(Map<String, Object> params);
+
+    void updateHpCfm(Map<String, Object> params) throws Exception;
 
 }

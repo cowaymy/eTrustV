@@ -1705,7 +1705,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			String memberCode = selectMemberCode.get("docNo").toString();
 			params.put("memberCode", memberCode);
 
-			params.put("branchId", sessionVO.getUserBranchId());
 
 			String   memId_seq =  String.valueOf(memberListMapper.getORG0001D_SEQ(params));
 
@@ -2247,4 +2246,13 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return memberListMapper.selectAllBranchCode();
 	}
 
+	@Override
+	public EgovMap validateHpStatus(Map<String, Object> params) {
+	    return memberListMapper.validateHpStatus(params);
+	}
+
+	@Override
+	public void updateHpCfm(Map<String, Object> params) throws Exception {
+	    memberListMapper.updateHpCfm(params);
+	}
 }

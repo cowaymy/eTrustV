@@ -33,7 +33,7 @@ public interface MemberListMapper {
 	List<EgovMap> selectHPApplicantList(Map<String, Object> params);
 
 	EgovMap selectMemberListView(Map<String, Object> params);
-	
+
 	EgovMap getHPMemberListView(Map<String, Object> params);
 
 	List<EgovMap> selectPromote(Map<String, Object> params);
@@ -133,7 +133,7 @@ public interface MemberListMapper {
 
 	int traineeUpdate(Map<String, Object> params);
 	int hpMemRegister(Map<String, Object> params);
-	
+
 	EgovMap afterSelTrainee(Map<String, Object> params);
 
 	List<EgovMap> getMemberListView(Map<String, Object> params);
@@ -141,13 +141,13 @@ public interface MemberListMapper {
 	int memberListUpdate_user(Map<String, Object> params);
 
 	int memberListUpdate_memorg(Map<String, Object> params);
-	
+
 	int memberListUpdate_memorg2(Map<String, Object> params);
 
 	int memberListUpdate_member(Map<String, Object> params);
-	
+
 	int traineeUpdateInfo(Map<String, Object> params);
-	
+
 	int traineeInsertInfor(Map<String, Object> params);
 
 	void saveDocSubmission(DocSubmissionVO docSubmissionVO);
@@ -157,32 +157,32 @@ public interface MemberListMapper {
 	List<EgovMap> selectDeptCodeHp(Map<String, Object> params);
 
 	EgovMap selectHpOranization(Map<String, Object> params);
-	
+
 	void updateHpApproval(Map<String, Object> params);
-	
+
 	public List<EgovMap> selectMainDept();
-	
+
 	public List<EgovMap> selectSubDept(Map<String, Object> params);
-	
+
 	public List<EgovMap> getDeptCdListList(Map<String, Object> params);
 
-	List<EgovMap> getSpouseInfoView(Map<String, Object> params);	
-	
+	List<EgovMap> getSpouseInfoView(Map<String, Object> params);
+
 	List<EgovMap> selectCoureCode(Map<String, Object> params);
-	
+
 	String selectTypeGroupCode(Map<String, Object> params);
-	
+
 	EgovMap selectORG001DInfo(String MemberId);
-	
+
 	public List<EgovMap> selectDepartmentCodeLit(Map<String, Object> params);
-	
+
 	public List<EgovMap> selectBranchCodeLit(Map<String, Object> params);
 
 	EgovMap selectLastCode(Map<String, Object> lastCode);
 
-	
+
 	String  getORG0001D_SEQ(Map<String, Object> params);
-	
+
 
 	List<EgovMap> checkNRIC1(Map<String, Object> params);
 
@@ -196,7 +196,7 @@ public interface MemberListMapper {
 	List<EgovMap> selectBusinessType();
 
 	List<EgovMap> selectParentIdFrom(Map<String, Object> parentEntry);
-	
+
 	List<EgovMap> selectParentDCFrom(Map<String, Object> parentDCFEntry);
 
 	List<EgovMap> selectHpMemberView(Map<String, Object> params);
@@ -204,9 +204,9 @@ public interface MemberListMapper {
 	EgovMap selectOneHPMember(Map<String, Object> params);
 
 	int updateHpMember(Map<String, Object> formMap);
-	
+
 	List<EgovMap> branch();
-	
+
 	void updateMemberBranch(Map<String, Object> params);
 	void updateMemberBranch2(Map<String, Object> params);
 
@@ -244,6 +244,7 @@ public interface MemberListMapper {
 
 	List<EgovMap> selectAllBranchCode();
 
+	EgovMap validateHpStatus(Map<String, Object> params);
 
-
+	void updateHpCfm(Map<String, Object> params) throws Exception;
 }

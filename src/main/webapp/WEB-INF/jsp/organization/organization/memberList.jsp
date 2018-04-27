@@ -12,16 +12,16 @@ function fn_memberListNew(){
 
 function fn_memberListSearch(){
 	/* if ($("#memTypeCom").val() == '5' ) {
-		AUIGrid.showColumnByDataField(myGridID, "testResult"); 
+		AUIGrid.showColumnByDataField(myGridID, "testResult");
 		AUIGrid.setColumnProp( myGridID, 6, { width : 130, visible : true } );
     } else {
         AUIGrid.setColumnProp( myGridID, 6, { width : 0, visible : false } );
     } */
- 	
+
     Common.ajax("GET", "/organization/memberListSearch", $("#searchForm").serialize(), function(result) {
         console.log("성공.");
         console.log("data : " + result);
-        
+
         var isTrainee = 0;
         for (var i=0; i<result.length; i++) {
         	if (result[i]["membertype"] == 5) {
@@ -30,14 +30,14 @@ function fn_memberListSearch(){
         		result[i]["testResult"] = "";
         	}
         }
-        
+
         if (isTrainee != 0) {
-        	AUIGrid.showColumnByDataField(myGridID, "testResult"); 
+        	AUIGrid.showColumnByDataField(myGridID, "testResult");
             AUIGrid.setColumnProp( myGridID, 6, { width : 130, visible : true } );
         } else {
         	AUIGrid.setColumnProp( myGridID, 6, { width : 0, visible : false } );
         }
-        
+
         AUIGrid.setGridData(myGridID, result);
     });
 
@@ -55,7 +55,7 @@ console.log( memberType )
 
 
 	if(val == '1'){
-        if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 ) {	
+        if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 ) {
 			 var jsonObj = {
 					     MemberID :memberid,
 			            MemberType : memberType
@@ -75,9 +75,9 @@ console.log( memberType )
 	        Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2" , null ,null , true  ,'_fn_TerminateResignDiv');
 		} else {
 		    Common.alert("Only available to entry with Promote/Demote Request in regular type of member");
-		}        
+		}
 	}
- 
+
 }
 
 /*By KV start - requestVacationPop*/
@@ -86,9 +86,9 @@ function fn_requestVacationPop(){
              MemberID :memberid,
             MemberType : memberType
     };
-    
+
     console.log("MemberID="+memberid+"&MemberType="+memberType);
-    
+
     if (memberType == 3 ) {
         Common.popupDiv("/organization/requestVacationPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType ,  null ,null , true  ,'_fn_requestVacationPopDiv');
     }else {
@@ -106,13 +106,13 @@ function fn_requestVacationPop(){
             MemberCode : membercode
     };
     //Common.popupDiv("/organization/confirmMemRegisPop.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType);
-    
+
     console.log(memberid + " :: " + memberType + " :: " + traineeType)
-    
+
     if ( memberType == 5 && (traineeType == 2 || traineeType == 3)) {
-    	
+
     	//alert(testResult);
-    	
+
     	if ( testResult == 'Fail' || testResult == 'Absent' ) {
     		Common.alert("Can't register the trainee due to test result in Fail/Absent");
     		return;
@@ -120,7 +120,7 @@ function fn_requestVacationPop(){
             Common.alert("Please register the test result first");
             return;
         }
-    
+
      Common.ajax("GET", "/organization/traineeUpdate.do", {memberId:memberid ,memberType:memberType, memberCode : membercode }, function(result) {
          console.log("성공.");
          console.log( result);
@@ -130,10 +130,10 @@ function fn_requestVacationPop(){
                  if ( traineeType == 2) {
 			        Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.message);
 			    }
-			    
+
 			    if ( traineeType == 3) {
 			        Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.message);
-			    } 
+			    }
         	  fn_memberListSearch();
          }
      });
@@ -143,8 +143,20 @@ function fn_requestVacationPop(){
 }
 
 function fn_clickHpApproval(){
-	
-    Common.confirm("Do you want to approve the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , fn_hpMemRegisPop );
+
+	$("#aplcntCode").val(membercode);
+    $("#aplcntNRIC").val(nric);
+
+    // Added checking if applicant agreed agreement - Kit Wai
+    Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantValidateForm").serialize(), function(result) {
+        console.log(result);
+
+        if(result.stus == "44" && result.cnfm == "0" && result.cnfm_dt == "1900-01-01") {
+            Common.alert("Only accepted agreement applicants may become members.")
+        } else {
+            Common.confirm("Do you want to approve the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , fn_hpMemRegisPop );
+        }
+    })
 }
 
 function fn_clickHpReject(){
@@ -157,14 +169,14 @@ function fn_hpMemRegisPop(){
             MemberType : memberType,
             MemberCode : membercode
     };
-    
+
     if (memberType == "2803" ) {
     	if ( statusName == "Pending" ) {
-    
+
 	     Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType, nric:nric, MemberCode : membercode }, function(result) {
 	         console.log("성공.");
 	         console.log( result);
-	
+
 	         if(result !="" ){
 	        	 if (result.message == "There is no address information to the HP applicant code") {
 	        		 Common.alert(result.message);
@@ -175,11 +187,11 @@ function fn_hpMemRegisPop(){
 	        		 fn_memberListSearch();
 	        	 }
 	         }
-	         
+
 	     });
         } else {
 	        Common.alert("Only available to entry Pending is in a case of Status");
-	    }     
+	    }
     } else {
     	Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
     }
@@ -194,7 +206,7 @@ function fn_RejectHPMem(){
 						});
 	        } else {
 	            Common.alert("Only available to entry Pending is in a case of Status");
-	        }     
+	        }
 	    } else {
 	        Common.alert("Only available to entry with HP Reject is in a case of HP Applicant");
 	    }
@@ -300,7 +312,7 @@ function createAUIGrid() {
             dataField : "traineeType",
             headerText : "Trainee Type",
             width : 0
-        }		
+        }
 		/* this is for put EDIT button in grid ,
         {
             dataField : "undefined",
@@ -437,31 +449,31 @@ function fn_searchPosition(selectedData){
 </c:if>
 <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
     <li><p class="btn_blue"><a href="javascript:fn_memberListSearch();"><span class="search"></span>Search</a></p></li>
-<%-- </c:if>    --%> 
+<%-- </c:if>    --%>
 <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_TerminateResign('1')">Request Terminate/Resign</a></p></li>
-</c:if>    
+</c:if>
 <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_TerminateResign('2')">Request Promote/Demote</a></p></li>
-</c:if>    
+</c:if>
 <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_memberEditPop()">Member Edit</a></p></li>
-</c:if>    
+</c:if>
 <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_branchEditPop()">Branch Edit</a></p></li>
 </c:if>
 <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_requestVacationPop()">Request Vacation </a></p></li>
-</c:if>   
+</c:if>
  <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_confirmMemRegisPop()">Confirm Member Registration </a></p></li>
-</c:if>  
- <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">  
+</c:if>
+ <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_clickHpApproval()">HP Approval</a></p></li>
-</c:if> 
- <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">  
+</c:if>
+ <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_clickHpReject()">HP Reject</a></p></li>
-</c:if>    
+</c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -602,6 +614,13 @@ function fn_searchPosition(selectedData){
 
 </form>
 </section><!-- search_table end -->
+
+<form id="applicantValidateForm" method="post">
+    <div style="display:none">
+        <input type="text" name="aplcntCode"  id="aplcntCode"/>
+        <input type="text" name="aplcntNRIC"  id="aplcntNRIC"/>
+    </div>
+</form>
 
 <section class="search_result"><!-- search_result start -->
 

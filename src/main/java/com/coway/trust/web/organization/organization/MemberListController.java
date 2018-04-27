@@ -6,9 +6,12 @@ import java.util.Map;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.support.MessageSourceAccessor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -20,13 +23,20 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.CommonService;
+import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
+import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.cmmn.model.SmsResult;
+import com.coway.trust.cmmn.model.SmsVO;
+import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.Precondition;
 import com.ibm.icu.text.SimpleDateFormat;
 import com.ibm.icu.util.Calendar;
 
@@ -43,10 +53,22 @@ public class MemberListController {
 
 	@Resource(name = "commonService")
 	private CommonService commonService;
-	
+
 	@Resource(name = "tagMgmtService")
 	TagMgmtService tagMgmtService;
-	
+
+	@Autowired
+    private LoginService loginService;
+
+	@Autowired
+    private SessionHandler sessionHandler;
+
+	@Autowired
+    private AdaptorService adaptorService;
+
+    @Autowired
+    private MessageSourceAccessor messageAccessor;
+
 	/**
 	 * Call commission rule book management Page
 	 *
@@ -57,21 +79,21 @@ public class MemberListController {
 	 */
 	@RequestMapping(value = "/memberList.do")
 	public String memberList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
-		
+
 		logger.debug("sessionVO  getUserTypeId  {} " , sessionVO.getUserTypeId());
-		
+
 		//화면에 공통코드값....가져와........
 		List<EgovMap> nationality = memberListService.nationality();
 		params.put("groupCode",1);
 		params.put("userTypeId", sessionVO.getUserTypeId());
-		
+
 		String type="";
 		if (params.get("userTypeId" ) == "4" ) {
-			type = memberListService.selectTypeGroupCode(params);        
+			type = memberListService.selectTypeGroupCode(params);
 		} else {
 			params.put("userTypeId", sessionVO.getUserTypeId());
 		}
-		
+
 		logger.debug("type : {}", type);
 
 		if ( params.get("userTypeId" ) == "4"  && type == "42") {
@@ -79,11 +101,11 @@ public class MemberListController {
 		} else if ( params.get("userTypeId" ) == "4"  && type == "43") {
 			params.put("userTypeId", "3");
 		} else if ( params.get("userTypeId" ) == "4"  && type == "45") {
-			params.put("userTypeId", "1");			
+			params.put("userTypeId", "1");
 		} else if ( params.get("userTypeId" ) == "4"  && type.equals("")){
 			params.put("userTypeId", "");
-		}  
-		
+		}
+
 		List<EgovMap> memberType = commonService.selectCodeList(params);
 		params.put("mstCdId",2);
 		params.put("dtailDisabled",0);
@@ -160,10 +182,10 @@ public class MemberListController {
 
 		logger.debug("memberLevel : {}", sessionVO.getMemberLevel());
 		logger.debug("userName : {}", sessionVO.getUserName());
-		
+
 		params.put("memberLevel", sessionVO.getMemberLevel());
 		params.put("userName", sessionVO.getUserName());
-		
+
 		List<EgovMap> memberList = null;
 
 		String MemType = params.get("memTypeCom").toString();
@@ -190,15 +212,15 @@ public class MemberListController {
 	@RequestMapping(value = "/selectMemberListDetailPop.do")
 	public String selectMemberListDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-		
+
 		logger.debug("selCompensation in.............");
 		logger.debug("params : {}", params);
-		
-		
+
+
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
-		
+
 		EgovMap selectMemberListView = null;
-		
+
 		if ( params.get("MemberType").equals("2803")) {
 			selectMemberListView = memberListService.selectHPMemberListView(params);
 		}else {
@@ -246,22 +268,22 @@ public class MemberListController {
 		params.put("mstCdId",3);
 		List<EgovMap> language = commonService.getDetailCommonCodeList(params);
 		List<EgovMap>  selectIssuedBank =  memberListService.selectIssuedBank();
-		
+
 		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
 		params.put("groupCode", "");
 		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
-		
+
 		params.put("mstCdId",377);
 		List<EgovMap> Religion = commonService.getDetailCommonCodeList(params);
 
 		String userName = sessionVO.getUserName();
 		params.put("userName", userName);
-		
+
 		List<EgovMap> DeptCdList = memberListService.getDeptCdListList(params);
-		
+
 		List<EgovMap> list = memberListService.getSpouseInfoView(params);
 		logger.debug("return_Values: " + list.toString());
-		
+
 		logger.debug("race : {} "+race);
 		logger.debug("marrital : {} "+marrital);
 		logger.debug("nationality : {} "+nationality);
@@ -269,7 +291,7 @@ public class MemberListController {
 		logger.debug("educationLvl : {} "+educationLvl);
 		logger.debug("language : {} "+language);
 		logger.debug("Religion : {} "+Religion);
-		
+
 		logger.debug("DeptCdList : {} "+DeptCdList);
 
 		model.addAttribute("race", race);
@@ -283,9 +305,9 @@ public class MemberListController {
 		model.addAttribute("subDeptList", subDeptList);
 		model.addAttribute("Religion", Religion);
 		model.addAttribute("DeptCdList", DeptCdList);
-		
+
 		model.addAttribute("userType", sessionVO.getUserTypeId());
-		
+
 		model.addAttribute("spouseInfoView", list);
 		model.addAttribute("memType", params.get("memType"));
 
@@ -318,7 +340,7 @@ public class MemberListController {
 		logger.debug("selectDocSubmission : {}", selectDocSubmission);
 		return ResponseEntity.ok(selectDocSubmission);
 	}
-	
+
 
 	/**
 	 * Search rule book management list
@@ -419,12 +441,12 @@ public class MemberListController {
 		int userId = sessionVO.getUserId();
 		String memberType =String.valueOf(formMap.get("memberType"));
 		String trainType =String.valueOf(formMap.get("traineeType1"));
-		
+
 		logger.debug(trainType + "train1111");
 		//doc 넣기
-	
+
 		memberListService.insertDocSub(updList, memCode, userId, memberType, trainType);
-		
+
 		logger.debug("memCode : {}", memCode);
 		// 결과 만들기.
        	ReturnMessage message = new ReturnMessage();
@@ -436,9 +458,9 @@ public class MemberListController {
        		message.setMessage("Compelete to Create a Member Code : " +memCode);
        	}
        	logger.debug("message : {}", message);
-    
+
        	System.out.println("msg   " + success);
-    
+
     	return ResponseEntity.ok(message);
 	}
 
@@ -455,7 +477,7 @@ public class MemberListController {
 		logger.debug("memberType : {}"+params.get("memType")+"11111111111111"); // member new detail edit 다쓰인다
 		logger.debug("params : {}"+params);
 		List<EgovMap> selectDocSubmission;
-		
+
 		params.put("memType" , params.get("memType").toString().trim() );
 		logger.debug("params : {}"+params);
 		if("2".equals( params.get("memType").toString().trim() )|| "2".equals(String.valueOf(params.get("trainType")))){//type가 Coway Lady면 traniee 쿼리가 살짝다름.....
@@ -469,7 +491,7 @@ public class MemberListController {
 			else{
 				selectDocSubmission = memberListService.selectHpDocSubmission(params);
 			}
-			 
+
 		}else{
 			selectDocSubmission = memberListService.selectHpDocSubmission(params);
 		}
@@ -708,10 +730,10 @@ public class MemberListController {
 		params.put("branchVal", params.get("groupCode[branchVal]"));
 		logger.debug("params : {}", params);*/
 		//List<EgovMap> deptCode = memberListService.selectDeptCodeHp(params);
-		
+
 		String userName = sessionVO.getUserName();
 		params.put("userName", userName);
-		
+
 		List<EgovMap> deptCode = memberListService.getDeptCdListList(params);
 		return ResponseEntity.ok(deptCode);
 	}
@@ -765,7 +787,7 @@ public class MemberListController {
 
 		List<EgovMap> branch = memberListService.branch();
 		logger.debug("branchList : {}", branch);
-		
+
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 		logger.debug("params123 : {}", params);
 		EgovMap selectMemberListView = null;
@@ -784,11 +806,11 @@ public class MemberListController {
 		logger.debug("PAExpired : {}", PAExpired);
 		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
 		logger.debug("mainDeptList : {}", mainDeptList);
-		
+
 		params.put("mstCdId",377);
 		List<EgovMap> Religion = commonService.getDetailCommonCodeList(params);
 		logger.debug("Religion : {} "+Religion);
-		
+
 		if(selectMemberListView != null){
     		params.put("groupCode", selectMemberListView.get("mainDept"));
     		logger.debug("params : {}", params);
@@ -799,7 +821,7 @@ public class MemberListController {
 		}
     		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
     		logger.debug("subDeptList : {}", subDeptList);
-		
+
 		model.addAttribute("PAExpired", PAExpired);
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
 		model.addAttribute("memberView", selectMemberListView);// 있어
@@ -875,17 +897,17 @@ public class MemberListController {
 		//update = memberListService.updateMember(formMap, updList,sessionVO);
 //		memberListService.updateMemberBranch(formMap);
 //		memberListService.updateMemberBranch2(formMap);
-		
+
 		//update
-		
+
 		memCode =  (String)formMap.get("memCode");
-		memId =(String) formMap.get("MemberID"); 
+		memId =(String) formMap.get("MemberID");
 		memberType = (String) formMap.get("memberType");
-		//doc 공통업데이트 
+		//doc 공통업데이트
 		memberListService.updateDocSub(updList, memId, userId,memberType);
-		
-		
-		
+
+
+
 		int resultUpc1 = 0;
 		int resultUpc2 = 0;
 		int resultUpc3 = 0;
@@ -895,30 +917,30 @@ public class MemberListController {
 		resultUpc1 = memberListService.memberListUpdate_user(formMap);
 		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
 		resultUpc3 = memberListService.memberListUpdate_member(formMap);
-		if(formMap.get("memberType").toString().equals("2")){ 
+		if(formMap.get("memberType").toString().equals("2")){
 			memberListService.memberCodyPaUpdate(formMap);
 		}
 		String memType = (String)formMap.get("memType");
 		logger.debug("================================================================================");
 		logger.debug("=============== memType {} ",  memType);
 		logger.debug("================================================================================");
-		
+
 		if ( memType.trim().equals("5") ) {
 			logger.debug("================================================================================");
 			logger.debug("=============== insert =====================================");
 			logger.debug("================================================================================");
 			resultUpc4 = memberListService.traineeUpdateInfo(formMap, sessionVO);
 		}
-		
+
 		logger.debug("result UPC : " + Integer.toString(resultUpc1)+ " , "+ Integer.toString(resultUpc2)+ " , "+ Integer.toString(resultUpc3)+ " , ");
 		}
-		
+
 		else {
 			resultUpc5 = memberListService.hpMemberUpdate(formMap);
-			
-			
+
+
 		}
-		
+
 		// 결과 만들기.
    	ReturnMessage message = new ReturnMessage();
 //    	message.setCode(AppConstants.SUCCESS);
@@ -968,9 +990,9 @@ public class MemberListController {
 		logger.debug("params : {}", params);
 
 		params.put("MemberID", Integer.parseInt((String) params.get("memberId")));
-		
+
 		resultValue = memberListService.hpMemRegister(params,sessionVO);
-		
+
 		logger.debug("in...... hpMemRegiste Result");
 		logger.debug("params : {}", params);
 		logger.debug("resultValue : {}", resultValue);
@@ -979,14 +1001,14 @@ public class MemberListController {
 			if (resultValue.get("duplicMemCode") != null) {
 				message.setMessage("This member is already registered<br/>as member code : "
 						+ resultValue.get("duplicMemCode").toString());
-				
+
 			} else {
 				message.setMessage((String)resultValue.get("memCode"));
 				// doc UPdate
 				params.put("hpMemId",  resultValue.get("memId").toString());
 				logger.debug("params {}" , params);
 				memberListService.updateDocSubWhenAppr(params , sessionVO);
-				
+
 			}
 		} else if (resultValue.size() == 0) {
 			message.setMessage("There is no address information to the HP applicant code");
@@ -995,18 +1017,18 @@ public class MemberListController {
 		logger.debug("message : {}", message);
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/selectSubDept.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getSubDept( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
-		
+
 		params.put("groupCode",  params.get("groupCode"));
-		
+
 		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
-		
+
 		return ResponseEntity.ok( subDeptList);
 	}
-	
+
 	/**
 	 * Search rule book management list
 	 *
@@ -1018,54 +1040,54 @@ public class MemberListController {
 	@RequestMapping(value = "/selectCoureCode.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCoureCode( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("selectCoureCode params : {}", params);
-		
-		
+
+
 		Calendar Startcal = Calendar.getInstance();
-		
+
 		Startcal.add(Calendar.MONTH,2);
-		
+
 		//현재 년도, 월, 일
 	    StringBuffer today2 = new StringBuffer();
 	    today2.append(String.format("%04d", Startcal.get(Startcal.YEAR)));
 	    today2.append(String.format("%02d", Startcal.get(Startcal.MONTH)));
         //today2.append(String.format("%02d",  01));
-	    
-	    String startDay = today2.toString(); 
-	    
+
+	    String startDay = today2.toString();
+
 		Calendar Endcal = Calendar.getInstance();
-	    
+
 		Endcal.add(Calendar.MONTH,3);
 		//Endcal.set(year, month+3, day); //월은 -1해줘야 해당월로 인식
-		
+
 	    StringBuffer today3 = new StringBuffer();
 	    today3.append(String.format("%04d", Endcal.get(Endcal.YEAR)));
 	    today3.append(String.format("%02d", Endcal.get(Endcal.MONTH) ));
 	    //today3.append(String.format("%02d", Endcal.getActualMaximum(Endcal.DAY_OF_MONTH)));
-		
+
 	    String endDay = today3.toString();
 		logger.debug("=====================todate2=========================" +startDay + " <>  " + endDay);
-		
+
 		params.put("startDay", startDay);
 		params.put("endDay", endDay);
-		
+
 		List<EgovMap> deptCode = memberListService.selectCoureCode(params);
 		return ResponseEntity.ok(deptCode);
 	}
 
 	@RequestMapping(value = "/selectDepartmentCode", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectDepartmentCode(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		List<EgovMap> deptCode = memberListService.selectDepartmentCodeLit(params);
 		return ResponseEntity.ok(deptCode);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/selectBranchCode", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectBranchCode(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		List<EgovMap> deptCode = memberListService.selectBranchCodeLit(params);
 		return ResponseEntity.ok(deptCode);
-	}		
-	
+	}
+
 	@RequestMapping(value = "/checkNRIC1.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkNRIC1(@RequestParam Map<String, Object> params, Model model) {
 
@@ -1073,34 +1095,34 @@ public class MemberListController {
 //		String nric = "";
 		logger.debug("nric_params : {} " + params);
 		List<EgovMap> checkNRIC1 = memberListService.checkNRIC1(params);
-		
+
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
-		
+
 		if (checkNRIC1.size() > 0) {
 			message.setMessage("This applicant had been registered");
 		} else {
 			message.setMessage("pass");
 		}
 		logger.debug("message : {}", message);
-    
+
     	return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/checkNRIC2.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkNRIC2(@RequestParam Map<String, Object> params, Model model) {
 
 		logger.debug("nric_params : {} " + params);
 		List<EgovMap> checkNRIC2 = memberListService.checkNRIC2(params);
 		String memType = "";
-		
+
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
-		
+
 		if (checkNRIC2.size() > 0) {
 			memType = checkNRIC2.get(0).get("memType").toString();
 			logger.debug("memType : " + memType);
-			
+
 			if (memType.equals("1") || memType.equals("2") || memType.equals("3") || memType.equals("4")) {
 				message.setMessage("This member is our existing HP/Cody/Staff/CT");
 			} else {
@@ -1109,41 +1131,41 @@ public class MemberListController {
 		} else {
 			message.setMessage("pass");
 		}
-		
+
 		logger.debug("message : {}", message);
-    
+
     	return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/checkNRIC3.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkNRIC3(@RequestParam Map<String, Object> params, Model model) {
 
 		logger.debug("nric_params : {} " + params);
 		List<EgovMap> checkNRIC3 = memberListService.checkNRIC3(params);
-		
+
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
-		
+
 		if (checkNRIC3.size() > 0) {
 			message.setMessage("Member must 18 years old and above");
 		} else {
 			message.setMessage("pass");
 		}
 		logger.debug("message : {}", message);
-    
+
     	return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/checkSponsor.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkSponsor(@RequestParam Map<String, Object> params, Model model) {
 
 		logger.debug("checkSponsor_params : {} " + params);
 		// modify jgkim
 		EgovMap checkSponsor = memberListService.checkSponsor(params);
-		
+
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
-		
+
 		if (checkSponsor == null) {
 			message.setMessage("There is no member code that you entered");
 		} else {
@@ -1151,18 +1173,18 @@ public class MemberListController {
 			message.setMessage("ok");
 		}
 		logger.debug("message : {}", message);
-    
+
     	return ResponseEntity.ok(message);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/selectBusinessType.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectBusinessType(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		List<EgovMap> course = memberListService.selectBusinessType();
 		return ResponseEntity.ok(course);
 	}
-	
-	
+
+
 	/**
 	 * MemberList Edit Pop open
 	 *
@@ -1177,7 +1199,7 @@ public class MemberListController {
 
 		List<EgovMap> branch = memberListService.branch();
 		logger.debug("branchList : {}", branch);
-		
+
 		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 		logger.debug("params123 : {}", params);
 		EgovMap selectMemberListView = null;
@@ -1196,7 +1218,7 @@ public class MemberListController {
 		logger.debug("PAExpired : {}", PAExpired);
 		List<EgovMap> mainDeptList = memberListService.getMainDeptList();
 		logger.debug("mainDeptList : {}", mainDeptList);
-		
+
 		if(selectMemberListView != null){
     		params.put("groupCode", selectMemberListView.get("mainDept"));
     		logger.debug("params : {}", params);
@@ -1207,7 +1229,7 @@ public class MemberListController {
 		}
     		List<EgovMap> subDeptList = memberListService.getSubDeptList(params) ;
     		logger.debug("subDeptList : {}", subDeptList);
-		
+
 		model.addAttribute("PAExpired", PAExpired);
 		model.addAttribute("ApplicantConfirm", ApplicantConfirm);
 		model.addAttribute("memberView", selectMemberListView);// 있어
@@ -1220,8 +1242,8 @@ public class MemberListController {
 		// 호출될 화면
 		return "organization/organization/memberListBranchEditPop";
 	}
-	
-	
+
+
 	@RequestMapping(value = "/memberBranchUpdate", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateBranchMemberl(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) throws Exception {
 
@@ -1257,7 +1279,7 @@ public class MemberListController {
 		logger.debug("memCode : {}", formMap.get("memCode"));
 
 		//update
-		
+
 		memCode =  (String)formMap.get("memCode");
 
 		int resultUpc1 = 0;
@@ -1269,7 +1291,7 @@ public class MemberListController {
     		resultUpc1 = memberListService.memberListUpdate_user(formMap);
     		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
     		resultUpc3 = memberListService.memberListUpdate_memorg2(formMap);
-		
+
 		}
 		// 결과 만들기.
    	ReturnMessage message = new ReturnMessage();
@@ -1290,33 +1312,33 @@ public class MemberListController {
 		ReturnMessage message = new ReturnMessage();
 		logger.debug("params {}", params);
 		boolean isHPApprovalReject = memberListService.updateHpApprovalReject(params);
-		
+
 		if(isHPApprovalReject){
 			message.setMessage("success");
 		}
-		
-		
-		
+
+
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 
 	@RequestMapping(value = "/sponsorPop.do")
 	public String sponsorPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
 		logger.debug("sponsorPopUp.............");
 		logger.debug("params : {}", params);
-		
+
 //		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 
 		// 호출될 화면
 		return "organization/organization/sponsorPop";
 	}
-	
-	
-	
-	
-	
+
+
+
+
+
 		@RequestMapping(value = "/selectMemberType.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectMemberType(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
 			   logger.debug("groupCode : {}", params);
@@ -1326,10 +1348,10 @@ public class MemberListController {
 			   List<EgovMap> selectMemberType = memberListService.selectMemberType(params);
 			   return ResponseEntity.ok(selectMemberType);
 		}
-		
-		
-		
-		
+
+
+
+
 		@RequestMapping(value = "/selectSponBrnchList.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectSponBrnchList(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
 			   logger.debug("groupCode : {}", params);
@@ -1339,10 +1361,10 @@ public class MemberListController {
 			   List<EgovMap> selectSponBrnchList = memberListService.selectSponBrnchList(params);
 			   return ResponseEntity.ok(selectSponBrnchList);
 		}
-		
-		
-		
-		
+
+
+
+
 		@RequestMapping(value = "/sponMemberSearch.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectSponMemberSearch(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
@@ -1350,8 +1372,8 @@ public class MemberListController {
 	    	list = memberListService.selectSponMemberSearch(params);
 			return ResponseEntity.ok(list);
 		}
-		
-		
+
+
 		@RequestMapping(value = "/selectAreaInfo.do", method = RequestMethod.GET)
 		public ResponseEntity<EgovMap> selectAreaInfo(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
@@ -1360,12 +1382,101 @@ public class MemberListController {
 			logger.debug("areaInfo : {}", areaInfo);
 			return ResponseEntity.ok(areaInfo);
 		}
-		
+
 		@RequestMapping(value = "/selectAllBranchCode.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectAllBranchCode(@RequestParam Map<String, Object> params) {
 			List<EgovMap> codeList = memberListService.selectAllBranchCode();
 			return ResponseEntity.ok(codeList);
 		}
-		
-	
+
+	    // Agreement screen with custom login
+		// Kit Wai - Start - 20180428
+		@RequestMapping(value = "/getApplicantInfo", method = RequestMethod.GET)
+		public ResponseEntity <Map> validateHpStatus(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+		    EgovMap item = new EgovMap();
+		    item = (EgovMap) memberListService.validateHpStatus(params);
+
+		    Map<String, Object> aplicntStatus = new HashMap();
+		    aplicntStatus.put("id", item.get("aplctnId"));
+		    aplicntStatus.put("idntfc", item.get("idntfc"));
+		    aplicntStatus.put("stus", item.get("stusId"));
+		    aplicntStatus.put("cnfm", item.get("cnfm"));
+		    aplicntStatus.put("cnfm_dt", item.get("cnfmDt"));
+
+		    return ResponseEntity.ok(aplicntStatus);
+		}
+
+		@RequestMapping(value = "/applicantHpSms.do", method = RequestMethod.GET)
+		public ResponseEntity<EgovMap> sendSMS( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model , SessionVO session) {
+	        logger.debug("params {}", params);
+
+	        //send SMS
+	        SmsVO sms = new SmsVO(session.getUserId(), 975);
+	        sms.setMessage( CommonUtils.nvl(params.get("msg")));
+	        sms.setMobiles(CommonUtils.nvl(params.get("rTelNo")));
+	        SmsResult smsResult = adaptorService.sendSMS(sms);
+	        logger.debug(" smsResult : {}" , smsResult.toString());
+
+	        logger.debug((String) params.get("aplcntSMS"));
+	        logger.debug((String) params.get("aplcntMobile"));
+
+
+	        EgovMap mp = new EgovMap();
+	        mp.put("isOky","OK");
+
+	        return ResponseEntity.ok(mp);
+	    }
+
+		@RequestMapping(value = "/agreementListing.do")
+	    public String agreementListing(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+	        logger.debug("==================== agreementListing.do ====================");
+
+	        // Custom login checking based on URL input
+
+	        Precondition.checkNotNull(params.get("MemberID"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "Member ID" }));
+	        Precondition.checkNotNull(params.get("UserTypeID"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "User Type ID" }));
+
+	        logger.debug("Applicant ID : {}", params.get("MemberID"));
+	        logger.debug("Applicant User Type : {}", params.get("UserTypeID"));
+
+	        LoginVO loginVO = loginService.getAplcntInfo(params);
+
+	        String message = "";
+	        String status = "";
+
+	        if (loginVO == null || loginVO.getUserId() == 0) {
+	            status = "FAILED";
+	            message = "Aplicant does not exist";
+	        } else {
+	            HttpSession session = sessionHandler.getCurrentSession();
+	            session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
+	        }
+
+	        model.addAttribute("memberID", params.get("MemberID"));
+	        model.addAttribute("userTypeID", params.get("UserTypeID"));
+	        model.addAttribute("status", status);
+	        model.addAttribute("message", message);
+
+	        return "organization/memberHpAgreement";
+	    }
+
+		@RequestMapping(value = "/updateHpCfm.do")
+	    public ResponseEntity<ReturnMessage> updateAplicntInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+	        //Session
+	        SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+	        params.put("userId", sessionVO.getUserId());
+	        //service
+	        memberListService.updateHpCfm(params);
+
+	        // 결과 만들기 예.
+	        ReturnMessage message = new ReturnMessage();
+	        message.setCode(AppConstants.SUCCESS);
+	        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+	        return ResponseEntity.ok(message);
+	    }
+		// Kit Wai - End - 20180428
+
 }

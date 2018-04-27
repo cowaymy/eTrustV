@@ -150,4 +150,17 @@ public class LoginServiceImpl implements LoginService {
 		loginMapper.insertLoginHistory(loginHistory);
 	}
 
+    @Override
+    public EgovMap checkByPass(Map<String, Object> params) {
+        return loginMapper.checkByPass(params);
+    }
+
+    @Override
+    public LoginVO getAplcntInfo(Map<String, Object> params) {
+        LOGGER.debug("applicantInfo");
+        LoginVO loginVO = loginMapper.getAplcntInfo(params);
+
+        return loginVO;
+    }
+
 }
