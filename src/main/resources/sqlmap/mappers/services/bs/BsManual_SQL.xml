@@ -78,6 +78,11 @@
         			 , S005M.CODE || '-' || S005M.NAME AS CODE_NAME
 			FROM SYS0005M S005M
 			WHERE S005M.TYPE_ID IN (42)
+			                UNION ALL
+                SELECT s005m.brnch_id AS code_id,
+                       s005m.code || '-' || s005m.NAME AS code_name
+                  FROM sys0005m s005m, sys0013m s0013m
+                 WHERE s005m.type_id = s0013m.code_id AND s005m.code = 'DSC-28'
         </otherwise>
     </choose>
     ) PROJECT
