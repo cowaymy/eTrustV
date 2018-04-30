@@ -1407,27 +1407,6 @@ public class MemberListController {
 		    return ResponseEntity.ok(aplicntStatus);
 		}
 
-		@RequestMapping(value = "/applicantHpSms.do", method = RequestMethod.POST)
-		public ResponseEntity<EgovMap> sendSMS( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model , SessionVO session) {
-	        logger.debug("params {}", params);
-
-	        //send SMS
-	        SmsVO sms = new SmsVO(session.getUserId(), 975);
-	        sms.setMessage( CommonUtils.nvl(params.get("msg")));
-	        sms.setMobiles(CommonUtils.nvl(params.get("rTelNo")));
-	        SmsResult smsResult = adaptorService.sendSMS(sms);
-	        logger.debug(" smsResult : {}" , smsResult.toString());
-
-	        logger.debug((String) params.get("aplcntSMS"));
-	        logger.debug((String) params.get("aplcntMobile"));
-
-
-	        EgovMap mp = new EgovMap();
-	        mp.put("isOky","OK");
-
-	        return ResponseEntity.ok(mp);
-	    }
-
 		@RequestMapping(value = "/agreementListing.do")
 	    public String agreementListing(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 

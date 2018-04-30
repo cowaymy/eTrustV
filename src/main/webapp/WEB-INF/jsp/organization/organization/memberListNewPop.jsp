@@ -37,29 +37,28 @@ function fn_memberSave(){
 			            console.log("Name :: " + $("#aplcntName").val());
 			            console.log("Mobile :: " + $("#aplcntMobile").val());
 
+
+
 			            // Get ID and identification
 			            Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantDtls").serialize(), function(result) {
 			                console.log("saving member details");
 			                console.log(result);
 
-			                $("#aplcntId").val(result.id);
-			                $("#aplcntIdntfc").val(result.idntfc);
+                            var aplcntId = result.id;
 
-			            });
+                         // Construct Agreement URL via SMS
+                            var cnfmSms = "RM0.00 COWAY: COMPULSORY click " +
+                                                 "http://etrust.my.coway.com/Organization/MemberID=" + aplcntId + "&UserTypeID=2803";
 
-			            // Construct Agreement URL via SMS
-			            var cnfmSms = "RM0.00 COWAY: COMPULSORY click " +
-			                                 "http://etrust.my.coway.com/Organization/MemberID=" + $("#aplcntId").val() + "&UserTypeID=2803";
+                            var rTelNo = $("#mobileNo").val();
 
-			            $("#aplcntSMS").val(cnfmSms);
+                            Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
+                                console.log("sms.");
+                                console.log( result);
+                            });
 
-			            // Send SMS to HP Applicant
-			            Common.ajax("POST", "/organization/applicantHpSms.do", $("applicantDtls").serialize(), function(result) {
-			                console.log(result);
 			            });
 			        }
-
-			            // End
 		});
 }
 
@@ -1005,11 +1004,8 @@ function autofilledbyNRIC(){
 <form id="applicantDtls" method="post">
     <div style="display:none">
         <input type="text" name="aplcntNRIC"  id="aplcntNRIC"/>
-        <input type="text" name="aplcntIdntfc"  id="aplcntIdntfc"/>
-        <input type="text" name="aplcntId"  id="aplcntId"/>
         <input type="text" name="aplcntName"  id="aplcntName"/>
         <input type="text" name="aplcntMobile"  id="aplcntMobile"/>
-        <input type="text" name="aplcntSMS"  id="aplcntSMS"/>
     </div>
 </form>
 
