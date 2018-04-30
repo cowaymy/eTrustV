@@ -1397,7 +1397,7 @@ public class MemberListController {
 		public ResponseEntity <Map> validateHpStatus(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
 		    EgovMap item = new EgovMap();
-		    item = (EgovMap) memberListService.validateHpStatus(params);
+//		    item = (EgovMap) memberListService.validateHpStatus(params);
 
 		    Map<String, Object> aplicntStatus = new HashMap();
 		    aplicntStatus.put("id", item.get("aplctnId"));
@@ -1457,7 +1457,7 @@ public class MemberListController {
 	        }
 
 	        //service
-	        memberListService.updateHpCfm(params);
+//	        memberListService.updateHpCfm(params);
 
 	        // 결과 만들기 예.
 	        ReturnMessage message = new ReturnMessage();
@@ -1466,6 +1466,36 @@ public class MemberListController {
 
 	        return ResponseEntity.ok(message);
 	    }
+
+		@RequestMapping(value = "/sendEmail.do", method = RequestMethod.GET)
+		public ResponseEntity<ReturnMessage> sendEmail( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model , SessionVO session) {
+
+		    logger.debug("==================== sendEmail.do ====================");
+
+		    logger.debug("params {}", params);
+
+		    // send email
+		    EmailVO email = new EmailVO();
+		    email.setTo((String) params.get("recipient"));
+		    email.setHtml(false);
+		    email.setSubject("HP Applicant Agreement");
+		    email.setText((String) params.get("msg"));
+
+	        boolean isResult = false;
+	        isResult = adaptorService.sendEmail(email, false);
+
+	        ReturnMessage message = new ReturnMessage();
+
+	        if(isResult == true){
+	            message.setCode(AppConstants.SUCCESS);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	        }else{
+	            message.setCode(AppConstants.FAIL);
+	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+	        }
+
+	        return ResponseEntity.ok(message);
+		}
 		// Kit Wai - End - 20180428
 
 }
