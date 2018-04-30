@@ -2246,7 +2246,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return memberListMapper.selectAllBranchCode();
 	}
 
-	@Override
+	/*@Override
 	public EgovMap validateHpStatus(Map<String, Object> params) {
 	    return memberListMapper.validateHpStatus(params);
 	}
@@ -2254,5 +2254,5 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Override
 	public void updateHpCfm(Map<String, Object> params) throws Exception {
 	    memberListMapper.updateHpCfm(params);
-	}
+	}*/
 }
