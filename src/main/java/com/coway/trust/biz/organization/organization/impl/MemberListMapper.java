@@ -244,7 +244,7 @@ public interface MemberListMapper {
 
 	List<EgovMap> selectAllBranchCode();
 
-//	EgovMap validateHpStatus(Map<String, Object> params);
+	EgovMap validateHpStatus(Map<String, Object> params);
 
-//	void updateHpCfm(Map<String, Object> params) throws Exception;
+	void updateHpCfm(Map<String, Object> params) throws Exception;
 }
