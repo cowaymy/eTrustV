@@ -1392,12 +1392,12 @@ public class MemberListController {
 		}
 
 	    // Agreement screen with custom login
-		// Kit Wai - Start - 20180428
+		// Kit Wai - Start - 20180428s
 		@RequestMapping(value = "/getApplicantInfo", method = RequestMethod.GET)
 		public ResponseEntity <Map> validateHpStatus(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
 		    EgovMap item = new EgovMap();
-//		    item = (EgovMap) memberListService.validateHpStatus(params);
+		    item = (EgovMap) memberListService.validateHpStatus(params);
 
 		    Map<String, Object> aplicntStatus = new HashMap();
 		    aplicntStatus.put("id", item.get("aplctnId"));
@@ -1457,7 +1457,7 @@ public class MemberListController {
 	        }
 
 	        //service
-//	        memberListService.updateHpCfm(params);
+	        memberListService.updateHpCfm(params);
 
 	        // 결과 만들기 예.
 	        ReturnMessage message = new ReturnMessage();
