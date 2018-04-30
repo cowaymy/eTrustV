@@ -4256,7 +4256,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
      <update id="updateHpCfm" parameterType="Map">
      <![CDATA[
         UPDATE ORG0003D
-         SET CNFM = 1,
+         SET CNFM = #{cnfm},
                CNFM_DT = SYSDATE,
                UPD_DT =  SYSDATE
            WHERE  APLCTN_ID = #{userId}

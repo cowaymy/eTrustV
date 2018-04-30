@@ -1,5 +1,6 @@
 package com.coway.trust.web.organization.organization;
 
+import java.io.File;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -29,6 +30,7 @@ import com.coway.trust.biz.login.LoginService;
 import com.coway.trust.biz.organization.organization.MemberListService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.services.tagMgmt.TagMgmtService;
+import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.LoginVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -1448,6 +1450,12 @@ public class MemberListController {
 	        //Session
 	        SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 	        params.put("userId", sessionVO.getUserId());
+	        if(params.get("choice") == "Y") {
+	            params.put("cnfm", "1");
+	        } else {
+	            params.put("cnfm", "0");
+	        }
+
 	        //service
 	        memberListService.updateHpCfm(params);
 
