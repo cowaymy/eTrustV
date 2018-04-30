@@ -17,15 +17,15 @@ public class CrcReconBankStateServiceImpl extends EgovAbstractServiceImpl implem
 
 	@Resource(name = "crcReconBankStateMapper")
 	private CrcReconBankStateMapper crcReconBankStateMapper;
-	
-	
+
+
 	/**
 	 * Credit Card Statement Master List  조회
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
-	 */	
+	 */
 	@Override
 	public List<EgovMap> selectMappingList(Map<String, Object> params) {
 		return crcReconBankStateMapper.selectMappingList(params);
@@ -33,11 +33,11 @@ public class CrcReconBankStateServiceImpl extends EgovAbstractServiceImpl implem
 
 	/**
 	 * Credit Card Statement Master List  조회
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
-	 */	
+	 */
 	@Override
 	public List<EgovMap> selectUnMappedCrc(Map<String, Object> params) {
 		return crcReconBankStateMapper.selectUnMappedCrc(params);
@@ -50,24 +50,24 @@ public class CrcReconBankStateServiceImpl extends EgovAbstractServiceImpl implem
 
 	/**
 	 * Bank & Crc 매핑 정보 업데이트 및 저장
-	 * @param 
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
-	 */	
+	 */
 	@Override
 	public int updateMappingData(List<Object> gridList, int userId) {
-		
+
 		for(int i=0; i<gridList.size(); i++){
 			Map<String, Object> row = (HashMap<String, Object>) gridList.get(i);
 			row.put("userId", userId);
-			
+
 			//crc 업데이트
 			System.out.println(row);
 			crcReconBankStateMapper.updateCrc(row);
 			//bank 업데이트
 			crcReconBankStateMapper.updateBank(row);
-			
+
 			//인터페이스에 추가
 			double sum = 0;
 			List<EgovMap> crcList = crcReconBankStateMapper.selectCrcIdList(row);
@@ -86,27 +86,27 @@ public class CrcReconBankStateServiceImpl extends EgovAbstractServiceImpl implem
 				crcRow.put("grosAmt", crcList.get(j).get("crcGrosAmt"));
 				crcRow.put("creditAmt", row.get("creditAmt"));
 				insertList.add(crcRow);
-				sum = sum+ Integer.parseInt(String.valueOf(crcList.get(j).get("crcGrosAmt")));
+				sum = sum+ Double.parseDouble(String.valueOf(crcList.get(j).get("crcGrosAmt")));
 			}
-			
+
 			for(int j=0; j<insertList.size(); j++){
 				insertList.get(j).put("diffAmt", sum - Double.parseDouble(String.valueOf(insertList.get(j).get("creditAmt"))));
 				crcReconBankStateMapper.insertInterfaceTb(insertList.get(j));
 			}
-			
-			
-			
+
+
+
 			// IF942  insert   Confirm Bank Charge I/F  add by hgham 2018-02-06
 			if(((String) row.get("isAmtSame" )).equals("false")){
 				Map<String, Object> ifM = new HashMap<String, Object>();
-				
+
 				ifM.put("userId", userId);
 				ifM.put("accId",  row.get("accountCode" ));
 				ifM.put("variance", row.get("variance" ));
 				ifM.put("fTrnscId", row.get("fTrnscId" ));
-				
+
 				crcReconBankStateMapper.insertCardPaymentMatchIF(ifM);
-				
+
 			}
 		}
 		return 1;
