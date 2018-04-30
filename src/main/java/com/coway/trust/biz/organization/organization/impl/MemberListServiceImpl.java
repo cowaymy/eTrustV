@@ -1796,7 +1796,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					accBill.put("billPayTypeId", 224);
 					accBill.put("billMemberShipNo", "");
 					accBill.put("billDate", new Date());
-					accBill.put("billAmt", 100);
+					accBill.put("billAmt", 120);
 					accBill.put("billRemark", "");
 					accBill.put("billIsPaid", false);
 					accBill.put("billIsComm", true);

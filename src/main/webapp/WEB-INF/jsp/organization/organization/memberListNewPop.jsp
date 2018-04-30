@@ -48,7 +48,7 @@ function fn_memberSave(){
 
                          // Construct Agreement URL via SMS
                             var cnfmSms = "RM0.00 COWAY: COMPULSORY click " +
-                                                 "http://etrust.my.coway.com/Organization/MemberID=" + aplcntId + "&UserTypeID=2803";
+                                                 "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + aplcntId + "&UserTypeID=2803";
 
                             var rTelNo = $("#mobileNo").val();
 
