@@ -118,7 +118,44 @@
          ORDER BY Extent1.FILE_ITM_ID
     </select>
 
-        <select id="selectECashDeductSubByIdCnt" parameterType="Map" resultType="int">
+    <select id="selectECashDeductSubByIdPaging" parameterType="Map" resultType="egovMap">
+    SELECT *
+        FROM (SELECT ROWNUM AS RNUM,
+        Z.* from (
+		    SELECT
+		        EXTENT1.FILE_ITM_ID,
+		        EXTENT2.SALES_ORD_NO,
+		        EXTENT1.FILE_ITM_ACC_NO,
+		        EXTENT1.FILE_ITM_AMT,
+		        (
+		                SELECT
+		                    MAX(NVL (crc.CUST_CRC_EXPR, '0000')) FILE_ITM_ACC_EXPR
+		                FROM
+		                    SAL0001D som
+		                    JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+		                    LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID AND rs.CUST_CRC_ID <![CDATA[   <> ]]> 0
+		                WHERE
+		                    som.STUS_CODE_ID <![CDATA[   <> ]]>  10
+		                    AND rs.MODE_ID = 131
+		                    AND som.APP_TYPE_ID = 66
+		                    AND rs.BANK_ID IN (19,34,17,28,18,31,16)
+		                    AND som.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+		                    AND ROWNUM = 1
+		                ) AS FILE_ITM_ACC_EXPR,
+		        EXTENT1.FILE_ITM_REF,
+		        EXTENT4.CUST_CRC_OWNER,
+		        EXTENT3.ISSU_NRIC
+		        FROM  SAL0152M EXTENT1
+		            JOIN SAL0001D EXTENT2 on EXTENT2.SALES_ORD_ID = EXTENT1.FILE_ITM_ORD_ID
+		            JOIN SAL0074D EXTENT3 on EXTENT3.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+		            JOIN SAL0028D EXTENT4 on EXTENT4.CUST_CRC_ID = EXTENT3.CUST_CRC_ID
+		        WHERE Extent1.FILE_BATCH_ID = #{fileBatchId}
+		         ORDER BY Extent1.FILE_ITM_ID ) Z
+        WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY FILE_ITM_ACC_NO ASC)
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </select>
+
+    <select id="selectECashDeductSubByIdCnt" parameterType="Map" resultType="int">
     SELECT
         COUNT(1) AS CNT
         FROM  SAL0152M EXTENT1

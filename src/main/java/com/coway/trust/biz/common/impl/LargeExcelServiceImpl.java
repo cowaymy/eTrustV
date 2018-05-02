@@ -307,7 +307,7 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	public void downloadMonthlyBillRawData(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.MONTHLY_BILL_RAW.getQueryId(), parameter, excelDownloadHandler);
 	}
-	
+
 	@Override
 	public void downloadDailyCollectionRawData(Object parameter, ExcelDownloadHandler excelDownloadHandler) {
 		this.downLoad(LargeExcelQuery.DAILY_COLLECTION_RAW.getQueryId(), parameter, excelDownloadHandler);
@@ -315,7 +315,7 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 
 	@Override
 	public void downLoadECashDeductionFileCIMB(Object parameter, ECashDeductionFileCIMBHandler eCashDeductionFileCIMBHandler) {
-		this.downLoad(LargeExcelQuery.ECASHDEDUCTION_DETAIL.getQueryId(), parameter, eCashDeductionFileCIMBHandler);
+		this.downLoad(LargeExcelQuery.ECASHDEDUCTION_DETAIL_PAGING.getQueryId(), parameter, eCashDeductionFileCIMBHandler);
 	}
 
 	@Override
