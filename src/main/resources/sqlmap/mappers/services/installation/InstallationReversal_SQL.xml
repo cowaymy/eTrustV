@@ -1054,7 +1054,6 @@ AND ROWNUM                    <= 1
 		   set ENTRY_ID=#{einstallEntryId}
 		      ,STUS_CODE_ID = '21'
 		      ,CT_ID = #{ectid}
-		     <!-- ,INSTALL_DT = to_date(#{instalStrlDate},'DD-MM-YYYY') -->
 		      ,REM = #{reverseReasonText}
 		      ,GL_POST =0
 		      ,CRT_USER_ID=#{userId}
