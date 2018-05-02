@@ -3,20 +3,20 @@
 
 <script type="text/javaScript">
 
-    // Make AUIGrid 
+    // Make AUIGrid
     var myGridID;
-    
+
     var aPostCode = "<spring:message code='sys.title.postcode' />";
     var aCountry = "<spring:message code='sys.country' />";
 
     //Start AUIGrid
     $(document).ready(function() {
-        
+
         // Create AUIGrid
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, "");
-        
+
        //Rule Book Item search
-        $("#search").click(function(){  
+        $("#search").click(function(){
         	if (validation()) {
 	            Common.ajax("GET", "/common/selectAreaManagement", $("#listSForm").serialize(), function(result) {
 	                console.log("성공.");
@@ -24,22 +24,22 @@
 	                AUIGrid.setGridData(myGridID, result);
 	            });
         	} //validation
-       }); 
-       
+       });
+
       //save
         $("#save").click(function() {
         	if (validationRowCheck()) {
               Common.confirm("<spring:message code='sys.common.alert.save'/>",fn_saveGridData);
         	}
-       }); 
-      
+       });
+
         //excel Download
-        $('#excelDown').click(function() {        
+        $('#excelDown').click(function() {
            GridCommon.exportTo("grid_wrap", 'xlsx', "Area Management");
         });
-        
+
     });//Ready
-    
+
     //Copy Pop 호출
     function fn_areaCopy(){
 
@@ -61,9 +61,9 @@
         $("#popId").val(AUIGrid.getCellValue(myGridID , first.rowIndex , "id"));
 
        Common.popupDiv("/common/areaCopyAddressMasterPop.do", $("#popSForm").serializeJSON(), null, true, "areaCopyAddressMasterPop");
-    } 
-    
-    
+    }
+
+
     function fn_saveGridData(){
         Common.ajax("POST", "/common/saveAreaManagement.do", GridCommon.getEditData(myGridID), function(result) {
             // 공통 메세지 영역에 메세지 표시.
@@ -78,18 +78,18 @@
             } catch (e) {
                 console.log(e);
             }
-            Common.alert("Fail : " + jqXHR.responseJSON.message);             
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
         });
-    } 
-    
-    
+    }
+
+
     // AUIGrid 칼럼 설정
     var columnLayout = [{
         dataField : "areaId",
         headerText : '<spring:message code="sys.areaId" />',
         width : 120,
         editable : false
-        
+
     },{
         dataField : "area",
         headerText : '<spring:message code="sys.area" />',
@@ -97,7 +97,7 @@
         editable : false
     },{
         dataField : "postcode",
-        headerText : '<spring:message code="sys.title.postcode" />', 
+        headerText : '<spring:message code="sys.title.postcode" />',
         width : 100,
         editable : false
     },{
@@ -112,7 +112,7 @@
         editable : false
     },{
         dataField : "country",
-        headerText : '<spring:message code="sys.country" />', 
+        headerText : '<spring:message code="sys.country" />',
         width : 80,
         editable : false
     },{
@@ -136,13 +136,13 @@
         headerText : '<spring:message code="sys.source" />',
         editable : false
     }];
-    
+
     /*  validation */
     function validationRowCheck() {
         var resultChk = true;
         var rowCount = AUIGrid.getRowCount(myGridID);
-        
-        var EditedList = AUIGrid.getEditedRowItems(myGridID);        
+
+        var EditedList = AUIGrid.getEditedRowItems(myGridID);
 
          if (rowCount == 0) {
         	 Common.alert("<spring:message code='sys.common.alert.noChange'/>");
@@ -152,25 +152,25 @@
         	return false;
         }
 
-        return resultChk; 
-    }  
+        return resultChk;
+    }
 
-    
+
     /*  validation */
     function validation() {
         var result = true;
 
         if(!validationCom() || !validationCom()){
             return false;
-       }      
+       }
         return result;
     }
-    
+
     function validationCom(){
         var result = true;
         var country = $("#country").val();
         var postcode = $("#postcode").val();
-        
+
         var lengthPostcode = postcode.length;
 
         if(country == '' || postcode == ''){
@@ -186,19 +186,19 @@
         }
         return result;
     }
-    
+
     //New MY Pop 호출
     function fn_areaNewMy(){
 
         Common.popupDiv("/common/areaNewAddressMyPop.do", $("#popSForm").serializeJSON(), null, true, "areaNewAddressMyPop");
-    } 
-    
+    }
+
     //New Other Pop 호출
     function fn_areaNewOther(){
-        
+
         Common.popupDiv("/common/areaNewAddressOtherPop.do", $("#popSForm").serializeJSON(), null, true, "areaNewAddressOtherPop");
-    } 
-    
+    }
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -212,7 +212,9 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2><spring:message code='sys.AreaManagement'/></h2>
 <ul class="right_btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="#"  id="search" ><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+    </c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -267,11 +269,11 @@
 <section class="search_result"><!-- search_result start -->
 
 <ul class="right_btns">
-    <li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code='sys.dwAddressMaster'/></a></p></li>
-    <li><p class="btn_grid"><a href="#" onClick="javascript:fn_areaCopy();"><spring:message code='sys.copy'/></a></p></li>
-    <li><p class="btn_grid"><a href="#" onClick="javascript:fn_areaNewMy();"><spring:message code='sys.newMy'/></a></p></li>
-    <li><p class="btn_grid"><a href="#" onClick="javascript:fn_areaNewOther();"><spring:message code='sys.newOther'/></a></p></li>
-    <li><p class="btn_grid"><a href="#" id="save"><spring:message code='sys.btn.save'/></a></p></li>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}"><li><p class="btn_grid"><a href="#" id="excelDown"><spring:message code='sys.dwAddressMaster'/></a></p></li></c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"><li><p class="btn_grid"><a href="#" onClick="javascript:fn_areaCopy();"><spring:message code='sys.copy'/></a></p></li></c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}"><li><p class="btn_grid"><a href="#" onClick="javascript:fn_areaNewMy();"><spring:message code='sys.newMy'/></a></p></li></c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}"><li><p class="btn_grid"><a href="#" onClick="javascript:fn_areaNewOther();"><spring:message code='sys.newOther'/></a></p></li></c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine6 == 'Y'}"><li><p class="btn_grid"><a href="#" id="save"><spring:message code='sys.btn.save'/></a></p></li></c:if>
 </ul>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
