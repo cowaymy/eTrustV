@@ -202,7 +202,7 @@
                #{menuCode} AS menu_code ,
                #{pgmTrnCode} AS pgm_trn_code ,
                #{funcYn} AS func_yn ,
-               0 AS user_id
+               #{userId} AS user_id
           FROM dual
   ) b
      ON ( a.AUTH_CODE = b.auth_code
