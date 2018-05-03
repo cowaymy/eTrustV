@@ -50,15 +50,32 @@ function fn_memberSave(){
                             var cnfmSms = "RM0.00 COWAY: COMPULSORY click " +
                                                  "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + aplcntId + "&UserTypeID=2803";
 
-                            var rTelNo = $("#mobileNo").val();
+                            if($("#mobileNo").val() != "") {
+                                var rTelNo = $("#mobileNo").val();
 
-                            Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
-                                console.log("sms.");
-                                console.log( result);
-                            });
+                                Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
+                                    console.log("sms.");
+                                    console.log( result);
+                                });
+                            }
+
+                            if($("#email").val() != "") {
+                                var recipient = $("#email").val();
+                                var file = "/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf";
+
+                                var msg = "Please read the agreement via attached URL " +
+                                               "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + aplcntId + "&UserTypeID=2803";
+
+                                // Send Email file, recipient
+                                Common.ajax("GET", "/organization/sendEmail.do", {msg:msg, recipient:recipient}, function(result) {
+                                    console.log("email.");
+                                    console.log(result);
+                                })
+                            }
 
 			            });
 			        }
+			        Common.alert(result.message,fn_close);
 		});
 }
 
@@ -712,10 +729,12 @@ function fn_saveValidation(){
     }
 
     if($("#memberType").val() == "2803") {
-    	if($("#mobileNo").val() == '') {
-    		Common.alert("Please key in Mobile No.");
-    		return false;
-    	}
+        if($("#mobileNo").val() == '') {
+            if($("#email").val() == '') {
+                Common.alert("Please key in Mobile No. or Email Adress");
+                return false;
+            }
+        }
     }
 
 	return true;

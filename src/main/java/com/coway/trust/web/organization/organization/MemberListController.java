@@ -1454,6 +1454,7 @@ public class MemberListController {
 	            params.put("cnfm", "1");
 	        } else {
 	            params.put("cnfm", "0");
+	            params.put("stusId", "6");
 	        }
 
 	        //service

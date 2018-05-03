@@ -4254,13 +4254,14 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       </select>
 
      <update id="updateHpCfm" parameterType="Map">
-     <![CDATA[
         UPDATE ORG0003D
          SET CNFM = #{cnfm},
                CNFM_DT = SYSDATE,
                UPD_DT =  SYSDATE
+               <if test="stusId != null and stusId != '' ">
+                   , STUS_ID = #{stusId}
+               </if>
            WHERE  APLCTN_ID = #{userId}
-        ]]>
      </update>
 
 </mapper>
