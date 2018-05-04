@@ -34,6 +34,8 @@ function fn_testAgreement(choice) {
 
     // 2018-05-04 - LaiKW - Start
     // Add validation checking upon
+    console.log(choice);
+
     if(choice == "Y") {
         if($("#acknowledgeAgreement").prop('checked') == false) {
             Common.alert("* Please agree the terms and conditions.");
@@ -51,7 +53,7 @@ function fn_testAgreement(choice) {
         console.log(result);
 
         if(result.cnfm == "0" && result.cnfm_dt == "1900-01-01") {
-        	Common.ajax("POST", "/organization/updateHpCfm.do", $('#agreementChoice').serializeJSON(), function(result) {
+        	Common.ajax("GET", "/organization/updateHpCfm.do", {choice:choice}, function(result) {
                 Common.alert(result.message);
             });
         } else {
@@ -97,10 +99,6 @@ input {
 <form id="applicantInfo" name="applicantInfo" method="post">
     <input type="hidden" id="memberID" name="memberID" value="${memberID}">
     <input type="hidden" id="userTypeID" name="userTypeID" value="${userTypeID}">
-</form>
-
-<form id="agreementChoice">
-    <input type="hidden" id="choice" name="choice" value="">
 </form>
 
 <form id="applicantValidateForm" method="post">

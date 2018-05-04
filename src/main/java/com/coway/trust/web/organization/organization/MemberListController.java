@@ -1417,10 +1417,15 @@ public class MemberListController {
 	        // Custom login checking based on URL input
 
 	        Precondition.checkNotNull(params.get("MemberID"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "Member ID" }));
-	        Precondition.checkNotNull(params.get("UserTypeID"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "User Type ID" }));
 
-	        logger.debug("Applicant ID : {}", params.get("MemberID"));
-	        logger.debug("Applicant User Type : {}", params.get("UserTypeID"));
+	        String userTypeId = ((String) params.get("MemberID")).substring(0, 4);
+	        String memberID = ((String) params.get("MemberID")).substring(4);
+
+	        logger.debug("Applicant ID : {}", memberID);
+	        logger.debug("User Type : {}", userTypeId);
+
+	        params.put("MemberID", memberID);
+	        params.put("UserTypeID", userTypeId);
 
 	        LoginVO loginVO = loginService.getAplcntInfo(params);
 
@@ -1442,15 +1447,17 @@ public class MemberListController {
 	        return "organization/organization/memberHpAgreement";
 	    }
 
-		@RequestMapping(value = "/updateHpCfm.do")
+		@RequestMapping(value = "/updateHpCfm.do", method = RequestMethod.GET)
 	    public ResponseEntity<ReturnMessage> updateAplicntInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 
 		    logger.debug("==================== updateHpCfm.do ====================");
 
+		    logger.debug("params {}", params);
+
 	        //Session
 	        SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 	        params.put("userId", sessionVO.getUserId());
-	        if(params.get("choice") == "Y") {
+	        if("Y".equals(params.get("choice"))) {
 	            params.put("cnfm", "1");
 	        } else {
 	            params.put("cnfm", "0");
@@ -1460,7 +1467,6 @@ public class MemberListController {
 	        //service
 	        memberListService.updateHpCfm(params);
 
-	        // 결과 만들기 예.
 	        ReturnMessage message = new ReturnMessage();
 	        message.setCode(AppConstants.SUCCESS);
 	        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
@@ -1478,9 +1484,20 @@ public class MemberListController {
 		    // send email
 		    EmailVO email = new EmailVO();
 		    email.setTo((String) params.get("recipient"));
-		    email.setHtml(false);
-		    email.setSubject("HP Applicant Agreement");
-		    email.setText((String) params.get("msg"));
+		    email.setHtml(true);
+		    email.setSubject("Health Planner Agreement Confirmation");
+
+		    String url = (String) params.get("url");
+		    String msg = "Dear Sir/Madam, <br /><br />" +
+		                      "Thank you for register as Coway Health Planner. Please click the link below for confirmation of Health Planner Agreement. <br /><br />" +
+		                      "<a href='" + url + "' target='_blank' style='color:blue; font-weight:bold'> Verify Now</a><br /><br />" +
+		                      "Please note that you are able to view this Coway Health Planner Agreement for agreement confirmation within 7 days from your application date to complete your Health Planner registration.<br /><br />" +
+		                      "This is a system generated email, please do not reply.<br /><br />" +
+		                      "Thank you." +
+		                      "<br /><br /><br />" +
+		                      "Best Regards,<br /><b>Coway Malaysia</b>";
+
+		    email.setText(msg);
 
 	        boolean isResult = false;
 	        isResult = adaptorService.sendEmail(email, false);

@@ -46,9 +46,10 @@ function fn_memberSave(){
 
                             var aplcntId = result.id;
 
-                         // Construct Agreement URL via SMS
+                            // Construct Agreement URL via SMS
                             var cnfmSms = "RM0.00 COWAY: COMPULSORY click " +
-                                                 "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + aplcntId + "&UserTypeID=2803";
+                                                 "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=2803" + aplcntId +
+                                                 " for confirmation of HP agreement. TQ!";
 
                             if($("#mobileNo").val() != "") {
                                 var rTelNo = $("#mobileNo").val();
@@ -63,11 +64,10 @@ function fn_memberSave(){
                                 var recipient = $("#email").val();
                                 var file = "/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf";
 
-                                var msg = "Please read the agreement via attached URL " +
-                                               "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + aplcntId + "&UserTypeID=2803";
+                                var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=2803" + aplcntId;
 
                                 // Send Email file, recipient
-                                Common.ajax("GET", "/organization/sendEmail.do", {msg:msg, recipient:recipient}, function(result) {
+                                Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
                                     console.log("email.");
                                     console.log(result);
                                 })
@@ -427,6 +427,10 @@ $(document).ready(function() {
 
         if ( memberType ==  "2803") {
             $('#course').attr("disabled", true);
+            $('#email').prop('required', true);
+            $('#mobileNo').prop('required', true);
+            $('#emailLbl').append("<span class='must'>*</span>");
+            $('#mobileNoLbl').append("<span class='must'>*</span>");
         } else {
             $('#course').removeAttr('disabled');
         }
@@ -731,7 +735,7 @@ function fn_saveValidation(){
     if($("#memberType").val() == "2803") {
         if($("#mobileNo").val() == '') {
             if($("#email").val() == '') {
-                Common.alert("Please key in Mobile No. or Email Adress");
+                Common.alert("Please key in Mobile No. or Email Address");
                 return false;
             }
         }
@@ -1190,13 +1194,13 @@ function autofilledbyNRIC(){
     </td>
 </tr> --%>
 <tr>
-    <th scope="row">Email</th>
+    <th scope="row" id="emailLbl" name="emailLbl">Email</th>
     <td colspan="5">
     <input type="text" title="" placeholder="Email" class="w100p" id="email" name="email" />
     </td>
 </tr>
 <tr>
-    <th scope="row">Mobile No.</th>
+    <th scope="row" id="mobileNoLbl" name="mobileNoLbl">Mobile No.</th>
     <td>
     <input type="text" title="" placeholder="Numberic Only" class="w100p" id="mobileNo" name="mobileNo"
         onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
