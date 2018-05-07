@@ -212,7 +212,7 @@
             var promoIdIdx = $("#cmbPromotionAexc option:selected").index();
             var promoIdVal = $("#cmbPromotionAexc").val();
 
-            if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ){
+            if($("#cmbAppTypeAexc").val() == 67 || $("#cmbAppTypeAexc").val() == 68 ){
                 SRV_PAC_ID = 0;
             }
             else{
@@ -240,7 +240,7 @@
             var idx    = $("#srvPacIdAexc option:selected").index();
             var selVal = $("#srvPacIdAexc").val();
 
-            if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 ){
+            if($("#cmbAppTypeAexc").val() == 67 || $("#cmbAppTypeAexc").val() == 68 ){
                 SRV_PAC_ID = 0;
             }
             else{
