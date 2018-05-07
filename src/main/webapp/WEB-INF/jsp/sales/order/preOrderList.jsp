@@ -7,18 +7,18 @@
 	var keyValueList = [];
 	var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 	var CATE_ID  = "14";
-	
+
     if(MEM_TYPE == '1') { //HP
         CATE_ID = "29";
     }
     else if(MEM_TYPE == '2') { //CODY
         CATE_ID = "28";
     }
-	
+
     $(document).ready(function(){
 
         fn_statusCodeSearch();
-        
+
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
 
@@ -26,38 +26,38 @@
         AUIGrid.bind(listGridID, "cellDoubleClick", function(event) {
             fn_setDetail(listGridID, event.rowIndex);
         });
-        
+
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', '_appTypeId', 'M', 'fn_multiCombo'); //Common Code
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
 
     });
-    
+
     function fn_statusCodeSearch(){
         Common.ajaxSync("GET", "/status/selectStatusCategoryCdList.do", {selCategoryId : CATE_ID, parmDisab : 0}, function(result) {
             keyValueList = result;
         });
     }
-    
+
     function fn_setDetail(gridID, rowIdx){
         //(_url, _jsonObj, _callback, _isManualClose, _divId, _initFunc)
         Common.popupDiv("/sales/order/preOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId") }, null, true, "_divPreOrdModPop");
     }
-    
+
     function fn_doSaveStatus() {
         console.log('!@# fn_doSaveStatus START');
-        
-        var preOrderVOList = {            
+
+        var preOrderVOList = {
             preOrderVOList : GridCommon.getEditData(listGridID)
         };
-        
+
         Common.ajax("POST", "/sales/order/modifyPreOrderStatus.do", preOrderVOList, function(result) {
 
             Common.alert("Pre-Order Status Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
-            
+
             fn_getPreOrderList();
-            
+
         },  function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -72,9 +72,9 @@
             }
         });
     }
-    
+
     function createAUIGrid() {
-        
+
     	//AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : "Channel",         dataField : "channel",    editable : false, width : 60  }
@@ -110,21 +110,21 @@
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : true,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-          //selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : true,
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+          //selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-        
+
         listGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
     }
 
@@ -155,10 +155,10 @@
                 fn_loadOrderSalesman(memCd);
             }
         });
-        $('#_memCode').keydown(function (event) {  
+        $('#_memCode').keydown(function (event) {
             if (event.which === 13) {    //enter
                 var memCd = $('#_memCode').val().trim();
-    
+
                 if(FormUtil.isNotEmpty(memCd)) {
                     fn_loadOrderSalesman(memCd);
                 }
@@ -179,7 +179,7 @@
                 $('#_memName').val(memInfo.name);            }
         });
     }
-    
+
     function fn_convToOrderPop() {
         var selIdx = AUIGrid.getSelectedIndex(listGridID)[0];
         if(selIdx > -1) {
@@ -203,39 +203,39 @@
         }
         return gstAmt;
     }
-    
+
     function fn_multiCombo(){
         $('#_appTypeId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
         $('#_appTypeId').multipleSelect("checkAll");
         $('#_stusId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
         $('#_stusId').multipleSelect("checkAll");
         $('#_brnchId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
         $('#_brnchId').multipleSelect("checkAll");
         $('#_typeId').change(function() {
             //console.log($(this).val());
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '100%'
         });
         $('#_typeId').multipleSelect("checkAll");
 
     }
-    
+
     $.fn.clearForm = function() {
         return this.each(function() {
             var type = this.type, tag = this.tagName.toLowerCase();
@@ -273,7 +273,7 @@
 
 <section class="search_table"><!-- search_table start -->
 <form id="_frmPreOrdSrch" name="_frmPreOrdSrch" action="#" method="post">
-<input id="callPrgm" name="callPrgm" value="PREORD_LIST" type="hidden" />
+<!-- <input id="callPrgm" name="callPrgm" value="PRE_ORD" type="hidden" /> -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>

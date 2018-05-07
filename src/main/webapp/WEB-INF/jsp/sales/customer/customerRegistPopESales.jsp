@@ -1,0 +1,1144 @@
+<%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
+<%@ include file="/WEB-INF/tiles/view/common.jsp"%>
+<script type="text/javaScript" language="javascript" >
+
+    //AUIGrid 그리드 객체
+    var myGridID;          // credit card
+    var myGridID1;        // bank account grid
+
+    //Choose Message
+    var optionState = {chooseMessage: " 1.States "};
+    var optionCity = {chooseMessage: "2. City"};
+    var optionPostCode = {chooseMessage: "3. Post Code"};
+    var optionArea = {chooseMessage: "4. Area"};
+
+    // 등록창
+    var addBankDialog;
+
+    $(document).ready(function(){
+
+         //j_date
+        var pickerOpts={
+                changeMonth:true,
+                changeYear:true,
+                dateFormat: "dd/mm/yy"
+        };
+
+        $(".j_date").datepicker(pickerOpts);
+
+        var monthOptions = {
+            pattern: 'mm/yyyy',
+            selectedYear: 2017,
+            startYear: 2007,
+            finalYear: 2027
+        };
+
+        $(".j_date2").monthpicker(monthOptions);
+
+        // AUIGrid 그리드를 생성합니다.
+        createAUIGrid();
+
+
+  //      AUIGrid.setSelectionMode(myGridID, "singleRow");
+
+        // 셀 더블클릭 이벤트 바인딩
+
+        // 셀 클릭 이벤트 바인딩
+
+        //Magic Address
+        fn_initAddress(); //init
+        CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
+         //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
+        doGetCombo('/common/selectCodeList.do', '8', '964','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
+        doGetCombo('/sales/customer/getNationList', '338' , '1' ,'_cmbNation_' , 'S');        // Nationality Combo Box
+        doGetCombo('/common/selectCodeList.do', '95', '','_cmbCorpTypeId_', 'S' , '');                      // Company Type Combo Box
+        doGetCombo('/common/selectCodeList.do', '17', '','_cmbInitials_', 'S' , '');                             // Initials Combo Box
+        doGetCombo('/common/selectCodeList.do', '2', '','_cmbRace_', 'S' , '');                                 // Race Combo Box
+    //    doGetCombo('/common/selectCodeList.do', '20', '','cmbBankType', 'S' , '');                         // Add Bank Type Combo Box
+       // getAddrRelay('mstate' , '1' , 'state', '');
+
+        //temp for individual only
+        /********************************************************/
+        $("#_cmbCorpTypeId_").val('');
+        $("#_cmbNation_").val('1');
+        $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
+        $("select[name=cmbCorpTypeId]").addClass("w100p disabled");
+        $("select[name=cmbNation]").removeClass("w100p disabled");
+        $("select[name=cmbNation]").addClass("w100p");
+        $("select[name=cmbNation]").removeAttr("disabled");
+        $("select[name=cmbRace]").removeClass("w100p disabled");
+        $("select[name=cmbRace]").addClass("w100p");
+        $("select[name=cmbRace]").removeAttr("disabled");
+        //$("#_dob_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
+        $("select[name=dob]").removeAttr("readonly");
+        $("#genderForm").removeAttr('disabled');
+        $("input:radio[name='gender']").attr("disabled" , false);
+        $('input:radio[name="gender"][value="M"]').prop('checked', true);
+        $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
+        /********************************************************/
+
+        //Enter Event
+        $('#_searchSt_').keydown(function (event) {
+            if (event.which === 13) {    //enter
+                fn_addrSearch();
+            }
+        });
+
+    });
+
+    function fn_initAddress(){
+
+           $('#_mCity_').append($('<option>', { value: '', text: '2. City' }));
+           $('#_mCity_').val('');
+           $("#_mCity_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+           $('#_mPostCd_').append($('<option>', { value: '', text: '3. Post Code' }));
+           $('#_mPostCd_').val('');
+           $("#_mPostCd_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+           $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
+           $('#_mArea_').val('');
+           $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+    }
+
+    /*####### Magic Address #########*/
+    function fn_selectState(selVal){
+
+        var tempVal = selVal;
+
+        if('' == selVal || null == selVal){
+            //전체 초기화
+            fn_initAddress();
+
+        }else{
+
+            $("#_mCity_").attr({"disabled" : false  , "class" : "w100p"});
+
+            $('#_mPostCd_').append($('<option>', { value: '', text: '3. Post Code' }));
+            $('#_mPostCd_').val('');
+            $("#_mPostCd_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+            $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
+            $('#_mArea_').val('');
+            $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+            //Call ajax
+            var cityJson = {state : tempVal}; //Condition
+            CommonCombo.make('_mCity_', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
+        }
+
+    }
+
+    function fn_selectCity(selVal){
+
+        var tempVal = selVal;
+
+        if('' == selVal || null == selVal){
+
+             $('#_mPostCd_').append($('<option>', { value: '', text: '3. Post Code' }));
+             $('#_mPostCd_').val('');
+             $("#_mPostCd_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+             $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
+             $('#_mArea_').val('');
+             $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+        }else{
+
+            $("#_mPostCd_").attr({"disabled" : false  , "class" : "w100p"});
+
+            $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
+            $('#_mArea_').val('');
+            $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+            //Call ajax
+            var postCodeJson = {state : $("#_mState_").val() , city : tempVal}; //Condition
+            CommonCombo.make('_mPostCd_', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
+        }
+
+    }
+
+
+    function fn_selectPostCode(selVal){
+
+        var tempVal = selVal;
+
+        if('' == selVal || null == selVal){
+
+            $('#_mArea_').append($('<option>', { value: '', text: '4. Area' }));
+            $('#_mArea_').val('');
+            $("#_mArea_").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
+
+        }else{
+
+            $("#_mArea_").attr({"disabled" : false  , "class" : "w100p"});
+
+            //Call ajax
+            var areaJson = {state : $("#_mState_").val(), city : $("#_mCity_").val() , postcode : tempVal}; //Condition
+            CommonCombo.make('_mArea_', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
+        }
+
+    }
+
+
+    /*####### Magic Address #########*/
+    function createAUIGrid() {
+        // AUIGrid 칼럼 설정
+        // credit card
+        var columnLayout = [
+            {
+                dataField : "cardType",
+                headerText : '<spring:message code="sal.text.cardType" />',
+                width : 100,
+                editable : true
+            },{
+                dataField : "crcType",
+                headerText : '<spring:message code="sal.title.text.crcType" />',
+                width : 100,
+                editable : true
+            },{
+                dataField : "bank",
+                headerText : '<spring:message code="sal.title.text.bank" />',
+                width : 100,
+                editable : true
+            }, {
+                dataField : "nmCard",
+                headerText : '<spring:message code="sal.text.name" />',
+                editable : true
+            }, {
+                dataField : "creditCardNo",
+                headerText : '<spring:message code="sal.text.creditCardNo" />',
+                width : 100,
+                editable : true
+            }, {
+                dataField : "cardExpiry",
+                headerText : '<spring:message code="sal.title.text.expiry" />',
+                editable : true
+            }, {
+                dataField : "cardRem",
+                headerText : '<spring:message code="sal.title.remark" />',
+                editable : true
+            }];
+
+        // bank account
+        var columnLayout1 = [
+            {
+                dataField : "accTypeId",
+                headerText : '<spring:message code="sal.title.type" />',
+                width : 100,
+                editable : true
+            },{
+                dataField : "accBankId",
+                headerText : '<spring:message code="sal.title.text.bank" />',
+                width : 100,
+                editable : true
+            },{
+                dataField : "accOwner",
+                headerText : '<spring:message code="sal.text.name" />',
+                width : 100,
+                editable : true
+            }, {
+                dataField : "accNo",
+                headerText : '<spring:message code="sal.text.accNo" />',
+                editable : true
+            }, {
+                dataField : "bankBranch",
+                headerText : '<spring:message code="sal.text.bankBranch" />',
+                width : 100,
+                editable : true
+            }, {
+                dataField : "accRem",
+                headerText : '<spring:message code="sal.title.remark" />',
+                editable : true
+            }];
+
+        //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+        myGridID = AUIGrid.create("#card_grid", columnLayout, "");
+        myGridID1 = AUIGrid.create("#account_grid", columnLayout1, "");
+
+        // 그리드 최초에 빈 데이터 넣음.
+        AUIGrid.setGridData(myGridID, []);
+        AUIGrid.setGridData(myGridID1, []);
+    }
+
+    // Customer Type 선택시 Company Type 변경 (Basic Info)
+   function onChangeCompanyType(val){
+
+        if($("#_cmbTy").val() == '965'){
+            $("select[name=cmbCorpTypeId]").removeAttr("disabled");
+            $("select[name=cmbCorpTypeId]").removeClass("w100p disabled");
+            $("select[name=cmbCorpTypeId]").addClass("w100p");
+            $("#_cmbCorpTypeId_").val('1173');
+            $("#_cmbNation_").val('');
+            $("select[name=cmbNation]").addClass("w100p disabled");
+            $("select[name=cmbNation]").attr('disabled', 'disabled');
+            $("#_cmbRace_").val('');
+            $("select[name=cmbRace]").addClass("w100p disabled");
+            $("select[name=cmbRace]").attr('disabled', 'disabled');
+            $("#_dob_").val('');
+//            $("select[name=dob]").attr('readonly','readonly');
+            $("#_dob_").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'});
+            $("#genderForm").attr('disabled',true);
+            $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
+            $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
+            $("input:radio[name='gender']").attr("disabled" , "disabled");
+            $("#genderForm").attr('checked', false);
+            $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+        }else if($("#_cmbTypeId_").val() == '964'){
+            $("#_cmbCorpTypeId_").val('');
+            $("#_cmbNation_").val('1');
+            $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
+            $("select[name=cmbCorpTypeId]").addClass("w100p disabled");
+            $("select[name=cmbNation]").removeClass("w100p disabled");
+            $("select[name=cmbNation]").addClass("w100p");
+            $("select[name=cmbNation]").removeAttr("disabled");
+            $("select[name=cmbRace]").removeClass("w100p disabled");
+            $("select[name=cmbRace]").addClass("w100p");
+            $("select[name=cmbRace]").removeAttr("disabled");
+            $("#_dob_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
+//            $("select[name=dob]").removeAttr("readonly");
+            $("#genderForm").removeAttr('disabled');
+            $("input:radio[name='gender']").attr("disabled" , false);
+            $('input:radio[name="gender"][value="M"]').prop('checked', true);
+            $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
+        }else{
+            $("#_oldNric_").val('');
+            $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            $("#_gstRgistNo_").val('');
+            $("#_gstRgistNo_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            $("#_cmbNation_").val('');
+            $("select[name=cmbNation]").addClass("w100p disabled");
+            $("select[name=cmbNation]").attr('disabled', 'disabled');
+            $("#genderForm").attr('disabled',true);
+            $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
+            $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
+            $("input:radio[name='gender']").attr("disabled" , "disabled");
+            $("#_cmbRace_").val('');
+            $("#_cmbRace_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            $("#_dob_").val('');
+            $("#_dob_").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'});
+        }
+
+    }
+
+    function fn_addCreditCardPop(){
+        Common.popupDiv("/sales/customer/customerAddCreditCardeSalesPop.do", $("#insBasicForm").serializeJSON(), null, true, "_cardDiv");
+    }
+
+    function fn_addBankAccountPop(){
+        Common.popupDiv('/sales/customer/customerAddBankAccountPop.do', $('#insBasicForm').serializeJSON(), null, true, '_bankDiv');
+    }
+
+
+    // save confirm
+    function fn_saveConfirm(){
+
+        console.log("save click");
+
+        if(fn_saveValidationCheck()){
+            Common.confirm("<spring:message code='sal.alert.text.saveCustomer'/>", fn_saveNewCustomer);
+        }
+    }
+
+    // save
+    function fn_saveNewCustomer(){
+
+            var customerForm = {
+                dataSet     : GridCommon.getEditData(myGridID),
+                dataSetBank     : GridCommon.getEditData(myGridID1),
+                customerVO : {
+                    cmbTypeId : insBasicForm.cmbTypeId.value,
+                    custName : insBasicForm.custName.value,
+                    cmbCorpTypeId : insBasicForm.cmbCorpTypeId.value,
+                    custInitial : insBasicForm.cmbInitials.value,
+                    nric : insBasicForm.nric.value,
+                    oldNric : insBasicForm.oldNric.value,
+                    //gstRgistNo : insBasicForm.gstRgistNo.value,
+                    cmbNation : insBasicForm.cmbNation.value,
+                    pasSportExpr : insBasicForm.pasSportExpr.value,
+                    dob : insBasicForm.dob.value,
+                    visaExpr : insBasicForm.visaExpr.value,
+                    gender : $('input:radio[name=gender]:checked').val(),
+                    email : insBasicForm.email.value,
+                    cmbRace : insBasicForm.cmbRace.value,
+                    telM1 : insBasicForm.telM1.value,
+                    telR : insBasicForm.telR.value,
+                    //telF : insBasicForm.telF.value,
+                    telO : insBasicForm.telO.value,
+                    ext : insBasicForm.ext.value,
+                    //rem : insBasicForm.rem.value,
+
+                    addrDtl : insAddressForm.addrDtl.value,
+                    areaId : insAddressForm.areaId.value,
+                    streetDtl : insAddressForm.streetDtl.value,
+                    //addrRem : insAddressForm.addrRem.value,
+
+                    asCustName : insContactForm.asCustName.value,
+                    asTelM : insContactForm.asTelM.value,
+                    asTelO : insContactForm.asTelO.value,
+                    asTelR : insContactForm.asTelR.value,
+                    //asTelF : insContactForm.asTelF.value,
+                    asExt : insContactForm.asExt.value,
+                    asEmail : insContactForm.asEmail.value
+                }
+            };
+
+            Common.ajax("POST", "/sales/customer/insCustBasicInfo.do", customerForm, function(result) {
+
+                if(result != null){
+                    $("._custMakeBtn").css("display" , "none");
+                }else{
+                    Common.alert('<spring:message code="sal.alert.msg.dupNricNum" />');
+                    return;
+                }
+                Common.alert("<spring:message code='sal.alert.text.saveCustomerSuccess'/><br/><spring:message code='sal.alert.text.plzKeyInOrdInfo'/><br/>" + " Customer ID : " + result , fn_winClose);
+
+                if('${callPrgm}' == 'ORD_REGISTER') {
+                    $('#custId').val(result);
+                    fn_selectCustInfo();
+                }
+                if('${callPrgm}' == 'PRE_ORD') {
+                    fn_loadCustomer(result, null);
+                }
+                if('${callPrgm}' == 'PRE_ORD_3PARTY') {
+                    fn_loadThirdParty(result, 1);
+                }
+                if('${callPrgm}' == 'ORD_REGISTER_3PARTY') {
+                    fn_loadThirdParty(result, 1);
+                }
+            }, function(jqXHR, textStatus, errorThrown) {
+                Common.alert("실패하였습니다.");
+                console.log("실패하였습니다.");
+                console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+
+                alert(jqXHR.responseJSON.message);
+                console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+
+            });
+
+    }
+
+    function fn_winClose(){
+
+        window.close();
+        $("#_insCloseBtn").click();
+    }
+
+    // Validation Check
+    function fn_saveValidationCheck(){
+        console.log("1.  type Check");
+        if($("#_cmbTypeId_").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzSelCustType" />');
+            return false;
+        }
+         console.log("2.  nric Check");
+        if($("#_nric_").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinNricCompNum" />');
+            return false;
+        }
+        /*else if($("#_nric_").length > 12){
+            Common.alert("IC length More than 12 digit. </br> Are you sure you want to Save?");
+        }else{
+            if(FormUtil.checkNum($("#_nric_"))){
+                Common.alert("* Invalid nric number.");
+                return false;
+            }
+        } */
+        console.log("3.  name check");
+        if($("#_custName_").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinCustName" />');
+            return false;
+        }
+        console.log("4.  tel check");
+        if($("#_telM1_").val() == '' && $("#_telR_").val() == '' && $("#_telF_").val() == '' && $("#_telO_").val() == '' ){
+            Common.alert('<spring:message code="sal.msg.keyInContactNum" />');
+            return false;
+        }else{
+            if($("#_telM1_").val() != ''){
+                if(FormUtil.checkNum($("#_telM1_"))){
+                    Common.alert('<spring:message code="sal.alert.msg.invaildTelNumM" />');
+                    return false;
+                }
+                if($("#_telM1_").length > 20){
+                    Common.alert('<spring:message code="sal.alert.msg.telMNumExceedLengTwenty" />');
+                    return false;
+                }
+            }
+            if($("#_telO_").val() != ''){
+
+                   if(FormUtil.checkNum($("#_telO_"))){
+                       Common.alert('<spring:message code="sal.alert.msg.invaildTelNumO" />');
+                       return false;
+                   }
+                   if($("#_telO_").length > 20){
+                       Common.alert('<spring:message code="sal.alert.msg.telONumExceedLengTwenty" />');
+                       return false;
+                   }
+               }
+            if($("#_telR_").val() != ''){
+                   if(FormUtil.checkNum($("#_telR_"))){
+                       Common.alert('<spring:message code="sal.alert.msg.invaildTelNumR" />');
+                   }
+                   if($("#_telR_").length > 20){
+                       Common.alert('<spring:message code="sal.alert.msg.telRNumExceedLengTwenty" />');
+                       return false;
+                   }
+               }
+           /*  if($("#_telF_").val() != ''){
+                   if(FormUtil.checkNum($("#_telF_"))){
+                       Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
+                   }
+                   if($("#_telF_").length > 20){
+                       Common.alert('<spring:message code="sal.alert.msg.telFNumExceedLengTwenty" />');
+                       return false;
+                   }
+               } */
+        }
+        console.log("5.  cmb type check");
+        if($("#_cmbTypeId_").val() == '964'){
+            if($("#_cmbNation_").val() == ''){
+                Common.alert('<spring:message code="sal.alert.msg.plzSelNationality" />');
+                return false;
+            }
+            if($("#_dob_").val() == ''){
+                Common.alert('<spring:message code="sal.alert.msg.plzKeyinCustDob" />');
+                   return false;
+            }
+            // Gender validation check (해야함.) * Customer is exist.
+            if($("#_cmbRace_").val() == ''){
+                Common.alert('<spring:message code="sal.alert.msg.plzSelCustRace" />');
+                   return false;
+            }
+            if($("#_cmbInitials_").val() == ''){
+                Common.alert('<spring:message code="sal.alert.msg.plzSelCntcPersonInitial" />');
+                   return false;
+            }
+        }
+        console.log("6.  detail addr check");
+        if($("#_addrDtl_").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinAddr" />');
+            return false;
+        }
+
+        console.log("7.  area check");
+        if($("#_mArea_").val() == ''){
+                Common.alert('<spring:message code="sal.alert.msg.plzKeyinArea" />');
+                return false;
+        }
+
+        console.log("8.  city check");
+        if($("#_mCity_").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinCity" />');
+            return false;
+        }
+
+        console.log("9.  postcode check");
+        if($("#_mPostCd_").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinPostcode" />');
+            return false;
+        }
+
+        console.log("10.  state check");
+        if($("#_mState_").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinState" />');
+            return false;
+        }
+
+        console.log("11.  cust name check");
+        if($("#_asCustName_").val() == ''){
+            $("#_contactTab").click();
+
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinCustCntcName" />', fn_focusToCustName);
+            return false;
+        }
+        console.log("12.  contact check");
+/*         if($("#_asTelM_").val() == '' && $("#_asTelR_").val() == '' && $("#_asTelF_").val() == '' && $("#_asTelO_").val() == '' ){
+            Common.alert('<spring:message code="sal.msg.keyInContactNum" />');
+            return false;
+        } */
+
+//      if(!FormUtil.checkNum($("#ext").val())){
+//               alert("* Invalid extension number.");
+//        }
+        return true;
+    }
+
+    function fn_focusToCustName(){
+        $("#_asCustName_").focus();
+    }
+
+    function fn_copyCustInfo(){
+        $("#_asCustName_").val($("#_custName_").val());
+        $("#_asTelM_").val($("#_telM1_").val());
+        $("#_asTelR_").val($("#_telR_").val());
+        $("#_asTelO_").val($("#_telO_").val());
+        //$("#_asTelF_").val($("#_telF_").val());
+        $("#_asExt_").val($("#_ext_").val());
+        $("#_asEmail_").val($("#email").val());
+    }
+
+    function fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,cardRem){
+
+        var item = new Object();
+
+        if(ccType != "" && iBank != "" && cardNo != "" && expDate != "" && nameCard != "" && cType != ""){
+            item.crcType = ccType;
+            item.bank = iBank;
+            item.creditCardNo = cardNo;
+            item.cardExpiry = expDate;
+            item.nmCard = nameCard;
+            item.cardType = cType;
+            item.cardRem = cardRem;
+            AUIGrid.addRow(myGridID, item, "last");
+        }
+    }
+
+    function fn_addBankAccountInfo(accType,accBank,accNo,bankBranch,accOwner,accRem){
+
+        var accItem = new Object();
+
+        if(accType != "" && accBank != "" && accNo != "" && accOwner != ""){
+            accItem.accTypeId = accType;
+            accItem.accBankId = accBank;
+            accItem.accNo = accNo;
+            accItem.bankBranch = bankBranch;
+            accItem.accOwner = accOwner;
+            accItem.accRem = accRem;
+            AUIGrid.addRow(myGridID1, accItem, "last");
+        }
+    }
+
+    function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
+
+        if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
+
+            $("#_mArea_").attr({"disabled" : false  , "class" : "w100p"});
+            $("#_mCity_").attr({"disabled" : false  , "class" : "w100p"});
+            $("#_mPostCd_").attr({"disabled" : false  , "class" : "w100p"});
+            $("#_mState_").attr({"disabled" : false  , "class" : "w100p"});
+
+            //Call Ajax
+
+            CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
+
+            var cityJson = {state : mstate}; //Condition
+            CommonCombo.make('_mCity_', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
+
+            var postCodeJson = {state : mstate , city : mcity}; //Condition
+            CommonCombo.make('_mPostCd_', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
+
+            var areaJson = {groupCode : mpostcode};
+            var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
+            CommonCombo.make('_mArea_', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
+
+            $("#areaId").val(areaid);
+            $("#_searchDiv").remove();
+        }else{
+            Common.alert('<spring:message code="sal.alert.msg.addrCheck" />');
+        }
+    }
+
+    //Get Area Id
+    function fn_getAreaId(){
+
+        var statValue = $("#_mState_").val();
+        var cityValue = $("#_mCity_").val();
+        var postCodeValue = $("#_mPostCd_").val();
+        var areaValue = $("#_mArea_").val();
+
+
+
+        if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
+
+            var jsonObj = { statValue : statValue ,
+                                  cityValue : cityValue,
+                                  postCodeValue : postCodeValue,
+                                  areaValue : areaValue
+                                };
+            Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
+
+                 $("#areaId").val(result.areaId);
+
+            });
+
+        }
+
+    }
+
+    function emailCheck(){
+        if($("#_email_").val() == ""){
+            return
+        }else{
+            if(FormUtil.checkEmail($("#_email_").val())){
+//              $("input[name='email']").focus();
+                Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
+
+                $("#_email_").val('');
+
+                return false;
+            }
+        }
+    }
+
+    function asEmailCheck(){
+        if(FormUtil.checkEmail($("#_asEmail_").val())){
+            Common.alert('<spring:message code="sal.alert.msg.invaildEmailAddr" />');
+            $("#_asEmail_").val('');
+//            $("#asEmail").focus();
+            return false;
+        }
+    }
+
+    function chgTab(tabNm) {
+        switch(tabNm) {
+            case 'card' :
+                AUIGrid.resize(myGridID, 960, 380);
+                break;
+            case 'account' :
+                AUIGrid.resize(myGridID1, 960, 380);
+                break;
+        }
+    }
+
+    function fn_addrSearch(){
+        if($("#_searchSt_").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzSearch" />');
+            return false;
+        }
+        Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv'); //searchSt
+    }
+
+    function fn_nricChkAndSuggDob(inputVal){
+
+        if($("#_cmbTypeId_").val() != '964'){
+            return;
+        }
+
+        //Dup Check
+        //Init Field
+        var nricObj = {cmbTypeId : $("#_cmbTypeId_").val() , nric : $("#_nric_").val()};
+
+        var ajaOtp = {
+                async : false
+        };
+        var isDup = false;
+        var msg = '';
+
+        Common.ajax("POST", "/sales/customer/nricDupChk.do", nricObj, function(result){
+            if(result != null){
+                    msg += '<spring:message code="sal.alert.msg.existCustomerBrCustId" />' + result.custId;
+                    isDup = true;
+            }
+        }, function(jqXHR, textStatus, errorThrown) {
+            Common.alert("실패하였습니다.");
+            console.log("실패하였습니다.");
+            console.log("error : " + jqXHR + " \n " + textStatus + "\n" + errorThrown);
+
+            alert(jqXHR.responseJSON.message);
+            console.log("jqXHR.responseJSON.message" + jqXHR.responseJSON.message);
+
+        });
+
+        if(isDup == true){
+            $("#_nric_").val('');
+            Common.alert(msg);
+            return;
+        }
+        /****** Validation ********/
+        //Init Filed
+        $("#_dob_").val('');
+        console.log("inputVal : " + inputVal);
+        var rtnVal = "";
+        //1.number check
+        /* if(FormUtil.checkNum($("#_nric_")) == true){
+            console.log("Not Numberic.");
+            return;
+        } */
+        //2. Digit
+        if(inputVal.length != 12){
+            console.log("Length is : " + inputVal.length);
+            return;
+        }
+        //3. Make YYYY
+        if(inputVal.substring(0, 2) >  20){
+            rtnVal = '19' + inputVal.substring(0, 6);
+        }else{
+            rtnVal = '20' + inputVal.substring(0, 6);
+        }
+        //4. Available Date Check
+        var year = Number(rtnVal.substring(0, 4));
+        var month = Number(rtnVal.substring(4, 6));
+        var day = Number(rtnVal.substring(6, 8));
+
+        // Month Check
+        if( month<1 || month>12 ) {
+            console.log("month failed caused by  month is [: "  + month + "]");
+            return;
+        }
+        var maxDaysInMonth = [31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31];
+        var maxDay = maxDaysInMonth[month-1];
+        // Leap Year Check
+        if( month==2 && ( year%4==0 && year%100!=0 || year%400==0 ) ) {
+            maxDay = 29;
+        }
+        // Day Check
+        if( day<=0 || day>maxDay ) {
+            console.log("day failed caused by  day is [: "  + day + "]");
+            return;
+        }
+
+        /***** DOB ******/
+        //Return
+        year = year + '';
+        month = month+'';
+        day = day+'';
+
+        if(month.length < 2){
+            month = '0'+month;
+        }
+        if(day.length < 2){
+            day = '0'+day;
+        }
+        rtnVal = day + "/" + month + "/" + year;
+        console.log(" create dob : " + rtnVal);
+        $("#_dob_").val(rtnVal);
+
+
+        /***** GENDER ******/
+        var genderStr =  inputVal.substring(inputVal.length -1, inputVal.length);
+        var genderNum = Number(genderStr);
+
+        if(genderNum % 2 == 0){
+            //Female
+            $('input:radio[name="gender"][value="F"]').prop('checked', true);
+        }else{
+            //Male
+            $('input:radio[name="gender"][value="M"]').prop('checked', true);
+        }
+    }
+
+</script>
+
+<div id="popup_wrap" class="popup_wrap pop_win"  ><!-- popup_wrap start -->
+    <header class="pop_header"><!-- pop_header start -->
+        <h1><spring:message code="sal.title.text.newCustomer2" /></h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a id="_insCloseBtn" onclick="window.close()"><spring:message code="sal.btn.close" /></a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+    <section class="pop_body">
+    <!-- pop_body start -->
+
+        <ul class="right_btns">
+            <%-- <li><span class="red_text"><spring:message code="sal.title.text.compulsoryField" /></span> <span class="brown_text">#Compulsory Field(For Indvidual Type)</span></li> --%>
+            <li><span class="red_text"><spring:message code="sal.title.text.compulsoryField" /></span><span class="brown_text">#Compulsory Field</span></li>
+        </ul>
+
+        <section class="tap_wrap mt20">
+            <!-- tap_wrap start -->
+            <ul class="tap_type1">
+                <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
+                <li><a href="#"><spring:message code="sal.text.insAddr" /></a></li>
+                <li><a href="#" id="_contactTab"><spring:message code="sal.title.text.additialServiceContact" /></a></li>
+                <li><a href="#" onclick="javascript:chgTab('card');"><spring:message code="sal.title.text.bankCard" /></a></li>
+                <li><a href="#" onclick="javascript:chgTab('account');"><spring:message code="sal.title.text.bankAccount" /></a></li>
+            </ul>
+            <!-- dup Nric Check  -->
+            <article class="tap_area">
+                <!-- tap_area start -->
+                <form id="insBasicForm" name="insBasicForm" method="POST">
+                    <table class="type1">
+                        <!-- table start -->
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width: 250px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.custType2" /><span class="must">*</span></th>
+                                <td>
+                                    <!-- <select class="w100p"  id="_cmbTypeId_" name="cmbTypeId" onchange="onChangeCompanyType(this.value)"> -->
+                                    <select class="w100p disabled" id="_cmbTypeId_" name="cmbTypeId" disabled="disabled"></select>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.initial2" /><span class="must">*</span></th>
+                                <td><select class="w100p" id="_cmbInitials_" name="cmbInitials"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.companyType2" /></th>
+                                <td id="corpTypeForm"><select class="w100p disabled" id="_cmbCorpTypeId_" name="cmbCorpTypeId" disabled="disabled"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.custName2" /><span class="must">*</span></th>
+                                <td><input type="text" title="" id="_custName_" name="custName" placeholder="Customer Name" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.nricCompNo" /><span class="must">*</span></th>
+                                <td><input type="text" title="" id="_nric_" name="nric" maxlength="18" placeholder="NRIC/Company No" class="w100p" onblur="javascript: fn_nricChkAndSuggDob(this.value)" /></td>
+                                <!-- <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
+            <td>
+                <input type="text" title="" id="_gstRgistNo_" name="gstRgistNo" placeholder="GST Registration No" class="w100p readonly" disabled="disabled" />
+            </td> -->
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.oldIcarmyPolice" /></th>
+                                <td><input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18" placeholder="Old IC/Army/Police" class="w100p" disabled="disabled" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.nationality" /><span class="must">*</span>
+                                <!-- <span class="brown_text">#</span> --></th>
+                                <td><select class="w100p disabled" id="_cmbNation_" name="cmbNation" disabled="disabled"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
+                                <td><input type="text" title="Create start Date" id="_pasSportExpr_" name="pasSportExpr" placeholder="DD/MM/YYYY" class="j_date" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
+                                <td><input type="text" id="_visaExpr_" name="visaExpr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.dob2" /><span class="brown_text">#</span></th>
+                                <td><input type="text" id="_dob_" name="dob" title="Create start Date" placeholder="Date Of Birth" class="j_date3 w100p" disabled="disabled" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.gender2" /><span class="brown_text">#</span></th>
+                                <td>
+                                    <div id="genderForm">
+                                        <label><input type="radio" name="gender" value="M" disabled="disabled" /><span><spring:message code="sal.title.text.male" /></span></label>
+                                        <label><input type="radio" name="gender" value="F" disabled="disabled" /><span><spring:message code="sal.title.text.female" /></span></label>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.email2" /></th>
+                                <td><input type="text" id="_email_" name="email" title="" onBlur="javascript:emailCheck()" placeholder="Email" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.race2" /><span class="brown_text">#</span></th>
+                                <td><select class="w100p disabled" id="_cmbRace_" name="cmbRace" disabled="disabled"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.telMOne" /><span class="must">*</span></th>
+                                <td><input type="text" id="_telM1_" name="telM1" maxlength="20" title="" placeholder="Telephone Number (Mobile)" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.telROne" /><span class="must">*</span></th>
+                                <td><input type="text" id="_telR_" name="telR" maxlength="20" title="" placeholder="Telephone Number (Residence)" class="w100p" /></td>
+                                <%-- <th scope="row"><spring:message code="sal.title.text.telFOne" /><span class="must">*</span></th>
+            <td>
+            <input type="text" id="_telF_" name="telF" maxlength="20" title="" placeholder="Telephone Number (Fax)" class="w100p" />
+            </td> --%>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.telOOne" /><span class="must">*</span></th>
+                                <td><input type="text" id="_telO_" name="telO" maxlength="20" title="" placeholder="Telephone Number (Office)" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.extNo" /></th>
+                                <td><input type="text" id="_ext_" name="ext" title="" placeholder="Extension Number" class="w100p" /></td>
+                            </tr>
+                            <%-- <tr>
+            <th scope="row"><spring:message code="sal.title.remark" /></th>
+            <td colspan="3">
+            <textarea cols="20" rows="5" id="_rem_" name="rem" placeholder="Remark"></textarea>
+            </td>
+        </tr> --%>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
+                </form>
+
+                <ul class="center_btns">
+                    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save" /></a></p></li>
+                </ul>
+
+
+            </article>
+            <!-- tap_area end -->
+
+            <article class="tap_area">
+                <!-- tap_area start -->
+
+                <aside class="title_line">
+                    <!-- title_line start -->
+                    <h2>
+                        <spring:message code="sal.text.instAddr" />
+                    </h2>
+                </aside>
+                <!-- title_line end -->
+
+                <form id="insAddressForm" name="insAddressForm" method="POST">
+                    <input type="hidden" id="areaId" name="areaId">
+                    <table class="type1">
+                        <!-- table start -->
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width: 250px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.areaSearch2" /><span class="must">*</span></th>
+                                <td colspan="1"><input type="text" title="" id="_searchSt_" name="searchSt" placeholder="" class="" />
+	                                <a href="#" onclick="fn_addrSearch()" class="search_btn">
+	                                    <img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" />
+	                                </a>
+                                </td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.addressDetail2" /><span class="must">*</span></th>
+                                <td colspan="1"><input type="text" title="" id="_addrDtl_" name="addrDtl" placeholder="Detail Address" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.street2" /></th>
+                                <td colspan="1"><input type="text" title="" id="_streetDtl_" name="streetDtl" placeholder="Detail Address" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.area42" /><span class="must">*</span></th>
+                                <td colspan="1"><select class="w100p" id="_mArea_" name="mArea" onchange="javascript : fn_getAreaId()"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.postCode32" /><span class="must">*</span></th>
+                                <td><select class="w100p" id="_mPostCd_" name="mPostCd" onchange="javascript : fn_selectPostCode(this.value)"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.city22" /><span class="must">*</span></th>
+                                <td><select class="w100p" id="_mCity_" name="mCity" onchange="javascript : fn_selectCity(this.value)"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.state12" /><span class="must">*</span></th>
+                                <td><select class="w100p" id="_mState_" name="mState" onchange="javascript : fn_selectState(this.value)"></select></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.country2" /><span class="must">*</span></th>
+                                <td><input type="text" title="" id="_mCountry_" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia" /></td>
+                            </tr>
+                            <%-- <tr>
+					                <th scope="row"><spring:message code="sal.text.remarks" /></th>
+					                <td colspan="3"><textarea cols="20" rows="5" id="_addrRem_" name="addrRem" placeholder="Remark"></textarea></td>
+					               </tr> --%>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
+                </form>
+                <ul class="center_btns">
+                    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save2" /></a></p></li>
+                </ul>
+
+            </article>
+            <!-- tap_area end -->
+
+            <article class="tap_area">
+                <!-- tap_area start -->
+
+                <aside class="title_line">
+                    <!-- title_line start -->
+                    <h2>
+                        <spring:message code="sal.text.instAddr" />
+                    </h2>
+                    <ul class="right_opt">
+                        <li><p class="btn_blue2"><a href="#" onclick="fn_copyCustInfo()"><spring:message code="sal.title.text.copyFromCustInfo" /></a></p></li>
+                    </ul>
+                </aside>
+                <!-- title_line end -->
+
+                <form id="insContactForm" name="insContactForm" method="POST">
+                    <table class="type1">
+                        <!-- table start -->
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width: 250px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
+                                <td colspan="1"><input type="text" id="_asCustName_" name="asCustName" title="" placeholder="Name" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.telMTwo" /><span class="must">*</span></th>
+                                <td><input type="text" id="_asTelM_" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.telRTwo" /><span class="must">*</span></th>
+                                <td><input type="text" id="_asTelR_" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.telOTwo" /><span class="must">*</span></th>
+                                <td><input type="text" id="_asTelO_" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.ext" /></th>
+                                <td><input type="text" id="_asExt_" name="asExt" title="" placeholder="Extension Number" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <%-- <th scope="row"><spring:message code="sal.title.text.telFTwo" /><span class="must">*</span></th>
+                                        <td><input type="text" id="_asTelF_" name="asTelF" title="" placeholder="Telephone Number (Fax)" class="w100p" /></td> --%>
+                                <th scope="row"><spring:message code="sal.title.text.emailTwo" /></th>
+                                <td><input type="text" id="_asEmail_" name="asEmail" title="" onBlur="javascript:asEmailCheck()" placeholder="Email" class="w100p" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
+                </form>
+                <ul class="center_btns">
+                    <li><p class="btn_blue2 big">
+                            <a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save" /></a>
+                        </p></li>
+                </ul>
+
+            </article>
+            <!-- tap_area end -->
+
+            <article class="tap_area">
+                <!-- tap_area start -->
+                <ul class="right_btns">
+                    <li><p class="btn_grid">
+                            <a href="#" onclick="fn_addCreditCardPop()"><spring:message code="sal.title.text.addCrdCard" /></a>
+                        </p></li>
+                </ul>
+
+                <article class="grid_wrap">
+                    <!-- grid_wrap start -->
+                    <div id="card_grid" style="width: 100%; height: 380px; margin: 0 auto;"></div>
+                </article>
+                <!-- grid_wrap end -->
+
+                <ul class="center_btns">
+                    <li><p class="btn_blue2 big">
+                            <a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save" /></a>
+                        </p></li>
+                </ul>
+            </article>
+            <!-- tap_area end -->
+
+            <article class="tap_area">
+                <!-- tap_area start -->
+                <ul class="right_btns">
+                    <li><p class="btn_grid">
+                            <a href="#" onclick="fn_addBankAccountPop()"><spring:message code="sal.title.addBankAccount" /></a>
+                        </p></li>
+                </ul>
+
+                <article class="grid_wrap">
+                    <!-- grid_wrap start -->
+                    <div id="account_grid" style="width: 100%; height: 380px; margin: 0 auto;"></div>
+                </article>
+                <!-- grid_wrap end -->
+
+                <ul class="center_btns">
+                    <li><p class="btn_blue2 big">
+                            <a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save" /></a>
+                        </p></li>
+                </ul>
+
+            </article><!-- tap_area end -->
+
+        </section><!-- tap_wrap end -->
+    </section><!-- pop_body end -->
+</div>
