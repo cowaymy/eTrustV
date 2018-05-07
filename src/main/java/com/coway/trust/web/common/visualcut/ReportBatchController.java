@@ -810,7 +810,7 @@ public class ReportBatchController {
 	}
 
 	@RequestMapping(value = "/RentalInstallationReport.do")
-	//@Scheduled(cron = "0 0 6 1 * *")//Daily (6:00am) /*monthly - end of month eg 31 @ 28 ...
+	//@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am) /*monthly - end of month eg 31 @ 28 ...
 	public void RentalInstallationReport() {
 		LOGGER.info("[START] RentalInstallationReport...");
 		Map<String, Object> params = new HashMap<>();
