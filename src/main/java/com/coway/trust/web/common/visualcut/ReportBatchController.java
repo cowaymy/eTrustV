@@ -4,12 +4,18 @@ import static com.coway.trust.AppConstants.*;
 
 import java.io.File;
 import java.io.IOException;
+import java.text.Format;
+import java.text.SimpleDateFormat;
+import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.apache.commons.lang.time.DateUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -804,7 +810,7 @@ public class ReportBatchController {
 	}
 
 	@RequestMapping(value = "/RentalInstallationReport.do")
-	//@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am) /*monthly - end of month eg 31 @ 28 ...
+	//@Scheduled(cron = "0 0 6 1 * *")//Daily (6:00am) /*monthly - end of month eg 31 @ 28 ...
 	public void RentalInstallationReport() {
 		LOGGER.info("[START] RentalInstallationReport...");
 		Map<String, Object> params = new HashMap<>();
@@ -819,46 +825,66 @@ public class ReportBatchController {
 	}
 
 	@RequestMapping(value = "/StockRecordMonthly.do")
-	//@Scheduled Monthly - 1st of the month
+	//@Scheduled(cron = "0 0 5 1 * *")// Monthly - 1st of the month
 	public void StockRecordMonthly() {
 		LOGGER.info("[START] StockRecordMonthly...");
 		Map<String, Object> params = new HashMap<>();
+
+		//Get Last Month
+		LocalDate lastMonth = LocalDate.now().minusMonths(1);
+		String month = lastMonth.getMonth().toString();
+		String year = String.valueOf(lastMonth.getYear());
+		String rptDate = month + "_" + year;
+
 		params.put(REPORT_FILE_NAME, "/visualcut/Stock_Record_Monthly.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
-		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Logistics" + File.separator
-				+ "StockRecordMonthly_" + CommonUtils.getNowDate() + ".xls");
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "DSC" + File.separator
+				+ "STK_Movement_" + rptDate + ".xls");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] StockRecordMonthly...");
 	}
 
 	@RequestMapping(value = "/FilterRecordMonthly.do")
-	//@Scheduled Monthly - 1st of the month
+	//@Scheduled(cron = "0 0 5 1 * *")// Monthly - 1st of the month
 	public void FilterRecordMonthly() {
 		LOGGER.info("[START] FilterRecordMonthly...");
+
+		//Get Last Month
+		LocalDate lastMonth = LocalDate.now().minusMonths(1);
+		String month = lastMonth.getMonth().toString();
+		String year = String.valueOf(lastMonth.getYear());
+		String rptDate = month + "_" + year;
+
 		Map<String, Object> params = new HashMap<>();
 		params.put(REPORT_FILE_NAME, "/visualcut/Filter_Record_Monthly.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
-		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Logistics" + File.separator
-				+ "FilterRecordMonthly_" + CommonUtils.getNowDate() + ".xls");
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "DSC" + File.separator
+				+ "FLT_Movement_" + rptDate + ".xls");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] FilterRecordMonthly...");
 	}
 
 	@RequestMapping(value = "/SparePartRecordMonthly.do")
-	//@Scheduled Monthly - 1st of the month
+	//@Scheduled(cron = "0 0 5 1 * *")// Monthly - 1st of the month
 	public void SparePartRecordMonthly() {
 		LOGGER.info("[START] SparePartRecordMonthly...");
+
+		//Get Last Month
+		LocalDate lastMonth = LocalDate.now().minusMonths(1);
+		String month = lastMonth.getMonth().toString();
+		String year = String.valueOf(lastMonth.getYear());
+		String rptDate = month + "_" + year;
+
 		Map<String, Object> params = new HashMap<>();
-		params.put(REPORT_FILE_NAME, "/visualcut/SparePart_RecordMonthly.rpt");// visualcut rpt file name.
+		params.put(REPORT_FILE_NAME, "/visualcut/SparePart_Record_Monthly.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
-		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Logistics" + File.separator
-				+ "SparePartRecordMonthly_" + CommonUtils.getNowDate() + ".xls");
-
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "DSC" + File.separator
+				+ "PRT_Movement_" + rptDate + ".xls");
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] SparePartRecordMonthly...");
 	}
