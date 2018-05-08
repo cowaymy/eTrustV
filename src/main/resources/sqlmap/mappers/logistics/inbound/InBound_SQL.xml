@@ -117,6 +117,7 @@
 		          </otherwise>
 		      </choose>
 		      AND WH_LOC_DESC  not LIKE ('%_B')
+		      AND WH_LOC_STUS_ID = 1
 	      ORDER BY WH_LOC_ID
 	</select>
  <select id="receiptList" parameterType="Map" resultType="EgovMap">
