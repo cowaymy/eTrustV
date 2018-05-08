@@ -74,7 +74,7 @@
         $("#genderForm").removeAttr('disabled');
         $("input:radio[name='gender']").attr("disabled" , false);
         $('input:radio[name="gender"][value="M"]').prop('checked', true);
-        $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
+        //$("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
         /********************************************************/
 
         //Enter Event
@@ -284,7 +284,7 @@
             $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
             $("input:radio[name='gender']").attr("disabled" , "disabled");
             $("#genderForm").attr('checked', false);
-            $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            //$("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         }else if($("#_cmbTypeId_").val() == '964'){
             $("#_cmbCorpTypeId_").val('');
             $("#_cmbNation_").val('1');
@@ -301,10 +301,10 @@
             $("#genderForm").removeAttr('disabled');
             $("input:radio[name='gender']").attr("disabled" , false);
             $('input:radio[name="gender"][value="M"]').prop('checked', true);
-            $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
+            //$("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
         }else{
-            $("#_oldNric_").val('');
-            $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            //$("#_oldNric_").val('');
+            //$("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
             $("#_gstRgistNo_").val('');
             $("#_gstRgistNo_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
             $("#_cmbNation_").val('');
@@ -353,7 +353,7 @@
                     cmbCorpTypeId : insBasicForm.cmbCorpTypeId.value,
                     custInitial : insBasicForm.cmbInitials.value,
                     nric : insBasicForm.nric.value,
-                    oldNric : insBasicForm.oldNric.value,
+                    //oldNric : insBasicForm.oldNric.value,
                     //gstRgistNo : insBasicForm.gstRgistNo.value,
                     cmbNation : insBasicForm.cmbNation.value,
                     pasSportExpr : insBasicForm.pasSportExpr.value,
@@ -884,12 +884,12 @@
                 <input type="text" title="" id="_gstRgistNo_" name="gstRgistNo" placeholder="GST Registration No" class="w100p readonly" disabled="disabled" />
             </td> -->
                             </tr>
-                            <tr>
+<%--                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.oldIcarmyPolice" /></th>
                                 <td><input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18" placeholder="Old IC/Army/Police" class="w100p" disabled="disabled" /></td>
-                            </tr>
+                            </tr> --%>
                             <tr>
-                                <th scope="row"><spring:message code="sal.text.nationality" /><span class="must">*</span>
+                                <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must">*</span>
                                 <!-- <span class="brown_text">#</span> --></th>
                                 <td><select class="w100p disabled" id="_cmbNation_" name="cmbNation" disabled="disabled"></select></td>
                             </tr>

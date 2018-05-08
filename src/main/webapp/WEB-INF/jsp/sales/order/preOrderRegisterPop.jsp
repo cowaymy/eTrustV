@@ -54,7 +54,7 @@
             groupingMessage     : "Here groupping"
         };
 
-        listGiftGridID = GridCommon.createAUIGrid("pop_list_gift_grid_wrap", columnLayoutGft, "", listGridPros);
+        /* listGiftGridID = GridCommon.createAUIGrid("pop_list_gift_grid_wrap", columnLayoutGft, "", listGridPros); */
     }
 
     $(function(){
@@ -100,7 +100,7 @@
             }
         });
         $('#btnNewCntc').click(function() {
-            Common.popupDiv('/sales/customer/updateCustomerNewContactPop.do', {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_CNTC"}, null , true);
+            Common.popupDiv('/sales/customer/updateCustomerNewContactPopeSales.do', {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_CNTC"}, null , true);
         });
         $('#btnSelCntc').click(function() {
             Common.popupDiv("/sales/customer/customerConctactSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_CNTC"}, null, true);
@@ -1491,9 +1491,9 @@
 <tbody>
 <tr>
 	<th scope="row">NRIC/Company No</th>
-	<td><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p"  value="930430105999"/></td>
+	<td><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p"/></td>
 	<th scope="row">eSales(SOF) No</th>
-	<td><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" value="A667199"/></td>
+	<td><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p"/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1567,7 +1567,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code="sal.text.nationality" /></th>
+    <th scope="row"><spring:message code="sal.text.nationality2" /></th>
     <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
@@ -1880,13 +1880,13 @@
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
+<!-- <aside class="title_line">title_line start
 <h3>Free Gift Information</h3>
-</aside><!-- title_line end -->
+</aside>title_line end
 
-<article class="grid_wrap"><!-- grid_wrap start -->
+<article class="grid_wrap">grid_wrap start
 <div id="pop_list_gift_grid_wrap" style="width:100%; height:100px; margin:0 auto;"></div>
-</article><!-- grid_wrap end -->
+</article>grid_wrap end -->
 <br><br><br><br><br>
 </section><!-- search_table end -->
 
@@ -1967,7 +1967,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th>Rental Paymode<span class="must">*</span></th>
+    <th><spring:message code="sal.text.rentalPaymode2" /><span class="must">*</span></th>
     <td  scope="row" colspan="3"'>
     <select id="rentPayMode" name="rentPayMode" class="w100p"></select>
     </td>
@@ -1982,7 +1982,7 @@
 <section id="sctCrCard" class="blind">
 
 <aside class="title_line"><!-- title_line start -->
-<h3>Credit Card</h3>
+<h3>Bank Card</h3>
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
