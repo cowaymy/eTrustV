@@ -112,6 +112,23 @@ public class SearchPaymentController {
 	}
 
 	/******************************************************
+	 * Search Payment  Edit Basic info POPUP
+	 *****************************************************/
+	/**
+	 * SearchPayment Edit Details 초기화 화면
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initSearchPaymentEditBasicPop.do")
+	public String initSearchPaymentEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("callPrgm", params.get("callPrgm"));
+		model.addAttribute("payId", params.get("payId"));
+		model.addAttribute("salesOrdId", params.get("salesOrdId"));
+		return "payment/payment/searchPaymentEditBasicPop";
+	}
+
+	/******************************************************
 	 * Search Payment  View History POPUP
 	 *****************************************************/
 	/**
