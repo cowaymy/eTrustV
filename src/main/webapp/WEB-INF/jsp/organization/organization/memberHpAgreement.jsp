@@ -100,22 +100,7 @@ input {
     top: -1px;
     *overflow: hidden;
 }
-.agreementiFrame{
-    position: relative;
-    padding-bottom: 65.25%;
-    padding-top: 30px;
-    height: 450px;
-    overflow: auto;
-    -webkit-overflow-scrolling:touch;
-    border: solid black 1px;
-}
-.agreementiFrame iframe {
-     position: absolute;
-     top: 0;
-     left: 0;
-     width: 100%;
-     height: 100%;
-}
+
 </style>
 <!--  2018-05-04 - LaiKW - End -->
 
@@ -142,8 +127,8 @@ input {
 
 <form id="agreementForm" style="width: 100%">
 
-    <div class="agreementiFrame">
-        <iframe id="agreementFrame" name = "agreementFrame" src = "/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf" frameborder = "10"></iframe>
+    <div style="overflow:auto; -webkit-overflow-scrolling:touch">
+        <iframe id="agreementFrame" name = "agreementFrame" src = "/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf" style="width:100%; height=100%" frameborder = "10"></iframe>
     </div>
 
     <!--  2018-05-04 - LaiKW - Start
