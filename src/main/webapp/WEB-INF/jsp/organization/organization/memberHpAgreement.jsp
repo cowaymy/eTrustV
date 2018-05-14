@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
+<script src ="/etrust/src/main/webapp/resources/js/pdfobject.js"></script>
 <script type="text/javaScript">
 $(document).ready(function() {
 
@@ -142,9 +143,11 @@ input {
 
 <form id="agreementForm" style="width: 100%">
 
-    <div class="agreementiFrame">
-        <embed width="100%" height="100%" name="plugin" id="plugin" src="/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf" type="application/pdf" internalinstanceid="4">
-    </div>
+    <object data="/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf" type="application/pdf" width="100%" height="100%">
+        <iframe src="/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf" width="100%" height="100%" style="border: none;">
+            This browser does not support PDFs. Please download the PDF to view it:<a href="/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf">Download PDF</a>
+        </iframe>
+    </object>
 
     <!--  2018-05-04 - LaiKW - Start
     - Add TNC and personal data protection agreement -->
