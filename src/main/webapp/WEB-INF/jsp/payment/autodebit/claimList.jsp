@@ -25,71 +25,76 @@ var bankData = [{"codeId": "2","codeName": "Alliance Bank"},
                 {"codeId": "9","codeName": "BSN Bank"},
                 {"codeId": "46","codeName": "My Clear"}
                 ];
-                
+
 //SMS Combo Data
-var smsData = [{"codeId": "0","codeName": "No"}, {"codeId": "1","codeName": "Yes"}];                
+var smsData = [{"codeId": "0","codeName": "No"}, {"codeId": "1","codeName": "Yes"}];
 
 //Claim Day  Data
 var claimDayData = [{"codeId": "5","codeName": "5"},{"codeId": "10","codeName": "10"}];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-	
+
 	//메인 페이지
     doDefCombo(claimTypeData, '' ,'claimType', 'S', '');        //Claim Type 생성
     doDefCombo(statusData, '' ,'status', 'S', '');                 //Status 생성
     doDefCombo(bankData, '' ,'issueBank', 'S', '');               //Issue Bank 생성
     doDefCombo(smsData, '' ,'smsSend', 'S', '');                 //SMS Send 생성
-    
+
     //New Result 팝업 페이지
     doDefCombo(claimTypeData, '' ,'new_claimType', 'S', '');        //Claim Type 생성
     doDefCombo(claimDayData, '' ,'new_claimDay', 'S', '');           //Claim Day 생성
     doDefCombo(bankData, '' ,'new_issueBank', 'S', '');               //Issue Bank 생성
-    
-   
+
+
     //Claim Type Combo 변경시 Issue Bank Combo 변경
-    $('#claimType').change(function (){    	
+    $('#claimType').change(function (){
     	if($(this).val() == 132){
     		$('#issueBank').val('');
-    		$('#issueBank').attr("disabled",false);	
+    		$('#issueBank').attr("disabled",false);
     	}else{
     		$('#issueBank').val('');
     		$('#issueBank').attr("disabled",true);
     	}
     });
-    
+
     //Pop-Up Claim Type Combo 변경시 Claim Day, Issue Bank Combo 변경
     $('#new_claimType').change(function (){
-    	
+
     	$('#new_claimDay').val('');
-        $('#new_issueBank').val('');      
+        $('#new_issueBank').val('');
+        $('#new_cardType').val('');
     	$('#new_claimDay').attr("disabled",true);
-    	$('#new_issueBank').attr("disabled",true);    	
+    	$('#new_issueBank').attr("disabled",true);
+    	$('#new_cardType').attr("disabled",true);
     	$('#new_debitDate').attr("placeholder","Debit Date");
-    	
+
     	//NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
         $("#claimDayMust").hide();
         $("#issueBankMust").hide();
-    	
+        $("#cardTypeMust").hide();
+
     	if($(this).val() == 131 || $(this).val() == 134){
     		$('#new_claimDay').attr("disabled",false);
     		$("#claimDayMust").show();
-    		
-    		if($(this).val() == 131 ){    			
+
+    		if($(this).val() == 131 ){
     			$('#new_debitDate').attr("placeholder","Debit Date (Same Day)");
-    		}    		
+    			$('#new_cardType').attr("disabled",false);
+    			$("#cardTypeMust").show();
+    		}
     	}else{
     		$('#new_issueBank').attr("disabled",false);
     		$("#issueBankMust").show();
     	}
-        
+
     });
-    
-    //Pop-Up Issue Combo 변경시 
-    $('#new_issueBank').change(function (){    	
+
+    //Pop-Up Issue Combo 변경시
+    $('#new_issueBank').change(function (){
     	$('#new_debitDate').attr("placeholder","Debit Date");
-    	
-    	switch($(this).val()){        
+
+    	switch($(this).val()){
     	   case "2":
     		   $('#new_debitDate').attr("placeholder","Debit Date (+1 Day Send Same Day)");
     		   break;
@@ -101,29 +106,29 @@ $(document).ready(function(){
     	   case "9" :
     	   case "21" :
                $('#new_debitDate').attr("placeholder","Debit Date (+1 Days)");
-               break;    	   
+               break;
            default :
         	   break;
     	}
     });
-    
-    //Grid Properties 설정 
-    var gridPros = {            
+
+    //Grid Properties 설정
+    var gridPros = {
             editable : false,                 // 편집 가능 여부 (기본값 : false)
             showStateColumn : false,     // 상태 칼럼 사용
             softRemoveRowMode:false
     };
-    
+
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     updResultGridID = GridCommon.createAUIGrid("updResult_grid_wrap", updResultColLayout,null,gridPros);
     smsGridID = GridCommon.createAUIGrid("sms_grid_wrap", smsColLayout,null,gridPros);
-    
+
     // Master Grid 셀 클릭시 이벤트
-    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+    AUIGrid.bind(myGridID, "cellClick", function( event ){
         selectedGridValue = event.rowIndex;
     });
-    
+
     // HTML5 브라우저인지 체크 즉, FileReader 를 사용할 수 있는지 여부
     function checkHTML5Brower() {
         var isCompatible = false;
@@ -132,7 +137,7 @@ $(document).ready(function(){
         }
         return isCompatible;
     };
-    
+
     // 파일 선택하기
 	/*
 	$('#fileSelector').on('change', function(evt) {
@@ -140,22 +145,22 @@ $(document).ready(function(){
 			// 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
 			// 파일 내용 읽어 반환시켜 그리드에 적용.
 			commitFormSubmit();
-			//alert("브라우저가 HTML5 를 지원하지 않습니다.");	
-			
+			//alert("브라우저가 HTML5 를 지원하지 않습니다.");
+
 		} else {
-		
+
 			var data = null;
 			var file = evt.target.files[0];
-		
+
 			if (typeof file == "undefined") {
 				return;
 			}
-			
+
 			var reader = new FileReader();
 			//reader.readAsText(file); // 파일 내용 읽기
 			reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
 
-			reader.onload = function(event) {		
+			reader.onload = function(event) {
 				if (typeof event.target.result != "undefined") {
 					// 그리드 CSV 데이터 적용시킴
 					AUIGrid.setCsvGridData(updResultGridID, event.target.result, false);
@@ -169,10 +174,10 @@ $(document).ready(function(){
 			reader.onerror = function() {
 				alert('Unable to read ' + file.fileName);
 			};
-		}	
+		}
 	});
 	*/
-    
+
 
 	//HTML5 브라우저 즉, FileReader 를 사용 못할 경우 Ajax 로 서버에 보냄
 	//서버에서 파일 내용 읽어 반환 한 것을 통해 그리드에 삽입
@@ -188,14 +193,14 @@ $(document).ready(function(){
 		$('#updResultForm').ajaxSubmit({
 			type : "json",
 			success : function(responseText, statusText) {
-			
+
 				if(responseText != "error") {
 					var csvText = responseText;
 
 					// 기본 개행은 \r\n 으로 구분합니다.
 					// Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
 					// 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
-					// 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함. 
+					// 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함.
 					csvText = csvText.replace(/\r?\n/g, "\r\n")
 
 					// 그리드 CSV 데이터 적용시킴
@@ -230,21 +235,21 @@ var columnLayout = [
     { dataField:"ctrlFailSmsIsPump" ,headerText:"<spring:message code='pay.head.sms'/>",width: 100 ,editable : false ,
     	  labelFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
     		    var myString = "";
-    		    
+
     		    if(value == 1){
-    		    	myString = "Yes";    		    			    	
+    		    	myString = "Yes";
     		    }else{
-    		    	myString = "No";                                    
+    		    	myString = "No";
     		    }
     		    return myString;
-    	} 
+    	}
     },
     { dataField:"ctrlWaitSync" ,headerText:"<spring:message code='pay.head.waitSync'/>",width: 100 ,editable : false,
     	renderer : {
-            type : "CheckBoxEditRenderer",            
+            type : "CheckBoxEditRenderer",
             checkValue : "1",
             unCheckValue : "0"
-        }    
+        }
     },
     { dataField:"ctrlStusId" ,headerText:"<spring:message code='pay.head.statusId'/>",width: 120 ,visible : false, editable : false },
     { dataField:"stusName" ,headerText:"<spring:message code='pay.head.statusName'/>",width: 120 ,visible : false, editable : false },
@@ -256,9 +261,9 @@ var columnLayout = [
     { dataField:"ctrlIsCrc" ,headerText:"<spring:message code='pay.head.ctrlIsCrc'/>",width: 120 ,visible : false, editable : false },
     { dataField:"bankId" ,headerText:"<spring:message code='pay.head.bankId'/>",width: 120 ,visible : false, editable : false },
     ];
-    
-var updResultColLayout = [ 
-                    {         
+
+var updResultColLayout = [
+                    {
                         dataField : "0",
                         headerText : "<spring:message code='pay.head.refNo'/>",
                         editable : true
@@ -270,9 +275,9 @@ var updResultColLayout = [
                         dataField : "2",
                         headerText : "<spring:message code='pay.head.itemId'/>",
                         editable : true
-                    }];  
+                    }];
 
-var smsColLayout = [ 
+var smsColLayout = [
                     { dataField:"bankDtlApprCode" ,headerText:"<spring:message code='pay.head.approvalCode'/>",width: 150 ,editable : false },
                     { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 150 ,editable : false },
                     { dataField:"bankDtlDrAccNo" ,headerText:"<spring:message code='pay.head.accountNo'/>",width: 150 ,editable : false },
@@ -280,11 +285,11 @@ var smsColLayout = [
                     { dataField:"bankDtlDrNric" ,headerText:"<spring:message code='pay.head.nric'/>",width: 150 ,editable : false },
                     { dataField:"bankDtlAmt" ,headerText:"<spring:message code='pay.head.claimAmt'/>",width: 150 ,editable : false },
                     { dataField:"bankDtlRenAmt" ,headerText:"<spring:message code='pay.head.rentAmt'/>",width: 150 ,editable : false },
-                    { dataField:"bankDtlRptAmt" ,headerText:"<spring:message code='pay.head.penaltyAmt'/>",width: 150 ,editable : false }      
-                          ];   
-                          
+                    { dataField:"bankDtlRptAmt" ,headerText:"<spring:message code='pay.head.penaltyAmt'/>",width: 150 ,editable : false }
+                          ];
+
 // 리스트 조회.
-function fn_getClaimListAjax() {        
+function fn_getClaimListAjax() {
     Common.ajax("GET", "/payment/selectClaimList", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
@@ -292,18 +297,18 @@ function fn_getClaimListAjax() {
 
 //View Claim Pop-UP
 function fn_openDivPop(val){
-	
+
 	if(val == "VIEW" || val == "RESULT" || val == "RESULTNEXT" || val == "FILE" || val == "SMS"){
-		
+
 		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-	    
+
 	    if (selectedItem[0] > -1){
-		
+
 	    	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
 	        var ctrlStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlStusId");
 	        var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName");
 	        var smsSend = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlFailSmsIsPump");
-	        
+
 	        if((val == "RESULT" || val == "RESULTNEXT") && ctrlStusId != 1){
                 Common.alert("<spring:message code='pay.alert.claimResult' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
 			}else if(val == "FILE" && ctrlStusId != 1){
@@ -313,14 +318,14 @@ function fn_openDivPop(val){
             }else if(val == "SMS" && smsSend == 1){
                 Common.alert("<spring:message code='pay.alert.failSmsProcess' arguments='"+ctrlId+"' htmlEscape='false'/>");
             }else{
-            	
+
             	$('#sms_grid_wrap').hide();
-            	
-            	
+
+
             	Common.ajax("GET", "/payment/selectClaimMasterById.do", {"batchId":ctrlId}, function(result) {
             		$("#view_wrap").show();
-                    $("#new_wrap").hide();                    
-                
+                    $("#new_wrap").hide();
+
                     $("#view_batchId").text(result.ctrlId);
                     $("#view_status").text(result.stusName);
                     $("#view_type").text(result.ctrlIsCrcName);
@@ -335,75 +340,76 @@ function fn_openDivPop(val){
                     $("#view_updateDate").text(result.updDt);
                     $("#view_totalSuccess").text(result.ctrlTotSucces);
                     $("#view_totalFail").text(result.ctrlTotFail);
-            	});  
-            	
-            	
+            	});
+
+
             	if(val == "SMS"){
             		$('#sms_grid_wrap').show();
-            		
+
             		  Common.ajax("GET", "/payment/selectFailClaimDetailList.do", {"batchId":ctrlId}, function(result) {
             			  AUIGrid.setGridData(smsGridID, result);
             			  AUIGrid.resize(smsGridID);
-                      });  
-            	} 
+                      });
+            	}
 			}
-			
+
 			//팝업 헤더 TEXT 및 버튼 설정
 			if(val == "VIEW"){
-			    $('#pop_header h1').text('VIEW CLAIM');			
+			    $('#pop_header h1').text('VIEW CLAIM');
 			    $('#center_btns1').hide();
-			    $('#center_btns2').hide();			
+			    $('#center_btns2').hide();
 			    $('#center_btns3').hide();
 			    $('#center_btns4').hide();
-			
+
 			}else if(val == "RESULT"){
-				$('#pop_header h1').text('CLAIM RESULT');				
+				$('#pop_header h1').text('CLAIM RESULT');
 				$('#center_btns1').show();
                 $('#center_btns2').hide();
                 $('#center_btns3').hide();
                 $('#center_btns4').hide();
-                
+
 			}else if(val == "RESULTNEXT"){
                 $('#pop_header h1').text('CLAIM RESULT(NEXT DAY)');
                 $('#center_btns1').hide();
                 $('#center_btns2').show();
                 $('#center_btns3').hide();
                 $('#center_btns4').hide();
-                
+
             }else if (val == "FILE"){
-                $('#pop_header h1').text('CLAIM FILE GENERATOR');                
+                $('#pop_header h1').text('CLAIM FILE GENERATOR');
                 $('#center_btns1').hide();
                 $('#center_btns2').hide();
                 $('#center_btns3').show();
                 $('#center_btns4').hide();
-            
+
             } else if (val == "SMS"){
-                $('#pop_header h1').text('FAILED DEDUCTION SMS');                
+                $('#pop_header h1').text('FAILED DEDUCTION SMS');
                 $('#center_btns1').hide();
                 $('#center_btns2').hide();
                 $('#center_btns3').hide();
                 $('#center_btns4').show();
             }
-			
+
         }else{
              Common.alert("<spring:message code='pay.alert.noClaim'/>");
         }
 	}else{
 		$("#view_wrap").hide();
-		$("#new_wrap").show();	
-				
+		$("#new_wrap").show();
+
 		//NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
 		$("#newForm")[0].reset();
 		$("#claimDayMust").hide();
-		$("#issueBankMust").hide();		
+		$("#issueBankMust").hide();
+		$("#cardTypeMust").hide();
 	}
 }
 
 //Layer close
 hideViewPopup=function(val){
 	//AUIGrid.destroy(updResultGridID);
-	//AUIGrid.destroy(smsGridID); 	
-	$('#sms_grid_wrap').hide();	
+	//AUIGrid.destroy(smsGridID);
+	$('#sms_grid_wrap').hide();
     $(val).hide();
 }
 
@@ -411,12 +417,12 @@ hideViewPopup=function(val){
 function fn_deactivate(){
 	Common.confirm("<spring:message code='pay.alert.deactivateBatch'/>",function (){
 	    var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
-	    
+
 	    Common.ajax("GET", "/payment/updateDeactivate.do", {"ctrlId":ctrlId}, function(result) {
 	    	Common.alert("<spring:message code='pay.alert.deactivateSuccess'/>","fn_openDivPop('VIEW')");
-	    	
+
 	    },function(result) {
-	        Common.alert("<spring:message code='pay.alert.deactivateFail'/>");   
+	        Common.alert("<spring:message code='pay.alert.deactivateFail'/>");
 	    });
 	});
 }
@@ -424,14 +430,14 @@ function fn_deactivate(){
 //Pop-UP 에서 Fail Deduction SMS 처리
 function fn_sendFailDeduction(){
 	   var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
-	   
+
 	   Common.ajax("GET", "/payment/sendFaileDeduction.do", {"ctrlId":ctrlId}, function(result) {
             Common.alert("<spring:message code='pay.alert.claimSmsSuccess'/>",function () {fn_openDivPop('VIEW'); });
-            
+
         },function(result) {
-            Common.alert("<spring:message code='pay.alert.claimSmsFail'/>");   
+            Common.alert("<spring:message code='pay.alert.claimSmsFail'/>");
         });
-    
+
 }
 
 
@@ -441,7 +447,7 @@ var updateResultItemKind = "";      //claim result update시 구분 (LIVE :curre
 //Pop-UP 에서 Update Result 버튼 클릭시 팝업창 생성
 function fn_updateResult(val){
 	updateResultItemKind = val;
-	$("#updResult_wrap").show();  
+	$("#updResult_wrap").show();
 }
 
 
@@ -457,12 +463,12 @@ function fn_uploadFile(){
 	formData.append("ctrlId", ctrlId);
 	formData.append("ctrlIsCrc", ctrlIsCrc);
 	formData.append("bankId", bankId);
-    
-	Common.ajaxFile("/payment/updateClaimResultItemBulk.do", formData, 
+
+	Common.ajaxFile("/payment/updateClaimResultItemBulk.do", formData,
 		function(result){
 			resetUpdatedItems(); // 초기화
 
-			var message = "";        
+			var message = "";
 			message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
             result.data.totalItem+" ; "+
             result.data.totalSuccess+" ; "+
@@ -478,22 +484,22 @@ function fn_uploadFile(){
 
 					//CALIM RESULT UPDATE
 					if(updateResultItemKind == 'LIVE'){
-						Common.ajax("POST", "/payment/updateClaimResultLive.do", data, 
+						Common.ajax("POST", "/payment/updateClaimResultLive.do", data,
 							function(result) {
 								Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
 							},
 							function(result) {
 								Common.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
 							}
-						);     
+						);
 					}
 
 					//CALIM RESULT UPDATE NEXT DAY
 					if(updateResultItemKind == 'NEXT'){
-						Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data, 
+						Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data,
 							function(result) {
 								var resultMsg = "";
-								resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";    	   
+								resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
 
 								Common.alert(resultMsg);
 							},
@@ -504,7 +510,7 @@ function fn_uploadFile(){
 					}
 				}
 			);
-		},  
+		},
 		function(jqXHR, textStatus, errorThrown) {
 			try {
 				console.log("status : " + jqXHR.status);
@@ -514,10 +520,10 @@ function fn_uploadFile(){
 			} catch (e) {
 				console.log(e);
 			}
-			Common.alert("Fail : " + jqXHR.responseJSON.message);        
+			Common.alert("Fail : " + jqXHR.responseJSON.message);
 		}
 	);
-	
+
 }
 
 
@@ -533,12 +539,12 @@ function fn_uploadFile3(){
 	formData.append("ctrlId", ctrlId);
 	formData.append("ctrlIsCrc", ctrlIsCrc);
 	formData.append("bankId", bankId);
-    
-	Common.ajaxFile("/payment/updateClaimResultItemBulk3.do", formData, 
+
+	Common.ajaxFile("/payment/updateClaimResultItemBulk3.do", formData,
 		function(result){
 			resetUpdatedItems(); // 초기화
 
-			var message = "";        
+			var message = "";
 			message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
             result.data.totalItem+" ; "+
             result.data.totalSuccess+" ; "+
@@ -554,22 +560,22 @@ function fn_uploadFile3(){
 
 					//CALIM RESULT UPDATE
 					if(updateResultItemKind == 'LIVE'){
-						Common.ajax("POST", "/payment/updateClaimResultLive.do", data, 
+						Common.ajax("POST", "/payment/updateClaimResultLive.do", data,
 							function(result) {
 								Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
 							},
 							function(result) {
 								Common.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
 							}
-						);     
+						);
 					}
 
 					//CALIM RESULT UPDATE NEXT DAY
 					if(updateResultItemKind == 'NEXT'){
-						Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data, 
+						Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data,
 							function(result) {
 								var resultMsg = "";
-								resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";    	   
+								resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
 
 								Common.alert(resultMsg);
 							},
@@ -580,7 +586,7 @@ function fn_uploadFile3(){
 					}
 				}
 			);
-		},  
+		},
 		function(jqXHR, textStatus, errorThrown) {
 			try {
 				console.log("status : " + jqXHR.status);
@@ -590,10 +596,10 @@ function fn_uploadFile3(){
 			} catch (e) {
 				console.log(e);
 			}
-			Common.alert("Fail : " + jqXHR.responseJSON.message);        
+			Common.alert("Fail : " + jqXHR.responseJSON.message);
 		}
 	);
-	
+
 }
 
 
@@ -610,12 +616,12 @@ function fn_uploadFile4(){
 	formData.append("ctrlId", ctrlId);
 	formData.append("ctrlIsCrc", ctrlIsCrc);
 	formData.append("bankId", bankId);
-    
-	Common.ajaxFile("/payment/updateClaimResultItemBulk4.do", formData, 
+
+	Common.ajaxFile("/payment/updateClaimResultItemBulk4.do", formData,
 		function(result){
 			resetUpdatedItems(); // 초기화
 
-			var message = "";        
+			var message = "";
 			message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
             result.data.totalItem+" ; "+
             result.data.totalSuccess+" ; "+
@@ -631,22 +637,22 @@ function fn_uploadFile4(){
 
 					//CALIM RESULT UPDATE
 					if(updateResultItemKind == 'LIVE'){
-						Common.ajax("POST", "/payment/updateClaimResultLive.do", data, 
+						Common.ajax("POST", "/payment/updateClaimResultLive.do", data,
 							function(result) {
 								Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
 							},
 							function(result) {
 								Common.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
 							}
-						);     
+						);
 					}
 
 					//CALIM RESULT UPDATE NEXT DAY
 					if(updateResultItemKind == 'NEXT'){
-						Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data, 
+						Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data,
 							function(result) {
 								var resultMsg = "";
-								resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";    	   
+								resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
 
 								Common.alert(resultMsg);
 							},
@@ -657,7 +663,7 @@ function fn_uploadFile4(){
 					}
 				}
 			);
-		},  
+		},
 		function(jqXHR, textStatus, errorThrown) {
 			try {
 				console.log("status : " + jqXHR.status);
@@ -667,24 +673,24 @@ function fn_uploadFile4(){
 			} catch (e) {
 				console.log(e);
 			}
-			Common.alert("Fail : " + jqXHR.responseJSON.message);        
+			Common.alert("Fail : " + jqXHR.responseJSON.message);
 		}
 	);
-	
+
 }
 
 //Result Update Pop-UP 에서 Upload 버튼 클릭시 처리
 function fn_resultFileUp(){
-	
+
 	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
 	var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlIsCrc");
 	var bankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "bankId");
-    
+
     //param data array
     var data = {};
     var gridList = AUIGrid.getGridData(updResultGridID);       //그리드 데이터
-    
-    //array에 담기        
+
+    //array에 담기
     if(gridList.length > 0) {
         data.all = gridList;
     }  else {
@@ -692,45 +698,45 @@ function fn_resultFileUp(){
         return;
         //data.all = [];
     }
-    
+
     //form객체 담기
     data.form = [{"ctrlId":ctrlId,"ctrlIsCrc":ctrlIsCrc,"bankId":bankId}];
-    
+
     //Ajax 호출
     Common.ajax("POST", "/payment/updateClaimResultItem.do", data, function(result) {
     	resetUpdatedItems(); // 초기화
-    	
+
         var message = "";
     	message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
 	    	result.data.totalItem+" ; "+
 	    	result.data.totalSuccess+" ; "+
 	    	result.data.totalFail+"' htmlEscape='false' argumentSeparator=';' />";
-        
+
         Common.confirm(message,
         		function (){
         	         var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
-        	         
+
         	         //param data array
         	         var data = {};
         	         data.form = [{"ctrlId":ctrlId, "ctrlIsCrc" : ctrlIsCrc , "bankId" : bankId}];
-        	         
+
         	         //CALIM RESULT UPDATE
         	         if(updateResultItemKind == 'LIVE'){
-	        	         Common.ajax("POST", "/payment/updateClaimResultLive.do", data, 
+	        	         Common.ajax("POST", "/payment/updateClaimResultLive.do", data,
 	        	        		 function(result) {
 	        	        	          Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
 	        	        	     },
 	        	        	     function(result) {
 	        	        	    	  Common.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
-	        	        	    });     
+	        	        	    });
         	         }
         	       //CALIM RESULT UPDATE NEXT DAY
         	       if(updateResultItemKind == 'NEXT'){
-	                   Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data, 
+	                   Common.ajax("POST", "/payment/updateClaimResultNextDay.do", data,
 	                           function(result) {
 	                	            var resultMsg = "";
 	                	            resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
-	                	   
+
 	                                Common.alert(resultMsg);
 	                           },
 	                           function(result) {
@@ -748,7 +754,7 @@ function fn_resultFileUp(){
         } catch (e) {
             console.log(e);
         }
-        alert("Fail : " + jqXHR.responseJSON.message);        
+        alert("Fail : " + jqXHR.responseJSON.message);
     });
 }
 
@@ -756,89 +762,94 @@ function fn_resultFileUp(){
 function resetUpdatedItems() {
      AUIGrid.resetUpdatedItems(updResultGridID, "a");
  }
- 
- 
+
+
 //NEW CLAIM Pop-UP 에서 Generate Claim 처리
 function fn_genClaim(){
-	
+
 	if($("#new_claimType option:selected").val() == ''){
 		Common.alert("<spring:message code='pay.alert.selectClaimType'/>");
 		return;
 	}else{
-		
-		 if ($("#new_claimType option:selected").val() == "131" || $("#new_claimType option:selected").val() == "134") {             
+
+		 if ($("#new_claimType option:selected").val() == "131" || $("#new_claimType option:selected").val() == "134") {
 			 if ($("#new_claimDay option:selected").val() == '' ) {
 				 Common.alert("<spring:message code='pay.alert.selectClaimDay'/>");
-                 return;                 
+                 return;
+             }
+
+             if ($("#new_cardType option:selected").val() == '' ) {
+                 Common.alert(" * Please select card type.");
+                 return;
              }
          } else if ($("#new_claimType option:selected").val() == "132") {
              if ($("#new_issueBank option:selected").val() == '') {
             	 Common.alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
-                 return;                 
+                 return;
              }
-         }		
+         }
 	}
-	
+
 	if($("#new_debitDate").val() == ''){
 		Common.alert("<spring:message code='pay.alert.insertDate'/>");
         return;
 	}
-	
+
 	//저장 처리
 	var data = {};
     var formList = $("#newForm").serializeArray();       //폼 데이터
-    
+
     if(formList.length > 0) data.form = formList;
     else data.form = [];
-    
-	
-	Common.ajax("POST", "/payment/generateNewClaim.do", data, 
+
+
+	Common.ajax("POST", "/payment/generateNewClaim.do", data,
 			function(result) {
 		         var message = "";
-		         
-		         if(result.code == "IS_BATCH"){		        	 
+
+		         if(result.code == "IS_BATCH"){
 		        	 message += "<spring:message code='pay.alert.claimIsBatch' arguments='"+result.data.ctrlId+" ; "+
 		        	 result.data.crtUserName+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
-		        	 
+
 		         }else if(result.code == "FILE_OK"){
                      message += "<spring:message code='pay.alert.claimFileOk' arguments='"+result.data.ctrlId+" ; "+result.data.ctrlBillAmt+" ; "+result.data.ctrlTotItm+" ; "+
                      result.data.crtUserId+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
-                     
+
 		         }else if(result.code == "FILE_FAIL"){
                      message += "<spring:message code='pay.alert.claimFileFail' arguments='"+result.data.ctrlId+" ; "+result.data.ctrlBillAmt+" ; "+result.data.ctrlTotItm+" ; "+
                      result.data.crtUserId+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
-                     
+
 		         }else{
 		        	 message += "<spring:message code='pay.alert.generateFailClaimBatch'/>";
 		         }
-		         
+
 		         Common.alert("<b>" + message + "</b>");
 	       },
 	       function(result) {
-                 Common.alert("<spring:message code='pay.alert.generateFailClaimBatch'/>");   
+                 Common.alert("<spring:message code='pay.alert.generateFailClaimBatch'/>");
            }
 	);
 }
 
 //NEW CLAIM Pop-UP 에서 Generate Claim 처리
 function fn_createFile(){
-	
+
 	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
-	
+
 	//param data array
     var data = {};
     data.form = [{"ctrlId":ctrlId}];
-    
-    Common.ajax("POST", "/payment/createClaimFile.do", data,  
+
+    Common.ajax("POST", "/payment/createClaimFile.do", data,
             function(result) {
                  Common.alert("<spring:message code='pay.alert.claimSucessCreate'/>");
-           
+
            },
            function(result) {
-                 Common.alert("<spring:message code='pay.alert.claimFailGenFile'/>");   
+                 Common.alert("<spring:message code='pay.alert.claimFailGenFile'/>");
            }
     );
-	
+
 }
 
 function fn_clear(){
@@ -847,7 +858,7 @@ function fn_clear(){
 
 //**************************************************
 //**************************************************
-// Schedule Claim Batch 관련 Script 
+// Schedule Claim Batch 관련 Script
 //**************************************************
 //**************************************************
 // Schedule Claim Batch 팝업
@@ -874,9 +885,9 @@ function fn_openDivPopDown(){
 		var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue, "stusName");
 
 		if(ctrlStusId != 1){
-			Common.alert("<spring:message code='pay.alert.claimFile' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");		
+			Common.alert("<spring:message code='pay.alert.claimFile' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
 		}else{
-			Common.popupDiv('/payment/initClaimFileDownPop.do', {"ctrlId" : ctrlId}, null , true ,'_claimFileDownPop');            	
+			Common.popupDiv('/payment/initClaimFileDownPop.do', {"ctrlId" : ctrlId}, null , true ,'_claimFileDownPop');
 		}
 	}else{
 		Common.alert("<spring:message code='pay.alert.noClaim'/>");
@@ -898,7 +909,7 @@ function fn_openDivPopDown(){
         <ul class="right_btns">
         <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_getClaimListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-        </c:if>  
+        </c:if>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
@@ -942,7 +953,7 @@ function fn_openDivPopDown(){
                     <tr>
                         <th scope="row">Claim Type</th>
                         <td>
-                            <select id="claimType" name="claimType" class="w100p"></select>                           
+                            <select id="claimType" name="claimType" class="w100p"></select>
                         </td>
                        <th scope="row">Status</th>
                         <td>
@@ -979,7 +990,7 @@ function fn_openDivPopDown(){
 
             <!-- link_btns_wrap start -->
             <aside class="link_btns_wrap">
-              <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">  
+               <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                 <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
                 <dl class="link_list">
                     <dt>Link</dt>
@@ -990,13 +1001,13 @@ function fn_openDivPopDown(){
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULTNEXT');"><spring:message code='pay.btn.claimResultNextDay'/></a></p></li>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');"><spring:message code='pay.btn.reGenerateClaimFile'/></a></p></li>
                         <!--<li><p class="link_btn"><a href="javascript:fn_openDivPopDown('FILEDN');">Generation File Down</a></p></li>-->
-                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('SMS');"><spring:message code='pay.btn.failDeductionSMS'/></a></p></li>                                                                       
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('SMS');"><spring:message code='pay.btn.failDeductionSMS'/></a></p></li>
                     </ul>
                     <ul class="btns">
-                        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('NEW');"><spring:message code='pay.btn.newClaim'/></a></p></li>        
+                        <li><p class="link_btn type2"><a href="javascript:fn_openDivPop('NEW');"><spring:message code='pay.btn.newClaim'/></a></p></li>
 						<li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleSettingPop();"><spring:message code='pay.btn.scheduleSetting'/></a></p></li>
                         <li><p class="link_btn type2"><a href="javascript:fn_openDivScheduleBatchPop();"><spring:message code='pay.btn.scheduleClaimBatch'/></a></p></li>
-                    </ul>                    
+                    </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
                 </dl>
@@ -1008,7 +1019,7 @@ function fn_openDivPopDown(){
     <!-- search_table end -->
 
     <!-- search_result start -->
-    <section class="search_result">     
+    <section class="search_result">
 
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
@@ -1018,11 +1029,11 @@ function fn_openDivPopDown(){
     <!-- search_result end -->
 
 </section>
-<!-- content end --> 
+<!-- content end -->
 
 
-<!------------------------------------------------------------------------------------- 
-    POP-UP (VIEW CLAIM / RESULT (Live) / RESULT (NEXT DAY) / FILE GENERATOR  
+<!-------------------------------------------------------------------------------------
+    POP-UP (VIEW CLAIM / RESULT (Live) / RESULT (NEXT DAY) / FILE GENERATOR
 -------------------------------------------------------------------------------------->
 <!-- popup_wrap start -->
 <div class="popup_wrap" id="view_wrap" style="display:none;">
@@ -1034,7 +1045,7 @@ function fn_openDivPopDown(){
         </ul>
     </header>
     <!-- pop_header end -->
-    
+
     <!-- pop_body start -->
     <section class="pop_body">
         <!-- search_table start -->
@@ -1090,14 +1101,14 @@ function fn_openDivPopDown(){
 	                    <td id="view_totalSuccess"></td>
 	                    <th scope="row">Total Fail</th>
 	                    <td id="view_totalFail"></td>
-	                </tr> 
+	                </tr>
                 </tbody>
             </table>
         </section>
         <!-- search_table end -->
-        
+
         <section class="search_result"><!-- search_result start -->
-            <article class="grid_wrap"  id="sms_grid_wrap"></article>               
+            <article class="grid_wrap"  id="sms_grid_wrap"></article>
             <!-- grid_wrap end -->
         </section><!-- search_result end -->
 
@@ -1105,12 +1116,12 @@ function fn_openDivPopDown(){
             <li><p class="btn_blue2"><a href="javascript:fn_deactivate();"><spring:message code='pay.btn.deactivate'/></a></p></li>
             <li><p class="btn_blue2"><a href="javascript:fn_updateResult('LIVE');"><spring:message code='pay.btn.updateResult'/></a></p></li>
         </ul>
-        
+
         <ul class="center_btns" id="center_btns2">
             <li><p class="btn_blue2"><a href="javascript:fn_deactivate();"><spring:message code='pay.btn.deactivate'/></a></p></li>
             <li><p class="btn_blue2"><a href="javascript:fn_updateResult('NEXT');"><spring:message code='pay.btn.updateResult'/></a></p></li>
         </ul>
-        
+
          <ul class="center_btns" id="center_btns3">
             <li><p class="btn_blue2"><a href="javascript:fn_createFile();"><spring:message code='pay.btn.generateFile'/></a></p></li>
         </ul>
@@ -1123,7 +1134,7 @@ function fn_openDivPopDown(){
 <!-- popup_wrap end -->
 
 
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
     POP-UP (NEW CLAIM)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -1136,7 +1147,7 @@ function fn_openDivPopDown(){
         </ul>
     </header>
     <!-- pop_header end -->
-    
+
     <!-- pop_body start -->
     <form name="newForm" id="newForm"  method="post">
     <section class="pop_body">
@@ -1151,7 +1162,7 @@ function fn_openDivPopDown(){
                     <col style="width:165px" />
                     <col style="width:*" />
                 </colgroup>
-                
+
                 <tbody>
                     <tr>
                         <th scope="row">Claim Type <span class="must">*</span></th>
@@ -1164,25 +1175,35 @@ function fn_openDivPopDown(){
                         </td>
                     </tr>
                      <tr>
-                        <th scope="row">Issue Bank <span class="must" id="issueBankMust">*</span></th>                            
+                        <th scope="row">Issue Bank <span class="must" id="issueBankMust">*</span></th>
                         <td>
                             <select id="new_issueBank" name="new_issueBank" class="w100p" disabled></select>
                         </td>
                         <th scope="row">Debit Date <span class="must">*</span></th>
                         <td>
-                            <input type="text" id="new_debitDate" name="new_debitDate" title="Debit Date" placeholder="Debit Date" class="j_date w100p" />                            
+                            <input type="text" id="new_debitDate" name="new_debitDate" title="Debit Date" placeholder="Debit Date" class="j_date w100p" />
                         </td>
                     </tr>
-                   </tbody>  
+                    <tr>
+                          <th scope="row">Card Type<span class="must" id="cardTypeMust">*</span></th>
+                        <td>
+                            <select id="new_cardType" name="new_cardType" class="w100p" disabled>
+                                <option value="">Choose One</option>
+                                <option value="Visa Card">Visa Card</option>
+                                <option value="Master Card">Master Card</option>
+                            </select>
+                        </td>
+                    </tr>
+                   </tbody>
             </table>
         </section>
         <!-- search_table end -->
-        
+
         <ul class="center_btns">
             <li><p class="btn_blue2"><a href="javascript:fn_genClaim();"><spring:message code='pay.btn.generateClaim'/></a></p></li>
         </ul>
     </section>
-    </form>       
+    </form>
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
@@ -1190,7 +1211,7 @@ function fn_openDivPopDown(){
 
 
 
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
     POP-UP (NEW CLAIM)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -1203,7 +1224,7 @@ function fn_openDivPopDown(){
         </ul>
     </header>
     <!-- pop_header end -->
-    
+
     <!-- pop_body start -->
     <form name="updResultForm" id="updResultForm"  method="post">
     <section class="pop_body">
@@ -1214,9 +1235,9 @@ function fn_openDivPopDown(){
                 <caption>table</caption>
                  <colgroup>
                     <col style="width:165px" />
-                    <col style="width:*" />                
+                    <col style="width:*" />
                 </colgroup>
-                
+
                 <tbody>
                     <tr>
                         <th scope="row">Result File</th>
@@ -1233,23 +1254,23 @@ function fn_openDivPopDown(){
 							</div><!-- auto_file end -->
                         </td>
                     </tr>
-                   </tbody>  
+                   </tbody>
             </table>
         </section>
-        
+
         <section class="search_result"><!-- search_result start -->
-            <article class="grid_wrap"  id="updResult_grid_wrap" style="display:none;"></article>             
+            <article class="grid_wrap"  id="updResult_grid_wrap" style="display:none;"></article>
             <!-- grid_wrap end -->
         </section><!-- search_result end -->
         <!-- search_table end -->
-        
+
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_uploadFile4();"><spring:message code='pay.btn.upload'/></a></p></li>
             <!--<li><p class="btn_blue2"><a href="javascript:fn_resultFileUp();"><spring:message code='pay.btn.upload'/></a></p></li>-->
             <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/ClaimResultUpdate_Format.csv"><spring:message code='pay.btn.downloadCsvFormat'/></a></p></li>
         </ul>
     </section>
-    </form>       
+    </form>
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
