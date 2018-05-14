@@ -608,11 +608,13 @@ public class ClaimController {
 					"yyyyMMdd");
 			String claimDay = CommonUtils.nvl(String.valueOf(claim.get("new_claimDay")));
 			String bankId = CommonUtils.nvl(String.valueOf(claim.get("new_issueBank")));
+			String cardType = CommonUtils.nvl(String.valueOf(claim.get("new_cardType")));
 
 			claim.put("new_claimType", isCRC);
 			claim.put("new_debitDate", inputDate);
 			claim.put("new_claimDay", claimDay);
 			claim.put("new_issueBank", bankId);
+			claim.put("new_cardType", cardType);
 			claim.put("userId", sessionVO.getUserId());
 
 			claimService.createClaim(claim); // 프로시저 함수 호출
