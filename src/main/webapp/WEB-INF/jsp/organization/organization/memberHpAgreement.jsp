@@ -5,7 +5,7 @@
 $(document).ready(function() {
 
     var memberID = $("#memberID").val();
-    var userTypeID = $("#userTypeID").val();
+    var identification = $("#identification").val();
 
     if (memberID == "") {
         if ($("#popup_wrap").attr("alert") != "Y") {
@@ -15,10 +15,10 @@ $(document).ready(function() {
         return false;
     }
 
-    if (userTypeID == "") {
+    if (identification == "") {
         if ($("#popup_wrap").attr("alert") != "Y") {
             Common.alert("<spring:message code='sys.msg.necessary' arguments='TYPE'/>");
-            $("#userTypeID").focus();
+            $("#identification").focus();
         }
         return false;
     }
@@ -28,38 +28,55 @@ $(document).ready(function() {
     }
 });
 
-function fn_testAgreement(choice) {
+function fn_AcceptAgreement() {
 
-    $("#choice").val(choice);
+    //$("#choice").val(choice);
 
     // 2018-05-04 - LaiKW - Start
-    // Add validation checking upon
-    console.log(choice);
+    // Add validation checking
 
-    if(choice == "Y") {
-        if($("#acknowledgeAgreement").prop('checked') == false) {
-            Common.alert("* Please agree the terms and conditions.");
-            return false;
-        }
-
-        if($("#personalDataAgreement").prop('checked')  == false) {
-            Common.alert("* Please agree the personal data protection.");
-            return false;
-        }
+    if($("#acknowledgeAgreement").prop('checked') == false) {
+        Common.alert("* Please agree the terms and conditions.");
+        return false;
     }
- // 2018-05-04 - LaiKW - End
 
+    if($("#personalDataAgreement").prop('checked')  == false) {
+        Common.alert("* Please agree the personal data protection.");
+        return false;
+    }
+console.log("accept");
     Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantValidateForm").serialize(), function(result) {
         console.log(result);
 
-        if(result.cnfm == "0" && result.cnfm_dt == "1900-01-01") {
-        	Common.ajax("GET", "/organization/updateHpCfm.do", {choice:choice}, function(result) {
-                Common.alert(result.message);
+        var cnfm = result.cnfm;
+        var cnfm_dt = result.cnfm_dt;
+        var stus = result.stus;
+
+        if(cnfm == "0" && cnfm_dt == "1900-01-01" && stus == "44") {
+            Common.ajax("GET", "/organization/updateHpCfm.do", {choice:"Y"}, function(result1) {
+                if(result1.message == "success") {
+                    Common.alert("Application success.");
+                }
             });
-        } else {
+        } else if(cnfm != "0" && cnfm_dt != "1900-01-01" && stus == "44") {
             Common.alert("Member has already accepted agreement.");
+        } else if(cnfm == "0" && cnfm_dt != "1900-01-01" && stus == "6") {
+            Common.alert("Member has already rejected agreement.");
         }
-    })
+    });
+
+
+    // 2018-05-04 - LaiKW - End
+}
+
+function fn_RejectAgreement() {
+    Common.confirm("Are you sure want to decline this agreement? ", function() {
+    	Common.ajax("GET", "/organization/updateHpCfm.do", {choice:"N"}, function(result) {
+            if(result.message == "success") {
+                Common.alert("Application has successfully rejected.");
+            }
+        });
+    });
 }
 
 </script>
@@ -83,6 +100,22 @@ input {
     top: -1px;
     *overflow: hidden;
 }
+.agreementiFrame{
+    position: relative;
+    padding-bottom: 65.25%;
+    padding-top: 30px;
+    height: 450px;
+    overflow: auto;
+    -webkit-overflow-scrolling:touch;
+    border: solid black 1px;
+}
+.agreementiFrame iframe {
+     position: absolute;
+     top: 0;
+     left: 0;
+     width: 100%;
+     height: 100%;
+}
 </style>
 <!--  2018-05-04 - LaiKW - End -->
 
@@ -98,7 +131,7 @@ input {
 <section id = "body">
 <form id="applicantInfo" name="applicantInfo" method="post">
     <input type="hidden" id="memberID" name="memberID" value="${memberID}">
-    <input type="hidden" id="userTypeID" name="userTypeID" value="${userTypeID}">
+    <input type="hidden" id="identification" name="identification" value="${identification}">
 </form>
 
 <form id="applicantValidateForm" method="post">
@@ -109,7 +142,9 @@ input {
 
 <form id="agreementForm" style="width: 100%">
 
-    <iframe id="agreementFrame" name = "agreementFrame" width = 100% height = "450px" src = "/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf" frameborder = "10"></iframe>
+    <div class="agreementiFrame">
+        <iframe id="agreementFrame" name = "agreementFrame" src = "/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf" frameborder = "10"></iframe>
+    </div>
 
     <!--  2018-05-04 - LaiKW - Start
     - Add TNC and personal data protection agreement -->
@@ -135,8 +170,8 @@ input {
     <!--  2018-05-04 - LaiKW - End -->
 
     <ul class="center_btns">
-        <li><p class="btn_blue"><a href="javascript:fn_testAgreement('Y');">Accept</a></p></li>
-        <li><p class="btn_blue"><a href="javascript:fn_testAgreement('N');">Reject</a></p></li>
+        <li><p class="btn_blue"><a href="javascript:fn_AcceptAgreement();">Accept</a></p></li>
+        <li><p class="btn_blue"><a href="javascript:fn_RejectAgreement();">Reject</a></p></li>
     </ul>
 </form>
 

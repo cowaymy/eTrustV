@@ -1392,9 +1392,11 @@ public class MemberListController {
 		}
 
 	    // Agreement screen with custom login
-		// Kit Wai - Start - 20180428s
+		// Kit Wai - Start - 20180428
 		@RequestMapping(value = "/getApplicantInfo", method = RequestMethod.GET)
 		public ResponseEntity <Map> validateHpStatus(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+		    logger.debug("==================== getApplicantInfo ====================");
 
 		    EgovMap item = new EgovMap();
 		    item = (EgovMap) memberListService.validateHpStatus(params);
@@ -1418,14 +1420,14 @@ public class MemberListController {
 
 	        Precondition.checkNotNull(params.get("MemberID"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "Member ID" }));
 
-	        String userTypeId = ((String) params.get("MemberID")).substring(0, 4);
-	        String memberID = ((String) params.get("MemberID")).substring(4);
+	        String idntfc = ((String) params.get("MemberID")).substring(0, 5);
+	        String memberID = ((String) params.get("MemberID")).substring(5);
 
 	        logger.debug("Applicant ID : {}", memberID);
-	        logger.debug("User Type : {}", userTypeId);
+	        logger.debug("User Type : {}", idntfc);
 
 	        params.put("MemberID", memberID);
-	        params.put("UserTypeID", userTypeId);
+	        params.put("Identification", idntfc);
 
 	        LoginVO loginVO = loginService.getAplcntInfo(params);
 
@@ -1441,7 +1443,7 @@ public class MemberListController {
 	        }
 
 	        model.addAttribute("memberID", params.get("MemberID"));
-	        model.addAttribute("userTypeID", params.get("UserTypeID"));
+	        model.addAttribute("identification", params.get("Identification"));
 	        model.addAttribute("status", status);
 	        model.addAttribute("message", message);
 	        return "organization/organization/memberHpAgreement";
