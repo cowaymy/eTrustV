@@ -11,13 +11,13 @@ var viewHistoryGridID;
 //Grid에서 선택된 RowID
 var selectedGridValue;
 
-//Grid Properties 설정 
-var gridPros = {            
+//Grid Properties 설정
+var gridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false     // 상태 칼럼 사용
 };
 
-//Grid Properties 설정 : 마스터 그리드용 
+//Grid Properties 설정 : 마스터 그리드용
 var gridProsMaster = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false,     // 상태 칼럼 사용
@@ -30,20 +30,20 @@ var _totalRowCount;
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-	
+
 	//Issue Bank 조회
     doGetCombo('/common/getAccountList.do', 'CASH' , ''   , 'bankAccount' , 'S', '');
-	
+
 	//Application Type 생성
     doGetCombo('/common/selectCodeList.do', '10' , ''   , 'applicationType' , 'S', '');
-	
+
 	//Payment Type 코드 조회
-    doGetCombo('/common/selectCodeList.do', '48' , ''   ,'paymentType', 'S' , '');  
-  
+    doGetCombo('/common/selectCodeList.do', '48' , ''   ,'paymentType', 'S' , '');
+
 	//Branch Combo 생성
 	doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','branchId', 'S' , '');
-	
-	
+
+
     //Branch Combo 변경시 User Combo 생성
     $('#branchId').change(function (){
     	doGetCombo('/common/getUsersByBranch.do', $(this).val() , ''   , 'userId' , 'S', '');
@@ -51,18 +51,18 @@ $(document).ready(function(){
 
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridProsMaster);
-    
-    
+
+
     // Master Grid 셀 클릭시 이벤트
-    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+    AUIGrid.bind(myGridID, "cellClick", function( event ){
     	selectedGridValue = event.rowIndex;
-    	AUIGrid.destroy(subGridID); 
+    	AUIGrid.destroy(subGridID);
     	// Payment (Slave Grid) 그리드 생성
         subGridID = GridCommon.createAUIGrid("grid_sub_wrap", slaveColumnLayout,null,gridPros);
-    	
+
     	$("#payId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "payId"));
     	$("#salesOrdId").val(AUIGrid.getCellValue(myGridID , event.rowIndex , "salesOrdId"));
-    	
+
     	fn_getPaymentListAjax();
 
     });
@@ -94,7 +94,7 @@ var columnLayout = [
 	{ dataField:"salesOrdId" ,headerText:"<spring:message code='pay.head.salesOrdId'/>" ,editable : false, visible : true}
     ];
 
-var slaveColumnLayout = [ 
+var slaveColumnLayout = [
 	{ dataField:"payId" ,headerText:"<spring:message code='pay.head.payID'/>",editable : false ,visible : false },
 	{ dataField:"payItmId" ,headerText:"<spring:message code='pay.head.itemId'/>",editable : false ,visible : false },
 	{ dataField:"codeName" ,headerText:"<spring:message code='pay.head.mode'/>",editable : false },
@@ -105,7 +105,7 @@ var slaveColumnLayout = [
 	{ dataField:"payItmCcExprDt" ,headerText:"<spring:message code='pay.head.CCExpiryDate'/>" ,editable : false },
 	{ dataField:"payItmChqNo" ,headerText:"<spring:message code='pay.head.chequeNo'/>" ,editable : false },
 	{ dataField:"name" ,headerText:"<spring:message code='pay.head.issueBank'/>" ,editable : false },
-	{ dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},                   
+	{ dataField:"payItmAmt" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
 	{ dataField:"c8" ,headerText:"<spring:message code='pay.head.CRCMode'/>" ,editable : false },
 	{ dataField:"accDesc" ,headerText:"<spring:message code='pay.head.bankAccount'/>" ,editable : false },
 	{ dataField:"c3" ,headerText:"<spring:message code='pay.head.account'/>" ,editable : false },
@@ -116,28 +116,28 @@ var slaveColumnLayout = [
 	{ dataField:"payItmRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false },
 	{ dataField:"payItmBankChrgAmt" ,headerText:"<spring:message code='pay.head.bankCharge'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"}
     ];
-              
+
 // 마스터 그리드 리스트 조회.
 function fn_getOrderListAjax(goPage) {
-	
+
 	//페이징 변수 세팅
-    $("#pageNo").val(goPage);   
-	
+    $("#pageNo").val(goPage);
+
 	AUIGrid.destroy(subGridID);//subGrid 초기화
     Common.ajax("GET", "/payment/selectOrderList", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result.resultList);
-        
+
         //전체건수 세팅
         _totalRowCount = result.totalRowCount;
-        
+
         //페이징 처리를 위한 옵션 설정
         var pagingPros = {
                 // 1페이지에서 보여줄 행의 수
                 rowCount : $("#rowCount").val()
         };
-        
+
         GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
-        
+
     });
 }
 
@@ -145,29 +145,29 @@ function fn_getOrderListAjax(goPage) {
 function moveToPage(goPage){
   //페이징 변수 세팅
   $("#pageNo").val(goPage);
-  
-  Common.ajax("GET", "/payment/selectOrderListPaging.do", $("#searchForm").serialize(), function(result) {        
+
+  Common.ajax("GET", "/payment/selectOrderListPaging.do", $("#searchForm").serialize(), function(result) {
       AUIGrid.setGridData(myGridID, result.resultList);
-      
+
       //페이징 처리를 위한 옵션 설정
       var pagingPros = {
               // 1페이지에서 보여줄 행의 수
               rowCount : $("#rowCount").val()
       };
-      
-      GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);        
-  });    
+
+      GridCommon.createPagingNavigator(goPage, _totalRowCount , pagingPros);
+  });
 }
 
 //상세 그리드 (Payment) 리스트 조회.
-function fn_getPaymentListAjax() {        
+function fn_getPaymentListAjax() {
     Common.ajax("GET", "/payment/selectPaymentList", $("#detailForm").serialize(), function(result) {
         AUIGrid.setGridData(subGridID, result);
     });
 }
 
 function fn_openDivPop(val){
-	
+
 	if(val == "VIEW"){
 		if(selectedGridValue !=  undefined){
 			Common.popupDiv('/payment/initSearchPaymentViewPop.do', {"payId":$("#payId").val(), "salesOrdId" : $("#salesOrdId").val(),"callPrgm" : "SEARCH_PAYMENT_VIEW"}, null , true);
@@ -175,7 +175,7 @@ function fn_openDivPop(val){
 	       Common.alert("<spring:message code='pay.alert.searchFirst'/>");
 	       return;
 	   }
-		
+
 	}else if(val == "EDIT"){
 		  if(selectedGridValue !=  undefined){
 			  Common.popupDiv('/payment/initSearchPaymentEditPop.do', {"payId":$("#payId").val(), "salesOrdId" : $("#salesOrdId").val(),"callPrgm" : "SEARCH_PAYMENT_EDIT"}, null , true);
@@ -183,7 +183,16 @@ function fn_openDivPop(val){
            Common.alert("<spring:message code='pay.alert.searchFirst'/>");
            return;
        }
-    }
+
+    }else if(val == "EDITBASIC"){
+        if(selectedGridValue !=  undefined){
+            Common.popupDiv('/payment/initSearchPaymentEditBasicPop.do', {"payId":$("#payId").val(), "salesOrdId" : $("#salesOrdId").val(),"callPrgm" : "SEARCH_PAYMENT_EDIT"}, null , true);
+           }else{
+         Common.alert("<spring:message code='pay.alert.searchFirst'/>");
+         return;
+     }
+
+  }
 }
 
 //popup 크기
@@ -196,12 +205,12 @@ var winPopOption = {
 function fn_openWinPop(val){
 	if(val == "FUNDTRANS"){
 		if(selectedGridValue !=  undefined){
-			
+
 			var payId = AUIGrid.getCellValue(myGridID, selectedGridValue, "payId");
 			var payTypeId = AUIGrid.getCellValue(myGridID, selectedGridValue, "payTypeId");
 			var payTypeName = AUIGrid.getCellValue(myGridID, selectedGridValue, "payTypeName");
 			var payDt = AUIGrid.getCellValue(myGridID, selectedGridValue, "payDt");
-			
+
 			//allow Fund Transfer
 			// CC Easy Payment : 95
 			// Deposit Payment : 100
@@ -223,30 +232,30 @@ function fn_openWinPop(val){
 			// POS : 577
 			// Fund Transfer : 1141
 			var payTypeIdArray = [95,100,101,102,103,104,224,225,226,228,229,230,231,232,233,234,235,577,1141];
-			
+
 			if(payTypeIdArray.indexOf(payTypeId) > -1){
                 Common.alert("<b>Payment Type : " + payTypeName + "<br />Fund transfer is disallowed for this payment.</b>");
                 return;
             }else{
             	var cutOffDate = new Date("01/01/2016");
             	var paymentDate = new Date(payDt);
-            	
+
                 if((cutOffDate.getTime() > paymentDate.getTime())){
             		Common.alert("<b>Payment date : " + payDt + "<br />" +
                             "Cut off date : 01/01/2014<br />" +
                             "Fund transfer is disallowed for this payment.</b>");
                     return;
-            	}else{            		
+            	}else{
             		$("#popPayId").val(payId);
                     Common.popupWin("trnsferForm", "/payment/initFundTransferPop.do", winPopOption);
-                    
+
 
             	}
             }
 		}else{
 			Common.alert("<spring:message code='pay.alert.noPay'/>");
 			return;
-		}        
+		}
     }
 }
 
@@ -256,12 +265,12 @@ function fn_clear(){
 
 function fn_officialReceiptReport(){
     var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-    
-    if (selectedItem[0] > -1){    
-        var orNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "orNo");        
-        $("#reportPDFForm #v_ORNo").val(orNo);        
+
+    if (selectedItem[0] > -1){
+        var orNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "orNo");
+        $("#reportPDFForm #v_ORNo").val(orNo);
         Common.report("reportPDFForm");
-        
+
     }else{
         Common.alert("<spring:message code='pay.alert.noPay'/>");
    }
@@ -281,8 +290,8 @@ function fn_officialReceiptReport(){
         <ul class="right_btns">
             <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_officialReceiptReport();"><spring:message code='pay.btn.officialReceipt'/></a></p></li>
-            </c:if>      
-            <c:if test="${PAGE_AUTH.funcView == 'Y'}">      
+            </c:if>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_getOrderListAjax(1);"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
             </c:if>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
@@ -295,7 +304,7 @@ function fn_officialReceiptReport(){
         <form name="searchForm" id="searchForm"  method="post">
             <input type="hidden" name="rowCount" id="rowCount" value="20" />
             <input type="hidden" name="pageNo" id="pageNo" />
-            
+
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
 				<colgroup>
@@ -322,7 +331,7 @@ function fn_officialReceiptReport(){
 					    </td>
 					    <th scope="row">Application Type</th>
 					    <td>
-					       <select id="applicationType" name="applicationType" class="w100p">					          
+					       <select id="applicationType" name="applicationType" class="w100p">
                            </select>
 					    </td>
 					</tr>
@@ -337,7 +346,7 @@ function fn_officialReceiptReport(){
                         </td>
 					    <th scope="row">Payment Type</th>
 					    <td>
-					       <select id="paymentType" name="paymentType" class="w100p">                               
+					       <select id="paymentType" name="paymentType" class="w100p">
                            </select>
 					    </td>
 					</tr>
@@ -354,10 +363,10 @@ function fn_officialReceiptReport(){
 					    <th scope="row">KeyIn User</th>
 					    <td>
 							    <select id="userId" name="userId" class="w100p">
-		                  <option value="">Select Branch</option>                                                                 
+		                  <option value="">Select Branch</option>
 		              </select>
-              </td>                           
-					</tr>					
+              </td>
+					</tr>
 					<tr>
                         <th scope="row">Customer Name</th>
                         <td>
@@ -370,7 +379,7 @@ function fn_officialReceiptReport(){
                         <th scope="row">TR No</th>
                         <td>
                            <input id="trNo" name="trNo" type="text" title="TR No" placeholder="TR No." class="w100p" />
-                        </td>                        
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Cheque No</th>
@@ -383,9 +392,9 @@ function fn_officialReceiptReport(){
                         </td>
                         <th scope="row">Issue Bank</th>
                         <td>
-                            <select id="bankAccount" name="bankAccount" class="w100p">                                                               
+                            <select id="bankAccount" name="bankAccount" class="w100p">
                             </select>
-                        </td>                        
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Batch Payment ID</th>
@@ -393,11 +402,11 @@ function fn_officialReceiptReport(){
                            <input id="batchPaymentId" name="batchPaymentId" type="text" title="Batch Payment ID" placeholder="Batch Payment ID" class="w100p" />
                         </td>
                         <th scope="row"></th>
-                        <td>                           
+                        <td>
                         </td>
                         <th scope="row"></th>
-                        <td>                            
-                        </td>                        
+                        <td>
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -416,12 +425,15 @@ function fn_officialReceiptReport(){
                         <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');"><spring:message code='pay.btn.link.editDetails'/></a></p></li>
                         </c:if>
-                        <!-- <li><p class="link_btn"><a href="javascript:fn_openWinPop('FUNDTRANS');">Fund Transfer</a></p></li>  -->                                                                      
+                         <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                        <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDITBASIC');">Edit Basic Info</a></p></li>
+                        </c:if>
+                        <!-- <li><p class="link_btn"><a href="javascript:fn_openWinPop('FUNDTRANS');">Fund Transfer</a></p></li>  -->
                     </ul>
-                    <!-- 
+                    <!--
                     <ul class="btns">
-                        <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>                        
-                        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>         
+                        <li><p class="link_btn type2"><a href="#">Fund Transfer</a></p></li>
+                        <li><p class="link_btn type2"><a href="#">Refund</a></p></li>
                     </ul>
                      -->
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -439,7 +451,7 @@ function fn_officialReceiptReport(){
         <article id="grid_wrap" class="grid_wrap"></article>
         <div id="grid_paging" class="aui-grid-paging-panel my-grid-paging-panel"></div>
         <!-- grid_wrap end -->
-        
+
         <!-- grid_wrap start -->
         <article id="grid_sub_wrap" class="grid_wrap mt10"></article>
         <!-- grid_wrap end -->
@@ -460,7 +472,7 @@ function fn_officialReceiptReport(){
     <input type="hidden" id="v_ORNo" name="v_ORNo" />
 </form>
 
-<form name="trnsferForm" id="trnsferForm"  method="post">    
+<form name="trnsferForm" id="trnsferForm"  method="post">
     <input type="hidden" id="popPayId" name="popPayId" />
 </form>
 
