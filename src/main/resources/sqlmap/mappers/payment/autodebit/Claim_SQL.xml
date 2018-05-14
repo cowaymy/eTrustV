@@ -389,7 +389,7 @@
     <resultMap id="resultClaimMap" type="egovMap" />
     <select id="createClaim" statementType="CALLABLE" parameterType="Map">
         {
-            call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} , #{new_issueBank},#{new_debitDate},#{userId},#{new_claimDay},#{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultClaimMap})
+            call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} , #{new_issueBank}, #{new_cardType}, #{new_debitDate}, #{userId}, #{new_claimDay}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultClaimMap})
         }
     </select>
 
