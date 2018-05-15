@@ -425,7 +425,7 @@ function fn_officialReceiptReport(){
                         <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDIT');"><spring:message code='pay.btn.link.editDetails'/></a></p></li>
                         </c:if>
-                         <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+                         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('EDITBASIC');">Edit Basic Info</a></p></li>
                         </c:if>
                         <!-- <li><p class="link_btn"><a href="javascript:fn_openWinPop('FUNDTRANS');">Fund Transfer</a></p></li>  -->
