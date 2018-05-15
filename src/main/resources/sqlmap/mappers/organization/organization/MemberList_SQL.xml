@@ -4264,4 +4264,20 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
            WHERE  APLCTN_ID = #{userId}
      </update>
 
+     <select id="getHPCtc" parameterType="Map" resultType="egovMap">
+        select
+        <if test="src == 'aplicant' ">
+            APLICNT_TEL_MOBILE MOBILE,
+            APLICNT_EMAIL EMAIL
+            from ORG0003D
+            where APLICNT_CODE = #{memCode}
+        </if>
+        <if test="src == 'member' ">
+            TEL_MOBILE MOBILE,
+            EMAIL,
+            from ORG0001D
+            where MEM_CODE = #{memCode}
+        </if>
+      </select>
+
 </mapper>
