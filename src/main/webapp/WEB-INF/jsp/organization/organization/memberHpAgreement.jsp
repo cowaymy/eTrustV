@@ -158,18 +158,12 @@ input {
 
 <form id="agreementForm" style="width: 100%">
 
-    <!-- <object data="/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf" type="application/pdf" width="100%" height="100%">
-        <iframe src="/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf" width="100%" height="100%" style="border: none;">
-            This browser does not support PDFs. Please download the PDF to view it:<a href="/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf">Download PDF</a>
-        </iframe>
-    </object>  -->
-
     <div id="agreementPDF" style="height: 450px">
-        <script>PDFObject.embed("/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf", "#agreementPDF");</script>
+        <script>PDFObject.embed("/resources/pdf/agreement/CowayHealthPlannerAgreement.pdf", "#agreementPDF");</script>
     </div>
 
     <div id="dlPDF" style="padding-left: 5%; padding-right: 5%">
-        <a href="/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf">
+        <a href="/resources/pdf/agreement/CowayHealthPlannerAgreement.pdf">
             <img src="${pageContext.request.contextPath}/resources/images/common/icon_pdf.png" alt="PDF" class="centerPDF">
         </a>
     </div>

@@ -45,10 +45,11 @@ function fn_memberSave(){
 			                console.log(result);
 
                             var aplcntId = result.id;
+                            var idntfc = result.idntfc;
 
                             // Construct Agreement URL via SMS
                             var cnfmSms = "RM0.00 COWAY: COMPULSORY click " +
-                                                 "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=2803" + aplcntId +
+                                                 "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
                                                  " for confirmation of HP agreement. TQ!";
 
                             if($("#mobileNo").val() != "") {
@@ -64,7 +65,7 @@ function fn_memberSave(){
                                 var recipient = $("#email").val();
                                 var file = "/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf";
 
-                                var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=2803" + aplcntId;
+                                var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
 
                                 // Send Email file, recipient
                                 Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
@@ -734,10 +735,13 @@ function fn_saveValidation(){
 
     if($("#memberType").val() == "2803") {
         if($("#mobileNo").val() == '') {
-            if($("#email").val() == '') {
-                Common.alert("Please key in Mobile No. or Email Address");
-                return false;
-            }
+        	Common.alert("Please key in Mobile No.");
+            return false;
+        }
+
+        if($("#email").val() == '') {
+            Common.alert("Please key in Email Address");
+            return false;
         }
     }
 
