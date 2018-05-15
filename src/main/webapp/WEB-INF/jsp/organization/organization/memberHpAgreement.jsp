@@ -13,6 +13,9 @@ $(document).ready(function() {
             Common.alert("<spring:message code='sys.msg.necessary' arguments='ID'/>");
             $("#memberID").focus();
         }
+
+        $("#agreementForm").attr("hidden", true);
+
         return false;
     }
 
@@ -24,9 +27,9 @@ $(document).ready(function() {
         return false;
     }
 
-    if("${message}" == "FAILED") {
+    /*if("${message}" == "FAILED") {
         Common.alert("${message}");
-    }
+    }*/
 
     var isMobile = false;
     console.log(isMobile);
@@ -66,10 +69,25 @@ console.log("accept");
         var stus = result.stus;
 
         if(cnfm == "0" && cnfm_dt == "1900-01-01" && stus == "44") {
+            // Update applicant status
             Common.ajax("GET", "/organization/updateHpCfm.do", {choice:"Y"}, function(result) {
                 if(result.message == "success.") {
                     Common.alert("Application successful.");
                 }
+
+                // Send reminder SMS
+                /*var successMsg = "Thank you for signing up as Coway Malaysia Health Planner. \n" +
+                                         "Kindly proceed to make payment of RM120 and supporting documents within 7 days from application date to complete your Health Planner registration. "+
+                                         "Thank you.";
+
+                if($("#mobileNo").val() != "") {
+                    var rTelNo = $("#mobileNo").val();
+
+                    Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:rTelNo , msg :cnfmSms} , function(result) {
+                        console.log("sms.");
+                        console.log( result);
+                    });
+                }*/
             });
         } else if(cnfm != "0" && cnfm_dt != "1900-01-01" && stus == "44") {
             Common.alert("Member has already accepted agreement.");
@@ -170,7 +188,7 @@ input {
 
     <!--  2018-05-04 - LaiKW - Start
     - Add TNC and personal data protection agreement -->
-    <div style="padding-top:1%; padding-left: 5%; padding-right: 5%">
+    <div id="acknowledgementDiv" name="acknowledgementDiv" style="padding-top:1%; padding-left: 5%; padding-right: 5%">
         <label for="acknowledgeAgreement">
             <input type="checkbox" id="acknowledgeAgreement" name="acknowledgeAgreement" value="1" />
             I hereby acknowledged that I have read and understood the terms and conditions as stated
@@ -179,7 +197,7 @@ input {
         </label>
     </div>
 
-    <div style="padding-top:1%; padding-bottom:1%; padding-left: 5%; padding-right: 5%">
+    <div id="personalDataDiv" name="personalDataDiv" style="padding-top:1%; padding-bottom:1%; padding-left: 5%; padding-right: 5%">
         <label for="personalDataAgreement">
             <input type="checkbox" id="personalDataAgreement" name="personalDataAgreement" value="1" />
             I hereby agree and consent that my personal data may be collected, used, processed and

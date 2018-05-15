@@ -2255,4 +2255,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public void updateHpCfm(Map<String, Object> params) throws Exception {
 	    memberListMapper.updateHpCfm(params);
 	}
+
+	@Override
+	public EgovMap getHPCtc(Map<String, Object> params) {
+	    return memberListMapper.getHPCtc(params);
+	}
 }

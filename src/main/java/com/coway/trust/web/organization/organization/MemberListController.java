@@ -1440,12 +1440,13 @@ public class MemberListController {
 	        } else {
 	            HttpSession session = sessionHandler.getCurrentSession();
 	            session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
+
+	            model.addAttribute("memberID", params.get("MemberID"));
+	            model.addAttribute("identification", params.get("Identification"));
 	        }
 
-	        model.addAttribute("memberID", params.get("MemberID"));
-	        model.addAttribute("identification", params.get("Identification"));
 	        model.addAttribute("status", status);
-	        model.addAttribute("message", message);
+            model.addAttribute("message", message);
 	        return "organization/organization/memberHpAgreement";
 	    }
 
@@ -1516,6 +1517,21 @@ public class MemberListController {
 
 	        return ResponseEntity.ok(message);
 		}
+
+	      @RequestMapping(value = "/getHPCtc", method = RequestMethod.GET)
+	        public ResponseEntity <Map> getHPCtc(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+	            logger.debug("==================== getHPCtc ====================");
+
+	            EgovMap item = new EgovMap();
+	            item = (EgovMap) memberListService.getHPCtc(params);
+
+	            Map<String, Object> hpCtc = new HashMap();
+	            hpCtc.put("mobile", item.get("mobile"));
+	            hpCtc.put("email", item.get("email"));
+
+	            return ResponseEntity.ok(hpCtc);
+	        }
 		// Kit Wai - End - 20180428
 
 }

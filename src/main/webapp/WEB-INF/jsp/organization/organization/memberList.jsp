@@ -185,6 +185,36 @@ function fn_hpMemRegisPop(){
 	        	 } else {
 	        		 Common.alert(" Health Planner registration has been completed. <br/>Member Code : "+membercode+"  to  "+ result.message );
 	        		 fn_memberListSearch();
+
+	        		 var newMemCode = result.message;
+
+	        		 var today = new Date();
+	        		 var dd = today.getDate();
+	        		 var mm = today.getMonth() + 1;
+	        		 var yy = today.getFullYear();
+	        		 if(dd < 10) {
+	        			 dd = '0' + dd;
+	        		 }
+	        		 if(mm < 10) {
+	        			 mm = '0' + mm;
+	        		 }
+	        		 today = dd + '/' + mm + '/' + yy;
+
+	        		// Construct approved SMS
+                     var apprSms = "RM0.00 COWAY: WELCOME to COWAY family! " +
+                                          "Your application for COWAY HP is completed. Your COWAY HP code " + newMemCode + " is ACTIVATED on " + today + ". TQ!";
+
+                     Common.ajax("GET", "/organization/getHPCtc", {src: "member", memCode: newMemCode}, function(result1) {
+                    	 var mobile = result1.mobile;
+                    	 //var email = result1.email;
+
+                         if(mobile != "") {
+                             Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:mobile , msg :apprSms} , function(result) {
+                                 console.log("sms.");
+                                 console.log( result);
+                             });
+                         }
+                     })
 	        	 }
 	         }
 
@@ -202,8 +232,38 @@ function fn_RejectHPMem(){
 	        	   Common.ajax("GET", "/organization/hpMemReject.do", {memberId:memberid ,memberType:memberType, nric:nric }, function(result) {
 						if(result.message == "success"){
 							  Common.alert("Success to Reject to the HP Applicant :" + membercode);
+
+							  var today = new Date();
+			                   var dd = today.getDate();
+			                   var mm = today.getMonth() + 1;
+			                   var yy = today.getFullYear();
+			                   if(dd < 10) {
+			                       dd = '0' + dd;
+			                   }
+			                   if(mm < 10) {
+			                       mm = '0' + mm;
+			                   }
+			                   today = dd + '/' + mm + '/' + yy;
+
+			                    // Construct approved SMS
+			                   var apprSms = "RM0.00 COWAY: Sorry to inform that your application for " +
+			                                        "COWAY HP has been REJECTED on " + today + ". Kindly refer to your sponsor for enquiry. TQ!";
+
+			                   Common.ajax("GET", "/organization/getHPCtc", {src: "aplicant", memCode: membercode}, function(result1) {
+			                       var mobile = result1.mobile;
+			                       //var email = result1.email;
+
+			                       if(mobile != "") {
+			                           Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:mobile , msg :apprSms} , function(result) {
+			                               console.log("sms.");
+			                               console.log( result);
+			                           });
+			                       }
+			                   })
 							}
 						});
+
+
 	        } else {
 	            Common.alert("Only available to entry Pending is in a case of Status");
 	        }

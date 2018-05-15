@@ -160,4 +160,6 @@ public interface MemberListService {
 
     void updateHpCfm(Map<String, Object> params) throws Exception;
 
+    EgovMap getHPCtc(Map<String, Object> params);
+
 }

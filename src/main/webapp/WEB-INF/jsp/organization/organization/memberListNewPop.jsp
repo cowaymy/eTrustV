@@ -63,7 +63,6 @@ function fn_memberSave(){
 
                             if($("#email").val() != "") {
                                 var recipient = $("#email").val();
-                                var file = "/resources/report/dev/agreement/CowayHealthPlannerAgreement.pdf";
 
                                 var url = "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId;
 
@@ -396,7 +395,7 @@ $(document).ready(function() {
     	//modify hgham 2017-12-25  주석 처리
     	//doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
-	createAUIGridDoc();
+
 	fn_docSubmission();
 	fn_departmentCode('2');  //modify  hgham 25-12 -2017    as is code  fn_departmentCode();
 
@@ -455,6 +454,10 @@ $(document).ready(function() {
      if( $("#userType").val() == "1") {
         $("#memberType option[value=2803]").attr('selected', 'selected');
         $('#memberType').attr("disabled", true);
+
+        $('#documentSub').attr("hidden", true);
+     } else {
+    	 createAUIGridDoc();
      }
 
 
@@ -1074,7 +1077,7 @@ function autofilledbyNRIC(){
 <ul class="tap_type1 num4">
     <li><a href="#" class="on">Basic Info</a></li>
     <li><a href="#">Spouse Info</a></li>
-    <li><a href="#">Document Submission</a></li>
+    <li><a href="#" id="documentSub">Document Submission</a></li>
     <li><a href="#">Member Address</a></li>
 </ul>
 
