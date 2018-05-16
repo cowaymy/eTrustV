@@ -376,7 +376,7 @@ function fn_departmentCode(value){
 
 }
 $(document).ready(function() {
-
+console.log("ready");
 	//doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','country', 'S', '');
 
     //doGetComboAddr('/common/selectAddrSelCodeList.do', 'country' , '' , '','national', 'S', '');
@@ -395,7 +395,7 @@ $(document).ready(function() {
     	//modify hgham 2017-12-25  주석 처리
     	//doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
     });
-
+    createAUIGridDoc();
 	fn_docSubmission();
 	fn_departmentCode('2');  //modify  hgham 25-12 -2017    as is code  fn_departmentCode();
 
@@ -426,6 +426,8 @@ $(document).ready(function() {
         var memberType = $("#memberType").val();
 
         if ( memberType ==  "2803") {
+            $('#grid_wrap_doc').attr("hidden", true);
+
             $('#course').attr("disabled", true);
             $('#email').prop('required', true);
             $('#mobileNo').prop('required', true);
@@ -467,10 +469,6 @@ $(document).ready(function() {
      if( $("#userType").val() == "1") {
         $("#memberType option[value=2803]").attr('selected', 'selected');
         $('#memberType').attr("disabled", true);
-
-        $('#documentSub').attr("hidden", true);
-     } else {
-    	 createAUIGridDoc();
      }
 
 
@@ -1090,7 +1088,7 @@ function autofilledbyNRIC(){
 <ul class="tap_type1 num4">
     <li><a href="#" class="on">Basic Info</a></li>
     <li><a href="#">Spouse Info</a></li>
-    <li><a href="#" id="documentSub">Document Submission</a></li>
+    <li><a href="#">Document Submission</a></li>
     <li><a href="#">Member Address</a></li>
 </ul>
 
