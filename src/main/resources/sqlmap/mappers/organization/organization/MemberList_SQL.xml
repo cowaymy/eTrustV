@@ -3256,6 +3256,7 @@ SELECT Limit1.MEM_ID MEM_ID  ,
        Limit1.C27 C27  ,
        Limit1.C28 C28  ,
        Limit1.BANK BANK  ,
+       Limit1.BANK_NAME BANK_NAME,
        Limit1.BANK_ACC_NO BANK_ACC_NO  ,
        Limit1.C29 C29  ,
        Limit1.C30 C30  ,
@@ -3330,6 +3331,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 Extent1.APLICNT_SPOUSE_OCPAT SPOUSE_OCPAT  ,
                 Extent1.APLICNT_SPOUSE_TEL_CNTC SPOUSE_TEL_CNTC  ,
                 Extent1.APLICNT_BANK_ID BANK  ,
+                Extent27.CODE || ' - ' || Extent27.NAME BANK_NAME,
                 Extent1.APLICNT_BANK_ACC_NO BANK_ACC_NO  ,
                 '' RANK  ,
                 '' TR_NO  ,
@@ -3630,6 +3632,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 --                LEFT JOIN SYS0013M Extent24   ON Extent24.CODE_ID = TO_NUMBER(Extent1.BIZ_TYPE,99999.99)
                 LEFT JOIN SYS0047M Extent25   ON Extent25.USER_FULL_NAME = Extent1.APLICNT_FULL_NAME
                 LEFT JOIN SYS0064M Extent26   ON Extent26.AREA_ID = Extent1.AREA_ID
+                LEFT JOIN SYS0004M Extent27   ON Extent1.APLICNT_BANK_ID = Extent27.BANK_ID and 1 = Extent27.STUS_CODE_ID
+                LEFT JOIN ORG0014D Extent28   ON Extent27.BANK_ID = Extent28.Bank_ID and 848 = Extent28.TYPE_ID and 1 = Extent28.STUS_CODE_ID
           WHERE  Extent1.APLCTN_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
@@ -4278,6 +4282,15 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             from ORG0001D
             where MEM_CODE = #{memCode}
         </if>
+      </select>
+
+      <select id="verifyAccess" parameterType="Map" resultType="egovMap">
+        SELECT
+            COUNT(1) CNT
+        FROM ORG0003D
+        WHERE APLCTN_ID = #{memberID}
+            AND APLICNT_IDNTFC = #{identification}
+            AND APLICNT_NRIC = #{nric}
       </select>
 
 </mapper>

@@ -162,4 +162,6 @@ public interface MemberListService {
 
     EgovMap getHPCtc(Map<String, Object> params);
 
+    EgovMap verifyAccess(Map<String, Object> params);
+
 }

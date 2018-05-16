@@ -249,4 +249,6 @@ public interface MemberListMapper {
 	void updateHpCfm(Map<String, Object> params) throws Exception;
 
 	EgovMap getHPCtc(Map<String, Object> params);
+
+	EgovMap verifyAccess(Map<String, Object> params);
 }

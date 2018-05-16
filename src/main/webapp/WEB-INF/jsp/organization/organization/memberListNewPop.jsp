@@ -431,6 +431,19 @@ $(document).ready(function() {
             $('#mobileNo').prop('required', true);
             $('#emailLbl').append("<span class='must'>*</span>");
             $('#mobileNoLbl').append("<span class='must'>*</span>");
+
+            $("#apprStusText").attr("disabled", true);
+            $("#apprStusCombo").attr("disabled", true);
+            $("#religion").attr("disabled", true);
+            $("#course").attr("disabled", true);
+            $("#totalVacation").attr("disabled", true);
+            $("#applicationStatus").attr("disabled", true);
+            $("#remainVacation").attr("disabled", true);
+            $("#searchdepartment").attr("disabled", true);
+            $("#searchSubDept").attr("disabled", true);
+            $("#educationLvl").attr("disabled", true);
+            $("#language").attr("disabled", true);
+            $("#trNo").attr("disabled", true);
         } else {
             $('#course').removeAttr('disabled');
         }
@@ -1267,7 +1280,7 @@ function autofilledbyNRIC(){
 <tr>
     <th scope="row">e-Approval Status</th>
     <td colspan="5">
-    <input type="text" title="" placeholder="e-Approval Status" class="w100p" />
+    <input type="text" id="apprStusText" name="apprStusText" title="" placeholder="e-Approval Status" class="w100p" />
     </td>
 </tr>
 <tr>
@@ -1282,7 +1295,7 @@ function autofilledbyNRIC(){
     </td>
     <th scope="row">e-Approval Status</th>
     <td colspan="2">
-    <select class="w100p">
+    <select class="w100p" id="apprStusCombo" name="apprStusCombo">
         <option value="">Choose One</option>
         <option value="">Pending</option>
         <option value="">Approved</option>
@@ -1298,7 +1311,7 @@ function autofilledbyNRIC(){
     </td>
     <th scope="row">Total Vacation</th>
     <td colspan="2">
-    <input type="text" title="" placeholder="Total Vacation" class="w100p" />
+    <input type="text" id="totalVacation" name="totalVacation" title="" placeholder="Total Vacation" class="w100p" />
     </td>
 </tr>
 <tr>
@@ -1316,7 +1329,7 @@ function autofilledbyNRIC(){
     </td>
     <th scope="row">Remain Vacation</th>
     <td colspan="2">
-    <input type="text" title="" placeholder="Remain Vacation" class="w100p" />
+    <input type="text" id="remainVacation" name="remainVacation" title="" placeholder="Remain Vacation" class="w100p" />
     </td>
 </tr>
 <tr id = "trTrainee" >

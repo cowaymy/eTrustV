@@ -2260,4 +2260,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public EgovMap getHPCtc(Map<String, Object> params) {
 	    return memberListMapper.getHPCtc(params);
 	}
+
+	@Override
+    public EgovMap verifyAccess(Map<String, Object> params) {
+        return memberListMapper.verifyAccess(params);
+    }
 }

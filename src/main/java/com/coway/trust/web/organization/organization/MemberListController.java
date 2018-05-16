@@ -1391,147 +1391,165 @@ public class MemberListController {
 			return ResponseEntity.ok(codeList);
 		}
 
-	    // Agreement screen with custom login
-		// Kit Wai - Start - 20180428
-		@RequestMapping(value = "/getApplicantInfo", method = RequestMethod.GET)
-		public ResponseEntity <Map> validateHpStatus(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+    // Agreement screen with custom login
+    // Kit Wai - Start - 20180428
+    @RequestMapping(value = "/getApplicantInfo", method = RequestMethod.GET)
+    public ResponseEntity<Map> validateHpStatus(@RequestParam Map<String, Object> params, HttpServletRequest request,
+            ModelMap model) {
 
-		    logger.debug("==================== getApplicantInfo ====================");
+        logger.debug("==================== getApplicantInfo ====================");
 
-		    EgovMap item = new EgovMap();
-		    item = (EgovMap) memberListService.validateHpStatus(params);
+        EgovMap item = new EgovMap();
+        item = (EgovMap) memberListService.validateHpStatus(params);
 
-		    Map<String, Object> aplicntStatus = new HashMap();
-		    aplicntStatus.put("id", item.get("aplctnId"));
-		    aplicntStatus.put("idntfc", item.get("idntfc"));
-		    aplicntStatus.put("stus", item.get("stusId"));
-		    aplicntStatus.put("cnfm", item.get("cnfm"));
-		    aplicntStatus.put("cnfm_dt", item.get("cnfmDt"));
+        Map<String, Object> aplicntStatus = new HashMap();
+        aplicntStatus.put("id", item.get("aplctnId"));
+        aplicntStatus.put("idntfc", item.get("idntfc"));
+        aplicntStatus.put("stus", item.get("stusId"));
+        aplicntStatus.put("cnfm", item.get("cnfm"));
+        aplicntStatus.put("cnfm_dt", item.get("cnfmDt"));
 
-		    return ResponseEntity.ok(aplicntStatus);
-		}
+        return ResponseEntity.ok(aplicntStatus);
+    }
 
-		@RequestMapping(value = "/agreementListing.do")
-	    public String agreementListing(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+    @RequestMapping(value = "/agreementListing.do")
+    public String agreementListing(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
-	        logger.debug("==================== agreementListing.do ====================");
+        logger.debug("==================== agreementListing.do ====================");
 
-	        // Custom login checking based on URL input
+        // Custom login checking based on URL input
 
-	        Precondition.checkNotNull(params.get("MemberID"), messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "Member ID" }));
+        Precondition.checkNotNull(params.get("MemberID"),
+                messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "Member ID" }));
 
-	        String idntfc = ((String) params.get("MemberID")).substring(0, 5);
-	        String memberID = ((String) params.get("MemberID")).substring(5);
+        String idntfc = ((String) params.get("MemberID")).substring(0, 5);
+        String memberID = ((String) params.get("MemberID")).substring(5);
 
-	        logger.debug("Applicant ID : {}", memberID);
-	        logger.debug("User Type : {}", idntfc);
+        logger.debug("Applicant ID : {}", memberID);
+        logger.debug("User Type : {}", idntfc);
 
-	        params.put("MemberID", memberID);
-	        params.put("Identification", idntfc);
+        params.put("MemberID", memberID);
+        params.put("Identification", idntfc);
 
-	        LoginVO loginVO = loginService.getAplcntInfo(params);
+        LoginVO loginVO = loginService.getAplcntInfo(params);
 
-	        String message = "";
-	        String status = "";
+        String message = "";
+        String status = "";
 
-	        if (loginVO == null || loginVO.getUserId() == 0) {
-	            status = "FAILED";
-	            message = "Aplicant does not exist";
-	        } else {
-	            HttpSession session = sessionHandler.getCurrentSession();
-	            session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
+        if (loginVO == null || loginVO.getUserId() == 0) {
+            status = "FAILED";
+            message = "Aplicant does not exist";
+        } else {
+            HttpSession session = sessionHandler.getCurrentSession();
+            session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
 
-	            model.addAttribute("memberID", params.get("MemberID"));
-	            model.addAttribute("identification", params.get("Identification"));
-	        }
+            model.addAttribute("memberID", params.get("MemberID"));
+            model.addAttribute("identification", params.get("Identification"));
+        }
 
-	        model.addAttribute("status", status);
-            model.addAttribute("message", message);
-	        return "organization/organization/memberHpAgreement";
-	    }
+        model.addAttribute("status", status);
+        model.addAttribute("message", message);
+        return "organization/organization/memberHpAgreement";
+    }
 
-		@RequestMapping(value = "/updateHpCfm.do", method = RequestMethod.GET)
-	    public ResponseEntity<ReturnMessage> updateAplicntInfo(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+    @RequestMapping(value = "/updateHpCfm.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> updateAplicntInfo(@RequestParam Map<String, Object> params, ModelMap model)
+            throws Exception {
 
-		    logger.debug("==================== updateHpCfm.do ====================");
+        logger.debug("==================== updateHpCfm.do ====================");
 
-		    logger.debug("params {}", params);
+        logger.debug("params {}", params);
 
-	        //Session
-	        SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-	        params.put("userId", sessionVO.getUserId());
-	        if("Y".equals(params.get("choice"))) {
-	            params.put("cnfm", "1");
-	        } else {
-	            params.put("cnfm", "0");
-	            params.put("stusId", "6");
-	        }
+        // Session
+        SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+        params.put("userId", sessionVO.getUserId());
+        if ("Y".equals(params.get("choice"))) {
+            params.put("cnfm", "1");
+        } else {
+            params.put("cnfm", "0");
+            params.put("stusId", "6");
+        }
 
-	        //service
-	        memberListService.updateHpCfm(params);
+        // service
+        memberListService.updateHpCfm(params);
 
-	        ReturnMessage message = new ReturnMessage();
-	        message.setCode(AppConstants.SUCCESS);
-	        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-	        return ResponseEntity.ok(message);
-	    }
+        return ResponseEntity.ok(message);
+    }
 
-		@RequestMapping(value = "/sendEmail.do", method = RequestMethod.GET)
-		public ResponseEntity<ReturnMessage> sendEmail( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model , SessionVO session) {
+    @RequestMapping(value = "/sendEmail.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> sendEmail(@RequestParam Map<String, Object> params, HttpServletRequest request,
+            ModelMap model, SessionVO session) {
 
-		    logger.debug("==================== sendEmail.do ====================");
+        logger.debug("==================== sendEmail.do ====================");
 
-		    logger.debug("params {}", params);
+        logger.debug("params {}", params);
 
-		    // send email
-		    EmailVO email = new EmailVO();
-		    email.setTo((String) params.get("recipient"));
-		    email.setHtml(true);
-		    email.setSubject("Health Planner Agreement Confirmation");
+        // send email
+        EmailVO email = new EmailVO();
+        email.setTo((String) params.get("recipient"));
+        email.setHtml(true);
+        email.setSubject("Health Planner Agreement Confirmation");
 
-		    String url = (String) params.get("url");
-		    String msg = "Dear Sir/Madam, <br /><br />" +
-		                      "Thank you for register as Coway Health Planner. Please click the link below for confirmation of Health Planner Agreement. <br /><br />" +
-		                      "<a href='" + url + "' target='_blank' style='color:blue; font-weight:bold'> Verify Now</a><br /><br />" +
-		                      "Please note that you are able to view this Coway Health Planner Agreement for agreement confirmation within 7 days from your application date to complete your Health Planner registration.<br /><br />" +
-		                      "This is a system generated email, please do not reply.<br /><br />" +
-		                      "Thank you." +
-		                      "<br /><br /><br />" +
-		                      "Best Regards,<br /><b>Coway Malaysia</b>";
+        String url = (String) params.get("url");
+        String msg = "Dear Sir/Madam, <br /><br />"
+                + "Thank you for register as Coway Health Planner. Please click the link below for confirmation of Health Planner Agreement. <br /><br />"
+                + "<a href='" + url
+                + "' target='_blank' style='color:blue; font-weight:bold'> Verify Now</a><br /><br />"
+                + "Please note that you are able to view this Coway Health Planner Agreement for agreement confirmation within 7 days from your application date to complete your Health Planner registration.<br /><br />"
+                + "This is a system generated email, please do not reply.<br /><br />" + "Thank you."
+                + "<br /><br /><br />" + "Best Regards,<br /><b>Coway Malaysia</b>";
 
-		    email.setText(msg);
+        email.setText(msg);
 
-	        boolean isResult = false;
-	        isResult = adaptorService.sendEmail(email, false);
+        boolean isResult = false;
+        isResult = adaptorService.sendEmail(email, false);
 
-	        ReturnMessage message = new ReturnMessage();
+        ReturnMessage message = new ReturnMessage();
 
-	        if(isResult == true){
-	            message.setCode(AppConstants.SUCCESS);
-	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-	        }else{
-	            message.setCode(AppConstants.FAIL);
-	            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-	        }
+        if (isResult == true) {
+            message.setCode(AppConstants.SUCCESS);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+        } else {
+            message.setCode(AppConstants.FAIL);
+            message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+        }
 
-	        return ResponseEntity.ok(message);
-		}
+        return ResponseEntity.ok(message);
+    }
 
-	      @RequestMapping(value = "/getHPCtc", method = RequestMethod.GET)
-	        public ResponseEntity <Map> getHPCtc(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+    @RequestMapping(value = "/getHPCtc", method = RequestMethod.GET)
+    public ResponseEntity<Map> getHPCtc(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
-	            logger.debug("==================== getHPCtc ====================");
+        logger.debug("==================== getHPCtc ====================");
 
-	            EgovMap item = new EgovMap();
-	            item = (EgovMap) memberListService.getHPCtc(params);
+        EgovMap item = new EgovMap();
+        item = (EgovMap) memberListService.getHPCtc(params);
 
-	            Map<String, Object> hpCtc = new HashMap();
-	            hpCtc.put("mobile", item.get("mobile"));
-	            hpCtc.put("email", item.get("email"));
+        Map<String, Object> hpCtc = new HashMap();
+        hpCtc.put("mobile", item.get("mobile"));
+        hpCtc.put("email", item.get("email"));
 
-	            return ResponseEntity.ok(hpCtc);
-	        }
-		// Kit Wai - End - 20180428
+        return ResponseEntity.ok(hpCtc);
+    }
+
+    @RequestMapping(value = "/verifyAccess", method = RequestMethod.GET)
+    public ResponseEntity<Map> verifyAccess(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+        logger.debug("==================== verifyAccess ====================");
+        logger.debug("params{} " + params);
+
+        EgovMap item = new EgovMap();
+        item = (EgovMap) memberListService.verifyAccess(params);
+
+        Map<String, Object> access = new HashMap();
+        access.put("cnt", item.get("cnt"));
+
+        return ResponseEntity.ok(access);
+    }
+    // Kit Wai - End - 20180428
 
 }
