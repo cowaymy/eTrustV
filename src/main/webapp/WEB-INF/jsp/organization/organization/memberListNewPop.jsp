@@ -426,7 +426,7 @@ console.log("ready");
         var memberType = $("#memberType").val();
 
         if ( memberType ==  "2803") {
-            $('#grid_wrap_doc').attr("hidden", true);
+            //$('#grid_wrap_doc').attr("hidden", true);
 
             $('#course').attr("disabled", true);
             $('#email').prop('required', true);
@@ -469,6 +469,8 @@ console.log("ready");
      if( $("#userType").val() == "1") {
         $("#memberType option[value=2803]").attr('selected', 'selected');
         $('#memberType').attr("disabled", true);
+        
+        $('#grid_wrap_doc').attr("hidden", true);
      }
 
 
