@@ -28,7 +28,7 @@
                                     return false;
                                }
 
-                               var SRV_FILTER_STK_ID =    AUIGrid.getCellValue(myDetailGridIDInActive, rowIndex, "srvFilterStkId");
+                               var SRV_FILTER_STK_ID =    AUIGrid.getCellValue(myDetailGridIDActive, rowIndex, "srvFilterStkId");
                                $("#orderInfoForm #srvFilterStkId").val(SRV_FILTER_STK_ID);
 
                               //Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
