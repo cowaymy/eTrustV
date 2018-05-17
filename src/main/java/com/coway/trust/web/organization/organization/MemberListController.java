@@ -1465,6 +1465,7 @@ public class MemberListController {
         params.put("userId", sessionVO.getUserId());
         if ("Y".equals(params.get("choice"))) {
             params.put("cnfm", "1");
+            params.put("stusId", "102");
         } else {
             params.put("cnfm", "0");
             params.put("stusId", "6");
