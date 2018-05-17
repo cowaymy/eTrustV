@@ -256,7 +256,7 @@
     <select id="getAplcntInfo" parameterType="Map" resultType="loginVO">
         SELECT
             APLCTN_ID USERID,
-            APLICNT_NAME USERNAME,
+            APLICNT_CODE USERNAME,
             APLICNT_FULL_NAME USERFULLNAME,
             APLICNT_EMAIL USEREMAIL,
             STUS_ID USERSTATUSID,
