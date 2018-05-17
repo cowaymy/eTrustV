@@ -1189,6 +1189,7 @@ function fn_openDivPopDown(){
                         <td>
                             <select id="new_cardType" name="new_cardType" class="w100p" disabled>
                                 <option value="">Choose One</option>
+                                <option value="All">All</option>
                                 <option value="Visa Card">Visa Card</option>
                                 <option value="Master Card">Master Card</option>
                             </select>
