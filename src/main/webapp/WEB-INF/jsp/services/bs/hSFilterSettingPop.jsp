@@ -28,7 +28,7 @@
                                     return false;
                                }
 
-                               var SRV_FILTER_STK_ID =    AUIGrid.getCellValue(myDetailGridIDActive, rowIndex, "srvFilterStkId");
+                               var SRV_FILTER_STK_ID =    AUIGrid.getCellValue(myDetailGridIDInActive, rowIndex, "srvFilterStkId");
                                $("#orderInfoForm #srvFilterStkId").val(SRV_FILTER_STK_ID);
 
                               //Common.popupDiv("/services/bs/hsBasicInfoPop.do?MOD=EDIT", $("#popEditForm").serializeJSON(), null , true , '');
@@ -413,12 +413,14 @@
 
 
 
-       function fn_getAddFilter() {
+/*        function fn_getAddFilter() {
             Common.popupDiv("/services/bs/hSAddFilterSetPop.do?&salesOrdId=" + ${hSOrderView.ordId} +"&stkId="+ ${hSOrderView.stkId} , null, null , true , '_AddFilterPop');
-       }
+       } */
 
 
-
+       function fn_getAddFilter() {
+           Common.popupDiv("/services/bs/hSAddFilterSetPop.do",{salesOrdId:'${hSOrderView.ordId}' ,stkId:'${hSOrderView.stkId}'} , null, null , true , '_AddFilterPop');
+      }
 
 
 		$(document).ready(function() {
