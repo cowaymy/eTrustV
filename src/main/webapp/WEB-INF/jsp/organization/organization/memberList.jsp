@@ -171,7 +171,7 @@ function fn_hpMemRegisPop(){
     };
 
     if (memberType == "2803" ) {
-    	if ( statusName == "Pending" ) {
+    	if ( statusName == "Ready" ) {
 
 	     Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType, nric:nric, MemberCode : membercode }, function(result) {
 	         console.log("성공.");
@@ -220,7 +220,7 @@ function fn_hpMemRegisPop(){
 
 	     });
         } else {
-	        Common.alert("Only available to entry Pending is in a case of Status");
+	        Common.alert("Only available to entry Ready is in a case of Status");
 	    }
     } else {
     	Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
