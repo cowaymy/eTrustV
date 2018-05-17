@@ -4278,7 +4278,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         </if>
         <if test="src == 'member' ">
             TEL_MOBILE MOBILE,
-            EMAIL,
+            EMAIL
             from ORG0001D
             where MEM_CODE = #{memCode}
         </if>
