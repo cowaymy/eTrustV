@@ -128,6 +128,7 @@ public class MemberListController {
 		model.addAttribute("status", status);
 		model.addAttribute("userBranch", userBranch);
 		model.addAttribute("user", user);
+		model.addAttribute("loginUserType", sessionVO.getUserTypeId());
 
 		// 호출될 화면
 		return "organization/organization/memberList";
@@ -1550,6 +1551,28 @@ public class MemberListController {
         access.put("cnt", item.get("cnt"));
 
         return ResponseEntity.ok(access);
+    }
+
+    @RequestMapping(value = "/checkBankAcc", method = RequestMethod.GET)
+    public ResponseEntity<Map> checkBankAcc(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+        logger.debug("==================== checkBankAcc ====================");
+
+        Map<String, Object> bankAccCheck = new HashMap();
+
+        EgovMap item = new EgovMap();
+        params.put("srcM", "1");
+        item = (EgovMap) memberListService.checkBankAcc(params);
+        bankAccCheck.put("cnt1", item.get("cnt"));
+
+        params.remove("srcM");
+
+        EgovMap item2 = new EgovMap();
+        params.put("srcA", "1");
+        item2 = (EgovMap) memberListService.checkBankAcc(params);
+        bankAccCheck.put("cnt2", item.get("cnt"));
+
+        return ResponseEntity.ok(bankAccCheck);
     }
     // Kit Wai - End - 20180428
 

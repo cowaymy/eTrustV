@@ -6,14 +6,16 @@ var myGridID;
 var grpOrgList = new Array(); // Group Organization List
 var orgList = new Array(); // Organization List
 
+var selectedGridValue;
+
 function fn_memberListNew(){
-	 Common.popupDiv("/organization/selectMemberListNewPop.do?isPop=true", "searchForm"  ,null , true  ,'fn_memberListNew');
+     Common.popupDiv("/organization/selectMemberListNewPop.do?isPop=true", "searchForm"  ,null , true  ,'fn_memberListNew');
 }
 
 function fn_memberListSearch(){
-	/* if ($("#memTypeCom").val() == '5' ) {
-		AUIGrid.showColumnByDataField(myGridID, "testResult");
-		AUIGrid.setColumnProp( myGridID, 6, { width : 130, visible : true } );
+    /* if ($("#memTypeCom").val() == '5' ) {
+        AUIGrid.showColumnByDataField(myGridID, "testResult");
+        AUIGrid.setColumnProp( myGridID, 6, { width : 130, visible : true } );
     } else {
         AUIGrid.setColumnProp( myGridID, 6, { width : 0, visible : false } );
     } */
@@ -24,18 +26,18 @@ function fn_memberListSearch(){
 
         var isTrainee = 0;
         for (var i=0; i<result.length; i++) {
-        	if (result[i]["membertype"] == 5) {
-        		isTrainee = 1;
-        	} else {
-        		result[i]["testResult"] = "";
-        	}
+            if (result[i]["membertype"] == 5) {
+                isTrainee = 1;
+            } else {
+                result[i]["testResult"] = "";
+            }
         }
 
         if (isTrainee != 0) {
-        	AUIGrid.showColumnByDataField(myGridID, "testResult");
+            AUIGrid.showColumnByDataField(myGridID, "testResult");
             AUIGrid.setColumnProp( myGridID, 6, { width : 130, visible : true } );
         } else {
-        	AUIGrid.setColumnProp( myGridID, 6, { width : 0, visible : false } );
+            AUIGrid.setColumnProp( myGridID, 6, { width : 0, visible : false } );
         }
 
         AUIGrid.setGridData(myGridID, result);
@@ -44,7 +46,7 @@ function fn_memberListSearch(){
 }
 
 function fn_excelDown(){
-	// type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+    // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
     GridCommon.exportTo("grid_wrap_memList", "xlsx", "MemberList");
 }
 
@@ -54,35 +56,35 @@ console.log( memberType )
 
 
 
-	if(val == '1'){
+    if(val == '1'){
         if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 ) {
-			 var jsonObj = {
-					     MemberID :memberid,
-			            MemberType : memberType
-			    };
-			console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1");
-			Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1", null ,null , true  ,'_fn_TerminateResignDiv');
-		} else {
+             var jsonObj = {
+                         MemberID :memberid,
+                        MemberType : memberType
+                };
+            console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1");
+            Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=1", null ,null , true  ,'_fn_TerminateResignDiv');
+        } else {
             Common.alert("Only available to entry with Terminate/Resign Request in regular type of member");
-		}
-	}else{
-	   if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 ) {
-	        var jsonObj = {
-	                 MemberID :memberid,
-	                MemberType : memberType
-	        };
-			console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2");
-	        Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2" , null ,null , true  ,'_fn_TerminateResignDiv');
-		} else {
-		    Common.alert("Only available to entry with Promote/Demote Request in regular type of member");
-		}
-	}
+        }
+    }else{
+       if (memberType == 1 || memberType == 2 || memberType == 3 || memberType == 4 ) {
+            var jsonObj = {
+                     MemberID :memberid,
+                    MemberType : memberType
+            };
+            console.log("MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2");
+            Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID="+memberid+"&MemberType="+memberType+"&codeValue=2" , null ,null , true  ,'_fn_TerminateResignDiv');
+        } else {
+            Common.alert("Only available to entry with Promote/Demote Request in regular type of member");
+        }
+    }
 
 }
 
 /*By KV start - requestVacationPop*/
 function fn_requestVacationPop(){
-	 var jsonObj = {
+     var jsonObj = {
              MemberID :memberid,
             MemberType : memberType
     };
@@ -111,12 +113,12 @@ function fn_requestVacationPop(){
 
     if ( memberType == 5 && (traineeType == 2 || traineeType == 3)) {
 
-    	//alert(testResult);
+        //alert(testResult);
 
-    	if ( testResult == 'Fail' || testResult == 'Absent' ) {
-    		Common.alert("Can't register the trainee due to test result in Fail/Absent");
-    		return;
-    	} else if ( testResult == '' || typeof(testResult) == 'undefined') {
+        if ( testResult == 'Fail' || testResult == 'Absent' ) {
+            Common.alert("Can't register the trainee due to test result in Fail/Absent");
+            return;
+        } else if ( testResult == '' || typeof(testResult) == 'undefined') {
             Common.alert("Please register the test result first");
             return;
         }
@@ -128,13 +130,13 @@ function fn_requestVacationPop(){
          if(result !="" ){
              //Common.alert(" New Cody registration has been completed from "+membercode+" to "+ result.message);
                  if ( traineeType == 2) {
-			        Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.message);
-			    }
+                    Common.alert(" Cody registration has been completed. "+membercode+" to "+ result.message);
+                }
 
-			    if ( traineeType == 3) {
-			        Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.message);
-			    }
-        	  fn_memberListSearch();
+                if ( traineeType == 3) {
+                    Common.alert(" CT  registration has been completed. "+membercode+" to "+ result.message);
+                }
+              fn_memberListSearch();
          }
      });
     }else {
@@ -144,12 +146,23 @@ function fn_requestVacationPop(){
 
 function fn_clickHpApproval(){
 
-	$("#aplcntCode").val(membercode);
+    $("#aplcntCode").val(membercode);
     $("#aplcntNRIC").val(nric);
 
     // Added checking if applicant agreed agreement - Kit Wai
     Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantValidateForm").serialize(), function(result) {
         console.log(result);
+
+        if(result.stus == "98" && result.cnfm == "1" && result.cnfm_dt != "1900-01-01") {
+            Common.confirm("Do you want to approve the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , fn_hpMemRegisPop );
+        } else if (result.stus == "44" && result.cnfm == "0" && result.cnfm_dt == "1900-01-01") {
+            Common.alert("Applicant has not accepted agreement.");
+        } else if(result.stus == "6") {
+            Common.alert("Aplicant has rejected agreement");
+        } else if(result.stus == "5") {
+            Common.alert("Aplicant has already been approved.");
+        }
+
 
         if(result.stus == "44" && result.cnfm == "0" && result.cnfm_dt == "1900-01-01") {
             Common.alert("Only accepted agreement applicants may become members.")
@@ -160,7 +173,7 @@ function fn_clickHpApproval(){
 }
 
 function fn_clickHpReject(){
-	  Common.confirm("Do you want to reject the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , fn_RejectHPMem );
+      Common.confirm("Do you want to reject the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , fn_RejectHPMem );
 }
 
 function fn_hpMemRegisPop(){
@@ -171,42 +184,42 @@ function fn_hpMemRegisPop(){
     };
 
     if (memberType == "2803" ) {
-    	if ( statusName == "Ready" ) {
+        if ( statusName == "Ready" ) {
 
-	     Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType, nric:nric, MemberCode : membercode }, function(result) {
-	         console.log("성공.");
-	         console.log( result);
+         Common.ajax("GET", "/organization/hpMemRegister.do", {memberId:memberid ,memberType:memberType, nric:nric, MemberCode : membercode }, function(result) {
+             console.log("성공.");
+             console.log( result);
 
-	         if(result !="" ){
-	        	 if (result.message == "There is no address information to the HP applicant code") {
-	        		 Common.alert(result.message);
-	        	 } else if (result.message.substr(0, 33) == "This member is already registered") {
-	        		 Common.alert(result.message);
-	        	 } else {
-	        		 Common.alert(" Health Planner registration has been completed. <br/>Member Code : "+membercode+"  to  "+ result.message );
-	        		 fn_memberListSearch();
+             if(result !="" ){
+                 if (result.message == "There is no address information to the HP applicant code") {
+                     Common.alert(result.message);
+                 } else if (result.message.substr(0, 33) == "This member is already registered") {
+                     Common.alert(result.message);
+                 } else {
+                     Common.alert(" Health Planner registration has been completed. <br/>Member Code : "+membercode+"  to  "+ result.message );
+                     fn_memberListSearch();
 
-	        		 var newMemCode = result.message;
+                     var newMemCode = result.message;
 
-	        		 var today = new Date();
-	        		 var dd = today.getDate();
-	        		 var mm = today.getMonth() + 1;
-	        		 var yy = today.getFullYear();
-	        		 if(dd < 10) {
-	        			 dd = '0' + dd;
-	        		 }
-	        		 if(mm < 10) {
-	        			 mm = '0' + mm;
-	        		 }
-	        		 today = dd + '/' + mm + '/' + yy;
+                     var today = new Date();
+                     var dd = today.getDate();
+                     var mm = today.getMonth() + 1;
+                     var yy = today.getFullYear();
+                     if(dd < 10) {
+                         dd = '0' + dd;
+                     }
+                     if(mm < 10) {
+                         mm = '0' + mm;
+                     }
+                     today = dd + '/' + mm + '/' + yy;
 
-	        		// Construct approved SMS
-                     var apprSms = "RM0.00 COWAY: WELCOME to COWAY family! " +
+                    // Construct approved SMS
+                     var apprSms = " COWAY: WELCOME to COWAY family! " +
                                           "Your application for COWAY HP is completed. Your COWAY HP code " + newMemCode + " is ACTIVATED on " + today + ". TQ!";
 
                      Common.ajax("GET", "/organization/getHPCtc", {src: "member", memCode: newMemCode}, function(result1) {
-                    	 var mobile = result1.mobile;
-                    	 //var email = result1.email;
+                         var mobile = result1.mobile;
+                         //var email = result1.email;
 
                          if(mobile != "") {
                              Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:mobile , msg :apprSms} , function(result) {
@@ -215,66 +228,63 @@ function fn_hpMemRegisPop(){
                              });
                          }
                      })
-	        	 }
-	         }
+                 }
+             }
 
-	     });
+         });
         } else {
-	        Common.alert("Only available to entry Ready is in a case of Status");
-	    }
+            Common.alert("Only available to entry Ready is in a case of Status");
+        }
     } else {
-    	Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
+        Common.alert("Only available to entry with HP Approval is in a case of HP Applicant");
     }
 }
 function fn_RejectHPMem(){
-	 if (memberType == "2803" ) {
-	        if ( statusName == "Pending" ) {
-	        	   Common.ajax("GET", "/organization/hpMemReject.do", {memberId:memberid ,memberType:memberType, nric:nric }, function(result) {
-						if(result.message == "success"){
-							  Common.alert("Success to Reject to the HP Applicant :" + membercode);
+     if (memberType == "2803" ) {
+    	 console.log($("#loginUserType").val());
+            if( (statusName == "Pending" && $("#loginUserType").val() != 6 ) || $("#loginUserType").val() == 6) {
+            	Common.ajax("GET", "/organization/hpMemReject.do", {memberId:memberid ,memberType:memberType, nric:nric }, function(result) {
+                    if(result.message == "success"){
+                          Common.alert("Successfully reject HP Applicant :" + membercode);
 
-							  var today = new Date();
-			                   var dd = today.getDate();
-			                   var mm = today.getMonth() + 1;
-			                   var yy = today.getFullYear();
-			                   if(dd < 10) {
-			                       dd = '0' + dd;
-			                   }
-			                   if(mm < 10) {
-			                       mm = '0' + mm;
-			                   }
-			                   today = dd + '/' + mm + '/' + yy;
+                          var today = new Date();
+                           var dd = today.getDate();
+                           var mm = today.getMonth() + 1;
+                           var yy = today.getFullYear();
+                           if(dd < 10) {
+                               dd = '0' + dd;
+                           }
+                           if(mm < 10) {
+                               mm = '0' + mm;
+                           }
+                           today = dd + '/' + mm + '/' + yy;
 
-			                    // Construct approved SMS
-			                   var apprSms = "RM0.00 COWAY: Sorry to inform that your application for " +
-			                                        "COWAY HP has been REJECTED on " + today + ". Kindly refer to your sponsor for enquiry. TQ!";
+                            // Construct approved SMS
+                           var apprSms = " COWAY: Sorry to inform that your application for " +
+                                                "COWAY HP has been REJECTED on " + today + ". Kindly refer to your sponsor for enquiry. TQ!";
 
-			                   Common.ajax("GET", "/organization/getHPCtc", {src: "aplicant", memCode: membercode}, function(result1) {
-			                       var mobile = result1.mobile;
-			                       //var email = result1.email;
+                           Common.ajax("GET", "/organization/getHPCtc", {src: "aplicant", memCode: membercode}, function(result1) {
+                               var mobile = result1.mobile;
+                               //var email = result1.email;
 
-			                       if(mobile != "") {
-			                           Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:mobile , msg :apprSms} , function(result) {
-			                               console.log("sms.");
-			                               console.log( result);
-			                           });
-			                       }
-			                   })
-							}
-						});
-
-
-	        } else {
-	            Common.alert("Only available to entry Pending is in a case of Status");
-	        }
-	    } else {
-	        Common.alert("Only available to entry with HP Reject is in a case of HP Applicant");
-	    }
+                               if(mobile != "") {
+                                   Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:mobile , msg :apprSms} , function(result) {
+                                       console.log("sms.");
+                                       console.log( result);
+                                   });
+                               }
+                           })
+                        }
+                    });
+            } else {
+                Common.alert("Only available to entry Pending is in a case of Status");
+            }
+        } else {
+            Common.alert("Only available to entry with HP Reject is in a case of HP Applicant");
+        }
 }
 
 /*By KV end - traineeToMemberRegistPop*/
-
-
 
 //Start AUIGrid --start Load Page- user 1st click Member
 $(document).ready(function() {
@@ -285,14 +295,14 @@ $(document).ready(function() {
     AUIGrid.setSelectionMode(myGridID, "singleRow");
 
  // 셀 더블클릭 이벤트 바인딩
-	  AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-	        //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
-	        Common.popupDiv("/organization/selectMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-	    });
+      AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+            //alert(event.rowIndex+ " - double clicked!! : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
+            Common.popupDiv("/organization/selectMemberListDetailPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
+        });
 
      AUIGrid.bind(myGridID, "cellClick", function(event) {
         //alert(event.rowIndex+ " -cellClick : " + event.value + " - rowValue : " + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid"));
-    	memberid =  AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid");
+        memberid =  AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid");
         memberType = AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype");
         membercode = AUIGrid.getCellValue(myGridID, event.rowIndex, "membercode");
         statusName = AUIGrid.getCellValue(myGridID, event.rowIndex, "statusName");
@@ -300,7 +310,7 @@ $(document).ready(function() {
         nric = AUIGrid.getCellValue(myGridID, event.rowIndex, "nric");
         memberName = AUIGrid.getCellValue(myGridID, event.rowIndex, "name");
         testResult = AUIGrid.getCellValue(myGridID, event.rowIndex, "testResult");
-    	//Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
+        //Common.popupDiv("/organization/requestTerminateResign.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
     });
 
     /*By KV Start  - Position button disable function in selection*/
@@ -310,53 +320,53 @@ $(document).ready(function() {
  });
 
 function createAUIGrid() {
-		//AUIGrid 칼럼 설정
-		var columnLayout = [ {
-		    dataField : "codename",
-		    headerText : "Type Name",
-		    editable : true,
-		    width : 130
-		}, {
-		    dataField : "memberid",
-		    headerText : "MemberID",
-		    editable : false,
-		    width : 0
-		}, {
-		    dataField : "membercode",
-		    headerText : "Member Code",
-		    editable : false,
-		    width : 130
-		}, {
-		    dataField : "name",
-		    headerText : "Member Name",
-		    editable : false,
-		    width : 130
-		}, {
-		    dataField : "nric",
-		    headerText : "Member NRIC",
-		    editable : false,
-		    style : "my-column",
-		    width : 130
-		}, {
-		    dataField : "statusName",
-		    headerText : "Status",
-		    editable : false,
-		    width : 130
-		}, {
+        //AUIGrid 칼럼 설정
+        var columnLayout = [ {
+            dataField : "codename",
+            headerText : "Type Name",
+            editable : true,
+            width : 130
+        }, {
+            dataField : "memberid",
+            headerText : "MemberID",
+            editable : false,
+            width : 0
+        }, {
+            dataField : "membercode",
+            headerText : "Member Code",
+            editable : false,
+            width : 130
+        }, {
+            dataField : "name",
+            headerText : "Member Name",
+            editable : false,
+            width : 130
+        }, {
+            dataField : "nric",
+            headerText : "Member NRIC",
+            editable : false,
+            style : "my-column",
+            width : 130
+        }, {
+            dataField : "statusName",
+            headerText : "Status",
+            editable : false,
+            width : 130
+        }, {
             dataField : "testResult",
             headerText : "Test Result",
             editable : false,
             width : 0,
             visible : false
         }, {
-		    dataField : "updated",
-		    headerText : "Last Update",
-		    editable : false,
-		    width : 130
+            dataField : "updated",
+            headerText : "Last Update",
+            editable : false,
+            width : 130
 
-		},
-		/*BY KV Position*/
-		{
+        },
+        /*BY KV Position*/
+        {
             dataField : "positionName",
             headerText : "Position Desc",
             editable : false,
@@ -367,13 +377,13 @@ function createAUIGrid() {
             dataField : "membertype",
             headerText : "Member Type",
             width : 0
-		},
-		{
+        },
+        {
             dataField : "traineeType",
             headerText : "Trainee Type",
             width : 0
         }
-		/* this is for put EDIT button in grid ,
+        /* this is for put EDIT button in grid ,
         {
             dataField : "undefined",
             headerText : "Edit",
@@ -392,10 +402,10 @@ function createAUIGrid() {
         } */];
 
 
-		 // 그리드 속성 설정
+         // 그리드 속성 설정
         var gridPros = {
 
-        		 usePaging           : true,         //페이징 사용
+                 usePaging           : true,         //페이징 사용
                  pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
                  editable            : false,
                  fixedColumnCount    : 1,
@@ -449,9 +459,9 @@ var gridPros = {
 
 
 function fn_memberEditPop(){
-	     //Common.popupDiv("/organization/memberListEditPop.do?isPop=true", "searchForm");
-	     Common.popupDiv("/organization/memberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
-	     //Common.popupDiv("/organization/memberListEditPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
+         //Common.popupDiv("/organization/memberListEditPop.do?isPop=true", "searchForm");
+         Common.popupDiv("/organization/memberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
+         //Common.popupDiv("/organization/memberListEditPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
 }
 
 function fn_branchEditPop(){
@@ -465,29 +475,51 @@ function fn_branchEditPop(){
 
 /*By KV start - Position - This is for display Position data only in Position selection.*/
 function fn_searchPosition(selectedData){
-	$("#position option").remove();
-	  if(selectedData == "2" || selectedData =="3" || selectedData =="1"){
-		   $("#position").attr("disabled",false);   /*position button enable*/
-		   Common.ajax("GET",
-				    "/organization/positionList.do",
-				    "memberType="+selectedData,
-				    function(result) {
-				    	/* By KV - user able use "select account" */
-				    	$("#position").append("<option value=''>Select Position</option> " );
-				        for(var idx=0; idx < result.length ; idx++){
-				            $("#position").append("<option value='" +result[idx].positionLevel+ "'> "+result[idx].positionName+ "</option>");
-				        }
-				    }
-		   );
-	   }else{
-		   /*position button disable*/
-		   $("#position").attr("disabled",true);
-		   /* If you want to set position default value remove under comment.*/
-		   $("#position").append("<option value=''>Select Account</option> " );
+    $("#position option").remove();
+      if(selectedData == "2" || selectedData =="3" || selectedData =="1"){
+           $("#position").attr("disabled",false);   /*position button enable*/
+           Common.ajax("GET",
+                    "/organization/positionList.do",
+                    "memberType="+selectedData,
+                    function(result) {
+                        /* By KV - user able use "select account" */
+                        $("#position").append("<option value=''>Select Position</option> " );
+                        for(var idx=0; idx < result.length ; idx++){
+                            $("#position").append("<option value='" +result[idx].positionLevel+ "'> "+result[idx].positionName+ "</option>");
+                        }
+                    }
+           );
+       }else{
+           /*position button disable*/
+           $("#position").attr("disabled",true);
+           /* If you want to set position default value remove under comment.*/
+           $("#position").append("<option value=''>Select Account</option> " );
 
-	   }
+       }
 }
 /*By KV end - Position - This is for display Position data only in Position selection.*/
+
+function fn_generateAgreement() {
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+    if (selectedItem[0] > -1){
+        var memCode = AUIGrid.getCellValue(myGridID, selectedGridValue, "membercode"); // Plausible to change if not based on GRID
+
+        // Remain the following section to display report
+        $("#reportDownFileName").val("HPAgreement_" + memCode);
+        $("#agreementReport #reportFileName").val("/organization/HPAgreement.rpt");
+
+        $("#v_memCode").val(memCode); // Plausible to change if not based on GRID
+        $("#agreementReport #viewType").val("PDF");
+        console.log(memCode);
+
+        var option = {
+                isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
+        };
+
+        Common.report("agreementReport", option);
+    }
+}
 
 </script>
 
@@ -534,8 +566,21 @@ function fn_searchPosition(selectedData){
  <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_clickHpReject()">HP Reject</a></p></li>
 </c:if>
+<c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
+    <li><p class="btn_blue"><a href="javascript:fn_generateAgreement()">Generate Agreement</a></p></li>
+</c:if>
 </ul>
 </aside><!-- title_line end -->
+
+<input type="hidden" id="loginUserType" name="loginUserType" value="${loginUserType} " />
+
+<form id="agreementReport" name="agreementReport">
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+
+    <input type="hidden" id="v_memCode" name="v_memCode" value="" />
+</form>
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" id="searchForm" method="post">

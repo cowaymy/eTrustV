@@ -48,7 +48,7 @@ function fn_memberSave(){
                             var idntfc = result.idntfc;
 
                             // Construct Agreement URL via SMS
-                            var cnfmSms = "RM0.00 COWAY: COMPULSORY click " +
+                            var cnfmSms = " COWAY: COMPULSORY click " +
                                                  "http://etrust.my.coway.com/organization/agreementListing.do?MemberID=" + idntfc + aplcntId +
                                                  " for confirmation of HP agreement. TQ!";
 
@@ -469,7 +469,7 @@ console.log("ready");
      if( $("#userType").val() == "1") {
         $("#memberType option[value=2803]").attr('selected', 'selected');
         $('#memberType').attr("disabled", true);
-        
+
         $('#grid_wrap_doc').attr("hidden", true);
      }
 
@@ -691,6 +691,27 @@ function fn_saveValidation(){
         Common.alert("Please select marrital");
         return false;
     }
+
+	if($("#marrital").val() == '26'){
+	    if($("#spouseCode").val == '') {
+	    	Common.alert("Please enter MCode");
+	    }
+	    if($("#spouseName").val == '') {
+            Common.alert("Please enter spouse name");
+        }
+	    if($("#spouseNric").val == '') {
+            Common.alert("Please enter spouse NRIC/Passport No");
+        }
+	    if($("#spouseOcc").val == '') {
+            Common.alert("Please enter spouse occupation");
+        }
+	    if($("#spouseDob").val == '') {
+            Common.alert("Please enter spouse date of birth");
+        }
+	    if($("#spouseContat").val == '') {
+            Common.alert("Please enter spouse contact");
+        }
+	}
 
 	if($("#issuedBank").val() == ''){
         Common.alert("Please select the issued bank");
@@ -1033,6 +1054,43 @@ function autofilledbyNRIC(){
     //}
 
 }
+
+function fn_onchangeMarrital() {
+	if($("#marrital").val() != "26") {
+		$("#spouseCodeLbl").find("span").remove();
+	    $("#spouseNameLbl").find("span").remove();
+	    $("#spouseNricLbl").find("span").remove();
+	    $("#spouseOccLbl").find("span").remove();
+	    $("#spouseDobLbl").find("span").remove();
+	    $("#spouseContatLbl").find("span").remove();
+	}
+
+	if($("#marrital").val() == "26") {
+	    $("#spouseCodeLbl").append("<span class='must'>*</span>");
+	    $("#spouseNameLbl").append("<span class='must'>*</span>");
+	    $("#spouseNricLbl").append("<span class='must'>*</span>");
+	    $("#spouseOccLbl").append("<span class='must'>*</span>");
+	    $("#spouseDobLbl").append("<span class='must'>*</span>");
+	    $("#spouseContatLbl").append("<span class='must'>*</span>");
+	}
+}
+
+function checkBankAccNo() {
+	console.log("checkbankaccno");
+	if(event.keyCode == 13) {
+		var jsonObj = { "bankAccNo" : $("#bankAccNo").val() };
+
+		Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
+			if(result.cnt1 == "0" && result.cnt2 == "0") {
+				return true;
+			} else {
+				Common.alert("Bank account number has been registered.");
+				return false;
+			}
+		});
+	}
+}
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -1161,7 +1219,7 @@ function autofilledbyNRIC(){
     </td>
     <th scope="row">Marrital Status<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="marrital" name="marrital">
+    <select class="w100p" id="marrital" name="marrital" onchange="javascript : fn_onchangeMarrital()">
     </select>
     </td>
 </tr>
@@ -1389,7 +1447,7 @@ function autofilledbyNRIC(){
     </td>
     <th scope="row">Bank Account No<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="Bank Account No" class="w100p" id="bankAccNo"  name="bankAccNo"/>
+    <input type="text" title="" placeholder="Bank Account No" class="w100p" id="bankAccNo"  name="bankAccNo" onKeyDown="checkBankAccNo()" />
     </td>
 </tr>
 </tbody>
@@ -1484,29 +1542,29 @@ function autofilledbyNRIC(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">MCode</th>
+    <th scope="row" id="spouseCodeLbl" name="spouseCodeLbl">MCode</th>
     <td>
     <input type="text" title="" placeholder="MCode" class="w100p readonly " id="spouseCode" readonly="readonly" name="spouseCode" value=""/>
     </td>
-    <th scope="row">Spouse Name</th>
+    <th scope="row" id="spouseNameLbl" name="spouseNameLbl">Spouse Name</th>
     <td>
     <input type="text" title="" placeholder="Spouse Nam" class="w100p readonly " id="spouseName" readonly="readonly"  name="spouseName" value=""/>
     </td>
-    <th scope="row">NRIC / Passport No.</th>
+    <th scope="row" id="spouseNricLbl" name="spouseNricLbl">NRIC / Passport No.</th>
     <td>
     <input type="text" title="" placeholder="NRIC / Passport No." class="w100p readonly " id="spouseNric" readonly="readonly"  name="spouseNric"  value=""/>
     </td>
 </tr>
 <tr>
-    <th scope="row">Occupation</th>
+    <th scope="row" id="spouseOccLbl" name="spouseOccLbl">Occupation</th>
     <td>
     <input type="text" title="" placeholder="Occupation" class="w100p" id="spouseOcc" name="spouseOcc" value=""/>
     </td>
-    <th scope="row">Date of Birth</th>
+    <th scope="row" id="spouseDobLbl" name="spouseDobLbl">Date of Birth</th>
     <td>
     <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date readonly" id="spouseDob" readonly="readonly"  name="spouseDob" value=""/>
     </td>
-    <th scope="row">Contact No.</th>
+    <th scope="row" id="spouseContatLbl" name="spouseContatLbl">Contact No.</th>
     <td>
     <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p readonly" id="spouseContat" readonly="readonly"  name="spouseContat"  value=""/>
     </td>

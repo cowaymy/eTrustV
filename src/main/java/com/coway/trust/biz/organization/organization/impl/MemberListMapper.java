@@ -251,4 +251,6 @@ public interface MemberListMapper {
 	EgovMap getHPCtc(Map<String, Object> params);
 
 	EgovMap verifyAccess(Map<String, Object> params);
+
+	EgovMap checkBankAcc(Map<String, Object> params);
 }

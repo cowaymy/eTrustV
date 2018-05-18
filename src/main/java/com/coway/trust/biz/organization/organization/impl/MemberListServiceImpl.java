@@ -2265,4 +2265,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     public EgovMap verifyAccess(Map<String, Object> params) {
         return memberListMapper.verifyAccess(params);
     }
+
+	@Override
+    public EgovMap checkBankAcc(Map<String, Object> params) {
+        return memberListMapper.checkBankAcc(params);
+    }
 }
