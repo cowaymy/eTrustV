@@ -4229,32 +4229,41 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
      <select id="validateHpStatus" parameterType="Map" resultType="egovMap">
         select
-            aplicnt.APLCTN_ID,
-            aplicnt.APLICNT_IDNTFC IDNTFC,
-            aplicnt.STUS_ID,
-            s.NAME STUS_NM,
-            aplicnt.CNFM,
-            TO_CHAR(aplicnt.CNFM_DT, 'YYYY-MM-DD') CNFM_DT
-        from ORG0003D aplicnt
-        inner join SYS0038M s
-            on aplicnt.STUS_ID = s.STUS_CODE_ID
-        where
-            1=1
-            <if test="aplcntCode != null and aplcntCode != '' ">
-                and aplicnt.APLICNT_CODE = #{aplcntCode}
-            </if>
-            <if test="aplcntNRIC != null and aplcntNRIC != '' ">
-                and aplicnt.APLICNT_NRIC = #{aplcntNRIC}
-            </if>
-            <if test="aplcntName != null and aplcntName != '' ">
-                and aplicnt.APLICNT_NAME = #{aplcntName}
-            </if>
-            <if test="aplcntMobile != null and aplcntMobile != '' ">
-                and aplicnt.APLICNT_TEL_MOBILE = #{aplcntMobile}
-            </if>
-            <if test="aplcntId != null and aplcntId != '' ">
-                and aplicnt.APLCTN_ID = #{aplcntId}
-            </if>
+            APLCTN_ID,
+            IDNTFC,
+            STUS_ID,
+            STUS_NM,
+            CNFM,
+            CNFM_DT from (
+                select
+                    aplicnt.APLCTN_ID,
+                    aplicnt.APLICNT_IDNTFC IDNTFC,
+                    aplicnt.STUS_ID,
+                    s.NAME STUS_NM,
+                    aplicnt.CNFM,
+                    TO_CHAR(aplicnt.CNFM_DT, 'YYYY-MM-DD') CNFM_DT
+                from ORG0003D aplicnt
+                inner join SYS0038M s
+                    on aplicnt.STUS_ID = s.STUS_CODE_ID
+                where
+                    1=1
+                    <if test="aplcntCode != null and aplcntCode != '' ">
+                        and aplicnt.APLICNT_CODE = #{aplcntCode}
+                    </if>
+                    <if test="aplcntNRIC != null and aplcntNRIC != '' ">
+                        and aplicnt.APLICNT_NRIC = #{aplcntNRIC}
+                    </if>
+                    <if test="aplcntName != null and aplcntName != '' ">
+                        and aplicnt.APLICNT_NAME = #{aplcntName}
+                    </if>
+                    <if test="aplcntMobile != null and aplcntMobile != '' ">
+                        and aplicnt.APLICNT_TEL_MOBILE = #{aplcntMobile}
+                    </if>
+                    <if test="aplcntId != null and aplcntId != '' ">
+                        and aplicnt.APLCTN_ID = #{aplcntId}
+                    </if>
+                order by aplicnt.APLCTN_ID desc)
+            where ROWNUM = 1
       </select>
 
      <update id="updateHpCfm" parameterType="Map">
@@ -4291,6 +4300,19 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         WHERE APLCTN_ID = #{memberID}
             AND APLICNT_IDNTFC = #{identification}
             AND APLICNT_NRIC = #{nric}
+      </select>
+
+      <select id="checkBankAcc" parameterType="Map" resultType="egovMap">
+        SELECT
+            COUNT(1) CNT
+        <if test="srcA != '' and srcA != null ">
+            FROM ORG0003D
+            WHERE APLICNT_BANK_ACC_NO = #{bankAccNo}
+        </if>
+        <if test="srcM != '' and srcM != null ">
+            FROM ORG0001D
+            WHERE BANK_ACC_NO = #{bankAccNo}
+        </if>
       </select>
 
 </mapper>

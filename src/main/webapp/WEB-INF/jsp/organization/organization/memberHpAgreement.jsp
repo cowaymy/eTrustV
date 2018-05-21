@@ -120,7 +120,7 @@ function fn_AcceptAgreement() {
                     }
                 });
             })
-        } else if(cnfm != "0" && cnfm_dt != "1900-01-01" && stus == "44") {
+        } else if(cnfm != "0" && cnfm_dt != "1900-01-01" && (stus == "44" || stus == "98")) {
             Common.alert("Member has already accepted agreement.");
         } else if(cnfm == "0" && cnfm_dt != "1900-01-01" && stus == "6") {
             Common.alert("Member has already rejected agreement.");
@@ -153,7 +153,7 @@ function fn_RejectAgreement() {
                         });
                     }
                 });
-            } else if(cnfm != "0" && cnfm_dt != "1900-01-01" && stus == "44") {
+            } else if(cnfm != "0" && cnfm_dt != "1900-01-01" && (stus == "44" || stus == "98")) {
                 Common.alert("Member has already accepted agreement.");
             } else if(cnfm == "0" && cnfm_dt != "1900-01-01" && stus == "6") {
                 Common.alert("Member has already rejected agreement.");
