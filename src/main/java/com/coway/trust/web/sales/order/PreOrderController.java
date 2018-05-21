@@ -1,8 +1,10 @@
 /**
- * 
+ *
  */
 package com.coway.trust.web.sales.order;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 import java.util.Map;
 
@@ -45,24 +47,24 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class PreOrderController {
 
 	private static Logger logger = LoggerFactory.getLogger(PreOrderController.class);
-	
+
 	@Resource(name = "preOrderService")
 	private PreOrderService preOrderService;
-	
+
 	@RequestMapping(value = "/preOrderList.do")
 	public String preOrderList(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 
 		model.put("toDay", toDay);
 		model.put("isAdmin", "true");
-		
+
 		return "sales/order/preOrderList";
 	}
-	
+
 	@RequestMapping(value = "/preOrderModifyPop.do")
 	public String preOrderModifyPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
-		
+
 		//[Tap]Basic Info
 		EgovMap result = preOrderService.selectPreOrderInfo(params);
 
@@ -73,12 +75,12 @@ public class PreOrderController {
 
 		return "sales/order/preOrderModifyPop";
 	}
-	
+
 	@RequestMapping(value = "/selectPreOrderList.do")
 	public ResponseEntity<List<EgovMap>> selectPreOrderList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-		
+
 		String[] arrAppType      = request.getParameterValues("_appTypeId"); //Application Type
-		String[] arrPreOrdStusId = request.getParameterValues("_stusId");    //Pre-Order Status 
+		String[] arrPreOrdStusId = request.getParameterValues("_stusId");    //Pre-Order Status
 		String[] arrKeyinBrnchId = request.getParameterValues("_brnchId");   //Key-In Branch
 		String[] arrCustType     = request.getParameterValues("_typeId");    //Customer Type
 
@@ -88,51 +90,53 @@ public class PreOrderController {
 		if(arrCustType     != null && !CommonUtils.containsEmpty(arrCustType))     params.put("arrCustType", arrCustType);
 
 		List<EgovMap> result = preOrderService.selectPreOrderList(params);
-		
+
 		return ResponseEntity.ok(result);
 	}
-	
+
 	@RequestMapping(value = "/selectExistSofNo.do")
 	public ResponseEntity<EgovMap> selectExistSofNo(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
 		int cnt = preOrderService.selectExistSofNo(params);
-		
+
 		EgovMap result = new EgovMap();
-		
+
 		result.put("IS_EXIST", cnt > 0 ? "true" : "false");
-		
+
 		return ResponseEntity.ok(result);
 	}
-	
+
 	@RequestMapping(value = "/selectExistingMember.do")
 	public ResponseEntity<EgovMap> selectExistingMember(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
 		int cnt = preOrderService.selectExistingMember(params);
-		
+
 		EgovMap result = new EgovMap();
-		
+
 		result.put("IS_EXIST", cnt > 0 ? "true" : "false");
-		
+
 		return ResponseEntity.ok(result);
 	}
-	
+
 	@RequestMapping(value = "/preOrderRegisterPop.do")
 	public String preOrderRegisterPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		logger.debug(CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
-		
-		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
-		
+		Calendar calendar = Calendar.getInstance();
+		calendar.add(Calendar.DAY_OF_YEAR,1);
+		Date nextDay = calendar.getTime();
+		logger.debug("@@@@@" + CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1,nextDay));
+
+		model.put("nextDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1,nextDay));
+
 		return "sales/order/preOrderRegisterPop";
 	}
-	
+
 	@RequestMapping(value = "/registerPreOrder.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> registerPreOrder(@RequestBody PreOrderVO preOrderVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
 
 		preOrderService.insertPreOrder(preOrderVO, sessionVO);
 
 		String msg = "", appTypeName = "";
-		
+
 		switch(preOrderVO.getAppTypeId()) {
     		case SalesConstants.APP_TYPE_CODE_ID_RENTAL :
     			appTypeName = SalesConstants.APP_TYPE_CODE_RENTAL_FULL;
@@ -161,11 +165,11 @@ public class PreOrderController {
     		default :
     			break;
     	}
-		
+
         msg += "Order successfully saved.<br />";
         msg += "SOF No : " + preOrderVO.getSofNo() + "<br />";
         msg += "Application Type : " + appTypeName + "<br />";
-		
+
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -174,14 +178,14 @@ public class PreOrderController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/modifyPreOrder.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> modifyPreOrder(@RequestBody PreOrderVO preOrderVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
 
 		preOrderService.updatePreOrder(preOrderVO, sessionVO);
 
 		String msg = "", appTypeName = "";
-		
+
 		switch(preOrderVO.getAppTypeId()) {
     		case SalesConstants.APP_TYPE_CODE_ID_RENTAL :
     			appTypeName = SalesConstants.APP_TYPE_CODE_RENTAL_FULL;
@@ -210,11 +214,11 @@ public class PreOrderController {
     		default :
     			break;
     	}
-		
+
         msg += "Order successfully updated.<br />";
         msg += "SOF No : " + preOrderVO.getSofNo() + "<br />";
         msg += "Application Type : " + appTypeName + "<br />";
-		
+
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -223,14 +227,14 @@ public class PreOrderController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/modifyPreOrderStatus.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> modifyPreOrderStatus(@RequestBody PreOrderListVO preOrderListVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
 
 		preOrderService.updatePreOrderStatus(preOrderListVO, sessionVO);
 
 		String msg = "Order Status successfully updated.";
-		
+
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -239,19 +243,19 @@ public class PreOrderController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/convertToOrderPop.do")
 	public String convertToOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		logger.debug(CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
-		
+
 		EgovMap result = preOrderService.selectPreOrderInfo(params);
-		
+
 		model.put("preOrderInfo", result);
 		model.put("CONV_TO_ORD_YN", "Y");
 		model.put("preOrdId", params.get("preOrdId"));
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
-		
+
 		return "sales/order/orderRegisterPop";
 	}
 }
