@@ -5,12 +5,14 @@
 
     //AUIGrid 생성 후 반환 ID
     var listGiftGridID;
+    var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
 
     $(document).ready(function(){
 
         createAUIGridStk();
 
-        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
+        doDefCombo(appTypeData, '' ,'appType', 'S', '');                 //Status 생성
+        //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'appType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
       //doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
         doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
@@ -22,6 +24,9 @@
         //Attach File
         $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
 
+        //UpperCase Field
+        $("#nric").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+        $("#sofNo").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
     });
 
     function createAUIGridStk() {
@@ -121,7 +126,6 @@
             Common.popupDiv("/sales/customer/customerBillGrpSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_BILL_GRP"}, null, true);
         });
         $('#appType').change(function() {
-
             $('#scPayInfo').addClass("blind");
 
             //CLEAR RENTAL PAY SETTING
@@ -156,7 +160,7 @@
                         case '66' : //RENTAL
                             $('#scPayInfo').removeClass("blind");
                             //?FD문서에서 아래 항목 빠짐
-                            $('[name="advPay"]').removeAttr("disabled");
+                            //$('[name="advPay"]').removeAttr("disabled");
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
                           //$("#gstChk").val('0');
                           //$('#pBtnCal').addClass("blind");
@@ -181,7 +185,7 @@
                         case '1412' : //Outright Plus
                             $('#installDur').val("36").prop("readonly", true).removeClass("readonly");
 
-                            $('[name="advPay"]').removeAttr("disabled");
+                            //$('[name="advPay"]').removeAttr("disabled");
 
                             $('#scPayInfo').removeClass("blind");
 
@@ -1276,6 +1280,7 @@
                     $('#sctBillPrefer').addClass("blind");
                 }
 */
+
                 if(custInfo.custAddId > 0) {
 
                     //----------------------------------------------------------
@@ -1304,7 +1309,6 @@
 
                     fn_loadMainCntcPerson(custInfo.custCntcId);
                     fn_loadCntcPerson(custInfo.custCntcId);
-
                     //----------------------------------------------------------
                     // [Installation] : Installation Contact Person
                     //----------------------------------------------------------
@@ -1315,6 +1319,7 @@
                 if(custInfo.codeName == 'Government') {
                     Common.alert('<b>Goverment Customer</b>');
                 }
+
             }
             else {
                 Common.confirm('<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop);
@@ -1444,7 +1449,20 @@
 
         switch(tabNm) {
             case 'ord' :
-                AUIGrid.resize(listGiftGridID, 980, 180);
+            	$('[name="advPay"]').prop("disabled", true);
+            	$('#advPayNo').prop("checked", true);
+            	$('#poNo').prop("disabled", true);
+                break;
+            case 'pay' :
+            	if($('#appType').val() == '66'){
+            		$('#rentPayMode').val('131');
+            		$('#rentPayMode').change();
+            		$('#rentPayMode').prop("disabled", true);
+            		$('#thrdParty').prop("disabled", true);
+            	}
+
+            	$('[name="grpOpt"]').prop("disabled", true);
+            	fn_setBillGrp("new"); // default set billing group option to new
                 break;
             default :
                 break;
@@ -1479,7 +1497,7 @@
 </ul>
 </aside><!-- title_line end -->
 <form id="frmCustSearch" name="frmCustSearch" action="#" method="post">
-    <input id="selType" name="selType" type="hidden" value="1" />
+    <input id="hiddenNric" name="hiddenNric" type="hidden" value="1" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1507,7 +1525,7 @@
 <ul class="tap_type1 num4">
 	<li><a href="#" class="on">Customer</a></li>
 	<li><a href="#" onClick="javascript:chgTab('ord');">Order Info</a></li>
-	<li><a href="#">Payment Info</a></li>
+	<li><a href="#" onClick="javascript:chgTab('pay');">Payment Info</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -1744,13 +1762,13 @@
 </tr>
 <tr>
     <th scope="row">Prefer Install Date<span class="must">*</span></th>
-    <td colspan="3"><input id="prefInstDt" name="prefInstDt" type="text" title="Create start Date" placeholder="Prefer Install Date (dd/MM/yyyy)" class="j_date w100p" /></td>
+    <td colspan="3"><input id="prefInstDt" name="prefInstDt" type="text" title="Create start Date" placeholder="Prefer Install Date (dd/MM/yyyy)" class="j_date w100p" value="${nextDay}"  disabled/></td>
 </tr>
 <tr>
     <th scope="row">Prefer Install Time<span class="must">*</span></th>
     <td colspan="3">
     <div class="time_picker"><!-- time_picker start -->
-    <input id="prefInstTm" name="prefInstTm" type="text" title="" placeholder="Prefer Install Time (hh:mi tt)" class="time_date w100p" />
+    <input id="prefInstTm" name="prefInstTm" type="text" title="" placeholder="Prefer Install Time (hh:mi tt)" class="time_date w100p" value="11:00 AM" disabled/>
     <ul>
         <li>Time Picker</li>
         <li><a href="#">12:00 AM</a></li>
@@ -1848,8 +1866,8 @@
 <tr>
     <th scope="row">Advance Rental Payment*</th>
     <td><span>Does customer make advance rental payment for 6 months and above?</sapn>
-        <input id="advPayYes" name="advPay" type="radio" value="1" disabled/><span>Yes</span>
-        <input id="advPayNo" name="advPay" type="radio" value="0" disabled/><span>No</span></td>
+        <input id="advPayYes" name="advPay" type="radio" value="1" /><span>Yes</span>
+        <input id="advPayNo" name="advPay" type="radio" value="0" /><span>No</span></td>
     <!-- <th scope="row">Normal Rental Fee<span class="must">*</span></th>
     <td><p><input id="normalOrdRentalFees" name="normalOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></p>
         <p id="pBtnCal" class="btn_sky blind"><a id="btnCal" href="#">Exclude GST Calc</a></p></td> -->
@@ -2099,7 +2117,7 @@
 <tr>
     <th scope="row">Group Option<span class="must">*</span></th>
     <td>
-    <label><input type="radio" id="grpOpt1" name="grpOpt" value="new"  /><span>New Billing Group</span></label>
+    <label><input type="radio" id="grpOpt1" name="grpOpt" value="new" /><span>New Billing Group</span></label>
     <label><input type="radio" id="grpOpt2" name="grpOpt" value="exist"/><span>Existion Billing Group</span></label>
     </td>
 </tr>

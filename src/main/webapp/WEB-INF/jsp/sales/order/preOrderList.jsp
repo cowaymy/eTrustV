@@ -7,6 +7,7 @@
 	var keyValueList = [];
 	var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 	var CATE_ID  = "14";
+	var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
 
     if(MEM_TYPE == '1') { //HP
         CATE_ID = "29";
@@ -27,7 +28,8 @@
             fn_setDetail(listGridID, event.rowIndex);
         });
 
-        doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', '_appTypeId', 'M', 'fn_multiCombo'); //Common Code
+        //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', '_appTypeId', 'M', 'fn_multiCombo'); //Common Code
+        doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code

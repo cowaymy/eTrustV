@@ -8,12 +8,15 @@
     $(document).ready(function(){
         doGetCombo('/common/selectCodeList.do', '21',  '','cmbCreditCardType', 'S', ''); // Add Card Type Combo Box
         doGetCombo('/sales/customer/selectAccBank.do',  '', '', 'cmbIssBank',  'S', ''); //Issue Bank)
-        doGetCombo('/common/selectCodeList.do', '115', '','cmbCardType',       'S', ''); // Add Card Type Combo Box
+       //doGetCombo('/common/selectCodeList.do', '115', '','cmbCardType',       'S', ''); // Add Card Type Combo Box
+        $("#nameOnCard").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
     });
 
     $(function(){
         $('#btnAddCreditCard').click(function() {
-            if(!fn_validCreditCard()) return false;
+        	$("#cmbCardType").val($('input[name=cmbCardType]:checked').val());
+
+        	if(!fn_validCreditCard()) return false;
             fn_doSaveCreditCard();
         });
         $('#cardNo').change(function() {
@@ -103,7 +106,12 @@
             }
         }
 
-        if($("#cmbCardType option:selected").index() <= 0) {
+        /* if($("#cmbCardType option:selected").index() <= 0) {
+            isValid = false;
+            msg += "<spring:message code='sal.alert.pleaseSelectTheCardType' />";
+        } */
+
+        if($("#cmbCardType").val() <= 0) {
             isValid = false;
             msg += "<spring:message code='sal.alert.pleaseSelectTheCardType' />";
         }
@@ -174,10 +182,28 @@
 </colgroup>
 <tbody>
 <tr>
+    <th scope="row"><spring:message code="sal.text.creditCardNo2" /><span class="must">*</span></th>
+    <td>
+        <input id="cardNo" name="cardNo" type="text" title="" placeholder="Credit Card Number" class="w100p" />
+    </td>
+</tr>
+<tr>
 	<th scope="row"><spring:message code="sal.text.type2" /><span class="must">*</span></th>
 	<td>
 	    <select class="w100p disabled" id="cmbCreditCardType" name="creditCardType" disabled="disabled"></select>
 	</td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.nameOnCard2" /><span class="must">*</span></th>
+    <td>
+        <input id="nameOnCard" name="nameOnCard" type="text" title="" placeholder="Name On Card" class="w100p" />
+    </td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.expiryDate2" /><span class="must">*</span></th>
+    <td>
+        <input id="expDate" name="expDate" type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2" />
+    </td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="sal.text.issueBank2" /><span class="must">*</span></th>
@@ -186,35 +212,22 @@
 	</td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="sal.text.creditCardNo2" /><span class="must">*</span></th>
-	<td>
-	    <input id="cardNo" name="cardNo" type="text" title="" placeholder="Credit Card Number" class="w100p" />
-	</td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="sal.text.expiryDate2" /><span class="must">*</span></th>
-	<td>
-	    <input id="expDate" name="expDate" type="text" title="Create start Date" placeholder="MM/YYYY" class="j_date2" />
-	</td>
-</tr>
-<tr>
-	<th scope="row"><spring:message code="sal.text.nameOnCard2" /><span class="must">*</span></th>
-	<td>
-	    <input id="nameOnCard" name="nameOnCard" type="text" title="" placeholder="Name On Card" class="w100p" />
-	</td>
-</tr>
-<tr>
 	<th scope="row"><spring:message code="sal.text.cardType2" /><span class="must">*</span></th>
 	<td>
-	    <select class="w100p" id="cmbCardType" name="cardType"></select>
+	    <!-- <select class="w100p" id="cmbCardType" name="cardType"></select> -->
+	    <div id="cardTypeForm">
+            <label><input type="radio" name="cmbCardType" value="1241" /><span>Credit Card</span></label>
+            <label><input type="radio" name="cmbCardType" value="1240" /><span>Debit Card</span></label>
+            <input id="cmbCardType" name="cardType" type="hidden"/>
+        </div>
 	</td>
 </tr>
-<tr>
+<%-- <tr>
 	<th scope="row"><spring:message code="sal.text.remark" /></th>
 	<td>
 	    <textarea id="cardRem" name="cardRem" cols="20" rows="5" placeholder="Remark"></textarea>
 	</td>
-</tr>
+</tr> --%>
 </tbody>
 </table><!-- table end -->
 </form>

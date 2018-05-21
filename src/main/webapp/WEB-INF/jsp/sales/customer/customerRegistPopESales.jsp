@@ -49,32 +49,24 @@
         fn_initAddress(); //init
         CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
          //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
-        doGetCombo('/common/selectCodeList.do', '8', '964','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
+     //   doGetCombo('/common/selectCodeList.do', '8', '964','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
         doGetCombo('/sales/customer/getNationList', '338' , '1' ,'_cmbNation_' , 'S');        // Nationality Combo Box
         doGetCombo('/common/selectCodeList.do', '95', '','_cmbCorpTypeId_', 'S' , '');                      // Company Type Combo Box
         doGetCombo('/common/selectCodeList.do', '17', '','_cmbInitials_', 'S' , '');                             // Initials Combo Box
-        doGetCombo('/common/selectCodeList.do', '2', '','_cmbRace_', 'S' , '');                                 // Race Combo Box
+    //    doGetCombo('/common/selectCodeList.do', '2', '','_cmbRace_', 'S' , '');                                 // Race Combo Box
     //    doGetCombo('/common/selectCodeList.do', '20', '','cmbBankType', 'S' , '');                         // Add Bank Type Combo Box
        // getAddrRelay('mstate' , '1' , 'state', '');
 
         //temp for individual only
         /********************************************************/
-        $("#_cmbCorpTypeId_").val('');
-        $("#_cmbNation_").val('1');
-        $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
-        $("select[name=cmbCorpTypeId]").addClass("w100p disabled");
-        $("select[name=cmbNation]").removeClass("w100p disabled");
-        $("select[name=cmbNation]").addClass("w100p");
-        $("select[name=cmbNation]").removeAttr("disabled");
-        $("select[name=cmbRace]").removeClass("w100p disabled");
-        $("select[name=cmbRace]").addClass("w100p");
-        $("select[name=cmbRace]").removeAttr("disabled");
-        //$("#_dob_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
-        $("select[name=dob]").removeAttr("readonly");
-        $("#genderForm").removeAttr('disabled');
-        $("input:radio[name='gender']").attr("disabled" , false);
-        $('input:radio[name="gender"][value="M"]').prop('checked', true);
-        //$("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
+        $("#_cmbTypeId_").val($('input[name=cmbTypeId]:checked').val());
+        onChangeCompanyType($("#_cmbTypeId_").val());
+
+      //UpperCase Field
+        $("#_nric_").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+        $("#_custName_").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+        $("#_asCustName_").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+
         /********************************************************/
 
         //Enter Event
@@ -265,7 +257,7 @@
     // Customer Type 선택시 Company Type 변경 (Basic Info)
    function onChangeCompanyType(val){
 
-        if($("#_cmbTy").val() == '965'){
+        if($("#_cmbTypeId_").val() == '965'){
             $("select[name=cmbCorpTypeId]").removeAttr("disabled");
             $("select[name=cmbCorpTypeId]").removeClass("w100p disabled");
             $("select[name=cmbCorpTypeId]").addClass("w100p");
@@ -290,9 +282,9 @@
             $("#_cmbNation_").val('1');
             $("select[name=cmbCorpTypeId]").attr('disabled', 'disabled');
             $("select[name=cmbCorpTypeId]").addClass("w100p disabled");
-            $("select[name=cmbNation]").removeClass("w100p disabled");
+            /* $("select[name=cmbNation]").removeClass("w100p disabled");
             $("select[name=cmbNation]").addClass("w100p");
-            $("select[name=cmbNation]").removeAttr("disabled");
+            $("select[name=cmbNation]").removeAttr("disabled"); */
             $("select[name=cmbRace]").removeClass("w100p disabled");
             $("select[name=cmbRace]").addClass("w100p");
             $("select[name=cmbRace]").removeAttr("disabled");
@@ -861,7 +853,12 @@
                                 <th scope="row"><spring:message code="sal.text.custType2" /><span class="must">*</span></th>
                                 <td>
                                     <!-- <select class="w100p"  id="_cmbTypeId_" name="cmbTypeId" onchange="onChangeCompanyType(this.value)"> -->
-                                    <select class="w100p disabled" id="_cmbTypeId_" name="cmbTypeId" disabled="disabled"></select>
+                                    <!-- <select class="w100p disabled" id="_cmbTypeId_" name="cmbTypeId" disabled="disabled"></select> -->
+                                    <div id="custTypeForm">
+                                        <label><input type="radio" name="cmbTypeId" value="965" disabled="disabled" /><span>Company</span></label>
+                                        <label><input type="radio" name="cmbTypeId" value="964" disabled="disabled" checked/><span>Individual</span></label>
+                                                   <input id="_cmbTypeId_" name="cmbTypeId" type="hidden"/>
+                                    </div>
                                 </td>
                             </tr>
                             <tr>
@@ -895,11 +892,11 @@
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.passportExpire" /></th>
-                                <td><input type="text" title="Create start Date" id="_pasSportExpr_" name="pasSportExpr" placeholder="DD/MM/YYYY" class="j_date" /></td>
+                                <td><input type="text" title="Create start Date" id="_pasSportExpr_" name="pasSportExpr" placeholder="DD/MM/YYYY" class="j_date"  disabled="disabled" /></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.visaExpire" /></th>
-                                <td><input type="text" id="_visaExpr_" name="visaExpr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></td>
+                                <td><input type="text" id="_visaExpr_" name="visaExpr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  disabled="disabled" /></td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.dob2" /><span class="brown_text">#</span></th>
@@ -920,7 +917,15 @@
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.race2" /><span class="brown_text">#</span></th>
-                                <td><select class="w100p disabled" id="_cmbRace_" name="cmbRace" disabled="disabled"></select></td>
+                                <td>
+                                    <!-- <select class="w100p disabled" id="_cmbRace_" name="cmbRace" disabled="disabled"></select> -->
+                                    <label><input type="radio" name="cmbRace" value="11" /><span>Chinese</span></label>
+                                    <label><input type="radio" name="cmbRace" value="12" /><span>Indian</span></label>
+                                    <label><input type="radio" name="cmbRace" value="14" /><span>Korean</span></label>
+                                    <label><input type="radio" name="cmbRace" value="10" /><span>Malay</span></label>
+                                    <label><input type="radio" name="cmbRace" value="13" /><span>Other</span></label>
+                                                <input id="_cmbRace_" name="cmbRace" type="hidden"/>
+                                </td>
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.telMOne" /><span class="must">*</span></th>
