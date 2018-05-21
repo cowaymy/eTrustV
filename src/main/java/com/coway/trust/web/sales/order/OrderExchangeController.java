@@ -1,5 +1,7 @@
 package com.coway.trust.web.sales.order;
 
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -168,4 +170,20 @@ public class OrderExchangeController {
 		return "sales/order/orderExchangeRawDataPop";
 	}
 
+	@RequestMapping(value="/orderExchangeProductReturnPop.do")
+	public String orderExchangeProductReturnPop(ModelMap model){
+
+		Calendar calendar = Calendar.getInstance();
+		calendar.set(Calendar.DATE, calendar.getActualMinimum(Calendar.DATE));
+		Date startDate = calendar.getTime();
+		calendar.set(Calendar.DATE, calendar.getActualMaximum(Calendar.DATE));
+		Date endDate = calendar.getTime();
+
+
+		model.put("startDate", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1,startDate));
+		model.put("endDate", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1,endDate));
+
+		logger.info("startDay : " + model.get("startDate").toString() + ". endDay : " + model.get("endDate").toString() + ". ");
+		return "sales/order/orderExchangeProductReturnPop";
+	}
 }

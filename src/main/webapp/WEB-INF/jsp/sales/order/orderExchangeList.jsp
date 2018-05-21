@@ -6,14 +6,14 @@
 	//AUIGrid 생성 후 반환 ID
 	var myGridID;
 	var basicAuth = false;
-	
+
     $(document).ready(function(){
-        
+
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-        
+
       //AUIGrid.setSelectionMode(myGridID, "singleRow");
-        
+
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(myGridID, "cellDoubleClick", function(event){
             $("#soExchgId").val(event.item.soExchgId);
@@ -25,16 +25,16 @@
             Common.popupDiv("/sales/order/orderExchangeDetailPop.do", $("#detailForm").serializeJSON());
         });
         // 셀 클릭 이벤트 바인딩
-    
+
       //Basic Auth (update Btn)
         if('${PAGE_AUTH.funcChange}' == 'Y'){
             basicAuth = true;
         }
     });
-    
+
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
@@ -94,82 +94,86 @@
                dataField : "soId",
                visible : false
            }];
-       
+
         // 그리드 속성 설정
         var gridPros = {
-            
-            // 페이징 사용       
+
+            // 페이징 사용
             usePaging : true,
-            
+
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 20,
-            
+
             editable : true,
-            
+
             fixedColumnCount : 1,
-            
-            showStateColumn : false, 
-            
+
+            showStateColumn : false,
+
             displayTreeOpen : true,
-            
+
             selectionMode : "multipleCells",
-            
+
             headerHeight : 30,
-            
+
             // 그룹핑 패널 사용
             useGroupingPanel : false,
-            
+
             // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             skipReadonlyColumns : true,
-            
+
             // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             wrapSelectionMove : true,
-            
+
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : false,
-            
+
             groupingMessage : "Here groupping"
         };
-        
+
         //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
         myGridID = AUIGrid.create("#list_grid_wrap", columnLayout, gridPros);
     }
-    
+
     //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
     doGetCombo('/common/selectCodeList.do', '56', '','cmbExcType', 'M' , 'f_multiCombo');    // Exchange Type Combo Box
     doGetCombo('/common/selectCodeList.do', '10', '','cmbAppType', 'M' , 'f_multiCombo');   // Application Type Combo Box
-    
+
     // 조회조건 combo box
     function f_multiCombo(){
         $(function() {
             $('#cmbExcType').change(function() {
-            
+
             }).multipleSelect({
-                selectAll: true, // 전체선택 
+                selectAll: true, // 전체선택
                 width: '80%'
             });
             $('#cmbAppType').change(function() {
-                
+
             }).multipleSelect({
-                selectAll: true, // 전체선택 
+                selectAll: true, // 전체선택
                 width: '80%'
             });
-           
+
             $('#cmbExcType').multipleSelect("checkAll");
             $('#cmbAppType').multipleSelect("checkAll");
         });
     }
-    
+
     function fn_searchListAjax(){
     	Common.ajax("GET", "/sales/order/orderExchangeJsonList", $("#searchForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
     }
-    
+
     function fn_rawData(){
     	Common.popupDiv("/sales/order/orderExchangeRawDataPop.do", null, null, true);
     }
-    
+
+    function fn_stkRetList(){
+        Common.popupDiv("/sales/order/orderExchangeProductReturnPop.do", null, null, true);
+    }
+
     $.fn.clearForm = function() {
         return this.each(function() {
             var type = this.type, tag = this.tagName.toLowerCase();
@@ -294,6 +298,9 @@
         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()"><spring:message code="sal.title.text.exchangeRawData" /></a></p></li>
         </c:if>
+        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+        <li><p class="link_btn type2"><a href="#" onClick="fn_stkRetList()"><spring:message code="sal.title.text.exchangeStkRet" /></a></p></li>
+        </c:if>
     </ul>
     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
     </dd>
@@ -303,7 +310,7 @@
 </form>
 </section><!-- search_table end -->
 
-<section class="search_result"><!-- search_result start 
+<section class="search_result"><!-- search_result start
 
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#">EDIT</a></p></li>
@@ -322,4 +329,4 @@
 </section><!-- search_result end -->
 
 </section><!-- content end -->
-        
+
