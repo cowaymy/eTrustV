@@ -166,4 +166,5 @@ public interface MemberListService {
 
     EgovMap checkBankAcc(Map<String, Object> params);
 
+    EgovMap getUserRole(Map<String, Object> params);
 }

@@ -173,7 +173,23 @@ function fn_clickHpApproval(){
 }
 
 function fn_clickHpReject(){
-      Common.confirm("Do you want to reject the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , fn_RejectHPMem );
+      Common.confirm("Do you want to reject the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , function() {
+    	  if($("#userRole").val() == 221 || $("#userRole").val() == 222) {
+    		  if(statusName == "Ready") {
+    			  console.log("1");
+                  fn_RejectHPMem();
+    		  } else {
+    			  Common.alert("Only available to entry Ready is in a case of Status");
+              }
+          } else if($("#userRole").val() != 221 && $("#userRole").val() != 222) {
+        	  if(statusName == "Pending" || statusName == "Ready") {
+                  console.log("2");
+                  fn_RejectHPMem();
+        	  } else {
+        		  Common.alert("Only available to entry Pending/Ready is in a case of Status");
+              }
+          }
+      });
 }
 
 function fn_hpMemRegisPop(){
@@ -241,44 +257,39 @@ function fn_hpMemRegisPop(){
 }
 function fn_RejectHPMem(){
      if (memberType == "2803" ) {
-    	 console.log($("#loginUserType").val());
-            if( (statusName == "Pending" && $("#loginUserType").val() != 6 ) || $("#loginUserType").val() == 6) {
-            	Common.ajax("GET", "/organization/hpMemReject.do", {memberId:memberid ,memberType:memberType, nric:nric }, function(result) {
-                    if(result.message == "success"){
-                          Common.alert("Successfully reject HP Applicant :" + membercode);
+    	 Common.ajax("GET", "/organization/hpMemReject.do", {memberId:memberid ,memberType:memberType, nric:nric }, function(result) {
+             if(result.message == "success"){
+                   Common.alert("Successfully reject HP Applicant :" + membercode);
 
-                          var today = new Date();
-                           var dd = today.getDate();
-                           var mm = today.getMonth() + 1;
-                           var yy = today.getFullYear();
-                           if(dd < 10) {
-                               dd = '0' + dd;
-                           }
-                           if(mm < 10) {
-                               mm = '0' + mm;
-                           }
-                           today = dd + '/' + mm + '/' + yy;
+                   var today = new Date();
+                    var dd = today.getDate();
+                    var mm = today.getMonth() + 1;
+                    var yy = today.getFullYear();
+                    if(dd < 10) {
+                        dd = '0' + dd;
+                    }
+                    if(mm < 10) {
+                        mm = '0' + mm;
+                    }
+                    today = dd + '/' + mm + '/' + yy;
 
-                            // Construct approved SMS
-                           var apprSms = " COWAY: Sorry to inform that your application for " +
-                                                "COWAY HP has been REJECTED on " + today + ". Kindly refer to your sponsor for enquiry. TQ!";
+                     // Construct approved SMS
+                    var apprSms = " COWAY: Sorry to inform that your application for " +
+                                         "COWAY HP has been REJECTED on " + today + ". Kindly refer to your sponsor for enquiry. TQ!";
 
-                           Common.ajax("GET", "/organization/getHPCtc", {src: "aplicant", memCode: membercode}, function(result1) {
-                               var mobile = result1.mobile;
-                               //var email = result1.email;
+                    Common.ajax("GET", "/organization/getHPCtc", {src: "aplicant", memCode: membercode}, function(result1) {
+                        var mobile = result1.mobile;
+                        //var email = result1.email;
 
-                               if(mobile != "") {
-                                   Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:mobile , msg :apprSms} , function(result) {
-                                       console.log("sms.");
-                                       console.log( result);
-                                   });
-                               }
-                           })
+                        if(mobile != "") {
+                            Common.ajax("GET", "/services/as/sendSMS.do",{rTelNo:mobile , msg :apprSms} , function(result) {
+                                console.log("sms.");
+                                console.log( result);
+                            });
                         }
-                    });
-            } else {
-                Common.alert("Only available to entry Pending is in a case of Status");
-            }
+                    })
+                 }
+             });
         } else {
             Common.alert("Only available to entry with HP Reject is in a case of HP Applicant");
         }
@@ -572,7 +583,7 @@ function fn_generateAgreement() {
 </ul>
 </aside><!-- title_line end -->
 
-<input type="hidden" id="loginUserType" name="loginUserType" value="${loginUserType} " />
+<input id="userRole" name="userRole" value="${userRole} " />
 
 <form id="agreementReport" name="agreementReport">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />

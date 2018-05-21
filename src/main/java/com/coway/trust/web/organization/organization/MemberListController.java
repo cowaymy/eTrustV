@@ -128,7 +128,11 @@ public class MemberListController {
 		model.addAttribute("status", status);
 		model.addAttribute("userBranch", userBranch);
 		model.addAttribute("user", user);
-		model.addAttribute("loginUserType", sessionVO.getUserTypeId());
+
+		params.put("userId", sessionVO.getUserId());
+		EgovMap userRole = memberListService.getUserRole(params);
+		logger.debug("userRole     " + userRole);
+		model.addAttribute("userRole", userRole.get("roleid"));
 
 		// 호출될 화면
 		return "organization/organization/memberList";

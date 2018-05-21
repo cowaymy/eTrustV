@@ -4303,7 +4303,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       </select>
 
       <select id="checkBankAcc" parameterType="Map" resultType="egovMap">
-
         SELECT
             COUNT(1) CNT
         <if test="srcA != '' and srcA != null ">
@@ -4321,7 +4320,22 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 AND TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(RESIGN_DT, 'YYYYMMDD'), 'YYYYMMDD') > 180
             ]]>
         </if>
+      </select>
 
+      <select id="getUserRole" parameterType="Map" resultType="egovMap">
+      select
+        a.USER_ID userId,
+        a.USER_NAME userName,
+        a.USER_FULL_NAME userFullName,
+        b.ROLE_ID roleId,
+        c.ROLE_CODE roleCode,
+        c.ROLE_DESC roleDesc
+      from SYS0047M a
+      inner join SYS0045M b
+        on a.USER_ID = b.USER_ID
+      inner join SYS0044M c
+        on c.ROLE_ID = b.ROLE_ID
+      where a.USER_ID = #{userId}
       </select>
 
 </mapper>

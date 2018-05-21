@@ -253,4 +253,6 @@ public interface MemberListMapper {
 	EgovMap verifyAccess(Map<String, Object> params);
 
 	EgovMap checkBankAcc(Map<String, Object> params);
+
+	EgovMap getUserRole(Map<String, Object> params);
 }
