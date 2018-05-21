@@ -4303,16 +4303,25 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       </select>
 
       <select id="checkBankAcc" parameterType="Map" resultType="egovMap">
+
         SELECT
             COUNT(1) CNT
         <if test="srcA != '' and srcA != null ">
-            FROM ORG0003D
-            WHERE APLICNT_BANK_ACC_NO = #{bankAccNo}
+            <![CDATA[
+                FROM ORG0003D
+                WHERE APLICNT_BANK_ACC_NO = #{bankAccNo}
+                AND (STUS_ID <> '5' AND STUS_ID <> '102' AND STUS_ID <> '44')
+            ]]>
         </if>
         <if test="srcM != '' and srcM != null ">
-            FROM ORG0001D
-            WHERE BANK_ACC_NO = #{bankAccNo}
+            <![CDATA[
+                FROM ORG0001D
+                WHERE BANK_ACC_NO = #{bankAccNo}
+                AND STUS <> '51'
+                AND TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(RESIGN_DT, 'YYYYMMDD'), 'YYYYMMDD') > 180
+            ]]>
         </if>
+
       </select>
 
 </mapper>

@@ -697,10 +697,6 @@ console.log("validation");
     }
 
 	if($("#marrital").val() == '26'){
-	    if($("#spouseCode").val() == '') {
-	    	Common.alert("Please enter MCode");
-	    	return false;
-	    }
 	    if($("#spouseName").val() == '') {
             Common.alert("Please enter spouse name");
             return false;
@@ -1067,7 +1063,6 @@ function autofilledbyNRIC(){
 
 function fn_onchangeMarrital() {
 	if($("#marrital").val() != "26") {
-		$("#spouseCodeLbl").find("span").remove();
 	    $("#spouseNameLbl").find("span").remove();
 	    $("#spouseNricLbl").find("span").remove();
 	    $("#spouseOccLbl").find("span").remove();
@@ -1076,7 +1071,6 @@ function fn_onchangeMarrital() {
 	}
 
 	if($("#marrital").val() == "26") {
-	    $("#spouseCodeLbl").append("<span class='must'>*</span>");
 	    $("#spouseNameLbl").append("<span class='must'>*</span>");
 	    $("#spouseNricLbl").append("<span class='must'>*</span>");
 	    $("#spouseOccLbl").append("<span class='must'>*</span>");
@@ -1085,20 +1079,25 @@ function fn_onchangeMarrital() {
 	}
 }
 
+function checkBankAccNoEnter() {
+	if(event.keyCode == 13) {
+		checkBankAccNo();
+	}
+}
+
 function checkBankAccNo() {
-    if(event.keyCode == 13) {
+    var jsonObj = { "bankAccNo" : $("#bankAccNo").val() };
 
-        var jsonObj = { "bankAccNo" : $("#bankAccNo").val() };
-
-        Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
-            if(result.cnt1 == "0" && result.cnt2 == "0") {
-                return true;
-            } else {
-                Common.alert("Bank account number has been registered.");
-                return false;
-            }
-        });
-    }
+    Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
+    	console.log(result);
+        if(result.cnt1 == "0" && result.cnt2 == "0") {
+            return true;
+        } else {
+            Common.alert("Bank account number has been registered.");
+            $("#bankAccNo").val("");
+            return false;
+        }
+    });
 }
 
 </script>
@@ -1457,7 +1456,7 @@ function checkBankAccNo() {
     </td>
     <th scope="row">Bank Account No<span class="must">*</span></th>
     <td>
-    <input type="text" title="" placeholder="Bank Account No" class="w100p" id="bankAccNo"  name="bankAccNo" onKeyDown="checkBankAccNo()"
+    <input type="text" title="" placeholder="Bank Account No" class="w100p" id="bankAccNo"  name="bankAccNo" onKeyDown="checkBankAccNoEnter()"
     onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
 </tr>

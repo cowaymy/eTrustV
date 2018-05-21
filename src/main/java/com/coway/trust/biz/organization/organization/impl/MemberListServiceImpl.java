@@ -1705,6 +1705,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			String memberCode = selectMemberCode.get("docNo").toString();
 			params.put("memberCode", memberCode);
 
+			params.put("branchId", sessionVO.getUserBranchId());
 
 			String   memId_seq =  String.valueOf(memberListMapper.getORG0001D_SEQ(params));
 

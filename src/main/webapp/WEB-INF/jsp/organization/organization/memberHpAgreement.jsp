@@ -143,7 +143,7 @@ function fn_RejectAgreement() {
             if(cnfm == "0" && cnfm_dt == "1900-01-01" && stus == "44") {
                 Common.ajax("GET", "/organization/updateHpCfm.do", {choice:"N"}, function(result) {
                 	console.log(result.message);
-                    if(result.message == "success") {
+                    if(result.message == "success.") {
                         Common.confirm("Application has successfully rejected.", function(event) {
                             // Redirect to login page
                             $("#applicantInfo").attr({
