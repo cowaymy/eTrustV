@@ -80,7 +80,7 @@ function fn_aplicantSearch() {
 }
 
 function fn_AcceptAgreement() {
-
+console.log("accept");
     // 2018-05-04 - LaiKW - Start
     // Add validation checking
 
@@ -120,7 +120,7 @@ function fn_AcceptAgreement() {
                     }
                 });
             })
-        } else if(cnfm != "0" && cnfm_dt != "1900-01-01" && (stus == "44" || stus == "98")) {
+        } else if(cnfm != "0" && cnfm_dt != "1900-01-01" && (stus == "44" || stus == "102" || stus == "5")) {
             Common.alert("Member has already accepted agreement.");
         } else if(cnfm == "0" && cnfm_dt != "1900-01-01" && stus == "6") {
             Common.alert("Member has already rejected agreement.");
@@ -153,7 +153,7 @@ function fn_RejectAgreement() {
                         });
                     }
                 });
-            } else if(cnfm != "0" && cnfm_dt != "1900-01-01" && (stus == "44" || stus == "98")) {
+            } else if(cnfm != "0" && cnfm_dt != "1900-01-01" && (stus == "44" || stus == "102" || stus == "5")) {
                 Common.alert("Member has already accepted agreement.");
             } else if(cnfm == "0" && cnfm_dt != "1900-01-01" && stus == "6") {
                 Common.alert("Member has already rejected agreement.");

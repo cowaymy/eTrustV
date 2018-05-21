@@ -635,7 +635,7 @@ var gridPros = {
 
 //Validation Check
 function fn_saveValidation(){
-
+console.log("validation");
 	if($("#memberNm").val() == ''){
         Common.alert("Please key  in Member Name");
         return false;
@@ -697,23 +697,29 @@ function fn_saveValidation(){
     }
 
 	if($("#marrital").val() == '26'){
-	    if($("#spouseCode").val == '') {
+	    if($("#spouseCode").val() == '') {
 	    	Common.alert("Please enter MCode");
+	    	return false;
 	    }
-	    if($("#spouseName").val == '') {
+	    if($("#spouseName").val() == '') {
             Common.alert("Please enter spouse name");
+            return false;
         }
-	    if($("#spouseNric").val == '') {
+	    if($("#spouseNric").val() == '') {
             Common.alert("Please enter spouse NRIC/Passport No");
+            return false;
         }
-	    if($("#spouseOcc").val == '') {
+	    if($("#spouseOcc").val() == '') {
             Common.alert("Please enter spouse occupation");
+            return false;
         }
-	    if($("#spouseDob").val == '') {
+	    if($("#spouseDob").val() == '') {
             Common.alert("Please enter spouse date of birth");
+            return false;
         }
-	    if($("#spouseContat").val == '') {
+	    if($("#spouseContat").val() == '') {
             Common.alert("Please enter spouse contact");
+            return false;
         }
 	}
 
@@ -1549,15 +1555,15 @@ function checkBankAccNo() {
 <tr>
     <th scope="row" id="spouseCodeLbl" name="spouseCodeLbl">MCode</th>
     <td>
-    <input type="text" title="" placeholder="MCode" class="w100p readonly " id="spouseCode" readonly="readonly" name="spouseCode" value=""/>
+    <input type="text" title="" placeholder="MCode" class="w100p" id="spouseCode" name="spouseCode" value=""/>
     </td>
     <th scope="row" id="spouseNameLbl" name="spouseNameLbl">Spouse Name</th>
     <td>
-    <input type="text" title="" placeholder="Spouse Nam" class="w100p readonly " id="spouseName" readonly="readonly"  name="spouseName" value=""/>
+    <input type="text" title="" placeholder="Spouse Nam" class="w100p" id="spouseName" name="spouseName" value=""/>
     </td>
     <th scope="row" id="spouseNricLbl" name="spouseNricLbl">NRIC / Passport No.</th>
     <td>
-    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p readonly " id="spouseNric" readonly="readonly"  name="spouseNric"  value=""/>
+    <input type="text" title="" placeholder="NRIC / Passport No." class="w100p" id="spouseNric" name="spouseNric"  value=""/>
     </td>
 </tr>
 <tr>
@@ -1567,11 +1573,11 @@ function checkBankAccNo() {
     </td>
     <th scope="row" id="spouseDobLbl" name="spouseDobLbl">Date of Birth</th>
     <td>
-    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date readonly" id="spouseDob" readonly="readonly"  name="spouseDob" value=""/>
+    <input type="text" title="" placeholder="DD/MM/YYYY" class="j_date readonly" id="spouseDob" name="spouseDob" value=""/>
     </td>
     <th scope="row" id="spouseContatLbl" name="spouseContatLbl">Contact No.</th>
     <td>
-    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p readonly" id="spouseContat" readonly="readonly"  name="spouseContat"  value=""/>
+    <input type="text" title="" placeholder="Contact No. (Numberic Only)" class="w100p readonly" id="spouseContat" name="spouseContat"  value=""/>
     </td>
 </tr>
 </tbody>
