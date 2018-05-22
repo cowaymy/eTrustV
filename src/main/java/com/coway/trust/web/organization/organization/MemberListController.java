@@ -1574,7 +1574,7 @@ public class MemberListController {
         EgovMap item2 = new EgovMap();
         params.put("srcA", "1");
         item2 = (EgovMap) memberListService.checkBankAcc(params);
-        bankAccCheck.put("cnt2", item.get("cnt"));
+        bankAccCheck.put("cnt2", item2.get("cnt"));
 
         return ResponseEntity.ok(bankAccCheck);
     }
