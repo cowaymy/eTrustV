@@ -3742,7 +3742,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		FROM ORG0001D
 		WHERE NRIC = #{nric}
 		AND STUS <> '51'
-        AND TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(RESIGN_DT, 'YYYYMMDD'), 'YYYYMMDD') > 180
     ]]>
     </select>
 
@@ -4309,7 +4308,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             <![CDATA[
                 FROM ORG0003D
                 WHERE APLICNT_BANK_ACC_NO = #{bankAccNo}
-                AND (STUS_ID <> '5' AND STUS_ID <> '102' AND STUS_ID <> '44')
+                AND STUS_ID <> '6'
             ]]>
         </if>
         <if test="srcM != '' and srcM != null ">
@@ -4317,7 +4316,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 FROM ORG0001D
                 WHERE BANK_ACC_NO = #{bankAccNo}
                 AND STUS <> '51'
-                AND TO_DATE(TO_CHAR(SYSDATE, 'YYYYMMDD'), 'YYYYMMDD') - TO_DATE(TO_CHAR(RESIGN_DT, 'YYYYMMDD'), 'YYYYMMDD') > 180
             ]]>
         </if>
       </select>

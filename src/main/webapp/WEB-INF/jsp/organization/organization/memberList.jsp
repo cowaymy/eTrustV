@@ -583,7 +583,7 @@ function fn_generateAgreement() {
 </ul>
 </aside><!-- title_line end -->
 
-<input id="userRole" name="userRole" value="${userRole} " />
+<input type="hidden" id="userRole" name="userRole" value="${userRole} " />
 
 <form id="agreementReport" name="agreementReport">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
