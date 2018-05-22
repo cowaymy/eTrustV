@@ -10,12 +10,12 @@ $(document).ready(function(){
 	   doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1389, inputId : 1, separator : '-'}, '', 'caseCategory', 'S'); //Reason Code
 	   doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1391, inputId : 1, separator : '-'}, '', 'finalAction', 'S'); //Reason Code
 	   doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1390, inputId : 1, separator : '-'}, '', 'docType', 'S'); //Reason Code
-	   
+
 	   AUIGrid.bind(myGridID_order, "removeRow", auiRemoveRowHandler);
-	   
+
 	   $("#hideContent").hide();
-	   
-	   
+
+
 	   $("#caseCategory").change(function(){
 	       if($("#caseCategory").val() == '2144' ){
 	    	   $("select[name=docType]").removeAttr("disabled");
@@ -26,11 +26,11 @@ $(document).ready(function(){
 	        	 $("select[name=docType]").attr('disabled', 'disabled');
 	             $("select[name=docType]").addClass("disabled");
 	             //$("select[name=docType]").addClass("w100p");
-	        }   
-		   
+	        }
+
 	   });
-	  
-	   
+
+
 });
 
 function fn_searchMember(){
@@ -38,7 +38,7 @@ function fn_searchMember(){
 }
 
 function fn_loadOrderSalesman(memId, memCode) {
-	
+
 	$("#memberCode").val(memCode);
 	$("#memberId").val(memId);
     console.log(' memId:'+memId);
@@ -46,7 +46,7 @@ function fn_loadOrderSalesman(memId, memCode) {
     $("#tabDetail").show();
     $(".btnHid").hide();
     $("#reselectBtn").show();
-    
+
     if(memCode.substring())
     fn_searchMemberDetail(memId);
 }
@@ -54,9 +54,9 @@ function fn_loadOrderSalesman(memId, memCode) {
 function fn_searchMemberDetail(memCode){
 	Common.ajax("GET", "/organization/compliance/getMemberDetail.do", {memberCode : memCode}, function(result) {
         console.log("성공.");
-        
+
         if(result.memType == "1" || result.memType == "2" ||  result.memType == "3"){
-            
+
             $("#ord1").html(result.orgCode+" (Organization Code)");
             $("#ord2").html(result.grpCode + " (Group Code)" );
             $("#ord3").html(result.deptCode + " (Department Code)");
@@ -126,9 +126,9 @@ function fn_registerOrderGrid() {
               type : "ButtonRenderer",
               labelText : "Remove",
               onclick : function(rowIndex, columnIndex, value, item) {
-            	  removeRow(); 
+            	  removeRow();
                   }
-        }  
+        }
     }, {
         dataField : "",
         headerText : "",
@@ -137,78 +137,78 @@ function fn_registerOrderGrid() {
               type : "ButtonRenderer",
               labelText : "▶",
               onclick : function(rowIndex, columnIndex, value, item) {
-                  
+
                   var salesOrdId = AUIGrid.getCellValue(myGridID_order, rowIndex, "salesOrdId");
-                  Common.popupDiv("/organization/compliance/complianceOrderFullDetailPop.do?salesOrderId="+salesOrdId ,null, null , true , ''); 
+                  Common.popupDiv("/organization/compliance/complianceOrderFullDetailPop.do?salesOrderId="+salesOrdId ,null, null , true , '');
                   }
-        }      
+        }
  }];
      // 그리드 속성 설정
     var gridPros = {
-        
+
              usePaging           : true,         //페이징 사용
-             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-             editable            : false,            
-             fixedColumnCount    : 1,            
-             showStateColumn     : false,             
-             displayTreeOpen     : false,            
-             selectionMode       : "singleRow",  //"multipleCells",            
-             headerHeight        : 30,       
+             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+             editable            : false,
+             fixedColumnCount    : 1,
+             showStateColumn     : false,
+             displayTreeOpen     : false,
+             selectionMode       : "singleRow",  //"multipleCells",
+             headerHeight        : 30,
              useGroupingPanel    : false,        //그룹핑 패널 사용
              skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
              wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID_order = AUIGrid.create("#grid_wrap_register", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false
-    
+
 };
 
 function fn_newOrder(){
 	var success = true;
-	
+
 	if($("#orderNo").val() == ""){
 		Common.alert("<spring:message code='sys.common.alert.validation' arguments='Order No' htmlEscape='false'/>");
 		return false;
 	}
 	Common.ajax("GET", "/organization/compliance/getCheckOrderNo.do", {orderNo : $("#orderNo").val()}, function(result) {
         console.log("성공.");
-	 
+
         if(result != null){
         	success = false;
         	Common.alert("Order No already in Case [" + $("#orderNo").val() + "], please use other order no..");
@@ -244,13 +244,13 @@ function fn_validation(){
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='Compliance remark' htmlEscape='false'/>");
         return false;
     }
-	
+
 	if($("#hidFileName").val() == '' ){
         Common.alert("<spring:message code='sys.common.alert.validation' arguments='attachment' htmlEscape='false'/>");
         return false;
     }
-	
-	
+
+
 	return true;
 }
 
@@ -261,7 +261,7 @@ function fn_save(){
 		Common.ajax("POST", "/organization/compliance/saveCompliance.do", jsonObj, function(result) {
 	        console.log("성공.");
 	        Common.alert("Compliance call Log saved.<br /> Case No : "+result.data+"<br />");
-	    });	
+	    });
 	}
 }
 
@@ -301,7 +301,12 @@ function fn_confirm(){
 	    $("#reselectBtn").show();
 	    $("input[name=memberCode]").attr('disabled', 'disabled');
 		var paramMemCode = $("#memberCode").val();
-		fn_searchMemberDetail(paramMemCode);
+
+		Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memCode : paramMemCode}, function(result) {
+			fn_searchMemberDetail(result.memId);
+        });
+
+		//fn_searchMemberDetail(paramMemCode);
 	}
 }
 </script>
@@ -333,7 +338,7 @@ function fn_confirm(){
 <tr>
     <th scope="row">Member Code</th>
     <td>
-    
+
     <input type="text" title="" placeholder="" class="" id="memberCode" name="memberCode" />
     <p class="btn_sky"><a href="#" class="btnHid" onclick="javascript:fn_confirm()">Confirm</a></p>
     <p class="btn_sky"><a href="#" onclick="javascript:fn_searchMember()" class="btnHid">Search</a></p>
