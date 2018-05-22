@@ -501,6 +501,10 @@ console.log("ready");
     	 checkBankAccNo();
      });
 
+     $('#issuedBank').blur(function() {
+         checkBankAccNo();
+     });
+
 });
 function createAUIGridDoc() {
     //AUIGrid 칼럼 설정
@@ -1086,7 +1090,7 @@ function checkBankAccNoEnter() {
 }
 
 function checkBankAccNo() {
-    var jsonObj = { "bankAccNo" : $("#bankAccNo").val() };
+    var jsonObj = { "bank" : $("#issuedBank").val(), "bankAccNo" : $("#bankAccNo").val() };
 
     Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
     	console.log(result);
@@ -1094,6 +1098,7 @@ function checkBankAccNo() {
             return true;
         } else {
             Common.alert("Bank account number has been registered.");
+            $("#issuedBank").val("");
             $("#bankAccNo").val("");
             return false;
         }

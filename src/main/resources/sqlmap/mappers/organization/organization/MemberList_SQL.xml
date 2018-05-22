@@ -4307,14 +4307,16 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         <if test="srcA != '' and srcA != null ">
             <![CDATA[
                 FROM ORG0003D
-                WHERE APLICNT_BANK_ACC_NO = #{bankAccNo}
+                WHERE APLICNT_BANK_ID = #{bank}
+                AND APLICNT_BANK_ACC_NO = #{bankAccNo}
                 AND STUS_ID <> '6'
             ]]>
         </if>
         <if test="srcM != '' and srcM != null ">
             <![CDATA[
                 FROM ORG0001D
-                WHERE BANK_ACC_NO = #{bankAccNo}
+                WHERE BANK = #{bank}
+                AND BANK_ACC_NO = #{bankAccNo}
                 AND STUS <> '51'
             ]]>
         </if>
