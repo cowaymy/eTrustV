@@ -302,8 +302,17 @@ function fn_confirm(){
 	    $("input[name=memberCode]").attr('disabled', 'disabled');
 		var paramMemCode = $("#memberCode").val();
 
-		Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memCode : paramMemCode}, function(result) {
-			fn_searchMemberDetail(result.memId);
+		Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memCode : paramMemCode}, function(memInfo) {
+			//fn_searchMemberDetail(result.memId);
+			    if(memInfo == null || memInfo == 'undefined') {
+                //Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');
+                Common.alert('<spring:message code="sal.alert.msg.memNotFoundInput"  arguments="'+paramMemCode+'"/>');
+            }
+            else {
+            	fn_searchMemberDetail(memInfo.memId);
+
+            }
+
         });
 
 		//fn_searchMemberDetail(paramMemCode);
