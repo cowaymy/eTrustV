@@ -499,7 +499,8 @@ function fn_onChange_cPromotionpac(o){
                                var t1 = oriprice - ( oriprice * ( promoPrcPrcnt /100 ) );
                                var t2 = 0;
                                if($("#eurCertYn").val() == "N"){
-                                   t2 =    (t1 -  promoAddDiscPrc) * 100 /106;
+                                   //t2 =    (t1 -  promoAddDiscPrc) * 100 /106; -- without GST 6% edited by TPY 23/05/2018
+                                   t2 =    (t1 -  promoAddDiscPrc)
                                    $("#hiddenNomalPrice").val( Number( Math.floor(t1)));
                                }else{
                                    t2 = t1 -  promoAddDiscPrc;
@@ -513,7 +514,8 @@ function fn_onChange_cPromotionpac(o){
                              var t2 = 0;
 
                         	 if($("#eurCertYn").val() == "N"){
-                        		 t2 = t1 *100 / 106;
+                        		 //t2 = t1 *100 / 106; -- without GST 6% edited by TPY 23/05/2018
+                        		 t2 = t1 ;
                                  $("#hiddenNomalPrice").val(Number( Math.floor(t1)));
                         	 }else{
                         		 t2 = t1;
@@ -580,8 +582,10 @@ function fn_getMembershipPackageInfo(_id){
                $("#hiddenNomalPrice").val(pacPrice);
 
                if($("#eurCertYn").val() == "N"){
-                   $("#txtPackagePrice").html(Math.floor(pacPrice *100/106));
-                   $("#hiddenPacOriPrice").val(Math.floor(pacPrice *100/106));
+                   //$("#txtPackagePrice").html(Math.floor(pacPrice *100/106)); -- without GST 6% edited by TPY 23/05/2018
+                   //$("#hiddenPacOriPrice").val(Math.floor(pacPrice *100/106)); -- without GST 6% edited by TPY 23/05/2018
+                   $("#txtPackagePrice").html(Math.floor(pacPrice));
+                   $("#hiddenPacOriPrice").val(Math.floor(pacPrice));
                }else{
                    $("#txtPackagePrice").html(pacPrice);
                    $("#hiddenPacOriPrice").val(pacPrice);
