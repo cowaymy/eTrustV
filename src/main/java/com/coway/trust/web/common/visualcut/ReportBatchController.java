@@ -116,6 +116,21 @@ public class ReportBatchController {
 		LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
 	}
 
+	@RequestMapping(value = "/ColorGrid_Daily_2018_Jan_Dec_S.do")
+	//@Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
+	public void colorGridDaily2018JanDecS() {
+		LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/ColorGrid_Daily_2018_Jan_Dec_S.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"ColorGrid" + File.separator + "ColorGrid_Daily_2018_Jan_Dec_S" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] SQLColorGrid_NoRental-Out-Ins_Excel...");
+	}
+
 	@RequestMapping(value = "/RentalMembership_CCP.do")
 	//@Scheduled(cron = "0 20 4 * * *")//Daily (4:20am)
 	public void rentalMembershipCCP() {
