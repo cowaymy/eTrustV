@@ -105,6 +105,8 @@ public interface OrderCancelMapper {
 
 	void updateCancelSAL0071D(Map<String, Object> params);
 
+	void insertOrdReactiveFee(Map<String, Object> params);
+
 	void updateCancelSAL0001D(Map<String, Object> params);
 
 	void insertCancelLOG0013D(Map<String, Object> params);
