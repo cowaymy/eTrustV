@@ -292,6 +292,7 @@ public class OrderCancelServiceImpl  extends EgovAbstractServiceImpl implements 
     				saveParam.put("rentalSchemeStusId", "ACT");
     			}else{
     				saveParam.put("rentalSchemeStusId", "REG");
+    				orderCancelMapper.insertOrdReactiveFee(saveParam);    //Insert Unbill billing
     			}
 				//saveParam.put("rentalSchemeStusId", reqStageIdValue);
 				orderCancelMapper.updateCancelSAL0071D(saveParam);											// RentalScheme
