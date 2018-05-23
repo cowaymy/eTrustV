@@ -53,11 +53,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
 	@Resource(name = "installationReversalMapper")
 	private InstallationReversalMapper installationReversalMapper;
-	
+
 
 	@Resource(name = "membershipRentalQuotationMapper")
 	private MembershipRentalQuotationMapper membershipRentalQuotationMapper;
-	
+
 
 
 	@Override
@@ -102,8 +102,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 //	public EgovMap getcustomerInfo(Object cust_id) {
 //		return installationResultListMapper.getcustomerInfo(cust_id);
 //	}
-//	
-	
+//
+
 
 	@Override
 	public EgovMap getcustomerInfo(Map<String, Object> params) {
@@ -182,13 +182,13 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 	public List<EgovMap> selectSalesPromoMs(int promotionId) {
 		return installationResultListMapper.selectSalesPromoMs(promotionId);
 	}
-	
-	
+
+
 	@Override
 	public int  insResultSync(Map<String, Object> params) {
 		return installationResultListMapper.insResultSync(params);
-	} 
-	
+	}
+
 
 	/*@Override
 	public EgovMap getPromoPriceAndPV(int promotionId, int productId) {
@@ -1494,41 +1494,45 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
     		  	//  params.put("srvSalesOrderId", CommonUtils.nvl( params.get("hidSalesOrderId")).toString());
     		    //  TAXRATE = membershipConvSaleMapper.getTaxRate(params);
-    		    //2018-03-08 수정 
-    		  	
+    		    //2018-03-08 수정
+
     		     String zeroRatYn = "Y";
     	 		 String eurCertYn = "Y";
-    	 		
+
     	         params.put("srvSalesOrderId", params.get("hidSalesOrderId"));
-    	 		 
+
     	         int zeroRat =  membershipRentalQuotationMapper.selectGSTZeroRateLocation(params);
     	 		 int EURCert = membershipRentalQuotationMapper.selectGSTEURCertificate(params);
-    	 		 
-    	 		 
-    	 		 int  filter_TAXRATE  =6;
-    	 		 int  filter_TAXCODE =32;
-    	 		
-    	 		 
-    	 		 //FILTER 
+
+
+    	 		 /* GST Rate - Amended By Kit
+    	 		  * int  filter_TAXRATE  =6;
+    	 		  * int  filter_TAXCODE =32;
+    	 		  * */
+    	 		int  filter_TAXRATE  =0;
+   	 		 	int  filter_TAXCODE =32;
+
+
+    	 		 //FILTER
 
     	 		 if(zeroRat > 0 ){
     	 			filter_TAXRATE =0 ;
     	 			filter_TAXCODE =39 ;
     	 		 }
-    	 		 
-    	 		 
+
+
     	 		 if(EURCert > 0 ) {
     	 			filter_TAXRATE =0 ;
     	 			filter_TAXCODE =28 ;
     	 		 }
-    	 		
-    	 		 	
+
+
     	          logger.debug("zeroRat ==========================>>  " + zeroRatYn);
     	          logger.debug("EURCert ==========================>>  " + eurCertYn);
-    		  
+
     		///////////////////////add by hgham     get taxRate  //////////////////
-    		      
-    		      
+
+
 
 
     		if(ApptypeID.equals("66") ){
@@ -1541,19 +1545,19 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 					  ////GST  do Not  2년 전부터 안했다고 함.
     			}
     		} else if(ApptypeID.equals("67")  || ApptypeID.equals("68") ||ApptypeID.equals("1412")){
-    			
+
     			///////////////////////////////  고객 정보 및 주소 추가 /////////////////////////////////////////
     			EgovMap   custInfoMap    = new EgovMap();
     			//EgovMap   micgAddres    = new EgovMap();
-    			
+
     			params.put("SALES_ORD_NO",params.get("hidTaxInvDSalesOrderNo")) ;
     			custInfoMap = installationResultListMapper.getCustInfo(params);
     			//custInfoMap = installationResultListMapper.getMAddressInfo(params);
-    			
+
     			 ///////////////////////////////  고객 정보 및 주소 추가 /////////////////////////////////////////
-    			
-    			
-    			
+
+
+
 
     			if(ApptypeID.equals("1412")){
         			if(outright35dAmount > 200){
@@ -1633,7 +1637,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         					taxInvoiceOutright.put("TAX_INVC_CUST_NAME",CommonUtils.nvl( custInfoMap.get("customer")));
         	        		taxInvoiceOutright.put("TAX_INVC_CNTC_PERSON", CommonUtils.nvl(custInfoMap.get("contact")));
         	        		// set address
-        	        		taxInvoiceOutright.put("TAX_INVC_ADDR1",CommonUtils.nvl(addrM.get("taxInvcAddr1")));    
+        	        		taxInvoiceOutright.put("TAX_INVC_ADDR1",CommonUtils.nvl(addrM.get("taxInvcAddr1")));
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR2",CommonUtils.nvl(addrM.get("taxInvcAddr2")));
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR3","");
         	        		taxInvoiceOutright.put("TAX_INVC_ADDR4","");
@@ -1684,7 +1688,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
         	            		 double  a =( outrightBalance - ( outrightBalance  * 100 / 106)) ;
         	            		 double  b =(outrightBalance  * 100 / 106 );
-        	            		 
+
         	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",Double.toString (a+b));
         	            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE",outrightSubProcessing);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(params.get("hidCategoryId")));
@@ -1722,11 +1726,11 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightSubBalance);
         	                	}
 
-        	            		
+
         	            		 double  a =( outrightBalance - ( outrightBalance  * 100 / 106)) ;
         	            		 double  b =(outrightBalance  * 100 / 106 );
         	            		taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",Double.toString (a+b));
-        	            		
+
         	            		//taxInvoiceOutrightSub.put("INVC_ITM_AMT_DUE",outrightSubBalance);
         	            		taxInvoiceOutrightSub.put("INVC_ITM_FEES_AMT_DUE","0");
         	            		taxInvoiceOutrightSub.put("INVC_ITM_PRODUCT_CTGRY",CommonUtils.nvl(custInfoMap.get("codeDesc")));
@@ -1994,7 +1998,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     				s46dup.put("updator",  installResult.get("creator"));
     				s46dup.put("installEntryId",  installResult.get("entryId"));
     				s46dup.put("installDate",  installResult.get("installDate"));
-    				
+
 
             		installationResultListMapper.updateInstallEntry(s46dup);
 
@@ -2039,7 +2043,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	if("66".equals(ApptypeID)){
         		installationResultListMapper.updateRentalStatus(orderLog);
         	}
-        	
+
         }
 
         //Fail
@@ -2059,17 +2063,17 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 				maxId = installationResultListMapper.selectMaxId(maxIdValue);
 				callEntry.put("callEntryId", maxId);
 				installationResultListMapper.updateCallEntry(callEntry);
-				
-				
+
+
 				Map m = new HashMap();
 				m.put("installEntryId", CommonUtils.nvl( installResult.get("entryId")));
 				m.put("stusCodeId", "21");
 				m.put("creator",installResult.get("creator"));
 				m.put("installResultId", maxId );
         		installationResultListMapper.updateInstallEntry(m);
-		
-				
-				
+
+
+
 			}
 
         	installationResultListMapper.insertOrderLog(orderLog);
@@ -2136,16 +2140,16 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 			for (int i = 0; i < updateItemList.size(); i++) {
 				Map<String, Object> updateMap = (Map<String, Object>) updateItemList.get(i);
 				logger.debug("updateMap : {}", updateMap);
-				
+
 				// 180312 select now assigned CT (previous)
 				// Compare View & DB
 				String prevCt_db = installationResultListMapper.selectPrevAssignCt(updateMap);
 				String prevCt_view = String.valueOf(updateMap.get("ctId"));
 				String newCt = String.valueOf(updateMap.get("insstallCtId"));
-				
+
 				// Only do when View & DB matching
 				if (prevCt_db.equals(prevCt_view)) {
-					
+
 					// Can't transfer to myself
 					if (newCt.equals(prevCt_view)) {
 						failCnt++;
@@ -2165,13 +2169,13 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 						transProc.put("T_CT", updateMap.get("insstallCtId") );
 						transProc.put("P_PRGNM", "TRNSFR");
 						transProc.put("P_USER", "9999999999");
-						
+
 						logger.debug("Transfer 물류 호출 PRAM ===> "+ transProc.toString());
 						servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST_TRANS(transProc);
 						procResult = transProc.get("p1").toString().substring(0, 3);
 						logger.debug("Transfer 물류 호출 결과 ===> " +procResult);
 						/////////////////////////물류 호출 END //////////////////////
-						
+
 						if (procResult.equals("000")) {
 							rtnValue = installationResultListMapper.updateAssignCT(updateMap) ;
 							successCnt += rtnValue;
@@ -2181,23 +2185,23 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 							failList.add(updateMap.get("installEntryNo").toString());
 						}
 					}
-					
+
 				} else {
-					
+
 					failCnt++;
 					failList.add(updateMap.get("installEntryNo").toString());
 					logger.debug("Fail Reason >> View & DB CT info not matching : " + prevCt_db + " / " + prevCt_view);
-					
+
 				}
-				
-				
+
+
 			}
 		}
 		resultValue.put("successCnt", successCnt);
 		resultValue.put("successList", successList);
 		resultValue.put("failCnt", failCnt);
 		resultValue.put("failList", failList);
-		
+
 		logger.debug("resultValue : {}", resultValue);
 		return resultValue;
 	}
@@ -2236,8 +2240,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		else{
 			params.put("isreqsms", 0);
 		}
-		
-		
+
+
 		int resultValue =installationResultListMapper.updateInstallResultEdit(params);
 		installationResultListMapper.updateInstallEntryEdit(params);
 
