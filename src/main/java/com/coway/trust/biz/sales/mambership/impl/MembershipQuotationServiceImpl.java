@@ -162,7 +162,8 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 
 			if("N".equals(params.get("zeroRatYn"))||"N".equals(params.get("eurCertYn"))){
 
-				sum  += Math.floor((double)(prc  * 100 / 106 ));
+				//sum  += Math.floor((double)(prc  * 100 / 106 )); -- without GST 6% edited by TPY 23/05/2018
+				sum  += Math.floor((double)(prc));
 
 			     logger.debug("SUM 111 :: ==========================>>  " + sum);
 
@@ -253,7 +254,8 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 			 srvMemPacAmt 	  	= CommonUtils.intNvl((String)params.get("srvMemPacAmt"));
 			 srvMemPacNetAmt 	= CommonUtils.intNvl((String)params.get("srvMemPacNetAmt"));
 
-			 srvMemPacNetAmt = (srvMemPacAmt  * 100 / 106  ) *100;
+			 //srvMemPacNetAmt = (srvMemPacAmt  * 100 / 106  ) *100; -- without GST 6% edited by TPY 23/05/2018
+			 srvMemPacNetAmt = srvMemPacAmt  * 100 ;
 			 cvtMemPacNetAmt = Math.round(srvMemPacNetAmt);
 
 			 srvMemPacNetAmt  = cvtMemPacNetAmt / 100;
@@ -277,7 +279,8 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 			 srvMemBSNetAmt  	= CommonUtils.intNvl((String)params.get("srvMemBSNetAmt"));
 			 srvMemBSAmt			= CommonUtils.intNvl((String)params.get("srvMemBSAmt"));
 
-			 srvMemBSNetAmt	=Math.round((double)(srvMemBSAmt  * 100 / 106 )*100)/100;
+			 //srvMemBSNetAmt	=Math.round((double)(srvMemBSAmt  * 100 / 106 )*100)/100; -- without GST 6% edited by TPY 23/05/2018
+			 srvMemBSNetAmt	=Math.round((double)(srvMemBSAmt)*100)/100;
 			 params.put("srvMemBSNetAmt",srvMemBSNetAmt );
 			 params.put("srvMemBSTaxes",srvMemBSAmt - srvMemBSNetAmt );
 
@@ -353,7 +356,9 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 
 						 double chargePrice =  Math.floor(Double.parseDouble(rMap.get("prc").toString())); //CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
 
-						 double stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 ) *100)/100;
+						 //double stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 ) *100)/100; -- without GST 6% edited by TPY 23/05/2018
+
+						 double stkNetAmt = Math.floor((float)(chargePrice) *100)/100;
 
 						 eFilterMap.put("StkChargePrice", stkNetAmt);
 						 eFilterMap.put("StkNetAmt", stkNetAmt);
@@ -367,8 +372,8 @@ public class MembershipQuotationServiceImpl extends EgovAbstractServiceImpl impl
 						 double   chargePrice =  Math.floor(Double.parseDouble(rMap.get("prc").toString())); //CommonUtils.intNvl(String.valueOf(rMap.get("prc")));
 						 double   stkNetAmt  =  0;
 
-						 stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 )*100)/100;
-
+						 //stkNetAmt = Math.floor((float)(chargePrice  * 100 / 106 )*100)/100; -- without GST 6% edited by TPY 23/05/2018
+						 stkNetAmt = Math.floor((float)(chargePrice)*100)/100;
 						 eFilterMap.put("StkNetAmt", stkNetAmt);
 						 eFilterMap.put("StkTaxes", chargePrice -stkNetAmt  );
 
