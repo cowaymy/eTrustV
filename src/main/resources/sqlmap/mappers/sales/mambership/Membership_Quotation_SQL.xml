@@ -1286,9 +1286,6 @@
 	                                      sList.STK_DESC        AS INVC_ITM_DESC1,
 	                                      '1'                          AS INVC_ITM_QTY,
 	                                      #{taxRate}            AS INVC_ITM_GST_RATE,
-	                                       --DECODE (#{taxRate} ,'6',round(((STK_CHRG_PRC) -(STK_CHRG_PRC * 100/106)),2),'0'  ) AS INVC_ITM_GST_TXS  ,
-	                                       --DECODE (#{taxRate}  ,'6', round((STK_CHRG_PRC * 100/106),2) , STK_CHRG_PRC  ) AS INVC_ITM_CHRG,
-
 							           STK_CHRG_PRC AS INVC_ITM_CHRG,
                                        STK_CHRG_PRC    AS INVC_ITM_AMT_DUE
 	                                      STK_CHRG_PRC    AS INVC_ITM_AMT_DUE
