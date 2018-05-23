@@ -419,20 +419,19 @@
       </insert>
 
       <select id="getFilterListData" parameterType="Map" resultType="egovMap">
-                             SELECT    
-                                          #{taxInvcId}           AS TAX_INVC_ID,           
-                                          '1265'                     AS INVC_ITM_TYPE,                
-                                          #{srvSalesOrdNo}     AS INVC_ITM_ORD_NO ,      
+                             SELECT
+                                          #{taxInvcId}           AS TAX_INVC_ID,
+                                          '1265'                     AS INVC_ITM_TYPE,
+                                          #{srvSalesOrdNo}     AS INVC_ITM_ORD_NO ,
                                           sList.STK_CODE        AS INVC_ITM_CODE ,
-                                          sList.STK_DESC        AS INVC_ITM_DESC1, 
+                                          sList.STK_DESC        AS INVC_ITM_DESC1,
                                           '1'                          AS INVC_ITM_QTY,
                                           #{taxRate}            AS INVC_ITM_GST_RATE,
-                                           DECODE (#{taxRate} ,'6'
-                                                                          ,round(((STK_CHRG_PRC) -(STK_CHRG_PRC * 100/106)),2)
-                                                                         ,'0'  ) AS INVC_ITM_GST_TXS  ,
-                                           DECODE (#{taxRate}  ,'6'
-                                                                           , round((STK_CHRG_PRC * 100/106),2)
-                                                                           , STK_CHRG_PRC  ) AS INVC_ITM_CHRG,
+                                           --DECODE (#{taxRate} ,'6',round(((STK_CHRG_PRC) -(STK_CHRG_PRC * 100/106)),2),'0'  ) AS INVC_ITM_GST_TXS  ,
+                                           --DECODE (#{taxRate}  ,'6', round((STK_CHRG_PRC * 100/106),2), STK_CHRG_PRC  ) AS INVC_ITM_CHRG,
+                                       '0' AS INVC_ITM_GST_TXS  ,
+                                       STK_CHRG_PRC AS INVC_ITM_CHRG,
+
                                           STK_CHRG_PRC    AS INVC_ITM_AMT_DUE
                               FROM ( SELECT Extent1.SRV_MEM_QUOT_FILTER_ID   ,
                                             Extent1.STK_ID   ,
@@ -441,24 +440,24 @@
                                             Extent1.STK_FILTER_PRC   ,
                                             Extent1.STK_CHRG_PRC   ,
                                             Extent2.STK_CODE   ,
-                                            Extent2.STK_DESC   
+                                            Extent2.STK_DESC
                                      FROM SAL0094D Extent1
                                             JOIN SYS0026M Extent2   ON Extent1.STK_ID = Extent2.STK_ID
                                       WHERE 1=1
                                         AND  Extent1.SRV_MEM_QUOT_ID = #{srvMemQuotId}
                                        ) sList
-                              ORDER BY sList.SRV_MEM_QUOT_FILTER_ID  ASC 
+                              ORDER BY sList.SRV_MEM_QUOT_FILTER_ID  ASC
       </select>
-      
-      
+
+
         <insert id="PAY0031D_INVC_ITM_UPDATE" parameterType="Map" >
-          UPDATE PAY0031D 
+          UPDATE PAY0031D
               SET (
-                    TAX_INVC_CHRG,     
-                    TAX_INVC_TXS,   
-                    TAX_INVC_AMT_DUE        
+                    TAX_INVC_CHRG,
+                    TAX_INVC_TXS,
+                    TAX_INVC_AMT_DUE
                  ) = (
-                         SELECT TO_NUMBER (INVC_ITM_CHRG +   round(#{V_INVC_ITM_CHRG},2)       )      TAX_INVC_CHRG ,      
+                         SELECT TO_NUMBER (INVC_ITM_CHRG +   round(#{V_INVC_ITM_CHRG},2)       )      TAX_INVC_CHRG ,
                                     TO_NUMBER (INVC_ITM_GST_TXS + round(#{V_INVC_ITM_GST_TXS} ,2) ) TAX_INVC_TXS ,
                                     TO_NUMBER (INVC_ITM_AMT_DUE +round(#{V_INVC_ITM_AMT_DUE} ,2)  ) TAX_INVC_AMT_DUE
                            FROM(
@@ -466,9 +465,12 @@
                                                sum(INVC_ITM_CHRG)         AS INVC_ITM_CHRG,
                                                sum(INVC_ITM_AMT_DUE)    AS INVC_ITM_AMT_DUE
                                  FROM(
-                                     SELECT    DECODE (#{taxRate},'6',  ROUND(((STK_CHRG_PRC) -(STK_CHRG_PRC * 100/106)),2),'0'  ) AS INVC_ITM_GST_TXS  ,
-                                                   DECODE (#{taxRate} ,'6', round((STK_CHRG_PRC * 100/106),2), STK_CHRG_PRC  )         AS INVC_ITM_CHRG,
-                                                   STK_CHRG_PRC    AS INVC_ITM_AMT_DUE
+                                     SELECT
+                                     --DECODE (#{taxRate},'6',  ROUND(((STK_CHRG_PRC) -(STK_CHRG_PRC * 100/106)),2),'0'  ) AS INVC_ITM_GST_TXS  ,
+                                     --DECODE (#{taxRate} ,'6', round((STK_CHRG_PRC * 100/106),2), STK_CHRG_PRC  )         AS INVC_ITM_CHRG,
+                                       '0' AS INVC_ITM_GST_TXS  ,
+                                       STK_CHRG_PRC AS INVC_ITM_CHRG,
+                                       STK_CHRG_PRC    AS INVC_ITM_AMT_DUE
                                       FROM ( SELECT Extent1.SRV_MEM_QUOT_FILTER_ID   ,
                                                     Extent1.STK_ID   ,
                                                     Extent1.STK_PRIOD   ,
@@ -476,17 +478,17 @@
                                                     Extent1.STK_FILTER_PRC   ,
                                                     Extent1.STK_CHRG_PRC   ,
                                                     Extent2.STK_CODE   ,
-                                                    Extent2.STK_DESC   
+                                                    Extent2.STK_DESC
                                              FROM SAL0094D Extent1
                                                     JOIN SYS0026M Extent2   ON Extent1.STK_ID = Extent2.STK_ID
                                               WHERE 1=1
                                                 AND  Extent1.SRV_MEM_QUOT_ID =  #{srvMemQuotId}
                                       ) sList
-                                      ORDER BY sList.SRV_MEM_QUOT_FILTER_ID  ASC 
+                                      ORDER BY sList.SRV_MEM_QUOT_FILTER_ID  ASC
                                  )
                               )
                             )
-               WHERE      TAX_INVC_ID =   #{taxInvcId}      
+               WHERE      TAX_INVC_ID =   #{taxInvcId}
            </insert>
       <insert id="PAY0032DFilter_insert" parameterType="Map" >
 
