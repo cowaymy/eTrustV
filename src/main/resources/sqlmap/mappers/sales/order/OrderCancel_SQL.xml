@@ -886,6 +886,13 @@ SELECT TT.CODE_ID
          WHERE REN_SCH_ID = #{renSchId}
     </update>
 
+
+    <select id="insertOrdReactiveFee" parameterType="Map"  statementType="CALLABLE">
+        {
+            call  SP_INSERT_ORD_REACT_FEES(#{salesOrdId},#{callCrtUserId})
+        }
+    </select>
+
     <select id="crtSeqLOG0031D"  resultType="java.lang.String">
         SELECT LOG0013D_MOV_ID_SEQ.NEXTVAL FROM DUAL
     </select>
