@@ -1825,7 +1825,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    			accOrderBill.put("accBillAdjustmentId", 0);
 	    			accOrderBill.put("accBillScheduleAmount", 120);
 	    			accOrderBill.put("accBillAdjustmentAmount", 0);
-	    			accOrderBill.put("accBillTaxesAmount",String.format("%.2f", 120 - ((120) * 100 / (double)106)));
+	    			//accOrderBill.put("accBillTaxesAmount",String.format("%.2f", 120 - ((120) * 100 / (double)106))); -- without GST 6% edited by TPY 24/05/2018
+	    			accOrderBill.put("accBillTaxesAmount",0);
 	    			accOrderBill.put("accBillNetAmount", String.format("%.2f",(double)120));
 	    			accOrderBill.put("accBillStatus", 1);
 	    			accOrderBill.put("accBillRemark",memberCode);
@@ -1833,7 +1834,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    			accOrderBill.put("accBillCreateBy", params.get("creator"));
 	    			accOrderBill.put("accBillGroupId", 0);
 	    			accOrderBill.put("accBillTaxCodeId", 32);
-	    			accOrderBill.put("accBillTaxRate", 6);
+	    			//accOrderBill.put("accBillTaxRate", 6); -- without GST 6% edited by TPY 24/05/2018
+	    			accOrderBill.put("accBillTaxRate", 0);
 	    			accOrderBill.put("accBillAcctConversion", 0);
 	    			accOrderBill.put("accBillContractId", 0);
 
@@ -1883,8 +1885,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    					InvMISC.put("taxInvoiceCountry",selectMiscList.get("name1"));
 	    					InvMISC.put("taxInvoiceTaskID",0);
 	    					InvMISC.put("taxInvoiceRemark","");
-	    					InvMISC.put("taxInvoiceCharges",String.format("%.2f",(double)120.00 * 100 / 106));
-	    					InvMISC.put("taxInvoiceTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106))));
+	    					//InvMISC.put("taxInvoiceCharges",String.format("%.2f",(double)120.00 * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
+	    					//InvMISC.put("taxInvoiceTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
+	    					InvMISC.put("taxInvoiceCharges",0);
+	    					InvMISC.put("taxInvoiceTaxes",0);
 	    					InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)120));
 	    					InvMISC.put("taxInvoiceCreated",new Date());
 	    					InvMISC.put("areaId",selectMiscList.get("areaId"));
@@ -1907,9 +1911,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    					InvMISCD.put("invoiceItemDescription2",selectMiscList.get("c7"));
 	    					InvMISCD.put("invoiceItemSerialNo","");
 	    					InvMISCD.put("invoiceItemQuantity",1);
-	    					InvMISCD.put("invoiceItemGSTRate",6);
-	    					InvMISCD.put("invoiceItemGSTTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106))));
-	    					InvMISCD.put("invoiceItemCharges",String.format("%.2f",((double)120.00) * 100 / 106));
+	    					//InvMISCD.put("invoiceItemGSTRate",6); -- without GST 6% edited by TPY 24/05/2018
+	    					//InvMISCD.put("invoiceItemGSTTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
+	    					//InvMISCD.put("invoiceItemCharges",String.format("%.2f",((double)120.00) * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
+	    					InvMISCD.put("invoiceItemGSTRate",0);
+	    					InvMISCD.put("invoiceItemGSTTaxes",0);
+	    					InvMISCD.put("invoiceItemCharges",0);
 	    					InvMISCD.put("invoiceItemAmountDue",String.format("%.2f",(double)120));
 	    					InvMISCD.put("invoiceItemAdd1","");
 	    					InvMISCD.put("invoiceItemAdd2","");
