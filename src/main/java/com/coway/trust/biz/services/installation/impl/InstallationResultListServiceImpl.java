@@ -1507,8 +1507,7 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
     	 		 /* GST Rate - Amended By Kit
     	 		  * int  filter_TAXRATE  =6;
-    	 		  * int  filter_TAXCODE =32;
-    	 		  * */
+    	 		  * int  filter_TAXCODE =32;*/
     	 		int  filter_TAXRATE  =0;
    	 		 	int  filter_TAXCODE =32;
 
@@ -1681,7 +1680,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
         	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",Double.toString(outrightSubProcessing  * 100 / 106 ));
         	                	}else{
         	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", "0");
-        	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightSubBalance);
+        	                		//taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightSubBalance);
+        	            			taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",outrightBalance);
         	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_GST_TXS","0");
         	                		taxInvoiceOutrightSub.put("INVC_ITM_FEES_CHRG",outrightSubProcessing);
         	                	}
@@ -1723,7 +1723,8 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 
         	                	}else{
         	            			taxInvoiceOutrightSub.put("INVC_ITM_GST_TXS", "0");
-        	                		taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightSubBalance);
+        	                		//taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightSubBalance);
+        	            			taxInvoiceOutrightSub.put("INVC_ITM_RENTAL_FEE",  outrightBalance);
         	                	}
 
 
