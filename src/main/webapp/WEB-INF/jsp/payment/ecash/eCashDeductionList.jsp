@@ -15,7 +15,10 @@ var claimTypeData = [{"codeId": "131","codeName": "Credit Card"}];
 //Status Combo Data
 var statusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "8","codeName": "Inactive"},{"codeId": "21","codeName": "Failed"}];
 
-var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},{"codeId": "3","codeName": "CIMB Bank"}];
+var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},
+                           {"codeId": "21","codeName": "Maybank"},
+                           {"codeId": "3","codeName": "CIMB Bank"}
+                           ];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
@@ -358,6 +361,11 @@ function fn_genClaim(){
         return;
     }
 
+	   if($("#new_cardType option:selected").val() == ''){
+	        Common.alert("* Please select Card Type.<br />");
+	        return;
+	    }
+
 	//저장 처리
 	var data = {};
     var formList = $("#newForm").serializeArray();       //폼 데이터
@@ -536,9 +544,9 @@ function fn_openFailedeCash() {
                         <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View eDeduction</a></p></li>
                         </c:if>
-                        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('NEW');">New eDeduction</a></p></li>
-                        </c:if>
+
                         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');">eDeduction Result</a></p></li>
                         </c:if>
@@ -740,6 +748,17 @@ function fn_openFailedeCash() {
                         <th scope="row">Issue Bank <span class="must">*</span></th>
                         <td>
                             <select id="new_issueBank" name="new_issueBank" class="w100p"></select>
+                        </td>
+                    </tr>
+                    <tr>
+                          <th scope="row">Card Type<span class="must" id="cardTypeMust">*</span></th>
+                        <td>
+                            <select id="new_cardType" name="new_cardType" class="w100p">
+                                <option value="">Choose One</option>
+                                <option value="All">All</option>
+                                <option value="Visa Card">Visa Card</option>
+                                <option value="Master Card">Master Card</option>
+                            </select>
                         </td>
                     </tr>
                    </tbody>
