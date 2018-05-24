@@ -10,6 +10,7 @@ import com.coway.trust.web.common.claim.ClaimFileALBHandler;
 import com.coway.trust.web.common.claim.ClaimFileBSNHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileCrcMBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
 import com.coway.trust.web.common.claim.ClaimFileHLBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileMBBHandler;
@@ -328,4 +329,11 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	public void downLoad(String id, Object parameter, ResultHandler resultHandler) {
 		excelDownloadMapper.getSqlSession().select(id, parameter, resultHandler);
 	}
+
+	@Override
+	public void downLoadClaimFileCrcMBB(Object parameter, ClaimFileCrcMBBHandler claimFileCrcMBBHandler) {
+		// TODO Auto-generated method stub
+
+	}
+
 }
