@@ -1708,7 +1708,7 @@ public class ClaimController {
 			downloadHandler = getTextDownloadCrcMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 
 			largeExcelService.downLoadClaimFileCrcMBB(claimMap, downloadHandler);
-			downloadHandler.writeFooter();
+			//downloadHandler.writeFooter();
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
