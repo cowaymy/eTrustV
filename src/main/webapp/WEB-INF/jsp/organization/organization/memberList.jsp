@@ -153,7 +153,7 @@ function fn_clickHpApproval(){
     Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantValidateForm").serialize(), function(result) {
         console.log(result);
 
-        if(result.stus == "98" && result.cnfm == "1" && result.cnfm_dt != "1900-01-01") {
+        if(result.stus == "102" && result.cnfm == "1" && result.cnfm_dt != "1900-01-01") {
             Common.confirm("Do you want to approve the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , fn_hpMemRegisPop );
         } else if (result.stus == "44" && result.cnfm == "0" && result.cnfm_dt == "1900-01-01") {
             Common.alert("Applicant has not accepted agreement.");
