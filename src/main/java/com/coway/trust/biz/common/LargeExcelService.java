@@ -6,6 +6,7 @@ import com.coway.trust.web.common.claim.ClaimFileALBHandler;
 import com.coway.trust.web.common.claim.ClaimFileBSNHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileCrcMBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
 import com.coway.trust.web.common.claim.ClaimFileHLBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileMBBHandler;
@@ -14,6 +15,7 @@ import com.coway.trust.web.common.claim.ClaimFileNewALBHandler;
 import com.coway.trust.web.common.claim.ClaimFilePBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileRHBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
+import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
 
 public interface LargeExcelService {
@@ -124,17 +126,21 @@ public interface LargeExcelService {
 
 	void downLoadClaimFileCrcCIMB(Object parameter, ClaimFileCrcCIMBHandler claimFileCrcCIMBHandler);
 
+	void downLoadClaimFileCrcMBB(Object parameter, ClaimFileCrcMBBHandler claimFileCrcMBBHandler);
+
 	void downLoadClaimFileFPX(Object parameter, ClaimFileFPXHandler claimFileFPXHandler);
 
 	void downloadInvcAdjExcelList(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downloadMonthlyBillRawData(Object parameter, ExcelDownloadHandler excelDownloadHandler);
-	
+
 	void downloadDailyCollectionRawData(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoadDCPMaster(Object parameter, ExcelDownloadHandler excelDownloadHandler);
 
 	void downLoadECashDeductionFileCIMB(Object parameter, ECashDeductionFileCIMBHandler downloadHandler);
+
+	void downLoadECashDeductionFileMBB(Object parameter, ECashDeductionFileMBBHandler downloadHandler);
 
 	void downLoad(String id, Object parameter, ResultHandler excelDownloadHandler);
 }
