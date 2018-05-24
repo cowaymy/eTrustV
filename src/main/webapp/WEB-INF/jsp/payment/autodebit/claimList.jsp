@@ -26,6 +26,11 @@ var bankData = [{"codeId": "2","codeName": "Alliance Bank"},
                 {"codeId": "46","codeName": "My Clear"}
                 ];
 
+//Issue Bank Combo Data for CRC
+var bankDataCRC = [
+                {"codeId": "3","codeName": "CIMB Bank"},
+                {"codeId": "21","codeName": "Maybank"}
+                ];
 //SMS Combo Data
 var smsData = [{"codeId": "0","codeName": "No"}, {"codeId": "1","codeName": "Yes"}];
 
@@ -44,7 +49,7 @@ $(document).ready(function(){
     //New Result 팝업 페이지
     doDefCombo(claimTypeData, '' ,'new_claimType', 'S', '');        //Claim Type 생성
     doDefCombo(claimDayData, '' ,'new_claimDay', 'S', '');           //Claim Day 생성
-    doDefCombo(bankData, '' ,'new_issueBank', 'S', '');               //Issue Bank 생성
+    //doDefCombo(bankData, '' ,'new_issueBank', 'S', '');               //Issue Bank 생성
 
 
     //Claim Type Combo 변경시 Issue Bank Combo 변경
@@ -82,8 +87,12 @@ $(document).ready(function(){
     			$('#new_debitDate').attr("placeholder","Debit Date (Same Day)");
     			$('#new_cardType').attr("disabled",false);
     			$("#cardTypeMust").show();
+    	        $('#new_issueBank').attr("disabled",false);
+    	        $("#issueBankMust").show();
+    	        doDefCombo(bankDataCRC, '' ,'new_issueBank', 'S', '');
     		}
     	}else{
+    		doDefCombo(bankData, '' ,'new_issueBank', 'S', '');
     		$('#new_issueBank').attr("disabled",false);
     		$("#issueBankMust").show();
     	}
@@ -92,23 +101,27 @@ $(document).ready(function(){
 
     //Pop-Up Issue Combo 변경시
     $('#new_issueBank').change(function (){
-    	$('#new_debitDate').attr("placeholder","Debit Date");
 
-    	switch($(this).val()){
-    	   case "2":
-    		   $('#new_debitDate').attr("placeholder","Debit Date (+1 Day Send Same Day)");
-    		   break;
-    	   case "3":
-    	   case "6":
-               $('#new_debitDate').attr("placeholder","Debit Date (Same Day)");
-               break;
-    	   case "7":
-    	   case "9" :
-    	   case "21" :
-               $('#new_debitDate').attr("placeholder","Debit Date (+1 Days)");
-               break;
-           default :
-        	   break;
+    	if($('#new_claimType').val() != 131 )
+    	{
+    		   $('#new_debitDate').attr("placeholder","Debit Date");
+
+		    	switch($(this).val()){
+		    	   case "2":
+		    		   $('#new_debitDate').attr("placeholder","Debit Date (+1 Day Send Same Day)");
+		    		   break;
+		    	   case "3":
+		    	   case "6":
+		               $('#new_debitDate').attr("placeholder","Debit Date (Same Day)");
+		               break;
+		    	   case "7":
+		    	   case "9" :
+		    	   case "21" :
+		               $('#new_debitDate').attr("placeholder","Debit Date (+1 Days)");
+		               break;
+		           default :
+		        	   break;
+		    	}
     	}
     });
 
@@ -138,85 +151,6 @@ $(document).ready(function(){
         return isCompatible;
     };
 
-    // 파일 선택하기
-	/*
-	$('#fileSelector').on('change', function(evt) {
-		if (!checkHTML5Brower()) {
-			// 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
-			// 파일 내용 읽어 반환시켜 그리드에 적용.
-			commitFormSubmit();
-			//alert("브라우저가 HTML5 를 지원하지 않습니다.");
-
-		} else {
-
-			var data = null;
-			var file = evt.target.files[0];
-
-			if (typeof file == "undefined") {
-				return;
-			}
-
-			var reader = new FileReader();
-			//reader.readAsText(file); // 파일 내용 읽기
-			reader.readAsText(file, "EUC-KR"); // 한글 엑셀은 기본적으로 CSV 포맷인 EUC-KR 임. 한글 깨지지 않게 EUC-KR 로 읽음
-
-			reader.onload = function(event) {
-				if (typeof event.target.result != "undefined") {
-					// 그리드 CSV 데이터 적용시킴
-					AUIGrid.setCsvGridData(updResultGridID, event.target.result, false);
-
-					//csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
-					AUIGrid.removeRow(updResultGridID,0);
-				} else {
-					alert('No data to import!');
-				}
-			};
-			reader.onerror = function() {
-				alert('Unable to read ' + file.fileName);
-			};
-		}
-	});
-	*/
-
-
-	//HTML5 브라우저 즉, FileReader 를 사용 못할 경우 Ajax 로 서버에 보냄
-	//서버에서 파일 내용 읽어 반환 한 것을 통해 그리드에 삽입
-	//즉, 이것은 IE 10 이상에서는 불필요 (IE8, 9 에서만 해당됨)
-	/*
-	function commitFormSubmit() {
-		AUIGrid.showAjaxLoader(updResultGridID);
-
-		// Submit 을 AJax 로 보내고 받음.
-		// ajaxSubmit 을 사용하려면 jQuery Plug-in 인 jquery.form.js 필요함
-		// 링크 : http://malsup.com/jquery/form/
-
-		$('#updResultForm').ajaxSubmit({
-			type : "json",
-			success : function(responseText, statusText) {
-
-				if(responseText != "error") {
-					var csvText = responseText;
-
-					// 기본 개행은 \r\n 으로 구분합니다.
-					// Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
-					// 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
-					// 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함.
-					csvText = csvText.replace(/\r?\n/g, "\r\n")
-
-					// 그리드 CSV 데이터 적용시킴
-					AUIGrid.setCsvGridData(updResultGridID, csvText);
-					AUIGrid.removeAjaxLoader(updResultGridID);
-
-					//csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
-					AUIGrid.removeRow(updResultGridID,0);
-				}
-			},
-			error : function(e) {
-				alert("ajaxSubmit Error : " + e);
-			}
-		});
-	}
-	*/
 });
 
 
@@ -777,12 +711,20 @@ function fn_genClaim(){
 				 Common.alert("<spring:message code='pay.alert.selectClaimDay'/>");
                  return;
              }
-
+		 }
+		 if($("#new_claimType option:selected").val() == "131")
+		 {
              if ($("#new_cardType option:selected").val() == '' ) {
                  Common.alert(" * Please select card type.");
                  return;
              }
-         } else if ($("#new_claimType option:selected").val() == "132") {
+
+             if ($("#new_issueBank option:selected").val() == '') {
+                 Common.alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
+                 return;
+             }
+         }
+		 else if ($("#new_claimType option:selected").val() == "132") {
              if ($("#new_issueBank option:selected").val() == '') {
             	 Common.alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
                  return;
