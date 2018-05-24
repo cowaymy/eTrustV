@@ -50,6 +50,7 @@ import com.coway.trust.web.common.claim.ClaimFileALBHandler;
 import com.coway.trust.web.common.claim.ClaimFileBSNHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
+import com.coway.trust.web.common.claim.ClaimFileCrcMBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
 import com.coway.trust.web.common.claim.ClaimFileHLBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileMBBHandler;
@@ -57,6 +58,7 @@ import com.coway.trust.web.common.claim.ClaimFileMyClearHandler;
 import com.coway.trust.web.common.claim.ClaimFileNewALBHandler;
 import com.coway.trust.web.common.claim.ClaimFilePBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileRHBHandler;
+import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -882,20 +884,33 @@ public class ClaimController {
             }
 		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 
-			//claimService.deleteClaimFileDownloadInfo(claimMap);
+            if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
+            {
+    			//10000건 단위로 추출하기 위해 전체 건수 조회
+    			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+    			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
 
-			//10000건 단위로 추출하기 위해 전체 건수 조회
-			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
-			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
+    			if (pageCnt > 0){
+    				for(int i = 1 ; i <= pageCnt ; i++){
+    					claimMap.put("pageNo", i);
+    					claimMap.put("rowCount", 10000);
+    					this.createClaimFileCrcCIMB(claimMap,i);
+    				}
+    			}
+            }
+            else if ("21".equals(String.valueOf(claimMap.get("ctrlBankId"))))
+            {
+    			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+    			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
 
-			if (pageCnt > 0){
-				for(int i = 1 ; i <= pageCnt ; i++){
-					claimMap.put("pageNo", i);
-					claimMap.put("rowCount", 10000);
-					this.createClaimFileCrcCIMB(claimMap,i);
-				}
-			}
-			//this.createClaimFileCrcCIMB(claimMap);
+    			if (pageCnt > 0){
+    				for(int i = 1 ; i <= pageCnt ; i++){
+    					claimMap.put("pageNo", i);
+    					claimMap.put("rowCount", 10000);
+    					this.createClaimFileCrcMBB(claimMap);
+    				}
+    			}
+            }
 
 		} else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 			//claimService.deleteClaimFileDownloadInfo(claimMap);
@@ -1661,6 +1676,64 @@ public class ClaimController {
 		excelDownloadVO.setFilePath(path);
 		excelDownloadVO.setSubFilePath(subPath);
 		return new ClaimFileCrcCIMBHandler(excelDownloadVO, params);
+	}
+
+	private ClaimFileCrcMBBHandler getTextDownloadCrcMBBHandler(String fileName, String[] columns, String[] titles, String path,
+			String subPath, Map<String, Object> params) {
+		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+		excelDownloadVO.setFilePath(path);
+		excelDownloadVO.setSubFilePath(subPath);
+		return new ClaimFileCrcMBBHandler(excelDownloadVO, params);
+	}
+
+	/**
+	 * CRC MMB - Create eCash Deduction File
+	 *
+	 * @param claimMap
+	 * @param claimDetailList
+	 * @throws Exception
+	 */
+	public void createClaimFileCrcMBB(EgovMap claimMap) throws Exception {
+
+		ClaimFileCrcMBBHandler downloadHandler = null;
+		String sFile;
+		String todayDate;
+		String inputDate;
+
+		try {
+			inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
+			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
+			sFile = "eCash_MBB_MBB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".txt";
+
+			downloadHandler = getTextDownloadCrcMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+
+			largeExcelService.downLoadClaimFileCrcMBB(claimMap, downloadHandler);
+			downloadHandler.writeFooter();
+
+		} catch (Exception ex) {
+			throw new ApplicationException(ex, AppConstants.FAIL);
+		} finally {
+			if (downloadHandler != null) {
+				try {
+					downloadHandler.close();
+				} catch (Exception ex) {
+					LOGGER.info(ex.getMessage());
+				}
+			}
+		}
+
+		// E-mail 전송하기
+		File file = new File(filePath + "/CRC/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("MayBank CRC Deduction File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
+
 	}
 
 	/**
