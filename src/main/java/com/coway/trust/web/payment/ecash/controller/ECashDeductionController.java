@@ -34,6 +34,7 @@ import com.coway.trust.web.common.claim.ClaimFileALBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
+import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
 import com.coway.trust.web.common.claim.FileInfoVO;
 import com.coway.trust.web.common.claim.FormDef;
 
@@ -459,4 +460,63 @@ public class ECashDeductionController {
 
 		return "payment/ecash/failedDeductionListPop";
 	}
+
+	private ECashDeductionFileMBBHandler getTextDownloadMBBHandler(String fileName, String[] columns, String[] titles, String path,
+			String subPath, Map<String, Object> params) {
+		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+		excelDownloadVO.setFilePath(path);
+		excelDownloadVO.setSubFilePath(subPath);
+		return new ECashDeductionFileMBBHandler(excelDownloadVO, params);
+	}
+
+	/**
+	 * CRC MMB - Create eCash Deduction File
+	 *
+	 * @param claimMap
+	 * @param claimDetailList
+	 * @throws Exception
+	 */
+	public void createECashDeductionFileMBB(EgovMap claimMap) throws Exception {
+
+		ECashDeductionFileMBBHandler downloadHandler = null;
+		String sFile;
+		String todayDate;
+		String inputDate;
+
+		try {
+			inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
+			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
+			sFile = "eCash_MBB_MBB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".txt";
+
+			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+
+			largeExcelService.downLoadECashDeductionFileMBB(claimMap, downloadHandler);
+			downloadHandler.writeFooter();
+
+		} catch (Exception ex) {
+			throw new ApplicationException(ex, AppConstants.FAIL);
+		} finally {
+			if (downloadHandler != null) {
+				try {
+					downloadHandler.close();
+				} catch (Exception ex) {
+					LOGGER.info(ex.getMessage());
+				}
+			}
+		}
+
+		// E-mail 전송하기
+		File file = new File(filePath + "/CRC/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("MayBank eAuto Debit CRC Deduction File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
+
+	}
+
 }
