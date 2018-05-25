@@ -1887,7 +1887,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    					InvMISC.put("taxInvoiceRemark","");
 	    					//InvMISC.put("taxInvoiceCharges",String.format("%.2f",(double)120.00 * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
 	    					//InvMISC.put("taxInvoiceTaxes",String.format("%.2f",(120 - ((double)120.00 * 100 / 106)))); -- without GST 6% edited by TPY 24/05/2018
-	    					InvMISC.put("taxInvoiceCharges",0);
+	    					InvMISC.put("taxInvoiceCharges",120);
 	    					InvMISC.put("taxInvoiceTaxes",0);
 	    					InvMISC.put("taxInvoiceAmountDue",String.format("%.2f",(double)120));
 	    					InvMISC.put("taxInvoiceCreated",new Date());
