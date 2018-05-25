@@ -15,10 +15,13 @@ var claimTypeData = [{"codeId": "131","codeName": "Credit Card"}];
 //Status Combo Data
 var statusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "8","codeName": "Inactive"},{"codeId": "21","codeName": "Failed"}];
 
-var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},
+/* var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},
                            {"codeId": "21","codeName": "Maybank"},
                            {"codeId": "3","codeName": "CIMB Bank"}
-                           ];
+                           ]; */
+                           var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},
+                                           {"codeId": "3","codeName": "CIMB Bank"}
+                                           ];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){

@@ -89,7 +89,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		try {
 			if (!isStarted) {
 				init();
-				writeHeader(result);
+				writeHeader();
 				isStarted = true;
 			}
 
@@ -104,20 +104,19 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		out = createFile();
 	}
 
-	private void writeHeader(ResultContext<? extends Map<String, Object>> result) throws IOException {
-		Map<String, Object> dataRow = result.getResultObject();
+	private void writeHeader() throws IOException {
 
-		BigDecimal totA = (BigDecimal)dataRow.get("totAmt");
+		BigDecimal totA = (BigDecimal)params.get("ctrlBillAmt");
 		long limit = totA.multiply(hunred).longValue();
 
 		// 헤더 작성
 		messageType	= StringUtils.rightPad(String.valueOf("H"), 1, " ");
-		sbatchNo      	= StringUtils.leftPad(String.valueOf(dataRow.get("bankDtlCtrlId")), 5, "0");
+		sbatchNo      	= StringUtils.leftPad(String.valueOf(params.get("batchNo")), 5, "0");
 		merOrg 			= StringUtils.rightPad(String.valueOf("001"), 3, " ");
 		merId 			= StringUtils.rightPad(String.valueOf("060012051"), 1, " ");
 		merName 		= StringUtils.rightPad(String.valueOf("COWAY (M) SDN BHD"), 20, " ");
 		merCode 		= StringUtils.rightPad(String.valueOf("7523"), 4, " ");
-		noOfTrans 		= StringUtils.leftPad(String.valueOf(dataRow.get("totSize")), 6, "0");
+		noOfTrans 		= StringUtils.leftPad(String.valueOf(params.get("ctrlTotItm")), 6, "0");
 		totAmt			= StringUtils.leftPad(String.valueOf(limit), 13, "0");
 		batchStus		= StringUtils.rightPad(String.valueOf("N"), 1, " ");
 		termId 			= StringUtils.rightPad(String.valueOf(""), 20, " ");
@@ -127,7 +126,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		filter1 			= StringUtils.rightPad(String.valueOf(""), 2, " ");
 		settleTerm 		= StringUtils.rightPad(String.valueOf(""), 8, " ");
 		filter2 			= StringUtils.rightPad(String.valueOf(""), 18, " ");
-		ret 				= StringUtils.rightPad("R", 1, " ");
+		ret 				= StringUtils.rightPad("", 1, " ");
 
 		//sSecCode = StringUtils.leftPad(String.valueOf((Integer.parseInt(sbatchNo) + 1208083646)), 10, " ");
 
@@ -143,12 +142,9 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
 
-		String transNo = String.valueOf(dataRow.get("bankDtlId"));
-		transNo = transNo.substring(transNo.length() - 6);
-
 		bMessageType = StringUtils.rightPad("T", 1, " ");
-		bBatchNo      	= StringUtils.leftPad(String.valueOf(dataRow.get("bankDtlCtrlId")), 5, "0");
-		bTransNo 		= StringUtils.rightPad(transNo, 6, " ");
+		bBatchNo      	= StringUtils.leftPad(String.valueOf(params.get("batchNo")), 5, "0");
+		bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
 		bTransCode 	= StringUtils.rightPad("40", 2, " ");
 		bAccNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlDrAccNo")), 19, " ");
 		//bAmount 		= StringUtils.rightPad(String.valueOf("1"), 13, " ");
@@ -161,10 +157,10 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		bDate 			= StringUtils.rightPad("", 6, " ");
 		bTime 			= StringUtils.rightPad("", 6, " ");
 		bRefNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlId")), 15, " ");
-		bRemark 		= StringUtils.rightPad(String.valueOf(dataRow.get("salesOrdNo")), 18, " ");
+		bRemark 		= StringUtils.rightPad(String.valueOf(dataRow.get("cntrctNOrdNo")), 18, " ");
 		bCvv 				= StringUtils.rightPad("", 3, " ");
 		bProductCode = StringUtils.rightPad("", 15, " ");
-		ret 				= StringUtils.rightPad("R", 1, " ");;
+		ret 				= StringUtils.rightPad("", 1, " ");;
 
 		//금액 계산
 		amount = (BigDecimal)dataRow.get("bankDtlAmt");
@@ -196,7 +192,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
 		sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");
 		sFiller      = StringUtils.leftPad("", 101, " ");
-		ret  		  = "R";
+		ret  		  = "";
 
 		sTextBtn = fMessage + sNoOfBatch + sRecTot + sBatchTot + sFiller + ret;
 

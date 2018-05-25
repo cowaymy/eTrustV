@@ -386,14 +386,17 @@ public class ECashDeductionController {
 					this.createECashDeductionFileCIMB(claimMap);
 				}
 			}
-        }else if ("21".equals(String.valueOf(claimMap.get("fileBatchBankId")))){
+        }else if ("19".equals(String.valueOf(claimMap.get("fileBatchBankId")))){// Standard Charted merchant getting MBB's cardHolder
+
         	int totRowCount = eCashDeductionService.selectECashDeductSubByIdCnt(map);
+        	int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
 			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
 
 			if (pageCnt > 0){
 				for(int i = 1 ; i <= pageCnt ; i++){
 					claimMap.put("pageNo", i);
 					claimMap.put("rowCount", 10000);
+					claimMap.put("batchNo",totBatToday);
 					this.createECashDeductionFileMBB(claimMap);
 				}
 			}
@@ -498,7 +501,7 @@ public class ECashDeductionController {
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-			sFile = "eCash_MBB_MBB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".dat";
+			sFile = "eCash_SCB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".dat";
 
 			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 			largeExcelService.downLoadECashDeductionFileMBB(claimMap, downloadHandler);

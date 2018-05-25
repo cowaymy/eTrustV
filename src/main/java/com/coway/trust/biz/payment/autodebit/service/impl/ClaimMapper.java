@@ -24,194 +24,196 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("claimMapper")
 public interface ClaimMapper {
 
-	
+
 	/**
 	 * Auto Debit - Claim List 리스트 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectClaimList(Map<String, Object> params);
-	
+
 	/**
 	 * Auto Debit - Claim Result Deactivate 처리 : 아이템 삭제
 	 * @param params
 	 * @return
 	 */
-	void deleteClaimResultItem(Map<String, Object> params);	
-	
+	void deleteClaimResultItem(Map<String, Object> params);
+
 	/**
 	 * Auto Debit - Claim Result Update : 아이템 등록
 	 * @param params
 	 * @return
 	 */
-	void insertClaimResultItem(Map<String, Object> params);	
-	
+	void insertClaimResultItem(Map<String, Object> params);
+
 	/**
 	 * Auto Debit - Claim Result Update : 아이템 등록
 	 * @param params
 	 * @return
 	 */
 	void insertClaimResultItemBulk(Map<String, Object> params);
-	
+
 	/**
 	 * Auto Debit - Claim Result Update : 아이템 등록
 	 * @param params
 	 * @return
 	 */
 	void updateClaimResultItemArrange(Map<String, Object> params);
-	
+
 	/**
 	 * Auto Debit - Claim Result Update : 아이템 등록
 	 * @param params
 	 * @return
 	 */
 	void removeItmId(Map<String, Object> params);
-	
+
 	/**
 	 * Auto Debit - Claim Result Update : 결과 조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectUploadResultBank(Map<String, Object> params);
-	
+
 	/**
 	 * Auto Debit - Claim Result Update : 결과 조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectUploadResultCRC(Map<String, Object> params);
-	
-	
-	
+
+
+
 	/**
 	 * Auto Debit - Claim Result Deactivate 처리 : 마스터 수정
 	 * @param params
 	 * @return
 	 */
 	void updateClaimResultStatus(Map<String, Object> params);
-	
+
 	/**
-	 * Auto Debit - Claim 조회 
+	 * Auto Debit - Claim 조회
 	 * @param params
 	 * @return
 	 */
-	EgovMap selectClaimById(Map<String, Object> params);	
-	
+	EgovMap selectClaimById(Map<String, Object> params);
+
 	/**
-	 * Auto Debit - Claim 조회 
+	 * Auto Debit - Claim 조회
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> selectClaimDetailById(Map<String, Object> params);	
-	
+	List<EgovMap> selectClaimDetailById(Map<String, Object> params);
+
 	/**
-	 * Auto Debit - Claim 조회 
+	 * Auto Debit - Claim 조회
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> selectClaimDetailByIdPaging(Map<String, Object> params);	
-	
+	List<EgovMap> selectClaimDetailByIdPaging(Map<String, Object> params);
+
 	/**
      * Auto Debit - Claim 생성 프로시저 호출
      * @param params
      */
 	Map<String, Object> createClaim(Map<String, Object> param);
-	
+
 	/**
 	 * Auto Debit - Claim Result Update Live
 	 * @param params
 	 * @return
 	 */
 	void updateClaimResultLive(Map<String, Object> params);
-	
+
 	/**
 	 * Auto Debit - Claim Result Update NEXT DAY
 	 * @param params
 	 * @return
 	 */
-	void updateClaimResultNextDay(Map<String, Object> params);	
-	
+	void updateClaimResultNextDay(Map<String, Object> params);
+
 	/**
 	 * Auto Debit - Claim Fail Deduction SMS 상세 리스트 조회
 	 * @param params
 	 * @return
 	 */
-	List<EgovMap> selectFailClaimDetailList(Map<String, Object> params);	
-	
+	List<EgovMap> selectFailClaimDetailList(Map<String, Object> params);
+
 	/**
 	 * Auto Debit - Fail Deduction SMS 재발송 처리
 	 * @param params
 	 * @return
 	 */
-	void sendFaileDeduction(Map<String, Object> params);	
-	
+	void sendFaileDeduction(Map<String, Object> params);
+
 	/**
-	 * Claim List - Schedule Claim Batch Pop-up 리스트 조회 
-	 * @param 
+	 * Claim List - Schedule Claim Batch Pop-up 리스트 조회
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	List<EgovMap> selectScheduleClaimBatchPop(Map<String, Object> params);
-	
+
 	/**
-	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
-	 * @param 
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	List<EgovMap> selectScheduleClaimSettingPop(Map<String, Object> params);
-	
+
 	/**
-	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
-	 * @param 
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	int isScheduleClaimSettingPop(Map<String, Object> params);
-	
+
 	/**
-	 * Claim List - Schedule Claim Batch Setting Pop-up 저장 
+	 * Claim List - Schedule Claim Batch Setting Pop-up 저장
 	 * @param params
 	 * @param model
 	 * @return
 	 */
-	void saveScheduleClaimSettingPop(Map<String, Object> params);	
-	
+	void saveScheduleClaimSettingPop(Map<String, Object> params);
+
 	/**
-	 * Claim List - Schedule Claim Batch Setting Pop-up 삭제 
+	 * Claim List - Schedule Claim Batch Setting Pop-up 삭제
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	void removeScheduleClaimSettingPop(Map<String, Object> params);
-	
+
 	 /**
-	 * Claim List - Regenerate CRC File 전체 카운트 조회 
+	 * Claim List - Regenerate CRC File 전체 카운트 조회
 	 * @param params
 	 * @return
 	 */
 	int selectClaimDetailByIdCnt(Map<String, Object> params);
-	
+
+	int selectClaimDetailBatchGen(Map<String, Object> params);
+
 	/**
 	 * Auto Debit - Claim Result Deactivate 처리 : 아이템 삭제
 	 * @param params
 	 * @return
 	 */
-	void deleteClaimFileDownloadInfo(Map<String, Object> params);	
-	
+	void deleteClaimFileDownloadInfo(Map<String, Object> params);
+
 	/**
 	 * Auto Debit - Claim Result Deactivate 처리 : 아이템 삭제
 	 * @param params
 	 * @return
 	 */
 	void insertClaimFileDownloadInfo(Map<String, Object> params);
-	
+
 	/**
-	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회 
-	 * @param 
+	 * Claim List - Schedule Claim Batch Setting Pop-up 리스트 조회
+	 * @param
 	 * @param params
 	 * @param model
 	 * @return

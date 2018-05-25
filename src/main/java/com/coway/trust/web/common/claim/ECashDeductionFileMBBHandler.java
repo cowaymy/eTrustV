@@ -89,7 +89,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		try {
 			if (!isStarted) {
 				init();
-				writeHeader(result);
+				writeHeader();
 				isStarted = true;
 			}
 
@@ -104,20 +104,19 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		out = createFile();
 	}
 
-	private void writeHeader(ResultContext<? extends Map<String, Object>> result) throws IOException {
-		Map<String, Object> dataRow = result.getResultObject();
+	private void writeHeader() throws IOException {
 
-		BigDecimal totA = (BigDecimal)dataRow.get("totAmt");
+		BigDecimal totA = (BigDecimal)params.get("fileBatchTotAmt");
 		long limit = totA.multiply(hunred).longValue();
 
 		// 헤더 작성
 		messageType	= StringUtils.rightPad(String.valueOf("H"), 1, " ");
-		sbatchNo      	= StringUtils.leftPad(String.valueOf(dataRow.get("fileBatchId")), 5, "0");
+		sbatchNo      	= StringUtils.leftPad(String.valueOf(params.get("batchNo")), 5, "0");
 		merOrg 			= StringUtils.rightPad(String.valueOf("001"), 3, " ");
 		merId 			= StringUtils.rightPad(String.valueOf("060012051"), 1, " ");
 		merName 		= StringUtils.rightPad(String.valueOf("COWAY (M) SDN BHD"), 20, " ");
 		merCode 		= StringUtils.rightPad(String.valueOf("7523"), 4, " ");
-		noOfTrans 		= StringUtils.leftPad(String.valueOf(dataRow.get("totSize")), 6, "0");
+		noOfTrans 		= StringUtils.leftPad(String.valueOf(params.get("fileBatchTotRcord")), 6, "0");
 		totAmt			= StringUtils.leftPad(String.valueOf(limit), 13, "0");
 		batchStus		= StringUtils.rightPad(String.valueOf("N"), 1, " ");
 		termId 			= StringUtils.rightPad(String.valueOf(""), 20, " ");
@@ -127,7 +126,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		filter1 			= StringUtils.rightPad(String.valueOf(""), 2, " ");
 		settleTerm 		= StringUtils.rightPad(String.valueOf(""), 8, " ");
 		filter2 			= StringUtils.rightPad(String.valueOf(""), 18, " ");
-		ret 				= StringUtils.rightPad("R", 1, " ");
+		ret 				= StringUtils.rightPad("", 1, " ");
 
 		//sSecCode = StringUtils.leftPad(String.valueOf((Integer.parseInt(sbatchNo) + 1208083646)), 10, " ");
 
@@ -145,8 +144,8 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 
 		String exp = StringUtils.isEmpty(String.valueOf(dataRow.get("fileItmAccExpr"))) ? "0000" : String.valueOf(dataRow.get("fileItmAccExpr"));
 		bMessageType = StringUtils.rightPad("T", 1, " ");
-		bBatchNo      	= StringUtils.leftPad(String.valueOf(dataRow.get("fileBatchId")), 5, "0");
-		bTransNo 		= StringUtils.rightPad(String.valueOf(dataRow.get("fileItmId")), 6, " ");
+		bBatchNo      	= StringUtils.leftPad(String.valueOf(params.get("batchNo")), 5, "0");
+		bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
 		bTransCode 	= StringUtils.rightPad("40", 2, " ");
 		bAccNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("fileItmAccNo")), 19, " ");
 		//bAmount 		= StringUtils.rightPad(String.valueOf("1"), 13, " ");
@@ -162,7 +161,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		bRemark 		= StringUtils.rightPad(String.valueOf(dataRow.get("salesOrdNo")), 18, " ");
 		bCvv 				= StringUtils.rightPad("", 3, " ");
 		bProductCode = StringUtils.rightPad("", 15, " ");
-		ret 				= StringUtils.rightPad("R", 1, " ");;
+		ret 				= StringUtils.rightPad("", 1, " ");;
 
 		//금액 계산
 		amount = (BigDecimal)dataRow.get("fileItmAmt");
@@ -190,11 +189,11 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 	public void writeFooter() throws IOException {
 
 		fMessage = "R";
-		sNoOfBatch = StringUtils.leftPad("001",3,"");
+		sNoOfBatch =StringUtils.leftPad(String.valueOf(params.get("batchNo")),3,"");
 		sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
 		sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");
 		sFiller      = StringUtils.leftPad("", 101, " ");
-		ret  		  = "R";
+		ret  		  = StringUtils.leftPad("", 1, " ");
 
 		sTextBtn = fMessage + sNoOfBatch + sRecTot + sBatchTot + sFiller + ret;
 

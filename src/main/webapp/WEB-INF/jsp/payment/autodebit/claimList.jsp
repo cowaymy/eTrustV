@@ -29,7 +29,8 @@ var bankData = [{"codeId": "2","codeName": "Alliance Bank"},
 //Issue Bank Combo Data for CRC
 var bankDataCRC = [
                 {"codeId": "3","codeName": "CIMB Bank"},
-                {"codeId": "21","codeName": "Maybank"}
+                {"codeId": "19","codeName": "Standard Chartered Bank"}
+                /* {"codeId": "21","codeName": "Maybank"} */
                 ];
 //SMS Combo Data
 var smsData = [{"codeId": "0","codeName": "No"}, {"codeId": "1","codeName": "Yes"}];

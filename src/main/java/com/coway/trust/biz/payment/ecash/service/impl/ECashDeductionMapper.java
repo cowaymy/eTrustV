@@ -100,4 +100,6 @@ public interface ECashDeductionMapper {
 	 * @return
 	 */
 	int selectECashDeductSubByIdCnt(Map<String, Object> params);
+
+	int selectECashDeductBatchGen(Map<String, Object> params);
 }

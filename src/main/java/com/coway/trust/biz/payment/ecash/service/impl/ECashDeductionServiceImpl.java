@@ -38,81 +38,49 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
 	@Resource(name = "eCashDeductionMapper")
 	private ECashDeductionMapper eCashDeductionMapper;
 
-	/**
-	 * E-Cash - List
-	 * @param params
-	 * @return
-	 */
 	@Override
 	public List<EgovMap> selectECashDeductList(Map<String, Object> params) {
 		return eCashDeductionMapper.selectECashDeductList(params);
 	}
 
-	/**
-	 *  E-Cash - eCash By ID
-	 * @param params
-	 * @return
-	 */
 	@Override
 	public EgovMap selectECashDeductById(Map<String, Object> params) {
 		return eCashDeductionMapper.selectECashDeductById(params);
 	}
 
-	/**
-	 *  E-Cash - eCash By ID
-	 * @param params
-	 * @return
-	 */
 	@Override
 	public List<EgovMap>  selectECashDeductSubById(Map<String, Object> params) {
 		return eCashDeductionMapper.selectECashDeductSubById(params);
 	}
 
 
-	/**
-	 *  E-Cash - eCash By ID Count
-	 * @param params
-	 * @return
-	 */
 	@Override
 	public int selectECashDeductSubByIdCnt(Map<String, Object> params) {
 		return eCashDeductionMapper.selectECashDeductSubByIdCnt(params);
 	}
 
+	@Override
+	public int selectECashDeductBatchGen(Map<String, Object> params) {
+		return eCashDeductionMapper.selectECashDeductBatchGen(params);
+	}
 
-	/**
-	 * E-Cash sub - List
-	 * @param params
-	 * @return
-	 */
+
 	@Override
 	public List<EgovMap> selectECashDeductSubList(Map<String, Object> params) {
 		return eCashDeductionMapper.selectECashDeductSubList(params);
 	}
 
-	/**
-     * E-Cash - Create new claim
-     * @param params
-     */
 	@Override
     public Map<String, Object> createECashDeduction(Map<String, Object> param){
 		return eCashDeductionMapper.createECashDeduction(param);
 	}
 
-	/**
-     * E-Cash - eCash Result Deactivate
-     * @param params
-     */
 	@Override
     public void deactivateECashDeductionStatus(Map<String, Object> param){
 		eCashDeductionMapper.deactivateEAutoDebitDeduction(param);
 		eCashDeductionMapper.deactivateEAutoDebitDeductionSub(param);
 	}
 
-	 /**
-     * E-Cash - eCash Result Item Update
-     * @param params
-     */
 	@Override
     public void updateECashDeductionResultItem(Map<String, Object> eCashMap, List<Object> resultItemList ){
 
@@ -127,10 +95,6 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
     	}
 	}
 
-	/**
-     * E-Cash - eCash Result Update
-     * @param params
-     */
 	@Override
     public void updateECashDeductionResult(Map<String, Object> eCashMap){
 		eCashDeductionMapper.updateECashDeductionResult(eCashMap);

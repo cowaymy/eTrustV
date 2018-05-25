@@ -301,6 +301,19 @@
 
     </select>
 
+    <!--Auto Debit - Claim Detail 조회 -->
+    <select id="selectClaimDetailBatchGen" parameterType="Map" resultType="int">
+        SELECT
+           COUNT(1) AS CNT
+        FROM  PAY0041D
+        WHERE 1 = 1
+        AND CTRL_IS_CRC = 1
+        AND CTRL_BANK_ID = 19
+        AND TO_CHAR(CRT_DT,'DD/MM/YYYY hh:mi:ss A.M.')
+        BETWEEN (SELECT  TO_CHAR(CRT_DT,'DD/MM/YYYY') FROM PAY0041D WHERE CTRL_ID = #{ctrlId})
+        AND  (SELECT  TO_CHAR(CRT_DT,'DD/MM/YYYY hh:mi:ss A.M.') FROM PAY0041D WHERE CTRL_ID = #{ctrlId})
+    </select>
+
 
     <!--Auto Debit - Claim Detail 조회 -->
     <select id="selectClaimDetailByIdPaging" parameterType="Map" resultType="egovMap">
@@ -382,7 +395,7 @@
         <!-- ORDER BY
             Extent1.BANK_DTL_DR_ACC_NO ASC -->
              ) Z
-                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY BANK_DTL_DR_ACC_NO ASC)
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY BANK_DTL_ID ASC)
         WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
     </select>
 
@@ -451,12 +464,9 @@
                     som.STUS_CODE_ID <![CDATA[   <> ]]> 10
                     AND rs.MODE_ID = 131
                     AND som.APP_TYPE_ID IN (66,1412)
-                    AND rs.BANK_ID IN (19,34,17,28,18,31,16)
                     AND som.SALES_ORD_ID = Extent3.SALES_ORD_ID
                     AND ROWNUM = 1
-                ) AS RENT_PAY_CRC_EXPR,
-                (SELECT sum(bank_dtl_amt) FROM pay0042d WHERE bank_dtl_ctrl_id = extent1.bank_dtl_ctrl_id) tot_Amt,
-                (SELECT count(bank_dtl_amt) FROM pay0042d WHERE bank_dtl_ctrl_id = extent1.bank_dtl_ctrl_id) tot_Size
+                ) AS RENT_PAY_CRC_EXPR
         FROM
             PAY0042D Extent1
             LEFT JOIN SYS0004M Extent2 ON Extent2.BANK_ID = Extent1.BANK_DTL_BANK_ID
@@ -468,7 +478,7 @@
         <!-- ORDER BY
             Extent1.BANK_DTL_DR_ACC_NO ASC -->
              ) Z
-                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY BANK_DTL_DR_ACC_NO ASC)
+                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY RNUM ASC)
         WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
     </select>
 
