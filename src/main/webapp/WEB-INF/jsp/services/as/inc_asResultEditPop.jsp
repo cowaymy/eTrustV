@@ -7,65 +7,65 @@
 var  myFltGrd10;
 
 $(document).ready(function(){
-    
+
 
     createCFilterAUIGrid() ;
-    
-    doGetCombo('/services/as/getASFilterInfo.do?AS_ID=${AS_ID}', '', '','ddlFilterCode', 'S' , ''); 
-    doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');    
-    doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '','ddlFailReason', 'S' , '');    
-    
-   //doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');    
-   //doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');   
-   
-      
-   doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');    
+
+    doGetCombo('/services/as/getASFilterInfo.do?AS_ID=${AS_ID}', '', '','ddlFilterCode', 'S' , '');
+    doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=336', '', '','ddlFilterExchangeCode', 'S' , '');
+    doGetCombo('/services/as/getASReasonCode.do?RESN_TYPE_ID=166', '', '','ddlFailReason', 'S' , '');
+
+   //doGetCombo('/services/as/getASMember.do', '', '','ddlCTCode', 'S' , 'fn_setCTcodeValue');
+   //doGetCombo('/services/as/getBrnchId.do', '', '','ddlDSCCode', 'S' , '');
+
+
+   doGetCombo('/services/as/inHouseGetProductMasters.do', '', '','productGroup', 'S' , '');
    fn_getErrMstList('${ORD_NO}') ;
-   
-   
-   // 행 추가 이벤트 바인딩 
+
+
+   // 행 추가 이벤트 바인딩
    AUIGrid.bind(myFltGrd10, "addRow", auiAddRowHandler);
-   
-   // 행 삭제 이벤트 바인딩 
+
+   // 행 삭제 이벤트 바인딩
    AUIGrid.bind(myFltGrd10, "removeRow", auiRemoveRowHandler);
-   
+
    var isF= true;
    AUIGrid.bind(myFltGrd10, "rowStateCellClick", function( event ) {
-        
+
 		   console.log(event);
-	       if(event.marker == "added") { 
-	           
+	       if(event.marker == "added") {
+
 	           if( event.item.filterType =="CHG"){
 	               var   fChage     = Number($("#txtFilterCharge").val());
 	               var   totchrge  = Number($("#txtTotalCharge").val());
-	               
+
 	               $("#txtFilterCharge").val(fChage  -  Number(event.item.filterTotal));
 	               $("#txtTotalCharge").val(totchrge  -  Number(event.item.filterTotal));
 	           }
 	           console.log(event);
-	
-	       
+
+
 	        }else if(event.marker == "removed"){
-	            
+
 	             if( event.item.filterType =="CHG"){
 	                   var   fChage = Number($("#txtFilterCharge").val());
 	                   var   totchrge  = Number($("#txtTotalCharge").val());
-	                   
+
 	                   $("#txtFilterCharge").val(fChage  +  Number(event.item.filterTotal));
 	                   $("#txtTotalCharge").val(totchrge  +   Number(event.item.filterTotal));
 	             }
-	
+
 	        }else if(  event.marker == "added-edited"){
-	            
+
 	        }
-    
+
    });
- 
-   
+
+
 });
 
 function createCFilterAUIGrid() {
-   
+
         var  clayout = [
                             {dataField : "filterType",     headerText  : "Type" ,editable       : false  } ,
                             { dataField : "filterDesc",      headerText  : "Description",  width  :200 },
@@ -77,7 +77,7 @@ function createCFilterAUIGrid() {
                             {
                                 dataField : "undefined",
                                 headerText : " ",
-                                width           : 110,    
+                                width           : 110,
                                 renderer : {
                                     type : "ButtonRenderer",
                                     labelText : "Remove",
@@ -88,14 +88,14 @@ function createCFilterAUIGrid() {
                             },
                             { dataField : "filterID",     headerText  : "filterID",  width          :150,    editable       : false ,   visible:false }
 
-                            
-                            
-     ];   
 
-    var gridPros2 = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};  
+
+     ];
+
+    var gridPros2 = { usePaging : true,  pageRowCount: 20, editable: true, fixedColumnCount : 1, selectionMode : "singleRow",  showRowNumColumn : true};
      myFltGrd10 = GridCommon.createAUIGrid("asfilter_grid_wrap", clayout  ,"" ,gridPros2);
-     
-     AUIGrid.resize(myFltGrd10, 950,200);   
+
+     AUIGrid.resize(myFltGrd10, 950,200);
 }
 
 
@@ -112,41 +112,41 @@ function auiAddRowHandler(event) {
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandler(event) {
 
-  
+
   console.log(event);
   if( event.items[0].filterType =="CHG"){
       var   fChage     = Number($("#txtFilterCharge").val());
       var   totchrge  = Number($("#txtTotalCharge").val());
-      
+
       $("#txtFilterCharge").val(fChage  -  Number(event.items[0].filterTotal));
       $("#txtTotalCharge").val(totchrge  -  Number(event.items[0].filterTotal));
   }
-  
+
 }
 
 
 
 
 function fn_setASRulstSVC0004DInfo(){
-	
-	
+
+
 }
 
 function fn_getErrMstList(_ordNo){
-    
+
      var SALES_ORD_NO = _ordNo ;
      $("#ddlErrorCode option").remove();
-     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , 'fn_errCallbackFun');            
+     doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','ddlErrorCode', 'S' , 'fn_errCallbackFun');
 }
 
 
 
 function fn_errMst_SelectedIndexChanged(){
-    
+
     var DEFECT_TYPE_CODE = $("#ddlErrorCode").val();
-    
+
      $("#ddlErrorDesc option").remove();
-     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','ddlErrorDesc', 'S' , '');            
+     doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+DEFECT_TYPE_CODE, '', '','ddlErrorDesc', 'S' , '');
 }
 
 
@@ -156,10 +156,10 @@ function fn_getASRulstEditFilterInfo(){
     Common.ajax("GET", "/services/as/getASRulstEditFilterInfo", {AS_RESULT_NO:$('#asData_AS_RESULT_NO').val() } , function(result) {
         console.log("fn_getASRulstEditFilterInfo.");
         console.log( result);
-        
-        
-        AUIGrid.setGridData(myFltGrd10, result);        
-    });  
+
+
+        AUIGrid.setGridData(myFltGrd10, result);
+    });
 }
 
 
@@ -168,7 +168,7 @@ function fn_getASRulstSVC0004DInfo(){
     Common.ajax("GET", "/services/as/getASRulstSVC0004DInfo",{AS_RESULT_NO:$('#asData_AS_RESULT_NO').val()} , function(result) {
         console.log("fn_getASRulstSVC0004DInfo.");
         console.log( result);
-        
+
         if(result !=""){
                fn_setSVC0004dInfo(result);
         }
@@ -182,40 +182,40 @@ var asMalfuncResnId;
 
 
 function fn_callback_ddlErrorDesc(){
-    
-    $("#ddlErrorDesc").val( asMalfuncResnId); 
+
+    $("#ddlErrorDesc").val( asMalfuncResnId);
 }
 
 
 
 function  fn_setSVC0004dInfo(result){
 
-    $("#creator").val( result[0].c28); 
-    $("#creatorat").val( result[0].asResultCrtDt); 
-    $("#txtResultNo").val( result[0].asResultNo); 
-    $("#ddlStatus").val( result[0].asResultStusId); 
-    $("#dpSettleDate").val( result[0].asSetlDt); 
-    $("#ddlFailReason").val( result[0].c2); 
-    $("#tpSettleTime").val( result[0].asSetlTm); 
-    $("#ddlDSCCode").val( result[0].asBrnchId); 
-    
-    
-    $("#ddlErrorCode").val( result[0].asMalfuncId); 
-    $("#ddlErrorDesc").val( result[0].asMalfuncResnId); 
-    
-    
+    $("#creator").val( result[0].c28);
+    $("#creatorat").val( result[0].asResultCrtDt);
+    $("#txtResultNo").val( result[0].asResultNo);
+    $("#ddlStatus").val( result[0].asResultStusId);
+    $("#dpSettleDate").val( result[0].asSetlDt);
+    $("#ddlFailReason").val( result[0].c2);
+    $("#tpSettleTime").val( result[0].asSetlTm);
+    $("#ddlDSCCode").val( result[0].asBrnchId);
+
+
+    $("#ddlErrorCode").val( result[0].asMalfuncId);
+    $("#ddlErrorDesc").val( result[0].asMalfuncResnId);
+
+
 
     asMalfuncResnId = result[0].asMalfuncResnId;
 
     if(result[0].asMalfuncId !=""){
         $("#ddlErrorDesc option").remove();
-        doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+result[0].asMalfuncId  , '', '','ddlErrorDesc', 'S' , 'fn_callback_ddlErrorDesc');       
+        doGetCombo('/services/as/getErrDetilList.do?DEFECT_TYPE_CODE='+result[0].asMalfuncId  , '', '','ddlErrorDesc', 'S' , 'fn_callback_ddlErrorDesc');
     }
-    
-    
-    //$("#ddlCTCodeText").val( result[0].c12); 
+
+
+    //$("#ddlCTCodeText").val( result[0].c12);
     //$("#ddlCTCode").val( result[0].c11);
-    
+
     /*
     c11: 35530
     c12: "CT100528"
@@ -230,86 +230,86 @@ function  fn_setSVC0004dInfo(result){
     $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
     */
-    
+
     $("#ddlCTCode").val(result[0].c11);
     $("#ddlDSCCode").val(result[0].asBrnchId);
     $("#ddlCTCodeText").val(result[0].c12);
     $("#ddlDSCCodeText").val(result[0].c5);
-    
-    $("#ddlWarehouse").val( result[0].asWhId); 
-    $("#txtRemark").val( result[0].asResultRem); 
-    
+
+    $("#ddlWarehouse").val( result[0].asWhId);
+    $("#txtRemark").val( result[0].asResultRem);
+
     if(result[0].c27 =="1"){
         $("#iscommission").attr("checked",true);
     }
-    
+
     $('#def_type') .val( result[0].c16);
     $('#def_type_text') .val( result[0].c17);
-    $('#def_type_id') .val( result[0].asDefectTypeId);  
-     
+    $('#def_type_id') .val( result[0].asDefectTypeId);
+
     $('#def_code') .val( result[0].c18);
     $('#def_code_text') .val( result[0].c19);
     $('#def_code_id') .val( result[0].asDefectId);
-    
-    $('#def_def').val( result[0].c22); 
+
+    $('#def_def').val( result[0].c22);
     $('#def_def_text').val( result[0].c23);
-    $('#def_def_id').val( result[0].asDefectDtlResnId);     
-    
+    $('#def_def_id').val( result[0].asDefectDtlResnId);
+
     $('#def_part') .val( result[0].c20);
     $('#def_part_text') .val( result[0].c21);
     $('#def_part_id') .val( result[0].asDefectPartId);
-    
-    
-    $('#solut_code').val( result[0].c25); 
-    $('#solut_code_text').val( result[0].c26); 
-    $('#solut_code_id').val( result[0].c24); 
-    
+
+
+    $('#solut_code').val( result[0].c25);
+    $('#solut_code_text').val( result[0].c26);
+    $('#solut_code_id').val( result[0].c24);
+
     var v =/^(\d+)([.]\d{0,2})$/;
     var regexp = new RegExp(v) ;
-    
+
     var  toamt =""+result[0].asTotAmt;
     var  tWork =""+result[0].asWorkmnsh;
-    var  tFilterAmt =""+result[0].asFilterAmt; 
-    
-      
-    
+    var  tFilterAmt =""+result[0].asFilterAmt;
+
+
+
     if(regexp.test(toamt)){
          $('#txtTotalCharge').val (toamt);
     }else{
         $('#txtTotalCharge').val (toamt+".00");
     }
-    
+
    if(regexp.test(tWork)){
         $('#txtLabourCharge').val (tWork);
    }else{
        $('#txtLabourCharge').val (tWork+".00");
    }
-    
+
    if(regexp.test(tFilterAmt)){
         $('#txtFilterCharge').val (tFilterAmt);
    }else{
        $('#txtFilterCharge').val (tFilterAmt+".00");
    }
-   
+
    if( result[0].inHuseRepairReplaceYn =="1"){
        $("input:radio[name='replacement']:radio[value='1']").attr('checked', true); // 원하는 값(Y)을 체크
    }else if (result[0].inHuseRepairReplaceYn =="0"){
        $("input:radio[name='replacement']:radio[value='0']").attr('checked', true); // 원하는 값(Y)을 체크
    }
-   
-   
+
+
    $('#productGroup') .val(result[0].inHuseRepairGrpCode);
    $('#productCode') .val(result[0].inHuseRepairProductCode);
    $('#serialNo') .val(result[0].inHuseRepairSerialNo);
    $('#inHouseRemark') .val(result[0].inHuseRepairRem);
    $('#promisedDate') .val(result[0].inHuseRepairPromisDt);
-   
-   
+
+
 }
 
 
 function fn_setCTcodeValue(){
-     $("#ddlCTCode").val(  $("#CTID").val()); 
+     $("#ddlCTCode").val(  $("#CTID").val());
 }
 
 
@@ -319,11 +319,11 @@ function fn_setCTcodeValue(){
 function fn_getASReasonCode2(_obj , _tobj, _v){
     var   reasonCode =$(_obj).val();
     var   reasonTypeId =_v;
-    
+
     Common.ajax("GET", "/services/as/getASReasonCode2.do", {RESN_TYPE_ID: reasonTypeId  ,CODE:reasonCode} , function(result) {
         console.log("fn_getASHistoryInfo.");
-        console.log( result); 
-        
+        console.log( result);
+
         if(result.length >0 ){
             $("#"+_tobj+"_text").val((result[0].resnDesc.trim()).trim());
             $("#"+_tobj+"_id").val(result[0].resnId);
@@ -339,15 +339,15 @@ function fn_HasFilterUnclaim(){
      Common.ajax("GET", "/services/as/getTotalUnclaimItem",{asResultId:$('#asData_AS_RESULT_ID').val() , type:"AS" } , function(result) {
             console.log("fn_HasFilterUnclaim.");
             console.log( result);
-         
+
             if(result.filter !=null){
                 var isSomeFileter = true;
-                if(Number(result.filter.qtyUse)  > Number(result.filter.qtyClm))  isSomeFileter = true;             
-                
+                if(Number(result.filter.qtyUse)  > Number(result.filter.qtyClm))  isSomeFileter = true;
+
                 if(isSomeFileter){
                     Common.alert("Filter Unclaim" +DEFAULT_DELIMITER +"<b>Some filter(s) are unclaim.<br />Please claim all the filter before you edit this result.</b>" );
                     $("#btnSaveDiv").attr("style","display:none");
-                }   
+                }
             }
         });
 }
@@ -356,17 +356,17 @@ function fn_HasFilterUnclaim(){
 
 
 function fn_ddlStatus_SelectedIndexChanged(){
-    
+
     fn_clearPageField();
-    
+
 
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     $("#ddlCTCode").val(selectedItems[0].item.asMemId);
     $("#ddlDSCCode").val(selectedItems[0].item.asBrnchId);
     $("#ddlCTCodeText").val(selectedItems[0].item.memCode);
     $("#ddlDSCCodeText").val(selectedItems[0].item.brnchCode);
-    
-    
+
+
     switch ($("#ddlStatus").val()) {
         case "4":
             //COMPLETE
@@ -387,52 +387,52 @@ function fn_ddlStatus_SelectedIndexChanged(){
 
 
 function fn_openField_Complete(){
-    
+
     $("#btnSaveDiv").attr("style","display:inline");
     $("#addDiv").attr("style","display:inline");
-      
-    $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");     
-    $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");     
-    $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");     
-    $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");    
-    $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");     
-    $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");    
-    $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
-    $('#iscommission').removeAttr("disabled").removeClass("readonly");  
 
-    $('#def_type').removeAttr("disabled").removeClass("readonly");  
-    $('#def_code').removeAttr("disabled").removeClass("readonly");  
-    $('#def_part').removeAttr("disabled").removeClass("readonly");  
-    $('#def_def').removeAttr("disabled").removeClass("readonly");  
-    $('#def_type_text').removeAttr("disabled").removeClass("readonly");  
-    $('#def_code_text').removeAttr("disabled").removeClass("readonly");  
-    $('#def_part_text').removeAttr("disabled").removeClass("readonly");  
-    $('#def_def_text').removeAttr("disabled").removeClass("readonly");  
-    
-    
-    $("#txtFilterCharge").attr("disabled", false); 
-    $("#txtLabourCharge").attr("disabled", false); 
-    $("#cmbLabourChargeAmt").attr("disabled", false); 
-    $("#ddlFilterCode").attr("disabled", false); 
-    $("#ddlFilterQty").attr("disabled", false); 
-    $("#ddlFilterPayType").attr("disabled", false); 
-    $("#ddlFilterExchangeCode").attr("disabled", false); 
-    $("#txtFilterRemark").attr("disabled", false); 
+    $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
+    $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");
+    $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");
+    $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
+    $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");
+    $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
+    $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+    $('#iscommission').removeAttr("disabled").removeClass("readonly");
+
+    $('#def_type').removeAttr("disabled").removeClass("readonly");
+    $('#def_code').removeAttr("disabled").removeClass("readonly");
+    $('#def_part').removeAttr("disabled").removeClass("readonly");
+    $('#def_def').removeAttr("disabled").removeClass("readonly");
+    $('#def_type_text').removeAttr("disabled").removeClass("readonly");
+    $('#def_code_text').removeAttr("disabled").removeClass("readonly");
+    $('#def_part_text').removeAttr("disabled").removeClass("readonly");
+    $('#def_def_text').removeAttr("disabled").removeClass("readonly");
+
+
+    $("#txtFilterCharge").attr("disabled", false);
+    $("#txtLabourCharge").attr("disabled", false);
+    $("#cmbLabourChargeAmt").attr("disabled", false);
+    $("#ddlFilterCode").attr("disabled", false);
+    $("#ddlFilterQty").attr("disabled", false);
+    $("#ddlFilterPayType").attr("disabled", false);
+    $("#ddlFilterExchangeCode").attr("disabled", false);
+    $("#txtFilterRemark").attr("disabled", false);
     fn_clearPanelField_ASChargesFees();
-    
+
     console.log(asDataInfo[0]);
-    
+
     $("#txtRemark").val(asDataInfo[0].callRem);
     $("#ddlErrorCode").val(asDataInfo[0].c12);
     $("#ddlErrorDesc").val(asDataInfo[0].c15);
     //$("#ddlCTCode").val(asDataInfo[0].c9);
     $("#ddlDSCCode").val(asDataInfo[0].c6);
-    
+
     if(asDataInfo[0].asAllowComm =="1"){
         $("#iscommission").attr("checked",true);
     }
-    
-    
+
+
     if (asDataInfo[0].asStusId  != 1){
         Common.alert("AS Not Active" +DEFAULT_DELIMITER +"<b>AS is no longer active. Result key-in is disallowed.</b>" );
         $("#btnSaveDiv").attr("style","display:none");
@@ -444,15 +444,15 @@ function fn_openField_Complete(){
 
 function fn_openField_Cancel(){
     $("#btnSaveDiv").attr("style","display:inline");
-    $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");  
-    $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
+    $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
+    $('#txtRemark').removeAttr("disabled").removeClass("readonly");
 }
 
 
 function fn_openField_Fail(){
        $("#btnSaveDiv").attr("style","display:inline");
-       $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");  
-       $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
+       $('#ddlFailReason').removeAttr("disabled").removeClass("readonly");
+       $('#txtRemark').removeAttr("disabled").removeClass("readonly");
 }
 
 
@@ -463,43 +463,43 @@ function fn_clearPageField(){
 
     $("#btnSaveDiv").attr("style","display:none");
     $("#addDiv").attr("style","display:none");
-    
-    $('#dpSettleDate').val("").attr("disabled", true); 
-    $('#ddlFailReason').val("").attr("disabled", true); 
-    $('#tpSettleTime').val("").attr("disabled", true); 
-    $('#ddlDSCCode').val("").attr("disabled", true); 
-    $('#ddlErrorCode').val("").attr("disabled", true); 
-    $('#ddlCTCode').val("").attr("disabled", true); 
+
+    $('#dpSettleDate').val("").attr("disabled", true);
+    $('#ddlFailReason').val("").attr("disabled", true);
+    $('#tpSettleTime').val("").attr("disabled", true);
+    $('#ddlDSCCode').val("").attr("disabled", true);
+    $('#ddlErrorCode').val("").attr("disabled", true);
+    $('#ddlCTCode').val("").attr("disabled", true);
     $('#ddlErrorDesc').val("").attr("disabled", true);
-    $('#ddlWarehouse').val("").attr("disabled", true); 
-    $('#txtRemark').val("").attr("disabled", true); 
-    $("#iscommission").attr("disabled", true); 
-    
-    
+    $('#ddlWarehouse').val("").attr("disabled", true);
+    $('#txtRemark').val("").attr("disabled", true);
+    $("#iscommission").attr("disabled", true);
+
+
     fn_clearPanelField_ASChargesFees();
-    
-    $("#ddlFilterCode").val("").attr("disabled", true); 
-    $("#ddlFilterQty").val("").attr("disabled", true); 
-    $("#ddlFilterPayType").val("").attr("disabled", true); 
-    $("#ddlFilterExchangeCode").val("").attr("disabled", true); 
-    $("#txtFilterRemark").val("").attr("disabled", true); 
-    $("#txtLabourCharge").val("0.00").attr("disabled", true); 
-    $("#txtFilterCharge").val("0.00").attr("disabled", true); 
+
+    $("#ddlFilterCode").val("").attr("disabled", true);
+    $("#ddlFilterQty").val("").attr("disabled", true);
+    $("#ddlFilterPayType").val("").attr("disabled", true);
+    $("#ddlFilterExchangeCode").val("").attr("disabled", true);
+    $("#txtFilterRemark").val("").attr("disabled", true);
+    $("#txtLabourCharge").val("0.00").attr("disabled", true);
+    $("#txtFilterCharge").val("0.00").attr("disabled", true);
 }
 
 
 
 function fn_LabourCharge_CheckedChanged(_obj){
-    
+
       if(_obj.checked){
-          $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");     
+          $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
           $("#cmbLabourChargeAmt").val("50");
           $("#txtLabourCharge").val("50.00");
       }else{
           $("#cmbLabourChargeAmt").val("");
-          $("#cmbLabourChargeAmt").attr("disabled", true); 
+          $("#cmbLabourChargeAmt").attr("disabled", true);
       }
-      
+
       fn_calculateTotalCharges();
 }
 
@@ -507,27 +507,27 @@ function fn_LabourCharge_CheckedChanged(_obj){
 
 
 function fn_calculateTotalCharges(){
-    
+
     var  labourCharges =0;
-    var filterCharges =0; 
+    var filterCharges =0;
     var totalCharges =0;
-    
+
     labourCharges =   $("#txtLabourCharge").val();
-    filterCharges   =   $("#txtFilterCharge").val();  
-    
+    filterCharges   =   $("#txtFilterCharge").val();
+
     filterCharges = Number(filterCharges.replace(/,/gi, ""));
     labourCharges = Number(labourCharges.replace(/,/gi, ""));
     totalCharges = labourCharges + filterCharges;
-    
-    $("#txtTotalCharge").val(totalCharges);  
-    
+
+    $("#txtTotalCharge").val(totalCharges);
+
 }
 
 
 
 
 function fn_cmbLabourChargeAmt_SelectedIndexChanged(){
-    
+
     var  v =$("#cmbLabourChargeAmt").val();
     $("#txtLabourCharge").val(v);
     fn_calculateTotalCharges();
@@ -540,20 +540,20 @@ function fn_cmbLabourChargeAmt_SelectedIndexChanged(){
 
 
 function fn_filterAddVaild(){
-    
-     if(FormUtil.checkReqValue($("#ddlFilterCode option:selected")) ){    
+
+     if(FormUtil.checkReqValue($("#ddlFilterCode option:selected")) ){
         return false;
      }
-    
-     if(FormUtil.checkReqValue($("#ddlFilterQty option:selected")) ){    
+
+     if(FormUtil.checkReqValue($("#ddlFilterQty option:selected")) ){
          return false;
      }
-     
-     if(FormUtil.checkReqValue($("#ddlFilterPayType option:selected")) ){    
+
+     if(FormUtil.checkReqValue($("#ddlFilterPayType option:selected")) ){
          return false;
-      } 
-     
-     if(FormUtil.checkReqValue($("#ddlFilterExchangeCode option:selected")) ){    
+      }
+
+     if(FormUtil.checkReqValue($("#ddlFilterExchangeCode option:selected")) ){
          return false;
       }
 }
@@ -562,7 +562,7 @@ function fn_filterAddVaild(){
 
 
 function fn_chStock(){
-    
+
     var   ct = $("#ddlCTCodeText").val();
     var   sk = $("#ddlFilterCode").val();
 
@@ -574,7 +574,7 @@ function fn_chStock(){
         fn_filterClear();
         return  false;
     }else{
-    	
+
     	if  ( availQty  <  Number($("#ddlFilterQty").val()) ){
             Common.alert('*<b> Not enough available stock to the member.  <br> availQty['+ availQty +'] </b>');
             fn_filterClear();
@@ -586,79 +586,79 @@ function fn_chStock(){
 
 
 function isstckOk(ct , sk){
-    
+
     var availQty = 0;
-    
+
     Common.ajaxSync("GET", "/services/as/getSVC_AVAILABLE_INVENTORY.do",{CT_CODE: ct  , STK_CODE: sk }, function(result) {
             console.log("isstckOk.");
             console.log( result);
             availQty = result.availQty;
     });
-    
-    
+
+
     return availQty;
 }
 
 
 function fn_filterAdd(){
-	
+
 	   if(fn_chStock() ==false){
            return ;
     }
-	   
-    
+
+
     if(fn_filterAddVaild() ==false){
         Common.alert('*<b>Please fill up the compulsory fields to add the filter.</b>');
         return  false;
     }
-    
-    
+
+
      var  fitem = new Object();
-         
+
         fitem.filterType =$("#ddlFilterPayType").val();
         fitem.filterDesc =$("#ddlFilterCode option:selected").text();
         fitem.filterExCode =$("#ddlFilterExchangeCode").val();
-        fitem.filterQty =$("#ddlFilterQty").val();  
-        fitem.filterRemark =$("#txtFilterRemark").val();    
-        fitem.filterID =$("#ddlFilterCode").val(); 
+        fitem.filterQty =$("#ddlFilterQty").val();
+        fitem.filterRemark =$("#txtFilterRemark").val();
+        fitem.filterID =$("#ddlFilterCode").val();
         //fitem.filterCODE =$("#ddlFilterCode").va();
-        
+
         var chargePrice =0;
         if (fitem.filterType  == "CHG") {
-            chargePrice  = getASStockPrice(fitem.filterID);        
+            chargePrice  = getASStockPrice(fitem.filterID);
         }
-        
+
         if(chargePrice == 0){
-            
+
             //Common.alert("<b>SAL0016M(StockPrice) no data  </br>");
            // return ;
         }
-        
+
         fitem.filterPrice = Number(chargePrice);
-        
+
         var  chargeTotalPrice = 0;
-        
+
         chargeTotalPrice =  Number($("#ddlFilterQty").val())  *  chargePrice;
         fitem.filterTotal =   Number(chargeTotalPrice);
-        
-        
+
+
         var v =  Number(  $("#txtFilterCharge").val()) + chargeTotalPrice;
-        $("#txtFilterCharge").val( v); 
-        
-        
+        $("#txtFilterCharge").val( v);
+
+
     if( AUIGrid.isUniqueValue (myFltGrd10,"filterID" ,fitem.filterID )){
          fn_addRow(fitem);
     }else{
         Common.alert("<b>This filter/spart part is existing. </br>");
         return ;
     }
-    
+
     fn_calculateTotalCharges();
 }
 
 
 //행 추가, 삽입
-function  fn_addRow(gItem) {      
+function  fn_addRow(gItem) {
   AUIGrid.addRow(myFltGrd10, gItem, "first");
 }
 
@@ -668,7 +668,7 @@ function getASStockPrice(_PRC_ID){
     Common.ajaxSync("GET", "/services/as/getASStockPrice.do",{PRC_ID: _PRC_ID}, function(result) {
         console.log("getASStockPrice.");
         console.log( result);
-        
+
         try{
             ret = Number( result[0].amt);
         }catch(e){
@@ -687,14 +687,14 @@ function fn_doSave(){
     if ( ! fn_validRequiredField_Save_ResultInfo()) {
        return ;
     }
-    
+
    if($("#ddlStatus").val()==4){
          //COMPLETE STATUS
           if (! fn_validRequiredField_Save_DefectiveInfo()) {
                  return ;
           }
    }
-   
+
    fn_setSaveFormData();
 }
 
@@ -702,35 +702,35 @@ function fn_doSave(){
 
 
 function fn_validRequiredField_Save_DefectiveInfo(){
-       
+
     var rtnMsg ="";
     var rtnValue =true;
-    
+
     if(FormUtil.checkReqValue($("#def_type_id"))){
         rtnMsg  +="Please select the def_type.<br/>" ;
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
+
     if(FormUtil.checkReqValue($("#def_code_id"))){
         rtnMsg  +="Please select the def_code.<br/>" ;
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
-    
+
+
     if(FormUtil.checkReqValue($("#def_part_id"))){
         rtnMsg  +="Please select the def_part.<br/>" ;
-        rtnValue =false; 
+        rtnValue =false;
     }
-    
+
     if(FormUtil.checkReqValue($("#solut_code_id"))){
         rtnMsg  +="Please select the solut_code.<br/>" ;
-        rtnValue =false; 
+        rtnValue =false;
     }
 
     if( rtnValue ==false ){
         Common.alert("Some required fields are empty in AS Defective Event." +DEFAULT_DELIMITER +rtnMsg );
     }
-    
+
      return rtnValue;
 }
 
@@ -739,74 +739,74 @@ function fn_validRequiredField_Save_DefectiveInfo(){
 
 
 function fn_validRequiredField_Save_ResultInfo(){
-    
+
     var rtnMsg ="";
     var rtnValue =true;
-    
+
     if(FormUtil.checkReqValue($("#ddlStatus"))){
         rtnMsg  +="Please select the ddlStatus.<br/>" ;
-        rtnValue =false; 
+        rtnValue =false;
     }else{
-        
+
         if($("#ddlStatus").val()==4){
-            
+
              if(FormUtil.checkReqValue($("#dpSettleDate"))){
                     rtnMsg  +="Please select the dpSettleDate.<br/>" ;
-                    rtnValue =false; 
+                    rtnValue =false;
               }else{
-                  
+
                   var asno =$("#txtASNo").val();
-                  
+
                   if(asno.match(/AS/g)){
                          var  nowdate      = $.datepicker.formatDate($.datepicker.ATOM, new Date());
                          var  nowdateArry  =nowdate.split("-");
                                 nowdateArry = nowdateArry[0]+""+nowdateArry[1]+""+nowdateArry[2];
                          var  rdateArray   =$("#dpSettleDate").val().split("/");
                          var requestDate  =rdateArray[2]+""+rdateArray[1]+""+rdateArray[0];
-                     
+
                          if((parseInt(requestDate,10)  - parseInt(nowdateArry,10) ) > 14 || (parseInt(nowdateArry,10)  - parseInt(requestDate,10) )   >14){
                             rtnMsg  +="* Request date should not be longer than 14 days from current date.<br />" ;
-                            rtnValue =false; 
+                            rtnValue =false;
                         }
-                      
-                  }               
+
+                  }
               }
-             
+
              if(FormUtil.checkReqValue($("#tpSettleTime"))){
                  rtnMsg  +="Please select the tpSettleTime.<br/>" ;
-                 rtnValue =false; 
+                 rtnValue =false;
              }
-             
+
              if(FormUtil.checkReqValue($("#ddlDSCCode"))){
                  rtnMsg  +="Please select the ddlDSCCode.<br/>" ;
-                 rtnValue =false; 
+                 rtnValue =false;
              }
-             
-             
+
+
               if(FormUtil.checkReqValue($("#ddlErrorCode"))){
                   rtnMsg  +="Please select the ddlErrorCode.<br/>" ;
-                  rtnValue =false; 
+                  rtnValue =false;
               }
-              
-              
+
+
               if(FormUtil.checkReqValue($("#ddlCTCode"))){
                   rtnMsg  +="Please select the ddlCTCode.<br/>" ;
-                  rtnValue =false; 
+                  rtnValue =false;
               }
         }else{
-            
+
               if(FormUtil.checkReqValue($("#ddlFailReason"))){
                     rtnMsg  +="Please select the ddlFailReason.<br/>" ;
-                    rtnValue =false; 
+                    rtnValue =false;
                 }
         }
     }
-    
+
 
     if( rtnValue ==false ){
         Common.alert("Required Fields Missing" +DEFAULT_DELIMITER +rtnMsg );
     }
-    
+
      return rtnValue;
 }
 
@@ -814,13 +814,13 @@ function fn_validRequiredField_Save_ResultInfo(){
 
 
 function fn_productGroup_SelectedIndexChanged(){
-    
+
     var STK_CTGRY_ID = $("#productGroup").val();
-    
+
      $("#serialNo").val("");
      $("#productCode option").remove();
-    
-     doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='+STK_CTGRY_ID, '', '','productCode', 'S' , '');            
+
+     doGetCombo('/services/as/inHouseGetProductDetails.do?STK_CTGRY_ID='+STK_CTGRY_ID, '', '','productCode', 'S' , '');
 }
 
 
@@ -828,45 +828,46 @@ function fn_productGroup_SelectedIndexChanged(){
 
 function  fn_setSaveFormData(){
 
+	var allRowItems = AUIGrid.getGridData(myFltGrd10);
     //추가된 행 아이템들(배열)
     var addedRowItems = AUIGrid.getAddedRowItems(myFltGrd10);
-        
+
     //수정된 행 아이템들(배열)
-    var editedRowItems = AUIGrid.getEditedRowColumnItems(myFltGrd10); 
-       
+    var editedRowItems = AUIGrid.getEditedRowColumnItems(myFltGrd10);
+
     //삭제된 행 아이템들(배열)
     var removedRowItems = AUIGrid.getRemovedItems(myFltGrd10);
-    
-    
+
+
     var asResultM ={
                    AS_ENTRY_ID:              $("#asData_AS_ID").val(),
                    AS_SO_ID:                   $("#asData_AS_SO_ID").val(),
                    AS_CT_ID:                   $('#ddlCTCode').val(),
-                   AS_SETL_DT:               $('#dpSettleDate').val() , 
-                   AS_SETL_TM:               $('#tpSettleTime').val(),   
-                   AS_RESULT_STUS_ID:    $('#ddlStatus').val(),  
-                   AS_FAIL_RESN_ID:         $('#ddlFailReason').val(),  
+                   AS_SETL_DT:               $('#dpSettleDate').val() ,
+                   AS_SETL_TM:               $('#tpSettleTime').val(),
+                   AS_RESULT_STUS_ID:    $('#ddlStatus').val(),
+                   AS_FAIL_RESN_ID:         $('#ddlFailReason').val(),
                    AS_REN_COLCT_ID:        0,
-                   AS_CMMS:                   $("#iscommission").prop("checked") ? '1': '0' ,    
-                   AS_BRNCH_ID:              $('#ddlDSCCode').val() , 
+                   AS_CMMS:                   $("#iscommission").prop("checked") ? '1': '0' ,
+                   AS_BRNCH_ID:              $('#ddlDSCCode').val() ,
                    AS_WH_ID:                  $('#ddlWarehouse').val() ,
                    AS_RESULT_REM:          $('#txtRemark').val() ,
                    AS_MALFUNC_ID:          $('#ddlErrorCode').val() ,
-                   AS_MALFUNC_RESN_ID:  $('#ddlErrorDesc').val() , 
-                   AS_DEFECT_TYPE_ID:    $('#ddlStatus').val()== 4 ? $('#def_type_id').val() : '0' , 
-                   AS_DEFECT_GRP_ID:             0,  
-                   AS_DEFECT_ID:                   $('#ddlStatus').val()== 4 ? $('#def_code_id').val() : '0' , 
-                   AS_DEFECT_PART_GRP_ID:    0 , 
-                   AS_DEFECT_PART_ID:          $('#ddlStatus').val()== 4 ? $('#def_part_id').val() : '0' , 
-                   AS_DEFECT_DTL_RESN_ID:    $('#ddlStatus').val()== 4 ? $('#def_def_id').val() : '0' , 
-                   AS_SLUTN_RESN_ID:            $('#ddlStatus').val()== 4 ? $('#solut_code_id').val() : '0' , 
+                   AS_MALFUNC_RESN_ID:  $('#ddlErrorDesc').val() ,
+                   AS_DEFECT_TYPE_ID:    $('#ddlStatus').val()== 4 ? $('#def_type_id').val() : '0' ,
+                   AS_DEFECT_GRP_ID:             0,
+                   AS_DEFECT_ID:                   $('#ddlStatus').val()== 4 ? $('#def_code_id').val() : '0' ,
+                   AS_DEFECT_PART_GRP_ID:    0 ,
+                   AS_DEFECT_PART_ID:          $('#ddlStatus').val()== 4 ? $('#def_part_id').val() : '0' ,
+                   AS_DEFECT_DTL_RESN_ID:    $('#ddlStatus').val()== 4 ? $('#def_def_id').val() : '0' ,
+                   AS_SLUTN_RESN_ID:            $('#ddlStatus').val()== 4 ? $('#solut_code_id').val() : '0' ,
                    AS_WORKMNSH:                  $('#txtLabourCharge').val()  ,
-                   AS_FILTER_AMT:                  $('#txtFilterCharge').val()  , 
+                   AS_FILTER_AMT:                  $('#txtFilterCharge').val()  ,
                    AS_ACSRS_AMT:                 0,
-                   AS_TOT_AMT:                    $('#txtTotalCharge').val()  ,   
+                   AS_TOT_AMT:                    $('#txtTotalCharge').val()  ,
                    AS_RESULT_IS_SYNCH:        0,
                    AS_RCALL:                         0,
-                   AS_RESULT_STOCK_USE:   addedRowItems.length  >0 ? 1:0,//detail 리스트 카운트  
+                   AS_RESULT_STOCK_USE:   addedRowItems.length  >0 ? 1:0,//detail 리스트 카운트
                    AS_RESULT_TYPE_ID:   457,
                    AS_RESULT_IS_CURR: 1,
                    AS_RESULT_MTCH_ID:  0,
@@ -893,11 +894,11 @@ function  fn_setSaveFormData(){
                    IN_HUSE_REPAIR_PRODUCT_CODE: $("#productCode").val(),
                    IN_HUSE_REPAIR_SERIAL_NO: $("#serialNo").val()
     }
-    
-    
-    
+
+
+
    var saveForm;
-    
+
   if($("#requestMod").val() =="INHOUSE" ){
       saveForm ={
               "asResultM": asResultM ,
@@ -905,52 +906,67 @@ function  fn_setSaveFormData(){
               "update" : editedRowItems,
               "remove" : removedRowItems
       }
-      
+
       Common.ajax("POST", "/services/inhouse/save.do", saveForm, function(result) {
           console.log("newResultAdd.");
-          console.log( result);       
-          
+          console.log( result);
+
           if(result.asNo !=""){
               Common.alert("<b>AS result successfully saved.</b>");
               fn_DisablePageControl();
           }
       });
-      
-      
+
+
   }else{
-      
-        
-        
+
+
+
         if($("#requestMod").val()=="NEW"){
             saveForm ={
                     "asResultM": asResultM ,
                     "add" : addedRowItems,
                     "update" : editedRowItems,
                     "remove" : removedRowItems
-            }  
-            
+            }
+
             Common.ajax("POST", "/services/as/newResultAdd.do", saveForm, function(result) {
                 console.log("newResultAdd.");
-                console.log( result);     
+                console.log( result);
                 if(result.asNo !=""){
                     Common.alert("<b>AS result successfully saved.</b>");
                     fn_DisablePageControl();
                 }
             });
-              
+
         }else if($("#requestMod").val()=="RESULTEDIT"){
-            
+
+        	if(addedRowItems != "")
+        		{
               saveForm ={
                       "asResultM": asResultM ,
-                      "add" : addedRowItems,
-                      "update" : editedRowItems,
+                      "add" : allRowItems,
+                      "update" :  editedRowItems,
                       "remove" : removedRowItems
-              }
-              
-             Common.ajax("POST", "/services/as/newResultUpdate.do", saveForm, function(result) {
+                     // "all" : allRowItems
+                      }
+        		}
+        	else
+        	{
+        		 saveForm ={
+                         "asResultM": asResultM ,
+                         "add" : addedRowItems,
+                         "update" : editedRowItems,
+                         "remove" : removedRowItems
+                         }
+        	}
+
+             //Common.ajax("POST", "/services/as/newResultUpdate.do", saveForm, function(result)
+            		 Common.ajax("POST", "/services/as/newResultUpdate_1.do", saveForm, function(result)
+            		 {
                  console.log("newResultUpdate.");
-                 console.log( result);       
-                 
+                 console.log( result);
+
                  if(result.data !=""){
                      $("#newResultNo").html("<B>"+result.data+"</B>");
                      Common.alert("<b>AS result successfully saved.</b>");
@@ -958,22 +974,22 @@ function  fn_setSaveFormData(){
                      fn_asResult_viewPageContral();
                      $("#btnSaveDiv").attr("style","display:none");
                  }
-                 
+
                  try{
                      fn_searchASManagement();
                      $("#_newASResultDiv1").remove();
-                     
+
                  }catch(e){}
-                 
-                 
+
+
              });
         }
-  }      
-  
-  
-    //reroad 
-    
-    
+  }
+
+
+    //reroad
+
+
 }
 
 
@@ -983,11 +999,11 @@ function  fn_setSaveFormData(){
 
 <form  id="asDataForm" method="post">
     <div style='display:none'>
-               <input type="text"   id= 'asData_AS_ID' name='asData_AS_ID'/> 
-               <input type="text"   id= 'asData_AS_SO_ID' name='asData_AS_SO_ID'/> 
-               <input type="text"   id= 'asData_AS_RESULT_ID' name='asData_AS_RESULT_ID'/> 
-               <input type="text"   id= 'asData_AS_RESULT_NO' name='asData_AS_RESULT_NO'/> 
-               <input type="text"   id= 'requestMod' name='requestMod'/> 
+               <input type="text"   id= 'asData_AS_ID' name='asData_AS_ID'/>
+               <input type="text"   id= 'asData_AS_SO_ID' name='asData_AS_SO_ID'/>
+               <input type="text"   id= 'asData_AS_RESULT_ID' name='asData_AS_RESULT_ID'/>
+               <input type="text"   id= 'asData_AS_RESULT_NO' name='asData_AS_RESULT_NO'/>
+               <input type="text"   id= 'requestMod' name='requestMod'/>
     </div>
 </form>
 
@@ -997,7 +1013,7 @@ function  fn_setSaveFormData(){
 <dl>
     <dt class="click_add_on on"><a href="#">AS Result Information</a></dt>
     <dd>
-    
+
     <table class="type1"><!-- table start -->
     <caption>table</caption>
     <colgroup>
@@ -1007,7 +1023,7 @@ function  fn_setSaveFormData(){
         <col style="width:*" />
     </colgroup>
     <tbody>
-    
+
      <tr >
         <th scope="row">New Result No</th>
         <td colspan="3">
@@ -1016,7 +1032,7 @@ function  fn_setSaveFormData(){
             </div>
         </td>
     </tr>
-    
+
     <tr>
         <th scope="row">Result No</th>
         <td>
@@ -1024,7 +1040,7 @@ function  fn_setSaveFormData(){
         </td>
         <th scope="row">Status <span class="must">*</span> </th>
         <td>
-        
+
             <select class="w100p"  id="ddlStatus" name="ddlStatus"  onChange="fn_ddlStatus_SelectedIndexChanged()">
                  <option value=""></option>
                 <option value="4">Complete</option>
@@ -1081,12 +1097,12 @@ function  fn_setSaveFormData(){
         </td>
         <th scope="row">DSC Code <span class="must">*</span> </th>
         <td>
-        
-        
+
+
          <input type="hidden" title="" placeholder="" class=""  id='ddlDSCCode' name='ddlDSCCode' value='${BRANCH_ID}'/>
          <input type="text" title=""    placeholder="" class="readonly"    id='ddlDSCCodeText' name='ddlDSCCodeText'  value='${BRANCH_NAME}'/>
-    
-    
+
+
         </td>
     </tr>
     <tr>
@@ -1097,20 +1113,20 @@ function  fn_setSaveFormData(){
         </td>
         <th scope="row">CT Code <span class="must">*</span> </th>
         <td>
-        
-        <!-- 
+
+        <!--
 	        <select  disabled="disabled" id='ddlCTCode' name='ddlCTCode'>
 	        <input type="hidden" title="" placeholder="" class=""  id='CTID' name='CTID'/>
-	         </select> 
+	         </select>
          -->
          <input type="hidden" title="" placeholder="ddlCTCode" class=""  id='ddlCTCode' name='ddlCTCode' />
          <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText' />
-        
-        <!-- 
+
+        <!--
          <input type="hidden" title="" placeholder="ddlCTCode" class=""  id='ddlCTCode' name='ddlCTCode' value='${USER_ID}'/>
          <input type="text" title=""   placeholder="" class="readonly"     id='ddlCTCodeText' name='ddlCTCodeText'  value='${USER_NAME}'/>
          -->
-         
+
         </td>
     </tr>
     <tr>
@@ -1136,8 +1152,8 @@ function  fn_setSaveFormData(){
         <label><input type="checkbox" disabled="disabled"  id= 'iscommission' name='iscommission'/><span>Has commission ? </span></label>
         </td>
     </tr>
-   
-    
+
+
     <tr>
         <th scope="row">Result Creator</th>
         <td>
@@ -1168,8 +1184,8 @@ function  fn_setSaveFormData(){
            <input type="text" title=""  id='def_type' disabled="disabled" name ='def_type' placeholder="ex) DT3" class=""  onChange="fn_getASReasonCode2(this, 'def_type' ,'387')" />
            <input type="hidden" title=""  id='def_type_id'    name ='def_type_id' placeholder="" class="" />
            <input type="text" title="" placeholder=""id='def_type_text' name ='def_type_text'   />
-          
-          
+
+
         </td>
     </tr>
     <tr>
@@ -1183,7 +1199,7 @@ function  fn_setSaveFormData(){
     <tr>
         <th scope="row">Defect Part <span class="must">*</span> </th>
         <td>
-        <input type="text" title="" placeholder="ex) FE12"  disabled="disabled" id='def_part' name ='def_part'   class=""  onChange="fn_getASReasonCode2(this, 'def_part' ,'305')" /> 
+        <input type="text" title="" placeholder="ex) FE12"  disabled="disabled" id='def_part' name ='def_part'   class=""  onChange="fn_getASReasonCode2(this, 'def_part' ,'305')" />
           <input type="hidden" title="" placeholder=""id='def_part_id' name ='def_part_id'   class="" />
           <input type="text" title="" placeholder=""id='def_part_text' name ='def_part_text'   />
         </td>
@@ -1202,7 +1218,7 @@ function  fn_setSaveFormData(){
             <input type="text" title="" placeholder="ex) A9" class=""  disabled="disabled"  id='solut_code' name ='solut_code'   onChange="fn_getASReasonCode2(this, 'solut_code'  ,'337')" />
             <input type="hidden" title="" placeholder="" class=""   id='solut_code_id' name ='solut_code_id'  />
             <input type="text" title="" placeholder="" class=""   id='solut_code_text' name ='solut_code_text'   />
-             
+
         </td>
     </tr>
     </tbody>
@@ -1224,10 +1240,10 @@ function  fn_setSaveFormData(){
         <th scope="row">Labour Charge</th>
         <td>
         <label><input type="checkbox"   id='txtLabourch' name='txtLabourch''  onChange="fn_LabourCharge_CheckedChanged(this)"/></label>
-        
+
         </td>
         <th scope="row">Labour Charge</th>
-        <td><input type="text"  id='txtLabourCharge' name='txtLabourCharge'  value='0.00' /> 
+        <td><input type="text"  id='txtLabourCharge' name='txtLabourCharge'  value='0.00' />
         </td>
     </tr>
     <tr>
@@ -1235,7 +1251,6 @@ function  fn_setSaveFormData(){
         <td>
         <select  id='cmbLabourChargeAmt' name='cmbLabourChargeAmt'  onChange="fn_cmbLabourChargeAmt_SelectedIndexChanged()">
              <option value=""></option>
-             <option value="50">RM 50.00</option>
              <option value="60">RM 60.00</option>
              <option value="100">RM 100.00</option>
              <option value="120">RM 120.00</option>
@@ -1274,7 +1289,7 @@ function  fn_setSaveFormData(){
             <option value="10">10</option>
             <option value="11">11</option>
             <option value="12">12</option>
-            
+
         </select>
         </td>
     </tr>
@@ -1304,15 +1319,15 @@ function  fn_setSaveFormData(){
 
     <ul class="center_btns"  id='addDiv'>
         <li><p class="btn_blue2"><a href="#" onclick="fn_filterAdd()">Add Filter</a></p></li>
-        <li><p class="btn_blue2"><a href="#">Clear</a></p></li>
+        <li><p class="btn_blue2"><a href="#" onclick = "fn_clearPanelField_ASChargesFees()">Clear</a></p></li>
     </ul>
-    
+
     <article class="grid_wrap"><!-- grid_wrap start -->
           <div id="asfilter_grid_wrap" style="width:100%; height:220px; margin:0 auto;"></div>
     </article><!-- grid_wrap end -->
     </dd>
-    
-    
+
+
     <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
     <dt class="click_add_on"><a href="#">In-House Repair Entry</a></dt>
     <dd  id='inHouseRepair_div' >
@@ -1328,23 +1343,23 @@ function  fn_setSaveFormData(){
     <tr>
         <th scope="row">Replacement </th>
         <td>
-        <label> 
+        <label>
                   <input type="radio"   id='replacement' name='replacement'  value='1'  /> Y
                   <input type="radio"   id='replacement' name='replacement'  value='0'  /> N
         </label>
-        
+
         </td>
         <th scope="row">PromisedDate </th>
         <td> <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="promisedDate"  name="promisedDate"/> </td>
     </tr>
-   
+
     <tr>
         <th scope="row">ProductGroup </th>
         <td>
             <select  id='productGroup' name='productGroup'  onChange="fn_productGroup_SelectedIndexChanged()"> </select>
         </td>
         <th scope="row">ProductCode</th>
-        <td> 
+        <td>
                 <select  id='productCode' name='productCode'  ></select>
         </td>
     </tr>
@@ -1353,7 +1368,7 @@ function  fn_setSaveFormData(){
         <td  colspan="3"><input type="text"  id='serialNo' name='serialNo'  onChange="fn_chSeriaNo()"  />
         </td>
     </tr>
-    
+
     <tr>
         <th scope="row">Remark</th>
         <td colspan="3">
@@ -1364,7 +1379,7 @@ function  fn_setSaveFormData(){
     </table><!-- table end -->
     </dd>
       <!-- ////////////////////////////////////////////in house repair////////////////////////////////// -->
-    
+
 </dl>
 </article><!-- acodi_wrap end -->
 
@@ -1373,59 +1388,59 @@ function  fn_setSaveFormData(){
 <script type="text/javascript">
 
 function fn_asResult_editPageContral(_type){
-    
-    
+
+
     if("INHOUSE"==_type){
-        $("#solut_code_text").attr("disabled", true); 
+        $("#solut_code_text").attr("disabled", true);
     }else{
         $("#newRno").attr("style","display:inline");
-        $('#solut_code').removeAttr("disabled").removeClass("readonly");  
-        $('#solut_code_text').removeAttr("disabled").removeClass("readonly");  
+        $('#solut_code').removeAttr("disabled").removeClass("readonly");
+        $('#solut_code_text').removeAttr("disabled").removeClass("readonly");
     }
-    
+
     //$("#resultEditCreator").attr("style","display:inline");
-    
+
     $("#btnSaveDiv").attr("style","display:inline");
     $("#addDiv").attr("style","display:inline");
-       
-    $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");     
-    $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");     
-    $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");     
-    $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");    
-    $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");     
-    $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");    
-    $('#txtRemark').removeAttr("disabled").removeClass("readonly");  
-    $('#iscommission').removeAttr("disabled").removeClass("readonly");  
-   
-    $('#def_type').removeAttr("disabled").removeClass("readonly");  
-    $('#def_code').removeAttr("disabled").removeClass("readonly");  
-    $('#def_part').removeAttr("disabled").removeClass("readonly");  
-    $('#def_def').removeAttr("disabled").removeClass("readonly");  
-    
-    $('#def_type_text').removeAttr("disabled").removeClass("readonly");  
-    $('#def_code_text').removeAttr("disabled").removeClass("readonly");  
-    $('#def_part_text').removeAttr("disabled").removeClass("readonly");  
-    $('#def_def_text').removeAttr("disabled").removeClass("readonly");  
-    
-    $('#txtLabourch').removeAttr("disabled").removeClass("readonly");  
-    $('#txtTotalCharge').removeAttr("disabled").removeClass("readonly");  
-    $('#txtFilterCharge').removeAttr("disabled").removeClass("readonly");  
-    $('#txtLabourCharge').removeAttr("disabled").removeClass("readonly");  
-    $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");  
-    $('#ddlFilterCode').removeAttr("disabled").removeClass("readonly");  
-    $('#ddlFilterQty').removeAttr("disabled").removeClass("readonly");  
-    $('#ddlFilterPayType').removeAttr("disabled").removeClass("readonly");  
-    $('#ddlFilterExchangeCode').removeAttr("disabled").removeClass("readonly");  
-    $('#txtFilterRemark').removeAttr("disabled").removeClass("readonly");  
-    
+
+    $('#dpSettleDate').removeAttr("disabled").removeClass("readonly");
+    $('#tpSettleTime').removeAttr("disabled").removeClass("readonly");
+    $('#ddlDSCCode').removeAttr("disabled").removeClass("readonly");
+    $('#ddlCTCode').removeAttr("disabled").removeClass("readonly");
+    $('#ddlErrorCode').removeAttr("disabled").removeClass("readonly");
+    $('#ddlErrorDesc').removeAttr("disabled").removeClass("readonly");
+    $('#txtRemark').removeAttr("disabled").removeClass("readonly");
+    $('#iscommission').removeAttr("disabled").removeClass("readonly");
+
+    $('#def_type').removeAttr("disabled").removeClass("readonly");
+    $('#def_code').removeAttr("disabled").removeClass("readonly");
+    $('#def_part').removeAttr("disabled").removeClass("readonly");
+    $('#def_def').removeAttr("disabled").removeClass("readonly");
+
+    $('#def_type_text').removeAttr("disabled").removeClass("readonly");
+    $('#def_code_text').removeAttr("disabled").removeClass("readonly");
+    $('#def_part_text').removeAttr("disabled").removeClass("readonly");
+    $('#def_def_text').removeAttr("disabled").removeClass("readonly");
+
+    $('#txtLabourch').removeAttr("disabled").removeClass("readonly");
+    $('#txtTotalCharge').removeAttr("disabled").removeClass("readonly");
+    $('#txtFilterCharge').removeAttr("disabled").removeClass("readonly");
+    $('#txtLabourCharge').removeAttr("disabled").removeClass("readonly");
+    $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
+    $('#ddlFilterCode').removeAttr("disabled").removeClass("readonly");
+    $('#ddlFilterQty').removeAttr("disabled").removeClass("readonly");
+    $('#ddlFilterPayType').removeAttr("disabled").removeClass("readonly");
+    $('#ddlFilterExchangeCode').removeAttr("disabled").removeClass("readonly");
+    $('#txtFilterRemark').removeAttr("disabled").removeClass("readonly");
+
     fn_clearPanelField_ASChargesFees();
-    
+
 }
 
 
 function   fn_clearPanelField_ASChargesFees(){
       $('#ddlFilterCode').val("") ;
-      $('#ddlFilterQty').val(""); 
+      $('#ddlFilterQty').val("");
       $('#ddlFilterPayType').val("") ;
       $('#ddlFilterExchangeCode').val("") ;
       $('#txtFilterRemark').val("") ;
@@ -1442,82 +1457,82 @@ function fn_asResult_viewPageContral(){
 
 
 function fn_setASDataInit(ops){
-    
+
     console.log("fn_setASDataInit====>");
     console.log(ops);
-    
+
     $("#asData_AS_ID").val(ops.AS_ID);
     $("#asData_AS_SO_ID").val(ops.AS_SO_ID);
     $("#asData_AS_RESULT_ID").val(ops.AS_RESULT_ID);
     $("#asData_AS_RESULT_NO").val(ops.AS_RESULT_NO);
     $("#requestMod").val(ops.MOD);
-    
+
 
 
     fn_getASRulstEditFilterInfo();   //AS_RESULT_NO
     fn_getASRulstSVC0004DInfo();  //AS_RESULT_NO
    // fn_setCTcodeValue();
-    
-    
-    
+
+
+
     //as result edit
     if(ops.MOD =="RESULTEDIT"){
           fn_getErrMstList('${ORD_NO}' , 'fn_errCallbackFun') ;
           fn_HasFilterUnclaim();
-          
+
     }else if(ops.MOD =="RESULTVIEW"){
         fn_getErrMstList('${ORD_NO}' , 'fn_errCallbackFun') ;
 
         $("#asResultForm").find("input, textarea, button, select").attr("disabled",true);
         $("#btnSaveDiv").attr("style","display:none");
-        
+
        // fn_HasFilterUnclaim();
        //	fn_asResult_viewPageContral();
-       
-       
+
+
 
         $("#btnSaveDiv").attr("style","display:none");
         $("#addDiv").attr("style","display:none");
-        
-        $('#dpSettleDate').attr("disabled", true); 
-        $('#ddlFailReason').attr("disabled", true); 
-        $('#tpSettleTime').attr("disabled", true); 
-        $('#ddlDSCCode').attr("disabled", true); 
 
-        $('#ddlErrorCode').attr("disabled", true); 
-        $('#ddlCTCode').attr("disabled", true);   
+        $('#dpSettleDate').attr("disabled", true);
+        $('#ddlFailReason').attr("disabled", true);
+        $('#tpSettleTime').attr("disabled", true);
+        $('#ddlDSCCode').attr("disabled", true);
+
+        $('#ddlErrorCode').attr("disabled", true);
+        $('#ddlCTCode').attr("disabled", true);
         $('#ddlErrorDesc').attr("disabled", true);
-        $('#ddlWarehouse').attr("disabled", true); 
-        $('#txtRemark').attr("disabled", true); 
-        $("#iscommission").attr("disabled", true); 
-        $("#ddlFilterCode").attr("disabled", true); 
-        $("#ddlFilterQty").attr("disabled", true); 
-        $("#ddlFilterPayType").attr("disabled", true); 
-        $("#ddlFilterExchangeCode").attr("disabled", true); 
-        $("#txtFilterRemark").attr("disabled", true); 
-        $("#txtLabourCharge").attr("disabled", true); 
-        $("#txtFilterCharge").attr("disabled", true); 
+        $('#ddlWarehouse').attr("disabled", true);
+        $('#txtRemark').attr("disabled", true);
+        $("#iscommission").attr("disabled", true);
+        $("#ddlFilterCode").attr("disabled", true);
+        $("#ddlFilterQty").attr("disabled", true);
+        $("#ddlFilterPayType").attr("disabled", true);
+        $("#ddlFilterExchangeCode").attr("disabled", true);
+        $("#txtFilterRemark").attr("disabled", true);
+        $("#txtLabourCharge").attr("disabled", true);
+        $("#txtFilterCharge").attr("disabled", true);
 
         $('#def_type').attr("disabled", true) ;
-        $('#def_code').attr("disabled", true); 
-        $('#def_part').attr("disabled", true); 
-        $('#def_def').attr("disabled", true); 
-        
-        $('#def_type_text').attr("disabled", true); 
+        $('#def_code').attr("disabled", true);
+        $('#def_part').attr("disabled", true);
+        $('#def_def').attr("disabled", true);
+
+        $('#def_type_text').attr("disabled", true);
         $('#def_code_text').attr("disabled", true);
-        $('#def_part_text').attr("disabled", true); 
-        $('#def_def_text').attr("disabled", true); 
-        
-    	
+        $('#def_part_text').attr("disabled", true);
+        $('#def_def_text').attr("disabled", true);
+
+
     }
-    
+
 }
 
 
 
 
 function fn_errCallbackFun(){
-	fn_getASRulstSVC0004DInfo(); 
+	fn_getASRulstSVC0004DInfo();
 }
 
 setPopData();
