@@ -1,71 +1,71 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.sales.pos.impl.PosMapper">
-   
+
    <select id="selectPosModuleCodeList" parameterType="Map" resultType="egovMap">
-        SELECT 
-            CODE_ID, 
-            CODE_NAME 
-        FROM 
-            SYS0013M 
-        WHERE 
+        SELECT
+            CODE_ID,
+            CODE_NAME
+        FROM
+            SYS0013M
+        WHERE
             CODE_MASTER_ID = #{groupCode}
-            
+
             <if test=" null != codeArray and codeArray.size > 0">
                 AND CODE_ID IN
                 <foreach collection="codeArray" item="item" open="(" separator="," close=")">
-                    #{item}                
+                    #{item}
                 </foreach>
             </if>
    </select>
-   
+
    <select id="selectStatusCodeList"  parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             T1.STUS_CODE_ID CODE_ID,
             T2.NAME CODE_NAME
-        FROM 
-            SYS0037M T1 
+        FROM
+            SYS0037M T1
             INNER JOIN SYS0038M T2
-        ON 
+        ON
             T1.STUS_CODE_ID = T2.STUS_CODE_ID
-        WHERE 
+        WHERE
             T1.STUS_CTGRY_ID = #{groupCode}
    </select>
-   
+
 <select id="selectWhBrnchList" resultType="egovMap">
-		   SELECT 
+		   SELECT
                 S5.BRNCH_ID CODE_ID,
                 S5.CODE || '-' || S5.NAME CODE_NAME,
                 S5.NAME ,
                 S5.CODE ,
-                S28.WH_LOC_ID , 
+                S28.WH_LOC_ID ,
                 S28.WH_LOC_CODE ,
                 S28.WH_LOC_DESC ,
-                S28.WH_LOC_GB , 
+                S28.WH_LOC_GB ,
                 (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
-            FROM 
+            FROM
                 SYS0005M S5 ,SYS0028M S28
-            WHERE  
+            WHERE
                 S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
             AND S28.WH_LOC_STK_GRAD = 'A'
             AND S28.WH_LOC_GB IN ('02' , '05' , '08')
-            ORDER BY   S5.CODE      
+            ORDER BY   S5.CODE
    </select>
-   
+
    <select id="selectWarehouse"  parameterType="Map" resultType="egovMap">
-          SELECT 
+          SELECT
                 S5.BRNCH_ID CODE_ID,
                 S5.CODE || '-' || S5.NAME CODE_NAME,
                 S5.NAME ,
                 S5.CODE ,
-                S28.WH_LOC_ID , 
+                S28.WH_LOC_ID ,
                 S28.WH_LOC_CODE ,
                 S28.WH_LOC_DESC ,
-                S28.WH_LOC_GB , 
+                S28.WH_LOC_GB ,
                 (SELECT CODE_NAME FROM SYS0013M WHERE CODE_MASTER_ID = 339 AND CODE = S28.WH_LOC_GB) LOCGB
-            FROM 
+            FROM
                 SYS0005M S5 ,SYS0028M S28
-            WHERE  
+            WHERE
                 S5.BRNCH_ID IN (WH_LOC_BRNCH_ID , WH_LOC_BRNCH_ID2 , WH_LOC_BRNCH_ID3)
             AND S28.WH_LOC_STK_GRAD = 'A'
             AND S28.WH_LOC_GB IN ('02' , '05', '08')
@@ -76,14 +76,14 @@
    </select>
 
     <select id="selectPosJsonList" parameterType="Map" resultType="egovMap">
-        SELECT  Extent1.POS_ID , 
-                        Extent1.POS_NO ,  
+        SELECT  Extent1.POS_ID ,
+                        Extent1.POS_NO ,
                         Extent1.POS_CUST_NAME ,
-                        TO_CHAR(Extent1.POS_DT, 'DD-MM-YYYY') POS_DT, 
+                        TO_CHAR(Extent1.POS_DT, 'DD-MM-YYYY') POS_DT,
                         Extent1.POS_TYPE_ID   ,
                         Extent1.POS_MODULE_TYPE_ID  ,
                         TO_CHAR(Extent1.POS_TOT_AMT , 'FM9999999999990.00') AS POS_TOT_AMT  ,
-                        Extent1.STUS_ID, 
+                        Extent1.STUS_ID,
                         Extent1.POS_WH_ID  ,
                         Extent1.POS_MEM_ID  ,
                         Extent1.POS_CRT_USER_ID  ,
@@ -102,91 +102,91 @@
                         LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
                         JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
                         LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
-                        <if test="(deducMem != null and deducMem != '') or (deducMemNric != null and deducMemNric != '' )">    
+                        <if test="(deducMem != null and deducMem != '') or (deducMemNric != null and deducMemNric != '' )">
                             LEFT JOIN (SELECT DISTINCT POS_ID, MEM_CODE, NRIC FROM SAL0058D) Extent8   ON Extent8.POS_ID = Extent1.POS_ID
                         </if>
                 WHERE  1=1
                <if test=" null != posModuleTypeId and '' != posModuleTypeId">
                    AND  Extent1.POS_MODULE_TYPE_ID = #{posModuleTypeId}
-                </if> 
-              
+                </if>
+
                 <if test=" null != systemArray and systemArray.length > 0">
                    AND Extent1.POS_TYPE_ID IN
                     <foreach collection="systemArray" item="item" open="(" separator="," close=")">
                         #{item}
                     </foreach>
                 </if>
-                 
+
                 <if test=" null != statusArray and statusArray.length > 0">
                     AND Extent1.STUS_ID IN
                     <foreach collection="statusArray" item="item" open="(" separator="," close=")">
                         #{item}
                     </foreach>
                 </if>
-              
+
                 <if test="posNo != nul and posNo != '' ">
                     AND  UPPER(Extent1.POS_NO) = UPPER(#{posNo})
                 </if>
-                
-                <if test="sDate != null and sDate != '' ">   
+
+                <if test="sDate != null and sDate != '' ">
                     <![CDATA[
-                    AND  Extent1.POS_DT >=  TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS') 
+                    AND  Extent1.POS_DT >=  TO_DATE(#{sDate}||' 00:00:00', 'DD-MM-YYYY HH24:MI:SS')
                      ]]>
                 </if>
-                
-                <if test="eDate != null and eDate != '' "> 
-                   <![CDATA[                    
-                    AND  Extent1.POS_DT <= TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')  
+
+                <if test="eDate != null and eDate != '' ">
+                   <![CDATA[
+                    AND  Extent1.POS_DT <= TO_DATE(#{eDate} ||' 23:59:59', 'DD-MM-YYYY HH24:MI:SS')
                     ]]>
-                </if> 
+                </if>
                 <if test="brnchId != null and brnchId != '' ">
                     AND Extent1.BRNCH_ID = #{brnchId}
                 </if>
                 <if test=" null != salesmanId and '' != salesmanId">
                     AND Extent1.POS_MEM_ID = #{salesmanId}
                 </if>
-                
+
                 <if test=" null != posCustName and '' != posCustName">
                     AND  Extent1.POS_CUST_NAME  = #{posCustName}
                 </if>
-                
-                <if test="deducMem != null and deducMem != '' ">    
+
+                <if test="deducMem != null and deducMem != '' ">
                     AND Extent1.POS_MODULE_TYPE_ID = 2391
                     AND UPPER(Extent8.MEM_CODE) = UPPER(#{deducMem})
                 </if>
-                
+
                 <if test="deducMemNric != null and deducMemNric != '' ">
                     AND Extent1.POS_MODULE_TYPE_ID = 2391
                     AND UPPER(Extent8.NRIC) = UPPER(#{deducMemNric})
                 </if>
-                
-                ORDER BY Extent1.POS_NO DESC  
+
+                ORDER BY Extent1.POS_NO DESC
     </select>
-    
-    <select id="selectPosTypeList" parameterType="Map" resultType="egovMap"> 
-				SELECT 
+
+    <select id="selectPosTypeList" parameterType="Map" resultType="egovMap">
+				SELECT
 				    CODE_ID ,
 				    CODE_NAME
-				FROM 
-				    SYS0013M 
-				WHERE 
+				FROM
+				    SYS0013M
+				WHERE
 				    CODE_MASTER_ID = #{codeM}
 				    <if test=" null != codArr and codArr.length > 0 ">
 				          AND CODE_ID IN
 				          <foreach collection="codArr" item="item" open="(" separator="," close=")">
 				                #{item}
-				          </foreach>   
-				    </if> 
+				          </foreach>
+				    </if>
 				    <!-- <if test=" null != exArr and exArr.length > 0">
-				          AND CODE_ID NOT IN 
+				          AND CODE_ID NOT IN
 				         <foreach collection="exArr" item="item" open="(" separator=","  close=")">
 				             #{item}
 				         </foreach>
 				    </if> -->
-				ORDER BY CODE_ID            
+				ORDER BY CODE_ID
     </select>
-    
-     
+
+
      <select id="selectPosItmList" parameterType="Map" resultType="egovMap">
 	    SELECT
             Project1.CODE_NAME,
@@ -197,8 +197,8 @@
             Project1.STK_TYPE_ID,
             Project1.STK_GRAD,
             Project1. ALLOW_SALES,
-            Project1.STUS_CODE_ID           
-        FROM    
+            Project1.STUS_CODE_ID
+        FROM
         (SELECT
                 T1.STK_CODE || ' - ' || T1.STK_DESC CODE_NAME,
                 T1.STK_ID CODE_ID,
@@ -209,53 +209,53 @@
                 T1.STK_GRAD,
                 T1.ALLOW_SALES,
                 T1.STUS_CODE_ID
-            FROM 
+            FROM
                 SYS0026M T1
                 LEFT JOIN SYS0013M T2  ON T1.STK_TYPE_ID = T2.CODE_ID
-            WHERE 
-                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  '600052' = STK_CODE  )) Project1  
-                
+            WHERE
+                61 != STK_TYPE_ID  OR ( 61 = STK_TYPE_ID  AND  '600052' = STK_CODE  )) Project1
+
             <!-- Filter / Parts -->
             <if test=" null != posSal and '' != posSal">
-                WHERE 
+                WHERE
                     Project1.STUS_CODE_ID = 1
-                AND 
+                AND
                     Project1.ALLOW_SALES = 1
                 AND
-                    Project1.STK_CTGRY_ID IN ('54','55','56','57','58','59','400','924')   
+                    Project1.STK_CTGRY_ID IN ('54','55','56','57','58','59','400','924')
                 AND
                     Project1.STK_TYPE_ID = #{itemType}
-            </if> 
-             
+            </if>
+
              <!-- Item Bank -->
              <if test=" null != posItm and '' != posItm">
-                WHERE 
+                WHERE
                      Project1. ALLOW_SALES = 1
-                AND 
+                AND
                      Project1.STUS_CODE_ID = 1
                 AND
                      Project1.STK_CTGRY_ID = #{itemType}
-                 AND 
+                 AND
                      Project1.STK_TYPE_ID = #{stkTypeId}
              </if>
-             
+
              <!-- OtherIncome -->
              <if test=" null != posOth and '' != posOth">
-                WHERE 
+                WHERE
                      Project1.STUS_CODE_ID = 1
                 AND
                      Project1.STK_CTGRY_ID = #{itemType}
-                 AND 
+                 AND
                      Project1.STK_TYPE_ID = #{stkTypeId}
              </if>
-              
+
               <!--Item Bank HQ -->
               <if test=" null != posHQ and '' != posHQ">
-                WHERE 
+                WHERE
                      Project1.STUS_CODE_ID = 1
                 AND
-                     Project1. ALLOW_SALES = 0     
-                 AND 
+                     Project1. ALLOW_SALES = 0
+                 AND
                      Project1.STK_TYPE_ID = #{stkTypeId}
                      <if test="stkTypeId != '1350' ">
                         AND
@@ -264,7 +264,7 @@
                   </if>
                   ORDER BY Project1.STK_CODE ASC
      </select>
-     
+
      <!-- <select id="selectPIItmList" parameterType="Map" resultType="egovMap">
             SELECT Project1.ITM_ID CODE_ID  ,
                    Project1.ITM_ID STK_ID  ,
@@ -273,19 +273,19 @@
                    Project1.ITM_DESC  STK_DESC ,
                    NVL(Project1.ITM_PRC , 0)  AMT,
                    Project1.ALLOW_SALES,
-                   100 QTY   
+                   100 QTY
             FROM ( SELECT Extent1.ITM_ID   ,
                             Extent1.ITM_CODE   ,
                             Extent1.ITM_DESC   ,
                             Extent1.ALLOW_SALES   ,
-                            Extent2.ITM_PRC   
+                            Extent2.ITM_PRC
                      FROM LOG0026D Extent1
                             JOIN LOG0027D Extent2   ON Extent2.ITM_ID = Extent1.ITM_ID
-                     WHERE   1 = Extent1.STUS_CODE_ID 
+                     WHERE   1 = Extent1.STUS_CODE_ID
                                <if test=" null != itemType and '' != itemType">
-                               AND  Extent1.ITM_TYPE_ID = #{itemType} 
+                               AND  Extent1.ITM_TYPE_ID = #{itemType}
                                </if>
-                               AND  Extent1.ALLOW_SALES = 1 
+                               AND  Extent1.ALLOW_SALES = 1
                                 <if test=" null != itmIdArray    and    itmIdArray.length > 0">
                                     AND Extent1.ITM_ID IN
                                     <foreach collection="itmIdArray" item = "item" open = "(" separator="," close=")">
@@ -295,10 +295,10 @@
                                 ) Project1
               ORDER BY Project1.ITM_CODE ASC
      </select> -->
-     
-     
+
+
      <select id="chkStockList" parameterType="Map" resultType="egovMap">
-						SELECT 
+						SELECT
                         Project1.LOC_ID,
                         Project1.STK_ID,
                         Project1.STK_CODE,
@@ -308,12 +308,12 @@
                         <!-- NVL(Project1.QTY, 0 ) QTY, -->
                         NVL(Project1.QTY, 0 ) QTY,
                         Project1.MOV_QTY,
-                        NVL(Project1.AMT , 0) AMT,                     
-                        (AMT * 100) / 106 SUB_CHANGES,
-                        AMT - ((AMT * 100) / 106) TAXES,
+                        NVL(Project1.AMT , 0) AMT,
+                        (AMT * 100) / 100 SUB_CHANGES,
+                        AMT - ((AMT * 100) / 100) TAXES,
                         Project1.SERIAL_CHK
-                    FROM ( 
-                            SELECT 
+                    FROM (
+                            SELECT
                                 NVL(Extent2.LOC_ID, 0) LOC_ID,
                                 Extent1.STK_ID,
                                 Extent1.STK_CODE,
@@ -325,35 +325,35 @@
                                 <!-- NVL(Extent3.AMT, 0) AMT, -->
                                 NVL(Extent3.AMT, 0) AMT ,
                                 Extent1.SERIAL_CHK
-                            FROM                     
-                                SYS0026M Extent1 
-                            LEFT JOIN 
+                            FROM
+                                SYS0026M Extent1
+                            LEFT JOIN
                                 LOG0056M Extent2 ON Extent2.STK_CODE = Extent1.STK_CODE AND Extent2.LOC_ID = #{locId}
                             LEFT JOIN
                                <!-- Price  -->
                                <!-- <![CDATA[
                                (SELECT STK_ID , AMT FROM  SAL0016M WHERE APP_TYPE_ID = 67 AND STUS_CODE_ID = 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID
                                ]]>       -->
-                               <![CDATA[                          
-                                (SELECT 
+                               <![CDATA[
+                                (SELECT
 									     T1.STK_ID, T1.AMT
-									   FROM 
-									      (SELECT 
+									   FROM
+									      (SELECT
 									          STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT
-									       FROM SAL0016M 
+									       FROM SAL0016M
 									       WHERE MEM_PAC_ID = 0
 									       AND APP_TYPE_ID = 67
 									       AND STUS_CODE_ID = 1
 									      ) T1
 									WHERE T1.CNT <= 1)
-                                                                              Extent3 ON Extent3.STK_ID = Extent1.STK_ID 
+                                                                              Extent3 ON Extent3.STK_ID = Extent1.STK_ID
                                  ]]>
-                                
-                             <![CDATA[    
-                            LEFT JOIN                                 
+
+                             <![CDATA[
+                            LEFT JOIN
                                 (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <> 'Y'  GROUP BY LOC_ID , ITM_CODE ) Extent4
                                  ON Extent2.STK_CODE = Extent4.ITM_CODE  AND Extent2.LOC_ID = Extent4.LOC_ID
-                             ]]>    
+                             ]]>
                          ) Project1
                     WHERE   1 = 1
                     <if test=" null != stkId and stkId.length > 0">
@@ -361,42 +361,42 @@
                               <foreach collection="stkId" item="item" open="(" separator="," close=")">
                                   #{item}
                               </foreach>
-                    </if> 
+                    </if>
      </select>
-     
+
      <select id="getMemCode" parameterType="Map" resultType="egovMap">
-				SELECT 
+				SELECT
                     T1.MEM_CODE,
                     T1.MEM_ID,
-                    T1.BRNCH 
-                FROM 
+                    T1.BRNCH
+                FROM
                     ORG0001D T1 INNER JOIN SYS0047M T2
-                ON 
+                ON
                     T1.MEM_CODE = T2.USER_NAME
                 WHERE 1 = 1
                     <if test=" userId != null and userId != ''">
                     AND T2.USER_ID = #{userId}
                     </if>
-                    
+
                     <if test="memCode != null and memCode != '' ">
                     AND T1.MEM_CODE = #{memCode}
                     </if>
      </select>
-     
+
      <select id="getReasonCodeList" parameterType="Map" resultType="egovMap">
-                SELECT 
+                SELECT
                     RESN_ID CODE_ID,
-                    CODE , 
+                    CODE ,
                     RESN_DESC CODE_NAME
-                FROM 
-                    SYS0032M 
-                WHERE 
-                    RESN_TYPE_ID = #{masterCode} 
+                FROM
+                    SYS0032M
+                WHERE
+                    RESN_TYPE_ID = #{masterCode}
                 ORDER BY RESN_ID
      </select>
-     
+
      <select id="getFilterSerialNum" parameterType="Map" resultType="egovMap">
-                    SELECT 
+                    SELECT
                         T1.MATNR,
                         T3.STK_ID,
                         T1.SERIAL_NO,
@@ -405,146 +405,146 @@
                         T2.USER_NAME,
                         T2.WH_LOC_CODE,
                         T2.WH_LOC_ID
-                    FROM 
-                        LOG0063D T1 
-                        INNER JOIN (                    
-                                    SELECT 
+                    FROM
+                        LOG0063D T1
+                        INNER JOIN (
+                                    SELECT
                                         Extent1.USER_ID,
                                         Extent1.USER_NAME,
                                         Extent2.WH_LOC_CODE,
-                                        Extent2.WH_LOC_ID                                        
-                                    FROM 
-                                        SYS0047M Extent1 
-                                        LEFT JOIN SYS0028M Extent2 ON Extent2.WH_LOC_CODE = Extent1.USER_NAME 
+                                        Extent2.WH_LOC_ID
+                                    FROM
+                                        SYS0047M Extent1
+                                        LEFT JOIN SYS0028M Extent2 ON Extent2.WH_LOC_CODE = Extent1.USER_NAME
                                    ) T2 ON T2.WH_LOC_ID = T1.LOC_ID
-                         INNER JOIN SYS0026M T3  ON  T3.STK_CODE = T1.MATNR       
-                      WHERE 
+                         INNER JOIN SYS0026M T3  ON  T3.STK_CODE = T1.MATNR
+                      WHERE
                        T2.USER_ID = #{userId}
                        <if test=" null != basketStkCode and '' != basketStkCode">
                             AND T1.MATNR = #{basketStkCode}
-                       </if> 
-                        
+                       </if>
+
                         <if test="null != filterArr and filterArr.length > 0">
                             AND T1.SERIAL_NO IN
                             <foreach collection="filterArr" item="item" open="(" separator="," close=")">
                                 #{item}
                             </foreach>
                         </if>
-                         
+
                         <if test="null != serialArr and serialArr.length > 0">
                             AND T1.SERIAL_NO NOT IN
                             <foreach collection="serialArr" item="idx" open="(" separator="," close=")">
                                 #{idx}
                             </foreach>
-                        </if> 
+                        </if>
      </select>
-     
+
      <!--현재 미사용 : 계정과목 부여 Query  -->
      <select id="getItemBankAccCodeByItemTypeID" parameterType="Map" resultType="egovMap">
 					SELECT Extent1.ITM_BANK_TYPE_ID   ,
-					       Extent1.CR_ACC_ID   , 
+					       Extent1.CR_ACC_ID   ,
 					       Extent1.DR_ACC_ID   ,
 					       Extent1.STUS_ID   ,
 					       Extent1.UPD_USER_ID   ,
-					       Extent1.UPD_DT   
+					       Extent1.UPD_DT
 					FROM LOG0025M Extent1
-					WHERE   Extent1.ITM_BANK_TYPE_ID = #{insPosSystemType} 
+					WHERE   Extent1.ITM_BANK_TYPE_ID = #{insPosSystemType}
 					AND 1 = Extent1.STUS_ID
-					<![CDATA[ 
+					<![CDATA[
 					AND ROWNUM <= 1
 					]]>
      </select>
-     
+
      <select id="getDocNo" parameterType="Map" resultType="java.lang.String">
         SELECT  FN_GET_DOCNO(#{docNoId}) FROM DUAL
     </select>
-    
+
     <select id="getSeqSal0057D" resultType="java.lang.Integer">
          SELECT SAL0057D_POS_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getSeqSal0058D" resultType="java.lang.Integer">
         SELECT SAL0058D_POS_ITM_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getSeqPay0007D" resultType="java.lang.Integer">
         SELECT PAY0007D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getSeqPay0016D" resultType="java.lang.Integer">
         SELECT PAY0016D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getSeqPay0031D" resultType="java.lang.Integer">
         SELECT PAY0031D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getSeqPay0032D" resultType="java.lang.Integer">
         SELECT PAY0032D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getSeqLog0014D" resultType="java.lang.Integer">
         SELECT LOG0014D_SR_CARD_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getSeqPay0069D" resultType="java.lang.Integer">
           SELECT PAY0069D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getSeqSal0147M" resultType="java.lang.Integer">
         SELECT SAL0147M_POS_SERIAL_ID_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getSeqPay0064D" resultType="java.lang.Integer">
         SELECT PAY0064D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getSeqPay0065D" resultType="java.lang.Integer">
         SELECT PAY0065D_SEQ.NEXTVAL  FROM DUAL
     </select>
-     
+
      <select id="getSeqPay0009D" resultType="java.lang.Integer">
         SELECT PAY0009D_SEQ.NEXTVAL FROM DUAL
-     </select>   
-        
+     </select>
+
     <select id="getUserFullName" parameterType="Map" resultType="egovMap">
 		<!--  SELECT
-		    USER_NAME || ' - ' || USER_FULL_NAME NAME 
-		 FROM 
-		    SYS0047M 
+		    USER_NAME || ' - ' || USER_FULL_NAME NAME
+		 FROM
+		    SYS0047M
 		 WHERE
 		    USER_NAME = #{salesmanPopCd} -->
-		    
-			SELECT 
+
+			SELECT
 			    FULL_NAME
-			NAME 
+			NAME
 			    FROM ORG0001D
-			WHERE 
+			WHERE
 			    MEM_CODE = #{salesmanPopCd}
     </select>
-    
+
     <insert id="insertPosMaster" parameterType="Map" >
         INSERT INTO SAL0057D
-				  ( POS_ID, 
-				    POS_NO, 
-				    POS_BILL_ID, 
+				  ( POS_ID,
+				    POS_NO,
+				    POS_BILL_ID,
 				    POS_CUST_NAME,
 				    POS_DT,
-				    POS_TYPE_ID, 
-				    POS_MODULE_TYPE_ID, 
+				    POS_TYPE_ID,
+				    POS_MODULE_TYPE_ID,
 				    POS_TOT_AMT,
 				    POS_TOT_CHRG,
 				    POS_TOT_TXS,
-				    POS_TOT_DSCNT, 
-				    POS_WH_ID, 
+				    POS_TOT_DSCNT,
+				    POS_WH_ID,
 				    POS_REM,
-				    POS_MTCH_ID, 
+				    POS_MTCH_ID,
 				    POS_MEM_ID,
 				    POS_CUST_ID,
 				    POS_CRT_USER_ID,
 				    POS_CRT_DT,
-				    POS_CRT_DEPT_ID, 
-				    CR_ACC_ID, 
+				    POS_CRT_DEPT_ID,
+				    CR_ACC_ID,
 				    DR_ACC_ID,
 				    POS_RESN_ID,
 				    BRNCH_ID,
@@ -556,7 +556,7 @@
     				   ADDR_DTL,
     				   STREET,
 				    </if>
-				    CRT_USER_ID, 
+				    CRT_USER_ID,
 				    CRT_DT,
 				    UPD_USER_ID,
 				    UPD_DT,
@@ -566,20 +566,20 @@
            #{posBillId},
            #{posCustName},
            SYSDATE,
-           #{insPosSystemType}, 
+           #{insPosSystemType},
            #{insPosModuleType},
            #{posTotalAmt},
            #{posCharge},
            #{posTaxes},
-           #{posDiscount}, 
+           #{posDiscount},
            #{hidLocId},
            #{posRemark},
            #{posMtchId},
            #{salesmanPopId},
            #{posCustomerId},
            #{userId},
-           SYSDATE, 
-           #{userDeptId}, 
+           SYSDATE,
+           #{userDeptId},
            #{crAccId},
            #{drAccId},
            #{posReason},
@@ -590,14 +590,14 @@
                </when>
                <otherwise>
                    TO_DATE(#{recvDate}, 'DD/MM/YYYY'),
-               </otherwise>                    
+               </otherwise>
             </choose>
            #{posStusId},
            <!--Case Other Income  -->
            <if test=" null != othCheck and othCheck > 0">
               #{areaId},
               #{addrDtl},
-              #{streetDtl},         
+              #{streetDtl},
            </if>
            #{userId},
            SYSDATE,
@@ -605,31 +605,31 @@
            SYSDATE,
            #{userDeptCode})
     </insert>
-    
+
     <insert id="insertPosDetail" parameterType="Map">
 			INSERT INTO SAL0058D
 			  ( POS_ITM_ID,
 			    POS_ID,
-			    POS_ITM_STOCK_ID, 
-			    POS_ITM_QTY, 
+			    POS_ITM_STOCK_ID,
+			    POS_ITM_QTY,
 			    POS_ITM_UNIT_PRC,
-			    POS_ITM_TOT, 
+			    POS_ITM_TOT,
 			    POS_ITM_CHRG,
 			    POS_ITM_TXS,
 			    POS_ITM_TAX_CODE_ID,
 			    MEM_ID,
 			    RCV_STUS_ID,
-			    CRT_USER_ID, 
+			    CRT_USER_ID,
                 CRT_DT,
                 UPD_USER_ID,
                 UPD_DT )
 			  VALUES ( #{posDetailSeq},
 			           #{posMasterSeq},
 			           #{stkId},
-			           #{inputQty}, 
+			           #{inputQty},
 			           #{amt},
 			           #{totalAmt},
-			           #{subTotal}, 
+			           #{subTotal},
 			           #{subChng},
 			           #{posItemTaxCodeId},
 			           #{posMemId},
@@ -639,15 +639,15 @@
 			           #{userId},
 			           SYSDATE)
     </insert>
-    
+
     <insert id="insertDeductionPosDetail" parameterType="Map">
             INSERT INTO SAL0058D
               ( POS_ITM_ID,
                 POS_ID,
-                POS_ITM_STOCK_ID, 
-                POS_ITM_QTY, 
+                POS_ITM_STOCK_ID,
+                POS_ITM_QTY,
                 POS_ITM_UNIT_PRC,
-                POS_ITM_TOT, 
+                POS_ITM_TOT,
                 POS_ITM_CHRG,
                 POS_ITM_TXS,
                 POS_ITM_TAX_CODE_ID,
@@ -659,17 +659,17 @@
                 NRIC,
                 MEM_STUS_ID,
                 RCV_STUS_ID,
-                CRT_USER_ID, 
+                CRT_USER_ID,
                 CRT_DT,
                 UPD_USER_ID,
                 UPD_DT )
               VALUES ( #{posDetailDuducSeq},
                        #{posMasterSeq},
                        #{posDetailStkId},
-                       #{posDetailQty}, 
+                       #{posDetailQty},
                        #{posDetailUnitPrc},
                        #{posDetailTotal},
-                       #{posDetailCharge}, 
+                       #{posDetailCharge},
                        #{posDetailTaxs},
                        #{posItemTaxCodeId},
                        #{memId},
@@ -685,38 +685,38 @@
                        #{userId},
                        SYSDATE)
     </insert>
-    
+
     <insert id="insertPosBilling" parameterType="Map">
 				INSERT INTO PAY0007D
 				  ( BILL_ID,
-				    BILL_TYPE_ID, 
-				    BILL_SO_ID, 
-				    BILL_MEM_ID, 
+				    BILL_TYPE_ID,
+				    BILL_SO_ID,
+				    BILL_MEM_ID,
 				    BILL_AS_ID,
 				    BILL_PAY_TYPE_ID,
 				    BILL_NO,
 				    BILL_MEM_SHIP_NO,
 				    BILL_DT,
-				    BILL_AMT, 
-				    BILL_REM, 
-				    BILL_IS_PAID, 
+				    BILL_AMT,
+				    BILL_REM,
+				    BILL_IS_PAID,
 				    BILL_IS_COMM,
 				    UPD_USER_ID,
-				    UPD_DT, 
+				    UPD_DT,
 				    SYNC_CHK,
-				    COURS_ID, 
+				    COURS_ID,
 				    STUS_ID )
 				  VALUES ( #{posBillSeq},
 				           #{posBillTypeId},
 				           #{posBillSoId},
-				           #{posBillMemId}, 
-				           #{posBillAsId}, 
-				           #{posBillPayTypeId}, 
-				           #{docNoPsn}, 
-				           #{posMemberShipNo}, 
-				           SYSDATE, 
-				           #{posBillAmt}, 
-				           #{posBillRem}, 
+				           #{posBillMemId},
+				           #{posBillAsId},
+				           #{posBillPayTypeId},
+				           #{docNoPsn},
+				           #{posMemberShipNo},
+				           SYSDATE,
+				           #{posBillAmt},
+				           #{posBillRem},
 				           #{posBillIsPaid},
 				           #{posBillIsComm},
 				           #{userId},
@@ -725,16 +725,16 @@
 				           #{posCourseId},
 				           #{posStatusId})
     </insert>
-    
+
     <update id="updatePosMasterPosBillId" parameterType="Map">
-				UPDATE 
+				UPDATE
 				    SAL0057D
-				SET 
+				SET
 				    POS_BILL_ID = #{posBillSeq}
-				WHERE 
+				WHERE
 				    POS_ID = #{posMasterSeq}
     </update>
-    
+
     <insert id="insertPosOrderBilling" parameterType="Map">
         INSERT INTO PAY0016D
 				  ( ACC_BILL_ID,
@@ -747,13 +747,13 @@
 				    ACC_BILL_MODE_ID,
 				    ACC_BILL_SCHDUL_ID,
 				    ACC_BILL_SCHDUL_PRIOD,
-				    ACC_BILL_ADJ_ID, 
+				    ACC_BILL_ADJ_ID,
 				    ACC_BILL_SCHDUL_AMT,
 				    ACC_BILL_ADJ_AMT,
-				    ACC_BILL_TXS_AMT, 
+				    ACC_BILL_TXS_AMT,
 				    ACC_BILL_NET_AMT,
 				    ACC_BILL_STUS,
-				    ACC_BILL_REM, 
+				    ACC_BILL_REM,
 				    ACC_BILL_CRT_DT,
 				    ACC_BILL_CRT_USER_ID,
 				    ACC_BILL_GRP_ID,
@@ -761,59 +761,59 @@
 				    ACC_BILL_TAX_RATE,
 				    ACC_BILL_ACCT_CNVR,
 				    ACC_BILL_CNTRCT_ID )
-		  VALUES (     #{posOrderBillSeq}, 
+		  VALUES (     #{posOrderBillSeq},
 				            #{posOrdBillTaskId},
 				            SYSDATE,
 				            #{posOrdBillRefNo},
 				            #{posOrdBillOrdId},
 				            #{posOrdBillOrdNo},
 				            #{posOrdBillTypeId},
-				            #{posOrdBillModeId}, 
-				            #{posOrdBillScheduleId}, 
-				            #{posOrdBillSchedulePeriod}, 
-				            #{posOrdBillAdjustmentId}, 
+				            #{posOrdBillModeId},
+				            #{posOrdBillScheduleId},
+				            #{posOrdBillSchedulePeriod},
+				            #{posOrdBillAdjustmentId},
 				            #{posOrdBillScheduleAmt},
 				            #{posOrdBillAdjustmentAmt},
-				            #{posOrdBillTaxesAmt}, 
+				            #{posOrdBillTaxesAmt},
 				            #{posOrdBillNetAmount},
-				            #{posOrdBillStatus}, 
+				            #{posOrdBillStatus},
 				            #{posOrdBillRem},
 				            SYSDATE,
 				            #{userId},
 				            #{posOrdBillGroupId},
-				            #{posOrdBillTaxCodeId}, 
-				            #{posOrdBillTaxRate}, 
-				            #{posOrdBillAcctCnvr}, 
+				            #{posOrdBillTaxCodeId},
+				            #{posOrdBillTaxRate},
+				            #{posOrdBillAcctCnvr},
 				            #{posOrdBillCntrctId})
     </insert>
-    
-    <insert id="insertPosTaxInvcMisc" parameterType="Map"> 
+
+    <insert id="insertPosTaxInvcMisc" parameterType="Map">
         INSERT INTO PAY0031D
 							  ( TAX_INVC_ID,
 							    TAX_INVC_REF_NO,
 							    TAX_INVC_REF_DT,
-							    TAX_INVC_SVC_NO, 
-							    TAX_INVC_TYPE, 
+							    TAX_INVC_SVC_NO,
+							    TAX_INVC_TYPE,
 							    TAX_INVC_CUST_NAME,
 							    TAX_INVC_CNTC_PERSON,
 							    <!-- 추후 삭제 -->
 							   <!--  TAX_INVC_ADDR1,
-							    TAX_INVC_ADDR2, 
-							    TAX_INVC_ADDR3, 
+							    TAX_INVC_ADDR2,
+							    TAX_INVC_ADDR3,
 							    TAX_INVC_ADDR4,
 							    TAX_INVC_POST_CODE,
 							    TAX_INVC_STATE_NAME,
 							    TAX_INVC_CNTY,   -->
-							    
-							    TAX_INVC_TASK_ID, 
-							    TAX_INVC_REM, 
-							    TAX_INVC_CHRG, 
-							    TAX_INVC_TXS, 
+
+							    TAX_INVC_TASK_ID,
+							    TAX_INVC_REM,
+							    TAX_INVC_CHRG,
+							    TAX_INVC_TXS,
 							    TAX_INVC_AMT_DUE,
 							    TAX_INVC_CRT_DT,
 							    TAX_INVC_CRT_USER_ID )
 						  VALUES ( #{accTaxInvMiscSeq},
-								           #{posTaxInvRefNo}, 
+								           #{posTaxInvRefNo},
 								           SYSDATE,
 								           #{posTaxInvSvcNo},
 								           #{posTaxInvType},
@@ -827,7 +827,7 @@
 								           #{postCode},
 								           #{stateName},
 								           #{cnty}, -->
-								           
+
 								           #{posTaxInvTaskId},
 								           #{posTaxInvUserName},
 								           #{posTaxInvCharges},
@@ -837,7 +837,7 @@
 								           #{userId}
 								           )
     </insert>
-    
+
     <insert id="insertPosTaxInvcMiscSub" parameterType="Map">
         INSERT INTO PAY0032D
 					  ( INVC_ITM_ID,
@@ -849,34 +849,34 @@
 					    INVC_ITM_DESC1,
 					    INVC_ITM_DESC2,
 					    INVC_ITM_SERIAL_NO,
-					    INVC_ITM_QTY, 
-					    INVC_ITM_UNIT_PRC, 
+					    INVC_ITM_QTY,
+					    INVC_ITM_UNIT_PRC,
 					    INVC_ITM_GST_RATE,
-					    INVC_ITM_GST_TXS, 
-					    INVC_ITM_CHRG, 
+					    INVC_ITM_GST_TXS,
+					    INVC_ITM_CHRG,
 					    INVC_ITM_AMT_DUE,
 					    <!-- 추후 삭제  Magic Address -->
-					  <!--   INVC_ITM_ADD1, 
-					    INVC_ITM_ADD2, 
-					    INVC_ITM_ADD3, 
-					    INVC_ITM_ADD4, 
+					  <!--   INVC_ITM_ADD1,
+					    INVC_ITM_ADD2,
+					    INVC_ITM_ADD3,
+					    INVC_ITM_ADD4,
 					    INVC_ITM_POST_CODE,
-					    INVC_ITM_AREA_NAME, 
+					    INVC_ITM_AREA_NAME,
 					    INVC_ITM_STATE_NAME,
 					    INVC_ITM_CNTY, -->
-					    
-					    INVC_ITM_INSTALL_DT, 
-					    INVC_ITM_RETN_DT, 
+
+					    INVC_ITM_INSTALL_DT,
+					    INVC_ITM_RETN_DT,
 					    INVC_ITM_BILL_REF_NO )
 					  VALUES ( #{invDetailSeq},
 					           #{accTaxInvMiscSeq},
-					           #{invItemTypeID}, 
+					           #{invItemTypeID},
 					           #{posTaxInvSubOrdNo},
 					           #{posTaxInvSubItmPoNo},
 					           #{stkCode},
 					           #{stkDesc},
 					           #{posTaxInvSubDescSub},
-					           #{posTaxInvSubSerialNo}, 
+					           #{posTaxInvSubSerialNo},
 					           #{inputQty},
 					           #{amt},
 					           #{posTaxInvSubGSTRate},
@@ -890,50 +890,50 @@
 					           #{posTaxInvSubAddr4},
 					           #{posTaxInvSubPostCode},
 					           #{posTaxInvSubAreaName},
-					           #{posTaxInvSubStateName}, 
-					           #{posTaxInvSubCntry},			 -->		           
-					           
+					           #{posTaxInvSubStateName},
+					           #{posTaxInvSubCntry},			 -->
+
 					           NULL,
-					           NULL, 
+					           NULL,
 					           NULL )
     </insert>
-    
+
     <insert id="insertStkRecord" parameterType="Map">
 		        INSERT INTO LOG0014D
 		                ( SR_CARD_ID,
-		                  LOC_ID, 
-		                  STOCK_ID, 
+		                  LOC_ID,
+		                  STOCK_ID,
 		                  ENTRY_DT,
-		                  TYPE_ID, 
+		                  TYPE_ID,
 		                  REF_NO,
 		                  SALES_ORD_ID,
-		                  ITM_NO, 
+		                  ITM_NO,
 		                  SRC_ID,
-		                  PRJCT_ID, 
+		                  PRJCT_ID,
 		                  BATCH_NO,
 		                  QTY,
-		                  CURR_ID, 
-		                  CURR_RATE, 
+		                  CURR_ID,
+		                  CURR_RATE,
 		                  COST,
-		                  PRC, 
+		                  PRC,
 		                  REM,
 		                  SERIAL_NO,
 		                  INSTALL_NO,
-		                  COST_DT, 
+		                  COST_DT,
 		                  APP_TYPE_ID,
-		                  STK_GRAD, 
+		                  STK_GRAD,
 		                  INSTALL_FAIL,
 		                  IS_SYNCH,
 		                  ENTRY_MTH_ID,
 		                  ORGN,
-		                  TRANS_TYPE, 
-		                  DOC_LNE_NO, 
+		                  TRANS_TYPE,
+		                  DOC_LNE_NO,
 		                  PO_NO,
 		                  INSERT_DT,
 		                  IS_GR,
 		                  PO_STUS )
 					  VALUES ( #{stkRecordSeq},
-					           #{locId}, 
+					           #{locId},
 					           #{stkCode},
 					           SYSDATE,
 					           #{invStkRecordTypeId},
@@ -944,14 +944,14 @@
 					           #{invStkRecordProjectId},
 					           #{invStkRecordBatchNo},
 					           #{inputQty},
-					           #{invStkRecordCurrId}, 
+					           #{invStkRecordCurrId},
 					           #{invStkRecordCurrRate},
 					           #{invStkRecordCost},
 					           #{invStkRecordPrice},
 					           #{invStkRecordRem},
 					           #{invStkRecordSerialNo},
 					           #{invStkRecordInstallNo},
-					           SYSDATE, 
+					           SYSDATE,
 					           #{invStkRecordAppTypeId},
 					           #{invStkRecordStkGrade},
 					           #{invStkRecordInstallFail},
@@ -965,30 +965,30 @@
 					           NULL,
 					           NULL )
     </insert>
-    
+
     <insert id="insertSerialNo" parameterType="Map">
-			        INSERT INTO SAL0147M( POS_SERIAL_ID, 
-			                                  POS_ID, 
-			                                  POS_ITM_STOCK_ID, 
+			        INSERT INTO SAL0147M( POS_SERIAL_ID,
+			                                  POS_ID,
+			                                  POS_ITM_STOCK_ID,
 			                                  POS_SERIAL_NO,
-			                                  POS_ITM_STUS_ID, 
-			                                  CRT_DT, 
+			                                  POS_ITM_STUS_ID,
+			                                  CRT_DT,
 			                                  CRT_USER_ID,
-			                                  UPD_DT, 
+			                                  UPD_DT,
 			                                  UPD_USER_ID)
                             VALUES (  #{serialSeq},
-                                           #{posMasterSeq}, 
+                                           #{posMasterSeq},
                                            #{stkId},
                                            #{serialNo},
-                                           NULL, 
+                                           NULL,
                                            SYSDATE,
                                            #{userId},
                                            SYSDATE,
                                            #{userId})
     </insert>
-    
+
     <select id="getUploadMemList" parameterType="Map" resultType="egovMap">
-				SELECT 
+				SELECT
 				    T1.MEM_ID,
                     T1.MEM_CODE,
                     T1.NAME,
@@ -1001,30 +1001,30 @@
 				 FROM
 				     ORG0001D T1 LEFT JOIN SYS0005M T2 ON T2.BRNCH_ID = T1.BRNCH
 				  <if test=" null != memberIdArr and memberIdArr.length > 0">
-				    WHERE T1.MEM_CODE IN 
+				    WHERE T1.MEM_CODE IN
 				    <foreach collection="memberIdArr" item="item" open="(" separator="," close=")">
 				        #{item}
 				    </foreach>
-				  </if>    
+				  </if>
     </select>
-    
+
     <!--### Reversal ###  -->
-    
+
     <select id="chkReveralBeforeReversal" parameterType="Map" resultType="egovMap">
-			SELECT 
-			    Extent1.POS_ID POS_ID  
-			FROM 
+			SELECT
+			    Extent1.POS_ID POS_ID
+			FROM
 			     SAL0057D Extent1
 			     JOIN SAL0057D Extent2   ON Extent2.POS_MTCH_ID = Extent1.POS_ID
-			WHERE 
+			WHERE
 			     Extent1.POS_NO = #{reRefNo}
-			<![CDATA[      
+			<![CDATA[
 			AND ROWNUM <= 1
 			]]>
     </select>
-    
+
     <select id="posReversalDetail" parameterType="Map" resultType="egovMap">
-		        SELECT 
+		        SELECT
                         T1.POS_ID,
                         T1.POS_NO,
                         T1.POS_BILL_ID,
@@ -1039,16 +1039,16 @@
                         T1.POS_WH_ID,
                         T1.POS_REM,
                         T1.POS_MEM_ID,
-                        T2.MEM_CODE, 
+                        T2.MEM_CODE,
                         T1.POS_RESN_ID,
                         T1.BRNCH_ID,
-                        T1.CR_ACC_ID, 
+                        T1.CR_ACC_ID,
                         T1.DR_ACC_ID,
                         T1.STUS_ID,
                         T1.POS_RCV_DT,
-                        T3.CODE                       
+                        T3.CODE
                     FROM
-                        SAL0057D T1 
+                        SAL0057D T1
                     LEFT JOIN ORG0001D T2 ON T2.MEM_ID = T1.POS_MEM_ID
                     LEFT JOIN SYS0005M T3 ON T3.BRNCH_ID = T2.BRNCH
                     WHERE
@@ -1056,11 +1056,11 @@
                     AND
                     <![CDATA[
                         ROWNUM <= 1
-                     ]]>        
+                     ]]>
     </select>
-    
+
     <select id="getPosDetailList"  parameterType="Map" resultType="egovMap">
-            SELECT 
+            SELECT
                 T1.POS_ITM_ID,
                 T1.POS_ID,
                 T1.POS_ITM_STOCK_ID,
@@ -1081,56 +1081,56 @@
                 T1.RCV_STUS_ID,
                 T3. POS_TYPE_ID,
                 T3.POS_MODULE_TYPE_ID
-            FROM 
+            FROM
                 SAL0058D T1
-                LEFT JOIN SYS0026M T2 ON T2.STK_ID = T1.POS_ITM_STOCK_ID 
+                LEFT JOIN SYS0026M T2 ON T2.STK_ID = T1.POS_ITM_STOCK_ID
                 <!-- <if test=" null != filterType and '' != filterType">
-                   
+
                 </if> -->
                 <!-- <if test=" null != itembankType and '' != itembankType">
                     LEFT JOIN LOG0026D T2 ON T2.ITM_ID = T1.POS_ITM_STOCK_ID
                 </if> -->
                 LEFT JOIN SAL0057D T3 ON T3.POS_ID = T1.POS_ID
-            WHERE 
+            WHERE
                T1.POS_ID = #{rePosId}
                <if test=" null != memId and '' != memId">
                     AND T1.MEM_ID = #{memId}
                </if>
     </select>
-    
+
     <insert id="insertPosReversalMaster" parameterType="Map" >
         INSERT INTO SAL0057D
-                  ( POS_ID, 
-                    POS_NO, 
-                    POS_BILL_ID, 
+                  ( POS_ID,
+                    POS_NO,
+                    POS_BILL_ID,
                     POS_CUST_NAME,
                     POS_DT,
-                    POS_TYPE_ID, 
-                    POS_MODULE_TYPE_ID, 
+                    POS_TYPE_ID,
+                    POS_MODULE_TYPE_ID,
                     POS_TOT_AMT,
                     POS_TOT_CHRG,
                     POS_TOT_TXS,
-                    POS_TOT_DSCNT, 
-                    POS_WH_ID, 
+                    POS_TOT_DSCNT,
+                    POS_WH_ID,
                     POS_REM,
-                    POS_MTCH_ID, 
+                    POS_MTCH_ID,
                     POS_MEM_ID,
                     POS_CUST_ID,
                     POS_CRT_USER_ID,
                     POS_CRT_DT,
-                    POS_CRT_DEPT_ID, 
-                    CR_ACC_ID, 
+                    POS_CRT_DEPT_ID,
+                    CR_ACC_ID,
                     DR_ACC_ID,
                     POS_RESN_ID,
                     BRNCH_ID,
                     POS_RCV_DT,
                     STUS_ID,
                     <if test=" null != chkOth and chkOth > 0">
-                        AREA_ID , 
-                        ADDR_DTL, 
+                        AREA_ID ,
+                        ADDR_DTL,
                         STREET,
                     </if>
-                    CRT_USER_ID, 
+                    CRT_USER_ID,
                     CRT_DT,
                     UPD_USER_ID,
                     UPD_DT,
@@ -1140,20 +1140,20 @@
            #{posBillId},
            #{posCustName},
            SYSDATE,
-           #{insPosSystemType}, 
+           #{insPosSystemType},
            #{insPosModuleType},
            #{posTotalAmt},
            #{posCharge},
            #{posTaxes},
-           #{posDiscount}, 
+           #{posDiscount},
            #{hidLocId},
            #{posRemark},
            #{posMtchId},
            #{salesmanPopId},
            #{posCustomerId},
            #{userId},
-           SYSDATE, 
-           #{userDeptId}, 
+           SYSDATE,
+           #{userDeptId},
            #{crAccId},
            #{drAccId},
            #{posReason},
@@ -1171,9 +1171,9 @@
            SYSDATE,
            #{userDeptCode})
     </insert>
-    
-    <select id="getOldDetailList"  parameterType="Map" resultType="egovMap"> 
-        SELECT 
+
+    <select id="getOldDetailList"  parameterType="Map" resultType="egovMap">
+        SELECT
         POS_ID,
         POS_ITM_STOCK_ID,
         POS_ITM_QTY,
@@ -1190,25 +1190,25 @@
         NRIC,
         MEM_STUS_ID,
         RCV_STUS_ID
-      FROM 
+      FROM
         SAL0058D
       WHERE
         POS_ID = #{rePosId}
     </select>
-    
+
     <insert id="insertPosReversalDetail" parameterType="egovMap">
         INSERT INTO SAL0058D
               ( POS_ITM_ID,
                 POS_ID,
-                POS_ITM_STOCK_ID, 
-                POS_ITM_QTY, 
+                POS_ITM_STOCK_ID,
+                POS_ITM_QTY,
                 POS_ITM_UNIT_PRC,
-                POS_ITM_TOT, 
+                POS_ITM_TOT,
                 POS_ITM_CHRG,
                 POS_ITM_TXS,
                 POS_ITM_TAX_CODE_ID,
                 MEM_ID,
-                
+
                 <!-- DEDUCTION -->
                 MEM_CODE,
                 MEM_TYPE,
@@ -1216,19 +1216,19 @@
                 FULL_NAME,
                 NRIC,
                 MEM_STUS_ID,
-                
+
                 RCV_STUS_ID,
-                CRT_USER_ID, 
+                CRT_USER_ID,
                 CRT_DT,
                 UPD_USER_ID,
                 UPD_DT )
               VALUES ( #{posDetailDuducSeq},
                        #{posMasterSeq},
                        #{posItmStockId},
-                       #{posDetailQty}, 
+                       #{posDetailQty},
                        #{posItmUnitPrc},
                        #{posDetailTotal},
-                       #{posDetailCharge}, 
+                       #{posDetailCharge},
                        #{posDetailTaxs},
                        #{posItmTaxCodeId},
                        #{memId},
@@ -1286,7 +1286,7 @@
                        #{userId},
                        SYSDATE)
     </insert>
-    
+
     <select id="getBillInfo" parameterType="Map" resultType="egovMap">
         SELECT
             BILL_ID,
@@ -1312,42 +1312,42 @@
         WHERE
           BILL_ID = #{rePosBillId}
         AND
-          <![CDATA[  
+          <![CDATA[
           ROWNUM <= 1
-          ]]>  
+          ]]>
     </select>
-    
+
     <insert id="insertPosReversalBilling"  parameterType="Map">
                 INSERT INTO PAY0007D
                   ( BILL_ID,
-                    BILL_TYPE_ID, 
-                    BILL_SO_ID, 
-                    BILL_MEM_ID, 
+                    BILL_TYPE_ID,
+                    BILL_SO_ID,
+                    BILL_MEM_ID,
                     BILL_AS_ID,
                     BILL_PAY_TYPE_ID,
                     BILL_NO,
                     BILL_MEM_SHIP_NO,
                     BILL_DT,
-                    BILL_AMT, 
-                    BILL_REM, 
-                    BILL_IS_PAID, 
+                    BILL_AMT,
+                    BILL_REM,
+                    BILL_IS_PAID,
                     BILL_IS_COMM,
                     UPD_USER_ID,
-                    UPD_DT, 
+                    UPD_DT,
                     SYNC_CHK,
-                    COURS_ID, 
+                    COURS_ID,
                     STUS_ID )
                   VALUES ( #{posBillSeq},
                            #{billTypeId},
                            #{billSoId},
-                           #{billMemId}, 
-                           #{billAsId}, 
-                           #{billPayTypeId}, 
-                           #{docNoPsn}, 
-                           #{billMemShipNo}, 
-                           SYSDATE, 
-                           #{billAmt}, 
-                           #{billRem}, 
+                           #{billMemId},
+                           #{billAsId},
+                           #{billPayTypeId},
+                           #{docNoPsn},
+                           #{billMemShipNo},
+                           SYSDATE,
+                           #{billAmt},
+                           #{billRem},
                            #{billIsPaid},
                            #{billIsComm},
                            #{userId},
@@ -1356,7 +1356,7 @@
                            #{coursId},
                            #{stusId})
     </insert>
-    
+
     <select id="getTaxInvoiceMisc" parameterType="Map" resultType="egovMap">
 			     SELECT
 			        TAX_INVC_ID,
@@ -1373,7 +1373,7 @@
 			        TAX_INVC_AMT_DUE,
 			        TAX_INVC_CRT_DT,
 			        TAX_INVC_CRT_USER_ID
-			    FROM 
+			    FROM
 			        PAY0031D
 			    WHERE
 			        TAX_INVC_SVC_NO = #{rePosNo}
@@ -1382,7 +1382,7 @@
 			        ROWNUM <= 1
 			        ]]>
     </select>
-    
+
     <select id="getAccOrderBill" parameterType="Map" resultType="egovMap">
 			  SELECT Extent1.ACC_BILL_ID   ,
 			       Extent1.ACC_BILL_TASK_ID   ,
@@ -1407,32 +1407,32 @@
 			       Extent1.ACC_BILL_TAX_CODE_ID   ,
 			       Extent1.ACC_BILL_TAX_RATE   ,
 			       Extent1.ACC_BILL_ACCT_CNVR   ,
-			       Extent1.ACC_BILL_CNTRCT_ID   
-			  FROM 
+			       Extent1.ACC_BILL_CNTRCT_ID
+			  FROM
 			       PAY0016D Extent1
-			  WHERE  
-			       Extent1.ACC_BILL_REM = #{taxInvcRefNo} 
+			  WHERE
+			       Extent1.ACC_BILL_REM = #{taxInvcRefNo}
 			  AND
-			       <![CDATA[ 
+			       <![CDATA[
 			       ROWNUM <= 1
 			       ]]>
     </select>
-    
+
     <update id="updateAccOrderBillingWithPosReversal"  parameterType="Map">
-			UPDATE 
+			UPDATE
 			    PAY0016D
 			SET
 			    ACC_BILL_STUS = #{accBillStatus}
-			WHERE 
-			    ACC_BILL_ID = #{accBillId}  
-			AND  
-			    ACC_BILL_TASK_ID = #{accBillTaskId}  
+			WHERE
+			    ACC_BILL_ID = #{accBillId}
+			AND
+			    ACC_BILL_TASK_ID = #{accBillTaskId}
     </update>
-    
+
     <select id="getSeqPay0011D" resultType="java.lang.Integer">
          SELECT PAY0011D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertInvAdjMemo"  parameterType="Map">
 				INSERT INTO PAY0011D
 						    ( MEMO_ADJ_ID,
@@ -1444,17 +1444,17 @@
 						      MEMO_ADJ_STUS_ID,
 						      MEMO_ADJ_RESN_ID,
 						      MEMO_ADJ_REM,
-						      MEMO_ADJ_TXS_AMT, 
+						      MEMO_ADJ_TXS_AMT,
 						      MEMO_ADJ_TOT_AMT,
 						      MEMO_ADJ_CRT_DT,
 						      MEMO_ADJ_CRT_USER_ID,
 						      MEMO_ADJ_UPD_DT,
 						      MEMO_ADJ_UPD_USER_ID )
-						  VALUES ( #{memoAdjSeq},  
+						  VALUES ( #{memoAdjSeq},
 								        #{memoAdjRefNo},
 							            #{memoAdjReptNo},
 							            #{memoAdjTypeId},
-							            #{memoAdjInvNo}, 
+							            #{memoAdjInvNo},
 							            #{memoAdjInvTypeId},
 							            #{memoAdjStatusId},
 							            #{memoAdjReasonId},
@@ -1466,16 +1466,16 @@
 							            SYSDATE,
 							            #{userId})
     </insert>
-    
+
     <select id="getSeqPay0027D" resultType="java.lang.Integer">
         SELECT PAY0027D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
-    <insert id="insertTaxDebitCreditNote"  parameterType="Map"> 
+
+    <insert id="insertTaxDebitCreditNote"  parameterType="Map">
         INSERT INTO PAY0027D
             ( NOTE_ID,
               NOTE_ENTRY_ID,
-              NOTE_TYPE_ID, 
+              NOTE_TYPE_ID,
               NOTE_GRP_NO,
               NOTE_REF_NO,
               NOTE_REF_DT,
@@ -1492,26 +1492,26 @@
               NOTE_AREA_NAME,
               NOTE_STATE_NAME,
               NOTE_CNTY_NAME, -->
-               
-              NOTE_TXS, 
+
+              NOTE_TXS,
               NOTE_CHRG,
               NOTE_AMT_DUE,
-              NOTE_REM, 
+              NOTE_REM,
               NOTE_STUS_ID,
               NOTE_CRT_DT,
               NOTE_CRT_USER_ID )
   VALUES (    #{noteSeq},
-		           #{memoAdjSeq}, 
-		           #{noteTypeId}, 
+		           #{memoAdjSeq},
+		           #{noteTypeId},
 		           #{noteGrpNo},
 		           #{noteRefNo},
 		           #{noteRefDate},
-		           #{noteInvNo}, 
-		           #{noteInvTypeId}, 
-		           #{noteInvCustName}, 
-		           #{noteCntcPerson}, 
+		           #{noteInvNo},
+		           #{noteInvTypeId},
+		           #{noteInvCustName},
+		           #{noteCntcPerson},
 		           <!--Magic Address  미반영, 추후 삭제  -->
-		          <!--  '', 
+		          <!--  '',
 		           '',
 		           '',
 		           '',
@@ -1519,16 +1519,16 @@
 		           '',
 		           '',
 		           '', -->
-		           
+
 		           #{noteInvTxs},
-		           #{noteInvChrg}, 
-		           #{noteInvAmt}, 
-		           #{noteRem}, 
-		           #{noteStatusId}, 
-		           SYSDATE, 
+		           #{noteInvChrg},
+		           #{noteInvAmt},
+		           #{noteRem},
+		           #{noteStatusId},
+		           SYSDATE,
 		           #{userId})
     </insert>
-    
+
     <select id="getMiscSubList" parameterType="Map" resultType="egovMap">
 			  SELECT Extent1.INVC_ITM_ID   ,
 			       Extent1.TAX_INVC_ID   ,
@@ -1545,7 +1545,7 @@
 			       Extent1.INVC_ITM_GST_TXS   ,
 			       Extent1.INVC_ITM_CHRG   ,
 			       Extent1.INVC_ITM_AMT_DUE   ,
-			       
+
 			      <!--  Extent1.INVC_ITM_ADD1   ,
 			       Extent1.INVC_ITM_ADD2   ,
 			       Extent1.INVC_ITM_ADD3   ,
@@ -1554,35 +1554,35 @@
 			       Extent1.INVC_ITM_AREA_NAME   ,
 			       Extent1.INVC_ITM_STATE_NAME   ,
 			       Extent1.INVC_ITM_CNTY   , -->
-			       
+
 			       Extent1.INVC_ITM_INSTALL_DT   ,
 			       Extent1.INVC_ITM_RETN_DT   ,
-			       Extent1.INVC_ITM_BILL_REF_NO   
+			       Extent1.INVC_ITM_BILL_REF_NO
 			  FROM PAY0032D Extent1
 			 WHERE  Extent1.TAX_INVC_ID = #{taxInvcId}
     </select>
-    
+
     <select id="getSeqPay0012D" resultType="java.lang.Integer">
         SELECT PAY0012D_SEQ.NEXTVAL FROM DUAL
     </select>
-  
-    <insert id="insertInvAdjMemoSub"  parameterType="Map">    
+
+    <insert id="insertInvAdjMemoSub"  parameterType="Map">
         INSERT INTO PAY0012D
                 ( MEMO_ITM_ID,
                   MEMO_ADJ_ID,
-                  MEMO_ITM_INVC_ITM_ID, 
-                  MEMO_ITM_INVC_ITM_QTY, 
+                  MEMO_ITM_INVC_ITM_ID,
+                  MEMO_ITM_INVC_ITM_QTY,
                   MEMO_ITM_CRDIT_ACC_ID,
                   MEMO_ITM_DEBT_ACC_ID,
                   MEMO_ITM_TAX_CODE_ID,
                   MEMO_ITM_STUS_ID,
-                  MEMO_ITM_REM, 
+                  MEMO_ITM_REM,
                   MEMO_ITM_GST_RATE,
                   MEMO_ITM_CHRG,
                   MEMO_ITM_TXS,
                   MEMO_ITM_AMT )
         VALUES ( #{miscSubSeq},
-                     #{memoAdjSeq}, 
+                     #{memoAdjSeq},
 	                 #{memoSubItmInvItmId},
 	                 #{memoSubItmInvItmQty},
 	                 #{memoSubItmCrditAccId},
@@ -1595,12 +1595,12 @@
 	                 #{memoSubItmInvItmTaxes},
 	                 #{memoSubItmInvItmAmount} )
     </insert>
-    
+
     <select id="getSeqPay0028D" resultType="java.lang.Integer">
         SELECT PAY0028D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
-    <insert id="insertTaxDebitCreditNoteSub" parameterType="Map">  
+
+    <insert id="insertTaxDebitCreditNoteSub" parameterType="Map">
         INSERT INTO PAY0028D (  NOTE_ITM_ID,
 					                        NOTE_ID,
 					                        NOTE_ITM_INVC_ITM_ID,
@@ -1608,8 +1608,8 @@
 					                        NOTE_ITM_PRODUCT_MODEL,
 					                        NOTE_ITM_SERIAL_NO,
 					                        NOTE_ITM_INSTALL_DT,
-					                       
-					                       <!--  
+
+					                       <!--
 					                        NOTE_ITM_ADD1,
 					                        NOTE_ITM_ADD2,
 					                        NOTE_ITM_ADD3,
@@ -1618,13 +1618,13 @@
 					                        NOTE_ITM_AREA_NAME,
 					                        NOTE_ITM_STATE_NAME,
 					                        NOTE_ITM_CNTY, -->
-					                        
+
 					                        NOTE_ITM_QTY,
 					                        NOTE_ITM_UNIT_PRC,
 					                        NOTE_ITM_GST_RATE,
 					                        NOTE_ITM_GST_TXS,
 					                        NOTE_ITM_CHRG,
-					                        NOTE_ITM_DUE_AMT) 
+					                        NOTE_ITM_DUE_AMT)
 					         VALUES (   #{noteSubSeq},
 						                    #{noteSeq},
 						                    #{noteSubItmId},
@@ -1647,11 +1647,11 @@
 						                    #{noteSubItmChrg},
 						                    #{noteSubItmDueAmt})
     </insert>
-    
+
     <select id="getSeqPay0017D" resultType="java.lang.Integer">
         SELECT PAY0017D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <insert id="insertAccOrderVoidInv" parameterType="Map">
         INSERT INTO PAY0017D (  ACC_INV_VOID_ID,
 					                        ACC_INV_VOID_REF_NO,
@@ -1660,7 +1660,7 @@
 					                        ACC_INV_VOID_REM,
 					                        ACC_INV_VOID_STUS_ID,
 					                        ACC_INV_VOID_CRT_USER_ID,
-					                        ACC_INV_VOID_CRT_DT ) 
+					                        ACC_INV_VOID_CRT_DT )
 						     VALUES ( #{ordVoidSeq},
 								              #{voidNo},
 								              #{accInvVoidRefNo},
@@ -1670,11 +1670,11 @@
 								              #{userId},
 								              SYSDATE)
     </insert>
-    
+
      <select id="getSeqPay0018D" resultType="java.lang.Integer">
         SELECT PAY0018D_SEQ.NEXTVAL FROM DUAL
       </select>
-    
+
     <insert id="insertAccOrderVoidInvSub" parameterType="Map">
         INSERT INTO PAY0018D (  ACC_INV_VOID_SUB_ID,
 					                        ACC_INV_VOID_ID,
@@ -1683,8 +1683,8 @@
 					                        ACC_INV_VOID_SUB_BILL_AMT,
 					                        ACC_INV_VOID_SUB_CRDIT_NOTE,
 					                        ACC_INV_VOID_SUB_CRDIT_NOTE_ID,
-					                        ACC_INV_VOID_SUB_REM) 
-						       VALUES ( #{ordVoidSubSeq}, 
+					                        ACC_INV_VOID_SUB_REM)
+						       VALUES ( #{ordVoidSubSeq},
 								                #{ordVoidSeq},
 								                #{ordVoidSubOrdId},
 								                #{ordVoidSubBillId},
@@ -1693,8 +1693,8 @@
 								                #{ordVoidSubCrditNoteId},
 								                #{ordVoidSubRem})
 	</insert>
-	
-	<select id="selectStkCardRecordList"  parameterType="Map" resultType="egovMap"> 
+
+	<select id="selectStkCardRecordList"  parameterType="Map" resultType="egovMap">
 				  SELECT Extent1.SR_CARD_ID   ,
 				       Extent1.LOC_ID   ,
 				       Extent1.STOCK_ID   ,
@@ -1726,11 +1726,11 @@
 				       Extent1.PO_NO   ,
 				       Extent1.INSERT_DT   ,
 				       Extent1.IS_GR   ,
-				       Extent1.PO_STUS   
+				       Extent1.PO_STUS
 				  FROM LOG0014D Extent1
 				 WHERE  Extent1.REF_NO = #{rePosNo}
 	</select>
-	
+
 	<insert id="insertStkCardRecordReversal" parameterType="egovMap">
 	   INSERT INTO LOG0014D (  SR_CARD_ID,
 					                        LOC_ID,
@@ -1763,7 +1763,7 @@
 					                        PO_NO,
 					                        INSERT_DT,
 					                        IS_GR,
-					                        PO_STUS) 
+					                        PO_STUS)
 				              VALUES (     #{stkSeq} ,
 						                        #{locId},
 						                        #{stockId},
@@ -1797,7 +1797,7 @@
 						                        NULL,
 						                        NULL)
 	</insert>
-	
+
 	<select id="getPurchMemList"  parameterType="Map" resultType="egovMap">
 				SELECT
 				    Project1.MEM_ID,
@@ -1809,7 +1809,7 @@
 				    Project1.BRNCH_ID,
 				    Project1.CODE,
 				    Project1.POS_ID,
-				    Project1.POS_TYPE_ID    
+				    Project1.POS_TYPE_ID
 				  FROM ( SELECT T1.MEM_ID,
 				                T1.RCV_STUS_ID,
 				                ROW_NUMBER() OVER(PARTITION BY MEM_ID ORDER BY RCV_STUS_ID DESC) AS ROW_NUM,
@@ -1826,31 +1826,31 @@
 				                JOIN SYS0005M T3 ON T2.BRNCH_ID = T3.BRNCH_ID
 				          WHERE T1.POS_ID = #{rePosId}
 				          GROUP BY MEM_ID, RCV_STUS_ID ) Project1
-				 WHERE Project1.ROW_NUM = 1		    
+				 WHERE Project1.ROW_NUM = 1
 	</select>
-	
-	
+
+
 	<update id="updatePosMStatus"  parameterType="posMasterVO">
-	   UPDATE 
+	   UPDATE
 	        SAL0057D
 	   SET
 	        STUS_ID = #{stusId},
 	        UPD_DT = SYSDATE
-	   WHERE 
+	   WHERE
 	        POS_ID = #{posId}
 	</update>
-	
+
 	<update id="updatePosDStatus" parameterType="posMasterVO">
-	   UPDATE 
-	       SAL0058D 
-	   SET 
+	   UPDATE
+	       SAL0058D
+	   SET
 	       RCV_STUS_ID = #{changeStatus},
 	       UPD_DT = SYSDATE
-	   WHERE 
+	   WHERE
 	       POS_ID = #{posId}
 	</update>
-	
-	
+
+
 	<select id="selectMemberByMemberIDCode" parameterType="Map" resultType="egovMap">
         SELECT T.MEM_ID
              , T.MEM_CODE
@@ -1997,59 +1997,59 @@
               </if>
                 AND ROWNUM &lt;= 1 ) T
     </select>
-		    
+
     <update id="updatePosDStatusByPosItmId"   parameterType="posDetailVO">
-       UPDATE 
+       UPDATE
             SAL0058D
        SET
             RCV_STUS_ID = #{rcvStusId}
-       WHERE 
+       WHERE
             POS_ITM_ID = #{posItmId}
     </update>
-    
+
     <select id="updatePosMemStatus" parameterType="posMemberVO">
-        UPDATE 
+        UPDATE
             SAL0058D
        SET
             RCV_STUS_ID = #{rcvStusId}
-       WHERE 
+       WHERE
             POS_ID = #{posId}
        AND
             MEM_ID = #{memId}
     </select>
-    
+
     <resultMap type="egovMap" id="bookMap"/>
-    
+
     <select id="posBookingCallSP_LOGISTIC_POS" parameterType="Map"  statementType="CALLABLE" >
-       <![CDATA[  
+       <![CDATA[
             {
                   call SP_LOGISTIC_POS ( #{psno}, #{retype} ,#{pType} ,'',#{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=bookMap})
             }
          ]]>
       </select>
-        
-        
-       <resultMap type="egovMap" id="giMap"/>    
+
+
+       <resultMap type="egovMap" id="giMap"/>
        <select id="posGICallSP_LOGISTIC_POS" parameterType="Map"  statementType="CALLABLE" >
-       <![CDATA[  
+       <![CDATA[
             {
                   call SP_LOGISTIC_POS ( #{psno}, #{retype} ,#{pType} ,#{posItmId}, #{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=giMap})
             }
          ]]>
-      </select> 
+      </select>
 
     <!-- PAYMENT START -->
-    
+
     <insert id="insertPayTrx" parameterType="Map">
 				INSERT INTO  PAY0069D
 				       (
 				        TRX_ID,
-				        TRX_DT, 
+				        TRX_DT,
 				        TRX_TYPE,
 				        TRX_AMT,
 				        TRX_MTCH_NO
 				        )
-				VALUES ( 
+				VALUES (
 				         #{trxSeq},
 				         SYSDATE,
 				         #{trxType},
@@ -2057,13 +2057,13 @@
 				         #{trxMatchNo}
 				        )
     </insert>
-    
+
     <insert id="insertPayMaster" parameterType="Map">
 		     INSERT INTO PAY0064D
 		            ( PAY_ID,
 		              OR_NO,
-		              SALES_ORD_ID, 
-		              BILL_ID, 
+		              SALES_ORD_ID,
+		              BILL_ID,
 		              TR_NO,
 		              TYPE_ID,
 		              PAY_DATA,
@@ -2071,33 +2071,33 @@
 		              BANK_CHG_ACC_ID,
 		              COLL_MEM_ID,
 		              BRNCH_ID,
-		              BANK_ACC_ID, 
+		              BANK_ACC_ID,
 		              ALLOW_COMM,
 		              STUS_CODE_ID,
-		              UPD_USER_ID, 
+		              UPD_USER_ID,
 		              UPD_DT,
 		              SYNC_HECK,
-		              CUST_ID_3PARTY, 
+		              CUST_ID_3PARTY,
 		              TOT_AMT,
-		              MTCH_ID, 
+		              MTCH_ID,
 		              CRT_USER_ID,
-		              CRT_DT, 
+		              CRT_DT,
 		              IS_ALLOW_REV_MULTI,
 		              IS_GL_POST_CLM,
 		              GL_POST_CLM_DT,
-		              TRX_ID, 
+		              TRX_ID,
 		              ADV_MONTH,
 		              ACC_BILL_ID,
-		              TR_ISSU_DT, 
+		              TR_ISSU_DT,
 		              TAX_INVC_IS_GEN,
-		              TAX_INVC_REF_NO, 
-		              TAX_INVC_REF_DT, 
+		              TAX_INVC_REF_NO,
+		              TAX_INVC_REF_DT,
 		              SVC_CNTRCT_ID,
 		              BATCH_PAY_ID )
 		  VALUES (  #{payMseq},
 			            #{orNo},
 			            #{salesOrdId},
-			            #{billId}, 
+			            #{billId},
 			            #{trNo},
 			            #{typeId},
 			            SYSDATE,
@@ -2106,19 +2106,19 @@
 			            #{collMemId},
 			            #{brnchId},
 			            #{bankAccId},
-			            #{allowComm}, 
+			            #{allowComm},
 			            #{stusCodeId},
-			            #{updUserId}, 
+			            #{updUserId},
 			            SYSDATE,
 			            #{syncCheck},
-			            #{thirdPartyCustId}, 
-			            #{totAmt}, 
-			            #{matchId}, 
+			            #{thirdPartyCustId},
+			            #{totAmt},
+			            #{matchId},
 			            #{crtUserId},
 			            SYSDATE,
 			            #{isAllowRevMulti},
 			            #{isGlPostClm},
-			            TO_DATE(#{glPostClmDt}, 'DD/MM/YYYY'),  
+			            TO_DATE(#{glPostClmDt}, 'DD/MM/YYYY'),
 			            #{trxSeq},
 			            #{advMonth},
 			            #{orderBillId},
@@ -2129,8 +2129,8 @@
 			            #{svcCntrctId},
 			            #{batchPayId})
     </insert>
-     
-     <insert id="insertAccGlRoute" parameterType="Map"> 
+
+     <insert id="insertAccGlRoute" parameterType="Map">
         INSERT INTO PAY0009D (  ID,
 					                        GL_POSTNG_DT,
 					                        GL_FISCAL_DT,
@@ -2151,7 +2151,7 @@
 					                        GL_JRNL_NO,
 					                        GL_AUDIT_REF,
 					                        GL_CNVR_STUS,
-					                        GL_CNVR_DT) 
+					                        GL_CNVR_DT)
 					       VALUES ( #{glSeq},
 								                SYSDATE,
 								                TO_DATE(#{glFisCalDate}, 'DD/MM/YYYY'),
@@ -2177,30 +2177,30 @@
      <insert id="insertPayDetail" parameterType="Map">
 		 INSERT INTO PAY0065D
 		        ( PAY_ITM_ID,
-		          PAY_ID, 
-		          PAY_ITM_MODE_ID, 
-		          PAY_ITM_REF_NO, 
+		          PAY_ID,
+		          PAY_ITM_MODE_ID,
+		          PAY_ITM_REF_NO,
 		          PAY_ITM_CC_NO,
-		          PAY_ITM_ORI_CC_NO, 
+		          PAY_ITM_ORI_CC_NO,
 		          PAY_ITM_ENCRYPT_CC_NO,
 		          PAY_ITM_CC_TYPE_ID,
 		          PAY_ITM_CHQ_NO,
 		          PAY_ITM_ISSU_BANK_ID,
 		          PAY_ITM_AMT,
-		          PAY_ITM_IS_ONLINE, 
+		          PAY_ITM_IS_ONLINE,
 		          PAY_ITM_BANK_ACC_ID,
 		          PAY_ITM_REF_DT,
-		          PAY_ITM_APPV_NO, 
+		          PAY_ITM_APPV_NO,
 		          PAY_ITM_REM,
 		          PAY_ITM_STUS_ID,
 		          PAY_ITM_IS_LOK,
-		          PAY_ITM_CC_HOLDER_NAME, 
+		          PAY_ITM_CC_HOLDER_NAME,
 		          PAY_ITM_CC_EXPR_DT,
 		          PAY_ITM_BANK_CHRG_AMT,
 		          PAY_ITM_IS_THRD_PARTY,
-		          PAY_ITM_THRD_PARTY_IC, 
-		          PAY_ITM_BANK_BRNCH_ID, 
-		          PAY_ITM_BANK_IN_SLIP_NO, 
+		          PAY_ITM_THRD_PARTY_IC,
+		          PAY_ITM_BANK_BRNCH_ID,
+		          PAY_ITM_BANK_IN_SLIP_NO,
 		          PAY_ITM_EFT_NO,
 		          PAY_ITM_CHQ_DEP_RECIPT_NO,
 		          ETC1,
@@ -2209,17 +2209,17 @@
 		          PAY_ITM_MID,
 		          PAY_ITM_GRP_ID,
 		          PAY_ITM_REF_ITM_ID,
-		          PAY_ITM_BANK_CHRG_ACC_ID, 
-		          PAY_ITM_RUNNG_NO, 
+		          PAY_ITM_BANK_CHRG_ACC_ID,
+		          PAY_ITM_RUNNG_NO,
 		          UPD_USER_ID,
 		          UPD_DT,
-		          IS_FUND_TRNSFR,  
-		          SKIP_RECON, 
+		          IS_FUND_TRNSFR,
+		          SKIP_RECON,
 		          PAY_ITM_CARD_TYPE_ID,
 		          PAY_ITM_CARD_MODE_ID )
 		  VALUES ( #{payItemId},
 		               #{payId},
-			           #{payMode}, 
+			           #{payMode},
 			           #{transactionRefNo},
 			           #{payCreditCardNo},
 			           #{payCreditCardNo},
@@ -2228,8 +2228,8 @@
 			           NULL,
 			           #{payIssueBank},
 			           #{payAmt},
-			           #{payCrcMode}, 
-			           #{payBankAccount}, 
+			           #{payCrcMode},
+			           #{payBankAccount},
 			           TO_DATE(#{payRefDate}, 'DD/MM/YYYY'),
 			           #{payApprovNo},
 			           #{payRem},
@@ -2250,8 +2250,8 @@
 			           NULL,
 			           NULL,
 			           NULL,
-			           NULL, 
-			           NULL, 
+			           NULL,
+			           NULL,
 			           NULL,
 			           NULL,
 			           #{isFundTrnsfr},
@@ -2259,46 +2259,46 @@
 			           NULL,
 			           NULL )
      </insert>
-      
-      
+
+
       <select id="getpayBranchList" resultType="egovMap">
-				SELECT 
+				SELECT
 				           Project1.CODE_ID,
-				           Project1.CODE_NAME  
-				FROM ( SELECT 
+				           Project1.CODE_NAME
+				FROM ( SELECT
 				                      Extent1.BRNCH_ID CODE_ID,
 				                      Extent1.CODE || '-' || Extent1.NAME CODE_NAME
-				             FROM 
+				             FROM
 				                      SYS0005M Extent1
-				           WHERE  
+				           WHERE
 				                      1 = Extent1.STUS_ID ) Project1
-				ORDER BY 
+				ORDER BY
 				           Project1.CODE_NAME ASC
-      </select> 
-      
+      </select>
+
       <select id="getDebtorAccList" parameterType="Map" resultType="egovMap">
-				  SELECT 
+				  SELECT
 				       Extent1.ACC_ID CODE_ID  ,
-				       Extent1.ACC_CODE || ' - ' || Extent1.ACC_DESC CODE_NAME  
+				       Extent1.ACC_CODE || ' - ' || Extent1.ACC_DESC CODE_NAME
 				  FROM
 				       SYS0001M Extent1
-				 WHERE 
-				      Extent1.ACC_CODE = #{accCode} 
+				 WHERE
+				      Extent1.ACC_CODE = #{accCode}
       </select>
-      
+
       <select id="getBankAccountList" parameterType="Map" resultType="egovMap">
-				
+
 				   SELECT Project1.CODE_ID,
 				       Project1.CODE_NAME,
-				       Project1.ACC_DESC   
+				       Project1.ACC_DESC
 				  FROM ( SELECT Extent1.ACC_ID CODE_ID  ,
 				                Extent1.ACC_CODE ACC_CODE  ,
 				                Extent1.ACC_DESC   ,
-				                Extent1.ACC_CODE || ' - ' || Extent1.ACC_DESC CODE_NAME  
+				                Extent1.ACC_CODE || ' - ' || Extent1.ACC_DESC CODE_NAME
 				         FROM SYS0001M Extent1
 				          WHERE
-				            1 = 1     
-				         <if test=" null != isCash and '' != isCash">          
+				            1 = 1
+				         <if test=" null != isCash and '' != isCash">
 				                   <![CDATA[
 				                   AND ( 1 = Extent1.ACC_STUS_ID )
 				                   AND ( 1 = Extent1.IS_PAY_CASH )
@@ -2316,17 +2316,17 @@
 				                   AND ( '9301/000' <> Extent1.ACC_CODE )
 				                   AND ( '9326/000' <> Extent1.ACC_CODE )
 				                   AND ( '9999/999' <> Extent1.ACC_CODE )
-				                   ]]> 
+				                   ]]>
 				          </if>
-				          
+
 				          <if test=" null != isDeduc and '' != isDeduc">
 				                    AND '2136/000' = Extent1.ACC_CODE
-				          </if>         
+				          </if>
 				                   ) Project1
 				  ORDER BY Project1.ACC_CODE ASC
-				 
+
       </select>
-      
+
       <select id="selectAccountIdByBranchId"  parameterType="Map" resultType="egovMap">
 			 SELECT Extent2.ACC_ID   ,
 			       Extent2.SAP_ACC_CODE   ,
@@ -2355,7 +2355,7 @@
 			       Extent2.IS_PAY_CASH   ,
 			       Extent2.IS_PAY_ONLINE   ,
 			       Extent2.IS_PAY_CHQ   ,
-			       Extent2.IS_PAY_CRC   
+			       Extent2.IS_PAY_CRC
 			  FROM SYS0006D Extent1
 			         JOIN SYS0001M Extent2   ON Extent1.BRNCH_BANK_CNTRL_ACC_ID = Extent2.ACC_ID
 			 WHERE  ( Extent1.BRNCH_BANK_CNTRL_BRNCH_ID = #{brnchId} )
@@ -2364,7 +2364,7 @@
 			          AND ROWNUM <= 1
 			          ]]>
       </select>
-      
+
       <select id="isPaymentKnowOffByPOSNo" parameterType="Map" resultType="egovMap">
 			 SELECT Extent4.ID   ,
 			       Extent4.GL_POSTNG_DT   ,
@@ -2386,14 +2386,14 @@
 			       Extent4.GL_AUDIT_REF   ,
 			       Extent4.GL_CNVR_STUS   ,
 			       Extent4.GL_CNVR_DT   ,
-			       Extent4.GL_RECIPT_ITM_CHRG   
+			       Extent4.GL_RECIPT_ITM_CHRG
 			  FROM SAL0057D Extent1
 			         JOIN PAY0064D Extent2   ON Extent2.BILL_ID = Extent1.POS_BILL_ID
 			         JOIN PAY0065D Extent3   ON Extent3.PAY_ID = Extent2.PAY_ID
 			         JOIN PAY0009D Extent4   ON Extent4.GL_RECIPT_ITM_ID = Extent3.PAY_ITM_ID
 			 WHERE  Extent1.POS_NO = #{psnNo}
       </select>
-      
+
       <select id="posReversalPayDetail" parameterType="Map" resultType="egovMap">
 			  SELECT Limit1.POS_ID   ,
 			       Limit1.POS_NO   ,
@@ -2432,7 +2432,7 @@
 			       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_CODE ELSE ' ' END ACC_CODE  ,
 			       CASE WHEN ( Limit1.ACC_ID IS NOT NULL ) THEN Limit1.ACC_DESC ELSE ' ' END ACC_DESC  ,
 			       Limit1.POS_RESN_ID   ,
-			       CASE WHEN ( Limit1.RESN_ID IS NOT NULL ) THEN Limit1.CODE1 || ' - ' || Limit1.RESN_DESC ELSE ' ' END RESN_DESC  
+			       CASE WHEN ( Limit1.RESN_ID IS NOT NULL ) THEN Limit1.CODE1 || ' - ' || Limit1.RESN_DESC ELSE ' ' END RESN_DESC
 			  FROM ( SELECT Extent1.POS_ID   ,
 			                Extent1.POS_NO   ,
 			                Extent1.POS_BILL_ID   ,
@@ -2447,7 +2447,7 @@
 			                Extent1.POS_WH_ID   ,
 			                Extent1.POS_REM   ,
 			                Extent1.POS_MEM_ID   ,
-			                Extent1.POS_CRT_USER_ID   ,            
+			                Extent1.POS_CRT_USER_ID   ,
 			                Extent1.CR_ACC_ID   ,
 			                Extent1.DR_ACC_ID   ,
 			                Extent1.POS_RESN_ID   ,
@@ -2477,7 +2477,7 @@
 			                Extent10.POS_NO POSNO1  ,
 			                Extent11.RESN_ID   ,
 			                Extent11.CODE CODE1  ,
-			                Extent11.RESN_DESC   
+			                Extent11.RESN_DESC
 			         FROM SAL0057D Extent1
 			                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
 			                JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
@@ -2493,7 +2493,7 @@
 			          WHERE  Extent1.POS_NO = #{posNo} AND ROWNUM <= 1 ) Limit1
 			          ]]>
       </select>
-      
+
       <select id="getPayInfoByPayId" parameterType="Map" resultType="egovMap">
 				 SELECT Extent1.PAY_ID   ,
 				       Extent1.OR_NO   ,
@@ -2528,19 +2528,19 @@
 				       Extent1.TAX_INVC_REF_NO   ,
 				       TO_CHAR(Extent1.TAX_INVC_REF_DT, 'DD/MM/YYYY') TAX_INVC_REF_DT ,
 				       Extent1.SVC_CNTRCT_ID   ,
-				       Extent1.BATCH_PAY_ID   
+				       Extent1.BATCH_PAY_ID
 				  FROM PAY0064D Extent1
 				  <![CDATA[
 				 WHERE  Extent1.PAY_ID = #{rePayId} AND ROWNUM <= 1
 				  ]]>
       </select>
-      
+
       <insert id="insertRePayMaster" parameterType="Map">
              INSERT INTO PAY0064D
                     ( PAY_ID,
                       OR_NO,
-                      SALES_ORD_ID, 
-                      BILL_ID, 
+                      SALES_ORD_ID,
+                      BILL_ID,
                       TR_NO,
                       TYPE_ID,
                       PAY_DATA,
@@ -2548,33 +2548,33 @@
                       BANK_CHG_ACC_ID,
                       COLL_MEM_ID,
                       BRNCH_ID,
-                      BANK_ACC_ID, 
+                      BANK_ACC_ID,
                       ALLOW_COMM,
                       STUS_CODE_ID,
-                      UPD_USER_ID, 
+                      UPD_USER_ID,
                       UPD_DT,
                       SYNC_HECK,
-                      CUST_ID_3PARTY, 
+                      CUST_ID_3PARTY,
                       TOT_AMT,
-                      MTCH_ID, 
+                      MTCH_ID,
                       CRT_USER_ID,
-                      CRT_DT, 
+                      CRT_DT,
                       IS_ALLOW_REV_MULTI,
                       IS_GL_POST_CLM,
                       GL_POST_CLM_DT,
-                      TRX_ID, 
+                      TRX_ID,
                       ADV_MONTH,
                       ACC_BILL_ID,
-                      TR_ISSU_DT, 
+                      TR_ISSU_DT,
                       TAX_INVC_IS_GEN,
-                      TAX_INVC_REF_NO, 
-                      TAX_INVC_REF_DT, 
+                      TAX_INVC_REF_NO,
+                      TAX_INVC_REF_DT,
                       SVC_CNTRCT_ID,
                       BATCH_PAY_ID )
           VALUES (  #{payMseq},
                         #{orNo},
                         #{salesOrdId},
-                        #{billId}, 
+                        #{billId},
                         #{trNo},
                         #{typeId},
                         SYSDATE,
@@ -2583,19 +2583,19 @@
                         #{collMemId},
                         #{brnchId},
                         #{bankAccId},
-                        #{allowComm}, 
+                        #{allowComm},
                         #{stusCodeId},
-                        #{updUserId}, 
+                        #{updUserId},
                         SYSDATE,
                         #{syncCheck},
-                        #{thirdPartyCustId}, 
-                        #{totAmt}, 
-                        #{matchId}, 
+                        #{thirdPartyCustId},
+                        #{totAmt},
+                        #{matchId},
                         #{crtUserId},
                         SYSDATE,
                         #{isAllowRevMulti},
                         #{isGlPostClm},
-                        TO_DATE(#{glPostClmDt}, 'DD/MM/YYYY'),  
+                        TO_DATE(#{glPostClmDt}, 'DD/MM/YYYY'),
                         #{trxSeq},
                         #{advMonth},
                         #{orderBillId},
@@ -2606,31 +2606,31 @@
                         #{svcCntrctId},
                         #{batchPayId})
     </insert>
-    
+
     <select id="getTrxInfo" parameterType="Map" resultType="egovMap">
-			 SELECT 
+			 SELECT
 			       Extent1.TRX_ID   ,
 			       Extent1.TRX_AMT   ,
 			       Extent1.TRX_DT   ,
 			       Extent1.TRX_TYPE   ,
-			       Extent1.TRX_MTCH_NO   
-			  FROM 
+			       Extent1.TRX_MTCH_NO
+			  FROM
 			       PAY0069D Extent1
 			  <![CDATA[
 			  WHERE  Extent1.TRX_ID = #{trxId} AND ROWNUM <= 1
 			  ]]>
     </select>
-    
+
     <insert id="insertRePayTrx"  parameterType="Map">
                 INSERT INTO  PAY0069D
                        (
                         TRX_ID,
-                        TRX_DT, 
+                        TRX_DT,
                         TRX_TYPE,
                         TRX_AMT,
                         TRX_MTCH_NO
                         )
-                VALUES ( 
+                VALUES (
                          #{trxSeq},
                          SYSDATE,
                          #{trxType},
@@ -2638,16 +2638,16 @@
                          #{trxMatchNo}
                         )
     </insert>
-    
+
     <update id="updatePayMTrxId" parameterType="Map">
-					UPDATE 
+					UPDATE
 					    PAY0064D
-					SET 
+					SET
 					    TRX_ID = #{trxId}
-					WHERE 
-					     PAY_ID = #{payId} 
+					WHERE
+					     PAY_ID = #{payId}
     </update>
-    
+
     <select id="getPayDetailListByPayId"  parameterType="Map" resultType="egovMap">
 			SELECT Extent1.PAY_ITM_ID   ,
 			       Extent1.PAY_ID   ,
@@ -2689,38 +2689,38 @@
 			       Extent1.IS_FUND_TRNSFR   ,
 			       Extent1.SKIP_RECON   ,
 			       Extent1.PAY_ITM_CARD_TYPE_ID   ,
-			       Extent1.PAY_ITM_CARD_MODE_ID   
+			       Extent1.PAY_ITM_CARD_MODE_ID
 			  FROM PAY0065D Extent1
 			 WHERE  Extent1.PAY_ID = #{rePayId}
     </select>
-    
+
     <insert id="insertRePayDetail" parameterType="Map">
          INSERT INTO PAY0065D
                 ( PAY_ITM_ID,
-                  PAY_ID, 
-                  PAY_ITM_MODE_ID, 
-                  PAY_ITM_REF_NO, 
+                  PAY_ID,
+                  PAY_ITM_MODE_ID,
+                  PAY_ITM_REF_NO,
                   PAY_ITM_CC_NO,
-                  PAY_ITM_ORI_CC_NO, 
+                  PAY_ITM_ORI_CC_NO,
                   PAY_ITM_ENCRYPT_CC_NO,
                   PAY_ITM_CC_TYPE_ID,
                   PAY_ITM_CHQ_NO,
                   PAY_ITM_ISSU_BANK_ID,
                   PAY_ITM_AMT,
-                  PAY_ITM_IS_ONLINE, 
+                  PAY_ITM_IS_ONLINE,
                   PAY_ITM_BANK_ACC_ID,
                   PAY_ITM_REF_DT,
-                  PAY_ITM_APPV_NO, 
+                  PAY_ITM_APPV_NO,
                   PAY_ITM_REM,
                   PAY_ITM_STUS_ID,
                   PAY_ITM_IS_LOK,
-                  PAY_ITM_CC_HOLDER_NAME, 
+                  PAY_ITM_CC_HOLDER_NAME,
                   PAY_ITM_CC_EXPR_DT,
                   PAY_ITM_BANK_CHRG_AMT,
                   PAY_ITM_IS_THRD_PARTY,
-                  PAY_ITM_THRD_PARTY_IC, 
-                  PAY_ITM_BANK_BRNCH_ID, 
-                  PAY_ITM_BANK_IN_SLIP_NO, 
+                  PAY_ITM_THRD_PARTY_IC,
+                  PAY_ITM_BANK_BRNCH_ID,
+                  PAY_ITM_BANK_IN_SLIP_NO,
                   PAY_ITM_EFT_NO,
                   PAY_ITM_CHQ_DEP_RECIPT_NO,
                   ETC1,
@@ -2729,17 +2729,17 @@
                   PAY_ITM_MID,
                   PAY_ITM_GRP_ID,
                   PAY_ITM_REF_ITM_ID,
-                  PAY_ITM_BANK_CHRG_ACC_ID, 
-                  PAY_ITM_RUNNG_NO, 
+                  PAY_ITM_BANK_CHRG_ACC_ID,
+                  PAY_ITM_RUNNG_NO,
                   UPD_USER_ID,
                   UPD_DT,
-                  IS_FUND_TRNSFR,  
-                  SKIP_RECON, 
+                  IS_FUND_TRNSFR,
+                  SKIP_RECON,
                   PAY_ITM_CARD_TYPE_ID,
                   PAY_ITM_CARD_MODE_ID )
           VALUES ( #{payItemId},
                        #{payId},
-                       #{payMode}, 
+                       #{payMode},
                        #{transactionRefNo},
                        #{payCreditCardNo},
                        #{payCreditCardOriNo},
@@ -2748,8 +2748,8 @@
                        #{payItmChqNo},
                        #{payIssueBank},
                        #{payAmt},
-                       #{payCrcMode}, 
-                       #{payBankAccount}, 
+                       #{payCrcMode},
+                       #{payBankAccount},
                        TO_DATE(#{payRefDate}, 'DD/MM/YYYY'),
                        #{payApprovNo},
                        #{payRem},
@@ -2769,8 +2769,8 @@
                        #{etc3},
                        #{payItmMid},
                        #{payItmGrpId},
-                       #{payItmRefItmId}, 
-                       #{payItmBankChrgAccId}, 
+                       #{payItmRefItmId},
+                       #{payItmBankChrgAccId},
                        #{payItmRunngNo},
                        #{updUserId},
                        SYSDATE,
@@ -2779,7 +2779,7 @@
                        #{payItmCardTypeId},
                        #{payItmCardModeId} )
      </insert>
-     
+
      <select id="getAccGLRoutesInfoByRcpItmId" parameterType="Map" resultType="egovMap">
 				SELECT
 				       Extent1.ID   ,
@@ -2802,17 +2802,17 @@
 				       Extent1.GL_AUDIT_REF   ,
 				       Extent1.GL_CNVR_STUS   ,
 				       Extent1.GL_CNVR_DT   ,
-				       Extent1.GL_RECIPT_ITM_CHRG   
-				  FROM 
+				       Extent1.GL_RECIPT_ITM_CHRG
+				  FROM
 				       PAY0009D Extent1
-				 WHERE  
-				       Extent1.GL_RECIPT_ITM_ID = #{payItmRefItmId} 
-				 AND 
+				 WHERE
+				       Extent1.GL_RECIPT_ITM_ID = #{payItmRefItmId}
+				 AND
 				    <![CDATA[
 				        ROWNUM <= 1
 				    ]]>
      </select>
-     
+
      <insert id="insertReAccGlRoute" parameterType="Map">
 				INSERT INTO PAY0009D (
 													    ID,
@@ -2860,9 +2860,9 @@
 											    #{glCnvrDt}
 											)
      </insert>
-     
+
      <select id="getPayDetailList" parameterType="Map" resultType="egovMap">
-				SELECT 
+				SELECT
 				       Extent2.PAY_ITM_ID   ,
 				       Extent2.PAY_ID   ,
 				       Extent2.PAY_ITM_MODE_ID   ,
@@ -2880,7 +2880,7 @@
 				       Extent2.PAY_ITM_BANK_ACC_ID   ,
 				       Extent5.ACC_DESC   ,
 				       TO_CHAR(Extent2.PAY_ITM_REF_DT, 'DD/MM/YYYY') PAY_ITM_REF_DT ,
-				       Extent2.PAY_ITM_REM   
+				       Extent2.PAY_ITM_REM
 				  FROM PAY0064D Extent1
 				         JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
 				         JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent2.PAY_ITM_MODE_ID
@@ -2888,9 +2888,9 @@
 				         LEFT JOIN SYS0001M Extent5   ON Extent5.ACC_ID = Extent2.PAY_ITM_BANK_ACC_ID
 				         LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent2.PAY_ITM_CC_TYPE_ID
 				         LEFT JOIN SYS0013M Extent7   ON Extent7.CODE_ID = Extent2.PAY_ITM_CARD_MODE_ID
-				 WHERE  Extent1.PAY_ID = #{rePayId}   
+				 WHERE  Extent1.PAY_ID = #{rePayId}
      </select>
-     
+
      <insert id="insertTransactionLog" parameterType="Map">
      <selectKey keyProperty="logId" resultType="Integer" order="BEFORE">
         SELECT SYS0049D_LOG_ID_SEQ.NEXTVAL  FROM DUAL
@@ -2923,9 +2923,9 @@
 										SYSDATE
 								)
      </insert>
-     
+
      <select id="getDetailInfoList" parameterType="Map" resultType="egovMap">
-			SELECT 
+			SELECT
 			    POS_ITM_ID,
 			    POS_ID,
 			    POS_ITM_STOCK_ID ,
@@ -2947,21 +2947,21 @@
 			    CRT_USER_ID,
 			    UPD_DT ,
 			    UPD_USER_ID
-			FROM 
+			FROM
 			    SAL0058D
 			WHERE
 			    POS_ID = #{posId}
 			AND
-			    RCV_STUS_ID = #{rcvStusId}     
+			    RCV_STUS_ID = #{rcvStusId}
      </select>
-     
+
      <select id="getPosNobyPosId" parameterType="posDetailVO" resultType="egovMap">
         SELECT
             POS_NO
         FROM
             SAL0057D
         WHERE
-            1 = 1 
+            1 = 1
         <if test=" null != posId and '' != posId">
             AND POS_ID = #{posId}
         </if>
@@ -2969,26 +2969,26 @@
            AND   ROWNUM <= 1
          ]]>
      </select>
-     
+
      <select id="getPosItmIdListByPosIdAndMemId" parameterType="posMemberVO" resultType="egovMap">
-       SELECT 
+       SELECT
             POS_ITM_ID
        FROM
             SAL0058D
-       WHERE 
+       WHERE
             POS_ID = #{posId}
        AND
             MEM_ID = #{memId}
      </select>
-     
-     
+
+
      <select id="getPosNobyPosIdForMember" parameterType="posMemberVO" resultType="egovMap">
         SELECT
             POS_NO
         FROM
             SAL0057D
         WHERE
-            1 = 1 
+            1 = 1
         <if test=" null != posId and '' != posId">
             AND POS_ID = #{posId}
         </if>
@@ -2996,9 +2996,9 @@
            AND   ROWNUM <= 1
          ]]>
      </select>
-     
+
      <select id="getPosItmIdListByPosNo" parameterType="Map" resultType="egovMap">
-			SELECT 
+			SELECT
 			    T2.POS_ITM_ID
 			FROM
 			    SAL0057D T1
@@ -3006,37 +3006,37 @@
 			WHERE
 			    T1.POS_NO = #{psno}
 			AND
-			    T2.RCV_STUS_ID = #{rcvStusId}       
+			    T2.RCV_STUS_ID = #{rcvStusId}
      </select>
-     
+
      <select id="chkMemIdByMemCode" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             MEM_ID
-        FROM 
+        FROM
             ORG0001D
         WHERE
            UPPER(MEM_CODE) =  UPPER(#{memCode})
-        AND 
+        AND
         <![CDATA[
             ROWNUM <= 1
         ]]>
      </select>
-     
+
      <select id="chkUserIdByUserName" parameterType="Map" resultType="egovMap">
-		 SELECT 
+		 SELECT
 		    USER_ID
-		 FROM 
-		    SYS0047M 
-		 WHERE 
+		 FROM
+		    SYS0047M
+		 WHERE
 		    UPPER(USER_NAME) = UPPER(#{userName})
 		 AND
 		    <![CDATA[
 		    ROWNUM <=1
 		    ]]>
      </select>
-     
+
      <select id="chkOldReqSerial" parameterType="Map" resultType="egovMap">
-			SELECT 
+			SELECT
 			    POS_SERIAL_ID,
 			    POS_ID,
 			    POS_ITM_STOCK_ID,
@@ -3051,19 +3051,19 @@
 			WHERE
 			    POS_ID = #{rePosId}
      </select>
-     
+
      <select id="getSeqPay0240T" resultType="java.lang.Integer">
          SELECT PAY0240T_SEQ.NEXTVAL FROM DUAL
      </select>
-     
+
      <insert id="insertPayT" parameterType="Map">
         <selectKey keyProperty="rsltSeq" resultType="java.lang.Integer" order="BEFORE" >
             SELECT PAY0252T_SEQ.NEXTVAL FROM DUAL
         </selectKey>
         <!-- <selectKey keyProperty="groupSeq" resultType="java.lang.Integer" order="BEFORE">
-            SELECT PAY0240T_SEQ.NEXTVAL FROM DAUL 
+            SELECT PAY0240T_SEQ.NEXTVAL FROM DAUL
         </selectKey> -->
-        
+
 		INSERT INTO PAY0252T(
 										    RSLT_SEQ ,
 										    GROUP_SEQ ,
@@ -3096,7 +3096,7 @@
 										    BANK_CHG_MAPPING_DT ,
 										    FT_STUS_ID ,
 										    FT_USER_ID ,
-										    FT_DT 
+										    FT_DT
 										)
 						      VALUES(
     										#{rsltSeq},
