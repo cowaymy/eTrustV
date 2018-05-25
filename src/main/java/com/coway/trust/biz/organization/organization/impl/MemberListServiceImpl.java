@@ -1916,7 +1916,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    					//InvMISCD.put("invoiceItemCharges",String.format("%.2f",((double)120.00) * 100 / 106)); -- without GST 6% edited by TPY 24/05/2018
 	    					InvMISCD.put("invoiceItemGSTRate",0);
 	    					InvMISCD.put("invoiceItemGSTTaxes",0);
-	    					InvMISCD.put("invoiceItemCharges",0);
+	    					InvMISCD.put("invoiceItemCharges",120);
 	    					InvMISCD.put("invoiceItemAmountDue",String.format("%.2f",(double)120));
 	    					InvMISCD.put("invoiceItemAdd1","");
 	    					InvMISCD.put("invoiceItemAdd2","");
