@@ -678,7 +678,7 @@ public class InvoiceAdjController {
             returnParam.put("memoItemTaxCodeID", Integer.parseInt(billItemTaxCodeId));
             returnParam.put("memoItemStatusID", 1);
             returnParam.put("memoItemRemark", "");
-            returnParam.put("memoItemGSTRate", Integer.parseInt(billItemTaxRate));  // check by GST value to determine for formula calculation currently value obtained from PAY0030D/32D/34D
+            returnParam.put("memoItemGSTRate", Integer.parseInt(billItemTaxRate));
             returnParam.put("memoItemAmount", itemAdjsutment);
 
             if (Double.parseDouble(billItemCharges) > 0 && Integer.parseInt(billItemTaxRate) == 6){
