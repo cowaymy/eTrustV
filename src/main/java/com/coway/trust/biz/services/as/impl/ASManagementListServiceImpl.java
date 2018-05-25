@@ -1415,10 +1415,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
 		 LOGGER.debug("tm==>" +tm.toString());
 
-		 int package_TAXRATE  =6;
+		 //int package_TAXRATE  =6; //2018-05-24 - Kit Wai - Update GST to 0%
+		 int package_TAXRATE  =0;
  		 int package_TAXCODE = 32;
 
- 		 int  filter_TAXRATE  =6;
+ 		 //int  filter_TAXRATE  =6; //2018-05-24 - Kit Wai - Update GST to 0%
+ 		 int  filter_TAXRATE  =0;
  		 int  filter_TAXCODE =32;
 
 
@@ -1554,6 +1556,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				    double t_SpareCharges =0.00;
 				    if(package_TAXRATE > 0){
 				    	  t_SpareCharges = (txtLabourCharge *100/106);
+				    } else {
+				        t_SpareCharges = txtLabourCharge;
 				    }
 					double t_SpareTaxes =    txtLabourCharge - t_SpareCharges ;
 
@@ -1693,7 +1697,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
            								}
 
-           							    double t_SpareCharges = (ft *100/106);
+           							    //double t_SpareCharges = (ft *100/106); / 2018-05-24 - Kit Wai - 0% GST
+           								double t_SpareCharges = ft;
            								double t_SpareTaxes =  ft - t_SpareCharges ;
 
 
