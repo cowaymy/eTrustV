@@ -1294,7 +1294,7 @@ function checkBankAccNo() {
 <tr>
     <th scope="row" id="mobileNoLbl" name="mobileNoLbl">Mobile No.</th>
     <td>
-    <input type="text" title="" placeholder="Numberic Only" class="w100p" id="mobileNo" name="mobileNo"
+    <input type="text" title="" placeholder="Numeric Only" class="w100p" id="mobileNo" name="mobileNo"
         onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
     <th scope="row">Office No.</th>

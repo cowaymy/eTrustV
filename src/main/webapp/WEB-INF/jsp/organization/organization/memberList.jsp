@@ -161,6 +161,8 @@ function fn_clickHpApproval(){
             Common.alert("Aplicant has rejected agreement");
         } else if(result.stus == "5") {
             Common.alert("Aplicant has already been approved.");
+        } else if(result.stus == "98") {
+            Common.alert("Aplicant has been automatically cancelled.");
         }
 
 
