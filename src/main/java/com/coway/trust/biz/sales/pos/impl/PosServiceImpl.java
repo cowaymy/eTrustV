@@ -442,7 +442,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     		accOrdBillingMap.put("userId", params.get("userId"));
     		accOrdBillingMap.put("posOrdBillGroupId", 0); //accorderbill.AccBillGroupID = 0;
     		accOrdBillingMap.put("posOrdBillTaxCodeId", SalesConstants.POS_ORD_BILL_TAX_CODE_ID); //accorderbill.AccBillTaxCodeID = 32;
-    		accOrdBillingMap.put("posOrdBillTaxRate", SalesConstants.POS_ORD_BILL_TAX_RATE); //accorderbill.AccBillTaxRate = 6;
+    		accOrdBillingMap.put("posOrdBillTaxRate", 0); //accorderbill.AccBillTaxRate = 6;
     		accOrdBillingMap.put("posOrdBillAcctCnvr", 0); //TODO ASIS 소스 없음
     		accOrdBillingMap.put("posOrdBillCntrctId", 0); //TODO ASIS 소스 없음
 
