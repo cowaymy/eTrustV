@@ -2,7 +2,6 @@ package com.coway.trust.web.common.claim;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.text.ParseException;
 import java.util.Map;
 
 import org.apache.commons.lang3.StringUtils;
@@ -15,132 +14,193 @@ import com.coway.trust.AppConstants;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.util.CommonUtils;
 
-public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler implements ResultHandler<Map<String, Object>>
-{
+public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler implements ResultHandler<Map<String, Object>> {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ECashDeductionFileMBBHandler.class);
 
+	// Header
+	String messageType = "";
+	String sbatchNo = "";
+	String merOrg = "";
+	String merId = "";
+	String merName = "";
+	String merCode = "";
+	String noOfTrans = "";
+	String totAmt= "";
+	String batchStus= "";
+	String termId = "";
+	String ccy = "";
+	String reserved = "";
+	String settleBatch= "";
+	String filter1 = "";
+	String settleTerm = "";
+	String filter2 = "";
+	String ret = "";
 	String inputDate = "";
-	String strHeader = "";
-	String strHeaderRecType = "";
-	String strHeaderVolume = "";
-	String strHeaderCompanyID = "";
-	String strHeaderCompanyDesc = "";
-	String strHeaderBillDate = "";
-	String strHeaderMerchantID = "";
-	String strHeaderBankUse = "";
 
-	String strBody = "";
-	String recType = "";
-	String accNo = "";
-	String chkDigit = "";
-	String billamt = "";
-	String crcNo = "";
-	String bCycle = "";
-	String bCode = "";
-	String bankUse = "";
+	String sSecCode = "";
+	String sText = "";
 
-	BigDecimal amount = null;
-	BigDecimal hundred = new BigDecimal(100);
+	// Body
+	String stextDetails = "";
+	String bMessageType = "";
+	String bBatchNo = "";
+	String bTransNo = "";
+	String bTransCode = "";
+	String bAccNo = "";
+	String bAmount = "";
+	String bExpiredDt = "";
+	String bPosEntry = "";
+	String bApprovalCode = "";
+	String bResponseCode = "";
+	String bMode = "";
+	String bOfflineStus = "";
+	String bDate = "";
+	String bTime = "";
+	String bRefNo = "";
+	String bRemark = "";
+	String bCvv = "";
+	String bProductCode = "";
+	//String ret = "";
 
 
-	long iHashTot = 0;
+	long sLimit = 0;
 	long iTotalAmt = 0;
+	long ihashtot3 = 0;
 	int iTotalCnt = 0;
 
-	String strFooter = "";
-	String strFooterRecType = "";
-	String strFooterTotItm = "";
-	String strFooterTotAmt = "";
-	String strFooterTotHash = "";
-	String strFooterBankUse = "";
+	// footer 작성
+	String fMessage = "";
+	String sNoOfBatch = "";
+	String sRecTot = "";
+	String sBatchTot = "";
+	String sFiller = "";
+	int endIndex = 0;
+	String sTextBtn = "";
 
-	public ECashDeductionFileMBBHandler(FileInfoVO fileInfoVO, Map<String, Object> params)
-	{
+	BigDecimal amount = null;
+	BigDecimal hunred = new BigDecimal(100);
+
+	public ECashDeductionFileMBBHandler(FileInfoVO fileInfoVO, Map<String, Object> params) {
 		super(fileInfoVO, params);
 	}
 
 	@Override
-	public void handleResult(ResultContext<? extends Map<String, Object>> result)
-	{
-		try
-		{
-			if (!isStarted)
-			{
+	public void handleResult(ResultContext<? extends Map<String, Object>> result) {
+		try {
+			if (!isStarted) {
 				init();
-				writeHeader();
+				writeHeader(result);
 				isStarted = true;
 			}
 
 			writeBody(result);
 
-		}
-		catch (Exception e)
-		{
+		} catch (Exception e) {
 			throw new ApplicationException(e, AppConstants.FAIL);
 		}
 	}
 
-	private void init() throws IOException
-	{
+	private void init() throws IOException {
 		out = createFile();
 	}
 
-	private void writeHeader() throws IOException
-	{
-		inputDate = CommonUtils.nvl(params.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) params.get("ctrlBatchDt");
-
-		strHeaderRecType = "1";
-		strHeaderVolume = "00";
-		strHeaderCompanyID = "00";
-		strHeaderCompanyDesc = StringUtils.rightPad("WOONGJIN COWAY", 15, " ");
-
-		strHeaderBillDate = CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "ddMMyy");
-		strHeaderMerchantID = StringUtils.rightPad("02172", 9, " ");
-		strHeaderBankUse = StringUtils.rightPad("", 43, " ");
-
-		strHeader = strHeaderRecType + strHeaderVolume + strHeaderCompanyID +
-							strHeaderCompanyDesc + strHeaderBillDate + " " + strHeaderMerchantID + strHeaderBankUse;
-
-		out.write(strHeader);
-		out.newLine();
-		out.flush();
-
-		LOGGER.debug("Write Header complete.....");
-	}
-
-	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException
-	{
+	private void writeHeader(ResultContext<? extends Map<String, Object>> result) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
 
-		recType = "2";
-		accNo = StringUtils.rightPad(String.valueOf(dataRow.get("fileItmId")).trim(), 15, " ");
-		amount = (BigDecimal)dataRow.get("fileItmAmt");
-		billamt = StringUtils.leftPad(String.valueOf(amount.multiply(hundred).longValue()), 12, "0");
-		crcNo = String.valueOf(dataRow.get("fileItmAccNo")).trim();
+		BigDecimal totA = (BigDecimal)dataRow.get("totAmt");
+		long limit = totA.multiply(hunred).longValue();
 
-		strBody = recType + accNo + " " + billamt + crcNo + bCycle + bCode + bankUse;
+		// 헤더 작성
+		messageType	= StringUtils.rightPad(String.valueOf("H"), 1, " ");
+		sbatchNo      	= StringUtils.leftPad(String.valueOf(dataRow.get("fileBatchId")), 5, "0");
+		merOrg 			= StringUtils.rightPad(String.valueOf("001"), 3, " ");
+		merId 			= StringUtils.rightPad(String.valueOf("060012051"), 1, " ");
+		merName 		= StringUtils.rightPad(String.valueOf("COWAY (M) SDN BHD"), 20, " ");
+		merCode 		= StringUtils.rightPad(String.valueOf("7523"), 4, " ");
+		noOfTrans 		= StringUtils.leftPad(String.valueOf(dataRow.get("totSize")), 6, "0");
+		totAmt			= StringUtils.leftPad(String.valueOf(limit), 13, "0");
+		batchStus		= StringUtils.rightPad(String.valueOf("N"), 1, " ");
+		termId 			= StringUtils.rightPad(String.valueOf(""), 20, " ");
+		ccy 				= StringUtils.rightPad(String.valueOf("458"), 3, " ");
+		reserved 		= StringUtils.rightPad(String.valueOf("000000"), 6, " ");
+		settleBatch		= StringUtils.rightPad(String.valueOf("000000"), 6, " ");
+		filter1 			= StringUtils.rightPad(String.valueOf(""), 2, " ");
+		settleTerm 		= StringUtils.rightPad(String.valueOf(""), 8, " ");
+		filter2 			= StringUtils.rightPad(String.valueOf(""), 18, " ");
+		ret 				= StringUtils.rightPad("R", 1, " ");
 
-		iHashTot = iHashTot + Long.parseLong(CommonUtils.right(String.valueOf(dataRow.get("fileItmAccNo")).trim(), 4));
-		iTotalAmt = iTotalAmt + amount.multiply(hundred).longValue();
-		iTotalCnt++;
+		//sSecCode = StringUtils.leftPad(String.valueOf((Integer.parseInt(sbatchNo) + 1208083646)), 10, " ");
 
-		out.write(strBody);
+		sText = messageType + sbatchNo + merOrg + merId + merName + merCode + noOfTrans + totAmt + batchStus + termId + ccy + reserved +  settleBatch + filter1 + settleTerm + filter2 + ret;
+
+		out.write(sText);
 		out.newLine();
 		out.flush();
+
+		LOGGER.debug("write Header complete.....");
 	}
 
-	public void writeFooter() throws IOException
-	{
-		strFooterRecType = "3";
-		strFooterTotItm = StringUtils.leftPad(String.valueOf(iTotalCnt), 5, "0");
-		strFooterTotAmt = StringUtils.leftPad(String.valueOf(iTotalAmt), 12, "0");
-		strFooterTotHash = StringUtils.leftPad(String.valueOf(iHashTot), 12, "0");
-		strFooterBankUse = StringUtils.rightPad("", 49, " ");
+	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
+		Map<String, Object> dataRow = result.getResultObject();
 
-		strFooter = strFooterRecType + strFooterTotItm + strFooterTotAmt + strFooterTotHash + strFooterBankUse;
+		String exp = StringUtils.isEmpty(String.valueOf(dataRow.get("fileItmAccExpr"))) ? "0000" : String.valueOf(dataRow.get("fileItmAccExpr"));
+		bMessageType = StringUtils.rightPad("T", 1, " ");
+		bBatchNo      	= StringUtils.leftPad(String.valueOf(dataRow.get("fileBatchId")), 5, "0");
+		bTransNo 		= StringUtils.rightPad(String.valueOf(dataRow.get("fileItmId")), 6, " ");
+		bTransCode 	= StringUtils.rightPad("40", 2, " ");
+		bAccNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("fileItmAccNo")), 19, " ");
+		//bAmount 		= StringUtils.rightPad(String.valueOf("1"), 13, " ");
+		bExpiredDt 		= StringUtils.rightPad(String.valueOf(exp), 4, " ");
+		bPosEntry 		= StringUtils.rightPad(String.valueOf("01"), 2, " ");
+		bApprovalCode= StringUtils.rightPad("", 6, " ");
+		bResponseCode= StringUtils.rightPad("", 2, " ");
+		bMode 			= StringUtils.rightPad("", 1, " ");
+		bOfflineStus 	= StringUtils.rightPad("", 1, " ");
+		bDate 			= StringUtils.rightPad("", 6, " ");
+		bTime 			= StringUtils.rightPad("", 6, " ");
+		bRefNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("fileItmId")), 15, " ");
+		bRemark 		= StringUtils.rightPad(String.valueOf(dataRow.get("salesOrdNo")), 18, " ");
+		bCvv 				= StringUtils.rightPad("", 3, " ");
+		bProductCode = StringUtils.rightPad("", 15, " ");
+		ret 				= StringUtils.rightPad("R", 1, " ");;
 
-		out.write(strFooter);
+		//금액 계산
+		amount = (BigDecimal)dataRow.get("fileItmAmt");
+		sLimit = amount.multiply(hunred).longValue();
+
+
+		iTotalAmt = iTotalAmt + sLimit;
+		ihashtot3 = ihashtot3 + sLimit + Long.parseLong(bAccNo.trim());
+		iTotalCnt++;
+
+		bAmount = StringUtils.leftPad(String.valueOf(sLimit), 13, "0");
+
+
+		stextDetails = bMessageType + bBatchNo + bTransNo + bTransCode + bAccNo + bAmount + bExpiredDt + bPosEntry
+				+ bApprovalCode + bResponseCode + bMode + bOfflineStus + bDate + bTime + bRefNo + bRemark + bCvv + bProductCode + ret;
+
+		out.write(stextDetails);
 		out.newLine();
 		out.flush();
+
+
+
+	}
+
+	public void writeFooter() throws IOException {
+
+		fMessage = "R";
+		sNoOfBatch = StringUtils.leftPad("001",3,"");
+		sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
+		sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");
+		sFiller      = StringUtils.leftPad("", 101, " ");
+		ret  		  = "R";
+
+		sTextBtn = fMessage + sNoOfBatch + sRecTot + sBatchTot + sFiller + ret;
+
+		out.write(sTextBtn);
+		out.newLine();
+		out.flush();
+
 	}
 }

@@ -18,7 +18,8 @@ public enum LargeExcelQuery {
 	, RESULTINDEX_HP("selectHPRawData"), RESULTINDEX_CM("selectCMRawData"), RESULTINDEX_CD("selectCodyRawData"), RESULTINDEX_CT("selectCTRawData")
 
 	, CLAIM_DETAIL("selectClaimDetailById"), CLAIM_DETAIL_PAGING("selectClaimDetailByIdPaging"), INVOICE_SUMMARY("selectInvoiceAdjList"),ALLDCPMASTER("selectAllDCPMaster")
-	, ECASHDEDUCTION_DETAIL_PAGING("selectECashDeductSubByIdPaging")
+	, CLAIM_DETAIL_PAGING_MBB("selectClaimDetailByIdPagingMBB")
+	, ECASHDEDUCTION_DETAIL_PAGING("selectECashDeductSubByIdPaging"),ECASHDEDUCTION_DETAIL_PAGING_MBB("selectECashDeductSubByIdPagingMBB")
 	, DAILY_COLLECTION_RAW("selectDailyCollectionData")
 	, MONTHLY_BILL_RAW("selectMonthlyRawData");
 

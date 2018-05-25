@@ -296,6 +296,11 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	}
 
 	@Override
+	public void downLoadClaimFileCrcMBB(Object parameter, ClaimFileCrcMBBHandler claimFileCrcMBBHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL_PAGING_MBB.getQueryId(), parameter, claimFileCrcMBBHandler);
+	}
+
+	@Override
 	public void downLoadClaimFileFPX(Object parameter, ClaimFileFPXHandler claimFileFPXHandler) {
 		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileFPXHandler);
 	}
@@ -322,18 +327,12 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 
 	@Override
 	public void downLoadECashDeductionFileMBB(Object parameter, ECashDeductionFileMBBHandler eCashDeductionFileMBBHandler) {
-		this.downLoad(LargeExcelQuery.ECASHDEDUCTION_DETAIL_PAGING.getQueryId(), parameter, eCashDeductionFileMBBHandler);
+		this.downLoad(LargeExcelQuery.ECASHDEDUCTION_DETAIL_PAGING_MBB.getQueryId(), parameter, eCashDeductionFileMBBHandler);
 	}
 
 	@Override
 	public void downLoad(String id, Object parameter, ResultHandler resultHandler) {
 		excelDownloadMapper.getSqlSession().select(id, parameter, resultHandler);
-	}
-
-	@Override
-	public void downLoadClaimFileCrcMBB(Object parameter, ClaimFileCrcMBBHandler claimFileCrcMBBHandler) {
-		// TODO Auto-generated method stub
-
 	}
 
 }

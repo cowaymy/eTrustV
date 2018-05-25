@@ -386,6 +386,18 @@ public class ECashDeductionController {
 					this.createECashDeductionFileCIMB(claimMap);
 				}
 			}
+        }else if ("21".equals(String.valueOf(claimMap.get("fileBatchBankId")))){
+        	int totRowCount = eCashDeductionService.selectECashDeductSubByIdCnt(map);
+			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
+
+			if (pageCnt > 0){
+				for(int i = 1 ; i <= pageCnt ; i++){
+					claimMap.put("pageNo", i);
+					claimMap.put("rowCount", 10000);
+					this.createECashDeductionFileMBB(claimMap);
+				}
+			}
+
         }
 
 		// 결과 만들기
@@ -486,10 +498,9 @@ public class ECashDeductionController {
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-			sFile = "eCash_MBB_MBB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".txt";
+			sFile = "eCash_MBB_MBB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".dat";
 
 			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
-
 			largeExcelService.downLoadECashDeductionFileMBB(claimMap, downloadHandler);
 			downloadHandler.writeFooter();
 

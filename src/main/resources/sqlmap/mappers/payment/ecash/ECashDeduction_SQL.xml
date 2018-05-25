@@ -155,6 +155,32 @@
         WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
     </select>
 
+    <select id="selectECashDeductSubByIdPagingMBB" parameterType="Map" resultType="egovMap">
+    SELECT *
+        FROM (SELECT ROWNUM AS RNUM,
+        Z.* from (
+            SELECT
+                EXTENT1.FILE_ITM_ID,
+                EXTENT1.FILE_BATCH_ID,
+                EXTENT2.SALES_ORD_NO,
+                EXTENT1.FILE_ITM_ACC_NO,
+                EXTENT1.FILE_ITM_AMT,
+                EXTENT1.FILE_ITM_ACC_EXPR,
+                EXTENT1.FILE_ITM_REF,
+                EXTENT4.CUST_CRC_OWNER,
+                EXTENT3.ISSU_NRIC,
+                (select SUM(FILE_ITM_AMT) from SAL0152M where FILE_BATCH_ID = extent1.file_batch_id) TOT_AMT,
+                (select COUNT(FILE_ITM_ID) from SAL0152M where FILE_BATCH_ID = extent1.file_batch_id) TOT_SIZE
+                FROM  SAL0152M EXTENT1
+                    JOIN SAL0001D EXTENT2 on EXTENT2.SALES_ORD_ID = EXTENT1.FILE_ITM_ORD_ID
+                    JOIN SAL0074D EXTENT3 on EXTENT3.SALES_ORD_ID = EXTENT2.SALES_ORD_ID
+                    JOIN SAL0028D EXTENT4 on EXTENT4.CUST_CRC_ID = EXTENT3.CUST_CRC_ID
+                WHERE Extent1.FILE_BATCH_ID = #{fileBatchId}
+                 ORDER BY Extent1.FILE_ITM_ID ) Z
+        WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY FILE_ITM_ID ASC)
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </select>
+
     <select id="selectECashDeductSubByIdCnt" parameterType="Map" resultType="int">
     SELECT
         COUNT(1) AS CNT

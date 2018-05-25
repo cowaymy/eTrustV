@@ -1701,14 +1701,14 @@ public class ClaimController {
 		String inputDate;
 
 		try {
-			inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
+			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-			sFile = "eCash_MBB_MBB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".txt";
+			sFile = "eCash_MBB_MBB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".dat";
 
 			downloadHandler = getTextDownloadCrcMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 
 			largeExcelService.downLoadClaimFileCrcMBB(claimMap, downloadHandler);
-			//downloadHandler.writeFooter();
+			downloadHandler.writeFooter();
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
