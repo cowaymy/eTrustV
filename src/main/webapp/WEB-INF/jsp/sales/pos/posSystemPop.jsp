@@ -9,170 +9,170 @@ var memGridID;
 var paymentGridID;
 
 $(document).ready(function() {
-	
+
 	/******  INIT ********************/
-	
+
 	createPurchaseGridID();
 	createSerialTempGridID();
 	creatememGridID();
 	createPaymentGrid();
-	
+
 	//PosModuleTypeComboBox
 	var modulePopParam = {groupCode : 143, codeIn : [2390, 2391]};
 	CommonCombo.make('_insPosModuleType', "/sales/pos/selectPosModuleCodeList", modulePopParam , '', optionModule);
-	
+
 	//PosSystemTypeComboBox
     var systemPopParam = {groupCode : 140 , codeIn : [1352, 1353]};
     CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
-	
+
     //branch List
     var selVal = $("#_memBrnch").val().trim();
     console.log('membrnch : [' + selVal+ ']');
     CommonCombo.make('_cmbWhBrnchIdPop', "/sales/pos/selectWhBrnchList", '' , selVal, '');
-    
+
     //Payment
     CommonCombo.make('_payBrnchCode', "/sales/pos/getpayBranchList", '', selVal, '');
     //CommonCombo.make('_payBrnchCode', "/sales/pos/selectWhBrnchList", '' , selVal, '');
-    
+
     var debSelVal = "524";
     CommonCombo.make("_payDebtorAcc", "/sales/pos/getDebtorAccList", '', debSelVal, optionModule);
     $("#_payDebtorAcc").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-    
-    fn_payModeAndBankAccControl(); //draw Combo 
-    
-    
+
+    fn_payModeAndBankAccControl(); //draw Combo
+
+
     /******  INIT ********************/
-    
+
     $("#_payMode").change(function() {
-    	
+
 		var payMode = $(this).val();
-		
+
 		if(payMode == 105){  // 105 cash
-			
-			
+
+
 		    $("#_payCreditCardNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); //this.txtCreditCardNo.Enabled = false;
 		    $("#_payApprovNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.txtApprovalNo.Enabled = false;
 		    $("#_payCrcType").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); //   this.cmbCRCType.Enabled = false;
 		    $("#_payCrcMode").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.cmbCRCMode.Enabled = false;
 		    $("#_payIssueBank").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.cmbCRCMode.Enabled = false;
-		    
+
 		    fn_payModeAndBankAccControl();
-		    
+
 		}// End 105 Cash
-		
+
 		if(payMode == 108){  // 108 deduction
-			
+
 			var initBankParam = {isDeduc : "1"};
 		    CommonCombo.make("_payBankAccount", "/sales/pos/getBankAccountList", initBankParam, '59', optionModule);
 		    $("#_payBankAccount").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-		    
+
 		    $("#_payCreditCardNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"});  //this.txtCreditCardNo.Enabled = false;
 		    $("#_payApprovNo").attr({"disabled" : "disabled" , "class" : "w100p disabled"});  // this.txtApprovalNo.Enabled = false;
 		    $("#_payCrcType").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); //   this.cmbCRCType.Enabled = false;
 		    $("#_payCrcMode").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.cmbIssuedBank.Enabled = false;
 		    $("#_payIssueBank").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.cmbCRCMode.Enabled = false;
 		}
-    	
-    	
+
+
 	    /* if(payMode == 107){  // 107 Credit Card
-            
-	    	$("#_payCreditCardNo").attr({"disabled" : true , "class" : "w100p disabled"}); 
-            $("#_payApprovNo").attr({"disabled" : true , "class" : "w100p disabled"}); 
-            $("#_payCrcType").attr({"disabled" : true , "class" : "w100p disabled"}); 
-            $("#_payCrcMode").attr({"disabled" : true , "class" : "w100p disabled"}); 
+
+	    	$("#_payCreditCardNo").attr({"disabled" : true , "class" : "w100p disabled"});
+            $("#_payApprovNo").attr({"disabled" : true , "class" : "w100p disabled"});
+            $("#_payCrcType").attr({"disabled" : true , "class" : "w100p disabled"});
+            $("#_payCrcMode").attr({"disabled" : true , "class" : "w100p disabled"});
             $("#_payIssueBank").attr({"disabled" : true , "class" : "w100p disabled"});
-            
+
             //TODO not use
             $("#_payIssueBank").attr({"disabled" : "disabled" , "class" : "w100p disabled"}); // this.cmbCRCMode.Enabled = false;
         } */
 	});
-    
-    
+
+
     //Wh List
     $("#_cmbWhBrnchIdPop").change(function() {
     	getLocIdByBrnchId($(this).val());
     	$("#_payBrnchCode").val($(this).val());
-    	
+
     	//Clear Grid
     	fn_clearAllGrid();
     });
-    
+
     //_insPosModuleType Change Func
     $("#_insPosModuleType").change(function() {
-        
+
     	fn_payFieldClear();
-    	
+
         var tempVal = $(this).val();
-        
+
         if(tempVal == 2390){ //POS Sales
             var optionSystem = {
-                    type: "M",                  
-                    isShowChoose: false  
+                    type: "M",
+                    isShowChoose: false
             };
             var systemPopParam = {groupCode : 140 , codeIn : [1352, 1353]};
             CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
             //PAYMENT TAB DISPLAY
             $("#_purchaseTab").click();
             $("#_payTab").css("display" , "");
-            
+
             //MEM GRID DISPLAY
             $("#_purchMemBtn").css("display" , "none");
             $("#_mainMemberGrid").css("display" , "none");
-            
+
             //SERIAL GRID DISPLAY
             $("#_mainSerialGrid").css("display" , "none");
-            
+
             fn_clearAllGrid();
         }
-        
+
         if(tempVal == 2391){ //Deduction
         	 var optionSystem = {
-                     type: "M",                  
-                     isShowChoose: false  
+                     type: "M",
+                     isShowChoose: false
              };
              var systemPopParam = {groupCode : 140 , codeIn : [1352, 1353]};
              CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
              //PAYMENT TAB DISPLAY
              $("#_purchaseTab").click();
              $("#_payTab").css("display" , "none");
-             
+
              //MEM GRID DISPLAY
              $("#_purchMemBtn").css("display" , "");
              $("#_mainMemberGrid").css("display" , "");
-             
+
              //SERIAL GRID DISPLAY
              $("#_mainSerialGrid").css("display" , "none");
-             
+
              fn_clearAllGrid();
         }
-        
+
        /*  if(tempVal == 2392){ //Other Income
             var optionSystem = {
-                    type: "M",                  
-                    isShowChoose: false  
+                    type: "M",
+                    isShowChoose: false
             };
             var systemPopParam = {groupCode : 140 , codeIn : [1358]};
             CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
              //MEM GRID DISPLAY
             $("#_purchMemBtn").css("display" , "none");
             $("#_mainMemberGrid").css("display" , "none");
-            
+
             //SERIAL GRID DISPLAY
             $("#_mainSerialGrid").css("display" , "none");
-            
+
             fn_clearAllGrid();
        } */
-        
+
     });
-    
+
     $("#_insPosSystemType").change(function() {
-		
+
     	//clear Grid
     	fn_clearAllGrid();
-    	
+
     	//
     	$("#_mainSerialGrid").css("display" , "none");
-    	
+
     	//Payment Mode
     	//clear
     	var targetObj = document.getElementById('_payMode');
@@ -187,13 +187,13 @@ $(document).ready(function() {
     		$("#_payMode").append("<option value='105'>Cash</option>");
     	}
 	});
-    
+
     //Member Search Popup
     $('#memBtnPop').click(function() {
         var callParam = {callPrgm : "1"};
     	Common.popupDiv("/common/memberPop.do", callParam, null, true);
     });
-    
+
     $('#salesmanPopCd').change(function(event) {
 
         var memCd = $('#salesmanPopCd').val().trim();
@@ -202,9 +202,9 @@ $(document).ready(function() {
             fn_loadOrderSalesman(0, memCd, 1);
         }
     });
-    
+
     $("#_purcDelBtn").click(function() {
-        
+
         //1. basketGrid == cheked Items
         var chkDelArray = AUIGrid.getCheckedRowItems(purchaseGridID);
         //2. serialGrid == all Items
@@ -220,46 +220,46 @@ $(document).ready(function() {
         }
         //4. Delete Serial Number
         if(delArr != null && delArr.length > 0){
-            AUIGrid.removeRow(serialTempGridID, delArr); 
+            AUIGrid.removeRow(serialTempGridID, delArr);
         }
-        
+
         var serialRowCnt = AUIGrid.getRowCount(serialTempGridID);
         if(serialRowCnt <= 0){
         	$("#_mainSerialGrid").css("display" , "none");
         }
-        //5. Remove Check Low 
+        //5. Remove Check Low
         AUIGrid.removeCheckedRows(purchaseGridID);
-        
+
         //PayTab Total Charge Text
         var purTotAmt = 0;
         purTotAmt = fn_calcuPurchaseAmt();
         if(chkDelArray == null || chkDelArray.length <= 0){
-        	$("#_payTotCharges").html(' ');	
+        	$("#_payTotCharges").html(' ');
         }else{
         	$("#_payTotCharges").html('RM : ' + purTotAmt);
         }
-        
-        
+
+
     });
-    
+
     //Purchase Btn
     $("#_purchBtn").click(function() {
-		
+
     	//Pos Sales  AND Deduction
-    	if($("#_insPosModuleType").val() == 2390 || $("#_insPosModuleType").val() == 2391) { 
-			
-    		
+    	if($("#_insPosModuleType").val() == 2390 || $("#_insPosModuleType").val() == 2391) {
+
+
     		if($("#_insPosModuleType").val() == 2391){
-    			
+
     			var memSize = AUIGrid.getGridData(memGridID);
     			if(memSize == null || memSize.length <= 0){
     				Common.alert('<spring:message code="sal.alert.msg.plzKeyinMemFirst" />');
     				return;
     			}
     		}
-    		
+
     		if($("#_insPosSystemType").val() == 1352){ //Pos Filter / Spare Part / Miscellaneous
-    			
+
     			// 창고 Validation
     			if($("#_cmbWhBrnchIdPop").val() == null || $("#_cmbWhBrnchIdPop").val() == ''){
     				Common.alert('<spring:message code="sal.alert.msg.selectWarehsBrnch" />');
@@ -271,27 +271,27 @@ $(document).ready(function() {
     			}
     			//창고 parameter
     		//	$("#_cmbWhBrnchIdPop").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
-    			// 
+    			//
     			$("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
     			$("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
     			Common.popupDiv("/sales/pos/posItmSrchPop.do", $("#_sysForm").serializeJSON(), null, true);
-    		} 
-    	
+    		}
+
     	    if($("#_insPosSystemType").val() == 1353){ // Pos Item Bank
     	    //	$("#_cmbWhBrnchIdPop").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     	    	$("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
                 $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
     	    	Common.popupDiv("/sales/pos/posItmSrchPop.do", $("#_sysForm").serializeJSON(), null, true);
-    	    	
+
             }
-    		   		
+
 		}
-    	
+
     	//Other Income - Item Bank(HQ)
-    	if($("#_insPosModuleType").val() == 2392) { 
-    		
+    	if($("#_insPosModuleType").val() == 2392) {
+
     		if($("#_insPosSystemType").val() == 1358){ //Item Bank(HQ)
-    			
+
     		    // 창고 Validation
                 if($("#_cmbWhBrnchIdPop").val() == null || $("#_cmbWhBrnchIdPop").val() == ''){
                     Common.alert('<spring:message code="sal.alert.msg.selectWarehsBrnch" />');
@@ -309,26 +309,26 @@ $(document).ready(function() {
     		}
     	}
 	});
-    
-    
+
+
     //Save Request
     $("#_posReqSaveBtn").click(function() {
-    	
+
     	/****Validation ***/
     	//Purchase Grid Null Check
     	if(AUIGrid.getGridData(purchaseGridID) <= 0){
     		Common.alert('<spring:message code="sal.alert.msg.selectItms" />');
     		return;
     	}
-    	
+
     	//Member Grid Null Check
     	if($("#_insPosModuleType").val() == 2391){
     		if(AUIGrid.getGridData(memGridID) <= 0){
                 Common.alert('<spring:message code="sal.alert.msg.selectMembers" />');
                 return;
-            }	
+            }
     	}
-    	
+
     	//Member Code and Id Null Check
     	if(null == $("#salesmanPopCd").val() || '' == $("#salesmanPopCd").val()){
     		Common.alert('<spring:message code="sal.alert.msg.selectMemCode" />');
@@ -356,21 +356,21 @@ $(document).ready(function() {
     		return;
     	}
     	// Compare with Todaty?
-    	
+
     	//Remark Null Check
     	if( null == $("#_posRemark").val() || '' == $("#_posRemark").val()){
     		Common.alert('<spring:message code="sal.alert.msg.plzKeyinRemark" />');
     		return;
     	}
-    	
+
     	//TODO payment not Enter
     	/*###############  Payment Validation Part #################################*/
-    	
+
     	if($("#_insPosModuleType").val() == 2390){   //POS SALES
     		/* //Save
             Common.confirm("Will you proceed with payment?", fn_payProceed, fn_payPass); */
-            
-            
+
+
             if(null == $("#_payTrIssueDate").val() || '' == $("#_payTrIssueDate").val()){
             	Common.alert('<spring:message code="sal.alert.msg.selectTrIssuedDate" />');
             	$("#_payTrIssueDate").focus();
@@ -390,41 +390,41 @@ $(document).ready(function() {
             	$("#_payBrnchCode").focus();
             	return;
             }
-            
-            
+
+
             if(null == $("#_payDebtorAcc").val() ||  '' == $("#_payDebtorAcc").val()){
             	Common.alert('<spring:message code="sal.alert.msg.selectDebAcc" />');
             	return;
             }
-            
+
             //Charge And Pay
-            //   
+            //
             var payTotAmt = fn_calcuPayAmt();
             var purchTotAmt = fn_calcuPurchaseAmt();
-            
+
             if( payTotAmt == null || payTotAmt == 0 || purchTotAmt == null || purchTotAmt == 0 || (payTotAmt != purchTotAmt)){
             	Common.alert('<spring:message code="sal.alert.msg.payMethodProhibit" />');
             	return;
             }
-            
+
             //Save
             fn_payProceed();
-            
-    		
+
+
     	}else{ //Deduction , Other Income
     		//Save
     		fn_payPass();
-    		
+
     	}
     	/*###############  Payment Validation Part #################################*/
-    	
+
 		//, (), ()
 	});
-    
+
     //Member List
     $("#_purchMemBtn").click(function() {
-    	
-    	
+
+
     	if(null == $("#_cmbWhBrnchIdPop").val() || '' == $("#_cmbWhBrnchIdPop").val()){
     		Common.alert("* Please select Warehouse first.");
     		return;
@@ -433,49 +433,49 @@ $(document).ready(function() {
         $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
     	Common.popupDiv("/sales/pos/posMemUploadPop.do", $("#_sysForm").serializeJSON(), null , true , '_memDiv');
 	});
-    
-    
+
+
     //Resize By Tab Click
     $("#_purchaseTab").click(function() {
     	fn_reSizeAllGrid();
     });
-    
+
     $("#_paymentTab").click(function() {
     	fn_reSizeAllGrid();
     });
-    
-    
+
+
     //Add Payment Mode
     $("#_addPayMode").click(function() {
-    	
+
     	//Validation
     	if(null == $("#_payMode").val() || '' == $("#_payMode").val()){
     		Common.alert('<spring:message code="sal.alert.msg.plzSelectPaymMode" />');
     		return;
     	}
-    	
+
     	if(null == $("#_payAmt").val() || '' == $("#_payAmt").val()){
     		Common.alert('<spring:message code="sal.alert.msg.amtCannotBempty" />');
     		return;
     	}
-    	
+
     	if(FormUtil.checkNum($("#_payAmt"))){
     		Common.alert('<spring:message code="sal.alert.msg.plzKeyInNumber" />');
     		return;
     	}
-    	
+
     	if(null == $("#_payBankAccount").val() || '' == $("#_payBankAccount").val()){
-    		Common.alert('<spring:message code="sal.alert.msg.plzSelectBankAcc" />'); 
+    		Common.alert('<spring:message code="sal.alert.msg.plzSelectBankAcc" />');
     		return;
     	}
-    	
+
     	if($("#_payMode") == 107){  //Card Select
-    		
+
     		if(null == $("#_payIssueBank").val() || '' == $("#_payIssueBank").val()){
     			Common.alert('<spring:message code="sal.alert.msg.plzSelectIssuedBank" />');
     			return;
     		}
-    	
+
     		if(null == $("#_payCreditCardNo").val() || '' == $("#_payCreditCardNo").val()){
     		    Common.alert('<spring:message code="sal.alert.msg.plzKeyinCrcNo" />');
     		    return;
@@ -486,33 +486,33 @@ $(document).ready(function() {
     				return;
     			}
     		}
-    		
+
     		if(null == $("#_payCrcType").val() || '' == $("#_payCrcType").val()){
-    		     Common.alert('<spring:message code="sal.alert.msg.plzSelectCrcType" />');   		
+    		     Common.alert('<spring:message code="sal.alert.msg.plzSelectCrcType" />');
     		     return;
     		}
-    		
+
     		if (null == $("#_payCrcMode").val() || '' == $("#_payCrcMode").val()) {
 				Common.alert('<spring:message code="sal.alert.msg.plzSelectCrcMode" />');
 				return;
 			}
-    		
+
     		if(null == $("#_payApprovNo").val() || '' == $("#_payApprovNo").val()){
     			Common.alert('<spring:message code="sal.alert.msg.plzKeyinApprovNo" />');
     			return;
     		}else{
     			var tempAppNo = $("#_payApprovNo").val();
-    			
+
     			if(tempAppNo.length != 6){
     				Common.alert('<spring:message code="sal.alert.msg.approvalNoMustbeSixChar" />');
     				return;
     			}
     		}
     	}
-    	
+
     	//Grid Set Data
     	var tempPayObj = {};
-    	
+
     	tempPayObj['payMode']  = $("#_payMode").val();
     	tempPayObj['payModeTxt']  = $("#_payMode :selected").text();
  //   	tempPayObj['payTrRefNo'] = $("#_payTrRefNo").val();
@@ -526,19 +526,19 @@ $(document).ready(function() {
     	tempPayObj['payBankAccount'] = $("#_payBankAccount").val();
     	tempPayObj['payRefDate'] = $("#_payRefDate").val();
     	tempPayObj['payRem'] = $("#_payRem").val();
-    	
-    	//not use  
+
+    	//not use
     	tempPayObj['payCrcType'] = $("#_payCrcType").val();
     	tempPayObj['payIssueBank'] = $("#_payIssueBank").val();
-    		
-    	AUIGrid.addRow(paymentGridID, tempPayObj, 'last');	
-    
+
+    	AUIGrid.addRow(paymentGridID, tempPayObj, 'last');
+
     	var total = 0;
     	total = fn_calcuPayAmt();
     	//total
     	$("#_totalPayAmount").html('Total Pay Amount : <b style="color: red;"> RM : '  + total + '</b>');
 	});
-    
+
     //Clear Pay Grid
     $("#_clearPayGrid").click(function() {
 		AUIGrid.clearGridData(paymentGridID);
@@ -546,16 +546,16 @@ $(document).ready(function() {
         total = fn_calcuPayAmt();
         //total
         $("#_totalPayAmount").html('Total Pay Amount : <b style="color: red;"> RM : '  + total + '</b>');
-		
+
 	});
 });//Document Ready Func End
 
 //Pay Total Amount
 function fn_calcuPayAmt(){
-	
+
 	var totArr = [];
     totArr = AUIGrid.getColumnValues(paymentGridID, 'payAmt');
-    
+
 	var totalAmount = 0;
     if(totArr != null && totArr.length > 0){
         for (var idx = 0; idx < totArr.length; idx++) {
@@ -563,16 +563,16 @@ function fn_calcuPayAmt(){
         }
     }
     totalAmount = parseFloat(totalAmount).toFixed(2);
-    
+
     return totalAmount;
 }
 
 //Purchase Charge Amount
 function fn_calcuPurchaseAmt(){
-	
+
 	var totArr = [];
     totArr = AUIGrid.getColumnValues(purchaseGridID, 'totalAmt');
-    
+
     var totalAmount = 0;
     if(totArr != null && totArr.length > 0){
         for (var idx = 0; idx < totArr.length; idx++) {
@@ -580,7 +580,7 @@ function fn_calcuPurchaseAmt(){
         }
     }
     totalAmount = parseFloat(totalAmount).toFixed(2);
-    
+
     return totalAmount;
 }
 
@@ -604,7 +604,7 @@ function fn_payModeAndBankAccControl(){
                      accResult = result.accId + '';
                  }
          }, '', ajaxOpt);    //Call Ajax end
-         
+
          if(isResult == true){
              $("#_payBankAccount").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
              var initBankParam = {isCash : "1"};
@@ -639,16 +639,16 @@ function fn_payFieldClear(){
 }
 
 function fn_clearAllGrid(){
-    
+
     AUIGrid.clearGridData(purchaseGridID);  //purchase TempGridID
     AUIGrid.resize(purchaseGridID , 960, 300);
-    
+
     AUIGrid.clearGridData(memGridID);  //member TempGridID
     AUIGrid.resize(memGridID , 960, 300);
-     
+
     AUIGrid.clearGridData(serialTempGridID);  //serial TempGridID
     AUIGrid.resize(serialTempGridID , 960, 300);
-    
+
     AUIGrid.clearGridData(paymentGridID);  //payment TempGridID
     AUIGrid.resize(paymentGridID , 960, 200);
 }
@@ -661,19 +661,19 @@ function fn_reSizeAllGrid(){
 }
 
 function fn_setMemberGirdData(paramObj){
-	
+
 	AUIGrid.setGridData(memGridID, paramObj);
-	
+
 }
 
 
 function fn_payPass(){
-	
+
 	 var data = {};
      var prchParam = AUIGrid.getGridData(purchaseGridID);
      var serialParam = AUIGrid.getGridData(serialTempGridID);
      var memParam = AUIGrid.getGridData(memGridID);
-     
+
      data.prch = prchParam;
      data.serial = serialParam;
      data.mem = memParam;
@@ -681,11 +681,11 @@ function fn_payPass(){
 	 $("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
      $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
      data.form = $("#_sysForm").serializeJSON();
-	 
+
      Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
-         Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'"/>', fn_popClose()); 
+         Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'"/>', fn_popClose());
      });
-	
+
 }
 
 function fn_payProceed(){
@@ -694,35 +694,35 @@ function fn_payProceed(){
     var serialParam = AUIGrid.getGridData(serialTempGridID);
     var memParam = AUIGrid.getGridData(memGridID);
     var payParam = AUIGrid.getGridData(paymentGridID);
-    
+
     data.prch = prchParam;
     data.serial = serialParam;
     data.mem = memParam;
     /* payment */
     data.pay = payParam;
-    
-    $("#_payResult").val('1');  //payment 
+
+    $("#_payResult").val('1');  //payment
     $("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
     $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
     data.form = $("#_sysForm").serializeJSON();
-    
+
     /* payment */
     var totAmts = fn_calcuPayAmt();
     $("#_hidTotPayAmt").val(totAmts);
     $("#_hidPayBrnchCode").val($("#_payBrnchCode").val());
     $("#_hidPayDebtorAcc").val($("#_payDebtorAcc").val());
-    
+
     data.payform = $("#_payForm").serializeJSON();
-    
+
     Common.ajax("POST", "/sales/pos/insertPos.do", data,function(result){
     	if(result.logError == "000"){
-    	
-    	    	Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'" />' , fn_bookingAndpopClose()); 
+
+    	    	Common.alert('<spring:message code="sal.alert.msg.posSavedShowRefNo" arguments="'+result.reqDocNo+'" />' , fn_bookingAndpopClose());
     	}
     	else{
     		  Common.alert("fail : Contact Logistics Team")
     	}
-    	
+
     	});
 }
 
@@ -733,46 +733,46 @@ function fn_popClose(){
 
 function fn_bookingAndpopClose(){
     //프로시저 호출
-	// 콜백  >> 
+	// 콜백  >>
 	$("#_systemClose").click();
 }
 
 
 function getLocIdByBrnchId(tempVal) {
-	  
+
    /*  var tempVal = $(this).val(); */
     if(tempVal == null || tempVal == '' ){
         $("#cmbWhIdPop").val("");
     }else{
         var paramObj = {brnchId : tempVal};
         Common.ajax('GET', "/sales/pos/selectWarehouse", paramObj,function(result){
-            
+
             if(result != null){
-                
+
             	console.log("result.whLocId : " + result.whLocId);
-            	
+
             	$("#cmbWhIdPop").val(result.whLocDesc);
-                $("#_hidLocId").val(result.whLocId); 
+                $("#_hidLocId").val(result.whLocId);
             }else{
                 $("#cmbWhIdPop").val('');
-                $("#_hidLocId").val(''); 
+                $("#_hidLocId").val('');
             }
         });
     }
 }
 
 function createPurchaseGridID(){
-    
-    
-    var posColumnLayout =  [ 
-                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%'}, 
+
+
+    var posColumnLayout =  [
+                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%'},
                             {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%'},
                             {dataField : "qty", headerText : '<spring:message code="sal.title.text.invStock" />', width : '10%'},
                             {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '10%'},
-                            {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00"}, 
+                            {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00"},
                             {dataField : "subTotal", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
-                            	return Number(calObj.subChanges); 
+                            	return Number(calObj.subChanges);
 							}},
                             {dataField : "subChng", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
@@ -785,18 +785,18 @@ function createPurchaseGridID(){
                             {dataField : "stkTypeId" , visible :false},
                             {dataField : "stkId" , visible :false}//STK_ID
                            ];
-    
+
     //그리드 속성 설정
     var gridPros = {
             showFooter : true,
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : true,             
-            displayTreeOpen     : false,            
-   //         selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : true,
+            displayTreeOpen     : false,
+   //         selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -804,10 +804,10 @@ function createPurchaseGridID(){
             showRowCheckColumn : true, //checkBox
             softRemoveRowMode : false
     };
-    
+
     purchaseGridID = GridCommon.createAUIGrid("#item_grid_wrap", posColumnLayout,'', gridPros);  // address list
     AUIGrid.resize(purchaseGridID , 960, 300);
-    
+
     //
     var footerLayout = [ {
         labelText : "Total(RM)",
@@ -837,17 +837,17 @@ function createPurchaseGridID(){
 }
 
 function createSerialTempGridID(){
-    
-    
+
+
 var serialGridPros = {
-            
+
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-   //         selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+   //         selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -857,14 +857,14 @@ var serialGridPros = {
             noDataMessage       : "No Item found.",
             groupingMessage     : "Here groupping"
     };
-    
-  var serialConfirmlColumnLayout =  [ 
+
+  var serialConfirmlColumnLayout =  [
                              {dataField : "matnr", headerText : '<spring:message code="sal.title.filterCode" />', width : '33%' , editable : false  } ,
                              {dataField : "stkDesc", headerText : '<spring:message code="sal.title.filterName" />', width : '33%' , editable : false },
                              {dataField : "serialNo", headerText : '<spring:message code="sal.title.serial" />', width : '33%' , editable : false },
                              {dataField : "stkId" , visible :true}//STK_ID
                             ];
-    
+
     serialTempGridID = GridCommon.createAUIGrid("#serialTemp_grid_wrap", serialConfirmlColumnLayout,'', serialGridPros);
     AUIGrid.resize(serialTempGridID , 960, 300);
 }
@@ -873,14 +873,14 @@ var serialGridPros = {
 function creatememGridID(){
 
 	var memGridPros = {
-            
+
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-   //         selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+   //         selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -888,8 +888,8 @@ function creatememGridID(){
             softRemoveRowMode : false,
             showRowCheckColumn : false
     };
-	
-	var memConfirmlColumnLayout =  [ 
+
+	var memConfirmlColumnLayout =  [
 	                                     {dataField : "memId" , headerText : '<spring:message code="sal.title.memberId" />', width : "20%",  editable : false },
 		                                 {dataField : "memCode" , headerText : '<spring:message code="sal.title.memberCode" />', width : "20%",  editable : false },
 		                                 {dataField : "name" , headerText : '<spring:message code="sal.title.memberName" />', width : "20%",  editable : false },
@@ -900,22 +900,22 @@ function creatememGridID(){
 		                                 {dataField : "fullName" , visible : false},
 		                                 {dataField : "stus" , visible : false}
 	                                 ];
-	
+
 	memGridID = GridCommon.createAUIGrid("#memTemp_grid_wrap", memConfirmlColumnLayout,'', memGridPros);
 	AUIGrid.resize(memGridPros , 960, 300);
 }
 
 function createPaymentGrid(){
    var payGridPros = {
-            
+
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 5,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false, 
+            pageRowCount        : 5,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
             editable : false,
-   //         selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+   //         selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -923,8 +923,8 @@ function createPaymentGrid(){
             softRemoveRowMode : false,
             showRowCheckColumn : false
     };
-   
-   var paymentColumnLayout =  [ 
+
+   var paymentColumnLayout =  [
                                    {dataField : "payMode", visible : false},
                                    {dataField : "payModeTxt" , headerText : '<spring:message code="sal.title.text.mode" />', width : "10%",  editable : false },
                                    {dataField : "payTrRefNo", visible : false},
@@ -935,15 +935,15 @@ function createPaymentGrid(){
                                    {dataField : "payCrcMode" , headerText : '<spring:message code="sal.title.text.crcMode" />', width : "8%",  editable : false },
                                    {dataField : "payIssueBank" , headerText : '<spring:message code="sal.title.text.issuedBank" />', width : "8%",  editable : false },
                                    {dataField : "payBankAccountTxt" , headerText : '<spring:message code="sal.text.bankAccNo" />', width : "10%",  editable : false },
-                                   {dataField : "payBankAccount", visible : false},// 
+                                   {dataField : "payBankAccount", visible : false},//
                                    {dataField : "payRefDate" , headerText : '<spring:message code="sal.title.text.refDate" />', width : "10%",  editable : false },
                                    {dataField : "payRem" , headerText : '<spring:message code="sal.title.remark" />', width : "10%",  editable : false },
                                    {
-                                       dataField : "undefined", 
-                                       headerText : " ", 
+                                       dataField : "undefined",
+                                       headerText : " ",
                                        width : '8%',
                                        renderer : {
-                                                type : "ButtonRenderer", 
+                                                type : "ButtonRenderer",
                                                 labelText : "Delete",
                                                 editable : false,
                                                 onclick : function(rowIndex, columnIndex, value, item) {
@@ -955,58 +955,58 @@ function createPaymentGrid(){
                                                 }
                                        }
                                    },
-                                   //not used  
+                                   //not used
                                    {dataField : "payCrcType", visible : false},
                                    {dataField : "payIssueBank", visible : false},
-                                   
+
                                    {dataField : "payIssueBank", visible : false}
-                                   
+
                                ];
-   
+
    paymentGridID = GridCommon.createAUIGrid("#payment_grid_wrap", paymentColumnLayout,'', payGridPros);
    AUIGrid.resize(payGridPros , 960, 300);
 }
 //posItmSrchPop -> posSystemPop
 function getItemListFromSrchPop(itmList, serialList){
 	AUIGrid.setGridData(purchaseGridID, itmList);
-	
+
 	var purTotAmt = 0;
 	purTotAmt = fn_calcuPurchaseAmt();
 	$("#_payTotCharges").html('RM : ' + purTotAmt);
-	
+
 	AUIGrid.setGridData(serialTempGridID, serialList);
 }
 
 function fn_calculateAmt(amt, qty) {
-    
+
     var subTotal = 0;
     var subChanges = 0;
     var taxes = 0;
-    
+
     subTotal = amt * qty;
-    subChanges = (subTotal * 100) / 106;
+    subChanges = (subTotal * 100) / 100;
     subChanges = subChanges.toFixed(2); //소수점2반올림
     taxes = subTotal - subChanges;
     taxes = taxes.toFixed(2);
-    
+
     var retObj = {subTotal : subTotal , subChanges : subChanges , taxes : taxes};
-    
+
     return retObj;
-    
+
 }
 
 var prev = "";
 var regexp = /^\d*(\.\d{0,2})?$/;
 
 function fn_inputAmt(obj){
-	
+
 	if(obj.value.search(regexp) == -1){
 		obj.value = prev;
 	}else{
 		prev = obj.value;
 	}
-	
-	
+
+
 }
 
 </script>
@@ -1069,9 +1069,9 @@ function fn_inputAmt(obj){
 <form id="_sysForm">
 <!-- HIDDEN VALUES -->
 <input type="hidden" name="hidLocId" id="_hidLocId" value="${locMap.whLocId }">
-<input type="hidden" name="posReason" id="_posReason">  
+<input type="hidden" name="posReason" id="_posReason">
 <input type="hidden" name="payResult" id="_payResult">
- 
+
 <!-- MODULE & SYSTEM -->
 <input type="hidden" name="insPosModuleType" id="_hidInsPosModuleType">
 <input type="hidden" name="insPosSystemType" id="_hidInsPosSystemType">
@@ -1086,7 +1086,7 @@ function fn_inputAmt(obj){
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.memberCode" /></th>
-    <td>  
+    <td>
         <div class="search_100p"><!-- search_100p start -->
 	        <input id="salesmanPopCd" name="salesmanPopCd" type="text" title="" placeholder="" class="w100p"  value="${memCodeMap.memCode}"/>
 	        <input id="hiddenSalesmanPopId" name="salesmanPopId" type="hidden"  value="${memCodeMap.memId}"/>
@@ -1129,12 +1129,12 @@ function fn_inputAmt(obj){
 <div id="item_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
-<div id="_mainSerialGrid" style="display: none;"> 
+<div id="_mainSerialGrid" style="display: none;">
 <aside class="title_line"><!-- title_line start -->
 <h2>Serial List</h2>
 </aside><!-- title_line end -->
 <article class="grid_wrap"><!-- grid_wrap start -->
-<div id="serialTemp_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div> 
+<div id="serialTemp_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article>
 </div>
 
