@@ -1730,7 +1730,7 @@ public class ClaimController {
 
 		email.setTo(emailReceiver);
 		email.setHtml(false);
-		email.setSubject("MayBank CRC Deduction File - Batch Date : " + inputDate);
+		email.setSubject("SCB CRC Deduction File - Batch Date : " + inputDate);
 		email.setText("Please find attached the claim file for your kind perusal.");
 		email.addFile(file);
 

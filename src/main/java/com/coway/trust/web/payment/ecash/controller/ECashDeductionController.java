@@ -527,7 +527,7 @@ public class ECashDeductionController {
 
 		email.setTo(emailReceiver);
 		email.setHtml(false);
-		email.setSubject("MayBank eAuto Debit CRC Deduction File - Batch Date : " + inputDate);
+		email.setSubject("SCB eAuto Debit CRC Deduction File - Batch Date : " + inputDate);
 		email.setText("Please find attached the claim file for your kind perusal.");
 		email.addFile(file);
 
