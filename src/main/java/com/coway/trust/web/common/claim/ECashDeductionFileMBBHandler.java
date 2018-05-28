@@ -126,11 +126,11 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		filter1 			= StringUtils.rightPad(String.valueOf(""), 2, " ");
 		settleTerm 		= StringUtils.rightPad(String.valueOf(""), 8, " ");
 		filter2 			= StringUtils.rightPad(String.valueOf(""), 18, " ");
-		ret 				= StringUtils.rightPad("", 1, " ");
+//		ret 				= StringUtils.rightPad("", 1, "");
 
 		//sSecCode = StringUtils.leftPad(String.valueOf((Integer.parseInt(sbatchNo) + 1208083646)), 10, " ");
 
-		sText = messageType + sbatchNo + merOrg + merId + merName + merCode + noOfTrans + totAmt + batchStus + termId + ccy + reserved +  settleBatch + filter1 + settleTerm + filter2 + ret;
+		sText = messageType + sbatchNo + merOrg + merId + merName + merCode + noOfTrans + totAmt + batchStus + termId + ccy + reserved +  settleBatch + filter1 + settleTerm + filter2;
 
 		out.write(sText);
 		out.newLine();
@@ -161,7 +161,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		bRemark 		= StringUtils.rightPad(String.valueOf(dataRow.get("salesOrdNo")), 18, " ");
 		bCvv 				= StringUtils.rightPad("", 3, " ");
 		bProductCode = StringUtils.rightPad("", 15, " ");
-		ret 				= StringUtils.rightPad("", 1, " ");;
+//		ret 				= StringUtils.rightPad("", 1, "");;
 
 		//금액 계산
 		amount = (BigDecimal)dataRow.get("fileItmAmt");
@@ -176,7 +176,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 
 
 		stextDetails = bMessageType + bBatchNo + bTransNo + bTransCode + bAccNo + bAmount + bExpiredDt + bPosEntry
-				+ bApprovalCode + bResponseCode + bMode + bOfflineStus + bDate + bTime + bRefNo + bRemark + bCvv + bProductCode + ret;
+				+ bApprovalCode + bResponseCode + bMode + bOfflineStus + bDate + bTime + bRefNo + bRemark + bCvv + bProductCode;
 
 		out.write(stextDetails);
 		out.newLine();
@@ -193,9 +193,9 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
 		sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");
 		sFiller      = StringUtils.leftPad("", 101, " ");
-		ret  		  = StringUtils.leftPad("", 1, " ");
+//		ret  		  = StringUtils.leftPad("", 1, "");
 
-		sTextBtn = fMessage + sNoOfBatch + sRecTot + sBatchTot + sFiller + ret;
+		sTextBtn = fMessage + sNoOfBatch + sRecTot + sBatchTot + sFiller;
 
 		out.write(sTextBtn);
 		out.newLine();
