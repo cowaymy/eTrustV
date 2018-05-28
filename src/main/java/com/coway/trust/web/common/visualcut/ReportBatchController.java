@@ -951,7 +951,7 @@ public class ReportBatchController {
 	public void adminProductivityPreviousMonthCody() throws IOException {
 		LOGGER.info("[START] AdminProductivityPreviousMonthCody2...");
 		Map<String, Object> params = new HashMap<>();
-		params.put(REPORT_FILE_NAME, "/visualcut/AdminProductivityPreviousMonth(Cody)2.rpt");// visualcut rpt file name.
+		params.put(REPORT_FILE_NAME, "/visualcut/AdminProductivityPreviousMonthCody2.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
 				"AdminProductivityPreviousMonthCody" + File.separator + "AdminProductivityPreviousMonthCody" + CommonUtils.getNowDate() + ".pdf");
