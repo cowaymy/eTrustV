@@ -29,12 +29,12 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class EarlyTerminationBillingController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(EarlyTerminationBillingController.class);
-	
+
 	@Resource(name = "earlyTerminationService")
 	private EarlyTerminationBillingService earlyTerminationService;
-	
+
 	/**
-	 * BillingMgnt 초기화 화면 
+	 * BillingMgnt 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -43,63 +43,63 @@ public class EarlyTerminationBillingController {
 	public String initBillingMgnt(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/billing/billPenalty";
 	}
-	
+
 	@RequestMapping(value = "/checkExistOrderCancellationList.do")
-	public ResponseEntity<Boolean> checkExistOrderCancellationList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
+	public ResponseEntity<Boolean> checkExistOrderCancellationList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		boolean value= false;
 
 		LOGGER.debug("params : {}", params);
-		
+
 		int val = earlyTerminationService.selectExistOrderCancellationList(String.valueOf(params.get("orderId")));
-		
+
 		if(val > 0)
 			value = true;
-		
+
 		return ResponseEntity.ok(value);
 	}
-	
+
 	@RequestMapping(value = "/checkExistPenaltyBill.do")
-	public ResponseEntity<Boolean> checkExistPenaltyBill(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
+	public ResponseEntity<Boolean> checkExistPenaltyBill(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		boolean value= false;
 
 		LOGGER.debug("params : {}", params);
-		
+
 		int val = earlyTerminationService.selectCheckExistPenaltyBill(String.valueOf(params.get("orderId")));
-		
+
 		if(val > 0)
 			value = true;
-		
+
 		return ResponseEntity.ok(value);
 	}
-	
+
 	@RequestMapping(value = "/selectRentalProductEarlyTerminationPenalty.do")
-	public ResponseEntity<EgovMap> selectRentalProductEarlyTerminationPenalty(@RequestParam Map<String, Object> params, ModelMap model) {	
-		
+	public ResponseEntity<EgovMap> selectRentalProductEarlyTerminationPenalty(@RequestParam Map<String, Object> params, ModelMap model) {
+
 		EgovMap result = null;
-		
+
 		LOGGER.debug("params : {}", params);
 		List<EgovMap> list = earlyTerminationService.selectRentalProductEarlyTerminationPenalty(String.valueOf(params.get("orderId")));
 		if(list.size()>0){
 			result = list.get(0);
 		}
-	
+
 		return ResponseEntity.ok(result);
 	}
-	
+
 	@RequestMapping(value = "/createBillsForEarlyTermination.do")
-	public ResponseEntity<Map<String, Object>> createBillsForEarlyTermination(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {	
+	public ResponseEntity<Map<String, Object>> createBillsForEarlyTermination(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 		LOGGER.debug("params : {}", params);
-		
+
 		Map<String, Object> result = new HashMap<String, Object>();
 		String message = "";
-    	
+
 		int userId = sessionVO.getUserId();
-		
+
 		if(userId > 0){
 			List<EgovMap> list = earlyTerminationService.selectRentalProductEarlyTerminationPenalty(String.valueOf(params.get("orderId")));
 			Date curdate = new Date();
 			SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-			
+
 			Map<String, Object> ledger = new HashMap<String, Object>();
 			ledger.put("rentId", 0);
 			ledger.put("rentSoId", String.valueOf(params.get("orderId")));
@@ -114,7 +114,7 @@ public class EarlyTerminationBillingController {
 			ledger.put("rentIsSync", false);
 			ledger.put("rentBillRunningTotal", 0);
 			ledger.put("rentRunId", 0);
-			
+
 			Map<String, Object> orderbill = new HashMap<String, Object>();
 			orderbill.put("accBillTaskId", 0);
 			orderbill.put("accBillRefDate", sdf.format(curdate));
@@ -136,8 +136,9 @@ public class EarlyTerminationBillingController {
 			orderbill.put("accBillCreateBy", userId);
 			orderbill.put("accBillGroupId", 0);
 			orderbill.put("accBillTaxRate", list.get(0).get("pnaltyTaxRate"));
-			orderbill.put("accBillTaxCodeId", Integer.parseInt(String.valueOf(list.get(0).get("pnaltyTaxRate"))) > 0 ? 32 : 28);
-			
+			//orderbill.put("accBillTaxCodeId", Integer.parseInt(String.valueOf(list.get(0).get("pnaltyTaxRate"))) > 0 ? 32 : 28); -- Edited By TPY 28/5/2018
+			orderbill.put("accBillTaxCodeId", Integer.parseInt(String.valueOf(list.get(0).get("pnaltyTaxCode"))));
+
 			Map<String, Object> invoiceM = new HashMap<String, Object>();
 			invoiceM.put("taxInvoiceRefNo", "");
 			invoiceM.put("taxInvoiceRefDate", sdf.format(curdate));
@@ -159,7 +160,7 @@ public class EarlyTerminationBillingController {
 			invoiceM.put("taxInvoiceAmountDue", String.valueOf(params.get("amount")));
 			invoiceM.put("taxInvoiceCreated", sdf.format(curdate));
 			invoiceM.put("taxInvoiceCreator", userId);
-			
+
 			Map<String, Object> invoiceD = new HashMap<String, Object>();
 			invoiceD.put("taxInvoiceId", 0);
 			invoiceD.put("invoiceItemType", 1276);
@@ -181,21 +182,21 @@ public class EarlyTerminationBillingController {
 			invoiceD.put("invoiceItemStateName", list.get(0).get("installState"));
 			invoiceD.put("invoiceItemCountry", list.get(0).get("installCnty"));
 			invoiceD.put("invoiceItemInstallDate", sdf.format(list.get(0).get("installDt")));
-			
+
 			String strInvoiceNo = earlyTerminationService.doSaveProductEarlyTerminationPenalty(ledger, orderbill, invoiceM, invoiceD);
 			ledger.put("renDocNo", strInvoiceNo);
-			
+
 			if(!strInvoiceNo.equals("")) message = "Save Successfully";
 			else message = "Failed To Save";
-			
+
 			result.put("data", ledger);
 			result.put("message", message);
-			
+
 		}else{
-			
+
 		}
 
 		return ResponseEntity.ok(result);
 	}
-	
+
 }
