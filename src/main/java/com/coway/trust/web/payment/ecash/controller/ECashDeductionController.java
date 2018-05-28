@@ -126,6 +126,7 @@ public class ECashDeductionController {
 		//검색 파라미터 확인.(화면 Form객체 입력값)
     	LOGGER.debug("claimType : {}", eCashDeduction.get("claimType"));
     	LOGGER.debug("new_issueBank : {}", eCashDeduction.get("new_issueBank"));
+    	LOGGER.debug("cardType : {}", eCashDeduction.get("new_cardType"));
 
 		// HasActiveBatch : 동일한 bankId, eCashDeduction Type 에 해당하는 active 건이 있는지 확인한다.
 		searchMap = new HashMap<String, Object>();
@@ -141,9 +142,10 @@ public class ECashDeductionController {
         	returnMap = (Map<String, Object>)isActiveBatchList.get(0);
         }else{
         	String bankId  = CommonUtils.nvl(String.valueOf(eCashDeduction.get("new_issueBank")));
-
+        	String cardType  = CommonUtils.nvl(String.valueOf(eCashDeduction.get("new_cardType")));
 
         	eCashDeduction.put("new_issueBank", bankId);
+        	eCashDeduction.put("new_cardType", cardType);
         	eCashDeduction.put("userId", sessionVO.getUserId());
 
         	eCashDeductionService.createECashDeduction(eCashDeduction);		        	//프로시저 함수 호출

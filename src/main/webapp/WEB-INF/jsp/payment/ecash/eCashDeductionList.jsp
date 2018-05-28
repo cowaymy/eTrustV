@@ -755,7 +755,7 @@ function fn_openFailedeCash() {
                     </tr>
                     <tr>
                           <th scope="row">Card Type<span class="must" id="cardTypeMust">*</span></th>
-                        <td colspan='2'>
+                        <td>
                             <select id="new_cardType" name="new_cardType" class="w100p">
                                 <option value="">Choose One</option>
                                 <option value="All">All</option>
@@ -763,6 +763,7 @@ function fn_openFailedeCash() {
                                 <option value="Master Card">Master Card</option>
                             </select>
                         </td>
+                        <td colspan='2'></td>
                     </tr>
                    </tbody>
             </table>

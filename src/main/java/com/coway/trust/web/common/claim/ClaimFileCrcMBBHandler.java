@@ -142,7 +142,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
 
-		String crcExpiry = dataRow.get("rentPayCrcExpr") == null ? "0000" : String.valueOf(dataRow.get("rentPayCrcExpr")).trim();
+		String crcExpiry = dataRow.get("bankDtlCrcExpr") == null ? "0000" : String.valueOf(dataRow.get("bankDtlCrcExpr")).trim();
 
 		bMessageType = StringUtils.rightPad("T", 1, " ");
 		bBatchNo      	= StringUtils.leftPad(String.valueOf(params.get("batchNo")), 5, "0");
