@@ -462,7 +462,7 @@
                     LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID AND rs.CUST_CRC_ID <![CDATA[   <> ]]> 0
                 WHERE
                     som.STUS_CODE_ID <![CDATA[   <> ]]> 10
-                    AND rs.MODE_ID = 131
+                    <!-- AND rs.MODE_ID = 131 -->
                     AND som.APP_TYPE_ID IN (66,1412)
                     AND som.SALES_ORD_ID = Extent3.SALES_ORD_ID
                     AND ROWNUM = 1
@@ -478,8 +478,9 @@
         <!-- ORDER BY
             Extent1.BANK_DTL_DR_ACC_NO ASC -->
              ) Z
-                    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY RNUM ASC)
-        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+                 <!--    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) -->
+                    ORDER BY RNUM ASC)
+        <!-- WHERE RNUM > ((#{pageNo} - 1) * #{rowCount}) -->
     </select>
 
     <resultMap id="resultClaimMap" type="egovMap" />

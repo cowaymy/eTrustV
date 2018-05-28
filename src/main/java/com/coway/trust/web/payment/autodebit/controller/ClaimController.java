@@ -58,7 +58,6 @@ import com.coway.trust.web.common.claim.ClaimFileMyClearHandler;
 import com.coway.trust.web.common.claim.ClaimFileNewALBHandler;
 import com.coway.trust.web.common.claim.ClaimFilePBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileRHBHandler;
-import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -900,18 +899,18 @@ public class ClaimController {
             }
             else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId"))))
             {
-    			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+//    			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
     			int totBatToday =  claimService.selectClaimDetailBatchGen(map);
-    			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
+//    			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 20000.0));
 
-    			if (pageCnt > 0){
-    				for(int i = 1 ; i <= pageCnt ; i++){
-    					claimMap.put("pageNo", i);
-    					claimMap.put("rowCount", 10000);
+//    			if (pageCnt > 0){
+//    				for(int i = 1 ; i <= pageCnt ; i++){
+//    					claimMap.put("pageNo", i);
+//    					claimMap.put("rowCount", 20000);
     					claimMap.put("batchNo", totBatToday);
     					this.createClaimFileCrcMBB(claimMap);
-    				}
-    			}
+//    				}
+//    			}
             }
 
 		} else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
@@ -1705,7 +1704,8 @@ public class ClaimController {
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-			sFile = "CRC_SCB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".dat";
+			//sFile = "CRC_SCB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".dat";
+			sFile = "CRC_SCB_" + todayDate + ".dat";
 
 			downloadHandler = getTextDownloadCrcMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 
