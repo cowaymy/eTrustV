@@ -904,33 +904,7 @@ public class ReportBatchController {
 		LOGGER.info("[END] SparePartRecordMonthly...");
 	}
 
-	//@RequestMapping(value = "/AdminProductivityCody.do")
-	//@Scheduled(cron = "0 10 9 * * *")//Daily (9:10am)
-	//public void adminProductivityCody() throws IOException {
-	//	LOGGER.info("[START] AdminProductivityCody...");
-	//	Map<String, Object> params = new HashMap<>();
-	//	params.put(REPORT_FILE_NAME, "/visualcut/AdminProductivityCody.rpt");// visualcut rpt file name.
-	//	params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
-	//	params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	//			"AdminProductivityCody" + File.separator + "AdminProductivityCody" + CommonUtils.getNowDate() + ".pdf");
 
-	//	this.view(null, null, params);
-	//	LOGGER.info("[END] AdminProductivityCody...");
-	//}
-
-	//@RequestMapping(value = "/AdminProductivityPreviousMonthCody.do")
-	//@Scheduled(cron = " 0 7 5 1 * ?")//Monthly (Day 1) 5:07am
-	//public void adminProductivityPreviousMonthCody() throws IOException {
-	//	LOGGER.info("[START] AdminProductivityPreviousMonthCody...");
-	//	Map<String, Object> params = new HashMap<>();
-	//	params.put(REPORT_FILE_NAME, "/visualcut/AdminProductivityPreviousMonth(Cody).rpt");// visualcut rpt file name.
-	//	params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
-	//	params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-	//			"AdminProductivityPreviousMonthCody" + File.separator + "AdminProductivityPreviousMonthCody" + CommonUtils.getNowDate() + ".pdf");
-
-	//	this.view(null, null, params);
-	//	LOGGER.info("[END] AdminProductivityPreviousMonthCody...");
-	//}
 
 	@RequestMapping(value = "/AdminProductivityCody2.do")
 	//@Scheduled(cron = "0 10 9 * * *")//Daily (9:10am)
@@ -942,7 +916,7 @@ public class ReportBatchController {
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
 				"AdminProductivityCody" + File.separator + "AdminProductivityCody" + CommonUtils.getNowDate() + ".pdf");
 
-		this.view(null, null, params);
+		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] AdminProductivityCody2...");
 	}
 
@@ -956,7 +930,7 @@ public class ReportBatchController {
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
 				"AdminProductivityPreviousMonthCody" + File.separator + "AdminProductivityPreviousMonthCody" + CommonUtils.getNowDate() + ".pdf");
 
-		this.view(null, null, params);
+		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] AdminProductivityPreviousMonthCody2...");
 	}
 
