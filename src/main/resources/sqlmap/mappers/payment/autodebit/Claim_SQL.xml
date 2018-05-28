@@ -303,15 +303,21 @@
 
     <!--Auto Debit - Claim Detail 조회 -->
     <select id="selectClaimDetailBatchGen" parameterType="Map" resultType="int">
+    SELECT COUNT(1) CNT FROM (
         SELECT
-           COUNT(1) AS CNT
-        FROM  PAY0041D
-        WHERE 1 = 1
-        AND CTRL_IS_CRC = 1
-        AND CTRL_BANK_ID = 19
-        AND TO_CHAR(CRT_DT,'DD/MM/YYYY hh:mi:ss A.M.')
-        BETWEEN (SELECT  TO_CHAR(CRT_DT,'DD/MM/YYYY') FROM PAY0041D WHERE CTRL_ID = #{ctrlId})
-        AND  (SELECT  TO_CHAR(CRT_DT,'DD/MM/YYYY hh:mi:ss A.M.') FROM PAY0041D WHERE CTRL_ID = #{ctrlId})
+            FILE_BATCH_CRT_DT CRT_DT
+            FROM  PAY0245M
+                WHERE TO_CHAR(FILE_BATCH_CRT_DT,'YYYY/MM/DD hh:mi:ss A.M.')
+                BETWEEN TO_CHAR(SYSDATE,'YYYY/MM/DD')
+                AND TO_CHAR(SYSDATE,'YYYY/MM/DD hh:mi:ss A.M.') AND FILE_BATCH_BANK_ID = 19 AND FILE_BATCH_STUS_ID IN (1,4)
+            UNION
+        SELECT
+            CRT_DT
+            FROM PAY0041D
+                WHERE TO_CHAR(CRT_DT,'YYYY/MM/DD hh:mi:ss A.M.')
+                BETWEEN TO_CHAR(SYSDATE,'YYYY/MM/DD')
+                AND TO_CHAR(CRT_DT,'YYYY/MM/DD hh:mi:ss A.M.') AND CTRL_BANK_ID = 19 AND CTRL_STUS_ID IN (1,4)
+        )
     </select>
 
 
