@@ -189,7 +189,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 	public void writeFooter() throws IOException {
 
 		fMessage = "R";
-		sNoOfBatch =StringUtils.leftPad(String.valueOf(params.get("batchNo")),3,"");
+		sNoOfBatch =StringUtils.leftPad(String.valueOf(params.get("batchNo")),3,"0");
 		sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
 		sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");
 		sFiller      = StringUtils.leftPad("", 101, " ");
