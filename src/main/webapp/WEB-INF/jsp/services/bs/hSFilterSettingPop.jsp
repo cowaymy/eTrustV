@@ -419,7 +419,7 @@
 
 
        function fn_getAddFilter() {
-           Common.popupDiv("/services/bs/hSAddFilterSetPop.do",{salesOrdId:'${hSOrderView.ordId}' ,stkId:'${hSOrderView.stkId}'} , null, null , true , '_AddFilterPop');
+           Common.popupDiv("/services/bs/hSAddFilterSetPop.do",{salesOrdId:'${hSOrderView.ordId}'} , null, null , true , '');
       }
 
 
