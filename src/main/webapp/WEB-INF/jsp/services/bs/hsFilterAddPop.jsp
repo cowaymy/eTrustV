@@ -4,38 +4,23 @@
 <script type="text/javaScript">
 
 
-
-	function fn_doSave(){
-	    
-	    if ( ! validRequiredField_AddFilter()) {
-	       return ;
-	    }else {
-	            
-            fn_addSvrfilterSetting();
-	    }
-	    
-	   
-/* 	   fn_setSaveFormData(); */
-	}
-
-    
     var lastChangeDate ="";
-    var  remark = "";           
-    
+    var  remark = "";
+
     function fn_addSvrfilterSetting(){
            var cnt =0;
            var filterCode =  $("#ddlFilterCode option:selected").val();
-           
+
            var  filterCntForm ={
             "salesOrdId": salesOrdId ,
             "filterCode" : filterCode
             }
-            
-            
+
+
            Common.ajax("GET", "/services/bs/addSrvFilterID.do", filterCntForm, function(result) {
                 console.log("fn_asAddRemark.");
                 console.log(result);
-                
+
                 cnt = parseInt(result[0].cnt,10);
 
 	            if(cnt > 0){
@@ -43,13 +28,13 @@
 	/*                 addFilterMsg.Text = "* This filter is existing."; */
 	                   Common.alert("This filter is existing.");
 	/*                 this.LoadOrderActiveFilter(); */
-	                
+
 	                return;
-	                
+
 	            }else {
 	/*                 return false; */
-	                  
-	                  
+
+
 	                  if(FormUtil.checkReqValue($("#dpPrevServiceDate"))){
 	                      //lastChangeDate = ("01/01/1900");
 	                      Commom.alert("Please insert 'Previous Service Date''");
@@ -57,13 +42,13 @@
 	                  }else {
 	                      lastChangeDate = $("#dpPrevServiceDate").val();
 	                  }
-	                  
-	
+
+
 	                  if($("#txtRemark").val()!= ""){
 	                      remark = $("#txtRemark").val();
 	                  }
-	                        
-	                  fn_doSaveFilterInfo_Add();      
+
+	                  fn_doSaveFilterInfo_Add();
 	/*                         if (this.doSaveFilterInfo_Add(OrderID, ProductID, StockID, LastChangeDate, Remark, li))
 	                        {
 	                            Common.alert(("<b>The filter successfully added.</b>", 380, 160, "Filter Successfully Added", "callBackFn", null);
@@ -75,17 +60,17 @@
 	                        {
 	                            Common.alert(("<b>Failed to add this filter. Please try again later.</b>", 380, 160, "Filter Fail To Add", "callBackFn", null);
 	                        } */
-	            
-	            
+
+
 	            }
-            
+
             });
     }
-    
-    
-    
+
+
+
     function fn_doSaveFilterInfo_Add() {
-         
+
          var  filterSaveForm ={
             "salesOrdId": salesOrdId ,
             "productID" : $("#stkId").val(),
@@ -93,12 +78,12 @@
             "lastChangeDate" : lastChangeDate,
             "remark" : remark
             }
-         
-         
+
+
           Common.ajax("POST", "/services/bs/doSaveFilterInfo.do", filterSaveForm, function(result) {
                console.log("fn_doSaveFilterInfo_Add.");
                console.log(result);
-               
+
                if(result.code == "00"){
                     $("#popClose").click();
                     fn_getInActivefilterInfo();
@@ -114,82 +99,97 @@
                }
            });
     }
-    
-    
+
+
+    function fn_doSave(){
+
+        if ( ! validRequiredField_AddFilter()) {
+           return ;
+        }else {
+
+            fn_addSvrfilterSetting();
+        }
+
+
+/*     fn_setSaveFormData(); */
+    }
+
+
+
     function fn_close() {
         $("#popClose").click();
     }
-    
-    
+
+
 /*     function fn_parentReload() {
-        
+
         fn_getAddFilter(); //parent Method (Reload)
     } */
-    
-    
+
+
     function validRequiredField_AddFilter(){
-    
-        
+
+
         var rtnMsg ="";
 	    var valid =true;
-        
-        
+
+
 	    if($("#ddlFilterCode option:selected").val() ==""){
 	        //Common.alert("Some required FilterCode fields are empty.<br/>");
 	        Common.alert("<spring:message code='service.msg.filter.empty'/><br/>");
 	        return ;
 	    }
-    
-    
+
+
         if(FormUtil.checkReqValue($("#dpPrevServiceDate"))){
             rtnMsg  +="* Some required ServiceDate fields are empty.<br/>" ;
-            valid =false; 
+            valid =false;
         }
-        
-    
+
+
 /*         if(FormUtil.checkReqValue($("#ddlFilterCode").val())){
  	        rtnMsg  +="* Some required FilterCode fields are empty.<br/>" ;
-	        valid =false; 
+	        valid =false;
 	    }
-	    
+
 	    if(FormUtil.checkReqValue($("dpPrevServiceDate"))){
 	        rtnMsg  +="* Some required ServiceDate fields are empty.<br/>" ;
-            valid =false; 
+            valid =false;
 	    } */
 
 
 	    if( valid ==false ){
 	        Common.alert("Required Fields Missing" +DEFAULT_DELIMITER +rtnMsg );
 	    }
-    
+
 
          return valid;
     }
-    
-    
-    
-    $(document).ready(function() {
-                    
-    });
-    
-    
 
-        
-        
-        
+
+
+    $(document).ready(function() {
+
+    });
+
+
+
+
+
+
 function fn_asAddFilter(){
     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
     var ordList ={
              "ordList":selectedItems,
              "BRID" : "CSD001"
     }
-    
-    
-    
+
+
+
     Common.ajax("GET", "/services/bs/addHsFilter.do", $("#addRemarkForm").serialize(), function(result) {
         console.log("fn_asAddRemark.");
         console.log(result);
-        
+
         if(result.code =="00"){
             Common.alert("* Remark successfully saved.");
             fn_getCallLog();
@@ -211,8 +211,8 @@ function fn_asAddFilter(){
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" method="post"  id='addFilterForm'  name='addFilterForm' >
-	<input type="hidden" name="salesOrdId"  id="salesOrdId" value="${_salesOrdId}"/>  
-	<input type="hidden" name="stkId"  id="stkId" value="${_stkId}"/>  
+	<input type="hidden" name="salesOrdId"  id="salesOrdId" value="${_salesOrdId}"/>
+	<input type="hidden" name="stkId"  id="stkId" value="${_stkId}"/>
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 
@@ -244,10 +244,11 @@ function fn_asAddFilter(){
     <th scope="row"><spring:message code='service.title.PreviousServiceDate'/></th>
     <td>
         <input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpPrevServiceDate"  name="dpPrevServiceDate" style="height: 26px; "/>
+
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.Remark'/></th>    
+    <th scope="row"><spring:message code='service.title.Remark'/></th>
     <td>
         <textarea  id='txtRemark' name='txtRemark'   rows='5' placeholder=""  class="w100p" style="width: 407px; "></textarea>
     </td>
@@ -258,7 +259,7 @@ function fn_asAddFilter(){
 
 <ul class="center_btns">
     <li><p class="btn_blue2 big"><a href="#"  onclick="fn_doSave()"><spring:message code='service.btn.Save'/></a></p></li>
-</ul>
+ </ul>
 
 </article><!-- tap_area end -->
 
