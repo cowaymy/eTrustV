@@ -30,66 +30,66 @@ var reasonOption = {
         chooseMessage: "Select Reason",
 };
 $(document).ready(function() {
-	
+
 	//Create Grid
 	fn_createBasketGrid(); //basket
 	fn_createSerialConfirmGrid(); //Serial
-	
+
 	//Init
 	fn_initField();
 	///getReasonCodeList
 	var rsnParam = {masterCode : 1363};
 	CommonCombo.make('_purcReason', "/sales/pos/getReasonCodeList", rsnParam , '', reasonOption); //Reason Code List
-	
+
 	//Change Func
     $("#_purcItemType").change(function() {
-    	
+
     	if ($(this).val() != null && $(this).val() != '' ) {
     		//Filed Enabled
             $("#_purcItems").attr({"disabled" : false , "class" : "w100p"});
-    		
+
             if($("#_posSystemType").val() == 1352){  //Filter
             	var itmType = {itemType : $(this).val() , posSal : 1};
             	CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
             }
-            
+
             if($("#_posSystemType").val() == 1353){  //Item Bank
             	var itmType = {itemType : $(this).val() , posItm : 1};
             	CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
             }
-            
+
             if($("#_posSystemType").val() == 1357){ // Other Income
             	var itmType = {itemType : $(this).val() , posOth : 1};
             	CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
             }
-            
+
             if($("#_posSystemType").val() == 1358){ // Item Bank HQ
                 var itmType = {itemType : $(this).val() , posOth : 1};
                 CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
             }
 		}
-		
+
 	});//Change Func End
-    
+
     $("#_basketAdd").click(function() {
-        
+
     	//Validation
     	//Null check
     	if($("#_purcItems").val() == null || $("#_purcItems").val() == ''){
     		Common.alert("No Selected Items.");
     		return;
     	}
-    	
-    	//Check Duplication of Basket , ItemList 
+
+    	//Check Duplication of Basket , ItemList
     	var basketCodeArray = AUIGrid.getColumnValues(basketGridID, 'stkId');
     	var values = $("#_purcItems").val();
     	var msg = '';
     	for (var idx = 0; idx < basketCodeArray.length; idx++) {
     		for (var i = 0; i < values.length; i++) {
-    			
+
     			console.log("basketCodeArray[idx] : " + basketCodeArray[idx]);
     			console.log("values[i] : " + values[i]);
-    			
+
     			if(basketCodeArray[idx] == values[i]){
     				msg += $("#_purcItems").find("option[value='"+values[i]+"']").text();
     				Common.alert("* " + msg +'<spring:message code="sal.alert.msg.isExistInList" />');
@@ -97,13 +97,13 @@ $(document).ready(function() {
     			}
 			}
 		}
-    	
+
     	//Validation Success
     	// 1 . filter
     	if($("#_posSystemType").val() == 1352){
-    		
+
             Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
-                
+
                 for (var i = 0; i < result.length; i++) {
                    var calResult = fn_calculateAmt(result[i].amt, 1);
                    result[i].subTotal  = calResult.subTotal;
@@ -111,21 +111,21 @@ $(document).ready(function() {
                    result[i].taxes  = calResult.taxes;
                    result[i].inputQty = 1;
                }
-                
+
                 //GridSet
                 /* AUIGrid.setGridData(basketGridID, result); */
                 AUIGrid.addRow(basketGridID, result, 'last');
                 fn_reasonFieldContorl();
-                
+
             });
     	}
-    	
+
     	// 2. item bank
     	if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
     		//id="chkStockList"
-    		
+
             Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
-                
+
                 for (var i = 0; i < result.length; i++) {
                    var calResult = fn_calculateAmt(result[i].amt, 1);
                    result[i].subTotal  = calResult.subTotal;
@@ -133,21 +133,21 @@ $(document).ready(function() {
                    result[i].taxes  = calResult.taxes;
                    result[i].inputQty = 1;
                }
-                
+
                 //GridSet
                 /* AUIGrid.setGridData(basketGridID, result); */
                 //_purcReason
                 AUIGrid.addRow(basketGridID, result, 'last');
-                
+
             });
     	}
-    	
-    	
+
+
     	// 3. Other Income
     	if($("#_posSystemType").val() == 1357){ //// Other Income 창고 Query Fix
-    		
+
     		Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
-                
+
                 for (var i = 0; i < result.length; i++) {
                    var calResult = fn_calculateAmt(result[i].amt, 1);
                    result[i].subTotal  = calResult.subTotal;
@@ -155,19 +155,19 @@ $(document).ready(function() {
                    result[i].taxes  = calResult.taxes;
                    result[i].inputQty = 1;
                }
-                
+
                 //GridSet
                 /* AUIGrid.setGridData(basketGridID, result); */
                 //_purcReason
                 AUIGrid.addRow(basketGridID, result, 'last');
             });
     	}
-    	
+
     	// 4. Item Bank HQ
         if($("#_posSystemType").val() == 1358){ //// Other Income 창고 Query Fix
-            
+
             Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
-                
+
                 for (var i = 0; i < result.length; i++) {
                    var calResult = fn_calculateAmt(result[i].amt, 1);
                    result[i].subTotal  = calResult.subTotal;
@@ -175,7 +175,7 @@ $(document).ready(function() {
                    result[i].taxes  = calResult.taxes;
                    result[i].inputQty = 1;
                }
-                
+
                 //GridSet
                 /* AUIGrid.setGridData(basketGridID, result); */
                 //_purcReason
@@ -183,10 +183,10 @@ $(document).ready(function() {
             });
         }
 	});
-	
+
 	//Delete Low
 	$("#_chkDelBtn").click(function() {
-	    
+
 		//1. basketGrid == cheked Items
 		var chkDelArray = AUIGrid.getCheckedRowItems(basketGridID);
 		//2. serialGrid == all Items
@@ -202,19 +202,19 @@ $(document).ready(function() {
 		}
 		//4. Delete Serial Number
 		if(delArr != null && delArr.length > 0){
-			AUIGrid.removeRow(serialConfirmGridID, delArr);	
+			AUIGrid.removeRow(serialConfirmGridID, delArr);
 		}
-		//5. Remove Check Low 
+		//5. Remove Check Low
 		AUIGrid.removeCheckedRows(basketGridID);
 		//6. Filter Check and Control Reason Field
 		fn_reasonFieldContorl();
-		
+
 	});
-	
-	
+
+
 	//Save
 	$("#_itemSrchSaveBtn").click(function() {
-		//Validation 
+		//Validation
 		//1 .장바구니 물품 Null Check
 		var valChk = true;
 		var nullChkNo = AUIGrid.getRowCount(basketGridID);
@@ -235,7 +235,7 @@ $(document).ready(function() {
 			Common.alert('<spring:message code="sal.alert.msg.listNoInvItm" />');
 			return;
 		}
-		
+
 		//3. 장바구니 가격 중 0  이 있는지 체크
 		var prcChkArr = AUIGrid.getColumnValues(basketGridID, 'amt'); // Amt
 		$(prcChkArr).each(function(idx, el) {
@@ -280,11 +280,11 @@ $(document).ready(function() {
 		//6. 장바구니 리스트 중에 필터가 있을 경우  stkTypeId == 62
 		var typeArr = AUIGrid.getColumnValues(basketGridID, 'stkTypeId'); //Type Chk
 		var filterChkFlag = false;
-		
+
 		$(typeArr).each(function(idx, el) {
 			if(typeArr[idx] == 62){ //filter
 				filterChkFlag = true;
-		        return false; 
+		        return false;
 	        }
 		});
 		if(filterChkFlag ==true){ //필터가 있을 때
@@ -297,7 +297,7 @@ $(document).ready(function() {
 		//	var itemCodeArr = AUIGrid.getColumnValues(basketGridID, 'stkCode'); //Stock Code List
 			var idxObj;
 			var serialCodeArr = AUIGrid.getColumnValues(serialConfirmGridID, 'matnr');
-			
+
 			for (var idx = 0; idx < nullChkNo; idx++) {
 				idxObj = AUIGrid.getItemByRowIndex(basketGridID, idx); //해당 index행  가져오기 // item // basket
 				if(idxObj.stkTypeId == 62 && idxObj.serialChk == 'Y'){// filter
@@ -309,14 +309,14 @@ $(document).ready(function() {
 						}
 					}//loop end
 					// cnt 와 qty 매칭  // serialCnt == idxObj.inputQty
-////////////////////////////////////////  Serial Number Check ///////////////////////////////////////////////////  추후 시리얼 번호 관리시 주석 해제					
+////////////////////////////////////////  Serial Number Check ///////////////////////////////////////////////////  추후 시리얼 번호 관리시 주석 해제
 				    if(serialCnt != idxObj.inputQty){
 						Common.alert('<spring:message code="sal.alert.msg.chkFilterNotMatch" />');
 						return;
 					}
 ////////////////////////////////////////Serial Number Check ///////////////////////////////////////////////////
 
-				 /*     //TEMP LOGIC  추후 시리얼 번호 관리시 로직 삭제  
+				 /*     //TEMP LOGIC  추후 시리얼 번호 관리시 로직 삭제
 				    if(serialCnt < idxObj.inputQty){
 				    	var tempLength = 0;
 				    	tempLength = idxObj.inputQty - serialCnt;
@@ -331,7 +331,7 @@ $(document).ready(function() {
 				    		}
 				    		console.log("random serial no : " + result);
                             var addObj = {matnr : idxObj.stkCode , stkDesc : idxObj.stkDesc , serialNo : result , stkId : idxObj.stkId};
-				    		
+
 				    		AUIGrid.addRow(serialConfirmGridID, addObj, 'first');
 						}
 				    }else if(serialCnt > idxObj.inputQty){
@@ -345,7 +345,7 @@ $(document).ready(function() {
 				$("#_mainSerialGrid").css("display" , "");
 			}//loop end
 		}
-		
+
 		//Vaidaton Success
         var finalPurchGridData = AUIGrid.getGridData(basketGridID);
 		/* console.log(" finalPurchGridData : " + finalPurchGridData);
@@ -357,13 +357,13 @@ $(document).ready(function() {
 		//close window
         $("#_posReason").val($("#_purcReason").val());
 		$("#_itmSrchPopClose").click();
-		
+
 	});
-	
-	
+
+
 	//Check Amt Can be Modifiy
 	AUIGrid.bind(basketGridID, "cellEditBegin", function( event ) {
-		
+
 		if(event.dataField == 'amt'){
 			var chkParam = {stkId : event.item.stkId};
 	        var isEdit = false;
@@ -371,10 +371,10 @@ $(document).ready(function() {
 	        Common.ajax("GET", "/sales/pos/chkAllowSalesKeyInPrc", chkParam, function (result){
 	             isEdit =  result;
 	        }, null, ajaOpt);
-	        
+
 	        //Force Editing
 	        AUIGrid.forceEditingComplete(basketGridID, null, false);
-	        
+
 	        return isEdit;
 		}else if(event.dataField == 'inputQty'){
 			return true;
@@ -382,21 +382,21 @@ $(document).ready(function() {
 			return false;
 		}
 	});
-	
+
 	//Edit Grid by Half Round
 	AUIGrid.bind(basketGridID, "cellEditEndBefore", function( event ) {
-	    
+
 	//	console.log("event.dataField : " + JSON.stringify(event.dataField));
-		
+
 		if(event.dataField == 'amt'){
 			var fixVal = 0 ;
 	        fixVal = event.value.toFixed(2);
-	        
+
 	     //   console.log("event.value : " + event.value);
 	     //   console.log("fixVal : " + fixVal);
-	        return fixVal; // 사용자가 입력한 값에 컴마가 있으면 제거 후 적용	
+	        return fixVal; // 사용자가 입력한 값에 컴마가 있으면 제거 후 적용
 		}
-		
+
 		if(event.dataField == 'inputQty'){
 			var inputQty = event.value;
 			var times = 1;
@@ -405,7 +405,7 @@ $(document).ready(function() {
 				girdLeng = AUIGrid.getGridData(memGridID);
 				times = girdLeng.length;
 			}
-			
+
 			if(isNaN(inputQty)){
 				inputQty = 0;
 			}else{
@@ -415,39 +415,39 @@ $(document).ready(function() {
 	                inputQty = Math.ceil(inputQty);
 	            }
 			}
-			
+
 		//	console.log("inputQty : " + inputQty);
 		//	console.log("times : " + times);
 			//return inputQty*times;
 			return inputQty;
 		}
 	});
-	
+
 });//Doc Ready Func End
 
 function fn_getConfirmFilterListAjax(rtnObject){
-    
+
     Common.ajax("GET", "/sales/pos/getConfirmFilterListAjax", rtnObject , function(result) {
-      
+
         /* AUIGrid.setGridData(serialConfirmGridID, result); */
     	 AUIGrid.addRow(serialConfirmGridID, result, 'last');
-        
+
     });
-    
+
 }
 
 
 function fn_createSerialConfirmGrid(){
-	
+
 	var serialGridPros = {
-	        
+
 	        usePaging           : true,         //페이징 사용
-	        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-	        fixedColumnCount    : 1,            
-	        showStateColumn     : false,             
-	        displayTreeOpen     : false,            
-	//        selectionMode       : "singleRow",  //"multipleCells",            
-	        headerHeight        : 30,       
+	        pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+	        fixedColumnCount    : 1,
+	        showStateColumn     : false,
+	        displayTreeOpen     : false,
+	//        selectionMode       : "singleRow",  //"multipleCells",
+	        headerHeight        : 30,
 	        useGroupingPanel    : false,        //그룹핑 패널 사용
 	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -455,49 +455,49 @@ function fn_createSerialConfirmGrid(){
 	        softRemoveRowMode : false,
 	        showRowCheckColumn : false
 	};
-	
-	 var seriaConfirmlColumnLayout =  [ 
+
+	 var seriaConfirmlColumnLayout =  [
                                 {dataField : "matnr", headerText : '<spring:message code="sal.title.filterCode" />', width : '33%' , editable : false} ,
                                 {dataField : "stkDesc", headerText :'<spring:message code="sal.title.filterName" />', width : '33%' , editable : false},
                                 {dataField : "serialNo", headerText : '<spring:message code="sal.title.serial" />', width : '33%' , editable : false},
                                 {dataField : "stkId" , visible : true}
                                ];
-	 
-	 serialConfirmGridID = GridCommon.createAUIGrid("#serial_grid_wrap", seriaConfirmlColumnLayout,'', serialGridPros);  
+
+	 serialConfirmGridID = GridCommon.createAUIGrid("#serial_grid_wrap", seriaConfirmlColumnLayout,'', serialGridPros);
      AUIGrid.resize(serialConfirmGridID , 960, 300);
 }
 
 
 function fn_reasonFieldContorl() {
-	
+
 	//Filter 유무 확인 후 Reason 필드 Open , Close
     //getColumnDistinctValues
     var typeArray = []
     typeArray = AUIGrid.getColumnDistinctValues(basketGridID , 'stkTypeId');
     //console.log('typeArray : ' + typeArray);
     var reasonCnt = 0;
-    
+
     if(typeArray != null && typeArray.length > 0){
-    	
+
         for (var idx = 0; idx < typeArray.length; idx++) {
             if(typeArray[idx] == '62'){
                 reasonCnt++;
                 break;
             }
         }
-        
+
         if (reasonCnt > 0) {
         	$("#_purcReason").attr({'disabled' : false , 'class' : 'w100p '});
 		}else{
 			$("#_purcReason").attr({'disabled' : 'disabled' , 'class' : 'w100p disabled'});
             $("#_purcReason").val('');
 		}
-        
+
     }else{
     	$("#_purcReason").attr({'disabled' : 'disabled' , 'class' : 'w100p disabled'});
         $("#_purcReason").val('');
     }
-	
+
 }
 
 
@@ -507,7 +507,7 @@ function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataF
 	if(item.stkTypeId == '62'){
 		//SERIAL_CHK
 		if(item.serialChk != null &&  item.serialChk == 'Y'){
-			return '';	
+			return '';
 		}else{
 			return "edit-column";
 		}
@@ -520,9 +520,9 @@ function cellStyleFunction(rowIndex, columnIndex, value, headerText, item, dataF
 
 
 function fn_createBasketGrid(){
-	
-	 var basketColumnLayout =  [ 
-	                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%' , editable : false}, 
+
+	 var basketColumnLayout =  [
+	                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%' , editable : false},
 	                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%', editable : false},
 	                            {dataField : "qty", headerText : '<spring:message code="sal.title.inventory" />', width : '10%', editable : false},
 	                            {dataField : "inputQty", headerText : '<spring:message code="sal.title.qty" />', width : '10%', editable : true, dataType : "numeric"},
@@ -531,24 +531,24 @@ function fn_createBasketGrid(){
 	                                onlyNumeric : true,
 	                                allowPoint : true
 	                            }},
-	                            {dataField : "subChanges", headerText : '<spring:message code="sal.title.excludeGST" />', width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00",expFunction : function(  rowIndex, columnIndex, item, dataField ) { 
+	                            {dataField : "subChanges", headerText : '<spring:message code="sal.title.excludeGST" />', width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00",expFunction : function(  rowIndex, columnIndex, item, dataField ) {
 	                                var subObj = fn_calculateAmt(item.amt , item.inputQty);
-	                                return Number(subObj.subChanges); 
+	                                return Number(subObj.subChanges);
 	                            }},
-	                            {dataField : "taxes", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00", expFunction : function(  rowIndex, columnIndex, item, dataField ) { 
+	                            {dataField : "taxes", headerText : 'GST(0%)', width : '10%', editable : false , dataType : "numeric", formatString : "#,##0.00", expFunction : function(  rowIndex, columnIndex, item, dataField ) {
 	                                var subObj = fn_calculateAmt(item.amt , item.inputQty);
-	                                return Number(subObj.taxes); 
+	                                return Number(subObj.taxes);
 	                            }},
 	                            {
-	                                dataField : "undefined", 
-	                                headerText : '<spring:message code="sal.title.serial" />', 
+	                                dataField : "undefined",
+	                                headerText : '<spring:message code="sal.title.serial" />',
 	                                width : '10%',
 	                                styleFunction : cellStyleFunction,
 	                                renderer : {
-	                                         type : "ButtonRenderer", 
-	                                         labelText : '<spring:message code="sal.title.serial" />', 
+	                                         type : "ButtonRenderer",
+	                                         labelText : '<spring:message code="sal.title.serial" />',
 	                                         onclick : function(rowIndex, columnIndex, value, item) {
-	                                        	
+
 	                                        	 //filter Grid`s Serial No
 	                                        	 var tempSerialArr = AUIGrid.getColumnValues(serialConfirmGridID, 'serialNo');
 	                                        	 var tempString = tempSerialArr.toString();
@@ -563,17 +563,17 @@ function fn_createBasketGrid(){
 	                            {dataField : "serialChk" , visible :false}, ////SERIAL_CHK
 	                            {dataField : "stkId" , visible :false}//STK_ID
 	                           ];
-	    
+
 	    //그리드 속성 설정
 	    var gridPros = {
-	            
+
 	            usePaging           : true,         //페이징 사용
-	            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-	            fixedColumnCount    : 1,            
-	            showStateColumn     : false,             
-	            displayTreeOpen     : false,            
-	   //         selectionMode       : "singleRow",  //"multipleCells",            
-	            headerHeight        : 30,       
+	            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+	            fixedColumnCount    : 1,
+	            showStateColumn     : false,
+	            displayTreeOpen     : false,
+	   //         selectionMode       : "singleRow",  //"multipleCells",
+	            headerHeight        : 30,
 	            useGroupingPanel    : false,        //그룹핑 패널 사용
 	            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
@@ -581,40 +581,40 @@ function fn_createBasketGrid(){
 	            softRemoveRowMode : false,
 	            showRowCheckColumn : true
 	    };
-	    
-	    basketGridID = GridCommon.createAUIGrid("#basket_grid_wrap", basketColumnLayout,'', gridPros);  
+
+	    basketGridID = GridCommon.createAUIGrid("#basket_grid_wrap", basketColumnLayout,'', gridPros);
 	    AUIGrid.resize(basketGridID , 960, 300);
-	
+
 }
 
 function fn_initField(){
 	//ComboBox Options
 	//Init -- Item Type ComboBox
-	
+
 	var tempModule =  $("#_posModuleType").val();
 	var tempSysType = $("#_posSystemType").val();
-	
+
 //	console.log("tempModule : " + tempModule);
 // console.log("tempSysType : " + tempSysType);
-	
+
 	if($("#_posModuleType").val() == 2390){ //2390 == POS Sales
-	
+
 	    if($("#_posSystemType").val() == 1352){ ////Pos Filter / Spare Part / Miscellaneous 창고 선택시
 	    	$("#_gridArea").css("display" , "");  //Serial Grid Display None
 	    	//Type
 	    	var codes = [61 , 62 , 63 , 64 , 1370];
 	    	var codeM = {codeM : 15 , codes : codes};
 	        CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
-	       //Itm List  
-	        var itmType = {itemType : 61 , posSal : 1};  
+	       //Itm List
+	        var itmType = {itemType : 61 , posSal : 1};
 	        CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
 	    }
-	    
+
 	    if($("#_posSystemType").val() == 1353){ //// Pos Item Bank 창고 Query Fix
-	    	
+
 	    	$("#_gridArea").css("display" , "none");  //Serial Grid Display None
 	    	//Type
-	    	var codes = [1345 , 1346 , 1347 , 1348 , 1362];  
+	    	var codes = [1345 , 1346 , 1347 , 1348 , 1362];
             var codeM = {codeM : 11 , codes : codes};
 	        CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
 	        //Itm List
@@ -622,23 +622,23 @@ function fn_initField(){
 	        CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
 	    }
 	}
-	
+
 	if($("#_posModuleType").val() == 2391){ //2391 == Deduction Commission
-		
+
 		if($("#_posSystemType").val() == 1352){ ////Pos Filter / Spare Part / Miscellaneous 창고 선택시
 			//Type
 			var codes = [61 , 64 , 1370];
             var codeM = {codeM : 15 , codes : codes};
 			$("#_gridArea").css("display" , "none");  //Serial Grid Display None
-            CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);  
+            CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
             //Itm List
             var itmType = {itemType : 61 , posSal : 1};
             CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
         }
-		
+
 		if($("#_posSystemType").val() == 1353){ // Pos Item Bank 창고 Query Fix
 			//Type
-			var codes = [1345 , 1346 , 1347 , 1348 , 1362];  
+			var codes = [1345 , 1346 , 1347 , 1348 , 1362];
             var codeM = {codeM : 11 , codes : codes};
             CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
             //Itm List
@@ -647,34 +647,34 @@ function fn_initField(){
             CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
         }
 	}
-	
+
 	if($("#_posModuleType").val() == 2392){ //2392  == Other Income
-	    
+
 		if($("#_posSystemType").val() == 1357){ // Other Income
-			
+
 			$("#_gridArea").css("display" , "none");  //Serial Grid Display None
-	        
-	        var codes = [1348 , 1349 , 1350];  
+
+	        var codes = [1348 , 1349 , 1350];
 	        var codeM = {codeM : 11 , codes : codes};
 	        CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
-	        
+
 	        //Itm List
 	        var itmType = {itemType : 1348 , posOth : 1};
 	        CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
 		}
-	
+
 	    if($("#_posSystemType").val() == 1358){ // Item Bank HQ
-            
+
 	    	$("#_gridArea").css("display" , "none");  //Serial Grid Display None
-	    	
-	    	var codes = [1345 , 1346 , 1347  , 1362 , 1426];  
+
+	    	var codes = [1345 , 1346 , 1347  , 1362 , 1426];
             var codeM = {codeM : 11 , codes : codes};
             CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
-            
+
             //Itm List
             var itmType = {itemType : 1345 , posOth : 1};
             CommonCombo.make('_purcItems', "/sales/pos/selectPosItmList", itmType , '', ItmOption);
-	    	
+
         }
 	}
 }
@@ -684,9 +684,9 @@ function fn_initField(){
 function f_multiCombo(){
     $(function() {
         $('#_purcItems').change(function() {
-        
+
         }).multipleSelect({
-            selectAll: false, // 전체선택 
+            selectAll: false, // 전체선택
             width: '80%'
         });
     });

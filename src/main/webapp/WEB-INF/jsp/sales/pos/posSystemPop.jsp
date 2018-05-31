@@ -774,7 +774,7 @@ function createPurchaseGridID(){
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
                             	return Number(calObj.subChanges);
 							}},
-                            {dataField : "subChng", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
+                            {dataField : "subChng", headerText : 'GST(0%)', width : '10%', dataType : "numeric", formatString : "#,##0.00", expFunction : function(rowIndex, columnIndex, item, dataField ) {
                             	var calObj = fn_calculateAmt(item.amt , item.inputQty);
                                 return Number(calObj.taxes);
                             }},
