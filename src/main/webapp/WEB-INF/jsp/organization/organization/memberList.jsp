@@ -395,7 +395,26 @@ function createAUIGrid() {
             dataField : "traineeType",
             headerText : "Trainee Type",
             width : 0
+        },
+        {
+        	dataField : "approvedBy",
+            headerText : "Approved by",
+            editable : false,
+            width : 130
+        },
+        {
+        	dataField : "branch",
+            headerText : "Approved Branch",
+            editable : false,
+            width : 130
+        },
+        {
+        	dataField : "crtDt",
+            headerText : "Action Date",
+            editable : false,
+            width : 130
         }
+        
         /* this is for put EDIT button in grid ,
         {
             dataField : "undefined",
