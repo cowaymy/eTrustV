@@ -140,7 +140,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 	@Transactional
 	@Override
-	public String saveMember(Map<String, Object> params, List<Object> docType) {
+	public String saveMember(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) {
 
 		String appId="";
 		String memCode = "";
@@ -189,9 +189,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 			MemApp.put("remark","");
 			MemApp.put("statusId",44);
 			MemApp.put("created",new Date());
-			MemApp.put("creator",52366);
+			//MemApp.put("creator",52366);
+			MemApp.put("creator",sessionVO.getUserId());
 			MemApp.put("updated",new Date());
-			MemApp.put("updator",52366);
+			//MemApp.put("updator",52366);
+			MemApp.put("updator",sessionVO.getUserId());
 			MemApp.put("confirmation",false);
 			MemApp.put("confirmDate","01/01/1900");
 			MemApp.put("deptCode",params.get("deptCd").toString());
@@ -283,9 +285,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		params.put("promoteDate","01/01/1900");
 		params.put("trNo", params.get("trNo")!=null ? params.get("trNo").toString().trim() : "");
 		params.put("created",new Date());
-		params.put("creator",52366);
+		//params.put("creator",52366);    sessionVO.getUserId()
+		params.put("creator",sessionVO.getUserId());
 		params.put("updated",new Date());
-		params.put("updator",52366);
+		//params.put("updator",52366);
+		params.put("updator",sessionVO.getUserId());
 		params.put("memIsOutSource",false);
 		params.put("applicantID", appId !=null ? appId : 0);
 		params.put("BusinessesType",1375);
