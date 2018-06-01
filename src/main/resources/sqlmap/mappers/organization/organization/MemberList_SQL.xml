@@ -149,7 +149,10 @@
 
 			Project1.C1 C1,
 			project1.TRAINEE_TYPE,
-			project1.TEST_RESULT
+			project1.TEST_RESULT,
+			project1.approved_by,
+            project1.branch,
+            project1.CRT_DT
 
 			FROM ( SELECT Project1.C1 C1,
 			         Project1.MEM_ID MEM_ID,
@@ -168,6 +171,9 @@
                     Project1.ct_sub_grp,
                     project1.TRAINEE_TYPE,
                     project1.TEST_RESULT,
+                    project1.approved_by,
+                    project1.branch,
+                    TO_CHAR(Project1.CRT_DT,'DD-MM-YYYY') CRT_DT,
 
 			         row_number() OVER (ORDER BY Project1.MEM_CODE ASC) AS row_number
 
@@ -195,7 +201,10 @@
 				        WHEN ( Extend8.COURS_TEST_RESULT = 'AB' )
 				        THEN 'Absent'
 			        ELSE ''
-			        END TEST_RESULT
+			        END TEST_RESULT,
+			        Extent9.USER_NAME as approved_by,
+                    Extent10.CODE as branch,
+                    Extent1.CRT_DT
 
 			        FROM   ORG0001D Extent1                                                                    /*Member eg.get mem_type eg HP, CODY, CT*/
 			        INNER JOIN SYS0013M Extent2 ON Extent1.MEM_TYPE = Extent2.CODE_ID   /*CodeDetail eg.HP, CODY, CT full desc*/
@@ -204,6 +213,8 @@
 			         /* By KV - add Position*/
 			        LEFT JOIN ORG0005D Extent5 ON Extent5.MEM_ID = Extent1.MEM_ID          /*MemberOrganization eg.get mem_LVL*/
 			        LEFT JOIN ORG0012D Extend6 ON Extend6.MEM_TYPE_ID =  Extent1.MEM_TYPE and Extend6.MEM_ORG_LVL =  Extent5.MEM_LVL /* MemberOrganizationDesc eg get full desc of mem_type and mem_LVL*/
+			        LEFT JOIN SYS0047M Extent9 ON Extent1.CRT_USER_ID = Extent9.USER_ID
+                    LEFT JOIN SYS0005M Extent10 ON Extent1.BRNCH = Extent10.BRNCH_ID
 
 			        CROSS JOIN  (SELECT
 			            COUNT(1) A1
