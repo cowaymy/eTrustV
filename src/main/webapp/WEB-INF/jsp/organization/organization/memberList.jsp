@@ -512,28 +512,6 @@ function fn_searchPosition(selectedData){
 }
 /*By KV end - Position - This is for display Position data only in Position selection.*/
 
-function fn_generateAgreement() {
-    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-
-    if (selectedItem[0] > -1){
-        var memCode = AUIGrid.getCellValue(myGridID, selectedGridValue, "membercode"); // Plausible to change if not based on GRID
-
-        // Remain the following section to display report
-        $("#reportDownFileName").val("HPAgreement_" + memCode);
-        $("#agreementReport #reportFileName").val("/organization/HPAgreement.rpt");
-
-        $("#v_memCode").val(memCode); // Plausible to change if not based on GRID
-        $("#agreementReport #viewType").val("PDF");
-        console.log(memCode);
-
-        var option = {
-                isProcedure : true // procedure 로 구성된 리포트 인경우 필수.  => /payment/PaymentListing_Excel.rpt 는 프로시져로 구성된 파일임.
-        };
-
-        Common.report("agreementReport", option);
-    }
-}
-
 </script>
 
 <!-- --------------------------------------DESIGN------------------------------------------------ -->
@@ -578,9 +556,6 @@ function fn_generateAgreement() {
 </c:if>
  <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_clickHpReject()">HP Reject</a></p></li>
-</c:if>
-<c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
-    <li><p class="btn_blue"><a href="javascript:fn_generateAgreement()">Generate Agreement</a></p></li>
 </c:if>
 </ul>
 </aside><!-- title_line end -->
