@@ -444,7 +444,7 @@ public class MemberListController {
 		logger.debug("udtList : {}", updList);
 		logger.debug("formMap : {}", formMap);
 		String memCode = "";
-		memCode = memberListService.saveMember(formMap, updList);
+		memCode = memberListService.saveMember(formMap, updList, sessionVO);
 		int userId = sessionVO.getUserId();
 		String memberType =String.valueOf(formMap.get("memberType"));
 		String trainType =String.valueOf(formMap.get("traineeType1"));
