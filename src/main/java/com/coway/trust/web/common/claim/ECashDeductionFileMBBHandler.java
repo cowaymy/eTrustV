@@ -64,6 +64,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 
 
 	long sLimit = 0;
+	long fLimit = 0;
 	long iTotalAmt = 0;
 	long ihashtot3 = 0;
 	int iTotalCnt = 0;
@@ -77,6 +78,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 	int endIndex = 0;
 	String sTextBtn = "";
 
+	BigDecimal fTotalAmt = null;
 	BigDecimal amount = null;
 	BigDecimal hunred = new BigDecimal(100);
 
@@ -89,7 +91,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		try {
 			if (!isStarted) {
 				init();
-				writeHeader();
+				writeHeader(result);
 				isStarted = true;
 			}
 
@@ -104,9 +106,9 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		out = createFile();
 	}
 
-	private void writeHeader() throws IOException {
-
-		BigDecimal totA = (BigDecimal)params.get("fileBatchTotAmt");
+	private void writeHeader(ResultContext<? extends Map<String, Object>> result) throws IOException {
+		Map<String, Object> dataRow = result.getResultObject();
+		BigDecimal totA = (BigDecimal)dataRow.get("totAmt");
 		long limit = totA.multiply(hunred).longValue();
 
 		// 헤더 작성
@@ -115,8 +117,9 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		merOrg 			= StringUtils.rightPad(String.valueOf("001"), 3, " ");
 		merId 			= StringUtils.rightPad(String.valueOf("060012051"), 1, " ");
 		merName 		= StringUtils.rightPad(String.valueOf("COWAY (M) SDN BHD"), 20, " ");
-		merCode 		= StringUtils.rightPad(String.valueOf("7523"), 4, " ");
-		noOfTrans 		= StringUtils.leftPad(String.valueOf(params.get("fileBatchTotRcord")), 6, "0");
+		//merCode 		= StringUtils.rightPad(String.valueOf("7523"), 4, " ");
+		merCode 		= StringUtils.rightPad(String.valueOf("5722"), 4, " ");
+		noOfTrans 		= StringUtils.leftPad(String.valueOf(dataRow.get("totItm")), 6, "0");
 		totAmt			= StringUtils.leftPad(String.valueOf(limit), 13, "0");
 		batchStus		= StringUtils.rightPad(String.valueOf("N"), 1, " ");
 		termId 			= StringUtils.rightPad(String.valueOf(""), 20, " ");
@@ -142,14 +145,15 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
 
-		String exp = StringUtils.isEmpty(String.valueOf(dataRow.get("fileItmAccExpr"))) ? "0000" : String.valueOf(dataRow.get("fileItmAccExpr"));
+		String crcExpiry = StringUtils.isEmpty(String.valueOf(dataRow.get("fileItmAccExpr"))) ? "0000" : String.valueOf(dataRow.get("fileItmAccExpr"));
+
 		bMessageType = StringUtils.rightPad("T", 1, " ");
 		bBatchNo      	= StringUtils.leftPad(String.valueOf(params.get("batchNo")), 5, "0");
 		bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
 		bTransCode 	= StringUtils.rightPad("40", 2, " ");
 		bAccNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("fileItmAccNo")), 19, " ");
 		//bAmount 		= StringUtils.rightPad(String.valueOf("1"), 13, " ");
-		bExpiredDt 		= StringUtils.rightPad(String.valueOf(exp), 4, " ");
+		bExpiredDt 		= StringUtils.rightPad(String.valueOf(crcExpiry), 4, " ");
 		bPosEntry 		= StringUtils.rightPad(String.valueOf("01"), 2, " ");
 		bApprovalCode= StringUtils.rightPad("", 6, " ");
 		bResponseCode= StringUtils.rightPad("", 2, " ");
@@ -166,7 +170,6 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		//금액 계산
 		amount = (BigDecimal)dataRow.get("fileItmAmt");
 		sLimit = amount.multiply(hunred).longValue();
-
 
 		iTotalAmt = iTotalAmt + sLimit;
 		ihashtot3 = ihashtot3 + sLimit + Long.parseLong(bAccNo.trim());
@@ -188,10 +191,16 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 
 	public void writeFooter() throws IOException {
 
+		fTotalAmt = (BigDecimal)params.get("fileBatchTotAmt");
+		fLimit = fTotalAmt.multiply(hunred).longValue();
+
 		fMessage = "R";
 		sNoOfBatch =StringUtils.leftPad(String.valueOf(params.get("batchNo")),3,"0");
-		sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
-		sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");
+		//sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
+		sRecTot    = StringUtils.leftPad(String.valueOf(params.get("fileBatchTotRcord")), 7, "0");
+		//sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");
+		sBatchTot = StringUtils.leftPad(String.valueOf(fLimit), 13, "0");
+//		sFiller      = StringUtils.leftPad("", 101, " ");
 		sFiller      = StringUtils.leftPad("", 101, " ");
 //		ret  		  = StringUtils.leftPad("", 1, "");
 

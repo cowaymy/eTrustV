@@ -64,6 +64,8 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 
 
 	long sLimit = 0;
+	long fLimit = 0;
+
 	long iTotalAmt = 0;
 	long ihashtot3 = 0;
 	int iTotalCnt = 0;
@@ -77,6 +79,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 	int endIndex = 0;
 	String sTextBtn = "";
 
+	BigDecimal fTotalAmt = null;
 	BigDecimal amount = null;
 	BigDecimal hunred = new BigDecimal(100);
 
@@ -89,7 +92,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		try {
 			if (!isStarted) {
 				init();
-				writeHeader();
+				writeHeader(result);
 				isStarted = true;
 			}
 
@@ -104,9 +107,9 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		out = createFile();
 	}
 
-	private void writeHeader() throws IOException {
-
-		BigDecimal totA = (BigDecimal)params.get("ctrlBillAmt");
+	private void writeHeader(ResultContext<? extends Map<String, Object>> result) throws IOException {
+		Map<String, Object> dataRow = result.getResultObject();
+		BigDecimal totA = (BigDecimal)dataRow.get("totAmt");
 		long limit = totA.multiply(hunred).longValue();
 
 		// 헤더 작성
@@ -115,8 +118,9 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		merOrg 			= StringUtils.rightPad(String.valueOf("001"), 3, " ");
 		merId 			= StringUtils.rightPad(String.valueOf("060012051"), 1, " ");
 		merName 		= StringUtils.rightPad(String.valueOf("COWAY (M) SDN BHD"), 20, " ");
-		merCode 		= StringUtils.rightPad(String.valueOf("7523"), 4, " ");
-		noOfTrans 		= StringUtils.leftPad(String.valueOf(params.get("ctrlTotItm")), 6, "0");
+		//merCode 		= StringUtils.rightPad(String.valueOf("7523"), 4, " ");
+		merCode 		= StringUtils.rightPad(String.valueOf("5722"), 4, " ");
+		noOfTrans 		= StringUtils.leftPad(String.valueOf(dataRow.get("totItm")), 6, "0");
 		totAmt			= StringUtils.leftPad(String.valueOf(limit), 13, "0");
 		batchStus		= StringUtils.rightPad(String.valueOf("N"), 1, " ");
 		termId 			= StringUtils.rightPad(String.valueOf(""), 20, " ");
@@ -146,7 +150,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 
 		bMessageType = StringUtils.rightPad("T", 1, " ");
 		bBatchNo      	= StringUtils.leftPad(String.valueOf(params.get("batchNo")), 5, "0");
-		bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
+		//bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
 		bTransCode 	= StringUtils.rightPad("40", 2, " ");
 		bAccNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlDrAccNo")), 19, " ");
 		//bAmount 		= StringUtils.rightPad(String.valueOf("1"), 13, " ");
@@ -172,7 +176,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		iTotalAmt = iTotalAmt + sLimit;
 		ihashtot3 = ihashtot3 + sLimit + Long.parseLong(bAccNo.trim());
 		iTotalCnt++;
-
+		bTransNo 		= StringUtils.leftPad(String.valueOf(iTotalCnt), 6, "0");
 		bAmount = StringUtils.leftPad(String.valueOf(sLimit), 13, "0");
 
 
@@ -189,10 +193,14 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 
 	public void writeFooter() throws IOException {
 
+		fTotalAmt = (BigDecimal)params.get("ctrlBillAmt");
+		fLimit = fTotalAmt.multiply(hunred).longValue();
 		fMessage = "R";
 		sNoOfBatch = StringUtils.leftPad(String.valueOf(params.get("batchNo")),3,"0");
-		sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
-		sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");
+		//sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
+		sRecTot    = StringUtils.leftPad(String.valueOf(params.get("ctrlTotItm")), 7, "0");
+		//sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");
+		sBatchTot = StringUtils.leftPad(String.valueOf(fLimit), 13, "0");
 		sFiller      = StringUtils.leftPad("", 101, " ");
 		//ret  		  = "";
 

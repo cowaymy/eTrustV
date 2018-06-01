@@ -899,18 +899,19 @@ public class ClaimController {
             }
             else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId"))))
             {
-//    			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+    			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
     			int totBatToday =  claimService.selectClaimDetailBatchGen(map);
-//    			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 20000.0));
+    			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
 
-//    			if (pageCnt > 0){
-//    				for(int i = 1 ; i <= pageCnt ; i++){
-//    					claimMap.put("pageNo", i);
-//    					claimMap.put("rowCount", 20000);
+    			if (pageCnt > 0){
+    				for(int i = 1 ; i <= pageCnt ; i++){
+    					claimMap.put("pageNo", i);
+    					claimMap.put("rowCount", 999);
     					claimMap.put("batchNo", totBatToday);
+    					claimMap.put("pageCnt", pageCnt);
     					this.createClaimFileCrcMBB(claimMap);
-//    				}
-//    			}
+    				}
+    			}
             }
 
 		} else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
@@ -1704,13 +1705,14 @@ public class ClaimController {
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-			//sFile = "CRC_SCB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".dat";
-			sFile = "CRC_SCB_" + todayDate + ".dat";
+			sFile = "CZ_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))  + ".dat";
 
 			downloadHandler = getTextDownloadCrcMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 
 			largeExcelService.downLoadClaimFileCrcMBB(claimMap, downloadHandler);
-			downloadHandler.writeFooter();
+			if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
+				downloadHandler.writeFooter();
+			}
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
@@ -1730,7 +1732,7 @@ public class ClaimController {
 
 		email.setTo(emailReceiver);
 		email.setHtml(false);
-		email.setSubject("SCB CRC Deduction File - Batch Date : " + inputDate);
+		email.setSubject("SCB CRC Deduction File - Batch Date : " + inputDate + "_"  + String.valueOf(claimMap.get("pageNo")));
 		email.setText("Please find attached the claim file for your kind perusal.");
 		email.addFile(file);
 

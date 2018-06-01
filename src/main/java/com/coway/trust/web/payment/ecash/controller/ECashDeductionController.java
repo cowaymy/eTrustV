@@ -392,13 +392,14 @@ public class ECashDeductionController {
 
         	int totRowCount = eCashDeductionService.selectECashDeductSubByIdCnt(map);
         	int totBatToday =  eCashDeductionService.selectECashDeductBatchGen(map);
-			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
+			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
 
 			if (pageCnt > 0){
 				for(int i = 1 ; i <= pageCnt ; i++){
 					claimMap.put("pageNo", i);
-					claimMap.put("rowCount", 10000);
+					claimMap.put("rowCount", 999);
 					claimMap.put("batchNo",totBatToday);
+					claimMap.put("pageCnt", pageCnt);
 					this.createECashDeductionFileMBB(claimMap);
 				}
 			}
@@ -507,7 +508,9 @@ public class ECashDeductionController {
 
 			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 			largeExcelService.downLoadECashDeductionFileMBB(claimMap, downloadHandler);
-			downloadHandler.writeFooter();
+			if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
+				downloadHandler.writeFooter();
+			}
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);

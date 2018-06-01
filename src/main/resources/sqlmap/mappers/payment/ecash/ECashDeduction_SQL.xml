@@ -158,13 +158,18 @@
     <select id="selectECashDeductSubByIdPagingMBB" parameterType="Map" resultType="egovMap">
     SELECT *
         FROM (SELECT ROWNUM AS RNUM,
-        Z.* from (
+        Z.*
+        ,SUM(FILE_ITM_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
+        ,COUNT(FILE_ITM_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
+        from (
             SELECT
                 EXTENT1.FILE_ITM_ID,
                 EXTENT2.SALES_ORD_NO,
                 EXTENT1.FILE_ITM_ACC_NO,
                 EXTENT1.FILE_ITM_AMT,
-                EXTENT1.FILE_ITM_ACC_EXPR,
+                CASE WHEN LENGTH(EXTENT1.FILE_ITM_ACC_EXPR) <![CDATA[<]]> 4 THEN '0000'
+                     WHEN TO_DATE(EXTENT1.FILE_ITM_ACC_EXPR,'MMYY') > SYSDATE THEN EXTENT1.FILE_ITM_ACC_EXPR
+                     ELSE '0000' END FILE_ITM_ACC_EXPR,
                 EXTENT1.FILE_ITM_REF,
                 EXTENT4.CUST_CRC_OWNER,
                 EXTENT3.ISSU_NRIC

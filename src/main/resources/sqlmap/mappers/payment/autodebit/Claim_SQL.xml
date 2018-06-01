@@ -410,6 +410,8 @@
      SELECT *
         FROM (SELECT ROWNUM AS RNUM
                                 ,Z.*
+                                ,SUM(BANK_DTL_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
+                                ,COUNT(BANK_DTL_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
                     FROM (
         SELECT
             Extent1.BANK_DTL_ID,
@@ -439,7 +441,9 @@
             TRIM(Extent3.SALES_ORD_NO) SALES_ORD_NO  ,
             (CASE WHEN Extent1.BANK_DTL_RPT_AMT IS NOT NULL THEN Extent1.BANK_DTL_RPT_AMT ELSE 0 END) AS  BANK_DTL_RPT_AMT  ,
             (CASE WHEN Extent1.BANK_DTL_REN_AMT IS NOT NULL THEN Extent1.BANK_DTL_REN_AMT ELSE 0 END) AS  BANK_DTL_REN_AMT  ,
-            (CASE WHEN Extent1.BANK_DTL_CRC_EXPR IS NOT NULL THEN Extent1.BANK_DTL_CRC_EXPR ELSE ' ' END) AS  BANK_DTL_CRC_EXPR  ,
+            (CASE WHEN LENGTH(Extent1.BANK_DTL_CRC_EXPR) <![CDATA[   < ]]> 4 THEN '0000'
+                     WHEN TO_DATE(NVL(Extent1.BANK_DTL_CRC_EXPR,'0000'),'MMYY') > SYSDATE THEN Extent1.BANK_DTL_CRC_EXPR
+            ELSE '0000' END) AS  BANK_DTL_CRC_EXPR
             (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL THEN TRIM(Extent4.SRV_CNTRCT_REF_NO) ELSE ' ' END) AS  SRV_CNTRCT_REF_NO  ,
             (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL
              THEN SUBSTR(TRIM(Extent4.SRV_CNTRCT_REF_NO), 5, 7) || TRIM(Extent3.SALES_ORD_NO)
@@ -470,9 +474,9 @@
         <!-- ORDER BY
             Extent1.BANK_DTL_DR_ACC_NO ASC -->
              ) Z
-                 <!--    WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) -->
+                 WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount})
                     ORDER BY RNUM ASC)
-        <!-- WHERE RNUM > ((#{pageNo} - 1) * #{rowCount}) -->
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
     </select>
 
     <resultMap id="resultClaimMap" type="egovMap" />
