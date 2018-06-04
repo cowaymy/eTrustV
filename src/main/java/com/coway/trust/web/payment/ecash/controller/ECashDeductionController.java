@@ -6,6 +6,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import javax.annotation.Resource;
+
+import org.apache.commons.lang3.StringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -504,7 +506,8 @@ public class ECashDeductionController {
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "yyMMdd");
-			sFile = "CZ" + todayDate + "02" + ".dat";
+			//sFile = "CZ" + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
+			sFile = "CZ" + todayDate + ".dat";
 
 			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 			largeExcelService.downLoadECashDeductionFileMBB(claimMap, downloadHandler);
