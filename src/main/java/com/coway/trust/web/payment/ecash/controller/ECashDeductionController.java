@@ -503,8 +503,8 @@ public class ECashDeductionController {
 
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
-			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-			sFile = "eCash_SCB_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".dat";
+			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "yyMMdd");
+			sFile = "CZ" + todayDate + "02" + ".dat";
 
 			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 			largeExcelService.downLoadECashDeductionFileMBB(claimMap, downloadHandler);
@@ -530,7 +530,7 @@ public class ECashDeductionController {
 
 		email.setTo(emailReceiver);
 		email.setHtml(false);
-		email.setSubject("SCB eAuto Debit CRC Deduction File - Batch Date : " + inputDate);
+		email.setSubject("SCB eCash CRC Deduction File - Batch Date : " + inputDate + "_ "+ String.valueOf(claimMap.get("pageNo")));
 		email.setText("Please find attached the claim file for your kind perusal.");
 		email.addFile(file);
 

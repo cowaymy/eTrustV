@@ -114,7 +114,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 
 		// 헤더 작성
 		messageType	= StringUtils.rightPad(String.valueOf("H"), 1, " ");
-		sbatchNo      	= StringUtils.leftPad(String.valueOf(params.get("batchNo")), 5, "0");
+		sbatchNo      	= StringUtils.leftPad(String.valueOf("1"), 5, "0");
 		merOrg 			= StringUtils.rightPad(String.valueOf("001"), 3, " ");
 		merId 			= StringUtils.rightPad(String.valueOf("060012051"), 1, " ");
 		merName 		= StringUtils.rightPad(String.valueOf("COWAY (M) SDN BHD"), 20, " ");
@@ -149,7 +149,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		String crcExpiry = dataRow.get("bankDtlCrcExpr") == null ? "0000" : String.valueOf(dataRow.get("bankDtlCrcExpr")).trim();
 
 		bMessageType = StringUtils.rightPad("T", 1, " ");
-		bBatchNo      	= StringUtils.leftPad(String.valueOf(params.get("batchNo")), 5, "0");
+		bBatchNo      	= StringUtils.leftPad(String.valueOf("1"), 5, "0");
 		//bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
 		bTransCode 	= StringUtils.rightPad("40", 2, " ");
 		bAccNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlDrAccNo")), 19, " ");
@@ -196,7 +196,7 @@ public class ClaimFileCrcMBBHandler extends BasicTextDownloadHandler implements 
 		fTotalAmt = (BigDecimal)params.get("ctrlBillAmt");
 		fLimit = fTotalAmt.multiply(hunred).longValue();
 		fMessage = "R";
-		sNoOfBatch = StringUtils.leftPad(String.valueOf(params.get("batchNo")),3,"0");
+		sNoOfBatch = StringUtils.leftPad(String.valueOf("1"),3,"0");
 		//sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
 		sRecTot    = StringUtils.leftPad(String.valueOf(params.get("ctrlTotItm")), 7, "0");
 		//sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");

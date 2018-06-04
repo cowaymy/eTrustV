@@ -1704,8 +1704,8 @@ public class ClaimController {
 
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
-			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
-			sFile = "CZ_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))  + ".dat";
+			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "ddMMyy", "ddMMyyyy");
+			sFile = "CZ" + todayDate + "001" + ".dat";
 
 			downloadHandler = getTextDownloadCrcMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 
