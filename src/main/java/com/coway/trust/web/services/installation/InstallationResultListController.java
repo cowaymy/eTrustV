@@ -123,7 +123,7 @@ public class InstallationResultListController {
 		String[] appTypeList = request.getParameterValues("appType");
 
 		String product = "";
-		if(!params.get("product").equals("") || !params.get("product").equals(null)) {
+		if(!"".equals(params.get("product"))) {
 		    product = params.get("product").toString();
 	        product = product.substring(0, product.indexOf(" - "));
 		}
