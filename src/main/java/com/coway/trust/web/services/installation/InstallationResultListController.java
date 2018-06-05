@@ -122,8 +122,11 @@ public class InstallationResultListController {
 		String[] typeList = request.getParameterValues("type");
 		String[] appTypeList = request.getParameterValues("appType");
 
-		String product = params.get("product").toString();
-		product = product.substring(0, product.indexOf(" - "));
+		String product = "";
+		if(!params.get("product").equals("") || !params.get("product").equals(null)) {
+		    product = params.get("product").toString();
+	        product = product.substring(0, product.indexOf(" - "));
+		}
 
 		params.put("product", product);
 		params.put("installStatusList", installStatusList);
