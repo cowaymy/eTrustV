@@ -20,7 +20,11 @@ var statusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName"
                            {"codeId": "3","codeName": "CIMB Bank"}
                            ]; */
                            var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},
-                                           {"codeId": "3","codeName": "CIMB Bank"}
+                                           {"codeId": "3","codeName": "CIMB Bank"},
+                                           //TEMP
+                                           {"codeId": "1","codeName": "Standard Chartered Bank (Neo)"},
+                                           {"codeId": "19","codeName": "Standard Chartered Bank (Weekly)"}
+                                           //TEMP
                                            ];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
