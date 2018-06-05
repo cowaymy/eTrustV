@@ -4,6 +4,7 @@
 <script type="text/javaScript">
 $(document).ready(function() {
 	doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'dscCode' , 'S', '');
+	doGetCombo('/services/getProductList.do', '', '', 'product', 'S','');
 
 	//grid 생성
 	createInstallationListAUIGrid();
@@ -20,7 +21,7 @@ $(document).ready(function() {
           }else{ */
         	 // alert(AUIGrid.getCellValue(myGridID, event.rowIndex, "code1"));
         	  Common.popupDiv("/services/installationResultDetailPop.do?isPop=true&installEntryId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "installEntryId")+"&codeId=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "codeid1"));
-          
+
       });
 
     AUIGrid.bind(myGridID, "cellClick", function(event) {
@@ -40,6 +41,7 @@ $(document).ready(function() {
 });
 
 function fn_installationListSearch(){
+	console.log($("#product").val());
 	Common.ajax("GET", "/services/installationListSearch.do", $("#searchForm").serialize(), function(result) {
         console.log("성공.");
         console.log( result);
@@ -295,6 +297,15 @@ function fn_editInstallation(){//active 일때만 열림
         Common.alert("<b><spring:message code='service.msg.Onlycompleted'/></b>");
     }
 }
+
+function f_multiCombo2() {
+
+    $('#product').change(function() {
+    }).multipleSelect({
+        selectAll : true,
+        width : '80%'
+    });
+}
 </script>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -412,6 +423,10 @@ function fn_editInstallation(){//active 일때만 열림
     <td><input type="text" class="w100p" title="" placeholder="" id="sirimNo" name="sirimNo"/></td>
     <th scope="row"><spring:message code='service.title.SerialNo'/></th>
     <td colspan="3"><input type="text" class="w100p" title="" placeholder="" id="serialNo" name="serialNo"/></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code='service.title.Product'/></th>
+    <td colspan="5"><select class="w100p" id="product" name="product"></select></td>
 </tr>
 </tbody>
 </table><!-- table end -->

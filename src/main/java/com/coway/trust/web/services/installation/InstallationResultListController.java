@@ -70,8 +70,8 @@ public class InstallationResultListController {
 		return "services/installation/installationResultList";
 	}
 
-	
-	
+
+
 
 	/**
 	 * Installation Result DetailPopup
@@ -83,7 +83,7 @@ public class InstallationResultListController {
 	 */
 	@RequestMapping(value = "/installationResultPop.do")
 	public String installationResultPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		EgovMap resultInfo = installationResultListService.getInstallationResultInfo(params);
 		model.addAttribute("resultInfo", resultInfo);
 		logger.debug("viewInstallation : {}", resultInfo);
@@ -92,9 +92,9 @@ public class InstallationResultListController {
 		// 호출될 화면
 		return "services/installation/installationResultPop";
 	}
-	
-	
-	
+
+
+
 	@RequestMapping(value = "/viewInstallationResult.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> viewInstallationResult(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
@@ -103,10 +103,10 @@ public class InstallationResultListController {
 		logger.debug("viewInstallation : {}", viewInstallation);
 		return ResponseEntity.ok(viewInstallation);
 	}
-	
-		
-		
-		
+
+
+
+
 	/**
 	 * Search rule book management list
 	 *
@@ -122,6 +122,10 @@ public class InstallationResultListController {
 		String[] typeList = request.getParameterValues("type");
 		String[] appTypeList = request.getParameterValues("appType");
 
+		String product = params.get("product").toString();
+		product = product.substring(0, product.indexOf(" - "));
+
+		params.put("product", product);
 		params.put("installStatusList", installStatusList);
 		params.put("typeList", typeList);
 		params.put("appTypeList", appTypeList);
@@ -144,7 +148,7 @@ public class InstallationResultListController {
 		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
 		EgovMap orderInfo = null;
 		logger.debug("params1111111 {}",params);
-		
+
 		if(params.get("codeId").toString().equals("258")){
 			orderInfo = installationResultListService.getOrderExchangeTypeByInstallEntryID(params);
 		}else{
@@ -152,8 +156,8 @@ public class InstallationResultListController {
 		}
 
 		//EgovMap customerInfo = installationResultListService.getcustomerInfo(orderInfo == null ?installResult.get("custId") :  orderInfo.get("custId"));
-		
-		
+
+
 		EgovMap customerInfo = installationResultListService.getcustomerInfo(orderInfo);
 		//EgovMap customerAddress = installationResultListService.getCustomerAddressInfo(customerInfo);
 		EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
@@ -186,13 +190,13 @@ public class InstallationResultListController {
 		return "services/installation/installationResultDetailPop";
 	}
 
-	
-	
-	
 
-	
-	
-	
+
+
+
+
+
+
 	/**
 	 * InstallationResultDetailPop View Installation Result
 	 *
@@ -276,7 +280,7 @@ public class InstallationResultListController {
 				promotionView.put("swapPormoPrice","0");
 			}
 		}
-		
+
 		logger.debug("paramsqqqq {}",params);
 		Object custId =( orderInfo == null ? installResult.get("custId") :  orderInfo.get("custId") );
 		params.put("custId", custId);
@@ -345,7 +349,7 @@ public class InstallationResultListController {
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params ,sessionVOl);
 		model.addAttribute("viewDetail", viewDetail);
 		model.addAttribute("orderDetail", orderDetail);
-		
+
 		// 180125_추가
 		List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
 		params.put("ststusCodeId", 1);
@@ -403,7 +407,7 @@ public class InstallationResultListController {
 				promotionView.put("swapPormoPrice","0");
 			}
 		}
-		
+
 		logger.debug("paramsqqqq {}",params);
 		Object custId =( orderInfo == null ? installResult.get("custId") :  orderInfo.get("custId") );
 		params.put("custId", custId);
@@ -496,20 +500,20 @@ public class InstallationResultListController {
 		EgovMap installResult = installationResultListService.getInstallResultByInstallEntryID(params);
 //		EgovMap locInfo = installationResultListService.getLocInfo(installResult);
 		logger.debug("installResult : {}"+ installResult);
-		
+
 		Map<String, Object> locInfoEntry = new HashMap<String, Object>();
 		locInfoEntry.put("CT_CODE", installResult.get("ctMemCode"));
 		locInfoEntry.put("STK_CODE", installResult.get("installStkId"));
 		logger.debug("locInfoEntry : {}"+ locInfoEntry);
 		EgovMap  locInfo = (EgovMap) servicesLogisticsPFCService.getFN_GET_SVC_AVAILABLE_INVENTORY(locInfoEntry);
 		logger.debug("locInfo : {}"+ locInfo);
-		
+
 		EgovMap validMap =  installationResultListService.validationInstallationResult(params);
 		int resultCnt = ((BigDecimal)validMap.get("resultCnt")).intValue();
-		
-		//failed  add  by hgham 
+
+		//failed  add  by hgham
 		if(CommonUtils.nvl(params.get("installStatus")).equals("21")){
-		
+
 			if(resultCnt > 0){
 				message.setMessage("There is complete result exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
     		} else {
@@ -527,43 +531,43 @@ public class InstallationResultListController {
         			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
         		}
     		}
-			
-			
+
+
 		}else{
 //		if(locInfo==null){
 //				message.setMessage("Can't complete the Installation without available stock in the CT");
 //			}else{
 //				if(Integer.parseInt(locInfo.get("availQty").toString())<1){
 //					message.setMessage("Can't complete the Installation without available stock in the CT");
-//				}else{    		
-	        	
+//				}else{
+
 	        		if(resultCnt > 0){
 	        			message.setMessage("There is complete result exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
 	        		} else {
 	            		resultValue = installationResultListService.insertInstallationResult(params, sessionVO);
-	            		
+
 	            		if( null !=resultValue){
 	            			HashMap   spMap =(HashMap)resultValue.get("spMap");
 	            			logger.debug("spMap :"+ spMap.toString());
 	            			if(!"000".equals(spMap.get("P_RESULT_MSG"))){
-	        
+
 	            				resultValue.put("logerr","Y");
 	            				message.setMessage("Error in Logistics Transaction !");
-	        
+
 	            			}else{
 	            				message.setData("Y");
 	            				message.setMessage(resultValue.get("value") + " to " + resultValue.get("installEntryNo"));
-	        
+
 	            			}
 	            			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 	            		}
             		}
 //			}
 //			}
-		
+
 		}
-		
-		
+
+
 		return ResponseEntity.ok(message);
 	}
 
@@ -631,24 +635,24 @@ public class InstallationResultListController {
 
 		Map<String, Object> returnValue = new HashMap<String, Object>();
 		returnValue = installationResultListService.updateAssignCT(params);
-		
+
 		logger.debug("rtnValue ===> "+returnValue);
-		
+
 		String content = "";
 		String successCon = "";
 		String failCon = "";
-		
+
 		int successCnt = 0;
 		int failCnt = 0;
 		successCnt = Integer.parseInt(returnValue.get("successCnt").toString());
 		failCnt = Integer.parseInt(returnValue.get("failCnt").toString());
 		content = "[ Complete Count : " + successCnt + ", Fail Count : " + failCnt + " ]";
-		
+
 		List<String> successList = new ArrayList<String>();
 		List<String> failList = new ArrayList<String>();
 		successList =  (List<String>) returnValue.get("successList");
 		failList =  (List<String>) returnValue.get("failList");
-		
+
 		if (successCnt > 0) {
 			content += "<br/>Complete INS Number : ";
 			for (int i=0; i<successCnt; i++) {
@@ -657,7 +661,7 @@ public class InstallationResultListController {
 			successCon = successCon.substring(0, successCon.length()-2);
 			content += successCon;
 		}
-		
+
 		if (failCnt > 0) {
 			content += "<br/>Fail INS Number : ";
 			for (int i=0; i<failCnt; i++) {
@@ -667,12 +671,12 @@ public class InstallationResultListController {
 			content += failCon;
 			content += "<br/>Can't transfer CT to the Installation order";
 		}
-		
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(99);
 		message.setMessage(content);
-		
+
 		/*if (rtnValue == -1) {
 			message.setCode(AppConstants.FAIL);
 			message.setMessage("Can't transfer CT to the Installation order");
@@ -681,7 +685,7 @@ public class InstallationResultListController {
 			message.setData(99);
 			message.setMessage("");
 		}*/
-		
+
 		logger.debug("message : {}", message);
 		return ResponseEntity.ok(message);
 
@@ -843,7 +847,7 @@ public class InstallationResultListController {
 		int userId = sessionVO.getUserId();
 		params.put("user_id", userId);
 		logger.debug("params : {}", params);
-	
+
 		resultValue = installationResultListService.editInstallationResult(params, sessionVO);
 		if(resultValue>0){
 			message.setMessage("Installation result successfully updated.");
@@ -853,25 +857,29 @@ public class InstallationResultListController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/checkMonth.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> checkMonthInstallation(@RequestParam Map<String, Object> params,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 		logger.debug("params : {}", params);
-		
+
 		EgovMap isPossibleMonth = installationResultListService.checkMonthInstallDate(params);
-		
+
 		if(isPossibleMonth != null) {
-			
-			
+
+
 		}else {
 			message.setMessage("Please choose this month only");
 		}
-		
-		
+
+
 		return ResponseEntity.ok(message);
 	}
-	
-	
-	
+
+	@RequestMapping(value = "/getProductList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getProductList(@RequestParam Map<String, Object> params) {
+        List<EgovMap> codeList = installationResultListService.getProductList(params);
+        return ResponseEntity.ok(codeList);
+    }
+
 }

@@ -21,7 +21,7 @@ public interface InstallationResultListService {
 	EgovMap getOrderInfo(Map<String, Object> params);
 
 	//EgovMap getcustomerInfo(Object cust_id);
-	
+
 	EgovMap getcustomerInfo( Map<String, Object> params);
 
 	EgovMap getCustomerAddressInfo(Map<String, Object> params);
@@ -76,11 +76,11 @@ public interface InstallationResultListService {
 
 	//add by hgham  mobile 중복 처리
 	int isInstallAlreadyResult (Map<String, Object> params);
-	
+
 	int insResultSync (Map<String, Object> params);
 
 	EgovMap validationInstallationResult(Map<String, Object> params);
-	
+
 	EgovMap getLocInfo(Map<String, Object> params);
 
 	EgovMap getInstallationResultInfo(Map<String, Object> params);
@@ -88,8 +88,8 @@ public interface InstallationResultListService {
 	List<EgovMap> viewInstallationResult(Map<String, Object> params);
 
 	EgovMap checkMonthInstallDate(Map<String, Object> params);
-	
-	
-	
+
+	List<EgovMap> getProductList(Map<String, Object> params);
+
 
 }

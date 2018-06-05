@@ -159,6 +159,9 @@
                          <if test="orderDate != null and orderDate != ''">
                          AND SOM.SALES_DT = TO_DATE(#{orderDate},'DD/MM/YYYY')
                          </if>
+                         <if test="product != null and product != ''">
+                         AND STK.STK_CODE = #{product}
+                         </if>
     </select>
     <select id="installationResultList2" parameterType="Map" resultType="egovMap">
     <![CDATA[
@@ -395,7 +398,7 @@
            Extent17.ADDR_DTL ,
            Extent17.STREET    ,
            Extent18.AREA_ID ,
-           Extent1.Grade 
+           Extent1.Grade
 	  FROM SAL0046D Extent1
 	         LEFT JOIN SAL0047D Extent2   ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
 	         JOIN SAL0001D Extent3   ON Extent1.SALES_ORD_ID = Extent3.SALES_ORD_ID
@@ -643,16 +646,16 @@
        extend64.STATE,
        extend64.COUNTRY,
        extend64.AREA
-    FROM SAL0029D Extent1 LEFT JOIN SYS0013M Extent2 ON TO_NUMBER(Extent1.RACE_ID, 99999) = Extent2.CODE_ID 
-                        LEFT JOIN SYS0015M Extent3 ON TO_NUMBER(Extent1.NATION, 99999) = Extent3.CNTY_ID 
-                        join SAL0023D extend23 ON Extent1.CUST_ID = extend23.CUST_ID 
+    FROM SAL0029D Extent1 LEFT JOIN SYS0013M Extent2 ON TO_NUMBER(Extent1.RACE_ID, 99999) = Extent2.CODE_ID
+                        LEFT JOIN SYS0015M Extent3 ON TO_NUMBER(Extent1.NATION, 99999) = Extent3.CNTY_ID
+                        join SAL0023D extend23 ON Extent1.CUST_ID = extend23.CUST_ID
                         join sys0064m extend64 ON extend23.AREA_ID = extend64.AREA_ID
-                        join sal0045d S45 ON S45.ADD_ID = extend23.cust_add_id  
-                        join sal0001d S01 ON s01.sales_ord_id = S45.sales_ord_id 
-                        
+                        join sal0045d S45 ON S45.ADD_ID = extend23.cust_add_id
+                        join sal0001d S01 ON s01.sales_ord_id = S45.sales_ord_id
+
     WHERE s01.sales_ord_no = #{salesOrdNo}
    AND extend23.cust_id = #{custId}
-   AND (TO_NUMBER(Extent1.STUS_CODE_ID, 99999) = 1 ) 
+   AND (TO_NUMBER(Extent1.STUS_CODE_ID, 99999) = 1 )
 
      </select>
      <select id="getCustomerAddressInfo" parameterType="Map" resultType="egovMap">
@@ -2601,8 +2604,8 @@
 		       INSTALL_DT = TO_DATE(#{installDate},'DD-MM-YYYY')
 		 WHERE  ( INSTALL_ENTRY_ID = #{installEntryId} )
 		 </update>
-		 
-		 
+
+
 		  <update id="updateInstallEntryEdit" parameterType="Map">
          UPDATE SAL0046D
            SET UPD_DT = SYSDATE,
@@ -2610,26 +2613,26 @@
                INSTALL_DT = TO_DATE(#{installdt},'DD-MM-YYYY')
          WHERE  ( INSTALL_ENTRY_ID = #{entryId} )
          </update>
-         
-         
+
+
     <update id="updateRentalStatus" parameterType="Map">
      <![CDATA[
         update sal0071d
            set stus_code_id = 'REG'
               ,ren_sch_dt = sysdate
-           
+
          where sales_ord_id = #{salesOrderId}
         ]]>
     </update>
     <update id="updateSal0004d" parameterType="Map">
-        UPDATE SAL0004D 
+        UPDATE SAL0004D
         SET    SO_EXCHG_STUS_ID = '4'
         , SO_EXCHG_UPD_USER_ID = #{logCreator}
         , SO_EXCHG_UPD_DT = SYSDATE
        where SO_ID = #{salesOrderId}
     </update>
 
-         
+
 		<insert id="insertSirim" parameterType="Map">
 		 INSERT INTO LOG0040D (
 		      SIRIM_ID
@@ -3636,29 +3639,29 @@
         ,#{TAX_INVC_OVERDU}
         ,#{TAX_INVC_AMT_DUE}
         ,#{TAX_INVC_PO_NO}
-        ,(SELECT   AREA_ID 
+        ,(SELECT   AREA_ID
 			     FROM   SAL0001D B  ,
 			               SAL0023D C  ,
-			               SAL0024D D  
+			               SAL0024D D
 			 WHERE   B.SALES_ORD_ID =#{hidSalesOrderId}
 			 AND B.CUST_BILL_ID    = D.CUST_BILL_ID
 			 AND C.CUST_ADD_ID     = D.CUST_BILL_ADD_ID
 			 AND ROWNUM =1  )
-        , (SELECT   ADDR_DTL 
+        , (SELECT   ADDR_DTL
                  FROM     SAL0001D B  ,
-                           SAL0023D C  ,  
-                           SAL0024D D  
+                           SAL0023D C  ,
+                           SAL0024D D
              WHERE   B.SALES_ORD_ID =#{hidSalesOrderId}
              AND B.CUST_BILL_ID    = D.CUST_BILL_ID
              AND C.CUST_ADD_ID     = D.CUST_BILL_ADD_ID
              AND ROWNUM =1   )
         , (SELECT   STREET  FROM   SAL0001D B  ,
                            SAL0023D C  ,
-                           SAL0024D D  
+                           SAL0024D D
              WHERE   B.SALES_ORD_ID =#{hidSalesOrderId}
              AND B.CUST_BILL_ID    = D.CUST_BILL_ID
              AND C.CUST_ADD_ID    = D.CUST_BILL_ADD_ID
-             AND ROWNUM =1  ) 
+             AND ROWNUM =1  )
           )
           </insert>
 
@@ -3711,7 +3714,7 @@
         ,#{INVC_ITM_FEES_AMT_DUE}
         ,#{INVC_ITM_FEES_CHRG}
         ,#{AREA_ID}
-        ,#{ADDR_DTL} 
+        ,#{ADDR_DTL}
         ,#{STREET}
           )
           </insert>
@@ -3946,8 +3949,8 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
 
 
     <select id="assignCtList" parameterType="Map" resultType="egovMap">
-    
-				    
+
+
 				    SELECT DISTINCT C.MEM_ID CT_ID,
 									       C.MEM_CODE CT_CODE,
 									       B.BRNCH_ID BRNCH_ID,
@@ -4031,7 +4034,7 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
        ELSE UTILS.CONVERT_TO_NUMBER(0,1,0)
           END C1  ,
        Limit1.CRT_DT CRT_DT  ,
-      TO_char( Limit1.INSTALL_DT, 'dd/mm/yyyy') INSTALL_DT, 
+      TO_char( Limit1.INSTALL_DT, 'dd/mm/yyyy') INSTALL_DT,
        CASE
             WHEN ( Limit1.USER_ID IS NOT NULL ) THEN Limit1.USER_NAME
        ELSE 'N'
@@ -4152,7 +4155,7 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
                UPD_DT = SYSDATE,
                UPD_USER_ID = #{user_id},
               INSTALL_DT= to_date( #{installdt} , 'DD/MM/YYYY' )
-               
+
          WHERE  ( RESULT_ID = #{resultId} )
          </update>
 
@@ -4196,13 +4199,13 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
         WHERE A.INSTALL_ENTRY_ID = B.ENTRY_ID
             AND A.INSTALL_ENTRY_ID = #{hidEntryId}
     </select>
-    
+
     <select id="getUsePAY0033D_addr" parameterType="Map" resultType="egovMap">
     <!-- PAY0033D -->
 SELECT B.ADDR_DTL AS TAX_INVC_ADDR1,
        B.STREET AS TAX_INVC_ADDR2,
        D.POSTCODE AS TAX_INVC_POST_CODE,
-       D.STATE AS TAX_INVC_STATE_NAME, 
+       D.STATE AS TAX_INVC_STATE_NAME,
        D.COUNTRY AS TAX_INVC_CNTY
   FROM SAL0001D A,
        SAL0023D B,
@@ -4214,14 +4217,14 @@ SELECT B.ADDR_DTL AS TAX_INVC_ADDR1,
    AND B.AREA_ID = D.AREA_ID
    AND A.SALES_ORD_NO = #{hidTaxInvDSalesOrderNo}
     </select>
-    
+
     <select id="getUsePAY0034D_addr" parameterType="Map" resultType="egovMap">
     <!-- PAY0034D -->
 
 SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
        B.STREET AS INVC_ITM_ADD2,
        D.POSTCODE AS INVC_ITM_POST_CODE,
-       D.STATE AS INVC_ITM_STATE_NAME, 
+       D.STATE AS INVC_ITM_STATE_NAME,
        D.COUNTRY AS INVC_ITM_CNTY
   FROM SAL0001D A,
        SAL0023D B,
@@ -4232,12 +4235,12 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
    AND A.CUST_ID = B.CUST_ID
    AND B.AREA_ID = D.AREA_ID
    AND A.SALES_ORD_NO = #{hidTaxInvDSalesOrderNo}
-    
+
     </select>
-    
-    <select id="getLocInfo" parameterType="Map" resultType="egovMap">    
+
+    <select id="getLocInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
-    
+
 				 SELECT L56.STK_CODE,
 				       NVL (L56.QTY, 0) + NVL (L56.MOV_QTY, 0) AS TOTAL_QTY,
 				       NVL (L75.BOOKQTY, 0) AS IN_TRANSIT,
@@ -4257,15 +4260,15 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 				   AND S26.STK_CODE = L56.STK_CODE
 				   AND L56.LOC_ID =(SELECT WH_LOC_ID  FROM SYS0028M WHERE  WH_LOC_CODE = #{ctMemCode})
 		           AND S26.STK_CODE = #{stkCode}
-                   
+
         ]]>
         </select>
-        
-        
-        
-        
+
+
+
+
      <select id="getCustInfo" parameterType="Map" resultType="egovMap">
-        <![CDATA[	
+        <![CDATA[
 				SELECT B.NAME AS CUSTOMER,
 				           F.NAME AS CONTACT,
 				           D.STK_DESC,
@@ -4281,12 +4284,12 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 				   AND C.ITM_STK_ID = D.STK_ID
 				   AND E.CODE_ID = D.STK_CTGRY_ID
 				   AND A.CUST_CNT_ID = F.CUST_CNTC_ID
-				   AND A.SALES_ORD_NO =  #{SALES_ORD_NO} 
+				   AND A.SALES_ORD_NO =  #{SALES_ORD_NO}
         ]]>
     </select>
-    
-    
-    
+
+
+
      <select id="getMAddressInfo" parameterType="Map" resultType="egovMap">
         <![CDATA[
 		          SELECT           B.ADDR_DTL            as ADDR_DTL        -- ASIS_ADDR1
@@ -4301,18 +4304,18 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 		              FROM  SAL0001D  A
 		                  , SAL0023D  B
 		                  , SAL0045D  C
-		                  , SYS0064M  D 
+		                  , SYS0064M  D
 		            WHERE   1=1
-		                AND  A.CUST_ID      = B.CUST_ID 
+		                AND  A.CUST_ID      = B.CUST_ID
 		                AND  C.SALES_ORD_ID = A.SALES_ORD_ID
 		                AND  B.CUST_ADD_ID  = C.ADD_ID
 		                AND  B.AREA_ID      = D.AREA_ID
 		                AND  D.STATUS_ID    = 1
-		                AND  A.SALES_ORD_NO =  #{SALES_ORD_NO} 
+		                AND  A.SALES_ORD_NO =  #{SALES_ORD_NO}
         ]]>
     </select>
-    
-   
+
+
     <select id="checkExchangeCollLog" parameterType="Map" resultType="egovMap">
                 select *
                 from ccr0006d
@@ -4321,21 +4324,21 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
                 and TYPE_ID = 258
                 order by CALL_ENTRY_ID desc
     </select>
-    
-   
+
+
      <select id="getCheckMonthInstallDt" parameterType="Map" resultType="egovMap">
-      select * 
+      select *
       from (
 		          select to_date(#{intallDate}, 'DD/MM/YYYY' ) check_month
 		           from dual
                )a
         where to_char(a.check_month, 'YYYYMM' )= to_char(sysdate , 'YYYYMM')
-     
+
      </select>
-    
+
          <select id="getInstallationResultInfo" parameterType="Map" resultType="egovMap">
         <![CDATA[
-				  SELECT * 
+				  SELECT *
 				  FROM ( SELECT Project1.RESULT_ID RESULT_ID  ,
 				                Project1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
 				                Project1.C1 C1  ,
@@ -4355,7 +4358,7 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 				                Project1.NEXT_CALL_DT NEXT_CALL_DT  ,
 				                Project1.REM REM  ,
 				                Project1.CODE1 CODE1  ,
-				                Project1.RESN_DESC RESN_DESC  
+				                Project1.RESN_DESC RESN_DESC
 				  FROM ( SELECT Extent1.RESULT_ID RESULT_ID  ,
 				                to_char(Extent1.INSTALL_DT,'yyyy-mm-dd')  INSTALL_DT  ,
 				                Extent1.REM REM  ,
@@ -4375,7 +4378,7 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 				                Extent4.NAME NAME1  ,
 				                Extent5.USER_NAME USER_NAME  ,
 				                Extent6.CODE CODE1  ,
-				                Extent6.RESN_DESC RESN_DESC  
+				                Extent6.RESN_DESC RESN_DESC
 				         FROM SAL0047D Extent1
 				                JOIN SAL0046D Extent2   ON Extent1.ENTRY_ID = Extent2.INSTALL_ENTRY_ID
 				                LEFT JOIN SYS0038M Extent3   ON Extent2.STUS_CODE_ID = Extent3.STUS_CODE_ID
@@ -4387,7 +4390,7 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 				  WHERE ROWNUM <= 1
         ]]>
     </select>
-    
+
     <select id="viewInstallationResult" parameterType="Map" resultType="egovMap">
 			SELECT Project1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
 			       Project1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
@@ -4398,7 +4401,7 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 			       Project1.RESULT_ID RESULT_ID  ,
 			       Project1.USER_NAME USER_NAME  ,
 			       Project1.C2 C2  ,
-			       Project1.CODE1 CODE1  
+			       Project1.CODE1 CODE1
 			  FROM ( SELECT Filter1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
 			                Filter1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
 			                (Filter1.INSTALLDATE1) C1  ,
@@ -4408,7 +4411,7 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 			                Filter1.CODE CODE  ,
 			                Filter1.MEM_CODE MEM_CODE  ,
 			                Filter1.USER_NAME USER_NAME  ,
-			                Extent7.CODE CODE1  
+			                Extent7.CODE CODE1
 			         FROM ( SELECT Extent1.INSTALL_ENTRY_ID INSTALL_ENTRY_ID  ,
 			                       Extent1.INSTALL_ENTRY_NO INSTALL_ENTRY_NO  ,
 			                       Extent1.INSTALL_DT INSTALLDATE1  ,
@@ -4418,7 +4421,7 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 			                       Extent3.CODE CODE  ,
 			                       Extent4.MEM_CODE MEM_CODE  ,
 			                       Extent5.USER_NAME USER_NAME  ,
-			                       Extent6.TYPE_ID TYPE_ID  
+			                       Extent6.TYPE_ID TYPE_ID
 			                FROM SAL0046D Extent1
 			                       LEFT JOIN SAL0047D Extent2   ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
 			                       LEFT JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
@@ -4431,18 +4434,32 @@ SELECT B.ADDR_DTL AS INVC_ITM_ADD1,
 			          WHERE  Filter1.RESULTID1 = #{resultId} ) Project1
 			  ORDER BY Project1.RESULT_ID ASC
      </select>
-         
-    
+
+
      <select id="insResultSync" parameterType="Map" resultType="java.lang.Integer">
-        <![CDATA[        
-               SELECT   COUNT(*) CNT 
-             FROM SAL0046D  A,  
-                  ORG0001D  B 
+        <![CDATA[
+               SELECT   COUNT(*) CNT
+             FROM SAL0046D  A,
+                  ORG0001D  B
              WHERE  A.INSTALL_ENTRY_NO     =#{serviceNo}
                 AND A.CT_ID =B.MEM_ID
                 AND B.MEM_CODE  =#{userId}
         ]]>
     </select>
-    
-    
+
+    <select id="getProductList" parameterType="Map" resultType="egovMap">
+        SELECT
+            STK_ID,
+            STK_CODE CODE,
+            STK_CODE || ' - ' || STK_DESC CODE_NAME
+        FROM
+            SYS0026M
+        WHERE
+                STK_TYPE_ID = '61'
+            AND
+                STUS_CODE_ID = '1'
+        ORDER BY
+            STK_CODE,
+            STK_DESC
+    </select>
     </mapper>

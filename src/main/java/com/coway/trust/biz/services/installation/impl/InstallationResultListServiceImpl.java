@@ -2283,4 +2283,10 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 		// TODO Auto-generated method stub
 		return installationResultListMapper.getCheckMonthInstallDt(params);
 	}
+
+	@Override
+    public List<EgovMap> getProductList(Map<String, Object> params) {
+        // TODO ProductCodeList 호출시 error남
+        return installationResultListMapper.getProductList(params);
+    }
 }
