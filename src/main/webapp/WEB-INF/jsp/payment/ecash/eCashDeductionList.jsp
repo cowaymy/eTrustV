@@ -23,7 +23,7 @@ var statusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName"
                                            {"codeId": "3","codeName": "CIMB Bank"},
                                            //TEMP
                                            {"codeId": "1","codeName": "Standard Chartered Bank (Neo)"},
-                                           {"codeId": "19","codeName": "Standard Chartered Bank (Weekly)"}
+                                           {"codeId": "2","codeName": "Standard Chartered Bank (Weekly)"}
                                            //TEMP
                                            ];
 
