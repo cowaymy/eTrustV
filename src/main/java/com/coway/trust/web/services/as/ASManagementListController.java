@@ -436,10 +436,18 @@ public class ASManagementListController {
 		model.put("BRANCH_NAME", sessionVO.getBranchName());
 		model.put("BRANCH_ID", sessionVO.getUserBranchId());
 
+		params.put("salesOrderId", params.get("ord_Id"));
+
 		//add order view info
-		EgovMap basicinfo = null;
-		basicinfo = hsManualService.selectHsViewBasicInfo(params);
-		model.addAttribute("basicinfo", basicinfo);
+		EgovMap orderDetail = null;
+		//basicinfo = hsManualService.selectHsViewBasicInfo(params);
+		try {
+			orderDetail= orderDetailService.selectOrderBasicInfo(params, sessionVO);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		model.addAttribute("orderDetail", orderDetail);
 
 		return "services/as/newASResultPop";
 	}
@@ -577,6 +585,17 @@ public class ASManagementListController {
 	}
 
 
+	@RequestMapping(value = "/getStockPrice.do",method = RequestMethod.GET)
+	public ResponseEntity<Map> getStockPrice(@RequestParam Map<String,Object> params, HttpServletRequest request,ModelMap model){
+		logger.debug("params : ", params.toString());
+		EgovMap filterprice = ASManagementListService.getStockPricebyStkID(params);
+
+		Map<String, Object> map = new HashMap();
+		map.put("FilPrice", filterprice);
+
+		logger.debug("FilPrice : ",map.get("FilPrice"));
+		return ResponseEntity.ok(map);
+	}
 
 
 	@RequestMapping(value = "/getTotalUnclaimItem", method = RequestMethod.GET)
