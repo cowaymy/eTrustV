@@ -118,6 +118,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		return ASManagementListMapper.spFilterClaimCheck(params);
 	}
 
+	@Override
+	public EgovMap getStockPricebyStkID(Map<String,Object> params){
+		return ASManagementListMapper.selectStkPriceByStkID(params);
+	}
 
 
 	@Override
