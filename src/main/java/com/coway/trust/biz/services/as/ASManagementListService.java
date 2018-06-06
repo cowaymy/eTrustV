@@ -122,6 +122,8 @@ public interface ASManagementListService {
 	List<EgovMap> selectSVC0025T(Map<String, Object> params);
 	List<EgovMap> selectSVC0026T(Map<String, Object> params);
 
+	EgovMap getStockPricebyStkID(Map<String, Object> params);
+
 
 
 
