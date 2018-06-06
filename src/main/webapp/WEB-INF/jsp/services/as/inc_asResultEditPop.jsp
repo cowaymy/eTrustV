@@ -493,9 +493,10 @@ function fn_LabourCharge_CheckedChanged(_obj){
 
       if(_obj.checked){
           $('#cmbLabourChargeAmt').removeAttr("disabled").removeClass("readonly");
-          $("#cmbLabourChargeAmt").val("50");
-          $("#txtLabourCharge").val("50.00");
+          $("#cmbLabourChargeAmt").val("60");
+          $("#txtLabourCharge").val("60.00");
       }else{
+    	  $("#txtLabourCharge").val("0.00");
           $("#cmbLabourChargeAmt").val("");
           $("#cmbLabourChargeAmt").attr("disabled", true);
       }
@@ -534,9 +535,31 @@ function fn_cmbLabourChargeAmt_SelectedIndexChanged(){
 }
 
 
+function fn_cmbPaymentType(){
+	if ($('#ddlFilterCode').val() != ""){
+		if ($("#ddlFilterPayType").val() == "CHG"){
+	        var pCode = $("#ddlFilterCode").val();
+
+	        Common.ajaxSync("GET", "/services/as/getStockPrice.do",{stkID:pCode} , function(result) {
+	            var pPrice = result.FilPrice.filterprice;
+	            //Common.alert("aa "+pPrice + pPrice);
+	            $("#txtFilterCharge").val(pPrice+".00");
+	        });
+	    }
+	    else
+	        {
+	        $("#txtFilterCharge").val("0.00");
+	        }
+	}
+	fn_calculateTotalCharges();
+}
 
 
-
+function fn_onChangeddlFilterCode(){
+	$("#ddlFilterPayType").val("");
+	$("#txtFilterCharge").val("0.00");
+	fn_calculateTotalCharges();
+}
 
 
 function fn_filterAddVaild(){
@@ -643,7 +666,7 @@ function fn_filterAdd(){
 
 
         var v =  Number(  $("#txtFilterCharge").val()) + chargeTotalPrice;
-        $("#txtFilterCharge").val( v);
+        //$("#txtFilterCharge").val( v);
 
 
     if( AUIGrid.isUniqueValue (myFltGrd10,"filterID" ,fitem.filterID )){
@@ -1270,7 +1293,7 @@ function  fn_setSaveFormData(){
     <tr>
         <th scope="row">Filter Code</th>
         <td>
-        <select  id='ddlFilterCode' name='ddlFilterCode'>
+        <select  id='ddlFilterCode' name='ddlFilterCode' onChange = "fn_onChangeddlFilterCode()">
         </select>
         </td>
         <th scope="row">Quantity</th>
@@ -1296,7 +1319,7 @@ function  fn_setSaveFormData(){
     <tr>
         <th scope="row">Payment Type</th>
         <td>
-        <select  id='ddlFilterPayType' name='ddlFilterPayType'>
+        <select  id='ddlFilterPayType' name='ddlFilterPayType' onChange="fn_cmbPaymentType()">
                <option value="" >Choose One</option>
               <option value="FOC">Free of Charge</option>
               <option value="CHG">Charge</option>
