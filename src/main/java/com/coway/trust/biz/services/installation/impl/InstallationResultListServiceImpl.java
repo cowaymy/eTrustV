@@ -2008,18 +2008,19 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
     			// Outright || Instalment || Outright Plus
 
     			if(isBillAvb){
-            		//insert taxinvoiceRental
-            		//installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
+    			    if("4".equals(installResult.get("statusCodeId").toString())){ // 2018-06-07 - LaiKW - Add checking to bill only when installation status is complete
+    			        //insert taxinvoiceRental
+                        //installationResultListMapper.insertTaxInvoiceCompany(TaxinvoiceCompany);
 
-        			//insert taxinvoiceOutright
-            		installationResultListMapper.insertTaxInvoiceOutright(taxInvoiceOutright);
-            		//insert taxinvoiceOutright_Sub
-            		installationResultListMapper.insertTaxInvoiceOutrightSub(taxInvoiceOutrightSub);
-            		//insert tradeLedger
-            		installationResultListMapper.insertAccTradeLedger(AccTradeLedger);
-            		//insert Accorderbill
-            		installationResultListMapper.insertAccorderBill(AccOrderBill);
-
+                        //insert taxinvoiceOutright
+                        installationResultListMapper.insertTaxInvoiceOutright(taxInvoiceOutright);
+                        //insert taxinvoiceOutright_Sub
+                        installationResultListMapper.insertTaxInvoiceOutrightSub(taxInvoiceOutrightSub);
+                        //insert tradeLedger
+                        installationResultListMapper.insertAccTradeLedger(AccTradeLedger);
+                        //insert Accorderbill
+                        installationResultListMapper.insertAccorderBill(AccOrderBill);
+    			    }
     			}
 
         		entry.put("installResultId", maxId);
