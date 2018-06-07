@@ -1691,14 +1691,14 @@
                     msg += '<spring:message code="sal.alert.msg.plzKeyinInstDuration" />';
                 }
             }
-/*
+
             if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '144' || appTypeVal == '1412') {
                 if($("#ordPromo option:selected").index() <= 0) {
                     isValid = false;
                     msg += "* Please select the promotion code.<br>";
                 }
             }
-*/
+
             if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '1412') {
                 if(FormUtil.checkReqValue($('#refereNo'))) {
                     isValid = false;
@@ -2703,7 +2703,7 @@
     <td><input id="salesmanNm" name="salesmanNm" type="text" title="" placeholder="Salesman Name" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.promo" /></th>
+    <th scope="row"><spring:message code="sal.title.text.promo" /><span class="must">*</span></th>
     <td>
     <select id="ordPromo" name="ordPromo" class="w100p" disabled></select>
     <input id="txtOldOrderID" name="txtOldOrderID" type="hidden" />
