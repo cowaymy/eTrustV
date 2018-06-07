@@ -288,7 +288,7 @@
     </select>
 
     <delete id="deleteECashDeductionResultItem" parameterType="Map" >
-        DELETE FROM SAL0211T WHERE ITM_ID = #{fileBatchId}
+        DELETE FROM SAL0211T
     </delete>
 
     <insert id="insertECashDeductionResultItem" parameterType="Map" >
