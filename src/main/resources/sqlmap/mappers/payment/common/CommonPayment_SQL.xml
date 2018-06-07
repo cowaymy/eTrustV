@@ -3,17 +3,17 @@
 <mapper namespace="com.coway.trust.biz.payment.common.service.impl.CommonPaymentMapper">
 
     <select id="selectOrdIdByNo" parameterType="Map" resultType="egovMap">
-        SELECT 
-            SALES_ORD_ID, 
+        SELECT
+            SALES_ORD_ID,
             SALES_ORD_NO,
             CUST_BILL_ID
-        FROM SAL0001D 
+        FROM SAL0001D
         WHERE SALES_ORD_NO=#{ordNo}
         AND ROWNUM=1
    </select>
 
     <select id="selectOrderInfoRental" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             Extent1.SALES_ORD_ID,
             Extent1.CUST_BILL_ID,
             Extent1.SALES_ORD_NO,
@@ -28,151 +28,151 @@
             Extent1.MTH_RENT_AMT,
             Extent1.TOT_AMT,
             0 AS BALANCE,
-            '' AS LAST_PAYMENT,       
+            '' AS LAST_PAYMENT,
             Extent1.MEM_ID MEM_ID,
             NVL(Extent5.RPF_CNT,0) AS RPF_CNT,
             NVL(Extent5.RPF_CHARGE,0) AS RPF_CHARGE,
             0 AS BTN_CHECK
-        FROM 
+        FROM
             SAL0001D Extent1
             JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
-            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID       
+            JOIN SAL0071D Extent3 ON Extent3.SALES_ORD_ID = Extent1.SALES_ORD_ID
             JOIN SAL0029D Extent4 ON Extent4.CUST_ID = Extent1.CUST_ID
             LEFT JOIN (
-                            SELECT 
+                            SELECT
                                 RENT_SO_ID,
                                 COUNT(1) AS RPF_CNT,
                                 NVL(SUM(RENT_AMT),0) AS RPF_CHARGE
-                            FROM 
-                                PAY0022D 
-                            WHERE  
+                            FROM
+                                PAY0022D
+                            WHERE
                                 RENT_DOC_TYPE_ID = 161 AND RENT_AMT  <![CDATA[ >= ]]>0
-                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID   
+                            GROUP BY RENT_SO_ID ) Extent5 ON Extent5.RENT_SO_ID = Extent1.SALES_ORD_ID
         WHERE
             Extent1.APP_TYPE_ID = 66
             <if test="orderId != null and orderId != ''">
             AND Extent1.SALES_ORD_ID = #{orderId}
-            </if>            
+            </if>
             <if test="billGrpId != null and billGrpId != ''">
             AND Extent1.CUST_BILL_ID = #{billGrpId}
             </if>
-        ORDER BY Extent1.SALES_ORD_NO      
+        ORDER BY Extent1.SALES_ORD_NO
 	</select>
-	
+
 	<select id="selectRPFCN" parameterType="Map" resultType="egovMap">
         SELECT
-            NVL(SUM(RENT_AMT),0) AS CN_AMT     
-        FROM 
-            ( 
-            SELECT 
+            NVL(SUM(RENT_AMT),0) AS CN_AMT
+        FROM
+            (
+            SELECT
                 DISTINCT
                 UnionAll1.RENT_RUN_ID,
-                UnionAll1.RENT_AMT  
-            FROM 
-                ( 
-                SELECT 
+                UnionAll1.RENT_AMT
+            FROM
+                (
+                SELECT
                     Extent1.RENT_RUN_ID RENT_RUN_ID  ,
-                    Extent1.RENT_AMT RENT_AMT  
-                FROM 
+                    Extent1.RENT_AMT RENT_AMT
+                FROM
                     PAY0022D Extent1
                     JOIN PAY0002D Extent2   ON (Extent2.ADJ_ENTRY_NOTE_NO = Extent1.RENT_DOC_NO  OR (Extent2.ADJ_ENTRY_SO_ID = #{orderId}  AND  Extent1.RENT_DOC_NO LIKE 'INS%'  ) )
-                                    AND 171 = Extent2.ADJ_ENTRY_DR_ACC_ID 
-                                    AND 43 = Extent2.ADJ_ENTRY_CR_ACC_ID 
-                                    AND 155 = Extent2.ADJ_ENTRY_NOTE_TYPE_ID 
-                WHERE  
+                                    AND 171 = Extent2.ADJ_ENTRY_DR_ACC_ID
+                                    AND 43 = Extent2.ADJ_ENTRY_CR_ACC_ID
+                                    AND 155 = Extent2.ADJ_ENTRY_NOTE_TYPE_ID
+                WHERE
                     Extent1.RENT_SO_ID = #{orderId}
                     AND 155 = Extent1.RENT_DOC_TYPE_ID
                     AND Extent1.RENT_AMT <![CDATA[ < ]]> 0
                 UNION ALL
-                SELECT 
+                SELECT
                     Extent3.RENT_RUN_ID RENT_RUN_ID  ,
                     Extent4.MEMO_ADJ_TOT_AMT * -1.00 C2
-                FROM 
+                FROM
                     PAY0022D Extent3
                     JOIN PAY0011D Extent4   ON Extent4.MEMO_ADJ_INVC_NO = Extent3.RENT_DOC_NO
                                                     AND 1293 = Extent4.MEMO_ADJ_TYPE_ID
-                                                    AND 4 = Extent4.MEMO_ADJ_STUS_ID 
-                WHERE  
+                                                    AND 4 = Extent4.MEMO_ADJ_STUS_ID
+                WHERE
                     Extent3.RENT_SO_ID = #{orderId}
                     AND 161 = Extent3.RENT_DOC_TYPE_ID
-                    AND Extent3.RENT_AMT <![CDATA[ > ]]> 0 
-                ) UnionAll1 
+                    AND Extent3.RENT_AMT <![CDATA[ > ]]> 0
+                ) UnionAll1
             ) Distinct1
     </select>
-    
+
     <select id="selectRPFDN" parameterType="Map"  resultType="egovMap">
-        SELECT 
-            NVL(SUM(Extent2.MEMO_ADJ_TOT_AMT),0) AS DN_AMT  
-        FROM 
+        SELECT
+            NVL(SUM(Extent2.MEMO_ADJ_TOT_AMT),0) AS DN_AMT
+        FROM
             PAY0022D Extent1
             JOIN PAY0011D Extent2  ON Extent2.MEMO_ADJ_INVC_NO = Extent1.RENT_DOC_NO
-                                                AND 1294 = Extent2.MEMO_ADJ_TYPE_ID 
+                                                AND 1294 = Extent2.MEMO_ADJ_TYPE_ID
                                                 AND 4 = Extent2.MEMO_ADJ_STUS_ID
-        WHERE  
+        WHERE
             Extent1.RENT_SO_ID = #{orderId}
             AND 161 = Extent1.RENT_DOC_TYPE_ID
             AND Extent1.RENT_AMT <![CDATA[>]]>  0
     </select>
-    
+
     <select id="selectRpfCnAmount" parameterType="Map"  resultType="egovMap">
         SELECT
             NVL(SUM(Extent2.ADJ_ENTRY_AMT),0) AS CN_AMT
-        FROM 
+        FROM
             PAY0022D Extent1
             JOIN PAY0002D Extent2   ON ( Extent2.ADJ_ENTRY_NOTE_NO = Extent1.RENT_DOC_NO OR ( Extent2.ADJ_ENTRY_SO_ID = #{orderId} AND  Extent1.RENT_DOC_NO LIKE 'INS%'  ))
                                                 AND Extent2.ADJ_ENTRY_DR_ACC_ID = 171
                                                 AND Extent2.ADJ_ENTRY_CR_ACC_ID = 43
                                                 AND Extent2.ADJ_ENTRY_NOTE_TYPE_ID = 155
-        WHERE  
+        WHERE
             Extent1.RENT_SO_ID = #{orderId}
             AND 155 = Extent1.RENT_DOC_TYPE_ID
             AND Extent1.RENT_AMT <![CDATA[ < ]]> 0
     </select>
-    
+
     <select id="selectRpfCnNewAmount" parameterType="Map"  resultType="egovMap">
-        SELECT 
+        SELECT
             NVL(SUM(Extent5.MEMO_ITM_AMT),0) AS CN_NEW_AMT
-        FROM 
+        FROM
             PAY0022D Extent1
             CROSS JOIN SAL0001D Extent2
             JOIN PAY0030D Extent3   ON Extent3.INVC_ITM_ORD_NO = Extent2.SALES_ORD_NO
             JOIN PAY0011D Extent4   ON Extent4.MEMO_ADJ_INVC_NO = Extent1.RENT_DOC_NO
                                                     AND Extent4.MEMO_ADJ_TYPE_ID = 1293
                                                     AND Extent4.MEMO_ADJ_STUS_ID = 4
-            JOIN PAY0012D Extent5   ON Extent5.MEMO_ADJ_ID = Extent4.MEMO_ADJ_ID 
-                                                    AND Extent5.MEMO_ITM_INVC_ITM_ID = Extent3.INVC_ITM_ID 
-        WHERE  
-            Extent1.RENT_SO_ID = #{orderId} 
+            JOIN PAY0012D Extent5   ON Extent5.MEMO_ADJ_ID = Extent4.MEMO_ADJ_ID
+                                                    AND Extent5.MEMO_ITM_INVC_ITM_ID = Extent3.INVC_ITM_ID
+        WHERE
+            Extent1.RENT_SO_ID = #{orderId}
             AND Extent1.RENT_DOC_TYPE_ID = 161
-            AND Extent1.RENT_AMT <![CDATA[ > ]]> 0 
+            AND Extent1.RENT_AMT <![CDATA[ > ]]> 0
             AND Extent2.SALES_ORD_ID = #{orderId}
-    </select>          
-    
+    </select>
+
     <select id="selectPayTotalAmount" parameterType="Map"  resultType="egovMap">
         SELECT NVL(SUM(RENT_AMT),0) AS PAY_TOTAL FROM PAY0022D WHERE RENT_SO_ID = #{orderId}  AND RENT_AMT <![CDATA[ < ]]> 0
-    </select>  
-    
+    </select>
+
     <select id="selectRpfTotBillAmount" parameterType="Map"  resultType="egovMap">
-        SELECT NVL(SUM(RENT_AMT),0) AS RPF_TOT_BILL FROM PAY0022D WHERE RENT_SO_ID = #{orderId} AND RENT_DOC_TYPE_ID = 161 AND RENT_AMT <![CDATA[ >= ]]> 0 
-    </select>  
+        SELECT NVL(SUM(RENT_AMT),0) AS RPF_TOT_BILL FROM PAY0022D WHERE RENT_SO_ID = #{orderId} AND RENT_DOC_TYPE_ID = 161 AND RENT_AMT <![CDATA[ >= ]]> 0
+    </select>
     <select id="selectReversedAmount" parameterType="Map"  resultType="egovMap">
-        SELECT 
-            NVL(SUM(B.REV_AMT),0) AS REV_AMT 
-        FROM 
-            PAY0022D A 
-            JOIN PAY1004V B ON A.RENT_SO_ID = B.SALES_ORD_ID 
+        SELECT
+            NVL(SUM(B.REV_AMT),0) AS REV_AMT
+        FROM
+            PAY0022D A
+            JOIN PAY1004V B ON A.RENT_SO_ID = B.SALES_ORD_ID
                                     AND A.RENT_DOC_NO = B.REV_WOR
             WHERE A.RENT_SO_ID = #{orderId}
             AND A.RENT_DOC_TYPE_ID = 161
             AND A.RENT_AMT <![CDATA[ < ]]> 0
-    </select>  
-    
+    </select>
+
     <select id="selectRevPaymentAmount" parameterType="Map"  resultType="egovMap">
         SELECT NVL(SUM(RENT_AMT),0) AS REV_PAYMENT_AMT FROM PAY0022D WHERE RENT_SO_ID = #{orderId} AND RENT_DOC_TYPE_ID = 160
     </select>
-    
+
     <select id="selectBills" parameterType="Map"  resultType="egovMap">
-        SELECT 
+        SELECT
             RENT_RUN_ID,
             RENT_ID,
             RENT_SO_ID,
@@ -186,49 +186,49 @@
             RENT_UPD_DT,
             RENT_IS_SYNC,
             RENT_BILL_RUNNG_TOT
-         FROM 
-            PAY0022D 
-        WHERE 
-            RENT_SO_ID = #{orderId} 
-            AND RENT_DOC_TYPE_ID != 160 
+         FROM
+            PAY0022D
+        WHERE
+            RENT_SO_ID = #{orderId}
+            AND RENT_DOC_TYPE_ID != 160
             AND RENT_AMT <![CDATA[ > ]]> 0
     </select>
-    
+
     <select id="selectOrderInfoForBills" parameterType="Map"  resultType="egovMap">
-        SELECT STUS_CODE_ID,TOT_AMT,MTH_RENT_AMT FROM SAL0001D WHERE SALES_ORD_ID = #{orderId} 
+        SELECT STUS_CODE_ID,TOT_AMT,MTH_RENT_AMT FROM SAL0001D WHERE SALES_ORD_ID = #{orderId}
     </select>
-   
+
    <select id="selectRpfPaidAmount" parameterType="Map"  resultType="egovMap">
         SELECT NVL(SUM(RENT_AMT),0) AS RPF_PAID FROM PAY0022D WHERE RENT_SO_ID = #{orderId} AND RENT_AMT <![CDATA[ < ]]> 0 AND RENT_DOC_TYPE_ID = 161
    </select>
-   
+
    <select id="selectLastPaymentDt" parameterType="Map"  resultType="egovMap">
         SELECT TO_CHAR(MAX(RENT_DT_TM),'YYYY-MM-DD') AS RENT_DT_TM FROM PAY0022D WHERE RENT_SO_ID = #{orderId} AND RENT_AMT <![CDATA[ < ]]> 0
    </select>
-   
+
    <select id="selectRentInstNo" parameterType="Map"  resultType="egovMap">
-        SELECT 
-            RENT_INST_NO 
-        FROM 
-            SAL0070D 
-        WHERE 
+        SELECT
+            RENT_INST_NO
+        FROM
+            SAL0070D
+        WHERE
             SALES_ORD_ID = #{orderId}
             AND EXTRACT(MONTH FROM RENT_INST_DT) = EXTRACT(MONTH FROM SYSDATE)
             AND EXTRACT(YEAR FROM RENT_INST_DT) = EXTRACT(YEAR FROM SYSDATE)
-    </select>         
-    
+    </select>
+
      <select id="selectLastBilledInstNo" parameterType="Map"  resultType="egovMap">
-        SELECT 
+        SELECT
             NVL(MAX(RENT_INST_NO),0) AS LAST_RENT_INST_NO,
-            NVL(SUM(RENT_AMT),0) AS TOT_BILL_AMT             
-        FROM 
-            PAY0022D 
-        WHERE 
-            RENT_SO_ID = #{orderId} 
-            AND RENT_AMT <![CDATA[ > ]]> 0 
+            NVL(SUM(RENT_AMT),0) AS TOT_BILL_AMT
+        FROM
+            PAY0022D
+        WHERE
+            RENT_SO_ID = #{orderId}
+            AND RENT_AMT <![CDATA[ > ]]> 0
             AND RENT_DOC_TYPE_ID != 160
-    </select>      
-    
+    </select>
+
     <select id="selectBillInfoRental" parameterType="Map" resultType="egovMap">
         SELECT
             BILL_ID  ,
@@ -247,56 +247,56 @@
             0 AS BTN_CHECK,
             STUS_CODE,
             STUS_CODE_NAME  ,
-            NRIC          
+            NRIC
         FROM
             (
             SELECT
-                Extent1.RENT_ID BILL_ID  ,                
+                Extent1.RENT_ID BILL_ID  ,
                 Extent1.RENT_SO_ID ORD_ID  ,
                 Extent3.SALES_ORD_NO ORD_NO  ,
                 Extent1.RENT_AMT BILL_AMT  ,
                 Extent1.RENT_DT_TM AS BILL_DT,
-                Extent1.RENT_DOC_NO BILL_NO  ,       
+                Extent1.RENT_DOC_NO BILL_NO  ,
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
-                Extent1.RENT_INST_NO AS INSTALLMENT,              
-                (CASE 
+                Extent1.RENT_INST_NO AS INSTALLMENT,
+                (CASE
                     WHEN Extent1.RENT_DOC_TYPE_ID = 155 THEN
-                        (CASE 
+                        (CASE
                             WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'CNR' THEN
                                 (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN              
+                            WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,2) = 'CN' THEN
                                 (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ADJS.MEMO_ITM_DEBT_ACC_ID = 170 THEN 159 ELSE 0 END) END)
                             WHEN Extent1.RENT_DOC_TYPE_ID = 155 AND SUBSTR(Extent1.RENT_DOC_NO,0,3) = 'ACN' THEN
-                                159    
-                            ELSE             
+                                159
+                            ELSE
                                 (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 171 THEN 161 ELSE (CASE WHEN ENT.ADJ_ENTRY_DR_ACC_ID = 170 THEN 159 ELSE 0 END) END)
-                        END )       
+                        END )
                     ELSE Extent1.RENT_DOC_TYPE_ID END ) AS BILL_TYPE_ID,
                 Extent2.CODE_NAME BILL_TYPE_NM,
                 STUS.CODE AS STUS_CODE,
                 STUS.NAME AS STUS_CODE_NAME,
                 Extent4.NRIC
-            FROM 
+            FROM
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
                 JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-                
+
                 LEFT JOIN PAY0002D ENT ON Extent1.RENT_DOC_NO = ENT.ADJ_ENTRY_NOTE_NO
                 LEFT JOIN PAY0011D ADJ ON Extent1.RENT_DOC_NO = ADJ.MEMO_ADJ_REF_NO
                 LEFT JOIN PAY0012D ADJS ON ADJ.MEMO_ADJ_ID = ADJS.MEMO_ADJ_ID
                 LEFT JOIN SYS0038M STUS ON Extent3.STUS_CODE_ID = STUS.STUS_CODE_ID
-            WHERE 
-                Extent1.RENT_SO_ID = #{orderId} 
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
             )
-        WHERE 
+        WHERE
             BILL_AMT <![CDATA[ > ]]> 0
             AND BILL_TYPE_ID <![CDATA[ <> ]]> 160
             <if test='excludeRPF != null and excludeRPF == "Y" '>
             AND BILL_TYPE_ID <![CDATA[ <> ]]> 161
             </if>
-        ORDER BY BILL_DT         
+        ORDER BY BILL_DT
     </select>
     <select id="selectBillRpfPaid" parameterType="Map" resultType="egovMap">
         SELECT
@@ -304,284 +304,284 @@
         FROM
             (
             SELECT
-                Extent1.RENT_AMT BILL_AMT  ,   
-                Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID                                     
-            FROM 
+                Extent1.RENT_AMT BILL_AMT  ,
+                Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID
+            FROM
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
-            WHERE 
-                Extent1.RENT_SO_ID = #{orderId} 
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
             )
-        WHERE 
+        WHERE
             BILL_AMT <![CDATA[ < ]]> 0
             AND BILL_TYPE_ID = 161
     </select>
-    
-    <select id="selectBillRpfRev" parameterType="Map" resultType="egovMap">    
-        SELECT 
-            NVL(SUM(Filter1.RPF_REV),0)  RPF_REV  
-        FROM 
-            ( 
-            SELECT 
+
+    <select id="selectBillRpfRev" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(Filter1.RPF_REV),0)  RPF_REV
+        FROM
+            (
+            SELECT
                 Extent2.PAY_ITM_AMT * -1 AS RPF_REV
-            FROM 
+            FROM
                 PAY0064D Extent1
                 JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
                 JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
                 JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND Extent4.TYPE_ID = 98
-            WHERE  
+            WHERE
                 Extent1.TYPE_ID = 101
-                AND Extent1.SALES_ORD_ID = #{orderId}  
+                AND Extent1.SALES_ORD_ID = #{orderId}
             ) Filter1
     </select>
-    
+
     <select id="selectBillAdjAmount" parameterType="Map" resultType="egovMap">
-        SELECT  
-            NVL(SUM(MEMO_ADJ_TOT_AMT),0) AS MEMO_ADJ_TOT_AMT  
+        SELECT
+            NVL(SUM(MEMO_ADJ_TOT_AMT),0) AS MEMO_ADJ_TOT_AMT
         FROM
             (
             SELECT
-                Extent1.RENT_ID BILL_ID  ,                
+                Extent1.RENT_ID BILL_ID  ,
                 Extent1.RENT_SO_ID ORD_ID  ,
                 Extent3.SALES_ORD_NO ORD_NO  ,
                 Extent1.RENT_AMT BILL_AMT  ,
                 Extent1.RENT_DT_TM AS BILL_DT,
-                Extent1.RENT_DOC_NO BILL_NO  ,       
+                Extent1.RENT_DOC_NO BILL_NO  ,
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
-                Extent1.RENT_INST_NO AS INSTALLMENT,   
+                Extent1.RENT_INST_NO AS INSTALLMENT,
                 Extent1.RENT_DOC_TYPE_ID AS BILL_TYPE_ID,
-                Extent2.CODE_NAME BILL_TYPE_NM  
-            FROM 
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
-            WHERE 
-                Extent1.RENT_SO_ID = #{orderId} 
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
             ) LED
-            JOIN PAY0011D ADJ2 ON LED.BILL_NO = ADJ2.MEMO_ADJ_INVC_NO AND ADJ2.MEMO_ADJ_STUS_ID = 4  
+            JOIN PAY0011D ADJ2 ON LED.BILL_NO = ADJ2.MEMO_ADJ_INVC_NO AND ADJ2.MEMO_ADJ_STUS_ID = 4
             AND MEMO_ADJ_REF_NO LIKE #{adjType}  || '%'
         WHERE
             LED.BILL_AMT <![CDATA[ > ]]> 0
-            AND LED.BILL_TYPE_ID = 161       
-    </select>            
-    
+            AND LED.BILL_TYPE_ID = 161
+    </select>
+
     <select id="selectBillRentalPaidAmount" parameterType="Map" resultType="egovMap">
         SELECT
             NVL(SUM(BILL_AMT),0) * -1 AS RENT_PAID
         FROM
             (
             SELECT
-                Extent1.RENT_ID BILL_ID  ,                
+                Extent1.RENT_ID BILL_ID  ,
                 Extent1.RENT_SO_ID ORD_ID  ,
                 Extent3.SALES_ORD_NO ORD_NO  ,
                 Extent1.RENT_AMT BILL_AMT  ,
                 Extent1.RENT_DT_TM AS BILL_DT,
-                Extent1.RENT_DOC_NO BILL_NO  ,       
+                Extent1.RENT_DOC_NO BILL_NO  ,
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
-                Extent1.RENT_INST_NO AS INSTALLMENT,  
+                Extent1.RENT_INST_NO AS INSTALLMENT,
                 Extent1.RENT_DOC_TYPE_ID AS BILL_TYPE_ID,
-                Extent2.CODE_NAME BILL_TYPE_NM  
-            FROM 
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
-            WHERE 
-                Extent1.RENT_SO_ID = #{orderId} 
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
             ) LED
         WHERE
             BILL_AMT <![CDATA[ < ]]> 0
             AND BILL_TYPE_ID NOT IN (1059,162,161)
     </select>
-    
-    <select id="selectBillRentalRevAmount" parameterType="Map" resultType="egovMap">    
-        SELECT 
-            NVL(SUM(Filter1.RENTAL_REV),0)  RENTAL_REV  
-        FROM 
-            ( 
-            SELECT 
+
+    <select id="selectBillRentalRevAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(Filter1.RENTAL_REV),0)  RENTAL_REV
+        FROM
+            (
+            SELECT
                 Extent2.PAY_ITM_AMT * -1 AS RENTAL_REV
-            FROM 
+            FROM
                 PAY0064D Extent1
                 JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
                 JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
-                JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID 
-                                                            AND 99 <![CDATA[ <> ]]> Extent4.TYPE_ID 
-                                                            AND 1059 <![CDATA[ <> ]]> Extent4.TYPE_ID 
+                JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID
+                                                            AND 99 <![CDATA[ <> ]]> Extent4.TYPE_ID
+                                                            AND 1059 <![CDATA[ <> ]]> Extent4.TYPE_ID
                                                             AND 98 <![CDATA[ <> ]]> Extent4.TYPE_ID
-            WHERE  
+            WHERE
                 Extent1.TYPE_ID = 101
-                AND Extent1.SALES_ORD_ID = #{orderId}  
+                AND Extent1.SALES_ORD_ID = #{orderId}
             ) Filter1
-    </select>       
-    
+    </select>
+
     <select id="selectBillPenaltyPaidAmount" parameterType="Map" resultType="egovMap">
         SELECT
             NVL(SUM(BILL_AMT),0) * -1 AS PENALTY_PAID
         FROM
             (
             SELECT
-                Extent1.RENT_ID BILL_ID  ,                
+                Extent1.RENT_ID BILL_ID  ,
                 Extent1.RENT_SO_ID ORD_ID  ,
                 Extent3.SALES_ORD_NO ORD_NO  ,
                 Extent1.RENT_AMT BILL_AMT  ,
                 Extent1.RENT_DT_TM AS BILL_DT,
-                Extent1.RENT_DOC_NO BILL_NO  ,       
+                Extent1.RENT_DOC_NO BILL_NO  ,
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
-                Extent1.RENT_INST_NO AS INSTALLMENT,   
+                Extent1.RENT_INST_NO AS INSTALLMENT,
                 Extent1.RENT_DOC_TYPE_ID AS  BILL_TYPE_ID,
-                Extent2.CODE_NAME BILL_TYPE_NM  
-            FROM 
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
-            WHERE 
-                Extent1.RENT_SO_ID = #{orderId} 
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
             ) LED
         WHERE
             BILL_AMT <![CDATA[ < ]]> 0
             AND BILL_TYPE_ID = 162
     </select>
-    
-    <select id="selectBillPenaltyRevAmount" parameterType="Map" resultType="egovMap">    
-        SELECT 
-            NVL(SUM(Filter1.PENALTY_REV),0)  PENALTY_REV  
-        FROM 
-            ( 
-            SELECT 
+
+    <select id="selectBillPenaltyRevAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(Filter1.PENALTY_REV),0)  PENALTY_REV
+        FROM
+            (
+            SELECT
                 Extent2.PAY_ITM_AMT * -1 AS PENALTY_REV
-            FROM 
+            FROM
                 PAY0064D Extent1
                 JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
                 JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
                 JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND 99 = Extent4.TYPE_ID
-            WHERE  
+            WHERE
                 Extent1.TYPE_ID = 101
-                AND Extent1.SALES_ORD_ID = #{orderId}  
+                AND Extent1.SALES_ORD_ID = #{orderId}
             ) Filter1
-    </select>    
-    
+    </select>
+
     <select id="selectBillRhfPaidAmount" parameterType="Map" resultType="egovMap">
         SELECT
             NVL(SUM(BILL_AMT),0) * -1 AS RHF_PAID
         FROM
             (
             SELECT
-                Extent1.RENT_ID BILL_ID  ,                
+                Extent1.RENT_ID BILL_ID  ,
                 Extent1.RENT_SO_ID ORD_ID  ,
                 Extent3.SALES_ORD_NO ORD_NO  ,
                 Extent1.RENT_AMT BILL_AMT  ,
                 Extent1.RENT_DT_TM AS BILL_DT,
-                Extent1.RENT_DOC_NO BILL_NO  ,       
+                Extent1.RENT_DOC_NO BILL_NO  ,
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
                 Extent1.RENT_INST_NO AS INSTALLMENT,
                 Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID,
-                Extent2.CODE_NAME BILL_TYPE_NM 
-            FROM 
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
-            WHERE 
-                Extent1.RENT_SO_ID = #{orderId} 
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
             ) LED
         WHERE
             BILL_AMT <![CDATA[ < ]]> 0
             AND BILL_TYPE_ID = 1059
     </select>
-    
-    <select id="selectBillRfhRevAmount" parameterType="Map" resultType="egovMap">    
-        SELECT 
-            NVL(SUM(Filter1.RHF_REV),0)  RHF_REV  
-        FROM 
-            ( 
-            SELECT 
+
+    <select id="selectBillRfhRevAmount" parameterType="Map" resultType="egovMap">
+        SELECT
+            NVL(SUM(Filter1.RHF_REV),0)  RHF_REV
+        FROM
+            (
+            SELECT
                 Extent2.PAY_ITM_AMT * -1 AS RHF_REV
-            FROM 
+            FROM
                 PAY0064D Extent1
                 JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
                 JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
                 JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND 1059 = Extent4.TYPE_ID
-            WHERE  
+            WHERE
                 Extent1.TYPE_ID = 101
-                AND Extent1.SALES_ORD_ID = #{orderId}  
+                AND Extent1.SALES_ORD_ID = #{orderId}
             ) Filter1
-    </select>  
-    
+    </select>
+
     <select id="selectBillRhfCNAmount" parameterType="Map" resultType="egovMap">
-        SELECT  
-            NVL(SUM(MEMO_ADJ_TOT_AMT),0) AS MEMO_ADJ_TOT_AMT  
+        SELECT
+            NVL(SUM(MEMO_ADJ_TOT_AMT),0) AS MEMO_ADJ_TOT_AMT
         FROM
             (
             SELECT
-                Extent1.RENT_ID BILL_ID  ,                
+                Extent1.RENT_ID BILL_ID  ,
                 Extent1.RENT_SO_ID ORD_ID  ,
                 Extent3.SALES_ORD_NO ORD_NO  ,
                 Extent1.RENT_AMT BILL_AMT  ,
                 Extent1.RENT_DT_TM AS BILL_DT,
-                Extent1.RENT_DOC_NO BILL_NO  ,       
+                Extent1.RENT_DOC_NO BILL_NO  ,
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
-                Extent1.RENT_INST_NO AS INSTALLMENT,              
+                Extent1.RENT_INST_NO AS INSTALLMENT,
                 Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID,
-                Extent2.CODE_NAME BILL_TYPE_NM  
-            FROM 
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
-            WHERE 
-                Extent1.RENT_SO_ID = #{orderId} 
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
             ) LED
-            JOIN PAY0011D ADJ2 ON LED.BILL_NO = ADJ2.MEMO_ADJ_INVC_NO AND ADJ2.MEMO_ADJ_STUS_ID = 4 AND ADJ2.MEMO_ADJ_TYPE_ID  = 1293              
+            JOIN PAY0011D ADJ2 ON LED.BILL_NO = ADJ2.MEMO_ADJ_INVC_NO AND ADJ2.MEMO_ADJ_STUS_ID = 4 AND ADJ2.MEMO_ADJ_TYPE_ID  = 1293
         WHERE
             LED.BILL_AMT <![CDATA[ > ]]> 0
-            AND LED.BILL_TYPE_ID = 1059       
-    </select>  
-    
+            AND LED.BILL_TYPE_ID = 1059
+    </select>
+
     <select id="selectBillRhfCNOldAmount" parameterType="Map" resultType="egovMap">
-        SELECT  
-            NVL(SUM(BILL_AMT),0) AS ADJ_OLD_CN_AMT  
+        SELECT
+            NVL(SUM(BILL_AMT),0) AS ADJ_OLD_CN_AMT
         FROM
             (
             SELECT
-                Extent1.RENT_ID BILL_ID  ,                
+                Extent1.RENT_ID BILL_ID  ,
                 Extent1.RENT_SO_ID ORD_ID  ,
                 Extent3.SALES_ORD_NO ORD_NO  ,
                 Extent1.RENT_AMT BILL_AMT  ,
                 Extent1.RENT_DT_TM AS BILL_DT,
-                Extent1.RENT_DOC_NO BILL_NO  ,       
+                Extent1.RENT_DOC_NO BILL_NO  ,
                 CASE WHEN ( Extent3.CUST_BILL_ID IS NULL ) THEN 0 ELSE Extent3.CUST_BILL_ID END BILL_GRP_ID  ,
                 Extent4.NAME CUST_NM  ,
-                Extent1.RENT_INST_NO AS INSTALLMENT,              
+                Extent1.RENT_INST_NO AS INSTALLMENT,
                 Extent1.RENT_DOC_TYPE_ID  AS BILL_TYPE_ID,
-                Extent2.CODE_NAME BILL_TYPE_NM  
-            FROM 
+                Extent2.CODE_NAME BILL_TYPE_NM
+            FROM
                 PAY0022D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.RENT_DOC_TYPE_ID
                 JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.RENT_SO_ID
-                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID                
-            WHERE 
-                Extent1.RENT_SO_ID = #{orderId} 
+                JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
+            WHERE
+                Extent1.RENT_SO_ID = #{orderId}
             ) LED
             JOIN PAY0002D ADJ2 ON LED.BILL_NO = ADJ2.ADJ_ENTRY_NOTE_NO
-                                               AND ADJ2.ADJ_ENTRY_DR_ACC_ID  = 203 
+                                               AND ADJ2.ADJ_ENTRY_DR_ACC_ID  = 203
                                                AND ADJ2.ADJ_ENTRY_NOTE_TYPE_ID  = 155
         WHERE
             LED.BILL_AMT <![CDATA[ < ]]> 0
-            AND LED.BILL_TYPE_ID = 155       
-    </select>   
-    
+            AND LED.BILL_TYPE_ID = 155
+    </select>
+
     <select id="selectOrderInfoNonRental" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             Extent1.SALES_ORD_ID,
             Extent1.CUST_BILL_ID,
             Extent1.SALES_ORD_NO,
@@ -596,14 +596,14 @@
             Extent1.MTH_RENT_AMT ,
             Extent1.TOT_AMT,
             0 AS BALANCE,
-            '' AS LAST_PAYMENT,      
+            '' AS LAST_PAYMENT,
             Extent1.MEM_ID MEM_ID  ,
             Extent3.NAME MEM_NM  ,
             Extent5.NAME BRNCH_NM  ,
             Extent6.USER_ID USER_ID  ,
             '' CREATOR_CODE,
-            Extent6.USER_NAME USER_NAME  
-        FROM 
+            Extent6.USER_NAME USER_NAME
+        FROM
             SAL0001D Extent1
             JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.APP_TYPE_ID
             JOIN ORG0001D Extent3   ON Extent3.MEM_ID = Extent1.MEM_ID
@@ -611,39 +611,39 @@
             LEFT JOIN SYS0005M Extent5   ON Extent5.BRNCH_ID = UTILS.CONVERT_TO_NUMBER(Extent3.BRNCH,10,0)
             LEFT JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.CRT_USER_ID
             JOIN SAL0029D Extent7   ON Extent7.CUST_ID = Extent1.CUST_ID
-        WHERE  
+        WHERE
             Extent1.APP_TYPE_ID IN ( 67,68,1412 )
-            AND  Extent1.SALES_ORD_ID = #{orderId} 
-    </select>            
-    
-    <select id="selectBillInfoLedgerCnt" parameterType="Map" resultType="egovMap">
-        SELECT COUNT(1) AS CNT FROM PAY0035D WHERE TRADE_SO_ID = #{orderId} 
+            AND  Extent1.SALES_ORD_ID = #{orderId}
     </select>
-    
+
+    <select id="selectBillInfoLedgerCnt" parameterType="Map" resultType="egovMap">
+        SELECT COUNT(1) AS CNT FROM PAY0035D WHERE TRADE_SO_ID = #{orderId}
+    </select>
+
     <select id="selectLedgerInfo" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             MAX(CASE WHEN TRADE_AMT <![CDATA[ < ]]> 0 THEN TO_CHAR(TRADE_DT_TM,'YYYY-MM-DD') ELSE '1900-01-01' END) AS LAST_PAY_DT,
             MAX(TRADE_INST_NO) AS TRADE_INST_NO,
             MAX(CASE WHEN TRADE_AMT <![CDATA[ > ]]> 0 THEN TO_CHAR(TRADE_DT_TM,'YYYY-MM-DD') ELSE '1900-01-01' END) AS LAST_BILL_DT,
             SUM(CASE WHEN TRADE_AMT <![CDATA[ < ]]> 0 AND TRADE_DOC_TYPE_ID <![CDATA[ <> ]]> 155  THEN TRADE_AMT * -1 ELSE 0 END) AS PAID_TOTAL,
             SUM(CASE WHEN TRADE_AMT <![CDATA[ > ]]> 0 AND TRADE_DOC_TYPE_ID <![CDATA[ <> ]]> 160  THEN TRADE_AMT ELSE 0 END) AS BILL_TOTAL,
             SUM(CASE WHEN TRADE_AMT <![CDATA[ < ]]> 0 AND TRADE_DOC_TYPE_ID = 155  THEN TRADE_AMT ELSE 0 END) AS CN_TOTAL,
-            SUM(CASE WHEN TRADE_AMT <![CDATA[ > ]]> 0 AND TRADE_DOC_TYPE_ID = 160  THEN TRADE_AMT ELSE 0 END) AS REV_TOTAL        
-        FROM 
-            PAY0035D 
-        WHERE 
+            SUM(CASE WHEN TRADE_AMT <![CDATA[ > ]]> 0 AND TRADE_DOC_TYPE_ID = 160  THEN TRADE_AMT ELSE 0 END) AS REV_TOTAL
+        FROM
+            PAY0035D
+        WHERE
             TRADE_SO_ID = #{orderId}
-    </select>        
-    
+    </select>
+
     <resultMap id="resultMembershipMap" type="egovMap" />
     <select id="selectOrderInfoSVM" statementType="CALLABLE" parameterType="Map">
         {
-            call SP_GET_OTSTND_MBRSH_BY_ORD_ID(#{orderId} , #{resultMemSvm, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultMembershipMap})            
+            call SP_GET_OTSTND_MBRSH_BY_ORD_ID(#{orderId} , #{resultMemSvm, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultMembershipMap})
         }
     </select>
-    
+
     <select id="selectOrderInfoSrvc" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             Extent1.SRV_CNTRCT_ID SRV_CNTRCT_ID  ,
 			Extent1.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
 			Extent1.SRV_CNTRCT_NET_MONTH SRV_CNTRCT_NET_MONTH  ,
@@ -660,156 +660,156 @@
 			Extent1.SRV_CNTRCT_EXP_FILTER SRV_CNTRCT_EXP_FILTER  ,
 			TO_DATE('1900-01-01','YYYY-MM-DD') AS LAST_PAY_DT,
 			0 AS BTN_CHECK
-        FROM 
+        FROM
             SAL0077D Extent1
 			JOIN SAL0078D Extent2   ON Extent2.SRV_CNTRCT_ID = Extent1.SRV_CNTRCT_ID
 			JOIN SAL0001D Extent3   ON Extent3.SALES_ORD_ID = Extent1.SRV_CNTRCT_ORD_ID
 			JOIN SAL0029D Extent4   ON Extent4.CUST_ID = Extent3.CUST_ID
-			JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.SRV_CNTRCT_STUS_ID			            
-        WHERE 
+			JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.SRV_CNTRCT_STUS_ID
+        WHERE
             1=1
             <if test="srvcId != null and srvcId != ''">
             AND Extent1.SRV_CNTRCT_ID =  #{srvcId}
-            </if>            
+            </if>
             <if test="billGrpId != null and billGrpId != ''">
             AND Extent3.CUST_BILL_ID = #{billGrpId}
             </if>
     </select>
-    
+
     <select id="selectOrderInfoSrvcCharge" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END ) AS FILTER_CHARGE,
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END ) AS PENALTY_CHARGE
-        FROM 
-            PAY0023D A            
-        WHERE 
+        FROM
+            PAY0023D A
+        WHERE
             A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
             AND A.SRV_LDGR_AMT <![CDATA[ >= ]]>  0
     </select>
-    
+
     <select id="selectOrderInfoSrvcADJ" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 AND B.MEMO_ADJ_TYPE_ID = 1293 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS FILTER_CN,
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 AND B.MEMO_ADJ_TYPE_ID = 1294 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS FILTER_DN,
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 AND B.MEMO_ADJ_TYPE_ID = 1293 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS PENALTY_CN,
-            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 AND B.MEMO_ADJ_TYPE_ID = 1294 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS PENALTY_DN,            
+            SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 AND B.MEMO_ADJ_TYPE_ID = 1294 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS PENALTY_DN,
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID IN (1305,154) AND B.MEMO_ADJ_TYPE_ID = 1293 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS RENTAL_CN,
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID IN (1305,154) AND B.MEMO_ADJ_TYPE_ID = 1294 THEN NVL(B.MEMO_ADJ_TOT_AMT,0) ELSE 0 END) AS RENTAL_DN
-        FROM 
+        FROM
             PAY0023D A
             JOIN PAY0011D B ON A.SRV_LDGR_REF_NO = B.MEMO_ADJ_INVC_NO
-        WHERE 
+        WHERE
             A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
             AND A.SRV_LDGR_AMT <![CDATA[ > ]]>  0
             AND B.MEMO_ADJ_STUS_ID = 4
     </select>
-    
+
     <select id="selectOrderInfoSrvcPaid" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END) AS  FILTER_PAID,
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END) AS  PENALTY_PAID,
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1305 THEN NVL(A.SRV_LDGR_AMT,0) ELSE 0 END) AS  TOTAL_PAID,
             MAX(CASE WHEN A.SRV_LDGR_TYPE_ID = 1305 THEN NVL(TO_CHAR(A.SRV_LDGR_REF_DT,'YYYY-MM-DD'),'1900-01-01') ELSE '1900-01-01' END) AS  LAST_PAY_DT
-        FROM 
+        FROM
             PAY0023D A
-        WHERE 
+        WHERE
             A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
-            AND A.SRV_LDGR_AMT <![CDATA[ < ]]>  0 
+            AND A.SRV_LDGR_AMT <![CDATA[ < ]]>  0
     </select>
-    
+
     <select id="selectOrderInfoSrvcRev" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1307 THEN NVL(B.PAY_ITM_AMT,0) ELSE 0 END) AS  FILTER_REV,
             SUM(CASE WHEN A.SRV_LDGR_TYPE_ID = 1306 THEN NVL(B.PAY_ITM_AMT,0) ELSE 0 END) AS  PENALTY_REV
-        FROM 
-            PAY0023D A 
+        FROM
+            PAY0023D A
             JOIN (
-                    SELECT 
+                    SELECT
                         Extent1.PAY_ID PAY_ID  ,
 					    NVL(Extent4.SVC_CNTRCT_ID,0) AS SVC_CNTRCT_ID,
 					    Extent4.OR_NO OR_NO  ,
 					    NVL(Extent2.PAY_ITM_AMT,0) AS PAY_ITM_AMT,
-					    NVL(Extent4.TYPE_ID,0) AS TYPE_ID  
-                    FROM 
+					    NVL(Extent4.TYPE_ID,0) AS TYPE_ID
+                    FROM
                         PAY0064D Extent1
                         JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
                         LEFT JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
-                        JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND Extent4.SVC_CNTRCT_ID = #{srvCntrctId} 
+                        JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND Extent4.SVC_CNTRCT_ID = #{srvCntrctId}
                     WHERE
-                        Extent1.TYPE_ID = 101) B ON A.SRV_LDGR_REF_NO = B.OR_NO    
+                        Extent1.TYPE_ID = 101) B ON A.SRV_LDGR_REF_NO = B.OR_NO
         WHERE
             SRV_LDGR_CNTRCT_ID = #{srvCntrctId}
             AND  SRV_LDGR_AMT <![CDATA[ < ]]> 0
     </select>
-    
+
     <select id="selectOrderInfoSrvcTotalRev" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             NVL(SUM(A.SRV_LDGR_AMT),0) AS  TOTAL_REV
-        FROM 
+        FROM
             PAY0023D A
-        WHERE 
-            A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}             
+        WHERE
+            A.SRV_LDGR_CNTRCT_ID  = #{srvCntrctId}
             AND A.SRV_LDGR_TYPE_ID = 160
             AND A.SRV_LDGR_PAY_TYPE = 1305
     </select>
-    
+
     <select id="selectOrderInfoSrvcBalance" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             NVL(SUM(SRV_LDGR_AMT),0) AS BALANCE,
             NVL(MAX(SRV_LDGR_CNTRCT_SCHDUL_NO),0) AS MAX_SCHDUL_NO
-        FROM 
-            PAY0023D 
+        FROM
+            PAY0023D
         WHERE
-            SRV_LDGR_CNTRCT_ID = #{srvCntrctId} 
+            SRV_LDGR_CNTRCT_ID = #{srvCntrctId}
             AND SRV_LDGR_AMT <![CDATA[ > ]]> 0
             AND SRV_LDGR_TYPE_ID <![CDATA[ <> ]]> 160
             AND SRV_LDGR_TYPE_ID = 1305
     </select>
-    
+
     <select id="selectOrderInfoSrvcUnbill" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             NVL(SRV_PAY_SCHDUL_NO,0) AS CURR_SCHDUL_NO,
             NVL(SRV_PAY_SCHDUL_AMT,0) AS MONTHLY_FEE
-        FROM 
+        FROM
             SAL0085D
         WHERE
-            SRV_PAY_CNTRCT_ID = #{srvCntrctId} 
+            SRV_PAY_CNTRCT_ID = #{srvCntrctId}
             AND SRV_PAY_SCHDUL_MONTH = EXTRACT(MONTH FROM SYSDATE)
             AND SRV_PAY_SCHDUL_YEAR =EXTRACT(YEAR FROM SYSDATE)
-    </select>          
-    
-    
+    </select>
+
+
     <select id="selectBillInfoSrvcPaid" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             SUM(CASE WHEN SRV_LDGR_TYPE_ID = 1307  THEN NVL(SRV_LDGR_AMT,0) ELSE 0 END)  AS FILTER_PAID,
-            SUM(CASE WHEN SRV_LDGR_TYPE_ID = 1306  THEN NVL(SRV_LDGR_AMT,0) ELSE 0 END)  AS PENALTY_PAID, 
+            SUM(CASE WHEN SRV_LDGR_TYPE_ID = 1306  THEN NVL(SRV_LDGR_AMT,0) ELSE 0 END)  AS PENALTY_PAID,
             SUM(CASE WHEN SRV_LDGR_TYPE_ID IN (1305,154) THEN NVL(SRV_LDGR_AMT,0) ELSE 0 END)  AS RENTAL_PAID
-        FROM 
-            PAY0023D 
-        WHERE 
+        FROM
+            PAY0023D
+        WHERE
             SRV_LDGR_CNTRCT_ID = #{srvCntrctId}
             AND SRV_LDGR_AMT <![CDATA[ < ]]> 0
-    </select>    
-    
+    </select>
+
     <select id="selectBillInfoSrvcRev" parameterType="Map" resultType="egovMap">
         SELECT
             SUM(CASE WHEN Extent4.TYPE_ID = 1310 THEN NVL(Extent2.PAY_ITM_AMT,0) ELSE 0 END) AS FILTER_REV,
             SUM(CASE WHEN Extent4.TYPE_ID = 1309 THEN NVL(Extent2.PAY_ITM_AMT,0) ELSE 0 END) AS PENALTY_REV,
-            SUM(CASE WHEN Extent4.TYPE_ID = 1308 THEN NVL(Extent2.PAY_ITM_AMT,0) ELSE 0 END) AS RENTAL_REV  
-        FROM 
+            SUM(CASE WHEN Extent4.TYPE_ID = 1308 THEN NVL(Extent2.PAY_ITM_AMT,0) ELSE 0 END) AS RENTAL_REV
+        FROM
             PAY0064D Extent1
             JOIN PAY0065D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
             LEFT JOIN PAY0065D Extent3   ON Extent3.PAY_ITM_ID = Extent2.PAY_ITM_REF_ITM_ID
-            JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND Extent4.SVC_CNTRCT_ID = #{srvCntrctId} 
+            JOIN PAY0064D Extent4   ON Extent4.PAY_ID = Extent3.PAY_ID AND Extent4.SVC_CNTRCT_ID = #{srvCntrctId}
         WHERE
             Extent1.TYPE_ID = 101
     </select>
-    
+
     <select id="selectBillInfoSrvcList" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             Extent1.SRV_LDGR_CNTRCT_ID SRV_LDGR_CNTRCT_ID  ,
             Extent2.SRV_CNTRCT_REF_NO SRV_CNTRCT_REF_NO  ,
-            Extent1.SRV_LDGR_REF_NO SRV_LDGR_REF_NO  ,            
+            Extent1.SRV_LDGR_REF_NO SRV_LDGR_REF_NO  ,
             NVL(Extent3.SRV_PAY_SCHDUL_NO,0) SRV_PAY_SCHDUL_NO  ,
             NVL(Extent1.SRV_LDGR_AMT,0) SRV_LDGR_AMT  ,
             Extent2.SRV_CNTRCT_ORD_ID SRV_CNTRCT_ORD_ID  ,
@@ -818,28 +818,28 @@
             Extent5.CODE_NAME SRV_LDGR_TYPE_NM  ,
             TO_CHAR(Extent1.SRV_LDGR_REF_DT,'YYYY-MM-DD') SRV_LDGR_REF_DT  ,
             Extent3.SRV_PAY_SCHDUL_ID SRV_PAY_SCHDUL_ID,
-            0 AS BTN_CHECK   
-        FROM 
+            0 AS BTN_CHECK
+        FROM
             PAY0023D Extent1
             JOIN SAL0077D Extent2   ON Extent2.SRV_CNTRCT_ID = Extent1.SRV_LDGR_CNTRCT_ID
             LEFT JOIN SAL0085D Extent3   ON Extent3.SRV_PAY_SCHDUL_ID = Extent1.SRV_LDGR_CNTRCT_SCHDUL_ID
             JOIN SAL0001D Extent4   ON Extent4.SALES_ORD_ID = Extent2.SRV_CNTRCT_ORD_ID
             JOIN SYS0013M Extent5   ON Extent5.CODE_ID = Extent1.SRV_LDGR_TYPE_ID
-        WHERE  
+        WHERE
             Extent1.SRV_LDGR_AMT <![CDATA[ > ]]> 0
             AND Extent1.SRV_LDGR_TYPE_ID <![CDATA[ <> ]]>  160
-            AND Extent1.SRV_LDGR_AMT <![CDATA[ > ]]> 0 
+            AND Extent1.SRV_LDGR_AMT <![CDATA[ > ]]> 0
             AND Extent1.SRV_LDGR_TYPE_ID <![CDATA[ <> ]]> 160
             AND Extent1.SRV_LDGR_TYPE_ID <![CDATA[ <> ]]> 1307
             AND Extent1.SRV_LDGR_TYPE_ID <![CDATA[ <> ]]> 1306
             AND Extent1.SRV_LDGR_CNTRCT_ID = #{srvCntrctId}
-        ORDER BY 
+        ORDER BY
             Extent3.SRV_PAY_SCHDUL_NO,
             Extent1.SRV_LDGR_REF_DT
     </select>
-    
+
     <select id="selectOrderInfoBillPaymentAS" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             BILL_ID,
             BILL_TYPE_ID,
             BILL_TYPE_NM,
@@ -865,13 +865,13 @@
             STUS_ID,
             STUS_NM,
             NRIC,
-            CUST_NM,        
+            CUST_NM,
             AS_LG_AMT,
             PAID_AMT,
             'AS' AS APP_TYPE
         FROM
             (
-            SELECT 
+            SELECT
 	            Extent3.BILL_ID,
 	            Extent3.BILL_TYPE_ID,
 	            Extent5.CODE_NAME AS BILL_TYPE_NM,
@@ -897,18 +897,18 @@
 	            Extent3.STUS_ID,
 	            Extent7.NAME STUS_NM,
 	            Extent10.NRIC,
-	            Extent10.NAME CUST_NM,        
+	            Extent10.NAME CUST_NM,
 	            NVL(TB1.AS_LG_AMT,0) AS AS_LG_AMT,
 	            (SELECT NVL(SUM(TOT_AMT),0) FROM PAY0064D WHERE BILL_ID = Extent3.BILL_ID) AS PAID_AMT
 	        FROM
 	            (
-	            SELECT 
+	            SELECT
 	                Extent2.AS_RESULT_NO AS_RESULT_NO  ,
-	                SUM(Extent2.AS_LG_AMT)  AS_LG_AMT  
-	            FROM 
+	                SUM(Extent2.AS_LG_AMT)  AS_LG_AMT
+	            FROM
 	                PAY0007D Extent1
 	                JOIN PAY0006D Extent2   ON Extent2.AS_RESULT_NO = Extent1.BILL_NO
-	            WHERE  
+	            WHERE
 	                Extent1.BILL_TYPE_ID = 238
 	            GROUP BY
 	                Extent2.AS_RESULT_NO ) TB1
@@ -919,7 +919,7 @@
 	            LEFT JOIN SYS0038M Extent7   ON Extent7.STUS_CODE_ID = Extent3.STUS_ID
 	            LEFT JOIN ORG0001D Extent8   ON Extent8.MEM_ID = Extent3.UPD_USER_ID
 	            LEFT JOIN SAL0001D Extent9   ON Extent9.SALES_ORD_ID = Extent3.BILL_SO_ID
-	            LEFT JOIN SAL0029D Extent10   ON Extent10.CUST_ID = Extent9.CUST_ID 
+	            LEFT JOIN SAL0029D Extent10   ON Extent10.CUST_ID = Extent9.CUST_ID
 	        WHERE
 	            NVL(TB1.AS_LG_AMT,0)  <![CDATA[ > ]]> 0
 	            AND Extent3.BILL_TYPE_ID = 238
@@ -930,16 +930,16 @@
 	            )
             )
         WHERE
-            BILL_AMT <![CDATA[ > ]]> PAID_AMT           
+            BILL_AMT <![CDATA[ > ]]> PAID_AMT
     </select>
-    
+
     <select id="selectOrderInfoBillPaymentHP" parameterType="Map" resultType="egovMap">
         SELECT
             BILL_ID,
             BILL_TYPE_ID,
-            BILL_TYPE_NM  ,        
+            BILL_TYPE_NM  ,
             BILL_SO_ID,
-            SALES_ORD_NO,        
+            SALES_ORD_NO,
             BILL_MEM_ID,
             BILL_MEM_CODE  ,
             BILL_MEM_NM  ,
@@ -962,15 +962,15 @@
             NRIC,
             CUST_NM,
             PAID_AMT,
-            'HP' AS APP_TYPE        
-        FROM 
+            'HP' AS APP_TYPE
+        FROM
             (
-            SELECT 
+            SELECT
 	            Extent1.BILL_ID,
 	            Extent1.BILL_TYPE_ID,
-	            Extent3.CODE_NAME BILL_TYPE_NM  ,        
+	            Extent3.CODE_NAME BILL_TYPE_NM  ,
 	            Extent1.BILL_SO_ID,
-	            Extent7.SALES_ORD_NO,        
+	            Extent7.SALES_ORD_NO,
 	            Extent1.BILL_MEM_ID,
 	            Extent2.MEM_CODE BILL_MEM_CODE  ,
 	            Extent2.NAME BILL_MEM_NM  ,
@@ -993,18 +993,18 @@
 	            Extent8.NRIC,
 	            Extent8.NAME AS CUST_NM,
 	            (SELECT NVL(SUM(TOT_AMT),0) FROM PAY0064D WHERE BILL_ID = Extent1.BILL_ID) AS PAID_AMT
-            FROM 
+            FROM
                 PAY0007D Extent1
 	            LEFT JOIN ORG0001D Extent2   ON Extent2.MEM_ID = Extent1.BILL_MEM_ID
 	            LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.BILL_TYPE_ID
 	            LEFT JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.BILL_PAY_TYPE_ID
 	            LEFT JOIN SYS0038M Extent5   ON Extent5.STUS_CODE_ID = Extent1.STUS_ID
 	            LEFT JOIN ORG0001D Extent6   ON Extent6.MEM_ID = Extent1.UPD_USER_ID
-	            LEFT JOIN SAL0001D Extent7   ON Extent7.SALES_ORD_ID = Extent1.BILL_SO_ID        
+	            LEFT JOIN SAL0001D Extent7   ON Extent7.SALES_ORD_ID = Extent1.BILL_SO_ID
 	            LEFT JOIN SAL0029D Extent8   ON Extent8.CUST_ID = Extent7.CUST_ID
-            WHERE  
+            WHERE
                 /*Extent1.STUS_ID = 1*/
-                Extent1.BILL_TYPE_ID = 222         
+                Extent1.BILL_TYPE_ID = 222
                 AND (
                     Extent1.BILL_NO = #{billSearchTxt}
                     OR Extent7.SALES_ORD_NO = #{billSearchTxt}
@@ -1012,12 +1012,12 @@
                 )
             )
         WHERE
-            BILL_AMT <![CDATA[ > ]]> PAID_AMT             
+            BILL_AMT <![CDATA[ > ]]> PAID_AMT
     </select>
-    
-    
+
+
     <select id="selectOutSrvcOrderInfo" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             QUOT_ID,QTY_FILTER_CHRG,QUOT_NO,PAC_ID,PAC_CODE,PAC_DESC,
             ORD_ID,ORD_NO,PAC_AMT,FILTER_AMT,TOT_AMT,DUR,REM,VALID_DT,
             CRT_DT,CRT_USER_ID,QUOT_STUS_ID,QUOT_STUS_CODE,UPD_DT,UPD_USER_ID,
@@ -1026,33 +1026,33 @@
             PAC_PROMO_CODE,PAC_PROMO_DESC,PROMO_ID,PROMO_CODE,PROMO_DESC,
             BS_FREQ,MEM_ID,MEM_CODE,MEM_NAME,VALID_STUS,VALID_STUS_ID,CNVR_MEM_ID,CNVR_MEM_NO,
             STK_ID,STK_CODE,STK_DESC,CUST_NAME,CUST_IC,TOT_CNT,REF_NO
-        FROM 
-            SAL1005V 
-        WHERE 
-            QUOT_ID = #{quotId}            
+        FROM
+            SAL1005V
+        WHERE
+            QUOT_ID = #{quotId}
     </select>
-    
+
     <select id="selectOutSrvcBillInfo" parameterType="Map" resultType="egovMap">
-        SELECT 
-            SRV_MEM_ID , 
-            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 386 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END) AS PACKAGE_CHARGE,
+        SELECT
+            SRV_MEM_ID ,
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID IN  (386,157) AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END) AS PACKAGE_CHARGE,
             SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 542 AND SRV_MEM_AMT  <![CDATA[ >= ]]>  0 THEN SRV_MEM_AMT ELSE 0 END) AS FILTER_CHARGE,
-            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT  <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END) 
-                - SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID = 164 THEN SRV_MEM_AMT ELSE 0 END) AS PACKAGE_PAID,                
-            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT  <![CDATA[ < ]]>  0 THEN SRV_MEM_AMT * -1 ELSE 0 END) 
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 164 AND SRV_MEM_AMT  <![CDATA[ < ]]> 0 THEN SRV_MEM_AMT * -1 ELSE 0 END)
+                - SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID = 164 THEN SRV_MEM_AMT ELSE 0 END) AS PACKAGE_PAID,
+            SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID IN (542,543) AND SRV_MEM_AMT  <![CDATA[ < ]]>  0 THEN SRV_MEM_AMT * -1 ELSE 0 END)
                 - SUM(CASE WHEN SRV_MEM_DOC_TYPE_ID = 101 AND REVRS_TYPE_ID IN (542,543) THEN SRV_MEM_AMT ELSE 0 END) AS FILTER_PAID
-        FROM 
-            PAY0024D 
-        WHERE 
+        FROM
+            PAY0024D
+        WHERE
             SRV_MEM_ID = #{cnvrMemId}
-        GROUP BY SRV_MEM_ID          
+        GROUP BY SRV_MEM_ID
     </select>
-    
+
     <!-- Payment 임시정보 Sequence 가져오기  -->
     <select id="getPayTempSEQ" resultType="int">
         SELECT PAY0240T_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <!-- proceduar Log Insert -->
     <insert id="insertTmpPaymentInfo" parameterType="Map">
         INSERT INTO PAY0240T (
@@ -1067,7 +1067,7 @@
             AMT,
             APPV_NO,
             EXPR_DT,
-            TENURE,            
+            TENURE,
             REF_NO,
             BANK_CHRG_AMT,
             CC_HOLDER_NAME,
@@ -1086,7 +1086,7 @@
             SKIP_RECON,
             PAY_ITM_CARD_TYPE,
             PAY_ITM_CARD_MODE,
-            CHQ_NO,            
+            CHQ_NO,
             CHQ_DEP_RECIPT_NO,
             BANK_SLIP_NO,
             EFT_NO,
@@ -1125,28 +1125,28 @@
 			#{keyInSkipRecon},
 			#{keyInPayItmCardType},
 			#{keyInPayItmCardMode},
-			#{keyInChqNo},			
+			#{keyInChqNo},
 			#{keyInChqDepReciptNo},
 			#{keyInBankSlipNo},
 			#{keyInEftNo},
 			#{keyInThrdPartyIc},
 			#{keyInBankBrnchId},
 			#{keyInIsCommChk}
-			
+
         )
-    </insert>  
-    
+    </insert>
+
     <select id="countTmpPaymentInfoFT" parameterType="Map" resultType="int">
         SELECT
             COUNT(1) AS CNT
-        FROM 
+        FROM
             PAY0240T
         WHERE
-            SEQ = #{groupSeq}          
+            SEQ = #{groupSeq}
     </select>
-    
-    
-    
+
+
+
     <!-- proceduar Log Insert -->
     <insert id="insertTmpPaymentInfoFT" parameterType="Map">
         INSERT INTO PAY0240T (
@@ -1155,20 +1155,20 @@
             ITM_REM,TR_NO,TR_ISSU_DT,COLL_MEM_ID,PAY_DT,IS_ONLINE,IS_LOCK,IS_3PARTY,STUS_ID,IS_FUND_TRNSF,
             SKIP_RECON,PAY_ITM_CARD_TYPE,PAY_ITM_CARD_MODE,CHQ_NO,CHQ_DEP_RECIPT_NO,BANK_SLIP_NO,EFT_NO,
             THRD_PARTY_IC,BANK_BRNCH_ID,GRP_ID,PAYER_NM,REF_DTL,BANK_TYPE_ID,VA_ACC_NO,IS_COMM_CHK
-        ) 
+        )
         SELECT
             #{seq},PAY_TYPE,CARD_MODE_ID,ISSU_BANK_ID,TRNSC_DT,CARD_NO,CARD_TYPE,CRDIT_CARD_TYPE,
             #{oldAmt},APPV_NO,EXPR_DT,TENURE,REF_NO,BANK_CHRG_AMT,CC_HOLDER_NAME,RUNNG_NO,BANK_ACC_ID,
             ITM_REM,TR_NO,TR_ISSU_DT,COLL_MEM_ID,PAY_DT,IS_ONLINE,IS_LOCK,IS_3PARTY,STUS_ID,IS_FUND_TRNSF,
             SKIP_RECON,PAY_ITM_CARD_TYPE,PAY_ITM_CARD_MODE,CHQ_NO,CHQ_DEP_RECIPT_NO,BANK_SLIP_NO,EFT_NO,
             THRD_PARTY_IC,BANK_BRNCH_ID,GRP_ID,PAYER_NM,REF_DTL,BANK_TYPE_ID,VA_ACC_NO,IS_COMM_CHK
-        FROM 
+        FROM
             PAY0240T
         WHERE
-            SEQ = #{groupSeq} 
-    </insert>  
-    
-    
+            SEQ = #{groupSeq}
+    </insert>
+
+
     <!-- proceduar Log Insert -->
     <insert id="insertTmpPaymentInfoFT2" parameterType="Map">
         INSERT INTO PAY0240T (
@@ -1177,8 +1177,8 @@
             ITM_REM,TR_NO,TR_ISSU_DT,COLL_MEM_ID,PAY_DT,IS_ONLINE,IS_LOCK,IS_3PARTY,STUS_ID,IS_FUND_TRNSF,
             SKIP_RECON,PAY_ITM_CARD_TYPE,PAY_ITM_CARD_MODE,CHQ_NO,CHQ_DEP_RECIPT_NO,BANK_SLIP_NO,EFT_NO,
             THRD_PARTY_IC,BANK_BRNCH_ID,GRP_ID,PAYER_NM,REF_DTL,BANK_TYPE_ID,VA_ACC_NO,IS_COMM_CHK
-        ) 
-        SELECT 
+        )
+        SELECT
             #{seq},
             B.PAY_ITM_MODE_ID AS PAY_TYPE,
             B.PAY_ITM_CARD_MODE_ID AS CARD_MODE_ID,
@@ -1221,14 +1221,14 @@
 			A.BANK_TYPE_ID AS BANK_TYPE_ID,
 			A.VA_ACC_NO AS VA_ACC_NO,
 			1
-    FROM 
-            PAY0064D A 
-            JOIN PAY0065D B ON A.PAY_ID = B.PAY_ID 
-    WHERE 
+    FROM
+            PAY0064D A
+            JOIN PAY0065D B ON A.PAY_ID = B.PAY_ID
+    WHERE
             A.PAY_ID = #{payId}
             AND ROWNUM <![CDATA[   <= ]]> 1
-    </insert> 
-    
+    </insert>
+
     <insert id="insertTmpNormalPaymentInfo" parameterType="Map">
         INSERT INTO PAY0240T
         (
@@ -1287,7 +1287,7 @@
 			#{keyInIsCommChk}
         )
     </insert>
-    
+
     <insert id="insertTmpBillingInfo" parameterType="Map">
         INSERT INTO PAY0241T (
             ITM_SEQ,
@@ -1316,7 +1316,7 @@
 			SRV_LDGR_CNTRCT_ID,
 			BILL_AS_ID,
 			SRV_MEM_ID
-			
+
         ) VALUES (
             PAY0241T_SEQ.NEXTVAL,
 			#{seq},
@@ -1344,40 +1344,40 @@
 			#{srvcContractID},
 			#{billAsId},
 			#{srvMemId}
-			
+
         )
     </insert>
-    
+
     <update id="processPayment" statementType="CALLABLE" parameterType="Map">
         {call SP_INST_PAYMENT(#{seq},#{userid},#{keyInPayRoute}, #{keyInScrn} )}
     </update>
-    
+
     <resultMap id="normalPayResultStus" type="egovMap"></resultMap>
-    <resultMap id="normalPayResultMsg" type="egovMap"></resultMap>    
-    
+    <resultMap id="normalPayResultMsg" type="egovMap"></resultMap>
+
     <update id="processNormalPayment" statementType="CALLABLE" parameterType="Map">
         {call SP_INST_NORMAL_PAYMENT(#{seq}, #{userid}, #{key}, #{keyInPayRoute}, #{keyInScrn},
                                         #{p1, mode=OUT, jdbcType=INTEGER, javaType=int, resultMap=normalPayResultStus},
                                         #{p2, mode=OUT, jdbcType=VARCHAR, javaType=String, resultMap=normalPayResultMsg})}
     </update>
-    
+
     <select id="selectProcessPaymentResult" parameterType="Map" resultType="egovMap">
          SELECT
             DISTINCT B.OR_NO
-        FROM 
+        FROM
             PAY0252T A JOIN PAY0064D B ON A.PAY_ID = B.PAY_ID
-        WHERE 
-            A.GROUP_SEQ =   #{seq}      
+        WHERE
+            A.GROUP_SEQ =   #{seq}
     </select>
-    
+
     <select id="selectMegaDealByOrderId" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             NVL(MEGA_DEAL,0) AS MEGA_DEAL
-        FROM 
-            SAL0001D A 
+        FROM
+            SAL0001D A
             JOIN SAL0017D B ON A.PROMO_ID = B.PROMO_ID
-        WHERE 
+        WHERE
             A.SALES_ORD_ID = #{orderId}
    </select>
-    
+
 </mapper>
