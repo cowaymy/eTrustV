@@ -1317,8 +1317,10 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             BigDecimal totPv = new BigDecimal((String)oMap.get("orderPVPromo"));
 
             if(CommonUtils.intNvl(salesOrderMVO.getGstChk()) == 1) {
-            	totAmt = totAmt.multiply(new BigDecimal(1/1.06)).setScale(0, BigDecimal.ROUND_FLOOR);
-            	mthRentAmt = mthRentAmt.multiply(new BigDecimal(1/1.06)).setScale(0, BigDecimal.ROUND_FLOOR);
+            	//totAmt = totAmt.multiply(new BigDecimal(1/1.06)).setScale(0, BigDecimal.ROUND_FLOOR);
+            	//mthRentAmt = mthRentAmt.multiply(new BigDecimal(1/1.06)).setScale(0, BigDecimal.ROUND_FLOOR);
+            	totAmt = totAmt.multiply(new BigDecimal(1/1.00)).setScale(0, BigDecimal.ROUND_FLOOR);
+            	mthRentAmt = mthRentAmt.multiply(new BigDecimal(1/1.00)).setScale(0, BigDecimal.ROUND_FLOOR);
             	totPv = new BigDecimal((String)oMap.get("orderPVPromoGST"));
 
             	if(orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
