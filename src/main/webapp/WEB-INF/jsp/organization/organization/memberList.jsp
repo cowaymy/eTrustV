@@ -413,8 +413,14 @@ function createAUIGrid() {
             headerText : "Action Date",
             editable : false,
             width : 130
+        },
+        {
+            dataField : "address",
+            headerText : "Address",
+            editable : false,
+            width : 130
         }
-        
+
         /* this is for put EDIT button in grid ,
         {
             dataField : "undefined",
