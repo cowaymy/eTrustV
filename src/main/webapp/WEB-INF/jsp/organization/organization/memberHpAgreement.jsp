@@ -246,7 +246,7 @@ input {
 
     <div id="dlPDF" style="padding-left: 5%; padding-right: 5%">
         <b><font size="4">Please tap on the icon to view the agreement:</font></b>
-        <a href="/resources/pdf/agreement/CowayHealthPlannerAgreement.pdf">
+        <a href="/resources/report/prd/organization/CowayHealthPlannerAgreement.pdf">
             <img src="${pageContext.request.contextPath}/resources/images/common/icon_pdf.png" alt="PDF" class="centerPDF">
         </a>
     </div>
