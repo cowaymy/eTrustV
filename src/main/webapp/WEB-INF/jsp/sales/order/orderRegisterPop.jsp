@@ -1692,7 +1692,7 @@
                 }
             }
 
-            if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '144' || appTypeVal == '1412') {
+            if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '1412') {
                 if($("#ordPromo option:selected").index() <= 0) {
                     isValid = false;
                     msg += "* Please select the promotion code.<br>";
