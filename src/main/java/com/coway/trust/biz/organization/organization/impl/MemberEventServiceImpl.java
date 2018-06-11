@@ -45,10 +45,10 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 
 	@Resource(name = "memberEventMapper")
 	private MemberEventMapper memberEventMapper;
-	
+
 	@Resource(name = "transferMapper")
 	private TransferMapper transferMapper;
-	
+
 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
@@ -57,16 +57,16 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 	public List<EgovMap> selectOrganizationEventList(Map<String, Object> params) {
 
 //		for(int i=0; i < params.size(); i++) {
-//			logger.debug("requestStatus : {}", params.get("StatusList"));			
+//			logger.debug("requestStatus : {}", params.get("StatusList"));
 //		}
-		
+
 		return memberEventMapper.selectOrganizationEventList(params);
 
 	}
 
 	@Override
 	public List<EgovMap> reqStatusComboList() {
- 
+
 		return memberEventMapper.reqStatusComboList();
 	}
 
@@ -76,67 +76,67 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 		return memberEventMapper.reqPersonComboList();
 	}
 
-	
-	
+
+
 	public EgovMap getMemberEventDetailPop(Map<String, Object> params) {
-		
+
 		logger.debug("getPstRequestDODetaiPop serviceImpl 호출 : " + params.get("promoId"));
 		logger.debug("fail.common.dbmsg : {}", messageSourceAccessor.getMessage("fail.common.dbmsg"));
-		
+
 		return memberEventMapper.getMemberEventDetailPop(params);
 	}
-	
-	
+
+
 	@Override
 	public List<EgovMap> selectPromteDemoteList(Map<String, Object> params) {
 		return memberEventMapper.selectPromteDemoteList(params);
 	}
 
-	
+
 	@Transactional
 	public boolean selectMemberPromoEntries(Map<String, Object> params) {
 		boolean success = false;
 		logger.debug("getMemberEventDetailPop serviceImpl 호출 : " + params.get("promoId"));
-		
+
 		EgovMap formList = memberEventMapper.selectMemberPromoEntries(params);
-		
+
 		String vMemTypeId =  formList.get("memTypeId").toString();
 		String vMemLvlTo = formList.get("memLvlTo").toString();
-		
+
 		logger.debug("vMemLvlTo::::" +vMemLvlTo);
 		logger.debug("vMemTypeId::::" + vMemTypeId );
 
-		
+
 		if(formList.size()>0) {
-			
+
 			String nextDocNo = "";
 			String newDeptCode1 = "";
 			EgovMap newDeptCode = null;
 			if(formList.get("memLvlTo").toString().equals("4")) {
 				newDeptCode = memberEventMapper.getMemberOrganizations(formList);
 				logger.debug("newDeptCode::::" + newDeptCode );
-				
+
 			} else if (formList.get("memLvlTo").toString().equals("0")) {
 				// request vacation
 			} else {
 				//Get New Dept Code
 				int docNoID = getNewDeptCodeDocNoId(vMemTypeId ,vMemLvlTo );
 				logger.debug("DocNoID::::" + docNoID );
-				
+
 				EgovMap  qryDocNo = memberEventMapper.getDocNoes(docNoID);
 //				Map<String,Object> mapQryDocNo = (Map<String,Object>)qryDocNo.get(0);
 				logger.debug("qryDocNo:::: : {}" + qryDocNo );
-				
+
                 String vDocNo = qryDocNo.get("docNo").toString();
                 String vDocNoPrefix = qryDocNo.get("docNoPrefix").toString();
-                
+
                 newDeptCode1 = vDocNoPrefix + vDocNo;
                 logger.debug("DocNoID::::" + newDeptCode1 );
-                
+
                 nextDocNo = getNextDocNo(vDocNoPrefix, vDocNo);
                 logger.debug("nextDocNo : {}",nextDocNo);
-                
-                
+
+
                 if(qryDocNo.size()>0){
                 	vDocNo = nextDocNo;
                 	qryDocNo.put("docNo", nextDocNo);
@@ -144,8 +144,8 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
                 	memberEventMapper.updateDocNoes(qryDocNo);
                 }
 			}
-			
-			//MemberOrganization			
+
+			//MemberOrganization
 			EgovMap mQryMemOrg     = memberEventMapper.getMemberOrganizationsMemId(formList.get("memId").toString());
             EgovMap mQryMemUpOrg = memberEventMapper.getMemberOrganizationsMemUpId(mQryMemOrg.get("memUpId").toString());
             EgovMap mQryMemPrOrg  = memberEventMapper.getMemberOrganizationsMemPrId(formList.get("prMemId").toString());
@@ -153,16 +153,16 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
             logger.debug("mQryMemOrg : {}",mQryMemOrg);
             logger.debug("mQryMemUpOrg : {}",mQryMemUpOrg);
             logger.debug("mQryMemPrOrg : {}",mQryMemPrOrg);
-            
-            String prevDeptCode = mQryMemOrg.get("deptCode").toString();            
+
+            String prevDeptCode = mQryMemOrg.get("deptCode").toString();
             String prevMemberUpID;
             String prevMemberLvl;
-            
+
 			if (mQryMemOrg.get("memUpId").toString() != null)
 				prevMemberUpID = mQryMemOrg.get("memUpId").toString();
 			else
 				prevMemberUpID = "0";
-            
+
 			if (mQryMemOrg.get("memLvl").toString() != null)
 				prevMemberLvl = mQryMemOrg.get("memLvl").toString();
 			else
@@ -188,22 +188,22 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mQryMemOrg.put("grandPrCode", mQryMemPrOrg.get("prCode"));
 			mQryMemOrg.put("grandPrMemId", mQryMemPrOrg.get("prMemId"));
 			mQryMemOrg.put("brnchId", deptCode.get("brnchId")  != null ? deptCode.get("brnchId") :0);
-			
+
 			mQryMemOrg.put("lastDeptCode", deptCode.get("lastDeptCode"));
 			mQryMemOrg.put("lastGrpCode", deptCode.get("lastGrpCode"));
 			mQryMemOrg.put("lastOrgCode", deptCode.get("lastOrgCode"));
-			
-			
+
+
 			//2017 -11 -20    hgham edit   전위원 요청 배치로 변경 한다고 함. (업데이트도 오류 있음.)
 			//memberEventMapper.updateMemberOrganizations(mQryMemOrg);
-			
+
 			Map<String, Object> updateValue = new HashMap<String, Object>(); // ORG0001D BRNCH_ID UPDATE
 			updateValue.put("brnchId", deptCode.get("brnchId"));
 			updateValue.put("memId", params.get("memId"));
 //			memberEventMapper.updateMemberBranch(updateValue);
-			
-			
-			
+
+
+
             //Member
 			EgovMap mQryMember    = memberEventMapper.getMemberSearch(formList.get("memId").toString());
 //			mQryMember.put("promoDt", sysdate);
@@ -213,7 +213,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mQryMember.put("syncChk", false);
 
 			memberEventMapper.updateMember(mQryMember);
-			
+
 
 			logger.debug("formList::::" + formList );
             //MemberPromoEntry
@@ -225,20 +225,20 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 			mPromoEntry.put("promoId", params.get("promoId"));
 			mPromoEntry.put("branchId", params.get("branchId"));
 			mPromoEntry.put("evtApplyDate", CommonUtils.isEmpty(params.get("evtApplyDate")) ? null : params.get("evtApplyDate"));
-			
+
 			logger.debug("mPromoEntry::::" + mPromoEntry);
             memberEventMapper.updateMemberPromoEntry(mPromoEntry);
-            
+
             success = true;
 		}
 		return success;
 	}
-	
 
-	
-	
 
-    
+
+
+
+
 	public String getNextDocNo(String prefixNo, String docNo) {
 		String nextDocNo = "";
 		int docNoLength = 0;
@@ -254,20 +254,20 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 
 		return nextDocNo;
 	}
-    
-	
-    
+
+
+
 	public int getNewDeptCodeDocNoId (String memberTypeID, String level) {
 
 		int DocNoID = 0;
-		
+
         if (memberTypeID.equals("1")) {
             if (level.equals("1"))
-                DocNoID = 62;
+                DocNoID = 160; //HP org code  old ID:62
             else if (level.equals("2"))
-                DocNoID = 61;
+                DocNoID = 161; //HP group code old ID:61
             else if (level.equals("3"))
-                DocNoID = 60;
+                DocNoID = 162; //HP dept Code old ID:60
         }else if (memberTypeID.equals("2")) {
             if (level.equals("1"))
                 DocNoID = 65;
@@ -283,7 +283,7 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
             else if (level.equals("3"))
                 DocNoID = 105;
         }
-		
+
 		return DocNoID;
 	}
 
@@ -291,5 +291,5 @@ public class MemberEventServiceImpl extends EgovAbstractServiceImpl implements M
 	public EgovMap getAvailableChild(Map<String, Object> params) {
 		return memberEventMapper.getAvailableChild(params);
 	}
-	
+
 }
