@@ -149,7 +149,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 
 		bMessageType = StringUtils.rightPad("T", 1, " ");
 		bBatchNo      	= StringUtils.leftPad(String.valueOf("1"), 5, "0");
-		bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
+		//bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
 		bTransCode 	= StringUtils.rightPad("40", 2, " ");
 		bAccNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("fileItmAccNo")), 19, " ");
 		//bAmount 		= StringUtils.rightPad(String.valueOf("1"), 13, " ");
@@ -174,7 +174,7 @@ public class ECashDeductionFileMBBHandler extends BasicTextDownloadHandler imple
 		iTotalAmt = iTotalAmt + sLimit;
 		ihashtot3 = ihashtot3 + sLimit + Long.parseLong(bAccNo.trim());
 		iTotalCnt++;
-
+		bTransNo 		= StringUtils.leftPad(String.valueOf(iTotalCnt), 6, "0");
 		bAmount = StringUtils.leftPad(String.valueOf(sLimit), 13, "0");
 
 
