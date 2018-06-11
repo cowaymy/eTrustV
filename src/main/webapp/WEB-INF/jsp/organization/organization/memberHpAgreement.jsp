@@ -241,7 +241,7 @@ input {
 <form id="agreementForm" style="width: 100%">
 
     <div id="agreementPDF" style="height: 450px">
-        <script>PDFObject.embed("/resources/report/prd/pdf/agreement/CowayHealthPlannerAgreement.pdf", "#agreementPDF");</script>
+        <script>PDFObject.embed("/resources/report/prd/organization/CowayHealthPlannerAgreement.pdf", "#agreementPDF");</script>
     </div>
 
     <div id="dlPDF" style="padding-left: 5%; padding-right: 5%">
