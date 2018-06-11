@@ -1077,11 +1077,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					}
 				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 1) {
 					if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
-						deptCode = getDocNo("60");
+						deptCode = getDocNo("162");
 					} else if (params.get("memberLvl").equals("3") && params.get("lvlTo").equals("2")) {
-						deptCode = getDocNo("61");
+						deptCode = getDocNo("161");
 					} else if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("1")) {
-						deptCode = getDocNo("62");
+						deptCode = getDocNo("160");
 					}
 				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 3) {
 					if (params.get("memberLvl").equals("4") && params.get("lvlTo").equals("3")) {
@@ -1102,9 +1102,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 					}
 				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 1) {
 					if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("3")) {
-						deptCode = getDocNo("60");
+						deptCode = getDocNo("162");
 					} else if (params.get("memberLvl").equals("1") && params.get("lvlTo").equals("2")) {
-						deptCode = getDocNo("61");
+						deptCode = getDocNo("161");
 					}
 				} else if (Integer.parseInt(params.get("memtype").toString().replaceAll(" ", "")) == 3) {
 					if (params.get("memberLvl").equals("2") && params.get("lvlTo").equals("3")) {
