@@ -3524,7 +3524,7 @@
 
       <insert id="reverse_State_CCR0001D" parameterType="Map" >
 		  UPDATE CCR0001D
-		   SET HC_STUS_ID =4,
+		   SET HC_STUS_ID = 8 ,
 		       UPD_USER_ID = #{updator},
 		       UPD_DT =SYSDATE
 		  WHERE HC_TYPE_NO =#{HC_TYPE_NO} AND HC_STUS_ID='33'
