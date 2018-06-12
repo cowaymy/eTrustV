@@ -833,8 +833,8 @@ var gridPros = {
     <td>
     <textarea cols="20" rows="5" readonly="readonly" class="readonly" id="msg" name="msg">RM0.00 COWAY DSC
 Install Status: Completed
-Order No: 0805892
-Name: HM MUHAMMAD IMRAN - ROADSHOW</textarea>
+Order No: ${installResult.salesOrdNo}
+Name: ${hpMember.name1}</textarea>
     </td>
 </tr>
 <tr>
