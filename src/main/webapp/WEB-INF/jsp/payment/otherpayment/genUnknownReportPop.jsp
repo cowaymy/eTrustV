@@ -66,7 +66,7 @@ function fn_generateReport(){
             date = "0" + date;
         }
 
-        $("#reportDownFileName").val("Bank_Statement_Unknown"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+        $("#reportForm #reportDownFileName").val("Bank_Statement_Unknown_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         $("#reportForm #v_WhereSQL").val(whereSQL);
         $("#reportForm #viewType").val("EXCEL");
         $("#reportForm #reportFileName").val("/payment/BankStmtUnknown.rpt");
@@ -135,6 +135,7 @@ function fn_generateReport(){
 
 <form name="reportForm" id="reportForm" method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="Excel" />
     <input type="hidden" id="v_WhereSQL" name="v_WhereSQL" value="" />
 </form>
