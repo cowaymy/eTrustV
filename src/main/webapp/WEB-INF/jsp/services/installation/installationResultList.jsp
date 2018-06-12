@@ -126,6 +126,12 @@ function createInstallationListAUIGrid() {
         editable : false,
         width : 100
     },
+    {
+        dataField : "memCode",
+        headerText : '<spring:message code="service.grid.CTCode" />',
+        editable : false,
+        width : 100
+    },
     /*{
         dataField : "name",
         headerText : '<spring:message code="service.grid.Customer" />',
