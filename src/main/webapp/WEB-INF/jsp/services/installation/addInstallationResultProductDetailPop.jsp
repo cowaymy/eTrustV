@@ -1398,8 +1398,8 @@
 							<td><textarea cols="20" rows="5" readonly="readonly"
 									class="readonly" id="msg" name="msg">RM0.00 COWAY DSC
 Install Status: Completed
-Order No: 0805892
-Name: HM MUHAMMAD IMRAN - ROADSHOW</textarea></td>
+Order No: ${viewDetail.exchangeInfo.salesOrdNo}
+Name: ${installResult.ctMemName}</textarea></td>
 						</tr>
 						<tr>
 							<td><input type="text" title="" placeholder="" class="w100p"
