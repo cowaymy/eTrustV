@@ -548,7 +548,7 @@
 
 		           select AREA as code_id, AREA as code_name
 				    from SYS0064M
-				    where upper(state) = #{groupCode}
+				    where upper(state) = upper(#{groupCode})
 				    group by AREA
 
 	   </select>
