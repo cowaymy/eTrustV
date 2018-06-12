@@ -28,16 +28,18 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface PreOrderMapper {
 
 	List<EgovMap> selectPreOrderList(Map<String, Object> params);
-	
+
 	EgovMap selectPreOrderInfo(Map<String, Object> params);
-	
+
 	int selectExistSofNo(Map<String, Object> params);
-	
+
 	void insertPreOrder(PreOrderVO preOrderVO);
-	
+
 	void updatePreOrder(PreOrderVO preOrderVO);
-	
+
 	void updatePreOrderStatus(PreOrderVO preOrderVO);
-	
+
+	void updatePreOrderFailStatus(Map<String, Object> params);
+
 	int selectExistingMember(Map<String, Object> params);
 }

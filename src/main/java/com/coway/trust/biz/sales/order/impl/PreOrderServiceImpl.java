@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.biz.sales.order.impl;
 
@@ -36,14 +36,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("preOrderService")
 public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreOrderService {
 
-//	private static Logger logger = LoggerFactory.getLogger(OrderListServiceImpl.class);
-	
+	private static Logger logger = LoggerFactory.getLogger(PreOrderServiceImpl.class);
+
 	@Resource(name = "preOrderMapper")
 	private PreOrderMapper preOrderMapper;
-	
+
 //	@Autowired
 //	private MessageSourceAccessor messageSourceAccessor;
-	
+
 	@Override
 	public List<EgovMap> selectPreOrderList(Map<String, Object> params) {
 		return preOrderMapper.selectPreOrderList(params);
@@ -51,23 +51,23 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 
 	@Override
 	public EgovMap selectPreOrderInfo(Map<String, Object> params) {
-		
+
 		EgovMap rslt = preOrderMapper.selectPreOrderInfo(params);
-		
+
 		if(rslt.get("preTm") != null) {
 			rslt.put("preTm", this.convert12Tm((String) rslt.get("preTm")));
 		}
-		
+
 		return preOrderMapper.selectPreOrderInfo(params);
 	}
-	
+
 	private String convert12Tm(String TM) {
 		String HH = "", MI = "", cvtTM = "";
-		
+
 		if(CommonUtils.isNotEmpty(TM)) {
 			HH = CommonUtils.left(TM, 2);
 			MI = TM.substring(3, 5);
-			
+
 			if(Integer.parseInt(HH) > 12) {
 				cvtTM = CommonUtils.getFillString((Integer.parseInt(HH) - 12), "0", 2) + ":" + String.valueOf(MI) + " PM";
 			}
@@ -82,38 +82,46 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 	public int selectExistSofNo(Map<String, Object> params) {
 		return preOrderMapper.selectExistSofNo(params);
 	}
-	
+
 	@Override
 	public void insertPreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
-		
+
 		this.preprocPreOrder(preOrderVO, sessionVO);
-		
+
 		preOrderMapper.insertPreOrder(preOrderVO);
 	}
-	
+
 	@Override
 	public void updatePreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
-		
+
 		this.preprocPreOrder(preOrderVO, sessionVO);
-		
+
 		preOrderMapper.updatePreOrder(preOrderVO);
 	}
-	
+
 	@Override
 	public void updatePreOrderStatus(PreOrderListVO preOrderListVO, SessionVO sessionVO) {
-		
+
 		GridDataSet<PreOrderVO> preOrderList = preOrderListVO.getPreOrderVOList();
-		
+
 		ArrayList<PreOrderVO> updateList = preOrderList.getUpdate();
-		
+
 		for(PreOrderVO vo : updateList) {
 			vo.setUpdUserId(sessionVO.getUserId());
 			preOrderMapper.updatePreOrderStatus(vo);
 		}
 	}
-	
+
+	@Override
+	public void updatePreOrderFailStatus(Map<String, Object> params, SessionVO sessionVO) {
+		logger.debug("@@@@@@@@@IMPL@@@@@" + params.toString());
+		params.put("updUserId", sessionVO.getUserId());
+
+		preOrderMapper.updatePreOrderFailStatus(params);
+	}
+
 	private void preprocPreOrder(PreOrderVO preOrderVO, SessionVO sessionVO) {
-		
+
 		preOrderVO.setChnnl(SalesConstants.PRE_ORDER_CHANNEL_WEB);
 		preOrderVO.setStusId(SalesConstants.STATUS_ACTIVE);
 		preOrderVO.setKeyinBrnchId(sessionVO.getUserBranchId());
@@ -122,15 +130,15 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 		preOrderVO.setCrtUserId(sessionVO.getUserId());
 		preOrderVO.setUpdUserId(sessionVO.getUserId());
 	}
-	
+
 	private String convert24Tm(String TM) {
 		String ampm = "", HH = "", MI = "", cvtTM = "";
-		
+
 		if(CommonUtils.isNotEmpty(TM)) {
 			ampm = CommonUtils.right(TM, 2);
 			HH = CommonUtils.left(TM, 2);
 			MI = TM.substring(3, 5);
-			
+
 			if("PM".equals(ampm)) {
 				cvtTM = String.valueOf(Integer.parseInt(HH) + 12) + ":" + MI + ":00";
 			}
@@ -140,7 +148,7 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 		}
 		return cvtTM;
 	}
-	
+
 	@Override
 	public int selectExistingMember(Map<String, Object> params) {
 		return preOrderMapper.selectExistingMember(params);

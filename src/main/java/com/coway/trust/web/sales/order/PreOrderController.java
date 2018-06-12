@@ -123,7 +123,6 @@ public class PreOrderController {
 		Calendar calendar = Calendar.getInstance();
 		calendar.add(Calendar.DAY_OF_YEAR,1);
 		Date nextDay = calendar.getTime();
-		logger.debug("@@@@@" + CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1,nextDay));
 
 		model.put("nextDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1,nextDay));
 
@@ -243,6 +242,23 @@ public class PreOrderController {
 
 		return ResponseEntity.ok(message);
 	}
+
+	@RequestMapping(value = "/updateFailPreOrderStatus.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateFailPreOrderFailStatus(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
+		logger.debug("@@@@@@@@@@@@@@@@@@@" + params.toString());
+		preOrderService.updatePreOrderFailStatus(params, sessionVO);
+
+		String msg = "Order Status successfully updated.";
+
+		// 결과 만들기
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+//		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setMessage(msg);
+
+		return ResponseEntity.ok(message);
+	}
+
 
 	@RequestMapping(value = "/convertToOrderPop.do")
 	public String convertToOrderPop(@RequestParam Map<String, Object> params, ModelMap model) {

@@ -47,26 +47,44 @@
         Common.popupDiv("/sales/order/preOrderModifyPop.do", { preOrdId : AUIGrid.getCellValue(gridID, rowIdx, "preOrdId") }, null, true, "_divPreOrdModPop");
     }
 
-    function fn_doSaveStatus() {
-        console.log('!@# fn_doSaveStatus START');
+    function fn_validStatus() {
+    	var selIdx = AUIGrid.getSelectedIndex(listGridID)[0];
 
-        var preOrderVOList = {
-            preOrderVOList : GridCommon.getEditData(listGridID)
-        };
+        if(selIdx > -1) {
+            var stusId    = AUIGrid.getCellValue(listGridID, selIdx, "stusId");
+            var preOrdId = AUIGrid.getCellValue(listGridID, selIdx, "preOrdId");
+            var sofNo     = AUIGrid.getCellValue(listGridID, selIdx, "sofNo");
 
-        Common.ajax("POST", "/sales/order/modifyPreOrderStatus.do", preOrderVOList, function(result) {
+            $('#hiddenPreOrdId').val(preOrdId);
+            $('#hiddenSof').val(sofNo);
 
-            Common.alert("Pre-Order Status Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+            if(stusId == 4 || stusId == 21){
+                Common.alert("Failed");
+            }
+            else{
+            	$('#updFail_wrap').show();
+            }
+        }else {
+                Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
+        }
+    }
 
-            fn_getPreOrderList();
+    function fn_doFailStatus(){
+    	console.log("Hi :: " + $('#hiddenSof').val() + ", " + $('#_rem_').val() + ", " + $('input[name=cmbFailCode]:checked').val() + " , " + $('#hiddenPreOrdId').val());
 
-        },  function(jqXHR, textStatus, errorThrown) {
+    	var failUpdOrd = {
+    			failCode  : $('input[name=cmbFailCode]:checked').val(),
+    		    remark    : $('#_rem_').val(),
+    		    sof         : $('#hiddenSof').val(),
+    		    preOrdId : $('#hiddenPreOrdId').val(),
+    		    stusId       : '21'
+    	};
+
+    	Common.ajax("POST", "/sales/order/updateFailPreOrderStatus.do", failUpdOrd, function(result) {
+            Common.alert("Order Failed" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closeFailedStusPop);
+        },
+        function(jqXHR, textStatus, errorThrown) {
             try {
-                console.log("status : " + jqXHR.status);
-                console.log("code : " + jqXHR.responseJSON.code);
-                console.log("message : " + jqXHR.responseJSON.message);
-                console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-
                 Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
             }
             catch (e) {
@@ -75,12 +93,17 @@
         });
     }
 
+    function fn_closeFailedStusPop() {
+        fn_getPreOrderList();
+        $('#updFail_wrap').remove();
+    }
+
     function createAUIGrid() {
 
     	//AUIGrid 칼럼 설정
         var columnLayout = [
-            { headerText : "Channel",         dataField : "channel",    editable : false, width : 60  }
-          , { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width : 100 }
+            /* { headerText : "Channel",         dataField : "channel",    editable : false, width : 60  } ,*/
+           { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width : 100 }
           , { headerText : "App Type",        dataField : "appType",    editable : false, width : 80  }
           , { headerText : "Pre-Order Date",  dataField : "requestDt",  editable : false, width : 100 }
           , { headerText : "Product",         dataField : "product",    editable : false}
@@ -88,7 +111,11 @@
           , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  }
           , { headerText : "NRIC/Company No", dataField : "nric",       editable : false, width : 100 }
           , { headerText : "Creator",         dataField : "userName",   editable : false, width : 100 }
-          , { headerText : "Status",          dataField : "stusId",     editable : true,  width : 100 ,
+          , { headerText : "Status",          dataField : "stusName",     editable : false,  width : 100 }
+          , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,  width : 100 }
+          , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,  width : 100 }
+          , { headerText : "StatusId",          dataField : "stusId",     editable : false, visible  : false,  width : 100 }
+          /* { headerText : "Status",          dataField : "stusId",     editable : true,  width : 100 ,
                     labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                     var retStr = value;
                     for(var i=0,len=keyValueList.length; i<len; i++) {
@@ -105,7 +132,7 @@
                     keyField   : "stusCodeId", //key 에 해당되는 필드명
                     valueField : "codeName"        //value 에 해당되는 필드명
                 }
-            }
+            } */
           , { headerText : "preOrdId",        dataField : "preOrdId",   visible  : false}
             ];
 
@@ -138,13 +165,16 @@
         	$('#_frmPreOrdSrch').clearForm();
         });
         $('#_btnSearch').click(function() {
-        	fn_getPreOrderList();
+        	if(fn_validSearchList()) fn_getPreOrderList();
         });
         $('#_btnConvOrder').click(function() {
             fn_convToOrderPop();
         });
-        $('#_btnSave').click(function() {
-            fn_doSaveStatus();
+        $('#_btnFail').click(function() {
+            fn_validStatus();
+        });
+        $('#_btnFailSave').click(function() {
+            fn_doFailStatus();
         });
         $('#_memBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/memberPop.do","");
@@ -169,6 +199,41 @@
         });
     });
 
+    function fn_validSearchList() {
+    	var isValid = true, msg = "";
+
+    	if(FormUtil.isEmpty($('#_memCode').val())
+    			/* && FormUtil.isEmpty($('#_appTypeId').val())
+    		    && FormUtil.isEmpty($('#_stusId').val())
+    		    && FormUtil.isEmpty($('#_brnchId').val())
+    		    && FormUtil.isEmpty($('#_typeId').val()) */
+    		    && FormUtil.isEmpty($('#_nric').val())
+    		    && FormUtil.isEmpty($('#_name').val())
+    		    && (FormUtil.isEmpty($('#_reqstStartDt').val()) || FormUtil.isEmpty($('#_reqstEndDt').val()))
+        ){
+    		 if((!FormUtil.isEmpty($('#_reqstStartDt').val()) && FormUtil.isEmpty($('#_reqstEndDt').val()))
+    		  || (FormUtil.isEmpty($('#_reqstStartDt').val()) && !FormUtil.isEmpty($('#_reqstEndDt').val())))
+    		 {
+    			    isValid = false;
+    			    msg += '<spring:message code="sal.alert.msg.selectOrdDate" /><br/>';
+    		 }
+    		if(FormUtil.isEmpty($('#_sofNo').val())){
+    			isValid = false;
+    			msg += '<spring:message code="sal.alert.msg.selSofNo" /><br/>';
+    		}
+    	 }
+
+         if(!isValid) Common.alert('<spring:message code="sal.title.text.ordSrch" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+         return isValid;
+
+    }
+
+  //Layer close
+    hideViewPopup=function(val){
+        $(val).hide();
+    }
+
     function fn_loadOrderSalesman(memCode) {
 
         Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memCode : memCode}, function(memInfo) {
@@ -183,12 +248,19 @@
     }
 
     function fn_convToOrderPop() {
-        var selIdx = AUIGrid.getSelectedIndex(listGridID)[0];
+    	var selIdx = AUIGrid.getSelectedIndex(listGridID)[0];
+
         if(selIdx > -1) {
-            Common.popupDiv("/sales/order/convertToOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
-        }
-        else {
-            Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
+        	var stusId = AUIGrid.getCellValue(listGridID, selIdx, "stusId");
+
+        	if(stusId == 10){
+                Common.alert("Convert order is not allowed for this pre-order");
+            }
+        	else{
+                Common.popupDiv("/sales/order/convertToOrderPop.do", { preOrdId : AUIGrid.getCellValue(listGridID, selIdx, "preOrdId") }, null , true);
+            }
+        }else {
+                Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
         }
     }
 
@@ -265,11 +337,19 @@
 <aside class="title_line"><!-- title_line start -->
 <h2>eSales</h2>
 <ul class="right_btns">
-	<li><p class="btn_blue"><a id="_btnConvOrder" href="#">Convert Order</a></p></li>
-	<li><p class="btn_blue"><a id="_btnNew" href="#">NEW</a></p></li>
-	<li><p class="btn_blue"><a id="_btnSave" href="#">SAVE</a></p></li>
-	<li><p class="btn_blue"><a id="_btnSearch" href="#"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a id="_btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
+    <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+	   <li><p class="btn_blue"><a id="_btnConvOrder" href="#">Convert Order</a></p></li>
+	</c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+        <li><p class="btn_blue"><a id="_btnFail" href="#">Update Fail</a></p></li>
+    </c:if>
+	<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+	   <li><p class="btn_blue"><a id="_btnNew" href="#">NEW</a></p></li>
+	</c:if>
+	<c:if test="${PAGE_AUTH.funcView == 'Y'}">
+	   <li><p class="btn_blue"><a id="_btnSearch" href="#"><span class="search"></span>Search</a></p></li>
+	   <li><p class="btn_blue"><a id="_btnClear" href="#"><span class="clear"></span>Clear</a></p></li>
+	</c:if>
 </ul>
 </aside><!-- title_line end -->
 
@@ -297,7 +377,13 @@
 	<th scope="row">Application Type</th>
 	<td><select id="_appTypeId" name="_appTypeId" class="multy_select w100p" multiple="multiple"></select></td>
 	<th scope="row">Pre-Order date</th>
-	<td><input id="_reqstDt" name="_reqstDt" type="text" value="${toDay}" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+	<td>
+	   <div class="date_set w100p"><!-- date_set start -->
+        <p><input id="_reqstStartDt" name="_reqstStartDt" type="text" value="" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+        <span>To</span>
+        <p><input id="_reqstEndDt" name="_reqstEndDt" type="text" value="" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+        </div><!-- date_set end -->
+    </td>
 </tr>
 <tr>
 	<th scope="row">Pre-Order Status</th>
@@ -315,6 +401,9 @@
 	<th scope="row">Customer Name</th>
 	<td><input id="_name" name="_name" type="text" title="" placeholder="" class="w100p" /></td>
 </tr>
+<tr>
+    <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>
+</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -324,5 +413,60 @@
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
+
+<!---------------------------------------------------------------
+    POP-UP (NEW CLAIM)
+---------------------------------------------------------------->
+<!-- popup_wrap start -->
+<div class="popup_wrap" id="updFail_wrap" style="display:none;">
+    <!-- pop_header start -->
+    <header class="pop_header" id="updFail_pop_header">
+        <h1>Failed Status</h1>
+        <ul class="right_opt">
+            <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#updFail_wrap')">CLOSE</a></p></li>
+        </ul>
+    </header>
+    <!-- pop_header end -->
+
+    <!-- pop_body start -->
+    <form name="updFailForm" id="updFailForm"  method="post">
+    <input id="hiddenPreOrdId" name="preOrdId"   type="hidden"/>
+    <input id="hiddenSof" name="sofNo"   type="hidden"/>
+    <section class="pop_body">
+        <!-- search_table start -->
+        <section class="search_table">
+            <!-- table start -->
+            <table class="type1">
+                <caption>table</caption>
+                 <colgroup>
+                    <col style="width:250px" />
+                    <col style="width:*" />
+                </colgroup>
+
+                <tbody>
+                    <tr>
+                        <th scope="row">Please select fail reason Code<span class="must">*</span></th>
+                            <td>
+                                <label><input type="radio" name="cmbFailCode" value="Incomplete document" /><span>Incomplete document</span></label>
+                                <label><input type="radio" name="cmbFailCode" value="Incorrect key-in" /><span>Incorrect key-in</span></label>
+                            </td>
+                    </tr>
+                    <tr>
+                        <th scope="row"><spring:message code="sal.title.remark" /></th>
+                            <td>
+                                <textarea cols="20" rows="2" id="_rem_" name="rem" placeholder="Remark"></textarea>
+                            </td>
+                    </tr>
+                   </tbody>
+            </table>
+        </section>
+
+        <ul class="center_btns" >
+            <li><p class="btn_blue2"><a id="_btnFailSave" href="#">Save</a></p></li>
+        </ul>
+    </section>
+    </form>
+    <!-- pop_body end -->
+</div>
 
 </section><!-- content end -->

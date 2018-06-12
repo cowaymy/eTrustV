@@ -6,6 +6,7 @@
     //AUIGrid 생성 후 반환 ID
     var listGiftGridID;
     var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
+    var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
 
     $(document).ready(function(){
 
@@ -68,6 +69,11 @@
             if(fn_isExistMember() == 'true') return false;
             if(fn_isExistESalesNo() == 'true') return false;
 
+            //encryptIc($('#nric').val());
+            $('#nric').prop("readonly", true).addClass("readonly");
+            $('#sofNo').prop("readonly", true).addClass("readonly");
+            $('#btnConfirm').addClass("blind");
+            $('#btnClear').addClass("blind");
           //$('#scPreOrdArea').removeClass("blind");
 
             /* $('#refereNo').val($('#sofNo').val().trim()) */
@@ -82,6 +88,11 @@
 
                 /* $('#refereNo').val($('#sofNo').val().trim()) */
 
+	            $('#nric').prop("readonly", true).addClass("readonly");
+	            $('#sofNo').prop("readonly", true).addClass("readonly");
+	            $('#btnConfirm').addClass("blind");
+	            $('#btnClear').addClass("blind");
+
                 fn_loadCustomer(null, $('#nric').val());
             }
         });
@@ -91,6 +102,10 @@
                 if(fn_isExistMember() == 'true') return false;
                 if(fn_isExistESalesNo() == 'true') return false;
 
+                $('#nric').prop("readonly", true).addClass("readonly");
+                $('#sofNo').prop("readonly", true).addClass("readonly");
+                $('#btnConfirm').addClass("blind");
+                $('#btnClear').addClass("blind");
                 /* $('#refereNo').val($('#sofNo').val().trim()) */
 
                 fn_loadCustomer(null, $('#nric').val());
@@ -612,7 +627,7 @@
             if(rsltInfo != null) {
                 isExist = rsltInfo.isExist;
             }
-            console.log('isExist:'+isExist);
+            console.log('isExistSalesNo:'+isExist);
         });
 
         if(isExist == 'true') Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* this Sales has posted, no amendment allow</b>");
@@ -627,7 +642,7 @@
             if(rsltInfo != null) {
                 isExist = rsltInfo.isExist;
             }
-            console.log('isExist:'+isExist);
+            console.log('isExistMember:'+isExist);
         });
 
         if(isExist == 'true') Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* The member is our existing HP/Cody/Staff/CT.</b>");
@@ -971,8 +986,8 @@
                     $('#billMthdEstm').prop("checked", true);
                     $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                     $('#billMthdEmail2').removeAttr("disabled");
-                    $('#billMthdEmailTxt1').removeAttr("disabled");
-                    $('#billMthdEmailTxt2').removeAttr("disabled");
+                    //$('#billMthdEmailTxt1').removeAttr("disabled");
+                    //$('#billMthdEmailTxt2').removeAttr("disabled");
                 }
 
                 $('#billMthdSms').prop("checked", true);
@@ -1122,13 +1137,13 @@
     }
 
     function fn_setDefaultSrvPacId() {
-        if($('#srvPacId option').size() == 2) {
-            $('#srvPacId option:eq(1)').attr('selected', 'selected');
+        //if($('#srvPacId option').size() == 2) {
+            $('#srvPacId option[value="2"]').attr('selected', 'selected');
 
             var stkType = $("#appType").val() == '66' ? '1' : '2';
 
             doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
-        }
+        //}
     }
 
     function fn_clearSales() {
@@ -1449,10 +1464,22 @@
 
         switch(tabNm) {
             case 'ord' :
+
+            	if(MEM_TYPE == '1' || MEM_TYPE == '2'){
+            		$('#memBtn').addClass("blind");
+            		$('#salesmanCd').val("${SESSION_INFO.userName}");
+                    $('#salesmanCd').change();
+            	}
+
+            	$('#appType').val("66");
+            	$('#appType').prop("disabled", true);
+            	$('#appType').change();
+
             	$('[name="advPay"]').prop("disabled", true);
             	$('#advPayNo').prop("checked", true);
             	$('#poNo').prop("disabled", true);
-                break;
+
+            	break;
             case 'pay' :
             	if($('#appType').val() == '66'){
             		$('#rentPayMode').val('131');
@@ -1477,6 +1504,11 @@
         }
         */
     }
+
+    function encryptIc(nric){
+    	$('#nric').attr("placeholder", nric.substr(0).replace(/[\S]/g,"*"));
+    	//$('#nric').val(nric.substr(0).replace(/[\S]/g,"*"));
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -1493,11 +1525,12 @@
 <aside class="title_line"><!-- title_line start -->
 <ul class="right_btns">
 	<li><p class="btn_blue"><a id="btnConfirm" href="#">Confirm</a></p></li>
-	<li><p class="btn_blue"><a href="#">Clear</a></p></li>
+	<li><p class="btn_blue"><a id="btnClear" href="#">Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 <form id="frmCustSearch" name="frmCustSearch" action="#" method="post">
     <input id="hiddenNric" name="hiddenNric" type="hidden" value="1" />
+    <input id="selType" name="selType" type="hidden" value="1" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1509,9 +1542,12 @@
 <tbody>
 <tr>
 	<th scope="row">NRIC/Company No</th>
-	<td><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p"/></td>
+	<td><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" /></td>
 	<th scope="row">eSales(SOF) No</th>
-	<td><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p"/></td>
+	<td><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row" colspan="4" ><span class="must"><spring:message code='sales.msg.ordlist.icvalid'/></span></th>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1646,14 +1682,14 @@
 	<col style="width:*" />
 </colgroup>
 <tbody>
-<tr>
+<!-- <tr>
 	<th scope="row">If contact same as above click here</th>
 	<td colspan="3"><input id="chkSameCntc" type="checkbox" checked/></td>
-</tr>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 
-<section id="scAnothCntc" class="blind">
+<section id="scAnothCntc">
 
 <ul class="right_btns mb10">
     <li><p class="btn_grid"><a id="btnNewCntc" href="#">Add New Contact</a></p></li>
@@ -1716,11 +1752,11 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Address | Alamat<span class="must">*</span></th>
+    <th scope="row">Address Line 1<span class="must">*</span></th>
     <td colspan="3"><input id="instAddrDtl" name="instAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Street | Jalan<span class="must">*</span></th>
+    <th scope="row">Address Line 2<span class="must">*</span></th>
     <td colspan="3"><input id="instStreet" name="instStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
@@ -1799,10 +1835,6 @@
     </div><!-- time_picker end -->
     </td>
 </tr>
-<tr>
-    <th scope="row">Special Instruction<span class="must">*</span></th>
-    <td colspan="3"><textarea id="speclInstct" name="speclInstct" cols="20" rows="5"></textarea></td>
-</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -1865,7 +1897,7 @@
 </tr>
 <tr>
     <th scope="row">Advance Rental Payment*</th>
-    <td><span>Does customer make advance rental payment for 6 months and above?</sapn>
+    <td><span>Does customer make advance rental payment for 12 months and above?</sapn>
         <input id="advPayYes" name="advPay" type="radio" value="1" /><span>Yes</span>
         <input id="advPayNo" name="advPay" type="radio" value="0" /><span>No</span></td>
     <!-- <th scope="row">Normal Rental Fee<span class="must">*</span></th>
@@ -1882,10 +1914,14 @@
 </tr> -->
 <tr>
 	<th scope="row">Salesman Code / Name<span class="must">*</span></th>
-    <td><input id="salesmanCd" name="salesmanCd" type="text" style="width:115px;" title="" placeholder="" class="" />
+    <td><input id="salesmanCd" name="salesmanCd" type="text" style="width:115px;" title="" placeholder="" class=""/>
         <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <p><input id="salesmanNm" name="salesmanNm" type="text" style="width:115px;" title="" placeholder="Salesman Name" readonly" readonly/></p>
+        <p><input id="salesmanNm" name="salesmanNm" type="text" style="width:115px;" title="" placeholder="Salesman Name" readonly disabled/></p>
         </td>
+</tr>
+<tr>
+    <th scope="row">Special Instruction<span class="must">*</span></th>
+    <td><textarea id="speclInstct" name="speclInstct" cols="20" rows="5"></textarea></td>
 </tr>
 <!-- <tr>
 	<th scope="row">PV<span class="must">*</span></th>
@@ -1917,7 +1953,7 @@
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:170px" />
+    <col style="width:250px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -1958,7 +1994,7 @@
         <a href="#" class="search_btn" id="thrdPartyBtn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
         <input id="hiddenThrdPartyId" name="hiddenThrdPartyId" type="hidden" title="" placeholder="Third Party ID" class="" /></td>
     <th scope="row">Type</th>
-    <td><input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Costomer Type" class="w100p readonly" readonly/></td>
+    <td><input id="thrdPartyType" name="thrdPartyType" type="text" title="" placeholder="Customer Type" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Name</th>
@@ -1978,7 +2014,7 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:170px" />
+    <col style="width:250px" />
     <col style="width:*" />
     <col style="width:190px" />
     <col style="width:*" />
@@ -2187,10 +2223,10 @@
 <h3>Billing Address</h3>
 </aside><!-- title_line end -->
 
-<ul class="right_btns mb10">
+<!-- <ul class="right_btns mb10">
     <li><p class="btn_grid"><a id="billNewAddrBtn" href="#">Add New Address</a></p></li>
     <li><p class="btn_grid"><a id="billSelAddrBtn" href="#">Select Another Address</a></p></li>
-</ul>
+</ul> -->
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -2333,10 +2369,10 @@
     <col style="width:*" />
 </colgroup>
 <tbody>
-<tr>
+<!-- <tr>
     <th scope="row">Remark</th>
     <td><textarea id="billRem" name="billRem" cols="20" rows="5" readonly></textarea></td>
-</tr>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 <!-- Existing Type end -->

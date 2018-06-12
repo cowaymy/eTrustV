@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.biz.sales.order;
 
@@ -29,6 +29,8 @@ public interface PreOrderService {
 	void updatePreOrder(PreOrderVO preOrderVO, SessionVO sessionVO);
 
 	void updatePreOrderStatus(PreOrderListVO preOrderListVO, SessionVO sessionVO);
+
+	void updatePreOrderFailStatus(Map<String, Object> params, SessionVO sessionVO);
 
 	int selectExistingMember(Map<String, Object> params);
 

@@ -15,6 +15,8 @@
 		     , T8.NAME AS STUS_NAME
 		     , T1.STUS_ID
 		     , T1.PRE_ORD_ID
+		     , T1.REM1
+		     , T1.REM2
 		  FROM SAL0213M T1
 		  LEFT OUTER
 		  JOIN SYS0013M T2
@@ -50,8 +52,8 @@
 	           #{item}
 	         </foreach>
          </if>
-         <if test='_reqstDt != null and _reqstDt != ""'>
-		   AND TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') = #{_reqstDt}
+         <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != ""'>
+		   AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt}, 'DD/MM/YYYY')  AND TO_DATE(#{_reqstEndDt}, 'DD/MM/YYYY')
          </if>
          <if test='arrPreOrdStusId != null and arrPreOrdStusId != ""'>
            AND T8.CODE IN
@@ -298,7 +300,7 @@
 		     , #{totPvGst}
 		     )
     </insert>
-    
+
     <update id="updatePreOrder" parameterType="preOrderVO">
         UPDATE SAL0213M
            SET CUST_PO_NO                 = #{custPoNo}
@@ -357,7 +359,7 @@
              , UPD_DT                     = SYSDATE
          WHERE PRE_ORD_ID                 = #{preOrdId}
     </update>
-    
+
     <update id="updatePreOrderStatus" parameterType="preOrderVO">
         UPDATE SAL0213M
            SET STUS_ID                    = #{stusId}
@@ -365,7 +367,17 @@
              , UPD_DT                     = SYSDATE
          WHERE PRE_ORD_ID                 = #{preOrdId}
     </update>
-    
+
+    <update id="updatePreOrderFailStatus" parameterType="Map">
+        UPDATE SAL0213M
+           SET STUS_ID                = #{stusId}
+             , UPD_USER_ID           = #{updUserId}
+             , UPD_DT                   = SYSDATE
+             , REM1                       = #{failCode}
+             , REM2                       = #{remark}
+         WHERE PRE_ORD_ID        = #{preOrdId}
+    </update>
+
     <select id="selectExistingMember" parameterType="Map" resultType="int">
 		SELECT COUNT(1) AS CNT
 		  FROM ORG0001D

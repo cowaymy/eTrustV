@@ -39,7 +39,7 @@
         createAUIGrid();
 
 
-  //      AUIGrid.setSelectionMode(myGridID, "singleRow");
+        AUIGrid.setSelectionMode(myGridID, "singleRow");
 
         // 셀 더블클릭 이벤트 바인딩
 
@@ -47,7 +47,7 @@
 
         //Magic Address
         fn_initAddress(); //init
-        CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
+      //  CommonCombo.make('_mState_', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
          //f_multiCombo 함수 호출이 되어야만 multi combo 화면이 안깨짐.
      //   doGetCombo('/common/selectCodeList.do', '8', '964','_cmbTypeId_', 'S' , '');                              // Customer Type Combo Box
         doGetCombo('/sales/customer/getNationList', '338' , '1' ,'_cmbNation_' , 'S');        // Nationality Combo Box
@@ -276,7 +276,7 @@
             $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
             $("input:radio[name='gender']").attr("disabled" , "disabled");
             $("#genderForm").attr('checked', false);
-            //$("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         }else if($("#_cmbTypeId_").val() == '964'){
             $("#_cmbCorpTypeId_").val('');
             $("#_cmbNation_").val('1');
@@ -293,10 +293,10 @@
             $("#genderForm").removeAttr('disabled');
             $("input:radio[name='gender']").attr("disabled" , false);
             $('input:radio[name="gender"][value="M"]').prop('checked', true);
-            //$("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
+            $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
         }else{
-            //$("#_oldNric_").val('');
-            //$("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
+            $("#_oldNric_").val('');
+            $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
             $("#_gstRgistNo_").val('');
             $("#_gstRgistNo_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
             $("#_cmbNation_").val('');
@@ -329,7 +329,7 @@
         console.log("save click");
 
         if(fn_saveValidationCheck()){
-            Common.confirm("<spring:message code='sal.alert.text.saveCustomer'/>", fn_saveNewCustomer);
+            Common.confirm("<spring:message code='sal.alert.savePreOrdCust'/>" + "<br/>" + $('#_custName_').val() + "<br/>" +  $('#_nric_').val() + "<br/>", fn_saveNewCustomer);
         }
     }
 
@@ -353,7 +353,7 @@
                     visaExpr : insBasicForm.visaExpr.value,
                     gender : $('input:radio[name=gender]:checked').val(),
                     email : insBasicForm.email.value,
-                    cmbRace : insBasicForm.cmbRace.value,
+                    cmbRace : $('input[name=cmbRace]:checked').val(), //insBasicForm.cmbRace.value,
                     telM1 : insBasicForm.telM1.value,
                     telR : insBasicForm.telR.value,
                     //telF : insBasicForm.telF.value,
@@ -361,10 +361,10 @@
                     ext : insBasicForm.ext.value,
                     //rem : insBasicForm.rem.value,
 
-                    addrDtl : insAddressForm.addrDtl.value,
-                    areaId : insAddressForm.areaId.value,
-                    streetDtl : insAddressForm.streetDtl.value,
-                    //addrRem : insAddressForm.addrRem.value,
+                    addrDtl : null,//insAddressForm.addrDtl.value,
+                    areaId : null, //insAddressForm.areaId.value,
+                    streetDtl : null, //insAddressForm.streetDtl.value,
+                    addrRem : null, //insAddressForm.addrRem.value,
 
                     asCustName : insContactForm.asCustName.value,
                     asTelM : insContactForm.asTelM.value,
@@ -498,7 +498,7 @@
                    return false;
             }
             // Gender validation check (해야함.) * Customer is exist.
-            if($("#_cmbRace_").val() == ''){
+            if(!$('input[name=cmbRace]:checked')){//if($("#_cmbRace_").val() == ''){
                 Common.alert('<spring:message code="sal.alert.msg.plzSelCustRace" />');
                    return false;
             }
@@ -507,7 +507,7 @@
                    return false;
             }
         }
-        console.log("6.  detail addr check");
+        /* console.log("6.  detail addr check");
         if($("#_addrDtl_").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinAddr" />');
             return false;
@@ -535,7 +535,7 @@
         if($("#_mState_").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.plzKeyinState" />');
             return false;
-        }
+        } */
 
         console.log("11.  cust name check");
         if($("#_asCustName_").val() == ''){
@@ -718,7 +718,7 @@
         var msg = '';
 
         Common.ajax("POST", "/sales/customer/nricDupChk.do", nricObj, function(result){
-            if(result != null){
+        	if(result != null){
                     msg += '<spring:message code="sal.alert.msg.existCustomerBrCustId" />' + result.custId;
                     isDup = true;
             }
@@ -832,10 +832,10 @@
             <!-- tap_wrap start -->
             <ul class="tap_type1">
                 <li><a href="#" class="on"><spring:message code="sal.tap.title.basicInfo" /></a></li>
-                <li><a href="#"><spring:message code="sal.text.insAddr" /></a></li>
+                <%-- <li><a href="#"><spring:message code="sal.text.insAddr" /></a></li> --%>
                 <li><a href="#" id="_contactTab"><spring:message code="sal.title.text.additialServiceContact" /></a></li>
-                <li><a href="#" onclick="javascript:chgTab('card');"><spring:message code="sal.title.text.bankCard" /></a></li>
-                <li><a href="#" onclick="javascript:chgTab('account');"><spring:message code="sal.title.text.bankAccount" /></a></li>
+                <%-- <li><a href="#" onclick="javascript:chgTab('card');"><spring:message code="sal.title.text.bankCard" /></a></li> --%>
+                <%-- <li><a href="#" onclick="javascript:chgTab('account');"><spring:message code="sal.title.text.bankAccount" /></a></li> --%>
             </ul>
             <!-- dup Nric Check  -->
             <article class="tap_area">
@@ -881,10 +881,10 @@
                 <input type="text" title="" id="_gstRgistNo_" name="gstRgistNo" placeholder="GST Registration No" class="w100p readonly" disabled="disabled" />
             </td> -->
                             </tr>
-<%--                             <tr>
+                            <tr>
                                 <th scope="row"><spring:message code="sal.title.text.oldIcarmyPolice" /></th>
                                 <td><input type="text" title="" id="_oldNric_" name="oldNric" maxlength="18" placeholder="Old IC/Army/Police" class="w100p" disabled="disabled" /></td>
-                            </tr> --%>
+                            </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must">*</span>
                                 <!-- <span class="brown_text">#</span> --></th>
@@ -919,10 +919,10 @@
                                 <th scope="row"><spring:message code="sal.text.race2" /><span class="brown_text">#</span></th>
                                 <td>
                                     <!-- <select class="w100p disabled" id="_cmbRace_" name="cmbRace" disabled="disabled"></select> -->
+                                    <label><input type="radio" name="cmbRace" value="10" /><span>Malay</span></label>
                                     <label><input type="radio" name="cmbRace" value="11" /><span>Chinese</span></label>
                                     <label><input type="radio" name="cmbRace" value="12" /><span>Indian</span></label>
                                     <label><input type="radio" name="cmbRace" value="14" /><span>Korean</span></label>
-                                    <label><input type="radio" name="cmbRace" value="10" /><span>Malay</span></label>
                                     <label><input type="radio" name="cmbRace" value="13" /><span>Other</span></label>
                                                 <input id="_cmbRace_" name="cmbRace" type="hidden"/>
                                 </td>
@@ -965,6 +965,69 @@
 
             </article>
             <!-- tap_area end -->
+
+            <article class="tap_area">
+                <!-- tap_area start -->
+
+                <aside class="title_line">
+                    <!-- title_line start -->
+                    <h2>
+                        <spring:message code="sal.text.contactPerson" />
+                    </h2>
+                    <ul class="right_opt">
+                        <li><p class="btn_blue2"><a href="#" onclick="fn_copyCustInfo()"><spring:message code="sal.title.text.copyFromCustInfo" /></a></p></li>
+                    </ul>
+                </aside>
+                <!-- title_line end -->
+
+                <form id="insContactForm" name="insContactForm" method="POST">
+                    <table class="type1">
+                        <!-- table start -->
+                        <caption>table</caption>
+                        <colgroup>
+                            <col style="width: 250px" />
+                            <col style="width: *" />
+                        </colgroup>
+                        <tbody>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
+                                <td colspan="1"><input type="text" id="_asCustName_" name="asCustName" title="" placeholder="Name" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.telMTwo" /><span class="must">*</span></th>
+                                <td><input type="text" id="_asTelM_" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.telRTwo" /><span class="must">*</span></th>
+                                <td><input type="text" id="_asTelR_" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.telOTwo" /><span class="must">*</span></th>
+                                <td><input type="text" id="_asTelO_" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <th scope="row"><spring:message code="sal.title.text.ext" /></th>
+                                <td><input type="text" id="_asExt_" name="asExt" title="" placeholder="Extension Number" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <%-- <th scope="row"><spring:message code="sal.title.text.telFTwo" /><span class="must">*</span></th>
+                                        <td><input type="text" id="_asTelF_" name="asTelF" title="" placeholder="Telephone Number (Fax)" class="w100p" /></td> --%>
+                                <th scope="row"><spring:message code="sal.title.text.emailTwo" /></th>
+                                <td><input type="text" id="_asEmail_" name="asEmail" title="" onBlur="javascript:asEmailCheck()" placeholder="Email" class="w100p" /></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                    <!-- table end -->
+                </form>
+                <ul class="center_btns">
+                    <li><p class="btn_blue2 big">
+                            <a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save" /></a>
+                        </p></li>
+                </ul>
+
+            </article>
+            <!-- tap_area end -->
+
 
             <article class="tap_area">
                 <!-- tap_area start -->
@@ -1023,78 +1086,16 @@
                                 <th scope="row"><spring:message code="sal.text.country2" /><span class="must">*</span></th>
                                 <td><input type="text" title="" id="_mCountry_" name="mCountry" placeholder="" class="w100p readonly" readonly="readonly" value="Malaysia" /></td>
                             </tr>
-                            <%-- <tr>
+                            <tr>
 					                <th scope="row"><spring:message code="sal.text.remarks" /></th>
 					                <td colspan="3"><textarea cols="20" rows="5" id="_addrRem_" name="addrRem" placeholder="Remark"></textarea></td>
-					               </tr> --%>
+					               </tr>
                         </tbody>
                     </table>
                     <!-- table end -->
                 </form>
                 <ul class="center_btns">
                     <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save2" /></a></p></li>
-                </ul>
-
-            </article>
-            <!-- tap_area end -->
-
-            <article class="tap_area">
-                <!-- tap_area start -->
-
-                <aside class="title_line">
-                    <!-- title_line start -->
-                    <h2>
-                        <spring:message code="sal.text.instAddr" />
-                    </h2>
-                    <ul class="right_opt">
-                        <li><p class="btn_blue2"><a href="#" onclick="fn_copyCustInfo()"><spring:message code="sal.title.text.copyFromCustInfo" /></a></p></li>
-                    </ul>
-                </aside>
-                <!-- title_line end -->
-
-                <form id="insContactForm" name="insContactForm" method="POST">
-                    <table class="type1">
-                        <!-- table start -->
-                        <caption>table</caption>
-                        <colgroup>
-                            <col style="width: 250px" />
-                            <col style="width: *" />
-                        </colgroup>
-                        <tbody>
-                            <tr>
-                                <th scope="row"><spring:message code="sal.text.name" /><span class="must">*</span></th>
-                                <td colspan="1"><input type="text" id="_asCustName_" name="asCustName" title="" placeholder="Name" class="w100p" /></td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><spring:message code="sal.title.text.telMTwo" /><span class="must">*</span></th>
-                                <td><input type="text" id="_asTelM_" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" /></td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><spring:message code="sal.title.text.telRTwo" /><span class="must">*</span></th>
-                                <td><input type="text" id="_asTelR_" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" /></td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><spring:message code="sal.title.text.telOTwo" /><span class="must">*</span></th>
-                                <td><input type="text" id="_asTelO_" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" /></td>
-                            </tr>
-                            <tr>
-                                <th scope="row"><spring:message code="sal.title.text.ext" /></th>
-                                <td><input type="text" id="_asExt_" name="asExt" title="" placeholder="Extension Number" class="w100p" /></td>
-                            </tr>
-                            <tr>
-                                <%-- <th scope="row"><spring:message code="sal.title.text.telFTwo" /><span class="must">*</span></th>
-                                        <td><input type="text" id="_asTelF_" name="asTelF" title="" placeholder="Telephone Number (Fax)" class="w100p" /></td> --%>
-                                <th scope="row"><spring:message code="sal.title.text.emailTwo" /></th>
-                                <td><input type="text" id="_asEmail_" name="asEmail" title="" onBlur="javascript:asEmailCheck()" placeholder="Email" class="w100p" /></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                    <!-- table end -->
-                </form>
-                <ul class="center_btns">
-                    <li><p class="btn_blue2 big">
-                            <a href="#" onclick="fn_saveConfirm()" class="_custMakeBtn"><spring:message code="sal.btn.save" /></a>
-                        </p></li>
                 </ul>
 
             </article>
