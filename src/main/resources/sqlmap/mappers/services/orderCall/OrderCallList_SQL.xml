@@ -48,7 +48,7 @@
                 CASE
                      WHEN ( Extent1.PRODUCT_ID IS NOT NULL ) THEN Extent1.PRODUCT_ID
                 ELSE 0
-                   END C4 
+                   END C4
          FROM ( SELECT vCallLogOrderCall.CALL_ENTRY_ID CALL_ENTRY_ID  ,
                        vCallLogOrderCall.CALLTYPEID CALL_TYPE_ID  ,
                        vCallLogOrderCall.CALL_TYPE_CODE CALL_TYPE_CODE  ,
@@ -83,7 +83,7 @@
                        vCallLogOrderCall.CALL_TYPE_NAME CALL_TYPE_NAME  ,
                        vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID  ,
                        vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE  ,
-                       vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC 
+                       vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC
        FROM    CCR1002V vCallLogOrderCall) Extent1
           WHERE  1=1
         ]]>
@@ -132,7 +132,7 @@
                    </if>
                    <if test="DSCCode != null and DSCCode != '' ">
                             and Extent1.DSC_BRNCH_ID = #{DSCCode}
-                            
+
                    </if>
                    <if test="createDate != '' and endDate == '' ">
                             <![CDATA[ AND  TO_DATE(Extent1.SALES_ORD_DT)  >= TO_DATE(#{createDate}, 'DD/MM/YYYY') ]]>
@@ -166,8 +166,8 @@
                   </if>
 
     </select>
-    
-    
+
+
      <select id="getOrderCall" parameterType="Map" resultType="egovMap">
       <![CDATA[
             SELECT Limit1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
@@ -347,7 +347,7 @@
 			       RESULT_ID = #{resultId},
 			       UPD_DT = SYSDATE,
 			       UPD_USER_ID = #{updator},
-			       CALL_DT  = TO_dATE(#{callDate} ,'dd/mm/yyyy') 
+			       CALL_DT  = TO_dATE(#{callDate} ,'dd/mm/yyyy')
 			 WHERE  ( CALL_ENTRY_ID = #{callEntryId} )
         </update>
         <insert id="insertInstallEntry" parameterType="Map">
@@ -417,20 +417,20 @@
                  </if>
          </select>
 
-			
-			
+
+
 			<resultMap type="egovMap" id="call_logCLOBMap">
 			    <result property="CALL_REM" column="CALL_REM" jdbcType="CLOB" javaType="java.lang.String"/>
 			</resultMap>
-			
-			
-          <select id="selectCallLogTransaction" parameterType="Map" resultMap="call_logCLOBMap">   
+
+
+          <select id="selectCallLogTransaction" parameterType="Map" resultMap="call_logCLOBMap">
           <![CDATA[
             SELECT Project1.CALL_RESULT_ID CALL_RESULT_ID  ,
 			       Project1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
 			       Project1.C1 C1  ,
 			       Project1.C2 C2  ,
-			       Project1.CALL_REM CALL_REM  , 
+			       Project1.CALL_REM CALL_REM  ,
 			       Project1.CALL_SMS CALL_SMS  ,
 			       Project1.CALL_SMS_REM CALL_SMS_REM  ,
 			       Project1.CALL_STUS_ID CALL_STUS_ID  ,
@@ -450,7 +450,7 @@
 			  FROM ( SELECT Project1.CALL_RESULT_ID CALL_RESULT_ID  ,
 			                Project1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
 			                Project1.CALL_STUS_ID CALL_STUS_ID  ,
-			                Project1.CALL_REM CALL_REM  ,  
+			                Project1.CALL_REM CALL_REM  ,
 			                Project1.CALL_CRT_USER_ID CALL_CRT_USER_ID  ,
 			                Project1.CALL_CRT_DT CALL_CRT_DT  ,
 			                Project1.CALL_HC_ID CALL_HC_ID  ,
@@ -472,7 +472,7 @@
 			         FROM ( SELECT Extent1.CALL_RESULT_ID CALL_RESULT_ID  ,
 			                       Extent1.CALL_ENTRY_ID CALL_ENTRY_ID  ,
 			                       Extent1.CALL_STUS_ID CALL_STUS_ID  ,
-			                       Extent1.CALL_REM CALL_REM  , 
+			                       Extent1.CALL_REM CALL_REM  ,
 			                       Extent1.CALL_CRT_USER_ID CALL_CRT_USER_ID  ,
 			                       TO_CHAR(Extent1.CALL_CRT_DT,'DD-MM-YY') CALL_CRT_DT  ,
 			                       Extent1.CALL_HC_ID CALL_HC_ID  ,
@@ -487,7 +487,7 @@
 			                        END C1  ,
 			                       CASE
 		                            WHEN ( Extent1.CALL_ACTN_DT IS NOT NULL ) THEN TO_CHAR(Extent1.CALL_ACTN_DT,'DD-MM-YY')
-		                       ELSE  '' 
+		                       ELSE  ''
 		                          END C2  ,
 			                       CASE
 			                            WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME
@@ -503,7 +503,7 @@
 			                          END C5  ,
 			                       CASE
 			                            WHEN ( Extent3.MEM_ID IS NOT NULL ) THEN Extent3.NAME
-			                       ELSE '' 
+			                       ELSE ''
 			                          END C6  ,
 			                       CASE
 			                            WHEN ( Extent1.CALL_FDBCK_ID IS NOT NULL ) THEN Extent1.CALL_FDBCK_ID
@@ -548,7 +548,7 @@
 
 		           select AREA as code_id, AREA as code_name
 				    from SYS0064M
-				    where state = #{groupCode}
+				    where upper(state) = #{groupCode}
 				    group by AREA
 
 	   </select>
@@ -600,7 +600,7 @@
           and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D
 -->
                       and s05.brnch_id in (s28.wh_loc_brnch_id ,s28.wh_loc_brnch_id2  ,s28.wh_loc_brnch_id3)
-          <choose>  
+          <choose>
                 <when test="stock eq 'B'.toString()">
                     and s28.WH_LOC_STK_GRAD = 'B'
                   </when>
@@ -608,7 +608,7 @@
                    and s28.WH_LOC_STK_GRAD = 'A'
                   </otherwise>
       </choose>
-                     
+
                        and s28.WH_LOC_GB in ( '02' ,'05')
           and s05.code in ( select D.CT_BRNCH_CODE FROM SAL0001D A, SAL0023D B, SAL0045D C, SYS0064M D
 
@@ -647,9 +647,9 @@
 
 
         <select id="getRdcInCdc" parameterType="Map" resultType="egovMap">
-     
-      WITH L AS  (SELECT WH_LOC_ID  RDC , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = A.CDC_CODE ) CDC FROM SYS0028M A , SYS0005M T WHERE T.BRNCH_ID IN (A.WH_LOC_BRNCH_ID , A.WH_LOC_BRNCH_ID2 , A.WH_LOC_BRNCH_ID3)  AND T.BRNCH_ID =#{dscBrnchId}  AND WH_LOC_GB in ('02','05') 
-      <choose>  
+
+      WITH L AS  (SELECT WH_LOC_ID  RDC , (SELECT WH_LOC_ID FROM SYS0028M WHERE WH_LOC_CODE = A.CDC_CODE ) CDC FROM SYS0028M A , SYS0005M T WHERE T.BRNCH_ID IN (A.WH_LOC_BRNCH_ID , A.WH_LOC_BRNCH_ID2 , A.WH_LOC_BRNCH_ID3)  AND T.BRNCH_ID =#{dscBrnchId}  AND WH_LOC_GB in ('02','05')
+      <choose>
                 <when test="stock eq 'B'.toString()">
                       AND WH_LOC_STK_GRAD = 'B'
                   </when>
@@ -657,11 +657,11 @@
                     AND WH_LOC_STK_GRAD = 'A'
                   </otherwise>
       </choose>
-      
+
       )
        <![CDATA[
         SELECT MAX(STK_CODE) stk_code , MAX(STK_DESC) stk_desc, MAX(RDC ) rdc , MAX(RAQTY) raqty, MAX(RINQTY) rinqty, MAX(CDC) cdc, MAX(CAQTY) caqty FROM (
-        SELECT STK_CODE , STK_DESC ,  L.RDC , (QTY - NVL(BOOKQTY , 0) ) RAQTY , NVL(B.MOV_QTY,0) RINQTY  ,  0 CDC  , 0 CAQTY  
+        SELECT STK_CODE , STK_DESC ,  L.RDC , (QTY - NVL(BOOKQTY , 0) ) RAQTY , NVL(B.MOV_QTY,0) RINQTY  ,  0 CDC  , 0 CAQTY
           FROM LOG0056M  B,L , (  SELECT LOC_ID,
                                      ITM_CODE,
                                      SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
@@ -671,12 +671,12 @@
                             FROM LOG0047M
                            WHERE NVL (REQST_DEL, 'N') <> 'Y')
                             GROUP BY LOC_ID, ITM_CODE)  C
-        WHERE B.LOC_ID = L.RDC 
+        WHERE B.LOC_ID = L.RDC
           AND B.LOC_ID = C.LOC_ID(+)
            AND B.STK_CODE = C.ITM_CODE(+)
            AND STK_CODE = #{productCode}
          UNION ALL
-         SELECT  STK_CODE , STK_DESC , 0 RDC , 0 RAQTY , 0 RINQTY  , L.CDC , (QTY - NVL(BOOKQTY,0) )  CAQTY  
+         SELECT  STK_CODE , STK_DESC , 0 RDC , 0 RAQTY , 0 RINQTY  , L.CDC , (QTY - NVL(BOOKQTY,0) )  CAQTY
           FROM LOG0056M  B,L ,(  SELECT LOC_ID,
                                      ITM_CODE,
                                      SUM (NVL (REQST_QTY, 0)) - SUM (NVL (MOV_QTY, 0)) AS BOOKQTY
@@ -693,7 +693,7 @@
          )
       ]]>
       </select>
-      
+
       <select id="selectProductList" parameterType="Map" resultType="egovMap">
         SELECT STK_ID
              , C1
