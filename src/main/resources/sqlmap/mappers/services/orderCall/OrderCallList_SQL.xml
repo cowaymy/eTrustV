@@ -20,7 +20,8 @@
                 Extent1.INSTALL_AREA_ID INSTALL_AREA_ID  ,
                /* Extent1.INSTALL_STATE_ID INSTALL_STATE_ID  ,*/
                 Extent1.INSTALL_AREA_NAME INSTALL_AREA_NAME  ,
-                extend1.state,
+                Extent1.STATE ,
+                Extent1.AREA,
                 Extent1.CALL_LOG_DT CALL_LOG_DT  ,
                 Extent1.DSC_BRNCH_ID DSC_BRNCH_ID  ,
                 Extent1.PO_NO PO_NO  ,
@@ -85,8 +86,10 @@
                        vCallLogOrderCall.CALL_FDBCK_ID CALL_FDBCK_ID  ,
                        vCallLogOrderCall.CALL_FDBCK_CODE CALL_FDBCK_CODE  ,
                        vCallLogOrderCall.CALL_FDBCK_DESC CALL_FDBCK_DESC,
-                       vcalllogordercall.state
-       FROM    CCR1002V vCallLogOrderCall) Extent1
+                       area.state,
+                       area.area
+       FROM    CCR1002V vCallLogOrderCall
+       join sys0064m area on area.area_id = vcalllogordercall.INSTALL_AREA_ID) Extent1
           WHERE  1=1
         ]]>
                  <if test="orderNo != null and orderNo != '' ">
