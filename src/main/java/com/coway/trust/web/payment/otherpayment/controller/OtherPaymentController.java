@@ -39,15 +39,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OtherPaymentController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtherPaymentController.class);
-	
+
 	@Resource(name = "otherPaymentService")
 	private OtherPaymentService otherPaymentService;
-	
+
 	/******************************************************
-	 * Other Payment 
-	 *****************************************************/	
+	 * Other Payment
+	 *****************************************************/
 	/**
-	 * Other Payment 초기화 화면 
+	 * Other Payment 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -56,7 +56,7 @@ public class OtherPaymentController {
 	public String CommissionDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/otherpayment/otherPayment";
 	}
-	
+
 	/**
 	 * Other Payment 조회
 	 * @param params
@@ -67,12 +67,12 @@ public class OtherPaymentController {
 	public ResponseEntity<List<EgovMap>> selectCommDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
 
         LOGGER.debug("params : {}", params);
-        
+
         List<EgovMap> resultList = otherPaymentService.selectBankStatementList(params);
 
         return ResponseEntity.ok(resultList);
      }
-	
+
 //	/**
 //	 * Commission Deduction 조회
 //	 * @param searchVO
@@ -84,12 +84,12 @@ public class OtherPaymentController {
 //	public ResponseEntity<List<EgovMap>> selectCommDeduction(@RequestParam Map<String, Object> params, ModelMap model) {
 //
 //        LOGGER.debug("params : {}", params);
-//        
+//
 //        List<EgovMap> resultList = commDeductionService.selectCommitionDeduction(params);
 //
 //        return ResponseEntity.ok(resultList);
 //        }
-//	
+//
 //	/**
 //	 * CSV 파일 저장
 //	 * @param searchVO
@@ -101,13 +101,13 @@ public class OtherPaymentController {
 //	public ResponseEntity<ReturnMessage> csvUpload(MultipartHttpServletRequest request, SessionVO sessionVO) throws IOException, InvalidFormatException {
 //		ReturnMessage mes = new ReturnMessage();
 //		String message = "";
-//		
+//
 //		if(sessionVO.getUserId() > 0){
 //    		Map<String, MultipartFile> fileMap = request.getFileMap();
 //    		MultipartFile multipartFile = fileMap.get("csvFile");
-//    
+//
 //    		List<CommDeductionVO> vos = csvReadComponent.readCsvToList(multipartFile, true, CommDeductionVO::create);
-//    
+//
 //    		List<Map<String, Object>> list = new ArrayList<Map<String, Object>>();
 //    		for (CommDeductionVO vo : vos) {
 //    			LOGGER.debug("getOrderNo : {}, getmCode : {}, getAmount : {}, getPaidMonth : {} ", vo.getOrderNo(), vo.getmCode(), vo.getAmount(), vo.getPaidMonth());
@@ -121,33 +121,33 @@ public class OtherPaymentController {
 //    			hm.put("paidMonth", vo.getPaidMonth());
 //    			list.add(hm);
 //    		}
-//    
+//
 //    		Calendar oCalendar = Calendar.getInstance( );
 //    		Date curdate = new Date();
 //    		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
 //    		String today = sdf.format(curdate);
-//    		
+//
 //    		int yyyy = oCalendar.get(oCalendar.YEAR);
 //    		String yy = String.valueOf(yyyy).substring(2, 3);
 //    		int mm = oCalendar.get(oCalendar.MONTH) + 1;
 //    		int dd = oCalendar.get(oCalendar.DATE);
-//    
+//
 //    		Map<String, Object> m = new HashMap<String, Object>();
-//    		
+//
 //    		m.put("fileName", multipartFile.getOriginalFilename());
 //    		m.put("fileDate", today);
 //    		m.put("fileRefNo", "COM" + yy + mm + dd);
 //    		m.put("totalRecords", list.size());
 //    		m.put("totalAmount", sumAmount(vos));
-//    		m.put("fileStatus", 1); 
-//    		
+//    		m.put("fileStatus", 1);
+//
 //    		System.out.println("master : " + m);
-//    		
+//
 //    		int result = this.commDeductionService.addBulkData(m, list);
 //    		if(result > 0){
 //        		File file = new File("C:\\COWAY_PROJECT\\CommissionDeduction_BatchFiles\\"+multipartFile.getOriginalFilename());
 //        		multipartFile.transferTo(file);
-//        		
+//
 //        		message = "Saved Successfully";
 //    		}else{
 //    			message = "Failed to save : Only one upload is allowed a day";
@@ -157,17 +157,17 @@ public class OtherPaymentController {
 //		}
 //		mes.setCode(AppConstants.SUCCESS);
 //    	mes.setMessage(message);
-//    	
+//
 //		return ResponseEntity.ok(mes);
 //	}
-//	
+//
 //	private int sumAmount(List<CommDeductionVO> list){
 //		int sum = 0;
 //		for(int i=0; i<list.size(); i++)
 //			sum += list.get(i).getAmount();
 //		return sum;
 //	}
-//	
+//
 //	/**
 //	 * PaymentResult 조회
 //	 * @param params
@@ -178,18 +178,18 @@ public class OtherPaymentController {
 //	public ResponseEntity<List<EgovMap>> loadPaymentResult(@RequestParam Map<String, Object> params, ModelMap model) {
 //
 //        LOGGER.debug("params : {}", params);
-//        
+//
 //        List<EgovMap> logList = commDeductionService.selectCommitionDeduction(params);
 //        System.out.println(logList.get(0));
-//        
+//
 //        List<EgovMap> resultList = commDeductionService.selectMasterView(logList.get(0));
 //        for(int i=0; i<resultList.size(); i++){
 //        	System.out.println(resultList.get(i));
 //        }
-//        
+//
 //        return ResponseEntity.ok(resultList);
 //	}
-//	
+//
 //	/**
 //	 * RawItemsStatus 조회
 //	 * @param params
@@ -200,12 +200,12 @@ public class OtherPaymentController {
 //	public ResponseEntity<List<EgovMap>> loadRawItemsStatus(@RequestParam Map<String, Object> params, ModelMap model) {
 //
 //        LOGGER.debug("params : {}", params);
-//        
+//
 //        List<EgovMap> logList = commDeductionService.selectLogDetail(params);
 //
 //        return ResponseEntity.ok(logList);
 //	}
-//	
+//
 //	/**
 //	 * PaymentResult에 대한 Detail 조회
 //	 * @param params
@@ -216,13 +216,13 @@ public class OtherPaymentController {
 //	public ResponseEntity<EgovMap> selectDetailForPaymentResult(@RequestParam Map<String, Object> params, ModelMap model) {
 //
 //        LOGGER.debug("params : {}", params);
-//        
+//
 //        List<EgovMap> list = commDeductionService.selectDetailForPaymentResult(params);
 //
 //        return ResponseEntity.ok(list.get(0));
 //	}
-//	
-//	
+//
+//
 //	/**
 //	 * PaymentResult에 대한 Detail 조회
 //	 * @param params
@@ -235,7 +235,7 @@ public class OtherPaymentController {
 //		String message = "";
 //        LOGGER.debug("params : {}", params);
 //        int userId = sessionVO.getUserId();
-//        
+//
 //        if(userId > 0){
 //        	EgovMap master = commDeductionService.selectCommitionDeduction(params).get(0);
 //        	if("1".equals(String.valueOf(master.get("fileStus")))){
@@ -253,10 +253,22 @@ public class OtherPaymentController {
 //        }else{
 //        	message = "Your login session has expired. Please relogin to our system.";
 //        }
-//        
+//
 //        mes.setCode(AppConstants.SUCCESS);
 //    	mes.setMessage(message);
 //
 //    	return ResponseEntity.ok(mes);
 //	}
+
+    // 2018-06-07 - LaiKW - Pop up for Bank Statement Unknown Report - Start
+    @RequestMapping(value = "/initGenUnknownReport.do")
+    public String initGenUnknownReport(@RequestParam Map<String, Object> params, ModelMap model) {
+
+        LOGGER.debug("params : {}", params);
+        model.put("PAY_MODE", (String) params.get("payMode"));
+
+        return "payment/otherpayment/genUnknownReportPop";
+    }
+    // 2018-06-07 - LaiKW - Pop up for Bank Statement Unknown Report - End
+
 }

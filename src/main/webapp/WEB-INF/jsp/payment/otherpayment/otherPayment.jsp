@@ -2863,6 +2863,17 @@ function fn_setSearchPayType() {
 	}
 }
 
+//**************************************************
+//**************************************************
+//Generate Bank Statement Unknown Report
+//**************************************************
+//**************************************************
+
+function fn_genUnknownReport() {
+	var payMode = $("#payMode").val();
+
+	Common.popupDiv("/payment/initGenUnknownReport.do" ,{payMode:payMode}, null , true , '_NewEntryPopDiv1');
+}
 
 </script>
 <!-- content start -->
@@ -2980,6 +2991,30 @@ function fn_setSearchPayType() {
 			</table>
 			<!-- table end -->
 		</form>
+
+        <!--
+        *****************************************************************
+        *****************************************************************
+        ***********************     Link drop down area     **********************
+        *****************************************************************
+        *****************************************************************
+        -->
+
+        <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+            <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+            <dl class="link_list">
+                <dt><spring:message code="sal.title.text.link" /></dt>
+                <dd>
+                <ul class="btns">
+                    <li><p class="link_btn"><a href="#" id="genUnknownReportBtn" onclick="fn_genUnknownReport()">Generate Bank Statement Unknown Report</a></p></li>
+                </ul>
+                <ul class="btns">
+                </ul>
+                <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+                </dd>
+            </dl>
+        </aside><!-- link_btns_wrap end -->
+
 	</section><!-- search_table end -->
     <!-- search_result start -->
     <section class="search_result">
