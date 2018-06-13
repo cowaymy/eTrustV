@@ -58,14 +58,23 @@ public class InstallationResultListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/installationResultList.do")
-	public String installationResultList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String installationResultList(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
 		List<EgovMap> appTypeList = installationResultListService.selectApplicationType();
 		logger.debug("appTypeList : {}", appTypeList);
 		List<EgovMap> installStatus = installationResultListService.selectInstallStatus();
 		logger.debug("installStatus : {}", installStatus);
+		/*KV- DSC Code*/
+		List<EgovMap> dscCodeList = installationResultListService.selectDscCode();
+		logger.debug("dscCodeList : {}", dscCodeList);
+
+
+		/* KV- DSC Code  --session*/
+		model.addAttribute("userBranchId", sessionVO.getUserBranchId());
 
 		model.addAttribute("appTypeList", appTypeList);
 		model.addAttribute("installStatus", installStatus);
+		/*KV- DSC Code*/
+		model.addAttribute("dscCodeList", dscCodeList);
 		// 호출될 화면
 		return "services/installation/installationResultList";
 	}
@@ -121,6 +130,9 @@ public class InstallationResultListController {
 		String[] installStatusList = request.getParameterValues("installStatus");
 		String[] typeList = request.getParameterValues("type");
 		String[] appTypeList = request.getParameterValues("appType");
+		/*KV- DSC Code*/
+		String[] dscCodeList = request.getParameterValues ("dscCode");   /*dscCode- kv testing */
+
 
 		String product = "";
 		if(!"".equals(params.get("product"))) {
@@ -132,6 +144,9 @@ public class InstallationResultListController {
 		params.put("installStatusList", installStatusList);
 		params.put("typeList", typeList);
 		params.put("appTypeList", appTypeList);
+		/*KV- DSC Code*/
+		params.put("dscCodeList", dscCodeList);
+
 		List<EgovMap> installationResultList = installationResultListService.installationResultList(params);
 		logger.debug("installationResultList : {}", installationResultList);
 		return ResponseEntity.ok(installationResultList);
