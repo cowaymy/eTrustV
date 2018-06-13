@@ -3,8 +3,16 @@
 
 <script type="text/javaScript">
 $(document).ready(function() {
-	doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'dscCode' , 'S', '');
+	/* doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'dscCode' , 'S', ''); */
 	doGetCombo('/services/getProductList.do', '', '', 'product', 'S','');
+
+	/* KV- DSC Code  --session*/
+    /* $("#dscCode").val('${userBranchId}'); */
+    /* console.log('${userBranchId}'); */
+	/* var branchids  = $("#userBranchId").val(); -- session*/
+	/* $('#dscCode option[value="'+branchids+'"]').attr('selected', true); */
+	/* $('#dscCode').multiSelect (branchids); -- session*/
+
 
 	//grid 생성
 	createInstallationListAUIGrid();
@@ -41,7 +49,7 @@ $(document).ready(function() {
 });
 
 function fn_installationListSearch(){
-	console.log($("#product").val());
+	console.log($("#dscCode").val());
 	Common.ajax("GET", "/services/installationListSearch.do", $("#searchForm").serialize(), function(result) {
         console.log("성공.");
         console.log( result);
@@ -407,13 +415,21 @@ function f_multiCombo2() {
     </td>
     <th scope="row"><spring:message code='service.title.CTCode'/></th>
     <td><input type="text" class="w100p" title="" placeholder="" id="ctCode" name="ctCode"/></td>
+
     <th scope="row"><spring:message code='service.title.DSCCode'/></th>
     <td>
-    <select class="w100p" id="dscCode" name="dscCode">
+    <!-- KV- DSC Code -->
+      <select class="multy_select w100p" multiple="multiple" id="dscCode" name="dscCode" >
+        <c:forEach var="list" items="${dscCodeList }" varStatus="status">
+           <option value="${list.brnchId}">${list.dscName}</option>
+        </c:forEach>
+    </select>
+
+<!--     <select class="w100p" id="dscCode" name="dscCode">
         <option value="">11</option>
         <option value="">22</option>
         <option value="">33</option>
-    </select>
+    </select> -->
     </td>
 </tr>
 <tr>
