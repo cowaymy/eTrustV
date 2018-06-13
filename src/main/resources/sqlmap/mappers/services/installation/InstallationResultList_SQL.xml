@@ -43,6 +43,20 @@
 	 WHERE  Extent1.STUS_CODE_ID IN ( 1,4,21 )
           ]]>
     </select>
+
+     <!--KV- DSC Code -->
+    <select id="selectDscCode" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+       SELECT Extent1.BRNCH_ID BRNCH_ID,
+       Extent1.CODE CODE_ID,
+       Extent1.CODE ||' '|| Extent1.NAME DSC_NAME
+       fROM SYS0005M Extent1
+       where Extent1.TYPE_ID= '43' and Extent1.STUS_ID= '1'
+       order by CODE
+                 ]]>
+    </select>
+
+
     <select id="installationResultList" parameterType="Map" resultType="egovMap">
         <![CDATA[
 		          SELECT DISTINCT
