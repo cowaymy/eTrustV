@@ -128,8 +128,12 @@
                          <if test="ctCode != null and ctCode != ''">
                          AND ((CASE WHEN (MEM.MEM_ID IS NOT NULL) THEN MEM.MEM_CODE ELSE '' END) = #{ctCode})
                          </if>
-                         <if test="dscCode != null and dscCode != ''">
-                        AND I.BRNCH_ID = #{dscCode}
+                         <if test="dscCodeList != null and dscCodeList != ''">
+                        AND I.BRNCH_ID IN
+                            <foreach item="item" collection="dscCodeList" index="index" open="(" separator="," close=")">
+                            #{item}
+                            </foreach>
+
                          </if>
                          <if test="customerId != null and customerId != ''">
                          AND CUST.CUST_ID = #{customerId}
