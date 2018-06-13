@@ -13,6 +13,9 @@ public interface InstallationResultListMapper {
 
 	List<EgovMap>  selectInstallStatus();
 
+	/*KV- DSC Code*/
+	List<EgovMap>  selectDscCode();
+
 	List<EgovMap>  installationResultList(Map<String, Object> params);
 
 	List<EgovMap> installationResultList2(Map<String, Object> params);
