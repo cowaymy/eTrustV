@@ -69,6 +69,12 @@ public class InstallationResultListServiceImpl extends EgovAbstractServiceImpl i
 	public List<EgovMap> selectInstallStatus() {
 		return installationResultListMapper.selectInstallStatus();
 	}
+	/*KV- DSC Code*/
+	@Override
+	public List<EgovMap> selectDscCode() {
+		return installationResultListMapper.selectDscCode();
+	}
+
 
 	@Override
 	public List<EgovMap> installationResultList(Map<String, Object> params) {
