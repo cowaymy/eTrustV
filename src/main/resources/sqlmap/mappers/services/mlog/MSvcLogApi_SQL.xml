@@ -3,8 +3,8 @@
 <mapper namespace="com.coway.trust.biz.services.mlog.impl.MSvcLogApiMapper">
 
     <select id="getHeartServiceJobList" parameterType="Map" resultType="egovMap">
-    
-  SELECT 
+
+  SELECT
         appointment_Date,
         service_No,
         job_Status,
@@ -214,11 +214,11 @@ FROM (
              SELECT  SRV_CONFIG_ID  ,COUNT(*) FILT_CNT  FROM (
              (SELECT *
                         FROM SAL0087D
-                       WHERE TO_CHAR (ADD_MONTHS (SRV_FILTER_PRV_CHG_DT, SRV_FILTER_PRIOD), 'YYYYMM')   <![CDATA[ <=  ]]> TO_CHAR (SYSDATE, 'YYYYMM') ) 
-            ) GROUP BY SRV_CONFIG_ID 
-)S87D 
-WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)    
-		       
+                       WHERE TO_CHAR (ADD_MONTHS (SRV_FILTER_PRV_CHG_DT, SRV_FILTER_PRIOD), 'YYYYMM')   <![CDATA[ <=  ]]> TO_CHAR (SYSDATE, 'YYYYMM') )
+            ) GROUP BY SRV_CONFIG_ID
+)S87D
+WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
+
      </select>
 
 
@@ -528,7 +528,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 		                                               sys0005m,
 		                                               sys0026m,
                                                        CCR0006D,
-                                                       CCR0007D		                                               
+                                                       CCR0007D
 		                                         WHERE     svc0001d.as_mem_id = org0001d.mem_id
 		                                               AND sal0001d.sales_ord_id = sal0002d.sales_ord_id
 		                                               AND sal0001d.sales_ord_id = svc0001d.as_so_id
@@ -549,7 +549,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 		                                               AND org0001d.brnch = sys0005m.brnch_id
 		                                               AND sal0002d.itm_stk_id = sys0026m.stk_id
                                                      and svc0001d.AS_CALLLOG_ID = CCR0006D.CALL_ENTRY_ID
-                                                     and CCR0006D.CALL_ENTRY_ID = CCR0007D.CALL_ENTRY_ID  		                                               
+                                                     and CCR0006D.CALL_ENTRY_ID = CCR0007D.CALL_ENTRY_ID
 		                                               AND ORG0001D.MEM_CODE = #{userId}
 		                                               AND SVC0001D.AS_APPNT_DT BETWEEN ADD_MONTHS (
 		                                                                                     LAST_DAY (
@@ -590,11 +590,11 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 		                               E.IN_HUSE_REPAIR_PRODUCT_CODE AS in_House_Repair_Product_Code,
 		                               E.IN_HUSE_REPAIR_SERIAL_NO AS in_House_Repair_Serial_No,
 		                               B.AS_SLUTN_RESN_ID AS AS_SLUTN_RESN_ID
-		                          FROM SVC0001D  A 
+		                          FROM SVC0001D  A
                                        , SVC0004D B
                                        , SVC0001D C
                                        , SVC0001D D
-                                       , SVC0004D E 
+                                       , SVC0004D E
                                    WHERE A.REF_REQST = to_char(B.AS_RESULT_ID)
                                        AND B.AS_ENTRY_ID = C.AS_ID
                                        AND C.REF_REQST = to_char(D.AS_ID)
@@ -805,8 +805,8 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
         order by Extent7.AS_RESULT_ID desc
        )
        where  ROWNUM = 1
-        
-            
+
+
 
     </select>
 
@@ -1055,7 +1055,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                 FROM SVC0103T
                 WHERE MEM_CODE = #{userId}
     </select>
-    
+
     <select id="getProductRetrunJobList" parameterType="Map" resultType="egovMap">
 		<![CDATA[
 		SELECT TO_CHAR (C.SALES_ORD_NO) AS sales_Order_No,
@@ -1272,9 +1272,9 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                             ,to_char(CRT_DT              )         AS        Create_Date
                         FROM SVC0104T
                         WHERE MEM_CODE =  #{userId}
-         
+
          </select>
-        
+
         <select id="heartServiceParts" parameterType="Map" resultType="egovMap">
             SELECT *
               FROM (SELECT ROW_NUMBER ()
@@ -1338,7 +1338,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                            LEFT JOIN SVC0007D S07A ON S07A.BS_RESULT_ID = S06A.RESULT_ID AND S87A.SRV_FILTER_STK_ID = S07A.BS_RESULT_PART_ID
                            INNER JOIN ORG0001D O1DA ON O1DA.MEM_ID = S08A.CODY_ID
                            LEFT OUTER JOIN (
-                               SELECT 
+                               SELECT
                                   S26.STK_CODE,
                                   NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
                                FROM SYS0026M S26
@@ -1378,7 +1378,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                     ,to_char(CRT_DT                )    AS     Create_Date
                 FROM SVC0105T
                 WHERE MEM_CODE = #{userId}
-        
+
         </select>
 
 
@@ -1466,11 +1466,11 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 		       TO_CHAR (CRT_USER_ID) AS Create_User_ID,
 		       TO_CHAR (CRT_DT) AS Create_Date
 		  FROM SVC0102T
-		 WHERE MEM_CODE = #{userId}    
+		 WHERE MEM_CODE = #{userId}
     </select>
 
         <select id="afterServiceParts" parameterType="Map" resultType="egovMap">
-        
+
                    SELECT
                         MST.*
                         , TO_CHAR(SUB.AMT) AS sales_Price
@@ -1521,14 +1521,14 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                 SELECT
                                     LOG43.MATRL_NO
                                     , LOG44.*
-                                FROM 
+                                FROM
                                     LOG0043M LOG43 INNER JOIN LOG0044D LOG44 ON LOG43.BOM = LOG44.BOM AND TO_CHAR(SYSDATE, 'YYYYMMDD') BETWEEN TO_CHAR(LOG44.VALID_FROM_DT, 'YYYYMMDD') AND TO_CHAR(LOG44.VALID_TO_DT, 'YYYYMMDD')
                             ) E ON D.STK_CODE = E.MATRL_NO
                             INNER JOIN SYS0026M F ON E.BOM_COMPNT = F.STK_CODE
                             LEFT OUTER JOIN SVC0004D G ON A.AS_ID = G.AS_ENTRY_ID AND A.AS_SO_ID = G.AS_SO_ID
                             LEFT OUTER JOIN SVC0005D S5D  ON S5D.AS_RESULT_ID = G.AS_RESULT_ID    AND  S5D.ASR_ITM_PART_ID=    F.STK_ID
                             LEFT OUTER JOIN (
-                                SELECT 
+                                SELECT
                                    S26.STK_CODE,
                                    NVL(S26.SERIAL_CHK , 'N') AS SERIALCHK
                                 FROM SYS0026M S26
@@ -1555,11 +1555,11 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                         AND AMT > 0
                     ) SUB ON MST.part_Id = SUB.STK_ID
 
-         </select>  
-         
-         
+         </select>
+
+
          <select id="afterServiceParts_b" parameterType="Map" resultType="egovMap">
-         
+
                      SELECT
                          to_char(SALES_ORD_NO          )   AS        sales_Order_No
                         ,to_char(SVC_NO                )   AS        service_No
@@ -1586,7 +1586,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                         ,to_char(CRT_DT                )   AS        Create_Date
                     FROM SVC0106T
                     WHERE MEM_CODE = #{userId}
-         
+
          </select>
 
 
@@ -1618,7 +1618,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                , TRAN_STUS_CD
                ,CHECKIN_DT
                ,CHECKIN_TM
-               ,CHECKIN_GPS            
+               ,CHECKIN_GPS
             ) VALUES (
                SVC0023T_RESULT_SEQ.NEXTVAL
                , #{userId}
@@ -1644,7 +1644,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                , 'N'
                , #{checkInDate}
                , #{checkInTime}
-               , #{checkInGps}             
+               , #{checkInGps}
             )
         </insert>
 
@@ -1689,7 +1689,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                 ,TRAN_STUS_CD
                ,CHECKIN_DT
                ,CHECKIN_TM
-               ,CHECKIN_GPS                 
+               ,CHECKIN_GPS
             ) VALUES (
                SVC0024T_RESULT_SEQ.NEXTVAL
                 ,#{userId}
@@ -1727,7 +1727,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                , 'N'
                , #{checkInDate}
                , #{checkInTime}
-               , #{checkInGps}               
+               , #{checkInGps}
             )
         </insert>
 
@@ -1756,7 +1756,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                         ,TRAN_STUS_CD
                        ,CHECKIN_DT
                        ,CHECKIN_TM
-                       ,CHECKIN_GPS                         
+                       ,CHECKIN_GPS
                     ) VALUES (
                        SVC0025T_RESULT_SEQ.NEXTVAL
                         ,#{userId}
@@ -1779,7 +1779,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                         , 'N'
                        , #{checkInDate}
                        , #{checkInTime}
-                       , #{checkInGps}                           
+                       , #{checkInGps}
                     )
 
             </insert>
@@ -1799,7 +1799,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
        <update id="updateASErrStatus" parameterType="string">
           UPDATE SVC0024T SET   TRAN_STUS_CD = 'E' WHERE TRNSC_ID = #{transactionId}
        </update>
-       
+
        <update id="updateSuccessASStatus" parameterType="string">
           UPDATE SVC0024T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
        </update>
@@ -1807,8 +1807,8 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
         <update id="updatePRErrStatus" parameterType="string">
           UPDATE SVC0026T SET   TRAN_STUS_CD = 'E' WHERE TRNSC_ID = #{transactionId}
        </update>
-       
-       
+
+
         <update id="updatePRStatus" parameterType="string">
           UPDATE SVC0026T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
        </update>
@@ -1816,7 +1816,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
        <update id="updateSuccessInstallStatus" parameterType="string">
           UPDATE SVC0025T SET   TRAN_STUS_CD = 'Y' WHERE TRNSC_ID = #{transactionId}
        </update>
-        
+
         <update id="updateSuccessErrInstallStatus" parameterType="string">
           UPDATE SVC0025T SET   TRAN_STUS_CD = 'E' WHERE TRNSC_ID = #{transactionId}
        </update>
@@ -2420,15 +2420,15 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                  ( SELECT LOG43.MATRL_NO, LOG44.*
                                       FROM LOG0043M LOG43, LOG0044D LOG44
                                      WHERE LOG43.BOM = LOG44.BOM ) BOM_DTL ,
-                                 SYS0026M G                                    
+                                 SYS0026M G
                WHERE S.AS_SO_ID = B.SALES_ORD_ID
                AND c.AS_RESULT_ID = #{asResultId}
                AND S.AS_RESULT_ID = C.AS_RESULT_ID(+)
                AND C.ASR_ITM_PART_ID =SRV_FILTER_ID(+)
                AND B.SALES_ORD_ID = H.SALES_ORD_ID
                AND G.STK_ID = H.ITM_STK_ID
-               and  G.STK_CODE =  BOM_DTL.MATRL_NO      
-              <![CDATA[  AND ROWNUM < 4]]>               
+               and  G.STK_CODE =  BOM_DTL.MATRL_NO
+              <![CDATA[  AND ROWNUM < 4]]>
                )
 
            </select>
@@ -2481,15 +2481,15 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                         from SVC0006D a
                                 ,SVC0008D b
                                 ,sal0001d c
-                                ,SAL0002D H 
+                                ,SAL0002D H
                                 ,org0001d d
                                 ,SVC0007D e
                                 ,sal0087d f
                                 ,( SELECT LOG43.MATRL_NO, LOG44.*
                                       FROM LOG0043M LOG43, LOG0044D LOG44
                                      WHERE LOG43.BOM = LOG44.BOM ) BOM_DTL
-                                ,SYS0026M G                     
-                                ,svc0001d I  
+                                ,SYS0026M G
+                                ,svc0001d I
                         where 1=1
                         and a.SCHDUL_ID = b.SCHDUL_ID
                         and a.sales_ord_id = c.sales_ord_id
@@ -2499,8 +2499,8 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                         AND e.BS_RESULT_ITM_ID =f.SRV_FILTER_ID(+)
                         <!-- and c.sales_ord_no = #{SALES_ORD_NO} -->
                         AND G.STK_ID = H.ITM_STK_ID
-                        and  G.STK_CODE =  BOM_DTL.MATRL_NO 
-                        AND B.SALES_ORD_ID = I.AS_SO_ID 
+                        and  G.STK_CODE =  BOM_DTL.MATRL_NO
+                        AND B.SALES_ORD_ID = I.AS_SO_ID
                         and e.BS_RESULT_ID = #{bsResultId}
                          ) x
                   where 1=1
@@ -2521,9 +2521,9 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                 } -->
 
             <select id="getRentalCustomerList" parameterType="Map" resultType="egovMap">
-            
-            
-            <![CDATA[ 
+
+
+            <![CDATA[
                             SELECT A.NAME AS cust_Name,
 							       SOM.SALES_ORD_NO AS sales_Order_No,
 							       CD.CODE_NAME AS payment_Mode,
@@ -2553,7 +2553,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 							               AND A.ACC_DEBT_OPNG_APP_TYPE_ID = 66
 							               AND S.ACC_DEBT_SUB_OPNG_OTSTND_AGING < 5
 							               AND S.ACC_DEBT_SUB_OPNG_COLCT_TRGET > 0
-							        UNION ALL
+							        /*UNION ALL
 							        SELECT ACC_DEBT_ORD_ID,
 							               ACC_DEBT_SRV_CNTRCT_ID,
 							               (CASE
@@ -2578,7 +2578,8 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 							                 WHERE     A.ACC_YM = TO_CHAR (ADD_MONTHS (SYSDATE, -2), 'YYYYMM')
 							                       AND A.ACC_DEBT_YEAR = TO_CHAR (ADD_MONTHS (SYSDATE, -2), 'YYYY')
 							                       AND A.ACC_DEBT_MONTH = TO_NUMBER (TO_CHAR (ADD_MONTHS (SYSDATE, -2), 'MM')))A
-							               JOIN ORG0001D B ON B.MEM_ID = A.ACC_DEBT_ORD_TRGET_CODY_ID) X
+							               JOIN ORG0001D B ON B.MEM_ID = A.ACC_DEBT_ORD_TRGET_CODY_ID*/
+							               ) X
 							       LEFT JOIN SAL0074D RPS
 							          ON RPS.SALES_ORD_ID = X.SALES_ORD_ID AND RPS.SVC_CNTRCT_ID = X.CNTRCT_ID
 							       LEFT JOIN SYS0013M CD ON Cd.CODE_ID = RPS.MODE_ID
@@ -2587,9 +2588,9 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 							       LEFT JOIN SAL0071D SC ON SC.SALES_ORD_ID = X.SALES_ORD_ID
 							       LEFT JOIN SAL0029D A ON A.CUST_ID = SOM.CUST_ID
 							       JOIN SAL0074D B ON B.SALES_ORD_ID = SOM.SALES_ORD_ID
-							 WHERE 1 = 1 
+							 WHERE 1 = 1
                                AND X.MEM_CODE = #{userId}
-                                            ]]>   
+                                            ]]>
 		                  <if test="searchKeyword != null and searchKeyword != ''">
 		                    <choose>
 		                        <when test="searchType == 2">
@@ -2602,12 +2603,12 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 		                          AND 1 = 1
 		                        </otherwise>
 		                    </choose>
-		                   </if>            
-            
-            
-            
-            
-         
+		                   </if>
+
+
+
+
+
 <!-- 		            SELECT A.NAME AS cust_Name,
 					       SOM.SALES_ORD_NO AS sales_Order_No,
 					       CD.CODE_NAME AS payment_Mode,
@@ -2666,7 +2667,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 					       LEFT JOIN SAL0071D SC ON SC.SALES_ORD_ID = X.SALES_ORD_ID
 					       LEFT JOIN SAL0029D A ON A.CUST_ID = SOM.CUST_ID
 					       JOIN SAL0074D B ON B.SALES_ORD_ID = SOM.SALES_ORD_ID
-					 WHERE 1 = 1 
+					 WHERE 1 = 1
                      AND X.MEM_CODE = #{userId}
 
                   <if test="searchKeyword != null and searchKeyword != ''">
@@ -2682,34 +2683,34 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                         </otherwise>
                     </choose>
                    </if> -->
-            
-            
-            
-            
-            
-            
-            
-            
-<!--         <![CDATA[ 
+
+
+
+
+
+
+
+
+<!--         <![CDATA[
                     SELECT A.NAME AS cust_Name
                           , SOM.SALES_ORD_NO AS sales_Order_No
-                          , CD.CODE_NAME AS payment_Mode  
+                          , CD.CODE_NAME AS payment_Mode
                           , X.TARGET AS target_Amount
                           , X.AMT AS amount
                           , B.MODE_ID AS payment_Mode_Id
                        FROM ( SELECT A.ACC_DEBT_ORD_ID SALES_ORD_ID  ,
                                      A.ACC_DEBT_SRV_CNTRCT_ID CNTRCT_ID  ,
-                                     (CASE 
+                                     (CASE
                                            WHEN A.ACC_DEBT_SRV_CNTRCT_ID <> 0 THEN A.ACC_DEBT_SRV_CNTRCT_NO
                                            ELSE A.ACC_DEBT_ORD_NO
                                         END) REF_NO  ,
                                      A.ACC_DEBT_YEAR   ,
                                      A.ACC_DEBT_MONTH  ,
-                                     TRUNC(S.ACC_DEBT_SUB_OPNG_COLCT_TRGET,2) TARGET  , 
+                                     TRUNC(S.ACC_DEBT_SUB_OPNG_COLCT_TRGET,2) TARGET  ,
                                      TRUNC(S.ACC_DEBT_SUB_CURR_COLCT,2) + TRUNC(S.ACC_DEBT_SUB_CURR_ADJ,2) AMT  ,
                                      A.ACC_DEBT_ORD_TRGET_CODY_ID MEM_ID  ,
                                      TRUNC(A.ACC_DEBT_COLCT_UPD_DT) UPD_DT ,
-                                     B.MEM_CODE 
+                                     B.MEM_CODE
                                 FROM PAY0052S A
                                      JOIN PAY0053S S   ON S.ACC_DEBT_ORD_ID = A.ACC_DEBT_ORD_ID
                                      AND S.ACC_DEBT_SRV_CNTRCT_ID = A.ACC_DEBT_SRV_CNTRCT_ID
@@ -2718,10 +2719,10 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                  AND A.ACC_DEBT_OPNG_APP_TYPE_ID = 66
                                  AND S.ACC_DEBT_SUB_OPNG_OTSTND_AGING < 5
                                  AND S.ACC_DEBT_SUB_OPNG_COLCT_TRGET > 0
-                              UNION ALL 
+                              UNION ALL
                               SELECT ACC_DEBT_ORD_ID ,
                                      ACC_DEBT_SRV_CNTRCT_ID ,
-                                     (CASE 
+                                     (CASE
                                            WHEN ACC_DEBT_SRV_CNTRCT_ID <> 0 THEN ACC_DEBT_SRV_CNTRCT_NO
                                            ELSE ACC_DEBT_ORD_NO
                                      END) ,
@@ -2735,17 +2736,17 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                 FROM ( SELECT *
                                          FROM PAY0150D A
                                         WHERE A.ACC_YM BETWEEN  TO_CHAR(FN_GET_LAST_DAY_MONTH(ADD_MONTHS(SYSDATE, -2)),'YYYYMM')  AND  TO_CHAR(FN_GET_LAST_DAY_MONTH(ADD_MONTHS(SYSDATE, -1)),'YYYYMM') ) A
-                                      JOIN ORG0001D B ON B.MEM_ID = A.ACC_DEBT_ORD_TRGET_CODY_ID ) X 
+                                      JOIN ORG0001D B ON B.MEM_ID = A.ACC_DEBT_ORD_TRGET_CODY_ID ) X
                             LEFT JOIN SAL0074D RPS   ON RPS.SALES_ORD_ID = X.SALES_ORD_ID
                             AND RPS.SVC_CNTRCT_ID = X.CNTRCT_ID
                             LEFT JOIN SYS0013M CD   ON Cd.CODE_ID = RPS.MODE_ID
-                            LEFT JOIN SAL0001D SOM   ON SOM.SALES_ORD_ID = X.SALES_ORD_ID    
+                            LEFT JOIN SAL0001D SOM   ON SOM.SALES_ORD_ID = X.SALES_ORD_ID
                             LEFT JOIN SAL0027D CC   ON CC.CUST_CNTC_ID = SOM.CUST_CNT_ID
                             LEFT JOIN SAL0071D SC   ON SC.SALES_ORD_ID = X.SALES_ORD_ID
-                            LEFT JOIN SAL0029D A    ON A.CUST_ID = SOM.CUST_ID 
-                            JOIN SAL0074D B ON B.SALES_ORD_ID = SOM.SALES_ORD_ID 
+                            LEFT JOIN SAL0029D A    ON A.CUST_ID = SOM.CUST_ID
+                            JOIN SAL0074D B ON B.SALES_ORD_ID = SOM.SALES_ORD_ID
                       WHERE 1 = 1
-                        AND X.ACC_DEBT_YEAR = EXTRACT(YEAR FROM SYSDATE)   
+                        AND X.ACC_DEBT_YEAR = EXTRACT(YEAR FROM SYSDATE)
                         AND X.ACC_DEBT_MONTH = EXTRACT(MONTH FROM SYSDATE)
                         AND X.MEM_CODE = #{userId}
                         ]]>
@@ -2762,10 +2763,10 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                         </otherwise>
                     </choose>
                    </if>       -->
-                         
-                        
 
-                        
+
+
+
 <!--             SELECT C.NAME as cust_name,
                    B.SALES_ORD_NO as sales_order_no,
                    E.CODE_NAME as payment_mode,
@@ -2802,7 +2803,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 
 
          <select id="selectOutstandingResult" parameterType="Map" resultType="egovMap">
-    <![CDATA[     
+    <![CDATA[
 		         SELECT *
 					  FROM (  SELECT A.SALES_ORD_ID,
 					                 A.SALES_ORD_NO,
@@ -2889,8 +2890,8 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 					        GROUP BY A.SALES_ORD_ID, A.LAST_UP_DT, a.sales_ord_no)
 					 WHERE 1 = 1
 					 ]]>
- 
- 
+
+
 <!--              <![CDATA[      select *
                     from (   SELECT A.SALES_ORD_ID ,
                                A.SALES_ORD_NO ,
@@ -2900,20 +2901,20 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                               SUM(NVL(D.AMT, 0))  sum_Rhf  ,
                               SUM(NVL(E.AMT, 0))  sum_Rental  ,
                               SUM(NVL(F.AMT, 0))  sum_Adjust  ,
-                              SUM(A.TOT)  TOT  
+                              SUM(A.TOT)  TOT
                          FROM ( SELECT M.SALES_ORD_ID ,m.sales_ord_no,
                                        UTILS.CONVERT_TO_NUMBER(SUM(L.RENT_AMT) ,10,2) TOT  ,
-                                       MAX(L.RENT_DT_TM)  LAST_UP_DT  
+                                       MAX(L.RENT_DT_TM)  LAST_UP_DT
                                 FROM SAL0001D M
                                        JOIN PAY0022D L   ON L.RENT_SO_ID = M.SALES_ORD_ID
                                  WHERE  M.APP_TYPE_ID = 66
                                   and m.mem_id = (select MEM_id
-                                        from org0001d 
+                                        from org0001d
                                         where mem_code = #{userId})
                                   GROUP BY M.SALES_ORD_ID,m.sales_ord_no ) A
                                 LEFT JOIN ( SELECT L.RENT_SO_ID ,
                                                    CD.CODE_NAME TYPE  ,
-                                                   SUM(L.RENT_AMT)  AMT  
+                                                   SUM(L.RENT_AMT)  AMT
                                             FROM PAY0022D L
                                                    JOIN SAL0001D M   ON M.SALES_ORD_ID = L.RENT_SO_ID
                                                    JOIN SYS0013M CD   ON CD.CODE_ID = L.RENT_DOC_TYPE_ID
@@ -2921,12 +2922,12 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                                       AND L.RENT_SO_ID <> 0
                                                       AND M.APP_TYPE_ID = 66
                                                         and m.mem_id = (select MEM_id
-                                                                        from org0001d 
+                                                                        from org0001d
                                                                         where mem_code = #{userId})
                                               GROUP BY L.RENT_SO_ID,CD.CODE_NAME ) B   ON B.RENT_SO_ID = A.SALES_ORD_ID
                                 LEFT JOIN ( SELECT L.RENT_SO_ID ,
                                                    CD.CODE_NAME TYPE  ,
-                                                   SUM(L.RENT_AMT)  AMT  
+                                                   SUM(L.RENT_AMT)  AMT
                                             FROM PAY0022D L
                                                    JOIN SAL0001D M   ON M.SALES_ORD_ID = L.RENT_SO_ID
                                                    JOIN SYS0013M CD   ON CD.CODE_ID = L.RENT_DOC_TYPE_ID
@@ -2934,12 +2935,12 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                                       AND L.RENT_SO_ID <> 0
                                                       AND M.APP_TYPE_ID = 66
                                                       and m.mem_id = (select MEM_id
-                                                                        from org0001d 
+                                                                        from org0001d
                                                                         where mem_code = #{userId})
                                               GROUP BY L.RENT_SO_ID,CD.CODE_NAME ) C   ON C.RENT_SO_ID = A.SALES_ORD_ID
                                 LEFT JOIN ( SELECT L.RENT_SO_ID ,
                                                    CD.CODE_NAME TYPE  ,
-                                                   SUM(L.RENT_AMT)  AMT  
+                                                   SUM(L.RENT_AMT)  AMT
                                             FROM PAY0022D L
                                                    JOIN SAL0001D M   ON M.SALES_ORD_ID = L.RENT_SO_ID
                                                    JOIN SYS0013M CD   ON CD.CODE_ID = L.RENT_DOC_TYPE_ID
@@ -2947,37 +2948,37 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                                       AND L.RENT_SO_ID <> 0
                                                       AND M.APP_TYPE_ID = 66
                                                       and m.mem_id = (select MEM_id
-                                                                        from org0001d 
-                                                                        where mem_code = #{userId})                                  
+                                                                        from org0001d
+                                                                        where mem_code = #{userId})
                                               GROUP BY L.RENT_SO_ID,CD.CODE_NAME ) D   ON D.RENT_SO_ID = A.SALES_ORD_ID
                                 LEFT JOIN ( SELECT X.RENT_SO_ID ,
-                                                   SUM(X.AMT)  AMT  
+                                                   SUM(X.AMT)  AMT
                                             FROM ( SELECT L.RENT_SO_ID ,
-                                                          SUM(L.RENT_AMT)  AMT  
+                                                          SUM(L.RENT_AMT)  AMT
                                                    FROM PAY0022D L
                                                           JOIN SAL0001D M   ON M.SALES_ORD_ID = L.RENT_SO_ID
                                                     WHERE  L.RENT_DOC_TYPE_ID NOT IN ( 155,157,161,162,1059 )
                                                              AND L.RENT_SO_ID <> 0
                                                              AND M.APP_TYPE_ID = 66
                                                               and m.mem_id = (select MEM_id
-                                                                                from org0001d 
-                                                                                where mem_code = #{userId})                                         
+                                                                                from org0001d
+                                                                                where mem_code = #{userId})
                                                      GROUP BY L.RENT_SO_ID
-                                                   UNION ALL 
+                                                   UNION ALL
                                                    SELECT L.RENT_SO_ID ,
-                                                          SUM(L.RENT_AMT)  AMT  
+                                                          SUM(L.RENT_AMT)  AMT
                                                    FROM PAY0022D L
                                                           JOIN SAL0001D M   ON M.SALES_ORD_ID = L.RENT_SO_ID
                                                     WHERE  L.RENT_DOC_NO LIKE 'ACN%'
                                                              AND L.RENT_SO_ID <> 0
                                                              AND M.APP_TYPE_ID = 66
                                                               and m.mem_id = (select MEM_id
-                                                                                from org0001d 
-                                                                                where mem_code = #{userId})                                         
+                                                                                from org0001d
+                                                                                where mem_code = #{userId})
                                                      GROUP BY L.RENT_SO_ID ) X
                                               GROUP BY X.RENT_SO_ID ) E   ON E.RENT_SO_ID = A.SALES_ORD_ID
                                 LEFT JOIN ( SELECT L.RENT_SO_ID ,
-                                                   SUM(L.RENT_AMT)  AMT  
+                                                   SUM(L.RENT_AMT)  AMT
                                             FROM PAY0022D L
                                                    JOIN SAL0001D M   ON M.SALES_ORD_ID = L.RENT_SO_ID
                                              WHERE  L.RENT_DOC_TYPE_ID IN ( 155,157 )
@@ -2985,8 +2986,8 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                                       AND M.APP_TYPE_ID = 66
                                                       AND L.RENT_DOC_NO NOT LIKE 'ACN%'
                                                       and m.mem_id = (select MEM_id
-                                                                        from org0001d 
-                                                                        where mem_code = #{userId})                                     
+                                                                        from org0001d
+                                                                        where mem_code = #{userId})
                                               GROUP BY L.RENT_SO_ID ) F   ON F.RENT_SO_ID = A.SALES_ORD_ID
                          GROUP BY A.SALES_ORD_ID,A.LAST_UP_DT, a.sales_ord_no
                          )
@@ -3032,7 +3033,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                    0 AS NALANCE_AMT,
                    NVL (SUM (CASE WHEN A.MODE_ID = '132' THEN A.RENT_AMT  END ), 0) DEBIT_AMT,
                    NVL(SUM (CASE WHEN A.MODE_ID = '131' THEN A.RENT_AMT END ) , 0) CREDIT_AMT,
-                   SUM (NVL(A.RENT_INST_AMT , 0)) amount,               
+                   SUM (NVL(A.RENT_INST_AMT , 0)) amount,
                    TO_CHAR (INSTALL_ENTRY_NO) AS INSTALL_NO,
                     TO_CHAR (A.INSTALL_DT, 'YYYYMMDD') as EVENT_DATE
               FROM (SELECT /*+ USE_NL(A B C  D E )     */
@@ -3066,7 +3067,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                              AND F.MEM_CODE = #{userId}
                              AND B.sales_ord_ID =  (SELECT SALES_ORD_ID
                                                     FROM SAL0001D
-                                                    WHERE SALES_ORD_NO = #{salesOrderNo}) 
+                                                    WHERE SALES_ORD_NO = #{salesOrderNo})
                                                           ) A
             GROUP BY A.CODE_NAME, A.RENT_DOC_NO ,A.INSTALL_DT,a.INSTALL_ENTRY_NO -->
          </select>
@@ -3358,7 +3359,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                                                                                where sales_ord_no =  #{salesOrderNo})
                                                             and a.CODY_ID = (select mem_id
                                                                                from org0001d
-                                                                               where mem_code =#{userId})                                    
+                                                                               where mem_code =#{userId})
                                                         )a
                                                         ,  SVC0006D b
                                                  where 1=1
@@ -3404,7 +3405,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                                  and as_mem_id = (select as_mem_id
                                                                     from org0001d
                                                                     where mem_code = #{userId})
-                                                )                    
+                                                )
 
                     </update>
 
@@ -3596,8 +3597,8 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 
                 </choose>
          </select>
-         
-         
+
+
        <update id="updateState_LOG0038D" parameterType="Map">
                 UPDATE  LOG0038D
                     SET    STUS_CODE_ID   = '4',
@@ -3605,13 +3606,13 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                              UPD_USER_ID     = (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId})
                 WHERE  retn_no   = #{serviceNo}
        </update>
-       
+
        <update id="updateState_SAL0001D" parameterType="Map">
                 UPDATE SAL0001D A
 				SET STUS_CODE_ID = '10'
 				WHERE A.SALES_ORD_NO = #{salesOrderNo}
        </update>
-       
+
        <insert  id="insert_SAL0009D" parameterType="Map">
                 INSERT INTO SAL0009D (
 											    LOG_ID,
@@ -3630,33 +3631,33 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 						    '0',
 						    '0',
 						    (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE = #{userId}),
-						    SYSDATE ) 
+						    SYSDATE )
        </insert>
-       
+
        <update id="updateState_SAL0020D" parameterType="Map">
                 UPDATE SAL0020D
 				SET SO_REQ_STUS_ID = '32'
 				WHERE SO_REQ_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D
 				                                    WHERE SALES_ORD_NO = #{salesOrderNo})
        </update>
-       
+
        <update id="updateState_SAL0071D" parameterType="Map">
                 UPDATE SAL0071D
 				SET STUS_CODE_ID = 'TER'
 				WHERE SALES_ORD_ID = (SELECT SALES_ORD_ID FROM SAL0001D
 				                                   WHERE SALES_ORD_NO = #{salesOrderNo})
        </update>
-       
+
        <select id="getRetnCrtUserId" parameterType="Map" resultType="java.lang.String">
          SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{stkRetnCrtUserId}
       </select>
-      
+
          <select id="getInstallDate" parameterType="Map" resultType="java.lang.String">
          Select to_char( to_Date(#{checkInDate} ,'YYYY/MM/DD') ,  'DD/MM/YYYY' ) from dual
-         
+
          </select>
-     
-       
+
+
        <insert  id="insert_SVC0026T" parameterType="Map">
                 INSERT INTO SVC0026T (
 				                      RESULT_SEQ
@@ -3699,49 +3700,49 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
 				       ,#{checkinGps}
 				       )
        </insert>
-          
+
        <insert  id="insert_LOG0039D" parameterType="Map">
                 INSERT INTO LOG0039D (
-                               STK_RETN_RESULT_ID, STK_RETN_ID, STK_RETN_STUS_ID, 
-                               STK_RETN_STK_IS_RET, STK_RETN_DT, STK_RETN_REM, 
-                               STK_RETN_RESN_ID, STK_RETN_CC_ID, STK_RETN_CRT_DT, 
-                               STK_RETN_CRT_USER_ID, STK_RETN_UPD_DT, STK_RETN_UPD_USER_ID, 
-                               STK_RETN_RESULT_IS_SYNCH, STK_RETN_ALLOW_COMM, STK_RETN_CT_MEM_ID, 
-                               CHECKIN_DT, CHECKIN_TM, CHECKIN_GPS, 
-                               SIGN_DATA, SIGN_REG_DT, SIGN_REG_TM, 
-                               OWNER_CODE, RESULT_CUST_NAME, RESULT_ICMOBILE_NO, 
-                               RESULT_RPT_EMAIL_NO, RESULT_ACEPT_NAME) 
+                               STK_RETN_RESULT_ID, STK_RETN_ID, STK_RETN_STUS_ID,
+                               STK_RETN_STK_IS_RET, STK_RETN_DT, STK_RETN_REM,
+                               STK_RETN_RESN_ID, STK_RETN_CC_ID, STK_RETN_CRT_DT,
+                               STK_RETN_CRT_USER_ID, STK_RETN_UPD_DT, STK_RETN_UPD_USER_ID,
+                               STK_RETN_RESULT_IS_SYNCH, STK_RETN_ALLOW_COMM, STK_RETN_CT_MEM_ID,
+                               CHECKIN_DT, CHECKIN_TM, CHECKIN_GPS,
+                               SIGN_DATA, SIGN_REG_DT, SIGN_REG_TM,
+                               OWNER_CODE, RESULT_CUST_NAME, RESULT_ICMOBILE_NO,
+                               RESULT_RPT_EMAIL_NO, RESULT_ACEPT_NAME)
                             VALUES (
-                                           LOG0039D_STK_RETN_RESULT_ID.nextval, 
-                                           (select  STK_RETN_ID  from LOG0038D where  retn_no =#{serviceNo}), 
-                                           #{stkRetnStusId}, 
-                                           #{stkRetnStkIsRet}, 
-                                           sysdate, 
-                                           #{stkRetnRem}, 
-                                           #{stkRetnResnId}, 
-                                           #{stkRetnCcId}, 
-                                           sysdate, 
-                                           (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{stkRetnCrtUserId}) , 
-                                           sysdate, 
-                                          (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{stkRetnCrtUserId}) , 
-                                           #{stkRetnResultIsSynch}, 
-                                           #{stkRetnAllowComm}, 
-                                           (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{stkRetnCrtUserId}) , 
-                                           to_char( to_date(#{checkinDt},'yyyymmdd') ,'yyyymmdd'), 
-                                           #{checkinTm}, 
-                                           #{checkinGps}, 
-                                           #{signData},   
-                                           to_char( to_date( #{signRegDt},'yyyymmdd') ,'yyyymmdd'), 
-                                           #{signRegTm}, 
-                                           #{ownerCode}, 
-                                           #{resultCustName},    
-                                           #{resultIcmobileNo}, 
-                                           #{resultRptEmailNo},    
+                                           LOG0039D_STK_RETN_RESULT_ID.nextval,
+                                           (select  STK_RETN_ID  from LOG0038D where  retn_no =#{serviceNo}),
+                                           #{stkRetnStusId},
+                                           #{stkRetnStkIsRet},
+                                           sysdate,
+                                           #{stkRetnRem},
+                                           #{stkRetnResnId},
+                                           #{stkRetnCcId},
+                                           sysdate,
+                                           (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{stkRetnCrtUserId}) ,
+                                           sysdate,
+                                          (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{stkRetnCrtUserId}) ,
+                                           #{stkRetnResultIsSynch},
+                                           #{stkRetnAllowComm},
+                                           (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{stkRetnCrtUserId}) ,
+                                           to_char( to_date(#{checkinDt},'yyyymmdd') ,'yyyymmdd'),
+                                           #{checkinTm},
+                                           #{checkinGps},
+                                           #{signData},
+                                           to_char( to_date( #{signRegDt},'yyyymmdd') ,'yyyymmdd'),
+                                           #{signRegTm},
+                                           #{ownerCode},
+                                           #{resultCustName},
+                                           #{resultIcmobileNo},
+                                           #{resultRptEmailNo},
                                            #{resultAceptName}
                                )
        </insert>
-         
-         
+
+
      <update id="updateAppTm_LOG0038D" parameterType="Map">
             UPDATE LOG0038D
                SET APP_DT = TO_DATE (#{appointmentDate}, 'YYYYMMDD'),
@@ -3772,31 +3773,31 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                        END)
              WHERE STK_RETN_ID = (SELECT STK_RETN_ID
                                     FROM LOG0038D
-                                   WHERE RETN_NO = #{serviceNo}) 
-                
+                                   WHERE RETN_NO = #{serviceNo})
+
        </update>
-       
-              
+
+
        <insert id="insertFailed_LOG0039D" parameterType="Map">
-       
+
              INSERT INTO LOG0039D (
-                       STK_RETN_RESULT_ID, 
-                       STK_RETN_ID, 
-                       STK_RETN_STUS_ID, 
+                       STK_RETN_RESULT_ID,
+                       STK_RETN_ID,
+                       STK_RETN_STUS_ID,
                        STK_RETN_CT_MEM_ID,
-                       STK_RETN_CRT_DT, 
-                       STK_RETN_CRT_USER_ID) 
-                    VALUES ( 
-                       LOG0039D_STK_RETN_RESULT_ID.nextval, 
-                       (select  STK_RETN_ID  from LOG0038D where  retn_no =#{serviceNo}) , 
-                       '21', 
+                       STK_RETN_CRT_DT,
+                       STK_RETN_CRT_USER_ID)
+                    VALUES (
+                       LOG0039D_STK_RETN_RESULT_ID.nextval,
+                       (select  STK_RETN_ID  from LOG0038D where  retn_no =#{serviceNo}) ,
+                       '21',
                        (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId}),
-                       sysdate, 
+                       sysdate,
                        (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId})
                      )
        </insert>
-         
-          
+
+
        <update id="updateFailed_LOG0038D" parameterType="Map">
                 UPDATE  LOG0038D
                     SET    STUS_CODE_ID   = '21',
@@ -3806,28 +3807,28 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                              CALL_ENTRY_ID = #{callEntryID}
                 WHERE  retn_no = #{serviceNo}
        </update>
-       
-       
+
+
 
          <update id="updateFailed_SAL0020D" parameterType="Map">
-         
-         update sal0020d  
+
+         update sal0020d
          set SO_REQ_UPD_USER_ID =  (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId})
-              , SO_REQ_UPD_DT = sysdate 
+              , SO_REQ_UPD_DT = sysdate
               , SO_REQ_STUS_ID = 1
               , SO_REQ_CUR_CALL_ENTRY_ID = #{callEntryID}
-         
+
           where   SO_REQ_SO_ID  =  (SELECT  SALES_ORD_ID  FROM SAL0001D WHERE  SALES_ORD_NO  =#{salesOrderNo})
          </update>
-       
-         
-         
-         
+
+
+
+
       <select id="getcancReqNo" parameterType="Map" resultType="java.lang.String">
          select GBSLCVD.FN_GET_CANC_REQ_NO  canc_Req_No  from dual
       </select>
-      
-      
+
+
        <insert id="insertCancelSMS" parameterType="Map">
            update svc0008d
                set CANC_REQ_NO =  #{cancReqNo}
@@ -3835,11 +3836,11 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                         from sal0001d
                                         where 1=1
                                         and SALES_ORD_NO = #{salesOrderNo}  )
-                and NO =   #{serviceNo}                                 
-       </insert>      
-       
-       
-       
+                and NO =   #{serviceNo}
+       </insert>
+
+
+
        <insert id="updateReApointResult" parameterType="Map">
             UPDATE  SVC0001D
                 SET    AS_APPNT_DT             =  to_DATE(#{AS_APPNT_DT} ,'ddmmyyyy'),
@@ -3848,99 +3849,99 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                          AS_UPD_DT                 =  SYSDATE,
                         AS_SESION_CODE         = #{AS_SESION_CODE}
                        WHERE  AS_NO              = #{AS_NO}
-       
-       </insert> 
+
+       </insert>
        <insert id="insert_CCR0006D" parameterType="Map">
-       INSERT INTO CCR0006D 
-      ( CALL_ENTRY_ID , SALES_ORD_ID , TYPE_ID 
+       INSERT INTO CCR0006D
+      ( CALL_ENTRY_ID , SALES_ORD_ID , TYPE_ID
       , STUS_CODE_ID , RESULT_ID , DOC_ID
-       , CRT_USER_ID , CRT_DT , CALL_DT 
-       , IS_WAIT_FOR_CANCL , HAPY_CALLER_ID 
-       , UPD_DT , UPD_USER_ID , ORI_CALL_DT ) 
+       , CRT_USER_ID , CRT_DT , CALL_DT
+       , IS_WAIT_FOR_CANCL , HAPY_CALLER_ID
+       , UPD_DT , UPD_USER_ID , ORI_CALL_DT )
        VALUES (
         #{callEntryID} ,  (SELECT  SALES_ORD_ID  FROM SAL0001D WHERE  SALES_ORD_NO  =#{salesOrderNo}) , 259
        ,19 , #{callResultID} , 0
        ,(SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId}), SYSDATE , SYSDATE + 1
-       ,0 , 0 
+       ,0 , 0
        ,SYSDATE , (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId} ) , SYSDATE + 1
        )
-   
+
        </insert>
-       
+
              <insert id="insert_CCR0007D" parameterType="Map">
-       INSERT INTO CCR0007D 
-      (CALL_RESULT_ID , CALL_ENTRY_ID , CALL_STUS_ID 
-      , CALL_DT , CALL_ACTN_DT , CALL_FDBCK_ID 
-      , CALL_CT_ID , CALL_REM , CALL_CRT_USER_ID 
+       INSERT INTO CCR0007D
+      (CALL_RESULT_ID , CALL_ENTRY_ID , CALL_STUS_ID
+      , CALL_DT , CALL_ACTN_DT , CALL_FDBCK_ID
+      , CALL_CT_ID , CALL_REM , CALL_CRT_USER_ID
       , CALL_CRT_DT , CALL_CRT_USER_ID_DEPT
-       , CALL_HC_ID , CALL_ROS_AMT 
-       , CALL_SMS , CALL_SMS_REM  ) 
+       , CALL_HC_ID , CALL_ROS_AMT
+       , CALL_SMS , CALL_SMS_REM  )
        VALUES (
        #{callResultID}, #{callEntryID} ,  19
-       , SYSDATE + 1 , to_date('1900/01/01', 'YYYY/MM/DD' ) , 0 
+       , SYSDATE + 1 , to_date('1900/01/01', 'YYYY/MM/DD' ) , 0
        , 0 , ' ' , (SELECT  MEM_ID  FROM ORG0001D WHERE  MEM_CODE  =#{userId})
-       , SYSDATE , 0 
-       , 0 , 0 
+       , SYSDATE , 0
+       , 0 , 0
        , 0 , ' '
        )
-     
+
        </insert>
-   
+
    <select id="select_SeqCCR0006D" parameterType="Map" resultType="java.lang.String">
-   
+
     select CCR0006D_CALL_ENTRY_ID_SEQ.NEXTVAL
    From dual
-   
+
    </select>
    <select id="select_SeqCCR0007D" parameterType="Map" resultType="java.lang.String">
-   
-    select CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL 
+
+    select CCR0007D_CALL_RESULT_ID_SEQ.NEXTVAL
    From dual
-   
+
    </select>
 
-  
-   
-                
-      <resultMap id="bliingRtnCode" type="egovMap" />     
-      
+
+
+
+      <resultMap id="bliingRtnCode" type="egovMap" />
+
       <select id="SP_RETURN_BILLING_EARLY_TERMI" parameterType="Map"  statementType="CALLABLE" >
       {
             call SP_RETURN_BILLING_EARLY_TERMI( #{P_SALES_ORD_NO},#{P_USER_ID},#{P_RETN_NO})
       }
-     </select>     
-     
-     
-     
-     
+     </select>
+
+
+
+
     <insert id="insert_SVC0066T" parameterType="Map">
-    
+
 INSERT INTO SVC0066T (
-   SEQ, APP_TYPE, SVC_NO, 
-   ERR_CODE, ERR_MSG ,TRNSC_ID) 
-VALUES ( 
-              SVC0066T_SEQ.NEXTVAL  
-              ,#{APP_TYPE} 
+   SEQ, APP_TYPE, SVC_NO,
+   ERR_CODE, ERR_MSG ,TRNSC_ID)
+VALUES (
+              SVC0066T_SEQ.NEXTVAL
+              ,#{APP_TYPE}
               ,#{SVC_NO}
               ,#{ERR_CODE}
               ,#{ERR_MSG}
               ,#{TRNSC_ID}
              )
-    
-    </insert>
-     
 
-    
+    </insert>
+
+
+
      <select id="prdResultSync" parameterType="Map" resultType="java.lang.Integer">
-        <![CDATA[        
-               SELECT   COUNT(*) CNT 
-             FROM log0038d  A,  
-                  ORG0001D  B 
+        <![CDATA[
+               SELECT   COUNT(*) CNT
+             FROM log0038d  A,
+                  ORG0001D  B
              WHERE  A.RETN_NO     =#{serviceNo}
                 AND A.CT_ID =B.MEM_ID
                 AND B.MEM_CODE  =#{userId}
         ]]>
     </select>
-    
-                    
+
+
 </mapper>
