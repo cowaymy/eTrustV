@@ -69,7 +69,7 @@ public class InstallationResultListController {
 
 
 		/* KV- DSC Code  --session*/
-		model.addAttribute("userBranchId", sessionVO.getUserBranchId());
+		/*model.addAttribute("userBranchId", sessionVO.getUserBranchId());*/
 
 		model.addAttribute("appTypeList", appTypeList);
 		model.addAttribute("installStatus", installStatus);
