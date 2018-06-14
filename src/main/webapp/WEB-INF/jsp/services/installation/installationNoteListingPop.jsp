@@ -6,16 +6,16 @@ var myGridID;
 $(document).ready(function(){
      $('.multy_select').on("change", function() {
            //console.log($(this).val());
-       }).multipleSelect({}); 
-    
-    doGetCombo('/common/selectCodeList.do', '10', '','appliType', 'M' , 'f_multiCombo'); 
-    doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'M', 'f_multiCombo1'); 
+       }).multipleSelect({});
+
+    doGetCombo('/common/selectCodeList.do', '10', '','appliType', 'M' , 'f_multiCombo');
+    doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'M', 'f_multiCombo1');
     doGetProductCombo('/common/selectProductCodeList.do', '', '', 'product', 'M','f_multiCombo2'); //Product Code
     fn_noteListingGrid();
 });
 
 function f_multiCombo() {
-    
+
     $('#appliType').change(function() {
     }).multipleSelect({
         selectAll : true,
@@ -56,7 +56,7 @@ function fn_noteListingGrid() {
     }, {
         dataField : "custname",
         //headerText : "Cust Name",
-        headerText : '<spring:message code="service.grid.CustName" />',        
+        headerText : '<spring:message code="service.grid.CustName" />',
         editable : false,
         width : 130
     }, {
@@ -84,7 +84,7 @@ function fn_noteListingGrid() {
         headerText : '<spring:message code="service.grid.InstDate" />',
         editable : false,
         width : 130
-        
+
     }, {
         dataField : "ctcode",
         //headerText : "CT Code",
@@ -115,61 +115,67 @@ function fn_noteListingGrid() {
         headerText : '<spring:message code="service.grid.InsStatus" />',
         editable : false,
         width : 130
+    },{
+        dataField : "callRem",
+        //headerText : "Ins Status",
+        headerText : 'Remark',
+        editable : false,
+        width : 130
     }];
      // 그리드 속성 설정
     var gridPros = {
-        
+
              usePaging           : true,         //페이징 사용
-             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-             editable            : false,            
-             fixedColumnCount    : 1,            
-             showStateColumn     : false,             
-             displayTreeOpen     : false,            
-             selectionMode       : "singleRow",  //"multipleCells",            
-             headerHeight        : 30,       
+             pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+             editable            : false,
+             fixedColumnCount    : 1,
+             showStateColumn     : false,
+             displayTreeOpen     : false,
+             selectionMode       : "singleRow",  //"multipleCells",
+             headerHeight        : 30,
              useGroupingPanel    : false,        //그룹핑 패널 사용
              skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
              wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
 
     };
-    
+
     //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
     myGridID = AUIGrid.create("#grid_wrap_noteListing", columnLayout, gridPros);
 }
 
 var gridPros = {
-    
-    // 페이징 사용       
+
+    // 페이징 사용
     usePaging : true,
-    
+
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
-    
+
     editable : true,
-    
+
     fixedColumnCount : 1,
-    
-    showStateColumn : true, 
-    
+
+    showStateColumn : true,
+
     displayTreeOpen : true,
-    
+
     selectionMode : "singleRow",
-    
+
     headerHeight : 30,
-    
+
     // 그룹핑 패널 사용
     useGroupingPanel : true,
-    
+
     // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
     skipReadonlyColumns : true,
-    
+
     // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
     wrapSelectionMove : true,
-    
+
     // 줄번호 칼럼 렌더러 출력
     showRowNumColumn : false
-    
+
 };
 function fn_validation(){
 	if($("#doCrtDate").val() != '' || $("#doEndDate").val() != ''){
@@ -268,7 +274,7 @@ function fn_openReport(){
             }else if(($("#sortType").val() == "7")){
                 orderBySql = " ORDER BY s2.Code ";
             }
-		
+
 		$("#reportForm #V_DSCCODE").val(DSCCode);
 		$("#reportForm #V_APPDATE").val(appDate);
 		$("#reportForm #V_ORDERDATE").val(orderDate);
@@ -277,17 +283,17 @@ function fn_openReport(){
 		$("#reportForm #reportFileName").val('/services/InstallationNoteListing_PDF.rpt');
 	     $("#reportForm #viewType").val("PDF");
 	     $("#reportForm #reportDownFileName").val("InstallationNoteList_"+day+month+date.getFullYear());
-	     
+
 		var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
-        
+
         Common.report("reportForm", option);
 	}
 }
 
 function fn_searchView(){
-	
+
 	if(fn_validation()){
         var whereSql = "";
         var DSCCode = "";
@@ -351,7 +357,7 @@ function fn_searchView(){
             }else if(($("#sortType").val() == "7")){
                 orderBySql = " ORDER BY s2.Code ";
             }
-        
+
         $("#reportForm #V_DSCCODE").val(DSCCode);
         $("#reportForm #V_APPDATE").val(appDate);
         $("#reportForm #V_ORDERDATE").val(orderDate);
@@ -360,11 +366,11 @@ function fn_searchView(){
         $("#reportForm #reportFileName").val('/services/InstallationNoteListing_PDF.rpt');
          $("#reportForm #viewType").val("PDF");
          $("#reportForm #reportDownFileName").val("InstallationNoteList_"+day+month+date.getFullYear());
-         
+
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
-        
+
         Common.ajax("GET", "/services/selectInstallationNoteListing.do", $("#reportForm").serialize(), function(result) {
             console.log("성공.");
             console.log("data : " + result);
@@ -431,7 +437,7 @@ $.fn.clearForm = function() {
         <option value="258">Product Exchange</option>
     </select>
     </td>
-    <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>    
+    <th scope="row"><spring:message code='service.title.AppointmentDate'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -443,7 +449,7 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.DSCBranch'/></th>    
+    <th scope="row"><spring:message code='service.title.DSCBranch'/></th>
     <td>
     <select class="multy_select" multiple="multiple" id="branch" name="branch">
     </select>
@@ -465,7 +471,7 @@ $.fn.clearForm = function() {
     <select class="multy_select" multiple="multiple"  id="appliType" name="appType">
     </select>
     </td>
-    <th scope="row"><spring:message code='service.title.OrderDate'/></th>    
+    <th scope="row"><spring:message code='service.title.OrderDate'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -477,7 +483,7 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.CTCode'/></th>    
+    <th scope="row"><spring:message code='service.title.CTCode'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -487,7 +493,7 @@ $.fn.clearForm = function() {
     </div><!-- date_set end -->
 
     </td>
-    <th scope="row"><spring:message code='service.title.SortBy'/></th>    
+    <th scope="row"><spring:message code='service.title.SortBy'/></th>
     <td>
     <select id="sortType" name="sortType">
         <option value=""></option>
@@ -502,7 +508,7 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.OrderNumber'/></th>    
+    <th scope="row"><spring:message code='service.title.OrderNumber'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -522,7 +528,7 @@ $.fn.clearForm = function() {
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.Product'/></th>    
+    <th scope="row"><spring:message code='service.title.Product'/></th>
     <td colspan="3">
     <select class="multy_select" multiple="multiple" id="product" name="product">
     </select>
