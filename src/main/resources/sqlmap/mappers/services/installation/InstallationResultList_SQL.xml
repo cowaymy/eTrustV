@@ -4038,7 +4038,10 @@ SELECT NVL(SUM(TRADE_AMT),0)   as SUMTRADE_AMT FROM PAY0035D WHERE TRADE_SO_ID =
 						  WHERE INSTALL_ENTRY_No = #{installEntryNo}
      </insert>
 
-<resultMap id="installationNoteListing" type="egovMap" />
+
+<resultMap id="installationNoteListing" type="egovMap" >
+     <result property="CALL_REM" column="CALL_REM" jdbcType="CLOB" javaType="java.lang.String"/>
+   </resultMap>
         <select id="selectInstallationNoteListing" parameterType="Map" resultType="egovMap" statementType="CALLABLE" >
         call  SP_CR_GEN_INS_NOTE_LIST(#{V_DSCCODE},#{V_APPDATE},#{V_ORDERDATE},#{V_WHERESQL},#{V_ORDERBYSQL},#{cv_1,mode=OUT,jdbcType=CURSOR, javaType=ResultSet, resultMap=installationNoteListing})
         </select>
