@@ -197,7 +197,7 @@
 							<tr>
 								<th scope="row">Assigned Technician</th>
 								<td colspan="3"><span><c:out
-											value=" (${viewDetail.installationInfo.c1}) ${viewDetail.installationInfo.c3}" /></span></td>
+											value=" (${installResult.ctMemCode}) ${installResult.ctMemName}" /></span></td>
 								<th scope="row">Result Status</th>
 								<td><span><c:out
 											value="${viewDetail.installationInfo.name}" /></span></td>
@@ -1399,7 +1399,7 @@
 									class="readonly" id="msg" name="msg">RM0.00 COWAY DSC
 Install Status: Completed
 Order No: ${viewDetail.exchangeInfo.salesOrdNo}
-Name: ${installResult.ctMemName}</textarea></td>
+Name: ${orderInfo.name2}</textarea></td>
 						</tr>
 						<tr>
 							<td><input type="text" title="" placeholder="" class="w100p"
