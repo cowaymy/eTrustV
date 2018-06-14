@@ -75,7 +75,11 @@ function fn_callLogTransaction(){
         AUIGrid.setGridData(callLogTranID, result);
 
         //Common.alert(result[0].callRem + " 1");
-        $('#veriremark').val(result[0].callRem);  //cyc
+        if(result != "")
+        	{
+        	 $('#veriremark').val(result[0].callRem);  //cyc
+        	}
+
     });
 }
 
