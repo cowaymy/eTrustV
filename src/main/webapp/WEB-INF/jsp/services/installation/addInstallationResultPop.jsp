@@ -510,7 +510,7 @@ var gridPros = {
     </td>
     <th scope="row"><spring:message code='service.title.AssignedCT'/></th>
     <td colspan="3">
-        <span><c:out value="(${stock.memCode}) ${stock.name}"/></span>
+        <span><c:out value="(${installResult.ctMemCode}) ${installResult.ctMemName}"/></span>
     </td>
 </tr>
 <tr>
