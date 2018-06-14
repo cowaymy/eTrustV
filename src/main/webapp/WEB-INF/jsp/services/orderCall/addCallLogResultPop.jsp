@@ -73,6 +73,9 @@ function fn_callLogTransaction(){
         console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(callLogTranID, result);
+
+        //Common.alert(result[0].callRem + " 1");
+        $('#veriremark').val(result[0].callRem);  //cyc
     });
 }
 
@@ -394,7 +397,7 @@ function fn_doAllaction(){
 <tr>
     <th scope="row"><spring:message code='service.title.VerificationRemark'/></th>
     <td>
-    <textarea cols="20" rows="5" placeholder=""></textarea>
+    <textarea cols="20" rows="5" placeholder="" id="veriremark" name="veriremark"></textarea>
     </td>
 </tr>
 </tbody>
