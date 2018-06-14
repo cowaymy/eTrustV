@@ -6,14 +6,6 @@ $(document).ready(function() {
 	/* doGetComboSepa("/common/selectBranchCodeList.do",'5' , '-',''   , 'dscCode' , 'S', ''); */
 	doGetCombo('/services/getProductList.do', '', '', 'product', 'S','');
 
-	/* KV- DSC Code  --session*/
-    /* $("#dscCode").val('${userBranchId}'); */
-    /* console.log('${userBranchId}'); */
-	/* var branchids  = $("#userBranchId").val(); -- session*/
-	/* $('#dscCode option[value="'+branchids+'"]').attr('selected', true); */
-	/* $('#dscCode').multiSelect (branchids); -- session*/
-
-
 	//grid 생성
 	createInstallationListAUIGrid();
 	AUIGrid.setSelectionMode(myGridID, "singleRow");
@@ -421,7 +413,11 @@ function f_multiCombo2() {
     <!-- KV- DSC Code -->
       <select class="multy_select w100p" multiple="multiple" id="dscCode" name="dscCode" >
         <c:forEach var="list" items="${dscCodeList }" varStatus="status">
-           <option value="${list.brnchId}">${list.dscName}</option>
+           <%-- <option value="${list.brnchId}">${list.dscName}</option> --%>
+           <!-- KV2- DSC Code -->
+            <option value="${list.brnchId}" <c:if test="${list.brnchId == SESSION_INFO.userBranchId}"> selected</c:if> >
+                ${list.dscName}
+            </option>
         </c:forEach>
     </select>
 
