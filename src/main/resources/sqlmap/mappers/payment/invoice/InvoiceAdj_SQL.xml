@@ -40,7 +40,7 @@
 			                UnionAll1.USER_NAME USER_NAME  ,
 			                UnionAll1.MEMO_ADJ_CRT_DT MEMO_ADJ_CRT_DT  ,
 			                UnionAll1.MEMO_ADJ_INVC_TYPE_ID MEMO_ADJ_INVC_TYPE_ID  ,
-			                UnionAll1.TAX_INVC_TYPE TAX_INVC_TYPE,  
+			                UnionAll1.TAX_INVC_TYPE TAX_INVC_TYPE,
 			                UnionAll1.DEPT_NAME,
 			                UnionAll1.MEMO_ADJ_REM,
 			                UnionAll1.UPD_USER_NAME,
@@ -63,52 +63,52 @@
 			                       Extent1.MEMO_ADJ_CRT_DT MEMO_ADJ_CRT_DT  ,
 			                       Extent1.MEMO_ADJ_INVC_TYPE_ID MEMO_ADJ_INVC_TYPE_ID  ,
 			                       0 TAX_INVC_TYPE ,
-			                       (CASE WHEN  Extent7.USER_DEPT_ID IS NULL OR NVL(Extent7.USER_DEPT_ID,0) = 0 THEN '-' ELSE Extent9.DEPT_NAME END) AS DEPT_NAME, 
+			                       (CASE WHEN  Extent7.USER_DEPT_ID IS NULL OR NVL(Extent7.USER_DEPT_ID,0) = 0 THEN '-' ELSE Extent9.DEPT_NAME END) AS DEPT_NAME,
 			                       Extent1.MEMO_ADJ_REM,
 			                       Extent71.USER_NAME UPD_USER_NAME,
                                    Extent1.MEMO_ADJ_UPD_DT MEMO_ADJ_UPD_DT,
-                                   Extent1.BATCH_ID 
+                                   Extent1.BATCH_ID
 			                FROM PAY0011D Extent1
 			                       JOIN PAY0012D Extent2   ON Extent2.MEMO_ADJ_ID = Extent1.MEMO_ADJ_ID
 			                       LEFT JOIN SYS0032M Extent3   ON Extent3.RESN_ID = Extent1.MEMO_ADJ_RESN_ID
 			                       LEFT JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.MEMO_ADJ_TYPE_ID
 			                       JOIN PAY0029D Extent5   ON Extent5.TAX_INVC_REF_NO = Extent1.MEMO_ADJ_INVC_NO
 			                       JOIN PAY0030D Extent6   ON Extent6.INVC_ITM_ID = Extent2.MEMO_ITM_INVC_ITM_ID
-			                       LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.MEMO_ADJ_CRT_USER_ID			                       
+			                       LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.MEMO_ADJ_CRT_USER_ID
 			                       LEFT JOIN SYS0038M Extent8   ON Extent8.STUS_CODE_ID = Extent1.MEMO_ADJ_STUS_ID
-			                       LEFT JOIN SYS0040M Extent9   ON Extent7.USER_DEPT_ID = Extent9.DEPT_ID	
-			                       LEFT JOIN SYS0047M Extent71  ON Extent71.USER_ID = Extent1.MEMO_ADJ_UPD_USER_ID		                       
+			                       LEFT JOIN SYS0040M Extent9   ON Extent7.USER_DEPT_ID = Extent9.DEPT_ID
+			                       LEFT JOIN SYS0047M Extent71  ON Extent71.USER_ID = Extent1.MEMO_ADJ_UPD_USER_ID
 			                WHERE 1=1
 			                        <if test="orderNo != null and orderNo != '' " >
-								    AND Extent6.INVC_ITM_ORD_NO = #{orderNo} 
+								    AND Extent6.INVC_ITM_ORD_NO = #{orderNo}
 								    </if>
 								    <if test="adjNo != null and adjNo != '' ">
-								    AND Extent1.MEMO_ADJ_REF_NO = #{adjNo} 
+								    AND Extent1.MEMO_ADJ_REF_NO = #{adjNo}
 								    </if>
 								    <if test="status != null and status != '' ">
-								    AND Extent1.MEMO_ADJ_STUS_ID = #{status} 
+								    AND Extent1.MEMO_ADJ_STUS_ID = #{status}
 								    </if>
 								    <if test="invoiceNo != null and invoiceNo != '' ">
 								    AND Extent1.MEMO_ADJ_INVC_NO = #{invoiceNo}
-								    </if> 
+								    </if>
 								    <if test="reportNo != null and reportNo != '' ">
-								    AND Extent1.MEMO_ADJ_RPT_NO = #{reportNo} 
+								    AND Extent1.MEMO_ADJ_RPT_NO = #{reportNo}
 								    </if>
 								    <if test="creator != null and creator != '' ">
 								    AND Extent7.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
 								    </if>
 								    <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
-								    AND 
-								        Extent1.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
-								        AND Extent1.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
+								    AND
+								        Extent1.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY')
+								        AND Extent1.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1
 								    </if>
 								    <if test="batchId != null and batchId != '' ">
                                     AND Extent1.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
-                                    </if>  
+                                    </if>
                                     <if test="deptNm != null and deptNm != '' ">
                                     AND Extent9.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
                                     </if>
-			                UNION ALL 
+			                UNION ALL
 			                SELECT Extent9.MEMO_ADJ_ID MEMO_ADJ_ID  ,
 			                       Extent9.MEMO_ADJ_ID MEMOADJUSTID1  ,
 			                       Extent9.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
@@ -130,7 +130,7 @@
 			                       Extent9.MEMO_ADJ_REM,
                                    Extent151.USER_NAME UPD_USER_NAME,
                                    Extent9.MEMO_ADJ_UPD_DT MEMO_ADJ_UPD_DT,
-                                   Extent9.BATCH_ID 
+                                   Extent9.BATCH_ID
 			                FROM PAY0011D Extent9
 			                       JOIN PAY0012D Extent10   ON Extent10.MEMO_ADJ_ID = Extent9.MEMO_ADJ_ID
 			                       LEFT JOIN SYS0032M Extent11   ON Extent11.RESN_ID = Extent9.MEMO_ADJ_RESN_ID
@@ -139,41 +139,41 @@
 			                       JOIN PAY0034D Extent14   ON Extent14.INVC_ITM_ID = Extent10.MEMO_ITM_INVC_ITM_ID
 			                       LEFT JOIN SYS0047M Extent15   ON Extent15.USER_ID = Extent9.MEMO_ADJ_CRT_USER_ID
 			                       LEFT JOIN SYS0038M Extent16   ON Extent16.STUS_CODE_ID = Extent9.MEMO_ADJ_STUS_ID
-			                       LEFT JOIN SYS0040M Extent17   ON Extent15.USER_DEPT_ID = Extent17.DEPT_ID 
+			                       LEFT JOIN SYS0040M Extent17   ON Extent15.USER_DEPT_ID = Extent17.DEPT_ID
 			                       LEFT JOIN SYS0047M Extent151  ON Extent151.USER_ID = Extent9.MEMO_ADJ_UPD_USER_ID
-			                 WHERE 1=1   
+			                 WHERE 1=1
                                     <if test="orderNo != null and orderNo != '' " >
-                                    AND Extent14.INVC_ITM_ORD_NO = #{orderNo} 
+                                    AND Extent14.INVC_ITM_ORD_NO = #{orderNo}
                                     </if>
                                     <if test="adjNo != null and adjNo != '' ">
-                                    AND Extent9.MEMO_ADJ_REF_NO = #{adjNo} 
+                                    AND Extent9.MEMO_ADJ_REF_NO = #{adjNo}
                                     </if>
                                     <if test="status != null and status != '' ">
-                                    AND Extent9.MEMO_ADJ_STUS_ID = #{status} 
+                                    AND Extent9.MEMO_ADJ_STUS_ID = #{status}
                                     </if>
                                     <if test="invoiceNo != null and invoiceNo != '' ">
                                     AND Extent9.MEMO_ADJ_INVC_NO = #{invoiceNo}
-                                    </if> 
+                                    </if>
                                     <if test="reportNo != null and reportNo != '' ">
-                                    AND Extent9.MEMO_ADJ_RPT_NO = #{reportNo} 
+                                    AND Extent9.MEMO_ADJ_RPT_NO = #{reportNo}
                                     </if>
                                     <if test="creator != null and creator != '' ">
                                     AND Extent15.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
                                     </if>
                                     <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
-                                    AND 
-                                        Extent9.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
-                                        AND Extent9.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
+                                    AND
+                                        Extent9.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY')
+                                        AND Extent9.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1
                                     </if>
-                                    <if test="batchId != null and batchId != '' ">                                     
+                                    <if test="batchId != null and batchId != '' ">
                                     AND Extent9.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
-                                    </if>  
+                                    </if>
                                     <if test="deptNm != null and deptNm != '' ">
                                     AND Extent17.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
-                                    </if>   
+                                    </if>
 			                       ) UnionAll1
-			                 
-			         UNION ALL 
+
+			         UNION ALL
 			         SELECT Extent17.MEMO_ADJ_ID MEMO_ADJ_ID  ,
 			                Extent17.MEMO_ADJ_ID MEMOADJUSTID1  ,
 			                Extent17.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
@@ -204,88 +204,88 @@
 			                JOIN PAY0032D Extent22   ON Extent22.INVC_ITM_ID = Extent18.MEMO_ITM_INVC_ITM_ID
 			                LEFT JOIN SYS0047M Extent23   ON Extent23.USER_ID = Extent17.MEMO_ADJ_CRT_USER_ID
 			                LEFT JOIN SYS0038M Extent24   ON Extent24.STUS_CODE_ID = Extent17.MEMO_ADJ_STUS_ID
-			                LEFT JOIN SYS0040M Extent9   ON Extent23.USER_DEPT_ID = Extent9.DEPT_ID 
+			                LEFT JOIN SYS0040M Extent9   ON Extent23.USER_DEPT_ID = Extent9.DEPT_ID
 			                LEFT JOIN SYS0047M Extent231  ON Extent231.USER_ID = Extent17.MEMO_ADJ_UPD_USER_ID
 			        WHERE 1=1
 			                         <if test="orderNo != null and orderNo != '' " >
-                                    AND Extent22.INVC_ITM_ORD_NO = #{orderNo} 
+                                    AND Extent22.INVC_ITM_ORD_NO = #{orderNo}
                                     </if>
                                     <if test="adjNo != null and adjNo != '' ">
-                                    AND Extent17.MEMO_ADJ_REF_NO = #{adjNo} 
+                                    AND Extent17.MEMO_ADJ_REF_NO = #{adjNo}
                                     </if>
                                     <if test="status != null and status != '' ">
-                                    AND Extent17.MEMO_ADJ_STUS_ID = #{status} 
+                                    AND Extent17.MEMO_ADJ_STUS_ID = #{status}
                                     </if>
                                     <if test="invoiceNo != null and invoiceNo != '' ">
                                     AND Extent17.MEMO_ADJ_INVC_NO = #{invoiceNo}
-                                    </if> 
+                                    </if>
                                     <if test="reportNo != null and reportNo != '' ">
-                                    AND Extent17.MEMO_ADJ_RPT_NO = #{reportNo} 
+                                    AND Extent17.MEMO_ADJ_RPT_NO = #{reportNo}
                                     </if>
                                     <if test="creator != null and creator != '' ">
                                     AND Extent23.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
                                     </if>
                                     <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
-                                    AND 
-                                        Extent17.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
-                                        AND Extent17.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
+                                    AND
+                                        Extent17.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY')
+                                        AND Extent17.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1
                                     </if>
-                                    <if test="batchId != null and batchId != '' ">                                     
+                                    <if test="batchId != null and batchId != '' ">
                                     AND Extent17.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
-                                    </if>  
+                                    </if>
                                     <if test="deptNm != null and deptNm != '' ">
                                     AND Extent9.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
-                                    </if>      
+                                    </if>
 			                ) UnionAll2
   ORDER BY UnionAll2.MEMOADJUSTID1 DESC
     </select>
-    
+
     <select id="countAdjustmentExcelList" parameterType="Map" resultType="int">
-        SELECT 
+        SELECT
             COUNT(1) AS CNT
-              FROM ( SELECT UnionAll1.MEMO_ADJ_ID MEMO_ADJ_ID  
-                     FROM ( SELECT Extent1.MEMO_ADJ_ID MEMO_ADJ_ID 
+              FROM ( SELECT UnionAll1.MEMO_ADJ_ID MEMO_ADJ_ID
+                     FROM ( SELECT Extent1.MEMO_ADJ_ID MEMO_ADJ_ID
                             FROM PAY0011D Extent1
                                    JOIN PAY0012D Extent2   ON Extent2.MEMO_ADJ_ID = Extent1.MEMO_ADJ_ID
                                    LEFT JOIN SYS0032M Extent3   ON Extent3.RESN_ID = Extent1.MEMO_ADJ_RESN_ID
                                    LEFT JOIN SYS0013M Extent4   ON Extent4.CODE_ID = Extent1.MEMO_ADJ_TYPE_ID
                                    JOIN PAY0029D Extent5   ON Extent5.TAX_INVC_REF_NO = Extent1.MEMO_ADJ_INVC_NO
                                    JOIN PAY0030D Extent6   ON Extent6.INVC_ITM_ID = Extent2.MEMO_ITM_INVC_ITM_ID
-                                   LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.MEMO_ADJ_CRT_USER_ID                                  
+                                   LEFT JOIN SYS0047M Extent7   ON Extent7.USER_ID = Extent1.MEMO_ADJ_CRT_USER_ID
                                    LEFT JOIN SYS0038M Extent8   ON Extent8.STUS_CODE_ID = Extent1.MEMO_ADJ_STUS_ID
-                                   LEFT JOIN SYS0040M Extent9   ON Extent7.USER_DEPT_ID = Extent9.DEPT_ID   
-                                   LEFT JOIN SYS0047M Extent71  ON Extent71.USER_ID = Extent1.MEMO_ADJ_UPD_USER_ID                             
+                                   LEFT JOIN SYS0040M Extent9   ON Extent7.USER_DEPT_ID = Extent9.DEPT_ID
+                                   LEFT JOIN SYS0047M Extent71  ON Extent71.USER_ID = Extent1.MEMO_ADJ_UPD_USER_ID
                             WHERE 1=1
                                     <if test="orderNo != null and orderNo != '' " >
-                                    AND Extent6.INVC_ITM_ORD_NO = #{orderNo} 
+                                    AND Extent6.INVC_ITM_ORD_NO = #{orderNo}
                                     </if>
                                     <if test="adjNo != null and adjNo != '' ">
-                                    AND Extent1.MEMO_ADJ_REF_NO = #{adjNo} 
+                                    AND Extent1.MEMO_ADJ_REF_NO = #{adjNo}
                                     </if>
                                     <if test="status != null and status != '' ">
-                                    AND Extent1.MEMO_ADJ_STUS_ID = #{status} 
+                                    AND Extent1.MEMO_ADJ_STUS_ID = #{status}
                                     </if>
                                     <if test="invoiceNo != null and invoiceNo != '' ">
                                     AND Extent1.MEMO_ADJ_INVC_NO = #{invoiceNo}
-                                    </if> 
+                                    </if>
                                     <if test="reportNo != null and reportNo != '' ">
-                                    AND Extent1.MEMO_ADJ_RPT_NO = #{reportNo} 
+                                    AND Extent1.MEMO_ADJ_RPT_NO = #{reportNo}
                                     </if>
                                     <if test="creator != null and creator != '' ">
                                     AND Extent7.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
                                     </if>
                                     <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
-                                    AND 
-                                        Extent1.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
-                                        AND Extent1.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
+                                    AND
+                                        Extent1.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY')
+                                        AND Extent1.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1
                                     </if>
                                     <if test="batchId != null and batchId != '' ">
                                     AND Extent1.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
-                                    </if>  
+                                    </if>
                                     <if test="deptNm != null and deptNm != '' ">
                                     AND Extent9.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
                                     </if>
-                            UNION ALL 
+                            UNION ALL
                             SELECT Extent9.MEMO_ADJ_ID MEMO_ADJ_ID
                             FROM PAY0011D Extent9
                                    JOIN PAY0012D Extent10   ON Extent10.MEMO_ADJ_ID = Extent9.MEMO_ADJ_ID
@@ -295,42 +295,42 @@
                                    JOIN PAY0034D Extent14   ON Extent14.INVC_ITM_ID = Extent10.MEMO_ITM_INVC_ITM_ID
                                    LEFT JOIN SYS0047M Extent15   ON Extent15.USER_ID = Extent9.MEMO_ADJ_CRT_USER_ID
                                    LEFT JOIN SYS0038M Extent16   ON Extent16.STUS_CODE_ID = Extent9.MEMO_ADJ_STUS_ID
-                                   LEFT JOIN SYS0040M Extent17   ON Extent15.USER_DEPT_ID = Extent17.DEPT_ID 
+                                   LEFT JOIN SYS0040M Extent17   ON Extent15.USER_DEPT_ID = Extent17.DEPT_ID
                                    LEFT JOIN SYS0047M Extent151  ON Extent151.USER_ID = Extent9.MEMO_ADJ_UPD_USER_ID
-                             WHERE 1=1   
+                             WHERE 1=1
                                     <if test="orderNo != null and orderNo != '' " >
-                                    AND Extent14.INVC_ITM_ORD_NO = #{orderNo} 
+                                    AND Extent14.INVC_ITM_ORD_NO = #{orderNo}
                                     </if>
                                     <if test="adjNo != null and adjNo != '' ">
-                                    AND Extent9.MEMO_ADJ_REF_NO = #{adjNo} 
+                                    AND Extent9.MEMO_ADJ_REF_NO = #{adjNo}
                                     </if>
                                     <if test="status != null and status != '' ">
-                                    AND Extent9.MEMO_ADJ_STUS_ID = #{status} 
+                                    AND Extent9.MEMO_ADJ_STUS_ID = #{status}
                                     </if>
                                     <if test="invoiceNo != null and invoiceNo != '' ">
                                     AND Extent9.MEMO_ADJ_INVC_NO = #{invoiceNo}
-                                    </if> 
+                                    </if>
                                     <if test="reportNo != null and reportNo != '' ">
-                                    AND Extent9.MEMO_ADJ_RPT_NO = #{reportNo} 
+                                    AND Extent9.MEMO_ADJ_RPT_NO = #{reportNo}
                                     </if>
                                     <if test="creator != null and creator != '' ">
                                     AND Extent15.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
                                     </if>
                                     <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
-                                    AND 
-                                        Extent9.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
-                                        AND Extent9.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
+                                    AND
+                                        Extent9.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY')
+                                        AND Extent9.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1
                                     </if>
-                                    <if test="batchId != null and batchId != '' ">                                     
+                                    <if test="batchId != null and batchId != '' ">
                                     AND Extent9.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
-                                    </if>  
+                                    </if>
                                     <if test="deptNm != null and deptNm != '' ">
                                     AND Extent17.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
-                                    </if>   
+                                    </if>
                                    ) UnionAll1
-                             
-                     UNION ALL 
-                     SELECT Extent17.MEMO_ADJ_ID MEMO_ADJ_ID 
+
+                     UNION ALL
+                     SELECT Extent17.MEMO_ADJ_ID MEMO_ADJ_ID
                      FROM PAY0011D Extent17
                             JOIN PAY0012D Extent18   ON Extent18.MEMO_ADJ_ID = Extent17.MEMO_ADJ_ID
                             LEFT JOIN SYS0032M Extent19   ON Extent19.RESN_ID = Extent17.MEMO_ADJ_RESN_ID
@@ -339,42 +339,42 @@
                             JOIN PAY0032D Extent22   ON Extent22.INVC_ITM_ID = Extent18.MEMO_ITM_INVC_ITM_ID
                             LEFT JOIN SYS0047M Extent23   ON Extent23.USER_ID = Extent17.MEMO_ADJ_CRT_USER_ID
                             LEFT JOIN SYS0038M Extent24   ON Extent24.STUS_CODE_ID = Extent17.MEMO_ADJ_STUS_ID
-                            LEFT JOIN SYS0040M Extent9   ON Extent23.USER_DEPT_ID = Extent9.DEPT_ID 
+                            LEFT JOIN SYS0040M Extent9   ON Extent23.USER_DEPT_ID = Extent9.DEPT_ID
                             LEFT JOIN SYS0047M Extent231  ON Extent231.USER_ID = Extent17.MEMO_ADJ_UPD_USER_ID
                     WHERE 1=1
                                      <if test="orderNo != null and orderNo != '' " >
-                                    AND Extent22.INVC_ITM_ORD_NO = #{orderNo} 
+                                    AND Extent22.INVC_ITM_ORD_NO = #{orderNo}
                                     </if>
                                     <if test="adjNo != null and adjNo != '' ">
-                                    AND Extent17.MEMO_ADJ_REF_NO = #{adjNo} 
+                                    AND Extent17.MEMO_ADJ_REF_NO = #{adjNo}
                                     </if>
                                     <if test="status != null and status != '' ">
-                                    AND Extent17.MEMO_ADJ_STUS_ID = #{status} 
+                                    AND Extent17.MEMO_ADJ_STUS_ID = #{status}
                                     </if>
                                     <if test="invoiceNo != null and invoiceNo != '' ">
                                     AND Extent17.MEMO_ADJ_INVC_NO = #{invoiceNo}
-                                    </if> 
+                                    </if>
                                     <if test="reportNo != null and reportNo != '' ">
-                                    AND Extent17.MEMO_ADJ_RPT_NO = #{reportNo} 
+                                    AND Extent17.MEMO_ADJ_RPT_NO = #{reportNo}
                                     </if>
                                     <if test="creator != null and creator != '' ">
                                     AND Extent23.USER_NAME LIKE '%' || #{creator} || '%' ESCAPE '~'
                                     </if>
                                     <if test="date1 != null and date2 != null and date1 != '' and date2 != '' ">
-                                    AND 
-                                        Extent17.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY') 
-                                        AND Extent17.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1 
+                                    AND
+                                        Extent17.MEMO_ADJ_CRT_DT <![CDATA[>=]]> TO_DATE(#{date1}, 'DD/MM/YYYY')
+                                        AND Extent17.MEMO_ADJ_CRT_DT<![CDATA[<]]> TO_DATE(#{date2}, 'DD/MM/YYYY')+1
                                     </if>
-                                    <if test="batchId != null and batchId != '' ">                                     
+                                    <if test="batchId != null and batchId != '' ">
                                     AND Extent17.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
-                                    </if>  
+                                    </if>
                                     <if test="deptNm != null and deptNm != '' ">
                                     AND Extent9.DEPT_NAME LIKE '%' || #{deptNm} || '%' ESCAPE '~'
-                                    </if>      
+                                    </if>
                             ) UnionAll2
-  
+
     </select>
-    
+
     <select id="selectNewAdjMaster" parameterType="Map" resultType="egovMap">
         SELECT UnionAll2.TXINVOICEID TXINVOICEID  ,
        UnionAll2.TXINVOICEID1 TXINVOICEID1  ,
@@ -395,7 +395,7 @@
        UnionAll2.OVERDUE OVERDUE  ,
        UnionAll2.TAXES TAXES  ,
        UnionAll2.AMOUNTDUE AMOUNTDUE  ,
-       UnionAll2.ACCOUNTCONVERSION ACCOUNTCONVERSION  
+       UnionAll2.ACCOUNTCONVERSION ACCOUNTCONVERSION
   FROM ( SELECT UnionAll1.TXINVOICEID TXINVOICEID  ,
                 UnionAll1.TXINVOICEID1 TXINVOICEID1  ,
                 UnionAll1.BR_NO BR_NO  ,
@@ -415,7 +415,7 @@
                 UnionAll1.TAX_INVC_CHRG OVERDUE  ,
                 UnionAll1.TAXES TAXES  ,
                 UnionAll1.AMOUNTDUE AMOUNTDUE  ,
-                UnionAll1.ACCOUNTCONVERSION ACCOUNTCONVERSION  
+                UnionAll1.ACCOUNTCONVERSION ACCOUNTCONVERSION
          FROM ( SELECT Extent1.TAX_INVC_ID TXINVOICEID  ,
                        Extent1.TAX_INVC_ID TXINVOICEID1  ,
                        Extent1.TAX_INVC_REF_NO BR_NO  ,
@@ -435,13 +435,13 @@
                        Extent1.TAX_INVC_CHRG TAX_INVC_CHRG  ,
                        Extent1.TAX_INVC_TXS TAXES  ,
                        Extent1.TAX_INVC_AMT_DUE AMOUNTDUE  ,
-                       1 ACCOUNTCONVERSION  
+                       1 ACCOUNTCONVERSION
                 FROM PAY0031D Extent1
                        LEFT JOIN SYS0012M Extent2   ON Extent1.TAX_INVC_TYPE = Extent2.CODE_MASTER_ID
                  <if test="refNo != '' ">
                  WHERE  Extent1.TAX_INVC_REF_NO = #{refNo}
                  </if>
-                UNION ALL 
+                UNION ALL
                 SELECT Extent3.TAX_INVC_ID TXINVOICEID  ,
                        Extent3.TAX_INVC_ID TXINVOICEID1  ,
                        Extent3.TAX_INVC_REF_NO BR_NO  ,
@@ -461,10 +461,10 @@
                        Extent3.TAX_INVC_CHRG TAX_INVC_CHRG  ,
                        Extent4.INVC_ITM_GST_TXS TAXES  ,
                        Extent3.TAX_INVC_AMT_DUE AMOUNTDUE  ,
-                       CASE 
+                       CASE
                             WHEN ( 1 = Extent6.ACC_BILL_ACCT_CNVR ) THEN 1
                        ELSE 0
-                          END ACCOUNTCONVERSION  
+                          END ACCOUNTCONVERSION
                 FROM PAY0033D Extent3
                        LEFT JOIN PAY0034D Extent4   ON Extent3.TAX_INVC_ID = Extent4.TAX_INVC_ID
                        LEFT JOIN SAL0001D Extent5   ON ( Extent4.INVC_ITM_ORD_NO = Extent5.SALES_ORD_NO )
@@ -475,7 +475,7 @@
                  WHERE  Extent3.TAX_INVC_REF_NO = #{refNo}
                  </if>
                  ) UnionAll1
-         UNION ALL 
+         UNION ALL
          SELECT Extent7.TAX_INVC_ID TXINVOICEID  ,
                 Extent7.TAX_INVC_ID TXINVOICEID1  ,
                 Extent7.TAX_INVC_REF_NO BR_NO  ,
@@ -495,10 +495,10 @@
                 Extent7.TAX_INVC_OVERDU TAX_INVC_OVERDU  ,
                 Extent8.INVC_ITM_GST_TXS TAXES  ,
                 Extent7.TAX_INVC_AMT_DUE AMOUNTDUE  ,
-                CASE 
+                CASE
                      WHEN ( 1 = Extent9.ACC_BILL_ACCT_CNVR ) THEN 1
                 ELSE 0
-                   END ACCOUNTCONVERSION  
+                   END ACCOUNTCONVERSION
          FROM PAY0029D Extent7
                 LEFT JOIN PAY0030D Extent8   ON Extent7.TAX_INVC_ID = Extent8.TAX_INVC_ID
                 LEFT JOIN PAY0016D Extent9   ON Extent7.TAX_INVC_REF_NO = Extent9.ACC_BILL_REM
@@ -511,40 +511,40 @@
  </if>
   ORDER BY UnionAll2.BR_NO DESC
     </select>
-    
+
     <select id="selectNewAdjDetailList" parameterType="Map" resultType="egovMap">
-        SELECT DISTINCT 
-    UnionAll3.C1 C1, 
-    UnionAll3.TXINVOICEID  TXINVOICEID, 
-    UnionAll3.BR_NO  BR_NO, 
-    UnionAll3.TXINVOICEITEMID TXINVOICEITEMID, 
-    UnionAll3.TXINVOICEITEMTYPEID TXINVOICEITEMTYPEID, 
-    UnionAll3.BILLITEMTYPE BILLITEMTYPE, 
-    UnionAll3.BILLITEMREFNO BILLITEMREFNO, 
-    UnionAll3.BILLITEMUNITPRICE BILLITEMUNITPRICE, 
-    UnionAll3.BILLITEMTAXCODEID BILLITEMTAXCODEID, 
-    UnionAll3.BILLITEMTAXCODE BILLITEMTAXCODE, 
-    UnionAll3.BILLITEMTAXRATE BILLITEMTAXRATE, 
-    UnionAll3.BILLITEMQTY BILLITEMQTY, 
-    UnionAll3.BILLITEMTAXES BILLITEMTAXES, 
-    UnionAll3.BILLITEMCHARGES BILLITEMCHARGES, 
+        SELECT DISTINCT
+    UnionAll3.C1 C1,
+    UnionAll3.TXINVOICEID  TXINVOICEID,
+    UnionAll3.BR_NO  BR_NO,
+    UnionAll3.TXINVOICEITEMID TXINVOICEITEMID,
+    UnionAll3.TXINVOICEITEMTYPEID TXINVOICEITEMTYPEID,
+    UnionAll3.BILLITEMTYPE BILLITEMTYPE,
+    UnionAll3.BILLITEMREFNO BILLITEMREFNO,
+    UnionAll3.BILLITEMUNITPRICE BILLITEMUNITPRICE,
+    UnionAll3.BILLITEMTAXCODEID BILLITEMTAXCODEID,
+    UnionAll3.BILLITEMTAXCODE BILLITEMTAXCODE,
+    UnionAll3.BILLITEMTAXRATE BILLITEMTAXRATE,
+    UnionAll3.BILLITEMQTY BILLITEMQTY,
+    UnionAll3.BILLITEMTAXES BILLITEMTAXES,
+    UnionAll3.BILLITEMCHARGES BILLITEMCHARGES,
     UnionAll3.BILLITEMAMOUNT BILLITEMAMOUNT,
     0 AS TOTAMOUNT
-    FROM  (SELECT 
-        UnionAll2.C1 C1, 
-        UnionAll2.TXINVOICEID TXINVOICEID, 
-        UnionAll2.BR_NO BR_NO, 
-        UnionAll2.TXINVOICEITEMID TXINVOICEITEMID, 
-        UnionAll2.TXINVOICEITEMTYPEID TXINVOICEITEMTYPEID, 
-        UnionAll2.BILLITEMTYPE BILLITEMTYPE, 
-        UnionAll2.BILLITEMREFNO BILLITEMREFNO, 
-        UnionAll2.BILLITEMUNITPRICE BILLITEMUNITPRICE, 
-        UnionAll2.BILLITEMTAXCODEID BILLITEMTAXCODEID, 
-        UnionAll2.BILLITEMTAXCODE BILLITEMTAXCODE, 
-        UnionAll2.BILLITEMTAXRATE BILLITEMTAXRATE, 
-        UnionAll2.BILLITEMQTY BILLITEMQTY, 
-        UnionAll2.BILLITEMTAXES BILLITEMTAXES, 
-        UnionAll2.BILLITEMCHARGES BILLITEMCHARGES, 
+    FROM  (SELECT
+        UnionAll2.C1 C1,
+        UnionAll2.TXINVOICEID TXINVOICEID,
+        UnionAll2.BR_NO BR_NO,
+        UnionAll2.TXINVOICEITEMID TXINVOICEITEMID,
+        UnionAll2.TXINVOICEITEMTYPEID TXINVOICEITEMTYPEID,
+        UnionAll2.BILLITEMTYPE BILLITEMTYPE,
+        UnionAll2.BILLITEMREFNO BILLITEMREFNO,
+        UnionAll2.BILLITEMUNITPRICE BILLITEMUNITPRICE,
+        UnionAll2.BILLITEMTAXCODEID BILLITEMTAXCODEID,
+        UnionAll2.BILLITEMTAXCODE BILLITEMTAXCODE,
+        UnionAll2.BILLITEMTAXRATE BILLITEMTAXRATE,
+        UnionAll2.BILLITEMQTY BILLITEMQTY,
+        UnionAll2.BILLITEMTAXES BILLITEMTAXES,
+        UnionAll2.BILLITEMCHARGES BILLITEMCHARGES,
         UnionAll2.BILLITEMAMOUNT BILLITEMAMOUNT
         FROM  (SELECT UnionAll1.C1 C1  ,
        UnionAll1.TXINVOICEID TXINVOICEID  ,
@@ -560,17 +560,17 @@
        UnionAll1.BILLITEMQTY BILLITEMQTY  ,
        UnionAll1.BILLITEMTAXES BILLITEMTAXES  ,
        UnionAll1.BILLITEMCHARGES BILLITEMCHARGES  ,
-       UnionAll1.BILLITEMAMOUNT BILLITEMAMOUNT  
+       UnionAll1.BILLITEMAMOUNT BILLITEMAMOUNT
   FROM ( SELECT 1 C1  ,
                 Filter1.TAXINVOICEID1 TXINVOICEID  ,
                 Filter1.BR_NO BR_NO  ,
-                Filter1.TXINVOICEITEMID TXINVOICEITEMID  ,                
+                Filter1.TXINVOICEITEMID TXINVOICEITEMID  ,
                 Filter1.CODEID1 TXINVOICEITEMTYPEID,
-                CASE 
+                CASE
                      WHEN ( 1265 = Filter1.TXINVOICEITEMTYPEID ) THEN Filter1.INVC_ITM_DESC1
                 ELSE Filter1.CODENAME1
                    END BILLITEMTYPE  ,
-                CASE 
+                CASE
                      WHEN ( ' ' = Filter1.INVC_ITM_ORD_NO ) THEN Filter1.INVC_ITM_CODE
                 ELSE Filter1.INVC_ITM_ORD_NO
                    END BILLITEMREFNO  ,
@@ -581,7 +581,7 @@
                 Filter1.INVC_ITM_QTY BILLITEMQTY  ,
                 Filter1.INVC_ITM_GST_TXS BILLITEMTAXES  ,
                 Filter1.INVC_ITM_CHRG BILLITEMCHARGES  ,
-                Filter1.INVC_ITM_AMT_DUE BILLITEMAMOUNT  
+                Filter1.INVC_ITM_AMT_DUE BILLITEMAMOUNT
          FROM ( SELECT Extent1.TAX_INVC_ID TAXINVOICEID1  ,
                        Extent1.TAX_INVC_REF_NO BR_NO  ,
                        Extent2.INVC_ITM_ID TXINVOICEITEMID  ,
@@ -597,7 +597,7 @@
                        Extent2.INVC_ITM_AMT_DUE INVC_ITM_AMT_DUE  ,
                        Extent3.CODE_NAME CODENAME1  ,
                        Extent4.CODE_ID CODEID1  ,
-                       Extent4.OLD_CODE_ID OLDCODEID1  
+                       Extent4.OLD_CODE_ID OLDCODEID1
                 FROM PAY0031D Extent1
                        LEFT JOIN PAY0032D Extent2   ON Extent1.TAX_INVC_ID = Extent2.TAX_INVC_ID
                        LEFT JOIN SYS0013M Extent3   ON Extent2.INVC_ITM_TYPE = Extent3.CODE_ID
@@ -617,7 +617,7 @@
                 AND Filter1.TXINVOICEITEMID = #{txInvoiceItemId}
               </if>
              </if>
-         UNION ALL 
+         UNION ALL
          SELECT 1 C1  ,
                 Extent6.TAX_INVC_ID TXINVOICEID  ,
                 Extent6.TAX_INVC_REF_NO BR_NO  ,
@@ -632,20 +632,20 @@
                 1 BILLITEMQTY  ,
                 Extent7.INVC_ITM_GST_TXS BILLITEMTAXES  ,
                 Extent7.INVC_ITM_RENTAL_FEE BILLITEMCHARGES  ,
-                Extent7.INVC_ITM_AMT_DUE BILLITEMAMOUNT  
+                Extent7.INVC_ITM_AMT_DUE BILLITEMAMOUNT
          FROM PAY0033D Extent6
                 LEFT JOIN PAY0034D Extent7   ON Extent6.TAX_INVC_ID = Extent7.TAX_INVC_ID
                 JOIN PAY0016D Extent8   ON Extent6.TAX_INVC_REF_NO = Extent8.ACC_BILL_REM
           <if test="refNo != '' ">
           WHERE  ( Extent6.TAX_INVC_REF_NO = #{refNo} ) AND ( Extent8.ACC_BILL_REM = #{refNo} )
-          
+
           <if test="invcItmOrdNo != null and invcItmOrdNo != '' ">
                 AND Extent7.INVC_ITM_ORD_NO = #{invcItmOrdNo}
               </if>
               <if test="txInvoiceItemId != null and txInvoiceItemId != '' ">
                 AND Extent7.INVC_ITM_ID = #{txInvoiceItemId}
               </if>
-              
+
           </if>
            ) UnionAll1
         UNION ALL
@@ -653,21 +653,21 @@
                     Extent9.TAX_INVC_ID TXINVOICEID  ,
                     Extent9.TAX_INVC_REF_NO BR_NO  ,
                     Extent10.INVC_ITM_ID TXINVOICEITEMID  ,
-                    CASE 
-                    WHEN ( 0 <![CDATA[<>]]> Extent11.ACC_BILL_CNTRCT_ID ) THEN CASE 
+                    CASE
+                    WHEN ( 0 <![CDATA[<>]]> Extent11.ACC_BILL_CNTRCT_ID ) THEN CASE
                                                                         WHEN ( 0 = Extent10.INVC_ITM_INSTLMT_NO ) THEN 1327
                     ELSE 1326
                         END
                     WHEN ( 0 = Extent10.INVC_ITM_INSTLMT_NO ) THEN 1280
                     ELSE 1279
                     END TXINVOICEITEMTYPEID  ,
-                    CASE 
+                    CASE
                     WHEN ( 0 = Extent10.INVC_ITM_INSTLMT_NO ) THEN 'RPF'
                     ELSE 'Rental'
                     END BILLITEMTYPE  ,
                     Extent10.INVC_ITM_ORD_NO BILLITEMREFNO  ,
                     Extent10.INVC_ITM_RENTAL_FEE BILLITEMUNITPRICE  ,
-                    CASE 
+                    CASE
                     WHEN ( Extent11.ACC_BILL_TAX_CODE_ID IS NULL ) THEN Extent12.ACC_BILL_TAX_CODE_ID
                     ELSE Extent11.ACC_BILL_TAX_CODE_ID
                     END BILLITEMTAXCODEID  ,
@@ -676,7 +676,7 @@
                     1 BILLITEMQTY  ,
                     Extent10.INVC_ITM_GST_TXS BILLITEMTAXES  ,
                     Extent10.INVC_ITM_RENTAL_FEE - Extent10.INVC_ITM_GST_TXS BILLITEMCHARGES  ,
-                    Extent10.INVC_ITM_RENTAL_FEE BILLITEMAMOUNT  
+                    Extent10.INVC_ITM_RENTAL_FEE BILLITEMAMOUNT
             FROM PAY0029D Extent9
             LEFT JOIN PAY0030D Extent10   ON Extent9.TAX_INVC_ID = Extent10.TAX_INVC_ID
             LEFT JOIN PAY0016D Extent11   ON ( Extent10.INVC_ITM_ORD_NO = Extent11.ACC_BILL_ORD_NO )
@@ -700,7 +700,7 @@
                 Filter5.TAXINVOICEID2 TXINVOICEID  ,
                 Filter5.TAX_INVC_REF_NO BR_NO  ,
                 Filter5.INVC_ITM_ID TXINVOICEITEMID  ,
-                CASE 
+                CASE
                     WHEN ( 1061 = Extent15.ACC_BILL_MODE_ID ) THEN 1281
                 ELSE 1328
                     END TXINVOICEITEMTYPEID  ,
@@ -713,7 +713,7 @@
                 1 BILLITEMQTY  ,
                 Filter5.INVC_ITM_HNDL_FEE_TXS BILLITEMTAXES  ,
                 Filter5.INVC_ITM_HNDL_FEE - Filter5.INVC_ITM_HNDL_FEE_TXS BILLITEMCHARGES  ,
-                Filter5.INVC_ITM_HNDL_FEE BILLITEMAMOUNT  
+                Filter5.INVC_ITM_HNDL_FEE BILLITEMAMOUNT
         FROM ( SELECT Extent13.TAX_INVC_ID TAXINVOICEID2  ,
                 Extent13.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
                 Extent13.TAX_INVC_TASK_ID TAX_INVC_TASK_ID  ,
@@ -721,7 +721,7 @@
                 Extent14.INVC_ITM_ORD_NO INVC_ITM_ORD_NO  ,
                 Extent14.INVC_ITM_GST_RATE INVC_ITM_GST_RATE  ,
                 Extent14.INVC_ITM_HNDL_FEE INVC_ITM_HNDL_FEE  ,
-                Extent14.INVC_ITM_HNDL_FEE_TXS INVC_ITM_HNDL_FEE_TXS  
+                Extent14.INVC_ITM_HNDL_FEE_TXS INVC_ITM_HNDL_FEE_TXS
             FROM PAY0029D Extent13
                 JOIN PAY0030D Extent14   ON Extent13.TAX_INVC_ID = Extent14.TAX_INVC_ID
             WHERE  Extent14.INVC_ITM_HNDL_FEE > UTILS.CONVERT_TO_NUMBER(0,18) ) Filter5
@@ -730,47 +730,47 @@
         WHERE  ( Extent15.ACC_BILL_MODE_ID IN ( 1061,1325 ))
             <if test="refNo != '' ">
             AND ( Filter5.TAX_INVC_REF_NO = #{refNo}) AND ( Extent15.ACC_BILL_REM = #{refNo} )
-            
+
             <if test="invcItmOrdNo != null and invcItmOrdNo != '' ">
                 AND Filter5.INVC_ITM_ORD_NO = #{invcItmOrdNo}
               </if>
               <if test="txInvoiceItemId != null and txInvoiceItemId != '' ">
                 AND Filter5.INVC_ITM_ID = #{txInvoiceItemId}
               </if>
-              
+
             </if>
         ) UnionAll3
 
-        
+
     </select>
-    
+
     <select id="getAdjustmentCnDnAccId" parameterType="Map" resultType="egovMap">
         SELECT ADJ_SET_CR_ACC_ID, ADJ_SET_DR_ACC_ID
-        FROM 
+        FROM
             (
-            SELECT 
+            SELECT
                 ADJ_SET_CR_ACC_ID, ADJ_SET_DR_ACC_ID
-            FROM 
+            FROM
                 PAY0001C
-            WHERE 
+            WHERE
                 ADJ_SET_GRP_ID = #{invoiceType}
                 AND ADJ_SET_NOTE_GRP_ID = #{memoTypeId}
                 AND ADJ_SET_APP_TYPE_ID = #{invoiceItemTypeId})
         WHERE
-            ROWNUM = 1               
-            
+            ROWNUM = 1
+
     </select>
-    
+
     <select id="getAdjustmentId" resultType="int">
       SELECT PAY0011D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
     <select id="getAdjBatchId" resultType="int">
       SELECT PAY0011D_BTCH_SEQ.NEXTVAL FROM DUAL
     </select>
-    
+
      <insert id="saveNewAdjMaster" parameterType="Map">
-        INSERT INTO PAY0011D 
+        INSERT INTO PAY0011D
             (MEMO_ADJ_ID,
 			MEMO_ADJ_REF_NO,
 			MEMO_ADJ_RPT_NO,
@@ -783,11 +783,11 @@
 			MEMO_ADJ_TXS_AMT,
 			MEMO_ADJ_TOT_AMT,
 			MEMO_ADJ_CRT_DT,
-			MEMO_ADJ_CRT_USER_ID,		
+			MEMO_ADJ_CRT_USER_ID,
 			BATCH_ID)
 		VALUES
 		  (
-		      #{memoAdjustId},		      
+		      #{memoAdjustId},
 		      #{memoAdjustRefNo},
 		      #{memoAdjustReportNo},
 		      #{memoAdjustTypeID},
@@ -799,13 +799,13 @@
 		      #{memoAdjustTaxesAmount},
 		      #{memoAdjustTotalAmount},
 		      SYSDATE,
-		      #{memoAdjustCreator},		    
+		      #{memoAdjustCreator},
 		      #{batchId}
         )
     </insert>
-    
+
     <insert id="saveBatchInfo" parameterType="Map">
-        INSERT INTO PAY0123M 
+        INSERT INTO PAY0123M
             (BATCH_ID,MEMO_ADJ_ID)
         VALUES
           (
@@ -813,9 +813,9 @@
               #{memoAdjustId}
         )
     </insert>
-    
+
     <insert id="saveNewAdjDetail" parameterType="Map">
-        INSERT INTO PAY0012D 
+        INSERT INTO PAY0012D
             (
             MEMO_ITM_ID,
 			MEMO_ADJ_ID,
@@ -832,24 +832,24 @@
 			MEMO_ITM_AMT
             )
         VALUES(
-              PAY0012D_SEQ.NEXTVAL,            
+              PAY0012D_SEQ.NEXTVAL,
               #{memoAdjustId},
               #{MemoItemInvoiceItemID},
-              #{memoItemInvoiceItmQty},              
+              #{memoItemInvoiceItmQty},
               #{memoItemCreditAccID},
-              #{memoItemDebitAccID},              
-              #{memoItemTaxCodeID},              
-              #{memoItemStatusID},              
-              #{memoItemRemark},              
+              #{memoItemDebitAccID},
+              #{memoItemTaxCodeID},
+              #{memoItemStatusID},
+              #{memoItemRemark},
               #{memoItemGSTRate},
               #{memoItemCharges},
               #{memoItemTaxes},
               #{memoItemAmount}
         )
     </insert>
-    
+
     <insert id="saveNewAdjHist" parameterType="Map">
-        INSERT INTO PAY0122D 
+        INSERT INTO PAY0122D
             (
             HIST_ID,
             ADJ_INVC_NO,
@@ -860,124 +860,124 @@
             )
         VALUES(
               PAY0122D_SEQ.NEXTVAL,
-              #{memoAdjustInvoiceNo},            
+              #{memoAdjustInvoiceNo},
               #{memoAdjustId},
               #{memoAdjustStatusID} ,
               SYSDATE,
               #{memoAdjustCreator}
         )
     </insert>
-    
+
      <select id="selectAdjDetailPopMaster" parameterType="Map" resultType="egovMap">
-       SELECT 
-        mst.MEMO_ADJ_ID , 
-        mst.MEMO_ADJ_REF_NO , 
-        mst.MEMO_ADJ_RPT_NO , 
-        mst.MEMO_ADJ_TYPE_ID , 
-        mst.MEMO_ADJ_INVC_TYPE_ID , 
-        mst.MEMO_ADJ_STUS_ID , 
-        mst.MEMO_ADJ_REM , 
-        mst.MEMO_ADJ_TXS_AMT , 
-        mst.MEMO_ADJ_TOT_AMT , 
+       SELECT
+        mst.MEMO_ADJ_ID ,
+        mst.MEMO_ADJ_REF_NO ,
+        mst.MEMO_ADJ_RPT_NO ,
+        mst.MEMO_ADJ_TYPE_ID ,
+        mst.MEMO_ADJ_INVC_TYPE_ID ,
+        mst.MEMO_ADJ_STUS_ID ,
+        mst.MEMO_ADJ_REM ,
+        mst.MEMO_ADJ_TXS_AMT ,
+        mst.MEMO_ADJ_TOT_AMT ,
         TO_CHAR(mst.MEMO_ADJ_CRT_DT,'DD/MM/YYYY') AS MEMO_ADJ_CRT_DT ,
-        CASE 
-                WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN misc.TAX_INVC_TYPE ELSE 0 END TAX_INVC_TYPE , 
-        CASE 
-            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_REF_NO 
-            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_REF_NO 
-            ELSE misc.TAX_INVC_REF_NO END TAX_INVC_REF_NO , 
-        CASE 
-            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_CHAR(company.TAX_INVC_REF_DT,'DD/MM/YYYY') 
-            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_CHAR(out.TAX_INVC_REF_DT,'DD/MM/YYYY') 
-            ELSE TO_CHAR(misc.TAX_INVC_REF_DT,'DD/MM/YYYY') END TAX_INVC_REF_DT , 
-        CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(company.TAX_INVC_MONTH) ELSE 0 END TAX_INVC_MONTH , 
-        CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(company.TAX_INVC_YEAR) ELSE 0 END TAX_INVC_YEAR , 
-        CASE 
-            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 'Rental' 
-            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 'Outright' 
-            ELSE type.CODE_MASTER_NAME END MEMO_ADJ_INVC_TYPE_NM , 
-        CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_GRP_NO ELSE '-' END TAX_INVC_GRP_NO 
-        , 0 ORD_ID 
-        , '-' ORD_NO , 
-        CASE WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN misc.TAX_INVC_SVC_NO ELSE '-' END TAX_INVC_SVC_NO , 
-        CASE 
-            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_CUST_NAME 
-            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_CUST_NAME 
-            ELSE misc.TAX_INVC_CUST_NAME END TAX_INVC_CUST_NAME , 
-        CASE 
-            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_CNTC_PERSON 
-            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_CNTC_PERSON 
-            ELSE misc.TAX_INVC_CNTC_PERSON END TAX_INVC_CNTC_PERSON , 
-        CASE 
-            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_ADDR1 || ' ' || company.TAX_INVC_ADDR2 || ' ' || company.TAX_INVC_ADDR3 || ' ' || company.TAX_INVC_POST_CODE || ' ' || company.TAX_INVC_STATE_NAME 
-            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_ADDR1 || ' ' || out.TAX_INVC_ADDR2 || ' ' || out.TAX_INVC_ADDR3 || ' ' || out.TAX_INVC_POST_CODE || ' ' || out.TAX_INVC_STATE_NAME 
-            ELSE misc.TAX_INVC_ADDR1 || ' ' || misc.TAX_INVC_ADDR2 || ' ' || misc.TAX_INVC_ADDR3 || ' ' || misc.TAX_INVC_POST_CODE || ' ' || misc.TAX_INVC_STATE_NAME END ADDRESS , 
-        CASE 
-            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_REM 
-            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_REM ELSE misc.TAX_INVC_REM END TAX_INVC_REM , 
+        CASE
+                WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN misc.TAX_INVC_TYPE ELSE 0 END TAX_INVC_TYPE ,
+        CASE
+            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_REF_NO
+            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_REF_NO
+            ELSE misc.TAX_INVC_REF_NO END TAX_INVC_REF_NO ,
+        CASE
+            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_CHAR(company.TAX_INVC_REF_DT,'DD/MM/YYYY')
+            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_CHAR(out.TAX_INVC_REF_DT,'DD/MM/YYYY')
+            ELSE TO_CHAR(misc.TAX_INVC_REF_DT,'DD/MM/YYYY') END TAX_INVC_REF_DT ,
+        CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(company.TAX_INVC_MONTH) ELSE 0 END TAX_INVC_MONTH ,
+        CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(company.TAX_INVC_YEAR) ELSE 0 END TAX_INVC_YEAR ,
+        CASE
+            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 'Rental'
+            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 'Outright'
+            ELSE type.CODE_MASTER_NAME END MEMO_ADJ_INVC_TYPE_NM ,
+        CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_GRP_NO ELSE '-' END TAX_INVC_GRP_NO
+        , 0 ORD_ID
+        , '-' ORD_NO ,
+        CASE WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN misc.TAX_INVC_SVC_NO ELSE '-' END TAX_INVC_SVC_NO ,
+        CASE
+            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_CUST_NAME
+            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_CUST_NAME
+            ELSE misc.TAX_INVC_CUST_NAME END TAX_INVC_CUST_NAME ,
+        CASE
+            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_CNTC_PERSON
+            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_CNTC_PERSON
+            ELSE misc.TAX_INVC_CNTC_PERSON END TAX_INVC_CNTC_PERSON ,
+        CASE
+            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_ADDR1 || ' ' || company.TAX_INVC_ADDR2 || ' ' || company.TAX_INVC_ADDR3 || ' ' || company.TAX_INVC_POST_CODE || ' ' || company.TAX_INVC_STATE_NAME
+            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_ADDR1 || ' ' || out.TAX_INVC_ADDR2 || ' ' || out.TAX_INVC_ADDR3 || ' ' || out.TAX_INVC_POST_CODE || ' ' || out.TAX_INVC_STATE_NAME
+            ELSE misc.TAX_INVC_ADDR1 || ' ' || misc.TAX_INVC_ADDR2 || ' ' || misc.TAX_INVC_ADDR3 || ' ' || misc.TAX_INVC_POST_CODE || ' ' || misc.TAX_INVC_STATE_NAME ||' '|| misc.ADDR_DTL ||' '|| misc.street END ADDRESS ,
+        CASE
+            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_REM
+            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_REM ELSE misc.TAX_INVC_REM END TAX_INVC_REM ,
         CASE
             WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_OVERDU
                 WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_CHRG ELSE misc.TAX_INVC_CHRG END TAX_INVC_OVERDU  ,
-            CASE 
+            CASE
                 WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 0
                 WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 0 ELSE misc.TAX_INVC_TXS END TAX_INVC_TXS  ,
-            CASE 
+            CASE
                 WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_AMT_DUE
                 WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN OUT.TAX_INVC_AMT_DUE ELSE misc.TAX_INVC_AMT_DUE END TAX_INVC_AMT_DUE  ,
-        status.NAME MEMO_ADJ_STUS_NM , 
-        cd1.CODE_NAME MEMO_ADJ_TYPE_NM , 
-        rsn.RESN_DESC RESN_DESC , 
+        status.NAME MEMO_ADJ_STUS_NM ,
+        cd1.CODE_NAME MEMO_ADJ_TYPE_NM ,
+        rsn.RESN_DESC RESN_DESC ,
         mst.MEMO_ADJ_CRT_USER_ID,
         userinfo.USER_NAME MEMO_ADJ_CRT_USER_NM ,
         dept.DEPT_NAME
-    FROM 
-        PAY0011D mst 
+    FROM
+        PAY0011D mst
         /* LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID */
-        LEFT JOIN PAY0029D company ON mst.MEMO_ADJ_INVC_NO = company.TAX_INVC_REF_NO 
-        LEFT JOIN PAY0031D misc ON mst.MEMO_ADJ_INVC_NO = misc.TAX_INVC_REF_NO 
-        LEFT JOIN PAY0033D out ON mst.MEMO_ADJ_INVC_NO = out.TAX_INVC_REF_NO 
-        LEFT JOIN SYS0038M status ON mst.MEMO_ADJ_STUS_ID = status.STUS_CODE_ID 
-        LEFT JOIN SYS0013M cd1 ON mst.MEMO_ADJ_TYPE_ID = cd1.CODE_ID 
+        LEFT JOIN PAY0029D company ON mst.MEMO_ADJ_INVC_NO = company.TAX_INVC_REF_NO
+        LEFT JOIN PAY0031D misc ON mst.MEMO_ADJ_INVC_NO = misc.TAX_INVC_REF_NO
+        LEFT JOIN PAY0033D out ON mst.MEMO_ADJ_INVC_NO = out.TAX_INVC_REF_NO
+        LEFT JOIN SYS0038M status ON mst.MEMO_ADJ_STUS_ID = status.STUS_CODE_ID
+        LEFT JOIN SYS0013M cd1 ON mst.MEMO_ADJ_TYPE_ID = cd1.CODE_ID
         LEFT JOIN SYS0032M rsn ON mst.MEMO_ADJ_RESN_ID = rsn.RESN_ID
-        LEFT JOIN SYS0013M cd2 ON misc.TAX_INVC_TYPE = cd2.CODE_ID 
-        LEFT JOIN SYS0012M type ON misc.TAX_INVC_TYPE = type.CODE_MASTER_ID 
+        LEFT JOIN SYS0013M cd2 ON misc.TAX_INVC_TYPE = cd2.CODE_ID
+        LEFT JOIN SYS0012M type ON misc.TAX_INVC_TYPE = type.CODE_MASTER_ID
         LEFT JOIN SYS0047M userinfo ON mst.MEMO_ADJ_CRT_USER_ID = userinfo.USER_ID
         LEFT JOIN SYS0040M dept   ON userinfo.USER_DEPT_ID = dept.DEPT_ID
-    WHERE mst.MEMO_ADJ_ID = #{adjId}     
+    WHERE mst.MEMO_ADJ_ID = #{adjId}
     </select>
-    
+
     <select id="selectAdjDetailPopList" parameterType="Map" resultType="egovMap">
-       SELECT 
-		    DISTINCT 
-		    CASE 
-		        WHEN ( 126 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN CASE WHEN ( 0 = company.INVC_ITM_INSTLMT_NO ) THEN 'RPF' ELSE 'Rental' END 
-		        WHEN ( 127 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN out.INVC_ITM_ORD_NO 
-		        ELSE cd.CODE_NAME END BILL_ITM_TYPE , 
-		    CASE 
-		        WHEN ( 126 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN company.INVC_ITM_ORD_NO 
-		        WHEN ( 127 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN out.INVC_ITM_ORD_NO 
-		        ELSE misc.INVC_ITM_ORD_NO END BILL_ITM_REF_NO , 
-		    sub.MEMO_ITM_INVC_ITM_ID , 
-		    sub.MEMO_ITM_INVC_ITM_QTY , 
-		    sub.MEMO_ITM_CHRG , 
-		    sub.MEMO_ITM_TXS , 
-		    sub.MEMO_ITM_AMT  
-		FROM 
-		    PAY0011D mst 
-		    LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID 
-		    LEFT JOIN PAY0032D misc ON sub.MEMO_ITM_INVC_ITM_ID = misc.INVC_ITM_ID 
-		    LEFT JOIN SYS0013M cd ON misc.INVC_ITM_TYPE = cd.CODE_ID 
-		    LEFT JOIN PAY0034D out ON sub.MEMO_ITM_INVC_ITM_ID = out.INVC_ITM_ID 
-		    LEFT JOIN PAY0030D company ON sub.MEMO_ITM_INVC_ITM_ID = company.INVC_ITM_ID 
-		WHERE mst.MEMO_ADJ_ID = #{adjId} 
+       SELECT
+		    DISTINCT
+		    CASE
+		        WHEN ( 126 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN CASE WHEN ( 0 = company.INVC_ITM_INSTLMT_NO ) THEN 'RPF' ELSE 'Rental' END
+		        WHEN ( 127 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN out.INVC_ITM_ORD_NO
+		        ELSE cd.CODE_NAME END BILL_ITM_TYPE ,
+		    CASE
+		        WHEN ( 126 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN company.INVC_ITM_ORD_NO
+		        WHEN ( 127 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN out.INVC_ITM_ORD_NO
+		        ELSE misc.INVC_ITM_ORD_NO END BILL_ITM_REF_NO ,
+		    sub.MEMO_ITM_INVC_ITM_ID ,
+		    sub.MEMO_ITM_INVC_ITM_QTY ,
+		    sub.MEMO_ITM_CHRG ,
+		    sub.MEMO_ITM_TXS ,
+		    sub.MEMO_ITM_AMT
+		FROM
+		    PAY0011D mst
+		    LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID
+		    LEFT JOIN PAY0032D misc ON sub.MEMO_ITM_INVC_ITM_ID = misc.INVC_ITM_ID
+		    LEFT JOIN SYS0013M cd ON misc.INVC_ITM_TYPE = cd.CODE_ID
+		    LEFT JOIN PAY0034D out ON sub.MEMO_ITM_INVC_ITM_ID = out.INVC_ITM_ID
+		    LEFT JOIN PAY0030D company ON sub.MEMO_ITM_INVC_ITM_ID = company.INVC_ITM_ID
+		WHERE mst.MEMO_ADJ_ID = #{adjId}
     </select>
-    
+
     <select id="selectAdjDetailPopHist" parameterType="Map" resultType="egovMap">
-       SELECT 
+       SELECT
 		    A.ADJ_INVC_NO,
             B.MEMO_ADJ_REF_NO,
             A.ADJ_STUS_ID,
-            (CASE 
+            (CASE
                 WHEN A.ADJ_STUS_ID = 1 THEN 'Requested'
                 WHEN A.ADJ_STUS_ID = 4 THEN 'Approved'
                 WHEN A.ADJ_STUS_ID = 21 THEN 'Rejected' ELSE ' ' END) AS ADJ_STUS_NAME,
@@ -985,17 +985,17 @@
             A.ADJ_CRT_USER_ID,
             C.USER_NAME AS ADJ_CRT_USER_NAME,
             D.DEPT_NAME
-		FROM 
+		FROM
 		    PAY0122D A
 		    JOIN PAY0011D B ON A.MEMO_ADJ_ID = B.MEMO_ADJ_ID
 		    LEFT JOIN SYS0047M C ON A.ADJ_CRT_USER_ID = C.USER_ID
 		    LEFT JOIN SYS0040M D   ON C.USER_DEPT_ID = D.DEPT_ID
-		WHERE 
+		WHERE
 		    A.ADJ_INVC_NO = (SELECT MEMO_ADJ_INVC_NO FROM PAY0011D WHERE MEMO_ADJ_ID = #{adjId} )
-		ORDER BY 
-		    A.ADJ_CRT_DT DESC 
+		ORDER BY
+		    A.ADJ_CRT_DT DESC
     </select>
-    
+
      <update id="approvalAdjustmentMaster" parameterType="Map">
         UPDATE PAY0011D SET
             MEMO_ADJ_STUS_ID = #{status},
@@ -1004,16 +1004,16 @@
         WHERE
             MEMO_ADJ_ID = #{adjId}
     </update>
-    
+
     <update id="approvalAdjustmentDetails" parameterType="Map">
         UPDATE PAY0012D SET
             MEMO_ITM_STUS_ID = #{status}
         WHERE
             MEMO_ADJ_ID = #{adjId}
     </update>
-    
+
     <select id="selectAdjMasterForApprovalRental" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             Extent1.MEMO_ADJ_ID AS NOTE_ENTRY_ID  ,
             Extent2.TAX_INVC_GRP_NO AS NOTE_GRP_NO  ,
             Extent1.MEMO_ADJ_REF_NO AS NOTE_REF_NO  ,
@@ -1032,19 +1032,19 @@
             Extent2.TAX_INVC_CNTY AS NOTE_CNTY_NAME  ,
             Extent1.MEMO_ADJ_TXS_AMT AS NOTE_TXS  ,
             Extent1.MEMO_ADJ_TOT_AMT - Extent1.MEMO_ADJ_TXS_AMT AS NOTE_CHRG  ,
-            Extent1.MEMO_ADJ_TOT_AMT AS NOTE_AMT_DUE  
-        FROM 
+            Extent1.MEMO_ADJ_TOT_AMT AS NOTE_AMT_DUE
+        FROM
             PAY0011D Extent1
             LEFT JOIN PAY0029D Extent2   ON Extent1.MEMO_ADJ_INVC_NO = Extent2.TAX_INVC_REF_NO
-        WHERE  
+        WHERE
             Extent1.MEMO_ADJ_ID = #{adjId}
     </select>
-    
+
     <select id="getNoteId" resultType="int">
       SELECT PAY0027D_SEQ.NEXTVAL FROM DUAL
     </select>
-    
-    
+
+
     <insert id="insertAccTaxDebitCreditNote" parameterType="EgovMap">
        INSERT INTO PAY0027D(
 			NOTE_ID,
@@ -1073,7 +1073,7 @@
 			NOTE_CRT_DT,
 			NOTE_CRT_USER_ID)
     VALUES
-            (   
+            (
                 #{noteId},
                 #{noteEntryId},
                 #{noteTypeId},
@@ -1100,9 +1100,9 @@
 				SYSDATE,
 				#{userId})
     </insert>
-    
+
     <select id="selectAdjDetailsForApprovalRental" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
 		       Extent1.MEMO_ITM_INVC_ITM_ID NOTE_ITM_INVC_ITM_ID  ,
 		       Extent2.INVC_ITM_ORD_NO NOTE_ITM_ORD_NO  ,
 		       Extent4.SALES_ORD_ID NOTE_ITM_ORD_ID  ,
@@ -1126,7 +1126,7 @@
 		       Extent3.TAX_INVC_BILL_TYPE NOTE_BILL_TYPE_ID  ,
 		       Extent2.INVC_ITM_TYPE_ID NOTE_TYPE_ID  ,
 		       CASE WHEN ( Extent5.SRV_CNTRCT_ID IS NOT NULL ) THEN Extent5.SRV_CNTRCT_ID ELSE 0 END NOTE_ITM_SRV_CNTRCT_ID
-		  FROM 
+		  FROM
 		    PAY0012D Extent1
 		    LEFT JOIN PAY0030D Extent2   ON Extent1.MEMO_ITM_INVC_ITM_ID = Extent2.INVC_ITM_ID
 		    LEFT JOIN PAY0029D Extent3   ON Extent2.TAX_INVC_ID = Extent3.TAX_INVC_ID
@@ -1136,7 +1136,7 @@
 		    LEFT JOIN SAL0077D Extent5   ON Extent2.INVC_ITM_DESC2 = Extent5.SRV_CNTRCT_REF_NO
 		 WHERE  Extent1.MEMO_ADJ_ID = #{adjId}
     </select>
-    
+
     <insert id="insertAccTaxDebitCreditNoteSub" parameterType="EgovMap">
         INSERT INTO PAY0028D(
 				NOTE_ITM_ID,
@@ -1185,7 +1185,7 @@
 				#{noteItmDueAmt}
 			)
     </insert>
-    
+
     <insert id="insertAccServiceContractLedger" parameterType="Map">
         INSERT INTO PAY0023D (
             SRV_LDGR_ID,
@@ -1217,7 +1217,7 @@
             #{srvLdgrPayType}
         )
     </insert>
-    
+
     <insert id="insertAccRentLedger" parameterType="Map">
         INSERT INTO PAY0022D (
             RENT_RUN_ID,
@@ -1251,71 +1251,71 @@
             0,
             0,
             ''
-        )   
+        )
     </insert>
-    
+
      <select id="selectAdjMasterForApprovalOutright" parameterType="Map" resultType="egovMap">
-        SELECT 
-            adjM.MEMO_ADJ_ID AS NOTE_ENTRY_ID, 
-            invoiced.INVC_ITM_ORD_NO AS NOTE_GRP_NO, 
-            adjM.MEMO_ADJ_REF_NO AS NOTE_REF_NO, 
-            invoice.TAX_INVC_REF_DT AS NOTE_REF_DT, 
-            invoice.TAX_INVC_REF_NO AS NOTE_INVC_NO, 
-            127 AS NOTE_INVC_TYPE_ID, 
-            invoice.TAX_INVC_CUST_NAME AS NOTE_CUST_NAME, 
-            invoice.TAX_INVC_CNTC_PERSON AS NOTE_CONTACT_PERSON, 
-            invoice.TAX_INVC_ADDR1 AS NOTE_ADDR1, 
-            invoice.TAX_INVC_ADDR2 AS NOTE_ADDR2, 
-            invoice.TAX_INVC_ADDR3 AS NOTE_ADDR3, 
-            invoice.TAX_INVC_ADDR4 AS NOTE_ADDR4, 
-            invoice.TAX_INVC_POST_CODE AS NOTE_POST_CODE, 
-            '' AS NOTE_AREA_NAME, 
-            invoice.TAX_INVC_STATE_NAME AS NOTE_STATE_NAME, 
-            invoice.TAX_INVC_CNTY AS NOTE_CNTY_NAME, 
-            adjM.MEMO_ADJ_TXS_AMT AS NOTE_TXS, 
-            (AdjM.MEMO_ADJ_TOT_AMT - adjM.MEMO_ADJ_TXS_AMT) AS NOTE_CHRG, 
-            adjM.MEMO_ADJ_TOT_AMT AS NOTE_AMT_DUE 
-        FROM 
-            PAY0011D adjM 
-            LEFT OUTER JOIN PAY0033D invoice ON adjM.MEMO_ADJ_INVC_NO = invoice.TAX_INVC_REF_NO 
-            LEFT OUTER JOIN PAY0034D invoiced ON invoice.TAX_INVC_ID = invoiced.TAX_INVC_ID 
-        WHERE 
-            adjM.MEMO_ADJ_ID = #{adjId}   
+        SELECT
+            adjM.MEMO_ADJ_ID AS NOTE_ENTRY_ID,
+            invoiced.INVC_ITM_ORD_NO AS NOTE_GRP_NO,
+            adjM.MEMO_ADJ_REF_NO AS NOTE_REF_NO,
+            invoice.TAX_INVC_REF_DT AS NOTE_REF_DT,
+            invoice.TAX_INVC_REF_NO AS NOTE_INVC_NO,
+            127 AS NOTE_INVC_TYPE_ID,
+            invoice.TAX_INVC_CUST_NAME AS NOTE_CUST_NAME,
+            invoice.TAX_INVC_CNTC_PERSON AS NOTE_CONTACT_PERSON,
+            invoice.TAX_INVC_ADDR1 AS NOTE_ADDR1,
+            invoice.TAX_INVC_ADDR2 AS NOTE_ADDR2,
+            invoice.TAX_INVC_ADDR3 AS NOTE_ADDR3,
+            invoice.TAX_INVC_ADDR4 AS NOTE_ADDR4,
+            invoice.TAX_INVC_POST_CODE AS NOTE_POST_CODE,
+            '' AS NOTE_AREA_NAME,
+            invoice.TAX_INVC_STATE_NAME AS NOTE_STATE_NAME,
+            invoice.TAX_INVC_CNTY AS NOTE_CNTY_NAME,
+            adjM.MEMO_ADJ_TXS_AMT AS NOTE_TXS,
+            (AdjM.MEMO_ADJ_TOT_AMT - adjM.MEMO_ADJ_TXS_AMT) AS NOTE_CHRG,
+            adjM.MEMO_ADJ_TOT_AMT AS NOTE_AMT_DUE
+        FROM
+            PAY0011D adjM
+            LEFT OUTER JOIN PAY0033D invoice ON adjM.MEMO_ADJ_INVC_NO = invoice.TAX_INVC_REF_NO
+            LEFT OUTER JOIN PAY0034D invoiced ON invoice.TAX_INVC_ID = invoiced.TAX_INVC_ID
+        WHERE
+            adjM.MEMO_ADJ_ID = #{adjId}
             AND ROWNUM = 1
     </select>
-    
+
     <select id="selectAdjDetailsForApprovalOutright" parameterType="Map" resultType="egovMap">
         SELECT
-            sub.MEMO_ITM_INVC_ITM_ID AS NOTE_ITM_INVC_ITM_ID, 
-			invoice.INVC_ITM_ORD_NO AS NOTE_ITM_ORD_NO, 
-			sales.SALES_ORD_ID AS NOTE_ITM_ORD_ID, 
-			invoice.INVC_ITM_PRODUCT_MODEL AS NOTE_ITM_PRODUCT_MODEL, 
-			invoice.INVC_ITM_PRODUCT_SERIAL_NO AS NOTE_ITM_SERIAL_NO, 
-			invoicem.TAX_INVC_REF_DT AS NOTE_ITM_INSTALL_DT, 
-			invoice.INVC_ITM_ADD1 AS NOTE_ITM_ADD1, 
-			invoice.INVC_ITM_ADD2 AS NOTE_ITM_ADD2, 
-			invoice.INVC_ITM_ADD3 AS NOTE_ITM_ADD3, 
-			'' AS NOTE_ITM_ADD4, 
-			invoice.INVC_ITM_POST_CODE AS NOTE_ITM_POST_CODE, 
-			'' AS NOTE_ITM_AREA_NAME, 
-			invoice.INVC_ITM_STATE_NAME AS NOTE_ITM_STATE_NAME, 
-			invoice.INVC_ITM_CNTY AS NOTE_ITM_CNTY, 
-			sub.MEMO_ITM_INVC_ITM_QTY AS NOTE_ITM_QTY, 
-			sub.MEMO_ITM_AMT AS NOTE_ITM_UNIT_PRC, 
-			sub.MEMO_ITM_GST_RATE AS NOTE_ITM_GST_RATE, 
-			sub.MEMO_ITM_TXS AS NOTE_ITM_GST_TXS, 
-			sub.MEMO_ITM_CHRG AS NOTE_ITM_CHRG, 
-			sub.MEMO_ITM_AMT AS NOTE_ITM_DUE_AMT 
-        FROM 
-            PAY0012D sub 
-            LEFT OUTER JOIN PAY0034D invoice ON sub.MEMO_ITM_INVC_ITM_ID = invoice.INVC_ITM_ID 
-            LEFT OUTER JOIN PAY0033D invoicem ON invoice.TAX_INVC_ID = invoicem.TAX_INVC_ID 
-            LEFT OUTER JOIN SAL0001D sales ON invoice.INVC_ITM_ORD_NO = sales.SALES_ORD_NO 
-        WHERE 
+            sub.MEMO_ITM_INVC_ITM_ID AS NOTE_ITM_INVC_ITM_ID,
+			invoice.INVC_ITM_ORD_NO AS NOTE_ITM_ORD_NO,
+			sales.SALES_ORD_ID AS NOTE_ITM_ORD_ID,
+			invoice.INVC_ITM_PRODUCT_MODEL AS NOTE_ITM_PRODUCT_MODEL,
+			invoice.INVC_ITM_PRODUCT_SERIAL_NO AS NOTE_ITM_SERIAL_NO,
+			invoicem.TAX_INVC_REF_DT AS NOTE_ITM_INSTALL_DT,
+			invoice.INVC_ITM_ADD1 AS NOTE_ITM_ADD1,
+			invoice.INVC_ITM_ADD2 AS NOTE_ITM_ADD2,
+			invoice.INVC_ITM_ADD3 AS NOTE_ITM_ADD3,
+			'' AS NOTE_ITM_ADD4,
+			invoice.INVC_ITM_POST_CODE AS NOTE_ITM_POST_CODE,
+			'' AS NOTE_ITM_AREA_NAME,
+			invoice.INVC_ITM_STATE_NAME AS NOTE_ITM_STATE_NAME,
+			invoice.INVC_ITM_CNTY AS NOTE_ITM_CNTY,
+			sub.MEMO_ITM_INVC_ITM_QTY AS NOTE_ITM_QTY,
+			sub.MEMO_ITM_AMT AS NOTE_ITM_UNIT_PRC,
+			sub.MEMO_ITM_GST_RATE AS NOTE_ITM_GST_RATE,
+			sub.MEMO_ITM_TXS AS NOTE_ITM_GST_TXS,
+			sub.MEMO_ITM_CHRG AS NOTE_ITM_CHRG,
+			sub.MEMO_ITM_AMT AS NOTE_ITM_DUE_AMT
+        FROM
+            PAY0012D sub
+            LEFT OUTER JOIN PAY0034D invoice ON sub.MEMO_ITM_INVC_ITM_ID = invoice.INVC_ITM_ID
+            LEFT OUTER JOIN PAY0033D invoicem ON invoice.TAX_INVC_ID = invoicem.TAX_INVC_ID
+            LEFT OUTER JOIN SAL0001D sales ON invoice.INVC_ITM_ORD_NO = sales.SALES_ORD_NO
+        WHERE
             sub.MEMO_ADJ_ID = #{adjId}
-   
+
     </select>
-    
+
     <insert id="insertAccTradeLedger" parameterType="Map">
         INSERT INTO PAY0035D (
             TRADE_RUN_ID,
@@ -1332,7 +1332,7 @@
 			TRADE_IS_SYNC,
 			R01
         ) VALUES (
-            PAY0035D_SEQ.NEXTVAL,            
+            PAY0035D_SEQ.NEXTVAL,
             0,
             #{tradeSoId},
             #{tradeDocNo},
@@ -1342,20 +1342,20 @@
             #{tradeBatchNo},
             #{tradeInstNo},
             #{userId},
-            SYSDATE,            
+            SYSDATE,
             0,
             0
-        )                            
+        )
     </insert>
-    
+
      <select id="selectAdjMasterForApprovalMisc" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             Extent1.MEMO_ADJ_ID AS NOTE_ENTRY_ID,
             Extent2.TAX_INVC_SVC_NO AS NOTE_GRP_NO,
-            Extent1.MEMO_ADJ_REF_NO  AS NOTE_REF_NO, 
+            Extent1.MEMO_ADJ_REF_NO  AS NOTE_REF_NO,
             Extent2.TAX_INVC_REF_DT AS NOTE_REF_DT  ,
             Extent2.TAX_INVC_REF_NO AS NOTE_INVC_NO  ,
-            128 AS NOTE_INVC_TYPE_ID, 
+            128 AS NOTE_INVC_TYPE_ID,
             Extent2.TAX_INVC_CUST_NAME AS NOTE_CUST_NAME  ,
             Extent2.TAX_INVC_CNTC_PERSON AS NOTE_CONTACT_PERSON  ,
             Extent2.TAX_INVC_ADDR1 AS NOTE_ADDR1  ,
@@ -1368,50 +1368,50 @@
             Extent2.TAX_INVC_CNTY AS NOTE_CNTY_NAME  ,
             Extent1.MEMO_ADJ_TXS_AMT AS NOTE_TXS  ,
             Extent1.MEMO_ADJ_TOT_AMT - Extent1.MEMO_ADJ_TXS_AMT AS NOTE_CHRG  ,
-            Extent1.MEMO_ADJ_TOT_AMT AS NOTE_AMT_DUE  
-        FROM 
+            Extent1.MEMO_ADJ_TOT_AMT AS NOTE_AMT_DUE
+        FROM
             PAY0011D Extent1
             LEFT JOIN PAY0031D Extent2   ON Extent1.MEMO_ADJ_INVC_NO = Extent2.TAX_INVC_REF_NO
-        WHERE  
-            Extent1.MEMO_ADJ_ID = #{adjId}   
+        WHERE
+            Extent1.MEMO_ADJ_ID = #{adjId}
             AND ROWNUM = 1
     </select>
-    
+
     <select id="selectAdjDetailsForApprovalMisc" parameterType="Map" resultType="egovMap">
         SELECT
-		    Extent1.MEMO_ITM_INVC_ITM_ID AS NOTE_ITM_INVC_ITM_ID , 
-		    CASE WHEN ( Extent2.INVC_ITM_ORD_NO IS NOT NULL ) THEN Extent2.INVC_ITM_ORD_NO ELSE ' ' END AS NOTE_ITM_ORD_NO , 
-		    CASE WHEN ( Extent3.SALES_ORD_ID IS NOT NULL ) THEN Extent3.SALES_ORD_ID ELSE 0 END AS NOTE_ITM_ORD_ID , 
-		    Extent2.INVC_ITM_TYPE AS NOTE_ITM_TYPE_ID , 
-		    ' ' AS NOTE_ITM_PRODUCT_MODEL , 
-		    ' ' AS NOTE_ITM_SERIAL_NO , 
-		    NULL AS NOTE_ITM_INSTALL_DT , 
-		    CASE WHEN ( Extent2.INVC_ITM_ADD1 IS NOT NULL ) THEN Extent2.INVC_ITM_ADD1 ELSE ' ' END AS NOTE_ITM_ADD1 , 
-		    CASE WHEN ( Extent2.INVC_ITM_ADD2 IS NOT NULL ) THEN Extent2.INVC_ITM_ADD2 ELSE ' ' END AS NOTE_ITM_ADD2 , 
-		    CASE WHEN ( Extent2.INVC_ITM_ADD3 IS NOT NULL ) THEN Extent2.INVC_ITM_ADD3 ELSE ' ' END AS NOTE_ITM_ADD3 ,  
-		    ' ' AS NOTE_ITM_ADD4 , 
-		    CASE WHEN ( Extent2.INVC_ITM_POST_CODE IS NOT NULL ) THEN Extent2.INVC_ITM_POST_CODE ELSE ' ' END AS NOTE_ITM_POST_CODE , 
-		    ' ' AS NOTE_ITM_AREA_NAME , 
-		    CASE WHEN ( Extent2.INVC_ITM_STATE_NAME IS NOT NULL ) THEN Extent2.INVC_ITM_STATE_NAME ELSE ' ' END AS NOTE_ITM_STATE_NAME , 
-		    CASE WHEN ( Extent2.INVC_ITM_CNTY IS NOT NULL ) THEN Extent2.INVC_ITM_CNTY ELSE ' ' END AS NOTE_ITM_CNTY , 
-		    Extent1.MEMO_ITM_INVC_ITM_QTY AS NOTE_ITM_QTY , 
-		    Extent1.MEMO_ITM_AMT AS NOTE_ITM_UNIT_PRC , 
-		    Extent1.MEMO_ITM_GST_RATE AS NOTE_ITM_GST_RATE , 
-		    Extent1.MEMO_ITM_TXS AS NOTE_ITM_GST_TXS , 
+		    Extent1.MEMO_ITM_INVC_ITM_ID AS NOTE_ITM_INVC_ITM_ID ,
+		    CASE WHEN ( Extent2.INVC_ITM_ORD_NO IS NOT NULL ) THEN Extent2.INVC_ITM_ORD_NO ELSE ' ' END AS NOTE_ITM_ORD_NO ,
+		    CASE WHEN ( Extent3.SALES_ORD_ID IS NOT NULL ) THEN Extent3.SALES_ORD_ID ELSE 0 END AS NOTE_ITM_ORD_ID ,
+		    Extent2.INVC_ITM_TYPE AS NOTE_ITM_TYPE_ID ,
+		    ' ' AS NOTE_ITM_PRODUCT_MODEL ,
+		    ' ' AS NOTE_ITM_SERIAL_NO ,
+		    NULL AS NOTE_ITM_INSTALL_DT ,
+		    CASE WHEN ( Extent2.INVC_ITM_ADD1 IS NOT NULL ) THEN Extent2.INVC_ITM_ADD1 ELSE ' ' END AS NOTE_ITM_ADD1 ,
+		    CASE WHEN ( Extent2.INVC_ITM_ADD2 IS NOT NULL ) THEN Extent2.INVC_ITM_ADD2 ELSE ' ' END AS NOTE_ITM_ADD2 ,
+		    CASE WHEN ( Extent2.INVC_ITM_ADD3 IS NOT NULL ) THEN Extent2.INVC_ITM_ADD3 ELSE ' ' END AS NOTE_ITM_ADD3 ,
+		    ' ' AS NOTE_ITM_ADD4 ,
+		    CASE WHEN ( Extent2.INVC_ITM_POST_CODE IS NOT NULL ) THEN Extent2.INVC_ITM_POST_CODE ELSE ' ' END AS NOTE_ITM_POST_CODE ,
+		    ' ' AS NOTE_ITM_AREA_NAME ,
+		    CASE WHEN ( Extent2.INVC_ITM_STATE_NAME IS NOT NULL ) THEN Extent2.INVC_ITM_STATE_NAME ELSE ' ' END AS NOTE_ITM_STATE_NAME ,
+		    CASE WHEN ( Extent2.INVC_ITM_CNTY IS NOT NULL ) THEN Extent2.INVC_ITM_CNTY ELSE ' ' END AS NOTE_ITM_CNTY ,
+		    Extent1.MEMO_ITM_INVC_ITM_QTY AS NOTE_ITM_QTY ,
+		    Extent1.MEMO_ITM_AMT AS NOTE_ITM_UNIT_PRC ,
+		    Extent1.MEMO_ITM_GST_RATE AS NOTE_ITM_GST_RATE ,
+		    Extent1.MEMO_ITM_TXS AS NOTE_ITM_GST_TXS ,
 		    Extent1.MEMO_ITM_CHRG AS NOTE_ITM_CHRG ,
-		    Extent1.MEMO_ITM_AMT AS NOTE_ITM_DUE_AMT , 
-		    Extent2.INVC_ITM_DESC2 AS NOTE_DESC2 
-        FROM 
-            PAY0012D Extent1 
-            LEFT JOIN PAY0032D Extent2 ON Extent1.MEMO_ITM_INVC_ITM_ID = Extent2.INVC_ITM_ID 
-            LEFT JOIN SAL0001D Extent3 ON ( Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO ) 
-                                                        OR ( ( Extent2.INVC_ITM_ORD_NO IS NULL ) AND ( Extent3.SALES_ORD_NO IS NULL ) ) 
-        WHERE 
-            Extent1.MEMO_ADJ_ID = #{adjId} 
+		    Extent1.MEMO_ITM_AMT AS NOTE_ITM_DUE_AMT ,
+		    Extent2.INVC_ITM_DESC2 AS NOTE_DESC2
+        FROM
+            PAY0012D Extent1
+            LEFT JOIN PAY0032D Extent2 ON Extent1.MEMO_ITM_INVC_ITM_ID = Extent2.INVC_ITM_ID
+            LEFT JOIN SAL0001D Extent3 ON ( Extent2.INVC_ITM_ORD_NO = Extent3.SALES_ORD_NO )
+                                                        OR ( ( Extent2.INVC_ITM_ORD_NO IS NULL ) AND ( Extent3.SALES_ORD_NO IS NULL ) )
+        WHERE
+            Extent1.MEMO_ADJ_ID = #{adjId}
 
-   
+
     </select>
-    
+
     <insert id="insertASLedger" parameterType="Map">
        INSERT INTO PAY0006D (
             AS_LDGR_ID,
@@ -1440,18 +1440,18 @@
 			#{asResultNo},
 			#{asSoId},
 			0,
-			0 
-        )       
+			0
+        )
     </insert>
-    
+
     <select id="selectQuotId" parameterType="String" resultType="int">
        SELECT SRV_MEM_QUOT_ID FROM SAL0093D WHERE SRV_MEM_QUOT_NO = #{value} AND ROWNUM = 1
     </select>
-    
+
     <select id="selectSrvMemId" parameterType="int" resultType="int">
        SELECT SRV_MEM_ID FROM SAL0095D WHERE SRV_MEM_QUOT_ID = #{value} AND ROWNUM = 1
     </select>
-    
+
     <insert id="insertAccSrvMemLedger" parameterType="Map">
         INSERT INTO PAY0024D (
             SRV_MEM_LG_ID,
@@ -1489,103 +1489,103 @@
             MEMO_ADJ_CRT_USER_NM,
             DEPT_NAME,
             MEMO_ADJ_STUS_NM,
-            MEMO_ADJ_CRT_DT,        
+            MEMO_ADJ_CRT_DT,
             RESN_DESC,
             MEMO_ADJ_REM,
             SUM(MEMO_ADJ_TOT_AMT) AS MEMO_ADJ_TOT_AMT
         FROM
-            (        
+            (
             SELECT
 				mst.BATCH_ID,
-				mst.MEMO_ADJ_ID , 
-				mst.MEMO_ADJ_REF_NO , 
-				mst.MEMO_ADJ_RPT_NO , 
-				mst.MEMO_ADJ_TYPE_ID , 
-				mst.MEMO_ADJ_INVC_TYPE_ID , 
-				mst.MEMO_ADJ_STUS_ID , 
-				mst.MEMO_ADJ_REM , 
-				mst.MEMO_ADJ_TXS_AMT , 
-				mst.MEMO_ADJ_TOT_AMT , 
+				mst.MEMO_ADJ_ID ,
+				mst.MEMO_ADJ_REF_NO ,
+				mst.MEMO_ADJ_RPT_NO ,
+				mst.MEMO_ADJ_TYPE_ID ,
+				mst.MEMO_ADJ_INVC_TYPE_ID ,
+				mst.MEMO_ADJ_STUS_ID ,
+				mst.MEMO_ADJ_REM ,
+				mst.MEMO_ADJ_TXS_AMT ,
+				mst.MEMO_ADJ_TOT_AMT ,
 				TO_CHAR(mst.MEMO_ADJ_CRT_DT,'DD/MM/YYYY') AS MEMO_ADJ_CRT_DT ,
-				CASE 
-				    WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN misc.TAX_INVC_TYPE ELSE 0 END TAX_INVC_TYPE , 
-				CASE 
-				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_REF_NO 
-				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_REF_NO 
-				    ELSE misc.TAX_INVC_REF_NO END TAX_INVC_REF_NO , 
-				CASE 
-				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_CHAR(company.TAX_INVC_REF_DT,'DD/MM/YYYY') 
-				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_CHAR(out.TAX_INVC_REF_DT,'DD/MM/YYYY') 
-				    ELSE TO_CHAR(misc.TAX_INVC_REF_DT,'DD/MM/YYYY') END TAX_INVC_REF_DT , 
-				CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(company.TAX_INVC_MONTH) ELSE 0 END TAX_INVC_MONTH , 
-				CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(company.TAX_INVC_YEAR) ELSE 0 END TAX_INVC_YEAR , 
-				CASE 
-				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 'Rental' 
-				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 'Outright' 
-				    ELSE type.CODE_MASTER_NAME END MEMO_ADJ_INVC_TYPE_NM , 
-				CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_GRP_NO ELSE '-' END TAX_INVC_GRP_NO 
-				, 0 ORD_ID 
-				, '-' ORD_NO , 
-				CASE WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN misc.TAX_INVC_SVC_NO ELSE '-' END TAX_INVC_SVC_NO , 
-				CASE 
-				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_CUST_NAME 
-				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_CUST_NAME 
-				    ELSE misc.TAX_INVC_CUST_NAME END TAX_INVC_CUST_NAME , 
-				CASE 
-				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_CNTC_PERSON 
-				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_CNTC_PERSON 
-				    ELSE misc.TAX_INVC_CNTC_PERSON END TAX_INVC_CNTC_PERSON , 
-				CASE 
-				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_ADDR1 || ' ' || company.TAX_INVC_ADDR2 || ' ' || company.TAX_INVC_ADDR3 || ' ' || company.TAX_INVC_POST_CODE || ' ' || company.TAX_INVC_STATE_NAME 
-				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_ADDR1 || ' ' || out.TAX_INVC_ADDR2 || ' ' || out.TAX_INVC_ADDR3 || ' ' || out.TAX_INVC_POST_CODE || ' ' || out.TAX_INVC_STATE_NAME 
-				    ELSE misc.TAX_INVC_ADDR1 || ' ' || misc.TAX_INVC_ADDR2 || ' ' || misc.TAX_INVC_ADDR3 || ' ' || misc.TAX_INVC_POST_CODE || ' ' || misc.TAX_INVC_STATE_NAME END ADDRESS , 
-				CASE 
-				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_REM 
-				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_REM ELSE misc.TAX_INVC_REM END TAX_INVC_REM , 
+				CASE
+				    WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN misc.TAX_INVC_TYPE ELSE 0 END TAX_INVC_TYPE ,
+				CASE
+				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_REF_NO
+				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_REF_NO
+				    ELSE misc.TAX_INVC_REF_NO END TAX_INVC_REF_NO ,
+				CASE
+				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_CHAR(company.TAX_INVC_REF_DT,'DD/MM/YYYY')
+				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_CHAR(out.TAX_INVC_REF_DT,'DD/MM/YYYY')
+				    ELSE TO_CHAR(misc.TAX_INVC_REF_DT,'DD/MM/YYYY') END TAX_INVC_REF_DT ,
+				CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(company.TAX_INVC_MONTH) ELSE 0 END TAX_INVC_MONTH ,
+				CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(company.TAX_INVC_YEAR) ELSE 0 END TAX_INVC_YEAR ,
+				CASE
+				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 'Rental'
+				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 'Outright'
+				    ELSE type.CODE_MASTER_NAME END MEMO_ADJ_INVC_TYPE_NM ,
+				CASE WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_GRP_NO ELSE '-' END TAX_INVC_GRP_NO
+				, 0 ORD_ID
+				, '-' ORD_NO ,
+				CASE WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN misc.TAX_INVC_SVC_NO ELSE '-' END TAX_INVC_SVC_NO ,
+				CASE
+				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_CUST_NAME
+				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_CUST_NAME
+				    ELSE misc.TAX_INVC_CUST_NAME END TAX_INVC_CUST_NAME ,
+				CASE
+				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_CNTC_PERSON
+				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_CNTC_PERSON
+				    ELSE misc.TAX_INVC_CNTC_PERSON END TAX_INVC_CNTC_PERSON ,
+				CASE
+				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_ADDR1 || ' ' || company.TAX_INVC_ADDR2 || ' ' || company.TAX_INVC_ADDR3 || ' ' || company.TAX_INVC_POST_CODE || ' ' || company.TAX_INVC_STATE_NAME
+				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_ADDR1 || ' ' || out.TAX_INVC_ADDR2 || ' ' || out.TAX_INVC_ADDR3 || ' ' || out.TAX_INVC_POST_CODE || ' ' || out.TAX_INVC_STATE_NAME
+				    ELSE misc.TAX_INVC_ADDR1 || ' ' || misc.TAX_INVC_ADDR2 || ' ' || misc.TAX_INVC_ADDR3 || ' ' || misc.TAX_INVC_POST_CODE || ' ' || misc.TAX_INVC_STATE_NAME END ADDRESS ,
+				CASE
+				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_REM
+				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_REM ELSE misc.TAX_INVC_REM END TAX_INVC_REM ,
 				CASE
 				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_OVERDU
 				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN out.TAX_INVC_CHRG ELSE misc.TAX_INVC_CHRG END TAX_INVC_OVERDU  ,
-				CASE 
+				CASE
 				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 0
 				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN 0 ELSE misc.TAX_INVC_TXS END TAX_INVC_TXS  ,
-				CASE 
+				CASE
 				    WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN company.TAX_INVC_AMT_DUE
 				    WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN OUT.TAX_INVC_AMT_DUE ELSE misc.TAX_INVC_AMT_DUE END TAX_INVC_AMT_DUE  ,
-				status.NAME MEMO_ADJ_STUS_NM , 
-				cd1.CODE_NAME MEMO_ADJ_TYPE_NM , 
-				rsn.RESN_DESC RESN_DESC , 
+				status.NAME MEMO_ADJ_STUS_NM ,
+				cd1.CODE_NAME MEMO_ADJ_TYPE_NM ,
+				rsn.RESN_DESC RESN_DESC ,
 				mst.MEMO_ADJ_CRT_USER_ID,
 				userinfo.USER_NAME MEMO_ADJ_CRT_USER_NM ,
 				dept.DEPT_NAME
             FROM
-                PAY0011D mst 
+                PAY0011D mst
                 /* LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID */
-				LEFT JOIN PAY0029D company ON mst.MEMO_ADJ_INVC_NO = company.TAX_INVC_REF_NO 
-				LEFT JOIN PAY0031D misc ON mst.MEMO_ADJ_INVC_NO = misc.TAX_INVC_REF_NO 
-				LEFT JOIN PAY0033D out ON mst.MEMO_ADJ_INVC_NO = out.TAX_INVC_REF_NO 
-				LEFT JOIN SYS0038M status ON mst.MEMO_ADJ_STUS_ID = status.STUS_CODE_ID 
-				LEFT JOIN SYS0013M cd1 ON mst.MEMO_ADJ_TYPE_ID = cd1.CODE_ID 
+				LEFT JOIN PAY0029D company ON mst.MEMO_ADJ_INVC_NO = company.TAX_INVC_REF_NO
+				LEFT JOIN PAY0031D misc ON mst.MEMO_ADJ_INVC_NO = misc.TAX_INVC_REF_NO
+				LEFT JOIN PAY0033D out ON mst.MEMO_ADJ_INVC_NO = out.TAX_INVC_REF_NO
+				LEFT JOIN SYS0038M status ON mst.MEMO_ADJ_STUS_ID = status.STUS_CODE_ID
+				LEFT JOIN SYS0013M cd1 ON mst.MEMO_ADJ_TYPE_ID = cd1.CODE_ID
 				LEFT JOIN SYS0032M rsn ON mst.MEMO_ADJ_RESN_ID = rsn.RESN_ID
-				LEFT JOIN SYS0013M cd2 ON misc.TAX_INVC_TYPE = cd2.CODE_ID 
-				LEFT JOIN SYS0012M type ON misc.TAX_INVC_TYPE = type.CODE_MASTER_ID 
+				LEFT JOIN SYS0013M cd2 ON misc.TAX_INVC_TYPE = cd2.CODE_ID
+				LEFT JOIN SYS0012M type ON misc.TAX_INVC_TYPE = type.CODE_MASTER_ID
 				LEFT JOIN SYS0047M userinfo ON mst.MEMO_ADJ_CRT_USER_ID = userinfo.USER_ID
 				LEFT JOIN SYS0040M dept   ON userinfo.USER_DEPT_ID = dept.DEPT_ID
-          WHERE 
+          WHERE
                 mst.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
                 AND mst.MEMO_ADJ_STUS_ID = 1 )
-          GROUP BY 
+          GROUP BY
                 BATCH_ID,
                 MEMO_ADJ_CRT_USER_ID,
 		        MEMO_ADJ_CRT_USER_NM,
 		        DEPT_NAME,
 		        MEMO_ADJ_STUS_NM,
-		        MEMO_ADJ_CRT_DT,        
+		        MEMO_ADJ_CRT_DT,
 		        RESN_DESC,
-		        MEMO_ADJ_REM              
+		        MEMO_ADJ_REM
     </select>
-    
+
     <select id="selectAdjBatchApprovalPopDetail" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
 		    tb1.BATCH_ID,
 		    tb1.MEMO_ADJ_ID,
 		    tb1.MEMO_ADJ_INVC_TYPE_ID,
@@ -1593,13 +1593,13 @@
 		    tb1.MEMO_ADJ_REF_NO,
 		    tb1.MEMO_ADJ_INVC_NO,
 		    tb1.BILL_ITM_REF_NO,
-		    tb2.CUST_ID, 
+		    tb2.CUST_ID,
 		    tb3.NAME AS CUST_NAME,
 		    tb1.MEMO_ADJ_TOT_AMT
-		     
-        FROM 
-		    (SELECT 
-		            DISTINCT 
+
+        FROM
+		    (SELECT
+		            DISTINCT
 		            mst.BATCH_ID,
 		            mst.MEMO_ADJ_ID,
 		            mst.MEMO_ADJ_INVC_TYPE_ID,
@@ -1607,46 +1607,46 @@
 		            mst.MEMO_ADJ_INVC_NO,
 		            mst.MEMO_ADJ_TYPE_ID,
 		            mst.MEMO_ADJ_STUS_ID,
-		            CASE 
-		                WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN miscm.TAX_INVC_TYPE ELSE 0 END TAX_INVC_TYPE , 
-		            CASE 
-		                WHEN ( 126 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN CASE WHEN ( 0 = company.INVC_ITM_INSTLMT_NO ) THEN 'RPF' ELSE 'Rental' END 
-		                WHEN ( 127 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN out.INVC_ITM_ORD_NO 
-		                ELSE cd.CODE_NAME END BILL_ITM_TYPE , 
-		            CASE 
-		                WHEN ( 126 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN company.INVC_ITM_ORD_NO 
-		                WHEN ( 127 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN out.INVC_ITM_ORD_NO 
-		                ELSE miscs.INVC_ITM_CODE END BILL_ITM_REF_NO , 
-		            sub.MEMO_ITM_INVC_ITM_ID , 
-		            sub.MEMO_ITM_INVC_ITM_QTY , 
-		            sub.MEMO_ITM_CHRG , 
-		            sub.MEMO_ITM_TXS , 
+		            CASE
+		                WHEN 128 = mst.MEMO_ADJ_INVC_TYPE_ID THEN miscm.TAX_INVC_TYPE ELSE 0 END TAX_INVC_TYPE ,
+		            CASE
+		                WHEN ( 126 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN CASE WHEN ( 0 = company.INVC_ITM_INSTLMT_NO ) THEN 'RPF' ELSE 'Rental' END
+		                WHEN ( 127 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN out.INVC_ITM_ORD_NO
+		                ELSE cd.CODE_NAME END BILL_ITM_TYPE ,
+		            CASE
+		                WHEN ( 126 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN company.INVC_ITM_ORD_NO
+		                WHEN ( 127 = mst.MEMO_ADJ_INVC_TYPE_ID ) THEN out.INVC_ITM_ORD_NO
+		                ELSE miscs.INVC_ITM_CODE END BILL_ITM_REF_NO ,
+		            sub.MEMO_ITM_INVC_ITM_ID ,
+		            sub.MEMO_ITM_INVC_ITM_QTY ,
+		            sub.MEMO_ITM_CHRG ,
+		            sub.MEMO_ITM_TXS ,
 		            sub.MEMO_ITM_AMT  ,
 		            mst.MEMO_ADJ_TOT_AMT
-		        FROM 
-		            PAY0011D mst 
+		        FROM
+		            PAY0011D mst
 		            LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID
-		            LEFT JOIN PAY0031D miscm ON mst.MEMO_ADJ_INVC_NO = miscm.TAX_INVC_REF_NO 
-		            LEFT JOIN PAY0032D miscs ON sub.MEMO_ITM_INVC_ITM_ID = miscs.INVC_ITM_ID 
-		            LEFT JOIN SYS0013M cd ON miscs.INVC_ITM_TYPE = cd.CODE_ID 
-		            LEFT JOIN PAY0034D out ON sub.MEMO_ITM_INVC_ITM_ID = out.INVC_ITM_ID 
-		            LEFT JOIN PAY0030D company ON sub.MEMO_ITM_INVC_ITM_ID = company.INVC_ITM_ID 
+		            LEFT JOIN PAY0031D miscm ON mst.MEMO_ADJ_INVC_NO = miscm.TAX_INVC_REF_NO
+		            LEFT JOIN PAY0032D miscs ON sub.MEMO_ITM_INVC_ITM_ID = miscs.INVC_ITM_ID
+		            LEFT JOIN SYS0013M cd ON miscs.INVC_ITM_TYPE = cd.CODE_ID
+		            LEFT JOIN PAY0034D out ON sub.MEMO_ITM_INVC_ITM_ID = out.INVC_ITM_ID
+		            LEFT JOIN PAY0030D company ON sub.MEMO_ITM_INVC_ITM_ID = company.INVC_ITM_ID
 		        WHERE mst.MEMO_ADJ_ID IN (SELECT MEMO_ADJ_ID FROM PAY0123M WHERE BATCH_ID = #{batchId})
 		              AND mst.MEMO_ADJ_STUS_ID = 1
 		        ) tb1
 		        left JOIN SAL0001D tb2
 		ON         tb1.BILL_ITM_REF_NO = tb2.SALES_ORD_NO
 		left JOIN SAL0029D tb3
-		ON tb2.CUST_ID = tb3.CUST_ID             
+		ON tb2.CUST_ID = tb3.CUST_ID
     </select>
-    
-    
+
+
     <select id="selectAdjBatchApprovalPopHist" parameterType="Map" resultType="egovMap">
-       SELECT 
+       SELECT
             A.ADJ_INVC_NO,
             B.MEMO_ADJ_REF_NO,
             A.ADJ_STUS_ID,
-            (CASE 
+            (CASE
                 WHEN A.ADJ_STUS_ID = 1 THEN 'Requested'
                 WHEN A.ADJ_STUS_ID = 4 THEN 'Approved'
                 WHEN A.ADJ_STUS_ID = 21 THEN 'Rejected' ELSE ' ' END) AS ADJ_STUS_NAME,
@@ -1654,15 +1654,15 @@
             A.ADJ_CRT_USER_ID,
             C.USER_NAME AS ADJ_CRT_USER_NAME,
             D.DEPT_NAME
-        FROM 
+        FROM
             PAY0122D A
             JOIN PAY0011D B ON A.MEMO_ADJ_ID = B.MEMO_ADJ_ID
             LEFT JOIN SYS0047M C ON A.ADJ_CRT_USER_ID = C.USER_ID
             LEFT JOIN SYS0040M D   ON C.USER_DEPT_ID = D.DEPT_ID
-        WHERE 
+        WHERE
             A.ADJ_INVC_NO IN (SELECT B.MEMO_ADJ_INVC_NO FROM PAY0123M A JOIN PAY0011D B ON A.MEMO_ADJ_ID = B.MEMO_ADJ_ID WHERE A.BATCH_ID = #{batchId} )
-        ORDER BY 
-            A.ADJ_CRT_DT DESC 
+        ORDER BY
+            A.ADJ_CRT_DT DESC
     </select>
-    
+
 </mapper>
