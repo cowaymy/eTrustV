@@ -77,7 +77,7 @@ function fn_callLogTransaction(){
         //Common.alert(result[0].callRem + " 1");
         if(result != "")
         	{
-        	 $('#veriremark').val(result[0].callRem);  //cyc
+        	 $('#veriremark').val(result[0].callRem);  //CASPER 20180614
         	}
 
     });
