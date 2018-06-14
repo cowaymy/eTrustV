@@ -530,7 +530,7 @@
 			                 WHERE  ( 8 <> Extent1.CALL_STUS_ID )
 			                          AND ( Extent1.CALL_ENTRY_ID = #{callEntryId} ) ) Project1 ) Project1
 			 WHERE  Project1.ROW_NUMBER > 0
-			  ORDER BY Project1.CALL_RESULT_ID ASC
+			  ORDER BY Project1.CALL_RESULT_ID DESC
              ]]>
           </select>
 
