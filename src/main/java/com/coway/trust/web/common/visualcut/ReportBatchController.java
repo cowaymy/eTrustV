@@ -934,6 +934,21 @@ public class ReportBatchController {
 		LOGGER.info("[END] AdminProductivityPreviousMonthCody2...");
 	}
 
+	@RequestMapping(value = "/NeoCallLogReport.do")
+	//@Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
+	public void NeoCallLogReport() {
+		LOGGER.info("[START] NeoCallLog...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/Neo_CallLog.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"Sales Planning" + File.separator + "Neo_CallLog_" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] NeoCallLog...");
+	}
+
 	private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
 			throws IOException {
 		checkArgument(params);
