@@ -12,7 +12,7 @@ var selectedGridValue;
 var gridPros = {
         // 편집 가능 여부 (기본값 : false)
         editable : false,
-        
+
         // 상태 칼럼 사용
         showStateColumn : false
 };
@@ -21,10 +21,10 @@ var gridPros = {
 $(document).ready(function(){
 	discountGridId = GridCommon.createAUIGrid("discounGrid_wrap", discountLayout,"",gridPros);
 	doGetComboDescription('/common/selectCodeList.do', '74', '','discountType', 'S' , ''); //discount 리스트 조회
-	
+
 });
 
-var discountLayout = [ 
+var discountLayout = [
                        {
                            dataField : "salesOrdNo",
                            headerText : "<spring:message code='pay.head.orderNo'/>",
@@ -85,16 +85,16 @@ var discountLayout = [
                                }
                            }
                        }];
-                       
-                       
+
+
 	function fn_orderSearch(){
 	    Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "BILLING_DISCOUNT_MGMT", indicator : "SearchTrialNo"});
 	}
-	
+
 	function fn_orderInfo(ordNo, ordId){
         loadOrderInfo(ordNo, ordId);
   }
-	
+
 	function loadOrderInfo(ordNo, ordId){
 
     	Common.ajax("GET","/payment/selectBasicInfo.do", {"salesOrdId" : ordId}, function(result){
@@ -103,41 +103,41 @@ var discountLayout = [
             $('#salesOrdId').val(result.data.basicInfo.ordId);
             $('#orderNo').val(result.data.basicInfo.ordNo);
             $('#custName').val(result.data.basicInfo.custName);
-            
+
             AUIGrid.setGridData(discountGridId, result.data.discountList);
         });
     }
-    
+
     function fn_createEvent(objId, eventType){
         var e = jQuery.Event(eventType);
         $('#'+objId).trigger(e);
     }
-    
+
     function fn_addNewEntry(){
     	var salesOrdId = $('#salesOrdId').val().trim();
-    	
+
     	if(FormUtil.isEmpty(salesOrdId)){
     		Common.alert("<spring:message code='pay.alert.selectOrderFirst'/>");
     		return;
     	}else{
-    		
+
     		Common.ajax("GET","/payment/selectSalesOrderMById.do", {"salesOrdId" : salesOrdId}, function(result){
-    			
+
                 console.log(result);
                 if(result.data.conversionSchemeId.cnvrSchemeId == 0){
-                	
+
                 	$('#addNewEntryPop').show();
-                	
+
                 }else{
-                	
+
                 	Common.alert("<spring:message code='pay.alert.meagaNotAllow'/>");
                 }
             });
     	}
     }
-    
+
     function fn_saveDiscount(){
-    	
+
         var salesOrdId = $('#salesOrdId').val().trim();
         var discountType = $('#discountType').val();
         var startPeriod = $('#startPeriod').val();
@@ -145,38 +145,38 @@ var discountLayout = [
         var discountAmount = $('#discountAmount').val();
         var remarks = $('#remarks').val().trim();
         var contractId = "";
-        
+
         if(FormUtil.isEmpty(salesOrdId)){
             Common.alert("<spring:message code='pay.alert.selectOrderFirst'/>");
             return;
         }
-    	
+
     	if(discountType == ""){
     		Common.alert("<spring:message code='pay.alert.requiredFieldDisType'/>");
             return;
     	}
-    	
+
     	if(startPeriod == "" || endPeriod == ""){
             Common.alert("<spring:message code='pay.alert.requiredFieldDisPeriod'/>");
             return;
         }
-    	
+
     	if((endPeriod - startPeriod) > 60){
             Common.alert("<spring:message code='pay.alert.cannot60Month'/>");
             return;
         }
-    	
+
     	if(discountAmount == ""){
             Common.alert("<spring:message code='pay.alert.requiredFieldDisAmt'/>");
             return;
         }else{
         	if(discountType == "1251"){
-        		
+
         		if(discountAmount > 0){
         			Common.alert("<spring:message code='pay.alert.mustBeLessThan0'/>");
                     return;
         		}
-        		
+
         	}else{
         		if(discountAmount < 0){
                     Common.alert("<spring:message code='pay.alert.mustNotLessThan0'/>");
@@ -184,12 +184,14 @@ var discountLayout = [
                 }
         	}
         }
-    	
+
     	if(FormUtil.isEmpty(remarks)){
     		Common.alert("<spring:message code='pay.alert.requiredFieldRemarks'/>");
             return;
     	}
-    	
+
+    	discountAmount
+
     	Common.ajax("GET","/payment/saveDiscount.do", $("#billingForm").serialize(), function(result){
             $('#discountType').val('');
             $('#startPeriod').val('');
@@ -197,30 +199,30 @@ var discountLayout = [
             $('#discountAmount').val('');
             $('#remarks').val('');
              $('#addNewEntryPop').hide();
-            
+
             //BASIC INFO
             $('#salesOrdId').val(result.data.basicInfo.ordId);
             $('#orderNo').val(result.data.basicInfo.ordNo);
             $('#custName').val(result.data.basicInfo.custName);
-            
+
             AUIGrid.setGridData(discountGridId, result.data.discountList);
         });
     }
-    
+
     function fn_close() {
         $('#addNewEntryPop').hide();
     }
-    
+
     function fn_disableDiscount(dscntEntryId){
     	var salesOrdId = $('#salesOrdId').val();
-    	
+
     	if(dscntEntryId == ""){
     		Common.alert(dscntEntryId);
     	}else{
-    		
+
     		Common.confirm("<spring:message code='pay.alert.saveDisableDiscount'/>",function (){
                 Common.ajax("GET","/payment/saveDisableDiscount.do", {"dscntEntryId" : dscntEntryId, "salesOrdId" : salesOrdId}, function(result){
-                    
+
                     //BASIC INFO
                     $('#salesOrdId').val(result.data.basicInfo.ordId);
                     $('#orderNo').val(result.data.basicInfo.ordNo);
@@ -229,19 +231,47 @@ var discountLayout = [
                     Common.alert(result.data.resultMessage);
                 });
             });
-    		
+
     	}
     }
-    
+
     function onlyNumber(event){
         event = event || window.event;
         var keyID = (event.which) ? event.which : event.keyCode;
-            if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 || keyID == 110 || keyID == 190){ 
+            if ( (keyID >= 48 && keyID <= 57) || (keyID >= 96 && keyID <= 105) || keyID == 8 || keyID == 46 || keyID == 37 || keyID == 39 || keyID == 110 || keyID == 190){
                 return;
         }else{
                 return false;
         }
     }
+
+
+// Function only allow 2 decimal value with or without (-)
+     function isNumberKey(evt) {
+         var charCode = (evt.which) ? evt.which : event.keyCode
+        		 if (charCode != 45 && charCode != 46 && charCode > 31 && (charCode < 48 || charCode > 57)){
+        		             return false;
+        		 }else{
+         var len = document.getElementById("discountAmount").value.length;
+         var index = document.getElementById("discountAmount").value.indexOf('.');
+
+
+         if (index > 0) {
+             var CharAfterdot = (len + 1) - index;
+             if (CharAfterdot > 3) {
+                 return false;
+             }
+         }
+
+         return true;
+
+         }
+      }
+
+
+
+
+
 
 </script>
 <body>
@@ -284,7 +314,7 @@ var discountLayout = [
 			                <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
 			                <dl class="link_list">
 			                    <dt>Link</dt>
-			                    <dd>                    
+			                    <dd>
 			                    <ul class="btns">
 			                        <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 			                        <li><p class="link_btn type2"><a href="javascript:fn_addNewEntry();"><spring:message code='pay.btn.link.addNewEntry'/></a></p></li>
@@ -321,7 +351,7 @@ var discountLayout = [
 			                    <tr>
 			                        <th scope="row">Discount Type</th>
 			                        <td>
-			                            <select id="discountType" name="discountType" class="w100p"></select>    
+			                            <select id="discountType" name="discountType" class="w100p"></select>
 			                        </td>
 			                     </tr>
 			                     <tr>
@@ -331,13 +361,13 @@ var discountLayout = [
 			                                <p><input id="startPeriod" name="startPeriod" type="text" title="startPeriod" placeholder="" class="w100p" onkeydown='return onlyNumber(event)'/></p>
 			                                <span>~</span>
 			                                <p><input id="endPeriod" name="endPeriod"  type="text" title="endPeriod" placeholder="" class="w100p" onkeydown='return onlyNumber(event)'/></p>
-			                             </div>   
+			                             </div>
 			                        </td>
 			                      </tr>
 			                      <tr>
 			                        <th scope="row">Discount Amount Per Installment</th>
 			                        <td>
-			                               <input id="discountAmount" name="discountAmount" type="text" title="discountAmount" placeholder="" class="w100p" onkeydown='return onlyNumber(event)'/>
+			                               <input id="discountAmount" name="discountAmount" type="text" title="discountAmount" placeholder="" class="w100p" onkeypress="return isNumberKey(event)" />
 			                        </td>
 			                      </tr>
 			                      <tr>
