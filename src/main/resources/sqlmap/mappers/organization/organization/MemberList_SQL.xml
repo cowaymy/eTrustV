@@ -3111,9 +3111,9 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 
 		        APLICNT_SPONS_CODE AS SPONS_CODE,
 		        SYSDATE CRT_DT,
-		        CRT_USER_ID,
+		        #{userid},
 		        SYSDATE UPD_DT,
-		        UPD_USER_ID,  '1' AS stus, APLCTN_ID
+		        #{userid},  '1' AS stus, APLCTN_ID
 		        ,MAIN_DEPT , SUB_DEPT
 		        ,SYSDATE JOIN_DT, AREA_ID, ADDR_DTL, STREET,
 		        #{branchId}
