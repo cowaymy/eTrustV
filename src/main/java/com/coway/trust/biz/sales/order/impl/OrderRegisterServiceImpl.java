@@ -140,8 +140,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	public List<EgovMap> selectPromotionByAppTypeStock2(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 
-		params.put("appTypeId", CommonUtils.changePromoAppTypeId(Integer.parseInt((String) params.get("appTypeId"))));
+		int apptypeid = Integer.parseInt((String)params.get("appTypeId"));
 
+        if (apptypeid == 144){
+	        params.put("appTypeId", apptypeid);
+
+        }
+        else{
+		    params.put("appTypeId", CommonUtils.changePromoAppTypeId(Integer.parseInt((String) params.get("appTypeId"))));
+        }
 		return orderRegisterMapper.selectPromotionByAppTypeStock2(params);
 	}
 
