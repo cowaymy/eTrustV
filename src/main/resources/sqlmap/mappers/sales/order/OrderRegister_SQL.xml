@@ -365,7 +365,7 @@
                   AND T2.PROMO_STUS_ID = 1
                   AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
                   AND T2.PROMO_SRV_MEM_PAC_ID = #{srvPacId}
-                  AND T2.PROMO_TYPE_ID = 2282 <!-- Discount -->
+                  AND T2.PROMO_TYPE_ID IN( 2282, 1034) <!-- Discount -->
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
                   AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
@@ -383,7 +383,7 @@
                    ON T2.PROMO_ID = T1.PROMO_ID
                   AND T2.PROMO_STUS_ID = 1
                   AND T2.PROMO_APP_TYPE_ID IN (#{appTypeId}, DECODE(#{appTypeId}, 2284, 66, 2285, 67, 2286, 68, 2287, 1412, 99999), DECODE(#{appTypeId}, 2286, 2285, 99999))
-                  AND T2.PROMO_TYPE_ID = 2282
+                  AND T2.PROMO_TYPE_ID IN( 2282, 1034)
                   AND 0 = T2.PROMO_IS_TRIAL_CNVR
                   AND TO_CHAR(T2.PROMO_DT_FROM, 'YYYYMMDD') &lt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
                   AND TO_CHAR(T2.PROMO_DT_END,  'YYYYMMDD') &gt;= TO_CHAR(SYSDATE, 'YYYYMMDD')
