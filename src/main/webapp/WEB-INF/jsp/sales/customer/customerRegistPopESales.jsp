@@ -390,12 +390,13 @@
                 }
                 Common.alert("<spring:message code='sal.alert.text.saveCustomerSuccess'/><br/><spring:message code='sal.alert.text.plzKeyInOrdInfo'/><br/>" + " Customer ID : " + result , fn_winClose);
 
+                console.log("Save Customer :: callPrgm :: " + '${callPrgm}');
                 if('${callPrgm}' == 'ORD_REGISTER') {
                     $('#custId').val(result);
                     fn_selectCustInfo();
                 }
                 if('${callPrgm}' == 'PRE_ORD') {
-                    fn_loadCustomer(result, null);
+                   // fn_loadCustomer(result, null);
                 }
                 if('${callPrgm}' == 'PRE_ORD_3PARTY') {
                     fn_loadThirdParty(result, 1);
@@ -416,9 +417,11 @@
     }
 
     function fn_winClose(){
-
+    	//Parent Reload Method Call
+    	window.opener.$("#btnConfirm").click();
         window.close();
         $("#_insCloseBtn").click();
+
     }
 
     // Validation Check
