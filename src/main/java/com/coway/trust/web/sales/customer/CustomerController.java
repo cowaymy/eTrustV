@@ -115,8 +115,11 @@ public class CustomerController {
 	 */
 	@RequestMapping(value = "/customerRegistPopESales.do")
 	public String insertPopESales(@RequestParam Map<String, Object> params, ModelMap model){
+
+		LOGGER.debug("params ======================================>>> " + params);
 		LOGGER.info("##### customerRegist START #####");
 		model.put("callPrgm", params.get("callPrgm"));
+		model.put("nric", params.get("nric"));
 
 			return "sales/customer/customerRegistPopESales";
 	}
@@ -1438,6 +1441,23 @@ public class CustomerController {
 			model.addAttribute("callParam" , params.get("callParam"));
 
 			return "sales/customer/customerNewContactPop";
+		}
+
+		/**
+		 * Add new Contact(Edit)
+		 * @param model
+		 * @param params
+		 * @return
+		 */
+		@RequestMapping(value = "/updateCustomerNewContactPopeSales.do")
+		public String updateCustomerNewContactPopeSales(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
+
+			model.addAttribute("insCustId", params.get("custId"));
+
+			//Page Param
+			model.addAttribute("callParam" , params.get("callParam"));
+
+			return "sales/customer/customerNewContactPopeSales";
 		}
 
 
