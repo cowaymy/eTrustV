@@ -58,7 +58,7 @@ function fn_generateReport(){
         }
 
         if($("#bankAcc").val() != "") {
-            whereSQL += " AND A.F_TRNSC_REM = '" + $("#bankAcc").val() + "' ";
+            whereSQL += " AND B.F_BANK_JRNL_ACC_ID = '" + $("#bankAcc").val() + "' ";
         }
 
         var date = new Date().getDate();
