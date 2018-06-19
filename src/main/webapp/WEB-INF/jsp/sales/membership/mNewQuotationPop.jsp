@@ -484,10 +484,11 @@ function fn_onChange_cPromotionpac(o){
                      if(result.length>0){
 
                         // var oriprice                = Number($("#hiddenPacOriPrice").val()) ;
-                         var oriprice                = Number($("#hiddenNomalPrice").val()) ;
+                        //pacYear Added by Kit - 20180619
+                         var pacYear   =  parseInt($("#DUR").val() ,10) / 12;
+                         var oriprice                = Number($("#hiddenNomalPrice").val()) / pacYear ;
                          var promoPrcPrcnt     = Number( result[0]. promoPrcPrcnt) ;
                          var promoAddDiscPrc = Number( result[0]. promoAddDiscPrc) ;
-
 
 
                          if(result[0].promoDiscType =="0"){       //%
@@ -496,7 +497,7 @@ function fn_onChange_cPromotionpac(o){
                              // $("#txtPackagePrice").html(  (oriprice -  Math.floor(  ( oriprice * ( promoPrcPrcnt /100 )) - promoAddDiscPrc  )) );
 
 
-                               var t1 = oriprice - ( oriprice * ( promoPrcPrcnt /100 ) );
+                               var t1 = Math.floor(oriprice - ( oriprice * ( promoPrcPrcnt /100 ) )) * pacYear;
                                var t2 = 0;
                                if($("#eurCertYn").val() == "N"){
                                    //t2 =    (t1 -  promoAddDiscPrc) * 100 /106; -- without GST 6% edited by TPY 23/05/2018
