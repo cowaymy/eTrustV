@@ -58,7 +58,7 @@
             $('#hiddenPreOrdId').val(preOrdId);
             $('#hiddenSof').val(sofNo);
 
-            if(stusId == 4 || stusId == 21){
+            if(stusId == 4){
                 Common.alert("Failed");
             }
             else{

@@ -148,8 +148,8 @@
 
             fn_clearRentPayMode();
             fn_clearRentPay3thParty();
-            fn_clearRentPaySetCRC();
-            fn_clearRentPaySetDD();
+            //fn_clearRentPaySetCRC();
+            //fn_clearRentPaySetDD();
 
             //CLEAR BILLING GROUP
             fn_clearBillGroup();
@@ -274,8 +274,8 @@
 
             console.log('rentPayMode click event');
 
-            fn_clearRentPaySetCRC();
-            fn_clearRentPaySetDD();
+            //fn_clearRentPaySetCRC();
+            //fn_clearRentPaySetDD();
 
             var rentPayModeIdx = $("#rentPayMode option:selected").index();
             var rentPayModeVal = $("#rentPayMode").val();
@@ -919,7 +919,7 @@
             custBillCustId       : $('#hiddenCustId').val(),
             custBillCntId        : $("#hiddenCustCntcId").val(),
             custBillAddId        : $("#hiddenBillAddId").val(),
-            custBillRem          : $('#billRem').val().trim(),
+            //custBillRem          : $('#billRem').val().trim(),
             custBillEmail        : $('#billMthdEmailTxt1').val().trim(),
             custBillIsSms        : $('#billMthdSms1').is(":checked") ? 1 : 0,
             custBillIsPost       : $('#billMthdPost').is(":checked") ? 1 : 0,
@@ -1529,7 +1529,6 @@
 </ul>
 </aside><!-- title_line end -->
 <form id="frmCustSearch" name="frmCustSearch" action="#" method="post">
-    <input id="hiddenNric" name="hiddenNric" type="hidden" value="1" />
     <input id="selType" name="selType" type="hidden" value="1" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>

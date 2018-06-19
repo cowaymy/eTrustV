@@ -60,7 +60,9 @@
         //temp for individual only
         /********************************************************/
         $("#_cmbTypeId_").val($('input[name=cmbTypeId]:checked').val());
+        $("#_nric_").val('${nric}');
         onChangeCompanyType($("#_cmbTypeId_").val());
+        fn_nricChkAndSuggDob($("#_nric_").val());
 
       //UpperCase Field
         $("#_nric_").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
@@ -288,12 +290,14 @@
             $("select[name=cmbRace]").removeClass("w100p disabled");
             $("select[name=cmbRace]").addClass("w100p");
             $("select[name=cmbRace]").removeAttr("disabled");
-            $("#_dob_").attr({'disabled' : false , 'class' : 'j_date3 w100p'});
 //            $("select[name=dob]").removeAttr("readonly");
-            $("#genderForm").removeAttr('disabled');
-            $("input:radio[name='gender']").attr("disabled" , false);
-            $('input:radio[name="gender"][value="M"]').prop('checked', true);
+            //$("#genderForm").removeAttr('disabled');
+            //$("input:radio[name='gender']").attr("disabled" , false);
+            //$('input:radio[name="gender"][value="M"]').prop('checked', true);
             $("#_oldNric_").attr({"disabled" : false , "class" : "w100p"});
+
+            $("#_dob_").attr({'disabled' : true , 'class' : 'j_date3 w100p'});
+            $("#_nric_").attr({"disabled" : true , "class" : "w100p"});
         }else{
             $("#_oldNric_").val('');
             $("#_oldNric_").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
