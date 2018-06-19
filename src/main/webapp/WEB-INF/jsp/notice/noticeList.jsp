@@ -71,7 +71,7 @@
     // 그리드 속성 설정
     var gridPros = {
 
-        // 페이징 사용       
+        // 페이징 사용
         usePaging: true,
 
         // 한 화면에 출력되는 행 개수 20(기본값:20)
@@ -185,7 +185,9 @@
 
     <section class="search_result"><!-- search_result start -->
         <ul class="right_btns">
-            <li><p class="btn_blue"><a id="newPop" onclick="javascript:fn_newNotice();" href="#"><spring:message code='notice.btn.new'/></a></p></li>
+            <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                <li><p class="btn_blue"><a id="newPop" onclick="javascript:fn_newNotice();" href="#"><spring:message code='notice.btn.new'/></a></p></li>
+            </c:if>
         </ul>
         <br>
 
