@@ -1057,7 +1057,7 @@ function fn_inputAmt(obj){
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <li><a href="#" class="on" id="_purchaseTab"><spring:message code="sal.title.text.purcInfo" /></a></li>
-    <li id="_payTab"><a id="_paymentTab"><spring:message code="sal.text.payMode" /></a></li>
+<%--     <li id="_payTab"><a id="_paymentTab"><spring:message code="sal.text.payMode" /></a></li> --%>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
