@@ -205,7 +205,7 @@
     function fn_login() {
         var userId = $("#userId").val();
         var password = $("#password").val();
-
+console.log("login");
         if (userId == "") {
             if ($("#popup_wrap").attr("alert") != "Y") {
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='ID'/>");
@@ -243,10 +243,27 @@
                 }
                 else {  // 재로그인을 하지 않을려면, popup에서 호출.
                     fn_configCookies(userId);
-                    if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
-                    	fn_goMain();
-                    }else{
-                    	fn_goMainExternal();
+
+                    // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
+                    if(result.data.userTypeId == "2") {
+
+                        // Check agreement confirmation status from HP Applicant table
+                        Common.ajax("GET", "/organization/getCDCnfm.do", {userId : userId}, function(result1) {
+                            if(result1.status == "Y") {
+                                fn_goMain();
+                            } else if(result1.status == "N") {
+                                Common.popupDiv("/organization/cdAgreement.do", $("#loginForm").serializeJSON(), null, false, '_cdAgreementPop');
+                            } else if(result1.status == "R") {
+                                Common.alert("Application has been rejected.");
+                            }
+                        });
+                    // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - End
+                    } else {
+                        if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
+                            fn_goMain();
+                        }else{
+                            fn_goMainExternal();
+                        }
                     }
                 }
             }
@@ -265,6 +282,18 @@
                 }
             });
     }
+
+    // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
+    function validateCDcnfm() {
+        Common.ajax("GET", "/organization/getCDCnfm.do", {userId : $("#userId").value()}, function(result1) {
+            if(result1.status == "Y") {
+                return "Y";
+            } else {
+                return "N";
+            }
+        });
+    }
+ // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - End
 
     function fnCreateEvent(objId, eventType) {
         var e = jQuery.Event(eventType);
