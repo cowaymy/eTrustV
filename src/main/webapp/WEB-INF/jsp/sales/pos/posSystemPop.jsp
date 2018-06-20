@@ -370,12 +370,12 @@ $(document).ready(function() {
     		/* //Save
             Common.confirm("Will you proceed with payment?", fn_payProceed, fn_payPass); */
 
-
+/*
             if(null == $("#_payTrIssueDate").val() || '' == $("#_payTrIssueDate").val()){
             	Common.alert('<spring:message code="sal.alert.msg.selectTrIssuedDate" />');
             	$("#_payTrIssueDate").focus();
             	return;
-            }
+            } */
             //Dup Validation
             /*   if (this.txtTotal.Text.Replace("RM", string.Empty) != "0")
             {
@@ -385,7 +385,7 @@ $(document).ready(function() {
                     message += "* Please select a branch.<br />";
                 }
             } */
-            if( null == $("#_payBrnchCode").val() || '' == $("#_payBrnchCode").val()){
+           /*  if( null == $("#_payBrnchCode").val() || '' == $("#_payBrnchCode").val()){
             	Common.alert('<spring:message code="sal.alert.msg.selectABranch" />');
             	$("#_payBrnchCode").focus();
             	return;
@@ -395,17 +395,17 @@ $(document).ready(function() {
             if(null == $("#_payDebtorAcc").val() ||  '' == $("#_payDebtorAcc").val()){
             	Common.alert('<spring:message code="sal.alert.msg.selectDebAcc" />');
             	return;
-            }
+            } */
 
             //Charge And Pay
             //
-            var payTotAmt = fn_calcuPayAmt();
+/*             var payTotAmt = fn_calcuPayAmt();
             var purchTotAmt = fn_calcuPurchaseAmt();
 
             if( payTotAmt == null || payTotAmt == 0 || purchTotAmt == null || purchTotAmt == 0 || (payTotAmt != purchTotAmt)){
             	Common.alert('<spring:message code="sal.alert.msg.payMethodProhibit" />');
             	return;
-            }
+            } */
 
             //Save
             fn_payProceed();
@@ -1057,7 +1057,7 @@ function fn_inputAmt(obj){
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1">
     <li><a href="#" class="on" id="_purchaseTab"><spring:message code="sal.title.text.purcInfo" /></a></li>
-<%--     <li id="_payTab"><a id="_paymentTab"><spring:message code="sal.text.payMode" /></a></li> --%>
+<%--    <li id="_payTab"><a id="_paymentTab"><spring:message code="sal.text.payMode" /></a></li> --%>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
