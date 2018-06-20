@@ -132,10 +132,12 @@ Common.ajax("GET", "/sales/membershipRentalChannel/selectPatsetInfo", {  SRV_CNT
               $("#Credit_Card").attr("style" ,"display:inline");
               $("#Direct_Debit").attr("style" ,"display:none");
 
+              $("#hiddenRentPayCRCID").val(resultPaysetInfo.custCrcId);
               $("#txtRentPayCRCNo").val(resultPaysetInfo.custCrcNo);
               $("#txtRentPayCRCType").val(resultPaysetInfo.codeName1);
               $("#txtRentPayCRCName").val(resultPaysetInfo.custCrcOwner);
               $("#txtRentPayCRCExpiry").val(resultPaysetInfo.custCrcExpr);
+              $("#hiddenCRCBankId").val(resultPaysetInfo.bankId);
               $("#txtRentPayCRCBank").val(resultPaysetInfo.c9 + " - " + resultPaysetInfo.c10);
               $("#txtRentPayCRCCardType").val(resultPaysetInfo.codeName);
 
@@ -148,9 +150,11 @@ Common.ajax("GET", "/sales/membershipRentalChannel/selectPatsetInfo", {  SRV_CNT
               $("#Credit_Card").attr("style" ,"display:none");
               $("#Direct_Debit").attr("style" ,"display:inline");
 
+              $("#hiddenRentPayBankAccID").val(resultPaysetInfo.custAccId);
               $("#txtRentPayBankAccNo").val(resultPaysetInfo.custAccNo);
               $("#txtRentPayBankAccType").val(resultPaysetInfo.codeName3);
               $("#txtRentPayBankAccName").val( resultPaysetInfo.custAccOwner);
+              $("#hiddenAccBankId").val(resultPaysetInfo.bankId);
               $("#txtRentPayBankAccBankBranch").val(resultPaysetInfo.custAccBankBrnch);
               $("#txtRentPayBankAccBank").val(resultPaysetInfo.c9 + " - " + resultPaysetInfo.c10);
 
@@ -182,10 +186,12 @@ Common.ajax("GET", "/sales/membershipRentalChannel/selectPatsetInfo", {  SRV_CNT
               //this.lblRentPayCompulsory7.Visible = true;
 
               $("#cmbRejectReason").removeAttr("disabled");
+
           }
 
 	      $("#cmbPayTerm").val(resultPaysetInfo.payTerm == "" ? resultPaysetInfo.payTerm  :0);
 	      fn_LoadRejectReasonList(resultPaysetInfo.modeId ,  resultPaysetInfo.failResnId);
+	      $("#cmbRejectReason").val(resultPaysetInfo.failResnId);
 	}
 });
 }
@@ -588,7 +594,7 @@ function fn_setSaveForm(){
 		    customerID:$('#paybyCk').is(':checked')?$("#hiddenThirdPartyID").val() :$("#txtThirdPartyID").val()  ,
 		    editTypeID:0,     // what is this?
 		    nRICOld:$("#txtRentPayIC").val()!=""?$("#txtRentPayIC").val()   : "" ,
-		    failReasonID:$('#rejectChbox').is(':checked')?$("#cmbRentPaymode").val()  : 0,
+		    failReasonID:$('#rejectChbox').is(':checked')?$("#cmbRejectReason").val()  : 0,
 		    issuedNRIC:_issuedNRIC,
 		    aeonConvert:false,    // What is this?
 		    remark :  "",     //remark 없음
@@ -811,7 +817,8 @@ function fn_ValidRequiredField(){
     	          console.log(" dpRejectDate valid  end...===>");
     		  }
     	  }
-    	  if (idx <= -1  ){
+    	  //if (idx <= -1  ){
+    		 if( $('#cmbRejectReason').val() =="" ){
     	        rV = false;
     	        rMessage += "* Reject select the reject reason.<br />";
     	 }
