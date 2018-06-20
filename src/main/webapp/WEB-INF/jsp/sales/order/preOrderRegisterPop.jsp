@@ -1473,7 +1473,10 @@
 
             	$('#appType').val("66");
             	$('#appType').prop("disabled", true);
-            	$('#appType').change();
+
+            	if($('#ordProudct').val() == null){
+            		   $('#appType').change();
+            	}
 
             	$('[name="advPay"]').prop("disabled", true);
             	$('#advPayNo').prop("checked", true);
@@ -1530,6 +1533,7 @@
 </aside><!-- title_line end -->
 <form id="frmCustSearch" name="frmCustSearch" action="#" method="post">
     <input id="selType" name="selType" type="hidden" value="1" />
+    <input id="callPrgm" name="callPrgm" type="hidden" value="PRE_ORD" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -1541,9 +1545,9 @@
 <tbody>
 <tr>
 	<th scope="row">NRIC/Company No</th>
-	<td><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p" /></td>
+	<td><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p"  value=""'/></td>
 	<th scope="row">eSales(SOF) No</th>
-	<td><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p" /></td>
+	<td><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p"   value=""'/></td>
 </tr>
 <tr>
     <th scope="row" colspan="4" ><span class="must"><spring:message code='sales.msg.ordlist.icvalid'/></span></th>
@@ -1691,8 +1695,8 @@
 <section id="scAnothCntc">
 
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnNewCntc" href="#">Add New Contact</a></p></li>
     <li><p class="btn_grid"><a id="btnSelCntc" href="#">Select Another Contact</a></p></li>
+    <li><p class="btn_grid"><a id="btnNewCntc" href="#">Add New Contact</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -1737,8 +1741,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
+    <li><p class="btn_grid"><a id="btnSelInstAddr" href="#">Select Existing Address</a></p></li>
 	<li><p class="btn_grid"><a id="btnNewInstAddr" href="#">Add New Address</a></p></li>
-	<li><p class="btn_grid"><a id="btnSelInstAddr" href="#">Select Existing Address</a></p></li>
 </ul>
 
 <table class="type1"><!-- table start -->
@@ -2039,8 +2043,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="addCreditCardBtn" href="#">Add New Credit Card</a></p></li>
     <li><p class="btn_grid"><a id="selCreditCardBtn" href="#">Select Another Credit Card</a></p></li>
+    <li><p class="btn_grid"><a id="addCreditCardBtn" href="#">Add New Credit Card</a></p></li>
 </ul>
 <!------------------------------------------------------------------------------
     Credit Card - Form ID(crcForm)
@@ -2095,8 +2099,8 @@
 </aside><!-- title_line end -->
 
 <ul class="right_btns mb10">
-    <li><p class="btn_grid"><a id="btnAddBankAccount" href="#">Add New Bank Account</a></p></li>
     <li><p class="btn_grid"><a id="btnSelBankAccount" href="#">Select Another Bank Account</a></p></li>
+    <li><p class="btn_grid"><a id="btnAddBankAccount" href="#">Add New Bank Account</a></p></li>
 </ul>
 <!------------------------------------------------------------------------------
     Direct Debit - Form ID(ddForm)
