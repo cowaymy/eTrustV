@@ -139,195 +139,222 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
 
 	@Transactional
-	@Override
-	public String saveMember(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) {
+    @Override
+    public String saveMember(Map<String, Object> params, List<Object> docType, SessionVO sessionVO) {
 
-		String appId="";
-		String memCode = "";
-		Map<String, Object> codeMap1 = new HashMap<String, Object>();
-		Map<String, Object> MemApp = new HashMap<String, Object>();
-		logger.debug("params : {}", params);
-		if(Integer.parseInt((String) params.get("memberType")) == 2803){   //if HP Applicant
+        String appId = "";
+        String memCode = "";
 
-			MemApp.put("applicationID", 0);
-			MemApp.put("applicantCode", "");
-			MemApp.put("applicantType",Integer.parseInt((String) params.get("memberType")));
-			MemApp.put("applicantName",params.get("memberNm").toString());
-			MemApp.put("applicantFullName",params.get("memberNm").toString());
-			MemApp.put("applicantIdentification",getRandomNumber(5));
-			MemApp.put("applicantNRIC",params.get("nric").toString());
-			MemApp.put("applicantDOB",params.get("Birth").toString());
-			MemApp.put("applicantGender", params.get("gender"));
-			MemApp.put("applicantRace",Integer.parseInt((String) params.get("cmbRace")));
-			MemApp.put("applicantMarital",Integer.parseInt((String) params.get("marrital")));
-			MemApp.put("applicantNationality",Integer.parseInt((String) params.get("national")));
-			//MemApp.put("applicantAdd1", params.get("address1").toString().trim()!=null ? params.get("address1").toString().trim() : "");
-			//MemApp.put("applicantAdd2", params.get("address2").toString().trim()!=null ? params.get("address2").toString().trim() : "");
-			//MemApp.put("applicantAdd3", params.get("address3").toString().trim()!=null ? params.get("address3").toString().trim() : "");
-			//MemApp.put("applicantAdd4","");
-			//MemApp.put("applicantAreald",params.get("area")!=null ? Integer.parseInt(params.get("area").toString().trim()) : 0);
-			//MemApp.put("applicantPostCodeId",params.get("postCode")!=null ? Integer.parseInt(params.get("postCode").toString().trim()) : 0);
-			//MemApp.put("applicantStateId",params.get("state") !=null ? Integer.parseInt(params.get("state").toString().trim()) : 0);
-			//MemApp.put("applicantCountryId",params.get("country")!=null ? Integer.parseInt(params.get("country").toString().trim()) : 0);
-			MemApp.put("applicantTelOffice",params.get("officeNo").toString().trim()!=null ? params.get("officeNo").toString().trim() : "");
-			MemApp.put("applicantTelHouse",params.get("residenceNo").toString().trim()!=null ? params.get("residenceNo").toString().trim() : "");
-			MemApp.put("applicantTelMobile",params.get("mobileNo").toString().trim()!=null ? params.get("mobileNo").toString().trim() : "");
-			MemApp.put("applicantEmail",params.get("email").toString().trim()!=null ? params.get("email").toString().trim() : "");
+        logger.debug("params : {}", params);
+        // 2018-06-18 - LaiKW - Added trainee record to be inserted into applicant table
+        // If HP Applicant or Trainee
+        if (Integer.parseInt((String) params.get("memberType")) == 2803) {
+            return insertApplicant(params, sessionVO);
+        } else {
 
-			MemApp.put("applicantSpouseCode",params.get("spouseCode").toString().trim()!=null ? params.get("spouseCode").toString().trim() : "");
-			MemApp.put("applicantSpouseName",params.get("spouseName").toString().trim()!=null ? params.get("spouseName").toString().trim() : "");
-			MemApp.put("applicantSpouseNRIC",params.get("spouseNric").toString().trim()!=null ? params.get("spouseNric").toString().trim() : "");
-			MemApp.put("applicantSpouseOccupation",params.get("spouseOcc").toString().trim()!=null ? params.get("spouseOcc").toString().trim() : "");
-			MemApp.put("applicantSpouseTelContact",params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
-			MemApp.put("applicantSpouseDOB",params.get("spouseDob").toString().trim()!=null ? params.get("spouseDob").toString().trim() :"01/01/1900");
-			MemApp.put("applicantEduLevel",params.get("educationLvl")!=null && params.get("educationLvl")!="" ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
-			MemApp.put("applicantLanguage",params.get("language")!="" && params.get("language")!=null ? Integer.parseInt(params.get("language").toString().trim()) : 0);
-			MemApp.put("applicantBankID",Integer.parseInt(params.get("issuedBank").toString()));
-			MemApp.put("applicantBankAccNo",params.get("bankAccNo").toString().trim());
-			MemApp.put("applicantSponsorCode",params.get("sponsorCd").toString().trim()!=null ? params.get("sponsorCd").toString().trim() : "");
-			MemApp.put("applicantTransport",0);
-			MemApp.put("remark","");
-			MemApp.put("statusId",44);
-			MemApp.put("created",new Date());
-			//MemApp.put("creator",52366);
-			MemApp.put("creator",sessionVO.getUserId());
-			MemApp.put("updated",new Date());
-			//MemApp.put("updator",52366);
-			MemApp.put("updator",sessionVO.getUserId());
-			MemApp.put("confirmation",false);
-			MemApp.put("confirmDate","01/01/1900");
-			MemApp.put("deptCode",params.get("deptCd").toString());
-			//addr 주소 가져오기
-			//MemApp.put("areaId",params.get("searchSt1").toString());
-			MemApp.put("areaId",params.get("areaId").toString());
-			MemApp.put("streetDtl",params.get("streetDtl")!= null ?params.get("streetDtl").toString() : "");
-			MemApp.put("addrDtl",params.get("addrDtl")!= null ? params.get("addrDtl").toString() : "");
+            // Mirror params value for applicant table insertion
+            Map<String, Object> paramM = new HashMap<String, Object> ();
+            paramM.putAll(params);
 
-			//Department
-			//MemApp.put("searchdepartment",  params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
-			MemApp.put("searchdepartment",   "");
-			MemApp.put("searchSubDept"		,  "");
+            int rank = 0;
+            if (params.get("memberType").equals("1")) {
+                rank = 433;
+            }
+            if (params.get("memberType").equals("2") || params.get("memberType").equals("3")) {
+                rank = 53;
+            }
+            if (params.get("memberType").equals("4")) {
+                rank = 427;
+            }
 
-			logger.debug("MemApp : {}",MemApp);
-			EgovMap appNo = getDocNo("145");
-			MemApp.put("applicantCode", appNo.get("docNo"));
-			logger.debug("appNo : {}",appNo);
-			updateDocNoNumber("145");
+            params.put("memberID", 0);
+            params.put("memberCode", "");
+            params.put("memberType", Integer.parseInt((String) params.get("memberType")));
+            params.put("memberNm", params.get("memberNm").toString().trim().toUpperCase());
+            params.put("fulllName", params.get("memberNm").toString().trim().toUpperCase());
+            params.put("password", params.get("nric").toString().trim().substring(((String) params.get("nric")).trim().length() - 6, 6));
+            params.put("nric", params.get("nric").toString().trim().toUpperCase());
+            // params.put("address1", params.get("address1").toString().trim()!=null ?
+            // params.get("address1").toString().trim() : "");
+            // params.put("address2", params.get("address2").toString().trim()!=null ?
+            // params.get("address2").toString().trim() : "");
+            // params.put("address3", params.get("address3").toString().trim()!=null ?
+            // params.get("address3").toString().trim() : "");
+            // params.put("address4", "");
+            // params.put("area", params.get("area")!=null ? Integer.parseInt(params.get("area").toString().trim()) : 0);
+            // params.put("postCode", params.get("postCode")!=null ?
+            // Integer.parseInt(params.get("postCode").toString().trim()) : 0);
+            params.put("race", Integer.parseInt((String) params.get("cmbRace")));
+            params.put("nation", Integer.parseInt((String) params.get("national")));
+            params.put("marrital", Integer.parseInt((String) params.get("marrital")));
+            // params.put("state", params.get("state") !=null ? Integer.parseInt(params.get("state").toString().trim()) : 0);
+            params.put("country", params.get("country") != null ? Integer.parseInt(params.get("country").toString().trim()) : 0);
+            params.put("mobileNo", params.get("mobileNo").toString().trim() != null ? params.get("mobileNo").toString().trim() : "");
+            params.put("officeNo", params.get("officeNo").toString().trim() != null ? params.get("officeNo").toString().trim() : "");
+            params.put("residenceNo", params.get("residenceNo").toString().trim() != null ? params.get("residenceNo").toString().trim() : "");
+            params.put("email", params.get("email").toString().trim() != null ? params.get("email").toString().trim() : "");
+            params.put("educationLvl", params.get("educationLvl") != null && params.get("educationLvl") != "" ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
+            params.put("language", params.get("language") != null && params.get("language") != "" ? Integer.parseInt(params.get("language").toString().trim()) : 0);
+            params.put("issuedBank", params.get("issuedBank") != null ? params.get("issuedBank").toString().trim() : "");
+            params.put("bankAccNo", params.get("bankAccNo").toString().trim() != null ? params.get("bankAccNo").toString().trim() : "");
+            params.put("sponsorCd", params.get("sponsorCd").toString().trim() != null ? params.get("sponsorCd").toString().trim() : "");
+            params.put("reSignDate", "01/01/1900");
+            params.put("termDate", "01/01/1900");
+            params.put("RenewDate", params.get("joinDate"));
+            params.put("AgrmntNo", "");
+            params.put("branch", params.get("branch") != null && params.get("branch") != "" ? Integer.parseInt(params.get("branch").toString().trim()) : 0);
+            params.put("status", "1");
+            params.put("SyncCheck", false);
+            params.put("rank", rank);
+            params.put("transportCd", params.get("transportCd") != null && params.get("transportCd") != "" ? Integer.parseInt(params.get("transportCd").toString().trim()) : 0);
+            params.put("promoteDate", "01/01/1900");
+            params.put("trNo", params.get("trNo") != null ? params.get("trNo").toString().trim() : "");
+            params.put("created", new Date());
+            // params.put("creator",52366); sessionVO.getUserId()
+            params.put("creator", sessionVO.getUserId());
+            params.put("updated", new Date());
+            // params.put("updator",52366);
+            params.put("updator", sessionVO.getUserId());
+            params.put("memIsOutSource", false);
+            params.put("applicantID", appId != null ? appId : 0);
+            params.put("BusinessesType", 1375);
+            params.put("Hospitalization", false);
+            params.put("deptCode", params.get("deptCd") != null ? params.get("deptCd").toString().trim() : "");
+            params.put("codyPaExpr", params.get("codyPaExpr") != null ? params.get("codyPaExpr").toString().trim() : "");
+            params.put("religion", params.get("religion") != null ? params.get("religion") : "");
+            // params.put("traineeType",Integer.parseInt(params.get("traineeType").toString()));
 
-			//insert HP applicant
-			memberListMapper.insertMemApp(MemApp);
-			codeMap1.put("code", "memApp");
-			appId = memberListMapper.selectMemberId(codeMap1);
+            // addr 가져오기
+            params.put("areaId", params.get("areaId").toString());
+            params.put("streetDtl", params.get("streetDtl") != null ? params.get("streetDtl").toString() : "");
+            params.put("addrDtl", params.get("addrDtl") != null ? params.get("addrDtl").toString() : "");
 
-			memCode = MemApp.get("applicantCode").toString();
+            // Department
+            params.put("searchdepartment", params.get("searchdepartment").toString().trim() != null ? params.get("searchdepartment").toString().trim() : "");
+            params.put("searchSubDept", params.get("subDept").toString().trim() != null ? params.get("subDept").toString().trim() : "");
 
-			/*if(success){
-			if(Integer.parseInt((String) params.get("memberType")) == 2){
-				if(MemApp != null){
-					//sendSMS(params);
-				}
-			}
-		}*/
+            // 두번째 탭 text 가져오기
+            params.put("spouseCode", params.get("spouseCode").toString().trim() != null ? params.get("spouseCode").toString().trim() : "");
+            params.put("spouseName", params.get("spouseName").toString().trim() != null ? params.get("spouseName").toString().trim() : "");
+            params.put("spouseNric", params.get("spouseNric").toString().trim() != null ? params.get("spouseNric").toString().trim() : "");
+            params.put("spouseOcc", params.get("spouseOcc").toString().trim() != null ? params.get("spouseOcc").toString().trim() : "");
+            params.put("spouseDob", params.get("spouseDob").toString().equals("") ? "01/01/1900" : params.get("spouseDob").toString().trim());
+            params.put("spouseContat", params.get("spouseContat").toString().trim() != null ? params.get("spouseContat").toString().trim() : "");
 
-			return memCode;
-		}
+            Boolean success = false;
 
-		else
-		{
+            if (params != null) {
+                memCode = doSaveMember(params, docType);
 
-		int rank = 0;
-		if(params.get("memberType").equals("1") ){
-			rank=433;
-		}
-		if(params.get("memberType").equals("2") || params.get("memberType").equals("3")){
-			rank=53;
-		}
-		if(params.get("memberType").equals("4")){
-			rank=427;
-		}
+                // 2018-06-18 - LaiKW - Insert trainee (Cody) record to applicant table for agreement purpose
+                if (Integer.parseInt((String) paramM.get("memberType"))== 5 && Integer.parseInt((String) paramM.get("traineeType1")) == 2) {
+                    paramM.put("applicantCode", memCode);
+                    insertApplicant(paramM, sessionVO);
+                }
+            }
+            return memCode;
+        }
 
-		params.put("memberID", 0);
-		params.put("memberCode", "");
-		params.put("memberType", Integer.parseInt((String) params.get("memberType")));
-		params.put("memberNm", params.get("memberNm").toString().trim().toUpperCase());
-		params.put("fulllName", params.get("memberNm").toString().trim().toUpperCase());
-		params.put("password", params.get("nric").toString().trim().substring(((String) params.get("nric")).trim().length() - 6, 6));
-		params.put("nric", params.get("nric").toString().trim().toUpperCase());
-		//params.put("address1", params.get("address1").toString().trim()!=null ? params.get("address1").toString().trim() : "");
-		//params.put("address2", params.get("address2").toString().trim()!=null ? params.get("address2").toString().trim() : "");
-		//params.put("address3", params.get("address3").toString().trim()!=null ? params.get("address3").toString().trim() : "");
-		//params.put("address4", "");
-		//params.put("area", params.get("area")!=null ? Integer.parseInt(params.get("area").toString().trim()) : 0);
-		//params.put("postCode", params.get("postCode")!=null ? Integer.parseInt(params.get("postCode").toString().trim()) : 0);
-		params.put("race", Integer.parseInt((String) params.get("cmbRace")));
-		params.put("nation", Integer.parseInt((String) params.get("national")));
-		params.put("marrital", Integer.parseInt((String) params.get("marrital")));
-		//params.put("state", params.get("state") !=null ? Integer.parseInt(params.get("state").toString().trim()) : 0);
-		params.put("country", params.get("country")!=null ? Integer.parseInt(params.get("country").toString().trim()) : 0);
-		params.put("mobileNo", params.get("mobileNo").toString().trim()!=null ? params.get("mobileNo").toString().trim() : "");
-		params.put("officeNo", params.get("officeNo").toString().trim()!=null ? params.get("officeNo").toString().trim() : "");
-		params.put("residenceNo", params.get("residenceNo").toString().trim()!=null ? params.get("residenceNo").toString().trim() : "");
-		params.put("email", params.get("email").toString().trim()!=null ? params.get("email").toString().trim() : "");
-		params.put("educationLvl", params.get("educationLvl")!=null &&  params.get("educationLvl")!="" ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
-		params.put("language", params.get("language")!=null && params.get("language")!=""? Integer.parseInt(params.get("language").toString().trim()) : 0);
-		params.put("issuedBank", params.get("issuedBank")!=null ? params.get("issuedBank").toString().trim() : "");
-		params.put("bankAccNo", params.get("bankAccNo").toString().trim()!=null ? params.get("bankAccNo").toString().trim() : "");
-		params.put("sponsorCd", params.get("sponsorCd").toString().trim()!=null ? params.get("sponsorCd").toString().trim() : "");
-		params.put("reSignDate","01/01/1900");
-		params.put("termDate","01/01/1900");
-		params.put("RenewDate",params.get("joinDate"));
-		params.put("AgrmntNo","");
-		params.put("branch", params.get("branch")!=null &&  params.get("branch")!=""? Integer.parseInt(params.get("branch").toString().trim()) : 0);
-		params.put("status","1");
-		params.put("SyncCheck",false);
-		params.put("rank",rank);
-		params.put("transportCd", params.get("transportCd")!=null &&  params.get("transportCd")!=""? Integer.parseInt(params.get("transportCd").toString().trim()) : 0);
-		params.put("promoteDate","01/01/1900");
-		params.put("trNo", params.get("trNo")!=null ? params.get("trNo").toString().trim() : "");
-		params.put("created",new Date());
-		//params.put("creator",52366);    sessionVO.getUserId()
-		params.put("creator",sessionVO.getUserId());
-		params.put("updated",new Date());
-		//params.put("updator",52366);
-		params.put("updator",sessionVO.getUserId());
-		params.put("memIsOutSource",false);
-		params.put("applicantID", appId !=null ? appId : 0);
-		params.put("BusinessesType",1375);
-		params.put("Hospitalization",false);
-		params.put("deptCode",params.get("deptCd")!=null ? params.get("deptCd").toString().trim() : "");
-		params.put("codyPaExpr",params.get("codyPaExpr")!=null ? params.get("codyPaExpr").toString().trim() : "");
-		params.put("religion",params.get("religion")!=null ? params.get("religion") : "");
-		//params.put("traineeType",Integer.parseInt(params.get("traineeType").toString()));
+    }
 
-		//addr 가져오기
-		params.put("areaId",params.get("areaId").toString());
-		params.put("streetDtl",params.get("streetDtl")!= null ?params.get("streetDtl").toString() : "");
-		params.put("addrDtl",params.get("addrDtl")!= null ? params.get("addrDtl").toString() : "");
+    public String insertApplicant(Map<String, Object> params, SessionVO sessionVO) {
 
-		//Department
-		params.put("searchdepartment",params.get("searchdepartment").toString().trim()!=null ? params.get("searchdepartment").toString().trim() : "");
-		params.put("searchSubDept"		,params.get("subDept").toString().trim()!=null ? params.get("subDept").toString().trim() : "");
+        logger.debug("params : {}", params);
 
-		//두번째 탭 text 가져오기
-		params.put("spouseCode", params.get("spouseCode").toString().trim()!=null ? params.get("spouseCode").toString().trim() : "");
-		params.put("spouseName", params.get("spouseName").toString().trim()!=null ? params.get("spouseName").toString().trim() : "");
-		params.put("spouseNric", params.get("spouseNric").toString().trim()!=null ? params.get("spouseNric").toString().trim() : "");
-		params.put("spouseOcc", params.get("spouseOcc").toString().trim()!=null ? params.get("spouseOcc").toString().trim() : "");
-		params.put("spouseDob", params.get("spouseDob").toString().equals("") ? "01/01/1900":params.get("spouseDob").toString().trim() );
-		params.put("spouseContat", params.get("spouseContat").toString().trim()!=null ? params.get("spouseContat").toString().trim() : "");
+        String appId = "";
 
+        Map<String, Object> MemApp = new HashMap<String, Object>();
+        Map<String, Object> codeMap1 = new HashMap<String, Object>();
 
-		Boolean success = false;
+        MemApp.put("applicationID", 0);
+        MemApp.put("applicantCode", "");
+        MemApp.put("applicantType", Integer.parseInt((String) params.get("memberType")));
+        MemApp.put("applicantName", params.get("memberNm").toString());
+        MemApp.put("applicantFullName", params.get("memberNm").toString());
+        MemApp.put("applicantIdentification", getRandomNumber(5));
+        MemApp.put("applicantNRIC", params.get("nric").toString());
+        MemApp.put("applicantDOB", params.get("Birth").toString());
+        MemApp.put("applicantGender", params.get("gender"));
+        MemApp.put("applicantRace", Integer.parseInt((String) params.get("cmbRace")));
+        MemApp.put("applicantMarital", Integer.parseInt((String) params.get("marrital")));
+        MemApp.put("applicantNationality", Integer.parseInt((String) params.get("national")));
+        // MemApp.put("applicantAdd1", params.get("address1").toString().trim()!=null ?
+        // params.get("address1").toString().trim() : "");
+        // MemApp.put("applicantAdd2", params.get("address2").toString().trim()!=null ?
+        // params.get("address2").toString().trim() : "");
+        // MemApp.put("applicantAdd3", params.get("address3").toString().trim()!=null ?
+        // params.get("address3").toString().trim() : "");
+        // MemApp.put("applicantAdd4","");
+        // MemApp.put("applicantAreald",params.get("area")!=null ?
+        // Integer.parseInt(params.get("area").toString().trim()) : 0);
+        // MemApp.put("applicantPostCodeId",params.get("postCode")!=null ?
+        // Integer.parseInt(params.get("postCode").toString().trim()) : 0);
+        // MemApp.put("applicantStateId",params.get("state") !=null ?
+        // Integer.parseInt(params.get("state").toString().trim()) : 0);
+        // MemApp.put("applicantCountryId",params.get("country")!=null ?
+        // Integer.parseInt(params.get("country").toString().trim()) : 0);
+        MemApp.put("applicantTelOffice", params.get("officeNo").toString().trim() != null ? params.get("officeNo").toString().trim() : "");
+        MemApp.put("applicantTelHouse", params.get("residenceNo").toString().trim() != null ? params.get("residenceNo").toString().trim() : "");
+        MemApp.put("applicantTelMobile", params.get("mobileNo").toString().trim() != null ? params.get("mobileNo").toString().trim() : "");
+        MemApp.put("applicantEmail", params.get("email").toString().trim() != null ? params.get("email").toString().trim() : "");
 
-		if(params != null){
-			memCode = doSaveMember(params, docType);
+        MemApp.put("applicantSpouseCode", params.get("spouseCode").toString().trim() != null ? params.get("spouseCode").toString().trim() : "");
+        MemApp.put("applicantSpouseName", params.get("spouseName").toString().trim() != null ? params.get("spouseName").toString().trim() : "");
+        MemApp.put("applicantSpouseNRIC", params.get("spouseNric").toString().trim() != null ? params.get("spouseNric").toString().trim() : "");
+        MemApp.put("applicantSpouseOccupation", params.get("spouseOcc").toString().trim() != null ? params.get("spouseOcc").toString().trim() : "");
+        MemApp.put("applicantSpouseTelContact", params.get("spouseContat").toString().trim() != null ? params.get("spouseContat").toString().trim() : "");
+        MemApp.put("applicantSpouseDOB", params.get("spouseDob").toString().trim() != null ? params.get("spouseDob").toString().trim() : "01/01/1900");
+        MemApp.put("applicantEduLevel", params.get("educationLvl") != null && params.get("educationLvl") != "" ? Integer.parseInt(params.get("educationLvl").toString().trim()) : 0);
+        MemApp.put("applicantLanguage", params.get("language") != "" && params.get("language") != null ? Integer.parseInt(params.get("language").toString().trim()) : 0);
+        MemApp.put("applicantBankID", Integer.parseInt(params.get("issuedBank").toString()));
+        MemApp.put("applicantBankAccNo", params.get("bankAccNo").toString().trim());
+        MemApp.put("applicantSponsorCode", params.get("sponsorCd").toString().trim() != null ? params.get("sponsorCd").toString().trim() : "");
+        MemApp.put("applicantTransport", 0);
+        MemApp.put("remark", "");
+        MemApp.put("statusId", 44);
+        MemApp.put("created", new Date());
+        // MemApp.put("creator",52366);
+        MemApp.put("creator", sessionVO.getUserId());
+        MemApp.put("updated", new Date());
+        // MemApp.put("updator",52366);
+        MemApp.put("updator", sessionVO.getUserId());
+        MemApp.put("confirmation", false);
+        MemApp.put("confirmDate", "01/01/1900");
+        MemApp.put("deptCode", params.get("deptCd").toString());
+        // addr 주소 가져오기
+        // MemApp.put("areaId",params.get("searchSt1").toString());
+        MemApp.put("areaId", params.get("areaId").toString());
+        MemApp.put("streetDtl", params.get("streetDtl") != null ? params.get("streetDtl").toString() : "");
+        MemApp.put("addrDtl", params.get("addrDtl") != null ? params.get("addrDtl").toString() : "");
 
+        // Department
+        // MemApp.put("searchdepartment", params.get("searchdepartment").toString().trim()!=null ?
+        // params.get("searchdepartment").toString().trim() : "");
+        MemApp.put("searchdepartment", "");
+        MemApp.put("searchSubDept", "");
 
-		}
-		return memCode;
-		}
+        if (Integer.parseInt((String) params.get("memberType")) == 2803) {
+            logger.debug("MemApp : {}", MemApp);
+            EgovMap appNo = getDocNo("145");
+            MemApp.put("applicantCode", appNo.get("docNo"));
+            logger.debug("appNo : {}", appNo);
+            updateDocNoNumber("145");
+        } else {
+            MemApp.put("applicantCode", params.get("applicantCode"));
+        }
 
-	}
+        // insert HP applicant
+        memberListMapper.insertMemApp(MemApp);
+        codeMap1.put("code", "memApp");
+        appId = memberListMapper.selectMemberId(codeMap1);
+
+        /*
+         * if(success){ if(Integer.parseInt((String) params.get("memberType")) == 2){ if(MemApp != null){
+         * //sendSMS(params); } } }
+         */
+
+        return MemApp.get("applicantCode").toString();
+    }
 
 
 
@@ -2288,4 +2315,19 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public EgovMap getUserRole(Map<String, Object> params) {
 	    return memberListMapper.getUserRole(params);
 	}
+
+	@Override
+    public EgovMap getCDCnfm(Map<String, Object> params) {
+        return memberListMapper.getCDCnfm(params);
+    }
+
+    @Override
+    public void updateCodyCfm(Map<String, Object> params) throws Exception {
+        memberListMapper.updateCodyCfm(params);
+    }
+
+    @Override
+    public EgovMap getCDInfo(Map<String, Object> params) {
+        return memberListMapper.getCDInfo(params);
+    }
 }

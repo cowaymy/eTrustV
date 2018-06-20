@@ -1580,4 +1580,97 @@ public class MemberListController {
     }
     // Kit Wai - End - 20180428
 
+    // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
+    @RequestMapping(value = "/getCDCnfm.do", method = RequestMethod.GET)
+    public ResponseEntity<Map> getCDCnfm(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+        logger.debug("==================== getCDCnfm ====================");
+
+        Map<String, Object> cdCnfmCheck = new HashMap();
+
+        EgovMap item = new EgovMap();
+        item = (EgovMap) memberListService.getCDCnfm(params);
+
+        String status = "";
+        String stusID = item.get("stusId").toString();
+        String cnfm = item.get("cnfm").toString();
+        String cnfmDt = item.get("cnfmDt").toString();
+
+        if("1".equals(cnfm) && !"1900-01-01".equals(cnfmDt) && "5".equals(stusID)) {
+            // Confirmed agreement
+            status = "Y";
+        } else if("0".equals(cnfm) && "1900-01-01".equals(cnfmDt) && "44".equals(stusID)) {
+            // Unconfirmed agreement
+            status = "N";
+        } else if("0".equals(cnfm) && !"1900-01-01".equals(cnfmDt) && "6".equals(stusID)) {
+            // Rejected agreement
+            status = "R";
+        }
+
+        cdCnfmCheck.put("status", status);
+
+        return ResponseEntity.ok(cdCnfmCheck);
+    }
+
+    @RequestMapping(value = "/cdAgreement.do")
+    public String cdAgreement(@RequestParam Map<String, Object> params, ModelMap model) {
+
+        logger.debug("==================== cdAgreement.do ====================");
+
+        logger.debug("params : {}", params);
+        model.put("loginUserId", (String) params.get("loginUserId"));
+        model.put("os", (String) params.get("os"));
+        model.put("browser", (String) params.get("browser"));
+        model.put("userId", (String) params.get("userId"));
+        model.put("password", (String) params.get("password"));
+
+        return "organization/organization/memberCodyAgreementPop";
+    }
+
+    @RequestMapping(value = "/updateCodyCfm.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> updateCodyCfm(@RequestParam Map<String, Object> params, ModelMap model) throws Exception {
+
+        logger.debug("==================== updateCodyCfm.do ====================");
+
+        logger.debug("params {}", params);
+
+        // Session
+        SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+        params.put("userId", sessionVO.getUserName());
+        if ("Y".equals(params.get("choice"))) {
+            params.put("cnfm", "1");
+            params.put("stusId", "5");
+        } else {
+            params.put("cnfm", "0");
+            params.put("stusId", "6");
+        }
+
+        // service
+        memberListService.updateCodyCfm(params);
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        return ResponseEntity.ok(message);
+    }
+
+    @RequestMapping(value = "/getCDInfo", method = RequestMethod.GET)
+    public ResponseEntity<Map> getCDInfo(@RequestParam Map<String, Object> params, HttpServletRequest request,
+            ModelMap model) {
+
+        logger.debug("==================== getCDInfo ====================");
+
+        EgovMap item = new EgovMap();
+        item = (EgovMap) memberListService.getCDInfo(params);
+
+        Map<String, Object> cdStus = new HashMap();
+        cdStus.put("id", item.get("aplctnId"));
+        cdStus.put("stus", item.get("stusId"));
+        cdStus.put("cnfm", item.get("cnfm"));
+        cdStus.put("cnfm_dt", item.get("cnfmDt"));
+
+        return ResponseEntity.ok(cdStus);
+    }
+    // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - End
 }

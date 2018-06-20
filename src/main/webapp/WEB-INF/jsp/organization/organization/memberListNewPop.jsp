@@ -37,8 +37,6 @@ function fn_memberSave(){
 			            console.log("Name :: " + $("#aplcntName").val());
 			            console.log("Mobile :: " + $("#aplcntMobile").val());
 
-
-
 			            // Get ID and identification
 			            Common.ajax("GET", "/organization/getApplicantInfo", $("#applicantDtls").serialize(), function(result) {
 			                console.log("saving member details");
@@ -499,10 +497,6 @@ console.log("ready");
 
      $('#bankAccNo').blur(function() {
     	 checkBankAccNo();
-     });
-
-     $('#issuedBank').blur(function() {
-         checkBankAccNo();
      });
 
 });
@@ -1090,7 +1084,8 @@ function checkBankAccNoEnter() {
 }
 
 function checkBankAccNo() {
-    var jsonObj = { "bank" : $("#issuedBank").val(), "bankAccNo" : $("#bankAccNo").val() };
+    //var jsonObj = { "bank" : $("#issuedBank").val(), "bankAccNo" : $("#bankAccNo").val() };
+    var jsonObj = { "bankAccNo" : $("#bankAccNo").val() };
 
     Common.ajax("GET", "/organization/checkBankAcc", jsonObj, function(result) {
     	console.log(result);
@@ -1098,7 +1093,7 @@ function checkBankAccNo() {
             return true;
         } else {
             Common.alert("Bank account number has been registered.");
-            $("#issuedBank").val("");
+            //$("#issuedBank").val("");
             $("#bankAccNo").val("");
             return false;
         }

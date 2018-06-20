@@ -176,16 +176,14 @@ function fn_clickHpApproval(){
 
 function fn_clickHpReject(){
       Common.confirm("Do you want to reject the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , function() {
-    	  if($("#userRole").val() == 221 || $("#userRole").val() == 222) {
-    		  if(statusName == "Ready") {
-    			  console.log("1");
+    	  if($("#userRole").val() == 111 || $("#userRole").val() == 112 || $("#userRole").val() == 113 || $("#userRole").val() == 114) {
+    		  if(statusName == "Pending") {
                   fn_RejectHPMem();
     		  } else {
-    			  Common.alert("Only available to entry Ready is in a case of Status");
+    			  Common.alert("Only available to entry Pending is in a case of Status");
               }
-          } else if($("#userRole").val() != 221 && $("#userRole").val() != 222) {
+          } else if($("#userRole").val() != 111 || $("#userRole").val() != 112 || $("#userRole").val() != 113 || $("#userRole").val() != 114) {
         	  if(statusName == "Pending" || statusName == "Ready") {
-                  console.log("2");
                   fn_RejectHPMem();
         	  } else {
         		  Common.alert("Only available to entry Pending/Ready is in a case of Status");

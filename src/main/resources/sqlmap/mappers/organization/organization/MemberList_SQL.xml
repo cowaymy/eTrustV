@@ -4325,17 +4325,16 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         <if test="srcA != '' and srcA != null ">
             <![CDATA[
                 FROM ORG0003D
-                WHERE APLICNT_BANK_ID = #{bank}
-                AND APLICNT_BANK_ACC_NO = #{bankAccNo}
+                WHERE APLICNT_BANK_ACC_NO = #{bankAccNo}
                 AND STUS_ID <> '6'
             ]]>
         </if>
         <if test="srcM != '' and srcM != null ">
             <![CDATA[
                 FROM ORG0001D
-                WHERE BANK = #{bank}
-                AND BANK_ACC_NO = #{bankAccNo}
+                WHERE BANK_ACC_NO = #{bankAccNo}
                 AND STUS <> '51'
+                AND STUS <> '3'
             ]]>
         </if>
       </select>
@@ -4355,5 +4354,45 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         on c.ROLE_ID = b.ROLE_ID
       where a.USER_ID = #{userId}
       </select>
+
+    <select id="getCDCnfm" parameterType="Map" resultType="egovMap">
+        SELECT
+            a.STUS_ID,
+            a.CNFM,
+            TO_CHAR(a.CNFM_DT, 'YYYY-MM-DD') CNFM_DT
+        FROM ORG0003D a
+        INNER JOIN ORG0001D b
+        ON a.APLICNT_CODE = b.TRAINEE_CODE
+        WHERE b.MEM_CODE = #{userId}
+    </select>
+
+    <update id="updateCodyCfm" parameterType="Map">
+        MERGE INTO ORG0003D
+        USING(
+            SELECT *
+            FROM ORG0001D A
+            INNER JOIN ORG0003D B
+                ON A.TRAINEE_CODE = B.APLICNT_CODE
+            WHERE A.MEM_CODE = #{userId}
+        ) SRC
+        ON (ORG0003D.APLICNT_CODE = SRC.TRAINEE_CODE)
+        WHEN MATCHED THEN UPDATE
+        SET CNFM = #{cnfm},
+              CNFM_DT = SYSDATE,
+              UPD_DT = SYSDATE,
+              STUS_ID = #{stusId}
+     </update>
+
+    <select id="getCDInfo" parameterType="Map" resultType="egovMap">
+        SELECT
+            a.APLCTN_ID,
+            a.STUS_ID,
+            a.CNFM,
+            TO_CHAR(a.CNFM_DT, 'YYYY-MM-DD') CNFM_DT
+        FROM ORG0003D a
+        INNER JOIN ORG0001D b
+            ON b.TRAINEE_CODE = a.APLICNT_CODE
+        WHERE b.MEM_CODE = #{userId}
+    </select>
 
 </mapper>
