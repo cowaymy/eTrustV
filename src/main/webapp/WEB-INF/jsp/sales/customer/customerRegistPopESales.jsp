@@ -344,7 +344,7 @@
                 dataSet     : GridCommon.getEditData(myGridID),
                 dataSetBank     : GridCommon.getEditData(myGridID1),
                 customerVO : {
-                    cmbTypeId : insBasicForm.cmbTypeId.value,
+                    cmbTypeId : $('input[name=cmbTypeId]:checked').val(),//insBasicForm.cmbTypeId.value,
                     custName : insBasicForm.custName.value,
                     cmbCorpTypeId : insBasicForm.cmbCorpTypeId.value,
                     custInitial : insBasicForm.cmbInitials.value,
