@@ -22,4 +22,10 @@ public interface ReturnUsedPartsService {
 	
 	int returnPartsdupchek(Map<String, Object> insMap);
 	
+	List<EgovMap> selectBranchCodeList(Map<String, Object> params);
+	
+	List<EgovMap> getDeptCodeList(Map<String, Object> params);
+	
+	List<EgovMap> getCodyCodeList(Map<String, Object> params);
+	
 }

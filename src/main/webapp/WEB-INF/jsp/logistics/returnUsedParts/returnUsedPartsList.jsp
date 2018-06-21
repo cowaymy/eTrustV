@@ -33,14 +33,14 @@ var comboData = [{"codeId": "N","codeName": "Not yet"},{"codeId": "Y","codeName"
 var comboData1 = [{"codeId": "62","codeName": "Filter"},{"codeId": "63","codeName": "Spare Part"}];
 var comboData2 = [{"codeId": "03","codeName": "CT"},{"codeId": "04","codeName": "CODY"}];
 var comboData3 = [{"codeId": "A","codeName": "A"},{"codeId": "B","codeName": "B"}];
-var uomlist = f_getTtype('364' , ''); 
+var uomlist = f_getTtype('364' , '');
 var oldQty;
 var oldSerial;
 
 
 /* Required Date 초기화 */
 var today = new Date();
-today.setDate(today.getDate() -7); 
+today.setDate(today.getDate() -7);
 var dd = today.getDate();
 var mm = today.getMonth()+1;
 var yyyy = today.getFullYear();
@@ -64,27 +64,27 @@ today = (dd + '/' + mm + '/' + yyyy);
 // nextDate = (dd2 + '/' + mm2 + '/' + yyyy2);
 
 
-                      
-var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},        
-                     {dataField: "seq",headerText :"seq"      ,width:120    ,height:30, visible:false },  
-                     {dataField: "serviceOrder",headerText :"<spring:message code='log.head.serviceorder'/>"      ,width:120    ,height:30, editable:false },    
+
+var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},
+                     {dataField: "seq",headerText :"seq"      ,width:120    ,height:30, visible:false },
+                     {dataField: "serviceOrder",headerText :"<spring:message code='log.head.serviceorder'/>"      ,width:120    ,height:30, editable:false },
                      {dataField: "code",headerText :"Branch Code"      ,width:120    ,height:30, editable:false },
-                     {dataField: "brnchName",headerText :"Branch Name"      ,width:120    ,height:30, editable:false },    
+                     {dataField: "brnchName",headerText :"Branch Name"      ,width:120    ,height:30, editable:false },
                      {dataField: "memCode",headerText :"CtAndCody Code"           ,width:120    ,height:30, editable:false },
-                     {dataField: "name",headerText :"CtAndCody Name"           ,width:120    ,height:30, editable:false },      
-                     {dataField: "serviceDate",headerText :"<spring:message code='log.head.servicedate'/>"                 ,width:120    ,height:30, editable:false},                        
-                     {dataField: "materialCode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:120    ,height:30, editable:true},    
+                     {dataField: "name",headerText :"CtAndCody Name"           ,width:120    ,height:30, editable:false },
+                     {dataField: "serviceDate",headerText :"<spring:message code='log.head.servicedate'/>"                 ,width:120    ,height:30, editable:false},
+                     {dataField: "materialCode",headerText :"<spring:message code='log.head.materialcode'/>"           ,width:120    ,height:30, editable:true},
 //                      {dataField: "materialCodeActual",headerText :"Material Code Actual"           ,width:150    ,height:30, editable:true},
 //                      {dataField: "stkIdNew",headerText :"New STK_ID"           ,width:150    ,height:30, editable:true},
-                     {dataField: "materialName",headerText :"<spring:message code='log.head.materialname'/>"     ,width:120    ,height:30, editable:false},                          
-                     {dataField: "serialNumber",headerText :"<spring:message code='log.head.serialnumber(system)'/>"                ,width:120    ,height:30, editable:true},                       
-//                      {dataField: "serial",headerText :"<spring:message code='log.head.serial(actual)'/>"     ,width:120    ,height:30                },     
-                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"          ,width:120    ,height:30                },                       
-                     /* {dataField:  "noPartsReturn",headerText :"<spring:message code='log.head.nopartsreturn'/>"        ,width:120    ,height:30 },  */                        
-                     {dataField: "noPartsReturn",headerText :"<spring:message code='log.head.nopartsreturn'/>"               ,width:120    ,height:30 
+                     {dataField: "materialName",headerText :"<spring:message code='log.head.materialname'/>"     ,width:120    ,height:30, editable:false},
+                     {dataField: "serialNumber",headerText :"<spring:message code='log.head.serialnumber(system)'/>"                ,width:120    ,height:30, editable:true},
+//                      {dataField: "serial",headerText :"<spring:message code='log.head.serial(actual)'/>"     ,width:120    ,height:30                },
+                     {dataField: "qty",headerText :"<spring:message code='log.head.qty'/>"          ,width:120    ,height:30                },
+                     /* {dataField:  "noPartsReturn",headerText :"<spring:message code='log.head.nopartsreturn'/>"        ,width:120    ,height:30 },  */
+                     {dataField: "noPartsReturn",headerText :"<spring:message code='log.head.nopartsreturn'/>"               ,width:120    ,height:30
                           ,labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
                               var retStr = "";
-                              
+
                               for(var i=0,len=uomlist.length; i<len; i++) {
                                   if(uomlist[i]["code"] == value) {
                                       retStr = uomlist[i]["codeName"];
@@ -92,28 +92,28 @@ var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='lo
                                   }
                               }
                               return retStr == "" ? value : retStr;
-                          },editRenderer : 
+                          },editRenderer :
                           {
                              type : "ComboBoxRenderer",
                              showEditorBtnOver : true, // 마우스 오버 시 에디터버턴 보이기
                              list : uomlist,
-                             keyField : "code", 
+                             keyField : "code",
                              valueField : "codeName"
                           }
                       },
-                      {dataField: "text",headerText :"<spring:message code='log.head.text'/>"      ,width:120    ,height:30                },                         
-                      {dataField: "returnComplete",headerText :"<spring:message code='log.head.returncomplete'/>"      ,width:120    ,height:30, editable:false},                         
-                      {dataField: "returnCompleteDate",headerText :"<spring:message code='log.head.returncompletedate'/>"      ,width:120    ,height:30, editable:false},                         
-                      {dataField: "serialChk",headerText :"<spring:message code='log.head.serialchk'/>"        ,width:120    ,height:30, editable:false}, 
-                      {dataField: "customer",headerText :"<spring:message code='log.head.customer'/>"      ,width:120    ,height:30, editable:false },                        
-                      {dataField: "customerName",headerText :"<spring:message code='log.head.customername'/>"           ,width:120    ,height:30, editable:false }       
-                      ];                     
- 
+                      {dataField: "text",headerText :"<spring:message code='log.head.text'/>"      ,width:120    ,height:30                },
+                      {dataField: "returnComplete",headerText :"<spring:message code='log.head.returncomplete'/>"      ,width:120    ,height:30, editable:false},
+                      {dataField: "returnCompleteDate",headerText :"<spring:message code='log.head.returncompletedate'/>"      ,width:120    ,height:30, editable:false},
+                      {dataField: "serialChk",headerText :"<spring:message code='log.head.serialchk'/>"        ,width:120    ,height:30, editable:false},
+                      {dataField: "customer",headerText :"<spring:message code='log.head.customer'/>"      ,width:120    ,height:30, editable:false },
+                      {dataField: "customerName",headerText :"<spring:message code='log.head.customername'/>"           ,width:120    ,height:30, editable:false }
+                      ];
+
 var subgridpros = {
         // 페이지 설정
         rowIdField : "rnum",
-        usePaging : false,                   
-        editable : true,                
+        usePaging : false,
+        editable : true,
         noDataMessage : "<spring:message code='sys.info.grid.noDataMessage'/>",
         //enableSorting : true,
         //selectionMode : "multipleRows",
@@ -129,132 +129,132 @@ var subgridpros = {
         	oldQty=item.qty;
         	oldSerial=item.serial;
             var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-            
+
             for (var i = 0; i < checkedItems.length; i++) {
 //             	oldQty=checkedItems[i].qty;
 //             	alert("oldQty?? : "+oldQty);
 //             	if(i != rowIndex){
-//             		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);  
+//             		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
 //             	}else{
-//             		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);           		
+//             		AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[i].rnum);
 //             	}
-            		
+
 			}
-                             
+
          },
-        
+
         };
-       
+
 var paramdata;
 
 $(document).ready(function(){
-    
+
     /**********************************
     * Header Setting
     **********************************/
     doDefCombo(comboData1, '' ,'searchMaterialType', 'S', '');
     doDefCombo(comboData, '' ,'searchComplete', 'S', '');
     doDefCombo(comboData2, '' ,'searchlocgb', 'S', '');
-    
-    
+
+
     doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
     //doGetComboData('/common/selectCodeList.do', { groupCode : 383 , orderValue : 'CODE' , Codeval : 'A'}, '', 'searchlocgrade', 'S','');
    // doGetComboData('/common/selectCodeList.do', { groupCode : 339 , orderValue : 'CODE'}, '', 'searchlocgb', 'M','f_multiCombo');
    $("#servicesdt").val(today);
-    doSysdate(0 , 'serviceedt');  
+    doSysdate(0 , 'serviceedt');
     doDefCombo(comboData3, 'A' ,'searchlocgrade', 'S', '');
-    
 
-    
-    
-    
+
+
+
+
     /**********************************
      * Header Setting End
      ***********************************/
-    
-    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, subgridpros);    
-      
+
+    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, subgridpros);
+
     AUIGrid.bind(listGrid, "cellClick", function( event ) {
 
     });
-    
+
     AUIGrid.bind(listGrid, "cellDoubleClick", function(event){
 
     });
-    
+
     AUIGrid.bind(listGrid, "ready", function(event) {
     });
-    
-    
+
+
     AUIGrid.bind(listGrid, "cellEditEnd", function (event){
      var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
          if(checkedItems.length <= 0) {
-             Common.alert('No data selected.');          
+             Common.alert('No data selected.');
              return false;
         }else{
-        	 
-         if(event.dataField == "materialCode"){	 
+
+         if(event.dataField == "materialCode"){
           var matcode = AUIGrid.getCellValue(listGrid, event.rowIndex, "materialCode") ;
-          
+
           if(matcode.length > 15){
         	  Common.alert('matcode is greater than 15 characters.');
         	  AUIGrid.setCellValue(listGrid , event.rowIndex , "materialCode" , "" );
         	  return false;
           }
-            
+
           var indexnum =event.rowIndex;
           validMatCodeAjax(matcode,indexnum);
 
          }
 
-          
+
 //          var serialNo = AUIGrid.getCellValue(listGrid, event.rowIndex, "serialNumber");
 //          var selectedItem = AUIGrid.getEditedRowItems(listGrid);
 
 //          console.log(selectedItem);
-         
-         
+
+
 //          alert("serialNo :   "+serialNo);
-         
+
 //          alert("길이 :: "+selectedItem.length);
-         
+
 //         	 for (var i = 0 ; i < selectedItem.length ; i++){
-        	
+
 //         	 if (selectedItem[i].serialNumber != null || selectedItem[i].serialNumber !=""){
 //         		 alert("체크 인덱스: "+selectedItem[i].rnum);
-//         		 AUIGrid.addCheckedRowsByIds(listGrid, selectedItem[i].rnum);    
+//         		 AUIGrid.addCheckedRowsByIds(listGrid, selectedItem[i].rnum);
 //         	 }
-        	 
-        	 	 
+
+
 // 		}
-         
+
 //          	 var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
-        	 
+
 //         	 if(checkedItems.length > 0) {
-        		 
+
 //         		 for (var j = 0 ; j < checkedItems.length ; j++){
 //         			 if (checkedItems[j].serialNumber == null || checkedItems[j].serialNumber ==""){
 //         			 alert("언체크 인덱스: "+checkedItems[j].rnum);
-//         				 AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[j].rnum); 
+//         				 AUIGrid.addUncheckedRowsByIds(listGrid, checkedItems[j].rnum);
 //         			 }
-        			 		 
+
 //         		 }
-        		 
+
 //         	 }
-         
-         
+
+
 //         if(event.dataField == "serial"){
 //             if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") =="Y"){
 //                 AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", 1);
 //                 return false;
 //             }
-            
+
 //             if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") !="Y"){
 //             	Common.alert("No Enter Serial");
 //             	AUIGrid.setCellValue(listGrid, event.rowIndex, "serial", "");
 //                 return false;
-//             }            
-            
+//             }
+
 //         }
 //         if(event.dataField == "qty"){
 //         	if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") !="Y"){
@@ -262,38 +262,38 @@ $(document).ready(function(){
 //         			Common.alert('The requested quantity is up to '+oldQty+'.');
 //         			AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", oldQty);
 //         			return false;
-//         			 }        		
-//         		 }        	
+//         			 }
+//         		 }
 //         	 if(AUIGrid.getCellValue(listGrid, event.rowIndex, "serialChk") =="Y"){
 //                  if(AUIGrid.getCellValue(listGrid, event.rowIndex, "qty") >  1){
 //                      Common.alert('only qty count 1.');
-//                      AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", 1);  
+//                      AUIGrid.setCellValue(listGrid, event.rowIndex, "qty", 1);
 //                      return false;
-//                       }              
-//                   }       
+//                       }
+//                   }
 //         	    }
          }
-        
+
     });
-    
+
 });
 
 
 
 	$(function() {
-	
+
 	$('#search').click(function() {
 		if(validation()) {
-			SearchListAjax();		
+			SearchListAjax();
 		}
-			
+
 		});
 		$('#clear').click(function() {
 
 			testFunc();
 
 		});//insert
-		
+
 		$('#delete').click(function() {
 
 			deltestFunc();
@@ -301,15 +301,15 @@ $(document).ready(function(){
         });//delete
 
 		$('#complete').click(function() {
-			 var chkfalg; 
+			 var chkfalg;
 			 var allChecked = false
 			 var checkedItems = AUIGrid.getCheckedRowItemsAll(listGrid);
 		        if(checkedItems.length <= 0) {
 		            Common.alert('No data selected.');
 		            return false;
 		        }else{
-		        	
-	
+
+
 		       if(checkedItems.length > 0){
 	        	   for (var i = 0 ; i < checkedItems.length ; i++){
 
@@ -317,37 +317,41 @@ $(document).ready(function(){
 	                	  chkfalg="Y";
 	                	  Common.alert('Already processed.');
 	                  }else{
-	                	   chkfalg="N";     	  
+	                	   chkfalg="N";
 	                  }
 
 	                   if (checkedItems[i].materialCode =="" || checkedItems[i].materialCode == undefined){
 	                	   Common.alert("Please Enter materialCode");
 	                	   return false;
 	                   }
-	                 } 	        	   
-		          }    
-		       
+	                 }
+		          }
+
 		        if(chkfalg=="N"){
 		        if(f_validatation('save')){
-		        	upReturnParts();		        		
+		        	upReturnParts();
 		        	}
-		        //업데이트 쿼리 	
-		        }		 
+		        //업데이트 쿼리
+		        }
 		   }
 		});
-        
+
         $("#download").click(function() {
         	GridCommon.exportTo("main_grid_wrap", 'xlsx', "Return Used Parts List")
         });
-		
+
 	$('#cancle').click(function() {
-		
+
 		cancleReturnParts();
 
 		});
 	
+	$('#btnHSUsedFilterListing').click(function() {
+        Common.popupDiv("/logistics/returnusedparts/HSUsedFilterListingPop.do", null, null, true);
+    });
+
     $('#searchBranch').change(function(){
-    	if ($('#searchBranch').val() != null && $('#searchBranch').val() != "" ){	
+    	if ($('#searchBranch').val() != null && $('#searchBranch').val() != "" ){
         var searchlocgb = $('#searchlocgb').val();
         var searchBranch = $('#searchBranch').val();
         //alert("searchBranch :  "+searchBranch);
@@ -360,7 +364,7 @@ $(document).ready(function(){
 //             }
 //         }
         //alert("searchlocgb :  "+searchlocgb);
-        if ($('#searchlocgb').val() == null || $('#searchlocgb').val() == "" ){   
+        if ($('#searchlocgb').val() == null || $('#searchlocgb').val() == "" ){
         	Common.alert("Please select Location Type");
         	doGetComboData('/logistics/totalstock/selectTotalBranchList.do','', '', 'searchBranch', 'S','');
         	return false;
@@ -369,11 +373,11 @@ $(document).ready(function(){
         var param = {searchlocgb:searchlocgb , grade:$('#searchlocgrade').val() , searchBranch:searchBranch     }
         doGetComboData('/common/selectStockLocationList3.do', param , '', 'searchLoc', 'M','f_multiComboType');
     	}
-    	
+
     });
-	
-	
-	
+
+
+
     $('#searchlocgrade').change(function(){
         var searchlocgb = $('#searchlocgb').val();
 
@@ -389,8 +393,8 @@ $(document).ready(function(){
         var param = {searchlocgb:searchlocgb , grade:$('#searchlocgrade').val()}
         doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
     });
-	
-	
+
+
     $('#searchlocgb').change(function() {
         console.log('1');
         if ($('#searchlocgb').val() != null && $('#searchlocgb').val() != "" ){
@@ -409,7 +413,7 @@ $(document).ready(function(){
                 doGetComboData('/common/selectStockLocationList2.do', param , '', 'searchLoc', 'M','f_multiComboType');
         }
         });
-	
+
 });
 
 	function testFunc() {
@@ -422,8 +426,8 @@ $(document).ready(function(){
 			$("#search").click();
 		});
 	}
-	
-	
+
+
 	function deltestFunc() {
         var url = "/logistics/returnusedparts/ReturnUsedPartsDelTest.do";
         var param = "param=BS8362776";
@@ -441,7 +445,7 @@ $(document).ready(function(){
 
 		Common.ajax("GET", url, param, function(data) {
 			AUIGrid.setGridData(listGrid, data.data);
-		    
+
 		});
 	}
 
@@ -493,7 +497,7 @@ $(document).ready(function(){
 			}
 
 		})
-	 }		
+	 }
 	function cancleReturnParts() {
 
        var data = {};
@@ -501,12 +505,12 @@ $(document).ready(function(){
        data.checked = checkdata;
 
        Common.ajax("POST","/logistics/returnusedparts/returnPartsCanCle.do", data, function(result) {
-           
+
                    Common.alert(result.message);
 
-       })			
+       })
 	}
-	
+
 	function f_validatation(v) {
 
 		if (v == 'save') {
@@ -520,21 +524,21 @@ $(document).ready(function(){
 			return true;
 		}
 	}
-	
+
 	   function validMatCodeAjax(matcode,indexnum) {
 	        var url = "/logistics/returnusedparts/validMatCodeSearch.do";
 	        var param = {"matcode":matcode};
-	     
+
 	        Common.ajax("GET", url, param, function(data) {
-	     
+
 	        	if(data.data == 0){
 	        		Common.alert("The product code is incorrect.");
-	        		AUIGrid.setCellValue(listGrid , indexnum , "materialCode" , "" );	        		
+	        		AUIGrid.setCellValue(listGrid , indexnum , "materialCode" , "" );
 	        	}
 	        	//$("#search").click();
 	        });
 	    }
-	   
+
 	   function f_multiComboType() {
 		    $(function() {
 		        $('#searchLoc').change(function() {
@@ -543,7 +547,7 @@ $(document).ready(function(){
 		        });
 		    });
 		}
-	   
+
 	   function validation() {
 		    if ($("#searchLoc").val() == '' ||$("#searchLoc").val() == undefined){
 		        Common.alert('Please Location selected.');
@@ -552,7 +556,7 @@ $(document).ready(function(){
 		        return true;
 		    }
 		}
-	
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -612,76 +616,91 @@ $(document).ready(function(){
                    <td>
 <!--                        <select class="w100p" id="searchLoc" name="searchLoc"><option value="">Choose One</option></select> -->
                        <select class="w100p" id="searchLoc" name="searchLoc"></select>
-                   </td>              
+                   </td>
                 </tr>
                 <tr>
                     <th scope="row">Branch</th>
                    <td>
                         <select class="w100p" id="searchBranch"  name="searchBranch"></select>
-                   </td> 
+                   </td>
                    <th scope="row">Oder</th>
                    <td>
                         <INPUT type="text"   class="w100p" id="searchOder" name="searchOder">
-                   </td> 
+                   </td>
                    <th scope="row">Customer</th>
                    <td>
                         <INPUT type="text"   class="w100p" id="searchCustomer" name="searchCustomer">
-                   </td>         
+                   </td>
                 </tr>
                 <tr>
                     <th scope="row">Service date</th>
                     <td>
                         <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="servicesdt" name="servicesdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <p><input id="servicesdt" name="servicesdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> To </span>
                         <p><input id="serviceedt" name="serviceedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date "></p>
-                        </div><!-- date_set end -->                        
+                        </div><!-- date_set end -->
                     </td>
                     <th scope="row">Return Date</th>
                     <td >
                         <div class="date_set w100p"><!-- date_set start -->
-                        <p><input id="returnsdt" name="returnsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>   
+                        <p><input id="returnsdt" name="returnsdt" type="text" title="Create start Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         <span> To </span>
                         <p><input id="returnedt" name="returnedt" type="text" title="Create End Date"  placeholder="DD/MM/YYYY" class="j_date"></p>
                         </div><!-- date_set end -->
-                    </td>     
+                    </td>
                     <th scope="row"></th>
                     <td>
-                    </td>         
+                    </td>
                 </tr>
                 <tr>
                     <th scope="row">Material Code</th>
                    <td>
                        <INPUT type="text"   class="w100p" id="searchMaterialCode" name="searchMaterialCode">
-                   </td>  
+                   </td>
                    <th scope="row">Material Type</th>
                    <td >
                       <select class="w100p" id="searchMaterialType" name="searchMaterialType"></select>
-                   </td> 
+                   </td>
                    <th scope="row">Complete</th>
                    <td>
                        <select class="w100p" id="searchComplete" name="searchComplete"></select>
                    </td>
                 </tr>
-                             
+
             </tbody>
         </table><!-- table end -->
     </form>
+
+    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+      <c:if test="${PAGE_AUTH.funcUserDefine20 == 'Y'}">
+        <li><p class="link_btn type2"><a href="#" id="btnHSUsedFilterListing">HS Used Filter Listing</a></p></li>
+      </c:if>
+    </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
 
     </section><!-- search_table end -->
 
     <!-- data body start -->
     <section class="search_result"><!-- search_result start -->
-    
+
         <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
          <li><p class="btn_grid"><a id="download"><spring:message code='sys.btn.excel.dw' /></a></p></li>
-</c:if>        
+</c:if>
 <!--          <li><p class="btn_grid"><a id="insert">INS</a></p></li>             -->
         </ul>
 
         <div id="main_grid_wrap" class="mt10" style="height:450px"></div>
-        
+
 
     </section><!-- search_result end -->
 

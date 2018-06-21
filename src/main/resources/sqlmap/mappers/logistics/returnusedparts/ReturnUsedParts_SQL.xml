@@ -4,16 +4,16 @@
 
 <insert id="returnPartsInsert" parameterType="String">
   INSERT INTO LOG0082M (SEQ, SVC_ORD_ID, CUST_ID, SVC_DT, STK_ID, QTY, OLD_SERIAL, NEW_SERIAL, CRT_DT , CRT_USER_ID)
-               SELECT 
+               SELECT
                     LOG0082M_SEQ.nextval
                     , S08.NO
-                    , S01.CUST_ID 
+                    , S01.CUST_ID
                     , S87.SRV_FILTER_PRV_CHG_DT
                     , S87.SRV_FILTER_STK_ID
                     , S07.BS_RESULT_PART_QTY
                     , S87.SRV_FILTER_PREV_SERIAL
                     , S87.SRV_FILTER_LAST_SERIAL
-                    , S06.RESULT_CRT_DT 
+                    , S06.RESULT_CRT_DT
                     , S06.RESULT_CRT_USER_ID
                    FROM SVC0006D S06
                            , SVC0008D S08
@@ -46,7 +46,7 @@
 		l82.STK_ID,
 		l82.OLD_SERIAL serial_number,
 <!-- 		l82.OLD_SERIAL serial, -->
- 		l82.NEW_SERIAL serial, 
+ 		l82.NEW_SERIAL serial,
 		l82.QTY qty,
 		l82.COMMENTS text,
 		l82.CMPLT_YN return_complete,
@@ -61,12 +61,12 @@
 		l82.UPD_USER_ID,
 		S26.SERIAL_CHK,
 		S26.STK_TYPE_ID,
-		l82.STK_ID_NEW,  
+		l82.STK_ID_NEW,
 		o01.BRNCH,
 	    o01.MEM_CODE,
         o01.NAME,
        (select CODE from SYS0005M where BRNCH_ID = o01.BRNCH ) code,
-       (select NAME from SYS0005M where BRNCH_ID = o01.BRNCH ) brnch_name  
+       (select NAME from SYS0005M where BRNCH_ID = o01.BRNCH ) brnch_name
 		from LOG0082M l82,sal0029d s29,sys0026m s26, org0001d o01
 		where 1=1
 		AND l82.CUST_ID=s29.CUST_ID
@@ -105,7 +105,7 @@
        </if>
        <if test="returnedt !=null and returnedt !=''">
           and to_char(l82.CMPLT_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{returnedt},'dd/mm/yyyy'),'yyyymmdd')
-       </if>	
+       </if>
         <if test="searchLoc != null and searchLoc !=''">
         and o01.MEM_CODE in
         <foreach item="item" collection="searchLoc" index="index" open="(" separator="," close=")">
@@ -131,8 +131,8 @@
         CRT_DT = SYSDATE,
         CRT_USER_ID=#{userId}
 		WHERE SEQ =#{seq}
-	</update> 
-	
+	</update>
+
 	<delete id="returnPartsCanCle" parameterType="Map">
         DELETE FROM LOG0082M
         WHERE SEQ =#{seq}
@@ -142,13 +142,13 @@
         DELETE FROM LOG0082M
         WHERE SVC_ORD_ID =#{param}
    </delete>
-   
-   
+
+
    <select id="validMatCodeSearch" parameterType="String" resultType="integer">
-     select count(*) from sys0026m where STK_CODE= #{matcode} 
+     select count(*) from sys0026m where STK_CODE= #{matcode}
    </select>
-   
-   
+
+
 <!--     <select id="returnPartsList" parameterType="Map" resultType="egovMap"> -->
 <!--         SELECT -->
 <!--         ROWNUM rnum, -->
@@ -212,11 +212,75 @@
 <!--           and to_char(l82.CMPLT_DT , 'yyyymmdd') <![CDATA[<=]]> to_char(to_date(#{returnedt},'dd/mm/yyyy'),'yyyymmdd') -->
 <!--        </if>     -->
 <!--     </select> -->
-        
+
         <select id="returnPartsdupchek" parameterType="Map" resultType="integer">
            select count(*) from log0082m where seq = #{seq} and CMPLT_YN ='Y'
         </select>
-   
-   
-   
+
+        <select id="getDeptCodeList" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.MEM_ID CODE_ID ,
+                Extent2.DEPT_CODE || ' - '  || Extent1.NAME CODE_NAME
+        FROM ORG0001D Extent1
+                JOIN
+                     (SELECT vMemberOrg.MEM_ID MEM_ID ,
+                            vMemberOrg.MEM_CODE MEM_CODE ,
+                            vMemberOrg.MEM_LVL MEM_LVL ,
+                            vMemberOrg.DEPT_CODE DEPT_CODE ,
+                            vMemberOrg.GRP_CODE GRP_CODE ,
+                            vMemberOrg.ORG_CODE ORG_CODE ,
+                            vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+                            vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+                            vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+                            vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+                            vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+                            vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                          FROM ORG1001V vMemberOrg
+                    ) Extent2
+                ON ( Extent2.MEM_ID    = Extent1.MEM_ID )
+                AND ( Extent2.MEM_LVL  = #{memLvl} )
+        WHERE ( 1 = Extent1.STUS )
+                AND ( Extent1.MEM_TYPE = #{memType} )
+        ORDER BY Extent2.DEPT_CODE
+    </select>
+
+    <select id="getCodyCodeList" parameterType="Map" resultType="egovMap">
+        SELECT Extent1.MEM_ID CODE_ID ,
+                  Extent1.MEM_CODE MEM_CODE ,
+                  Extent1.NAME NAME ,
+                  Extent1.MEM_CODE || ' - '  || Extent1.NAME CODE_NAME ,
+                  Extent2.DEPT_CODE DEPT_CODE ,
+                  Extent2.GRP_CODE GRP_CODE ,
+                  Extent2.ORG_CODE ORG_CODE
+        FROM ORG0001D Extent1
+            JOIN
+                  (SELECT vMemberOrg.MEM_ID MEM_ID ,
+                            vMemberOrg.MEM_CODE MEM_CODE ,
+                            vMemberOrg.MEM_LVL MEM_LVL ,
+                            vMemberOrg.DEPT_CODE DEPT_CODE ,
+                            vMemberOrg.GRP_CODE GRP_CODE ,
+                            vMemberOrg.ORG_CODE ORG_CODE ,
+                            vMemberOrg.TOP_ORG_CODE TOP_ORG_CODE ,
+                            vMemberOrg.MEM_UP_ID MEM_UP_ID ,
+                            vMemberOrg.LVL3_UP_ID LVL3_UP_ID ,
+                            vMemberOrg.LVL2_UP_ID LVL2_UP_ID ,
+                            vMemberOrg.LVL1_UP_ID LVL1_UP_ID ,
+                            vMemberOrg.LVL0_UP_ID LVL0_UP_ID
+                     FROM ORG1001V vMemberOrg
+                  ) Extent2
+          ON ( Extent2.MEM_ID    = Extent1.MEM_ID )
+          AND ( Extent2.MEM_LVL  = #{memLvl} )
+       WHERE ( 1 = Extent1.STUS )
+       AND ( Extent1.MEM_TYPE = #{memType} )
+       AND ( Extent2.MEM_UP_ID = #{upperLineMemberID} )
+       ORDER BY Extent1.MEM_CODE
+    </select>
+
+   <select id="selectBranchCodeList" parameterType="Map" resultType="egovMap">
+      select BRNCH_ID CODE_ID,CODE || '-' || NAME CODE_NAME
+       from sys0005m
+       where TYPE_ID = 42
+       order by CODE
+
+</select>
+
 </mapper>

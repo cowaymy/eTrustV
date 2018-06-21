@@ -19,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.logistics.returnusedparts.ReturnUsedPartsService;
@@ -223,8 +224,35 @@ public class ReturnUsedPartsController {
 		
 	}
 	
+	@RequestMapping(value="/HSUsedFilterListingPop.do")
+	public String HSUsedFilterListingPop(){
+		
+		return "logistics/returnUsedParts/HSUsedFilterListingPop";
+	}
 	
+	@RequestMapping(value="/getDeptCodeList")
+	public ResponseEntity<List<EgovMap>> getDeptCodeList(@RequestParam Map<String, Object> params) throws Exception{
 	
+		List<EgovMap> deptCodeList = null;
+		deptCodeList = returnUsedPartsService.getDeptCodeList(params);
+		
+		return ResponseEntity.ok(deptCodeList);
+	}
+	
+	@RequestMapping(value="/getCodyCodeList")
+	public ResponseEntity<List<EgovMap>> getCodyCodeList(@RequestParam Map<String, Object> params) throws Exception{
+	
+		List<EgovMap> codyCodeList = null;
+		codyCodeList = returnUsedPartsService.getCodyCodeList(params);
+		
+		return ResponseEntity.ok(codyCodeList);
+	}
+	
+	@RequestMapping(value = "/selectBranchCodeList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectBranchCodeList(@RequestParam Map<String, Object> params) {
+		List<EgovMap> branchCodeList = returnUsedPartsService.selectBranchCodeList(params);
+		return ResponseEntity.ok(branchCodeList);
+	}
 	
 	
 }

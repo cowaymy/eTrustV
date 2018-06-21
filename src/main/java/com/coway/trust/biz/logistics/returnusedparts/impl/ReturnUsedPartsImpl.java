@@ -99,4 +99,22 @@ public class ReturnUsedPartsImpl extends EgovAbstractServiceImpl implements Retu
 		
 	}
 	
+	@Override
+	public List<EgovMap> getDeptCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return returnUsedPartsMapper.getDeptCodeList(params);
+	}
+	
+	@Override
+	public List<EgovMap> getCodyCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return returnUsedPartsMapper.getCodyCodeList(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectBranchCodeList(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return returnUsedPartsMapper.selectBranchCodeList(params);
+	}
+	
 }
