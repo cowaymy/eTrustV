@@ -389,6 +389,9 @@ console.log("ready");
     doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
     //doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
 
+    //$("#issuedBank option[value='MBF']").remove();
+    //$("#issuedBank option[value='OTH']").remove();
+
     $("#deptCd").change(function (){
     	//modify hgham 2017-12-25  주석 처리
     	//doGetComboSepa("/common/selectBranchCodeList.do",$("#deptCd").val() , '-',''   , 'branch' , 'S', '');
@@ -496,10 +499,24 @@ console.log("ready");
      }
 
      $('#bankAccNo').blur(function() {
-    	 checkBankAccNo();
+         // 2018-06-21 - LaiKW - Added removal of special characters from bank account number - Start
+         var bnkNo = $('#bankAccNo').val();
+         bnkNo = bnkNo.replace(/[^0-9]/g,"");
+
+         $('#bankAccNo').val(bnkNo);
+         // 2018-06-21 - LaiKW - Added removal of special characters from bank account number - End
+
+         checkBankAccNo();
      });
 
 });
+
+// 2018-06-20 - LaiKW - Removal of MBF Bank and Others from Issued Bank drop down box
+function onclickIssuedBank() {
+	$("#issuedBank > option[value='22']").remove();
+	$("#issuedBank > option[value='24']").remove();
+}
+
 function createAUIGridDoc() {
     //AUIGrid 칼럼 설정
     var columnLayout = [
@@ -1079,6 +1096,13 @@ function fn_onchangeMarrital() {
 
 function checkBankAccNoEnter() {
 	if(event.keyCode == 13) {
+		// 2018-06-21 - LaiKW - Added removal of special characters from bank account number - Start
+		var bnkNo = $('#bankAccNo').val();
+        bnkNo = bnkNo.replace(/[^0-9]/g,"");
+
+        $('#bankAccNo').val(bnkNo);
+        // 2018-06-21 - LaiKW - Added removal of special characters from bank account number - End
+
 		checkBankAccNo();
 	}
 }
@@ -1451,7 +1475,7 @@ function checkBankAccNo() {
 <tr>
     <th scope="row">Issued Bank<span class="must">*</span></th>
     <td>
-    <select class="w100p" id="issuedBank" name="issuedBank">
+    <select class="w100p" id="issuedBank" name="issuedBank" onClick="javascript : onclickIssuedBank()">
     </select>
     </td>
     <th scope="row">Bank Account No<span class="must">*</span></th>
