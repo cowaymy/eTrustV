@@ -2060,12 +2060,12 @@
             return false;
         }
         else {
-            if(!fn_validReqOwntCustmer())      return false;
-            if(!fn_validReqOwntMailAddress())  return false;
-            if(!fn_validReqOwntContact())      return false;
-            if(!fn_validReqOwntRentPaySet())   return false;
-            if(!fn_validReqOwntBillGroup())    return false;
-            if(!fn_validReqOwntInstallation()) return false;
+            if(!fn_validReqOwntCustmer()){     return false;}
+            if(!fn_validReqOwntMailAddress()){return false;}
+            if(!fn_validReqOwntContact()){     return false;}
+            if(!fn_validReqOwntRentPaySet()){  return false;}
+            if(!fn_validReqOwntBillGroup()){    return false;}
+            if(!fn_validReqOwntInstallation()){ return false;}
         }
         return true;
     }
@@ -2128,16 +2128,15 @@
 
     function fn_validReqOwntRentPaySet() {
         var isValid = true, msg = "";
-
         if(APP_TYPE_ID == '66') {
             if($('#btnThirdPartyOwnt').is(":checked")) {
-                if(FormUtil.checkReqValue($('#txtHiddenThirdPartyID'))) {
+                if(FormUtil.checkReqValue($('#txtHiddenThirdPartyIDOwnt'))) {
                     isValid = false;
                     msg += '<spring:message code="sal.alert.msg.plzSelThirdParty" />';
                 }
             }
-            if($("#cmbRentPaymodeOwnt option:selected").index() <= 0) {
-                Common.ajaxSync("GET", "/sales/order/selectOderOutsInfo.do", {ordId : ORD_ID}, function(result) {
+            if($("#cmbRentPaymodeOwnt option:selected").index() <= 0) {C
+                Common.ajaxSync("GET", "/sales/order/selectOderOutsInfo.do", {ordId : ORD_ID}, function(result) {Common.alert('5');
                     if(result != null && result.length > 0) {
                         if(result[0].lastBillMth != 60 || result[0].ordTotOtstnd != 0) {
                             isValid = false;
@@ -2164,7 +2163,7 @@
                         isValid = false;
                         msg += '<spring:message code="sal.alert.msg.plzSelBankAccount" />';
                     }
-                    else {
+                    else {Common.alert('7');
                         if(FormUtil.checkReqValue($('#hiddenRentPayBankAccBankIDOwnt')) || $('#hiddenRentPayBankAccBankIDOwnt').val() == '0') {
                             isValid = false;
                             msg += '<spring:message code="sal.alert.msg.invalidBankAccIssueBank" />';
