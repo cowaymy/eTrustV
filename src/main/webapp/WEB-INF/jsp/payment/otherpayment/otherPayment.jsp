@@ -1575,7 +1575,7 @@ function isDupSrvcToFinal(){
 	        return;
 	    }else{
 
-			if(isDupHPToFinal() > 0 || isDupASToFinal() > 0){
+			if(isDupHPToFinal() > 0 || isDupASToFinal() > 0 || isDupPOSToFinal() > 0){ // Added POS - TPY 21/06/2018
 				Common.alert("<spring:message code='pay.alert.keyin.add.dup'/>");
 				return;
 			}
@@ -1683,6 +1683,32 @@ function isDupHPToFinal(){
 	}
 	return dupCnt;
 }
+
+//Add to handle Bill Type - POS  - TPY 21/06/2018
+function isDupPOSToFinal(){
+    var rowCnt = AUIGrid.getRowCount(targetBillMstGridID);
+    var addedRows = AUIGrid.getRowsByValue(targetFinalBillGridID,"appType","POS");
+    var dupCnt = 0;
+
+
+    if(rowCnt > 0){
+        for(i = 0 ; i < rowCnt ; i++){
+            if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
+                var targetAmt = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
+
+                if(addedRows.length > 0) {
+                    for(addedIdx = 0 ; addedIdx < addedRows.length ; addedIdx++){
+                        if (AUIGrid.getCellValue(targetBillMstGridID, i ,"billId") == addedRows[addedIdx].billId && AUIGrid.getCellValue(targetBillMstGridID, i ,"appType") == 'POS') {
+                            dupCnt++;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    return dupCnt;
+}
+
 
   //Outright Amount 계산
     function recalculateOutTotalAmt(){
@@ -2417,11 +2443,17 @@ function srvcDiscountValue(){
 	        AUIGrid.showColumnByDataField(targetBillMstGridID, "custNm");
 	        AUIGrid.showColumnByDataField(targetBillMstGridID, "nric");
 
-	    }else{
+	    }else if($("#billType").val() == 2){
 	        AUIGrid.showColumnByDataField(targetBillMstGridID, "billMemNm" );
 	        AUIGrid.showColumnByDataField(targetBillMstGridID, "billMemCode" );
 	        AUIGrid.hideColumnByDataField(targetBillMstGridID, "custNm");
 	        AUIGrid.hideColumnByDataField(targetBillMstGridID, "nric");
+
+	    }else{ // added to handle bill type = 3 - POS
+	          AUIGrid.hideColumnByDataField(targetBillMstGridID, "billMemNm" );
+	            AUIGrid.hideColumnByDataField(targetBillMstGridID, "billMemCode" );
+	            AUIGrid.showColumnByDataField(targetBillMstGridID, "custNm");
+	            AUIGrid.showColumnByDataField(targetBillMstGridID, "nric");
 	    }
 	}
 
@@ -3599,6 +3631,7 @@ function fn_genUnknownReport() {
                                 <select id="billType" name="billType" onChange="javascript:fn_changeBillType();">
                                     <option value="1">AS</option>
                                     <option value="2">HP</option>
+                                    <option value="3">POS</option>
                                 </select>
                             </td>
                             <th scope="row">Search Keywords(BillNo, OrderNo, HPCode)</th>
