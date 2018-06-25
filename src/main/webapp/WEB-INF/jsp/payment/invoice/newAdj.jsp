@@ -8,8 +8,8 @@
     //Default Combo Data
     var adjTypeData = [{"codeId": "1293","codeName": "Credit Note"},{"codeId": "1294","codeName": "Debit Note"}];
 
-    //Grid Properties 설정 
-    var gridPros = {            
+    //Grid Properties 설정
+    var gridPros = {
         editable : true,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false     // 상태 칼럼 사용
     };
@@ -21,16 +21,16 @@
         { dataField:"billitemtype" ,headerText:"<spring:message code='pay.head.billType'/>" ,editable : false ,width : 120},
         { dataField:"billitemrefno" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false ,width : 120 },
         { dataField:"billitemunitprice" ,headerText:"<spring:message code='pay.head.unitPrice'/>" ,editable : false, dataType : "numeric",formatString : "#,##0.00" ,width : 120},
-        { dataField:"billitemqty" ,headerText:"<spring:message code='pay.head.quantity'/>" ,editable : false ,width : 120},    
-        { dataField:"billitemtaxrate" ,headerText:"<spring:message code='pay.head.gstRate'/>" ,editable : false , postfix : "%" ,width : 120},    
+        { dataField:"billitemqty" ,headerText:"<spring:message code='pay.head.quantity'/>" ,editable : false ,width : 120},
+        { dataField:"billitemtaxrate" ,headerText:"<spring:message code='pay.head.gstRate'/>" ,editable : false , postfix : "%" ,width : 120},
         { dataField:"billitemcharges" ,headerText:"<spring:message code='pay.head.amount'/>" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
         { dataField:"billitemtaxes" ,headerText:"<spring:message code='pay.head.gstRate'/>" ,editable : false , dataType : "numeric",formatString : "#,##0.00" ,width : 120},
         { dataField:"billitemamount" ,headerText:"<spring:message code='pay.head.total'/>" ,editable : false ,dataType : "numeric",formatString : "#,##0.00" ,width : 120},
         {
             dataField : "totamount",
-            headerText : "<spring:message code='pay.head.totalAdjustmentAmount'/>",        
+            headerText : "<spring:message code='pay.head.totalAdjustmentAmount'/>",
             dataType : "numeric",
-            width : 220, 
+            width : 220,
             formatString : "#,##0.00",
             style : "input_style",
             editRenderer : {
@@ -39,7 +39,7 @@
                 onlyNumeric : true, // 0~9만 입력가능
                 allowPoint : true, // 소수점( . ) 도 허용할지 여부
                 allowNegative : false, // 마이너스 부호(-) 허용 여부
-                textAlign : "right", // 오른쪽 정렬로 입력되도록 설정            
+                textAlign : "right", // 오른쪽 정렬로 입력되도록 설정
                 autoThousandSeparator : true // 천단위 구분자 삽입 여부
             }
         }];
@@ -48,14 +48,14 @@
     $(document).ready(function(){
 
         //Adjustment Type 생성
-        doDefCombo(adjTypeData, '' ,'adjType', 'S', '');            
+        doDefCombo(adjTypeData, '' ,'adjType', 'S', '');
 
         //Adjustment Type 변경시 Reason Combo 생성
         $('#adjType').change(function (){
-            $("#adjReason option").remove();        
+            $("#adjReason option").remove();
 
             if($(this).val() != ""){
-                var param = $(this).val() == "1293" ? "1584" : "1585"; 
+                var param = $(this).val() == "1293" ? "1584" : "1585";
                 doGetCombo('/common/selectAdjReasontList.do', param , ''   , 'adjReason' , 'S', '');
             }
         });
@@ -64,7 +64,7 @@
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 
         //Cell Edit Event : adjustment 금액은 total amount를 초과할수 없음.
-        AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {        
+        AUIGrid.bind(myGridID, "cellEditEnd", function( event ) {
             var charge = AUIGrid.getCellValue(myGridID, event.rowIndex, "billitemamount"); //invoice charge
             var totamount = AUIGrid.getCellValue(myGridID, event.rowIndex, "totamount"); //transfer amount
 
@@ -82,8 +82,8 @@
     });
 
     function getAdjustmentInfo(refNo){
-        
-        //데이터 조회 (초기화면시 로딩시 조회)       
+
+        //데이터 조회 (초기화면시 로딩시 조회)
         Common.ajax("GET", "/payment/selectNewAdjList.do", {"refNo":refNo}, function(result) {
             if(result != 'undefined'){
                 $("#reselect").attr("disabled", true);
@@ -124,7 +124,7 @@
     //Total Adjustment Amount 계산
     function auiGridSelectionChangeHandler(event) {
         var allList = AUIGrid.getGridData(myGridID);
-        var val;    
+        var val;
         var sum = 0;
 
         if(allList.length < 1) {
@@ -138,10 +138,10 @@
 
             if(isNaN(val)) {
                 continue;
-            }       
+            }
             sum += val;
-        }   
-        
+        }
+
         $('#totAdjustment').text(sum);
     }
 
@@ -163,7 +163,7 @@
         $("#search").show();
         $("#reSelect").hide();
 
-        $("#invoiceNo").val("");   
+        $("#invoiceNo").val("");
         $("#invoiceNo").removeClass('readonly');
         $("#invoiceNo").prop('readonly', false);
     }
@@ -173,50 +173,51 @@
         Common.popupDiv('/payment/common/initCommonSearchInvoicePop.do', null, null , true ,'_searchInvoice');
     }
 
-    //search Invoice 팝업에서 리스트 선택시 
+    //search Invoice 팝업에서 리스트 선택시
     function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value, item){
         $("#invoiceNo").val(AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo"));
         confirmList();
         $('#_searchInvoice').hide();
         $('#_searchInvoice').remove();
     }
-    
+
     //Save
     function fn_saveAdjustmentInfo(){
-    	
-    	if(FormUtil.checkReqValue($("#adjType option:selected")) ){	
+
+    	if(FormUtil.checkReqValue($("#adjType option:selected")) ){
     		Common.alert("<spring:message code='pay.alert.selectAdjType'/>");
             return;
         }
-    	
-    	if(FormUtil.checkReqValue($("#adjReason option:selected")) ){    
+
+    	if(FormUtil.checkReqValue($("#adjReason option:selected")) ){
     		Common.alert("<spring:message code='pay.alert.selectAdjReason'/>");
             return;
         }
-    	
-        if(FormUtil.checkReqValue($("#remark")) ){    
+
+        if(FormUtil.checkReqValue($("#remark")) ){
         	Common.alert("<spring:message code='pay.alert.selectAdjRemark'/>");
             return;
         }
-        
-        if(Number($("#totAdjustment").text()) < 1){
+
+    // Allow User to enter adjustment amount less than 1
+  /*       if(Number($("#totAdjustment").text()) < 1){
         	Common.alert("<spring:message code='pay.alert.selectAdjAmt'/>");
         	return;
         }
-        
+         */
         //param data array
         var data = GridCommon.getGridData(myGridID);
         data.form = $("#searchForm").serializeJSON();
-        
+
         //Ajax 호출
         Common.ajax("POST", "/payment/saveNewAdjList.do", data, function(result) {
         	var returnMsg = "<spring:message code='pay.alert.saveBatchNewAdjList' arguments='"+result.data+"' htmlEscape='false'/>";
-        	
+
         	Common.alert(returnMsg, function (){
         		location.href = "/payment/initAdjCnDn.do";
-        		
+
         	});
-            
+
         },  function(jqXHR, textStatus, errorThrown) {
             try {
                 console.log("status : " + jqXHR.status);
@@ -226,9 +227,9 @@
             } catch (e) {
                 console.log(e);
             }
-            Common.alert("Fail : " + jqXHR.responseJSON.message);        
+            Common.alert("Fail : " + jqXHR.responseJSON.message);
         });
-    	
+
     }
 </script>
 
@@ -342,7 +343,7 @@
 	                </tr>
 	            </tbody>
 	        </table>
-	
+
 	        <!-- title_line start -->
 	        <aside class="title_line">
 	            <h3>Adjustment Information</h3>
@@ -379,7 +380,7 @@
 	                </tr>
 	            </tbody>
 	        </table>
-        </form> 
+        </form>
         <!-- title_line start -->
         <aside class="title_line">
             <h3>Item(s) Information</h3>
@@ -387,7 +388,7 @@
         <!-- table end -->
 
         <!-- search_result start -->
-        <section class="search_result"> 
+        <section class="search_result">
             <!-- grid_wrap start -->
             <article id="grid_wrap" class="grid_wrap"></article>
             <!-- grid_wrap end -->
