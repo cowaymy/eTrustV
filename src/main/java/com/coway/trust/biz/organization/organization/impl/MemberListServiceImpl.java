@@ -1881,7 +1881,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    			EgovMap org001dInfo = null;
 	    			org001dInfo = memberListMapper.selectORG001DInfo(MemberId) ;
 
-	    			if (org001dInfo != null) {
+	    			//if (org001dInfo != null) {
 
 	    				logger.debug("org001dInfo : {}",org001dInfo);
 
@@ -1987,7 +1987,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	    	    		userPram.put("P_STATUS", userPram.get("p1"));
 	    	    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
 
-	    			}
+	    			//}
 
 			}
 
