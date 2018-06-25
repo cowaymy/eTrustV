@@ -60,31 +60,31 @@ SELECT   T.CLM_NO
                  ) T
           WHERE 1=1
         <if test="startDt != null and startDt != ''">
-        <![CDATA[ 
+        <![CDATA[
              AND T.INVC_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
         ]]>
-        </if>          
+        </if>
         <if test="endDt != null and endDt != ''">
-        <![CDATA[ 
+        <![CDATA[
              AND T.INVC_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
-        </if>          
+        </if>
         <if test="memAccId != null and memAccId != ''">
              AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
-        </if>          
+        </if>
         <if test="costCenter != null and costCenter != ''">
              AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
-        </if>     
+        </if>
         <if test="clmNo != null and clmNo != ''">
              AND UPPER(T.CLM_NO) = UPPER(#{clmNo})
-        </if>   
+        </if>
         <if test="appvPrcssStus != null and appvPrcssStus != ''">
              AND T.APPV_PRCSS_STUS_CODE IN
          <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
              #{item}
          </foreach>
         </if>
-        ORDER BY T.CLM_NO         
+        ORDER BY T.CLM_NO
 </select>
 
 <select id="selectSupplier" parameterType="Map" resultType="egovMap">
@@ -132,7 +132,7 @@ SELECT   T.CLM_NO
 <select id="selectTaxCodeWebInvoiceFlag" resultType="egovMap">
 /* webInvoiceMapper.selectTaxCodeWebInvoiceFlag */
     SELECT TAX_CODE ,
-                INDUSTRY_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME 
+                INDUSTRY_CODE||' '||'('||TAX_NAME||')' AS TAX_NAME
     FROM FCM0007C
     WHERE WEB_INVC_FLAG = 'X'
 </select>
@@ -405,7 +405,7 @@ SELECT   T.CLM_NO
           LEFT JOIN SYS0071D T2
           ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
           WHERE T1.ATCH_FILE_GRP_ID IN (SELECT ATCH_FILE_GRP_ID FROM FCM0015D WHERE APPV_PRCSS_NO = #{appvPrcssNo})
-          ORDER BY T1.ATCH_FILE_ID         
+          ORDER BY T1.ATCH_FILE_ID
 </select>
 
 <select id="selectAttachList" parameterType="String" resultType="egovMap">
@@ -421,7 +421,7 @@ SELECT   T.CLM_NO
           LEFT JOIN SYS0071D T2
           ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
           WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
-          ORDER BY T1.ATCH_FILE_ID         
+          ORDER BY T1.ATCH_FILE_ID
 </select>
 
 <select id="selectAttachmentInfo" parameterType="Map" resultType="egovMap">
@@ -437,7 +437,7 @@ SELECT   T.CLM_NO
           LEFT JOIN SYS0071D T2
           ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
           WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
-          AND T1.ATCH_FILE_ID = #{atchFileId}         
+          AND T1.ATCH_FILE_ID = #{atchFileId}
 </select>
 
 <update id="updateWebInvoiceInfo" parameterType="Map">
@@ -463,7 +463,7 @@ SELECT   T.CLM_NO
        ,BIL_PERIOD_T = TO_DATE(#{bilPeriodT}, 'DD/MM/YYYY')
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE CLM_NO = #{clmNo}       
+    WHERE CLM_NO = #{clmNo}
 </update>
 
 <update id="updateWebInvoiceDetail" parameterType="Map">
@@ -490,7 +490,7 @@ SELECT   T.CLM_NO
 
 <delete id="deleteWebInvoiceDetail" parameterType="Map">
 /* webInvoiceMapper.deleteWebInvoiceDetail */
-    DELETE FROM FCM0003D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq} 
+    DELETE FROM FCM0003D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq}
 </delete>
 
 <select id="budgetCheck" parameterType="Map" resultType="String">
@@ -661,7 +661,7 @@ SELECT   T.CLM_NO
    SET APPV_PRCSS_NO = #{appvPrcssNo}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE CLM_NO = #{clmNo}       
+    WHERE CLM_NO = #{clmNo}
 </update>
 
 <select id="selectApproveList" parameterType="Map" resultType="egovMap">
@@ -734,47 +734,47 @@ SELECT T.APPV_PRCSS_NO
                  LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
                  LEFT JOIN FCM0006M T5 ON T3.MEM_ACC_ID = T5.MEM_ACC_ID
                  LEFT JOIN
-                 (SELECT Q.ATCH_FILE_GRP_ID, 
-                                 Q.ATCH_FILE_ID, 
-                                 Q.ATCH_FILE_NAME, 
-                                 Q.FILE_EXTSN, 
-                                 Q.FILE_CNT 
-                          FROM   (SELECT ROW_NUMBER () 
-                                           OVER ( 
-                                             PARTITION BY R.APPV_PRCSS_NO 
-                                             ORDER BY R.ATCH_FILE_GRP_ID) AS 
-                                         RNUM, 
-                                         R.ATCH_FILE_GRP_ID, 
-                                         R.ATCH_FILE_ID, 
-                                         R.ATCH_FILE_NAME, 
-                                         R.FILE_EXTSN, 
-                                         R.FILE_CNT 
-                                  FROM   (SELECT ROW_NUMBER () 
-                                                   OVER ( 
-                                                     PARTITION BY 
-                                                   X.ATCH_FILE_GRP_ID 
-                                                     ORDER BY 
-                                                   X.ATCH_FILE_GRP_ID, 
-                                                   Y.ATCH_FILE_ID) AS RNUM 
-                                                 , 
-                                                 Z.APPV_PRCSS_NO, 
-                                                 X.ATCH_FILE_GRP_ID, 
-                                                 X.ATCH_FILE_ID, 
-                                                 Y.ATCH_FILE_NAME, 
-                                                 Y.FILE_EXTSN, 
-                                                 Count (X.ATCH_FILE_ID) 
-                                                   OVER ( 
-                                                     PARTITION BY 
-                                                   X.ATCH_FILE_GRP_ID) 
-                                                 FILE_CNT 
-                                          FROM   SYS0070M X 
-                                                 LEFT JOIN SYS0071D Y 
-                                                        ON X.ATCH_FILE_ID = 
-                                                           Y.ATCH_FILE_ID 
-                                                 LEFT JOIN FCM0015D Z 
-                                                        ON Z.ATCH_FILE_GRP_ID = 
-                                                           X.ATCH_FILE_GRP_ID) R 
-                                  WHERE  R.RNUM = 1) Q 
+                 (SELECT Q.ATCH_FILE_GRP_ID,
+                                 Q.ATCH_FILE_ID,
+                                 Q.ATCH_FILE_NAME,
+                                 Q.FILE_EXTSN,
+                                 Q.FILE_CNT
+                          FROM   (SELECT ROW_NUMBER ()
+                                           OVER (
+                                             PARTITION BY R.APPV_PRCSS_NO
+                                             ORDER BY R.ATCH_FILE_GRP_ID) AS
+                                         RNUM,
+                                         R.ATCH_FILE_GRP_ID,
+                                         R.ATCH_FILE_ID,
+                                         R.ATCH_FILE_NAME,
+                                         R.FILE_EXTSN,
+                                         R.FILE_CNT
+                                  FROM   (SELECT ROW_NUMBER ()
+                                                   OVER (
+                                                     PARTITION BY
+                                                   X.ATCH_FILE_GRP_ID
+                                                     ORDER BY
+                                                   X.ATCH_FILE_GRP_ID,
+                                                   Y.ATCH_FILE_ID) AS RNUM
+                                                 ,
+                                                 Z.APPV_PRCSS_NO,
+                                                 X.ATCH_FILE_GRP_ID,
+                                                 X.ATCH_FILE_ID,
+                                                 Y.ATCH_FILE_NAME,
+                                                 Y.FILE_EXTSN,
+                                                 Count (X.ATCH_FILE_ID)
+                                                   OVER (
+                                                     PARTITION BY
+                                                   X.ATCH_FILE_GRP_ID)
+                                                 FILE_CNT
+                                          FROM   SYS0070M X
+                                                 LEFT JOIN SYS0071D Y
+                                                        ON X.ATCH_FILE_ID =
+                                                           Y.ATCH_FILE_ID
+                                                 LEFT JOIN FCM0015D Z
+                                                        ON Z.ATCH_FILE_GRP_ID =
+                                                           X.ATCH_FILE_GRP_ID) R
+                                  WHERE  R.RNUM = 1) Q
                           WHERE  Q.RNUM = 1) T6 ON T3.ATCH_FILE_GRP_ID = T6.ATCH_FILE_GRP_ID
            WHERE     T2.APPV_LINE_USER_ID = #{memCode}
            <!-- WHERE 1=1 -->
@@ -801,26 +801,26 @@ SELECT T.APPV_PRCSS_NO
                 ,T6.FILE_CNT
                 ,T2.APPV_DT -->
                 ) T
-  WHERE 1 = 1   
+  WHERE 1 = 1
         <if test="startDt != null and startDt != ''">
-        <![CDATA[ 
+        <![CDATA[
              AND T.REQST_DT >= TO_DATE(#{startDt}, 'DD/MM/YYYY')
         ]]>
-        </if>          
+        </if>
         <if test="endDt != null and endDt != ''">
-        <![CDATA[ 
+        <![CDATA[
              AND T.REQST_DT < TO_DATE(#{endDt}, 'DD/MM/YYYY') + 1
         ]]>
-        </if>          
+        </if>
         <if test="memAccId != null and memAccId != ''">
              AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
-        </if>          
+        </if>
         <if test="createUser != null and createUser != ''">
              AND UPPER(T.REQST_USER_ID) = (SELECT USER_NAME FROM SYS0047M WHERE HR_CODE = UPPER(#{createUser}))
-        </if>          
+        </if>
         <if test="costCenter != null and costCenter != ''">
              AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
-        </if>     
+        </if>
         <if test="appvPrcssStus != null and appvPrcssStus != ''">
              AND T.APPV_PRCSS_STUS_CODE IN
          <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
@@ -833,28 +833,28 @@ SELECT T.APPV_PRCSS_NO
              #{item}
          </foreach>
         </if>
-        ORDER BY T.APPV_PRCSS_NO, T.REQST_DT           
+        ORDER BY T.APPV_PRCSS_NO, T.REQST_DT
 </select>
 
 <select id="selectAppvLineInfo" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.selectAppvLineInfo */
-SELECT T1.APPV_PRCSS_NO, 
+SELECT T1.APPV_PRCSS_NO,
        T1.APPV_LINE_SEQ,
-       T1.APPV_LINE_USER_ID, 
-       T2.NAME AS APPV_LINE_USER_NAME, 
-       TO_CHAR(T1.APPV_DT, 'DD/MM/YYYY') AS APPV_DT, 
-       T1.APPV_STUS 
-FROM   FCM0005D T1 
-       LEFT JOIN ORG0001D T2 
-              ON T1.APPV_LINE_USER_ID = T2.MEM_CODE 
-WHERE  T1.APPV_PRCSS_NO = #{appvPrcssNo} 
-ORDER  BY T1.APPV_LINE_SEQ 
+       T1.APPV_LINE_USER_ID,
+       T2.NAME AS APPV_LINE_USER_NAME,
+       TO_CHAR(T1.APPV_DT, 'DD/MM/YYYY') AS APPV_DT,
+       T1.APPV_STUS
+FROM   FCM0005D T1
+       LEFT JOIN ORG0001D T2
+              ON T1.APPV_LINE_USER_ID = T2.MEM_CODE
+WHERE  T1.APPV_PRCSS_NO = #{appvPrcssNo}
+ORDER  BY T1.APPV_LINE_SEQ
 </select>
 
 <select id="selectRejectOfAppvPrcssNo" parameterType="Map" resultType="String">
 /* webInvoiceMapper.selectRejectOfAppvPrcssNo */
 SELECT REJCT_RESN
-FROM   FCM0005D 
+FROM   FCM0005D
 WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
 </select>
 
@@ -872,7 +872,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
                       ,TO_CHAR(T2.APPV_DT, 'DD/MM/YYYY') AS APPV_DT
                       ,T2.APPV_STUS*/
                       ,T3.APPV_ITM_SEQ
-                      ,T3.INVC_NO
+                      ,REGEXP_REPLACE(T3.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)',null) INVC_NO
                       ,TO_CHAR(T3.INVC_DT, 'DD/MM/YYYY') AS INVC_DT
                       ,T3.MEM_ACC_ID
                       ,T6.MEM_ACC_NAME
@@ -896,12 +896,12 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
                       ,T3.EXP_DESC
                       ,T3.CLAM_UN
                       <if test="clmType == 'J3'">
-                      ,NVL(( SUBSTR(T8.CRDIT_CARD_NO, 1, 4) 
-                                || '********' 
+                      ,NVL(( SUBSTR(T8.CRDIT_CARD_NO, 1, 4)
+                                || '********'
                                 || SUBSTR(T8.CRDIT_CARD_NO, -4)
-                                || ' ' 
-                                || '(' 
-                                || T8.CRDIT_CARD_USER_NAME 
+                                || ' '
+                                || '('
+                                || T8.CRDIT_CARD_USER_NAME
                                 || ')' ), '')    AS CRDIT_CARD_NO
                       </if>
           FROM FCM0004M T1 /*LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO*/
@@ -914,7 +914,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
           LEFT JOIN FCM0017M T8 ON T1.APPV_REQ_KEY_NO = T8.CLM_NO
           </if>
           WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}
-          ORDER BY T3.APPV_ITM_SEQ         
+          ORDER BY T3.APPV_ITM_SEQ
 </select>
 
 <select id="selectAppvLineCnt" parameterType="String" resultType="int">
@@ -935,7 +935,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,APPV_LINE_PRCSS_CNT = #{appvLinePrcssCnt}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE APPV_PRCSS_NO = #{appvPrcssNo}       
+    WHERE APPV_PRCSS_NO = #{appvPrcssNo}
 </update>
 
 <update id="updateAppvLine" parameterType="Map">
@@ -947,7 +947,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
     WHERE APPV_PRCSS_NO = #{appvPrcssNo}
-    AND APPV_LINE_SEQ = #{appvLineSeq}       
+    AND APPV_LINE_SEQ = #{appvLineSeq}
 </update>
 
 <update id="updateLastAppvLine" parameterType="Map">
@@ -956,7 +956,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
    SET APPV_PRCSS_STUS = 'A'
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE APPV_PRCSS_NO = #{appvPrcssNo}       
+    WHERE APPV_PRCSS_NO = #{appvPrcssNo}
 </update>
 
 <select id="selectNextAppvIfKey" resultType="String">
@@ -1096,13 +1096,13 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
 </update>
 
 <select id="selectBudgetCodeList" parameterType="Map" resultType="egovMap">
-        SELECT T1.BUDGET_CODE 
+        SELECT T1.BUDGET_CODE
                   ,T2.BUDGET_CODE_TEXT
-         FROM FCM0104D T1 
-         LEFT JOIN FCM0010M T2 
+         FROM FCM0104D T1
+         LEFT JOIN FCM0010M T2
          ON T1.BUDGET_CODE = T2.BUDGET_CODE
          WHERE 1=1
-        <!-- <![CDATA[ 
+        <!-- <![CDATA[
              AND START_DT <= SYSDATE
              AND END_DT  >= SYSDATE
         ]]> -->
@@ -1114,15 +1114,15 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
            AND T2.BUDGET_CODE_TEXT LIKE '%'|| #{budgetCodeText} || '%'
         </if>
 </select>
-  
+
 <select id="selectGlCodeList" parameterType="Map" resultType="egovMap">
-SELECT T1.GL_ACC_CODE, 
-               T2.GL_ACC_DESC 
-        FROM   FCM0104D T1 
-               LEFT JOIN FCM0009M T2 
-                      ON T1.GL_ACC_CODE = T2.GL_ACC_CODE 
-        WHERE  1 = 1 
-               AND Upper(T1.COST_CENTR) = Upper(#{costCentr}) 
+SELECT T1.GL_ACC_CODE,
+               T2.GL_ACC_DESC
+        FROM   FCM0104D T1
+               LEFT JOIN FCM0009M T2
+                      ON T1.GL_ACC_CODE = T2.GL_ACC_CODE
+        WHERE  1 = 1
+               AND Upper(T1.COST_CENTR) = Upper(#{costCentr})
                AND T1.BUDGET_CODE = #{budgetCode}
 </select>
 
@@ -1133,8 +1133,8 @@ SELECT T1.GL_ACC_CODE,
 
 <select id="selectClamUn" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.selectClamUn */
-SELECT #{clmType} || NVL (TO_CHAR (MAX (SUBSTR (CLAM_UN, 3, 7) + 1), 'FM0000000'), '0000001') AS CLAM_UN 
-FROM   FCM0022M 
+SELECT #{clmType} || NVL (TO_CHAR (MAX (SUBSTR (CLAM_UN, 3, 7) + 1), 'FM0000000'), '0000001') AS CLAM_UN
+FROM   FCM0022M
 WHERE  CLM_TYPE = #{clmType}
 </select>
 
@@ -1145,12 +1145,12 @@ WHERE  CLM_TYPE = #{clmType}
 
 <select id="selectSameVender" parameterType="Map" resultType="String">
 /* webInvoiceMapper.selectSameVender */
-SELECT A.CLM_NO 
+SELECT A.CLM_NO
 FROM   FCM0002M A
 LEFT JOIN FCM0004M B
 ON A.CLM_NO = B.APPV_REQ_KEY_NO
-WHERE B.APPV_PRCSS_STUS != 'J' 
-    AND UPPER(A.MEM_ACC_ID) = UPPER(#{memAccId}) 
+WHERE B.APPV_PRCSS_STUS != 'J'
+    AND UPPER(A.MEM_ACC_ID) = UPPER(#{memAccId})
     AND A.INVC_NO = #{invcNo}
 <if test="clmNo != null and clmNo != ''">
     AND A.CLM_NO != #{clmNo}
@@ -1160,51 +1160,51 @@ WHERE B.APPV_PRCSS_STUS != 'J'
 <select id="getAppvExcelInfo" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.getAppvExcelInfo */
 SELECT <!-- M.APPV_PRCSS_NO,  -->
-       M.APPV_REQ_KEY_NO, 
-       TO_CHAR(M.REQST_DT, 'DD/MM/YYYY') AS REQST_DT, 
-       M.REQST_USER_ID, 
-       D.INVC_NO, 
-       TO_CHAR(D.INVC_DT, 'DD/MM/YYYY') AS INVC_DT, 
-       ( CASE D.INVC_TYPE 
-           WHEN 'F' THEN 'Full Tax invoice' 
-           WHEN 'S' THEN 'Simplified Tax invoice' 
-         END )                            AS INVC_TYPE, 
-       D.MEM_ACC_ID, 
-       (SELECT MEM_ACC_NAME 
-        FROM   FCM0006M 
-        WHERE  MEM_ACC_ID = D.MEM_ACC_ID) AS MEM_ACC_NAME, 
+       M.APPV_REQ_KEY_NO,
+       TO_CHAR(M.REQST_DT, 'DD/MM/YYYY') AS REQST_DT,
+       M.REQST_USER_ID,
+       D.INVC_NO,
+       TO_CHAR(D.INVC_DT, 'DD/MM/YYYY') AS INVC_DT,
+       ( CASE D.INVC_TYPE
+           WHEN 'F' THEN 'Full Tax invoice'
+           WHEN 'S' THEN 'Simplified Tax invoice'
+         END )                            AS INVC_TYPE,
+       D.MEM_ACC_ID,
+       (SELECT MEM_ACC_NAME
+        FROM   FCM0006M
+        WHERE  MEM_ACC_ID = D.MEM_ACC_ID) AS MEM_ACC_NAME,
        D.SUPPLIR,
-       TO_CHAR(D.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT, 
-       D.EXP_TYPE, 
-       D.EXP_TYPE_NAME, 
-       D.COST_CENTR, 
-       D.COST_CENTR_NAME, 
-       D.GL_ACC_CODE, 
-       D.GL_ACC_CODE_NAME, 
-       D.BUDGET_CODE, 
-       D.BUDGET_CODE_NAME, 
-       D.TAX_CODE, 
-       (SELECT INDUSTRY_CODE 
-               || ' ' 
-               || '(' 
-               || TAX_NAME 
-               || ')' 
-        FROM   FCM0007C 
-        WHERE  TAX_CODE = D.TAX_CODE)     AS TAX_NAME, 
-       D.NET_AMT, 
-       D.TAX_AMT, 
-       D.TAX_NON_CLM_AMT, 
-       D.APPV_AMT, 
-       D.UTIL_NO, 
-       D.J_PAY_NO, 
-       TO_CHAR(D.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F, 
-       TO_CHAR(D.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T, 
-       <!-- D.CLAM_UN, --> 
-       D.EXP_DESC 
-       <!-- ,D.ATCH_FILE_GRP_ID --> 
-FROM   FCM0004M M 
-       JOIN FCM0015D D 
-         ON M.APPV_PRCSS_NO = D.APPV_PRCSS_NO 
+       TO_CHAR(D.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT,
+       D.EXP_TYPE,
+       D.EXP_TYPE_NAME,
+       D.COST_CENTR,
+       D.COST_CENTR_NAME,
+       D.GL_ACC_CODE,
+       D.GL_ACC_CODE_NAME,
+       D.BUDGET_CODE,
+       D.BUDGET_CODE_NAME,
+       D.TAX_CODE,
+       (SELECT INDUSTRY_CODE
+               || ' '
+               || '('
+               || TAX_NAME
+               || ')'
+        FROM   FCM0007C
+        WHERE  TAX_CODE = D.TAX_CODE)     AS TAX_NAME,
+       D.NET_AMT,
+       D.TAX_AMT,
+       D.TAX_NON_CLM_AMT,
+       D.APPV_AMT,
+       D.UTIL_NO,
+       D.J_PAY_NO,
+       TO_CHAR(D.BIL_PERIOD_F, 'DD/MM/YYYY') AS BIL_PERIOD_F,
+       TO_CHAR(D.BIL_PERIOD_T, 'DD/MM/YYYY') AS BIL_PERIOD_T,
+       <!-- D.CLAM_UN, -->
+       D.EXP_DESC
+       <!-- ,D.ATCH_FILE_GRP_ID -->
+FROM   FCM0004M M
+       JOIN FCM0015D D
+         ON M.APPV_PRCSS_NO = D.APPV_PRCSS_NO
 WHERE  M.APPV_PRCSS_NO IN
 <foreach item="item" collection="appvPrcssNo" index="index" open="(" separator="," close=")">
              #{item}
