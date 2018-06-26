@@ -20,6 +20,7 @@
         , l59.trnsc_type_code
         , l60.MATRL_DOC_ITM
         , l60.delvry_no
+        , s1.SALES_ORD_NO ordno
         , l59.REF_DOC_NO
         , l60.STOCK_TRNSFR_REQST
         , tt.code_name trantype
@@ -65,6 +66,8 @@
         , (select * from sys0013m where code_master_id = 306) tt
         , (select * from sys0013m where code_master_id = 308) mt
         , (select * from sys0013m where code_master_id = 42) ut
+        , sal0046d s46
+        , sal0001d s1
         where 1 = 1
         and l60.matrl_no = s26.STK_CODE(+)
         and l60.measure_bas_unit = ut.code_id(+)
@@ -72,6 +75,8 @@
         and l60.INVNTRY_MOV_TYPE = mt.code
         AND l60.rciv_issu_storg_loc = t28.wh_loc_id(+)
         AND l60.storg_loc = f28.wh_loc_id(+)
+        AND l60.SALES_ORD_NO = s46.INSTALL_ENTRY_NO (+)
+        AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+)
         <if test="matdoc !=null and matdoc !=''">
             and l59.matrl_doc_no like  #{matdoc} ||'%'
         </if>
@@ -163,8 +168,12 @@
             and l60.SALES_ORD_NO = #{sordno}
         </if>
          <if test="mainloc !=null and mainloc !=''">
-            and (select WH_LOC_ID from sys0028m where WH_LOC_CODE =#{mainloc}) in(STORG_LOC,RCIV_ISSU_STORG_LOC) 
+            and (select WH_LOC_ID from sys0028m where WH_LOC_CODE =#{mainloc}) in(STORG_LOC,RCIV_ISSU_STORG_LOC)
         </if>
+        <if test="ordno !=null and ordno != ''">
+            AND s1.SALES_ORD_NO = #{ordno}
+        </if>
+
         order by l60.delvry_no desc , l59.matrl_doc_no desc, l60.matrl_doc_itm asc
     </select>
 
