@@ -42,6 +42,7 @@ var serialchk = false;
 var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
                      {dataField: "status",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30 , visible:false},
                      {dataField: "reqstno",headerText :"SMO No."        ,width:120    ,height:30                },
+                     {dataField: "ordno",headerText :"Order No."        ,width:120    ,height:30                },
                      {dataField: "staname",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30                },
                      {dataField: "reqitmno",headerText :"<spring:message code='log.head.stockmovementrequestitem'/>"  ,width:120    ,height:30 , visible:false},
                      {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
@@ -372,10 +373,10 @@ $(document).ready(function(){
      //alert("전체 선택  checked 111 : " + event.checked);
 	     if(true==event.checked){
 	    	 //alert(111);
-	    	$("#allChk").val(event.checked); 
+	    	$("#allChk").val(event.checked);
 	     }else{
 	    	 //alert(222);
-	    	$("#allChk").val(event.checked); 
+	    	$("#allChk").val(event.checked);
 	     }
     });
     /*
@@ -688,20 +689,20 @@ function giFunc(){
             return false;
         }
     }
-    
+
 	    if ($("#giptdate").val() == "") {
 	        Common.alert("Please select the GI Posting Date.");
 	        $("#giptdate").focus();
 	        return false;
 	    }
-	    
+
 	    if ($("#gipfdate").val() == "") {
 	        Common.alert("Please select the GI Doc Date.");
 	        $("#gipfdate").focus();
 	        return false;
 	    }
-	    
-    
+
+
     data.check   = check;
     data.checked = check;
     data.add     = serials;
@@ -717,7 +718,7 @@ function giFunc(){
             AUIGrid.resetUpdatedItems(listGrid, "all");
            $("#giopenwindow").hide();
            $('#search').click();
-        	
+
         }
 
     },  function(jqXHR, textStatus, errorThrown) {
@@ -902,7 +903,8 @@ function fn_serialChck(rowindex , rowitem , str){
                     <td>
                         <select class="w100p" id="sam" name="sam"></select>
                     </td>
-                    <td colspan="2">&nbsp;</td>
+                      <th scope="row">Sales Order No.</th>
+                     <td ><input type="text" class="w100p" id="ordno" name="ordno"></td>
                 </tr>
             </tbody>
         </table><!-- table end -->
