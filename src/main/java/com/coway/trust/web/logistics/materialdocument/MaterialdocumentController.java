@@ -89,9 +89,10 @@ public class MaterialdocumentController {
 		String sam = request.getParameter("sam");
 		String sordno = request.getParameter("sordno");
 		String mainloc = request.getParameter("mainloc").trim();
-		
+		String ordno = request.getParameter("ordno");
+
 		logger.debug("mainloc trim@@@@@@@ : {}", mainloc);
-		
+
 		Map<String, Object> pmap = new HashMap();
 		pmap.put("trantype", trantype);
 		pmap.put("movetype", movetype);
@@ -115,9 +116,10 @@ public class MaterialdocumentController {
 		pmap.put("sam", sam);
 		pmap.put("sordno", sordno);
 		pmap.put("mainloc", mainloc);
+		pmap.put("ordno", ordno);
 
 		List<EgovMap> list = MaterialDocumentService.MaterialDocSearchList(pmap);
-				
+
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
 
