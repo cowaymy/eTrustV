@@ -15,6 +15,7 @@
         select ROWNUM rnum , l47.REQST_STUS     status
 <!--              , reqs.code_name     staname -->
              , (case when l48.FINAL_CMPLT = 'Y' then 'Complete' else 'Open' end) staname
+             , s1.SALES_ORD_NO ordno
              , l47.reqst_no       reqstno
              , l48.reqst_no_itm   reqitmno
              , l47.trnsc_type     ttype
@@ -39,6 +40,7 @@
                       when s26.stk_type_id= 63 then case when s26.SERIAL_CHK = 'Y' and  s28q.serial_pt_chk = 'Y' then 'Y' else 'N' end
                       else 'N' end serialchk
              , l48.itm_name      itmname
+             , (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID =  s26.STK_TYPE_ID) AS itmtype
              , l48.reqst_qty     reqstqty
              , NVL (l55.DELVRY_QTY, 0) AS delyqty
              , 0 AS indelyqty
@@ -58,6 +60,8 @@
              , sys0028m s28q
              , (select reqst_no , itm_code , sum(DELVRY_QTY) DELVRY_QTY , sum(RCIPT_QTY) RCIPT_QTY from log0055d where nvl(del_flag , 'N' ) <![CDATA[<>]]> 'Y' group by reqst_no , itm_code )l55
              , sys0026m s26
+             , sal0046D s46
+             , sal0001D s1
          where 1 =1
            and l47.reqst_no       = l48.reqst_no
            and l47.trnsc_type     = tran.code(+)
@@ -71,6 +75,8 @@
            and l47.reqst_stus     = reqs.code(+)
            and l47.trnsc_type     <![CDATA[<>]]> 'US'
            AND L47.REQST_TYPE  <![CDATA[<>]]> 'PO'
+           AND l47.REF_DOC_NO = s46.INSTALL_ENTRY_NO (+)
+           AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+)
            <if test='sscancel !="Y"'>
            AND NVL(l47.REQST_DEL , 'N') = 'N'
            AND NVL(l48.REQST_DEL , 'N') = 'N'
@@ -123,6 +129,15 @@
            </if>
            <if test="sdocno !=null and sdocno !=''">
               and l47.ref_doc_no = #{sdocno}
+           </if>
+           <if test="stktype !=null">
+                AND s26.STK_TYPE_ID IN
+                <foreach item="item" collection="stktype" index="index" open="(" separator="," close=")">
+                       #{item}
+                </foreach>
+           </if>
+           <if test="ordno !=null">
+                AND s1.SALES_ORD_NO = #{ordno}
            </if>
            ORDER by l47.CRT_DT desc
     </select>
@@ -349,6 +364,7 @@
              , TO_CHAR(TO_DATE(l54.delvry_gr_dt, 'YYYY/MM/DD'), 'DD/MM/YYYY') grdt
              , l48.itm_code itmcd
              , l48.itm_name itmname
+             , (SELECT CODE_NAME FROM SYS0013M WHERE CODE_ID = s26.STK_TYPE_ID) AS itmtype
              , l55.delvry_qty delyqty
              , l48.uom uom
              , uomt.code_name uomnm
@@ -375,6 +391,7 @@
              , (select * from sys0013m where code_master_id = 42) uomt
              , sys0028m s28c
              , sys0028m s28q
+             , sys0026m s26
          where 1 = 1
            and l47.trnsc_type     = tran.code
            and l47.trnsc_type_dtl = trand.code
@@ -382,6 +399,7 @@
            and l47.reqst_cdc_rdc  = s28q.wh_loc_id(+)
            and l48.uom            = uomt.code_id
            and l48.itm_code  = l55.itm_code
+           and l48.itm_code = s26.stk_code
            and l54.delvry_no = l55.delvry_no
            and l48.reqst_no  = l55.reqst_no
            and l47.reqst_no  = l48.reqst_no
@@ -420,11 +438,17 @@
            <if test="crtedt !=null and crtedt !=''">
               and l54.DELVRY_DT <![CDATA[<=]]> to_char(to_date(#{crtedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
-            <if test="reqsdt !=null and reqsdt !=''">
-              and l54.DELVRY_GI_DT <![CDATA[>=]]> to_char(to_date(#{reqsdt},'dd/mm/yyyy'),'yyyymmdd')
+           <if test="reqsdt !=null and reqsdt !=''">
+              and l47.reqst_require_dt  <![CDATA[>=]]> to_char(to_date(#{reqsdt},'dd/mm/yyyy'),'dd/mm/yyyy')
            </if>
            <if test="reqedt !=null and reqedt !=''">
-              and l54.DELVRY_GI_DT <![CDATA[<=]]> to_char(to_date(#{reqedt},'dd/mm/yyyy'),'yyyymmdd')
+              and l47.reqst_require_dt  <![CDATA[<=]]> to_char(to_date(#{reqedt},'dd/mm/yyyy'),'dd/mm/yyyy')
+           </if>
+            <if test="gisdt !=null and gisdt !=''">
+              and l54.DELVRY_GI_DT <![CDATA[>=]]> to_char(to_date(#{gisdt},'dd/mm/yyyy'),'yyyymmdd')
+           </if>
+           <if test="giedt !=null and giedt !=''">
+              and l54.DELVRY_GI_DT <![CDATA[<=]]> to_char(to_date(#{giedt},'dd/mm/yyyy'),'yyyymmdd')
            </if>
            <if test="rcivsdt !=null and rcivsdt !=''">
               and l54.DELVRY_GR_DT <![CDATA[>=]]> to_char(to_date(#{rcivsdt},'dd/mm/yyyy'),'yyyymmdd')
@@ -438,11 +462,17 @@
            <if test="gtype !=null and gtype =='receiptList'">
               and L54.DELVRY_GR_CMPLT <![CDATA[=]]> 'Y'
            </if>
-            <if test="sdocno !=null and sdocno !=''">
+           <if test="sdocno !=null and sdocno !=''">
               and l47.ref_doc_no = #{sdocno}
            </if>
-            <if test="status !=null and status !=''">
+           <if test="status !=null and status !=''">
               and  NVL (L54.DELVRY_GR_CMPLT , 'N') = #{status}
+           </if>
+           <if test="stktype !=null">
+	            AND s26.STK_TYPE_ID IN
+	            <foreach item="item" collection="stktype" index="index" open="(" separator="," close=")">
+	                   #{item}
+	            </foreach>
            </if>
 
            ORDER BY l54.delvry_no desc
@@ -700,30 +730,30 @@
             FROM LOG0055D
            WHERE NVL (DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
          AND   REQST_NO= #{reqstno}
-         AND  ITM_CODE =#{itmcd}  
+         AND  ITM_CODE =#{itmcd}
          GROUP BY REQST_NO , ITM_CODE
     </select>
-    
+
      <update id="updateStockHead" parameterType="Map">
         UPDATE LOG0047M
            SET REQST_DEL = 'Y'
          WHERE REQST_NO = #{reqsmono}
      </update>
-     
+
     <delete id="deleteStockDelete" parameterType="Map">
         delete from LOG0048D where REQST_NO = #{reqsmono}
     </delete>
-    
+
        <delete id="deleteStockBooking" parameterType="Map">
-        delete from log0075m where REQST_NO = #{reqsmono} 
+        delete from log0075m where REQST_NO = #{reqsmono}
     </delete>
-    
+
     <select id="selectAvaliableStockQty" parameterType="Map" resultType="integer">
         SELECT CASE WHEN (L56.QTY - NVL(L75.BOOKQTY , 0)) <![CDATA[<]]> #{rqty}  THEN 1 ELSE 0 END RESULT
-         FROM 
+         FROM
           LOG0056M L56 ,
          (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <![CDATA[<>]]> 'Y'
-           AND  reqst_no IN (SELECT reqst_no FROM log0047m WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')             
+           AND  reqst_no IN (SELECT reqst_no FROM log0047m WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
            GROUP BY LOC_ID , ITM_CODE) L75
         WHERE 1 = 1
         AND L56.STK_CODE = L75.ITM_CODE(+)
@@ -731,9 +761,9 @@
         AND L56.STK_CODE = #{itmcd}
         AND L56.LOC_ID = #{tlocation}
     </select>
-    
+
     <select id="selectDelvryGRcmplt" parameterType="String" resultType="Map">
-    SELECT 
+    SELECT
     DELVRY_NO,
     DELVRY_DT,
     DELVRY_GI_DT,
@@ -741,7 +771,7 @@
     NVL(DELVRY_CMPLT,'N') DEL_CMPLT,
     NVL(DELVRY_GI_CMPLT,'N') DEL_GI_CMPLT,
     NVL(DELVRY_GR_CMPLT,'N') DEL_GR_CMPLT
-    FROM LOG0054M 
+    FROM LOG0054M
     WHERE DELVRY_NO=#{delyno}
     </select>
 
