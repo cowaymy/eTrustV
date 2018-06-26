@@ -46,6 +46,7 @@ var columnLayout = [{dataField: "matrlNo",headerText :"<spring:message code='log
 							{dataField: "matrlDocItm",headerText :"Mat. Doc Item"                         ,width:120    ,height:30 , visible:true},
 							{dataField: "postingdate",headerText :"<spring:message code='log.head.postingdate'/>"                  ,width:120    ,height:30 , visible:true},
 							{dataField: "delvryNo",headerText :"<spring:message code='log.head.deliveryno'/>"                   ,width:120    ,height:30 , visible:true},
+							{dataField: "ordno",headerText :"Order No."        ,width:120    ,height:30                },
 							{dataField: "refDocNo",headerText :"<spring:message code='log.head.refdocno'/>"                 ,width:120    ,height:30 , visible:true},
 							{dataField: "stockTrnsfrReqst",headerText :"<spring:message code='log.head.requestno'/>"                    ,width:120    ,height:30 , visible:true},
 							{dataField: "rcivCdcRdc",headerText :"Req_F_Loc"                    ,width:120    ,height:30 , visible:true},
@@ -180,7 +181,7 @@ $(function(){
     	if (valiedcheck()) {
         SearchListAjax();
     	}
-    	
+
     });
     $("#clear").click(function() {
 
@@ -351,11 +352,11 @@ function f_multiCombos() {
 			});
 		}
 	}
-	
+
 	function valiedcheck() {
 
         if (!$("#mainloc").val() == "" || $("#mainloc").val() == null) {
-        	
+
         	if($("#sfrLoctype").val() != null || $("#stoLoctype").val() != null ){
         		//Common.alert("181818");
         		Common.alert("When choosing Main Location, do not select From Location Type or To Location Type.");
@@ -367,10 +368,10 @@ function f_multiCombos() {
         return true;
 
     }
-	
-	
-	
-	
+
+
+
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -515,10 +516,8 @@ function f_multiCombos() {
                     <td>
                         <input type="text" id="mainloc" name="mainloc" title="" placeholder="Location Code" class="w100p" />
                     </td>
-                    <th scope="row"></th>
-                    <td>
-                        
-                    </td>
+                      <th scope="row">Sales Order No.</th>
+                     <td ><input type="text" class="w100p" id="ordno" name="ordno"></td>
                 </tr>
             </tbody>
         </table><!-- table end -->
