@@ -2163,7 +2163,7 @@
                         isValid = false;
                         msg += '<spring:message code="sal.alert.msg.plzSelBankAccount" />';
                     }
-                    else {Common.alert('7');
+                    else {
                         if(FormUtil.checkReqValue($('#hiddenRentPayBankAccBankIDOwnt')) || $('#hiddenRentPayBankAccBankIDOwnt').val() == '0') {
                             isValid = false;
                             msg += '<spring:message code="sal.alert.msg.invalidBankAccIssueBank" />';
