@@ -68,6 +68,7 @@ today = (dd + '/' + mm + '/' + yyyy);
 var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>"               ,width:120    ,height:30 , visible:false},
                      {dataField: "seq",headerText :"seq"      ,width:120    ,height:30, visible:false },
                      {dataField: "serviceOrder",headerText :"<spring:message code='log.head.serviceorder'/>"      ,width:120    ,height:30, editable:false },
+                     {dataField: "orderNo",headerText :"Order No"      ,width:120    ,height:30, editable:false },
                      {dataField: "code",headerText :"Branch Code"      ,width:120    ,height:30, editable:false },
                      {dataField: "brnchName",headerText :"Branch Name"      ,width:120    ,height:30, editable:false },
                      {dataField: "memCode",headerText :"CtAndCody Code"           ,width:120    ,height:30, editable:false },
@@ -345,7 +346,7 @@ $(document).ready(function(){
 		cancleReturnParts();
 
 		});
-	
+
 	$('#btnHSUsedFilterListing').click(function() {
         Common.popupDiv("/logistics/returnusedparts/HSUsedFilterListingPop.do", null, null, true);
     });
