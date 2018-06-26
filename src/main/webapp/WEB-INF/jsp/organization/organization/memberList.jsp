@@ -401,20 +401,26 @@ function createAUIGrid() {
             width : 130
         },
         {
+            dataField : "crtDt",
+            headerText : "Action Date",
+            editable : false,
+            width : 130
+        },
+        {
         	dataField : "branch",
             headerText : "Approved Branch",
             editable : false,
             width : 130
         },
         {
-        	dataField : "crtDt",
-            headerText : "Action Date",
+            dataField : "address",
+            headerText : "Address",
             editable : false,
             width : 130
         },
         {
-            dataField : "address",
-            headerText : "Address",
+            dataField : "grpCode",
+            headerText : "Group Code",
             editable : false,
             width : 130
         }
