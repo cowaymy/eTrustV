@@ -3290,7 +3290,55 @@
 
 
       <insert id="insert_PAY0064D" parameterType="Map" >
-			INSERT INTO PAY0064D (
+      INSERT INTO PAY0064D (
+               PAY_ID, OR_NO, SALES_ORD_ID,
+               BILL_ID, TR_NO, TYPE_ID,
+               PAY_DATA, BANK_CHG_AMT, BANK_CHG_ACC_ID,
+               COLL_MEM_ID, BRNCH_ID, BANK_ACC_ID,
+               ALLOW_COMM, STUS_CODE_ID, UPD_USER_ID,
+               UPD_DT, SYNC_HECK, CUST_ID_3PARTY,
+               TOT_AMT, MTCH_ID, CRT_USER_ID,
+               CRT_DT, IS_ALLOW_REV_MULTI, IS_GL_POST_CLM,
+               GL_POST_CLM_DT, TRX_ID, ADV_MONTH,
+               ACC_BILL_ID, TR_ISSU_DT, TAX_INVC_IS_GEN,
+               TAX_INVC_REF_NO, TAX_INVC_REF_DT, SVC_CNTRCT_ID,
+               BATCH_PAY_ID)
+            VALUES (
+               #{payId},
+               #{orNo},
+               #{salesOrdId},
+               #{billId},
+               #{trNo},
+               #{typeId},
+               SYSDATE,
+               #{bankChgAmt},
+               #{bankChgAccId},
+               #{collMemId},
+               #{brnchId},
+               #{bankAccId},
+               #{allowComm},
+               #{stusCodeId},
+               #{updUserId},
+               SYSDATE,
+               #{syncHeck},
+               #{custId3party},
+               #{totAmt},
+               #{mtchId},
+               #{crtUserId},
+               SYSDATE,
+               #{isAllowRevMulti},
+               #{isGlPostClm},
+               TO_DATE(#{glPostClmDt},'DD/MM/YYYY'),
+               #{trxId},
+               #{advMonth},
+               #{accBillId},
+               TO_DATE(#{trIssuDt},'DD/MM/YYYY'),
+               #{taxInvcIsGen},
+               #{taxInvcRefNo},
+               TO_DATE(#{taxInvcRefDt},'DD/MM/YYYY'),
+               #{svcCntrctId},
+               #{batchPayId})
+			<!-- INSERT INTO PAY0064D (
 			   PAY_ID, OR_NO, SALES_ORD_ID,
 			   BILL_ID, TR_NO, TYPE_ID,
 			   PAY_DATA, BANK_CHG_AMT, BANK_CHG_ACC_ID,
@@ -3337,7 +3385,7 @@
 			   #{taxInvcRefNo},
 			   #{taxInvcRefDt},
 			   #{svcCntrctId},
-			   #{batchPayId})
+			   #{batchPayId}) -->
      </insert>
 
      <select id="getPAY0064DSEQ" parameterType="Map" resultType="egovMap">
