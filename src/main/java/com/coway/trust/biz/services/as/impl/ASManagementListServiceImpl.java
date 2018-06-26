@@ -1,5 +1,6 @@
 package com.coway.trust.biz.services.as.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -2260,9 +2261,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
              if(null != p64dList && p64dList.size() >0){
             	 for(int i=0;i<p64dList.size(); i++){
 
-            		 EgovMap p64dList_Map =p64dList.get(i);
-            		 double trxTotAmt =  p64dList_Map.get("totAmt") ==null  ? 0 : Double.parseDouble((String)p64dList_Map.get("totAmt") );
 
+            		 EgovMap p64dList_Map =p64dList.get(i);
+            		 BigDecimal totAmt = (BigDecimal)p64dList_Map.get("totAmt");
+//            		 double trxTotAmt =  p64dList_Map.get("totAmt") ==null  ? 0 : Double.parseDouble((String)p64dList_Map.get("totAmt") );
+            		 long trxTotAmt =  p64dList_Map.get("totAmt") ==null  ? 0 :  totAmt.longValue();
                 	 Map  PAY_DocNoMap =null;
                 	 String PAYNO_REV =null;
 
@@ -2293,11 +2296,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                      EgovMap pay064d_insert = new EgovMap();
                      pay064d_insert.put("payId",PAY0064DSEQ);
                      pay064d_insert.put("orNo",PAYNO_REV);
-                     pay064d_insert.put("salesOrdId",p64dList_Map.get("saleOrdId"));
+                     pay064d_insert.put("salesOrdId",p64dList_Map.get("salesOrdId"));
                      pay064d_insert.put("billId",p64dList_Map.get("billId"));
                      pay064d_insert.put("trNo",p64dList_Map.get("trNo"));
                      pay064d_insert.put("typeId","101");
-                     pay064d_insert.put("payData",new  Date());
+                     //pay064d_insert.put("payData",new  Date());
                      pay064d_insert.put("bankChgAmt",p64dList_Map.get("bankChgAmt"));
                      pay064d_insert.put("bankChgAccId",p64dList_Map.get("bankChgAccId"));
                      pay064d_insert.put("collMemId",p64dList_Map.get("collMemId"));
@@ -2306,27 +2309,27 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                      pay064d_insert.put("allowComm",p64dList_Map.get("allowComm"));
                      pay064d_insert.put("stusCodeId","1");
                      pay064d_insert.put("updUserId",svc0004dmap.get("updator"));
-                     pay064d_insert.put("updDt",new Date());
+                     //pay064d_insert.put("updDt",new Date());
                      pay064d_insert.put("syncHeck","0");
                      pay064d_insert.put("custId3party",p64dList_Map.get("custId3party"));
-                     double  p46TotAmt =  p64dList_Map.get("totAmt") ==null  ? 0 : Double.parseDouble((String)p64dList_Map.get("totAmt") );
-                     pay064d_insert.put("totAmt",(-1 * p46TotAmt));
+                     //double  p46TotAmt =  p64dList_Map.get("totAmt") ==null  ? 0 : Double.parseDouble((String)p64dList_Map.get("totAmt") );
+                     pay064d_insert.put("totAmt",(-1 * trxTotAmt)); //p46TotAmt
                      pay064d_insert.put("mtchId",p64dList_Map.get("payId"));
                      pay064d_insert.put("crtUserId",svc0004dmap.get("updator"));
-                     pay064d_insert.put("crtDt",new Date());
+                     //pay064d_insert.put("crtDt",new Date());
                      pay064d_insert.put("isAllowRevMulti","0");
                      pay064d_insert.put("isGlPostClm","0");
                      pay064d_insert.put("glPostClmDt","01/01/1900");
                      pay064d_insert.put("trxId",PAY0069DSEQ);
                      pay064d_insert.put("advMonth","0");
                      pay064d_insert.put("accBillId","0");
-                     pay064d_insert.put("trIssuDt","");
+                     pay064d_insert.put("trIssuDt","01/01/1900");
                      pay064d_insert.put("taxInvcIsGen","0");
                      pay064d_insert.put("taxInvcRefNo","");
-                     pay064d_insert.put("taxInvcRefDt","");
+                     pay064d_insert.put("taxInvcRefDt","01/01/1900");
                      pay064d_insert.put("svcCntrctId","0");
                      pay064d_insert.put("batchPayId","0");
-                     int insert_PAY0064D_cnt =ASManagementListMapper. insert_PAY0064D (pay069d_insert);
+                     int insert_PAY0064D_cnt =ASManagementListMapper. insert_PAY0064D (pay064d_insert);
                      //////////////////PAY0064D   out    ////////////////
 
 
@@ -2343,8 +2346,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
                              //////////////////PAY0065D   insert ////////////////
                     		 EgovMap p65dList_Map =p65dList.get(i);
-                    		 double payTotAmt =  p65dList_Map.get("payItmAmt") ==null  ? 0 : Double.parseDouble(((String)p65dList_Map.get("payItmAmt") ));
+                    		 //double payTotAmt =  p65dList_Map.get("payItmAmt") ==null  ? 0 : Double.parseDouble(((String)p65dList_Map.get("payItmAmt") ));
 
+                    		 BigDecimal totAmt65D = (BigDecimal)p65dList_Map.get("totAmt");
+                    		 long trxTotAmt65D =  p65dList_Map.get("totAmt") ==null  ? 0 :  totAmt65D.longValue();
 
                              EgovMap pay065d_insert = new EgovMap();
                              pay065d_insert.put("payItmId",PAY0065DSEQ);
@@ -2357,7 +2362,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                              pay065d_insert.put("payItmCcTypeId",p65dList_Map.get("payItmCcTypeId"));
                              pay065d_insert.put("payItmChqNo",p65dList_Map.get("payItmChqNo"));
                              pay065d_insert.put("payItmIssuBankId",p65dList_Map.get("payItmIssuBankId"));
-                             pay065d_insert.put("payItmAmt",(-1 * payTotAmt));
+                             pay065d_insert.put("payItmAmt",(-1 * trxTotAmt65D));  //payTotAmt
                              pay065d_insert.put("payItmIsOnline",p65dList_Map.get("payItmIssuBankId"));
                              pay065d_insert.put("payItmBankAccId",p65dList_Map.get("payItmIssuBankId"));
                              pay065d_insert.put("payItmRefDt","01/01/1900");
@@ -2402,7 +2407,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                              pay09d_insert.put("glFiscalDt","01/01/1900");
                              pay09d_insert.put("glBatchNo",PAY0064DSEQ);
                              pay09d_insert.put("glBatchTypeDesc","");
-                             pay09d_insert.put("glBatchTot", (-1 * payTotAmt));
+                             pay09d_insert.put("glBatchTot", (-1 * trxTotAmt65D));
                              pay09d_insert.put("glReciptNo",PAYNO_REV);
                              pay09d_insert.put("glReciptTypeId","101" );
                              pay09d_insert.put("glReciptBrnchId",svc0004dmap.get("brnchId"));
@@ -2422,7 +2427,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                              pay09d_insert.put("glReciptItmId",PAY0065DSEQ);
                              pay09d_insert.put("glReciptItmModeId",p65dList_Map.get("payItmModeId") );
                              pay09d_insert.put("glRevrsReciptItmId",p65dList_Map.get("payItmId") );
-                             pay09d_insert.put("glReciptItmAmt",( -1 * payTotAmt ) );
+                             pay09d_insert.put("glReciptItmAmt",( -1 * trxTotAmt65D ) );
 
                         	 double t_payItemBankChargeAmt  =  p65dList_Map.get("payItmBankChrgAmt") ==null ?0 :Double.parseDouble(((String)p65dList_Map.get("payItmBankChrgAmt")));
                              pay09d_insert.put("glReciptItmChrg",t_payItemBankChargeAmt);
@@ -2448,7 +2453,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
 
                                	EgovMap p06dList_Map =p06dList.get(i);
-                               	double asLgAmt =  p06dList_Map.get("asLgAmt") ==null  ? 0 : Double.parseDouble(((String)p06dList_Map.get("asLgAmt") ));
+                               	//double asLgAmt =  p06dList_Map.get("asLgAmt") ==null  ? 0 : Double.parseDouble(((String)p06dList_Map.get("asLgAmt") ));
+
+                               	BigDecimal totAmt06D = (BigDecimal)p06dList_Map.get("totAmt");
+                               	long trxTotAmt06D =  p06dList_Map.get("totAmt") ==null  ? 0 :  totAmt06D.longValue();
 
                           	      //////////////////pay06d    ////////////////////
                               	EgovMap pay06d_insert = new EgovMap();
@@ -2457,7 +2465,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                               	 pay06d_insert.put("asDocNo",PAYNO_REV);
                                  pay06d_insert.put("asLgDocTypeId","160");
                                  pay06d_insert.put("asLgDt",new Date());
-                                 pay06d_insert.put("asLgAmt", (asLgAmt * -1) );
+                                 pay06d_insert.put("asLgAmt", (trxTotAmt06D * -1) );  //asLgAmt
                                  pay06d_insert.put("asLgUpdUserId",svc0004dmap.get("updator"));
                                  pay06d_insert.put("asLgUpdDt", new Date());
                                  pay06d_insert.put("asSoNo",  p06dList_Map.get("asSoNo"));
