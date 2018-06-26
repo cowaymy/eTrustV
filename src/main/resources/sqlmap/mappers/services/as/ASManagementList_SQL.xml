@@ -112,7 +112,7 @@
 						                       LEFT JOIN ORG0001D Extent8   ON Extent1.AS_MEM_ID = Extent8.MEM_ID
 						                       LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent8.BRNCH
 						                       LEFT JOIN ( select * from svc0004d a where AS_RESULT_ID in (
-                                                                            select max(AS_RESULT_ID) from svc0004d group by AS_ENTRY_ID
+                                                                            select max(AS_RESULT_ID) from svc0004d where ( 1 = as_result_is_curr ) group by AS_ENTRY_ID
                                                                ) )  Extent7
 										                                               ON ( Extent1.AS_ID = Extent7.AS_ENTRY_ID )
 																                       AND ( 457 = Extent7.AS_RESULT_TYPE_ID )
