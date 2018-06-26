@@ -35,6 +35,7 @@ var gradeList = new Array();
 
 var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
                      {dataField: "delyno",headerText :"<spring:message code='log.head.deliveryno'/>"                  ,width:120    ,height:30                },
+                     {dataField: "ordno",headerText :"Order No."        ,width:120    ,height:30                },
                      {dataField: "grcmplt",headerText :"<spring:message code='log.head.grcomplete'/>"                   ,width:120    ,height:30 },
                      {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
                      {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
@@ -506,14 +507,14 @@ function grFunc(){
 
 	var gradchk=false;
 	var delychek = check[0].item.delyno;
-      
+
       //alert("delychek    :      "+delychek);
-	
+
 	for(var i = 0 ; i < check.length ; i++){
 		var docno  = check[i].item.docno;
 		//alert("docno : "+docno);
 		 if(docno !=null && docno != ""){
-			docno = docno.substring(0, 3);		 
+			docno = docno.substring(0, 3);
 		 }
         //alert("docno after : "+docno);
         //if(check[i].item.mtype =="UM93" ){
@@ -521,13 +522,13 @@ function grFunc(){
         if(check[i].item.mtype =="UM93" && check[i].item.serialcheck=="Y" && docno =="RET" ){
         	gradchk=true;
         }
- 
+
        if(delychek != check[i].item.delyno){
     	   Common.alert("Deliveryno Is Different.");
     	   return false;
        }
-   
-        
+
+
    }
 	var graddata;
 	if(gradchk){
@@ -545,33 +546,33 @@ function grFunc(){
 		}
 	graddata=GridCommon.getEditData(gradeGrid);
 	}
-    
+
 		if ($("#giptdate").val() == "") {
 	        Common.alert("Please select the GR Posting Date.");
 	        $("#giptdate").focus();
 	        return false;
 	    }
-	    
+
 	    if ($("#gipfdate").val() == "") {
 	        Common.alert("Please select the GR Doc Date.");
 	        $("#gipfdate").focus();
 	        return false;
 	    }
-	
+
 	 for (var i = 0 ; i < checkdata.length ; i++){
 	       if (checkdata[i].delydt == "" || checkdata[i].delydt == null){
 	          Common.alert("Please check the Delivery Date.")
 	          return false;
-	      }          
-	   } 
-	 
+	      }
+	   }
+
 	 for (var i = 0 ; i < checkdata.length ; i++){
 	     if (checkdata[i].gidt == "" || checkdata[i].gidt == null){
 	        Common.alert("Please check the GI Date.")
 	        return false;
-	    }          
+	    }
 	 }
-	
+
 	data.check   = check;
 	data.checked = check;
 	data.grade    = graddata;
@@ -792,6 +793,12 @@ function fn_gradComb(){
                         <input type="hidden"  id="tlocation" name="tlocation">
                         <input type="text" class="w100p" id="tlocationnm" name="tlocationnm">
                     </td>
+                </tr>
+                <tr>
+                      <th scope="row">Sales Order No.</th>
+                     <td ><input type="text" class="w100p" id="ordno" name="ordno"></td>
+
+                     <td colspan="4">&nbsp;</td>
                 </tr>
             </tbody>
         </table><!-- table end -->
