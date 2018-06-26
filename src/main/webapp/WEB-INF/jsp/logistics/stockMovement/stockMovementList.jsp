@@ -33,6 +33,7 @@ var mdcGrid;
 var rescolumnLayout=[{dataField:    "rnum",headerText :"<spring:message code='log.head.rownum'/>",width:120    ,height:30 , visible:false},
                      {dataField: "status",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30 , visible:false},
                      {dataField: "reqstno",headerText :"SMO No."        ,width:120    ,height:30                },
+                     {dataField: "ordno",headerText :"Order No."        ,width:120    ,height:30                },
                      {dataField: "staname",headerText :"<spring:message code='log.head.status'/>",width:120    ,height:30                },
                      {dataField: "rcvloc",headerText :"<spring:message code='log.head.fromlocation'/>"                  ,width:120    ,height:30 , visible:false},
                      {dataField: "rcvlocnm",headerText :"<spring:message code='log.head.fromlocation'/>"                ,width:120    ,height:30 , visible:false},
@@ -159,7 +160,7 @@ $(document).ready(function(){
     //doGetComboDataAndMandatory('/common/selectCodeList.do', paramdata, '${searchVal.sttype}','sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', paramdata, ('${searchVal.sttype}'==''?'UM':'${searchVal.sttype}'),'sttype', 'S' , 'f_change');
     doGetComboData('/common/selectCodeList.do', {groupCode:'309'}, '${searchVal.sstatus}','sstatus', 'S' , '');
-    
+
     doDefCombo(servicecanceldata, 'N' ,'sscancel', 'S', '');
     //doGetComboData('/logistics/stockMovement/selectStockMovementNo.do', {groupCode:'stock'} , '${searchVal.streq}','streq', 'S' , '');
 //     doGetCombo('/common/selectStockLocationList.do', '', '${searchVal.tlocation}','tlocation', 'S' , '');
@@ -228,7 +229,7 @@ $(function(){
         document.searchForm.action = '/logistics/stockMovement/StockMovementIns.do';
         document.searchForm.submit();
     });
-    
+
     $('#delete').click(function(){
 	    var selectedItem = AUIGrid.getSelectedItems(listGrid);
 	     if(selectedItem.length <= 0){
@@ -237,7 +238,7 @@ $(function(){
 	    }else{
 	    	var docno= selectedItem[0].item.docno;
 	    	if(docno !=null || docno !=undefined){
-	    	docno = docno.substr(0,3);	    		
+	    	docno = docno.substr(0,3);
 	    	}
 		     if('INS'== docno){
 		    	 Common.alert("It cannot delete for INS.");
@@ -245,12 +246,12 @@ $(function(){
 		    	 Common.alert("No Delete SMO No.");
 		     }else{
                 var reqstono=selectedItem[0].item.reqstno;
-                Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete); 
+                Common.confirm("<spring:message code='sys.common.alert.delete'/></br> "+reqstono,fn_delete);
                 //fn_deleteAjax(reqsmono);
 		     }
-		}     
+		}
     });
-    
+
 
     $("#tlocationnm").keypress(function(event) {
         $('#tlocation').val('');
@@ -372,16 +373,16 @@ function fn_delete(){
 	var reqsmono=selectedItem[0].item.reqstno;
 	//alert("reqsmono ???  "+reqsmono);
 	fn_deleteAjax(reqsmono)
-         
+
 }
 
 function fn_deleteAjax(reqsmono){
-	
+
 	var url = "/logistics/stockMovement/deleteSmoNo.do";
     Common.ajax("GET", url , {"reqsmono":reqsmono} , function(result)    {
     	Common.alert(""+result.message+"</br> Delete : "+reqsmono, locationList);
     });
-         
+
 }
 
 
@@ -499,7 +500,8 @@ function locationList(){
                                 <option value="2">CT/Cody to CT/Cody</option>
                             </select>
                     </td>
-                    <td colspan="2">&nbsp;</td>
+                     <th scope="row">Sales Order No.</th>
+                     <td ><input type="text" class="w100p" id="ordno" name="ordno"></td>
                 </tr>
             </tbody>
         </table><!-- table end -->
