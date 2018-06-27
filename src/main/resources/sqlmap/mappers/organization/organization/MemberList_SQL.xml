@@ -4348,6 +4348,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         a.USER_ID userId,
         a.USER_NAME userName,
         a.USER_FULL_NAME userFullName,
+        a.USER_TYPE_ID memType,
         b.ROLE_ID roleId,
         c.ROLE_CODE roleCode,
         c.ROLE_DESC roleDesc

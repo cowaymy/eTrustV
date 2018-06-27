@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.logistics.agreement.impl.agreementMapper">
+
+    <select id="memberList" parameterType="Map" resultType="EgovMap">
+        SELECT
+            A.MEM_CODE memCode,
+            A.MEM_TYPE memType,
+            A.FULL_NAME name,
+            A.NRIC nric,
+            B.DEPTCODE deptCode,
+            B.GRPCODE grpCode,
+            B.ORGCODE orgCode,
+            E.ROLE_DESC userRole,
+            F.NAME status
+        FROM ORG0001D A
+        INNER JOIN (
+            SELECT
+                B1.MEM_ID,
+                CASE WHEN B1.DEPT_CODE = '' THEN B1.LAST_DEPT_CODE ELSE B1.DEPT_CODE END AS DEPTCODE,
+                B1.LAST_GRP_CODE GRPCODE,
+                B1.LAST_ORG_CODE ORGCODE,
+                B1.MEM_LVL MEMLVL
+                FROM ORG0005D B1
+        ) B
+            ON B.MEM_ID = A.MEM_ID
+        INNER JOIN SYS0047M C
+            ON C.USER_NAME = A.MEM_CODE
+        INNER JOIN SYS0045M D
+            ON D.USER_ID = C.USER_ID
+        INNER JOIN SYS0044M E
+            ON E.ROLE_ID = D.ROLE_ID
+        INNER JOIN SYS0038M F
+            ON F.STUS_CODE_ID = C.USER_STUS_ID
+        WHERE
+            A.MEM_TYPE = #{memTypeCom}
+            <if test="code !=null and code !=''">
+                AND A.MEM_CODE LIKE '%' || #{code} || '%'
+            </if>
+            <if test="name !=null and name !=''">
+                AND A.FULL_NAME LIKE '%' || #{name} || '%'
+            </if>
+            <if test="icNum !=null and icNum !=''">
+                AND A.NRIC LIKE '%' || #{icNum} || '%'
+            </if>
+            <if test="deptCode !=null and deptCode !=''">
+                AND B.DEPTCODE LIKE '%' || #{deptCode} || '%'
+            </if>
+            <if test="grpCode !=null and grpCode !=''">
+                AND B.GRPCODE LIKE '%' || #{grpCode} || '%'
+            </if>
+            <if test="orgCode !=null and orgCode !=''">
+                AND B.ORGCODE LIKE '%' || #{orgCode} || '%'
+            </if>
+            <if test="memStusCmb != null and memStusCmb !='' ">
+                AND C.USER_STUS_ID = #{memStusCmb}
+            </if>
+            <if test="memLevelCom != null and memLevelCom !='' ">
+                AND B.MEMLVL = #{memLevelCom}
+            </if>
+        ORDER BY B.ORGCODE, B.GRPCODE, B.DEPTCODE, B.MEMLVL, C.USER_STUS_ID, A.MEM_CODE
+    </select>
+
+    <select id="getMemberInfo" parameterType="Map" resultType="EgovMap">
+        SELECT
+            A.FULL_NAME NAME,
+            A.NRIC NRIC,
+            CASE WHEN B.DEPT_CODE = '' THEN B.LAST_DEPT_CODE ELSE B.DEPT_CODE END DEPTCDE,
+            B.LAST_GRP_CODE GRPCDE,
+            B.LAST_ORG_CODE ORGCDE,
+            B.MEM_LVL MEMLVL,
+            A.STUS
+        FROM ORG0001D A
+        INNER JOIN ORG0005D B
+            ON A.MEM_ID = B.MEM_ID
+        WHERE A.MEM_CODE = #{memID}
+    </select>
+
+    <select id="getMemHPpayment" parameterType="Map" resultType="EgovMap">
+        SELECT
+            B.BILL_AMT VERSION
+        FROM
+            ORG0001D A
+        INNER JOIN PAY0007D B
+            ON A.MEM_ID = B.BILL_MEM_ID
+        WHERE A.MEM_CODE = #{memID}
+            <if test="memType !=null and memType !=''">
+                AND A.MEM_TYPE = #{memType}
+            </if>
+        ORDER BY
+            A.MEM_ID DESC
+    </select>
+
+    <select id="getMemStatus" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.STUS_CODE_ID CODE_ID,
+            A.CODE,
+            A.NAME CODE_NAME
+        FROM SYS0038M A
+        INNER JOIN (
+            SELECT DISTINCT STUS FROM ORG0001D
+        )B
+        ON A.STUS_CODE_ID = B.STUS
+    </select>
+
+    <select id="getMemLevel" parameterType="Map" resultType="egovMap">
+        SELECT
+            MEM_ORG_LVL CODE_ID,
+            MEM_ORG_LVL CODE,
+            MEM_ORG_DESC_CODE || ' - ' || MEM_ORG_DESC CODE_NAME
+        FROM ORG0012D
+        WHERE MEM_TYPE_ID = #{groupCode}
+        ORDER BY CODE
+    </select>
+
+    <select id="getAgreementVersion" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
+        <if test="groupCode == 1 ">
+            SELECT
+                '100' CODE_ID,
+                '2016 - 4.0 Version' CODE_NAME
+            FROM DUAL
+
+            UNION ALL
+
+            SELECT
+                '120' CODE_ID,
+                '201805 Version' CODE_NAME
+            FROM DUAL
+        </if>
+        <if test="groupCode == 2 ">
+            SELECT
+                '2017' CODE_ID,
+                '2017 - 5.0 Version' CODE_NAME
+            FROM DUAL
+
+            UNION ALL
+
+            SELECT
+                '2018' CODE_ID,
+                '2018 - XXXX' CODE_NAME
+            FROM DUAL
+        </if>
+        )
+    </select>
+</mapper>
