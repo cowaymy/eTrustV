@@ -136,7 +136,7 @@
                        #{item}
                 </foreach>
            </if>
-           <if test="ordno !=null">
+           <if test="ordno !=null and ordno != ''">
                 AND s1.SALES_ORD_NO = #{ordno}
            </if>
            ORDER by l47.CRT_DT desc
@@ -352,6 +352,7 @@
         SELECT Rownum rnum , T.* FROM (
         select
                l47.reqst_no reqstno
+             , s1.SALES_ORD_NO ordno
              , l55.delvry_no delyno
              , l55.delvry_no_itm
              , l47.trnsc_type ttype
@@ -392,6 +393,8 @@
              , sys0028m s28c
              , sys0028m s28q
              , sys0026m s26
+             , sal0046d s46
+             , sal0001d s1
          where 1 = 1
            and l47.trnsc_type     = tran.code
            and l47.trnsc_type_dtl = trand.code
@@ -405,6 +408,8 @@
            and l47.reqst_no  = l48.reqst_no
            AND L47.REQST_TYPE  <![CDATA[<>]]> 'PO'
            AND NVL(L54.DEL_FLAG,'N') <![CDATA[<>]]>'Y'
+           AND l47.REF_DOC_NO = s46.INSTALL_ENTRY_NO (+)
+           AND s46.SALES_ORD_ID = s1.SALES_ORD_ID (+)
            <if test="reqstno != null and reqstno != ''">
               and l47.reqst_no  = #{reqstno}
            </if>
@@ -474,7 +479,9 @@
 	                   #{item}
 	            </foreach>
            </if>
-
+           <if test="ordno !=null and ordno != ''">
+                AND s1.SALES_ORD_NO = #{ordno}
+           </if>
            ORDER BY l54.delvry_no desc
            ) T
     </select>
