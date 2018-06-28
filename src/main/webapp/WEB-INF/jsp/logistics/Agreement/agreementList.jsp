@@ -103,7 +103,7 @@ function fn_downloadAgreement() {
     var version = $("#agreementVersion").val();
     console.log(version);
 
-    $("#v_memCode").val($("#code").val());
+
 
     var option = {
         isProcedure : true
@@ -116,6 +116,7 @@ function fn_downloadAgreement() {
             $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130) { // Administrator
 
         code = memberid;
+        $("#v_memCode").val(memberid);
 
         if($("#agreementVersion").val() == "") {
             Common.alert("Please select agreement version");
@@ -123,6 +124,7 @@ function fn_downloadAgreement() {
         }
     } else {
         code = $("#code").val();
+        $("#v_memCode").val($("#code").val());
     }
 
     if($("#memTypeCom").val() == "1") {
@@ -134,7 +136,7 @@ function fn_downloadAgreement() {
                 return false;
             } else {
                 $("#reportFileName").val("/logistics/HPAgreement_" + version + ".rpt");
-                $("#reportDownFileName").val("HPAgreement_" + $("#code").val());
+                $("#reportDownFileName").val("HPAgreement_" + code);
 
                 Common.report("agreementReport", option);
             }
@@ -143,7 +145,7 @@ function fn_downloadAgreement() {
     } else if($("#memTypeCom").val() == "2") {
         // CD Download
         $("#reportFileName").val("/logistics/CodyAgreement_" + version + ".rpt");
-        $("#reportDownFileName").val("CodyAgreement_" + $("#code").val());
+        $("#reportDownFileName").val("CodyAgreement_" + code);
 
         Common.report("agreementReport", option);
     }
@@ -337,7 +339,7 @@ function createAUIGrid() {
 <form id="agreementReport" name="agreementReport" style="display:none">
     <input id="reportFileName" name="reportFileName" value="/organization/HPAgreement.rpt" />
     <input id="viewType" name="viewType" value="PDF" />
-    <input id="reportDownFileName" name="reportDownFileName" value="${memCode}" />
+    <input id="reportDownFileName" name="reportDownFileName" />
 
     <input id="v_memCode" name="v_memCode" value="" />
 </form>
