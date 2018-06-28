@@ -1382,7 +1382,7 @@
 						AND   C.STK_CODE = #{prdctCd}
 						AND   B.VALID_FROM_DT < SYSDATE
 						AND   B.VALID_TO_DT > SYSDATE
-						ORDER BY D.STK_TYPE_ID
+						ORDER BY D.STK_CODE
 						         ]]>
 
 
@@ -1398,7 +1398,7 @@
                         AND   C.STK_OLD_CODE = #{prdctCd}
                         AND   B.VALID_FROM_DT < SYSDATE
                         AND   B.VALID_TO_DT > SYSDATE
-                        ORDER BY D.STK_TYPE_ID
+                        ORDER BY D.STK_CODE
                                  ]]>
     </select>
 
@@ -1592,7 +1592,7 @@
 
 
             <select id="getASRulstEditFilterInfo" parameterType="Map" resultType="egovMap">
-            	                       SELECT         S.ASR_ITM_ID   filter_ID,
+            	                       SELECT         S.STK_ID   filter_Id,
 													       S.STK_ID   ,
 													       S.C1  filter_Desc ,
 													       S.C2  filter_Type ,
