@@ -18,7 +18,8 @@ function removePopupCallback(){
 }
 
 function chkPwd(str){
-    var regPwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
+    //var regPwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
+    var regPwd =/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
     if(regPwd.test(str)){
         return true;
     }
