@@ -465,7 +465,7 @@ console.log("ready");
     $("#national option[value=1]").attr('selected', 'selected');
 
     //var cmbRacelStatusCd = "10";
-    $("#cmbRace option[value=10]").attr('selected', 'selected');
+    /* $("#cmbRace option[value=10]").attr('selected', 'selected'); */
 
      if( $("#userType").val() == "1") {
         $("#memberType option[value=2803]").attr('selected', 'selected');
@@ -1230,6 +1230,7 @@ function checkBankAccNo() {
     <th scope="row">Race<span class="must">*</span></th>
     <td>
     <select class="w100p" id="cmbRace" name="cmbRace">
+         <option value="">Choose One</option>
         <c:forEach var="list" items="${race}" varStatus="status">
             <option value="${list.detailcodeid}">${list.detailcodename } </option>
         </c:forEach>
@@ -1387,7 +1388,7 @@ function checkBankAccNo() {
     <th scope="row">e-Approval Status</th>
     <td colspan="2">
     <select class="w100p" id="apprStusCombo" name="apprStusCombo">
-        <option value="">Choose One</option>
+       <!--  <option value="">Choose One</option> -->
         <option value="">Pending</option>
         <option value="">Approved</option>
         <option value="">Rejected</option>
