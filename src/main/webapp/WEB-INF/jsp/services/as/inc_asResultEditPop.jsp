@@ -83,10 +83,11 @@ function createCFilterAUIGrid() {
                                     labelText : "Remove",
                                     onclick : function(rowIndex, columnIndex, value, item) {
                                          AUIGrid.removeRow(myFltGrd10, rowIndex);
+                                         AUIGrid.removeSoftRows(myFltGrd10);        //completed remove from AUIGrid cyc
                                     }
                                 }
                             },
-                            { dataField : "filterID",     headerText  : "filterID",  width          :150,    editable       : false ,   visible:false }
+                            { dataField : "filterId",     headerText  : "filterId",  width          :150,    editable       : false ,   visible:false}
 
 
 
@@ -108,11 +109,8 @@ function createCFilterAUIGrid() {
 function auiAddRowHandler(event) {
 
 }
-
 //행 삭제 이벤트 핸들러
 function auiRemoveRowHandler(event) {
-
-
   console.log(event);
   if( event.items[0].filterType =="CHG"){
       var   fChage     = Number($("#txtFilterCharge").val());
@@ -121,7 +119,6 @@ function auiRemoveRowHandler(event) {
       $("#txtFilterCharge").val(fChage  -  Number(event.items[0].filterTotal));
       $("#txtTotalCharge").val(totchrge  -  Number(event.items[0].filterTotal));
   }
-
 }
 
 
@@ -335,7 +332,6 @@ function fn_getASReasonCode2(_obj , _tobj, _v){
 
 
 function fn_HasFilterUnclaim(){
-
      Common.ajax("GET", "/services/as/getTotalUnclaimItem",{asResultId:$('#asData_AS_RESULT_ID').val() , type:"AS" } , function(result) {
             console.log("fn_HasFilterUnclaim.");
             console.log( result);
@@ -964,13 +960,13 @@ function  fn_setSaveFormData(){
 
         }else if($("#requestMod").val()=="RESULTEDIT"){
 
-        	if(addedRowItems != "")
+        	if(addedRowItems != "" || removedRowItems != "")
         		{
               saveForm ={
                       "asResultM": asResultM ,
                       "add" : allRowItems,
                       "update" :  editedRowItems,
-                      "remove" : removedRowItems
+                      "remove" : editedRowItems
                      // "all" : allRowItems
                       }
         		}
