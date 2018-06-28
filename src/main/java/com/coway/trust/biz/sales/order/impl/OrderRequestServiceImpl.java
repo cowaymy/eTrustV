@@ -1290,7 +1290,7 @@ public class OrderRequestServiceImpl implements OrderRequestService {
                     BigDecimal val1 = new BigDecimal("100");
                     BigDecimal val2 = new BigDecimal("106");
 
-                    BigDecimal gstRate = val1.divide(val2, MathContext.DECIMAL32);
+                    BigDecimal gstRate = val1.divide(val1, MathContext.DECIMAL32);
 
                     if(TaxRate > 0) {
                         //OrderBill.AccBillTaxesAmount = OrderBill.AccBillScheduleAmount - (OrderBill.AccBillScheduleAmount * 100 / 106);
