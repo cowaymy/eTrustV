@@ -18,8 +18,8 @@ function removePopupCallback(){
 }
 
 function chkPwd(str){
-    //var regPwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
-    var regPwd =/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
+    var regPwd = /^.*(?=.{6,20})(?=.*[0-9])(?=.*[a-zA-Z]).*$/;
+    //var regPwd =/^(?=.*[0-9])(?=.*[a-zA-Z])([a-zA-Z0-9]+)$/;
     if(regPwd.test(str)){
         return true;
     }
@@ -345,7 +345,10 @@ function fn_updateUserPasswd(){
                 "GET",
                 "/common/userManagement/editUserManagementList.do",
                 //UserPasswdLastUpdDt doesn't matter anything for updating
-                "userId="+$("#userEditForm #userId").val()+"&userPasswd="+$("#passwdEditForm #userPasswdConfirm").val()+"&userPasswdLastUpdDt=today"+"&userDfltPassWd="+$("#passwdEditForm #userPasswdConfirm").val() ,
+                //"userId="+$("#userEditForm #userId").val()+"&userPasswd="+$("#passwdEditForm #userPasswdConfirm").val()+"&userPasswdLastUpdDt=today"+"&userDfltPassWd="+$("#passwdEditForm #userPasswdConfirm").val() ,
+                {"userId" : $("#userEditForm #userId").val(),
+                    "userPasswd" : $("#passwdEditForm #userPasswdConfirm").val(),
+                    "userDfltPassWd" : $("#passwdEditForm #userPasswdConfirm").val()} ,
                 function(data, textStatus, jqXHR){ // Success
                     Common.alert("<spring:message code='sys.msg.success' htmlEscape='false'/>",removePopupCallback);
                 },
