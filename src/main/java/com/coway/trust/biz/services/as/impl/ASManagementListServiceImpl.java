@@ -827,8 +827,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
 				}
 
+				String strFilterID =  String.valueOf(updateMap.get("filterId")) !="null" ? String.valueOf(updateMap.get("filterId")) : String.valueOf(updateMap.get("filterID"));
+
 				iMap.put("AS_RESULT_ID",			 AS_RESULT_ID);
-				iMap.put("ASR_ITM_PART_ID",  	 updateMap.get("filterID") );
+				iMap.put("ASR_ITM_PART_ID",  	 strFilterID.trim() );
 				iMap.put("ASR_ITM_PART_QTY",  updateMap.get("filterQty") );
 				iMap.put("ASR_ITM_PART_PRC",   updateMap.get("filterPrice") );
 				iMap.put("ASR_ITM_CHRG_AMT",  updateMap.get("filterTotal") );
@@ -1636,14 +1638,17 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                 		    						}
                 								}
 
+                								String strFilterID1 =  String.valueOf(updateMap.get("filterId"));
+                								String strFilterID2 =  String.valueOf(updateMap.get("filterID"));
 
+                								String strFilterID =  String.valueOf(updateMap.get("filterId")) != "null" ? String.valueOf(updateMap.get("filterId")) : String.valueOf(updateMap.get("filterID"));
                 								//setAsChargesTypeId 1261
                 								AsResultChargesViewVO vo_filter  =null;
                 								vo_filter =  new AsResultChargesViewVO();
                 								vo_filter.setAsEntryId("");
                 								vo_filter.setAsChargesTypeId("1262");
                 								vo_filter.setAsChargeQty(String.valueOf(updateMap.get("filterQty")));
-                								vo_filter.setSparePartId(String.valueOf(updateMap.get("filterID")) );
+                								vo_filter.setSparePartId( strFilterID);
                 								vo_filter.setSparePartCode(filterCode);
                 								vo_filter.setSparePartName(filterName);
                 								vo_filter.setSparePartSerial("");
@@ -1707,6 +1712,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
            								double t_SpareTaxes =  ft - t_SpareCharges ;
 
 
+           								String strFilterID =  String.valueOf(updateMap.get("filterId")) !="" ? String.valueOf(updateMap.get("filterId")) : String.valueOf(updateMap.get("filterID"));
 
            								//setAsChargesTypeId 1261
            								AsResultChargesViewVO vo_filter32  =null;
@@ -1714,7 +1720,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
            								vo_filter32.setAsEntryId("");
            								vo_filter32.setAsChargesTypeId("1262");
            								vo_filter32.setAsChargeQty(String.valueOf(updateMap.get("filterQty")));
-           								vo_filter32.setSparePartId( String.valueOf(updateMap.get("filterID")) );
+           								vo_filter32.setSparePartId( strFilterID);
            								vo_filter32.setSparePartCode(filterCode);
            								vo_filter32.setSparePartName(filterName);
            								vo_filter32.setSparePartSerial("");
