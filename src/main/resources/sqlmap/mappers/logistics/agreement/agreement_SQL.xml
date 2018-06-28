@@ -133,13 +133,13 @@
                 '2017' CODE_ID,
                 '2017 - 5.0 Version' CODE_NAME
             FROM DUAL
-
+            /* to re-enable when new version is ready
             UNION ALL
 
             SELECT
                 '2018' CODE_ID,
                 '2018 - XXXX' CODE_NAME
-            FROM DUAL
+            FROM DUAL*/
         </if>
         )
     </select>

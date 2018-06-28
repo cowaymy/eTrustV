@@ -142,8 +142,8 @@ function fn_downloadAgreement() {
 
     } else if($("#memTypeCom").val() == "2") {
         // CD Download
-        $("#reportFileName").val("/logistics/CDAgreement_" + version + ".rpt");
-        $("#reportDownFileName").val("CDAgreement_" + $("#code").val());
+        $("#reportFileName").val("/logistics/CodyAgreement_" + version + ".rpt");
+        $("#reportDownFileName").val("CodyAgreement_" + $("#code").val());
 
         Common.report("agreementReport", option);
     }
