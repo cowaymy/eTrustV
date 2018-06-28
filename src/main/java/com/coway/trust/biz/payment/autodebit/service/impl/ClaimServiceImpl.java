@@ -93,6 +93,16 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 		return claimMapper.createClaim(param);
 	}
 
+	/**
+     * Auto Debit - Claim 생성 프로시저 호출
+     * @param params
+     */
+	@Override
+    public Map<String, Object> createClaimCreditCard(Map<String, Object> param){
+		return claimMapper.createClaimCreditCard(param);
+	}
+
+
 	 /**
      * Auto Debit - Claim Result Update
      * @param params
@@ -356,6 +366,15 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 	}
 
 	/**
+     * Auto Debit - Claim Result Update Live
+     * @param params
+     */
+	@Override
+    public void updateCreditCardResultLive(Map<String, Object> claimMap){
+		claimMapper.updateClaimResultLive(claimMap);
+	}
+
+	/**
      * Auto Debit - Claim Result Update NEXT DAY
      * @param params
      */
@@ -363,6 +382,8 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
     public void updateClaimResultNextDay(Map<String, Object> claimMap){
 		claimMapper.updateClaimResultNextDay(claimMap);
 	}
+
+
 
 	/**
      * Auto Debit - Claim Fail Deduction SMS 상세 리스트 조회

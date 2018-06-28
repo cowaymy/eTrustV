@@ -58,6 +58,8 @@ import com.coway.trust.web.common.claim.ClaimFileMyClearHandler;
 import com.coway.trust.web.common.claim.ClaimFileNewALBHandler;
 import com.coway.trust.web.common.claim.ClaimFilePBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileRHBHandler;
+import com.coway.trust.web.common.claim.CreditCardFileCIMBHandler;
+import com.coway.trust.web.common.claim.CreditCardFileMBBHandler;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -108,6 +110,11 @@ public class ClaimController {
 	@RequestMapping(value = "/initClaimList.do")
 	public String initClaimList(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/autodebit/claimList";
+	}
+
+	@RequestMapping(value = "/initCreditCardList.do")
+	public String initCreditCardList(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/autodebit/creditCardList";
 	}
 
 	/**
@@ -568,7 +575,6 @@ public class ClaimController {
 			Model model, SessionVO sessionVO) {
 
 		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
-
 		Map<String, Object> returnMap = new HashMap<String, Object>();
 		Map<String, Object> searchMap = null;
 		String returnCode = "";
@@ -650,6 +656,119 @@ public class ClaimController {
 		return ResponseEntity.ok(message);
 
 	}
+
+
+	/**
+	 * Claim Result Update LIVE 처리
+	 *
+	 * @param params
+	 * @param model
+	 * @return
+	 * @RequestParam Map<String, Object> params
+	 */
+	@RequestMapping(value = "/updateCreditCardResultLive.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateCreditCardResultLive(@RequestBody Map<String, ArrayList<Object>> params,
+			Model model, SessionVO sessionVO) {
+
+		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+
+		// 폼객체 처리.
+		Map<String, Object> claimMap = (Map<String, Object>) formList.get(0);
+		claimMap.put("userId", sessionVO.getUserId());
+
+		// 데이터 수정
+		claimService.updateCreditCardResultLive(claimMap);
+
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(claimMap);
+		message.setMessage("Saved Successfully");
+
+		return ResponseEntity.ok(message);
+	}
+
+	/**
+	 * Generate New Claim 처리
+	 *
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/generateNewCreditCardClaim.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> generateNewCreditCardClaim(@RequestBody Map<String, ArrayList<Object>> params,
+			Model model, SessionVO sessionVO) {
+
+		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
+
+		Map<String, Object> returnMap = new HashMap<String, Object>();
+		Map<String, Object> searchMap = null;
+		String returnCode = "";
+
+		// form 객체 값을 담을 Map
+		Map<String, Object> claim = new HashMap<String, Object>();
+
+		// form 객체 데이터 세팅
+		if (formList.size() > 0) {
+			formList.forEach(obj -> {
+				Map<String, Object> map = (Map<String, Object>) obj;
+				claim.put((String) map.get("name"), map.get("value"));
+			});
+		}
+
+		// HasActiveBatch : 동일한 bankId, Claim Type 에 해당하는 active 건이 있는지 확인한다.
+		searchMap = new HashMap<String, Object>();
+		searchMap.put("issueBank", claim.get("new_merchantBank"));
+		searchMap.put("claimType", claim.get("new_claimType"));
+		searchMap.put("status", "1");
+
+		List<EgovMap> isActiveBatchList = claimService.selectClaimList(searchMap);
+
+		// Active인 배치가 있는 경우
+		if (isActiveBatchList.size() > 0) {
+			returnCode = "IS_BATCH";
+			returnMap = (Map<String, Object>) isActiveBatchList.get(0);
+		} else {
+
+			String isCRC = "131".equals((String.valueOf(claim.get("new_claimType")))) ? "1" : "132".equals((String.valueOf(claim.get("new_claimType")))) ? "0" : "134";
+			String inputDate = (claim.get("new_debitDate") == "" || claim.get("new_debitDate") == null) ? CommonUtils.changeFormat(CommonUtils.getNowDate(), "dd/MM/yyyy", "yyyyMMdd") : CommonUtils.changeFormat(String.valueOf(claim.get("new_debitDate")), "dd/MM/yyyy", "yyyyMMdd");
+			String issueBankId = CommonUtils.nvl(String.valueOf(claim.get("hiddenIssueBank")));
+			String bankId = CommonUtils.nvl(String.valueOf(claim.get("new_merchantBank")));
+			String cardType = CommonUtils.nvl(String.valueOf(claim.get("new_cardType")));
+
+
+			claim.put("new_claimType", isCRC);
+			claim.put("new_debitDate", inputDate);
+			claim.put("new_issueBankId", issueBankId);
+			claim.put("new_merchantBank", bankId);
+			claim.put("new_cardType", cardType);
+			claim.put("userId", sessionVO.getUserId());
+
+			claimService.createClaimCreditCard(claim); // 프로시저 함수 호출
+			List<EgovMap> resultMapList = (List<EgovMap>) claim.get("p1"); // 결과 뿌려보기 : 프로시저에서 p1이란 key값으로 객체를 반환한다.
+
+			if (resultMapList.size() > 0) {
+				returnMap = (Map<String, Object>) resultMapList.get(0);
+				try {
+					returnCode = "FILE_OK";
+				} catch (Exception e) {
+					returnCode = "FILE_FAIL";
+				}
+			} else {
+				returnCode = "FAIL";
+			}
+		}
+
+		// 결과 만들기.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(returnCode);
+		message.setData(returnMap);
+		message.setMessage("Enrollment successfully saved. \n Enroll ID : ");
+
+		return ResponseEntity.ok(message);
+
+	}
+
 
 	/**
 	 * Claim List - SMS deduction 팝업 리스트 조회
@@ -824,7 +943,6 @@ public class ClaimController {
 			Model model) throws Exception {
 
 		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
-
 		// Calim Master 데이터 조회
 		Map<String, Object> map = (Map<String, Object>) formList.get(0);
 		EgovMap claimMap = claimService.selectClaimById(map);
@@ -883,36 +1001,70 @@ public class ClaimController {
             }
 		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 
-            if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
-            {
-    			//10000건 단위로 추출하기 위해 전체 건수 조회
-    			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
-    			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
+			if(params.get("isCrc") != null){
+                if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
+                {
+        			//10000건 단위로 추출하기 위해 전체 건수 조회
+        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
 
-    			if (pageCnt > 0){
-    				for(int i = 1 ; i <= pageCnt ; i++){
-    					claimMap.put("pageNo", i);
-    					claimMap.put("rowCount", 10000);
-    					this.createClaimFileCrcCIMB(claimMap,i);
-    				}
-    			}
-            }
-            else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId"))))
-            {
-    			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
-    			int totBatToday =  claimService.selectClaimDetailBatchGen(map);
-    			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
+        			if (pageCnt > 0){
+        				for(int i = 1 ; i <= pageCnt ; i++){
+        					claimMap.put("pageNo", i);
+        					claimMap.put("rowCount", 10000);
+        					this.createClaimFileCrcCIMB(claimMap,i);
+        				}
+        			}
+                }
+                else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId"))))
+                {
+        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+        			int totBatToday =  claimService.selectClaimDetailBatchGen(map);
+        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
 
-    			if (pageCnt > 0){
-    				for(int i = 1 ; i <= pageCnt ; i++){
-    					claimMap.put("pageNo", i);
-    					claimMap.put("rowCount", 999);
-    					claimMap.put("batchNo", totBatToday);
-    					claimMap.put("pageCnt", pageCnt);
-    					this.createClaimFileCrcMBB(claimMap);
-    				}
-    			}
-            }
+        			if (pageCnt > 0){
+        				for(int i = 1 ; i <= pageCnt ; i++){
+        					claimMap.put("pageNo", i);
+        					claimMap.put("rowCount", 999);
+        					claimMap.put("batchNo", totBatToday);
+        					claimMap.put("pageCnt", pageCnt);
+        					this.createClaimFileCrcMBB(claimMap);
+        				}
+        			}
+                }
+			}else{
+                if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
+                {
+        			//10000건 단위로 추출하기 위해 전체 건수 조회
+        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
+
+        			if (pageCnt > 0){
+        				for(int i = 1 ; i <= pageCnt ; i++){
+        					claimMap.put("pageNo", i);
+        					claimMap.put("rowCount", 10000);
+        					this.createCreditCardFileCIMB(claimMap);
+        				}
+        			}
+                }
+                else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId"))))
+                {
+        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+        			int totBatToday =  claimService.selectClaimDetailBatchGen(map);
+        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
+
+        			if (pageCnt > 0){
+        				for(int i = 1 ; i <= pageCnt ; i++){
+        					claimMap.put("pageNo", i);
+        					claimMap.put("rowCount", 999);
+        					claimMap.put("batchNo", totBatToday);
+        					claimMap.put("pageCnt", pageCnt);
+        					this.createCreditCardFileMBB(claimMap);
+        				}
+        			}
+                }
+
+			}
 
 		} else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 			//claimService.deleteClaimFileDownloadInfo(claimMap);
@@ -1680,14 +1832,6 @@ public class ClaimController {
 		return new ClaimFileCrcCIMBHandler(excelDownloadVO, params);
 	}
 
-	private ClaimFileCrcMBBHandler getTextDownloadCrcMBBHandler(String fileName, String[] columns, String[] titles, String path,
-			String subPath, Map<String, Object> params) {
-		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
-		excelDownloadVO.setFilePath(path);
-		excelDownloadVO.setSubFilePath(subPath);
-		return new ClaimFileCrcMBBHandler(excelDownloadVO, params);
-	}
-
 	/**
 	 * CRC MMB - Create eCash Deduction File
 	 *
@@ -1738,6 +1882,132 @@ public class ClaimController {
 
 		adaptorService.sendEmail(email, false);
 
+	}
+
+	private ClaimFileCrcMBBHandler getTextDownloadCrcMBBHandler(String fileName, String[] columns, String[] titles, String path,
+			String subPath, Map<String, Object> params) {
+		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+		excelDownloadVO.setFilePath(path);
+		excelDownloadVO.setSubFilePath(subPath);
+		return new ClaimFileCrcMBBHandler(excelDownloadVO, params);
+	}
+
+	/**
+	 * CRC CIMB - Create Claim File
+	 *
+	 * @param claimMap
+	 * @param claimDetailList
+	 * @throws Exception
+	 */
+	public void createCreditCardFileCIMB(EgovMap claimMap) throws Exception {
+
+		CreditCardFileCIMBHandler downloadHandler = null;
+		String sFile;
+		String todayDate;
+		String inputDate;
+
+		try {
+			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
+			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "ddMMyyyy");
+			sFile = "CRC_" + todayDate + "_" + String.valueOf(claimMap.get("pageNo"))   + ".csv";
+
+			downloadHandler = getTextDownloadCreditCardCIMBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+
+			largeExcelService.downLoadCreditCardFileCIMB(claimMap, downloadHandler);
+			//downloadHandler.writeFooter();
+
+		} catch (Exception ex) {
+			throw new ApplicationException(ex, AppConstants.FAIL);
+		} finally {
+			if (downloadHandler != null) {
+				try {
+					downloadHandler.close();
+				} catch (Exception ex) {
+					LOGGER.info(ex.getMessage());
+				}
+			}
+		}
+
+		// E-mail 전송하기
+		File file = new File(filePath + "/CRC/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("CIMB Credit Card Claim File - Batch Date : " + inputDate);
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
+
+	}
+
+	private CreditCardFileCIMBHandler getTextDownloadCreditCardCIMBHandler(String fileName, String[] columns, String[] titles, String path,
+			String subPath, Map<String, Object> params) {
+		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+		excelDownloadVO.setFilePath(path);
+		excelDownloadVO.setSubFilePath(subPath);
+		return new CreditCardFileCIMBHandler(excelDownloadVO, params);
+	}
+
+	/**
+	 * CRC MBB - Create Claim File
+	 *
+	 * @param claimMap
+	 * @param claimDetailList
+	 * @throws Exception
+	 */
+	public void createCreditCardFileMBB(EgovMap claimMap) throws Exception {
+
+		CreditCardFileMBBHandler downloadHandler = null;
+		String sFile;
+		String todayDate;
+		String inputDate;
+
+		try {
+			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
+			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "yyMMdd");
+			sFile = "CZ" + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
+
+			downloadHandler = getTextDownloadCreditCardMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
+
+			largeExcelService.downLoadCreditCardFileMBB(claimMap, downloadHandler);
+
+			if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
+				downloadHandler.writeFooter();
+			}
+		} catch (Exception ex) {
+			throw new ApplicationException(ex, AppConstants.FAIL);
+		} finally {
+			if (downloadHandler != null) {
+				try {
+					downloadHandler.close();
+				} catch (Exception ex) {
+					LOGGER.info(ex.getMessage());
+				}
+			}
+		}
+
+		// E-mail 전송하기
+		File file = new File(filePath + "/CRC/" + sFile);
+		EmailVO email = new EmailVO();
+
+		email.setTo(emailReceiver);
+		email.setHtml(false);
+		email.setSubject("SCB CRC Deduction File - Batch Date : " + inputDate + "_"  + String.valueOf(claimMap.get("pageNo")));
+		email.setText("Please find attached the claim file for your kind perusal.");
+		email.addFile(file);
+
+		adaptorService.sendEmail(email, false);
+
+	}
+
+	private CreditCardFileMBBHandler getTextDownloadCreditCardMBBHandler(String fileName, String[] columns, String[] titles, String path,
+			String subPath, Map<String, Object> params) {
+		FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+		excelDownloadVO.setFilePath(path);
+		excelDownloadVO.setSubFilePath(subPath);
+		return new CreditCardFileMBBHandler(excelDownloadVO, params);
 	}
 
 	/**

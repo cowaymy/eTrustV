@@ -118,11 +118,24 @@ public interface ClaimMapper {
 	Map<String, Object> createClaim(Map<String, Object> param);
 
 	/**
+     * Auto Debit - Claim 생성 프로시저 호출
+     * @param params
+     */
+	Map<String, Object> createClaimCreditCard(Map<String, Object> param);
+
+	/**
 	 * Auto Debit - Claim Result Update Live
 	 * @param params
 	 * @return
 	 */
 	void updateClaimResultLive(Map<String, Object> params);
+
+	/**
+	 * Auto Debit - Claim Result Update Live
+	 * @param params
+	 * @return
+	 */
+	void updateCreditCardResultLive(Map<String, Object> params);
 
 	/**
 	 * Auto Debit - Claim Result Update NEXT DAY

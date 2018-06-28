@@ -184,6 +184,12 @@
         }
     </update>
 
+    <update id="updateCreditCardResultLive" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_AUTO_DEBT_UPD_RESULT_CCD(#{ctrlId},#{ctrlIsCrc},#{bankId},#{userId})
+        }
+    </update>
+
 
     <!--Auto Debit - Claim Result Update NEXT DAY -->
     <update id="updateClaimResultNextDay" parameterType="Map" >
@@ -442,7 +448,7 @@
             (CASE WHEN Extent1.BANK_DTL_RPT_AMT IS NOT NULL THEN Extent1.BANK_DTL_RPT_AMT ELSE 0 END) AS  BANK_DTL_RPT_AMT  ,
             (CASE WHEN Extent1.BANK_DTL_REN_AMT IS NOT NULL THEN Extent1.BANK_DTL_REN_AMT ELSE 0 END) AS  BANK_DTL_REN_AMT  ,
             (CASE WHEN LENGTH(Extent1.BANK_DTL_CRC_EXPR) <![CDATA[   < ]]> 4 THEN '0000'
-                     WHEN TO_DATE(NVL(Extent1.BANK_DTL_CRC_EXPR,'0000'),'MMYY') > SYSDATE THEN Extent1.BANK_DTL_CRC_EXPR
+                     WHEN TO_DATE(Extent1.BANK_DTL_CRC_EXPR,'MMYY') <![CDATA[   > ]]>  SYSDATE THEN Extent1.BANK_DTL_CRC_EXPR
             ELSE '0000' END) AS  BANK_DTL_CRC_EXPR,
             (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL THEN TRIM(Extent4.SRV_CNTRCT_REF_NO) ELSE ' ' END) AS  SRV_CNTRCT_REF_NO  ,
             (CASE WHEN Extent4.SRV_CNTRCT_ID IS NOT NULL
@@ -479,10 +485,68 @@
         WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
     </select>
 
+    <!--Auto Debit - Claim Detail 조회 -->
+    <select id="selectCreditCardDetailByIdPaging" parameterType="Map" resultType="egovMap">
+     SELECT *
+        FROM( SELECT ROWNUM RNUM
+        ,Z.*
+        ,SUM(BANK_DTL_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
+        ,COUNT(BANK_DTL_CTRL_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
+        FROM(
+            SELECT
+                Extent1.BANK_DTL_GRP_ID
+                ,Extent1.BANK_DTL_CTRL_ID
+                ,Extent1.BANK_DTL_CRC_NO
+                ,Extent1.BANK_DTL_CRC_NAME
+                ,Extent1.BANK_DTL_AMT
+
+                <choose>
+	                <when test='ctrlBankId == "19" '>
+	                    ,(CASE WHEN LENGTH(Extent2.BANK_DTL_CRC_EXPR) <![CDATA[   < ]]> 4 THEN '0000'
+	                              WHEN TO_DATE(Extent2.BANK_DTL_CRC_EXPR,'MMYY') <![CDATA[   > ]]> SYSDATE THEN Extent2.BANK_DTL_CRC_EXPR
+	                              ELSE '0000' END) AS  RENT_PAY_CRC_EXPR
+	                </when>
+	                <otherwise>
+	                    ,NVL (Extent2.BANK_DTL_CRC_EXPR, '0000') RENT_PAY_CRC_EXPR
+	                </otherwise>
+                </choose>
+
+            FROM PAY0287D Extent1
+            LEFT JOIN
+                (SELECT BANK_DTL_GRP_ID,MAX(BANK_DTL_DR_BANK_TYPE_ID) BANK_DTL_DR_BANK_TYPE_ID ,MAX(BANK_DTL_CRC_EXPR) BANK_DTL_CRC_EXPR,BANK_DTL_CTRL_ID FROM PAY0042D
+                    GROUP BY BANK_DTL_CTRL_ID, BANK_DTL_DR_ACC_NO, BANK_DTL_DR_NAME,BANK_DTL_GRP_ID
+                    ) Extent2
+                        ON Extent1.BANK_DTL_GRP_ID = Extent2.BANK_DTL_GRP_ID
+                        and Extent1.BANK_DTL_CTRL_ID = Extent2.BANK_DTL_CTRL_ID
+
+                        <choose>
+	                        <when test='ctrlBankId == "19" '>
+	                            and 1 = 1
+	                        </when>
+	                        <otherwise>
+	                            and Extent2.BANK_DTL_DR_BANK_TYPE_ID IN (19,34,17,28,18,31,16)
+	                        </otherwise>
+                        </choose>
+
+            WHERE
+                Extent1.BANK_DTL_CTRL_ID = #{ctrlId}
+            ORDER BY Extent1.BANK_DTL_GRP_ID) Z
+                WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount})
+                ORDER BY RNUM ASC)
+            WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </select>
+
     <resultMap id="resultClaimMap" type="egovMap" />
     <select id="createClaim" statementType="CALLABLE" parameterType="Map">
         {
             call SP_AUTO_DEBT_GENRT_CLM(#{new_claimType} , #{new_issueBank}, #{new_cardType}, #{new_debitDate}, #{userId}, #{new_claimDay}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultClaimMap})
+        }
+    </select>
+
+    <resultMap id="resultClaimCreditCardMap" type="egovMap" />
+    <select id="createClaimCreditCard" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_AUTO_DEBT_GENRT_CLM_CCD(#{new_claimType} , #{new_merchantBank}, #{new_cardType}, #{new_debitDate}, #{userId}, #{new_issueBankId}, #{p1, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultClaimMap})
         }
     </select>
 

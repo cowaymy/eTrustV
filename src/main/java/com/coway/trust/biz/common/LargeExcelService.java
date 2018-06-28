@@ -14,6 +14,8 @@ import com.coway.trust.web.common.claim.ClaimFileMyClearHandler;
 import com.coway.trust.web.common.claim.ClaimFileNewALBHandler;
 import com.coway.trust.web.common.claim.ClaimFilePBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileRHBHandler;
+import com.coway.trust.web.common.claim.CreditCardFileCIMBHandler;
+import com.coway.trust.web.common.claim.CreditCardFileMBBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
@@ -141,6 +143,11 @@ public interface LargeExcelService {
 	void downLoadECashDeductionFileCIMB(Object parameter, ECashDeductionFileCIMBHandler downloadHandler);
 
 	void downLoadECashDeductionFileMBB(Object parameter, ECashDeductionFileMBBHandler downloadHandler);
+
+	void downLoadCreditCardFileCIMB(Object parameter, CreditCardFileCIMBHandler creditCardFileCIMBHandler);
+
+	void downLoadCreditCardFileMBB(Object parameter, CreditCardFileMBBHandler creditCardFileMBBHandler);
+
 
 	void downLoad(String id, Object parameter, ResultHandler excelDownloadHandler);
 }

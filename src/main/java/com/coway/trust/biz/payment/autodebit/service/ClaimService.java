@@ -42,6 +42,12 @@ public interface ClaimService
     Map<String, Object> createClaim(Map<String, Object> param);
 
     /**
+     * Auto Debit - Claim 생성 프로시저 호출
+     * @param params
+     */
+    Map<String, Object> createClaimCreditCard(Map<String, Object> param);
+
+    /**
      * Auto Debit - Claim Result Update
      * @param params
      */
@@ -106,6 +112,12 @@ public interface ClaimService
      * @param params
      */
     void updateClaimResultNextDay(Map<String, Object> claimMap);
+
+    /**
+     * Auto Debit - CreditCard Result Update LIVE
+     * @param params
+     */
+    void updateCreditCardResultLive(Map<String, Object> claimMap);
 
     /**
      * Auto Debit - Claim Fail Deduction SMS 상세 리스트 조회

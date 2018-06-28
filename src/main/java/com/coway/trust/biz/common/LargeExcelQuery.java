@@ -21,7 +21,9 @@ public enum LargeExcelQuery {
 	, CLAIM_DETAIL_PAGING_MBB("selectClaimDetailByIdPagingMBB")
 	, ECASHDEDUCTION_DETAIL_PAGING("selectECashDeductSubByIdPaging"),ECASHDEDUCTION_DETAIL_PAGING_MBB("selectECashDeductSubByIdPagingMBB")
 	, DAILY_COLLECTION_RAW("selectDailyCollectionData")
+	, CREDITCARD_DETAIL_PAGING("selectCreditCardDetailByIdPaging")
 	, MONTHLY_BILL_RAW("selectMonthlyRawData");
+
 
 	private final String queryId;
 
