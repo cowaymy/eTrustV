@@ -644,7 +644,7 @@ function resetUpdatedItems() {
 function fn_genClaim(){
 
     if ($("#new_issueBank option:selected").val() == null) {
-        Common.alert("Issue Bank");
+        Common.alert(" * Please select issue bank ");
         return;
    }
     if ($("#new_cardType option:selected").val() == '' ) {
@@ -652,7 +652,7 @@ function fn_genClaim(){
         return;
    }
     if ($("#new_merchantBank option:selected").val() == '') {
-        Common.alert("new_merchantBank");
+        Common.alert(" * Please select a merchant bank ");
         return;
    }
 
@@ -663,9 +663,9 @@ function fn_genClaim(){
         $('#new_issueBank :selected').each(function(i, mul){
             if($(mul).val() != "0"){
                 if(runNo1 > 0){
-                    issueBank += ", '"+$(mul).val()+"' ";
+                    issueBank += ", "+$(mul).val()+" ";
                 }else{
-                    issueBank += " '"+$(mul).val()+"' ";
+                    issueBank += " "+$(mul).val()+" ";
                 }
                 runNo1 += 1;
             }
@@ -1061,6 +1061,7 @@ function fn_openDivPopDown(){
                      <th scope="row">Issue Bank <span class="must">*</span></th>
                         <td>
                             <select class="multy_select w100p" multiple="multiple" id="new_issueBank" data-placeholder="Bank Name"></select>
+                            <input type="hidden"  id="hiddenIssueBank" name="hiddenIssueBank"/>
                         </td>
                         <th scope="row">Card Type<span class="must" id="cardTypeMust">*</span></th>
                         <td>
