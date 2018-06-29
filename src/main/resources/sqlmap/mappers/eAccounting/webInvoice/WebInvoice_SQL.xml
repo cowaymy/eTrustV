@@ -730,7 +730,16 @@ SELECT T.APPV_PRCSS_NO
                 ,T6.FILE_CNT
                 ,TO_CHAR (T2.APPV_DT, 'DD/MM/YYYY') APPV_PRCSS_DT
             FROM FCM0004M T1 LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO <!-- AND T2.APPV_LINE_SEQ = 1 -->
-                 LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO AND T3.APPV_ITM_SEQ = 1 <!-- AND T3.APPV_ITM_SEQ = 1 추가 -->
+                 LEFT JOIN (
+                    SELECT
+                        MIN(APPV_ITM_SEQ) APPV_ITM_SEQ,
+                        APPV_PRCSS_NO,
+                        COST_CENTR,
+                        COST_CENTR_NAME
+                    FROM FCM0015D
+                    GROUP BY APPV_PRCSS_NO, COST_CENTR, COST_CENTR_NAME
+                 ) T3M ON T1.APPV_PRCSS_NO = T3M.APPV_PRCSS_NO
+                 INNER JOIN FCM0015D T3 ON T3M.APPV_PRCSS_NO = T3.APPV_PRCSS_NO and T3M.APPV_ITM_SEQ = T3.APPV_ITM_SEQ <!-- AND T3.APPV_ITM_SEQ = 1 추가 -->
                  LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
                  LEFT JOIN FCM0006M T5 ON T3.MEM_ACC_ID = T5.MEM_ACC_ID
                  LEFT JOIN
