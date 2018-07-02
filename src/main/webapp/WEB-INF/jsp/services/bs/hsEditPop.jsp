@@ -770,7 +770,7 @@ var myDetailGridData = null;
     </td>
     <th scope="row" style="width: 59px; ">Instruction</th>
     <td>
-        <input id="txtInstruction" name="txtInstruction"  type="text" title="" placeholder="Instruction" class="w100p" value="${settleInfo.configBsRem}"/>
+        <input id="txtInstruction" name="txtInstruction"  type="text" title="" placeholder="Instruction" class="w100p" value="${basicinfo.instct}"/>
         <%-- <span>${settleInfo.configBsRem}</span> --%>
     </td>
 </tr>
@@ -823,7 +823,7 @@ var myDetailGridData = null;
  <input type="text" value="<c:out value="${basicinfo.codyId}"/> "  id="codyId" name="codyId"/>
  <input type="text" value="<c:out value="${basicinfo.setlDt}"/> "  id="setlDt" name="setlDt"/>
  <input type="text" value="<c:out value="${basicinfo.configBsRem}"/> "  id="configBsRem" name="configBsRem"/>
- <input type="text" value="<c:out value="${basicinfo.configBsRem}"/> "  id="Instruction" name="Instruction"/>
+ <input type="text" value="<c:out value="${basicinfo.instct}"/> "  id="Instruction" name="Instruction"/>
  <input type="text" value=""  id="cmbCollectType1" name="cmbCollectType1"/>
 
  </div>
