@@ -50,24 +50,24 @@
     // 수정창
     var dialog;
     var itemdata;
-    
+
     // AUIGrid 칼럼 설정             // formatString : "mm/dd/yyyy",    dataType:"numeric", formatString : "#,##0"
-var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.head.memoid'/>"           ,width:120    ,height:30 , visible:false},                        
-							{dataField: "memotitle",headerText :"<spring:message code='log.head.title'/>"              ,width:250    ,height:30 , visible:true},                        
-							{dataField: "memocntnt",headerText :"<spring:message code='log.head.memocntnt'/>"          ,width:350    ,height:30 , visible:false},                       
-							{dataField: "stusid",headerText :"<spring:message code='log.head.statuscode'/>"      ,width:140    ,height:30 , visible:false},                         
-							{dataField: "stuscode",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:140    ,height:30 , visible:false},                         
-							{dataField: "stusname",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:140    ,height:30 , visible:true},                          
-							{dataField: "crtdt",headerText :"<spring:message code='log.head.createdate'/>"           ,width:140    ,height:30 , visible:true},                          
-							{dataField: "fcrtdt",headerText :"<spring:message code='log.head.creator'/>"             ,width:140    ,height:30 , visible:false},                         
-							{dataField: "crtuserid",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},                         
-							{dataField: "crtusernm",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:true},                          
-							{dataField: "upddt",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},                         
-							{dataField: "fupddt",headerText :"<spring:message code='log.head.creator'/>"             ,width:140    ,height:30 , visible:false},                         
-							{dataField: "upduserid",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},                         
-							{dataField: "updusernm",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},                         
-							{dataField: "staffmemo",headerText :"<spring:message code='log.head.staff'/>"              ,width:140    ,height:30 , visible:true 
-                            , renderer : 
+var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.head.memoid'/>"           ,width:120    ,height:30 , visible:false},
+							{dataField: "memotitle",headerText :"<spring:message code='log.head.title'/>"              ,width:250    ,height:30 , visible:true},
+							{dataField: "memocntnt",headerText :"<spring:message code='log.head.memocntnt'/>"          ,width:350    ,height:30 , visible:false},
+							{dataField: "stusid",headerText :"<spring:message code='log.head.statuscode'/>"      ,width:140    ,height:30 , visible:false},
+							{dataField: "stuscode",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:140    ,height:30 , visible:false},
+							{dataField: "stusname",headerText :"<spring:message code='log.head.statuscode'/>"        ,width:140    ,height:30 , visible:true},
+							{dataField: "crtdt",headerText :"<spring:message code='log.head.createdate'/>"           ,width:140    ,height:30 , visible:true},
+							{dataField: "fcrtdt",headerText :"<spring:message code='log.head.creator'/>"             ,width:140    ,height:30 , visible:false},
+							{dataField: "crtuserid",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},
+							{dataField: "crtusernm",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:true},
+							{dataField: "upddt",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},
+							{dataField: "fupddt",headerText :"<spring:message code='log.head.creator'/>"             ,width:140    ,height:30 , visible:false},
+							{dataField: "upduserid",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},
+							{dataField: "updusernm",headerText :"<spring:message code='log.head.creator'/>"          ,width:140    ,height:30 , visible:false},
+							{dataField: "staffmemo",headerText :"<spring:message code='log.head.staff'/>"              ,width:140    ,height:30 , visible:true
+                            , renderer :
                             {
                                 type : "CheckBoxEditRenderer",
                                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
@@ -76,50 +76,50 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
                                 unCheckValue : ""
                             }
                         },
-                        {dataField:  "codymemo",headerText :"<spring:message code='log.head.cody'/>"         ,width:140    ,height:30 , visible:true 
-                            , renderer : 
+                        {dataField:  "codymemo",headerText :"<spring:message code='log.head.cody'/>"         ,width:140    ,height:30 , visible:true
+                            , renderer :
                             {
                                 type : "CheckBoxEditRenderer",
                                 showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
                                 editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
                                 checkValue : "1", // true, false 인 경우가 기본
                                 unCheckValue : ""
-                                
-                            }     
-                        },
-                        {dataField: "hpmemo",headerText :"<spring:message code='log.head.hp'/>"            ,width:140    ,height:30 , visible:true 
-                            , renderer : 
-                            {
-                                type : "CheckBoxEditRenderer",
-                                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                                editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
-                                checkValue : "1", // true, false 인 경우가 기본
-                                unCheckValue : ""
-                                
-                               
+
                             }
-                                      
+                        },
+                        {dataField: "hpmemo",headerText :"<spring:message code='log.head.hp'/>"            ,width:140    ,height:30 , visible:true
+                            , renderer :
+                            {
+                                type : "CheckBoxEditRenderer",
+                                showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+                                checkValue : "1", // true, false 인 경우가 기본
+                                unCheckValue : ""
+
+
+                            }
+
                         }
                        ];
-    
+
     var gridoptions = {showStateColumn : false , editable : false, pageRowCount : 30, usePaging : true, useGroupingPanel : false , fixedColumnCount:2};
-    
+
 
     $(document).ready(function(){
     	HTMLArea.init();
         HTMLArea.onload = initEditor;
-        
+
      	$("#editwindow").hide();
-        
+
         // masterGrid 그리드를 생성합니다.
         listGrid = GridCommon.createAUIGrid("grid_wrap", columnLayout,"", gridoptions);
-        
-        AUIGrid.bind(listGrid, "cellClick", function( event ) 
-        {   
+
+        AUIGrid.bind(listGrid, "cellClick", function( event )
+        {
         });
 
         // 셀 더블클릭 이벤트 바인딩
-        AUIGrid.bind(listGrid, "cellDoubleClick", function(event) 
+        AUIGrid.bind(listGrid, "cellDoubleClick", function(event)
         {
         	$("#viewwindow").show();
         	var itm = event.item;
@@ -129,13 +129,13 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
         	$("#vupdnm").html(itm.updusernm);
         	$("#vupddt").html(itm.upddt);
         	$("#vmemo").html(itm.memocntnt);
-        	
+
         });
-        
+
         AUIGrid.bind(listGrid, "ready", function(event) {
-            
+
         });
-        
+
         //SearchListAjax();
     });
 
@@ -160,14 +160,14 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
             var selectedItem = AUIGrid.getSelectedIndex(listGrid);
 
             Common.ajax("POST", "/logistics/memorandum/memoSave.do", param, function (result) {
-            	
+
             	if (result.data != null){
             		AUIGrid.updateRow(listGrid, result.data, selectedItem[0]);
             		AUIGrid.resetUpdatedItems(listGrid, "all");
             	}
-            	
+
             	$("#editwindow").hide();
-            	
+
             });
         });
     	$("#vdelete").click(function(){
@@ -178,7 +178,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
             Common.ajax("GET", "/logistics/memorandum/memoDelete.do", param, function (result) {
             	$("#editwindow").hide();
             	 SearchListAjax();
-            	
+
             });
         });
     	$("#update").click(function(){
@@ -190,15 +190,15 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
     		$("#dataTitle2").text("Memo Randum Edit");
     		$("#editwindow").show();
             $("#vdelete").show();
-    		
+
     		var selectedItems = AUIGrid.getSelectedItems(listGrid);
             var itm = selectedItems[0].item;
-            
+
             $("#vmode").val("upd");
             $("#etitle").val(itm.memotitle);
             $("#hedtor").val(itm.memocntnt);
             $("#memoid").val(itm.memoid);
-            
+
             if (itm.staffmemo == 1){
             	$("#staffmemo").prop("checked" , true);
             }else{
@@ -221,7 +221,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
             $(".htmlarea > iframe").attr("style","border-width: 1px; width:100%;");
 			editor.setHTML("");
 			editor.insertHTML(itm.memocntnt);
-            
+
         });
     	$("#insert").click(function(){
     		$("#vdelete").hide();
@@ -238,19 +238,19 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
     		$(".htmlarea .toolbar > table").attr("style","width:100%;");
     		$(".htmlarea .toolbar > table > tr").attr("style","width:100%;");
     		$(".htmlarea > iframe").attr("style","border-width: 1px; width:100%;");
-    		
+
     		$("#vmode").val("ins");
-    		
+
         });
     });
-    
+
     function SearchListAjax() {
-        
+
         var url = "/logistics/memorandum/memoSearchList.do";
         var param = $('#searchForm').serializeJSON();
         Common.ajax("POST" , url , param , function(data){
             AUIGrid.setGridData(listGrid, data.data);
-            
+
         });
     }
 </script>
@@ -294,10 +294,10 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
     <th scope="row">Create Date</th>
     <td>
         <div class="date_set w100p"><!-- date_set start -->
-        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>   
+        <p><input id="crtsdt" name="crtsdt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"></p>
         <span>To</span>
         <p><input id="crtedt" name="crtedt" type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date "></p>
-        </div><!-- date_set end -->                        
+        </div><!-- date_set end -->
     </td>
 </tr>
 </tbody>
@@ -307,11 +307,13 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
 
 <section class="search_result"><!-- search_result start -->
 
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 <ul class="right_btns">
     <%-- <li><p class="btn_grid"><a id="delete"><spring:message code='sys.btn.del' /></a></p></li> --%>
     <li><p class="btn_grid"><a id="update"><spring:message code='sys.btn.update' /></a></p></li>
     <li><p class="btn_grid"><a id="insert"><spring:message code='sys.btn.add' /></a></p></li>
 </ul>
+</c:if>
 
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="grid_wrap" class="mt10" style="height:430px"></div>
@@ -326,7 +328,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
                 <li><p class="btn_blue2"><a href="#">CLOSE</a></p></li>
             </ul>
         </header><!-- pop_header end -->
-        
+
         <section class="pop_body"><!-- pop_body start -->
             <form id="grForm" name="grForm" method="POST">
             <table class="type1">
@@ -342,31 +344,31 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
                 <tr>
                     <th scope="row">Title</th>
                     <td id="vtitle" colspan="2"></td>
-                   <td align="right"><div class="search_100p" align="right"><input name="pdf" type="button" value="PDF" /></div></td> 
+                   <td align="right"><div class="search_100p" align="right"><input name="pdf" type="button" value="PDF" /></div></td>
                 </tr>
-                <tr>    
+                <tr>
                     <th scope="row">Creator</th>
                     <td id="vcrtnm"></td>
                     <th scope="row">Create Date</th>
                     <td id="vcrtdt"></td>
                 </tr>
-                <tr>    
+                <tr>
                     <th scope="row">Updator</th>
                     <td id="vupdnm"></td>
                     <th scope="row">Update Date</th>
                     <td id="vupddt" ></td>
                 </tr>
-                <tr>    
+                <tr>
                     <td id="vmemo" colspan="4"></td>
                 </tr>
             </tbody>
             </table>
-        
+
            <!--  <ul class="center_btns">
-                <li><p class="btn_blue2 big"><a id="vclose">CLOSE</a></p></li> 
+                <li><p class="btn_blue2 big"><a id="vclose">CLOSE</a></p></li>
             </ul> -->
             </form>
-        
+
         </section>
     </div>
     <div class="popup_wrap size_big" id="editwindow"><!-- popup_wrap start -->
@@ -376,7 +378,7 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
                 <li><p class="btn_blue2"><a id="eclose">CLOSE</a></p></li>
             </ul>
         </header><!-- pop_header end -->
-        
+
         <section class="pop_body"><!-- pop_body start -->
             <form id="edForm" name="edForm" method="POST">
             <input type="hidden" name="vmode"  id="vmode" />
@@ -393,9 +395,9 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
             <tbody>
                 <tr>
                     <th scope="row">Title</th>
-                    <td colspan="3"><input type="text" id="etitle" name="etitle" value="" class="w100p"></td>    
+                    <td colspan="3"><input type="text" id="etitle" name="etitle" value="" class="w100p"></td>
                 </tr>
-                <tr>    
+                <tr>
                     <th scope="row">Memo Viewer</th>
                     <td id="vtitle" colspan="3">
                         <label><input type="checkbox" id='staffmemo' name='staffmemo'/><span> Staff Memo </span></label>
@@ -407,11 +409,11 @@ var columnLayout = [{dataField: "memoid",headerText :"<spring:message code='log.
             </table>
               <textarea id="editorArea" name="editorArea" style="width:100%;"></textarea>
               <ul class="center_btns">
-                <li><p class="btn_blue2 big"><a id="vsave">SAVE</a></p></li> 
-                <li><p class="btn_blue2 big"><a id="vdelete">DELETE</a></p></li> 
+                <li><p class="btn_blue2 big"><a id="vsave">SAVE</a></p></li>
+                <li><p class="btn_blue2 big"><a id="vdelete">DELETE</a></p></li>
             </ul>
             </form>
-        
+
         </section>
     </div>
-</section>    
+</section>
