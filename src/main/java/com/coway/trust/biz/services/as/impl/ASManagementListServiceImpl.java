@@ -844,14 +844,15 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 				}
 
 
-				iMap.put("ASR_ITM_EXCHG_ID",    updateMap.get("filterExCode") );
+				//iMap.put("ASR_ITM_EXCHG_ID",    updateMap.get("filterExCode") != "-" ? updateMap.get("filterExCode") : "0");//cyc
+				iMap.put("ASR_ITM_EXCHG_ID",    updateMap.get("filterExCode") );//cyc
 				iMap.put("ASR_ITM_CLM",   		  		"0");
 				iMap.put("ASR_ITM_TAX_CODE_ID",    "0" );
 				iMap.put("ASR_ITM_TXS_AMT" , 			"0" );
 
 				iMap.put("SERIAL_NO" , updateMap.get("srvFilterLastSerial"));
 				iMap.put("FILTER_BARCD_SERIAL_NO" , updateMap.get("srvFilterLastSerial"));
-				iMap.put("EXCHG_ID" , updateMap.get("filterExCode"));
+				iMap.put("EXCHG_ID" ,  updateMap.get("filterExCode"));
 
 
 				LOGGER.debug("					insertSVC0005D {} ",iMap);
@@ -1214,7 +1215,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
 
 	//AccASLedger
-	public  int  setPay0006dData(ArrayList<AsResultChargesViewVO>  vewList ,Map<String, Object> params ,String type ){
+	public  int  setPay0006dData(ArrayList<AsResultChargesViewVO>  vewList ,Map<String, Object> params ,String type ,double totalASAmount){
 		 LOGGER.debug("									===> setPay0006dData   in");
 	   	  Map<String, Object>  pay0006dMap = new HashMap() ;
 
@@ -1224,10 +1225,12 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
     	   pay0006dMap.put("asLgDt",new Date());
 
     	   if("A".equals(type)){
-    		   pay0006dMap.put("asLgAmt",params.get("AS_TOT_AMT"));
+    		   pay0006dMap.put("asLgAmt",totalASAmount);
+    		   //pay0006dMap.put("asLgAmt",params.get("AS_TOT_AMT"));
 
     	   }else if("B".equals(type)){
-    		   pay0006dMap.put("asLgAmt" , Double.parseDouble((String)params.get("AS_TOT_AMT"))  * -1 );
+    		   pay0006dMap.put("asLgAmt" , totalASAmount  * -1 );
+    		   //pay0006dMap.put("asLgAmt" , Double.parseDouble((String)params.get("AS_TOT_AMT"))  * -1 );
 
     	   }else if("C".equals(type)){
     		   pay0006dMap.put("asLgAmt" , Double.parseDouble((String)params.get("totalAASLeft"))  * -1);
@@ -1791,12 +1794,26 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	     	}
 
 
+	      	//get total AS item amount
+	      	  //double  totalCharges =0;
+			  //double  totalTaxes =0;
+			double  totalASAmount =0;
+
+			if(vewList.size()>0){
+				for(AsResultChargesViewVO vo :   vewList){
+
+					//totalCharges  		  +=   Double.parseDouble(vo.getSpareCharges());
+					//totalTaxes     		  +=   Double.parseDouble(vo.getSpareTaxes());
+					totalASAmount     +=   Double.parseDouble(vo.getSpareAmountDue());
+				}
+			}
 
 
+			svc0004dmap.put("AS_TOT_AMT", totalASAmount);
 
 	      	boolean isBillIsPaid =false;
 
-	      	this.setPay0006dData(vewList ,svc0004dmap ,"A");
+	      	this.setPay0006dData(vewList ,svc0004dmap ,"A",totalASAmount);
 
 			double totalLgAmt =  0;
 			double totalUsedLgAmt = 0;
@@ -1811,11 +1828,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			if(totalAASLeft >0) {
 			    if (totalAASLeft >= AS_TOT_AMT){
 			    	isBillIsPaid =true;
-                	this.setPay0006dData(vewList ,svc0004dmap ,"B");
+                	this.setPay0006dData(vewList ,svc0004dmap ,"B",totalASAmount);
 
                 }else{
                 	svc0004dmap.put("totalAASLeft", String.valueOf(sumLeftMap.get("totalaasleft")));
-                	this.setPay0006dData(vewList ,svc0004dmap,"C");
+                	this.setPay0006dData(vewList ,svc0004dmap,"C",totalASAmount);
                 }
 			}
 
@@ -2096,7 +2113,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
 
 
-      		 //////////////////  pay16d  ////////////////////
+      		 //////////////////  pay16d AccOrderBill ////////////////////
       		EgovMap PAY0016DSEQMap = ASManagementListMapper.getPAY0016DSEQ(params);
           	String PAY0016DSEQ = String.valueOf(PAY0016DSEQMap.get("seq"));
           	EgovMap pay16d_insert = new EgovMap();
@@ -2117,11 +2134,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
             pay16d_insert.put("memoAdjUpdUserId",svc0004dmap.get("updator"));
             pay16d_insert.put("batchId","");
             ASManagementListMapper.reverse_PAY0016D(pay16d_insert);
-            //////////////////  pay12d  ////////////////////
+            //////////////////    ////////////////////
 
 
 
-            //////////////////  pay12d  ////////////////////
+            ////////////////// AccInvoiceAdjustment_Sub ////////////////////
             svc0004dmap.put("MEMO_ADJ_ID", PAY0016DSEQ);
  		    svc0004dmap.put("MEMO_ITM_TAX_CODE_ID", pay0016dData.get("accBillTaxCodeId"));
  		    svc0004dmap.put("MEMO_ITM_REM", "AS RESULT REVERSAL_"+ resultPAY0031DInfo.get("taxInvcSvcNo"));
@@ -2132,7 +2149,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 
 
 
- 		    //////////////////  pay27d  ////////////////////
+ 		    //////////////////  pay27d AccTaxDebitCreditNote ////////////////////
  		    EgovMap PAY0027DSEQMap = ASManagementListMapper.getPAY0027DSEQ(params);
             String PAY0027DSEQ = String.valueOf(PAY0027DSEQMap.get("seq"));
          	EgovMap pay27d_insert = new EgovMap();
@@ -2165,7 +2182,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
            //////////////////  pay27d   end  ////////////////////
 
 
-
+            //////////    AccTaxDebitCreditNote_Sub    ////////////
             if(reverse_PAY0012D_cnt > 0){
                 svc0004dmap.put("NOTE_ID", PAY0027DSEQ);
                 int   reverse_PAY0028D_cnt = ASManagementListMapper.reverse_PAY0028D(svc0004dmap);
@@ -2198,7 +2215,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
             pay06d_insert.put("asSoId",svc0004dmap.get("AS_SO_ID"));
             pay06d_insert.put("asAdvPay","0");
             pay06d_insert.put("r01","");
-
+//4
             int   reverse_PAY0006D_cnt = ASManagementListMapper.insert_Pay0006d(pay06d_insert);
             //////////////////pay06d    end////////////////////
          }
@@ -2225,7 +2242,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		         pay06d_insert.put("asSoId",svc0004dmap.get("AS_SO_ID"));
 		         pay06d_insert.put("asAdvPay","1");
 		         pay06d_insert.put("r01","");
-
+//3
 		         int   reverse_PAY0006D_1setCnt = ASManagementListMapper.insert_Pay0006d(pay06d_insert);
 				 //////////////////pay06d    1set end////////////////
 
@@ -2242,7 +2259,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		         pay06d_insert.put("asSoId",svc0004dmap.get("AS_SO_ID"));
 		         pay06d_insert.put("asAdvPay","1");
 		         pay06d_insert.put("r01","");
-
+//2
 		            int   reverse_PAY0006D_2setCnt = ASManagementListMapper.insert_Pay0006d(pay06d_insert);
 				 //////////////////pay06d    2set end////////////////
 			 }
@@ -2479,7 +2496,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
                                  pay06d_insert.put("asSoId",p06dList_Map.get("asSoId"));
                                  pay06d_insert.put("asAdvPay",p06dList_Map.get("asAdvPay"));
                                  pay06d_insert.put("r01","");
-
+//1
                                  int   reverse_PAY0006D_cnt = ASManagementListMapper.reverse_DocNo_PAY0006D(pay06d_insert);
 
                           	 }
