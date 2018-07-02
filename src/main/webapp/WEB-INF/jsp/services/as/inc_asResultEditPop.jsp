@@ -802,9 +802,9 @@ function fn_validRequiredField_Save_ResultInfo(){
              }
 
 
-              if(FormUtil.checkReqValue($("#ddlErrorCode"))){
-                  rtnMsg  +="Please select the ddlErrorCode.<br/>" ;
-                  rtnValue =false;
+             if(FormUtil.checkReqValue($("#ddlErrorCode"))){
+               rtnMsg  +="Please select the ddlErrorCode.<br/>" ;
+                rtnValue =false;
               }
 
 
