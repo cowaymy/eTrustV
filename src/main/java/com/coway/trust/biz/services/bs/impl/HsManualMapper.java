@@ -111,7 +111,7 @@ public interface HsManualMapper {
 	List<EgovMap> selectOrderActiveFilter(Map<String, Object> params);
 
 	void updateAssignCody(Map<String, Object> updateMap);
-	
+
 	void updateAssignCody90D(Map<String, Object> updateMap);
 
 	void updateHsSVC0006D(Map<String, Object> sal0090);
@@ -123,13 +123,13 @@ public interface HsManualMapper {
 	void updateHs009d(Map<String, Object> params);
 
 	List<EgovMap> selectBranch_id(Map<String, Object> params);
-	
+
 	List<EgovMap> selectCTMByDSC_id(Map<String, Object> params);
 
 	EgovMap selectCheckMemCode(Map<String, Object> params);
 
 	EgovMap selectSerMember(Map<String, Object> params);
-	
+
 	public List<EgovMap> selectHSCodyList(Map<String, Object> params);
 
 	String selectMemberId(Map<String, Object> params);
@@ -137,7 +137,7 @@ public interface HsManualMapper {
 	void updateSrvCodyId(Map<String, Object> params);
 
 	void insertCcr0001d(Map<String, Object> callMas);
-	
+
 	List<EgovMap> selectHSAddFilterSetInfo(Map<String, Object> params);
 
 	List<EgovMap> addSrvFilterIdCnt(Map<String, Object> params);
@@ -153,76 +153,76 @@ public interface HsManualMapper {
 	EgovMap getSrvConfigFilter_SAL0087D(Map<String, Object> params);
 
 	void saveChanges(Map<String, Object> send_sal0087D);
-	
+
 	void saveHsFilterInfoAdd(Map<String, Object> params);
 
 	int saveDeactivateFilter(Map<String, Object> params);
 
-	int saveFilterUpdate(Map<String, Object> params);	
-	
+	int saveFilterUpdate(Map<String, Object> params);
+
 	List<EgovMap> selecthSFilterUseHistorycall(Map<String, Object> params);
-	
-	
+
+
 	String getSVC008D_NO(Map<String, Object> params);
-	
+
 	void updateHsResultM2(EgovMap params);
-	
+
 	String GetDocNo(Map<String, Object> params);
-	
+
 	int GetDocNo1(Map<String, Object> params);
-	
+
 	EgovMap selectQryBS_Rev(Map<String, Object> params);
-	
+
 	void addbsResultMas_Rev(Map<String, Object> params);
-	
+
 	List<EgovMap> selectQryResultDet(Map<String, Object> params);
-	
+
 	EgovMap selectQry_stkReqM(Map<String, Object> params);
-	
+
 	int getBSResultM_resultID();
-	
+
 	void addbsResultDet_Rev(Map<String, Object> params);
-	
+
 	void addstkReqM_Rev(Map<String, Object> params);
-	
+
 	int getMobileWarehouseByMemID(Map<String, Object> params);
-	
+
 	EgovMap selectQryBS(Map<String, Object> params);
-	
+
 	EgovMap qry_stkReqD_Rev(Map<String, Object> params);
-	
+
 	int getStkReqM_StkReqID();
-	
+
 	void addStkReqD_Rev(Map<String, Object> params);
-	
+
 	void addStkCrd_Rev(Map<String, Object> params);
-		
+
 	void updateQry_CurBS(Map<String, Object> params);
-	
+
 	void updateQry_New(Map<String, Object> params);
-	
+
 	void addbsResultMas(Map<String, Object> params);
-	
+
 	void updatebsResultMas(Map<String, Object> params);
-	
+
 	void updateQrySchedule(Map<String, Object> params);
-	
+
 	void updateQryConfig(Map<String, Object> params);
-	
+
 	void updateQryConfig4(Map<String, Object> params);
-	
+
 	int selectLocationID(Map<String, Object> params);
-	
+
 	EgovMap selectQrySchedule(Map<String, Object> params);
-	
+
 	void addStkCrd_new(Map<String, Object> params);
-	
+
 	EgovMap selectQryConfig(Map<String, Object> params);
-	
+
 	void updateQryFilter(Map<String, Object> params);
-	
+
 	void addBsResultDet_NoFilter(Map<String, Object> params);
-	//add by hgham  mobile 중복 처리 
+	//add by hgham  mobile 중복 처리
 	int isHsAlreadyResult (Map<String, Object> params);
 
 	void updateQry_CurBSZero(Map<String, Object> qry_CurBS);
@@ -241,9 +241,11 @@ public interface HsManualMapper {
 	List<EgovMap> assignDeptMemUp(Map<String, Object> params);
 
 	List<EgovMap> selectCMList(Map<String, Object> params);
-		
+
 	int hsResultSync(Map<String, Object> params);
 
-	
-	
+	void updateInstRemark(Map<String, Object> bsResultInst);
+
+
+
 }
