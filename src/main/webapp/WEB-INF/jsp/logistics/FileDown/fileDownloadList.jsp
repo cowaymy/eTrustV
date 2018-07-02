@@ -31,46 +31,46 @@ var subGrid;
 var userCode;
 
 var userSession = ${SESSION_INFO.userId};
-                    
+
  var rescolumnLayout=[
-						{dataField: "fileUploadId",headerText :"<spring:message code='log.head.fileuploadid'/>",width:120    ,height:30 , visible:false},                       
-						{dataField: "fileTypeId",headerText :"<spring:message code='log.head.filetypeid'/>",width:120    ,height:30 , visible:false},                       
-						{dataField: "codeName",headerText :"<spring:message code='log.head.type'/>",width:200    ,height:30 },                          
-						{dataField: "fileTypeLbl",headerText :"<spring:message code='log.head.label'/>"       ,width:400    ,height:30                },                        
-						{dataField: "fileName",headerText :"<spring:message code='log.head.filename'/>"                ,width:600    ,height:30  },                         
-						{dataField: "isCody",headerText :"<spring:message code='log.head.cody'/>",width:60    ,height:30              
-                   	   , renderer : 
+						{dataField: "fileUploadId",headerText :"<spring:message code='log.head.fileuploadid'/>",width:120    ,height:30 , visible:false},
+						{dataField: "fileTypeId",headerText :"<spring:message code='log.head.filetypeid'/>",width:120    ,height:30 , visible:false},
+						{dataField: "codeName",headerText :"<spring:message code='log.head.type'/>",width:200    ,height:30 },
+						{dataField: "fileTypeLbl",headerText :"<spring:message code='log.head.label'/>"       ,width:400    ,height:30                },
+						{dataField: "fileName",headerText :"<spring:message code='log.head.filename'/>"                ,width:600    ,height:30  },
+						{dataField: "isCody",headerText :"<spring:message code='log.head.cody'/>",width:60    ,height:30
+                   	   , renderer :
                          {
                              type : "CheckBoxEditRenderer",
                              showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
                              //editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
                              checkValue : 1, // true, false 인 경우가 기본
                              unCheckValue :0
-                         }  
+                         }
                       },
-                      {dataField:    "isHp",headerText :"<spring:message code='log.head.hp'/>"    ,width:60    ,height:30    
-                    	  , renderer : 
+                      {dataField:    "isHp",headerText :"<spring:message code='log.head.hp'/>"    ,width:60    ,height:30
+                    	  , renderer :
                           {
                               type : "CheckBoxEditRenderer",
                               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
                               //editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
                               checkValue :1, // true, false 인 경우가 기본
                               unCheckValue :0
-                          }  
+                          }
                       },
-                      {dataField:   "isStaff",headerText :"<spring:message code='log.head.staff'/>"             ,width:60    ,height:30  
-                    	  , renderer : 
+                      {dataField:   "isStaff",headerText :"<spring:message code='log.head.staff'/>"             ,width:60    ,height:30
+                    	  , renderer :
                           {
                               type : "CheckBoxEditRenderer",
                               showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
                               //editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
                               checkValue :1, // true, false 인 경우가 기본
                               unCheckValue : 0
-                          }                
+                          }
                       },
-                      {dataField: "crtUserId",headerText :"<spring:message code='log.head.crtuserid'/>"                  ,width:110    ,height:30 , visible:false },                          
-                      {dataField: "c1",headerText :"<spring:message code='log.head.creator'/>"                   ,width:110    ,height:30 },                          
-                      {dataField: "crtDt",headerText :"<spring:message code='log.head.createdate'/>"                 ,width:110    ,height:30},                       
+                      {dataField: "crtUserId",headerText :"<spring:message code='log.head.crtuserid'/>"                  ,width:110    ,height:30 , visible:false },
+                      {dataField: "c1",headerText :"<spring:message code='log.head.creator'/>"                   ,width:110    ,height:30 },
+                      {dataField: "crtDt",headerText :"<spring:message code='log.head.createdate'/>"                 ,width:110    ,height:30},
                       {dataField: "fileUrl",headerText :"<spring:message code='log.head.file_url'/>"           ,width:120    ,height:30 , visible:false},
                       {
                           dataField : "",
@@ -85,24 +85,24 @@ var userSession = ${SESSION_INFO.userId};
                           }
                       , editable : false
                       },
-                      {dataField: "subpath",headerText :"<spring:message code='log.head.subpath'/>",width:120    ,height:30 , visible:false},                         
-                      {dataField: "filename",headerText :"<spring:message code='log.head.filename'/>",width:120    ,height:30 , visible:false}  
-                      ];                     
-                                    
+                      {dataField: "subpath",headerText :"<spring:message code='log.head.subpath'/>",width:120    ,height:30 , visible:false},
+                      {dataField: "filename",headerText :"<spring:message code='log.head.filename'/>",width:120    ,height:30 , visible:false}
+                      ];
+
 //var reqop = {editable : false,usePaging : false ,showStateColumn : false};
 var gridoptions = {
-        showStateColumn : false , 
-        editable : false, 
-        pageRowCount : 30, 
-        usePaging : true, 
+        showStateColumn : false ,
+        editable : false,
+        pageRowCount : 30,
+        usePaging : true,
         useGroupingPanel : false,
         };
-        
+
 var subgridpros = {
         // 페이지 설정
-        usePaging : true,                
-        pageRowCount : 20,                
-        editable : false,                
+        usePaging : true,
+        pageRowCount : 20,
+        editable : false,
         noDataMessage :  "<spring:message code='sys.info.grid.noDataMessage' />",
         enableSorting : true,
         //selectionMode : "multipleRows",
@@ -115,7 +115,7 @@ var subgridpros = {
         //softRemoveRowMode:false
         };
 var resop = {
-        rowIdField : "rnum",            
+        rowIdField : "rnum",
         editable : true,
         fixedColumnCount : 6,
         groupingFields : ["reqstno"],
@@ -128,22 +128,22 @@ var resop = {
         };
 
 
-        
+
 var paramdata;
 
 $(document).ready(function(){
-	
+
 
 doGetCombo('/common/selectCodeList.do', '70', '','searchFileType', 'M' , 'f_multiCombo'); //File Type 리스트 조회
 //$("#fileSpace").val("You required to upload your file after save file space.");
-//$("#uploadFileText").val("Only allow .zip file || Max file size : 5MB || File will be overwrite if you re-upload");   
+//$("#uploadFileText").val("Only allow .zip file || Max file size : 5MB || File will be overwrite if you re-upload");
 
 
-    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, gridoptions);    
-    
-    
-    
-    
+    listGrid = AUIGrid.create("#main_grid_wrap", rescolumnLayout, gridoptions);
+
+
+
+
 });
 
 
@@ -156,9 +156,9 @@ $(function(){
     	$("#searchForm")[0].reset();
     	doGetCombo('/common/selectCodeList.do', '70', '','searchFileType', 'M' , 'f_multiCombo'); //File Type 리스트 조회
     });
-    
+
     $('#newUpFile').click(function() {
-    	
+
     	$("#pop_title").text("Save New File Space");
     	$("#ReceivePopUp_wrap").show();
     	$("#fileSpace_tr").show();
@@ -170,12 +170,12 @@ $(function(){
     	 $("#insTypeLabel1").attr("checked", false);
     	 $("#insTypeLabel2").attr("checked", false);
     	 $("input[name='insTypeLabel']").prop('disabled', true);
-    	 
+
     	 $("#insNewLabel").val('');
     	 doGetComboSelBox('/logistics/file/selectLabelList.do', '' , '' , '','insExistingLabel', 'S', '');
     	 $("#ExistingLabel").show();
     	 $("#NewLabel").hide();
-    	 $("#thLabel").text("Existing Label"); 
+    	 $("#thLabel").text("Existing Label");
     	 $("#insFileNm").val('');
     	 $("#insStaff").prop("checked", true);
     	 $("#insCody").prop("checked", true);
@@ -218,26 +218,26 @@ $(function(){
 	    	$("#reUp").show();
          }
     });
-    
+
     $("input:radio[name=insTypeLabel]").click(function(){
         var radioValue =    $("input:radio[name=insTypeLabel]:checked").val();
-       
+
            if(radioValue == "E" ){
         	   var val = $("#insType").val();
-	       	   $("#insNewLabel").val(""); 
+	       	   $("#insNewLabel").val("");
         	   $("#insExistingLabel").attr("disabled", false);
-        	   $("#ExistingLabel").show(); 
-        	   $("#NewLabel").hide(); 
-        	   $("#thLabel").text("Existing Label"); 
-        	   doGetComboSelBox('/logistics/file/selectLabelList.do', '' , val , '','insExistingLabel', 'S', ''); //Label 리스트 조회                
+        	   $("#ExistingLabel").show();
+        	   $("#NewLabel").hide();
+        	   $("#thLabel").text("Existing Label");
+        	   doGetComboSelBox('/logistics/file/selectLabelList.do', '' , val , '','insExistingLabel', 'S', ''); //Label 리스트 조회
             }else{
-        	    $("#insExistingLabel").val(""); 
+        	    $("#insExistingLabel").val("");
             	$("#NewLabel").show();
-            	$("#ExistingLabel").hide(); 
-        	   $("#thLabel").text("New Label"); 
-            }       
-    }) 
-    
+            	$("#ExistingLabel").hide();
+        	   $("#thLabel").text("New Label");
+            }
+    })
+
     $("input[id=fileSelector]").change(function(){
         // 필드 채워지면
         if($(this).val() != ""){
@@ -248,7 +248,7 @@ $(function(){
                     $(this).val("");
                     return false;
                 }
-                
+
                 // 용량 체크
                 var fileSize = this.files[0].size;
                 var maxSize = 1024 * 1024*5;
@@ -260,8 +260,8 @@ $(function(){
         }
     });
 
-   
-   
+
+
 });
 
 // function SearchSessionAjax() {
@@ -278,14 +278,14 @@ function SearchListAjax() {
     var param = $('#searchForm').serialize();
     Common.ajax("GET" , url , param , function(data){
         AUIGrid.setGridData(listGrid, data.data);
-        
+
     });
 }
 
 
 function fn_insertFileSpace(flag){
 	if(flag =="S"){
-	  //div="FS"  
+	  //div="FS"
 	 fileSpaceSaveAjax();
 	}else{
 		   if(""==$("input[id=fileSelector]").val()){
@@ -297,10 +297,10 @@ function fn_insertFileSpace(flag){
 		}else if(flag =="R"){
 	      fn_reUpFile();
 		}
-			
-	} 
-	
-   
+
+	}
+
+
 }
 
 
@@ -308,7 +308,7 @@ function fileSpaceSaveAjax() {
     var url;
     var param;
        param= $("#FileSpaceForm").serializeJSON();
-       url="/logistics/file/insertFileSpace.do";    
+       url="/logistics/file/insertFileSpace.do";
    Common.ajax("POST",url,param,function(result){
        if(result.cnt == 0){
 	        $("#upId").val(result.re);
@@ -318,16 +318,16 @@ function fileSpaceSaveAjax() {
 	        $(".auto_file input[type=text]").text('');
 	        $("#newUp").show();
 	        $("#reUp").hide();
-    	   
+
        }else{
     	   Common.alert("* Same file space is exist.");
        }
    });
-} 
+}
 function fileSaveAjax() {
     var url;
     var formData = new FormData();
-        url="/logistics/file/insertFile.do";    
+        url="/logistics/file/insertFile.do";
          formData.append("excelFile", $("input[name=zipUpload]")[0].files[0]);
          formData.append("upId", $("#upId").val());
    Common.ajaxFile(url,formData,function(result){
@@ -336,7 +336,7 @@ function fileSaveAjax() {
 	   $("#ReceivePopUp_wrap").hide();
 	   SearchListAjax();
    });
-} 
+}
 
 
 
@@ -345,7 +345,7 @@ function f_multiCombo() {
         $('#searchFileType').change(function() {
         }).multipleSelect({
             selectAll : true
-        });  /* .multipleSelect("checkAll"); */        
+        });  /* .multipleSelect("checkAll"); */
     });
 }
 
@@ -354,14 +354,14 @@ function getComboRelayss(obj, value, tag, selvalue) {
     var robj = '#' + obj;
     $(robj).attr("disabled", false);
     $("input[name='insTypeLabel']").prop('checked', false);
-    $("#insTypeLabel1").attr("disabled", false); 
-    $("#insTypeLabel2").attr("disabled", false); 
-    $("#insNewLabel").val(""); 
-    $("#insExistingLabel").val(""); 
-    $("#ExistingLabel").show(); 
-    $("#NewLabel").hide(); 
-    $("#thLabel").text("Existing Label"); 
-    doGetComboSelBox('/logistics/file/selectLabelList.do', tag , value , selvalue,obj, 'S', ''); //Label 리스트 조회                
+    $("#insTypeLabel1").attr("disabled", false);
+    $("#insTypeLabel2").attr("disabled", false);
+    $("#insNewLabel").val("");
+    $("#insExistingLabel").val("");
+    $("#ExistingLabel").show();
+    $("#NewLabel").hide();
+    $("#thLabel").text("Existing Label");
+    doGetComboSelBox('/logistics/file/selectLabelList.do', tag , value , selvalue,obj, 'S', ''); //Label 리스트 조회
 }
 
 function doGetComboSelBox(url, groupCd, codevalue, selCode, obj, type, callbackFn) {
@@ -429,6 +429,8 @@ function fileDown(rowIndex){
       var subPath = AUIGrid.getCellValue(listGrid,  rowIndex, "subpath");
       var fileName = AUIGrid.getCellValue(listGrid,  rowIndex, "filename");
       var orignlFileNm = AUIGrid.getCellValue(listGrid,  rowIndex, "fileName")+".zip";
+      console.log("File Name ::" + subPath+"/"+fileName+"/"+orignlFileNm);
+
    if(""==subPath || null==subPath ||""==fileName || null==fileName ){
       var oldSet = AUIGrid.getCellValue(listGrid,  rowIndex, "fileUrl");
 	  // Common.alert("File is not exist.");
@@ -448,10 +450,10 @@ function fn_modifyileSpace(str){
     var param;
     var msg="";
 	if(str=="M"){
-       url="/logistics/file/insertFileSpace.do";  
+       url="/logistics/file/insertFileSpace.do";
        msg="File space has successfully updated.";
 	}else{
-       url="/logistics/file/deleteFileSpace.do";    
+       url="/logistics/file/deleteFileSpace.do";
        msg="File space has been deleted.";
 	}
        param= $("#FileSpaceForm").serializeJSON();
@@ -461,7 +463,7 @@ function fn_modifyileSpace(str){
 		   msg="* Same file space is exist.";
 	   }
         Common.alert(msg);
-        $("#ReceivePopUp_wrap").hide();         
+        $("#ReceivePopUp_wrap").hide();
         SearchListAjax();
 
    });
@@ -473,14 +475,14 @@ function fn_dataSet(){
         $("#insTypeLabel1").prop("disabled", false);
         $("#insTypeLabel2").prop("disabled", false);
         $("#insTypeLabel1").prop("checked", true);
-	    $("#insNewLabel").val(""); 
+	    $("#insNewLabel").val("");
 	    $("#insExistingLabel").prop("disabled", false);
-	    $("#ExistingLabel").show(); 
-	    $("#NewLabel").hide(); 
-	    $("#thLabel").text("Existing Label"); 
+	    $("#ExistingLabel").show();
+	    $("#NewLabel").hide();
+	    $("#thLabel").text("Existing Label");
 	    doGetComboSelBox('/logistics/file/selectLabelList.do', '' ,AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileTypeId") ,AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileTypeLbl"),'insExistingLabel', 'S', '');
-	    $("#insFileNm").val(AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileName")); 
-	    
+	    $("#insFileNm").val(AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileName"));
+
 	    if(1==AUIGrid.getCellValue(listGrid,  selectedItem[0], "isStaff")){
 	        $("#insStaff").prop("checked", true);
 	    }else{
@@ -502,7 +504,7 @@ function fn_reUpFile(){
 	var selectedItem = AUIGrid.getSelectedIndex(listGrid);
     var url;
     var formData = new FormData();
-        url="/logistics/file/insertFile.do";    
+        url="/logistics/file/insertFile.do";
          formData.append("excelFile", $("input[name=zipUpload]")[0].files[0]);
          formData.append("upId",AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileUploadId"));
          formData.append("insType",AUIGrid.getCellValue(listGrid,  selectedItem[0], "fileTypeId"));
@@ -539,7 +541,7 @@ function fn_reUpFile(){
 
 <section class="search_table"><!-- search_table start -->
     <form id="searchForm" name="searchForm" method="post" onsubmit="return false;">
-        <input type="hidden" name="rStcode" id="rStcode" />    
+        <input type="hidden" name="rStcode" id="rStcode" />
         <table class="type1"><!-- table start -->
             <caption>search table</caption>
             <colgroup>
@@ -555,36 +557,39 @@ function fn_reUpFile(){
                 <th scope="row">File Type</th>
                    <td >
                       <select class="w100p" id="searchFileType" name="searchFileType"><option value=''>Choose One</option></select>
-                    </td> 
+                    </td>
                     <th scope="row">File Type Label</th>
                     <td>
                         <input type="text" title="" placeholder=""  class="w100p" id="searchTypeLabel" name="searchTypeLabel"/>
-                    </td> 
+                    </td>
                     <th scope="row">Filename</th>
                     <td>
                         <input type="text" title="" placeholder=""  class="w100p" id="searchFilename" name="searchFilename"/>
                     </td>
                 </tr>
-                         
+
             </tbody>
         </table><!-- table end -->
-     <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
-		<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
-		<dl class="link_list">
-		    <dt>Link</dt>
-		    <dd>
- 		    <ul class="btns"> 
- 		        <li><p class="link_btn"><a id="editFile">Edit File Space</a></p></li> 
-  		        <li><p class="link_btn"><a id="reUpFile">Re-Upload File</a></p></li> 
-  		    </ul> 
-		    <ul class="btns">
-		        <li><p class="link_btn type2"><a id="newUpFile">Upload New File</a></p></li>
-		    </ul>
-		    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
-		    </dd>
-		</dl>
-		</aside><!-- link_btns_wrap end -->
-		        
+
+      <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+	     <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+			<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+			<dl class="link_list">
+			    <dt>Link</dt>
+			    <dd>
+	 		    <ul class="btns">
+	 		        <li><p class="link_btn"><a id="editFile">Edit File Space</a></p></li>
+	  		        <li><p class="link_btn"><a id="reUpFile">Re-Upload File</a></p></li>
+	  		    </ul>
+			    <ul class="btns">
+			        <li><p class="link_btn type2"><a id="newUpFile">Upload New File</a></p></li>
+			    </ul>
+			    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+			    </dd>
+			</dl>
+			</aside><!-- link_btns_wrap end -->
+		</c:if>
+
     </form>
 
     </section><!-- search_table end -->
@@ -593,11 +598,11 @@ function fn_reUpFile(){
     <section class="search_result"><!-- search_result start -->
 
         <div id="main_grid_wrap" class="mt10" style="height:300px"></div>
-       
+
     </section><!-- search_result end -->
-    
-    
-    
+
+
+
 <div id="ReceivePopUp_wrap" class="popup_wrap" style="display: none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
@@ -646,7 +651,7 @@ function fn_reUpFile(){
     <td colspan="2" >
         <label><input type="checkbox"  id="insStaff" name="insStaff"  checked="checked" /><span>Staff</span></label>
         <label><input type="checkbox"  id="insCody" name="insCody"   checked="checked" /><span>Cody</span></label>
-        <label><input type="checkbox"  id="insHP" name="insHP"   checked="checked" /><span>HP</span></label>  
+        <label><input type="checkbox"  id="insHP" name="insHP"   checked="checked" /><span>HP</span></label>
     </td>
 </tr>
 <tr id="fileSpace_tr">
@@ -669,8 +674,8 @@ function fn_reUpFile(){
 </section><!-- pop_body end -->
 
 </div><!-- popup_wrap end -->
-    
-    
+
+
 <div id="UploadFilePopUp_wrap" class="popup_wrap" style="display: none;"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
@@ -718,7 +723,7 @@ function fn_reUpFile(){
 </ul>
 </section><!-- pop_body end -->
 
-</div><!-- popup_wrap end -->    
+</div><!-- popup_wrap end -->
 
 </section>
 
