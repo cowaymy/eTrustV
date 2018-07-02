@@ -1263,6 +1263,16 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		bsResultMas.put("bsPreferWeek", String.valueOf(params.get("srvBsWeek")));
 
 
+		// UPDATE SAL0045D - INSTALLATION INSTRUCTION - TPY 20180629
+
+		Map<String, Object> bsResultInst = new HashMap<String, Object>();
+
+		bsResultInst.put("SalesOrderId", String.valueOf(params.get("hidSalesOrdId")));
+		bsResultInst.put("userId", String.valueOf(sessionVO.getUserId()));
+		bsResultInst.put("instct", String.valueOf(params.get("txtInstruction")));
+
+		// END
+
 
 		Map<String, Object> bsResultMas_Rev = new HashMap<String, Object>();
 
@@ -1543,6 +1553,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     			}
     			logger.debug(">>>>>>>>>>bsResultMas : {}", bsResultMas);
     			hsManualMapper.updatebsResultMas(bsResultMas); // UPDATE 1건 svc0006d
+    		}
+
+    		if(bsResultInst.get("instct")!=null){
+    			hsManualMapper.updateInstRemark(bsResultInst); // UPDATE SAL0045D - TPY 20180629
     		}
 
     		hsManualMapper.updateQry_CurBSZero(qry_CurBS);// 최신거 업데이트
