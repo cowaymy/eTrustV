@@ -93,7 +93,7 @@ var myColumnLayout = [ {
 
 //그리드 속성 설정
 var myGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -280,7 +280,7 @@ var mileageGridColumnLayout = [ {
             myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
         }
         return myString;
-     }, 
+     },
     renderer : {
         type : "ButtonRenderer",
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -344,8 +344,8 @@ var mileageGridID;
 
 $(document).ready(function () {
     myGridID = AUIGrid.create("#approveView_grid_wrap", myColumnLayout, myGridPros);
-    
-    AUIGrid.bind(myGridID, "cellDoubleClick", function( event ) 
+
+    AUIGrid.bind(myGridID, "cellDoubleClick", function( event )
             {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick clmNo : " + $("#viewClmNo").text());
@@ -361,9 +361,9 @@ $(document).ready(function () {
                 	fn_getAppvItemOfClmUn($("#viewClmNo").text(), event.item.appvItmSeq, event.item.clamUn);
                 }
             });
-    
+
     $("#fileListPop_btn").click(fn_fileListPop);
-    
+
     $("#viewClmNo").text(myGridData[0].clmNo);
     $("#viewClmType").text(myGridData[0].clmType);
     $("#viewCostCentr").text(myGridData[0].costCentr + "/" + myGridData[0].costCentrName);
@@ -382,10 +382,10 @@ $(document).ready(function () {
     }
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
     $("#viewAppvAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
-    
+
     $("#pApprove_btn").click(fn_approvalSubmit);
     $("#pReject_btn").click(fn_RejectSubmit);
-    
+
     fn_setGridData(myGridID, myGridData);
 });
 
@@ -423,14 +423,14 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
     Common.ajax("POST", url, obj, function(result) {
     	console.log(result);
     	console.log(result.data);
-    	
+
     	console.log("expGrp : " + result.data.expGrp);
     	if(result.data.expGrp == "1") {
     		$("#noMileage").hide();
-            
+
             fn_destroyMGrid();
             fn_createMileageAUIGrid(result.data.itemGrp);
-            
+
             // TODO attachFile
             attachList = result.data.attachList;
             console.log(attachList);
@@ -447,7 +447,7 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
             }
     	} else {
     		$("#noMileage").show();
-    		
+
     		if(clmType == "J1") {
                 $("#supplirTh").html('');
                 $("#supplirTd").text("");
@@ -498,10 +498,10 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
             $("#invcNo").text(result.data.invcNo);
             $("#gstRgistNo").text(result.data.gstRgistNo);
             $("#expDesc").text(result.data.expDesc);
-            
+
             fn_destroyMileageGrid();
             fn_createMGrid(result.data.itemGrp);
-            
+
             // TODO attachFile
             attachList = result.data.attachList;
             console.log(attachList);
@@ -509,9 +509,11 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
             	if(attachList.length > 0) {
                     $("#attachTd").html("");
                     for(var i = 0; i < attachList.length; i++) {
-                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                        //$("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' /></div>");
+                        $(".input_text").val(attachList[i].atchFileName);
                     }
-                    
+
                     // 파일 다운
                     $(".input_text").dblclick(function() {
                         var oriFileName = $(this).val();
@@ -528,7 +530,7 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
                 }
             }
     	}
-    	
+
     	//fn_setGridData(mGridID, result.itemGrp);
     });
 }
@@ -540,7 +542,7 @@ function fn_createMileageAUIGrid(gridData) {
     if(AUIGrid.isCreated("#mileage_grid_wrap")) {
         fn_destroyMileageGrid();
     }
-    
+
     $("#mileage_grid_wrap").show();
 
     // 실제로 #grid_wrap 에 그리드 생성
@@ -563,14 +565,14 @@ function fn_createMGrid(gridData) {
     if(AUIGrid.isCreated("#mGrid_wrap")) {
         fn_destroyMGrid();
     }
-    
+
     $("#mGrid_wrap").show();
 
     // 실제로 #grid_wrap 에 그리드 생성
     mGridID = AUIGrid.create("#mGrid_wrap", mGridColumnLayout, mGridPros);
     // AUIGrid 에 데이터 삽입합니다.
     AUIGrid.setGridData(mGridID, gridData);
-    
+
     //fn_myGridSetEvent();
 }
 
