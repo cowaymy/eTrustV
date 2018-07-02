@@ -268,23 +268,9 @@
 
     <resultMap id="resultECashDeductionMap" type="egovMap" />
     <select id="createECashDeduction" statementType="CALLABLE" parameterType="Map">
-    <choose>
-        <when test='"1".equalsIgnoreCase(new_issueBank)'>
-        {
-            call SP_INST_ECASH_GENDEDUCTION_NEO( 19, #{new_cardType} ,#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashDeductionMap})
-        }
-        </when>
-        <when test='"2".equalsIgnoreCase(new_issueBank)'>
-        {
-            call SP_INST_ECASH_GENDEDUCTION_WK( 19, #{new_cardType} ,#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashDeductionMap})
-        }
-        </when>
-        <otherwise>
         {
             call SP_INST_ECASH_GENDEDUCTION( #{new_issueBank}, #{new_cardType} ,#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashDeductionMap})
         }
-        </otherwise>
-    </choose>
     </select>
 
     <delete id="deleteECashDeductionResultItem" parameterType="Map" >
