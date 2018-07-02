@@ -1613,7 +1613,7 @@
 										                E2.STK_ID   ,
 										                E2.STK_CODE || ' - ' || E2.STK_DESC C1  ,
 										                CASE  WHEN ( 1 = E1.ASR_ITM_CHRG_FOC ) THEN 'FOC'   ELSE 'CHG' END C2  ,
-										                CASE  WHEN ( E3.RESN_ID IS NOT NULL ) THEN E3.CODE  ELSE '-'    END C3  ,
+										                CASE  WHEN ( E3.RESN_ID IS NOT NULL ) THEN E3.CODE  ELSE '0'    END C3  ,
 										                CASE  WHEN ( E3.RESN_ID IS NOT NULL ) THEN E3.RESN_ID   ELSE 0    END C4
 										         FROM SVC0005D E1
 										                JOIN SYS0026M E2   ON E1.ASR_ITM_PART_ID = E2.STK_ID
@@ -3200,7 +3200,21 @@
 
 
  <select id="getResult_PAY0006D" parameterType="Map" resultType="egovMap">
-		<![CDATA[
+
+		 <![CDATA[
+             SELECT
+                   P.AS_LDGR_ID, P.AS_ID, P.AS_DOC_NO,
+                   P.AS_LG_DOC_TYPE_ID, P.AS_LG_DT, P.AS_LG_AMT,
+                   P.AS_LG_UPD_USER_ID, P.AS_LG_UPD_DT, P.AS_SO_NO,
+                   P.AS_RESULT_NO, P.AS_SO_ID, P.AS_ADV_PAY,
+                   P.R01
+              FROM PAY0006D P
+            WHERE P.AS_DOC_NO = #{AS_RESULT_NO}
+                 AND P.AS_ADV_PAY =0
+                 AND P.AS_LG_DOC_TYPE_ID ='163'
+                 AND P.AS_LG_AMT < 0
+      ]]>
+<!--  	  <![CDATA[
 			 SELECT
 			       P.AS_LDGR_ID, P.AS_ID, P.AS_DOC_NO,
                    P.AS_LG_DOC_TYPE_ID, P.AS_LG_DT, P.AS_LG_AMT,
@@ -3212,7 +3226,7 @@
 			     AND P.AS_ADV_PAY =0
 			     AND P.AS_LG_DOC_TYPE_ID ='163'
 			     AND P.AS_LG_AMT < 0
-      ]]>
+      ]]>-->
 </select>
 
 
