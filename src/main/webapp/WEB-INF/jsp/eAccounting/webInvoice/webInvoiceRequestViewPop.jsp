@@ -184,6 +184,9 @@ var mGridColumnLayout = [ {
 }, {
     dataField : "atchFileGrpId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
+}, {
+    dataField : "cnt",
+    visible : false
 }
 ];
 
@@ -380,7 +383,16 @@ $(document).ready(function () {
         $("#viewMemAccNameTd").text(myGridData[0].memAccId + " / " + myGridData[0].memAccName);
     }
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
-    $("#viewAppvAmt").text(AUIGrid.formatNumber(myGridData[0].totAmt, "#,##0.00"));
+
+ // 2018-07-03 - LaiKW - Added looping calculation of total - Start
+    var totalAmt = 0;
+    for(var i = 0; i < myGridData.length; i++  ) {
+        totalAmt += myGridData[i].totAmt;
+    }
+    $("#viewAppvAmt").text(totalAmt);
+
+    $("#viewAppvAmt").text(AUIGrid.formatNumber(totalAmt, "#,##0.00"));
+ // 2018-07-03 - LaiKW - Added looping calculation of total - End
 
     $("#pApprove_btn").click(fn_approvalSubmit);
     $("#pReject_btn").click(fn_RejectSubmit);

@@ -869,61 +869,97 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
 
 <select id="selectAppvInfoAndItems" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.selectAppvInfoAndItems */
-            SELECT T1.APPV_PRCSS_NO
-                      ,T1.APPV_PRCSS_STUS
-                      ,T1.APPV_REQ_KEY_NO AS CLM_NO
-                      ,T4.CODE_NAME AS CLM_TYPE
-                      ,TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQST_DT
-                      ,T1.REQST_USER_ID
-                      ,T1.APPV_LINE_CNT
-                      ,T1.APPV_LINE_PRCSS_CNT
-                      /*,T2.APPV_LINE_USER_ID
-                      ,TO_CHAR(T2.APPV_DT, 'DD/MM/YYYY') AS APPV_DT
-                      ,T2.APPV_STUS*/
-                      ,T3.APPV_ITM_SEQ
-                      ,REGEXP_REPLACE(T3.INVC_NO, '(^[[:space:]]+)|([[:space:]]+$)',null) INVC_NO
-                      ,TO_CHAR(T3.INVC_DT, 'DD/MM/YYYY') AS INVC_DT
-                      ,T3.MEM_ACC_ID
-                      ,T6.MEM_ACC_NAME
-                      ,TO_CHAR(T3.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT
-                      ,T3.EXP_TYPE
-                      ,T3.EXP_TYPE_NAME
-                      ,T3.COST_CENTR
-                      ,T3.COST_CENTR_NAME
-                      ,T3.GL_ACC_CODE
-                      ,T3.GL_ACC_CODE_NAME
-                      ,T3.BUDGET_CODE
-                      ,T3.BUDGET_CODE_NAME
-                      ,T3.TAX_CODE
-                      ,NVL2(T3.TAX_CODE, T5.INDUSTRY_CODE ||' ' ||'(' ||T5.TAX_NAME ||')', '')  AS TAX_NAME
-                      ,'MYR'                                               AS CUR
-                      ,T3.NET_AMT
-                      ,T3.TAX_AMT
-                      ,T3.TAX_NON_CLM_AMT
-                      ,T3.APPV_AMT
-                      ,T7.TOT_AMT
-                      ,T3.EXP_DESC
-                      ,T3.CLAM_UN
-                      <if test="clmType == 'J3'">
-                      ,NVL(( SUBSTR(T8.CRDIT_CARD_NO, 1, 4)
-                                || '********'
-                                || SUBSTR(T8.CRDIT_CARD_NO, -4)
-                                || ' '
-                                || '('
-                                || T8.CRDIT_CARD_USER_NAME
-                                || ')' ), '')    AS CRDIT_CARD_NO
-                      </if>
-          FROM FCM0004M T1 /*LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO*/
-          LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
-          LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
-          LEFT JOIN FCM0007C T5 ON T3.TAX_CODE = T5.TAX_CODE
-          LEFT JOIN FCM0006M T6 ON T3.MEM_ACC_ID = T6.MEM_ACC_ID
-          LEFT JOIN (SELECT APPV_PRCSS_NO, SUM(APPV_AMT) AS TOT_AMT FROM FCM0015D GROUP BY APPV_PRCSS_NO) T7 ON T1.APPV_PRCSS_NO = T7.APPV_PRCSS_NO
-          <if test="clmType == 'J3'">
-          LEFT JOIN FCM0017M T8 ON T1.APPV_REQ_KEY_NO = T8.CLM_NO
-          </if>
-          WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}
-          ORDER BY T3.APPV_ITM_SEQ
+    <![CDATA[
+        SELECT
+            T1.APPV_PRCSS_NO,
+            T1.APPV_PRCSS_STUS,
+            T1.APPV_REQ_KEY_NO AS CLM_NO,
+            T4.CODE_NAME AS CLM_TYPE,
+            TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQST_DT,
+            T1.REQST_USER_ID,
+            T1.APPV_LINE_CNT,
+            T1.APPV_LINE_PRCSS_CNT /*,T2.APPV_LINE_USER_ID ,TO_CHAR(T2.APPV_DT,'DD/MM/YYYY') AS APPV_DT ,T2.APPV_STUS*/,
+            T3.APPV_ITM_SEQ,
+            REGEXP_REPLACE(NVL(T9.INVC_NO, T3.INVC_NO), '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
+            TO_CHAR(NVL(T9.INVC_DT, T3.INVC_DT), 'DD/MM/YYYY') AS INVC_DT,
+            T3.MEM_ACC_ID,
+            T6.MEM_ACC_NAME,
+            TO_CHAR(T3.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT,
+            NVL(T9.EXP_TYPE, T3.EXP_TYPE) EXP_TYPE,
+            NVL(T9.EXP_TYPE_NAME, T3.EXP_TYPE_NAME) EXP_TYPE_NAME,
+            T3.COST_CENTR,
+            T3.COST_CENTR_NAME,
+            NVL(T9.GL_ACC_CODE, T3.GL_ACC_CODE) GL_ACC_CODE,
+            NVL(T9.GL_ACC_CODE_NAME, T3.GL_ACC_CODE_NAME) GL_ACC_CODE_NAME,
+            NVL(T9.BUDGET_CODE, T3.BUDGET_CODE) BUDGET_CODE,
+            NVL(T9.BUDGET_CODE_NAME, T3.BUDGET_CODE_NAME) BUDGET_CODE_NAME,
+            NVL(T9.TAX_CODE, T3.TAX_CODE) TAX_CODE,
+            NVL2(NVL(T9.TAX_CODE, T3.TAX_CODE), T5.INDUSTRY_CODE || ' ' || '(' || T5.TAX_NAME || ')', '') AS TAX_NAME,
+            'MYR' AS CUR,
+            NVL(T9.GST_BEFOR_AMT, T3.NET_AMT) NET_AMT,
+            NVL(T9.GST_AMT, T3.TAX_AMT) TAX_AMT,
+            NVL(T9.NON_CLM_GST_AMT, T3.TAX_NON_CLM_AMT) TAX_NON_CLM_AMT,
+            NVL(T9.TOT_AMT, T3.APPV_AMT) APPV_AMT,
+            CASE WHEN (T9.TOT_AMT <> '' OR T9.TOT_AMT IS NOT NULL) THEN T9.GST_BEFOR_AMT + T9.GST_AMT ELSE T7.TOT_AMT END TOT_AMT,
+            NVL(T9.EXP_DESC, T3.EXP_DESC) EXP_DESC,
+            NVL(T9.CLAM_UN, T3.CLAM_UN) CLAM_UN ]]>
+            <if test="clmType == 'J3'">
+                ,NVL(( SUBSTR(T8.CRDIT_CARD_NO, 1, 4)
+                    || '********'
+                    || SUBSTR(T8.CRDIT_CARD_NO, -4)
+                    || ' '
+                    || '('
+                    || T8.CRDIT_CARD_USER_NAME
+                    || ')' ), '')    AS CRDIT_CARD_NO
+            </if>
+        FROM FCM0004M T1 /*LEFT JOIN FCM0005D T2 ON T1.APPV_PRCSS_NO = T2.APPV_PRCSS_NO*/
+        LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
+        LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
+        LEFT JOIN FCM0007C T5 ON T3.TAX_CODE = T5.TAX_CODE
+        LEFT JOIN FCM0006M T6 ON T3.MEM_ACC_ID = T6.MEM_ACC_ID
+        LEFT JOIN (SELECT APPV_PRCSS_NO, SUM(APPV_AMT) AS TOT_AMT FROM FCM0015D GROUP BY APPV_PRCSS_NO) T7 ON T1.APPV_PRCSS_NO = T7.APPV_PRCSS_NO
+        <if test="clmType == 'J3'">
+            LEFT JOIN FCM0017M T8 ON T1.APPV_REQ_KEY_NO = T8.CLM_NO
+        </if>
+        LEFT JOIN (
+            SELECT
+                A.APPV_PRCSS_NO,
+                B.*
+            FROM FCM0013M A
+            INNER JOIN FCM0014D B ON A.CLM_NO = B.CLM_NO
+            WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
+        ) T9
+        ON T1.APPV_PRCSS_NO = T9.APPV_PRCSS_NO
+        AND T3.CLAM_UN = T9.CLAM_UN
+        JOIN (
+            SELECT
+                T1.APPV_PRCSS_NO,
+                COUNT(*) CNT
+            FROM FCM0004M T1
+            LEFT JOIN FCM0015D T3 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
+            LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
+            LEFT JOIN FCM0007C T5 ON T3.TAX_CODE = T5.TAX_CODE
+            LEFT JOIN FCM0006M T6 ON T3.MEM_ACC_ID = T6.MEM_ACC_ID
+            LEFT JOIN (SELECT APPV_PRCSS_NO, SUM(APPV_AMT) AS TOT_AMT FROM FCM0015D GROUP BY APPV_PRCSS_NO) T7 ON T1.APPV_PRCSS_NO = T7.APPV_PRCSS_NO
+            <if test="clmType == 'J3'">
+                LEFT JOIN FCM0017M T8 ON T1.APPV_REQ_KEY_NO = T8.CLM_NO
+            </if>
+            LEFT JOIN (
+                SELECT
+                    A.APPV_PRCSS_NO,
+                    B.*
+                FROM FCM0013M A
+                INNER JOIN FCM0014D B ON A.CLM_NO = B.CLM_NO
+                WHERE A.APPV_PRCSS_NO = #{appvPrcssNo}
+            ) T9
+            ON T1.APPV_PRCSS_NO = T9.APPV_PRCSS_NO
+            AND T3.CLAM_UN = T9.CLAM_UN
+            WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}
+            GROUP BY T1.APPV_PRCSS_NO
+        ) T11
+        ON T1.APPV_PRCSS_NO = T11.APPV_PRCSS_NO
+        WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}
+        ORDER BY T3.APPV_ITM_SEQ
 </select>
 
 <select id="selectAppvLineCnt" parameterType="String" resultType="int">
