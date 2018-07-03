@@ -48,7 +48,7 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
        AND L56.STK_TYPE_ID = STYPE.CODE_ID
        AND L56.STK_CODE = S26.STK_CODE
        AND L56.LOC_ID = S28.WH_LOC_ID
-       AND S28.WH_LOC_BRNCH_ID = S5.BRNCH_ID
+       AND S28.WH_LOC_BRNCH_ID = S5.BRNCH_ID (+)
 
     <if test="searchMatCode != null and searchMatCode !=''">
       AND S26.STK_CODE = #{searchMatCode}
@@ -84,15 +84,15 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
          #{item}
          </foreach>
      </if>
-     
+
     <if test="searchBranch != null and searchBranch !=''">
       AND #{searchBranch} in(wh_loc_brnch_id , wh_loc_brnch_id2 , wh_loc_brnch_id3)
     </if>
-     
+
     <if test="searchCDC != null and searchCDC !=''">
       AND S28.WH_LOC_CODE = #{searchCDC}
     </if>
-     
+
     <!-- AND L56.LOC_ID = #{LocCode} -->
 </select>
 
@@ -102,7 +102,7 @@ SELECT S28.WH_LOC_CODE   LOC_CODE,
 </select>
 
 <select id="selectCDCList" parameterType="Map" resultType="egovMap">
- select WH_LOC_CODE code, wh_LOC_DESC CODE_NAME  from sys0028m where wh_loc_gb in ('01' , '05') 
+ select WH_LOC_CODE code, wh_LOC_DESC CODE_NAME  from sys0028m where wh_loc_gb in ('01' , '05')
   <choose>
    <when test="groupCode != null and groupCode !=''">
    and #{groupCode} in (wh_loc_brnch_id , wh_loc_brnch_id2 , wh_loc_brnch_id3)
