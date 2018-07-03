@@ -1001,39 +1001,10 @@ public class ClaimController {
             }
 		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 
-			if(params.get("isCrc") != null){
-                if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
-                {
-        			//10000건 단위로 추출하기 위해 전체 건수 조회
-        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
-        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
-
-        			if (pageCnt > 0){
-        				for(int i = 1 ; i <= pageCnt ; i++){
-        					claimMap.put("pageNo", i);
-        					claimMap.put("rowCount", 10000);
-        					this.createClaimFileCrcCIMB(claimMap,i);
-        				}
-        			}
-                }
-                else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId"))))
-                {
-        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
-        			int totBatToday =  claimService.selectClaimDetailBatchGen(map);
-        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
-
-        			if (pageCnt > 0){
-        				for(int i = 1 ; i <= pageCnt ; i++){
-        					claimMap.put("pageNo", i);
-        					claimMap.put("rowCount", 999);
-        					claimMap.put("batchNo", totBatToday);
-        					claimMap.put("pageCnt", pageCnt);
-        					this.createClaimFileCrcMBB(claimMap);
-        				}
-        			}
-                }
-			}else{
-                if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
+			String isCrc  = map.get("isCrc") != null ?  (String)map.get("isCrc") : "";
+LOGGER.info(" @@@@@@@@@@@@@@@@@@@@@@@@@@@ :: " +isCrc);
+			if(isCrc.equals("crc") ){
+				if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
                 {
         			//10000건 단위로 추출하기 위해 전체 건수 조회
         			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
@@ -1063,7 +1034,37 @@ public class ClaimController {
         				}
         			}
                 }
+			}else{
+				if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
+                {
+        			//10000건 단위로 추출하기 위해 전체 건수 조회
+        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
 
+        			if (pageCnt > 0){
+        				for(int i = 1 ; i <= pageCnt ; i++){
+        					claimMap.put("pageNo", i);
+        					claimMap.put("rowCount", 10000);
+        					this.createClaimFileCrcCIMB(claimMap,i);
+        				}
+        			}
+                }
+                else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId"))))
+                {
+        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+        			int totBatToday =  claimService.selectClaimDetailBatchGen(map);
+        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
+
+        			if (pageCnt > 0){
+        				for(int i = 1 ; i <= pageCnt ; i++){
+        					claimMap.put("pageNo", i);
+        					claimMap.put("rowCount", 999);
+        					claimMap.put("batchNo", totBatToday);
+        					claimMap.put("pageCnt", pageCnt);
+        					this.createClaimFileCrcMBB(claimMap);
+        				}
+        			}
+                }
 			}
 
 		} else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
