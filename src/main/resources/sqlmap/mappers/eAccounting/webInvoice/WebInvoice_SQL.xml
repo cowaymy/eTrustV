@@ -932,7 +932,8 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
         ) T9
         ON T1.APPV_PRCSS_NO = T9.APPV_PRCSS_NO
         AND T3.CLAM_UN = T9.CLAM_UN
-        and T3.TAX_CODE = T9.TAX_CODE
+        AND T3.TAX_CODE = T9.TAX_CODE
+        AND T3.APPV_ITM_SEQ = T9.CLM_SEQ
         JOIN (
             SELECT
                 T1.APPV_PRCSS_NO,
@@ -956,6 +957,8 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
             ) T9
             ON T1.APPV_PRCSS_NO = T9.APPV_PRCSS_NO
             AND T3.CLAM_UN = T9.CLAM_UN
+            AND T3.TAX_CODE = T9.TAX_CODE
+            AND T3.APPV_ITM_SEQ = T9.CLM_SEQ
             WHERE T1.APPV_PRCSS_NO = #{appvPrcssNo}
             GROUP BY T1.APPV_PRCSS_NO
         ) T11
