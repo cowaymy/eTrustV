@@ -356,6 +356,67 @@ public class ReportBatchController {
 		LOGGER.info("[END] StockBalanceListingByLocCodeRAW_DSC...");
 	}
 
+	@RequestMapping(value = "/RentalAging12Month.do")
+	// //NO NEED SCHEDULE
+	public void RentalAging12Month() {
+		LOGGER.info("[START] RentalAging12Month...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/RentalAging12Month.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Finance" + File.separator
+				+ "RentalAging12Month" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] RentalAging12Month...");
+	}
+
+	@RequestMapping(value = "/RentalAgingReport.do")
+	// //NO NEED SCHEDULE
+	public void RentalAgingReport() {
+		LOGGER.info("[START] RentalAgingReport...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/RentalAgingReport.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Finance" + File.separator
+				+ "RentalAgingReport" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] RentalAgingReport...");
+	}
+
+	@RequestMapping(value = "/OutrightPlusAgingCollection_12Month.do")
+	// //NO NEED SCHEDULE
+	public void OutrightPlusAgingCollection_12Month() {
+		LOGGER.info("[START] OutrightPlusAgingCollection_12Month...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/OutrightPlusAgingCollection_12Month.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Finance" + File.separator
+				+ "OutrightPlusAgingCollection_12Month" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] OutrightPlusAgingCollection_12Month...");
+	}
+
+	@RequestMapping(value = "/OutrightPlusAging_12Month.do")
+	// //NO NEED SCHEDULE
+	public void OutrightPlusAging_12Month() {
+		LOGGER.info("[START] OutrightPlusAging_12Month...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/OutrightPlusAging_12Month.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Finance" + File.separator
+				+ "OutrightPlusAging_12Month" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] OutrightPlusAging_12Month...");
+	}
+
+
 	@RequestMapping(value = "/BSReport.do")
 	//@Scheduled(cron = " 0 0 3 2 * ?")//Monthly (Day 2) 3:00am
 	public void bsReport() {
