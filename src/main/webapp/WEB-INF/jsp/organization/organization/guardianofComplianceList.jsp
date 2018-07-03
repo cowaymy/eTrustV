@@ -2,12 +2,12 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javaScript">
-$(document).ready(function() { 
+$(document).ready(function() {
     //doGetComboCodeId('/common/selectReasonCodeList.do', {typeId : 1389, inputId : 1, separator : '-'}, '', 'caseCategory', 'S'); //Reason Code
 
 	ComplianceListGrid();
-	
-    AUIGrid.bind(myGridID, "cellClick", function(event) { 
+
+    AUIGrid.bind(myGridID, "cellClick", function(event) {
 	    requestid = AUIGrid.getCellValue(myGridID, event.rowIndex, "requestid");
 	});
 
@@ -31,14 +31,14 @@ function ComplianceListGrid() {
         headerText : "Request Status",
         editable : false,
         width : 150
-    }, 
-    
+    },
+
     {
         dataField : "requestcreateat",
         headerText : "Request Date",
         editable : false,
         width : 150,
-        dataType : "date", 
+        dataType : "date",
         formatString : "dd/mm/yyyy"
     },
     {
@@ -56,7 +56,7 @@ function ComplianceListGrid() {
         headerText : "Complaint Date",
         editable : false,
         width : 150,
-        dataType : "date", 
+        dataType : "date",
         formatString : "dd/mm/yyyy"
     }
     ];
@@ -88,7 +88,7 @@ function ComplianceListGrid() {
 
 	        // 줄번호 칼럼 렌더러 출력
 	        showRowNumColumn : true
-	        
+
    };
 
 
@@ -97,14 +97,22 @@ function ComplianceListGrid() {
 }
 
 function fn_complianceSearch(){
-
-	Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {
+	 if("${SESSION_INFO.userTypeId}" =="1" || "${SESSION_INFO.userTypeId}" =="2" || "${SESSION_INFO.userTypeId}" =="3"){
+	Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListCodyHP.do", $("#complianceSearch").serialize(), function(result) {
         console.log("성공.");
         console.log("data : " + JSON.stringify(result));
         AUIGrid.setGridData(myGridID, result);
     });
 }
- 
+	 else{
+		 Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceList.do", $("#complianceSearch").serialize(), function(result) {
+		        console.log("성공.");
+		        console.log("data : " + JSON.stringify(result));
+		        AUIGrid.setGridData(myGridID, result);
+		    });
+		 }
+	 }
+
 
 $.fn.clearForm = function() {
     return this.each(function() {
@@ -119,7 +127,7 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = -1;
         }
-        AUIGrid.clearGridData(myGridID); 
+        AUIGrid.clearGridData(myGridID);
     });
 };
 
@@ -160,6 +168,7 @@ function fn_complianceView() {
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" method="post" id="complianceSearch">
+<input type="hidden" name="memType" id="memType" value="${memType }"/>
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -178,7 +187,7 @@ function fn_complianceView() {
         <select class="multy_select w100p" multiple="multiple" id="caseCategory" name="caseCategory">
              <c:forEach var="list" items="${caseCategoryCodeList}" varStatus="status">
                  <option value="${list.codeId}">${list.codeName } </option>
-            </c:forEach> 
+            </c:forEach>
         </select>
     </td>
     <th scope="row">Pre-Register Date</th>
@@ -223,13 +232,13 @@ function fn_complianceView() {
 </tbody>
 </table><!-- table end -->
 
-</aside><!-- link_btns_wrap end -->  
+</aside><!-- link_btns_wrap end -->
 
 </form>
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
- 
+
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 <div id="grid_wrap_complianceList" style="width: 100%; height: 500px; margin: 0 auto;"></div>

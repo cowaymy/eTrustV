@@ -2,45 +2,46 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script  type="text/javascript">
 
-$(document).ready(function(){  
-    
+$(document).ready(function(){
+
          setInputFile2();
 });
 
 
 function fn_attachFile(){
-	 
+
 	if($("#fileName").val() ==""){
 		alert("Please select a file.");
 		return;
 	}else{
 		var str = $("#fileName").val().split(".");
-		if(str[1] != "jpg"){
+		if(str[1] != "zip"){
 	        alert("Not a zip file.");
 			return;
 		}else{
-		    
+
 			var date = new Date();
 			var day = date.getDate();
 			if(date.getDate() < 10){
-				day = "0"+date.getDate(); 
+				day = "0"+date.getDate();
 			}
 		     var newName = day+(date.getMonth()+1)+date.getFullYear()+date.getHours()+date.getMinutes()+date.getSeconds();
-		     
-		     
+
+
 		    var formData = Common.getFormData("attachTrForm");
 		    formData.append("targetFolder", $("#targetFolder").val());
 		    formData.append("fileName", newName);
 			 Common.ajaxFile("/organization/compliance/updateGuardianFile", formData, function(result)    {
-			       
+
 			        console.log("성공." + JSON.stringify(result));
 			        console.log("data : " + result.cnt);
 
 			        Common.alert(result.message);
-			        
+
 			       $("#hidFileName").val("/WebShare/Guardian/Guardian/" + newName);
+			       $("#groupId").val(result.data);
 			       $("#fileUploadPop").remove();
-			        
+
 			     }
 			     , function(jqXHR, textStatus, errorThrown){
 			            try {
@@ -75,7 +76,7 @@ function setInputFile2(){//인풋파일 세팅하기
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" method="post" id="attachTrForm" name="attachTrForm" enctype="multipart/form-data">
 	<input type="hidden" id="targetFolder" name="targetFolder" value="/WebShare/Guardian/">
-	
+
 <aside class="title_line"><!-- title_line start -->
 <h2 class="fl_right">*** Attachment file will be replace if you re-upload the file.</h2>
 </aside><!-- title_line end -->
@@ -97,7 +98,7 @@ function setInputFile2(){//인풋파일 세팅하기
 	</td>
 </tr>
 <tr>
-	<td scope="row" colspan="2"><span class="red_text">Allowed file extension : .jpg || Allowed file size : <= 6MB</span></td>
+	<td scope="row" colspan="2"><span class="red_text">Allowed file extension : .zip || Allowed file size : <= 6MB</span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
