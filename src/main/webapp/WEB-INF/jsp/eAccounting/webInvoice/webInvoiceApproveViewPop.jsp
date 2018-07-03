@@ -12,6 +12,7 @@
 }
 </style>
 <script type="text/javascript">
+console.log("1");
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
 var attachList = null;
@@ -388,7 +389,7 @@ $(document).ready(function () {
     // 2018-07-03 - LaiKW - Added looping calculation of total - Start
     var totalAmt = 0;
     for(var i = 0; i < myGridData.length; i++  ) {
-        totalAmt += myGridData[i].totAmt;
+        totalAmt += myGridData[i].appvAmt;
     }
     $("#viewAppvAmt").text(totalAmt);
     // 2018-07-03 - LaiKW - Added looping calculation of total - End

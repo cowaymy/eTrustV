@@ -12,6 +12,7 @@
 }
 </style>
 <script type="text/javascript">
+console.log("1");
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
 var attachList = null;
@@ -384,15 +385,15 @@ $(document).ready(function () {
     }
     $("#viewPayDueDt").text(myGridData[0].payDueDt);
 
- // 2018-07-03 - LaiKW - Added looping calculation of total - Start
+    // 2018-07-03 - LaiKW - Added looping calculation of total - Start
     var totalAmt = 0;
     for(var i = 0; i < myGridData.length; i++  ) {
-        totalAmt += myGridData[i].totAmt;
+        totalAmt += myGridData[i].appvAmt;
     }
     $("#viewAppvAmt").text(totalAmt);
 
     $("#viewAppvAmt").text(AUIGrid.formatNumber(totalAmt, "#,##0.00"));
- // 2018-07-03 - LaiKW - Added looping calculation of total - End
+    // 2018-07-03 - LaiKW - Added looping calculation of total - End
 
     $("#pApprove_btn").click(fn_approvalSubmit);
     $("#pReject_btn").click(fn_RejectSubmit);
