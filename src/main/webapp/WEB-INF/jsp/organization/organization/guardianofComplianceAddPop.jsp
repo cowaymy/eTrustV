@@ -305,11 +305,11 @@ function fn_caseChange (val) {
 <tr>
     <th scope="row">Customer Contact</th>
     <td colspan="3">
-    <input type="text" title="" placeholder="Customer Contact" class="" id="reqstCntnt" name="reqstCntnt" value=""/>
+    <input type="text" title="" placeholder="Customer Contact" disabled="disabled" class="" id="reqstCntnt" name="reqstCntnt" value=""/>
     </td>
 <th scope="row">Customer Name</th>
     <td colspan="3">
-    <input type="text" title="" placeholder="Customer Name" class="" id="custName" name="custName" value=""/>
+    <input type="text" title="" placeholder="Customer Name" disabled="disabled" class="" id="custName" name="custName" value=""/>
     </td>
 </tr>
 <tr>
