@@ -7,8 +7,8 @@ var myGridID_remark;
 var complianceList;
 $(document).ready(function(){
 
-	   fn_GuardianRemarkGrid();
-	   fn_guardianRemark();
+       fn_GuardianRemarkGrid();
+       fn_guardianRemark();
 
 
             var reqstCtgry = "${guardianofCompliance.reqstCtgry}";
@@ -19,7 +19,7 @@ $(document).ready(function(){
 
             var reqstStus = "${guardianofCompliance.reqstStusId}";
 
-            	if(reqstStus == 5 || reqstStus == 6){
+                if(reqstStus == 5 || reqstStus == 6){
                     $('#empty').addClass("blind");
                     $('#status').addClass("blind");
                     $('#save').addClass("blind");
@@ -133,14 +133,14 @@ function fn_validation(){
 
 function fn_save(){
     if(fn_validation()){
-    	if($("#cmbreqStatus").val() == '5'){
-    		Common.ajax("POST", "/organization/compliance/saveGuardianCompliance2.do",$("#saveForm").serializeJSON() , function(result) {
+        if($("#cmbreqStatus").val() == '5'){
+            Common.ajax("POST", "/organization/compliance/saveGuardianCompliance2.do",$("#saveForm").serializeJSON() , function(result) {
                 console.log("성공.");
                 Common.alert("Compliance call Log saved.<br /> Case No : "+result.data+"<br />", fn_guardianViewPopClose());
-    	});
-    	}
-    	else{
-    		Common.ajax("POST", "/organization/compliance/saveGuardianCompliance.do",$("#saveForm").serializeJSON() , function(result) {
+        });
+        }
+        else{
+            Common.ajax("POST", "/organization/compliance/saveGuardianCompliance.do",$("#saveForm").serializeJSON() , function(result) {
                 console.log("성공.");
                 if(result.data){
                     Common.alert("Compliance call Log saved.<br />", fn_guardianViewPopClose());
@@ -148,7 +148,7 @@ function fn_save(){
                     Common.alert("Compliance call Log saved Fail.<br />");
                 }
             });
-    	}
+        }
 
     }
 }
@@ -160,22 +160,22 @@ function fn_guardianViewPopClose() {
 
 function fn_memberListNew(){
 
-	Common.ajax("GET", "/organization/compliance/guardianAttachDownload.do", {cmplncAtchFileGrpId : "${guardianofCompliance.reqstAtchFileGrpId}"}, function(result) {
-	    console.log("성공.");
+    Common.ajax("GET", "/organization/compliance/guardianAttachDownload.do", {cmplncAtchFileGrpId : "${guardianofCompliance.reqstAtchFileGrpId}"}, function(result) {
+        console.log("성공.");
 
-	    if( result == null ){
-	        Common.alert("File is not exist.");
-	        return false;
-	    }
-	    var fileSubPath = result.fileSubPath;
-	    var physiclFileName = result.physiclFileName;
-	    var atchFileName = result.atchFileName
-	    fileSubPath = fileSubPath.replace('\', '/'');
-	    console.log("/file/fileDown.do?subPath=" + fileSubPath
-	            + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName);
-	    window.open("/file/fileDown.do?subPath=" + fileSubPath
-	        + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName)
-	});
+        if( result == null ){
+            Common.alert("File is not exist.");
+            return false;
+        }
+        var fileSubPath = result.fileSubPath;
+        var physiclFileName = result.physiclFileName;
+        var atchFileName = result.atchFileName
+        fileSubPath = fileSubPath.replace('\', '/'');
+        console.log("/file/fileDown.do?subPath=" + fileSubPath
+                + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName);
+        window.open("/file/fileDown.do?subPath=" + fileSubPath
+            + "&fileName=" + physiclFileName + "&orignlFileNm=" + atchFileName)
+    });
 }
 
 
@@ -278,7 +278,7 @@ function fn_memberListNew(){
     </td>
     <th scope="row">Case Category</th>
     <td colspan="3">
-        <select class="w100p" id="caseCategory" name="caseCategory" onchange="fn_caseChange(this.value);">
+        <select class="w100p disabled" id="caseCategory" name="caseCategory" disabled="disabled" onchange="fn_caseChange(this.value);">
              <c:forEach var="list" items="${caseCategoryCodeList}" varStatus="status">
                  <option value="${list.codeId}">${list.codeName } </option>
             </c:forEach>
@@ -293,7 +293,7 @@ function fn_memberListNew(){
     </td>
     <th scope="row">Types of Documents</th>
     <td colspan="3">
-    <select class="w100p"  id="docType" name="docType">
+    <select class="w100p disabled"  id="docType" name="docType" disabled="disabled" >
              <c:forEach var="list" items="${documentsCodeList}" varStatus="status">
                  <option value="${list.codeId}">${list.codeName } </option>
             </c:forEach>
@@ -327,44 +327,10 @@ function fn_memberListNew(){
     </td>
 </tr>
 
-    <tr id = "empty">
-
-    <th scope="row"></th>
-    <td colspan="7">
-    </td>
-
-</tr>
-
-<tr id = "status">
-    <th scope="row">Request Status</th>
-    <td colspan="3">
-    <select class="w100p"  id="cmbreqStatus" name="cmbreqStatus">
-        <option value="44">Pending</option>
-        <option value="5">Approve</option>
-        <option value="6">Reject</option>
-
-    </select>
-    </td>
-</tr>
-<tr id = "ccontent">
-     <th scope="row">Complaint Content</th>
-    <td colspan="7">
-    <textarea cols="20" rows="5" placeholder="Complaint Content" id="complianceContent" name="complianceContent"></textarea>
-    </td>
-</tr>
 
 </tbody>
 </table><!-- table end -->
 </form>
-
-    <ul class="center_btns" id="save">
-        <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save()">Save</a></p></li>
-    </ul>
-
-
-
-
-
 
 
 </article><!-- tap_area end -->

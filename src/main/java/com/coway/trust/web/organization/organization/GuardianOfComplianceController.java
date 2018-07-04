@@ -283,6 +283,32 @@ public class GuardianOfComplianceController {
 		return "organization/organization/guardianofComplianceViewPop";
 	}
 
+	@RequestMapping(value = "/guardianofComplianceViewLimitPop.do")
+	public String GuardianofComplianceViewLimitPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		params.put("typeId", "1389");
+		params.put("inputId", "1");
+		params.put("separator", "-");
+
+		List<EgovMap> caseCategoryCodeList = commonService.selectReasonCodeList(params);
+
+		params.put("typeId", "1390");
+		params.put("inputId", "1");
+		params.put("separator", "-");
+
+		List<EgovMap> documentsCodeList = commonService.selectReasonCodeList(params);
+
+		model.put("caseCategoryCodeList", caseCategoryCodeList);
+		model.put("documentsCodeList", documentsCodeList);
+
+		EgovMap guardianofCompliance = guardianOfComplianceService.selectGuardianofComplianceInfo(params);
+
+		model.put("guardianofCompliance", guardianofCompliance);
+
+		// 호출될 화면
+		return "organization/organization/guardianofComplianceViewLimitPop";
+	}
+
 	@RequestMapping(value = "/guardianRemark.do", method = RequestMethod.GET)
 	public ResponseEntity <List<EgovMap>> getGuardianRemark(@RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
 		List<EgovMap> guardianRemarkList = guardianOfComplianceService.selectGuardianRemark(params);

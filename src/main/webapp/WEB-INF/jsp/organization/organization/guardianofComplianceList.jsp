@@ -139,11 +139,23 @@ function fn_complianceView() {
 
     var selectedItems = AUIGrid.getSelectedItems(myGridID);
         if (selectedItems.length <= 0) {
-            Common.alert("<b>No Compensation selected.</b>");
+            Common.alert("<b>No request selected.</b>");
             return;
         }
 
     Common.popupDiv("/organization/compliance/guardianofComplianceViewPop.do?reqstId=" + requestid, null, null, true, '_compensationEditPop');
+
+}
+
+function fn_complianceViewLimit() {
+
+    var selectedItems = AUIGrid.getSelectedItems(myGridID);
+        if (selectedItems.length <= 0) {
+            Common.alert("<b>No request selected.</b>");
+            return;
+        }
+
+    Common.popupDiv("/organization/compliance/guardianofComplianceViewLimitPop.do?reqstId=" + requestid, null, null, true, '_compensationEditPop');
 
 }
 </script>
@@ -159,7 +171,12 @@ function fn_complianceView() {
 <h2>Guardian of Compliance</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceNew()"><span class="new"></span>New</a></p></li>
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceView()"><span class="view"></span>View</a></p></li>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceView()"><span class="view"></span>View</a></p></li>
+    </c:if>
+    <c:if test="${PAGE_AUTH.funcUserDefine1 != 'Y'}">
+        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceViewLimit()"><span class="view"></span>View</a></p></li>
+    </c:if>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceSearch()"><span class="search"></span>Search</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:$('#complianceSearch').clearForm();"><span class="clear"></span>Clear</a></p></li>
 </ul>
