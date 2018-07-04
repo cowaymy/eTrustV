@@ -456,7 +456,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 			insertHsResultfinal.put("resultIsSync", '0');
 			insertHsResultfinal.put("resultIsEdit", '0');
-			insertHsResultfinal.put("resultStockUse", '1');
+			insertHsResultfinal.put("resultStockUse", '0');
 			insertHsResultfinal.put("resultIsCurr", '1');
 			insertHsResultfinal.put("resultMtchId", '0');
 
@@ -516,6 +516,28 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
   					hsManualMapper.insertHsResultD(docSub);	// INSERT SVC0007D
 
+  					
+  					// UPDATE SVC0006D - HISTORY HS RESULTS - HAS FILTER - TPY 20180703
+  					
+  					Map<String, Object> bsResultMas = new HashMap<String, Object>();
+
+  					bsResultMas.put("ScheduleID", String.valueOf(params.get("hidschdulId")));
+  					bsResultMas.put("ResultRemark", params.get("remark"));
+  					bsResultMas.put("RenCollectionID", params.get("cmbCollectType"));
+  					bsResultMas.put("FailReasonID", params.get("failReason"));
+  					bsResultMas.put("ResultStatusCodeID", params.get("cmbStatusType"));
+  					bsResultMas.put("ResultStockUse",  String.valueOf(1));
+
+  					if(params.get("settleDate")!=null||params.get("settleDate")!=""){
+  						bsResultMas.put("SettleDate", String.valueOf(params.get("settleDate")));
+  					}else{
+  						bsResultMas.put("SettleDate", "01/01/1900");
+  					}
+
+  					hsManualMapper.updatebsResultMas(bsResultMas);  // UPDATE SVC0006D - TPY 20180703
+  					
+  					//END
+  					
   					String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
 
   		            if("".equals(filterLastserial)){
@@ -538,6 +560,20 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			hsManualMapper.updateHs009d(params);		// UPDATE SAL0090D
 
 		}
+
+		// UPDATE SAL0045D - INSTALLATION INSTRUCTION - TPY 20180629
+
+		Map<String, Object> bsResultInst = new HashMap<String, Object>();
+
+		bsResultInst.put("SalesOrderId", String.valueOf(params.get("hidSalesOrdId")));
+		bsResultInst.put("userId", String.valueOf(sessionVO.getUserId()));
+		bsResultInst.put("instct", String.valueOf(params.get("instruction")));
+
+		if(bsResultInst.get("instct")!=null){
+			hsManualMapper.updateInstRemark(bsResultInst); // UPDATE SAL0045D - TPY 20180629
+		}
+
+		// END
 
 
 		EgovMap getHsResultMList = hsManualMapper.selectHSResultMList(params);
@@ -660,6 +696,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
             logger.debug("HSCOMCALL 물류 호출 결과 ===>");
             /////////////////////////물류 호출 END //////////////////////
       }*/
+
+
+
 
 
 
@@ -1553,6 +1592,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     			}
     			logger.debug(">>>>>>>>>>bsResultMas : {}", bsResultMas);
     			hsManualMapper.updatebsResultMas(bsResultMas); // UPDATE 1건 svc0006d
+    			//TODO - TPY
     		}
 
     		if(bsResultInst.get("instct")!=null){
