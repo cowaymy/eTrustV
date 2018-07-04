@@ -97,7 +97,7 @@ function ComplianceListGrid() {
 }
 
 function fn_complianceSearch(){
-	 if("${SESSION_INFO.userTypeId}" =="1" || "${SESSION_INFO.userTypeId}" =="2" || "${SESSION_INFO.userTypeId}" =="3"){
+	 if("${PAGE_AUTH.funcUserDefine1}" !='Y'){
 	Common.ajax("GET", "/organization/compliance/selectGuardianofComplianceListCodyHP.do", $("#complianceSearch").serialize(), function(result) {
         console.log("성공.");
         console.log("data : " + JSON.stringify(result));
