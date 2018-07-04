@@ -363,6 +363,8 @@ public class ReportBatchController {
 		Map<String, Object> params = new HashMap<>();
 		params.put(REPORT_FILE_NAME, "/visualcut/RentalAging12Month.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("AgingDate", "");// parameter
+		params.put("RentalStatus", "");// parameter
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Finance" + File.separator
 				+ "RentalAging12Month" + CommonUtils.getNowDate() + ".xls");
@@ -394,6 +396,7 @@ public class ReportBatchController {
 		params.put(REPORT_FILE_NAME, "/visualcut/OutrightPlusAgingCollection_12Month.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
+		params.put("AgingDate", "");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Finance" + File.separator
 				+ "OutrightPlusAgingCollection_12Month" + CommonUtils.getNowDate() + ".xls");
 
@@ -409,6 +412,7 @@ public class ReportBatchController {
 		params.put(REPORT_FILE_NAME, "/visualcut/OutrightPlusAging_12Month.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
+		params.put("AgingDate", "");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Finance" + File.separator
 				+ "OutrightPlusAging_12Month" + CommonUtils.getNowDate() + ".xls");
 
