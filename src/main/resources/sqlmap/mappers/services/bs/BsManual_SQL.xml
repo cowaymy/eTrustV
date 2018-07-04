@@ -1276,7 +1276,7 @@
 
                 <![CDATA[
 
-            select  distinct1.SRV_FILTER_STK_ID AS STK_ID,
+            SELECT  DISTINCT distinct1.SRV_FILTER_STK_ID AS STK_ID,
                            distinct1.STK_CODE,
                            distinct1.STK_DESC,
                            distinct1.SERIAL_CHK,
@@ -3050,7 +3050,7 @@
 	                    SELECT DISTINCT D.MEM_CODE CODE_ID, D.MEM_CODE || '-' ||  D.NAME CODE_NAME
 						FROM (SELECT MEM_CODE, NAME, 1 AS QUERYNO
 						      FROM ORG0001D
-						      WHERE MEM_ID = (SELECT SRV_CODY_ID FROM SAL0090D WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{entry_orderNo}))
+						      WHERE MEM_ID = (SELECT SRV_CODY_ID FROM SAL0090D WHERE SRV_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{entry_orderNo}) AND SRV_STUS_ID = 1 )
 						       union
 						      SELECT A.MEM_CODE, A.NAME , 2 AS QUERYNO
 						      FROM  ORG0001D A, ORG0005D B
@@ -3568,9 +3568,10 @@
             UPDATE SVC0006D
 			SET SETL_DT = TO_DATE( NVL(#{SettleDate},'01/01/1900'), 'DD/MM/YYYY'),
 			    RESULT_STUS_CODE_ID = #{ResultStatusCodeID},
-			    FAIL_RESN_ID = #{FailReasonID},
+			    FAIL_RESN_ID = NVL(#{FailReasonID},'0'),
 			    REN_COLCT_ID = #{RenCollectionID},
-			    RESULT_REM = #{ResultRemark}
+			    RESULT_REM = #{ResultRemark},
+			    RESULT_STOCK_USE = #{ResultStockUse}
 			WHERE SCHDUL_ID = #{ScheduleID}
 			AND RESULT_IS_CURR = 1
           </update>
