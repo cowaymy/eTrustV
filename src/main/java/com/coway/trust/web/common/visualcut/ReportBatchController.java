@@ -185,10 +185,40 @@ public class ReportBatchController {
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
 		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
-				"RCM" + File.separator + "RCM_Daily_S_2" + CommonUtils.getNowDate() + ".xls");
+				"RCM" + File.separator + "RCM_Daily_S1_2" + CommonUtils.getNowDate() + ".xls");
 
 		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] RCM_Daily_2015_S_2...");
+	}
+
+	@RequestMapping(value = "/RCM_Daily_2015_S1_2.do")
+	//@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
+	public void rcmDaily2015S2_1() {
+		LOGGER.info("[START] RCM_Daily_2015_S1_2...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_2015_S1_2.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"RCM" + File.separator + "RCM_Daily_S2_2" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] RCM_Daily_2015_S1_2...");
+	}
+
+	@RequestMapping(value = "/RCM_Daily_2015_Company.do")
+	//@Scheduled(cron = "0 0 5 * * *")//Daily (5:00am)
+	public void rcmDaily2015S2_Company() {
+		LOGGER.info("[START] RCM_Daily_2015_Company...");
+		Map<String, Object> params = new HashMap<>();
+		params.put(REPORT_FILE_NAME, "/visualcut/RCM_Daily_2015_Company.rpt");// visualcut rpt file name.
+		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
+		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
+				"RCM" + File.separator + "RCM_Daily_Company" + CommonUtils.getNowDate() + ".xls");
+
+		this.viewProcedure(null, null, params);
+		LOGGER.info("[END] RCM_Daily_2015_Company...");
 	}
 
 	@RequestMapping(value = "/ColorGrid_Simplification_2014_2015.do")
