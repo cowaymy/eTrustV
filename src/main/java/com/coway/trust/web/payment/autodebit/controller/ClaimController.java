@@ -1002,12 +1002,12 @@ public class ClaimController {
 		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 
 			String isCrc  = map.get("isCrc") != null ?  (String)map.get("isCrc") : "";
-LOGGER.info(" @@@@@@@@@@@@@@@@@@@@@@@@@@@ :: " +isCrc);
+
 			if(isCrc.equals("crc") ){
 				if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
                 {
         			//10000건 단위로 추출하기 위해 전체 건수 조회
-        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+        			int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
         			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
 
         			if (pageCnt > 0){
@@ -1020,7 +1020,7 @@ LOGGER.info(" @@@@@@@@@@@@@@@@@@@@@@@@@@@ :: " +isCrc);
                 }
                 else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId"))))
                 {
-        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+        			int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
         			int totBatToday =  claimService.selectClaimDetailBatchGen(map);
         			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
 

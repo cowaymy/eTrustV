@@ -233,4 +233,6 @@ public interface ClaimMapper {
 	 */
 	List<EgovMap> selectClaimFileDown(Map<String, Object> params);
 
+	int selectCCClaimDetailByIdCnt(Map<String, Object> params);
+
 }

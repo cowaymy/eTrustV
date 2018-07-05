@@ -472,6 +472,12 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
 		return claimMapper.selectClaimDetailByIdCnt(params);
 	}
 
+
+	@Override
+	public int selectCCClaimDetailByIdCnt(Map<String, Object> params) {
+		return claimMapper.selectCCClaimDetailByIdCnt(params);
+	}
+
 	@Override
 	public int selectClaimDetailBatchGen(Map<String, Object> params) {
 		return claimMapper.selectClaimDetailBatchGen(params);

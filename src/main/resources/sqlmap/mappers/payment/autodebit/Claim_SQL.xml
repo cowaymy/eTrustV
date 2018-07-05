@@ -307,6 +307,17 @@
 
     </select>
 
+        <!--Auto Debit - Claim Detail 조회 -->
+    <select id="selectClaimDetailByIdCnt" parameterType="Map" resultType="int">
+        SELECT
+           COUNT(1) AS CNT
+        FROM
+            PAY0287D Extent1
+        WHERE
+            Extent1.BANK_DTL_CTRL_ID =  #{ctrlId}
+
+    </select>
+
     <!--Auto Debit - Claim Detail 조회 -->
     <select id="selectClaimDetailBatchGen" parameterType="Map" resultType="int">
     SELECT COUNT(1) CNT FROM (
