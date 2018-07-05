@@ -521,9 +521,10 @@ function fn_getAppvItemOfClmUn(clmNo, appvItmSeq, clamUn) {
                 if(attachList.length > 0) {
                     $("#attachTd").html("");
                     for(var i = 0; i < attachList.length; i++) {
-                    	//$("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
-                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' /></div>");
-                        $(".input_text").val(attachList[i].atchFileName);
+                        //$("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                        var atchTdId = "atchId" + (i+1);
+                        $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
+                        $(".input_text[name='" + atchTdId + "']").val(attachList[i].atchFileName);
                     }
 
                     // 파일 다운
