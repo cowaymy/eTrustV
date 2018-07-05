@@ -308,7 +308,7 @@
     </select>
 
         <!--Auto Debit - Claim Detail 조회 -->
-    <select id="selectClaimDetailByIdCnt" parameterType="Map" resultType="int">
+    <select id="selectCCClaimDetailByIdCnt" parameterType="Map" resultType="int">
         SELECT
            COUNT(1) AS CNT
         FROM
