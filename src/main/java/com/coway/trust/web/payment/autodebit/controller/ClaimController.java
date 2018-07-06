@@ -721,6 +721,7 @@ public class ClaimController {
 		searchMap.put("issueBank", claim.get("new_merchantBank"));
 		searchMap.put("claimType", claim.get("new_claimType"));
 		searchMap.put("status", "1");
+		searchMap.put("IS_GRP", "1");
 
 		List<EgovMap> isActiveBatchList = claimService.selectClaimList(searchMap);
 
