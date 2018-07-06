@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.web.sales.order;
 
@@ -56,34 +56,34 @@ import io.swagger.annotations.ApiParam;
 public class OrderModifyController {
 
 	private static Logger logger = LoggerFactory.getLogger(OrderModifyController.class);
-	
+
 	@Resource(name = "orderDetailService")
 	private OrderDetailService orderDetailService;
-	
+
 	@Resource(name = "orderModifyService")
 	private OrderModifyService orderModifyService;
-	
+
 	@Resource(name = "orderRegisterService")
 	private OrderRegisterService orderRegisterService;
-	
+
 	@Resource(name = "customerService")
 	private CustomerService customerService;
-	
+
 	@Autowired
 	private FileService fileService;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	@RequestMapping(value = "/orderModifyPop.do")
 	public String orderModifyPop(@RequestParam Map<String, Object>params, ModelMap model, SessionVO sessionVO) throws Exception {
-		
+
 		String callCenterYn = "N";
-		
+
 		if(CommonUtils.isNotEmpty(params.get(AppConstants.CALLCENTER_TOKEN_KEY))){
 			callCenterYn = "Y";
 		}
-		
+
 		//[Tap]Basic Info
 		EgovMap orderDetail = orderDetailService.selectOrderBasicInfo(params, sessionVO);//APP_TYPE_ID CUST_ID
 		EgovMap basicInfo = (EgovMap) orderDetail.get("basicInfo");
@@ -103,7 +103,7 @@ public class OrderModifyController {
 		model.put("srvPacId",     basicInfo.get("srvPacId"));
 		model.put("callCenterYn", callCenterYn);
 		model.put("memType",      sessionVO.getUserTypeId());
-		 
+
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+model.get("salesOrderId"));
 		logger.debug("!@###### ordEditType  : "+model.get("ordEditType"));
@@ -113,13 +113,13 @@ public class OrderModifyController {
 		logger.debug("!@###### salesOrderNo : "+model.get("salesOrderNo"));
 		logger.debug("!@###### custNric     : "+model.get("custNric"));
 		logger.debug("!@##############################################################################");
-		
+
 		return "sales/order/orderModifyPop";
 	}
 
 	@RequestMapping(value = "/updateOrderBasinInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateOrderBasinInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
-		
+
 		orderModifyService.updateOrderBasinInfo(params, sessionVO);
 
 		// 결과 만들기
@@ -133,7 +133,7 @@ public class OrderModifyController {
 
 	@RequestMapping(value = "/updateMailingAddress.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateMailingAddress(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
-		
+
 		orderModifyService.updateOrderMailingAddress(params, sessionVO);
 
 		// 결과 만들기
@@ -144,10 +144,10 @@ public class OrderModifyController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updateMailingAddress2.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateMailingAddress2(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
-		
+
 		orderModifyService.updateOrderMailingAddress2(params, sessionVO);
 
 		// 결과 만들기
@@ -158,10 +158,10 @@ public class OrderModifyController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updateCntcPerson.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateCntcPerson(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
-		
+
 		orderModifyService.updateCntcPerson(params, sessionVO);
 
 		// 결과 만들기
@@ -172,10 +172,10 @@ public class OrderModifyController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updateNric.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateNric(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
-		
+
 		orderModifyService.updateNric(params, sessionVO);
 
 		// 결과 만들기
@@ -186,10 +186,10 @@ public class OrderModifyController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePaymentChannel.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePaymentChannel(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
-		
+
 		orderModifyService.updatePaymentChannel(params, sessionVO);
 
 		// 결과 만들기
@@ -214,75 +214,75 @@ public class OrderModifyController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/selectBillGrpMailingAddrJson.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> selectBillGrpMailingAddrJson(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
-		
+
 		EgovMap resultMap = orderModifyService.selectBillGrpMailingAddr(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
-	
+
 	@RequestMapping(value = "/selectBillGrpCntcPersonJson.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> selectBillGrpCntcPerson(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
-		
+
 		EgovMap resultMap = orderModifyService.selectBillGrpCntcPerson(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
-	
+
 	@RequestMapping(value = "/checkNricEdit.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> checkNricEdit(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
-		
+
 		EgovMap resultMap = orderModifyService.checkNricEdit(params);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
-	
+
 	@RequestMapping(value = "/checkNricExist.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> checkNricExist(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
-		
+
 		EgovMap resultMap = orderModifyService.checkNricExist(params);
-		
+
 		logger.info("resultMap:"+resultMap);
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
-	
+
 	@RequestMapping(value = "/selectCustomerInfo.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> selectCustomerInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		EgovMap resultMap = orderModifyService.selectCustomerInfo(params);
-		
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
-	
+
 	@RequestMapping(value = "/selectInstallInfo.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> selectInstallInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		EgovMap resultMap = orderModifyService.selectInstallInfo(params);
-		
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
@@ -291,7 +291,7 @@ public class OrderModifyController {
 	public ResponseEntity<EgovMap> selectInstallAddrInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		EgovMap resultMap = orderModifyService.selectInstallAddrInfo(params);
-		
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
@@ -300,7 +300,7 @@ public class OrderModifyController {
 	public ResponseEntity<EgovMap> selectInstallCntcInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		EgovMap resultMap = orderModifyService.selectInstallCntcInfo(params);
-		
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
@@ -309,7 +309,7 @@ public class OrderModifyController {
 	public ResponseEntity<EgovMap> selectInstRsltCount(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		EgovMap resultMap = orderModifyService.selectInstRsltCount(params);
-		
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
@@ -318,7 +318,7 @@ public class OrderModifyController {
 	public ResponseEntity<EgovMap> selectGSTZRLocationCount(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		EgovMap resultMap = orderModifyService.selectGSTZRLocationCount(params);
-		
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
@@ -327,14 +327,14 @@ public class OrderModifyController {
 	public ResponseEntity<EgovMap> selectGSTZRLocationByAddrIdCount(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		EgovMap resultMap = orderModifyService.selectGSTZRLocationByAddrIdCount(params);
-		
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
 
 	@RequestMapping(value = "/updateInstallInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateInstallInfo(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws ParseException {
-		
+
 		orderModifyService.updateInstallInfo(params, sessionVO);
 
 		// 결과 만들기
@@ -350,7 +350,7 @@ public class OrderModifyController {
 	public ResponseEntity<EgovMap> selectRentPaySetInfo(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		EgovMap resultMap = orderModifyService.selectRentPaySetInfo(params);
-		
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
@@ -359,7 +359,7 @@ public class OrderModifyController {
 	public ResponseEntity<EgovMap> selectCustomerBankDetailView(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		EgovMap resultMap = customerService.selectCustomerBankDetailViewPop(params);
-		
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
@@ -368,9 +368,9 @@ public class OrderModifyController {
 	public ResponseEntity<EgovMap> selectCustomerCreditCardDetailView(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
 
 		EgovMap resultMap = customerService.selectCustomerCreditCardDetailViewPop(params);
-		
+
 		resultMap.put("decryptCRCNoShow", CommonUtils.getMaskCreditCardNo(StringUtils.trim((String)resultMap.get("custOriCrcNo")), "*", 4));
-		
+
 		// 데이터 리턴.
 		return ResponseEntity.ok(resultMap);
 	}
@@ -381,31 +381,31 @@ public class OrderModifyController {
 		logger.debug("!@##############################################################################");
 		logger.debug("!@###### /selectEditDocSubmList.do : salesOrderId : "+params.get("salesOrderId"));
 		logger.debug("!@##############################################################################");
-		
+
 		List<EgovMap> docuList = orderRegisterService.selectDocSubmissionList(params);
 		List<EgovMap> saveList = orderDetailService.selectDocumentList(params);
-		
+
 		int chkfield = 0;
 		BigDecimal docCopyQty = BigDecimal.ZERO;
 		BigDecimal codeId = BigDecimal.ZERO;
 		BigDecimal docTypeId = BigDecimal.ZERO;
-		
+
 		List<EgovMap> mapList = new ArrayList<EgovMap>();
-		
+
 		for(EgovMap docuMap : docuList) {
-			
+
 			chkfield = 0;
 			docCopyQty = BigDecimal.ZERO;
 			codeId = (BigDecimal)docuMap.get("codeId");
-			
+
 			for(EgovMap saveMap : saveList) {
-				
+
 				docTypeId = (BigDecimal)saveMap.get("docTypeId");
-				
+
 				if(codeId.compareTo(docTypeId) == 0) {
 					chkfield = 1;
 					docCopyQty = (BigDecimal)saveMap.get("docCopyQty");
-					
+
 					break;
 				}
 			}
@@ -414,29 +414,29 @@ public class OrderModifyController {
 			docuMap.put("docCopyQty", docCopyQty);
 			docuMap.put("docTypeId",  codeId);
 			docuMap.put("docSoId",    params.get("salesOrderId"));
-			
+
 			mapList.add(docuMap);
 		}
 
 		// 데이터 리턴.
 		return ResponseEntity.ok(mapList);
 	}
-	
+
     @RequestMapping(value = "/selectReferralList.do", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> selectReferralList(@RequestParam Map<String, Object> params)    {
     	List<EgovMap> rsltList = orderModifyService.selectReferralList(params);
     	return ResponseEntity.ok(rsltList);
     }
-	
+
     @RequestMapping(value = "/selectStateCodeList.do", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> selectStateCodeList(@RequestParam Map<String, Object> params)    {
     	List<EgovMap> rsltList = orderModifyService.selectStateCodeList(params);
     	return ResponseEntity.ok(rsltList);
     }
-    
+
 	@RequestMapping(value = "/saveReferral.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveReferral(@RequestBody OrderModifyVO orderModifyVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
-		
+
 		orderModifyService.saveReferral(orderModifyVO, sessionVO);
 
 		// 결과 만들기
@@ -450,7 +450,7 @@ public class OrderModifyController {
 
 	@RequestMapping(value = "/updatePromoPriceInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePromoPriceInfo(@RequestBody SalesOrderMVO salesOrderMVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
-		
+
 		orderModifyService.updatePromoPriceInfo(salesOrderMVO, sessionVO);
 
 		// 결과 만들기
@@ -461,12 +461,12 @@ public class OrderModifyController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updateGstCertInfo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateGstCertInfo(@RequestBody GSTEURCertificateVO gSTEURCertificateVO, HttpServletRequest request, Model model, SessionVO sessionVO) throws Exception {
-		
+
 		orderModifyService.updateGSTEURCertificate(gSTEURCertificateVO, sessionVO);
-		
+
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -475,19 +475,26 @@ public class OrderModifyController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
     @RequestMapping(value = "/selectGSTCertInfo.do", method = RequestMethod.GET)
     public ResponseEntity<EgovMap> selectGSTCertInfo(@RequestParam Map<String, Object> params)    {
     	EgovMap rslt = orderDetailService.selectGSTCertInfo(params);
     	return ResponseEntity.ok(rslt);
     }
-    
+
     @RequestMapping(value = "/gstCertFileDown.do", method = RequestMethod.GET)
 	public ResponseEntity<FileDto> getFilesByGroupId(@RequestParam Map<String, Object> params) throws Exception {
     	int fileGroupId = Integer.parseInt((String)params.get("atchFileGrpId"));
-    	
+
 		List<FileVO> list = fileService.getFiles(fileGroupId);
 		FileDto fileDto = FileDto.createByFileVO(list, fileGroupId);
 		return ResponseEntity.ok(fileDto);
+	}
+
+	@RequestMapping(value = "/getInstallDetail.do", method = RequestMethod.GET)
+	public ResponseEntity <EgovMap> getInstallDetail(@RequestParam Map<String, Object> params, ModelMap model,HttpServletRequest request) {
+		EgovMap orderInstallDetail = orderModifyService.getInstallDetail(params);
+		logger.debug("orderInstallDetail : {}",orderInstallDetail);
+		return ResponseEntity.ok(orderInstallDetail);
 	}
 }

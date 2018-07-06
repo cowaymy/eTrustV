@@ -431,11 +431,28 @@
                                 $('#rentPayMode').val('');
                             }
                             else {
-                                $('#scPC_CrCard').removeClass("blind");
+                                Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
+                                    if(result.stusCodeId != "4"){
+                                        Common.alert('Change paymode to CRC is not allowed due to installation is not complete');
+
+                                    }
+                                    else{
+                                    	$('#scPC_CrCard').removeClass("blind");
+                                    }
+                                });
+
                             }
                         }
                         else {
-                            $('#scPC_CrCard').removeClass("blind");
+                        	Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
+                                if(result.stusCodeId != "4"){
+                                    Common.alert('Change paymode to CRC is not allowed due to installation is not complete');
+
+                                }
+                                else{
+                                    $('#scPC_CrCard').removeClass("blind");
+                                }
+                            });
                         }
                     }
                     else if($('#rentPayMode').val() == '132') {
@@ -821,10 +838,20 @@
         } else {
             $('#scIN').addClass("blind");
         }
+
         if(tabNm == 'PAY') {
-            $('#scPC').removeClass("blind");
-            $('#aTabPay').click();
-            fn_loadRentPaySetInfo(ORD_ID);
+        	Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
+        		if(result.modeId == "131" && result.stusCodeId != "4"){
+        			Common.alert('Change paymode is not allowed due to installation is not complete');
+
+        		}
+        		else{
+        			$('#scPC').removeClass("blind");
+                    $('#aTabPay').click();
+                    fn_loadRentPaySetInfo(ORD_ID);
+        		}
+        	});
+
         } else {
             $('#scPC').addClass("blind");
         }

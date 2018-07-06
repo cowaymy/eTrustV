@@ -614,4 +614,9 @@ public class OrderModifyServiceImpl extends EgovAbstractServiceImpl implements O
 		gSTEURCertificateVO.setEurcUpdUserId(sessionVO.getUserId());
 	}
 
+	@Override
+	public EgovMap getInstallDetail(Map<String, Object> params) {
+		return orderModifyMapper.getInstallDetail(params);
+	}
+
 }
