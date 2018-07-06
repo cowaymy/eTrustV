@@ -79,6 +79,14 @@
             <if test="issueBank != null and issueBank != ''">
                 AND Extent1.CTRL_BANK_ID = #{issueBank}
             </if>
+            <choose>
+                <when test="IS_GRP != null and IS_GRP != '' ">
+                    AND Extent1.CTRL_GROUP = 1
+                </when>
+                <otherwise>
+                    AND Extent1.CTRL_GROUP != 1
+                </otherwise>
+            </choose>
          ORDER BY Extent1.CTRL_ID
     </select>
 

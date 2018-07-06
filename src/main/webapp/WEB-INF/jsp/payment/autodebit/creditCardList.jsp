@@ -180,7 +180,7 @@ function fn_openDivPop(val){
             	$('#sms_grid_wrap').hide();
 
 
-            	Common.ajax("GET", "/payment/selectClaimMasterById.do", {"batchId":ctrlId}, function(result) {
+            	Common.ajax("GET", "/payment/selectClaimMasterById.do", {"batchId":ctrlId,"IS_GRP":1}, function(result) {
             		$("#view_wrap").show();
                     $("#new_wrap").hide();
 
@@ -714,7 +714,7 @@ function fn_genClaim(){
 function fn_createFile(){
 
 	var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue, "ctrlId");
-    var isCrc = true;
+    var isCrc = 'crc';
 	//param data array
     var data = {};
     data.form = [{"ctrlId":ctrlId, "isCrc":isCrc}] ;
@@ -797,7 +797,7 @@ function fn_openDivPopDown(){
     <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
-
+                <input type="hidden" name="IS_GRP"  id="IS_GRP" value = "1"/>
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
