@@ -82,7 +82,7 @@ $(function(){
 	                    <br />
 	                    <a href="https://drive.google.com/drive/folders/1ThDlCyUPZC2AtR-P9op8ePP3BzXg_fcO?usp=sharing" target="_blank"><font color="#0000FF">Company Profile</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/drive/folders/1wlv4pgRXfZ4tJ3FEYUtA1MgAmoTV3Jx7?usp=sharing" target="_blank"><font color="#0000FF">Cover Photo</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1XYAM8XZPN6TSmGOog4DlE97eL1vM6593?usp=sharing" target="_blank"><font color="#0000FF">Cover Photo</font></a>
 	                    <br />
 	                    <a href="https://drive.google.com/drive/folders/1s-1rApHlYW3XbI9voT02SbqoZRilhmNG?usp=sharing" target="_blank"><font color="#0000FF">Product USP</font></a>
 	                    <br />
