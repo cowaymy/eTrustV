@@ -34,12 +34,12 @@ $(document).ready(function(){
     /**********************************
      * Header Setting End
      ***********************************/
-    
+
 });
 
 //btn clickevent
 $(function(){
-    
+
 });
 
 
@@ -62,40 +62,40 @@ $(function(){
             <table class="type1"><!-- table start -->
             <colgroup>
                 <col style="width:345px" />
-                <col style="width:345px" />                
+                <col style="width:345px" />
             </colgroup>
             <tbody>
                 <tr>
                     <td>Social Media</td>
-                    <td>Flyer</td>                    
+                    <td>Flyer</td>
                 </tr>
                 <tr>
-                
+
                <%--      <td width="313px"><img ID="RadImageTile1" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Social-Media-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
-                    <td width="313px"><img ID="RadImageTile2" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Flyer-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>           --%>          
+                    <td width="313px"><img ID="RadImageTile2" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Flyer-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>           --%>
                     <td width="313px"><img ID="RadImageTile1" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Social-Media-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
-                    <td width="313px"><img ID="RadImageTile2" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Flyer-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>                    
+                    <td width="313px"><img ID="RadImageTile2" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Flyer-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
                 </tr>
                 <tr>
 	                <td>
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOZlllc2I2NDROS28" target="_blank"><font color="#0000FF">Announcement</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1lSC4KgzU02pLG52H_UocvO8tvLD-vbjZ?usp=sharing" target="_blank"><font color="#0000FF">Announcement</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOORzN6SkM2VV91REk" target="_blank"><font color="#0000FF">Company Profile</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1ThDlCyUPZC2AtR-P9op8ePP3BzXg_fcO?usp=sharing" target="_blank"><font color="#0000FF">Company Profile</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOONnhTMkkzdk90SUU" target="_blank"><font color="#0000FF">Cover Photo</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1wlv4pgRXfZ4tJ3FEYUtA1MgAmoTV3Jx7?usp=sharing" target="_blank"><font color="#0000FF">Cover Photo</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOYUdLTDFJV3daQVk" target="_blank"><font color="#0000FF">Product USP</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1s-1rApHlYW3XbI9voT02SbqoZRilhmNG?usp=sharing" target="_blank"><font color="#0000FF">Product USP</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOTkJ4V1NKa2NaY0k" target="_blank"><font color="#0000FF">Profile Picture</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1GJWyO9MOESxw0H6tJzbzmiihLmrgzP8z?usp=sharing" target="_blank"><font color="#0000FF">Profile Picture</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOSWZDVDNTTEl0Ukk" target="_blank"><font color="#0000FF">Promotion</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1IEW-o9_sSLMTRnVsnMXvDfT1w7YTvbTX?usp=sharing" target="_blank"><font color="#0000FF">Promotion</font></a>
 	                    <br />
 	                    <br />
 	                </td>
 	                <td>
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOZEg1NWt3UmpuVG8" target="_blank"><font color="#0000FF">Cody Recruitment Flyer</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1yK9VBEMDUqlUCHoAWJo_HGXVqHLIB83_?usp=sharing" target="_blank"><font color="#0000FF">Cody Recruitment Flyer</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOZlhxOW1TdmZ0ZGs" target="_blank"><font color="#0000FF">HP Recruitment Flyer</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1a4gSm3Zz5CjtJ-R7W-1kn9hzcxjXBE5e?usp=sharing" target="_blank"><font color="#0000FF">HP Recruitment Flyer</font></a>
 	                    <br />
 	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOSVBSZTJsajl3ZUE" target="_blank"><font color="#0000FF">Roadshow Flyer 1</font></a>
 	                    <br />
@@ -109,32 +109,32 @@ $(function(){
                 </tr>
                 <tr>
                     <td>BANNER</td>
-                    <td >BUNTING</td>                                 
+                    <td >BUNTING</td>
                 </tr>
                 <tr>
                   <%--   <td width="313px"><img ID="RadImageTile3" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Banner-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
                     <td width="313px"><img ID="RadImageTile4" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/images/Artwork/Bunting-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>                     --%>
                     <td width="313px"><img ID="RadImageTile3" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Banner-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
-                    <td width="313px"><img ID="RadImageTile4" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Bunting-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>                    
+                    <td width="313px"><img ID="RadImageTile4" Shape="Wide" BackColor="Black" src="${pageContext.request.contextPath}/resources/WebShare/Artwork/Bunting-Image-Preview.png" style="top: 1px; left: 0px; width: 380px; height: 190px"></td>
                 </tr>
                 <tr>
 	                <td>
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOLXJIeVF3dmQxYkE" target="_blank"><font color="#0000FF">Branding Banner</font></a>
+	                    <a href="https://drive.google.com/drive/folders/0B2Nvq8toyZOOLXJIeVF3dmQxYkE?usp=sharing" target="_blank"><font color="#0000FF">Branding Banner</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOdG52dTE2OGpnODg" target="_blank"><font color="#0000FF">Cody Recruitment Banner</font></a>
+	                    <a href="https://drive.google.com/drive/folders/0B2Nvq8toyZOOdG52dTE2OGpnODg?usp=sharing" target="_blank"><font color="#0000FF">Cody Recruitment Banner</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOMEluYm1sSVBQZnM" target="_blank"><font color="#0000FF">Generic Product Banner</font></a>
+	                    <a href="https://drive.google.com/drive/folders/0B2Nvq8toyZOOMEluYm1sSVBQZnM?usp=sharing" target="_blank"><font color="#0000FF">Generic Product Banner</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOdkFqN2ozR0dfWWc" target="_blank"><font color="#0000FF">HP Recruitment Banner</font></a>
+	                    <a href="https://drive.google.com/drive/folders/0B2Nvq8toyZOOdkFqN2ozR0dfWWc?usp=sharing" target="_blank"><font color="#0000FF">HP Recruitment Banner</font></a>
 	                </td>
 	                <td>
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOd2FBNU83SUtPYjA" target="_blank"><font color="#0000FF">Branding Bunting</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1Nc6ijqkYCVqqVScciu9hr-njGjVjFcQ7?usp=sharing" target="_blank"><font color="#0000FF">Branding Bunting</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOOG5GdFo0aGNHNE0" target="_blank"><font color="#0000FF">Cody Recruitment Bunting</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1HkBdsfuComJ-ia2mFaakhM58JLR4i85i?usp=sharing" target="_blank"><font color="#0000FF">Cody Recruitment Bunting</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOOaWF4a0NGU2ZXMDQ" target="_blank"><font color="#0000FF">Generic Product Bunting</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1wlv4pgRXfZ4tJ3FEYUtA1MgAmoTV3Jx7?usp=sharing" target="_blank"><font color="#0000FF">Generic Product Bunting</font></a>
 	                    <br />
-	                    <a href="https://drive.google.com/open?id=0B2Nvq8toyZOObHVvMUhwZ293dU0" target="_blank"><font color="#0000FF">HP Recruitment Bunting</font></a>
+	                    <a href="https://drive.google.com/drive/folders/1oPdCiPd8hAFiyQBWovZu_dIGwzA9c7OP?usp=sharing" target="_blank"><font color="#0000FF">HP Recruitment Bunting</font></a>
 	                </td>
                 </tr>
             </tbody>
