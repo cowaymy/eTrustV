@@ -555,12 +555,17 @@
     <![CDATA[
         SELECT SOM.SALES_ORD_ID SALES_ORD_ID,
                    SOM.SALES_ORD_NO SALES_ORD_NO,
-                   IE.STUS_CODE_ID STUS_CODE_ID,
+                   SM.STUS_CODE_ID STUS_CODE_ID,
                    RPS.MODE_ID MODE_ID
         FROM SAL0001D SOM
-        LEFT JOIN SAL0046D IE   ON IE.SALES_ORD_ID = SOM.SALES_ORD_ID
+        LEFT JOIN (select * from SAL0046D SM
+                        where SM.INSTALL_ENTRY_ID = (SELECT MAX(aa.INSTALL_ENTRY_ID)
+                                               from SAL0046D aa
+                                                where
+                                                aa.SALES_ORD_ID = SM.SALES_ORD_ID))SM
+                                                on (SM.SALES_ORD_ID = SOM.SALES_ORD_ID)
         LEFT JOIN SAL0074D RPS  ON RPS.SALES_ORD_ID = SOM.SALES_ORD_ID
-        WHERE  SOM.SALES_ORD_ID = #{ordId} AND ROWNUM <= 1
+        WHERE  SOM.SALES_ORD_ID = 842371 AND ROWNUM <= 1
         ]]>
         </select>
 
