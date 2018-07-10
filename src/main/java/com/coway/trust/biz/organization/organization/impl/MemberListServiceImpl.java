@@ -249,9 +249,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
                 // 2018-06-18 - LaiKW - Insert trainee (Cody) record to applicant table for agreement purpose
                 if (Integer.parseInt((String) paramM.get("memberType"))== 5 && Integer.parseInt((String) paramM.get("traineeType1")) == 2) {
                     paramM.put("applicantCode", memCode);
-                    String aplCde = insertApplicant(paramM, sessionVO);
+                    insertApplicant(paramM, sessionVO);
 
-                    paramM.put("aplCde", aplCde);
+                    EgovMap aplCde = (EgovMap) memberListMapper.getCdAplId(paramM);
+                    paramM.put("aplCde", aplCde.get("aplctnId"));
 
                     memberListMapper.updateCodyAplCde(paramM);
                 }

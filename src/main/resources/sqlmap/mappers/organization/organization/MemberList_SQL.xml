@@ -4405,9 +4405,18 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         WHERE b.MEM_CODE = #{userId}
     </select>
 
+    <select id="getCdAplId" parameterType="Map" resultType="egovMap">
+        SELECT
+            a.APLCTN_ID
+        FROM ORG0003D a
+        INNER JOIN ORG0001D b
+            ON b.MEM_CODE = a.APLICNT_CODE
+        WHERE b.MEM_CODE = #{applicantCode}
+    </select>
+
     <update id="updateCodyAplCde" parameterType="Map">
         UPDATE ORG0001D
-        SET APLICNT_ID = #{aplCode},
-        WHERE  ( MEM_ID = #{memId} )
+        SET APLICNT_ID = #{aplCde}
+        WHERE  MEM_CODE = #{applicantCode}
      </update>
 </mapper>

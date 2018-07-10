@@ -263,4 +263,6 @@ public interface MemberListMapper {
     EgovMap getCDInfo(Map<String, Object> params);
 
     void updateCodyAplCde(Map<String, Object> params);
+
+    EgovMap getCdAplId(Map<String, Object> params);
 }
