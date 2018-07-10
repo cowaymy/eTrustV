@@ -840,17 +840,11 @@
         }
 
         if(tabNm == 'PAY') {
-        	Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
-        		if(result.modeId == "131" && result.stusCodeId != "4"){
-        			Common.alert('Change paymode is not allowed due to installation is not complete');
 
-        		}
-        		else{
-        			$('#scPC').removeClass("blind");
-                    $('#aTabPay').click();
-                    fn_loadRentPaySetInfo(ORD_ID);
-        		}
-        	});
+        	$('#scPC').removeClass("blind");
+            $('#aTabPay').click();
+            fn_loadRentPaySetInfo(ORD_ID);
+
 
         } else {
             $('#scPC').addClass("blind");
@@ -1014,8 +1008,21 @@
                 $("#rentPayMode").val(rsltInfo.payModeId);
 
                 if(rsltInfo.payModeId == '131') {
-                    $('#scPC_CrCard').removeClass("blind");
-                    fn_loadCreditCard(rsltInfo.crcId);
+                	Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
+                        if(result.stusCodeId != "4"){
+                        	$('#rentPayMode').prop("disabled", true);
+                        	$('#rentPayMode').addClass("disabled");
+                        	$('#scPC_CrCard').removeClass("blind");
+                            fn_loadCreditCard(rsltInfo.crcId);
+                        }
+                        else{
+                        	$('#scPC_CrCard').removeClass("blind");
+                            fn_loadCreditCard(rsltInfo.crcId);
+                        }
+                    });
+
+                  //  $('#scPC_CrCard').removeClass("blind");
+                   // fn_loadCreditCard(rsltInfo.crcId);
                 }
                 else if(rsltInfo.payModeId == '132') {
                     $('#scPC_DirectDebit').removeClass("blind");
