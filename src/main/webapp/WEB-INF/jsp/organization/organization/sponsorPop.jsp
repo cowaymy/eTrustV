@@ -13,29 +13,29 @@ $(document).ready(function() {
     // AUIGrid 그리드를 생성합니다.
     createAUIGrid3();
 
- 
+
     // To show Type of Leave selection
     doGetCombo('/organization/selectMemberType.do','' ,'','cmbMemberType' ,'S','');
     doGetCombo('/organization/selectSponBrnchList.do','' ,'','cmbBranch' ,'S','');
 
     var tempsponsorCd = $("#sponsorCd").val();
-    
+
     if(tempsponsorCd != ""){
         $("#txtMemberCode").val(tempsponsorCd);
-        
+
         fn_sponMemberSearch();
     }
- 
+
      // 셀 더블클릭 이벤트 바인딩
      AUIGrid.bind(myGridID3, "cellDoubleClick", function(event) {
        var msponsorCd = AUIGrid.getCellValue(myGridID3, event.rowIndex, "memCode");
        var msponsorNm =  AUIGrid.getCellValue(myGridID3, event.rowIndex, "name");
        var msponsorNric =  AUIGrid.getCellValue(myGridID3, event.rowIndex, "nric");
-       
+
        fn_addSponsor(msponsorCd, msponsorNm, msponsorNric);
 
      });
-                  
+
 });
 
 
@@ -97,7 +97,7 @@ function createAUIGrid3() {
         headerText : "updator",
         editable : false,
         width : 180 ,
-        visible:false                                       
+        visible:false
     }];
      // 그리드 속성 설정
     var gridPros = {
@@ -140,12 +140,22 @@ function createAUIGrid3() {
 
 function fn_sponMemberSearch(){
 
-    Common.ajax("GET", "/organization/sponMemberSearch.do",$("#membeSponForm").serializeJSON(), function(result) {
+    var jsonObj = {
+            cmbMemberType: $("#cmbMemberType").val(),
+            txtMemberCode: $("#txtMemberCode").val(),
+            txtMemberName: $("#txtMemberName").val(),
+            txtICNumber: $("#txtICNumber").val(),
+            cmbBranch: $("#cmbBranch").val(),
+            cmbBranch: $("#cmbBranch").val(),
+            deptCd: $("#txtDept") .val()
+          };
+
+    Common.ajax("GET", "/organization/sponMemberSearch.do", jsonObj, function(result) {
         console.log("성공.");
         console.log("data : " + result);
         AUIGrid.setGridData(myGridID3, result);
     });
-    
+
 }
 
 
@@ -174,6 +184,7 @@ function fn_winClose(){
 <section class="pop_body"><!-- pop_body start -->
 <form action="#" id="membeSponForm" method="post">
 
+ <input type="hidden" id="txtDept" name="txtDept" value="${deptCd}"/>
  <input type="hidden" value="<c:out value="${codeValue}"/>" id="codeValue"/>
  <input type="hidden" value="<c:out value="${memberView.memId}"/>" id="memberid"/>
  <input type="hidden" value="<c:out value="${memberView.memType}"/> "  id="memtype"/>
@@ -181,16 +192,12 @@ function fn_winClose(){
  <input type="hidden" value="<c:out value="${memberView.hsptlz}"/> "  id="hsptlz"/>
 <section class="tap_wrap"><!-- tap_wrap start -->
 
-
-
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:160px" />
     <col style="width:*" />
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:150px" />
+    <col style="width:160px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -217,9 +224,8 @@ function fn_winClose(){
 </tr>
 <tr>
     <th scope="row">Branch</th>
-    <td colspan="3">
+    <td>
         <select class="w100p" id="cmbBranch" name="cmbBranch">    </select>
-
     </td>
 </tr>
 

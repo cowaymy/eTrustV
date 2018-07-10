@@ -1338,6 +1338,8 @@ public class MemberListController {
 
 //		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 
+		model.addAttribute("deptCd", params.get("deptCd"));
+
 		// 호출될 화면
 		return "organization/organization/sponsorPop";
 	}
@@ -1374,7 +1376,7 @@ public class MemberListController {
 
 		@RequestMapping(value = "/sponMemberSearch.do", method = RequestMethod.GET)
 		public ResponseEntity<List<EgovMap>> selectSponMemberSearch(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
-
+logger.debug("params : {}", params);
 			List<EgovMap> list =null;
 	    	list = memberListService.selectSponMemberSearch(params);
 			return ResponseEntity.ok(list);

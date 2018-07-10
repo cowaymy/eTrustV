@@ -426,6 +426,9 @@ console.log("ready");
 	console.log("================" +  $("#memberType").val());
         var memberType = $("#memberType").val();
 
+        $('span', '#emailLbl').empty().remove();
+        $('span', '#mobileNoLbl').empty().remove();
+
         if ( memberType ==  "2803") {
             //$('#grid_wrap_doc').attr("hidden", true);
 
@@ -447,12 +450,13 @@ console.log("ready");
             $("#educationLvl").attr("disabled", true);
             $("#language").attr("disabled", true);
             $("#trNo").attr("disabled", true);
-        } else {
+        } else if(memberType ==  "5") {
+            $('#mobileNo').prop('required', true);
+            $('#mobileNoLbl').append("<span class='must'>*</span>");
+        }else {
             $('#course').removeAttr('disabled');
         }
         fn_departmentCode(memberType);
-
-
      });
 
      $("#searchdepartment").change(function(){
@@ -473,7 +477,6 @@ console.log("ready");
 
         $('#grid_wrap_doc').attr("hidden", true);
      }
-
 
      $('#memberType').trigger('click');
 
@@ -499,16 +502,13 @@ console.log("ready");
      }
 
      $('#bankAccNo').blur(function() {
-         // 2018-06-21 - LaiKW - Added removal of special characters from bank account number - Start
-         var bnkNo = $('#bankAccNo').val();
-         bnkNo = bnkNo.replace(/[^0-9]/g,"");
-
-         $('#bankAccNo').val(bnkNo);
-         // 2018-06-21 - LaiKW - Added removal of special characters from bank account number - End
-
+         fmtNumber("#bankAccNo"); // 2018-06-21 - LaiKW - Added removal of special characters from bank account number
          checkBankAccNo();
      });
 
+     $("#mobileNo").blur(function() {
+        fmtNumber("#mobileNo"); // 2018-07-06 - LaiKW - Removal of special characters from mobile no
+     });
 });
 
 // 2018-06-20 - LaiKW - Removal of MBF Bank and Others from Issued Bank drop down box
@@ -791,12 +791,14 @@ console.log("validation");
     	}
     }
 
-    if($("#memberType").val() == "2803") {
+    if($("#memberType").val() == "2803" || $("#memberType").val() == "5") {
         if($("#mobileNo").val() == '') {
         	Common.alert("Please key in Mobile No.");
             return false;
         }
+    }
 
+    if($("#memberType").val() == "2803") {
         if($("#email").val() == '') {
             Common.alert("Please key in Email Address");
             return false;
@@ -1094,15 +1096,22 @@ function fn_onchangeMarrital() {
 	}
 }
 
+function fn_checkMobileNo() {
+    if(event.keyCode == 13) {
+        fmtNumber("#mobileNo");
+    }
+}
+
+function fmtNumber(field) {
+    var fld = $(field).val();
+    fld = fld.replace(/[^0-9]/g,"");
+
+    $(field).val(fld);
+}
+
 function checkBankAccNoEnter() {
 	if(event.keyCode == 13) {
-		// 2018-06-21 - LaiKW - Added removal of special characters from bank account number - Start
-		var bnkNo = $('#bankAccNo').val();
-        bnkNo = bnkNo.replace(/[^0-9]/g,"");
-
-        $('#bankAccNo').val(bnkNo);
-        // 2018-06-21 - LaiKW - Added removal of special characters from bank account number - End
-
+        fmtNumber("#bankAccNo"); // 2018-06-21 - LaiKW - Added removal of special characters from bank account number
 		checkBankAccNo();
 	}
 }
@@ -1314,7 +1323,7 @@ function checkBankAccNo() {
 <tr>
     <th scope="row" id="mobileNoLbl" name="mobileNoLbl">Mobile No.</th>
     <td>
-    <input type="text" title="" placeholder="Numeric Only" class="w100p" id="mobileNo" name="mobileNo"
+    <input type="text" title="" placeholder="Numeric Only" class="w100p" id="mobileNo" name="mobileNo" onKeyDown="fn_checkMobileNo()"
         onKeypress="if(event.keyCode < 45 || event.keyCode > 57) event.returnValue = false;" style = "IME-MODE:disabled;"/>
     </td>
     <th scope="row">Office No.</th>

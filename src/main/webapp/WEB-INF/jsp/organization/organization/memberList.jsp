@@ -541,6 +541,59 @@ function fn_searchPosition(selectedData){
 }
 /*By KV end - Position - This is for display Position data only in Position selection.*/
 
+function fn_genRawData() {
+
+    var rptNm;
+    var rptDownNm;
+    var whereSQL
+
+    if($("#createDate").val() == "" && $("#endDate").val() ==  "") {
+        //AND TO_CHAR(A.CRT_DT, 'MM/yyyy') =
+
+        var today = new Date();
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yy = today.getFullYear();
+        if(dd < 10) {
+            dd = '0' + dd;
+        }
+        if(mm < 10) {
+            mm = '0' + mm;
+        }
+        today = dd + '/' + mm + '/' + yy;
+
+        whereSQL = " AND TO_CHAR(A.CRT_DT, 'MM/yyyy') = '" +mm + "/" + yy "' ";
+    }
+    //else {
+    	//whereSQL = " AND TO_CHAR(A.CRT_DT, 'MM/yyyy') between '" +mm + "/" + yy "' ";
+    //}
+
+
+
+
+    $("#v_dt").val(whereSQL);
+
+    if($("#memTypeCom").val() == "") {
+        Common.alert("Please select Coway Lady/Health Planner.")
+        return false;
+    } else if($("#memTypeCom").val() == "1") {
+        rptNm = "/organization/HpRawData.rpt";
+        rptDownNm = "hpRawData_" + today;
+    } else if($("#memTypeCom").val() == "2") {
+        rptNm = "/organization/CodyRawData.rpt";
+        rptDownNm = "codyRawData_" + today;
+    }
+
+    $("#reportFileName").val(rptNm);
+    $("#reportDownFileName").val(rptDownNm);
+
+    var option = {
+            isProcedure : true
+        };
+
+    Common.report("rawDataReport", option);
+}
+
 </script>
 
 <!-- --------------------------------------DESIGN------------------------------------------------ -->
@@ -586,17 +639,20 @@ function fn_searchPosition(selectedData){
  <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_clickHpReject()">HP Reject</a></p></li>
 </c:if>
+ <c:if test="${PAGE_AUTH.funcUserDefine9 == 'Y'}">
+    <li><p class="btn_blue"><a href="javascript:fn_genRawData()">Raw Data Download</a></p></li>
+</c:if>
 </ul>
 </aside><!-- title_line end -->
 
 <input type="hidden" id="userRole" name="userRole" value="${userRole} " />
 
-<form id="agreementReport" name="agreementReport">
+<form id="rawDataReport" name="rawDataReport">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
-    <input type="hidden" id="viewType" name="viewType" value="" />
+    <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
-    <input type="hidden" id="v_memCode" name="v_memCode" value="" />
+    <input type="hidden" id="v_dt" name="v_dt" value="" />
 </form>
 
 <section class="search_table"><!-- search_table start -->

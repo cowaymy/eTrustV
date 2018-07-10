@@ -4133,6 +4133,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                                                             AND ( UTILS.CONVERT_TO_NUMBER(Extent4.BRNCH,10,0) = #{cmbBranch} )
                                                          </if>
                                                          ) GroupBy1
+                                       INNER JOIN ORG0005D Extent5 ON Extent1.MEM_ID = Extent5.MEM_ID
+                                       /* LEFT JOIN SYS0047M Extent6 ON Extent1.MEM_CODE = Extent6.USER_NAME */
                                                     WHERE  1=1
                                                          <if test="cmbMemberType != null and cmbMemberType != '' ">
                                                             AND (Extent1.MEM_TYPE = #{cmbMemberType})
@@ -4149,11 +4151,14 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                                                          <if test="cmbBranch != null and cmbBranch != '' ">
                                                             AND ( UTILS.CONVERT_TO_NUMBER(Extent1.BRNCH,10,0) = #{cmbBranch} )
                                                          </if>
+                                                         <if test="deptCd != null and deptCd != '' ">
+                                                            AND ( Extent5.DEPT_CODE = #{deptCd})
+                                                         </if>
+                                                         AND Extent1.STUS = 1
                                                          ) Project1
                                              ) Project1
                  WHERE  Project1.ROW_NUMBER > 0
                     ORDER BY Project1.MEM_CODE ASC )
-                 <![CDATA[         WHERE ROWNUM <= 10    ]]>
 
 
           </select>
@@ -4400,4 +4405,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         WHERE b.MEM_CODE = #{userId}
     </select>
 
+    <update id="updateCodyAplCde" parameterType="Map">
+        UPDATE ORG0001D
+        SET APLICNT_ID = #{aplCode},
+        WHERE  ( MEM_ID = #{memId} )
+     </update>
 </mapper>
