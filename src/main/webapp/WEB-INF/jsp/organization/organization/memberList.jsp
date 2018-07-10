@@ -547,6 +547,9 @@ function fn_genRawData() {
     var rptDownNm;
     var whereSQL
 
+    console.log($("#createDate").val());
+    console.log($("#endDate").val());
+
     if($("#createDate").val() == "" && $("#endDate").val() ==  "") {
         //AND TO_CHAR(A.CRT_DT, 'MM/yyyy') =
 
@@ -562,14 +565,10 @@ function fn_genRawData() {
         }
         today = dd + '/' + mm + '/' + yy;
 
-        whereSQL = " AND TO_CHAR(A.CRT_DT, 'MM/yyyy') = '" +mm + "/" + yy "' ";
+        whereSQL = " AND TO_CHAR(A.CRT_DT, 'MM/yyyy') = '" + mm + "/" + yy + "' ";
+    } else {
+        whereSQL = " AND TO_CHAR(A.CRT_DT, 'dd/MM/yyyy') between '" + $("#createDate").val() + "' and '" + $("#endDate").val() + "' ";
     }
-    //else {
-    	//whereSQL = " AND TO_CHAR(A.CRT_DT, 'MM/yyyy') between '" +mm + "/" + yy "' ";
-    //}
-
-
-
 
     $("#v_dt").val(whereSQL);
 
