@@ -652,14 +652,15 @@ public class ReportBatchController {
 		Map<String, Object> params = new HashMap<>();
 		params.put(REPORT_FILE_NAME, "/visualcut/CodyTraineeAppRaw_Excel.rpt");// visualcut rpt file name.
 		params.put(REPORT_VIEW_TYPE, "EXCEL"); // viewType
+		params.put("V_TEMP", "TEMP");// parameter
 		params.put(AppConstants.REPORT_DOWN_FILE_NAME,
 				"Member" + File.separator + "CodyTraineeAppRaw_Excel" + CommonUtils.getNowDate() + ".xls");
 
-		this.view(null, null, params);
+		this.viewProcedure(null, null, params);
 		LOGGER.info("[END] CodyTraineeAppRaw_Excel...");
 	}
-	
-	
+
+
 	@RequestMapping(value = "/BSRawCurrent.do")
 	//@Scheduled(cron = "0 24 8 * * MON,WED,FRI")
 	public void bsRawCurrent() throws IOException {
