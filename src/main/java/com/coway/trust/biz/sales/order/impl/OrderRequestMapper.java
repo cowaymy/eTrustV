@@ -206,4 +206,6 @@ public interface OrderRequestMapper {
 
 	void updateSalesOrderMCanc(Map<String, Object> params);
 
+	int validOCRStus(Map<String, Object> params);
+
 }

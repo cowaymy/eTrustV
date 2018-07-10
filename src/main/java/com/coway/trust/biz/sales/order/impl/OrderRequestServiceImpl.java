@@ -2438,4 +2438,19 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		return result;
 	}
 
+	@Override
+	public EgovMap validOCRStus(Map<String, Object> params) {
+
+		EgovMap result = new EgovMap();
+
+		int callLogResult 		  = orderRequestMapper.validOCRStus(params);
+
+		if(callLogResult > 0){
+			result.put("callLogResult",1);
+			result.put("msg", "OCR is not allowed due to Installation Status  still [ACTIVE]");
+		}
+
+		return result;
+	}
+
 }

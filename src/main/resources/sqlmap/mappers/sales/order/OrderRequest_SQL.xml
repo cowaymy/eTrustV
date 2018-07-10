@@ -1981,6 +1981,32 @@
     ]]>
     </select>
 
+    <select id="validOCRStus" parameterType="Map" resultType="int">
+    <![CDATA[
+       SELECT
+	    COUNT(1)
+	   FROM
+	    SAL0001D SOM
+	    JOIN CCR0006D CAL ON CAL.SALES_ORD_ID = SOM.SALES_ORD_ID
+	                    AND CAL.CALL_ENTRY_ID = (SELECT MAX(CALL_ENTRY_ID) FROM CCR0006D X WHERE X.SALES_ORD_ID = SOM.SALES_ORD_ID )
+	    JOIN (
+	        SELECT
+	            MAX(INSTALL_ENTRY_ID) INSTALL_ENTRY_ID,
+	            SALES_ORD_ID
+	        FROM
+	            SAL0046D
+	        GROUP BY
+	            SALES_ORD_ID
+	    ) IE ON IE.SALES_ORD_ID = SOM.SALES_ORD_ID
+	    LEFT JOIN SAL0047D IR ON IR.ENTRY_ID = IE.INSTALL_ENTRY_ID
+	   WHERE
+	    SOM.SALES_ORD_ID =#{salesOrdId}
+	    AND   CAL.STUS_CODE_ID = '20'
+	    AND   CAL.TYPE_ID = '257'
+	    AND   (IR.STUS_CODE_ID IS NULL OR IR.STUS_CODE_ID = 1)
+    ]]>
+    </select>
+
      <update id="updateSalesOrderLog" parameterType="Map">
         UPDATE SAL0009D
            SET REF_ID = 0,

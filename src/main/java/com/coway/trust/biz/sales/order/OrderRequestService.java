@@ -51,4 +51,6 @@ public interface OrderRequestService {
 
 	EgovMap checkeAutoDebitDeduction(Map<String, Object> params);
 
+	EgovMap validOCRStus(Map<String, Object> params);
+
 }

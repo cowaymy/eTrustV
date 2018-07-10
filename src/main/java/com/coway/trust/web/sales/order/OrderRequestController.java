@@ -208,4 +208,10 @@ public class OrderRequestController {
     	return ResponseEntity.ok(rslt);
     }
 
+    @RequestMapping(value = "/validOCRStus.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> validOCRStus(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderRequestService.validOCRStus(params);
+    	return ResponseEntity.ok(rslt);
+    }
+
 }

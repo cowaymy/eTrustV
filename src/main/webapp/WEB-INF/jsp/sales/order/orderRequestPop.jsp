@@ -1605,6 +1605,14 @@
         	}
         }
 
+        //Valid OCR Status - (CallLog Type - 257, Stus - 20, InstallResult Stus - Active )
+	        Common.ajaxSync("GET", "/sales/order/validOCRStus.do", {salesOrdId : ORD_ID}, function(result) {
+	        	if(result.callLogResult == 1) {
+                    isLock = true;
+                    msg = 'This order is under progress [ Ready to Install ].<br />' + result.msg + '.<br/>';
+                }
+	        });
+
         if(isLock) {
             if(tabNm == 'CANC') {
                 msg += '<spring:message code="sal.alert.msg.cancDisallowed" />';
