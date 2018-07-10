@@ -436,7 +436,7 @@ function fn_uploadFile3(){
 
 					//CALIM RESULT UPDATE
 					if(updateResultItemKind == 'LIVE'){
-						Common.ajax("POST", "/payment/updateClaimResultLive.do", data,
+						Common.ajax("POST", "/payment/updateCreditCardResultLive.do", data,
 							function(result) {
 								Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
 							},
@@ -513,7 +513,7 @@ function fn_uploadFile4(){
 
 					//CALIM RESULT UPDATE
 					if(updateResultItemKind == 'LIVE'){
-						Common.ajax("POST", "/payment/updateClaimResultLive.do", data,
+						Common.ajax("POST", "/payment/updateCreditCardResultLive.do", data,
 							function(result) {
 								Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
 							},
@@ -598,7 +598,7 @@ function fn_resultFileUp(){
 
         	         //CALIM RESULT UPDATE
         	         if(updateResultItemKind == 'LIVE'){
-	        	         Common.ajax("POST", "/payment/updateClaimResultLive.do", data,
+	        	         Common.ajax("POST", "/payment/updateCreditCardResultLive.do", data,
 	        	        		 function(result) {
 	        	        	          Common.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
 	        	        	     },
@@ -1030,6 +1030,7 @@ function fn_openDivPopDown(){
 
     <!-- pop_body start -->
     <form name="newForm" id="newForm"  method="post">
+    <input type="hidden"  id="IS_GRP" name="IS_GRP" value="1" />
     <section class="pop_body">
         <!-- search_table start -->
         <section class="search_table">

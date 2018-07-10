@@ -371,7 +371,7 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
      */
 	@Override
     public void updateCreditCardResultLive(Map<String, Object> claimMap){
-		claimMapper.updateClaimResultLive(claimMap);
+		claimMapper.updateCreditCardResultLive(claimMap);
 	}
 
 	/**
