@@ -432,7 +432,7 @@
                             }
                             else {
                                 Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
-                                    if(result.stusCodeId != "4"){
+                                    if(result.stusCodeId != "4" && result.modeId != "131"){
                                         Common.alert('Change paymode to CRC is not allowed due to installation is not complete');
 
                                     }
@@ -445,7 +445,7 @@
                         }
                         else {
                         	Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
-                                if(result.stusCodeId != "4"){
+                                if(result.stusCodeId != "4" && result.modeId != "131"){
                                     Common.alert('Change paymode to CRC is not allowed due to installation is not complete');
 
                                 }
@@ -1010,8 +1010,9 @@
                 if(rsltInfo.payModeId == '131') {
                 	Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
                         if(result.stusCodeId != "4"){
-                        	$('#rentPayMode').prop("disabled", true);
-                        	$('#rentPayMode').addClass("disabled");
+                        	//$('#rentPayMode').val(rsltInfo.payModeId).prop("disabled", true);
+                        //$('#rentPayMode').val(rsltInfo.payModeId).prop("readonly", true).addClass("readonly");
+                        	$('#rentPayMode').addClass("blind");
                         	$('#scPC_CrCard').removeClass("blind");
                             fn_loadCreditCard(rsltInfo.crcId);
                         }
