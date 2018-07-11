@@ -5,7 +5,7 @@
         <result property="attach_img_loc" column="ATTACH_IMG_LOC" jdbcType="CLOB" javaType="java.lang.String"/>
         <result property="itm_desc" column="ITM_DESC" jdbcType="CLOB" javaType="java.lang.String"/>
     </resultMap> -->
-    
+
    <select id="selectStockMstList" parameterType="Map" resultType="egovMap">
 	   SELECT itemid , itemname , itemcode ,cateid, catename, statusname
 	   <if test="gubun =='item'">
@@ -16,7 +16,7 @@
 	   </if>
 	   from (
         <if test="gubun =='item'">
-		  SELECT 
+		  SELECT
 		      ITM_ID  itemid ,
 		       ITM_NAME  itemname,
 		       ITM_CODE  itemcode,
@@ -30,8 +30,8 @@
                (SELECT SYS0038M.NAME
                   FROM SYS0038M
                  WHERE SYS0038M.STUS_CODE_ID = MSC0039D.STUS_CODE_ID) statusname
-		  FROM MSC0039D 
-		 where 1 = 1 
+		  FROM MSC0039D
+		 where 1 = 1
 		 </if>
 		 <if test="gubun =='stock' or gubun =='stocklist'">
 		 SELECT STK_ID  itemid
@@ -40,7 +40,7 @@
 		     , STK_CTGRY_ID cateid
 		     , STK_TYPE_ID typeid
 		     , STUS_CODE_ID stateid
-		     , UOM uom 
+		     , UOM uom
 		     , SERIAL_CHK serialchk
 		     ,(SELECT CODE_NAME
 		          FROM SYS0013M
@@ -53,9 +53,9 @@
                (SELECT SYS0038M.NAME
                   FROM SYS0038M
                  WHERE SYS0038M.STUS_CODE_ID = SYS0026M.STUS_CODE_ID) statusname
-		 FROM SYS0026M 
+		 FROM SYS0026M
 		WHERE 1 = 1
-		 </if>  
+		 </if>
       )
       where 1 = 1
        <if test="scode != null and scode !=''">
@@ -63,7 +63,7 @@
        </if>
        <if test="sname != null and sname !=''">
             and itemname like '%'|| #{sname} ||'%'
-       </if>    			
+       </if>
        <if test="cateid != null and cateid !=''">
             and cateid =  #{cateid}
        </if>
@@ -71,13 +71,13 @@
             and typeid =  #{typeid}
        </if>
        <if test="catelist != null and catelist != ''">
-            AND cateid in 
+            AND cateid in
             <foreach item="item" collection="catelist" index="index" open="(" separator="," close=")">
             #{item}
             </foreach>
        </if>
        <if test="typelist != null and typelist != ''">
-            AND typeid in 
+            AND typeid in
             <foreach item="item" collection="typelist" index="index" open="(" separator="," close=")">
             #{item}
             </foreach>
@@ -86,13 +86,13 @@
             and stateid =  #{stateid}
        </if>
        <if test="statlist != null and statlist != ''">
-            AND stateid in 
+            AND stateid in
             <foreach item="item" collection="statlist" index="index" open="(" separator="," close=")">
             #{item}
             </foreach>
        </if>
 	</select>
-	
+
 	<select id="selectMaterialMstItemList" parameterType="Map"  resultType="egovMap">
        SELECT T1.ITM_ID,
        T1.ITM_CODE,
@@ -161,20 +161,20 @@
          WHERE CODE_MASTER_ID = 63) S63,
        (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 42) S42,
        (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 94) S94
- WHERE T1.CTGRY_ID = S63.CODE_ID(+)             
+ WHERE T1.CTGRY_ID = S63.CODE_ID(+)
    AND T1.UOM       = S42.CODE_ID(+)
    AND T1.CURRENCY  = S94.CODE_ID(+)
     </select>
     <select id="selectNonItemType" resultType="egovMap">
-        select * from 
+        select * from
 		(SELECT code_name , code_id
 		           FROM SYS0013M
-		          WHERE CODE_MASTER_ID = '141')
+		          WHERE CODE_MASTER_ID = '63')
 		          PIVOT (MAX (code_id)
 		                      FOR code_name
 		                      IN ('Product Display – Dummy Set','Cody Tools','HR Item','Finance Item','Misc Item','Uniform','Merchandise Item','Kiosk Item'))
     </select>
-    
+
     <update id="updateMaterialItemType" parameterType="Map">
        UPDATE MSC0039D
           SET ITM_NAME     = #{itmName}
@@ -190,12 +190,12 @@
             , UPD_USER_ID  = #{updUserId}
         WHERE ITM_ID       = #{itmId}
     </update>
-    
+
     <insert id="insertMaterialItemType" parameterType="Map">
-	    INSERT INTO MSC0039D( 
+	    INSERT INTO MSC0039D(
 	    ITM_ID
 	   ,SEQ
-	   ,ITM_CODE 
+	   ,ITM_CODE
 	   ,ITM_NAME
 	   ,PRC
 	   ,ITM_DESC
@@ -204,7 +204,7 @@
 	   ,STUS_CODE_ID
 	   ,CTGRY_ID
 	   ,OLD_STK_ID
-	   ,CURRENCY 
+	   ,CURRENCY
 	   ,UOM
 	   ,ITEM_TYPE
 	    )
@@ -217,25 +217,25 @@
 	   ,#{insitmdesc}
 	   ,SYSDATE
 	   ,#{loginId}
-	   ,#{insstuscode}   
-	   ,#{inscateid} 
-	   ,#{insolditemid}  
+	   ,#{insstuscode}
+	   ,#{inscateid}
+	   ,#{insolditemid}
 	   ,#{inscurrency}
 	   ,#{insuom}
-	   ,#{insitemtype}    
+	   ,#{insitemtype}
 	    )
-    </insert> 
-    
+    </insert>
+
     <delete id="deleteMaterialItemType" parameterType="Map">
-       DELETE FROM MSC0039D 
-       WHERE ITM_ID = #{itmId} 
+       DELETE FROM MSC0039D
+       WHERE ITM_ID = #{itmId}
     </delete>
-    
+
     <select id="materialItmIdSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(ITM_ID),0) + 1 from MSC0039D
     </select>
     <select id="materialItemTypeSeq" parameterType="Map" resultType="Integer">
         SELECT NVL(MAX(SEQ),0) + 1 from MSC0039D
     </select>
-  
+
 </mapper>
