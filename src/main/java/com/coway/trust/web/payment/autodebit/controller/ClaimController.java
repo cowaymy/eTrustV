@@ -464,7 +464,7 @@ public class ClaimController {
 		int end;
 
 		Map<String, Object> bulkMap = new HashMap<>();
-		for (int i = 0; i < page; i++) {
+		for (int i = 0; i <= page; i++) {
 			start = i * size;
 			end = size;
 
