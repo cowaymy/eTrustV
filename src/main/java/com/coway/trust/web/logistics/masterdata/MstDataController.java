@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 /**
  * @author methree
@@ -51,13 +51,13 @@ public class MstDataController {
 
 	@Resource(name = "mstdataservice")
 	private MaterialService mst;
-	
+
 	@Resource(name = "commonService")
 	private CommonService commonService;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
+
 	@Autowired
 	private SessionHandler sessionHandler;
 
@@ -65,10 +65,10 @@ public class MstDataController {
 	public String listdevice(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
 		return "logistics/MaterialData/MY_LOG_E007";
 	}
-	
+
 	@RequestMapping(value = "/materialcdsearch.do" , method = RequestMethod.POST)
 	public ResponseEntity<Map> selectMaterialCodeList(@RequestBody Map<String, Object> params, Model model) throws Exception {
-		
+
 		if (params.get("cmbCategory") != null ){
     		List<String> list = (List)params.get("cmbCategory");
     		if (!list.isEmpty()){
@@ -79,7 +79,7 @@ public class MstDataController {
         		params.put("catelist" , cate);
     		}
 		}
-		
+
 		if (params.get("cmbType") != null ){
     		List<String> list = (List)params.get("cmbType");
     		if (!list.isEmpty()){
@@ -90,7 +90,7 @@ public class MstDataController {
         		params.put("typelist" , type);
     		}
 		}
-		
+
 		if (params.get("cmbStatus") != null ){
     		List<String> list = (List)params.get("cmbStatus");
     		if (!list.isEmpty()){
@@ -101,7 +101,7 @@ public class MstDataController {
         		params.put("statlist" , stat);
     		}
 		}
-		
+
 		List<EgovMap> codeList = mst.selectStockMstList(params);
 
 		Map<String, Object> map = new HashMap();
@@ -109,7 +109,7 @@ public class MstDataController {
 
 		return ResponseEntity.ok(map);
 	}
-	
+
 	@RequestMapping(value = "/materialitemList.do" , method = RequestMethod.POST)
 	public ResponseEntity<Map> selectMaterialItemList(@RequestBody Map<String, Object> params, Model model) throws Exception {
 		List<EgovMap> codeList = mst.selectMaterialMstItemList(params);
@@ -119,22 +119,22 @@ public class MstDataController {
 
 		return ResponseEntity.ok(map);
 	}
-	
+
 	@RequestMapping(value = "/materialitemTypeList.do" , method = RequestMethod.GET)
 	public ResponseEntity<Map> selectMaterialItemTypeList(@RequestParam Map<String, Object> params, Model model) throws Exception {
-		
+
 		EgovMap codeList = mst.selectMaterialMstItemTypeList();
 		return ResponseEntity.ok(codeList);
 	}
-	
+
 	@RequestMapping(value = "/materialUpdateItemType.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> materialUpdateItemType(@RequestBody Map<String, ArrayList<Object>> params,
 			Model model) {
 
 		List<Object> updateList = params.get(AppConstants.AUIGRID_UPDATE); // 수정 리스트 얻기
-		
+
 		mst.updateMaterialItemType(updateList);
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -142,24 +142,24 @@ public class MstDataController {
 
 		return ResponseEntity.ok(message);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/materialInsertItemType.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> materialInsertItemType(@RequestBody Map<String, Object> params,
 			Model model) {
-		
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = 0;
-		
+
 		if(sessionVO==null){
-			loginId=99999999;			
+			loginId=99999999;
 		}else{
 			loginId=sessionVO.getUserId();
 		}
-	
-		
-		Map<String, Object> insmaterialmap = new HashMap();	
-		
+
+
+		Map<String, Object> insmaterialmap = new HashMap();
+
 		insmaterialmap.put("insitmname", params.get("insitmname"));
 		insmaterialmap.put("insitmdesc", params.get("insitmdesc"));
 		insmaterialmap.put("insolditemid", params.get("insolditemid"));
@@ -168,12 +168,12 @@ public class MstDataController {
 		insmaterialmap.put("inscateid", params.get("inscateid"));
 		insmaterialmap.put("insprice", params.get("insprice"));
 		insmaterialmap.put("insstuscode", params.get("insstuscode"));
-		insmaterialmap.put("insitemtype", params.get("insitemtype"));
+		insmaterialmap.put("insitemtype", params.get("inscateid"));
 		insmaterialmap.put("loginId", loginId);
-				
+
 		mst.insertMaterialItemType(insmaterialmap);
-		
-		
+
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -181,18 +181,18 @@ public class MstDataController {
 
 		return ResponseEntity.ok(message);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/materialDeleteItemType.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> materialDeleteItemType(ModelMap model, HttpServletRequest request, HttpServletResponse response)
 			throws Exception{
-		
+
 		Map<String, Object> materialDelete = new HashMap();
-		
+
 		String itmId        = request.getParameter("itmId");
-		materialDelete.put("itmId", itmId);		
+		materialDelete.put("itmId", itmId);
 		mst.deleteMaterialItemType(materialDelete);
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -200,7 +200,7 @@ public class MstDataController {
 
 		return ResponseEntity.ok(message);
 	}
-	
-	
-	
+
+
+
 }
