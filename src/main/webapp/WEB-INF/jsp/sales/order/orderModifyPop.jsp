@@ -344,7 +344,17 @@
             $('#modApplyDate').val("${toDay}");
             $('#modSubmitDate').val('');
             $('#modStartDate').val('');
-            $('#rentPayMode').val('');
+            Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
+                if(result.stusCodeId != "4" && result.modeId == "131"){
+                	$('#rentPayMode').val(131);
+                	$('#scPC_CrCard').removeClass("blind");
+
+                }
+                else{
+                	$('#rentPayMode').val('');
+                }
+            });
+
 
             if($('#thrdParty').is(":checked")) {
                 $('#scPC_ThrdParty').removeClass("blind");
@@ -366,7 +376,17 @@
             $('#modApplyDate').val("${toDay}");
             $('#modSubmitDate').val('');
             $('#modStartDate').val('');
-            $('#rentPayMode').val('');
+            Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
+                if(result.stusCodeId != "4" && result.modeId == "131"){
+                    $('#rentPayMode').val(131);
+                    $('#scPC_CrCard').removeClass("blind");
+
+                }
+                else{
+                	$('#rentPayMode').val('');
+                }
+            });
+
 
             if(InputCustID != CUST_ID) {
                 fn_loadThirdParty(InputCustID, 2);
@@ -392,7 +412,16 @@
                 $('#modApplyDate').val("${toDay}");
                 $('#modSubmitDate').val('');
                 $('#modStartDate').val('');
-                $('#rentPayMode').val('');
+                Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
+                    if(result.stusCodeId != "4" && result.modeId == "131"){
+                        $('#rentPayMode').val(131);
+                        $('#scPC_CrCard').removeClass("blind");
+
+                    }
+                    else{
+                        $('#rentPayMode').val('');
+                    }
+                });
 
                 if(InputCustID != CUST_ID) {
                     fn_loadThirdParty(InputCustID, 2);
@@ -1075,7 +1104,16 @@
             $('#modApplyDate').val("${toDay}");
             $('#modSubmitDate').val('');
             $('#modStartDate').val('');
-            $('#rentPayMode').val('');
+            Common.ajax("GET", "/sales/order/getInstallDetail.do", {ordId : ORD_ID}, function(result) {
+                if(result.stusCodeId != "4" && result.modeId == "131"){
+                    $('#rentPayMode').val(131);
+                    $('#scPC_CrCard').removeClass("blind");
+
+                }
+                else{
+                    $('#rentPayMode').val('');
+                }
+            });
 
             if(InputCustID != CUST_ID) {
                 fn_loadThirdParty(InputCustID, 1);
