@@ -550,6 +550,7 @@ function fn_genRawData() {
     console.log($("#createDate").val());
     console.log($("#endDate").val());
 
+    /*
     if($("#createDate").val() == "" && $("#endDate").val() ==  "") {
         //AND TO_CHAR(A.CRT_DT, 'MM/yyyy') =
 
@@ -568,7 +569,16 @@ function fn_genRawData() {
         whereSQL = " AND TO_CHAR(A.CRT_DT, 'MM/yyyy') = '" + mm + "/" + yy + "' ";
     } else {
         whereSQL = " AND TO_CHAR(A.CRT_DT, 'dd/MM/yyyy') between '" + $("#createDate").val() + "' and '" + $("#endDate").val() + "' ";
+    }*/
+
+    var today = new Date();
+    var dd = today.getDate();
+    var mm = today.getMonth() + 1;
+    var yy = today.getFullYear();
+    if(mm < 10) {
+        mm = '0' + mm;
     }
+    whereSQL = mm + "/" + yy
 
     $("#v_dt").val(whereSQL);
 

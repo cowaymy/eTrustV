@@ -166,7 +166,8 @@ public class MemberListController {
 	 * @throws Exception
 	 */
 	@RequestMapping(value = "/memberListSearch", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectmemberListSearch(@ModelAttribute("searchVO") SampleDefaultVO searchVO, @RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+	public ResponseEntity<List<EgovMap>> selectmemberListSearch(@ModelAttribute("searchVO") SampleDefaultVO searchVO,
+			@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		logger.debug("memTypeCom : {}", params.get("memTypeCom"));
 		logger.debug("code : {}", params.get("code"));
@@ -177,9 +178,9 @@ public class MemberListController {
 		logger.debug("race : {}", params.get("race"));
 		logger.debug("status : {}", params.get("status"));
 
-		//By KV start - Do Search Button for Position Level
-		logger.debug("position : {}",params.get("position"));
-		//By KV end - Do Search Button for Position Level
+		// By KV start - Do Search Button for Position Level
+		logger.debug("position : {}", params.get("position"));
+		// By KV end - Do Search Button for Position Level
 
 		logger.debug("contact : {}", params.get("contact"));
 		logger.debug("keyUser : {}", params.get("keyUser"));
@@ -195,13 +196,28 @@ public class MemberListController {
 
 		List<EgovMap> memberList = null;
 
+		/*if (sessionVO.getUserTypeId() == 1) {
+			params.put("userId", sessionVO.getUserId());
+
+			EgovMap item = new EgovMap();
+			item = (EgovMap) memberListService.getOrgDtls(params);
+
+			if (sessionVO.getMemberLevel() == 3) {
+				params.put("deptCodeHd", item.get("lastDeptCode"));
+				params.put("grpCodeHd", item.get("lastGrpCode"));
+				params.put("orgCodeHd", item.get("lastOrgCode"));
+			} else if (sessionVO.getMemberLevel() == 2) {
+				params.put("grpCodeHd", item.get("lastGrpCode"));
+				params.put("orgCodeHd", item.get("lastOrgCode"));
+			} else if (sessionVO.getMemberLevel() == 1) {
+				params.put("orgCodeHd", item.get("lastOrgCode"));
+			}
+		}*/
+
 		String MemType = params.get("memTypeCom").toString();
-		if(MemType.equals("2803"))
-		{
+		if (MemType.equals("2803")) {
 			memberList = memberListService.selectHPApplicantList(params);
-		}
-		else
-		{
+		} else {
 			memberList = memberListService.selectMemberList(params);
 		}
 
@@ -317,7 +333,6 @@ public class MemberListController {
 
 		model.addAttribute("spouseInfoView", list);
 		model.addAttribute("memType", params.get("memType"));
-
 
 		// 호출될 화면
 		return "organization/organization/memberListNewPop";
@@ -1331,14 +1346,17 @@ public class MemberListController {
 
 
 	@RequestMapping(value = "/sponsorPop.do")
-	public String sponsorPop(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String sponsorPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
 
 		logger.debug("sponsorPopUp.............");
 		logger.debug("params : {}", params);
 
 //		params.put("MemberID", Integer.parseInt((String) params.get("MemberID")));
 
-		model.addAttribute("deptCd", params.get("deptCd"));
+		// 2018-07-16 - LaiKW - Amend sponsor pop up search only limited to own department for HP only
+		if(sessionVO.getUserTypeId() == 1) {
+			model.addAttribute("deptCd", params.get("deptCd"));
+		}
 
 		// 호출될 화면
 		return "organization/organization/sponsorPop";
@@ -1583,37 +1601,6 @@ logger.debug("params : {}", params);
     // Kit Wai - End - 20180428
 
     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
-    @RequestMapping(value = "/getCDCnfm.do", method = RequestMethod.GET)
-    public ResponseEntity<Map> getCDCnfm(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
-
-        logger.debug("==================== getCDCnfm ====================");
-
-        Map<String, Object> cdCnfmCheck = new HashMap();
-
-        EgovMap item = new EgovMap();
-        item = (EgovMap) memberListService.getCDCnfm(params);
-
-        String status = "";
-        String stusID = item.get("stusId").toString();
-        String cnfm = item.get("cnfm").toString();
-        String cnfmDt = item.get("cnfmDt").toString();
-
-        if("1".equals(cnfm) && !"1900-01-01".equals(cnfmDt) && "5".equals(stusID)) {
-            // Confirmed agreement
-            status = "Y";
-        } else if("0".equals(cnfm) && "1900-01-01".equals(cnfmDt) && "44".equals(stusID)) {
-            // Unconfirmed agreement
-            status = "N";
-        } else if("0".equals(cnfm) && !"1900-01-01".equals(cnfmDt) && "6".equals(stusID)) {
-            // Rejected agreement
-            status = "R";
-        }
-
-        cdCnfmCheck.put("status", status);
-
-        return ResponseEntity.ok(cdCnfmCheck);
-    }
-
     @RequestMapping(value = "/cdAgreement.do")
     public String cdAgreement(@RequestParam Map<String, Object> params, ModelMap model) {
 
@@ -1671,6 +1658,24 @@ logger.debug("params : {}", params);
         cdStus.put("stus", item.get("stusId"));
         cdStus.put("cnfm", item.get("cnfm"));
         cdStus.put("cnfm_dt", item.get("cnfmDt"));
+
+        String status = "";
+        String stusID = item.get("stusId").toString();
+        String cnfm = item.get("cnfm").toString();
+        String cnfmDt = item.get("cnfmDt").toString();
+
+        if("1".equals(cnfm) && !"1900-01-01".equals(cnfmDt) && "5".equals(stusID)) {
+            // Confirmed agreement
+            status = "Y";
+        } else if("0".equals(cnfm) && "1900-01-01".equals(cnfmDt) && "44".equals(stusID)) {
+            // Unconfirmed agreement
+            status = "N";
+        } else if("0".equals(cnfm) && !"1900-01-01".equals(cnfmDt) && "6".equals(stusID)) {
+            // Rejected agreement
+            status = "R";
+        }
+
+        cdStus.put("status", status);
 
         return ResponseEntity.ok(cdStus);
     }
