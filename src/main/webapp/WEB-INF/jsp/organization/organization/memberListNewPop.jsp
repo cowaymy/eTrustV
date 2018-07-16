@@ -72,6 +72,18 @@ function fn_memberSave(){
                             }
 
 			            });
+			        /*}else if($("#memberType").val() == "5") {
+			            if($("#email").val() != "") {
+                            var recipient = $("#email").val();
+
+                            var url = "http://etrust.my.coway.com/";
+
+                            // Send Email file, recipient
+                            Common.ajax("GET", "/organization/sendEmail.do", {url:url, recipient:recipient}, function(result) {
+                                console.log("email.");
+                                console.log(result);
+                            })
+                        }*/
 			        }
 			        Common.alert(result.message,fn_close);
 		});

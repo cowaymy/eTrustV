@@ -246,16 +246,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             if (params != null) {
                 memCode = doSaveMember(params, docType);
 
-                // 2018-06-18 - LaiKW - Insert trainee (Cody) record to applicant table for agreement purpose
-                if (Integer.parseInt((String) paramM.get("memberType"))== 5 && Integer.parseInt((String) paramM.get("traineeType1")) == 2) {
-                    paramM.put("applicantCode", memCode);
-                    insertApplicant(paramM, sessionVO);
-
-                    EgovMap aplCde = (EgovMap) memberListMapper.getCdAplId(paramM);
-                    paramM.put("aplCde", aplCde.get("aplctnId"));
-
-                    memberListMapper.updateCodyAplCde(paramM);
-                }
             }
             return memCode;
         }
@@ -1473,33 +1463,39 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	@Transactional
 	@Override
 	public Map<String, Object> traineeUpdate(Map<String, Object> params,SessionVO sessionVO) {
-		boolean success = false;
-		Map<String, Object> resultValue = new HashMap<String, Object>(); //팝업 결과값 가져가는 map
+        boolean success = false;
+        Map<String, Object> paramM = new HashMap<String, Object>();
+        Map<String, Object> resultValue = new HashMap<String, Object>(); // 팝업 결과값 가져가는 map
 
-		// CT, CD 코드 생성
-    	int a =memberListMapper.traineeUpdate(params);
+        // CT, CD 코드 생성
+        int a = memberListMapper.traineeUpdate(params);
 
-    	if(a> 0){
-    		resultValue =	memberListMapper.afterSelTrainee(params);
+        if (a > 0) {
+            resultValue = memberListMapper.afterSelTrainee(params);
 
-    		// SP_DAY_USER_CRT 프로시저 호출
-    		Map<String, Object>  userPram = new HashMap<String, Object>();
-    		userPram.put("IN_MEMCODE", resultValue.get("memCode"));
-    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>"+ userPram.toString());
-    		memberListMapper.SP_DAY_USER_CRT(userPram);
-    		userPram.put("P_STATUS", userPram.get("p1"));
-    		logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" +userPram);
+            // SP_DAY_USER_CRT 프로시저 호출
+            Map<String, Object> userPram = new HashMap<String, Object>();
+            userPram.put("IN_MEMCODE", resultValue.get("memCode"));
+            logger.debug("SP_DAY_USER_CRT 프로시저 호출 PRAM ===>" + userPram.toString());
+            memberListMapper.SP_DAY_USER_CRT(userPram);
+            userPram.put("P_STATUS", userPram.get("p1"));
+            logger.debug("SP_DAY_USER_CRT 프로시저 호출 결과 ===>" + userPram);
 
-    		// SP_SVC_LOG_SYS0028M(P_MEM_CODE) 프로시저 호출
-    		Map<String, Object>  logPram = new HashMap<String, Object>();
-    		logPram.put("P_MEM_CODE", resultValue.get("memCode"));
-    		logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 PRAM ===>"+ logPram.toString());
-    		memberListMapper.SP_SVC_LOG_SYS0028M(logPram);
-//    		logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 결과 ===>" +logPram);
-    	}
+            // SP_SVC_LOG_SYS0028M(P_MEM_CODE) 프로시저 호출
+            Map<String, Object> logPram = new HashMap<String, Object>();
+            logPram.put("P_MEM_CODE", resultValue.get("memCode"));
+            logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 PRAM ===>" + logPram.toString());
+            memberListMapper.SP_SVC_LOG_SYS0028M(logPram);
+            // logger.debug("SP_SVC_LOG_SYS0028M 프로시저 호출 결과 ===>" +logPram);
 
-		return resultValue;
-	}
+            // 2018-07-12 - Insertion of trainee's e-Agreement
+            paramM.put("memCode", resultValue.get("memCode"));
+            // memberListMapper.updateCodyAplCde(paramM);
+
+        }
+
+        return resultValue;
+    }
 
 	@Override
 	public List<EgovMap> getMemberListView(Map<String, Object> params) {
@@ -2322,11 +2318,6 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 
 	@Override
-    public EgovMap getCDCnfm(Map<String, Object> params) {
-        return memberListMapper.getCDCnfm(params);
-    }
-
-    @Override
     public void updateCodyCfm(Map<String, Object> params) throws Exception {
         memberListMapper.updateCodyCfm(params);
     }
@@ -2334,5 +2325,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     @Override
     public EgovMap getCDInfo(Map<String, Object> params) {
         return memberListMapper.getCDInfo(params);
+    }
+
+    @Override
+    public EgovMap getOrgDtls(Map<String, Object> params) {
+        return memberListMapper.getOrgDtls(params);
     }
 }
