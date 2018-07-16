@@ -138,6 +138,8 @@ function fn_generateReport(){
             $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscWholeSales_PDF.rpt');
         }else if(miscType == 124) {
             $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF.rpt');
+        }else if(miscType == 125) {
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscTermination_PDF.rpt');
         }else if(miscType == 142) {
             $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF.rpt');
         }
