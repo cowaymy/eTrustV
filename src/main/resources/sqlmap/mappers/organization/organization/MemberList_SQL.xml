@@ -343,6 +343,15 @@
                           <if test="position != null and position != ''">
                             AND Extent5.MEM_LVL= #{position}
                          </if>
+                         <if test="deptCodeHd != null and deptCodeHd != ''">
+                            AND Extent5.LAST_DEPT_CODE = #{deptCodeHd}
+                         </if>
+                         <if test="grpCodeHd != null and grpCodeHd != ''">
+                            AND Extent5.LAST_GRP_CODE = #{grpCodeHd}
+                         </if>
+                         <if test="orgCodeHd != null and orgCodeHd != ''">
+                            AND Extent5.LAST_ORG_CODE= #{orgCodeHd}
+                         </if>
 
 						<choose>
 						        <when test="memberLevel == 1">
@@ -455,6 +464,9 @@
                          </if>
                           <if test="contact != null and contact != ''">
                             AND  ((Extent1.APLICNT_TEL_HUSE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.APLICNT_TEL_OFFICE LIKE '%' || #{contact}|| '%' ) OR ( Extent1.APLICNT_TEL_MOBILE LIKE '%' || #{contact}|| '%' ) ) AND ( Extent1.APLICNT_TEL_MOBILE = #{contact} OR Extent1.APLICNT_TEL_HUSE = #{contact} OR Extent1.APLICNT_TEL_OFFICE = #{contact})
+                         </if>
+                         <if test="deptCodeHd != null and deptCodeHd != ''">
+                            AND Extent1.DEPT_CODE = #{deptCodeHd}
                          </if>
                   <![CDATA[
                 )   Project1
@@ -4365,15 +4377,36 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       where a.USER_ID = #{userId}
       </select>
 
-    <select id="getCDCnfm" parameterType="Map" resultType="egovMap">
-        SELECT
-            a.STUS_ID,
-            a.CNFM,
-            TO_CHAR(a.CNFM_DT, 'YYYY-MM-DD') CNFM_DT
-        FROM ORG0003D a
-        INNER JOIN ORG0001D b
-        ON a.APLICNT_CODE = b.TRAINEE_CODE
-        WHERE b.MEM_CODE = #{userId}
+    <select id="getCDDtls" parameterType="Map" resultType="egovMap">
+        select
+            MEM_CODE mem_Code,
+            TO_CHAR(MEM_TYPE) member_Type,
+            FULL_NAME member_Nm,
+            NRIC,
+            DOB birth,
+            TO_CHAR(GENDER) GENDER,
+            TO_CHAR(RACE) cmb_Race,
+            TO_CHAR(MARTL) marrital,
+            TO_CHAR(NATION) national,
+            TEL_OFFICE office_No,
+            TEL_HUSE residence_No,
+            TEL_MOBILE mobile_No,
+            EMAIL,
+            SPUSE_CODE spouse_Code,
+            SPOUSE_NAME spouse_Name,
+            SPOUSE_NRIC spouse_Nric,
+            SPOUSE_OCPAT spouse_Occ,
+            SPOUSE_TEL_CNTC spouse_Contat,
+            SPOUSE_DOB spouse_Dob,
+            TO_CHAR(EDC_LEV) education_Lvl,
+            TO_CHAR(LANG) language,
+            TO_CHAR(BANK) issued_Bank,
+            BANK_ACC_NO,
+            SPONS_CODE sponsor_Cd,
+            STREET street_Dtl,
+            ADDR_DTL addr_Dtl
+        from ORG0001D
+        where MEM_ID = #{memberId}
     </select>
 
     <update id="updateCodyCfm" parameterType="Map">
@@ -4385,7 +4418,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 ON A.TRAINEE_CODE = B.APLICNT_CODE
             WHERE A.MEM_CODE = #{userId}
         ) SRC
-        ON (ORG0003D.APLICNT_CODE = SRC.TRAINEE_CODE)
+        ON (ORG0003D.APLICNT_CODE = SRC.MEM_CODE)
         WHEN MATCHED THEN UPDATE
         SET CNFM = #{cnfm},
               CNFM_DT = SYSDATE,
@@ -4401,7 +4434,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             TO_CHAR(a.CNFM_DT, 'YYYY-MM-DD') CNFM_DT
         FROM ORG0003D a
         INNER JOIN ORG0001D b
-            ON b.TRAINEE_CODE = a.APLICNT_CODE
+            ON b.MEM_CODE = a.APLICNT_CODE
         WHERE b.MEM_CODE = #{userId}
     </select>
 
@@ -4415,8 +4448,138 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
 
     <update id="updateCodyAplCde" parameterType="Map">
-        UPDATE ORG0001D
-        SET APLICNT_ID = #{aplCde}
-        WHERE  MEM_CODE = #{applicantCode}
+        MERGE INTO ORG0003D A USING
+            ( SELECT
+                A.MEM_CODE,
+                A.MEM_TYPE,
+                A.NAME,
+                A.FULL_NAME,
+                A.DOB,
+                A.GENDER,
+                A.RACE,
+                A.MARTL,
+                A.NATION,
+                A.TEL_OFFICE,
+                A.TEL_HUSE,
+                A.TEL_MOBILE,
+                A.EMAIL,
+                A.SPUSE_CODE,
+                A.SPOUSE_NAME,
+                A.SPOUSE_NRIC,
+                A.SPOUSE_OCPAT,
+                A.SPOUSE_TEL_CNTC,
+                A.SPOUSE_DOB,
+                A.EDC_LEV,
+                A.LANG,
+                A.BANK,
+                A.BANK_ACC_NO,
+                A.SPONS_CODE,
+                A.TRNSPRT,
+                A.AREA_ID,
+                A.ADDR_DTL,
+                A.STREET,
+                A.UPD_USER_ID,
+                B.DEPT_CODE
+            FROM ORG0001D A
+            INNER JOIN ORG0005D B
+                    ON A.MEM_ID = B.MEM_ID
+            WHERE MEM_CODE = #{memCode}
+          ) SRC
+      ON (A.APLICNT_CODE = SRC.MEM_CODE)
+      WHEN NOT MATCHED THEN INSERT (
+            APLCTN_ID,
+            APLICNT_CODE,
+            APLICNT_TYPE,
+            APLICNT_NAME,
+            APLICNT_FULL_NAME,
+            APLICNT_IDNTFC,
+            APLICNT_DOB,
+            APLICNT_GENDER,
+            APLICNT_RACE,
+            APLICNT_MARTL,
+            APLICNT_NATION,
+            APLICNT_TEL_OFFICE,
+            APLICNT_TEL_HUSE,
+            APLICNT_TEL_MOBILE,
+            APLICNT_EMAIL,
+            APLICNT_SPOUSE_CODE,
+            APLICNT_SPOUSE_NAME,
+            APLICNT_SPOUSE_NRIC,
+            APLICNT_SPOUSE_OCPAT,
+            APLICNT_SPOUSE_TEL_CNTC,
+            APLICNT_SPOUSE_DOB,
+            APLICNT_EDU_LEV,
+            APLICNT_LANG,
+            APLICNT_BANK_ID,
+            APLICNT_BANK_ACC_NO,
+            APLICNT_SPONS_CODE,
+            APLICNT_TRNSPRT,
+            STUS_ID,
+            CRT_DT,
+            CRT_USER_ID,
+            UPD_DT,
+            UPD_USER_ID,
+            CNFM,
+            CNFM_DT,
+            DEPT_CODE,
+            AREA_ID,
+            ADDR_DTL,
+            STREET
+      ) VALUES ( ORG0003D_APLCTN_ID_SEQ.NEXTVAL,
+                      SRC.MEM_CODE,
+                      2,
+                      SRC.NAME,
+                      SRC.FULL_NAME,
+                      '1',
+                      SRC.DOB,
+                      SRC.GENDER,
+                      SRC.RACE,
+                      SRC.MARTL,
+                      SRC.NATION,
+                      SRC.TEL_OFFICE,
+                      SRC.TEL_HUSE,
+                      SRC.TEL_MOBILE,
+                      SRC.EMAIL,
+                      SRC.SPUSE_CODE,
+                      SRC.SPOUSE_NAME,
+                      SRC.SPOUSE_NRIC,
+                      SRC.SPOUSE_OCPAT,
+                      SRC.SPOUSE_TEL_CNTC,
+                      SRC.SPOUSE_DOB,
+                      SRC.EDC_LEV,
+                      SRC.LANG,
+                      SRC.BANK,
+                      SRC.BANK_ACC_NO,
+                      SRC.SPONS_CODE,
+                      SRC.TRNSPRT,
+                      44,
+                      SYSDATE,
+                      SRC.UPD_USER_ID,
+                      SYSDATE,
+                      SRC.UPD_USER_ID,
+                      0,
+                      '01-JAN-1900',
+                      SRC.DEPT_CODE,
+                      SRC.AREA_ID,
+                      SRC.ADDR_DTL,
+                      SRC.STREET
+      )
      </update>
+
+     <select id="getOrgDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            C.MEM_LVL,
+            C.LAST_DEPT_CODE,
+            C.LAST_GRP_CODE,
+            C.LAST_ORG_CODE
+        FROM
+            SYS0047M A
+            LEFT JOIN ORG0001D B
+                ON A.USER_NAME = B.MEM_CODE
+            LEFT JOIN ORG0005D C
+                ON B.MEM_ID = C.MEM_ID
+        WHERE
+            A.USER_ID = #{userId}
+    </select>
+
 </mapper>
