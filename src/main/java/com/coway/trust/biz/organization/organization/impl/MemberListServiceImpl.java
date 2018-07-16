@@ -2327,8 +2327,8 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         return memberListMapper.getCDInfo(params);
     }
 
-    @Override
+    /*@Override
     public EgovMap getOrgDtls(Map<String, Object> params) {
         return memberListMapper.getOrgDtls(params);
-    }
+    }*/
 }
