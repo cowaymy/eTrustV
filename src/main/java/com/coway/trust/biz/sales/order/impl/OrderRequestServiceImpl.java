@@ -1267,7 +1267,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
                         }
                         else {
                             TaxCodeID = 32;
-                            TaxRate = 6;
+                            //TaxRate = 6; Kit- Remove GST Rate - 20180716
+                            TaxRate = 0;
                         }
                     }
 
