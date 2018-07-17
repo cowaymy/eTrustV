@@ -196,23 +196,23 @@ public class MemberListController {
 
 		List<EgovMap> memberList = null;
 
-		/*if (sessionVO.getUserTypeId() == 1) {
+		if (sessionVO.getUserTypeId() == 1) {
 			params.put("userId", sessionVO.getUserId());
 
 			EgovMap item = new EgovMap();
 			item = (EgovMap) memberListService.getOrgDtls(params);
 
-			if (sessionVO.getMemberLevel() == 3) {
-				params.put("deptCodeHd", item.get("lastDeptCode"));
-				params.put("grpCodeHd", item.get("lastGrpCode"));
-				params.put("orgCodeHd", item.get("lastOrgCode"));
-			} else if (sessionVO.getMemberLevel() == 2) {
+			params.put("deptCodeHd", item.get("lastDeptCode"));
+			params.put("grpCodeHd", item.get("lastGrpCode"));
+			params.put("orgCodeHd", item.get("lastOrgCode"));
+
+			/*else if (sessionVO.getMemberLevel() == 2) {
 				params.put("grpCodeHd", item.get("lastGrpCode"));
 				params.put("orgCodeHd", item.get("lastOrgCode"));
 			} else if (sessionVO.getMemberLevel() == 1) {
 				params.put("orgCodeHd", item.get("lastOrgCode"));
-			}
-		}*/
+			}*/
+		}
 
 		String MemType = params.get("memTypeCom").toString();
 		if (MemType.equals("2803")) {
@@ -1179,10 +1179,36 @@ public class MemberListController {
 	}
 
 	@RequestMapping(value = "/checkSponsor.do", method = RequestMethod.GET)
-	public ResponseEntity<ReturnMessage> checkSponsor(@RequestParam Map<String, Object> params, Model model) {
+	public ResponseEntity<ReturnMessage> checkSponsor(@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) {
 
 		logger.debug("checkSponsor_params : {} " + params);
 		// modify jgkim
+
+		if (sessionVO.getUserTypeId() == 1) {
+			params.put("userTypeId", sessionVO.getUserTypeId());
+			params.put("userId", sessionVO.getUserId());
+
+			EgovMap item = new EgovMap();
+			item = (EgovMap) memberListService.getOrgDtls(params);
+
+			if(sessionVO.getMemberLevel() == 3) {
+				logger.debug("3");
+				params.put("deptCodeHd", item.get("lastDeptCode"));
+				params.put("grpCodeHd", item.get("lastGrpCode"));
+				params.put("orgCodeHd", item.get("lastOrgCode"));
+			} else if(sessionVO.getMemberLevel() == 2) {
+				logger.debug("2");
+				params.put("deptCodeHd", item.get("lastDeptCode"));
+				params.put("grpCodeHd", item.get("lastGrpCode"));
+			} else if(sessionVO.getMemberLevel() == 1) {
+				logger.debug("1");
+				params.put("orgCodeHd", item.get("lastOrgCode"));
+			}
+//			params.put("deptCodeHd", item.get("lastDeptCode"));
+//			params.put("grpCodeHd", item.get("lastGrpCode"));
+//			params.put("orgCodeHd", item.get("lastOrgCode"));
+		}
+
 		EgovMap checkSponsor = memberListService.checkSponsor(params);
 
 		// 결과 만들기.

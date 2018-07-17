@@ -343,15 +343,6 @@
                           <if test="position != null and position != ''">
                             AND Extent5.MEM_LVL= #{position}
                          </if>
-                         <if test="deptCodeHd != null and deptCodeHd != ''">
-                            AND Extent5.LAST_DEPT_CODE = #{deptCodeHd}
-                         </if>
-                         <if test="grpCodeHd != null and grpCodeHd != ''">
-                            AND Extent5.LAST_GRP_CODE = #{grpCodeHd}
-                         </if>
-                         <if test="orgCodeHd != null and orgCodeHd != ''">
-                            AND Extent5.LAST_ORG_CODE= #{orgCodeHd}
-                         </if>
 
 						<choose>
 						        <when test="memberLevel == 1">
@@ -3788,9 +3779,22 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
     <select id="checkSponsor"  parameterType="Map" resultType="egovMap">
     <!-- modify jgkim -->
-        SELECT MEM_CODE, NAME, NRIC
-        FROM ORG0001D
-        WHERE MEM_CODE = #{sponsorCd}
+        SELECT a.MEM_CODE, a.NAME, a.NRIC
+        FROM ORG0001D a
+        <if test="userTypeId != null and userTypeId != '' ">
+        INNER JOIN ORG0005D b
+            ON a.MEM_ID = b.MEM_ID
+        </if>
+        WHERE a.MEM_CODE = #{sponsorCd}
+        <if test="deptCodeHd != null and deptCodeHd != '' ">
+            and b.LAST_DEPT_CODE = #{deptCodeHd}
+        </if>
+        <if test="grpCodeHd != null and grpCodeHd != '' ">
+            and b.LAST_GRP_CODE = #{grpCodeHd}
+        </if>
+        <if test="orgCodeHd != null and orgCodeHd != '' ">
+            and b.LAST_ORG_CODE = #{orgCodeHd}
+        </if>
     </select>
 
 

@@ -248,7 +248,7 @@ console.log("login");
                     if(result.data.userTypeId == "2") {
 
                         // Check agreement confirmation status from HP Applicant table
-                        Common.ajax("GET", "/organization/getCDCnfm.do", {userId : userId}, function(result1) {
+                        Common.ajax("GET", "/organization/getCDInfo.do", {userId : userId}, function(result1) {
                             if(result1.status == "Y") {
                                 fn_goMain();
                             } else if(result1.status == "N") {
@@ -285,7 +285,7 @@ console.log("login");
 
     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
     function validateCDcnfm() {
-        Common.ajax("GET", "/organization/getCDCnfm.do", {userId : $("#userId").value()}, function(result1) {
+        Common.ajax("GET", "/organization/getCDInfo.do", {userId : $("#userId").value()}, function(result1) {
             if(result1.status == "Y") {
                 return "Y";
             } else {
