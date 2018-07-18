@@ -25,11 +25,11 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @RequestMapping(value = "/services/as/report")
 public class ASReportController {
 	private static final Logger logger = LoggerFactory.getLogger(ASReportController.class);
-	
+
 	@Resource(name = "ASReportService")
 	private ASReportService ASReportService;
-	
-	
+
+
 	@RequestMapping(value = "/asReportPop.do")
 	public String asReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		EgovMap orderNum = ASReportService.selectOrderNum();
@@ -39,7 +39,7 @@ public class ASReportController {
 		// 호출될 화면
 		return "services/as/asReportPop";
 	}
-	
+
 	/**
 	 * Search rule book management list
 	 *
@@ -51,46 +51,49 @@ public class ASReportController {
 	@RequestMapping(value = "/selectMemberCodeList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectMemberCode( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
-		List<EgovMap> memberCode = ASReportService.selectMemberCodeList();
+		/*
+		 *BY KV - branch - CT
+		 */
+		List<EgovMap> memberCode = ASReportService.selectMemberCodeList(params);
 		//model.addAttribute("branchList", branchList);
 		logger.debug("memberCode {}", memberCode);
 		return ResponseEntity.ok(memberCode);
 	}
-	
+
 	@RequestMapping(value = "/asRawDataPop.do")
 	public String asRawDataPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "services/as/asRawDataPop";
 	}
-	
+
 	@RequestMapping(value = "/asYellowSheetPop.do")
 	public String asYellowSheetPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "services/as/asYellowSheetPop";
 	}
-	
+
 	@RequestMapping(value = "/asLogBookListPop.do")
 	public String asPerformanceReportPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "services/as/asLogBookListPop";
 	}
-	
+
 	@RequestMapping(value = "/asSummaryListPop.do")
 	public String asSummaryListPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "services/as/asSummaryListPop";
 	}
-	
+
 	@RequestMapping(value = "/asLedgerPop.do")
 	public String asLedgerPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		logger.debug("params {}", params);
-		
+
 		model.addAttribute("ASRNo", params.get("ASRNO"));
 		// 호출될 화면
 		return "services/as/asLedgerPop";
 	}
-	
-	
+
+
 	/**
 	 * Search rule book management list
 	 *
@@ -104,7 +107,7 @@ public class ASReportController {
 		List<EgovMap> viewLedger = ASReportService.selectViewLedger(params);
 		return ResponseEntity.ok(viewLedger);
 	}
-	
+
 
 	/**
 	 * Search rule book management list
@@ -122,5 +125,5 @@ public class ASReportController {
 		logger.debug("memberCode {}", memberCode);
 		return ResponseEntity.ok(memberCode);
 	}
-	
+
 }
