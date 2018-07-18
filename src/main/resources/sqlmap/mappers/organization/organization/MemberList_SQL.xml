@@ -2974,6 +2974,12 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ]]>
     </update>
 
+
+<update id="updateMemberValidateDt" parameterType="Map">
+     UPDATE SYS0047M SET USER_VAL_ID_TO =TO_DATE(#{memberValidDt},'DD-MM-YYYY')  ,USER_UPD_DT= SYSDATE,USER_UPD_USER_ID = #{user_id} WHERE USER_NAME = #{membercode}
+    </update>
+
+
     <update id="memberListUpdate_member" parameterType="Map">
      <![CDATA[
         UPDATE ORG0001D
@@ -3936,6 +3942,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         SELECT BRNCH_ID,CODE BRANCH_CODE, NAME BRANCH_NAME FROM SYS0005M WHERE STUS_ID = 1 order by branch_code
     </select>
 
+    <select id="selectMemberValidDate" parameterType="Map" resultType="egovMap">
+        select TO_CHAR(USER_VAL_ID_TO, 'DD/MM/YYYY') memberValidTo  from sys0047m where user_name = #{membercode} and USER_STUS_ID = 1
+    </select>
+
     <update id="updateMemberBranch" parameterType="Map" >
         UPDATE ORG0001D
 		   SET BRNCH = #{selectBranch}
@@ -4035,7 +4045,6 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 		    INSERT (AG_ID, MEM_ID, AG_TYPE_ID, AG_STUS_ID, AG_START_DT, AG_EXPR_DT, AG_CRT_USER_ID, AG_CRT_DT, AG_UPD_USER_ID, AG_UPD_DT)
 		    VALUES (ORG0002D_AG_ID_SEQ.NEXTVAL, #{MemberID}, '1416', '1', SYSDATE, TO_DATE(#{codyPaExpr}, 'DD/MM/YYYY'), #{user_id}, SYSDATE, #{user_id}, SYSDATE)
        </update>
-
 
      <update id="updateHpApprovalReject" parameterType="Map">
 
