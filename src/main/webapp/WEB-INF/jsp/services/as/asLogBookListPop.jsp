@@ -6,10 +6,12 @@ $(document).ready(function(){
 	$('.multy_select').on("change", function() {
         //console.log($(this).val());
     }).multipleSelect({});
-	
-	doGetCombo('/services/as/report/selectMemberCodeList.do', '', '','CTCode', 'S' ,  '');
+
+	//doGetCombo('/services/as/report/selectMemberCodeList.do', '', '','CTCode', 'S' ,  '');
 	doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'S', '');
 });
+
+
 
 function fn_validation(){
     if($("#asAppDate").val() == ''){
@@ -19,23 +21,46 @@ function fn_validation(){
     return true;
 }
 
+function fn_changeCT() {
+	console.log("fn_changeCT");
+	var branchCd = $("#branch").val();
+
+	doGetCombo('/services/as/report/selectMemberCodeList.do', branchCd, '','CTCode', 'S' ,  '');
+
+}
 function fn_openGenerate(){
+	console.log("fn_openGenerate");
     var date = new Date();
     var month = date.getMonth()+1;
     var day = date.getDate();
+    var runNo1 = 0;
+    var asType = "";
     if(date.getDate() < 10){
         day = "0"+date.getDate();
     }
     if(fn_validation()){
-        
          var ASAppDate = $("#asAppDate").val() == '' ? "" : $("#asAppDate").val();
          var ASCTCode = $("#CTCode").val() == '' ? "" : $("#CTCode option:selected").text();
          var ASBranch = $("#branch").val() == '' ? "" : $("#branch option:selected").text();
          var ASCTGroup = $("#CTGroup").val() == '' ? "" : $("#CTGroup option:selected").text();
          var whereSql="";
-         
-         if($("#asType").val() != '' && $("#asType").val() != null){
-        	 whereSql+= " AND ae.AS_TYPE_ID IN(" + $("#asType").val() + ") ";
+
+         if($("#asType :checked").length > 0){
+             $("#asType :checked").each(function(i, mul){
+                 if($(mul).val() != "0"){
+                     if(runNo1 > 0){
+                    	 asType += ", "+$(mul).val()+" ";
+                     }else{
+                    	 asType += " "+$(mul).val()+" ";
+                     }
+                     runNo1 += 1;
+                 }
+             });
+         }
+
+         if($("#asType :checked").val() != '' && $("#asType :checked").val() != null){
+
+        	 whereSql+= " AND ae.AS_TYPE_ID IN (" + asType + ") ";
          }
          if($("#asAppDate").val() != ''  && $("#asAppDate").val() != null){
              whereSql+= " AND ae.AS_APPNT_DT = to_date('" + $("#asAppDate").val() + "','DD/MM/YYYY') AND  ae.AS_Stus_ID = 1";
@@ -60,13 +85,13 @@ function fn_openGenerate(){
         $("#reportFormList #V_ASCTCODE").val(ASCTCode);
         $("#reportFormList #V_ASBRANCH").val(ASBranch);
         $("#reportFormList #V_ASCTGROUP").val(ASCTGroup);
-        
+
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
-        
+
         Common.report("reportFormList", option);
-        
+
     }
 }
 
@@ -83,7 +108,7 @@ $.fn.clearForm = function() {
         }else if (tag === 'select'){
             this.selectedIndex = -1;
         }
-        
+
     });
 };
 </script>
@@ -126,9 +151,10 @@ $.fn.clearForm = function() {
     <th scope="row">AS Type</th>
     <td>
     <select class="multy_select w100p" multiple="multiple" id="asType" name="asType" >
-        <option value="674">Manual AS</option>
-        <option value="675">Auto AS</option>
-    </select>
+     <option value="674">Manual AS</option>
+     <option value="675">Auto AS</option>
+</select>
+
     </td>
     <th scope="row"></th>
     <td>
@@ -144,16 +170,18 @@ $.fn.clearForm = function() {
     <select id="CTCode" name="CTCode">
     </select>
     </td>
+
 </tr>
 <tr>
     <th scope="row">DSC Branch</th>
     <td>
-    <select id="branch" name="branch">
+    <select id="branch" name="branch" ONCHANGE= "javascript: fn_changeCT()">
     </select>
     </td>
     <th scope="row">CT Group</th>
     <td>
     <select id="CTGroup" name="CTGroup">
+        <option value="" selected>Choose One</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
