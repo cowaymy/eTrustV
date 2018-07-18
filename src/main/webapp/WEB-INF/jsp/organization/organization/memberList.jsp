@@ -174,6 +174,20 @@ function fn_clickHpApproval(){
     })
 }
 
+function fn_addMemberValidDate(){ // cyc
+
+    /* var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
+
+
+    if(selectedItems.length  >  0) {
+    	membercode  =selectedItems[0].item.membercode;
+    } */
+
+
+    Common.popupDiv("/organization/memberValidDateEdit.do" ,{membercode:membercode},null, null,true,'_editDiv3New' );
+
+}
+
 function fn_clickHpReject(){
       Common.confirm("Do you want to reject the HP? <br/> Member Code :  "+membercode+"  <br/> Name :"+ memberName , function() {
     	  if($("#userRole").val() == 111 || $("#userRole").val() == 112 || $("#userRole").val() == 113 || $("#userRole").val() == 114) {
@@ -501,16 +515,13 @@ var gridPros = {
 
 
 function fn_memberEditPop(){
-         //Common.popupDiv("/organization/memberListEditPop.do?isPop=true", "searchForm");
          Common.popupDiv("/organization/memberListEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
-         //Common.popupDiv("/organization/memberListEditPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-}
+
+       }
 
 function fn_branchEditPop(){
-    //Common.popupDiv("/organization/memberListEditPop.do?isPop=true", "searchForm");
-    Common.popupDiv("/organization/memberListBranchEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
-    //Common.popupDiv("/organization/memberListEditPop.do?isPop=true&MemberID=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "memberid")+"&MemberType=" + AUIGrid.getCellValue(myGridID, event.rowIndex, "membertype"), "");
-}
+     Common.popupDiv("/organization/memberListBranchEditPop.do?isPop=true&memberCode=" + membercode+"&MemberID=" + memberid+"&memType=" + memberType, "");
+   }
 
 
 
@@ -644,6 +655,9 @@ function fn_genRawData() {
 </c:if>
  <c:if test="${PAGE_AUTH.funcUserDefine7 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_clickHpApproval()">HP Approval</a></p></li>
+</c:if>
+ <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+    <li><p class="btn_blue"><a href="javascript:fn_addMemberValidDate()">Member Valid date</a></p></li>
 </c:if>
  <c:if test="${PAGE_AUTH.funcUserDefine8 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_clickHpReject()">HP Reject</a></p></li>
