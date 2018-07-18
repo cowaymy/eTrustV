@@ -175,7 +175,7 @@ public interface MemberListService {
 	EgovMap selectMemberValidDate(Map<String, Object> params);
 
 
-    EgovMap getCDCnfm(Map<String, Object> params);
+    //EgovMap getCDCnfm(Map<String, Object> params);
 
 
     void updateCodyCfm(Map<String, Object> params) throws Exception;
