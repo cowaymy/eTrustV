@@ -17,25 +17,28 @@ public class ASReportServiceimpl extends EgovAbstractServiceImpl implements ASRe
 
 	@Resource(name = "ASReportMapper")
 	private ASReportMapper ASReportMapper;
-	
+
+	/*
+	 *BY KV - branch - CT
+	 */
 	@Override
-	public List<EgovMap> selectMemberCodeList() {
-		return ASReportMapper.selectMemberCodeList();
+	public List<EgovMap> selectMemberCodeList(Map<String, Object> params) {
+		return ASReportMapper.selectMemberCodeList(params);
 	}
-	
+
 	@Override
 	public EgovMap selectOrderNum() {
 		return ASReportMapper.selectOrderNum();
 	}
-	
+
 	@Override
 	public List<EgovMap> selectViewLedger(Map<String, Object> params) {
 		return ASReportMapper.selectViewLedger(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectMemCodeList() {
 		return ASReportMapper.selectMemCodeList();
 	}
-	
+
 }
