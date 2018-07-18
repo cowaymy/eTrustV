@@ -184,6 +184,8 @@ public interface MemberListService {
 
 	EgovMap getOrgDtls(Map<String, Object> params);
 
+	EgovMap getCDInfo(Map<String, Object> params);
+
 
 
 }
