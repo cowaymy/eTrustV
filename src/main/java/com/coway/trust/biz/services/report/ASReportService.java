@@ -7,11 +7,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface ASReportService {
 
-	List<EgovMap> selectMemberCodeList();
-	
+	/*
+	 *BY KV - branch - CT add params
+	 */
+	List<EgovMap> selectMemberCodeList(Map<String, Object> params);
+
 	EgovMap selectOrderNum();
-	
+
 	List<EgovMap> selectViewLedger(Map<String, Object> params);
-	
+
 	List<EgovMap> selectMemCodeList();
 }
