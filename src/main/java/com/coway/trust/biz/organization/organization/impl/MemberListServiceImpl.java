@@ -1523,6 +1523,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 
 	@Override
+	public  int    UpdateMemberValidate(Map<String, Object> params) {
+		return memberListMapper.updateMemberValidate(params);
+	}
+
+	@Override
 	public int traineeUpdateInfo(Map<String, Object> params,SessionVO sessionVO) {
 
 		int result = 0;
@@ -2116,6 +2121,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	}
 
 	@Override
+	public EgovMap selectMemberValidDate(Map<String, Object> params){
+		return memberListMapper.selectMemberValidDate(params);
+	}
+
+
+	@Override
 	public void updateMemberBranch(Map<String, Object> params) throws Exception {
 
 		memberListMapper.updateMemberBranch(params);
@@ -2197,6 +2208,11 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public void memberCodyPaUpdate(Map<String, Object> params) {
 		memberListMapper.updateCodyPaDate(params);
 
+	}
+
+	@Override
+	public void MemberValidateUpdate(Map<String,Object> params){
+		memberListMapper.updateMemberValidateDt(params);
 	}
 
 	@Override
