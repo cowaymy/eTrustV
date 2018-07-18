@@ -2,6 +2,7 @@ package com.coway.trust.web.organization.organization;
 
 import java.io.File;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -858,6 +859,19 @@ public class MemberListController {
 		return "organization/organization/memberListEditPop";
 	}
 
+	@RequestMapping(value = "/memberValidDateEdit.do")
+	public String memberValidDateEdit(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		EgovMap memberValidDate = memberListService.selectMemberValidDate(params);
+		logger.debug("memValidDate : {}", memberValidDate);
+
+		//model.addAttribute("memType", params.get("memType"));
+		model.addAttribute("membercode", params.get("membercode"));
+		model.addAttribute("memValidDate", memberValidDate);
+		// 호출될 화면
+		return "organization/organization/memberValidDateEdit";
+	}
+
 	@RequestMapping(value = "/getMemberListMemberView", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getMemberListMemberView(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 
@@ -1341,6 +1355,52 @@ public class MemberListController {
     		resultUpc3 = memberListService.memberListUpdate_memorg2(formMap);
 
 		}
+		// 결과 만들기.
+   	ReturnMessage message = new ReturnMessage();
+   	if(memCode.equals("") && memCode.equals(null)){
+   		message.setMessage("fail saved");
+   	}else{
+   		message.setMessage("Compelete to Edit a Member Code : " +memCode);
+   	}
+   	logger.debug("message : {}", message);
+
+   	System.out.println("msg   " + success);
+//
+	return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/memberValidateUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateMemberValidate(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) throws Exception {
+
+
+		Boolean success = false;
+		String msg = "";
+
+		int userId = sessionVO.getUserId();
+
+		LinkedHashMap  ResultM = (LinkedHashMap)  params.get("ResultM");
+
+		HashMap   mp= new HashMap();
+		mp.put("membercode", ResultM.get("membercode"));
+		mp.put("memberValidDt", ResultM.get("memberValidDt"));
+		mp.put("user_id",userId);
+
+
+		logger.debug("Member Valid Result ===>"+mp.toString());
+
+		//formMap.put("user_id", userId);
+
+
+		String memCode = "";
+		boolean update = false;
+
+		//logger.debug("memCode : {}", formMap.get("memCode"));
+
+		//update
+		memCode =  (String)mp.get("membercode");
+
+		 memberListService.MemberValidateUpdate(mp);
+
 		// 결과 만들기.
    	ReturnMessage message = new ReturnMessage();
    	if(memCode.equals("") && memCode.equals(null)){
