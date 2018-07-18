@@ -138,6 +138,8 @@ public interface MemberListService {
 
 	void memberCodyPaUpdate(Map<String, Object> formMap);
 
+	void MemberValidateUpdate(Map<String,Object> formMap);
+
 	boolean updateHpApprovalReject(Map<String, Object> params);
 
 	List<EgovMap> selectMemberType(Map<String, Object> params);
@@ -168,9 +170,20 @@ public interface MemberListService {
 
     EgovMap getUserRole(Map<String, Object> params);
 
+
+
+	EgovMap selectMemberValidDate(Map<String, Object> params);
+
+
+    EgovMap getCDCnfm(Map<String, Object> params);
+
+
     void updateCodyCfm(Map<String, Object> params) throws Exception;
 
-    EgovMap getCDInfo(Map<String, Object> params);
+	int UpdateMemberValidate(Map<String, Object> params);
 
-    EgovMap getOrgDtls(Map<String, Object> params);
+	EgovMap getOrgDtls(Map<String, Object> params);
+
+
+
 }
