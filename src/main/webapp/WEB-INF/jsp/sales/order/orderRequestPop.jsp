@@ -1579,6 +1579,7 @@
 
         if(valid == 'isInValid') {
             Common.alert(msgT + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+            fn_disableControlAexc();
             isTrue = false;
         }
 
