@@ -9,11 +9,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("ASReportMapper")
 public interface ASReportMapper {
 
-	List<EgovMap> selectMemberCodeList();
-	
+	/*
+	 *BY KV - branch - CT add params
+	 */
+	List<EgovMap> selectMemberCodeList(Map<String, Object> params);
+
 	EgovMap selectOrderNum();
-	
+
 	List<EgovMap> selectViewLedger(Map<String, Object> params);
-	
+
 	List<EgovMap> selectMemCodeList();
 }
