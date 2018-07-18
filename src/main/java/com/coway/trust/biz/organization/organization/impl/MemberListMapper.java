@@ -222,6 +222,8 @@ public interface MemberListMapper {
 
 	void updateCodyPaDate(Map<String, Object> params);
 
+	void updateMemberValidateDt(Map<String, Object> params);
+
 	int updateHpApprovalReject(Map<String, Object> params);
 
 	List<EgovMap> selectMemberType(Map<String, Object> params);
@@ -256,7 +258,11 @@ public interface MemberListMapper {
 
 	EgovMap getUserRole(Map<String, Object> params);
 
-	EgovMap getCDDtls(Map<String, Object> params);
+
+	EgovMap selectMemberValidDate(Map<String, Object> params);
+
+
+	EgovMap getCDCnfm(Map<String, Object> params);
 
     void updateCodyCfm(Map<String, Object> params) throws Exception;
 
@@ -266,7 +272,10 @@ public interface MemberListMapper {
 
     EgovMap getCdAplId(Map<String, Object> params);
 
-    void insertORG03D(Map<String, Object> params);
+	int updateMemberValidate(Map<String, Object> params);
 
-    EgovMap getOrgDtls(Map<String, Object> params);
+	void insertORG03D(Map<String, Object> params);
+	
+	EgovMap getOrgDtls(Map<String, Object> params);
+
 }
