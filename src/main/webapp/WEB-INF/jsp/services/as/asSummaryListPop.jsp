@@ -47,11 +47,11 @@ function fn_openGenerate(){
         day = "0"+date.getDate();
     }
     if(fn_validation()){
-        
+
         var whereSql = "";
         var asNoFrom = "";
         var asNoTo = "";
-        
+
         if($("#asNumFr").val() != '' && $("#asNumTo").val() != '' && $("#asNumFr").val() != null && $("#asNumTo").val() != null){
             asNoFrom = $("#asNumFr").val();
             asNoTo =    $("#asNumTo").val();
@@ -74,7 +74,7 @@ function fn_openGenerate(){
         	dscCode = $("#branch  option:selected").text();
         	whereSql +=   "AND ae.AS_BRNCH_ID = " + $("#branch").val() + " ";
         }
-        
+
         var appointDateFrom = "";
         var appointDateTo = "";
         if($("#appDtFr").val() != '' && $("#appDtTo").val() != '' && $("#appDtFr").val() != null && $("#appDtTo").val() != null){
@@ -82,7 +82,7 @@ function fn_openGenerate(){
         	appointDateTo = $("#appDtTo").val();
         	whereSql +=  "AND ae.AS_APPNT_DT between to_date('" + $("#appDtFr").val() + "', 'DD/MM/YYYY') AND to_date('" + $("#appDtTo").val()  + "', 'DD/MM/YYYY')  ";
         }
-        
+
         var requestDateFrom = "";
         var requestDateTo = "";
         if($("#reqDtFr").val() != '' && $("#reqDtTo").val() != '' && $("#reqDtFr").val() != null && $("#reqDtTo").val() != null){
@@ -90,32 +90,32 @@ function fn_openGenerate(){
         	requestDateTo = $("#reqDtTo").val();
         	whereSql +=  "AND ae.AS_REQST_DT  between to_date('" + $("#reqDtFr").val() + "', 'DD/MM/YYYY') AND to_date('" + $("#reqDtTo").val()  + "', 'DD/MM/YYYY') ";
         }
-        
+
         var asStus = "";
         if($("#asStatus").val() != '' && $("#asStatus").val() != null){
         	asStus = $("#asStatus  option:selected").text();
         	whereSql +=   "AND ae.AS_STUS_ID = " + $("#asStatus").val() + " ";
         }
-        
+
         var asTypeId = "";
         if($("#asType").val() != '' &&  $("#asType").val() != null){
         	asTypeId = $("#asType  option:selected").text();
         	if($("#asType").val() == "0"){
-        		alert(111);
+        		
         		whereSql +=   "AND (ae.AS_TYPE_ID = 674 OR ae.AS_TYPE_ID = 675) ";
         	}else{
-        		alert(22);
+        	
         		whereSql +=   "AND ae.AS_TYPE_ID = " + $("#asType").val() + " ";
         	}
         }
-        
+
         var asGroup = "";
         if($("#CTGroup").val() != '' && $("#CTGroup").val() != null){
         	asGroup = $("#CTGroup  option:selected").text();
         	whereSql +=   "AND ae.AS_MEM_GRP = '" + $("#CTGroup").val() + "' ";
         }
         var asSort = "";
-        
+
         $("#reportFormAS #reportFileName").val('/services/ASSummaryList.rpt');
         $("#reportFormAS #reportDownFileName").val("ASSummaryList_"+day+month+date.getFullYear());
         $("#reportFormAS #viewType").val("PDF");
@@ -141,9 +141,9 @@ function fn_openGenerate(){
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
-        
+
         Common.report("reportFormAS", option);
-        
+
     }
 }
 </script>
@@ -271,6 +271,7 @@ function fn_openGenerate(){
     <th scope="row">CT Group</th>
     <td colspan="3">
     <select id="CTGroup">
+        <option value="">Choose One</option>
         <option value="A">A</option>
         <option value="B">B</option>
         <option value="C">C</option>
