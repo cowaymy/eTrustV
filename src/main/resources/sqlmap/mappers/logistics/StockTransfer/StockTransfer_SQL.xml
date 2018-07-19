@@ -214,6 +214,7 @@
            and l56.stk_type_id = s15.code_id
            and l56.stk_ctgry_id = s11.code_id
            and l56.stk_code = s26.stk_code
+           and s26.STUS_CODE_ID = 1
 		   and l56.loc_id = #{toloc}
 		   <if test="ctype != null and ctype !=''">
 		      and l56.stk_type_id in
@@ -304,7 +305,7 @@
             FROM LOG0055D
            WHERE NVL (DEL_FLAG, 'N') <![CDATA[<>]]> 'Y'
          AND   REQST_NO= #{reqstno}
-         AND  ITM_CODE =#{itmcd}  
+         AND  ITM_CODE =#{itmcd}
          GROUP BY REQST_NO , ITM_CODE
     </select>
     <delete id="deliveryStockTransferItmDel" parameterType="Map">
@@ -544,28 +545,28 @@
      <delete id="updateRequestTransferStus" parameterType="Map">
         update LOG0047M set REQST_STUS = 'O' where REQST_NO = #{reqstno}
      </delete>
-     
+
      <update id="updateStockHead" parameterType="Map">
         UPDATE LOG0047M
            SET REQST_DEL = 'Y'
          WHERE REQST_NO = #{reqstono}
      </update>
-     
+
     <delete id="deleteStockDelete" parameterType="Map">
         delete from LOG0048D where REQST_NO = #{reqstono}
     </delete>
-    
+
     <delete id="deleteStockBooking" parameterType="Map">
-        delete from log0075m where REQST_NO = #{reqstono} 
+        delete from log0075m where REQST_NO = #{reqstono}
     </delete>
-    
+
     <select id="selectdeliveryHead" parameterType="Map" resultType="integer">
         select count(*)cnt From log0055d where reqst_no=#{reqstono}
     </select>
-    
+
     <select id="selectAvaliableStockQty" parameterType="Map" resultType="integer">
         SELECT CASE WHEN (L56.QTY - NVL(L75.BOOKQTY , 0)) <![CDATA[<]]> #{rqty}  THEN 1 ELSE 0 END RESULT
-		 FROM 
+		 FROM
 		  LOG0056M L56 ,
 		 (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <![CDATA[<>]]> 'Y'
 		  AND  reqst_no IN (SELECT reqst_no FROM log0047m WHERE NVL (REQST_DEL, 'N') <![CDATA[<>]]> 'Y')
@@ -576,9 +577,9 @@
 		AND L56.STK_CODE = #{itmcd}
 		AND L56.LOC_ID = #{tlocation}
     </select>
-    
+
   <select id="selectDelvryGRcmplt" parameterType="String" resultType="Map">
-    SELECT 
+    SELECT
     DELVRY_NO,
     DELVRY_DT,
     DELVRY_GI_DT,
@@ -586,9 +587,9 @@
     NVL(DELVRY_CMPLT,'N') DEL_CMPLT,
     NVL(DELVRY_GI_CMPLT,'N') DEL_GI_CMPLT,
     NVL(DELVRY_GR_CMPLT,'N') DEL_GR_CMPLT
-    FROM LOG0054M 
+    FROM LOG0054M
     WHERE DELVRY_NO=#{delyno}
     </select>
-    
-    
+
+
 </mapper>
