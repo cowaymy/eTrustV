@@ -101,10 +101,10 @@ function fn_openGenerate(){
         if($("#asType").val() != '' &&  $("#asType").val() != null){
         	asTypeId = $("#asType  option:selected").text();
         	if($("#asType").val() == "0"){
-        		
+
         		whereSql +=   "AND (ae.AS_TYPE_ID = 674 OR ae.AS_TYPE_ID = 675) ";
         	}else{
-        	
+
         		whereSql +=   "AND ae.AS_TYPE_ID = " + $("#asType").val() + " ";
         	}
         }
