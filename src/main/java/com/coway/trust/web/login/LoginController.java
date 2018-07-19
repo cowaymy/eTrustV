@@ -118,7 +118,7 @@ public class LoginController {
 		LOGGER.debug("findIdPop: {} ", params.toString());
 		return "/login/findIdPop";
 	}
-	
+
 	// UserSetting Popup
 	@RequestMapping(value = "/userSettingPop.do")
 	public String userSettingPop(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
@@ -160,7 +160,7 @@ public class LoginController {
 
 		int cnt = loginService.updatePassWord(params, sessionVO.getUserId());
 
-		// 결과 만들기 
+		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(cnt);
@@ -169,40 +169,56 @@ public class LoginController {
 		return ResponseEntity.ok(message);
 
 	}
-	
+
 	@RequestMapping(value = "/udateUserInfoSetting.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updateUserSetting(@RequestBody Map<String, Object> params,	SessionVO sessionVO) 
+	public ResponseEntity<ReturnMessage> updateUserSetting(@RequestBody Map<String, Object> params,	SessionVO sessionVO)
 	{
 		LOGGER.debug("udateUserInfoSetting: " + params.toString());
-		
+
 		int cnt = loginService.updateUserSetting(params, sessionVO.getUserId());
-		
-		// 결과 만들기 
+
+		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(cnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
+
 		return ResponseEntity.ok(message);
-		
+
 	}
-	
+
 	@RequestMapping(value = "/selectSecureResnList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectSecureResnList(@RequestParam Map<String, Object> params, ModelMap model) 
+	public ResponseEntity<List<EgovMap>> selectSecureResnList(@RequestParam Map<String, Object> params, ModelMap model)
 	{
 		LOGGER.debug("selectSecureResnList : {}", params.toString());
-		
+
 		List<EgovMap> selectSecureResnList = loginService.selectSecureResnList(params);
 		return ResponseEntity.ok(selectSecureResnList);
 	}
-	
+
 	@RequestMapping(value="/myInfo.do", method = RequestMethod.GET)
 	public String myInfo(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO){
 		model.addAttribute("userSettingFlag", sessionVO);
 		LOGGER.debug("userSettingPop: {} ,getUserId: {}", params.toString(),sessionVO.getUserId());
 		return "/login/myInfo";
-		
-		
+
+
 	}
-	
+
+    // 2018-07-19 - LaiKW - HP Pop up
+    @RequestMapping(value = "/loginPop.do")
+    public String loginPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+    	LOGGER.debug("==================== loginPop.do ====================");
+
+    	LOGGER.debug("params : {}", params);
+        model.put("loginUserId", (String) params.get("loginUserId"));
+        model.put("os", (String) params.get("os"));
+        model.put("browser", (String) params.get("browser"));
+        model.put("userId", (String) params.get("userId"));
+        model.put("password", (String) params.get("password"));
+
+        return "/login/loginPop";
+    }
+
 }

@@ -205,7 +205,7 @@
     function fn_login() {
         var userId = $("#userId").val();
         var password = $("#password").val();
-console.log("login");
+        console.log("login");
         if (userId == "") {
             if ($("#popup_wrap").attr("alert") != "Y") {
                 Common.alert("<spring:message code='sys.msg.necessary' arguments='ID'/>");
@@ -244,11 +244,15 @@ console.log("login");
                 else {  // 재로그인을 하지 않을려면, popup에서 호출.
                     fn_configCookies(userId);
 
+                    // 2018-07-19 - LaiKW - HP Pop Up (Temporary for July 2018)
+                    if(result.data.userTypeId == "1") {
+                        Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
+                    }
                     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
-                    if(result.data.userTypeId == "2") {
+                   /* else if(result.data.userTypeId == "2") {
 
                         // Check agreement confirmation status from HP Applicant table
-                        Common.ajax("GET", "/organization/getCDInfo.do", {userId : userId}, function(result1) {
+                        Common.ajax("GET", "/organization/getCDInfo", {userId : userId}, function(result1) {
                             if(result1.status == "Y") {
                                 fn_goMain();
                             } else if(result1.status == "N") {
@@ -258,7 +262,8 @@ console.log("login");
                             }
                         });
                     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - End
-                    } else {
+                    }*/
+                    else {
                         if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
                             fn_goMain();
                         }else{
@@ -285,7 +290,7 @@ console.log("login");
 
     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
     function validateCDcnfm() {
-        Common.ajax("GET", "/organization/getCDInfo.do", {userId : $("#userId").value()}, function(result1) {
+        Common.ajax("GET", "/organization/getCDInfo", {userId : $("#userId").value()}, function(result1) {
             if(result1.status == "Y") {
                 return "Y";
             } else {
