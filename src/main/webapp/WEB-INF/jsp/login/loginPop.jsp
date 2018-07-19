@@ -113,7 +113,7 @@ input {
 
 <form id="popForm" style="width: 100%">
 
-    <div id="PDF" style="height: 670px">`
+    <div id="PDF" style="height: 550px">`
         <script>PDFObject.embed("/resources/report/prd/organization/2019_Half_Yearly_Incentive_Trip_v2.pdf", "#PDF");</script>
     </div>
 
