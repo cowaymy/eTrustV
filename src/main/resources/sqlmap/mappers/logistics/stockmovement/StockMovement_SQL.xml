@@ -257,6 +257,7 @@
            and l56.stk_type_id = s15.code_id
            and l56.stk_ctgry_id = s11.code_id
            and l56.stk_code = s26.stk_code
+           and s26.STUS_CODE_ID = 1
            and l56.loc_id = #{toloc}
            <if test="ctype != null and ctype !=''">
               and l56.stk_type_id in
