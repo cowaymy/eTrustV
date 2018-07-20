@@ -5,36 +5,36 @@
 <select id="selectStaffClaimList" parameterType="Map" resultType="egovMap">
 /* staffClaimMapper.selectStaffClaimList */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T.CLM_NO, 
-       T.MEM_ACC_ID, 
-       T.MEM_ACC_NAME, 
-       TO_DATE(T.CLM_MONTH, 'YYYYMM') AS CLM_MONTH, 
-       T.REQST_DT, 
-       'MYR' AS CUR, 
-       T.TOT_AMT, 
+SELECT T.CLM_NO,
+       T.MEM_ACC_ID,
+       T.MEM_ACC_NAME,
+       TO_DATE(T.CLM_MONTH, 'YYYYMM') AS CLM_MONTH,
+       T.REQST_DT,
+       'MYR' AS CUR,
+       T.TOT_AMT,
        T.APPV_PRCSS_NO,
-       T.APPV_PRCSS_STUS_CODE, 
-       T.APPV_PRCSS_STUS, 
-       T.APPV_PRCSS_DT 
-FROM   (SELECT T1.CLM_NO, 
-               T1.MEM_ACC_ID, 
-               T2.MEM_ACC_NAME, 
-               T1.CLM_MONTH, 
-               T1.TOT_AMT, 
-               T1.APPV_PRCSS_NO, 
-               T4.REQST_DT, 
-               Nvl (T4.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE, 
-               Nvl (( CASE T4.APPV_PRCSS_STUS 
-                        WHEN 'R' THEN 'Request' 
-                        WHEN 'P' THEN 'Approve In-Progress' 
-                        WHEN 'A' THEN 'Approved' 
-                        WHEN 'J' THEN 'Rejected' 
-                      END ), 'Temporary Save') AS APPV_PRCSS_STUS, 
-               T4.APPV_PRCSS_DT 
-        FROM   FCM0019M T1 
-               LEFT JOIN FCM0006M T2 
-                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID 
-               LEFT JOIN FCM0004M T4 
+       T.APPV_PRCSS_STUS_CODE,
+       T.APPV_PRCSS_STUS,
+       T.APPV_PRCSS_DT
+FROM   (SELECT T1.CLM_NO,
+               T1.MEM_ACC_ID,
+               T2.MEM_ACC_NAME,
+               T1.CLM_MONTH,
+               T1.TOT_AMT,
+               T1.APPV_PRCSS_NO,
+               T4.REQST_DT,
+               Nvl (T4.APPV_PRCSS_STUS, 'T')   AS APPV_PRCSS_STUS_CODE,
+               Nvl (( CASE T4.APPV_PRCSS_STUS
+                        WHEN 'R' THEN 'Request'
+                        WHEN 'P' THEN 'Approve In-Progress'
+                        WHEN 'A' THEN 'Approved'
+                        WHEN 'J' THEN 'Rejected'
+                      END ), 'Temporary Save') AS APPV_PRCSS_STUS,
+               T4.APPV_PRCSS_DT
+        FROM   FCM0019M T1
+               LEFT JOIN FCM0006M T2
+                      ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
+               LEFT JOIN FCM0004M T4
                       ON T1.APPV_PRCSS_NO = T4.APPV_PRCSS_NO WHERE CLM_TYPE = 'J4'
           <if test="loginUserId != null and loginUserId != ''">
             AND T1.CRT_USER_ID = #{loginUserId}
@@ -42,10 +42,10 @@ FROM   (SELECT T1.CLM_NO,
             ) T
        WHERE 1=1
 <if test="clmMonth != null and clmMonth != ''">
-<![CDATA[ 
+<![CDATA[
 AND T.CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
 ]]>
-</if>       
+</if>
 <if test="memAccId != null and memAccId != ''">
 AND UPPER(T.MEM_ACC_ID) = UPPER(#{memAccId})
 </if>
@@ -57,8 +57,8 @@ AND T.APPV_PRCSS_STUS_CODE IN
 <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
 #{item}
 </foreach>
-</if>  
-ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT          
+</if>
+ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
 </select>
 
 <select id="selectTaxCodeStaffClaimFlag" resultType="egovMap">
@@ -230,90 +230,90 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
 /* staffClaimMapper.selectStaffClaimItems */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
 SELECT T1.CLM_SEQ,
-       T3.COST_CENTR, 
-       T3.COST_CENTR_NAME, 
-       T3.MEM_ACC_ID, 
-       T1.EXP_TYPE, 
-       T1.EXP_TYPE_NAME, 
-       T1.GL_ACC_CODE, 
-       T1.GL_ACC_CODE_NAME, 
-       T1.BUDGET_CODE, 
-       T1.BUDGET_CODE_NAME, 
+       T3.COST_CENTR,
+       T3.COST_CENTR_NAME,
+       T3.MEM_ACC_ID,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
        T4.MEM_ACC_ID AS SUPPLIR,
-       T1.SUPPLIR AS SUPPLIR_NAME, 
-       T1.INVC_TYPE, 
-       ( CASE T1.INVC_TYPE 
-           WHEN 'F' THEN 'Full Tax invoice' 
-           WHEN 'S' THEN 'Simplified Tax invoice' 
-         END )     AS INVC_TYPE_NAME, 
-       T1.INVC_NO, 
-       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT,  
-       T1.GST_RGIST_NO, 
-       T1.TAX_CODE, 
-       T2.TAX_NAME, 
-       'MYR'       AS CUR, 
-       T1.NET_AMT AS GST_BEFOR_AMT, 
+       T1.SUPPLIR AS SUPPLIR_NAME,
+       T1.INVC_TYPE,
+       ( CASE T1.INVC_TYPE
+           WHEN 'F' THEN 'Full Tax invoice'
+           WHEN 'S' THEN 'Simplified Tax invoice'
+         END )     AS INVC_TYPE_NAME,
+       T1.INVC_NO,
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT,
+       T1.GST_RGIST_NO,
+       T1.TAX_CODE,
+       T2.TAX_NAME,
+       'MYR'       AS CUR,
+       T1.NET_AMT AS GST_BEFOR_AMT,
        T1.TAX_AMT AS GST_AMT,
        T1.TAX_NON_CLM_AMT,
-       T1.TOT_AMT, 
-       T1.ATCH_FILE_GRP_ID, 
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
        T1.EXP_DESC,
-       T1.CLAM_UN, 
-       T1.EXP_GRP,  
+       T1.CLAM_UN,
+       T1.EXP_GRP,
        T3.TOT_AMT  AS ALL_TOT_AMT,
-       T3.APPV_PRCSS_NO 
-FROM   FCM0020D T1 
-       LEFT JOIN FCM0007C T2 
-              ON T1.TAX_CODE = T2.TAX_CODE 
-       LEFT JOIN FCM0019M T3 
+       T3.APPV_PRCSS_NO
+FROM   FCM0020D T1
+       LEFT JOIN FCM0007C T2
+              ON T1.TAX_CODE = T2.TAX_CODE
+       LEFT JOIN FCM0019M T3
               ON T1.CLM_NO = T3.CLM_NO
-       LEFT JOIN FCM0006M T4 
+       LEFT JOIN FCM0006M T4
               ON T1.SUPPLIR = T4.MEM_ACC_NAME
-WHERE  T1.CLM_NO = #{clmNo} 
+WHERE  T1.CLM_NO = #{clmNo}
 ORDER  BY T1.CLM_SEQ
 </select>
 
 <select id="selectStaffClaimInfo" parameterType="Map" resultType="egovMap">
 /* staffClaimMapper.selectStaffClaimInfo */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T1.CLM_SEQ, 
-       T3.COST_CENTR, 
-       T3.COST_CENTR_NAME, 
-       T3.MEM_ACC_ID, 
-       T4.MEM_ACC_NAME, 
+SELECT T1.CLM_SEQ,
+       T3.COST_CENTR,
+       T3.COST_CENTR_NAME,
+       T3.MEM_ACC_ID,
+       T4.MEM_ACC_NAME,
        T3.BANK_CODE,
-       T4.BANK_NAME, 
-       T3.BANK_ACC_NO, 
-       TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
+       T4.BANK_NAME,
+       T3.BANK_ACC_NO,
+       TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
        T3.TOT_AMT                                          AS ALL_TOT_AMT,
-       T1.EXP_GRP, 
+       T1.EXP_GRP,
        T3.APPV_PRCSS_NO,
-       T1.EXP_TYPE, 
-       T1.EXP_TYPE_NAME, 
-       T1.GL_ACC_CODE, 
-       T1.GL_ACC_CODE_NAME, 
-       T1.BUDGET_CODE, 
-       T1.BUDGET_CODE_NAME, 
-       T5.MEM_ACC_ID                                       AS SUPPLIR, 
-       T1.SUPPLIR                                          AS SUPPLIR_NAME, 
-       T1.INVC_TYPE, 
-       T1.INVC_NO, 
-       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT, 
-       T1.GST_RGIST_NO, 
-       T1.TAX_CODE, 
-       'MYR'                                               AS CUR, 
-       T1.NET_AMT                                          AS GST_BEFOR_AMT, 
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T5.MEM_ACC_ID                                       AS SUPPLIR,
+       T1.SUPPLIR                                          AS SUPPLIR_NAME,
+       T1.INVC_TYPE,
+       T1.INVC_NO,
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT,
+       T1.GST_RGIST_NO,
+       T1.TAX_CODE,
+       'MYR'                                               AS CUR,
+       T1.NET_AMT                                          AS GST_BEFOR_AMT,
        T1.TAX_AMT                                          AS GST_AMT,
-       T1.TAX_NON_CLM_AMT, 
-       T1.TOT_AMT, 
-       T1.ATCH_FILE_GRP_ID, 
+       T1.TAX_NON_CLM_AMT,
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
        T1.EXP_DESC
-FROM   FCM0020D T1 
-       LEFT JOIN FCM0019M T3 
-              ON T1.CLM_NO = T3.CLM_NO 
-       LEFT JOIN FCM0006M T4 
-              ON T3.MEM_ACC_ID = T4.MEM_ACC_ID 
-       LEFT JOIN FCM0006M T5 
+FROM   FCM0020D T1
+       LEFT JOIN FCM0019M T3
+              ON T1.CLM_NO = T3.CLM_NO
+       LEFT JOIN FCM0006M T4
+              ON T3.MEM_ACC_ID = T4.MEM_ACC_ID
+       LEFT JOIN FCM0006M T5
               ON T1.SUPPLIR = T4.MEM_ACC_NAME
 WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
 </select>
@@ -321,127 +321,127 @@ WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
 <select id="selectStaffClaimInfoForAppv" parameterType="Map" resultType="egovMap">
 /* staffClaimMapper.selectStaffClaimInfoForAppv */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T1.CLM_SEQ, 
-       T3.COST_CENTR, 
-       T3.COST_CENTR_NAME, 
-       T3.MEM_ACC_ID, 
-       T4.MEM_ACC_NAME, 
+SELECT T1.CLM_SEQ,
+       T3.COST_CENTR,
+       T3.COST_CENTR_NAME,
+       T3.MEM_ACC_ID,
+       T4.MEM_ACC_NAME,
        T3.BANK_CODE,
-       T4.BANK_NAME, 
-       T3.BANK_ACC_NO, 
-       TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH, 
+       T4.BANK_NAME,
+       T3.BANK_ACC_NO,
+       TO_CHAR(TO_DATE(T3.CLM_MONTH, 'YYYYMM'), 'MM/YYYY') AS CLM_MONTH,
        T3.TOT_AMT                                          AS ALL_TOT_AMT,
-       T1.EXP_GRP, 
+       T1.EXP_GRP,
        T3.APPV_PRCSS_NO,
-       T1.EXP_TYPE, 
-       T1.EXP_TYPE_NAME, 
-       T1.GL_ACC_CODE, 
-       T1.GL_ACC_CODE_NAME, 
-       T1.BUDGET_CODE, 
-       T1.BUDGET_CODE_NAME, 
-       T5.MEM_ACC_ID                                       AS SUPPLIR, 
-       T1.SUPPLIR                                          AS SUPPLIER, 
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T5.MEM_ACC_ID                                       AS SUPPLIR,
+       T1.SUPPLIR                                          AS SUPPLIER,
        (CASE T1.INVC_TYPE
             WHEN 'F'
                 THEN 'Full Tax invoice'
             WHEN 'S'
                 THEN 'Simplified Tax invoice'
          END
-        ) AS INVC_TYPE,  
-       T1.INVC_NO, 
-       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT, 
-       T1.GST_RGIST_NO, 
-       T1.TAX_CODE, 
-       'MYR'                                               AS CUR, 
-       T1.NET_AMT                                          AS GST_BEFOR_AMT, 
+        ) AS INVC_TYPE,
+       T1.INVC_NO,
+       TO_CHAR(T1.INVC_DT, 'DD/MM/YYYY')                   AS INVC_DT,
+       T1.GST_RGIST_NO,
+       T1.TAX_CODE,
+       'MYR'                                               AS CUR,
+       T1.NET_AMT                                          AS GST_BEFOR_AMT,
        T1.TAX_AMT                                          AS GST_AMT,
-       T1.TAX_NON_CLM_AMT, 
-       T1.TOT_AMT, 
-       T1.ATCH_FILE_GRP_ID, 
+       T1.TAX_NON_CLM_AMT,
+       T1.TOT_AMT,
+       T1.ATCH_FILE_GRP_ID,
        T1.EXP_DESC
-FROM   FCM0020D T1 
-       LEFT JOIN FCM0019M T3 
-              ON T1.CLM_NO = T3.CLM_NO 
-       LEFT JOIN FCM0006M T4 
-              ON T3.MEM_ACC_ID = T4.MEM_ACC_ID 
-       LEFT JOIN FCM0006M T5 
-              ON T1.SUPPLIR = T4.MEM_ACC_NAME
+FROM   FCM0020D T1
+       LEFT JOIN FCM0019M T3
+              ON T1.CLM_NO = T3.CLM_NO
+       LEFT JOIN FCM0006M T4
+              ON T3.MEM_ACC_ID = T4.MEM_ACC_ID
+       LEFT JOIN FCM0006M T5
+              ON T1.SUPPLIR = T5.MEM_ACC_NAME
 WHERE T1.CLM_NO = #{clmNo} AND T1.CLM_SEQ = #{clmSeq}
 </select>
 
 <select id="selectStaffClaimItemGrp" parameterType="Map" resultType="egovMap">
 /* staffClaimMapper.selectStaffClaimItemGrp */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T1.CLM_SEQ, 
-       T1.EXP_TYPE, 
-       T1.EXP_TYPE_NAME, 
-       T1.GL_ACC_CODE, 
-       T1.GL_ACC_CODE_NAME, 
-       T1.BUDGET_CODE, 
-       T1.BUDGET_CODE_NAME, 
-       T1.TAX_CODE, 
-       T2.TAX_NAME, 
-       T2.TAX_RATE, 
-       'MYR' AS CUR, 
-       T1.NET_AMT AS GST_BEFOR_AMT, 
-       T1.TAX_AMT AS GST_AMT, 
-       T1.TAX_NON_CLM_AMT, 
-       T1.TOT_AMT, 
+SELECT T1.CLM_SEQ,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.TAX_CODE,
+       T2.TAX_NAME,
+       T2.TAX_RATE,
+       'MYR' AS CUR,
+       T1.NET_AMT AS GST_BEFOR_AMT,
+       T1.TAX_AMT AS GST_AMT,
+       T1.TAX_NON_CLM_AMT,
+       T1.TOT_AMT,
        T1.CLAM_UN,
        T1.ATCH_FILE_GRP_ID,
-       T3.CAR_MILAG_DT, 
-       T3.LOC_FROM, 
-       T3.LOC_TO, 
-       T3.CAR_MILAG, 
-       T3.CAR_MILAG_AMT, 
-       T3.TOLL_AMT, 
-       T3.PARKING_AMT, 
+       T3.CAR_MILAG_DT,
+       T3.LOC_FROM,
+       T3.LOC_TO,
+       T3.CAR_MILAG,
+       T3.CAR_MILAG_AMT,
+       T3.TOLL_AMT,
+       T3.PARKING_AMT,
        T3.PURPOSE,
        T1.EXP_DESC
-FROM   FCM0020D T1 
-       LEFT JOIN FCM0007C T2 
-              ON T1.TAX_CODE = T2.TAX_CODE 
-       LEFT JOIN FCM0021D T3 
+FROM   FCM0020D T1
+       LEFT JOIN FCM0007C T2
+              ON T1.TAX_CODE = T2.TAX_CODE
+       LEFT JOIN FCM0021D T3
               ON T1.CLM_NO = T3.CLM_NO AND T1.CLM_SEQ = T3.CLM_SEQ
-WHERE  T1.CLM_NO = #{clmNo} 
+WHERE  T1.CLM_NO = #{clmNo}
        AND CLAM_UN = #{clamUn}
 </select>
 
 <select id="selectStaffClaimItemGrpForAppv" parameterType="Map" resultType="egovMap">
 /* staffClaimMapper.selectStaffClaimItemGrpForAppv */
 <!-- TO_CHAR(DISAB_DT, 'yyyy-mm-dd') -->
-SELECT T1.CLM_SEQ, 
-       T1.EXP_TYPE, 
-       T1.EXP_TYPE_NAME, 
-       T1.GL_ACC_CODE, 
-       T1.GL_ACC_CODE_NAME, 
-       T1.BUDGET_CODE, 
-       T1.BUDGET_CODE_NAME, 
-       T1.TAX_CODE, 
-       NVL2(T1.TAX_CODE, T2.INDUSTRY_CODE||' '||'('||T2.TAX_NAME||')', '') AS TAX_NAME, 
-       T2.TAX_RATE, 
-       'MYR' AS CUR, 
-       T1.NET_AMT AS GST_BEFOR_AMT, 
-       T1.TAX_AMT AS GST_AMT, 
-       T1.TAX_NON_CLM_AMT, 
-       T1.TOT_AMT, 
+SELECT T1.CLM_SEQ,
+       T1.EXP_TYPE,
+       T1.EXP_TYPE_NAME,
+       T1.GL_ACC_CODE,
+       T1.GL_ACC_CODE_NAME,
+       T1.BUDGET_CODE,
+       T1.BUDGET_CODE_NAME,
+       T1.TAX_CODE,
+       NVL2(T1.TAX_CODE, T2.INDUSTRY_CODE||' '||'('||T2.TAX_NAME||')', '') AS TAX_NAME,
+       T2.TAX_RATE,
+       'MYR' AS CUR,
+       T1.NET_AMT AS GST_BEFOR_AMT,
+       T1.TAX_AMT AS GST_AMT,
+       T1.TAX_NON_CLM_AMT,
+       T1.TOT_AMT,
        T1.CLAM_UN,
        T1.ATCH_FILE_GRP_ID,
-       T3.CAR_MILAG_DT, 
-       T3.LOC_FROM, 
-       T3.LOC_TO, 
-       T3.CAR_MILAG, 
-       T3.CAR_MILAG_AMT, 
-       T3.TOLL_AMT, 
-       T3.PARKING_AMT, 
+       T3.CAR_MILAG_DT,
+       T3.LOC_FROM,
+       T3.LOC_TO,
+       T3.CAR_MILAG,
+       T3.CAR_MILAG_AMT,
+       T3.TOLL_AMT,
+       T3.PARKING_AMT,
        T3.PURPOSE,
        T1.EXP_DESC
-FROM   FCM0020D T1 
-       LEFT JOIN FCM0007C T2 
-              ON T1.TAX_CODE = T2.TAX_CODE 
-       LEFT JOIN FCM0021D T3 
+FROM   FCM0020D T1
+       LEFT JOIN FCM0007C T2
+              ON T1.TAX_CODE = T2.TAX_CODE
+       LEFT JOIN FCM0021D T3
               ON T1.CLM_NO = T3.CLM_NO AND T1.CLM_SEQ = T3.CLM_SEQ
-WHERE  T1.CLM_NO = #{clmNo} 
+WHERE  T1.CLM_NO = #{clmNo}
        AND CLAM_UN = #{clamUn}
 </select>
 
@@ -454,7 +454,7 @@ WHERE  T1.CLM_NO = #{clmNo}
           LEFT JOIN SYS0071D T2
           ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
           WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
-          ORDER BY T1.ATCH_FILE_ID         
+          ORDER BY T1.ATCH_FILE_ID
 </select>
 
 <update id="updateStaffClaimExp" parameterType="Map">
@@ -469,7 +469,7 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,TOT_AMT = #{allTotAmt}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE CLM_NO = #{clmNo}       
+    WHERE CLM_NO = #{clmNo}
 </update>
 
 <update id="updateStaffClaimExpItem" parameterType="Map">
@@ -495,8 +495,8 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,EXP_DESC = #{expDesc}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE CLM_NO = #{clmNo}     
-    AND CLM_SEQ = #{clmSeq}  
+    WHERE CLM_NO = #{clmNo}
+    AND CLM_SEQ = #{clmSeq}
 </update>
 
 <update id="updateStaffClaimExpMileage" parameterType="Map">
@@ -512,8 +512,8 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,PURPOSE = #{purpose}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE CLM_NO = #{clmNo}     
-    AND CLM_SEQ = #{clmSeq}  
+    WHERE CLM_NO = #{clmNo}
+    AND CLM_SEQ = #{clmSeq}
 </update>
 
 <insert id="insertApproveItems" parameterType="Map">
@@ -589,17 +589,17 @@ WHERE  T1.CLM_NO = #{clmNo}
    SET APPV_PRCSS_NO = #{appvPrcssNo}
        ,UPD_DT = SYSDATE
        ,UPD_USER_ID = #{userId}
-    WHERE CLM_NO = #{clmNo}       
+    WHERE CLM_NO = #{clmNo}
 </update>
 
 <delete id="deleteStaffClaimExpItem" parameterType="Map">
 /* staffClaimMapper.deleteStaffClaimExpItem */
-   DELETE FROM FCM0020D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq} 
+   DELETE FROM FCM0020D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq}
 </delete>
 
 <delete id="deleteStaffClaimExpMileage" parameterType="Map">
 /* staffClaimMapper.deleteStaffClaimExpMileage */
-   DELETE FROM FCM0021D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq} 
+   DELETE FROM FCM0021D WHERE CLM_NO = #{clmNo} AND CLM_SEQ = #{clmSeq}
 </delete>
 
 <update id="updateStaffClaimExpTotAmt" parameterType="Map">
@@ -611,15 +611,15 @@ WHERE  T1.CLM_NO = #{clmNo}
 /* staffClaimMapper.checkOnceAMonth */
 SELECT COUNT(*) FROM (SELECT E.CLM_TYPE, E.CLM_MONTH,
        E.MEM_ACC_ID
-FROM   FCM0019M E 
-       JOIN FCM0004M A 
-         ON E.APPV_PRCSS_NO = A.APPV_PRCSS_NO 
+FROM   FCM0019M E
+       JOIN FCM0004M A
+         ON E.APPV_PRCSS_NO = A.APPV_PRCSS_NO
             AND E.CLM_NO = A.APPV_REQ_KEY_NO
-            AND E.CLM_TYPE = SUBSTR(A.APPV_REQ_KEY_NO, 0, 2) 
-WHERE  A.APPV_PRCSS_STUS != 'J') T 
+            AND E.CLM_TYPE = SUBSTR(A.APPV_REQ_KEY_NO, 0, 2)
+WHERE  A.APPV_PRCSS_STUS != 'J') T
 WHERE T.CLM_TYPE = #{clmType}
 AND T.CLM_MONTH = TO_CHAR(TO_DATE(#{clmMonth}, 'MM/YYYY'), 'YYYYMM')
-AND T.MEM_ACC_ID = #{memAccId}        
+AND T.MEM_ACC_ID = #{memAccId}
 </select>
 
 
