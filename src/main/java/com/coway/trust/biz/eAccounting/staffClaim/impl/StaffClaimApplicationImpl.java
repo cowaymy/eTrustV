@@ -22,18 +22,18 @@ import com.coway.trust.util.CommonUtils;
 
 @Service("staffClaimApplication")
 public class StaffClaimApplicationImpl implements StaffClaimApplication {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(FileApplicationImpl.class);
-	
+
 	@Value("${app.name}")
 	private String appName;
-	
+
 	@Autowired
 	private FileService fileService;
-	
+
 	@Autowired
 	private FileMapper fileMapper;
-	
+
 	@Autowired
 	private StaffClaimService staffClaimService;
 
@@ -49,9 +49,9 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 		// TODO Auto-generated method stub
 
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		LOGGER.debug("list.size : {}", list.size());
-		
+
 		// 243,258
 		String update = (String) params.get("update");
 		String[] updateList = null;
@@ -86,7 +86,7 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 				}
 			}
 		}
-		
+
 		String remove = (String) params.get("remove");
 		String[] removeList = null;
 		if(!StringUtils.isEmpty(remove)) {
@@ -113,7 +113,11 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 		} else {
 			// Temp. Save
 			// 저장된 파일 삭제 및 테이블 데이터 삭제
-			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+			// 2018-07-20 - LaiKW - Added check on atchFileGrpId for claims without attachments - Start
+			if(params.get("atchFileGrpId") != null) {
+				fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
+			}
+			// 2018-07-20 - LaiKW - Added check on atchFileGrpId for claims without attachments - End
 			staffClaimService.deleteStaffClaimExpItem(params);
 			LOGGER.debug("expGrp =====================================>>  " + params.get("expGrp"));
 			if("1".equals(params.get("expGrp"))) {
@@ -122,7 +126,7 @@ public class StaffClaimApplicationImpl implements StaffClaimApplication {
 			staffClaimService.updateStaffClaimExpTotAmt(params);
 		}
 	}
-	
-	
+
+
 
 }
