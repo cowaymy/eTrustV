@@ -1412,7 +1412,7 @@
         var vCustBillId = $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0;
         var vBindingNo  = FormUtil.isEmpty($('#txtOldOrderID').val().trim()) ? $('#relatedNo').val().trim() : $('#hiddenOldOrderId').val().trim();
         var vCnvrSchemeId;
-
+console.log("vBindingNo" + vBindingNo);
         if($('#trialNoChk').is(":checked")) {
             vBindingNo = $('#trialNo').val().trim();
             vCnvrSchemeId = $('#trialId').val().trim();
@@ -2089,7 +2089,7 @@
 
         fn_clearOrderSalesman();
 
-		Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1}, function(memInfo) {
+		Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode, stus : 1, salesMen : 1}, function(memInfo) {
 
             if(memInfo == null) {
 //              Common.alert('<b>Member not found.</br>Your input member code : '+memCode+'</b>');

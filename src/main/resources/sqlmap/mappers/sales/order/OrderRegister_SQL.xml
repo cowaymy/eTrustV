@@ -672,6 +672,10 @@
 			  <if test='stus != null and stus !=""'>
                 AND T1.STUS = #{stus}
               </if>
+              <if test='salesMen != null and salesMen !=""'>
+                AND MEM_LVL = 4
+                AND MEM_TYPE IN (1,2)
+              </if>
 		        AND ROWNUM &lt;= 1 ) T
     </select>
 
