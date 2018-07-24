@@ -592,6 +592,7 @@
          AND S28.wh_loc_stk_grad = 'A'
          AND L56.STK_CODE = #{productCode}
          AND S28.WH_LOC_CODE IN (CRDC.WH_LOC_CODE, CRDC.CDC_CODE, CRDC.RDC_CODE)
+
          AND S28.WH_LOC_GB = '01'
 
 	   </select>
