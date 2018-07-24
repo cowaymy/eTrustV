@@ -245,7 +245,8 @@
                     fn_configCookies(userId);
 
                     // 2018-07-19 - LaiKW - HP Pop Up (Temporary for July 2018)
-                    if(result.data.userTypeId == "1") {
+                    if(result.data.userTypeId == "1" || result.data.userTypeId == "4") {
+                        $("#loginUserType").val(result.data.userTypeId);
                         Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
                     }
                     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
@@ -386,6 +387,8 @@
             <input type="hidden" id="loginUserId" name="loginUserId" value=""/>
             <input type="hidden" id="loginOs" name="os" value=""/>
             <input type="hidden" id="loginBrowser" name="browser" value=""/>
+
+            <input type="hidden" id="loginUserType" name="loginUserType" value=""/> <!-- 2017-07-24 - LaiKW - Staff Memo Pop Up -->
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2>
             <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value=""/></p>

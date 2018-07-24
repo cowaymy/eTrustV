@@ -217,6 +217,7 @@ public class LoginController {
         model.put("browser", (String) params.get("browser"));
         model.put("userId", (String) params.get("userId"));
         model.put("password", (String) params.get("password"));
+        model.put("userType", (String) params.get("loginUserType"));
 
         return "/login/loginPop";
     }
