@@ -15,10 +15,17 @@ var claimTypeData = [{"codeId": "131","codeName": "Credit Card"}];
 //Status Combo Data
 var statusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "8","codeName": "Inactive"},{"codeId": "21","codeName": "Failed"}];
 
-var bankData = [ /* {"codeId": "21","codeName": "Maybank"}, */
-                           {"codeId": "3","codeName": "CIMB Bank"},
-                           {"codeId": "19","codeName": "Standard Chartered Bank"}
-                           ];
+/* var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},
+                           {"codeId": "21","codeName": "Maybank"},
+                           {"codeId": "3","codeName": "CIMB Bank"}
+                           ]; */
+                           var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},
+                                           {"codeId": "3","codeName": "CIMB Bank"},
+                                           //TEMP
+                                           {"codeId": "1","codeName": "Standard Chartered Bank (Neo)"},
+                                           {"codeId": "2","codeName": "Standard Chartered Bank (Weekly)"}
+                                           //TEMP
+                                           ];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
@@ -169,7 +176,8 @@ var batchDeductionColumnLayout= [
     {dataField : "crtUser", headerText : "Creator", width : '10%'},
     {dataField : "fileItmCrt", headerText : "Creatord", width : '10%'},
     {dataField : "updUser", headerText : "Updator", width : '10%'},
-    {dataField : "fileItmUpd", headerText : "Updated", width : '10%'},
+    {dataField : "fileItmUpd", headerText : "Updated", width : '10%'}
+
     ];
 
 // 리스트 조회.
@@ -431,9 +439,9 @@ function fn_clear(){
 function fn_getItmStatus(val){
 	var fileBatchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
 
-	if(val == "4"){$('#pop_header h3').text('APPROVED TRANSACTION');}
-	else if(val == "6"){$('#pop_header h3').text('FAILED TRANSACTIONS');}
-	else{$('#pop_header h3').text('ALL TRANSACTIONS');}
+	if(val == "4"){$('#pop_header h2').text('APPROVED TRANSACTION');}
+	else if(val == "6"){$('#pop_header h2').text('FAILED TRANSACTIONS');}
+	else{$('#pop_header h2').text('ALL TRANSACTIONS');}
 
 	Common.ajax("GET", "/payment/selectECashSubDeductionById.do", {"batchId":fileBatchId,"status":val}, function(result) {
         AUIGrid.setGridData(batchDeductionItemId, result);
@@ -679,7 +687,7 @@ function fn_openFailedeCash() {
 					<!-- grid_wrap start -->
 					<aside class="title_line"><!-- title_line start -->
 					<header class="pop_header" id="pop_header">
-                    <h3></h3>
+                    <h2></h2>
                         <ul class="right_btns">
                             <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus('')">All Transactions</a></p></li>
                             <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus(4)">Approved Transactions</a></p></li>

@@ -59,6 +59,14 @@
             <if test="batchName != null and batchName != ''">
                 AND Extent1.FILE_BATCH_NAME = #{batchName}
             </if>
+            <choose>
+                <when test="IS_GRP != null and IS_GRP != '' ">
+                    AND Extent1.FILE_BATCH_GROUP = 1
+                </when>
+                <otherwise>
+                    AND Extent1.FILE_BATCH_GROUP != 1
+                </otherwise>
+            </choose>
          ORDER BY Extent1.FILE_BATCH_ID
     </select>
 
@@ -193,6 +201,13 @@
         WHERE Extent1.FILE_BATCH_ID = #{batchId}
     </select>
 
+    <select id="selectECashDeductCCSubByIdCnt" parameterType="Map" resultType="int">
+    SELECT
+        COUNT(1) AS CNT
+        FROM  PAY0288D EXTENT1
+        WHERE Extent1.FILE_BATCH_ID = #{batchId}
+    </select>
+
     <select id="selectECashDeductBatchGen" parameterType="Map" resultType="int">
     SELECT COUNT(1) CNT FROM (
         SELECT
@@ -246,6 +261,33 @@
          ORDER BY Extent1.FILE_ITM_ID
     </select>
 
+    <select id="selectECashDeductCCSubList" parameterType="Map" resultType="egovMap">
+    SELECT
+        EXTENT1.FILE_BATCH_GRP_ID,
+        EXTENT1.FILE_BATCH_ID,
+        EXTENT1.FILE_ITM_STUS_ID,
+        EXTENT1.FILE_ITM_ACC_NO,
+        EXTENT1.FILE_ITM_ACC_EXPR,
+        EXTENT3.NAME as FILE_ITM_STUS_NAME,
+        EXTENT1.FILE_ITM_AMT,
+        (CASE WHEN Extent1.FILE_ITM_APPR_DT IS NOT NULL
+                THEN NVL(TO_CHAR(Extent1.FILE_ITM_APPR_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_ITM_APPR_DT,
+        EXTENT5.USER_NAME as CRT_USER,
+        NVL(TO_CHAR(Extent1.CRT_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00') AS FILE_ITM_CRT,
+        EXTENT6.USER_NAME as UPD_USER,
+         (CASE WHEN Extent1.UPD_DT IS NOT NULL
+                THEN NVL(TO_CHAR(Extent1.UPD_DT,'DD/MM/YYYY hh:mi:ss A.M.'),'01-01-1900 AM 00:00:00')
+                ELSE NULL END) AS FILE_ITM_UPD
+    from PAY0288D EXTENT1
+        left join SYS0038M EXTENT3 on EXTENT3.STUS_CODE_ID = EXTENT1.FILE_ITM_STUS_ID
+        left join SYS0047M EXTENT5 on EXTENT5.USER_ID = EXTENT1.CRT_USER_ID
+        left join SYS0047M EXTENT6 on EXTENT6.USER_ID =EXTENT1.UPD_USER_ID
+    WHERE 1=1
+            AND Extent1.FILE_BATCH_ID = 283
+         ORDER BY Extent1.FILE_BATCH_GRP_ID;
+    </select>
+
     <!-- E-Cash - Deactivate e-AutoDebitDecution -->
     <update id="deactivateEAutoDebitDeduction" parameterType="Map" >
         UPDATE PAY0245M SET
@@ -268,9 +310,23 @@
 
     <resultMap id="resultECashDeductionMap" type="egovMap" />
     <select id="createECashDeduction" statementType="CALLABLE" parameterType="Map">
+	<choose>
+        <when test='"1".equalsIgnoreCase(new_issueBank)'>
+        {
+            call SP_INST_ECASH_GENDEDUCTION_NEO( 19, #{new_cardType} ,#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashDeductionMap})
+        }
+        </when>
+        <when test='"2".equalsIgnoreCase(new_issueBank)'>
+        {
+            call SP_INST_ECASH_GENDEDUCTION_WK( 19, #{new_cardType} ,#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashDeductionMap})
+        }
+        </when>
+        <otherwise>
         {
             call SP_INST_ECASH_GENDEDUCTION( #{new_issueBank}, #{new_cardType} ,#{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashDeductionMap})
         }
+        </otherwise>
+    </choose>
     </select>
 
     <delete id="deleteECashDeductionResultItem" parameterType="Map" >
