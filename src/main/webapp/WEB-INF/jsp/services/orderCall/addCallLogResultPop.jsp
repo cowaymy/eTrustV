@@ -4,13 +4,14 @@
 
 function fn_saveValidation(){
 
-	if($("#callStatus").val() == 20 ){
-		if   ('${orderRdcInCdc.raqty}'   == ''  || '${orderRdcInCdc.raqty}'  =="0"  || '${orderRdcInCdc.raqty}' == " " ){
+    if($("#callStatus").val() == 20 ){
 
-			Common.alert("There is no available inventory in RDC to create installation order ");
-	        return false;
-	    }
-	}
+        if   ($("#rdc").text()  == ''  || $("#rdc").text()  == "0"  || $("#rdc").text() == " " ){
+
+            Common.alert("There is no available inventory in RDC to create installation order ");
+            return false;
+        }
+    }
 
 
 	if($("#callStatus").val() == ''){
