@@ -59,14 +59,14 @@
             <if test="batchName != null and batchName != ''">
                 AND Extent1.FILE_BATCH_NAME = #{batchName}
             </if>
-            <choose>
+            <!-- <choose>
                 <when test="IS_GRP != null and IS_GRP != '' ">
                     AND Extent1.FILE_BATCH_GROUP = 1
                 </when>
                 <otherwise>
                     AND Extent1.FILE_BATCH_GROUP != 1
                 </otherwise>
-            </choose>
+            </choose> -->
          ORDER BY Extent1.FILE_BATCH_ID
     </select>
 
