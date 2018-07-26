@@ -3,6 +3,10 @@
 <script type="text/javaScript">
 
 $(document).ready(function(){
+	$('.multy_select').on("change", function() {
+        //console.log($(this).val());
+    }).multipleSelect({});
+
     doGetCombo('/services/as/report/selectMemberCodeList.do', '', '','CTCode', 'S' ,  '');
     doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'S', '');
 });
@@ -43,14 +47,33 @@ function fn_openGenerate(){
     var date = new Date();
     var month = date.getMonth()+1;
     var day = date.getDate();
+    /* by KV- change selection button */
+    var runNo1 = 0;
+    var asStus = "";
+
     if(date.getDate() < 10){
         day = "0"+date.getDate();
     }
+
     if(fn_validation()){
 
         var whereSql = "";
         var asNoFrom = "";
         var asNoTo = "";
+
+        /* By KV - change selection button */
+        if($("#asStatus1 :checked").length > 0){
+            $("#asStatus1 :checked").each(function(i, mul){
+                if($(mul).val() != "0"){
+                    if(runNo1 > 0){
+                    	asStus += ", "+$(mul).val()+" ";
+                    }else{
+                    	asStus += " "+$(mul).val()+" ";
+                    }
+                    runNo1 += 1;
+                }
+            });
+        }
 
         if($("#asNumFr").val() != '' && $("#asNumTo").val() != '' && $("#asNumFr").val() != null && $("#asNumTo").val() != null){
             asNoFrom = $("#asNumFr").val();
@@ -91,11 +114,15 @@ function fn_openGenerate(){
         	whereSql +=  "AND ae.AS_REQST_DT  between to_date('" + $("#reqDtFr").val() + "', 'DD/MM/YYYY') AND to_date('" + $("#reqDtTo").val()  + "', 'DD/MM/YYYY') ";
         }
 
-        var asStus = "";
-        if($("#asStatus").val() != '' && $("#asStatus").val() != null){
+         /* var asStus = "";
+         if($("#asStatus").val() != '' && $("#asStatus").val() != null){
         	asStus = $("#asStatus  option:selected").text();
-        	whereSql +=   "AND ae.AS_STUS_ID = " + $("#asStatus").val() + " ";
-        }
+        	whereSql +=   "AND ae.AS_STUS_ID IN (" + $("#asStatus").val() + ")";
+         }
+         */
+         if($("#asStatus1 :selected").val() != '' && $("#asStatus1 :selected").val() != null){
+        	   whereSql+= " AND ae.AS_STUS_ID IN (" + asStus + ") ";
+         }
 
         var asTypeId = "";
         if($("#asType").val() != '' &&  $("#asType").val() != null){
@@ -254,7 +281,8 @@ function fn_openGenerate(){
 <tr>
     <th scope="row">Status</th>
     <td>
-    <select id="asStatus">
+    <!-- Edit by KV change to edit button-->
+    <select class="multy_select w100p" multiple="multiple" id="asStatus1"  name="asStatus1" >
         <option value="1">Active</option>
         <option value="4">Complete</option>
         <option value="21">Fail</option>
