@@ -1891,6 +1891,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , STREET
 	   , MAIN_DEPT
        , SUB_DEPT
+       , APLICNT_BRANCH
+       , APLICNT_MEETPOINT
 	   )
 	  VALUES (
 	  ORG0003D_APLCTN_ID_SEQ.NEXTVAL
@@ -1935,6 +1937,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , #{streetDtl}
 	  , #{searchdepartment}
 	  , #{searchSubDept}
+	  , #{memBranch}
+	  , #{meetingPoint}
 	  )
   </insert>
   <insert id="insertMemberAgr" parameterType="Map">
@@ -3088,7 +3092,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		,SPUSE_CODE 		,SPOUSE_NAME 		,SPOUSE_NRIC 		,SPOUSE_OCPAT 		,SPOUSE_TEL_CNTC
 		,SPOUSE_DOB 		,EDC_LEV 		,LANG 		,BANK 		,BANK_ACC_NO
 		,SPONS_CODE 		,CRT_DT 		,CRT_USER_ID 		,UPD_DT 		,UPD_USER_ID,  stus, APLICNT_ID
-		,MAIN_DEPT , SUB_DEPT, JOIN_DT , AREA_ID, ADDR_DTL, STREET, BRNCH
+		,MAIN_DEPT , SUB_DEPT, JOIN_DT , AREA_ID, ADDR_DTL, STREET, BRNCH, MEM_BRANCH
 		)
 		select
 		        #{memId},
@@ -3129,7 +3133,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        #{userid},  '1' AS stus, APLCTN_ID
 		        ,MAIN_DEPT , SUB_DEPT
 		        ,SYSDATE JOIN_DT, AREA_ID, ADDR_DTL, STREET,
-		        #{branchId}
+		        #{branchId},
+		        APLICNT_BRANCH
 		from ORG0003D   d
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>
@@ -4390,6 +4395,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       where a.USER_ID = #{userId}
       </select>
 
+<!--
     <select id="getCDDtls" parameterType="Map" resultType="egovMap">
         select
             MEM_CODE mem_Code,
@@ -4421,6 +4427,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         from ORG0001D
         where MEM_ID = #{memberId}
     </select>
+-->
 
     <update id="updateCodyCfm" parameterType="Map">
         MERGE INTO ORG0003D
@@ -4593,6 +4600,13 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 ON B.MEM_ID = C.MEM_ID
         WHERE
             A.USER_ID = #{userId}
+    </select>
+
+    <select id="selectHpMeetPoint" parameterType="Map" resultType="egovMap">
+        SELECT
+            MEET_POINT_ID CODE_ID,
+            MEET_POINT_DESC CODE_NAME
+        FROM SYS0089M
     </select>
 
 </mapper>

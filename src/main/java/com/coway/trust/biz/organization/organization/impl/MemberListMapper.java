@@ -258,11 +258,9 @@ public interface MemberListMapper {
 
 	EgovMap getUserRole(Map<String, Object> params);
 
+	//EgovMap getCDDtls(Map<String, Object> params);
 
 	EgovMap selectMemberValidDate(Map<String, Object> params);
-
-
-	EgovMap getCDCnfm(Map<String, Object> params);
 
     void updateCodyCfm(Map<String, Object> params) throws Exception;
 
@@ -275,7 +273,8 @@ public interface MemberListMapper {
 	int updateMemberValidate(Map<String, Object> params);
 
 	void insertORG03D(Map<String, Object> params);
-	
-	EgovMap getOrgDtls(Map<String, Object> params);
 
+    EgovMap getOrgDtls(Map<String, Object> params);
+
+    List<EgovMap> selectHpMeetPoint();
 }

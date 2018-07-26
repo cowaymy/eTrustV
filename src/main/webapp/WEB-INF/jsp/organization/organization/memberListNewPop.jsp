@@ -137,12 +137,12 @@ function fn_departmentCode(value){
         $('#sponsorNm').val(spouseName);
         $('#sponsorNric').val(spouseNric);  */
 
-		$("#branch").find('option').each(function() {
-		    $(this).remove();
-		});
+		//$("#branch").find('option').each(function() {
+		    //$(this).remove();
+		//});
         $("#branch").append("<option value=''>Choose One</option>");
 
-        $("#branch").attr("disabled", true);
+        //$("#branch").attr("disabled", true);
         $("#transportCd").attr("disabled", true);
         $("#applicationStatus").attr("disabled", true);
         $("#searchdepartment").attr("disabled", true);
@@ -317,7 +317,7 @@ function fn_departmentCode(value){
 
         case "2803" :
 
-
+        	doGetComboSepa("/common/selectBranchCodeList.do",45 , '-',''   , 'branch' , 'S', '');
 
 	        if ( $("#userType").val() == "1" ) {
 
@@ -398,8 +398,9 @@ console.log("ready");
     doGetCombo('/common/selectCodeList.do', '4', '','marrital', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '3', '','language', 'S' , '');
     doGetCombo('/common/selectCodeList.do', '5', '','educationLvl', 'S' , '');
-    doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '')
+    doGetCombo('/sales/customer/selectAccBank.do', '', '', 'issuedBank', 'S', '');
     //doGetCombo('/organization/selectCourse.do', '', '','course', 'S' , '');
+    doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
 
     //$("#issuedBank option[value='MBF']").remove();
     //$("#issuedBank option[value='OTH']").remove();
@@ -514,8 +515,17 @@ console.log("ready");
      }
 
      $('#bankAccNo').blur(function() {
-         fmtNumber("#bankAccNo"); // 2018-06-21 - LaiKW - Added removal of special characters from bank account number
-         checkBankAccNo();
+         if($("#memberType").val() != "5") {
+            console.log("not trainee with -/0")
+            fmtNumber("#bankAccNo"); // 2018-06-21 - LaiKW - Added removal of special characters from bank account number
+            checkBankAccNo();
+         } else if($("#memberType").val() == "5") {
+            console.log("5");
+            console.log("bankaccno :: " + $("#bankAccNo").val());
+            if($("#bankAccNo").val() != "-"){
+                checkBankAccNo();
+            }
+         }
      });
 
      $("#mobileNo").blur(function() {
@@ -1122,9 +1132,17 @@ function fmtNumber(field) {
 }
 
 function checkBankAccNoEnter() {
-	if(event.keyCode == 13) {
-        fmtNumber("#bankAccNo"); // 2018-06-21 - LaiKW - Added removal of special characters from bank account number
-		checkBankAccNo();
+    if(event.keyCode == 13) {
+        if($("#memberType").val() != "5") {
+            console.log("not trainee with -/0")
+            fmtNumber("#bankAccNo"); // 2018-06-21 - LaiKW - Added removal of special characters from bank account number
+            checkBankAccNo();
+         } else if($("#memberType").val() == "5") {
+            console.log("bankaccno :: " + $("#bankAccNo").val());
+            if($("#bankAccNo").val() != "-"){
+                checkBankAccNo();
+            }
+         }
 	}
 }
 
@@ -1388,6 +1406,12 @@ function checkBankAccNo() {
     <td>
     <select class="w100p"  id="transportCd" name="transportCd">
     </select>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Meeting Point</th>
+    <td colspan="5">
+        <select class="w100p" id="meetingPoint" name="meetingPoint"></select>
     </td>
 </tr>
 <tr>

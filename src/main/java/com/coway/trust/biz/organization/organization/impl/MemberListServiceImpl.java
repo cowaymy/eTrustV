@@ -328,6 +328,10 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         MemApp.put("searchdepartment", "");
         MemApp.put("searchSubDept", "");
 
+        // 2018-07-26 - LaiKW - HP Branch and Meeting Point
+        MemApp.put("meetingPoint", params.get("meetingPoint").toString());
+        MemApp.put("memBranch", params.get("branch").toString());
+
         if (Integer.parseInt((String) params.get("memberType")) == 2803) {
             logger.debug("MemApp : {}", MemApp);
             EgovMap appNo = getDocNo("145");
@@ -2347,4 +2351,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     public EgovMap getOrgDtls(Map<String, Object> params) {
         return memberListMapper.getOrgDtls(params);
     }
+
+    @Override
+	public List<EgovMap> selectHpMeetPoint() {
+		return memberListMapper.selectHpMeetPoint();
+	}
 }

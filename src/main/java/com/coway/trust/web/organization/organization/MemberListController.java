@@ -1766,4 +1766,15 @@ logger.debug("params : {}", params);
         return ResponseEntity.ok(cdStus);
     }
     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - End
+
+    // 2018-07-26 - LaiKW - Add HP Meeting Point drop down - Start
+	@RequestMapping(value = "/selectHpMeetPoint.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCodeList(@RequestParam Map<String, Object> params) {
+
+		List<EgovMap> meetList = memberListService.selectHpMeetPoint();
+		logger.debug("return_Values: " + meetList.toString());
+
+		return ResponseEntity.ok(meetList);
+	}
+	// 2018-07-26 - LaiKW - Add HP Meeting Point drop down - End
 }

@@ -170,13 +170,7 @@ public interface MemberListService {
 
     EgovMap getUserRole(Map<String, Object> params);
 
-
-
 	EgovMap selectMemberValidDate(Map<String, Object> params);
-
-
-    //EgovMap getCDCnfm(Map<String, Object> params);
-
 
     void updateCodyCfm(Map<String, Object> params) throws Exception;
 
@@ -186,6 +180,5 @@ public interface MemberListService {
 
 	EgovMap getCDInfo(Map<String, Object> params);
 
-
-
+	List<EgovMap> selectHpMeetPoint();
 }
