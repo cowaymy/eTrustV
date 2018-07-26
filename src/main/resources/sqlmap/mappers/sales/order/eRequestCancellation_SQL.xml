@@ -1008,6 +1008,7 @@
     </select>
 
         <select id="cancelReqInfo" parameterType="Map" resultType="egovMap">
+        SELECT * FROM (
         SELECT distinct A.REQ_ID ,
                    A.REQ_NO ,
                    A.ORD_ID ,
@@ -1128,6 +1129,9 @@
                                     V.ATTACH
                             FROM SAL1007V V ) A
              WHERE  A.ORD_ID = #{salesOrderId}
+             ORDER BY REQ_ID DESC )
+             WHERE
+              ROWNUM = 1
     </select>
 
 </mapper>
