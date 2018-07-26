@@ -450,6 +450,7 @@ console.log("ready");
             $('#mobileNo').prop('required', true);
             $('#emailLbl').append("<span class='must'>*</span>");
             $('#mobileNoLbl').append("<span class='must'>*</span>");
+            $('#meetingPoint').append("<span class='must'>*</span>");
 
             $("#apprStusText").attr("disabled", true);
             $("#apprStusCombo").attr("disabled", true);
@@ -823,6 +824,17 @@ console.log("validation");
     if($("#memberType").val() == "2803") {
         if($("#email").val() == '') {
             Common.alert("Please key in Email Address");
+            return false;
+        }
+
+        // 2018-07-26 - LaiKW - Added Meeting Point and Branch
+        if($('#meetingPoint').val() == '') {
+            Common.alert("Please select meeting point");
+            return false;
+        }
+
+        if($('#branch').val() == '') {
+            Common.alert("Please select branch");
             return false;
         }
     }
