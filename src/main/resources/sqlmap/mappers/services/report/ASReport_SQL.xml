@@ -18,7 +18,7 @@
 		         JOIN ORG0005D ORG5 ON ORG5.MEM_ID = Extent1.MEM_ID
 		          WHERE  ( 1 = Extent1.STUS )
 		                   AND ( Extent1.MEM_TYPE = 3 )
-		                   AND ( ORG5.MEM_LVL= 4 )
+		                   AND ( ORG5.MEM_LVL in ( '4','3','2') )
 		                   <!-- By KV link with branch in as log book list jsp -->
 		                   <if test="groupCode != null and groupCode !='' ">
 		                       and Extent1.BRNCH = #{groupCode}
