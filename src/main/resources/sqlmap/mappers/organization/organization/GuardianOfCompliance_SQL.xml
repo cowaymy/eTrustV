@@ -835,4 +835,12 @@
         FROM SYS0070M A LEFT JOIN SYS0071D B ON A.ATCH_FILE_ID = B.ATCH_FILE_ID
         WHERE ATCH_FILE_GRP_ID = #{cmplncAtchFileGrpId}
      </select>
+     
+     <update id="updateGuarContent" parameterType="Map">
+           UPDATE MSC0043M
+           SET REQST_UPD_DT = sysdate,
+                  REQST_CNTNT = #{guardianRemark},
+                  REQST_UPD_USER_ID = #{guardianCreateBy}
+           WHERE  ( REQST_ID = #{reqstId} )
+     </update>
 </mapper>

@@ -41,5 +41,7 @@ public interface GuardianOfComplianceMapper {
 	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
 
 	EgovMap selectAttachDownload(Map<String, Object> params);
+	
+	void updateGuarContent(Map<String, Object> params);
 }
 

@@ -31,5 +31,7 @@ public interface GuardianOfComplianceService {
 	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
 
 	EgovMap selectAttachDownload(Map<String, Object> params);
+	
+	boolean updateGuardianCompliance(Map<String, Object> params,SessionVO sessionVo);
 
 }

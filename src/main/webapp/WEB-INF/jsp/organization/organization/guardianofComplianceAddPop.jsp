@@ -244,7 +244,7 @@ function fn_caseChange (val) {
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Guardian of Compliance New</h1>
+<h1>Guardian of Coway New</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="btnGuarViewClose">CLOSE</a></p></li>
 </ul>

@@ -289,4 +289,28 @@ public class GuardianOfComplianceServiceImpl extends EgovAbstractServiceImpl imp
 	public EgovMap selectAttachDownload(Map<String, Object> params) {
 		return guardianOfComplianceMapper.selectAttachDownload(params);
 	}
+	
+	@Override
+	public boolean  updateGuardianCompliance(Map<String, Object> params,SessionVO sessionVo) {
+
+		boolean success = false;
+		EgovMap guardian = guardianOfComplianceMapper.selectGuardianNoValue(params);
+
+		if(guardian != null){
+    		Map<String, Object> com =new HashMap<String, Object>();
+
+    		com.put("reqstId", Integer.parseInt(params.get("reqstId").toString()));
+    		com.put("guardianRemark",params.get("complianceRem").toString());
+    		com.put("guardianCreateBy", sessionVo.getUserId());
+
+    		 //insert
+    		guardianOfComplianceMapper.updateGuarContent(com);
+
+           
+    		success = true;
+		}
+		return success;
+
+	}
+
 }

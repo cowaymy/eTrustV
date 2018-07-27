@@ -20,16 +20,12 @@ $(document).ready(function(){
             var reqstStus = "${guardianofCompliance.reqstStusId}";
 
                 if(reqstStus == 5 || reqstStus == 6){
-                    $('#empty').addClass("blind");
-                    $('#status').addClass("blind");
+                    $('#complianceRem').addClass("readonly");
                     $('#save').addClass("blind");
-                    $('#ccontent').addClass("blind");
                 }
                 else{
-                    $('#empty').removeClass("blind");
-                    $('#status').removeClass("blind");
                     $('#save').removeClass("blind");
-                    $('#ccontent').removeClass("blind");
+                    $('#complianceRem').removeClass("readonly");
                 }
 
 
@@ -107,48 +103,23 @@ function fn_caseChange (val) {
 }
 
 function fn_validation(){
-    if($("#caseCategory").val() == "" ){
-            Common.alert("Please select a case category");
-            return false;
-    }
-    if($("#caseCategory").val() == "2144"){
-        if($("#docType").val() == ""){
-            Common.alert("Please select a case detail");
-            return false;
-        }
-    }
-    if($("#cmbreqStatus").val() == ""){
-            Common.alert("Please select a status");
-            return false;
-    }
-    if($("#cmbreqStatus").val() == "44" || $("#cmbreqStatus").val() == "6"){
-        if($("#complianceContent").val() == ""){
+
+        if($("#complianceRem").val() == ""){
             Common.alert("Remark field is empty");
             return false;
         }
-    }
+
 
     return true;
 }
 
 function fn_save(){
     if(fn_validation()){
-        if($("#cmbreqStatus").val() == '5'){
-            Common.ajax("POST", "/organization/compliance/saveGuardianCompliance2.do",$("#saveForm").serializeJSON() , function(result) {
+
+            Common.ajax("POST", "/organization/compliance/updateGuardianCompliance.do",$("#saveForm").serializeJSON() , function(result) {
                 console.log("성공.");
-                Common.alert("Compliance call Log saved.<br /> Case No : "+result.data+"<br />", fn_guardianViewPopClose());
+                Common.alert("Compliance call Log saved.<br />", fn_guardianViewPopClose());
         });
-        }
-        else{
-            Common.ajax("POST", "/organization/compliance/saveGuardianCompliance.do",$("#saveForm").serializeJSON() , function(result) {
-                console.log("성공.");
-                if(result.data){
-                    Common.alert("Compliance call Log saved.<br />", fn_guardianViewPopClose());
-                }else{
-                    Common.alert("Compliance call Log saved Fail.<br />");
-                }
-            });
-        }
 
     }
 }
@@ -183,7 +154,7 @@ function fn_memberListNew(){
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Guardian of Compliance View</h1>
+<h1>Guardian of Coway View</h1>
 <ul class="right_opt">
     <li><p class="btn_blue2"><a href="#" id="btnGuarViewClose">CLOSE</a></p></li>
 </ul>
@@ -303,7 +274,7 @@ function fn_memberListNew(){
 <tr>
     <th scope="row">Feedback Content</th>
     <td colspan="7">
-    <textarea cols="20" rows="5"  id="complianceRem"  readonly="readonly"  class="readonly"  name="complianceRem">${guardianofCompliance.reqstCntnt}</textarea>
+    <textarea cols="20" rows="5"  id="complianceRem"  class=""  name="complianceRem">${guardianofCompliance.reqstCntnt}</textarea>
     </td>
 </tr>
 <tr>
@@ -331,6 +302,10 @@ function fn_memberListNew(){
 </tbody>
 </table><!-- table end -->
 </form>
+
+    <ul class="center_btns" id="save">
+        <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_save()">Save</a></p></li>
+    </ul>
 
 
 </article><!-- tap_area end -->

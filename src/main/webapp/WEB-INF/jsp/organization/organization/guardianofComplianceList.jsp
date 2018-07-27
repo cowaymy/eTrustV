@@ -168,7 +168,7 @@ function fn_complianceViewLimit() {
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Guardian of Compliance</h2>
+<h2>Guardian of Coway</h2>
 <ul class="right_btns">
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_complianceNew()"><span class="new"></span>New</a></p></li>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">

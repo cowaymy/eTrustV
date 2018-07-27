@@ -393,4 +393,17 @@ public class GuardianOfComplianceController {
 		logger.debug("fileDownload : {}",fileDownload);
 		return ResponseEntity.ok(fileDownload);
 	}
+	
+	@RequestMapping(value = "/updateGuardianCompliance.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateGuardianCompliance(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVo) {
+		boolean success = false;
+		logger.debug("params : {}",params);
+		success = guardianOfComplianceService.updateGuardianCompliance(params,sessionVo);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(success);
+		return ResponseEntity.ok(message);
+	}
 }
