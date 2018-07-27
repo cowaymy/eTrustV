@@ -1,19 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.payment.payment.service.impl.SearchPaymentMapper">
-    
+
     <sql id="pagingStart">
         SELECT *
         FROM (SELECT ROWNUM AS RNUM
                                 ,Z.*
-                    FROM (  
+                    FROM (
     </sql>
     <sql id="pagingEnd">
          ) Z
                     WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) )
         WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
     </sql>
-    
+
     <!--Search Payment Order List(Master Grid) 리스트 조회  -->
     <select id="selectOrderList" parameterType="Map" resultType="egovMap">
     <include refid="pagingStart" />
@@ -71,8 +71,8 @@
 			ADV_MONTH,
 			TR_ISSU_DT,
 			BATCH_PAY_ID
-	    FROM           
-	        PAY1001V 
+	    FROM
+	        PAY1001V
 	    WHERE
 	        1=1
 	        <if test="orderNo != '' and orderNo != null">
@@ -81,41 +81,41 @@
 	        <if test="orderId != '' and orderId != null">
               AND SALES_ORD_ID = #{orderId}
             </if>
-	        <if test="payDate1 != '' and payDate2 != '' and payDate1 != null and payDate2 != null"> 
+	        <if test="payDate1 != '' and payDate2 != '' and payDate1 != null and payDate2 != null">
 				AND PAY_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{payDate1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
 		        AND PAY_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{payDate2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
 			</if>
-	        <if test="applicationType != '' and applicationType != null"> 
+	        <if test="applicationType != '' and applicationType != null">
 			AND APP_TYPE_ID = #{applicationType}
 			</if>
-	        <if test="orNo != '' and orNo != null"> 
-			AND OR_NO = #{orNo} 
+	        <if test="orNo != '' and orNo != null">
+			AND OR_NO = #{orNo}
 			</if>
 	        <if test="poNo != '' and poNo != null">
-			AND PO_NO = #{poNo} 
+			AND PO_NO = #{poNo}
 			</if>
 	        <if test="paymentType != '' and paymentType != null">
 			AND PAY_TYPE_ID = #{paymentType}
 			</if>
-	        <if test="customerId != '' and customerId != null"> 
+	        <if test="customerId != '' and customerId != null">
 			AND CUST_ID = #{customerId}
 			</if>
-	        <if test="branchId != '' and branchId != null"> 
+	        <if test="branchId != '' and branchId != null">
 			AND KEYIN_BRNCH_ID = #{branchId}
 			</if>
-	        <if test="userId != '' and userId != null"> 
+	        <if test="userId != '' and userId != null">
 			AND KEYIN_USER_ID = #{userId}
 			</if>
-	        <if test="customerName != '' and customerName != null"> 
+	        <if test="customerName != '' and customerName != null">
 			AND CUST_NAME LIKE '%' || #{customerName} || '%'
 			</if>
 	        <if test="customerIC != '' and customerIC != null">
 			AND CUST_IC = #{customerIC}
 			</if>
-	        <if test="trNo != '' and trNo != null"> 
+	        <if test="trNo != '' and trNo != null">
 			AND TR_NO = #{trNo}
 			</if>
-	        <if test="chequeNo != '' and chequeNo != null"> 
+	        <if test="chequeNo != '' and chequeNo != null">
 			AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_CHQ_NO = #{chequeNo})
 			</if>
 	        <if test="crcNo != '' and crcNo != null">
@@ -127,36 +127,36 @@
 	        <if test="batchPaymentId != '' and batchPaymentId != null">
 			AND BATCH_PAY_ID = #{batchPaymentId}
 			</if>
-			
-			<if test="orderNo != '' and orderNo != null 
-			             or payDate1 != '' and payDate1 != null 
-			             or payDate2 != '' and payDate2 != null 
-			             or applicationType != '' and applicationType != null 
-			             or orNo != '' and orNo != null 
-			             or poNo != '' and poNo != null 
-			             or paymentType != '' and paymentType != null 
-			             or customerId != '' and customerId != null 
-			             or branchId != '' and branchId != null 
-			             or userId != '' and userId != null 
-			             or customerName != '' and customerName != null 
-			             or customerIC != '' and customerIC != null 
-			             or trNo != '' and trNo != null 
-			             or chequeNo != '' and chequeNo != null 
-			             or crcNo != '' and crcNo != null 
-			             or bankAccount != '' and bankAccount != null 
+
+			<if test="orderNo != '' and orderNo != null
+			             or payDate1 != '' and payDate1 != null
+			             or payDate2 != '' and payDate2 != null
+			             or applicationType != '' and applicationType != null
+			             or orNo != '' and orNo != null
+			             or poNo != '' and poNo != null
+			             or paymentType != '' and paymentType != null
+			             or customerId != '' and customerId != null
+			             or branchId != '' and branchId != null
+			             or userId != '' and userId != null
+			             or customerName != '' and customerName != null
+			             or customerIC != '' and customerIC != null
+			             or trNo != '' and trNo != null
+			             or chequeNo != '' and chequeNo != null
+			             or crcNo != '' and crcNo != null
+			             or bankAccount != '' and bankAccount != null
 			             or batchPaymentId != '' and batchPaymentId != null ">
                 ORDER BY PAY_ID
             </if>
-	    <include refid="pagingEnd" />           
+	    <include refid="pagingEnd" />
     </select>
-    
+
      <!--Search Payment Order List(Master Grid) 전체 건수  -->
-    
-    <select id="selectOrderListCount" parameterType="Map" resultType="int">    
+
+    <select id="selectOrderListCount" parameterType="Map" resultType="int">
         SELECT
            COUNT(1) AS CNT
-        FROM           
-            PAY1001V 
+        FROM
+            PAY1001V
         WHERE
             1=1
             <if test="orderNo != '' and orderNo != null">
@@ -165,41 +165,41 @@
             <if test="orderId != '' and orderId != null">
               AND SALES_ORD_ID = #{orderId}
             </if>
-            <if test="payDate1 != '' and payDate2 != '' and payDate1 != null and payDate2 != null"> 
+            <if test="payDate1 != '' and payDate2 != '' and payDate1 != null and payDate2 != null">
                 AND PAY_DT  <![CDATA[   >= ]]> TO_DATE(TO_CHAR(TO_DATE(#{payDate1},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss')
                 AND PAY_DT  <![CDATA[  < ]]>  TO_DATE(TO_CHAR(TO_DATE(#{payDate2},'DD/MM/YYYY'),'YYYYMMDD') || '000000','yyyymmddhh24miss') + 1
             </if>
-            <if test="applicationType != '' and applicationType != null"> 
+            <if test="applicationType != '' and applicationType != null">
             AND APP_TYPE_ID = #{applicationType}
             </if>
-            <if test="orNo != '' and orNo != null"> 
-            AND OR_NO = #{orNo} 
+            <if test="orNo != '' and orNo != null">
+            AND OR_NO = #{orNo}
             </if>
             <if test="poNo != '' and poNo != null">
-            AND PO_NO = #{poNo} 
+            AND PO_NO = #{poNo}
             </if>
             <if test="paymentType != '' and paymentType != null">
             AND PAY_TYPE_ID = #{paymentType}
             </if>
-            <if test="customerId != '' and customerId != null"> 
+            <if test="customerId != '' and customerId != null">
             AND CUST_ID = #{customerId}
             </if>
-            <if test="branchId != '' and branchId != null"> 
+            <if test="branchId != '' and branchId != null">
             AND KEYIN_BRNCH_ID = #{branchId}
             </if>
-            <if test="userId != '' and userId != null"> 
+            <if test="userId != '' and userId != null">
             AND KEYIN_USER_ID = #{userId}
             </if>
-            <if test="customerName != '' and customerName != null"> 
+            <if test="customerName != '' and customerName != null">
             AND CUST_NAME LIKE '%' || #{customerName} || '%'
             </if>
             <if test="customerIC != '' and customerIC != null">
             AND CUST_IC = #{customerIC}
             </if>
-            <if test="trNo != '' and trNo != null"> 
+            <if test="trNo != '' and trNo != null">
             AND TR_NO = #{trNo}
             </if>
-            <if test="chequeNo != '' and chequeNo != null"> 
+            <if test="chequeNo != '' and chequeNo != null">
             AND PAY_ID IN (SELECT PAY_ID from PAY0065D WHERE PAY_ITM_CHQ_NO = #{chequeNo})
             </if>
             <if test="crcNo != '' and crcNo != null">
@@ -210,58 +210,58 @@
             </if>
             <if test="batchPaymentId != '' and batchPaymentId != null">
             AND BATCH_PAY_ID = #{batchPaymentId}
-            </if>         
+            </if>
     </select>
-    
+
     <!--Search Payment : PaymentList (Slave Grid) 리스트 조회  -->
     <select id="selectPaymentList" parameterType="Map" resultType="egovMap">
-        SELECT 
-            Extent1.PAY_ITM_ID, 
-            Extent1.PAY_ID, 
-            Extent1.PAY_ITM_MODE_ID, 
-            Extent2.CODE_NAME, 
-            Extent1.PAY_ITM_REF_NO, 
-            Extent1.PAY_ITM_CC_NO, 
-            CASE WHEN Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL THEN Extent1.PAY_ITM_ORI_CC_NO ELSE ' ' END AS C1, 
+        SELECT
+            Extent1.PAY_ITM_ID,
+            Extent1.PAY_ID,
+            Extent1.PAY_ITM_MODE_ID,
+            Extent2.CODE_NAME,
+            Extent1.PAY_ITM_REF_NO,
+            Extent1.PAY_ITM_CC_NO,
+            CASE WHEN Extent1.PAY_ITM_ORI_CC_NO IS NOT NULL THEN Extent1.PAY_ITM_ORI_CC_NO ELSE ' ' END AS C1,
 		    Extent1.PAY_ITM_ORI_CC_NO,
-		    Extent1.PAY_ITM_CC_TYPE_ID, 
-		    Extent3.CODE_NAME AS CODE_NAME1, 
-		    Extent1.PAY_ITM_CC_HOLDER_NAME, 
-		    Extent1.PAY_ITM_CC_EXPR_DT, 
-		    Extent1.PAY_ITM_CHQ_NO, 
-		    Extent1.PAY_ITM_ISSU_BANK_ID, 
-		    CASE WHEN Extent4.BANK_ID IS NOT NULL THEN Extent4.CODE ELSE ' ' END AS C2, 
-		    Extent4.NAME, 
-		    Extent1.PAY_ITM_AMT, 
-		    Extent1.PAY_ITM_IS_ONLINE, 
-		    Extent1.PAY_ITM_BANK_ACC_ID AS PayItemBankAccID, 
-		    CASE WHEN Extent5.ACC_ID IS NOT NULL THEN Extent5.ACC_CODE ELSE ' ' END AS C3, 
-		    Extent5.ACC_DESC, 
-		    Extent1.PAY_ITM_REF_DT, 
-		    Extent1.PAY_ITM_APPV_NO, 
-		    Extent1.PAY_ITM_REM, 
-		    Extent1.PAY_ITM_STUS_ID, 
-		    Extent6.NAME AS NAME1, 
-		    Extent1.PAY_ITM_IS_LOK, 
-		    Extent1.PAY_ITM_BANK_CHRG_AMT, 
-		    Extent1.PAY_ITM_IS_THRD_PARTY, 
-		    Extent1.PAY_ITM_THRD_PARTY_IC, 
-		    Extent1.PAY_ITM_MID, 
-		    Extent1.PAY_ITM_GRP_ID, 
-		    Extent1.PAY_ITM_REF_ITM_ID, 
-		    Extent1.ETC3, 
-		    CASE WHEN Extent1.PAY_ITM_EFT_NO IS NOT NULL THEN Extent1.PAY_ITM_EFT_NO ELSE ' ' END AS C4, 
-		    CASE WHEN Extent1.PAY_ITM_RUNNG_NO IS NOT NULL THEN Extent1.PAY_ITM_RUNNG_NO ELSE ' ' END AS C5, 
-		    CASE WHEN Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL THEN Extent1.PAY_ITM_CARD_TYPE_ID ELSE 0 END AS C6, 
-		    CASE WHEN Extent7.CODE_ID IS NOT NULL THEN Extent7.CODE_NAME ELSE ' ' END AS C7, 
-		    CASE WHEN Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL THEN 
-		                                                                  CASE WHEN 1298 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'On' 
-                                                                         WHEN 1299 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'Off' 
-                                                                         WHEN 1300 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'PNP' 
+		    Extent1.PAY_ITM_CC_TYPE_ID,
+		    Extent3.CODE_NAME AS CODE_NAME1,
+		    Extent1.PAY_ITM_CC_HOLDER_NAME,
+		    Extent1.PAY_ITM_CC_EXPR_DT,
+		    Extent1.PAY_ITM_CHQ_NO,
+		    Extent1.PAY_ITM_ISSU_BANK_ID,
+		    CASE WHEN Extent4.BANK_ID IS NOT NULL THEN Extent4.CODE ELSE ' ' END AS C2,
+		    Extent4.NAME,
+		    Extent1.PAY_ITM_AMT,
+		    Extent1.PAY_ITM_IS_ONLINE,
+		    Extent1.PAY_ITM_BANK_ACC_ID AS PayItemBankAccID,
+		    CASE WHEN Extent5.ACC_ID IS NOT NULL THEN Extent5.ACC_CODE ELSE ' ' END AS C3,
+		    Extent5.ACC_DESC,
+		    Extent1.PAY_ITM_REF_DT,
+		    Extent1.PAY_ITM_APPV_NO,
+		    Extent1.PAY_ITM_REM,
+		    Extent1.PAY_ITM_STUS_ID,
+		    Extent6.NAME AS NAME1,
+		    Extent1.PAY_ITM_IS_LOK,
+		    Extent1.PAY_ITM_BANK_CHRG_AMT,
+		    Extent1.PAY_ITM_IS_THRD_PARTY,
+		    Extent1.PAY_ITM_THRD_PARTY_IC,
+		    Extent1.PAY_ITM_MID,
+		    Extent1.PAY_ITM_GRP_ID,
+		    Extent1.PAY_ITM_REF_ITM_ID,
+		    Extent1.ETC3,
+		    CASE WHEN Extent1.PAY_ITM_EFT_NO IS NOT NULL THEN Extent1.PAY_ITM_EFT_NO ELSE ' ' END AS C4,
+		    CASE WHEN Extent1.PAY_ITM_RUNNG_NO IS NOT NULL THEN Extent1.PAY_ITM_RUNNG_NO ELSE ' ' END AS C5,
+		    CASE WHEN Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL THEN Extent1.PAY_ITM_CARD_TYPE_ID ELSE 0 END AS C6,
+		    CASE WHEN Extent7.CODE_ID IS NOT NULL THEN Extent7.CODE_NAME ELSE ' ' END AS C7,
+		    CASE WHEN Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL THEN
+		                                                                  CASE WHEN 1298 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'On'
+                                                                         WHEN 1299 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'Off'
+                                                                         WHEN 1300 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'PNP'
                                                                          ELSE CARDMODE.CODE_NAME END
-		         WHEN 1 = Extent1.PAY_ITM_IS_ONLINE THEN 'On' 
+		         WHEN 1 = Extent1.PAY_ITM_IS_ONLINE THEN 'On'
 		         WHEN 0 = Extent1.PAY_ITM_IS_ONLINE THEN 'Off' ELSE '-' END AS C8
-        FROM       
+        FROM
 		    PAY0065D Extent1
 		    LEFT OUTER JOIN SYS0013M Extent2 ON Extent2.CODE_ID = Extent1.PAY_ITM_MODE_ID
 		    LEFT OUTER JOIN SYS0013M Extent3 ON Extent3.CODE_ID = Extent1.PAY_ITM_CC_TYPE_ID
@@ -270,12 +270,12 @@
 		    LEFT OUTER JOIN SYS0038M Extent6 ON Extent6.STUS_CODE_ID = Extent1.PAY_ITM_STUS_ID
 		    LEFT OUTER JOIN SYS0013M Extent7 ON Extent7.CODE_ID = Extent1.PAY_ITM_CARD_TYPE_ID
 		    LEFT OUTER JOIN SYS0013M CARDMODE ON Extent1.PAY_ITM_CARD_MODE_ID = CARDMODE.CODE_ID
-		WHERE 
+		WHERE
 		    Extent1.PAY_ITM_STUS_ID = 1
 		    AND Extent1.PAY_ID = #{payId}
-                      
+
     </select>
-     
+
     <select id="selectSalesList" parameterType="Map" resultType="egovMap">
      SELECT V.ORG_CODE tOrgCode  ,
        V.GRP_CODE tGrpCode  ,
@@ -285,7 +285,7 @@
        V.DEPT_CODE DeptCode,
        R1.MEM_CODE MemberCode,
        COUNT(ACC.ACC_DEBT_ORD_ID)  sUnit  ,
-       SUM(CASE 
+       SUM(CASE
                 WHEN Sub.ACC_DEBT_SUB_OPNG_OTSTND <![CDATA[< ]]> 0 THEN 0
            ELSE Sub.ACC_DEBT_SUB_OPNG_OTSTND
               END)  sLMOS  ,
@@ -295,10 +295,10 @@
        SUM(Sub.ACC_DEBT_SUB_CURR_ADJ)  sADJ  ,
        (SUM(Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET)  + (SUM(Sub.ACC_DEBT_SUB_CURR_COLCT)  + SUM(Sub.ACC_DEBT_SUB_CURR_ADJ) )) sOUT  ,
        /*SUM(Sub.AccDebtSubTotalOutstanding)CUROUTSTD,*/
-       (CASE 
+       (CASE
              WHEN (SUM(Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET) ) = 0 THEN 0
        ELSE round(((SUM(Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET)  + (SUM(Sub.ACC_DEBT_SUB_CURR_COLCT)  + SUM(Sub.ACC_DEBT_SUB_CURR_ADJ) )) / (SUM(Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET) ) * 100), 2)
-          END) sRate  
+          END) sRate
   FROM PAY0052S ACC
          JOIN PAY0053S Sub   ON Sub.ACC_DEBT_ORD_ID = ACC.ACC_DEBT_ORD_ID
          JOIN SAL0001D SOM   ON SOM.SALES_ORD_ID = ACC.ACC_DEBT_ORD_ID
@@ -308,7 +308,7 @@
          JOIN ORG1001V V   ON V.MEM_ID = R1.MEM_ID
  WHERE  R1.STUS = 1
           AND SOM.APP_TYPE_ID = 66
-          
+
           /* AND SOM.DeptCode like '%CCS%'*/
           AND Sub.ACC_DEBT_SUB_OPNG_COLCT_TRGET > 0
           AND SOM.STUS_CODE_ID = 4
@@ -330,44 +330,44 @@
       GROUP BY V.ORG_CODE,V.GRP_CODE,V.DEPT_CODE,R1.MEM_CODE
        ORDER BY V.ORG_CODE,V.GRP_CODE,V.DEPT_CODE,R1.MEM_CODE
      </select>
-     
+
      <!-- RentalCollectionByBS 리스트 조회 -->
     <select id="searchRentalCollectionByBSList" parameterType="rentalCollectionByBSSearchVO" resultType="rentalCollectionByBSListVO">
-       SELECT 
+       SELECT
            S_ID AS sID,
-           T_ORG_CODE AS tOrgCode, 
-           T_GRP_CODE AS tGrpCode, 
-           T_DEPT_CODE AS tDeptCode, 
-           ORG_CODE AS orgCode, 
-           GRP_CODE AS grpCode, 
-           DEPT_CODE AS deptCode, 
-           MEM_CODE AS memCode, 
-           S_UNIT AS sUnit, 
-           S_LMOS AS sLmos, 
-           S_CM_CHG AS sCmChg, 
-           S_CL_CTG AS sClCtg, 
-           S_COL AS sCol, 
-           S_ADJ AS sAdj, 
-           S_OUT AS sOut, 
+           T_ORG_CODE AS tOrgCode,
+           T_GRP_CODE AS tGrpCode,
+           T_DEPT_CODE AS tDeptCode,
+           ORG_CODE AS orgCode,
+           GRP_CODE AS grpCode,
+           DEPT_CODE AS deptCode,
+           MEM_CODE AS memCode,
+           S_UNIT AS sUnit,
+           S_LMOS AS sLmos,
+           S_CM_CHG AS sCmChg,
+           S_CL_CTG AS sClCtg,
+           S_COL AS sCol,
+           S_ADJ AS sAdj,
+           S_OUT AS sOut,
            S_OUT_RATE AS sOutRate
         FROM REP0014S
         WHERE
         1=1
         <if test="orgCode != '' ">
-           AND T_ORG_CODE = #{orgCode} 
+           AND T_ORG_CODE = #{orgCode}
        </if>
        <if test="grpCode != '' ">
-           AND T_GRP_CODE = #{grpCode} 
+           AND T_GRP_CODE = #{grpCode}
        </if>
        <if test="deptCode != '' ">
-           AND T_DEPT_CODE = #{deptCode} 
+           AND T_DEPT_CODE = #{deptCode}
        </if>
        <if test="memCode != '' ">
-           AND MEM_CODE = #{memCode} 
+           AND MEM_CODE = #{memCode}
        </if>
        ORDER BY S_ID
     </select>
-    
+
      <select id="selectPaymentDetailViewer" parameterType="Map" resultType="egovMap">
           SELECT Extent1.TRX_ID TRX_ID  ,
 		       Extent1.TRX_DT TRX_DT  ,
@@ -422,7 +422,7 @@
 		       Extent1.ADV_MONTH ADV_MONTH  ,
 		       /*Extent1.TR_ISSU_DT TR_ISSU_DT  ,*/
 		       TO_CHAR(Extent1.TR_ISSU_DT,'DD/MM/YYYY') TR_ISSU_DT  ,
-		       Extent1.BATCH_PAY_ID BATCH_PAY_ID  
+		       Extent1.BATCH_PAY_ID BATCH_PAY_ID
 		  FROM ( SELECT PaymentMasterView.TRX_ID TRX_ID  ,
                 PaymentMasterView.TRX_DT TRX_DT  ,
                 PaymentMasterView.TRX_AMT TRX_AMT  ,
@@ -475,41 +475,41 @@
                 PaymentMasterView.ALLOW_COMM ALLOW_COMM  ,
                 PaymentMasterView.ADV_MONTH ADV_MONTH  ,
                 PaymentMasterView.TR_ISSU_DT TR_ISSU_DT  ,
-                PaymentMasterView.BATCH_PAY_ID BATCH_PAY_ID  
+                PaymentMasterView.BATCH_PAY_ID BATCH_PAY_ID
          FROM PAY1001V PaymentMasterView ) Extent1
         WHERE  Extent1.PAY_ID = #{payId} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
-     
+
      <select id="selectOrderProgressStatus" parameterType="Map" resultType="egovMap">
-          SELECT 
+          SELECT
                 Extent1.INSTALL_ENTRY_ID  ,
                 Extent2.REM   ,
-                Extent3.NAME   
+                Extent3.NAME
 		        FROM SAL0046D Extent1
 		         LEFT JOIN SAL0047D Extent2   ON Extent1.INSTALL_ENTRY_ID = Extent2.ENTRY_ID
 		         LEFT JOIN SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
-		         JOIN ( SELECT MAX(Extent4.INSTALL_ENTRY_ID)  A1  
+		         JOIN ( SELECT MAX(Extent4.INSTALL_ENTRY_ID)  A1
 		                FROM SAL0046D Extent4
 		                       JOIN CCR0006D Extent5   ON Extent4.SALES_ORD_ID = Extent5.SALES_ORD_ID
             WHERE  Extent5.SALES_ORD_ID = #{salesOrdId} ) GroupBy1   ON Extent1.INSTALL_ENTRY_ID = GroupBy1.A1 WHERE ROWNUM <![CDATA[   <= ]]> 1
      </select>
-     
+
      <select id="selectPaymentDetailView" parameterType="Map" resultType="egovMap">
           SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
 		       Extent1.PAY_ID PAY_ID  ,
 		       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
 		       Extent2.CODE_NAME CODE_NAME  ,
 		       Extent1.PAY_ITM_REF_NO PAY_ITM_REF_NO  ,
-		       (CASE 
+		       (CASE
                   WHEN Extent1.PAY_ITM_ORI_CC_NO IS NULL THEN ' '
-                  WHEN LENGTH(Extent1.PAY_ITM_ORI_CC_NO) >= 13 THEN SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,0,6) 
-                                              || '******' || SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,13,LENGTH(Extent1.PAY_ITM_ORI_CC_NO))            
+                  WHEN LENGTH(Extent1.PAY_ITM_ORI_CC_NO) >= 13 THEN SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,0,6)
+                                              || '******' || SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,13,LENGTH(Extent1.PAY_ITM_ORI_CC_NO))
                                                                 ELSE Extent1.PAY_ITM_ORI_CC_NO END) PAY_ITM_CC_NO,
-                (CASE 
+                (CASE
                   WHEN Extent1.PAY_ITM_ORI_CC_NO IS NULL THEN ' '
-                  WHEN LENGTH(Extent1.PAY_ITM_ORI_CC_NO) >= 13 THEN SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,0,6) 
-                                              || '******' || SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,13,LENGTH(Extent1.PAY_ITM_ORI_CC_NO))            
-                                                                ELSE Extent1.PAY_ITM_ORI_CC_NO END) C1,                   
+                  WHEN LENGTH(Extent1.PAY_ITM_ORI_CC_NO) >= 13 THEN SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,0,6)
+                                              || '******' || SUBSTR(Extent1.PAY_ITM_ORI_CC_NO,13,LENGTH(Extent1.PAY_ITM_ORI_CC_NO))
+                                                                ELSE Extent1.PAY_ITM_ORI_CC_NO END) C1,
 		       Extent1.PAY_ITM_ORI_CC_NO AS PAY_ITM_ENCRYPT_CC_NO   ,
 		       Extent1.PAY_ITM_CC_TYPE_ID PAY_ITM_CC_TYPE_ID  ,
 		       Extent3.CODE_NAME CODENAME1  ,
@@ -517,7 +517,7 @@
 		       Extent1.PAY_ITM_CC_EXPR_DT PAY_ITM_CC_EXPR_DT  ,
 		       Extent1.PAY_ITM_CHQ_NO PAY_ITM_CHQ_NO  ,
 		       Extent1.PAY_ITM_ISSU_BANK_ID PAY_ITM_ISSU_BANK_ID  ,
-		       CASE 
+		       CASE
 		            WHEN ( Extent4.BANK_ID IS NOT NULL ) THEN Extent4.CODE
 		       ELSE ' '
 		          END C2  ,
@@ -525,7 +525,7 @@
 		       Extent1.PAY_ITM_AMT PAY_ITM_AMT  ,
 		       Extent1.PAY_ITM_IS_ONLINE PAY_ITM_IS_ONLINE  ,
 		       Extent1.PAY_ITM_BANK_ACC_ID PAY_ITM_BANK_ACC_ID  ,
-		       CASE 
+		       CASE
 		            WHEN ( Extent5.ACC_ID IS NOT NULL ) THEN Extent5.ACC_CODE
 		       ELSE ' '
 		          END C3  ,
@@ -543,32 +543,32 @@
 		       Extent1.PAY_ITM_GRP_ID PAY_ITM_GRP_ID  ,
 		       Extent1.PAY_ITM_REF_ITM_ID PAY_ITM_REF_ITM_ID  ,
 		       Extent1.ETC3 ETC3  ,
-		       CASE 
+		       CASE
 		            WHEN ( Extent1.PAY_ITM_EFT_NO IS NOT NULL ) THEN Extent1.PAY_ITM_EFT_NO
 		       ELSE ' '
 		          END C4  ,
-		       CASE 
+		       CASE
 		            WHEN ( Extent1.PAY_ITM_RUNNG_NO IS NOT NULL ) THEN Extent1.PAY_ITM_RUNNG_NO
 		       ELSE ' '
 		          END PAY_ITM_RUNNG_NO  ,
-		       CASE 
+		       CASE
 		            WHEN ( Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL ) THEN Extent1.PAY_ITM_CARD_TYPE_ID
 		       ELSE 0
 		          END C6  ,
-		       CASE 
+		       CASE
 		            WHEN ( Extent7.CODE_ID IS NOT NULL ) THEN Extent7.CODE_NAME
 		       ELSE ' '
 		          END C7  ,
-		       CASE 
-		            WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN 		            
-		                                                                  CASE WHEN 1298 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'On' 
-                                                                         WHEN 1299 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'Off' 
-                                                                         WHEN 1300 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'PNP' 
+		       CASE
+		            WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN
+		                                                                  CASE WHEN 1298 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'On'
+                                                                         WHEN 1299 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'Off'
+                                                                         WHEN 1300 = Extent1.PAY_ITM_CARD_MODE_ID THEN 'PNP'
                                                                          ELSE CARDMODE.CODE_NAME END
 		            WHEN ( 1 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'On'
 		            WHEN ( 0 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'Off'
 		       ELSE '-'
-		          END C8  
+		          END C8
 		  FROM PAY0065D Extent1
 		         LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_ITM_MODE_ID
 		         LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PAY_ITM_CC_TYPE_ID
@@ -580,9 +580,9 @@
 		 WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
 		          AND ( Extent1.PAY_ID = #{payId} )
      </select>
-     
+
      <select id="selectPaymentDetailSlaveList" parameterType="Map" resultType="egovMap">
-          SELECT 
+          SELECT
                Extent1.TRX_ID TRX_ID  ,
                TO_CHAR(Extent1.TRX_DT,'DD-MM-YYYY') TRX_DT,
                Extent1.TRX_AMT TRX_AMT  ,
@@ -635,7 +635,7 @@
                Extent1.ALLOW_COMM ALLOW_COMM  ,
                Extent1.ADV_MONTH ADV_MONTH  ,
                Extent1.TR_ISSU_DT TR_ISSU_DT  ,
-               Extent1.BATCH_PAY_ID BATCH_PAY_ID  
+               Extent1.BATCH_PAY_ID BATCH_PAY_ID
           FROM ( SELECT PaymentMasterView.TRX_ID TRX_ID  ,
                 PaymentMasterView.TRX_DT TRX_DT  ,
                 PaymentMasterView.TRX_AMT TRX_AMT  ,
@@ -688,11 +688,11 @@
                 PaymentMasterView.ALLOW_COMM ALLOW_COMM  ,
                 PaymentMasterView.ADV_MONTH ADV_MONTH  ,
                 PaymentMasterView.TR_ISSU_DT TR_ISSU_DT  ,
-                PaymentMasterView.BATCH_PAY_ID BATCH_PAY_ID  
+                PaymentMasterView.BATCH_PAY_ID BATCH_PAY_ID
          FROM PAY1001V PaymentMasterView ) Extent1
         WHERE  Extent1.PAY_ID = #{payId}
      </select>
-     
+
      <select id="selectViewHistoryList" parameterType="java.lang.Integer" resultType="egovMap">
         SELECT Project1.HIST_ID HistoryId  ,
 		       Project1.CRT_DT CreateDate  ,
@@ -704,7 +704,7 @@
 		       Project1.TYPE_ID TypeID  ,
 		       Project1.CODE_NAME TypeName  ,
 		       Project1.VALU_FROM ValueFr  ,
-		       Project1.VALU_TO ValueTo  
+		       Project1.VALU_TO ValueTo
         FROM ( SELECT Extent1.HIST_ID HIST_ID  ,
                 Extent1.TYPE_ID TYPE_ID  ,
                 Extent1.PAY_ID PAY_ID  ,
@@ -715,17 +715,17 @@
                 TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') CRT_DT  ,
                 Extent1.CRT_USER_ID CREATEBY  ,
                 Extent2.CODE_NAME CODE_NAME  ,
-                CASE 
+                CASE
                      WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
                 ELSE ' '
-                   END C1  
+                   END C1
          FROM PAY0066D Extent1
                 JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TYPE_ID
                 LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
           WHERE  Extent1.PAY_ID = #{value} ) Project1
      ORDER BY Project1.HIST_ID DESC
     </select>
-    
+
     <select id="selectDetailHistoryList" parameterType="java.lang.Integer" resultType="egovMap">
         SELECT Project1.HIST_ID HistoryID  ,
 		       Project1.CRT_USER_ID CreatorId  ,
@@ -738,7 +738,7 @@
 		       Project1.CODE_NAME TypeName  ,
 		       Project1.VALU_FROM ValueFr  ,
 		       Project1.VALU_TO ValueTo  ,
-		       Project1.PAY_ITM_ID PayItemID  
+		       Project1.PAY_ITM_ID PayItemID
 		  FROM ( SELECT Extent1.HIST_ID HIST_ID  ,
 		                Extent1.TYPE_ID TYPE_ID  ,
 		                Extent1.PAY_ID PAY_ID  ,
@@ -750,19 +750,19 @@
 		                TO_CHAR(Extent1.CRT_DT, 'DD-MM-YYYY') CRT_DT  ,
 		                Extent1.CRT_USER_ID CRT_USER_ID  ,
 		                Extent2.CODE_NAME CODE_NAME  ,
-		                CASE 
+		                CASE
 		                     WHEN ( Extent3.USER_ID IS NOT NULL ) THEN Extent3.USER_NAME
 		                ELSE ' '
-		                   END USER_NAME  
+		                   END USER_NAME
 		         FROM PAY0095D Extent1
 		                JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.TYPE_ID
 		                LEFT JOIN SYS0047M Extent3   ON Extent3.USER_ID = Extent1.CRT_USER_ID
 		          WHERE  Extent1.PAY_ITM_ID = #{value} ) Project1
 		  ORDER BY Project1.HIST_ID DESC
     </select>
-    
+
     <select id="selectPayMaster" parameterType="Map" resultType="egovMap">
-          SELECT 
+          SELECT
 		       Extent1.PAY_ID PAY_ID  ,
 		       Extent1.OR_NO OR_NO  ,
 		       Extent1.SALES_ORD_ID SALES_ORD_ID  ,
@@ -796,31 +796,31 @@
 		       Extent1.TAX_INVC_REF_NO TAX_INVC_REF_NO  ,
 		       Extent1.TAX_INVC_REF_DT TAX_INVC_REF_DT  ,
 		       Extent1.SVC_CNTRCT_ID SVC_CNTRCT_ID  ,
-		       Extent1.BATCH_PAY_ID BATCH_PAY_ID  
+		       Extent1.BATCH_PAY_ID BATCH_PAY_ID
 		  FROM PAY0064D Extent1
 		 WHERE  Extent1.PAY_ID = #{hiddenPayId} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
-  
+
      <insert id="saveChanges" parameterType="Map">
         INSERT INTO PAY0066D(
         HIST_ID,
-        TYPE_ID, 
-        PAY_ID, 
-        VALU_FROM, 
-        VALU_TO, 
-        REF_ID_FROM, 
-        REF_ID_TO, 
-        CRT_DT, 
+        TYPE_ID,
+        PAY_ID,
+        VALU_FROM,
+        VALU_TO,
+        REF_ID_FROM,
+        REF_ID_TO,
+        CRT_DT,
         CRT_USER_ID
         )VALUES (
         PAY0066D_SEQ.NEXTVAL,
-        #{typeID}, 
-        #{payID}, 
-        #{valueFr}, 
-        #{valueTo}, 
-        #{refIDFr}, 
-        #{refIDTo}, 
-        SYSDATE, 
+        #{typeID},
+        #{payID},
+        #{valueFr},
+        #{valueTo},
+        #{refIDFr},
+        #{refIDTo},
+        SYSDATE,
         #{createBy}
         )
     </insert>
@@ -828,17 +828,17 @@
     <update id="updChanges" parameterType="Map">
         UPDATE PAY0064D
         SET
-        UPD_DT= SYSDATE 
+        UPD_DT= SYSDATE
           , TR_NO=#{trNo}
           , COLL_MEM_ID = #{collMemId}
           , BRNCH_ID = #{brnchId}
           , TR_ISSU_DT = TO_DATE(#{trIssueDate},'DD/MM/YYYY')
-          , ALLOW_COMM = #{allowComm}       
+          , ALLOW_COMM = #{allowComm}
         WHERE PAY_ID=#{payId}
     </update>
-    
+
     <select id="selectMemCode" parameterType="Map" resultType="egovMap">
-          SELECT 
+          SELECT
                Extent1.MEM_ID MEM_ID  ,
                Extent1.MEM_CODE MEM_CODE  ,
 		       Extent1.MEM_TYPE MEM_TYPE  ,
@@ -893,12 +893,12 @@
 		       Extent1.MEM_IS_OUT_SRC MEM_IS_OUT_SRC  ,
 		       Extent1.APLICNT_ID APLICNT_ID  ,
 		       Extent1.BIZ_TYPE BIZ_TYPE  ,
-		       Extent1.HSPTLZ HSPTLZ  
+		       Extent1.HSPTLZ HSPTLZ
 		  FROM ORG0001D Extent1
-				LEFT JOIN SYS0064M nads ON Extent1.AREA_ID = nads.AREA_ID AND nads.STATUS_ID = 1			
+				LEFT JOIN SYS0064M nads ON Extent1.AREA_ID = nads.AREA_ID AND nads.STATUS_ID = 1
 		 WHERE  Extent1.MEM_ID = #{edit_txtCollectorId} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
-     
+
      <select id="selectBranchCode" parameterType="Map" resultType="egovMap">
           SELECT Extent1.BRNCH_ID BRNCH_ID  ,
 		       Extent1.CODE CODE  ,
@@ -920,21 +920,21 @@
 		       Extent1.UPD_USER_ID UPD_USER_ID  ,
 		       Extent1.UPD_DT UPD_DT  ,
 		       Extent1.IS_SYNC IS_SYNC  ,
-		       Extent1.REGN_ID REGN_ID  
+		       Extent1.REGN_ID REGN_ID
 		  FROM SYS0005M Extent1
 		 WHERE  Extent1.BRNCH_ID = #{edit_branchId} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
-     
+
      <update id="updGlReceiptBranchId" parameterType="Map">
         UPDATE PAY0009D
         SET
-        GL_RECIPT_BRNCH_ID = #{brnchId} 
+        GL_RECIPT_BRNCH_ID = #{brnchId}
         WHERE
         ID=#{id}
     </update>
-    
+
     <select id="selectPayDs" parameterType="Map" resultType="egovMap">
-          SELECT 
+          SELECT
                Extent1.PAY_ITM_ID PAY_ITM_ID  ,
 		       Extent1.PAY_ID PAY_ID  ,
 		       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
@@ -975,14 +975,14 @@
 		       Extent1.IS_FUND_TRNSFR IS_FUND_TRNSFR  ,
 		       Extent1.SKIP_RECON SKIP_RECON  ,
 		       Extent1.PAY_ITM_CARD_TYPE_ID PAY_ITM_CARD_TYPE_ID  ,
-		       Extent1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID  
+		       Extent1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID
 		  FROM PAY0065D Extent1
 		 WHERE  ( Extent1.PAY_ID = #{hiddenPayId} )
          AND ( 1 = Extent1.PAY_ITM_STUS_ID )
      </select>
-     
+
      <select id="selectGlRoute" parameterType="java.lang.String" resultType="egovMap">
-          SELECT 
+          SELECT
             Extent1.ID ID  ,
             Extent1.GL_POSTNG_DT GL_POSTNG_DT  ,
 	       Extent1.GL_FISCAL_DT GL_FISCAL_DT  ,
@@ -1003,7 +1003,7 @@
 	       Extent1.GL_AUDIT_REF GL_AUDIT_REF  ,
 	       Extent1.GL_CNVR_STUS GL_CNVR_STUS  ,
 	       Extent1.GL_CNVR_DT GL_CNVR_DT  ,
-	       Extent1.GL_RECIPT_ITM_CHRG GL_RECIPT_ITM_CHRG  
+	       Extent1.GL_RECIPT_ITM_CHRG GL_RECIPT_ITM_CHRG
 	  FROM PAY0009D Extent1
 	 WHERE  Extent1.GL_RECIPT_ITM_ID = #{value} AND ROWNUM <![CDATA[   <= ]]>  1
      </select>
@@ -1048,7 +1048,7 @@
 	       Limit1.C5 PAY_ITM_RUNNG_NO  ,
 	       Limit1.C6 PAY_ITM_CARD_TYPE_ID  ,
 	       Limit1.C7 CODE_ID  ,
-	       Limit1.C8 IS_ONLINE  
+	       Limit1.C8 IS_ONLINE
 	  FROM ( SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
 	                Extent1.PAY_ID PAY_ID  ,
 	                Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
@@ -1087,12 +1087,12 @@
 	                CASE WHEN ( Extent1.PAY_ITM_RUNNG_NO IS NOT NULL ) THEN Extent1.PAY_ITM_RUNNG_NO ELSE ' ' END C5  ,
 	                CASE WHEN ( Extent1.PAY_ITM_CARD_TYPE_ID IS NOT NULL ) THEN Extent1.PAY_ITM_CARD_TYPE_ID ELSE 0 END C6  ,
 	                CASE WHEN ( Extent7.CODE_ID IS NOT NULL ) THEN Extent7.CODE_NAME ELSE ' ' END C7  ,
-	                CASE WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN CASE 
+	                CASE WHEN ( Extent1.PAY_ITM_CARD_MODE_ID IS NOT NULL ) THEN CASE
 	                        WHEN ( 1298 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'On'
 	                        WHEN ( 1299 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'Off'
 	                        WHEN ( 1300 = Extent1.PAY_ITM_CARD_MODE_ID ) THEN 'PNP' ELSE '-' END
 	                     WHEN ( 1 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'On'
-	                     WHEN ( 0 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'Off' ELSE '-' END C8  
+	                     WHEN ( 0 = Extent1.PAY_ITM_IS_ONLINE ) THEN 'Off' ELSE '-' END C8
 	               FROM PAY0065D Extent1
 		                LEFT JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.PAY_ITM_MODE_ID
 		                LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.PAY_ITM_CC_TYPE_ID
@@ -1103,7 +1103,7 @@
 	               WHERE  ( 1 = Extent1.PAY_ITM_STUS_ID )
 	                   AND ( Extent1.PAY_ITM_ID = #{value} ) AND ROWNUM <![CDATA[<]]>= 1 ) Limit1
 	</select>
-	
+
 	<select id="selectPaymentDetail" parameterType="java.lang.Integer" resultType="egovMap">
 	   SELECT Extent1.PAY_ITM_ID PAY_ITM_ID  ,
 	       Extent1.PAY_ID PAY_ID  ,
@@ -1145,26 +1145,26 @@
 	       Extent1.IS_FUND_TRNSFR IS_FUND_TRNSFR  ,
 	       Extent1.SKIP_RECON SKIP_RECON  ,
 	       Extent1.PAY_ITM_CARD_TYPE_ID PAY_ITM_CARD_TYPE_ID  ,
-	       Extent1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID  
+	       Extent1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID
 	 FROM PAY0065D Extent1
 	 WHERE  Extent1.PAY_ITM_ID = #{value} AND ROWNUM <![CDATA[<=]]> 1
 	</select>
 
-	
+
     <select id="checkORNoIsAORType" parameterType="java.lang.String" resultType="java.lang.String">
-        SELECT Limit1.OR_NO OR_NO  
-        FROM ( SELECT Extent2.OR_NO OR_NO  
+        SELECT Limit1.OR_NO OR_NO
+        FROM ( SELECT Extent2.OR_NO OR_NO
             FROM PAY0065D Extent1
                 JOIN PAY0064D Extent2   ON Extent2.PAY_ID = Extent1.PAY_ID
             WHERE  Extent1.PAY_ITM_ID = #{value} AND ROWNUM <![CDATA[<= ]]>1 ) Limit1
        WHERE  Limit1.OR_NO LIKE '%AOR%'
     </select>
-    
+
     <update id="insertPayDHistory" parameterType="PayDHistoryVO" >
         <selectKey keyProperty="historyId" resultType="int" order="BEFORE">
             SELECT PAY0095D_SEQ.NEXTVAL FROM DUAL
         </selectKey>
-        
+
         INSERT INTO PAY0095D
         (
             HIST_ID,
@@ -1192,7 +1192,7 @@
             #{createBy}
         )
     </update>
-    
+
     <update id="updatePayDetail" parameterType="Map">
         UPDATE PAY0065D
         SET UPD_DT = SYSDATE
@@ -1231,50 +1231,50 @@
         </if>
          WHERE PAY_ITM_ID = #{payItemId}
     </update>
-    
+
     <select id="selectPaymentDocRelated" parameterType="java.lang.Integer" resultType="EgovMap">
-        SELECT 
-			RELATED_ID RELATED_ID, 
-			PAY_ITM_ID PAY_ITM_ID, 
-			STUS_ID STUS_ID, 
-			CRT_DT CRT_DT, 
-			CRT_USER_ID CRT_USER_ID, 
-			UPD_DT UPD_DT, 
-			UPD_USER_ID UPD_USER_ID, 
+        SELECT
+			RELATED_ID RELATED_ID,
+			PAY_ITM_ID PAY_ITM_ID,
+			STUS_ID STUS_ID,
+			CRT_DT CRT_DT,
+			CRT_USER_ID CRT_USER_ID,
+			UPD_DT UPD_DT,
+			UPD_USER_ID UPD_USER_ID,
 			ITM_ID ITM_ID
 		FROM PAY0098M
-		WHERE PAY_ITM_ID = #{value} AND 1 = STUS_ID  
+		WHERE PAY_ITM_ID = #{value} AND 1 = STUS_ID
     </select>
-    
+
     <select id="selectPaymentDocDetail" parameterType="java.lang.Integer" resultType="EgovMap">
         SELECT
-			ITM_ID ITM_ID, 
-			BATCH_ID BATCH_ID, 
-			ITM_STUS_ID ITM_STUS_ID, 
-			TRX_ID TRX_ID, 
-			AMT AMT, 
-			PAY_MODE_ID PAY_MODE_ID, 
-			IS_ONLINE IS_ONLINE, 
-			ORI_CC_NO ORI_CC_NO, 
-			CC_TYPE_ID CC_TYPE_ID, 
-			CC_HOLDER_NAME CC_HOLDER_NAME, 
-			CC_EXPR CC_EXPR, 
-			BANK_ID BANK_ID, 
-			REF_DT REF_DT, 
-			APPV_NO APPV_NO, 
-			REF_NO REF_NO, 
-			CRT_DT CRT_DT, 
-			CRT_USER_ID CRT_USER_ID, 
-			UPD_DT UPD_DT, 
-			UPD_USER_ID UPD_USER_ID, 
-			MID MID, 
-			BRNCH_ID BRNCH_ID, 
-			PAY_DT PAY_DT, 
+			ITM_ID ITM_ID,
+			BATCH_ID BATCH_ID,
+			ITM_STUS_ID ITM_STUS_ID,
+			TRX_ID TRX_ID,
+			AMT AMT,
+			PAY_MODE_ID PAY_MODE_ID,
+			IS_ONLINE IS_ONLINE,
+			ORI_CC_NO ORI_CC_NO,
+			CC_TYPE_ID CC_TYPE_ID,
+			CC_HOLDER_NAME CC_HOLDER_NAME,
+			CC_EXPR CC_EXPR,
+			BANK_ID BANK_ID,
+			REF_DT REF_DT,
+			APPV_NO APPV_NO,
+			REF_NO REF_NO,
+			CRT_DT CRT_DT,
+			CRT_USER_ID CRT_USER_ID,
+			UPD_DT UPD_DT,
+			UPD_USER_ID UPD_USER_ID,
+			MID MID,
+			BRNCH_ID BRNCH_ID,
+			PAY_DT PAY_DT,
 			ACC_ID ACC_ID
 		FROM PAY0097D
 		WHERE ITM_ID = #{value}
     </select>
-    
+
    <update id="updatePayDocDetail" parameterType="Map">
         UPDATE PAY0097D
         SET UPD_DT = SYSDATE
@@ -1295,7 +1295,7 @@
         </if>
         <if test="ccTypeId != null ">
             , CC_TYPE_ID = #{ccTypeId}
-        </if>        
+        </if>
         <if test="updator != null ">
             , UPD_USER_ID = #{updator}
         </if>
@@ -1306,15 +1306,15 @@
 	   FROM SYS0004M
 	   WHERE BANK_ID = #{value}
 	</select>
-	
+
 	<select id="selectCodeDetail" parameterType="java.lang.String" resultType="java.lang.String">
 	   SELECT CODE_NAME
 	   FROM SYS0013M
 	   WHERE CODE_ID = #{value}
 	</select>
-	
+
 	<select id="selectPaymentItemIsPassRecon" parameterType="Map" resultType="egovMap">
-       SELECT 
+       SELECT
 	       Extent1.PAY_ITM_ID PAY_ITM_ID  ,
 	       Extent1.PAY_ID PAY_ID  ,
 	       Extent1.PAY_ITM_MODE_ID PAY_ITM_MODE_ID  ,
@@ -1355,7 +1355,7 @@
 	       Extent1.IS_FUND_TRNSFR IS_FUND_TRNSFR  ,
 	       Extent1.SKIP_RECON SKIP_RECON  ,
 	       Extent1.PAY_ITM_CARD_TYPE_ID PAY_ITM_CARD_TYPE_ID  ,
-	       Extent1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID  
+	       Extent1.PAY_ITM_CARD_MODE_ID PAY_ITM_CARD_MODE_ID
 	   FROM PAY0065D Extent1
 	         JOIN PAY0074D Extent2   ON Extent2.F_DEP_RECON_ITM_PAY_ITM_ID = Extent1.PAY_ITM_ID
 	         JOIN PAY0073D Extent3   ON ( Extent3.F_DEP_RECON_ID = Extent2.F_DEP_RECON_ID )
@@ -1363,6 +1363,78 @@
 	   WHERE  ( Extent1.PAY_ID = #{payId} )
 	          AND ( 1 = Extent1.PAY_ITM_STUS_ID )
     </select>
-	
+
+	<!-- RentalCollectionByBS 리스트 조회 -->
+    <select id="searchRCByBSAgingMonthList" parameterType="rentalCollectionByBSSearchVO" resultType="egovMap">
+       SELECT
+		    ACC_DEBT_SUB_CURR_ADJ ,
+		    ACC_DEBT_SUB_CURR_COLCT ,
+		    ACC_DEBT_SUB_TOT_OTSTND ,
+		    IS_BOOLEAN ,
+		    IS_BS_BOOLEAN ,
+		    ACC_DEBT_SUB_OPNG_OTSTND_AGING ,
+		    ACC_DEBT_ORD_NO ,
+		    ACC_DEBT_ORD_ID ,
+		    MODE_ID ,
+		    PAY_MODE ,
+		    ACC_DEBT_SUB_OPNG_COLCT_TRGET ,
+		    CUSTOMER_TYPE_ID ,
+		    CUSTOMER_NAME ,
+		    MEM_ID ,
+		    MEM_CODE ,
+		    MEMBER_NAME ,
+		    TOP_ORG_CODE ,
+		    ORG_CODE ,
+		    GRP_CODE ,
+		    DEPT_CODE ,
+		    TEL_M1 ,
+		    TEL_M2 ,
+		    TEL_R ,
+		    TEL_O ,
+		    TELF,
+		    DEDUCT_STUS,
+		    BANK_DTL_DR_BANK_TYPE_ID
+        FROM PAY1012V
+        WHERE 1=1
+        <if test="orgCode != '' ">
+           AND ORG_CODE = #{orgCode}
+       </if>
+       <if test="grpCode != '' ">
+           AND GRP_CODE = #{grpCode}
+       </if>
+       <if test="deptCode != '' ">
+           AND DEPT_CODE = #{deptCode}
+       </if>
+        <if test="memCode != '' ">
+           AND MEM_CODE = #{memCode}
+       </if>
+       <if test="cmbOutstandMonth != '' and cmbOutstandMonth != 0">
+           AND ACC_DEBT_SUB_OPNG_OTSTND_AGING BETWEEN #{cmbOutstandMonth} AND (#{cmbOutstandMonth}+1)
+       </if>
+       <if test="cmbCustTypeId != '' ">
+           AND CUSTOMER_TYPE_ID = #{cmbCustTypeId}
+       </if>
+       <if test="cmbIsPaid != '' and cmbIsPaid != 0">
+            <if test="cmbIsPaid == 1 ">
+                AND (ACC_DEBT_SUB_CURR_ADJ + ACC_DEBT_SUB_CURR_COLCT + ACC_DEBT_SUB_OPNG_COLCT_TRGET ) = 0
+           </if>
+            <if test="cmbIsPaid == 2 ">
+                AND  (ACC_DEBT_SUB_CURR_ADJ + ACC_DEBT_SUB_CURR_COLCT + ACC_DEBT_SUB_OPNG_COLCT_TRGET ) <![CDATA[ > ]]> 0
+                AND ACC_DEBT_SUB_CURR_COLCT <![CDATA[ < ]]> 0
+           </if>
+            <if test="cmbIsPaid == 3 ">
+                AND ACC_DEBT_SUB_CURR_COLCT = 0
+           </if>
+       </if>
+       <if test="cmbPaymode != '' ">
+           AND MODE_ID = #{cmbPaymode}
+       </if>
+       <if test="cmbBsMonth != '' ">
+           AND IS_BS_BOOLEAN = #{cmbBsMonth}
+       </if>
+<!--         <if test="deductStus != '' ">
+           AND MEM_CODE = #{memCode}
+       </if> -->
+    </select>
 
 </mapper>

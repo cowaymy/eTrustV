@@ -27,42 +27,42 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("searchPaymentMapper")
 public interface SearchPaymentMapper {
 
-	
+
 	/**
 	 * SearchPayment Order List(Master Grid) 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectOrderList(Map<String, Object> params);
-	
+
 	/**
 	 * SearchPayment Order List(Master Grid) 전체 건수
 	 * @param params
 	 * @return
 	 */
 	int selectOrderListCount(Map<String, Object> params);
-	
+
 	/**
 	 * SearchPayment Payment List(Slave Grid) 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectPaymentList(Map<String, Object> params);
-	
+
 	/**
 	 * RentalCollectionBySales(Slave Grid) 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectSalesList(Map<String, Object> params);
-	
+
 	/**
 	 * RentalCollectionByBS 조회
 	 * @param params
 	 * @return
 	 */
 	List<RentalCollectionByBSSearchVO> searchRentalCollectionByBSList(RentalCollectionByBSSearchVO searchVO);
-	
+
 	/**
 	 * MasterHistory 조회
 	 * @param params
@@ -76,85 +76,85 @@ public interface SearchPaymentMapper {
 	 * @return
 	 */
 	List<EgovMap> selectDetailHistoryList(int payItemId);
-	
+
 	/**
 	 * PaymentDetailViewer   조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectPaymentDetailViewer(Map<String, Object> params);
-	
+
 	/**
 	 * 주문진행상태   조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectOrderProgressStatus(Map<String, Object> params);
-	
+
 	/**
 	 * paymentDetailView   조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectPaymentDetailView(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * PaymentDetailSlaveList   조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectPaymentDetailSlaveList(Map<String, Object> params);
-	
+
 	/**
 	 * selectPayMaster   조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectPayMaster(Map<String, Object> params);
-	
+
 	/**
 	 * SaveChanges
 	 * @param params
 	 * @return
 	 */
 	void saveChanges(Map<String, Object> params);
-	
+
 	/**
 	 * updChanges
 	 * @param params
 	 * @return
 	 */
 	void updChanges(Map<String, Object> params);
-	
+
 	/**
 	 * selectPayMaster   조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectMemCode(Map<String, Object> params);
-	
+
 	/**
 	 * selectBranchCode   조회
 	 * @param params
 	 * @return
 	 */
 	EgovMap selectBranchCode(Map<String, Object> params);
-	
+
 	/**
 	 * updGlReceiptBranchId
 	 * @param params
 	 * @return
 	 */
 	void updGlReceiptBranchId(Map<String, Object> params);
-	
+
 	/**
 	 * selectPayDs   조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectPayDs(Map<String, Object> params);
-	
+
 	/**
 	 * selectGlRoute   조회
 	 * @param params
@@ -168,7 +168,7 @@ public interface SearchPaymentMapper {
 	 * @return
 	 */
 	List<EgovMap> selectPaymentItem(int payItemId);
-	
+
 	/**
 	 * PaymentDetail 조회
 	 * @param payItemId
@@ -176,53 +176,60 @@ public interface SearchPaymentMapper {
 	 */
 	List<EgovMap> selectPaymentDetail(int payItemId);
 
-	
+
 	/**
 	 *  CheckAORType 조회
 	 * @param payItemId
 	 * @return
 	 */
 	String checkORNoIsAORType(String payItmId);
-	
+
 	/**
 	 *  PayHistory에 저장
 	 * @param payItemId
 	 * @return
 	 */
 	void insertPayDHistory(PayDHistoryVO vo);
-	
+
 	/**
 	 *  paymentDetail업데이트
 	 * @param Map
 	 * @return
 	 */
 	void updatePayDetail(Map map);
-	
+
 	/**
 	 *  DocRelated 검색
 	 * @param String
 	 * @return EgovMap
 	 */
 	List<EgovMap> selectPaymentDocRelated(int payItemId);
-	
+
 	/**
 	 *  DocDetail 검색
 	 * @param int
 	 * @return EgovMap
 	 */
 	List<EgovMap> selectPaymentDocDetail(int payItemId);
-	
+
 	/**
 	 *  payDocDetail업데이트
 	 * @param Map
 	 * @return
 	 */
 	void updatePayDocDetail(Map map);
-	
+
 	/**
 	 * selectPaymentItemIsPassRecon 조회
 	 * @param params
 	 * @return
 	 */
 	List<EgovMap> selectPaymentItemIsPassRecon(Map<String, Object> params);
+
+	/**
+	 * RentalCollectionByBSAgingMonth 조회
+	 * @param params
+	 * @return
+	 */
+	List<RentalCollectionByBSSearchVO> searchRCByBSAgingMonthList(RentalCollectionByBSSearchVO searchVO);
 }

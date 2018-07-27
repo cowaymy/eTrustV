@@ -1044,4 +1044,36 @@ public class SearchPaymentController {
 
 		return ResponseEntity.ok(message);
 	}
+
+	/******************************************************
+	 * RentalCollectionByBS(Aging Month)
+	 *****************************************************/
+	/**
+	 * RentalCollectionByBS초기화 화면
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/initRCByBSAgingMonth.do")
+	public String initRCByBSAgingMonth(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "payment/payment/rentalCollectionByBSAgingMonth";
+	}
+
+	/**
+	 * RentalCollectionByBS(Aging Month)   조회
+	 * @param searchVO
+	 * @param params
+	 * @param model
+	 * @return
+	 */
+	@RequestMapping(value = "/selectRCByBSAgingMonthList", method = RequestMethod.GET)
+	public ResponseEntity<List<RentalCollectionByBSSearchVO>> selectRCByBSAgingMonthList(@ModelAttribute("searchVO")RentalCollectionByBSSearchVO searchVO
+				, @RequestParam Map<String, Object> params, ModelMap model) {
+
+        // 조회.
+        List<RentalCollectionByBSSearchVO> resultList = searchPaymentService.searchRCByBSAgingMonthList(searchVO);
+
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultList);
+	}
 }

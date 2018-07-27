@@ -766,4 +766,14 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 		return searchPaymentMapper.selectPaymentItemIsPassRecon(params);
 	}
 
+	/**
+	 * RentalCollectionByBSAgingMonth 조회
+	 * @param params
+	 * @return
+	 */
+	@Override
+	public List<RentalCollectionByBSSearchVO> searchRCByBSAgingMonthList(RentalCollectionByBSSearchVO searchVO) {
+		return searchPaymentMapper.searchRCByBSAgingMonthList(searchVO);
+	}
+
 }
