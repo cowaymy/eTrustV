@@ -10,12 +10,56 @@ $(document).ready(function() {
 
     $("#agreementVersion").attr("disabled", true);
     $("#memLevelCom").attr("disabled", true);
+    $("#selectBranch").attr("disabled", true);
 
     doGetCombo('/logistics/agreement/getMemStatus', null, '' ,'memStusCmb' , 'S');
-
+    console.log($("#userRole").val());
     if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
             $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
-            $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130) { // Administrator
+            $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130 || // Administrator
+            $("#userRole").val() == 177 || $("#userRole").val() == 179 || $("#userRole").val() == 180 || // Cody Support
+            $("#userRole").val() == 200 || $("#userRole").val() == 252 || $("#userRole").val() == 253 || // Cody Planning
+            $("#userRole").val() == 250 || $("#userRole").val() == 256 ) { // Cody Branch
+
+        //doGetComboSepa("/common/selectBranchCodeList.do",2 , '-',''   , 'branch' , 'S', '');
+
+        if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
+                $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105) { // DST Support
+
+            $('#memTypeCom option[value="1"] ').attr("selected", true);;
+            $('#memTypeCom').attr("disabled", true);
+
+            doGetCombo('/logistics/agreement/getAgreementVersion', '1', '' ,'agreementVersion' , 'S');
+            $("#memLevelCom").attr("disabled", false);
+            $("#agreementVersion").attr("disabled", false);
+            $("#selectBranch").attr("disabled", true);
+
+            $("#memLevelCom option[value='4']").attr("selected", true); // Temporary default to HP only
+
+            $("#selectBranchCol").attr("hidden", true);
+            $("#selectBranchLbl").attr("hidden", true);
+            $("#selectBranch").attr("hidden", true);
+
+        } else if($("#userRole").val() == 177 || $("#userRole").val() == 179 || $("#userRole").val() == 180 || // Cody Support
+                $("#userRole").val() == 200 || $("#userRole").val() == 252 || $("#userRole").val() == 253 || // Cody Planning
+                $("#userRole").val() == 250 || $("#userRole").val() == 256 ){
+
+            var brnch = "${branch}";
+            $('#selectBranch option[value="' + brnch +'"] ').attr("selected", true);
+
+            $('#memTypeCom option[value="2"] ').attr("selected", true);
+            $('#memTypeCom').attr("disabled", true);
+
+            doGetCombo('/logistics/agreement/getAgreementVersion', '2', '' ,'agreementVersion' , 'S');
+            $("#memLevelCom").attr("disabled", false);
+            $("#agreementVersion").attr("disabled", false);
+
+            $("#memLevelCom option[value='4']").attr("selected", true); // Temporary default to Cody only
+
+            if($("#userRole").val() == 177 || $("#userRole").val() == 256) {
+                $("#selectBranch").attr("disabled", true);
+            }
+        }
 
         createAUIGrid();
         AUIGrid.setSelectionMode(myGridID, "singleRow");
@@ -26,9 +70,13 @@ $(document).ready(function() {
 
     } else {
 
+        $("#versionLbl").attr("hidden", true);
+        $("#versionCol").attr("hidden", true);
+        $("#agreementVersion").attr("hidden", true);
+
         var memType = "${memType}";
 
-        doGetCombo('/logistics/agreement/getMemLevel', memType, '' ,'memLevelCom' , 'S');
+        //doGetCombo('/logistics/agreement/getMemLevel', memType, '' ,'memLevelCom' , 'S');
         doGetCombo('/logistics/agreement/getAgreementVersion', memType, '' ,'agreementVersion' , 'S');
 
         if(memType == 1 || memType == 2) {
@@ -49,9 +97,14 @@ $(document).ready(function() {
 
             if(memType == 1) {
                 $("#agreementVersion option[value='" + result.version +"']").attr("selected", true);
+
+                $("#selectBranchCol").attr("hidden", true);
+                $("#selectBranchLbl").attr("hidden", true);
+                $("#selectBranch").attr("hidden", true);
             }
 
             if(memType == 2) {
+                $("#agreementVersion option[value='2017']").attr("selected", true);
                 $("#agreementVersion").attr("disabled", false);
             }
         })
@@ -73,13 +126,30 @@ function fn_onChgMemType() {
 
     var memType = $("#memTypeCom").val();
 
-    // Member Level
-    doGetCombo('/logistics/agreement/getMemLevel', memType, '' ,'memLevelCom' , 'S');
-    $("#memLevelCom").attr("disabled", false);
+    if(memType != '') {
+        // Member Level
+        doGetCombo('/logistics/agreement/getMemLevel', memType, '' ,'memLevelCom' , 'S');
+        $("#memLevelCom").attr("disabled", false);
+        $('#memLevelCom option[value="4"] ').attr("selected", true);
 
-    // Agreement Version
-    doGetCombo('/logistics/agreement/getAgreementVersion', memType, '' ,'agreementVersion' , 'S');
-    $("#agreementVersion").attr("disabled", false);
+        // Agreement Version
+        doGetCombo('/logistics/agreement/getAgreementVersion', memType, '' ,'agreementVersion' , 'S');
+        $("#agreementVersion").attr("disabled", false);
+
+        if(memType == "2") {
+            $("#selectBranch").attr("disabled", false);
+        }
+    } else {
+        $("#memLevelCom").empty();
+        $("#agreementVersion").empty();
+
+        $("#memLevelCom").append("<option value=''>Choose One</option>");
+        $("#agreementVersion").append("<option value=''>Choose One</option>");
+
+        $("#memLevelCom").attr("disabled", true);
+        $("#agreementVersion").attr("disabled", true);
+    }
+
 }
 
 function fn_searchMember() {
@@ -89,7 +159,20 @@ function fn_searchMember() {
         return false;
     }
 
-    Common.ajax("GET", "/logistics/agreement/memberList", $("#searchForm").serialize(), function(result) {
+    var obj = {
+        code : $("#code").val(),
+        name : $("#name").val(),
+        icNum : $("#icNum").val(),
+        memTypeCom : $("#memTypeCom").val(),
+        memLevelCom : $("#memLevelCom").val(),
+        memStusCmb : $("#memStusCmb").val(),
+        deptCode : $("#deptCode").val(),
+        grpCode : $("#grpCode").val(),
+        orgCode : $("#orgCode").val(),
+        selectBranch : $("#selectBranch").val()
+    };
+
+    Common.ajax("GET", "/logistics/agreement/memberList", obj, function(result) {
 
         console.log("search");
         console.log(result);
@@ -292,14 +375,18 @@ function createAUIGrid() {
             <option value="2">Cody</option>
         </select>
     </td>
-    <th scope="row">Status</th>
-    <td>
-        <select class="w100p" id="memStusCmb" name="memStusCmb">
-    </td>
     <th scope="row">Member Level</th>
     <td>
-        <select class="w100p" id="memLevelCom" name="memLevelCom">
-            <option value="" selected></option>
+        <select class="w100p"  id="memLevelCom" name="memLevelCom" >
+            <option value="">Choose One</option>
+                <c:forEach var="list" items="${memLevel}" varStatus="status">
+                    <option value="${list.codeId}">${list.codeName}</option>
+                </c:forEach>
+        </select>
+    </td>
+    <th scope="row">Status</th>
+    <td>
+        <select class="w100p" id="memStusCmb" name="memStusCmb"></select>
     </td>
 </tr>
 <tr>
@@ -317,8 +404,18 @@ function createAUIGrid() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Version</th>
-    <td>
+    <th scope="row" id="selectBranchLbl">Branch</th>
+    <td id="selectBranchCol">
+     <!-- <span><c:out value="${memberView.c4} - ${memberView.c5} " /></span>-->
+     <select class="w100p"  id="selectBranch" name="selectBranch" >
+        <option value="0">Choose One</option>
+        <c:forEach var="list" items="${branchList}" varStatus="status">
+           <option value="${list.brnchId}">${list.branchCode} - ${list.branchName}</option>
+        </c:forEach>
+    </select>
+    </td>
+    <th scope="row" id="versionLbl">Version</th>
+    <td  id="versionCol">
         <!-- Version option value to be added into SQL  -->
         <select class="w100p" id="agreementVersion" name="agreementVersion"></select>
     </td>
