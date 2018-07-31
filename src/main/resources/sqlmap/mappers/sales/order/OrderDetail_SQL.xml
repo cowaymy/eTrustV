@@ -127,7 +127,7 @@
                  ORDER BY T1.LOG_ID DESC
              ) T WHERE ROWNUM &lt;= 1
     </select>
-    
+
     <select id="selectOrderAgreementByOrderID" parameterType="Map" resultType="egovMap">
         SELECT T.GOV_AG_ITM_ID
              , T.GOV_AG_ID
@@ -165,7 +165,7 @@
              ) T
          WHERE RANK1 = 1
     </select>
-    
+
     <select id="selectOrderReferralInfoList" parameterType="Map" resultType="egovMap">
         SELECT T.SALES_ORD_ID
              , T.ORD_REF_ID
@@ -204,7 +204,7 @@
             ON T4.USER_ID = T.CRT_USER_ID
          WHERE T.SALES_ORD_NO = #{salesOrdNo}
     </select>
-    
+
     <resultMap id="callLogClobMap" type="egovMap">
         <result property="callRem" column="CALL_REM" jdbcType="CLOB" javaType="string"/>
     </resultMap>
@@ -440,7 +440,7 @@
     </select>
 
     <select id="selectOrderCCPFeedbackCodeByOrderID" parameterType="Map" resultType="egovMap">
- 
+
         select A.CODE,
                A.RESN_DESC
         from (
@@ -484,7 +484,7 @@
          AND ROWNUM <= 1
          ]]>
     </select>
-    
+
     <select id="selectOrderSalesmanViewByOrderID" parameterType="Map" resultType="egovMap">
         SELECT T1.SALES_ORD_ID SALES_ORD_ID
              , T1.DEPT_CODE DEPT_CODE
@@ -525,7 +525,7 @@
             ON T5.MEM_ID = T1.SALES_HM_ID
          WHERE  T1.SALES_ORD_ID = #{salesOrderId}
     </select>
-    
+
     <select id="selectOrderServiceMemberViewByOrderID" parameterType="Map" resultType="egovMap">
     <![CDATA[
         SELECT T1.SALES_ORD_ID SALES_ORD_ID
@@ -614,12 +614,12 @@
          WHERE T1.SALES_ORD_ID = #{salesOrderId} AND ROWNUM <= 1
     ]]>
     </select>
-    
+
     <select id="selectOrderSameRentalGroupOrderList" parameterType="Map" resultType="egovMap">
     <![CDATA[
         SELECT T.SALES_ORD_ID
              , T.SALES_ORD_NO
-             , T.CODE 
+             , T.CODE
              , T.CODE1
              , T.NAME
              , T.NRIC
@@ -649,7 +649,7 @@
          ORDER BY T.SALES_ORD_NO
     ]]>
     </select>
-    
+
     <select id="selectOrderMailingInfoByOrderID" parameterType="Map" resultType="egovMap">
         SELECT V1.ORD_ID
              , V1.ADDR_DTL
@@ -679,7 +679,7 @@
           FROM SAL1011V V1
          WHERE V1.ORD_ID = #{salesOrderId}
     </select>
-    
+
     <select id="selectOrderRentPaySetInfoByOrderID" parameterType="Map" resultType="egovMap">
         SELECT V1.ORD_ID
              , V1.RENT_PAY_ID
@@ -718,7 +718,7 @@
          WHERE V1.ORD_ID = #{salesOrderId}
            AND ROWNUM = 1
     </select>
-    
+
     <select id="selectThirdPartyInfo" parameterType="Map" resultType="egovMap">
         SELECT V1.ORD_ID
              , V1.RENT_PAY_MODE_CODE
@@ -754,7 +754,7 @@
           FROM PAY1009V V1
          WHERE V1.ORD_ID = #{salesOrderId}
     </select>
-    
+
     <select id="selectMembershipInfoList" parameterType="Map" resultType="egovMap">
         SELECT SORT_NO
              , SALES_ORD_ID
@@ -785,29 +785,29 @@
              )
          ORDER BY SORT_NO, MBRSH_START_DT2
     </select>
-    
+
     <select id="selectDocumentList" parameterType="Map" resultType="egovMap">
-        SELECT T.DOC_SUB_ID  
-             , T.DOC_SO_ID  
-             , T.DOC_TYPE_ID  
-             , T.CODE_NAME  
+        SELECT T.DOC_SUB_ID
+             , T.DOC_SO_ID
+             , T.DOC_TYPE_ID
+             , T.CODE_NAME
              , T.DOC_SUB_DT
              , T.DOC_COPY_QTY
-          FROM 
-             ( SELECT T1.DOC_SUB_ID DOC_SUB_ID  
-                    , T1.DOC_TYPE_ID DOC_TYPE_ID  
-                    , T1.DOC_SO_ID DOC_SO_ID  
-                    , T2.CODE_NAME CODE_NAME  
+          FROM
+             ( SELECT T1.DOC_SUB_ID DOC_SUB_ID
+                    , T1.DOC_TYPE_ID DOC_TYPE_ID
+                    , T1.DOC_SO_ID DOC_SO_ID
+                    , T2.CODE_NAME CODE_NAME
                     , DECODE(T1.DOC_SUB_DT, NULL, '01/01/1900', TO_CHAR(T1.DOC_SUB_DT, 'DD/MM/YYYY')) DOC_SUB_DT
                     , NVL(T1.DOC_COPY_QTY, 0) DOC_COPY_QTY
                  FROM ORG0010D T1
                  JOIN SYS0013M T2   ON T2.CODE_ID = T1.DOC_TYPE_ID
                 WHERE 1 = T1.STUS_ID
-                  AND T1.DOC_SO_ID = #{salesOrderId} 
+                  AND T1.DOC_SO_ID = #{salesOrderId}
              ) T
          ORDER BY T.CODE_NAME ASC
     </select>
-    
+
     <select id="selectGuaranteeInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
         SELECT T1.CCP_ID CCP_ID
@@ -849,7 +849,7 @@
            AND ROWNUM <= 1
     ]]>
     </select>
-    
+
     <select id="selectAutoDebitList" parameterType="Map" resultType="egovMap">
         SELECT T.BANK_DTL_ID
              , T.BANK_DTL_AMT
@@ -858,10 +858,12 @@
              , T.CRT_DT_DD
              , T.BATCH_MODE
              , T.CODE
-             , CASE WHEN T.CTRL_STUS_ID = 1 THEN '-'
-                    WHEN T.BANK_APPV    = 1 THEN 'Success'
-                                            ELSE 'Fail'
-               END IS_APPROVE_STR
+             ,     CASE
+                    WHEN t.ctrl_stus_id = 1 THEN '-'
+                    WHEN t.BANK_DTL_APPR_CODE IS NULL OR t.BANK_DTL_APPR_CODE = 00    THEN 'Success'
+                    WHEN t.BANK_DTL_APPR_CODE = 51 THEN 'Insufficient Fund'
+                    ELSE 'Others'
+            END is_approve_str
           FROM
              ( SELECT T1.BANK_DTL_ID
                     , T1.BANK_DTL_AMT
@@ -875,6 +877,7 @@
                     , DECODE(T3.BANK_ID, NULL, '', T3.CODE) CODE
                     , NVL(T2.CTRL_STUS_ID, 1) CTRL_STUS_ID
                     , NVL(T1.BANK_APPV, 0) BANK_APPV
+                    , NVL(t1.BANK_DTL_APPR_CODE,0) BANK_DTL_APPR_CODE
                  FROM PAY0042D T1
                  JOIN PAY0041D T2
                    ON T2.CTRL_ID = T1.BANK_DTL_CTRL_ID
@@ -886,7 +889,7 @@
              ) T
          ORDER BY T.BANK_DTL_ID DESC
     </select>
-    
+
     <select id="selectEcashList" parameterType="Map" resultType="egovMap">
         SELECT T1.FILE_ITM_ID
              , TO_CHAR(T1.FILE_ITM_CRT, 'DD/MM/YYYY') AS FILE_ITM_CRT
@@ -924,7 +927,7 @@
          WHERE T1.ORD_ID = #{salesOrderId}
            AND 1 = T1.DC_STUS_ID
     </select>
-    
+
     <select id="selectOrderConfigInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
         SELECT ORD_ID
@@ -1097,7 +1100,7 @@
          WHERE ROWNUM <= 1
     ]]>
     </select>
-    
+
     <select id="selectGSTCertInfo" parameterType="Map" resultType="egovMap">
     <![CDATA[
         SELECT T1.EURC_ID
@@ -1115,7 +1118,7 @@
            AND ROWNUM <= 1
     ]]>
     </select>
-    
+
     <select id="selectMemberInfo" parameterType="string" resultType="string">
     <![CDATA[
         SELECT CODE
@@ -1127,7 +1130,7 @@
            AND ROWNUM <= 1
     ]]>
     </select>
-    
+
     <resultMap id="transMap" type="egovMap"></resultMap>
     <select id="selectLast6MonthTransList" parameterType="Map"  statementType="CALLABLE">
         {
@@ -1477,7 +1480,7 @@
 		     ) T
     ]]>
     </select>
-    
+
     <select id="selectASInfoList" parameterType="Map" resultType="egovMap">
 		SELECT DISTINCT T.AS_ID
 		     , T.AS_NO
