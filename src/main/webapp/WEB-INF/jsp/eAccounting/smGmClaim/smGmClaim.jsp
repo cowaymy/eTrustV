@@ -198,9 +198,9 @@ function fn_setEvent() {
             if($("#invcType").val() == "F") {
                 var gstRgistNo = $(this).val();
                 console.log(gstRgistNo);
-                if(gstRgistNo.length != 12) {
+                /*if(gstRgistNo.length != 12) {
                     Common.alert('Please insert 12 digits GST Registration No');
-                    $("#gstRgistNo").val("");
+                    $("#gstRgistNo").val("");*/
                 }
             }
         }
