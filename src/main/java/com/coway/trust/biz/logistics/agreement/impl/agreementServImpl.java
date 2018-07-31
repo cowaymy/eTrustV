@@ -49,4 +49,14 @@ public class agreementServImpl extends EgovAbstractServiceImpl implements agreem
     public List<EgovMap> getAgreementVersion(Map<String, Object> params) {
         return agreementMapper.getAgreementVersion(params);
     }
+
+    @Override
+    public EgovMap getBranchCd(Map<String, Object> params) {
+        return agreementMapper.getBranchCd(params);
+    }
+
+	@Override
+	public List<EgovMap> branch() {
+		return agreementMapper.branch();
+	}
 }

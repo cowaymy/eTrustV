@@ -58,22 +58,35 @@
             <if test="memLevelCom != null and memLevelCom !='' ">
                 AND B.MEMLVL = #{memLevelCom}
             </if>
+            <if test="selectBranch != null and selectBranch !='' ">
+                AND A.BRNCH = #{selectBranch}
+            </if>
         ORDER BY B.ORGCODE, B.GRPCODE, B.DEPTCODE, B.MEMLVL, C.USER_STUS_ID, A.MEM_CODE
     </select>
 
     <select id="getMemberInfo" parameterType="Map" resultType="EgovMap">
-        SELECT
-            A.FULL_NAME NAME,
-            A.NRIC NRIC,
-            CASE WHEN B.DEPT_CODE = '' THEN B.LAST_DEPT_CODE ELSE B.DEPT_CODE END DEPTCDE,
-            B.LAST_GRP_CODE GRPCDE,
-            B.LAST_ORG_CODE ORGCDE,
-            B.MEM_LVL MEMLVL,
-            A.STUS
-        FROM ORG0001D A
-        INNER JOIN ORG0005D B
-            ON A.MEM_ID = B.MEM_ID
-        WHERE A.MEM_CODE = #{memID}
+        <![CDATA[
+            SELECT
+                A.FULL_NAME NAME,
+                A.NRIC NRIC,
+                CASE WHEN B.DEPT_CODE = '' THEN B.LAST_DEPT_CODE ELSE B.DEPT_CODE END DEPTCDE,
+                B.LAST_GRP_CODE GRPCDE,
+                B.LAST_ORG_CODE ORGCDE,
+                B.MEM_LVL MEMLVL,
+                A.STUS,
+                CASE
+                    WHEN C.UPD_DT <= TO_DATE('2017/05/01', 'YYYY/MM/DD') THEN '201604'
+                    WHEN C.UPD_DT >= TO_DATE('2017/05/02', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/05/01', 'YYYY/MM/DD') THEN '201704'
+                    WHEN C.UPD_DT >= TO_DATE('2018/05/01', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201805'
+                    WHEN C.UPD_DT >= TO_DATE('2018/06/09', 'YYYY/MM/DD') AND C.UPD_DT THEN '201806'
+                CNFMDT
+            FROM ORG0001D A
+            INNER JOIN ORG0005D B
+                ON A.MEM_ID = B.MEM_ID
+            LEFT JOIN ORG0003D C
+                ON A.APLICNT_ID = C.APLCTN_ID
+            WHERE A.MEM_CODE = #{memID}
+        ]]>
     </select>
 
     <select id="getMemHPpayment" parameterType="Map" resultType="EgovMap">
@@ -109,7 +122,12 @@
             MEM_ORG_LVL CODE,
             MEM_ORG_DESC_CODE || ' - ' || MEM_ORG_DESC CODE_NAME
         FROM ORG0012D
-        WHERE MEM_TYPE_ID = #{groupCode}
+        <if test="groupCode != null and groupCode != '' ">
+            WHERE MEM_TYPE_ID = #{groupCode}
+        </if>
+        <if test="userTypeId !=null and userTypeId !='' ">
+            WHERE MEM_TYPE_ID = #{userTypeId}
+        </if>
         ORDER BY CODE
     </select>
 
@@ -118,21 +136,37 @@
         <if test="groupCode == 1 ">
             SELECT
                 '100' CODE_ID,
-                '2016 - 4.0 Version' CODE_NAME
+                '201604 VERSION' CODE_NAME
+            FROM DUAL
+
+            UNION ALL
+
+            SELECT
+                '100' CODE_ID,
+                '201704 VERSION' CODE_NAME
             FROM DUAL
 
             UNION ALL
 
             SELECT
                 '120' CODE_ID,
-                '201805 Version' CODE_NAME
+                '201805 VERSION' CODE_NAME
             FROM DUAL
+
+            UNION ALL
+
+            SELECT
+                '120' CODE_ID,
+                '201806 VERSION' CODE_NAME
+            FROM DUAL
+
         </if>
         <if test="groupCode == 2 ">
             SELECT
                 '2017' CODE_ID,
                 '2017 - 5.0 Version' CODE_NAME
             FROM DUAL
+
             /* to re-enable when new version is ready
             UNION ALL
 
@@ -142,5 +176,16 @@
             FROM DUAL*/
         </if>
         )
+    </select>
+
+    <select id="getBranchCd" parameterType="Map" resultType="EgovMap">
+        SELECT
+            USER_BRNCH_ID BRANCH
+        FROM SYS0047M
+        WHERE USER_ID = #{userId}
+    </select>
+
+    <select id="branch" parameterType="Map" resultType="egovMap">
+        SELECT BRNCH_ID,CODE BRANCH_CODE, NAME BRANCH_NAME FROM SYS0005M WHERE STUS_ID = 1 AND TYPE_ID IN (42) ORDER BY CODE
     </select>
 </mapper>

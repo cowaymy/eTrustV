@@ -330,7 +330,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
         // 2018-07-26 - LaiKW - HP Branch and Meeting Point
         MemApp.put("meetingPoint", params.get("meetingPoint").toString());
-        MemApp.put("memBranch", params.get("branch").toString());
+        //MemApp.put("memBranch", params.get("branch").toString());
 
         if (Integer.parseInt((String) params.get("memberType")) == 2803) {
             logger.debug("MemApp : {}", MemApp);

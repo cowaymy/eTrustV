@@ -20,4 +20,8 @@ public interface agreementMapper {
     List<EgovMap> getMemLevel(Map<String, Object> params);
 
     List<EgovMap> getAgreementVersion(Map<String, Object> params);
+
+    EgovMap getBranchCd(Map<String, Object> params);
+
+    List<EgovMap> branch();
 }

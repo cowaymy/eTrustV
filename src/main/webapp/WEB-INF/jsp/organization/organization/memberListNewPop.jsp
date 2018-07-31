@@ -137,12 +137,13 @@ function fn_departmentCode(value){
         $('#sponsorNm').val(spouseName);
         $('#sponsorNric').val(spouseNric);  */
 
-		//$("#branch").find('option').each(function() {
-		    //$(this).remove();
-		//});
+		$("#branch").find('option').each(function() {
+		    $(this).remove();
+		});
         $("#branch").append("<option value=''>Choose One</option>");
 
-        //$("#branch").attr("disabled", true);
+        $("#meetingPoint").attr("disabled", false);
+        $("#branch").attr("disabled", true);
         $("#transportCd").attr("disabled", true);
         $("#applicationStatus").attr("disabled", true);
         $("#searchdepartment").attr("disabled", true);
@@ -186,6 +187,7 @@ function fn_departmentCode(value){
         $('#spouseDob', '#memberAddForm').attr('class','w100p  ');
         $('#spouseContat', '#memberAddForm').attr('class','w100p  ');
 
+        $("#meetingPoint").attr("disabled", true);
         $("#branch").attr("disabled", false);
         $("#transportCd").attr("disabled", false);
         $("#applicationStatus").attr("disabled", false);
@@ -441,6 +443,7 @@ console.log("ready");
 
         $('span', '#emailLbl').empty().remove();
         $('span', '#mobileNoLbl').empty().remove();
+        $('span', '#meetingPointLbl').empty().remove();
 
         if ( memberType ==  "2803") {
             //$('#grid_wrap_doc').attr("hidden", true);
@@ -450,7 +453,7 @@ console.log("ready");
             $('#mobileNo').prop('required', true);
             $('#emailLbl').append("<span class='must'>*</span>");
             $('#mobileNoLbl').append("<span class='must'>*</span>");
-            $('#meetingPoint').append("<span class='must'>*</span>");
+            $('#meetingPointLbl').append("<span class='must'>*</span>");
 
             $("#apprStusText").attr("disabled", true);
             $("#apprStusCombo").attr("disabled", true);
@@ -829,12 +832,7 @@ console.log("validation");
 
         // 2018-07-26 - LaiKW - Added Meeting Point and Branch
         if($('#meetingPoint').val() == '') {
-            Common.alert("Please select meeting point");
-            return false;
-        }
-
-        if($('#branch').val() == '') {
-            Common.alert("Please select branch");
+            Common.alert("Please select reporting branch");
             return false;
         }
     }
@@ -1421,7 +1419,7 @@ function checkBankAccNo() {
     </td>
 </tr>
 <tr>
-    <th scope="row">Meeting Point</th>
+    <th scope="row" id="meetingPointLbl">Reporting Branch</th>
     <td colspan="5">
         <select class="w100p" id="meetingPoint" name="meetingPoint"></select>
     </td>
