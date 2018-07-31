@@ -44,9 +44,37 @@ public class AgreementController {
         params.put("userId", sessionVO.getUserId());
         EgovMap userRole = memberListService.getUserRole(params);
 
+        List<EgovMap> branch = agreementService.branch();
+
+        String strUserRole = userRole.get("roleid").toString();
+        logger.debug("strUserRole :: " + strUserRole);
+
+        if("97".equals(strUserRole) || "98".equals(strUserRole) || "99".equals(strUserRole) || "100".equals(strUserRole) || // SO Branch
+           "103".equals(strUserRole) || "104".equals(strUserRole) || "105".equals(strUserRole) || // DST Support
+           "111".equals(strUserRole) || "112".equals(strUserRole) || "113".equals(strUserRole) || "114".equals(strUserRole) || "115".equals(strUserRole)) { // HP
+            params.put("userTypeId", "1");
+
+        } else if("177".equals(strUserRole) || "179".equals(strUserRole) || "180".equals(strUserRole) || // Cody Support
+                "200".equals(strUserRole) || "252".equals(strUserRole) || "253".equals(strUserRole) || // Cody Planning
+                "250".equals(strUserRole) || "256".equals(strUserRole) ||  // Cody Branch)
+                "117".equals(strUserRole) || "118".equals(strUserRole) || "119".equals(strUserRole) || "120".equals(strUserRole) || "121".equals(strUserRole)) { // Cody
+            params.put("userTypeId", "2");
+        }
+
+        List<EgovMap> memLevel = agreementService.getMemLevel(params);
+
         model.addAttribute("userRole", userRole.get("roleid"));
         model.addAttribute("memType", userRole.get("memtype"));
         model.addAttribute("memCode", sessionVO.getUserName());
+        model.addAttribute("branchList", branch);
+        model.addAttribute("memLevel", memLevel);
+
+        EgovMap item = new EgovMap();
+        item = (EgovMap) agreementService.getBranchCd(params);
+
+        if(item.get("branch") != null) {
+            model.addAttribute("branch", item.get("branch"));
+        }
 
         return "logistics/Agreement/agreementList";
     }
@@ -67,6 +95,7 @@ public class AgreementController {
         memInfo.put("orgCode", item.get("orgcde"));
         memInfo.put("memLvl", item.get("memlvl"));
         memInfo.put("stus", item.get("stus"));
+        memInfo.put("signDt", item.get("cnfmdt"));
 
         // getMemHPpayment
         if("1".equals(params.get("memType"))) {
@@ -82,6 +111,7 @@ public class AgreementController {
     public ResponseEntity<List<EgovMap>> memberList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
 
         logger.debug("==================== memberList ====================");
+        logger.debug("params :: {}", params);
 
         List<EgovMap> memberList = agreementService.memberList(params);
 
