@@ -16,6 +16,7 @@
     var SRV_PAC_ID    = "${srvPacId}";
     var GST_CHK       = "${orderDetail.basicInfo.gstChk}";
     var ADDR_ID       = "${orderDetail.basicInfo.ordAddrId}";
+    var ROLE_ID = "${roleId}";
 
     var keyValueList = [];
 
@@ -813,6 +814,12 @@
             $('#scBI').removeClass("blind");
             $('#aTabBI').click();
             fn_loadUpdateInfo(ORD_ID);
+
+            if(ROLE_ID == 256 || ROLE_ID == 250 || ROLE_ID == 249 || ROLE_ID == 177 || ROLE_ID == 179 || ROLE_ID == 180){
+            	$('#modSalesmanCd').prop("disabled", true);
+            }
+
+
         } else {
             $('#scBI').addClass("blind");
         }
@@ -2252,7 +2259,11 @@
 	<th scope="row"><spring:message code="sal.title.text.instDuration" /><span class="must">*</span></th>
 	<td><input id="modInstallDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p" disabled /></td>
 	<th scope="row"><spring:message code="sal.text.salManCode" /><span class="must">*</span></th>
-	<td><input id="modSalesmanCd" name="salesmanCd" type="text" title="" placeholder="Salesman Code" class="" /><a id="btnSalesmanPop" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<td><input id="modSalesmanCd" name="salesmanCd" type="text" title="" placeholder="Salesman Code" class="" />
+	<c:if test="${roleId != 256 || roleId != 250 || roleId != 249 || roleId != 177 || roleId != 179 || roleId != 180}">
+	<a id="btnSalesmanPop" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+</c:if>
+</td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="sal.text.refNo" /></th>
