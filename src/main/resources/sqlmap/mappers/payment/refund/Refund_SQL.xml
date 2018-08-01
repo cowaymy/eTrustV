@@ -217,6 +217,12 @@ FROM   (SELECT CR.SO_REQ_SO_ID                          ORD_ID,
                LEFT OUTER JOIN SYS0064M C
                             ON C.AREA_ID = CA3.AREA_ID
                                AND C.STATUS_ID = 1
+               JOIN (select * from SAL0020D CR1
+                       where CR1.SO_REQ_ID = (SELECT MAX(aa.SO_REQ_ID)
+                                                          from SAL0020D aa
+                                                          where
+                                                          aa.SO_REQ_SO_ID = CR1.SO_REQ_SO_ID))CR1
+                                                          on (CR1.SO_REQ_ID = CR.SO_REQ_ID)
         WHERE  CR.SO_REQ_STUS_ID = 32
                AND NOT EXISTS (SELECT B.MTCH_ID,
                                       SUM(B.TOT_AMT)
