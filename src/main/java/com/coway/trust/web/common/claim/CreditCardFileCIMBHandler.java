@@ -59,7 +59,7 @@ public class CreditCardFileCIMBHandler extends BasicTextDownloadHandler implemen
 		Map<String, Object> dataRow = result.getResultObject();
 
 		// 본문 작성
-		crcOwner = (String.valueOf(dataRow.get("bankDtlCrcName"))).trim();
+		crcOwner = dataRow.get("bankDtlCrcName") == null ? " " : (String.valueOf(dataRow.get("bankDtlCrcName"))).trim();
 
 		// ISSUE : 암호화 RULE 규정
 		// String CrcNo = EncryptionProvider.Decrypt(det.AccNo.Trim()).Trim();
