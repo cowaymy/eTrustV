@@ -488,6 +488,11 @@ var myDetailGridData = null;
 
 
      function fn_UpdateHsResult(){
+    	 if($("#cmbStatusType2").val() == null || $("#cmbStatusType2").val() == '' ) {
+    		 Common.alert("Please Select 'HS Status' ");
+    		 return false;
+    	 }
+
 
     	 if ($("#cmbStatusType2").val() == 4) {    // Completed
              if ($("#settleDt").val() == '' || $("#settleDt").val() == null) {
