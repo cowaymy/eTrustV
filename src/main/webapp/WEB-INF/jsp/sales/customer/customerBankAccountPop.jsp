@@ -9,16 +9,16 @@ var selCodeAccBankId = $("#accBank").val();
 doGetCombo('/common/selectCodeList.do', '20', '','_insCmbBankType', 'S' , '');                              // Add Bank Type Combo Box
 doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAccBank', 'S', '') //Issue Bank)
 
-	
+
 	function fn_addBankAccount(){
-        var accType = document.insAccountForm.cmbBankType.value;
+        var accType = document.insAccountForm.bankType.value;
  //       var accBank = document.insAccountForm.cmbAccBank.value;
         var accBank = $("#_insCmbAccBank").val();
         var accNo = document.insAccountForm.accNo.value;
-        var bankBranch = document.insAccountForm.bankBranch.value;
-        var accOwner = document.insAccountForm.accOwner.value;
-        var accRem = document.insAccountForm.accRem.value;
-        
+        var bankBranch = document.insAccountForm.accBankBranch.value;
+        var accOwner = document.insAccountForm.accName.value;
+        var accRem = document.insAccountForm.accRemark.value;
+
         if(accType == ''){
             Common.alert("<spring:message code='sal.alert.msg.pleaseSelectTheAccType' />");
             return false;
@@ -39,15 +39,15 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
 
         	var lengResult = true; // true/false
             var availableResult = false; // true/false
-            
+
             // 2. Account No Validation
             /* length validation  */
             lengResult = fn_lengthCheck(accBank, accNo);
             if(lengResult == false){
                 Common.alert("* <spring:message code='sal.alert.msg.invalidBankAccNum' />");
                 return false;
-            } 
-            
+            }
+
             /* availability validation */
             availableResult = fn_availabilityCheck(accBank, accNo);
             if(availableResult == true){
@@ -59,19 +59,20 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
             Common.alert("<spring:message code='sal.alert.msg.pleaseKeyBankAccOwnName' />");
             return false;
         }
-        
+
         //insert
-        fn_addBankAccountInfo(accType,accBank,accNo,bankBranch,accOwner,accRem);
+        //fn_addBankAccountInfo(accType,accBank,accNo,bankBranch,accOwner,accRem);
+        fn_doSaveBankAcc();
         //close
         $("#_bankInsCloseBtn").click();
     }
-	
+
 	/* ########## length Check Start ##########*/
     function fn_lengthCheck(bankId, AccNo){
-        
+
         var valid = true; //result
         var lengthOfAccNo = AccNo.length;
-        
+
         //MAYBANK
         if(bankId == 21 || bankId == 30){
             if(lengthOfAccNo != 12){
@@ -81,7 +82,7 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
         }
         //CIMB BANK
         if(bankId == 3 || bankId == 36){
-            
+
             if(lengthOfAccNo != 14 && lengthOfAccNo != 10){
                 valid = false;
                 return valid;
@@ -185,16 +186,16 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
                 return valid;
             }
         }
-        
+
         return valid;
     }
     /*########## length Check End ##########*/
-    
+
     /*########## availability Check Start ##########*/
     function fn_availabilityCheck(bankId, AccNo){
-        
+
         var isReject = false; //result
-        
+
         //MAYBANK
         if(bankId == 21 || bankId == 30){
             if(AccNo.substr(0,1).trim() ==  '4'){
@@ -202,7 +203,7 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
                 return isReject;
             }
         }
-        
+
         //CIMB BANK
         if(bankId == 3 || bankId == 36){
             if(AccNo.length == 14){
@@ -213,7 +214,7 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
                 }
             }
         }
-        
+
         //PUBLIC BANK
         if(bankId == 6 || bankId == 32){
             if(AccNo.substr(0,1).trim() == '2' || AccNo.substr(0,1).trim() == '8'){
@@ -221,7 +222,7 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
                 return isReject;
             }
         }
-        
+
         //RHB BANK
         if(bankId == 7 || bankId == 33){
             if(AccNo.substr(0,1).trim() == '7'){
@@ -229,7 +230,7 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
                 return isReject;
             }
         }
-        
+
         //HONG LEONG BANK
         if(bankId == 5 || bankId == 29){
             if(AccNo.substr(3,1).trim() == '8' || AccNo.substr(3,1).trim() == '9'){
@@ -240,6 +241,27 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
         return isReject;
     }
     /*########## availability Check End ##########*/
+        function fn_doSaveBankAcc() {
+        console.log('fn_doSaveBankAcc() START');
+
+        Common.ajax("POST", "/sales/customer/insertBankAccountInfo2.do", $('#insAccountForm').serializeJSON(), function(result) {
+
+                Common.alert("<spring:message code='sal.alert.title.bankAccAdded' />" + DEFAULT_DELIMITER + "<b><spring:message code='sal.alert.msg.successfully' /></b>");
+
+                if('${callPrgm}' == 'ORD_REGISTER_BANK_ACC' || '${callPrgm}' == 'PRE_ORD') {
+                    fn_loadBankAccountPop(result.data);
+                    $('#addDdCloseBtn').click();
+                }
+            }, function(jqXHR, textStatus, errorThrown) {
+                try {
+                    Common.alert("<spring:message code='sal.alert.title.failedToAdd' />" + DEFAULT_DELIMITER + "<b><spring:message code='sal.alert.msg.failedToAddNewbankAcc' />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                }
+                catch(e) {
+                    console.log(e);
+                }
+            }
+        );
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -252,6 +274,7 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
 
 <section class="pop_body"><!-- pop_body start -->
 <form action="" id="insAccountForm" name="insAccountForm" method="GET">
+<input type="hidden" id="custId" name="custId" value="${custId}" />
 	<table class="type1"><!-- table start -->
 	<caption>table</caption>
 	<colgroup>
@@ -264,12 +287,12 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
 			<tr>
 			    <th scope="row"><spring:message code="sal.text.type" /><span class="must">*</span></th>
 			    <td>
-				    <select class="w100p" id="_insCmbBankType" name="cmbBankType">
+				    <select class="w100p" id="_insCmbBankType" name="bankType">
 				    </select>
 			    </td>
 			    <th scope="row"><spring:message code="sal.text.issueBank" /><span class="must">*</span></th>
 			    <td>
-				    <select class="w100p" id="_insCmbAccBank" name="cmbAccBank">
+				    <select class="w100p" id="_insCmbAccBank" name="accBank">
 				    </select>
 			    </td>
 			</tr>
@@ -280,24 +303,24 @@ doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, '_insCmbAcc
 			    </td>
 			    <th scope="row"><spring:message code="sal.text.bankBranch" /></th>
 			    <td>
-			        <input type="text" id="_insBankBranch" name="bankBranch" title="" placeholder="Bank Branch" class="w100p" />
+			        <input type="text" id="_insBankBranch" name="accBankBranch" title="" placeholder="Bank Branch" class="w100p" />
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row"><spring:message code="sal.text.accountOwner" /><span class="must">*</span></th>
 			    <td colspan="3">
-			        <input type="text" id="_insAccOwner" name="accOwner" title="" placeholder="Account Owner" class="w100p" />
+			        <input type="text" id="_insAccOwner" name="accName" title="" placeholder="Account Owner" class="w100p" />
 			    </td>
 			</tr>
 			<tr>
 			    <th scope="row"><spring:message code="sal.text.remark" /></th>
 			    <td colspan="3">
-			        <textarea cols="20" rows="5" id="_insAccRem" name="accRem" placeholder="Remark"></textarea>
+			        <textarea cols="20" rows="5" id="_insAccRem" name="accRemark" placeholder="Remark"></textarea>
 			    </td>
 			</tr>
 		</tbody>
 	</table><!-- table end -->
-	
+
 	<ul class="center_btns">
 	    <li><p class="btn_blue2 big"><a href="#" onclick="fn_addBankAccount()"><spring:message code="sal.btn.addBankAccout" /></a></p></li>
 	</ul>
