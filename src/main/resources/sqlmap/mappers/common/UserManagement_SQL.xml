@@ -11,8 +11,8 @@
 	        , a.user_email
 	        , a.user_stus_id
 	        , d.code as user_stus_nm
-	        , e.brnch /* a.user_brnch_id 20180104 */
-	        , (SELECT code FROM SYS0005M WHERE brnch_id = e.brnch) as user_brnch_nm
+	        , a.user_brnch_id /* a.user_brnch_id 20180104 */
+	        , (SELECT code FROM SYS0005M WHERE brnch_id = a.user_brnch_id) as user_brnch_nm
 	        , NVL(e.sub_dept,e.main_dept) AS user_dept_cd
 	        , (SELECT dept_name FROM SYS0040M WHERE dept_code = NVL(e.sub_dept,e.main_dept)) as user_dept_nm
 	        , CASE WHEN e.sub_dept IS NULL
