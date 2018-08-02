@@ -1518,7 +1518,7 @@ public class ClaimController {
 		sb.append("                                                         REPORT DATE: "
 				+ CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "dd/MM/yyyy")).append("\n");
 		sb.append("").append("\n");
-		sb.append("                           WOONGJIN COWAY (M) SDN BHD").append("\n");
+		sb.append("                           COWAYM COWAY (M) SDN BHD").append("\n");
 		sb.append("                   TRANSMITTAL REPORT OF DIRECT DEBIT RECORDS").append("\n");
 		sb.append("                              FOR PUBLIC BANK BERHAD").append("\n");
 		sb.append("").append("\n");
