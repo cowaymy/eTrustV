@@ -167,6 +167,8 @@ public class CustomerController {
 
 		List<EgovMap> accBankList = customerService.selectAccBank(params);
 		model.addAttribute("accBankList", accBankList);
+		model.put("custId", params.get("custId"));
+
 
 		return "sales/customer/customerBankAccountPop"	;
 	}
