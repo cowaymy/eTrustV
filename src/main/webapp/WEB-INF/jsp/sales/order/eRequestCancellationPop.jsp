@@ -116,15 +116,14 @@
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                     return false;
                     }
-
-
+/*
                 if(todayYY >= 2018) {
-                    if(todayDD == 26 || todayDD == 27 || todayDD == 1 || todayDD == 2) {
+                    if(todayDD == 26 || todayDD == 27 || todayDD == 1 || todayDD == 2) { // Block if date on 26 / 27 / 1 / 2 of the month
                         var msg = '<spring:message code="sal.msg.chkCancDate" />';
                         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                         return false;
                     }
-                }
+                } */
             }
             else {
                 var msg = "Sorry. You have no access rights to request order cancellation.";
@@ -458,7 +457,6 @@
         doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '536', stusCodeId:'1'}, '1998', 'cmbReason', 'S', 'fn_removeOpt'); //Reason Code
         $("#dpCallLogDate").val((new Date().getDate()+1) +"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
         $("#txtRemark").val("CANCEL & REFUND");
-
     }
 
 
