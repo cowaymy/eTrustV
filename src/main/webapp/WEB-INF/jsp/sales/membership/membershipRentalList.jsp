@@ -9,9 +9,9 @@ var  gridID;
 
 
 $(document).ready(function(){
-	
+
 	$("#table1").hide();
-	    
+
 	if("${SESSION_INFO.userTypeId}" == "1" ||"${SESSION_INFO.userTypeId}" == "2" ){
         $("#table1").show();
     }
@@ -21,23 +21,23 @@ $(document).ready(function(){
         $("#orgCode").val("${orgCode}");
         $("#orgCode").attr("class", "w100p readonly");
         $("#orgCode").attr("readonly", "readonly");
-        
+
     }else if("${SESSION_INFO.memberLevel}" =="2"){
 
         $("#orgCode").val("${orgCode}");
         $("#orgCode").attr("class", "w100p readonly");
         $("#orgCode").attr("readonly", "readonly");
-        
+
         $("#grpCode").val("${grpCode}");
         $("#grpCode").attr("class", "w100p readonly");
         $("#grpCode").attr("readonly", "readonly");
-                    
+
     }else if("${SESSION_INFO.memberLevel}" =="3"){
 
         $("#orgCode").val("${orgCode}");
         $("#orgCode").attr("class", "w100p readonly");
         $("#orgCode").attr("readonly", "readonly");
-        
+
         $("#grpCode").val("${grpCode}");
         $("#grpCode").attr("class", "w100p readonly");
         $("#grpCode").attr("readonly", "readonly");
@@ -45,13 +45,13 @@ $(document).ready(function(){
         $("#deptCode").val("${deptCode}");
         $("#deptCode").attr("class", "w100p readonly");
         $("#deptCode").attr("readonly", "readonly");
-                    
+
     }else if("${SESSION_INFO.memberLevel}" =="4"){
-        
+
         $("#orgCode").val("${orgCode}");
         $("#orgCode").attr("class", "w100p readonly");
         $("#orgCode").attr("readonly", "readonly");
-         
+
         $("#grpCode").val("${grpCode}");
         $("#grpCode").attr("class", "w100p readonly");
         $("#grpCode").attr("readonly", "readonly");
@@ -64,29 +64,29 @@ $(document).ready(function(){
         $("#memCode").attr("class", "w100p readonly");
         $("#memCode").attr("readonly", "readonly");
     }
-	
-    
-	 var optionUnit = {  
+
+
+	 var optionUnit = {
              id: "stusCodeId",              // 콤보박스 value 에 지정할 필드명.
-             name: "codeName",  // 콤보박스 text 에 지정할 필드명.              
+             name: "codeName",  // 콤보박스 text 에 지정할 필드명.
              isShowChoose: false,
              type : 'M'
      };
-             
+
      CommonCombo.make('cmbStatus', "/status/selectStatusCategoryCdList.do", {selCategoryId : 23} , "" , optionUnit);
-     
-     var optionUnit = {  
+
+     var optionUnit = {
              id: "code",              // 콤보박스 value 에 지정할 필드명.
-             name: "codeName",  // 콤보박스 text 에 지정할 필드명.              
+             name: "codeName",  // 콤보박스 text 에 지정할 필드명.
              isShowChoose: false,
              isCheckAll : false,
              type : 'M'
      };
-             
-     
+
+
      CommonCombo.make('cmbSRVCStatus', "/status/selectStatusCategoryCdList.do", {selCategoryId : 24} , "ACT|!|REG|!|INV|!|SUS" , optionUnit);
-    
-	
+
+
     //AUIGrid 그리드를 생성합니다.
     createAUIGrid();
 
@@ -94,22 +94,22 @@ $(document).ready(function(){
     	console.log(event.rowIndex);
     	fn_goSVMDetails(gridID, event.rowIndex);
     });
-    
+
     f_multiCombo();
     fn_keyEvent();
-    
+
 });
 
 
 function fn_keyEvent(){
-	
+
 
     $("#sRVContrtNo").keydown(function(key)  {
             if (key.keyCode == 13) {
                 fn_selectListAjax();
             }
      });
-    
+
     $("#orderNo").keydown(function(key)  {
             if (key.keyCode == 13) {
                 fn_selectListAjax();
@@ -121,7 +121,7 @@ function fn_keyEvent(){
                 fn_selectListAjax();
             }
       });
-    
+
     $("#custId").keydown(function(key)  {
             if (key.keyCode == 13) {
                 fn_selectListAjax();
@@ -133,17 +133,17 @@ function fn_keyEvent(){
             fn_selectListAjax();
             }
       });
-    
+
     $("#custNRIC").keydown(function(key)  {
         if (key.keyCode == 13) {
             fn_selectListAjax();
             }
       });
-	
+
 }
 
 function fn_clear(){
-	
+
 	$("#sRVContrtNo").val("");
 	$("#cmbStatus").val("");
 	$("#salesDate").val("");
@@ -153,10 +153,10 @@ function fn_clear(){
 	$("#custId").val("");
 	$("#custName").val("");
 	$("#custNRIC").val("");
-	
+
     $("text").each(function(){
-        
-        if($(this).hasClass("readonly")){           
+
+        if($(this).hasClass("readonly")){
         }else{
             $(this).val("");
         }
@@ -164,22 +164,22 @@ function fn_clear(){
 
     $("#cmbStatus").multipleSelect("uncheckAll");
     $("#cmbSRVCStatus").multipleSelect("uncheckAll");
-	
+
 }
 
 
 // 리스트 조회.
-function fn_selectListAjax() {       
-	
+function fn_selectListAjax() {
+
     if( $("#sRVContrtNo").val() ==""  &&  $("#salesDate").val() ==""  &&  $("#orderNo").val() ==""  ){
-        
+
         Common.alert("<spring:message code="sal.text.mustKeyIn3" />");
          return ;
      }
-     
+
 
    Common.ajax("GET", "/sales/membershipRental/selectList", $("#listSForm").serialize(), function(result) {
-       
+
 	   console.log(result);
        AUIGrid.setGridData(gridID, result);
    });
@@ -189,12 +189,12 @@ function fn_selectListAjax() {
 
 
 function f_multiCombo(){
-	
+
     $(function() {
         $('#MBRSH_STUS_ID').change(function() {
-        
+
         }).multipleSelect({
-            selectAll: true, // 전체선택 
+            selectAll: true, // 전체선택
             width: '80%'
         });
         $('#MBRSH_STUS_ID').multipleSelect("checkAll");
@@ -203,7 +203,7 @@ function f_multiCombo(){
 
 
 function createAUIGrid() {
-        
+
         var columnLayout = [
                             { dataField : "srvCntrctRefNo", headerText  : "<spring:message code="sal.title.mbrshNo" />.",    width : 100,  editable : false},
                             { dataField : "salesOrdNo", headerText  : "<spring:message code="sal.title.ordNo" />.",width : 80,  editable: false },
@@ -216,45 +216,46 @@ function createAUIGrid() {
                             { dataField : "name1",      headerText  : "<spring:message code="sal.title.custName" />",   width          : 150,    editable       : false },
                             { dataField : "srvCntrctCrtDt",     headerText  : "<spring:message code="sal.title.created" />",    width          : 90,        editable       : false,dataType : "date", formatString : "dd-mm-yyyy"},
                             { dataField : "userName",     headerText  : "<spring:message code="sal.title.creator" />",    width : 100,       editable  : false}
-                               
+
+
        ];
 
-        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false,  headerHeight        : 30, showRowNumColumn : true};  
-        
+        var gridPros = { usePaging : true,  pageRowCount: 20, editable: false,  headerHeight        : 30, showRowNumColumn : true};
+
         gridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout  ,"" ,gridPros);
     }
-    
-    
+
+
 
 function  fn_goPayChannel(){
 
 
     var selectedItems = AUIGrid.getSelectedItems(gridID);
-    
+
     if(selectedItems ==""){
        Common.alert("<spring:message code="sal.alert.title.membershipMissing" />"+DEFAULT_DELIMITER+"<spring:message code="sal.alert.msg.membershipMissing" /> ");
        return ;
     }
-    
-     var pram  ="?srvCntrctId="+selectedItems[0].item.srvCntrctId+"&srvCntrctOrdId="+selectedItems[0].item.srvCntrctOrdId;
+
+     var pram  ="?srvCntrctId="+selectedItems[0].item.srvCntrctId+"&srvCntrctOrdId="+selectedItems[0].item.srvCntrctOrdId+"&custId="+selectedItems[0].item.custId;
      Common.popupDiv("/sales/membershipRentalChannel/membershipRentalChannelPop.do"+pram ,null, null , true , '_PayChannelDiv1');
-     
-	
+
+
 }
 
 function fn_goLEDGER(){
-	
+
 
     var selectedItems = AUIGrid.getSelectedItems(gridID);
-    
+
     if(selectedItems ==""){
         Common.alert("<spring:message code="sal.alert.title.membershipMissing" />"+DEFAULT_DELIMITER+"<spring:message code="sal.alert.msg.membershipMissing" /> ");
         return ;
     }
-    
+
      var pram  ="?srvCntrctId="+selectedItems[0].item.srvCntrctId+"&srvCntrctOrdId="+selectedItems[0].item.srvCntrctOrdId;
      Common.popupDiv("/sales/membershipRental/mRLedgerPop.do"+pram ,null, null , true , '_LedgerDiv1');
-     
+
 }
 
 //Report
@@ -264,21 +265,21 @@ function fn_goKey_in_List(){
 
 function fn_goSVMDetails(){
 
-	
+
 	  var selectedItems = AUIGrid.getSelectedItems(gridID);
-      
+
       if(selectedItems ==""){
           Common.alert("<spring:message code="sal.alert.title.membershipMissing" />"+DEFAULT_DELIMITER+"<spring:message code="sal.alert.msg.membershipMissing" /> ");
           return ;
       }
-      
+
 
       //contractID = this.RadGrid_SRVSales.SelectedValues["SrvContractID"].ToString();
       //Response.Redirect( "ServiceContract_Sales_View.aspx?ContractID=" + contractID);
-      
+
       //$("#QUOT_ID").val(selectedItems[0].item.quotId);
-      
-      var pram  ="?srvCntrctId="+selectedItems[0].item.srvCntrctId; 
+
+      var pram  ="?srvCntrctId="+selectedItems[0].item.srvCntrctId;
       Common.popupDiv("/sales/membershipRental/mRContSalesViewPop.do"+pram ,null, null , true , '_ViewSVMDetailsDiv1');
 }
 
@@ -329,7 +330,7 @@ function fn_goSVMDetails(){
 	<td>
 	       <select class="multy_select w100p" multiple="multiple"  id ="cmbStatus" name="cmbStatus"  >
             </select>
-			
+
 	</td>
 	<th scope="row"><spring:message code="sal.text.salesDate" /><span class="must">*</span></th>
 	<td><input type="text" placeholder="DD/MM/YYYY" class="j_date w100p"   id="salesDate" name="salesDate" /></td>
@@ -339,7 +340,7 @@ function fn_goSVMDetails(){
 	<td>
 			<select class="multy_select w100p" multiple="multiple"  id="cmbSRVCStatus"  name="cmbSRVCStatus">
             </select>
-		    
+
 	</td>
 	<th scope="row"><spring:message code="sal.text.ordNo" />.<span class="must">*</span></th>
 	<td><input type="text" title="" placeholder="Order No" class="w100p"  id="orderNo" name="orderNo"/></td>
@@ -400,7 +401,7 @@ function fn_goSVMDetails(){
 	<dt><spring:message code="sales.Link" /></dt>
 	<dd>
 	<ul class="btns">
-	
+
 	</ul>
 	<ul class="btns">
 

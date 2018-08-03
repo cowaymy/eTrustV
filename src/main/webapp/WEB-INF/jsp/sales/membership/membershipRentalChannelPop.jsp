@@ -11,6 +11,7 @@ var  resultPaysetInfo;
 var  resultCustBasicinfo;
 var  resultCardInfo;
 var  resultBankAccInfo;
+var CUST_ID       = "${custId}";
 
 $(document).ready(function(){
 
@@ -426,7 +427,7 @@ function fn_doAddNewCard_Click(){
     if($('#paybyCk').is(':checked')){
     	_custId = $("#txtThirdPartyID").val();
     }else{
-        _custId = $("#hiddenThirdPartyID").val();
+        _custId = CUST_ID;
     }
     Common.popupDiv('/sales/customer/updateCustomerNewCardPop.do', {custId:_custId}, null , true ,'_AddNewCardDiv1');
 }
@@ -439,7 +440,7 @@ function fn_doSelectCard_Click(){
     if($('#paybyCk').is(':checked')){
         _custId = $("#txtThirdPartyID").val();
     }else{
-        _custId = $("#hiddenThirdPartyID").val();
+        _custId = CUST_ID;
     }
 
     Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : _custId, callPrgm : "ORD_REQUEST_PAY"}, null, true ,'_SelectCardDiv1');
@@ -468,9 +469,9 @@ function fn_doAddNewBank_Click(){
     if($('#paybyCk').is(':checked')){
         _custId = $("#txtThirdPartyID").val();
     }else{
-        _custId = $("#hiddenThirdPartyID").val();
+        _custId = CUST_ID;
     }
-    Common.popupDiv('/sales/customer/customerAddBankAccountPop.do', {custId:_custId}, null , true ,'_AddNewBankDiv1');
+    Common.popupDiv('/sales/customer/customerAddBankAccountMemPop.do', {custId:_custId}, null , true ,'_AddNewBankDiv1');
 }
 
 
@@ -481,7 +482,7 @@ function fn_doSelectBank_Click(){
     if($('#paybyCk').is(':checked')){
         _custId = $("#txtThirdPartyID").val();
     }else{
-        _custId = $("#hiddenThirdPartyID").val();
+        _custId = CUST_ID;
     }
 
     //Common.popupDiv("/sales/customer/customer/customerAddBankAccountPop.do", {custId : _custId}, null, true ,'_SelectCardDiv1');
@@ -595,7 +596,7 @@ function fn_setSaveForm(){
 		    ddRejectDate:$("#dpRejectDate").val() != ""?$("#dpRejectDate").val()  : defaultDate,
 		    statusCodeID:1,
 		    is3rdParty:$('#paybyCk').is(':checked')?1 : 0 ,
-		    customerID:$('#paybyCk').is(':checked')?$("#hiddenThirdPartyID").val() :$("#txtThirdPartyID").val()  ,
+		    customerID:$('#paybyCk').is(':checked')?$("#txtThirdPartyID").val() : CUST_ID  ,
 		    editTypeID:0,     // what is this?
 		    nRICOld:$("#txtRentPayIC").val()!=""?$("#txtRentPayIC").val()   : "" ,
 		    failReasonID:$('#rejectChbox').is(':checked')?$("#cmbRejectReason").val()  : 0,

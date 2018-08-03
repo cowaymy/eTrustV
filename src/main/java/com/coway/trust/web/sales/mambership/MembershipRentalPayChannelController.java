@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.web.sales.mambership;
 
@@ -36,7 +36,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 
 /**
- * 
+ *
  * @author hamhg
  *
  */
@@ -45,65 +45,66 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class  MembershipRentalPayChannelController {
 
 	private static Logger logger = LoggerFactory.getLogger(MembershipRentalPayChannelController.class);
-	
+
 	@Resource(name = "membershipRentalChannelService")
-	private MembershipRentalChannelService  membershipRentalChannelService;   
-	
-	
+	private MembershipRentalChannelService  membershipRentalChannelService;
+
+
 	@Resource(name = "membershipRentalService")
-	private MembershipRentalService  membershipRentalService;   
-	
+	private MembershipRentalService  membershipRentalService;
+
 	@Resource(name = "customerService")
 	private CustomerService customerService;
-	
-	
 
-	
+
+
+
 	@RequestMapping(value = "/membershipRentalChannelPop.do")
 	public String main(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		logger.debug("in  membershipRentalChannelPop.do ");  
+
+		logger.debug("in  membershipRentalChannelPop.do ");
 
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		
 
-		model.addAttribute("srvCntrctId",params.get("srvCntrctId")); 
-		model.addAttribute("srvCntrctOrdId",params.get("srvCntrctOrdId")); 
-		
-		return "sales/membership/membershipRentalChannelPop";  
+
+		model.addAttribute("srvCntrctId",params.get("srvCntrctId"));
+		model.addAttribute("srvCntrctOrdId",params.get("srvCntrctOrdId"));
+		model.addAttribute("custId",params.get("custId"));
+
+		return "sales/membership/membershipRentalChannelPop";
 	}
-	
-	
+
+
 
 	@RequestMapping(value = "/selectPatsetInfo", method = RequestMethod.GET)
 	public ResponseEntity<Map>  selectPatsetInfo(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sesseionVO) throws Exception {
 
 		logger.debug("in  selectPatsetInfo ");
-		
+
 		EgovMap paysetInfo = null;
 		EgovMap custBasicinfo = null;
 
-		
+
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-		
-		
+
+
 		paysetInfo =  membershipRentalService.selectPatsetInfo(params, sesseionVO);
-		params.put("custId", paysetInfo.get("custId")); 
+		params.put("custId", paysetInfo.get("custId"));
 		custBasicinfo =  customerService.selectCustomerViewBasicInfo(params);
-		
+
 		Map<String, Object> map = new HashMap();
 		map.put("paysetInfo", paysetInfo);
-		map.put("custBasicinfo", custBasicinfo);  
-		
+		map.put("custBasicinfo", custBasicinfo);
+
 		return ResponseEntity.ok(map);
-		
+
 	}
 
-	
+
 
 	@RequestMapping(value = "/getLoadRejectReasonList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getLoadRejectReasonList(@RequestParam Map<String, Object> params,
@@ -113,42 +114,42 @@ public class  MembershipRentalPayChannelController {
 
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
-		logger.debug("			pram set end  ");  
+		logger.debug("			pram set end  ");
 
 		List<EgovMap> list = membershipRentalChannelService.getLoadRejectReasonList(params);
 
-	 
+
 		return ResponseEntity.ok(list);
 	}
-	
-	
+
+
 
 	@RequestMapping(value = "/insertRentalChannel.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertRentalChannel(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
-		
+
 		logger.debug("in  insertRentalChannel ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
-		logger.debug("			pram set end  ");  
-		
+		logger.debug("			pram set end  ");
+
 		params.put("updator", sessionVO.getUserId());
-		
+
 		int  o = membershipRentalChannelService.SAL0074D_update(params);
-		
+
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(o);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-				
+
 		return ResponseEntity.ok(message);
-		
+
 	}
 
-	
-	
+
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
-	
+
+
 }

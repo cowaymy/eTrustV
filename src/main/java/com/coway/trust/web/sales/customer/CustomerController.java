@@ -167,7 +167,7 @@ public class CustomerController {
 
 		List<EgovMap> accBankList = customerService.selectAccBank(params);
 		model.addAttribute("accBankList", accBankList);
-		model.put("custId", params.get("custId"));
+
 
 
 		return "sales/customer/customerBankAccountPop"	;
@@ -1733,6 +1733,17 @@ public class CustomerController {
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 			return ResponseEntity.ok(message);
+		}
+
+		@RequestMapping(value = "/customerAddBankAccountMemPop.do")
+		public String customerAddBankAccountMemPop(@RequestParam Map<String, Object> params, ModelMap model){
+
+			List<EgovMap> accBankList = customerService.selectAccBank(params);
+			model.addAttribute("accBankList", accBankList);
+			model.put("custId", params.get("custId"));
+
+
+			return "sales/customer/customerBankAccountMemPop"	;
 		}
 
 }

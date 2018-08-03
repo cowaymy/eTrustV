@@ -39,7 +39,8 @@
 		            FL.SRV_CNTRCT_UPD_DT  C2  ,
 		            CASE WHEN ( FL.SRV_CNTRCT_PROMO_ID IS NOT NULL ) THEN FL.SRV_CNTRCT_PROMO_ID ELSE 0 END C3  ,
 		            CASE WHEN ( FL.PROMOID1 IS NOT NULL ) THEN FL.PROMODESC1 ELSE '-' END C4  ,
-		            CASE WHEN ( FL.PROMOID2 IS NOT NULL ) THEN FL.PROMODESC2 ELSE '-' END C5
+		            CASE WHEN ( FL.PROMOID2 IS NOT NULL ) THEN FL.PROMODESC2 ELSE '-' END C5  ,
+		            FL.CUST_ID
 		FROM ( SELECT E.SRV_CNTRCT_ID SRVCONTRACTID1  ,
 					          E.SRV_CNTRCT_REF_NO   ,
 					          E.SRV_CNTRCT_ORD_ID   ,
@@ -76,7 +77,8 @@
 					          E14.CODE_NAME   ,
 					          E15.RESN_DESC   ,
 					          E16.SALES_ORD_NO   ,
-					          E17.NAME NAME2
+					          E17.NAME NAME2   ,
+					          E17.CUST_ID
 					   FROM SAL0077D E
 					          JOIN SAL0078D E2   ON E2.SRV_CNTRCT_ID = E.SRV_CNTRCT_ID
 					          JOIN SAL0081D E3   ON E3.SRV_CNTRCT_PAC_ID = E.SRV_CNTRCT_PCKG_ID
