@@ -91,8 +91,8 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 		if("".equals(params.get("custIc"))) {logger.debug("!@###### custIc ''");}
 
 		logger.debug("!@##############################################################################");
-		logger.debug("!@###### userId : "+sessionVO.getUserId());
-		logger.debug("!@###### roleId : "+sessionVO.getRoleId());
+		//logger.debug("!@###### userId : "+sessionVO.getUserId());
+		//logger.debug("!@###### roleId : "+sessionVO.getRoleId());
 		logger.debug("!@###### ordNo : "+params.get("ordNo"));
 		logger.debug("!@###### ordStartDt : "+params.get("ordStartDt"));
 		logger.debug("!@###### ordEndDt : "+params.get("ordEndDt"));
@@ -126,7 +126,7 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 		model.put("orderDetail", orderDetail);
 		//model.addAttribute("salesOrderNo", params.get("salesOrderNo"));
 		// order detail end
-
+		logger.info("##### params ########" + params);
 		logger.info("##### salesOrderId #####" +(String)params.get("salesOrderId"));
 		EgovMap cancelReqInfo = eRequestCancellationService.cancelReqInfo(params);
 
