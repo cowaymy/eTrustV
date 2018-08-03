@@ -308,8 +308,10 @@ function  fn_cmbRentPaymodeEvt(){
     		 if($("#cmbRentPaymode").val() =='131' ){ //card
 
     			 if($('#paybyCk').is(':checked')){
-    				 if( null == resultCustBasicinfo.custId  ||  ""== resultCustBasicinfo.custId   || null ==resultCustBasicinfo  ){
+    				// if( null == resultCustBasicinfo.custId  ||  ""== resultCustBasicinfo.custId   || null ==resultCustBasicinfo  ){
+    				if( FormUtil.isEmpty($('#txtThirdPartyID').val()) ){
     					 Common.alert("<b> Third Party Required </b>"+DEFAULT_DELIMITER+"<b>Please select the third party first..</b>");
+    					 $("#cmbRentPaymode").val('');
     				 }else{
     					 $("#Credit_Card").attr("style" ,"display:inline");
     				 }
@@ -323,8 +325,10 @@ function  fn_cmbRentPaymodeEvt(){
 
     		     if($('#paybyCk').is(':checked')){
 
-    		    	 if( null == resultCustBasicinfo.custId  ||  ""==  resultCustBasicinfo.custId   || null ==resultCustBasicinfo  ){
+    		    	 //if( null == resultCustBasicinfo.custId  ||  ""==  resultCustBasicinfo.custId   || null ==resultCustBasicinfo  ){
+    		    	 if( FormUtil.isEmpty($('#txtThirdPartyID').val()) ){
                          Common.alert("<b> Third Party Required </b>"+ DEFAULT_DELIMITER +"<b>Please select the third party first..</b>");
+                         $("#cmbRentPaymode").val('');
                      }else{
                          $("#Direct_Debit").attr("style" ,"display:inline");
                      }
@@ -420,9 +424,9 @@ function fn_doAddNewCard_Click(){
 
 	var _custId;
     if($('#paybyCk').is(':checked')){
-    	_custId = $("#hiddenThirdPartyID").val();
+    	_custId = $("#txtThirdPartyID").val();
     }else{
-        _custId = $("#txtThirdPartyID").val();
+        _custId = $("#hiddenThirdPartyID").val();
     }
     Common.popupDiv('/sales/customer/updateCustomerNewCardPop.do', {custId:_custId}, null , true ,'_AddNewCardDiv1');
 }
@@ -433,9 +437,9 @@ function fn_doSelectCard_Click(){
 
     var _custId;
     if($('#paybyCk').is(':checked')){
-    	_custId = $("#hiddenThirdPartyID").val();
+        _custId = $("#txtThirdPartyID").val();
     }else{
-    	_custId = $("#txtThirdPartyID").val();
+        _custId = $("#hiddenThirdPartyID").val();
     }
 
     Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : _custId, callPrgm : "ORD_REQUEST_PAY"}, null, true ,'_SelectCardDiv1');
@@ -462,9 +466,9 @@ function fn_doAddNewBank_Click(){
 
     var _custId;
     if($('#paybyCk').is(':checked')){
-        _custId = $("#hiddenThirdPartyID").val();
-    }else{
         _custId = $("#txtThirdPartyID").val();
+    }else{
+        _custId = $("#hiddenThirdPartyID").val();
     }
     Common.popupDiv('/sales/customer/customerAddBankAccountPop.do', {custId:_custId}, null , true ,'_AddNewBankDiv1');
 }
@@ -475,9 +479,9 @@ function fn_doSelectBank_Click(){
 
     var _custId;
     if($('#paybyCk').is(':checked')){
-        _custId = $("#hiddenThirdPartyID").val();
-    }else{
         _custId = $("#txtThirdPartyID").val();
+    }else{
+        _custId = $("#hiddenThirdPartyID").val();
     }
 
     //Common.popupDiv("/sales/customer/customer/customerAddBankAccountPop.do", {custId : _custId}, null, true ,'_SelectCardDiv1');
