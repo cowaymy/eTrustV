@@ -166,4 +166,18 @@ public class AgreementController {
 
         return ResponseEntity.ok(memInfo);
     }
+
+    @RequestMapping(value = "/agreement/cdEagmt1", method = RequestMethod.GET)
+    public ResponseEntity<Map> cdEagmt1(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+        logger.debug("==================== cdEagmt1 ====================");
+
+        EgovMap item = new EgovMap();
+        item = (EgovMap) agreementService.cdEagmt1(params);
+
+        Map<String, Object> memInfo = new HashMap();
+        memInfo.put("signdt", item.get("signdt"));
+
+        return ResponseEntity.ok(memInfo);
+    }
 }

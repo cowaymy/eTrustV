@@ -194,13 +194,13 @@ function fn_clickHpReject(){
     		  if(statusName == "Pending") {
                   fn_RejectHPMem();
     		  } else {
-    			  Common.alert("Only available to entry Pending is in a case of Status");
+    			  Common.alert("Member cancellation is not allowed under READY / APPROVED");
               }
           } else if($("#userRole").val() != 111 || $("#userRole").val() != 112 || $("#userRole").val() != 113 || $("#userRole").val() != 114) {
         	  if(statusName == "Pending" || statusName == "Ready") {
                   fn_RejectHPMem();
         	  } else {
-        		  Common.alert("Only available to entry Pending/Ready is in a case of Status");
+        		  Common.alert("Member cancellation is not allowed under READY / APPROVED");
               }
           }
       });

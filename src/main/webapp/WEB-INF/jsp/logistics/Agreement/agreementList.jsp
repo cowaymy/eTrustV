@@ -13,7 +13,9 @@ $(document).ready(function() {
     $("#selectBranch").attr("disabled", true);
 
     doGetCombo('/logistics/agreement/getMemStatus', null, '' ,'memStusCmb' , 'S');
-    console.log($("#userRole").val());
+
+
+
     if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
             $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support
             $("#userRole").val() == 128 || $("#userRole").val() == 129 || $("#userRole").val() == 130 || // Administrator
@@ -35,6 +37,8 @@ $(document).ready(function() {
             $("#selectBranch").attr("disabled", true);
 
             $("#memLevelCom option[value='4']").attr("selected", true); // Temporary default to HP only
+
+            $('#selectBranch option[value="0"] ').attr("selected", true);
 
             $("#selectBranchCol").attr("hidden", true);
             $("#selectBranchLbl").attr("hidden", true);
@@ -96,18 +100,21 @@ $(document).ready(function() {
             $("#memLevelCom option[value='" + result.memLvl + "']").attr("selected", true);
 
             if(memType == 1) {
-                $("#agreementVersion option[value='" + result.version +"']").attr("selected", true);
+                $("#agreementVersion option[value='" + result.signDt +"']").attr("selected", true);
 
                 $("#selectBranchCol").attr("hidden", true);
                 $("#selectBranchLbl").attr("hidden", true);
                 $("#selectBranch").attr("hidden", true);
+
+                //userAgreement
+                $("#userAgreement").val(result.signDt);
             }
 
             if(memType == 2) {
                 $("#agreementVersion option[value='2017']").attr("selected", true);
                 $("#agreementVersion").attr("disabled", false);
             }
-        })
+        });
 
         $("#memTypeCom").attr("disabled", true);
         $("#memStusCmb").attr("disabled", true);
@@ -186,8 +193,6 @@ function fn_downloadAgreement() {
     var version = $("#agreementVersion").val();
     console.log(version);
 
-
-
     var option = {
         isProcedure : true
     };
@@ -201,10 +206,6 @@ function fn_downloadAgreement() {
         code = memberid;
         $("#v_memCode").val(memberid);
 
-        if($("#agreementVersion").val() == "") {
-            Common.alert("Please select agreement version");
-            return false;
-        }
     } else {
         code = $("#code").val();
         $("#v_memCode").val($("#code").val());
@@ -213,20 +214,34 @@ function fn_downloadAgreement() {
     if($("#memTypeCom").val() == "1") {
         // HP Download
 
-        Common.ajax("GET", "/logistics/agreement/getMemHPpayment", {memID : code}, function(result) {
-            if(result.version != version) {
-                Common.alert("Invalid agreement selected. Please select again.");
-                return false;
-            } else {
-                $("#reportFileName").val("/logistics/HPAgreement_" + version + ".rpt");
-                $("#reportDownFileName").val("HPAgreement_" + code);
+        Common.ajax("GET", "/logistics/agreement/getMemberInfo", {memID : code, memType : $("#memTypeCom").val()}, function(result) {
+            console.log(result);
 
-                Common.report("agreementReport", option);
+            var signDt = result.signDt;
+            if(signDt == "" || signDt == null) {
+            	signDt = "201604";
             }
+
+            $("#reportFileName").val("/logistics/HPAgreement_" + signDt + ".rpt");
+            $("#reportDownFileName").val("HPAgreement_" + code);
+
+            Common.report("agreementReport", option);
+
+            console.log($("#reportFileName").val());
         });
 
     } else if($("#memTypeCom").val() == "2") {
         // CD Download
+        //signdt
+        Common.ajax("GET", "/logistics/agreement/cdEagmt1", {memID : code, memType : $("#memTypeCom").val()}, function(result) {
+            console.log(result);
+
+            var signDt = result.signdt.substring(0, 5);
+
+            console.log(signDt);
+            //if($("#agreementVersion").val() < signdt.substring(0, 3))
+        });
+
         $("#reportFileName").val("/logistics/CodyAgreement_" + version + ".rpt");
         $("#reportDownFileName").val("CodyAgreement_" + code);
 
@@ -329,6 +344,7 @@ function createAUIGrid() {
 </aside><!-- title_line end -->
 
 <input type="hidden" id="userRole" name="userRole" value="${userRole} " />
+<input type="hidden" id="userAgreement" name="userAgreement" />
 
 <form id="agreementReport" name="agreementReport">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />

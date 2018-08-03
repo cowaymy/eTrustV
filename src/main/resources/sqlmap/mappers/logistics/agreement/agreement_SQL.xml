@@ -58,7 +58,7 @@
             <if test="memLevelCom != null and memLevelCom !='' ">
                 AND B.MEMLVL = #{memLevelCom}
             </if>
-            <if test="selectBranch != null and selectBranch !='' ">
+            <if test="selectBranch != 0 ">
                 AND A.BRNCH = #{selectBranch}
             </if>
         ORDER BY B.ORGCODE, B.GRPCODE, B.DEPTCODE, B.MEMLVL, C.USER_STUS_ID, A.MEM_CODE
@@ -78,8 +78,8 @@
                     WHEN C.UPD_DT <= TO_DATE('2017/05/01', 'YYYY/MM/DD') THEN '201604'
                     WHEN C.UPD_DT >= TO_DATE('2017/05/02', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/05/01', 'YYYY/MM/DD') THEN '201704'
                     WHEN C.UPD_DT >= TO_DATE('2018/05/01', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201805'
-                    WHEN C.UPD_DT >= TO_DATE('2018/06/09', 'YYYY/MM/DD') AND C.UPD_DT THEN '201806'
-                CNFMDT
+                    WHEN C.UPD_DT >= TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201806'
+                END AS CNFMDT
             FROM ORG0001D A
             INNER JOIN ORG0005D B
                 ON A.MEM_ID = B.MEM_ID
@@ -135,28 +135,28 @@
         SELECT * FROM (
         <if test="groupCode == 1 ">
             SELECT
-                '100' CODE_ID,
+                '201604' CODE_ID,
                 '201604 VERSION' CODE_NAME
             FROM DUAL
 
             UNION ALL
 
             SELECT
-                '100' CODE_ID,
+                '201704' CODE_ID,
                 '201704 VERSION' CODE_NAME
             FROM DUAL
 
             UNION ALL
 
             SELECT
-                '120' CODE_ID,
+                '201805' CODE_ID,
                 '201805 VERSION' CODE_NAME
             FROM DUAL
 
             UNION ALL
 
             SELECT
-                '120' CODE_ID,
+                '201806' CODE_ID,
                 '201806 VERSION' CODE_NAME
             FROM DUAL
 
@@ -187,5 +187,11 @@
 
     <select id="branch" parameterType="Map" resultType="egovMap">
         SELECT BRNCH_ID,CODE BRANCH_CODE, NAME BRANCH_NAME FROM SYS0005M WHERE STUS_ID = 1 AND TYPE_ID IN (42) ORDER BY CODE
+    </select>
+
+    <select id="cdEagmt1" parameterType="Map" resultType="egovMap">
+        SELECT APLICNT_AGMTDT SIGNDT
+        FROM ORG0003D
+        WHERE MEM_CODE = #{memID}
     </select>
 </mapper>

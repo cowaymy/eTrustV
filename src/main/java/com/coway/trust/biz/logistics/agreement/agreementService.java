@@ -24,4 +24,6 @@ public interface agreementService {
     EgovMap getBranchCd(Map<String, Object> params);
 
     List<EgovMap> branch();
+
+    EgovMap cdEagmt1(Map<String, Object> params);
 }

@@ -59,4 +59,9 @@ public class agreementServImpl extends EgovAbstractServiceImpl implements agreem
 	public List<EgovMap> branch() {
 		return agreementMapper.branch();
 	}
+
+	@Override
+    public EgovMap cdEagmt1(Map<String, Object> params) {
+        return agreementMapper.cdEagmt1(params);
+    }
 }
