@@ -1891,7 +1891,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	   , STREET
 	   , MAIN_DEPT
        , SUB_DEPT
-       , APLICNT_BRANCH
+       , APLICNT_MEETPOINT
 	   )
 	  VALUES (
 	  ORG0003D_APLCTN_ID_SEQ.NEXTVAL
@@ -1936,7 +1936,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 	  , #{streetDtl}
 	  , #{searchdepartment}
 	  , #{searchSubDept}
-	  , #{memBranch}
+	  , #{meetingPoint}
 	  )
   </insert>
   <insert id="insertMemberAgr" parameterType="Map">
