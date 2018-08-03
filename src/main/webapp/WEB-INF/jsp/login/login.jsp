@@ -250,7 +250,7 @@
                         Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
                     }
                     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
-                   /* else if(result.data.userTypeId == "2") {
+                    else if(result.data.userTypeId == "2") {
 
                         // Check agreement confirmation status from HP Applicant table
                         Common.ajax("GET", "/organization/getCDInfo", {userId : userId}, function(result1) {
@@ -263,7 +263,7 @@
                             }
                         });
                     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - End
-                    }*/
+                    }
                     else {
                         if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
                             fn_goMain();
