@@ -111,7 +111,7 @@
 
                 //if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
                 	if(ORD_STUS_ID != '1') { // block if Order status is not active
-                  var msg = "Order [" + ORD_NO + "] is under [" + ORD_STUS_CODE + "] status.<br/>Order cancellation request is disallowed.";
+                  var msg = "Order " + ORD_NO + " is under " + ORD_STUS_CODE + " status. <br/>Order cancellation request is disallowed.";
                     //msg = '<spring:message code="sal.msg.underOrdCanc" arguments="'+ORD_NO+';'+ORD_STUS_CODE+'" argumentSeparator=";"/>';
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                     return false;
@@ -173,12 +173,12 @@
                     //Valid eCash Floating Stus - 1
                     if(rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
                         isLock = true;
-                        msg = 'This order is under progress [ eCash Deduction ].<br />' + rsltInfo.msg + '.<br/>';
+                        msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + rsltInfo.msg + '.<br/>';
                     }
                 });
             }else{
                 isLock = true;
-                msg = 'This order is under progress [' + "${orderDetail.logView.prgrs}" + '].<br />';
+                msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />';
             }
         }
 
@@ -186,13 +186,13 @@
             Common.ajaxSync("GET", "/sales/order/validRequestOCRStus.do", {salesOrdId : ORD_ID}, function(result) {
                 if(result.callLogResult == 1) {
                     isLock = true;
-                    msg = 'This order is under progress [ Ready to Install ].<br />' + result.msg + '.<br/>';
+                    msg = 'Order ' + ORD_NO + ' is under ready installation status.<br />' + result.msg + '.<br/>';
                 }
             });
 
         if(isLock) {
             if(tabNm == 'CANC') {
-                msg += '<spring:message code="sal.alert.msg.cancDisallowed" />';
+                msg += '<spring:message code="sal.alert.msg.cancDisallowed" />.<br />' + ' Kindly refer CSS Dept via <br /><u>helpme.css@coway.com.my</u> for help.<br />';
                 fn_disableControlCanc();
             }
 
