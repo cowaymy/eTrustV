@@ -75,7 +75,7 @@ public class ClaimFilePBBHandler extends BasicTextDownloadHandler implements Res
 		inputDate = CommonUtils.nvl(params.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) params.get("ctrlBatchDt");
 		//3139835308 Old Account
 		//3999527828 New Account
-		sText = "FH0001" + "3139835308" + StringUtils.rightPad("PBB", 10, " ")
+		sText = "FH0001" + "3999527828" + StringUtils.rightPad("PBB", 10, " ")
 				+ CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd")
 				+ StringUtils.rightPad("WCBDEBIT", 20, " ")
 				+ CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + StringUtils.rightPad("", 138, " ");
@@ -130,7 +130,7 @@ public class ClaimFilePBBHandler extends BasicTextDownloadHandler implements Res
 	public void writeFooter() throws IOException {
 		//3139835308 Old Account
 		//3999527828 New Account
-		sTextBtn = "FT0001" + "3139835308" + StringUtils.rightPad("PBB", 10, " ")
+		sTextBtn = "FT0001" + "3999527828" + StringUtils.rightPad("PBB", 10, " ")
 				+ StringUtils.leftPad(String.valueOf((iTotalCnt + 2)), 10, "0")
 				+ StringUtils.leftPad(String.valueOf(iTotalAmt), 20, "0")
 				+ StringUtils.leftPad(String.valueOf(iHashTot), 15, "0") + StringUtils.rightPad("", 129, " ");
