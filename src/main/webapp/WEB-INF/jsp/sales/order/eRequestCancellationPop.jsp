@@ -371,10 +371,10 @@
         //msg += '<spring:message code="sal.title.text.requestStage" /> : ' + RequestStage + '<br />';
         //msg += '<spring:message code="sal.title.text.requestor" /> : '    + $('#cmbRequestor option:selected').text() + '<br />';
         //msg += '<spring:message code="sal.title.text.reason" /> : '       + $('#cmbReason option:selected').text() + '<br />';
-        msg += 'Order No.          : ' + ORD_ID + '<br />';
+        msg += 'Order No.          : ' + ORD_NO + '<br />';
         msg += 'Customer Name : ' + CUST_NAME + '<br />';
         msg += 'Product             : ' + STOCK_DESC + '<br />';
-        msg += 'Refund Amount  : ' + MONTH_REN_FEE + '<br />';
+        msg += 'Refund Amount  : ' + '' + '<br />';
         msg += 'Refund Account  : ' + BANK_ACC_NO + '<br />';
         //msg += '<spring:message code="sal.text.callLogDate" /> : '        + $('#dpCallLogDate').val() + '<br />';
 
