@@ -523,13 +523,13 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
 
 		EgovMap result = new EgovMap();
 
-		int ccpResult = eRequestCancellationMapper.selectCcpDecisionMById(params);
+		//int ccpResult = eRequestCancellationMapper.selectCcpDecisionMById(params);
 		int eCashResult = eRequestCancellationMapper.selectECashDeductionItemById(params);
 
-		if(ccpResult > 0){
+/*		if(ccpResult > 0){
 			result.put("ccpStus",1);
 			result.put("msg", "CCP Result is not approve");
-		}
+		}*/
 		if(eCashResult > 0){
 			result.put("eCashStus",1);
 			result.put("msg","eCash is Active");
@@ -547,7 +547,7 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
 
 		if(callLogResult > 0){
 			result.put("callLogResult",1);
-			result.put("msg", "OCR is not allowed due to Installation Status  still [ACTIVE]");
+			result.put("msg", "OCR is not allowed due to Installation Status still [ACTIVE]");
 		}
 
 		return result;
