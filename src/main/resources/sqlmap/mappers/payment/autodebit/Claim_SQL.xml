@@ -526,8 +526,21 @@
 	                              ELSE '0000' END) AS  RENT_PAY_CRC_EXPR
 	                </when>
 	                <otherwise>
-	                   ,(CASE WHEN  Extent1.BANK_DTL_CRC_BANK_TYPE_ID IN (19,34,17,28,18,31,16) THEN Extent1.BANK_DTL_CRC_EXPR
-                        ELSE '0000' END) AS RENT_PAY_CRC_EXPR
+	                   ,(           SELECT
+                               MAX(NVL(crc.CUST_CRC_EXPR, '0000')) RENT_PAY_CRC_EXPR
+                            FROM
+                                PAY0287D grp
+                                JOIN PAY0042D dtl on grp.BANK_DTL_GRP_ID = dtl.BANK_DTL_GRP_ID
+                                JOIN SAL0001D som ON som.SALES_ORD_ID = dtl.SALES_ORD_ID
+                                LEFT JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+                                LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID AND rs.CUST_CRC_ID <> 0
+                            WHERE
+                                som.STUS_CODE_ID <>  10
+                                AND rs.MODE_ID = 131
+                                AND som.APP_TYPE_ID = 66
+                                AND rs.BANK_ID IN (19,34,17,28,18,31,16)
+                                AND dtl.BANK_DTL_GRP_ID = EXTENT1.BANK_DTL_GRP_ID
+                     ) AS RENT_PAY_CRC_EXPR
 	                </otherwise>
                 </choose>
 
