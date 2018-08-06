@@ -116,14 +116,14 @@
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                     return false;
                     }
-/*
+
                 if(todayYY >= 2018) {
                     if(todayDD == 26 || todayDD == 27 || todayDD == 1 || todayDD == 2) { // Block if date on 26 / 27 / 1 / 2 of the month
                         var msg = '<spring:message code="sal.msg.chkCancDate" />';
                         Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                         return false;
                     }
-                } */
+                }
             }
             else {
                 var msg = "Sorry. You have no access rights to request order cancellation.";
