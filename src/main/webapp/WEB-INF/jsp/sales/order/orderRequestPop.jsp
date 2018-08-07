@@ -2144,8 +2144,8 @@
                     msg += '<spring:message code="sal.alert.msg.plzSelThirdParty" />';
                 }
             }
-            if($("#cmbRentPaymodeOwnt option:selected").index() <= 0) {C
-                Common.ajaxSync("GET", "/sales/order/selectOderOutsInfo.do", {ordId : ORD_ID}, function(result) {Common.alert('5');
+            if($("#cmbRentPaymodeOwnt option:selected").index() <= 0) {
+                Common.ajaxSync("GET", "/sales/order/selectOderOutsInfo.do", {ordId : ORD_ID}, function(result) {
                     if(result != null && result.length > 0) {
                         if(result[0].lastBillMth != 60 || result[0].ordTotOtstnd != 0) {
                             isValid = false;
