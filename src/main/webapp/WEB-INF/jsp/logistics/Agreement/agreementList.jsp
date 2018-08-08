@@ -10,11 +10,11 @@ $(document).ready(function() {
 
     $("#agreementVersion").attr("disabled", true);
     $("#memLevelCom").attr("disabled", true);
-    $("#selectBranch").attr("disabled", true);
+    //$("#selectBranch").attr("disabled", true);
 
     doGetCombo('/logistics/agreement/getMemStatus', null, '' ,'memStusCmb' , 'S');
 
-
+    console.log($("#userRole").val());
 
     if($("#userRole").val() == 97 || $("#userRole").val() == 98 || $("#userRole").val() == 99 || $("#userRole").val() == 100 || // SO Branch
             $("#userRole").val() == 103 || $("#userRole").val() == 104 || $("#userRole").val() == 105 || // DST Support

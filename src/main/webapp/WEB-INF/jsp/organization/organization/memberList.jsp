@@ -556,52 +556,48 @@ function fn_genRawData() {
 
     var rptNm;
     var rptDownNm;
-    var whereSQL
-
-    console.log($("#createDate").val());
-    console.log($("#endDate").val());
-
-    /*
-    if($("#createDate").val() == "" && $("#endDate").val() ==  "") {
-        //AND TO_CHAR(A.CRT_DT, 'MM/yyyy') =
-
-        var today = new Date();
-        var dd = today.getDate();
-        var mm = today.getMonth() + 1;
-        var yy = today.getFullYear();
-        if(dd < 10) {
-            dd = '0' + dd;
-        }
-        if(mm < 10) {
-            mm = '0' + mm;
-        }
-        today = dd + '/' + mm + '/' + yy;
-
-        whereSQL = " AND TO_CHAR(A.CRT_DT, 'MM/yyyy') = '" + mm + "/" + yy + "' ";
-    } else {
-        whereSQL = " AND TO_CHAR(A.CRT_DT, 'dd/MM/yyyy') between '" + $("#createDate").val() + "' and '" + $("#endDate").val() + "' ";
-    }*/
+    var date1;
+    var date2;
+    var whereSQL;
 
     var today = new Date();
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yy = today.getFullYear();
+    var lastDay = new Date(yy, mm, 0).getDate();
+    if(dd < 10) {
+        dd = '0' + dd;
+    }
     if(mm < 10) {
         mm = '0' + mm;
     }
-    whereSQL = mm + "/" + yy
 
-    $("#v_dt").val(whereSQL);
+    if($("#createDate").val() == "" && $("#endDate").val() ==  "") {
+        date1 = yy + mm + "01";
+        date2 = yy + mm + lastDay;
+    } else {
+        dt1 = $("#createDate").val().split("/");
+        dt2 = $("#endDate").val().split("/");
+
+        date1 = dt1[2] + dt1[1] + dt1[0];
+        date2 = dt2[2] + dt2[1] + dt2[0];
+    }
+
+    console.log(date1);
+    console.log(date2);
+
+    $("#v_dt1").val(date1);
+    $("#v_dt2").val(date2);
 
     if($("#memTypeCom").val() == "") {
         Common.alert("Please select Coway Lady/Health Planner.")
         return false;
     } else if($("#memTypeCom").val() == "1") {
         rptNm = "/organization/HpRawData.rpt";
-        rptDownNm = "hpRawData_" + today;
+        rptDownNm = "hpRawData_" + yy + mm + dd;
     } else if($("#memTypeCom").val() == "2") {
         rptNm = "/organization/CodyRawData.rpt";
-        rptDownNm = "codyRawData_" + today;
+        rptDownNm = "codyRawData_" + yy + mm + dd;
     }
 
     $("#reportFileName").val(rptNm);
@@ -675,7 +671,8 @@ function fn_genRawData() {
     <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
-    <input type="hidden" id="v_dt" name="v_dt" value="" />
+    <input type="hidden" id="v_dt1" name="v_dt1" value="" />
+    <input type="hidden" id="v_dt2" name="v_dt2" value="" />
 </form>
 
 <section class="search_table"><!-- search_table start -->
