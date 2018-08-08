@@ -208,7 +208,12 @@ function fn_downloadAgreement() {
 
     } else {
         code = $("#code").val();
-        $("#v_memCode").val($("#code").val());
+        if(code != "") {
+            $("#v_memCode").val($("#code").val());
+        } else {
+        	code = memberid;
+            $("#v_memCode").val(memberid);
+        }
     }
 
     if($("#memTypeCom").val() == "1") {
@@ -232,15 +237,15 @@ function fn_downloadAgreement() {
 
     } else if($("#memTypeCom").val() == "2") {
         // CD Download
-        //signdt
-        Common.ajax("GET", "/logistics/agreement/cdEagmt1", {memID : code, memType : $("#memTypeCom").val()}, function(result) {
-            console.log(result);
 
-            var signDt = result.signdt.substring(0, 5);
+        //Common.ajax("GET", "/logistics/agreement/cdEagmt1", {memID : code, memType : $("#memTypeCom").val()}, function(result) {
+            //console.log(result);
 
-            console.log(signDt);
+            //var signDt = result.signdt.substring(0, 5);
+
+            //console.log(signDt);
             //if($("#agreementVersion").val() < signdt.substring(0, 3))
-        });
+        //});
 
         $("#reportFileName").val("/logistics/CodyAgreement_" + version + ".rpt");
         $("#reportDownFileName").val("CodyAgreement_" + code);

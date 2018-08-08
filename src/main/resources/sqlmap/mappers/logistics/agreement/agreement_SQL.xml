@@ -190,8 +190,8 @@
     </select>
 
     <select id="cdEagmt1" parameterType="Map" resultType="egovMap">
-        SELECT APLICNT_AGMTDT SIGNDT
+        SELECT *
         FROM ORG0003D
-        WHERE MEM_CODE = #{memID}
+        WHERE APLICNT_CODE = #{memID}
     </select>
 </mapper>
