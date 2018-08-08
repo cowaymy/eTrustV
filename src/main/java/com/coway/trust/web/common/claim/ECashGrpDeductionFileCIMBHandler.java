@@ -67,7 +67,7 @@ public class ECashGrpDeductionFileCIMBHandler extends BasicTextDownloadHandler i
 		//crcExpiry = "0000";
 		crcExpiry = dataRow.get("fileItmAccExpr") == null ? "0000" : String.valueOf(dataRow.get("fileItmAccExpr")).trim();
 		amount = CommonUtils.getNumberFormat(String.valueOf(dataRow.get("fileItmAmt")), "0.00");
-		salesOrdNo = " ";
+		salesOrdNo = "0000";
 		remarks = String.valueOf(dataRow.get("fileBatchGrpId"));
 
 		stext = crcOwner + "," + crcNo + "," + crcExpiry + ",$" + amount + "," + salesOrdNo + "," + remarks;
