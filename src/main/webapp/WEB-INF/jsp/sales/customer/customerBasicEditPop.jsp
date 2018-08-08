@@ -1,19 +1,19 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
-     var selCodeCustId;  
-     var selCodeCorpId; 
-     var selCodeNation; 
+     var selCodeCustId;
+     var selCodeCorpId;
+     var selCodeNation;
      var selCodeRaceId;
 $(document).ready(function(){
-    
+
     //j_date
     var pickerOpts={
             changeMonth:true,
             changeYear:true,
             dateFormat: "dd/mm/yy"
     };
-    
+
     $(".j_date").datepicker(pickerOpts);
 
     var monthOptions = {
@@ -24,14 +24,14 @@ $(document).ready(function(){
     };
 
     $(".j_date2").monthpicker(monthOptions);
-    
+
     //selected Codes
-    selCodeCustId = $("#selCodeCustId").val(); // TypeId 
+    selCodeCustId = $("#selCodeCustId").val(); // TypeId
     selCodeCorpId = $("#selCodeCorpId").val();
     selCodeNation = $("#selCodeNation").val();
     selCodeRaceId = $("#selCodeRaceId").val(); //race id
-    
-    
+
+
     doGetCombo('/common/selectCodeList.do', '95', selCodeCorpId ,'basicCmbCorpTypeId', 'S', '');     // Company Type Combo Box
     doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'basicCmbCustTypeId', 'S', '');       // Customer Type Combo Box
     doGetCombo('/sales/customer/getNationList', '338' , selCodeNation ,'basicCmdNationTypeId' , 'S');        // Nationality Combo Box
@@ -58,21 +58,21 @@ $(document).ready(function(){
         $("#basicDob").attr("disabled" , "disabled");
     }
     //edit
-     // 수정 항목 변경 
+     // 수정 항목 변경
     $("#_editCustomerInfo").change(function(){
-              
+
             var stateVal = $(this).val();
             $("#_selectParam").val(stateVal);
     });
-     
+
     $("#_confirm").click(function (currPage) {
     	fn_comboAuthCtrl();
     });
-    
-    
+
+
  // update Button Click
     $("#_updBtn").click(function(){
-       
+
         if(selCodeCustId == '964'){
             // 1. validation
             //Customer Name
@@ -85,16 +85,16 @@ $(document).ready(function(){
                 Common.alert("<spring:message code='sal.alert.msg.pleaseEnterRace' />");
                 return;
             }
-            //Email 
+            //Email
             if('' != $("#basicEmail").val() && null != $("#basicEmail").val()){
-                
+
                 if(FormUtil.checkEmail($("#basicEmail").val()) == true){
                     Common.alert("<spring:message code='sal.msg.invalidEmail' />");
                     return;
                  }
             }
         }
-        
+
         /*********** company ***********/
         if(selCodeCustId == '965'){
             // 1. validation
@@ -108,22 +108,22 @@ $(document).ready(function(){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Customer Name'/>");
                 return;
             }
-            //Email 
+            //Email
             if('' != $("#basicEmail").val() && null != $("#basicEmail").val()){
-                
+
                 if(FormUtil.checkEmail($("#basicEmail").val()) == true){
                     Common.alert("<spring:message code='sal.msg.invalidEmail' />");
                     return;
                  }
             }
         }
-        
+
         //update
         fn_getCustomerBasicAjax();
-        
+
     });
-   
- 
+
+
     //Btn Auth
     if(basicAuth == true){
     	$("#_basicUpdBtn").css("display" , "");
@@ -134,11 +134,11 @@ $(document).ready(function(){
 
     //update
     function fn_getCustomerBasicAjax(){
-        Common.ajax("GET", "/sales/customer/updateCustomerBasicInfoAf.do",$("#updForm").serialize(), function(result) {
+        Common.ajax("GET", "/sales/customer/updateCustomerBasicInfoAf.do",$("#updForm").serializeJSON(), function(result) {
             Common.alert(result.message, fn_reloadPage);
         });
     }
-    
+
     //reload Page func
     function fn_reloadPage(){
         //Parent Window Method Call
@@ -146,7 +146,7 @@ $(document).ready(function(){
         Common.popupDiv('/sales/customer/updateCustomerBasicInfoPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv1');
         $("#_close").click();
     }
-    
+
     //close Func
     function fn_closeFunc(){
         $("#_selectParam").val(1);
@@ -154,7 +154,7 @@ $(document).ready(function(){
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <!-- getParams  -->
-<input type="hidden" value="${result.typeId }" id="selCodeCustId"> <!-- TypeId : 964(Individual) / 965(Company)  --> 
+<input type="hidden" value="${result.typeId }" id="selCodeCustId"> <!-- TypeId : 964(Individual) / 965(Company)  -->
 <input type="hidden" value="${result.corpTypeId}" id="selCodeCorpId">
 <input type="hidden" value="${result.nation }" id="selCodeNation">
 <input type="hidden" value="${result.raceId }" id="selCodeRaceId">
@@ -221,9 +221,9 @@ $(document).ready(function(){
     <td><span>${result.custId}</span></td>
     <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
-        <span> 
+        <span>
                 ${result.codeName1}
-                <!-- not Individual -->  
+                <!-- not Individual -->
                 <c:if test="${ result.typeId ne 964}">
                     (${result.codeName})
                 </c:if>
@@ -334,7 +334,7 @@ $(document).ready(function(){
                      Female
                 </c:when>
                 <c:otherwise>
-                    <!-- korean : 5  -->                    
+                    <!-- korean : 5  -->
                 </c:otherwise>
             </c:choose>
      </td>
@@ -347,7 +347,7 @@ $(document).ready(function(){
         <span>
             <c:if test="${contactinfo.dob ne  '01-01-1900'}">
                 ${contactinfo.dob}
-            </c:if> 
+            </c:if>
         </span>
     </td>
     <th scope="row"><spring:message code="sal.text.race" /></th>
@@ -408,8 +408,8 @@ $(document).ready(function(){
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.companyType" /><span class="must">*</span></th> 
-    <td><select name="basicCmbCorpTypeId" id="basicCmbCorpTypeId" class="disabled w100p" ></select></td> 
+    <th scope="row"><spring:message code="sal.text.companyType" /><span class="must">*</span></th>
+    <td><select name="basicCmbCorpTypeId" id="basicCmbCorpTypeId" class="disabled w100p" ></select></td>
     <th scope="row"><spring:message code="sal.text.nricCompanyNo" /><span class="must">*</span></th>
     <td>
     <input type="text" title="" placeholder=""   value="${result.nric}" id="basicNric"/>
