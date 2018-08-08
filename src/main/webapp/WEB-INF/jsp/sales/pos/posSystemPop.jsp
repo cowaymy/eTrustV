@@ -255,7 +255,7 @@ $(document).ready(function() {
 
     			var memSize = AUIGrid.getGridData(memGridID);
     			if(memSize == null || memSize.length <= 0){
-    				Common.alert('<spring:message code="sal.alert.msg.selectMemCode" />');
+    				Common.alert('* Please make sure Member List is not empty. ');
     				return;
     			}
     		}
