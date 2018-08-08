@@ -445,7 +445,6 @@ function fn_createFile(){
            }
     );
 }
-EcashGroupDeductDetails.rpt
 
 function fn_clear(){
     $("#searchForm")[0].reset();
@@ -476,7 +475,7 @@ function fn_report(){
     }
 
     $("#excelForm #reportDownFileName").val("ECashGroupingDeduction_" + batchId + "_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-    $("#excelForm #v_BANK_DTL_CTRL_ID").val(ctrlId);
+    $("#excelForm #v_FILE_BATCH_ID").val(batchId);
 
     var option = {
             isProcedure : true
