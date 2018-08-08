@@ -3134,8 +3134,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 		        #{userid},  '1' AS stus, APLCTN_ID
 		        ,MAIN_DEPT , SUB_DEPT
 		        ,SYSDATE JOIN_DT, AREA_ID, ADDR_DTL, STREET,
-		        #{branchId},
-		        APLICNT_BRANCH
+		        #{branchId}
 		from ORG0003D   d
 		where 1=1 and APLCTN_ID = #{MemberID}
     </insert>
