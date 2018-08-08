@@ -563,7 +563,8 @@
        (select CODE_DESC DEPT_NAME from sys0013M  WHERE CODE_MASTER_ID = 359 and code =  Limit1.MAIN_DEPT) MAIN_DEPT,
       (select CODE_DESC SUB_DEPT from sys0013M  WHERE CODE_MASTER_ID = 360 and code =  Limit1.SUB_DEPT) SUB_DEPT,
       Limit1.BANK_NAME,
-       (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course
+       (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
+       Limit1.APLICNT_MEETPOINT
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -904,7 +905,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
 			    END CNFM_DT,
                 EXTENT1.MAIN_DEPT,
                 EXTENT1.SUB_DEPT,
-                BANK.NAME AS BANK_NAME
+                BANK.NAME AS BANK_NAME,
+                EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -945,6 +947,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                  left join SYS0004M BANK  ON BANK.BANK_ID = Extent1.BANK
                 LEFT JOIN SYS0013M Extent27   ON Extent27.CODE_ID = Extent1.RELIGION
                 LEFT JOIN ORG0003D Extent28   ON Extent28.APLCTN_ID = Extent1.APLICNT_ID
+                LEFT JOIN SYS0089M Extent29 on Extent28.APLICNT_MEETPOINT = Extent29.MEET_POINT_ID
           WHERE  Extent1.MEM_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
@@ -3339,7 +3342,8 @@ SELECT Limit1.MEM_ID MEM_ID  ,
        Limit1.HSPTLZ  HSPTLZ,
        Limit1.MAIN_DEPT,
       Limit1.SUB_DEPT,
-       (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course
+       (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
+       Limit1.APLICNT_MEETPOINT
   FROM (
 SELECT Extent1.APLCTN_ID MEM_ID  ,
                 Extent1.APLICNT_CODE MEM_CODE  ,
@@ -3628,7 +3632,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 '' C59  ,
                 '' C60,
                 EXTENT1.MAIN_DEPT,
-                EXTENT1.SUB_DEPT
+                EXTENT1.SUB_DEPT,
+                EXTENT29.MEET_POINT_CODE || ' - ' || MEET_POINT_DESC APLICNT_MEETPOINT
          FROM ORG0003D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS_ID
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.APLICNT_TYPE
@@ -3668,6 +3673,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                 LEFT JOIN SYS0064M Extent26   ON Extent26.AREA_ID = Extent1.AREA_ID
                 LEFT JOIN SYS0004M Extent27   ON Extent1.APLICNT_BANK_ID = Extent27.BANK_ID and 1 = Extent27.STUS_CODE_ID
                 LEFT JOIN ORG0014D Extent28   ON Extent27.BANK_ID = Extent28.Bank_ID and 848 = Extent28.TYPE_ID and 1 = Extent28.STUS_CODE_ID
+                LEFT JOIN SYS0089M Extent29 ON Extent1.APLICNT_MEETPOINT = Extent29.MEET_POINT_ID
           WHERE  Extent1.APLCTN_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>

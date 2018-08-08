@@ -23,6 +23,8 @@ $(document).ready(function() {
     fn_selectPaymentHistory();
     fn_selectRenewalHistory();
 
+    doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
+
     //cody 를 제외하고 Pa Renewal History 와 Cody PA Expired 안보이기 숨긴다
     if($("#memtype").val() != 2){
     	$("#hideContent").hide();
@@ -106,7 +108,7 @@ $(document).ready(function() {
 
 	   }
 	});
-        
+
 });
 function createAUIGrid4() {
     //AUIGrid 칼럼 설정
@@ -742,6 +744,12 @@ function fn_winClose(){
     </td>
 </tr>
 <tr>
+    <th scope="row">Reporting Branch</th>
+    <td colspan="3">
+        <span><c:out value="${memberView.aplicntMeetpoint}"/></span>
+    </td>
+</tr>
+<tr>
     <th scope="row">Mobile No.</th>
     <td>
     <span><c:out value="${memberView.telMobile}"/></span>
@@ -880,10 +888,10 @@ function fn_winClose(){
     <td>
     <span><span><c:out value="${memberView.subDept}"/></span></span>
     </td>
-    
-    
-    
-    
+
+
+
+
 </tr>
 <tr>
 <th scope="row" class="hideContent">Cody PA Expired</th>
@@ -1223,7 +1231,7 @@ function fn_winClose(){
     <th scope="row">Remark</th>
     <td colspan="3">
     <textarea cols="20" rows="5" id="remark1" name="remark1" ></textarea>
- 
+
 </tr>
 </tbody>
 </table><!-- table end -->
