@@ -60,6 +60,11 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
 	}
 
 	@Override
+	public int selectECashDeductCCSubByIdCnt(Map<String, Object> params) {
+		return eCashDeductionMapper.selectECashDeductCCSubByIdCnt(params);
+	}
+
+	@Override
 	public int selectECashDeductBatchGen(Map<String, Object> params) {
 		return eCashDeductionMapper.selectECashDeductBatchGen(params);
 	}
@@ -100,5 +105,14 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
 		eCashDeductionMapper.updateECashDeductionResult(eCashMap);
 	}
 
+	@Override
+    public Map<String, Object> createECashGrpDeduction(Map<String, Object> param){
+		return eCashDeductionMapper.createECashGrpDeduction(param);
+	}
+
+	@Override
+    public void updateECashGrpDeductionResult(Map<String, Object> eCashMap){
+		eCashDeductionMapper.updateECashGrpDeductionResult(eCashMap);
+	}
 
 }

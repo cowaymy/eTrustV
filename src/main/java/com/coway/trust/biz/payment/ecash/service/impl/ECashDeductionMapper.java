@@ -102,4 +102,10 @@ public interface ECashDeductionMapper {
 	int selectECashDeductSubByIdCnt(Map<String, Object> params);
 
 	int selectECashDeductBatchGen(Map<String, Object> params);
+
+	int selectECashDeductCCSubByIdCnt(Map<String, Object> params);
+
+	Map<String, Object> createECashGrpDeduction(Map<String, Object> param);
+
+	void updateECashGrpDeductionResult(Map<String, Object> params);
 }

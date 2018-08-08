@@ -15,17 +15,11 @@ var claimTypeData = [{"codeId": "131","codeName": "Credit Card"}];
 //Status Combo Data
 var statusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "8","codeName": "Inactive"},{"codeId": "21","codeName": "Failed"}];
 
-/* var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},
-                           {"codeId": "21","codeName": "Maybank"},
-                           {"codeId": "3","codeName": "CIMB Bank"}
-                           ]; */
-                           var bankData = [{"codeId": "19","codeName": "Standard Chartered Bank"},
-                                           {"codeId": "3","codeName": "CIMB Bank"},
-                                           //TEMP
-                                           {"codeId": "1","codeName": "Standard Chartered Bank (Neo)"},
-                                           {"codeId": "2","codeName": "Standard Chartered Bank (Weekly)"}
-                                           //TEMP
-                                           ];
+var bankData = [ /* {"codeId": "21","codeName": "Maybank"},
+                             */
+                             {"codeId": "3","codeName": "CIMB Bank"},
+                             {"codeId": "19","codeName": "Standard Chartered Bank"}
+                           ];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
@@ -35,7 +29,8 @@ $(document).ready(function(){
 
     //New Result 팝업 페이지
     doDefCombo(claimTypeData, '131','claimType', 'S', '');        //Claim Type 생성
-    doDefCombo(bankData, '' ,'new_issueBank', 'S', '');               //Issue Bank 생성
+    doDefCombo(bankData, '' ,'new_merchantBank', 'S', '');               //Issue Bank 생성
+    CommonCombo.make('new_issueBank', '/sales/order/getBankCodeList', '' , '', {type: 'M', isCheckAll: false});
 
     //Grid Properties 설정
     var gridPros = {
@@ -176,8 +171,7 @@ var batchDeductionColumnLayout= [
     {dataField : "crtUser", headerText : "Creator", width : '10%'},
     {dataField : "fileItmCrt", headerText : "Creatord", width : '10%'},
     {dataField : "updUser", headerText : "Updator", width : '10%'},
-    {dataField : "fileItmUpd", headerText : "Updated", width : '10%'}
-
+    {dataField : "fileItmUpd", headerText : "Updated", width : '10%'},
     ];
 
 // 리스트 조회.
@@ -236,7 +230,7 @@ function fn_openDivPop(val){
 			    $('#center_btns1').hide();
 			    $('#center_btns2').hide();
 			    $('#center_btns3').hide();
-			    $('#center_btns4').hide();
+			    $('#center_btns4').show();
 
 			}else if(val == "RESULT"){
 				$('#pop_header h1').text('E-DEDUCTION BATCH DETAILS');
@@ -335,7 +329,7 @@ function fn_resultFileUp(){
             var data = {};
             data.form = [{"fileBatchId":fileBatchId,"fileBatchBankId":fileBatchBankId,"settleDate":settleDate,"fileName":fileName}];
 
-            Common.ajax("POST", "/payment/updateECashDeductionResult.do", data,
+            Common.ajax("POST", "/payment/updateECashGrpDeductionResult.do", data,
             	function(result) {
                 Common.alert("<b>Deduction results successfully updated.</b>");
                 },
@@ -364,15 +358,35 @@ function resetUpdatedItems() {
 
 //NEW CLAIM Pop-UP 에서 Generate Claim 처리
 function fn_genClaim(){
-	if($("#new_issueBank option:selected").val() == ''){
+	if($("#new_merchantBank option:selected").val() == ''){
         Common.alert("* Please select Issue Bank.<br />");
         return;
     }
+    if($("#new_cardType option:selected").val() == ''){
+        Common.alert("* Please select Card Type.<br />");
+        return;
+	}
+    if ($("#new_issueBank option:selected").val() == null) {
+        Common.alert(" * Please select issue bank ");
+        return;
+	}
 
-	   if($("#new_cardType option:selected").val() == ''){
-	        Common.alert("* Please select Card Type.<br />");
-	        return;
-	    }
+    var runNo1 = 0;
+    var issueBank = "";
+
+    if($('#new_issueBank :selected').length > 0){
+        $('#new_issueBank :selected').each(function(i, mul){
+            if($(mul).val() != "0"){
+                if(runNo1 > 0){
+                    issueBank += ", "+$(mul).val()+" ";
+                }else{
+                    issueBank += " "+$(mul).val()+" ";
+                }
+                runNo1 += 1;
+            }
+        });
+    }
+    $("#hiddenIssueBank").val(issueBank);
 
 	//저장 처리
 	var data = {};
@@ -381,7 +395,7 @@ function fn_genClaim(){
     if(formList.length > 0) data.form = formList;
     else data.form = [];
 
-	Common.ajax("POST", "/payment/generateNewEDeduction.do", data,
+	Common.ajax("POST", "/payment/generateNewECashGrpDeduction.do", data,
 			function(result) {
 		         var message = "";
 
@@ -419,7 +433,7 @@ function fn_createFile(){
 
 	//param data array
     var data = {};
-    data.form = [{"batchId":fileBatchId}];
+    data.form = [{"batchId":fileBatchId,"v_isGrp":1}];
 
     Common.ajax("POST", "/payment/createECashDeductionFile.do", data,
             function(result) {
@@ -431,6 +445,7 @@ function fn_createFile(){
            }
     );
 }
+EcashGroupDeductDetails.rpt
 
 function fn_clear(){
     $("#searchForm")[0].reset();
@@ -439,9 +454,9 @@ function fn_clear(){
 function fn_getItmStatus(val){
 	var fileBatchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
 
-	if(val == "4"){$('#pop_header h2').text('APPROVED TRANSACTION');}
-	else if(val == "6"){$('#pop_header h2').text('FAILED TRANSACTIONS');}
-	else{$('#pop_header h2').text('ALL TRANSACTIONS');}
+	if(val == "4"){$('#pop_header h3').text('APPROVED TRANSACTION');}
+	else if(val == "6"){$('#pop_header h3').text('FAILED TRANSACTIONS');}
+	else{$('#pop_header h3').text('ALL TRANSACTIONS');}
 
 	Common.ajax("GET", "/payment/selectECashSubDeductionById.do", {"batchId":fileBatchId,"status":val}, function(result) {
         AUIGrid.setGridData(batchDeductionItemId, result);
@@ -450,6 +465,25 @@ function fn_getItmStatus(val){
 
 function fn_openFailedeCash() {
     Common.popupDiv("/payment/failedDeductionListPop.do", null, null, true);
+}
+
+function fn_report(){
+
+    var batchId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchId");
+    var date = new Date().getDate();
+    if(date.toString().length == 1){
+        date = "0" + date;
+    }
+
+    $("#excelForm #reportDownFileName").val("ECashGroupingDeduction_" + batchId + "_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
+    $("#excelForm #v_BANK_DTL_CTRL_ID").val(ctrlId);
+
+    var option = {
+            isProcedure : true
+    };
+
+    Common.report("excelForm", option);
+
 }
 
 </script>
@@ -466,12 +500,12 @@ function fn_openFailedeCash() {
     <!-- title_line start -->
     <aside class="title_line">
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-        <h2>eCash Deduction</h2>
+        <h2>eCash Grouping Deduction</h2>
         <ul class="right_btns">
-            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+            <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
             <li><p class="btn_blue"><a href="javascript:fn_getECashListAjax();"><span class="search"></span>Search</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
-            </c:if>
+            <%-- </c:if> --%>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -479,7 +513,7 @@ function fn_openFailedeCash() {
     <!-- search_table start -->
     <section class="search_table">
         <form name="searchForm" id="searchForm"  method="post">
-            <input type="hidden" name="IS_GRP"  id="IS_GRP" value = "0"/>
+                <input type="hidden" name="IS_GRP"  id="IS_GRP" value = "1"/>
             <table class="type1"><!-- table start -->
                 <caption>table</caption>
                 <colgroup>
@@ -516,7 +550,7 @@ function fn_openFailedeCash() {
                         <td>
                            <select id="status" name="status" class="w100p"></select>
                         </td>
-                          <th scope="row">Issue Bank</th>
+                          <th scope="row">Merchant Bank</th>
                         <td>
                            <select id="issueBank" name="issueBank" class="w100p"></select>
                         </td>
@@ -549,21 +583,21 @@ function fn_openFailedeCash() {
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                        <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View eDeduction</a></p></li>
-                        </c:if>
+                        <%-- </c:if> --%>
 
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('NEW');">New eDeduction</a></p></li>
 
-                        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+                        <%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');">eDeduction Result</a></p></li>
-                        </c:if>
-                        <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
+                        <%-- </c:if>
+                        <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}"> --%>
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');">Re-Generate Claim File</a></p></li>
-                        </c:if>
-                        <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}">
+                        <%-- </c:if>
+                        <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}"> --%>
                         <li><p class="link_btn"><a href="javascript:fn_openFailedeCash('VIEW');">Failed eCash Listing</a></p></li>
-                        </c:if>
+                        <%-- </c:if> --%>
                     </ul>
                     <ul class="btns">
                     </ul>
@@ -604,6 +638,13 @@ function fn_openFailedeCash() {
 		</ul>
 	</header>
 	<!-- pop_header end -->
+	<form action="#" method="post" id="excelForm" name="excelForm">
+        <input type="hidden" id="reportFileName" name="reportFileName" value="/payment/EcashGroupDeductDetails.rpt" />
+        <input type="hidden" id="viewType" name="viewType" value="EXCEL" />
+        <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
+        <input type="hidden" id="v_FILE_BATCH_ID" name="v_FILE_BATCH_ID" value='$("#view_batchId").text()' />
+    </form>
+
 
 	<!-- pop_body start -->
 	<section class="pop_body">
@@ -678,7 +719,9 @@ function fn_openFailedeCash() {
 				<ul class="center_btns" id="center_btns3">
 					<li><p class="btn_blue2"><a href="javascript:fn_createFile();">Generate File</a></p></li>
 				</ul>
-
+                <ul class="center_btns" id="center_btns4">
+                    <li><p class="btn_blue2"><a href="javascript:fn_report();"><spring:message code='pay.btn.generateToExcel'/></a></p></li>
+                </ul>
 			</article>
 			<!-- #########Batch Deduction Item######### -->
 			<article class="tap_area">
@@ -687,7 +730,7 @@ function fn_openFailedeCash() {
 					<!-- grid_wrap start -->
 					<aside class="title_line"><!-- title_line start -->
 					<header class="pop_header" id="pop_header">
-                    <h2></h2>
+                    <h3></h3>
                         <ul class="right_btns">
                             <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus('')">All Transactions</a></p></li>
                             <li><p class="btn_blue2"><a href="javascript:fn_getItmStatus(4)">Approved Transactions</a></p></li>
@@ -734,6 +777,7 @@ function fn_openFailedeCash() {
 
     <!-- pop_body start -->
     <form name="newForm" id="newForm"  method="post">
+    <input type="hidden" name="v_isGrp"  id="v_isGrp" value = "1"/>
     <section class="pop_body">
         <!-- search_table start -->
         <section class="search_table">
@@ -753,12 +797,17 @@ function fn_openFailedeCash() {
                         <td>
                             <select id="claimType" name="claimType" class="w100p" disabled></select>
                         </td>
-                        <th scope="row">Issue Bank <span class="must">*</span></th>
+                        <th scope="row">Merchant Bank<span class="must">*</span></th>
                         <td>
-                            <select id="new_issueBank" name="new_issueBank" class="w100p"></select>
+                            <select id="new_merchantBank" name="new_merchantBank" class="w100p"></select>
                         </td>
                     </tr>
                     <tr>
+                        <th scope="row">Issue Bank<span class="must">*</span></th>
+                        <td>
+                            <select class="multy_select w100p" multiple="multiple" id="new_issueBank" data-placeholder="Bank Name"></select>
+                            <input type="hidden"  id="hiddenIssueBank" name="hiddenIssueBank"/>
+                        </td>
                           <th scope="row">Card Type<span class="must" id="cardTypeMust">*</span></th>
                         <td>
                             <select id="new_cardType" name="new_cardType" class="w100p">
@@ -768,7 +817,6 @@ function fn_openFailedeCash() {
                                 <option value="Master Card">Master Card</option>
                             </select>
                         </td>
-                        <td colspan='2'></td>
                     </tr>
                    </tbody>
             </table>

@@ -18,7 +18,11 @@ import com.coway.trust.web.common.claim.CreditCardFileCIMBHandler;
 import com.coway.trust.web.common.claim.CreditCardFileMBBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
+import com.coway.trust.web.common.claim.ECashGrpDeductionFileCIMBHandler;
+import com.coway.trust.web.common.claim.ECashGrpDeductionFileMBBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface LargeExcelService {
 
@@ -148,6 +152,11 @@ public interface LargeExcelService {
 
 	void downLoadCreditCardFileMBB(Object parameter, CreditCardFileMBBHandler creditCardFileMBBHandler);
 
+	void downLoadECashGrpDeductionFileMBB(Object parameter, ECashGrpDeductionFileMBBHandler downloadHandler);
+
+	void downLoadECashGrpDeductionFileCIMB(Object parameter, ECashGrpDeductionFileCIMBHandler downloadHandler);
 
 	void downLoad(String id, Object parameter, ResultHandler excelDownloadHandler);
+
+
 }

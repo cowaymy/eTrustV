@@ -16,6 +16,8 @@ public interface ECashDeductionService
 
     int  selectECashDeductSubByIdCnt(Map<String, Object> params);
 
+    int selectECashDeductCCSubByIdCnt(Map<String, Object> params);
+
     int selectECashDeductBatchGen(Map<String, Object> params);
 
     List<EgovMap> selectECashDeductSubList(Map<String, Object> params);
@@ -27,5 +29,10 @@ public interface ECashDeductionService
     void updateECashDeductionResultItem(Map<String, Object> eCashMap, List<Object> resultItemList );
 
     void updateECashDeductionResult(Map<String, Object> eCashMap);
+
+    Map<String, Object> createECashGrpDeduction(Map<String, Object> param);
+
+    void updateECashGrpDeductionResult(Map<String, Object> eCashMap);
+
 
 }

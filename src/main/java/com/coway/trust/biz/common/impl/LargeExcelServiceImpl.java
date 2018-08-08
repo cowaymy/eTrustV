@@ -22,7 +22,11 @@ import com.coway.trust.web.common.claim.CreditCardFileCIMBHandler;
 import com.coway.trust.web.common.claim.CreditCardFileMBBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileCIMBHandler;
 import com.coway.trust.web.common.claim.ECashDeductionFileMBBHandler;
+import com.coway.trust.web.common.claim.ECashGrpDeductionFileCIMBHandler;
+import com.coway.trust.web.common.claim.ECashGrpDeductionFileMBBHandler;
 import com.coway.trust.web.common.excel.download.ExcelDownloadHandler;
+
+import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service
 public class LargeExcelServiceImpl implements LargeExcelService {
@@ -343,8 +347,19 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 	}
 
 	@Override
+	public void downLoadECashGrpDeductionFileMBB(Object parameter, ECashGrpDeductionFileMBBHandler eCashGrpDeductionFileMBBHandler) {
+		this.downLoad(LargeExcelQuery.ECASHDEDUCTION_GROUP_PAGING.getQueryId(), parameter, eCashGrpDeductionFileMBBHandler);
+	}
+
+	@Override
+	public void downLoadECashGrpDeductionFileCIMB(Object parameter, ECashGrpDeductionFileCIMBHandler eCashGrpDeductionFileCIMBHandler) {
+		this.downLoad(LargeExcelQuery.ECASHDEDUCTION_GROUP_PAGING.getQueryId(), parameter, eCashGrpDeductionFileCIMBHandler);
+	}
+
+	@Override
 	public void downLoad(String id, Object parameter, ResultHandler resultHandler) {
 		excelDownloadMapper.getSqlSession().select(id, parameter, resultHandler);
 	}
+
 
 }

@@ -59,14 +59,9 @@
             <if test="batchName != null and batchName != ''">
                 AND Extent1.FILE_BATCH_NAME = #{batchName}
             </if>
-            <!-- <choose>
-                <when test="IS_GRP != null and IS_GRP != '' ">
-                    AND Extent1.FILE_BATCH_GROUP = 1
-                </when>
-                <otherwise>
-                    AND Extent1.FILE_BATCH_GROUP != 1
-                </otherwise>
-            </choose> -->
+            <if test="IS_GRP != null and IS_GRP != ''">
+                AND Extent1.FILE_BATCH_GROUP = #{IS_GRP}
+            </if>
          ORDER BY Extent1.FILE_BATCH_ID
     </select>
 
@@ -340,6 +335,65 @@
     <update id="updateECashDeductionResult" statementType="CALLABLE" parameterType="Map">
         {
             call SP_UPD_ECASH_DEDUCTIONRESULT(#{fileBatchId},#{fileBatchBankId},#{userId},#{fileName},#{settleDate})
+        }
+    </update>
+
+
+    <resultMap id="resultECashGrpDeductionMap" type="egovMap" />
+    <select id="createECashGrpDeduction" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_INST_ECASH_GEN_GRP_DEDUCT( #{new_merchantBank}, #{new_cardType} , #{new_issueBank}, #{userId},#{eCash, mode=OUT, jdbcType=CURSOR, javaType=ResultSet, resultMap=resultECashGrpDeductionMap})
+        }
+    </select>
+
+    <select id="selectECashGrpDeductByIdPaging" parameterType="Map" resultType="egovMap">
+    SELECT *
+        FROM (SELECT ROWNUM AS RNUM
+                            ,Z.*
+                            ,SUM(FILE_ITM_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
+                            ,COUNT(FILE_BATCH_GRP_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
+         from (
+            SELECT
+                EXTENT1.FILE_BATCH_GRP_ID,
+                EXTENT1.FILE_ITM_ACC_NO,
+                EXTENT1.FILE_ITM_AMT,
+
+                <choose>
+                    <when test='fileBatchBankId == "19" '>
+	                 CASE WHEN LENGTH(EXTENT1.FILE_ITM_ACC_EXPR) <![CDATA[<]]> 4 THEN '0000'
+                             WHEN TO_DATE(EXTENT1.FILE_ITM_ACC_EXPR,'MMYY') > SYSDATE THEN EXTENT1.FILE_ITM_ACC_EXPR
+                     ELSE '0000' END FILE_ITM_ACC_EXPR
+                    </when>
+                    <otherwise>
+                       (
+                            SELECT
+                               MAX(NVL(crc.CUST_CRC_EXPR, '0000')) FILE_ITM_ACC_EXPR
+                            FROM
+                                PAY0288D grp
+                                JOIN SAL0152M dtl on grp.FILE_BATCH_GRP_ID = dtl.FILE_BATCH_GRP_ID
+                                JOIN SAL0001D som ON som.SALES_ORD_ID = dtl.FILE_ITM_ORD_ID
+                                LEFT JOIN SAL0074D rs ON rs.SALES_ORD_ID = som.SALES_ORD_ID
+                                LEFT JOIN SAL0028D crc ON crc.CUST_CRC_ID = rs.CUST_CRC_ID AND rs.CUST_CRC_ID <![CDATA[ <> ]]> 0
+                            WHERE
+                                som.STUS_CODE_ID <![CDATA[ <> ]]>  10
+                                AND rs.MODE_ID = 131
+                                AND som.APP_TYPE_ID = 66
+                                AND rs.BANK_ID IN (19,34,17,28,18,31,16)
+                                AND dtl.FILE_BATCH_GRP_ID = EXTENT1.FILE_BATCH_GRP_ID
+                     ) AS FILE_ITM_ACC_EXPR
+                    </otherwise>
+                </choose>
+
+                FROM  PAY0288D EXTENT1
+                WHERE Extent1.FILE_BATCH_ID = #{fileBatchId}
+                 ORDER BY Extent1.FILE_BATCH_GRP_ID ) Z
+        WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY FILE_ITM_ACC_NO ASC)
+        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+    </select>
+
+    <update id="updateECashGrpDeductionResult" statementType="CALLABLE" parameterType="Map">
+        {
+            call SP_UPD_ECASH_GRP_DEDUCT_RESULT(#{fileBatchId},#{fileBatchBankId},#{userId},#{fileName},#{settleDate})
         }
     </update>
 
