@@ -139,6 +139,8 @@ $(document).ready(function() {
              //MEM GRID DISPLAY
              $("#_purchMemBtn").css("display" , "");
              $("#_mainMemberGrid").css("display" , "");
+             //$("#_purchMemBtn").css("display" , "none");
+             //$("#_mainMemberGrid").css("display" , "none");
 
              //SERIAL GRID DISPLAY
              $("#_mainSerialGrid").css("display" , "none");
@@ -249,11 +251,11 @@ $(document).ready(function() {
     	if($("#_insPosModuleType").val() == 2390 || $("#_insPosModuleType").val() == 2391) {
 
 
-    		if($("#_insPosModuleType").val() == 2391){
+     		if($("#_insPosModuleType").val() == 2391){
 
     			var memSize = AUIGrid.getGridData(memGridID);
     			if(memSize == null || memSize.length <= 0){
-    				Common.alert('<spring:message code="sal.alert.msg.plzKeyinMemFirst" />');
+    				Common.alert('<spring:message code="sal.alert.msg.selectMemCode" />');
     				return;
     			}
     		}
