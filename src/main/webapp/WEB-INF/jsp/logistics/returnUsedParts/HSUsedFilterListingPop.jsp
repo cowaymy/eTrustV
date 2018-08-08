@@ -62,7 +62,7 @@ function validRequiredField(){
     	     message += 'Please select Cody Code';
     	}
     }
-    
+
     if($("#cmbDepartmentCode").val() == null || $("#cmbDepartmentCode").val().length == 0){
         valid = false;
         message += 'Please select Department Code';
@@ -102,13 +102,13 @@ function btnGeneratePDF_Click(){
 
 
         if(!($("#dpHSSettleDateFrom").val() == null || $("#dpHSSettleDateFrom").val().length == 0)){
-            whereSQL += " AND l82.SVC_DT >= TO_DATE('"+$("#dpHSSettleDateFrom").val()+"', 'dd/MM/YY')";
+            whereSQL += " AND TO_CHAR(l82.SVC_DT, 'yyyymmdd') >= TO_CHAR(TO_DATE('"+$("#dpHSSettleDateFrom").val()+"', 'dd/MM/YYYY'), 'yyyymmdd')";
             hsSettleDateFrom = $("#dpHSSettleDateFrom").val();
 
         }
 
         if(!($("#dpHSSettleDateTo").val() == null || $("#dpHSSettleDateTo").val().length == 0)){
-            whereSQL += " AND l82.SVC_DT <= TO_DATE('"+$("#dpHSSettleDateTo").val()+"', 'dd/MM/YY')";
+            whereSQL += " AND TO_CHAR(l82.SVC_DT, 'yyyymmdd') <= TO_CHAR(TO_DATE('"+$("#dpHSSettleDateTo").val()+"', 'dd/MM/YYYY'), 'yyyymmdd')";
             hsSettleDateTo = $("#dpHSSettleDateTo").val();
 
         }
