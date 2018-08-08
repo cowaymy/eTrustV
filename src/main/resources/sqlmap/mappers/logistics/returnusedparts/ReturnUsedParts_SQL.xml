@@ -39,7 +39,7 @@
 		l82.CUST_ID customer,
 		s29.NAME customer_name,
 		<!-- TO_CHAR(l82.SVC_DT,'DD/MM/YYYY') service_date, -->
-		TO_CHAR(l82.SVC_DT,'YYYY/MM/DD') service_date,
+		TO_CHAR(s06.SETL_DT,'YYYY/MM/DD') service_date,
 		<!-- s26.STK_CODE material_code, -->
 		(select STK_CODE from sys0026m where STK_ID=l82.STK_ID) material_code,
 		s26.STK_CODE material_code_actual,
@@ -68,12 +68,13 @@
         o01.NAME,
        (select CODE from SYS0005M where BRNCH_ID = o01.BRNCH ) code,
        (select NAME from SYS0005M where BRNCH_ID = o01.BRNCH ) brnch_name
-		from LOG0082M l82,sal0029d s29,sys0026m s26, org0001d o01, SVC0008D s08, SAL0001D s01
+		from LOG0082M l82,sal0029d s29,sys0026m s26, org0001d o01, SVC0008D s08, SAL0001D s01, SVC0006D s06
 		where 1=1
 		AND l82.CUST_ID=s29.CUST_ID
 		AND l82.STK_ID=s26.STK_ID
 		AND l82.SVC_ORD_ID=s08.NO
 		AND s08.SALES_ORD_ID=s01.SALES_ORD_ID
+		AND s06.RESULT_ID=l82.RESULT_ID
 		AND l82.MEM_ID = o01.MEM_ID(+)
 	   <if test="searchOder != null and searchOder !=''">
            AND l82.SVC_ORD_ID = #{searchOder}
