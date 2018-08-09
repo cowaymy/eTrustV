@@ -186,13 +186,13 @@
             Common.ajaxSync("GET", "/sales/order/validRequestOCRStus.do", {salesOrdId : ORD_ID}, function(result) {
                 if(result.callLogResult == 1) {
                     isLock = true;
-                    msg = 'Order ' + ORD_NO + ' is under ready installation status.<br />' + result.msg + '.<br/>';
+                    msg = 'Order ' + ORD_NO + ' is under ready installation status.<br />' + result.msg + '.<br/>' + ' Kindly refer CSS Dept via <br /><u>helpme.css@coway.com.my</u> for help.<br />';
                 }
             });
 
         if(isLock) {
             if(tabNm == 'CANC') {
-                msg += '<spring:message code="sal.alert.msg.cancDisallowed" />.<br />' + ' Kindly refer CSS Dept via <br /><u>helpme.css@coway.com.my</u> for help.<br />';
+                msg += '<spring:message code="sal.alert.msg.cancDisallowed" />.<br />' ;
                 fn_disableControlCanc();
             }
 
