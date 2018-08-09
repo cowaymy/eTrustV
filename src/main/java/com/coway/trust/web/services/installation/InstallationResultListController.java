@@ -301,7 +301,9 @@ public class InstallationResultListController {
 
 		logger.debug("paramsqqqq {}",params);
 		Object custId =( orderInfo == null ? installResult.get("custId") :  orderInfo.get("custId") );
+		Object salesOrdNo =( orderInfo == null ? installResult.get("salesOrdNo") :  orderInfo.get("salesOrdNo") );
 		params.put("custId", custId);
+		params.put("salesOrdNo", salesOrdNo);
 		EgovMap customerInfo = installationResultListService.getcustomerInfo(params);
 		//EgovMap customerAddress = installationResultListService.getCustomerAddressInfo(customerInfo);
 		EgovMap customerContractInfo = installationResultListService.getCustomerContractInfo(customerInfo);
@@ -314,7 +316,7 @@ public class InstallationResultListController {
 
 		//}
 
-
+		logger.debug("paramsKIT : {}",params);
 		logger.debug("installResult : {}", installResult);
 		logger.debug("orderInfo : {}", orderInfo);
 		logger.debug("customerInfo : {}", customerInfo);
@@ -335,6 +337,7 @@ public class InstallationResultListController {
 		model.addAttribute("orderInfo", orderInfo);
 		model.addAttribute("customerInfo", customerInfo);
 		//model.addAttribute("customerAddress", customerAddress);
+		model.addAttribute("installation", installation);
 		model.addAttribute("customerContractInfo", customerContractInfo);
 		model.addAttribute("installationContract", installationContract);
 		model.addAttribute("salseOrder", salseOrder);
@@ -463,6 +466,7 @@ public class InstallationResultListController {
 		model.addAttribute("customerInfo", customerInfo);
 		//model.addAttribute("customerAddress", customerAddress);
 		model.addAttribute("customerContractInfo", customerContractInfo);
+		model.addAttribute("installation", installation);
 		model.addAttribute("installationContract", installationContract);
 		model.addAttribute("salseOrder", salseOrder);
 		model.addAttribute("hpMember", hpMember);
@@ -559,7 +563,7 @@ public class InstallationResultListController {
 //					message.setMessage("Can't complete the Installation without available stock in the CT");
 //				}else{
 
-	        		if(resultCnt > 0){
+	        		if(resultCnt < 0){
 	        			message.setMessage("There is complete result exist already, 'ResultID : "+validMap.get("resultId")+". Can't save the result again");
 	        		} else {
 	            		resultValue = installationResultListService.insertInstallationResult(params, sessionVO);

@@ -516,22 +516,22 @@ var gridPros = {
 <tr>
     <th scope="row" rowspan="4"><spring:message code='service.title.InstallationAddress'/></th>
     <td colspan="5">
-    <span><c:out value="${installation.Address}"/></span>
+    <span><c:out value="${installation.address}"/></span>
     </td>
 </tr>
 <tr>
     <td colspan="5">
-    <span></span>
+    <span>${installResult.city}</span>
     </td>
 </tr>
 <tr>
     <td colspan="5">
-    <span></span>
+    <span>${installResult.area}</span>
     </td>
 </tr>
 <tr>
     <td colspan="5">
-    <span></span>
+    <span>${installResult.country}</span>
     </td>
 </tr>
 <tr>
@@ -734,7 +734,7 @@ var gridPros = {
  <c:if test="${installResult.codeid1  == '258' }">
 <input type="hidden" value=" ${orderInfo.c12}" id = "hidOutright_Price" name = "hidOutright_Price" />
  </c:if>
- <input type="hidden" value="${installation.Address}" id="hidInstallation_AddDtl" name = "hidInstallation_AddDtl" />
+ <input type="hidden" value="${installation.address}" id="hidInstallation_AddDtl" name = "hidInstallation_AddDtl" />
 <input type="hidden" value="${installation.areaId}" id = "hidInstallation_AreaID" name = "hidInstallation_AreaID"/>
 <input type="hidden" value="${customerContractInfo.name}" id = "hidInatallation_ContactPerson" name = "hidInatallation_ContactPerson"/>
 
