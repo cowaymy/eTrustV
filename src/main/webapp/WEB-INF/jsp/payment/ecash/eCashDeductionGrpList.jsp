@@ -719,7 +719,7 @@ function fn_report(){
 					<li><p class="btn_blue2"><a href="javascript:fn_createFile();">Generate File</a></p></li>
 				</ul>
                 <ul class="center_btns" id="center_btns4">
-                    <li><p class="btn_blue2"><a href="javascript:fn_report();"><spring:message code='pay.btn.generateToExcel'/></a></p></li>
+                    <li><p class="btn_blue2"><a href="javascript:fn_report();">Generate To Excel</a></p></li>
                 </ul>
 			</article>
 			<!-- #########Batch Deduction Item######### -->
