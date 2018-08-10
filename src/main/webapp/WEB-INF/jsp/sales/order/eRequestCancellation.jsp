@@ -26,6 +26,59 @@ $(document).ready(function(){
         }
     });
 
+
+    //if($("#memType").val() == 1 || $("#memType").val() == 2){
+        if("${SESSION_INFO.memberLevel}" =="1"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+        }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+            $("#orgCode").val("${orgCode}");
+            $("#orgCode").attr("class", "w100p readonly");
+            $("#orgCode").attr("readonly", "readonly");
+
+            $("#grpCode").val("${grpCode}");
+            $("#grpCode").attr("class", "w100p readonly");
+            $("#grpCode").attr("readonly", "readonly");
+
+            $("#deptCode").val("${deptCode}");
+            $("#deptCode").attr("class", "w100p readonly");
+            $("#deptCode").attr("readonly", "readonly");
+
+            $("#memCode").val("${memCode}");
+            $("#memCode").attr("class", "w100p readonly");
+            $("#memCode").attr("readonly", "readonly");
+        }
+ //   }
+
+
     if(IS_3RD_PARTY == '0') {
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '', 'listAppType', 'M', 'fn_multiCombo2'); //Common Code
     }
@@ -77,14 +130,14 @@ function fn_validSearchList() {
     && FormUtil.isEmpty($('#listCustId').val())
     && FormUtil.isEmpty($('#listCustName').val())
     && FormUtil.isEmpty($('#listCustIc').val())
-    && FormUtil.isEmpty($('#listVaNo').val())
+    //&& FormUtil.isEmpty($('#listVaNo').val())
     && FormUtil.isEmpty($('#listSalesmanCode').val())
-    && FormUtil.isEmpty($('#listPoNo').val())
+    //&& FormUtil.isEmpty($('#listPoNo').val())
     && FormUtil.isEmpty($('#listContactNo').val())
-    && FormUtil.isEmpty($('#listSerialNo').val())
-    && FormUtil.isEmpty($('#listSirimNo').val())
-    && FormUtil.isEmpty($('#listRelatedNo').val())
-    && FormUtil.isEmpty($('#listCrtUserId').val())
+    //&& FormUtil.isEmpty($('#listSerialNo').val())
+    //&& FormUtil.isEmpty($('#listSirimNo').val())
+    //&& FormUtil.isEmpty($('#listRelatedNo').val())
+    //&& FormUtil.isEmpty($('#listCrtUserId').val())
     && FormUtil.isEmpty($('#listPromoCode').val())
     && FormUtil.isEmpty($('#listRefNo').val())
     ) {
@@ -252,6 +305,9 @@ $.fn.clearForm = function() {
 
 <form id="listSearchForm" name="listSearchForm" action="#" method="post">
     <input id="listSalesOrderId" name="salesOrderId" type="hidden" />
+        <input type="hidden" name="memType" id="memType" value="${memType }"/>
+    <input type="hidden" name="initGrpCode" id="initGrpCode" value="${grpCode }"/>
+    <input type="hidden" name="memCode" id="memCode" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -342,41 +398,27 @@ $.fn.clearForm = function() {
     <td>
     <input id="listRefNo" name="refNo" type="text" title="Reference No<" placeholder="<spring:message code='sales.refNo3'/>" class="w100p" />
     </td>
-    <th scope="row"><spring:message code='sales.poNum'/></th>
-    <td>
-    <input id="listPoNo" name="poNo" type="text" title="PO No" placeholder="<spring:message code='sales.poNum'/>" class="w100p" />
-    </td>
     <th scope="row"><spring:message code='sales.ContactNo'/></th>
     <td>
     <input id="listContactNo" name="contactNo" type="text" title="Contact No" placeholder="<spring:message code='sales.ContactNo'/>" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code='sales.vaNum'/></th>
-    <td>
-    <input id="listVaNo" name="vaNo" type="text" title="VA Number" placeholder="<spring:message code='sales.vaNum'/>" class="w100p" />
-    </td>
-    <th scope="row"><spring:message code='sales.SeriacNo'/></th>
-    <td>
-    <input id="listSerialNo" name="serialNo" type="text" title="Serial Number" placeholder="<spring:message code='sales.SeriacNo'/>" class="w100p" />
-    </td>
-    <th scope="row"><spring:message code='sales.SirimNo'/></th>
-    <td>
-    <input id="listSirimNo" name="sirimNo" type="text" title="Sirim Number" placeholder="<spring:message code='sales.SirimNo'/>" class="w100p" />
-    </td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code='sales.Creator'/></th>
-    <td>
-    <input id="listCrtUserId" name="crtUserId" type="text" title="Creator" placeholder="Creator (Username)" class="w100p" />
     </td>
     <th scope="row"><spring:message code='sales.promoCd'/></th>
     <td>
     <input id="listPromoCode" name="promoCode" type="text" title="Promotion Code" placeholder="<spring:message code='sales.promoCd'/>" class="w100p" />
     </td>
-    <th scope="row"><spring:message code='sales.relatedNo2'/></th>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.title.text.orgCode" /></th>
     <td>
-    <input id="listRelatedNo" name="relatedNo" type="text" title="Related No(Exchange)" placeholder="<spring:message code='sales.relatedNo2'/>" class="w100p" />
+    <input type="text" title="" id="orgCode" name="orgCode" value="${orgCode }" placeholder="Organization Code" class="w100p" />
+    </td>
+    <th scope="row"><spring:message code="sal.title.text.groupCode" /></th>
+    <td>
+    <input type="text" title="" id="grpCode" name="grpCode" placeholder="Group Code" class="w100p" />
+    </td>
+    <th scope="row"><spring:message code="sal.title.text.deptCode" /></th>
+    <td>
+    <input type="text" title="" id="deptCode" name="deptCode" placeholder="Department Code" class="w100p" />
     </td>
 </tr>
 <tr>
