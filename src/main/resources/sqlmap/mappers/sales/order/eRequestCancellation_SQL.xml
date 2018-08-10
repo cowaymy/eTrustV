@@ -90,6 +90,7 @@
                     , V1.RELATED_NO
                     , V1.RELATED_ID
                  FROM SAL1013V  V1
+                 LEFT JOIN SAL0001D F1 ON V1.ORD_ID = F1.SALES_ORD_ID
                 WHERE 1 = 1
                 <if test='ordDt == null || ordDt == ""'>
                   AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
@@ -148,35 +149,22 @@
                 <if test='refNo != null and refNo != ""'>
                   AND UPPER(V1.REF_NO) = UPPER(#{refNo})
                 </if>
-                <if test='poNo != null and poNo != ""'>
-                  AND UPPER(V1.PO_NO) = UPPER(#{poNo})
-                </if>
                 <if test='contactNo != null and contactNo != ""'>
                   AND #{contactNo} IN (V1.MAIL_TEL_MOB, V1.MAIL_TEL_OFF, V1.MAIL_TEL_RES)
-                </if>
-                <if test='vaNo != null and vaNo != ""'>
-                  AND UPPER(V1.CUST_VA_NO) = UPPER(#{vaNo})
-                </if>
-                <if test='serialNo != null and serialNo != ""'>
-                  AND UPPER(V1.SERIAL_NO) = UPPER(#{serialNo})
-                </if>
-                <if test='sirimNo != null and sirimNo != ""'>
-                  AND UPPER(V1.SIRIM_NO) = UPPER(#{sirimNo})
-                </if>
-                <if test='crtUserId != null and crtUserId != ""'>
-                  AND UPPER(V1.CRT_USER_ID) = UPPER(#{crtUserId})
                 </if>
                 <if test='promoCode != null and promoCode != ""'>
                   AND UPPER(V1.PROMO_CODE) = UPPER(#{promoCode})
                 </if>
-                <if test='relatedNo != null and relatedNo != ""'>
-                  AND UPPER(V1.RELATED_NO) = UPPER(#{relatedNo})
-                </if>
-                <if test='invoicePoNo != null and invoicePoNo != ""'>
-                  AND V1.ORD_ID IN (SELECT DISTINCT PO_ORD_ID
-                                      FROM PAY0015D
-                                     WHERE PO_REF_NO = #{invoicePoNo})
-                </if>
+                  <if test="orgCode != null and orgCode != ''">
+                  AND UPPER(F1.ORG_CODE) = UPPER(#{orgCode})
+              </if>
+              <if test="grpCode != null and grpCode != ''">
+                  AND UPPER(F1.GRP_CODE) = UPPER(#{grpCode})
+              </if>
+              <if test="deptCode != null and deptCode != ''">
+                  AND UPPER(F1.DEPT_CODE) = UPPER(#{deptCode})
+              </if>
+
                ) T
 
 
