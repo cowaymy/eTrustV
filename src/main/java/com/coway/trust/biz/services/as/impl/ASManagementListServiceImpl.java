@@ -2228,8 +2228,10 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
         		 EgovMap pay06d_insert =p6dList.get(i);
 
         		 //////////////////pay06d    1set ////////////////////
-        		 double p16d_asTotAmt =  pay06d_insert.get("asLgAmt") ==null  ? 0 : Double.parseDouble((String)pay06d_insert.get("asLgAmt") );
-
+        		 BigDecimal asLgAmt = (BigDecimal)pay06d_insert.get("asLgAmt");
+        		 //double p16d_asTotAmt =  pay06d_insert.get("asLgAmt") ==null  ? 0 : Double.parseDouble((String)pay06d_insert.get("asLgAmt") );
+        		 long p16d_asTotAmt =  pay06d_insert.get("asLgAmt") ==null  ? 0 :  asLgAmt.longValue();
+        		 
         		 pay06d_insert.put("asId",AS_ID);
 		         pay06d_insert.put("asDocNo",NEW_AS_RESULT_NO);
 		         pay06d_insert.put("asLgDocTypeId","163");
