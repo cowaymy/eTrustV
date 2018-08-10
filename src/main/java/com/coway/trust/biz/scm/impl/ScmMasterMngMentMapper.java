@@ -7,9 +7,9 @@ import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("ScmMasterMngMentMapper")
-public interface ScmMasterMngMentMapper 
+public interface ScmMasterMngMentMapper
 {
-	/* SCM MASTER MANAGEMENT */
+	//	SCM Master Management
 	List<EgovMap> selectMasterMngmentSearch(Map<String, Object> params);
 	List<EgovMap> selectInvenCbBoxByStockType(Map<String, Object> params);
 	List<EgovMap> selectInvenCbBoxByCategory(Map<String, Object> params);
@@ -18,28 +18,27 @@ public interface ScmMasterMngMentMapper
 	int insertMstMngMasterCDC(Map<String, Object> params);
 	int insertMstMngMasterHeader(Map<String, Object> params);
 	
-	/* CDC WARE MAPPING */
+	//	CDC Ware Mapping
 	List<EgovMap> selectCdcWareMapping(Map<String, Object> params);
 	List<EgovMap> selectWhLocationMapping(Map<String, Object> params);
 	
-	int insetCdcWhMapping(Map<String, Object> params); 
-	int deleteCdcWhMapping(Map<String, Object> params); 
+	int insetCdcWhMapping(Map<String, Object> params);
+	int deleteCdcWhMapping(Map<String, Object> params);
 	
-	/* Business Plan Manager */
+	//	Business Plan Manager
 	List<EgovMap> selectVersionCbList(Map<String, Object> params);
 	List<EgovMap> selectBizPlanManager(Map<String, Object> params);
-	List<EgovMap> selectBizPlanStock(Map<String, Object> params);  
+	List<EgovMap> selectBizPlanStock(Map<String, Object> params);
 	int updatePlanStock(Map<String, Object> params);
-	int insertBizPlanMaster(Map<String, Object> params);   
+	int insertBizPlanMaster(Map<String, Object> params);
 	
-	// 
-	int getSeqNowSCM0003M(); 
+	//
+	int getSeqNowSCM0003M();
 	int insertDetailExcel(Map<String, Object> master);
 	int insertMasterExcel(Map<String, Object> master);
-
-	/* Plan and Sales DashBoard */
-	List<EgovMap> selectChartDataList(Map<String, Object> params);	
-	List<EgovMap> selectQuarterRate(Map<String, Object> params);	
-	List<EgovMap> selectPSDashList(Map<String, Object> params);	
 	
+	//	Plan and Sales Dashboard
+	List<EgovMap> selectChartDataList(Map<String, Object> params);
+	List<EgovMap> selectQuarterRate(Map<String, Object> params);
+	List<EgovMap> selectPSDashList(Map<String, Object> params);
 }
