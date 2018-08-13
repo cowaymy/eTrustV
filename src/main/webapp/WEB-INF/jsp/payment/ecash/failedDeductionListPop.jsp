@@ -22,7 +22,7 @@ $.fn.clearForm = function() {
     });
 };
 
-function fn_report(){
+function fn_report(val){
 
     $("#reportFileName").val("");
     $("#reportDownFileName").val("");
@@ -79,9 +79,16 @@ function fn_report(){
     }
 
     $("#reportDownFileName").val("eDeduction_FailedListing_"+date+(new Date().getMonth()+1)+new Date().getFullYear());
-    $("#form #reportFileName").val("/payment/eDeduction_FailedListing_PDF.rpt");
 
-    $("#form #viewType").val("PDF");
+    $("#form #viewType").val(val);
+
+    if(val == "PDF"){
+        $("#form #reportFileName").val("/payment/eDeduction_FailedListing_PDF.rpt");
+    }else{
+    	$("#form #reportFileName").val("/payment/eDeduction_FailedListing_EXCEL.rpt");
+    }
+
+
 
     $("#form #PRINT_BY").val("");
     $("#form #SORT_BY").val(sortBy);
@@ -167,7 +174,8 @@ doDefCombo(sortBy, '', 'sortBy', 'S', '');
 </table><!-- table end -->
 
 <ul class="center_btns">
-    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_report();"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_report('PDF');"><spring:message code="sal.btn.genPDF" /></a></p></li>
+    <li><p class="btn_blue2"><a href="#" onclick="javascript:fn_report('EXCEL');"><spring:message code="sal.btn.genExcel" /></a></p></li>
     <li><p class="btn_blue2"><a href="#" onclick="javascript:$('#form').clearForm();"><spring:message code="sal.btn.clear" /></a></p></li>
 </ul>
 
