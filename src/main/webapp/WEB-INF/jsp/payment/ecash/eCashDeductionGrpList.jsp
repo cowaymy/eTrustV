@@ -295,7 +295,7 @@ function fn_resultFileUp(){
 	var fileBatchBankId = AUIGrid.getCellValue(myGridID, selectedGridValue, "fileBatchBankId");
 
     //param data array
-    var data = {};
+/*     var data = {};
     var gridList = AUIGrid.getGridData(updResultGridID);       //그리드 데이터
 
     //array에 담기
@@ -305,13 +305,19 @@ function fn_resultFileUp(){
         alert('Select the CSV file on the local PC');
         return;
         //data.all = [];
-    }
+    } */
 
     //form객체 담기
-    data.form = [{"fileBatchId":fileBatchId,"fileBatchBankId":fileBatchBankId}];
+    //data.form = [{"fileBatchId":fileBatchId,"fileBatchBankId":fileBatchBankId}];
+
+    var formData = new FormData();
+
+    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+    formData.append("fileBatchId", fileBatchId);
+    formData.append("fileBatchBankId", fileBatchBankId);
 
     //Ajax 호출
-    Common.ajax("POST", "/payment/updateECashDeductionResultItem.do", data, function(result) {
+    Common.ajaxFile("/payment/updateECashDeductionResultItemBulk.do", formData, function(result) {
     	resetUpdatedItems(); // 초기화
 
         var message = "";
@@ -328,7 +334,7 @@ function fn_resultFileUp(){
             var fileName = $('input[type=file]').val().replace(/C:\\fakepath\\/i, '');
             var data = {};
             data.form = [{"fileBatchId":fileBatchId,"fileBatchBankId":fileBatchBankId,"settleDate":settleDate,"fileName":fileName}];
-
+console.log(data.form);
             Common.ajax("POST", "/payment/updateECashGrpDeductionResult.do", data,
             	function(result) {
                 Common.alert("<b>Deduction results successfully updated.</b>");
@@ -863,9 +869,12 @@ function fn_report(){
                         <th scope="row">Result File</th>
                         <td>
                             <!-- auto_file start -->
-                           <div class="auto_file">
+                           <!-- <div class="auto_file">
                                <input type="file" id="fileSelector" title="file add" accept=".csv" />
-                           </div>
+                           </div> -->
+                            <div class="auto_file"><!-- auto_file start -->
+                            <input type="file" title="file add" id="uploadfile" name="uploadfile" accept=".csv"/>
+                            </div><!-- auto_file end -->
                            <!-- auto_file end -->
                         </td>
                     </tr>

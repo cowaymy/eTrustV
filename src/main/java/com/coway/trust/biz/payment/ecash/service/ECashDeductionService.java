@@ -34,5 +34,10 @@ public interface ECashDeductionService
 
     void updateECashGrpDeductionResult(Map<String, Object> eCashMap);
 
+    void updateECashDeductionResultItemBulk(Map<String, Object> bulkMap) throws Exception;
+
+    EgovMap selectECashBankResult(Map<String, Object> eCashMap);
+
+	void deleteECashDeductionResultItem(Map<String, Object> eCashMap);
 
 }

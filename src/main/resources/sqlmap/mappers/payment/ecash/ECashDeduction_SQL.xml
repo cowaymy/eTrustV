@@ -332,6 +332,18 @@
         INSERT INTO SAL0211T (ITM_CNT,ITM_ID,APPV_CODE,RESPNS_CODE) VALUES (#{itmCnt},#{itmId},#{appvCode},#{respnsCode})
     </insert>
 
+    <insert id="insertECashDeductionResultItemBulk" parameterType="java.util.List" >
+        INSERT INTO SAL0211T (ITM_CNT,ITM_ID,APPV_CODE,RESPNS_CODE)
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+        SELECT
+            #{item.itmCnt},
+            #{item.itmId},
+            #{item.appvCode},
+            #{item.respnsCode}
+        FROM DUAL
+        </foreach>
+    </insert>
+
     <update id="updateECashDeductionResult" statementType="CALLABLE" parameterType="Map">
         {
             call SP_UPD_ECASH_DEDUCTIONRESULT(#{fileBatchId},#{fileBatchBankId},#{userId},#{fileName},#{settleDate})
@@ -396,5 +408,14 @@
             call SP_UPD_ECASH_GRP_DEDUCT_RESULT(#{fileBatchId},#{fileBatchBankId},#{userId},#{fileName},#{settleDate})
         }
     </update>
+
+     <!--Auto Debit - Claim Result Update : 결과 조회 -->
+    <select id="selectECashBankResult" parameterType="Map" resultType="egovMap">
+       select
+            Count(1) AS TOTAL_ITEM,
+            SUM(CASE WHEN APPV_CODE IS NULL OR APPV_CODE = '' THEN 1 ELSE 0 END) TOTAL_REJECTED,
+            SUM(CASE WHEN APPV_CODE IS NOT NULL THEN 1 ELSE 0 END) TOTAL_APPROVED
+        FROM SAL0211T
+    </select>
 
 </mapper>

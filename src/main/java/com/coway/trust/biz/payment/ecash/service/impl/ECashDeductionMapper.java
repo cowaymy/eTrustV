@@ -108,4 +108,8 @@ public interface ECashDeductionMapper {
 	Map<String, Object> createECashGrpDeduction(Map<String, Object> param);
 
 	void updateECashGrpDeductionResult(Map<String, Object> params);
+
+	void insertECashDeductionResultItemBulk(Map<String, Object> params);
+
+	EgovMap selectECashBankResult(Map<String, Object> params);
 }

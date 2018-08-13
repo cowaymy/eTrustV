@@ -5,6 +5,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
+
 import javax.annotation.Resource;
 
 import org.apache.commons.lang3.StringUtils;
@@ -22,15 +25,22 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
+
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.common.LargeExcelService;
 import com.coway.trust.biz.payment.ecash.service.ECashDeductionService;
+import com.coway.trust.biz.payment.payment.service.ClaimResultUploadVO;
+import com.coway.trust.biz.payment.payment.service.ECashResultUploadVO;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.model.EmailVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
+import com.coway.trust.config.csv.CsvReadComponent;
+import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.common.claim.ClaimFileALBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
@@ -61,6 +71,9 @@ public class ECashDeductionController {
 
 	@Resource(name = "eCashDeductionService")
 	private ECashDeductionService eCashDeductionService;
+
+	@Autowired
+	private CsvReadComponent csvReadComponent;
 
 	@Autowired
 	private LargeExcelService largeExcelService;
@@ -796,6 +809,70 @@ public class ECashDeductionController {
 
     	return ResponseEntity.ok(message);
     }
+
+    @RequestMapping(value = "/updateECashDeductionResultItemBulk.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> updateECashDeductionResultItemBulk(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
+
+		LOGGER.debug("eCashMap : {}  ", request.getParameter("fileBatchId"));
+		LOGGER.debug("eCashMap : {}  ", request.getParameter("fileBatchBankId"));
+
+		//Master 정보 세팅
+		Map<String, Object> eCashMap = new HashMap<String, Object>();
+
+		//CVS 파일 세팅
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+		MultipartFile multipartFile = fileMap.get("csvFile");
+		List<ECashResultUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,ECashResultUploadVO::create);
+
+		//CVS 파일 객체 세팅
+		Map<String, Object> cvsParam = new HashMap<String, Object>();
+		cvsParam.put("voList", vos);
+		cvsParam.put("userId", sessionVO.getUserId());
+
+		// cvs 파일 저장 처리
+		List<ECashResultUploadVO> vos2 = (List<ECashResultUploadVO>) cvsParam.get("voList");
+
+		List<Map> list = vos2.stream().map(r -> {
+			Map<String, Object> map = BeanConverter.toMap(r);
+			map.put("itmCnt", r.getItmCnt());
+			map.put("itmId", r.getItmId());
+			map.put("appvCode", r.getAppvCode());
+			map.put("respnsCode", r.getRespnsCode());
+			map.put("settleDate", r.getSettleDate());
+			return map;
+		}).collect(Collectors.toList());
+
+		int size = 500;
+		int page = list.size() / size;
+		int start;
+		int end;
+
+		Map<String, Object> bulkMap = new HashMap<>();
+		eCashDeductionService.deleteECashDeductionResultItem(eCashMap);
+		for (int i = 0; i <= page; i++) {
+			start = i * size;
+			end = size;
+
+			if (i == page) {
+				end = list.size();
+			}
+			bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+			eCashDeductionService.updateECashDeductionResultItemBulk(bulkMap);
+		}
+
+		eCashMap = eCashDeductionService.selectECashBankResult(eCashMap);
+		eCashMap.put("settleDate", list.get(0).get("settleDate").toString());
+		eCashMap.put("fileBatchId",request.getParameter("fileBatchId"));
+		eCashMap.put("fileBatchBankId",request.getParameter("fileBatchBankId"));
+    	// 결과 만들기.
+    	ReturnMessage message = new ReturnMessage();
+    	message.setCode(AppConstants.SUCCESS);
+    	message.setData(eCashMap);
+    	message.setMessage("Saved Successfully");
+
+    	return ResponseEntity.ok(message);
+    }
+
 
 
 }

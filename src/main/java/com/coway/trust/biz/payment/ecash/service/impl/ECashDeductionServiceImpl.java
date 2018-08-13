@@ -115,4 +115,20 @@ public class ECashDeductionServiceImpl extends EgovAbstractServiceImpl implement
 		eCashDeductionMapper.updateECashGrpDeductionResult(eCashMap);
 	}
 
+	@Override
+	public void updateECashDeductionResultItemBulk(Map<String, Object> bulkMap) throws Exception{
+		eCashDeductionMapper.insertECashDeductionResultItemBulk(bulkMap);
+
+	}
+
+	@Override
+	public EgovMap selectECashBankResult(Map<String, Object> eCashMap) {
+		return eCashDeductionMapper.selectECashBankResult(eCashMap);
+	}
+
+	@Override
+	public void deleteECashDeductionResultItem(Map<String, Object> eCashMap) {
+		eCashDeductionMapper.deleteECashDeductionResultItem(eCashMap);
+	}
+
 }
