@@ -507,10 +507,10 @@ function fn_report(){
         <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
         <h2>eCash Grouping Deduction</h2>
         <ul class="right_btns">
-            <%-- <c:if test="${PAGE_AUTH.funcView == 'Y'}"> --%>
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_getECashListAjax();"><span class="search"></span>Search</a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span>Clear</a></p></li>
-            <%-- </c:if> --%>
+            </c:if>
         </ul>
     </aside>
     <!-- title_line end -->
@@ -588,21 +588,25 @@ function fn_report(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
+                        <c:if test="${PAGE_AUTH.funcView == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('VIEW');">View eDeduction</a></p></li>
-                        <%-- </c:if> --%>
+                        </c:if>
 
+                        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('NEW');">New eDeduction</a></p></li>
+                        </c:if>
 
-                        <%-- <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}"> --%>
+                        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('RESULT');">eDeduction Result</a></p></li>
-                        <%-- </c:if>
-                        <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}"> --%>
+                        </c:if>
+
+                        <c:if test="${PAGE_AUTH.funcUserDefine4 == 'Y'}">
                         <li><p class="link_btn"><a href="javascript:fn_openDivPop('FILE');">Re-Generate Claim File</a></p></li>
-                        <%-- </c:if>
+                        </c:if>
+
                         <c:if test="${PAGE_AUTH.funcUserDefine5 == 'Y'}"> --%>
                         <li><p class="link_btn"><a href="javascript:fn_openFailedeCash('VIEW');">Failed eCash Listing</a></p></li>
-                        <%-- </c:if> --%>
+                        </c:if>
                     </ul>
                     <ul class="btns">
                     </ul>
