@@ -101,11 +101,11 @@ SYSDATE,
 )
 </insert>
 
- <update id="udtBudgetSysMaintGrid">  
+ <update id="udtBudgetSysMaintGrid">
 MERGE INTO FCM0106M F0
 USING DUAL
  ON (F0.BUDGET_YEAR = #{budgetYear}
-  AND F0.BUDGET_MONTH = 
+  AND F0.BUDGET_MONTH =
  <if test="budgetMonth == 'JAN'">
  1
  </if>
@@ -144,7 +144,7 @@ USING DUAL
  </if>)
 WHEN MATCHED THEN
   UPDATE
-  SET BUDGET_STUS =  
+  SET BUDGET_STUS =
   <if test="budgetStus == 'Open'">
  'N'
  </if>
@@ -215,104 +215,104 @@ WHEN NOT MATCHED THEN
 </update>
 
  <select id="selectMonthlyBudgetList" parameterType="Map" resultType="egovMap">
-SELECT BUDGET_PLAN_YEAR , 
-            COST_CENTR , 
-            ( SELECT B.COST_CENTER_TEXT 
-                FROM   FCM0008M B 
-              WHERE  B.COST_CENTER = A.COST_CENTR) COST_CENTER_TEXT , 
-            GL_ACC_CODE , 
-           ( SELECT B.GL_ACC_DESC 
-               FROM   FCM0009M B 
-             WHERE  B.GL_ACC_CODE = A.GL_ACC_CODE) GL_ACC_DESC , 
+SELECT BUDGET_PLAN_YEAR ,
+            COST_CENTR ,
+            ( SELECT B.COST_CENTER_TEXT
+                FROM   FCM0008M B
+              WHERE  B.COST_CENTER = A.COST_CENTR) COST_CENTER_TEXT ,
+            GL_ACC_CODE ,
+           ( SELECT B.GL_ACC_DESC
+               FROM   FCM0009M B
+             WHERE  B.GL_ACC_CODE = A.GL_ACC_CODE) GL_ACC_DESC ,
            BUDGET_CODE ,
-           ( SELECT B.BUDGET_CODE_TEXT 
-               FROM   FCM0010M B 
-             WHERE  B.BUDGET_CODE = A.BUDGET_CODE) BUDGET_CODE_TEXT , 
-           MAX(CNTRL_TYPE) CNTRL_TYPE, 
-           SUM(M1)  M1, 
-           SUM(M2)  M2, 
-           SUM(M3)  M3, 
-           SUM(M4)  M4, 
-           SUM(M5)  M5, 
-           SUM(M6)  M6 , 
-           SUM(M7)  M7, 
-           SUM(M8)  M8, 
-           SUM(M9)  M9, 
-           SUM(M10) M10, 
-           SUM(M11) M11, 
-           SUM(M12) M12  
- FROM ( 
+           ( SELECT B.BUDGET_CODE_TEXT
+               FROM   FCM0010M B
+             WHERE  B.BUDGET_CODE = A.BUDGET_CODE) BUDGET_CODE_TEXT ,
+           MAX(CNTRL_TYPE) CNTRL_TYPE,
+           SUM(M1)  M1,
+           SUM(M2)  M2,
+           SUM(M3)  M3,
+           SUM(M4)  M4,
+           SUM(M5)  M5,
+           SUM(M6)  M6 ,
+           SUM(M7)  M7,
+           SUM(M8)  M8,
+           SUM(M9)  M9,
+           SUM(M10) M10,
+           SUM(M11) M11,
+           SUM(M12) M12
+ FROM (
  <if test ='budgetPlan == "0" '>
-        SELECT A.BUDGET_ADJ_YEAR BUDGET_PLAN_YEAR, 
-                   A.COST_CENTR , 
-                   A.GL_ACC_CODE , 
+        SELECT A.BUDGET_ADJ_YEAR BUDGET_PLAN_YEAR,
+                   A.COST_CENTR ,
+                   A.GL_ACC_CODE ,
                    A.BUDGET_CODE ,
-                   '' CNTRL_TYPE, 
-                   NVL(M1,0)  M1, 
-                   NVL(M2,0)  M2, 
-                   NVL(M3,0)  M3, 
-                   NVL(M4,0)  M4, 
-                   NVL(M5,0)  M5, 
-                   NVL(M6,0)  M6 , 
-                   NVL(M7,0)  M7, 
-                   NVL(M8,0)  M8, 
-                   NVL(M9,0)  M9, 
-                   NVL(M10,0) M10, 
-                   NVL(M11,0) M11, 
-                   NVL(M12,0) M12 
+                   '' CNTRL_TYPE,
+                   NVL(M1,0)  M1,
+                   NVL(M2,0)  M2,
+                   NVL(M3,0)  M3,
+                   NVL(M4,0)  M4,
+                   NVL(M5,0)  M5,
+                   NVL(M6,0)  M6 ,
+                   NVL(M7,0)  M7,
+                   NVL(M8,0)  M8,
+                   NVL(M9,0)  M9,
+                   NVL(M10,0) M10,
+                   NVL(M11,0) M11,
+                   NVL(M12,0) M12
           FROM (
           SELECT * FROM (
-                 SELECT   SUM(CASE WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) - SUM( CASE WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) TOTAL , 
-                         A.COST_CENTR , 
-                         A.BUDGET_CODE , 
-                         A.GL_ACC_CODE , 
-                         A.BUDGET_ADJ_YEAR , 
-                         A.BUDGET_ADJ_MONTH 
-                FROM     FCM0103D A, 
-                         FCM0102M B 
+                 SELECT   SUM(CASE WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) - SUM( CASE WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) TOTAL ,
+                         A.COST_CENTR ,
+                         A.BUDGET_CODE ,
+                         A.GL_ACC_CODE ,
+                         A.BUDGET_ADJ_YEAR ,
+                         A.BUDGET_ADJ_MONTH
+                FROM     FCM0103D A,
+                         FCM0102M B
                 WHERE    A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
-                AND      B.APPV_STUS = 'C' 
-                GROUP BY A.BUDGET_ADJ_YEAR, 
-                         A.BUDGET_ADJ_MONTH , 
-                         A.COST_CENTR , 
-                         A.BUDGET_CODE, 
+                AND      B.APPV_STUS = 'C'
+                GROUP BY A.BUDGET_ADJ_YEAR,
+                         A.BUDGET_ADJ_MONTH ,
+                         A.COST_CENTR ,
+                         A.BUDGET_CODE,
                          A.GL_ACC_CODE ) A
                  PIVOT (SUM(TOTAL)
-                FOR BUDGET_ADJ_MONTH IN ( '1' AS M1,  '2'  AS M2, '3'  AS M3, '4'  AS M4, '5'  AS M5, 
+                FOR BUDGET_ADJ_MONTH IN ( '1' AS M1,  '2'  AS M2, '3'  AS M3, '4'  AS M4, '5'  AS M5,
                                                               '6'  AS M6 , '7'  AS M7, '8'  AS M8, '9'  AS M9, '10' AS M10, '11' AS M11, '12' AS M12) )) A
         UNION ALL
    </if>
-         SELECT A.BUDGET_PLAN_YEAR , 
-                   A.COST_CENTR , 
-                   A.GL_ACC_CODE , 
+         SELECT A.BUDGET_PLAN_YEAR ,
+                   A.COST_CENTR ,
+                   A.GL_ACC_CODE ,
                    A.BUDGET_CODE ,
-                   C.CNTRL_TYPE, 
-                   NVL(M1,0)  M1, 
-                   NVL(M2,0)  M2, 
-                   NVL(M3,0)  M3, 
-                   NVL(M4,0)  M4, 
-                   NVL(M5,0)  M5, 
-                   NVL(M6,0)  M6 , 
-                   NVL(M7,0)  M7, 
-                   NVL(M8,0)  M8, 
-                   NVL(M9,0)  M9, 
-                   NVL(M10,0) M10, 
-                   NVL(M11,0) M11, 
-                   NVL(M12,0) M12 
+                   C.CNTRL_TYPE,
+                   NVL(M1,0)  M1,
+                   NVL(M2,0)  M2,
+                   NVL(M3,0)  M3,
+                   NVL(M4,0)  M4,
+                   NVL(M5,0)  M5,
+                   NVL(M6,0)  M6 ,
+                   NVL(M7,0)  M7,
+                   NVL(M8,0)  M8,
+                   NVL(M9,0)  M9,
+                   NVL(M10,0) M10,
+                   NVL(M11,0) M11,
+                   NVL(M12,0) M12
             FROM   ( SELECT * FROM FCM0101M A
                PIVOT (MAX(
-                               CASE 
-                                      WHEN '0'= #{budgetPlan} THEN PLAN_AMT + CHNG_AMT 
-                                      WHEN '1'= #{budgetPlan} THEN PLAN_AMT 
-                                      ELSE 0 
+                               CASE
+                                      WHEN '0'= #{budgetPlan} THEN PLAN_AMT + CHNG_AMT
+                                      WHEN '1'= #{budgetPlan} THEN PLAN_AMT
+                                      ELSE 0
                                END)
-                FOR BUDGET_PLAN_MONTH IN ( '1' AS M1,  '2'  AS M2, '3'  AS M3, '4'  AS M4, '5'  AS M5, 
-                                                              '6'  AS M6 , '7'  AS M7, '8'  AS M8, '9'  AS M9, '10' AS M10, '11' AS M11, '12' AS M12) ) ) A 
-                                                                LEFT OUTER JOIN FCM0104D C 
-                                               ON              A.COST_CENTR = C.COST_CENTR 
-                                               AND             A.BUDGET_CODE = C.BUDGET_CODE 
+                FOR BUDGET_PLAN_MONTH IN ( '1' AS M1,  '2'  AS M2, '3'  AS M3, '4'  AS M4, '5'  AS M5,
+                                                              '6'  AS M6 , '7'  AS M7, '8'  AS M8, '9'  AS M9, '10' AS M10, '11' AS M11, '12' AS M12) ) ) A
+                                                                LEFT OUTER JOIN FCM0104D C
+                                               ON              A.COST_CENTR = C.COST_CENTR
+                                               AND             A.BUDGET_CODE = C.BUDGET_CODE
                                                AND             A.GL_ACC_CODE = C.GL_ACC_CODE
-                                       )   A                
+                                       )   A
          WHERE A.BUDGET_PLAN_YEAR =#{budgetPlanYear}
          <if test="costCentr != null and costCentr != '' " >
             AND A.COST_CENTR = #{costCentr}
@@ -324,8 +324,8 @@ SELECT BUDGET_PLAN_YEAR ,
            <if test="edCostCentr == null or edCostCentr == '' ">
            AND A.COST_CENTR = #{stCostCentr}
            </if>
-        </if> 
-        
+        </if>
+
         <if test="stGlAccCode != null and stGlAccCode != '' ">
             <if test="edGlAccCode != null and edGlAccCode != ''">
            AND A.GL_ACC_CODE BETWEEN #{stGlAccCode} AND #{edGlAccCode}
@@ -333,83 +333,83 @@ SELECT BUDGET_PLAN_YEAR ,
            <if test="edGlAccCode == null or edGlAccCode == ''">
            AND A.GL_ACC_CODE = #{stGlAccCode}
            </if>
-        </if>  
+        </if>
         <if test="stBudgetCode != null and stBudgetCode != '' ">
             <if test="edBudgetCode != null and edBudgetCode != '' ">
            AND A.BUDGET_CODE BETWEEN #{stBudgetCode} AND #{edBudgetCode}
            </if>
            <if test="edBudgetCode == null or edBudgetCode == ''">
-           AND A.BUDGET_CODE = #{stBudgetCode} 
+           AND A.BUDGET_CODE = #{stBudgetCode}
            </if>
-        </if>  
+        </if>
          GROUP BY    BUDGET_PLAN_YEAR,   COST_CENTR,   GL_ACC_CODE,     BUDGET_CODE
          ORDER BY COST_CENTR
   </select>
-  
+
   <select id="selectAdjustmentCBG" parameterType="Map" resultType="egovMap">
-SELECT COST_CENTER, 
-       COST_CENTER_TEXT, 
-       GL_ACC_CODE, 
-       GL_ACC_DESC, 
-       BUDGET_CODE, 
-       BUDGET_CODE_TEXT, 
-       START_DT, 
-       END_DT 
-FROM   (SELECT COST_CENTR                             AS COST_CENTER, 
-               (SELECT B.COST_CENTER_TEXT 
-                FROM   FCM0008M B 
-                WHERE  B.COST_CENTER = A.COST_CENTR)  COST_CENTER_TEXT, 
-               GL_ACC_CODE, 
-               (SELECT B.GL_ACC_DESC 
-                FROM   FCM0009M B 
-                WHERE  B.GL_ACC_CODE = A.GL_ACC_CODE) GL_ACC_DESC, 
-               BUDGET_CODE, 
-               (SELECT B.BUDGET_CODE_TEXT 
-                FROM   FCM0010M B 
-                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) BUDGET_CODE_TEXT, 
-               (SELECT TO_CHAR(B.START_DT, 'DD-MM-YYYY') 
-                FROM   FCM0010M B 
-                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) START_DT, 
-               (SELECT TO_CHAR(B.END_DT, 'DD-MM-YYYY') 
-                FROM   FCM0010M B 
-                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) END_DT 
-        FROM   (SELECT A.BUDGET_ADJ_YEAR BUDGET_PLAN_YEAR, 
-                       A.COST_CENTR, 
-                       A.GL_ACC_CODE, 
-                       A.BUDGET_CODE 
-                FROM   (SELECT * 
-                        FROM   (SELECT A.COST_CENTR, 
-                                       A.BUDGET_CODE, 
-                                       A.GL_ACC_CODE, 
-                                       A.BUDGET_ADJ_YEAR, 
-                                       A.BUDGET_ADJ_MONTH 
-                                FROM   FCM0103D A, 
-                                       FCM0102M B 
-                                WHERE  A.BUDGET_DOC_NO = B.BUDGET_DOC_NO 
-                                       AND B.APPV_STUS = 'C' 
-                                GROUP  BY A.BUDGET_ADJ_YEAR, 
-                                          A.BUDGET_ADJ_MONTH, 
-                                          A.COST_CENTR, 
-                                          A.BUDGET_CODE, 
-                                          A.GL_ACC_CODE) A) A 
-                UNION ALL 
-                SELECT A.BUDGET_PLAN_YEAR, 
-                       A.COST_CENTR, 
-                       A.GL_ACC_CODE, 
-                       A.BUDGET_CODE 
-                FROM   (SELECT * 
-                        FROM   FCM0101M A) A 
-                       LEFT OUTER JOIN FCM0104D C 
-                                    ON A.COST_CENTR = C.COST_CENTR 
-                                       AND A.BUDGET_CODE = C.BUDGET_CODE 
-                                       AND A.GL_ACC_CODE = C.GL_ACC_CODE) A 
+SELECT COST_CENTER,
+       COST_CENTER_TEXT,
+       GL_ACC_CODE,
+       GL_ACC_DESC,
+       BUDGET_CODE,
+       BUDGET_CODE_TEXT,
+       START_DT,
+       END_DT
+FROM   (SELECT COST_CENTR                             AS COST_CENTER,
+               (SELECT B.COST_CENTER_TEXT
+                FROM   FCM0008M B
+                WHERE  B.COST_CENTER = A.COST_CENTR)  COST_CENTER_TEXT,
+               GL_ACC_CODE,
+               (SELECT B.GL_ACC_DESC
+                FROM   FCM0009M B
+                WHERE  B.GL_ACC_CODE = A.GL_ACC_CODE) GL_ACC_DESC,
+               BUDGET_CODE,
+               (SELECT B.BUDGET_CODE_TEXT
+                FROM   FCM0010M B
+                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) BUDGET_CODE_TEXT,
+               (SELECT TO_CHAR(B.START_DT, 'DD-MM-YYYY')
+                FROM   FCM0010M B
+                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) START_DT,
+               (SELECT TO_CHAR(B.END_DT, 'DD-MM-YYYY')
+                FROM   FCM0010M B
+                WHERE  B.BUDGET_CODE = A.BUDGET_CODE) END_DT
+        FROM   (SELECT A.BUDGET_ADJ_YEAR BUDGET_PLAN_YEAR,
+                       A.COST_CENTR,
+                       A.GL_ACC_CODE,
+                       A.BUDGET_CODE
+                FROM   (SELECT *
+                        FROM   (SELECT A.COST_CENTR,
+                                       A.BUDGET_CODE,
+                                       A.GL_ACC_CODE,
+                                       A.BUDGET_ADJ_YEAR,
+                                       A.BUDGET_ADJ_MONTH
+                                FROM   FCM0103D A,
+                                       FCM0102M B
+                                WHERE  A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
+                                       AND B.APPV_STUS = 'C'
+                                GROUP  BY A.BUDGET_ADJ_YEAR,
+                                          A.BUDGET_ADJ_MONTH,
+                                          A.COST_CENTR,
+                                          A.BUDGET_CODE,
+                                          A.GL_ACC_CODE) A) A
+                UNION ALL
+                SELECT A.BUDGET_PLAN_YEAR,
+                       A.COST_CENTR,
+                       A.GL_ACC_CODE,
+                       A.BUDGET_CODE
+                FROM   (SELECT *
+                        FROM   FCM0101M A) A
+                       LEFT OUTER JOIN FCM0104D C
+                                    ON A.COST_CENTR = C.COST_CENTR
+                                       AND A.BUDGET_CODE = C.BUDGET_CODE
+                                       AND A.GL_ACC_CODE = C.GL_ACC_CODE) A
         WHERE  A.BUDGET_PLAN_YEAR = TO_CHAR(SYSDATE, 'YYYY') AND A.COST_CENTR = #{costCentr}
-        GROUP  BY BUDGET_PLAN_YEAR, 
-                  COST_CENTR, 
-                  GL_ACC_CODE, 
-                  BUDGET_CODE 
-        ORDER  BY COST_CENTR) T 
-WHERE 1=1 
+        GROUP  BY BUDGET_PLAN_YEAR,
+                  COST_CENTR,
+                  GL_ACC_CODE,
+                  BUDGET_CODE
+        ORDER  BY COST_CENTR) T
+WHERE 1=1
        <if test="costCenter != null and costCenter != '' " >
             AND COST_CENTER = #{costCenter}
        </if>
@@ -429,7 +429,7 @@ WHERE 1=1
             AND GL_ACC_DESC = #{glAccCodeDesc}
        </if>
   </select>
-  
+
   <select id="selectAvailableBudgetAmt" parameterType="Map" resultType="egovMap">
   <![CDATA[
       SELECT A.PLAN_AMT
@@ -445,7 +445,7 @@ WHERE 1=1
                           , BUDGET_PLAN_MONTH
                           , COST_CENTR
                           , GL_ACC_CODE
-                          , BUDGET_CODE 
+                          , BUDGET_CODE
                 FROM (SELECT  PLAN_AMT
                                    , CHNG_AMT
                                    , BUDGET_PLAN_YEAR
@@ -453,7 +453,7 @@ WHERE 1=1
                                    , COST_CENTR
                                    , GL_ACC_CODE
                                    , BUDGET_CODE
-                             FROM FCM0101M A 
+                             FROM FCM0101M A
                           UNION ALL
                             SELECT 0 PLAN_AMT
                                       ,0 CHNG_AMT
@@ -462,33 +462,33 @@ WHERE 1=1
                                       ,#{costCentr} COST_CENTR
                                       ,#{glAccCode} GL_ACC_CODE
                                       ,#{budgetCode} BUDGET_CODE
-                              FROM DUAL ) A                           
+                              FROM DUAL ) A
                             GROUP BY BUDGET_PLAN_YEAR, BUDGET_PLAN_MONTH, COST_CENTR, GL_ACC_CODE, BUDGET_CODE
                             ) A
-               LEFT OUTER JOIN ( SELECT SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) AS PLUS_ADJ_AMT 
+               LEFT OUTER JOIN ( SELECT SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) AS PLUS_ADJ_AMT
                               ,SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) AS MINUS_ADJ_AMT
                               ,SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) TOTAL
                               ,A.COST_CENTR
                               ,A.BUDGET_CODE
                               ,A.GL_ACC_CODE
-                              ,A.BUDGET_ADJ_YEAR 
+                              ,A.BUDGET_ADJ_YEAR
                               ,A.BUDGET_ADJ_MONTH
                        FROM FCM0103D A, FCM0102M B
                       WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-                        AND B.APPV_STUS = 'C' 
+                        AND B.APPV_STUS = 'C'
                         AND A.BUDGET_ADJ_YEAR = #{budgetPlanYear}
                         AND A.BUDGET_ADJ_MONTH = #{budgetPlanMonth}
-                        GROUP BY  A.BUDGET_ADJ_YEAR, A.BUDGET_ADJ_MONTH ,A.COST_CENTR ,A.BUDGET_CODE, A.GL_ACC_CODE 
-                  ) B  ON  A.BUDGET_PLAN_YEAR = B.BUDGET_ADJ_YEAR 
-                        AND A.BUDGET_PLAN_MONTH  = B.BUDGET_ADJ_MONTH 
-                        AND A.COST_CENTR         = B.COST_CENTR 
-                        AND A.BUDGET_CODE       = B.BUDGET_CODE 
+                        GROUP BY  A.BUDGET_ADJ_YEAR, A.BUDGET_ADJ_MONTH ,A.COST_CENTR ,A.BUDGET_CODE, A.GL_ACC_CODE
+                  ) B  ON  A.BUDGET_PLAN_YEAR = B.BUDGET_ADJ_YEAR
+                        AND A.BUDGET_PLAN_MONTH  = B.BUDGET_ADJ_MONTH
+                        AND A.COST_CENTR         = B.COST_CENTR
+                        AND A.BUDGET_CODE       = B.BUDGET_CODE
                         AND A.GL_ACC_CODE       = B.GL_ACC_CODE
-                 LEFT OUTER JOIN (SELECT A.COST_CENTR 
+                 LEFT OUTER JOIN (SELECT A.COST_CENTR
                                ,A.BUDGET_CODE
                                ,A.GL_ACC_CODE
-                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT 
-                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT  
+                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT
+                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT
                                ,SUM(A.NET_AMT ) APP_AMT_TOTAL
                                ,MAX(A.INVC_DT) AS INVC_DT
                        FROM FCM0015D A, FCM0004M B
@@ -496,11 +496,11 @@ WHERE 1=1
                          AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
                          AND TO_CHAR(A.INVC_DT, 'YYYYMM') =  #{budgetPlanYear}||TO_CHAR(#{budgetPlanMonth}, 'FM00')
                      GROUP BY A.COST_CENTR, A.BUDGET_CODE, A.GL_ACC_CODE
-                 )   C          
-                        ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY') 
-                        AND TO_CHAR(A.BUDGET_PLAN_MONTH, 'FM00') = TO_CHAR(C.INVC_DT, 'MM') 
-                        AND A.COST_CENTR     = C.COST_CENTR 
-                        AND A.BUDGET_CODE  = C.BUDGET_CODE 
+                 )   C
+                        ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY')
+                        AND TO_CHAR(A.BUDGET_PLAN_MONTH, 'FM00') = TO_CHAR(C.INVC_DT, 'MM')
+                        AND A.COST_CENTR     = C.COST_CENTR
+                        AND A.BUDGET_CODE  = C.BUDGET_CODE
                         AND A.GL_ACC_CODE  = C.GL_ACC_CODE
                         ]]>
       WHERE BUDGET_PLAN_YEAR   = #{budgetPlanYear}
@@ -509,10 +509,10 @@ WHERE 1=1
         AND A.BUDGET_CODE        = #{budgetCode}
         AND A.GL_ACC_CODE        = #{glAccCode}
   </select>
-  
+
   <select id="selectAdjustmentAmount" parameterType="Map" resultType="egovMap">
   <![CDATA[
-      SELECT TO_CHAR(A.UPD_DT, 'dd-mm-yyyy hh24:mi') AS CONFIRM_DATE 
+      SELECT TO_CHAR(A.UPD_DT, 'dd-mm-yyyy hh24:mi') AS CONFIRM_DATE
                   ,B.BUDGET_DOC_NO
                   ,B.BUDGET_ADJ_TYPE
                   ,FN_GET_CODENAME('347', B.BUDGET_ADJ_TYPE) BUDGET_ADJ_TYPE_NAME
@@ -522,39 +522,39 @@ WHERE 1=1
                   ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
                   ,B.GL_ACC_CODE
                   ,(SELECT GL_ACC_DESC FROM FCM0009M A WHERE A.GL_ACC_CODE = B.GL_ACC_CODE) GL_ACC_DESC
-                  ,B.SIGNAL 
+                  ,B.SIGNAL
                   ,ADJ_AMT
-                  ,B.ADJ_REM    
+                  ,B.ADJ_REM
          FROM FCM0102M  A,  FCM0103D B
         WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-            AND A.APPV_STUS = 'C' 
+            AND A.APPV_STUS = 'C'
                         ]]>
           <choose>
-          <when test="stDate != null and stDate !='' "> 
+          <when test="stDate != null and stDate !='' ">
                <if test="edDate != null and edDate != '' ">
             AND B.BUDGET_ADJ_YEAR  || TO_CHAR(B.BUDGET_ADJ_MONTH,'FM00') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
-               </if>    
-               <if test="edDate == null or edDate == '' ">       
+               </if>
+               <if test="edDate == null or edDate == '' ">
             AND  B.BUDGET_ADJ_YEAR  || TO_CHAR(B.BUDGET_ADJ_MONTH,'FM00') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
-                </if>                   
+                </if>
             </when>
             <otherwise>
             AND B.BUDGET_ADJ_YEAR   = #{budgetPlanYear}
-            AND B.BUDGET_ADJ_MONTH  = TO_CHAR(#{budgetPlanMonth}, 'FM00')  
+            AND B.BUDGET_ADJ_MONTH  = TO_CHAR(#{budgetPlanMonth}, 'FM00')
             </otherwise>
-            </choose> 
+            </choose>
             AND B.COST_CENTR         = #{costCentr}
             AND B.BUDGET_CODE        = #{budgetCode}
             AND B.GL_ACC_CODE        = #{glAccCode}
-            ORDER BY B.BUDGET_ADJ_YEAR, B.BUDGET_ADJ_MONTH      
+            ORDER BY B.BUDGET_ADJ_YEAR, B.BUDGET_ADJ_MONTH
   </select>
-  
+
   <select id="selectPenConAmount" parameterType="Map" resultType="egovMap">
-      SELECT A.APPV_REQ_KEY_NO 
-               ,B.COST_CENTR_NAME       
-               ,(SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID) AS USER_NAME  
+      SELECT A.APPV_REQ_KEY_NO
+               ,B.COST_CENTR_NAME
+               ,(SELECT USER_NAME FROM SYS0047M WHERE USER_ID = A.CRT_USER_ID) AS USER_NAME
                ,A.CRT_USER_ID
-               ,TO_CHAR(A.CRT_DT, 'dd/mm/yyyy') CRT_DT 
+               ,TO_CHAR(A.CRT_DT, 'dd/mm/yyyy') CRT_DT
                ,TO_CHAR(B.INVC_DT, 'dd/mm/yyyy') INVC_DT
                ,TO_CHAR(B.PAY_DUE_DT, 'dd/mm/yyyy') PAY_DUE_DT
                ,B.MEM_ACC_ID
@@ -564,38 +564,38 @@ WHERE 1=1
        FROM FCM0004M A, FCM0015D B
      WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
      <if test='type == "Pending" '>
-         AND A.APPV_PRCSS_STUS IN ( 'R' ,'P' ) 
+         AND A.APPV_PRCSS_STUS IN ( 'R' ,'P' )
      </if>
      <if test='type == "Consumed" '>
-         AND A.APPV_PRCSS_STUS =  'A'  
+         AND A.APPV_PRCSS_STUS =  'A'
      </if>
-     
+
          <choose>
-          <when test="stDate != null and stDate !='' "> 
+          <when test="stDate != null and stDate !='' ">
                <if test="edDate != null and edDate != '' ">
             AND TO_CHAR(B.INVC_DT, 'yyyymm') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
-               </if>    
-               <if test="edDate == null or edDate == '' ">       
+               </if>
+               <if test="edDate == null or edDate == '' ">
             AND  TO_CHAR(B.INVC_DT, 'yyyymm') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
-                </if>                   
+                </if>
             </when>
             <otherwise>
             AND TO_CHAR(B.INVC_DT, 'yyyy')   = #{budgetPlanYear}
-            AND TO_CHAR(B.INVC_DT, 'mm')   = TO_CHAR(#{budgetPlanMonth}, 'FM00')  
+            AND TO_CHAR(B.INVC_DT, 'mm')   = TO_CHAR(#{budgetPlanMonth}, 'FM00')
             </otherwise>
-            </choose> 
+            </choose>
             AND B.COST_CENTR         = #{costCentr}
             AND B.BUDGET_CODE        = #{budgetCode}
             AND B.GL_ACC_CODE        = #{glAccCode}
-            ORDER BY B.INVC_DT  
+            ORDER BY B.INVC_DT
   </select>
-  
+
   <select id="selectAdjustmentList" parameterType="Map" resultType="egovMap">
-       <![CDATA[ 
+       <![CDATA[
        SELECT  CASE WHEN A.APPV_STUS = 'C' THEN 'Close' WHEN A.APPV_STUS = 'T' THEN 'Temp. Save' ELSE 'Open' END STATUS
                  ,A.BUDGET_DOC_NO
                  ,B.COST_CENTR
-                 ,BUDGET_DOC_SEQ                 
+                 ,BUDGET_DOC_SEQ
                  ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
                  ,TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR ADJ_YEAR_MONTH
                  ,B.BUDGET_CODE
@@ -610,18 +610,18 @@ WHERE 1=1
                  ,( SELECT CASE WHEN FD.FILE_SUB_PATH IS NOT NULL THEN REPLACE (FD.FILE_SUB_PATH,'\','/') ||'/'||PHYSICL_FILE_NAME  ELSE ' ' END
                        FROM SYS0070M FM
                       INNER JOIN SYS0071D FD
-                          ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID 
+                          ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID
                        WHERE FM.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
-                           AND rownum=1) AS FILE_PATH  
+                           AND rownum=1) AS FILE_PATH
                  ,CASE WHEN A.ATCH_FILE_GRP_ID IS NOT NULL THEN 'view' ELSE '' END  FILE_SUB_PATH
-                 ,'N' AS CHECK_ID 
+                 ,'N' AS CHECK_ID
                 /* ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT*/
-                 ,A.BUDGET_DOC_NO || B.BUDGET_DOC_SEQ AS SEQ                                       
+                 ,A.BUDGET_DOC_NO || B.BUDGET_DOC_SEQ AS SEQ
         FROM FCM0102M A
-       INNER JOIN FCM0103D B 
+       INNER JOIN FCM0103D B
            ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
       WHERE  1=1
-      ]]>     
+      ]]>
         <if test="stYearMonth != null and stYearMonth != ''">
         AND TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR  BETWEEN #{stYearMonth} AND #{edYearMonth}
          </if>
@@ -639,10 +639,10 @@ WHERE 1=1
          <foreach item="item" collection="budgetAdjType" index="index" open="(" separator="," close=")">
            #{item}
          </foreach>
-         </if>         
+         </if>
         <if test="budgetDocNo != null and budgetDocNo != ''">
           AND A.BUDGET_DOC_NO LIKE '%' || #{budgetDocNo} || '%'
-          </if>          
+          </if>
         <if test="appvStus != null and appvStus != ''">
            AND A.APPV_STUS IN
            <foreach item="item" collection="appvStus" index="index" open="(" separator="," close=")">
@@ -651,7 +651,7 @@ WHERE 1=1
            </if>
            ORDER BY A.BUDGET_DOC_NO, BUDGET_DOC_SEQ
   </select>
-  
+
      <select id="selectFileList" parameterType="Map"  resultType="egovMap">
       SELECT FM.ATCH_FILE_GRP_ID
                  ,FM.ATCH_FILE_ID
@@ -663,20 +663,20 @@ WHERE 1=1
              ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID
         WHERE FM.ATCH_FILE_GRP_ID = #{atchFileGrpId}
     </select>
-    
+
      <!--  <select id="selectBudgetDocNo" parameterType="Map" resultType="String">
-      SELECT TO_CHAR(SYSDATE, 'yyyymm') || NVL(TO_CHAR(MAX(SUBSTR(BUDGET_DOC_NO,7,4)) + 1, 'FM0000'), '0001') budgetDocNo 
+      SELECT TO_CHAR(SYSDATE, 'yyyymm') || NVL(TO_CHAR(MAX(SUBSTR(BUDGET_DOC_NO,7,4)) + 1, 'FM0000'), '0001') budgetDocNo
             FROM FCM0102M
-          WHERE BUDGET_DOC_NO LIKE  TO_CHAR(SYSDATE, 'yyyymm') ||'%' 
+          WHERE BUDGET_DOC_NO LIKE  TO_CHAR(SYSDATE, 'yyyymm') ||'%'
     </select> -->
- 
+
     <insert id="insertAdjustmentM" parameterType="Map">
         <selectKey keyProperty="budgetDocNo" resultType="String" order="BEFORE">
-            SELECT TO_CHAR(SYSDATE, 'yyyymm') || NVL(TO_CHAR(MAX(SUBSTR(BUDGET_DOC_NO,7,4)) + 1, 'FM0000'), '0001') budgetDocNo 
+            SELECT TO_CHAR(SYSDATE, 'yyyymm') || NVL(TO_CHAR(MAX(SUBSTR(BUDGET_DOC_NO,7,4)) + 1, 'FM0000'), '0001') budgetDocNo
                FROM FCM0102M
-             WHERE BUDGET_DOC_NO LIKE  TO_CHAR(SYSDATE, 'yyyymm') ||'%' 
+             WHERE BUDGET_DOC_NO LIKE  TO_CHAR(SYSDATE, 'yyyymm') ||'%'
         </selectKey>
-        
+
            INSERT INTO FCM0102M
            (
                 BUDGET_DOC_NO
@@ -698,12 +698,12 @@ WHERE 1=1
                ,#{userId}
             )
     </insert>
-    
+
     <insert id="insertAdjustmentD" parameterType="Map">
         <selectKey keyProperty="seq" resultType="int" order="BEFORE">
             SELECT NVL(MAX(BUDGET_DOC_SEQ) +1,1) FROM FCM0103D WHERE BUDGET_DOC_NO = #{budgetDocNo}
         </selectKey>
-        
+
            INSERT INTO FCM0103D
            (
                 BUDGET_DOC_NO
@@ -734,7 +734,7 @@ WHERE 1=1
                ,#{budgetCode}
                ,#{glAccCode}
                ,#{adjAmt}
-               ,#{adjRem} 
+               ,#{adjRem}
                ,SYSDATE
                ,#{userId}
                ,SYSDATE
@@ -764,12 +764,12 @@ WHERE 1=1
 </update>
 
  <update id="deleteAdjustmentM" parameterType="Map">
-   DELETE FROM FCM0102M      
+   DELETE FROM FCM0102M
     WHERE BUDGET_DOC_NO     = #{budgetDocNo}
 </update>
 
   <update id="deleteAdjustmentD" parameterType="Map">
-   DELETE FROM FCM0103D      
+   DELETE FROM FCM0103D
     WHERE BUDGET_DOC_NO     = #{budgetDocNo}
     <if test="budgetDocSeq != null and budgetDocSeq !='' ">
         AND BUDGET_DOC_SEQ = #{budgetDocSeq}
@@ -777,26 +777,26 @@ WHERE 1=1
 </update>
 
  <update id="insertApprove" parameterType="Map">
-        
+
    MERGE INTO FCM0105M A
             USING (SELECT #{budgetDocNo} AS BUDGET_DOC_NO ,
-                                  #{userId} AS USER_ID 
+                                  #{userId} AS USER_ID
                          FROM dual)b
             ON (      A.BUDGET_DOC_NO = B.BUDGET_DOC_NO)
        WHEN MATCHED THEN
-    UPDATE  SET 
+    UPDATE  SET
        <if test='appvPrcssStus == "R" '>
                A.REQST_DT = SYSDATE ,
                A.REQST_USER_ID = #{userId} ,
        </if>
        <if test='appvPrcssStus == "J" '>
                A.REJCT_RESN = #{rejectMsg},
-       </if>          
+       </if>
                A.APPV_PRCSS_STUS = #{appvPrcssStus} ,
                A.UPD_DT = SYSDATE,
                A.UPD_USER_ID = #{userId}
     WHEN NOT MATCHED THEN
-           INSERT 
+           INSERT
            (
                 BUDGET_DOC_NO
                ,REQST_DT
@@ -820,15 +820,15 @@ WHERE 1=1
                ,SYSDATE
                ,#{userId}
            )
-    </update>   
-    
-        
+    </update>
+
+
   <update id="deleteApprove" parameterType="Map">
-    DELETE FROM FCM0105M      
+    DELETE FROM FCM0105M
      WHERE BUDGET_DOC_NO     = #{budgetDocNo}
    </update>
-     
-    
+
+
 <select id="getBudgetAmt" parameterType="Map" resultType="egovMap">
 /* webInvoiceMapper.budgetCheck */
     SELECT FN_GET_AVAILABLE_AMT(#{year}, #{month}, #{costCentr}, #{budgetCode}, #{glAccCode}) AVAILABLE_AMT FROM DUAL
@@ -836,17 +836,17 @@ WHERE 1=1
 
 
 <select id="selectAvailableAmtList" parameterType="Map" resultType="egovMap">
-       <![CDATA[ 
+       <![CDATA[
        SELECT A.BUDGET_DOC_NO
-                 ,B.COST_CENTR               
+                 ,B.COST_CENTR
                  ,B.BUDGET_CODE
                  ,B.GL_ACC_CODE
                  ,BUDGET_ADJ_YEAR
                  ,BUDGET_ADJ_MONTH
-                 ,SUM(CASE  WHEN B.SIGNAL = '+' THEN B.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN B.SIGNAL = '-' THEN B.ADJ_AMT ELSE 0 END) TOTAL 
-                 ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT                     
+                 ,SUM(CASE  WHEN B.SIGNAL = '+' THEN B.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN B.SIGNAL = '-' THEN B.ADJ_AMT ELSE 0 END) TOTAL
+                 ,FN_GET_AVAILABLE_AMT(BUDGET_ADJ_YEAR,BUDGET_ADJ_MONTH, B.COST_CENTR, B.BUDGET_CODE, B.GL_ACC_CODE)  AVAILABLE_AMT
         FROM FCM0102M A
-       INNER JOIN FCM0103D B 
+       INNER JOIN FCM0103D B
            ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
            where A.BUDGET_DOC_NO = #{budgetDocNo}
            group by A.BUDGET_DOC_NO, B.COST_CENTR ,B.BUDGET_CODE
@@ -856,11 +856,11 @@ WHERE 1=1
   </select>
 
   <select id="selectApprovalList" parameterType="Map" resultType="egovMap">
-       <![CDATA[ 
+       <![CDATA[
               SELECT A.BUDGET_DOC_NO
                  ,B.COST_CENTR
                  ,TO_CHAR(C.REQST_DT, 'DD/MM/YYYY') AS REQST_DT
-                 ,BUDGET_DOC_SEQ                 
+                 ,BUDGET_DOC_SEQ
                  ,(SELECT COST_CENTER_TEXT FROM FCM0008M A WHERE A.COST_CENTER = B.COST_CENTR) COST_CENTER_TEXT
                  ,TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR ADJ_YEAR_MONTH
                  ,B.BUDGET_CODE
@@ -875,20 +875,20 @@ WHERE 1=1
                  ,( SELECT CASE WHEN FD.FILE_SUB_PATH IS NOT NULL THEN REPLACE (FD.FILE_SUB_PATH,'\','/') ||'/'||PHYSICL_FILE_NAME  ELSE ' ' END
                        FROM SYS0070M FM
                       INNER JOIN SYS0071D FD
-                          ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID 
+                          ON FM.ATCH_FILE_ID = FD.ATCH_FILE_ID
                        WHERE FM.ATCH_FILE_GRP_ID = A.ATCH_FILE_GRP_ID
-                           AND rownum=1) AS FILE_PATH  
+                           AND rownum=1) AS FILE_PATH
                  ,CASE WHEN A.ATCH_FILE_GRP_ID IS NOT NULL THEN 'view' ELSE '' END  FILE_SUB_PATH
-                 ,'N' AS CHECK_ID 
-                 ,A.BUDGET_DOC_NO || B.BUDGET_DOC_SEQ AS SEQ                                       
+                 ,'N' AS CHECK_ID
+                 ,A.BUDGET_DOC_NO || B.BUDGET_DOC_SEQ AS SEQ
         FROM FCM0105M C
         INNER JOIN FCM0102M A
             ON C.BUDGET_DOC_NO = A.BUDGET_DOC_NO
           AND C.APPV_PRCSS_STUS = 'R'
-       INNER JOIN FCM0103D B 
+       INNER JOIN FCM0103D B
            ON A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
       WHERE  1=1
-      ]]>     
+      ]]>
         <if test="stYearMonth != null and stYearMonth != ''">
         AND TO_CHAR(BUDGET_ADJ_MONTH, 'FM00') || '/' || BUDGET_ADJ_YEAR  BETWEEN #{stYearMonth} AND #{edYearMonth}
          </if>
@@ -906,46 +906,46 @@ WHERE 1=1
          <foreach item="item" collection="budgetAdjType" index="index" open="(" separator="," close=")">
            #{item}
          </foreach>
-         </if>         
+         </if>
         <if test="budgetDocNo != null and budgetDocNo != ''">
           AND A.BUDGET_DOC_NO LIKE '%' || #{budgetDocNo} || '%'
-          </if> 
+          </if>
            ORDER BY A.BUDGET_DOC_NO, BUDGET_DOC_SEQ
   </select>
-  
+
   <select id="selectPlanMaster" parameterType="Map" resultType="int">
-      SELECT COUNT(-1) CNT  
-        FROM FCM0104D 
-      WHERE COST_CENTR = #{costCenter} 
+      SELECT COUNT(-1) CNT
+        FROM FCM0104D
+      WHERE COST_CENTR = #{costCenter}
           AND GL_ACC_CODE = #{glAccCode}
           AND BUDGET_CODE= #{budgetCode}
   </select>
-  
+
   <select id="selectCostCenterName" parameterType="Map" resultType="String">
       SELECT COST_CENTER_TEXT FROM FCM0008M  WHERE COST_CENTER = #{code}
   </select>
-  
+
   <select id="selectBudgetCodeName" parameterType="Map" resultType="String">
       SELECT BUDGET_CODE_TEXT FROM FCM0010M  WHERE BUDGET_CODE = #{code}
   </select>
-  
+
   <select id="selectGlAccCodeName" parameterType="Map" resultType="String">
       SELECT GL_ACC_DESC FROM FCM0009M WHERE GL_ACC_CODE = #{code}
   </select>
-  
+
   <update id="deleteAdjustmentDByDocNo" parameterType="Map">
-   DELETE FROM FCM0103D      
+   DELETE FROM FCM0103D
     WHERE BUDGET_DOC_NO     = #{budgetDocNo}
   </update>
 
   <select id="selectCloseMonth" parameterType="Map" resultType="String">
-      SELECT BUDGET_STUS 
-        FROM FCM0106M 
-      WHERE BUDGET_YEAR = SUBSTR(REPLACE (#{yearMonth}, '/',''),3,4) 
+      SELECT BUDGET_STUS
+        FROM FCM0106M
+      WHERE BUDGET_YEAR = SUBSTR(REPLACE (#{yearMonth}, '/',''),3,4)
           AND BUDGET_MONTH = SUBSTR(REPLACE (#{yearMonth}, '/',''),1,2)
   </select>
-  
-  
+
+
     <select id="selectAvailableBudgetList" parameterType="Map" resultType="egovMap">
     SELECT COST_CENTR, COST_CENTER_TEXT, GL_ACC_CODE, GL_ACC_DESC, BUDGET_CODE, BUDGET_CODE_TEXT,
 			SUM(PLAN_AMT) PLAN_AMT,
@@ -977,7 +977,7 @@ WHERE 1=1
                           , BUDGET_PLAN_MONTH
                           , COST_CENTR
                           , GL_ACC_CODE
-                          , BUDGET_CODE 
+                          , BUDGET_CODE
                 FROM (SELECT  PLAN_AMT
                                    , CHNG_AMT
                                    , BUDGET_PLAN_YEAR
@@ -985,7 +985,7 @@ WHERE 1=1
                                    , COST_CENTR
                                    , GL_ACC_CODE
                                    , BUDGET_CODE
-                             FROM FCM0101M A 
+                             FROM FCM0101M A
                           UNION ALL
                             SELECT 0 PLAN_AMT
                                        ,0 CHNG_AMT
@@ -995,69 +995,77 @@ WHERE 1=1
                                        , GL_ACC_CODE
                                        , BUDGET_CODE
                             FROM (
-                                 SELECT   
-                                         A.COST_CENTR , 
-                                         A.BUDGET_CODE , 
-                                         A.GL_ACC_CODE , 
-                                         A.BUDGET_ADJ_YEAR , 
-                                         A.BUDGET_ADJ_MONTH 
-                                FROM     FCM0103D A, 
-                                         FCM0102M B 
+                                 SELECT
+                                         A.COST_CENTR ,
+                                         A.BUDGET_CODE ,
+                                         A.GL_ACC_CODE ,
+                                         A.BUDGET_ADJ_YEAR ,
+                                         A.BUDGET_ADJ_MONTH
+                                FROM     FCM0103D A,
+                                         FCM0102M B
                                 WHERE    A.BUDGET_DOC_NO = B.BUDGET_DOC_NO
-                                AND      B.APPV_STUS = 'C' 
-                                GROUP BY A.BUDGET_ADJ_YEAR, 
-                                         A.BUDGET_ADJ_MONTH , 
-                                         A.COST_CENTR , 
-                                         A.BUDGET_CODE, 
-                                         A.GL_ACC_CODE )   ) A                           
+                                AND      B.APPV_STUS = 'C'
+                                GROUP BY A.BUDGET_ADJ_YEAR,
+                                         A.BUDGET_ADJ_MONTH ,
+                                         A.COST_CENTR ,
+                                         A.BUDGET_CODE,
+                                         A.GL_ACC_CODE )   ) A
                             GROUP BY BUDGET_PLAN_YEAR, BUDGET_PLAN_MONTH, COST_CENTR, GL_ACC_CODE, BUDGET_CODE
                             ) A
-               LEFT OUTER JOIN ( SELECT SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) AS PLUS_ADJ_AMT 
+               LEFT OUTER JOIN ( SELECT SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END) AS PLUS_ADJ_AMT
                               ,SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) AS MINUS_ADJ_AMT
                               ,SUM(CASE  WHEN A.SIGNAL = '+' THEN A.ADJ_AMT ELSE 0 END)  - SUM(CASE  WHEN A.SIGNAL = '-' THEN A.ADJ_AMT ELSE 0 END) TOTAL
                               ,A.COST_CENTR
                               ,A.BUDGET_CODE
                               ,A.GL_ACC_CODE
-                              ,A.BUDGET_ADJ_YEAR 
+                              ,A.BUDGET_ADJ_YEAR
                               ,A.BUDGET_ADJ_MONTH
                        FROM FCM0103D A, FCM0102M B
                       WHERE  A.BUDGET_DOC_NO     = B.BUDGET_DOC_NO
-                        AND B.APPV_STUS = 'C' 
-                        GROUP BY  A.BUDGET_ADJ_YEAR, A.BUDGET_ADJ_MONTH ,A.COST_CENTR ,A.BUDGET_CODE, A.GL_ACC_CODE 
-                  ) B  ON  A.BUDGET_PLAN_YEAR = B.BUDGET_ADJ_YEAR 
-                        AND A.BUDGET_PLAN_MONTH  = B.BUDGET_ADJ_MONTH 
-                        AND A.COST_CENTR         = B.COST_CENTR 
-                        AND A.BUDGET_CODE       = B.BUDGET_CODE 
+                        AND B.APPV_STUS = 'C'
+                        GROUP BY  A.BUDGET_ADJ_YEAR, A.BUDGET_ADJ_MONTH ,A.COST_CENTR ,A.BUDGET_CODE, A.GL_ACC_CODE
+                  ) B  ON  A.BUDGET_PLAN_YEAR = B.BUDGET_ADJ_YEAR
+                        AND A.BUDGET_PLAN_MONTH  = B.BUDGET_ADJ_MONTH
+                        AND A.COST_CENTR         = B.COST_CENTR
+                        AND A.BUDGET_CODE       = B.BUDGET_CODE
                         AND A.GL_ACC_CODE       = B.GL_ACC_CODE
-                 LEFT OUTER JOIN (SELECT A.COST_CENTR 
+                 LEFT OUTER JOIN (SELECT A.COST_CENTR
                                ,A.BUDGET_CODE
                                ,A.GL_ACC_CODE
-                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT 
-                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT  
+                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT
+                               ,SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT
                                ,SUM(A.NET_AMT ) APP_AMT_TOTAL
                                ,MAX(A.INVC_DT) AS INVC_DT
                        FROM FCM0015D A, FCM0004M B
                      WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
                          AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
+                         <if test="stYearMonth != null and stYearMonth != '' " >
+                            <if test="edYearMonth != null and edYearMonth != '' ">
+                                AND TO_CHAR(A.INVC_DT, 'YYYYMM') BETWEEN TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00') AND TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'MM')), 'FM00')
+                            </if>
+                            <if test="edYearMonth == null or edYearMonth == '' ">
+                                AND TO_CHAR(A.INVC_DT, 'YYYYMM') = TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00')
+                            </if>
+                         </if>
                      GROUP BY A.COST_CENTR, A.BUDGET_CODE, A.GL_ACC_CODE
-                 )   C          
-                        ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY') 
-                        AND TO_CHAR(A.BUDGET_PLAN_MONTH, 'FM00') = TO_CHAR(C.INVC_DT, 'MM') 
-                        AND A.COST_CENTR     = C.COST_CENTR 
-                        AND A.BUDGET_CODE  = C.BUDGET_CODE 
+                 )   C
+                        ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY')
+                        AND TO_CHAR(A.BUDGET_PLAN_MONTH, 'FM00') = TO_CHAR(C.INVC_DT, 'MM')
+                        AND A.COST_CENTR     = C.COST_CENTR
+                        AND A.BUDGET_CODE  = C.BUDGET_CODE
                         AND A.GL_ACC_CODE  = C.GL_ACC_CODE
-        WHERE 1=1 
+        WHERE 1=1
          <if test="costCentr != null and costCentr != '' " >
             AND A.COST_CENTR = #{costCentr}
          </if>
         <if test="stYearMonth != null and stYearMonth != '' " >
             <if test="edYearMonth != null and edYearMonth != '' ">
 	          AND BUDGET_PLAN_YEAR  || TO_CHAR(BUDGET_PLAN_MONTH,'FM00') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stYearMonth},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edYearMonth},'/',''), 'mmyyyy'), 'yyyymm')
-	        </if>	 
-	        <if test="edYearMonth == null or edYearMonth == '' ">       
+	        </if>
+	        <if test="edYearMonth == null or edYearMonth == '' ">
               AND BUDGET_PLAN_YEAR  || TO_CHAR(BUDGET_PLAN_MONTH,'FM00') = TO_CHAR(TO_DATE(REPLACE(#{stYearMonth},'/',''), 'mmyyyy'), 'yyyymm')
             </if>
-         </if>      
+         </if>
 
          <if test="stCostCentr != null and stCostCentr != '' " >
             <if test="edCostCentr != null and edCostCentr != '' ">
@@ -1066,8 +1074,8 @@ WHERE 1=1
            <if test="edCostCentr == null or edCostCentr == '' ">
            AND A.COST_CENTR = #{stCostCentr}
            </if>
-        </if> 
-        
+        </if>
+
         <if test="stGlAccCode != null and stGlAccCode != '' ">
             <if test="edGlAccCode != null and edGlAccCode != ''">
            AND A.GL_ACC_CODE BETWEEN #{stGlAccCode} AND #{edGlAccCode}
@@ -1075,18 +1083,18 @@ WHERE 1=1
            <if test="edGlAccCode == null or edGlAccCode == ''">
            AND A.GL_ACC_CODE = #{stGlAccCode}
            </if>
-        </if>  
+        </if>
         <if test="stBudgetCode != null and stBudgetCode != '' ">
             <if test="edBudgetCode != null and edBudgetCode != '' ">
            AND A.BUDGET_CODE BETWEEN #{stBudgetCode} AND #{edBudgetCode}
            </if>
            <if test="edBudgetCode == null or edBudgetCode == ''">
-           AND A.BUDGET_CODE = #{stBudgetCode} 
+           AND A.BUDGET_CODE = #{stBudgetCode}
            </if>
-        </if>   
+        </if>
          )
     group by COST_CENTR, COST_CENTER_TEXT, GL_ACC_CODE, GL_ACC_DESC, BUDGET_CODE, BUDGET_CODE_TEXT
-    ORDER BY  COST_CENTR, BUDGET_CODE, GL_ACC_CODE        
+    ORDER BY  COST_CENTR, BUDGET_CODE, GL_ACC_CODE
   </select>
 
 </mapper>
