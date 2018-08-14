@@ -10,16 +10,16 @@ var option = {
 
     //AUIGrid 생성 후 반환 ID
     var myGridID;
-    
+
     $(document).ready(function(){
-        
+
     	$("#_inputMemCode").attr("readonly" , "readonly");
     	$("#_memConfirm").hide();
     	$("#_memSearch").hide();
-    	
+
         // AUIGrid 그리드를 생성합니다.
         createAUIGrid();
-    
+
         fn_filterChargeListJsonAjax();
         $("#chkDiv").hide();
         if($("#appTypeId").val() != 66  && $("#custBillId").val() == 0){
@@ -35,65 +35,65 @@ var option = {
         }
         $("#radio1").hide();
         $("#radio2").hide();
-        
+
         $("#cardDiv").hide();
         $("#directDiv").hide();
-        
+
         //confirm click(Member Confirm)
         $("#_memConfirm").click(function() {
-            
+
             var inputVal = $("#_inputMemCode").val();
             fn_getMemCodeConfirm(inputVal);
-            
+
         });
-        
+
         //Member Search Pop
         $("#_memSearch").click(function() {
             Common.popupDiv('/sales/ccp/searchMemberPop.do' , $('#_searchForm').serializeJSON(), null , true, '_searchDiv');
-            
+
         });
-        
+
         $('#thrdPartyBtn').click(function() {
             //Common.searchpopupWin("searchForm", "/common/customerPop.do","");
             Common.popupDiv("/common/customerPop.do", {callPrgm : "ORD_REGISTER_PAY_3RD_PARTY"}, null, true);
         });
-        
+
         $('#addCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId}, null, true);
         });
-        
+
         $('#selCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             //Common.popupWin("searchForm", "/sales/customer/customerCreditCardSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : vCustId, callPrgm : "ORD_REQUEST_PAY"}, null, true);
         });
-        
+
         //Add New Bank Account
         $('#btnAddBankAccount').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : vCustId}, null, true);
         });
-      
+
         //Select Another Bank Account
         $('#btnSelBankAccount').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_BANK_ACC"});
         });
-        
+
         //Billing Group
         $('#billGrpBtn').click(function() {
             //Common.popupWin("searchForm", "/customerBillGrpSearchPop.do", {width : "1200px", height : "630x"});
             Common.popupDiv("/sales/customer/customerBillGrpSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "ORD_REGISTER_BILL_GRP"}, null, true);
         });
-        
+
     });
-    
+
     doGetCombo('/common/selectCodeList.do', '19', '','cmbRentPaymode', 'S' , '');   // cmbRentPaymode Combo Box
-    
+
     function createAUIGrid() {
         // AUIGrid 칼럼 설정
-        
+
         // 데이터 형태는 다음과 같은 형태임,
         //[{"id":"#Cust0","date":"2014-09-03","name":"Han","country":"USA","product":"Apple","color":"Red","price":746400}, { .....} ];
         var columnLayout = [ {
@@ -140,16 +140,16 @@ var option = {
                 editable : false,
                 style: 'left_style'
             }];
-       
+
         // 그리드 속성 설정
         var gridPros = {
-            // 페이징 사용       
+            // 페이징 사용
             usePaging : true,
             // 한 화면에 출력되는 행 개수 20(기본값:20)
             pageRowCount : 10,
             editable : false,
             fixedColumnCount : 1,
-            showStateColumn : false, 
+            showStateColumn : false,
             displayTreeOpen : true,
             selectionMode : "multipleCells",
             headerHeight : 30,
@@ -162,22 +162,22 @@ var option = {
             // 줄번호 칼럼 렌더러 출력
             showRowNumColumn : true
         };
-        
+
         myGridID = AUIGrid.create("#filter_grid_wrap", columnLayout, gridPros);
     }
-    
+
     //Get Contact by Ajax
     function fn_filterChargeListJsonAjax(){
         Common.ajax("GET", "/sales/membershipRentalQut/cnvrToSalesfilterChgJsonList",$("#paramForm").serialize(), function(result) {
             AUIGrid.setGridData(myGridID, result);
         });
     }
-    
+
     //resize func (tab click)
-    function fn_resizefunc(gridName){ // 
+    function fn_resizefunc(gridName){ //
         AUIGrid.resize(gridName, 950, 300);
    }
-    
+
     function checkboxDivChg(){
 
     	if($('input:checkbox[id="thrdParty"]').is(":checked") == true){
@@ -196,7 +196,7 @@ var option = {
             $("#radio2").show();
     	}
     }
-    
+
     function fn_payModeChg(){
     	if($("#cmbRentPaymode").val() == ''){
             $("#cardDiv").hide();
@@ -212,11 +212,11 @@ var option = {
             $("#directDiv").hide();
     	}
     }
-    
+
     function fn_getMemCodeConfirm(inputVal){
-        
+
         $.ajax({
-            
+
             type : "GET",
             url : getContextPath() + "/sales/ccp/getMemCodeConfirm",
             contentType: "application/json;charset=UTF-8",
@@ -224,7 +224,7 @@ var option = {
             data: {inputMemCode : inputVal},
             dataType: "json",
             success : function (data) {
-                
+
                 $("#_inputMemCode").val(data.memCode);
                 $("#_hiddenInputMemCode").val(data.memCode);
                 $("#_govAgMemId").val(data.memId);
@@ -239,11 +239,11 @@ var option = {
             }
         });
     }
-    
+
     function fn_newParty(){
         Common.popupWin("paramForm", "/sales/customer/customerRegistPop.do", option);
     }
-    
+
     function fn_reselect(){
     	$("#_inputMemCode").val('');
     	$("#_inputMemName").text('');
@@ -252,22 +252,22 @@ var option = {
         $("#_memReSelected").hide();
 //        $("#_memConfirm").css("display" , "");
 //        $("#_memSearch").css("display" , "");
-        
+
 //        $("#_inputMemCode").attr("readonly" , "readonly");
         $("#_memConfirm").show();
         $("#_memSearch").show();
     }
-    
+
     function fn_selected(){
-        
+
         $("#_inputMemCode").attr({"readonly" : "readonly" , "class" : "w100 readonly"});
         $("#_memReSelected").show();
         $("#_memConfirm").hide();
         $("#_memSearch").hide();
         $("#_closeMemPop").click();
-      
+
     }
-    
+
     function fn_loadCreditCard(crcId, custOriCrcNo, custCrcNo, custCrcType, custCrcName, custCrcExpr, custCRCBank, custCrcBankId, crcCardType) {
     	$('#hiddenRentPayCRCId').val(crcId);
         $('#rentPayCRCNo').val(custOriCrcNo);
@@ -278,14 +278,14 @@ var option = {
         $('#rentPayCRCBank').val(custCRCBank);
         $('#hiddenRentPayCRCBankId').val(custCrcBankId);
         $('#rentPayCRCCardType').val(crcCardType);
-        
+
     }
-    
+
     function fn_loadBankAccountPop(bankAccId) {
 //        fn_clearRentPaySetDD();
 
         fn_loadBankAccount(bankAccId);
-        
+
         $('#sctDirectDebit').removeClass("blind");
 
         if(!FormUtil.IsValidBankAccount($('#hiddenRentPayBankAccID').val(), $('#rentPayBankAccNo').val())) {
@@ -294,15 +294,15 @@ var option = {
             Common.alert("<spring:message code="sal.alert.title.invalidBankAcc" />" + DEFAULT_DELIMITER + "<b><spring:message code="sal.alert.msg.invalidBankAcc" /></b>");
         }
     }
-    
+
     function fn_loadBankAccount(bankAccId) {
         console.log("fn_loadBankAccount START");
-        
+
         Common.ajax("GET", "/sales/order/selectCustomerBankDetailView.do", {getparam : bankAccId}, function(rsltInfo) {
 
             if(rsltInfo != null) {
                 console.log("fn_loadBankAccount Setting");
-                
+
                 $("#hiddenRentPayBankAccID").val(rsltInfo.custAccId);
                 $("#rentPayBankAccNo").val(rsltInfo.custAccNo);
                 $("#rentPayBankAccNoEncrypt").val(rsltInfo.custEncryptAccNo);
@@ -314,7 +314,7 @@ var option = {
             }
         });
     }
-    
+
     function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
         $('#hiddenBillGrpId').removeClass("readonly").val(billGrpId);
         $('#billGrp').removeClass("readonly").val(custBillGrpNo);
@@ -323,7 +323,7 @@ var option = {
         $('#billRem').removeClass("readonly").val(custBillRem);
 
     }
-    
+
     function fn_loadThirdParty(custId, sMethd) {
 
 //        fn_clearRentPayMode();
@@ -364,19 +364,19 @@ var option = {
 
         $('#sctThrdParty').removeClass("blind");
     }
-    
+
     function fn_ctsSave(){
     	if($('input:checkbox[id="thrdParty"]').is(":checked") == true){
             $("#chkBoxThrdParty").val('1');
         }else{
             $("#chkBoxThrdParty").val('0');
         }
-    	
+
     	if($("#cmbRentPaymode").val() == ""){
     		Common.alert("<spring:message code="sal.alert.msg.pleaseSelectRentalPaymode" />");
     		return false;
     	}
-    	
+
     	if(mSaveForm.groupVal.value == "1"){
     		if($('input:radio[id="billingGroup"]').is(":checked") == false){
     			Common.alert("<spring:message code="sal.alert.msg.pleaseSelectGroupOption" />");
@@ -394,7 +394,7 @@ var option = {
     		}
 
         }
-    	
+
     	Common.ajax("GET", "/sales/membershipRentalQut/saveCnvrToSale.do", $("#mSaveForm").serialize(), function(result){
             //result alert and reload
             Common.alert("<b><spring:message code="sal.alert.msg.succQuotKeyInPayment" /></b>", fn_success);
@@ -404,7 +404,7 @@ var option = {
                 console.log("code : " + jqXHR.responseJSON.code);
                 console.log("message : " + jqXHR.responseJSON.message);
                 console.log("detailMessage : " + jqXHR.responseJSON.detailMessage);
-    
+
                 //Common.alert("Failed to order invest reject.<br />"+"Error message : " + jqXHR.responseJSON.message + "</b>");
                 Common.alert("<spring:message code="sal.alert.msg.unableToRetrieve" />");
                 }
@@ -415,7 +415,7 @@ var option = {
             alert("Fail : " + jqXHR.responseJSON.message);
         });
     }
-    
+
     function fn_success(){
     	fn_selectListAjax();
     	$("#cnvrClose").click();
@@ -566,7 +566,7 @@ var option = {
 </article><!-- tap_area end -->
 
 <article class="tap_area"><!-- tap_area start -->
-<!-- 
+<!--
 <ul class="left_btns mb10">
     <li><p class="btn_blue"><a href="#">Other Contact Person</a></p></li>
     <li><p class="btn_blue"><a href="#">New Contact Person</a></p></li>
@@ -640,8 +640,9 @@ var option = {
 <input type="hidden" id="filterAmt" name="filterAmt" value="${packageInfo.qotatExpFilterAmt }">
 <input type="hidden" id="chkBoxThrdParty" name="chkBoxThrdParty" >
 <input type="hidden" id="hiddenOrdNo" name="hiddenOrdNo" value="${orderInfo.ordNo }">
-<input type="hidden" id="qotatCrtUserId" name="qotatCrtUserId" value="${packageInfo.qotatCrtUserId }">
+<input type="hidden" id="hiddenNRIC" name="hiddenNRIC" value="${orderInfo.custNric }">
 <input type="hidden" id="groupVal" name="groupVal" >
+
 <section class="search_table mt20"><!-- search_table start -->
 
 <table class="type1"><!-- table start -->
@@ -958,7 +959,7 @@ var option = {
         <input type="text" id="_inputMemCode" name="inputMemCode" title="" value="${packageInfo.memCode }" placeholder="" class=""/>
         <input type="hidden" id="_hiddenInputMemCode" >
         <input type="hidden" id="_govAgMemId" name="govAgMemId">
-        <p class="btn_sky"><a href="#" id="_memConfirm"><spring:message code="sal.btn.confirm" /></a></p> 
+        <p class="btn_sky"><a href="#" id="_memConfirm"><spring:message code="sal.btn.confirm" /></a></p>
         <p class="btn_sky"><a href="#" id="_memSearch"><spring:message code="sal.btn.search" /></a></p>
         <p class="btn_sky"><a  id="_memReSelected" onclick="fn_reselect()"><spring:message code="sal.btn.reselect" /></a></p>
     </td>
