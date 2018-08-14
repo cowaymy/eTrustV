@@ -2290,8 +2290,8 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 						isInValid = "isInValid";
 					}
 					else if(LastBillMth >= 24) {
-						msgT = "Unbill Amount Exist";
-						msg  = "This order come with un-bill amount. Contact CRT.";
+						msgT = "Exceed 24 Billing Month";
+						msg  = "This order exceeded 24th billing month. Contact CRT.";
 						isInValid = "isInValid";
 					}
 					else if(Integer.parseInt(installDate) <= 19000101) {
