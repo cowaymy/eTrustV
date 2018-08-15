@@ -7,12 +7,12 @@ var myRequestFTFinalGridID;
 //Grid Properties 설정
 var gridPros = {
 		// 편집 가능 여부 (기본값 : false)
-		editable : false,        
+		editable : false,
 		// 상태 칼럼 사용
 		showStateColumn : false,
 		// 기본 헤더 높이 지정
 		headerHeight : 35,
-		
+
 		softRemoveRowMode:false
 
 };
@@ -27,12 +27,12 @@ var targetFinalBillColumnLayout = [
     { dataField:"ordId" ,headerText:"Order ID" ,editable : false , width : 100  , visible : true },
     { dataField:"mstRpf" ,headerText:"Master RPF" ,editable : false , width : 100  , dataType : "numeric", formatString : "#,##0.00" , visible : true },
     { dataField:"mstRpfPaid" ,headerText:"Master RPF Paid" ,editable : false , width : 100  , dataType : "numeric", formatString : "#,##0.00" , visible : true },
-    { dataField:"billNo" ,headerText:"Bill No" ,editable : false , width : 150 },      
+    { dataField:"billNo" ,headerText:"Bill No" ,editable : false , width : 150 },
     { dataField:"ordNo" ,headerText:"Order No" ,editable : false , width : 100 },
     { dataField:"billTypeId" ,headerText:"Bill TypeID" ,editable : false , width : 100 , visible : true },
-    { dataField:"billTypeNm" ,headerText:"Bill Type" ,editable : false , width : 180 },      
-    { dataField:"installment" ,headerText:"Installment" ,editable : false , width : 100 },      
-    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},  
+    { dataField:"billTypeNm" ,headerText:"Bill Type" ,editable : false , width : 180 },
+    { dataField:"installment" ,headerText:"Installment" ,editable : false , width : 100 },
+    { dataField:"billAmt" ,headerText:"Amount" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},
     { dataField:"paidAmt" ,headerText:"Paid" ,editable : false , width : 100 , dataType : "numeric", formatString : "#,##0.00"},
     { dataField:"targetAmt" ,headerText:"Target<br>Amount" ,editable : true , dataType : "numeric", formatString : "#,##0.00"},
     { dataField:"billDt" ,headerText:"Bill Date" ,editable : false , width : 100 , visible : true},
@@ -54,11 +54,11 @@ $(document).ready(function(){
 
 // ajax list 조회.
 function searchFTList(){
-	Common.ajax("POST","/payment/selectFTOldData.do",$("#_ftSearchForm").serializeJSON(), function(result){    		
+	Common.ajax("POST","/payment/selectFTOldData.do",$("#_ftSearchForm").serializeJSON(), function(result){
 		$("#oldOrdNo").val(result.salesOrdNo);
 		$("#oldCustNm").val(result.custNm);
 		$("#oldAmt").val(result.totAmt);
-		
+
 		//AUIGrid.setGridData(myRequestFTOldGridID, result);
 		//recalculateTotalAmt();
 	});
@@ -83,16 +83,16 @@ function fn_FTRequest(){
         Common.alert("<spring:message code='pay.alert.noReasonSelected'/>");
         return;
     }
-	
+
 	if( Number($("#newAmt").val()) <= 0 ){
     	Common.alert("<spring:message code='pay.alert.totalAmtZero'/>");
     	return;
-    }	
+    }
 
 	if( Number($("#oldAmt").val()) != Number($("#newAmt").val())){
     	Common.alert("<spring:message code='pay.alert.amountDifferent'/>");
     	return;
-    }	
+    }
 
 	if( FormUtil.byteLength($("#newRemark").val()) > 3000 ){
     	Common.alert("<spring:message code='pay.alert.inputRemark3000Char'/>");
@@ -109,10 +109,10 @@ function fn_FTRequest(){
 
 		//param data array
 		var data = {};
-		
+
 		var gridList = AUIGrid.getGridData(targetFinalBillGridID);       //그리드 데이터
 		var formList = $("#_ftSearchForm").serializeArray();       //폼 데이터
-		
+
 		//array에 담기
 		if(gridList.length > 0) {
 			data.all = gridList;
@@ -120,20 +120,20 @@ function fn_FTRequest(){
 			Common.alert("<spring:message code='pay.alert.noPaymentData'/>");
 			return;
 		}
-	    
+
 	    if(formList.length > 0) data.form = formList;
 		else data.form = [];
-    
 
-	    
+
+
 	    Common.ajax("POST", "/payment/requestFT.do", data, function(result) {
-			
+
 			var message = "<spring:message code='pay.alert.ftSuccessReq' arguments='"+result.returnKey+"' htmlEscape='false'/>";
 
     		Common.alert(message, function(){
 				searchList();
-				$('#_requestFTPop').remove();    	      
-    		});        
+				$('#_requestFTPop').remove();
+    		});
 	    });
 	});
 }
@@ -153,21 +153,21 @@ function setTargetInfo(){
 	//Fund Transfer 총 금액 세팅
 	var rowCnt = AUIGrid.getRowCount(myRequestFTFinalGridID);
 	var totalAmt = 0;
-	
+
 	if(rowCnt > 0){
-		$("#newOrdNo").val(AUIGrid.getCellValue(myRequestFTFinalGridID, 0 ,"ordNo"));    
-		$("#newCustNm").val(AUIGrid.getCellValue(myRequestFTFinalGridID, 0 ,"custNm"));    
+		$("#newOrdNo").val(AUIGrid.getCellValue(myRequestFTFinalGridID, 0 ,"ordNo"));
+		$("#newCustNm").val(AUIGrid.getCellValue(myRequestFTFinalGridID, 0 ,"custNm"));
 
 		for(var i = 0; i < rowCnt; i++){
 			totalAmt += AUIGrid.getCellValue(myRequestFTFinalGridID, i ,"targetAmt");
 		}
 	}
 
-	$("#newAmt").val(totalAmt); 
+	$("#newAmt").val(totalAmt.toFixed(2));
 }
 
 
-</script>   
+</script>
 
 <div id="popup_wrap" class="popup_wrap size_large"><!-- popup_wrap start -->
 	<header class="pop_header"><!-- pop_header start -->
@@ -194,9 +194,9 @@ function setTargetInfo(){
 					<caption>table</caption>
 					<colgroup>
 						<col style="width:140px" />
-						<col style="width:*" />		
+						<col style="width:*" />
 						<col style="width:140px" />
-						<col style="width:*" />	
+						<col style="width:*" />
 					</colgroup>
 					<tbody>
 						<tr>
@@ -227,9 +227,9 @@ function setTargetInfo(){
 					<caption>table</caption>
 					<colgroup>
 						<col style="width:140px" />
-						<col style="width:*" />		
+						<col style="width:*" />
 						<col style="width:140px" />
-						<col style="width:*" />					
+						<col style="width:*" />
 					</colgroup>
 					<tbody>
 						<tr>
@@ -250,7 +250,7 @@ function setTargetInfo(){
 							<td colspan="3">
 								 <input type="text" name="newAmt" id="newAmt" title="" placeholder="" class="readonly" readonly  />
 							</td>
-							
+
 						</tr>
 						</tbody>
 				  </table>
@@ -264,12 +264,12 @@ function setTargetInfo(){
 					<caption>table</caption>
 					<colgroup>
 						<col style="width:140px" />
-						<col style="width:*" />		
+						<col style="width:*" />
 						<col style="width:140px" />
-						<col style="width:*" />					
+						<col style="width:*" />
 					</colgroup>
-					<tbody>						
-						<tr>							
+					<tbody>
+						<tr>
 							<th scope="row">Reason</th>
 							<td colspan="3">
 								<select id="newReason" name="newReason" class="w100p"></select>
@@ -286,7 +286,7 @@ function setTargetInfo(){
 			</form>
 		</section>
 		<!-- search_result start -->
-		<section class="search_result" style="display:none">     
+		<section class="search_result" style="display:none">
 			<!-- grid_wrap start -->
 			<article id="grid_request_ft_wrap" class="grid_wrap"></article>
 			<!-- grid_wrap end -->
@@ -294,6 +294,6 @@ function setTargetInfo(){
 		<ul class="center_btns">
 			<li><p class="btn_blue"><a href="javascript:fn_FTRequest();"><spring:message code='pay.btn.request'/></a></p></li>
 			<li><p class="btn_blue"><a href="javascript:fn_FtClear();"><spring:message code='sys.btn.clear'/></a></p></li>
-		</ul> 
+		</ul>
 	</section>
 </div>
