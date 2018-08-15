@@ -727,7 +727,7 @@ public class CustomerController {
 
 				String cardExpiry = form.getCardExpiry();
 				if(cardExpiry != null){
-					cardExpiry = cardExpiry.substring(0,2) +cardExpiry.substring(5);
+					cardExpiry = cardExpiry.substring(0,2) +cardExpiry.substring(5,7);
 				}else{
 					cardExpiry = null;
 				}
