@@ -4,7 +4,7 @@
 <script type="text/javaScript" language="javascript">
 
   	//AUIGrid ���� �� ��ȯ ID
-	
+
     $(document).ready(function(){
         doGetCombo('/common/selectCodeList.do',       '20', '', 'cmbBankType', 'S', ''); //Add Bank Type Combo Box
         doGetComboCodeId('/sales/customer/selectAccBank.do', {isAllowForDd : '1'}, '', 'cmbAccBank',   'S', ''); //Issue Bank)
@@ -16,9 +16,14 @@
             fn_doSaveBankAcc();
         });
     });
-    
+
     function fn_validBankAcc() {
         var isValid = true, msg = "";
+
+        if(FormUtil.isEmpty($('#txtAccName').val())) {
+            isValid = false;
+            msg += "<spring:message code='sal.alert.msg.pleaseKeyBankAccOwnName' /><br/>";
+        }
 
         if($("#cmbBankType option:selected").index() <= 0) {
             isValid = false;
@@ -62,10 +67,10 @@
 
         return isValid;
     }
-    
+
     function fn_existAccNo(CustID, AccNo, IssueBankID){
         var isExist = false;
-        
+
         Common.ajax("GET", "/sales/customer/selectCustomerBankAccJsonList", {custId : CustID, custAccNo : AccNo, custAccBankId : IssueBankID}, function(rsltInfo) {
             if(rsltInfo != null) {
                 isExist = rsltInfo.length == 0 ? false : true;
@@ -74,12 +79,12 @@
         console.log('isExist ggg:'+isExist);
         return isExist;
     }
-    
+
     function fn_doSaveBankAcc() {
         console.log('fn_doSaveBankAcc() START');
-        
+
         Common.ajax("POST", "/sales/customer/insertBankAccountInfo2.do", $('#frmBankAcc').serializeJSON(), function(result) {
-                
+
                 Common.alert("<spring:message code='sal.alert.title.bankAccAdded' />" + DEFAULT_DELIMITER + "<b><spring:message code='sal.alert.msg.successfully' /></b>");
 
         	    if('${callPrgm}' == 'ORD_REGISTER_BANK_ACC' || '${callPrgm}' == 'PRE_ORD') {

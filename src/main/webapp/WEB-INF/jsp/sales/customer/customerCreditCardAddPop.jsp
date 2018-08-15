@@ -4,7 +4,7 @@
 <script type="text/javaScript" language="javascript">
 
   	//AUIGrid ���� �� ��ȯ ID
-	
+
     $(document).ready(function(){
         doGetCombo('/common/selectCodeList.do', '21',  '','cmbCreditCardType', 'S', ''); // Add Card Type Combo Box
         doGetCombo('/sales/customer/selectAccBank.do',  '', '', 'cmbIssBank',  'S', ''); //Issue Bank)
@@ -29,12 +29,12 @@
             }
         });
     });
-    
+
     function fn_validCreditCard() {
         var isValid = true, msg = "";
 
         $('#cmbCreditCardType').removeAttr("disabled");
-        
+
         if($("#cmbCreditCardType option:selected").index() <= 0) {
             isValid = false;
             msg += "* <spring:message code='sal.alert.msg.pleaseSelectCreditCardType' /><br/>";
@@ -43,6 +43,17 @@
         if($("#cmbIssBank option:selected").index() <= 0) {
             isValid = false;
             msg += "* <spring:message code='sal.alert.msg.pleaseSelectTheIssueBank' /><br/>";
+        }
+
+        if(FormUtil.isEmpty($('#nameOnCard').val())) {
+            isValid = false;
+            msg += "<spring:message code='sal.alert.msg.pleaseKeyInNameOnCard' /><br/>";
+        }
+        else {
+            if(!FormUtil.checkSpecialChar($('#nameOnCard').val())) {
+                isValid = false;
+                msg += "<spring:message code='sal.alert.NameOnCardCannotContainOfSpecChr' />";
+            }
         }
 
         if(FormUtil.isEmpty($('#cardNo').val())) {
@@ -61,7 +72,7 @@
                 }
                 else {
                     var isExistCrc = fn_existCrcNo('${custId}', $('#cardNo').val().trim());
-                    
+
                     if(isExistCrc) {
                         isValid = false;
                         msg += "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
@@ -87,27 +98,17 @@
                 }
             }
         }
-        
+
         if(FormUtil.isEmpty($('#expDate').val())) {
             isValid = false;
             msg += "<spring:message code='sal.alert.msg.pleaseSelectCreditCardExpDate' />";
         }
-        if(FormUtil.isEmpty($('#nameOnCard').val())) {
-            isValid = false;
-            msg += "<spring:message code='sal.alert.msg.pleaseKeyInNameOnCard' />";
-        }
-        else {
-            if(!FormUtil.checkSpecialChar($('#nameOnCard').val())) {
-                isValid = false;
-                msg += "<spring:message code='sal.alert.NameOnCardCannotContainOfSpecChr' />";
-            }
-        }
-        
+
         if($("#cmbCardType option:selected").index() <= 0) {
             isValid = false;
             msg += "<spring:message code='sal.alert.pleaseSelectTheCardType' />";
         }
-        
+
         if(!isValid) {
             Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
             $('#cmbCreditCardType').prop("disabled", true);
@@ -115,10 +116,10 @@
 
         return isValid;
     }
-    
+
     function fn_existCrcNo(CustID, CrcNo, IssueBankID){
         var isExist = false;
-        
+
         Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custOriCrcNo : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
                 console.log('rsltInfo.length:'+rsltInfo.length);
@@ -128,14 +129,14 @@
         console.log('isExist ggg:'+isExist);
         return isExist;
     }
-    
+
     function fn_doSaveCreditCard() {
         console.log('fn_doSaveBankAcc() START');
-        
+
         Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
-                
+
                 Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
-            
+
                 if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
         	        fn_loadCreditCard2(result.data);
         	        $('#addCrcCloseBtn').click();
