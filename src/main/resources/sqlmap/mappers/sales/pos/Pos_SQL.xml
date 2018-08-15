@@ -306,7 +306,7 @@
                         Project1.STK_TYPE_ID,
                         Project1.STK_CTGRY_ID,
                         <!-- NVL(Project1.QTY, 0 ) QTY, -->
-                        NVL(Project1.QTY, 0 ) QTY,
+                        999 QTY,
                         Project1.MOV_QTY,
                         NVL(Project1.AMT , 0) AMT,
                         (AMT * 100) / 100 SUB_CHANGES,
