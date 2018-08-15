@@ -173,12 +173,12 @@
                     //Valid eCash Floating Stus - 1
                     if(rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
                         isLock = true;
-                        msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + rsltInfo.msg + '.<br/>';
+                        msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + rsltInfo.msg + '.<br/>' + '<spring:message code="sal.alert.msg.cancDisallowed" />.<br />';
                     }
                 });
             }else{
                 isLock = true;
-                msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />';
+                msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<spring:message code="sal.alert.msg.cancDisallowed" />.<br />';
             }
         }
 
@@ -192,7 +192,7 @@
 
         if(isLock) {
             if(tabNm == 'CANC') {
-                msg += '<spring:message code="sal.alert.msg.cancDisallowed" />.<br />' ;
+                //msg += '<spring:message code="sal.alert.msg.cancDisallowed" />.<br />' ;
                 fn_disableControlCanc();
             }
 
