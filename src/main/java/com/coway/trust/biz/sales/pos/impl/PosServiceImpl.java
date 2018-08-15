@@ -544,7 +544,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
           //8.  ********************************************************************************************************* InvStkRecordCard --> Only For Filter/Spare Part Type
 
-            if(String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_FILTER)){  //insPosSystemType == 1352   POS_SALES_TYPE_FILTER  posMap
+       /*     if(String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_FILTER)){  //insPosSystemType == 1352   POS_SALES_TYPE_FILTER  posMap
 
             	for (int idx = 0; idx < basketGrid.size(); idx++) {
 
@@ -587,7 +587,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
             	 }
          	}// end 8
-
+*/
            //  *********************   PAYMENT LOGIC START *********************   //
             // When   'POS SALES' Case
             if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){  //2390 -- POS SALES
@@ -866,7 +866,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
           	//10.  ********************************************************************************************************* BOOKING
 
 
-    		Map<String, Object>  logPram = new HashMap<String, Object>();
+/*    		Map<String, Object>  logPram = new HashMap<String, Object>();
 
     		logPram.put("psno", docNoPsn);
     		logPram.put("retype", "REQ");
@@ -883,7 +883,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             //
 
             LOGGER.info("################################## return value(docNoPsn): "  + docNoPsn);
-
+*/
 
             //retrun Map
             Map<String, Object> rtnMap = new HashMap<String, Object>();
@@ -893,8 +893,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             LOGGER.info("##################### POS Request Success!!! ######################################");
             LOGGER.info("##################### POS Request Success!!! ######################################");
 
-		    	rtnMap.put("logError", reqResult);
-
+		    	//rtnMap.put("logError", reqResult);
+            rtnMap.put("logError", "000");
 
 
             return rtnMap;
