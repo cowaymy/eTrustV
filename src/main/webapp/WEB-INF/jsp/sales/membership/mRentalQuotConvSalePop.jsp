@@ -640,6 +640,7 @@ var option = {
 <input type="hidden" id="filterAmt" name="filterAmt" value="${packageInfo.qotatExpFilterAmt }">
 <input type="hidden" id="chkBoxThrdParty" name="chkBoxThrdParty" >
 <input type="hidden" id="hiddenOrdNo" name="hiddenOrdNo" value="${orderInfo.ordNo }">
+<input type="hidden" id="qotatCrtUserId" name="qotatCrtUserId" value="${packageInfo.qotatCrtUserId }">
 <input type="hidden" id="hiddenNRIC" name="hiddenNRIC" value="${orderInfo.custNric }">
 <input type="hidden" id="groupVal" name="groupVal" >
 
