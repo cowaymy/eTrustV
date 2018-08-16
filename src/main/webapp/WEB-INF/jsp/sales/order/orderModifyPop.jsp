@@ -827,14 +827,14 @@
             $('#scBI').addClass("blind");
         }
         if(tabNm == 'MAL') {
-//            if(APP_TYPE_ID == '66') {
+        	if(APP_TYPE_ID == '66') {
                 $('#scMA').removeClass("blind");
                 fn_loadBillGrpMailAddr(ORD_ID);
-//            }
-//            else {
-//                $('#scMA2').removeClass("blind");
-//                fn_loadMailAddress(ADDR_ID);
-//            }
+            }
+            else {
+                $('#scMA2').removeClass("blind");
+                fn_loadMailAddress(ADDR_ID);
+            }
 
             $('#aTabMA').click();
         } else {
