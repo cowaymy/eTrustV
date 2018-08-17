@@ -196,7 +196,12 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 
 	@RequestMapping(value = "/eRequestCancelOrder.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> eRequestCancelOrder(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception {
+		params.put("cmbRequestor", "526");
+		params.put("dpCallLogDate",  CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
+		params.put("cmbReason","1998");
+		params.put("txtRemark", "CANCEL & REFUND");
 
+		logger.info("##### params #####" +params);
 		ReturnMessage message = eRequestCancellationService.requestCancelOrder(params, sessionVO);
 
 		return ResponseEntity.ok(message);
