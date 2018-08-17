@@ -9,6 +9,7 @@
     var ORD_DT        = "${orderDetail.basicInfo.ordDt}";
     var ORD_STUS_ID   = "${orderDetail.basicInfo.ordStusId}";
     var ORD_STUS_CODE = "${orderDetail.basicInfo.ordStusCode}";
+    var ORD_STUS_NAME = "${orderDetail.basicInfo.ordStusName}";
     var CUST_ID       = "${orderDetail.basicInfo.custId}";
     var CUST_TYPE_ID  = "${orderDetail.basicInfo.custTypeId}";
     var CUST_NAME  = "${orderDetail.basicInfo.custName}";
@@ -111,7 +112,7 @@
 
                 //if(ORD_STUS_ID != '1' && ORD_STUS_ID != '4') {
                 	if(ORD_STUS_ID != '1') { // block if Order status is not active
-                  var msg = "Order " + ORD_NO + " is under " + ORD_STUS_CODE + " status. <br/>Order cancellation request is disallowed.";
+                  var msg = "Order " + ORD_NO + " is under " + ORD_STUS_NAME + " status. <br/>Order cancellation request is disallowed.";
                     //msg = '<spring:message code="sal.msg.underOrdCanc" arguments="'+ORD_NO+';'+ORD_STUS_CODE+'" argumentSeparator=";"/>';
                     Common.alert('<spring:message code="sal.alert.msg.actionRestriction" />' + DEFAULT_DELIMITER + "<b>" + msg + "</b>", fn_selfClose);
                     return false;
@@ -155,8 +156,12 @@
             fn_loadOrderInfoCanc();
 
             fn_isLockOrder(tabNm);
+
+
         } else {
             $('#scCN').addClass("blind");
+
+
         }
 
     }
@@ -173,12 +178,12 @@
                     //Valid eCash Floating Stus - 1
                     if(rsltInfo.ccpStus == 1 || rsltInfo.eCashStus == 1) {
                         isLock = true;
-                        msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />' + rsltInfo.msg + '.<br/>' + '<spring:message code="sal.alert.msg.cancDisallowed" />.<br />';
+                        msg = 'Order ' + ORD_NO + ' is under eCash deduction progress.<br />'  + 'Order cancellation request is disallowed.<br />';
                     }
                 });
             }else{
                 isLock = true;
-                msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<spring:message code="sal.alert.msg.cancDisallowed" />.<br />';
+                msg = 'Order ' + ORD_NO + ' is under ' + "${orderDetail.logView.prgrs}" + ' progress.<br />' + '<br/>' + 'Order cancellation request is disallowed.<br />';
             }
         }
 
@@ -186,7 +191,7 @@
             Common.ajaxSync("GET", "/sales/order/validRequestOCRStus.do", {salesOrdId : ORD_ID}, function(result) {
                 if(result.callLogResult == 1) {
                     isLock = true;
-                    msg = 'Order ' + ORD_NO + ' is under ready installation status.<br />' + result.msg + '.<br/>' + ' Kindly refer CSS Dept via <br /><u>helpme.css@coway.com.my</u> for help.<br />';
+                    msg = 'Order ' + ORD_NO + ' is under ready installation status.<br />' + 'Order cancellation request is disallowed.<br/>' + ' Kindly refer CSS Dept via <br /><u>helpme.css@coway.com.my</u> for help.<br />';
                 }
             });
 
@@ -210,7 +215,7 @@
         $('#txtRemark').prop("disabled", true);
         $('#txtPenaltyAdj').prop("disabled", true);
 
-        $('#btnReqCancOrder').addClass("blind");
+       $('#btnReqCancOrder').addClass("blind");
     }
 
 
@@ -374,8 +379,8 @@
         msg += 'Order No.          : ' + ORD_NO + '<br />';
         msg += 'Customer Name : ' + CUST_NAME + '<br />';
         msg += 'Product             : ' + STOCK_DESC + '<br />';
-        msg += 'Refund Amount  : ' + '' + '<br />';
-        msg += 'Refund Account  : ' + BANK_ACC_NO + '<br />';
+        msg += '<br /><i>Note : Payment amount shall be refunded if any</i> ' + '' + '<br />';
+        //msg += 'Refund Account  : ' + BANK_ACC_NO + '<br />';
         //msg += '<spring:message code="sal.text.callLogDate" /> : '        + $('#dpCallLogDate').val() + '<br />';
 
         if(ORD_STUS_ID == '4') {
@@ -390,7 +395,7 @@
                 msg += '<spring:message code="sal.text.totAmt" /> : '             + $('#txtTotalAmount').val()      + '<br/>';
             }
         }
-        msg += '<br/><spring:message code="sal.alert.msg.wantToOrdCanc" /><br/><br/>';
+        msg += '<br/> <font color="red">Are you sure want to confirm order cancellation? </font><br/><br/>';
 
         Common.confirm('<spring:message code="sal.title.text.reqCancConfrm" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_doSaveReqCanc, fn_selfClose);
     }
@@ -424,7 +429,7 @@
     function fn_validReqCanc() {
         var isValid = true, msg = "";
 
-        if($("#cmbRequestor option:selected").index() <= 0) {
+/*         if($("#cmbRequestor option:selected").index() <= 0) {
             isValid = false;
             msg += '<spring:message code="sal.alert.msg.plzSelReq" />';
         }
@@ -443,7 +448,7 @@
         if(FormUtil.checkReqValue($('#txtRemark'))) {
             isValid = false;
             msg += '* <spring:message code="sal.alert.msg.pleaseKeyInTheRemark" /><br>';
-        }
+        } */
 
         if(!isValid) Common.alert('<spring:message code="sal.alert.msg.cancReqSum" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
@@ -453,10 +458,10 @@
 
 
     function fn_loadListCanc() {
-        doGetComboOrder('/common/selectCodeList.do', '52',  'CODE_ID',  '526', 'cmbRequestor', 'S', ''); //Common Code
+/*         doGetComboOrder('/common/selectCodeList.do', '52',  'CODE_ID',  '526', 'cmbRequestor', 'S', ''); //Common Code
         doGetComboData('/sales/order/selectResnCodeList.do', {resnTypeId : '536', stusCodeId:'1'}, '1998', 'cmbReason', 'S', 'fn_removeOpt'); //Reason Code
         $("#dpCallLogDate").val((new Date().getDate()+1) +"/"+(new Date().getMonth()+1)+"/"+new Date().getFullYear());
-        $("#txtRemark").val("CANCEL & REFUND");
+        $("#txtRemark").val("CANCEL & REFUND"); */
     }
 
 
@@ -533,7 +538,7 @@
 ------------------------------------------------------------------------------->
 <section id="scCN" class="blind">
 <aside class="title_line"><!-- title_line start -->
-<h3><spring:message code="sales.subTitle.ordCanReqInfo" /></h3>
+<%-- <h3><spring:message code="sales.subTitle.ordCanReqInfo" /></h3> --%>
 </aside><!-- title_line end -->
 
 <section class="search_table"><!-- search_table start -->
@@ -541,7 +546,7 @@
 
 <input name="salesOrdId" type="hidden" value="${orderDetail.basicInfo.ordId}"/>
 
-<table class="type1"><!-- table start -->
+<%-- <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:180px" />
@@ -571,7 +576,7 @@
     <td colspan="3"><textarea id="txtRemark" name="txtRemark" cols="20" rows="5" ></textarea></td>
 </tr>
 </tbody>
-</table><!-- table end -->
+</table><!-- table end --> --%>
 
 <!-- Outstanding & Penalty Info Edit START------------------------------------->
 <section id="scOP" class="blind">
@@ -622,11 +627,11 @@
 </form>
 </section><!-- search_table end -->
 
-
 <ul class="center_btns">
     <li><p class="btn_blue2"><a id="btnReqCancOrder" href="#">Request Cancel</a></p></li>
 </ul>
 </section>
+
 <!------------------------------------------------------------------------------
     Order Cancellation Request END
 ------------------------------------------------------------------------------->
