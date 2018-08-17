@@ -7,7 +7,7 @@ var gridID;
 var counselingId;
 
 function tagMgmtGrid() {
-    
+
     var columnLayout =[
                        {
                            dataField: "counselingNo",
@@ -58,73 +58,79 @@ function tagMgmtGrid() {
                            width: "5%"
                        }
                    ];
-    
-     var gridPros = {  
+
+     var gridPros = {
     		                        usePaging           : true,         //페이징 사용
-                        	        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-                        	        showStateColumn     : false,             
-                        	        displayTreeOpen     : false,            
-                        	        selectionMode       : "singleRow",  //"multipleCells",            
+                        	        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+                        	        showStateColumn     : false,
+                        	        displayTreeOpen     : false,
+                        	        selectionMode       : "singleRow",  //"multipleCells",
                         	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                         	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                        	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-                        	        editable :false 
-                          };  
-                          
+                        	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+                        	        editable :false
+                          };
+
                           gridID = GridCommon.createAUIGrid("tagMgmt_grid_wap", columnLayout  ,"" ,gridPros);
-                          
-                           
+
+
 
     }
 $(document).ready(function(){
-	
+
 	tagMgmtGrid(); // tagMgmt 그리드 생성 함수
-	
+
 	   //search
     $("#search").click(function() {
-                                        
+
         Common.ajax("GET","/services/tagMgmt/selectTagStatus",$("#tagMgmtForm").serialize(),function(result) {
             console.log("성공.");
             console.log("data : "+ result);
             AUIGrid.setGridData(gridID,result);
         });
-                                    
+
     });
-	
+
     //excel Download
     $('#excelDown').click(function() {
         GridCommon.exportTo("tagMgmt_grid_wap", 'xlsx',"Tag Management");
     });
-    
+
     // cell click
          AUIGrid.bind(gridID, "cellClick", function(event) {
         	 counselingId = AUIGrid.getCellValue(gridID, event.rowIndex, "counselingNo");
-        	
+
          });
-    
-    
+
+
          doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'main_department' , 'S', '');
-         
-         
+
+
          $("#main_department").change(function(){
-           if($("#main_department").val() == ''){
-        	   $("#sub_department").val('');
-        	   $("#sub_department").find("option").remove();
+           if($("#main_department").val() == 'MD08' || $("#main_department").val() == 'MD11' || $("#main_department").val() == 'MD16'){
+        	    var brnch = '';
+        	    if       ($("#main_department").val() == 'MD08') brnch = 4; //Cody Support
+        	    else if($("#main_department").val() == 'MD11') brnch = 2; //Customer Service Support
+        	    else if($("#main_department").val() == 'MD16') brnch = 45; //DST Support
+
+        	   doGetComboSepa('/common/selectBranchCodeList.do', brnch, ' - ','', 'sub_department', 'S');
+        	    //doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#main_department").val(), '','sub_department', 'S' ,  '');
            }else{
-        	    doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#main_department").val(), '','sub_department', 'S' ,  ''); 
+        	   $("#sub_department").val('');
+               $("#sub_department").find("option").remove();
            }
        });
-         
-         
+
+
          doGetCombo('/services/tagMgmt/selectMainInquiry.do', '' , '', 'main_inquiry' , 'S', '');
-         
-         
+
+
          $("#main_inquiry").change(function(){
-           
-           doGetCombo('/services/tagMgmt/selectSubInquiry.do',  $("#main_inquiry").val(), '','sub_inquiry', 'S' ,  ''); 
-           
+
+           doGetCombo('/services/tagMgmt/selectSubInquiry.do',  $("#main_inquiry").val(), '','sub_inquiry', 'S' ,  '');
+
        });
-         
+
 });
 
 
@@ -139,7 +145,7 @@ function fn_tagLog() {
 
 
 
-    
+
        //Common.popupDiv("/services/tagMgmt/tagLogRegist.do?&salesOrdId="+salesOrdId +"&brnchId="+brnchId, null, null , true , '_ConfigBasicPop');
        Common.popupDiv("/services/tagMgmt/tagLogRegistPop.do?counselingId="+counselingId+"", null, null , true , "tagLogRegistPop");
 
@@ -165,10 +171,10 @@ function fn_tagLog() {
 <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:fn_tagLog()" >View Respond Ticket</a></p></li>
-</c:if>    
-<c:if test="${PAGE_AUTH.funcView == 'Y'}">    
+</c:if>
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" id ="search"><span class="search"></span>Search</a></p></li>
-</c:if> 
+</c:if>
 <!--     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li> -->
 </ul>
 
@@ -212,13 +218,13 @@ function fn_tagLog() {
 <tr>
     <th scope="row">Feedback Code</th>
     <td><input type="text" id="feedback_code" name="feedback_code" title="" placeholder="feedback_code" class="w100p" /></td>
-   
-        
-    
-    
+
+
+
+
        <th scope="row">Regist Date</th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regDt" name="regDt"/></td>
-    
+
      <th scope="row">Status</th>
     <td>
          <select  class="multy_select w100p" multiple="multiple"  id="statusList" name="statusList">
@@ -228,9 +234,9 @@ function fn_tagLog() {
                 <option value="35">Unsolved</option>
                 <option value="36">Closed</option>
                 <option value="10">Cancelled</option>
-        </select> 
-    </td> 
-    
+        </select>
+    </td>
+
 </tr>
 
 </tbody>

@@ -5,7 +5,7 @@
 <script type="text/javaScript">
 var gridID1;
 function tagRespondGrid() {
-		
+
 		var columnLayout1 =[
 					                   {
 					                       dataField: "mainDepartment",
@@ -29,29 +29,29 @@ function tagRespondGrid() {
                                        },
 					                   {
 					                       dataField: "statusNm",
-					                       headerText: "Status",					                      
+					                       headerText: "Status",
 					                       width: 120
 					                   },
 					                   {
 					                       dataField: "crtDate",
 					                       headerText: "Date",
 					                       dataType : "date"
-					                
+
 					                   }
-		                   
+
 			                   ];
-	                   
-	var gridPros1 = {  
-	        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-	        showStateColumn     : false,             
-	        displayTreeOpen     : false,            
-	        selectionMode       : "singleRow",  //"multipleCells",            
+
+	var gridPros1 = {
+	        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+	        showStateColumn     : false,
+	        displayTreeOpen     : false,
+	        selectionMode       : "singleRow",  //"multipleCells",
 	        skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	        wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
-	        editable :false 
-	};  
-	
+	        showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
+	        editable :false
+	};
+
 	gridID1 = GridCommon.createAUIGrid("respond_grid_wrap", columnLayout1  ,"" ,gridPros1);
 
 
@@ -61,50 +61,62 @@ function tagRespondGrid() {
 
 
 $(document).ready(function(){
-	
+
 	//grid 생성
 	tagRespondGrid();
-	
+
 	$("#respondInfo").click(function() {
-		
+
 		  var counselingNum = $("#counselingNo").text();
-		  
+
 		    Common.ajax("Get", "/services/tagMgmt/getRemarkResults.do?counselingNo="+ counselingNum +"", '' , function(result) {
-		    	
+
 		    	 console.log("성공.");
 		         console.log("data : "+ result);
 		        AUIGrid.setGridData(gridID1 , result );
 		        AUIGrid.resize(gridID1,900,300);
 		    });
-		    
+
 	});
-	
+
 	  doGetCombo('/services/tagMgmt/selectMainDept.do', '' , '', 'inputMainDept' , 'S', '');
-	
-	
+
+
 	   $("#inputMainDept").change(function(){
-         
-         
-         if($("#inputMainDept").val() == ''){
+
+		    if($("#inputMainDept").val() == 'MD08' || $("#inputMainDept").val() == 'MD11' || $("#inputMainDept").val() == 'MD16'){
+		        var brnch = '';
+		        if       ($("#inputMainDept").val() == 'MD08') brnch = 4; //Cody Support
+		        else if($("#inputMainDept").val() == 'MD11') brnch = 2; //Customer Service Support
+		        else if($("#inputMainDept").val() == 'MD16') brnch = 45; //DST Support
+
+		        doGetComboSepa('/common/selectBranchCodeList.do', brnch, ' - ','', 'inputSubDept', 'S');
+		    }else{
+		        $("#inputSubDept").val('');
+		        $("#inputSubDept").find("option").remove();
+		     }
+
+
+        /*  if($("#inputMainDept").val() == ''){
              $("#inputSubDept").val('');
              $("#inputSubDept").find("option").remove();
          }else{
-        	 doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#inputMainDept").val(), '','inputSubDept', 'S' ,  ''); 
-         }
-         
-     });
-	   
-	   
-	
+        	 doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#inputMainDept").val(), '','inputSubDept', 'S' ,  '');
+         } */
 
-	
+     });
+
+
+
+
+
 });
 
 
 
 function fn_saveRemarkResult(){
 
-	  var jsonObj = { 
+	  var jsonObj = {
 			 "remark" : $("#remark").val(),
 			 "status" : $("#status").val(),
 			  "counselingNo" :  $("#counselingNo").text(),
@@ -118,15 +130,15 @@ function fn_saveRemarkResult(){
 	       };
 	 var regDate =  $("#orderId").val();
 	  console.log(regDate);
-	  
-	
+
+
 	 Common.ajax("POST", "/services/tagMgmt/addRemarkResult.do", jsonObj , function(result) {
-		  
-		  
+
+
 		  Common.alert(result.message);
-		  
-	  }); 
-	
+
+	  });
+
 
 }
 
@@ -217,7 +229,7 @@ function fn_saveRemarkResult(){
             <td><span ><c:out value="${tagMgmtDetail.latestMainDept }"/></span>
                 <input type="hidden" id ="mainDept" value="${tagMgmtDetail.deptCode}">
             </td>
-            
+
             <th scope="row">Latest Sub Dept</th>
             <td><span><c:out value="${tagMgmtDetail.latestSubDept }"/></span>
                 <input type="hidden" id ="subDept" value="${tagMgmtDetail.subDeptCde}">
@@ -250,7 +262,7 @@ function fn_saveRemarkResult(){
                     <td><span><c:out value="${tagMgmtDetail.ordNo }"/></span></td>
                     <th scope="row">App Type</th>
                     <td><span><c:out value="${orderInfo.codeDesc }"/></span></td>
-                    <th scope="row">Product</th>    
+                    <th scope="row">Product</th>
                     <td><span><c:out value="${orderInfo.stkDesc }"/></span></td>
                 </tr>
                 <tr>
@@ -419,7 +431,7 @@ function fn_saveRemarkResult(){
          <div id="respond_grid_wrap" style="width:100%; height:300px; margin:0 "></div>
     </article><!-- grid_wrap end -->
 
-  
+
 </article><!-- tap_area end -->
 <!-- Respond Info End -->
 
@@ -438,15 +450,15 @@ function fn_saveRemarkResult(){
   <aside class="title_line"><!-- title_line start -->
     <h3>Add Respond</h3>
     </aside><!-- title_line end -->
- 
+
     <table class="type1"><!-- table start -->
-  
+
     <caption>table</caption>
     <colgroup>
         <col style="width:180px" />
         <col style="width:*" />
     </colgroup>
-   
+
     <tbody>
      <tr>
         <th scope="row">Main Dept</th>
@@ -474,18 +486,18 @@ function fn_saveRemarkResult(){
     <tr>
         <th scope="row">Remark</th>
         <td><textarea name="remark" id="remark" cols="20" rows="5" placeholder=""></textarea></td>
-         
+
     </tr>
-    
+
     </tbody>
-    
+
     </table><!-- table end -->
 
     <ul class="right_btns">
     <li><p class="btn_grid"><a  id="remark" onclick="fn_saveRemarkResult()">Save</a></p></li>
 </ul>
-    
-    
+
+
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
