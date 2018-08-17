@@ -547,7 +547,7 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
 
 		if(callLogResult > 0){
 			result.put("callLogResult",1);
-			result.put("msg", "OCR is not allowed due to Installation Status still [ACTIVE]");
+			result.put("msg", "OCR is not allowed due to Installation Status still Active");
 		}
 
 		return result;
