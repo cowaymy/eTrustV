@@ -395,7 +395,7 @@
                 msg += '<spring:message code="sal.text.totAmt" /> : '             + $('#txtTotalAmount').val()      + '<br/>';
             }
         }
-        msg += '<br/> <font color="red">Are you sure want to confirm order cancellation? </font><br/><br/>';
+        msg += '<br/> <font size="3" color="red">Are you sure want to confirm order cancellation? </font><br/><br/>';
 
         Common.confirm('<spring:message code="sal.title.text.reqCancConfrm" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_doSaveReqCanc, fn_selfClose);
     }
