@@ -4393,6 +4393,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
       from SYS0047M a
       inner join SYS0045M b
         on a.USER_ID = b.USER_ID
+        and b.STUS_ID = 1
       inner join SYS0044M c
         on c.ROLE_ID = b.ROLE_ID
       where a.USER_ID = #{userId}
