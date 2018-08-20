@@ -406,7 +406,6 @@ function fn_checkEmpty() {
 	return checkResult;
 }
 
-
 function fn_selectWebInvoiceItemList(clmNo) {
     var obj = {
             clmNo : clmNo
@@ -531,7 +530,46 @@ function fn_setNewGridEvent() {
 		            $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
 		            console.log(totAmt);
 		            $("#totAmt").val(totAmt);
+
+		            var availableVar = {
+		                costCentr : $("#newCostCenter").val(),
+		                stYearMonth : $("#keyDate").val().substring(3),
+		                stBudgetCode : event.item.budgetCode,
+		                stGlAccCode : event.item.glAccCode
+		            }
+
+		            var availableAmtCp = 0;
+		            Common.ajax("GET", "/eAccounting/webInvoice/availableAmtCp.do", availableVar, function(result) {
+		                console.log("availableAmtCp");
+		                console.log(result.totalAvailable);
+
+		                if(result.totalAvailable < event.item.totAmt) {
+		                    console.log("else :: result.totalAvailable < event.item.totAmt");
+		                    Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+		                    console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+		                } else {
+		                    var idx = AUIGrid.getRowCount(newGridID);
+
+		                    console.log("Details count :: " + idx);
+
+		                    for(var a = 0; a < idx; a++) {
+		                        console.log("for a :: " + a);
+
+		                        if(event.item.budgetCode == AUIGrid.getCellValue(newGridID, a, "budgetCode") && event.item.glAccCode == AUIGrid.getCellValue(newGridID, a, "glAccCode")) {
+		                            availableAmtCp += AUIGrid.getCellValue(newGridID, a, "totAmt");
+		                            console.log(availableAmtCp);
+		                        }
+		                    }
+
+		                    if(result.totalAvailable < availableAmtCp) {
+		                        console.log("else :: result.totalAvailable < availableAmtCp");
+		                        Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+	                            console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+		                    }
+		                }
+		            });
 		        }
+
 		        if(event.dataField == "taxCode") {
 		            console.log("taxCode Choice Action");
 		            console.log(event.item.taxCode);
