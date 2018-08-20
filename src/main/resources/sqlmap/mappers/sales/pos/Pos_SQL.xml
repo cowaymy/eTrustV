@@ -372,7 +372,7 @@
                 FROM
                     ORG0001D T1 INNER JOIN SYS0047M T2
                 ON
-                    T1.MEM_CODE = T2.HR_CODE
+                    T1.MEM_CODE = T2.USER_NAME
                 WHERE 1 = 1
                     <if test=" userId != null and userId != ''">
                     AND T2.USER_ID = #{userId}
