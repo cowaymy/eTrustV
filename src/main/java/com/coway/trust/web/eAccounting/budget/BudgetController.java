@@ -158,6 +158,11 @@ public class BudgetController {
 			params.put("costCentr", sessionVO.getCostCentr());
 		}
 
+		if(sessionVO.getUserId() == 79333) {
+			params.put("costCentr", "A1701");
+			params.put("costCentr2", "A2101");
+		}
+
 		LOGGER.debug("params =====================================>>  " + params);
 
 		budgetList = budgetService.selectMonthlyBudgetList(params);
