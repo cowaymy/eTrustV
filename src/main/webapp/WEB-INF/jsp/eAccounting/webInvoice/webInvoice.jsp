@@ -526,10 +526,11 @@ function fn_setNewGridEvent() {
 		                    AUIGrid.setCellValue(newGridID, event.rowIndex, "taxNonClmAmt", taxNonClmAmt);
 		                }
 		            }
+
 		            var totAmt = fn_getTotalAmount();
-		            $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
-		            console.log(totAmt);
-		            $("#totAmt").val(totAmt);
+                    $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+                    console.log(totAmt);
+                    $("#totAmt").val(totAmt);
 
 		            var availableVar = {
 		                costCentr : $("#newCostCenter").val(),
@@ -543,10 +544,18 @@ function fn_setNewGridEvent() {
 		                console.log("availableAmtCp");
 		                console.log(result.totalAvailable);
 
-		                if(result.totalAvailable < event.item.totAmt) {
-		                    console.log("else :: result.totalAvailable < event.item.totAmt");
+		                var finAvailable = result.totalAvilableAdj - result.totalPending - result.totalUtilized;
+
+		                if(finAvailable < event.item.totAmt) {
+		                    console.log("else if :: result.totalAvailable < event.item.totAmt");
 		                    Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
 		                    console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+		                    AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+
+		                    var totAmt = fn_getTotalAmount();
+		                    $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+		                    console.log(totAmt);
+		                    $("#totAmt").val(totAmt);
 		                } else {
 		                    var idx = AUIGrid.getRowCount(newGridID);
 
@@ -565,6 +574,12 @@ function fn_setNewGridEvent() {
 		                        console.log("else :: result.totalAvailable < availableAmtCp");
 		                        Common.alert("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
 	                            console.log("Insufficient budget amount available for Budget Code : " + event.item.budgetCode + ", GL Code : " + event.item.glAccCode + ". ");
+	                            AUIGrid.setCellValue(newGridID, event.rowIndex, "netAmt", "0.00");
+
+	                            var totAmt = fn_getTotalAmount();
+	                            $("#totalAmount").text(AUIGrid.formatNumber(totAmt, "#,##0.00"));
+	                            console.log(totAmt);
+	                            $("#totAmt").val(totAmt);
 		                    }
 		                }
 		            });
