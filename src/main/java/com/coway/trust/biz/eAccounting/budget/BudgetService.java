@@ -54,4 +54,6 @@ public interface BudgetService {
 	List<EgovMap> selectAvailableBudgetList(Map<String, Object> params) throws Exception;
 
 	EgovMap availableAmtCp(Map<String, Object> params);
+
+	EgovMap checkBgtPlan(Map<String, Object> params);
 }

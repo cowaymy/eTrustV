@@ -317,6 +317,9 @@ SELECT BUDGET_PLAN_YEAR ,
          <if test="costCentr != null and costCentr != '' " >
             AND A.COST_CENTR = #{costCentr}
          </if>
+         <if test="costCentr2 != null and costCentr2 != '' " >
+            OR A.COST_CENTR = #{costCentr2}
+         </if>
          <if test="stCostCentr != null and stCostCentr != '' " >
             <if test="edCostCentr != null and edCostCentr != '' ">
            AND A.COST_CENTR BETWEEN #{stCostCentr} AND #{edCostCentr}
@@ -1207,4 +1210,12 @@ WHERE 1=1
     ORDER BY  COST_CENTR, BUDGET_CODE, GL_ACC_CODE
   </select>
 
+    <select id="checkBgtPlan" parameterType="Map" resultType="egovMap">
+        SELECT
+            CNTRL_TYPE
+        FROM FCM0104D
+        WHERE COST_CENTR = #{costCentr}
+        AND BUDGET_CODE = #{stBudgetCode}
+        AND GL_ACC_CODE = #{stGlAccCode}
+    </select>
 </mapper>

@@ -769,4 +769,20 @@ public class WebInvoiceController {
 
 		return ResponseEntity.ok(budgetInfo);
 	}
+
+	//checkBgtPlan
+	@RequestMapping(value = "/checkBgtPlan.do", method = RequestMethod.GET)
+	public ResponseEntity<Map> checkBgtPlan(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model) {
+
+		LOGGER.debug("============= checkBgtPlan =============");
+		LOGGER.debug("params =====================================>>  " + params);
+
+		EgovMap item = new EgovMap();
+		item = (EgovMap) budgetService.checkBgtPlan(params);
+
+		Map<String, Object> budgetInfo = new HashMap();
+		budgetInfo.put("ctrlType", item.get("cntrlType"));
+
+		return ResponseEntity.ok(budgetInfo);
+	}
 }

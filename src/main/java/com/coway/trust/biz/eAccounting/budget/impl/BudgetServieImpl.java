@@ -465,4 +465,9 @@ public class BudgetServieImpl extends EgovAbstractServiceImpl implements BudgetS
     public EgovMap availableAmtCp(Map<String, Object> params) {
         return budgetMapper.availableAmtCp(params);
     }
+
+    @Override
+    public EgovMap checkBgtPlan(Map<String, Object> params) {
+        return budgetMapper.checkBgtPlan(params);
+    }
 }
