@@ -368,7 +368,8 @@
 				SELECT
                     T1.MEM_CODE,
                     T1.MEM_ID,
-                    T1.BRNCH
+                    '' AS BRNCH
+                    --T1.BRNCH
                 FROM
                     ORG0001D T1 INNER JOIN SYS0047M T2
                 ON
