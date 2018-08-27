@@ -153,8 +153,8 @@ public class BudgetController {
 		for(int i = 0; i < roleIds.length; i++) {
 			roleIdList.add(roleIds[i]);
 		}
-		LOGGER.debug("roleID index :: " + Integer.toString(roleIdList.indexOf(sessionVO.getRoleId())));
-		if(roleIdList.indexOf(sessionVO.getRoleId()) > 0) {
+
+		if(roleIdList.indexOf(sessionVO.getRoleId()) >= 0) {
 			params.put("costCentr", sessionVO.getCostCentr());
 		}
 
@@ -301,7 +301,7 @@ public class BudgetController {
 			roleIdList.add(roleIds[i]);
 		}
 
-		if(roleIdList.indexOf(sessionVO.getRoleId()) > 0) {
+		if(roleIdList.indexOf(sessionVO.getRoleId()) >= 0) {
 			params.put("costCentr", sessionVO.getCostCentr());
 		}
 
@@ -353,7 +353,7 @@ public class BudgetController {
 			roleIdList.add(roleIds[i]);
 		}
 
-		if(roleIdList.indexOf(sessionVO.getRoleId()) > 0) {
+		if(roleIdList.indexOf(sessionVO.getRoleId()) >= 0) {
 			model.addAttribute("mgrYn", "Y");
 		} else {
 			model.addAttribute("mgrYn", "N");
@@ -783,7 +783,7 @@ public class BudgetController {
 			roleIdList.add(roleIds[i]);
 		}
 
-		if(roleIdList.indexOf(sessionVO.getRoleId()) > 0) {
+		if(roleIdList.indexOf(sessionVO.getRoleId()) >= 0) {
 			params.put("costCentr", sessionVO.getCostCentr());
 		}
 
