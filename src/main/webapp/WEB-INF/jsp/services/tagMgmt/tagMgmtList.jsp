@@ -107,17 +107,11 @@ $(document).ready(function(){
 
 
          $("#main_department").change(function(){
-           if($("#main_department").val() == 'MD08' || $("#main_department").val() == 'MD11' || $("#main_department").val() == 'MD16'){
-        	    var brnch = '';
-        	    if       ($("#main_department").val() == 'MD08') brnch = 4; //Cody Support
-        	    else if($("#main_department").val() == 'MD11') brnch = 2; //Customer Service Support
-        	    else if($("#main_department").val() == 'MD16') brnch = 45; //DST Support
-
-        	   doGetComboSepa('/common/selectBranchCodeList.do', brnch, ' - ','', 'sub_department', 'S');
-        	    //doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#main_department").val(), '','sub_department', 'S' ,  '');
-           }else{
+           if($("#main_department").val() == ''){
         	   $("#sub_department").val('');
-               $("#sub_department").find("option").remove();
+        	   $("#sub_department").find("option").remove();
+           }else{
+        	    doGetCombo('/services/tagMgmt/selectSubDept.do',  $("#main_department").val(), '','sub_department', 'S' ,  '');
            }
        });
 
@@ -223,7 +217,13 @@ function fn_tagLog() {
 
 
        <th scope="row">Regist Date</th>
-    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regDt" name="regDt"/></td>
+       <td>
+       <div class="date_set w100p"><!-- date_set start -->
+        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regStartDt" name="regStartDt"/></p>
+        <span>To</span>
+        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regEndDt" name="regEndDt"/></p>
+       </div><!-- date_set end -->
+       </td>
 
      <th scope="row">Status</th>
     <td>
