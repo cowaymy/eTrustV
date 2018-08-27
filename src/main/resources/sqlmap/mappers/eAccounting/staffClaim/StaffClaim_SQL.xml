@@ -257,7 +257,7 @@ SELECT T1.CLM_SEQ,
        T1.TAX_NON_CLM_AMT,
        T1.TOT_AMT,
        T1.ATCH_FILE_GRP_ID,
-       T1.EXP_DESC,
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
        T1.CLAM_UN,
        T1.EXP_GRP,
        T3.TOT_AMT  AS ALL_TOT_AMT,
@@ -307,7 +307,7 @@ SELECT T1.CLM_SEQ,
        T1.TAX_NON_CLM_AMT,
        T1.TOT_AMT,
        T1.ATCH_FILE_GRP_ID,
-       T1.EXP_DESC
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
 FROM   FCM0020D T1
        LEFT JOIN FCM0019M T3
               ON T1.CLM_NO = T3.CLM_NO
@@ -358,7 +358,7 @@ SELECT T1.CLM_SEQ,
        T1.TAX_NON_CLM_AMT,
        T1.TOT_AMT,
        T1.ATCH_FILE_GRP_ID,
-       T1.EXP_DESC
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
 FROM   FCM0020D T1
        LEFT JOIN FCM0019M T3
               ON T1.CLM_NO = T3.CLM_NO
@@ -397,7 +397,7 @@ SELECT T1.CLM_SEQ,
        T3.TOLL_AMT,
        T3.PARKING_AMT,
        T3.PURPOSE,
-       T1.EXP_DESC
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
 FROM   FCM0020D T1
        LEFT JOIN FCM0007C T2
               ON T1.TAX_CODE = T2.TAX_CODE
@@ -435,7 +435,7 @@ SELECT T1.CLM_SEQ,
        T3.TOLL_AMT,
        T3.PARKING_AMT,
        T3.PURPOSE,
-       T1.EXP_DESC
+       REGEXP_REPLACE(T1.EXP_DESC, '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC
 FROM   FCM0020D T1
        LEFT JOIN FCM0007C T2
               ON T1.TAX_CODE = T2.TAX_CODE
