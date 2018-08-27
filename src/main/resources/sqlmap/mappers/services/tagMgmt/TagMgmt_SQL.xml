@@ -23,8 +23,7 @@
                 , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_MEDCLAS_CD, 'ms-MY') AS Sub_inquiry
                 , CALLCENTERUSER.FN_CNSL_CD_NM(A.CNSL_SMLCLAS_CD, 'ms-MY') AS Feedback_code
                 , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', B.MAIN_DEPT )) AS MAIN_DEPT
-                --, DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS SUB_DEPT
-                , brnch.NAME AS sub_dept
+                , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS SUB_DEPT
                 , A.DEPT_CODE
                 , A.SUB_DEPT_CDE
                 , A.Ord_no
@@ -55,8 +54,7 @@
            AND  Z.DEPT_CODE IN (#{main_department})
         </if>
          <if test="sub_department != null and sub_department != '' ">
-           <!-- AND  Z.SUB_DEPT_CDE IN (#{sub_department}) -->
-            AND Z.BRNCH_ID = (#{sub_department})
+           AND  Z.SUB_DEPT_CDE IN (#{sub_department})
         </if>
           <if test="feedback_code != null and feedback_code != '' ">
            AND  LOWER(Z.Feedback_code) = LOWER(#{feedback_code})
@@ -97,8 +95,7 @@
                 , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) AS MAIN_DEPT
                 , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) AS SUB_DEPT
                 , DECODE(B.MAIN_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', A.DEPT_CODE) , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('M', B.MAIN_DEPT )) AS LATEST_MAIN_DEPT
-                , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) , B.SUB_DEPT, CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT), C.CODE || '-' ||C.NAME ) AS LATEST_SUB_DEPT
-                <!-- , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS LATEST_SUB_DEPT -->
+                , DECODE(B.SUB_DEPT,'',CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', A.SUB_DEPT_CDE) , CALLCENTERUSER.FN_ERP_TAG_DEPT_NM('S', B.SUB_DEPT)) AS LATEST_SUB_DEPT
                 , A.DEPT_CODE
                 , A.SUB_DEPT_CDE
                 , A.Ord_no
@@ -108,9 +105,6 @@
                 FROM CALLCENTERUSER.T_CUR_HIST A
                 LEFT OUTER JOIN GBSLCVD.CCR0006D B
                 ON A.CUR_SEQNO = B.CUR_SEQ_NO
-
-                LEFT JOIN GBSLCVD.SYS0005M C ON B.SUB_DEPT = TO_CHAR(C.BRNCH_ID)
-
                 WHERE A.TR_DVCD         = 'T'
         ) Z
         WHERE 1=1
