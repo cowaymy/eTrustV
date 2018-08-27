@@ -152,32 +152,75 @@ VALUES
 )
 </insert>
 
-<!-- WARE HOUSE MAPPING -->
+<!-- CDC WAREHOUSE MAPPING : CDC Master -->
+<select id="selectCdcMst" parameterType="Map" resultType="egovMap">
+SELECT 'N' AS EDIT
+     , A.CDC_CODE
+     , A.CDC_NAME
+     , A.CDC_PORT_NAME
+  FROM SCM0016M A
+ ORDER BY A.CDC_CODE
+</select>
+
+<insert id="insertCdcMst" parameterType="Map">
+INSERT INTO SCM0016M
+(
+       CDC_CODE
+     , CDC_NAME
+     , CDC_PORT_NAME
+ )
+VALUES
+(
+       #{cdcCode}
+     , #{cdcName}
+     , #{cdcPortName}
+ )
+</insert>
+
+<update id="updateCdcMst" parameterType="Map">
+UPDATE SCM0016M
+   SET CDC_NAME = #{cdcName}
+     , CDC_PORT_NAME = #{cdcPortName}
+ WHERE CDC_CODE = #{cdcCode}
+</update>
+
+<delete id="deleteCdcMst" parameterType="Map">
+DELETE FROM SCM0016M WHERE CDC_CODE = #{cdcCode}
+</delete>
+
+<!-- CDC WAREHOUSE MAPPING : CDC Warehouse Mapping -->
 <select id="selectCdcWareMapping" parameterType="Map" resultType="egovMap">
-SELECT 'delete' AS FLAG
+SELECT '0' AS CHK
+     , B.CODE AS SYS_CODE
+     , B.CODE_DESC AS CDC_CODE
+     , B.CODE_NAME AS CDC_NAME
      , A.WH_ID
-     , A.CDC
-     , B.WH_LOC_CODE WH_CODE
-     , B.WH_LOC_DESC WH_NAME
-  FROM SCM0022M A
-  LEFT OUTER JOIN SYS0028M B ON (B.WH_LOC_ID = A.WH_ID)
- WHERE B.WH_LOC_CODE NOT LIKE 'CT%'
+     , C.WH_LOC_ID
+     , C.WH_LOC_CODE
+     , C.WH_LOC_DESC
+  FROM SCM0022M A /* CDC-Warehouse Mapping */
+  LEFT OUTER JOIN SYS0013M B ON (B.CODE = A.CDC AND B.CODE_MASTER_ID = 349 AND B.DISAB = 0) /* System Code */
+  LEFT OUTER JOIN SYS0028M C ON (C.WH_LOC_ID = A.WH_ID) /* Warehouse Code */
+ WHERE C.WH_LOC_CODE NOT LIKE 'CT%'
 	<if test="cdcCbBox != null and cdcCbBox !=''">
-   AND A.CDC= DECODE(#{cdcCbBox}, '2010', 'KL', '2020', 'PN', '2030', 'JB', '2040', 'KK', '2050', 'KC', #{cdcCbBox})
+   AND B.CODE = #{cdcCode}
+   <!-- AND A.CDC = DECODE(#{cdcCbBox}, '2010', 'KL', '2020', 'PN', '2030', 'JB', '2040', 'KK', '2050', 'KC', #{cdcCbBox}) -->
 	</if>
+ ORDER BY B.CODE, A.WH_ID
 </select>
 
 <select id="selectWhLocationMapping" parameterType="Map" resultType="egovMap">
-SELECT A.WH_LOC_ID WH_ID
-     , ' ' AS CDC
+SELECT '' AS CDC
+     , A.WH_LOC_ID WH_ID
      , A.WH_LOC_CODE AS WH_CODE
      , A.WH_LOC_DESC AS WH_NAME
-  FROM SYS0028M A
- WHERE A.WH_LOC_CODE LIKE 'DSC%'
+  FROM SYS0028M A /* Warehouse Master */
+ WHERE A.WH_LOC_DESC LIKE 'DSC%'
    AND A.WH_LOC_ID NOT IN (SELECT WH_ID FROM SCM0022M)
+ ORDER BY A.WH_LOC_ID, A.WH_LOC_CODE
 </select>
 
-<insert id="insetCdcWhMapping" parameterType="Map">
+<insert id="insertCdcWhMapping" parameterType="Map">
 INSERT INTO SCM0022M
 (
        WH_ID
@@ -191,9 +234,10 @@ VALUES
 </insert>
 
 <delete id="deleteCdcWhMapping" parameterType="Map">
-DELETE FROM SCM0022M WHERE WH_ID = #{whId} AND CDC = #{cdc}
+DELETE FROM SCM0022M WHERE WH_ID = #{whLocId} AND CDC = #{sysCode}
 </delete>
 
+<!-- ??? -->
 <select id="selectInvenCbBoxByStockType" parameterType="Map" resultType="egovMap">
 SELECT A.STK_CODE AS STOCK_CODE
      , A.STK_DESC AS STOCK_NAME
