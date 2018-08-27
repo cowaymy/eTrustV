@@ -206,39 +206,103 @@ public class ScmMasterMngMentServiceImpl implements ScmMasterMngMentService
 		return	saveCnt;
 	}
 	
+	/*
+	 * CDC Warehouse Mapping
+	 */
+	//	CDC Master
+	@Override
+	public List<EgovMap> selectCdcMst(Map<String, Object> params) {
+		return	scmMasterMngMentMapper.selectCdcMst(params);
+	}
+	//	insert cdc mst
+	@Override
+	public int insertCdcMst(List<Object> insList, Integer crtUserId) {
+		int insCnt	= 0;
+		
+		for ( Object obj : insList ) {
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			LOGGER.debug("insertCdcMst CDC_CODE : {}", ((Map<String, Object>) obj).get("cdcCode"));
+			
+			insCnt++;
+			
+			scmMasterMngMentMapper.insertCdcMst((Map<String, Object>) obj);
+		}
+		
+		return	insCnt;
+	}
+	//	update cdc mst
+	@Override
+	public int updateCdcMst(List<Object> updList, Integer crtUserId) {
+		int updCnt	= 0;
+		
+		for ( Object obj : updList ) {
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			LOGGER.debug("updateCdcMst CDC_CODE : {}", ((Map<String, Object>) obj).get("cdcCode"));
+			
+			updCnt++;
+			
+			scmMasterMngMentMapper.updateCdcMst((Map<String, Object>) obj);
+		}
+		
+		return	updCnt;
+	}
+	//	delete cdc mst
+	@Override
+	public int deleteCdcMst(List<Object> delList, Integer crtUserId) {
+		int delCnt	= 0;
+		
+		for ( Object obj : delList ) {
+			((Map<String, Object>) obj).put("crtUserId", crtUserId);
+			((Map<String, Object>) obj).put("updUserId", crtUserId);
+			
+			LOGGER.debug("deleteCdcMst CDC_CODE : {}", ((Map<String, Object>) obj).get("cdcCode"));
+			
+			delCnt++;
+			
+			scmMasterMngMentMapper.deleteCdcMst((Map<String, Object>) obj);
+		}
+		
+		return	delCnt;
+	}
+	
 	//	CDC WareHouse Mapping
 	@Override
 	public List<EgovMap> selectCdcWareMapping(Map<String, Object> params) {
 		return	scmMasterMngMentMapper.selectCdcWareMapping(params);
 	}
+
 	@Override
 	public List<EgovMap> selectWhLocationMapping(Map<String, Object> params) {
 		return	scmMasterMngMentMapper.selectWhLocationMapping(params);
 	}
 	
 	@Override
-	public int insetCdcWhMapping(List<Object> addList, Integer crtUserId) {
+	public int insertCdcWhMapping(List<Object> insList, Integer crtUserId) {
 		int saveCnt	= 0;
 		
-		for ( Object obj : addList ) {
+		for ( Object obj : insList ) {
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			
-			LOGGER.debug(" insetCdcWhMapping_Whid : {}", ((Map<String, Object>) obj).get("whId"));
+			LOGGER.debug(" insertCdcWhMapping_Whid : {}", ((Map<String, Object>) obj).get("whId"));
 			
 			saveCnt++;
 			
-			scmMasterMngMentMapper.insetCdcWhMapping((Map<String, Object>) obj);
+			scmMasterMngMentMapper.insertCdcWhMapping((Map<String, Object>) obj);
 		}
 		
 		return	saveCnt;
 	}
 	
 	@Override
-	public int deleteCdcWhMapping(List<Object> addList, Integer crtUserId) {
+	public int deleteCdcWhMapping(List<Object> delList, Integer crtUserId) {
 		int saveCnt	= 0;
 		
-		for ( Object obj : addList ) {
+		for ( Object obj : delList ) {
 			((Map<String, Object>) obj).put("crtUserId", crtUserId);
 			((Map<String, Object>) obj).put("updUserId", crtUserId);
 			

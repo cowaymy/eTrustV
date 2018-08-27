@@ -42,6 +42,9 @@ public class ScmMasterMngmentController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
+	/*****************************************
+	 *   SCM Master Management
+	 *****************************************/
 	//	view
 	@RequestMapping(value = "/scmMasterManagement.do")
 	public String masterMngmentView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
@@ -184,6 +187,69 @@ public class ScmMasterMngmentController {
 	/*****************************************
 	 *   CDC WareHouse MAPPING
 	 *****************************************/
+	/*
+	 * CDC Master
+	 */
+	//	Select CDC Master
+	@RequestMapping(value = "/selectCdcMst.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectCdcMst(@RequestParam Map<String, Object> params) {
+		LOGGER.debug("selectCDCList : {}", params.toString());
+		
+		List<EgovMap> selectCdcMstList		= scmMasterMngMentService.selectCdcMst(params);
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		//	main Data
+		map.put("cdcMstList", selectCdcMstList);
+		
+		return	ResponseEntity.ok(map);
+	}
+	//	Save CDC Master
+	@RequestMapping(value = "/saveCdcMst.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveCdcMst(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		List<Object> delList	= params.get(AppConstants.AUIGRID_REMOVE);	//	Get grid addList
+		List<Object> insList	= params.get(AppConstants.AUIGRID_ADD);		//	Get grid delList
+		List<Object> updList	= params.get(AppConstants.AUIGRID_UPDATE);	//	Get grid updList
+		
+		//	반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		int tmpCnt	= 0;
+		int totCnt	= 0;
+		
+		if ( null != insList ) {
+			if ( 0 < insList.size() ) {
+				tmpCnt	= scmMasterMngMentService.insertCdcMst(insList, sessionVO.getUserId());
+				totCnt	= totCnt + tmpCnt;
+			}
+			LOGGER.info("CdcWareHouse_추가 : {}", insList.toString());
+		}
+		if ( null != updList ) {
+			if ( 0 < updList.size() ) {
+				tmpCnt	= scmMasterMngMentService.updateCdcMst(updList, sessionVO.getUserId());
+				totCnt	= totCnt + tmpCnt;
+			}
+			LOGGER.info("CdcWareHouse_수정 : {}", updList.toString());
+		}
+		if ( null != delList ) {
+			if ( 0 < delList.size() ) {
+				tmpCnt	= scmMasterMngMentService.deleteCdcMst(delList, sessionVO.getUserId());
+				totCnt	= totCnt + tmpCnt;
+			}
+			LOGGER.info("CdcWareHouse_삭제 : {}", delList.toString());
+		}
+		
+		LOGGER.info("CdcWareHouse_카운트 : {}", totCnt);
+		
+		ReturnMessage message	= new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return	ResponseEntity.ok(message);
+	}
+	
+	/*
+	 * Cdc Warehouse Mapping
+	 */
 	//	view
 	@RequestMapping(value = "/cdcWhMappingManager.do")
 	public String cdcWareHouseMappingView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
@@ -191,6 +257,7 @@ public class ScmMasterMngmentController {
 		return	"/scm/cdcWhMappingManager";
 	}
 	
+	//	Search
 	@RequestMapping(value = "/selectWHouseMappingSerch.do", method = RequestMethod.GET)
 	public ResponseEntity<Map<String, Object>> selectWhLocationMapping(@RequestParam Map<String, Object> params, @RequestParam(value = "stockCodeCbBox", required = false) Integer[] stkCodes ) {
 		LOGGER.debug("selectWhLocationMapping_Input : {}", params.toString());
@@ -206,6 +273,55 @@ public class ScmMasterMngmentController {
 		
 		return	ResponseEntity.ok(map);
 	}
+	
+	//	Add Cdc
+	@RequestMapping(value = "/cdcWhMappingAddPop.do")
+	public String cdcWhMappingAddPop(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/cdcWhMappingAddPop";
+	}
+	
+	//	Save(Mapped Warehouse)
+	@RequestMapping(value = "/saveUnmap.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveUnmap(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		int totCnt	= 0;
+		
+		//	Only delete
+		List<Object> delList	= params.get(AppConstants.AUIGRID_UPDATE);	//	Get grid delList
+		
+		if ( 0 < delList.size() ) {
+			totCnt	= scmMasterMngMentService.deleteCdcWhMapping(delList, sessionVO.getUserId());
+		}
+		
+		ReturnMessage message	= new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return	ResponseEntity.ok(message);
+	}
+	
+	//	Save(Unmapped Warehouse)
+	@RequestMapping(value = "/saveMap.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveMap(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		int totCnt	= 0;
+		
+		//	Only delete
+		List<Object> insList	= params.get(AppConstants.AUIGRID_UPDATE);	//	Get grid insList : AUIGRID_UPDATE -> row insert
+		
+		if ( 0 < insList.size() ) {
+			totCnt	= scmMasterMngMentService.insertCdcWhMapping(insList, sessionVO.getUserId());
+		}
+		
+		ReturnMessage message	= new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return	ResponseEntity.ok(message);
+	}
+	/*
+	//	view
+
 	
 	@RequestMapping(value = "/saveCdcWhMappingList.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveCommMstGrid(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
@@ -240,7 +356,7 @@ public class ScmMasterMngmentController {
 		
 		return	ResponseEntity.ok(message);
 	}
-	
+	*/
 	/*****************************************
 	 *   Business Plan Manager
 	 *****************************************/

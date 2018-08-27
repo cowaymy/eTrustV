@@ -9,7 +9,9 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface ScmMasterMngMentService
 {
-	//	SCM Master ManageMent
+	/*
+	 * SCM Master Management
+	 */
 	List<EgovMap> selectMasterMngmentSearch(Map<String, Object> params);
 	List<EgovMap> selectInvenCbBoxByStockType(Map<String, Object> params);
 	List<EgovMap> selectInvenCbBoxByCategory(Map<String, Object> params);
@@ -18,11 +20,20 @@ public interface ScmMasterMngMentService
 	int insertMstMngMasterCDC(Map<String, Object> params, SessionVO sessionVO);
 	int insertMstMngMasterHeader(Map<String, Object> params, SessionVO sessionVO);
 	
-	//	CDC WareHouse Mapping
+	/*
+	 * CDC Warehouse Mapping
+	 */
+	//	CDC Master
+	List<EgovMap> selectCdcMst(Map<String, Object> params);
+	int insertCdcMst(List<Object> insList, Integer crtUserId);
+	int updateCdcMst(List<Object> updList, Integer crtUserId);
+	int deleteCdcMst(List<Object> delList, Integer crtUserId);
+	
+	//	CDC Mapping
 	List<EgovMap> selectCdcWareMapping(Map<String, Object> params);
 	List<EgovMap> selectWhLocationMapping(Map<String, Object> params);
-	int insetCdcWhMapping(List<Object> addList, Integer crtUserId);
-	int deleteCdcWhMapping(List<Object> addList, Integer crtUserId);
+	int insertCdcWhMapping(List<Object> insList, Integer crtUserId);
+	int deleteCdcWhMapping(List<Object> delList, Integer crtUserId);
 	
 	//	Business Plan Manager
 	List<EgovMap> selectVersionCbList(Map<String, Object> params);

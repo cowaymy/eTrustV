@@ -18,11 +18,19 @@ public interface ScmMasterMngMentMapper
 	int insertMstMngMasterCDC(Map<String, Object> params);
 	int insertMstMngMasterHeader(Map<String, Object> params);
 	
+	/*
+	 * CDC Warehouse Mapping
+	 */
+	//	CDC Master
+	List<EgovMap> selectCdcMst(Map<String, Object> params);
+	int insertCdcMst(Map<String, Object> params);
+	int updateCdcMst(Map<String, Object> params);
+	int deleteCdcMst(Map<String, Object> params);
+	
 	//	CDC Ware Mapping
 	List<EgovMap> selectCdcWareMapping(Map<String, Object> params);
 	List<EgovMap> selectWhLocationMapping(Map<String, Object> params);
-	
-	int insetCdcWhMapping(Map<String, Object> params);
+	int insertCdcWhMapping(Map<String, Object> params);
 	int deleteCdcWhMapping(Map<String, Object> params);
 	
 	//	Business Plan Manager
