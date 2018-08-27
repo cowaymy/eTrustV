@@ -202,7 +202,7 @@ SELECT '0' AS CHK
   LEFT OUTER JOIN SYS0013M B ON (B.CODE = A.CDC AND B.CODE_MASTER_ID = 349 AND B.DISAB = 0) /* System Code */
   LEFT OUTER JOIN SYS0028M C ON (C.WH_LOC_ID = A.WH_ID) /* Warehouse Code */
  WHERE C.WH_LOC_CODE NOT LIKE 'CT%'
-	<if test="cdcCbBox != null and cdcCbBox !=''">
+	<if test="cdcCode != null and cdcCode !=''">
    AND B.CODE = #{cdcCode}
    <!-- AND A.CDC = DECODE(#{cdcCbBox}, '2010', 'KL', '2020', 'PN', '2030', 'JB', '2040', 'KK', '2050', 'KC', #{cdcCbBox}) -->
 	</if>

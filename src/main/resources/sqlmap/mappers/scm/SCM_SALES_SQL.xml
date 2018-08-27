@@ -465,26 +465,25 @@ WITH SALES_PLAN_SUMMARY
 			 ORDER BY SYS26M.STK_DESC   ASC
     </select>
 
-    <select id="selectPlanId" parameterType="Map" resultType="egovMap">
-			SELECT
-			       PLAN_ID
-			      ,PLAN_YEAR
-			      ,PLAN_MONTH
-			      ,PLAN_WEEK
-			      ,TEAM
-			      ,DECODE(PLAN_STUS_ID,1,'Active','Confirmed') PLAN_STUS_NM
-			      ,TO_CHAR(CRT_DT,'YYYY/MM/DD HH24:MI:SS') CRT_DT
-			      ,STUS_DT
-			      ,CRT_USER_ID
-			      ,PLAN_STUS_ID
-			 FROM SCM0001M
-			WHERE PLAN_YEAR = #{scmYearCbBox}
-			  AND PLAN_WEEK = #{scmPeriodCbBox}
-     <if test="scmTeamCbBox != null and scmTeamCbBox !=''">
-        AND TEAM      = #{scmTeamCbBox}
-     </if>
-			  AND ROWNUM    = 1
-    </select>
+<select id="selectPlanId" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_ID
+     , A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , A.TEAM
+     , DECODE(A.PLAN_STUS_ID, 1, 'Active', 'Confirmed') AS PLAN_STUS_NM
+     , TO_CHAR(A.CRT_DT, 'YYYY/MM/DD HH24:MI:SS') AS CRT_DT
+     , A.STUS_DT
+     , A.CRT_USER_ID
+     , A.PLAN_STUS_ID
+  FROM SCM0001M A
+ WHERE A.PLAN_YEAR = #{scmYearCbBox}
+   AND A.PLAN_WEEK = #{scmPeriodCbBox}
+	<if test="scmTeamCbBox != null and scmTeamCbBox !=''">
+   AND A.TEAM = #{scmTeamCbBox}
+	</if>
+   AND ROWNUM = 1
+</select>
 
 <select id="selectSalesPlanMngmentList" parameterType="Map" resultType="egovMap">
 
