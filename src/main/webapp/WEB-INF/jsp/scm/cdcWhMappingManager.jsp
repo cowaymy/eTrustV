@@ -390,12 +390,20 @@ var MstGridLayout	=
 			//headerText : "<spring:message code='sys.scm.pomngment.cdc'/>",
 			headerText : "SYS",
 			width : "10%",
-			editable: false,
+			editable : false,
+			//visible : false,
 		},
 		{
 			dataField : "cdcCode",
 			//headerText : "<spring:message code='sys.scm.pomngment.cdcName'/>",
 			headerText : "CDC",
+			width : "10%",
+			editable: false,
+		},
+		{
+			dataField : "cdcName",
+			//headerText : "<spring:message code='sys.scm.pomngment.cdcName'/>",
+			headerText : "CDC Name",
 			width : "20%",
 			editable: false,
 		},
@@ -427,8 +435,9 @@ var LocationGridLayout	=
 	[
 		{
 			dataField : "cdc",
-			headerText : "<spring:message code='sys.scm.pomngment.cdc'/>",
-			width : "10%",
+			//headerText : "<spring:message code='sys.scm.pomngment.cdc'/>",
+			headerText : "CDC Name",
+			width : "20%",
 			renderer : {
 				type : "DropDownListRenderer",
 				showEditorBtnOver : true,
@@ -453,8 +462,9 @@ var LocationGridLayout	=
 		{
 			dataField : "whId",
 			headerText : "<spring:message code='sys.scm.whousemapping.whId'/>",
-			width : "20%",
-			editable: false,
+			//width : "20%",
+			editable : false,
+			visible : false,
 		},
 		{
 			dataField : "whCode",
@@ -465,7 +475,7 @@ var LocationGridLayout	=
 		{
 			dataField : "whName",
 			headerText : "<spring:message code='sys.scm.whousemapping.whName'/>",
-			width : "50%",
+			width : "60%",
 			style : "aui-grid-left-column",
 			editable: false,
 		}
