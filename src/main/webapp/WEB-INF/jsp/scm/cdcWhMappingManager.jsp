@@ -202,13 +202,13 @@ function fnSetGridComboList() {
 }
 
 function fnSelectCDCComboList() {
-	CommonCombo.make("cdcCbBox"
+	CommonCombo.make("cdcCode"
 					, "/scm/selectComboSupplyCDC.do"
-					, { codeMasterId: "349" }
+					, { codeMasterId : "349" }
 					, ""
 					, {
 						id  : "code",		//	use By query's parameter values
-						name: "codeName",
+						name : "codeName",
 						chooseMessage: "Select a CDC"
 					}
 					, "");
@@ -599,7 +599,7 @@ $(document).ready(function() {
 			<tr>
 				<th scope="row">CDC</th>
 				<td>
-					<select id="cdcCbBox" name="cdcCbBox" onChange="fnOnchanged(this);">
+					<select id="cdcCode" name="cdcCode" onChange="fnOnchanged(this);">
 					</select>
 				</td>
 			</tr>
