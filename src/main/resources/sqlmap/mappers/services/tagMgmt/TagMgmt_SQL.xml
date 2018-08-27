@@ -60,10 +60,10 @@
            AND  LOWER(Z.Feedback_code) = LOWER(#{feedback_code})
         </if>
         <if test="regStartDt != null and regStartDt != '' ">
-            and TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') >= TO_CHAR(TO_DATE (#{regStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+            and TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <![CDATA[>= ]]> TO_CHAR(TO_DATE (#{regStartDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
         </if>
         <if test="regEndDt != null and regEndDt != '' ">
-            and TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <= TO_CHAR(TO_DATE (#{regEndDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
+            and TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') <![CDATA[<= ]]> TO_CHAR(TO_DATE (#{regEndDt},   'DD/MM/YYYY'),'YYYY-MM-DD')
         </if>
 
         <if test="listStatus != null and listStatus != '' ">
