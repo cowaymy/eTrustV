@@ -20,6 +20,21 @@ var bsMonth = [{"codeId":"0","codeName":"All"},{"codeId":"1","codeName":"Yes"},{
 
 $(document).ready(function(){
 
+	if("${SESSION_INFO.userTypeId}" == "2"){
+		$("#orgCode").attr("disabled", true);
+		$("#grpCode").attr("disabled", true);
+		$("#deptCode").attr("disabled", true);
+
+		if("${SESSION_INFO.memberLevel}" <= "3"){
+			$("#deptCode").attr("disabled", false);
+		}
+		if("${SESSION_INFO.memberLevel}" <= "2"){
+            $("#grpCode").attr("disabled", false);
+        }
+		if("${SESSION_INFO.memberLevel}" <= "1"){
+            $("#orgCode").attr("disabled", false);
+        }
+	}
 	doGetCombo('/common/selectCodeList.do', '8', selCodeCustId ,'cmbCustTypeId', 'S', '');       // Customer Type Combo Box
 	doDefCombo(paymode, '', 'cmbPaymode', 'S', '');
 	doDefCombo(isPaid, '', 'cmbIsPaid', 'S', '');
@@ -78,6 +93,11 @@ console.log(gridObj);
 
     function fn_clear(){
         $("#searchForm")[0].reset();
+    }
+
+    function fn_excelDown(){
+        // type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+        GridCommon.exportTo("grid_wrap", "xlsx", "RC by BS (Aging Month)");
     }
 </script>
 
@@ -148,6 +168,12 @@ console.log(gridObj);
         </form>
     </section>
     <!-- search_table end -->
+
+    <ul class="right_btns">
+        <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
+            <li><p class="btn_grid"><a href="#" onClick="fn_excelDown()"><spring:message code='service.btn.Generate'/></a></p></li>
+        </c:if>
+    </ul>
 
     <form id="ledgerForm" action="#" method="post">
         <input type="hidden" id="ordId" name="ordId" />
