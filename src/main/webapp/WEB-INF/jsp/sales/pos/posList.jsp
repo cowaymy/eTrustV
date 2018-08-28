@@ -8,16 +8,16 @@ var deductionCmGridID;
 var posItmDetailGridID;
 
 var optionModule = {
-        type: "S",                  
-        isShowChoose: false  
+        type: "S",
+        isShowChoose: false
 };
 var optionSystem = {
-        type: "M",                  
-        isShowChoose: false  
+        type: "M",
+        isShowChoose: false
 };
 var optionReasonChoose = {
-        type: "M",                  
-        isShowChoose: true  
+        type: "M",
+        isShowChoose: true
 };
 //Grid in SelectBox  - Selcet value
 var arrPosStusCode; //POS GRID
@@ -29,7 +29,7 @@ var ajaxOtp= {async : false};
 
 $(document).ready(function() { //*************************************************************************
 
-    
+
     fn_getStatusCode('9');
     fn_getStatusCode('10');
     fn_getStatusCode('11');
@@ -37,13 +37,13 @@ $(document).ready(function() { //***********************************************
     createDeductionGrid();
     createPosItmDetailGrid();
     girdHide();
-    
+
      /*######################## Init Combo Box ########################*/
-     
+
     //PosModuleTypeComboBox
     var moduleParam = {groupCode : 143, codeIn : [2390, 2391]};
     CommonCombo.make('cmbPosTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
-    
+
     //PosSystemTypeComboBox
     var systemParam = {groupCode : 140 , codeIn : [1352, 1353 , 1361]};
 
@@ -52,54 +52,54 @@ $(document).ready(function() { //***********************************************
     //selectStatusCodeList
     var statusParam = {groupCode : 9};
     CommonCombo.make('cmbStatusTypeId', "/sales/pos/selectStatusCodeList", statusParam , '', optionSystem);
-    
+
     //branch List
     CommonCombo.make('cmbWhBrnchId', "/sales/pos/selectWhBrnchList", '' , '', '');
-    
+
     //Wh List
     $("#cmbWhBrnchId").change(function() {
-        
+
         var tempVal = $(this).val();
         if(tempVal == null || tempVal == '' ){
             $("#cmbWhId").val("");
         }else{
             var paramObj = {brnchId : tempVal};
             Common.ajax('GET', "/sales/pos/selectWarehouse", paramObj,function(result){
-            	
+
             	if(result != null){
-            		$("#cmbWhId").val(result.whLocDesc);	
+            		$("#cmbWhId").val(result.whLocDesc);
             	}else{
             		$("#cmbWhId").val('');
             	}
             });
         }
     });
-    
+
     /*######################## Init Combo Box ########################*/
-    
+
     //cmbPosTypeId Change Func
     $("#cmbPosTypeId").change(function() {
-        
+
         var tempVal = $(this).val();
-        
+
       /*   if(tempVal == 2392){
             var systemParam = {groupCode : 140 , codeIn : [1358 , 1361]};
             var optionSystem = {
-                    type: "M",                  
-                    isShowChoose: false  
+                    type: "M",
+                    isShowChoose: false
             };
             CommonCombo.make('cmbSalesTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , '', optionSystem);
         }else{ */
             var systemParam = {groupCode : 140 , codeIn : [1352, 1353 , 1361]};
             var optionSystem = {
-                    type: "M",                  
-                    isShowChoose: false  
+                    type: "M",
+                    isShowChoose: false
             };
             CommonCombo.make('cmbSalesTypeId', "/sales/pos/selectPosModuleCodeList", systemParam , '', optionSystem);
       //  }
-        
+
     });
-    
+
     //Member Search Popup
     $('#memBtn').click(function() {
         Common.popupDiv("/common/memberPop.do", $("#searchForm").serializeJSON(), null, true);
@@ -113,61 +113,61 @@ $(document).ready(function() { //***********************************************
             fn_loadOrderSalesman(0, memCd);
         }
     });
-    
+
     //Search
     $("#_search").click(function() {
-        
+
     	//Case Dededuction ComboChange
     	if( ($("#_deducMem").val() != null && $("#_deducMem").val() != '') ||
     			($("#_deducMemNric").val() != null && $("#_deducMemNric").val() != '')){
     		//cmbPosTypeId
     		$("#cmbPosTypeId").val(2391);
     	}
-    	
-    	//Validation   
+
+    	//Validation
     	if(FormUtil.isEmpty($('#_sDate').val()) || FormUtil.isEmpty($('#_eDate').val())) {
 			    Common.alert('<spring:message code="sal.alert.msg.selectOrdDate" />');
 			    return;
     	}
-    	
+
     	//Gap
     	var startDate = $('#_sDate').val();
     	var endDate = $('#_eDate').val();
-    	
+
     	if( fn_getDateGap(startDate , endDate) > 31){
     		Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
     		return;
     	}
-    	
+
     	//Grid Clear
     	AUIGrid.clearGridData(posGridID);
-    	AUIGrid.clearGridData(posItmDetailGridID);  
+    	AUIGrid.clearGridData(posItmDetailGridID);
         AUIGrid.clearGridData(deductionCmGridID);
-        
+
         fn_getPosListAjax();
     });
-    
+
     //Pos System
     $("#_systemBtn").click(function() {
     	Common.popupDiv("/sales/pos/posSystemPop.do", '', null , true , '_insDiv');
     });
-    
+
     //Pos Reversal
     $("#_reversalBtn").click(function() {
-    	
+
     	var clickChk = AUIGrid.getSelectedItems(posGridID);
     	//Validation
     	if(clickChk == null || clickChk.length <= 0 ){
     		Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
     		return;
     	}
-    	
+
     	if(clickChk[0].item.posTypeId == 1361){  //reversal
     		Common.alert('<spring:message code="sal.alert.msg.posProhibit" />');
     		return;
     	}
     	console.log("clickChk[0].item.stusId : " + clickChk[0].item.stusId);
-    	if(clickChk[0].item.stusId != 4){  
+    	if(clickChk[0].item.stusId != 4){
     		Common.alert('<spring:message code="sal.alert.msg.canNotbeReversalByCompl" />');
             return;
     	}
@@ -176,73 +176,73 @@ $(document).ready(function() { //***********************************************
     	var reRefNo = clickChk[0].item.posNo;
     	var reObject = { reRefNo : reRefNo};
     	var chkRv = true;
-    	
+
     	Common.ajax("GET", "/sales/pos/chkReveralBeforeReversal", reObject, function(result) {
     	    if(result != null){
     	    	chkRv = false;
-    	    }			
+    	    }
 		}, null ,ajaxOtp);
-    	
-    	
+
+
     	if(chkRv == false){
     		Common.alert('<spring:message code="sal.alert.msg.posProhibit" />');
             return;
     	}
-    	
+
     	// IsPaymentKnowOffByPOSNo
-    	var isPay = false; 
+    	var isPay = false;
     	var inPosNo = {};
     	Common.ajax("GET", "/sales/pos/isPaymentKnowOffByPOSNo", inPosNo, function(result) {
             if(result == true){
             	isPay = true;
-            }           
+            }
         }, null ,ajaxOtp);
-    	
+
     	if(isPay == true){
     		Common.alert('<spring:message code="sal.alert.msg.paymentKnockOff" />');
     		return;
     	}
-    	
-        //TODO Check Auth == ASIS Token > TOBE  
-    	
+
+        //TODO Check Auth == ASIS Token > TOBE
+
     	//Call controller
     	var reversalForm = { posId : clickChk[0].item.posId };
     	Common.popupDiv("/sales/pos/posReversalPop.do", reversalForm , null , true , "_revDiv");
-		
+
 	});
-    
-    
+
+
     // 셀 더블클릭 이벤트 바인딩
     /* AUIGrid.bind(posGridID, "cellDoubleClick", function(event){
         alert("개발중...");
     }); */
     //Cell Click Event
     AUIGrid.bind(posGridID, "cellClick", function(event){
-        
+
     	//clear data
-    	AUIGrid.clearGridData(posItmDetailGridID);  
-    	AUIGrid.clearGridData(deductionCmGridID);  
-    	
+    	AUIGrid.clearGridData(posItmDetailGridID);
+    	AUIGrid.clearGridData(deductionCmGridID);
+
     	if(event.item.posModuleTypeId == 2390 || event.item.posModuleTypeId == 2392){ // POS SALES & OTHER(ITEM BANK(HQ))
-    		
+
     		//Mybatis Separate Param
     		//1. Grid Display Control
     		$("#_itmDetailGridDiv").css("display" , "");
     		$("#_deducGridDiv").css("display", "none");
-    		
+
             var detailParam = {rePosId : event.item.posId};
             //Ajax
             Common.ajax("GET", "/sales/pos/getPosDetailList", detailParam, function(result){
                 AUIGrid.setGridData(posItmDetailGridID, result);
-            }); 
+            });
     	}
-    	
+
         if(event.item.posModuleTypeId == 2391){ // DEDUCTION COMMISSION
-        	
+
         	//1. Grid Display Control
         	$("#_itmDetailGridDiv").css("display" , "none");
         	$("#_deducGridDiv").css("display", "");
-        
+
         	//2. Grid Set Data
         //	console.log("event.item.posId 위 : " + event.item.posId);
        // 	console.log("event.item.posId 아래 : " + event.item.posId);
@@ -251,14 +251,14 @@ $(document).ready(function() { //***********************************************
              Common.ajax("GET", "/sales/pos/getPurchMemList", detailParam, function(result){
                  AUIGrid.setGridData(deductionCmGridID, result);
              });
-             
+
         }
-    	
+
     });
-    
+
     //MemGrid Cell Click
     AUIGrid.bind(deductionCmGridID, "cellClick", function(event){
-    	
+
     	$("#_itmDetailGridDiv").css("display" , "");
         var detailParam = {rePosId : event.item.posId , memId : event.item.memId};
         //Ajax
@@ -266,12 +266,12 @@ $(document).ready(function() { //***********************************************
             AUIGrid.setGridData(posItmDetailGridID, result);
         });
     });
-    
-    
+
+
     /***************** Status Change  *****************/
     // 1) Pos Master Update
     $("#_headerSaveBtn").click(function() {
-    	
+
     	var rowCnt = AUIGrid.getRowCount(posGridID);
         if(rowCnt <= 0 ){
             Common.alert("* please Search First.");
@@ -279,27 +279,27 @@ $(document).ready(function() { //***********************************************
         }
     	var updateList = AUIGrid.getEditedRowItems(posGridID);
    // 	console.log("updateList(type) : " + $.type(updateList));
-    	
+
     	if(updateList == null || updateList.length <= 0 ){
     		Common.alert('<spring:message code="sal.alert.msg.noDataChange" />');
     		return;
     	}
-    	
+
         var PosGridVO = {posStatusDataSetList : GridCommon.getEditData(posGridID)}; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
-        
+
          Common.ajax("POST", "/sales/pos/updatePosMStatus", PosGridVO, function(result) {
-        	 
+
             Common.alert(result.message);
-            AUIGrid.clearGridData(posItmDetailGridID);  
+            AUIGrid.clearGridData(posItmDetailGridID);
             AUIGrid.clearGridData(deductionCmGridID);
             fn_getPosListAjax();
         });
-    	
+
 	});
-    
+
     // 2) Pos Member Update
     $("#_deducSaveBtn").click(function() {
-        
+
     	var rowCnt = AUIGrid.getRowCount(deductionCmGridID);
         if(rowCnt <= 0 ){
             Common.alert('<spring:message code="sal.alert.msg.selectMember" />');
@@ -307,26 +307,26 @@ $(document).ready(function() { //***********************************************
         }
         var updateList = AUIGrid.getEditedRowItems(deductionCmGridID);
         console.log("updateList(type) : " + $.type(updateList));
-        
+
         if(updateList == null || updateList.length <= 0 ){
             Common.alert('<spring:message code="sal.alert.msg.noDataChange" />');
             return;
         }
-    	
+
         var PosGridVO = {posMemberStatusDataSetList : GridCommon.getEditData(deductionCmGridID)}; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
-        
+
         Common.ajax("POST", "/sales/pos/updatePosMemStatus", PosGridVO, function(result) {
-            
+
             Common.alert(result.message);
-            AUIGrid.clearGridData(posItmDetailGridID);  
+            AUIGrid.clearGridData(posItmDetailGridID);
             AUIGrid.clearGridData(deductionCmGridID);
             fn_getPosListAjax();
         });
     });
-  
+
     // 3) Pos Detail Update
     $("#_itemSaveBtn").click(function() {
-         
+
     	var rowCnt = AUIGrid.getRowCount(posItmDetailGridID);
         if(rowCnt <= 0 ){
             Common.alert('<spring:message code="sal.alert.msg.selectItm" />');
@@ -334,25 +334,25 @@ $(document).ready(function() { //***********************************************
         }
         var updateList = AUIGrid.getEditedRowItems(posItmDetailGridID);
       //  console.log("updateList(type) : " + $.type(updateList));
-        
+
         if(updateList == null || updateList.length <= 0 ){
             Common.alert('<spring:message code="sal.alert.msg.noDataChange" />');
             return;
         }
-    	
+
         var PosGridVO = {posDetailStatusDataSetList : GridCommon.getEditData(posItmDetailGridID)}; //  name Careful = PARAM NAME SHOULD BE EQUAL VO`S NAME
-        
+
         Common.ajax("POST", "/sales/pos/updatePosDStatus", PosGridVO, function(result) {
-            
+
             Common.alert(result.message);
-            AUIGrid.clearGridData(posItmDetailGridID);  
+            AUIGrid.clearGridData(posItmDetailGridID);
             AUIGrid.clearGridData(deductionCmGridID);
             fn_getPosListAjax();
         });
-         
+
     });
-    
-    
+
+
     /***************  Pos Grid Status ********************/
      //1) Master
      AUIGrid.bind(posGridID, "cellEditBegin", function(event) {
@@ -366,13 +366,13 @@ $(document).ready(function() { //***********************************************
                 Common.alert('<spring:message code="sal.alert.msg.canNotChngStatus" />');
                 return false;
             }
-			
+
 			//Others
 			return true;
     });
     // 2) Detail
      AUIGrid.bind(posItmDetailGridID, "cellEditBegin", function(event) {
-    	 
+
     	 if(event.item.posTypeId == 1361){
     		 Common.alert('<spring:message code="sal.alert.msg.canNotChngStatusByReversal" />');
     		 return false;
@@ -387,7 +387,7 @@ $(document).ready(function() { //***********************************************
      });
      // 3) Member
      AUIGrid.bind(deductionCmGridID, "cellEditBegin", function(event) {
-         
+
          if(event.item.posTypeId == 1361){
              Common.alert('<spring:message code="sal.alert.msg.canNotChngStatusByReversal" />');
              return false;
@@ -400,13 +400,13 @@ $(document).ready(function() { //***********************************************
          //Others
          return true;
      });
-    
-     
+
+
      /***  Report ***/
      $("#_posRawDataBtn").click(function() {
     	 Common.popupDiv("/sales/pos/posRawDataPop.do", '', null, null, true);
 	});
-     
+
      $("#_posPayListing").click(function() {
     	 Common.popupDiv("/sales/pos/posPaymentListingPop.do", '', null, null, true);
 	});
@@ -414,19 +414,19 @@ $(document).ready(function() { //***********************************************
 
 
 function fn_getDateGap(sdate, edate){
-	
+
 	var startArr, endArr;
-	
+
 	startArr = sdate.split('/');
     endArr = edate.split('/');
-    
+
     var keyStartDate = new Date(startArr[2] , startArr[1] , startArr[0]);
     var keyEndDate = new Date(endArr[2] , endArr[1] , endArr[0]);
-    
+
     var gap = (keyEndDate.getTime() - keyStartDate.getTime())/1000/60/60/24;
-    
+
 //    console.log("gap : " + gap);
-    
+
     return gap;
 }
 
@@ -439,16 +439,16 @@ function girdHide(){
 }
 
 function createPosItmDetailGrid(){
-	var posItmColumnLayout =  [ 
-	                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%' , editable : false}, 
+	var posItmColumnLayout =  [
+	                            {dataField : "stkCode", headerText : '<spring:message code="sal.title.itemCode" />', width : '10%' , editable : false},
 	                            {dataField : "stkDesc", headerText : '<spring:message code="sal.title.itemDesc" />', width : '30%' , editable : false},
 	                            {dataField : "qty", headerText : '<spring:message code="sal.title.qty" />', width : '10%' , editable : false},
-	                            {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00" , editable : false}, 
+	                            {dataField : "amt", headerText : '<spring:message code="sal.title.unitPrice" />', width : '10%' , dataType : "numeric", formatString : "#,##0.00" , editable : false},
 	                            {dataField : "chrg", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
 	                            {dataField : "txs", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
 	                            {dataField : "tot", headerText : '<spring:message code="sal.text.totAmt" />', width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
 	                            { dataField : "rcvStusId",  headerText : '<spring:message code="sal.title.rcvStusId" />', width : '10%',
-	                               labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+	                               labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
 	                                    var retStr = "";
 	                                    for(var i=0,len=arrItmStusCode.length; i<len; i++) {
 	                                        if(arrItmStusCode[i]["codeId"] == value) {
@@ -473,26 +473,26 @@ function createPosItmDetailGrid(){
                            ];
 	 //그리드 속성 설정
     var itmGridPros = {
-            
+
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            fixedColumnCount    : 1,            
-            showStateColumn     : true,             
-            displayTreeOpen     : false,            
-  //          selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            fixedColumnCount    : 1,
+            showStateColumn     : true,
+            displayTreeOpen     : false,
+  //          selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true
     };
-    
+
     posItmDetailGridID = GridCommon.createAUIGrid("#itm_detail_grid_wrap", posItmColumnLayout,'', itmGridPros);  // address list
 }
 
 function createDeductionGrid () {
-	 
-	var posDeducColumnLayout =  [ 
+
+	var posDeducColumnLayout =  [
 									{dataField : "memId" , headerText : '<spring:message code="sal.title.memberId" />', width : "10%",  editable : false },
 									{dataField : "memCode" , headerText : '<spring:message code="sal.title.memberCode" />', width : "20%",  editable : false },
 									{dataField : "name" , headerText : '<spring:message code="sal.title.memberName" />', width : "20%",  editable : false },
@@ -504,7 +504,7 @@ function createDeductionGrid () {
 	                                    dataField : "rcvStusId",
 	                                    headerText : '<spring:message code="sal.title.rcvStusId" />',
 	                                    width : '10%',
-	                                    labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+	                                    labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
 	                                        var retStr = "";
 	                                        for(var i=0,len=arrItmStusCode.length; i<len; i++) {
 	                                            if(arrItmStusCode[i]["codeId"] == value) {
@@ -523,23 +523,23 @@ function createDeductionGrid () {
 	                                     }
 	                               }
 	                           ];
-	    
+
 	    //그리드 속성 설정
 	    var memGridPros = {
-	            
+
 	            usePaging           : true,         //페이징 사용
-	            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-	            fixedColumnCount    : 1,            
-	            showStateColumn     : true,             
-	            displayTreeOpen     : false,            
-	    //        selectionMode       : "singleRow",  //"multipleCells",            
-	            headerHeight        : 30,       
+	            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+	            fixedColumnCount    : 1,
+	            showStateColumn     : true,
+	            displayTreeOpen     : false,
+	    //        selectionMode       : "singleRow",  //"multipleCells",
+	            headerHeight        : 30,
 	            useGroupingPanel    : false,        //그룹핑 패널 사용
 	            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
 	            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	            showRowNumColumn    : true
 	    };
-	    
+
 	    deductionCmGridID = GridCommon.createAUIGrid("#deduc_grid_wrap", posDeducColumnLayout,'', memGridPros);  // address list
 }
 
@@ -566,7 +566,7 @@ $.fn.clearForm = function() {
 };
 
 function fn_getStatusCode(grpCode){
-    
+
 	if(grpCode == '9'){
 		$.ajax({
 	        type: 'get',
@@ -583,21 +583,21 @@ function fn_getStatusCode(grpCode){
 	             Common.removeLoader();
 	         },
 	         success: function(result) {
-	             
+
 	             var tempArr = new Array();
-	             
+
 	             for (var idx = 0; idx < result.length; idx++) {
-	                 tempArr.push(result[idx]); 
+	                 tempArr.push(result[idx]);
 	             }
 	             arrPosStusCode = tempArr;
-	             
+
 	        },error: function () {
 	            Common.alert("Fail to Get Code List....");
 	        }
-	        
+
 	    });
 	}
-	
+
 	if(grpCode == '10'){
 		$.ajax({
             type: 'get',
@@ -614,21 +614,21 @@ function fn_getStatusCode(grpCode){
                  Common.removeLoader();
              },
              success: function(result) {
-                 
+
                  var tempArr = new Array();
-                 
+
                  for (var idx = 0; idx < result.length; idx++) {
-                     tempArr.push(result[idx]); 
+                     tempArr.push(result[idx]);
                  }
-                 arrItmStusCode = tempArr; 
-                 
+                 arrItmStusCode = tempArr;
+
             },error: function () {
                 Common.alert("Fail to Get Code List....");
             }
-            
+
         });
 	}
-	
+
     if(grpCode == '11'){
     	$.ajax({
             type: 'get',
@@ -645,18 +645,18 @@ function fn_getStatusCode(grpCode){
                  Common.removeLoader();
              },
              success: function(result) {
-                 
+
                  var tempArr = new Array();
-                 
+
                  for (var idx = 0; idx < result.length; idx++) {
-                     tempArr.push(result[idx]); 
+                     tempArr.push(result[idx]);
                  }
-                 arrMemStusCode = tempArr; 
-                 
+                 arrMemStusCode = tempArr;
+
             },error: function () {
                 Common.alert("Fail to Get Code List....");
             }
-            
+
         });
     }
 }
@@ -681,13 +681,13 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
         		$('#hiddenSalesmanPopId').val(memInfo.memId);
                 $('#salesmanPopCd').val(memInfo.memCode);
                 $('#salesmanPopCd').removeClass("readonly");
-                 
+
                  Common.ajax("GET", "/sales/pos/getMemCode", {memCode : memCode},function(result){
-                	
+
                 	if(result != null){
-                		$("#_cmbWhBrnchIdPop").val(result.brnch);
-                		$("#_payBrnchCode").val(result.brnch);
-                        getLocIdByBrnchId(result.brnch);	
+                		//$("#_cmbWhBrnchIdPop").val(result.brnch);
+                		//$("#_payBrnchCode").val(result.brnch);
+                        //getLocIdByBrnchId(result.brnch);
                 	}else{
                 		Common.alert('<spring:message code="sal.alert.msg.memHasNoBrnch" />');
                 		$("#salesmanPopCd").val('');
@@ -711,21 +711,21 @@ function fn_loadOrderSalesman(memId, memCode, isPop) {
 
 
 function createAUIGrid(){
-    
-    
-    var posColumnLayout =  [ 
-                            {dataField : "posNo", headerText : '<spring:message code="sal.title.posNo" />', width : '8%' , editable : false}, 
+
+
+    var posColumnLayout =  [
+                            {dataField : "posNo", headerText : '<spring:message code="sal.title.posNo" />', width : '8%' , editable : false},
                             {dataField : "posDt", headerText : '<spring:message code="sal.title.salDate" />', width : '8%', editable : false},
                             {dataField : "userName", headerText : '<spring:message code="sal.title.memberId" />', width : '8%' , editable : false},
                             {dataField : "codeName", headerText : '<spring:message code="sal.title.posType" />', width : '8%' , editable : false},
                             {dataField : "codeName1", headerText : '<spring:message code="sal.title.salesType" />', width : '8%' , editable : false},
-                            {dataField : "taxInvcRefNo", headerText : '<spring:message code="sal.title.invoiceNo" />', width : '8%' , editable : false}, 
+                            {dataField : "taxInvcRefNo", headerText : '<spring:message code="sal.title.invoiceNo" />', width : '8%' , editable : false},
                             {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : '18%' , editable : false},
                             {dataField : "whLocCode", headerText : '<spring:message code="sal.text.branch" />', width : '8%' , style : 'left_style' , editable : false},
                             {dataField : "whLocCode", headerText : '<spring:message code="sal.title.warehouse" />', width : '8%' , editable : false},
                             {dataField : "posTotAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '8%' , editable : false},
                             {dataField : "stusId", headerText : "Status", width : '10%',
-                            	labelFunction : function( rowIndex, columnIndex, value, headerText, item) { 
+                            	labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
                                     var retStr = "";
                                     for(var i=0,len=arrPosStusCode.length; i<len; i++) {
                                         if(arrPosStusCode[i]["codeId"] == value) {
@@ -744,79 +744,79 @@ function createAUIGrid(){
                               }
                             } ,
                             {dataField : "posId", visible : false},
-                            {dataField : "posModuleTypeId", visible : false}, 
-                            {dataField : "posTypeId", visible : false}  
+                            {dataField : "posModuleTypeId", visible : false},
+                            {dataField : "posTypeId", visible : false}
                            ];
-    
+
     //그리드 속성 설정
     var gridPros = {
-            
+
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            fixedColumnCount    : 1,            
-            showStateColumn     : true,             
-            displayTreeOpen     : false,            
-       //     selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            fixedColumnCount    : 1,
+            showStateColumn     : true,
+            displayTreeOpen     : false,
+       //     selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true
     };
-    
+
     posGridID = GridCommon.createAUIGrid("#pos_grid_wrap", posColumnLayout,'', gridPros);  // address list
 }
 
 function fn_getPosListAjax(){
 
       Common.ajax("GET", "/sales/pos/selectPosJsonList", $("#searchForm").serialize(), function(result) {
-        
+
           AUIGrid.setGridData(posGridID, result);
       });
-      
+
 }
 
 /*************   Repoort *************/
 
 function fn_posReceipt(){
-	
+
 	var clickChk = AUIGrid.getSelectedItems(posGridID);
     //Validation
     if(clickChk == null || clickChk.length <= 0 ){
         Common.alert('<spring:message code="sal.alert.msg.noOrderSelected" />');
         return;
     }
-    
+
     console.log("clickChk[0].item.posModuleTypeId : " + clickChk[0].item.posModuleTypeId);
-    
+
     if(clickChk[0].item.posModuleTypeId == 2390){  //Pos Sales
-        
+
     	fn_report(clickChk[0].item.posNo, clickChk[0].item.posTypeId);
-        
+
     }else{
     	Common.alert('<spring:message code="sal.alert.msg.disallowPrint" />');
     	return;
     }
-	
+
 }
 
 
 function fn_report(posNo, posTypeId){
-	
+
 	//insert Log
 	fn_insTransactionLog(posNo, posTypeId);
-	
+
 	var option = {
-            isProcedure : true 
+            isProcedure : true
     };
-    
-	
+
+
 	//params Setting
 	$("#reportFileName").val("/sales/POSReceipt_New.rpt");
 	$("#viewType").val("PDF");
 	$("#V_POSREFNO").val(posNo);
 	$("#V_POSMODULETYPEID").val(posTypeId);
-	
+
 	Common.report("rptForm", option);
 }
 
@@ -830,7 +830,7 @@ function fn_insTransactionLog(posNo, posTypeId){
     transacMap.rptPath = getContextPath()+"/sales/POSReceipt_New.rpt";
     transacMap.rptParamtrValu = "@PosRefNo," + posNo + ";@POSModuleTypeID," + posTypeId;
     transacMap.rptRem = "";
-    
+
     Common.ajax("GET", "/sales/pos/insertTransactionLog", transacMap, function(result){
     	if(result == null){
     		Common.alert('<spring:message code="sal.alert.msg.failToSaveLog" />');
@@ -839,7 +839,7 @@ function fn_insTransactionLog(posNo, posTypeId){
     		console.log("insert log : " + result.message);
     	} */
     });
-		
+
 }
 
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -850,14 +850,14 @@ function fn_insTransactionLog(posNo, posTypeId){
     <input type="hidden" id="reportFileName" name="reportFileName" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType"  /><!-- View Type  -->
     <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
-    
+
     <!-- Receipt params -->
     <input type="hidden" id="V_POSREFNO" name="V_POSREFNO" />
     <input type="hidden" id="V_POSMODULETYPEID" name="V_POSMODULETYPEID" />
-    
+
     <!--Raw Data  -->
     <input type="hidden" id="V_WHERESQL" name="V_WHERESQL"/>
-    
+
     <!--Payment Listing  -->
     <input type="hidden" id="V_SHOWPAYMENTDATE" name="V_SHOWPAYMENTDATE">
     <input type="hidden" id="V_SHOWKEYINBRANCH" name="V_SHOWKEYINBRANCH">
@@ -866,7 +866,7 @@ function fn_insTransactionLog(posNo, posTypeId){
     <input type="hidden" id="V_SHOWKEYINUSER" name="V_SHOWKEYINUSER">
     <input type="hidden" id="V_SHOWPOSNO" name="V_SHOWPOSNO">
     <input type="hidden" id="V_SHOWMEMBERCODE" name="V_SHOWMEMBERCODE">
-    
+
 </form>
 <section id="content"><!-- content start -->
 <ul class="path">
@@ -929,7 +929,7 @@ function fn_insTransactionLog(posNo, posTypeId){
     <th scope="row"><spring:message code="sal.title.salDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate" id="_sDate" value="${bfDay}"/></p>  
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate" id="_sDate" value="${bfDay}"/></p>
     <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate"  id="_eDate" value="${toDay}"/></p>
     </div><!-- date_set end -->
@@ -955,7 +955,7 @@ function fn_insTransactionLog(posNo, posTypeId){
 <tr>
     <th scope="row"><spring:message code="sal.title.text.memNameDeduc" /></th>
     <td>
-        <input type="text" title="" placeholder="Member Name" class="w100p" name="deducMem" id="_deducMem" /> 
+        <input type="text" title="" placeholder="Member Name" class="w100p" name="deducMem" id="_deducMem" />
     </td>
     <th scope="row"><spring:message code="sal.title.text.memIcDeduc" /></th>
     <td colspan="3">
@@ -1012,7 +1012,7 @@ function fn_insTransactionLog(posNo, posTypeId){
     <li><p class="btn_blue2 big"><a id="_headerSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
 </ul>
 <!-- deduction Grid -->
-<div id="_deducGridDiv"> 
+<div id="_deducGridDiv">
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.text.deducMemList" /></h3>
 </aside><!-- title_line end -->
@@ -1030,7 +1030,7 @@ function fn_insTransactionLog(posNo, posTypeId){
 <aside class="title_line"><!-- title_line start -->
 <h3><spring:message code="sal.title.itmList" /></h3>
 </aside><!-- title_line end -->
-<article class="grid_wrap"><!-- grid_wrap start --> 
+<article class="grid_wrap"><!-- grid_wrap start -->
 <div id="itm_detail_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 
