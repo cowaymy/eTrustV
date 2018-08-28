@@ -148,7 +148,7 @@ public class BudgetController {
 		List<EgovMap> budgetList = null;
 
 		// add jgkim
-		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96};
+		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96, 206, 236};
 		List<Object> roleIdList = new ArrayList<Object>();
 		for(int i = 0; i < roleIds.length; i++) {
 			roleIdList.add(roleIds[i]);
@@ -295,7 +295,7 @@ public class BudgetController {
 		params.put("budgetAdjType", budgetAdjType);
 		params.put("appvStus", appvStus);
 
-		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96};
+		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96, 206, 236};
 		List<Object> roleIdList = new ArrayList<Object>();
 		for(int i = 0; i < roleIds.length; i++) {
 			roleIdList.add(roleIds[i]);
@@ -303,6 +303,11 @@ public class BudgetController {
 
 		if(roleIdList.indexOf(sessionVO.getRoleId()) >= 0) {
 			params.put("costCentr", sessionVO.getCostCentr());
+		}
+
+		if(sessionVO.getUserId() == 79333) {
+			params.put("costCentr", "A1701");
+			params.put("costCentr2", "A2101");
 		}
 
 		List<EgovMap> adjustmentList = null;
@@ -347,7 +352,7 @@ public class BudgetController {
 		LOGGER.debug("params =====================================>>  " + params);
 
 		// add jgkim
-		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96};
+		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96, 206, 236};
 		List<Object> roleIdList = new ArrayList<Object>();
 		for(int i = 0; i < roleIds.length; i++) {
 			roleIdList.add(roleIds[i]);
@@ -777,7 +782,7 @@ public class BudgetController {
 		List<EgovMap> budgetList = null;
 
 		// add jgkim
-		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96};
+		int[] roleIds = {87, 96, 279, 130, 264, 94, 155, 261, 104, 193, 207, 52, 82, 200, 180, 296, 254, 289, 96, 206, 236};
 		List<Object> roleIdList = new ArrayList<Object>();
 		for(int i = 0; i < roleIds.length; i++) {
 			roleIdList.add(roleIds[i]);
@@ -785,6 +790,11 @@ public class BudgetController {
 
 		if(roleIdList.indexOf(sessionVO.getRoleId()) >= 0) {
 			params.put("costCentr", sessionVO.getCostCentr());
+		}
+
+		if(sessionVO.getUserId() == 79333) {
+			params.put("costCentr", "A1701");
+			params.put("costCentr2", "A2101");
 		}
 
 		LOGGER.debug("params =====================================>>  " + params);
