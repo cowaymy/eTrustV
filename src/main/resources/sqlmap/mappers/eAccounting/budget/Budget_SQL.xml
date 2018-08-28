@@ -535,16 +535,16 @@ WHERE 1=1
           <choose>
           <when test="stDate != null and stDate !='' ">
                <if test="edDate != null and edDate != '' ">
-            AND B.BUDGET_ADJ_YEAR  || TO_CHAR(B.BUDGET_ADJ_MONTH,'FM00') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
+                    AND B.BUDGET_ADJ_YEAR  || TO_CHAR(B.BUDGET_ADJ_MONTH,'FM00') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
                </if>
                <if test="edDate == null or edDate == '' ">
-            AND  B.BUDGET_ADJ_YEAR  || TO_CHAR(B.BUDGET_ADJ_MONTH,'FM00') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
+                    AND  B.BUDGET_ADJ_YEAR  || TO_CHAR(B.BUDGET_ADJ_MONTH,'FM00') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
                 </if>
             </when>
-            <otherwise>
-            AND B.BUDGET_ADJ_YEAR   = #{budgetPlanYear}
-            AND B.BUDGET_ADJ_MONTH  = TO_CHAR(#{budgetPlanMonth}, 'FM00')
-            </otherwise>
+                <otherwise>
+                    AND B.BUDGET_ADJ_YEAR   = #{budgetPlanYear}
+                    AND B.BUDGET_ADJ_MONTH  = #{budgetPlanMonth}
+                </otherwise>
             </choose>
             AND B.COST_CENTR         = #{costCentr}
             AND B.BUDGET_CODE        = #{budgetCode}
