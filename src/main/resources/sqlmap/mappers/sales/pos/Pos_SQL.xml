@@ -368,12 +368,12 @@
 				SELECT
                     T1.MEM_CODE,
                     T1.MEM_ID,
-                    '' AS BRNCH
-                    --T1.BRNCH
+                    T1.BRNCH
                 FROM
-                    ORG0001D T1 INNER JOIN SYS0047M T2
+                    ORG0001D T1 LEFT JOIN SYS0047M T2
                 ON
-                    T1.MEM_CODE = T2.USER_NAME
+                    --T1.MEM_CODE = T2.USER_NAME
+                    T1.MEM_CODE = T2.HR_CODE
                 WHERE 1 = 1
                     <if test=" userId != null and userId != ''">
                     AND T2.USER_ID = #{userId}
