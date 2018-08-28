@@ -39,6 +39,7 @@ import com.coway.trust.biz.payment.payment.service.SearchPaymentService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
 import com.coway.trust.biz.payment.reconciliation.service.ReconciliationSearchVO;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sample.SampleDefaultVO;
 import com.coway.trust.biz.sample.SampleService;
 import com.coway.trust.biz.sample.SampleVO;
@@ -62,6 +63,9 @@ public class SearchPaymentController {
 
 	@Resource(name = "searchPaymentService")
 	private SearchPaymentService searchPaymentService;
+
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
 
 	/******************************************************
 	 * Search Payment
@@ -1055,7 +1059,18 @@ public class SearchPaymentController {
 	 * @return
 	 */
 	@RequestMapping(value = "/initRCByBSAgingMonth.do")
-	public String initRCByBSAgingMonth(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String initRCByBSAgingMonth(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+
+			params.put("userId", sessionVO.getUserId());
+			EgovMap result =  salesCommonService.getUserInfo(params);
+
+			model.put("orgCode", result.get("orgCode"));
+			model.put("grpCode", result.get("grpCode"));
+			model.put("deptCode", result.get("deptCode"));
+			model.put("memCode", result.get("memCode"));
+		}
+
 		return "payment/payment/rentalCollectionByBSAgingMonth";
 	}
 
