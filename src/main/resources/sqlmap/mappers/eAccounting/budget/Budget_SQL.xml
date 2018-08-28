@@ -493,11 +493,11 @@ WHERE 1=1
                                ,SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT
                                ,SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT
                                ,SUM(A.NET_AMT ) APP_AMT_TOTAL
-                               ,MAX(A.INVC_DT) AS INVC_DT
+                               ,MAX(A.CRT_DT) AS INVC_DT
                        FROM FCM0015D A, FCM0004M B
                      WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
                          AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
-                         AND TO_CHAR(A.INVC_DT, 'YYYYMM') =  #{budgetPlanYear}||TO_CHAR(#{budgetPlanMonth}, 'FM00')
+                         AND TO_CHAR(A.CRT_DT, 'YYYYMM') =  #{budgetPlanYear}||TO_CHAR(#{budgetPlanMonth}, 'FM00')
                      GROUP BY A.COST_CENTR, A.BUDGET_CODE, A.GL_ACC_CODE
                  )   C
                         ON A.BUDGET_PLAN_YEAR = TO_CHAR(C.INVC_DT, 'YYYY')
@@ -583,8 +583,8 @@ WHERE 1=1
                 </if>
             </when>
             <otherwise>
-            AND TO_CHAR(B.INVC_DT, 'yyyy')   = #{budgetPlanYear}
-            AND TO_CHAR(B.INVC_DT, 'mm')   = TO_CHAR(#{budgetPlanMonth}, 'FM00')
+            AND TO_CHAR(B.CRT_DT, 'yyyy')   = #{budgetPlanYear}
+            AND TO_CHAR(B.CRT_DT, 'mm')   = TO_CHAR(#{budgetPlanMonth}, 'FM00')
             </otherwise>
             </choose>
             AND B.COST_CENTR         = #{costCentr}
@@ -631,6 +631,9 @@ WHERE 1=1
         <if test="costCentr != null and costCentr != ''">
           AND B.COST_CENTR    = #{costCentr}
           </if>
+          <if test="costCentr2 != null and costCentr2 != '' " >
+            OR B.COST_CENTR = #{costCentr2}
+         </if>
         <if test="budgetCode != null and budgetCode != ''">
           AND B.BUDGET_CODE  = #{budgetCode}
           </if>
@@ -1059,6 +1062,9 @@ WHERE 1=1
         WHERE 1=1
          <if test="costCentr != null and costCentr != '' " >
             AND A.COST_CENTR = #{costCentr}
+         </if>
+         <if test="costCentr2 != null and costCentr2 != '' " >
+            OR A.COST_CENTR = #{costCentr2}
          </if>
         <if test="stYearMonth != null and stYearMonth != '' " >
             <if test="edYearMonth != null and edYearMonth != '' ">
