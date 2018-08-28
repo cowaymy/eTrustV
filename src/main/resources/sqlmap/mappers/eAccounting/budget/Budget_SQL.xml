@@ -576,10 +576,10 @@ WHERE 1=1
          <choose>
           <when test="stDate != null and stDate !='' ">
                <if test="edDate != null and edDate != '' ">
-            AND TO_CHAR(B.INVC_DT, 'yyyymm') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
+            AND TO_CHAR(A.CRT_DT, 'yyyymm') BETWEEN TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm') AND TO_CHAR(TO_DATE(REPLACE(#{edDate},'/',''), 'mmyyyy'), 'yyyymm')
                </if>
                <if test="edDate == null or edDate == '' ">
-            AND  TO_CHAR(B.INVC_DT, 'yyyymm') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
+            AND  TO_CHAR(A.CRT_DT, 'yyyymm') = TO_CHAR(TO_DATE(REPLACE(#{stDate},'/',''), 'mmyyyy'), 'yyyymm')
                 </if>
             </when>
             <otherwise>
@@ -1037,16 +1037,16 @@ WHERE 1=1
                                ,SUM(CASE WHEN B.APPV_PRCSS_STUS IN ( 'R' ,'P' ) THEN A.NET_AMT ELSE 0 END ) AS PEND_APPV_AMT
                                ,SUM(CASE WHEN B.APPV_PRCSS_STUS = 'A'  THEN A.NET_AMT ELSE 0 END ) AS CONSUM_APPV_AMT
                                ,SUM(A.NET_AMT ) APP_AMT_TOTAL
-                               ,MAX(A.INVC_DT) AS INVC_DT
+                               ,MAX(A.CRT_DT) AS INVC_DT
                        FROM FCM0015D A, FCM0004M B
                      WHERE  A.APPV_PRCSS_NO   = B.APPV_PRCSS_NO
                          AND B.APPV_PRCSS_STUS IN( 'R' ,'P' ,'A')
                          <if test="stYearMonth != null and stYearMonth != '' " >
                             <if test="edYearMonth != null and edYearMonth != '' ">
-                                AND TO_CHAR(A.INVC_DT, 'YYYYMM') BETWEEN TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00') AND TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'MM')), 'FM00')
+                                AND TO_CHAR(A.CRT_DT, 'YYYYMM') BETWEEN TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00') AND TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{edYearMonth},'mm/yyyy'), 'MM')), 'FM00')
                             </if>
                             <if test="edYearMonth == null or edYearMonth == '' ">
-                                AND TO_CHAR(A.INVC_DT, 'YYYYMM') = TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00')
+                                AND TO_CHAR(A.CRT_DT, 'YYYYMM') = TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'YYYY')|| TO_CHAR(TRIM(LEADING '0' FROM TO_CHAR(TO_DATE(#{stYearMonth},'mm/yyyy'), 'MM')), 'FM00')
                             </if>
                          </if>
                      GROUP BY A.COST_CENTR, A.BUDGET_CODE, A.GL_ACC_CODE
