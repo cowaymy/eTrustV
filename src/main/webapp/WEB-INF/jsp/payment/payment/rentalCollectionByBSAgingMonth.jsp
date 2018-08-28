@@ -49,10 +49,10 @@ var columnLayout = [
     , {dataField : "telF", headerText : "<spring:message code='pay.head.fax'/>", editable : false}
     , {dataField : "payMode", headerText : "<spring:message code='pay.head.payMode'/>", editable : false}
     , {dataField : "deductStus", headerText : "<spring:message code='pay.head.deductStus'/>", editable : false}
-    , {dataField : "accDebtSubCurrAdj", headerText : "<spring:message code='pay.head.targetAmt'/>", editable : false, width : 150,dataType:"numeric", formatString:"###0.#"}
+    , {dataField : "accDebtSubOpngColctTrget", headerText : "<spring:message code='pay.head.targetAmt'/>", editable : false, width : 150,dataType:"numeric", formatString:"###0.#"}
     , {dataField : "accDebtSubCurrColct", headerText : "<spring:message code='commissiom.text.excel.collectionAmt'/>", editable : false, width : 150, dataType:"numeric"}
-    , {dataField : "accDebtSubTotOtstnd", headerText : "<spring:message code='commissiom.text.excel.adjAmt'/>", editable : false, width : 150, dataType : "numeric", formatString : "#,##0.##"}
-    , {dataField : "accDebtSubOpngColctTrget", headerText : "<spring:message code='pay.head.balance'/>", editable : false, width : 120, dataType : "numeric", formatString : "#,##0.##"}
+    , {dataField : "accDebtSubCurrAdj", headerText : "<spring:message code='commissiom.text.excel.adjAmt'/>", editable : false, width : 150, dataType : "numeric", formatString : "#,##0.##"}
+    , {dataField : "accDebtSubTotOtstnd", headerText : "<spring:message code='pay.head.balance'/>", editable : false, width : 120, dataType : "numeric", formatString : "#,##0.##"}
     ];
 
     // ajax list 조회.
