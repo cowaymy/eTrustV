@@ -251,7 +251,7 @@
                     }
                     // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
                     else if(result.data.userTypeId == "2") {
-
+                        console.log("Cody");
                         // Check agreement confirmation status from HP Applicant table
                         Common.ajax("GET", "/organization/getCDInfo", {userId : userId}, function(result1) {
                             if(result1.status == "Y") {
