@@ -168,12 +168,12 @@ function fn_Clear(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-                        <li><p class="link_btn type2"><a href="javascript:fn_cmmSearchInvoicePop();"><spring:message code='pay.btn.link.newCnDnReq'/></a></p></li>
-                        </c:if>
-                        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('BATCH_REQ');"><spring:message code='pay.btn.link.newBatchReq'/></a></p></li>
-                        </c:if>
+                      <!--  <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">  -->
+                      <!--  <li><p class="link_btn type2"><a href="javascript:fn_cmmSearchInvoicePop();"><spring:message code='pay.btn.link.newCnDnReq'/></a></p></li>  -->
+                      <!--  </c:if>  -->
+                      <!--  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">  -->
+                      <!--  <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('BATCH_REQ');"><spring:message code='pay.btn.link.newBatchReq'/></a></p></li>  -->
+                       <!-- </c:if>  -->
                         <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
                         <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('SUMMARY');"><spring:message code='pay.btn.link.genSummaryList'/></a></p></li>
                         </c:if>
