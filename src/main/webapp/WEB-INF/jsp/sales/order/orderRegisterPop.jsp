@@ -352,7 +352,8 @@
                     if(custInfo.gstChk == '1') {
                         $("#gstChk").val('1').prop("disabled", true);
                         $("#pBtnCal").removeClass("blind");
-                        fn_tabOnOffSet('REL_CER', 'SHOW');
+                        //fn_tabOnOffSet('REL_CER', 'SHOW');
+                        fn_tabOnOffSet('REL_CER', 'HIDE');
                     }
                     else {
                         $("#gstChk").val('0').prop("disabled", true);
@@ -754,7 +755,8 @@
         $('#gstChk').change(function(event) {
             if($("#gstChk").val() == '1') {
                 $('#pBtnCal').removeClass("blind");
-                fn_tabOnOffSet('REL_CER', 'SHOW');
+                //fn_tabOnOffSet('REL_CER', 'SHOW');
+                fn_tabOnOffSet('REL_CER', 'HIDE');
                 GST_MANNUAL = 'Y';
             }
             else {
@@ -852,7 +854,8 @@
                             if(GST_CHK == '1') {
                                 $("#gstChk").val('1').removeAttr("disabled");
                                 $("#pBtnCal").removeClass("blind");
-                                fn_tabOnOffSet('REL_CER', 'SHOW');
+                                //fn_tabOnOffSet('REL_CER', 'SHOW');
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
                             }
                             else {
                                 $("#gstChk").val('0').removeAttr("disabled");
@@ -870,7 +873,8 @@
                             if(GST_CHK == '1') {
                                 $("#gstChk").val('1').removeAttr("disabled");
                                 $("#pBtnCal").removeClass("blind");
-                                fn_tabOnOffSet('REL_CER', 'SHOW');
+                                //fn_tabOnOffSet('REL_CER', 'SHOW');
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
                             }
                             else {
                                 $("#gstChk").val('0').removeAttr("disabled");
@@ -890,7 +894,8 @@
                             if(GST_CHK == '1') {
                                 $("#gstChk").val('1').removeAttr("disabled");
                                 $("#pBtnCal").removeClass("blind");
-                                fn_tabOnOffSet('REL_CER', 'SHOW');
+                                //fn_tabOnOffSet('REL_CER', 'SHOW');
+                                fn_tabOnOffSet('REL_CER', 'HIDE');
                             }
                             else {
                                 $("#gstChk").val('0').removeAttr("disabled");
