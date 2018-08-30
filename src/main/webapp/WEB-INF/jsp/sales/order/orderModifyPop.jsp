@@ -3191,13 +3191,13 @@
 <tbody>
 <tr>
     <th scope="row"><spring:message code="sal.text.refNo" /><span class="must">*</span></th>
-    <td><input id="certRefNo" name="certRefNo" type="text" title="" placeholder="Cert Reference No" class="w100p" /></td>
+    <td><input id="certRefNo" name="certRefNo" type="text" title="" placeholder="Cert Reference No" class="w100p" disabled /></td>
     <th scope="row"><spring:message code="sal.title.text.certificateDate" /><span class="must">*</span></th>
-    <td><input id="certRefDt" name="certRefDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" /></td>
+    <td><input id="certRefDt" name="certRefDt" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p"  disabled/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.gstRegistrationNo" /></th>
-    <td colspan="3"><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" /></td>
+    <td colspan="3"><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p"  disabled/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="sal.title.text.appType" /></th>
@@ -3211,14 +3211,14 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
-    <td colspan="3"><textarea id="txtCertRemark" name="txtCertRemark" cols="20" rows="5"></textarea></td>
+    <td colspan="3"><textarea id="txtCertRemark" name="txtCertRemark" cols="20" rows="5" disabled></textarea></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.title.text.uploadReliefZipFile" /></th>
     <td colspan="3">
         <!-- auto_file start -->
         <div class="auto_file2">
-            <input id="certRefFile" name="certRefFile" type="file" title="file add" />
+            <input id="certRefFile" name="certRefFile" type="file" title="file add"  disabled/>
         </div>
         <!-- auto_file end -->
     </td>
@@ -3228,9 +3228,9 @@
 
 </form>
 </section><!-- search_table end -->
-<ul class="center_btns">
-	<li><p class="btn_blue2"><a id="btnSaveGstCert" name="btnSaveGstCert" href="#"><spring:message code="sal.btn.save" /></a></p></li>
-</ul>
+<!--<ul class="center_btns">-->
+<!--	<li><p class="btn_blue2"><a id="btnSaveGstCert" name="btnSaveGstCert" href="#"><spring:message code="sal.btn.save" /></a></p></li>-->
+<!--</ul>-->
 </section>
 <!------------------------------------------------------------------------------
     GST Certification Edit END
