@@ -217,12 +217,14 @@ public class SalesPlanManagementController {
 		LOGGER.debug("addMonth_Param : {}", params.toString());
 
 		List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentList(params);
-
+		List<EgovMap> seperationInfo = salesPlanMngementService.selectSeperation(params);
 
 		Map<String, Object> map = new HashMap<>();
 
 		//main Data
+		map.put("planInfo", planInfo);
 		map.put("salesPlanMainList", selectSalesPlanMngmentList);
+		map.put("seperationInfo", seperationInfo);
 
 		return ResponseEntity.ok(map);
 	}
@@ -345,7 +347,7 @@ public class SalesPlanManagementController {
 
 		return ResponseEntity.ok(message);
 	}
-
+/*
 	@RequestMapping(value = "/saveInsScmSalesPlan.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveInsScmSalesPlan(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
 	{
@@ -371,13 +373,26 @@ public class SalesPlanManagementController {
 
 		return ResponseEntity.ok(message);
 	}
-
+	*/
+	/*
 	@RequestMapping(value = "/insertSalesPlanMaster.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertSalesPlanMaster(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 
 		LOGGER.debug("insertSalesPlanMaster_params : {}", params);
 
 		int createCnt =salesPlanMngementService.selectCreateCount(params);
+		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);
+		//int createdCnt	= salesPlanMngementService
+		
+		ReturnMessage message	= new ReturnMessage();
+		
+		if ( ! planInfo.isEmpty() ) {
+			//	already has plan
+			message.setCode(AppConstants.FAIL);
+			message.setMessage("Already has plan");
+		} else {
+			
+		}
 		
 		LOGGER.info("salesPlan Create카운트 ?????    : {}", createCnt);
 		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
@@ -386,7 +401,7 @@ public class SalesPlanManagementController {
 		int resCnt = 0;
 
 		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
+		
 		
 		if(createCnt > 0){
 			message.setCode(AppConstants.FAIL);
@@ -402,6 +417,38 @@ public class SalesPlanManagementController {
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
+		}
+		
+		return ResponseEntity.ok(message);
+	}
+*/
+	@RequestMapping(value = "/insertSalesPlanMaster.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertSalesPlanMaster(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+
+		LOGGER.debug("insertSalesPlanMaster_params : {}", params);
+
+		int createdCnt	= salesPlanMngementService.selectCreateCount(params);
+		
+		LOGGER.info("salesPlan Create카운트 ?????    : {}", createdCnt);
+		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
+		int tmpCnt = 0;
+		int totCnt = 0;
+		int resCnt = 0;
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		
+		if ( createdCnt > 0 ) {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		} else {
+			tmpCnt	= salesPlanMngementService.insertSalesPlanMaster(params, sessionVO);
+			resCnt	= salesPlanMngementService.updateSalesPlanMasterMonthly(params, sessionVO);
+			totCnt	= totCnt + tmpCnt;
+			
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(totCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		}
 		
 		return ResponseEntity.ok(message);
