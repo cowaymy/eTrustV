@@ -207,4 +207,10 @@ private static Logger logger = LoggerFactory.getLogger(eRequestCancellationContr
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value="/eRequestRawDataPop.do")
+	public String orderCancelRequestRawDataPop(){
+
+		return "sales/order/eRequestRawDataPop";
+	}
+
 }
