@@ -224,7 +224,13 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		    int m2Sum = 0;
 		    int m3Sum = 0;
 		    int m4Sum = 0;
-
+		    
+		    LOGGER.debug(" >>>>> iM0TotCnt : " + iM0TotCnt);
+		    LOGGER.debug(" >>>>> iM1TotCnt : " + iM1TotCnt);
+		    LOGGER.debug(" >>>>> iM2TotCnt : " + iM2TotCnt);
+		    LOGGER.debug(" >>>>> iM3TotCnt : " + iM3TotCnt);
+		    LOGGER.debug(" >>>>> iM4TotCnt : " + iM4TotCnt);
+		    
 			for(int m1=0;m1<Integer.parseInt(iM0TotCnt);m1++){
 				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
 
@@ -232,10 +238,19 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	            {
 	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
 	            }
-
+	            
+	            LOGGER.debug(" >>>>> intToStrFieldCnt : " + intToStrFieldCnt);
+	            
 		        if (Integer.parseInt(chield.get(m1).get("weekTh").toString()) <  Integer.parseInt(weekth) && m1 != Integer.parseInt(iM0TotCnt)-1 ){
+		        	LOGGER.debug(" >>>>> if true : " );
 		        } else {
-		        	m0Sum = m0Sum+Integer.parseInt(getReplaceStr(((Map<String, Object>) obj).get("w"+intToStrFieldCnt).toString(),",",""));
+		        	LOGGER.debug(" >>>>> if false : " + ((Map<String, Object>) obj));
+		        	LOGGER.debug(" >>>>> if false : " + ((Map<String, Object>) obj).get("w" + intToStrFieldCnt));
+		        	//LOGGER.debug(" >>>>> if false : " + ((Map<String, Object>) obj).get("w" + intToStrFieldCnt).toString());
+		        	//	w00이 null로 들어오는 경우가 있음 : 스플릿 주차
+		        	if ( null !=  ((Map<String, Object>) obj).get("w" + intToStrFieldCnt) ) {
+		        		m0Sum = m0Sum+Integer.parseInt(getReplaceStr(((Map<String, Object>) obj).get("w"+intToStrFieldCnt).toString(),",",""));
+		        	}
 		        	iLootDataFieldCnt++;
 	            }
 			}
@@ -1260,15 +1275,15 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	public int updateSalesPlanMasterMonthly(Map<String, Object> params, SessionVO sessionVO)
 	{
 
-		List<EgovMap> salesList = salesPlanMngementMapper.selectSalesPlanList(params);
+		List<EgovMap> salesList = salesPlanMngementMapper.selectSalesPlanList(params);	//	Plan 대상
 
-		List<EgovMap> monthList = salesPlanMngementMapper.selectScmMonth(params);
+		List<EgovMap> monthList = salesPlanMngementMapper.selectScmMonth(params);		//	선택한 주차의 월
 
 		String planMonth = monthList.get(0).get("scmMonth").toString();
 
 		params.put("selectPlanMonth", planMonth);
 
-		List<EgovMap> chield = salesPlanMngementMapper.selectChildField(params);
+		List<EgovMap> chield = salesPlanMngementMapper.selectChildField(params);		//	M0 ~ M3 까지의 월별 주차수
 
 		List<EgovMap> seperaionMap = salesPlanMngementMapper.selectSeperation2(params);
 
@@ -1331,7 +1346,26 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			String intToStrFieldCnt ="";
 		    int iLootDataFieldCnt = 0;
 
-			for(int m1=0;m1<Integer.parseInt(iM0TotCnt);m1++){
+		    for ( int j = 0 ; j < Integer.parseInt(iM0TotCnt) ; j++ ) {
+		    	LOGGER.debug(" 0 loop ========== j : " + j);
+		    	intToStrFieldCnt	= String.valueOf(iLootDataFieldCnt);
+		    	LOGGER.debug(" 1 loop ========== intToStrFieldCnt : " + intToStrFieldCnt);
+		    	if ( 1 == intToStrFieldCnt.length() ) {
+		    		intToStrFieldCnt	= "0" + intToStrFieldCnt;
+		    		LOGGER.debug(" 2 loop ========== intToStrFieldCnt : " + intToStrFieldCnt);
+		    	}
+		    	LOGGER.debug(" 3 loop ========== Integer.parseInt(chield.get(j).get('weekTh').toString()) : " + Integer.parseInt(chield.get(j).get("weekTh").toString()));
+		    	LOGGER.debug(" 4 loop ========== Integer.parseInt(weekth) : " + Integer.parseInt(weekth));
+		    	LOGGER.debug(" 5 loop ========== Integer.parseInt(iM0TotCnt) - 1 : " + (Integer.parseInt(iM0TotCnt) - 1));
+		    	if ( Integer.parseInt(chield.get(j).get("weekTh").toString()) < Integer.parseInt(weekth) && j != Integer.parseInt(iM0TotCnt) - 1 ) {
+		    		LOGGER.debug(" 6 loop ========== true : ");
+		    	} else {
+		    		m0Sum	= m0Sum + Integer.parseInt(getReplaceStr(params.get("w" + intToStrFieldCnt).toString(), ",", ""));
+		    		LOGGER.debug(" 7 loop ========== m0Sum : " + m0Sum);
+		    		iLootDataFieldCnt++;
+		    	}
+		    }
+/*			for(int i=0;i<Integer.parseInt(iM0TotCnt);i++){
 				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
 
 	            if (intToStrFieldCnt.length() == 1)
@@ -1339,12 +1373,12 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
 	            }
 
-		        if (Integer.parseInt(chield.get(m1).get("weekTh").toString()) <  Integer.parseInt(weekth) && m1 != Integer.parseInt(iM0TotCnt)-1 ){
+		        if (Integer.parseInt(chield.get(i).get("weekTh").toString()) <  Integer.parseInt(weekth) && i != Integer.parseInt(iM0TotCnt)-1 ){
 		        } else {
 		        	m0Sum = m0Sum+Integer.parseInt(getReplaceStr(params.get("w"+intToStrFieldCnt).toString(),",",""));
 		        	iLootDataFieldCnt++;
 	            }
-			}
+			}*/
 
 			String intToStrFieldCnt2 ="";
 			int iLootDataFieldCnt2 = 0;
