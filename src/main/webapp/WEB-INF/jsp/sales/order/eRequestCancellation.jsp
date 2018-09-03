@@ -276,6 +276,10 @@ $.fn.clearForm = function() {
     });
 };
 
+function fn_rawData(){
+    Common.popupDiv("/sales/order/eRequestRawDataPop.do", null, null, true);
+}
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -426,6 +430,23 @@ $.fn.clearForm = function() {
 </tr>
 </tbody>
 </table><!-- table end -->
+
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+<dl class="link_list">
+    <dt>Link</dt>
+    <dd>
+    <ul class="btns">
+    <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+        <li><p class="link_btn type2"><a href="#" onClick="fn_rawData()"><spring:message code="sal.btn.requestRawData" /></a></p></li>
+    </c:if>
+    </ul>
+    <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+    </dd>
+</dl>
+</aside><!-- link_btns_wrap end -->
+
+
 
 </form>
 
