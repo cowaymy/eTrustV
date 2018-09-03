@@ -230,7 +230,8 @@ WITH SALES_PLAN_SUMMARY
 			  WHERE SCM_YEAR =  #{scmYearCbBox}
 			   AND SCM_MONTH =  #{selectPlanMonth}
 			   AND WEEK_TH <![CDATA[ < ]]> #{scmPeriodCbBox}
-			   AND NVL(USE_YN,'Y')='Y'
+			   AND USE_YN = 'Y'
+			   /*AND NVL(USE_YN,'Y')='Y' */
     </select>
 
     <select id="selectChildField" parameterType="Map" resultType="egovMap">
@@ -242,7 +243,7 @@ WITH SALES_PLAN_SUMMARY
 		        ,SCM_YYYYMM
 		        ,ROWNUM ROW_SEQ
 		  FROM SCM0018M
-		 WHERE to_char(week_th_sn_end,'YYYYMM') = #{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0)    AND NVL (USE_YN, 'Y') = 'Y'
+		 WHERE to_char(week_th_sn_end,'YYYYMM') = #{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0) AND USE_YN = 'Y'  /* AND NVL (USE_YN, 'Y') = 'Y' */
 		 ORDER BY WEEK_TH
     </select>
 
@@ -257,7 +258,8 @@ WITH SALES_PLAN_SUMMARY
    FROM SCM0018M
   WHERE SCM_YEAR =  #{scmYearCbBox}
     AND SCM_MONTH = #{selectPlanMonth}
-    AND NVL(USE_YN,'Y')='Y'
+    AND USE_YN = 'Y'
+    /*AND NVL(USE_YN,'Y')='Y'*/
     AND WEEK_TH_SN = 1
   ORDER BY WEEK_TH
 </select>
@@ -281,7 +283,8 @@ WITH SALES_PLAN_SUMMARY
                  FROM SCM0018M
                 WHERE SCM_YEAR  = #{scmYearCbBox}
                   AND SCM_MONTH = #{scmMonthCbBox}
-                  AND NVL(USE_YN,'Y')='Y'
+                  AND USE_YN = 'Y'
+                  /*AND NVL(USE_YN,'Y')='Y'*/
                   AND WEEK_TH_SN = 1
             )
             SELECT *
@@ -308,7 +311,8 @@ WITH SALES_PLAN_SUMMARY
 					  FROM SCM0018M
 					 WHERE SCM_YEAR =  #{scmYearCbBox}
 					   AND SCM_MONTH = #{selectPlanMonth}
-					   AND NVL(USE_YN,'Y')='Y'
+					   /*AND NVL(USE_YN,'Y')='Y'*/
+					   AND USE_YN = 'Y'
 					   GROUP BY SCM_YEAR,SCM_MONTH
 					  ) M0
 					,
@@ -327,7 +331,8 @@ WITH SALES_PLAN_SUMMARY
              AND SCM_MONTH = (#{selectPlanMonth} +1)
         </otherwise>
       </choose>
- 			       AND NVL(USE_YN,'Y')='Y'
+ 			       /*AND NVL(USE_YN,'Y')='Y'*/
+ 			       AND USE_YN = 'Y'
 					 GROUP BY SCM_YEAR,SCM_MONTH
 					) M1
 					,
@@ -346,7 +351,8 @@ WITH SALES_PLAN_SUMMARY
              AND SCM_MONTH = (#{selectPlanMonth} +2)
         </otherwise>
       </choose>
-					   AND NVL(USE_YN,'Y')='Y'
+					   /*AND NVL(USE_YN,'Y')='Y'*/
+					   AND USE_YN = 'Y'
 					   GROUP BY SCM_YEAR,SCM_MONTH
 					) M2
 					,
@@ -365,7 +371,8 @@ WITH SALES_PLAN_SUMMARY
              AND SCM_MONTH = (#{selectPlanMonth} +3)
         </otherwise>
       </choose>
-					   AND NVL(USE_YN,'Y')='Y'
+					   /*AND NVL(USE_YN,'Y')='Y'*/
+					   AND USE_YN = 'Y'
 					   GROUP BY SCM_YEAR,SCM_MONTH
 					) M3
 			WHERE ROWNUM = 1
@@ -385,7 +392,8 @@ WITH SALES_PLAN_SUMMARY
        WHERE SCM_YEAR = #{scmYearCbBox}
          AND WEEK_TH  = #{scmPeriodCbBox}
          AND WEEK_TH_SN = 1
-         AND NVL(USE_YN,'Y')='Y'
+         /*AND NVL(USE_YN,'Y')='Y'*/
+         AND USE_YN = 'Y'
     </select>
 
     <select id="selectPeriodByYear" parameterType="Map" resultType="egovMap">
@@ -396,7 +404,8 @@ WITH SALES_PLAN_SUMMARY
 			  FROM SCM0018M
 			 WHERE SCM_YEAR = #{year}
 			   AND WEEK_TH_SN = 1
-			   AND NVL(USE_YN,'Y')='Y'
+			   /*AND NVL(USE_YN,'Y')='Y'*/
+			   AND USE_YN = 'Y'
     </select>
 
     <select id="selectScmTeamCode" parameterType="Map" resultType="egovMap">
@@ -471,168 +480,233 @@ SELECT A.PLAN_ID
      , A.PLAN_MONTH
      , A.PLAN_WEEK
      , A.TEAM
-     , DECODE(A.PLAN_STUS_ID, 1, 'Active', 'Confirmed') AS PLAN_STUS_NM
+     , DECODE(A.PLAN_STUS_ID, 4, 'Active', 'Confirmed') AS PLAN_STUS_NM
      , TO_CHAR(A.CRT_DT, 'YYYY/MM/DD HH24:MI:SS') AS CRT_DT
      , A.STUS_DT
      , A.CRT_USER_ID
      , A.PLAN_STUS_ID
+     , DECODE(A.CRT_DT, NULL, '0', '1') AS CREATED
   FROM SCM0001M A
  WHERE A.PLAN_YEAR = #{scmYearCbBox}
    AND A.PLAN_WEEK = #{scmPeriodCbBox}
 	<if test="scmTeamCbBox != null and scmTeamCbBox !=''">
    AND A.TEAM = #{scmTeamCbBox}
 	</if>
-   AND ROWNUM = 1
 </select>
 
+
 <select id="selectSalesPlanMngmentList" parameterType="Map" resultType="egovMap">
-
-
- SELECT   
-                (SELECT PLAN_STUS_ID
-                    FROM SCM0001M
-                   WHERE PLAN_ID = PLAN_MASTER_ID
-                 ) CHECK_FLAG,
-                 S_O.PLAN_MASTER_ID,
-                 S_O.team,
-                 S_O.STK_TYPE_ID,
-                 S_O.category,
-                 S_O.code,
-                 S_O.name,
-                 ROUND (FN_GET_SCM_SCM0002D(S_O.code,'PRE_M3_AVG_ISSU'  ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID )) || '/' || ROUND (FN_GET_SCM_SCM0002D(S_O.code,'PRE_M3_AVG_ORDED'  ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID )) M3_AVG_Issue_Order,  
-                 ROUND (FN_GET_SCM_SCM0002D(S_O.code,'M_1'  ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID )) || '/' || ROUND (FN_GET_SCM_SCM0002D(S_O.code,'M1_ORD'  ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) ) M1_ISSUE_ORDER,
-                 FN_GET_SCM_SCM0002D(S_O.code,'M0_PLAN' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) ||'/'|| FN_GET_SCM_SCM0002D(S_O.code,'M0_ORD' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID )   M0_PLAN_ORDER ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'M1' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) M1 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'M2' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) M2 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'M3' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) M3 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'M4' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) M4 ,
-                 FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(S_O.code,'STOCK_CODE' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) ,  FN_GET_SCM_SCM0002D(S_O.code,'TEAM' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) ,'2018','2',('6' -4) ) BEF_4_WEEK_TH,
-                 FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(S_O.code,'STOCK_CODE' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) ,  FN_GET_SCM_SCM0002D(S_O.code,'TEAM' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) ,'2018','2',('6' -3) ) BEF_3_WEEK_TH,
-                 FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(S_O.code,'STOCK_CODE' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) ,  FN_GET_SCM_SCM0002D(S_O.code,'TEAM' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) ,'2018','2',('6' -2) ) BEF_2_WEEK_TH,
-                 FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(S_O.code,'STOCK_CODE' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) ,  FN_GET_SCM_SCM0002D(S_O.code,'TEAM' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) ,'2018','2',('6' -1) ) BEF_1_WEEK_TH,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W00' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W00 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W01' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W01 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W02' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W02 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W03' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W03 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W04' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W04 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W05' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W05 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W06' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W06 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W07' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W07 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W08' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W08 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W09' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W09 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W10' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W10 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W11' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W11 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W12' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W12 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W13' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W13 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W14' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W14 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W15' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W15 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W16' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W16 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W17' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W17 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W18' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W18 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W19' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W19 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W20' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W20 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W21' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W21 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W22' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W22 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W23' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W23 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W24' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W24 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W25' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W25 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W26' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W26 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W27' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W27 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W28' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W28 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'W29' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W29 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'W30' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) W30 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'WS1' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) WS1 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'WS2' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) WS2 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'WS3' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) WS3 , 
-                 FN_GET_SCM_SCM0002D(S_O.code,'WS4' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) WS4 ,
-                 FN_GET_SCM_SCM0002D(S_O.code,'WS5' ,S_O.PLAN_MASTER_ID ,  S_O.STK_TYPE_ID ) WS5    
-              FROM       
-                   ( SELECT   SCM39V.PLAN_DTL_ID,
-                             SCM39V.PLAN_MASTER_ID,
-                             SCM39V.TEAM team,
-                             SCM39V.STK_TYPE_ID,
-                             SCM39V.STOCK_CODE code,
-                             SCM39V.PRE_M3_AVG_ORDED,
-                             SCM39V.PRE_M3_AVG_ISSU,
-                             SCM39V.M1_ORD,
-                             SCM39V.M2_ORD,
-                             SCM39V.M3_ORD,
-                             SCM39V.M_3,
-                             SCM39V.M_2,
-                             SCM39V.M_1,
-                             SCM39V.M0_PLAN M0_PLAN,
-                             SCM39V.M0_ORD M0_ORD,
-                             SCM39V.M1,
-                             SCM39V.M2,
-                             SCM39V.M3,
-                             SCM39V.M4,
-                             SCM39V.W00,
-                             SCM39V.W01,
-                             SCM39V.W02,
-                             SCM39V.W03,
-                             SCM39V.W04,
-                             SCM39V.W05,
-                             SCM39V.W06,
-                             SCM39V.W07,
-                             SCM39V.W08,
-                             SCM39V.W09,
-                             SCM39V.W10,
-                             SCM39V.W11,
-                             SCM39V.W12,
-                             SCM39V.W13,
-                             SCM39V.W14,
-                             SCM39V.W15,
-                             SCM39V.W16,
-                             SCM39V.W17,
-                             SCM39V.W18,
-                             SCM39V.W19,
-                             SCM39V.W20,
-                             SCM39V.W21,
-                             SCM39V.W22,
-                             SCM39V.W23,
-                             SCM39V.W24,
-                             SCM39V.W25,
-                             SCM39V.W26,
-                             SCM39V.W27,
-                             SCM39V.W28,
-                             SCM39V.W29,
-                             SCM39V.W30,
-                             SCM39V.WS1,
-                             SCM39V.WS2,
-                             SCM39V.WS3,
-                             SCM39V.WS4,
-                             SCM39V.WS5,
-                             SCM39V.STOCK_NAME name,
-                             SCM39V.STOCK_CTGRY category
-                      FROM   SCM0039V SCM39V
-			           WHERE PLAN_MASTER_ID  IN ( SELECT PLAN_ID
-			                                       FROM SCM0001M
-			                                      WHERE PLAN_YEAR = #{scmYearCbBox}
-			                                        AND PLAN_WEEK = #{scmPeriodCbBox}
-			                                    <if test='scmTeamCbBox != null and scmTeamCbBox !="" '>
-			                                        AND TEAM      = #{scmTeamCbBox}
-			                                    </if>
-                                   )
-      <choose>
-        <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
-         AND  SCM39V.STK_TYPE_ID IN
-            <foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
-                #{item}
-            </foreach>
-        </when>
-      </choose>
-
-      <choose>
-        <when test='stkCodes != null and !stkCodes.isEmpty '>
-         AND  SCM39V.STOCK_CODE IN 
-                            <foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
-                                #{item}
-                          </foreach>
-        </when>
-      </choose>
-    ) S_O
-    </select>
-    
+SELECT A.PLAN_ID AS PLAN_MASTER_ID
+     , A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , A.PLAN_STUS_ID AS CHECK_FLAG
+     , A.TEAM
+     , B.PLAN_DTL_ID
+     , C.STK_TYPE_ID
+     , C.STK_CTGRY_ID AS CATEGORY
+     , C.STK_CODE AS CODE
+     , C.STK_DESC AS NAME
+     , 0 AS M3_AVG_ISSUE_ORDER
+     , 0 AS M1_ISSUE_ORDER
+     , 0 AS M0_PLAN_ORDER
+     , B.M1
+     , B.M2
+     , B.M3
+     , B.M4
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(C.STK_CODE, 'STOCK_CODE', A.PLAN_ID, C.STK_TYPE_ID), FN_GET_SCM_SCM0002D(C.STK_CODE, 'TEAM', A.PLAN_ID, C.STK_TYPE_ID), #{scmYearCbBox}, #{selectPlanMonth}, (#{scmPeriodCbBox}-4)) AS BEF_4_WEEK_TH
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(C.STK_CODE, 'STOCK_CODE', A.PLAN_ID, C.STK_TYPE_ID), FN_GET_SCM_SCM0002D(C.STK_CODE, 'TEAM', A.PLAN_ID, C.STK_TYPE_ID), #{scmYearCbBox}, #{selectPlanMonth}, (#{scmPeriodCbBox}-3)) AS BEF_3_WEEK_TH
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(C.STK_CODE, 'STOCK_CODE', A.PLAN_ID, C.STK_TYPE_ID), FN_GET_SCM_SCM0002D(C.STK_CODE, 'TEAM', A.PLAN_ID, C.STK_TYPE_ID), #{scmYearCbBox}, #{selectPlanMonth}, (#{scmPeriodCbBox}-2)) AS BEF_2_WEEK_TH
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(C.STK_CODE, 'STOCK_CODE', A.PLAN_ID, C.STK_TYPE_ID), FN_GET_SCM_SCM0002D(C.STK_CODE, 'TEAM', A.PLAN_ID, C.STK_TYPE_ID), #{scmYearCbBox}, #{selectPlanMonth}, (#{scmPeriodCbBox}-1)) AS BEF_1_WEEK_TH
+     , B.W00
+     , B.W01, B.W02, B.W03, B.W04, B.W05, B.W06, B.W07, B.W08, B.W09, B.W10
+     , B.W11, B.W12, B.W13, B.W14, B.W15, B.W16, B.W17, B.W18, B.W19, B.W20
+     , B.W21, B.W22, B.W23, B.W24, B.W25, B.W26, B.W27, B.W28, B.W29, B.W30
+     , B.WS1, B.WS2, B.WS3, B.WS4, B.WS5
+  FROM SCM0001M A
+  LEFT OUTER JOIN SCM0002D B ON (A.PLAN_ID = B.PLAN_MASTER_ID)
+  LEFT OUTER JOIN SYS0026M C ON (B.STOCK_CODE = C.STK_CODE)
+ WHERE A.PLAN_YEAR = #{scmYearCbBox}
+   AND A.PLAN_WEEK = #{scmPeriodCbBox}
+	<if test="scmTeamCbBox != null and scmTeamCbBox !='' ">
+   AND A.TEAM = #{scmTeamCbBox}
+	</if>
+	<choose>
+		<when test="scmStockTypes != null and !scmStockTypes.isEmpty">
+   AND C.STK_TYPE_ID IN
+			<foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+       #{item}
+			</foreach>
+		</when>
+	</choose>
+	<choose>
+		<when test="stkCategories != null and !stkCategories.isEmpty">
+   AND C.STK_CTGRY_ID IN 
+			<foreach item="item" collection="stkCategories" index="index" open="(" separator="," close=")">
+       #{item}
+			</foreach>
+		</when>
+	</choose>
+	<choose>
+		<when test="stkCodes != null and !stkCodes.isEmpty">
+   AND C.STK_CODE IN 
+			<foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
+       #{item}
+			</foreach>
+		</when>
+	</choose>
+ ORDER BY A.TEAM, C.STK_TYPE_ID, C.STK_CTGRY_ID, C.STK_CODE
+</select>
+<!--
+<select id="selectSalesPlanMngmentList" parameterType="Map" resultType="egovMap">
+SELECT (SELECT Z.PLAN_STUS_ID
+          FROM SCM0001M Z
+         WHERE Z.PLAN_ID = S_O.PLAN_MASTER_ID
+        ) AS CHECK_FLAG
+     , S_O.PLAN_MASTER_ID
+     , S_O.TEAM
+     , S_O.STK_TYPE_ID
+     , S_O.CATEGORY
+     , S_O.CODE
+     , S_O.NAME
+     , ROUND(FN_GET_SCM_SCM0002D(S_O.CODE, 'PRE_M3_AVG_ISSU', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID)) || '/' ||
+       ROUND(FN_GET_SCM_SCM0002D(S_O.CODE, 'PRE_M3_AVG_ORDED', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID)) AS M3_AVG_ISSUE_ORDER
+     , ROUND(FN_GET_SCM_SCM0002D(S_O.CODE, 'M_1', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID)) || '/' ||
+       ROUND(FN_GET_SCM_SCM0002D(S_O.CODE, 'M1_ORD', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID)) AS M1_ISSUE_ORDER
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'M0_PLAN' ,S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) || '/' ||
+       FN_GET_SCM_SCM0002D(S_O.CODE, 'M0_ORD' ,S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS M0_PLAN_ORDER
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'M1', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS M1
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'M2', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS M2
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'M3', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS M3
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'M4', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS M4
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(S_O.CODE, 'STOCK_CODE', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID), FN_GET_SCM_SCM0002D(S_O.CODE, 'TEAM', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID), '2018', '2', ('6'-4)) AS BEF_4_WEEK_TH
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(S_O.CODE, 'STOCK_CODE', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID), FN_GET_SCM_SCM0002D(S_O.CODE, 'TEAM', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID), '2018', '2', ('6'-3)) AS BEF_3_WEEK_TH
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(S_O.CODE, 'STOCK_CODE', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID), FN_GET_SCM_SCM0002D(S_O.CODE, 'TEAM', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID), '2018', '2', ('6'-2)) AS BEF_2_WEEK_TH
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(S_O.CODE, 'STOCK_CODE', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID), FN_GET_SCM_SCM0002D(S_O.CODE, 'TEAM', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID), '2018', '2', ('6'-1)) AS BEF_1_WEEK_TH
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W00', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W00
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W01', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W01
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W02', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W02
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W03', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W03
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W04', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W04
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W05', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W05
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W06', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W06
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W07', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W07
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W08', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W08
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W09', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W09
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W10', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W10
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W11', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W11
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W12', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W12
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W13', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W13
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W14', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W14
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W15', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W15
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W16', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W16
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W17', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W17
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W18', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W18
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W19', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W19
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W20', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W20
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W21', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W21
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W22', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W22
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W23', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W23
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W24', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W24
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W25', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W25
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W26', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W26
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W27', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W27
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W28', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W28
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W29', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W29
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'W30', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS W30
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'WS1', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS WS1
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'WS2', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS WS2
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'WS3', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS WS3
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'WS4', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS WS4
+     , FN_GET_SCM_SCM0002D(S_O.CODE, 'WS5', S_O.PLAN_MASTER_ID, S_O.STK_TYPE_ID) AS WS5
+  FROM (
+        SELECT SCM39V.PLAN_DTL_ID
+             , SCM39V.PLAN_MASTER_ID
+             , SCM39V.TEAM AS TEAM
+             , SCM39V.STK_TYPE_ID
+             , SCM39V.STOCK_CODE AS CODE
+             , SCM39V.PRE_M3_AVG_ORDED
+             , SCM39V.PRE_M3_AVG_ISSU
+             , SCM39V.M1_ORD
+             , SCM39V.M2_ORD
+             , SCM39V.M3_ORD
+             , SCM39V.M_3
+             , SCM39V.M_2
+             , SCM39V.M_1
+             , SCM39V.M0_PLAN M0_PLAN
+             , SCM39V.M0_ORD M0_ORD
+             , SCM39V.M1
+             , SCM39V.M2
+             , SCM39V.M3
+             , SCM39V.M4
+             , SCM39V.W00
+             , SCM39V.W01
+             , SCM39V.W02
+             , SCM39V.W03
+             , SCM39V.W04
+             , SCM39V.W05
+             , SCM39V.W06
+             , SCM39V.W07
+             , SCM39V.W08
+             , SCM39V.W09
+             , SCM39V.W10
+             , SCM39V.W11
+             , SCM39V.W12
+             , SCM39V.W13
+             , SCM39V.W14
+             , SCM39V.W15
+             , SCM39V.W16
+             , SCM39V.W17
+             , SCM39V.W18
+             , SCM39V.W19
+             , SCM39V.W20
+             , SCM39V.W21
+             , SCM39V.W22
+             , SCM39V.W23
+             , SCM39V.W24
+             , SCM39V.W25
+             , SCM39V.W26
+             , SCM39V.W27
+             , SCM39V.W28
+             , SCM39V.W29
+             , SCM39V.W30
+             , SCM39V.WS1
+             , SCM39V.WS2
+             , SCM39V.WS3
+             , SCM39V.WS4
+             , SCM39V.WS5
+             , SCM39V.STOCK_NAME AS NAME
+             , SCM39V.STOCK_CTGRY AS CATEGORY
+          FROM SCM0039V SCM39V
+         WHERE PLAN_MASTER_ID IN (
+                                  SELECT PLAN_ID
+                                    FROM SCM0001M
+                                   WHERE PLAN_YEAR = #{scmYearCbBox}
+                                     AND PLAN_WEEK = #{scmPeriodCbBox}
+	<if test="scmTeamCbBox != null and scmTeamCbBox !='' ">
+                                     AND TEAM = #{scmTeamCbBox}
+	</if>
+                                  )
+	<choose>
+		<when test="scmStockTypes != null and !scmStockTypes.isEmpty">
+           AND SCM39V.STK_TYPE_ID IN
+			<foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+               #{item}
+			</foreach>
+		</when>
+	</choose>
+	<choose>
+		<when test="stkCodes != null and !stkCodes.isEmpty">
+           AND SCM39V.STOCK_CODE IN 
+			<foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
+               #{item}
+			</foreach>
+		</when>
+	</choose>
+        ) S_O
+ ORDER BY S_O.TEAM, S_O.STK_TYPE_ID, S_O.CATEGORY, S_O.CODE
+</select>
+-->
 
     <select id="selectSalesPlanMngmentPeriod" parameterType="Map" resultType="egovMap">
 			SELECT SCM_YEAR   ,
@@ -642,7 +716,8 @@ SELECT A.PLAN_ID
 			  FROM SCM0018M
 			 WHERE SCM_YEAR = #{year}
 			   AND WEEK_TH_SN = 1
-			   AND NVL(USE_YN,'Y')='Y'
+			   /*AND NVL(USE_YN,'Y')='Y'*/
+			   AND USE_YN = 'Y'
     </select>
 
     <update id="updateScmPlanMaster" parameterType="Map">
@@ -1131,34 +1206,33 @@ SELECT STK_ID
 
 </insert>
 
-
+<!-- fin -->
 <insert id="insertSalesPlanMaster" parameterType="Map">
-        <selectKey keyProperty="salesPlanMstSeq" resultType="int" order="BEFORE">
-            SELECT SCM0001M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
-        </selectKey>
-
-            INSERT INTO SCM0001M
-				           (
-				             PLAN_ID
-				           , TEAM
-				           , PLAN_YEAR
-				           , PLAN_MONTH
-				           , PLAN_WEEK
-				           , PLAN_STUS_ID
-				           , CRT_DT
-				           , CRT_USER_ID
-				           )
-             VALUES
-				          (
-				             #{salesPlanMstSeq}
-				           , #{scmTeamCbBox}
-				           , #{scmYearCbBox}
-				           , (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1 )
-				           , #{scmPeriodCbBox}
-				           , 4
-				           , SYSDATE
-				           , #{crtUserId}
-				          )
+	<selectKey keyProperty="salesPlanMstSeq" resultType="int" order="BEFORE">
+	SELECT SCM0001M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
+	</selectKey>
+INSERT INTO SCM0001M
+(
+       PLAN_ID
+     , TEAM
+     , PLAN_YEAR
+     , PLAN_MONTH
+     , PLAN_WEEK
+     , PLAN_STUS_ID
+     , CRT_DT
+     , CRT_USER_ID
+ )
+VALUES
+(
+       #{salesPlanMstSeq}
+     , #{scmTeamCbBox}
+     , #{scmYearCbBox}
+     , (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1)
+     , #{scmPeriodCbBox}
+     , 4
+     , SYSDATE
+     , #{crtUserId}
+ )
 </insert>
 
 <delete id="deleteStockCode" parameterType="Map">
@@ -1175,28 +1249,37 @@ SELECT STK_ID
 
 </delete>
 
+<!-- fin -->
 <update id="updateSalesPlanUnConfirm" parameterType="Map">
+UPDATE SCM0001M
+   SET PLAN_STUS_ID = 4
+ WHERE PLAN_ID = #{planId}
+</update>
+<!-- 
+<update id="updateSalesPlanUnConfirm" parameterType="Map">
+UPDATE SCM0001M
+   SET PLAN_STUS_ID = 4
+ WHERE PLAN_YEAR = #{scmYearCbBox}
+   AND PLAN_WEEK = #{scmPeriodCbBox}
+   AND PLAN_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1)
+</update> -->
+<!-- fin -->
+<update id="updateSalesPlanConfirm" parameterType="Map">
+UPDATE SCM0001M
+   SET PLAN_STUS_ID = 1
+ WHERE PLAN_ID = #{planId}
+</update>
+<!-- 
+<update id="updateSalesPlanConfirm" parameterType="Map">
   UPDATE SCM0001M
      SET PLAN_STUS_ID = 1
    WHERE PLAN_YEAR = #{scmYearCbBox}
      AND PLAN_WEEK = #{scmPeriodCbBox}
      AND PLAN_MONTH= (SELECT SCM_MONTH
-           FROM SCM0018M
-          WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1)
-     <!-- AND TEAM      = #{scmTeamCbBox} -->
-</update>
-
-<update id="updateSalesPlanConfirm" parameterType="Map">
-  UPDATE SCM0001M
-     SET PLAN_STUS_ID = 4
-   WHERE PLAN_YEAR = #{scmYearCbBox}
-     AND PLAN_WEEK = #{scmPeriodCbBox}
-     AND PLAN_MONTH= (SELECT SCM_MONTH
                 FROM SCM0018M
                WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox} AND WEEK_TH_SN = 1)
-     <!-- AND PLAN_ID      = #{planId} -->
-     <!-- AND TEAM      = #{scmTeamCbBox} -->
 </update>
+ -->
 
 <select id="selectAccuracyWeeklyDetail" parameterType="Map" resultType="egovMap">
   SELECT *
@@ -1959,27 +2042,27 @@ SELECT STK_ID
 			       M4.REC_CNT M4_TOT_CNT
 			       FROM (  SELECT COUNT (SCM_YEAR) REC_CNT
 			       FROM SCM0018M
-			       WHERE to_char(week_th_sn_end,'YYYYMM') = #{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0)    AND NVL (USE_YN, 'Y') = 'Y'
+			       WHERE to_char(week_th_sn_end,'YYYYMM') = #{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0)  AND USE_YN = 'Y'/*  AND NVL (USE_YN, 'Y') = 'Y'*/
 			      ) M0,
 			     (  SELECT  COUNT (SCM_YEAR) REC_CNT
 			     FROM SCM0018M
 			     WHERE    to_char(week_th_sn_end,'YYYYMM')=(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0),'YYYYMM'),1),'YYYYMM') FROM DUAL)
-			     AND NVL (USE_YN, 'Y') = 'Y'
+			     AND USE_YN = 'Y'/*AND NVL (USE_YN, 'Y') = 'Y'*/
 			     ) M1,
 			     (  SELECT  COUNT (SCM_YEAR) REC_CNT
 			     FROM SCM0018M
 			     WHERE     to_char(week_th_sn_end,'YYYYMM')=(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0),'YYYYMM'),2),'YYYYMM') FROM DUAL)
-			      AND NVL (USE_YN, 'Y') = 'Y'
+			      AND USE_YN = 'Y'/*AND NVL (USE_YN, 'Y') = 'Y'*/
 			      ) M2,
 			     (  SELECT  COUNT (SCM_YEAR) REC_CNT
 			     FROM SCM0018M
 			     WHERE     to_char(week_th_sn_end,'YYYYMM')=(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0),'YYYYMM'),3),'YYYYMM') FROM DUAL)
-			     AND NVL (USE_YN, 'Y') = 'Y'
+			     AND USE_YN = 'Y'/*AND NVL (USE_YN, 'Y') = 'Y'*/
 			     ) M3,
 			     (  SELECT  COUNT (SCM_YEAR) REC_CNT
 			      FROM SCM0018M
 			      WHERE     to_char(week_th_sn_end,'YYYYMM')=(SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox}||LPAD(#{selectPlanMonth},2,0),'YYYYMM'),4),'YYYYMM') FROM DUAL)
-			        AND NVL (USE_YN, 'Y') = 'Y'
+			        AND USE_YN = 'Y'/*AND NVL (USE_YN, 'Y') = 'Y'*/
 			      ) M4
 			     WHERE ROWNUM = 1
     </select>
@@ -2421,11 +2504,19 @@ SELECT STK_ID
  AND b.PLAN_MASTER_ID =  #{planId}
  <!-- AND b.STOCK_CODE = '112110'; -->
  </insert>
-    
-    
+
+<select id="selectCreateCount" parameterType="Map" resultType="int">
+SELECT COUNT(*)
+  FROM SCM0001M A
+ WHERE A.PLAN_YEAR = #{scmYearCbBox}
+   AND A.PLAN_WEEK = #{scmPeriodCbBox}
+   AND A.TEAM = #{scmTeamCbBox}
+</select>    
+<!-- 
 <select id="selectCreateCount" parameterType="Map" resultType="int">
         select count(*) From SCM0001M where PLAN_YEAR= #{scmYearCbBox} and PLAN_WEEK= #{scmPeriodCbBox} and TEAM= #{scmTeamCbBox}
 </select>
+ -->
 
 <select id="selectUnConfirmCnt" parameterType="Map" resultType="int">
         select count(*) From scm0005m where PLAN_YEAR=#{scmYearCbBox}and PLAN_WEEK=#{scmPeriodCbBox} and PLAN_MONTH=(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox}  AND WEEK_TH_SN = 1)
