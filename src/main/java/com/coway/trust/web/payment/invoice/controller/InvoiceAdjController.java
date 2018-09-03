@@ -241,9 +241,9 @@ public class InvoiceAdjController {
 																						String.valueOf(gridMap.get("billitemcharges")),
 																						String.valueOf(gridMap.get("billitemqty")));
 
-				if (Double.parseDouble(String.valueOf(gridMap.get("billitemcharges"))) > 0 && Integer.parseInt(String.valueOf(gridMap.get("billitemtaxrate"))) == 6){
-					totalTaxes += itemAdjsutment- (itemAdjsutment * 100 / 106);
-				}
+				//if (Double.parseDouble(String.valueOf(gridMap.get("billitemcharges"))) > 0 && Integer.parseInt(String.valueOf(gridMap.get("billitemtaxrate"))) == 6){
+				//	totalTaxes += itemAdjsutment- (itemAdjsutment * 100 / 106);
+				//}
 
 				totalAmount += itemAdjsutment;
 
@@ -253,7 +253,7 @@ public class InvoiceAdjController {
 			}
 		}
 
-		masterParamMap.put("memoAdjustTaxesAmount", totalTaxes);
+		masterParamMap.put("memoAdjustTaxesAmount", 0);
 		masterParamMap.put("memoAdjustTotalAmount", totalAmount);
 
 		//저장처리
@@ -399,9 +399,9 @@ public class InvoiceAdjController {
 																								String.valueOf(detailMap.get("billitemcharges")),
 																								String.valueOf(detailMap.get("billitemqty")));
 
-						if (Double.parseDouble(String.valueOf(detailMap.get("billitemcharges"))) > 0 && Integer.parseInt(String.valueOf(detailMap.get("billitemtaxrate"))) == 6){
-							totalTaxes += itemAdjsutment- (itemAdjsutment * 100 / 106);
-						}
+						//if (Double.parseDouble(String.valueOf(detailMap.get("billitemcharges"))) > 0 && Integer.parseInt(String.valueOf(detailMap.get("billitemtaxrate"))) == 6){
+						//	totalTaxes += itemAdjsutment- (itemAdjsutment * 100 / 106);
+						//}
 
 						totalAmount += itemAdjsutment;
 
@@ -410,7 +410,7 @@ public class InvoiceAdjController {
 					}
 				}
 
-				masterParamMap.put("memoAdjustTaxesAmount", totalTaxes);
+				masterParamMap.put("memoAdjustTaxesAmount", 0);
 				masterParamMap.put("memoAdjustTotalAmount", totalAmount);
 
 				//저장처리
@@ -678,19 +678,19 @@ public class InvoiceAdjController {
             returnParam.put("memoItemTaxCodeID", Integer.parseInt(billItemTaxCodeId));
             returnParam.put("memoItemStatusID", 1);
             returnParam.put("memoItemRemark", "");
-            returnParam.put("memoItemGSTRate", Integer.parseInt(billItemTaxRate));
+            returnParam.put("memoItemGSTRate", 0);
             returnParam.put("memoItemAmount", itemAdjsutment);
 
-            if (Double.parseDouble(billItemCharges) > 0 && Integer.parseInt(billItemTaxRate) == 6){
-            	returnParam.put("memoItemCharges", itemAdjsutment * 100 / 106);
-            	returnParam.put("memoItemTaxes", itemAdjsutment- (itemAdjsutment * 100 / 106));
+           // if (Double.parseDouble(billItemCharges) > 0 && Integer.parseInt(billItemTaxRate) == 6){
+           // 	returnParam.put("memoItemCharges", itemAdjsutment * 100 / 106);
+           // 	returnParam.put("memoItemTaxes", itemAdjsutment- (itemAdjsutment * 100 / 106));
 
             	//totalTaxes += itemAdjsutment- (itemAdjsutment * 100 / 106);
 
-            } else {
+            //} else {
             	returnParam.put("memoItemCharges", itemAdjsutment);
             	returnParam.put("memoItemTaxes",0);
-            }
+           // }
 
             //totalAmount += itemAdjsutment;
             returnParam.put("memoItemInvoiceItmQty", Integer.parseInt(billItemQty));
