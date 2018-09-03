@@ -11,15 +11,15 @@ var adjStatusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeNa
 //Default Combo Data
 var adjTypeData = [{"codeId": "1293","codeName": "Credit Note"},{"codeId": "1294","codeName": "Debit Note"}];
 
-//Grid Properties 설정 
-var gridPros = {            
+//Grid Properties 설정
+var gridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false,     // 상태 칼럼 사용
         headerHeight : 35,
         softRemoveRowMode:false
 };
 
-var columnLayout=[    
+var columnLayout=[
     { dataField:"batchId" ,headerText:"<spring:message code='pay.head.batchId'/>" ,editable : false},
     { dataField:"memoAdjRefNo" ,headerText:"<spring:message code='pay.head.cnDnNo'/>" ,editable : false },
     { dataField:"memoAdjInvcNo" ,headerText:"<spring:message code='pay.head.invoiceNo'/>" ,editable : false },
@@ -28,12 +28,12 @@ var columnLayout=[
     { dataField:"resnDesc" ,headerText:"<spring:message code='pay.head.reason'/>" ,editable : false },
     { dataField:"userName" ,headerText:"<spring:message code='pay.head.requestor'/>" ,editable : false },
     { dataField:"deptName" ,headerText:"<spring:message code='pay.head.department'/>" ,editable : false },
-    { dataField:"memoAdjCrtDt" ,headerText:"Request Create Date" ,editable : false },    
+    { dataField:"memoAdjCrtDt" ,headerText:"Request Create Date" ,editable : false },
     { dataField:"code1" ,headerText:"<spring:message code='pay.head.status'/>" ,editable : false },
     { dataField:"memoAdjRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false }
     ];
 
-var newBatchColLayout = [ 
+var newBatchColLayout = [
     {dataField : "0", headerText : "<spring:message code='pay.head.invoiceNumber'/>", editable : true},
     {dataField : "1", headerText : "<spring:message code='pay.head.orderNumber'/>", editable : true},
     {dataField : "2", headerText : "<spring:message code='pay.head.itemId'/>", editable : true},
@@ -42,36 +42,36 @@ var newBatchColLayout = [
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-	
+
 	 //Adjustment Type 생성
-    doDefCombo(adjTypeData, '' ,'newAdjType', 'S', '');        
-	 
+    doDefCombo(adjTypeData, '' ,'newAdjType', 'S', '');
+
     //Adjustment Status 생성
     doDefCombo(adjStatusData, '' ,'status', 'S', '');
 
     //Adjustment Type 변경시 Reason Combo 생성
     $('#newAdjType').change(function (){
-        $("#newAdjReason option").remove();        
+        $("#newAdjReason option").remove();
 
         if($(this).val() != ""){
-            var param = $(this).val() == "1293" ? "1584" : "1585"; 
+            var param = $(this).val() == "1293" ? "1584" : "1585";
             doGetCombo('/common/selectAdjReasontList.do', param , ''   , 'newAdjReason' , 'S', '');
         }
     });
-    
+
     //Grid 생성
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
 	newBatchAdjGridID = GridCommon.createAUIGrid("newBatchAdj_grid_wrap", newBatchColLayout,null,gridPros);
-	
 
-    
+
+
     // 파일 선택하기
     $('#fileSelector').on('change', function(evt) {
         if (!checkHTML5Brower()) {
             // 브라우저가 FileReader 를 지원하지 않으므로 Ajax 로 서버로 보내서
             // 파일 내용 읽어 반환시켜 그리드에 적용.
             commitFormSubmit();
-            
+
             //alert("브라우저가 HTML5 를 지원하지 않습니다.");
         } else {
             var data = null;
@@ -86,7 +86,7 @@ $(document).ready(function(){
                 if (typeof event.target.result != "undefined") {
                     // 그리드 CSV 데이터 적용시킴
                     AUIGrid.setCsvGridData(newBatchAdjGridID, event.target.result, false);
-                    
+
                   //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
                     AUIGrid.removeRow(newBatchAdjGridID,0);
                 } else {
@@ -97,9 +97,9 @@ $(document).ready(function(){
             	Common.alert("<spring:message code='pay.alert.unableToRead' arguments='"+file.fileName+"' htmlEscape='false'/>");
             };
         }
-    
-        });  
-	
+
+        });
+
 });
 
 // HTML5 브라우저인지 체크 즉, FileReader 를 사용할 수 있는지 여부
@@ -115,29 +115,29 @@ function checkHTML5Brower() {
 //서버에서 파일 내용 읽어 반환 한 것을 통해 그리드에 삽입
 //즉, 이것은 IE 10 이상에서는 불필요 (IE8, 9 에서만 해당됨)
 function commitFormSubmit() {
-    
+
 	AUIGrid.showAjaxLoader(newBatchAdjGridID);
- 
+
 	 // Submit 을 AJax 로 보내고 받음.
 	 // ajaxSubmit 을 사용하려면 jQuery Plug-in 인 jquery.form.js 필요함
 	 // 링크 : http://malsup.com/jquery/form/
- 
+
     $('#updResultForm').ajaxSubmit({
     	type : "json",
     	success : function(responseText, statusText) {
     		if(responseText != "error") {
     			var csvText = responseText;
-    			
+
     			// 기본 개행은 \r\n 으로 구분합니다.
     			// Linux 계열 서버에서 \n 으로 구분하는 경우가 발생함.
     			// 따라서 \n 을 \r\n 으로 바꿔서 그리드에 삽입
-    			// 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함. 
+    			// 만약 서버 사이드에서 \r\n 으로 바꿨다면 해당 코드는 불필요함.
                 csvText = csvText.replace(/\r?\n/g, "\r\n")
-             
+
                 // 그리드 CSV 데이터 적용시킴
                 AUIGrid.setCsvGridData(newBatchAdjGridID, csvText);
                 AUIGrid.removeAjaxLoader(newBatchAdjGridID);
-                
+
               //csv 파일이 header가 있는 파일이면 첫번째 행(header)은 삭제한다.
                 AUIGrid.removeRow(newBatchAdjGridID,0);
             }
@@ -146,8 +146,8 @@ function commitFormSubmit() {
     			   Common.alert("ajaxSubmit Error : " + e);
     			   }
     		   });
- 
- }  
+
+ }
 
 // 리스트 조회.
 function fn_getAdjustmentListAjax() {
@@ -155,7 +155,7 @@ function fn_getAdjustmentListAjax() {
 		Common.alert("<spring:message code='pay.alert.selectBatchId'/>");
         return;
     }
-	
+
     Common.ajax("GET", "/payment/selectAdjustmentList.do", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
@@ -163,8 +163,8 @@ function fn_getAdjustmentListAjax() {
 
 //New Batch Adjustment Pop-UP
 function fn_openDivPop(){
-	$("#newBatchAdj_wrap").show();  
-                
+	$("#newBatchAdj_wrap").show();
+
 }
 
 //Layer close
@@ -177,40 +177,40 @@ hideViewPopup=function(val){
 
 //Save
 function fn_batchAdjFileUp(){
-	
+
 	 //param data array
     var data = GridCommon.getGridData(newBatchAdjGridID);
     data.form = $("#newBatchAdjForm").serializeJSON();
-    
-      
-    if(FormUtil.checkReqValue($("#newAdjType option:selected")) ){ 
+
+
+    if(FormUtil.checkReqValue($("#newAdjType option:selected")) ){
     	Common.alert("<spring:message code='pay.alert.selectAdjType'/>");
         return;
     }
-    
-    if(FormUtil.checkReqValue($("#newAdjReason option:selected")) ){    
+
+    if(FormUtil.checkReqValue($("#newAdjReason option:selected")) ){
     	Common.alert("<spring:message code='pay.alert.selectAdjReason'/>");
         return;
     }
-    
-    if(FormUtil.checkReqValue($("#newRemark")) ){    
+
+    if(FormUtil.checkReqValue($("#newRemark")) ){
     	Common.alert("<spring:message code='pay.alert.selectAdjRemark'/>");
         return;
     }
-    
+
     if(data.all.length < 1){
     	Common.alert("<spring:message code='pay.alert.selectCsvFile'/>");
         return;
     }
-    
+
     //Ajax 호출
     Common.ajax("POST", "/payment/saveBatchNewAdjList.do", data, function(result) {
     	var returnMsg = "<spring:message code='pay.alert.saveBatchNewAdjList' arguments='"+result.data+"' htmlEscape='false'/>";
-        
+
         Common.alert(returnMsg, function (){
         	hideViewPopup('#newBatchAdj_wrap');
         });
-        
+
     },  function(jqXHR, textStatus, errorThrown) {
         try {
             console.log("status : " + jqXHR.status);
@@ -220,9 +220,9 @@ function fn_batchAdjFileUp(){
         } catch (e) {
             console.log(e);
         }
-        Common.alert("Fail : " + jqXHR.responseJSON.message);        
+        Common.alert("Fail : " + jqXHR.responseJSON.message);
     });
-    
+
 }
 </script>
 <div id="popup_wrap" class="popup_wrap pop_win"><!-- popup_wrap start -->
@@ -241,7 +241,7 @@ function fn_batchAdjFileUp(){
 				    <col style="width:180px" />
 				    <col style="width:*" />
 				    <col style="width:180px" />
-				    <col style="width:*" />				    
+				    <col style="width:*" />
 				</colgroup>
 				<tbody>
 				    <tr>
@@ -274,21 +274,21 @@ function fn_batchAdjFileUp(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                     <!--    <li><p class="link_btn type2"><a href="javascript:fn_openDivPop();"><spring:message code='pay.btn.link.newBatch'/></a></p></li>     -->                                                                                         
+                         <li><p class="link_btn type2"><a href="javascript:fn_openDivPop();"><spring:message code='pay.btn.link.newBatch'/></a></p></li>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
                     </dd>
                 </dl>
             </aside>
             <!-- link_btns_wrap end -->
-        </form>		
+        </form>
 
 		<article id="grid_wrap" class="grid_wrap"></article>
-			
+
 	</section><!-- pop_body end -->
 </div><!-- popup_wrap end -->
 
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
     POP-UP (NEW Batch ADJUSTMENT)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -301,7 +301,7 @@ function fn_batchAdjFileUp(){
         </ul>
     </header>
     <!-- pop_header end -->
-    
+
     <!-- pop_body start -->
     <form name="newBatchAdjForm" id="newBatchAdjForm"  method="post">
     <section class="pop_body">
@@ -312,11 +312,11 @@ function fn_batchAdjFileUp(){
                 <caption>table</caption>
                  <colgroup>
                     <col style="width:165px" />
-                    <col style="width:*" />                
+                    <col style="width:*" />
                     <col style="width:165px" />
                     <col style="width:*" />
                 </colgroup>
-                <tbody>              
+                <tbody>
                     <tr>
                        <th scope="row">Adjustment Type</th>
                         <td>
@@ -343,22 +343,22 @@ function fn_batchAdjFileUp(){
                            <!-- auto_file end -->
                         </td>
                     </tr>
-                   </tbody>  
+                   </tbody>
             </table>
         </section>
-        
+
         <section class="search_result"><!-- search_result start -->
-            <article class="grid_wrap"  id="newBatchAdj_grid_wrap"  style="display:none;"></article>             
+            <article class="grid_wrap"  id="newBatchAdj_grid_wrap"  style="display:none;"></article>
             <!-- grid_wrap end -->
         </section><!-- search_result end -->
         <!-- search_table end -->
-        
+
         <ul class="center_btns" >
             <li><p class="btn_blue2"><a href="javascript:fn_batchAdjFileUp();"><spring:message code='pay.btn.uploadFile'/></a></p></li>
-            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/InvoiceAdjustmentBatch_Format.csv"><spring:message code='pay.btn.downloadTemplate'/></a></p></li>          
+            <li><p class="btn_blue2"><a href="${pageContext.request.contextPath}/resources/download/payment/InvoiceAdjustmentBatch_Format.csv"><spring:message code='pay.btn.downloadTemplate'/></a></p></li>
         </ul>
     </section>
-    </form>       
+    </form>
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->
