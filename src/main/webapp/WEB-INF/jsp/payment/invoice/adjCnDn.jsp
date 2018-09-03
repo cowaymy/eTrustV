@@ -8,8 +8,8 @@ var myGridID,subGridID;
 //Default Combo Data
 var adjStatusData = [{"codeId": "1","codeName": "Active"},{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
 
-//Grid Properties 설정 
-var gridPros = {            
+//Grid Properties 설정
+var gridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         headerHeight : 35,
         showStateColumn : false     // 상태 칼럼 사용
@@ -17,18 +17,18 @@ var gridPros = {
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-	
+
 	//Adjustment Status 생성
     doDefCombo(adjStatusData, '' ,'status', 'S', '');
-	
+
 	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-	
+
 	// 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-    	var adjId = AUIGrid.getCellValue(myGridID, event.rowIndex, 'memoAdjId');    	
+    	var adjId = AUIGrid.getCellValue(myGridID, event.rowIndex, 'memoAdjId');
     	Common.popupDiv('/payment/initAdjustmentDetailPop.do', {adjId : adjId, mode : "SEARCH"}, null , true ,'_adjustmentDetailPop');
     });
-    
+
 });
 
 var columnLayout=[
@@ -44,21 +44,21 @@ var columnLayout=[
     { dataField:"resnDesc" ,headerText:"<spring:message code='pay.head.reason'/>" ,editable : false },
     { dataField:"userName" ,headerText:"<spring:message code='pay.head.requestor'/>" ,editable : false },
     { dataField:"deptName" ,headerText:"<spring:message code='pay.head.department'/>" ,editable : false },
-    { dataField:"memoAdjCrtDt" ,headerText:"<spring:message code='pay.head.requestCreateDate'/>" ,editable : false },    
+    { dataField:"memoAdjCrtDt" ,headerText:"<spring:message code='pay.head.requestCreateDate'/>" ,editable : false },
     { dataField:"code1" ,headerText:"<spring:message code='pay.head.status'/>" ,editable : false },
     { dataField:"memoAdjRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false }
     ];
 
 // 리스트 조회.
 function fn_getAdjustmentListAjax() {
-	
+
 	if(FormUtil.checkReqValue($("#orderNo")) &&
 			FormUtil.checkReqValue($("#invoiceNo")) &&
 			FormUtil.checkReqValue($("#adjNo"))){
         Common.alert("<spring:message code='pay.alert.orderNoOrInvoiceNoOrAdjNo'/>");
         return;
     }
-	
+
     Common.ajax("GET", "/payment/selectAdjustmentList.do", $("#searchForm").serialize(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
@@ -77,7 +77,7 @@ var winPopOption = {
 
 function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value, item){
     //location.href="/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo");
-    
+
     $('#_searchInvoice').hide();
     Common.popupWin("searchForm", "/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo"), winPopOption);
 }
@@ -89,7 +89,7 @@ function fn_openWinPop(val){
 		Common.popupWin("searchForm", "/payment/initInvAdjCnDnPop.do", {width : "1200px", height : "450", resizable: "no", scrollbars: "no"});
 	}else if(val == 'APPROVAL'){
 		Common.popupWin("searchForm", "/payment/initApprovalAdjCnDnListPop.do", {width : "1200px", height : "650", resizable: "no", scrollbars: "no"});
-	}	
+	}
 }
 
 function fn_Clear(){
@@ -125,7 +125,7 @@ function fn_Clear(){
 				    <col style="width:180px" />
 				    <col style="width:*" />
 				    <col style="width:180px" />
-				    <col style="width:*" />				    
+				    <col style="width:*" />
 				</colgroup>
 				<tbody>
 				    <tr>
@@ -155,7 +155,7 @@ function fn_Clear(){
                         </td>
 					    <th scope="row">Creator</th>
 					    <td>
-					        <input id="creator" name="creator" type="text" placeholder="Creator" class="w100p">                               
+					        <input id="creator" name="creator" type="text" placeholder="Creator" class="w100p">
 					    </td>
 					</tr>
                 </tbody>
@@ -168,17 +168,17 @@ function fn_Clear(){
                     <dt>Link</dt>
                     <dd>
                     <ul class="btns">
-                      <!--  <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">  -->
-                      <!--  <li><p class="link_btn type2"><a href="javascript:fn_cmmSearchInvoicePop();"><spring:message code='pay.btn.link.newCnDnReq'/></a></p></li>  -->
-                      <!--  </c:if>  -->
-                      <!--  <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">  -->
-                      <!--  <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('BATCH_REQ');"><spring:message code='pay.btn.link.newBatchReq'/></a></p></li>  -->
-                       <!-- </c:if>  -->
+                        <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                        <li><p class="link_btn type2"><a href="javascript:fn_cmmSearchInvoicePop();"><spring:message code='pay.btn.link.newCnDnReq'/></a></p></li>
+                        </c:if>
+                        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('BATCH_REQ');"><spring:message code='pay.btn.link.newBatchReq'/></a></p></li>
+                        </c:if>
                         <c:if test="${PAGE_AUTH.funcPrint == 'Y'}">
                         <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('SUMMARY');"><spring:message code='pay.btn.link.genSummaryList'/></a></p></li>
                         </c:if>
                         <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('APPROVAL');"><spring:message code='pay.btn.link.approval'/></a></p></li>                                                                      
+                        <li><p class="link_btn type2"><a href="javascript:fn_openWinPop('APPROVAL');"><spring:message code='pay.btn.link.approval'/></a></p></li>
                         </c:if>
                     </ul>
                     <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
@@ -191,7 +191,7 @@ function fn_Clear(){
     <!-- search_table end -->
 
     <!-- search_result start -->
-    <section class="search_result">	
+    <section class="search_result">
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
         <!-- grid_wrap end -->
