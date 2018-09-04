@@ -24,7 +24,7 @@ $('.multy_select').change(function() {
 });
 
 $.fn.clearForm = function() {
-    $("#cmbReqStage").multipleSelect("checkAll");
+    //$("#cmbReqStage").multipleSelect("checkAll");
     $("#cmbAppType").multipleSelect("checkAll");
     $("#cmbKeyBranch").multipleSelect("uncheckAll");
 
@@ -177,9 +177,8 @@ CommonCombo.make('cmbKeyBranch', '/sales/ccp/getBranchCodeList', '' , '', {type:
 <tr>
     <th scope="row"><spring:message code="sal.title.text.requestStage" /></th>
     <td>
-    <select class="multy_select w100p" multiple="multiple" id="cmbReqStage">
+    <select class="w100p"  id="cmbReqStage">
         <option value="24" selected><spring:message code="sal.text.beforeInstall" /></option>
-        <option value="25" selected><spring:message code="sal.text.afterInstall" /></option>
     </select>
     </td>
     <th scope="row"><spring:message code="sal.text.appType" /></th>
