@@ -87,7 +87,7 @@ function fnCreatePreviousSupplyPlan(obj)
 	  }
 
 	  Common.ajax("POST"
-			        , "/scm/insertSalesPlanMstCdc.do"
+			        , "/scm/insertSalesPlanMstCdc1.do"
 	            , $("#MainForm").serializeJSON()
 	            , function(result)
 	             {
@@ -246,7 +246,7 @@ function fnConfirmSave(Obj)
   data.checked = checkdata;
   data.form = $("#MainForm").serializeJSON();
    
-  Common.ajax("POST", "/scm/saveConfirmPlanByCDC.do", data, function(result) {
+  Common.ajax("POST", "/scm/saveConfirmPlanByCDC1.do", data, function(result) {
 
       if(result.code==99){
           Common.alert("It is already Confirm.");
@@ -324,7 +324,7 @@ function fnSearchBtnList()
 	 params = $.extend($("#MainForm").serializeJSON(), params);
 
    Common.ajax("POST"
-		       , "/scm/selectSupplyPlanByCdcSearch.do"
+		       , "/scm/selectSupplyPlanByCdcSearch1.do"
 	         , params
            , function(result)
            {
