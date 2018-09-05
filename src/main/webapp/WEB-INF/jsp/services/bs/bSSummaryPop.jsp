@@ -10,7 +10,7 @@
      doGetCombo('/services/bs/report/insStatusCode.do', 1, '','cmbInsStatus', 'S');
      doGetCombo('/services/bs/report/codyCode.do', 3, '','cmbCodyCode', 'S');
      doGetCombo('/services/bs/report/areaCode.do', 3, '','cmbArea', 'S');
-     
+
      $('#hsMonth').val($.datepicker.formatDate('mm/yy', new Date()));
 
 
@@ -21,34 +21,34 @@
                 doGetCombo('/services/bs/report/codyCode.do', 3, '','cmbCodyCode', 'S');
             }else{
                  doGetCombo('/services/bs/report/codyCode_1.do', $("#cmbDeptCode option:selected").val() , '','cmbCodyCode', 'S');
-            } 
+            }
 
-            doGetCombo('/services/bs/report/codyCode_1.do', $("#cmbDeptCode option:selected").val() , '','cmbCodyCode', 'S');	          
+            doGetCombo('/services/bs/report/codyCode_1.do', $("#cmbDeptCode option:selected").val() , '','cmbCodyCode', 'S');
 
-        });  
-          
-          
+        });
+
+
 		$("#cmbContent").change(function() {
 
-            
+
 		  if($(this).val() ==3) {
 		    $("#cmbDSC").val("");
             $("#cmbStatus").val("");
             $("#cmbInsStatus").val("");
             $("#cmbArea").val("");
-            
-            
+
+
 		    $('#cmbDSC').attr("disabled",true);
 		    $('#cmbStatus').attr("disabled",true);
 		    $('#cmbInsStatus').attr("disabled",true);
 		    $('#cmbArea').attr("disabled",true);
-		    
-		    
+
+
 		  }else if($(this).val() ==1 || $(this).val() ==2) {
-             $('#cmbDSC').attr("disabled",false);  
+             $('#cmbDSC').attr("disabled",false);
             $('#cmbStatus').attr("disabled",false);
             $('#cmbInsStatus').attr("disabled",false);
-            $('#cmbArea').attr("disabled",false); 
+            $('#cmbArea').attr("disabled",false);
 		  }
 		});
 
@@ -56,11 +56,11 @@
 
 
 
-    
-    
-    
-    
-    
+
+
+
+
+
 
 function fn_validation(){
      if($("#cmbContent option:selected").length < 1)
@@ -90,46 +90,46 @@ function fn_Generate(){
         var branchid = 0;
         branchid = Number($("#brnch option:selected").val());
  */
- 
+
          var cmid = 0;
 //        cmid = Number($("#V_HSType option:selected").val());
         cmid = Number($("#cmbContent option:selected").val());
         $("#summaryform #viewType").val("PDF");
-        
-        
+
+
         if(cmid!=3){
-            
-            
+
+
 	         var whereSql ="";
 	         if($("#hsMonth").val() != '' && $("#hsMonth").val() != null) {
 	             whereSql+= " and m.YEAR =  to_char(to_date('" +  $("#hsMonth").val() + "'" + ",'" + "mm/yyyy" + "')," + "'yyyy" +  "')" ;
 	             whereSql+= " and m.MONTH =  to_char(to_date('" +  $("#hsMonth").val() + "'" + ",'" + "mm/yyyy" + "')," + "'mm" +  "')" ;
 	         }
-	
+
 	         if($("#cmbDeptCode").val() != '' && $("#cmbDeptCode").val() != null) {
 	            whereSql+= " AND v.DEPT_CODE = '" + $("#cmbDeptCode").val() + "'";
 	         }
-	
+
 	         if($("#cmbCodyCode").val() != '' && $("#cmbCodyCode").val() != null) {
-	            whereSql+= " AND mr.MEM_code = '" + $("#cmbCodyCode").val() + "'";
+	            whereSql+= " AND mr.MEM_ID = '" + $("#cmbCodyCode").val() + "'";
 	         }
-	         
+
 	         if($("#cmbDSC").val() != '' && $("#cmbDSC").val() != null) {
 	            whereSql+= " AND i.BRNCH_ID = '" + $("#cmbDSC").val() + "'";
 	         }
-	         
+
 	         if($("#cmbStatus").val() != '' && $("#cmbStatus").val() != null) {
 	            whereSql+= " AND m.STUS_CODE_ID = '" + $("#cmbStatus").val() + "'";
 	         }
-	         
+
 	         if($("#cmbInsStatus").val() != '' && $("#cmbInsStatus").val() != null) {
 	            whereSql+= " AND a.STUS_CODE_ID = '" + $("#cmbInsStatus").val() + "'";
-	         }                           
-	
+	         }
+
 	         if($("#cmbArea").val() != '' && $("#cmbArea").val() != null) {
 	            whereSql+= " AND a.AREA_ID = '" + $("#cmbArea").val() + "'";
-	         }                           
-	            
+	         }
+
 	         $("#summaryform #V_SELECTSQL").val("");
 	         $("#summaryform #V_WHERESQL").val(whereSql);
 	         $("#summaryform #V_GROUPBYSQL").val("");
@@ -138,14 +138,14 @@ function fn_Generate(){
 
 	             var month = $("#hsMonth").val().substring(0,2);
 	             var year= $("#hsMonth").val().substring(3,7);
-	             
+
 	             $("#summaryform #V_BSMONTH").val(month);
 	             $("#summaryform #V_BSYEAR").val(year);
 	             $("#summaryform #V_BSCODYID").val($("#cmbCodyCode").val());
 	             $("#summaryform #V_BSCODYDEPTCODE").val($("#cmbDeptCode").val());
          }
-         
-         
+
+
         if(cmid==1){
             $("#summaryform #reportFileName").val('/services/BSSummaryList.rpt');
             $("#summaryform #reportDownFileName").val("BSCountForecastByBranch_"+day+month+date.getFullYear());
@@ -157,7 +157,7 @@ function fn_Generate(){
             $("#summaryform #reportDownFileName").val("BSCountForecastByCMGroup_"+day+month+date.getFullYear());
         }
 
-         
+
          /*             string WhereSQL = "";
             if (!string.IsNullOrEmpty(mypBSMonth.SelectedDate.ToString()))
                 WhereSQL += "AND m.Month = " + mypBSMonth.SelectedDate.Value.Month.ToString() +
@@ -174,7 +174,7 @@ function fn_Generate(){
                 WhereSQL += "AND a.StateID = " + cmbState.SelectedValue + " ";
             if (cmbArea.SelectedIndex > -1)
                 WhereSQL += "AND a.AreaID = " + cmbArea.SelectedValue + " "; */
-                
+
 
 
   /*          $("#summaryform #V_hsMonth").val();
@@ -183,26 +183,26 @@ function fn_Generate(){
          $("#summaryform #V_DSC").val($("#cmbDSC option:selected").val());
          $("#summaryform #V_Status").val($("#cmbStatus option:selected").val());
          $("#summaryform #V_InsStatus").val($("#cmbInsStatus option:selected").val());
-         $("#summaryform #V_Area").val($("#cmbArea option:selected").val()); */  
-         
-                         
+         $("#summaryform #V_Area").val($("#cmbArea option:selected").val()); */
 
-         
-         
-                  
+
+
+
+
+
        //report 호출
          var option = {
                  isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
          };
-         
+
          Common.report("summaryform", option);
     }
-    
+
 }
 
 
 
-         
+
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
@@ -214,7 +214,7 @@ function fn_Generate(){
 </header><!-- pop_header end -->
 
 <section class="pop_body"><!-- pop_body start -->
-         
+
 <section class="search_table"><!-- search_table start -->
 <form action="#" id="summaryform">
 <input type="hidden" id="V_HSType" name="V_HSType" />
@@ -249,14 +249,14 @@ function fn_Generate(){
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Type</th>    
+    <th scope="row">Type</th>
     <td>
     <select id="cmbContent" name="cmbContent">
         <option value="">Choose one</option>
         <option value="1">Monthly HS Summary Report</option>
         <option value="2">Monthly HS Remark Listing</option>
         <option value="3">Filter Replacement Particular</option>
-        
+
     </select>
     </td>
     <th scope="row">HS Month</th>
@@ -268,7 +268,7 @@ function fn_Generate(){
     <th scope="row">Department Code</th>
     <td>
     <select id="cmbDeptCode" name="cmbDeptCode">
-    
+
     </select>
     </td>
     <th scope="row">Cody Code</th>
@@ -288,9 +288,9 @@ function fn_Generate(){
     <select id="cmbStatus" name="cmbStatus">
         <option value="">Choose one</option>
         <option value="1">Active</option>
-        <option value="2">Complete</option>
-        <option value="3">Cancel</option>
-        <option value="4">Fail</option>
+        <option value="4">Complete</option>
+        <option value="10">Cancel</option>
+        <option value="21">Fail</option>
     </select>
     </td>
 </tr>
@@ -315,7 +315,7 @@ function fn_Generate(){
 </form>
 </section><!-- search_table end -->
 <ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_Generate()">Generate</a></p></li>    
+    <li><p class="btn_blue2 big"><a href="#" onclick="javascript:fn_Generate()">Generate</a></p></li>
 </ul>
 </section><!-- pop_body end -->
 
