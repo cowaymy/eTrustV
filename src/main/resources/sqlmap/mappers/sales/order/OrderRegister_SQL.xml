@@ -674,7 +674,7 @@
               </if>
               <if test='salesMen != null and salesMen !=""'>
                 AND (MEM_LVL = 4
-                AND MEM_TYPE IN (1,2) OR MEM_TYPE = 4)
+                AND MEM_TYPE IN (1,2) OR MEM_TYPE IN (4,6) )
               </if>
 		        AND ROWNUM &lt;= 1 ) T
     </select>
