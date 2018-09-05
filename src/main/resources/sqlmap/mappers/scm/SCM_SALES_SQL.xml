@@ -494,6 +494,117 @@ SELECT A.PLAN_ID
 	</if>
 </select>
 
+<select id="selectSalesPlanMngmentGroupList" parameterType="Map" resultType="egovMap">
+SELECT 0 AS PLAN_MASTER_ID
+     , A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , A.CHECK_FLAG
+     , 'ALL' AS TEAM
+     , 0 AS PLAN_DTL_ID
+     , A.STK_TYPE_ID
+     , A.CATEGORY
+     , A.CODE
+     , A.NAME
+     , SUM(A.M3_AVG_ISSUE_ORDER) AS M3_AVG_ISSUE_ORDER
+     , SUM(A.M1_ISSUE_ORDER) AS M1_ISSUE_ORDER
+     , SUM(A.M0_PLAN_ORDER) AS M0_PLAN_ORDER
+     , SUM(A.M1) AS M1
+     , SUM(A.M2) AS M2
+     , SUM(A.M3) AS M3
+     , SUM(A.M4) AS M4
+     , SUM(A.BEF_4_WEEK_TH) AS BEF_4_WEEK_TH
+     , SUM(A.BEF_3_WEEK_TH) AS BEF_3_WEEK_TH
+     , SUM(A.BEF_2_WEEK_TH) AS BEF_2_WEEK_TH
+     , SUM(A.BEF_1_WEEK_TH) AS BEF_1_WEEK_TH
+     , SUM(A.W00) AS W00
+     , SUM(A.W01) AS W01, SUM(A.W02) AS W02, SUM(A.W03) AS W03, SUM(A.W04) AS W04, SUM(A.W05) AS W05, SUM(A.W06) AS W06, SUM(A.W07) AS W07, SUM(A.W08) AS W08, SUM(A.W09) AS W09, SUM(A.W10) AS W10
+     , SUM(A.W11) AS W11, SUM(A.W12) AS W12, SUM(A.W13) AS W13, SUM(A.W14) AS W14, SUM(A.W15) AS W15, SUM(A.W16) AS W16, SUM(A.W17) AS W17, SUM(A.W18) AS W18, SUM(A.W19) AS W19, SUM(A.W20) AS W20
+     , SUM(A.W21) AS W21, SUM(A.W22) AS W22, SUM(A.W23) AS W23, SUM(A.W24) AS W24, SUM(A.W25) AS W25, SUM(A.W26) AS W26, SUM(A.W27) AS W27, SUM(A.W28) AS W28, SUM(A.W29) AS W29, SUM(A.W30) AS W30
+     , SUM(A.WS1) AS WS1, SUM(A.WS2) AS WS2, SUM(A.WS3) AS WS3, SUM(A.WS4) AS WS4, SUM(A.WS5) AS WS5
+  FROM (
+SELECT A.PLAN_ID AS PLAN_MASTER_ID
+     , A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , A.PLAN_STUS_ID AS CHECK_FLAG
+     , A.TEAM
+     , B.PLAN_DTL_ID
+     , C.STK_TYPE_ID
+     , C.STK_CTGRY_ID AS CATEGORY
+     , C.STK_CODE AS CODE
+     , C.STK_DESC AS NAME
+     , (SELECT ROUND(COUNT(*)/3)
+          FROM GBSLCVD.SCM0051S Z
+         WHERE Z.STOCK_CODE = C.STK_CODE
+           AND Z.TEAM = A.TEAM
+           AND Z.ISS_DT BETWEEN #{m3YearFrom} || LPAD(#{m3MonthFrom}, 2, '0') || '01' AND #{m3YearTo} || LPAD(#{m3MonthTo}, 2, '0') || '31') AS M3_AVG_ISSUE_ORDER
+     , (SELECT COUNT(*)
+          FROM GBSLCVD.SCM0051S Z
+         WHERE Z.STOCK_CODE = C.STK_CODE
+           AND Z.TEAM = A.TEAM
+           AND Z.ISS_DT BETWEEN #{m1YearFrom} || LPAD(#{m1MonthFrom}, 2, '0') || '01' AND #{m1YearTo} || LPAD(#{m1MonthTo}, 2, '0') || '31') AS M1_ISSUE_ORDER
+     , (SELECT COUNT(*)
+          FROM GBSLCVD.SCM0050S Z
+         WHERE Z.STOCK_CODE = C.STK_CODE
+           AND Z.TEAM = A.TEAM
+           AND Z.ORD_DT BETWEEN #{scmYearCbBox} || LPAD(#{selectPlanMonth}, 2, '0') || '01' AND #{scmYearCbBox} || LPAD(#{selectPlanMonth}, 2, '0') || '31') AS M0_PLAN_ORDER
+     , B.M1
+     , B.M2
+     , B.M3
+     , B.M4
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(C.STK_CODE, 'STOCK_CODE', A.PLAN_ID, C.STK_TYPE_ID), FN_GET_SCM_SCM0002D(C.STK_CODE, 'TEAM', A.PLAN_ID, C.STK_TYPE_ID), #{scmYearCbBox}, #{selectPlanMonth}, (#{scmPeriodCbBox}-4)) AS BEF_4_WEEK_TH
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(C.STK_CODE, 'STOCK_CODE', A.PLAN_ID, C.STK_TYPE_ID), FN_GET_SCM_SCM0002D(C.STK_CODE, 'TEAM', A.PLAN_ID, C.STK_TYPE_ID), #{scmYearCbBox}, #{selectPlanMonth}, (#{scmPeriodCbBox}-3)) AS BEF_3_WEEK_TH
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(C.STK_CODE, 'STOCK_CODE', A.PLAN_ID, C.STK_TYPE_ID), FN_GET_SCM_SCM0002D(C.STK_CODE, 'TEAM', A.PLAN_ID, C.STK_TYPE_ID), #{scmYearCbBox}, #{selectPlanMonth}, (#{scmPeriodCbBox}-2)) AS BEF_2_WEEK_TH
+     , FN_GET_COUNT_SCM_WEEK_TH(FN_GET_SCM_SCM0002D(C.STK_CODE, 'STOCK_CODE', A.PLAN_ID, C.STK_TYPE_ID), FN_GET_SCM_SCM0002D(C.STK_CODE, 'TEAM', A.PLAN_ID, C.STK_TYPE_ID), #{scmYearCbBox}, #{selectPlanMonth}, (#{scmPeriodCbBox}-1)) AS BEF_1_WEEK_TH
+     , B.W00
+     , B.W01, B.W02, B.W03, B.W04, B.W05, B.W06, B.W07, B.W08, B.W09, B.W10
+     , B.W11, B.W12, B.W13, B.W14, B.W15, B.W16, B.W17, B.W18, B.W19, B.W20
+     , B.W21, B.W22, B.W23, B.W24, B.W25, B.W26, B.W27, B.W28, B.W29, B.W30
+     , B.WS1, B.WS2, B.WS3, B.WS4, B.WS5
+  FROM SCM0001M A
+  LEFT OUTER JOIN SCM0002D B ON (A.PLAN_ID = B.PLAN_MASTER_ID)
+  LEFT OUTER JOIN SYS0026M C ON (B.STOCK_CODE = C.STK_CODE)
+ WHERE A.PLAN_YEAR = #{scmYearCbBox}
+   AND A.PLAN_WEEK = #{scmPeriodCbBox}
+	<if test="scmTeamCbBox != null and scmTeamCbBox !='' ">
+   AND A.TEAM = #{scmTeamCbBox}
+	</if>
+	<choose>
+		<when test="scmStockTypes != null and !scmStockTypes.isEmpty">
+   AND C.STK_TYPE_ID IN
+			<foreach item="item" collection="scmStockTypes" index="index" open="(" separator="," close=")">
+       #{item}
+			</foreach>
+		</when>
+	</choose>
+	<choose>
+		<when test="stkCategories != null and !stkCategories.isEmpty">
+   AND C.STK_CTGRY_ID IN 
+			<foreach item="item" collection="stkCategories" index="index" open="(" separator="," close=")">
+       #{item}
+			</foreach>
+		</when>
+	</choose>
+	<choose>
+		<when test="stkCodes != null and !stkCodes.isEmpty">
+   AND C.STK_CODE IN 
+			<foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
+       #{item}
+			</foreach>
+		</when>
+	</choose>
+ ) A
+ GROUP BY A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , A.CHECK_FLAG
+     , A.STK_TYPE_ID
+     , A.CATEGORY
+     , A.CODE
+     , A.NAME
+ ORDER BY A.STK_TYPE_ID, A.CATEGORY, A.CODE
+</select>
 
 <select id="selectSalesPlanMngmentList" parameterType="Map" resultType="egovMap">
 SELECT A.PLAN_ID AS PLAN_MASTER_ID
@@ -507,9 +618,21 @@ SELECT A.PLAN_ID AS PLAN_MASTER_ID
      , C.STK_CTGRY_ID AS CATEGORY
      , C.STK_CODE AS CODE
      , C.STK_DESC AS NAME
-     , 0 AS M3_AVG_ISSUE_ORDER
-     , 0 AS M1_ISSUE_ORDER
-     , 0 AS M0_PLAN_ORDER
+     , (SELECT ROUND(COUNT(*)/3)
+          FROM GBSLCVD.SCM0051S Z
+         WHERE Z.STOCK_CODE = C.STK_CODE
+           AND Z.TEAM = A.TEAM
+           AND Z.ISS_DT BETWEEN #{m3YearFrom} || LPAD(#{m3MonthFrom}, 2, '0') || '01' AND #{m3YearTo} || LPAD(#{m3MonthTo}, 2, '0') || '31') AS M3_AVG_ISSUE_ORDER
+     , (SELECT COUNT(*)
+          FROM GBSLCVD.SCM0051S Z
+         WHERE Z.STOCK_CODE = C.STK_CODE
+           AND Z.TEAM = A.TEAM
+           AND Z.ISS_DT BETWEEN #{m1YearFrom} || LPAD(#{m1MonthFrom}, 2, '0') || '01' AND #{m1YearTo} || LPAD(#{m1MonthTo}, 2, '0') || '31') AS M1_ISSUE_ORDER
+     , (SELECT COUNT(*)
+          FROM GBSLCVD.SCM0050S Z
+         WHERE Z.STOCK_CODE = C.STK_CODE
+           AND Z.TEAM = A.TEAM
+           AND Z.ORD_DT BETWEEN #{scmYearCbBox} || LPAD(#{selectPlanMonth}, 2, '0') || '01' AND #{scmYearCbBox} || LPAD(#{selectPlanMonth}, 2, '0') || '31') AS M0_PLAN_ORDER
      , B.M1
      , B.M2
      , B.M3
