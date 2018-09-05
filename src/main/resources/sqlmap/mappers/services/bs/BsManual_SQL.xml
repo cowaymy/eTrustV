@@ -504,7 +504,7 @@
                                 AND HSM.STUS_CODE_ID = EXTENT2.STUS_CODE_ID(+)
                                 AND SOM.CUST_ADD_ID = sal023.CUST_ADD_ID
                                 and sal023.area_id = sys064.area_id*/
-                                AND SOM.CUST_ID = SAL023.CUST_ID
+                                <!-- AND SOM.CUST_ID = SAL023.CUST_ID -->
                                 AND SOM.SALES_ORD_ID = SAL45.SALES_ORD_ID
                                 AND SAL023.CUST_ADD_ID = SAL45.ADD_ID
                                 AND SAL023.AREA_ID = SYS064.AREA_ID
@@ -1933,7 +1933,7 @@
                                     LEFT JOIN SVC0006D Extent11   ON ( Extent1.SCHDUL_ID = Extent11.SCHDUL_ID )
                                     AND ( 1 = Extent11.RESULT_IS_CURR )
                                      JOIN SAL0023D B ON B.CUST_ADD_ID  = Extent10.ADD_ID
-                                     AND  Extent4.CUST_ID = B.CUST_ID
+                                     <!-- AND  Extent4.CUST_ID = B.CUST_ID-->
                                     LEFT JOIN SYS0064M C ON C.AREA_ID = B.AREA_ID
                                    WHERE  Extent1.SCHDUL_ID = #{schdulId}
                                    <![CDATA[            AND ROWNUM <= 1 ) Limit1 ]]>
