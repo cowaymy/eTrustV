@@ -111,7 +111,7 @@ function fn_Generate(){
 	         }
 
 	         if($("#cmbCodyCode").val() != '' && $("#cmbCodyCode").val() != null) {
-	            whereSql+= " AND mr.MEM_ID = '" + $("#cmbCodyCode").val() + "'";
+	            whereSql+= " AND mr.MEM_CODE = '" + $("#cmbCodyCode").val() + "'";
 	         }
 
 	         if($("#cmbDSC").val() != '' && $("#cmbDSC").val() != null) {
