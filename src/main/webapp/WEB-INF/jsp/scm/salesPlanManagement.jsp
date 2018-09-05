@@ -24,6 +24,18 @@
   color:#000;
 }
 
+.my-backColumn3 {
+	text-align : right;
+	background : #c0c0c0;
+	color : #000;
+}
+
+.my-backColumn4 {
+	text-align : center;
+	background : #c0c0c0;
+	color : #000;
+}
+
 .my-editable {
   background:#A9BCF5;
   color:#000;
@@ -654,7 +666,7 @@ function fnSettiingHeader()
 			fixedColumnCount : 8,
 			enableRestore : true,
 			softRemovePolicy : "exceptNew",	//	사용자추가한 행은 바로 삭제
-			showRowCheckColumn : true,		//	체크박스 표시 설정
+			showRowCheckColumn : false,		//	체크박스 표시 설정
 			independentAllCheckBox : true,	//	전체 선택 체크박스가 독립적인 역할을 할지 여부
 			usePaging : false,				//	페이징처리 설정
 			rowCheckableFunction : function(rowIndex, isChecked, item) {
@@ -776,31 +788,45 @@ function fnSettiingHeader()
 									 visible : false
 								 }, {
 									 dataField : result.header[0].teamH1,
-									 headerText : "<spring:message code='sys.scm.salesplan.Team' />",
-									 editable : true
+									 //headerText : "<spring:message code='sys.scm.salesplan.Team' />",
+									 headerText : "Team",
+									 editable : true,
+									 style : "my-backColumn4"
 								 }, {
 									 dataField : result.header[0].stkTypeIdH1,
-									 headerText : "<spring:message code='sys.scm.interface.stockType' />",
-									 editable : true
+									 //headerText : "<spring:message code='sys.scm.interface.stockType' />",
+									 headerText : "Type",
+									 editable : true,
+									 style : "my-backColumn4"
 								 }, {
 									 dataField : result.header[0].categoryH1,
-									 headerText : "<spring:message code='sys.scm.salesplan.Category' />",
-									 editable : true
+									 //headerText : "<spring:message code='sys.scm.salesplan.Category' />",
+									 headerText : "Category",
+									 editable : true,
+									 style : "my-backColumn4"
 								 }, {
 									 dataField : result.header[0].codeH1,
-									 headerText : "<spring:message code='sys.scm.salesplan.Code' />",
-									 editable : true
+									 //headerText : "<spring:message code='sys.scm.salesplan.Code' />",
+									 headerText : "Code",
+									 editable : true,
+									 style : "my-backColumn4"
 								 }, {
 									 dataField : result.header[0].nameH1,
-									 headerText : "<spring:message code='sys.scm.salesplan.Name' />",
-									 editable : true
+									 //headerText : "<spring:message code='sys.scm.salesplan.Name' />",
+									 headerText : "Name",
+									 editable : true,
+									 style : "my-backColumn3"
 								 }
 								 ]
 							}, {
 								//	M-3 AVG
 								dataField : result.header[0].isuueorderH,
-								headerText : "<spring:message code='sys.scm.salesplan.M3_AVG_IssueOrder' />",
-								editable : false
+								//headerText : "<spring:message code='sys.scm.salesplan.M3_AVG_IssueOrder' />",
+								headerText : "M3 Issue<br/> AVG",
+								dataType : "numeric",
+								formatString : "#,##0",
+								editable : false,
+								style : "my-backColumn3"
 							}, {
 								headerText : "Monthly",
 								children :
@@ -905,28 +931,48 @@ function fnSettiingHeader()
 									//	for insert end
 									 }, {
 										 dataField : result.header[0].beforeDayH2,
-										 headerText : "<spring:message code='sys.scm.salesplan.M1_issue_IssueOrder' />",
-										 editable : false
+										 //headerText : "<spring:message code='sys.scm.salesplan.M1_issue_IssueOrder' />",
+										 headerText : "M1 Issue",
+										 dataType : "numeric",
+										 formatString : "#,##0",
+										 editable : false,
+										 style : "my-backColumn3"
 									 }, {
 										 dataField : result.header[0].todayH2,
-										 headerText : "<spring:message code='sys.scm.salesplan.M0_PLN_ORD' />",
-										 editable : false
+										 //headerText : "<spring:message code='sys.scm.salesplan.M0_PLN_ORD' />",
+										 headerText : "M0 Ord",
+										 dataType : "numeric",
+										 formatString : "#,##0",
+										 editable : false,
+										 style : "my-backColumn3"
 									 }, {
 										 dataField : result.header[0].m1H2,
 										 headerText : "<spring:message code='sys.scm.salesplan.M1' />",
-										 editable : false
+										 dataType : "numeric",
+										 formatString : "#,##0",
+										 editable : false,
+										 style : "my-backColumn3"
 									 }, {
 										 dataField : result.header[0].m2H2,
 										 headerText : "<spring:message code='sys.scm.salesplan.M2' />",
-										 editable : false
+										 dataType : "numeric",
+										 formatString : "#,##0",
+										 editable : false,
+										 style : "my-backColumn3"
 									 }, {
 										 dataField : result.header[0].m3H3,
 										 headerText : "<spring:message code='sys.scm.salesplan.M3' />",
-										 editable : false
+										 dataType : "numeric",
+										 formatString : "#,##0",
+										 editable : false,
+										 style : "my-backColumn3"
 									 }, {
 										 dataField : result.header[0].m4H4,
 										 headerText : "<spring:message code='sys.scm.salesplan.M4' />",
-										 editable : false
+										 dataType : "numeric",
+										 formatString : "#,##0",
+										 editable : false,
+										 style : "my-backColumn3"
 									 }
 									 ]
 							}
@@ -972,7 +1018,7 @@ function fnSettiingHeader()
 							
 							sumWeekThStr	= "bef" + (i+1) + "WeekTh";
 							fieldStr		= "w" + iLootCnt + "WeekSeq";
-							
+							//console.log("sumWeekThStr : " + sumWeekThStr);
 							groupM_0.children.push({
 								dataField :  sumWeekThStr,
 								headerText : result.header[0][fieldStr],
@@ -1244,14 +1290,23 @@ function fnSearchBtnList() {
 			scmStockTypes : $("#scmStockType").multipleSelect("getSelects"),
 			stkCodes : $("#stockCodeCbBox").multipleSelect("getSelects")
 	}
+	var url	= "";
 	params	= $.extend($("#MainForm").serializeJSON(), params);
 	
+	if ( "" == $("#scmTeamCbBox").val() ) {
+		console.log("search all");
+		url	= "/scm/selectSalesPlanMngmentSearchGroup.do";
+	} else {
+		console.log("search each team");
+		url	= "/scm/selectSalesPlanMngmentSearch.do";
+	}
+	console.log("=========== url : " + url + ", team : " + $("#scmTeamCbBox").val());
 	Common.ajax("POST"
-			, "/scm/selectSalesPlanMngmentSearch.do"
+			, url
 			, params
 			, function(result) {
-				console.log("성공 fnSearchBtnList: " + result.length);
-				console.log(result);
+				//console.log("성공 fnSearchBtnList: " + result.length);
+				//console.log(result);
 				
 				if ( result.planInfo != null && result.planInfo.length > 0 ) {
 					for ( var i = 0 ; i < result.planInfo.length ; i++ ) {
@@ -1298,7 +1353,7 @@ function fnSearchBtnList() {
 				gM2	= result.seperationInfo[0].m2TotCnt;
 				gM3	= result.seperationInfo[0].m3TotCnt;
 				//gM0	= result.seperationInfo[0].m4TotCnt;
-				console.log("=========== M0 cnt : " + gM0);
+				//console.log("=========== M0 cnt : " + gM0);
 				AUIGrid.setGridData(myGridID, result.salesPlanMainList);
 			});
 }
@@ -1366,13 +1421,13 @@ $(document).ready(function()
 //	change team
 function fnButtonControl(create) {
 	var scmTeamCbBox	= $("#scmTeamCbBox").val();
-	console.log("=========== scmTeam : " + scmTeamCbBox);
+	/*console.log("=========== scmTeam : " + scmTeamCbBox);
 	console.log("=========== planId1 : " + $("#planId1").val());
 	console.log("=========== planId2 : " + $("#planId2").val());
 	console.log("=========== planId3 : " + $("#planId3").val());
 	console.log("=========== planStusId1 : " + $("#planStusId1").val());
 	console.log("=========== planStusId2 : " + $("#planStusId2").val());
-	console.log("=========== planStusId3 : " + $("#planStusId3").val());
+	console.log("=========== planStusId3 : " + $("#planStusId3").val());*/
 
 	if ( "" == scmTeamCbBox ) {
 		//	Team : All -> All Button disabled
