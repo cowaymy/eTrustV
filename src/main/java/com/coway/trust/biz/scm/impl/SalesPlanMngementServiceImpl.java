@@ -180,6 +180,11 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	public List<EgovMap> selectSalesPlanMngmentList(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectSalesPlanMngmentList(params);
 	}
+	
+	@Override
+	public List<EgovMap> selectSalesPlanMngmentGroupList(Map<String, Object> params) {
+		return salesPlanMngementMapper.selectSalesPlanMngmentGroupList(params);
+	}
 
 	@Override
 	public List<EgovMap> selectStockIdByStCode(Map<String, Object> params) {
