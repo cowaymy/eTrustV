@@ -213,10 +213,150 @@ public class SalesPlanManagementController {
 		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);
 		String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));
 		((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);
+		
+		String planYear	= (String) params.get("scmYearCbBox");
+		String m3YearFrom	= "";	String m3YearTo	= "";	String m3MonthFrom	= "";	String m3MonthTo	= "";
+		String m1YearFrom	= "";	String m1YearTo	= "";	String m1MonthFrom	= "";	String m1MonthTo	= "";
+		Integer year	= 0;	Integer month	= 0;
+		
+		//	파라미터로 입력된 년월로 실적조회할 년월
+		if ( "1".equals(selectPlanMonth) ) {
+			//	파라미터가 2017년 1월인 경우
+			//	직전 3개월 2016년 10월 ~ 2016년12월
+			year	= Integer.parseInt(planYear) - 1;
+			m3YearFrom	= year.toString();	m3YearTo	= year.toString();
+			m3MonthFrom	= "10";				m3MonthTo	= "12";
+			//	직전 1개월 2016년 12월 ~ 2016년 12월
+			m1YearFrom	= m3YearFrom;		m1YearTo	= m3YearTo;
+			m1MonthFrom	= "12";				m1MonthTo	= "12";
+		} else if ( "2".equals(selectPlanMonth) ) {
+			//	파라미터가 2017년 2월인 경우
+			//	직전 3개월 2016년 11월 ~ 2017년 1월
+			year	= Integer.parseInt(planYear) - 1;
+			m3YearFrom	= year.toString();	m3YearTo	= planYear;
+			m3MonthFrom	= "11";				m3MonthTo		= "1";
+			//	직전 1개월 2017년 1월 ~ 2017년 1월
+			m1YearFrom	= planYear;			m1YearTo	= planYear;
+			m1MonthFrom	= "1";				m1MonthTo	= "1";
+		} else if ( "3".equals(selectPlanMonth) ) {
+			//	파라미터가 2017년 3월인 경우
+			//	직전 3개월 2016년 12월 ~ 2017년 2월
+			year	= Integer.parseInt(planYear) - 1;
+			m3YearFrom	= year.toString();	m3YearTo	= planYear;
+			m3MonthFrom	= "12";				m3MonthTo	= "2";
+			//	직전 1개월 2017년 2월 ~ 2017년 2월
+			m1YearFrom	= planYear;			m1YearTo	= planYear;
+			m1MonthFrom	= "2";				m1MonthTo	= "2";
+		} else {
+			//	파라미터가 2017년 4월 ~ 2017년 12월
+			//	직전 3개월 2017년 1월 ~ 3월 -> 2017년 9월 ~ 2017년 11월
+			m3YearFrom	= planYear;			m3YearTo	= planYear;
+			month	= Integer.parseInt(selectPlanMonth) - 3;	m3MonthFrom	= month.toString();
+			month	= Integer.parseInt(selectPlanMonth) - 1;	m3MonthTo	= month.toString();
+			//	직전 1개월 2017년 3월 -> 2017년 11월
+			m1YearFrom	= planYear;			m1YearTo	= planYear;
+			month	= Integer.parseInt(selectPlanMonth) - 1;
+			m1MonthFrom	= month.toString();	m1MonthTo	= month.toString();
+		}
+		
+		LOGGER.debug("==================== planYear : " + planYear + ", planMonth : " + selectPlanMonth);
+		LOGGER.debug("==================== m3YearFrom : " + m3YearFrom + ", m3YearTo : " + m3YearTo + ", m3MonthFrom : " + m3MonthFrom + ", m3MonthTo : " + m3MonthTo);
+		LOGGER.debug("==================== m1YearFrom : " + m1YearFrom + ", m1YearTo : " + m1YearTo + ", m1MonthFrom : " + m1MonthFrom + ", m1MonthTo : " + m1MonthTo);
+		
+		((Map<String, Object>) params).put("m3YearFrom", m3YearFrom);
+		((Map<String, Object>) params).put("m3YearTo", m3YearTo);
+		((Map<String, Object>) params).put("m3MonthFrom", m3MonthFrom);
+		((Map<String, Object>) params).put("m3MonthTo", m3MonthTo);
+		((Map<String, Object>) params).put("m1YearFrom", m1YearFrom);
+		((Map<String, Object>) params).put("m1YearTo", m1YearTo);
+		((Map<String, Object>) params).put("m1MonthFrom", m1MonthFrom);
+		((Map<String, Object>) params).put("m1MonthTo", m1MonthTo);
+		
+		LOGGER.debug("addMonth_Param : {}", params.toString());
+		
+		List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentList(params);
+		List<EgovMap> seperationInfo = salesPlanMngementService.selectSeperation(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		//main Data
+		map.put("planInfo", planInfo);
+		map.put("salesPlanMainList", selectSalesPlanMngmentList);
+		map.put("seperationInfo", seperationInfo);
 
+		return ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/selectSalesPlanMngmentSearchGroup.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanMngmentGroupList(@RequestBody Map<String, Object> params)
+	{
+		LOGGER.debug("selectSalesPlanMngmentList : {}", params.toString());
+
+		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);
+		String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));
+		((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);
+		
+		String planYear	= (String) params.get("scmYearCbBox");
+		String m3YearFrom	= "";	String m3YearTo	= "";	String m3MonthFrom	= "";	String m3MonthTo	= "";
+		String m1YearFrom	= "";	String m1YearTo	= "";	String m1MonthFrom	= "";	String m1MonthTo	= "";
+		Integer year	= 0;	Integer month	= 0;
+		
+		//	파라미터로 입력된 년월로 실적조회할 년월
+		if ( "1".equals(selectPlanMonth) ) {
+			//	파라미터가 2017년 1월인 경우
+			//	직전 3개월 2016년 10월 ~ 2016년12월
+			year	= Integer.parseInt(planYear) - 1;
+			m3YearFrom	= year.toString();	m3YearTo	= year.toString();
+			m3MonthFrom	= "10";				m3MonthTo	= "12";
+			//	직전 1개월 2016년 12월 ~ 2016년 12월
+			m1YearFrom	= m3YearFrom;		m1YearTo	= m3YearTo;
+			m1MonthFrom	= "12";				m1MonthTo	= "12";
+		} else if ( "2".equals(selectPlanMonth) ) {
+			//	파라미터가 2017년 2월인 경우
+			//	직전 3개월 2016년 11월 ~ 2017년 1월
+			year	= Integer.parseInt(planYear) - 1;
+			m3YearFrom	= year.toString();	m3YearTo	= planYear;
+			m3MonthFrom	= "11";				m3MonthTo		= "1";
+			//	직전 1개월 2017년 1월 ~ 2017년 1월
+			m1YearFrom	= planYear;			m1YearTo	= planYear;
+			m1MonthFrom	= "1";				m1MonthTo	= "1";
+		} else if ( "3".equals(selectPlanMonth) ) {
+			//	파라미터가 2017년 3월인 경우
+			//	직전 3개월 2016년 12월 ~ 2017년 2월
+			year	= Integer.parseInt(planYear) - 1;
+			m3YearFrom	= year.toString();	m3YearTo	= planYear;
+			m3MonthFrom	= "12";				m3MonthTo	= "2";
+			//	직전 1개월 2017년 2월 ~ 2017년 2월
+			m1YearFrom	= planYear;			m1YearTo	= planYear;
+			m1MonthFrom	= "2";				m1MonthTo	= "2";
+		} else {
+			//	파라미터가 2017년 4월 ~ 2017년 12월
+			//	직전 3개월 2017년 1월 ~ 3월 -> 2017년 9월 ~ 2017년 11월
+			m3YearFrom	= planYear;			m3YearTo	= planYear;
+			month	= Integer.parseInt(selectPlanMonth) - 3;	m3MonthFrom	= month.toString();
+			month	= Integer.parseInt(selectPlanMonth) - 1;	m3MonthTo	= month.toString();
+			//	직전 1개월 2017년 3월 -> 2017년 11월
+			m1YearFrom	= planYear;			m1YearTo	= planYear;
+			month	= Integer.parseInt(selectPlanMonth) - 1;
+			m1MonthFrom	= month.toString();	m1MonthTo	= month.toString();
+		}
+		
+		LOGGER.debug("==================== planYear : " + planYear + ", planMonth : " + selectPlanMonth);
+		LOGGER.debug("==================== m3YearFrom : " + m3YearFrom + ", m3YearTo : " + m3YearTo + ", m3MonthFrom : " + m3MonthFrom + ", m3MonthTo : " + m3MonthTo);
+		LOGGER.debug("==================== m1YearFrom : " + m1YearFrom + ", m1YearTo : " + m1YearTo + ", m1MonthFrom : " + m1MonthFrom + ", m1MonthTo : " + m1MonthTo);
+		
+		((Map<String, Object>) params).put("m3YearFrom", m3YearFrom);
+		((Map<String, Object>) params).put("m3YearTo", m3YearTo);
+		((Map<String, Object>) params).put("m3MonthFrom", m3MonthFrom);
+		((Map<String, Object>) params).put("m3MonthTo", m3MonthTo);
+		((Map<String, Object>) params).put("m1YearFrom", m1YearFrom);
+		((Map<String, Object>) params).put("m1YearTo", m1YearTo);
+		((Map<String, Object>) params).put("m1MonthFrom", m1MonthFrom);
+		((Map<String, Object>) params).put("m1MonthTo", m1MonthTo);
+		
 		LOGGER.debug("addMonth_Param : {}", params.toString());
 
-		List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentList(params);
+		List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentGroupList(params);
 		List<EgovMap> seperationInfo = salesPlanMngementService.selectSeperation(params);
 
 		Map<String, Object> map = new HashMap<>();
