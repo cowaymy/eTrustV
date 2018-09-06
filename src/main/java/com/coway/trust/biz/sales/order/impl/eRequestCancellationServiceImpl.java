@@ -599,6 +599,7 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
 		params.put("appTypeId",  appTypeId);
 		params.put("callEntryId",  LatestOrderCallEntryID);
 		params.put("tempOrdId",  params.get("salesOrdId"));
+		params.put("userId",  sessionVO.getUserId());
 
 		this.preprocSalesReqCancel(salesReqCancelVO, params, sessionVO);
 		this.preprocCallEntryMaster(callEntryMasterVO, params, sessionVO, SalesConstants.ORDER_REQ_TYPE_CD_CANC);
@@ -707,7 +708,16 @@ public class eRequestCancellationServiceImpl extends EgovAbstractServiceImpl imp
 		saveParam.put("salesOrdId", params.get("salesOrdId"));
 
 
+		int ccpResult = eRequestCancellationMapper.selectCcpDecisionMById(params);
+
+		if(ccpResult > 0){
+			eRequestCancellationMapper.updateCcpStatus(params); // CCP Results
+
+		}
+
 		logger.info("####################### Confirm To Cancel save Start!! #####################");
+
+
 		saveParam.put("userId", sessionVO.getUserId());
 		EgovMap getResultId = orderSuspensionMapper.newSuspendSearch2(saveParam);		// CallEntry
 		saveParam.put("resultId", getResultId.get("resultId"));
