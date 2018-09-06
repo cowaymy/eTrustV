@@ -65,6 +65,8 @@ public interface eRequestCancellationMapper {
 
 	EgovMap cancelReqInfo(Map<String, Object> params);
 
+	void updateCcpStatus(Map<String, Object> params); // CCP
+
 
 
 
