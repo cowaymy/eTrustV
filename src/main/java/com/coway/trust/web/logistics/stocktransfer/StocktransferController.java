@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 /**
  * @author methree
@@ -183,9 +183,12 @@ public class StocktransferController {
 	}
 
 	@RequestMapping(value = "/StocktransferSearchList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> selectLocationList(@RequestBody Map<String, Object> params, Model model)
+	public ResponseEntity<Map> selectLocationList(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVo)
 			throws Exception {
 
+		int userId = sessionVo.getUserId();
+
+		params.put("userId", userId);
 		List<EgovMap> list = stock.selectStockTransferMainList(params);
 
 		Map<String, Object> map = new HashMap();
@@ -195,7 +198,7 @@ public class StocktransferController {
 	}
 
 	@RequestMapping(value = "/StocktransferRequestDeliveryList.do", method = RequestMethod.GET)
-	public ResponseEntity<Map> StocktransferRequestDeliveryList(@RequestParam Map<String, Object> params, Model model)
+	public ResponseEntity<Map> StocktransferRequestDeliveryList(@RequestParam Map<String, Object> params, Model model,SessionVO sessionVo)
 			throws Exception {
 
 		List<EgovMap> list = stock.selectStockTransferDeliveryList(params);
@@ -223,7 +226,7 @@ public class StocktransferController {
 		param.put("form", formMap);
 		param.put("userId", userId);
 		String reqNo = stock.insertStockTransferInfo(param);
-		
+
 		logger.debug("reqNo!!!!! : {}", reqNo);
 		ReturnMessage message = new ReturnMessage();
 		if (reqNo != null && !"".equals(reqNo)){
@@ -314,13 +317,13 @@ public class StocktransferController {
 		String[] type = request.getParameterValues("cType");
 		String toloc = request.getParameter("slocation");
 		String mcode = request.getParameter("materialCode");
-		
+
 		Map<String, Object> smap = new HashMap();
 		smap.put("catetype", catetype);
 		smap.put("ctype", type);
 		smap.put("toloc", toloc);
 		smap.put("mcode", mcode);
-		
+
 		List<EgovMap> list = stock.selectTolocationItemList(smap);
 
 		smap.put("data", list);
@@ -406,7 +409,7 @@ public class StocktransferController {
 //		message.setData(data);
 //		return ResponseEntity.ok(message);
 //	}
-	
+
 	@RequestMapping(value = "/StocktransferReqDelivery.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> StocktransferReqDelivery(@RequestBody Map<String, Object> params, Model mode,
 			SessionVO sessionVo) {
@@ -425,19 +428,16 @@ public class StocktransferController {
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		message.setData(data);
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
-	@RequestMapping(value = "/StocktransferSearchDeliveryList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> StocktransferSearchDeliveryList(@RequestBody Map<String, Object> params, Model model)
-			throws Exception {
 
+	@RequestMapping(value = "/StocktransferSearchDeliveryList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map> StocktransferSearchDeliveryList(@RequestBody Map<String, Object> params, Model mode,SessionVO sessionVo)
+			throws Exception {
+		int userId = sessionVo.getUserId();
+		params.put("userId", userId);
 		List<EgovMap> list = stock.selectStockTransferDeliveryList(params);
-		
-		for (int i = 0 ; i < list.size(); i++){
-			logger.debug(" ::: {}" , list.get(i));
-		}
 
 		Map<String, Object> map = new HashMap();
 		map.put("data", list);
@@ -450,78 +450,78 @@ public class StocktransferController {
 			SessionVO sessionVo) throws Exception {
 		int userId = sessionVo.getUserId();
 		String delyno = "";
-		
+
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		ReturnMessage message = new ReturnMessage();
-		
+
 		String gtype= (String) formMap.get("gtype");
-		
+
 		logger.debug("gtype @@@@@@@: {}", gtype);
-		
+
 		if("RC".equals(gtype)){
-			
+
 			List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-    		
+
     		params.put("userId", userId);
     		params.put("add", serialList);
-    		
+
     		String reVal = stock.StockTransferDeliveryIssue(params);
-    
+
     		// 결과 만들기 예.
-    		
+
     		message.setCode(AppConstants.SUCCESS);
     		message.setData(reVal);
     		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-			
+
 		}else{
-			
+
     		if (checklist.size() > 0) {
     			for (int i = 0; i < checklist.size(); i++) {
     				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
-    
+
     				Map<String, Object> imap = new HashMap();
     				imap = (Map<String, Object>) map.get("item");
-    
+
     				delyno = (String) imap.get("delyno");
-    			
+
     			}
     		}
-    		
+
     		logger.debug("delyno ??????: {}", delyno);
-    		
+
     		Map<String, Object> grlist = stock.selectDelvryGRcmplt(delyno);
-    		
+
     		if(null == grlist){
     			throw new PreconditionException(AppConstants.FAIL, "DelvryNO does not exist.");
     		}
-    		
+
     		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
     		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
-    		
+
     		logger.debug("grmplt    값 : {}", grmplt);
     		logger.debug("gimplt    값 : {}", gimplt);
-    		
-    		
+
+
     		if ("Y".equals(gimplt)){
     			message.setCode(AppConstants.FAIL);
     			message.setMessage("Already processed.");
     		}else{
-    			
+
         		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-        		
+
         		params.put("userId", userId);
         		params.put("add", serialList);
-        		
+
         		String reVal = stock.StockTransferDeliveryIssue(params);
-        
+
         		// 결과 만들기 예.
-        		
+
         		message.setCode(AppConstants.SUCCESS);
         		message.setData(reVal);
         		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		}		
-	}		
+		}
+	}
 		return ResponseEntity.ok(message);
 	}
 
@@ -530,32 +530,32 @@ public class StocktransferController {
 			SessionVO sessionVo) throws Exception {
 		int userId = sessionVo.getUserId();
 		String delyno = "";
-		
+
 		Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
 		List<Object> checklist = (List<Object>) params.get(AppConstants.AUIGRID_CHECK);
 		ReturnMessage message = new ReturnMessage();
 		String gtype= (String) formMap.get("gtype");
-		
+
 		logger.debug("gtype @@@@@@@: {}", gtype);
-		
-		
+
+
 		if("RC".equals(gtype)){
-			
+
 			List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-    		
+
     		params.put("userId", userId);
     		params.put("add", serialList);
-    		
+
     		String reVal = stock.StockTransferDeliveryIssue(params);
-    
+
     		// 결과 만들기 예.
-    		
+
     		message.setCode(AppConstants.SUCCESS);
     		message.setData(reVal);
     		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-				
+
 		}else{
-			
+
 		if (checklist.size() > 0) {
 			for (int i = 0; i < checklist.size(); i++) {
 				Map<String, Object> map = (Map<String, Object>) checklist.get(i);
@@ -564,51 +564,51 @@ public class StocktransferController {
 				imap = (Map<String, Object>) map.get("item");
 
 				delyno = (String) imap.get("delyno");
-			
+
 			}
 		}
-		
+
 		logger.debug("delyno ??????: {}", delyno);
-		
+
 		Map<String, Object> grlist = stock.selectDelvryGRcmplt(delyno);
-		
+
 		if(null == grlist){
 			throw new PreconditionException(AppConstants.FAIL, "DelvryNO does not exist.");
 		}
-		
+
 		String grmplt =(String) grlist.get("DEL_GR_CMPLT");
 		String gimplt =(String) grlist.get("DEL_GI_CMPLT");
-		
+
 		logger.debug("grmplt    값 : {}", grmplt);
 		logger.debug("gimplt    값 : {}", gimplt);
-		
-		
-		
+
+
+
 		if ("Y".equals(grmplt)){
 			message.setCode(AppConstants.FAIL);
 			message.setMessage("Already processed.");
 		}else{
-			
+
     		List<Object> serialList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-    		
+
     		params.put("userId", userId);
     		params.put("add", serialList);
-    		
+
     		String reVal = stock.StockTransferDeliveryIssue(params);
-    
+
     		// 결과 만들기 예.
-    		
+
     		message.setCode(AppConstants.SUCCESS);
     		message.setData(reVal);
     		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		}
-}		
-		
+}
+
 		return ResponseEntity.ok(message);
-	
+
 	}
-		
+
 	@RequestMapping(value = "/StocktransferDeliveryDelete.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> StocktransferDeliveryDelete(@RequestBody Map<String, Object> params,
 			Model mode, SessionVO sessionVo) {
@@ -632,8 +632,8 @@ public class StocktransferController {
 
 		return ResponseEntity.ok(message);
 	}
-	
-	
+
+
 	@RequestMapping(value = "/deleteStoNo.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> deleteStoNo(@RequestParam Map<String, Object> params,
 			Model model) {
@@ -647,7 +647,7 @@ public class StocktransferController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/selectDelNo.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> selectDelNo(@RequestParam Map<String, Object> params,
 			Model model) {
@@ -662,18 +662,18 @@ public class StocktransferController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/stockMaxQtyCheck.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> stockMaxQtyCheck(@RequestParam Map<String, Object> params,
 			Model model) {
-		
+
 		logger.debug(" :::: {} ", params);
-		
+
 		String chkYn = stock.selectMaxQtyCheck(params);
 		Map<String, Object> map = new HashMap();
 		map.put("chkyn" , chkYn);
 
 		return ResponseEntity.ok(map);
 	}
-	
+
 }

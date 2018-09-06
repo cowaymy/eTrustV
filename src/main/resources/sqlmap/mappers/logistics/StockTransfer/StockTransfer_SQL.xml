@@ -97,6 +97,12 @@
            <if test="sstatus !=null and sstatus !=''">
               and l47.reqst_stus = #{sstatus}
            </if>
+           <if test="userId == 71469">
+              and (l47.reqst_cdc_rdc = 1532 or l47.rciv_cdc_rdc = 1532)
+           </if>
+           <if test="userId == 71473">
+              and (l47.reqst_cdc_rdc in (46,90148) or l47.rciv_cdc_rdc in (46,90148))
+           </if>
            ORDER BY l47.reqst_no DESC
     </select>
 
@@ -424,6 +430,15 @@
            </if>
            <if test="instatus !=null and instatus !=''">
               and L54.DELVRY_GR_CMPLT = #{instatus}
+           </if>
+           <if test="instatus !=null and instatus !=''">
+              and L54.DELVRY_GR_CMPLT = #{instatus}
+           </if>
+           <if test="userId == 71469">
+              and (l47.reqst_cdc_rdc = 1532 or l47.rciv_cdc_rdc = 1532)
+           </if>
+           <if test="userId == 71473">
+              and (l47.reqst_cdc_rdc in (46,90148) or l47.rciv_cdc_rdc in (46,90148))
            </if>
 
            ORDER BY l54.delvry_no DESC
