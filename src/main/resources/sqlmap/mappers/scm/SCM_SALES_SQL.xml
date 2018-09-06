@@ -404,7 +404,7 @@ WITH SALES_PLAN_SUMMARY
 			  FROM SCM0018M
 			 WHERE SCM_YEAR = #{year}
 			   AND WEEK_TH_SN = 1
-			   /*AND NVL(USE_YN,'Y')='Y'*/
+			   AND NVL(USE_YN,'Y')='Y'
 			   AND USE_YN = 'Y'
     </select>
 
@@ -580,7 +580,7 @@ SELECT A.PLAN_ID AS PLAN_MASTER_ID
 	</choose>
 	<choose>
 		<when test="stkCategories != null and !stkCategories.isEmpty">
-   AND C.STK_CTGRY_ID IN 
+   AND C.STK_CTGRY_ID IN
 			<foreach item="item" collection="stkCategories" index="index" open="(" separator="," close=")">
        #{item}
 			</foreach>
@@ -588,7 +588,7 @@ SELECT A.PLAN_ID AS PLAN_MASTER_ID
 	</choose>
 	<choose>
 		<when test="stkCodes != null and !stkCodes.isEmpty">
-   AND C.STK_CODE IN 
+   AND C.STK_CODE IN
 			<foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
        #{item}
 			</foreach>
@@ -664,7 +664,7 @@ SELECT A.PLAN_ID AS PLAN_MASTER_ID
 	</choose>
 	<choose>
 		<when test="stkCategories != null and !stkCategories.isEmpty">
-   AND C.STK_CTGRY_ID IN 
+   AND C.STK_CTGRY_ID IN
 			<foreach item="item" collection="stkCategories" index="index" open="(" separator="," close=")">
        #{item}
 			</foreach>
@@ -672,7 +672,7 @@ SELECT A.PLAN_ID AS PLAN_MASTER_ID
 	</choose>
 	<choose>
 		<when test="stkCodes != null and !stkCodes.isEmpty">
-   AND C.STK_CODE IN 
+   AND C.STK_CODE IN
 			<foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
        #{item}
 			</foreach>
@@ -820,7 +820,7 @@ SELECT (SELECT Z.PLAN_STUS_ID
 	</choose>
 	<choose>
 		<when test="stkCodes != null and !stkCodes.isEmpty">
-           AND SCM39V.STOCK_CODE IN 
+           AND SCM39V.STOCK_CODE IN
 			<foreach item="item" collection="stkCodes" index="index" open="(" separator="," close=")">
                #{item}
 			</foreach>
@@ -1378,7 +1378,7 @@ UPDATE SCM0001M
    SET PLAN_STUS_ID = 4
  WHERE PLAN_ID = #{planId}
 </update>
-<!-- 
+<!--
 <update id="updateSalesPlanUnConfirm" parameterType="Map">
 UPDATE SCM0001M
    SET PLAN_STUS_ID = 4
@@ -1392,7 +1392,7 @@ UPDATE SCM0001M
    SET PLAN_STUS_ID = 1
  WHERE PLAN_ID = #{planId}
 </update>
-<!-- 
+<!--
 <update id="updateSalesPlanConfirm" parameterType="Map">
   UPDATE SCM0001M
      SET PLAN_STUS_ID = 1
@@ -2482,8 +2482,8 @@ UPDATE SCM0001M
       WHERE PLAN_MASTER_ID = (SELECT PLAN_ID FROM SCM0001M WHERE PLAN_YEAR = #{scmYearCbBox} AND PLAN_WEEK = #{scmPeriodCbBox} AND TEAM = #{scmTeamCbBox})
         AND STOCK_CODE = #{stockCode}
     </insert>
-    
-    
+
+
    <insert id="insertITF189" parameterType="Map">
       INSERT INTO itf0189m (IF_KEY,
                       SEQ,
@@ -2550,8 +2550,8 @@ UPDATE SCM0001M
                       WS2,
                       WS3,
                       WS4,
-                      WS5)     
-     SELECT 
+                      WS5)
+     SELECT
      FN_CRT_IFKEY('189'),
       1,
       '189',
@@ -2621,7 +2621,7 @@ UPDATE SCM0001M
        WS4,
        WS5
   FROM SCM0001M a ,SCM0002D b
- WHERE 
+ WHERE
  a.PLAN_ID=b.PLAN_MASTER_ID
  AND a.PLAN_STUS_ID ='4'
  AND b.PLAN_MASTER_ID =  #{planId}
@@ -2634,8 +2634,8 @@ SELECT COUNT(*)
  WHERE A.PLAN_YEAR = #{scmYearCbBox}
    AND A.PLAN_WEEK = #{scmPeriodCbBox}
    AND A.TEAM = #{scmTeamCbBox}
-</select>    
-<!-- 
+</select>
+<!--
 <select id="selectCreateCount" parameterType="Map" resultType="int">
         select count(*) From SCM0001M where PLAN_YEAR= #{scmYearCbBox} and PLAN_WEEK= #{scmPeriodCbBox} and TEAM= #{scmTeamCbBox}
 </select>
@@ -2644,8 +2644,8 @@ SELECT COUNT(*)
 <select id="selectUnConfirmCnt" parameterType="Map" resultType="int">
         select count(*) From scm0005m where PLAN_YEAR=#{scmYearCbBox}and PLAN_WEEK=#{scmPeriodCbBox} and PLAN_MONTH=(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmPeriodCbBox}  AND WEEK_TH_SN = 1)
 </select>
-    
-    
-    
+
+
+
 
 </mapper>
