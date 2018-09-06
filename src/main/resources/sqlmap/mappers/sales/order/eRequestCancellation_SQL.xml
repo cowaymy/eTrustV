@@ -956,9 +956,20 @@
         SELECT COUNT(*) AS ccpOrder
           FROM SAL0102D
          WHERE CCP_SALES_ORD_ID = #{salesOrdId}
-         AND CCP_STUS_ID <> 5
+         AND CCP_STUS_ID = 1
     ]]>
     </select>
+
+
+        <update id="updateCcpStatus" parameterType="Map">
+        UPDATE SAL0102D
+             SET CCP_UPD_DT = SYSDATE,
+                   CCP_UPD_USER_ID = #{userId},
+                   CCP_STUS_ID = 6
+         WHERE CCP_SALES_ORD_ID = #{salesOrdId}
+    </update>
+
+
 
     <select id="selectECashDeductionItemById" parameterType="Map" resultType="int">
     <![CDATA[
