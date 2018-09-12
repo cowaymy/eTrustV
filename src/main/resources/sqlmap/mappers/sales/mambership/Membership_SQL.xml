@@ -1256,7 +1256,7 @@
 			                        #{SAVE_BS_FREQ},
 			                        to_date(#{SAVE_START_DATE}||'01 00:00:00'  ,'yyyy-mm-dd hh24:mi:ss') ,
 			                        --add_months(add_months( to_date(#{SAVE_START_DATE} ||'01' ,'yyyy-mm-dd hh24:mi:ss'),#{SAVE_DURATION} ),-1),
-			                        ADD_MONTHS(TO_CHAR(#{SAVE_START_DATE},'YYYY/MM')|| '01',#{SAVE_DURATION}) -1
+			                        ADD_MONTHS(TO_CHAR(#{SAVE_START_DATE},'YYYY/MM')|| '01',#{SAVE_DURATION}) -1,
 			                        #{SAVE_DURATION},
 			                        4,
 			                        #{remark},
