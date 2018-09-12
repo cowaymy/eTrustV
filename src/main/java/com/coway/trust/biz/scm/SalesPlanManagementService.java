@@ -13,4 +13,7 @@ public interface SalesPlanManagementService {
 	List<EgovMap> selectSplitInfo(Map<String, Object> params);
 	List<EgovMap> selectChildField(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanList(Map<String, Object> params);
+	int insertSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO);
+	int updateSalesPlanDetail(List<Object> updList, SessionVO sessionVO);
+	int updateSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO);
 }

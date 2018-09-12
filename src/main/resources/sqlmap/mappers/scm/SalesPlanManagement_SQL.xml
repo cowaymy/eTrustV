@@ -141,7 +141,6 @@ SELECT A.PLAN_ID
 	<if test="scmTeamCbBox != null and scmTeamCbBox !=''">
    AND A.TEAM = #{scmTeamCbBox}
 	</if>
-   AND ROWNUM = 1
 </select>
 
 <select id="selectSplitInfo" parameterType="Map" resultType="egovMap">
@@ -209,11 +208,16 @@ SELECT A.PLAN_ID
      , NVL(B.PRE_M3_AVG_ISSU, 0) AS M3_ISSUE_AVG
      , NVL(B.M1_ORD, 0) AS M1_ISSUE
      , NVL(B.M0_ORD, 0) AS M0_ORDER
-     , CASE WHEN B.M0_PLAN IS NULL OR B.M0_PLAN = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE 10 END AS M0_PLAN
-     , CASE WHEN B.M1 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M1', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE 10 END AS M1
-     , CASE WHEN B.M2 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M2', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE 20 END AS M2
-     , CASE WHEN B.M3 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M3', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE 30 END AS M3
-     , CASE WHEN B.M4 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE 40 END AS M4
+     , CASE WHEN B.M0_PLAN IS NULL OR B.M0_PLAN = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M0_PLAN END AS M0_PLAN
+     , CASE WHEN B.M1 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M1', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M1 END AS M1
+     , CASE WHEN B.M2 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M2', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M2 END AS M2
+     , CASE WHEN B.M3 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M3', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M3 END AS M3
+     , CASE WHEN B.M4 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M4 END AS M4
+/*     , GBSLCVD.FN_GET_M_PLAN_CNT('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M0_PLAN
+     , GBSLCVD.FN_GET_M_PLAN_CNT('M1', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M1
+     , GBSLCVD.FN_GET_M_PLAN_CNT('M2', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M2
+     , GBSLCVD.FN_GET_M_PLAN_CNT('M3', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M3
+     , GBSLCVD.FN_GET_M_PLAN_CNT('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M4*/
      , NVL(B.W01, 0) AS W01
      , NVL(B.W02, 0) AS W02
      , NVL(B.W03, 0) AS W03
@@ -260,7 +264,7 @@ SELECT A.PLAN_ID
 	<if test="scmTeamCbBox != null and scmTeamCbBox != ''">
    AND A.TEAM = #{scmTeamCbBox}
 	</if>
-<!-- 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
+ 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
    AND D.STK_CTGRY_ID IN
 		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
 		#{item}
@@ -272,12 +276,14 @@ SELECT A.PLAN_ID
 		#{item}
 		</foreach>
 	</if>
-	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
+<!--	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
    AND B.STOCK_CODE IN
 		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
 		#{item}
 		</foreach>
 	</if> -->
+   AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
+ ORDER BY A.PLAN_ID DESC, B.STOCK_CODE
 </select>
 
 <insert id="insertSalesPlanMaster" parameterType="Map">
@@ -304,5 +310,59 @@ VALUES
      , #{crtUserId}
  )
 </insert>
+
+<resultMap id="insertSalesPlanDetailResultMap" type="egovMap"></resultMap>
+<select id="callSpScmInsSalesPlanDetail" statementType="CALLABLE" parameterType="Map">
+{ call GBSLCVD.SP_SCM_INS_SALES_PLAN_DETAIL(#{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=insertSalesPlanDetailResultMap}) }
+</select>
+
+<update id="updateSalesPlanDetail" parameterType="Map">
+UPDATE SCM0002D
+   SET PRE_M3_AVG_ISSU = #{m3IssueAvg}
+     , M1_ORD = #{m1Issue}
+     , M0_ORD = #{m0Order}
+     , M0_PLAN = #{m0Plan}
+     , M1 = #{m1}
+     , M2 = #{m2}
+     , M3 = #{m2}
+     , M4 = #{m2}
+     , W01 = #{w01}
+     , W02 = #{w02}
+     , W03 = #{w03}
+     , W04 = #{w04}
+     , W05 = #{w05}
+     , W06 = #{w06}
+     , W07 = #{w07}
+     , W08 = #{w08}
+     , W09 = #{w09}
+     , W10 = #{w10}
+     , W11 = #{w11}
+     , W12 = #{w12}
+     , W13 = #{w13}
+     , W14 = #{w14}
+     , W15 = #{w15}
+     , W16 = #{w16}
+     , W17 = #{w17}
+     , W18 = #{w18}
+     , W19 = #{w19}
+     , W20 = #{w20}
+     , W21 = #{w21}
+     , W22 = #{w22}
+     , W23 = #{w23}
+     , W24 = #{w24}
+     , W25 = #{w25}
+     , W26 = #{w26}
+     , W27 = #{w27}
+     , W28 = #{w28}
+     , W29 = #{w29}
+     , W30 = #{w30}
+ WHERE PLAN_DTL_ID = #{planDtlId}
+</update>
+
+<update id="updateSalesPlanMaster" parameterType="Map">
+UPDATE SCM0001M
+   SET PLAN_STUS_ID = #{planStusId}
+ WHERE PLAN_ID = #{planId}
+</update>
 
 </mapper>

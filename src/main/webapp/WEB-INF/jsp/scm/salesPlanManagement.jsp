@@ -47,11 +47,12 @@ var gToday	= new Date();
 var gYear	= "";
 var gMonth	= "";
 var gDay	= "";
-var m0PlanCnt	= 0;
-var m1PlanCnt	= 0;
-var m2PlanCnt	= 0;
-var m3PlanCnt	= 0;
-var m4PlanCnt	= 0;
+var m0WeekCnt	= 0;	var m0WeekStart	= 0;
+var m1WeekCnt	= 0;	var m1WeekStart	= 0;
+var m2WeekCnt	= 0;	var m2WeekStart	= 0;
+var m3WeekCnt	= 0;	var m3WeekStart	= 0;
+var m4WeekCnt	= 0;	var m4WeekStart	= 0;
+var salesPlanList	= new Object();
 
 $(function() {
 	//	Get Today Year, Week
@@ -67,7 +68,7 @@ $(function() {
 	fnScmTeamCbBox();
 	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
-	fnScmStockCodeCbBox();
+	//fnScmStockCodeCbBox();
 });
 
 //	year
@@ -155,7 +156,7 @@ function fnScmTeamCbBox() {
 //	category
 function fnScmStockCategoryCbBox() {
 	//	callback
-	var fnScmStockCodeCbBoxCallback	= function() {
+/*	var fnScmStockCodeCbBoxCallback	= function() {
 		$("#scmStockCategoryCbBox").on("change", function() {
 			var $this	= $(this);
 			
@@ -176,7 +177,7 @@ function fnScmStockCategoryCbBox() {
 				fnScmStockCodeCbBox();
 			}
 		});
-	};
+	};*/
 	
 	CommonCombo.make("scmStockCategoryCbBox"
 			, "/scm/selectScmStockCategory.do"
@@ -187,13 +188,14 @@ function fnScmStockCategoryCbBox() {
 				name : "name",
 				type : "M"
 			}
-			, fnScmStockCodeCbBoxCallback);
+			//, fnScmStockCodeCbBoxCallback);
+			, "");
 }
 
 //	stock type
 function fnScmStockTypeCbBox() {
 	//	callback
-	var fnScmStockCodeCbBoxCallback	= function() {
+/*	var fnScmStockCodeCbBoxCallback	= function() {
 		$("#scmStockTypeCbBox").on("change", function() {
 			var $this	= $(this);
 			
@@ -214,7 +216,7 @@ function fnScmStockTypeCbBox() {
 				fnScmStockCodeCbBox();
 			}
 		});
-	};
+	};*/
 	
 	CommonCombo.make("scmStockTypeCbBox"
 			, "/scm/selectScmStockType.do"
@@ -225,9 +227,10 @@ function fnScmStockTypeCbBox() {
 				name : "name",
 				type : "M"
 			}
-			, fnScmStockCodeCbBoxCallback);
+			//, fnScmStockCodeCbBoxCallback);
+			, "");
 }
-
+/*
 //	stock code
 function fnScmStockCodeCbBox() {
 	CommonCombo.make("scmStockCodeCbBox"
@@ -241,15 +244,15 @@ function fnScmStockCodeCbBox() {
 			}
 			, "");
 }
-
+*/
 //	header
 function fnSalesPlanHeader() {
 	if ( 1 > $("#scmYearCbBox").val().length ) {
-		Common.alert("<spring:message code='sys.msg.necessary' arguments='YEAR' htmlEscape='false'/>");
+		Common.alert("<spring:message code='sys.msg.necessary' arguments='Year' htmlEscape='false'/>");
 		return	false;
 	}
 	if ( 1 > $("#scmWeekCbBox").val().length ) {
-		Common.alert("<spring:message code='sys.msg.necessary' arguments='WEEK' htmlEscape='false'/>");
+		Common.alert("<spring:message code='sys.msg.necessary' arguments='Week' htmlEscape='false'/>");
 		return	false;
 	}
 	
@@ -281,14 +284,31 @@ function fnSalesPlanHeader() {
 			, "/scm/selectSalesPlanHeader.do"
 			, $("#MainForm").serializeJSON()
 			, function(result) {
-				console.log ("selectSalesPlanHeader.do : " + result);
-				/*if ( null == result.planInfo ) {
-					Common.alert("no data found!!!!!");
-					return;
-				}*/
-				console.log("result : " + result.selectSalesPlanHeader);
 				
-				//	result null, remove grid
+				console.log (result);
+				
+				//	if selectSalesPlanInfo result is null then alert
+				if ( null == result.selectSalesPlanInfo || 1 > result.selectSalesPlanInfo.length ) {
+					Common.alert("Sales Plan Master Info is null");
+					return	false;
+				} else {
+					console.log("selectSalesPlanInfo is not null")
+					fnSetSalesPlanInfo(result.selectSalesPlanInfo);
+				}
+				
+				//	if selectSplitInfo result is null then alert
+				if ( null == result.selectSplitInfo || 1 > result.selectSplitInfo.length ) {
+					Common.alert("Week Split Info is null");
+					return	false;
+				}
+				
+				//	if selectChildField result is null then alert
+				if ( null == result.selectChildField || 1 > result.selectChildField.length ) {
+					Common.alert("Child Filed Info is null");
+					return	false;
+				}
+				
+				//	if selectSalesPlanHeader result null then remove grid
 				if ( null == result.selectSalesPlanHeader || 1 > result.selectSalesPlanHeader.length ) {
 					if ( AUIGrid.isCreated(myGridID) ) {
 						AUIGrid.destroy(myGridID);
@@ -297,21 +317,8 @@ function fnSalesPlanHeader() {
 					return	false;
 				}
 				
-				if ( null == result.selectSplitInfo || 1 > result.selectSplitInfo.length ) {
-					//	message
-					return	false;
-				} else {
-					//	for monthly sum
-					/*m0WeekCnt	= result.selectSplitInfo[0].m0WeekCnt;
-					m1WeekCnt	= result.selectSplitInfo[0].m1WeekCnt;
-					m2WeekCnt	= result.selectSplitInfo[0].m2WeekCnt;
-					m3WeekCnt	= result.selectSplitInfo[0].m3WeekCnt;
-					m4WeekCnt	= result.selectSplitInfo[0].m4WeekCnt;*/
-				}
-				console.log("----------- : " + result.selectSalesPlanHeader[0].h2m1);
 				//	make header
 				if ( null != result.selectSalesPlanHeader && 0 < result.selectSalesPlanHeader.length ) {
-					console.log(result.selectSalesPlanHeader);
 					dynamicLayout.push(
 							{
 								headerText : "Stock",
@@ -437,6 +444,12 @@ function fnSalesPlanHeader() {
 					m3WeekCnt	= parseInt(result.selectSplitInfo[0].m3WeekCnt);
 					m4WeekCnt	= parseInt(result.selectSplitInfo[0].m4WeekCnt);
 					
+					m0WeekStart	= 1;
+					m1WeekStart	= m0WeekCnt + 1;
+					m2WeekStart	= m0WeekCnt + m1WeekCnt + 1;
+					m3WeekStart	= m0WeekCnt + m1WeekCnt + m2WeekCnt + 1;
+					m4WeekStart	= m0WeekCnt + m1WeekCnt + m2WeekCnt + m3WeekCnt + 1;
+					
 					var iLoopCnt	= 1;
 					var iLoopDataFieldCnt	= 1;
 					var intToStrFieldCnt	= "";
@@ -446,7 +459,7 @@ function fnSalesPlanHeader() {
 					
 					//var sumWeekThStr	= "";
 					var m0HeaderLabel	= "";
-					console.log("gWeekTh : " + gWeekTh);
+					//console.log("gWeekTh : " + gWeekTh);
 					/******************************
 					******** M0 Header
 					******************************/
@@ -465,7 +478,7 @@ function fnSalesPlanHeader() {
 							startCnt	= startCnt + 1;
 						}
 						if ( parseInt(gWeekTh) > startCnt ) {
-							console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							//console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							if ( 2 > startCnt.toString().length ) {
 								strWeekTh	= "W0";
 							} else {
@@ -482,7 +495,7 @@ function fnSalesPlanHeader() {
 							});
 							iLoopCnt++;
 						} else if ( parseInt(gWeekTh) == startCnt ) {
-							console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							//console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -494,7 +507,7 @@ function fnSalesPlanHeader() {
 							});
 							iLoopCnt++;
 						} else {
-							console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							//console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,	//	w00
@@ -627,6 +640,7 @@ function fnSalesPlanHeader() {
 					AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 						console.log("DobleClick(" + event.rowIndex + ", " + event.columnIndex + ") :  " + " value : " + event.value );
 					});
+					AUIGrid.bind(myGridID, "cellEditEnd", fnSumMnPlan);
 					
 					//	
 					fnSearch();
@@ -659,30 +673,335 @@ function fnSearch() {
 			, "/scm/selectSalesPlanList.do"
 			, params
 			, function(result) {
-				console.log("Success fnSearch : " + result.length);
+				//console.log("Success fnSearch : " + result.length);
 				console.log(result);
 				
-				//fnCalcMonthlyPlan(result.selectSalesPlanList);
-				/*
-				result.selectSalesPlanList[0]["m1"]	= 10;
-				console.log("m1 : " + result.selectSalesPlanList[0]["m1"]);
-				result.selectSalesPlanList[1]["stock"]	= 100;
-				console.log("stock : " + result.selectSalesPlanList[1]["stock"]);
-				*/
 				AUIGrid.setGridData(myGridID, result.selectSalesPlanList);
 				
+				//	set result list to object
+				salesPlanList	= result.selectSalesPlanList;
+				//console.log("-=======================-");
+				//console.log(salesPlanList);
+				
 				if ( null != result && 0 < result.selectSalesPlanList.length ) {
-					$("#btnConfirm").removeClass("btn_disabled");
+				//	$("#btnConfirm").removeClass("btn_disabled");
 				//	$("#btnSave").removeClass("btn_disabled");
 				//	$("#btnDownload").removeClass("btn_disabled");
 				} else if ( 0 == result.selectSalesPlanList.length ) {
-					$("#btnUnconfirm").removeClass("btn_disabled");
+				//	$("#btnUnconfirm").removeClass("btn_disabled");
 				//	$("#btnDownload").addClass("btn_disabled");
 				//	$("#btnSave").addClass("btn_disabled");
 				}
 			});
 }
 
+//	create
+function fnCreate(obj) {
+	if ( true == $(obj).parents().hasClass("btn_disabled") )	return	false;
+	
+	if ( 1 > $("#scmYearCbBox").val().length ) {
+		Common.alert("<spring:message code='sys.msg.necessary' arguments='Year' htmlEscape='false'/>");
+		return	false;
+	}
+	if ( 1 > $("#scmWeekCbBox").val().length ) {
+		Common.alert("<spring:message code='sys.msg.necessary' arguments='Week' htmlEscape='false'/>");
+		return	false;
+	}
+	if ( 1 > $("#scmTeamCbBox").val().length ) {
+		Common.alert("<spring:message code='sys.msg.necessary' arguments='Team' htmlEscape='false'/>");
+		return	false;
+	}
+	
+	var params	= { planStusId : 1 };
+	params	= $.extend($("#MainForm").serializeJSON(), params);
+	
+	Common.ajax("POST"
+			, "/scm/insertSalesPlanMaster.do"
+			, params
+			, function(result) {
+				if ( 99 == result.code ) {
+					Common.alert("Already Created Sales Plan.");
+				} else {
+					Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+					fnSalesPlanHeader();
+					console.log("Success : " + JSON.stringify(result) + " /data : " + result.data);
+				}
+			}
+			, function(jqXHR, textStatus, errorThrown) {
+				try {
+					console.log("HeaderFail Status : " + jqXHR.status);
+					console.log("code : "        + jqXHR.responseJSON.code);
+					console.log("message : "     + jqXHR.responseJSON.message);
+					console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+				} catch ( e ) {
+					console.log(e);
+				}
+				Common.alert("Fail : " + jqXHR.responseJSON.message);
+			});
+}
+
+//	save
+function fnSaveDetail(obj) {
+	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
+		return	false;
+	}
+	
+	if ( false == fnValidation() ) {
+		return	false;
+	}
+	
+	Common.ajax("POST"
+			, "/scm/updateSalesPlanDetail.do"
+			, GridCommon.getEditData(myGridID)
+			, function(result) {
+				Common.alert(result.data  + "<spring:message code='sys.msg.saveCnt'/>");
+				fnSalesPlanHeader();
+				console.log("Success : " + JSON.stringify(result) + " /data : " + result.data);
+			}
+			, function(jqXHR, textStatus, errorThrown) {
+				try {
+					console.log("HeaderFail Status : " + jqXHR.status);
+					console.log("code : "        + jqXHR.responseJSON.code);
+					console.log("message : "     + jqXHR.responseJSON.message);
+					console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+				} catch ( e ) {
+					console.log(e);
+				}
+				Common.alert("Fail : " + jqXHR.responseJSON.message);
+			});
+}
+
+//	confirm/unconfirm
+function fnSaveMaster(obj, conf) {
+	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
+		return	false;
+	}
+	
+	if ( 1 > $("#scmTeamCbBox").val().length ) {
+		Common.alert("<spring:message code='sys.msg.necessary' arguments='Team' htmlEscape='false'/>");
+		return	false;
+	}
+	
+	//	set planId
+	if ( "DST" == $("#scmTeamCbBox").val() ) {
+		$("#planId").val($("#planId1").val());
+	} else if ( "CODY" == $("#scmTeamCbBox").val() ) {
+		$("#planId").val($("#planId2").val());
+	} else if ( "CS" == $("#scmTeamCbBox").val() ) {
+		$("#planId").val($("#planId3").val());
+	} else {
+		Common.alert("Error");
+		return	false;
+	}
+	
+	//	set planStusId
+	if ( "confirm" == conf ) {
+		$("#planStusId").val(4);
+	} else if ( "unconfirm" == conf ) {
+		$("#planStusId").val(1);
+	}
+	
+	Common.ajax("POST"
+			, "/scm/updateSalesPlanMaster.do"
+			, $("#MainForm").serializeJSON()
+			, function(result) {
+				Common.alert(result.data  + "<spring:message code='sys.msg.saveCnt'/>");
+				fnSalesPlanHeader();
+				console.log("Success : " + JSON.stringify(result) + " /data : " + result.data);
+			}
+			, function(jqXHR, textStatus, errorThrown) {
+				try {
+					console.log("HeaderFail Status : " + jqXHR.status);
+					console.log("code : "        + jqXHR.responseJSON.code);
+					console.log("message : "     + jqXHR.responseJSON.message);
+					console.log("detailMessage : "  + jqXHR.responseJSON.detailMessage);
+				} catch ( e ) {
+					console.log(e);
+				}
+				Common.alert("Fail : " + jqXHR.responseJSON.message);
+			});
+}
+
+//	excel
+function fnExcel(obj, fileName) {
+	//	1. grid id
+	//	2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+	//	3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
+	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
+		return	false;
+	}
+	
+	GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileName + '_' + getTimeStamp());
+}
+
+//	sum each Mn plan
+function fnSumMnPlan(event) {
+	//console.log(event);
+	var colStartIdx		= 18;	//	every week's cnt start column index : It should be changable, selectSalesPlanList query column count change
+	var colChangeIdx	= event.columnIndex;
+	var m0	= 0;	var m1	= 0;	var m2	= 0;	var m3	= 0;	var m4	= 0;
+	var ms0	= "";	var ms1	= "";	var ms2	= "";	var ms3	= "";	var ms4	= "";
+	if ( "cellEditEnd" == event.type ) {
+		console.log("m0WeekCnt : " + m0WeekCnt + ", m1WeekCnt : " + m1WeekCnt + ", m2WeekCnt : " + m2WeekCnt + ", m3WeekCnt : " + m3WeekCnt + ", m4WeekCnt : " + m4WeekCnt);
+		console.log("m0WeekStart : " + m0WeekStart + ", m1WeekStart : " + m1WeekStart + ", m2WeekStart : " + m2WeekStart + ", m3WeekStart : " + m3WeekStart + ", m4WeekStart : " + m4WeekStart);
+		console.log(event.columnIndex);
+		
+		//	sum m0
+		for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
+			ms0	= "w0" + (parseInt(m0WeekStart) + parseInt(i)).toString();
+			//console.log("parseInt(i) + parseInt(colStartIdx) + parseInt(m0WeekStart) : " + parseInt(i) + parseInt(colStartIdx) + parseInt(m0WeekStart) + ", colidx : " + colChangeIdx);
+			if ( parseInt(i) + parseInt(colStartIdx) + parseInt(m0WeekStart) - 1 == parseInt(colChangeIdx) ) {
+				m0	= parseInt(m0) + parseInt(event.value);
+				salesPlanList[event.rowIndex][ms0]	= event.value;
+				console.log("11. i : " + i + ", ms0 : " + ms0 + ", value : " + event.value);
+			} else {
+				m0	= parseInt(m0) + parseInt(salesPlanList[event.rowIndex][ms0]);
+				console.log("12. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
+			}
+		}
+		//console.log("m0 : " + m0);
+		salesPlanList[event.rowIndex]["m0Plan"]	= m0;
+		AUIGrid.setCellValue(myGridID, event.rowIndex, "m0Plan", m0);
+		//console.log("m0Plan : " + salesPlanList[event.rowIndex]["m0Plan"]);
+		
+		//	sum 01
+		for ( var i = 0 ; i < m1WeekCnt ; i++ ) {
+			if ( 10 > parseInt(m1WeekStart) + parseInt(i) ) {
+				ms1	= "w0" + (parseInt(m1WeekStart) + parseInt(i)).toString();
+			} else {
+				ms1	= "w" + (parseInt(m1WeekStart) + parseInt(i)).toString();
+			}
+			if ( parseInt(i) + parseInt(colStartIdx) + parseInt(m1WeekStart) - 1 == parseInt(colChangeIdx) ) {
+				m1	= parseInt(m1) + parseInt(event.value);
+				console.log("21. i : " + i + ", ms1 : " + ms1 + ", value : " + event.value);
+			} else {
+				m1	= parseInt(m1) + parseInt(salesPlanList[event.rowIndex][ms1]);
+				console.log("22. i : " + i + ", ms1 : " + ms1 + ", value : " + salesPlanList[event.rowIndex][ms1]);
+			}
+		}
+		salesPlanList[event.rowIndex]["m1"]	= m1;
+		AUIGrid.setCellValue(myGridID, event.rowIndex, "m1", m1);
+	}
+}
+
+//	set plan info
+function fnSetSalesPlanInfo(result) {
+	console.log(result);
+	for ( var i = 0 ; i < result.length ; i++ ) {
+		if ( "DST" == result[i].team ) {
+			$("#planId1").val(result[i].planId);
+			$("#planStusId1").val(result[i].planStusId);
+			$("#crtDt1").val(result[i].crtDt);
+			$("#planTeam1").text(result[i].team);
+			$("#planStatus1").text(result[i].planStusNm);
+			$("#planCreatedAt1").text(result[i].crtDt);
+		} else if ( "CODY" == result[i].team ) {
+			$("#planId2").val(result[i].planId);
+			$("#planStusId2").val(result[i].planStusId);
+			$("#crtDt2").val(result[i].crtDt);
+			$("#planTeam2").text(result[i].team);
+			$("#planStatus2").text(result[i].planStusNm);
+			$("#planCreatedAt2").text(result[i].crtDt);
+		} else if ( "CS" == result[i].team ) {
+			$("#planId3").val(result[i].planId);
+			$("#planStusId3").val(result[i].planStusId);
+			$("#crtDt3").val(result[i].crtDt);
+			$("#planTeam3").text(result[i].team);
+			$("#planStatus3").text(result[i].planStusNm);
+			$("#planCreatedAt3").text(result[i].crtDt);
+		}
+	}
+}
+
+//	validation
+function fnValidation() {
+	var result	= true;
+	var updList	= AUIGrid.getEditedRowItems(myGridID);
+	
+	if ( 0 == updList.length ) {
+		Common.alert("No Change");
+		result	= false;
+	}
+	
+	return	result;
+}
+
+//	get timestamp
+function getTimeStamp() {
+	function fnLeadingZeros(n, digits) {
+		var zero	= "";
+		n	= n.toString();
+		
+		if ( n.length < digits ) {
+			for (var i = 0 ; i < digits - n.length ; i++ ) {
+				zero	+= "0";
+			}
+		}
+		return	zero + n;
+	}
+	
+	var d	= new Date();
+	var date	= fnLeadingZeros(d.getFullYear(), 4) + fnLeadingZeros(d.getMonth() + 1, 2) + fnLeadingZeros(d.getDate(), 2);
+	var time	= fnLeadingZeros(d.getHours(), 2) + fnLeadingZeros(d.getMinutes(), 2) + fnLeadingZeros(d.getSeconds(), 2);
+	
+	return	date + "_" + time;
+}
+
+//	button Control
+function fnBtnCtrl(header, result) {
+	var scmTeamCbBox	= $("#scmTeamCbBox").val();
+	var planId1	= $("#planId1").val();	var planStusId1	= $("#planStusId1").val();	//	DST
+	var planId2	= $("#planId2").val();	var planStusId2	= $("#planStusId2").val();	//	CODY
+	var planId3	= $("#planId3").val();	var planStusId1	= $("#planStusId3").val();	//	CS
+	
+	if ( null == result ) {
+		$("#btnCreate").addClass("btn_disabled");
+		$("#btnSave").addClass("btn_disabled");
+		$("#btnConfirm").addClass("btn_disabled");
+		$("#btnUnconfirm").addClass("btn_disabled");
+		$("#btnExcel").addClass("btn_disabled");
+	} else {
+		if ( "" == scmTeamCbBox ) {
+			$("#btnCreate").addClass("btn_disabled");
+			$("#btnSave").removeClass("btn_disabled");
+			$("#btnConfirm").addClass("btn_disabled");
+			$("#btnUnconfirm").addClass("btn_disabled");
+			$("#btnExcel").removeClass("btn_disabled");
+		} else if ( "DST" == scmTeamCbBox ) {
+			if ( 1 == planStusId1 || "1" == planStusId1 ) {
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").removeClass("btn_disabled");
+				$("#btnConfirm").removeClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnExcel").removeClass("btn_disabled");
+			} else if ( 4 == planStusId1 || "4" == planStusId1 ) {
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").removeClass("btn_disabled");
+				$("#btnExcel").removeClass("btn_disabled");
+			} else {
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnExcel").addClass("btn_disabled");
+			}
+		} else if ( "CODY" == scmTeamCbBox ) {
+			$("#btnCreate").addClass("btn_disabled");
+			$("#btnSave").removeClass("btn_disabled");
+			$("#btnConfirm").addClass("btn_disabled");
+			$("#btnUnconfirm").addClass("btn_disabled");
+			$("#btnExcel").removeClass("btn_disabled");
+		} else if ( "CS" == scmTeamCbBox ) {
+			$("#btnCreate").addClass("btn_disabled");
+			$("#btnSave").removeClass("btn_disabled");
+			$("#btnConfirm").addClass("btn_disabled");
+			$("#btnUnconfirm").addClass("btn_disabled");
+			$("#btnExcel").removeClass("btn_disabled");
+		}
+	}
+}
 
 //	Event
 function fnScmWeekCbBoxChange(object) {
@@ -715,16 +1034,18 @@ $(document).ready(function() {
 	
 	<section class="search_table"><!-- search_table start -->
 		<form id="MainForm" method="get" action="">
+			<input type="hidden" id="planId" name="planId" value=""/>			<!-- for confirm/unconfirm -->
+			<input type="hidden" id="planStusId" name="planStusId" value=""/>	<!-- for confirm/unconfirm -->
 			<input type="hidden" id="planId1" name="planId1" value=""/>
 			<input type="hidden" id="planId2" name="planId2" value=""/>
 			<input type="hidden" id="planId3" name="planId3" value=""/>
 			<input type="hidden" id="planStusId1" name="planStusId1" value=""/>
 			<input type="hidden" id="planStusId2" name="planStusId2" value=""/>
 			<input type="hidden" id="planStusId3" name="planStusId3" value=""/>
-			<input type="hidden" id="created1" name="created1" value=""/>
-			<input type="hidden" id="created2" name="created2" value=""/>
-			<input type="hidden" id="created3" name="created3" value=""/>
-			<input type="hidden" id="selectPlanMonth" name="selectPlanMonth" value=""/>
+			<input type="hidden" id="crtDt1" name="crtDt1" value=""/>
+			<input type="hidden" id="crtDt2" name="crtDt2" value=""/>
+			<input type="hidden" id="crtDt3" name="crtDt3" value=""/>
+			<input type="hidden" id="planMonth" name="planMonth" value=""/>
 			<table class="type1"><!-- table start -->
 				<caption>table</caption>
 				<colgroup>
@@ -744,23 +1065,24 @@ $(document).ready(function() {
 							<select class="sel_date" id="scmWeekCbBox" name="scmWeekCbBox" onchange="fnScmWeekCbBoxChange(this);"></select>
 							</div><!-- date_set end -->
 						</td>
-						<th scope="row">Team</th>
+						<th scope="row">Stock</th>
 						<td colspan="3">
-							<select class="w100p" id="scmTeamCbBox" name="scmTeamCbBox"></select>
+							<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
 						</td>
 					</tr>
 					<tr>
+						<th scope="row">Team</th>
+						<td>
+							<select class="w100p" id="scmTeamCbBox" name="scmTeamCbBox"></select>
+						</td>
 						<th scope="row">Category</th>
 						<td>
 							<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
 						</td>
 						<th scope="row">Type</th>
 						<td>
+							<!-- <select class="multy_select w100p" multiple="multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox"></select> -->
 							<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
-						</td>
-						<th scope="row">Stock</th>
-						<td>
-							<select class="multy_select w100p" multiple="multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox"></select>
 						</td>
 					</tr>
 				</tbody>
@@ -802,11 +1124,11 @@ $(document).ready(function() {
 
 	<section class="search_result"><!-- search_result start -->
 		<ul class="right_btns">
-			<li><p id="btnCreate" class="btn_grid btn_disabled"><a onclick="fnCreate(this);">Create</a></p></li>
-			<li><p id="btnConfirm" class="btn_grid btn_disabled"><a onclick="fnConfirm(this);">Confirm</a></p></li>
-			<li><p id="btnUnconfirm" class="btn_grid btn_disabled"><a onclick="fnUnConfirm(this);">UnConfirm</a></p></li>
-			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSave(this);">Save</a></p></li>
-			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this,'SalesPlanManagement');">Excel</a></p></li>
+			<li><p id="btnCreate" class="btn_grid"><a onclick="fnCreate(this);">Create</a></p></li>
+			<li><p id="btnSave" class="btn_grid"><a onclick="fnSaveDetail(this);">Save</a></p></li>
+			<li><p id="btnConfirm" class="btn_grid"><a onclick="fnSaveMaster(this, 'confirm');">Confirm</a></p></li>
+			<li><p id="btnUnconfirm" class="btn_grid"><a onclick="fnSaveMaster(this, 'unconfirm');">UnConfirm</a></p></li>
+			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SalesPlanManagement');">Excel</a></p></li>
 			<!-- <li><p id='btnExcel'  class="btn_grid btn_disabled"><a onclick="fnExcel(this,'SalesPlanManagement');">Download</a></p></li> -->
 		</ul>
 		

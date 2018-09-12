@@ -1330,6 +1330,7 @@ SELECT STK_ID
 </insert>
 
 <!-- fin -->
+<!-- 
 <insert id="insertSalesPlanMaster" parameterType="Map">
 	<selectKey keyProperty="salesPlanMstSeq" resultType="int" order="BEFORE">
 	SELECT SCM0001M_PLAN_ID_SEQ.NEXTVAL FROM DUAL
@@ -1357,7 +1358,7 @@ VALUES
      , #{crtUserId}
  )
 </insert>
-
+ -->
 <delete id="deleteStockCode" parameterType="Map">
 
     DELETE
@@ -2476,13 +2477,13 @@ UPDATE SCM0001M
 			NVL(#{w30},0)
 		FROM DUAL
     </insert>
-
+<!-- 
     <insert id="updateSalesPlanDetailMonthly" parameterType="Map">
     UPDATE SCM0002D SET M0_PLAN = #{m0}, M1 = #{m1}, M2 = #{m2}, M3 = #{m3}, M4 = #{m4}
       WHERE PLAN_MASTER_ID = (SELECT PLAN_ID FROM SCM0001M WHERE PLAN_YEAR = #{scmYearCbBox} AND PLAN_WEEK = #{scmPeriodCbBox} AND TEAM = #{scmTeamCbBox})
         AND STOCK_CODE = #{stockCode}
     </insert>
-
+ -->
 
    <insert id="insertITF189" parameterType="Map">
       INSERT INTO itf0189m (IF_KEY,

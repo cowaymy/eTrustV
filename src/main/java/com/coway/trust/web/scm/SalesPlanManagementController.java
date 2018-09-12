@@ -148,4 +148,78 @@ public class SalesPlanManagementController {
 		
 		return	ResponseEntity.ok(map);
 	}
+	
+	@RequestMapping(value = "/insertSalesPlanMaster.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertSalesPlanMaster(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("insertSalesPlanMaster : {}", params);
+		
+		int createCnt	= salesPlanManagementService.insertSalesPlanMaster(params, sessionVO);
+		
+		LOGGER.debug("createCnt : {}", createCnt);
+		
+		ReturnMessage message	= new ReturnMessage();
+		
+		if ( 0 < createCnt ) {
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(createCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		
+		return	ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/updateSalesPlanDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateSalesPlanDetail(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		
+		int updCnt	= 0;
+		List<Object> updList	= params.get(AppConstants.AUIGRID_UPDATE);
+		LOGGER.info("updateSalesPlanDetail : {}", updList.toString());
+		
+		if ( 0 < updList.size() ) {
+			updCnt	= salesPlanManagementService.updateSalesPlanDetail(updList, sessionVO);
+		} else {
+			LOGGER.info("updateSalesPlanDetail : no changed");
+		}
+		
+		LOGGER.info("updCnt : ", updCnt);
+		
+		ReturnMessage message	= new ReturnMessage();
+		
+		if ( 0 < updCnt ) {
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(updCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		
+		return	ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/updateSalesPlanMaster.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateSalesPlanMaster(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
+		
+		int updCnt	= 0;
+		LOGGER.info("updateSalesPlanMaster : {}", params.toString());
+		
+		updCnt	= salesPlanManagementService.updateSalesPlanMaster(params, sessionVO);
+		
+		ReturnMessage message	= new ReturnMessage();
+		
+		if ( 0 < updCnt ) {
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(updCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		
+		return	ResponseEntity.ok(message);
+	}
 }

@@ -98,4 +98,62 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 	public List<EgovMap> selectSalesPlanList(Map<String, Object> params) {
 		return salesPlanManagementMapper.selectSalesPlanList(params);
 	}
+	@Override
+	public int insertSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
+		
+		int createCnt	= 0;
+		
+		params.put("crtUserId", sessionVO.getUserId());
+		
+		try {
+			salesPlanManagementMapper.insertSalesPlanMaster(params);
+			createCnt++;
+			LOGGER.debug(" createCnt : {} ", createCnt);
+			
+			salesPlanManagementMapper.callSpScmInsSalesPlanDetail(params);
+			//Map<String, Object> result	= params;
+			if ( null != params.get("result") ) {
+				String result	= params.get("result").toString();
+				LOGGER.debug(" callSpScmInsSalesPlanDetail result : {} ", result);
+			} else {
+				LOGGER.debug(" callSpScmInsSalesPlanDetail result is null");
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return	createCnt;
+	}
+	@SuppressWarnings("unchecked")
+	@Override
+	public int updateSalesPlanDetail(List<Object> updList, SessionVO sessionVO) {
+		
+		int updCnt	= 0;
+		
+		try {
+			for ( Object obj : updList ) {
+				salesPlanManagementMapper.updateSalesPlanDetail((Map<String, Object>) obj);
+				LOGGER.debug("planDtlId : ", ((Map<String, Object>) obj).get("planDtlId"));
+				updCnt++;
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return	updCnt;
+	}
+	@Override
+	public int updateSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
+		
+		int updCnt	= 0;
+		
+		try {
+			salesPlanManagementMapper.updateSalesPlanMaster(params);
+			updCnt++;
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return	updCnt;
+	}
 }
