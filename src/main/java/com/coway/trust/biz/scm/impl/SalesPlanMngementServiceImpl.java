@@ -180,7 +180,7 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	public List<EgovMap> selectSalesPlanMngmentList(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectSalesPlanMngmentList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectSalesPlanMngmentGroupList(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectSalesPlanMngmentGroupList(params);
@@ -229,13 +229,13 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		    int m2Sum = 0;
 		    int m3Sum = 0;
 		    int m4Sum = 0;
-		    
+
 		    LOGGER.debug(" >>>>> iM0TotCnt : " + iM0TotCnt);
 		    LOGGER.debug(" >>>>> iM1TotCnt : " + iM1TotCnt);
 		    LOGGER.debug(" >>>>> iM2TotCnt : " + iM2TotCnt);
 		    LOGGER.debug(" >>>>> iM3TotCnt : " + iM3TotCnt);
 		    LOGGER.debug(" >>>>> iM4TotCnt : " + iM4TotCnt);
-		    
+
 			for(int m1=0;m1<Integer.parseInt(iM0TotCnt);m1++){
 				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
 
@@ -243,9 +243,9 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 	            {
 	         	   intToStrFieldCnt =  "0" + intToStrFieldCnt;
 	            }
-	            
+
 	            LOGGER.debug(" >>>>> intToStrFieldCnt : " + intToStrFieldCnt);
-	            
+
 		        if (Integer.parseInt(chield.get(m1).get("weekTh").toString()) <  Integer.parseInt(weekth) && m1 != Integer.parseInt(iM0TotCnt)-1 ){
 		        	LOGGER.debug(" >>>>> if true : " );
 		        } else {
@@ -563,9 +563,9 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 
 			//Sales Plan 값 구하기
 			List<EgovMap> salesPlanList =   salesPlanMngementMapper.selectSalesPlanByStockCode(params);
-			
+
 			if(salesPlanList.size() > 0){
-			
+
 			psi1Params.put("w00", Integer.parseInt(salesPlanList.get(0).get("w00").toString()));
 			psi1Params.put("w01", Integer.parseInt(salesPlanList.get(0).get("w01").toString()));
 			psi1Params.put("w02", Integer.parseInt(salesPlanList.get(0).get("w02").toString()));
@@ -597,8 +597,8 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			psi1Params.put("w28", Integer.parseInt(salesPlanList.get(0).get("w28").toString()));
 			psi1Params.put("w29", Integer.parseInt(salesPlanList.get(0).get("w29").toString()));
 			psi1Params.put("w30", Integer.parseInt(salesPlanList.get(0).get("w30").toString()));
-			
-			
+
+
 			for(int j=0; j  < countBef; j++ ){
 				int k = j+1;
 				int beforeWeek = Integer.parseInt(params.get("scmPeriodCbBox").toString()) - k;
@@ -654,7 +654,7 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 
 		    String intToStrFieldCnt ="";
 		    int iLootDataFieldCnt = 0;
-		    
+
 			for(int m1=0;m1<Integer.parseInt(iM0TotCnt);m1++){
 				intToStrFieldCnt = String.valueOf(iLootDataFieldCnt);
 
@@ -1194,9 +1194,9 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 		params.put("updateSalesPlanConfirm_Params", params.toString() );
 
 		saveCnt = salesPlanMngementMapper.updateSalesPlanConfirm(params);
-		
+
 		salesPlanMngementMapper.insertITF189(params);
-			
+
 		totCnt = totCnt + saveCnt;
 
 		return totCnt;
@@ -1559,28 +1559,28 @@ public class SalesPlanMngementServiceImpl implements SalesPlanMngementService {
 			}
 		}
 	}
-	
-	
+
+
 	@Override
 	public int selectCreateCount(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectCreateCount(params);
 	}
-	
-	
+
+
 	@Override
 	public int selectUnConfirmCnt(Map<String, Object> params) {
 		return salesPlanMngementMapper.selectUnConfirmCnt(params);
 	}
-	
+
 	@Override
 	public int supplyPlancheck(Map<String, Object> params) {
 		return salesPlanMngementMapper.supplyPlancheck(params);
 	}
-	
+
 	@Override
 	public int SelectConfirmPlanCheck(Map<String, Object> params) {
 		return salesPlanMngementMapper.SelectConfirmPlanCheck(params);
 	}
-	
-	
+
+
 }

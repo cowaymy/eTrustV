@@ -1,0 +1,19 @@
+package com.coway.trust.biz.scm.impl;
+
+import java.util.List;
+import java.util.Map;
+
+import egovframework.rte.psl.dataaccess.mapper.Mapper;
+import egovframework.rte.psl.dataaccess.util.EgovMap;
+
+@Mapper("supplyPlanManagementMapper")
+public interface SupplyPlanManagementMapper {
+	/*
+	 * Supply Plan Management
+	 */
+	List<EgovMap> selectScmYear(Map<String, Object> params);
+	List<EgovMap> selectScmWeekByYear(Map<String, Object> params);
+	List<EgovMap> selectScmCdc(Map<String, Object> params);
+	List<EgovMap> selectScmStockType(Map<String, Object> params);
+	List<EgovMap> selectScmStockCode(Map<String, Object> params);
+}

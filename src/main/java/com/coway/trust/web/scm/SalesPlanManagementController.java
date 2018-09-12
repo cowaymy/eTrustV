@@ -20,7 +20,8 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
-import com.coway.trust.biz.scm.SalesPlanMngementService;
+import com.coway.trust.biz.scm.SalesPlanManagementService;
+import com.coway.trust.biz.scm.ScmCommonService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.Precondition;
@@ -35,7 +36,10 @@ public class SalesPlanManagementController {
 	//private static final Logger LOGGER  = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
-	private SalesPlanMngementService salesPlanMngementService;
+	private SalesPlanManagementService salesPlanManagementService;
+	
+	@Autowired
+	private ScmCommonService scmCommonService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -45,717 +49,103 @@ public class SalesPlanManagementController {
 		//model.addAttribute("languages", loginService.getLanguages());
 		return "/scm/salesPlanManagement";
 	}
-
-	@RequestMapping(value = "/selectCalendarHeader.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectCalendarHeaderList(@RequestBody Map<String, Object> params)
-	{
-		LOGGER.debug("selectCalendarHeaderList : {}", params.toString());
-
-		Map<String, Object> map = new HashMap<>();
-
-		List<EgovMap> selectCalendarHeaderList = salesPlanMngementService.selectCalendarHeader(params);
-		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);
-
-		map.put("header", selectCalendarHeaderList);
-
-		if (!planInfo.isEmpty())
-		{
-			LOGGER.debug("planMonth_map : {}", planInfo.get(0).toString() );
-			String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));
-			LOGGER.debug("selectPlanMonth : {}", selectPlanMonth);
-
-            ((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);
-
-			LOGGER.debug("selectCalendarHeaderList : {}", params.toString());
-
-			List<EgovMap> seperaionInfo = salesPlanMngementService.selectSeperation(params);  // WeekCount per month
-			List<EgovMap> childFieldList_M0 = salesPlanMngementService.selectChildField(params);
-
-			LOGGER.debug("seperaionInfo : {}", seperaionInfo.toString());
-
-			map.put("planInfo",planInfo);
-			map.put("seperaionInfo",seperaionInfo);
-			map.put("getChildField",childFieldList_M0);
-		}
-
-		return ResponseEntity.ok(map);
+	
+	@RequestMapping(value = "/selectScmYear.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScmYear(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectScmYear : {}", params.toString());
+		
+		List<EgovMap> selectScmYear	= scmCommonService.selectScmYear(params);
+		return ResponseEntity.ok(selectScmYear);
 	}
-
-	@RequestMapping(value = "/selectCalendarHeaderByCdc.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectCalendarHeaderByCdcList(@RequestBody Map<String, Object> params)
-	{
-		LOGGER.debug("selectCalendarHeaderList : {}", params.toString());
-
-		Map<String, Object> map = new HashMap<>();
-
-		List<EgovMap> selectCalendarHeaderList = salesPlanMngementService.selectCalendarHeader(params);
-		List<EgovMap> planByCdcInfo = salesPlanMngementService.selectPlanIdByCdc(params);
-
-		map.put("header", selectCalendarHeaderList);
-
-		if (!planByCdcInfo.isEmpty())
-		{
-			String selectPlanMonthByCdc = String.valueOf(planByCdcInfo.get(0).get("planMonth"));
-			LOGGER.debug("selectPlanMonthByCdc : {}", selectPlanMonthByCdc);
-
-			((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonthByCdc);
-
-			LOGGER.debug("selectCalendarHeaderList_Params : {}", params.toString());
-
-			List<EgovMap> seperaionInfo = salesPlanMngementService.selectSeperation(params);  // SCM0018M
-			List<EgovMap> childFieldList_M0 = salesPlanMngementService.selectChildField(params);
-
-			map.put("planByCdcInfo",planByCdcInfo);
-			map.put("seperaionInfo",seperaionInfo);
-			map.put("getChildField",childFieldList_M0);
-		}
-
-		return ResponseEntity.ok(map);
+	@RequestMapping(value = "/selectScmWeek.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScmWeek(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectScmWeek : {}", params.toString());
+		
+		List<EgovMap> selectScmWeek	= scmCommonService.selectScmWeek(params);
+		return ResponseEntity.ok(selectScmWeek);
 	}
-
-
-	@RequestMapping(value = "/selectPlanMstIdDetailSeqForIns.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectPlanDetailIdSeq(@RequestParam Map<String, Object> params)
-	{
-		LOGGER.debug("selectPlanMstIdDetailSeqForIns : {}", params.toString());
-
-		Map<String, Object> map = new HashMap<>();
-
-		List<EgovMap> selectPlanDetailIdSeq = salesPlanMngementService.selectPlanDetailIdSeq(params);
-		List<EgovMap> selectPlanMasterId = salesPlanMngementService.selectPlanMasterId(params);
-
-		map.put("selectPlanDetailIdSeq",selectPlanDetailIdSeq);
-		map.put("selectPlanMasterId",selectPlanMasterId);
-
-		return ResponseEntity.ok(map);
+	@RequestMapping(value = "/selectScmTeam.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScmTeam(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectScmTeam : {}", params.toString());
+		
+		List<EgovMap> selectScmTeam	= scmCommonService.selectScmTeam(params);
+		return ResponseEntity.ok(selectScmTeam);
 	}
-
-	@RequestMapping(value = "/selectAccuracyMonthlyHeaderList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectAccuracyMonthlyHeaderList(@RequestBody Map<String, Object> params)
-	{
-		LOGGER.debug("selectAccuracyMonthlyHeaderList : {}", params.toString());
-
-		Map<String, Object> map = new HashMap<>();
-
-		List<EgovMap> selectWeekThAccuracy = salesPlanMngementService.selectAccuracyMonthlyHeaderList(params);
-		List<EgovMap> seperaionCnt = salesPlanMngementService.selectSeperation(params);  // WeekCount per month
-
-		/* Stored Procedure Call (SP_INS_SCM_ACCURACY) */
-		String retval = salesPlanMngementService.callSpCreateMonthlyAccuracy(params);
-		LOGGER.debug("SPCall_Retvalue : {}", retval.toString());
-
-		if ("OkSP".equals(retval))
-		{
-		  List<EgovMap> selectAccuracyMonthlyReport = salesPlanMngementService.selectAccuracyMonthlyReport(params);
-		  map.put("selectAccuracyMonthlyReport",selectAccuracyMonthlyReport);
-		}
-		else
-		{
-		  map.put("selectAccuracyMonthlyReport",null);
-		}
-
-		map.put("selectWeekThAccuracy",selectWeekThAccuracy);
-		map.put("accuracyHeadCount",seperaionCnt);
-
-		return ResponseEntity.ok(map);
+	@RequestMapping(value = "/selectScmStockCategory.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScmStockCategory(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectScmStockCategory : {}", params.toString());
+		
+		List<EgovMap> selectScmStockCategory	= scmCommonService.selectScmStockCategory(params);
+		return ResponseEntity.ok(selectScmStockCategory);
 	}
-
-	@RequestMapping(value = "/selectStockIdByStCode.do", method = RequestMethod.GET)
-	public ResponseEntity<Map<String, Object>> selectStockIdByStCode(@RequestParam Map<String, Object> params)
-	{
-		LOGGER.debug("selectStockIdByStCode : {}", params.toString());
-
-		Map<String, Object> map = new HashMap<>();
-
-		List<EgovMap> selectStockIdByStCode = salesPlanMngementService.selectStockIdByStCode(params);
-
-		map.put("selectStockIdByStCode",selectStockIdByStCode);
-
-		return ResponseEntity.ok(map);
+	@RequestMapping(value = "/selectScmStockType.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScmStockType(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectScmStockType : {}", params.toString());
+		
+		List<EgovMap> selectScmStockType	= scmCommonService.selectScmStockType(params);
+		return ResponseEntity.ok(selectScmStockType);
 	}
-
-	@RequestMapping(value = "/selectPlanId.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectPlanId(@RequestParam Map<String, Object> params)
-	{
-		LOGGER.debug("selectPlanId : {}", params.toString());
-
-		List<EgovMap> selectPlanIdList = salesPlanMngementService.selectPlanId(params);
-		return ResponseEntity.ok(selectPlanIdList);
-	}
-
-	@RequestMapping(value = "/selectStockCtgrySummary.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectStockCtgrySummaryList(@RequestBody Map<String, Object> params)
-	{
-		LOGGER.debug("selectStockCtgrySummaryList : {}", params.toString());
-
-		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);
-		String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));
-		((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);
-
-		LOGGER.debug("SummaryParams : {}", params.toString());
-
-		List<EgovMap> selectStockCtgrySummaryList = salesPlanMngementService.selectStockCtgrySummary(params);
-
-		Map<String, Object> map = new HashMap<>();
-
-		//main Data
-		map.put("selectSalesSummaryList", selectStockCtgrySummaryList);
-
-		return ResponseEntity.ok(map);
-
-	}
-
-	@RequestMapping(value = "/selectSalesPlanMngmentSearch.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectSalesPlanMngmentList(@RequestBody Map<String, Object> params)
-	{
-		LOGGER.debug("selectSalesPlanMngmentList : {}", params.toString());
-
-		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);
-		String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));
-		((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);
+	@RequestMapping(value = "/selectScmStockCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScmStockCode(@RequestParam Map<String, Object> params) {
 		
-		String planYear	= (String) params.get("scmYearCbBox");
-		String m3YearFrom	= "";	String m3YearTo	= "";	String m3MonthFrom	= "";	String m3MonthTo	= "";
-		String m1YearFrom	= "";	String m1YearTo	= "";	String m1MonthFrom	= "";	String m1MonthTo	= "";
-		Integer year	= 0;	Integer month	= 0;
+		LOGGER.debug("selectScmStockCode : {}", params.toString());
 		
-		//	파라미터로 입력된 년월로 실적조회할 년월
-		if ( "1".equals(selectPlanMonth) ) {
-			//	파라미터가 2017년 1월인 경우
-			//	직전 3개월 2016년 10월 ~ 2016년12월
-			year	= Integer.parseInt(planYear) - 1;
-			m3YearFrom	= year.toString();	m3YearTo	= year.toString();
-			m3MonthFrom	= "10";				m3MonthTo	= "12";
-			//	직전 1개월 2016년 12월 ~ 2016년 12월
-			m1YearFrom	= m3YearFrom;		m1YearTo	= m3YearTo;
-			m1MonthFrom	= "12";				m1MonthTo	= "12";
-		} else if ( "2".equals(selectPlanMonth) ) {
-			//	파라미터가 2017년 2월인 경우
-			//	직전 3개월 2016년 11월 ~ 2017년 1월
-			year	= Integer.parseInt(planYear) - 1;
-			m3YearFrom	= year.toString();	m3YearTo	= planYear;
-			m3MonthFrom	= "11";				m3MonthTo		= "1";
-			//	직전 1개월 2017년 1월 ~ 2017년 1월
-			m1YearFrom	= planYear;			m1YearTo	= planYear;
-			m1MonthFrom	= "1";				m1MonthTo	= "1";
-		} else if ( "3".equals(selectPlanMonth) ) {
-			//	파라미터가 2017년 3월인 경우
-			//	직전 3개월 2016년 12월 ~ 2017년 2월
-			year	= Integer.parseInt(planYear) - 1;
-			m3YearFrom	= year.toString();	m3YearTo	= planYear;
-			m3MonthFrom	= "12";				m3MonthTo	= "2";
-			//	직전 1개월 2017년 2월 ~ 2017년 2월
-			m1YearFrom	= planYear;			m1YearTo	= planYear;
-			m1MonthFrom	= "2";				m1MonthTo	= "2";
-		} else {
-			//	파라미터가 2017년 4월 ~ 2017년 12월
-			//	직전 3개월 2017년 1월 ~ 3월 -> 2017년 9월 ~ 2017년 11월
-			m3YearFrom	= planYear;			m3YearTo	= planYear;
-			month	= Integer.parseInt(selectPlanMonth) - 3;	m3MonthFrom	= month.toString();
-			month	= Integer.parseInt(selectPlanMonth) - 1;	m3MonthTo	= month.toString();
-			//	직전 1개월 2017년 3월 -> 2017년 11월
-			m1YearFrom	= planYear;			m1YearTo	= planYear;
-			month	= Integer.parseInt(selectPlanMonth) - 1;
-			m1MonthFrom	= month.toString();	m1MonthTo	= month.toString();
-		}
-		
-		LOGGER.debug("==================== planYear : " + planYear + ", planMonth : " + selectPlanMonth);
-		LOGGER.debug("==================== m3YearFrom : " + m3YearFrom + ", m3YearTo : " + m3YearTo + ", m3MonthFrom : " + m3MonthFrom + ", m3MonthTo : " + m3MonthTo);
-		LOGGER.debug("==================== m1YearFrom : " + m1YearFrom + ", m1YearTo : " + m1YearTo + ", m1MonthFrom : " + m1MonthFrom + ", m1MonthTo : " + m1MonthTo);
-		
-		((Map<String, Object>) params).put("m3YearFrom", m3YearFrom);
-		((Map<String, Object>) params).put("m3YearTo", m3YearTo);
-		((Map<String, Object>) params).put("m3MonthFrom", m3MonthFrom);
-		((Map<String, Object>) params).put("m3MonthTo", m3MonthTo);
-		((Map<String, Object>) params).put("m1YearFrom", m1YearFrom);
-		((Map<String, Object>) params).put("m1YearTo", m1YearTo);
-		((Map<String, Object>) params).put("m1MonthFrom", m1MonthFrom);
-		((Map<String, Object>) params).put("m1MonthTo", m1MonthTo);
-		
-		LOGGER.debug("addMonth_Param : {}", params.toString());
-		
-		List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentList(params);
-		List<EgovMap> seperationInfo = salesPlanMngementService.selectSeperation(params);
-		
-		Map<String, Object> map = new HashMap<>();
-		
-		//main Data
-		map.put("planInfo", planInfo);
-		map.put("salesPlanMainList", selectSalesPlanMngmentList);
-		map.put("seperationInfo", seperationInfo);
-
-		return ResponseEntity.ok(map);
+		List<EgovMap> selectScmStockCode	= scmCommonService.selectScmStockCode(params);
+		return ResponseEntity.ok(selectScmStockCode);
 	}
 	
-	@RequestMapping(value = "/selectSalesPlanMngmentSearchGroup.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectSalesPlanMngmentGroupList(@RequestBody Map<String, Object> params)
-	{
-		LOGGER.debug("selectSalesPlanMngmentList : {}", params.toString());
-
-		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);
-		String selectPlanMonth = String.valueOf(planInfo.get(0).get("planMonth"));
-		((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonth);
+	@RequestMapping(value = "/selectSalesPlanHeader.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanHeader(@RequestBody Map<String, Object> params) {
 		
-		String planYear	= (String) params.get("scmYearCbBox");
-		String m3YearFrom	= "";	String m3YearTo	= "";	String m3MonthFrom	= "";	String m3MonthTo	= "";
-		String m1YearFrom	= "";	String m1YearTo	= "";	String m1MonthFrom	= "";	String m1MonthTo	= "";
-		Integer year	= 0;	Integer month	= 0;
+		LOGGER.debug("selectSalesPlanHeader : {}", params.toString());
 		
-		//	파라미터로 입력된 년월로 실적조회할 년월
-		if ( "1".equals(selectPlanMonth) ) {
-			//	파라미터가 2017년 1월인 경우
-			//	직전 3개월 2016년 10월 ~ 2016년12월
-			year	= Integer.parseInt(planYear) - 1;
-			m3YearFrom	= year.toString();	m3YearTo	= year.toString();
-			m3MonthFrom	= "10";				m3MonthTo	= "12";
-			//	직전 1개월 2016년 12월 ~ 2016년 12월
-			m1YearFrom	= m3YearFrom;		m1YearTo	= m3YearTo;
-			m1MonthFrom	= "12";				m1MonthTo	= "12";
-		} else if ( "2".equals(selectPlanMonth) ) {
-			//	파라미터가 2017년 2월인 경우
-			//	직전 3개월 2016년 11월 ~ 2017년 1월
-			year	= Integer.parseInt(planYear) - 1;
-			m3YearFrom	= year.toString();	m3YearTo	= planYear;
-			m3MonthFrom	= "11";				m3MonthTo		= "1";
-			//	직전 1개월 2017년 1월 ~ 2017년 1월
-			m1YearFrom	= planYear;			m1YearTo	= planYear;
-			m1MonthFrom	= "1";				m1MonthTo	= "1";
-		} else if ( "3".equals(selectPlanMonth) ) {
-			//	파라미터가 2017년 3월인 경우
-			//	직전 3개월 2016년 12월 ~ 2017년 2월
-			year	= Integer.parseInt(planYear) - 1;
-			m3YearFrom	= year.toString();	m3YearTo	= planYear;
-			m3MonthFrom	= "12";				m3MonthTo	= "2";
-			//	직전 1개월 2017년 2월 ~ 2017년 2월
-			m1YearFrom	= planYear;			m1YearTo	= planYear;
-			m1MonthFrom	= "2";				m1MonthTo	= "2";
-		} else {
-			//	파라미터가 2017년 4월 ~ 2017년 12월
-			//	직전 3개월 2017년 1월 ~ 3월 -> 2017년 9월 ~ 2017년 11월
-			m3YearFrom	= planYear;			m3YearTo	= planYear;
-			month	= Integer.parseInt(selectPlanMonth) - 3;	m3MonthFrom	= month.toString();
-			month	= Integer.parseInt(selectPlanMonth) - 1;	m3MonthTo	= month.toString();
-			//	직전 1개월 2017년 3월 -> 2017년 11월
-			m1YearFrom	= planYear;			m1YearTo	= planYear;
-			month	= Integer.parseInt(selectPlanMonth) - 1;
-			m1MonthFrom	= month.toString();	m1MonthTo	= month.toString();
-		}
+		Map<String, Object> map	= new HashMap<>();
 		
-		LOGGER.debug("==================== planYear : " + planYear + ", planMonth : " + selectPlanMonth);
-		LOGGER.debug("==================== m3YearFrom : " + m3YearFrom + ", m3YearTo : " + m3YearTo + ", m3MonthFrom : " + m3MonthFrom + ", m3MonthTo : " + m3MonthTo);
-		LOGGER.debug("==================== m1YearFrom : " + m1YearFrom + ", m1YearTo : " + m1YearTo + ", m1MonthFrom : " + m1MonthFrom + ", m1MonthTo : " + m1MonthTo);
+		List<EgovMap> selectSalesPlanHeader	= salesPlanManagementService.selectSalesPlanHeader(params);
+		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(params);
 		
-		((Map<String, Object>) params).put("m3YearFrom", m3YearFrom);
-		((Map<String, Object>) params).put("m3YearTo", m3YearTo);
-		((Map<String, Object>) params).put("m3MonthFrom", m3MonthFrom);
-		((Map<String, Object>) params).put("m3MonthTo", m3MonthTo);
-		((Map<String, Object>) params).put("m1YearFrom", m1YearFrom);
-		((Map<String, Object>) params).put("m1YearTo", m1YearTo);
-		((Map<String, Object>) params).put("m1MonthFrom", m1MonthFrom);
-		((Map<String, Object>) params).put("m1MonthTo", m1MonthTo);
+		map.put("selectSalesPlanHeader", selectSalesPlanHeader);
 		
-		LOGGER.debug("addMonth_Param : {}", params.toString());
-
-		List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentGroupList(params);
-		List<EgovMap> seperationInfo = salesPlanMngementService.selectSeperation(params);
-
-		Map<String, Object> map = new HashMap<>();
-
-		//main Data
-		map.put("planInfo", planInfo);
-		map.put("salesPlanMainList", selectSalesPlanMngmentList);
-		map.put("seperationInfo", seperationInfo);
-
-		return ResponseEntity.ok(map);
-	}
-
-	@RequestMapping(value = "/selectSalesCnt.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectSalesCnt(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectSalesCnt : {}", params.toString());
-
-		List<EgovMap> selectSalesCntList = salesPlanMngementService.selectSalesCnt(params);
-		return ResponseEntity.ok(selectSalesCntList);
-	}
-
-	@RequestMapping(value = "/selectExcuteYear.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectExcuteYearList(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectExcuteYearList : {}", params.toString());
-
-		List<EgovMap> selectExcuteYearList = salesPlanMngementService.selectExcuteYear(params);
-		return ResponseEntity.ok(selectExcuteYearList);
-	}
-
-	@RequestMapping(value = "/selectPeriodByYear.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectPeriodByYearList(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectPeriodByYearList : {}", params.toString());
-
-		List<EgovMap> selectPeriodByYearList = salesPlanMngementService.selectPeriodByYear(params);
-		return ResponseEntity.ok(selectPeriodByYearList);
-	}
-
-	@RequestMapping(value = "/selectMonthCombo.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMonthCombo(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectMonthComboList : {}", params.toString());
-
-		List<EgovMap> selectMonthCombo = salesPlanMngementService.selectMonthCombo(params);
-		return ResponseEntity.ok(selectMonthCombo);
-	}
-
-	@RequestMapping(value = "/selectWeekThList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectWeekThList(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectWeekThComboList : {}", params.toString());
-
-		List<EgovMap> selectWeekThComboList = salesPlanMngementService.selectChildField(params);
-		return ResponseEntity.ok(selectWeekThComboList);
-	}
-
-	@RequestMapping(value = "/selectWeekThSnComboList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectWeekThSn(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectWeekThSnComboList : {}", params.toString());
-
-		List<EgovMap> selectWeekThSnComboList = salesPlanMngementService.selectWeekThSn(params);
-		return ResponseEntity.ok(selectWeekThSnComboList);
-	}
-
-	@RequestMapping(value = "/selectScmTeamCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectScmTeamCodeList(@RequestParam Map<String, Object> params) {
-		Precondition.checkNotNull(params.get("codeMasterId"),
-				messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "codeMasterId" }));
-
-		LOGGER.debug("codeMasterId : {}", params.get("codeMasterId"));
-
-		List<EgovMap> selectScmTeamCodeList = salesPlanMngementService.selectScmTeamCode(params);
-		return ResponseEntity.ok(selectScmTeamCodeList);
-	}
-
-	@RequestMapping(value = "/selectStockCategoryCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectStockCategoryCode(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectStockCategoryCodeList : {}", params.toString());
-
-		List<EgovMap> selectStockCategoryCodeList = salesPlanMngementService.selectStockCategoryCode(params);
-		return ResponseEntity.ok(selectStockCategoryCodeList);
-	}
-
-	@RequestMapping(value = "/selectStockCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectStockCode(@RequestParam Map<String, Object> params )
-	 {
-		LOGGER.debug("selectStockCode : {}", params.toString());
-
-		List<EgovMap> selectStockCodeList = salesPlanMngementService.selectStockCode(params);
-		return ResponseEntity.ok(selectStockCodeList);
-	}
-
-	@RequestMapping(value = "/selectDefaultStockCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectDefaultStockCode(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectDefaultStockCode : {}", params.toString());
-
-		List<EgovMap> selectDefaultStockCode = salesPlanMngementService.selectDefaultStockCode(params);
-		return ResponseEntity.ok(selectDefaultStockCode);
-	}
-
-	// update save
-	@RequestMapping(value = "/saveScmSalesPlan.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveUserExceptAuthMapping(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
-	{
-		List<Object> udtList = params.get(AppConstants.AUIGRID_UPDATE); // Get gride UpdateList
-		// 콘솔로 찍어보기
-		LOGGER.info("salesPlanMngementService_수정 : {}", udtList.toString());
-
-		int tmpCnt = 0;
-		int totCnt = 0;
-
-		if (udtList.size() > 0) {
-			tmpCnt = salesPlanMngementService.updateSCMPlanMaster(udtList, sessionVO.getUserId());
-			totCnt = totCnt + tmpCnt;
-		}
-
-		LOGGER.info("salesPlan Saves카운트 : {}", totCnt);
-
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		return ResponseEntity.ok(message);
-	}
-/*
-	@RequestMapping(value = "/saveInsScmSalesPlan.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> saveInsScmSalesPlan(@RequestBody Map<String, ArrayList<Object>> params,	SessionVO sessionVO)
-	{
-		List<Object> addList = params.get(AppConstants.AUIGRID_ADD); // Get grid addList
-		// 콘솔로 찍어보기
-		LOGGER.info("salesPlanMngementService_추가 : {}", addList.toString());
-
-		int tmpCnt = 0;
-		int totCnt = 0;
-
-		if (addList.size() > 0) {
-			tmpCnt = salesPlanMngementService.insertSalesPlanDetail(addList, sessionVO.getUserId());
-			totCnt = totCnt + tmpCnt;
-		}
-
-		LOGGER.info("salesPlan Saves카운트 : {}", totCnt);
-
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		return ResponseEntity.ok(message);
-	}
-	*/
-	/*
-	@RequestMapping(value = "/insertSalesPlanMaster.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> insertSalesPlanMaster(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
-
-		LOGGER.debug("insertSalesPlanMaster_params : {}", params);
-
-		int createCnt =salesPlanMngementService.selectCreateCount(params);
-		List<EgovMap> planInfo = salesPlanMngementService.selectPlanId(params);
-		//int createdCnt	= salesPlanMngementService
-		
-		ReturnMessage message	= new ReturnMessage();
-		
-		if ( ! planInfo.isEmpty() ) {
-			//	already has plan
-			message.setCode(AppConstants.FAIL);
-			message.setMessage("Already has plan");
-		} else {
+		if ( ! selectSalesPlanInfo.isEmpty() ) {
+			LOGGER.debug("planMonth_map : {}", selectSalesPlanInfo.get(0).toString());
+			String planMonth	= String.valueOf(selectSalesPlanInfo.get(0).get("planMonth"));
+			LOGGER.debug("planMonth : {}", planMonth);
 			
+			((Map<String, Object>) params).put("planMonth", planMonth);
+			LOGGER.debug("selectSalesPlanHeader : {}", params.toString());
+			
+			List<EgovMap> selectSplitInfo	= salesPlanManagementService.selectSplitInfo(params);
+			List<EgovMap> selectChildField	= salesPlanManagementService.selectChildField(params);
+			
+			LOGGER.debug("selectSplitInfo : {}", selectSplitInfo.toString());
+			LOGGER.debug("selectChildField : {}", selectChildField.toString());
+			
+			map.put("selectSalesPlanInfo", selectSalesPlanInfo);
+			map.put("selectSplitInfo", selectSplitInfo);
+			map.put("selectChildField", selectChildField);
 		}
 		
-		LOGGER.info("salesPlan Create카운트 ?????    : {}", createCnt);
-		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
-		int tmpCnt = 0;
-		int totCnt = 0;
-		int resCnt = 0;
-
-		// 결과 만들기 예.
-		
-		
-		if(createCnt > 0){
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-
-		}else{
-		
-	    tmpCnt = salesPlanMngementService.insertSalesPlanMaster(params, sessionVO);
-	    resCnt = salesPlanMngementService.updateSalesPlanMasterMonthly(params, sessionVO);
-		totCnt = totCnt + tmpCnt;
+		return	ResponseEntity.ok(map);
+	}
 	
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+	@RequestMapping(value = "/selectSalesPlanList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanList(@RequestBody Map<String, Object> params) {
 		
-		}
+		LOGGER.debug("selectSalesPlanList : {}", params.toString());
 		
-		return ResponseEntity.ok(message);
+		List<EgovMap> selectSalesPlanList	= salesPlanManagementService.selectSalesPlanList(params);
+		//List<EgovMap> selectSalesPlanList	= salesPlanManagementService.selectSalesPlanList(params);
+		//List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentList(params);
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		map.put("selectSalesPlanList", selectSalesPlanList);
+		
+		return	ResponseEntity.ok(map);
 	}
-*/
-	@RequestMapping(value = "/insertSalesPlanMaster.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> insertSalesPlanMaster(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
-
-		LOGGER.debug("insertSalesPlanMaster_params : {}", params);
-
-		int createdCnt	= salesPlanMngementService.selectCreateCount(params);
-		
-		LOGGER.info("salesPlan Create카운트 ?????    : {}", createdCnt);
-		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
-		int tmpCnt = 0;
-		int totCnt = 0;
-		int resCnt = 0;
-
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		
-		if ( createdCnt > 0 ) {
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		} else {
-			tmpCnt	= salesPlanMngementService.insertSalesPlanMaster(params, sessionVO);
-			resCnt	= salesPlanMngementService.updateSalesPlanMasterMonthly(params, sessionVO);
-			totCnt	= totCnt + tmpCnt;
-			
-			message.setCode(AppConstants.SUCCESS);
-			message.setData(totCnt);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		}
-		
-		return ResponseEntity.ok(message);
-	}
-
-	@RequestMapping(value = "/insertSalesPlanMstCdc.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> insertSalesPlanMstCdc(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
-
-		LOGGER.debug("insertSalesPlanMstCdc_params : {}", params);
-		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
-		int tmpCnt = 0;
-		int totCnt = 0;
-
-        List<EgovMap> planByCdcInfo = salesPlanMngementService.selectPlanIdByCdc(params);
-        
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-        
-        // SCMSupplyPlanMaster(SCM0005M) Creation Check.
-		if (!planByCdcInfo.isEmpty())
-		{
-		  String selectPlanIdSeq = String.valueOf(planByCdcInfo.get(0).get("planId"));
-		  
-		  String selectPlanStus = String.valueOf(planByCdcInfo.get(0).get("planStus"));
-		  
-		  LOGGER.debug("selectPlanStus  **** : {}", selectPlanStus);
-
-		  ((Map<String, Object>) params).put("salesPlanMstCdcSeq", selectPlanIdSeq);
-
-		  LOGGER.debug("supplyPlanMst_Params : {}", params.toString());
-		  
-			if (!"4".equals(selectPlanStus)) {
-				// SCMSupplyPlanDetail Insert (SCM0006D)
-				tmpCnt = salesPlanMngementService.insertSalesCdcDetail(params, sessionVO);
-				totCnt = totCnt + tmpCnt;
-
-				message.setCode(AppConstants.SUCCESS);
-				message.setData(totCnt);
-				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-			} else {
-				message.setCode(AppConstants.FAIL);
-				message.setData(totCnt);
-				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-			}
-
-		}
-		else
-		{
-		   String selectPlanIdSeq = salesPlanMngementService.insertSalesPlanMstCdc(params, sessionVO);
-
-		   ((Map<String, Object>) params).put("salesPlanMstCdcSeq", selectPlanIdSeq);
-
-		   LOGGER.debug("supplyPlanMst_Params : {}", params.toString());
-
-		   //SCMSupplyPlanDetail Insert (SCM0006D)
-		   tmpCnt = salesPlanMngementService.insertSalesCdcDetail(params, sessionVO);
-		   totCnt = totCnt + tmpCnt;
-		   /*Precondition.checkNotNull(params.get("planId"),
-		   messageAccessor.getMessage(AppConstants.MSG_NECESSARY, new Object[] { "planId" }));*/
-		   
-			message.setCode(AppConstants.SUCCESS);
-			message.setData(totCnt);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		   
-		   
-		}
-
-		return ResponseEntity.ok(message);
-	}
-
-	@RequestMapping(value = "/updateSalesPlanUnConfirm.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updateSalesPlanUnConfirm(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
-
-		LOGGER.debug("updateSalesPlanUnConfirm_params : {}", params);
-
-		
-		int unConfirmCnt =salesPlanMngementService.selectUnConfirmCnt(params);
-		LOGGER.info("salesPlan unConfirm 카운트 ?????    : {}", unConfirmCnt);
-
-		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
-		int tmpCnt = 0;
-		int totCnt = 0;
-		
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		
-		if(unConfirmCnt > 0){
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		}else{
-		
-		tmpCnt = salesPlanMngementService.updateSalesPlanUnConfirm(params, sessionVO);
-		totCnt = totCnt + tmpCnt;
-
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		}
-		
-		return ResponseEntity.ok(message);
-	}
-
-	@RequestMapping(value = "/updateSalesPlanConfirm.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updateSalesPlanConfirm(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
-
-		LOGGER.debug("updateSalesPlanConfirm_params : {}", params);
-
-		// 반드시 서비스 호출하여 비지니스 처리. (현재는 샘플이므로 로그만 남김.)
-		int tmpCnt = 0;
-		int totCnt = 0;
-
-		tmpCnt = salesPlanMngementService.updateSalesPlanConfirm(params, sessionVO);
-		totCnt = totCnt + tmpCnt;
-
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		return ResponseEntity.ok(message);
-	}
-
-	@RequestMapping(value = "/deleteStockCodeList.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> deleteStockCodeList(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO)
-	{
-		List<Object> checkList = params.get(AppConstants.AUIGRID_CHECK);
-
-		LOGGER.info("deleteStockCodeList : {}", checkList.toString());
-
-		int tmpCnt = 0;
-		int totCnt = 0;
-
-		if (checkList.size() > 0) {
-			tmpCnt = salesPlanMngementService.deleteStockCode(checkList, sessionVO.getUserId());
-
-			totCnt = totCnt + tmpCnt;
-		}
-
-		// 콘솔로 찍어보기
-		LOGGER.info("deleteStockCodeList_카운트 : {}", totCnt);
-
-		// 결과 만들기 예.
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		return ResponseEntity.ok(message);
-	}
-
-
-	// SALES PLAN ACCURACY
-	@RequestMapping(value = "/selectAccuracyWeeklyDetail.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectAccuracyWeeklyDetail(@RequestBody Map<String, Object> params)
-	{
-
-		LOGGER.debug("selectAccuracyWeeklyDetail_Params : {}", params.toString());
-
-		Map<String, Object> map = new HashMap<>();
-
-		List<EgovMap> selectAccuracyWeeklyDetail = salesPlanMngementService.selectAccuracyWeeklyDetail(params);
-
-		map.put("accuracyWeeklyDetailList",selectAccuracyWeeklyDetail);
-
-		return ResponseEntity.ok(map);
-	}
-
 }
