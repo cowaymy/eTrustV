@@ -232,7 +232,7 @@ function isValidDate(param) {
 		maxDay	= 29;
 	}
 	
-	if ( 0 >= day || maxDat < day ) {
+	if ( 0 >= day || maxDay < day ) {
 		console.log("error2");
 		return	succDate;
 	}
