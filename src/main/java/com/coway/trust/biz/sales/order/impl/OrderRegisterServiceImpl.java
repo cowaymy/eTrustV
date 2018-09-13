@@ -248,12 +248,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         else {
         	if(this.isVerifyOldSalesOrderNoValidity(getOldOrderID)) {
 
-        		EgovMap resultMap = this.selectSalesOrderM(getOldOrderID, SalesConstants.APP_TYPE_CODE_ID_SERVICE);
+//        		EgovMap resultMap = this.selectSalesOrderM(getOldOrderID, SalesConstants.APP_TYPE_CODE_ID_SERVICE); // 2018-09-13 - Disabled extrade for Education and Free Trial
+        		EgovMap resultMap = this.selectSalesOrderM(getOldOrderID, 0);
         		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(promoId);
 
-            	if(resultMap != null) { //if(so.VerifyOldSalesOrderNotServiceType(getOldOrderID)
-                	ROOT_STATE = "ROOT_2";
+            	//if(resultMap != null) { //if(so.VerifyOldSalesOrderNotServiceType(getOldOrderID)
+            	if(resultMap.get("appTypeId") == "144" || resultMap.get("appTypeId") == "145") { // 2018-09-13 - Disabled extrade for Education and Free Trial
+            		ROOT_STATE = "ROOT_2";
             	}
+            	//}
             	else {
             		if(GetExpDate == null) {
                     	ROOT_STATE = "ROOT_3";
