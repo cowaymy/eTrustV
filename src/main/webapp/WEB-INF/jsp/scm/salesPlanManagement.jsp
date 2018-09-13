@@ -47,12 +47,18 @@ var gToday	= new Date();
 var gYear	= "";
 var gMonth	= "";
 var gDay	= "";
-var m0WeekCnt	= 0;	var m0WeekStart	= 0;
-var m1WeekCnt	= 0;	var m1WeekStart	= 0;
-var m2WeekCnt	= 0;	var m2WeekStart	= 0;
-var m3WeekCnt	= 0;	var m3WeekStart	= 0;
-var m4WeekCnt	= 0;	var m4WeekStart	= 0;
+var m0WeekCnt	= 0;	//	M0월 주차갯수
+var m1WeekCnt	= 0;	//	M+1월 주차갯수
+var m2WeekCnt	= 0;	//	M+2월 주차갯수
+var m3WeekCnt	= 0;	//	M+3월 주차갯수
+var m4WeekCnt	= 0;	//	M+4월 주차갯수
+var m0ThWeekStart	= 0;	//	M0월 시작주차
+var m1ThWeekStart	= 0;	//	M1월 시작주차
+var m2ThWeekStart	= 0;	//	M2월 시작주차
+var m3ThWeekStart	= 0;	//	M3월 시작주차
+var m4ThWeekStart	= 0;	//	M4월 시작주차
 var salesPlanList	= new Object();
+var childField	= new Object();
 
 $(function() {
 	//	Get Today Year, Week
@@ -272,7 +278,7 @@ function fnSalesPlanHeader() {
 		showStateColumn : true,
 		showEditedCellMarker : true,
 		enableCellMerge : true,
-		fixedColumnCount : 5,			//	고정칼럼 카운트 지정
+		fixedColumnCount : 10,			//	고정칼럼 카운트 지정
 		enableRestore : true,
 		//softRemovePolicy : "exceptNew",	//	사용자추가한 행은 바로 삭제
 		showRowCheckColumn : false,
@@ -289,23 +295,26 @@ function fnSalesPlanHeader() {
 				
 				//	if selectSalesPlanInfo result is null then alert
 				if ( null == result.selectSalesPlanInfo || 1 > result.selectSalesPlanInfo.length ) {
-					Common.alert("Sales Plan Master Info is null");
+					fnBtnCtrl(result.selectSalesPlanInfo);
+					Common.alert("No Data : Sales Plan Master Info");
 					return	false;
 				} else {
-					console.log("selectSalesPlanInfo is not null")
+					//console.log("selectSalesPlanInfo is not null")
 					fnSetSalesPlanInfo(result.selectSalesPlanInfo);
 				}
 				
 				//	if selectSplitInfo result is null then alert
 				if ( null == result.selectSplitInfo || 1 > result.selectSplitInfo.length ) {
-					Common.alert("Week Split Info is null");
+					Common.alert("No Data : Week Split Info");
 					return	false;
 				}
 				
 				//	if selectChildField result is null then alert
 				if ( null == result.selectChildField || 1 > result.selectChildField.length ) {
-					Common.alert("Child Filed Info is null");
+					Common.alert("No Data : Child Filed Info");
 					return	false;
+				} else {
+					childField	= result.selectChildField;
 				}
 				
 				//	if selectSalesPlanHeader result null then remove grid
@@ -327,16 +336,15 @@ function fnSalesPlanHeader() {
 									 {
 										 dataField : result.selectSalesPlanHeader[0].h1PlanId,
 										 headerText : "Plan Id",
-										 visible : true
+										 visible : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h1PlanDtlId,
 										 headerText : "Plan Dtl Id",
-										 visible : true
+										 visible : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h1Stock,
 										 headerText : "Stock",
-										 visible : true,
-										 style : "my-backColumn4"
+										 visible : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h2Team,
 										 headerText : "Team",
@@ -345,21 +353,21 @@ function fnSalesPlanHeader() {
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h2TypeId,
 										 headerText : "Type Id",
-										 visible : true,
+										 visible : false,
 										 style : "my-backColumn4"
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h2TypeName,
-										 headerText : "Type Name",
+										 headerText : "Type",
 										 visible : true,
 										 style : "my-backColumn4"
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h2CategoryId,
 										 headerText : "Category Id",
-										 visible : true,
+										 visible : false,
 										 style : "my-backColumn4"
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h2CategoryName,
-										 headerText : "Category Name",
+										 headerText : "Category",
 										 visible : true,
 										 style : "my-backColumn4"
 									 }, {
@@ -444,11 +452,11 @@ function fnSalesPlanHeader() {
 					m3WeekCnt	= parseInt(result.selectSplitInfo[0].m3WeekCnt);
 					m4WeekCnt	= parseInt(result.selectSplitInfo[0].m4WeekCnt);
 					
-					m0WeekStart	= 1;
-					m1WeekStart	= m0WeekCnt + 1;
-					m2WeekStart	= m0WeekCnt + m1WeekCnt + 1;
-					m3WeekStart	= m0WeekCnt + m1WeekCnt + m2WeekCnt + 1;
-					m4WeekStart	= m0WeekCnt + m1WeekCnt + m2WeekCnt + m3WeekCnt + 1;
+					m0ThWeekStart	= parseInt(result.selectChildField[0].weekTh);
+					m1ThWeekStart	= m0ThWeekStart + m0WeekCnt;
+					m2ThWeekStart	= m1ThWeekStart + m1WeekCnt;
+					m3ThWeekStart	= m2ThWeekStart + m2WeekCnt;
+					m4ThWeekStart	= m3ThWeekStart + m3WeekCnt;
 					
 					var iLoopCnt	= 1;
 					var iLoopDataFieldCnt	= 1;
@@ -634,11 +642,11 @@ function fnSalesPlanHeader() {
 					AUIGrid.bind(myGridID, "cellClick", function(event) {
 						//gSelMainRowIdx	= event.rowIndex;
 						//console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex);
-						console.log("name : " + event.dataField);
-						console.log("columnIndex : " + event.columnIndex + ", rowIndex : " + event.rowIndex + ", dataField Name : " + AUIGrid.getDataFieldByColumnIndex(event.columnIndex));
+						//console.log("name : " + event.dataField);
+						//console.log("columnIndex : " + event.columnIndex + ", rowIndex : " + event.rowIndex + ", dataField Name : " + AUIGrid.getDataFieldByColumnIndex(event.columnIndex));
 					});
 					AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-						console.log("DobleClick(" + event.rowIndex + ", " + event.columnIndex + ") :  " + " value : " + event.value );
+						//console.log("DobleClick(" + event.rowIndex + ", " + event.columnIndex + ") :  " + " value : " + event.value );
 					});
 					AUIGrid.bind(myGridID, "cellEditEnd", fnSumMnPlan);
 					
@@ -680,6 +688,7 @@ function fnSearch() {
 				
 				//	set result list to object
 				salesPlanList	= result.selectSalesPlanList;
+				//fnSumMnPlanAfterSearch();	//	조회 후 합계
 				//console.log("-=======================-");
 				//console.log(salesPlanList);
 				
@@ -754,7 +763,7 @@ function fnSaveDetail(obj) {
 			, "/scm/updateSalesPlanDetail.do"
 			, GridCommon.getEditData(myGridID)
 			, function(result) {
-				Common.alert(result.data  + "<spring:message code='sys.msg.saveCnt'/>");
+				Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 				fnSalesPlanHeader();
 				console.log("Success : " + JSON.stringify(result) + " /data : " + result.data);
 			}
@@ -794,10 +803,13 @@ function fnSaveMaster(obj, conf) {
 		return	false;
 	}
 	
+	var msg	= "";
 	//	set planStusId
 	if ( "confirm" == conf ) {
+		msg	= $("#scmYearCbBox").val() + " year " + $("#scmWeekCbBox").val() + " th Week Sales Plan is confirmed";
 		$("#planStusId").val(4);
 	} else if ( "unconfirm" == conf ) {
+		msg	= $("#scmYearCbBox").val() + " year " + $("#scmWeekCbBox").val() + " th Week Sales Plan is Unconfirmed";
 		$("#planStusId").val(1);
 	}
 	
@@ -805,7 +817,8 @@ function fnSaveMaster(obj, conf) {
 			, "/scm/updateSalesPlanMaster.do"
 			, $("#MainForm").serializeJSON()
 			, function(result) {
-				Common.alert(result.data  + "<spring:message code='sys.msg.saveCnt'/>");
+				//Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
+				Common.alert(msg);
 				fnSalesPlanHeader();
 				console.log("Success : " + JSON.stringify(result) + " /data : " + result.data);
 			}
@@ -839,49 +852,256 @@ function fnSumMnPlan(event) {
 	//console.log(event);
 	var colStartIdx		= 18;	//	every week's cnt start column index : It should be changable, selectSalesPlanList query column count change
 	var colChangeIdx	= event.columnIndex;
+	var planWeek	= $("#scmWeekCbBox").val();
 	var m0	= 0;	var m1	= 0;	var m2	= 0;	var m3	= 0;	var m4	= 0;
 	var ms0	= "";	var ms1	= "";	var ms2	= "";	var ms3	= "";	var ms4	= "";
+	
 	if ( "cellEditEnd" == event.type ) {
 		console.log("m0WeekCnt : " + m0WeekCnt + ", m1WeekCnt : " + m1WeekCnt + ", m2WeekCnt : " + m2WeekCnt + ", m3WeekCnt : " + m3WeekCnt + ", m4WeekCnt : " + m4WeekCnt);
-		console.log("m0WeekStart : " + m0WeekStart + ", m1WeekStart : " + m1WeekStart + ", m2WeekStart : " + m2WeekStart + ", m3WeekStart : " + m3WeekStart + ", m4WeekStart : " + m4WeekStart);
-		console.log(event.columnIndex);
+		//console.log("m0ThWeekStart : " + m0ThWeekStart + ", m1ThWeekStart : " + m1ThWeekStart + ", m2ThWeekStart : " + m2ThWeekStart + ", m3ThWeekStart : " + m3ThWeekStart + ", m4ThWeekStart : " + m4ThWeekStart);
+		//console.log(event.columnIndex);
 		
 		//	sum m0
 		for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
-			ms0	= "w0" + (parseInt(m0WeekStart) + parseInt(i)).toString();
-			//console.log("parseInt(i) + parseInt(colStartIdx) + parseInt(m0WeekStart) : " + parseInt(i) + parseInt(colStartIdx) + parseInt(m0WeekStart) + ", colidx : " + colChangeIdx);
-			if ( parseInt(i) + parseInt(colStartIdx) + parseInt(m0WeekStart) - 1 == parseInt(colChangeIdx) ) {
-				m0	= parseInt(m0) + parseInt(event.value);
-				salesPlanList[event.rowIndex][ms0]	= event.value;
-				console.log("11. i : " + i + ", ms0 : " + ms0 + ", value : " + event.value);
+			ms0	= "w0" + (i + 1).toString();
+			//console.log("planWeek : " + planWeek + ", m0ThWeekStart : " + m0ThWeekStart + ", i : " + i + ", colChangeIdx : " + colChangeIdx);
+			if ( planWeek < parseInt(i) + parseInt(m0ThWeekStart) ) {
+				//console.log("sum");
+				if ( parseInt(i) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
+					m0	= parseInt(m0) + parseInt(event.value);
+					salesPlanList[event.rowIndex][ms0]	= ((event.value).toString()).replace(",", "");
+					//console.log("01. i : " + i + ", ms0 : " + ms0 + ", value : " + event.value);
+				} else {
+					m0	= parseInt(m0) + parseInt(salesPlanList[event.rowIndex][ms0]);
+					//console.log("02. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
+				}
 			} else {
-				m0	= parseInt(m0) + parseInt(salesPlanList[event.rowIndex][ms0]);
-				console.log("12. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
+				//console.log("not sum");
 			}
 		}
-		//console.log("m0 : " + m0);
-		salesPlanList[event.rowIndex]["m0Plan"]	= m0;
+		salesPlanList[event.rowIndex]["m0Plan"]	= parseInt(m0);
 		AUIGrid.setCellValue(myGridID, event.rowIndex, "m0Plan", m0);
-		//console.log("m0Plan : " + salesPlanList[event.rowIndex]["m0Plan"]);
 		
 		//	sum 01
 		for ( var i = 0 ; i < m1WeekCnt ; i++ ) {
-			if ( 10 > parseInt(m1WeekStart) + parseInt(i) ) {
-				ms1	= "w0" + (parseInt(m1WeekStart) + parseInt(i)).toString();
+			if ( 10 > i + 1 + parseInt(m0WeekCnt) ) {
+				ms1	= "w0" + (i + 1 + parseInt(m0WeekCnt)).toString();
 			} else {
-				ms1	= "w" + (parseInt(m1WeekStart) + parseInt(i)).toString();
+				ms1	= "w" + (i + 1 + parseInt(m0WeekCnt)).toString();
 			}
-			if ( parseInt(i) + parseInt(colStartIdx) + parseInt(m1WeekStart) - 1 == parseInt(colChangeIdx) ) {
+			//console.log("planWeek : " + planWeek + ", m1ThWeekStart : " + m1ThWeekStart + ", i : " + i + ", colChangeIdx : " + colChangeIdx);
+			if ( i + parseInt(m0WeekCnt) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
 				m1	= parseInt(m1) + parseInt(event.value);
-				console.log("21. i : " + i + ", ms1 : " + ms1 + ", value : " + event.value);
+				salesPlanList[event.rowIndex][ms1]	= ((event.value).toString()).replace(",", "");
+				console.log("11. i : " + i + ", ms1 : " + ms1 + ", value : " + event.value);
 			} else {
 				m1	= parseInt(m1) + parseInt(salesPlanList[event.rowIndex][ms1]);
-				console.log("22. i : " + i + ", ms1 : " + ms1 + ", value : " + salesPlanList[event.rowIndex][ms1]);
+				console.log("12. i : " + i + ", ms1 : " + ms1 + ", value : " + salesPlanList[event.rowIndex][ms1]);
 			}
 		}
-		salesPlanList[event.rowIndex]["m1"]	= m1;
+		salesPlanList[event.rowIndex]["m1"]	= parseInt(m1);
 		AUIGrid.setCellValue(myGridID, event.rowIndex, "m1", m1);
+		
+		//	sum m2
+		for ( var i = 0 ; i < m2WeekCnt ; i++ ) {
+			if ( 10 > i + 1 + parseInt(m0WeekCnt) + parseInt(m1WeekCnt) ) {
+				ms2	= "w0" + (i + 1 + parseInt(m0WeekCnt) + parseInt(m1WeekCnt)).toString();
+			} else {
+				ms2	= "w" + (i + 1 + parseInt(m0WeekCnt) + parseInt(m1WeekCnt)).toString();
+			}
+			if ( i + parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
+				m2	= parseInt(m2) + parseInt(event.value);
+				salesPlanList[event.rowIndex][ms2]	=  ((event.value).toString()).replace(",", "");
+				console.log("21. i : " + i + ", ms2 : " + ms2 + ", value : " + event.value);
+			} else {
+				m2	= parseInt(m2) + parseInt(salesPlanList[event.rowIndex][ms2]);
+				console.log("22. i : " + i + ", ms2 : " + ms2 + ", value : " + salesPlanList[event.rowIndex][ms2]);
+			}
+		}
+		salesPlanList[event.rowIndex]["m2"]	= parseInt(m2);
+		AUIGrid.setCellValue(myGridID, event.rowIndex, "m2", m2);
+		
+		//	sum m3
+		for ( var i = 0 ; i < m3WeekCnt ; i++ ) {
+			ms3	= "w" + (i + 1 + parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt)).toString();
+			if ( i + parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
+				m3	= parseInt(m3) + parseInt(event.value);
+				salesPlanList[event.rowIndex][ms3]	= ((event.value).toString()).replace(",", "");
+				console.log("31. i : " + i + ", ms3 : " + ms3 + ", value : " + event.value);
+			} else {
+				m3	= parseInt(m3) + parseInt(salesPlanList[event.rowIndex][ms3]);
+				console.log("32. i : " + i + ", ms3 : " + ms3 + ", value : " + salesPlanList[event.rowIndex][ms3]);
+			}
+		}
+		salesPlanList[event.rowIndex]["m3"]	= parseInt(m3);
+		AUIGrid.setCellValue(myGridID, event.rowIndex, "m3", m3);
+		
+		//	sum m4
+		for ( var i = 0 ; i < m4WeekCnt ; i++ ) {
+			ms4	= "w" + (i + 1 + parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt) + parseInt(m3WeekCnt)).toString();
+			if ( i + parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt) + parseInt(m3WeekCnt) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
+				m4	= parseInt(m4) + parseInt(event.value);
+				salesPlanList[event.rowIndex][ms4]	= ((event.value).toString()).replace(",", "");
+				console.log("41. i : " + i + ", ms4 : " + ms4 + ", value : " + event.value);
+			} else {
+				m4	= parseInt(m4) + parseInt(salesPlanList[event.rowIndex][ms4]);
+				console.log("42. i : " + i + ", ms4 : " + ms4 + ", value : " + salesPlanList[event.rowIndex][ms4]);
+			}
+		}
+		salesPlanList[event.rowIndex]["m4"]	= parseInt(m4);
+		AUIGrid.setCellValue(myGridID, event.rowIndex, "m4", m4);
 	}
+}
+
+//	
+function fnSumMnPlanAfterSearch() {
+	var colStartIdx		= 18;	//	every week's cnt start column index : It should be changable, selectSalesPlanList query column count change
+	var planWeek	= $("#scmWeekCbBox").val();
+	var m0	= 0;	var m1	= 0;	var m2	= 0;	var m3	= 0;	var m4	= 0;
+	var ms0	= "";	var ms1	= "";	var ms2	= "";	var ms3	= "";	var ms4	= "";
+	
+	console.log("m0WeekCnt : " + m0WeekCnt + ", m1WeekCnt : " + m1WeekCnt + ", m2WeekCnt : " + m2WeekCnt + ", m3WeekCnt : " + m3WeekCnt + ", m4WeekCnt : " + m4WeekCnt);
+	console.log("m0ThWeekStart : " + m0ThWeekStart + ", m1ThWeekStart : " + m1ThWeekStart + ", m2ThWeekStart : " + m2ThWeekStart + ", m3ThWeekStart : " + m3ThWeekStart + ", m4ThWeekStart : " + m4ThWeekStart);
+	//console.log(event.columnIndex);
+	
+	for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
+		m0	= 0;	m1	= 0;	m2	= 0;	m3	= 0;	m4	= 0;
+		//	m0
+		for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
+			ms0	= "w0" + (parseInt(m0ThWeekStart) + parseInt(i)).toString();
+			if ( 0 == parseInt(salesPlanList[j][ms0]) ) {
+				if ( planWeek < parseInt(i) + parseInt(m0ThWeekStart) ) {
+					m0	= parseInt(m0) + parseInt(salesPlanList[j][ms0]);
+					salesPlanList[j]["m0Plan"]	= m0;
+					AUIGrid.setCellValue(myGridID, j, "m0Plan", m0);
+				} else {
+					//console.log("not sum");
+				}
+			}
+		}
+		//	m1
+		for ( var i = 0 ; i < m1WeekCnt ; i++ ) {
+			if ( 10 > parseInt(m1ThWeekStart) + parseInt(i) ) {
+				ms1	= "w0" + (parseInt(m1ThWeekStart) + parseInt(i)).toString();
+			} else {
+				ms1	= "w" + (parseInt(m1ThWeekStart) + parseInt(i)).toString();
+			}
+			if ( 0 == parseInt(salesPlanList[j][ms1]) ) {
+				m1	= parseInt(m1) + parseInt(salesPlanList[j][ms1]);
+				salesPlanList[j]["m1"]	= m1;
+				AUIGrid.setCellValue(myGridID, j, "m1", m1);
+			}
+		}
+		//	m2
+		for ( var i = 0 ; i < m2WeekCnt ; i++ ) {
+			if ( 10 > parseInt(m2ThWeekStart) + parseInt(i) ) {
+				ms2	= "w0" + (parseInt(m2ThWeekStart) + parseInt(i)).toString();
+			} else {
+				ms2	= "w" + (parseInt(m2ThWeekStart) + parseInt(i)).toString();
+			}
+			if ( 0 == parseInt(salesPlanList[j][ms2]) ) {
+				m2	= parseInt(m2) + parseInt(salesPlanList[j][ms2]);
+				salesPlanList[j]["m2"]	= m2;
+				AUIGrid.setCellValue(myGridID, j, "m2", m2);
+			}
+		}
+		//	m3
+		for ( var i = 0 ; i < m3WeekCnt ; i++ ) {
+			if ( 10 > parseInt(m3ThWeekStart) + parseInt(i) ) {
+				ms3	= "w0" + (parseInt(m3ThWeekStart) + parseInt(i)).toString();
+			} else {
+				ms3	= "w" + (parseInt(m3ThWeekStart) + parseInt(i)).toString();
+			}
+			if ( 0 == parseInt(salesPlanList[j][ms3]) ) {
+				m3	= parseInt(m3) + parseInt(salesPlanList[j][ms3]);
+				salesPlanList[j]["m3"]	= m3;
+				AUIGrid.setCellValue(myGridID, j, "m3", m3);
+			}
+		}
+		//	m4
+		for ( var i = 0 ; i < m4WeekCnt ; i++ ) {
+			if ( 10 > parseInt(m4ThWeekStart) + parseInt(i) ) {
+				ms4	= "w0" + (parseInt(m4ThWeekStart) + parseInt(i)).toString();
+			} else {
+				ms4	= "w" + (parseInt(m4ThWeekStart) + parseInt(i)).toString();
+			}
+			if ( 0 == parseInt(salesPlanList[j][ms4]) ) {
+				m4	= parseInt(m4) + parseInt(salesPlanList[j][ms4]);
+				salesPlanList[j]["m4"]	= m4;
+				AUIGrid.setCellValue(myGridID, j, "m4", m4);
+			}
+		}
+	}
+	//	sum m0
+/*	for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
+		ms0	= "w0" + (parseInt(m0ThWeekStart) + parseInt(i)).toString();
+		for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
+			if ( planWeek < parseInt(i) + parseInt(m0ThWeekStart) ) {
+				m0	= parseInt(m0) + parseInt(salesPlanList[j][ms0]);
+				salesPlanList[j]["m0Plan"]	= m0;
+				AUIGrid.setCellValue(myGridID, j, "m0Plan", m0);
+			} else {
+				//console.log("not sum");
+			}
+		}
+	}
+	
+	//	sum 01
+	for ( var i = 0 ; i < m1WeekCnt ; i++ ) {
+		if ( 10 > parseInt(m1ThWeekStart) + parseInt(i) ) {
+			ms1	= "w0" + (parseInt(m1ThWeekStart) + parseInt(i)).toString();
+		} else {
+			ms1	= "w" + (parseInt(m1ThWeekStart) + parseInt(i)).toString();
+		}
+		for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
+			m1	= parseInt(m1) + parseInt(salesPlanList[j][ms1]);
+			salesPlanList[j]["m1"]	= m1;
+			AUIGrid.setCellValue(myGridID, j, "m1", m1);
+		}
+	}
+	
+	//	sum m2
+	for ( var i = 0 ; i < m2WeekCnt ; i++ ) {
+		if ( 10 > parseInt(m2ThWeekStart) + parseInt(i) ) {
+			ms2	= "w0" + (parseInt(m2ThWeekStart) + parseInt(i)).toString();
+		} else {
+			ms2	= "w" + (parseInt(m2ThWeekStart) + parseInt(i)).toString();
+		}
+		for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
+			m2	= parseInt(m2) + parseInt(salesPlanList[j][ms2]);
+			salesPlanList[j]["m2"]	= m2;
+			AUIGrid.setCellValue(myGridID, j, "m2", m2);
+		}
+	}
+	
+	//	sum m3
+	for ( var i = 0 ; i < m3WeekCnt ; i++ ) {
+		if ( 10 > parseInt(m3ThWeekStart) + parseInt(i) ) {
+			ms3	= "w0" + (parseInt(m3ThWeekStart) + parseInt(i)).toString();
+		} else {
+			ms3	= "w" + (parseInt(m3ThWeekStart) + parseInt(i)).toString();
+		}
+		for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
+			m3	= parseInt(m3) + parseInt(salesPlanList[j][ms3]);
+			salesPlanList[j]["m3"]	= m3;
+			AUIGrid.setCellValue(myGridID, j, "m3", m3);
+		}
+	}
+	
+	//	sum m4
+	for ( var i = 0 ; i < m4WeekCnt ; i++ ) {
+		if ( 10 > parseInt(m4ThWeekStart) + parseInt(i) ) {
+			ms4	= "w0" + (parseInt(m4ThWeekStart) + parseInt(i)).toString();
+		} else {
+			ms4	= "w" + (parseInt(m4ThWeekStart) + parseInt(i)).toString();
+		}
+		for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
+			m4	= parseInt(m4) + parseInt(salesPlanList[j][ms4]);
+			salesPlanList[j]["m4"]	= m4;
+			AUIGrid.setCellValue(myGridID, j, "m4", m4);
+		}
+	}
+	*/
 }
 
 //	set plan info
@@ -911,6 +1131,7 @@ function fnSetSalesPlanInfo(result) {
 			$("#planCreatedAt3").text(result[i].crtDt);
 		}
 	}
+	fnBtnCtrl(result);
 }
 
 //	validation
@@ -948,20 +1169,22 @@ function getTimeStamp() {
 }
 
 //	button Control
-function fnBtnCtrl(header, result) {
+function fnBtnCtrl(result) {
 	var scmTeamCbBox	= $("#scmTeamCbBox").val();
 	var planId1	= $("#planId1").val();	var planStusId1	= $("#planStusId1").val();	//	DST
 	var planId2	= $("#planId2").val();	var planStusId2	= $("#planStusId2").val();	//	CODY
-	var planId3	= $("#planId3").val();	var planStusId1	= $("#planStusId3").val();	//	CS
+	var planId3	= $("#planId3").val();	var planStusId3	= $("#planStusId3").val();	//	CS
 	
 	if ( null == result ) {
-		$("#btnCreate").addClass("btn_disabled");
+		//console.log("===========btn1============");
+		$("#btnCreate").removeClass("btn_disabled");
 		$("#btnSave").addClass("btn_disabled");
 		$("#btnConfirm").addClass("btn_disabled");
 		$("#btnUnconfirm").addClass("btn_disabled");
 		$("#btnExcel").addClass("btn_disabled");
 	} else {
 		if ( "" == scmTeamCbBox ) {
+			//console.log("===========btn2============");
 			$("#btnCreate").addClass("btn_disabled");
 			$("#btnSave").removeClass("btn_disabled");
 			$("#btnConfirm").addClass("btn_disabled");
@@ -969,12 +1192,35 @@ function fnBtnCtrl(header, result) {
 			$("#btnExcel").removeClass("btn_disabled");
 		} else if ( "DST" == scmTeamCbBox ) {
 			if ( 1 == planStusId1 || "1" == planStusId1 ) {
+				//console.log("===========btn3============");
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").removeClass("btn_disabled");
 				$("#btnConfirm").removeClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
 			} else if ( 4 == planStusId1 || "4" == planStusId1 ) {
+				//console.log("===========btn4============");
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").removeClass("btn_disabled");
+				$("#btnExcel").removeClass("btn_disabled");
+			} else {
+				//console.log("===========btn5============");
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnExcel").addClass("btn_disabled");
+			}
+		} else if ( "CODY" == scmTeamCbBox ) {
+			if ( 1 == planStusId2 || "1" == planStusId2 ) {
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").removeClass("btn_disabled");
+				$("#btnConfirm").removeClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnExcel").removeClass("btn_disabled");
+			} else if ( 4 == planStusId2 || "4" == planStusId2 ) {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
@@ -987,18 +1233,26 @@ function fnBtnCtrl(header, result) {
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").addClass("btn_disabled");
 			}
-		} else if ( "CODY" == scmTeamCbBox ) {
-			$("#btnCreate").addClass("btn_disabled");
-			$("#btnSave").removeClass("btn_disabled");
-			$("#btnConfirm").addClass("btn_disabled");
-			$("#btnUnconfirm").addClass("btn_disabled");
-			$("#btnExcel").removeClass("btn_disabled");
 		} else if ( "CS" == scmTeamCbBox ) {
-			$("#btnCreate").addClass("btn_disabled");
-			$("#btnSave").removeClass("btn_disabled");
-			$("#btnConfirm").addClass("btn_disabled");
-			$("#btnUnconfirm").addClass("btn_disabled");
-			$("#btnExcel").removeClass("btn_disabled");
+			if ( 1 == planStusId3 || "1" == planStusId3 ) {
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").removeClass("btn_disabled");
+				$("#btnConfirm").removeClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnExcel").removeClass("btn_disabled");
+			} else if ( 4 == planStusId3 || "4" == planStusId3 ) {
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").removeClass("btn_disabled");
+				$("#btnExcel").removeClass("btn_disabled");
+			} else {
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnExcel").addClass("btn_disabled");
+			}
 		}
 	}
 }
@@ -1124,57 +1378,51 @@ $(document).ready(function() {
 
 	<section class="search_result"><!-- search_result start -->
 		<ul class="right_btns">
-			<li><p id="btnCreate" class="btn_grid"><a onclick="fnCreate(this);">Create</a></p></li>
-			<li><p id="btnSave" class="btn_grid"><a onclick="fnSaveDetail(this);">Save</a></p></li>
-			<li><p id="btnConfirm" class="btn_grid"><a onclick="fnSaveMaster(this, 'confirm');">Confirm</a></p></li>
-			<li><p id="btnUnconfirm" class="btn_grid"><a onclick="fnSaveMaster(this, 'unconfirm');">UnConfirm</a></p></li>
-			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SalesPlanManagement');">Excel</a></p></li>
+			<li><p id="btnCreate" class="btn_grid btn_disabled"><a onclick="fnCreate(this);">Create</a></p></li>
+			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSaveDetail(this);">Save</a></p></li>
+			<li><p id="btnConfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'confirm');">Confirm</a></p></li>
+			<li><p id="btnUnconfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'unconfirm');">UnConfirm</a></p></li>
+			<li><p id="btnExcel" class="btn_grid btn_disabled"><a onclick="fnExcel(this, 'SalesPlanManagement');">Excel</a></p></li>
 			<!-- <li><p id='btnExcel'  class="btn_grid btn_disabled"><a onclick="fnExcel(this,'SalesPlanManagement');">Download</a></p></li> -->
 		</ul>
 		
 		<table class="type1 mt10"><!-- table start -->
 			<caption>table</caption>
 			<colgroup>
-				<col style="width:90px" />
-				<col style="width:*" />
 				<col style="width:60px" />
 				<col style="width:*" />
+				<col style="width:80px" />
+				<col style="width:*" />
+				<col style="width:100px" />
+				<col style="width:170px" />
 				<col style="width:60px" />
 				<col style="width:*" />
+				<col style="width:80px" />
+				<col style="width:*" />
+				<col style="width:100px" />
+				<col style="width:170px" />
 				<col style="width:60px" />
 				<col style="width:*" />
-				<col style="width:120px" />
-				<col style="width:90px" />
-				<col style="width:160px" />
-				<col style="width:150px" />
+				<col style="width:80px" />
+				<col style="width:*" />
+				<col style="width:100px" />
+				<col style="width:170px" />
 			</colgroup>
 			<tbody>
 				<tr><!-- Team DST -->
 					<!-- <th scope="row">Year</th><td><span id="planYear1"></span></td>
 					<th scope="row">Month</th><td><span id="planMonth1"></span></td>
 					<th scope="row">Week</th><td><span id="planWeek1"></span></td> -->
-					<th scope="row">Team</th><td colspan="3"><span id="planTeam1"></span></td>
-					<th scope="row">Status</th><td colspan="3"><span id="planStatus1"></span></td>
-					<th scope="row">Created At</th><td colspan="3"><span id="planCreatedAt1"></span></td>
+					<th scope="row">Team</th><td><span id="planTeam1"></span></td>
+					<th scope="row">Status</th><td><span id="planStatus1"></span></td>
+					<th scope="row">Created At</th><td><span id="planCreatedAt1"></span></td>
+					<th scope="row">Team</th><td><span id="planTeam2"></span></td>
+					<th scope="row">Status</th><td><span id="planStatus2"></span></td>
+					<th scope="row">Created At</th><td><span id="planCreatedAt2"></span></td>
+					<th scope="row">Team</th><td><span id="planTeam3"></span></td>
+					<th scope="row">Status</th><td><span id="planStatus3"></span></td>
+					<th scope="row">Created At</th><td><span id="planCreatedAt3"></span></td>
 					<!-- <th scope="row">Last Updated At</th><td><span id="lastUpdatedAt1"></span></td> -->
-				</tr>
-				<tr><!-- Team CODY -->
-					<!-- <th scope="row">Year</th><td><span id="planYear2"></span></td>
-					<th scope="row">Month</th><td><span id="planMonth2"></span></td>
-					<th scope="row">Week</th><td><span id="planWeek2"></span></td> -->
-					<th scope="row">Team</th><td colspan="3"><span id="planTeam2"></span></td>
-					<th scope="row">Status</th><td colspan="3"><span id="planStatus2"></span></td>
-					<th scope="row">Created At</th><td colspan="3"><span id="planCreatedAt2"></span></td>
-					<!-- <th scope="row">Last Updated At</th><td><span id="lastUpdatedAt2"></span></td> -->
-				</tr>
-				<tr><!-- Team CS -->
-					<!-- <th scope="row">Year</th><td><span id="planYear3"></span></td>
-					<th scope="row">Month</th><td><span id="planMonth3"></span></td>
-					<th scope="row">Week</th><td><span id="planWeek3"></span></td> -->
-					<th scope="row">Team</th><td colspan="3"><span id="planTeam3"></span></td>
-					<th scope="row">Status</th><td colspan="3"><span id="planStatus3"></span></td>
-					<th scope="row">Created At</th><td colspan="3"><span id="planCreatedAt3"></span></td>
-					<!-- <th scope="row">Last Updated At</th><td><span id="lastUpdatedAt3"></span></td> -->
 				</tr>
 			</tbody>
 		</table><!-- table end -->

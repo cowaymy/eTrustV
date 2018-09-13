@@ -187,8 +187,7 @@ SELECT A.SCM_YEAR
      , A.WEEK_TH
      , A.WEEK_TH_SN
      , A.IS_SRPTD
-     , A.SCM_YYYYMM
-     , ROWNUM AS ROW_SEQ
+     , ROW_NUMBER() OVER (PARTITION BY A.SCM_MONTH ORDER BY A.WEEK_TH) AS RN
   FROM SCM0018M A
  WHERE TO_CHAR(A.WEEK_TH_SN_END, 'YYYYMM') = #{scmYearCbBox} || LPAD(#{planMonth}, 2, 0)
    AND A.USE_YN = 'Y'
@@ -217,7 +216,12 @@ SELECT A.PLAN_ID
      , GBSLCVD.FN_GET_M_PLAN_CNT('M1', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M1
      , GBSLCVD.FN_GET_M_PLAN_CNT('M2', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M2
      , GBSLCVD.FN_GET_M_PLAN_CNT('M3', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M3
-     , GBSLCVD.FN_GET_M_PLAN_CNT('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M4*/
+     , GBSLCVD.FN_GET_M_PLAN_CNT('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M4
+     , NVL(B.M0_PLAN, 0) AS M0_PLAN
+     , NVL(B.M1, 0) AS M1
+     , NVL(B.M2, 0) AS M2
+     , NVL(B.M3, 0) AS M3
+     , NVL(B.M4, 0) AS M4*/
      , NVL(B.W01, 0) AS W01
      , NVL(B.W02, 0) AS W02
      , NVL(B.W03, 0) AS W03
@@ -318,44 +322,44 @@ VALUES
 
 <update id="updateSalesPlanDetail" parameterType="Map">
 UPDATE SCM0002D
-   SET PRE_M3_AVG_ISSU = #{m3IssueAvg}
-     , M1_ORD = #{m1Issue}
-     , M0_ORD = #{m0Order}
-     , M0_PLAN = #{m0Plan}
-     , M1 = #{m1}
-     , M2 = #{m2}
-     , M3 = #{m2}
-     , M4 = #{m2}
-     , W01 = #{w01}
-     , W02 = #{w02}
-     , W03 = #{w03}
-     , W04 = #{w04}
-     , W05 = #{w05}
-     , W06 = #{w06}
-     , W07 = #{w07}
-     , W08 = #{w08}
-     , W09 = #{w09}
-     , W10 = #{w10}
-     , W11 = #{w11}
-     , W12 = #{w12}
-     , W13 = #{w13}
-     , W14 = #{w14}
-     , W15 = #{w15}
-     , W16 = #{w16}
-     , W17 = #{w17}
-     , W18 = #{w18}
-     , W19 = #{w19}
-     , W20 = #{w20}
-     , W21 = #{w21}
-     , W22 = #{w22}
-     , W23 = #{w23}
-     , W24 = #{w24}
-     , W25 = #{w25}
-     , W26 = #{w26}
-     , W27 = #{w27}
-     , W28 = #{w28}
-     , W29 = #{w29}
-     , W30 = #{w30}
+   SET PRE_M3_AVG_ISSU = TO_NUMBER(REPLACE(#{m3IssueAvg}, ','))
+     , M1_ORD = TO_NUMBER(REPLACE(#{m1Issue}, ','))
+     , M0_ORD = TO_NUMBER(REPLACE(#{m0Order}, ','))
+     , M0_PLAN = TO_NUMBER(REPLACE(#{m0Plan}, ','))
+     , M1 = TO_NUMBER(REPLACE(#{m1}, ','))
+     , M2 = TO_NUMBER(REPLACE(#{m2}, ','))
+     , M3 = TO_NUMBER(REPLACE(#{m2}, ','))
+     , M4 = TO_NUMBER(REPLACE(#{m2}, ','))
+     , W01 = TO_NUMBER(REPLACE(#{w01}, ','))
+     , W02 = TO_NUMBER(REPLACE(#{w02}, ','))
+     , W03 = TO_NUMBER(REPLACE(#{w03}, ','))
+     , W04 = TO_NUMBER(REPLACE(#{w04}, ','))
+     , W05 = TO_NUMBER(REPLACE(#{w05}, ','))
+     , W06 = TO_NUMBER(REPLACE(#{w06}, ','))
+     , W07 = TO_NUMBER(REPLACE(#{w07}, ','))
+     , W08 = TO_NUMBER(REPLACE(#{w08}, ','))
+     , W09 = TO_NUMBER(REPLACE(#{w09}, ','))
+     , W10 = TO_NUMBER(REPLACE(#{w10}, ','))
+     , W11 = TO_NUMBER(REPLACE(#{w11}, ','))
+     , W12 = TO_NUMBER(REPLACE(#{w12}, ','))
+     , W13 = TO_NUMBER(REPLACE(#{w13}, ','))
+     , W14 = TO_NUMBER(REPLACE(#{w14}, ','))
+     , W15 = TO_NUMBER(REPLACE(#{w15}, ','))
+     , W16 = TO_NUMBER(REPLACE(#{w16}, ','))
+     , W17 = TO_NUMBER(REPLACE(#{w17}, ','))
+     , W18 = TO_NUMBER(REPLACE(#{w18}, ','))
+     , W19 = TO_NUMBER(REPLACE(#{w19}, ','))
+     , W20 = TO_NUMBER(REPLACE(#{w20}, ','))
+     , W21 = TO_NUMBER(REPLACE(#{w21}, ','))
+     , W22 = TO_NUMBER(REPLACE(#{w22}, ','))
+     , W23 = TO_NUMBER(REPLACE(#{w23}, ','))
+     , W24 = TO_NUMBER(REPLACE(#{w24}, ','))
+     , W25 = TO_NUMBER(REPLACE(#{w25}, ','))
+     , W26 = TO_NUMBER(REPLACE(#{w26}, ','))
+     , W27 = TO_NUMBER(REPLACE(#{w27}, ','))
+     , W28 = TO_NUMBER(REPLACE(#{w28}, ','))
+     , W29 = TO_NUMBER(REPLACE(#{w29}, ','))
+     , W30 = TO_NUMBER(REPLACE(#{w30}, ','))
  WHERE PLAN_DTL_ID = #{planDtlId}
 </update>
 
