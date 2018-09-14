@@ -54,14 +54,14 @@ public class SupplyCorpController {
 		return ResponseEntity.ok(selectSupplyCDCCodeList);
 	}
 	
-	@RequestMapping(value = "/selectComboSupplyCDC.do", method = RequestMethod.GET)
+/*	@RequestMapping(value = "/selectComboSupplyCDC.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectComboSupplyCDC(@RequestParam Map<String, Object> params) {
 		
 		LOGGER.debug("selectComboSupplyCDC_ComboList : {}", params.toString());
 		
 		List<EgovMap> selectComboListSupplyCDC = salesPlanMngementService.selectComboSupplyCDC(params);
 		return ResponseEntity.ok(selectComboListSupplyCDC);
-	}
+	}*/
 	
 	@RequestMapping(value = "/selectSupplyPlanMaster.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectSupplyPlanMaster(@RequestParam Map<String, Object> params) {

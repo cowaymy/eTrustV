@@ -12,9 +12,5 @@ public interface SupplyPlanManagementService
 	/*
 	 * Supply Plan Management
 	 */
-	List<EgovMap> selectScmYear(Map<String, Object> params);
-	List<EgovMap> selectScmWeekByYear(Map<String, Object> params);
-	List<EgovMap> selectScmCdc(Map<String, Object> params);
-	List<EgovMap> selectScmStockType(Map<String, Object> params);
-	List<EgovMap> selectScmStockCode(Map<String, Object> params);
+	List<EgovMap> selectSupplyPlanHeader(Map<String, Object> params);
 }

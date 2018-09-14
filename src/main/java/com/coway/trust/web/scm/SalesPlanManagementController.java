@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.SalesPlanManagementService;
+import com.coway.trust.biz.scm.SalesPlanMngementService;
 import com.coway.trust.biz.scm.ScmCommonService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -37,6 +38,9 @@ public class SalesPlanManagementController {
 
 	@Autowired
 	private SalesPlanManagementService salesPlanManagementService;
+	
+	@Autowired
+	private SalesPlanMngementService salesPlanMngementService;
 	
 	@Autowired
 	private ScmCommonService scmCommonService;
@@ -221,5 +225,49 @@ public class SalesPlanManagementController {
 		}
 		
 		return	ResponseEntity.ok(message);
+	}
+	
+	/*
+	 * for delete
+	 */
+	@RequestMapping(value = "/selectExcuteYear.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectExcuteYearList(@RequestParam Map<String, Object> params) {
+
+		LOGGER.debug("selectExcuteYearList : {}", params.toString());
+
+		List<EgovMap> selectExcuteYearList = salesPlanMngementService.selectExcuteYear(params);
+		return ResponseEntity.ok(selectExcuteYearList);
+	}
+	@RequestMapping(value = "/selectPeriodByYear.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPeriodByYearList(@RequestParam Map<String, Object> params) {
+
+		LOGGER.debug("selectPeriodByYearList : {}", params.toString());
+
+		List<EgovMap> selectPeriodByYearList = salesPlanMngementService.selectPeriodByYear(params);
+		return ResponseEntity.ok(selectPeriodByYearList);
+	}
+	@RequestMapping(value = "/selectComboSupplyCDC.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectComboSupplyCDC(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectComboSupplyCDC_ComboList : {}", params.toString());
+		
+		List<EgovMap> selectComboListSupplyCDC = salesPlanMngementService.selectComboSupplyCDC(params);
+		return ResponseEntity.ok(selectComboListSupplyCDC);
+	}
+	@RequestMapping(value = "/selectStockCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStockCode(@RequestParam Map<String, Object> params )
+	 {
+		LOGGER.debug("selectStockCode : {}", params.toString());
+
+		List<EgovMap> selectStockCodeList = salesPlanMngementService.selectStockCode(params);
+		return ResponseEntity.ok(selectStockCodeList);
+	}
+	@RequestMapping(value = "/selectMonthCombo.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMonthCombo(@RequestParam Map<String, Object> params) {
+
+		LOGGER.debug("selectMonthComboList : {}", params.toString());
+
+		List<EgovMap> selectMonthCombo = salesPlanMngementService.selectMonthCombo(params);
+		return ResponseEntity.ok(selectMonthCombo);
 	}
 }

@@ -48,22 +48,45 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 	@Autowired
 	private SupplyPlanManagementMapper supplyPlanManagementMapper;
 	
+	@Autowired
+	private SalesPlanManagementMapper salesPlanManagementMapper;
+	
 	/*
 	 * Supply Plan Management
 	 */
-	public List<EgovMap> selectScmYear(Map<String, Object> params) {
-		return	supplyPlanManagementMapper.selectScmYear(params);
-	}
-	public List<EgovMap> selectScmWeekByYear(Map<String, Object> params) {
-		return	supplyPlanManagementMapper.selectScmWeekByYear(params);
-	}
-	public List<EgovMap> selectScmCdc(Map<String, Object> params) {
-		return	supplyPlanManagementMapper.selectScmCdc(params);
-	}
-	public List<EgovMap> selectScmStockType(Map<String, Object> params) {
-		return	supplyPlanManagementMapper.selectScmStockType(params);
-	}
-	public List<EgovMap> selectScmStockCode(Map<String, Object> params) {
-		return	supplyPlanManagementMapper.selectScmStockCode(params);
+	@Override
+	public List<EgovMap> selectSupplyPlanHeader(Map<String, Object> params) {
+		
+		List<EgovMap> selectSupplyPlanMonth	= salesPlanManagementMapper.selectSalesPlanMonth(params);
+		
+		String planYear		= params.get("scmYearCbBox").toString();
+		String planMonth	= selectSupplyPlanMonth.get(0).get("planMonth").toString();
+		
+		if ( 2 > planMonth.length() ) {
+			planMonth	= "0" + planMonth;
+		}
+		
+		DateFormat dateFormat	= new SimpleDateFormat("yyyyMM");
+		DateFormat yearFormat	= new SimpleDateFormat("yyyy");
+		DateFormat monthFormat	= new SimpleDateFormat("MM");
+		Date date	= null;
+		
+		try {
+			date	= dateFormat.parse(planYear + planMonth);
+		} catch ( ParseException e ) {
+			e.printStackTrace();
+		}
+		
+		Calendar cal	= Calendar.getInstance();
+		cal.setTime(date);
+		cal.add(Calendar.MONTH, 4);
+		
+		String supplyPlanFrom	= planYear + planMonth;
+		String supplyPlanTo		= yearFormat.format(cal.getTime()) + monthFormat.format(cal.getTime());
+		
+		params.put("salesPlanFrom", supplyPlanFrom);
+		params.put("salesPlanTo", supplyPlanTo);
+		
+		return	supplyPlanManagementMapper.selectSupplyPlanHeader(params);
 	}
 }

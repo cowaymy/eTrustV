@@ -21,6 +21,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.SupplyPlanManagementService;
+import com.coway.trust.biz.scm.SalesPlanManagementService;
+import com.coway.trust.biz.scm.SalesPlanMngementService;
+import com.coway.trust.biz.scm.ScmCommonService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.Precondition;
@@ -36,11 +39,90 @@ public class SupplyPlanManagementController {
 	private SupplyPlanManagementService supplyPlanManagementService;
 	
 	@Autowired
+	private SalesPlanManagementService salesPlanManagementService;
+	
+	@Autowired
+	private ScmCommonService scmCommonService;
+	
+	@Autowired
 	private MessageSourceAccessor messageAccessor;
 	
 	@RequestMapping(value = "/supplyPlanManager.do")
 	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/supplyPlanManagement";
+	}
+	
+	@RequestMapping(value = "/selectScmCdc.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScmCdc(@RequestParam Map<String, Object> params) {
+		LOGGER.debug("selectScmCdc : {}", params.toString());
+		
+		List<EgovMap> selectScmCdc	= scmCommonService.selectScmCdc(params);
+		
+		return ResponseEntity.ok(selectScmCdc);
+	}
+	@RequestMapping(value = "/selectSupplyPlanHeader.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSupplyPlanHeader(@RequestBody Map<String, Object> params) {
+		
+		LOGGER.debug("selectSupplyPlanHeader : {}", params.toString());
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		List<EgovMap> selectSalesPlanHeader	= salesPlanManagementService.selectSalesPlanHeader(params);
+		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(params);
+		
+		map.put("selectSalesPlanHeader", selectSalesPlanHeader);
+		
+		if ( ! selectSalesPlanInfo.isEmpty() ) {
+			LOGGER.debug("planMonth_map : {}", selectSalesPlanInfo.get(0).toString());
+			String planMonth	= String.valueOf(selectSalesPlanInfo.get(0).get("planMonth"));
+			LOGGER.debug("planMonth : {}", planMonth);
+			
+			((Map<String, Object>) params).put("planMonth", planMonth);
+			LOGGER.debug("selectSalesPlanHeader : {}", params.toString());
+			
+			List<EgovMap> selectSplitInfo	= salesPlanManagementService.selectSplitInfo(params);
+			List<EgovMap> selectChildField	= salesPlanManagementService.selectChildField(params);
+			
+			LOGGER.debug("selectSplitInfo : {}", selectSplitInfo.toString());
+			LOGGER.debug("selectChildField : {}", selectChildField.toString());
+			
+			map.put("selectSalesPlanInfo", selectSalesPlanInfo);
+			map.put("selectSplitInfo", selectSplitInfo);
+			map.put("selectChildField", selectChildField);
+		}
+		
+		return	ResponseEntity.ok(map);
+	}
+/*	@RequestMapping(value = "/selectCalendarHeaderByCdc.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectCalendarHeaderByCdcList(@RequestBody Map<String, Object> params)
+	{
+		LOGGER.debug("selectCalendarHeaderList : {}", params.toString());
+
+		Map<String, Object> map = new HashMap<>();
+
+		List<EgovMap> selectCalendarHeaderList = salesPlanMngementService.selectCalendarHeader(params);
+		List<EgovMap> planByCdcInfo = salesPlanMngementService.selectPlanIdByCdc(params);
+
+		map.put("header", selectCalendarHeaderList);
+
+		if (!planByCdcInfo.isEmpty())
+		{
+			String selectPlanMonthByCdc = String.valueOf(planByCdcInfo.get(0).get("planMonth"));
+			LOGGER.debug("selectPlanMonthByCdc : {}", selectPlanMonthByCdc);
+
+			((Map<String, Object>) params).put("selectPlanMonth", selectPlanMonthByCdc);
+
+			LOGGER.debug("selectCalendarHeaderList_Params : {}", params.toString());
+
+			List<EgovMap> seperaionInfo = salesPlanMngementService.selectSeperation(params);  // SCM0018M
+			List<EgovMap> childFieldList_M0 = salesPlanMngementService.selectChildField(params);
+
+			map.put("planByCdcInfo",planByCdcInfo);
+			map.put("seperaionInfo",seperaionInfo);
+			map.put("getChildField",childFieldList_M0);
+		}
+
+		return ResponseEntity.ok(map);
 	}
 /*	@RequestMapping(value = "/selectScmYear.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectScmYear(@RequestParam Map<String, Object> params) {
@@ -58,14 +140,7 @@ public class SupplyPlanManagementController {
 		
 		return ResponseEntity.ok(selectScmWeekByYear);
 	}
-	@RequestMapping(value = "/selectScmCdc.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectScmCdc(@RequestParam Map<String, Object> params) {
-		LOGGER.debug("selectScmCdc : {}", params.toString());
-		
-		List<EgovMap> selectScmCdc	= supplyPlanManagementService.selectScmCdc(params);
-		
-		return ResponseEntity.ok(selectScmCdc);
-	}
+
 	@RequestMapping(value = "/selectScmStockType.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectScmStockType(@RequestParam Map<String, Object> params) {
 		LOGGER.debug("selectScmStockType : {}", params.toString());
