@@ -252,16 +252,18 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         		EgovMap resultMap = this.selectSalesOrderM(getOldOrderID, 0);
         		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(promoId);
 
-        		String appTypId = "";
-        		if(resultMap != null)
-        			appTypId = resultMap.get("appTypeId").toString();
+        		//String appTypId = "";
+        		if(resultMap != null) {
+        			//String appTypId = resultMap.get("appTypeId").toString();
 
-            	//if(resultMap != null) { //if(so.VerifyOldSalesOrderNotServiceType(getOldOrderID)
-            	if("144".equals(appTypId) || "145".equals(appTypId)) { // 2018-09-13 - Disabled extrade for Education and Free Trial
-            		ROOT_STATE = "ROOT_2";
-            	}
-            	//}
-            	else {
+            	    //if(resultMap != null) { //if(so.VerifyOldSalesOrderNotServiceType(getOldOrderID)
+        		    // REMOVE CHECKING FOR ROOT_STATE = ROOT_2 TO BECOME EMPTY
+            	    //if("144".equals(appTypId) || "145".equals(appTypId)) { // 2018-09-13 - Disabled extrade for Education and Free Trial
+            		    //ROOT_STATE = "ROOT_2";
+            	    //}
+            	    //}
+        			ROOT_STATE = "";
+        		} else {
             		if(GetExpDate == null) {
                     	ROOT_STATE = "ROOT_3";
             		}
