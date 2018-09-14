@@ -7,23 +7,23 @@
 	    $('#btnRWok').click(function() {
 	        fn_onClickBtnRWok();
 	    });
-        $('#rwOldOrder').keydown(function (event) {  
-            if (event.which === 13) {    //enter  
+        $('#rwOldOrder').keydown(function (event) {
+            if (event.which === 13) {    //enter
                 fn_onClickBtnRWok();
                 return false;
-            }  
+            }
         });
 	});
-	
+
 	function fn_onClickBtnRWok() {
         $('#lblOldOrderNo').text('');
         $('#txtOldOrderID').val('');
-        
+
         if(FormUtil.checkReqValue($('#rwOldOrder'))) {
             $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.plzKeyInOldOrdNo" />');
             return;
         }
-        
+
         console.log('/sales/order/checkOldOrderId.do CALL START');
         console.log('param salesOrdId:'+$('#rwOldOrder').val());
         console.log('param custId:'+$('#custId').val());
@@ -34,16 +34,17 @@
             console.log('RESULT MSG         :'+RESULT.msg);
             console.log('RESULT OLD_ORDER_ID:'+RESULT.oldOrderId);
             console.log('RESULT INST_SPEC_INST:'+RESULT.instSpecInst);
-            
+
             $('#txtOldOrderID').val(RESULT.oldOrderId);
-             
+
             if(RESULT.rootState == 'ROOT_1') {
                 $('#rwOldOrder').clearForm();
                 $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.oldOrdNoNotFound" />');
             }
             if(RESULT.rootState == 'ROOT_2') {
                 $('#rwOldOrder').clearForm();
-                $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.disallowExTrade" />');
+                //$('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.disallowExTrade" />');
+                $('#lblOldOrderNo').text('Education and Free Trial type order is disallowed to register for ex-trade');
             }
             if(RESULT.rootState == 'ROOT_3') {
                 $('#rwOldOrder').clearForm();
@@ -75,22 +76,22 @@
             }
         });
 	}
-	
+
 	function fn_apprvPopClose() {
 	    $('#orderApprvalCloseBtn').click();
 	}
-	
+
 	function btnHidden_Valid_Click(isInValid) {
 	    console.log('btnHidden_Valid_Click CALL START');
 	    console.log('isInValid :'+isInValid);
-	    
+
 	    if(isInValid == 'InValid') {
-	        //2017.11.19 °áÁ¦È®ÀÎ ÆË¾÷ ÁÖ¼®Ã³¸®. Confirm¸Þ¼¼Áö·Î ´ëÃ¼
+	        //2017.11.19 ï¿½ï¿½ï¿½ï¿½È®ï¿½ï¿½ ï¿½Ë¾ï¿½ ï¿½Ö¼ï¿½Ã³ï¿½ï¿½. Confirmï¿½Þ¼ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½Ã¼
             //Common.popupDiv("/sales/order/orderApprovalPop.do");
             var msg  = "For Ex-trade sales key-in, if the order doesn't meet the 3 conditions (Outstanding fee, below 57th months (rental) and different customer),";
                 msg += "(Outstanding fee, below 57th months (rental) and different customer),<br>";
                 msg += "a pop up window which require the information of Report For Decision.";
-                
+
             Common.confirm('<spring:message code="sal.alert.msg.cnfrmToSave" />' + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_popOrderDetail);
 	    }
 	    else {
