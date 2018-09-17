@@ -12,4 +12,11 @@ public interface SupplyPlanManagementMapper {
 	 * Supply Plan Management
 	 */
 	List<EgovMap> selectSupplyPlanHeader(Map<String, Object> params);
+	List<EgovMap> selectSupplyPlanInfo(Map<String, Object> params);
+	List<EgovMap> selectSupplyPlanList(Map<String, Object> params);
+	void insertSupplyPlanMaster(Map<String, Object> params);
+	void insertSupplyPlanDetail(Map<String, Object> params);
+	//String callSpScmInsSalesPlanDetail(Map<String, Object> params);
+	void updateSupplyPlanDetail(Map<String, Object> params);
+	void updateSupplyPlanMaster(Map<String, Object> params);
 }

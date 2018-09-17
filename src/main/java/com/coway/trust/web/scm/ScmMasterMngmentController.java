@@ -46,12 +46,12 @@ public class ScmMasterMngmentController {
 	 *   SCM Master Management
 	 *****************************************/
 	//	view
-	@RequestMapping(value = "/scmMasterManagement.do")
+/*	@RequestMapping(value = "/scmMasterManagement.do")
 	public String masterMngmentView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		//model.addAttribute("languages", loginService.getLanguages());
 		return	"/scm/scmMasterManagement";
 	}
-	
+	*/
 	@RequestMapping(value = "/scmMasterMngmentAddPop.do")
 	public String scmMasterMngmentAddPop(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/scmMasterMngmentAddPop";

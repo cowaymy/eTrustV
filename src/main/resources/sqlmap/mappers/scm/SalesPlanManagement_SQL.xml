@@ -16,6 +16,7 @@ SELECT H1_PLAN_ID
      , H1_M3_ISSUE_AVG
      , H1_MONTHLY
      , H2_M1_ISSUE
+     , H2_M0_EXP
      , H2_M0_ORDER
      , H2_M0_PLAN
      , H2_M1
@@ -72,6 +73,7 @@ SELECT H1_PLAN_ID
                      , H1_M3_ISSUE_AVG
                      , H1_MONTHLY
                      , H2_M1_ISSUE
+                     , H2_M0_EXP
                      , H2_M0_ORDER
                      , H2_M0_PLAN
                      , H2_M1
@@ -97,6 +99,7 @@ SELECT H1_PLAN_ID
                              , 'm3IssueAvg' AS H1_M3_ISSUE_AVG
                              , 'monthly' AS H1_MONTHLY
                              , 'm1Issue' AS H2_M1_ISSUE
+                             , 'm0Exp' AS H2_M0_EXP
                              , 'm0Order' AS H2_M0_ORDER
                              , 'm0Plan' AS H2_M0_PLAN
                              , 'm1' AS H2_M1
@@ -206,6 +209,7 @@ SELECT A.PLAN_ID
      , D.STK_DESC AS NAME
      , NVL(B.PRE_M3_AVG_ISSU, 0) AS M3_ISSUE_AVG
      , NVL(B.M1_ORD, 0) AS M1_ISSUE
+     , NVL(B.M0_ORD, 0) + CASE WHEN B.M0_PLAN IS NULL OR B.M0_PLAN = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M0_PLAN END AS M0_EXP
      , NVL(B.M0_ORD, 0) AS M0_ORDER
      , CASE WHEN B.M0_PLAN IS NULL OR B.M0_PLAN = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M0_PLAN END AS M0_PLAN
      , CASE WHEN B.M1 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M1', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M1 END AS M1

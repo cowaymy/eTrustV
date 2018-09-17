@@ -278,7 +278,7 @@ function fnSalesPlanHeader() {
 		showStateColumn : true,
 		showEditedCellMarker : true,
 		enableCellMerge : true,
-		fixedColumnCount : 10,			//	고정칼럼 카운트 지정
+		fixedColumnCount : 11,			//	고정칼럼 카운트 지정
 		enableRestore : true,
 		//softRemovePolicy : "exceptNew",	//	사용자추가한 행은 바로 삭제
 		showRowCheckColumn : false,
@@ -400,16 +400,23 @@ function fnSalesPlanHeader() {
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
+										 dataField : result.selectSalesPlanHeader[0].h2M0Exp,
+										 headerText : "M0 Exp",
+										 visible : true,
+										 style : "my-backColumn3",
+										 dataType : "numeric",
+										 formatString : "#,##0"
+									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h2M0Order,
 										 headerText : "M0 Order",
-										 visible : true,
+										 visible : false,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h2M0Plan,
 										 headerText : "M0 Plan",
-										 visible : true,
+										 visible : false,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"

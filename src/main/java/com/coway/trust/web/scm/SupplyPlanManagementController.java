@@ -67,18 +67,18 @@ public class SupplyPlanManagementController {
 		
 		Map<String, Object> map	= new HashMap<>();
 		
-		List<EgovMap> selectSalesPlanHeader	= salesPlanManagementService.selectSalesPlanHeader(params);
-		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(params);
+		List<EgovMap> selectSupplyPlanHeader	= supplyPlanManagementService.selectSupplyPlanHeader(params);
+		List<EgovMap> selectSupplyPlanInfo		= supplyPlanManagementService.selectSupplyPlanInfo(params);
 		
-		map.put("selectSalesPlanHeader", selectSalesPlanHeader);
+		map.put("selectSupplyPlanHeader", selectSupplyPlanHeader);
 		
-		if ( ! selectSalesPlanInfo.isEmpty() ) {
-			LOGGER.debug("planMonth_map : {}", selectSalesPlanInfo.get(0).toString());
-			String planMonth	= String.valueOf(selectSalesPlanInfo.get(0).get("planMonth"));
+		if ( ! selectSupplyPlanInfo.isEmpty() ) {
+			LOGGER.debug("planMonth : {}", selectSupplyPlanInfo.get(0).toString());
+			String planMonth	= String.valueOf(selectSupplyPlanInfo.get(0).get("planMonth"));
 			LOGGER.debug("planMonth : {}", planMonth);
 			
 			((Map<String, Object>) params).put("planMonth", planMonth);
-			LOGGER.debug("selectSalesPlanHeader : {}", params.toString());
+			LOGGER.debug("selectSupplyPlanHeader : {}", params.toString());
 			
 			List<EgovMap> selectSplitInfo	= salesPlanManagementService.selectSplitInfo(params);
 			List<EgovMap> selectChildField	= salesPlanManagementService.selectChildField(params);
@@ -86,12 +86,36 @@ public class SupplyPlanManagementController {
 			LOGGER.debug("selectSplitInfo : {}", selectSplitInfo.toString());
 			LOGGER.debug("selectChildField : {}", selectChildField.toString());
 			
-			map.put("selectSalesPlanInfo", selectSalesPlanInfo);
+			map.put("selectSalesPlanInfo", selectSupplyPlanInfo);
 			map.put("selectSplitInfo", selectSplitInfo);
 			map.put("selectChildField", selectChildField);
 		}
 		
 		return	ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/selectSupplyPlanList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSupplyPlanList(@RequestBody Map<String, Object> params) {
+		
+		LOGGER.debug("selectSupplyPlanList : {}", params.toString());
+		
+		List<EgovMap> selectSupplyPlanList = supplyPlanManagementService.selectSupplyPlanList(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("selectSupplyPlanList", selectSupplyPlanList);
+		
+		return	ResponseEntity.ok(map);
+	}
+	
+	@RequestMapping(value = "/insertSupplyPlanMaster.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> insertSupplyPlanMaster(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+		
+		LOGGER.debug("insertSupplyPlanMaster : {}", params);
+		
+		ReturnMessage message	= new ReturnMessage();
+		
+		return	ResponseEntity.ok(message);
 	}
 /*	@RequestMapping(value = "/selectCalendarHeaderByCdc.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectCalendarHeaderByCdcList(@RequestBody Map<String, Object> params)

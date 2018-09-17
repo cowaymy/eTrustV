@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.ScmMasterManagementMapper">
+
+<select id="selectScmMasterList" parameterType="Map" resultType="egovMap">
+SELECT A.STK_ID AS STOCK_ID
+     , DECODE(B.STOCK_ID, NULL, '1', '0') AS IS_NEW /* 1 : have to insert, 0 : have to update */
+     , A.STK_CODE AS STOCK_CODE
+     , A.STK_DESC AS STOCK_DESC
+     , A.STK_CTGRY_ID AS CATEGORY_ID
+     , C.CODE_NAME AS CATEGORY
+     , A.STK_TYPE_ID AS TYPE_ID
+     , D.CODE_NAME AS TYPE
+     , B.IS_TRGET
+     , B.MEMO
+     , TO_CHAR(B.START_DT, 'MM-DD-YYYY') AS START_DT
+     , TO_CHAR(B.END_DT, 'MM-DD-YYYY') AS END_DT
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2010') AS KL_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2020') AS PN_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2030') AS JB_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2040') AS KK_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.IS_TRGET, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2050') AS KC_TARGET
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2010') AS KL_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2020') AS PN_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2030') AS JB_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2040') AS KK_MOQ
+     , (SELECT TO_NUMBER(NVL(Z.MOQ, 0))
+          FROM SCM0017M Z
+         WHERE A.STK_ID = Z.STOCK_ID
+           AND Z.CDC_CODE = '2050') AS KC_MOQ
+     , NVL(B.SAFETY_STOCK, 0) AS SAFETY_STOCK
+     , NVL(B.LEAD_TM, 0) AS LEAD_TM
+     , NVL(B.LOADING_QTY, 0) AS LOADING_QTY
+     , NVL(B.MIN_ORD_QTY, 0) AS MIN_ORD_QTY
+     , B.DFLT_STOCK
+  FROM SYS0026M A
+  LEFT OUTER JOIN SCM0008M B ON (A.STK_ID = B.STOCK_ID)
+  LEFT OUTER JOIN SYS0013M C ON (A.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M D ON (A.STK_TYPE_ID = D.CODE_ID AND D.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+ WHERE A.STUS_CODE_ID = 1
+   AND A.IS_NCV = 0
+	<if test="scmStockCode != null and scmStockCode != ''">
+   AND (A.STK_CODE LIKE '%' || #{scmStockCode} || '%' OR A.STK_DESC LIKE '%' || #{scmStockCode} || '%')
+	</if>
+	<if test="scmStockTypeCbBox != null and !scmStockTypeCbBox.isEmpty">
+   AND A.STK_TYPE_ID IN 
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+       #{item}
+		</foreach>
+	</if>
+	<if test="scmStockCategoryCbBox != null and !scmStockCategoryCbBox.isEmpty">
+   AND A.STK_CTGRY_ID IN 
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
+       #{item}
+		</foreach>
+	</if>
+ ORDER BY A.STK_CTGRY_ID, A.STK_TYPE_ID, A.STK_DESC
+</select>
+
+<update id="saveScmMaster" parameterType="Map">
+MERGE INTO SCM0008M
+USING DUAL
+ON (STOCK_ID = #{stockId})
+WHEN MATCHED THEN
+     UPDATE
+        SET IS_TRGET = NVL(#{isTrget}, 0)
+          , MEMO = #{memo}
+          , START_DT = #{startDt}
+          , END_DT = #{endDt}
+          , SAFETY_STOCK = NVL(#{safetyStock}, 0)
+          , LEAD_TM = NVL(#{leadTm}, 0)
+          , LOADING_QTY = NVL(#{loadingQty}, 0)
+          , DFLT_STOCK = #{dfltStock}
+WHEN NOT MATCHED THEN
+     INSERT
+     (
+            STOCK_ID
+          , STOCK_CODE
+          , IS_TRGET
+          , MEMO
+          , START_DT
+          , END_DT
+          , SAFETY_STOCK
+          , LEAD_TM
+          , MIN_ORD_QTY
+          , LOADING_QTY
+          , STUS_CODE
+          , DFLT_STOCK
+      )
+     VALUES
+     (
+            #{stockId}
+          , #{stockCode}
+          , NVL(#{isTrget}, 0)
+          , #{memo}
+          , #{startDt}
+          , #{endDt}
+          , NVL(#{safetyStock}, 0)
+          , NVL(#{leadTm}, 0)
+          , NVL(#{minOrdQty}, 0)
+          , NVL(#{loadingQty}, 0)
+          , 1
+          , #{dfltStock}
+      )
+</update>
+
+<update id="saveScmMaster2" parameterType="Map">
+MERGE INTO SCM0017M
+USING DUAL
+ON (STOCK_ID = #{stockId} AND CDC_CODE = #{cdcCode})
+WHEN MATCHED THEN
+     UPDATE
+        SET IS_TRGET = NVL(#{isTrget}, 0)
+          , MOQ = NVL(#{moq}, 0)
+WHEN NOT MATCHED THEN
+     INSERT
+     (
+            STOCK_ID
+          , STOCK_CODE
+          , IS_TRGET
+          , CDC_CODE
+          , MOQ
+      )
+     VALUES
+     (
+            #{stockId}
+          , #{stockCode}
+          , NVL(#{isTrget}, 0)
+          , #{cdcCode}
+          , NVL(#{moq}, 0)
+      )
+</update>
+
+</mapper>

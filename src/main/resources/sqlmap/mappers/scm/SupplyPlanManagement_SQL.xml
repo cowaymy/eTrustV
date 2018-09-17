@@ -3,25 +3,26 @@
 <mapper namespace="com.coway.trust.biz.scm.impl.SupplyPlanManagementMapper">
 
 <select id="selectSupplyPlanHeader" parameterType="Map" resultType="egovMap">
-SELECT H1_PLAN_ID
-     , H1_PLAN_DTL_ID
-     , H1_STOCK
-     , H2_TEAM
-     , H2_TYPE_ID
-     , H2_TYPE_NAME
-     , H2_CATEGORY_ID
-     , H2_CATEGORY_NAME
-     , H2_CODE
-     , H2_NAME
-     , H1_M3_ISSUE_AVG
-     , H1_MONTHLY
-     , H2_M1_ISSUE
-     , H2_M0_ORDER
-     , H2_M0_PLAN
-     , H2_M1
-     , H2_M2
-     , H2_M3
-     , H2_M4
+SELECT PLAN_ID
+     , PLAN_DTL_ID
+     , STOCK
+     , CDC
+     , PLAN_STUS_ID
+     , VER_NO
+     , TYPE_ID
+     , TYPE_NAME
+     , CATEGORY_ID
+     , CATEGORY_NAME
+     , CODE
+     , NAME
+     , PSI_ID
+     , PSI_NAME
+     , M0
+     , M1
+     , M2
+     , M3
+     , M4
+     , OVERDUE
      , (CASE WHEN (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W1_WEEK_SEQ ,1,5) ELSE SUBSTR(W1_WEEK_SEQ ,1,3) END) AS W1_WEEK_SEQ
      , (CASE WHEN (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W2_WEEK_SEQ ,1,5) ELSE SUBSTR(W2_WEEK_SEQ ,1,3) END) AS W2_WEEK_SEQ
      , (CASE WHEN (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W3_WEEK_SEQ ,1,5) ELSE SUBSTR(W3_WEEK_SEQ ,1,3) END) AS W3_WEEK_SEQ
@@ -59,50 +60,52 @@ SELECT H1_PLAN_ID
                                  , 11, '11', 12, '12', 13, '13', 14, '14', 15, '15', 16, '16', 17, '17', 18, '18', 19, '19', 20, '20'
                                  , 21, '21', 22, '22', 23, '23', 24, '24', 25, '25', 26, '26', 27, '27', 28, '28', 29, '29', 30, '30') AS RNO
                      , WEEK_SEQ
-                     , H1_PLAN_ID
-                     , H1_PLAN_DTL_ID
-                     , H1_STOCK
-                     , H2_TEAM
-                     , H2_TYPE_ID
-                     , H2_TYPE_NAME
-                     , H2_CATEGORY_ID
-                     , H2_CATEGORY_NAME
-                     , H2_CODE
-                     , H2_NAME
-                     , H1_M3_ISSUE_AVG
-                     , H1_MONTHLY
-                     , H2_M1_ISSUE
-                     , H2_M0_ORDER
-                     , H2_M0_PLAN
-                     , H2_M1
-                     , H2_M2
-                     , H2_M3
-                     , H2_M4
+                     , PLAN_ID
+                     , PLAN_DTL_ID
+                     , STOCK
+                     , CDC
+                     , PLAN_STUS_ID
+                     , VER_NO
+                     , TYPE_ID
+                     , TYPE_NAME
+                     , CATEGORY_ID
+                     , CATEGORY_NAME
+                     , CODE
+                     , NAME
+                     , PSI_ID
+                     , PSI_NAME
+                     , M0
+                     , M1
+                     , M2
+                     , M3
+                     , M4
+                     , OVERDUE
                   FROM (
                         SELECT ROWNUM AS RNO
                              , DECODE(LEAD(Z.WEEK_TH_SN) OVER (ORDER BY 'W' || LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN)
                                     , NULL
                                     , 'W' || LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN || '-' || '9'
                                     , 'W' || LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN || '-' || LEAD(Z.WEEK_TH_SN) OVER (ORDER BY 'W'|| LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN)) AS WEEK_SEQ
-                             , 'planId' AS H1_PLAN_ID
-                             , 'planDtlId' AS H1_PLAN_DTL_ID
-                             , 'stock' AS H1_STOCK
-                             , 'team' AS H2_TEAM
-                             , 'typeId' AS H2_TYPE_ID
-                             , 'typeName' AS H2_TYPE_NAME
-                             , 'categoryId' AS H2_CATEGORY_ID
-                             , 'categoryName' AS H2_CATEGORY_NAME
-                             , 'code' AS H2_CODE
-                             , 'name' AS H2_NAME
-                             , 'm3IssueAvg' AS H1_M3_ISSUE_AVG
-                             , 'monthly' AS H1_MONTHLY
-                             , 'm1Issue' AS H2_M1_ISSUE
-                             , 'm0Order' AS H2_M0_ORDER
-                             , 'm0Plan' AS H2_M0_PLAN
-                             , 'm1' AS H2_M1
-                             , 'm2' AS H2_M2
-                             , 'm3' AS H2_M3
-                             , 'm4' AS H2_M4
+                             , 'planId' AS PLAN_ID
+                             , 'planDtlId' AS PLAN_DTL_ID
+                             , 'stock' AS STOCK
+                             , 'cdc' AS CDC
+                             , 'planStusId' AS PLAN_STUS_ID
+                             , 'verNo' AS VER_NO
+                             , 'typeId' AS TYPE_ID
+                             , 'typeName' AS TYPE_NAME
+                             , 'categoryId' AS CATEGORY_ID
+                             , 'categoryName' AS CATEGORY_NAME
+                             , 'code' AS CODE
+                             , 'name' AS NAME
+                             , 'psiId' AS PSI_ID
+                             , 'psiName' AS PSI_NAME
+                             , 'm0' AS M0
+                             , 'm1' AS M1
+                             , 'm2' AS M2
+                             , 'm3' AS M3
+                             , 'm4' AS M4
+                             , 'overdue' AS OVERDUE
                           FROM SCM0018M Z
                          WHERE TO_CHAR(Z.WEEK_TH_SN_START, 'YYYYMM') BETWEEN #{salesPlanFrom} AND #{salesPlanTo}
                         )
@@ -115,5 +118,156 @@ SELECT H1_PLAN_ID
                 )
         )
 </select>
+
+<select id="selectSupplyPlanInfo" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_ID
+     , A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , A.CDC
+     , A.PLAN_STUS AS PLAN_STUS_ID
+     , DECODE(A.PLAN_STUS, 1, 'Active', 'Confirmed') AS PLAN_STUS_NM
+     , TO_CHAR(A.PLAN_CRT_DT, 'YYYY/MM/DD HH24:MI:SS') AS PLAN_CRT_DT
+     , TO_CHAR(A.LAST_UP_DT, 'YYYY/MM/DD HH24:MI:SS') AS LAST_UP_DT
+     , TO_CHAR(A.VER_DT, 'YYYY/MM/DD HH24:MI:SS') AS VER_DT
+     , A.VER_NO
+  FROM SCM0005M A
+ WHERE A.PLAN_YEAR = #{scmYearCbBox}
+   AND A.PLAN_WEEK = #{scmWeekCbBox}
+	<if test="scmCdcCbBox != null and scmCdcCbBox !=''">
+   AND A.CDC = #{scmCdcCbBox}
+	</if>
+</select>
+
+<select id="selectSupplyPlanList" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_ID
+     , A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , A.CDC
+     , A.PLAN_STUS
+     , A.VER_NO
+     , B.PLAN_DTL_ID
+     , B.PSI_ID
+     , B.PSI_NAME
+     , D.STK_TYPE_ID AS TYPE_ID
+     , E.CODE_NAME AS TYPE_NAME
+     , D.STK_CTGRY_ID AS CATEGORY_ID
+     , F.CODE_NAME AS CATEGORY_NAME
+     , B.STOCK_CODE AS CODE
+     , D.STK_DESC AS NAME
+     , 0 AS M0
+     , 0 AS M1
+     , 0 AS M2
+     , 0 AS M3
+     , 0 AS M4
+     , 0 AS OVERDUE
+     , NVL(B.W01, 0) AS W01
+     , NVL(B.W02, 0) AS W02
+     , NVL(B.W03, 0) AS W03
+     , NVL(B.W04, 0) AS W04
+     , NVL(B.W05, 0) AS W05
+     , NVL(B.W06, 0) AS W06
+     , NVL(B.W07, 0) AS W07
+     , NVL(B.W08, 0) AS W08
+     , NVL(B.W09, 0) AS W09
+     , NVL(B.W10, 0) AS W10
+     , NVL(B.W11, 0) AS W11
+     , NVL(B.W12, 0) AS W12
+     , NVL(B.W13, 0) AS W13
+     , NVL(B.W14, 0) AS W14
+     , NVL(B.W15, 0) AS W15
+     , NVL(B.W16, 0) AS W16
+     , NVL(B.W17, 0) AS W17
+     , NVL(B.W18, 0) AS W18
+     , NVL(B.W19, 0) AS W19
+     , NVL(B.W20, 0) AS W20
+     , NVL(B.W21, 0) AS W21
+     , NVL(B.W22, 0) AS W22
+     , NVL(B.W23, 0) AS W23
+     , NVL(B.W24, 0) AS W24
+     , NVL(B.W25, 0) AS W25
+     , NVL(B.W26, 0) AS W26
+     , NVL(B.W27, 0) AS W27
+     , NVL(B.W28, 0) AS W28
+     , NVL(B.W29, 0) AS W29
+     , NVL(B.W30, 0) AS W30
+  FROM SCM0005M A
+  LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_MASTER_ID)
+  LEFT OUTER JOIN SCM0008M C ON (B.STOCK_CODE = C.STOCK_CODE)
+  LEFT OUTER JOIN SYS0026M D ON (C.STOCK_ID = D.STK_ID)
+  LEFT OUTER JOIN SYS0013M E ON (D.STK_CTGRY_ID = E.CODE_ID AND E.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M F ON (D.STK_TYPE_ID = F.CODE_ID AND F.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+ WHERE A.PLAN_YEAR = #{scmYearCbBox}
+   AND A.PLAN_WEEK = #{scmWeekCbBox}
+	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
+   AND D.STK_TYPE_ID IN
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+   AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
+ ORDER BY A.PLAN_ID DESC, B.STOCK_CODE, B.PSI_ID
+</select>
+
+<insert id="insertSupplyPlanMaster" parameterType="Map">
+</insert>
+
+<insert id="insertSupplyPlanDetail" parameterType="Map">
+</insert>
+<!-- 
+<resultMap id="insertSalesPlanDetailResultMap" type="egovMap"></resultMap>
+<select id="callSpScmInsSalesPlanDetail" statementType="CALLABLE" parameterType="Map">
+{ call GBSLCVD.SP_SCM_INS_SALES_PLAN_DETAIL(#{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=insertSalesPlanDetailResultMap}) }
+</select>
+ -->
+<update id="updateSupplyPlanDetail" parameterType="Map">
+UPDATE SCM0002D
+   SET PRE_M3_AVG_ISSU = TO_NUMBER(REPLACE(#{m3IssueAvg}, ','))
+     , M1_ORD = TO_NUMBER(REPLACE(#{m1Issue}, ','))
+     , M0_ORD = TO_NUMBER(REPLACE(#{m0Order}, ','))
+     , M0_PLAN = TO_NUMBER(REPLACE(#{m0Plan}, ','))
+     , M1 = TO_NUMBER(REPLACE(#{m1}, ','))
+     , M2 = TO_NUMBER(REPLACE(#{m2}, ','))
+     , M3 = TO_NUMBER(REPLACE(#{m2}, ','))
+     , M4 = TO_NUMBER(REPLACE(#{m2}, ','))
+     , W01 = TO_NUMBER(REPLACE(#{w01}, ','))
+     , W02 = TO_NUMBER(REPLACE(#{w02}, ','))
+     , W03 = TO_NUMBER(REPLACE(#{w03}, ','))
+     , W04 = TO_NUMBER(REPLACE(#{w04}, ','))
+     , W05 = TO_NUMBER(REPLACE(#{w05}, ','))
+     , W06 = TO_NUMBER(REPLACE(#{w06}, ','))
+     , W07 = TO_NUMBER(REPLACE(#{w07}, ','))
+     , W08 = TO_NUMBER(REPLACE(#{w08}, ','))
+     , W09 = TO_NUMBER(REPLACE(#{w09}, ','))
+     , W10 = TO_NUMBER(REPLACE(#{w10}, ','))
+     , W11 = TO_NUMBER(REPLACE(#{w11}, ','))
+     , W12 = TO_NUMBER(REPLACE(#{w12}, ','))
+     , W13 = TO_NUMBER(REPLACE(#{w13}, ','))
+     , W14 = TO_NUMBER(REPLACE(#{w14}, ','))
+     , W15 = TO_NUMBER(REPLACE(#{w15}, ','))
+     , W16 = TO_NUMBER(REPLACE(#{w16}, ','))
+     , W17 = TO_NUMBER(REPLACE(#{w17}, ','))
+     , W18 = TO_NUMBER(REPLACE(#{w18}, ','))
+     , W19 = TO_NUMBER(REPLACE(#{w19}, ','))
+     , W20 = TO_NUMBER(REPLACE(#{w20}, ','))
+     , W21 = TO_NUMBER(REPLACE(#{w21}, ','))
+     , W22 = TO_NUMBER(REPLACE(#{w22}, ','))
+     , W23 = TO_NUMBER(REPLACE(#{w23}, ','))
+     , W24 = TO_NUMBER(REPLACE(#{w24}, ','))
+     , W25 = TO_NUMBER(REPLACE(#{w25}, ','))
+     , W26 = TO_NUMBER(REPLACE(#{w26}, ','))
+     , W27 = TO_NUMBER(REPLACE(#{w27}, ','))
+     , W28 = TO_NUMBER(REPLACE(#{w28}, ','))
+     , W29 = TO_NUMBER(REPLACE(#{w29}, ','))
+     , W30 = TO_NUMBER(REPLACE(#{w30}, ','))
+ WHERE PLAN_DTL_ID = #{planDtlId}
+</update>
+
+<update id="updateSupplyPlanMaster" parameterType="Map">
+UPDATE SCM0001M
+   SET PLAN_STUS_ID = #{planStusId}
+ WHERE PLAN_ID = #{planId}
+</update>
 
 </mapper>

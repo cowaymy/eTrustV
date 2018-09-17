@@ -89,4 +89,13 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		
 		return	supplyPlanManagementMapper.selectSupplyPlanHeader(params);
 	}
+	@Override
+	public List<EgovMap> selectSupplyPlanInfo(Map<String, Object> params) {
+		return	supplyPlanManagementMapper.selectSupplyPlanInfo(params);
+	}
+	
+	@Override
+	public List<EgovMap> selectSupplyPlanList(Map<String, Object> params) {
+		return	supplyPlanManagementMapper.selectSupplyPlanList(params);
+	}
 }
