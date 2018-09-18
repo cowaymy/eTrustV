@@ -1349,11 +1349,15 @@ public class MemberListController {
 		int resultUpc3 = 0;
 		int resultUpc4 = 0;
 		int resultUpc5 = 0;
+		/*20180918 - By KV - for service capacity update data purpose*/
+		int resultUpc6 = 0;
+
 		if( !formMap.get("memberType").toString().equals("2803") ){// hp가아닐때
     		resultUpc1 = memberListService.memberListUpdate_user(formMap);
     		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
     		resultUpc3 = memberListService.memberListUpdate_memorg2(formMap);
-
+    		/*20180918 - By KV - for service capacity update data purpose*/
+    		resultUpc6 = memberListService.memberListUpdate_memorg3(formMap);
 		}
 		// 결과 만들기.
    	ReturnMessage message = new ReturnMessage();
