@@ -2979,6 +2979,19 @@ SELECT Extent1.MEM_ID MEM_ID  ,
         ]]>
     </update>
 
+      <!--20180918 - BY KV - update data for Service Capacity purpose. -->
+     <update id="memberListUpdate_memorg3" parameterType="Map">
+     <![CDATA[
+        UPDATE ORG0015M
+        SET UPD_DT = SYSDATE
+              ,UPD_USER_ID = #{user_id}
+              ,BRNCH_ID = #{selectBranch}
+        WHERE  ( CT_ID = #{MemberID} )
+        ]]>
+    </update>
+
+
+
 
 <update id="updateMemberValidateDt" parameterType="Map">
      UPDATE SYS0047M SET USER_VAL_ID_TO =TO_DATE(#{memberValidDt},'DD-MM-YYYY')  ,USER_UPD_DT= SYSDATE,USER_UPD_USER_ID = #{user_id} WHERE USER_NAME = #{membercode}
