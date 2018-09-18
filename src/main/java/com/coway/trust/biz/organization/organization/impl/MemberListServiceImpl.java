@@ -1521,6 +1521,12 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 		return memberListMapper.memberListUpdate_memorg2(params);
 	}
 
+	/*By KV - for service capacity update data purpose*/
+	@Override
+	public  int    memberListUpdate_memorg3(Map<String, Object> params) {
+		return memberListMapper.memberListUpdate_memorg3(params);
+	}
+
 	@Override
 	public  int    memberListUpdate_member(Map<String, Object> params) {
 		return memberListMapper.memberListUpdate_member(params);
