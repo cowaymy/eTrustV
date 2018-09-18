@@ -486,16 +486,20 @@ function fn_reasonFieldContorl() {
             }
         }
 
-        if (reasonCnt > 0) {
-        	$("#_purcReason").attr({'disabled' : false , 'class' : 'w100p '});
+
+        $("#_purcReason").attr({"disabled" : false , "class" : "w100p"});
+/*           if (reasonCnt > 0) {
+        	$("#_purcReason").attr({'disabled' : false , 'class' : 'w100p'});
 		}else{
 			$("#_purcReason").attr({'disabled' : 'disabled' , 'class' : 'w100p disabled'});
             $("#_purcReason").val('');
 		}
-
-    }else{
-    	$("#_purcReason").attr({'disabled' : 'disabled' , 'class' : 'w100p disabled'});
+ */
+     }
+     else{
+     	$("#_purcReason").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
         $("#_purcReason").val('');
+
     }
 
 }
@@ -739,7 +743,9 @@ function f_multiCombo(){
 <tr>
 <th scope="row"><spring:message code="sal.title.posResn" /></th>
     <td>
-    <select class="w100p disabled" id="_purcReason" name="purcReason" disabled="disabled"></select>
+    <!-- <select class="w100p disabled" id="_purcReason" name="purcReason" disabled="disabled"> -->
+    <select class="w100p" id="_purcReason" name="purcReason" disabled="disabled" >
+    </select>
     </td>
 </tr>
 </tbody>
