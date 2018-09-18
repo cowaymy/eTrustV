@@ -84,6 +84,9 @@ public interface MemberListService {
 
 	int memberListUpdate_memorg2(Map<String, Object> params);
 
+	/*By KV - for service capacity update data purpose*/
+	int memberListUpdate_memorg3(Map<String, Object> params);
+
 	int memberListUpdate_member(Map<String, Object> params);
 
 	int traineeUpdateInfo(Map<String, Object> params,SessionVO sessionVO);
