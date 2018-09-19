@@ -278,7 +278,7 @@ function fnSalesPlanHeader() {
 		showStateColumn : true,
 		showEditedCellMarker : true,
 		enableCellMerge : true,
-		fixedColumnCount : 11,			//	고정칼럼 카운트 지정
+		fixedColumnCount : 19,			//	고정칼럼 카운트 지정
 		enableRestore : true,
 		//softRemovePolicy : "exceptNew",	//	사용자추가한 행은 바로 삭제
 		showRowCheckColumn : false,
@@ -296,7 +296,7 @@ function fnSalesPlanHeader() {
 				//	if selectSalesPlanInfo result is null then alert
 				if ( null == result.selectSalesPlanInfo || 1 > result.selectSalesPlanInfo.length ) {
 					fnBtnCtrl(result.selectSalesPlanInfo);
-					Common.alert("No Data : Sales Plan Master Info");
+					Common.alert("Sales Plan was not created on this week");
 					return	false;
 				} else {
 					//console.log("selectSalesPlanInfo is not null")
@@ -305,13 +305,13 @@ function fnSalesPlanHeader() {
 				
 				//	if selectSplitInfo result is null then alert
 				if ( null == result.selectSplitInfo || 1 > result.selectSplitInfo.length ) {
-					Common.alert("No Data : Week Split Info");
+					Common.alert(" Sales Plan was not created on this week");
 					return	false;
 				}
 				
 				//	if selectChildField result is null then alert
 				if ( null == result.selectChildField || 1 > result.selectChildField.length ) {
-					Common.alert("No Data : Child Filed Info");
+					Common.alert("  Sales Plan was not created on this week");
 					return	false;
 				} else {
 					childField	= result.selectChildField;
@@ -400,23 +400,23 @@ function fnSalesPlanHeader() {
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2M0Exp,
-										 headerText : "M0 Exp",
-										 visible : true,
-										 style : "my-backColumn3",
-										 dataType : "numeric",
-										 formatString : "#,##0"
-									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h2M0Order,
 										 headerText : "M0 Order",
-										 visible : false,
+										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h2M0Plan,
 										 headerText : "M0 Plan",
-										 visible : false,
+										 visible : true,
+										 style : "my-backColumn3",
+										 dataType : "numeric",
+										 formatString : "#,##0"
+									 }, {
+										 dataField : result.selectSalesPlanHeader[0].h2M0Exp,
+										 headerText : "M0 Exp",
+										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"
@@ -857,7 +857,7 @@ function fnExcel(obj, fileName) {
 //	sum each Mn plan
 function fnSumMnPlan(event) {
 	//console.log(event);
-	var colStartIdx		= 18;	//	every week's cnt start column index : It should be changable, selectSalesPlanList query column count change
+	var colStartIdx		= 19;	//	every week's cnt start column index : It should be changable, selectSalesPlanList query column count change
 	var colChangeIdx	= event.columnIndex;
 	var planWeek	= $("#scmWeekCbBox").val();
 	var m0	= 0;	var m1	= 0;	var m2	= 0;	var m3	= 0;	var m4	= 0;
@@ -865,8 +865,6 @@ function fnSumMnPlan(event) {
 	
 	if ( "cellEditEnd" == event.type ) {
 		console.log("m0WeekCnt : " + m0WeekCnt + ", m1WeekCnt : " + m1WeekCnt + ", m2WeekCnt : " + m2WeekCnt + ", m3WeekCnt : " + m3WeekCnt + ", m4WeekCnt : " + m4WeekCnt);
-		//console.log("m0ThWeekStart : " + m0ThWeekStart + ", m1ThWeekStart : " + m1ThWeekStart + ", m2ThWeekStart : " + m2ThWeekStart + ", m3ThWeekStart : " + m3ThWeekStart + ", m4ThWeekStart : " + m4ThWeekStart);
-		//console.log(event.columnIndex);
 		
 		//	sum m0
 		for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
@@ -887,7 +885,9 @@ function fnSumMnPlan(event) {
 			}
 		}
 		salesPlanList[event.rowIndex]["m0Plan"]	= parseInt(m0);
+		salesPlanList[event.rowIndex]["m0Exp"]	= parseInt(salesPlanList[event.rowIndex]["m0Order"]) + parseInt(salesPlanList[event.rowIndex]["m0Plan"]);
 		AUIGrid.setCellValue(myGridID, event.rowIndex, "m0Plan", m0);
+		AUIGrid.setCellValue(myGridID, event.rowIndex, "m0Exp", parseInt(salesPlanList[event.rowIndex]["m0Order"]) + parseInt(salesPlanList[event.rowIndex]["m0Plan"]));
 		
 		//	sum 01
 		for ( var i = 0 ; i < m1WeekCnt ; i++ ) {

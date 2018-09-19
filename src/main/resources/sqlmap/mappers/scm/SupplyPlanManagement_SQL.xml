@@ -211,9 +211,74 @@ SELECT A.PLAN_ID
 </select>
 
 <insert id="insertSupplyPlanMaster" parameterType="Map">
+INSERT INTO SCM0005M
+(
+       PLAN_ID
+     , PLAN_YEAR
+     , PLAN_MONTH
+     , PLAN_WEEK
+     , CDC
+     , PLAN_STUS
+     , PLAN_CRT_DT
+     , VER_NO
+     , VER_DT
+ )
+VALUES
+(
+       SCM0005M_PLAN_ID_SEQ.NEXTVAL
+     , #{scmYearCbBox}
+     , #{planMonth}
+     , #{scmWeekCbBox}
+     , #{scmCdcCbBox}
+     , 1
+     , SYSDATE
+     , 0
+     , SYSDATE
+ )
 </insert>
 
+<resultMap id="insertSupplyPlanDetailResultMap" type="egovMap"></resultMap>
+<select id="callSpScmInsSupplyPlanDetail" statementType="CALLABLE" parameterType="Map">
+{ call GBSLCVD.SP_SCM_INS_SUPPLY_PLAN_DETAIL(#{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=insertSupplyPlanDetailResultMap}) }
+</select>
+
 <insert id="insertSupplyPlanDetail" parameterType="Map">
+INSERT INTO SCM0006D
+(
+       PLAN_DTL_ID
+     , PLAN_MASTER_ID
+     , PSI_ID
+     , STOCK_CODE
+     , CMPLT
+     , M0_ORD
+     , M0_PLAN
+     , M1
+     , M2
+     , M3
+     , M4
+     , OVERDUE
+     , W01, W02, W03, W04, W05, W06, W07, W08, W09, W10
+     , W11, W12, W13, W14, W15, W16, W17, W18, W19, W20
+     , W21, W22, W23, W24, W25, W26, W27, W28, W29, W30
+ )
+VALUES
+(
+       SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL
+     , (SELECT PLAN_ID FROM SCM0005M WHERE PLAN_YEAR = #{scmYearCbBox} AND PLAN_WEEK = #{scmWeekCbBox} AND CDC = #{scmCdcCbBox})
+     , #{psiId}
+     , #{stockCode}
+     , 1
+     , #{m0Ord}
+     , #{m0Plan}
+     , NVL(#{m1}, 0)
+     , NVL(#{m2}, 0)
+     , NVL(#{m3}, 0)
+     , NVL(#{m4}, 0)
+     , #{overdue}
+     , NVL(#{w01}, 0), NVL(#{w02}, 0), NVL(#{w03}, 0), NVL(#{w04}, 0), NVL(#{w05}, 0), NVL(#{w06}, 0), NVL(#{w07}, 0), NVL(#{w08}, 0), NVL(#{w09}, 0), NVL(#{w10}, 0)
+     , NVL(#{w11}, 0), NVL(#{w12}, 0), NVL(#{w13}, 0), NVL(#{w14}, 0), NVL(#{w15}, 0), NVL(#{w16}, 0), NVL(#{w17}, 0), NVL(#{w18}, 0), NVL(#{w19}, 0), NVL(#{w20}, 0)
+     , NVL(#{w21}, 0), NVL(#{w22}, 0), NVL(#{w23}, 0), NVL(#{w24}, 0), NVL(#{w25}, 0), NVL(#{w26}, 0), NVL(#{w27}, 0), NVL(#{w28}, 0), NVL(#{w29}, 0), NVL(#{w30}, 0)
+ )
 </insert>
 <!-- 
 <resultMap id="insertSalesPlanDetailResultMap" type="egovMap"></resultMap>
@@ -269,5 +334,26 @@ UPDATE SCM0001M
    SET PLAN_STUS_ID = #{planStusId}
  WHERE PLAN_ID = #{planId}
 </update>
+
+<select id="selectCdcRate" parameterType="Map" resultType="egovMap">
+SELECT A.STOCK_CODE
+     , B.CDC
+     , ROUND((B.CDC_SUM / A.STOCK_SUM) * 100) AS CDC_RATE
+  FROM (
+        SELECT Z.STOCK_CODE
+             , SUM(Z.ISS_QTY) AS STOCK_SUM
+          FROM SCM0051S Z
+         WHERE Z.ISS_DT BETWEEN #{issDtFrom} AND #{issDtTo}
+         GROUP BY Z.STOCK_CODE
+        ) A
+  LEFT OUTER JOIN (
+                   SELECT Z.STOCK_CODE
+                        , Z.CDC
+                        , SUM(Z.ISS_QTY) AS CDC_SUM
+                     FROM SCM0051S Z
+                    WHERE Z.ISS_DT BETWEEN #{issDtFrom} AND #{issDtTo}
+                    GROUP BY Z.STOCK_CODE, Z.CDC
+                   ) B ON (A.STOCK_CODE = B.STOCK_CODE)
+</select>
 
 </mapper>

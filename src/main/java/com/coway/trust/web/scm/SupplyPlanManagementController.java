@@ -113,7 +113,34 @@ public class SupplyPlanManagementController {
 		
 		LOGGER.debug("insertSupplyPlanMaster : {}", params);
 		
+		int totCnt	= 0;
+		
+		List<EgovMap> selectSupplyPlanInfo	= supplyPlanManagementService.selectSupplyPlanInfo(params);
+		
 		ReturnMessage message	= new ReturnMessage();
+		
+		if ( ! selectSupplyPlanInfo.isEmpty() ) {
+			LOGGER.debug("selectSupplyPlanInfo : {}", selectSupplyPlanInfo);
+			//String planId		= String.valueOf(selectSupplyPlanInfo.get(0).get("planId"));
+			//String planStusId	= String.valueOf(selectSupplyPlanInfo.get(0).get("planStusId"));
+			
+			message.setCode(AppConstants.FAIL);
+			message.setData(totCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		} else {
+			
+			totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
+			
+			if ( 0 < totCnt ) {
+				message.setCode(AppConstants.SUCCESS);
+				message.setData(totCnt);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			} else {
+				message.setCode(AppConstants.FAIL);
+				message.setData(totCnt);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			}
+		}
 		
 		return	ResponseEntity.ok(message);
 	}

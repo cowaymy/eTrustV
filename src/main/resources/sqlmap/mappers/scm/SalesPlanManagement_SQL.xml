@@ -5,6 +5,7 @@
 <select id="selectSalesPlanHeader" parameterType="Map" resultType="egovMap">
 SELECT H1_PLAN_ID
      , H1_PLAN_DTL_ID
+     , H1_PLAN_STUS_ID
      , H1_STOCK
      , H2_TEAM
      , H2_TYPE_ID
@@ -62,6 +63,7 @@ SELECT H1_PLAN_ID
                      , WEEK_SEQ
                      , H1_PLAN_ID
                      , H1_PLAN_DTL_ID
+                     , H1_PLAN_STUS_ID
                      , H1_STOCK
                      , H2_TEAM
                      , H2_TYPE_ID
@@ -88,6 +90,7 @@ SELECT H1_PLAN_ID
                                     , 'W' || LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN || '-' || LEAD(Z.WEEK_TH_SN) OVER (ORDER BY 'W'|| LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN)) AS WEEK_SEQ
                              , 'planId' AS H1_PLAN_ID
                              , 'planDtlId' AS H1_PLAN_DTL_ID
+                             , 'planStusId' AS H1_PLAN_STUS_ID
                              , 'stock' AS H1_STOCK
                              , 'team' AS H2_TEAM
                              , 'typeId' AS H2_TYPE_ID
@@ -124,26 +127,40 @@ SELECT A.SCM_MONTH AS PLAN_MONTH
   FROM SCM0018M A
  WHERE A.SCM_YEAR = #{scmYearCbBox}
    AND A.WEEK_TH = #{scmWeekCbBox}
-   AND A.WEEK_TH_SN = 1
+ ORDER BY A.SCM_MONTH DESC /* SPLIT 마지막 주차를 조회하는 경우 다음달을 월로 던져주기 위해서 ORDER BY 사용 */
 </select>
 
 <select id="selectSalesPlanInfo" parameterType="Map" resultType="egovMap">
 SELECT A.PLAN_ID
      , A.PLAN_YEAR
-     , A.PLAN_MONTH
+     , CASE WHEN A.PLAN_MONTH = A.SCM_MONTH THEN A.PLAN_MONTH ELSE A.SCM_MONTH END AS PLAN_MONTH
      , A.PLAN_WEEK
      , A.TEAM
-     , DECODE(A.PLAN_STUS_ID, 1, 'Active', 'Confirmed') AS PLAN_STUS_NM
-     , TO_CHAR(A.CRT_DT, 'YYYY/MM/DD HH24:MI:SS') AS CRT_DT
+     , A.PLAN_STUS_NM
+     , A.CRT_DT
      , A.STUS_DT
      , A.CRT_USER_ID
      , A.PLAN_STUS_ID
-  FROM SCM0001M A
- WHERE A.PLAN_YEAR = #{scmYearCbBox}
-   AND A.PLAN_WEEK = #{scmWeekCbBox}
+  FROM (
+        SELECT A.PLAN_ID
+             , A.PLAN_YEAR
+             , A.PLAN_MONTH
+             , (SELECT MAX(Z.SCM_MONTH) FROM SCM0018M Z WHERE A.PLAN_YEAR = Z.SCM_YEAR AND A.PLAN_WEEK = Z.WEEK_TH) AS SCM_MONTH
+             , A.PLAN_WEEK
+             , A.TEAM
+             , DECODE(A.PLAN_STUS_ID, 1, 'Active', 'Confirmed') AS PLAN_STUS_NM
+             , TO_CHAR(A.CRT_DT, 'YYYY/MM/DD HH24:MI:SS') AS CRT_DT
+             , A.STUS_DT
+             , A.CRT_USER_ID
+             , A.PLAN_STUS_ID
+          FROM SCM0001M A
+         WHERE A.PLAN_YEAR = #{scmYearCbBox}
+           AND A.PLAN_WEEK = #{scmWeekCbBox}
 	<if test="scmTeamCbBox != null and scmTeamCbBox !=''">
-   AND A.TEAM = #{scmTeamCbBox}
+           AND A.TEAM = #{scmTeamCbBox}
 	</if>
+        ) A
+ ORDER BY A.TEAM
 </select>
 
 <select id="selectSplitInfo" parameterType="Map" resultType="egovMap">
@@ -200,6 +217,7 @@ SELECT A.SCM_YEAR
 <select id="selectSalesPlanList" parameterType="Map" resultType="egovMap">
 SELECT A.PLAN_ID
      , B.PLAN_DTL_ID
+     , A.PLAN_STUS_ID
      , A.TEAM
      , D.STK_TYPE_ID AS TYPE_ID
      , E.CODE_NAME AS TYPE_NAME
@@ -209,23 +227,25 @@ SELECT A.PLAN_ID
      , D.STK_DESC AS NAME
      , NVL(B.PRE_M3_AVG_ISSU, 0) AS M3_ISSUE_AVG
      , NVL(B.M1_ORD, 0) AS M1_ISSUE
-     , NVL(B.M0_ORD, 0) + CASE WHEN B.M0_PLAN IS NULL OR B.M0_PLAN = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M0_PLAN END AS M0_EXP
+/*     , NVL(B.M0_ORD, 0) + CASE WHEN B.M0_PLAN IS NULL OR B.M0_PLAN = 0 THEN GBSLCVD.FN_GET_M_PLAN('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M0_PLAN END AS M0_EXP
      , NVL(B.M0_ORD, 0) AS M0_ORDER
-     , CASE WHEN B.M0_PLAN IS NULL OR B.M0_PLAN = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M0_PLAN END AS M0_PLAN
-     , CASE WHEN B.M1 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M1', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M1 END AS M1
-     , CASE WHEN B.M2 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M2', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M2 END AS M2
-     , CASE WHEN B.M3 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M3', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M3 END AS M3
-     , CASE WHEN B.M4 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN_CNT('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M4 END AS M4
-/*     , GBSLCVD.FN_GET_M_PLAN_CNT('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M0_PLAN
+     , CASE WHEN B.M0_PLAN IS NULL OR B.M0_PLAN = 0 THEN GBSLCVD.FN_GET_M_PLAN('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M0_PLAN END AS M0_PLAN
+     , CASE WHEN B.M1 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN('M1', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M1 END AS M1
+     , CASE WHEN B.M2 IS NULL OR B.M2 = 0 THEN GBSLCVD.FN_GET_M_PLAN('M2', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M2 END AS M2
+     , CASE WHEN B.M3 IS NULL OR B.M3 = 0 THEN GBSLCVD.FN_GET_M_PLAN('M3', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M3 END AS M3
+     , CASE WHEN B.M4 IS NULL OR B.M4 = 0 THEN GBSLCVD.FN_GET_M_PLAN('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M4 END AS M4
+     , GBSLCVD.FN_GET_M_PLAN_CNT('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M0_PLAN
      , GBSLCVD.FN_GET_M_PLAN_CNT('M1', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M1
      , GBSLCVD.FN_GET_M_PLAN_CNT('M2', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M2
      , GBSLCVD.FN_GET_M_PLAN_CNT('M3', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M3
-     , GBSLCVD.FN_GET_M_PLAN_CNT('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M4
+     , GBSLCVD.FN_GET_M_PLAN_CNT('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M4*/
+     , NVL(B.M0_ORD, 0) AS M0_ORDER
      , NVL(B.M0_PLAN, 0) AS M0_PLAN
+     , NVL(B.M0_ORD, 0) + NVL(B.M0_PLAN, 0) AS M0_EXP
      , NVL(B.M1, 0) AS M1
      , NVL(B.M2, 0) AS M2
      , NVL(B.M3, 0) AS M3
-     , NVL(B.M4, 0) AS M4*/
+     , NVL(B.M4, 0) AS M4
      , NVL(B.W01, 0) AS W01
      , NVL(B.W02, 0) AS W02
      , NVL(B.W03, 0) AS W03
@@ -311,7 +331,7 @@ VALUES
        SCM0001M_PLAN_ID_SEQ.NEXTVAL
      , #{scmTeamCbBox}
      , #{scmYearCbBox}
-     , (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox} AND WEEK_TH_SN = 1)
+     , #{planMonth}
      , #{scmWeekCbBox}
      , #{planStusId}
      , SYSDATE
@@ -324,6 +344,30 @@ VALUES
 { call GBSLCVD.SP_SCM_INS_SALES_PLAN_DETAIL(#{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=insertSalesPlanDetailResultMap}) }
 </select>
 
+<select id="selectSalesPlanDetailSum" parameterType="Map" resultType="egovMap">
+SELECT B.PLAN_DTL_ID
+     , GBSLCVD.FN_GET_M_PLAN('M0', #{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, B.STOCK_CODE) AS M0
+     , GBSLCVD.FN_GET_M_PLAN('M1', #{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, B.STOCK_CODE) AS M1
+     , GBSLCVD.FN_GET_M_PLAN('M2', #{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, B.STOCK_CODE) AS M2
+     , GBSLCVD.FN_GET_M_PLAN('M3', #{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, B.STOCK_CODE) AS M3
+     , GBSLCVD.FN_GET_M_PLAN('M4', #{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, B.STOCK_CODE) AS M4
+  FROM SCM0001M A
+  LEFT OUTER JOIN SCM0002D B ON (A.PLAN_ID = B.PLAN_MASTER_ID)
+ WHERE A.PLAN_YEAR = #{scmYearCbBox}
+   AND A.PLAN_WEEK = #{scmWeekCbBox}
+   AND A.TEAM = #{scmTeamCbBox}
+</select>
+
+<update id="updateSalesPlanDetailSum" parameterType="Map">
+UPDATE SCM0002D
+   SET M0_PLAN = TO_NUMBER(REPLACE(#{m0}, ','))
+     , M1 = TO_NUMBER(REPLACE(#{m1}, ','))
+     , M2 = TO_NUMBER(REPLACE(#{m2}, ','))
+     , M3 = TO_NUMBER(REPLACE(#{m3}, ','))
+     , M4 = TO_NUMBER(REPLACE(#{m4}, ','))
+ WHERE PLAN_DTL_ID = #{planDtlId}
+</update>
+
 <update id="updateSalesPlanDetail" parameterType="Map">
 UPDATE SCM0002D
    SET PRE_M3_AVG_ISSU = TO_NUMBER(REPLACE(#{m3IssueAvg}, ','))
@@ -332,8 +376,8 @@ UPDATE SCM0002D
      , M0_PLAN = TO_NUMBER(REPLACE(#{m0Plan}, ','))
      , M1 = TO_NUMBER(REPLACE(#{m1}, ','))
      , M2 = TO_NUMBER(REPLACE(#{m2}, ','))
-     , M3 = TO_NUMBER(REPLACE(#{m2}, ','))
-     , M4 = TO_NUMBER(REPLACE(#{m2}, ','))
+     , M3 = TO_NUMBER(REPLACE(#{m3}, ','))
+     , M4 = TO_NUMBER(REPLACE(#{m4}, ','))
      , W01 = TO_NUMBER(REPLACE(#{w01}, ','))
      , W02 = TO_NUMBER(REPLACE(#{w02}, ','))
      , W03 = TO_NUMBER(REPLACE(#{w03}, ','))

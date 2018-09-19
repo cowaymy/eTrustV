@@ -143,8 +143,6 @@ public class SalesPlanManagementController {
 		LOGGER.debug("selectSalesPlanList : {}", params.toString());
 		
 		List<EgovMap> selectSalesPlanList	= salesPlanManagementService.selectSalesPlanList(params);
-		//List<EgovMap> selectSalesPlanList	= salesPlanManagementService.selectSalesPlanList(params);
-		//List<EgovMap> selectSalesPlanMngmentList = salesPlanMngementService.selectSalesPlanMngmentList(params);
 		
 		Map<String, Object> map	= new HashMap<>();
 		

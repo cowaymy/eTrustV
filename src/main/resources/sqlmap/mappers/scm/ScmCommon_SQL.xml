@@ -29,7 +29,8 @@ SELECT A.CODE AS ID
 </select>
 
 <select id="selectScmCdc" parameterType="Map" resultType="egovMap">
-SELECT A.CODE_DESC AS ID
+SELECT A.CODE AS ID
+     , A.CODE_DESC AS ID2
      , A.CODE_NAME AS NAME
   FROM SYS0013M A
  WHERE A.CODE_MASTER_ID = 349

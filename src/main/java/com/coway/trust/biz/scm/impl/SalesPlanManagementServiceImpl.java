@@ -52,6 +52,9 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		
 		List<EgovMap> selectSalesplanMonth	= salesPlanManagementMapper.selectSalesPlanMonth(params);
 		
+		//	월의 마지막주차가 SPLIT인 경우는 FROM월을 1개월 뒤로 미룸
+		LOGGER.debug("selectSalesplanMonth : {} ", selectSalesplanMonth.toString());
+		
 		String planYear		= params.get("scmYearCbBox").toString();
 		String planMonth	= selectSalesplanMonth.get(0).get("planMonth").toString();
 		
@@ -101,14 +104,18 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 	@Override
 	public int insertSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
 		
-		int createCnt	= 0;
+		int cnt	= 0;
+		int updCnt	= 0;
 		
+		List<EgovMap> selectSalesplanMonth	= salesPlanManagementMapper.selectSalesPlanMonth(params);
+		
+		params.put("planMonth", selectSalesplanMonth.get(0).get("planMonth"));
 		params.put("crtUserId", sessionVO.getUserId());
 		
 		try {
 			salesPlanManagementMapper.insertSalesPlanMaster(params);
-			createCnt++;
-			LOGGER.debug(" createCnt : {} ", createCnt);
+			cnt++;
+			LOGGER.debug(" createCnt : {} ", cnt);
 			
 			salesPlanManagementMapper.callSpScmInsSalesPlanDetail(params);
 			//Map<String, Object> result	= params;
@@ -118,11 +125,18 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 			} else {
 				LOGGER.debug(" callSpScmInsSalesPlanDetail result is null");
 			}
+			
+			List<EgovMap> updList	= salesPlanManagementMapper.selectSalesPlanDetailSum(params);
+			for ( Object obj : updList ) {
+				salesPlanManagementMapper.updateSalesPlanDetailSum((Map<String, Object>) obj);
+				updCnt++;
+				LOGGER.debug("Monthly Sales Plan Sum (" + obj);
+			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
 		
-		return	createCnt;
+		return	cnt;
 	}
 	@SuppressWarnings("unchecked")
 	@Override

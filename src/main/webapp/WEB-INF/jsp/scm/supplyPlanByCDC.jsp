@@ -111,7 +111,7 @@ function fnScmYearCbBox() {
 			, fnScmWeekCbBoxCallback);
 }
 
-//default week
+//	default week
 function fnScmWeekCbBox() {
 	CommonCombo.initById("scmWeekCbBox");	//	reset
 	var weekChkBox	= document.getElementById("scmWeekCbBox");
@@ -193,7 +193,7 @@ function fnSupplyPlanHeader() {
 				
 				//	if selectSupplyPlanHeader result is null then alert
 				if ( null == result.selectSupplyPlanHeader || 1 > result.selectSupplyPlanHeader.length ) {
-					Common.alert("No Data : Supply Plan Master Info");
+					Common.alert("Supply Plan was not created on this week");
 					return	false;
 				} else {
 					console.log("selectSupplyPlanInfo is not null")
@@ -202,13 +202,13 @@ function fnSupplyPlanHeader() {
 				
 				//	if selectSplitInfo result is null then alert
 				if ( null == result.selectSplitInfo || 1 > result.selectSplitInfo.length ) {
-					Common.alert("No Data : Week Split Info");
+					Common.alert("Supply Plan was not created on this week");
 					return	false;
 				}
 				
 				//	if selectChildField result is null then alert
 				if ( null == result.selectChildField || 1 > result.selectChildField.length ) {
-					Common.alert("No Data : Child Filed Info");
+					Common.alert("Supply Plan was not created on this week");
 					return	false;
 				} else {
 					childField	= result.selectChildField;
@@ -615,7 +615,7 @@ function fnCreate(obj) {
 					Common.alert("Already Created Sales Plan.");
 				} else {
 					Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
-					fnSalesPlanHeader();
+					fnSupplyPlanHeader();
 					console.log("Success : " + JSON.stringify(result) + " /data : " + result.data);
 				}
 			}
@@ -765,7 +765,7 @@ var myGridID;
 				</td>
 				<th scope="row">Stock</th>
 				<td colspan="3">
-					<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
+					<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSupplyPlanHeader(); return false;}">
 				</td>
 			</tr>
 		</tbody>

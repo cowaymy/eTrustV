@@ -98,4 +98,49 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 	public List<EgovMap> selectSupplyPlanList(Map<String, Object> params) {
 		return	supplyPlanManagementMapper.selectSupplyPlanList(params);
 	}
+	
+	@Override
+	public int insertSupplyPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
+		
+		int cnt	= 0;
+		
+		LOGGER.debug("insertSupplyPlanMaster : {}", params);
+		
+		List<EgovMap> selectSalesplanMonth	= salesPlanManagementMapper.selectSalesPlanMonth(params);
+		params.put("planMonth", selectSalesplanMonth.get(0).get("planMonth"));
+		
+		try {
+			supplyPlanManagementMapper.insertSupplyPlanMaster(params);
+			cnt++;
+			LOGGER.debug(" createCnt : {} ", cnt);
+			
+			supplyPlanManagementMapper.callSpScmInsSupplyPlanDetail(params);
+			
+			if ( null != params.get("result") ) {
+				String result	= params.get("result").toString();
+				LOGGER.debug(" callSpScmInsSupplyPlanDetail result : {} ", result);
+			} else {
+				LOGGER.debug(" callSpScmInsSupplyPlanDetail result is null");
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return	cnt;
+	}
+	
+	@Override
+	public int insertSupplyPlanDetail(Map<String, Object> params, SessionVO sessionVO) {
+		int cnt	= 0;
+		
+		return	cnt;
+	}
+	
+	public int insertPsi1(Map<String, Object> params, SessionVO sessionVO) {
+		int cnt	= 0;
+		
+		supplyPlanManagementMapper.insertSupplyPlanDetail(params);
+		
+		return	cnt;
+	}
 }
