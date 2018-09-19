@@ -90,7 +90,7 @@
                     , V1.RELATED_NO
                     , V1.RELATED_ID
                  FROM SAL1013V  V1
-                 LEFT JOIN SAL0001D F1 ON V1.ORD_ID = F1.SALES_ORD_ID
+                 LEFT JOIN SAL1008V F1 ON V1.ORD_ID = F1.ORD_ID
                 WHERE 1 = 1
                 <if test='ordDt == null || ordDt == ""'>
                   AND V1.SALES_DT BETWEEN TO_DATE(#{ordStartDt}, 'YYYY-MM-DD') AND TO_DATE(#{ordEndDt}||' 23:59:59', 'YYYY-MM-DD HH24:MI:SS')
