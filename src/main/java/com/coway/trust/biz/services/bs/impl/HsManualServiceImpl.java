@@ -1238,6 +1238,8 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 		//logger.debug("txtRemark isEmpty : " + StringUtils.isEmpty(String.valueOf(params.get(""txtRemark"")).trim()));
 		bsResultMas.put("ResultRemark", String.valueOf(params.get("txtRemark")));
+		// [19-09-2018] ADD HS INSTRUCTION REMARK FOR MAPPER USE
+		bsResultMas.put("ResultInstRemark", String.valueOf(params.get("txtInstruction")));
 
 		/*logger.debug("configBsRem isEmpty : " + StringUtils.isEmpty(String.valueOf(params.get("configBsRem")).trim()));
 		if(StringUtils.isEmpty(String.valueOf(params.get("configBsRem")).trim())){
