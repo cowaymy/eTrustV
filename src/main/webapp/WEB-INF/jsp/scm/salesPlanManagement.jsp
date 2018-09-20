@@ -403,7 +403,7 @@ function fnSalesPlanHeader() {
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].h2M0Order,
 										 headerText : "M0 Order",
-										 visible : false,
+										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"
