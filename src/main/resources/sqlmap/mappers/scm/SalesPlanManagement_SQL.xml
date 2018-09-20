@@ -83,7 +83,7 @@ SELECT H1_PLAN_ID
                      , H2_M3
                      , H2_M4
                   FROM (
-                        SELECT ROWNUM AS RNO
+                        SELECT ROW_NUMBER() OVER (PARTITION BY Z.SCM_YEAR ORDER BY Z.CAL_ID) AS RNO
                              , DECODE(LEAD(Z.WEEK_TH_SN) OVER (ORDER BY 'W' || LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN)
                                     , NULL
                                     , 'W' || LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN || '-' || '9'
