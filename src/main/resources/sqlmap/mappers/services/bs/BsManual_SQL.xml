@@ -1918,7 +1918,9 @@
                                     Extent1.next_svc_area next_svc_area,
                                     Extent1.distance distance,
                                     Extent1.CANC_REQ_NO,
-                                    Extent10.INSTCT
+                                    <!--  Extent10.INSTCT -->
+                                    <!-- [19-09-2018] GET INSTUCTION FROM SAL0090D RATHER THAN FROM SAL0045D  -->
+                                    Extent8.SRV_REM AS INSTCT
                              FROM SVC0008D Extent1
                                     JOIN SYS0013M Extent2   ON Extent1.TYPE_ID = Extent2.CODE_ID
                                     JOIN  SYS0038M Extent3   ON Extent1.STUS_CODE_ID = Extent3.STUS_CODE_ID
@@ -2991,7 +2993,9 @@
                   <update id="updateHs009d" parameterType="Map">
 
                        UPDATE SAL0090D
-                           SET SRV_REM = #{remark},
+                           <!-- SET SRV_REM = #{remark}, -->
+                           <!-- [19-09-2018] AMEND PARAMETER VALUE -->
+                           SET SRV_REM = #{instruction},
                                SRV_PREV_DT = to_date(#{settleDate}, 'DD/MM/YYYY'),
                                SRV_BS_WEEK = #{srvBsWeek},
                                SRV_CODY_ID = #{hidCodyId},
@@ -3585,7 +3589,9 @@
 
           <update id="updateQryConfig" parameterType="Map">
           update SAL0090D
-           set SRV_REM = #{ResultRemark}
+           <!--  set SRV_REM = #{ResultRemark}-->
+           <!-- [19-09-2018] AMEND PARAMETER VALUE -->
+           set SRV_REM = #{ResultInstRemark}
               ,SRV_BS_WEEK = #{bsPreferWeek}
         where SRV_STUS_ID = 1
           and SRV_SO_ID =#{SalesOrderId}
@@ -3593,7 +3599,9 @@
 
           <update id="updateQryConfig4" parameterType="Map">
           update SAL0090D
-           set SRV_REM = #{ResultRemark}
+           <!-- set SRV_REM = #{ResultRemark} -->
+           <!-- [19-09-2018] AMEND PARAMETER VALUE -->
+           set SRV_REM = #{ResultInstRemark}
               ,SRV_PREV_DT = TO_DATE(#{SettleDate}, 'DD/MM/YYYY')
               ,SRV_BS_WEEK = #{bsPreferWeek}
         where SRV_STUS_ID = 1
