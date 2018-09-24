@@ -41,13 +41,13 @@
                 c.LAST_ORG_CODE
             from SYS0047M a
             inner join ORG0001D b
-                on b.MEM_CODE = a.USER_NAME
-            inner join ORG0005D c
+                on b.MEM_CODE = a.HR_CODE
+            LEFT join ORG0005D c
                 on c.MEM_ID = b.MEM_ID
-            <if test = "roleId != '128' and roleId != '129' and roleId != '130' and roleId != '137' ">
+            <if test = "roleId != '128' and roleId != '129' and roleId != '130' and roleId != '137' and roleId != '179' ">
                 where a.USER_ID = #{userId}
             </if>
-            <if test = "roleId == '128' or roleId == '129' or roleId == '130' or roleId == '137' ">
+            <if test = "roleId == '128' or roleId == '129' or roleId == '130' or roleId == '137' or roleId == '179' ">
                 where c.MEM_LVL = '1'
             </if>
         ) l
