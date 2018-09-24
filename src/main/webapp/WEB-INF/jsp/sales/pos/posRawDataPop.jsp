@@ -53,7 +53,7 @@ function fn_posRawData(){
 	}
 
 	if($("#_frPosNo").val() != null && $("#_frPosNo").val() != '' && $("#_toPosNo").val() != null && $("#_toPosNo").val() != ''){
-		whereSql += " AND M.POS_NO BETWEEN " + $("#_frPosNo").val()+ " AND " + $("#_toPosNo").val();
+		whereSql += " AND M.POS_NO BETWEEN '" + $("#_frPosNo").val()+ "' AND '" + $("#_toPosNo").val() +"' ";
 	}
 
 	if($("#_sttDate").val() != null && $("#_sttDate").val() != '' && $("#_eddDate").val() != null && $("#_eddDate").val() != '' ){
