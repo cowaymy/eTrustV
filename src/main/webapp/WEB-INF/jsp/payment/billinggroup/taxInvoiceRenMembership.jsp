@@ -37,7 +37,9 @@ var columnLayout = [
     { dataField:"taxInvcCustName" ,headerText:"Customer Name" , editable : false },    
     { dataField:"taxInvcRefDt" ,headerText:"Invoice Date",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
     { dataField:"invcItmRentalFee" ,headerText:"Invoice Amount",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"},
-    { dataField:"invcItmInstlmtNo" ,headerText:"Inst No.",width: 200 , editable : false }
+    { dataField:"invcItmInstlmtNo" ,headerText:"Inst No.",width: 200 , editable : false },
+    { dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
+    { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
     ];    
 
 // 리스트 조회.
@@ -63,7 +65,15 @@ function fn_generateInvoice(){
   var selectedItem = AUIGrid.getSelectedIndex(myGridID);
   
   if (selectedItem[0] > -1){
-      //report form에 parameter 세팅      
+      //report form에 parameter 세팅     
+      var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+      var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+
+      if( parseInt(year)*100 + parseInt(month) >= 201810){
+          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_ServiceContract_PDF_SST.rpt');
+      }else{
+          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_ServiceContract_PDF.rpt');
+      }   
       $("#reportPDFForm #V_REFERENCEID").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
       $("#reportPDFForm #V_TYPE").val(134);
       console.log("referenceId :  "  + AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
@@ -163,7 +173,7 @@ function fn_Clear(){
 </section>
 <!-- content end --> 
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/TaxInvoice_ServiceContract_PDF.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="V_TYPE" name="V_TYPE" />
     <input type="hidden" id="V_TASKID" name="V_TASKID" value="0"/>

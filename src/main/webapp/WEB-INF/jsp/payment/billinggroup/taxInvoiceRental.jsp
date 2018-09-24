@@ -80,10 +80,13 @@ function fn_generateInvoice(){
         	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_NOGST_PDF.rpt');
         }else{
         	if( parseInt(year)*100 + parseInt(month) >= 201602){
-        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_201602.rpt');
-        	}else{
-        		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY.rpt');
-        	}
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_201602.rpt');
+            }
+            if( parseInt(year)*100 + parseInt(month) >= 201810){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_SST.rpt');
+            }else{
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY.rpt');
+            }
         }
         
         $("#reportPDFForm #V_REFERENCEID").val(taxInvcId);

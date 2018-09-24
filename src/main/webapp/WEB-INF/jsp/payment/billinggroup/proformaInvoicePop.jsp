@@ -23,24 +23,26 @@ var columnLayout=[
     {dataField:"stockdesc", headerText:"<spring:message code='pay.head.product'/>"},
     {dataField:"customername", headerText:"<spring:message code='pay.head.custName'/>"},
     {dataField:"customeric", headerText:"<spring:message code='pay.head.nricCompanyNo'/>"},
-    {dataField:"creator", headerText:"<spring:message code='pay.head.creator'/>"}
+    {dataField:"creator", headerText:"<spring:message code='pay.head.creator'/>"},
+    {dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
+    {dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
 ];
 
 $(document).ready(function(){
-    
+
 		myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-		
+
 	    doGetCombo('/common/selectCodeList.do', '10' , ''   , 'appType' , 'M', 'f_multiCombo');//Application Type 생성
 	    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - '  ,'' , 'keyBranch' , 'M', 'f_multiCombo'); //key-in Branch 생성
 	    doGetComboSepa('/common/selectBranchCodeList.do', '2' , ' - '  ,'' , 'dscBranch' , 'M', 'f_multiCombo');//Branch생성
 	    doGetComboAndGroup('/common/selectProductList.do', '' , ''   , 'product' , 'S', '');//product 생성
-	  
+
 
 	    // Master Grid 셀 클릭시 이벤트
-	    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+	    AUIGrid.bind(myGridID, "cellClick", function( event ){
 	        selectedGridValue = event.rowIndex;
-	    });  
-     
+	    });
+
     $("#custId").keyup(function() {
          var str = $("#custId").val();
          var pattern_special = /[~!@\#$%<>^&*\()\-=+_\’]/gi, pattern_eng = /[A-za-z]/g;
@@ -49,39 +51,39 @@ $(document).ready(function(){
               $("#custId").val(str.replace(/[^0-9]/g, ""));
           }
     });
-    
+
    $(function() {
        $("#orderStatus").multipleSelect("disable");
    });//AS-IS에서 1일 때만 체크해서 넘김, -> TO-BE에서 DB조회시 1과 일치하는 것만 검색해오게 함
 
-    
+
 });
 
 function f_multiCombo() {
     $(function() {
         $('#appType').multipleSelect({
-            selectAll : true, // 전체선택 
+            selectAll : true, // 전체선택
             width : '80%'
         }).multipleSelect("checkAll");
-        
+
         $("#keyBranch").multipleSelect({
             width : '80%'
         });
-        
+
         $("#dscBranch").multipleSelect({
             width : '80%'
         });
-        
+
         $('#rentalStatus').multipleSelect({
-            //selectAll : true, // 전체선택 
+            //selectAll : true, // 전체선택
             width : '80%'
         })
-        
+
     });
 }
 
 
-function fn_getProformaInvoiceListAjax() {        
+function fn_getProformaInvoiceListAjax() {
     var valid = ValidRequiredField();
     if(!valid){
     	Common.alert("<spring:message code='pay.alert.billNoOROrderNo'/>");
@@ -94,97 +96,113 @@ function fn_getProformaInvoiceListAjax() {
 
 function ValidRequiredField(){
     var valid = true;
-    
+
     if($("#invoiceNo").val() == "" && $("#orderNo").val() == "")
         valid = false;
-    
+
     return valid;
 }
 
 
 
 //Layer close
-hideViewPopup=function(val){   
+hideViewPopup=function(val){
   $(val).hide();
 }
 
 
 //Crystal Report Option Pop-UP
 function fn_openDivPop(){
-    
+
     var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-    
+
     if (selectedItem[0] > -1){
-        
+
         $('input:checkbox[name=boosterPump]').eq(0).attr("checked", false);
         $('input:radio[name=advance]').attr("checked", false);
         //$('input:radio[name=printMethod]').eq(0).attr("checked", false);
-        
+
         $('#popup_wrap2').show();
     }else{
     	Common.alert("<spring:message code='pay.alert.noPrintType'/>");
-    }  
+    }
 }
 
 //크리스탈 레포트
-function fn_generateStatement(){    
+function fn_generateStatement(){
     //옵션 팝업 닫기
     $('#popup_wrap2').hide();
-    
+
     //report form에 parameter 세팅
     //옵션 초기화
+    var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+    var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+    if( parseInt(year)*100 + parseInt(month) >= 201810){
+        $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF_SST.rpt');
+    }
+    else {
+        $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF.rpt');
+    }
     $("#reportPDFForm #v_adv1Boolean").val(0);
     $("#reportPDFForm #v_adv2Boolean").val(0);
     $("#reportPDFForm #v_bustPump").val(0);
-    
+
     //옵션 세팅
     $("#reportPDFForm #v_orderId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "orderid"));
     $("#reportPDFForm #viewType").val("PDF");
-    
+
     if ($("#advance1").is(":checked")) $("#reportPDFForm #v_adv1Boolean").val(1);
     if ($("#advance2").is(":checked")) $("#reportPDFForm #v_adv2Boolean").val(1);
-    if ($("#boosterPump").is(":checked")) $("#reportPDFForm #v_bustPump").val(1);    
-    
-        
-        
-    
+    if ($("#boosterPump").is(":checked")) $("#reportPDFForm #v_bustPump").val(1);
+
+
+
+
     //report 호출
     //var option = {
     //  isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
     //};
-    
+
     //Common.report("reportPDFForm", option);
     Common.report("reportPDFForm");
-    
+
 }
 
 //EMAIL
-function fn_sendEInvoice(){    
-    
+function fn_sendEInvoice(){
+
     var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-    
+
     if (selectedItem[0] > -1){
-        
+
         if(FormUtil.checkReqValue($("#eInvoiceForm #send_email")) ){
         	Common.alert("<spring:message code='pay.alert.emailAddress.'/>");
         	return;
         }
-        
+
         //report form에 parameter 세팅
         //옵션 초기화
+        var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+        var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+        if( parseInt(year)*100 + parseInt(month) >= 201810){
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF_SST.rpt');
+        }
+        else {
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF.rpt');
+        }
         $("#reportPDFForm #v_adv1Boolean").val(0);
         $("#reportPDFForm #v_adv2Boolean").val(0);
         $("#reportPDFForm #v_bustPump").val(0);
-        
+
         //옵션 세팅
         $("#reportPDFForm #v_orderId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "orderid"));
         $("#reportPDFForm #viewType").val("MAIL_PDF");
-        
+
         if ($("#advance1").is(":checked")) $("#reportPDFForm #v_adv1Boolean").val(1);
         if ($("#advance2").is(":checked")) $("#reportPDFForm #v_adv2Boolean").val(1);
-        if ($("#boosterPump").is(":checked")) $("#reportPDFForm #v_bustPump").val(1); 
-        
-        
+        if ($("#boosterPump").is(":checked")) $("#reportPDFForm #v_bustPump").val(1);
+
+
         var message = "";
         message += "Dear customer,\n\n" +
 	        "Please refer to the attachment of the re-send invoice as per requested.\n" +
@@ -195,7 +213,7 @@ function fn_sendEInvoice(){
 	        "Thank you and have a wonderful day.\n\n" +
 	        "Regards\n" +
 	        "Management Team of Coway Malaysia Sdn. Bhd.";
-        
+
         //E-mail 제목
         var emailTitle = "Proforma Invoice " + AUIGrid.getCellValue(myGridID, selectedGridValue, "orderid");
         $("#reportPDFForm #emailSubject").val(emailTitle);
@@ -218,8 +236,8 @@ function fn_clear(){
     AUIGrid.clearGridData(myGridID);
 }
 </script>
- 
- 
+
+
 <div id="popup_wrap" class="popup_wrap size_large"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
@@ -229,7 +247,7 @@ function fn_clear(){
 </ul>
 </header><!-- pop_header end -->
 
-<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->   
+<section class="pop_body" style="min-height: auto;"><!-- pop_body start -->
         <ul class="right_btns">
             <li><p class="btn_blue"><a href="javascript:fn_openDivPop();"><spring:message code='pay.btn.invoice.generate'/></a></p></li>
             <li><p class="btn_blue"><a href="javascript:fn_getProformaInvoiceListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
@@ -341,26 +359,26 @@ function fn_clear(){
         </form>
         </section>
          <!-- search_result start -->
-        <section class="search_result">     
+        <section class="search_result">
             <!-- grid_wrap start -->
             <article id="grid_wrap" class="grid_wrap"></article>
             <!-- grid_wrap end -->
         </section>
 </section>
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/TaxInvoice_Performa_PDF.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="" />
-    <input type="hidden" id="v_orderId" name="v_orderId" />    
+    <input type="hidden" id="v_orderId" name="v_orderId" />
     <input type="hidden" id="v_adv1Boolean" name="v_adv1Boolean" />
     <input type="hidden" id="v_adv2Boolean" name="v_adv2Boolean" />
     <input type="hidden" id="v_bustPump" name="v_bustPump" />
     <!-- 이메일 전송인 경우 모두 필수-->
     <input type="hidden" id="emailSubject" name="emailSubject" value="" />
     <input type="hidden" id="emailText" name="emailText" value="" />
-    <input type="hidden" id="emailTo" name="emailTo" value="" /> 
+    <input type="hidden" id="emailTo" name="emailTo" value="" />
 </form>
 </div>
-<!--------------------------------------------------------------- 
+<!---------------------------------------------------------------
     POP-UP (PRINT OPTION)
 ---------------------------------------------------------------->
 <!-- popup_wrap start -->
@@ -383,7 +401,7 @@ function fn_clear(){
                     <caption>table</caption>
                      <colgroup>
                         <col style="width:165px" />
-                        <col style="width:*" />                
+                        <col style="width:*" />
                     </colgroup>
                     <tbody>
                         <tr>
@@ -394,14 +412,14 @@ function fn_clear(){
                                 <label><input type="radio" id="advance2" name="advance" /><span>Advanced 2 Year</span></label>
                             </td>
                         </tr>
-                       </tbody>  
+                       </tbody>
                 </table>
-            </section>        
+            </section>
             <ul class="center_btns" >
                 <li><p class="btn_blue2"><a href="javascript:fn_generateStatement();"><spring:message code='pay.btn.generate'/></a></p></li>
             </ul>
         </section>
-    </form>       
+    </form>
     <!-- pop_body end -->
 </div>
 <!-- popup_wrap end -->

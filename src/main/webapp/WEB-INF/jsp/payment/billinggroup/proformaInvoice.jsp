@@ -71,7 +71,9 @@ var columnLayout=[
     {dataField:"stockdesc", headerText:"Product"},
     {dataField:"customername", headerText:"Customer Name"},
     {dataField:"customeric", headerText:"NRIC/Company No"},
-    {dataField:"creator", headerText:"Creator"}
+    {dataField:"creator", headerText:"Creator"},
+    {dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
+    {dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
 ];
 
 function fn_getProformaInvoiceListAjax() {        
@@ -126,6 +128,14 @@ function fn_generateStatement(){
     
 	//report form에 parameter 세팅
 	//옵션 초기화
+    var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+    var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+    if( parseInt(year)*100 + parseInt(month) >= 201810){
+        $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF_SST.rpt');
+    }
+    else {
+        $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF.rpt');
+    }
 	$("#reportPDFForm #v_adv1Boolean").val(0);
     $("#reportPDFForm #v_adv2Boolean").val(0);
     $("#reportPDFForm #v_bustPump").val(0);
@@ -165,6 +175,14 @@ function fn_sendEInvoice(){
 	    
 	    //report form에 parameter 세팅
 	    //옵션 초기화
+        var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+        var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+        if( parseInt(year)*100 + parseInt(month) >= 201810){
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF_SST.rpt');
+        }
+        else {
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Performa_PDF.rpt');
+        }
 	    $("#reportPDFForm #v_adv1Boolean").val(0);
 	    $("#reportPDFForm #v_adv2Boolean").val(0);
 	    $("#reportPDFForm #v_bustPump").val(0);
@@ -368,7 +386,7 @@ function fn_Clear(){
 		</section>
 </section>
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/TaxInvoice_Performa_PDF.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="" />
     <input type="hidden" id="v_orderId" name="v_orderId" />    
     <input type="hidden" id="v_adv1Boolean" name="v_adv1Boolean" />

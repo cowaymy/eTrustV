@@ -929,7 +929,16 @@
         rsn.RESN_DESC RESN_DESC ,
         mst.MEMO_ADJ_CRT_USER_ID,
         userinfo.USER_NAME MEMO_ADJ_CRT_USER_NM ,
-        dept.DEPT_NAME
+        dept.DEPT_NAME,
+        CASE
+            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(TO_CHAR(company.TAX_INVC_REF_DT,'MM'))
+            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(TO_CHAR(out.TAX_INVC_REF_DT,'MM'))
+            ELSE TO_NUMBER(TO_CHAR(misc.TAX_INVC_REF_DT,'MM')) END month,
+        CASE
+            WHEN 126 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(TO_CHAR(company.TAX_INVC_REF_DT,'YYYY'))
+            WHEN 127 = mst.MEMO_ADJ_INVC_TYPE_ID THEN TO_NUMBER(TO_CHAR(out.TAX_INVC_REF_DT,'YYYY'))
+            ELSE TO_NUMBER(TO_CHAR(misc.TAX_INVC_REF_DT,'YYYY')) END year
+
     FROM
         PAY0011D mst
         /* LEFT JOIN PAY0012D sub ON mst.MEMO_ADJ_ID = sub.MEMO_ADJ_ID */

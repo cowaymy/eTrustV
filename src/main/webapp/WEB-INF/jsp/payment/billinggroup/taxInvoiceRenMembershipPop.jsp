@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-    
+
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
@@ -11,40 +11,42 @@ var selectedGridValue;
 
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
-$(document).ready(function(){    
-       
-    //Grid Properties 설정 
-    var gridPros = {            
+$(document).ready(function(){
+
+    //Grid Properties 설정
+    var gridPros = {
             editable : false,                 // 편집 가능 여부 (기본값 : false)
             showStateColumn : false,     // 상태 칼럼 사용
             showFooter: false
     };
-    
+
  // AUIGrid 칼럼 설정
  var columnLayout = [
      { dataField:"taxInvcId" ,headerText:"<spring:message code='pay.head.taxInvcId'/>",width: 100 , editable : false ,visible : false},
-     { dataField:"taxInvcRefNo" ,headerText:"<spring:message code='pay.head.brNo'/>",width: 180 , editable : false },    
-     { dataField:"invcItmOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>.",width: 200, editable : false },    
-     { dataField:"taxInvcCustName" ,headerText:"<spring:message code='pay.head.custName'/>" , editable : false },    
+     { dataField:"taxInvcRefNo" ,headerText:"<spring:message code='pay.head.brNo'/>",width: 180 , editable : false },
+     { dataField:"invcItmOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>.",width: 200, editable : false },
+     { dataField:"taxInvcCustName" ,headerText:"<spring:message code='pay.head.custName'/>" , editable : false },
      { dataField:"taxInvcRefDt" ,headerText:"<spring:message code='pay.head.invoiceDate'/>",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
      { dataField:"invcItmRentalFee" ,headerText:"<spring:message code='pay.head.invoiceAmt'/>",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"},
-     { dataField:"invcItmInstlmtNo" ,headerText:"<spring:message code='pay.head.instNo'/>",width: 200 , editable : false }
-     ];    
-    
+     { dataField:"invcItmInstlmtNo" ,headerText:"<spring:message code='pay.head.instNo'/>",width: 200 , editable : false },
+     { dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
+     { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
+     ];
+
     	// Order 정보 (Master Grid) 그리드 생성
     	myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
     	// Master Grid 셀 클릭시 이벤트
-        AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+        AUIGrid.bind(myGridID, "cellClick", function( event ){
             selectedGridValue = event.rowIndex;
-        });    
-    
-      
+        });
+
+
 });
 
 
 // 리스트 조회.
-function fn_getTaxInvoiceListAjax() {   
-    
+function fn_getTaxInvoiceListAjax() {
+
     if(FormUtil.checkReqValue($("#brNo")) &&
             FormUtil.checkReqValue($("#invoicePeriod")) &&
             FormUtil.checkReqValue($("#rentalMembershipNo")) &&
@@ -53,7 +55,7 @@ function fn_getTaxInvoiceListAjax() {
         Common.alert("<spring:message code='pay.alert.searchCondition'/>");
         return;
     }
-    
+
     Common.ajax("POST", "/payment/selectTaxInvoiceRenMembershipList.do", $("#searchForm").serializeJSON(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
@@ -63,20 +65,28 @@ function fn_getTaxInvoiceListAjax() {
 //크리스탈 레포트
 function fn_generateInvoice(){
   var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-  
+
   if (selectedItem[0] > -1){
-      //report form에 parameter 세팅      
+      //report form에 parameter 세팅
+      var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+      var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+
+	  if( parseInt(year)*100 + parseInt(month) >= 201810){
+          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_ServiceContract_PDF_SST.rpt');
+      }else{
+          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_ServiceContract_PDF.rpt');
+      }
       $("#reportPDFForm #V_REFERENCEID").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
       $("#reportPDFForm #V_TYPE").val(134);
       console.log("referenceId :  "  + AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
-      
+
       //report 호출
       var option = {
               isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
       };
 
       Common.report("reportPDFForm", option);
-       
+
   }else{
 	  Common.alert("<spring:message code='pay.alert.noPrintType'/>");
   }
@@ -114,7 +124,7 @@ function fn_clear(){
                     <col style="width:200px" />
                     <col style="width:*" />
                     <col style="width:180px" />
-                    <col style="width:*" />                    
+                    <col style="width:*" />
                 </colgroup>
                 <tbody>
                     <tr>
@@ -125,7 +135,7 @@ function fn_clear(){
                        <th scope="row">Invoice Period</th>
                        <td>
                             <input type="text" id="invoicePeriod" name="invoicePeriod"  title="Invoice Period" placeholder="Invoice Period" class="j_date2 w100p" />
-                       </td>               
+                       </td>
                     </tr>
                     <tr>
                        <th scope="row">Rental Membership No.</th>
@@ -135,13 +145,13 @@ function fn_clear(){
                        <th scope="row">Order No.</th>
                        <td>
                             <input type="text" id="orderNo" name="orderNo" title="Order No." placeholder="Order No." class="w100p" />
-                       </td>               
-                    </tr>                    
+                       </td>
+                    </tr>
                     <tr>
                         <th scope="row">Customer Name</th>
                         <td colspan="3">
-                            <input type="text" id="custName" name="custName" title="Customer Name" placeholder="Customer Name." class="w100p" />                            
-                        </td>                          
+                            <input type="text" id="custName" name="custName" title="Customer Name" placeholder="Customer Name." class="w100p" />
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -158,9 +168,9 @@ function fn_clear(){
     </section>
     <!-- search_result end -->
 </section>
-<!-- content end --> 
+<!-- content end -->
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/TaxInvoice_ServiceContract_PDF.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="V_TYPE" name="V_TYPE" />
     <input type="hidden" id="V_TASKID" name="V_TASKID" value="0"/>

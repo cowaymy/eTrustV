@@ -33,7 +33,9 @@ $(document).ready(function(){
      { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>",width: 200, editable : false },
      { dataField:"taxInvcCustName" ,headerText:"<spring:message code='pay.head.custName'/>" , editable : false },
      { dataField:"taxInvcRefDt" ,headerText:"<spring:message code='pay.head.invoiceDate'/>",width: 180 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-     { dataField:"invcItmAmtDue" ,headerText:"<spring:message code='pay.head.invoiceAmt'/>",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"}
+     { dataField:"invcItmAmtDue" ,headerText:"<spring:message code='pay.head.invoiceAmt'/>",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"},
+     { dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
+     { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
      ];
     
     	// Order 정보 (Master Grid) 그리드 생성
@@ -67,6 +69,14 @@ function fn_generateInvoice(){
 
     if (selectedItem[0] > -1){
         //report form에 parameter 세팅
+        var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+        var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+
+        if( parseInt(year)*100 + parseInt(month) >= 201810){
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST.rpt');
+        }else{
+            $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF.rpt');
+        }
         $("#reportPDFForm #v_serviceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcSvcNo"));
         $("#reportPDFForm #v_invoiceType").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcType"));
         $("#reportPDFForm #v_invoiceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcRefNo"));
@@ -168,7 +178,7 @@ function fn_clear(){
 </section>
 <!-- content end --> 
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/TaxInvoice_Miscellaneous_Membership_PDF.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="v_serviceNo" name="v_serviceNo" />
     <input type="hidden" id="v_invoiceType" name="v_invoiceType" />

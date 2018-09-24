@@ -54,7 +54,9 @@ var columnLayout = [
     { dataField:"codeName" ,headerText:"App Type",width: 150 ,editable : false },
     { dataField:"invcItmProductModel" ,headerText:"Product Model",width: 200 , editable : false },
     { dataField:"taxInvcCustName" ,headerText:"Customer Name" , editable : false },
-    { dataField:"invcItmAmtDue" ,headerText:"Invoice Amount",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.#"}
+    { dataField:"invcItmAmtDue" ,headerText:"Invoice Amount",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.#"},
+    { dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
+    { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
     ];
       
                           
@@ -78,6 +80,15 @@ function fn_generateInvoice(){
   
   if (selectedItem[0] > -1){
       //report form에 parameter 세팅      
+      var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+      var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
+
+      if( parseInt(year)*100 + parseInt(month) >= 201810){
+          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF_SST.rpt');
+      }else{
+          $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF.rpt');
+      }
+ 
       $("#reportPDFForm #v_taxInvoiceId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
       
       //report 호출
@@ -174,7 +185,7 @@ function fn_Clear(){
 </section>
 <!-- content end --> 
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/statement/TaxInvoice_Outright_PDF.rpt" />
+    <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />
     <input type="hidden" id="v_taxInvoiceId" name="v_taxInvoiceId" />
 </form>

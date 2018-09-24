@@ -48,7 +48,9 @@ var columnLayout = [
     { dataField:"taxInvcSvcNo" ,headerText:"Service No.",width: 200  , editable : false },
     { dataField:"taxInvcCustName" ,headerText:"Customer Name" , editable : false },
     { dataField:"taxInvcRefDt" ,headerText:"Invoice Date",width: 200 , editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
-    { dataField:"taxInvcAmtDue" ,headerText:"Invoice Amount",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"}
+    { dataField:"taxInvcAmtDue" ,headerText:"Invoice Amount",width: 200 , editable : false, dataType : "numeric", formatString : "#,##0.00"},
+    { dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
+    { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
     ];
                           
 // 리스트 조회.
@@ -74,39 +76,86 @@ function fn_generateInvoice(){
         var taxInvcType = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcType");             //taxInvoice Id
         var taxInvcSvcNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcSvcNo"); //service No
         var taxInvcRefNo = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcRefNo");               //br No. = invoiceNo
+        var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
+        var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
         
         switch (taxInvcType){
-            case 117 :
-            	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF.rpt');
-            	break;
-            case 118 :
+        case 117 :
+            if( parseInt(year)*100 + parseInt(month) >= 201810){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF_SST.rpt');
+            }
+            else {
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF.rpt');
+            }
+            break;
+        case 118 :
+            if( parseInt(year)*100 + parseInt(month) >= 201810){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
+            }
+            else {
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF.rpt');
-                break;
-            case 121 :
+            }
+            break;
+        case 121 :
+            if( parseInt(year)*100 + parseInt(month) >= 201810){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_POS_PDF_SST.rpt');
+            }
+            else {
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_POS_PDF.rpt');
-                break;
-            case 122 :
+            }
+            break;
+        case 122 :
+            if( parseInt(year)*100 + parseInt(month) >= 201810){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF_SST.rpt');
+            }
+            else {
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF.rpt');
-                break;
-            case 123 :
+            }
+            break;
+        case 123 :
+            if( parseInt(year)*100 + parseInt(month) >= 201810){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_SST.rpt');
+            }
+            else {
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF.rpt');
-                break;
-            case 124 :
+            }
+            break;
+        case 124 :
+            if( parseInt(year)*100 + parseInt(month) >= 201810){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF_SST.rpt');
+            }
+            else {
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF.rpt');
-                break;
-            case 125 :
-            	if(taxInvcSvcNo.indexOf('SCT') > -1){
-            		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_ServiceContract_PDF.rpt');	
-            	}else{
-            		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF.rpt');	
-            	}                
-                break;
-            case 142 :
+            }
+            break;
+        case 125 :
+            if(taxInvcSvcNo.indexOf('SCT') > -1){
+                if( parseInt(year)*100 + parseInt(month) >= 201810){
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_ServiceContract_PDF_SST.rpt');
+                }
+                else {
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_ServiceContract_PDF.rpt');
+                }
+            }else{
+                if( parseInt(year)*100 + parseInt(month) >= 201810){
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF_SST.rpt');
+                }
+                else {
+                    $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF.rpt');
+                }
+            }
+            break;
+        case 142 :
+            if( parseInt(year)*100 + parseInt(month) >= 201810){
+                $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF_SST.rpt');
+            }
+            else {
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF.rpt');
-                break;
-            default:
-                break;
-        }        
+            }
+            break;
+        default:
+            break;
+    }        
         
         $("#reportPDFForm #v_serviceNo").val(taxInvcSvcNo);
         $("#reportPDFForm #v_invoiceType").val(taxInvcType);                    
