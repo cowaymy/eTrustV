@@ -2741,7 +2741,7 @@
                                                 )
                          VALUES  (
                                         SAL0087D_SRV_FILTER_ID_SEQ.nextval,
-                                        (SELECT SRV_CONFIG_ID FROM SAL0090D WHERE SRV_SO_ID = #{salesOrdId}),
+                                        (SELECT SRV_CONFIG_ID FROM SAL0090D WHERE SRV_SO_ID = #{salesOrdId} AND SRV_STUS_ID = 1 ),
                                         #{filterCode},
                                         ( SELECT  D.LEAD_TM_OFFSET
                                           FROM
