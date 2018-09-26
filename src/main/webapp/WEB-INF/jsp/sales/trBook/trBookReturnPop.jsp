@@ -227,6 +227,12 @@ function fn_goAction(str, rowIndex){
             	 fn_updateReTrBook("Set As Marketing Use");
             });
             break;
+        case "103":
+            //USED BY POS
+             Common.confirm("<spring:message code="sal.alert.title.actionConfirmation" />"  + DEFAULT_DELIMITER + "<spring:message code="sal.alert.msg.actionConfirmation5" />", function(){
+                 fn_updateReTrBook("Set As POS Use");
+            });
+            break;
         default:
             break;
     }
