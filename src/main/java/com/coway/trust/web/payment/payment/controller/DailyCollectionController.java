@@ -35,20 +35,20 @@ import com.coway.trust.web.payment.billing.controller.BillingMgmtController;
 @Controller
 @RequestMapping(value = "/payment")
 public class DailyCollectionController {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(DailyCollectionController.class);
-	
+
 	@Resource(name = "dailyCollectionService")
 	private DailyCollectionService dailyCollectionService;
-	
+
 	@Autowired
 	private LargeExcelService largeExcelService;
 
 	/******************************************************
-	 * Daily Collection Raw 
-	 *****************************************************/	
+	 * Daily Collection Raw
+	 *****************************************************/
 	/**
-	 * Daily Collection Raw 초기화 화면 
+	 * Daily Collection Raw 초기화 화면
 	 * @param params
 	 * @param model
 	 * @return
@@ -57,52 +57,52 @@ public class DailyCollectionController {
 	public String initDailyCollection(@RequestParam Map<String, Object> params, ModelMap model) {
 		return "payment/payment/dailyCollectionRaw";
 	}
-	
-	
+
+
 	/**
-	 * Daily Collection  카운트 조회 
+	 * Daily Collection  카운트 조회
 	 * @param params
 	 * @param model
 	 * @return
 	 */
 	@RequestMapping(value = "/countDailyCollectionData.do")
 	public ResponseEntity<Integer> countDailyCollectionData(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		int cnt = dailyCollectionService.countDailyCollectionData(params);
 		return ResponseEntity.ok(cnt);
-	}	
-	
-	
+	}
+
+
 
 	@RequestMapping(value = "/selectDailyCollectionData.do")
 	public void selectDailyCollectionData(HttpServletRequest request, HttpServletResponse response) {
-		
+
 		ExcelDownloadHandler downloadHandler = null;
-		
+
 		try {
-            
+
             Map<String, Object> map = new HashMap<String, Object>();
     		map.put("payDateFr", request.getParameter("payDateFr") == null ? "01/01/1900" :  request.getParameter("payDateFr"));
-    		map.put("payDateTo", request.getParameter("payDateTo") == null ? "01/01/1900" :  request.getParameter("payDateTo"));		
-    		
+    		map.put("payDateTo", request.getParameter("payDateTo") == null ? "01/01/1900" :  request.getParameter("payDateTo"));
+
     		String[] columns;
             String[] titles;
-			
-            columns = new String[] {"receiptno","orderno","payDate","name","bankAcc","debtCode","branchcode","payitemappvno","payitemchqno",
+
+            columns = new String[] {"receiptno","orderno","trxDate","name","bankAcc","debtCode","branchcode","payitemappvno","payitemchqno",
             		"username","description","payitemamt","payitemremark","fpayitemccno","paymode","trNo","refNo","crcmode",
             		"crctype","payitemccholdername","payitemccexpirydate","refdate","keyinby","issuedbank","deptcode","orderstatus",
             		"custvano","bankChgAmt","advancemth","runningno","cardtype","reconStatus","rclNo","crcStatementNo","crcStatus",
-            		"crcStatementRemark","custcategory","custtype"};  
-            
-            titles = new String[] {"RECEIPTNO","ORDERNO","PAY_DATE","NAME","BANK_ACC","DEBT_CODE","BRANCHCODE","PAYITEMAPPVNO","PAYITEMCHQNO","USERNAME",
+            		"crcStatementRemark","custcategory","custtype"};
+
+            titles = new String[] {"RECEIPTNO","ORDERNO","TRX_DATE","NAME","BANK_ACC","DEBT_CODE","BRANCHCODE","PAYITEMAPPVNO","PAYITEMCHQNO","USERNAME",
             		"DESCRIPTION","PAYITEMAMT","PAYITEMREMARK","FPAYITEMCCNO","PAYMODE","TR_NO","REF_NO","CRCMODE","CRCTYPE","PAYITEMCCHOLDERNAME",
             		"PAYITEMCCEXPIRYDATE","REFDATE","KEYINBY","ISSUEDBANK","DEPTCODE","ORDERSTATUS","CUSTVANO","BANK_CHG_AMT","ADVANCEMTH",
             		"RUNNINGNO","CARDTYPE","RECON_STATUS","RCL_NO","CRC_STATEMENT_NO","CRC_STATUS","CRC_STATEMENT_REMARK","CustCategory","CustType"};
-            
-	             
-			downloadHandler = getExcelDownloadHandler(response, "DailyCollectionRawData.xlsx", columns, titles);			
+
+
+			downloadHandler = getExcelDownloadHandler(response, "DailyCollectionRawData.xlsx", columns, titles);
 			largeExcelService.downloadDailyCollectionRawData(map, downloadHandler);
-			
+
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
 		} finally {
@@ -115,11 +115,11 @@ public class DailyCollectionController {
 			}
 		}
 	}
-	
+
 	private ExcelDownloadHandler getExcelDownloadHandler(HttpServletResponse response, String fileName,
 			String[] columns, String[] titles) {
 		ExcelDownloadVO excelDownloadVO = ExcelDownloadFormDef.getExcelDownloadVO(fileName, columns, titles);
 		return new ExcelDownloadHandler(excelDownloadVO, response);
 	}
-	
+
 }
