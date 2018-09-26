@@ -282,7 +282,7 @@
          SELECT
                 B.OR_NO AS RECEIPTNO  ,
                 (CASE WHEN C.SALES_ORD_NO IS NULL THEN SOM.SALES_ORD_NO ELSE C.SALES_ORD_NO END) AS ORDERNO  ,
-                TO_CHAR(B.PAY_DATA,'DD/MM/YYYY') AS PAY_DATE,
+                TO_CHAR(trx.TRX_DT,'DD/MM/YYYY') AS TRX_DATE,
                 (CASE WHEN D.NAME IS NULL THEN CTD.NAME ELSE D.NAME END) NAME  ,
                 E.ACC_CODE AS BANK_ACC  ,
                 F.ACC_CODE AS DEBT_CODE  ,
@@ -367,6 +367,7 @@
                 LEFT JOIN SYS0038M ssc   ON ssc.STUS_CODE_ID = c.STUS_CODE_ID
                 LEFT JOIN ORG0001D mbb   ON mbb.MEM_ID = C.MEM_ID
                 LEFT JOIN ORG0001D mbb1   ON mbb1.MEM_ID = B.COLL_MEM_ID
+                LEFT JOIN PAY0069D trx   ON trx.TRX_ID = B.TRX_ID
             WHERE
                 B.PAY_DATA <![CDATA[ >= ]]> TO_DATE(#{payDateFr},'DD/MM/YYYY')
                 AND B.PAY_DATA  <![CDATA[ < ]]> TO_DATE(#{payDateTo},'DD/MM/YYYY') + 1
@@ -376,7 +377,7 @@
             SELECT
                 DISTINCT B.OR_NO RECIPT_NO  ,
                 l.SALES_ORD_NO ORD_NO  ,
-                TO_CHAR(B.PAY_DATA,'DD/MM/YYYY') AS PAY_DATE,
+                TO_CHAR(trx.TRX_DT,'DD/MM/YYYY') AS TRX_DATE,
                 D.NAME ,
                 E.ACC_CODE BANK_ACC  ,
                 F.ACC_CODE DEBT_CODE  ,
@@ -457,6 +458,7 @@
                 LEFT JOIN SAL0001D som   ON som.SALES_ORD_ID = B.SALES_ORD_ID
                 LEFT JOIN ORG0001D mbb   ON mbb.MEM_ID = som.MEM_ID
                 LEFT JOIN ORG0001D mbb1   ON mbb1.MEM_ID = B.COLL_MEM_ID
+                LEFT JOIN PAY0069D trx   ON trx.TRX_ID = B.TRX_ID
         WHERE
                 B.PAY_DATA <![CDATA[ >= ]]> TO_DATE(#{payDateFr},'DD/MM/YYYY')
                 AND B.PAY_DATA  <![CDATA[ < ]]> TO_DATE(#{payDateTo},'DD/MM/YYYY') + 1
@@ -466,7 +468,7 @@
         SELECT
             DISTINCT B.OR_NO RECIPT_NO  ,
             l.MEM_CODE ORD_NO  ,
-            TO_CHAR(B.PAY_DATA,'DD/MM/YYYY') AS PAY_DATE,
+            TO_CHAR(trx.TRX_DT,'DD/MM/YYYY') AS TRX_DATE,
             l.NAME ,
             E.ACC_CODE BANK_ACC  ,
             F.ACC_CODE DEBT_CODE  ,
@@ -543,6 +545,7 @@
             LEFT JOIN SAL0001D som   ON som.SALES_ORD_NO = l.MEM_CODE
             LEFT JOIN ORG0001D mbb   ON mbb.MEM_ID = som.MEM_ID
             LEFT JOIN ORG0001D mbb1   ON mbb1.MEM_ID = B.COLL_MEM_ID
+            LEFT JOIN PAY0069D trx   ON trx.TRX_ID = B.TRX_ID
         WHERE
             B.PAY_DATA <![CDATA[ >= ]]> TO_DATE(#{payDateFr},'DD/MM/YYYY')
             AND B.PAY_DATA  <![CDATA[ < ]]> TO_DATE(#{payDateTo},'DD/MM/YYYY') + 1
