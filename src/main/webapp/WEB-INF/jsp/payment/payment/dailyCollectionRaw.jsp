@@ -5,8 +5,8 @@
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
-	
-   
+
+
 });
 
 
@@ -37,19 +37,19 @@ function fn_genDocument(){
 			$.fileDownload("/payment/selectDailyCollectionData.do?payDateFr=" + payDateFr + "&payDateTo="+payDateTo)
 				.done(function () {
 					Common.alert("<spring:message code='pay.alert.downSuccess'/>");
-					Common.removeLoader();            
+					Common.removeLoader();
 				})
 				.fail(function () {
 					Common.alert("<spring:message code='pay.alert.downFail'/>");
-					Common.removeLoader();            
+					Common.removeLoader();
 				});
 		}else{
-			Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
+			Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 		}
 	});
 }
 
-   
+
 function fn_clear(){
     $("#searchForm")[0].reset();
 }
@@ -85,14 +85,14 @@ function fn_clear(){
 				<colgroup>
 				    <col style="width:150px" />
 				    <col style="width:300px" />
-				    <col style="width:*" /> 				   		    
+				    <col style="width:*" />
 				</colgroup>
 				<tbody>
 				    <tr>
-				        <th scope="row">Payment Date</th>
+				        <th scope="row">Trx Date</th>
 					    <td>
 					           <div class="date_set  w100p"><!-- date_set start -->
-					           <p><input id="payDateFr" name="payDateFr" type="text" title="Pay start Date" placeholder="DD/MM/YYYY" class="j_date" readonly />					               
+					           <p><input id="payDateFr" name="payDateFr" type="text" title="Pay start Date" placeholder="DD/MM/YYYY" class="j_date" readonly />
 					           </p>
 					           <span>~</span>
 					           <p><input id="payDateTo" name="payDateTo"  type="text" title="Pay end Date" placeholder="DD/MM/YYYY" class="j_date" readonly  /></p>
@@ -103,7 +103,7 @@ function fn_clear(){
                     </tr>
                 </tbody>
             </table>
-            <!-- table end -->            
+            <!-- table end -->
         </form>
     </section>
     <!-- search_table end -->
