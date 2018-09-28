@@ -6,25 +6,29 @@
 <script type="text/javaScript">
 
         //Combo Data
-    var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
-/*     cmbCollectType
-    Collection Code */
+    //var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
+    // 19-09-2018 REMOVE HS STATUS "CANCELLED" START FROM 1 OCT 2018
+    var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
 
-  
+    /*  cmbCollectType
+        Collection Code
+    */
+
+
     // AUIGrid 생성 후 반환 ID
-    var myDetailGridID;   
+    var myDetailGridID;
 
-    
+
     var option = {
         width : "1000px", // 창 가로 크기
         height : "600px" // 창 세로 크기
     };
-    
-    
+
+
          function fn_close(){
          $("#popup_wrap").remove();
      }
-     
+
     function createAUIGrid(){
         // AUIGrid 칼럼 설정
         var columnLayout = [ {
@@ -32,12 +36,12 @@
                     headerText:"Filter Code",
                     width:140,
                     height:30
-                }, {                        
+                }, {
                     dataField : "stkId",
                     headerText : "Filter id",
                     width : 240,
-                    visible:false   
-                }, {                        
+                    visible:false
+                }, {
                     dataField : "stkDesc",
                     headerText : "Filter Name",
                     width : 240
@@ -56,48 +60,48 @@
 						            textEditable : true
 						        }*/
                 editable : true
-                }, {                        
+                }, {
                     dataField : "serialNo",
                     headerText : "Serial No",
-                    width : 240	                            
-                }, {                        
+                    width : 240
+                }, {
                     dataField : "serialChk",
                     headerText : "Serial Check",
                     width : 100,
-                    visible:false   
+                    visible:false
                 }];
             // 그리드 속성 설정
             var gridPros = {
-                // 페이징 사용       
+                // 페이징 사용
                 //usePaging : true,
                 // 한 화면에 출력되는 행 개수 20(기본값:20)
                 //pageRowCount : 20,
-                
+
                 editable : true,
-                
-                //showStateColumn : true, 
-                
+
+                //showStateColumn : true,
+
                 //displayTreeOpen : true,
-                
+
                 headerHeight : 30,
-                
+
                 // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 skipReadonlyColumns : true,
-                
+
                 // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
                 wrapSelectionMove : true,
-                
+
                 // 줄번호 칼럼 렌더러 출력
                 showRowNumColumn : true,
-                
+
                 // 수정한 셀에 수정된 표시(마크)를 출력할 지 여부
                 showEditedCellMarker : false
-        
+
             };
-            
+
             //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
             myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
-            
+
             AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
                 if (event.columnIndex == 3 || event.columnIndex == 4){
                 	if ($("#cmbStatusType1").val() == 4) {    // Completed
@@ -111,23 +115,23 @@
                     }
                 }
             });
-            
+
             // 에디팅 정상 종료 이벤트 바인딩
             AUIGrid.bind(myDetailGridID, "cellEditEnd", function (event){
             	    console.log(event);
-            	 
-            	    //가용재고 체크 하기 
+
+            	    //가용재고 체크 하기
 	                if(event.columnIndex ==3){
-	                	
-	                	     //마스터 그리드 
+
+	                	     //마스터 그리드
 	                	     var selectedItems = AUIGrid.getCheckedRowItems(myGridID);
 	                	     console.log(selectedItems);
-	                	     
+
 	                	     var ct = selectedItems[0].item.c5;//////
 	                	     var sk = event.item.stkId;
-	                	     
+
 		                	 var  availQty =isstckOk(ct ,sk);
-		                     
+
 		                     if(availQty == 0){
 		                         Common.alert('*<b> There are no available stocks.</b>');
 		                         AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
@@ -137,15 +141,15 @@
 		                             AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
 		                         }
 		                     }
-	                }       
+	                }
             });
     }
-        
-	
+
+
 	function fn_chStock(){
 	}
-	
-	
+
+
 	function isstckOk(ct , sk){
 	    var availQty = 0;
 	    Common.ajaxSync("GET", "/services/as/getSVC_AVAILABLE_INVENTORY.do",{CT_CODE: ct  , STK_CODE: sk }, function(result) {
@@ -157,9 +161,9 @@
 	}
 
 
-    
+
     $(document).ready(function() {
-    	
+
 
    	   doDefCombo(StatusTypeData1, '' ,'cmbStatusType1', 'S', '');
         //order detail
@@ -167,18 +171,18 @@
 
        createAUIGrid();
        fn_getHsFilterListAjax();
-           
-//           AUIGrid.setGridData(myGridID, "hsFilterList");                       
+
+//           AUIGrid.setGridData(myGridID, "hsFilterList");
         //createAUIGridCust();
         //fn_getselectPopUpListAjax();
-		
+
         // HS Result Information > HS Status 값 변경 시 다른 정보 입력 가능 여부 설정
        $("#cmbStatusType1").change(function(){
-    	   
+
     	   AUIGrid.forceEditingComplete(myDetailGridID, null, false);
     	   AUIGrid.updateAllToValue(myDetailGridID, "name", '');
     	   AUIGrid.updateAllToValue(myDetailGridID, "serialNo", '');
-    	   
+
            if ($("#cmbStatusType1").val() == 4) {    // Completed
         	   $("input[name='settleDate']").attr('disabled', false);
                $("select[name='failReason'] option").remove();
@@ -193,15 +197,15 @@
                //$("select[name=cmbCollectType]").attr('disabled', true);
            } else if ($("#cmbStatusType1").val() == 10) {    // Cancelled
         	   //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
-               doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  ''); 
+               doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
                $('#settleDate').val('');
                $("input[name='settleDate']").attr('disabled', true);
                //$("select[name='cmbCollectType'] option").remove();
                //$("select[name=cmbCollectType]").attr('disabled', true);
            }
-           
+
        });
-        
+
     });
 
 
@@ -209,28 +213,28 @@
          Common.ajax("GET", "/services/bs/SelectHsFilterList.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
             console.log("성공.");
             console.log("data : " + result);
-            AUIGrid.setGridData(myDetailGridID, result);  
-        }); 
-    }   
-    
-    
+            AUIGrid.setGridData(myDetailGridID, result);
+        });
+    }
+
+
     function fn_getOrderDetailListAjax(){
-        
+
          Common.ajax("GET", "/sales/order/orderDetailPop.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}'}, function(result) {
             console.log("성공.");
             console.log("data : " + result);
-        }); 
+        });
 
-    }                
-        
+    }
 
-    
+
+
     function fn_saveHsResult(){
-        
+
 
 /*              var dat =  GridCommon.getEditData(myGridID);
                   dat.form = $("#addHsForm").serializeJSON();
-                
+
                  Common.ajax("POST", "/bs/addIHsResult.do",  dat.form, function(result) {
                     Common.alert(result.message.message);
                     console.log("성공.");
@@ -263,30 +267,30 @@
                  return false;
              } */
          }
-            
-            
+
+
             /* if("" == $("#remark").val() || null == $("#remark").val()){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='remark Type'/>");
                 return false;
-            }            
+            }
 
 
             if("" == $("#instruction").val() || null == $("#instruction").val()){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='instruction Type'/>");
                 return false;
             } */
-            
-            
+
+
 /*             if("" == $("#srvBsWeek").val() || null == $("#srvBsWeek").val()){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Week Type'/>");
                 return false;
             }  */
-                        
-            
+
+
             // 시리얼넘버체크
             //수정된 행 아이템들(배열)
             var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
-            
+
             var serialChkCode = new Array();
             var serialChkName = new Array();
             var j = 0;
@@ -298,7 +302,7 @@
                     j++;
             	}
             }
-            
+
             var serialChkList = "";
             if (serialChkCode.length > 0) {
             	for (var i = 0; i < serialChkCode.length; i++) {
@@ -307,7 +311,7 @@
             	Common.alert("Please insert 'Serial No' for" + serialChkList);
             	return false;
             }
-            
+
              //var jsonObj =  GridCommon.getEditData(myDetailGridID);
             // add by jgkim
             var jsonObj = {};
@@ -323,17 +327,17 @@
             	}
             }
             console.log(resultList);
-            jsonObj.add = resultList;        
+            jsonObj.add = resultList;
             $("input[name='settleDate']").removeAttr('disabled');
             $("select[name=cmbCollectType]").removeAttr('disabled');
             jsonObj.form = $("#addHsForm").serializeJSON();
             //$("input[name='settleDate']").attr('disabled', true);
             //$("select[name=cmbCollectType]").attr('disabled', true);
             console.log(jsonObj);
-            
+
             Common.ajax("POST", "/services/bs/saveValidation.do", jsonObj, function(result) {
                 console.log("save validation : " + result );
-                
+
                 // result가 0일 때만 저장
                 if (result == 0) {
                     Common.ajax("POST", "/services/bs/addIHsResult.do", jsonObj, function(result) {
@@ -346,26 +350,26 @@
                     return false;
                 }
             });
-            
+
         }
-        
-        
+
+
     function fn_close(){
         $("#popup_wrap").remove();
     }
-    
+
     function fn_parentReload() {
         fn_close();
         fn_getBSListAjax(); //parent Method (Reload)
-    }    
-    
-    
+    }
+
+
         var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
 
     function onChangeStatusType(val){
 
         if($("#cmbStatusType1").val() == '4'){
-        
+
           $("select[name=failReason]").attr('disabled', 'disabled');
           //$("select[name=cmbCollectType]").attr("disabled ",true);
           $("select[name=cmbCollectType]").attr('disabled',false);
@@ -381,7 +385,7 @@
             $("select[name=cmbRace]").attr('disabled', 'disabled');
             $("#dob").val('');
 //            $("select[name=dob]").attr('readonly','readonly');
-            $("#dob").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'}); 
+            $("#dob").attr({'disabled' : 'disabled' , 'class' : 'j_date3 w100p'});
             $("#genderForm").attr('disabled',true);
             $("input:radio[name='gender']:radio[value='M']").prop("checked", false);
             $("input:radio[name='gender']:radio[value='F']").prop("checked", false);
@@ -393,18 +397,18 @@
             //$("select[name=failReason]").attr("enabled",true);
             $("select[name=failReason]").attr('disabled',false);
         }
-        
+
     }
-            
-    
+
+
     </script>
-    
-    
-    
+
+
+
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
-<form action="#" id="addHsForm" method="post">   
+<form action="#" id="addHsForm" method="post">
  <input type="hidden" value="${hsDefaultInfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
  <input type="hidden" value="${hsDefaultInfo.salesOrdId}" id="hidSalesOrdId" name="hidSalesOrdId"/>
  <input type="hidden" value="${hsDefaultInfo.codyId}" id="hidCodyId" name="hidCodyId"/>
@@ -441,7 +445,7 @@
     <th scope="row">HS Month</th>
     <td><span><c:out value="${hsDefaultInfo.monthy}"/></span></td>
     <th scope="row">HS Type</th>
-    <td><span><c:out value="${hsDefaultInfo.codeName}"/></span></td>    
+    <td><span><c:out value="${hsDefaultInfo.codeName}"/></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -501,7 +505,7 @@
 <%--     <th scope="row">Service Member</th>
     <td>
     <select class="w100p" id ="serMemList" name = "serMemList">
-         <option value="" selected>Choose One</option> 
+         <option value="" selected>Choose One</option>
             <c:forEach var="list" items="${ serMemList}" varStatus="status">
                  <option value="${list.CodeId}">${list.codeName } </option>
             </c:forEach>
@@ -528,10 +532,10 @@
     <label><input type="radio" name="srvBsWeek"  value="2"/><span>Week 2</span></label>
     <label><input type="radio" name="srvBsWeek"  value="3"/><span>Week 3</span></label>
     <label><input type="radio" name="srvBsWeek"  value="4"/><span>Week 4</span></label>
-    </td> 
+    </td>
         <th scope="row" style="width: 91px; ">Cancel Request Number</th>
     <td style="width: 242px; ">
-        <span><c:out value="${hsDefaultInfo.cancReqNo}"/></span> 
+        <span><c:out value="${hsDefaultInfo.cancReqNo}"/></span>
     </td>
 </tr>
 </tbody>
@@ -542,7 +546,7 @@
 </aside><!-- title_line end -->
 <article class="grid_wrap"><!-- grid_wrap start -->
 	 <div id="grid_wrap1" style="width: 100%; height: 334px; margin: 0 auto;"></div>
-	 
+
 <!-- 	 <ul class="center_btns">
 	    <li><p class="btn_blue2 big"><a href="#" onclick="fn_saveHsResult()">Save</a></p></li>
 	    <li><p class="btn_blue2 big"><a href="#">Close</a></p></li>
