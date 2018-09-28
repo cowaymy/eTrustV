@@ -6,26 +6,23 @@
 // add by jgkim
 var myDetailGridData = null;
 
-        //Combo Data
-    var StatusTypeData2 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
-/*     cmbCollectType
-    Collection Code */
+    //Combo Data
+    //var StatusTypeData2 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
+    // 19-09-2018 REMOVE HS STATUS "CANCELLED" START FROM 1 OCT 2018
+    var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
 
+    /* cmbCollectType
+       Collection Code */
 
     // AUIGrid 생성 후 반환 ID
     var myDetailGridID;
     var myDetailGridID2;
     var myDetailGridID3;
 
-
-
-
     var option = {
         width : "1000px", // 창 가로 크기
         height : "600px" // 창 세로 크기
     };
-
-
 
     function createAUIGrid(){
         // AUIGrid 칼럼 설정
