@@ -82,7 +82,7 @@
                         FROM SAL0001D som
                         join SAL0002D SOD ON SOD.SALES_ORD_ID = som.SALES_ORD_ID
                         JOIN SAL0045D I ON I.SALES_ORD_ID = som.SALES_ORD_ID
-                        LEFT JOIN SAL0046D IE ON IE.SALES_ORD_ID = som.SALES_ORD_ID
+                        LEFT JOIN SAL0046D IE ON IE.SALES_ORD_ID = som.SALES_ORD_ID and  IE.CALL_ENTRY_ID <> 0 /*By KV - no need data which is call_entry_id = 0 */
                         LEFT JOIN SAL0047D IR ON IR.ENTRY_ID = IE.INSTALL_ENTRY_ID
                         LEFT JOIN CCR0006D CE ON CE.CALL_ENTRY_ID = IE.CALL_ENTRY_ID
                         JOIN SYS0026M STK ON STK.STK_ID =  ie.INSTALL_STK_ID /* SOD.ITM_STK_ID*/
