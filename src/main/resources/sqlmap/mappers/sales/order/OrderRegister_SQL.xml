@@ -442,6 +442,43 @@
              , T4.PRC_RPF
              , T4.PRC_PV
              , CASE WHEN T4.APP_TYPE_ID IN (67,68)
+             THEN TRUNC(FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC),-1)
+             ELSE FLOOR(T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC)
+             END AS PROMO_AMT
+             , T4.PRC_RPF - T3.PROMO_RPF_DISC_AMT AS PROMO_PRC_RPF
+             , T1.PROMO_ITM_PV
+             , NVL(T1.PROMO_ITM_PV_GST, 0) AS PROMO_ITM_PV_GST
+             , T3.PROMO_APP_TYPE_ID
+          FROM SAL0018D T1
+          LEFT OUTER
+          JOIN SYS0026M T2
+            ON T1.PROMO_ITM_STK_ID = T2.STK_ID
+          LEFT OUTER
+          JOIN SAL0017D T3
+            ON T1.PROMO_ID = T3.PROMO_ID
+          LEFT OUTER
+          JOIN SAL0016M T4
+            ON T4.STK_ID = T1.PROMO_ITM_STK_ID
+           AND T4.APP_TYPE_ID = DECODE(T3.PROMO_APP_TYPE_ID, 2284, 66, 2285, 67, 2286, 68, 2287, 1412)
+         WHERE T1.PROMO_ID = #{promoId}
+           AND T1.PROMO_ITM_STUS_ID = 1
+           AND T1.PROMO_ITM_STK_ID = #{stkId}
+           AND T4.MEM_PAC_ID = #{srvPacId}
+           AND ROWNUM = 1
+    </select>
+
+    <select id="selectProductPromotionPriceByPromoStockIDNewCorp" parameterType="Map" resultType="egovMap">
+        SELECT T1.PROMO_ITM_ID
+             , T1.PROMO_ID
+             , T1.PROMO_ITM_STK_ID
+             , T2.STK_CODE AS ITMCD
+             , T2.STK_DESC AS ITMNAME
+             , T1.PROMO_ITM_CUR_ID
+             , T1.PROMO_ITM_PRC
+             , T4.AMT
+             , T4.PRC_RPF
+             , T4.PRC_PV
+             , CASE WHEN T4.APP_TYPE_ID IN (67,68)
              THEN TRUNC((T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC),-1)
              ELSE (T4.AMT - DECODE(T3.PROMO_DISC_TYPE, 0, T4.AMT*(T3.PROMO_PRC_PRCNT/100), T3.PROMO_PRC_PRCNT) - T3.PROMO_ADD_DISC_PRC)
              END AS PROMO_AMT
