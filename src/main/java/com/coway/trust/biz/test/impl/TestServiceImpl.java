@@ -273,4 +273,21 @@ public class TestServiceImpl extends EgovAbstractServiceImpl implements TestServ
     public EgovMap getTotAmt(Map<String, Object> params) {
         return testMapper.getTotAmt(params);
     }
+
+    @Override
+    public EgovMap selectStaffClaimInfo(Map<String, Object> params) {
+        return testMapper.selectStaffClaimInfo(params);
+    }
+
+    @Override
+    public List<EgovMap> selectStaffClaimItemGrp(Map<String, Object> params) {
+        return testMapper.selectStaffClaimItemGrp(params);
+    }
+
+    @Override
+    public List<EgovMap> selectAttachList(String atchFileGrpId) {
+        // TODO Auto-generated method stub
+        return testMapper.selectAttachList(atchFileGrpId);
+    }
+
 }

@@ -44,4 +44,10 @@ public interface TestMapper {
     void insertStaffClaimExpMileage(Map<String, Object> params);
 
     EgovMap getTotAmt(Map<String, Object> params);
+
+    EgovMap selectStaffClaimInfo(Map<String, Object> params);
+
+    List<EgovMap> selectStaffClaimItemGrp(Map<String, Object> params);
+
+    List<EgovMap> selectAttachList(String atchFileGrpId);
 }

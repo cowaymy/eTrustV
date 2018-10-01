@@ -248,6 +248,26 @@ public class testController {
         return ResponseEntity.ok(claimTotal);
     }
 
+    @RequestMapping(value = "/selectStaffClaimInfo.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectStaffClaimInfo(@RequestParam Map<String, Object> params, ModelMap model) {
+
+        logger.debug("params =====================================>>  " + params);
+
+        EgovMap info = testService.selectStaffClaimInfo(params);
+        List<EgovMap> itemGrp = testService.selectStaffClaimItemGrp(params);
+
+        info.put("itemGrp", itemGrp);
+
+        String atchFileGrpId = String.valueOf(info.get("atchFileGrpId"));
+        logger.debug("atchFileGrpId =====================================>>  " + atchFileGrpId);
+        if(atchFileGrpId != "null") {
+            List<EgovMap> attachList = testService.selectAttachList(atchFileGrpId);
+            info.put("attachList", attachList);
+        }
+
+        return ResponseEntity.ok(info);
+    }
+
     /*
      * Delete claim master and details when expenses main pop closed TODO - Delete claim details when double click
      * select summarized claim based on invoice number grouping

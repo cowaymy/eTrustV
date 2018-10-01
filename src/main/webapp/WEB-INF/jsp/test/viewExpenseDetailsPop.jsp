@@ -324,7 +324,7 @@ $(document).ready(function() {
     }
 
     console.log(data);
-    Common.ajax("GET", "/eAccounting/staffClaim/selectStaffClaimInfo.do?_cacheId=" + Math.random(), data, fn_setStaffClaimInfo);
+    Common.ajax("GET", "/test/selectStaffClaimInfo.do?_cacheId=" + Math.random(), data, fn_setStaffClaimInfo);
 
     $("#delete_btn").click(fn_deleteClaim)
 
