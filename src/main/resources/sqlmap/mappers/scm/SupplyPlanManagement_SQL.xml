@@ -131,6 +131,9 @@ SELECT A.PLAN_ID
      , TO_CHAR(A.LAST_UP_DT, 'YYYY/MM/DD HH24:MI:SS') AS LAST_UP_DT
      , TO_CHAR(A.VER_DT, 'YYYY/MM/DD HH24:MI:SS') AS VER_DT
      , A.VER_NO
+     , (SELECT NVL(MAX(Z.PLAN_STUS_ID), 0) FROM SCM0001M Z WHERE Z.PLAN_YEAR = #{scmYearCbBox} AND Z.PLAN_WEEK = #{scmWeekCbBox} AND Z.TEAM = 'DST')
+     + (SELECT NVL(MAX(Z.PLAN_STUS_ID), 0) FROM SCM0001M Z WHERE Z.PLAN_YEAR = #{scmYearCbBox} AND Z.PLAN_WEEK = #{scmWeekCbBox} AND Z.TEAM = 'CODY')
+     + (SELECT NVL(MAX(Z.PLAN_STUS_ID), 0) FROM SCM0001M Z WHERE Z.PLAN_YEAR = #{scmYearCbBox} AND Z.PLAN_WEEK = #{scmWeekCbBox} AND Z.TEAM = 'CS') AS CONF
   FROM SCM0005M A
  WHERE A.PLAN_YEAR = #{scmYearCbBox}
    AND A.PLAN_WEEK = #{scmWeekCbBox}
@@ -239,7 +242,7 @@ VALUES
 
 <resultMap id="insertSupplyPlanDetailResultMap" type="egovMap"></resultMap>
 <select id="callSpScmInsSupplyPlanDetail" statementType="CALLABLE" parameterType="Map">
-{ call GBSLCVD.SP_SCM_INS_SUPPLY_PLAN_DETAIL(#{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=insertSupplyPlanDetailResultMap}) }
+{ call GBSLCVD.SP_SCM_INS_SUPPLY_PLAN_DETAIL(#{scmYearCbBox}, #{scmWeekCbBox}, #{scmCdcCbBox}, #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=insertSupplyPlanDetailResultMap}) }
 </select>
 
 <insert id="insertSupplyPlanDetail" parameterType="Map">

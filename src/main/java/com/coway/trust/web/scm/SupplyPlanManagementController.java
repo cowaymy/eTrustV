@@ -86,7 +86,7 @@ public class SupplyPlanManagementController {
 			LOGGER.debug("selectSplitInfo : {}", selectSplitInfo.toString());
 			LOGGER.debug("selectChildField : {}", selectChildField.toString());
 			
-			map.put("selectSalesPlanInfo", selectSupplyPlanInfo);
+			map.put("selectSupplyPlanInfo", selectSupplyPlanInfo);
 			map.put("selectSplitInfo", selectSplitInfo);
 			map.put("selectChildField", selectChildField);
 		}

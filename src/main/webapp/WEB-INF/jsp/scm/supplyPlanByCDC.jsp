@@ -45,16 +45,18 @@
 
 <script type="text/javaScript">
 var gWeekTh	= "";
-var m0WeekCnt	= 0;
-var m1WeekCnt	= 0;
-var m2WeekCnt	= 0;
-var m3WeekCnt	= 0;
-var m4WeekCnt	= 0;
-var m0ThWeekStart	= 0;
-var m1ThWeekStart	= 0;
-var m2ThWeekStart	= 0;
-var m3ThWeekStart	= 0;
-var m4ThWeekStart	= 0;
+var m0WeekCnt	= 0;	//	M0월 주차갯수
+var m1WeekCnt	= 0;	//	M+1월 주차갯수
+var m2WeekCnt	= 0;	//	M+2월 주차갯수
+var m3WeekCnt	= 0;	//	M+3월 주차갯수
+var m4WeekCnt	= 0;	//	M+4월 주차갯수
+var m0ThWeekStart	= 0;	//	M0월 시작주차
+var m1ThWeekStart	= 0;	//	M1월 시작주차
+var m2ThWeekStart	= 0;	//	M2월 시작주차
+var m3ThWeekStart	= 0;	//	M3월 시작주차
+var m4ThWeekStart	= 0;	//	M4월 시작주차
+var supplyPlanList	= new Object();
+var childField	= new Object();
 
 $(function() {
 	fnScmYearCbBox();		//fnSelectExcuteYear
@@ -192,23 +194,25 @@ function fnSupplyPlanHeader() {
 				console.log (result);
 				
 				//	if selectSupplyPlanHeader result is null then alert
-				if ( null == result.selectSupplyPlanHeader || 1 > result.selectSupplyPlanHeader.length ) {
-					Common.alert("Supply Plan was not created on this week");
+				if ( null == result.selectSupplyPlanInfo || 1 > result.selectSupplyPlanInfo.length ) {
+					fnBtnCtrl(result.selectSupplyPlanInfo);
+					Common.alert("Supply Plan was not created on this week1");
 					return	false;
 				} else {
+					fnSetSupplyPlanInfo(result.selectSupplyPlanInfo);
 					console.log("selectSupplyPlanInfo is not null")
 					//fnSetSalesPlanInfo(result.selectSupplyPlanInfo);
 				}
 				
 				//	if selectSplitInfo result is null then alert
 				if ( null == result.selectSplitInfo || 1 > result.selectSplitInfo.length ) {
-					Common.alert("Supply Plan was not created on this week");
+					Common.alert("Supply Plan was not created on this week2");
 					return	false;
 				}
 				
 				//	if selectChildField result is null then alert
 				if ( null == result.selectChildField || 1 > result.selectChildField.length ) {
-					Common.alert("Supply Plan was not created on this week");
+					Common.alert("Supply Plan was not created on this week3");
 					return	false;
 				} else {
 					childField	= result.selectChildField;
@@ -703,6 +707,74 @@ function fnSaveMaster(obj, conf) {
 }
 */
 
+//	set sales & supply info
+function fnSetSupplyPlanInfo(result) {
+	var salesPlan	= result[0].conf;			//	12(3 Team, Confirm : 4 -> 4 + 4 + 4 = 12) : All Sales Plan Confirmed
+	var supplyPlan	= result[0].planStusId;		//	4 : Supply Plan Confirm, 1 : Supply Plan Unconfirm
+	
+	if ( null == result ) {
+		$("#cirSales").addClass("circle_grey");
+		$("#cirConfirm").addClass("circle_grey");
+	} else {
+		if ( 12 == salesPlan ) {
+			$("#cirSales").addClass("circle_blue");
+			if ( 4 == supplyPlan ) {
+				$("#cirConfirm").addClass("circle_blue");
+			} else if ( 1 == supplyPlan ) {
+				$("#cirConfirm").addClass("circle_red");
+			}
+		} else {
+			$("#cirSales").addClass("circle_red");
+			$("#cirConfirm").addClass("circle_grey");
+		}
+	}
+}
+
+//	button control
+function fnBtnCtrl(result) {
+	var scmCdcCbBox	= $("#scmCdcCbBox").val();
+	var salesPlan	= "";
+	var supplyPlan	= "";
+	
+	if ( null == result ) {
+		$("#btnCreate").removeClass("btn_disabled");
+		$("#btnSave").addClass("btn_disabled");
+		$("#btnConfirm").addClass("btn_disabled");
+		$("#btnUnconfirm").addClass("btn_disabled");
+	} else {
+		salesPlan	= result[0].conf;
+		supplyPlan	= result[0].planStusId;
+		if ( "12" == salesPlan ) {
+			//	SalesPlan Confirm status
+			if ( 4 == supplyPlan ) {
+				//	SupplyPlan Confirm Status
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").removeClass("btn_disabled");
+			} else if ( 1 == supplyPlan ) {
+				//	SupplyPlan Unconfirm Status
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").removeClass("btn_disabled");
+				$("#btnConfirm").removeClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+			} else {
+				//	error
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+			}
+		} else {
+			//	SalesPlan Unconfirm status
+			$("#btnCreate").addClass("btn_disabled");
+			$("#btnSave").addClass("btn_disabled");
+			$("#btnConfirm").addClass("btn_disabled");
+			$("#btnUnconfirm").addClass("btn_disabled");
+		}
+	}
+}
+
 //	Grid
 var myGridID;
 </script>
@@ -751,9 +823,9 @@ var myGridID;
 				<td>
 					<div class="status_result">
 						<!-- circle_red, circle_blue, circle_grey -->
-						<p><span id ="cir_sales" class="circle circle_grey"></span> Sales</p>
-						<p><span id ="cir_save" class="circle circle_grey"></span> Plan Save</p>
-						<p><span id ="cir_cinfirm" class="circle circle_grey"></span> Confirm</p>
+						<p><span id ="cirSales" class="circle circle_grey"></span> Sales</p>
+						<!-- <p><span id ="cirSave" class="circle circle_grey"></span> Plan Save</p> -->
+						<p><span id ="cirCinfirm" class="circle circle_grey"></span> Confirm</p>
 					</div>
 				</td>
 			</tr>
