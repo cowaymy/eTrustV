@@ -7,7 +7,7 @@
 var myDetailGridData = null;
 
     //Combo Data
-    //var StatusTypeData2 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
+    var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
     // 19-09-2018 REMOVE HS STATUS "CANCELLED" START FROM 1 OCT 2018
     var StatusTypeData2 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
 
@@ -315,8 +315,15 @@ var myDetailGridData = null;
 
 
     $(document).ready(function() {
+		   var mthYr = "${basicinfo.monthy}";
+		   var mth = mthYr.substring(0, mthYr.indexOf("/"));
+		   var yr = mthYr.substring(mthYr.indexOf("/") + 1, mthYr.length);
+		   if (yr <= 2018 && mth <= 9) { // HS PERIOD BEFORE OCT 1 CAN HAVE CANCELLED STATUS
+			   doDefCombo(StatusTypeData1, '' ,'cmbStatusType2', 'S', '');
+		   } else { // HS PERIOD AFTER SEP 30 REMOVE CANCELLED STATUS
+			   doDefCombo(StatusTypeData2, '' ,'cmbStatusType2', 'S', '');
+		   }
 
-    	   doDefCombo(StatusTypeData2, '' ,'cmbStatusType2', 'S', '');
 
            selSchdulId = $("#hidschdulId").val(); // TypeId
            selSalesOrdId = $("#hidSalesOrdId").val(); // TypeId
