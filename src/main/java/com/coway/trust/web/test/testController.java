@@ -120,6 +120,24 @@ public class testController {
         return "test/viewExpenseDetailsPop";
     }
 
+    @RequestMapping(value = "/approveLinePop.do")
+    public String approveLinePop(@RequestParam Map<String, Object> params, ModelMap model) {
+        logger.debug("approveLinePop.do");
+        logger.debug("params :: " + params);
+
+        model.addAttribute("claimNo", params.get("claimNo"));
+        return "test/approveLinePop";
+    }
+
+    @RequestMapping(value = "/registrationMsgPop.do")
+    public String registrationMsgPop(@RequestParam Map<String, Object> params, ModelMap model) {
+        logger.debug("registrationMsgPop.do");
+        logger.debug("params :: " + params);
+
+        model.addAttribute("claimNo", params.get("claimNo"));
+        return "test/registrationMsgPop";
+    }
+
     /*
      * ========= FUNCTIONS =========
      */
@@ -204,6 +222,18 @@ public class testController {
         return ResponseEntity.ok(dtlClaimList);
     }
 
+    @RequestMapping(value = "/getHList.do")
+    public ResponseEntity<List<EgovMap>> getHList(@RequestParam Map<String, Object> params,
+            HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+        logger.debug("getHList.do :: start");
+        logger.debug("params :: " + params);
+
+        List<EgovMap> dtlClaimList = staffClaimService.selectStaffClaimItems((String) params.get("clmNo"));
+
+        logger.debug("getHList.do :: end");
+        return ResponseEntity.ok(dtlClaimList);
+    }
+
     @RequestMapping(value = "/getTotal.do")
     public ResponseEntity<Map> getTotal(@RequestParam Map<String, Object> params,
             HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
@@ -235,6 +265,7 @@ public class testController {
 
         if("-".equals(clamUn)) {
             testService.deleteMasterClaim(params);
+            params.put("clamUn", "");
         }
 
         /*
@@ -289,30 +320,6 @@ public class testController {
         logger.debug("list.size : {}", list.size());
 
         testService.insertNormalClaim(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params, sessionVO);
-
-        ReturnMessage message = new ReturnMessage();
-        message.setCode(AppConstants.SUCCESS);
-        message.setData(params);
-        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-        return ResponseEntity.ok(message);
-    }
-
-    // Car Mileage Claim File Upload
-    @RequestMapping(value = "/cmFileUpload.do", method = RequestMethod.POST)
-    public ResponseEntity<ReturnMessage> cmFileUpload(MultipartHttpServletRequest request,
-            @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
-
-        logger.debug("dtlsFileUpload.do :: start");
-        logger.debug("params :: " + params);
-
-        List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir,
-                File.separator + "eAccounting" + File.separator + "staffClaim", AppConstants.UPLOAD_MAX_FILE_SIZE,
-                true);
-
-        logger.debug("list.size : {}", list.size());
-
-        testService.insertCarMileageClaim(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params, sessionVO);
 
         ReturnMessage message = new ReturnMessage();
         message.setCode(AppConstants.SUCCESS);

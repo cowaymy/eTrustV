@@ -96,11 +96,182 @@ var newGridColumnLayout = [ {
  */
 
 /* =========================
+ * Hidden Claim Details Grid - Start
+ * =========================
+ */
+
+ var hNewGridColumnLayout = [ {
+        dataField : "clamUn",
+        headerText : '<spring:message code="newWebInvoice.seq" />'
+    }, {
+        dataField : "expGrp",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "clmSeq",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "costCentr",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "costCentrName",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "memAccId",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "bankCode",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "bankAccNo",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "clmMonth",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "invcDt",
+        headerText : '<spring:message code="webInvoice.invoiceDate" />'
+    }, {
+        dataField : "expType",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "expTypeName",
+        headerText : '<spring:message code="pettyCashNewExp.expBrType" />',
+        style : "aui-grid-user-custom-left"
+    }, {
+        dataField : "glAccCode",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "glAccCodeName",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "budgetCode",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "budgetCodeName",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "supplirName",
+        headerText : '<spring:message code="crditCardNewReim.supplierBrName" />'
+    }, {
+        dataField : "taxCode",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "taxName",
+        headerText : '<spring:message code="newWebInvoice.taxCode" />'
+    }, {
+        dataField : "gstRgistNo",
+        headerText : '<spring:message code="pettyCashNewExp.gstBrRgist" />'
+    }, {
+        dataField : "invcType",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "invcTypeName",
+        headerText : '<spring:message code="pettyCashNewExp.invcBrType" />',
+        style : "aui-grid-user-custom-left"
+    }, {
+        dataField : "invcNo",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "supplir",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "cur",
+        headerText : '<spring:message code="newWebInvoice.cur" />'
+    }, {
+        dataField : "gstBeforAmt",
+        headerText : '<spring:message code="pettyCashNewExp.amtBrBeforeGst" />',
+        style : "aui-grid-user-custom-right",
+        dataType: "numeric",
+        formatString : "#,##0.00"
+    }, {
+        dataField : "gstAmt",
+        headerText : '<spring:message code="pettyCashNewExp.gst" />',
+        style : "aui-grid-user-custom-right",
+        dataType: "numeric",
+        formatString : "#,##0.00"
+    }, {
+        dataField : "taxNonClmAmt",
+        headerText : '<spring:message code="newWebInvoice.taxNonClmAmt" />',
+        style : "aui-grid-user-custom-right",
+        dataType: "numeric",
+        formatString : "#,##0.00"
+    }, {
+        dataField : "totAmt",
+        headerText : '<spring:message code="pettyCashNewExp.totBrAmt" />',
+        style : "aui-grid-user-custom-right",
+        dataType: "numeric",
+        formatString : "#,##0.00",
+        expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+            // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
+            return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
+        },
+        styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
+            if(item.yN == "N") {
+                return "my-cell-style";
+            }
+            return null;
+        }
+    }, {
+        dataField : "atchFileGrpId",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "carMilagDt",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField: "locFrom",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField: "locTo",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "carMilag",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "carMilagAmt",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "tollAmt",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "parkingAmt",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "purpose",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }, {
+        dataField : "expDesc",
+        headerText : '<spring:message code="newWebInvoice.remark" />',
+        style : "aui-grid-user-custom-left",
+        width : 200
+    }, {
+        dataField : "yN",
+        visible : false // Color 칼럼은 숨긴채 출력시킴
+    }
+    ];
+
+    //그리드 속성 설정
+    var hNewGridPros = {
+        usePaging : true,
+        pageRowCount : 20,
+        headerHeight : 40,
+        height : 175,
+        softRemoveRowMode : false,
+        rowIdField : "clmSeq",
+        selectionMode : "multipleCells"
+    };
+
+/* =========================
+ * Hidden Claim Details Grid - End
+ * =========================
+ */
+
+/* =========================
  * Grid Design -End
  * =========================
  */
 
 var newGridID;
+var hNewGridID;
 var mileageGridID;
 var myGridID;
 
@@ -124,6 +295,8 @@ $(document).ready(function() {
     $("#cnfmClaimBtn").click(fn_confirmClaim);
     $("#expPopCloseBtn").click(fn_closeNew);
     $("#request_btn").click(fn_approveLinePop);
+    $("#supplier_search_btn").click(fn_popSupplierSearchPop);
+    $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
 
     $("#bankDtlsRow").attr("hidden", true);
 
@@ -170,7 +343,7 @@ function fn_addCMDtlsPop() {
 }
 
 function fn_confirmClaim() {
-	console.log("confirmClaim :: start");
+    console.log("confirmClaim :: start");
     cnfmFlg = "Y";
 
     if($("#newCostCenter").val() == "") {
@@ -195,6 +368,8 @@ function fn_confirmClaim() {
 
     AUIGrid.destroy("#newStaffCliam_grid_wrap");
     newGridID = AUIGrid.create("#newStaffCliam_grid_wrap", newGridColumnLayout, newGridPros);
+    hNewGridID = AUIGrid.create("#hNewStaffCliam_grid_wrap", newGridColumnLayout, newGridPros);
+    $("#hNewStaffCliam_grid_wrap").hide();
 
     // Hide/Unhide display elements upon confirm button click
     $("#cnfmClaimBtn").attr("hidden", true);
@@ -248,6 +423,73 @@ function fn_setPopExpType() {
     AUIGrid.setCellValue(myGridID , selectRowIdx , "glAccCodeName", $("#search_glAccCodeName").val());
 }
 
+function fn_supplierSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {accGrp:"VM10"}, null, true, "supplierSearchPop");
+}
+
+function fn_setSupplier() {
+    $("#memAccId").val($("#search_memAccId").val());
+    $("#memAccName").val($("#search_memAccName").val());
+}
+
+function fn_popCostCenterSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/costCenterSearchPop.do", {pop:"pop"}, null, true, "costCenterSearchPop");
+}
+
+function fn_setPopCostCenter() {
+    $("#newCostCenter").val($("#search_costCentr").val());
+    $("#newCostCenterText").val($("#search_costCentrName").val());
+}
+
+function fn_popSupplierSearchPop() {
+    Common.popupDiv("/eAccounting/webInvoice/supplierSearchPop.do", {pop:"pop",accGrp:"VM10"}, null, true, "supplierSearchPop");
+}
+
+function fn_setPopSupplier() {
+    $("#newMemAccId").val($("#search_memAccId").val());
+    $("#newMemAccName").val($("#search_memAccName").val());
+    $("#bankCode").val($("#search_bankCode").val());
+    $("#bankName").val($("#search_bankName").val());
+    $("#bankAccNo").val($("#search_bankAccNo").val());
+}
+
+function fn_setCostCenterEvent() {
+    $("#newCostCenter").change(function(){
+        var costCenter = $(this).val();
+        console.log(costCenter);
+        if(!FormUtil.isEmpty(costCenter)){
+            Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:costCenter}, function(result) {
+                console.log(result);
+                if(result.length > 0) {
+                    var row = result[0];
+                    console.log(row);
+                    $("#newCostCenterText").val(row.costCenterText);
+                }
+            });
+        }
+   });
+}
+
+function fn_setSupplierEvent() {
+    $("#newMemAccId").change(function(){
+        var memAccId = $(this).val();
+        console.log(memAccId);
+        if(!FormUtil.isEmpty(memAccId)){
+            Common.ajax("GET", "/eAccounting/webInvoice/selectSupplier.do?_cacheId=" + Math.random(), {memAccId:memAccId}, function(result) {
+                console.log(result);
+                if(result.length > 0) {
+                    var row = result[0];
+                    console.log(row);
+                    $("#newMemAccName").val(row.memAccName);
+                    $("#bankCode").val(row.bankCode);
+                    $("#bankName").val(row.bankName);
+                    $("#bankAccNo").val(row.bankAccNo);
+                }
+            });
+        }
+   });
+}
+
 function fn_closeNew() {
     console.log("fn_closeNew");
 
@@ -262,7 +504,7 @@ function fn_removeClaim(clmNo, clmUn, source, clmType) {
     console.log("fn_removeClaim");
 
     Common.confirm("Do you wish to delete this claim?", function() {
-    	if(source == "VIEW") {
+        if(source == "VIEW") {
             $("#viewStaffDtlsClaimPop").remove();
         }
 
@@ -278,9 +520,9 @@ function fn_removeClaim(clmNo, clmUn, source, clmType) {
 function fn_approveLinePop() {
     console.log("fn_approveLinePop");
 
-	Common.popupDiv("/eAccounting/staffClaim/approveLinePop.do", null, null, true, "approveLineSearchPop");
+    Common.popupDiv("/test/approveLinePop.do", {claimNo : claimNo}, null, true, "approveLineSearchPop");
 
-	// check request - Request once per user per month
+    // check request - Request once per user per month
     /*Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J4", memAccId:memAccId, clmMonth:clmMonth}, function(result) {
         console.log(result);
         if(result.data > 0) {
@@ -317,8 +559,12 @@ function fn_selectSummary() {
         console.log(result);
 
         AUIGrid.setGridData(newGridID, result);
+    });
 
-        //fn_getAllTotAmt();
+    Common.ajax("GET", "/test/getHList.do", {clmNo: claimNo}, function(result) {
+        console.log(result);
+
+        AUIGrid.setGridData(hNewGridID, result);
     });
 }
 
@@ -1195,6 +1441,8 @@ function fn_getTotCarMilag(rowIndex) {
 </aside><!-- title_line end -->
 
 <article class="grid_wrap" id="newStaffCliam_grid_wrap"><!-- grid_wrap start -->
+</article><!-- grid_wrap end -->
+<article class="grid_wrap" id="hNewStaffCliam_grid_wrap" ><!-- grid_wrap start -->
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->
