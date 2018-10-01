@@ -520,25 +520,15 @@ function fn_removeClaim(clmNo, clmUn, source, clmType) {
 function fn_approveLinePop() {
     console.log("fn_approveLinePop");
 
-    Common.popupDiv("/test/approveLinePop.do", {claimNo : claimNo}, null, true, "approveLineSearchPop");
-
-    // check request - Request once per user per month
-    /*Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType:"J4", memAccId:memAccId, clmMonth:clmMonth}, function(result) {
+    // Check request - Request once per user per month
+    Common.ajax("POST", "/eAccounting/staffClaim/checkOnceAMonth.do?_cacheId=" + Math.random(), {clmType : $("#claimType").val(), memAccId : $("#newMemAccId").val(), clmMonth : $("#newClmMonth").val()}, function(result) {
         console.log(result);
         if(result.data > 0) {
             Common.alert(result.message);
         } else {
-            // tempSave를 하지 않고 바로 submit인 경우
-            if(FormUtil.isEmpty(clmNo)) {
-                fn_insertStaffClaimExp("");
-            } else {
-                // 바로 submit 후에 appvLinePop을 닫고 재수정 대비
-                fn_updateStaffClaimExp("");
-            }
-
-
+            Common.popupDiv("/test/approveLinePop.do", {claimNo : claimNo}, null, true, "approveLineSearchPop");
         }
-    });*/
+    });
 }
 
 

@@ -328,8 +328,6 @@ $(document).ready(function() {
 
     $("#delete_btn").click(fn_deleteClaim)
 
-
-
     console.log("newExpsenseDetailsPop :: ready :: end");
 });
 
