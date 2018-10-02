@@ -159,7 +159,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		logger.info("@@@@@@@@@@@@@@@@@@@@@@:: " + params.toString());
 		EgovMap priceInfo = null;
 
-		int srvPacId = Integer.parseInt((String)params.get("srvPacId"));
+		int srvPacId = Integer.parseInt(String.valueOf(params.get("srvPacId")));
 
 		if(!StringUtils.isEmpty(params.get("promoId"))) {
     		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(Integer.parseInt((String)params.get("promoId")));
