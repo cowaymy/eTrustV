@@ -4452,7 +4452,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             SELECT *
             FROM ORG0001D A
             INNER JOIN ORG0003D B
-                ON A.TRAINEE_CODE = B.APLICNT_CODE
+                ON A.MEM_CODE = B.APLICNT_CODE
             WHERE A.MEM_CODE = #{userId}
         ) SRC
         ON (ORG0003D.APLICNT_CODE = SRC.MEM_CODE)
