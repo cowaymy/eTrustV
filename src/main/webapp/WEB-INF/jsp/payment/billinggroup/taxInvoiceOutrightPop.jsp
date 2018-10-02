@@ -87,7 +87,7 @@ function fn_generateInvoice(){
       var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
       var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
 
-      if( parseInt(year)*100 + parseInt(month) >= 201810){
+      if( parseInt(year)*100 + parseInt(month) >= 201809){
           $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF_SST.rpt');
       }else{
           $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF.rpt');

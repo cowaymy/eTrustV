@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
-    
+
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
@@ -13,18 +13,18 @@ var selectedGridValue;
 var invoiceTypeData = [{"codeId": "119","codeName": "Service Membership Invoice"}];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
-$(document).ready(function(){    
+$(document).ready(function(){
     //메인 페이지
     doDefCombo(invoiceTypeData, '' ,'invoiceType', 'S', '');
     $("#invoiceType option:eq(1)").prop("selected", true);
-        
-    //Grid Properties 설정 
-    var gridPros = {            
+
+    //Grid Properties 설정
+    var gridPros = {
             editable : false,                 // 편집 가능 여부 (기본값 : false)
             showStateColumn : false,     // 상태 칼럼 사용
             showFooter: false
     };
-    
+
  // AUIGrid 칼럼 설정
  var columnLayout = [
      { dataField:"taxInvcType" ,headerText:"<spring:message code='pay.head.taxInvoiceType'/>",width: 100 , editable : false ,visible : false},
@@ -37,26 +37,26 @@ $(document).ready(function(){
      { dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
      { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
      ];
-    
+
     	// Order 정보 (Master Grid) 그리드 생성
         myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-        
+
         // Master Grid 셀 클릭시 이벤트
-        AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+        AUIGrid.bind(myGridID, "cellClick", function( event ){
             selectedGridValue = event.rowIndex;
-        });	
-      
+        });
+
 });
 
 
 // 리스트 조회.
-function fn_getTaxInvoiceListAjax() {   
-    
+function fn_getTaxInvoiceListAjax() {
+
     if(FormUtil.checkReqValue($("#invoiceType option:selected")) ){
         Common.alert("<spring:message code='pay.alert.selectInvoiceType'/>");
         return;
     }
-    
+
     Common.ajax("POST", "/payment/selectTaxInvoiceMembershipList.do", $("#searchForm").serializeJSON(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
@@ -72,7 +72,7 @@ function fn_generateInvoice(){
         var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
         var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
 
-        if( parseInt(year)*100 + parseInt(month) >= 201810){
+        if( parseInt(year)*100 + parseInt(month) >= 201809){
             $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF_SST.rpt');
         }else{
             $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Membership_PDF.rpt');
@@ -80,14 +80,14 @@ function fn_generateInvoice(){
         $("#reportPDFForm #v_serviceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcSvcNo"));
         $("#reportPDFForm #v_invoiceType").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcType"));
         $("#reportPDFForm #v_invoiceNo").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcRefNo"));
-    
+
         //report 호출
         var option = {
             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
             };
 
         Common.report("reportPDFForm", option);
-     
+
     }else{
     	Common.alert("<spring:message code='pay.alert.noPrintType'/>");
     }
@@ -126,14 +126,14 @@ function fn_clear(){
                     <col style="width:140px" />
                     <col style="width:*" />
                     <col style="width:140px" />
-                    <col style="width:*" />                    
+                    <col style="width:*" />
                 </colgroup>
                 <tbody>
                     <tr>
                         <th scope="row">Invoice Type</th>
                         <td colspan="3">
-                            <select id="invoiceType" name="invoiceType" class="w100p"></select>                            
-                        </td>                          
+                            <select id="invoiceType" name="invoiceType" class="w100p"></select>
+                        </td>
                     </tr>
                     <tr>
                        <th scope="row">Invoice No.</th>
@@ -143,7 +143,7 @@ function fn_clear(){
                        <th scope="row">Invoice Period</th>
                        <td>
                             <input type="text" id="invoicePeriod" name="invoicePeriod"  title="Invoice Period" placeholder="Invoice Period" class="j_date2 w100p" />
-                       </td>               
+                       </td>
                     </tr>
                     <tr>
                         <th scope="row">Service No.</th>
@@ -158,8 +158,8 @@ function fn_clear(){
                     <tr>
                         <th scope="row">Customer Name</th>
                         <td colspan="3">
-                            <input type="text" id="custName" name="custName" title="Customer Name" placeholder="Customer Name." class="w100p" />                            
-                        </td>                          
+                            <input type="text" id="custName" name="custName" title="Customer Name" placeholder="Customer Name." class="w100p" />
+                        </td>
                     </tr>
                 </tbody>
             </table>
@@ -176,7 +176,7 @@ function fn_clear(){
     </section>
     <!-- search_result end -->
 </section>
-<!-- content end --> 
+<!-- content end -->
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />

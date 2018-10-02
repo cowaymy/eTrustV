@@ -126,7 +126,7 @@ function fn_generateReport(){
 	}
 
     if(invoiceType ==  126 || invoiceType == 127){
-    	if( parseInt(year)*100 + parseInt(month) >= 201810){
+    	if( parseInt(year)*100 + parseInt(month) >= 201809){
     		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_SST.rpt');
     	}
     	else{
@@ -134,63 +134,63 @@ function fn_generateReport(){
     	}
     }else{
         if( miscType == 117 ){
-        	if( parseInt(year)*100 + parseInt(month) >= 201810){
+        	if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscHP_PDF_SST.rpt');
             }
             else{
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscHP_PDF.rpt');
             }
         }else if(miscType == 118) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201810){
+        	if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF_SST.rpt');
             }
             else{
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscAS_PDF.rpt');
             }
         }else if(miscType == 119) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201810){
+        	if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF_SST.rpt');
             }
             else{
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscSRV_PDF.rpt');
             }
         }else if(miscType == 121) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201810){
+        	if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF_SST.rpt');
             }
             else{
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF.rpt');
             }
         }else if(miscType == 122) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201810){
+        	if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF_SST.rpt');
             }
             else{
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF.rpt');
             }
         }else if(miscType == 123) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201810){
+        	if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscWholeSales_PDF_SST.rpt');
             }
             else{
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscWholeSales_PDF.rpt');
             }
         }else if(miscType == 124) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201810){
+        	if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF_SST.rpt');
             }
             else{
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_PDF.rpt');
             }
         }else if(miscType == 125) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201810){
+        	if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscTermination_PDF_SST.rpt');
             }
             else{
             	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscTermination_PDF.rpt');
             }
         }else if(miscType == 142) {
-        	if( parseInt(year)*100 + parseInt(month) >= 201810){
+        	if( parseInt(year)*100 + parseInt(month) >= 201809){
         		$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_CreditNote_MiscItemBankPOS_PDF_SST.rpt');
             }
             else{

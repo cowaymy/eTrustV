@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-    
+
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
@@ -13,23 +13,23 @@ var selectedGridValue;
 var invoiceTypeData = [{"codeId": "1267","codeName": "Company Type Invoice"},{"codeId": "1268","codeName": "Individual Type Invoice"}];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
-$(document).ready(function(){    
+$(document).ready(function(){
     //메인 페이지
     doDefCombo(invoiceTypeData, '' ,'invoiceType', 'S', '');        //Claim Type 생성
-    
-    //Grid Properties 설정 
-    var gridPros = {            
+
+    //Grid Properties 설정
+    var gridPros = {
             editable : false,                 // 편집 가능 여부 (기본값 : false)
             showStateColumn : false     // 상태 칼럼 사용
     };
-    
+
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-    
+
     // Master Grid 셀 클릭시 이벤트
-    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+    AUIGrid.bind(myGridID, "cellClick", function( event ){
         selectedGridValue = event.rowIndex;
-    });  
+    });
 });
 
 
@@ -46,20 +46,20 @@ var columnLayout = [
     { dataField:"invcItmRentalFee" ,headerText:"Invoice Amount",width: 200 , dataType : "numeric", formatString : "#,##0.#"},
     { dataField:"invcItmInstlmtNo" ,headerText:"Inst No.",width: 200 , editable : false }
     ];
-                          
+
 // 리스트 조회.
-function fn_getTaxInvoiceListAjax() {   
-	
+function fn_getTaxInvoiceListAjax() {
+
 	if(FormUtil.checkReqValue($("#invoiceType option:selected")) ){
         Common.alert('* Please select the Invoice Type. <br/>');
         return;
     }
-	
+
 	if(FormUtil.checkReqValue($("#brNo")) && FormUtil.checkReqValue($("#orderNo"))){
         Common.alert('* Please Input BR No OR Order No.<br/>');
         return;
     }
-	
+
     Common.ajax("POST", "/payment/selectTaxInvoiceRentalList.do", $("#searchForm").serializeJSON(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
@@ -68,37 +68,37 @@ function fn_getTaxInvoiceListAjax() {
 //크리스탈 레포트
 function fn_generateInvoice(){
     var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-    
+
     if (selectedItem[0] > -1){
         //report form에 parameter 세팅
         var taxInvcId = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId");
         var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
         var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
         var taxInvcType = AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcType");
-        
+
         if(parseInt(year) == 2015 && parseInt(month) < 4){
         	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_NOGST_PDF.rpt');
         }else{
         	if( parseInt(year)*100 + parseInt(month) >= 201602){
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_201602.rpt');
             }
-            if( parseInt(year)*100 + parseInt(month) >= 201810){
+            if( parseInt(year)*100 + parseInt(month) >= 201809){
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY_SST.rpt');
             }else{
                 $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Rental_PDF_JOMPAY.rpt');
             }
         }
-        
+
         $("#reportPDFForm #V_REFERENCEID").val(taxInvcId);
         $("#reportPDFForm #V_TYPE").val(133);
-        
+
         //report 호출
         var option = {
                 isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
         };
 
         Common.report("reportPDFForm", option);
-         
+
     }else{
         Common.alert('<b>No print type selected.</b>');
     }
@@ -140,24 +140,24 @@ function fn_Clear(){
                     <col style="width:140px" />
                     <col style="width:*" />
                     <col style="width:140px" />
-                    <col style="width:*" />                    
+                    <col style="width:*" />
                 </colgroup>
                 <tbody>
                     <tr>
                         <th scope="row">Invoice Type</th>
                         <td colspan="3">
                             <select id="invoiceType" name="invoiceType" class="w100p"></select>
-                        </td>                        
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">BR No.</th>
                         <td>
-                            <input type="text" id="brNo" name="brNo" title="BR No." placeholder="BR No." class="w100p" />                           
+                            <input type="text" id="brNo" name="brNo" title="BR No." placeholder="BR No." class="w100p" />
                         </td>
                        <th scope="row">Invoice Period</th>
                         <td>
                            <input type="text" id="invoicePeriod" name="invoicePeriod"  title="Invoice Period" placeholder="Invoice Period" class="j_date2 w100p" placeholder="MM/YYYY"/>
-                        </td>                        
+                        </td>
                     </tr>
                     <tr>
                         <th scope="row">Order No.</th>
@@ -184,7 +184,7 @@ function fn_Clear(){
     </section>
     <!-- search_result end -->
 </section>
-<!-- content end --> 
+<!-- content end -->
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />

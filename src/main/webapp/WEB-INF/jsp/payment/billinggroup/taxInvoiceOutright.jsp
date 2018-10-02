@@ -1,6 +1,6 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ taglib prefix="c"      uri="http://java.sun.com/jsp/jstl/core" %>
-    
+
 <script type="text/javaScript">
 
 //AUIGrid 그리드 객체
@@ -13,35 +13,35 @@ var selectedGridValue;
 var appTypeData = [{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Installment"}];
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
-$(document).ready(function(){    
+$(document).ready(function(){
     //메인 페이지
     doDefCombo(appTypeData, '' ,'appType', 'M', 'f_multiCombo');        //Claim Type 생성
-        
-    //Grid Properties 설정 
-    var gridPros = {            
+
+    //Grid Properties 설정
+    var gridPros = {
             editable : false,                 // 편집 가능 여부 (기본값 : false)
             showStateColumn : false     // 상태 칼럼 사용
     };
-    
+
     // Order 정보 (Master Grid) 그리드 생성
     myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-    
+
     // Master Grid 셀 클릭시 이벤트
-    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+    AUIGrid.bind(myGridID, "cellClick", function( event ){
         selectedGridValue = event.rowIndex;
-    });  
+    });
 });
 
-//멀티 셀렉트 세팅 함수들    
+//멀티 셀렉트 세팅 함수들
 function f_multiCombo() {
-    
+
     $(function() {
         $('#appType').change(function() {
 
         }).multipleSelect({
-            selectAll : true, // 전체선택 
+            selectAll : true, // 전체선택
             width : '80%'
-        }).multipleSelect("checkAll");       
+        }).multipleSelect("checkAll");
     });
 }
 
@@ -58,16 +58,16 @@ var columnLayout = [
     { dataField:"month" ,headerText:"Month",width: 100 , editable : false ,visible : false},
     { dataField:"year" ,headerText:"Year",width: 100 , editable : false ,visible : false}
     ];
-      
-                          
+
+
 // 리스트 조회.
-function fn_getTaxInvoiceListAjax() {   
-	
+function fn_getTaxInvoiceListAjax() {
+
 	if(FormUtil.checkReqValue($("#orderNo")) &&  FormUtil.checkReqValue($("#invoiceNo"))){
         Common.alert('* Please key in either Invoice No. or Order No. <br />');
         return;
     }
-	
+
     Common.ajax("POST", "/payment/selectTaxInvoiceOutrightList.do", $("#searchForm").serializeJSON(), function(result) {
         AUIGrid.setGridData(myGridID, result);
     });
@@ -77,27 +77,27 @@ function fn_getTaxInvoiceListAjax() {
 //크리스탈 레포트
 function fn_generateInvoice(){
   var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-  
+
   if (selectedItem[0] > -1){
-      //report form에 parameter 세팅      
+      //report form에 parameter 세팅
       var month = AUIGrid.getCellValue(myGridID, selectedGridValue, "month");
       var year = AUIGrid.getCellValue(myGridID, selectedGridValue, "year");
 
-      if( parseInt(year)*100 + parseInt(month) >= 201810){
+      if( parseInt(year)*100 + parseInt(month) >= 201809){
           $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF_SST.rpt');
       }else{
           $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Outright_PDF.rpt');
       }
- 
+
       $("#reportPDFForm #v_taxInvoiceId").val(AUIGrid.getCellValue(myGridID, selectedGridValue, "taxInvcId"));
-      
+
       //report 호출
       var option = {
               isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
       };
 
       Common.report("reportPDFForm", option);
-       
+
   }else{
       Common.alert('<b>No print type selected.</b>');
   }
@@ -139,18 +139,18 @@ function fn_Clear(){
                     <col style="width:140px" />
                     <col style="width:*" />
                     <col style="width:140px" />
-                    <col style="width:*" />                    
+                    <col style="width:*" />
                 </colgroup>
                 <tbody>
                     <tr>
                         <th scope="row">Invoice No</th>
                         <td>
-                            <input type="text" id="invoiceNo" name="invoiceNo" title="Invoice No." placeholder="Invoice No." class="w100p" />                            
+                            <input type="text" id="invoiceNo" name="invoiceNo" title="Invoice No." placeholder="Invoice No." class="w100p" />
                         </td>
                         <th scope="row">Invoice Period</th>
                         <td>
                            <input type="text" id="invoicePeriod" name="invoicePeriod"  title="Invoice Period" placeholder="Invoice Period" class="j_date2 w100p"  placeholder="MM/YYYY"/>
-                        </td>  
+                        </td>
                     </tr>
                     <tr>
                        <th scope="row">Order No.</th>
@@ -160,7 +160,7 @@ function fn_Clear(){
                        <th scope="row">App Type</th>
                        <td>
                             <select id="appType" name="appType[]" class="w100p"></select>
-                       </td>               
+                       </td>
                     </tr>
                     <tr>
                         <th scope="row">Customer Name</th>
@@ -183,7 +183,7 @@ function fn_Clear(){
     </section>
     <!-- search_result end -->
 </section>
-<!-- content end --> 
+<!-- content end -->
 <form name="reportPDFForm" id="reportPDFForm"  method="post">
     <input type="hidden" id="reportFileName" name="reportFileName" value="" />
     <input type="hidden" id="viewType" name="viewType" value="PDF" />

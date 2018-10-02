@@ -81,7 +81,7 @@ function fn_generateInvoice(){
 
         switch (taxInvcType){
             case 117 :
-                if( parseInt(year)*100 + parseInt(month) >= 201810){
+                if( parseInt(year)*100 + parseInt(month) >= 201809){
                     $("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_HPRegistration_PDF_SST.rpt');
                 }
                 else {
@@ -89,7 +89,7 @@ function fn_generateInvoice(){
                 }
                 break;
             case 118 :
-                if( parseInt(year)*100 + parseInt(month) >= 201810){
+                if( parseInt(year)*100 + parseInt(month) >= 201809){
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_AS_PDF_SST.rpt');
                 }
                 else {
@@ -97,7 +97,7 @@ function fn_generateInvoice(){
                 }
                 break;
             case 121 :
-                if( parseInt(year)*100 + parseInt(month) >= 201810){
+                if( parseInt(year)*100 + parseInt(month) >= 201809){
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_POS_PDF_SST.rpt');
                 }
                 else {
@@ -105,7 +105,7 @@ function fn_generateInvoice(){
                 }
                 break;
             case 122 :
-                if( parseInt(year)*100 + parseInt(month) >= 201810){
+                if( parseInt(year)*100 + parseInt(month) >= 201809){
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF_SST.rpt');
                 }
                 else {
@@ -113,7 +113,7 @@ function fn_generateInvoice(){
                 }
                 break;
             case 123 :
-                if( parseInt(year)*100 + parseInt(month) >= 201810){
+                if( parseInt(year)*100 + parseInt(month) >= 201809){
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_WholeSales_PDF_SST.rpt');
                 }
                 else {
@@ -121,7 +121,7 @@ function fn_generateInvoice(){
                 }
                 break;
             case 124 :
-                if( parseInt(year)*100 + parseInt(month) >= 201810){
+                if( parseInt(year)*100 + parseInt(month) >= 201809){
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ProductLost_PDF_SST.rpt');
                 }
                 else {
@@ -130,14 +130,14 @@ function fn_generateInvoice(){
                 break;
             case 125 :
                 if(taxInvcSvcNo.indexOf('SCT') > -1){
-                    if( parseInt(year)*100 + parseInt(month) >= 201810){
+                    if( parseInt(year)*100 + parseInt(month) >= 201809){
                     	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_ServiceContract_PDF_SST.rpt');
                     }
                     else {
                     	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_ServiceContract_PDF.rpt');
                     }
                 }else{
-                    if( parseInt(year)*100 + parseInt(month) >= 201810){
+                    if( parseInt(year)*100 + parseInt(month) >= 201809){
                     	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_Termination_PDF_SST.rpt');
                     }
                     else {
@@ -146,7 +146,7 @@ function fn_generateInvoice(){
                 }
                 break;
             case 142 :
-                if( parseInt(year)*100 + parseInt(month) >= 201810){
+                if( parseInt(year)*100 + parseInt(month) >= 201809){
                 	$("#reportPDFForm #reportFileName").val('/statement/TaxInvoice_Miscellaneous_ItemBank_PDF_SST.rpt');
                 }
                 else {
