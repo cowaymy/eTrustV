@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 /**
  * @author methree
@@ -62,7 +62,9 @@ public class MemorandumController {
 	}
 
 	@RequestMapping(value = "/memoSearchList.do", method = RequestMethod.POST)
-	public ResponseEntity<Map> selectMemoList(@RequestBody Map<String, Object> params, Model model) throws Exception {
+	public ResponseEntity<Map> selectMemoList(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+		params.put("userTypeId", sessionVO.getUserTypeId());
 
 		List<EgovMap> list = memo.selectMemoRandumList(params);
 

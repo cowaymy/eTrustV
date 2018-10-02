@@ -4,7 +4,7 @@
     <resultMap id="clobMap" type="EgovMap">
         <result property="MEMOCNTNT" column="MEMOCNTNT" jdbcType="CLOB"  javaType="java.lang.String" />
     </resultMap>
-    
+
     <select id="selectMemoRandumList" parameterType="Map" resultMap="clobMap">
         <![CDATA[
             SELECT M10.MEMO_ID MEMOID
@@ -14,11 +14,11 @@
 			     , M10.MEMO_TITLE MEMOTITLE
 			     , M10.MEMO_CNTNT MEMOCNTNT
 			     , M10.CRT_USER_ID CRTUSERID
-			     , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.CRT_USER_ID) CRTUSERNM 
+			     , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.CRT_USER_ID) CRTUSERNM
 			     , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY') CRTDT
 			     , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY HH24:MI:SS') FCRTDT
 			     , M10.UPD_USER_ID UPDUSERID
-			     , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.UPD_USER_ID) UPDUSERNM 
+			     , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.UPD_USER_ID) UPDUSERNM
 			     , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY') UPDDT
                  , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY HH24:MI:SS') FUPDDT
                  , M10.IS_STAFF_MEMO STAFFMEMO
@@ -38,11 +38,17 @@
             <if test="crtsdt !=null and crtsdt != ''">
             AND M10.CRT_DT BETWEEN TO_DATE(#{crtsdt}||'000000' , 'DD/MM/YYYYHH24MISS') AND TO_DATE(#{crtedt}||'235959' , 'DD/MM/YYYYHH24MISS')
             </if>
-        ORDER BY MEMO_ID DESC                
+            <if test="userTypeId == 1">
+            AND M10.IS_HP_MEMO = 1
+            </if>
+            <if test="userTypeId == 2">
+            AND M10.IS_CODY_MEMO = 1
+            </if>
+        ORDER BY MEMO_ID DESC
     </select>
-    
+
     <insert id="memoSave" parameterType="Map">
-         insert into MSC0010D 
+         insert into MSC0010D
 		 select (select decode(count(1) , 0 , 1 , max(MEMO_ID)+1) from MSC0010D),
 		         1 , #{etitle} , #{hedtor},
 		         decode(nvl(#{staffmemo} , '0') , '0' , 0 , 1),
@@ -67,7 +73,7 @@
            SET STUS_CODE_ID = 8
          WHERE MEMO_ID = #{memoid}
     </update>
-    
+
     <select id="selectMemoRandumData" parameterType="Map" resultMap="clobMap">
         SELECT M10.MEMO_ID MEMOID
              , M10.STUS_CODE_ID STUSID
@@ -76,11 +82,11 @@
              , M10.MEMO_TITLE MEMOTITLE
              , M10.MEMO_CNTNT MEMOCNTNT
              , M10.CRT_USER_ID CRTUSERID
-             , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.CRT_USER_ID) CRTUSERNM 
+             , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.CRT_USER_ID) CRTUSERNM
              , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY') CRTDT
              , TO_CHAR(M10.CRT_DT , 'DD/MM/YYYY HH24MISS') FCRTDT
              , M10.UPD_USER_ID UPDUSERID
-             , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.UPD_USER_ID) UPDUSERNM 
+             , (SELECT USER_NAME FROM SYS0047M WHERE USER_ID = M10.UPD_USER_ID) UPDUSERNM
              , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY') UPDDT
              , TO_CHAR(M10.UPD_DT , 'DD/MM/YYYY HH24MISS') FUPDDT
              , M10.IS_STAFF_MEMO STAFFMEMO
@@ -89,6 +95,6 @@
           FROM MSC0010D M10 , SYS0038M S38
          WHERE 1 = 1
            AND M10.STUS_CODE_ID = S38.STUS_CODE_ID
-           AND M10.MEMO_ID = #{memoid}             
+           AND M10.MEMO_ID = #{memoid}
     </select>
 </mapper>
