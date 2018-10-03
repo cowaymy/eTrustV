@@ -1227,7 +1227,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			else {
                 //APP TYPE == OTHER THAT SERVICES
                 //PROGRESS : INSTALLATION CALL-LOG (NEW INSTALLATION)
-				progressId = 2;
+				//progressId = 2;
+				progressId = 1;
 			}
 		}
 		else {
