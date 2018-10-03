@@ -25,7 +25,7 @@ var webInvoiceColumnLayout = [ {
     formatString : "dd/mm/yyyy"
 }, {
     dataField : "clmNo",
-    visible : false
+    headerText : 'Claim No'
 }, {
     dataField : "invcNo",
     headerText : '<spring:message code="webInvoice.invoiceNo" />',
@@ -127,6 +127,9 @@ $(document).ready(function () {
         fn_report();
         //Common.alert('The program is under development.');
     });
+
+	// Edit rejected web invoice
+	$("#editRejBtn").click(fn_editRejected);
 
 	$("#appvPrcssStus").multipleSelect("checkAll");
 
@@ -370,6 +373,9 @@ function fn_removeRow() {
 }
 
 function fn_checkEmpty() {
+	console.log("fn_checkEmpty");
+	console.log($("#newMemAccId").val());
+	console.log($("#invcNo").val());
 	var checkResult = true;
 	if(FormUtil.isEmpty($("#invcDt").val())) {
         Common.alert('<spring:message code="webInvoice.invcDt.msg" />');
@@ -747,7 +753,42 @@ function fn_setWebInvoiceInfo(result) {
     }
 }
 
+function fn_editRejected() {
+    console.log("fn_editRejected");
+
+    var gridObj = AUIGrid.getSelectedItems(webInvoiceGridID);
+
+    if(gridObj == null || gridObj.length <= 0 ){
+        Common.alert("* No Value Selected. ");
+        return;
+    }
+
+    var status = gridObj[0].item.appvPrcssStus;
+
+    if(status == "Rejected") {
+        Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J1"}, function(result) {
+            console.log(result);
+
+            Common.ajax("POST", "/eAccounting/webInvoice/editRejected.do", {clmNo : gridObj[0].item.clmNo, clamUn : result.clamUn}, function(result1) {
+                console.log(result1);
+
+                Common.alert("New claim number : " + result1.data.clmNo);
+            })
+        });
+    } else {
+        Common.alert("Only rejected claims are allowed to edit.");
+    }
+
+}
+
 </script>
+
+<style>
+.cRange,
+.cRange.w100p,
+.w100p{width:100%!important;}
+</style>
+
 <form id="dataForm">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Web_Invoice.rpt" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
@@ -767,7 +808,7 @@ function fn_setWebInvoiceInfo(result) {
 <h2><spring:message code="webInvoice.title" /></h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-    <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectWebInvoiceList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
+        <li><p class="btn_blue"><a href="#" onclick="javascript:fn_selectWebInvoiceList()"><span class="search"></span><spring:message code="webInvoice.btn.search" /></a></p></li>
     </c:if>
 </ul>
 </aside><!-- title_line end -->
@@ -796,11 +837,11 @@ function fn_setWebInvoiceInfo(result) {
 <tr>
     <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
     <td>
-    <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/></p>
-    <span><spring:message code="webInvoice.to" /></span>
-    <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt"/></p>
-    </div><!-- date_set end -->
+        <div class="date_set w100p"><!-- date_set start -->
+            <p><input type="text" title="Create Start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/></p>
+            <span><spring:message code="webInvoice.to" /></span>
+            <p><input type="text" title="Create End Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt"/></p>
+        </div><!-- date_set end -->
     </td>
     <th scope="row"><spring:message code="webInvoice.status" /></th>
     <td>
@@ -814,10 +855,39 @@ function fn_setWebInvoiceInfo(result) {
     </td>
 </tr>
 <tr>
-    <th scope="row"></th>
-    <td></td>
     <th scope="row"><spring:message code="invoiceApprove.clmNo" /></th>
-    <td><input type="text" title="" placeholder="" class="" id="clmNo" name="clmNo"/></td>
+    <td>
+        <!-- <input type="text" title="" placeholder="" class="" id="clmNo" name="clmNo"/>  -->
+        <div class="date_set w100p"><!-- date_set start -->
+            <p><input type="text" title="Claim No Start" id="clmNoStart" name="clmNoStart" class="cRange" /></p>
+            <span><spring:message code="webInvoice.to" /></span>
+            <p><input type="text" title="Claim No End" id="clmNoEnd" name="clmNoEnd" class="cRange"  /></p>
+        </div><!-- date_set end -->
+    </td>
+    <th scope="row">Invoice No</th>
+    <td><input type="text" title="" placeholder="" class="" id="srchInvcNo" name="srchInvcNo"/></td>
+</tr>
+<tr>
+    <th scope="row">Request Date</th>
+    <td>
+        <div class="date_set w100p"><!-- date_set start -->
+            <p><input type="text" title="Request Start Date" placeholder="DD/MM/YYYY" class="j_date" id="reqStartDt" name="reqStartDt"/></p>
+            <span><spring:message code="webInvoice.to" /></span>
+            <p><input type="text" title="Request End Date" placeholder="DD/MM/YYYY" class="j_date" id="reqEndDt" name="reqEndDt"/></p>
+        </div><!-- date_set end -->
+    </td>
+    <th scope="row">Utility Account Number</th>
+    <td><input type="text" title="" placeholder="" class="" id="utilAccNo" name="utilAccNo"/></td>
+</tr>
+<tr>
+    <th scope="row">Approval Date</th>
+    <td>
+        <div class="date_set w100p"><!-- date_set start -->
+            <p><input type="text" title="Approval Start Date" placeholder="DD/MM/YYYY" class="j_date" id="appStartDt" name="appStartDt"/></p>
+            <span><spring:message code="webInvoice.to" /></span>
+            <p><input type="text" title="Approval End Date" placeholder="DD/MM/YYYY" class="j_date" id="appEndDt" name="appEndDt"/></p>
+        </div><!-- date_set end -->
+    </td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -825,22 +895,23 @@ function fn_setWebInvoiceInfo(result) {
 </form>
 </section><!-- search_table end -->
 
-    <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+<aside class="link_btns_wrap"><!-- link_btns_wrap start -->
     <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
     <dl class="link_list">
         <dt>Link</dt>
         <dd>
-        <ul class="btns">
-            <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-            <li><p class="link_btn"><a href="#" id="_webInvBtn">Web Invoice</a></p></li>
-            </c:if>
-        </ul>
-        <ul class="btns">
-        </ul>
-        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+            <ul class="btns">
+                <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+                    <li><p class="link_btn"><a href="#" id="_webInvBtn">Web Invoice</a></p></li>
+                </c:if>
+                <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
+            </ul>
+            <ul class="btns">
+            </ul>
+            <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
         </dd>
     </dl>
-    </aside><!-- link_btns_wrap end -->
+</aside><!-- link_btns_wrap end -->
 
 
 
@@ -848,7 +919,7 @@ function fn_setWebInvoiceInfo(result) {
 
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-    <li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="webInvoice.btn.registration" /></a></p></li>
+        <li><p class="btn_grid"><a href="#" id="registration_btn"><spring:message code="webInvoice.btn.registration" /></a></p></li>
     </c:if>
 </ul>
 

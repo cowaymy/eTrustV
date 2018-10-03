@@ -1,6 +1,7 @@
 package com.coway.trust.web.eAccounting.invoice;
 
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -273,27 +274,58 @@ public class WebInvoiceController {
 	}
 
 	@RequestMapping(value = "/selectWebInvoiceList.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectWebInvoiceList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+    public ResponseEntity<List<EgovMap>> selectWebInvoiceList(@RequestParam Map<String, Object> params,
+            HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
 
-		String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
-		if(!"A1101".equals(costCentr)) {
-			params.put("loginUserId", sessionVO.getUserId());
-		}
+        String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
+        params.put("userId", sessionVO.getUserId());
+        if (!"A1101".equals(costCentr)) {
+            if("A1401".equals(costCentr)) {
+                params.put("loginUserId", sessionVO.getUserId());
+            }
 
-		LOGGER.debug("params =====================================>>  " + params);
+            EgovMap dtls = new EgovMap();
+            dtls = (EgovMap) webInvoiceService.getDtls(params);
 
-		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
+            String brnchId = "";
+            String deptId = "";
+            if(dtls.containsKey("userBrnchId")) {
+                brnchId = dtls.get("userBrnchId").toString();
+            }
 
-		params.put("appvPrcssStus", appvPrcssStus);
+            if(dtls.containsKey("userDeptId")) {
+                deptId = dtls.get("userDeptId").toString();
+            }
 
-		List<EgovMap> list = webInvoiceService.selectWebInvoiceList(params);
+            LOGGER.debug("brnchId :: " + brnchId);
+            LOGGER.debug("deptId :: " + deptId);
 
+            if (brnchId.equals("42")) {
+                if("MD03".equals(deptId) || "MD01".equals(deptId)) {
+                    // TO-DO NOTHING
+                    // Skip Finance and Human Resource
+                } else {
+                    params.put("brnchId", brnchId);
+                    params.put("deptId", deptId);
+                }
+            } else {
+                params.put("brnchId", brnchId);
+                params.put("deptId", deptId);
+            }
+        }
 
-		LOGGER.debug("params =====================================>>  " + list.toString());
+        LOGGER.debug("params =====================================>>  " + params);
 
+        String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
 
-		return ResponseEntity.ok(list);
-	}
+        params.put("appvPrcssStus", appvPrcssStus);
+
+        List<EgovMap> list = webInvoiceService.selectWebInvoiceList(params);
+
+        LOGGER.debug("params =====================================>>  " + list.toString());
+
+        return ResponseEntity.ok(list);
+    }
 
 	@RequestMapping(value = "/selectApproveList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectApproveList(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
@@ -303,10 +335,35 @@ public class WebInvoiceController {
 
 		LOGGER.debug("params =====================================>>  " + params);
 
-		String[] clmType = request.getParameterValues("clmType");
+		String[] pClmType = request.getParameterValues("clmType");
 		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
 
-		params.put("clmType", clmType);
+		// Removal of J3 (credit card type)
+		int index = -1;
+		for(int i = 0; i < pClmType.length; i++) {
+			if(pClmType[i].equals("J3")) {
+				index = i;
+				break;
+			}
+		}
+
+		Object[] clmType = null;
+		if(index >= 0) {
+			clmType = (Object[]) Array.newInstance(pClmType.getClass().getComponentType(), pClmType.length - 1);
+
+			if(clmType.length > 0) {
+				System.arraycopy(pClmType, 0, clmType, 0, index);
+				System.arraycopy(pClmType, index + 1, clmType, index, clmType.length - index);
+			}
+			params.put("crcPrcssStus", "J3");
+		}
+
+		if(clmType == null) {
+			params.put("clmType", pClmType);
+		} else {
+			params.put("clmType", clmType);
+		}
+
 		params.put("appvPrcssStus", appvPrcssStus);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
@@ -361,6 +418,12 @@ public class WebInvoiceController {
 		String clmNo = webInvoiceService.selectNextClmNo();
 		params.put("clmNo", clmNo);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		EgovMap dtls = new EgovMap();
+		dtls = (EgovMap) webInvoiceService.getDtls(params);
+
+		params.put("brnchId", dtls.get("userBrnchId"));
+		params.put("deptId", dtls.get("userDeptId"));
 
 		webInvoiceService.insertWebInvoiceInfo(params);
 
@@ -785,4 +848,23 @@ public class WebInvoiceController {
 
 		return ResponseEntity.ok(budgetInfo);
 	}
+
+	   @RequestMapping(value = "/editRejected.do", method = RequestMethod.POST)
+	    public ResponseEntity<ReturnMessage> editRejected(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
+
+	        LOGGER.debug("params =====================================>>  " + params);
+
+	        String clmNo = webInvoiceService.selectNextClmNo();
+	        params.put("newClmNo", clmNo);
+	        params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+	        webInvoiceService.editRejected(params);
+
+	        ReturnMessage message = new ReturnMessage();
+	        message.setCode(AppConstants.SUCCESS);
+	        message.setData(params);
+	        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+	        return ResponseEntity.ok(message);
+	    }
 }

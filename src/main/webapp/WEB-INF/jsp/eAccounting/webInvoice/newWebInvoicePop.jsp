@@ -50,7 +50,7 @@ var myColumnLayout = [ {
         type : "IconRenderer",
         iconTableRef :  {
             "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },         
+        },
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -77,7 +77,7 @@ var myColumnLayout = [ {
         type : "IconRenderer",
         iconTableRef :  {
             "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },         
+        },
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -98,7 +98,7 @@ var myColumnLayout = [ {
         list : keyValueList, //key-value Object 로 구성된 리스트
         keyField : "taxCode", // key 에 해당되는 필드명
         valueField : "taxName", // value 에 해당되는 필드명
-        
+
     }
 }, {
     dataField : "taxRate",
@@ -182,7 +182,7 @@ var myColumnLayout = [ {
 
 //그리드 속성 설정
 var myGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -199,18 +199,18 @@ var myGridPros = {
 
 $(document).ready(function () {
     newGridID = AUIGrid.create("#newWebInvoice_grid_wrap", myColumnLayout, myGridPros);
-    
+
     setInputFile2();
-    
+
     $("#tempSave").click(fn_tempSave);
     $("#submitPop").click(fn_approveLinePop);
     $("#add_row").click(fn_addRow);
     $("#remove_row").click(fn_removeRow);
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
-    
+
     fn_setNewGridEvent();
-    
+
     fn_setKeyInDate();
     fn_setPayDueDtEvent();
     fn_setCostCenterEvent();
@@ -224,16 +224,16 @@ function setInputFile2(){//인풋파일 세팅하기
 
 function fn_approveLinePop() {
 	var checkResult = fn_checkEmpty();
-    
+
     if(!checkResult){
         return false;
     }
-    
+
     var data = {
             memAccId : $("#newMemAccId").val(),
             invcNo : $("#invcNo").val()
     }
-    
+
     // new
     if(FormUtil.isEmpty($("#newClmNo").val())) {
         Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
@@ -242,7 +242,7 @@ function fn_approveLinePop() {
                 Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
             } else {
                 fn_attachmentUpload("");
-                
+
                 Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
             }
         });
@@ -255,26 +255,25 @@ function fn_approveLinePop() {
                 Common.alert('<spring:message code="newWebInvoice.sameVender.msg" />');
             } else {
                 fn_attachmentUpdate("");
-                
+
                 Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
             }
         });
     }
-    
+
 }
 
 function fn_tempSave() {
 	var checkResult = fn_checkEmpty();
-    
+
     if(!checkResult){
         return false;
     }
-    
+
     var data = {
             memAccId : $("#newMemAccId").val(),
             invcNo : $("#invcNo").val()
     }
-    
     // new
     if(FormUtil.isEmpty($("#newClmNo").val())) {
     	Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
@@ -318,7 +317,7 @@ function fn_insertWebInvoiceInfo(st) {
         $("#newClmNo").val(result.data.clmNo);
         //fn_selectWebInvoiceItemList(result.data.clmNo);
         fn_selectWebInvoiceInfo(result.data.clmNo);
-        
+
         if(st == 'new') {
             Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
             $("#newWebInvoicePop").remove();
@@ -352,14 +351,14 @@ function fn_updateWebInvoiceInfo(st) {
         console.log(result);
         //fn_selectWebInvoiceItemList(result.data.clmNo);
         fn_selectWebInvoiceInfo(result.data.clmNo);
-        
+
         if(st == "new"){
             Common.alert('<spring:message code="newWebInvoice.tempSave.msg" />');
             $("#newWebInvoicePop").remove();
         }
         fn_selectWebInvoiceList();
     });
-    
+
 }
 </script>
 

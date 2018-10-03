@@ -26,15 +26,15 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("webInvoiceService")
 public class WebInvoiceServiceImpl implements WebInvoiceService {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(SampleServiceImpl.class);
 
 	@Value("${app.name}")
 	private String appName;
-	
+
 	@Resource(name = "webInvoiceMapper")
 	private WebInvoiceMapper webInvoiceMapper;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
@@ -49,7 +49,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectWebInvoiceInfo(clmNo);
 	}
-	
+
 	@Override
 	public EgovMap selectWebInvoiceInfoForAppv(String clmNo) {
 		// TODO Auto-generated method stub
@@ -61,7 +61,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectWebInvoiceItems(clmNo);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectWebInvoiceItemsForAppv(String clmNo) {
 		// TODO Auto-generated method stub
@@ -73,7 +73,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectApproveList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectAppvLineInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -103,7 +103,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectAttachList(atchFileGrpId);
 	}
-	
+
 	@Override
 	public EgovMap selectAttachmentInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -113,15 +113,15 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	@Override
 	public void insertWebInvoiceInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
-		
+
 		LOGGER.debug("insertWebInvoiceInfo =====================================>>  " + params);
-		
+
 		webInvoiceMapper.insertWebInvoiceInfo(params);
-		
+
 		Map<String, Object> gridData = (Map<String, Object>) params.get("gridData");
-		
+
 		List<Object> addList = (List<Object>) gridData.get("add"); // 추가 리스트 얻기
-		
+
 		if (addList.size() > 0) {
 			Map hm = null;
 			// biz처리
@@ -137,22 +137,22 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			}
 		}
 
-		
+
 		LOGGER.info("추가 : {}", addList.toString());
 	}
-	
+
 	@Override
 	public void updateWebInvoiceInfo(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
 		webInvoiceMapper.updateWebInvoiceInfo(params);
-		
+
 		Map<String, Object> gridData = (Map<String, Object>) params.get("gridData");
-		
+
 		List<Object> addList = (List<Object>) gridData.get("add"); // 추가 리스트 얻기
 		List<Object> updateList = (List<Object>) gridData.get("update"); // 수정 리스트 얻기
 		List<Object> removeList = (List<Object>) gridData.get("remove"); // 제거 리스트 얻기
-		
+
 		if (addList.size() > 0) {
 			Map hm = null;
 			// biz처리
@@ -169,7 +169,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		}
 		if (updateList.size() > 0) {
 			Map hm = null;
-			
+
 			for (Object map : updateList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("clmNo", params.get("clmNo"));
@@ -181,7 +181,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		}
 		if (removeList.size() > 0) {
 			Map hm = null;
-			
+
 			for (Object map : removeList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("clmNo", params.get("clmNo"));
@@ -191,30 +191,30 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				webInvoiceMapper.deleteWebInvoiceDetail(hm);
 			}
 		}
-		
+
 		webInvoiceMapper.updateWebInvoiceInfoTotAmt(params);
-		
+
 		LOGGER.info("추가 : {}", addList.toString());
 		LOGGER.info("수정 : {}", updateList.toString());
 		LOGGER.info("삭제 : {}", removeList.toString());
 	}
-	
+
 	@Override
 	public void insertApproveManagement(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		List<Object> apprGridList = (List<Object>) params.get("apprGridList");
 		List<Object> newGridList = (List<Object>) params.get("newGridList");
-		
+
 		params.put("appvLineCnt", apprGridList.size());
-		
+
 		LOGGER.debug("insertApproveManagement =====================================>>  " + params);
 		webInvoiceMapper.insertApproveManagement(params);
-		
+
 		if (apprGridList.size() > 0) {
 			Map hm = null;
-			
+
 			for (Object map : apprGridList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
@@ -225,10 +225,10 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				webInvoiceMapper.insertApproveLineDetail(hm);
 			}
 		}
-		
+
 		if (newGridList.size() > 0) {
 			Map hm = null;
-			
+
 			// biz처리
 			for (Object map : newGridList) {
 				hm = (HashMap<String, Object>) map;
@@ -254,7 +254,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				webInvoiceMapper.insertApproveItems(hm);
 			}
 		}
-		
+
 		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
 		webInvoiceMapper.updateAppvPrcssNo(params);
 	}
@@ -353,13 +353,13 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectCostCenter(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectTaxCodeWebInvoiceFlag() {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectTaxCodeWebInvoiceFlag();
 	}
-	
+
 	@Override
 	public String selectNextClmNo() {
 		// TODO Auto-generated method stub
@@ -389,10 +389,10 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				list.add(data.get("clmSeq"));
 			}
 		}
-		
+
 		LOGGER.debug("list =====================================>>  " + list);
 		LOGGER.debug("list.size() =====================================>>  " + list.size());
-		
+
 		return list;
 	}
 
@@ -400,7 +400,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 	public String getAppvPrcssStus(List<EgovMap> appvLineInfo, List<EgovMap> appvInfoAndItems) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("appvInfoAndItems =====================================>>  " + appvInfoAndItems);
-		
+
 		// appvInfo get
 		EgovMap appvInfo = appvInfoAndItems.get(0);
 		String reqstUserId = (String) appvInfo.get("reqstUserId");
@@ -483,8 +483,21 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 		// TODO Auto-generated method stub
 		return webInvoiceMapper.selectAppvStus(param);
 	}
-	
-	
-	
 
+    @Override
+    public void editRejected(Map<String, Object> params) {
+        // TODO Auto-generated method stub
+
+        LOGGER.debug("editRejected =====================================>>  " + params);
+
+        webInvoiceMapper.insertRejectM(params);
+
+        webInvoiceMapper.insertRejectD(params);
+
+    }
+
+    @Override
+    public EgovMap getDtls(Map<String, Object> params) {
+        return webInvoiceMapper.getDtls(params);
+    }
 }
