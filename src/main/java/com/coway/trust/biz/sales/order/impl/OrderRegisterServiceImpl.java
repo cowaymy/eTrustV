@@ -1214,9 +1214,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		int progressId = 0;
 		int isLock = SalesConstants.IS_TRUE;
 
-		if((orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL)
-		|| (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)) {
-
+//		if((orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL)
+//		|| (orderAppType == SalesConstants.APP_TYPE_CODE_ID_RENTAL && custTypeId == SalesConstants.CUST_TYPE_CODE_ID_IND && custRaceId == 14)) {
+		if(orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL){
 			//APP TYPE != RENTAL || APP TYPE == RENTAL && RACE == KOREAN
 			if(orderAppType == SalesConstants.APP_TYPE_CODE_ID_SERVICE) {
                 //APP TYPE == SERVICES
@@ -1227,8 +1227,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			else {
                 //APP TYPE == OTHER THAT SERVICES
                 //PROGRESS : INSTALLATION CALL-LOG (NEW INSTALLATION)
-				//progressId = 2;
-				progressId = 1;
+				progressId = 2;
+
 			}
 		}
 		else {
