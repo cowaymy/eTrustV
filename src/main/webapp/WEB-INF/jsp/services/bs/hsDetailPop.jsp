@@ -6,9 +6,9 @@
 <script type="text/javaScript">
 
         //Combo Data
-    //var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
+    var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
     // 19-09-2018 REMOVE HS STATUS "CANCELLED" START FROM 1 OCT 2018
-    var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
+    //var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
 
     /*  cmbCollectType
         Collection Code
