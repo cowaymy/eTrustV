@@ -20,6 +20,7 @@ SELECT   T.CLM_NO
         ,T.APPV_PRCSS_STUS_CODE
         ,T.APPV_PRCSS_STUS
         ,T.APPV_PRCSS_DT
+        ,T.UTIL_NO
     FROM (SELECT T1.CLM_NO
                 ,T1.INVC_NO
                 ,T1.INVC_DT
@@ -52,6 +53,7 @@ SELECT   T.CLM_NO
                      ,'Temporary Save'
                      ) APPV_PRCSS_STUS
                 ,T3.APPV_PRCSS_DT
+                ,T1.UTIL_NO
             FROM FCM0002M T1
             LEFT JOIN FCM0006M T2
                 ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
