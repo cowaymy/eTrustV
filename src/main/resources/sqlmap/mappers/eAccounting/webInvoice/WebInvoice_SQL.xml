@@ -119,7 +119,9 @@ SELECT   T.CLM_NO
         ]]>
         </if>
         <if test="utilAccNo != null and utilAccNo != ''">
-             AND UPPER(T.UTIL_NO) = UPPER(#{utilAccNo})
+        <![CDATA[
+             AND UPPER(T.UTIL_NO) LIKE UPPER(%#{utilAccNo}%)
+        ]]>
         </if>
         <if test="appStartDt != null and appStartDt != ''">
         <![CDATA[
