@@ -39,6 +39,8 @@ public class LoginVO {
 	private String mgrYn;
 	private String memId;
 	private String costCentr;
+	private String agrmtAppStat; //ADD AGREEMENT APPROVAL STATUS FOR MOBILE
+	private String agrmt; //ADD AGREEMENT STATUS FOR MOBILE
 
 	public String getUserNric() {
 		return userNric;
@@ -315,5 +317,27 @@ public class LoginVO {
 
 	public void setCostCentr(String costCentr) {
 		this.costCentr = costCentr;
+	}
+
+	public String getAgrmtAppStat() {
+		if (agrmtAppStat == null) {
+			return "";
+		}
+		return agrmtAppStat;
+	}
+
+	public void setAgrmtAppStat(String agrmtAppStat) {
+		this.agrmtAppStat = agrmtAppStat;
+	}
+
+	public String getAgrmt() {
+		if (agrmt == null) {
+			return "";
+		}
+		return agrmt;
+	}
+
+	public void setAgrmt(String agrmt) {
+		this.agrmt = agrmt;
 	}
 }
