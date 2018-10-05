@@ -52,7 +52,7 @@ SELECT   T.CLM_NO
                        )
                      ,'Temporary Save'
                      ) APPV_PRCSS_STUS
-                ,T3.APPV_PRCSS_DT
+                ,TO_CHAR (T3.APPV_PRCSS_DT, 'DD/MM/YYYY') AS APPV_PRCSS_DT
                 ,T1.UTIL_NO
             FROM FCM0002M T1
             LEFT JOIN FCM0006M T2
@@ -125,12 +125,12 @@ SELECT   T.CLM_NO
         </if>
         <if test="appStartDt != null and appStartDt != ''">
         <![CDATA[
-             AND T.APPV_PRCSS_DT >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
+             AND T.APPV_PRCSS_DT >=#{appStartDt}
         ]]>
         </if>
         <if test="appEndDt != null and appEndDt != ''">
         <![CDATA[
-             AND T.APPV_PRCSS_DT < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
+             AND T.APPV_PRCSS_DT <= #{appEndDt}
         ]]>
         </if>
         ORDER BY T.CLM_NO
