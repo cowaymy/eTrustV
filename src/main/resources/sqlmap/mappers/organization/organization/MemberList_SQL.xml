@@ -3707,7 +3707,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			   AND COURS_MEM_TYPE_ID = '2'
 			   AND COURS_STUS_ID = '1'
 			   AND COURS_LIMIT > nvl (MS9.CNT, 0)
-               AND COURS_START  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
+			   AND COURS_END > SYSDATE
+               
             ]]>
             </when>
             <when test="groupCode == 3">
@@ -3724,8 +3725,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 			   AND COURS_MEM_TYPE_ID = '3'
 			   AND COURS_STUS_ID = '1'
 			   AND COURS_LIMIT > nvl (MS9.CNT, 0)
-			   AND COURS_START  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
-			   AND COURS_END  BETWEEN to_date(#{startDay},'yyyymm') and to_date(#{endDay},'yyyymm')
+               AND COURS_END > SYSDATE
             ]]>
             </when>
          </choose>
