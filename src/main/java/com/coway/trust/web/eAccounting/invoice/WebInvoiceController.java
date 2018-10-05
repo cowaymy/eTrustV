@@ -284,7 +284,9 @@ public class WebInvoiceController {
                 params.put("loginUserId", sessionVO.getUserId());
             }*/
 
-            EgovMap dtls = new EgovMap();
+            params.put("loginUserId", sessionVO.getUserId());
+
+            /*EgovMap dtls = new EgovMap();
             dtls = (EgovMap) webInvoiceService.getDtls(params);
 
             String brnchId = "";
@@ -301,7 +303,7 @@ public class WebInvoiceController {
             LOGGER.debug("deptId :: " + deptId);
 
             params.put("brnchId", brnchId);
-            params.put("deptId", deptId);
+            params.put("deptId", deptId);*/
         }
 
         LOGGER.debug("params =====================================>>  " + params);
