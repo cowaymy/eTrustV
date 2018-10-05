@@ -280,9 +280,9 @@ public class WebInvoiceController {
         String costCentr = CommonUtils.isEmpty(sessionVO.getCostCentr()) ? "0" : sessionVO.getCostCentr();
         params.put("userId", sessionVO.getUserId());
         if (!"A1101".equals(costCentr)) {
-            if("A1401".equals(costCentr)) {
+            /*if("A1401".equals(costCentr)) {
                 params.put("loginUserId", sessionVO.getUserId());
-            }
+            }*/
 
             EgovMap dtls = new EgovMap();
             dtls = (EgovMap) webInvoiceService.getDtls(params);
