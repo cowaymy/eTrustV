@@ -393,6 +393,11 @@ function fn_checkEmpty() {
 	        checkResult = false;
 	        return checkResult;
 	    }
+	    if(FormUtil.isEmpty($("#invcRem").val())) {
+            Common.alert('Please enter the remark');
+            checkResult = false;
+            return checkResult;
+        }
 	    var length = AUIGrid.getGridData(newGridID).length;
 	    if(length > 0) {
 	    	for(var i = 0; i < length; i++) {
@@ -403,6 +408,11 @@ function fn_checkEmpty() {
 	            }
 	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "netAmt"))) {
                     Common.alert('<spring:message code="webInvoice.netAmt.msg" />' + (i +1) + ".");
+                    checkResult = false;
+                    return checkResult;
+                }
+	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "expDesc"))) {
+                    Common.alert('Please enter the description of line line ' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
                 }
