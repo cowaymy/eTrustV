@@ -8,6 +8,8 @@
 }
 </style>
 <script type="text/javascript">
+
+console.log("approveLinePop");
 var selectRowIdx;
 var approveLineColumnLayout = [ {
     dataField : "approveNo",
@@ -29,7 +31,7 @@ var approveLineColumnLayout = [ {
         type : "IconRenderer",
         iconTableRef :  {
             "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },         
+        },
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -50,7 +52,7 @@ var approveLineColumnLayout = [ {
         type : "IconRenderer",
         iconTableRef :  {
             "default" : "${pageContext.request.contextPath}/resources/images/common/btn_plus.gif"// default
-        },         
+        },
         iconWidth : 12,
         iconHeight : 12,
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -60,7 +62,7 @@ var approveLineColumnLayout = [ {
         	} else {
         		fn_appvLineGridAddRow();
         	}
-        	
+
         }
        }
 }
@@ -68,7 +70,7 @@ var approveLineColumnLayout = [ {
 
 //그리드 속성 설정
 var approveLineGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -86,15 +88,15 @@ var approveLineGridID;
 
 $(document).ready(function () {
     approveLineGridID = AUIGrid.create("#approveLine_grid_wrap", approveLineColumnLayout, approveLineGridPros);
-    
+
     $("#lineDel_btn").click(fn_appvLineGridDeleteRow);
     $("#submit").click(fn_newRegistMsgPop);
-    
+
     AUIGrid.bind(approveLineGridID, "cellClick", function( event ) {
     	        console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
     	        selectRowIdx = event.rowIndex;
     	    });
-    
+
     //fn_setTemporaryData();
     fn_appvLineGridAddRow();
 });
@@ -125,7 +127,7 @@ function fn_searchUserIdPop() {
 function fn_loadOrderSalesman(memId, memCode) {
 	var result = true;
 	var list = AUIGrid.getColumnValues(approveLineGridID, "memCode", true);
-	
+
 	if(list.length > 0) {
 		for(var i = 0; i < list.length; i ++) {
 			if(memCode == list[i]) {
@@ -133,7 +135,7 @@ function fn_loadOrderSalesman(memId, memCode) {
 			}
 		}
 	}
-	
+
 	if(result) {
 		Common.ajax("GET", "/sales/order/selectMemberByMemberIDCode.do", {memId : memId, memCode : memCode}, function(memInfo) {
 
@@ -156,7 +158,7 @@ function fn_newRegistMsgPop() {
 	var checkMemCode = true;
 	console.log(length);
 	// 1개의 default Line 존재
-    if(length > 1) {
+    if(length >= 1) {
         for(var i = 0; i < length; i++) {
             if(FormUtil.isEmpty(AUIGrid.getCellValue(approveLineGridID, i, "memCode"))) {
                 Common.alert('<spring:message code="approveLine.userId.msg" />' + (i +1) + ".");
