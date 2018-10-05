@@ -300,18 +300,8 @@ public class WebInvoiceController {
             LOGGER.debug("brnchId :: " + brnchId);
             LOGGER.debug("deptId :: " + deptId);
 
-            if (brnchId.equals("42")) {
-                if("MD03".equals(deptId) || "MD01".equals(deptId)) {
-                    // TO-DO NOTHING
-                    // Skip Finance and Human Resource
-                } else {
-                    params.put("brnchId", brnchId);
-                    params.put("deptId", deptId);
-                }
-            } else {
-                params.put("brnchId", brnchId);
-                params.put("deptId", deptId);
-            }
+            params.put("brnchId", brnchId);
+            params.put("deptId", deptId);
         }
 
         LOGGER.debug("params =====================================>>  " + params);
