@@ -1097,7 +1097,13 @@ public class MemberListController {
 
 	    StringBuffer today3 = new StringBuffer();
 	    today3.append(String.format("%04d", Endcal.get(Endcal.YEAR)));
-	    today3.append(String.format("%02d", Endcal.get(Endcal.MONTH) ));
+
+	    if("00".equals(String.format("%02d", Endcal.get(Endcal.MONTH)))) {
+	        today3.append("01");
+	    } else {
+	        today3.append(String.format("%02d", Endcal.get(Endcal.MONTH) ));
+	    }
+
 	    //today3.append(String.format("%02d", Endcal.getActualMaximum(Endcal.DAY_OF_MONTH)));
 
 	    String endDay = today3.toString();
