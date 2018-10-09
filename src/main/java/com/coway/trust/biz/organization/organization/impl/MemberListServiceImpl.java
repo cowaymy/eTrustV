@@ -1477,6 +1477,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
         if (a > 0) {
             resultValue = memberListMapper.afterSelTrainee(params);
 
+            EgovMap item = (EgovMap) memberListMapper.getAplcntId();
+            paramM.put("aplcntId", item.get("aplcntId"));
+
             // SP_DAY_USER_CRT 프로시저 호출
             Map<String, Object> userPram = new HashMap<String, Object>();
             userPram.put("IN_MEMCODE", resultValue.get("memCode"));
@@ -1496,6 +1499,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
             paramM.put("memCode", resultValue.get("memCode"));
             memberListMapper.updateCodyAplCde(paramM);
 
+            memberListMapper.updateCdApl(paramM);
         }
 
         return resultValue;

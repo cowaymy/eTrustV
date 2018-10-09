@@ -280,4 +280,8 @@ public interface MemberListMapper {
     EgovMap getOrgDtls(Map<String, Object> params);
 
     List<EgovMap> selectHpMeetPoint();
+
+    EgovMap getAplcntId();
+
+    void updateCdApl(Map<String, Object> params);
 }

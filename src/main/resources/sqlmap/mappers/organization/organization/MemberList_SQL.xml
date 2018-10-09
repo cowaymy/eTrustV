@@ -4563,7 +4563,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             AREA_ID,
             ADDR_DTL,
             STREET
-      ) VALUES ( ORG0003D_APLCTN_ID_SEQ.NEXTVAL,
+      ) VALUES ( #{aplcntId},
                       SRC.MEM_CODE,
                       2,
                       SRC.NAME,
@@ -4626,5 +4626,13 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             MEET_POINT_CODE || ' - ' || MEET_POINT_DESC CODE_NAME
         FROM SYS0089M
     </select>
+
+    <select id="getAplcntId" parameterType="Map" resultType="egovMap">
+        SELECT ORG0003D_APLCTN_ID_SEQ.NEXTVAL aplcntId FROM DUAL
+    </select>
+
+    <update id="updateCdApl" parameterType="Map">
+        UPDATE ORG0001D SET APLICNT_ID = #{aplcntId} WHERE MEM_CODE = #{memCode}
+    </update>
 
 </mapper>
