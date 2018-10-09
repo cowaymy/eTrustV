@@ -331,7 +331,7 @@ public class WebInvoiceController {
 		String[] appvPrcssStus = request.getParameterValues("appvPrcssStus");
 
 		// Removal of J3 (credit card type)
-		int index = -1;
+		/*int index = -1;
 		for(int i = 0; i < pClmType.length; i++) {
 			if(pClmType[i].equals("J3")) {
 				index = i;
@@ -354,8 +354,9 @@ public class WebInvoiceController {
 			params.put("clmType", pClmType);
 		} else {
 			params.put("clmType", clmType);
-		}
+		}*/
 
+		params.put("clmType", pClmType);
 		params.put("appvPrcssStus", appvPrcssStus);
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 		params.put("userName", sessionVO.getUserName());
