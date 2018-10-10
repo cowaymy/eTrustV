@@ -184,4 +184,6 @@ public interface MemberListService {
 	EgovMap getCDInfo(Map<String, Object> params);
 
 	List<EgovMap> selectHpMeetPoint();
+
+	void updateMeetpoint(Map<String, Object> params);
 }

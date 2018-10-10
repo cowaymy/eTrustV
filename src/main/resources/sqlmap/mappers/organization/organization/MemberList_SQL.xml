@@ -2558,7 +2558,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
        Limit1.MAIN_DEPT,
        Limit1.SUB_DEPT,
        Limit1.RELIGION,
-       (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course
+       (SELECT COURS_ID  FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID AND COURS_ITM_ID = (SELECT MAX(COURS_ITM_ID) FROM MSC0009D WHERE 1=1 AND COURS_MEM_ID  = Limit1.MEM_ID)) AS course,
+       Limit1.MEETPOINT_ID
   FROM (
 SELECT Extent1.MEM_ID MEM_ID  ,
                 Extent1.MEM_CODE MEM_CODE  ,
@@ -2905,7 +2906,8 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                  Extent26.AREA_ID c68,
                  Extent1.RELIGION,
                  EXTENT1.MAIN_DEPT,
-                 EXTENT1.SUB_DEPT
+                 EXTENT1.SUB_DEPT,
+                 EXTENT23.APLICNT_MEETPOINT MEETPOINT_ID
          FROM ORG0001D Extent1
                 JOIN SYS0038M Extent2   ON Extent2.STUS_CODE_ID = Extent1.STUS
                 JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.MEM_TYPE
@@ -2943,6 +2945,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                 LEFT JOIN SYS0013M Extent24   ON Extent24.CODE_ID = TO_NUMBER(Extent1.BIZ_TYPE,99999.99)
                 LEFT JOIN SYS0047M Extent25   ON Extent25.USER_FULL_NAME = Extent1.FULL_NAME
                 LEFT JOIN SYS0064M Extent26   ON Extent26.AREA_ID = Extent1.AREA_ID
+                LEFT JOIN ORG0003D Extent23   ON Extent1.APLICNT_ID = Extent23.APLCTN_ID
           WHERE  Extent1.MEM_ID = #{MemberID} AND ROWNUM <= 1  ) Limit1
            ]]>
     </select>
@@ -3955,6 +3958,9 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             <if test="statusID != null and statusID != '' ">
             , STUS_ID = #{statusID}
            </if>
+           <if test="meetingPoint != null and meetingPoint != '' ">
+            , APLICNT_MEETPOINT = #{meetingPoint}
+           </if>
      where  APLCTN_ID = #{MemberID}
 
 
@@ -4636,6 +4642,19 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
 
     <update id="updateCdApl" parameterType="Map">
         UPDATE ORG0001D SET APLICNT_ID = #{aplcntId} WHERE MEM_CODE = #{memCode}
+    </update>
+
+    <update id="updateMeetpoint" parameterType="Map">
+        MERGE INTO ORG0003D A
+        USING (
+            SELECT
+                APLICNT_ID
+            FROM ORG0001D
+            WHERE MEM_ID = TO_NUMBER(TRIM(#{MemberID}))
+        ) SRC
+        ON (A.APLCTN_ID = SRC.APLICNT_ID)
+        WHEN MATCHED THEN UPDATE
+        SET A.APLICNT_MEETPOINT = #{meetingPoint}
     </update>
 
 </mapper>

@@ -284,4 +284,6 @@ public interface MemberListMapper {
     EgovMap getAplcntId();
 
     void updateCdApl(Map<String, Object> params);
+
+    void updateMeetpoint(Map<String, Object> params);
 }

@@ -895,103 +895,105 @@ public class MemberListController {
 	}
 
 	@RequestMapping(value = "/memberUpdate", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updateMemberl(@RequestBody Map<String, Object> params, Model model,SessionVO sessionVO) throws Exception {
+    public ResponseEntity<ReturnMessage> updateMemberl(@RequestBody Map<String, Object> params, Model model,
+            SessionVO sessionVO) throws Exception {
 
-		//memberListService.saveDocSubmission(memberListVO,params, sessionVO);
+        // memberListService.saveDocSubmission(memberListVO,params, sessionVO);
 
-		Boolean success = false;
-		String msg = "";
+        Boolean success = false;
+        String msg = "";
 
+        Map<String, Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+        // Map<String , Object> formMap1 = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
+        List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
+        List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
+        List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
 
+        int userId = sessionVO.getUserId();
+        formMap.put("user_id", userId);
+        logger.debug("udtparam11111 : {}", params);
+        logger.debug("udtList : {}", updList);
+        logger.debug("formMap : {}", formMap);
 
-		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		//Map<String , Object> formMap1 = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
-		List<Object> insList = (List<Object>) params.get(AppConstants.AUIGRID_ADD);
-		List<Object> updList = (List<Object>) params.get(AppConstants.AUIGRID_UPDATE);
-		List<Object> remList = (List<Object>) params.get(AppConstants.AUIGRID_REMOVE);
+        logger.debug("memberNm : {}", formMap.get("memberNm"));
+        logger.debug("memberType : {}", formMap.get("memberType"));
+        logger.debug("joinDate : {}", formMap.get("joinDate"));
+        logger.debug("gender : {}", formMap.get("gender"));
+        logger.debug("update : {}", formMap.get("docType"));
+        logger.debug("myGridID : {}", formMap.get("params"));
 
-		int userId = sessionVO.getUserId();
-		formMap.put("user_id", userId);
-		logger.debug("udtparam11111 : {}", params);
-		logger.debug("udtList : {}", updList);
-		logger.debug("formMap : {}", formMap);
+        String memCode = "";
+        String memId = "";
+        String memberType = "";
+        boolean update = false;
 
-		logger.debug("memberNm : {}", formMap.get("memberNm"));
-		logger.debug("memberType : {}", formMap.get("memberType"));
-		logger.debug("joinDate : {}", formMap.get("joinDate"));
-		logger.debug("gender : {}", formMap.get("gender"));
-		logger.debug("update : {}", formMap.get("docType"));
-		logger.debug("myGridID : {}", formMap.get("params"));
+        logger.debug("formMap : {}", formMap);
 
-		String memCode = "";
-		String memId="";
-		String memberType ="";
-		boolean update = false;
+        // update = memberListService.updateMember(formMap, updList,sessionVO);
+        // memberListService.updateMemberBranch(formMap);
+        // memberListService.updateMemberBranch2(formMap);
 
-		logger.debug("formMap : {}", formMap);
+        // update
 
-		//update = memberListService.updateMember(formMap, updList,sessionVO);
-//		memberListService.updateMemberBranch(formMap);
-//		memberListService.updateMemberBranch2(formMap);
+        memCode = (String) formMap.get("memCode");
+        memId = (String) formMap.get("MemberID");
+        memberType = (String) formMap.get("memberType");
+        // doc 공통업데이트
+        memberListService.updateDocSub(updList, memId, userId, memberType);
 
-		//update
+        int resultUpc1 = 0;
+        int resultUpc2 = 0;
+        int resultUpc3 = 0;
+        int resultUpc4 = 0;
+        int resultUpc5 = 0;
+        if (!formMap.get("memberType").toString().equals("2803")) {// hp가아닐때
+            resultUpc1 = memberListService.memberListUpdate_user(formMap);
+            resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
+            resultUpc3 = memberListService.memberListUpdate_member(formMap);
+            if (formMap.get("memberType").toString().equals("2")) {
+                memberListService.memberCodyPaUpdate(formMap);
+            }
+            String memType = (String) formMap.get("memType");
+            logger.debug("================================================================================");
+            logger.debug("=============== memType {} ", memType);
+            logger.debug("================================================================================");
 
-		memCode =  (String)formMap.get("memCode");
-		memId =(String) formMap.get("MemberID");
-		memberType = (String) formMap.get("memberType");
-		//doc 공통업데이트
-		memberListService.updateDocSub(updList, memId, userId,memberType);
+            if (memType.trim().equals("5")) {
+                logger.debug("================================================================================");
+                logger.debug("=============== insert =====================================");
+                logger.debug("================================================================================");
+                resultUpc4 = memberListService.traineeUpdateInfo(formMap, sessionVO);
+            }
 
+            if(memType.trim().equals("1")) {
+                // Update ORG0003D aplicant meetpoint
+                memberListService.updateMeetpoint(formMap);
+            }
 
+            logger.debug("result UPC : " + Integer.toString(resultUpc1) + " , " + Integer.toString(resultUpc2) + " , "
+                    + Integer.toString(resultUpc3) + " , ");
+        }
 
-		int resultUpc1 = 0;
-		int resultUpc2 = 0;
-		int resultUpc3 = 0;
-		int resultUpc4 = 0;
-		int resultUpc5 = 0;
-		if( !formMap.get("memberType").toString().equals("2803") ){// hp가아닐때
-		resultUpc1 = memberListService.memberListUpdate_user(formMap);
-		resultUpc2 = memberListService.memberListUpdate_memorg(formMap);
-		resultUpc3 = memberListService.memberListUpdate_member(formMap);
-		if(formMap.get("memberType").toString().equals("2")){
-			memberListService.memberCodyPaUpdate(formMap);
-		}
-		String memType = (String)formMap.get("memType");
-		logger.debug("================================================================================");
-		logger.debug("=============== memType {} ",  memType);
-		logger.debug("================================================================================");
+        else {
+            resultUpc5 = memberListService.hpMemberUpdate(formMap);
 
-		if ( memType.trim().equals("5") ) {
-			logger.debug("================================================================================");
-			logger.debug("=============== insert =====================================");
-			logger.debug("================================================================================");
-			resultUpc4 = memberListService.traineeUpdateInfo(formMap, sessionVO);
-		}
+        }
 
-		logger.debug("result UPC : " + Integer.toString(resultUpc1)+ " , "+ Integer.toString(resultUpc2)+ " , "+ Integer.toString(resultUpc3)+ " , ");
-		}
+        // 결과 만들기.
+        ReturnMessage message = new ReturnMessage();
+        // message.setCode(AppConstants.SUCCESS);
+        // message.setData(map);
+        if (memCode.equals("") && memCode.equals(null)) {
+            message.setMessage("fail saved");
+        } else {
+            message.setMessage("Compelete to Edit a Member Code : " + memCode);
+        }
+        logger.debug("message : {}", message + memCode);
 
-		else {
-			resultUpc5 = memberListService.hpMemberUpdate(formMap);
-
-
-		}
-
-		// 결과 만들기.
-   	ReturnMessage message = new ReturnMessage();
-//    	message.setCode(AppConstants.SUCCESS);
-//    	message.setData(map);
-   	if(memCode.equals("") && memCode.equals(null)){
-   		message.setMessage("fail saved");
-   	}else{
-   		message.setMessage("Compelete to Edit a Member Code : " +memCode);
-   	}
-   	logger.debug("message : {}", message + memCode);
-
-   	System.out.println("msg   " + success + memCode);
-//
-	return ResponseEntity.ok(message);
-	}
+        System.out.println("msg   " + success + memCode);
+        //
+        return ResponseEntity.ok(message);
+    }
 	/*
 	@RequestMapping(value = "/getMemberListEditPop.do")
 	public String getMemberListEditPop(@RequestParam Map<String, Object> params, ModelMap model) {

@@ -2366,4 +2366,9 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 	public List<EgovMap> selectHpMeetPoint() {
 		return memberListMapper.selectHpMeetPoint();
 	}
+
+    @Override
+    public void updateMeetpoint(Map<String, Object> params) {
+        memberListMapper.updateMeetpoint(params);
+    }
 }

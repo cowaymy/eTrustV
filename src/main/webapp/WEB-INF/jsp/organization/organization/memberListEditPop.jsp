@@ -168,6 +168,11 @@ $(document).ready(function() {
                      });
     }
     doGetCombo('/organization/selectBusinessType.do', '', '','businessType', 'S' , '');
+
+    if($("#memberType").val() == "1" || $("#memberType").val() == "2803") {
+        doGetCombo('/organization/selectHpMeetPoint.do', '', '', 'meetingPoint', 'S', '');
+    }
+
     /*fill edit field*/
     /*
     var memberType = "${memberView.memType}";
@@ -358,6 +363,7 @@ function fn_setMemInfo(data){
 
     $("#selectBranch option[value='"+ data.c3 +"']").attr("selected", true);
 
+    $("#meetingPoint option[value=" + data.meetpointId +"]").attr("selected", true);
 
     }
 	else{
@@ -394,7 +400,6 @@ function fn_setMemInfo(data){
 	        $("#cmbRace").val(data.aplicntRace);
 	        $("#bankAccNo").val(data.bankAccNo);
 	        $("#statusID").val(data.stusId);
-
 
 	}
 
@@ -1251,6 +1256,12 @@ function fn_addSponsor(msponsorCd, msponsorNm, msponsorNric) {
     <td>
     <select class="w100p"  id="transportCd" name="transportCd">
     </select>
+    </td>
+</tr>
+<tr>
+    <th scope="row" id="meetingPointLbl">Reporting Branch</th>
+    <td colspan="5">
+        <select class="w100p" id="meetingPoint" name="meetingPoint"></select>
     </td>
 </tr>
 <tr>
