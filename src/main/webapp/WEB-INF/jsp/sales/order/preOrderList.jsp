@@ -16,24 +16,74 @@
         CATE_ID = "28";
     }
 
+
     $(document).ready(function(){
 
         fn_statusCodeSearch();
-
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
 
+        if(MEM_TYPE == "1" || MEM_TYPE == "2" ){
+
+            if("${SESSION_INFO.memberLevel}" =="1"){
+
+                $("#orgCode").val("${orgCode}");
+                $("#orgCode").attr("class", "w100p readonly");
+                $("#orgCode").attr("readonly", "readonly");
+
+            }else if("${SESSION_INFO.memberLevel}" =="2"){
+
+                $("#orgCode").val("${orgCode}");
+                $("#orgCode").attr("class", "w100p readonly");
+                $("#orgCode").attr("readonly", "readonly");
+
+
+            }else if("${SESSION_INFO.memberLevel}" =="3"){
+
+                $("#orgCode").val("${orgCode}");
+                $("#orgCode").attr("class", "w100p readonly");
+                $("#orgCode").attr("readonly", "readonly");
+
+                $("#grpCode").val("${grpCode}");
+                $("#grpCode").attr("class", "w100p readonly");
+                $("#grpCode").attr("readonly", "readonly");
+
+                $("#deptCode").val("${deptCode}");
+                $("#deptCode").attr("class", "w100p readonly");
+                $("#deptCode").attr("readonly", "readonly");
+
+            }else if("${SESSION_INFO.memberLevel}" =="4"){
+
+                $("#orgCode").val("${orgCode}");
+                $("#orgCode").attr("class", "w100p readonly");
+                $("#orgCode").attr("readonly", "readonly");
+
+                $("#grpCode").val("${grpCode}");
+                $("#grpCode").attr("class", "w100p readonly");
+                $("#grpCode").attr("readonly", "readonly");
+
+                $("#deptCode").val("${deptCode}");
+                $("#deptCode").attr("class", "w100p readonly");
+                $("#deptCode").attr("readonly", "readonly");
+
+                $("#_memCode").val("${SESSION_INFO.userName}");
+                $("#_memCode").attr("class", "w100p readonly");
+                $("#_memCode").attr("readonly", "readonly");
+                $("#_memBtn").hide();
+
+            }
+        }
+
         // 셀 더블클릭 이벤트 바인딩
-        AUIGrid.bind(listGridID, "cellDoubleClick", function(event) {
+/*         AUIGrid.bind(listGridID, "cellDoubleClick", function(event) {
             fn_setDetail(listGridID, event.rowIndex);
-        });
+        }); */
 
         //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', '_appTypeId', 'M', 'fn_multiCombo'); //Common Code
         doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
-
     });
 
     function fn_statusCodeSearch(){
@@ -105,7 +155,7 @@
             /* { headerText : "Channel",         dataField : "channel",    editable : false, width : 60  } ,*/
            { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width : 100 }
           , { headerText : "App Type",        dataField : "appType",    editable : false, width : 80  }
-          , { headerText : "Pre-Order Date",  dataField : "requestDt",  editable : false, width : 100 }
+          , { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width : 100 }
           , { headerText : "Product",         dataField : "product",    editable : false}
           , { headerText : "Customer Name",   dataField : "custNm",     editable : false, width : 80  }
           , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  }
@@ -325,6 +375,8 @@
             }
         });
     };
+
+
 </script>
 
 <section id="content"><!-- content start -->
@@ -388,7 +440,7 @@
 <tr>
 	<th scope="row">Pre-Order Status</th>
 	<td><select id="_stusId" name="_stusId" class="multy_select w100p" multiple="multiple"></td>
-	<th scope="row">Key-In Branch</th>
+	<th scope="row">Posting Branch</th>
 	<td><select id="_brnchId" name="_brnchId" class="multy_select w100p" multiple="multiple"></select></td>
 	<th scope="row">NRIC/Company No</th>
 	<td><input id="_nric" name="_nric" type="text" title="" placeholder="" class="w100p" /></td>
@@ -400,6 +452,14 @@
 	<td><select id="_typeId" name="_typeId" class="multy_select w100p" multiple="multiple"></select></td>
 	<th scope="row">Customer Name</th>
 	<td><input id="_name" name="_name" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<tr>
+    <th scope="row">Org Code</th>
+    <td><input type="text" title="orgCode" id="orgCode" name="orgCode" placeholder="Org Code" class="w100p" /></td>
+    <th scope="row">Grp Code</th>
+    <td><input type="text" title="grpCode" id="grpCode" name="grpCode"  placeholder="Grp Code" class="w100p"/></td>
+    <th scope="row">Dept Code</th>
+    <td><input type="text" title="deptCode" id="deptCode" name="deptCode"  placeholder="Dept Code" class="w100p"/></td>
 </tr>
 <tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyinsof'/></span></th>

@@ -25,6 +25,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderListService;
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
@@ -51,8 +52,22 @@ public class PreOrderController {
 	@Resource(name = "preOrderService")
 	private PreOrderService preOrderService;
 
+	@Resource(name = "salesCommonService")
+	private SalesCommonService salesCommonService;
+
 	@RequestMapping(value = "/preOrderList.do")
-	public String preOrderList(@RequestParam Map<String, Object> params, ModelMap model) {
+	public String preOrderList(@RequestParam Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
+
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+
+			params.put("userId", sessionVO.getUserId());
+			EgovMap result =  salesCommonService.getUserInfo(params);
+
+			model.put("orgCode", result.get("orgCode"));
+			model.put("grpCode", result.get("grpCode"));
+			model.put("deptCode", result.get("deptCode"));
+			model.put("memCode", result.get("memCode"));
+		}
 
 		String toDay = CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1);
 

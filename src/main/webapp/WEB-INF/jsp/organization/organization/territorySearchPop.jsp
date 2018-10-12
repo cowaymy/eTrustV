@@ -12,7 +12,7 @@
 }
 </style>
 <script type="text/javascript">
-var columnLayout = [ 
+var columnLayout = [
 	{
 	    dataField : "area",
 	    headerText : "Area",
@@ -34,7 +34,7 @@ var columnLayout = [
         headerText : "Postcode",
         width: 100
     }, {
-        dataField : "codyBrnchCode", 
+        dataField : "codyBrnchCode",
         headerText : "Cody Branch",
         width: 100
     }, {
@@ -50,6 +50,10 @@ var columnLayout = [
         headerText : "CT Sub Group",
         width: 120
     }, {
+        dataField : "soBrnchCode",
+        headerText : "SO Group",
+        width: 120
+    },  {
         dataField : "status",
         headerText : "Status",
         width: 100
@@ -58,7 +62,7 @@ var columnLayout = [
 
 //그리드 속성 설정
 var gridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -70,10 +74,11 @@ var myGridID;
 
 $(document).ready(function () {
     myGridID = AUIGrid.create("#grid_wrap", columnLayout, gridPros);
-    
+
     doGetCombo('/organization/territory/selectState.do', '', '','state', 'S' , '');
    	doGetCombo('/organization/territory/selectBranchCode.do', '42', '','codyBranch', 'S' , '');
    	doGetCombo('/organization/territory/selectBranchCode.do', '43', '','ctBranch', 'S' , '');
+   	doGetCombo('/organization/territory/selectBranchCode.do', '45', '','soBranch', 'S' , '');
 });
 
 function fn_searchCurrentTerritory() {
@@ -133,8 +138,11 @@ function fn_excelDown(){
         <select class="w100p"  id="state" name="state">
         </select>
     </td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">SO Branch</th>
+    <td>
+        <select class="w100p"  id="soBranch" name="soBranch">
+        </select>
+    </td>
 </tr>
 <tr>
     <th scope="row">Cody Branch</th>

@@ -6,7 +6,7 @@
 		SELECT T2.CODE_NAME AS CHANNEL
 		     , T1.SOF_NO
 		     , T3.CODE_NAME AS APP_TYPE
-		     , TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY') AS REQUEST_DT
+		     , TO_CHAR(T1.REQST_DT, 'DD/MM/YYYY HH:MI:SS AM') AS REQUEST_DT
 		     , T4.STK_DESC AS PRODUCT
 		     , T5.NAME AS CUST_NM
 		     , T6.CODE_NAME AS CUST_TYPE
@@ -17,6 +17,9 @@
 		     , T1.PRE_ORD_ID
 		     , T1.REM1
 		     , T1.REM2
+             , T9.Org_Code
+             , T9.Grp_Code
+             , T9.Dept_Code
 		  FROM SAL0213M T1
 		  LEFT OUTER
 		  JOIN SYS0013M T2
@@ -42,6 +45,8 @@
 		  LEFT OUTER
 		  JOIN SYS0038M T8
 		    ON T8.STUS_CODE_ID = T1.STUS_ID
+		 LEFT JOIN ORG1001V T9
+		    ON T9.MEM_CODE = T7.USER_NAME
 		 WHERE 1 = 1
          <if test='_memCode != null and _memCode != ""'>
 		   AND T1.MEM_CODE = #{_memCode}
@@ -82,6 +87,15 @@
          <if test='_name != null and _name != ""'>
 		   AND UPPER(T5.NAME) LIKE UPPER(#{_name})||'%'
          </if>
+         <if test="orgCode != '' ">
+           AND T9.ORG_CODE = #{orgCode}
+	     </if>
+         <if test="grpCode != '' ">
+           AND T9.GRP_CODE = #{grpCode}
+         </if>
+         <if test="deptCode != '' ">
+           AND T9.DEPT_CODE = #{deptCode}
+         </if>
          ORDER BY T1.PRE_ORD_ID ASC
     </select>
 
@@ -104,7 +118,7 @@
 		     , T1.KEYIN_BRNCH_ID
 		     , T1.INST_ADD_ID
 		     , T1.DSC_BRNCH_ID
-		     , TO_CHAR(T1.PRE_DT, 'DD/MM/YYYY') AS PRE_DT
+		     , TO_CHAR(T1.PRE_DT, 'DD/MM/YYYY HH:MI:SS AM') AS PRE_DT
 		     , T1.PRE_TM
 		     , T1.INSTCT
 		     , T1.EX_TRADE

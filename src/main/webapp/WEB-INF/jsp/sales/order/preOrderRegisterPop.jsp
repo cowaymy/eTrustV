@@ -7,6 +7,7 @@
     var listGiftGridID;
     var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
     var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
+    var BNRCH_ID     = '${SESSION_INFO.userBranchId}';
 
     $(document).ready(function(){
 
@@ -17,7 +18,7 @@
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '', 'rentPayMode', 'S', ''); //Common Code
       //doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
         doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
-
+        doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'keyinBrnchId',  'S', ''); //Branch Code
         doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '0', 'exTrade', 'S'); //EX-TRADE
         //doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
         //doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
@@ -1399,7 +1400,7 @@
                 $("#instCountry").val(custInfo.country); //Country
 
                 $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
-
+                $("#keyinBrnchId").val(BNRCH_ID); //Posting Branch
 //              if(!$("#gstChk").is('[disabled]')) {
 
                     if(custInfo.gstChk == '1') {
@@ -1704,31 +1705,35 @@
 <colgroup>
 	<col style="width:250px" />
 	<col style="width:*" />
-	<col style="width:250px" />
-	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Initial<span class="must">*</span></th>
-	<td><input id="custCntcInitial" name="custCntcInitial" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td>
+	<!-- <th scope="row">Initial<span class="must">*</span></th>
+	<td><input id="custCntcInitial" name="custCntcInitial" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td> -->
 	<th scope="row">Second/Service contact person name</th>
 	<td><input id="custCntcName" name="custCntcName" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
 	<th scope="row">Tel (Mobile)<span class="must">*</span></th>
 	<td><input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+	</tr>
+<tr>
 	<th scope="row">Tel (Residence)<span class="must">*</span></th>
 	<td><input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
 	<th scope="row">Tel (Office)<span class="must">*</span></th>
 	<td><input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
 	<th scope="row">Tel (Fax)<span class="must">*</span></th>
 	<td><input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Ext No.(1)</th>
     <td><input id="custCntcExt" name="custCntcExt" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
     <th scope="row">Email(1)</th>
     <td><input id="custCntcEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
@@ -1798,6 +1803,10 @@
 <tr>
     <th scope="row">DSC Branch<span class="must">*</span></th>
     <td colspan="3"><select id="dscBrnchId" name="dscBrnchId" class="w100p" disabled></select></td>
+</tr>
+<tr>
+    <th scope="row">Posting Branch<span class="must">*</span></th>
+    <td colspan="3"><select id="keyinBrnchId" name="keyinBrnchId" class="w100p" ></select></td>
 </tr>
 <tr>
     <th scope="row">Prefer Install Date<span class="must">*</span></th>

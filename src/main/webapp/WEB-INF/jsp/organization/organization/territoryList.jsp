@@ -19,10 +19,10 @@ $(document).ready(function(){
    // doGetCombo('/common/selectCodeList.do', '45', '','comBranchType', 'S' , '');
 
     AUIGrid.bind(gridID, "cellDoubleClick", function(event) {
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">     
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
         console.log(event.rowIndex);
         fn_selectDetailListAjax(AUIGrid.getCellValue(gridID, event.rowIndex, "reqstNo"))
-</c:if>        
+</c:if>
     });
 
     AUIGrid.bind(gridID, "cellClick", function(event) {
@@ -86,7 +86,8 @@ function createDetailAUIGrid() {
                             { dataField : "codyBrnchCode",         headerText  : "CDB",   width          : 120,     editable       : false  },
                             { dataField : "codyMangrUserId",  headerText  : "Cody Manager",   width          : 200,     editable       : false  },
                             { dataField : "ctBrnchCode",         headerText  : "DSC",   width          : 120,     editable       : false  },
-                            { dataField : "ctSubGrp",  headerText  : "CT Sub Group",   width          : 200,     editable       : false  }
+                            { dataField : "ctSubGrp",  headerText  : "CT Sub Group",   width          : 200,     editable       : false  },
+                            { dataField : "soBrnchCode",  headerText  : "SO Group",   width          : 110,     editable       : false  }
 
        ];
 
@@ -195,17 +196,17 @@ function fn_Cancel(){
 <ul class="right_btns">
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javasclipt:fn_CurrentSearch()">Current Territory Search</a></p></li>
-</c:if> 
+</c:if>
 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javasclipt:fn_New()"><span class="Update Request"></span>Update Request</a></p></li>
-</c:if>    
-<c:if test="${PAGE_AUTH.funcChange == 'Y'}">    
+</c:if>
+<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javasclipt:fn_Comfirm()"><span class="Comfirm"></span>Confirm</a></p></li>
-</c:if>    
+</c:if>
 <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <!-- <li><p class="btn_blue"><a href="javascript:void(0);" onclick="javasclipt:fn_Cancel()"><span class="Cancel"></span>Cancel</a></p></li> -->
 	<li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript:fn_mainSelectListAjax()"><span class="search"></span>Search</a></p></li>
-</c:if>	
+</c:if>
 	<li><p class="btn_blue"><a href="javascript:void(0);" onclick="javascript:fn_Clear()"><span class="clear"></span>Clear</a></p></li>
 
 </ul>
@@ -238,6 +239,7 @@ function fn_Cancel(){
 		   <option value="11">Choose One</option>
 		   <option value="42">Cody Branch</option>
           <option value="43">Dream Service Center</option>
+          <option value="45">Sales Office</option>
 		</select>
 	</td>
 	<th scope="row">Assign Request Code</th>

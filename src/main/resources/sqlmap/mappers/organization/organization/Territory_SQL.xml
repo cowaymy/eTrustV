@@ -4,7 +4,7 @@
 
 	<select id="cody42Vaild" parameterType="Map" resultType="egovMap">
 	  <![CDATA[
-	      SELECT 
+	      SELECT
 				     (SELECT
 				         COUNT(AREA_ID) AS   ACNT
 				        FROM SYS0064M  WHERE AREA_ID =#{areaId}
@@ -16,15 +16,15 @@
 				     (SELECT
 				         COUNT(CODY_MANGR_USER_ID) AS   UCNT
 				        FROM SYS0064M  WHERE CODY_MANGR_USER_ID =#{extBranch}
-				     ) UCNT 
+				     ) UCNT
 		   FROM DUAL
 		  ]]>
 	</select>
-	
-	
+
+
     <select id="dream43Vaild" parameterType="Map" resultType="egovMap">
    <![CDATA[
-	          SELECT 
+	          SELECT
 	                     (SELECT
 	                         COUNT(AREA_ID) AS   ACNT
 	                        FROM SYS0064M  WHERE AREA_ID =#{areaId}
@@ -36,11 +36,11 @@
 	                     (SELECT
 	                         COUNT(CT_SUB_GRP) AS   UCNT
 	                        FROM SYS0064M  WHERE CT_SUB_GRP =#{extBranch}
-	                     ) UCNT 
+	                     ) UCNT
 	           FROM DUAL
           ]]>
     </select>
-	
+
 	<insert id="insertCody" parameterType="java.util.List">
 	       INSERT INTO ORG0019M(
 	       REQST_NO
@@ -68,7 +68,7 @@
 	<select id="selectRequestNo"  resultType="String">
 	   SELECT MAX(REQST_NO) FROM ORG0019M
 	</select>
-	
+
 	<select id="selectTerritory"  parameterType="Map" resultType="egovMap">
 	   SELECT A.REQST_NO REQST_NO ,
             A.REQST_DT REQST_DT,
@@ -95,8 +95,8 @@
                END  CNFM_STUS_NAME
              FROM ORG0019M INNER JOIN ORG0001D B ON REQST_USER_ID  = B.MEM_ID ) A
              WHERE 1=1
-            
-          
+
+
              <if test="branchTypeList != null and branchTypeList != '' ">
                  AND A.BRNCH_TYPE IN
                 <choose>
@@ -106,13 +106,13 @@
                    </when>
                 <otherwise>
                  <foreach item="item" collection="branchTypeList" index="index" open="(" separator="," close=")">
-                    #{item}               
+                    #{item}
                  </foreach>
                  </otherwise>
               </choose>
               </if>
-           
-                 
+
+
               <if test="requestNo != null and requestNo != ''">
                   AND LOWER ( A.REQST_NO ) = LOWER( #{requestNo} )
               </if>
@@ -125,7 +125,7 @@
           GROUP BY A.REQST_NO,A.REQST_DT ,A.REQST_USER_ID,A.BRNCH_TYPE,A.BRNCH_NAME,A.CNFM_STUS,A.CNFM_STUS_NAME,A.FULL_NAME
           ORDER BY A.REQST_NO
 	</select>
-	
+
 	<select id="selectMagicAddress"  parameterType="Map" resultType="egovMap">
 	   SELECT AREA_ID,
        AREA,
@@ -134,12 +134,13 @@
        STATE,
        CODY_BRNCH_CODE CODY_BRNCH_CODE,
        CODY_MANGR_USER_ID CODY_MANGR_USER_ID,
-        CT_BRNCH_CODE CT_BRNCH_CODE,  
-       CT_SUB_GRP CT_SUB_GRP 
-        from SYS0064M 
+        CT_BRNCH_CODE CT_BRNCH_CODE,
+       CT_SUB_GRP CT_SUB_GRP,
+       SO_BRNCH_CODE
+        from SYS0064M
         where area_id in(select area_id from ORG0019M where reqst_no=#{reqstNo})
 	</select>
-	
+
 	<select id="select19M"  parameterType="Map" resultType="egovMap">
 	 SELECT REQST_NO,
                AREA_ID,
@@ -159,12 +160,12 @@
           WHERE REQST_NO=#{reqstNo}
 	</select>
 	<update id="updateSYS0064M" parameterType="Map">
-	   UPDATE SYS0064M SET 
+	   UPDATE SYS0064M SET
 	   CODY_BRNCH_CODE =  #{codyBrnchCode},
 	   CODY_MANGR_USER_ID = #{codyMangrUserId}
 	   WHERE AREA_ID=#{areaId}
 	</update>
-	
+
 	<update id="updateORG0019M" parameterType="Map">
 	      UPDATE ORG0019M SET
 	      AVAIL_FLAG = 'Y',
@@ -176,7 +177,7 @@
           AVAIL_FLAG = 'N'
           WHERE AREA_ID=#{areaId} AND BRNCH_TYPE= #{brnchType}
 	</update>
-	
+
 	<insert id="insertDreamServiceCenter" parameterType="java.util.List">
         INSERT INTO ORG0019M(
         REQST_NO
@@ -200,27 +201,27 @@
             FROM DUAL
         </foreach>
 	</insert>
-	
+
 	<update id="updateSYS0064MDream" parameterType="Map">
-       UPDATE SYS0064M SET 
+       UPDATE SYS0064M SET
        CT_BRNCH_CODE =  #{ctBrnchCode},
        CT_SUB_GRP = #{ctSubGrp}
        WHERE AREA_ID=#{areaId}
     </update>
-    
+
     <select id="selectBranchCode"  parameterType="Map" resultType="egovMap">
 		SELECT CODE CODE_ID, CODE CODE_NAME
 		FROM SYS0005M
 		WHERE TYPE_ID = #{groupCode}
 		ORDER BY CODE
     </select>
-    
+
     <select id="selectState"  parameterType="Map" resultType="egovMap">
         SELECT DISTINCT STATE CODE_ID, STATE CODE_NAME
 		FROM SYS0064M
 		ORDER BY STATE
     </select>
-    
+
     <select id="selectCurrentTerritory"  parameterType="Map" resultType="egovMap">
         SELECT A.*, CASE
 							WHEN A.AREA_ID IN (SELECT AREA_ID
@@ -252,6 +253,9 @@
         <if test="ctBranch != null and ctBranch != ''">
 			AND A.CT_BRNCH_CODE = #{ctBranch}
 		</if>
+		<if test="soBranch != null and soBranch != ''">
+            AND A.SO_BRNCH_CODE = #{soBranch}
+        </if>
         <if test="status != null and status != ''">
             <if test=" status == 'Active' ">
                 AND (CODY_BRNCH_CODE IS NULL OR CT_BRNCH_CODE IS NULL)
