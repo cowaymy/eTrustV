@@ -105,8 +105,7 @@ public class InstallationJobDto {
 	private int contractDuration;
 
 	@ApiModelProperty(value = "")
-	private String monthlyRentalFees ;
-	 /*By KV - private int monthlyRentalFees ;*/
+	private int monthlyRentalFees ;
 
 	@ApiModelProperty(value = "")
 	private int registrationFees;
@@ -487,13 +486,12 @@ public class InstallationJobDto {
 		this.contractDuration = contractDuration;
 	}
 
-	/*By KV - public int getMonthlyRentalFees() {*/
-	public String getMonthlyRentalFees() {
+	public int getMonthlyRentalFees() {
 		return monthlyRentalFees;
 	}
 
-	/*By KV - public void setMonthlyRentalFees(int monthlyRentalFees) {*/
-	public void setMonthlyRentalFees(String monthlyRentalFees) {
+	public void setMonthlyRentalFees(int monthlyRentalFees) {
+
 		this.monthlyRentalFees = monthlyRentalFees;
 	}
 
