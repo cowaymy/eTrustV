@@ -105,7 +105,8 @@ public class InstallationJobDto {
 	private int contractDuration;
 
 	@ApiModelProperty(value = "")
-	private int monthlyRentalFees;
+	private String monthlyRentalFees ;
+	 /*By KV - private int monthlyRentalFees ;*/
 
 	@ApiModelProperty(value = "")
 	private int registrationFees;
@@ -486,11 +487,13 @@ public class InstallationJobDto {
 		this.contractDuration = contractDuration;
 	}
 
-	public int getMonthlyRentalFees() {
+	/*By KV - public int getMonthlyRentalFees() {*/
+	public String getMonthlyRentalFees() {
 		return monthlyRentalFees;
 	}
 
-	public void setMonthlyRentalFees(int monthlyRentalFees) {
+	/*By KV - public void setMonthlyRentalFees(int monthlyRentalFees) {*/
+	public void setMonthlyRentalFees(String monthlyRentalFees) {
 		this.monthlyRentalFees = monthlyRentalFees;
 	}
 
@@ -822,13 +825,13 @@ public class InstallationJobDto {
 		this.beforeProductSerialNo = beforeProductSerialNo;
 	}
 
-	
-	
-	
+
+
+
 	public static InstallationJobDto create(EgovMap egvoMap) {
 		return BeanConverter.toBean(egvoMap, InstallationJobDto.class);
 	}
-	
-	
-	
+
+
+
 }
