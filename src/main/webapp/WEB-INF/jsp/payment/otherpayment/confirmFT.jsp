@@ -179,7 +179,7 @@
 		<dl class="link_list">
 			<dt>Link</dt>
 			<dd>
-			<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+			<c:if test="${PAGE_AUTH.funcChange == 'Y'}">
 				<ul class="btns">
 					<li><p class="link_btn"><a href="javascript:fn_confirmFTPop();"><spring:message code='pay.btn.link.approvalFT'/></a></p></li>
 				</ul>
