@@ -95,6 +95,10 @@ public class testController {
         model.addAttribute("userName", sessionVO.getUserName());
         model.addAttribute("costCentr", sessionVO.getCostCentr());
         model.addAttribute("taxCodeList", new Gson().toJson(taxCodeFlagList));
+
+        if(params.containsKey("clamUn")) {
+            model.addAttribute("clamUn", params.get("clamUn"));
+        }
         // return "test/staffClaimNewExpensesPop";
         logger.debug("newDtlsPop.do :: end");
         return "test/newExpenseDetailsPop";
@@ -187,7 +191,7 @@ public class testController {
 
     // Save claim details per invoice (FCM0020D)
     @RequestMapping(value = "/saveClaimDtls.do")
-    public ResponseEntity<List<EgovMap>> saveClaimDtls(@RequestBody Map<String, Object> params, Model model,
+    public ResponseEntity<EgovMap> saveClaimDtls(@RequestBody Map<String, Object> params, Model model,
             SessionVO sessionVO) {
 
 
@@ -197,17 +201,28 @@ public class testController {
         params.put(CommonConstants.USER_ID, sessionVO.getUserId());
         params.put("userName", sessionVO.getUserName());
 
+        if("CM".equals(params.get("clmType"))) {
+            testService.deleteNCDtls(params); // Normal Claim Details Delete
+            testService.deleteCMDtls(params); // Car Mileage Details Delete
+        }
+
         // Insert into FCM0020D + FCM0021D
         testService.saveClaimDtls(params);
 
         // Update FCM0019M
         testService.updateMasterClaim(params);
 
-        List<EgovMap> dtlClaimList = testService.getSummary(params);
+        EgovMap gridInfo = new EgovMap();
+
+        List<EgovMap> summaryGrid = testService.getSummary(params);
+        List<EgovMap> hiddenGrid = testService.selectStaffClaimItems((String) params.get("claimNo"));
+
+        gridInfo.put("summaryGrid", summaryGrid);
+        gridInfo.put("hiddenGrid", hiddenGrid);
 
         logger.debug("saveClaimDtls.do :: end");
 
-        return ResponseEntity.ok(dtlClaimList);
+        return ResponseEntity.ok(gridInfo);
     }
 
     @RequestMapping(value = "/getSummary.do")
@@ -228,7 +243,7 @@ public class testController {
         logger.debug("getHList.do :: start");
         logger.debug("params :: " + params);
 
-        List<EgovMap> dtlClaimList = staffClaimService.selectStaffClaimItems((String) params.get("clmNo"));
+        List<EgovMap> dtlClaimList = testService.selectStaffClaimItems((String) params.get("clmNo"));
 
         logger.debug("getHList.do :: end");
         return ResponseEntity.ok(dtlClaimList);
@@ -279,39 +294,21 @@ public class testController {
         logger.debug("removeClaim.do :: start");
         logger.debug("params :: " + params);
 
-        String clmType = params.get("clmType").toString();
+        String clmType = "";
+        if(params.containsKey("clmType")) {
+            clmType = params.get("clmType").toString();
+        }
 
         String clamUn = params.get("clamUn").toString();
 
-        if("-".equals(clamUn)) {
+        if("".equals(clamUn)) {
             testService.deleteMasterClaim(params);
-            params.put("clamUn", "");
-        }
-
-        /*
-         * Get list of attached file group ID Loop list delete from SYS0070M, SYS0071D
-         */
-       /*
-        List<EgovMap> attachGrpList = testService.getAttachGrpList(params);
-        logger.debug("attachGrpList :: " + attachGrpList.toString());
-        for (int i = 0; i < attachGrpList.size(); i++) {
-
-            Map<String, Object> attachMap = (Map<String, Object>) attachGrpList.get(i);
-            String atchInfo = attachMap.get("atchinfo").toString();
-
-            String[] arrAtchInfo = atchInfo.split("-");
-
-            Map<String, Object> atchInfoMap = new HashMap<String, Object>();
-            atchInfoMap.put("atchFileGrpId", arrAtchInfo[0]);
-            atchInfoMap.put("atchFileId", arrAtchInfo[1]);
-
-            //testService.deleteFileMaster(atchInfoMap);
-            //testService.deleteFileDtls(atchInfoMap);
-        }*/
-
-        testService.deleteNCDtls(params); // Normal Claim Details Delete
-        if("CM".equals(clmType)) {
-            testService.deleteCMDtls(params); // Car Mileage Details Delete
+            testService.deleteDtlsClaim(params); // Normal Claim Details Delete
+        } else {
+            testService.deleteNCDtls(params); // Normal Claim Details Delete
+            if("CM".equals(clmType)) {
+                testService.deleteCMDtls(params); // Car Mileage Details Delete
+            }
         }
 
         ReturnMessage message = new ReturnMessage();
@@ -349,4 +346,26 @@ public class testController {
         return ResponseEntity.ok(message);
     }
     // File uploading functions - End
+
+    @RequestMapping(value = "/checkCM.do", method = RequestMethod.GET)
+    public ResponseEntity<Map> checkCM(@RequestParam Map<String, Object> params, HttpServletRequest request,
+            ModelMap model) {
+
+        logger.debug("checkCM.do :: start");
+        logger.debug("params :: " + params);
+
+        EgovMap item = new EgovMap();
+        item = (EgovMap) testService.checkCM(params);
+
+        Map<String, Object> cmDtls = new HashMap();
+
+        if(item != null) {
+            cmDtls.put("clamUn", item.get("clamUn"));
+            cmDtls.put("cnt", "1");
+        } else {
+            cmDtls.put("cnt", "0");
+        }
+
+        return ResponseEntity.ok(cmDtls);
+    }
 }

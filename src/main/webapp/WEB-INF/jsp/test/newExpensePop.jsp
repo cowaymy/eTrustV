@@ -338,7 +338,18 @@ function fn_addCMDtlsPop() {
     console.log(claimNo);
     console.log($("hClaimNo").val());
 
-    Common.popupDiv("/test/newDtlsPop.do", {callType:"new", claimNo: claimNo, type: "cm"}, null, true, "newStaffDtlsClaimPop");
+    // Check existing CM claim
+    Common.ajax("GET", "/test/checkCM.do", {claimNo : claimNo}, function(result) {
+        console.log(result);
+
+        if(result.cnt == 0) {
+            Common.popupDiv("/test/newDtlsPop.do", {callType:"new", claimNo: claimNo, type: "cm"}, null, true, "newStaffDtlsClaimPop");
+        } else {
+            Common.popupDiv("/test/newDtlsPop.do", {callType:"new", claimNo: claimNo, type: "cm", clamUn : result.clamUn}, null, true, "newStaffDtlsClaimPop");
+        }
+
+    });
+
     console.log("fn_addCMDtlsPop :: end");
 }
 
@@ -368,7 +379,7 @@ function fn_confirmClaim() {
 
     AUIGrid.destroy("#newStaffCliam_grid_wrap");
     newGridID = AUIGrid.create("#newStaffCliam_grid_wrap", newGridColumnLayout, newGridPros);
-    hNewGridID = AUIGrid.create("#hNewStaffCliam_grid_wrap", newGridColumnLayout, newGridPros);
+    hNewGridID = AUIGrid.create("#hNewStaffCliam_grid_wrap", hNewGridColumnLayout, hNewGridPros);
     $("#hNewStaffCliam_grid_wrap").hide();
 
     // Hide/Unhide display elements upon confirm button click
@@ -494,7 +505,7 @@ function fn_closeNew() {
     console.log("fn_closeNew");
 
     if(claimNo != "") {
-        fn_removeClaim(claimNo, "-", "", "");
+        fn_removeClaim(claimNo, "", "", "");
     } else {
         fn_closeNewClaimPop();
     }
@@ -510,8 +521,6 @@ function fn_removeClaim(clmNo, clmUn, source, clmType) {
 
         Common.ajax("GET", "/test/removeClaim.do", {claimNo : clmNo, clamUn : clmUn, clmType : clmType}, function(result) {
             console.log(result);
-
-            fn_selectSummary();
         });
     });
 
@@ -541,22 +550,6 @@ function fn_approveLinePop() {
   * General Events - Start
   * =====================
   */
-
-// Select/refresh summarized grid
-function fn_selectSummary() {
-    console.log("fn_selectSummary");
-    Common.ajax("GET", "/test/getSummary.do", {claimNo: claimNo}, function(result) {
-        console.log(result);
-
-        AUIGrid.setGridData(newGridID, result);
-    });
-
-    Common.ajax("GET", "/test/getHList.do", {clmNo: claimNo}, function(result) {
-        console.log(result);
-
-        AUIGrid.setGridData(hNewGridID, result);
-    });
-}
 
 /* =====================
  * General Events - End
@@ -906,7 +899,7 @@ function fn_mileageAdd() {
     }
 }
 
-function fn_addRow(claimNo, allTotAmt, detailData) {
+function fn_addRow(claimNo, allTotAmt, detailData, clamUn) {
 
     var atchFileGrpId;
 
@@ -974,6 +967,8 @@ function fn_addRow(claimNo, allTotAmt, detailData) {
                     atchFileGrpId = result.data.fileGroupKey;
 
                     var data1 = {
+                            clmType : "CM",
+                            clamUn : clamUn,
                             claimNo : claimNo,
                             invcDt : data.invcDt,
                             invcType : data.invcType,
@@ -992,7 +987,8 @@ function fn_addRow(claimNo, allTotAmt, detailData) {
                     Common.ajax("POST", "/test/saveClaimDtls.do", data1, function(result1) {
                         console.log(result1);
 
-                        AUIGrid.setGridData(newGridID, result1);
+                        AUIGrid.setGridData(newGridID, result1.summaryGrid);
+                        AUIGrid.setGridData(hNewGridID, result1.hiddenGrid)
 
                         Common.ajax("GET", "/test/getTotal.do", {claimNo: claimNo}, function(result2) {
                             console.log(result2);
@@ -1018,7 +1014,7 @@ function fn_addRow(claimNo, allTotAmt, detailData) {
                     fn_destroyMileageGrid();
                     //fn_createMileageAUIGrid();
 
-                    fn_selectSummary();
+                    //fn_selectSummary();
                     //fn_getAllTotAmt();
                 });
             }
@@ -1079,6 +1075,8 @@ function fn_addRow(claimNo, allTotAmt, detailData) {
                     atchFileGrpId = result.data.fileGroupKey;
 
                     var data1 = {
+                            clmType : "NC",
+                            clamUn : clamUn,
                             claimNo : claimNo,
                             invcDt : data.invcDt,
                             invcType : data.invcType,
@@ -1097,7 +1095,8 @@ function fn_addRow(claimNo, allTotAmt, detailData) {
                     Common.ajax("POST", "/test/saveClaimDtls.do", data1, function(result1) {
                         console.log(result);
 
-                        AUIGrid.setGridData(newGridID, result1);
+                        AUIGrid.setGridData(newGridID, result1.summaryGrid);
+                        AUIGrid.setGridData(hNewGridID, result1.hiddenGrid)
 
                         Common.ajax("GET", "/test/getTotal.do", {claimNo: claimNo}, function(result2) {
                             console.log(result2);
@@ -1119,7 +1118,7 @@ function fn_addRow(claimNo, allTotAmt, detailData) {
 
                     $("#newStaffDtlsClaimPop").remove();
 
-                    fn_selectSummary();
+                    //fn_selectSummary();
                     //fn_getAllTotAmt();
                 });
             }
@@ -1128,6 +1127,8 @@ function fn_addRow(claimNo, allTotAmt, detailData) {
         }
 
     }
+
+    //fn_selectSummary();
 }
 
 function fn_removeMyGridRow() {

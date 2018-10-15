@@ -73,7 +73,7 @@ $(document).ready(function() {
 
     staffClaimGridID = AUIGrid.create("#staffClaim_grid_wrap", staffClaimColumnLayout, staffClaimGridPros);
 
-    $("#newClaimBtn").click(fn_NewClaimPop);
+    $("#newExpStaffClaim").click(fn_NewClaimPop);
     console.log("testList :: ready :: end");
 });
 
@@ -177,6 +177,7 @@ function fn_selectStaffClaimList() {
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
             <li><p class="link_btn"><a href="#" id="_staffClaimBtn">Staff Claim</a></p></li>
             <%-- </c:if> --%>
+            <li><p class="link_btn"><a href="#" id="newExpStaffClaim">New Staff Claim (Submission Only)</a></p></li>
         </ul>
         <ul class="btns">
         </ul>

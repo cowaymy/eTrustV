@@ -188,8 +188,6 @@ var mileageGridColumnLayout = [ {
 }, {
     dataField : "carMilagDt",
     headerText : '<spring:message code="pettyCashNewExp.date" />',
-    dataType : "date",
-    formatString : "dd/mm/yyyy",
     editRenderer : {
         type : "CalendarRenderer",
         openDirectly : true,
@@ -300,6 +298,16 @@ $(document).ready(function() {
         myGridID = AUIGrid.create("#mileage_grid_wrap", mileageGridColumnLayout, mileageGridPros);
         $("#carMileage_radio").attr("checked", "checked");
         $("#normalExp_radio").attr("disabled", true);
+
+        if("${clamUn}" != "") {
+            var data = {
+                    clmNo : "${claimNo}",
+                    clamUn : "${clamUn}",
+                    claimType : "${claimType}"
+            }
+
+            Common.ajax("GET", "/test/selectStaffClaimInfo.do?_cacheId=" + Math.random(), data, fn_setStaffClaimInfo);
+        }
     }
 
     fn_checkExpGrp();
@@ -333,21 +341,30 @@ $(document).ready(function() {
  * Button Key Events Functions - Start
  * =====================
  */
-// Normal Claim - Attachment Button
-function setInputFile2() {
-    $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>File</a></span></label><span class='label_text'><a href='#'>Add</a></span><span class='label_text'><a href='#'>Delete</a></span>");
-}
 
 function claimDtls() {
     console.log("saveDtls :: start");
 
+    var clamUn = "";
     var detailData;
     if("${claimType}" == "nc") {
         detailData = AUIGrid.getOrgGridData(myGridID);
+        clamUn = "";
     } else {
         detailData = AUIGrid.getOrgGridData(mileageGridID);
+        clamUn = "${clamUn}";
+
+        /*if("${clamUn}" != "") {
+            console.log("Inactive existing CM");
+
+            Common.ajax("GET", "/test/removeClaim.do", {claimNo : $("#claimNo").val(), clamUn : clamUn, clmType : "CM"}, function(iResult) {
+                console.log(iResult);
+            })
+        }*/
     }
-    fn_addRow($("#claimNo").val(), Number($("#allTotAmt_text").text().replace(/, /gi, "")), detailData);
+    fn_addRow($("#claimNo").val(), Number($("#allTotAmt_text").text().replace(/, /gi, "")), detailData, clamUn);
+
+    //fn_selectSummary();
 
     console.log("saveDtls :: end");
 }
@@ -356,14 +373,34 @@ function deleteFullDtls() {
     Common.confirm("Do you which to delete this invoice entry", fn_deleteDtl);
 }
 
-/*
-function fn_myButtonClick(item){
-    console.log("fn_myButtonClick Action")
-    recentGridItem = item; // 그리드의 클릭한 행 아이템 보관
-    var input = $("#file");
-    input.trigger('click'); // 파일 브라우저 열기
-};
-*/
+function fn_setStaffClaimInfo(result) {
+    console.log("fn_setStaffClaimInfo");
+    console.log(result);
+    // Car Mileage Expense
+    console.log("carMileage_radio checked");
+    $("#normalExp_radio").prop("checked", false);
+    $("#carMileage_radio").prop("checked", true);
+    fn_checkExpGrp();
+
+    $("#newCostCenter").val(result.costCentr);
+    $("#newCostCenterText").val(result.costCentrName);
+    $("#newMemAccId").val(result.memAccId);
+    $("#newMemAccName").val(result.memAccName);
+    $("#bankCode").val(result.bankCode);
+    $("#bankName").val(result.bankName);
+    $("#bankAccNo").val(result.bankAccNo);
+    $("#newClmMonth").val(result.clmMonth);
+    $("#expType").val(result.expType);
+    $("#expTypeName").val(result.expTypeName);
+    $("#glAccCode").val(result.glAccCode);
+    $("#glAccCodeName").val(result.glAccCodeName);
+    $("#budgetCode").val(result.budgetCode);
+    $("#budgetCodeName").val(result.budgetCodeName);
+
+    console.log(result);
+
+    AUIGrid.setGridData(mileageGridID, result.itemGrp);
+}
 
 //
 

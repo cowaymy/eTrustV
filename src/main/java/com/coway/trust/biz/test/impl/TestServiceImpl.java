@@ -240,6 +240,11 @@ public class TestServiceImpl extends EgovAbstractServiceImpl implements TestServ
     }
 
     @Override
+    public void deleteDtlsClaim(Map<String, Object> params) {
+        testMapper.deleteDtlsClaim(params);
+    }
+
+    @Override
     public void deleteNCDtls(Map<String, Object> params) {
         testMapper.deleteNCDtls(params);
     }
@@ -290,4 +295,14 @@ public class TestServiceImpl extends EgovAbstractServiceImpl implements TestServ
         return testMapper.selectAttachList(atchFileGrpId);
     }
 
+    @Override
+    public EgovMap checkCM(Map<String, Object> params) {
+        return testMapper.checkCM(params);
+    }
+
+    @Override
+    public List<EgovMap> selectStaffClaimItems(String clmNo) {
+        // TODO Auto-generated method stub
+        return testMapper.selectStaffClaimItems(clmNo);
+    }
 }

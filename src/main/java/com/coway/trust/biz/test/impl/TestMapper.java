@@ -29,6 +29,8 @@ public interface TestMapper {
 
     void deleteMasterClaim(Map<String, Object> params);
 
+    void deleteDtlsClaim(Map<String, Object> params);
+
     void deleteNCDtls(Map<String, Object> params);
 
     void deleteCMDtls(Map<String, Object> params);
@@ -50,4 +52,8 @@ public interface TestMapper {
     List<EgovMap> selectStaffClaimItemGrp(Map<String, Object> params);
 
     List<EgovMap> selectAttachList(String atchFileGrpId);
+
+    EgovMap checkCM(Map<String, Object> params);
+
+    List<EgovMap> selectStaffClaimItems(String clmNo);
 }
