@@ -114,6 +114,7 @@ public class SupplyPlanManagementController {
 		LOGGER.debug("insertSupplyPlanMaster : {}", params);
 		
 		int totCnt	= 0;
+		int dtlCnt	= 0;
 		
 		List<EgovMap> selectSupplyPlanInfo	= supplyPlanManagementService.selectSupplyPlanInfo(params);
 		
@@ -132,6 +133,11 @@ public class SupplyPlanManagementController {
 			totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
 			
 			if ( 0 < totCnt ) {
+				//	safety stock update
+				LOGGER.debug("============ update safety Stock ===============");
+				//dtlCnt	= supplyPlanManagementService.updateSupplyPlanDetail(params, sessionVO);
+				//dtlCnt	= supplyPlanManagementService.insertSupplyPlanDetail(params, sessionVO);
+				
 				message.setCode(AppConstants.SUCCESS);
 				message.setData(totCnt);
 				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
@@ -140,6 +146,57 @@ public class SupplyPlanManagementController {
 				message.setData(totCnt);
 				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 			}
+		}
+		
+		return	ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/updateSupplyPlanMaster.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateSupplyPlanMaster(@RequestBody Map<String, Object> params, SessionVO sessionVO) {
+		
+		int saveCnt	= 0;
+		LOGGER.info("updateSupplyPlanMaster : {}", params.toString());
+		
+		saveCnt	= supplyPlanManagementService.updateSupplyPlanMaster(params, sessionVO);
+		
+		ReturnMessage message	= new ReturnMessage();
+		
+		if ( 0 < saveCnt ) {
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(saveCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
+		
+		return	ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/updateSupplyPlanDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateSupplyPlanDetail(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		int saveCnt	= 0;
+		List<Object> updList	= params.get(AppConstants.AUIGRID_UPDATE);
+		LOGGER.info("updateSupplyPlanDetail : {}", params.toString());
+		
+		if ( 0 < updList.size() ) {
+			saveCnt	= supplyPlanManagementService.updateSupplyPlanDetail(updList, sessionVO);
+			saveCnt++;
+		} else {
+			LOGGER.info("updateSupplyPlanDetail : no changed");
+		}
+		
+		LOGGER.info("saveCnt : ", saveCnt);
+		
+		ReturnMessage message	= new ReturnMessage();
+		
+		if ( 0 < saveCnt ) {
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(saveCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		}
 		
 		return	ResponseEntity.ok(message);
