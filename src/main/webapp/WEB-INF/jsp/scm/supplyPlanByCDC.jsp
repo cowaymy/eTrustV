@@ -215,6 +215,7 @@ function fnSupplyPlanHeader() {
 				
 				//	if selectSupplyPlanHeader result is null then alert
 				if ( null == result.selectSupplyPlanInfo || 1 > result.selectSupplyPlanInfo.length ) {
+					fnBtnCtrl(result.selectSupplyPlanInfo);
 					Common.alert("Supply Plan was not created on this week1");
 					return	false;
 				} else {
@@ -247,7 +248,7 @@ function fnSupplyPlanHeader() {
 					
 					return	false;
 				}
-				fnBtnCtrl(result.selectSupplyPlanInfo);
+				
 				//int leadTm	= result.selectSupplyPlanInfo[0].leadTm;
 				//console.log("===leadTm : " + result.selectSupplyPlanInfo[0].leadTm);
 				//	make header
@@ -976,6 +977,7 @@ function fnSetSupplyPlanInfo(result) {
 			$("#cirSupply").removeClass("circle_red");
 		}
 	}
+	fnBtnCtrl(result);
 }
 
 //	button control
