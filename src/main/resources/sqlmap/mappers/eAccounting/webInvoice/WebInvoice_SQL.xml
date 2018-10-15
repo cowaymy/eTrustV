@@ -727,13 +727,17 @@ SELECT T.APPV_PRCSS_NO
       ,T.REQST_DT
       ,T.CODE
       ,T.CODE_NAME
-      ,T.COST_CENTR
+      <!-- ,T.COST_CENTR
       ,T.COST_CENTR_NAME
       ,T.INVC_TYPE
-      ,T.INVC_DT
+      ,T.INVC_DT -->
+      ,CASE WHEN T.CODE = 'J3' THEN '-' ELSE T.COST_CENTR END AS COST_CENTR
+      ,CASE WHEN T.CODE = 'J3' THEN '-' ELSE T.COST_CENTR_NAME END AS COST_CENTR_NAME
+      ,CASE WHEN T.CODE = 'J3' THEN '-' ELSE T.INVC_TYPE END AS INVC_TYPE
+      ,CASE WHEN T.CODE = 'J3' THEN NULL ELSE T.INVC_DT END AS INVC_DT
       ,T.MEM_ACC_ID
       ,T.MEM_ACC_NAME
-      ,'MYR'                                               AS CUR
+      ,'MYR' AS CUR
       ,T.APPV_AMT
       ,T.APPV_PRCSS_STUS
       ,T.APPV_PRCSS_STUS_CODE
@@ -786,11 +790,22 @@ SELECT T.APPV_PRCSS_NO
                  LEFT JOIN (
                     SELECT
                         MIN(APPV_ITM_SEQ) APPV_ITM_SEQ,
+                        APPV_PRCSS_NO
+                    FROM FCM0015D
+                    GROUP BY
+                        APPV_PRCSS_NO
+                 <!--
+                    SELECT
+                        MIN(APPV_ITM_SEQ) APPV_ITM_SEQ,
                         APPV_PRCSS_NO,
                         COST_CENTR,
                         COST_CENTR_NAME
                     FROM FCM0015D
-                    GROUP BY APPV_PRCSS_NO, COST_CENTR, COST_CENTR_NAME
+                    GROUP BY
+                        APPV_PRCSS_NO,
+                        COST_CENTR,
+                        COST_CENTR_NAME
+                 -->
                  ) T3M ON T1.APPV_PRCSS_NO = T3M.APPV_PRCSS_NO
                  INNER JOIN FCM0015D T3 ON T3M.APPV_PRCSS_NO = T3.APPV_PRCSS_NO and T3M.APPV_ITM_SEQ = T3.APPV_ITM_SEQ <!-- AND T3.APPV_ITM_SEQ = 1 추가 -->
                  LEFT JOIN SYS0013M T4 ON SUBSTR (T1.APPV_REQ_KEY_NO, 1, 2) = T4.CODE
@@ -1405,6 +1420,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         TAX_NON_CLM_AMT,
         TOT_AMT,
         EXP_DESC,
+        CLAM_UN,
         CRT_DT,
         CRT_USER_ID,
         UPD_DT,
@@ -1426,6 +1442,7 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         TAX_NON_CLM_AMT,
         TOT_AMT,
         EXP_DESC,
+        #{clamUn},
         SYSDATE,
         #{userId},
         SYSDATE,
