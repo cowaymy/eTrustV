@@ -14,18 +14,18 @@
 
 	//Grid에서 선택된 RowID
 	var selectedGridValue;
-	
+
 	//Grid Properties 설정
 	var gridPros = {
 	        // 편집 가능 여부 (기본값 : false)
-	        editable : false,        
+	        editable : false,
 	        // 상태 칼럼 사용
 	        showStateColumn : false,
 	        // 기본 헤더 높이 지정
 	        headerHeight : 35,
-	        
+
 	        softRemoveRowMode:false
-	
+
 	};
 
 	//Default Combo Data
@@ -34,7 +34,7 @@
 					{"codeId": "6","codeName": "Rejected"}];
 
 	// AUIGrid 칼럼 설정
-	var columnLayout = [ 
+	var columnLayout = [
         {dataField : "ftReqId",headerText : "<spring:message code='pay.head.ftRequestNo'/>",width : 150 , editable : false},
         {dataField : "ftResnNm",headerText : "<spring:message code='pay.head.reason'/>",width : 240 , editable : false},
         {dataField : "ftCrtUserNm",headerText : "<spring:message code='pay.head.requestor'/>",width : 180 , editable : false},
@@ -44,64 +44,64 @@
 		{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 150 , editable : false, visible : false},
 		{dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGrpNo'/>",width : 150 , editable : false, visible : false}
 	];
-	
-    
+
+
 	$(document).ready(function(){
 		doGetCombo('/common/selectCodeList.do', '396' , ''   , 'reason' , 'S', '');
 		doDefCombo(statusData, '' ,'status', 'S', '');
 
 		//그리드 생성
 	    confirmFTGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-		
+
 		// Master Grid 셀 클릭시 이벤트
-	    AUIGrid.bind(confirmFTGridID, "cellClick", function( event ){ 
+	    AUIGrid.bind(confirmFTGridID, "cellClick", function( event ){
 		    selectedGridValue = event.rowIndex;
 	    });
-	    
+
 	});
 
     // ajax list 조회.
     function searchList(){
 
-		if(FormUtil.checkReqValue($("#reqNo"))){			
+		if(FormUtil.checkReqValue($("#reqNo"))){
 			if(FormUtil.checkReqValue($("#reqDateFr")) ||
 				FormUtil.checkReqValue($("#reqDateTo"))){
 	            Common.alert("<spring:message code='pay.alert.inputReqDate'/>");
 		        return;
-			}	
-		}        
-    	
-    	Common.ajax("POST","/payment/selectRequestFTList.do",$("#searchForm").serializeJSON(), function(result){    		
+			}
+		}
+
+    	Common.ajax("POST","/payment/selectRequestFTList.do",$("#searchForm").serializeJSON(), function(result){
     		AUIGrid.setGridData(confirmFTGridID, result);
     	});
     }
-    
+
     // 화면 초기화
     function clear(){
     	//화면내 모든 form 객체 초기화
     	$("#searchForm")[0].reset();
-    	
+
     	//그리드 초기화
     	//AUIGrid.clearGridData(myGridID);
     }
-    
-    
+
+
 	//Request DCF 팝업
 	function fn_confirmFTPop(){
 		var selectedItem = AUIGrid.getSelectedIndex(confirmFTGridID);
-		
+
 		if (selectedItem[0] > -1){
 
 			var ftReqId = AUIGrid.getCellValue(confirmFTGridID, selectedGridValue, "ftReqId");
 			var ftStusId = AUIGrid.getCellValue(confirmFTGridID, selectedGridValue, "ftStusId");
 			var payId = AUIGrid.getCellValue(confirmFTGridID, selectedGridValue, "payId");
 			var groupSeq = AUIGrid.getCellValue(confirmFTGridID, selectedGridValue, "groupSeq");
-			
+
 			Common.popupDiv('/payment/initConfirmFTPop.do', {"ftReqId" : ftReqId, "ftStusId" : ftStusId, "payId" : payId , "groupSeq" : groupSeq}, null , true ,'_confirmFTPop');
-			
+
 		}else{
              Common.alert("<spring:message code='pay.alert.transListSelected'/>");
-        }	
+        }
 	}
 
 </script>
@@ -116,7 +116,9 @@
         <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Confirm Fund Transfer</h2>
         <ul class="right_btns">
-            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>     
+            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
+            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+            </c:if>
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside>
@@ -177,9 +179,11 @@
 		<dl class="link_list">
 			<dt>Link</dt>
 			<dd>
+			<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 				<ul class="btns">
 					<li><p class="link_btn"><a href="javascript:fn_confirmFTPop();"><spring:message code='pay.btn.link.approvalFT'/></a></p></li>
 				</ul>
+			</c:if>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>
 		</dl>
