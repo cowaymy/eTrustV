@@ -16,8 +16,28 @@ public interface SupplyPlanManagementMapper {
 	List<EgovMap> selectSupplyPlanList(Map<String, Object> params);
 	void insertSupplyPlanMaster(Map<String, Object> params);
 	void insertSupplyPlanDetail(Map<String, Object> params);
+	List<EgovMap> selectSupplyPlanMoq(Map<String, Object> params);
+	List<EgovMap> selectSupplyPlanMonth(Map<String, Object> params);
+	int selectSupplyPlanBeforeYearsLastWeek(Map<String, Object> params);
+	int selectBeforeOrdCnt(Map<String, Object> params);
+	int selectSupplyPlanEndingInventory(Map<String, Object> params);
+	int selectSupplyPlanWeekCnt(Map<String, Object> params);
+	int selectBeforePoCnt(Map<String, Object> params);
+	int selectAfterPoCnt(Map<String, Object> params);
+	List<EgovMap> selectSalesPlanInSupplyPlan(Map<String, Object> params);
+	List<EgovMap> selectInsertedSalesPlan(Map<String, Object> params);
 	String callSpScmInsSupplyPlanDetail(Map<String, Object> params);
 	//String callSpScmInsSalesPlanDetail(Map<String, Object> params);
 	void updateSupplyPlanDetail(Map<String, Object> params);
 	void updateSupplyPlanMaster(Map<String, Object> params);
+	
+	
+	void insertSupplyPlanDetailPsi1(Map<String, Object> params);
+	void insertSupplyPlanDetailPsi4(Map<String, Object> params);
+	void insertSupplyPlanDetailPsi235(Map<String, Object> params);
+	List<EgovMap> selectBefWeekInfo(Map<String, Object> params);
+	List<EgovMap> selectPsi1(Map<String, Object> params);
+	List<EgovMap> selectEachPsi(Map<String, Object> params);
+	void updateSupplyPlanDetailPsi1(Map<String, Object> params);
+	void updateSupplyPlanDetailPsi235(Map<String, Object> params);
 }
