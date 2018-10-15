@@ -7,33 +7,50 @@
 }
 
 /* 커스텀 칼럼 스타일 정의 */
-.my-column {
-	text-align:right;
-	margin-top:-20px;
+.my-columnEditable {
+	text-align : right;
+	margin-top : -20px;
 }
 
-.my-backColumn0 {
-	background:#73EAA8;
-	color:#000;
+.my-columnRight0 {
+	text-align : right;
+	background : #CCFFFF;
+	color : #000;
 }
 
-.my-backColumn1 {
-	background:#1E9E9E;
-	color:#000;
+.my-columnRight1 {
+	text-align : right;
+	background : #CCCCFF;
+	color : #000;
 }
 
-.my-backColumn2 {
-	background:#818284;
-	color:#000;
+.my-columnLeadTm {
+	text-align : right;
+	background : #FFCCFF;
+	color : #000;
 }
 
-.my-backColumn3 {
-	background:#a1a2a3;
-	color:#000;
+.my-columnCenter0 {
+	text-align : center;
+	background : #CCFFFF;
+	color : #000;
 }
 
-.my-backColumn4 {
-	background : #c0c0c0;
+.my-columnCenter1 {
+	text-align : center;
+	background : #CCCCFF;
+	color : #000;
+}
+
+.my-columnLeft0 {
+	text-align : left;
+	background : #CCFFFF;
+	color : #000;
+}
+
+.my-columnLeft1 {
+	text-align : left;
+	background : #CCCCFF;
 	color : #000;
 }
 
@@ -57,6 +74,9 @@ var m3ThWeekStart	= 0;	//	M3월 시작주차
 var m4ThWeekStart	= 0;	//	M4월 시작주차
 var supplyPlanList	= new Object();
 var childField	= new Object();
+var splitInfo	= new Object();
+var planId	= "";
+var weekStartCol	= 19;	//	w01 칼럼이 시작되는 column 차례 : 19번째 이전에 칼럼이 추가되면 변경해줘야 함
 
 $(function() {
 	fnScmYearCbBox();		//fnSelectExcuteYear
@@ -180,10 +200,10 @@ function fnSupplyPlanHeader() {
 		showStateColumn : true,
 		showEditedCellMarker : true,
 		enableCellMerge : true,
-		fixedColumnCount : 10,			//	고정칼럼 카운트 지정
+		fixedColumnCount : weekStartCol,	//	고정칼럼 카운트 지정
 		enableRestore : true,
 		showRowCheckColumn : false,
-		usePaging : false				//	페이징처리 설정
+		usePaging : false					//	페이징처리 설정
 	};
 	
 	Common.ajax("POST"
@@ -195,7 +215,6 @@ function fnSupplyPlanHeader() {
 				
 				//	if selectSupplyPlanHeader result is null then alert
 				if ( null == result.selectSupplyPlanInfo || 1 > result.selectSupplyPlanInfo.length ) {
-					fnBtnCtrl(result.selectSupplyPlanInfo);
 					Common.alert("Supply Plan was not created on this week1");
 					return	false;
 				} else {
@@ -208,6 +227,8 @@ function fnSupplyPlanHeader() {
 				if ( null == result.selectSplitInfo || 1 > result.selectSplitInfo.length ) {
 					Common.alert("Supply Plan was not created on this week2");
 					return	false;
+				} else {
+					splitInfo	= result.selectSplitInfo;
 				}
 				
 				//	if selectChildField result is null then alert
@@ -226,7 +247,9 @@ function fnSupplyPlanHeader() {
 					
 					return	false;
 				}
-				
+				fnBtnCtrl(result.selectSupplyPlanInfo);
+				//int leadTm	= result.selectSupplyPlanInfo[0].leadTm;
+				//console.log("===leadTm : " + result.selectSupplyPlanInfo[0].leadTm);
 				//	make header
 				if ( null != result.selectSupplyPlanHeader && 0 < result.selectSupplyPlanHeader.length ) {
 					dynamicLayout.push(
@@ -237,70 +260,90 @@ function fnSupplyPlanHeader() {
 									 {
 										 dataField : result.selectSupplyPlanHeader[0].planId,
 										 headerText : "Plan Id",
-										 visible : true
+										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].planDtlId,
 										 headerText : "Plan Dtl Id",
-										 visible : true
-									 }, {
-										 dataField : result.selectSupplyPlanHeader[0].stock,
-										 headerText : "Stock",
-										 visible : true
+										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].cdc,
 										 headerText : "Cdc",
-										 visible : true,
-										 style : "my-backColumn4"
+										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].planStusId,
 										 headerText : "Plan Stus Id",
-										 visible : true,
-										 style : "my-backColumn4"
+										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].verNo,
 										 headerText : "Ver No",
-										 visible : true,
-										 style : "my-backColumn4"
+										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].typeId,
 										 headerText : "Type Id",
-										 visible : true,
-										 style : "my-backColumn4"
+										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].typeName,
 										 headerText : "Type",
 										 visible : true,
-										 style : "my-backColumn4"
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnCenter0";
+											 } else {
+												 return	"my-columnCenter1";
+											 }
+										 }
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].categoryId,
 										 headerText : "Category Id",
-										 visible : true,
-										 style : "my-backColumn4"
+										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].categoryName,
 										 headerText : "Category",
 										 visible : true,
-										 style : "my-backColumn4"
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnCenter0";
+											 } else {
+												 return	"my-columnCenter1";
+											 }
+										 }
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].code,
 										 headerText : "Code",
 										 visible : true,
-										 style : "my-backColumn4"
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnCenter0";
+											 } else {
+												 return	"my-columnCenter1";
+											 }
+										 }
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].name,
 										 headerText : "Name",
 										 visible : true,
-										 style : "my-backColumn3"
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnLeft0";
+											 } else {
+												 return	"my-columnLeft1";
+											 }
+										 }
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].psiId,
 										 headerText : "Psi Id",
-										 visible : true,
-										 style : "my-backColumn3"
+										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].psiName,
 										 headerText : "Psi",
 										 visible : true,
-										 style : "my-backColumn3"
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnLeft0";
+											 } else {
+												 return	"my-columnLeft1";
+											 }
+										 }
 									 }
 									 ]
 							}, {
@@ -311,35 +354,78 @@ function fnSupplyPlanHeader() {
 										 dataField : result.selectSupplyPlanHeader[0].m0,
 										 headerText : "M + 0",
 										 visible : true,
-										 style : "my-backColumn3",
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnRight0";
+											 } else {
+												 return	"my-columnRight1";
+											 }
+										 },
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m1,
 										 headerText : "M + 1",
 										 visible : true,
-										 style : "my-backColumn3",
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnRight0";
+											 } else {
+												 return	"my-columnRight1";
+											 }
+										 },
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m2,
 										 headerText : "M + 2",
 										 visible : true,
-										 style : "my-backColumn3",
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnRight0";
+											 } else {
+												 return	"my-columnRight1";
+											 }
+										 },
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m3,
 										 headerText : "M + 3",
 										 visible : true,
-										 style : "my-backColumn3",
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnRight0";
+											 } else {
+												 return	"my-columnRight1";
+											 }
+										 },
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m4,
 										 headerText : "M + 4",
 										 visible : true,
-										 style : "my-backColumn3",
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnRight0";
+											 } else {
+												 return	"my-columnRight1";
+											 }
+										 },
+										 dataType : "numeric",
+										 formatString : "#,##0"
+									 }, {
+										 dataField : result.selectSupplyPlanHeader[0].overdue,
+										 headerText : "OVERDUE",
+										 visible : true,
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnRight0";
+											 } else {
+												 return	"my-columnRight1";
+											 }
+										 },
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }
@@ -381,53 +467,35 @@ function fnSupplyPlanHeader() {
 						if ( 1 == intToStrFieldCnt.length ) {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
-						if ( 0 == i ) {
-							startCnt	= parseInt(result.selectChildField[i].weekTh);
-						} else {
-							startCnt	= startCnt + 1;
-						}
-						if ( parseInt(gWeekTh) > startCnt ) {
-							//console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
-							if ( 2 > startCnt.toString().length ) {
-								strWeekTh	= "W0";
-							} else {
-								strWeekTh	= "W";
-							}
-							fieldStr		= "w" + iLoopCnt + "WeekSeq";
-							groupM0.children.push({
-								dataField : "w" + intToStrFieldCnt,
-								headerText : result.selectSupplyPlanHeader[0][fieldStr],
-								dataType : "numeric",
-								formatString : "#,##0",
-								editable : false,
-								style : "my-backColumn1"
-							});
-							iLoopCnt++;
-						} else if ( parseInt(gWeekTh) == startCnt ) {
-							//console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
-							fieldStr	= "w" + iLoopCnt + "WeekSeq";
-							groupM0.children.push({
-								dataField : "w" + intToStrFieldCnt,
-								headerText : result.selectSupplyPlanHeader[0][fieldStr],
-								dataType : "numeric",
-								formatString : "#,##0",
-								editable : false,
-								style : "my-backColumn2"
-							});
-							iLoopCnt++;
-						} else {
-							//console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
-							fieldStr	= "w" + iLoopCnt + "WeekSeq";
+						fieldStr	= "w" + iLoopCnt + "WeekSeq";
+						if ( iLoopDataFieldCnt > result.selectSupplyPlanInfo[0].leadTm ) {
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,	//	w00
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
 								formatString : "#,##0",
-								//editable : false,
-								style : "my-column"
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( 3 != item.psiId ) {
+										if ( "0" == item.divOdd ) {
+											return	"my-columnRight0";
+										} else {
+											return	"my-columnRight1";
+										}
+									} else {
+										return	"my-columnEditable";
+									}
+								}
 							});
-							iLoopCnt++;
+						} else {
+							groupM0.children.push({
+								dataField : "w" + intToStrFieldCnt,	//	w00
+								headerText : result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								style : "my-columnLeadTm"
+							});
 						}
+						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					}
 					dynamicLayout.push(groupM0);
@@ -446,13 +514,33 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM1.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSupplyPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							style : "my-column"
-						});
+						if ( iLoopDataFieldCnt > result.selectSupplyPlanInfo[0].leadTm ) {
+							groupM1.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( 3 != item.psiId ) {
+										if ( "0" == item.divOdd ) {
+											return	"my-columnRight0";
+										} else {
+											return	"my-columnRight1";
+										}
+									} else {
+										return	"my-columnEditable";
+									}
+								}
+							});
+						} else {
+							groupM1.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								style : "my-columnLeadTm"
+							});
+						}
 						iLoopCnt ++;
 						iLoopDataFieldCnt++;
 					}
@@ -472,13 +560,33 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM2.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSupplyPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							style : "my-column"
-						});
+						if ( iLoopDataFieldCnt > result.selectSupplyPlanInfo[0].leadTm ) {
+							groupM2.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( 3 != item.psiId ) {
+										if ( "0" == item.divOdd ) {
+											return	"my-columnRight0";
+										} else {
+											return	"my-columnRight1";
+										}
+									} else {
+										return	"my-columnEditable";
+									}
+								}
+							});
+						} else {
+							groupM2.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								style : "my-columnLeadTm"
+							});
+						}
 						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					};
@@ -498,13 +606,33 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM3.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSupplyPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							style : "my-column"
-						});
+						if ( iLoopDataFieldCnt > result.selectSupplyPlanInfo[0].leadTm ) {
+							groupM3.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( 3 != item.psiId ) {
+										if ( "0" == item.divOdd ) {
+											return	"my-columnRight0";
+										} else {
+											return	"my-columnRight1";
+										}
+									} else {
+										return	"my-columnEditable";
+									}
+								}
+							});
+						} else {
+							groupM3.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								style : "my-columnLeadTm"
+							});
+						}
 						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					}
@@ -524,13 +652,33 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM4.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSupplyPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							style : "my-column"
-						});
+						if ( iLoopDataFieldCnt > result.selectSupplyPlanInfo[0].leadTm ) {
+							groupM4.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( 3 != item.psiId ) {
+										if ( "0" == item.divOdd ) {
+											return	"my-columnRight0";
+										} else {
+											return	"my-columnRight1";
+										}
+									} else {
+										return	"my-columnEditable";
+									}
+								}
+							});
+						} else {
+							groupM4.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								style : "my-columnLeadTm"
+							});
+						}
 						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					}
@@ -549,7 +697,12 @@ function fnSupplyPlanHeader() {
 					AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 						//console.log("DobleClick(" + event.rowIndex + ", " + event.columnIndex + ") :  " + " value : " + event.value );
 					});
-					//AUIGrid.bind(myGridID, "cellEditEnd", fnSumMnPlan);
+					AUIGrid.bind(myGridID, "cellEditEnd", fnCalcPsi5);
+					AUIGrid.bind(myGridID, "cellEditBegin", function(event) {
+						if ( "3" != event.item.psiId ) {
+							return	false;
+						}
+					});
 					
 					//	
 					fnSearch();
@@ -566,6 +719,52 @@ function fnSupplyPlanHeader() {
 				}
 				Common.alert("Fail : " + jqXHR.responseJSON.message);
 			});
+}
+
+function fnCalcPsi5(event) {
+	var leadTm	= parseInt(supplyPlanList[0]["leadTm"]);
+	var weekCnt	= parseInt(splitInfo[0]["m0WeekCnt"]) + parseInt(splitInfo[0].m1WeekCnt) + parseInt(splitInfo[0].m2WeekCnt) + parseInt(splitInfo[0].m3WeekCnt) + parseInt(splitInfo[0].m4WeekCnt);
+	//var from	= event.columnIndex;
+	//var to		= (parseInt(weekCnt) + parseInt(weekStartCol)) - (event.columnIndex - (parseInt(weekStartCol) + parseInt(leadTm))) - 1; 
+	var psi1	= 0;
+	var psi3	= 0;
+	var psi5	= 0;
+	
+	var startWeek	= event.columnIndex - weekStartCol + 1;
+	
+	var psi1Row	= event.rowIndex - 2;
+	var psi3Row	= event.rowIndex;
+	var psi5Row	= event.rowIndex + 2;
+	
+	//var chngWeekCnt	= parseInt(to) - parseInt(from);
+	var colNm	= "";
+	var colNm2	= "";
+	var colTh	= "";
+	var colTh2	= "";
+	for ( var i = startWeek ; i < weekCnt + weekStartCol ; i++ ) {
+		if ( i < 10 ) {
+			colTh	= "0" + (parseInt(i));
+			colTh2	= "0" + (parseInt(i) - 1);
+		} else if ( i == 10 ) {
+			colTh	= (parseInt(i));
+			colTh2	= "0" + (parseInt(i) - 1);
+		} else {
+			colTh	= (parseInt(i));
+			colTh2	= (parseInt(i) - 1);
+		}
+		colNm	= "w" + colTh;
+		colNm2	= "w" + colTh2;
+		console.log("i : " + i + ", psi1Row : " + psi1Row + ", psi3Row : " + psi3Row + ", psi5Row : " + psi5Row + ", colNm : " + colNm + ", colNm2 : " + colNm2);
+		psi1	= AUIGrid.getCellValue(myGridID, psi1Row, colNm);
+		if ( 0 == i ) {
+			psi3	= event.value;
+		} else {
+			psi3	= AUIGrid.getCellValue(myGridID, psi3Row, colNm);
+		}
+		psi5	= AUIGrid.getCellValue(myGridID, psi5Row, colNm2);
+		psi5	= psi5 - psi1 + psi3;
+		AUIGrid.setCellValue(myGridID, psi5Row, colNm, psi5);
+	}
 }
 
 //	search
@@ -667,8 +866,7 @@ function fnSaveDetail(obj) {
 			});
 }
 
-//	confirm
-/*
+//confirm/unconfirm
 function fnSaveMaster(obj, conf) {
 	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
 		return	false;
@@ -680,15 +878,20 @@ function fnSaveMaster(obj, conf) {
 	}
 	
 	//	set planId
-	
+	var planId	= supplyPlanList[0]["planId"];
+	var planStusId	= "";
+	if ( "confirm" == conf ) {
+		planStusId	= "4";
+	} else {
+		planStusId	= "1";
+	}
 	var msg	= "";
-	//	set planStusId
-	
+	var params	= { planId : planId, planStusId : planStusId };
+	console.log(params);
 	Common.ajax("POST"
 			, "/scm/updateSupplyPlanMaster.do"
-			, $("#MainForm").serializeJSON()
+			, params
 			, function(result) {
-				//Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 				Common.alert(msg);
 				fnSupplyPlanHeader();
 				console.log("Success : " + JSON.stringify(result) + " /data : " + result.data);
@@ -705,27 +908,72 @@ function fnSaveMaster(obj, conf) {
 				Common.alert("Fail : " + jqXHR.responseJSON.message);
 			});
 }
-*/
+
+//excel
+function fnExcel(obj, fileName) {
+	//	1. grid id
+	//	2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+	//	3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
+	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
+		return	false;
+	}
+	
+	GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileName + '_' + getTimeStamp());
+}
+
+//validation
+function fnValidation() {
+	var result	= true;
+	var updList	= AUIGrid.getEditedRowItems(myGridID);
+	
+	if ( 0 == updList.length ) {
+		Common.alert("No Change");
+		result	= false;
+	}
+	
+	return	result;
+}
 
 //	set sales & supply info
 function fnSetSupplyPlanInfo(result) {
-	var salesPlan	= result[0].conf;			//	12(3 Team, Confirm : 4 -> 4 + 4 + 4 = 12) : All Sales Plan Confirmed
-	var supplyPlan	= result[0].planStusId;		//	4 : Supply Plan Confirm, 1 : Supply Plan Unconfirm
-	
+	var salesPlan	= result[0].salesPlanStusId;		//	12(3 Team, Confirm : 4 -> 4 + 4 + 4 = 12) : All Sales Plan Confirmed
+	var supplyPlan	= result[0].supplyPlanStusId;		//	4 : Supply Plan Confirm, 1 : Supply Plan Unconfirm
+	console.log("circle : salesPlan : " + salesPlan + ", supplyPlan : " + supplyPlan);
 	if ( null == result ) {
+		console.log("sales, supply grey");
 		$("#cirSales").addClass("circle_grey");
-		$("#cirConfirm").addClass("circle_grey");
+		$("#cirSales").removeClass("circle_blue");
+		$("#cirSales").removeClass("circle_red");
+		$("#cirSupply").addClass("circle_grey");
+		$("#cirSupply").removeClass("circle_blue");
+		$("#cirSupply").removeClass("circle_red");
 	} else {
-		if ( 12 == salesPlan ) {
+		if ( 4 == salesPlan ) {
+			console.log("sales blue");
+			$("#cirSales").removeClass("circle_grey");
 			$("#cirSales").addClass("circle_blue");
+			$("#cirSales").removeClass("circle_red");
 			if ( 4 == supplyPlan ) {
-				$("#cirConfirm").addClass("circle_blue");
+				console.log("supply blue");
+				$("#cirSupply").removeClass("circle_grey");
+				$("#cirSupply").addClass("circle_blue");
+				$("#cirSupply").removeClass("circle_red");
 			} else if ( 1 == supplyPlan ) {
-				$("#cirConfirm").addClass("circle_red");
+				console.log("supply red");
+				$("#cirSupply").removeClass("circle_grey");
+				$("#cirSupply").removeClass("circle_blue");
+				$("#cirSupply").addClass("circle_red");
+			} else {
+				console.log("?????????????");
 			}
 		} else {
+			console.log("sales red, supply grey");
+			$("#cirSales").removeClass("circle_grey");
+			$("#cirSales").removeClass("circle_blue");
 			$("#cirSales").addClass("circle_red");
-			$("#cirConfirm").addClass("circle_grey");
+			$("#cirSupply").addClass("circle_grey");
+			$("#cirSupply").removeClass("circle_blue");
+			$("#cirSupply").removeClass("circle_red");
 		}
 	}
 }
@@ -741,10 +989,13 @@ function fnBtnCtrl(result) {
 		$("#btnSave").addClass("btn_disabled");
 		$("#btnConfirm").addClass("btn_disabled");
 		$("#btnUnconfirm").addClass("btn_disabled");
+		console.log("1");
 	} else {
-		salesPlan	= result[0].conf;
-		supplyPlan	= result[0].planStusId;
-		if ( "12" == salesPlan ) {
+		salesPlan	= result[0].salesPlanStusId;
+		supplyPlan	= result[0].supplyPlanStusId;
+		console.log("salesPlan : " + salesPlan + ", supplyPlan : " + supplyPlan);
+		//if ( 12 == salesPlan ) {	//	4 * team cnt
+//		if ( 4 == salesPlan ) {
 			//	SalesPlan Confirm status
 			if ( 4 == supplyPlan ) {
 				//	SupplyPlan Confirm Status
@@ -752,27 +1003,52 @@ function fnBtnCtrl(result) {
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
 				$("#btnUnconfirm").removeClass("btn_disabled");
+				console.log("2");
 			} else if ( 1 == supplyPlan ) {
 				//	SupplyPlan Unconfirm Status
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").removeClass("btn_disabled");
 				$("#btnConfirm").removeClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
+				console.log("3");
 			} else {
 				//	error
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
+				console.log("4");
 			}
-		} else {
+//		} else {
 			//	SalesPlan Unconfirm status
-			$("#btnCreate").addClass("btn_disabled");
-			$("#btnSave").addClass("btn_disabled");
-			$("#btnConfirm").addClass("btn_disabled");
-			$("#btnUnconfirm").addClass("btn_disabled");
-		}
+	//		$("#btnCreate").addClass("btn_disabled");
+//			$("#btnSave").addClass("btn_disabled");
+			//$("#btnConfirm").addClass("btn_disabled");
+		//	$("#btnUnconfirm").addClass("btn_disabled");
+	//		console.log("5");
+//		}
 	}
+}
+	
+//get timestamp
+function getTimeStamp() {
+	function fnLeadingZeros(n, digits) {
+		var zero	= "";
+		n	= n.toString();
+		
+		if ( n.length < digits ) {
+			for (var i = 0 ; i < digits - n.length ; i++ ) {
+				zero	+= "0";
+			}
+		}
+		return	zero + n;
+	}
+	
+	var d	= new Date();
+	var date	= fnLeadingZeros(d.getFullYear(), 4) + fnLeadingZeros(d.getMonth() + 1, 2) + fnLeadingZeros(d.getDate(), 2);
+	var time	= fnLeadingZeros(d.getHours(), 2) + fnLeadingZeros(d.getMinutes(), 2) + fnLeadingZeros(d.getSeconds(), 2);
+	
+	return	date + "_" + time;
 }
 
 //	Grid
@@ -823,9 +1099,9 @@ var myGridID;
 				<td>
 					<div class="status_result">
 						<!-- circle_red, circle_blue, circle_grey -->
-						<p><span id ="cirSales" class="circle circle_grey"></span> Sales</p>
+						<p><span id ="cirSales" class="circle circle_grey"></span> Sales Plan</p>
 						<!-- <p><span id ="cirSave" class="circle circle_grey"></span> Plan Save</p> -->
-						<p><span id ="cirCinfirm" class="circle circle_grey"></span> Confirm</p>
+						<p><span id ="cirSupply" class="circle circle_grey"></span>   Supply Plan</p>
 					</div>
 				</td>
 			</tr>
@@ -887,7 +1163,9 @@ var myGridID;
 		<ul class="right_btns">
 			<li><p id="btnCreate" class="btn_grid btn_disabled"><a onclick="fnCreate(this);">Create</a></p></li>
 			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSaveDetail(this);">Save</a></p></li>
-			<li><p id="btnConfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this);">Confirm</a></p></li>
+			<li><p id="btnConfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'confirm');">Confirm</a></p></li>
+			<li><p id="btnUnconfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'unconfirm');">UnConfirm</a></p></li>
+			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SalesPlanManagement');">Excel</a></p></li>
 		</ul>
 	</div><!-- side_btns end -->
 
