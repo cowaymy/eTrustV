@@ -14,6 +14,7 @@ public interface SupplyPlanManagementService
 	 */
 	List<EgovMap> selectSupplyPlanHeader(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanInfo(Map<String, Object> params);
+	List<EgovMap> selectTotalSplitInfo(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanList(Map<String, Object> params);
 	int insertSupplyPlanMaster(Map<String, Object> params, SessionVO sessionVO);
 	int insertSupplyPlanDetail(Map<String, Object> params, SessionVO sessionVO);

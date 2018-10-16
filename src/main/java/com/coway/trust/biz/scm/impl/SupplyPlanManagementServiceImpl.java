@@ -97,6 +97,10 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 	public List<EgovMap> selectSupplyPlanInfo(Map<String, Object> params) {
 		return	supplyPlanManagementMapper.selectSupplyPlanInfo(params);
 	}
+	@Override
+	public List<EgovMap> selectTotalSplitInfo(Map<String, Object> params) {
+		return	supplyPlanManagementMapper.selectTotalSplitInfo(params);
+	}
 	
 	@Override
 	public List<EgovMap> selectSupplyPlanList(Map<String, Object> params) {
@@ -108,85 +112,92 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		
 		int saveCnt	= 0;
 		
-		String planId		= "";
-		String planYear		= "";	String befPlanYear	= "";
-		String planMonth	= "";	String befPlanMonth	= "";
-		String planWeek		= "";	String befPlanWeek	= "";
-		String issDtFrom	= "";
-		String issDtTo		= "";
+		String befDtFrom	= "";	String planWeekStart	= "";
+		String befDtTo		= "";	String planWeekEnd		= "";
+		int planId			= 0;	int planDtlId		= 0;
+		int planYear		= 0;	int planMonth		= 0;	int planWeek	= 0;
+		int befPlanYear		= 0;	int befPlanMonth	= 0;	int befPlanWeek	= 0;
+		int invenYear		= 0;	int invenMonth		= 0;
+		int planWeekSn		= 0;	int isSrptd			= 0;
+		int leadTm			= 0;
+		int planWeekTh		= 0;
+		int fstWeek			= 0;
+		int splitCnt		= 0;
 		
 		LOGGER.debug("insertSupplyPlanMaster : {}", params);
 		
-		List<EgovMap> selectSalesplanMonth	= salesPlanManagementMapper.selectSalesPlanMonth(params);
-		params.put("planMonth", selectSalesplanMonth.get(0).get("planMonth"));
+		//List<EgovMap> selectSalesplanMonth	= salesPlanManagementMapper.selectSalesPlanMonth(params);
+		List<EgovMap> selectTotalSplitInfo	= supplyPlanManagementMapper.selectTotalSplitInfo(params);
+		planYear	= Integer.parseInt(selectTotalSplitInfo.get(0).get("planYear").toString());
+		planMonth	= Integer.parseInt(selectTotalSplitInfo.get(0).get("planMonth").toString());
+		leadTm		= Integer.parseInt(selectTotalSplitInfo.get(0).get("leadTm").toString());
+		planWeekTh	= Integer.parseInt(selectTotalSplitInfo.get(0).get("planWeekTh").toString());
+		fstWeek		= Integer.parseInt(selectTotalSplitInfo.get(0).get("fstWeek").toString());
+		splitCnt	= Integer.parseInt(selectTotalSplitInfo.get(0).get("splitCnt").toString());
+		befPlanYear	= Integer.parseInt(selectTotalSplitInfo.get(0).get("befPlanYear").toString());
+		befPlanMonth	= Integer.parseInt(selectTotalSplitInfo.get(0).get("befPlanMonth").toString());
+		befPlanWeek	= Integer.parseInt(selectTotalSplitInfo.get(0).get("befPlanWeek").toString());
+		
+		params.put("planYear", planYear);
+		params.put("planMonth", planMonth);
+		params.put("leadTm", leadTm);
+		params.put("planWeekTh", planWeekTh);
+		params.put("fstWeek", fstWeek);
+		params.put("splitCnt", splitCnt);
+		params.put("befPlanYear", befPlanYear);
+		params.put("befPlanMonth", befPlanMonth);
+		params.put("befPlanWeek", befPlanWeek);
 		
 		//	1. insert Supply Plan Master
 		try {
 			supplyPlanManagementMapper.insertSupplyPlanMaster(params);
 			saveCnt++;
 			LOGGER.debug(" createCnt : {} ", saveCnt);
-			
-			/*supplyPlanManagementMapper.callSpScmInsSupplyPlanDetail(params);
-			
-			if ( null != params.get("result") ) {
-				String result	= params.get("result").toString();
-				LOGGER.debug(" callSpScmInsSupplyPlanDetail result : {} ", result);
-			} else {
-				LOGGER.debug(" callSpScmInsSupplyPlanDetail result is null");
-			}*/
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
 		
 		//	2. insert Supply Plan Detail
 		List<EgovMap> selectSupplyPlanInfo	= supplyPlanManagementMapper.selectSupplyPlanInfo(params);	//	planId, planMonth
-		planId		= selectSupplyPlanInfo.get(0).get("planId").toString();
-		planYear	= params.get("scmYearCbBox").toString();
-		planMonth	= selectSupplyPlanInfo.get(0).get("planMonth").toString();
-		planWeek	= params.get("scmWeekCbBox").toString();
-		params.put("planId", Integer.parseInt(planId));
-		params.put("planMonth", Integer.parseInt(planMonth));
-		LOGGER.debug("selectSupplyPlanInfo : {}", selectSupplyPlanInfo);
 		List<EgovMap> selectSplitInfo	= salesPlanManagementMapper.selectSplitInfo(params);			//	m0WeekCnt ~ m4WeekCnt
 		List<EgovMap> selectBefWeekInfo	= supplyPlanManagementMapper.selectBefWeekInfo(params);			//	befPlanYear, befPlanMonth, befPlanWeek
-		LOGGER.debug("selectSplitInfo : {}", selectSplitInfo);
-		LOGGER.debug("selectBefWeekInfo : {}", selectBefWeekInfo);
 		List<EgovMap> selectChildField	= salesPlanManagementMapper.selectChildField(params);
 		
-		//	make planmonth
-		if ( 1 == planMonth.length() ) {
-			planMonth	= "0" + planMonth;
+		planId		= Integer.parseInt(selectSupplyPlanInfo.get(0).get("planId").toString());
+		params.put("planId", planId);
+		
+		LOGGER.debug("selectSplitInfo : {}", selectSplitInfo);
+		LOGGER.debug("selectBefWeekInfo : {}", selectBefWeekInfo);
+		
+		//	set params before from - to
+		if ( planMonth < 10 ) {
+			befDtFrom	= planYear + "0" + planMonth + "01";
+			befDtTo		= planYear + "0" + planMonth + "31";
+		} else {
+			befDtFrom	= planYear + planMonth + "01";
+			befDtTo		= planYear + planMonth + "31";
 		}
-		issDtFrom	= planYear + planMonth + "01";
-		issDtTo		= planYear + planMonth + "31";
-		params.put("issDtFrom", issDtFrom);
-		params.put("issDtTo", issDtTo);
+		params.put("befDtFrom", befDtFrom);
+		params.put("befDtTo", befDtTo);
 		
 		//	set invenYear, invenMonth
-		if ( "01".equals(planMonth) ) {
-			params.put("invenYear", Integer.parseInt(planYear) - 1);
+		if ( 1 == planMonth ) {
+			params.put("invenYear", planYear - 1);
 			params.put("invenMonth", 12);
 		} else {
-			params.put("invenYear", Integer.parseInt(planYear));
-			params.put("invenMonth", Integer.parseInt(planMonth) - 1);
+			params.put("invenYear", planYear);
+			params.put("invenMonth", planMonth - 1);
 		}
 		
 		//	2-1. psi #1 : Sales Plan insert
 		try {
-			LOGGER.debug("insert psi#1 -> issDtFrom : " + issDtFrom + ", issDtTo : " + issDtTo);
+			LOGGER.debug("insert psi#1 -> befDtFrom : " + befDtFrom + ", befDtTo : " + befDtTo);
 			supplyPlanManagementMapper.insertSupplyPlanDetailPsi1(params);
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
 		
 		//	2-2. psi #4 : Before Week Supply Plan
-		befPlanYear		= selectBefWeekInfo.get(0).get("befPlanYear").toString();
-		befPlanMonth	= selectBefWeekInfo.get(0).get("befPlanMonth").toString();
-		befPlanWeek		= selectBefWeekInfo.get(0).get("befPlanWeek").toString();
-		params.put("befPlanYear", Integer.parseInt(befPlanYear));
-		params.put("befPlanMonth", Integer.parseInt(befPlanMonth));
-		params.put("befPlanWeek", Integer.parseInt(befPlanWeek));
-		
 		try {
 			LOGGER.debug("insert psi 4 -> befPlanYear : " + befPlanYear + ", befPlanMonth : " + befPlanMonth + ", befPlanWeek : " + befPlanWeek);
 			supplyPlanManagementMapper.insertSupplyPlanDetailPsi4(params);
@@ -203,38 +214,44 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		}
 		
 		//	3. update Supply Plan Detail
-		int planDtlId	= 0;
-		int safetyStock	= 0;
-		int leadTm		= 0;
-		int moq			= 0;
-		int loadingQty	= 0;
-		int invenQty	= 0;
-		int basicQty	= 0;
-		int overdue		= 0;
 		String stockCode	= "";
-		
 		int m0Psi1	= 0;	int m0Psi2	= 0;	int m0Psi3	= 0;	int m0Psi5	= 0;	int m0WeekCnt	= Integer.parseInt(selectSplitInfo.get(0).get("m0WeekCnt").toString());
 		int m1Psi1	= 0;	int m1Psi2	= 0;	int m1Psi3	= 0;	int m1Psi5	= 0;	int m1WeekCnt	= Integer.parseInt(selectSplitInfo.get(0).get("m1WeekCnt").toString());
 		int m2Psi1	= 0;	int m2Psi2	= 0;	int m2Psi3	= 0;	int m2Psi5	= 0;	int m2WeekCnt	= Integer.parseInt(selectSplitInfo.get(0).get("m2WeekCnt").toString());
 		int m3Psi1	= 0;	int m3Psi2	= 0;	int m3Psi3	= 0;	int m3Psi5	= 0;	int m3WeekCnt	= Integer.parseInt(selectSplitInfo.get(0).get("m3WeekCnt").toString());
 		int m4Psi1	= 0;	int m4Psi2	= 0;	int m4Psi3	= 0;	int m4Psi5	= 0;	int m4WeekCnt	= Integer.parseInt(selectSplitInfo.get(0).get("m4WeekCnt").toString());
 		
-		String zmonth	= planYear + planMonth;
-		params.put("zmonth", zmonth);
-		params.put("psiId", 1);	List<EgovMap> selectPsi1	= supplyPlanManagementMapper.selectPsi1(params);	//	psi1
-		params.put("psiId", 2);	List<EgovMap> selectPsi2	= supplyPlanManagementMapper.selectEachPsi(params);					//	psi2
-		params.put("psiId", 5);	List<EgovMap> selectPsi5	= supplyPlanManagementMapper.selectEachPsi(params);					//	psi5
+		params.put("psiId", 1);	List<EgovMap> selectPsi1	= supplyPlanManagementMapper.selectPsi1(params);		//	psi1
+		params.put("psiId", 2);	List<EgovMap> selectPsi2	= supplyPlanManagementMapper.selectEachPsi(params);		//	psi2
+		params.put("psiId", 5);	List<EgovMap> selectPsi5	= supplyPlanManagementMapper.selectEachPsi(params);		//	psi5
 		LOGGER.debug("selectPsi1 : {}", selectPsi1);
+		LOGGER.debug("selectPsi2 : {}", selectPsi2);
+		LOGGER.debug("selectPsi5 : {}", selectPsi5);
 		
-		//	psi1/psi2/psi3 is same cnt
+		//	set params to get po cnt
 		
-		//	re calc lead time
-		for ( int sn = 0 ; sn < selectChildField.size() ; sn++ ) {
-			String weekThSn	= selectChildField.get(sn).get("weekThSn").toString();
-			if ( "2".equals(weekThSn) ) {
-				leadTm	= leadTm + 1;
+		for ( int i = 0 ; i < selectTotalSplitInfo.size() ; i++ ) {
+			isSrptd	= Integer.parseInt(selectTotalSplitInfo.get(i).get("isSrptd").toString());
+			planWeek	= Integer.parseInt(selectTotalSplitInfo.get(i).get("planWeek").toString());
+			planWeekSn	= Integer.parseInt(selectTotalSplitInfo.get(i).get("planWeekSn").toString());
+			LOGGER.debug("isSrptd : " + isSrptd + ", planWeek : " + planWeek + ", planWeekSn : " + planWeekSn);
+			if ( 1 == isSrptd ) {
+				if ( 1 == planWeekSn ) {
+					//	split 앞주차
+					params.put("week" + (fstWeek + i), 0);			//	split 앞주차는 PO값을 안가져오기 위해서 파라미터 0
+				} else {
+					//	split 뒷주차
+					params.put("week" + (fstWeek + i), planWeek);	//	split 뒷주차는 PO값을 가져오기 위해서 파라미터 planWeek
+				}
+			} else {
+				params.put("week" + (fstWeek + i), planWeek);
 			}
 		}
+		for ( int i = selectTotalSplitInfo.size() + 1 ; i < 16 ; i++ ) {
+			params.put("week" + i, 9999);	//	dummy params
+		}
+		LOGGER.debug("params : {}", params);
+		List<EgovMap> selectPoInLeadTm	= supplyPlanManagementMapper.selectPoInLeadTm(params);
 		
 		//	psi2, psi5
 		Map<String, Object> psi1Params = new HashMap<String, Object>();
@@ -242,27 +259,28 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		Map<String, Object> psi3Params = new HashMap<String, Object>();
 		Map<String, Object> psi5Params = new HashMap<String, Object>();
 		
+		int moq	= 0;
+		int safetyStock	= 0;
+		int loadingQty	= 0;
+		int basicQty	= 0;
+		int overdue		= 0;
+		int totLeadTm	= leadTm + planWeekTh + splitCnt;	//	stock의 leadTm, 수립주차(planWeek), 수립주차의 해당월의 주차순서, leadTm 내의 스플릿주차 등을 감안한 최종 leadTm
+		//	selectPsi1.size() == selectPsi2.size() == selectPsi5.size()
 		for ( int i = 0 ; i < selectPsi1.size() ; i++ ) {
 			String intToStrFieldCnt1	= "";	int iLoopDataFieldCnt1	= 1;
 			String intToStrFieldCnt2	= "";	int iLoopDataFieldCnt2	= 1;
-			String intToStrFieldCnt3	= "";	int iLoopDataFieldCnt3	= 0;
 			int psi1	= 0;	//	ex) w01 Sales plan
 			int psi2	= 0;	//	ex) m01 Safety qty
 			int psi3	= 0;	//	ex) w01 Supply plan
 			int psi5	= 0;	//	ex) w01 - 1 Inventory qty
 			
-			planDtlId	= Integer.parseInt(selectPsi1.get(i).get("planDtlId").toString());
-			safetyStock	= Integer.parseInt(selectPsi1.get(i).get("safetyStock").toString());
-			leadTm	= Integer.parseInt(selectPsi1.get(i).get("leadTm").toString());
-			moq	= Integer.parseInt(selectPsi1.get(i).get("moq").toString());
-			loadingQty	= Integer.parseInt(selectPsi1.get(i).get("loadingQty").toString());
-			//invenQty	= Integer.parseInt(selectPsi1.get(i).get("invenQty").toString());
 			stockCode	= selectPsi1.get(i).get("stockCode").toString();
-			
-			//	기초재고
-			//	SalesPlan row의 overdue column에 기초재고를 저장함
-			basicQty	= Integer.parseInt(selectPsi1.get(i).get("overdue").toString());
-			overdue		= Integer.parseInt(selectPsi5.get(i).get("overdue").toString());
+			planDtlId	= Integer.parseInt(selectPsi1.get(i).get("planDtlId").toString());
+			moq			= Integer.parseInt(selectPsi1.get(i).get("moq").toString());
+			safetyStock	= Integer.parseInt(selectPsi1.get(i).get("safetyStock").toString());
+			loadingQty	= Integer.parseInt(selectPsi1.get(i).get("loadingQty").toString());
+			basicQty	= Integer.parseInt(selectPsi1.get(i).get("overdue").toString());	//	psi1의 overdue는 전월 기초재고
+			overdue		= Integer.parseInt(selectPsi5.get(i).get("overdue").toString());	//	psi5의 overdue는 전월 Overdue
 			
 			psi1Params.put("planId", planId);
 			psi1Params.put("psiId", 1);
@@ -307,16 +325,18 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				//	psi3
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m0Psi2;	//	ok
-				if ( 1 == m0 ) {
-					psi5	= basicQty - overdue;
-					if ( 0 >= psi1 + psi2 - psi5 ) {
-						psi3	= 0;
-					} else {
-						psi3	= psi1 + psi2 - psi5;
+				//	check leadTm
+				if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
+					if ( 1 == m0 ) {
+						psi5	= basicQty - overdue;
 					}
+					psi3	= Integer.parseInt(selectPoInLeadTm.get(i).get("w" + intToStrFieldCnt2).toString());
+					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 					psi5	= psi5 - psi1 + psi3;
-					LOGGER.debug("1. m0 : " + m0 + ", psi1 : " + psi1 + ", psi2 : " + psi2 + ", psi3 : " + psi3 + ", psi5 : " + psi5 + ", m0Psi3 : " + m0Psi3);
 				} else {
+					if ( 1 == m0 ) {
+						psi5	= basicQty - overdue;
+					}
 					if ( 0 > psi1 + psi2 - psi5 ) {
 						psi3	= 0;
 					} else {
@@ -362,10 +382,15 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				//	psi3, psi5
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m1Psi2;
-				if ( 0 > psi1 + psi2 - psi5 ) {
-					psi3	= 0;
+				if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
+					psi3	= Integer.parseInt(selectPoInLeadTm.get(i).get("w" + intToStrFieldCnt2).toString());
+					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 				} else {
-					psi3	= psi1 + psi2 - psi5;
+					if ( 0 > psi1 + psi2 - psi5 ) {
+						psi3	= 0;
+					} else {
+						psi3	= psi1 + psi2 - psi5;
+					}
 				}
 				psi5	= psi5 - psi1 + psi3;
 				m1Psi3	= m1Psi3 + psi3;
@@ -405,10 +430,15 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				//	psi3, psi5
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m2Psi2;
-				if ( 0 > psi1 + psi2 - psi5 ) {
-					psi3	= 0;
+				if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
+					psi3	= Integer.parseInt(selectPoInLeadTm.get(i).get("w" + intToStrFieldCnt2).toString());
+					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 				} else {
-					psi3	= psi1 + psi2 - psi5;
+					if ( 0 > psi1 + psi2 - psi5 ) {
+						psi3	= 0;
+					} else {
+						psi3	= psi1 + psi2 - psi5;
+					}
 				}
 				psi5	= psi5 - psi1 + psi3;
 				m2Psi3	= m2Psi3 + psi3;
@@ -435,7 +465,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				}
 				iLoopDataFieldCnt1++;
 			}
-			psi3Params.put("m3", m3Psi1);
+			psi1Params.put("m3", m3Psi1);
 			for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
 				intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 				//if ( 1 == intToStrFieldCnt2.length() ) {
@@ -448,10 +478,15 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				//	psi3, psi5
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m1Psi2;
-				if ( 0 > psi1 + psi2 - psi5 ) {
-					psi3	= 0;
+				if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
+					psi3	= Integer.parseInt(selectPoInLeadTm.get(i).get("w" + intToStrFieldCnt2).toString());
+					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 				} else {
-					psi3	= psi1 + psi2 - psi5;
+					if ( 0 > psi1 + psi2 - psi5 ) {
+						psi3	= 0;
+					} else {
+						psi3	= psi1 + psi2 - psi5;
+					}
 				}
 				psi5	= psi5 - psi1 + psi3;
 				m3Psi3	= m3Psi3 + psi3;
@@ -535,8 +570,8 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		String planYear		= "";	String befPlanYear	= "";
 		String planMonth	= "";	String befPlanMonth	= "";
 		String planWeek		= "";	String befPlanWeek	= "";
-		String issDtFrom	= "";
-		String issDtTo		= "";
+		String befDtFrom	= "";
+		String befDtTo		= "";
 		
 		List<EgovMap> selectSupplyPlanInfo	= supplyPlanManagementMapper.selectSupplyPlanInfo(params);	//	planId, planMonth
 		planId		= selectSupplyPlanInfo.get(0).get("planId").toString();
@@ -554,14 +589,14 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		if ( 1 == planMonth.length() ) {
 			planMonth	= "0" + planMonth;
 		}
-		issDtFrom	= planYear + planMonth + "01";
-		issDtTo		= planYear + planMonth + "31";
-		params.put("issDtFrom", issDtFrom);
-		params.put("issDtTo", issDtTo);
+		befDtFrom	= planYear + planMonth + "01";
+		befDtTo		= planYear + planMonth + "31";
+		params.put("befDtFrom", befDtFrom);
+		params.put("befDtTo", befDtTo);
 		
 		//	1. psi #1 : Sales Plan insert
 		try {
-			LOGGER.debug("insert psi#1 -> issDtFrom : " + issDtFrom + ", issDtTo : " + issDtTo);
+			LOGGER.debug("insert psi#1 -> befDtFrom : " + befDtFrom + ", befDtTo : " + befDtTo);
 			supplyPlanManagementMapper.insertSupplyPlanDetailPsi1(params);
 		} catch ( Exception e ) {
 			e.printStackTrace();

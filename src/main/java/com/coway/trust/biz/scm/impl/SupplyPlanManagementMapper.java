@@ -38,6 +38,8 @@ public interface SupplyPlanManagementMapper {
 	List<EgovMap> selectBefWeekInfo(Map<String, Object> params);
 	List<EgovMap> selectPsi1(Map<String, Object> params);
 	List<EgovMap> selectEachPsi(Map<String, Object> params);
+	List<EgovMap> selectPoInLeadTm(Map<String, Object> params);
+	List<EgovMap> selectTotalSplitInfo(Map<String, Object> params);
 	void updateSupplyPlanDetailPsi1(Map<String, Object> params);
 	void updateSupplyPlanDetailPsi235(Map<String, Object> params);
 }
