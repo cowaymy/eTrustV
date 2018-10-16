@@ -69,25 +69,28 @@ public class SupplyPlanManagementController {
 		
 		List<EgovMap> selectSupplyPlanHeader	= supplyPlanManagementService.selectSupplyPlanHeader(params);
 		List<EgovMap> selectSupplyPlanInfo		= supplyPlanManagementService.selectSupplyPlanInfo(params);
+		List<EgovMap> selectTotalSplitInfo		= supplyPlanManagementService.selectTotalSplitInfo(params);
 		
 		map.put("selectSupplyPlanHeader", selectSupplyPlanHeader);
 		
 		if ( ! selectSupplyPlanInfo.isEmpty() ) {
 			LOGGER.debug("planMonth : {}", selectSupplyPlanInfo.get(0).toString());
-			String planMonth	= String.valueOf(selectSupplyPlanInfo.get(0).get("planMonth"));
+			//String planMonth	= String.valueOf(selectSupplyPlanInfo.get(0).get("planMonth"));
+			String planMonth	= String.valueOf(selectTotalSplitInfo.get(0).get("planMonth"));
 			LOGGER.debug("planMonth : {}", planMonth);
 			
 			((Map<String, Object>) params).put("planMonth", planMonth);
 			LOGGER.debug("selectSupplyPlanHeader : {}", params.toString());
 			
-			List<EgovMap> selectSplitInfo	= salesPlanManagementService.selectSplitInfo(params);
+			//List<EgovMap> selectSplitInfo	= salesPlanManagementService.selectSplitInfo(params);
 			List<EgovMap> selectChildField	= salesPlanManagementService.selectChildField(params);
 			
-			LOGGER.debug("selectSplitInfo : {}", selectSplitInfo.toString());
+			//LOGGER.debug("selectSplitInfo : {}", selectSplitInfo.toString());
 			LOGGER.debug("selectChildField : {}", selectChildField.toString());
 			
 			map.put("selectSupplyPlanInfo", selectSupplyPlanInfo);
-			map.put("selectSplitInfo", selectSplitInfo);
+			map.put("selectTotalSplitInfo", selectTotalSplitInfo);
+			//map.put("selectSplitInfo", selectSplitInfo);
 			map.put("selectChildField", selectChildField);
 		}
 		
@@ -122,22 +125,28 @@ public class SupplyPlanManagementController {
 		
 		if ( ! selectSupplyPlanInfo.isEmpty() ) {
 			LOGGER.debug("selectSupplyPlanInfo : {}", selectSupplyPlanInfo);
-			//String planId		= String.valueOf(selectSupplyPlanInfo.get(0).get("planId"));
-			//String planStusId	= String.valueOf(selectSupplyPlanInfo.get(0).get("planStusId"));
+			String salesPlanStusId	= String.valueOf(selectSupplyPlanInfo.get(0).get("salesPlanStusId"));
+			String supplyPlanStusId	= String.valueOf(selectSupplyPlanInfo.get(0).get("supplyPlanStusId"));
 			
-			message.setCode(AppConstants.FAIL);
-			message.setData(totCnt);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			if ( "0".equals(supplyPlanStusId) ) {
+				totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
+				if ( 0 < totCnt ) {
+					message.setCode(AppConstants.SUCCESS);
+					message.setData(totCnt);
+					message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+				} else {
+					message.setCode(AppConstants.FAIL);
+					message.setData(totCnt);
+					message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+				}
+			} else {
+				message.setCode(AppConstants.FAIL);
+				message.setData(totCnt);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			}
 		} else {
-			
 			totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
-			
 			if ( 0 < totCnt ) {
-				//	safety stock update
-				LOGGER.debug("============ update safety Stock ===============");
-				//dtlCnt	= supplyPlanManagementService.updateSupplyPlanDetail(params, sessionVO);
-				//dtlCnt	= supplyPlanManagementService.insertSupplyPlanDetail(params, sessionVO);
-				
 				message.setCode(AppConstants.SUCCESS);
 				message.setData(totCnt);
 				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
