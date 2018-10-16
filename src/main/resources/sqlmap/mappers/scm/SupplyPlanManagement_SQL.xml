@@ -230,6 +230,87 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_CTGRY_ID, B.STOCK_CODE), 2) AS DIV_
  ORDER BY D.STK_CTGRY_ID, B.STOCK_CODE, B.PSI_ID
 </select>
 
+<select id="selectSupplyPlanSummaryList" parameterType="Map" resultType="egovMap">
+SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_CTGRY_ID, B.STOCK_CODE), 2) AS DIV_ODD
+     , A.PLAN_ID
+     , A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , B.PSI_ID
+     , G.CODE_NAME AS PSI_NAME
+     , D.STK_TYPE_ID AS TYPE_ID
+     , E.CODE_NAME AS CATEGORY_NAME
+     , D.STK_CTGRY_ID AS CATEGORY_ID
+     , F.CODE_NAME AS TYPE_NAME
+     , B.STOCK_CODE AS CODE
+     , D.STK_DESC AS NAME
+     , SUM(NVL(B.M0_PLAN, 0)) AS M0
+     , SUM(NVL(B.M1, 0)) AS M1
+     , SUM(NVL(B.M2, 0)) AS M2
+     , SUM(NVL(B.M3, 0)) AS M3
+     , SUM(NVL(B.M4, 0)) AS M4
+     , SUM(NVL(B.OVERDUE, 0)) AS OVERDUE
+     , SUM(NVL(B.W01, 0)) AS W01
+     , SUM(NVL(B.W02, 0)) AS W02
+     , SUM(NVL(B.W03, 0)) AS W03
+     , SUM(NVL(B.W04, 0)) AS W04
+     , SUM(NVL(B.W05, 0)) AS W05
+     , SUM(NVL(B.W06, 0)) AS W06
+     , SUM(NVL(B.W07, 0)) AS W07
+     , SUM(NVL(B.W08, 0)) AS W08
+     , SUM(NVL(B.W09, 0)) AS W09
+     , SUM(NVL(B.W10, 0)) AS W10
+     , SUM(NVL(B.W11, 0)) AS W11
+     , SUM(NVL(B.W12, 0)) AS W12
+     , SUM(NVL(B.W13, 0)) AS W13
+     , SUM(NVL(B.W14, 0)) AS W14
+     , SUM(NVL(B.W15, 0)) AS W15
+     , SUM(NVL(B.W16, 0)) AS W16
+     , SUM(NVL(B.W17, 0)) AS W17
+     , SUM(NVL(B.W18, 0)) AS W18
+     , SUM(NVL(B.W19, 0)) AS W19
+     , SUM(NVL(B.W20, 0)) AS W20
+     , SUM(NVL(B.W21, 0)) AS W21
+     , SUM(NVL(B.W22, 0)) AS W22
+     , SUM(NVL(B.W23, 0)) AS W23
+     , SUM(NVL(B.W24, 0)) AS W24
+     , SUM(NVL(B.W25, 0)) AS W25
+     , SUM(NVL(B.W26, 0)) AS W26
+     , SUM(NVL(B.W27, 0)) AS W27
+     , SUM(NVL(B.W28, 0)) AS W28
+     , SUM(NVL(B.W29, 0)) AS W29
+     , SUM(NVL(B.W30, 0)) AS W30
+  FROM SCM0005M A
+  LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_MASTER_ID)
+  LEFT OUTER JOIN SCM0008M C ON (B.STOCK_CODE = C.STOCK_CODE)
+  LEFT OUTER JOIN SYS0026M D ON (C.STOCK_ID = D.STK_ID)
+  LEFT OUTER JOIN SYS0013M E ON (D.STK_CTGRY_ID = E.CODE_ID AND E.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M F ON (D.STK_TYPE_ID = F.CODE_ID AND F.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+  LEFT OUTER JOIN SYS0013M G ON (B.PSI_ID = G.CODE AND G.CODE_MASTER_ID = 399) /* 399 : PSI ID */
+ WHERE A.PLAN_YEAR = #{scmYearCbBox}
+   AND A.PLAN_WEEK = #{scmWeekCbBox}
+	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
+   AND D.STK_TYPE_ID IN
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+   AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
+ GROUP BY A.PLAN_ID
+     , A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , B.PSI_ID
+     , G.CODE_NAME
+     , D.STK_TYPE_ID
+     , E.CODE_NAME
+     , D.STK_CTGRY_ID
+     , F.CODE_NAME
+     , B.STOCK_CODE
+     , D.STK_DESC
+ ORDER BY D.STK_CTGRY_ID, B.STOCK_CODE, B.PSI_ID
+</select>
+
 <insert id="insertSupplyPlanMaster" parameterType="Map">
 INSERT INTO SCM0005M
 (
