@@ -20,4 +20,6 @@ public interface SupplyPlanManagementService
 	int insertSupplyPlanDetail(Map<String, Object> params, SessionVO sessionVO);
 	int updateSupplyPlanMaster(Map<String, Object> params, SessionVO sessionVO);
 	int updateSupplyPlanDetail(List<Object> updList, SessionVO sessionVO);
+	
+	List<EgovMap> selectSupplyPlanSummaryList(Map<String, Object> params);
 }
