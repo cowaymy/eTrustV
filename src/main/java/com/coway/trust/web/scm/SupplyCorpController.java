@@ -39,11 +39,11 @@ public class SupplyCorpController {
 	private MessageSourceAccessor messageAccessor;
 
 	// Supply Plan Summary By CDC
-	@RequestMapping(value = "/supplyPlanByCDC.do")
+/*	@RequestMapping(value = "/supplyPlanByCDC.do")
 	public String supplyPlanByCdcMain(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		//model.addAttribute("languages", loginService.getLanguages());
 		return "/scm/supplyPlanByCDC";  
-	}  
+	}  */
 	
 	@RequestMapping(value = "/selectSupplyCDC.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectSupplyCDC(@RequestParam Map<String, Object> params) {
@@ -126,11 +126,11 @@ public class SupplyCorpController {
 		return ResponseEntity.ok(map);
 	}	
 	
-	// Supply Plan Summary View
+/*	// Supply Plan Summary View
 	@RequestMapping(value = "/supplyPlanSummary.do")
 	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return "/scm/supplyPlanSummaryView";  
-	}  
+	}*/  
 	
 	@RequestMapping(value = "/selectSupplyCorpListSearch.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectSalesPlanMngmentList(@RequestBody Map<String, Object> params)

@@ -52,6 +52,12 @@ public class SupplyPlanManagementController {
 		return	"/scm/supplyPlanManagement";
 	}
 	
+	// Supply Plan Summary View
+	@RequestMapping(value = "/supplyPlanSummary.do")
+	public String login2(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return "/scm/supplyPlanSummary";  
+	}
+	
 	@RequestMapping(value = "/selectScmCdc.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectScmCdc(@RequestParam Map<String, Object> params) {
 		LOGGER.debug("selectScmCdc : {}", params.toString());
@@ -209,6 +215,20 @@ public class SupplyPlanManagementController {
 		}
 		
 		return	ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/selectSupplyPlanSummaryList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSupplyPlanSummaryList(@RequestBody Map<String, Object> params) {
+		
+		LOGGER.debug("selectSupplyPlanSummaryList : {}", params.toString());
+		
+		List<EgovMap> selectSupplyPlanSummaryList = supplyPlanManagementService.selectSupplyPlanSummaryList(params);
+		
+		Map<String, Object> map = new HashMap<>();
+		
+		map.put("selectSupplyPlanSummaryList", selectSupplyPlanSummaryList);
+		
+		return	ResponseEntity.ok(map);
 	}
 /*	@RequestMapping(value = "/selectCalendarHeaderByCdc.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectCalendarHeaderByCdcList(@RequestBody Map<String, Object> params)
