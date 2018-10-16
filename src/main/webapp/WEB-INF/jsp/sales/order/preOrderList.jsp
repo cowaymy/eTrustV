@@ -156,6 +156,7 @@
            { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width : 100 }
           , { headerText : "App Type",        dataField : "appType",    editable : false, width : 80  }
           , { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width : 100 }
+          , { headerText : "eKey-in Time",  dataField : "requestTm",  editable : false, width : 100 }
           , { headerText : "Product",         dataField : "product",    editable : false}
           , { headerText : "Customer Name",   dataField : "custNm",     editable : false, width : 80  }
           , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  }
