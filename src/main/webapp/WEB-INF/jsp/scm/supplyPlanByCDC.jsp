@@ -216,7 +216,7 @@ function fnSupplyPlanHeader() {
 				//	if selectSupplyPlanHeader result is null then alert
 				if ( null == result.selectSupplyPlanInfo || 1 > result.selectSupplyPlanInfo.length ) {
 					fnBtnCtrl(result.selectSupplyPlanInfo);
-					Common.alert("Supply Plan was not created on this week1");
+					Common.alert("Sales Plan must be first created on this week");
 					return	false;
 				} else {
 					fnSetSupplyPlanInfo(result.selectSupplyPlanInfo);
@@ -224,12 +224,12 @@ function fnSupplyPlanHeader() {
 					//fnSetSalesPlanInfo(result.selectSupplyPlanInfo);
 				}
 				
-				//	if selectSplitInfo result is null then alert
-				if ( null == result.selectSplitInfo || 1 > result.selectSplitInfo.length ) {
+				//	if selectTotalSplitInfo result is null then alert
+				if ( null == result.selectTotalSplitInfo || 1 > result.selectTotalSplitInfo.length ) {
 					Common.alert("Supply Plan was not created on this week2");
 					return	false;
 				} else {
-					splitInfo	= result.selectSplitInfo;
+					splitInfo	= result.selectTotalSplitInfo;
 				}
 				
 				//	if selectChildField result is null then alert
@@ -249,8 +249,11 @@ function fnSupplyPlanHeader() {
 					return	false;
 				}
 				
-				//int leadTm	= result.selectSupplyPlanInfo[0].leadTm;
-				//console.log("===leadTm : " + result.selectSupplyPlanInfo[0].leadTm);
+				var leadTm		= result.selectTotalSplitInfo[0].leadTm;
+				var planWeekTh	= result.selectTotalSplitInfo[0].planWeekTh;
+				var splitCnt	= result.selectTotalSplitInfo[0].splitCnt;
+				leadTm	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(splitCnt);
+				//console.log("===leadTm : " + leadTm);
 				//	make header
 				if ( null != result.selectSupplyPlanHeader && 0 < result.selectSupplyPlanHeader.length ) {
 					dynamicLayout.push(
@@ -434,11 +437,11 @@ function fnSupplyPlanHeader() {
 							}
 					);
 					
-					m0WeekCnt	= parseInt(result.selectSplitInfo[0].m0WeekCnt);
-					m1WeekCnt	= parseInt(result.selectSplitInfo[0].m1WeekCnt);
-					m2WeekCnt	= parseInt(result.selectSplitInfo[0].m2WeekCnt);
-					m3WeekCnt	= parseInt(result.selectSplitInfo[0].m3WeekCnt);
-					m4WeekCnt	= parseInt(result.selectSplitInfo[0].m4WeekCnt);
+					m0WeekCnt	= parseInt(result.selectTotalSplitInfo[0].m0WeekCnt);
+					m1WeekCnt	= parseInt(result.selectTotalSplitInfo[0].m1WeekCnt);
+					m2WeekCnt	= parseInt(result.selectTotalSplitInfo[0].m2WeekCnt);
+					m3WeekCnt	= parseInt(result.selectTotalSplitInfo[0].m3WeekCnt);
+					m4WeekCnt	= parseInt(result.selectTotalSplitInfo[0].m4WeekCnt);
 					
 					m0ThWeekStart	= parseInt(result.selectChildField[0].weekTh);
 					m1ThWeekStart	= m0ThWeekStart + m0WeekCnt;
@@ -469,7 +472,7 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						if ( iLoopDataFieldCnt > result.selectSupplyPlanInfo[0].leadTm ) {
+						if ( iLoopDataFieldCnt > leadTm ) {
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,	//	w00
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
@@ -493,6 +496,7 @@ function fnSupplyPlanHeader() {
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
 								formatString : "#,##0",
+								editable : false,
 								style : "my-columnLeadTm"
 							});
 						}
@@ -515,7 +519,7 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						if ( iLoopDataFieldCnt > result.selectSupplyPlanInfo[0].leadTm ) {
+						if ( iLoopDataFieldCnt > leadTm ) {
 							groupM1.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
@@ -539,6 +543,7 @@ function fnSupplyPlanHeader() {
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
 								formatString : "#,##0",
+								editable : false,
 								style : "my-columnLeadTm"
 							});
 						}
@@ -561,7 +566,7 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						if ( iLoopDataFieldCnt > result.selectSupplyPlanInfo[0].leadTm ) {
+						if ( iLoopDataFieldCnt > leadTm ) {
 							groupM2.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
@@ -585,6 +590,7 @@ function fnSupplyPlanHeader() {
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
 								formatString : "#,##0",
+								editable : false,
 								style : "my-columnLeadTm"
 							});
 						}
@@ -607,7 +613,7 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						if ( iLoopDataFieldCnt > result.selectSupplyPlanInfo[0].leadTm ) {
+						if ( iLoopDataFieldCnt > leadTm ) {
 							groupM3.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
@@ -631,6 +637,7 @@ function fnSupplyPlanHeader() {
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
 								formatString : "#,##0",
+								editable : false,
 								style : "my-columnLeadTm"
 							});
 						}
@@ -653,7 +660,7 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						if ( iLoopDataFieldCnt > result.selectSupplyPlanInfo[0].leadTm ) {
+						if ( iLoopDataFieldCnt > leadTm ) {
 							groupM4.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
@@ -949,7 +956,7 @@ function fnSetSupplyPlanInfo(result) {
 		$("#cirSupply").removeClass("circle_blue");
 		$("#cirSupply").removeClass("circle_red");
 	} else {
-		if ( 4 == salesPlan ) {
+		if ( 4 == salesPlan || 8 == salesPlan || 12 == salesPlan ) {
 			console.log("sales blue");
 			$("#cirSales").removeClass("circle_grey");
 			$("#cirSales").addClass("circle_blue");
@@ -964,6 +971,11 @@ function fnSetSupplyPlanInfo(result) {
 				$("#cirSupply").removeClass("circle_grey");
 				$("#cirSupply").removeClass("circle_blue");
 				$("#cirSupply").addClass("circle_red");
+			} else if ( 0 == supplyPlan ) {
+				console.log("supply grey");
+				$("#cirSupply").addClass("circle_grey");
+				$("#cirSupply").removeClass("circle_blue");
+				$("#cirSupply").removeClass("circle_red");
 			} else {
 				console.log("?????????????");
 			}
@@ -982,22 +994,19 @@ function fnSetSupplyPlanInfo(result) {
 
 //	button control
 function fnBtnCtrl(result) {
-	var scmCdcCbBox	= $("#scmCdcCbBox").val();
-	var salesPlan	= "";
-	var supplyPlan	= "";
-	
+	var salesPlan	= result[0].salesPlanStusId;		//	12(3 Team, Confirm : 4 -> 4 + 4 + 4 = 12) : All Sales Plan Confirmed
+	var supplyPlan	= result[0].supplyPlanStusId;		//	4 : Supply Plan Confirm, 1 : Supply Plan Unconfirm
+	console.log("circle : salesPlan : " + salesPlan + ", supplyPlan : " + supplyPlan);
 	if ( null == result ) {
+		console.log("create");
 		$("#btnCreate").removeClass("btn_disabled");
 		$("#btnSave").addClass("btn_disabled");
 		$("#btnConfirm").addClass("btn_disabled");
 		$("#btnUnconfirm").addClass("btn_disabled");
 		console.log("1");
 	} else {
-		salesPlan	= result[0].salesPlanStusId;
-		supplyPlan	= result[0].supplyPlanStusId;
-		console.log("salesPlan : " + salesPlan + ", supplyPlan : " + supplyPlan);
 		//if ( 12 == salesPlan ) {	//	4 * team cnt
-//		if ( 4 == salesPlan ) {
+		if ( 4 == salesPlan || 8 == salesPlan || 12 == salesPlan ) {
 			//	SalesPlan Confirm status
 			if ( 4 == supplyPlan ) {
 				//	SupplyPlan Confirm Status
@@ -1005,30 +1014,37 @@ function fnBtnCtrl(result) {
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
 				$("#btnUnconfirm").removeClass("btn_disabled");
-				console.log("2");
+				console.log("unconfirm");
 			} else if ( 1 == supplyPlan ) {
 				//	SupplyPlan Unconfirm Status
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").removeClass("btn_disabled");
 				$("#btnConfirm").removeClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
-				console.log("3");
+				console.log("confirm, save");
+			} else if ( 0 == supplyPlan ) {
+				//	SupplyPlan Unconfirm Status
+				$("#btnCreate").removeClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+				console.log("create");
 			} else {
 				//	error
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
-				console.log("4");
+				console.log("none1");
 			}
-//		} else {
+		} else {
 			//	SalesPlan Unconfirm status
-	//		$("#btnCreate").addClass("btn_disabled");
-//			$("#btnSave").addClass("btn_disabled");
-			//$("#btnConfirm").addClass("btn_disabled");
-		//	$("#btnUnconfirm").addClass("btn_disabled");
-	//		console.log("5");
-//		}
+			$("#btnCreate").addClass("btn_disabled");
+			$("#btnSave").addClass("btn_disabled");
+			$("#btnConfirm").addClass("btn_disabled");
+			$("#btnUnconfirm").addClass("btn_disabled");
+			console.log("none2");
+		}
 	}
 }
 	
