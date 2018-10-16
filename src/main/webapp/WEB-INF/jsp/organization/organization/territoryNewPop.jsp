@@ -13,27 +13,27 @@ var excelLayout = [
                    ];
 var gridPros = {
         // 페이지 설정
-        usePaging : true,               
-        pageRowCount : 10,              
+        usePaging : true,
+        pageRowCount : 10,
         //fixedColumnCount : 1,
         // 편집 가능 여부 (기본값 : false)
-        editable : false,                
+        editable : false,
         // 엔터키가 다음 행이 아닌 다음 칼럼으로 이동할지 여부 (기본값 : false)
-        enterKeyColumnBase : true,                
+        enterKeyColumnBase : true,
         // 셀 선택모드 (기본값: singleCell)
-        //selectionMode : "multipleCells",                
+        //selectionMode : "multipleCells",
         // 컨텍스트 메뉴 사용 여부 (기본값 : false)
-        useContextMenu : true,                
+        useContextMenu : true,
         // 필터 사용 여부 (기본값 : false)
-        enableFilter : true,            
+        enableFilter : true,
         // 그룹핑 패널 사용
-        //useGroupingPanel : true,                
+        //useGroupingPanel : true,
         // 상태 칼럼 사용
-        showStateColumn : true,                
+        showStateColumn : true,
         // 그룹핑 또는 트리로 만들었을 때 펼쳐지게 할지 여부 (기본값 : false)
-        displayTreeOpen : true,                
-        noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",                
-        groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",                
+        displayTreeOpen : true,
+        noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+        groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
         //selectionMode : "multipleCells",
         //rowIdField : "stkid",
         enableSorting : true,
@@ -52,9 +52,9 @@ function fn_uploadFile() {
     formData.append("comBranchTypep", $("#comBranchTypep").val());
 
     Common.ajaxFile("/organization/territory/excelUpload", formData, function (result) {
-      
+
     	console.log(result);
-    	
+
     	if(result.code == "99"){
             Common.alert(" ExcelUpload "+DEFAULT_DELIMITER + result.message);
          }else{
@@ -78,31 +78,31 @@ function fn_downFile() {
 
 
 $(document).ready(function(){
-	var stringMemType ="${param.memType}"; 
+	var stringMemType ="${param.memType}";
 	$("#comBranchTypep").val(stringMemType);
-	
+
 	$('#excelDown').click(function() {
         // 그리드의 숨겨진 칼럼이 있는 경우, 내보내기 하면 엑셀에 아예 포함시키지 않습니다.
         // 다음처럼 excelProps 에서 exceptColumnFields 을 지정하십시오.
-        
+
         var excelProps = {
-                
+
             fileName     : "Assign Change Upload",
             //sheetName : $("#txtlocCode").text(),
-            
+
             //exceptColumnFields : ["cntQty"], // 이름, 제품, 컬러는 아예 엑셀로 내보내기 안하기.
-            
+
              //현재 그리드의 히든 처리된 칼럼의 dataField 들 얻어 똑같이 동기화 시키기
-           exceptColumnFields : AUIGrid.getHiddenColumnDataFields(myGridIDExcelHide) 
+           exceptColumnFields : AUIGrid.getHiddenColumnDataFields(myGridIDExcelHide)
         };
-        
+
         //AUIGrid.exportToXlsx(myGridIDHide, excelProps);
         AUIGrid.exportToXlsx(myGridIDExcelHide, excelProps);
         //GridCommon.exportTo("grid_wrap", "xlsx", "test");
     });
 
-	
-	
+
+
 });
 
 
@@ -145,14 +145,15 @@ $(document).ready(function(){
 <tbody>
 <tr>
 
-        
+
     <th scope="row">Branch Type</th>
     <td>
             <select class="multy_select w100p"  id="comBranchTypep" name="comBranchTypep">
                <option value="42">Cody Branch</option>
                <option value="43">Dream Service Center</option>
+               <option value="45">Sales Office</option>
             </select>
-            
+
     </td>
 </tr>
 <tr>
@@ -160,22 +161,22 @@ $(document).ready(function(){
                     <td>
 					    <div class="auto_file"><!-- auto_file start -->
 					       <form id="fileUploadForm" method="post" enctype="multipart/form-data" action="">
-					    
+
 							    <input title="file add" type="file" id="uploadfile" name="uploadfile">
 							    <label><span class="label_text"><a href="#">File</a></span><input class="input_text" type="text" readonly="readonly"></label>
 						   </form>
 						</div><!-- auto_file end -->
-						    
-						    <p class="btn_sky"><a href="javascript:fn_uploadFile()" >ExcelUpLoad</a></p> 
-						    
-						    
+
+						    <p class="btn_sky"><a href="javascript:fn_uploadFile()" >ExcelUpLoad</a></p>
+
+
 				    </td>
 	        </tr>
 </tbody>
 </table><!-- table end -->
 
 <article class="grid_wrap"><!-- grid_wrap start -->
-        
+
         <div id="grid_wrap_hide" style="display: none;"></div>
 </article>
 </section><!-- pop_body end -->
