@@ -42,4 +42,6 @@ public interface SupplyPlanManagementMapper {
 	List<EgovMap> selectTotalSplitInfo(Map<String, Object> params);
 	void updateSupplyPlanDetailPsi1(Map<String, Object> params);
 	void updateSupplyPlanDetailPsi235(Map<String, Object> params);
+	
+	List<EgovMap> selectSupplyPlanSummaryList(Map<String, Object> params);
 }

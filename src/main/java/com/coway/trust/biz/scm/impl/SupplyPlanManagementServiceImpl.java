@@ -563,6 +563,13 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 	}
 	
 	@Override
+	public List<EgovMap> selectSupplyPlanSummaryList(Map<String, Object> params) {
+		return	supplyPlanManagementMapper.selectSupplyPlanSummaryList(params);
+	}
+	
+	//	이하 미사용
+	
+	@Override
 	public int insertSupplyPlanDetail(Map<String, Object> params, SessionVO sessionVO) {
 		int saveCnt	= 0;
 		
