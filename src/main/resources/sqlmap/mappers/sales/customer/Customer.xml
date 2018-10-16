@@ -802,8 +802,10 @@
 				                       LEFT JOIN SYS0047M Extent5 ON Extent5.USER_ID = Extent1.CUST_CRC_UPD_USER_ID
 				                       JOIN SYS0013M Extent6 ON Extent6.CODE_ID = Extent1.CARD_TYPE_ID
 			                 WHERE  8 <> Extent1.CUST_CRC_STUS_ID
-			                          AND  CASE WHEN Extent1.CUST_ID IS NOT NULL THEN Extent1.CUST_ID ELSE 0 END = #{custId}
          ]]>
+                                   <if test='custId != null and custId !=""'>
+                                      AND  CASE WHEN Extent1.CUST_ID IS NOT NULL THEN Extent1.CUST_ID ELSE 0 END = #{custId}
+                                   </if>
 		                           <if test='custOriCrcNo != null and custOriCrcNo !=""'>
 		                              AND Extent1.CUST_ORI_CRC_NO = #{custOriCrcNo}
 		                           </if>
