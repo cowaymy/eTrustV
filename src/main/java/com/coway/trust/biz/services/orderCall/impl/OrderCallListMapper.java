@@ -10,21 +10,25 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface OrderCallListMapper {
 
 	List<EgovMap> selectOrderCall(Map<String, Object> params);
-	
+
 	EgovMap getOrderCall(Map<String, Object> params);
-	
+
 	EgovMap selectCallEntry(Map<String, Object> params);
-	
+
+	EgovMap selectOrderEntry(String orderNo);
+
 	void insertCallResult(Map<String, Object> params);
-	
+
 	void updateCallEntry(Map<String, Object> params);
-	
+
 	void insertInstallEntry(Map<String, Object> params);
-	
+
+	void updateASEntry(Map<String, Object> params);
+
 	List<EgovMap> selectCallStatus();
-	
+
 	String selectMaxId(Map<String, Object> params);
-	
+
 	List<EgovMap> selectCallLogTransaction(Map<String, Object> params);
 
 	List<EgovMap> getstateList();
@@ -34,9 +38,9 @@ public interface OrderCallListMapper {
 	EgovMap selectCdcAvaiableStock(Map<String, Object> params);
 
 	EgovMap selectRdcStock(Map<String, Object> params);
-	
+
 	EgovMap getRdcInCdc(Map<String, Object> params);
-	
+
 	List<EgovMap> selectProductList();
 
 }
