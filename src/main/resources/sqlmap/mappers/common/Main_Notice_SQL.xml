@@ -36,9 +36,13 @@ WITH VIEW_COUNT AS
          AND 8 <> STUS_CODE_ID
          AND APP_TYPE_ID IN (66,67,68) ) SALES,
 
-         (SELECT CUST_ACC_QTY
-           FROM SAL0222M
-            )  ACC_ACT_ACCOUNT
+     (SELECT CUST_ACC_QTY
+        FROM SAL0222M )  ACC_ACT_ACCOUNT,
+
+     (SELECT COUNT(*)
+         FROM SYS0092M
+       WHERE NTF_USER_ID = #{userId}
+           AND NTF_FLAG = '1') NTF_CNT
 FROM DUAL )
 
 SELECT
@@ -48,7 +52,8 @@ SELECT
        OUT_RIGHT ,
        INSTALLMENT ,
        (RENTAL + OUT_RIGHT + INSTALLMENT) TOTAL,
-       ACC_ACT_ACCOUNT
+       ACC_ACT_ACCOUNT,
+       NTF_CNT
 FROM VIEW_COUNT
 	]]>
 	</select>

@@ -339,6 +339,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 			LOGGER.debug("rejection invoAppvInfo =====================================>>  " + invoAppvInfo);
 			webInvoiceMapper.updateAppvInfo(invoAppvInfo);
 			webInvoiceMapper.updateAppvLine(invoAppvInfo);
+			webInvoiceMapper.insertNotification(invoAppvInfo);
 		}
 	}
 

@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper
-	namespace="com.coway.trust.biz.test.impl.TestMapper">
+<mapper namespace="com.coway.trust.biz.test.impl.TestMapper">
 
     <select id="getClaimNo" parameterType="Map" resultType="egovMap">
         /* staffClaimMapper.selectNextClmNo */
@@ -194,39 +193,39 @@
         GROUP BY A.ATCH_FILE_GRP_ID || '-' || C.ATCH_FILE_ID
     </select>
 
-    <delete id="deleteFileMaster" parameterType="Map">
+    <update id="deleteFileMaster" parameterType="Map">
         DELETE FROM SYS0070M WHERE ATCH_FILE_GRP_ID = #{atchFileGrpId}
-    </delete>
+    </update>
 
-    <delete id="deleteFileDtls" parameterType="Map">
+    <update id="deleteFileDtls" parameterType="Map">
         DELETE FROM SYS0071D WHERE ATCH_FILE_ID = #{atchFileId}
-    </delete>
+    </update>
 
-    <delete id="deleteMasterClaim" parameterType="Map">
+    <update id="deleteMasterClaim" parameterType="Map">
         <!-- deleteMasterClaim -->
         UPDATE FCM0019M
         SET CLM_FLG = 'Y'
         WHERE CLM_NO = #{claimNo}
-    </delete>
+    </update>
 
-    <delete id="deleteDtlsClaim" parameterType="Map">
+    <update id="deleteDtlsClaim" parameterType="Map">
         UPDATE FCM0020D
         SET CLM_FLG = 'Y'
         WHERE CLM_NO = #{claimNo}
-    </delete>
+    </update>
 
-    <delete id="deleteNCDtls" parameterType="Map">
+    <update id="deleteNCDtls" parameterType="Map">
         UPDATE FCM0020D
         SET CLM_FLG = 'Y'
         WHERE CLM_NO = #{claimNo}
             AND CLAM_UN = #{clamUn}
-    </delete>
+    </update>
 
-    <delete id="deleteCMDtls" parameterType="Map">
+    <update id="deleteCMDtls" parameterType="Map">
         UPDATE FCM0021D
         SET CLM_FLG = 'Y'
         WHERE CLM_NO = #{claimNo}
-    </delete>
+    </update>
 
     <select id="selectNextFileId" resultType="int">
         SELECT SYS0071D_ATCH_FILE_ID_SEQ.NEXTVAL atchFileId FROM DUAL
@@ -462,4 +461,39 @@
             AND T1.CLM_FLG = 'N'
         ORDER  BY T1.CLM_SEQ
     </select>
+
+    <!-- *********************************** NOTIFICATION *********************************** -->
+
+    <select id="selectNtfList" parameterType="Map" resultType="egovMap">
+        SELECT
+            NTF_ID,
+            NTF_TYPE_DESC,
+            NTF_KEY,
+            NTF_REM,
+            NTF_FLAG
+        FROM SYS0092M
+        WHERE NTF_USER_ID = #{userId}
+        <if test="ntfFlag != null and ntfFlag != '' ">
+            AND NTF_FLAG = #{ntfFlag}
+        </if>
+        <if test="createDate != null and createDate != ''">
+        <![CDATA[
+             AND CRT_DT >= TO_DATE(#{createDate}, 'DD/MM/YYYY')
+        ]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+        <![CDATA[
+             AND CRT_DT < TO_DATE(#{endDate}, 'DD/MM/YYYY') + 1
+        ]]>
+        </if>
+        ORDER BY CRT_DT DESC
+    </select>
+
+    <update id="updateNtfStus" parameterType="Map">
+        <!-- deleteMasterClaim -->
+        UPDATE SYS0092M
+        SET NTF_FLAG = #{ntfFlag}
+        WHERE NTF_ID = #{ntfId}
+        AND NTF_KEY = #{ntfKey}
+    </update>
 </mapper>

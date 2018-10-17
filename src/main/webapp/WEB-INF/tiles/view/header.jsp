@@ -31,6 +31,7 @@
         <li>Total: <a href="javascript:void(0);"><span id="header_total">-</span></a>]</li>
         <li>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</li>
         <li><span >Accumulated Account:</span> <a href="javascript:void(0);"><span class="red_text" id="header_acc_act_account">-</span></a></li>
+        <li><span >Notification:</span> <a href="${pageContext.request.contextPath}/test/notification.do"><span id="header_notification">-</span></a></li>
         </ul>
 		</c:otherwise>
 	</c:choose>
@@ -110,6 +111,7 @@
         $("#header_rental").text(inintV);
         $("#header_total").text(inintV);
         $("#header_acc_act_account").text(inintV);
+        $("#header_notification").text(inintV);
 
         Common.ajax("GET", "/common/selectDailyCount.do"
             , null
@@ -126,6 +128,11 @@
 
                     $("#header_total").text(result[0].total);
                     $("#header_acc_act_account").text(result[0].accActAccount);
+
+                    $("#header_notification").text(result[0].ntfCnt)
+                    if(result[0].ntfCnt > 0) {
+                        $("#header_notification").addClass("red_text");
+                    }
                 }
             }, null, {
                 isShowLoader : false

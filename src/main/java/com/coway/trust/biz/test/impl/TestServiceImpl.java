@@ -305,4 +305,16 @@ public class TestServiceImpl extends EgovAbstractServiceImpl implements TestServ
         // TODO Auto-generated method stub
         return testMapper.selectStaffClaimItems(clmNo);
     }
+
+    // ===========================
+
+    @Override
+    public List<EgovMap> selectNtfList(Map<String, Object> params) {
+        return testMapper.selectNtfList(params);
+    }
+
+    @Override
+    public void updateNtfStus(Map<String, Object> params) {
+        testMapper.updateNtfStus(params);
+    }
 }

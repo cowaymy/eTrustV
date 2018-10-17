@@ -368,4 +368,48 @@ public class testController {
 
         return ResponseEntity.ok(cmDtls);
     }
+
+    /*
+     * ============================================================================================
+     */
+
+    @RequestMapping(value = "/notification.do")
+    public String notification(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+        logger.debug("notification.do.do :: start");
+
+        return "test/notification";
+    }
+
+    @RequestMapping(value="/selectNtfList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectNtfList(@RequestParam Map<String, Object> params,
+            HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+        logger.debug("selectNtfList.do :: start");
+        logger.debug("params :: " + params);
+
+        params.put("userId", sessionVO.getUserName());
+        List<EgovMap> itemGrp = testService.selectNtfList(params);
+
+        logger.debug("selectNtfList.do :: end");
+        return ResponseEntity.ok(itemGrp);
+    }
+
+    @RequestMapping(value = "/updateNtf.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> updateNtf(@RequestParam Map<String, Object> params, Model model,
+            SessionVO sessionVO) throws Exception {
+
+        logger.debug("updateNtf.do :: start");
+        logger.debug("params :: " + params);
+
+        testService.updateNtfStus(params);
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        logger.debug("updateNtf.do :: end");
+
+        return ResponseEntity.ok(message);
+    }
 }

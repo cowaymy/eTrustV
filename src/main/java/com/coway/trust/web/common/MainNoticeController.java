@@ -29,7 +29,9 @@ public class MainNoticeController {
 	private MainNoticeService mainNoticeService;
 
 	@RequestMapping(value = "/selectDailyCount.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectDailyCount(@RequestParam Map<String, Object> params) {
+	public ResponseEntity<List<EgovMap>> selectDailyCount(@RequestParam Map<String, Object> params, SessionVO sessionVO) {
+	    params.put("userId", sessionVO.getUserName());
+
 		List<EgovMap> selectDailyCountList = mainNoticeService.selectDailyCount(params);
 
 		LOGGER.debug("return_Values: " + selectDailyCountList.toString());

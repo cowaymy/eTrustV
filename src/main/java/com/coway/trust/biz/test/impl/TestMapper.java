@@ -56,4 +56,10 @@ public interface TestMapper {
     EgovMap checkCM(Map<String, Object> params);
 
     List<EgovMap> selectStaffClaimItems(String clmNo);
+
+    // ==================================================
+
+    List<EgovMap> selectNtfList(Map<String, Object> params);
+
+    void updateNtfStus(Map<String, Object> params);
 }
