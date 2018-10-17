@@ -17,7 +17,7 @@
         	$("#cmbCardType").val($('input[name=cmbCardType]:checked').val());
 
         	if(!fn_validCreditCard()) return false;
-            /* fn_doSaveCreditCard(); */
+             fn_doSaveCreditCard();
         });
         $('#cardNo').change(function() {
             var vCardNo = $('#cardNo').val();
@@ -130,7 +130,7 @@
 
         Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custOriCrcNo : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
-            	if(rsltInfo.length >= 0){
+            	if(rsltInfo.length > 0){
                     isExist = rsltInfo[0].custId;
                 }
             }
