@@ -23,43 +23,43 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("orderCallListService")
 public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements OrderCallListService {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(InstallationResultListController.class);
-	   
+
 	@Resource(name = "orderCallListMapper")
 	private OrderCallListMapper orderCallListMapper;
-	
+
 	@Resource(name = "memberListMapper")
 	private MemberListMapper memberListMapper;
-	
-	
+
+
 	@Resource(name = "servicesLogisticsPFCMapper")
 	private ServicesLogisticsPFCMapper servicesLogisticsPFCMapper;
-	
-	 
-	
+
+
+
 	@Override
 	public List<EgovMap> selectOrderCall(Map<String, Object> params) {
 		return orderCallListMapper.selectOrderCall(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectCallStatus() {
 		return orderCallListMapper.selectCallStatus();
 	}
-	
-	
+
+
 	@Override
 	public EgovMap getOrderCall(Map<String, Object> params) {
 		return orderCallListMapper.getOrderCall(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> selectCallLogTransaction(Map<String, Object> params) {
 		return orderCallListMapper.selectCallLogTransaction(params);
 	}
-	
-	
+
+
 	@Override
 	public Map<String, Object>  insertCallResult(Map<String, Object> params, SessionVO sessionVO) {
 		String salesOrdNo = params.get("salesOrdNo").toString();
@@ -74,13 +74,13 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 				installMaster = getSaveInstallMaster(params, sessionVO);
 				orderLogList = getSaveOrderLogList(params, sessionVO);
 			}
-			
+
 			String returnNo="";
 			boolean success = false;
 			resultValue = orderCallLogSave(callMaster, callDetails, installMaster,  orderLogList ,salesOrdNo ,params);
-			
+
 		}
-		
+
 		return resultValue;
 	}
 	@Transactional
@@ -99,11 +99,11 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		if(callEntry != null){
 			//Insert CALL LOG RESULT
 			orderCallListMapper.insertCallResult(callDetails);
-			
+
 			//UPDATE CALL LOG ENTRY
 			returnNo = callEntry.get("callEntryId").toString();
 			callEntry.put("statusCodeId", callMaster.get("statusCodeId"));
-			
+
 			//RESULTID 값 가져오기
 			maxIdValue.put("value", "callResultId");
 			maxId = orderCallListMapper.selectMaxId(maxIdValue);
@@ -121,7 +121,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 				callEntId = Integer.parseInt(installMaster.get("callEntryId").toString());
 			}
 			if(installMaster != null && callEntId > 0){
-				
+
 				//INSERT INSTALL ENTRY
 				installNo = getDocNo("9");
 				returnNo = installNo.get("docNo").toString();
@@ -129,51 +129,64 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 				String nextDocNo=getNextDocNo("INS",installNo.get("docNo").toString());
 				installNo.put("nextDocNo", nextDocNo);
 				logger.debug("installNo : {}", installNo);
-				
-				//UPDATE DOC NO 
+
+				//UPDATE DOC NO
 				memberListMapper.updateDocNo(installNo);
-				
+
 				installMaster.put("installEntryNo", installNo.get("docNo"));//물류 보낼때 installEntryNo 필요함
 				logger.debug("installMaster : {}", installMaster);
 				orderCallListMapper.insertInstallEntry(installMaster);
-				
-				
+
+
 				if(Integer.parseInt(params.get("callStatus").toString()) ==20){
 					/////////////////////////물류 호출//////////////////////
         			logPram.put("ORD_ID", installNo.get("docNo"));
-        			logPram.put("RETYPE", "SVO");  
-        			logPram.put("P_TYPE", "OD01");  
-        			logPram.put("P_PRGNM", "OCALL");  
-        			logPram.put("USERID", Integer.parseInt(String.valueOf(callMaster.get("updator"))));   
-        			
+        			logPram.put("RETYPE", "SVO");
+        			logPram.put("P_TYPE", "OD01");
+        			logPram.put("P_PRGNM", "OCALL");
+        			logPram.put("USERID", Integer.parseInt(String.valueOf(callMaster.get("updator"))));
+
         			logger.debug("ORDERCALL 물류 호출 PRAM ===>"+ logPram.toString());
         			servicesLogisticsPFCMapper.SP_LOGISTIC_REQUEST(logPram);
         		 	logPram.put("P_RESULT_TYPE", "IN");
             		logPram.put("P_RESULT_MSG", logPram.get("p1"));
         			logger.debug("ORDERCALL 물류 호출 결과 ===>");
-        			/////////////////////////물류 호출 END //////////////////////   
-        			
+        			/////////////////////////물류 호출 END //////////////////////
+
+        			// ONGHC - START
+        			// START UPDATE SVC0001D'S AS_CALLLOG_ID FOR ADD ON COMPONENT
+        			EgovMap salesEntry = orderCallListMapper.selectOrderEntry(salesOrdNo);
+        			if (salesEntry != null) {
+        			  logger.debug("salesEntry " + salesEntry);
+        			  if (salesEntry.get("cpntId").toString() != null && !salesEntry.get("cpntId").toString().equals("")) {
+        				  salesEntry.put("callEntryId", callEntry.get("callEntryId").toString());
+        				  orderCallListMapper.updateASEntry(salesEntry);
+        			  }
+        			} else {
+        			  logger.debug("Sales Entry No " + salesOrdNo + " Not Found!!");
+        			}
+        			// ONGHC - END
 				}
-				
-				
+
+
 			}
 			if(orderLogList != null && orderLogList.size() > 0 && Integer.parseInt(callMaster.get("statusCodeId").toString()) == 20){
-				
+
 			}
-			
+
 		}
 		Map<String, Object> resultValue = new HashMap<String, Object>();
-		String installationNo =""; 
+		String installationNo ="";
 		if(installNo.get("docNo")!=null&&installNo.get("docNo")!=""){
 			installationNo = installNo.get("docNo").toString();
 		}
 		resultValue.put("installationNo", installationNo);
 		resultValue.put("salesOrdNo", salesOrdNo);
 		resultValue.put("spMap", logPram);
-		
+
 		return resultValue;
 	}
-	
+
 	public String getNextDocNo(String prefixNo,String docNo){
 		String nextDocNo = "";
 		int docNoLength=0;
@@ -184,22 +197,22 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		}else{
 			docNoLength = docNo.length();
 		}
-		
+
 		int nextNo = Integer.parseInt(docNo) + 1;
 		nextDocNo = String.format("%0"+docNoLength+"d", nextNo);
 		logger.debug("nextDocNo : {}",nextDocNo);
 		return nextDocNo;
 	}
-	
+
 	public EgovMap getDocNo(String docNoId){
 		int tmp = Integer.parseInt(docNoId);
 		String docNo = "";
 		EgovMap selectDocNo = memberListMapper.selectDocNo(docNoId);
 		logger.debug("selectDocNo : {}",selectDocNo);
 		String prefix = "";
-		
+
 		if(Integer.parseInt((String) selectDocNo.get("docNoId").toString()) == tmp){
-			
+
 			if(selectDocNo.get("c2") != null){
 				prefix = (String) selectDocNo.get("c2");
 			}else{
@@ -213,7 +226,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		}
 		return selectDocNo;
 	}
-	
+
 	private Map<String, Object> getSaveOrderLogList(Map<String, Object> params,SessionVO sessionVO){
 		Map<String, Object> orderLogList = new HashMap<String, Object>();
 		 orderLogList.put("logId", 0);
@@ -224,7 +237,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		 orderLogList.put("isLock", true);
 		 orderLogList.put("logCreator", sessionVO.getUserId());
 		 orderLogList.put("logCreated", new Date());
-		 
+
 		return orderLogList;
 	}
 	private Map<String, Object> getSaveInstallMaster(Map<String, Object> params,SessionVO sessionVO){
@@ -298,11 +311,11 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		callDetails.put("CallSMSRemark", "");
 		logger.debug("callDetails : {}", callDetails);
 		return callDetails;
-		
+
 	}
-	
+
 	private Map<String, Object> getSaveCallCenter(Map<String, Object> params,SessionVO sessionVO){
-		Map<String, Object> callMaster = new HashMap<String, Object>(); 
+		Map<String, Object> callMaster = new HashMap<String, Object>();
 		boolean IsWaitCancel = false;
 		if(Integer.parseInt(params.get("callStatus").toString()) == 30){
 			IsWaitCancel = true;
@@ -342,13 +355,13 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Override
 	public EgovMap selectCdcAvaiableStock(Map<String, Object> params) {
-		
+
 		return orderCallListMapper.selectCdcAvaiableStock(params);
 	}
 
 	@Override
 	public EgovMap selectRdcStock(Map<String, Object> params) {
-	
+
 		return orderCallListMapper.selectRdcStock(params);
 	}
 
