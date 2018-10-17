@@ -467,4 +467,11 @@ public class OrderRegisterController {
 		List<EgovMap> result = orderRegisterService.selectPrevOrderNoList(params);
 		return ResponseEntity.ok(result);
 	}
+	
+    @RequestMapping(value = "/selectProductComponent.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectProductComponent(@RequestParam Map<String, Object> params)
+    {
+    	List<EgovMap> codeList = orderRegisterService.selectProductComponent(params);
+    	return ResponseEntity.ok(codeList);
+    }
 }

@@ -51,6 +51,7 @@ import com.coway.trust.biz.sales.order.vo.SrvConfigPeriodVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigSettingVO;
 import com.coway.trust.biz.sales.order.vo.SrvConfigurationVO;
 import com.coway.trust.biz.sales.order.vo.SrvMembershipSalesVO;
+import com.coway.trust.biz.sales.order.vo.ASEntryVO;
 import com.coway.trust.biz.sales.pst.impl.PSTRequestDOServiceImpl;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
@@ -1267,6 +1268,61 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		gSTEURCertificateVO.setEurcUpdUserId(sessionVO.getUserId());
 	}
 
+	private void preprocASEntry(ASEntryVO aSEntryVO, SessionVO sessionVO) throws ParseException {
+
+		logger.info("!@###### preprocASEntry START ");
+
+
+		aSEntryVO.setAsId(0);
+		aSEntryVO.setAsNo("");
+		aSEntryVO.setAsSoId(0);
+		aSEntryVO.setAsMemId(0);
+		aSEntryVO.setAsMemGrp(null);
+		//aSEntryVO.setAsReqstDt();
+		//aSEntryVO.setAsReqstTm();
+		//aSEntryVO.setAsAppntDt();
+		//aSEntryVO.setAsAppntTm();
+		aSEntryVO.setAsBrnchId(0);
+		aSEntryVO.setAsMalfuncId(9004100);
+		aSEntryVO.setAsMalfuncResnId(2);
+		aSEntryVO.setAsRemReqster("");
+		aSEntryVO.setAsRemReqsterCntc("");
+		aSEntryVO.setAsCalllogId(0);
+		aSEntryVO.setAsStusId(0);
+		aSEntryVO.setAsSms(0);
+		aSEntryVO.setAsCrtUserId(sessionVO.getUserId());
+		//aSEntryVO.setAsCrtDt(reliefTypeId);
+		aSEntryVO.setAsUpdUserId(sessionVO.getUserId());
+		//aSEntryVO.setAsUpdDt("");
+		aSEntryVO.setAsEntryIsSynch(0);
+		aSEntryVO.setAsEntryIsEdit(0);
+		aSEntryVO.setAsTypeId(0);
+		aSEntryVO.setAsReqsterTypeId(0);
+		aSEntryVO.setAsIsBSWithin30days(0);
+		aSEntryVO.setAsAllowComm(0);
+		aSEntryVO.setAsPrevMemId(0);
+		aSEntryVO.setAsRemAddCntc(null);
+		aSEntryVO.setAsRemReqsterCntcSms(0);
+		aSEntryVO.setAsRemAddCntcSms(0);
+		aSEntryVO.setAsSesionCode("");
+		aSEntryVO.setCallMem("0");
+		aSEntryVO.setRefReqst(null);
+		aSEntryVO.setPrevCompSvc(null);
+		aSEntryVO.setNextCompSvc(null);
+		//aSEntryVO.setSignDtTime("");
+		//aSEntryVO.setCompDtSeq(0);
+		//aSEntryVO.setDistance(0);
+		aSEntryVO.setFirst(null);
+		aSEntryVO.setLast(null);
+		aSEntryVO.setHome(null);
+		aSEntryVO.setAsMobileReqstId(null);
+		aSEntryVO.setAsRqstRem(null);
+		aSEntryVO.setPrevSvcArea(null);
+		aSEntryVO.setNextSvcArea(null);
+		aSEntryVO.setAsIfFlag(null);
+
+	}
+
 	@Override
 	public void registerOrder(OrderVO orderVO, SessionVO sessionVO) throws ParseException {
 
@@ -1296,6 +1352,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		String billGrp   = orderVO.getBillGrp(); //new, exist
 		String sInstallDate = installationVO.getPreDt();
 		int itmStkId   = salesOrderDVO.getItmStkId();
+		int itmCompId = salesOrderDVO.getItmCompId();
 
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 //		Date dInstallDate = (Date)formatter.parse(sInstallDate);
@@ -1462,6 +1519,13 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			regOrderVO.setgSTEURCertificateVO(gSTEURCertificateVO);
 		}
 
+		//AS ENTRY
+		if(itmCompId == 2 || itmCompId == 3 || itmCompId == 4){
+			ASEntryVO aSEntryVO = new ASEntryVO();
+			this.preprocASEntry(aSEntryVO, sessionVO);
+			regOrderVO.setASEntryVO(aSEntryVO);
+		}
+
         //GET ORDER NUMBER
         String salesOrdNo = "";
         String newOrdNoFirst = "";
@@ -1562,10 +1626,13 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		List<SalesOrderLogVO> 	 salesOrderLogVOList 	= orderVO.getSalesOrderLogVOList();
 		GSTEURCertificateVO 	 gSTEURCertificateVO 	= orderVO.getgSTEURCertificateVO();
 		SalesOrderContractVO     salesOrderContractVO   = orderVO.getSalesOrderContractVO();
+		ASEntryVO asEntryVO   = orderVO.getASEntryVO();
 
 		int orderAppType = orderVO.getOrderAppType();
 
         int salesOrdId = 0;
+
+        int compId = salesOrderDVO.getItmCompId();
 
         //SALES ORDER MASTER
         logger.info("!@#### ORDER_ID  :"+salesOrderMVO.getSalesOrdId());
@@ -1749,6 +1816,15 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         	gSTEURCertificateVO.setEurcSalesOrdId(salesOrdId);
         	orderRegisterMapper.insertGSTEURCertificate(gSTEURCertificateVO);
         }
+
+        if(compId == 2 || compId == 3 || compId == 4){
+            if(asEntryVO != null) {
+            	String asNo = orderRegisterMapper.selectDocNo(DocTypeConstants.AS_ENTRY);
+            	asEntryVO.setAsNo(asNo);
+            	asEntryVO.setAsSoId(salesOrdId);
+            	orderRegisterMapper.insertASEntry(asEntryVO);
+            }
+        }
 	}
 
 	@Override
@@ -1773,6 +1849,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	public List<EgovMap> selectPrevOrderNoList(Map<String, Object> params) {
 		// TODO ProductCodeList 호출시 error남
 		return orderRegisterMapper.selectPrevOrderNoList(params);
+	}
+
+	public List<EgovMap> selectProductComponent(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+
+		return orderRegisterMapper.selectProductComponent(params);
 	}
 
 }

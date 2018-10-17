@@ -987,6 +987,7 @@
 		     , EDIT_TYPE_ID
 		     , ITM_ID
 		     , ITM_CALL_ENTRY_ID
+		     , CPNT_ID
 		     )
 		VALUES
 		     ( #{salesOrdId}
@@ -1002,6 +1003,7 @@
 		     , #{editTypeId}
 		     , #{itmId}
 		     , #{itmCallEntryId}
+		     , #{itmCompId}
 		     )
 	</insert>
 
@@ -2111,5 +2113,83 @@
 		 WHERE T1.CUST_ID = #{custId}
 		   AND T1.STUS_CODE_ID = '4'
     </select>
+
+    <select id="selectProductComponent" parameterType="Map" resultType="egovMap">
+        SELECT ITM_CPNT_ID CODE,
+                   ITM_CPNT_NAME CODE_NAME
+        FROM SAL0223M
+        WHERE ITM_STK_ID = #{stkId}
+
+    </select>
+
+      <insert id="insertASEntry" parameterType="asEntryVO">
+      <selectKey keyProperty="asId" resultType="Integer" order="BEFORE">
+        SELECT SVC0001D_AS_ID_SEQ.NEXTVAL FROM DUAL
+      </selectKey>
+        INSERT
+          INTO SVC0001D
+             ( AS_ID
+             , AS_NO
+             , AS_SO_ID
+             , AS_MEM_ID
+             , AS_REQST_DT
+             , AS_APPNT_DT
+             , AS_BRNCH_ID
+             , AS_MALFUNC_ID
+             , AS_MALFUNC_RESN_ID
+             , AS_REM_REQSTER
+             , AS_REM_REQSTER_CNTC
+             , AS_CALLLOG_ID
+             , AS_STUS_ID
+             , AS_SMS
+             , AS_CRT_USER_ID
+             , AS_CRT_DT
+             , AS_UPD_USER_ID
+             , AS_UPD_DT
+             , AS_ENTRY_IS_SYNCH
+             , AS_ENTRY_IS_EDIT
+             , AS_TYPE_ID
+             , AS_REQSTER_TYPE_ID
+             , AS_IS_BS_WITHIN_30DAYS
+             , AS_ALLOW_COMM
+             , AS_PREV_MEM_ID
+             , AS_REM_REQSTER_CNTC_SMS
+             , AS_REM_ADD_CNTC_SMS
+             , AS_SESION_CODE
+             , CALL_MEM
+
+             )
+        VALUES
+             ( #{asId}
+             , #{asNo}
+             , #{asSoId}
+             , #{asMemId}
+             , SYSDATE
+             , #{asAppntDt}
+             , #{asBrnchId}
+             , #{asMalfuncId}
+             , #{asMalfuncResnId}
+             , #{asRemReqster}
+             , #{asRemReqsterCntc}
+             , #{asCalllogId}
+             , #{asStusId}
+             , #{asSms}
+             , #{asCrtUserId}
+             , SYSDATE
+             , #{asUpdUserId}
+             , SYSDATE
+             , #{asEntryIsSynch}
+             , #{asEntryIsEdit}
+             , #{asTypeId}
+             , #{asReqsterTypeId}
+             , #{asIsBSWithin30days}
+             , #{asAllowComm}
+             , #{asPrevMemId}
+             , #{asRemReqsterCntcSms}
+             , #{asRemAddCntcSms}
+             , #{asSesionCode}
+             , #{callMem}
+             )
+    </insert>
 
 </mapper>

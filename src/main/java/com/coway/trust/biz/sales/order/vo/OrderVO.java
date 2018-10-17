@@ -63,6 +63,8 @@ public class OrderVO implements Serializable {
 	private List<SalesOrderLogVO> salesOrderLogVOList;
 	
 	private GSTEURCertificateVO gSTEURCertificateVO;
+	
+	private ASEntryVO aSEntryVO;
 
 	private int custTypeId;
 
@@ -89,6 +91,7 @@ public class OrderVO implements Serializable {
 	private int copyQty;
 	
 	private String salesOrdNoFirst;
+	
 	
 	public SalesOrderMVO getSalesOrderMVO() {
 		return salesOrderMVO;
@@ -377,5 +380,15 @@ public class OrderVO implements Serializable {
 	public void setSalesOrdNoFirst(String salesOrdNoFirst) {
 		this.salesOrdNoFirst = salesOrdNoFirst;
 	}
+	
+	public ASEntryVO getASEntryVO() {
+		return aSEntryVO;
+	}
+
+	public void setASEntryVO(ASEntryVO aSEntryVO) {
+		this.aSEntryVO = aSEntryVO;
+	}
+	
+
 
 }

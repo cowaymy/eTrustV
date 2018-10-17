@@ -7,6 +7,7 @@ import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 
+import com.coway.trust.biz.sales.order.vo.ASEntryVO;
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
 import com.coway.trust.biz.sales.order.vo.CallEntryVO;
 import com.coway.trust.biz.sales.order.vo.CallResultVO;
@@ -146,5 +147,9 @@ public interface OrderRegisterMapper {
 	EgovMap selectServiceContractPackage(Map<String, Object> params);
 
 	List<EgovMap> selectPrevOrderNoList(Map<String, Object> params);
+	
+	List<EgovMap> selectProductComponent(Map<String, Object> params);
+
+	void insertASEntry(ASEntryVO asEntryVo);
 
 }

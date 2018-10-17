@@ -1049,6 +1049,14 @@
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
+
+            if(stkIdVal == "1243") {
+            	//$('#compType').removeClass("blind");
+                fn_loadProductComponent(stkIdVal);
+            }
+            else{
+            	$('#compType').addClass("blind");
+            }
         });
         $('#rentPayMode').change(function() {
 
@@ -1510,7 +1518,8 @@ console.log("vBindingNo" + vBindingNo);
                 itmPrc                  : $('#ordPrice').val().trim(),
                 itmPrcId                : $('#ordPriceId').val().trim(),
                 itmPv                   : $('#ordPv').val().trim(),
-                itmStkId                : $('#ordProudct').val()
+                itmStkId                : $('#ordProudct').val(),
+                itmCompId                : $('#compType').val(),
             },
             installationVO : {
                 addId                   : $('#hiddenCustAddId').val(),
@@ -2168,6 +2177,16 @@ console.log("vBindingNo" + vBindingNo);
         });
     }
 
+    //LoadProductComponent
+    function fn_loadProductComponent(stkId) {
+
+
+    	$('#compType').removeClass("blind");
+
+
+        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
+    }
+
     //LoadProductPromotion
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
         console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
@@ -2703,7 +2722,8 @@ console.log("vBindingNo" + vBindingNo);
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.product" /><span class="must">*</span></th>
-    <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select></td>
+    <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select>
+            <select id="compType" name="compType" class="w100p blind" ></select></td>
     <th scope="row"><spring:message code="sal.text.salManName" /></th>
     <td><input id="salesmanNm" name="salesmanNm" type="text" title="" placeholder="Salesman Name" class="w100p readonly" readonly/></td>
 </tr>
