@@ -310,6 +310,16 @@
 		 WHERE  Extent1.CALL_ENTRY_ID = #{callEntryId} AND ROWNUM <= 1
 		   ]]>
 		 </select>
+	 <select id="selectOrderEntry" parameterType="Map" resultType="egovMap">
+     <![CDATA[
+		    SELECT A.SALES_ORD_ID  SALES_ORD_ID,
+		       TO_CHAR(A.SALES_DT, 'dd-mm-yyyy') SALES_DT,
+		       B.CPNT_ID CPNT_ID
+		  FROM SAL0001D A
+		  JOIN SAL0002D B ON A.SALES_ORD_ID = B.SALES_ORD_ID
+		 WHERE  A.SALES_ORD_NO = #{orderNo} AND A.STUS_CODE_ID = 1 AND ROWNUM <= 1
+		   ]]>
+		 </select>
 	<insert id="insertCallResult" parameterType="Map">
               INSERT INTO CCR0007D (
                    CALL_RESULT_ID
@@ -401,6 +411,13 @@
 		  , #{stock}
 		  )
         </insert>
+        <update id="updateASEntry" parameterType="Map">
+	        UPDATE SVC0001D
+			   SET AS_CALLLOG_ID = #{callEntryId}
+			 WHERE AS_SO_ID = #{salesOrdId}
+			   AND TO_CHAR(AS_REQST_DT, 'dd-mm-yyyy') = #{salesDt}
+			   AND AS_ID = (SELECT MIN(AS_ID) FROM SVC0001D WHERE AS_SO_ID = #{salesOrdId} AND TO_CHAR(AS_REQST_DT, 'dd-mm-yyyy') = #{salesDt})
+        </update>
         <select id="selectCallStatus" parameterType="Map" resultType="egovMap">
         SELECT Extent1.RESN_ID RESN_ID  ,
 		       Extent1.CODE CODE  ,
