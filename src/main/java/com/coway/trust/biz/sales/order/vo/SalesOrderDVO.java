@@ -41,6 +41,8 @@ public class SalesOrderDVO implements Serializable {
 	private Date updDt;
 
 	private int updUserId;
+	
+	private int itmCompId;
 
 	public SalesOrderDVO() {
 	}
@@ -163,6 +165,14 @@ public class SalesOrderDVO implements Serializable {
 
 	public void setUpdUserId(int updUserId) {
 		this.updUserId = updUserId;
+	}
+	
+	public int getItmCompId() {
+		return itmCompId;
+	}
+
+	public void setItmCompId(int itmCompId) {
+		this.itmCompId = itmCompId;
 	}
 
 }
