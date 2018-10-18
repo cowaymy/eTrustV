@@ -78,10 +78,14 @@ var webInvoiceGridPros = {
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
     // 셀 선택모드 (기본값: singleCell)
-    selectionMode : "multipleCells"
+    selectionMode : "multipleCells",
+    showRowCheckColumn : true,
+    showRowAllCheckBox : true
 };
 
 var webInvoiceGridID;
+
+var bulkRptInt;
 
 $(document).ready(function () {
 	webInvoiceGridID = AUIGrid.create("#webInvoice _grid_wrap", webInvoiceColumnLayout, webInvoiceGridPros);
@@ -128,6 +132,68 @@ $(document).ready(function () {
         //Common.alert('The program is under development.');
     });
 
+    $('#bulkWebInvDl').click(function() {
+        var list = AUIGrid.getCheckedRowItems(webInvoiceGridID);
+
+        if(list == null || list.length < 1) {
+            Common.alert("*No Value Selected. ");
+            return;
+        } else {
+            /*for(var i = 0; i < list.length; i++) {
+
+                var clmNo = list[i].item.clmNo;
+                setTimeout(function(clmNo) {
+                    //var clmNo = list.item.clmNo;
+                    $("#_clmNo").val(clmNo);
+                    console.log("clmNo : " + $("#_clmNo").val());
+
+                    $("#reportDownFileName").val(clmNo);
+
+                    fn_report();
+                }, 10000);
+
+                //var clmNo = list[i].item.clmNo;
+                //$("#_clmNo").val(clmNo);
+                //console.log("clmNo : " + $("#_clmNo").val());
+
+                //$("#reportDownFileName").val(clmNo);
+
+                //fn_report();
+
+                //setTimeout(fn_report(), 15000);
+                //setTimeout(function(){ fn_saveResultTrans(result.data.qotatId) ;}, 3000);
+
+                setTimeout(function fn_report() {
+                    var option = {
+                            isProcedure : false
+                        };
+                        Common.report("dataForm", option);
+                    }, 10000);
+            }*/
+
+            var i = list.length -1;
+
+            console.log(list.length - 1);
+
+            bulkRptInt = setInterval(function() {
+                console.log(i)
+                if(i >= 0) {
+                    var clmNo = list[i].item.clmNo;
+                    $("#_clmNo").val(clmNo);
+                    console.log("clmNo : " + $("#_clmNo").val());
+
+                    $("#reportDownFileName").val(clmNo);
+
+                    fn_report();
+
+                    i--;
+                } else {
+                    fn_stopBulkRpt();
+                }
+            }, 10000);
+        }
+    });
+
 	// Edit rejected web invoice
 	$("#editRejBtn").click(fn_editRejected);
 
@@ -136,6 +202,9 @@ $(document).ready(function () {
 	fn_setToDay();
 });
 
+function fn_stopBulkRpt() {
+    clearInterval(bulkRptInt);
+}
 
 function fn_setToDay() {
     var today = new Date();
@@ -669,7 +738,6 @@ function fn_selectWebInvoiceInfo(clmNo) {
     Common.ajax("GET", "/eAccounting/webInvoice/selectWebInvoiceInfo.do?_cacheId=" + Math.random(), obj, fn_setWebInvoiceInfo);
 }
 
-
 function fn_report() {
     var option = {
         isProcedure : false
@@ -803,6 +871,7 @@ function fn_editRejected() {
     <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Web_Invoice.rpt" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
+    <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
     <!-- params -->
     <input type="hidden" id="_clmNo" name="V_CLMNO" />
@@ -915,6 +984,7 @@ function fn_editRejected() {
                     <li><p class="link_btn"><a href="#" id="_webInvBtn">Web Invoice</a></p></li>
                 </c:if>
                 <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
+                <li><p class="link_btn"><a href="#" id="bulkWebInvDl">Bulk Web Invoice</a></p></li>
             </ul>
             <ul class="btns">
             </ul>
