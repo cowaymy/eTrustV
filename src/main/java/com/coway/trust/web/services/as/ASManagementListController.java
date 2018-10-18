@@ -55,19 +55,14 @@ public class ASManagementListController {
 	@Resource(name = "InHouseRepairService")
 	private InHouseRepairService inHouseRepairService;
 
-
 	@Resource(name = "servicesLogisticsPFCService")
 	private ServicesLogisticsPFCService servicesLogisticsPFCService;
 
 	@Autowired
 	private AdaptorService adaptorService;
 
-
-
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-
-
 
 	/**
 	 * Services - AS  - AS Management List 메인 화면
@@ -83,16 +78,12 @@ public class ASManagementListController {
 		return "services/as/ASManagementList";
 	}
 
-
-
-
 	@RequestMapping(value = "/asResultInfo.do")
 	public String asResultInfo(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 
 		return "services/as/inc_asResultInfoPop";
 	}
-
 
 	@RequestMapping(value = "/asResultInfoEdit.do")
 	public String asResultInfoEdit(@RequestParam Map<String, Object> params, ModelMap model ,SessionVO sessionVO) {
@@ -102,7 +93,6 @@ public class ASManagementListController {
 
 		logger.debug("===================>"+params.toString());
 
-
 		model.put("USER_ID", sessionVO.getMemId());
 		model.put("USER_NAME", sessionVO.getUserName());
 
@@ -110,33 +100,21 @@ public class ASManagementListController {
 		model.put("BRANCH_ID", sessionVO.getUserBranchId());
 		model.put("ORD_NO", params.get("ord_No"));
 
-
-
 		return "services/as/inc_asResultEditPop";
 	}
-
-
-
-
 
 	@RequestMapping(value = "/asInHouseEntryPop.do")
 	public String asInHouseEntryPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
-
 		logger.debug("===================>"+params.toString());
-
 
 		model.put("ORD_ID",(String) params.get("ord_Id"));
 		model.put("ORD_NO",(String) params.get("ord_No"));
 		model.put("AS_ID", (String)params.get("as_Id"));
 		model.put("AS_NO", (String)params.get("as_No"));
 
-
 		return "services/as/asInHouseEntryPop";
 	}
-
-
-
 
 	/**
 	 * Services - AS  - AS Management List Search
@@ -165,7 +143,6 @@ public class ASManagementListController {
 
 		List<EgovMap> ASMList = ASManagementListService.selectASManagementList(params);
 
-
 		logger.debug("ASMList : {}", ASMList);
 		return ResponseEntity.ok(ASMList);
 	}
@@ -188,13 +165,11 @@ public class ASManagementListController {
 			model.put("AS_ResultNO", (String)params.get("asResultNo"));
 			model.put("AS_ResultId", (String)params.get("in_asResultId"));
 
-
 			if(! "".equals((String) params.get("in_ordId"))){
 				return "services/as/ASReceiveEntryPop";
 			}else{
 				return "services/as/ASReceiveEntryPop";
 			}
-
 
 		// 호출될 화면
 
@@ -202,8 +177,6 @@ public class ASManagementListController {
 
 	@RequestMapping(value = "/asResultViewPop.do")
 	public String asResultViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
-
-
 
 		model.put("ORD_ID",(String) params.get("ord_Id"));
 		model.put("ORD_NO",(String) params.get("ord_No"));
@@ -217,8 +190,6 @@ public class ASManagementListController {
 		// 호출될 화면
 		return "services/as/asResultViewPop";
 	}
-
-
 
 	/**
 	 * Services - AS  - ASReceiveEntry Order No search
@@ -262,14 +233,10 @@ public class ASManagementListController {
 		model.put("mafuncId", (String)params.get("mafuncId"));
 		model.put("mafuncResnId", (String)params.get("mafuncResnId"));
 
-
-
 		model.put("USER_ID", sessionVO.getMemId());
 		model.put("USER_NAME", sessionVO.getUserName());
 		model.put("BRANCH_NAME", sessionVO.getBranchName());
 		model.put("BRANCH_ID", sessionVO.getUserBranchId());
-
-
 
 		/*
 		if("VIEW".equals(params.get("mod"))){
@@ -286,8 +253,6 @@ public class ASManagementListController {
 
 		return "services/as/resultASReceiveEntryPop";
 	}
-
-
 
 	/**
 	 * Services - AS  - ASReceiveEntry Order No search
@@ -320,7 +285,6 @@ public class ASManagementListController {
 //			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 //		}
 
-
 		// 호출될 화면
 		return ResponseEntity.ok(sm);
 	}
@@ -337,7 +301,6 @@ public class ASManagementListController {
 	public ResponseEntity<EgovMap> saveASInHouseEntry(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 
-
 		logger.debug("saveASEntry in....");
 		logger.debug("params :"+ params.toString());
 		params.put("updator", sessionVO.getUserId());
@@ -352,13 +315,9 @@ public class ASManagementListController {
 			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 		 }
 
-
 		// 호출될 화면
 		return ResponseEntity.ok(sm);
 	}
-
-
-
 
 	/**
 	 * Services - AS  - saveASInHouseEntry in house
@@ -372,7 +331,6 @@ public class ASManagementListController {
 	public ResponseEntity<EgovMap> updateASInHouseEntry(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 
-
 		logger.debug("updateASInHouseEntry in....");
 		logger.debug("params :"+ params.toString());
 		params.put("updator", sessionVO.getUserId());
@@ -382,8 +340,6 @@ public class ASManagementListController {
 		// 호출될 화면
 		return ResponseEntity.ok(sm);
 	}
-
-
 
 	/**
 	 * Services - AS  - ASReceiveEntry Order No search
@@ -397,7 +353,6 @@ public class ASManagementListController {
 	public ResponseEntity<EgovMap> updateASEntry(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVO) {
 		ReturnMessage message = new ReturnMessage();
 
-
 		logger.debug("updateASEntry in....");
 		logger.debug("params :"+ params.toString());
 		params.put("USER_ID", sessionVO.getUserId());
@@ -406,9 +361,6 @@ public class ASManagementListController {
 		// 호출될 화면
 		return ResponseEntity.ok(sm);
 	}
-
-
-
 
 	/**
 	 * Services - AS  - ASReceiveEntry 메인화면
@@ -428,7 +380,6 @@ public class ASManagementListController {
 		model.put("AS_ID", (String)params.get("as_Id"));
 		model.put("REF_REQST", (String)params.get("refReqst"));
 		model.put("IS_AUTO", (String)params.get("isAuto"));
-
 
 		model.put("USER_ID", sessionVO.getMemId());
 		model.put("USER_NAME", sessionVO.getUserName());
@@ -452,8 +403,6 @@ public class ASManagementListController {
 		return "services/as/newASResultPop";
 	}
 
-
-
 	@RequestMapping(value = "/asResultEditViewPop.do")
 	public String asResultEditViewPop(@RequestParam Map<String, Object> params, ModelMap model  ,SessionVO sessionVO) {
 		// 호출될 화면
@@ -466,16 +415,11 @@ public class ASManagementListController {
 		model.put("AS_RESULT_ID", (String)params.get("as_Result_Id"));
 		model.put("MOD", (String)params.get("mod"));
 
-
-
 		model.put("USER_ID", sessionVO.getMemId());
 		model.put("USER_NAME", sessionVO.getUserName());
 
 		model.put("BRANCH_NAME", sessionVO.getBranchName());
 		model.put("BRANCH_ID", sessionVO.getUserBranchId());
-
-
-
 
 		return "services/as/asResultEditViewPop";
 	}
@@ -483,7 +427,6 @@ public class ASManagementListController {
 	@RequestMapping(value = "/asResultEditBasicPop.do")
 	public String asResultEditBasicPop(@RequestParam Map<String, Object> params, ModelMap model  ,SessionVO sessionVO) {
 		// 호출될 화면
-
 		model.put("ORD_ID",(String) params.get("ord_Id"));
 		model.put("ORD_NO",(String) params.get("ord_No"));
 		model.put("AS_NO", (String)params.get("as_No"));
@@ -492,20 +435,14 @@ public class ASManagementListController {
 		model.put("AS_RESULT_ID", (String)params.get("as_Result_Id"));
 		model.put("MOD", (String)params.get("mod"));
 
-
-
 		model.put("USER_ID", sessionVO.getMemId());
 		model.put("USER_NAME", sessionVO.getUserName());
 
 		model.put("BRANCH_NAME", sessionVO.getBranchName());
 		model.put("BRANCH_ID", sessionVO.getUserBranchId());
 
-
 		return "services/as/asResultEditBasicPop";
 	}
-
-
-
 
 	/**
 	 * Services - AS  - AS Management List Search
@@ -524,8 +461,6 @@ public class ASManagementListController {
 
 		return ResponseEntity.ok(sHistoryList);
 	}
-
-
 
 	/**
 	 * Services - AS  - AS Management List Search
@@ -546,8 +481,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(bHistoryList);
 	}
 
-
-
 	/**
 	 * Services - AS  - AS Management List Search
 	 *
@@ -566,9 +499,6 @@ public class ASManagementListController {
 
 		return ResponseEntity.ok(list);
 	}
-
-
-
 
 	@RequestMapping(value = "/getMemberBymemberID", method = RequestMethod.GET)
 	public  ResponseEntity<Map>  getMemberBymemberID(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
@@ -596,7 +526,6 @@ public class ASManagementListController {
 		logger.debug("FilPrice : ",map.get("FilPrice"));
 		return ResponseEntity.ok(map);
 	}
-
 
 	@RequestMapping(value = "/getTotalUnclaimItem", method = RequestMethod.GET)
 	public  ResponseEntity<Map>  getTotalUnclaimItem(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
@@ -626,9 +555,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(map);
 	}
 
-
-
-
 	/**
 	 * Services - AS  - AS Management List Search
 	 *
@@ -647,7 +573,6 @@ public class ASManagementListController {
 
 		return ResponseEntity.ok(list);
 	}
-
 
 	/**
 	 * Services - AS  - AS Management List Search
@@ -668,7 +593,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(list);
 	}
 
-
 	/**
 	 * Services - AS  - AS Management List Search
 	 *
@@ -688,7 +612,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(list);
 	}
 
-
 	/**
 	 * Services - AS  - AS Management List Search
 	 *
@@ -707,8 +630,6 @@ public class ASManagementListController {
 
 		return ResponseEntity.ok(list);
 	}
-
-
 
 	/**
 	 * Services - AS  - AS Management List Search
@@ -761,7 +682,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(list);
 	}
 
-
 	/**
 	 * Services - AS  - AS Management List Search
 	 *
@@ -780,8 +700,6 @@ public class ASManagementListController {
 
 		return ResponseEntity.ok(list);
 	}
-
-
 
 	/**
 	 * Services - AS  - AS Management List Search
@@ -846,13 +764,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(list);
 	}
 
-
-
-
-
-
-
-
 	@RequestMapping(value = "/newResultAdd.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> newResultAdd(@RequestBody Map<String, Object> params, Model model  ,HttpServletRequest request, SessionVO sessionVO) {
 
@@ -873,14 +784,11 @@ public class ASManagementListController {
 		logger.debug("remove ===>"+remove.toString());
 		logger.debug("update ===>"+update.toString());
 
-
-
 		ReturnMessage message = new ReturnMessage();
 
 		HashMap   mp= new HashMap();
 		mp.put("serviceNo", asResultM.get("AS_NO"));
 		int  isAsCnt =	 ASManagementListService.isAsAlreadyResult(mp);
-
 
 		 if(isAsCnt == 0){
     		EgovMap  rtnValue = ASManagementListService.asResult_insert(params);
@@ -903,7 +811,6 @@ public class ASManagementListController {
 		 }
 
 		return ResponseEntity.ok(message);
-
 	}
 
 
@@ -929,17 +836,12 @@ public class ASManagementListController {
 
 		EgovMap  rtnValue = ASManagementListService.asResult_update(params);
 
-
-
 		logger.debug("newResultUpdate   done!!--->"+rtnValue.toString());
-
-
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(rtnValue.get("asNo"));
 		message.setMessage("");
-
 
 		return ResponseEntity.ok(message);
 
@@ -969,17 +871,12 @@ public class ASManagementListController {
 
 		EgovMap  rtnValue = ASManagementListService.asResult_update_1(params);
 
-
-
 		logger.debug("newResultUpdate   done!!--->"+rtnValue.toString());
-
-
 
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(rtnValue.get("asNo"));
 		message.setMessage("");
-
 
 		return ResponseEntity.ok(message);
 
@@ -1054,21 +951,16 @@ public class ASManagementListController {
 	@RequestMapping(value = "/addASRemarkPop.do")
 	public String addASRemarkPop(@RequestParam Map<String, Object> params, ModelMap model) {
 
-
 		logger.debug("in  addASRemarkPop ");
 		logger.debug("			pram set  log");
 		logger.debug("					" + params.toString());
 		logger.debug("			pram set end  ");
-
 
 		model.put("AS_ID", (String)params.get("AS_ID"));
 
 		// 호출될 화면
 		return "services/as/addASRemarkPop";
 	}
-
-
-
 
 	@RequestMapping(value = "/assignCTTransferPop.do")
 	public String assignCTTransferPop(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -1086,6 +978,7 @@ public class ASManagementListController {
 
 	@RequestMapping(value = "/assignCtList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> assignCtList(@RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
 		logger.debug("in  assignCtList.....");
 		logger.debug("params : {}", params.toString());
 		//BRNCH_ID
@@ -1136,24 +1029,22 @@ public class ASManagementListController {
 		message.setData(99);
 		message.setMessage("");
 
-
 		return ResponseEntity.ok(message);
 
 	}
 
 	@RequestMapping(value = "/selectCTByDSC.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCTMByDSC( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
 		logger.debug("params {}", params);
 		List<EgovMap> selectCTSubGroupDscList = ASManagementListService.selectCTByDSC(params);
 		logger.debug("selectCTSubGroupDscList {}", selectCTSubGroupDscList);
 		return ResponseEntity.ok(selectCTSubGroupDscList);
 	}
 
-
-
-
 	@RequestMapping(value = "/inHouseGetProductMasters.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> inHouseGetProductMasters( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+
 		logger.debug("params {}", params);
 		List<EgovMap> getProductMasters = inHouseRepairService.getProductMasters(params);
 		logger.debug("GetProductMasters {}", getProductMasters);
@@ -1191,8 +1082,6 @@ public class ASManagementListController {
 
 		params.put("updator", sessionVO.getUserId());
 
-
-
 		ReturnMessage message = new ReturnMessage();
 
 		HashMap   mp= new HashMap();
@@ -1200,38 +1089,34 @@ public class ASManagementListController {
 		mp.put("serviceNo", svc0004dmap.get("AS_NO"));
 		int  isAsCnt =	 ASManagementListService.isAsAlreadyResult(mp);
 
-
 		 if(isAsCnt == 0){
         		EgovMap  rtnValue = ASManagementListService.asResult_insert(params);
-
         		if( null !=rtnValue){
         			HashMap   spMap =(HashMap)rtnValue.get("spMap");
         			logger.debug("spMap :"+ spMap.toString());
         			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
         				rtnValue.put("logerr","Y");
         			}
-        			  servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
-        			  logger.debug("			SP_SVC_LOGISTIC_REQUEST===> "+spMap.toString());
-        		}
 
+        			// ONGHC ADD FOR OMBAK MINERAL
+        			boolean rst = ASManagementListService.insertOmkMineral(params);
+
+        			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
+        			logger.debug("SP_SVC_LOGISTIC_REQUEST===> "+spMap.toString());
+        		}
 
         		message.setCode(AppConstants.SUCCESS);
         	    message.setData(rtnValue.get("asNo"));
         		message.setMessage("");
 
 		 }else{
-
 				message.setCode("98");
 			    message.setData( svc0004dmap.get("AS_NO") );
 		        message.setMessage("There is complete result exist already");
 		 }
 
 		return ResponseEntity.ok(message);
-
 	}
-
-
-
 
 	@RequestMapping(value = "/getErrMstList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getErrMstList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
@@ -1240,7 +1125,6 @@ public class ASManagementListController {
 		logger.debug("getErrMstList {}", getErrMstList);
 		return ResponseEntity.ok(getErrMstList);
 	}
-
 
 	@RequestMapping(value = "/getErrDetilList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getErrDetilList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
@@ -1251,9 +1135,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(getErrDetilList);
 	}
 
-
-
-
 	@RequestMapping(value = "/getSLUTN_CODE_List.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getSLUTN_CODE_List( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
@@ -1262,9 +1143,6 @@ public class ASManagementListController {
 		logger.debug("getErrDetilList {}", getSLUTN_CODE_List);
 		return ResponseEntity.ok(getSLUTN_CODE_List);
 	}
-
-
-
 
 	@RequestMapping(value = "/getDTAIL_DEFECT_List.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getDTAIL_DEFECT_List( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
@@ -1275,9 +1153,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(getDTAIL_DEFECT_List);
 	}
 
-
-
-
 	@RequestMapping(value = "/getDEFECT_PART_List.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getDEFECT_PART_List( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
@@ -1286,9 +1161,6 @@ public class ASManagementListController {
 		logger.debug("getErrDetilList {}", getDEFECT_PART_List);
 		return ResponseEntity.ok(getDEFECT_PART_List);
 	}
-
-
-
 
 	@RequestMapping(value = "/getDEFECT_CODE_List.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getDEFECT_CODE_List( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
@@ -1299,9 +1171,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(getDEFECT_CODE_List);
 	}
 
-
-
-
 	@RequestMapping(value = "/getDEFECT_TYPE_List.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getDEFECT_TYPE_List( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
@@ -1310,10 +1179,6 @@ public class ASManagementListController {
 		logger.debug("getErrDetilList {}", getDEFECT_TYPE_List);
 		return ResponseEntity.ok(getDEFECT_TYPE_List);
 	}
-
-
-
-
 
 	@RequestMapping(value = "/sendSMS.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> sendSMS( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model , SessionVO session) {
@@ -1333,16 +1198,12 @@ public class ASManagementListController {
 		return ResponseEntity.ok(mp);
 	}
 
-
-
 	@RequestMapping(value = "/sendSMSPop.do")
 	public String sendSMSPop(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 
 		return "services/as/sendNewSMSPop";
 	}
-
-
 
 	@RequestMapping(value = "/getCustAddressInfo.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> getCustAddressInfo( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
@@ -1356,8 +1217,6 @@ public class ASManagementListController {
 
 		return ResponseEntity.ok(rtnm);
 	}
-
-
 
 	@RequestMapping(value = "/getSmsCTMemberById.do", method = RequestMethod.GET)
 	public ResponseEntity<EgovMap> getSmsCTMemberById( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
@@ -1377,9 +1236,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(CTM);
 	}
 
-
-
-
 	@RequestMapping(value = "/getMemberByMemberIdCode.do", method = RequestMethod.GET)
 	public ResponseEntity <EgovMap> getMemberByMemberIdCode( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
@@ -1389,8 +1245,6 @@ public class ASManagementListController {
 		return ResponseEntity.ok(MEMup);
 	}
 
-
-
 	@RequestMapping(value = "/getSVC_AVAILABLE_INVENTORY.do", method = RequestMethod.GET)
 	public ResponseEntity <EgovMap> getSVC_AVAILABLE_INVENTORY( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
@@ -1399,12 +1253,6 @@ public class ASManagementListController {
 		logger.debug("logc {}", logc);
 		return ResponseEntity.ok(logc);
 	}
-
-
-
-
-
-
 
 	@RequestMapping(value = "/getAPILogList.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getAPILogList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
@@ -1436,14 +1284,10 @@ public class ASManagementListController {
 		return ResponseEntity.ok(list);
 	}
 
-
-
 	@RequestMapping(value = "/initAPILog.do")
 	public String initAPILog(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "services/as/apiLogList";
 	}
-
-
 
 }
