@@ -4045,4 +4045,58 @@
             AND   A.TRNSC_ID = B.TRNSC_ID(+)
       </select>
 
+    <select id="getFilterCount" parameterType="Map" resultType="java.lang.Integer">
+        <![CDATA[
+             SELECT COUNT(SRV_FILTER_ID)
+              FROM SAL0090D A
+              JOIN SAL0087D B ON A.SRV_CONFIG_ID = B.SRV_CONFIG_ID
+              WHERE A.SRV_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ordNo}) ]]>
+              <if test="cond1 != null and cond1 != '' ">
+                 <![CDATA[AND B.SRV_FILTER_STK_ID = #{ordNo} ]]>
+              </if>
+       <![CDATA[ ]]>
+    </select>
+
+    <select id="getSAL87ConfigId" parameterType="Map" resultType="java.lang.Integer">
+        <![CDATA[
+             SELECT B.SRV_CONFIG_ID
+              FROM SAL0090D A
+              JOIN SAL0087D B ON A.SRV_CONFIG_ID = B.SRV_CONFIG_ID
+              WHERE A.SRV_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{orderNo})
+              AND ROWNUM <= 1
+        ]]>
+    </select>
+
+    <select id="getFilterInfo" parameterType="Map" resultType="egovMap">
+        <![CDATA[
+             SELECT BOM_PART_ID, BOM_PART_PRIOD
+              FROM LOG0001M
+              WHERE BOM_STK_ID = '1428' AND BOM_PART_STUS_ID = 1 AND BOM_PART_PRIOD > 0 AND BOM_PART_TYPE_ID = 310
+        ]]>
+    </select>
+
+   <insert id="insert_SAL0087D" parameterType="Map" >
+
+        INSERT INTO SAL0087D (
+           SRV_FILTER_ID, SRV_CONFIG_ID, SRV_FILTER_STK_ID,
+           SRV_FILTER_PRIOD, SRV_FILTER_PRV_CHG_DT, SRV_FILTER_STUS_ID,
+           SRV_FILTER_REM, SRV_FILTER_CRT_DT, SRV_FILTER_CRT_USER_ID,
+           SRV_FILTER_UPD_DT, SRV_FILTER_UPD_USER_ID, SRV_FILTER_EXPR_DT)
+        VALUES (
+           SAL0087D_SRV_FILTER_ID_SEQ.NEXTVAL,
+           #{configId},
+           NVL(#{fID},0),
+           NVL((SELECT LEAD_TM_OFFSET_N FROM LOG0044D A JOIN SYS0026M B ON A.BOM_COMPNT = B.STK_CODE WHERE B.STK_ID = #{fID}),0),
+           TO_DATE(#{AS_SETL_DT},'DD/MM/YYYY'),
+           '44',
+           #{AS_ORD_NO},
+           SYSDATE,
+           '8888',
+           SYSDATE,
+           '8888',
+           TO_DATE(#{AS_SETL_DT},'DD/MM/YYYY')
+         )
+
+   </insert>
+
 </mapper>
