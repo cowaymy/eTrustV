@@ -5,29 +5,34 @@
 
     //AUIGrid 생성 후 반환 ID
     var listGiftGridID;
-    
+
     $(document).ready(function(){
 
         createAUIGridStk();
-        
         doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID',   '${preOrderInfo.appTypeId}', 'appType',     'S', ''); //Common Code
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '${preOrderInfo.rentPayModeId}', 'rentPayMode', 'S', ''); //Common Code
       //doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
         doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
         doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '${preOrderInfo.exTrade}', 'exTrade', 'S'); //EX-TRADE
-        doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '${preOrderInfo.gstChk}',  'gstChk',  'S'); //GST_CHK
-        doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '${preOrderInfo.promoDiscPeriodTp}', 'promoDiscPeriodTp', 'S'); //Discount period
+        /*doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '${preOrderInfo.gstChk}',  'gstChk',  'S'); //GST_CHK */
+        /* doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '${preOrderInfo.promoDiscPeriodTp}', 'promoDiscPeriodTp', 'S'); //Discount period */
 
         //Attach File
         $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
-        
-        
+
         fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
+
+        if('${preOrderInfo.stusId}' == 4 || '${preOrderInfo.stusId}' == 10 ){
+            $('#scPreOrdArea').find("input,textarea,button,select").attr("disabled",true);
+            $("#scPreOrdArea").find("p.btn_grid").hide();
+            $('#btnSave').hide();
+        }
+
     });
 
     function createAUIGridStk() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayoutGft = [
             { headerText : "Product CD",   dataField : "itmcd",              width : 180 }
@@ -40,53 +45,53 @@
         //그리드 속성 설정
         var listGridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 1,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-          //selectionMode       : "singleRow",  //"multipleCells", 
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 1,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+          //selectionMode       : "singleRow",  //"multipleCells",
             softRemoveRowMode   : false,
-            headerHeight        : 30,       
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-        
-        listGiftGridID = GridCommon.createAUIGrid("pop_list_gift_grid_wrap", columnLayoutGft, "", listGridPros);
+
+        /* listGiftGridID = GridCommon.createAUIGrid("pop_list_gift_grid_wrap", columnLayoutGft, "", listGridPros); */
     }
-    
+
     $(function(){
         $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
             if(fn_isExistESalesNo() == 'true') return false;
-            
+
             $('#scPreOrdArea').removeClass("blind");
-            
+
             $('#refereNo').val($('#sofNo').val().trim())
-            
+
             fn_loadCustomer(null, $('#nric').val());
         });
-        $('#nric').keydown(function (event) {  
+        $('#nric').keydown(function (event) {
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
                 if(fn_isExistESalesNo() == 'true') return false;
-                
+
                 $('#refereNo').val($('#sofNo').val().trim())
-                
+
                 fn_loadCustomer(null, $('#nric').val());
             }
         });
-        $('#sofNo').keydown(function (event) {  
+        $('#sofNo').keydown(function (event) {
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
                 if(fn_isExistESalesNo() == 'true') return false;
-                
+
                 $('#refereNo').val($('#sofNo').val().trim())
-                
+
                 fn_loadCustomer(null, $('#nric').val());
             }
         });
@@ -112,7 +117,7 @@
         });
         $('#billNewAddrBtn').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewAddressPop.do", {custId : $('#hiddenCustId').val(), callParam : "PRE_ORD_BILL_ADD"}, null , true);
-        });        
+        });
         $('#billSelAddrBtn').click(function() {
             Common.popupDiv("/sales/customer/customerAddressSearchPop.do", {custId : $('#hiddenCustId').val(), callPrgm : "PRE_ORD_BILL_ADD"}, null, true);
         });
@@ -150,7 +155,7 @@
                     $('#aTabCS').click();
                 }
                 else {
-                            
+
                     switch(selVal) {
                         case '66' : //RENTAL
                             $('#scPayInfo').removeClass("blind");
@@ -159,38 +164,38 @@
                             $('#installDur').val('').prop("readonly", true).addClass("readonly");
                           //$("#gstChk").val('0');
                           //$('#pBtnCal').addClass("blind");
-                            
+
                             appSubType = '367';
-                            
+
                             break;
 
                         case '67' : //OUTRIGHT
-                            
+
                             appSubType = '368';
-                            
+
                             break;
 
                         case '68' : //INSTALLMENT
                             $('#installDur').removeAttr("readonly").removeClass("readonly");
-                            
+
                             appSubType = '369';
-                            
+
                             break;
 
                         case '1412' : //Outright Plus
                             $('#installDur').val("36").prop("readonly", true).removeClass("readonly");
 
                             $('[name="advPay"]').removeAttr("disabled");
-                            
+
                           //fn_tabOnOffSet('PAY_CHA', 'SHOW');
                           //fn_tabOnOffSet('REL_CER', 'HIDE');
-                            
+
                             appSubType = '370';
 
                             break;
-                        case '142' : //Sponsor                        
-                            appSubType = '371';    
-                            break;                            
+                        case '142' : //Sponsor
+                            appSubType = '371';
+                            break;
                         case '143' : //Service
                             appSubType = '372';
                             break;
@@ -217,9 +222,9 @@
                 }
             }
             else {
-                $('#srvPacId option').remove(); 
+                $('#srvPacId option').remove();
             }
-            
+
             $('#ordProudct option').remove();
             $('#ordProudct optgroup').remove();
         });
@@ -294,18 +299,18 @@
 
             var idx    = $("#srvPacId option:selected").index();
             var selVal = $("#srvPacId").val();
-            
+
             if(idx > 0) {
                 var stkType = $("#appType").val() == '66' ? '1' : '2';
               //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
-                
+
                 doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
             }
         });
         $('#ordProudct').change(function() {
-            
+
             console.log('ordProudct change event start');
-            
+
             if(FormUtil.checkReqValue($('#exTrade'))) {
                 Common.alert("Save Sales Order Summary" + DEFAULT_DELIMITER + "<b>* Please select an Ex-Trade.</b>");
                 $('#ordProudct').val('');
@@ -314,7 +319,7 @@
 
             if(FormUtil.isEmpty($('#ordProudct').val())) {
                 $('#ordPromo option').remove();
-                
+
                 //console.log('stkIdx:'+stkIdx);
                 $("#ordPrice").val('');
                 $("#ordPv").val('');
@@ -326,10 +331,10 @@
                 $("#normalOrdPv").val('');
                 $("#normalOrdRentalFees").val('');
                 $("#normalOrdPriceId").val('');
-                
+
                 $("#promoDiscPeriodTp").val('');
                 $("#promoDiscPeriod").val('');
-                
+
                 return;
             }
 
@@ -374,7 +379,7 @@
 */
 
                 fn_loadPromotionPrice(promoIdVal, stkIdVal);
-                
+
                 fn_selectPromotionFreeGiftListForList2(promoIdVal);
             }
             else {
@@ -388,10 +393,10 @@
                 fn_loadOrderSalesman(0, memCd);
             }
         });
-        $('#salesmanCd').keydown(function (event) {  
+        $('#salesmanCd').keydown(function (event) {
             if (event.which === 13) {    //enter
                 var memCd = $('#salesmanCd').val().trim();
-    
+
                 if(FormUtil.isNotEmpty(memCd)) {
                     fn_loadOrderSalesman(0, memCd);
                 }
@@ -406,7 +411,7 @@
             fn_setBillGrp($('input:radio[name="grpOpt"]:checked').val());
         });
         $('#btnSave').click(function() {
-            
+
             if(!fn_validCustomer()) {
                 $('#aTabCS').click();
                 return false;
@@ -421,10 +426,10 @@
                 $('#aTabBD').click();
                 return false;
             }
-            
+
             fn_doSavePreOrder();
         });
-        $('#btnCal').click(function() {            
+        $('#btnCal').click(function() {
 
             var appTypeName  = $('#appType').val();
             var productName  = $('#ordProudct option:selected').text();
@@ -440,18 +445,18 @@
             var oldRentalGST = fn_calcGst(oldRental);
             var newRentalGST = fn_calcGst(newRental);
             var newPv        = $('#ordPvGST').val();
-            
+
             var msg = '';
-            
+
             msg += 'Application Type : '+appTypeName +'<br>';
             msg += 'Product          : '+productName +'<br>';
             msg += 'Price(RPF)       : '+newPriceGST +'<br>';
             msg += 'Normal Rental    : '+oldRentalGST+'<br>';
             msg += 'Promotion        : '+newRentalGST+'<br>';
             msg += '<br>The Price(Fee) was applied to the tab of [Sales Order]';
-            
+
             fn_excludeGstAmt();
-            
+
             Common.alert('GST Amount' + DEFAULT_DELIMITER + '<b>'+msg+'</b>');
         });
         $('#gstChk').change(function(event) {
@@ -460,11 +465,11 @@
             }
             else {
                 $('#pBtnCal').addClass("blind");
-                
+
                 var appTypeVal = $("#appType").val();
                 var stkIdVal   = $("#ordProudct").val();
                 var promoIdVal = $("#ordPromo").val();
-                
+
                 fn_loadProductPrice(appTypeVal, stkIdVal);
                 if(FormUtil.isNotEmpty(promoIdVal)) {
                     fn_loadPromotionPrice(promoIdVal, stkIdVal);
@@ -494,7 +499,7 @@
     function fn_loadBankAccountPop(bankAccId) {
         fn_clearRentPaySetDD();
         fn_loadBankAccount(bankAccId);
-        
+
         $('#sctDirectDebit').removeClass("blind");
 
         if(!FormUtil.IsValidBankAccount($('#hiddenRentPayBankAccID').val(), $('#rentPayBankAccNo').val())) {
@@ -503,15 +508,15 @@
             Common.alert("Invalid Bank Account" + DEFAULT_DELIMITER + "<b>Invalid account for auto debit.</b>");
         }
     }
-    
+
     function fn_loadBankAccount(bankAccId) {
         console.log("fn_loadBankAccount START");
-        
+
         Common.ajax("GET", "/sales/order/selectCustomerBankDetailView.do", {getparam : bankAccId}, function(rsltInfo) {
 
             if(rsltInfo != null) {
                 console.log("fn_loadBankAccount Setting");
-                
+
                 $("#hiddenRentPayBankAccID").val(rsltInfo.custAccId);
                 $("#rentPayBankAccNo").val(rsltInfo.custAccNo);
                 $("#rentPayBankAccNoEncrypt").val(rsltInfo.custEncryptAccNo);
@@ -523,7 +528,7 @@
             }
         });
     }
-    
+
     function fn_loadCreditCard2(custCrcId) {
         console.log("fn_loadCreditCard START");
 
@@ -541,7 +546,7 @@
             }
         });
     }
-    
+
     function fn_loadThirdParty(custId, sMethd) {
 
         fn_clearRentPayMode();
@@ -582,7 +587,7 @@
 
         $('#sctThrdParty').removeClass("blind");
     }
-    
+
 	function fn_excludeGstAmt() {
         //Amount before GST
         var oldPrice     = $('#normalOrdPrice').val();
@@ -596,16 +601,16 @@
         var oldRentalGST = fn_calcGst(oldRental);
         var newRentalGST = fn_calcGst(newRental);
         var newPv        = $('#ordPvGST').val();
-        
+
         $('#normalOrdPrice').val(oldPriceGST);
         $('#ordPrice').val(newPriceGST);
         $('#normalOrdRentalFees').val(oldRentalGST);
         $('#ordRentalFees').val(newRentalGST);
         $('#ordPv').val(newPv);
-        
+
         $('#pBtnCal').addClass("blind");
 	}
-	
+
     function fn_isExistESalesNo() {
         var isExist = false, msg = "";
 
@@ -620,7 +625,7 @@
 
         return isExist;
     }
-    
+
     function fn_isExistMember() {
         var isExist = false, msg = "";
 
@@ -635,7 +640,7 @@
 
         return isExist;
     }
-    
+
     function fn_validPaymentInfo() {
         var isValid = true, msg = "";
 
@@ -682,7 +687,7 @@
                     }
                 }
             }
-            
+
             if(!grpOptSelYN) {
                 isValid = false;
                 msg += "* Please select the group option.<br>";
@@ -737,7 +742,7 @@
 
         return isValid;
     }
-    
+
     function fn_validOrderInfo() {
         var isValid = true, msg = "";
 
@@ -762,7 +767,7 @@
                     msg += "* Please key in the reference no.<br>";
                 }
             }
-            
+
             if(appTypeVal == '66') {
                 if($(':radio[name="advPay"]:checked').val() != '1' && $(':radio[name="advPay"]:checked').val() != '0') {
                     isValid = false;
@@ -782,7 +787,7 @@
                 msg += "* Please select a salesman.<br>";
             }
         }
-        
+
         if(!$('#pBtnCal').hasClass("blind")) {
             isValid = false;
             msg += "* Please press the Calculation button<br>";
@@ -792,7 +797,7 @@
 
         return isValid;
     }
-    
+
     function fn_validConfirm() {
         var isValid = true, msg = "";
 
@@ -804,12 +809,12 @@
             isValid = false;
             msg += "* Please key in eSales(SOF) No.<br>";
         }
-        
+
         if(!isValid) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
     }
-    
+
     function fn_validCustomer() {
         var isValid = true, msg = "";
 
@@ -827,7 +832,7 @@
             isValid = false;
             msg += "* Please select a contact person.<br>";
         }
-        
+
         if(FormUtil.checkReqValue($('#hiddenCustAddId'))) {
             isValid = false;
             msg += "* Please select an installation address.<br>";
@@ -847,14 +852,14 @@
             isValid = false;
             msg += "* Please select prefer install time.<br>";
         }
-        
+
         if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
     }
-    
+
     function fn_doSavePreOrder() {
-        
+
         var vAppType    = $('#appType').val();
         var vCustCRCID  = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCId').val() : 0;
         var vCustAccID  = $('#rentPayMode').val() == '132' ? $('#hiddenRentPayBankAccID').val() : 0;
@@ -862,7 +867,7 @@
         var vIs3rdParty = $('#thrdParty').is(":checked") ? 1 : 0;
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
-        
+
         var orderVO = {
             preOrdId             : $('#hiddenPreOrdId').val().trim(),
             sofNo                : $('#sofNo').val().trim(),
@@ -917,7 +922,7 @@
             custBillCustCareCntId: $("#hiddenBPCareId").val()
         };
         Common.ajax("POST", "/sales/order/modifyPreOrder.do", orderVO, function(result) {
-            Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdModPop);            
+            Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdModPop);
         },
         function(jqXHR, textStatus, errorThrown) {
             try {
@@ -928,7 +933,7 @@
             }
         });
     }
-    
+
     function fn_closePreOrdModPop() {
         fn_getPreOrderList();
         $('#_divPreOrdModPop').remove();
@@ -993,7 +998,7 @@
             $('#billRem').prop("readonly", true).addClass("readonly");
         }
     }
-    
+
     function fn_loadBillingPreference(custCareCntId) {
 
         Common.ajax("GET", "/sales/order/selectSrvCntcJsonInfo.do", {custCareCntId : custCareCntId}, function(srvCntcInfo) {
@@ -1008,7 +1013,7 @@
         });
 
     }
-    
+
     function fn_loadOrderSalesman(memId, memCode) {
 
         console.log('fn_loadOrderSalesman memId:'+memId);
@@ -1028,16 +1033,16 @@
             }
         });
     }
-    
+
     function fn_selectPromotionFreeGiftListForList2(promoId) {
         console.log('fn_selectPromotionFreeGiftListAjax START');
         Common.ajax("GET", "/sales/promotion/selectPromotionFreeGiftList.do", { promoId : promoId }, function(result) {
             AUIGrid.setGridData(listGiftGridID, result);
         });
     }
-    
+
     function fn_loadPromotionPrice(promoId, stkId) {
-        
+
         if($('#gstChk').val() == '1') {
             $('#pBtnCal').removeClass("blind");
         }
@@ -1065,7 +1070,7 @@
             }
         });
     }
-    
+
     //LoadProductPromotion
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
         console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
@@ -1077,7 +1082,7 @@
 
         doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$('#srvPacId').val()}, '', 'ordPromo', 'S', ''); //Common Code
     }
-    
+
     //LoadProductPrice
     function fn_loadProductPrice(appTypeVal, stkId) {
 
@@ -1111,27 +1116,27 @@
                 $("#normalOrdPv").val(stkPriceInfo.orderPV);
                 $("#normalOrdRentalFees").val(stkPriceInfo.orderRentalFees);
                 $("#normalOrdPriceId").val(stkPriceInfo.priceId);
-                
+
                 $("#promoDiscPeriodTp").val('');
                 $("#promoDiscPeriod").val('');
             }
         });
     }
-    
+
     function fn_setOptGrpClass() {
         $("optgroup").attr("class" , "optgroup_text")
     }
-    
+
     function fn_setDefaultSrvPacId() {
         if($('#srvPacId option').size() == 2) {
             $('#srvPacId option:eq(1)').attr('selected', 'selected');
-            
+
             var stkType = $("#appType").val() == '66' ? '1' : '2';
-            
+
             doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
         }
     }
-    
+
     function fn_clearSales() {
         $('#installDur').val('');
         $('#ordProudct').val('');
@@ -1144,7 +1149,7 @@
         $('#ordPv').val('');
         $('#ordRentalFees').val('');
     }
-    
+
     //ClearControl_BillGroup
     function fn_clearBillGroup() {
 
@@ -1166,7 +1171,7 @@
         $('#billMthdEmailTxt1').val('');
         $('#billMthdEmailTxt2').val('');
         $('#billGrpWebUrl').val('');
-        
+
         $('#hiddenBPCareId').val('');
         $('#billPreferInitial').val('');
         $('#billPreferName').val('');
@@ -1178,7 +1183,7 @@
         $('#billType').val('');
         $('#billAddr').val('');
     }
-    
+
     //ClearControl_RentPaySet_ThirdParty
     function fn_clearRentPayMode() {
         $('#rentPayMode').val('');
@@ -1210,7 +1215,7 @@
     //ClearControl_RentPaySet_CRC
     function fn_clearRentPaySetCRC() {
         $('#sctCrCard').addClass("blind");
-        
+
         $('#rentPayCRCNo').val('');
         $('#hiddenRentPayCRCId').val('');
         $('#hiddenRentPayEncryptCRCNoId').val('');
@@ -1229,21 +1234,21 @@
             }
         });
     }
-    
+
 	function fn_getSvrPacCombo(selVal, srvPacId){
 
         switch(selVal) {
             case '66' : //RENTAL
                 $('#scPayInfo').removeClass("blind");
                 $('[name="advPay"]').removeAttr("disabled");
-                
-                appSubType = '367';                
+
+                appSubType = '367';
                 break;
             case '67' : //OUTRIGHT
                 appSubType = '368';
                 break;
             case '68' : //INSTALLMENT
-                appSubType = '369';                
+                appSubType = '369';
                 break;
             case '1412' : //Outright Plus
                 $('#scPayInfo').removeClass("blind");
@@ -1251,9 +1256,9 @@
                 $('#installDur').val('').prop("readonly", true).addClass("readonly");
                 appSubType = '370';
                 break;
-            case '142' : //Sponsor                        
-                appSubType = '371';    
-                break;                            
+            case '142' : //Sponsor
+                appSubType = '371';
+                break;
             case '143' : //Service
                 appSubType = '372';
                 break;
@@ -1266,20 +1271,20 @@
             default :
                 break;
         }
-        
+
         var pType = $("#appType").val() == '66' ? '1' : '2';
         //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
         doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, srvPacId, 'srvPacId', 'S', ''); //APPLICATION SUBTYPE
     }
-    
+
     function fn_loadPreOrderInfo(custId, nric){
-        
+
         var vCustTypeId = '';
-        
+
         Common.ajaxSync("GET", "/sales/customer/selectCustomerJsonList", {custId : custId, nric : nric}, function(result) {
 
             if(result != null && result.length == 1) {
-                
+
                 $('#scPreOrdArea').removeClass("blind");
 
                 var custInfo = result[0];
@@ -1295,9 +1300,9 @@
                 $("#hiddenTypeId").val(custInfo.typeId); //Type
                 $("#name").val(custInfo.name); //Name
                 $("#nric").val(custInfo.nric); //NRIC/Company No
-                
+
                 vCustTypeId = custInfo.typeId;
-                
+
                 $("#nationNm").val(custInfo.name2); //Nationality
                 $("#race").val(custInfo.codeName2); //
                 $("#dob").val(custInfo.dob == '01/01/1900' ? '' : custInfo.dob); //DOB
@@ -1332,12 +1337,12 @@
                     //----------------------------------------------------------
                     fn_loadMainCntcPerson(custInfo.custCntcId);
                     fn_loadCntcPerson('${preOrderInfo.custCntcId}');
-                    
+
                     if('${preOrderInfo.custCntcId}' != custInfo.custCntcId) {
                         $('#chkSameCntc').prop("checked", false);
                         $('#scAnothCntc').removeClass("blind");
                     }
-                    
+
                     // Salesman
                     fn_loadOrderSalesman(null, '${preOrderInfo.memCode}');
                 }
@@ -1350,28 +1355,28 @@
                 Common.confirm('<b>* This customer is existing customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop);
             }
         });
-        
+
         //--------------------------------------------------------------
         // [Order Info]
         //--------------------------------------------------------------
         //$('#appType').val('${preOrderInfo.appTypeId}');
-        
+
         fn_getSvrPacCombo('${preOrderInfo.appTypeId}', '${preOrderInfo.srvPacId}');
-        
+
       //$('#srvPacId').val('${preOrderInfo.srvPacId}');
-      
+
         $('#ordProudct').removeAttr("disabled");
-      
+
         var stkType = $("#appType").val() == '66' ? '1' : '2';
         doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.itmStkId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
-      
+
         $('#installDur').val('${preOrderInfo.instPriod}');
         $('#poNo').val('${preOrderInfo.custPoNo}');
         $('#refereNo').val('${preOrderInfo.sofNo}');
 
       //fn_loadProductPrice('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}');
       //fn_loadProductPromotion('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}', '${preOrderInfo.empChk}', $("#typeId").val(), '${preOrderInfo.exTrade}');
-        
+
         $('#ordPromo').removeAttr("disabled");
         doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${preOrderInfo.appTypeId}'
                                                                         ,stkId:'${preOrderInfo.itmStkId}'
@@ -1379,8 +1384,8 @@
                                                                         ,promoCustType:vCustTypeId
                                                                         ,exTrade:'${preOrderInfo.exTrade}'
                                                                         ,srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.promoId}', 'ordPromo', 'S', ''); //Common Code
-        
-        
+
+
         $('#ordRentalFees').val('${preOrderInfo.mthRentAmt}');
         $('#promoDiscPeriodTp').val('${preOrderInfo.promoDiscPeriodTp}');
         $('#promoDiscPeriod').val('${preOrderInfo.promoDiscPeriod}');
@@ -1391,15 +1396,15 @@
         $('#ordPv').val('${preOrderInfo.totPv}');
         $('#ordPvGST').val('${preOrderInfo.totPvGst}');
         $('#ordPriceId').val('${preOrderInfo.prcId}');
-        
+
         $("input:radio[name='advPay']:radio[value='${preOrderInfo.advBill}']").prop("checked", true);
-        
+
         if('${preOrderInfo.is3rdParty}' == '1') {
             $('#thrdParty').attr("checked", true);
             $('#sctThrdParty').removeClass("blind");
             fn_loadThirdParty('${preOrderInfo.rentPayCustId}', 2);
         }
-   
+
         if('${preOrderInfo.rentPayModeId}' == '131') {
             $('#sctCrCard').removeClass("blind");
             fn_loadCreditCard2('${preOrderInfo.custCrcId}');
@@ -1408,7 +1413,7 @@
             $('#sctDirectDebit').removeClass("blind");
             fn_loadBankAccount('${preOrderInfo.custAccId}');
         }
-        
+
         if('${preOrderInfo.custBillId}' == '' || '${preOrderInfo.custBillId}' == '0') {
 
             $('#grpOpt1').prop("checked", true);
@@ -1425,7 +1430,7 @@
                 console.log("fn_setBillGrp 1 typeId : "+$('#typeId').val());
 
                 $('#sctBillPrefer').removeClass("blind");
-                
+
                 if('${preOrderInfo.custBillCustCareCntId}' != '' && '${preOrderInfo.custBillCustCareCntId}' != '0') {
                     fn_loadBillingPreference('${preOrderInfo.custBillCustCareCntId}');
                 }
@@ -1435,7 +1440,7 @@
                 $('#billMthdEmail2').removeAttr("disabled");
                 $('#billMthdEmailTxt1').removeAttr("disabled").val('${preOrderInfo.custBillEmail}');
                 $('#billMthdEmailTxt2').removeAttr("disabled").val('${preOrderInfo.custBillEmailAdd}');
-                
+
                 if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmailAdd}')) {
                     $('#billMthdEmail2').prop("checked", true);
                 }
@@ -1452,7 +1457,7 @@
                     $('#billMthdEmail2').removeAttr("disabled");
                     $('#billMthdEmailTxt1').removeAttr("disabled").val('${preOrderInfo.custBillEmail}');
                     $('#billMthdEmailTxt2').removeAttr("disabled").val('${preOrderInfo.custBillEmailAdd}');
-                    
+
                     if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmailAdd}')) {
                         $('#billMthdEmail2').prop("checked", true);
                     }
@@ -1461,7 +1466,7 @@
                 $('#billMthdSms').prop("checked", true);
                 $('#billMthdSms1').prop("checked", true).removeAttr("disabled").val('${preOrderInfo.custBillIsSms}');
                 $('#billMthdSms2').removeAttr("disabled").val('${preOrderInfo.CustBillIsSms2}');
-                
+
                 if(FormUtil.isNotEmpty('${preOrderInfo.CustBillIsSms2}')) {
                     $('#billMthdSms2').prop("checked", true);
                 }
@@ -1474,11 +1479,11 @@
             $('#sctBillSel').removeClass("blind");
 
             $('#billRem').prop("readonly", true).addClass("readonly");
-            
+
             fn_loadBillingGroupById('${preOrderInfo.custBillCustId}', '${preOrderInfo.custBillId}');
         }
     }
-    
+
     function fn_loadBillingGroup(billGrpId, custBillGrpNo, billType, billAddrFull, custBillRem, custBillAddId) {
         $('#hiddenBillGrpId').removeClass("readonly").val(billGrpId);
         $('#billGrp').removeClass("readonly").val(custBillGrpNo);
@@ -1488,7 +1493,7 @@
 
         fn_loadBillAddr(custBillAddId);
     }
-    
+
     function fn_loadBillAddr(custAddId){
         console.log("fn_loadBillAddr START");
 
@@ -1507,14 +1512,14 @@
                 $("#billPostCode").val(billCustInfo.postcode); //Post Code
                 $("#billState").val(billCustInfo.state); //State
                 $("#billCountry").val(billCustInfo.country); //Country
-                
+
                 $("#hiddenBillStreetId").val(billCustInfo.custAddId); //Magic Address STREET_ID(Hidden)
 
                 console.log("hiddenBillAddId2 : " + $("#hiddenBillAddId").val());
             }
         });
     }
-    
+
     function fn_loadInstallAddr(custAddId){
         console.log("fn_loadInstallAddr START");
 
@@ -1534,9 +1539,9 @@
                 $("#instPostCode").val(custInfo.postcode); //Post Code
                 $("#instState").val(custInfo.state); //State
                 $("#instCountry").val(custInfo.country); //Country
-                
+
                 $("#dscBrnchId").val('${preOrderInfo.dscBrnchId}'); //DSC Branch
-                
+
 //              if(!$("#gstChk").is('[disabled]')) {
 /*
                     if(custInfo.gstChk == '1') {
@@ -1550,11 +1555,11 @@
             }
         });
     }
-    
+
     function fn_createCustomerPop() {
         Common.popupDiv("/sales/customer/customerRegistPop.do", {"callPrgm" : "PRE_ORD"}, null, true);
     }
-    
+
     function fn_loadMainCntcPerson(custCntcId){
         console.log("fn_loadCntcPerson START");
 
@@ -1574,7 +1579,7 @@
             }
         });
     }
-    
+
     function fn_loadCntcPerson(custCntcId){
         console.log("fn_loadCntcPerson START");
 
@@ -1595,10 +1600,10 @@
             }
         });
     }
-    
+
     function chgTab(tabNm) {
         console.log('tabNm:'+tabNm);
-        
+
         switch(tabNm) {
             case 'ord' :
                 AUIGrid.resize(listGiftGridID, 980, 180);
@@ -1626,7 +1631,7 @@
 	<li><p class="btn_blue blind"><a href="#">Clear</a></p></li>
 </ul>
 </aside><!-- title_line end -->
-<form id="frmCustSearch" name="frmCustSearch" action="#" method="post">    
+<form id="frmCustSearch" name="frmCustSearch" action="#" method="post">
     <input id="selType" name="selType" type="hidden" value="1" />
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -1675,83 +1680,91 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:250px" />
-	<col style="width:*" />
-	<col style="width:250px" />
+	<col style="width:350px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Customer Type<span class="must">*</span></th>
-	<td><input id="custTypeNm" name="custTypeNm" type="text" title="" placeholder="" class="w100p readonly" /></td>
-	<th scope="row">Company Type<span class="must">*</span></th>
-	<td><input id="corpTypeNm" name="corpTypeNm" type="text" title="" placeholder="" class="w100p readonly" /></td>
+    <th scope="row"><spring:message code="sal.text.custType2" /><span class="must">*</span></th>
+    <td><input id="custTypeNm" name="custTypeNm" type="text" title="" placeholder="" class="w100p readonly" /></td>
 </tr>
 <tr>
-	<th scope="row">Initial<span class="must">*</span></th>
-	<td><input id="custInitial" name="custInitial" type="text" title="Create start Date" placeholder="Initial" class="w100p readonly" readonly/></td>
-	<th scope="row">Customer / Company Name<span class="must">*</span></th>
-	<td><input id="name" name="name" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+    <th scope="row"><spring:message code="sal.text.initial2" /><span class="must">*</span></th>
+    <td><input id="custInitial" name="custInitial" type="text" title="Initial" placeholder="Initial" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
+    <th scope="row"><spring:message code="sal.title.text.companyType2" /><span class="must">*</span></th>
+    <td><input id="corpTypeNm" name="corpTypeNm" type="text" title="" placeholder="" class="w100p readonly" /></td>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.custName2" /><span class="must">*</span></th>
+    <td><input id="name" name="name" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+</tr>
+<!-- <tr>
 	<th scope="row">GST Relief Certificate / Regist. No.</th>
 	<td colspan="3"><p><select id="gstChk" name="gstChk" class="w100p"></select></p>
 		<p><input id="txtCertCustRgsNo" name="txtCertCustRgsNo" type="text" title="" placeholder="" class="w100p" /></p>
 		<p>
-		<div class="auto_file file_flag"><!-- auto_file start -->
+		<div class="auto_file file_flag">auto_file start
 		<input type="file" title="file add" />
-		</div><!-- auto_file end -->
+		</div>auto_file end
 		</p>
 	</td>
-</tr>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:250px" />
-	<col style="width:*" />
-	<col style="width:250px" />
+	<col style="width:350px" />
 	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Race | Keturunan<span class="must">*</span></th>
-	<td><input id="race" name="race" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td>
-	<th scope="row">Date of Birth | Tarikh Lahir<span class="must">*</span></th>
-	<td><input id="dob" name="dob" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
+    <th scope="row"><spring:message code="sal.text.nationality2" /></th>
+    <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row">Nationality</th>
-	<td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p readonly" readonly/></td>
-	<th scope="row">Gender | Jantina<span class="must">*</span></th>
-	<td><input id="gender" name="gender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly/></td>
+    <th scope="row">Passport Visa expiry date | Visa passport tarikh tamat(foreigner)</th>
+    <td><input id="visaExpr" name="visaExpr" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row" colspan="2">Passport Visa expiry date | Visa passport tarikh tamat(foreigner)</th>
-	<td colspan="2"><input id="visaExpr" name="visaExpr" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
+    <th scope="row">Passport expiry date | Passport tarikh luput(foreigner)</th>
+    <td><input id="pasSportExpr" name="pasSportExpr" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row" colspan="2">Passport expiry date | Pasport tarikh luput(foreigner)</th>
-	<td colspan="2"><input id="pasSportExpr" name="pasSportExpr" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
+    <th scope="row"><spring:message code="sal.text.dob2" /><span class="must">*</span></th>
+    <td><input id="dob" name="dob" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row">Email<span class="must">*</span></th>
-	<td><input id="custEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-	<th scope="row">Tel (Mobile)<span class="must">*</span></th>
-	<td><input id="custTelM" name="custTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+    <th scope="row"><spring:message code="sal.text.race2" /><span class="must">*</span></th>
+    <td><input id="race" name="race" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row">Tel (Residence)<span class="must">*</span></th>
-	<td><input id="custTelR" name="custTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-	<th scope="row">Tel (Fax)<span class="must">*</span></th>
-	<td><input id="custTelF" name="custTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+    <th scope="row"><spring:message code="sal.text.gender2" /><span class="must">*</span></th>
+    <td><input id="gender" name="gender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row">Tel (Office)<span class="must">*</span></th>
-	<td><input id="custTelO" name="custTelO" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-	<th scope="row">Ext No.</th>
-	<td><input id="custExt" name="custExt" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+    <th scope="row"><spring:message code="sal.title.text.email2" /><span class="must">*</span></th>
+    <td><input id="custEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Tel (Mobile)<span class="must">*</span></th>
+    <td><input id="custTelM" name="custTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Tel (Residence)<span class="must">*</span></th>
+    <td><input id="custTelR" name="custTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+<!--    <th scope="row">Tel (Fax)<span class="must">*</span></th>
+    <td><input id="custTelF" name="custTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td> -->
+</tr>
+<tr>
+    <th scope="row">Tel (Office)<span class="must">*</span></th>
+    <td><input id="custTelO" name="custTelO" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Ext No.</th>
+    <td><input id="custExt" name="custExt" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -1769,14 +1782,14 @@
 	<col style="width:*" />
 </colgroup>
 <tbody>
-<tr>
+<!-- <tr>
 	<th scope="row">If contact same as above click here</th>
 	<td colspan="3"><input id="chkSameCntc" type="checkbox" checked/></td>
-</tr>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 
-<section id="scAnothCntc" class="blind">
+<section id="scAnothCntc">
 
 <ul class="right_btns mb10">
     <li><p class="btn_grid"><a id="btnNewCntc" href="#">Add New Contact</a></p></li>
@@ -1788,31 +1801,35 @@
 <colgroup>
 	<col style="width:250px" />
 	<col style="width:*" />
-	<col style="width:250px" />
-	<col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Initial<span class="must">*</span></th>
-	<td><input id="custCntcInitial" name="custCntcInitial" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td>
-	<th scope="row">Second/Service contact person name</th>
-	<td><input id="custCntcName" name="custCntcName" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+    <!-- <th scope="row">Initial<span class="must">*</span></th>
+    <td><input id="custCntcInitial" name="custCntcInitial" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td> -->
+    <th scope="row">Second/Service contact person name</th>
+    <td><input id="custCntcName" name="custCntcName" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row">Tel (Mobile)<span class="must">*</span></th>
-	<td><input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-	<th scope="row">Tel (Residence)<span class="must">*</span></th>
-	<td><input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+    <th scope="row">Tel (Mobile)<span class="must">*</span></th>
+    <td><input id="custCntcTelM" name="custCntcTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+    </tr>
+<tr>
+    <th scope="row">Tel (Residence)<span class="must">*</span></th>
+    <td><input id="custCntcTelR" name="custCntcTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row">Tel (Office)<span class="must">*</span></th>
-	<td><input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
-	<th scope="row">Tel (Fax)<span class="must">*</span></th>
-	<td><input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+    <th scope="row">Tel (Office)<span class="must">*</span></th>
+    <td><input id="custCntcTelO" name="custCntcTelO" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Tel (Fax)<span class="must">*</span></th>
+    <td><input id="custCntcTelF" name="custCntcTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
     <th scope="row">Ext No.(1)</th>
     <td><input id="custCntcExt" name="custCntcExt" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
     <th scope="row">Email(1)</th>
     <td><input id="custCntcEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
@@ -1839,36 +1856,32 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Address Detail<span class="must">*</span></th>
+    <th scope="row">Address Line 1<span class="must">*</span></th>
     <td colspan="3"><input id="instAddrDtl" name="instAddrDtl" type="text" title="" placeholder="Address Detail" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Street<span class="must">*</span></th>
+    <th scope="row">Address Line 2<span class="must">*</span></th>
     <td colspan="3"><input id="instStreet" name="instStreet" type="text" title="" placeholder="Street" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Area<span class="must">*</span></th>
+    <th scope="row">Area | Daerah<span class="must">*</span></th>
     <td colspan="3"><input id="instArea" name="instArea" type="text" title="" placeholder="Area" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">City<span class="must">*</span></th>
-    <td>
-    <input id="instCity" name="instCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
-    </td>
-    <th scope="row">PostCode<span class="must">*</span></th>
-    <td>
-    <input id="instPostCode" name="instPostCode" type="text" title="" placeholder="Post Code" class="w100p readonly" readonly/>
-    </td>
+    <th scope="row">City | Bandar<span class="must">*</span></th>
+    <td colspan="3"><input id="instCity" name="instCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">State<span class="must">*</span></th>
-    <td>
-    <input id="instState" name="instState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
-    </td>
-    <th scope="row">Country<span class="must">*</span></th>
-    <td>
-    <input id="instCountry" name="instCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
-    </td>
+    <th scope="row">PostCode | Poskod<span class="must">*</span></th>
+    <td colspan="3"><input id="instPostCode" name="instPostCode" type="text" title="" placeholder="Post Code" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">State | Negeri<span class="must">*</span></th>
+    <td colspan="3"><input id="instState" name="instState" type="text" title="" placeholder="State" class="w100p readonly" readonly/></td>
+</tr>
+<tr>
+    <th scope="row">Country | Negara<span class="must">*</span></th>
+    <td colspan="3"><input id="instCountry" name="instCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/></td>
 </tr>
 
 </tbody>
@@ -1888,12 +1901,18 @@
     <td colspan="3"><select id="dscBrnchId" name="dscBrnchId" class="w100p" disabled></select></td>
 </tr>
 <tr>
+    <th scope="row">Posting Branch<span class="must">*</span></th>
+    <td colspan="3"><select id="keyinBrnchId" name="keyinBrnchId" class="w100p" ></select></td>
+</tr>
+<tr>
     <th scope="row">Prefer Install Date<span class="must">*</span></th>
-    <td><input id="prefInstDt" name="prefInstDt" type="text" value="${preOrderInfo.preDt}" title="Create start Date" placeholder="Prefer Install Date (dd/MM/yyyy)" class="j_date w100p" /></td>
+    <td colspan="3"><input id="prefInstDt" name="prefInstDt" type="text" title="Create start Date" placeholder="Prefer Install Date (dd/MM/yyyy)" class="j_date w100p" value="${preOrderInfo.preDt}"  disabled/></td>
+</tr>
+<tr>
     <th scope="row">Prefer Install Time<span class="must">*</span></th>
-    <td>
+    <td colspan="3">
     <div class="time_picker"><!-- time_picker start -->
-    <input id="prefInstTm" name="prefInstTm" type="text" value="${preOrderInfo.preTm}" title="" placeholder="Prefer Install Time (hh:mi tt)" class="time_date w100p" />
+    <input id="prefInstTm" name="prefInstTm" type="text" title="" placeholder="Prefer Install Time (hh:mi tt)" class="time_date w100p" value="11:00 AM" value="${preOrderInfo.preTm}" disabled/>
     <ul>
         <li>Time Picker</li>
         <li><a href="#">12:00 AM</a></li>
@@ -1924,10 +1943,6 @@
     </div><!-- time_picker end -->
     </td>
 </tr>
-<tr>
-    <th scope="row">Special Instruction<span class="must">*</span></th>
-    <td colspan="3"><textarea id="speclInstct" name="speclInstct" value="${preOrderInfo.instct}" cols="20" rows="5"></textarea></td>
-</tr>
 </tbody>
 </table><!-- table end -->
 
@@ -1947,77 +1962,91 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-	<col style="width:170px" />
-	<col style="width:*" />
-	<col style="width:220px" />
-	<col style="width:*" />
+    <col style="width:250px" />
+    <col style="width:*" />
+<!--    <col style="width:220px" />
+    <col style="width:*" /> -->
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row">Application Type<span class="must">*</span></th>
-	<td>
-    <p><select id="appType" name="appType" class="w100p"></select></p>
-    <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
-	</td>
     <th scope="row">Ex-Trade/Related No</th>
     <td><p><select id="exTrade" name="exTrade" class="w100p"></select></p>
         <p><input id="relatedNo" name="relatedNo" type="text" title="" placeholder="Related Number" class="w100p readonly" readonly /></p></td>
 </tr>
 <tr>
-	<th scope="row">Installment Duration<span class="must">*</span></th>
-	<td><input id="installDur" name="installDur" type="text" value="${preOrderInfo.instPriod}" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
-	<th scope="row">PO No</th>
-	<td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
+    <th scope="row">Application Type | Jenis Permohonan<span class="must">*</span></th>
+    <td>
+    <p><select id="appType" name="appType" class="w100p"></select></p>
+    <p><select id="srvPacId" name="srvPacId" class="w100p"></select></p>
+    </td>
 </tr>
 <tr>
-	<th scope="row">SOF No<span class="must">*</span></th>
-	<td><input id="refereNo" name="refereNo" type="text" value="${preOrderInfo.sofNo}" title="" placeholder="" class="w100p readonly" readonly/></td>
-	<th scope="row">Salesman Code / Name<span class="must">*</span></th>
-    <td><input id="salesmanCd" name="salesmanCd" type="text" style="width:115px;" title="" placeholder="" class="" />
-        <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <p><input id="salesmanNm" name="salesmanNm" type="text" style="width:115px;" title="" placeholder="Salesman Name" readonly" readonly/></p>
-        </td>
+    <th scope="row">Product | Produk<span class="must">*</span></th>
+    <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select></td>
 </tr>
 <tr>
-	<th scope="row">Product | Produk<span class="must">*</span></th>
-	<td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select></td>
-	<th scope="row">Promotion | Promosi<span class="must">*</span></th>
-	<td><select id="ordPromo" name="ordPromo" class="w100p" disabled></select></td>
+    <th scope="row">Promotion | Promosi<span class="must">*</span></th>
+    <td><select id="ordPromo" name="ordPromo" class="w100p" disabled></select></td>
 </tr>
+<!-- <tr>
+    <th scope="row">Installment Duration<span class="must">*</span></th>
+    <td><input id="installDur" name="installDur" type="text" title="" placeholder="Installment Duration (1-36 Months)" class="w100p readonly" readonly/></td>
+</tr> -->
 <tr>
-	<th scope="row">Price / RPF (RM)</th>
+    <th scope="row">Price / RPF (RM)</th>
     <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
         <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
         <input id="normalOrdPrice" name="normalOrdPrice" type="hidden" />
         <input id="normalOrdPv"    name="normalOrdPv"    type="hidden" /></td>
-	<th scope="row">Rental Fee<span class="must">*</span></th>
-	<td><p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p></td>
 </tr>
 <tr>
-	<th scope="row">PV<span class="must">*</span></th>
+    <th scope="row">Rental Fee<span class="must">*</span></th>
+    <td><p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p></td>
+</tr>
+<tr>
+    <th scope="row">Advance Rental Payment*</th>
+    <td><span>Does customer make advance rental payment for 12 months and above?</sapn>
+        <input id="advPayYes" name="advPay" type="radio" value="1" /><span>Yes</span>
+        <input id="advPayNo" name="advPay" type="radio" value="0" /><span>No</span></td>
+    <!-- <th scope="row">Normal Rental Fee<span class="must">*</span></th>
+    <td><p><input id="normalOrdRentalFees" name="normalOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></p>
+        <p id="pBtnCal" class="btn_sky blind"><a id="btnCal" href="#">Exclude GST Calc</a></p></td> -->
+</tr>
+<tr>
+    <th scope="row">PO No</th>
+    <td><input id="poNo" name="poNo" type="text" title="" placeholder="" class="w100p" /></td>
+</tr>
+<!-- <tr>
+    <th scope="row">SOF No<span class="must">*</span></th>
+    <td><input id="refereNo" name="refereNo" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
+</tr> -->
+<tr>
+    <th scope="row">Salesman Code / Name<span class="must">*</span></th>
+    <td><input id="salesmanCd" name="salesmanCd" type="text" style="width:115px;" title="" placeholder="" class=""/>
+        <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
+        <p><input id="salesmanNm" name="salesmanNm" type="text" style="width:115px;" title="" placeholder="Salesman Name" readonly disabled/></p>
+        </td>
+</tr>
+<tr>
+    <th scope="row">Special Instruction<span class="must">*</span></th>
+    <td><textarea id="speclInstct" name="speclInstct" cols="20" rows="5"></textarea></td>
+</tr>
+<!-- <tr>
+    <th scope="row">PV<span class="must">*</span></th>
     <td><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
         <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
-	<th scope="row">Discount Type /  Period (month)</th>
+    <th scope="row">Discount Type /  Period (month)</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p></td>
-</tr>
-<tr>
-	<th scope="row">Advance Rental Payment*</th>
-    <td><span>Does customer make advance rental payment for 6 months and above?</sapn>
-        <input id="advPayYes" name="advPay" type="radio" value="1" disabled/><span>Yes</span>
-        <input id="advPayNo" name="advPay" type="radio" value="0" disabled/><span>No</span></td>
-	<th scope="row">Normal Rental Fee<span class="must">*</span></th>
-	<td><p><input id="normalOrdRentalFees" name="normalOrdRentalFees" type="text" title="" placeholder="Rental Fees (Monthly)" class="w100p readonly" readonly /></p>
-	    <p id="pBtnCal" class="btn_sky blind"><a id="btnCal" href="#">Exclude GST Calc</a></p></td>
-</tr>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 
-<aside class="title_line"><!-- title_line start -->
+<!-- <aside class="title_line">title_line start
 <h3>Free Gift Information</h3>
-</aside><!-- title_line end -->
+</aside>title_line end
 
-<article class="grid_wrap"><!-- grid_wrap start -->
+<article class="grid_wrap">grid_wrap start
 <div id="pop_list_gift_grid_wrap" style="width:100%; height:80px; margin:0 auto;"></div>
 </article><!-- grid_wrap end -->
 <br><br><br><br><br>
@@ -2032,7 +2061,7 @@
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:170px" />
+    <col style="width:250px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
@@ -2063,8 +2092,6 @@
 <colgroup>
     <col style="width:170px" />
     <col style="width:*" />
-    <col style="width:190px" />
-    <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
@@ -2093,19 +2120,19 @@
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:170px" />
+    <col style="width:250px" />
     <col style="width:*" />
     <col style="width:190px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Rental Paymode<span class="must">*</span></th>
-    <td>
+        <th><spring:message code="sal.text.rentalPaymode2" /><span class="must">*</span></th>
+    <td  scope="row" colspan="3"'>
     <select id="rentPayMode" name="rentPayMode" class="w100p"></select>
     </td>
-    <th scope="row">NRIC on DD/Passbook</th>
-    <td><input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="NRIC appear on DD/Passbook" class="w100p" /></td>
+    <!-- <th scope="row">NRIC on DD/Passbook</th>
+    <td><input id="rentPayIC" name="rentPayIC" type="text" title="" placeholder="NRIC appear on DD/Passbook" class="w100p" /></td> -->
 </tr>
 </tbody>
 </table><!-- table end -->
@@ -2129,39 +2156,43 @@
 <table class="type1 mb1m"><!-- table start -->
 <caption>table</caption>
 <colgroup>
-    <col style="width:170px" />
-    <col style="width:*" />
-    <col style="width:190px" />
+    <col style="width:250px" />
     <col style="width:*" />
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row">Credit Card Number<span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.creditCardNo2" /><span class="must">*</span></th>
     <td><input id="rentPayCRCNo" name="rentPayCRCNo" type="text" title="" placeholder="Credit Card Number" class="w100p readonly" readonly/>
         <input id="hiddenRentPayCRCId" name="rentPayCRCId" type="hidden" />
         <input id="hiddenRentPayEncryptCRCNoId" name="hiddenRentPayEncryptCRCNoId" type="hidden" /></td>
-    <th scope="row">Credit Card Type</th>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.type2" /></th>
     <td><input id="rentPayCRCType" name="rentPayCRCType" type="text" title="" placeholder="Credit Card Type" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Name On Card</th>
+    <th scope="row"><spring:message code="sal.text.nameOnCard2" /></th>
     <td><input id="rentPayCRCName" name="rentPayCRCName" type="text" title="" placeholder="Name On Card" class="w100p readonly" readonly/></td>
-    <th scope="row">Expiry</th>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.expiryDate2" /></th>
     <td><input id="rentPayCRCExpiry" name="rentPayCRCExpiry" type="text" title="" placeholder="Credit Card Expiry" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row">Issue Bank</th>
+    <th scope="row"><spring:message code="sal.text.issueBank2" /></th>
     <td><input id="rentPayCRCBank" name="rentPayCRCBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly/>
         <input id="hiddenRentPayCRCBankId" name="rentPayCRCBankId" type="hidden" title="" class="w100p" /></td>
-    <th scope="row">Card Type</th>
+</tr>
+<tr>
+    <th scope="row"><spring:message code="sal.text.cardType2" /></th>
     <td><input id="rentPayCRCCardType" name="rentPayCRCCardType" type="text" title="" placeholder="Card Type" class="w100p readonly" readonly/></td>
 </tr>
 </tbody>
 </table><!-- table end -->
 
-<ul class="center_btns">
+<!-- <ul class="center_btns">
     <li><p class="btn_blue"><a name="ordSaveBtn" href="#">OK</a></p></li>
-</ul>
+</ul> -->
 </section>
 
 <section id="sctDirectDebit" class="blind">
@@ -2332,21 +2363,25 @@
 </tr>
 <tr>
     <th scope="row">City<span class="must">*</span></th>
-    <td>
+    <td colspan="3">
     <input id="billCity" name="billCity" type="text" title="" placeholder="City" class="w100p readonly" readonly/>
     </td>
+</tr>
+<tr>
     <th scope="row">PostCode<span class="must">*</span></th>
-    <td>
+    <td colspan="3">
     <input id="billPostCode" name="billPostCode" type="text" title="" placeholder="Postcode" class="w100p readonly" readonly/>
     </td>
 </tr>
 <tr>
     <th scope="row">State<span class="must">*</span></th>
-    <td>
+    <td colspan="3">
     <input id="billState" name="billState" type="text" title="" placeholder="State" class="w100p readonly" readonly/>
     </td>
+</tr>
+<tr>
     <th scope="row">Country<span class="must">*</span></th>
-    <td>
+    <td colspan="3">
     <input id="billCountry" name="billCountry" type="text" title="" placeholder="Country" class="w100p readonly" readonly/>
     </td>
 </tr>
@@ -2440,10 +2475,10 @@
     <col style="width:*" />
 </colgroup>
 <tbody>
-<tr>
+<!-- <tr>
     <th scope="row">Remark</th>
     <td><textarea id="billRem" name="billRem" cols="20" rows="5" readonly></textarea></td>
-</tr>
+</tr> -->
 </tbody>
 </table><!-- table end -->
 <!-- Existing Type end -->

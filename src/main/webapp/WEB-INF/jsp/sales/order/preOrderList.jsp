@@ -75,9 +75,9 @@
         }
 
         // 셀 더블클릭 이벤트 바인딩
-/*         AUIGrid.bind(listGridID, "cellDoubleClick", function(event) {
+        AUIGrid.bind(listGridID, "cellDoubleClick", function(event) {
             fn_setDetail(listGridID, event.rowIndex);
-        }); */
+        });
 
         //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', '_appTypeId', 'M', 'fn_multiCombo'); //Common Code
         doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
@@ -304,7 +304,7 @@
         if(selIdx > -1) {
         	var stusId = AUIGrid.getCellValue(listGridID, selIdx, "stusId");
 
-        	if(stusId == 10){
+        	if(stusId == 10 || stusId == 4){
                 Common.alert("Convert order is not allowed for this pre-order");
             }
         	else{
