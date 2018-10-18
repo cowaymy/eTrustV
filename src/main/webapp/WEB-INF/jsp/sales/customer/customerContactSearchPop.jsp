@@ -8,12 +8,12 @@
 
 	$(document).ready(function(){
 	    //AUIGrid 그리드를 생성합니다.
-	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' 
+	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
 	    || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
 	    || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC'
 	    || $('#callPrgm').val() == 'fn_loadCntcPerson'
 	    || $('#callPrgm').val() == 'fn_loadInstallationCntcPerson'
-	    || $('#callPrgm').val() == 'PRE_ORD_CNTC') {
+	    || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
 	        createAUIGrid();
 	        fn_getCustomerContactAjax();
 
@@ -23,11 +23,11 @@
                 $('#custPopCloseBtn').click();
             });
 	    }
-	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD'
-	         || $('#callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
+	    else if($('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_CNTC_ADD'
+	         || $('#cnctSearchForm #callPrgm').val() == 'ORD_REGISTER_BILL_PRF') {
 	        createAUIGrid2();
 	        fn_getCustomerCareAjax();
-	        
+
             // 셀 더블클릭 이벤트 바인딩
             AUIGrid.bind(contactGridID, "cellDoubleClick", function(event) {
                 fn_setData(AUIGrid.getCellValue(contactGridID , event.rowIndex , "custCareCntId"))
@@ -36,9 +36,9 @@
 	    }
 
 	});
-	
+
 	function fn_setData(cntcId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN' || $('#callPrgm').val() == 'PRE_ORD_CNTC') {
+	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN' || $('#cnctSearchForm #callPrgm').val() == 'PRE_ORD_CNTC') {
 	        fn_loadCntcPerson(cntcId);
 	    }
 	    else if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_ADD') {
@@ -54,9 +54,9 @@
 	    	eval(${callPrgm}(cntcId));
 	    }
 	}
-	
+
     function createAUIGrid() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : '<spring:message code="sal.title.status" />',          dataField : "name",       editable : false, width : 80  }
@@ -74,26 +74,26 @@
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 0,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-   //         selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 0,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+   //         selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-        
+
         contactGridID = GridCommon.createAUIGrid("grid_cntc_wrap", columnLayout, "", gridPros);
     }
 
     function createAUIGrid2() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayout = [
             { headerText : '<spring:message code="sal.title.status" />',          dataField : "name",          width : 100 }
@@ -109,21 +109,21 @@
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 0,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-  //          selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 0,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+  //          selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-        
+
         contactGridID = GridCommon.createAUIGrid("grid_cntc_wrap", columnLayout, "", gridPros);
     }
 
@@ -131,9 +131,9 @@
 	    $('#cntcSearchBtn').click(function() {
 	        fn_getCustomerContactAjax();
 	    });
-        $('#searchWord').keydown(function (event) {  
+        $('#searchWord').keydown(function (event) {
             if (event.which === 13) {    //enter
-        	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN' 
+        	    if($('#callPrgm').val() == 'ORD_REGISTER_CNTC_OWN'
         	    || $('#callPrgm').val() == 'ORD_MODIFY_CNTC_OWN'
         	    || $('#callPrgm').val() == 'ORD_MODIFY_INST_CNTC') {
         	        fn_getCustomerContactAjax();
@@ -143,24 +143,24 @@
         	        fn_getCustomerCareAjax();
         	    }
                 return false;
-            }            
+            }
         });
 	});
-	
+
     //Get Contact by Ajax
     function fn_getCustomerContactAjax(){
         Common.ajax("GET", "/sales/customer/selectCustomerContactJsonList", $("#cnctSearchForm").serializeJSON(), function(result) {
             AUIGrid.setGridData(contactGridID, result);
         });
     }
-    
+
     //Get Contact by Ajax
     function fn_getCustomerCareAjax(){
         Common.ajax("GET", "/sales/customer/selectCustCareContactList.do", $("#cnctSearchForm").serializeJSON(), function(result) {
             AUIGrid.setGridData(contactGridID, result);
         });
     }
-    
+
 </script>
 </head>
 <body>
