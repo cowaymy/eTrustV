@@ -60,23 +60,22 @@
            FROM SAL1005V A
 
            <if test='userTypeId =="1" or userTypeId == "2" '>
-		                   JOIN SYS0047M USR ON A.SRV_SALES_MEM_ID = USR.USER_ID
-		                   JOIN ORG0001D B ON USR.USER_ID = B.MEM_ID
-		                                        <if test="memCode != null and memCode != '' ">
-		                                            AND B.MEM_CODE = #{memCode}
-		                                        </if>
-		                   JOIN ORG0005D C ON B.MEM_ID = C.MEM_ID
-                                                <if test="orgCode != null and orgCode != '' ">
-		                                          AND C.LAST_ORG_CODE = #{orgCode}
-                                                </if>
-		                                          <if test="grpCode != null and grpCode != '' ">
-		                                          AND C.LAST_GRP_CODE = #{grpCode}
-		                                          </if>
-		                                          <if test="deptCode != null and deptCode != '' ">
-		                                          AND C.LAST_GRP_CODE = #{deptCode}
-		                                          </if>
+		                       JOIN ORG0001D B ON A.SRV_SALES_MEM_ID = B.MEM_ID
+                               JOIN ORG0005D C ON B.MEM_ID = C.MEM_ID
 		   </if>
         WHERE  1=1
+        <if test="orgCode != null and orgCode != '' ">
+            AND C.LAST_ORG_CODE = #{orgCode}
+        </if>
+        <if test="grpCode != null and grpCode != '' ">
+            AND C.LAST_GRP_CODE = #{grpCode}
+        </if>
+        <if test="deptCode != null and deptCode != '' ">
+            AND C.LAST_GRP_CODE = #{deptCode}
+        </if>
+        <if test="memCode != null and memCode != '' ">
+            AND B.MEM_CODE = #{memCode}
+        </if>
 
         <if test="QUOT_NO != null and QUOT_NO != ''">
             AND  A.QUOT_NO = UPPER(#{QUOT_NO})
