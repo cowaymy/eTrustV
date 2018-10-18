@@ -984,7 +984,9 @@ function fn_editRejected() {
                     <li><p class="link_btn"><a href="#" id="_webInvBtn">Web Invoice</a></p></li>
                 </c:if>
                 <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
-                <li><p class="link_btn"><a href="#" id="bulkWebInvDl">Bulk Web Invoice</a></p></li>
+                <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+                    <li><p class="link_btn"><a href="#" id="bulkWebInvDl">Bulk Web Invoice</a></p></li>
+                </c:if>
             </ul>
             <ul class="btns">
             </ul>
