@@ -17,23 +17,16 @@ public interface ASManagementListService {
 	List<EgovMap> getErrMstList(Map<String, Object> params);
 	List<EgovMap> getErrDetilList(Map<String, Object> params);
 
-
-
 	List<EgovMap> getSLUTN_CODE_List(Map<String, Object> params);
 	List<EgovMap> getDTAIL_DEFECT_List(Map<String, Object> params);
 	List<EgovMap> getDEFECT_PART_List(Map<String, Object> params);
 	List<EgovMap> getDEFECT_CODE_List(Map<String, Object> params);
 	List<EgovMap> getDEFECT_TYPE_List(Map<String, Object> params);
 
-
-
-
-
 	List<EgovMap> getBSHistoryList(Map<String, Object> params);
 	List<EgovMap> getBrnchId(Map<String, Object> params);
 
 	EgovMap  getMemberBymemberID(Map<String, Object> params);
-
 
 	EgovMap selectOrderBasicInfo(Map<String, Object> params);
 
@@ -41,9 +34,7 @@ public interface ASManagementListService {
 
 	EgovMap getResultASEntryId(Map<String, Object> params);
 
-
 	EgovMap selASEntryView(Map<String, Object> params);
-
 
 	EgovMap getASEntryDocNo(Map<String, Object> params);
 
@@ -56,7 +47,6 @@ public interface ASManagementListService {
 	EgovMap   updateASEntry(Map<String, Object> params);
 
 	EgovMap   updateASInHouseEntry(Map<String, Object> params);
-
 
 	List<EgovMap> getASOrderInfo(Map<String, Object> params);
 
@@ -80,8 +70,6 @@ public interface ASManagementListService {
 	List<EgovMap> getASRulstSVC0004DInfo(Map<String, Object> params);
 	List<EgovMap> getASRulstEditFilterInfo(Map<String, Object> params);
 
-
-
 	boolean insertASNo(Map<String, Object> params,SessionVO sessionVO);
 
 	EgovMap asResult_insert (Map<String, Object> params);
@@ -91,31 +79,22 @@ public interface ASManagementListService {
 	int addASRemark (Map<String, Object> params);
 	int updateAssignCT (Map<String, Object> params);
 
-
-
 	List<EgovMap> assignCtOrderList(Map<String, Object> params);
 	List<EgovMap> assignCtList(Map<String, Object> params);
 	List<EgovMap> selectCTByDSC(Map<String, Object> params);
-
-
 
 	//add by hgham  mobile 중복 처리
 	int isAsAlreadyResult (Map<String, Object> params);
 	//add by hgham  mobile 중복 처리
 	int asResultSync (Map<String, Object> params);
 
-
-
 	String  getCustAddressInfo (Map<String, Object> params);
-
-
 
 	EgovMap   getSmsCTMemberById(Map<String, Object> params);
 	EgovMap   getSmsCTMMemberById(Map<String, Object> params);
 	EgovMap   getMemberByMemberIdCode(Map<String, Object> params);
 
 	EgovMap getAsEventInfo(Map<String, Object> params);
-
 
 	List<EgovMap> selectSVC0023T(Map<String, Object> params);
 	List<EgovMap> selectSVC0024T(Map<String, Object> params);
@@ -124,8 +103,10 @@ public interface ASManagementListService {
 
 	EgovMap getStockPricebyStkID(Map<String, Object> params);
 
-
-
-
+	// ONGHC ADD FUNCTION FOR OMBAK MINERAL
+	boolean insertOmkMineral(Map<String, Object> params);
+	int getFilterCount(Map<String, Object> params);
+	int getSAL87ConfigId(String params);
+	int insert_SAL0087D (Map<String, Object> params);
 
 }
