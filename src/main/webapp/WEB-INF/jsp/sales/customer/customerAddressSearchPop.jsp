@@ -16,14 +16,14 @@
             fn_setData(AUIGrid.getCellValue(addrGridID , event.rowIndex , "custAddId"))
             $('#custPopCloseBtn').click();
         });
-	    
+
 	});
-	
+
 	function fn_setData(custAddId) {
 	    if($('#callPrgm').val() == 'ORD_REGISTER_BILL_MTH' || $('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR') {
 	        fn_loadMailAddr(custAddId);
 	    }
-	    else if($('#callPrgm').val() == 'ORD_REGISTER_INST_ADD' || $('#callPrgm').val() == 'PRE_ORD_INST_ADD') {
+	    else if($('#callPrgm').val() == 'ORD_REGISTER_INST_ADD') {
 	        fn_loadInstallAddr(custAddId);
 	    }
 	    else if($('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR') {
@@ -35,16 +35,20 @@
 	    else if($('#callPrgm').val() == 'ORD_MODIFY_INST_ADR') {
 	        fn_loadInstallAddrInfoNew(custAddId);
 	    }
-	    else if($('#callPrgm').val() == 'PRE_ORD_BILL_ADD') {
+	    else if($('#addrSearchForm #callPrgm').val() == 'PRE_ORD_BILL_ADD') {
 	        fn_loadBillAddr(custAddId);
+	    }
+	    else if($('#addrSearchForm #callPrgm').val() == 'PRE_ORD_INST_ADD'){
+	    	fn_loadInstallAddr(custAddId);
+	    	fn_loadBillAddr(custAddId);
 	    }
 	    else{
 	    	eval(${callPrgm}(custAddId));
 	    }
 	}
-	
+
     function createAUIGrid() {
-        
+
         //AUIGrid 칼럼 설정
         var columnLayout = [{
 	            dataField : "name",
@@ -61,21 +65,21 @@
         //그리드 속성 설정
         var gridPros = {
             usePaging           : true,         //페이징 사용
-            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-            editable            : false,            
-            fixedColumnCount    : 0,            
-            showStateColumn     : false,             
-            displayTreeOpen     : false,            
-    //        selectionMode       : "singleRow",  //"multipleCells",            
-            headerHeight        : 30,       
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            editable            : false,
+            fixedColumnCount    : 0,
+            showStateColumn     : false,
+            displayTreeOpen     : false,
+    //        selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
             useGroupingPanel    : false,        //그룹핑 패널 사용
             skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+            showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
             groupingMessage     : "Here groupping"
         };
-        
+
         addrGridID = GridCommon.createAUIGrid("grid_addr_wrap", columnLayout, "", gridPros);
     }
 
@@ -84,14 +88,14 @@
 	        fn_getCustomerAddressAjax();
 	    });
 	});
-	
+
     //Get Contact by Ajax
     function fn_getCustomerAddressAjax(){
         Common.ajax("GET", "/sales/customer/selectCustomerAddressJsonList", $("#addrSearchForm").serializeJSON(), function(result) {
             AUIGrid.setGridData(addrGridID, result);
         });
     }
-  
+
 </script>
 </head>
 <body>
