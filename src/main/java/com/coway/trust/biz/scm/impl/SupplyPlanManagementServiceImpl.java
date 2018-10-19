@@ -279,8 +279,8 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			moq			= Integer.parseInt(selectPsi1.get(i).get("moq").toString());
 			safetyStock	= Integer.parseInt(selectPsi1.get(i).get("safetyStock").toString());
 			loadingQty	= Integer.parseInt(selectPsi1.get(i).get("loadingQty").toString());
-			basicQty	= Integer.parseInt(selectPsi1.get(i).get("overdue").toString());	//	psi1의 overdue는 전월 기초재고
-			overdue		= Integer.parseInt(selectPsi5.get(i).get("overdue").toString());	//	psi5의 overdue는 전월 Overdue
+			basicQty	= Integer.parseInt(selectPsi5.get(i).get("overdue").toString());	//	psi1의 overdue는 전월 기초재고
+			overdue		= Integer.parseInt(selectPsi1.get(i).get("overdue").toString());	//	psi5의 overdue는 전월 Overdue
 			
 			psi1Params.put("planId", planId);
 			psi1Params.put("psiId", 1);
@@ -345,6 +345,16 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					psi5	= psi5 - psi1 + psi3;
 					LOGGER.debug("2. m0 : " + m0 + ", psi1 : " + psi1 + ", psi2 : " + psi2 + ", psi3 : " + psi3 + ", psi5 : " + psi5 + ", m0Psi3 : " + m0Psi3);
 				}
+				//	moq와 비교
+				if ( psi3 < moq && psi3 > 0 ) {
+					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
+					psi3	= moq;
+				}
+				//	psi5 음수확인
+				if ( psi5 < 0 ) {
+					psi5	= 0;
+					LOGGER.debug("stockCode : " + stockCode + ", psi5 : " + psi5);
+				}
 				m0Psi3	= m0Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
 				psi5Params.put("m0", psi5);	//	하나씩 덮어넣다보면 제일 마지막것이 들어간다.
@@ -392,7 +402,17 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 						psi3	= psi1 + psi2 - psi5;
 					}
 				}
+				//	moq와 비교
+				if ( psi3 < moq && psi3 > 0 ) {
+					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
+					psi3	= moq;
+				}
 				psi5	= psi5 - psi1 + psi3;
+				//	psi5 음수확인
+				if ( psi5 < 0 ) {
+					psi5	= 0;
+					LOGGER.debug("stockCode : " + stockCode + ", psi5 : " + psi5);
+				}
 				m1Psi3	= m1Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
 				psi5Params.put("m1", psi5);
@@ -440,7 +460,17 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 						psi3	= psi1 + psi2 - psi5;
 					}
 				}
+				//	moq와 비교
+				if ( psi3 < moq && psi3 > 0 ) {
+					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
+					psi3	= moq;
+				}
 				psi5	= psi5 - psi1 + psi3;
+				//	psi5 음수확인
+				if ( psi5 < 0 ) {
+					psi5	= 0;
+					LOGGER.debug("stockCode : " + stockCode + ", psi5 : " + psi5);
+				}
 				m2Psi3	= m2Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
 				psi5Params.put("m1", psi5);
@@ -454,9 +484,6 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			m3Psi3	= 0;
 			for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
-				//if ( 1 == intToStrFieldCnt1.length() ) {
-				//	intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
-				//}
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt1).toString());
 				if ( 0 == selectPsi1.size() ) {
 					m3Psi1	= 0;
@@ -468,16 +495,13 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			psi1Params.put("m3", m3Psi1);
 			for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
 				intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-				//if ( 1 == intToStrFieldCnt2.length() ) {
-				//	intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-				//}
 				//	psi2
 				m3Psi2	= m3Psi1 / 30 * safetyStock;
 				psi2Params.put("m3", m3Psi2);
 				psi2Params.put("w" + intToStrFieldCnt2, m3Psi2);
 				//	psi3, psi5
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
-				psi2	= m1Psi2;
+				psi2	= m3Psi2;
 				if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
 					psi3	= Integer.parseInt(selectPoInLeadTm.get(i).get("w" + intToStrFieldCnt2).toString());
 					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
@@ -488,7 +512,17 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 						psi3	= psi1 + psi2 - psi5;
 					}
 				}
+				//	moq와 비교
+				if ( psi3 < moq && psi3 > 0 ) {
+					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
+					psi3	= moq;
+				}
 				psi5	= psi5 - psi1 + psi3;
+				//	psi5 음수확인
+				if ( psi5 < 0 ) {
+					psi5	= 0;
+					LOGGER.debug("stockCode : " + stockCode + ", psi5 : " + psi5);
+				}
 				m3Psi3	= m3Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
 				psi5Params.put("m3", psi5);
@@ -502,9 +536,6 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			m4Psi3	= 0;
 			for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
-				//if ( 1 == intToStrFieldCnt1.length() ) {
-				//	intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
-				//}
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt1).toString());
 				if ( 0 == selectPsi1.size() ) {
 					m4Psi1	= 0;
@@ -516,12 +547,9 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			psi1Params.put("m4", m4Psi1);
 			for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 				intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-				//if ( 1 == intToStrFieldCnt2.length() ) {
-				//	intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-				//}
 				//	psi2
 				m4Psi2	= m4Psi1 / 30 * safetyStock;
-				psi2Params.put("m1", m4Psi2);
+				psi2Params.put("m4", m4Psi2);
 				psi2Params.put("w" + intToStrFieldCnt2, m4Psi2);
 				//	psi3, psi5
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
@@ -531,7 +559,17 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				} else {
 					psi3	= psi1 + psi2 - psi5;
 				}
+				//	moq와 비교
+				if ( psi3 < moq && psi3 > 0 ) {
+					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
+					psi3	= moq;
+				}
 				psi5	= psi5 - psi1 + psi3;
+				//	psi5 음수확인
+				if ( psi5 < 0 ) {
+					psi5	= 0;
+					LOGGER.debug("stockCode : " + stockCode + ", psi5 : " + psi5);
+				}
 				m4Psi3	= m4Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
 				psi5Params.put("m4", psi5);
