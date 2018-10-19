@@ -32,6 +32,7 @@ var remove = new Array();
 var attachList;
 var myColumnLayout = [ {
     dataField : "clamUn",
+    editable : false,
     headerText : '<spring:message code="newWebInvoice.seq" />'
 }, {
     dataField : "clmSeq",
@@ -387,8 +388,8 @@ function fn_updateWebInvoiceInfo(st) {
 <form action="#" method="post" enctype="multipart/form-data" id="form_newWebInvoice">
 <input type="hidden" id="newClmNo" name="clmNo">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
-<input type="hidden" id="newCostCenterText" name="costCentrName">
-<input type="hidden" id="newMemAccName" name="memAccName">
+<!-- <input type="hidden" id="newCostCenterText" name="costCentrName">
+<input type="hidden" id="newMemAccName" name="memAccName"> -->
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="totAmt" name="totAmt">
 <input type="hidden" id="crtUserId" name="crtUserId" value="${userId}">
@@ -403,20 +404,27 @@ function fn_updateWebInvoiceInfo(st) {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt"/></td>
 	<th scope="row"><spring:message code="newWebInvoice.keyInDate" /></th>
 	<td><input type="text" title="" placeholder="DD/MM/YYYY" class="j_date w100p" id="keyDate" name="keyDate"/></td>
+	<th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${userName}"/></td>
+
 </tr>
 <tr>
-	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
-	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${costCentr}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
-	<th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${userName}"/></td>
+    <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
+    <td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${costCentr}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+    <th scope="row">Cost Centre Name</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="newCostCenterText" name="costCentrName" disabled/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.supplier" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId"/><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
+	<th scope="row">Supplier Name</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="newMemAccName" name="memAccName" disabled/></td>
+</tr>
+<tr>
+	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt"/></td>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
 	<td>
 	<select class="w100p" id="invcType" name="invcType">
