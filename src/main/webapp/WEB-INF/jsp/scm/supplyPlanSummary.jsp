@@ -41,7 +41,7 @@
 
 <script type="text/javaScript">
 var gWeekThValue	= "";
-var weekStartCol	= 15;
+var weekStartCol	= 16;
 
 $(function() {
 	fnScmYearCbBox();		//fnSelectExcuteYear
@@ -173,14 +173,14 @@ function fnSupplyPlanHeader() {
 	
 	dynamicOption	=
 	{
-		usePaging : true,
+		//usePaging : true,
 		useGroupingPanel : false,
 		showRowNumColumn : false,
 		editable : false,
 		fixedColumnCount : weekStartCol,	//	고정칼럼 카운트 지정
 		enableCellMerge : true,
-		selectionMode : "singleRow",
-		cellMergePolicy : "default"
+		cellMergePolicy : "withNull",
+		selectionMode : "multipleCells"
 	};
 	
 	Common.ajax("POST"
@@ -222,9 +222,15 @@ function fnSupplyPlanHeader() {
 					dynamicLayout.push(
 							{
 								headerText : "Stock",
+								cellMerge : true,
 								children :
 									[
 									 {
+										 dataField : result.selectSupplyPlanHeader[0].divOdd,
+										 headerText : "Div Odd",
+										 visible : false,
+										 cellMerge : true
+									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].planId,
 										 headerText : "Plan Id",
 										 visible : false
@@ -235,6 +241,9 @@ function fnSupplyPlanHeader() {
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].typeName,
 										 headerText : "Type",
+										 cellMerge : true,
+										 mergePolicy : "restrict",
+										 mergeRef : result.selectSupplyPlanHeader[0].divOdd,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnCenter0";
@@ -249,6 +258,9 @@ function fnSupplyPlanHeader() {
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].categoryName,
 										 headerText : "Category",
+										 cellMerge : true,
+										 mergePolicy : "restrict",
+										 mergeRef : result.selectSupplyPlanHeader[0].divOdd,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnCenter0";

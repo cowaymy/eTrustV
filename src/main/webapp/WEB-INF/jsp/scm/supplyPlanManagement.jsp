@@ -68,14 +68,13 @@ var supplyPlanList	= new Object();
 var childField	= new Object();
 var splitInfo	= new Object();
 var planId	= "";
-var weekStartCol	= 19;	//	w01 칼럼이 시작되는 column 차례 : 19번째 이전에 칼럼이 추가되면 변경해줘야 함
+var weekStartCol	= 20;	//	w01 칼럼이 시작되는 column 차례 : 19번째 이전에 칼럼이 추가되면 변경해줘야 함
 
 $(function() {
 	fnScmYearCbBox();		//fnSelectExcuteYear
 	fnScmWeekCbBox();		//fnSelectPeriodReset
 	fnScmCdcCbBox();		//fnSelectCDCComboList : 349
 	fnScmStockTypeCbBox();	//fnSelectStockTypeComboList : 15
-	//fnScmStockCodeCbBox();	//fnSetStockComboBox
 });
 
 //	year
@@ -185,7 +184,7 @@ function fnSupplyPlanHeader() {
 	
 	dynamicOption	=
 	{
-		usePaging : true,
+		usePaging : false,
 		useGroupingPanel : false,
 		showRowNumColumn : true,
 		editable : true,
@@ -252,6 +251,11 @@ function fnSupplyPlanHeader() {
 								children :
 									[
 									 {
+										 dataField : result.selectSupplyPlanHeader[0].divOdd,
+										 headerText : "Div Odd",
+										 visible : false,
+										 cellMerge : true
+									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].planId,
 										 headerText : "Plan Id",
 										 visible : false
@@ -279,6 +283,9 @@ function fnSupplyPlanHeader() {
 										 dataField : result.selectSupplyPlanHeader[0].typeName,
 										 headerText : "Type",
 										 visible : true,
+										 cellMerge : true,
+										 mergePolicy : "restrict",
+										 mergeRef : result.selectSupplyPlanHeader[0].divOdd,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnCenter0";
@@ -294,6 +301,9 @@ function fnSupplyPlanHeader() {
 										 dataField : result.selectSupplyPlanHeader[0].categoryName,
 										 headerText : "Category",
 										 visible : true,
+										 cellMerge : true,
+										 mergePolicy : "restrict",
+										 mergeRef : result.selectSupplyPlanHeader[0].divOdd,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnCenter0";
@@ -305,6 +315,9 @@ function fnSupplyPlanHeader() {
 										 dataField : result.selectSupplyPlanHeader[0].code,
 										 headerText : "Code",
 										 visible : true,
+										 cellMerge : true,
+										 mergePolicy : "restrict",
+										 mergeRef : result.selectSupplyPlanHeader[0].divOdd,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnCenter0";
@@ -316,6 +329,9 @@ function fnSupplyPlanHeader() {
 										 dataField : result.selectSupplyPlanHeader[0].name,
 										 headerText : "Name",
 										 visible : true,
+										 cellMerge : true,
+										 mergePolicy : "restrict",
+										 mergeRef : result.selectSupplyPlanHeader[0].divOdd,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnLeft0";
@@ -916,7 +932,7 @@ function fnExcel(obj, fileName) {
 		return	false;
 	}
 	
-	GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileName + '_' + getTimeStamp());
+	GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileName + "_" + getTimeStamp());
 }
 
 //validation
