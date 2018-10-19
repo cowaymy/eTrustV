@@ -971,7 +971,9 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
             NVL(T9.TOT_AMT, T3.APPV_AMT) APPV_AMT,
             CASE WHEN (T9.TOT_AMT <> '' OR T9.TOT_AMT IS NOT NULL) THEN T9.GST_BEFOR_AMT + T9.GST_AMT ELSE T7.TOT_AMT END TOT_AMT,
             REGEXP_REPLACE(NVL(T9.EXP_DESC, T3.EXP_DESC), '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
-            NVL(T9.CLAM_UN, T3.CLAM_UN) CLAM_UN ]]>
+            NVL(T9.CLAM_UN, T3.CLAM_UN) CLAM_UN,
+            T3.J_PAY_NO,
+            T3.UTIL_NO ]]>
             <if test="clmType == 'J3'">
                 ,NVL(( SUBSTR(T8.CRDIT_CARD_NO, 1, 4)
                     || '********'
@@ -1127,6 +1129,8 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,DIMENSION1
        ,DIMENSION2
        ,STATUS
+       ,JOMPNO
+       ,UTLACNO
     )
     values
     (
@@ -1161,6 +1165,8 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,#{costCentr}
        ,#{budgetCode}
        ,#{appvPrcssStus}
+       ,#{jPayNo}
+       ,#{utilNo}
     )
 </insert>
 
