@@ -180,7 +180,7 @@ public class FileDownloadController {
 	public ResponseEntity<List<EgovFormBasedFileVo>> insertFile(MultipartHttpServletRequest request,
 			@RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, "FileUpload",
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDirWeb, "FileUpload",
 				1024 * 1024 * 5);
 
 		String upId = (String) params.get("upId");

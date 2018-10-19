@@ -25,7 +25,7 @@ import com.coway.trust.util.EgovResourceCloseHelper;
 
 /**
  * 파일 다운로드를 위한 컨트롤러 클래스
- * 
+ *
  * @author 공통서비스개발팀 이삼섭
  * @since 2009.06.01
  * @version 1.0
@@ -48,7 +48,7 @@ public class EgovFileDownloadController {
 
 	@Value("${com.file.upload.path}")
 	private String uploadDir;
-	
+
 	@Value("${web.resource.upload.file}")
 	private String uploadDirWeb;
 
@@ -147,7 +147,7 @@ public class EgovFileDownloadController {
 			originalFileName = (String) params.get("orignlFileNm");
 		}
 
-		File uFile = new File(uploadDir + File.separator + subPath, fileName);
+		File uFile = new File(uploadDirWeb + File.separator + subPath, fileName);
 		long fSize = uFile.length();
 
 		if (fSize > 0) {
@@ -187,7 +187,7 @@ public class EgovFileDownloadController {
 //			printwriter.close();
 		}
 	}
-	
+
 	/**
 	 * 첨부파일로 등록된 파일에 대하여 다운로드를 제공한다.
 	 *
@@ -213,23 +213,23 @@ public class EgovFileDownloadController {
 			subPath = (String) params.get("subPath");
 			fileName = (String) params.get("fileName");
 			originalFileName = (String) params.get("orignlFileNm");
-		}		
-				
+		}
+
 		File uFile = new File(uploadDir + "/" + subPath, fileName);
 		long fSize = uFile.length();
 
 		if (fSize > 0) {
-		
+
 			String mimetype = "application/x-msdownload";
 			response.setContentType(mimetype);
 			response.setHeader("Set-Cookie", "fileDownload=true; path=/"); 	///resources/js/jquery.fileDownload.js   callback 호출시 필수.
 			setDisposition(originalFileName, request, response);
 			BufferedInputStream in = null;
 			BufferedOutputStream out = null;
-			
-			try {		
-				in = new BufferedInputStream(new FileInputStream(uFile));		
-				out = new BufferedOutputStream(response.getOutputStream());		
+
+			try {
+				in = new BufferedInputStream(new FileInputStream(uFile));
+				out = new BufferedOutputStream(response.getOutputStream());
 
 				FileCopyUtils.copy(in, out);
 				out.flush();
@@ -244,7 +244,7 @@ public class EgovFileDownloadController {
 			throw new FileDownException(AppConstants.FAIL, "Could not get file name : " + originalFileName);
 		}
 	}
-	
+
 	/**
 	 * 첨부파일로 등록된 파일에 대하여 다운로드를 제공한다.
 	 *
