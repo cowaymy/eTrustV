@@ -612,7 +612,7 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , 1 AS PSI_ID
      , B.STOCK_CODE
      , 1 AS CMPLT
-     , NVL(E.QTY, 0) - NVL(F.QTY, 0) AS OVERDUE
+     , NVL(E.QTY, 0) AS OVERDUE
      , CEIL(NVL((NVL(B.M0_ORD, 0) * D.CDC_RATE) / 100, 0)) AS M0_ORDER
      , CEIL(NVL((NVL(B.M0_PLAN, 0) * D.CDC_RATE) / 100, 0)) AS M0
      , CEIL(NVL((NVL(B.M1, 0) * D.CDC_RATE) / 100, 0)) AS M1
@@ -673,8 +673,7 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
                                        GROUP BY G.STOCK_CODE, G.CDC
                                       ) X ON (Z.STOCK_CODE = X.STOCK_CODE)
                    ) D ON (B.STOCK_CODE = D.STOCK_CODE AND D.CDC = #{scmCdcCbBox})
-  LEFT OUTER JOIN SCM0028S E ON (E.CDC = #{scmCdcCbBox} AND B.STOCK_CODE = E.STOCK_CODE AND E.CLOS_YEAR = #{invenYear} AND E.CLOS_MONTH = #{invenMonth})
-  LEFT OUTER JOIN SCM0029S F ON (F.CDC = #{scmCdcCbBox} AND B.STOCK_CODE = F.STOCK_CODE AND F.CLOS_YEAR = #{invenYear} AND F.CLOS_MONTH = #{invenMonth})
+  LEFT OUTER JOIN SCM0029S E ON (E.CDC = #{scmCdcCbBox} AND B.STOCK_CODE = E.STOCK_CODE AND E.CLOS_YEAR = #{invenYear} AND E.CLOS_MONTH = #{invenMonth})
  WHERE A.PLAN_YEAR = #{scmYearCbBox}
    AND A.PLAN_WEEK = #{scmWeekCbBox}
 </insert>
@@ -736,7 +735,7 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
              , NVL(C.QTY, 0) AS OVERDUE
           FROM SCM0005M A
           LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_MASTER_ID)
-          LEFT OUTER JOIN SCM0029S C ON (C.CDC = #{scmCdcCbBox} AND B.STOCK_CODE = C.STOCK_CODE AND C.CLOS_YEAR = #{invenYear} AND C.CLOS_MONTH = #{invenMonth})
+          LEFT OUTER JOIN SCM0028S C ON (C.CDC = #{scmCdcCbBox} AND B.STOCK_CODE = C.STOCK_CODE AND C.CLOS_YEAR = #{invenYear} AND C.CLOS_MONTH = #{invenMonth})
          WHERE A.PLAN_YEAR = #{scmYearCbBox}
            AND A.PLAN_WEEK = #{scmWeekCbBox}
            AND A.CDC = #{scmCdcCbBox}
