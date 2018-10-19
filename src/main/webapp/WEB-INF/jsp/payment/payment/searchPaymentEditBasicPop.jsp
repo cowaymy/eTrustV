@@ -25,6 +25,7 @@ var gridPros = {
 
 // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
 $(document).ready(function(){
+	console.log("searchPaymentEditBasicInfo");
     fn_openDivEditPop();
 
     //EDIT POP Branch Combo 생성
@@ -213,7 +214,7 @@ function fn_openDivEditPop(){
                 $("#edit_branchId").css("backgroundColor","transparent");
 
               }else{
-                $("#edit_branchId").prop('disabled', false);
+                $("#edit_branchId").prop('disabled', true); // 2018-10-19 - LaiKW
                 $("#edit_branchId").css("backgroundColor","#F5F6CE");
               }
 
