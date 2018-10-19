@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.logistics.bom.impl.BomMapper">
     <select id="selectCdcList" parameterType="Map" resultType="EgovMap">
-		SELECT   
+		SELECT
 		         WH_LOC_ID CODE_ID
 		        ,WH_LOC_CODE CODE_CODE
 		        ,DBMS_LOB.SUBSTR (WH_LOC_DESC, 4000) CODE_NAME
@@ -42,9 +42,9 @@
 			</otherwise>
 		</choose>
 	</select>
-    
+
     <select id="selectBomList" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
             m.BOM  bom ,
             m.ALTRTIV_BOM  altrtiv_bom ,
             m.PLANT  plant ,
@@ -77,7 +77,8 @@
             d.LEAD_TM_OFFSET_N LEAD_TM_OFFSET,
             d.ALTER_ITM_GRP ALTER_ITM_GRP,
             d.ALTER_ITM_RANK_ORD ALTER_ITM_RANK_ORD,
-            d.USE_PROBABILTIY USE_PROBABILTIY
+            d.USE_PROBABILTIY USE_PROBABILTIY,
+            (CASE WHEN d.DEFAULT_FILTER = 1 THEN 'Y' ELSE 'N' END) default_filter
         FROM LOG0043M m, LOG0044D d , SYS0026M m2, SYS0013M sm
               WHERE m.BOM  = d.BOM
               AND d.BOM_COMPNT = m2.STK_CODE
@@ -93,26 +94,26 @@
 	          </if>
               <if test="srchcatagorytype !=null and srchcatagorytype !=''">
                     AND  sm.CODE_ID = #{srchcatagorytype}
-             </if> 
+             </if>
 <!-- 	           <if test="srchValid != null and srchValid != ''"> -->
 <!-- 	              AND TO_CHAR(d.VALID_FROM_DT, 'DD/MM/YYYY') = TO_CHAR(TO_DATE(#{srchValid},'DD/MM/YYYY'),'DD/MM/YYYY') -->
 <!-- 	           </if>   -->
 	            <if test="srchValid != null and srchValid != ''">
                   AND TO_CHAR (TO_DATE (#{srchValid},   'DD/MM/YYYY'),'YYYYMMDD')   between TO_CHAR(d.VALID_FROM_DT, 'YYYYMMDD')  AND TO_CHAR(d.VALID_TO_DT, 'YYYYMMDD')
-               </if> 
+               </if>
               </otherwise>
              </choose>
-                ORDER BY m.BOM, d.BOM_ITM_NODE_NO 
+                ORDER BY m.BOM, d.BOM_ITM_NODE_NO
     </select>
      <select id="materialInfo" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
                 l43m.BOM
                ,l43m.ALTRTIV_BOM
                ,l43m.PLANT
                ,l43m.BOM_USE
                ,l43m.MATRL_NO
                ,s26m.STK_ID
-               ,s26m.STK_CODE 
+               ,s26m.STK_CODE
                ,s26m.STK_DESC STK_DESC
                ,(SELECT CODE_NAME
                   FROM SYS0013M
@@ -138,7 +139,7 @@
            AND  l43m.BOM = #{bom}
      </select>
      <select id="materialInfo2" parameterType="Map" resultType="egovMap">
-        SELECT 
+        SELECT
 		        l44d.BOM_COMPNT BOM_COMPNT
 		       ,s26m.STK_DESC STK_DESC
 		       ,(SELECT CODE_NAME
@@ -164,9 +165,9 @@
 		   AND l44d.BOM_COMPNT = s26m.STK_CODE
 		   AND l44d.BOM_COMPNT=#{cmpntId}
      </select>
-     
+
      <update id="modifyLeadTmOffset" parameterType="Map">
-        update log0044d 
+        update log0044d
            set LEAD_TM_OFFSET_N = #{leadTmOffset}
          where bom = #{bom}
            and BOM_ITM_NODE_NO = #{bomItmNodeNo}
