@@ -521,9 +521,11 @@ public class HsManualController {
 	@RequestMapping(value = "/addIHsResult.do",method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> addIHsResult(@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO) throws Exception  {
 		ReturnMessage message = new ReturnMessage();
-		logger.debug("params : {}", params);
+		logger.debug("addIHsResult params : {}", params);
 
+		String msg = "" ;
 		boolean success = false;
+
 		Map<String, Object> resultValue = new HashMap<String, Object>();
 
 		Map<String , Object> formMap = (Map<String, Object>) params.get(AppConstants.AUIGRID_FORM);
@@ -546,21 +548,69 @@ public class HsManualController {
 			if(! "000".equals(spMap.get("P_RESULT_MSG"))){
 
 				resultValue.put("logerr","Y");
-				message.setMessage("Logistics call Error." );
+				msg = "Logistics call Error." ;
 			}else{
 
-				message.setMessage("Complete to Add a HS Order : " + resultValue.get("resultId") );
+				msg = "Complete to Add a HS Order : " + resultValue.get("resultId") ;
 			}
 
 			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
 		} else if ( null !=resultValue && (status == 21 || status == 10) ) {
 
-			message.setMessage("Complete to Add a HS Order : " + resultValue.get("resultId") );
+			msg = "Complete to Add a HS Order : " + resultValue.get("resultId") ;
 
 		}
 
+		// CHECKING FILTER LIST IN SVC0007D
+		params.put("selSchdulId",formMap.get("hidschdulId").toString());
+		EgovMap useFilterList = hsManualService.getBSFilterInfo(params);
+		//logger.debug("useFilterList : "+ useFilterList.toString());
+
+		// INSERT AS ENTRY FOR OMBAK  -- TPY
+		if(useFilterList != null){
+			String stkId = useFilterList.get("stkId").toString();
+			if(stkId.equals("1428")){  // 1428 - MINERAL FILTER  
+		logger.debug("==================== saveASEntryResult [Start] ========================");
+		//logger.debug("saveASEntryResult params :"+ params.toString());
+
+		params.put("userId", sessionVO.getUserId());
+		params.put("salesOrdId", formMap.get("hidSalesOrdId").toString());
+		params.put("codyId", formMap.get("hidCodyId").toString());
+		params.put("settleDate", formMap.get("settleDate").toString());
+		params.put("stkId", useFilterList.get("stkId").toString());
+		params.put("stkCode", useFilterList.get("stkCode").toString());
+		params.put("stkDesc", useFilterList.get("stkDesc").toString());
+		params.put("stkQty", useFilterList.get("bsResultPartQty").toString());
+		params.put("amt", useFilterList.get("amt").toString());
+		params.put("totalAmt", useFilterList.get("totalAmt").toString());
+		params.put("no", useFilterList.get("no").toString());
+		//params.put("stkFilterId", useFilterList.get("srvFilterId").toString());
+		logger.debug("saveASEntryResult params :"+ params.toString());
+
+		Map<String, Object> sm = new HashMap<String, Object>();
+		sm =	hsManualService.saveASEntryResult(params);
+		params.put("asNo", sm.get("asNo").toString());
+		params.put("asId", sm.get("asId").toString());
+		params.put("asResultNo", sm.get("asResultNo").toString());
+
+		logger.debug("==================== saveASEntryResult [End] ========================");
 
 
+		// INSERT TAX INVOICE FOR OMBAK -- TPY
+		logger.debug("==================== saveASTaxInvoice [Start] ========================");
+		logger.debug("saveASTaxInvoice params :"+ params.toString());
+		Map<String, Object> pb = new HashMap<String, Object>();
+		pb = hsManualService.saveASTaxInvoice(params);
+
+		logger.debug("==================== saveASTaxInvoice [End] ========================");
+
+		msg = msg + "<br /> AS NO : " + sm.get("asNo").toString() + "<br /> AS REF NO : " + pb.get("taxInvcRefNo").toString() ;
+
+			}
+
+		}
+
+		message.setMessage(msg);
 		return ResponseEntity.ok(message);
 	}
 
