@@ -1098,8 +1098,8 @@ public class ASManagementListController {
         				rtnValue.put("logerr","Y");
         			}
 
-        			// ONGHC ADD FOR OMBAK MINERAL
-        			boolean rst = ASManagementListService.insertOmkMineral(params);
+        			// ONGHC ADD FOR OPTIONAL FILTER
+        			boolean rst = ASManagementListService.insertOptFlt(params);
 
         			servicesLogisticsPFCService.SP_SVC_LOGISTIC_REQUEST(spMap);
         			logger.debug("SP_SVC_LOGISTIC_REQUEST===> "+spMap.toString());
