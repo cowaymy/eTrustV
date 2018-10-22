@@ -107,14 +107,14 @@ public interface HsManualService {
 
 	int saveDeactivateFilter(Map<String, Object> params);
 
-	int saveFilterUpdate(Map<String, Object> params);	
-	
+	int saveFilterUpdate(Map<String, Object> params);
+
 	List<EgovMap> selecthSFilterUseHistorycall(Map<String, Object> params);
 	
 	Map<String, Object> UpdateHsResult2(Map<String, Object> formMap, List<Object> docType, SessionVO sessionVO) throws ParseException;
 	
 
-	//add by hgham  mobile 중복 처리 
+	//add by hgham  mobile 중복 처리
 	int isHsAlreadyResult (Map<String, Object> params);
 
 	// Add HS Result - Save Validation
@@ -133,5 +133,15 @@ public interface HsManualService {
 	
 	int hsResultSync (Map<String, Object> params);
 	
+	// OMBAK - AS ENTRY RESULT & INVOICE BILLING  -- TPY
+
+	Map<String, Object> saveASEntryResult(Map<String, Object> params);
+
+	EgovMap getBSFilterInfo(Map<String, Object> params);
+
+	Map<String, Object> saveASTaxInvoice(Map<String, Object> params);
+
+
+
 
 }
