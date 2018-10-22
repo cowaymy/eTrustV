@@ -28,7 +28,8 @@ $(document).ready(function(){
     fn_openDivEditPop();
 
     //EDIT POP Branch Combo 생성
-    doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','edit_branchId', 'S' , '');
+    // 2018-10-22 - Changed Branch code to text
+    //doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','edit_branchId', 'S' , '');
 });
 
 var popColumnLayout = [
@@ -195,7 +196,8 @@ function fn_openDivEditPop(){
               $('#edit_txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
               $('#edit_txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
 
-              $('#edit_branchId').val(result.viewMaster.clctrBrnchId);
+              //$('#edit_branchId').val(result.viewMaster.clctrBrnchId); // 2018-10-22 - Changed to get text form
+              $('#edit_branchId').val(result.viewMaster.clctrBrnchName);
               $('#edit_txtCollectorCode').val(result.viewMaster.clctrCode);
               $('#edit_txtClctrName').text(result.viewMaster.clctrName);
               $('#edit_txtCollectorId').val(result.viewMaster.clctrId);
@@ -240,20 +242,21 @@ function saveChanges() {
 
     var payId = $("#payId").val();
     var trNo = $("#edit_txtTRRefNo").val();
-    var branchId = $("#edit_branchId").val();
+    //var branchId = $("#edit_branchId").val();
 
     if($.trim(trNo).length > 10 ){
           Common.alert("<spring:message code='pay.alert.trNo'/>");
           return;
       }
 
-    if($.trim(branchId ) == ""){
+    // 2018-10-22 - Changed Branch code to text
+    /*if($.trim(branchId ) == ""){
       Common.alert("<spring:message code='pay.alert.selectBranch'/>");
       return;
-    }
+    }*/
 
     $("#hiddenPayId").val(payId);
-    $("#hiddenBranchId").val(branchId);
+    //$("#hiddenBranchId").val(branchId);
 
     console.log("branchId :: " + branchId);
     console.log("hiddenBranchId :: " + $("#hiddenBranchId").val(branchId));
@@ -435,8 +438,9 @@ function fn_goSalesConfirm(){
                       <tr>
                           <th scope="row">Branch Code</th>
                           <td id="" colspan="3">
-                              <select id="edit_branchId" name="edit_branchId" class="w100p">
-                               </select>
+                              <!-- <select id="edit_branchId" name="edit_branchId" class="w100p">
+                               </select>  -->
+                               <input type="text" name="edit_branchId" id="edit_branchId" class="w100p" disabled/>
                           </td>
                       </tr>
                   </tbody>
