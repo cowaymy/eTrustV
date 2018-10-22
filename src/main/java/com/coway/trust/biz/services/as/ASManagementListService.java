@@ -104,7 +104,8 @@ public interface ASManagementListService {
 	EgovMap getStockPricebyStkID(Map<String, Object> params);
 
 	// ONGHC ADD FUNCTION FOR OMBAK MINERAL
-	boolean insertOmkMineral(Map<String, Object> params);
+	boolean insertOptFlt(Map<String, Object> params);
+	List<EgovMap> getfltConfLst();
 	int getFilterCount(Map<String, Object> params);
 	int getSAL87ConfigId(String params);
 	int insert_SAL0087D (Map<String, Object> params);
