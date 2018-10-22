@@ -265,48 +265,56 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	}
 
 	@Override
-	public boolean insertOmkMineral(Map<String, Object> params) {
-		LOGGER.debug(" ============= START INSERT MINERAL RECORD ============= ");
-		Map mp = (Map) params.get("asResultM");
-		if (mp.get("AS_RESULT_STUS_ID").equals("4")) { // IF AS STATUS = COMPLETE
+	public boolean insertOptFlt(Map<String, Object> params) {
+	  LOGGER.debug(" ============= START INSERT MINERAL RECORD ============= ");
+	  Map mp = (Map) params.get("asResultM");
+	  //if (mp.get("AS_RESULT_STUS_ID").equals("4")) { // IF AS STATUS = COMPLETE
 
-		  List<EgovMap> addListing = (List<EgovMap>) params.get("add");
-		  boolean mineralStat = false;
+        List<EgovMap> fltConfLst = (List<EgovMap>) getfltConfLst();
+        List<EgovMap> addListing = (List<EgovMap>) params.get("add");
+        boolean fltSta = false;
+
+        LOGGER.debug(" ============= OPTIONAL FILTER NUMBER:: " + fltConfLst.size());
+        for (int a = 0; a < fltConfLst.size(); a++) {
+          Map<String, Object> fltConfLstMap = (Map<String, Object>) fltConfLst.get(a);
+          LOGGER.debug(" ============= FILTER :: " + fltConfLstMap.get("stkId") + " " + fltConfLstMap.get("stkDesc"));
 		  for (int i = 0; i < addListing.size(); i++) {
-		  	Map<String, Object> updateMap = (Map<String, Object>) addListing.get(i);
-		 	if (updateMap.get("filterID").equals("1428")) { // OMBAK'S MINERAL CODE
-				mineralStat = true;
-				break;
+		    Map<String, Object> updateMap = (Map<String, Object>) addListing.get(i);
+		 	if (updateMap.get("filterID").equals(fltConfLstMap.get("stkId"))) {
+		 	  fltSta = true;
+			  break;
 			} else {
-				//mineralStat = false;
-				mineralStat = true;
+		      fltSta = false;
 			}
 		  }
 
-		  if (mineralStat) {
-			  // CHECK SAL0087D RECORD EXIST
-		  	  HashMap hm = new HashMap();
-			  hm.put("ordNo", (String) mp.get("AS_ORD_NO"));
-			  hm.put("cond1", "1428");
+		  if (fltSta) {
+		    // CHECK SAL0087D RECORD EXIST
+		  	HashMap hm = new HashMap();
+		    hm.put("ordNo", (String) mp.get("AS_ORD_NO"));
+		    hm.put("cond1", fltConfLstMap.get("stkId"));
 
-			  int noOfMineralFilter = getFilterCount(hm);
-			  if (noOfMineralFilter == 0) {
-			    // MINERAL FILTER EXIST , TRY TO GET CONFIG ID
-			    hm.put("cond1", "");
-			    int noOfFilter = getFilterCount(hm);
+		    int noOfMineralFilter = getFilterCount(hm);
+	        if (noOfMineralFilter == 0) {
+			  // MINERAL FILTER EXIST , TRY TO GET CONFIG ID
+			  hm.put("cond1", "");
+			  int noOfFilter = getFilterCount(hm);
 
-			    if (noOfFilter > 0) {
-				  // GET EXISTING CONFIG ID AND INSERT WITH MINERAL WITH THIS CONFIG ID
-				  mp.put("configId", getSAL87ConfigId((String) mp.get("AS_ORD_NO")));
-	  		    } else {
-		 	   	  // INSERT SAL0087D WITH CONFIG ID = 0. THIS VALUE WILL BE UPDATED LATER
-				  mp.put("configId", "0");
-			    }
-			    mp.put("fID", "1428");
-			    insert_SAL0087D(mp);
+			  if (noOfFilter > 0) {
+			    // GET EXISTING CONFIG ID AND INSERT WITH MINERAL WITH THIS CONFIG ID
+				mp.put("configId", getSAL87ConfigId((String) mp.get("AS_ORD_NO")));
+	  		  } else {
+		 	   	// INSERT SAL0087D WITH CONFIG ID = 0. THIS VALUE WILL BE UPDATED LATER
+				mp.put("configId", "0");
 			  }
+			  mp.put("fID", fltConfLstMap.get("stkId"));
+			  insert_SAL0087D(mp);
+			}
+		  } else {
+		    LOGGER.debug(" ============= NO FILTER MATCHED TP PROCESS =============");
 		  }
-	  }
+		}
+	  //}
 	  LOGGER.debug(" ============= END INSERT MINERAL RECORD ============= ");
 	  return true;
 	}
@@ -314,6 +322,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	@Override
 	public int  getFilterCount(Map<String, Object> params) {
 		return ASManagementListMapper.getFilterCount(params);
+	}
+
+	@Override
+	public List<EgovMap> getfltConfLst() {
+		return ASManagementListMapper.getfltConfLst();
 	}
 
 	@Override
