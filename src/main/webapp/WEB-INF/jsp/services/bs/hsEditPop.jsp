@@ -66,6 +66,17 @@ var myDetailGridData = null;
                 headerText : "Serial Check",
                 width : 100,
                 visible:false
+            }, {
+                dataField : "isReturn",
+                headerText : "Has Return",
+                width : 100,
+                renderer : {
+                    type : "CheckBoxEditRenderer",
+                    showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                    editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+                    checkValue : "1", // true, false 인 경우가 기본
+                    unCheckValue : "0"
+                }
             }];
             // 그리드 속성 설정
             var gridPros = {
