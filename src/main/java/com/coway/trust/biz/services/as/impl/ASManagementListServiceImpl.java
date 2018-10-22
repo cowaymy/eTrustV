@@ -280,7 +280,8 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
           LOGGER.debug(" ============= FILTER :: " + fltConfLstMap.get("stkId") + " " + fltConfLstMap.get("stkDesc"));
 		  for (int i = 0; i < addListing.size(); i++) {
 		    Map<String, Object> updateMap = (Map<String, Object>) addListing.get(i);
-		 	if (updateMap.get("filterID").equals(fltConfLstMap.get("stkId"))) {
+	        LOGGER.debug(" ============= :: " + updateMap.get("filterID").toString() + " = " + fltConfLstMap.get("stkId").toString());
+		 	if ((updateMap.get("filterID").toString()).equals((fltConfLstMap.get("stkId")).toString())) {
 		 	  fltSta = true;
 			  break;
 			} else {
@@ -295,11 +296,13 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		    hm.put("cond1", fltConfLstMap.get("stkId"));
 
 		    int noOfMineralFilter = getFilterCount(hm);
+		    LOGGER.debug(" ============= NO OF MINERAL :: " + noOfMineralFilter);
 	        if (noOfMineralFilter == 0) {
 			  // MINERAL FILTER EXIST , TRY TO GET CONFIG ID
 			  hm.put("cond1", "");
 			  int noOfFilter = getFilterCount(hm);
 
+			  LOGGER.debug(" ============= NO OF MINERAL :: " + noOfFilter);
 			  if (noOfFilter > 0) {
 			    // GET EXISTING CONFIG ID AND INSERT WITH MINERAL WITH THIS CONFIG ID
 				mp.put("configId", getSAL87ConfigId((String) mp.get("AS_ORD_NO")));
@@ -311,7 +314,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 			  insert_SAL0087D(mp);
 			}
 		  } else {
-		    LOGGER.debug(" ============= NO FILTER MATCHED TP PROCESS =============");
+		    LOGGER.debug(" ============= NO FILTER MATCHED TO PROCESS =============");
 		  }
 		}
 	  }
