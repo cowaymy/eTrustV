@@ -246,6 +246,48 @@ public interface HsManualMapper {
 
 	void updateInstRemark(Map<String, Object> bsResultInst);
 
+	// OMBAK - AS ENTRY RESULT & INVOICE BILLING -- TPY
+
+	String saveASEntry(Map<String, Object> params);
+
+	EgovMap getASEntryDocNo(Map<String, Object> params);
+
+	EgovMap getASEntryId(Map<String, Object> params);
+
+	int insertSVC0001D(Map<String, Object> params);
+
+	int insertSVC0003D(Map<String, Object> params);
+
+	void updateStateSVC0001D(Map<String, Object> params);
+
+	int insertSVC0004D(Map<String, Object> params);
+
+	EgovMap getResultASEntryId(Map<String, Object> params2);
+
+	int insertSVC0005D(Map<String, Object> params3);
+
+	EgovMap getBSFilterInfo(Map<String, Object> params);
+
+	EgovMap selectBasicInfo(Map<String, Object> params);
+
+	EgovMap selectOrderMailingInfoByOrderID(Map<String, Object> params);
+
+	EgovMap selectTaxInvoice(Map<String, Object> params);
+
+	int insert_Pay0031d(Map<String, Object> param);
+
+	int getSeqPay0031D();
+
+	void insert_Pay0032d(Map<String, Object> param);
+
+	void insert_Pay0016d(Map<String, Object> param);
+
+	void insert_Pay0006d(Map<String, Object> param4);
+
+	void insert_Pay0007d(Map<String, Object> param5);
+
+
+
 
 
 }
