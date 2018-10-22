@@ -1222,18 +1222,21 @@
                                    Distinct1.STK_DESC STK_DESC,
                                    Distinct1.SERIAL_CHK,
                                    Distinct1.SRV_FILTER_ID,
-                                   Distinct1.srv_config_id
+                                   Distinct1.srv_config_id,
+                                   Distinct1.IS_RETURN
                               FROM ( SELECT DISTINCT Extent3.STK_ID STK_ID  ,
                                                      Extent3.STK_CODE STK_CODE  ,
                                                      Extent3.STK_DESC STK_DESC  ,
                                                      Extent3.SERIAL_CHK,
                                                      1 C1,
                                                      Filter1.SRV_FILTER_ID,
-                                                     Filter1.srv_config_id
+                                                     Filter1.srv_config_id,
+                                                     Filter1.IS_RETURN
                                      FROM ( SELECT Extent1.SRV_SO_ID SRV_SO_ID  ,
                                                    Extent2.SRV_FILTER_STK_ID SRV_FILTER_STK_ID,
                                                    Extent2.SRV_FILTER_ID,
-                                                   Extent1.srv_config_id
+                                                   Extent1.srv_config_id,
+                                                   Extent2.IS_RETURN
                                             FROM SAL0090D Extent1
                                                    JOIN SAL0087D Extent2   ON ( Extent1.SRV_CONFIG_ID = Extent2.SRV_CONFIG_ID )
                                                    AND ( 1 = Extent2.SRV_FILTER_STUS_ID )
@@ -1285,12 +1288,14 @@
                            CASE WHEN distinct1.SRV_FILTER_STK_ID = c.BS_RESULT_PART_ID
                                    THEN C.BS_RESULT_PART_QTY
                                    ELSE 0
-                                   END AS NAME
+                                   END AS NAME,
+                           distinct1.IS_RETURN
                FROM( SELECT  e.SRV_FILTER_STK_ID AS STK_ID,
                            f.STK_CODE,
                            f.STK_DESC,
                            f.SERIAL_CHK,
-                           e.SRV_FILTER_STK_ID
+                           e.SRV_FILTER_STK_ID,
+                           e.IS_RETURN
                      FROM SVC0008D A,
                               SAL0090D D,
                               SAL0087D E,
@@ -2972,6 +2977,7 @@
                                   ,SRV_FILTER_PRV_CHG_DT= to_date(#{settleDate}, 'DD/MM/YYYY')
                                   ,SRV_FILTER_UPD_USER_ID= #{hidCodyId}
                                   ,SRV_FILTER_UPD_DT= sysdate
+                                  ,IS_RETURN = #{isReturn}
                              WHERE 1=1
                              and SRV_FILTER_ID = #{srvFilterId}
                  </update>
@@ -3913,6 +3919,648 @@
     </update>
 
 
+    <select id="getASEntryDocNo" parameterType="Map" resultType="egovMap">
+       <![CDATA[
+                SELECT FN_GET_DOCNO(#{DOCNO})  asno  FROM DUAL
+        ]]>
+    </select>
+
+
+    <select id="getASEntryId" parameterType="Map" resultType="egovMap">
+       <![CDATA[
+
+                 SELECT  SVC0001D_AS_ID_SEQ.nextval   seq FROM DUAL
+
+        ]]>
+    </select>
+
+    <insert id="insertSVC0001D" parameterType="Map">
+       <![CDATA[
+       INSERT INTO SVC0001D (
+                           AS_ID, AS_NO, AS_SO_ID,
+                           AS_MEM_ID, AS_MEM_GRP, AS_REQST_DT,
+                           AS_REQST_TM, AS_APPNT_DT, AS_APPNT_TM,
+                           AS_BRNCH_ID, AS_MALFUNC_ID, AS_MALFUNC_RESN_ID,
+                           AS_REM_REQSTER, AS_REM_REQSTER_CNTC, AS_CALLLOG_ID,
+                           AS_STUS_ID, AS_SMS, AS_CRT_USER_ID,
+                           AS_CRT_DT, AS_UPD_USER_ID, AS_UPD_DT,
+                           AS_ENTRY_IS_SYNCH, AS_ENTRY_IS_EDIT, AS_TYPE_ID,
+                           AS_REQSTER_TYPE_ID, AS_IS_BS_WITHIN_30DAYS, AS_ALLOW_COMM,
+                           AS_PREV_MEM_ID, AS_REM_ADD_CNTC, AS_REM_REQSTER_CNTC_SMS,
+                           AS_REM_ADD_CNTC_SMS, AS_SESION_CODE, CALL_MEM,
+                           REF_REQST, NO
+                         )
+                        VALUES (
+                           #{AS_ID},
+                           #{AS_NO},
+                           #{AS_SO_ID},
+                           #{AS_MEM_ID},
+                           #{AS_MEM_GRP},
+                           TO_DATE(#{AS_REQST_DT},'DD/MM/YYYY'),
+                           #{AS_REQST_TM},
+                           TO_DATE(#{AS_APPNT_DT},'DD/MM/YYYY'),
+                           #{AS_APPNT_TM},
+                           #{AS_BRNCH_ID},
+                           #{AS_MALFUNC_ID},
+                           #{AS_MALFUNC_RESN_ID},
+                           #{AS_REM_REQSTER},
+                           #{AS_REM_REQSTER_CNTC},
+                           #{AS_CALLLOG_ID},
+                           #{AS_STUS_ID},
+                           #{AS_SMS},
+                           #{USER_ID},
+                           SYSDATE,
+                           #{USER_ID},
+                           SYSDATE,
+                           #{AS_ENTRY_IS_SYNCH},
+                           #{AS_ENTRY_IS_EDIT},
+                           #{AS_TYPE_ID},
+                           #{AS_REQSTER_TYPE_ID},
+                           #{AS_IS_BS_WITHIN_30DAYS},
+                           #{AS_ALLOW_COMM},
+                           #{AS_PREV_MEM_ID},
+                           #{AS_REM_ADD_CNTC},
+                           #{AS_REM_REQSTER_CNTC_SMS},
+                           #{AS_REM_ADD_CNTC_SMS},
+                           #{AS_SESION_CODE},
+                           #{CALL_MEMBER},
+                           #{REF_REQUEST},
+                           #{NO}
+                           )
+        ]]>
+    </insert>
+
+    <insert id="insertSVC0003D" parameterType="Map">
+       <![CDATA[
+                           INSERT INTO  SVC0003D (
+                                               AS_PIC_ID, AS_ID, PIC_NAME,
+                                               PIC_CNTC, CRT_DT, CRT_USER_ID)
+                               VALUES ( SVC0003D_AS_PIC_ID_SEQ.NEXTVAL , #{AS_ID} , #{PIC_NAME},
+                                               #{PIC_CNTC},SYSDATE , #{USER_ID})
+        ]]>
+    </insert>
+
+    <insert id="updateStateSVC0001D" parameterType="Map">
+        UPDATE SVC0001D
+        SET AS_STUS_ID =#{AS_RESULT_STUS_ID},
+        AS_UPD_USER_ID =#{USER_ID},
+        AS_UPD_DT =SYSDATE
+        WHERE AS_ID =#{AS_ENTRY_ID}
+    </insert>
+
+
+    <insert id="insertSVC0004D" parameterType="Map">
+
+        INSERT INTO SVC0004D (
+        AS_RESULT_ID,
+        AS_RESULT_NO,
+        AS_ENTRY_ID,
+        AS_SO_ID,
+        AS_CT_ID,
+        AS_SETL_DT,
+        AS_SETL_TM,
+        AS_RESULT_STUS_ID,
+        AS_FAIL_RESN_ID,
+        AS_REN_COLCT_ID,
+        AS_CMMS,
+        AS_BRNCH_ID,
+        AS_WH_ID,
+        AS_RESULT_REM,
+        AS_RESULT_CRT_DT,
+        AS_RESULT_CRT_USER_ID,
+        AS_MALFUNC_ID,
+        AS_MALFUNC_RESN_ID,
+        AS_DEFECT_TYPE_ID,
+        AS_DEFECT_GRP_ID,
+        AS_DEFECT_ID,
+        AS_DEFECT_PART_GRP_ID,
+        AS_DEFECT_PART_ID,
+        AS_DEFECT_DTL_RESN_ID,
+        AS_SLUTN_RESN_ID,
+        AS_WORKMNSH,
+        AS_FILTER_AMT,
+        AS_ACSRS_AMT,
+        AS_TOT_AMT,
+        AS_RESULT_IS_SYNCH,
+        AS_RCALL,
+        AS_RESULT_STOCK_USE,
+        AS_RESULT_TYPE_ID,
+        AS_RESULT_IS_CURR,
+        AS_RESULT_MTCH_ID,
+        AS_RESULT_NO_ERR,
+        AS_RESULT_UPD_DT,
+        AS_RESULT_UPD_USER_ID,
+        AS_ENTRY_POINT,
+        AS_WORKMNSH_TAX_CODE_ID,
+        AS_WORKMNSH_TXS,
+        AS_RESULT_MOBILE_ID,
+        APPNT_DT,
+        APPNT_TM,
+        IN_HUSE_REPAIR_REM,
+        IN_HUSE_REPAIR_REPLACE_YN,
+        IN_HUSE_REPAIR_PROMIS_DT,
+        IN_HUSE_REPAIR_GRP_CODE,
+        IN_HUSE_REPAIR_PRODUCT_CODE,
+        IN_HUSE_REPAIR_SERIAL_NO,
+        RESULT_CUST_NAME,
+        RESULT_MOBILE_NO,
+        RESULT_REP_EMAIL_NO,
+        RESULT_ACEPT_NAME,
+        SGN_DT,
+        TRNSC_ID
+        )
+        VALUES (
+        #{AS_RESULT_ID},
+        #{AS_RESULT_NO},
+        #{AS_ENTRY_ID},
+        #{AS_SO_ID},
+        #{AS_CT_ID},
+        to_DATE(#{AS_SETL_DT},'dd/mm/yyyy'),
+        #{AS_SETL_TM},
+        NVL(#{AS_RESULT_STUS_ID},0),
+        NVL(#{AS_FAIL_RESN_ID},0),
+        NVL(#{AS_REN_COLCT_ID},0),
+        NVL(#{AS_CMMS},0),
+        NVL(#{AS_BRNCH_ID},0),
+        NVL(#{AS_WH_ID},0),
+        #{AS_RESULT_REM},
+        sysdate,
+        #{updator},
+        NVL(#{AS_MALFUNC_ID},0),
+        NVL(#{AS_MALFUNC_RESN_ID},0),
+        NVL(#{AS_DEFECT_TYPE_ID},0),
+        NVL(#{AS_DEFECT_GRP_ID},0),
+        NVL(#{AS_DEFECT_ID},0),
+        NVL(#{AS_DEFECT_PART_GRP_ID},0),
+        NVL(#{AS_DEFECT_PART_ID},0),
+        NVL(#{AS_DEFECT_DTL_RESN_ID},0),
+        NVL(#{AS_SLUTN_RESN_ID},0),
+        NVL(#{AS_WORKMNSH},0),
+        NVL((#{AS_FILTER_AMT}),0),
+        NVL(#{AS_ACSRS_AMT},0),
+        NVL((#{AS_TOT_AMT}),0),
+        NVL(#{AS_RESULT_IS_SYNCH},0),
+        NVL(#{AS_RCALL},0),
+        NVL(#{AS_RESULT_STOCK_USE},0),
+        NVL(#{AS_RESULT_TYPE_ID},0),
+        #{AS_RESULT_IS_CURR},
+        #{AS_RESULT_MTCH_ID},
+        #{AS_RESULT_NO_ERR},
+        sysdate,
+        #{updator},
+        NVL(#{AS_ENTRY_POINT},0),
+        NVL(#{AS_WORKMNSH_TAX_CODE_ID},0),
+        NVL(#{AS_WORKMNSH_TXS},0),
+        #{AS_RESULT_MOBILE_ID},
+        to_date(#{APPNT_DT},'dd/mm/yyyy'),
+        #{APPNT_TM},
+        #{IN_HUSE_REPAIR_REM},
+        #{IN_HUSE_REPAIR_REPLACE_YN},
+        to_date(#{IN_HUSE_REPAIR_PROMIS_DT},'dd/mm/yyyy'),
+        #{IN_HUSE_REPAIR_GRP_CODE},
+        #{IN_HUSE_REPAIR_PRODUCT_CODE},
+        #{IN_HUSE_REPAIR_SERIAL_NO},
+        #{RESULT_CUST_NAME},
+        #{RESULT_MOBILE_NO},
+        #{RESULT_REP_EMAIL_NO},
+        #{RESULT_ACEPT_NAME},
+        #{SGN_DT},
+        #{TRNSC_ID}
+        )
+    </insert>
+
+    <select id="getResultASEntryId" parameterType="Map" resultType="egovMap">
+       <![CDATA[
+                SELECT SVC0004D_AS_RESULT_ID_SEQ.NEXTVAL seq FROM DUAL
+        ]]>
+    </select>
+
+
+    <insert id="insertSVC0005D" parameterType="Map">
+        INSERT INTO SVC0005D (
+        ASR_ITM_ID,
+        AS_RESULT_ID,
+        ASR_ITM_PART_ID,
+        ASR_ITM_PART_DESC,
+        ASR_ITM_PART_QTY,
+        ASR_ITM_PART_PRC,
+        ASR_ITM_CHRG_AMT,
+        ASR_ITM_REM,
+        ASR_ITM_CRT_USER_ID,
+        ASR_ITM_CRT_DT,
+        ASR_ITM_CHRG_FOC,
+        ASR_ITM_EXCHG_ID,
+        ASR_ITM_CLM,
+        ASR_ITM_TAX_CODE_ID,
+        ASR_ITM_TXS_AMT
+        <!-- SERIAL_NO, EXCHN_ID, FILTER_BARCD_SERIAL_NO -->
+        )
+        VALUES (
+        SVC0005D_ASR_ITM_ID_SEQ.nextval,
+        #{AS_RESULT_ID},
+        #{ASR_ITM_PART_ID},
+        #{ASR_ITM_PART_DESC},
+        #{ASR_ITM_PART_QTY},
+        nvl(#{ASR_ITM_PART_PRC},0),
+        nvl(#{ASR_ITM_CHRG_AMT},0),
+        #{ASR_ITM_REM},
+        #{ASR_ITM_CRT_USER_ID},
+        sysdate,
+        #{ASR_ITM_CHRG_FOC},
+        #{ASR_ITM_EXCHG_ID},
+        #{ASR_ITM_CLM},
+        #{ASR_ITM_TAX_CODE_ID},
+        nvl(#{ASR_ITM_TXS_AMT},0)
+        <!-- #{SERIAL_NO}, #{EXCHG_ID}, #{FILTER_BARCD_SERIAL_NO} -->
+        )
+    </insert>
+
+
+    <select id="getBSFilterInfo" parameterType="Map" resultType="egovMap">
+            <![CDATA[
+                            SELECT Distinct1.C1 C1  ,
+                                   Distinct1.NO NO  ,
+                                   Distinct1.RESULT_IS_CURR RESULT_IS_CURR  ,
+                                   Distinct1.STK_ID STK_ID  ,
+                                   Distinct1.STK_CODE STK_CODE  ,
+                                   Distinct1.STK_DESC STK_DESC  ,
+                                   Distinct1.BS_RESULT_FILTER_CLM BS_RESULT_FILTER_CLM  ,
+                                   Distinct1.RESULT_CRT_DT RESULT_CRT_DT  ,
+                                   Distinct1.BS_RESULT_PART_QTY BS_RESULT_PART_QTY  ,
+                                   Distinct1.USER_NAME USER_NAME,
+                                   Distinct1.AMT,
+                                   Distinct1.TOTAL_AMT
+                              FROM ( SELECT DISTINCT Filter1.NO NO  ,
+                                                     Filter1.RESULT_CRT_DT RESULT_CRT_DT  ,
+                                                     Filter1.RESULT_IS_CURR RESULT_IS_CURR  ,
+                                                     Filter1.BS_RESULT_PART_QTY BS_RESULT_PART_QTY  ,
+                                                     decode(Filter1.BS_RESULT_FILTER_CLM,'0','X','O') BS_RESULT_FILTER_CLM,
+                                                     Filter1.STK_ID STK_ID  ,
+                                                     Filter1.STK_CODE STK_CODE  ,
+                                                     Filter1.STK_DESC STK_DESC  ,
+                                                     1 C1  ,
+                                                     Extent4.USER_NAME USER_NAME ,
+                                                     AMT,
+                                                     Filter1.BS_RESULT_PART_QTY * AMT AS TOTAL_AMT
+                                     FROM ( SELECT Extent1.NO NO  ,
+                                                   Extent1.SCHDUL_ID SCHDUL_ID  ,
+                                                   Extent1.RESULT_CRT_DT RESULT_CRT_DT  ,
+                                                   Extent1.RESULT_CRT_USER_ID RESULT_CRT_USER_ID  ,
+                                                   Extent1.RESULT_IS_CURR RESULT_IS_CURR  ,
+                                                   Extent2.BS_RESULT_PART_QTY BS_RESULT_PART_QTY  ,
+                                                   Extent2.BS_RESULT_FILTER_CLM BS_RESULT_FILTER_CLM  ,
+                                                   Extent3.STK_ID STK_ID  ,
+                                                   Extent3.STK_CODE STK_CODE  ,
+                                                   Extent3.STK_DESC STK_DESC ,
+                                                   NVL(Extent5.AMT,0) AMT
+                                            FROM SVC0006D Extent1
+                                                   JOIN SVC0007D Extent2   ON Extent1.RESULT_ID = Extent2.BS_RESULT_ID
+                                                   JOIN SYS0026M Extent3   ON Extent2.BS_RESULT_PART_ID = Extent3.STK_ID
+                                                   LEFT JOIN SAL0016M Extent5 ON Extent5.STK_ID = Extent3.STK_ID
+                                             WHERE  ( 306 = Extent1.TYPE_ID )
+                                                      AND ( 0 <> Extent2.BS_RESULT_PART_ID )
+                                                      AND ( Extent2.BS_RESULT_PART_QTY > 0 ) ) Filter1
+                                            LEFT JOIN SYS0047M Extent4   ON Filter1.RESULT_CRT_USER_ID = Extent4.USER_ID
+                                      WHERE  Filter1.SCHDUL_ID = #{selSchdulId} ) Distinct1
+                                      WHERE  Distinct1.STK_ID = 1428
+
+                        ]]>
+
+    </select>
+
+    <select id="selectOrderMailingInfoByOrderID" parameterType="Map"
+        resultType="egovMap">
+        SELECT V1.ORD_ID
+        , V1.ADDR_DTL
+        , V1.STREET
+        , V1.MAIL_AREA
+        , V1.MAIL_POST_CODE
+        , V1.MAIL_CITY
+        , V1.MAIL_STATE
+        , V1.MAIL_CNTY
+        , V1.MAIL_CNT_NAME
+        , V1.MAIL_CNT_NRIC
+        , V1.MAIL_CNT_EMAIL
+        , V1.MAIL_CNT_TEL_M
+        , V1.MAIL_CNT_TEL_O
+        , V1.MAIL_CNT_TEL_R
+        , V1.MAIL_CNT_TEL_F
+        , V1.MAIL_CNT_GENDER
+        , V1.BILL_GRP_NO
+        , V1.BILL_STATE_EMAIL
+        , V1.BILL_STATE
+        , V1.BILL_SMS
+        , V1.BILL_POST
+        , V1.MAIL_CNTC_ID
+        , V1.MAIL_ADDR_ID
+        , V1.MAIL_CNT_DEPT
+        , V1.MAIL_CNT_POST
+        FROM SAL1011V V1
+        WHERE V1.ORD_ID = #{salesOrderId}
+    </select>
+
+    <select id="selectBasicInfo" parameterType="Map" resultType="egovMap">
+        SELECT V1.ORD_ID
+        , V1.ORD_NO
+        , V1.RENTAL_STUS
+        , V1.ORD_STUS_ID
+        , V1.ORD_STUS_CODE
+        , V1.ORD_STUS_NAME
+        , V1.ORD_DT
+        , V1.INSTLMT_PRIOD
+        , V1.ORD_AMT
+        , V1.ORD_MTH_RENTAL
+        , V1.ORD_PV
+        , V1.ORD_PV_MONTH
+        , V1.ORD_PV_YEAR
+        , V1.ORD_REF_NO
+        , V1.ORD_PO_NO
+        , V1.ORD_DEPT_CODE
+        , V1.ORD_GRP_CODE
+        , V1.ORD_ORG_CODE
+        , V1.ORD_CRT_USER_ID
+        , V1.ORD_CRT_DT
+        , V1.APP_TYPE_ID
+        , V1.APP_TYPE_CODE
+        , V1.APP_TYPE_DESC
+        , V1.ITM_PRC_ID
+        , V1.STOCK_ID
+        , V1.STOCK_CODE
+        , V1.STOCK_DESC
+        , V1.MASTER_STK_ID
+        , V1.CUST_ID
+        , V1.CUST_TYPE
+        , V1.CUST_NAME
+        , V1.CUST_NRIC
+        , V1.CUST_DOB
+        , V1.CUST_NATION
+        , V1.CUST_GENDER
+        , V1.CUST_RACE
+        , V1.CUST_EMAIL
+        , V1.CUST_VA_NO
+        , TO_CHAR(V1.CUST_PASSPORT_EXPR, 'DD/MM/YYYY') CUST_PASSPORT_EXPR
+        , TO_CHAR(V1.CUST_VISA_EXPR, 'DD/MM/YYYY') CUST_VISA_EXPR
+        , V1.ORD_PROMO_ID
+        , V1.ORD_PROMO_CODE
+        , V1.ORD_PROMO_DESC
+        , V1.ORD_MEM_ID
+        , V1.ORD_MEM_CODE
+        , V1.ORD_MEM_NAME
+        , V1.ORD_MEM_NRIC
+        , V1.ORD_MEM_TYPE_ID
+        , V1.ORD_MEM_TYPE_CODE
+        , V1.ORD_MEM_TYPE_NAME
+        , V1.COOL_OFF_PRIOD
+        , V1.KEYIN_BRNCH_ID
+        , V1.KEYIN_BRNCH_CODE
+        , V1.KEYIN_BRNCH_NAME
+        , V1.ORD_REM
+        , V1.RENT_CHK_ID
+        , V1.ORD_HM_ID
+        , V1.ORD_SM_ID
+        , V1.ORD_GM_ID
+        , V1.ORD_ADDR_ID
+        , V1.ORD_CNTC_ID
+        , V1.CUST_CARE_CNT_ID
+        , V1.ORD_PROMO_RELATED_NO
+        , V1.UPD_DT
+        , V1.UPD_USER_ID
+        , V1.JOM_PAY_REF
+        , V1.STK_CTGRY_ID
+        , V1.STK_CTGRY_NAME
+        , V1.CUST_TYPE_ID
+        , V1.CUST_BILL_ID
+        , V1.OBLIGT_YEAR
+        , NVL(V1.EMP_CHK, 0) AS EMP_CHK
+        , NVL(V1.EX_TRADE, 0) AS EX_TRADE
+        , NVL(V1.GST_CHK, 0) AS GST_CHK
+        , V1.CNVR_SCHEME_ID
+        , V1.PROMO_DISC_PERIOD_TP
+        , V1.PROMO_DISC_PERIOD_TP_NM
+        , V1.PROMO_DISC_PERIOD
+        , V1.NOR_AMT
+        , V1.NOR_RNT_FEE
+        , V1.DISC_RNT_FEE
+        , V1.SRV_PAC_ID
+        , V1.ADV_BILL
+        , V1.CRT_DUR
+        FROM SAL1006V V1
+        WHERE V1.ORD_ID = #{salesOrderId}
+    </select>
+
+    <select id="getSeqPay0031D" resultType="java.lang.Integer">
+        SELECT PAY0031D_SEQ.NEXTVAL FROM DUAL
+    </select>
+
+
+
+    <select id="selectTaxInvoice" parameterType="Map" resultType="egovMap">
+
+
+        SELECT search.TAX_INVOICE_CUST_NAME, search.TAX_INVOICE_CONT_PERS
+        from (
+        SELECT B.NAME TAX_INVOICE_CONT_PERS , D.NAME TAX_INVOICE_CUST_NAME , Rank()
+        over(order by c.CUST_BILL_ID desc ) rcnt_info
+        FROM
+        SAL0001D A,
+        SAL0027D B,
+        SAL0024D C,
+        SAL0029D D
+        WHERE A.CUST_CNT_ID = B.CUST_CNTC_ID
+        AND A.CUST_BILL_ID = C.CUST_BILL_ID
+        AND A.CUST_ID = D.CUST_ID
+        AND A.SALES_ORD_ID = #{AS_SO_ID}
+
+        ) search
+        where search.rcnt_info = 1
+    </select>
+
+
+    <insert id="insert_Pay0031d" parameterType="Map">
+
+        INSERT INTO PAY0031D (
+        TAX_INVC_ID, TAX_INVC_REF_NO, TAX_INVC_REF_DT,
+        TAX_INVC_SVC_NO, TAX_INVC_TYPE, TAX_INVC_CUST_NAME,
+        TAX_INVC_CNTC_PERSON, TAX_INVC_ADDR1, TAX_INVC_ADDR2,
+        TAX_INVC_ADDR3, TAX_INVC_ADDR4, TAX_INVC_POST_CODE,
+        TAX_INVC_STATE_NAME, TAX_INVC_CNTY, TAX_INVC_TASK_ID,
+        TAX_INVC_REM, TAX_INVC_CHRG, TAX_INVC_TXS,
+        TAX_INVC_AMT_DUE, TAX_INVC_CRT_DT, TAX_INVC_CRT_USER_ID, AREA_ID ,ADDR_DTL, STREET)
+        VALUES (
+        #{taxInvcId},
+        #{taxInvcRefNo},
+        SYSDATE,
+        #{taxInvcSvcNo},
+        #{taxInvcType},
+        #{taxInvcCustName},
+        #{taxInvcCntcPerson},
+        #{taxInvcAddr1},
+        #{taxInvcAddr2},
+        #{taxInvcAddr3},
+        #{taxInvcAddr4},
+        #{taxInvcPostCode},
+        #{taxInvcStateName},
+        #{taxInvcCnty},
+        #{taxInvcTaskId},
+        #{taxInvcRem},
+        #{taxInvcChrg},
+        #{taxInvcTxs},
+        #{taxInvcAmtDue},
+        #{taxInvcCrtDt},
+        #{taxInvcCrtUserId},
+        FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
+        ,'AREA_ID'),
+        FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
+        ,'ADDR1'),
+        FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id =#{AS_SO_ID})
+        ,'ADDR2')
+        )
+    </insert>
+
+
+    <insert id="insert_Pay0032d" parameterType="Map">
+
+        INSERT INTO PAY0032D (
+        INVC_ITM_ID, TAX_INVC_ID, INVC_ITM_TYPE,
+        INVC_ITM_ORD_NO, INVC_ITM_PO_NO, INVC_ITM_CODE,
+        INVC_ITM_DESC1, INVC_ITM_DESC2, INVC_ITM_SERIAL_NO,
+        INVC_ITM_QTY, INVC_ITM_UNIT_PRC, INVC_ITM_GST_RATE,
+        INVC_ITM_GST_TXS, INVC_ITM_CHRG, INVC_ITM_AMT_DUE,
+        INVC_ITM_ADD1, INVC_ITM_ADD2, INVC_ITM_ADD3,
+        INVC_ITM_ADD4, INVC_ITM_POST_CODE, INVC_ITM_AREA_NAME,
+        INVC_ITM_STATE_NAME, INVC_ITM_CNTY, INVC_ITM_INSTALL_DT,
+        INVC_ITM_RETN_DT, INVC_ITM_BILL_REF_NO ,AREA_ID ,ADDR_DTL, STREET)
+        VALUES (
+        PAY0032D_SEQ.NEXTVAL,
+        #{taxInvcId},
+        #{invcItmType},
+        (select sales_ord_no from sal0001d where sales_ord_id =#{invcItmOrdNo}),
+        #{invcItmPoNo},
+        #{invcItmCode},
+        #{invcItmDesc1},
+        #{invcItmDesc2},
+        #{invcItmSerialNo},
+        #{invcItmQty},
+        #{invcItmUnitPrc},
+        #{invcItmGstRate},
+        #{invcItmGstTxs},
+        #{invcItmChrg},
+        #{invcItmAmtDue},
+        #{invcItmAdd1},
+        #{invcItmAdd2},
+        #{invcItmAdd3},
+        #{invcItmAdd4},
+        #{invcItmPostCode},
+        #{invcItmAreaName},
+        #{invcItmStateName},
+        #{invcItmCnty},
+        #{invcItmInstallDt},
+        #{invcItmRetnDt},
+        #{invcItmBillRefNo},
+        FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'AREA_ID'),
+        FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'ADDR1'),
+        FN_GET_SVC_BILL_MADDRESS( (select sales_ord_no from sal0001d where sales_ord_id
+        =#{invcItmOrdNo}) ,'ADDR2')
+        )
+
+    </insert>
+
+
+    <insert id="insert_Pay0016d" parameterType="Map" >
+
+                INSERT INTO PAY0016D (
+                   ACC_BILL_ID, ACC_BILL_TASK_ID, ACC_BILL_REF_DT,
+                   ACC_BILL_REF_NO, ACC_BILL_ORD_ID, ACC_BILL_ORD_NO,
+                   ACC_BILL_TYPE_ID, ACC_BILL_MODE_ID, ACC_BILL_SCHDUL_ID,
+                   ACC_BILL_SCHDUL_PRIOD, ACC_BILL_ADJ_ID, ACC_BILL_SCHDUL_AMT,
+                   ACC_BILL_ADJ_AMT, ACC_BILL_TXS_AMT, ACC_BILL_NET_AMT,
+                   ACC_BILL_STUS, ACC_BILL_REM, ACC_BILL_CRT_DT,
+                   ACC_BILL_CRT_USER_ID, ACC_BILL_GRP_ID, ACC_BILL_TAX_CODE_ID,
+                   ACC_BILL_TAX_RATE, ACC_BILL_ACCT_CNVR, ACC_BILL_CNTRCT_ID)
+                VALUES (
+                           PAY0016D_SEQ.NEXTVAL,
+                           #{accBillTaskId},
+                           #{accBillRefDt},
+                           #{accBillRefNo},
+                           #{accBillOrdId},
+                            (SELECT SALES_ORD_NO  FROM SAL0001D WHERE  SALES_ORD_ID =#{accBillOrdId} ) ,
+                           #{accBillTypeId},
+                           #{accBillModeId},
+                           #{accBillSchdulId},
+                           #{accBillSchdulPriod},
+                           #{accBillAdjId},
+                           #{accBillSchdulAmt},
+                           #{accBillAdjAmt},
+                           #{accBillTxsAmt},
+                           #{accBillNetAmt},
+                           #{accBillStus},
+                           #{accBillRem},
+                           #{accBillCrtDt},
+                           #{accBillCrtUserId},
+                           #{accBillGrpId},
+                           #{accBillTaxCodeId},
+                           #{accBillTaxRate},
+                           #{accBillAcctCnvr},
+                           #{accBillCntrctId}
+                       )
+       </insert>
+
+              <insert id="insert_Pay0006d" parameterType="Map" >
+
+            INSERT INTO PAY0006D (
+                                               AS_LDGR_ID, AS_ID, AS_DOC_NO,
+                                               AS_LG_DOC_TYPE_ID, AS_LG_DT, AS_LG_AMT,
+                                               AS_LG_UPD_USER_ID, AS_LG_UPD_DT, AS_SO_NO,
+                                               AS_RESULT_NO, AS_SO_ID, AS_ADV_PAY,
+                                               R01)
+                                            VALUES (
+                                               PAY0006D_SEQ.NEXTVAL,
+                                               #{asId},
+                                               #{asDocNo},
+                                               #{asLgDocTypeId},
+                                               #{asLgDt},
+                                               #{asLgAmt},
+                                               #{asLgUpdUserId},
+                                               #{asLgUpdDt},
+                                               (SELECT SALES_ORD_NO  FROM SAL0001D WHERE  SALES_ORD_ID =#{asSoId} ) ,
+                                               #{asResultNo},
+                                               #{asSoId},
+                                               #{asAdvPay},
+                                               #{r01}
+                                            )
+       </insert>
+
+
+       <insert id="insert_Pay0007d" parameterType="Map" >
+                        INSERT INTO PAY0007D (
+                           BILL_ID, BILL_TYPE_ID, BILL_SO_ID,
+                           BILL_MEM_ID, BILL_AS_ID, BILL_PAY_TYPE_ID,
+                           BILL_NO, BILL_MEM_SHIP_NO, BILL_DT,
+                           BILL_AMT, BILL_REM, BILL_IS_PAID,
+                           BILL_IS_COMM, UPD_USER_ID, UPD_DT,
+                           SYNC_CHK, COURS_ID, STUS_ID)
+                        VALUES (
+                           PAY0007D_SEQ.NEXTVAL,
+                           #{billTypeId},
+                           #{billSoId},
+                           #{billMemId},
+                           #{billAsId},
+                           #{billPayTypeId},
+                           #{billNo},
+                           #{billMemShipNo},
+                           #{billDt},
+                           #{billAmt},
+                           #{billRem},
+                           #{billIsPaid},
+                           #{billIsComm},
+                           #{updUserId},
+                           #{updDt},
+                           #{syncChk},
+                           #{coursId},
+                           #{stusId})
+     </insert>
 
 
 </mapper>
