@@ -91,5 +91,13 @@ public class NoticeServiceImpl implements NoticeService {
 		return result;
 	}
 
+    @Override
+    public List<EgovMap> selectNtfList(Map<String, Object> params) {
+        return noticeMapper.selectNtfList(params);
+    }
 
+    @Override
+    public void updateNtfStus(Map<String, Object> params) {
+        noticeMapper.updateNtfStus(params);
+    }
 }

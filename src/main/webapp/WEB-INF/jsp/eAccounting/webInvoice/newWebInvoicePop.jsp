@@ -414,7 +414,7 @@ function fn_updateWebInvoiceInfo(st) {
     <th scope="row"><spring:message code="webInvoice.costCenter" /></th>
     <td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${costCentr}"/><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></td>
     <th scope="row">Cost Centre Name</th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="newCostCenterText" name="costCentrName" disabled/></td>
+    <td><input type="text" title="" placeholder="" class="w100p" id="newCostCenterText" name="costCentrName" value="${costCentrNm}" disabled/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.supplier" /></th>

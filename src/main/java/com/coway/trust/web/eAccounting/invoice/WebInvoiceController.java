@@ -110,6 +110,11 @@ public class WebInvoiceController {
 		model.addAttribute("taxCodeList", new Gson().toJson(taxCodeList));
 		model.addAttribute("callType", params.get("callType"));
 
+		params.put("costCenter", sessionVO.getCostCentr());
+		EgovMap costName = (EgovMap) webInvoiceService.getCostCenterName(params);
+
+		model.addAttribute("costCentrNm", costName.get("costCenterName"));
+
 		return "eAccounting/webInvoice/newWebInvoicePop";
 	}
 

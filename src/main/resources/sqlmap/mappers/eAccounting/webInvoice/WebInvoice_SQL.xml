@@ -1484,4 +1484,11 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
     )
 </insert>
 
+<select id="getCostCenterName" parameterType="Map" resultType="egovMap">
+    SELECT
+        COST_CENTER_TEXT COST_CENTER_NAME
+    FROM FCM0008M
+    WHERE COST_CENTER = #{costCenter}
+</select>
+
 </mapper>

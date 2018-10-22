@@ -13,9 +13,9 @@
    </select>
 
     <select id="checkPassword" resultType="int">
-        SELECT COUNT(*) 
+        SELECT COUNT(*)
           FROM SYS0069M
-         WHERE NTCE_NO = #{ntceNo} 
+         WHERE NTCE_NO = #{ntceNo}
            AND PASSWORD = #{password}
     </select>
 
@@ -41,27 +41,27 @@
     </update>
 
     <select id="noticeInfo" parameterType="Map" resultType="egovMap">
-    
+
         SELECT
              NTCE_NO
-            ,NTCE_SUBJECT 
+            ,NTCE_SUBJECT
             ,RGST_USER_NM
             ,TO_CHAR(NTCE_START_DT, 'DD/MM/YYYY') AS NTCE_START_DT
             ,TO_CHAR(NTCE_END_DT, 'DD/MM/YYYY') AS NTCE_END_DT
             ,READ_CNT
-            ,EMGNCY_FLAG        
+            ,EMGNCY_FLAG
             ,PASSWORD
             ,NTCE_CNTNT
-            ,ATCH_FILE_GRP_ID 
+            ,ATCH_FILE_GRP_ID
             ,TO_CHAR(CRT_DT, 'DD/MM/YYYY') AS CRT_DT
             ,CRT_USER_ID
         FROM SYS0069M
-        WHERE NTCE_NO = #{ntceNo}   
-        
+        WHERE NTCE_NO = #{ntceNo}
+
     </select>
 
     <select id="noticeList" parameterType="Map" resultType="egovMap">
-    
+
 	      SELECT
 	             NTCE_NO,
 	             NTCE_SUBJECT,
@@ -70,12 +70,12 @@
 	             CRT_DT,
 	             SYSDATE,
 	             ATCH_FILE_GRP_ID,
-	             CASE  
-	                 WHEN SYSDATE - CRT_DT >= 1 THEN 'N' 
-	                 ELSE 'Y' 
-	             END IMG_FLAG 
-	        FROM 
-	             SYS0069M 
+	             CASE
+	                 WHEN SYSDATE - CRT_DT >= 1 THEN 'N'
+	                 ELSE 'Y'
+	             END IMG_FLAG
+	        FROM
+	             SYS0069M
 	       WHERE STUS_FLAG = 'N'
                <if test="noticeSearch == 2562 ">
 		        AND NTCE_SUBJECT LIKE '%' || #{keyword} || '%'
@@ -93,13 +93,13 @@
 		        </if>
 	         AND EMGNCY_FLAG IS NOT NULL
 	    ORDER BY EMGNCY_FLAG DESC, NTCE_NO DESC
-      
+
     </select>
 
 
     <update id="updateViewCnt" parameterType="Map">
         UPDATE SYS0069M
-           SET READ_CNT = READ_CNT +1 
+           SET READ_CNT = READ_CNT +1
            WHERE NTCE_NO = #{ntceNo}
     </update>
 
@@ -110,22 +110,22 @@
 
     <insert id="insertNotice" parameterType="Map">
         INSERT INTO SYS0069M(
-			     NTCE_NO            
-			    ,NTCE_SUBJECT       
-			    ,RGST_USER_NM       
-			    ,EMGNCY_FLAG        
+			     NTCE_NO
+			    ,NTCE_SUBJECT
+			    ,RGST_USER_NM
+			    ,EMGNCY_FLAG
 			    ,PASSWORD
-			    ,NTCE_CNTNT           
-			    ,NTCE_START_DT       
-			    ,NTCE_END_DT        
-			    ,RGST_USER_ID       
-			    ,ATCH_FILE_GRP_ID   
-			    ,CRT_USER_ID        
-			    ,CRT_DT             
-			    ,UPD_USER_ID        
-			    ,UPD_DT 
-			    ,READ_CNT             
-              )          
+			    ,NTCE_CNTNT
+			    ,NTCE_START_DT
+			    ,NTCE_END_DT
+			    ,RGST_USER_ID
+			    ,ATCH_FILE_GRP_ID
+			    ,CRT_USER_ID
+			    ,CRT_DT
+			    ,UPD_USER_ID
+			    ,UPD_DT
+			    ,READ_CNT
+              )
 		VALUES
 		    (
 		        #{noticeSeq}
@@ -160,5 +160,37 @@
           ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
           WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
     </select>
-    
+
+    <select id="selectNtfList" parameterType="Map" resultType="egovMap">
+        SELECT
+            NTF_ID,
+            NTF_TYPE_DESC,
+            NTF_KEY,
+            NTF_REM,
+            NTF_FLAG
+        FROM SYS0092M
+        WHERE NTF_USER_ID = #{userId}
+        <if test="ntfFlag != null and ntfFlag != '' ">
+            AND NTF_FLAG = #{ntfFlag}
+        </if>
+        <if test="createDate != null and createDate != ''">
+        <![CDATA[
+             AND CRT_DT >= TO_DATE(#{createDate}, 'DD/MM/YYYY')
+        ]]>
+        </if>
+        <if test="endDate != null and endDate != ''">
+        <![CDATA[
+             AND CRT_DT < TO_DATE(#{endDate}, 'DD/MM/YYYY') + 1
+        ]]>
+        </if>
+        ORDER BY CRT_DT DESC
+    </select>
+
+    <update id="updateNtfStus" parameterType="Map">
+        <!-- deleteMasterClaim -->
+        UPDATE SYS0092M
+        SET NTF_FLAG = #{ntfFlag}
+        WHERE NTF_ID = #{ntfId}
+        AND NTF_KEY = #{ntfKey}
+    </update>
 </mapper>

@@ -3,6 +3,8 @@ package com.coway.trust.web.notice;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -151,5 +153,45 @@ public class NoticeController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
+	@RequestMapping(value = "/notification.do")
+    public String notification(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+
+	    LOGGER.debug("notification.do :: start");
+
+        return "notice/notification";
+    }
+
+    @RequestMapping(value="/selectNtfList.do", method = RequestMethod.GET)
+    public ResponseEntity<List<EgovMap>> selectNtfList(@RequestParam Map<String, Object> params,
+            HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+        LOGGER.debug("selectNtfList.do :: start");
+        LOGGER.debug("params :: " + params);
+
+        params.put("userId", sessionVO.getUserName());
+        List<EgovMap> itemGrp = noticeService.selectNtfList(params);
+
+        LOGGER.debug("selectNtfList.do :: end");
+        return ResponseEntity.ok(itemGrp);
+    }
+
+    @RequestMapping(value = "/updateNtf.do", method = RequestMethod.GET)
+    public ResponseEntity<ReturnMessage> updateNtf(@RequestParam Map<String, Object> params, Model model,
+            SessionVO sessionVO) throws Exception {
+
+        LOGGER.debug("updateNtf.do :: start");
+        LOGGER.debug("params :: " + params);
+
+        noticeService.updateNtfStus(params);
+
+        ReturnMessage message = new ReturnMessage();
+        message.setCode(AppConstants.SUCCESS);
+        message.setData(params);
+        message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+        LOGGER.debug("updateNtf.do :: end");
+
+        return ResponseEntity.ok(message);
+    }
+
 }

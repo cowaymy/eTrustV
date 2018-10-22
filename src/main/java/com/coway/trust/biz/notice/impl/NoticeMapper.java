@@ -13,8 +13,8 @@ public interface NoticeMapper {
 
 	void insertNotice(Map<String, Object> params);
 
-	List<EgovMap> selectCodeList(Map<String, Object> params);  
-	
+	List<EgovMap> selectCodeList(Map<String, Object> params);
+
 	int getNtceNOSeq();
 
 	EgovMap noticeInfo(Map<String, Object> params);
@@ -28,5 +28,9 @@ public interface NoticeMapper {
 	void deleteNotice(Map<String, Object> params);
 
 	List<EgovMap> selectAttachmentFileInfo(Map<String, Object> params);
+
+    List<EgovMap> selectNtfList(Map<String, Object> params);
+
+    void updateNtfStus(Map<String, Object> params);
 
 }
