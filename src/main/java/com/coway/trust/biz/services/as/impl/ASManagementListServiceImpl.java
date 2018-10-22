@@ -268,7 +268,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	public boolean insertOptFlt(Map<String, Object> params) {
 	  LOGGER.debug(" ============= START INSERT MINERAL RECORD ============= ");
 	  Map mp = (Map) params.get("asResultM");
-	  //if (mp.get("AS_RESULT_STUS_ID").equals("4")) { // IF AS STATUS = COMPLETE
+	  if (mp.get("AS_RESULT_STUS_ID").equals("4")) { // IF AS STATUS = COMPLETE
 
         List<EgovMap> fltConfLst = (List<EgovMap>) getfltConfLst();
         List<EgovMap> addListing = (List<EgovMap>) params.get("add");
@@ -314,7 +314,7 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 		    LOGGER.debug(" ============= NO FILTER MATCHED TP PROCESS =============");
 		  }
 		}
-	  //}
+	  }
 	  LOGGER.debug(" ============= END INSERT MINERAL RECORD ============= ");
 	  return true;
 	}
