@@ -198,6 +198,7 @@ public interface ASManagementListMapper {
 
 	// ONGHC ADD FUNCTION FOR OMBAK MINERAL
 	int getFilterCount(Map<String, Object> params);
+	List<EgovMap> getfltConfLst();
 	int getSAL87ConfigId(String ordNo);
 	int insert_SAL0087D(Map<String, Object> params);
 
