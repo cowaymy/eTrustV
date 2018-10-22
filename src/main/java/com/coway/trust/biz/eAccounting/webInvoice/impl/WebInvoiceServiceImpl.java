@@ -501,4 +501,9 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
     public EgovMap getDtls(Map<String, Object> params) {
         return webInvoiceMapper.getDtls(params);
     }
+
+    @Override
+    public EgovMap getCostCenterName(Map<String, Object> params) {
+        return webInvoiceMapper.getCostCenterName(params);
+    }
 }

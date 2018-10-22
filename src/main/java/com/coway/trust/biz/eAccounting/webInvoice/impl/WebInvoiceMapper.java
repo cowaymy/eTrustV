@@ -114,6 +114,8 @@ public interface WebInvoiceMapper {
 	void insertRejectD(Map<String, Object> params);
 
 	EgovMap getDtls(Map<String, Object> params);
-	
+
 	void insertNotification(Map<String, Object> params);
+
+	EgovMap getCostCenterName(Map<String, Object> params);
 }
