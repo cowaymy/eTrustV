@@ -1715,6 +1715,285 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		return hsManualMapper.hsResultSync(params);
 	}
 
+	@Override
+	public EgovMap getBSFilterInfo(Map<String, Object> params) {
+		return hsManualMapper.getBSFilterInfo(params);
+	}
 
+	// OMBAK - AS ENTRY RESULT & INVOICE BILLING  -- TPY
+	public Map<String, Object> saveASEntryResult(Map<String, Object> params) {
+
+		params.put("DOCNO", "17");
+		EgovMap eMap = hsManualMapper.getASEntryDocNo(params);
+
+		EgovMap seqMap = hsManualMapper.getASEntryId(params);
+
+		// AS ENTRY -- SVC0001D
+		params.put("AS_ID", String.valueOf(seqMap.get("seq")).trim());
+		params.put("AS_NO", String.valueOf(eMap.get("asno")).trim());
+		params.put("AS_SO_ID", params.get("salesOrdId").toString());
+		params.put("AS_MEM_ID", "0");
+		params.put("AS_REQST_DT", params.get("settleDate").toString());
+		params.put("AS_APPNT_DT", params.get("settleDate").toString());
+		params.put("AS_BRNCH_ID", "0");
+		params.put("AS_MALFUNC_ID", "9004100");// GENERAL REQUEST
+		params.put("AS_MALFUNC_RESN_ID", "2");// AS DURING INSTALLATION
+		// params.put("AS_REM_REQSTER", "716");
+		params.put("AS_STUS_ID", "4");
+		params.put("AS_SMS", "0");
+		params.put("AS_CRT_USER_ID", params.get("userId").toString());
+		params.put("AS_UPD_USER_ID", params.get("userId").toString());
+		params.put("AS_TYPE_ID", "457");
+		// params.put("AS_REQSTER_TYPE_ID", "95164777");
+		params.put("AS_ALLOW_COMM", "1");
+		// params.put("AS_CALLLOG_ID", String.valueOf( ccrSeqMap.get("seq")).trim());
+		params.put("NO", params.get("no").toString());
+
+		// AS RESULT -- SVC0004D
+		Map<String, Object> params2 = null;
+		params2 = new HashMap<String, Object>();
+
+		params2.put("DOCNO", "21");
+		EgovMap seqMap2 = hsManualMapper.getResultASEntryId(params2);
+		EgovMap eMap2 = hsManualMapper.getASEntryDocNo(params2);
+
+		String AS_RESULT_ID = String.valueOf(seqMap2.get("seq"));
+		String AS_RESULT_NO = String.valueOf(eMap2.get("asno"));
+
+		params2.put("AS_RESULT_ID", AS_RESULT_ID);
+		params2.put("AS_RESULT_NO", AS_RESULT_NO);
+		params2.put("AS_ENTRY_ID", String.valueOf(seqMap.get("seq")).trim());
+		params2.put("AS_SO_ID", params.get("salesOrdId").toString());
+		params2.put("AS_CT_ID", "0");
+		params2.put("AS_SETL_DT", params.get("settleDate").toString());
+		params2.put("AS_SETL_TM", "0");
+		params2.put("AS_RESULT_STUS_ID", "4");
+		params2.put("AS_BRNCH_ID", "0");
+		params2.put("AS_RESULT_REM", "");
+		// params2.put("AS_RESULT_CRT_DT", "");
+		params2.put("updator", params.get("userId").toString());
+		params2.put("AS_MALFUNC_ID", "9004100"); // GENERAL REQUEST
+		params2.put("AS_MALFUNC_RESN_ID", "2"); // AS DURING INSTALLATION
+		params2.put("AS_FILTER_AMT", params.get("amt").toString());
+		params2.put("AS_TOT_AMT", params.get("totalAmt").toString());
+		params2.put("AS_RESULT_TYPE_ID", "457");
+		// params2.put("AS_RESULT_UPD_DT", "");
+		// params2.put("AS_RESULT_UPD_USER_ID", "");
+		// params.put("AS_DEFECT_TYPE_ID", "");
+		// params.put("AS_DEFECT_ID", "");
+		// params.put("AS_DEFECT_PART_ID", "");
+		// params.put("AS_DEFECT_DTL_RESN_ID", "");
+		// params.put("AS_SLUTN_RESN_ID", "");
+		params2.put("AS_RESULT_IS_CURR", "1");
+		params2.put("AS_RESULT_MTCH_ID", "0");
+		params2.put("AS_RESULT_NO_ERR", "");
+		params2.put("AS_RESULT_MOBILE_ID", "");
+		params2.put("APPNT_DT", "");
+		params2.put("APPNT_TM", "");
+		params2.put("IN_HUSE_REPAIR_REM", "");
+		params2.put("IN_HUSE_REPAIR_REPLACE_YN", "");
+		params2.put("IN_HUSE_REPAIR_PROMIS_DT", "");
+		params2.put("IN_HUSE_REPAIR_GRP_CODE", "");
+		params2.put("IN_HUSE_REPAIR_PRODUCT_CODE", "");
+		params2.put("IN_HUSE_REPAIR_SERIAL_NO", "");
+		params2.put("RESULT_CUST_NAME", "");
+		params2.put("RESULT_MOBILE_NO", "");
+		params2.put("RESULT_REP_EMAIL_NO", "");
+		params2.put("RESULT_ACEPT_NAME", "");
+		params2.put("SGN_DT", "");
+		params2.put("TRNSC_ID", "");
+
+		// AS FILTER USE -- SVC0005D
+		Map<String, Object> params3 = null;
+		params3 = new HashMap<String, Object>();
+		params3.put("AS_RESULT_ID", AS_RESULT_ID);
+		params3.put("ASR_ITM_PART_ID", params.get("stkId").toString());
+		params3.put("ASR_ITM_PART_DESC", params.get("stkDesc").toString());
+		params3.put("ASR_ITM_PART_QTY", params.get("stkQty").toString());
+		params3.put("ASR_ITM_PART_PRC", params.get("amt").toString());
+		params3.put("ASR_ITM_CHRG_AMT", params.get("amt").toString());
+		params3.put("ASR_ITM_REM", "");
+		params3.put("ASR_ITM_CRT_USER_ID", params.get("userId").toString());
+		// params3.put("ASR_ITM_CRT_DT", "");
+		params3.put("ASR_ITM_EXCHG_ID", "0");
+		params3.put("ASR_ITM_CHRG_FOC", "0");
+		params3.put("ASR_ITM_CLM", "0");
+		params3.put("ASR_ITM_TAX_CODE_ID", "0");
+		params3.put("ASR_ITM_TXS_AMT", "0");
+		// params3.put("SERIAL_NO", "");
+		// params3.put("EXCHG_ID", "");
+		// params3.put("FILTER_BARCD_SERIAL_NO", "");
+
+		hsManualMapper.insertSVC0001D(params);
+		hsManualMapper.insertSVC0004D(params2);
+		hsManualMapper.insertSVC0005D(params3);
+
+		EgovMap em = new EgovMap();
+
+		em.put("AS_NO", String.valueOf(params.get("AS_NO")));
+		em.put("AS_ID", String.valueOf(seqMap.get("seq")).trim());
+		em.put("AS_RESULT_NO", AS_RESULT_NO);
+
+		logger.debug("===================================");
+		logger.debug(em.toString());
+		logger.debug("===================================");
+		return em;
+
+	}
+
+	public Map<String, Object> saveASTaxInvoice(Map<String, Object> params) {
+
+		// TAX INVOICE
+		// PAY0031D
+		params.put("AS_SO_ID", params.get("salesOrdId").toString());
+		params.put("DOCNO", "128");
+		EgovMap invoiceDocNo = hsManualMapper.getASEntryDocNo(params);
+		int taxInvcId = hsManualMapper.getSeqPay0031D();
+		EgovMap taxPersonInfo = hsManualMapper.selectTaxInvoice(params);
+		params.put("DOCNO", "22");
+		EgovMap asBillDocNo = hsManualMapper.getASEntryDocNo(params);
+
+		Map<String, Object> param = new HashMap();
+
+		param.put("taxInvcId", taxInvcId);
+		param.put("taxInvcRefNo", String.valueOf(invoiceDocNo.get("asno")));
+		param.put("taxInvcRefDt", "");
+		param.put("taxInvcSvcNo", params.get("asResultNo").toString());
+		param.put("taxInvcType", "118");
+
+		try {
+			param.put("taxInvcCustName", taxPersonInfo.get("taxInvoiceCustName"));
+			param.put("taxInvcCntcPerson", taxPersonInfo.get("taxInvoiceContPers"));
+		} catch (Exception e) {
+
+			param.put("taxInvcCustName", "");
+			param.put("taxInvcCntcPerson", "");
+
+		}
+
+		param.put("taxInvcAddr1", "");
+		param.put("taxInvcAddr2", "");
+		param.put("taxInvcAddr3", "");
+		param.put("taxInvcAddr4", "");
+		param.put("taxInvcPostCode", "");
+		param.put("taxInvcStateName", "");
+		param.put("taxInvcCnty", "");
+		param.put("taxInvcTaskId", "");
+		param.put("taxInvcRem", "");
+		param.put("taxInvcChrg", params.get("totalAmt").toString());
+		param.put("taxInvcTxs", "0");
+		param.put("taxInvcAmtDue", params.get("totalAmt").toString());
+		param.put("taxInvcCrtDt", new Date());
+		param.put("taxInvcCrtUserId", params.get("userId").toString());
+
+		// PAY0032D
+		Map<String, Object> param2 = new HashMap();
+
+		param2.put("taxInvcId", taxInvcId);
+		param2.put("invcItmType", "1262");
+		param2.put("invcItmOrdNo", params.get("salesOrdId").toString());
+		param2.put("invcItmPoNo", "");
+		param2.put("invcItmCode", params.get("stkCode").toString());
+		param2.put("invcItmDesc1", params.get("stkDesc").toString());
+		param2.put("invcItmDesc2", "");
+		param2.put("invcItmSerialNo", "");
+		param2.put("invcItmQty", params.get("stkQty").toString());
+		param2.put("invcItmUnitPrc", "");
+		param2.put("invcItmGstRate", "0");
+		param2.put("invcItmGstTxs", "0");
+		param2.put("invcItmChrg", params.get("totalAmt").toString());
+		param2.put("invcItmAmtDue", params.get("totalAmt").toString());
+		param2.put("invcItmAdd1", "");
+		param2.put("invcItmAdd2", "");
+		param2.put("invcItmAdd3", "");
+		param2.put("invcItmAdd4", "");
+		param2.put("invcItmPostCode", "");
+		param2.put("invcItmAreaName", "");
+		param2.put("invcItmStateName", "");
+		param2.put("invcItmCnty", "");
+		param2.put("invcItmInstallDt", "");
+		param2.put("invcItmRetnDt", "");
+		param2.put("invcItmBillRefNo", "");
+
+		// PAY0016D
+		Map<String, Object> param3 = new HashMap();
+
+		param3.put("accBillTaskId", "0");
+		param3.put("accBillRefDt", new Date());
+		param3.put("accBillRefNo", "1000");
+		param3.put("accBillOrdId", params.get("salesOrdId").toString());
+		param3.put("accBillTypeId", "1159");
+		param3.put("accBillModeId", "1263");
+		param3.put("accBillSchdulId", "0");
+		param3.put("accBillSchdulPriod", "0");
+		param3.put("accBillAdjId", "0");
+		param3.put("accBillSchdulAmt", params.get("totalAmt").toString());
+		param3.put("accBillAdjAmt", "0");
+		param3.put("accBillTxsAmt", "0");
+		param3.put("accBillNetAmt", params.get("totalAmt").toString());
+		param3.put("accBillStus", "1");
+		param3.put("accBillRem", String.valueOf(invoiceDocNo.get("asno")));
+		param3.put("accBillCrtDt", new Date());
+		param3.put("accBillCrtUserId", params.get("userId").toString());
+		param3.put("accBillGrpId", "0");
+		param3.put("accBillTaxCodeId", "0");
+		param3.put("accBillTaxRate", "0");
+		param3.put("accBillAcctCnvr", "0");
+		param3.put("accBillCntrctId", "0");
+
+		// PAY0006D
+		Map<String, Object> param4 = new HashMap();
+
+		param4.put("asId", params.get("asId").toString());
+		param4.put("asDocNo", params.get("asResultNo").toString());
+		param4.put("asLgDocTypeId", "163");
+		param4.put("asLgDt", new Date());
+		param4.put("asLgAmt", params.get("totalAmt").toString());
+		param4.put("asLgUpdUserId", params.get("userId").toString());
+		param4.put("asLgUpdDt", new Date());
+		// pay0006dMap.put("asSoNo",""); //AS_SO_ID select
+		param4.put("asResultNo", params.get("asResultNo").toString());
+		param4.put("asSoId", params.get("salesOrdId").toString());
+		param4.put("asAdvPay", "0");
+		param4.put("r01", "0");
+
+		// PAY0007D
+		Map<String, Object> param5 = new HashMap();
+
+		param5.put("billTypeId", "238");
+		param5.put("billSoId", params.get("salesOrdId").toString());
+		param5.put("billMemId", "0");
+		param5.put("billAsId", params.get("asId").toString());
+		param5.put("billPayTypeId", "");
+		param5.put("billNo", params.get("asResultNo").toString());
+		param5.put("billMemShipNo", String.valueOf(asBillDocNo.get("asno")));
+		param5.put("billDt", new Date());
+		param5.put("billAmt", params.get("totalAmt").toString());
+		param5.put("billRem", "");
+		param5.put("billIsPaid", "1");
+		param5.put("billIsComm", "0");
+		param5.put("updUserId", params.get("userId").toString());
+		param5.put("updDt", new Date());
+		param5.put("syncChk", "0");
+		param5.put("coursId", "0");
+		param5.put("stusId", "1");
+
+		hsManualMapper.insert_Pay0031d(param);
+		hsManualMapper.insert_Pay0032d(param2);
+		hsManualMapper.insert_Pay0016d(param3);
+		hsManualMapper.insert_Pay0006d(param4);
+		hsManualMapper.insert_Pay0007d(param5);
+
+		EgovMap em = new EgovMap();
+
+		em.put("TAX_INVC_ID", taxInvcId);
+		em.put("TAX_INVC_REF_NO", String.valueOf(invoiceDocNo.get("asno")));
+
+		logger.debug("===================================");
+		logger.debug(em.toString());
+		logger.debug("===================================");
+		return em;
+
+	}
 
 }
