@@ -141,6 +141,10 @@ public interface HsManualService {
 
 	Map<String, Object> saveASTaxInvoice(Map<String, Object> params);
 
+	EgovMap checkStkDuration(Map<String, Object> params);
+
+
+
 
 
 
