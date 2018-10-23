@@ -781,7 +781,9 @@ public class SearchPaymentController {
 	 */
 	@RequestMapping(value = "/saveChanges", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveChanges(@RequestBody Map<String, Object> params, ModelMap model, SessionVO sessionVO) throws Exception{
-		int userId = sessionVO.getUserId();
+
+	    LOGGER.debug("saveChanges :: " + params);
+	    int userId = sessionVO.getUserId();
 
         // 마스터조회
 		EgovMap viewMaster = searchPaymentService.selectPayMaster(params);
@@ -842,6 +844,7 @@ public class SearchPaymentController {
 		}
 
 		//1128 : Key-In Branch
+		/*
 		if(params.get("hiddenBranchId") != null && !brnchId.equals(String.valueOf(params.get("edit_branchId")))){
 
 			Map<String, Object> frBranchIdMap = new HashMap<String, Object>();
@@ -883,7 +886,7 @@ public class SearchPaymentController {
             branchMap.put("createBy", createBy);
 
             searchPaymentService.saveChanges(branchMap);
-		}
+		}*/
 
 		//1129 : Collector
 		if(!collMemId.equals(hiddenCollMemId)){

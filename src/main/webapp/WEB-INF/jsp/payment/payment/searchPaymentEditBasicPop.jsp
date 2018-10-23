@@ -214,10 +214,12 @@ function fn_openDivEditPop(){
                 $("#edit_branchId").prop('disabled', true);
                 reconLock = 1;
                 $("#edit_branchId").css("backgroundColor","transparent");
+                $("#edit_branchNm").css("backgroundColor","transparent");
 
               }else{
                 $("#edit_branchId").prop('disabled', "disabled"); // 2018-10-19 - LaiKW
                 $("#edit_branchId").css("backgroundColor","#F5F6CE");
+                $("#edit_branchNm").css("backgroundColor","#F5F6CE");
               }
 
               //팝업그리드 뿌리기
@@ -251,10 +253,10 @@ function saveChanges() {
       }
 
     // 2018-10-22 - Changed Branch code to text
-    if($.trim(branchId ) == ""){
+    /*if($.trim(branchId ) == ""){
       Common.alert("<spring:message code='pay.alert.selectBranch'/>");
       return;
-    }
+    }*/
 
     $("#hiddenPayId").val(payId);
     $("#hiddenBranchId").val(branchId);

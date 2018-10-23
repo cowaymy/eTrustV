@@ -138,38 +138,9 @@ $(document).ready(function () {
         if(list == null || list.length < 1) {
             Common.alert("*No Value Selected. ");
             return;
+        } else if(list.length > 100) {
+            Common.alert("*Only 100 transactions can be processed at any single time.");
         } else {
-            /*for(var i = 0; i < list.length; i++) {
-
-                var clmNo = list[i].item.clmNo;
-                setTimeout(function(clmNo) {
-                    //var clmNo = list.item.clmNo;
-                    $("#_clmNo").val(clmNo);
-                    console.log("clmNo : " + $("#_clmNo").val());
-
-                    $("#reportDownFileName").val(clmNo);
-
-                    fn_report();
-                }, 10000);
-
-                //var clmNo = list[i].item.clmNo;
-                //$("#_clmNo").val(clmNo);
-                //console.log("clmNo : " + $("#_clmNo").val());
-
-                //$("#reportDownFileName").val(clmNo);
-
-                //fn_report();
-
-                //setTimeout(fn_report(), 15000);
-                //setTimeout(function(){ fn_saveResultTrans(result.data.qotatId) ;}, 3000);
-
-                setTimeout(function fn_report() {
-                    var option = {
-                            isProcedure : false
-                        };
-                        Common.report("dataForm", option);
-                    }, 10000);
-            }*/
 
             var i = list.length -1;
 
@@ -984,9 +955,7 @@ function fn_editRejected() {
                     <li><p class="link_btn"><a href="#" id="_webInvBtn">Web Invoice</a></p></li>
                 </c:if>
                 <li><p class="link_btn"><a href="#" id="editRejBtn">Edit Rejected</a></p></li>
-                <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-                    <li><p class="link_btn"><a href="#" id="bulkWebInvDl">Bulk Web Invoice</a></p></li>
-                </c:if>
+                <li><p class="link_btn"><a href="#" id="bulkWebInvDl">Bulk Web Invoice</a></p></li>
             </ul>
             <ul class="btns">
             </ul>
