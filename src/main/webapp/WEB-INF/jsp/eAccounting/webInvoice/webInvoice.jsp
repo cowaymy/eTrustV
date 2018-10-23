@@ -808,27 +808,49 @@ function fn_editRejected() {
     console.log("fn_editRejected");
 
     var gridObj = AUIGrid.getSelectedItems(webInvoiceGridID);
+    var list = AUIGrid.getCheckedRowItems(webInvoiceGridID);
 
-    if(gridObj == null || gridObj.length <= 0 ){
+    if(gridObj != null && list != null) {
+        var status;
+        var selClmNo;
+
+        if(list.length > 1) {
+            Common.alert("* Only 1 record is permitted. ");
+            return;
+        }
+
+        if(gridObj.length > 0) {
+            status = gridObj[0].item.appvPrcssStus;
+            selClmNo = gridObj[0].item.clmNo;
+        } else {
+            status = list[0].item.appvPrcssStus;
+            selClmNo = list[0].item.clmNo;
+        }
+
+        if(status == "Rejected") {
+            Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J1"}, function(result) {
+                console.log(result);
+
+                Common.ajax("POST", "/eAccounting/webInvoice/editRejected.do", {clmNo : selClmNo, clamUn : result.clamUn}, function(result1) {
+                    console.log(result1);
+
+                    Common.alert("New claim number : " + result1.data.newClmNo);
+                })
+            });
+        } else {
+            Common.alert("Only rejected claims are allowed to edit.");
+        }
+    } else {
         Common.alert("* No Value Selected. ");
         return;
     }
 
-    var status = gridObj[0].item.appvPrcssStus;
+    /*if(gridObj == null || gridObj.length <= 0 ){
+        Common.alert("* No Value Selected. ");
+        return;
+    }*/
 
-    if(status == "Rejected") {
-        Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J1"}, function(result) {
-            console.log(result);
 
-            Common.ajax("POST", "/eAccounting/webInvoice/editRejected.do", {clmNo : gridObj[0].item.clmNo, clamUn : result.clamUn}, function(result1) {
-                console.log(result1);
-
-                Common.alert("New claim number : " + result1.data.newClmNo);
-            })
-        });
-    } else {
-        Common.alert("Only rejected claims are allowed to edit.");
-    }
 
 }
 
