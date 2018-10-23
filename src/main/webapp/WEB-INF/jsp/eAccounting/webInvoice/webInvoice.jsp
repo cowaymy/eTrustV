@@ -239,6 +239,7 @@ function fn_setCostCenterEvent() {
                 	var row = result[0];
                     console.log(row);
                     $("#newCostCenterText").val(row.costCenterText);
+                    $("#costCentrName").val(row.costCenterText);
                 }
             });
         }
@@ -821,7 +822,7 @@ function fn_editRejected() {
             Common.ajax("POST", "/eAccounting/webInvoice/editRejected.do", {clmNo : gridObj[0].item.clmNo, clamUn : result.clamUn}, function(result1) {
                 console.log(result1);
 
-                Common.alert("New claim number : " + result1.data.clmNo);
+                Common.alert("New claim number : " + result1.data.newClmNo);
             })
         });
     } else {
