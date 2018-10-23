@@ -1048,11 +1048,12 @@ AND ROWNUM                    <= 1
 		)
     </insert>
 
-    <update id="updateInstallresult" parameterType="Map">
+    <update id="updateInstallresult" parameterType="Map">  <!--KV refer  -->
+     <!-- BY KV - old set  ENTRY_ID=#{einstallEntryId} -->
+     <!-- BY KV - old where RESULT_ID = #{einstallEntryId} -->
      <![CDATA[
         update sal0047d
-		   set ENTRY_ID=#{einstallEntryId}
-		      ,STUS_CODE_ID = '21'
+		   set STUS_CODE_ID = '21'
 		      ,CT_ID = #{ectid}
 		      ,REM = #{reverseReasonText}
 		      ,GL_POST =0
@@ -1069,7 +1070,8 @@ AND ROWNUM                    <= 1
 		      ,DOC_REF_NO2=''
 		      ,UPD_USER_ID=#{userId}
 		      ,ADJ_AMT='0'
-		 where RESULT_ID = #{einstallEntryId}
+		 where RESULT_ID = #{InstallResultID} and ENTRY_ID=#{einstallEntryId}
+
         ]]>
     </update>
 
