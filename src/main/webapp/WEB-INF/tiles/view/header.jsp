@@ -52,7 +52,7 @@
            </c:otherwise>
 	    </c:choose>
 
-	    <li><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
+	    <li><a href="javascript:fn_userSetting();"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_set.gif" alt="Setting" /></a></li>
 	    <li id="menuLinkHelp"><a href="javascript:void(0);"><img src="${pageContext.request.contextPath}/resources/images/common/top_btn_help.gif" alt="Help" /></a></li>
 	</ul>
 	</header><!-- header end -->
@@ -247,6 +247,17 @@ function fn_selectMyMenuProgrmList() {
             alert("Fail : " + jqXHR.responseJSON.message);
         }
     )
+}
+
+function fn_userSetting() {
+    var popUpObj = Common.popupDiv
+    (
+         "/login/userSettingPop.do"
+         , ""
+         , null
+         , "false"
+         , "userSettingPop"
+    );
 }
 </script>
 
