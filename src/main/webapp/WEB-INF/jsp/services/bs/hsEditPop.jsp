@@ -149,6 +149,11 @@ var myDetailGridData = null;
                                          AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
                                      }
                                  }
+                                 // CHECK MINERAL FILTER - NOT ALLOW TO EDIT -- TPY
+                                 if(sk == 1428){
+                                	 Common.alert('*<b> This Filter not allow to edit.</b>');
+                                	 AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+                                 }
                         }
                 });
 
