@@ -86,7 +86,6 @@ public class LoginController {
 			loginHistory.setLoginType(AppConstants.LOGIN_WEB);
 
 			loginService.saveLoginHistory(loginHistory);
-
 			HttpSession session = sessionHandler.getCurrentSession();
 			session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
 			message.setData(loginVO);
@@ -160,6 +159,14 @@ public class LoginController {
 
 		int cnt = loginService.updatePassWord(params, sessionVO.getUserId());
 
+		params.put("userId", sessionVO.getUserName());
+		params.put("password", params.get("newPasswordConfirmTxt"));
+
+		// Reset session info to get latest password
+		LoginVO loginVO = loginService.getLoginInfo(params);
+		HttpSession session = sessionHandler.getCurrentSession();
+		session.setAttribute(AppConstants.SESSION_INFO, SessionVO.create(loginVO));
+
 		// 결과 만들기
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -170,10 +177,10 @@ public class LoginController {
 
 	}
 
-	@RequestMapping(value = "/udateUserInfoSetting.do", method = RequestMethod.POST)
+	@RequestMapping(value = "/updateUserInfoSetting.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateUserSetting(@RequestBody Map<String, Object> params,	SessionVO sessionVO)
 	{
-		LOGGER.debug("udateUserInfoSetting: " + params.toString());
+		LOGGER.debug("updateUserInfoSetting: " + params.toString());
 
 		int cnt = loginService.updateUserSetting(params, sessionVO.getUserId());
 
