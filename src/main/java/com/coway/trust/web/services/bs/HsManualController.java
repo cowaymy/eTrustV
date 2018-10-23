@@ -569,7 +569,7 @@ public class HsManualController {
 		// INSERT AS ENTRY FOR OMBAK  -- TPY
 		if(useFilterList != null){
 			String stkId = useFilterList.get("stkId").toString();
-			if(stkId.equals("1428")){  // 1428 - MINERAL FILTER  
+			if(stkId.equals("1428")){  // 1428 - MINERAL FILTER
 		logger.debug("==================== saveASEntryResult [Start] ========================");
 		//logger.debug("saveASEntryResult params :"+ params.toString());
 
@@ -1174,6 +1174,24 @@ public class HsManualController {
 		model.addAttribute("cmbCMList", cmbCMList);
 
 		return ResponseEntity.ok(cmbCMList);
+	}
+
+
+	@RequestMapping(value = "/checkStkDuration.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkStkDuration( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("params {}", params);
+		String msg = "";
+		EgovMap stkId =  hsManualService.checkStkDuration(params);
+
+		if(stkId != null){
+		 msg = "YES";
+		}else{
+		 msg = "NO";
+		}
+		logger.debug("checkStkDuration - msg : " + msg);
+		message.setMessage(msg);
+		return ResponseEntity.ok(message);
 	}
 
 }
