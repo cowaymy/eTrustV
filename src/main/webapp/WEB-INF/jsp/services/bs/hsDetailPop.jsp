@@ -152,8 +152,26 @@
 		                             AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
 		                         }
 		                     }
+
+		                     // CHECK MINERAL FILTER - NOT ALLOW TO EDIT -- TPY
+                             if(sk == 1428 ){
+                            	 var msg = fn_checkStkDuration();
+                            	 if(msg == "NO"){
+                                     Common.alert('*<b> This Filter not allow to edit.</b>');
+                                     AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+                            	 }
+                             }
 	                }
             });
+    }
+
+
+    function fn_checkStkDuration(){
+    	 Common.ajaxSync("GET", "/services/bs/checkStkDuration.do",{salesOrderId : '${hsDefaultInfo.salesOrdId}', stkId : 1428 }, function(result) {
+             //console.log("checkStkDuration : "+ result.message);
+              msg = result.message;
+     });
+    	 return msg;
     }
 
 
