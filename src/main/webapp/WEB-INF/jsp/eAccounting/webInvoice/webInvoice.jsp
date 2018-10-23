@@ -810,7 +810,7 @@ function fn_editRejected() {
     var gridObj = AUIGrid.getSelectedItems(webInvoiceGridID);
     var list = AUIGrid.getCheckedRowItems(webInvoiceGridID);
 
-    if(gridObj != null && list != null) {
+    if(gridObj != "" || list != "") {
         var status;
         var selClmNo;
 
