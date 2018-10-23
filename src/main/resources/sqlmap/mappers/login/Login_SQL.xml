@@ -214,7 +214,7 @@
         )
     </insert>
 
-    <update id="updateUserSetting" parameterType="loginVO">
+    <update id="updateUserSetting" parameterType="Map">
 	    UPDATE SYS0047M
 	       SET USER_EMAIL  =  #{eMail}
 	          ,USER_UPD_DT =  SYSDATE
