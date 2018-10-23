@@ -323,6 +323,7 @@ function fn_setSupplier() {
 function fn_setPopCostCenter() {
     $("#newCostCenter").val($("#search_costCentr").val());
     $("#newCostCenterText").val($("#search_costCentrName").val());
+    $("#costCentrName").val($("#search_costCentrName").val());
 }
 
 function fn_setPopSupplier() {
