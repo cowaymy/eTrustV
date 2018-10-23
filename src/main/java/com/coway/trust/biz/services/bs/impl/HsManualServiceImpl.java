@@ -1859,7 +1859,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		param.put("taxInvcRefNo", String.valueOf(invoiceDocNo.get("asno")));
 		param.put("taxInvcRefDt", "");
 		param.put("taxInvcSvcNo", params.get("asResultNo").toString());
-		param.put("taxInvcType", "118");
+		param.put("taxInvcType", "118"); // AS INVOICE
 
 		try {
 			param.put("taxInvcCustName", taxPersonInfo.get("taxInvoiceCustName"));
@@ -1890,7 +1890,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		Map<String, Object> param2 = new HashMap();
 
 		param2.put("taxInvcId", taxInvcId);
-		param2.put("invcItmType", "1262");
+		param2.put("invcItmType", "459"); // AS CHANGE FILTER
 		param2.put("invcItmOrdNo", params.get("salesOrdId").toString());
 		param2.put("invcItmPoNo", "");
 		param2.put("invcItmCode", params.get("stkCode").toString());
@@ -1922,8 +1922,9 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		param3.put("accBillRefDt", new Date());
 		param3.put("accBillRefNo", "1000");
 		param3.put("accBillOrdId", params.get("salesOrdId").toString());
-		param3.put("accBillTypeId", "1159");
-		param3.put("accBillModeId", "1263");
+		param3.put("accBillTypeId", "1159"); // SYSTEM GENERATE BILL
+		//param3.put("accBillModeId", "1263"); // AS BILL - SPARE PART
+		param3.put("accBillModeId", "1163"); // AS BILL
 		param3.put("accBillSchdulId", "0");
 		param3.put("accBillSchdulPriod", "0");
 		param3.put("accBillAdjId", "0");
@@ -1946,7 +1947,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 		param4.put("asId", params.get("asId").toString());
 		param4.put("asDocNo", params.get("asResultNo").toString());
-		param4.put("asLgDocTypeId", "163");
+		param4.put("asLgDocTypeId", "163");// AS BILL
 		param4.put("asLgDt", new Date());
 		param4.put("asLgAmt", params.get("totalAmt").toString());
 		param4.put("asLgUpdUserId", params.get("userId").toString());
@@ -1960,7 +1961,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		// PAY0007D
 		Map<String, Object> param5 = new HashMap();
 
-		param5.put("billTypeId", "238");
+		param5.put("billTypeId", "238"); // AS BILL
 		param5.put("billSoId", params.get("salesOrdId").toString());
 		param5.put("billMemId", "0");
 		param5.put("billAsId", params.get("asId").toString());
