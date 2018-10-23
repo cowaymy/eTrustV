@@ -286,6 +286,10 @@ public interface HsManualMapper {
 
 	void insert_Pay0007d(Map<String, Object> param5);
 
+	EgovMap checkStkDuration(Map<String, Object> params);
+
+
+
 
 
 
