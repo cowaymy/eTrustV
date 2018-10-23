@@ -4375,6 +4375,26 @@
         where search.rcnt_info = 1
     </select>
 
+    <select id="checkStkDuration" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+                SELECT SRV_FILTER_STK_ID
+        FROM (
+            SELECT SRV_SO_ID ,fc.SRV_CONFIG_ID, SRV_FILTER_STK_ID , SRV_FILTER_PRIOD , SRV_FILTER_PRV_CHG_DT , BUFF_DAY ,
+            TO_CHAR(ADD_MONTHS(SRV_FILTER_PRV_CHG_DT,SRV_FILTER_PRIOD),'YYYYMMDD') AS ECHG_PRIOD
+            FROM SAL0087D fc
+        LEFT JOIN SAL0090D cf ON cf.SRV_CONFIG_ID = fc.SRV_CONFIG_ID
+        LEFT JOIN SVC0067M buf ON fc.SRV_FILTER_STK_ID = buf.STK_ID
+        WHERE
+        fc.SRV_FILTER_STUS_ID = 1
+        AND cf.SRV_SO_ID = #{salesOrderId}
+        AND fc.SRV_FILTER_STK_ID = #{stkId}
+        ) A
+            WHERE TO_CHAR(SYSDATE,'YYYYMMDD') >= ECHG_PRIOD
+                AND TO_CHAR(SYSDATE,'YYYYMMDD') <= TO_CHAR((TO_DATE(ECHG_PRIOD,'YYYYMMDD') + BUFF_DAY),'YYYYMMDD')
+
+             ]]>
+     </select>
+
 
     <insert id="insert_Pay0031d" parameterType="Map">
 
