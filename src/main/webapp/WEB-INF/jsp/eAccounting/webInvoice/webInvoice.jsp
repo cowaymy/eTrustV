@@ -238,7 +238,7 @@ function fn_setCostCenterEvent() {
                 if(result.length > 0) {
                 	var row = result[0];
                     console.log(row);
-                    $("#newCostCenterText").val(row.costCenterText);
+                    //$("#newCostCenterText").val(row.costCenterText);
                     $("#costCentrName").val(row.costCenterText);
                 }
             });

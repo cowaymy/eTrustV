@@ -388,8 +388,8 @@ function fn_updateWebInvoiceInfo(st) {
 <form action="#" method="post" enctype="multipart/form-data" id="form_newWebInvoice">
 <input type="hidden" id="newClmNo" name="clmNo">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
-<input type="hidden" id="newCostCenterText" name="costCentrName">
-<!--<input type="hidden" id="newMemAccName" name="memAccName"> -->
+<!-- <input type="hidden" id="newCostCenterText" name="costCentrName">
+<input type="hidden" id="newMemAccName" name="memAccName"> -->
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="totAmt" name="totAmt">
 <input type="hidden" id="crtUserId" name="crtUserId" value="${userId}">
