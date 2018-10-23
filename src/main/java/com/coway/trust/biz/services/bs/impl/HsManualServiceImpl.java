@@ -1996,4 +1996,10 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 	}
 
+
+	@Override
+	public EgovMap checkStkDuration(Map<String, Object> params) {
+		return hsManualMapper.checkStkDuration(params);
+	}
+
 }
