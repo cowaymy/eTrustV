@@ -831,9 +831,7 @@
         UPD_DT= SYSDATE
           , TR_NO=#{trNo}
           , COLL_MEM_ID = #{collMemId}
-          <if test="brnchId != null or brnchId != '' ">
-              , BRNCH_ID = #{brnchId}
-          </if>
+          , BRNCH_ID = #{brnchId}
           , TR_ISSU_DT = TO_DATE(#{trIssueDate},'DD/MM/YYYY')
           , ALLOW_COMM = #{allowComm}
         WHERE PAY_ID=#{payId}

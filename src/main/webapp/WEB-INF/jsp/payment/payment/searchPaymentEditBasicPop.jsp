@@ -28,9 +28,7 @@ $(document).ready(function(){
     fn_openDivEditPop();
 
     //EDIT POP Branch Combo 생성
-    // 2018-10-22 - Changed Branch code to text
     doGetComboSepa('/common/selectBranchCodeList.do', '1' , ' - ' , '','edit_branchId', 'S' , '');
-    $("#edit_branchId").attr("hidden", true);
 });
 
 var popColumnLayout = [
@@ -197,8 +195,7 @@ function fn_openDivEditPop(){
               $('#edit_txtBranch').text(result.viewMaster.clctrBrnchCode + "(" + result.viewMaster.clctrBrnchName+")");
               $('#edit_txtDebtor').text(result.viewMaster.debtorAccCode + "(" + result.viewMaster.debtorAccDesc+")");
 
-              $('#edit_branchId').val(result.viewMaster.clctrBrnchId); // 2018-10-22 - Changed to get text form
-              $('#edit_branchNm').val(result.viewMaster.clctrBrnchName);
+              $('#edit_branchId').val(result.viewMaster.clctrBrnchId);
               $('#edit_txtCollectorCode').val(result.viewMaster.clctrCode);
               $('#edit_txtClctrName').text(result.viewMaster.clctrName);
               $('#edit_txtCollectorId').val(result.viewMaster.clctrId);
@@ -214,12 +211,10 @@ function fn_openDivEditPop(){
                 $("#edit_branchId").prop('disabled', true);
                 reconLock = 1;
                 $("#edit_branchId").css("backgroundColor","transparent");
-                $("#edit_branchNm").css("backgroundColor","transparent");
 
               }else{
-                $("#edit_branchId").prop('disabled', "disabled"); // 2018-10-19 - LaiKW
+                $("#edit_branchId").prop('disabled', false);
                 $("#edit_branchId").css("backgroundColor","#F5F6CE");
-                $("#edit_branchNm").css("backgroundColor","#F5F6CE");
               }
 
               //팝업그리드 뿌리기
@@ -252,11 +247,10 @@ function saveChanges() {
           return;
       }
 
-    // 2018-10-22 - Changed Branch code to text
-    /*if($.trim(branchId ) == ""){
+    if($.trim(branchId ) == ""){
       Common.alert("<spring:message code='pay.alert.selectBranch'/>");
       return;
-    }*/
+    }
 
     $("#hiddenPayId").val(payId);
     $("#hiddenBranchId").val(branchId);
@@ -441,9 +435,8 @@ function fn_goSalesConfirm(){
                       <tr>
                           <th scope="row">Branch Code</th>
                           <td id="" colspan="3">
-                               <select id="edit_branchId" name="edit_branchId" class="w100p">
+                              <select id="edit_branchId" name="edit_branchId" class="w100p">
                                </select>
-                               <input type="text" name="edit_branchNm" id="edit_branchNm" class="w100p" disabled/>
                           </td>
                       </tr>
                   </tbody>
