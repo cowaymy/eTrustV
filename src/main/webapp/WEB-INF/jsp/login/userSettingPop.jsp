@@ -43,10 +43,10 @@ function chkEmail(str){
 
 function  isValidMobileNo(inputContact){
 
-    if(isNaN(inputContact) == false){
+    /* if(isNaN(inputContact) == false){
 
         return false;
-    }
+    } */
 
     if(inputContact.length != 10 && inputContact != 11){
 
