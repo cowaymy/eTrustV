@@ -1776,14 +1776,14 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		params2.put("AS_MALFUNC_RESN_ID", "2"); // AS DURING INSTALLATION
 		params2.put("AS_FILTER_AMT", params.get("amt").toString());
 		params2.put("AS_TOT_AMT", params.get("totalAmt").toString());
-		params2.put("AS_RESULT_TYPE_ID", "457");
+		params2.put("AS_RESULT_TYPE_ID", "457"); // AFTER SERVICE
 		params2.put("AS_RESULT_UPD_DT", "");
 		params2.put("AS_RESULT_UPD_USER_ID", "");
-		params2.put("AS_DEFECT_TYPE_ID", "1103");
-		params2.put("AS_DEFECT_ID", "662");
-		params2.put("AS_DEFECT_PART_ID", "1253");
-		params2.put("AS_DEFECT_DTL_RESN_ID", "514");
-		params2.put("AS_SLUTN_RESN_ID", "439");
+		params2.put("AS_DEFECT_TYPE_ID", "1103"); // DT5 - SERVICE MAINTANENCE
+		params2.put("AS_DEFECT_ID", "662"); // I5 - OPERATING NORMALLY
+		params2.put("AS_DEFECT_PART_ID", "1253"); // AI17 - LEAD ADAPTOR
+		params2.put("AS_DEFECT_DTL_RESN_ID", "514"); // 11 - NO FILTER / PART CHANGE
+		params2.put("AS_SLUTN_RESN_ID", "439"); // A2 - UPGRADE : UF , BOOSTER PUMP , OPTIONAL
 		params2.put("AS_RESULT_IS_CURR", "1");
 		params2.put("AS_RESULT_MTCH_ID", "0");
 		params2.put("AS_RESULT_NO_ERR", "");
