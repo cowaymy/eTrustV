@@ -1291,12 +1291,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		aSEntryVO.setAsStusId(1);
 		aSEntryVO.setAsSms(0);
 		aSEntryVO.setAsCrtUserId(sessionVO.getUserId());
-		//aSEntryVO.setAsCrtDt(reliefTypeId);
+		//aSEntryVO.setAsCrtDt();
 		aSEntryVO.setAsUpdUserId(sessionVO.getUserId());
 		//aSEntryVO.setAsUpdDt("");
 		aSEntryVO.setAsEntryIsSynch(0);
 		aSEntryVO.setAsEntryIsEdit(0);
-		aSEntryVO.setAsTypeId(0);
+		aSEntryVO.setAsTypeId(674);
 		aSEntryVO.setAsReqsterTypeId(0);
 		aSEntryVO.setAsIsBSWithin30days(0);
 		aSEntryVO.setAsAllowComm(0);
@@ -1523,6 +1523,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		if(itmCompId == 2 || itmCompId == 3 || itmCompId == 4){
 			ASEntryVO aSEntryVO = new ASEntryVO();
 			this.preprocASEntry(aSEntryVO, sessionVO);
+            String asNo = orderRegisterMapper.selectDocNo(DocTypeConstants.AS_ENTRY);
+            aSEntryVO.setAsNo(asNo);
+
 			regOrderVO.setASEntryVO(aSEntryVO);
 		}
 
@@ -1597,7 +1600,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
 		logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdId() : {}"+regOrderVO.getSalesOrderMVO().getSalesOrdId());
 		logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdNo() : {}"+regOrderVO.getSalesOrderMVO().getSalesOrdNo());
-
+		logger.info("regOrderVO.getASEntryVO().getAsNo() : {}"+regOrderVO.getASEntryVO().getAsNo());
 	}
 
 	private void doSaveOrder(OrderVO orderVO) {
@@ -1819,8 +1822,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
         if(compId == 2 || compId == 3 || compId == 4){
             if(asEntryVO != null) {
-            	String asNo = orderRegisterMapper.selectDocNo(DocTypeConstants.AS_ENTRY);
-            	asEntryVO.setAsNo(asNo);
+            	//String asNo = orderRegisterMapper.selectDocNo(DocTypeConstants.AS_ENTRY);
+            	//asEntryVO.setAsNo(asNo);
             	asEntryVO.setAsSoId(salesOrdId);
             	orderRegisterMapper.insertASEntry(asEntryVO);
             }
