@@ -250,9 +250,9 @@ function fn_tagLog() {
        <th scope="row">Regist Date</th>
        <td>
        <div class="date_set w100p"><!-- date_set start -->
-        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regStartDt" name="regStartDt" value="24/10/2018"/></p>
+        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regStartDt" name="regStartDt"/></p>
         <span>To</span>
-        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regEndDt" name="regEndDt" value="24/10/2018"/></p>
+        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regEndDt" name="regEndDt"/></p>
        </div><!-- date_set end -->
        </td>
 
