@@ -13,7 +13,8 @@
                      , Z.DEPT_CODE, Z.SUB_DEPT_CDE  , Z.Status
                      ,TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') Reg_date
                      ,z.ord_no,z.hc_mem_id  , z.CNSL_LRGCLAS_CD,  z.CNSL_MEDCLAS_CD
-
+                     ,TO_CHAR (Z.UPD_DT, 'YYYY-MM-DD') UPD_DT
+                     ,z.LST_UPD_ID, Z.CALL_REM
         FROM      (
              SELECT A.CUR_SEQNO   Counseling_No
                 , A.CUST_NO as Customer_No
@@ -29,10 +30,28 @@
                 , A.Ord_no
                 , DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
                 , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
+                , to_date(Substr(a.LST_UPD_DTM, 1, 8 ),'YYYY/MM/DD') UPD_DT
                 , a.hc_mem_id , A.CNSL_LRGCLAS_CD,  A.CNSL_MEDCLAS_CD
                 , BRNCH_ID
+                , A.LST_UPD_ID
+                , NVL(C.CALL_REM,'  ') CALL_REM
                 FROM CALLCENTERUSER.T_CUR_HIST A
 				LEFT OUTER JOIN GBSLCVD.CCR0006D B  ON A.CUR_SEQNO = B.CUR_SEQ_NO
+				LEFT JOIN (
+                  SELECT * FROM (
+                    SELECT CUR_SEQNO, CALL_REM, LST_UPD_DTM, ROW_NUMBER() OVER (PARTITION BY CUR_SEQNO ORDER BY LST_UPD_DTM DESC) SEQ FROM (
+                        SELECT CUR_SEQNO, MEMO CALL_REM, TO_DATE(substr(LST_UPD_DTM, 1, 8 ),'YYYY/MM/DD') LST_UPD_DTM
+                            FROM CALLCENTERUSER.T_RMK_HIST D
+                        UNION ALL
+	                        ( SELECT
+	                            A.CUR_SEQ_NO CUR_SEQNO, cast(SUBSTR(B.CALL_REM,0,2000) AS nvarchar2(2000)) CALL_REM, CALL_CRT_DT LST_UPD_DTM
+	                            FROM GBSLCVD.CCR0006D A
+	                            JOIN GBSLCVD.CCR0007D B ON A.CALL_ENTRY_ID = B.CALL_ENTRY_ID
+	                                WHERE CUR_SEQ_NO IS NOT NULL
+	                        )
+	                    )
+	                ) WHERE SEQ = 1
+	            ) C ON A.CUR_SEQNO = C.CUR_SEQNO
 				LEFT JOIN GBSLCVD.SYS0047M usr ON b.UPD_USER_ID = usr.USER_ID
                 LEFT JOIN GBSLCVD.SYS0005M brnch ON usr.USER_BRNCH_ID = brnch.BRNCH_ID
 				WHERE A.TR_DVCD         = 'T'
@@ -86,7 +105,7 @@
                      ,TO_CHAR (Z.Reg_date, 'YYYY-MM-DD') Reg_date
                      ,z.ord_no,  z.hc_mem_id, z.ORD_ID, z.hc_id
                      ,z.LATEST_MAIN_DEPT,LATEST_SUB_DEPT
-
+                     ,z.ATCH_FILE_GRP_ID
         FROM      (
              SELECT A.CUR_SEQNO   Counseling_No
                 , A.CUST_NO as Customer_No
@@ -104,7 +123,7 @@
                 , A.Ord_no
                 , DECODE(B.STUS_CODE_ID, '', 'Active', CALLCENTERUSER.FN_ERP_GET_STUS_NM(B.STUS_CODE_ID)) as Status
                 , to_date(Substr(a.REG_DTM, 1, 8 ),'YYYY/MM/DD') Reg_date
-                ,  a.hc_mem_id ,  a.ORD_ID, a.hc_id
+                ,  a.hc_mem_id ,  a.ORD_ID, a.hc_id, a.ATCH_FILE_GRP_ID
                 FROM CALLCENTERUSER.T_CUR_HIST A
                 LEFT OUTER JOIN GBSLCVD.CCR0006D B
                 ON A.CUR_SEQNO = B.CUR_SEQ_NO
@@ -453,6 +472,21 @@
             ON T9.MEM_ID = T8.MEM_UP_ID
          WHERE T1.SALES_ORD_ID = #{salesOrdId} AND ROWNUM <= 1
     ]]>
+    </select>
+
+    <select id="selectAttachList" parameterType="Map" resultType="egovMap">
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          ORDER BY T1.ATCH_FILE_ID
     </select>
 
 

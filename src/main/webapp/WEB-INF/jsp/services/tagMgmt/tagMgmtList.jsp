@@ -4,6 +4,7 @@
 <script type="text/javaScript">
 
 var gridID;
+var gridIDExcel;
 var counselingId;
 
 function tagMgmtGrid() {
@@ -59,6 +60,19 @@ function tagMgmtGrid() {
                        }
                    ];
 
+    var excelLayout = [
+                        {dataField: "regDate",headerText: "Register Date",width:150 ,height:80}
+                       ,{dataField: "counselingNo",headerText: "CounselingNo",width:200 ,height:80}
+                       ,{dataField: "customerName",headerText: "Customer",width:200 ,height:80}
+                       ,{dataField: "mainInquiry",headerText: "Main Inquiry",width:200 ,height:80}
+                       ,{dataField: "subInquiry",headerText: "Sub Inquiry",width:200 ,height:80}
+                       ,{dataField: "mainDept",headerText: "Main Department",width:200 ,height:80}
+                       ,{dataField: "updDt",headerText: "Update Date",width:150 ,height:80}
+                       ,{dataField: "lstUpdId",headerText: "Updated By",width:150 ,height:80}
+                       ,{dataField: "status",headerText: "Status",width:100 ,height:80}
+                       ,{dataField: "callRem",headerText: "Remark",width:500 ,height:80}
+                       ];
+
      var gridPros = {
     		                        usePaging           : true,         //페이징 사용
                         	        pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
@@ -71,7 +85,20 @@ function tagMgmtGrid() {
                         	        editable :false
                           };
 
+     var excelGridPros = {
+             enterKeyColumnBase : true,
+             useContextMenu : true,
+             enableFilter : true,
+             showStateColumn : true,
+             displayTreeOpen : true,
+             wordWrap : true,
+             noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+             groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
+             exportURL : "/common/exportGrid.do"
+         };
+
                           gridID = GridCommon.createAUIGrid("tagMgmt_grid_wap", columnLayout  ,"" ,gridPros);
+                          gridIDExcelHide = GridCommon.createAUIGrid("grid_wrap_hide", excelLayout  ,"" ,excelGridPros);
 
 
 
@@ -84,16 +111,20 @@ $(document).ready(function(){
     $("#search").click(function() {
 
         Common.ajax("GET","/services/tagMgmt/selectTagStatus",$("#tagMgmtForm").serialize(),function(result) {
-            console.log("성공.");
-            console.log("data : "+ result);
             AUIGrid.setGridData(gridID,result);
+            AUIGrid.setGridData(gridIDExcelHide,result);
         });
 
     });
 
     //excel Download
     $('#excelDown').click(function() {
-        GridCommon.exportTo("tagMgmt_grid_wap", 'xlsx',"Tag Management");
+        //GridCommon.exportTo("tagMgmt_grid_wap", 'xlsx',"Tag Management");
+        var excelProps = {
+            fileName     : "Tag Management",
+           exceptColumnFields : AUIGrid.getHiddenColumnDataFields(gridIDExcelHide)
+        };
+        AUIGrid.exportToXlsx(gridIDExcelHide, excelProps);
     });
 
     // cell click
@@ -219,9 +250,9 @@ function fn_tagLog() {
        <th scope="row">Regist Date</th>
        <td>
        <div class="date_set w100p"><!-- date_set start -->
-        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regStartDt" name="regStartDt"/></p>
+        <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regStartDt" name="regStartDt" value="24/10/2018"/></p>
         <span>To</span>
-        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regEndDt" name="regEndDt"/></p>
+        <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="regEndDt" name="regEndDt" value="24/10/2018"/></p>
        </div><!-- date_set end -->
        </td>
 
@@ -255,6 +286,7 @@ function fn_tagLog() {
 </c:if>
 <article class="grid_wrap"><!-- grid_wrap start  그리드 영역-->
     <div id="tagMgmt_grid_wap" style="width:100%; height:300px; margin:0 auto;"></div>
+    <div id="grid_wrap_hide" style="display: none;"></div>
 </article><!-- grid_wrap end -->
 
 </section><!-- search_result end -->

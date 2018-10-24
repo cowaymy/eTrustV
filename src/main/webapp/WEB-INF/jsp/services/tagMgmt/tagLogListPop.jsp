@@ -73,6 +73,7 @@ $(document).ready(function(){
 		    Common.ajax("Get", "/services/tagMgmt/getRemarkResults.do?counselingNo="+ counselingNum +"", '' , function(result) {
 
 		    	 console.log("성공.");
+
 		         console.log("data : "+ result);
 		        AUIGrid.setGridData(gridID1 , result );
 		        AUIGrid.resize(gridID1,900,300);
@@ -96,8 +97,38 @@ $(document).ready(function(){
      });
 
 
+	   /* atchFileGrpId */
+	   var attachList = $("#atchFileGrpId").val();
+	   console.log(attachList);
+	   Common.ajax("Get", "/services/tagMgmt/selectAttachList.do", {atchFileGrpId :attachList} , function(result) {
+            console.log(result);
+       if(result) {
+            if(result.length > 0) {
+                $("#attachTd").html("");
+                for(var i = 0; i < result.length; i++) {
+                    //$("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' value='" + attachList[i].atchFileName + "'/></div>");
+                    var atchTdId = "atchId" + (i+1);
+                    $("#attachTd").append("<div class='auto_file2 auto_file3'><input type='text' class='input_text' readonly='readonly' name='" + atchTdId + "'/></div>");
+                    $(".input_text[name='" + atchTdId + "']").val(result[i].atchFileName);
+                }
 
+                // 파일 다운
+                $(".input_text").dblclick(function() {
+                    var oriFileName = $(this).val();
+                    var fileGrpId;
+                    var fileId;
+                    for(var i = 0; i < result.length; i++) {
+                        if(result[i].atchFileName == oriFileName) {
+                            fileGrpId = result[i].atchFileGrpId;
+                            fileId = result[i].atchFileId;
+                        }
+                    }
+                    fn_atchViewDown(fileGrpId, fileId);
+                });
+            }
+        }
 
+	   });
 
 });
 
@@ -131,13 +162,29 @@ function fn_saveRemarkResult(){
 
 }
 
-
-
-
-
-
-
-
+function fn_atchViewDown(fileGrpId, fileId) {
+    var data = {
+            atchFileGrpId : fileGrpId,
+            atchFileId : fileId
+    };
+    Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+        console.log(result);
+        if(result.fileExtsn == "jpg" || result.fileExtsn == "png" || result.fileExtsn == "gif") {
+            // TODO View
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+            window.open(DEFAULT_RESOURCE_FILE + fileSubPath + '/' + result.physiclFileName);
+        } else {
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath
+                    + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath
+                + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        }
+    });
+}
 
 </script>
 
@@ -225,6 +272,13 @@ function fn_saveRemarkResult(){
             </td>
          <th scope="row"></th>
             <td><span></span></td>
+        </tr>
+        <tr>
+         <th scope="row">Attachment</th>
+            <td colspan="5" id="attachTd">
+                <input type="hidden" id ="atchFileGrpId" value="${tagMgmtDetail.atchFileGrpId }">
+                <!--             <div class="auto_file2 auto_file3">auto_file start <input type="file" title="file add" /> </div>auto_file end -->
+            </td>
         </tr>
         </tbody>
         </table><!-- table end -->

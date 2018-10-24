@@ -27,20 +27,20 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Controller
 @RequestMapping(value = "/services/tagMgmt")
 public class TagMgmtController {
-	
+
 	private static final Logger logger = LoggerFactory.getLogger(MileageCalculationController.class);
 
 	@Resource(name = "tagMgmtService")
 	TagMgmtService tagMgmtService;
-	
-	
+
+
 	@RequestMapping(value = "/tagManagement.do")
 	public String viewTagMangement (@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("params", params);
 		// 호출될 화면
 		return "services/tagMgmt/tagMgmtList";
 	}
-	
+
 	@RequestMapping(value = "/tagLogRegistPop.do")
 	public String viewTagLogRegistPop (@RequestParam Map<String, Object> params, ModelMap model) {
 		model.addAttribute("params", params);
@@ -48,28 +48,28 @@ public class TagMgmtController {
 		logger.debug("paramsJINMU1 {}", params);
 		EgovMap tagMgmtDetail = tagMgmtService.getDetailTagStatus(params);
 		model.addAttribute("tagMgmtDetail" , tagMgmtDetail );
-		
+
 		logger.debug("paramsJINMU1 {}", tagMgmtDetail );
-		
+
 		List<EgovMap> remarks = tagMgmtService.getTagRemark(params);
 		model.addAttribute("remarks" , remarks );
-		
+
 		EgovMap orderInfo = tagMgmtService.getOrderInfo(tagMgmtDetail);
 		model.addAttribute("orderInfo" , orderInfo );
-		
+
 		EgovMap callerInfo = tagMgmtService.getOrderInfo(tagMgmtDetail);
 		model.addAttribute("callerInfo" , callerInfo );
-		
+
 		EgovMap salesmanInfo 	 = tagMgmtService.selectOrderSalesmanViewByOrderID(orderInfo);
 		model.addAttribute("salesmanInfo" , salesmanInfo);
-		
+
 		EgovMap codyInfo     	 = tagMgmtService.selectOrderServiceMemberViewByOrderID(orderInfo);
 		model.addAttribute("codyInfo" , codyInfo);
 		return "services/tagMgmt/tagLogListPop";
 	}
-	
-	
-	
+
+
+
 	@RequestMapping(value = "/selectTagStatus")
 	 ResponseEntity<List<EgovMap>> getTagStatus(@RequestParam Map<String, Object> params, HttpServletRequest request) {
 		logger.debug("paramsJINMU {}", params);
@@ -79,7 +79,7 @@ public class TagMgmtController {
 		logger.debug("paramsJINMU {}", notice );
 		return ResponseEntity.ok(notice);
 	}
-	
+
 
 	@RequestMapping(value = "/getRemarkResults.do")
 	 ResponseEntity<List<EgovMap>> getRemarks(@RequestParam Map<String, Object> params) {
@@ -88,14 +88,14 @@ public class TagMgmtController {
 		logger.debug("paramsJINMU5 {}", remarks);
 		return ResponseEntity.ok(remarks);
 	}
-	
+
 	@RequestMapping(value = "/addRemarkResult.do" , method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> addRemarkResult (@RequestBody Map<String, Object> params, HttpServletRequest request,SessionVO sessionVO)  throws ParseException {
-		ReturnMessage message = new ReturnMessage();	
+		ReturnMessage message = new ReturnMessage();
 		logger.debug("paramsJINMU3 {}", params);
-		
+
 		int remarkResult =	tagMgmtService.addRemarkResult(params, sessionVO );
-		
+
 		if(remarkResult == 2){
 			message.setMessage("success");
 		}
@@ -103,44 +103,51 @@ public class TagMgmtController {
 			message.setMessage("fail");
 		}
 
-		
-		
+
+
 		return ResponseEntity.ok(message);
-		
-		
-		
+
+
+
 }
-	
+
 	@RequestMapping(value = "/selectMainDept.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getMainDeptList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
 		List<EgovMap> mainDeptList = tagMgmtService.getMainDeptList() ;
-		
+
 		return ResponseEntity.ok( mainDeptList);
 	}
-	
+
 	@RequestMapping(value = "/selectSubDept.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getSubDept( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params =================={}", params);
 		List<EgovMap> subDeptList = tagMgmtService.getSubDeptList(params) ;
-		
+
 		return ResponseEntity.ok( subDeptList);
 	}
-	
+
 	@RequestMapping(value = "/selectMainInquiry.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getMainInquiryList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
 		List<EgovMap> mainInquiryList = tagMgmtService.getMainInquiryList() ;
-		
+
 		return ResponseEntity.ok( mainInquiryList);
 	}
-	
+
 	@RequestMapping(value = "/selectSubInquiry.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> getSubInquiryList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
 		logger.debug("params {}", params);
 		List<EgovMap> subInquiryList = tagMgmtService.getSubInquiryList(params) ;
-		
+
 		return ResponseEntity.ok( subInquiryList);
 	}
-	
+
+	@RequestMapping(value = "/selectAttachList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getAttachList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> attachList = tagMgmtService.getAttachList(params) ;
+
+		return ResponseEntity.ok( attachList);
+	}
 }
