@@ -3357,4 +3357,11 @@ public class ASManagementListServiceImpl extends EgovAbstractServiceImpl impleme
 	public List<EgovMap> selectSVC0026T(Map<String, Object> params) {
 		return ASManagementListMapper.selectSVC0026T(params);
 	}
+
+	// AS RECEIVED ENTRY POP UP NOTIFICATION -- TPY
+	@Override
+	public EgovMap checkASReceiveEntry(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return ASManagementListMapper.checkASReceiveEntry(params);
+	}
 }
