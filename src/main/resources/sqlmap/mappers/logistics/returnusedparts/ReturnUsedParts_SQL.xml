@@ -32,50 +32,58 @@
 
 	<select id="returnPartsList" parameterType="Map" resultType="egovMap">
 		SELECT
-		ROWNUM rnum,
-		l82.SEQ,
-		l82.SVC_ORD_ID service_order,
-		s01.SALES_ORD_NO order_no,
-		l82.CUST_ID customer,
-		s29.NAME customer_name,
-		<!-- TO_CHAR(l82.SVC_DT,'DD/MM/YYYY') service_date, -->
-		TO_CHAR(s06.SETL_DT,'YYYY/MM/DD') service_date,
-		<!-- s26.STK_CODE material_code, -->
-		(select STK_CODE from sys0026m where STK_ID=l82.STK_ID) material_code,
-		s26.STK_CODE material_code_actual,
-		s26.STK_DESC material_name,
-		l82.STK_ID,
-		l82.OLD_SERIAL serial_number,
-<!-- 		l82.OLD_SERIAL serial, -->
- 		l82.NEW_SERIAL serial,
-		l82.QTY qty,
-		l82.COMMENTS text,
-		l82.CMPLT_YN return_complete,
-	    <!-- TO_CHAR(l82.CMPLT_DT,'DD/MM/YYYY') return_complete_date, -->
+        ROWNUM rnum,
+        l82.SEQ,
+        l82.SVC_ORD_ID service_order,
+        s01.SALES_ORD_NO order_no,
+        l82.CUST_ID customer,
+        s29.NAME customer_name,
+
+        TO_CHAR(s06.SETL_DT,'YYYY/MM/DD') service_date,
+
+        (select STK_CODE from sys0026m where STK_ID=l82.STK_ID) material_code,
+        s26.STK_CODE material_code_actual,
+        s26.STK_DESC material_name,
+        l82.STK_ID,
+        l82.OLD_SERIAL serial_number,
+
+        l82.NEW_SERIAL serial,
+        l82.QTY qty,
+        l82.COMMENTS text,
+        l82.CMPLT_YN return_complete,
+
         TO_CHAR(l82.CMPLT_DT,'YYYY/MM/DD') return_complete_date,
-		<!-- l82.CMPLT_DT return_complete_date, -->
-		<!-- (SELECT CODE FROM SYS0013M WHERE CODE=l82.RESN_CODE AND  CODE_MASTER_ID='364')  no_parts_return, -->
-		l82.RESN_CODE no_parts_return,
-		l82.CRT_DT,
-		l82.CRT_USER_ID,
-		l82.UPD_DT,
-		l82.UPD_USER_ID,
-		S26.SERIAL_CHK,
-		S26.STK_TYPE_ID,
-		l82.STK_ID_NEW,
-		o01.BRNCH,
-	    o01.MEM_CODE,
+
+        l82.RESN_CODE no_parts_return,
+        l82.CRT_DT,
+        l82.CRT_USER_ID,
+        l82.UPD_DT,
+        l82.UPD_USER_ID,
+        S26.SERIAL_CHK,
+        S26.STK_TYPE_ID,
+        l82.STK_ID_NEW,
+        o01.BRNCH,
+        o01.MEM_CODE,
         o01.NAME,
        (select CODE from SYS0005M where BRNCH_ID = o01.BRNCH ) code,
        (select NAME from SYS0005M where BRNCH_ID = o01.BRNCH ) brnch_name
-		from LOG0082M l82,sal0029d s29,sys0026m s26, org0001d o01, SVC0008D s08, SAL0001D s01, SVC0006D s06
-		where 1=1
-		AND l82.CUST_ID=s29.CUST_ID
-		AND l82.STK_ID=s26.STK_ID
-		AND l82.SVC_ORD_ID=s08.NO
-		AND s08.SALES_ORD_ID=s01.SALES_ORD_ID
-		AND s06.RESULT_ID=l82.RESULT_ID
-		AND l82.MEM_ID = o01.MEM_ID(+)
+       from LOG0082M l82
+        join sal0029d s29 on l82.CUST_ID=s29.CUST_ID
+        join sys0026m s26 on l82.STK_ID=s26.STK_ID
+        join org0001d o01 on l82.MEM_ID = o01.MEM_ID
+        join SVC0008D s08 on l82.SVC_ORD_ID=s08.NO
+        join SAL0001D s01 on s08.SALES_ORD_ID=s01.SALES_ORD_ID
+        join SVC0006D s06 on s06.RESULT_ID=l82.RESULT_ID
+       JOIN (select * from LOG0082M SM
+                        where SM.RESULT_ID = (SELECT MAX(aa.RESULT_ID)
+                                               from LOG0082M aa
+                                                where
+                                                aa.SVC_ORD_ID =  SM.SVC_ORD_ID ))SM
+                                                on (SM.SEQ = l82.SEQ)
+       JOIN (select WW.RESULT_ID, sum(WW.qty) from LOG0082M WW
+       group by WW.RESULT_ID
+       having sum(WW.qty)<![CDATA[<>]]>  0)QQ on (QQ.RESULT_ID = SM.RESULT_ID)
+       where 1=1
 	   <if test="searchOder != null and searchOder !=''">
            AND l82.SVC_ORD_ID = #{searchOder}
        </if>
