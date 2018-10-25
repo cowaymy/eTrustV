@@ -201,5 +201,7 @@ public interface ASManagementListMapper {
 	List<EgovMap> getfltConfLst();
 	int getSAL87ConfigId(String ordNo);
 	int insert_SAL0087D(Map<String, Object> params);
+	// AS RECEIVED ENTRY POP UP NOTIFICATION -- TPY
+	EgovMap checkASReceiveEntry(Map<String, Object> params);
 
 }
