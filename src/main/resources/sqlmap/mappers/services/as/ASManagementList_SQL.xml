@@ -363,7 +363,7 @@
 		                vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
 		         FROM SAL1006V vOrderBasicInfo ) Extent1
 		 WHERE  ( Extent1.ORD_NO = #{orderNo} )
-		          AND ( Extent1.ORD_STUS_ID = 4 ) AND ROWNUM <= 1
+		          AND ( Extent1.ORD_STUS_ID = 4 ) AND (Extent1.RENTAL_STUS NOT IN ('WOF','SUS','RET')) AND ROWNUM <= 1
              ]]>
     </select>
 
@@ -4111,5 +4111,40 @@
          )
 
    </insert>
+
+    <select id="checkASReceiveEntry" parameterType="Map" resultType="egovMap">
+    <![CDATA[
+
+                  SELECT
+                  som.SALES_ORD_NO ,
+                  som.SALES_ORD_ID ,
+                  os.SRV_MEM_NO ,
+                  asm.AS_NO AS_NO,
+                  hsm.NO HS_NO,
+                  som.STUS_CODE_ID ORD_STUS ,
+                  os.SRV_STUS_CODE_ID SRV_STUS,
+                  asm.AS_STUS_ID AS_STUS ,
+                  S1.CODE AS_STUS_DESC ,
+                  hsm.STUS_CODE_ID HS_STUS ,
+                  S2.CODE HS_STUS_DESC
+                  FROM SAL0001D som
+                  LEFT JOIN SAL0095D os ON os.SRV_SALES_ORD_ID = som.SALES_ORD_ID
+                  AND SYSDATE BETWEEN SRV_START_DT AND SRV_EXPR_DT
+                  LEFT JOIN SVC0001D asm ON asm.AS_SO_ID = som.SALES_ORD_ID
+                  AND EXTRACT(MONTH FROM AS_REQST_DT) = EXTRACT(MONTH FROM SYSDATE)
+                  AND EXTRACT(YEAR FROM AS_REQST_DT) = EXTRACT(YEAR FROM SYSDATE)
+                  LEFT JOIN SVC0008D hsm ON hsm.SALES_ORD_ID = som.SALES_ORD_ID
+                  AND MONTH = EXTRACT(MONTH FROM SYSDATE)
+                  AND YEAR = EXTRACT(YEAR FROM SYSDATE)
+                  AND hsm.STUS_CODE_ID = 1
+                  LEFT JOIN SYS0038M S1
+                    ON S1.STUS_CODE_ID = asm.AS_STUS_ID
+                  LEFT JOIN SYS0038M S2
+                    ON S2.STUS_CODE_ID = hsm.STUS_CODE_ID
+                  WHERE
+                  som.SALES_ORD_NO = #{salesOrderNo}
+
+             ]]>
+     </select>
 
 </mapper>
