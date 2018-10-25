@@ -1325,10 +1325,18 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
 
 
-
+            int count = hsManualMapper.selectTotalFilter(bsResultMas_Rev);
     		logger.debug("selectQryResultDet : {}" + bsResultMas_Rev);
     		List<EgovMap> qryResultDet =  hsManualMapper.selectQryResultDet(bsResultMas_Rev);
-    		List<EgovMap> qryUsedFilter =  hsManualMapper.selectQryUsedFilter(bsResultMas_Rev);
+    		List<EgovMap> qryUsedFilter;
+    		if(count == 0){
+        		qryUsedFilter =  hsManualMapper.selectQryUsedFilterNew(bsResultMas_Rev);
+
+    		}
+    		else{
+        		qryUsedFilter =  hsManualMapper.selectQryUsedFilter(bsResultMas_Rev);
+
+    		}
     		logger.debug("qryResultDet : {}" + qryResultDet);
     		logger.debug("qryResultDet.size() : {}" + qryResultDet.size());
 

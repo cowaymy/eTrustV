@@ -4680,5 +4680,29 @@
             )
           </insert>
 
+          <select id="selectTotalFilter" parameterType="Map" resultType="Integer">
+
+            select COUNT(*)
+          from SVC0007D
+         where BS_RESULT_ID = #{ResultMatchID}
+
+
+          </select>
+
+           <select id="selectQryUsedFilterNew" parameterType="Map" resultType="egovMap">
+
+            select c.NO
+                ,d.CUST_ID
+                ,TO_CHAR(b.RESULT_CRT_DT, 'DD/MM/YYYY') RESULT_CRT_DT
+                ,c.CODY_ID
+                ,b.RESULT_ID
+          from SVC0006D b
+          left join SVC0008D c ON c.SCHDUL_ID = b.SCHDUL_ID
+          left join SAL0001D d ON d.SALES_ORD_ID = b.SALES_ORD_ID
+         where b.RESULT_ID = #{ResultMatchID}
+
+
+          </select>
+
 
 </mapper>

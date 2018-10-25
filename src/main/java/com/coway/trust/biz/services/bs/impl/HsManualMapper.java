@@ -296,7 +296,9 @@ public interface HsManualMapper {
 
 	void addusedFilter(Map<String, Object> params);
 
+	int selectTotalFilter(Map<String, Object> params);
 
+	List<EgovMap> selectQryUsedFilterNew(Map<String, Object> params);
 
 
 }
