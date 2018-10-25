@@ -332,7 +332,13 @@
 
     function fn_addCreditCardPop(){
        // Common.popupWin("insBasicForm", "/sales/customer/customerAddCreditCardPop.do", option);
-        Common.popupDiv("/sales/customer/customerAddCreditCardPop.do", $("#insBasicForm").serializeJSON(), null, true, '_cardDiv');
+        console.log("Check NRIC for CRC");
+        if($("#_nric_").val() == ''){
+            Common.alert('<spring:message code="sal.alert.msg.plzKeyinNricCompNum" />');
+            return false;
+        } else {
+            Common.popupDiv("/sales/customer/customerAddCreditCardPop.do", $("#insBasicForm").serializeJSON(), null, true, '_cardDiv');
+        }
     }
 
     function fn_addBankAccountPop(){
@@ -353,6 +359,8 @@
 
     // save
     function fn_saveNewCustomer(){
+
+        console.log("saveNewCustomer()");
 
             var customerForm = {
                 dataSet     : GridCommon.getEditData(myGridID),

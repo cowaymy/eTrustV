@@ -26,16 +26,16 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class CustomerServiceImpl extends EgovAbstractServiceImpl implements CustomerService {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(CustomerServiceImpl.class);
-	
+
 	@Resource(name = "customerMapper")
 	private CustomerMapper customerMapper;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
-	
+
 	/**
 	 * 글 목록을 조회한다.
-	 * 
+	 *
 	 * @param CustomerVO
 	 *            - 조회할 정보가 담긴 VO
 	 * @return 글 목록
@@ -43,111 +43,111 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	 */
 	@Override
 	public List<EgovMap> selectCustomerList(Map<String, Object> params) {
-		
+
 		return customerMapper.selectCustomerList(params);
 	}
 
-	
+
 	/**
 	 * 상세화면 조회한다.(Basic Info)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
 	@Override
 	public EgovMap selectCustomerViewBasicInfo(Map<String, Object> params) {
-		
+
 		return customerMapper.selectCustomerViewBasicInfo(params);
 	}
-	
-	
+
+
 	/**
 	 * 상세화면 조회한다. (Main Address)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
 	@Override
 	public EgovMap selectCustomerViewMainAddress(Map<String, Object> params) throws Exception{
-		
+
 		return customerMapper.selectCustomerViewMainAddress(params);
 	}
-	
-	
+
+
 	/**
 	 * 상세화면 조회한다. (Main Contact)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
 	@Override
 	public EgovMap selectCustomerViewMainContact(Map<String, Object> params) throws Exception{
-		
+
 		return customerMapper.selectCustomerViewMainContact(params);
 	}
-	
-	
+
+
 	/**
 	 * 상세화면 조회한다. (Address List)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.20
 	 */
 	@Override
 	public List<EgovMap> selectCustomerAddressJsonList(Map<String, Object> params) throws Exception{
-		
+
 		return customerMapper.selectCustomerAddressJsonList(params);
 	}
-	
-	
+
+
 	/**
 	 * 상세화면 조회한다. (Contact List)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.21
 	 */
 	@Override
 	public List<EgovMap> selectCustomerContactJsonList(Map<String, Object> params)throws Exception{
-		
+
 		return customerMapper.selectCustomerContactJsonList(params);
 	}
 
-	
+
 	/**
 	 * 상세화면 조회한다. (Contact List)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.21
 	 */
 	@Override
 	public List<EgovMap> selectCustCareContactList(Map<String, Object> params)throws Exception{
-		
+
 		return customerMapper.selectCustCareContactList(params);
 	}
 
-	
+
 	/**
 	 * 상세화면 조회한다. (Contact List)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.21
 	 */
 	@Override
 	public List<EgovMap> selectBillingGroupByKeywordCustIDList(Map<String, Object> params)throws Exception{
-		
+
 		List<EgovMap> result = customerMapper.selectBillingGroupByKeywordCustIDList(params);
-		
+
 		List<EgovMap> resultNew = new ArrayList<>();
-		
+
 		for(EgovMap eMap : result) {
-			
+
 			String billAddrFull = "";
 			String billType = "";
 /*
@@ -165,212 +165,212 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 			if(CommonUtils.isNotEmpty(eMap.get("city")))     billAddrFull += eMap.get("city") + " ";
 			if(CommonUtils.isNotEmpty(eMap.get("state")))    billAddrFull += eMap.get("state") + " ";
 			if(CommonUtils.isNotEmpty(eMap.get("country")))  billAddrFull += eMap.get("country") + " ";
-			
+
 			if(((BigDecimal)eMap.get("custBillIsPost")).compareTo(BigDecimal.ONE) == 0) {
 				billType += "Post";
 			}
 			if(((BigDecimal)eMap.get("custBillIsSms")).compareTo(BigDecimal.ONE) == 0) {
-				billType += CommonUtils.isNotEmpty(billType) ? ",SMS" : "SMS"; 
+				billType += CommonUtils.isNotEmpty(billType) ? ",SMS" : "SMS";
 			}
 			if(((BigDecimal)eMap.get("custBillIsEstm")).compareTo(BigDecimal.ONE) == 0) {
-				billType += CommonUtils.isNotEmpty(billType) ? ",EStatement" : "EStatement"; 
+				billType += CommonUtils.isNotEmpty(billType) ? ",EStatement" : "EStatement";
 			}
-			
+
 			eMap.put("billAddrFull", billAddrFull);
 			eMap.put("billType", billType);
-			
+
 			resultNew.add(eMap);
 		}
-		
-		
+
+
 		return resultNew;
 	}
 
-	
+
 	/**
 	 * 상세화면 조회한다. (Bank List)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.21
 	 */
 	@Override
 	public List<EgovMap> selectCustomerBankAccJsonList(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCustomerBankAccJsonList(params);
 	}
 
-	
+
 	/**
 	 * 상세화면 조회한다. (Card List)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.21
 	 */
 	@Override
 	public List<EgovMap> selectCustomerCreditCardJsonList(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCustomerCreditCardJsonList(params);
 	}
-	
-	
+
+
 	/**
 	 * 상세화면 조회한다. (Own Order List)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.21
 	 */
 	@Override
 	public List<EgovMap> selectCustomerOwnOrderJsonList(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCustomerOwnOrderJsonList(params);
 	}
-	
-	
+
+
 	/**
 	 * 상세화면 조회한다. (Third Party Order List)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.21
 	 */
 	@Override
 	public List<EgovMap> selectCustomerThirdPartyJsonList(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCustomerThirdPartyJsonList(params);
 	}
-	
-	
+
+
 	/**
 	 * 상세화면 조회한다. (Detail Address View)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.24
 	 */
 	@Override
 	public EgovMap selectCustomerAddrDetailViewPop(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCustomerAddrDetailViewPop(params);
 	}
-	
-	
+
+
 	@Override
 	public int getCustCareCntIdSeq() {
-		
+
 		int getCustCareCntId = customerMapper.getCustCareCntIdSeq();
-		
+
 		return getCustCareCntId;
 	}
-	
-	
+
+
 	/**
-	 * NRIC / Company No 중복체크 
-	 * @param 
-	 * @return 
+	 * NRIC / Company No 중복체크
+	 * @param
+	 * @return
 	 * @exception Exception
-	 * @author 
+	 * @author
 	 */
 	public EgovMap nricDupChk(Map<String, Object> params){
 		return customerMapper.nricDupChk(params);
 	}
-	
-	
+
+
 	@Override
 	public void insertCustomerInfo(Map<String, Object> params) {
-		
+
 		customerMapper.insertCustomerInfo(params);
 	}
-	
-	
+
+
 	@Override
 	public void insertAddressInfo(Map<String, Object> params) {
-		
+
 		customerMapper.insertAddressInfo(params);
 	}
-	
-	
+
+
 	@Override
 	public void insertContactInfo(Map<String, Object> params) {
-		
+
 		customerMapper.insertContactInfo(params);
 	}
-	
-	
+
+
 	@Override
 	public void insertCareContactInfo(Map<String, Object> params) {
 		customerMapper.insertCareContactInfo(params);
 	}
-	
-	
+
+
 	/**
 	 * 상세화면 조회한다. (Detail Contact View)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.25
 	 */
 	@Override
 	public EgovMap selectCustomerContactDetailViewPop(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCustomerContactDetailViewPop(params);
 	}
-	
-	
+
+
 	/**
 	 * 상세화면 조회한다. (Detail Bank View)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.25
 	 */
 	@Override
 	public EgovMap selectCustomerBankDetailViewPop(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCustomerBankDetailViewPop(params);
 	}
-	
-	
+
+
 	/**
 	 * 상세화면 조회한다. (Detail Card View)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.07.25
 	 */
 	@Override
 	public EgovMap selectCustomerCreditCardDetailViewPop(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCustomerCreditCardDetailViewPop(params);
 	}
-	
-	
+
+
 	/**
-	 * 기본정보 업데이트 
-	 * @param 
-	 * @return 
+	 * 기본정보 업데이트
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.01
 	 */
 	@Override
 	public void updateCustomerBasicInfoAf(Map<String, Object> params) throws Exception {
-		
+
 		customerMapper.updateCustomerBasicInfoAf(params);
 	}
 
 	/**
 	 * Main Address 업데이트 (Set Main)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.01
 	 */
 	@Override
 	@Transactional
 	public void updateCustomerAddressSetMain(Map<String, Object> params) throws Exception {
-		
+
 		customerMapper.updateCustomerAddressSetActive(params);
 		customerMapper.updateCustomerAddressSetMain(params);
 	}
@@ -378,15 +378,15 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
 	/**
 	 * Main Contact 업데이트 (Set Main)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.03
 	 */
 	@Override
 	@Transactional
 	public void updateCustomerContactSetMain(Map<String, Object> params) throws Exception {
-		
+
 		customerMapper.updateCustomerContactSetActive(params);
 		//set STUS_CODE_ID == 9 <MAIN>
 		customerMapper.updateCustomerContactSetMain(params);
@@ -395,65 +395,65 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
 	/**
 	 * 연락처 업데이트
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.03
 	 */
 	@Override
 	public void updateCustomerContactInfoAf(Map<String, Object> params) throws Exception {
-		
+
 		customerMapper.updateCustomerContactInfoAf(params);
-		
+
 	}
 
-	
+
 	/**
 	 * Bank ComboBox List (Issue Bank)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.04
 	 */
 	@Override
 	public List<EgovMap> selectAccBank(Map<String, Object> params)  {
-		
+
 		return customerMapper.selectAccBank(params);
 	}
 
 
 	/**
 	 * Card ComboBox List (Issue Bank)
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.04
 	 */
 	@Override
 	public List<EgovMap> selectCrcBank(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCrcBank(params);
 	}
 
 
 	/**
 	 * 은행 Account 업데이트
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.03
 	 */
 	@Override
 	public void updateCustomerBankInfoAf(Map<String, Object> params) throws Exception {
 		customerMapper.updateCustomerBankInfoAf(params);
-		
+
 	}
 
 
 	/**
 	 * 카드 Account 업데이트
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.03
 	 */
@@ -462,11 +462,11 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		customerMapper.updateCustomerCardInfoAf(params);
 	}
 
-	
+
 	/**
 	 * Address Delete
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.03
 	 */
@@ -475,11 +475,11 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		customerMapper.deleteCustomerAddress(params);
 	}
 
-	
+
 	/**
 	 * Contact Delete
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.03
 	 */
@@ -491,22 +491,22 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
 	/**
 	 * Bank Delete
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.07
 	 */
 	@Override
 	public void deleteCustomerBank(Map<String, Object> params) throws Exception {
 		customerMapper.deleteCustomerBank(params);
-		
+
 	}
 
 
 	/**
 	 * Card Delete
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.07
 	 */
@@ -518,8 +518,8 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
 	/**
 	 * Address Update
-	 * @param 
-	 * @return 
+	 * @param
+	 * @return
 	 * @exception Exception
 	 * @author 이석희 2017.08.07
 	 */
@@ -527,43 +527,43 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 	public void updateCustomerAddressInfoAf(Map<String, Object> params) throws Exception {
 		customerMapper.updateCustomerAddressInfoAf(params);
 	}
-	
-	
+
+
 	/**
-	 *  Credit Card Issue Bank 
+	 *  Credit Card Issue Bank
 	 */
 	@Override
 	public List<EgovMap> selectIssueBank(Map<String, Object> params) {
 		return customerMapper.selectIssueBank(params);
 	}
-	
-	
+
+
 	@Override
 	public void insertCreditCardInfo(List<CustomerCVO> customerCardVOList) {
-		
+
 		for(CustomerCVO customerCVO : customerCardVOList) {
 			LOGGER.debug("##### Impl >> getCreditCardNo :"+customerCVO.getCreditCardNo());
 			customerMapper.insertCreditCardInfo(customerCVO);
 		}
-		
+
 	}
 
-	
+
 	@Override
 	public void insertBankAccountInfo(List<CustomerBVO> customerBankVOList) {
-		
+
 		for(CustomerBVO customerBVO : customerBankVOList) {
-			
+
 			customerMapper.insertBankAccountInfo(customerBVO);
 		}
-		
+
 	}
-	
+
 	@Override
 	public int insertBankAccountInfo2(Map<String, Object> params, SessionVO sessionVO) {
-		
+
 		CustAccVO custAccVO = new CustAccVO();
-		
+
 		custAccVO.setCustId(Integer.parseInt((String) params.get("custId")));
 		custAccVO.setCustAccNo((String) params.get("accNo"));
 		custAccVO.setCustEncryptAccNo((String) params.get("accNo"));
@@ -580,21 +580,21 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		custAccVO.setCustAccIdcm(0);
 		custAccVO.setCustHlbbId(0);
 		custAccVO.setCustAccCrtUserId(sessionVO.getUserId());
-		
+
 		customerMapper.insertBankAccountInfo2(custAccVO);
-		
+
 		return custAccVO.getCustAccId();
 	}
-	
+
 	@Override
 	public int insertCreditCardInfo2(Map<String, Object> params, SessionVO sessionVO) {
-		
+
 		String expDate = (String) params.get("expDate");
-		
+
 		expDate = expDate.substring(0, 2) + expDate.substring(5, 7);
-		
+
 		CustCrcVO custCrcVO = new CustCrcVO();
-		
+
 		custCrcVO.setCustId(Integer.parseInt((String) params.get("custId")));
 		custCrcVO.setCustCrcNo((String) params.get("cardNo")); //EncryptionProvider.Encrypt(txtCRCNo.Text.Trim());
 		custCrcVO.setCustOriCrcNo((String) params.get("cardNo"));
@@ -611,45 +611,45 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		custCrcVO.setCustCrcIdcm(0);
 		custCrcVO.setCustCrcCrtUserId(sessionVO.getUserId());
 		custCrcVO.setCardTypeId(Integer.parseInt((String) params.get("cardType")));
-		
+
 		customerMapper.insertCreditCardInfo2(custCrcVO);
 
 		return custCrcVO.getCustCrcId();
 	}
-	
-	
+
+
 	/**
-	 * Customer Magic Address 
-	 * 
-	 * @param 
-	 * @return Customer Magic Address 
+	 * Customer Magic Address
+	 *
+	 * @param
+	 * @return Customer Magic Address
 	 * @exception Exception
 	 */
 	@Override
 	public List<EgovMap> searchMagicAddressPop(Map<String, Object> params) {
-		
+
 		return customerMapper.searchMagicAddressPop(params);
 	}
 
 
 	/**
-	 * Customer Add New Address  (Af)  
-	 * 
-	 * @param 
+	 * Customer Add New Address  (Af)
+	 *
+	 * @param
 	 * @return void
 	 * @exception Exception
 	 */
 	@Override
-	public int insertCustomerAddressInfoAf(Map<String, Object> params) throws Exception {		
+	public int insertCustomerAddressInfoAf(Map<String, Object> params) throws Exception {
 		customerMapper.insertCustomerAddressInfoAf(params);
 		return (int) params.get("custAddId");
 	}
-	
-	
+
+
 	/**
-	 * Customer Add New Contact (Af)  
-	 * 
-	 * @param 
+	 * Customer Add New Contact (Af)
+	 *
+	 * @param
 	 * @return void
 	 * @exception Exception
 	 */
@@ -661,74 +661,74 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 
 
 	/**
-	 * Customer Add New Bank Account (Af)  
-	 * 
-	 * @param 
+	 * Customer Add New Bank Account (Af)
+	 *
+	 * @param
 	 * @return void
 	 * @exception Exception
 	 */
 	@Override
 	public void insertCustomerBankAddAf(Map<String, Object> params) throws Exception {
-		
+
 		customerMapper.insertCustomerBankAddAf(params);
-		
+
 	}
 
 
 	/**
-	 * Customer Add New Card Account (Af)  
-	 * 
-	 * @param 
+	 * Customer Add New Card Account (Af)
+	 *
+	 * @param
 	 * @return void
 	 * @exception Exception
 	 */
 	@Override
 	public void insertCustomerCardAddAf(Map<String, Object> params) throws Exception {
-		
+
 		customerMapper.insertCustomerCardAddAf(params);
 	}
 
 
 	/**
-	 * Get Customer Detail Main Address 
-	 * @param params 
-	 * @return 
+	 * Get Customer Detail Main Address
+	 * @param params
+	 * @return
 	 * @exception Exception
-	 * @author 
+	 * @author
 	 */
 	@Override
 	public EgovMap selectCustomerMainAddr(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCustomerMainAddr(params);
 	}
 
 
 	/**
-	 * Get Customer Detail Main Contact 
-	 * @param params 
-	 * @return 
+	 * Get Customer Detail Main Contact
+	 * @param params
+	 * @return
 	 * @exception Exception
-	 * @author 
+	 * @author
 	 */
 	@Override
 	public EgovMap selectCustomerMainContact(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.selectCustomerMainContact(params);
 	}
 
-	
+
 	/**
-	 * selectMagicAddressComboList (Magic Address) 
-	 * @param params 
-	 * @return 
+	 * selectMagicAddressComboList (Magic Address)
+	 * @param params
+	 * @return
 	 * @exception Exception
-	 * @author 
+	 * @author
 	 */
 
 
 	@Override
 	public List<EgovMap> selectMagicAddressComboList(Map<String, Object> params) throws Exception {
-		
+
 		//State
 		if(params.get("state") == null && params.get("city") == null && params.get("postcode") == null){
 			params.put("colState", "1");
@@ -745,64 +745,74 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		if(params.get("state") != null  && params.get("city") != null && params.get("postcode") != null){
 			params.put("colArea", "1");
 		}
-		
+
 		return customerMapper.selectMagicAddressComboList(params);
 	}
 
 
 	/**
-	 * Get Area Id (Magic Address) 
-	 * @param params 
-	 * @return 
+	 * Get Area Id (Magic Address)
+	 * @param params
+	 * @return
 	 * @exception Exception
-	 * @author 
+	 * @author
 	 */
 	@Override
 	public EgovMap getAreaId(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.getAreaId(params);
 	}
 
 
 	/**
 	 * Nation List
-	 * @param params 
-	 * @return 
+	 * @param params
+	 * @return
 	 * @exception Exception
-	 * @author 
+	 * @author
 	 */
 	@Override
 	public List<EgovMap> getNationList(Map<String, Object> params) throws Exception {
-		
+
 		return customerMapper.getNationList(params);
 	}
 
 
 	@Override
 	public void updateLimitBasicInfo(Map<String, Object> params) throws Exception {
-		
+
 		customerMapper.updateLimitBasicInfo(params);
-		
+
 	}
 
 
 	@Override
 	public int getCustIdSeq() throws Exception {
-		
+
 		return customerMapper.getCustIdSeq();
 	}
-	
-	
+
+
 	@Override
 	public int billAddrExist(Map<String, Object> params) {
-		
+
 		return customerMapper.billAddrExist(params);
 	}
-	
-	
+
+
 	@Override
 	public int installAddrExist(Map<String, Object> params) {
-		
+
 		return customerMapper.installAddrExist(params);
 	}
+
+	@Override
+	public EgovMap checkCRC1(Map<String, Object> params) {
+	    return customerMapper.checkCRC1(params);
+	}
+
+	@Override
+    public EgovMap checkCRC2(Map<String, Object> params) {
+        return customerMapper.checkCRC2(params);
+    }
 }

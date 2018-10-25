@@ -136,6 +136,7 @@ public class CustomerController {
 
 		List<EgovMap> bankList = customerService.selectIssueBank(params);
 		model.addAttribute("bankList", bankList);
+		model.addAttribute("nric", params.get("nric"));
 
 		return "sales/customer/customerCreditCardPop";
 	}
@@ -1506,6 +1507,7 @@ public class CustomerController {
 		public String updateCustomerNewCardPop(@RequestParam Map<String, Object> params, ModelMap model) throws Exception{
 
 			model.addAttribute("insCustId", params.get("custId"));
+			model.addAttribute("insNric", params.get("_custNric"));
 
 			return "sales/customer/customerNewCardPop";
 		}
@@ -1746,4 +1748,60 @@ public class CustomerController {
 			return "sales/customer/customerBankAccountMemPop"	;
 		}
 
+    @RequestMapping(value = "/checkCrc.do", method = RequestMethod.GET)
+    public ResponseEntity<Integer> checkCrc(@RequestParam Map<String, Object> params, HttpServletRequest request,
+            ModelMap model) throws Exception {
+
+        LOGGER.debug("checkCrc.do :: start");
+        LOGGER.debug("params :: " + params);
+
+        int rtnCrc = 0;
+
+        if("NC".equals(params.get("src").toString())) {
+            String cardExp = params.get("expDate").toString().substring(0, 2) + params.get("expDate").toString().substring(5, 7);
+            params.put("expDate", cardExp);
+        }
+
+        /* Step 1 - Check Credit Card number count
+         * If Credit Card count > 0, proceed saving
+         *  Else proceed step 2
+         */
+        LOGGER.info("checkCRC :: step 1");
+        EgovMap step1 = (EgovMap) customerService.checkCRC1(params);
+        LOGGER.info("checkCRC :: step 1 :: " + step1.get("cnt").toString());
+        if(!"0".equals(step1.get("cnt").toString())) {
+
+            /* Step 2 - Check Credit Card number's cust_id's NRIC
+             * If Existing Credit card belongs to > 1 cust nric, stop
+             * Else proceed step 3
+             */
+
+            LOGGER.info("checkCRC :: step 2");
+            EgovMap step2 = (EgovMap) customerService.checkCRC2(params);
+            LOGGER.info("checkCRC :: step 2 :: " + step2.get("cnt").toString());
+            if("1".equals(step2.get("cnt").toString())) {
+
+                /* Step 3 - Check Credit Card number's to PASSED IN nric
+                 * If Existing Credit card == PASSED IN nric procced save
+                 * Else stop
+                 */
+
+                params.put("step", "3");
+
+                LOGGER.info("checkCRC :: step 3");
+                EgovMap step3 = (EgovMap) customerService.checkCRC2(params);
+                LOGGER.info("checkCRC :: step 3 :: " + step3.get("cnt").toString());
+                if(!"1".equals(step3.get("cnt").toString())) {
+                    // 0 = NRIC does not match; 1 = NRIC match
+                    rtnCrc = 3;
+                }
+            } else {
+                rtnCrc = 2;
+            }
+        }
+
+        LOGGER.info("checkCRC :: rtnCrc :: " + rtnCrc);
+
+        return ResponseEntity.ok(rtnCrc);
+    }
 }

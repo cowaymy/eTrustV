@@ -3,10 +3,9 @@
 
 <script type="text/javaScript">
 
-
     doGetCombo('/common/selectCodeList.do', '21', '','_insCmbCreditCardType', 'S' , '');           // Add Card Type Combo Box
     doGetCombo('/common/selectCodeList.do', '115', '','_cmbCardType_', 'S' , '');           // Add Card Type Combo Box
-    
+
     // card number에 따라 card type 변경
     function fn_selectCreditCardType(){
     	if($("#_cardNo_").val().substr(0,1) == '4'){
@@ -17,7 +16,7 @@
     		$("#_insCmbCreditCardType").val('');
     	}
     }
-    
+
 	function fn_addCreditCard(){
 		var ccType = document.insCardForm.cmbCreditCardType.value;
 		var iBank = document.insCardForm.issueBank.value;
@@ -26,7 +25,18 @@
 		var nameCard = document.insCardForm.nameCard.value;
 		var cType = document.insCardForm.cmbCardType.value;
 		var bankRem = document.insCardForm.bankRem.value;
-		
+
+		var checkCrc = {
+		    ccType : ccType,
+		    ccBank : iBank,
+		    cardNo : cardNo,
+		    expDate : expDate,
+		    nameCard : nameCard,
+		    cType : cType,
+		    nric : document.insCardForm.nric.value,
+		    src : "NC"
+		};
+
 		if(ccType == ""){
 			Common.alert("<spring:message code='sal.alert.msg.pleaseSelectCreditCardType' />");
             return false;
@@ -40,11 +50,11 @@
             return false;
         }else{
         	// number Check
-            if(FormUtil.checkNum($("#_cardNo_"))){ 
+            if(FormUtil.checkNum($("#_cardNo_"))){
                 Common.alert("<spring:message code='sal.alert.msg.invalidCreditCardNum' />");
                 return false;
             }
-            
+
             //digit 16
             if(16 != $("#_cardNo_").val().length){
                 Common.alert("<spring:message code='sal.alert.msg.creditCardNumMustIn16Digits' />");
@@ -64,10 +74,18 @@
             return false;
         }
 
-        //insert
-		fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,bankRem);
-		//close
-		$("#_cardPopCloseBtn").click();
+        Common.ajax("GET", "/sales/customer/checkCrc.do", checkCrc, function(result) {
+            console.log(result);
+
+            if(result != "0") {
+                Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.</br>Please inform respective HP/Cody.");
+            } else {
+                //insert
+                fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,bankRem);
+                //close
+                $("#_cardPopCloseBtn").click();
+            }
+        });
 	}
 </script>
 
@@ -80,6 +98,9 @@
 </header><!-- pop_header end -->
 <section class="pop_body"><!-- pop_body start -->
 <form action="" id="insCardForm" name="insCardForm" method="GET">
+
+    <input type="hidden" id="nric" name="nric" value="${nric}">
+
 	<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>

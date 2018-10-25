@@ -16,346 +16,346 @@ public interface CustomerMapper {
 
 	/**
 	 * 글 목록을 조회한다.
-	 * 
+	 *
 	 * @param searchVO
 	 *            - 조회할 정보가 담긴 VO
 	 * @return 글 목록
 	 * @exception Exception
 	 */
 	List<EgovMap> selectCustomerList(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * Customer View Basic Info mapper
-	 * 
+	 *
 	 * @param params
 	 * @return EgovMap
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	EgovMap selectCustomerViewBasicInfo(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * Customer View Main Address mapper
-	 * 
+	 *
 	 * @param params
 	 * @return EgovMap
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	EgovMap selectCustomerViewMainAddress(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer View Main Contact mapper
-	 * 
+	 *
 	 * @param params
 	 * @return EgovMap
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	EgovMap selectCustomerViewMainContact(Map<String, Object> params)throws Exception;
-	
-	
+
+
 	/**
 	 * Customer View Address List mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	List<EgovMap> selectCustomerAddressJsonList(Map<String, Object> params)throws Exception;
-	
-	
+
+
 	/**
 	 * Customer View Contact List mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	List<EgovMap> selectCustomerContactJsonList(Map<String, Object> params)throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Care Contact List mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author Yunseok Jang
 	 */
 	List<EgovMap> selectCustCareContactList(Map<String, Object> params)throws Exception;
-	
-	
+
+
 	/**
 	 * Billing Group List mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author Yunseok Jang
 	 */
 	List<EgovMap> selectBillingGroupByKeywordCustIDList(Map<String, Object> params)throws Exception;
-	
-	
+
+
 	/**
 	 * Customer View Bank List mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	List<EgovMap> selectCustomerBankAccJsonList(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer View Card List mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	List<EgovMap> selectCustomerCreditCardJsonList(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Own Order List mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	List<EgovMap> selectCustomerOwnOrderJsonList(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Third Party Order List mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	List<EgovMap> selectCustomerThirdPartyJsonList(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Address Detail View mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	EgovMap selectCustomerAddrDetailViewPop(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
-	 * get customer Id 
-	 * 
+	 * get customer Id
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int getCustIdSeq();
-	
-	
+
+
 	/**
-	 * get customer Address 
-	 * 
+	 * get customer Address
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int getCustAddrIdSeq();
-	
-	
+
+
 	/**
 	 * get customer Contact
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int getCustCntcIdSeq();
-	
-	
+
+
 	/**
-	 * get customer Care Contact 
-	 * 
+	 * get customer Care Contact
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int getCustCareCntIdSeq();
-	
-	
+
+
 	/**
 	 * insert customer Info Data
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int insertCustomerInfo(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * NRIC/Customer No Data Duplication Check
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	EgovMap nricDupChk(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * update customer Info Data
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int updateCustomerInfo(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * insert address Info Data
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int insertAddressInfo(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * insert contact Info Data
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int insertContactInfo(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * insert care contact Info Data
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int insertCareContactInfo(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * Customer Contact Detail View mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	EgovMap selectCustomerContactDetailViewPop(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Bank Detail View mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	EgovMap selectCustomerBankDetailViewPop(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Card Detail View mapper
-	 * 
+	 *
 	 * @param params
 	 * @return List<EgovMap>
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	EgovMap selectCustomerCreditCardDetailViewPop(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Credit Card Issue Bank
 	 */
 	List<EgovMap> selectIssueBank(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * insert Credit Card Info Data
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int insertCreditCardInfo(CustomerCVO customerCVO);
-	
+
 	int insertCreditCardInfo2(CustCrcVO custCrcVO);
-	
-	
+
+
 	/**
-	 * get Customer Id Max Seq 
+	 * get Customer Id Max Seq
 	 * 필요없음.
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int getCustIdMaxSeq();
-	
-	
+
+
 	/**
 	 * insert Bank Account Info Data
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int insertBankAccountInfo(CustomerBVO customerBVO);
-	
+
 	int insertBankAccountInfo2(CustAccVO custAccVO);
-	
-	
-	
+
+
+
 	/**
 	 * Customer Basic Update mapper
-	 * 
+	 *
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	void updateCustomerBasicInfoAf(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Address to Set Active mapper
-	 * 
+	 *
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	void updateCustomerAddressSetActive(Map<String, Object> params)throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Address to Set Main mapper
-	 * 
+	 *
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
@@ -363,51 +363,51 @@ public interface CustomerMapper {
 	 */
 	void updateCustomerAddressSetMain(Map<String, Object> params) throws Exception;
 
-	
+
 	/**
 	 * Customer Contact to Set Active mapper
-	 * 
+	 *
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	void updateCustomerContactSetActive(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Contact to Set Main mapper
-	 * 
+	 *
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	void updateCustomerContactSetMain(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Contact update mapper
-	 * 
+	 *
 	 * @param params
 	 * @return Boolean
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	void updateCustomerContactInfoAf(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Bank ComboBox List (Issue Bank) mapper
-	 * 
+	 *
 	 * @param params
-	 * @return 
+	 * @return
 	 * @exception Exception
 	 * @author 이석희
 	 */
 	List<EgovMap> selectAccBank(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * Card ComboBox List (Issue Bank) mapper
 	 * @param params
@@ -416,8 +416,8 @@ public interface CustomerMapper {
 	 * @author 이석희
 	 */
 	List<EgovMap> selectCrcBank(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Bank update mapper
 	 * @param params
@@ -425,9 +425,9 @@ public interface CustomerMapper {
 	 * @exception Exception
 	 * @author 이석희
 	 */
-	void updateCustomerBankInfoAf(Map<String, Object> params) throws Exception; 
-	
-	
+	void updateCustomerBankInfoAf(Map<String, Object> params) throws Exception;
+
+
 	/**
 	 * Customer Card update mapper
 	 * @param params
@@ -436,8 +436,8 @@ public interface CustomerMapper {
 	 * @author 이석희
 	 */
 	void updateCustomerCardInfoAf(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Address Delete mapper
 	 * @param params
@@ -446,8 +446,8 @@ public interface CustomerMapper {
 	 * @author 이석희
 	 */
 	void deleteCustomerAddress(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Contact Delete mapper
 	 * @param params
@@ -456,8 +456,8 @@ public interface CustomerMapper {
 	 * @author 이석희
 	 */
 	void deleteCustomerContact(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Bank Delete mapper
 	 * @param params
@@ -466,8 +466,8 @@ public interface CustomerMapper {
 	 * @author 이석희
 	 */
 	void deleteCustomerBank(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Card Delete mapper
 	 * @param params
@@ -476,8 +476,8 @@ public interface CustomerMapper {
 	 * @author 이석희
 	 */
 	void deleteCustomerCard(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Address Update mapper
 	 * @param params
@@ -486,18 +486,18 @@ public interface CustomerMapper {
 	 * @author 이석희
 	 */
 	void updateCustomerAddressInfoAf(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
-	 * Customer Magic Address 
+	 * Customer Magic Address
 	 * @param params
 	 * @return EgovMap
 	 * @exception Exception
 	 * @author
 	 */
 	List<EgovMap> searchMagicAddressPop(Map<String, Object> params);
-	
-	
+
+
 	/**
 	 * Customer Add new Address
 	 * @param params
@@ -506,8 +506,8 @@ public interface CustomerMapper {
 	 * @author
 	 */
 	int insertCustomerAddressInfoAf(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Customer Add new Contact Account
 	 * @param params
@@ -515,7 +515,7 @@ public interface CustomerMapper {
 	 * @author
 	 */
 	int insertCustomerContactAddAf(Map<String, Object> params) throws Exception;
-	
+
 
 
 	/**
@@ -525,7 +525,7 @@ public interface CustomerMapper {
 	 * @author
 	 */
 	void insertCustomerBankAddAf(Map<String, Object> params) throws Exception;
-	
+
 
 	/**
 	 * Customer Add new Card Account
@@ -534,8 +534,8 @@ public interface CustomerMapper {
 	 * @author
 	 */
 	void insertCustomerCardAddAf(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Get Customer Detail Main Address
 	 * @param params
@@ -543,8 +543,8 @@ public interface CustomerMapper {
 	 * @author
 	 */
 	EgovMap selectCustomerMainAddr(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Get Customer Detail Main Contact
 	 * @param params
@@ -552,8 +552,8 @@ public interface CustomerMapper {
 	 * @author
 	 */
 	EgovMap selectCustomerMainContact(Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/* #### Magic Address Start #####*/
 	/**
 	 * Get State List (Magic Address)
@@ -562,8 +562,8 @@ public interface CustomerMapper {
 	 * @author
 	 */
 	List<EgovMap> selectMagicAddressComboList (Map<String, Object> params) throws Exception;
-	
-	
+
+
 	/**
 	 * Get Area Id (Magic Address)
 	 * @param params
@@ -572,8 +572,8 @@ public interface CustomerMapper {
 	 */
 	EgovMap getAreaId(Map<String, Object> params) throws Exception;
 	/* #### Magic Address End #####*/
-	
-	
+
+
 	/**
 	 * Nation List
 	 * @param params
@@ -581,10 +581,14 @@ public interface CustomerMapper {
 	 * @author
 	 */
 	List<EgovMap> getNationList (Map<String, Object> params) throws Exception;
-	
+
 	void updateLimitBasicInfo(Map<String, Object> params) throws Exception;
-	
+
 	int billAddrExist(Map<String, Object> params);
 	int installAddrExist(Map<String, Object> params);
-	
+
+	EgovMap checkCRC1(Map<String, Object> params);
+
+	EgovMap checkCRC2(Map<String, Object> params);
+
 }
