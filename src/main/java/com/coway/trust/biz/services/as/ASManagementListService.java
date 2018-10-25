@@ -110,4 +110,8 @@ public interface ASManagementListService {
 	int getSAL87ConfigId(String params);
 	int insert_SAL0087D (Map<String, Object> params);
 
+	EgovMap checkASReceiveEntry(Map<String, Object> params);
+
+
+
 }
