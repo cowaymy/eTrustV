@@ -288,8 +288,13 @@ public interface HsManualMapper {
 
 	EgovMap checkStkDuration(Map<String, Object> params);
 
+	List<EgovMap> selectQryUsedFilter(Map<String, Object> params);
 
+	List<EgovMap> selectQryUsedFilter2(Map<String, Object> params);
 
+	void addusedFilter_Rev(Map<String, Object> params);
+
+	void addusedFilter(Map<String, Object> params);
 
 
 

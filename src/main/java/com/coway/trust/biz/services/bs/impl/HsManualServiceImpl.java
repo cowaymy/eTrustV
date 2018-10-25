@@ -1328,6 +1328,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     		logger.debug("selectQryResultDet : {}" + bsResultMas_Rev);
     		List<EgovMap> qryResultDet =  hsManualMapper.selectQryResultDet(bsResultMas_Rev);
+    		List<EgovMap> qryUsedFilter =  hsManualMapper.selectQryUsedFilter(bsResultMas_Rev);
     		logger.debug("qryResultDet : {}" + qryResultDet);
     		logger.debug("qryResultDet.size() : {}" + qryResultDet.size());
 
@@ -1335,9 +1336,11 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     		// bsResultDet
     		Map<String, Object> bsResultDet_Rev = null;
+    		Map<String, Object> usedFilter_Rev = null;
     		for(int i = 0 ; i<qryResultDet.size() ; i++){
 
     			bsResultDet_Rev = new HashMap<String, Object>();
+    			usedFilter_Rev = new HashMap<String, Object>();
     			//bsResultDet_Rev.put("BSResultItemID", 0);
     			bsResultDet_Rev.put("BSResultID", BSResultM_resultID);
     			bsResultDet_Rev.put("BSResultPartID", String.valueOf(qryResultDet.get(i).get("bsResultPartId")));//BS_RESULT_PART_ID
@@ -1355,8 +1358,26 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     			bsResultDet_Rev.put("BSResultCreateBy",String.valueOf(sessionVO.getUserId()));
     			bsResultDet_Rev.put("BSResultFilterClaim",CommonUtils.intNvl( qryResultDet.get(i).get("bsResultFilterClm")));//BS_RESULT_FILTER_CLM
 
+
+    			usedFilter_Rev.put("HSNo",  String.valueOf(qryUsedFilter.get(i).get("no")));
+    			usedFilter_Rev.put("CustId", CommonUtils.intNvl(qryUsedFilter.get(i).get("custId")));
+    			usedFilter_Rev.put("CreatedDt",  String.valueOf(qryUsedFilter.get(i).get("resultCrtDt")));
+    			usedFilter_Rev.put("PartId", CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartId")));
+    			if(String.valueOf(qryBS_Rev.get("resultId")) != null && String.valueOf(qryBS_Rev.get("resultId")) != ""){
+    				usedFilter_Rev.put("PartQty",  CommonUtils.intNvl( qryUsedFilter.get(i).get("bsResultPartQty"))*-1);//BS_RESULT_PART_QTY
+    				//logger.debug("jinmu {}" + String.valueOf(qryBS_Rev.get("resultId")));
+    			}
+    			else{
+    				usedFilter_Rev.put("PartQty",  CommonUtils.intNvl(qryUsedFilter.get(i).get("bsResultPartQty")));
+    				//logger.debug("jinmu111 {}" + String.valueOf(qryBS_Rev.get("resultId")));
+    			}
+    			usedFilter_Rev.put("SerialNo",  String.valueOf(qryUsedFilter.get(i).get("serialNo")));
+    			usedFilter_Rev.put("CodyId", CommonUtils.intNvl(qryUsedFilter.get(i).get("codyId")));
+    			usedFilter_Rev.put("ResultId", CommonUtils.intNvl(qryUsedFilter.get(i).get("resultId")));
     			if(CommonUtils.intNvl( qryResultDet.get(i).get("bsResultPartQty")) > 0){
     				hsManualMapper.addbsResultDet_Rev(bsResultDet_Rev);	//insert svc 0007d c
+    				hsManualMapper.addusedFilter_Rev(usedFilter_Rev);	//insert log0082m
+
     				checkInt ++;
     				if(i == (qryResultDet.size() - 1)){ // 마지막일때 넘기기
 
@@ -1523,8 +1544,23 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 
     			row.put("BSResultID", BSResultM_resultID2);
 
+    			Map<String, Object> usedFilter = bsResultDet.get(i);
+        		usedFilter.put("HSNo",  String.valueOf(qryUsedFilter.get(0).get("no")));
+        		usedFilter.put("CustId", String.valueOf(qryUsedFilter.get(0).get("custId")));
+        		//usedFilter.put("CreatedDt",  String.valueOf(qryUsedFilter_2.get(i).get("resultCrtDt")));
+        		//usedFilter.put("PartId", String.valueOf(bsResultDet.get(i).get("bsResultPartId")));
+        		//usedFilter.put("PartQty",  CommonUtils.intNvl(bsResultDet.get(i).get("bsResultPartQty")));
+        		//usedFilter.put("SerialNo",  String.valueOf(bsResultDet.get(i).get("serialNo")));
+        		usedFilter.put("CodyId", String.valueOf(qryUsedFilter.get(0).get("codyId")));
+        		usedFilter.put("ResultId", BSResultM_resultID2);
+
+
+
+
+
     			if(row.get("BSResultPartQty") != null && !row.get("BSResultPartQty").toString().equals("0")){
     				hsManualMapper.addbsResultDet_Rev(row); //인서트 svc 0007d
+    				hsManualMapper.addusedFilter(usedFilter);
     				cnt++;
     				if(i == (bsResultDet.size() - 1)){
         				logger.debug("request JM"+ i + String.valueOf(row.get("BSResultID")));

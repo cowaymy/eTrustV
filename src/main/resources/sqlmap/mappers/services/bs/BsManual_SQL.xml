@@ -4582,5 +4582,103 @@
                            #{stusId})
      </insert>
 
+     <select id="selectQryUsedFilter" parameterType="Map" resultType="egovMap">
+
+            select a.BS_RESULT_PART_ID
+                ,a.BS_RESULT_PART_DESC
+                ,a.BS_RESULT_PART_QTY
+                ,a.BS_RESULT_REM
+                ,a.BS_RESULT_FILTER_CLM
+                ,c.NO
+                ,d.CUST_ID
+                ,TO_CHAR(b.RESULT_CRT_DT, 'DD/MM/YYYY') RESULT_CRT_DT
+                ,a.SERIAL_NO
+                ,c.CODY_ID
+                ,b.RESULT_ID
+          from SVC0007D a
+          left join SVC0006D b ON b.RESULT_ID = a.BS_RESULT_ID
+          left join SVC0008D c ON c.SCHDUL_ID = b.SCHDUL_ID
+          left join SAL0001D d ON d.SALES_ORD_ID = b.SALES_ORD_ID
+         where a.BS_RESULT_ID = #{ResultMatchID}
+         order by a.BS_RESULT_ITM_ID
+
+          </select>
+
+           <select id="selectQryUsedFilter2" parameterType="Map" resultType="egovMap">
+
+            select a.BS_RESULT_PART_ID
+                ,a.BS_RESULT_PART_DESC
+                ,a.BS_RESULT_PART_QTY
+                ,a.BS_RESULT_REM
+                ,a.BS_RESULT_FILTER_CLM
+                ,c.NO
+                ,d.CUST_ID
+                ,TO_DATE(b.RESULT_CRT_DT, 'DD/MM/YYYY') RESULT_CRT_DT
+                ,a.SERIAL_NO
+                ,c.CODY_ID
+                ,b.RESULT_ID
+          from SVC0007D a
+          left join SVC0006D b ON b.RESULT_ID = a.BS_RESULT_ID
+          left join SVC0008D c ON c.SCHDUL_ID = b.SCHDUL_ID
+          left join SAL0001D d ON d.SALES_ORD_ID = b.SALES_ORD_ID
+         where a.BS_RESULT_ID = #{BSResultID}
+         order by a.BS_RESULT_ITM_ID
+
+          </select>
+
+          <insert id="addusedFilter_Rev" parameterType="Map">
+          insert into log0082m
+            (SEQ
+            ,SVC_ORD_ID
+            ,CUST_ID
+            ,SVC_DT
+            ,STK_ID
+            ,QTY
+            ,OLD_SERIAL
+            ,MEM_ID
+            ,RESULT_ID
+            )
+            values
+            (
+            LOG0082M_SEQ.NEXTVAL
+            ,#{HSNo}
+            ,#{CustId}
+            ,TO_DATE(#{CreatedDt}, 'DD/MM/YYYY')
+            ,#{PartId}
+            ,#{PartQty}
+            ,nvl(#{SerialNo}, '')
+            ,#{CodyId}
+            ,#{ResultId}
+
+            )
+          </insert>
+
+          <insert id="addusedFilter" parameterType="Map">
+          insert into log0082m
+            (SEQ
+            ,SVC_ORD_ID
+            ,CUST_ID
+            ,SVC_DT
+            ,STK_ID
+            ,QTY
+            ,OLD_SERIAL
+            ,MEM_ID
+            ,RESULT_ID
+            )
+            values
+            (
+            LOG0082M_SEQ.NEXTVAL
+            ,#{HSNo}
+            ,#{CustId}
+            ,sysdate
+            ,#{BSResultPartID}
+            ,#{BSResultPartQty}
+            ,nvl(#{SerialNo}, '')
+            ,#{CodyId}
+            ,#{ResultId}
+
+            )
+          </insert>
+
 
 </mapper>
