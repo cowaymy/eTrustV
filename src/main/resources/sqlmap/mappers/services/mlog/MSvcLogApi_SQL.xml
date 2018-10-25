@@ -1513,6 +1513,7 @@ WHERE AA.SRV_CONFIG_ID  = S87D.SRV_CONFIG_ID(+)
                                     SVC0001D
                                 WHERE AS_MEM_ID = (SELECT MEM_ID FROM ORG0001D WHERE MEM_CODE = #{userId})
                                 AND AS_APPNT_DT BETWEEN ADD_MONTHS( LAST_DAY( TO_DATE(#{requestDate}, 'YYYYMM' )) + 1, - 1 ) AND LAST_DAY( TO_DATE(#{requestDate}, 'YYYYMM' ))
+                                AND AS_STUS_ID <![CDATA[ <> ]]> 4
                             ) A
                             INNER JOIN SAL0001D B ON A.AS_SO_ID = B.SALES_ORD_ID
                             INNER JOIN SAL0002D C ON B.SALES_ORD_ID = C.SALES_ORD_ID
