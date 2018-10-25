@@ -1290,4 +1290,44 @@ public class ASManagementListController {
 		return "services/as/apiLogList";
 	}
 
+	// AS RECEIVED ENTRY POP UP NOTIFICATION -- TPY
+	@RequestMapping(value = "/checkASReceiveEntry.do", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> checkASReceiveEntry( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		logger.debug("params {}", params);
+		String msg = "";
+		EgovMap asReceiveInfo =  ASManagementListService.checkASReceiveEntry(params);
+
+		if(asReceiveInfo != null){
+
+			logger.debug("AS Stus : " +  asReceiveInfo.get("asStus"));
+			if(asReceiveInfo.get("asStus") == null || asReceiveInfo.get("asStus") == "" || asReceiveInfo.get("asStus") == "null" ){
+				msg = msg + "" ;
+			}
+			else{
+				msg = msg + "* This order AS is under " + asReceiveInfo.get("asStusDesc") + " status.<br />" ;
+			}
+			logger.debug("Srv Stus : " + asReceiveInfo.get("srvStus"));
+			if(asReceiveInfo.get("srvStus") != null || asReceiveInfo.get("srvStus") != "" || asReceiveInfo.get("srvStus") != "null"){
+				msg = msg + "" ;
+			}
+			else{
+				 msg = msg + "* This order Membership is under Out of Warranty status.<br />" ;
+			}
+			logger.debug("HS Stus : " +  asReceiveInfo.get("hsStus"));
+			if(asReceiveInfo.get("hsStus") == null || asReceiveInfo.get("hsStus") == "" || asReceiveInfo.get("hsStus") == "null" ){
+				msg = msg + "" ;
+			}
+			else{
+				 msg = msg + "* This order HS is under " + asReceiveInfo.get("hsStusDesc") + " status.<br />" ;
+			}
+
+
+		}else{
+		 msg = "";
+		}
+		logger.debug("checkASReceiveEntry - msg : " + msg);
+		message.setMessage(msg);
+		return ResponseEntity.ok(message);
+	}
 }
