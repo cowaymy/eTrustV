@@ -214,15 +214,6 @@ function fnCreatePO()
 {
   var rowCount = AUIGrid.getRowCount(myGridID2);
 
-	//for(var i=0; i<rowCount; i++)
-	//  AUIGrid.updateRow(myGridID2, { "checkFlag" : 1 }, i);
-
-	if ( parseInt(AUIGrid.getCellValue(myGridID2, 0, "fobAmount")) > 500000 
-			&&  parseInt(AUIGrid.getCellValue(myGridID2, 0, "vendor")) == 9200000 )
-	{
-	   Common.alert("<spring:message code='sys.scm.planByCdc.amountExceeds'/> ");
-	   return false;  
-	}   
 	
   var udtList = AUIGrid.getEditedRowItems(myGridID2);
   var addList = AUIGrid.getAddedRowItems(myGridID2);
