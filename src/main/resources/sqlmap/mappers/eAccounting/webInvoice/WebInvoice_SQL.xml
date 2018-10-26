@@ -951,7 +951,15 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
             T3.APPV_ITM_SEQ,
             REGEXP_REPLACE(NVL(T9.INVC_NO, T3.INVC_NO), '(^[[:space:]]+)|([[:space:]]+$)', NULL) INVC_NO,
             TO_CHAR(NVL(T9.INVC_DT, T3.INVC_DT), 'DD/MM/YYYY') AS INVC_DT,
-            T3.MEM_ACC_ID,
+            ]]>
+            <!-- 2018-10-26 - LaiKW - Amend for Credit Card expense to ECC -->
+            <if test="clmType == 'J3'">
+                CASE WHEN(SUBSTR(T1.APPV_REQ_KEY_NO, 1, 2)) = 'J3' THEN T10.BANK_NAME ELSE T3.MEM_ACC_ID END AS MEM_ACC_ID,
+            </if>
+            <if test="clmType != 'J3'">
+                T3.MEM_ACC_ID,
+            </if>
+            <![CDATA[
             T6.MEM_ACC_NAME,
             TO_CHAR(T3.PAY_DUE_DT, 'DD/MM/YYYY') AS PAY_DUE_DT,
             NVL(T9.EXP_TYPE, T3.EXP_TYPE) EXP_TYPE,
@@ -991,6 +999,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
         LEFT JOIN (SELECT APPV_PRCSS_NO, SUM(APPV_AMT) AS TOT_AMT FROM FCM0015D GROUP BY APPV_PRCSS_NO) T7 ON T1.APPV_PRCSS_NO = T7.APPV_PRCSS_NO
         <if test="clmType == 'J3'">
             LEFT JOIN FCM0017M T8 ON T1.APPV_REQ_KEY_NO = T8.CLM_NO
+            LEFT JOIN FCM0016M T10 ON T10.CRDIT_CARD_USER_ID = T8.CRDIT_CARD_USER_ID AND T10.CRDIT_CARD_NO = T8.CRDIT_CARD_NO
         </if>
         LEFT JOIN (
             SELECT
@@ -1018,6 +1027,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
             LEFT JOIN (SELECT APPV_PRCSS_NO, SUM(APPV_AMT) AS TOT_AMT FROM FCM0015D GROUP BY APPV_PRCSS_NO) T7 ON T1.APPV_PRCSS_NO = T7.APPV_PRCSS_NO
             <if test="clmType == 'J3'">
                 LEFT JOIN FCM0017M T8 ON T1.APPV_REQ_KEY_NO = T8.CLM_NO
+                LEFT JOIN FCM0016M T10 ON T10.CRDIT_CARD_USER_ID = T8.CRDIT_CARD_USER_ID AND T10.CRDIT_CARD_NO = T8.CRDIT_CARD_NO
             </if>
             LEFT JOIN (
                 SELECT
