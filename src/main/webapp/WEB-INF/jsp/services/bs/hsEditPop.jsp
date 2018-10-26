@@ -5,649 +5,588 @@
 
 // add by jgkim
 var myDetailGridData = null;
-
-    //Combo Data
-    var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
-    // 19-09-2018 REMOVE HS STATUS "CANCELLED" START FROM 1 OCT 2018
-    //var StatusTypeData2 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
-
-    /* cmbCollectType
-       Collection Code */
-
-    // AUIGrid 생성 후 반환 ID
-    var myDetailGridID;
-    var myDetailGridID2;
-    var myDetailGridID3;
-
-    var option = {
-        width : "1000px", // 창 가로 크기
-        height : "600px" // 창 세로 크기
-    };
-
-    function createAUIGrid(){
-        // AUIGrid 칼럼 설정
-        var columnLayout = [ {
-                    dataField:"stkCode",
-                    headerText:"Filter Code",
-                    width:140,
-                    height:30
-                }, {
-                    dataField : "stkId",
-                    headerText : "Filter id",
-                    width : 240,
-                    visible:false
-                }, {
-                    dataField : "stkDesc",
-                    headerText : "Filter Name",
-                    width : 240
-                    }, {
-                    dataField : "bsResultItmId",
-                    headerText : "Filter Name",
-                    width : 240    ,
-                    visible:false
-                }, {
-                    dataField : "name",
-                    headerText : "Filter Quantity",
-                    width : 120,
-                    dataType : "numeric",
-                     /* editRenderer : {
-                        type : "NumberStepRenderer",
-                        min : 0,
-                        max : 50,
-                        step : 1,
-                        textEditable : true
-                    }  */
-            }, {
-                dataField : "serialNo",
-                headerText : "Serial No",
-                width : 240
-            }, {
-                dataField : "serialChk",
-                headerText : "Serial Check",
-                width : 100,
-                visible:false
-            }, {
-                dataField : "isReturn",
-                headerText : "Has Return",
-                width : 100,
-                renderer : {
-                    type : "CheckBoxEditRenderer",
-                    showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
-                    editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
-                    checkValue : "1", // true, false 인 경우가 기본
-                    unCheckValue : "0"
-                }
-            }];
-            // 그리드 속성 설정
-            var gridPros = {
-                // 페이징 사용
-                //usePaging : true,
-                // 한 화면에 출력되는 행 개수 20(기본값:20)
-                //pageRowCount : 20,
-
-                editable : true,
-
-                //showStateColumn : true,
-
-                //displayTreeOpen : true,
-
-                headerHeight : 30,
-
-                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                skipReadonlyColumns : true,
-
-                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                wrapSelectionMove : true,
-
-                // 줄번호 칼럼 렌더러 출력
-                showRowNumColumn : true,
-
-                // 수정한 셀에 수정된 표시(마크)를 출력할 지 여부
-                showEditedCellMarker : false
-
-            };
-
-                //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-                myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
-
-                AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
-                    if (event.columnIndex == 4 || event.columnIndex == 5){
-                        if ($("#cmbStatusType2").val() == 4) {    // Completed
-                            return true;
-                        } else if ($("#cmbStatusType2").val() == 21) {    // Failed
-                            return false;
-                        } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
-                            return false;
-                        } else {
-                            return false;
-                        }
-                    }
-                });
-
-                // 에디팅 정상 종료 이벤트 바인딩
-                AUIGrid.bind(myDetailGridID, "cellEditEnd", function (event){
-                        console.log(event);
-
-                        //가용재고 체크 하기
-                        if(event.columnIndex == 4){
-
-                                 //마스터 그리드
-                                 var selectedItem = AUIGrid.getItemByRowIndex(myGridID, '${ROW}');
-                                 console.log(selectedItem);
-
-                                 var ct = selectedItem.c5;
-                                 var sk = event.item.stkId;
-
-                                 var  availQty =isstckOk(ct ,sk);
-
-                                 if(availQty == 0){
-                                     Common.alert('*<b> There are no available stocks.</b>');
-                                     AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
-                                 }else{
-                                     if  ( availQty  <  Number(event.value) ){
-                                         Common.alert('*<b> Not enough available stock to the member.  <br> availQty['+ availQty +'] </b>');
-                                         AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
-                                     }
-                                 }
-                                 // CHECK MINERAL FILTER - NOT ALLOW TO EDIT -- TPY
-                                 if(sk == 1428){
-                                	 Common.alert('*<b> This Filter not allow to edit.</b>');
-                                	 AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
-                                 }
-                        }
-                });
-
-    }
-
-
-
-
-
-    function createAUIGrid2(){
-        // AUIGrid 칼럼 설정
-        var resultColumnLayout = [ {
-                    dataField:"resultIsCurr",
-                    headerText:"Version",
-                    width:100,
-                    height:30
-                }, {
-                    dataField : "no",
-                    headerText : "BSR No",
-                    width : 140
-                }, {
-                    dataField : "code",
-                    headerText : "Status",
-                    width : 140
-                }, {
-                    dataField : "memCode",
-                    headerText : "Member",
-                    width : 140
-                }, {
-                    dataField : "setlDt",
-                    headerText : "Settle Date",
-                    width : 140 ,
-                    dataType : "date",
-                    formatString : "dd/mm/yyyy"
-                }, {
-                    dataField : "resultStockUse",
-                    headerText : "Has Filter",
-                    width : 140
-                }, {
-                    dataField : "resultCrtDt",
-                    headerText : "Key At",
-                    width : 140,
-                    dataType : "date",
-                    formatString : "dd/mm/yyyy"
-                }, {
-                    dataField : "userName",
-                    headerText : "Key By",
-                    width : 140
-                }, {
-                    dataField : "resultId",
-                    headerText : "result_id",
-                    width : 140,
-                    visible:false
-                },{
-                        dataField : "undefined",
-                        headerText : "View",
-                        width : 170,
-                        renderer : {
-                              type : "ButtonRenderer",
-                              labelText : "View",
-                              onclick : function(rowIndex, columnIndex, value, item) {
-
-                                   if(item.code == "ACT") {
-                                        Common.alert('Not able to EDIT for the HS order status in Active.');
-                                        return false;
-                                   }
-
-/*                                   $("#_schdulId").val(item.schdulId);
-                                  $("#_salesOrdId").val(item.salesOrdId);
-                                  $("#_openGb").val("edit");
-                                  $("#_brnchId").val(item.brnchId);
- */
-                                  var aaa = AUIGrid.getCellValue(myDetailGridID2, rowIndex,"resultId");
-                                    $("#MresultId").val(AUIGrid.getCellValue(myDetailGridID2, rowIndex,"resultId"));
-                                    Common.popupDiv("/services/bs/hSMgtResultViewResultPop.do", $("#viewHSResultForm").serializeJSON());
-
-                  }
-           }
-            }];
-
-            // 그리드 속성 설정
-            var gridPros = {
-                // 페이징 사용
-                //usePaging : true,
-                // 한 화면에 출력되는 행 개수 20(기본값:20)
-                //pageRowCount : 20,
-
-                editable : false,
-
-                //showStateColumn : true,
-
-                //displayTreeOpen : true,
-
-                headerHeight : 30,
-
-                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                skipReadonlyColumns : true,
-
-                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                wrapSelectionMove : true,
-
-                // 줄번호 칼럼 렌더러 출력
-                showRowNumColumn : true
-
-            };
-                //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-                myDetailGridID2 = GridCommon.createAUIGrid("hsResult_grid_wrap", resultColumnLayout,'', gridPros);
-    }
-
-
-
-
-
-    function createAUIGrid3(){
-        // AUIGrid 칼럼 설정
-        var fitercolumnLayout = [ {
-                    dataField:"no",
-                    headerText:"BSR No",
-                    width:200,
-                    height:30
-                }, {
-                    dataField : "stkDesc",
-                    headerText : "Filter",
-                    width : 140
-                }, {
-                    dataField : "bsResultPartQty",
-                    headerText : "Qty",
-                    width : 90
-                }, {
-                    dataField : "bsResultFilterClm",
-                    headerText : "Claim",
-                    width : 240
-               }, {
-                    dataField : "resultCrtDt",
-                    headerText : "Key At",
-                    width : 240 ,
-                    dataType : "date",
-                    formatString : "dd/mm/yyyy"
-               }, {
-                    dataField : "userName",
-                    headerText : "Key By",
-                    width : 240
-
-            }];
-            // 그리드 속성 설정
-            var gridPros = {
-                // 페이징 사용
-                //usePaging : true,
-                // 한 화면에 출력되는 행 개수 20(기본값:20)
-                //pageRowCount : 20,
-
-                editable : true,
-
-                //showStateColumn : true,
-
-                //displayTreeOpen : true,
-
-                headerHeight : 30,
-
-                // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
-                skipReadonlyColumns : true,
-
-                // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                wrapSelectionMove : true,
-
-                // 줄번호 칼럼 렌더러 출력
-                showRowNumColumn : true
-
-            };
-                //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
-                myDetailGridID3 = GridCommon.createAUIGrid("fiter_grid_wrap", fitercolumnLayout, '',gridPros);
-    }
-
-
-
-
-    $(document).ready(function() {
-		   //var mthYr = "${basicinfo.monthy}";
-		   //var mth = mthYr.substring(0, mthYr.indexOf("/"));
-		   //var yr = mthYr.substring(mthYr.indexOf("/") + 1, mthYr.length);
-		   //if (yr <= 2018 && mth <= 9) { // HS PERIOD BEFORE OCT 1 CAN HAVE CANCELLED STATUS
-			   //doDefCombo(StatusTypeData1, '' ,'cmbStatusType2', 'S', '');
-		   //} else { // HS PERIOD AFTER SEP 30 REMOVE CANCELLED STATUS
-			   //doDefCombo(StatusTypeData2, '' ,'cmbStatusType2', 'S', '');
-		   //}
-
-		   doDefCombo(StatusTypeData1, '' ,'cmbStatusType2', 'S', '');
-
-           selSchdulId = $("#hidschdulId").val(); // TypeId
-           selSalesOrdId = $("#hidSalesOrdId").val(); // TypeId
-           openGb = $("#openGb").val(); // TypeId
-           brnchId = $("#brnchId").val(); // TypeId
-           hidHsno = $("#hidHsno").val(); // TypeId
-           hrResultId = $("#hrResultId").val(); // TypeId
-
-
-           createAUIGrid();
-           createAUIGrid2();
-           createAUIGrid3();
-
-           fn_getHsViewfilterInfoAjax();
-
-           var statusCd = "${basicinfo.stusCodeId}";
-           $("#cmbStatusType2 option[value='"+ statusCd +"']").attr("selected", true);
-
-            var failResnCd = "${basicinfo.failResnId}";
-            //alert("fail reason : " + failResnCd);
-            if(failResnCd != "0" ){
-                $("#failReason option[value='"+ failResnCd +"']").attr("selected", true);
-                //$("#failReason option[value='60']").attr("selected", true);
-            }else{
-            	$("#failReason").find("option").remove();
-            }
-
-           var codyIdCd = "${basicinfo.codyId}";
-           $("#cmbServiceMem option[value='"+codyIdCd +"']").attr("selected", true);
-
-           var renColctCd = "${basicinfo.renColctId}";
-           /* if(renColctCd != "0" ){
-        	   $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
-           }else{
-               $("#cmbCollectType").find("option").remove();
-           } */
-           $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
-
-             if($("#_openGb").val() == "view"){
-                    $("#btnSave").hide();
-            }
-
-
-
-            if('${MOD}' =="VIEW"){
-               $("#stitle").text("HS - Result View")	;
-               $("#editHSResultForm").find("input, textarea, button, select").attr("disabled",true);
-
-
-            }else {
-                $("#stitle").text("HS - Result EDIT")  ;
-
-                if($("#stusCode").val()==4) {
-                    $("#editHSResultForm").find("input, textarea, button, select").attr("disabled",false);
-                    $('#cmbCollectType').removeAttr('disabled');
-                }
-
-            }
-
-
-            // HS Result Information > HS Status 값에 따라 다른 정보 입력 가능 여부 설정
-            if ($("#cmbStatusType2").val() == 4) {    // Completed
-                    $("input[name='settleDt']").attr('disabled', false);
-                    $("select[name='failReason'] option").remove();
-                    //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
-                    //$("select[name=cmbCollectType]").attr('disabled', false);
-                } else if ($("#cmbStatusType2").val() == 21) {    // Failed
-                    //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
-                    //doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
-                    $('#settleDt').val('');
-                    $("input[name='settleDt']").attr('disabled', true);
-                    //$("select[name='cmbCollectType'] option").remove();
-                    //$("select[name=cmbCollectType]").attr('disabled', true);
-                } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
-                    //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
-                    //doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
-                    $('#settleDt').val('');
-                    $("input[name='settleDt']").attr('disabled', true);
-                    //$("select[name='cmbCollectType'] option").remove();
-                    //$("select[name=cmbCollectType]").attr('disabled', true);
-                }
-
-            $("#cmbStatusType2").change(function(){
-
-                AUIGrid.forceEditingComplete(myDetailGridID, null, false);
-                AUIGrid.updateAllToValue(myDetailGridID, "name", '');
-                AUIGrid.updateAllToValue(myDetailGridID, "serialNo", '');
-
-                if ($("#cmbStatusType2").val() == 4) {    // Completed
-                    $("input[name='settleDt']").attr('disabled', false);
-                    $("select[name='failReason'] option").remove();
-                    //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
-                    //$("select[name=cmbCollectType]").attr('disabled', false);
-                } else if ($("#cmbStatusType2").val() == 21) {    // Failed
-                    //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
-                    doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
-                    $('#settleDt').val('');
-                    $("input[name='settleDt']").attr('disabled', true);
-                    //$("select[name='cmbCollectType'] option").remove();
-                    //$("select[name=cmbCollectType]").attr('disabled', true);
-                } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
-                    //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
-                    doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
-                    $('#settleDt').val('');
-                    $("input[name='settleDt']").attr('disabled', true);
-                    //$("select[name='cmbCollectType'] option").remove();
-                    //$("select[name=cmbCollectType]").attr('disabled', true);
-                }
-
-            });
-
+  //Combo Data
+  var StatusTypeData1 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancelled"}];
+  // 19-09-2018 REMOVE HS STATUS "CANCELLED" START FROM 1 OCT 2018
+  //var StatusTypeData2 = [{"codeId": "4","codeName": "Completed"},{"codeId": "21","codeName": "Failed"}];
+
+  /* cmbCollectType
+      Collection Code */
+
+  // AUIGrid 생성 후 반환 ID
+  var myDetailGridID;
+  var myDetailGridID2;
+  var myDetailGridID3;
+
+  var option = {
+    width : "1000px", // 창 가로 크기
+    height : "600px" // 창 세로 크기
+  };
+
+  function createAUIGrid(){
+    // AUIGrid 칼럼 설정
+    var columnLayout = [ {
+                           dataField:"stkCode",
+                           headerText:"Filter Code",
+                           width:140,
+                           height:30
+                         }, {
+                           dataField : "stkId",
+                           headerText : "Filter id",
+                           width : 240,
+                           visible:false
+                         }, {
+                           dataField : "stkDesc",
+                           headerText : "Filter Name",
+                           width : 240
+                         }, {
+                           dataField : "bsResultItmId",
+                           headerText : "Filter Name",
+                           width : 240    ,
+                           visible:false
+                         }, {
+                           dataField : "name",
+                           headerText : "Filter Quantity",
+                           width : 120,
+                           dataType : "numeric",
+                           /* editRenderer : {
+                                                type : "NumberStepRenderer",
+                                                min : 0,
+                                                max : 50,
+                                                step : 1,
+                                                textEditable : true
+                           }  */
+                         }, {
+                             dataField : "serialNo",
+                             headerText : "Serial No",
+                             width : 240
+                         }, {
+                             dataField : "serialChk",
+                             headerText : "Serial Check",
+                             width : 100,
+                             visible:false
+                         }, {
+                             dataField : "isReturn",
+                             headerText : "Has Return",
+                             width : 100,
+                             renderer : {
+                                        type : "CheckBoxEditRenderer",
+                                        showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
+                                        editable : false, // 체크박스 편집 활성화 여부(기본값 : false)
+                                        checkValue : "1", // true, false 인 경우가 기본
+                                        unCheckValue : "0"
+                             }
+                         }];
+
+    // 그리드 속성 설정
+    var gridPros = {  // 페이징 사용
+                  	  //usePaging : true,
+                 	  // 한 화면에 출력되는 행 개수 20(기본값:20)
+                	  //pageRowCount : 20,
+                	  editable : true,
+                	  //showStateColumn : true,
+                	  //displayTreeOpen : true,
+	                  headerHeight : 30,
+	                  // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+	                  skipReadonlyColumns : true,
+	                  // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+	                  wrapSelectionMove : true,
+	                  // 줄번호 칼럼 렌더러 출력
+	                  showRowNumColumn : true,
+	                  // 수정한 셀에 수정된 표시(마크)를 출력할 지 여부
+	                  showEditedCellMarker : false
+           	       };
+
+    //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+    myDetailGridID = AUIGrid.create("#grid_wrap1", columnLayout, gridPros);
+
+    AUIGrid.bind(myDetailGridID, "cellEditBegin", function (event){
+	  if (event.columnIndex == 4 || event.columnIndex == 5){
+        if ($("#cmbStatusType2").val() == 4) {    // Completed
+          return true;
+        } else if ($("#cmbStatusType2").val() == 21) {    // Failed
+          return false;
+        } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+          return false;
+        } else {
+          return false;
+        }
+      }
     });
 
+    // 에디팅 정상 종료 이벤트 바인딩
+    AUIGrid.bind(myDetailGridID, "cellEditEnd", function (event) {
+      console.log("createAUIGrid :: event :: " + event.columnIndex);
 
-    function fn_getHsViewfilterInfoAjax(){
-    	 Common.ajax("GET", "/services/bs/selectHsViewfilterPop.do",{selSchdulId : selSchdulId}, function(result) {
-             console.log("성공 fn_getHsViewfilterInfoAjax.");
-             console.log("data : " + result);
+     //가용재고 체크 하기
+     if(event.columnIndex == 4) {
+       //마스터 그리드
+        var selectedItem = AUIGrid.getItemByRowIndex(myGridID, '${ROW}');
+        console.log("createAUIGrid :: selectedItem :: " + selectedItem);
 
-             AUIGrid.setGridData(myDetailGridID, result);
+  	    var ct = selectedItem.c5;
+        var sk = event.item.stkId;
 
-             // Grid 안의 값이 음수 또는 0인 경우 빈칸으로 출력
-             var cnt = result.length;
-             for (var i=0; i<cnt; i++) {
-                 var qtyCheck = AUIGrid.getCellValue(myDetailGridID, i, "name");
-                 if (qtyCheck < 0) {
-                     AUIGrid.updateRow(myDetailGridID, { name : "" }, i, false);
-                 } else if (qtyCheck == 0) {
-                     AUIGrid.updateRow(myDetailGridID, { name : "" }, i, false);
-                 }
-             }
+        var  availQty = isstckOk(ct ,sk);
 
-             myDetailGridData = result;
-         });
-
-
-          Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{selSchdulId : selSchdulId}, function(result) {
-            console.log("성공 selectHistoryHSResult.");
-            console.log("data : " + result);
-            AUIGrid.setGridData(myDetailGridID2, result);
-        });
-
-
-         Common.ajax("GET", "/services/bs/selectFilterTransaction.do",{selSchdulId : selSchdulId}, function(result) {
-            console.log("성공 selectFilterTransaction.");
-            console.log("data : " + result);
-            AUIGrid.setGridData(myDetailGridID3, result);
-        });
-
-
-
-
-    }
-
-
-
-    function fn_getOrderDetailListAjax(){
-
-         Common.ajax("GET", "/sales/order/orderDetailPop.do",{salesOrderId : 'selSalesOrdId'}, function(result) {
-            console.log("성공.");
-            console.log("data : " + result);
-        });
-
-    }
-
-
-
-     function fn_UpdateHsResult(){
-    	 if($("#cmbStatusType2").val() == null || $("#cmbStatusType2").val() == '' ) {
-    		 Common.alert("Please Select 'HS Status' ");
-    		 return false;
-    	 }
-
-
-    	 if ($("#cmbStatusType2").val() == 4) {    // Completed
-             if ($("#settleDt").val() == '' || $("#settleDt").val() == null) {
-                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='settleDate Type'/>");
-                 return false;
-             }
-             if ($("#cmbCollectType").val() == '' || $("#cmbCollectType").val() == null) {
-                 Common.alert("Please Select 'Collection Code'");
-                 return false;
-             }
-         } else if ($("#cmbStatusType2").val() == 21) {    // Failed
-             if ($("#failReason").val() == '' || $("#failReason").val() == null) {
-                 Common.alert("Please Select 'Fail Reason'.");
-                 return false;
-             }
-         } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
-             if ($("#failReason").val() == '' || $("#failReason").val() == null) {
-                 Common.alert("Please Select 'Fail Reason'.");
-                 return false;
-             }
-             /* if (<c:out value="${basicinfo.cancReqNo}"/> == "" || <c:out value="${basicinfo.cancReqNo}"/> == null) {
-                 Common.alert("Can’t entry without Cancel Request Number");
-                 return false;
-             } */
-         }
-
-    	 /* if ($("#cmbStatusType2").val() == 21) {    // Failed
-        	 if ($("#failReason").val() == '') {
-        		 Common.alert("Please Select 'Fail Reason'.");
-                 return false;
-             }
-         } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
-        	 if ($("#failReason").val() == '') {
-        		 Common.alert("Please Select 'Fail Reason'.");
-                 return false;
-             }
-         } */
-
-          // 시리얼넘버체크
-          //수정된 행 아이템들(배열)
-          var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
-
-          var serialChkCode = new Array();
-          var serialChkName = new Array();
-          var j = 0;
-          for (var i = 0; i < editedRowItems.length; i++) {
-              if (parseInt(editedRowItems[i]["name"]) > 0 && editedRowItems[i]["serialChk"] == "Y" &&
-                      (editedRowItems[i]["serialNo"] == null || editedRowItems[i]["serialNo"] == "") ) {
-                  serialChkCode[j] = editedRowItems[i]["stkCode"];
-                  serialChkName[j] = editedRowItems[i]["stkDesc"];
-                  j++;
-              }
-          }
-
-          var serialChkList = "";
-          if (serialChkCode.length > 0) {
-              for (var i = 0; i < serialChkCode.length; i++) {
-                  serialChkList = serialChkList + "<br/>" + serialChkCode[i] + " - " + serialChkName[i];
-              }
-              Common.alert("Please insert 'Serial No' for" + serialChkList);
-              return false;
-          }
-
-    	  var resultList = new Array();
-    	     $("#cmbCollectType1").val(editHSResultForm.cmbCollectType.value);
-              var jsonObj =  GridCommon.getEditData(myDetailGridID);
-              var gridDataList = AUIGrid.getGridData(myDetailGridID);
-              //var gridDataList = AUIGrid.getOrgGridData(myDetailGridID);
-              //var gridDataList = AUIGrid.getEditedRowItems(myDetailGridID);
-              console.log(gridDataList);
-              for(var i = 0; i < gridDataList.length; i++) {
-                  var item = gridDataList[i];
-                  if(item.name > 0) {
-                      resultList.push(gridDataList[i]);
-                  }
-              }
-              jsonObj.add = resultList;
-
-
-           // add by jgkim
-              var cmbStatusType2 = $("#cmbStatusType2").val();
-              $("input[name='settleDt']").removeAttr('disabled');
-              //$("select[name=cmbCollectType]").removeAttr('disabled');
-              var form = $("#editHSResultForm").serializeJSON();
-              //$("input[name='settleDt']").attr('disabled', true);
-              //$("select[name=cmbCollectType]").attr('disabled', true);
-              form.cmbStatusType2 = cmbStatusType2;
-              jsonObj.form = form;
-              console.log(jsonObj);
-              Common.ajax("POST", "/services/bs/UpdateHsResult2.do", jsonObj, function(result) {
-            	  Common.alert(result.message, fn_parentReload);
-            	  $("#popClose").click();
-            });
+        if(availQty == 0) {
+          Common.alert('*<b> There are no available stocks.</b>');
+          AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+        } else {
+          if  ( availQty  <  Number(event.value) ){
+            Common.alert('*<b> Not enough available stock to the member.  <br> availQty['+ availQty +'] </b>');
+            AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+           }
         }
 
+        // CHECK MINERAL FILTER - NOT ALLOW TO EDIT -- TPY
+        //if(sk == 1428){
+          //Common.alert('*<b> This Filter not allow to edit.</b>');
+          //AUIGrid.setCellValue(myDetailGridID, event.rowIndex, "name", "");
+        //}
+      }
 
-    function fn_parentReload() {
-        fn_getBSListAjax(); //parent Method (Reload)
+      if (event.columnIndex == 4 || event.columnIndex == 5 || event.columnIndex == 7) {
+        console.log("createAUIGrid :: event.item.stkId :: " + event.item.stkId);
+        if((event.item.stkId) == 1428){
+          Common.alert('* <b>' + event.item.stkDesc + '<br>is not allow to edit.</b>');
+          AUIGrid.setCellValue(myDetailGridID, event.rowIndex, event.dataField, "");
+        }
+      }
+    });
+  }
+
+  function createAUIGrid2(){
+    // AUIGrid 칼럼 설정
+    var resultColumnLayout = [ {
+                                dataField:"resultIsCurr",
+			                    headerText:"Version",
+			                    width:100,
+			                    height:30
+			                   }, {
+			                    dataField : "no",
+			                    headerText : "BSR No",
+			                    width : 140
+			                   }, {
+			                    dataField : "code",
+			                    headerText : "Status",
+			                    width : 140
+			                   }, {
+			                    dataField : "memCode",
+			                    headerText : "Member",
+			                    width : 140
+			                   }, {
+			                    dataField : "setlDt",
+			                    headerText : "Settle Date",
+			                    width : 140 ,
+			                    dataType : "date",
+			                    formatString : "dd/mm/yyyy"
+			                   }, {
+			                    dataField : "resultStockUse",
+			                    headerText : "Has Filter",
+			                    width : 140
+			                   }, {
+			                    dataField : "resultCrtDt",
+			                    headerText : "Key At",
+			                    width : 140,
+			                    dataType : "date",
+			                    formatString : "dd/mm/yyyy"
+			                   }, {
+			                    dataField : "userName",
+			                    headerText : "Key By",
+			                    width : 140
+			                   }, {
+			                    dataField : "resultId",
+			                    headerText : "result_id",
+			                    width : 140,
+			                    visible:false
+			                   }, {
+                                dataField : "undefined",
+		                        headerText : "View",
+		                        width : 170,
+		                        renderer : {
+			                                 type : "ButtonRenderer",
+			                                 labelText : "View",
+		                                     onclick : function(rowIndex, columnIndex, value, item) {
+
+                                               if(item.code == "ACT") {
+                                                 Common.alert('Not able to EDIT for the HS order status in Active.');
+                                                 return false;
+                                               }
+
+											   /* $("#_schdulId").val(item.schdulId);
+											      $("#_salesOrdId").val(item.salesOrdId);
+											      $("#_openGb").val("edit");
+											      $("#_brnchId").val(item.brnchId);
+											   */
+
+                                               var aaa = AUIGrid.getCellValue(myDetailGridID2, rowIndex,"resultId");
+                                               $("#MresultId").val(AUIGrid.getCellValue(myDetailGridID2, rowIndex,"resultId"));
+                                               Common.popupDiv("/services/bs/hSMgtResultViewResultPop.do", $("#viewHSResultForm").serializeJSON());
+
+                                             }
+                                }
+                               }];
+
+    // 그리드 속성 설정
+    var gridPros = {
+      // 페이징 사용
+      //usePaging : true,
+      // 한 화면에 출력되는 행 개수 20(기본값:20)
+      //pageRowCount : 20,
+      editable : false,
+      //showStateColumn : true,
+      //displayTreeOpen : true,
+      headerHeight : 30,
+      // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+      skipReadonlyColumns : true,
+      // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+      wrapSelectionMove : true,
+      // 줄번호 칼럼 렌더러 출력
+      showRowNumColumn : true
+
+    };
+
+    //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+    myDetailGridID2 = GridCommon.createAUIGrid("hsResult_grid_wrap", resultColumnLayout,'', gridPros);
+  }
+
+  function createAUIGrid3(){
+    // AUIGrid 칼럼 설정
+    var fitercolumnLayout = [ {
+                               dataField:"no",
+                               headerText:"BSR No",
+                               width:200,
+                               height:30
+                              }, {
+		                       dataField : "stkDesc",
+		                       headerText : "Filter",
+		                       width : 140
+		                      }, {
+		                       dataField : "bsResultPartQty",
+		                       headerText : "Qty",
+		                       width : 90
+		                      }, {
+		                       dataField : "bsResultFilterClm",
+		                       headerText : "Claim",
+		                       width : 240
+		                      }, {
+		                       dataField : "resultCrtDt",
+		                       headerText : "Key At",
+		                       width : 240 ,
+		                       dataType : "date",
+		                       formatString : "dd/mm/yyyy"
+		                      }, {
+		                       dataField : "userName",
+		                       headerText : "Key By",
+		                       width : 240
+
+                           }];
+
+    // 그리드 속성 설정
+    var gridPros = {
+                    // 페이징 사용
+                    //usePaging : true,
+                    // 한 화면에 출력되는 행 개수 20(기본값:20)
+                    //pageRowCount : 20,
+                    editable : true,
+                    //showStateColumn : true,
+                    //displayTreeOpen : true,
+                    headerHeight : 30,
+                    // 읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+                    skipReadonlyColumns : true,
+                    // 칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+                    wrapSelectionMove : true,
+                    // 줄번호 칼럼 렌더러 출력
+                    showRowNumColumn : true
+    };
+
+    //myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout, gridPros);
+    myDetailGridID3 = GridCommon.createAUIGrid("fiter_grid_wrap", fitercolumnLayout, '',gridPros);
+  }
+
+  $(document).ready(function() {
+    // var mthYr = "${basicinfo.monthy}";
+	// var mth = mthYr.substring(0, mthYr.indexOf("/"));
+	// var yr = mthYr.substring(mthYr.indexOf("/") + 1, mthYr.length);
+	// if (yr <= 2018 && mth <= 9) { // HS PERIOD BEFORE OCT 1 CAN HAVE CANCELLED STATUS
+	  // doDefCombo(StatusTypeData1, '' ,'cmbStatusType2', 'S', '');
+	// } else { // HS PERIOD AFTER SEP 30 REMOVE CANCELLED STATUS
+	  // doDefCombo(StatusTypeData2, '' ,'cmbStatusType2', 'S', '');
+	// }
+
+	doDefCombo(StatusTypeData1, '' ,'cmbStatusType2', 'S', '');
+
+    selSchdulId = $("#hidschdulId").val(); // TypeId
+    selSalesOrdId = $("#hidSalesOrdId").val(); // TypeId
+    openGb = $("#openGb").val(); // TypeId
+    brnchId = $("#brnchId").val(); // TypeId
+    hidHsno = $("#hidHsno").val(); // TypeId
+    hrResultId = $("#hrResultId").val(); // TypeId
+
+    createAUIGrid();
+    createAUIGrid2();
+    createAUIGrid3();
+
+    fn_getHsViewfilterInfoAjax();
+
+    var statusCd = "${basicinfo.stusCodeId}";
+    $("#cmbStatusType2 option[value='"+ statusCd +"']").attr("selected", true);
+
+    var failResnCd = "${basicinfo.failResnId}";
+    //alert("fail reason : " + failResnCd);
+    if (failResnCd != "0"){
+      $("#failReason option[value='"+ failResnCd +"']").attr("selected", true);
+      //$("#failReason option[value='60']").attr("selected", true);
+    } else {
+      $("#failReason").find("option").remove();
     }
 
-        //resize func (tab click)
-    function fn_resizefunc(obj, gridName){ //
+    var codyIdCd = "${basicinfo.codyId}";
+    $("#cmbServiceMem option[value='"+codyIdCd +"']").attr("selected", true);
 
-         var $this = $(obj);
-         var width = $this.width();
-
-
-          AUIGrid.resize(gridName, width, 200);
-//          AUIGrid.resize(gridName, width, height);
-
-//         setTimeout(function(){
-//             AUIGrid.resize(gridName);
-//         }, 100);
+    var renColctCd = "${basicinfo.renColctId}";
+    /* if(renColctCd != "0" ){
+         $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
+       } else {
+         $("#cmbCollectType").find("option").remove();
+       } */
+    $("#cmbCollectType option[value='"+renColctCd +"']").attr("selected", true);
+    if ($("#_openGb").val() == "view"){
+      $("#btnSave").hide();
     }
 
+    if ('${MOD}' =="VIEW") {
+      $("#stitle").text("HS - Result View")	;
+      $("#editHSResultForm").find("input, textarea, button, select").attr("disabled",true);
+    } else {
+      $("#stitle").text("HS - Result EDIT")  ;
 
-    function isstckOk(ct , sk){
-        var availQty = 0;
-        Common.ajaxSync("GET", "/services/as/getSVC_AVAILABLE_INVENTORY.do",{CT_CODE: ct  , STK_CODE: sk }, function(result) {
-                console.log("isstckOk.");
-                console.log( result);
-                availQty = result.availQty;
-        });
-        return availQty;
+      if ($("#stusCode").val()==4) {
+        $("#editHSResultForm").find("input, textarea, button, select").attr("disabled",false);
+        $('#cmbCollectType').removeAttr('disabled');
+      }
     }
 
-    </script>
+    // HS Result Information > HS Status 값에 따라 다른 정보 입력 가능 여부 설정
+    if ($("#cmbStatusType2").val() == 4) {    // Completed
+      $("input[name='settleDt']").attr('disabled', false);
+      $("select[name='failReason'] option").remove();
+      //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
+      //$("select[name=cmbCollectType]").attr('disabled', false);
+    } else if ($("#cmbStatusType2").val() == 21) {    // Failed
+        //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+        //doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
+        $('#settleDt').val('');
+        $("input[name='settleDt']").attr('disabled', true);
+        //$("select[name='cmbCollectType'] option").remove();
+        //$("select[name=cmbCollectType]").attr('disabled', true);
+     } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+        //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+        //doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
+        $('#settleDt').val('');
+        $("input[name='settleDt']").attr('disabled', true);
+        //$("select[name='cmbCollectType'] option").remove();
+        //$("select[name=cmbCollectType]").attr('disabled', true);
+     }
 
+     $("#cmbStatusType2").change(function(){
 
+       AUIGrid.forceEditingComplete(myDetailGridID, null, false);
+       AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+       AUIGrid.updateAllToValue(myDetailGridID, "serialNo", '');
 
+       if ($("#cmbStatusType2").val() == 4) {    // Completed
+         $("input[name='settleDt']").attr('disabled', false);
+         $("select[name='failReason'] option").remove();
+         //doGetCombo('/services/bs/selectCollectType.do',  '', '','cmbCollectType', 'S' ,  '');
+         //$("select[name=cmbCollectType]").attr('disabled', false);
+       } else if ($("#cmbStatusType2").val() == 21) {    // Failed
+         //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+         doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
+         $('#settleDt').val('');
+         $("input[name='settleDt']").attr('disabled', true);
+         //$("select[name='cmbCollectType'] option").remove();
+         //$("select[name=cmbCollectType]").attr('disabled', true);
+       } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+         //AUIGrid.updateAllToValue(myDetailGridID, "name", '');
+         doGetCombo('/services/bs/selectFailReason.do',  '', '','failReason', 'S' ,  '');
+         $('#settleDt').val('');
+         $("input[name='settleDt']").attr('disabled', true);
+         //$("select[name='cmbCollectType'] option").remove();
+         //$("select[name=cmbCollectType]").attr('disabled', true);
+       }
+     });
+  });
+
+  function fn_getHsViewfilterInfoAjax(){
+    Common.ajax("GET", "/services/bs/selectHsViewfilterPop.do",{selSchdulId : selSchdulId}, function(result) {
+      console.log("성공 fn_getHsViewfilterInfoAjax.");
+      console.log("data : " + result);
+
+      AUIGrid.setGridData(myDetailGridID, result);
+
+      // Grid 안의 값이 음수 또는 0인 경우 빈칸으로 출력
+      var cnt = result.length;
+      for (var i=0; i<cnt; i++) {
+        var qtyCheck = AUIGrid.getCellValue(myDetailGridID, i, "name");
+        if (qtyCheck < 0) {
+          AUIGrid.updateRow(myDetailGridID, { name : "" }, i, false);
+        } else if (qtyCheck == 0) {
+          AUIGrid.updateRow(myDetailGridID, { name : "" }, i, false);
+        }
+      }
+      myDetailGridData = result;
+    });
+
+    Common.ajax("GET", "/services/bs/selectHistoryHSResult.do",{selSchdulId : selSchdulId}, function(result) {
+      console.log("성공 selectHistoryHSResult.");
+      console.log("data : " + result);
+      AUIGrid.setGridData(myDetailGridID2, result);
+    });
+
+    Common.ajax("GET", "/services/bs/selectFilterTransaction.do",{selSchdulId : selSchdulId}, function(result) {
+      console.log("성공 selectFilterTransaction.");
+      console.log("data : " + result);
+      AUIGrid.setGridData(myDetailGridID3, result);
+    });
+  }
+
+  function fn_getOrderDetailListAjax(){
+    Common.ajax("GET", "/sales/order/orderDetailPop.do",{salesOrderId : 'selSalesOrdId'}, function(result) {
+      console.log("성공.");
+      console.log("data : " + result);
+    });
+  }
+
+  function fn_UpdateHsResult(){
+    if($("#cmbStatusType2").val() == null || $("#cmbStatusType2").val() == '' ) {
+      Common.alert("Please Select 'HS Status' ");
+      return false;
+    }
+
+    if ($("#cmbStatusType2").val() == 4) {    // Completed
+      if ($("#settleDt").val() == '' || $("#settleDt").val() == null) {
+        Common.alert("<spring:message code='sys.common.alert.validation' arguments='settleDate Type'/>");
+        return false;
+      }
+      if ($("#cmbCollectType").val() == '' || $("#cmbCollectType").val() == null) {
+        Common.alert("Please Select 'Collection Code'");
+        return false;
+      }
+    } else if ($("#cmbStatusType2").val() == 21) {    // Failed
+      if ($("#failReason").val() == '' || $("#failReason").val() == null) {
+        Common.alert("Please Select 'Fail Reason'.");
+        return false;
+      }
+    } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+      if ($("#failReason").val() == '' || $("#failReason").val() == null) {
+        Common.alert("Please Select 'Fail Reason'.");
+        return false;
+      }
+      /* if (<c:out value="${basicinfo.cancReqNo}"/> == "" || <c:out value="${basicinfo.cancReqNo}"/> == null) {
+        Common.alert("Can’t entry without Cancel Request Number");
+        return false;
+      } */
+    }
+
+    /* if ($("#cmbStatusType2").val() == 21) {    // Failed
+         if ($("#failReason").val() == '') {
+           Common.alert("Please Select 'Fail Reason'.");
+           return false;
+         }
+       } else if ($("#cmbStatusType2").val() == 10) {    // Cancelled
+         if ($("#failReason").val() == '') {
+           Common.alert("Please Select 'Fail Reason'.");
+           return false;
+         }
+       } */
+
+    // 시리얼넘버체크
+    //수정된 행 아이템들(배열)
+    var editedRowItems = AUIGrid.getEditedRowItems(myDetailGridID);
+
+    var serialChkCode = new Array();
+    var serialChkName = new Array();
+    var j = 0;
+    for (var i = 0; i < editedRowItems.length; i++) {
+      if (parseInt(editedRowItems[i]["name"]) > 0 && editedRowItems[i]["serialChk"] == "Y" && (editedRowItems[i]["serialNo"] == null || editedRowItems[i]["serialNo"] == "") ) {
+        serialChkCode[j] = editedRowItems[i]["stkCode"];
+        serialChkName[j] = editedRowItems[i]["stkDesc"];
+        j++;
+      }
+    }
+
+    var serialChkList = "";
+    if (serialChkCode.length > 0) {
+      for (var i = 0; i < serialChkCode.length; i++) {
+        serialChkList = serialChkList + "<br/>" + serialChkCode[i] + " - " + serialChkName[i];
+      }
+      Common.alert("Please insert 'Serial No' for" + serialChkList);
+      return false;
+    }
+
+    var resultList = new Array();
+    $("#cmbCollectType1").val(editHSResultForm.cmbCollectType.value);
+    var jsonObj =  GridCommon.getEditData(myDetailGridID);
+    var gridDataList = AUIGrid.getGridData(myDetailGridID);
+    //var gridDataList = AUIGrid.getOrgGridData(myDetailGridID);
+    //var gridDataList = AUIGrid.getEditedRowItems(myDetailGridID);
+    console.log("fn_UpdateHsResult :: gridDataList ::" + gridDataList);
+    for(var i = 0; i < gridDataList.length; i++) {
+      var item = gridDataList[i];
+      if(item.name > 0) {
+        resultList.push(gridDataList[i]);
+      }
+    }
+    jsonObj.add = resultList;
+
+    // add by jgkim
+    var cmbStatusType2 = $("#cmbStatusType2").val();
+    $("input[name='settleDt']").removeAttr('disabled');
+    //$("select[name=cmbCollectType]").removeAttr('disabled');
+    var form = $("#editHSResultForm").serializeJSON();
+    //$("input[name='settleDt']").attr('disabled', true);
+    //$("select[name=cmbCollectType]").attr('disabled', true);
+    form.cmbStatusType2 = cmbStatusType2;
+    jsonObj.form = form;
+    console.log("fn_UpdateHsResult :: jsonObj :: " + jsonObj);
+    Common.ajax("POST", "/services/bs/UpdateHsResult2.do", jsonObj, function(result) {
+      Common.alert(result.message, fn_parentReload);
+      $("#popClose").click();
+    });
+  }
+
+  function fn_parentReload() {
+    fn_getBSListAjax(); //parent Method (Reload)
+  }
+
+  //resize func (tab click)
+  function fn_resizefunc(obj, gridName){
+    var $this = $(obj);
+    var width = $this.width();
+
+    AUIGrid.resize(gridName, width, 200);
+    // AUIGrid.resize(gridName, width, height);
+
+    // setTimeout(function(){
+    // AUIGrid.resize(gridName);
+    // }, 100);
+  }
+
+  function isstckOk(ct , sk){
+    var availQty = 0;
+    Common.ajaxSync("GET", "/services/as/getSVC_AVAILABLE_INVENTORY.do",{CT_CODE: ct  , STK_CODE: sk }, function(result) {
+      console.log("isstckOk.");
+      console.log(result);
+      availQty = result.availQty;
+    });
+    return availQty;
+  }
+
+</script>
 
 <div id="popup_Editwrap" class="popup_wrap"><!-- popup_wrap start -->
-
-
 
 <header class="pop_header"><!-- pop_header start -->
 
@@ -709,7 +648,6 @@ var myDetailGridData = null;
     Order Detail Page Include END
 ------------------------------------------------------------------------------->
 
-
 <article class="acodi_wrap"><!-- acodi_wrap start -->
 <dl>
     <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(this, myDetailGridID2)">Current & History HS Result</a></dt>
@@ -726,7 +664,6 @@ var myDetailGridData = null;
     </dd>
 </dl>
 </article><!-- acodi_wrap end -->
-
 
 <form action="#" id="editHSResultForm" method="post">
 <aside class="title_line mt20"><!-- title_line start -->
@@ -832,7 +769,6 @@ var myDetailGridData = null;
 <!--     <li><p class="btn_blue2 big"><a href="#">Close</a></p></li> -->
 </ul>
 
-
  <div  style="display:none">
 
  <input type="text" value="${basicinfo.schdulId}" id="hidschdulId" name="hidschdulId"/>
@@ -841,7 +777,6 @@ var myDetailGridData = null;
  <input type="text" value="${basicinfo.c2}" id="hrResultId" name="hrResultId"/>
  <input type="text" value="${basicinfo.srvBsWeek}" id="srvBsWeek" name="srvBsWeek"/>
  <input type="text" value="${basicinfo.codyId}" id="cmbServiceMem" name="cmbServiceMem"/>
-
 
  <input type="text" value="<c:out value="${basicinfo.stusCodeId}"/> "  id="stusCode" name="stusCode"/>
  <input type="text" value="<c:out value="${basicinfo.failResnId}"/> "  id="failResn" name="failResn"/>
