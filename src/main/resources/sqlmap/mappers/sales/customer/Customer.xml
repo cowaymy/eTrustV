@@ -2306,13 +2306,13 @@
     FROM SAL0028D A
     INNER JOIN (
         SELECT
-            CUST_CRC_NO,
+            CUST_ORI_CRC_NO,
             COUNT(*)
         FROM SAL0028D
-        GROUP BY CUST_CRC_NO
+        GROUP BY CUST_ORI_CRC_NO
     ) B
-    ON A.CUST_CRC_NO = B.CUST_CRC_NO
-    WHERE A.CUST_CRC_NO = #{cardNo}
+    ON A.CUST_ORI_CRC_NO = B.CUST_ORI_CRC_NO
+    WHERE A.CUST_ORI_CRC_NO = #{cardNo}
         AND A.CUST_CRC_TYPE_ID = #{ccType}
         AND A.CUST_CRC_BANK_ID = #{ccBank}
         AND A.CUST_CRC_EXPR = #{expDate}
@@ -2326,18 +2326,18 @@
     INNER JOIN (
         SELECT
             A1.CUST_ID,
-            A1.CUST_CRC_NO,
+            A1.CUST_ORI_CRC_NO,
             B1.CNT
         FROM SAL0028D A1
         INNER JOIN (
             SELECT
-                CUST_CRC_NO,
+                CUST_ORI_CRC_NO,
                 COUNT(*) CNT
             FROM SAL0028D
             GROUP BY CUST_CRC_NO
         ) B1
-        ON A1.CUST_CRC_NO = B1.CUST_CRC_NO
-        WHERE A1.CUST_CRC_NO = #{cardNo}
+        ON A1.CUST_ORI_CRC_NO = B1.CUST_ORI_CRC_NO
+        WHERE A1.CUST_ORI_CRC_NO = #{cardNo}
             AND A1.CUST_CRC_TYPE_ID = #{ccType}
             AND A1.CUST_CRC_BANK_ID = #{ccBank}
             AND A1.CUST_CRC_EXPR = #{expDate}
