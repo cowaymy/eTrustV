@@ -1296,7 +1296,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		//aSEntryVO.setAsUpdDt("");
 		aSEntryVO.setAsEntryIsSynch(0);
 		aSEntryVO.setAsEntryIsEdit(0);
-		aSEntryVO.setAsTypeId(674);
+		aSEntryVO.setAsTypeId(2972);
 		aSEntryVO.setAsReqsterTypeId(0);
 		aSEntryVO.setAsIsBSWithin30days(0);
 		aSEntryVO.setAsAllowComm(0);
@@ -1353,6 +1353,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		String sInstallDate = installationVO.getPreDt();
 		int itmStkId   = salesOrderDVO.getItmStkId();
 		int itmCompId = salesOrderDVO.getItmCompId();
+		int brnchId = installationVO.getBrnchId();
 
 		DateFormat formatter = new SimpleDateFormat("dd/MM/yyyy");
 //		Date dInstallDate = (Date)formatter.parse(sInstallDate);
@@ -1525,8 +1526,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			this.preprocASEntry(aSEntryVO, sessionVO);
             String asNo = orderRegisterMapper.selectDocNo(DocTypeConstants.AS_ENTRY);
             aSEntryVO.setAsNo(asNo);
+            aSEntryVO.setAsAppntDt(installationVO.getPreDt());
+            aSEntryVO.setAsBrnchId(brnchId);
 
 			regOrderVO.setASEntryVO(aSEntryVO);
+			orderVO.setASEntryVO(aSEntryVO);
 		}
 
         //GET ORDER NUMBER
@@ -1600,7 +1604,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
 		logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdId() : {}"+regOrderVO.getSalesOrderMVO().getSalesOrdId());
 		logger.info("regOrderVO.getSalesOrderMVO().getSalesOrdNo() : {}"+regOrderVO.getSalesOrderMVO().getSalesOrdNo());
-		logger.info("regOrderVO.getASEntryVO().getAsNo() : {}"+regOrderVO.getASEntryVO().getAsNo());
 	}
 
 	private void doSaveOrder(OrderVO orderVO) {
@@ -1636,6 +1639,8 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         int salesOrdId = 0;
 
         int compId = salesOrderDVO.getItmCompId();
+
+        String installDate = installationVO.getPreDt();
 
         //SALES ORDER MASTER
         logger.info("!@#### ORDER_ID  :"+salesOrderMVO.getSalesOrdId());
