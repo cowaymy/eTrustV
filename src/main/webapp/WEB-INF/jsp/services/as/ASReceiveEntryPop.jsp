@@ -168,10 +168,15 @@ function fn_checkASReceiveEntryConfirmation(){
 
             var msg = fn_checkASReceiveEntry();
 
+            if(msg == ""){
+         	fn_resultASPop(result.ordId , result.ordNo);
+            	$("#_NewEntryPopDiv1").remove();
+            }
+            else {
             msg += '<br/> Do you want to proceed ? <br/>';
 
             Common.confirm('AS Received Entry Confirmation' + DEFAULT_DELIMITER + "<b>"+msg+"</b>", fn_resultASPop(result.ordId , result.ordNo), fn_selfClose);
-
+            }
         }
     });
 
