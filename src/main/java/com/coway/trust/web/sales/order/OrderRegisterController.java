@@ -335,6 +335,8 @@ public class OrderRegisterController {
 		*/
 		orderRegisterService.registerOrder(orderVO, sessionVO);
 
+		logger.info("orderVO : {}"+orderVO.getASEntryVO());
+
 		//Ex-Trade : 1
 		if(orderVO.getSalesOrderMVO().getExTrade() == 1 && CommonUtils.isNotEmpty(orderVO.getSalesOrderMVO().getBindingNo())) {
 			logger.debug("@#### Order Cancel START");
@@ -403,10 +405,16 @@ public class OrderRegisterController {
 
         if("Y".equals(orderVO.getCopyOrderBulkYN())) {
         	msg += "Order Number : " + orderVO.getSalesOrdNoFirst() + " ~ " + orderVO.getSalesOrderMVO().getSalesOrdNo() + "<br />";
+
+
         }
         else {
         	msg += "Order Number : " + orderVO.getSalesOrderMVO().getSalesOrdNo() + "<br />";
         }
+
+    	if(orderVO.getSalesOrderDVO().getItmCompId() == 2 || orderVO.getSalesOrderDVO().getItmCompId() == 3 || orderVO.getSalesOrderDVO().getItmCompId() == 4){
+    	msg += "AS Number : " + orderVO.getASEntryVO().getAsNo()+ "<br />";
+    	}
 
         msg += "Application Type : " + appTypeName + "<br />";
 
@@ -467,7 +475,7 @@ public class OrderRegisterController {
 		List<EgovMap> result = orderRegisterService.selectPrevOrderNoList(params);
 		return ResponseEntity.ok(result);
 	}
-	
+
     @RequestMapping(value = "/selectProductComponent.do", method = RequestMethod.GET)
     public ResponseEntity<List<EgovMap>> selectProductComponent(@RequestParam Map<String, Object> params)
     {
