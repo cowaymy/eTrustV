@@ -1185,9 +1185,9 @@ public class HsManualController {
 		EgovMap stkId =  hsManualService.checkStkDuration(params);
 
 		if(stkId != null){
-		 msg = "YES";
+		 msg = "1";
 		}else{
-		 msg = "NO";
+		 msg = "0";
 		}
 		logger.debug("checkStkDuration - msg : " + msg);
 		message.setMessage(msg);
