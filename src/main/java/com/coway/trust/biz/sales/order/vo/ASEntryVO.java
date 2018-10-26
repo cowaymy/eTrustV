@@ -26,7 +26,7 @@ public class ASEntryVO implements Serializable {
 
 	private String asReqstTm;
 
-	private Date asAppntDt;
+	private String asAppntDt;
 
 	private String asAppntTm;
 
@@ -165,11 +165,11 @@ public class ASEntryVO implements Serializable {
 		this.asReqstTm = asReqstTm;
 	}
 
-	public Date getAsAppntDt() {
+	public String getAsAppntDt() {
 		return asAppntDt;
 	}
 
-	public void setAsAppntDt(Date asAppntDt) {
+	public void setAsAppntDt(String asAppntDt) {
 		this.asAppntDt = asAppntDt;
 	}
 
