@@ -2334,7 +2334,7 @@
                 CUST_ORI_CRC_NO,
                 COUNT(*) CNT
             FROM SAL0028D
-            GROUP BY CUST_CRC_NO
+            GROUP BY CUST_ORI_CRC_NO
         ) B1
         ON A1.CUST_ORI_CRC_NO = B1.CUST_ORI_CRC_NO
         WHERE A1.CUST_ORI_CRC_NO = #{cardNo}
