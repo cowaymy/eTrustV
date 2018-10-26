@@ -1308,11 +1308,11 @@ public class ASManagementListController {
 				msg = msg + "* This order AS is under " + asReceiveInfo.get("asStusDesc") + " status.<br />" ;
 			}
 			logger.debug("Srv Stus : " + asReceiveInfo.get("srvStus"));
-			if(asReceiveInfo.get("srvStus") != null || asReceiveInfo.get("srvStus") != "" || asReceiveInfo.get("srvStus") != "null"){
-				msg = msg + "" ;
+			if(asReceiveInfo.get("srvStus") == null || asReceiveInfo.get("srvStus") == "" || asReceiveInfo.get("srvStus") == "null"){
+				 msg = msg + "* This order Membership is under Out of Warranty status.<br />" ;
 			}
 			else{
-				 msg = msg + "* This order Membership is under Out of Warranty status.<br />" ;
+				msg = msg + "" ;
 			}
 			logger.debug("HS Stus : " +  asReceiveInfo.get("hsStus"));
 			if(asReceiveInfo.get("hsStus") == null || asReceiveInfo.get("hsStus") == "" || asReceiveInfo.get("hsStus") == "null" ){
