@@ -4136,7 +4136,7 @@
                   LEFT JOIN SVC0008D hsm ON hsm.SALES_ORD_ID = som.SALES_ORD_ID
                   AND MONTH = EXTRACT(MONTH FROM SYSDATE)
                   AND YEAR = EXTRACT(YEAR FROM SYSDATE)
-                  AND hsm.STUS_CODE_ID = 1
+                  AND hsm.STUS_CODE_ID IN (1,4)
                   LEFT JOIN SYS0038M S1
                     ON S1.STUS_CODE_ID = asm.AS_STUS_ID
                   LEFT JOIN SYS0038M S2
