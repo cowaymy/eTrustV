@@ -158,9 +158,11 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
         			EgovMap salesEntry = orderCallListMapper.selectOrderEntry(salesOrdNo);
         			if (salesEntry != null) {
         			  logger.debug("salesEntry " + salesEntry);
-        			  if (salesEntry.get("cpntId").toString() != null && !salesEntry.get("cpntId").toString().equals("")) {
-        				  salesEntry.put("callEntryId", callEntry.get("callEntryId").toString());
-        				  orderCallListMapper.updateASEntry(salesEntry);
+        			  if (salesEntry.get("cpntId") != null && !salesEntry.get("cpntId").toString().equals("")) {
+        				  if (Integer.parseInt(salesEntry.get("cpntId").toString()) > 0) { // IS NOT DEFAULT SET
+        				    salesEntry.put("callEntryId", callEntry.get("callEntryId").toString());
+        				    orderCallListMapper.updateASEntry(salesEntry);
+        				  }
         			  }
         			} else {
         			  logger.debug("Sales Entry No " + salesOrdNo + " Not Found!!");
