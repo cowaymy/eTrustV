@@ -67,6 +67,7 @@ function tagMgmtGrid() {
                        ,{dataField: "mainInquiry",headerText: "Main Inquiry",width:200 ,height:80}
                        ,{dataField: "subInquiry",headerText: "Sub Inquiry",width:200 ,height:80}
                        ,{dataField: "mainDept",headerText: "Main Department",width:200 ,height:80}
+                       ,{dataField: "subDept",headerText: "Sub Department",width:200 ,height:80}
                        ,{dataField: "updDt",headerText: "Update Date",width:150 ,height:80}
                        ,{dataField: "lstUpdId",headerText: "Updated By",width:150 ,height:80}
                        ,{dataField: "status",headerText: "Status",width:100 ,height:80}
