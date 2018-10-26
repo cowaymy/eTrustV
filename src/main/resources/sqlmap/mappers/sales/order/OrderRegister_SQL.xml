@@ -2165,7 +2165,7 @@
              , #{asSoId}
              , #{asMemId}
              , SYSDATE
-             , #{asAppntDt}
+             , TO_DATE(#{asAppntDt}, 'DD/MM/YYYY')
              , #{asBrnchId}
              , #{asMalfuncId}
              , #{asMalfuncResnId}
