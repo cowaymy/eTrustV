@@ -56,7 +56,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectCustBillId 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -67,7 +67,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectBasicInfo 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -78,7 +78,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectMaillingInfo 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -89,7 +89,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectContractInfo 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -100,7 +100,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectOrderGroupList 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -111,7 +111,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectEstmReqHistory 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -122,7 +122,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectBillGrpHistory 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -133,7 +133,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectBillGrpOrder 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -144,7 +144,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectBillGrpHistory 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -155,7 +155,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * updRemark 업데이트
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -166,7 +166,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * updSalesOrderMaster 업데이트
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -177,7 +177,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * insRemarkHis
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -188,7 +188,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectDetailHistoryView 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -199,7 +199,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectMailAddrHistorty 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -210,7 +210,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectContPersonHistorty 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -221,7 +221,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectCustMailAddrList 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -232,7 +232,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectSalesOrderM 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -243,7 +243,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectContPersonList 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -254,7 +254,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectCustBillMaster 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -265,7 +265,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectReqMaster 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -276,7 +276,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * updReqEstm
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -287,7 +287,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectDocNo
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -298,7 +298,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * updDocNo
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -309,7 +309,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * insEstmReq
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -320,7 +320,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectEstmReqHisView
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -331,7 +331,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectEStatementReqs
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -342,7 +342,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectBillGrpOrdView
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -353,7 +353,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectBillGrpOrdView
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -364,7 +364,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectReplaceOrder
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -375,7 +375,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectAddOrdList 조회
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -386,7 +386,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectMainOrderHistory
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -397,7 +397,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * insBillGrpMaster
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -408,7 +408,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * selectGetOrder
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -419,7 +419,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 
 	/**
 	 * getSAL0024DSEQ
-	 * 
+	 *
 	 * @param params
 	 * @return
 	 */
@@ -987,7 +987,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 					billingGroupMapper.updReqEstm(params);
 				}
 			}
-			
+
 			//등록할 이메일의 직전의 이메일 정보를 취소 처리한다. : 하지만 사용하지 않음
 //			EgovMap lateHistory = billingGroupMapper.selectEstmLatelyHistory(params);
 //			if(lateHistory != null){
@@ -1040,7 +1040,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			// estmReq 인서트
 			billingGroupMapper.insEstmReq(estmMap);
 			//String reqId = String.valueOf(estmMap.get("reqIdSeq"));
-			
+
 			Map<String, Object> updCustMap = new HashMap<String, Object>();
 			updCustMap.put("custBillId", String.valueOf(params.get("custBillId")));
 			updCustMap.put("emailNew", String.valueOf(params.get("reqEmail")).trim());// new
@@ -1049,7 +1049,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 			updCustMap.put("userId", userId);
 			updCustMap.put("custBillIsEstm", "1");
 			billingGroupMapper.updCustMaster(updCustMap);
-			
+
 			// E-mail 전송하기
 			EmailVO email = new EmailVO();
 			List<String> toList = new ArrayList<String>();
@@ -1069,7 +1069,7 @@ public class BillingGroupServiceImpl extends EgovAbstractServiceImpl implements 
 					+ "Your email address have been registered as per below:- <br /><br />" + "Email 1: "
 					+ String.valueOf(params.get("reqEmail")).trim() + "<br />" + "Email 2: " + additionalEmail
 					+ "<br /><br /> "
-					+ "To complete the registration, please confirm the above email addresses by clicking the link below:- <br /><br />"
+					//+ "To complete the registration, please confirm the above email addresses by clicking the link below:- <br /><br />"
 					+
 					// To-Be eTRUST시스템에서는 문구 삭제 요청함
 					// "<a href='" + billingTypeConfirmUrl + "?reqId=" + reqId + "' target='_blank'
