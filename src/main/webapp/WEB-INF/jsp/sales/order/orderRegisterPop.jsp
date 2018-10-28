@@ -820,6 +820,10 @@
             //ClearControl_Sales();
             fn_clearSales();
 
+            //HIDE COMPONENT
+            $('#compType').addClass("blind");
+
+
             $('[name="advPay"]').prop("disabled", true);
 
             var idx    = $("#appType option:selected").index();
@@ -980,6 +984,8 @@
             $('#ordProudct optgroup').remove();
 
             $('#ordPromo option').remove();
+            $('#compType').addClass("blind");
+
 
             var idx    = $("#srvPacId option:selected").index();
             var selVal = $("#srvPacId").val();
@@ -1051,9 +1057,12 @@
             }
 
             if(stkIdVal == "1243") {
-            	//$('#compType').removeClass("blind");
+
+            	$('#compType').removeClass("blind");
+
                 fn_loadProductComponent(stkIdVal);
             }
+
             else{
             	$('#compType').addClass("blind");
             }
@@ -2181,10 +2190,9 @@ console.log("vBindingNo" + vBindingNo);
     function fn_loadProductComponent(stkId) {
 
 
-    	$('#compType').removeClass("blind");
 
 
-        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
+        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', 'fn_setDefaultCompId'); //Common Code
     }
 
     //LoadProductPromotion
@@ -2434,6 +2442,31 @@ console.log("vBindingNo" + vBindingNo);
             doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
         }
     }
+
+    function fn_setDefaultCompId() {
+    	var today = new Date();
+
+        var dd = today.getDate();
+        var mm = today.getMonth() + 1;
+        var yyyy = today.getFullYear();
+
+        if(dd < 10) {
+            dd = "0" + dd;
+        }
+        if(mm < 10){
+            mm = "0" + mm
+        }
+
+        if($('#compType option').size() >= 2) {
+        	if( parseInt(yyyy)*100 + parseInt(mm) < 201901){
+        		$('#compType option:eq(3)').attr('selected', 'selected');               }
+            else{
+            	$('#compType option:eq(1)').attr('selected', 'selected');               }
+
+        }
+
+        }
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap">
