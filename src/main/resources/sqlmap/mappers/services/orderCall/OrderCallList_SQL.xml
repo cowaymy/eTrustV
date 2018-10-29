@@ -413,7 +413,9 @@
         </insert>
         <update id="updateASEntry" parameterType="Map">
 	        UPDATE SVC0001D
-			   SET AS_CALLLOG_ID = #{callEntryId}
+			   SET AS_CALLLOG_ID = #{callEntryId},
+			       AS_MEM_ID = #{ctid},
+			       AS_MEM_GRP = #{ctgroup}
 			 WHERE AS_SO_ID = #{salesOrdId}
 			   AND TO_CHAR(AS_REQST_DT, 'dd-mm-yyyy') = #{salesDt}
 			   AND AS_ID = (SELECT MIN(AS_ID) FROM SVC0001D WHERE AS_SO_ID = #{salesOrdId} AND TO_CHAR(AS_REQST_DT, 'dd-mm-yyyy') = #{salesDt})
