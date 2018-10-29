@@ -2,15 +2,15 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 
 <script type="text/javascript">
- 
-	//Combo Box Choose Message    
+
+	//Combo Box Choose Message
 	var optionState = {chooseMessage: " 1.States "};
 	var optionCity = {chooseMessage: "2. City"};
 	var optionPostCode = {chooseMessage: "3. Post Code"};
 	var optionArea = {chooseMessage: "4. Area"};
 
 	 $(document).ready(function() {
-		
+
 		 //Filed Init
 		 fn_initAddress();
 		 CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , '', optionState);
@@ -20,13 +20,13 @@
          fn_selectPage();
 		/* #### Btn Action  #### */
 		 $("#_saveBtn").click(function() {
-			    
+
 			 /* addr1 addr2 null check */
 			 if( ( "" == $("#addrDtl").val() || null == $("#addrDtl").val())){
 				 Common.alert('<spring:message code="sal.alert.msg.plzKeyinAddr" />');
 				 return;
 			 }
-			 
+
 			 if($("#mState").val() == ''){
 		         Common.alert('<spring:message code="sal.alert.msg.plzKeyinState" />');
 		         return;
@@ -47,21 +47,21 @@
 	              Common.alert('<spring:message code="sal.alert.msg.plzKeyinPostcode" />');
 	              return ;
 	         }
-	         
+
 	         fn_customerAddressInfoAddAjax();
-			 
+
 		 })	;
-		 
+
 		 $("#_copyBtn").click(function() {
-			
+
 			 //custAddrId
 			 var addid = $("#tempAddrId").val();
-			 $("#areaId").val($("#tempAreaId").val());			 
-			 
+			 $("#areaId").val($("#tempAreaId").val());
+
 			 $.ajax({
 				 type : "GET",
 				 url : getContextPath() + "/sales/customer/selectCustomerCopyAddressJson",
-				 data : { getparam : addid}, 
+				 data : { getparam : addid},
 				 dataType: "json",
 				 contentType : "application/json;charset=UTF-8",
 	             success : function(data) {
@@ -74,140 +74,140 @@
 	                    $("#mStreet").val(data.street);
 	                    $("#mPostCd").val(data.postCode);
 	                    $("#addrRem").val(data.rem);
-	            	 
+
 	             },
 	             error: function(){
 	                alert("Get Address Detail was Failed!");
 	             },
 	             complete: function(){
 	             }
-				 
+
 			 });
 		});
-		
-		 
+
+
 		//Enter Event
-        $('#searchSt').keydown(function (event) {  
-            if (event.which === 13) {    //enter  
+        $('#searchSt').keydown(function (event) {
+            if (event.which === 13) {    //enter
                 fn_addrSearch();
-            }  
+            }
         });
-		 
+
 	});//Document Ready Func End
-	
-	 
+
+
 	    /*####### Magic Address #########*/
 	    function fn_initAddress(){
-	        
+
 	    	   $('#mCity').append($('<option>', { value: '', text: '2. City' }));
 	           $('#mCity').val('');
 	           $("#mCity").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	           
+
 	           $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
 	           $('#mPostCd').val('');
 	           $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	           
+
 	           $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
 	           $('#mArea').val('');
 	           $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
 	    }
-	     
-	     
+
+
 	    function fn_selectState(selVal){
-	        
+
 	        var tempVal = selVal;
-	        
+
 	        if('' == selVal || null == selVal){
 	            //전체 초기화
-	            fn_initAddress();   
-	            
+	            fn_initAddress();
+
 	        }else{
-	            
+
 	        	$("#mCity").attr({"disabled" : false  , "class" : "w100p"});
-	            
+
 	            $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
 	            $('#mPostCd').val('');
 	            $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	            
+
 	            $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
 	            $('#mArea').val('');
 	            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	            
+
 	            //Call ajax
 	            var cityJson = {state : tempVal}; //Condition
 	            CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, '' , optionCity);
 	        }
-	        
+
 	    }
-	    
+
 	    function fn_selectCity(selVal){
-	        
+
 	        var tempVal = selVal;
-	        
+
 	        if('' == selVal || null == selVal){
-	           
+
 	        	 $('#mPostCd').append($('<option>', { value: '', text: '3. Post Code' }));
 	             $('#mPostCd').val('');
 	             $("#mPostCd").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	            
+
 	             $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
 	             $('#mArea').val('');
 	             $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	            
+
 	        }else{
-	            
+
 	        	 $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
-	             
+
 	             $('#mArea').append($('<option>', { value: '', text: '4. Area' }));
 	             $('#mArea').val('');
 	             $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	            
-	            
+
+
 	            //Call ajax
 	            var postCodeJson = {state : $("#mState").val() , city : tempVal}; //Condition
 	            CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, '' , optionPostCode);
 	        }
-	        
+
 	    }
-	    
-	    
+
+
 	   function fn_selectPostCode(selVal){
-	        
+
 	        var tempVal = selVal;
-	        
+
 	        if('' == selVal || null == selVal){
-	           
+
 	        	$('#mArea').append($('<option>', { value: '', text: '4. Area' }));
 	            $('#mArea').val('');
 	            $("#mArea").attr({"disabled" : "disabled"  , "class" : "w100p disabled"});
-	            
+
 	        }else{
-	            
+
 	            $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
-	            
+
 	            //Call ajax
 	            var areaJson = {state : $("#mState").val(), city : $("#mCity").val() , postcode : tempVal}; //Condition
 	            CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, '' , optionArea);
 	        }
-	        
+
 	    }
-	    
-	    
+
+
 	    /*####### Magic Address #########*/
-	    
+
 	function fn_selectPage(){
-		 
+
 		 if("" != $("#_callParam").val() && null != $("#_callParam").val()){
 			  $("#_copyBtn").css("display" , "");
 		 }
 	 }
-	 
+
 	function fn_getCustAddrId(){
-		
+
 		var getparam = $("#_insCustId").val();
-		
+
 		$.ajax({
-			
+
 			type: "GET",
 			url : getContextPath() + "/sales/customer/selectCustomerMainAddr",
 			data : {getparam : getparam},
@@ -223,13 +223,13 @@
 	        complete: function(){
 	        }
 		});
-		
+
 	}
-	 
+
 	// Call Ajax - DB Insert
     function fn_customerAddressInfoAddAjax(){
         Common.ajax("GET", "/sales/customer/insertCustomerAddressInfoAf.do",$("#insAddressForm").serialize(), function(result) {
-            
+
         	if( null != $("#_callParam").val() && "" != $("#_callParam").val()){
         		Common.alert(result.message);
         	}else{
@@ -243,9 +243,13 @@
                 fn_loadBillAddr(result.data);
                 $("#_close1").click();
             }
-            if('${callParam}' == 'ORD_REGISTER_INST_ADD' || '${callParam}' == 'PRE_ORD_INST_ADD') {
+            if('${callParam}' == 'ORD_REGISTER_INST_ADD') {
                 fn_loadInstallAddr(result.data);
                 $("#_close1").click();
+            }
+            if('${callParam}' == 'PRE_ORD_INST_ADD'){
+                fn_loadInstallAddr(result.data);
+                fn_loadBillAddr(result.data);
             }
             if('${callParam}' == 'ORD_MODIFY_MAIL_ADR2') {
                 fn_loadMailAddress(result.data);
@@ -253,16 +257,16 @@
             }
         });
     }
-	 
+
     function fn_parentReload() {
         fn_selectPstRequestDOListAjax(); //parent Method (Reload)
         $("#_close1").click();
         $("#_close").click();
         $("#_selectParam").val('2');
-        Common.popupDiv('/sales/customer/updateCustomerAddressPop.do' , $('#popForm').serializeJSON(), null , true, '_editDiv2'); 
-        Common.popupDiv('/sales/customer/updateCustomerNewAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2New'); 
+        Common.popupDiv('/sales/customer/updateCustomerAddressPop.do' , $('#popForm').serializeJSON(), null , true, '_editDiv2');
+        Common.popupDiv('/sales/customer/updateCustomerNewAddressPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv2New');
     }
-    
+
     function fn_addrSearch(){
         if($("#searchSt").val() == ''){
             Common.alert("Please search.");
@@ -270,63 +274,63 @@
         }
         Common.popupDiv('/sales/customer/searchMagicAddressPop.do' , $('#insAddressForm').serializeJSON(), null , true, '_searchDiv');
     }
-    
-    
+
+
     function fn_addMaddr(marea, mcity, mpostcode, mstate, areaid, miso){
-        
+
         if(marea != "" && mpostcode != "" && mcity != "" && mstate != "" && areaid != "" && miso != ""){
-            
+
             $("#mArea").attr({"disabled" : false  , "class" : "w100p"});
             $("#mCity").attr({"disabled" : false  , "class" : "w100p"});
             $("#mPostCd").attr({"disabled" : false  , "class" : "w100p"});
             $("#mState").attr({"disabled" : false  , "class" : "w100p"});
-            
+
             //Call Ajax
-           
+
             CommonCombo.make('mState', "/sales/customer/selectMagicAddressComboList", '' , mstate, optionState);
-            
+
             var cityJson = {state : mstate}; //Condition
             CommonCombo.make('mCity', "/sales/customer/selectMagicAddressComboList", cityJson, mcity , optionCity);
-            
+
             var postCodeJson = {state : mstate , city : mcity}; //Condition
             CommonCombo.make('mPostCd', "/sales/customer/selectMagicAddressComboList", postCodeJson, mpostcode , optionCity);
-            
+
             var areaJson = {groupCode : mpostcode};
             var areaJson = {state : mstate , city : mcity , postcode : mpostcode}; //Condition
             CommonCombo.make('mArea', "/sales/customer/selectMagicAddressComboList", areaJson, marea , optionArea);
-            
+
             $("#areaId").val(areaid);
             $("#_searchDiv").remove();
         }else{
             Common.alert('<spring:message code="sal.alert.msg.addrCheck" />');
         }
     }
-    
+
     //Get Area Id
     function fn_getAreaId(){
-        
+
         var statValue = $("#mState").val();
         var cityValue = $("#mCity").val();
         var postCodeValue = $("#mPostCd").val();
         var areaValue = $("#mArea").val();
-        
-        
-        
+
+
+
         if('' != statValue && '' != cityValue && '' != postCodeValue && '' != areaValue){
-            
+
             var jsonObj = { statValue : statValue ,
                                   cityValue : cityValue,
                                   postCodeValue : postCodeValue,
                                   areaValue : areaValue
                                 };
             Common.ajax("GET", "/sales/customer/getAreaId.do", jsonObj, function(result) {
-                
+
                  $("#areaId").val(result.areaId);
-                
+
             });
-            
+
         }
-        
+
     }
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -340,7 +344,7 @@
 
 <form id="insAddressForm" name="insAddressForm" method="POST">
     <input type="hidden" id="areaId" name="areaId">
-    <input type="hidden" value="${insCustId}" id="_insCustId" name="insCustId"> 
+    <input type="hidden" value="${insCustId}" id="_insCustId" name="insCustId">
     <input type="hidden" name="addrCustAddId" value="${detailaddr.custAddId}" id="addrCustAddId">
     <!-- Temp Address Id -->
     <input type="hidden" name="tempAddrId" id="tempAddrId">
@@ -377,13 +381,13 @@
             <tr>
                <th scope="row"><spring:message code="sal.text.area4" /><span class="must">*</span></th>
                 <td colspan="3">
-                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select> 
+                <select class="w100p" id="mArea"  name="mArea" onchange="javascript : fn_getAreaId()"></select>
                 </td>
             </tr>
             <tr>
                  <th scope="row"><spring:message code="sal.text.city2" /><span class="must">*</span></th>
                 <td>
-                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>  
+                <select class="w100p" id="mCity"  name="mCity" onchange="javascript : fn_selectCity(this.value)"></select>
                 </td>
                 <th scope="row"><spring:message code="sal.text.postCode3" /><span class="must">*</span></th>
                 <td>
