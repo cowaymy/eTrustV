@@ -604,7 +604,7 @@ public class HsManualController {
 
 		logger.debug("==================== saveASTaxInvoice [End] ========================");
 
-		msg = msg + "<br /> AS NO : " + sm.get("asNo").toString() + "<br /> AS REF NO : " + pb.get("taxInvcRefNo").toString() ;
+		msg = msg + "<br /> AS NO : " + sm.get("asNo").toString() + "<br /> AS REF : " + sm.get("asResultNo").toString() ;
 
 			}
 
