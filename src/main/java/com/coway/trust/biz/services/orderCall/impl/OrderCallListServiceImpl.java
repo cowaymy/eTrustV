@@ -96,6 +96,7 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
 		EgovMap callEntry = orderCallListMapper.selectCallEntry(callMaster);
 		EgovMap installNo = new EgovMap();
 		Map<String, Object>  logPram = new HashMap<String, Object>();
+
 		if(callEntry != null){
 			//Insert CALL LOG RESULT
 			orderCallListMapper.insertCallResult(callDetails);
@@ -161,6 +162,9 @@ public class OrderCallListServiceImpl extends EgovAbstractServiceImpl implements
         			  if (salesEntry.get("cpntId") != null && !salesEntry.get("cpntId").toString().equals("")) {
         				  if (Integer.parseInt(salesEntry.get("cpntId").toString()) > 0) { // IS NOT DEFAULT SET
         				    salesEntry.put("callEntryId", callEntry.get("callEntryId").toString());
+        				    salesEntry.put("CTID", params.get("CTID").toString());
+        				    salesEntry.put("CTgroup", params.get("CTgroup").toString());
+        				    logger.debug("salesEntry " + salesEntry);
         				    orderCallListMapper.updateASEntry(salesEntry);
         				  }
         			  }
