@@ -150,15 +150,15 @@
         //}
       }
 
-      if (event.columnIndex == 3 || event.columnIndex == 4 || event.columnIndex == 6) { // 3-FILTER QUANTITY 4-SERIAL NO 5- HAS RETURN
+      if (event.columnIndex == 6) { // 3-FILTER QUANTITY 4-SERIAL NO 5- HAS RETURN
     	  console.log("event.item.stkId :: " + event.item.stkId);
         if((event.item.stkId) == 1428){
-          var msg = fn_checkStkDuration();
-          console.log("msg :: " + msg);
-          if(msg == "0"){
-            Common.alert('* <b>' + event.item.stkDesc + '<br>currently are not allow to edit.</b>');
-            AUIGrid.setCellValue(myDetailGridID, event.rowIndex, event.dataField, "");
-          }
+          //var msg = fn_checkStkDuration();
+          //console.log("msg :: " + msg);
+          //if(msg == "0"){
+            //Common.alert('* <b>' + event.item.stkDesc + '<br>currently are not allow to edit.</b>');
+            //AUIGrid.setCellValue(myDetailGridID, event.rowIndex, event.dataField, "");
+          //}
         } else {
           if (event.columnIndex == 6) {
         	  Common.alert('* <b>' + event.item.stkDesc + '<br>is not applicable for this option.</b>');
