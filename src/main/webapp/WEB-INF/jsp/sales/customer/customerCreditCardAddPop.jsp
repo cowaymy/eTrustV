@@ -75,7 +75,8 @@
 
                     if(isExistCrc) {
                         isValid = false;
-                        msg += "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
+                        msg += "<spring:message code='sal.alert.msg.creditCardUsed' /><br/>";
+                        msg += "CUSTOMER ID : " + isExistCrc;
                     }
                     else {
                         if($("#cmbCreditCardType option:selected").index() > 0) {
@@ -120,14 +121,23 @@
     function fn_existCrcNo(CustID, CrcNo, IssueBankID){
         var isExist = false;
 
-        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custOriCrcNo : CrcNo}, function(rsltInfo) {
+        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custOriCrcNo : CrcNo}, function(rsltInfo) {
+            if(rsltInfo != null) {
+                if(rsltInfo.length >= 0){
+                    isExist = rsltInfo[i].custId;
+                }
+            }
+        }, null, {async : false});
+        console.log('isExist ggg:'+isExist);
+        return isExist;
+        /* Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custOriCrcNo : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
                 console.log('rsltInfo.length:'+rsltInfo.length);
                 isExist = rsltInfo.length == 0 ? false : true;
             }
         }, null, {async : false});
         console.log('isExist ggg:'+isExist);
-        return isExist;
+        return isExist; */
     }
 
     function fn_doSaveCreditCard() {
