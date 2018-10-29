@@ -293,6 +293,7 @@ public class WebInvoiceServiceImpl implements WebInvoiceService {
 				String clmNo = String.valueOf(invoAppvInfo.get("clmNo"));
 				String clmType = clmNo.substring(0, 2);
 				LOGGER.debug("clmType =====================================>>  " + clmType);
+				invoAppvInfo.put("clmType", clmType);
 				if("J1".equals(clmType) || "J2".equals(clmType) || "J3".equals(clmType) || "J4".equals(clmType) || "J5".equals(clmType) || "J6".equals(clmType) || "J7".equals(clmType) || "J8".equals(clmType)) {
 					// appvPrcssNo의 items get
 					List<EgovMap> appvInfoAndItems = webInvoiceMapper.selectAppvInfoAndItems(invoAppvInfo);
