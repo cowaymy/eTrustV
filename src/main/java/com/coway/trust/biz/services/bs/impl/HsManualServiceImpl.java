@@ -1787,7 +1787,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		params.put("AS_SMS", "0");
 		params.put("AS_CRT_USER_ID", params.get("userId").toString());
 		params.put("AS_UPD_USER_ID", params.get("userId").toString());
-		params.put("AS_TYPE_ID", "457");
+		params.put("AS_TYPE_ID", "2972"); // SPECIAL AS
 		// params.put("AS_REQSTER_TYPE_ID", "95164777");
 		params.put("AS_ALLOW_COMM", "1");
 		// params.put("AS_CALLLOG_ID", String.valueOf( ccrSeqMap.get("seq")).trim());
@@ -1820,7 +1820,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		params2.put("AS_MALFUNC_RESN_ID", "2"); // AS DURING INSTALLATION
 		params2.put("AS_FILTER_AMT", params.get("amt").toString());
 		params2.put("AS_TOT_AMT", params.get("totalAmt").toString());
-		params2.put("AS_RESULT_TYPE_ID", "457"); // AFTER SERVICE
+		params2.put("AS_RESULT_TYPE_ID", "2972"); // SPECIAL AFTER SERVICE
 		params2.put("AS_RESULT_UPD_DT", "");
 		params2.put("AS_RESULT_UPD_USER_ID", "");
 		params2.put("AS_DEFECT_TYPE_ID", "1103"); // DT5 - SERVICE MAINTANENCE
