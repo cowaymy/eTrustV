@@ -146,7 +146,7 @@ var myDetailGridData = null;
         //}
       }
 
-      if (event.columnIndex == 4 || event.columnIndex == 5 || event.columnIndex == 7) {
+      if (event.columnIndex == 7) {
         console.log("createAUIGrid :: event.item.stkId :: " + event.item.stkId);
         if((event.item.stkId) == 1428){
           Common.alert('* <b>' + event.item.stkDesc + '<br>is not allow to edit.</b>');
