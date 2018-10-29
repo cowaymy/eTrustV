@@ -4067,7 +4067,8 @@
         RESULT_REP_EMAIL_NO,
         RESULT_ACEPT_NAME,
         SGN_DT,
-        TRNSC_ID
+        TRNSC_ID,
+        NO
         )
         VALUES (
         #{AS_RESULT_ID},
@@ -4125,7 +4126,8 @@
         #{RESULT_REP_EMAIL_NO},
         #{RESULT_ACEPT_NAME},
         #{SGN_DT},
-        #{TRNSC_ID}
+        #{TRNSC_ID},
+        #{NO}
         )
     </insert>
 
