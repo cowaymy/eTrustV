@@ -11,49 +11,41 @@
 	text-align : right;
 	margin-top : -20px;
 }
-
 .my-columnRight0 {
 	text-align : right;
 	background : #CCFFFF;
 	color : #000;
 }
-
 .my-columnRight1 {
 	text-align : right;
 	background : #CCCCFF;
 	color : #000;
 }
-
 .my-columnLeadTm {
 	text-align : right;
 	background : #FFCCFF;
 	color : #000;
 }
-
 .my-columnCenter0 {
 	text-align : center;
 	background : #CCFFFF;
 	color : #000;
 }
-
 .my-columnCenter1 {
 	text-align : center;
 	background : #CCCCFF;
 	color : #000;
 }
-
 .my-columnLeft0 {
 	text-align : left;
 	background : #CCFFFF;
 	color : #000;
 }
-
 .my-columnLeft1 {
 	text-align : left;
 	background : #CCCCFF;
 	color : #000;
 }
-
 .my-header {
 	background:#828282;
 	color:#000;
@@ -917,7 +909,7 @@ function fnSaveMaster(obj, conf) {
 			});
 }
 
-//excel
+//	excel
 function fnExcel(obj, fileName) {
 	//	1. grid id
 	//	2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
@@ -1106,7 +1098,7 @@ var myGridID;
 				<td>
 					<div class="date_set w100p"><!-- date_set start -->
 						<select class="sel_year" id="scmYearCbBox" name="scmYearCbBox"></select>
-						<select class="sel_date"  id="scmWeekCbBox" name="scmWeekCbBox"></select>
+						<select class="sel_date" id="scmWeekCbBox" name="scmWeekCbBox"></select>
 					</div><!-- date_set end -->
 				</td>
 				<th scope="row">CDC</th>
@@ -1183,7 +1175,7 @@ var myGridID;
 			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSaveDetail(this);">Save</a></p></li>
 			<li><p id="btnConfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'confirm');">Confirm</a></p></li>
 			<li><p id="btnUnconfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'unconfirm');">UnConfirm</a></p></li>
-			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SalesPlanManagement');">Excel</a></p></li>
+			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SupplyPlanManagement');">Excel</a></p></li>
 		</ul>
 	</div><!-- side_btns end -->
 
