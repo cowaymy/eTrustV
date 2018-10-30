@@ -4706,5 +4706,61 @@
 
           </select>
 
+          <select id="selectCustomer" parameterType="Map" resultType="Integer">
+
+            select A.CUST_ID
+          from SAL0001D A
+         where A.SALES_ORD_ID = #{hidSalesOrdId}
+
+
+          </select>
+
+                     <select id="selectSerialNo" parameterType="Map" resultType="String">
+
+            select A.SERIAL_NO
+          from SVC0007D A
+         where A.BS_RESULT_ID = #{bsResultId}
+
+
+          </select>
+
+
+                               <select id="selectCody" parameterType="Map" resultType="Integer">
+
+            select A.CODY_ID
+          from SVC0008D A
+         where A.SCHDUL_ID = #{hidschdulId}
+
+
+          </select>
+
+          <insert id="insertUsedFilter" parameterType="Map">
+          insert into log0082m
+            (SEQ
+            ,SVC_ORD_ID
+            ,CUST_ID
+            ,SVC_DT
+            ,STK_ID
+            ,QTY
+            ,OLD_SERIAL
+            ,MEM_ID
+            ,RESULT_ID
+            )
+            values
+            (
+            LOG0082M_SEQ.NEXTVAL
+            ,#{hsNo}
+            ,#{custId}
+            ,sysdate
+            ,#{bsResultPartId}
+            ,#{bsResultPartQty}
+            ,nvl(#{serialNo}, '')
+            ,#{bsCodyId}
+            ,#{bsResultId}
+
+            )
+          </insert>
+
+
 
 </mapper>

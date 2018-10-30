@@ -477,6 +477,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 			logger.debug("### insertHsResultfinal : {}", insertHsResultfinal);
 			hsManualMapper.insertHsResultfinal(insertHsResultfinal);		// INSERT SVC0006D
 
+			List<EgovMap>qryUsedFilter =  hsManualMapper.selectQryUsedFilter2(insertHsResultfinal);
 
 	        //BSResultD
 			for(int i=0; i< docType.size(); i++) {
@@ -492,6 +493,25 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	            docSub.put("bsResultCrtUserId",sessionVO.getUserId());
 	            docSub.put("bsResultFilterClm",docSub.get("name"));
 
+	            //Map<String, Object>  docSub2 = (Map<String, Object>) insertHsResultfinal.get(i);
+	    		EgovMap docSub2 = new EgovMap();
+
+				Map<String, Object>  docSub3 = (Map<String, Object>) docType.get(i);
+
+
+	            int custId = hsManualMapper.selectCustomer(params);
+	            int codyId = hsManualMapper.selectCody(params);
+	            params.put("bsResultId", nextSeq);
+	            String serialNo = hsManualMapper.selectSerialNo(params);
+
+	            docSub2.put("hsNo", LOG_SVC0008D_NO);
+	            docSub2.put("custId", custId);
+	            docSub2.put("bsResultPartId", docSub3.get("stkId"));
+	            docSub2.put("bsResultPartQty", docSub3.get("name"));
+	            docSub2.put("serialNo",serialNo);
+//	            docSub2.put("bsResultCrtDt");
+	            docSub2.put("bsCodyId",codyId);
+	            docSub2.put("bsResultId", nextSeq);
 
 	  	      	String vstkId = String.valueOf( docSub.get("stkId"));
 
@@ -515,6 +535,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
   				if( !"".equals(vstkId) && !("null").equals(vstkId) && vstkId != null ) {
 
   					hsManualMapper.insertHsResultD(docSub);	// INSERT SVC0007D
+  					hsManualMapper.insertUsedFilter(docSub2);	// INSERT LOG0082M
 
   					String filterLastserial =  hsManualMapper.select0087DFilter(docSub);
 

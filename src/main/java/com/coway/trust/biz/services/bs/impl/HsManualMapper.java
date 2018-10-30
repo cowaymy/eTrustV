@@ -300,5 +300,12 @@ public interface HsManualMapper {
 
 	List<EgovMap> selectQryUsedFilterNew(Map<String, Object> params);
 
+	int selectCustomer(Map<String, Object> params);
+	
+	String selectSerialNo(Map<String, Object> params);
+	
+	int selectCody(Map<String, Object> params);
+	
+	void insertUsedFilter(Map<String, Object> params);
 
 }
