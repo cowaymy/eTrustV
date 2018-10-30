@@ -3,27 +3,27 @@
 <mapper namespace="com.coway.trust.biz.scm.impl.SalesPlanManagementMapper">
 
 <select id="selectSalesPlanHeader" parameterType="Map" resultType="egovMap">
-SELECT H1_PLAN_ID
-     , H1_PLAN_DTL_ID
-     , H1_PLAN_STUS_ID
-     , H1_STOCK
-     , H2_TEAM
-     , H2_TYPE_ID
-     , H2_TYPE_NAME
-     , H2_CATEGORY_ID
-     , H2_CATEGORY_NAME
-     , H2_CODE
-     , H2_NAME
-     , H1_M3_ISSUE_AVG
-     , H1_MONTHLY
-     , H2_M1_ISSUE
-     , H2_M0_EXP
-     , H2_M0_ORDER
-     , H2_M0_PLAN
-     , H2_M1
-     , H2_M2
-     , H2_M3
-     , H2_M4
+SELECT PLAN_ID
+     , PLAN_DTL_ID
+     , PLAN_STUS_ID
+     , STOCK
+     , TEAM
+     , TYPE_ID
+     , TYPE_NAME
+     , CATEGORY_ID
+     , CATEGORY_NAME
+     , CODE
+     , NAME
+     , PRE_M3_ISS_AVG
+     , MONTHLY
+     , PRE_M1_ORD_SUM
+     , M0_EXP
+     , M0_ORD_SUM
+     , M0
+     , M1
+     , M2
+     , M3
+     , M4
      , (CASE WHEN (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W1_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W1_WEEK_SEQ ,1,5) ELSE SUBSTR(W1_WEEK_SEQ ,1,3) END) AS W1_WEEK_SEQ
      , (CASE WHEN (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W2_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W2_WEEK_SEQ ,1,5) ELSE SUBSTR(W2_WEEK_SEQ ,1,3) END) AS W2_WEEK_SEQ
      , (CASE WHEN (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 2 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 1) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 1 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) OR (FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',3) = 9 AND FN_GET_SPLIT_DATA2(W3_WEEK_SEQ ,'-',2) = 2) THEN SUBSTR(W3_WEEK_SEQ ,1,5) ELSE SUBSTR(W3_WEEK_SEQ ,1,3) END) AS W3_WEEK_SEQ
@@ -61,54 +61,54 @@ SELECT H1_PLAN_ID
                                  , 11, '11', 12, '12', 13, '13', 14, '14', 15, '15', 16, '16', 17, '17', 18, '18', 19, '19', 20, '20'
                                  , 21, '21', 22, '22', 23, '23', 24, '24', 25, '25', 26, '26', 27, '27', 28, '28', 29, '29', 30, '30') AS RNO
                      , WEEK_SEQ
-                     , H1_PLAN_ID
-                     , H1_PLAN_DTL_ID
-                     , H1_PLAN_STUS_ID
-                     , H1_STOCK
-                     , H2_TEAM
-                     , H2_TYPE_ID
-                     , H2_TYPE_NAME
-                     , H2_CATEGORY_ID
-                     , H2_CATEGORY_NAME
-                     , H2_CODE
-                     , H2_NAME
-                     , H1_M3_ISSUE_AVG
-                     , H1_MONTHLY
-                     , H2_M1_ISSUE
-                     , H2_M0_EXP
-                     , H2_M0_ORDER
-                     , H2_M0_PLAN
-                     , H2_M1
-                     , H2_M2
-                     , H2_M3
-                     , H2_M4
+                     , PLAN_ID
+                     , PLAN_DTL_ID
+                     , PLAN_STUS_ID
+                     , STOCK
+                     , TEAM
+                     , TYPE_ID
+                     , TYPE_NAME
+                     , CATEGORY_ID
+                     , CATEGORY_NAME
+                     , CODE
+                     , NAME
+                     , PRE_M3_ISS_AVG
+                     , MONTHLY
+                     , PRE_M1_ORD_SUM
+                     , M0_EXP
+                     , M0_ORD_SUM
+                     , M0
+                     , M1
+                     , M2
+                     , M3
+                     , M4
                   FROM (
                         SELECT ROW_NUMBER() OVER (PARTITION BY Z.SCM_YEAR ORDER BY Z.CAL_ID) AS RNO
                              , DECODE(LEAD(Z.WEEK_TH_SN) OVER (ORDER BY 'W' || LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN)
                                     , NULL
                                     , 'W' || LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN || '-' || '9'
                                     , 'W' || LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN || '-' || LEAD(Z.WEEK_TH_SN) OVER (ORDER BY 'W'|| LPAD(Z.WEEK_TH, 2, 0) || '-' || Z.WEEK_TH_SN)) AS WEEK_SEQ
-                             , 'planId' AS H1_PLAN_ID
-                             , 'planDtlId' AS H1_PLAN_DTL_ID
-                             , 'planStusId' AS H1_PLAN_STUS_ID
-                             , 'stock' AS H1_STOCK
-                             , 'team' AS H2_TEAM
-                             , 'typeId' AS H2_TYPE_ID
-                             , 'typeName' AS H2_TYPE_NAME
-                             , 'categoryId' AS H2_CATEGORY_ID
-                             , 'categoryName' AS H2_CATEGORY_NAME
-                             , 'code' AS H2_CODE
-                             , 'name' AS H2_NAME
-                             , 'm3IssueAvg' AS H1_M3_ISSUE_AVG
-                             , 'monthly' AS H1_MONTHLY
-                             , 'm1Issue' AS H2_M1_ISSUE
-                             , 'm0Exp' AS H2_M0_EXP
-                             , 'm0Order' AS H2_M0_ORDER
-                             , 'm0Plan' AS H2_M0_PLAN
-                             , 'm1' AS H2_M1
-                             , 'm2' AS H2_M2
-                             , 'm3' AS H2_M3
-                             , 'm4' AS H2_M4
+                             , 'planId' AS PLAN_ID
+                             , 'planDtlId' AS PLAN_DTL_ID
+                             , 'planStusId' AS PLAN_STUS_ID
+                             , 'stock' AS STOCK
+                             , 'team' AS TEAM
+                             , 'typeId' AS TYPE_ID
+                             , 'typeName' AS TYPE_NAME
+                             , 'categoryId' AS CATEGORY_ID
+                             , 'categoryName' AS CATEGORY_NAME
+                             , 'code' AS CODE
+                             , 'name' AS NAME
+                             , 'monthly' AS MONTHLY
+                             , 'preM3IssAvg' AS PRE_M3_ISS_AVG
+                             , 'preM1OrdSum' AS PRE_M1_ORD_SUM
+                             , 'm0Exp' AS M0_EXP
+                             , 'm0OrdSum' AS M0_ORD_SUM
+                             , 'm0' AS M0
+                             , 'm1' AS M1
+                             , 'm2' AS M2
+                             , 'm3' AS M3
+                             , 'm4' AS M4
                           FROM SCM0018M Z
                          WHERE TO_CHAR(Z.WEEK_TH_SN_START, 'YYYYMM') BETWEEN #{salesPlanFrom} AND #{salesPlanTo}
                         )
@@ -136,11 +136,10 @@ SELECT A.PLAN_ID
      , CASE WHEN A.PLAN_MONTH = A.SCM_MONTH THEN A.PLAN_MONTH ELSE A.SCM_MONTH END AS PLAN_MONTH
      , A.PLAN_WEEK
      , A.TEAM
+     , A.PLAN_STUS_ID
      , A.PLAN_STUS_NM
      , A.CRT_DT
-     , A.STUS_DT
      , A.CRT_USER_ID
-     , A.PLAN_STUS_ID
   FROM (
         SELECT A.PLAN_ID
              , A.PLAN_YEAR
@@ -148,12 +147,12 @@ SELECT A.PLAN_ID
              , (SELECT MAX(Z.SCM_MONTH) FROM SCM0018M Z WHERE A.PLAN_YEAR = Z.SCM_YEAR AND A.PLAN_WEEK = Z.WEEK_TH) AS SCM_MONTH
              , A.PLAN_WEEK
              , A.TEAM
-             , DECODE(A.PLAN_STUS_ID, 1, 'Active', 'Confirmed') AS PLAN_STUS_NM
-             , TO_CHAR(A.CRT_DT, 'YYYY/MM/DD HH24:MI:SS') AS CRT_DT
-             , A.STUS_DT
-             , A.CRT_USER_ID
              , A.PLAN_STUS_ID
+             , B.CODE_NAME AS PLAN_STUS_NM
+             , TO_CHAR(A.CRT_DT, 'YYYY/MM/DD HH24:MI:SS') AS CRT_DT
+             , A.CRT_USER_ID
           FROM SCM0001M A
+          LEFT OUTER JOIN SYS0013M B ON (A.PLAN_STUS_ID = B.CODE AND B.CODE_MASTER_ID = 402) /* 402 : SCM Plan Status Code */
          WHERE A.PLAN_YEAR = #{scmYearCbBox}
            AND A.PLAN_WEEK = #{scmWeekCbBox}
 	<if test="scmTeamCbBox != null and scmTeamCbBox !=''">
@@ -225,23 +224,11 @@ SELECT A.PLAN_ID
      , F.CODE_NAME AS TYPE_NAME
      , B.STOCK_CODE AS CODE
      , D.STK_DESC AS NAME
-     , NVL(B.PRE_M3_AVG_ISSU, 0) AS M3_ISSUE_AVG
-     , NVL(B.M1_ORD, 0) AS M1_ISSUE
-/*     , NVL(B.M0_ORD, 0) + CASE WHEN B.M0_PLAN IS NULL OR B.M0_PLAN = 0 THEN GBSLCVD.FN_GET_M_PLAN('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M0_PLAN END AS M0_EXP
-     , NVL(B.M0_ORD, 0) AS M0_ORDER
-     , CASE WHEN B.M0_PLAN IS NULL OR B.M0_PLAN = 0 THEN GBSLCVD.FN_GET_M_PLAN('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M0_PLAN END AS M0_PLAN
-     , CASE WHEN B.M1 IS NULL OR B.M1 = 0 THEN GBSLCVD.FN_GET_M_PLAN('M1', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M1 END AS M1
-     , CASE WHEN B.M2 IS NULL OR B.M2 = 0 THEN GBSLCVD.FN_GET_M_PLAN('M2', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M2 END AS M2
-     , CASE WHEN B.M3 IS NULL OR B.M3 = 0 THEN GBSLCVD.FN_GET_M_PLAN('M3', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M3 END AS M3
-     , CASE WHEN B.M4 IS NULL OR B.M4 = 0 THEN GBSLCVD.FN_GET_M_PLAN('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) ELSE B.M4 END AS M4
-     , GBSLCVD.FN_GET_M_PLAN_CNT('M0', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M0_PLAN
-     , GBSLCVD.FN_GET_M_PLAN_CNT('M1', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M1
-     , GBSLCVD.FN_GET_M_PLAN_CNT('M2', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M2
-     , GBSLCVD.FN_GET_M_PLAN_CNT('M3', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M3
-     , GBSLCVD.FN_GET_M_PLAN_CNT('M4', A.PLAN_YEAR, A.PLAN_WEEK, A.TEAM, B.STOCK_CODE) AS M4*/
-     , NVL(B.M0_ORD, 0) AS M0_ORDER
-     , NVL(B.M0_PLAN, 0) AS M0_PLAN
-     , NVL(B.M0_ORD, 0) + NVL(B.M0_PLAN, 0) AS M0_EXP
+     , NVL(B.PRE_M3_ISS_AVG, 0) AS PRE_M3_ISS_AVG
+     , NVL(B.PRE_M1_ORD_SUM, 0) AS PRE_M1_ORD_SUM
+     , NVL(B.M0_ORD_SUM, 0) + NVL(B.M0, 0) AS M0_EXP
+     , NVL(B.M0_ORD_SUM, 0) AS M0_ORD_SUM
+     , NVL(B.M0, 0) AS M0
      , NVL(B.M1, 0) AS M1
      , NVL(B.M2, 0) AS M2
      , NVL(B.M3, 0) AS M3
@@ -282,7 +269,7 @@ SELECT A.PLAN_ID
      , NVL(B.WS4, 0) AS WS4
      , NVL(B.WS5, 0) AS WS5
   FROM SCM0001M A
-  LEFT OUTER JOIN SCM0002D B ON (A.PLAN_ID = B.PLAN_MASTER_ID)
+  LEFT OUTER JOIN SCM0002D B ON (A.PLAN_ID = B.PLAN_ID)
   LEFT OUTER JOIN SCM0008M C ON (B.STOCK_CODE = C.STOCK_CODE)
   LEFT OUTER JOIN SYS0026M D ON (C.STOCK_ID = D.STK_ID)
   LEFT OUTER JOIN SYS0013M E ON (D.STK_CTGRY_ID = E.CODE_ID AND E.CODE_MASTER_ID = 11) /* 11 : Stock Category */
@@ -304,40 +291,275 @@ SELECT A.PLAN_ID
 		#{item}
 		</foreach>
 	</if>
-<!--	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
-   AND B.STOCK_CODE IN
-		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
+   AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
+ ORDER BY B.PLAN_DTL_ID
+</select>
+
+<select id="selectSalesPlanListAll" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_ID
+     , B.PLAN_DTL_ID
+     , A.PLAN_STUS_ID
+     , 'All' AS TEAM
+     , D.STK_TYPE_ID AS TYPE_ID
+     , E.CODE_NAME AS CATEGORY_NAME
+     , D.STK_CTGRY_ID AS CATEGORY_ID
+     , F.CODE_NAME AS TYPE_NAME
+     , B.STOCK_CODE AS CODE
+     , D.STK_DESC AS NAME
+     , SUM(NVL(B.PRE_M3_ISS_AVG, 0)) AS PRE_M3_ISS_AVG
+     , SUM(NVL(B.PRE_M1_ORD_SUM, 0)) AS PRE_M1_ORD_SUM
+     , SUM(NVL(B.M0_ORD_SUM, 0) + NVL(B.M0, 0)) AS M0_EXP
+     , SUM(NVL(B.M0_ORD_SUM, 0)) AS M0_ORD_SUM
+     , SUM(NVL(B.M0, 0)) AS M0
+     , SUM(NVL(B.M1, 0)) AS M1
+     , SUM(NVL(B.M2, 0)) AS M2
+     , SUM(NVL(B.M3, 0)) AS M3
+     , SUM(NVL(B.M4, 0)) AS M4
+     , SUM(NVL(B.W01, 0)) AS W01
+     , SUM(NVL(B.W02, 0)) AS W02
+     , SUM(NVL(B.W03, 0)) AS W03
+     , SUM(NVL(B.W04, 0)) AS W04
+     , SUM(NVL(B.W05, 0)) AS W05
+     , SUM(NVL(B.W06, 0)) AS W06
+     , SUM(NVL(B.W07, 0)) AS W07
+     , SUM(NVL(B.W08, 0)) AS W08
+     , SUM(NVL(B.W09, 0)) AS W09
+     , SUM(NVL(B.W10, 0)) AS W10
+     , SUM(NVL(B.W11, 0)) AS W11
+     , SUM(NVL(B.W12, 0)) AS W12
+     , SUM(NVL(B.W13, 0)) AS W13
+     , SUM(NVL(B.W14, 0)) AS W14
+     , SUM(NVL(B.W15, 0)) AS W15
+     , SUM(NVL(B.W16, 0)) AS W16
+     , SUM(NVL(B.W17, 0)) AS W17
+     , SUM(NVL(B.W18, 0)) AS W18
+     , SUM(NVL(B.W19, 0)) AS W19
+     , SUM(NVL(B.W20, 0)) AS W20
+     , SUM(NVL(B.W21, 0)) AS W21
+     , SUM(NVL(B.W22, 0)) AS W22
+     , SUM(NVL(B.W23, 0)) AS W23
+     , SUM(NVL(B.W24, 0)) AS W24
+     , SUM(NVL(B.W25, 0)) AS W25
+     , SUM(NVL(B.W26, 0)) AS W26
+     , SUM(NVL(B.W27, 0)) AS W27
+     , SUM(NVL(B.W28, 0)) AS W28
+     , SUM(NVL(B.W29, 0)) AS W29
+     , SUM(NVL(B.W30, 0)) AS W30
+     , SUM(NVL(B.WS1, 0)) AS WS1
+     , SUM(NVL(B.WS2, 0)) AS WS2
+     , SUM(NVL(B.WS3, 0)) AS WS3
+     , SUM(NVL(B.WS4, 0)) AS WS4
+     , SUM(NVL(B.WS5, 0)) AS WS5
+  FROM SCM0001M A
+  LEFT OUTER JOIN SCM0002D B ON (A.PLAN_ID = B.PLAN_ID)
+  LEFT OUTER JOIN SCM0008M C ON (B.STOCK_CODE = C.STOCK_CODE)
+  LEFT OUTER JOIN SYS0026M D ON (C.STOCK_ID = D.STK_ID)
+  LEFT OUTER JOIN SYS0013M E ON (D.STK_CTGRY_ID = E.CODE_ID AND E.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M F ON (D.STK_TYPE_ID = F.CODE_ID AND F.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+ WHERE A.PLAN_YEAR = #{scmYearCbBox}
+   AND A.PLAN_WEEK = #{scmWeekCbBox}
+ 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
+   AND D.STK_CTGRY_ID IN
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
 		#{item}
 		</foreach>
-	</if> -->
+	</if>
+	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
+   AND D.STK_TYPE_ID IN
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
    AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
- ORDER BY A.PLAN_ID DESC, B.STOCK_CODE
+ GROUP BY A.PLAN_ID
+     , B.PLAN_DTL_ID
+     , A.PLAN_STUS_ID
+     , D.STK_TYPE_ID
+     , E.CODE_NAME
+     , D.STK_CTGRY_ID
+     , F.CODE_NAME
+     , B.STOCK_CODE
+     , D.STK_DESC
+ ORDER BY ORDER BY B.PLAN_DTL_ID
+</select>
+
+<select id="selectCreateCheck" parameterType="Map" resultType="egovMap">
+SELECT A.BEF_PLAN
+     , B.THIS_PLAN
+  FROM (
+        SELECT COUNT(*) AS BEF_PLAN
+          FROM SCM0001M Z
+         WHERE Z.PLAN_YEAR = #{befPlanYear}
+           AND Z.PLAN_WEEK = #{befPlanWeek}
+           AND Z.TEAM = #{scmTeamCbBox}
+           AND Z.PLAN_STUS_ID = 4
+        ) A
+     , (
+        SELECT COUNT(*) AS THIS_PLAN
+          FROM SCM0001M Z
+         WHERE Z.PLAN_YEAR = #{scmYearCbBox}
+           AND Z.PLAN_WEEK = #{scmWeekCbBox}
+           AND Z.TEAM = #{scmTeamCbBox}
+           AND Z.PLAN_STUS_ID = 4
+        ) B
 </select>
 
 <insert id="insertSalesPlanMaster" parameterType="Map">
 INSERT INTO SCM0001M
 (
        PLAN_ID
-     , TEAM
      , PLAN_YEAR
      , PLAN_MONTH
      , PLAN_WEEK
-     , PLAN_STUS_ID
+     , TEAM
      , CRT_DT
      , CRT_USER_ID
  )
 VALUES
 (
        SCM0001M_PLAN_ID_SEQ.NEXTVAL
-     , #{scmTeamCbBox}
-     , #{scmYearCbBox}
+     , #{planYear}
      , #{planMonth}
-     , #{scmWeekCbBox}
-     , #{planStusId}
+     , #{planWeek}
+     , #{team}
      , SYSDATE
      , #{crtUserId}
  )
 </insert>
+
+<insert id="insertSalesPlanDetail" parameterType="Map">
+INSERT INTO SCM0002D
+(
+       PLAN_ID
+     , PLAN_DTL_ID
+     , STOCK_CODE
+     , PRE_M3_ISS_AVG
+     , PRE_M1_ORD_SUM
+     , M0_ORD_SUM
+ )
+SELECT (SELECT PLAN_ID FROM SCM0001M WHERE PLAN_YEAR = #{planYear} AND PLAN_WEEK = #{planWeek} AND TEAM = #{team})
+     , SCM0002D_PLAN_DTL_ID_SEQ.NEXTVAL
+     , A.STOCK_CODE
+     , NVL((
+            SELECT ROUND(COUNT(*) / 3)
+              FROM SCM0051S Z
+             WHERE Z.ISS_DT BETWEEN #{issDtFrom} AND #{issDtTo}
+               AND Z.TEAM = #{team}
+               AND Z.STOCK_CODE = A.STOCK_CODE
+            ), 0) AS PRE_M3_ISS_AVG
+     , NVL((
+            SELECT SUM(Z.ORD_QTY)
+              FROM SCM0050S Z
+             WHERE Z.ORD_DT BETWEEN #{m1OrdDtFrom} AND #{m1OrdDtTo}
+               AND Z.TEAM = #{team}
+               AND Z.STOCK_CODE = A.STOCK_CODE
+            ), 0) AS PRE_M1_ORD_SUM
+     , NVL((
+            SELECT SUM(Z.ORD_QTY)
+              FROM SCM0050S Z
+             WHERE Z.ORD_DT BETWEEN #{m0OrdDtFrom} AND #{m0OrdDtTo}
+               AND Z.TEAM = #{team}
+               AND Z.STOCK_CODE = A.STOCK_CODE
+            ), 0) AS M0_ORD_SUM
+  FROM SCM0008M A
+ WHERE A.STUS_CODE_ID = 1
+   AND A.IS_TRGET = 1
+   AND TO_CHAR(A.START_DT, 'YYYYMMDD') <![CDATA[ <= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+   AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+</insert>
+
+<select id="selectSalesPlanForUpdate" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_ID
+     , B.PLAN_DTL_ID
+     , B.STOCK_CODE
+     , NVL(B.W01, 0) AS W01
+     , NVL(B.W02, 0) AS W02
+     , NVL(B.W03, 0) AS W03
+     , NVL(B.W04, 0) AS W04
+     , NVL(B.W05, 0) AS W05
+     , NVL(B.W06, 0) AS W06
+     , NVL(B.W07, 0) AS W07
+     , NVL(B.W08, 0) AS W08
+     , NVL(B.W09, 0) AS W09
+     , NVL(B.W10, 0) AS W10
+     , NVL(B.W11, 0) AS W11
+     , NVL(B.W12, 0) AS W12
+     , NVL(B.W13, 0) AS W13
+     , NVL(B.W14, 0) AS W14
+     , NVL(B.W15, 0) AS W15
+     , NVL(B.W16, 0) AS W16
+     , NVL(B.W17, 0) AS W17
+     , NVL(B.W18, 0) AS W18
+     , NVL(B.W19, 0) AS W19
+     , NVL(B.W20, 0) AS W20
+     , NVL(B.W21, 0) AS W21
+     , NVL(B.W22, 0) AS W22
+     , NVL(B.W23, 0) AS W23
+     , NVL(B.W24, 0) AS W24
+     , NVL(B.W25, 0) AS W25
+     , NVL(B.W26, 0) AS W26
+     , NVL(B.W27, 0) AS W27
+     , NVL(B.W28, 0) AS W28
+     , NVL(B.W29, 0) AS W29
+     , NVL(B.W30, 0) AS W30
+     , NVL(B.WS1, 0) AS WS1
+     , NVL(B.WS2, 0) AS WS2
+     , NVL(B.WS3, 0) AS WS3
+     , NVL(B.WS4, 0) AS WS4
+     , NVL(B.WS5, 0) AS WS5
+  FROM SCM0001M A
+  LEFT OUTER JOIN SCM0002D B ON (A.PLAN_ID = B.PLAN_ID)
+ WHERE A.PLAN_YEAR = #{year}
+   AND A.PLAN_WEEK = #{week}
+   AND A.TEAM = #{team}
+ ORDER BY B.PLAN_DTL_ID
+</select>
+
+<select id="selectSalesPlanForUpdate2" parameterType="Map" resultType="egovMap">
+SELECT A.PLAN_ID
+     , B.PLAN_DTL_ID
+     , B.STOCK_CODE
+     , NVL(B.W01, 0) AS W01
+     , NVL(B.W02, 0) AS W02
+     , NVL(B.W03, 0) AS W03
+     , NVL(B.W04, 0) AS W04
+     , NVL(B.W05, 0) AS W05
+     , NVL(B.W06, 0) AS W06
+     , NVL(B.W07, 0) AS W07
+     , NVL(B.W08, 0) AS W08
+     , NVL(B.W09, 0) AS W09
+     , NVL(B.W10, 0) AS W10
+     , NVL(B.W11, 0) AS W11
+     , NVL(B.W12, 0) AS W12
+     , NVL(B.W13, 0) AS W13
+     , NVL(B.W14, 0) AS W14
+     , NVL(B.W15, 0) AS W15
+     , NVL(B.W16, 0) AS W16
+     , NVL(B.W17, 0) AS W17
+     , NVL(B.W18, 0) AS W18
+     , NVL(B.W19, 0) AS W19
+     , NVL(B.W20, 0) AS W20
+     , NVL(B.W21, 0) AS W21
+     , NVL(B.W22, 0) AS W22
+     , NVL(B.W23, 0) AS W23
+     , NVL(B.W24, 0) AS W24
+     , NVL(B.W25, 0) AS W25
+     , NVL(B.W26, 0) AS W26
+     , NVL(B.W27, 0) AS W27
+     , NVL(B.W28, 0) AS W28
+     , NVL(B.W29, 0) AS W29
+     , NVL(B.W30, 0) AS W30
+     , NVL(B.WS1, 0) AS WS1
+     , NVL(B.WS2, 0) AS WS2
+     , NVL(B.WS3, 0) AS WS3
+     , NVL(B.WS4, 0) AS WS4
+     , NVL(B.WS5, 0) AS WS5
+  FROM SCM0008M A
+ WHERE A.STUS_CODE_ID = 1
+   AND A.IS_TRGET = 1
+   AND TO_CHAR(A.START_DT, 'YYYYMMDD') <![CDATA[ <= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+   AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+</select>
 
 <resultMap id="insertSalesPlanDetailResultMap" type="egovMap"></resultMap>
 <select id="callSpScmInsSalesPlanDetail" statementType="CALLABLE" parameterType="Map">
@@ -370,10 +592,7 @@ UPDATE SCM0002D
 
 <update id="updateSalesPlanDetail" parameterType="Map">
 UPDATE SCM0002D
-   SET PRE_M3_AVG_ISSU = TO_NUMBER(REPLACE(#{m3IssueAvg}, ','))
-     , M1_ORD = TO_NUMBER(REPLACE(#{m1Issue}, ','))
-     , M0_ORD = TO_NUMBER(REPLACE(#{m0Order}, ','))
-     , M0_PLAN = TO_NUMBER(REPLACE(#{m0Plan}, ','))
+   SET M0 = TO_NUMBER(REPLACE(#{m0}, ','))
      , M1 = TO_NUMBER(REPLACE(#{m1}, ','))
      , M2 = TO_NUMBER(REPLACE(#{m2}, ','))
      , M3 = TO_NUMBER(REPLACE(#{m3}, ','))

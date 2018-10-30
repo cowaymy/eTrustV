@@ -35,6 +35,7 @@ SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
      , F.VENDOR
      , F.VENDOR_TXT
      , F.CURR
+     , F.CURR_NAME
   FROM (
         SELECT Z.PLAN_YEAR, Z.PLAN_MONTH, Z.PLAN_WEEK, Z.CDC, X.STOCK_CODE, NVL(Y.MOQ, 0) AS MOQ
              , NVL(X.W01, 0) AS W01, NVL(X.W02, 0) AS W02, NVL(X.W03, 0) AS W03, NVL(X.W04, 0) AS W04, NVL(X.W05, 0) AS W05
@@ -78,7 +79,8 @@ SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
                                END AS FOB_PRC
                         , Z.VENDOR
                         , Z.VENDOR_TXT
-                        , X.CODE_NAME AS CURR
+                        , X.CODE_NAME AS CURR_NAME
+                        , Z.CUR AS CURR
                         , ROW_NUMBER() OVER (PARTITION BY Z.VENDOR, Z.MATRL_MST, Z.PURCHS_ORG ORDER BY Z.SEQ_NO DESC) AS SN
                      FROM LOG0078M Z
                      LEFT OUTER JOIN SYS0013M X ON (Z.CUR = X.CODE_ID AND X.CODE_MASTER_ID = 94) /* 94 : Currency */
@@ -210,6 +212,9 @@ INSERT INTO SCM0053D
      , PURCH_PRC
      , FOB_PRC
      , FOB_AMT
+     , VENDOR
+     , VENDOR_TXT
+     , CURR
      , CRT_DT
      , CRT_USER_ID
  )
@@ -228,6 +233,9 @@ VALUES
      , #{purchPrc}
      , #{fobPrc}
      , #{fobAmt}
+     , #{vendor}
+     , #{vendorTxt}
+     , #{curr}
      , SYSDATE
      , #{crtUserId}
  )

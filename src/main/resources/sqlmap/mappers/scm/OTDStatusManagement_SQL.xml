@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.OTDStatusManagementMapper">
+
+<select id="selectOTDStatus" parameterType="Map" resultType="egovMap">
+SELECT /* PO */
+       A.PO_NO
+     , A.PO_ISSUE_DT
+     , B.STK_CTGRY_ID AS CTGRY_ID
+     , C.CODE_NAME AS CTGRY
+     , B.STK_TYPE_ID AS TYPE_ID
+     , D.CODE_NAME AS TYPE
+     , A.STOCK_CODE
+     , B.STK_DESC AS NAME
+     , A.GR_DT
+     , NVL(A.PO_QTY, 0) AS PO_QTY
+     , A.PO_STUS AS PO_STUS_ID
+     , E.NAME AS PO_STUS_NAME
+     /* SO */
+     , NVL(A.SO_QTY, 0) AS SO_QTY
+     , A.SO_DT
+     /* PP */
+     , NVL(A.PP_PLAN_QTY, 0) AS PP_PLAN_QTY
+     , NVL(A.PP_PROD_QTY, 0) AS PP_PROD_QTY
+     , A.PP_PROD_START_DT
+     , A.PP_PROD_END_DT
+     /* GI */
+     , NVL(A.GI_QTY, 0) AS GI_QTY
+     , A.GI_DT
+     /* SBO */
+     , NVL(A.SBO_PO_QTY, 0) AS SBO_PO_QTY
+     , NVL(A.SBO_AP_QTY, 0) AS SBO_AP_QTY
+     , NVL(A.SBO_GR_QTY, 0) AS SBO_GR_QTY
+  FROM SCM0039M A
+  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
+  LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M D ON (B.STK_TYPE_ID = D.CODE_ID AND D.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+  LEFT OUTER JOIN SYS0038M E ON (A.PO_STUS = E.STUS_CODE_ID)
+ WHERE A.PO_ISSUE_DT BETWEEN #{fromDt} AND #{toDt}
+	<if test="poStusId != null and poStusId !=''">
+   AND A.PO_STUS = #{poStusId}
+	</if>
+	<if test="poNo != null and poNo !=''">
+   AND A.PO_NO LIKE '%' || #{poNo} || '%'
+	</if>
+	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
+   AND B.STK_TYPE_ID IN
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ ORDER BY A.PO_NO DESC
+</select>
+
+</mapper>

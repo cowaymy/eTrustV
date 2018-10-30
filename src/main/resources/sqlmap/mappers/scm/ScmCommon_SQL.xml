@@ -10,7 +10,7 @@ SELECT TO_CHAR(SYSDATE, 'YYYY') AS ID, TO_CHAR(SYSDATE, 'YYYY') AS NAME FROM DUA
 
 <select id="selectScmWeek" parameterType="Map" resultType="egovMap">
 SELECT A.SCM_YEAR
-     , A.WEEK_TH || DECODE(LENGTH(A.WEEK_TH), 1, '  [', '[') || TO_CHAR(A.WEEK_TH_SN_START, 'YYYY-MM-DD') || ' ~ ' || A.WEEK_TH_SN_END || ']' AS NAME
+     , A.WEEK_TH || DECODE(LENGTH(A.WEEK_TH), 1, '  [', '[') || TO_CHAR(A.WEEK_TH_SN_START, 'YYYY-MM-DD') || ' ~ ]' AS NAME
      , A.SCM_MONTH
      , A.WEEK_TH AS ID
   FROM SCM0018M A
@@ -38,13 +38,43 @@ SELECT A.CODE AS ID
  ORDER BY A.CODE_ID
 </select>
 
+<select id="selectScmIfType" parameterType="Map" resultType="egovMap">
+SELECT A.CODE AS ID
+     , A.CODE_DESC AS ID2
+     , A.CODE_NAME AS NAME
+  FROM SYS0013M A
+ WHERE A.CODE_MASTER_ID = 352
+   AND A.DISAB = 0
+ ORDER BY A.CODE_ID
+</select>
+
+<select id="selectScmIfTranStatus" parameterType="Map" resultType="egovMap">
+SELECT A.CODE AS ID
+     , A.CODE_DESC AS ID2
+     , A.CODE_NAME AS NAME
+  FROM SYS0013M A
+ WHERE A.CODE_MASTER_ID = 400
+   AND A.DISAB = 0
+ ORDER BY A.CODE_ID
+</select>
+
+<select id="selectScmIfErrCode" parameterType="Map" resultType="egovMap">
+SELECT A.CODE AS ID
+     , A.CODE_DESC AS ID2
+     , A.CODE_NAME AS NAME
+  FROM SYS0013M A
+ WHERE A.CODE_MASTER_ID = 401
+   AND A.DISAB = 0
+ ORDER BY A.CODE_ID
+</select>
+
 <select id="selectScmStockCategory" parameterType="Map" resultType="egovMap">
 SELECT DISTINCT C.CODE_ID AS ID
      , C.CODE_NAME AS NAME
   FROM SCM0008M A
   LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
   LEFT OUTER JOIN SYS0013M C ON (B.STK_CTGRY_ID = C.CODE_ID AND C.CODE_MASTER_ID = 11)
- WHERE A.STUS_CODE = 1
+ WHERE A.STUS_CODE_ID = 1
    AND B.STUS_CODE_ID = 1
    AND B.IS_NCV = 0
    AND C.DISAB = 0
@@ -57,7 +87,7 @@ SELECT DISTINCT C.CODE_ID AS ID
   FROM SCM0008M A
   LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
   LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15)
- WHERE A.STUS_CODE = 1
+ WHERE A.STUS_CODE_ID = 1
    AND B.STUS_CODE_ID = 1
    AND B.IS_NCV = 0
    AND C.DISAB = 0
@@ -70,7 +100,7 @@ SELECT B.STK_CODE AS ID
   FROM SCM0008M A
   LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
  WHERE A.IS_TRGET = 1
-   AND A.STUS_CODE = 1
+   AND A.STUS_CODE_ID = 1
    AND B.IS_NCV = 0
    AND B.STUS_CODE_ID = 1
 	<if test="scmStockCategory != null and scmStockCategory != ''">

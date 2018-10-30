@@ -1,0 +1,203 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.coway.trust.biz.scm.impl.ScmInterfaceManagementMapper">
+
+<select id="selectInterfaceList" parameterType="Map" resultType="egovMap">
+SELECT A.IF_TYPE
+     , B.CODE_NAME AS IF_TYPE_NAME
+     , A.TRAN_STATUS_CD
+     , C.CODE_NAME AS TRAN_STATUS_NAME
+     , A.ERR_CD
+     , D.CODE_NAME AS ERR_NAME
+     , A.ERR_MSG
+     , SUBSTR(A.TRAN_DT, 5, 2) || '-' || SUBSTR(A.TRAN_DT, 7, 2) || '-' || SUBSTR(A.TRAN_DT, 1, 4) AS TRAN_DT
+     , SUBSTR(A.TRAN_TM, 1, 2) || ':' || SUBSTR(A.TRAN_TM, 3, 2) || ':' || SUBSTR(A.TRAN_TM, 5, 4) AS TRAN_TM
+     , SUBSTR(A.RGST_DT, 5, 2) || '-' || SUBSTR(A.RGST_DT, 7, 2) || '-' || SUBSTR(A.RGST_DT, 1, 4) AS RGST_DT
+     , SUBSTR(A.RGST_TM, 1, 2) || ':' || SUBSTR(A.RGST_TM, 3, 2) || ':' || SUBSTR(A.RGST_TM, 5, 4) AS RGST_TM
+  FROM (
+        SELECT Z.IF_TYPE
+             , Z.TRAN_STATUS_CD
+             , Z.ERR_CD
+             , Z.ERR_MSG
+             , Z.TRAN_DT
+             , Z.TRAN_TM
+             , Z.RGST_DT
+             , Z.RGST_TM
+          FROM ITF0151M Z
+         WHERE Z.TRAN_DT BETWEEN #{tranDtFrom} AND #{tranDtTo}
+	<if test="scmIfTranStatusCbBox != null and ! scmIfTranStatusCbBox.isEmpty">
+           AND Z.TRAN_STATUS_CD IN
+		<foreach item="item" collection="scmIfTranStatusCbBox" index="index" open="(" separator="," close=")">
+           #{item}
+		</foreach>
+	</if>
+<!-- 	<if test="scmIfErrCodeCbBox != null and ! scmIfErrCodeCbBox.isEmpty">
+           AND Z.ERR_CD IN
+		<foreach item="item" collection="scmIfErrCodeCbBox" index="index" open="(" separator="," close=")">
+           #{item}
+		</foreach>
+	</if> -->
+        UNION ALL
+        SELECT Z.IF_TYPE
+             , Z.TRAN_STATUS_CD
+             , Z.ERR_CD
+             , Z.ERR_MSG
+             , Z.TRAN_DT
+             , Z.TRAN_TM
+             , Z.RGST_DT
+             , Z.RGST_TM
+          FROM ITF0152M Z
+         WHERE Z.TRAN_DT BETWEEN #{tranDtFrom} AND #{tranDtTo}
+	<if test="scmIfTranStatusCbBox != null and ! scmIfTranStatusCbBox.isEmpty">
+           AND Z.TRAN_STATUS_CD IN
+		<foreach item="item" collection="scmIfTranStatusCbBox" index="index" open="(" separator="," close=")">
+           #{item}
+		</foreach>
+	</if>
+<!-- 	<if test="scmIfErrCodeCbBox != null and ! scmIfErrCodeCbBox.isEmpty">
+           AND Z.ERR_CD IN
+		<foreach item="item" collection="scmIfErrCodeCbBox" index="index" open="(" separator="," close=")">
+           #{item}
+		</foreach>
+	</if> -->
+        UNION ALL
+        SELECT Z.IF_TYPE
+             , Z.TRAN_STATUS_CD
+             , Z.ERR_CD
+             , Z.ERR_MSG
+             , Z.TRAN_DT
+             , Z.TRAN_TM
+             , Z.RGST_DT
+             , Z.RGST_TM
+          FROM ITF0153M Z
+         WHERE Z.TRAN_DT BETWEEN #{tranDtFrom} AND #{tranDtTo}
+	<if test="scmIfTranStatusCbBox != null and ! scmIfTranStatusCbBox.isEmpty">
+           AND Z.TRAN_STATUS_CD IN
+		<foreach item="item" collection="scmIfTranStatusCbBox" index="index" open="(" separator="," close=")">
+           #{item}
+		</foreach>
+	</if>
+<!-- 	<if test="scmIfErrCodeCbBox != null and ! scmIfErrCodeCbBox.isEmpty">
+           AND Z.ERR_CD IN
+		<foreach item="item" collection="scmIfErrCodeCbBox" index="index" open="(" separator="," close=")">
+           #{item}
+		</foreach>
+	</if> -->
+        UNION ALL
+        SELECT Z.IF_TYPE
+             , Z.TRAN_STATUS_CD
+             , Z.ERR_CD
+             , Z.ERR_MSG
+             , Z.TRAN_DT
+             , Z.TRAN_TM
+             , Z.RGST_DT
+             , Z.RGST_TM
+          FROM ITF0155M Z
+         WHERE Z.TRAN_DT BETWEEN #{tranDtFrom} AND #{tranDtTo}
+	<if test="scmIfTranStatusCbBox != null and ! scmIfTranStatusCbBox.isEmpty">
+           AND Z.TRAN_STATUS_CD IN
+		<foreach item="item" collection="scmIfTranStatusCbBox" index="index" open="(" separator="," close=")">
+           #{item}
+		</foreach>
+	</if>
+<!-- 	<if test="scmIfErrCodeCbBox != null and ! scmIfErrCodeCbBox.isEmpty">
+           AND Z.ERR_CD IN
+		<foreach item="item" collection="scmIfErrCodeCbBox" index="index" open="(" separator="," close=")">
+           #{item}
+		</foreach>
+	</if> -->
+        UNION ALL
+        SELECT Z.IF_TYPE
+             , Z.TRAN_STATUS_CD
+             , Z.ERR_CD
+             , Z.ERR_MSG
+             , Z.TRAN_DT
+             , Z.TRAN_TM
+             , Z.RGST_DT
+             , Z.RGST_TM
+          FROM ITF0156M Z
+         WHERE Z.TRAN_DT BETWEEN #{tranDtFrom} AND #{tranDtTo}
+	<if test="scmIfTranStatusCbBox != null and ! scmIfTranStatusCbBox.isEmpty">
+           AND Z.TRAN_STATUS_CD IN
+		<foreach item="item" collection="scmIfTranStatusCbBox" index="index" open="(" separator="," close=")">
+           #{item}
+		</foreach>
+	</if>
+<!-- 	<if test="scmIfErrCodeCbBox != null and ! scmIfErrCodeCbBox.isEmpty">
+           AND Z.ERR_CD IN
+		<foreach item="item" collection="scmIfErrCodeCbBox" index="index" open="(" separator="," close=")">
+           #{item}
+		</foreach>
+	</if> -->
+        ) A
+  LEFT OUTER JOIN SYS0013M B ON (A.IF_TYPE = B.CODE AND B.CODE_MASTER_ID = 352) /* 352 : SCM Interface Type */
+  LEFT OUTER JOIN SYS0013M C ON (A.TRAN_STATUS_CD = C.CODE AND C.CODE_MASTER_ID = 400) /* 400 : SCM Interface Trans Status */
+  LEFT OUTER JOIN SYS0013M D ON (A.ERR_CD = D.CODE AND D.CODE_MASTER_ID = 401) /* 401 : SCM Interface Interface Error Code */
+ WHERE 1 = 1
+	<if test="scmIfTypeCbBox != null and ! scmIfTypeCbBox.isEmpty">
+   AND A.IF_TYPE IN
+		<foreach item="item" collection="scmIfTypeCbBox" index="index" open="(" separator="," close=")">
+       #{item}
+		</foreach>
+	</if>
+ ORDER BY A.TRAN_DT DESC
+</select>
+
+<select id="doInterface" parameterType="Map" resultType="egovMap">
+</select>
+
+<insert id="scmIf155" parameterType="Map">
+INSERT INTO ITF0155M
+(
+       IF_KEY
+     , SEQ
+     , IF_TYPE
+     , TRAN_STATUS_CD
+     , TRAN_DT
+     , TRAN_TM
+     , RGST_DT
+     , RGST_TM
+     , RGST_ID
+     , PO_ID
+     , PO_NO
+     , PO_ITM_NO
+     , DELFLAG
+     , VENDOR
+     , PO_ISSU_DT
+     , CDC
+     , STOCK_CODE
+     , QTY
+     , FOB_AMT
+     , FOB_PRC
+     , PRC_UNIT
+     , CUR
+ )
+SELECT B.PO_ITEM_NO AS IF_KEY
+     , 1 AS SEQ
+     , '155' AS IF_TYPE
+     , '20' AS TRAN_STATUS_CD
+     , TO_CHAR(SYSDATE, 'YYYYMMDD') AS TRAN_DT
+     , TO_CHAR(SYSDATE, 'HH24MISS') AS TRAN_TM
+     , TO_CHAR(SYSDATE, 'YYYYMMDD') AS RGST_DT
+     , TO_CHAR(SYSDATE, 'HH24MISS') AS RGST_TM
+     , #{crtUserId} AS RGST_ID
+     , A.PO_ID
+     , B.PO_NO
+     , B.PO_ITEM_NO AS PO_ITM_NO
+     , 'N' AS DELFLAG
+     , B.VENDOR
+     , TO_CHAR(A.CRT_DT, 'YYYYMMDD') AS PO_ISSU_DT
+     , A.CDC
+     , B.STOCK_CODE
+     , B.PO_QTY AS QTY
+     , B.FOB_AMT
+     , B.FOB_PRC
+     , B.COND_PRC_UNIT
+     , B.CURR AS CUR
+  FROM SCM0052M A
+  LEFT OUTER JOIN SCM0053D B ON (A.PO_ID = B.PO_ID AND B.USE_YN = 'Y')
+ WHERE B.PO_NO = #{poNo}
+   AND B.PO_ITEM_NO = #{poItemNo}
+</insert>
+
+</mapper>
