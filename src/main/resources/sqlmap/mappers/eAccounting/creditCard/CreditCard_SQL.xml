@@ -845,4 +845,128 @@ FROM   FCM0016M
 WHERE CRDIT_CARD_STUS = 'A'
 </select>
 
+<select id="getOldDisClamUn" parameterType="Map" resultType="egovMap">
+    SELECT
+        CLAM_UN
+    FROM FCM0018D
+    WHERE CLM_NO = #{clmNo}
+    GROUP BY CLAM_UN
+</select>
+
+<update id="updateExistingClamUn" parameterType="Map">
+    UPDATE FCM0018D
+    SET CLAM_UN = #{newClamUn}
+    WHERE CLM_NO = #{clmNo}
+    and CLAM_UN = #{oldClamUn}
+</update>
+
+<insert id="insertRejectM" parameterType="Map">
+    INSERT INTO FCM0017M (
+        CLM_NO,
+        CLM_TYPE,
+        CRDIT_CARD_USER_ID,
+        CRDIT_CARD_USER_NAME,
+        CRDIT_CARD_NO,
+        CHRG_USER_ID,
+        COST_CENTR,
+        COST_CENTR_NAME,
+        BANK_CODE,
+        BANK_NAME,
+        CLM_MONTH,
+        TOT_AMT,
+        /* APPV_PRCSS_NO */
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID,
+        PREV_CLM_NO
+    )
+    SELECT
+        #{newClmNo},
+        CLM_TYPE,
+        CRDIT_CARD_USER_ID,
+        CRDIT_CARD_USER_NAME,
+        CRDIT_CARD_NO,
+        CHRG_USER_ID,
+        COST_CENTR,
+        COST_CENTR_NAME,
+        BANK_CODE,
+        BANK_NAME,
+        CLM_MONTH,
+        TOT_AMT,
+        /* APPV_PRCSS_NO */
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId},
+        CLM_NO AS PREV_CLM_NO
+    FROM
+        FCM0017M
+    WHERE
+        CLM_NO = #{clmNo}
+</insert>
+
+<insert id="insertRejectD" parameterType="Map">
+    INSERT INTO FCM0018D (
+        CLM_NO,
+        CLM_SEQ,
+        INVC_TYPE,
+        INVC_NO,
+        INVC_DT,
+        SUPPLY_NAME,
+        EXP_TYPE,
+        EXP_TYPE_NAME,
+        GL_ACC_CODE,
+        GL_ACC_CODE_NAME,
+        BUDGET_CODE,
+        BUDGET_CODE_NAME,
+        TAX_CODE,
+        NET_AMT,
+        TAX_AMT,
+        TAX_NON_CLM_AMT,
+        TOT_AMT,
+        ATCH_FILE_GRP_ID,
+        EXP_DESC,
+        CLAM_UN,
+        CRT_DT,
+        CRT_USER_ID,
+        UPD_DT,
+        UPD_USER_ID,
+        COST_CENTR,
+        COST_CENTR_NAME,
+        GST_RGIST_NO
+    )
+    SELECT
+        #{newClmNo},
+        CLM_SEQ,
+        INVC_TYPE,
+        INVC_NO,
+        INVC_DT,
+        SUPPLY_NAME,
+        EXP_TYPE,
+        EXP_TYPE_NAME,
+        GL_ACC_CODE,
+        GL_ACC_CODE_NAME,
+        BUDGET_CODE,
+        BUDGET_CODE_NAME,
+        TAX_CODE,
+        NET_AMT,
+        TAX_AMT,
+        TAX_NON_CLM_AMT,
+        TOT_AMT,
+        ATCH_FILE_GRP_ID,
+        EXP_DESC,
+        CLAM_UN,
+        SYSDATE,
+        #{userId},
+        SYSDATE,
+        #{userId},
+        COST_CENTR,
+        COST_CENTR_NAME,
+        GST_RGIST_NO
+    FROM
+        FCM0018D
+    WHERE
+        CLM_NO = #{clmNo}
+</insert>
 </mapper>

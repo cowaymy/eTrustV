@@ -23,18 +23,18 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("creditCardService")
 public class CreditCardServiceImpl implements CreditCardService {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(SampleServiceImpl.class);
-	
+
 	@Value("${app.name}")
 	private String appName;
-	
+
 	@Resource(name = "creditCardMapper")
 	private CreditCardMapper creditCardMapper;
-	
+
 	@Autowired
 	private WebInvoiceMapper webInvoiceMapper;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
@@ -49,7 +49,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 		// TODO Auto-generated method stub
 		return creditCardMapper.selectBankCode();
 	}
-	
+
 	@Override
 	public int selectNextCrditCardSeq() {
 		// TODO Auto-generated method stub
@@ -120,22 +120,22 @@ public class CreditCardServiceImpl implements CreditCardService {
 	public void insertReimbursement(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		List<Object> gridDataList = (List<Object>) params.get("gridDataList");
-		
+
 		Map<String, Object> masterData = (Map<String, Object>) gridDataList.get(0);
-		
+
 		String clmNo = creditCardMapper.selectNextClmNo();
 		params.put("clmNo", clmNo);
-		
+
 		masterData.put("clmNo", clmNo);
 		masterData.put("allTotAmt", params.get("allTotAmt"));
 		masterData.put("userId", params.get("userId"));
 		masterData.put("userName", params.get("userName"));
-		
+
 		LOGGER.debug("masterData =====================================>>  " + masterData);
 		creditCardMapper.insertReimbursement(masterData);
-		
+
 		for(int i = 0; i < gridDataList.size(); i++) {
 			Map<String, Object> item = (Map<String, Object>) gridDataList.get(i);
 			int clmSeq = creditCardMapper.selectNextClmSeq(clmNo);
@@ -176,11 +176,11 @@ public class CreditCardServiceImpl implements CreditCardService {
 	public void updateReimbursement(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		// TODO editGridDataList GET
 		List<Object> addList = (List<Object>) params.get("add"); // 추가 리스트 얻기
 		List<Object> updateList = (List<Object>) params.get("update"); // 수정 리스트 얻기
-		
+
 		if (addList.size() > 0) {
 			Map hm = null;
 			// biz처리
@@ -216,7 +216,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 				creditCardMapper.updateReimbursementItem(hm);
 			}
 		}
-		
+
 		LOGGER.info("추가 : {}", addList.toString());
 		LOGGER.info("수정 : {}", updateList.toString());
 	}
@@ -225,18 +225,18 @@ public class CreditCardServiceImpl implements CreditCardService {
 	public void insertApproveManagement(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		List<Object> apprGridList = (List<Object>) params.get("apprGridList");
 		List<Object> newGridList = (List<Object>) params.get("newGridList");
 
 		params.put("appvLineCnt", apprGridList.size());
-		
+
 		LOGGER.debug("insertApproveManagement =====================================>>  " + params);
 		webInvoiceMapper.insertApproveManagement(params);
-		
+
 		if (apprGridList.size() > 0) {
 			Map hm = null;
-			
+
 			for (Object map : apprGridList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
@@ -247,10 +247,10 @@ public class CreditCardServiceImpl implements CreditCardService {
 				webInvoiceMapper.insertApproveLineDetail(hm);
 			}
 		}
-		
+
 		if (newGridList.size() > 0) {
 			Map hm = null;
-			
+
 			// biz처리
 			for (Object map : newGridList) {
 				hm = (HashMap<String, Object>) map;
@@ -264,7 +264,7 @@ public class CreditCardServiceImpl implements CreditCardService {
 				creditCardMapper.insertApproveItems(hm);
 			}
 		}
-		
+
 		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
 		// TODO pettyCashReqst table update
 		creditCardMapper.updateAppvPrcssNo(params);
@@ -299,8 +299,39 @@ public class CreditCardServiceImpl implements CreditCardService {
 		// TODO Auto-generated method stub
 		return creditCardMapper.selectReimbursementItemGrpForAppv(params);
 	}
-	
-	
-	
 
+    @Override
+    public void editRejected(Map<String, Object> params) {
+        // TODO Auto-generated method stub
+
+        LOGGER.debug("editRejected =====================================>>  " + params);
+
+        creditCardMapper.insertRejectM(params);
+
+        creditCardMapper.insertRejectD(params);
+
+        List<EgovMap> oldSeq = creditCardMapper.getOldDisClamUn(params);
+        for(int i = 0; i < oldSeq.size(); i++) {
+            Map<String, Object> oldSeq1 = (Map<String, Object>) oldSeq.get(i);
+            String oldClamUn = oldSeq1.get("clamUn").toString();
+            LOGGER.debug("oldClamUn :: " + oldClamUn);
+
+            params.put("clmType", "J3");
+            EgovMap clamUn = webInvoiceMapper.selectClamUn(params);
+            clamUn.put("clmType", "J3");
+
+            webInvoiceMapper.updateClamUn(clamUn);
+
+            LOGGER.debug(clamUn.get("clamUn").toString());
+            params.put("oldClamUn", oldClamUn);
+            params.put("newClamUn", clamUn.get("clamUn"));
+            creditCardMapper.updateExistingClamUn(params);
+        }
+
+    }
+
+    @Override
+    public String selectNextClmNo() {
+        return creditCardMapper.selectNextClmNo();
+    }
 }
