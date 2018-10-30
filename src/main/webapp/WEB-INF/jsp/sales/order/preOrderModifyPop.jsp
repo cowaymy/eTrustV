@@ -761,12 +761,12 @@
                 }
             }
 
-            if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '1412') {
+            /* if(appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68' || appTypeVal == '1412') {
                 if(FormUtil.checkReqValue($('#refereNo'))) {
                     isValid = false;
                     msg += "* Please key in the reference no.<br>";
                 }
-            }
+            } */
 
             if(appTypeVal == '66') {
                 if($(':radio[name="advPay"]:checked').val() != '1' && $(':radio[name="advPay"]:checked').val() != '0') {
@@ -788,10 +788,10 @@
             }
         }
 
-        if(!$('#pBtnCal').hasClass("blind")) {
+/*         if(!$('#pBtnCal').hasClass("blind")) {
             isValid = false;
             msg += "* Please press the Calculation button<br>";
-        }
+        } */
 
         if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
@@ -867,60 +867,60 @@
         var vIs3rdParty = $('#thrdParty').is(":checked") ? 1 : 0;
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
-
+console.log("email 1 : " + $('#billMthdEmailTxt1').val().trim());
         var orderVO = {
-            preOrdId             : $('#hiddenPreOrdId').val().trim(),
-            sofNo                : $('#sofNo').val().trim(),
-            custPoNo             : $('#poNo').val().trim(),
-            appTypeId            : vAppType,
-            srvPacId             : $('#srvPacId').val(),
-            instPriod            : $('#installDur').val().trim(),
-            custId               : $('#hiddenCustId').val(),
-            empChk               : 0,
-            gstChk               : $('#gstChk').val(),
-//          atchFileGrpId        :
-            custCntcId           : $('#hiddenCustCntcId').val(),
-//          keyinBrnchId         :
-            instAddId            : $('#hiddenCustAddId').val(),
-            dscBrnchId           : $('#dscBrnchId').val(),
-            preDt                : $('#prefInstDt').val().trim(),
-            preTm                : $('#prefInstTm').val().trim(),
-            instct               : $('#speclInstct').val().trim(),
-            exTrade              : $('#exTrade').val(),
-            itmStkId             : $('#ordProudct').val(),
-            promoId              : $('#ordPromo').val(),
-            mthRentAmt           : $('#ordRentalFees').val().trim(),
-            promoDiscPeriodTp    : $('#promoDiscPeriodTp').val(),
-            promoDiscPeriod      : $('#promoDiscPeriod').val().trim(),
-            totAmt               : $('#ordPrice').val().trim(),
-            norAmt               : $('#normalOrdPrice').val().trim(),
-            norRntFee            : $('#normalOrdRentalFees').val().trim(),
-            discRntFee           : $('#ordRentalFees').val().trim(),
-            totPv                : $('#ordPv').val().trim(),
-            totPvGst             : $('#ordPvGST').val().trim(),
-            prcId                : $('#ordPriceId').val(),
-            memCode              : $('#salesmanCd').val(),
-            advBill              : $('input:radio[name="advPay"]:checked').val(),
-            custCrcId            : vCustCRCID,
-            bankId               : vBankID,
-            custAccId            : vCustAccID,
-            is3rdParty           : vIs3rdParty,
-            rentPayCustId        : vCustomerId,
-            rentPayModeId        : $('#rentPayMode').val(),
-            custBillId           : vCustBillId,
-            custBillCustId       : $('#hiddenCustId').val(),
-            custBillCntId        : $("#hiddenCustCntcId").val(),
-            custBillAddId        : $("#hiddenBillAddId").val(),
-            custBillRem          : $('#billRem').val().trim(),
-            custBillEmail        : $('#billMthdEmailTxt1').val().trim(),
-            custBillIsSms        : $('#billMthdSms1').is(":checked") ? 1 : 0,
-            custBillIsPost       : $('#billMthdPost').is(":checked") ? 1 : 0,
-            custBillEmailAdd     : $('#billMthdEmailTxt2').val().trim(),
-            custBillIsWebPortal  : $('#billGrpWeb').is(":checked")   ? 1 : 0,
-            custBillWebPortalUrl : $('#billGrpWebUrl').val().trim(),
-            custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
-            custBillCustCareCntId: $("#hiddenBPCareId").val()
-        };
+        		preOrdId             : $('#frmPreOrdReg #hiddenPreOrdId').val().trim(),
+                sofNo                : $('#sofNo').val().trim(),
+                custPoNo             : $('#poNo').val().trim(),
+                appTypeId            : vAppType,
+                srvPacId             : $('#srvPacId').val(),
+//                instPriod            : $('#installDur').val().trim(),
+                custId               : $('#hiddenCustId').val(),
+                empChk               : 0,
+                gstChk               : $('#gstChk').val(),
+//              atchFileGrpId        :
+                custCntcId           : $('#hiddenCustCntcId').val(),
+//              keyinBrnchId         :
+                instAddId            : $('#hiddenCustAddId').val(),
+                dscBrnchId           : $('#dscBrnchId').val(),
+                preDt                : $('#prefInstDt').val().trim(),
+                preTm                : $('#prefInstTm').val().trim(),
+                instct               : $('#speclInstct').val().trim(),
+                exTrade              : $('#exTrade').val(),
+                itmStkId             : $('#ordProudct').val(),
+                promoId              : $('#ordPromo').val(),
+                mthRentAmt           : $('#ordRentalFees').val().trim(),
+//                promoDiscPeriodTp    : $('#promoDiscPeriodTp').val(),
+//                promoDiscPeriod      : $('#promoDiscPeriod').val().trim(),
+                totAmt               : $('#ordPrice').val().trim(),
+                norAmt               : $('#normalOrdPrice').val().trim(),
+//                norRntFee            : $('#normalOrdRentalFees').val().trim(),
+                discRntFee           : $('#ordRentalFees').val().trim(),
+//                totPv                : $('#ordPv').val().trim(),
+//                totPvGst             : $('#ordPvGST').val().trim(),
+                prcId                : $('#ordPriceId').val(),
+                memCode              : $('#salesmanCd').val(),
+                advBill              : $('input:radio[name="advPay"]:checked').val(),
+                custCrcId            : vCustCRCID,
+                bankId               : vBankID,
+                custAccId            : vCustAccID,
+                is3rdParty           : vIs3rdParty,
+                rentPayCustId        : vCustomerId,
+                rentPayModeId        : $('#rentPayMode').val(),
+                custBillId           : vCustBillId,
+                custBillCustId       : $('#hiddenCustId').val(),
+                custBillCntId        : $("#hiddenCustCntcId").val(),
+                custBillAddId        : $("#hiddenBillAddId").val(),
+                //custBillRem          : $('#billRem').val().trim(),
+                custBillEmail        : $('#billMthdEmailTxt1').val().trim(),
+                custBillIsSms        : $('#billMthdSms1').is(":checked") ? 1 : 0,
+                custBillIsPost       : $('#billMthdPost').is(":checked") ? 1 : 0,
+                custBillEmailAdd     : $('#billMthdEmailTxt2').val().trim(),
+                custBillIsWebPortal  : $('#billGrpWeb').is(":checked")   ? 1 : 0,
+                custBillWebPortalUrl : $('#billGrpWebUrl').val().trim(),
+                custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
+                custBillCustCareCntId: $("#hiddenBPCareId").val()
+            };
         Common.ajax("POST", "/sales/order/modifyPreOrder.do", orderVO, function(result) {
             Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdModPop);
         },
@@ -1427,7 +1427,7 @@
 
             if($('#hiddenTypeId').val() == '965') { //Company
 
-                console.log("fn_setBillGrp 1 typeId : "+$('#typeId').val());
+                console.log("fn_setBillGrp 1 typeId : "+$('#hiddenTypeId').val());
 
                 $('#sctBillPrefer').removeClass("blind");
 
@@ -1447,11 +1447,12 @@
             }
             else if($('#hiddenTypeId').val() == '964') { //Individual
 
-                console.log("fn_setBillGrp 2 typeId : "+$('#typeId').val());
+                console.log("fn_setBillGrp 2 typeId : "+$('#hiddenTypeId').val());
                 console.log("custCntcEmail : "+$('#custCntcEmail').val());
                 console.log(FormUtil.isNotEmpty($('#custCntcEmail').val().trim()));
 
-                if(FormUtil.isNotEmpty($('#custCntcEmail').val().trim())) {
+                if(FormUtil.isNotEmpty('${preOrderInfo.custBillEmail}')) {
+
                     $('#billMthdEstm').prop("checked", true);
                     $('#billMthdEmail1').prop("checked", true).removeAttr("disabled");
                     $('#billMthdEmail2').removeAttr("disabled");
@@ -1597,6 +1598,7 @@
                 $("#custCntcTelO").val(custCntcInfo.telO);
                 $("#custCntcTelF").val(custCntcInfo.telf);
                 $("#custCntcExt").val(custCntcInfo.ext);
+
             }
         });
     }
