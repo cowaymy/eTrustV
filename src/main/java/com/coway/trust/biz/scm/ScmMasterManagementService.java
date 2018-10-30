@@ -10,7 +10,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface ScmMasterManagementService
 {
+	//	SCM Master Manager
 	List<EgovMap> selectScmMasterList(Map<String, Object> params);
 	int saveScmMaster(List<Object> addList, SessionVO sessionVO);
 	int saveScmMaster2(List<Object> addList, SessionVO sessionVO);
+	
+	//	CDC Warehouse Mapping
+	List<EgovMap> selectCdcWhMappingList(Map<String, Object> params);
+	List<EgovMap> selectCdcWhUnmappingList(Map<String, Object> params);
+	int insertCdcWhMapping(List<Object> insList, Integer crtUserId);
+	int deleteCdcWhMapping(List<Object> delList, Integer crtUserId);
 }
