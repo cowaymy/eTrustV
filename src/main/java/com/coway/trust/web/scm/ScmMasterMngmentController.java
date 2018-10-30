@@ -279,7 +279,7 @@ public class ScmMasterMngmentController {
 	public String cdcWhMappingAddPop(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/cdcWhMappingAddPop";
 	}
-	
+/*	
 	//	Save(Mapped Warehouse)
 	@RequestMapping(value = "/saveUnmap.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> saveUnmap(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
@@ -319,6 +319,7 @@ public class ScmMasterMngmentController {
 		
 		return	ResponseEntity.ok(message);
 	}
+	*/
 	/*
 	//	view
 
