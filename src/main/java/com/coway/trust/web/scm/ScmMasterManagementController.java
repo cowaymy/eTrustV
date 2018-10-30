@@ -39,11 +39,22 @@ public class ScmMasterManagementController {
 	private MessageSourceAccessor messageAccessor;
 	
 	//	view
-	@RequestMapping(value = "/scmMasterManagement.do")
-	public String masterMngmentView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+	@RequestMapping(value = "/scmMasterManagerView.do")
+	public String scmMasterManagerView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/scmMasterManagement";
 	}
+	@RequestMapping(value = "/cdcWhMappingView.do")
+	public String cdcWhMappingView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/cdcWhMapping";
+	}
+	@RequestMapping(value = "/cdcWhMappingPopupView.do")
+	public String cdcWhMappingPopupView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/cdcWhMappingPopup";
+	}
 	
+	/*
+	 * SCM Master Manager
+	 */
 	//	search
 	@RequestMapping(value = "/selectScmMasterList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectScmMasterList(@RequestBody Map<String, Object> params) {
@@ -53,7 +64,6 @@ public class ScmMasterManagementController {
 		
 		Map<String, Object> map	= new HashMap<>();
 		
-		//	main Data
 		map.put("selectScmMasterList", selectScmMasterList);
 		
 		return	ResponseEntity.ok(map);
@@ -76,6 +86,66 @@ public class ScmMasterManagementController {
 		}
 		
 		LOGGER.debug("SCM0008M : " + totCnt + ", SCM0017M : " + saveCnt);
+		
+		ReturnMessage message	= new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return	ResponseEntity.ok(message);
+	}
+	
+	/*
+	 * CDC Warehouse Mapping
+	 */
+	//	search
+	@RequestMapping(value = "/selectCdcWhList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectCdcWhList(@RequestBody Map<String, Object> params) {
+		LOGGER.debug("selectCdcWhList : {}", params.toString());
+		
+		List<EgovMap> selectCdcWhMappingList	= scmMasterManagementService.selectCdcWhMappingList(params);
+		List<EgovMap> selectCdcWhUnmappingList	= scmMasterManagementService.selectCdcWhUnmappingList(params);
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		//	main Data
+		map.put("selectCdcWhMappingList", selectCdcWhMappingList);
+		map.put("selectCdcWhUnmappingList", selectCdcWhUnmappingList);
+		
+		return	ResponseEntity.ok(map);
+	}
+	
+	//	save Unmap
+	@RequestMapping(value = "/saveUnmap.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveUnmap(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		int totCnt	= 0;
+		
+		//	Only delete
+		List<Object> delList	= params.get(AppConstants.AUIGRID_UPDATE);	//	Get grid delList
+		
+		if ( 0 < delList.size() ) {
+			totCnt	= scmMasterManagementService.deleteCdcWhMapping(delList, sessionVO.getUserId());
+		}
+		
+		ReturnMessage message	= new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		
+		return	ResponseEntity.ok(message);
+	}
+	
+	//	save Map
+	@RequestMapping(value = "/saveMap.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveMap(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		int totCnt	= 0;
+		
+		//	Only delete
+		List<Object> insList	= params.get(AppConstants.AUIGRID_UPDATE);	//	Get grid insList : AUIGRID_UPDATE -> row insert
+		
+		if ( 0 < insList.size() ) {
+			totCnt	= scmMasterManagementService.insertCdcWhMapping(insList, sessionVO.getUserId());
+		}
 		
 		ReturnMessage message	= new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);

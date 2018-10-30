@@ -34,7 +34,7 @@ private static final Logger LOGGER = LoggerFactory.getLogger(ScmMasterMngmentCon
 	private SalesPlanMngementService salesPlanMngementService;
 	
 	// view
-	@RequestMapping(value = "/interface.do")
+	@RequestMapping(value = "/interfaceNoUse.do")
 	public String poManager(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) 
 	{
 		//model.addAttribute("languages", loginService.getLanguages());

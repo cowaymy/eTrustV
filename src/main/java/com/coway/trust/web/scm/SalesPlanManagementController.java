@@ -34,26 +34,26 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class SalesPlanManagementController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(SalesPlanManagementController.class);
-	//private static final Logger LOGGER  = LoggerFactory.getLogger(this.getClass());
 
 	@Autowired
 	private SalesPlanManagementService salesPlanManagementService;
-	
-	@Autowired
-	private SalesPlanMngementService salesPlanMngementService;
 	
 	@Autowired
 	private ScmCommonService scmCommonService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-
-	@RequestMapping(value = "/salesPlanManager.do")
-	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
-		//model.addAttribute("languages", loginService.getLanguages());
-		return "/scm/salesPlanManagement";
+	
+	//	view
+	@RequestMapping(value = "/salesPlanManagerView.do")
+	public String salesPlanManagerView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/salesPlanManagement";
 	}
 	
+	/*
+	 * Sales Plan Manager
+	 */
+	//	combo box
 	@RequestMapping(value = "/selectScmYear.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectScmYear(@RequestParam Map<String, Object> params) {
 		
@@ -103,6 +103,7 @@ public class SalesPlanManagementController {
 		return ResponseEntity.ok(selectScmStockCode);
 	}
 	
+	//	search header
 	@RequestMapping(value = "/selectSalesPlanHeader.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectSalesPlanHeader(@RequestBody Map<String, Object> params) {
 		
@@ -137,38 +138,58 @@ public class SalesPlanManagementController {
 		return	ResponseEntity.ok(map);
 	}
 	
+	//	search each team
 	@RequestMapping(value = "/selectSalesPlanList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectSalesPlanList(@RequestBody Map<String, Object> params) {
 		
 		LOGGER.debug("selectSalesPlanList : {}", params.toString());
-		
 		List<EgovMap> selectSalesPlanList	= salesPlanManagementService.selectSalesPlanList(params);
-		
 		Map<String, Object> map	= new HashMap<>();
-		
 		map.put("selectSalesPlanList", selectSalesPlanList);
 		
 		return	ResponseEntity.ok(map);
 	}
 	
+	//	search all
+	@RequestMapping(value = "/selectSalesPlanListAll.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanListAll(@RequestBody Map<String, Object> params) {
+		
+		LOGGER.debug("selectSalesPlanListAll : {}", params.toString());
+		List<EgovMap> selectSalesPlanListAll	= salesPlanManagementService.selectSalesPlanListAll(params);
+		Map<String, Object> map	= new HashMap<>();
+		map.put("selectSalesPlanList", selectSalesPlanListAll);
+		
+		return	ResponseEntity.ok(map);
+	}
+	
+	//	create
 	@RequestMapping(value = "/insertSalesPlanMaster.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> insertSalesPlanMaster(@RequestBody Map<String, Object> params, Model model, SessionVO sessionVO) {
 		
 		LOGGER.debug("insertSalesPlanMaster : {}", params);
 		
-		int createCnt	= salesPlanManagementService.insertSalesPlanMaster(params, sessionVO);
-		
-		LOGGER.debug("createCnt : {}", createCnt);
-		
+		int createCnt	= 0;
+		String befPlan	= "";	String thisPlan	= "";
 		ReturnMessage message	= new ReturnMessage();
 		
-		if ( 0 < createCnt ) {
+		List<EgovMap> selectCreateCheck = salesPlanManagementService.selectCreateCheck(params);
+		LOGGER.debug("selectCreateCheck : {}", selectCreateCheck);
+		befPlan		= selectCreateCheck.get(0).get("befPlan").toString();
+		thisPlan	= selectCreateCheck.get(0).get("thisPlan").toString();
+		
+		if ( "0".equals(befPlan) ) {
+			message.setCode("98");		//	BEFORE WEEK MUST HAVE TO CREATED
+			message.setData(createCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		} else if ( "1".equals(thisPlan) ) {
+			message.setCode("97");		//	THIS WEEK ALREADY CREATED
+			message.setData(createCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		} else {
+			createCnt	= salesPlanManagementService.insertSalesPlanMaster(params, sessionVO);
 			message.setCode(AppConstants.SUCCESS);
 			message.setData(createCnt);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		} else {
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		}
 		
 		return	ResponseEntity.ok(message);
@@ -223,49 +244,5 @@ public class SalesPlanManagementController {
 		}
 		
 		return	ResponseEntity.ok(message);
-	}
-	
-	/*
-	 * for delete
-	 */
-	@RequestMapping(value = "/selectExcuteYear.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectExcuteYearList(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectExcuteYearList : {}", params.toString());
-
-		List<EgovMap> selectExcuteYearList = salesPlanMngementService.selectExcuteYear(params);
-		return ResponseEntity.ok(selectExcuteYearList);
-	}
-	@RequestMapping(value = "/selectPeriodByYear.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectPeriodByYearList(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectPeriodByYearList : {}", params.toString());
-
-		List<EgovMap> selectPeriodByYearList = salesPlanMngementService.selectPeriodByYear(params);
-		return ResponseEntity.ok(selectPeriodByYearList);
-	}
-	@RequestMapping(value = "/selectComboSupplyCDC.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectComboSupplyCDC(@RequestParam Map<String, Object> params) {
-		
-		LOGGER.debug("selectComboSupplyCDC_ComboList : {}", params.toString());
-		
-		List<EgovMap> selectComboListSupplyCDC = salesPlanMngementService.selectComboSupplyCDC(params);
-		return ResponseEntity.ok(selectComboListSupplyCDC);
-	}
-	@RequestMapping(value = "/selectStockCode.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectStockCode(@RequestParam Map<String, Object> params )
-	 {
-		LOGGER.debug("selectStockCode : {}", params.toString());
-
-		List<EgovMap> selectStockCodeList = salesPlanMngementService.selectStockCode(params);
-		return ResponseEntity.ok(selectStockCodeList);
-	}
-	@RequestMapping(value = "/selectMonthCombo.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectMonthCombo(@RequestParam Map<String, Object> params) {
-
-		LOGGER.debug("selectMonthComboList : {}", params.toString());
-
-		List<EgovMap> selectMonthCombo = salesPlanMngementService.selectMonthCombo(params);
-		return ResponseEntity.ok(selectMonthCombo);
 	}
 }

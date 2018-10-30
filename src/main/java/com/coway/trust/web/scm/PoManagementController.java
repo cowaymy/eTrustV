@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.PoManagementService;
 import com.coway.trust.biz.scm.PoMngementService;
+import com.coway.trust.biz.scm.ScmInterfaceManagementService;
 import com.coway.trust.biz.scm.SupplyPlanManagementService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -42,6 +43,9 @@ public class PoManagementController {
 	
 	@Autowired
 	private SupplyPlanManagementService supplyPlanManagementService;
+	
+	@Autowired
+	private ScmInterfaceManagementService scmInterfaceManagementService;
 	
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -163,11 +167,21 @@ public class PoManagementController {
 	public ResponseEntity<ReturnMessage> approvePo(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO) {
 		
 		int totCnt	= 0;
-		List<Map<String, Object>> updList	= params.get(AppConstants.AUIGRID_CHECK);
-		
-		totCnt	= poManagementService.updatePoApprove(updList, sessionVO);
-		
+		List<Map<String, Object>> chkList	= params.get(AppConstants.AUIGRID_CHECK);
 		ReturnMessage message = new ReturnMessage();
+		
+		totCnt	= poManagementService.updatePoApprove(chkList, sessionVO);
+		
+		if ( 0 < totCnt ) {
+			//	po approve success
+			LOGGER.debug("totCnt after po approve : " + totCnt);
+			totCnt	= scmInterfaceManagementService.scmIf155(chkList, sessionVO);
+			LOGGER.debug("totCnt after po interface : " + totCnt);
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setData(totCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
 		
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
