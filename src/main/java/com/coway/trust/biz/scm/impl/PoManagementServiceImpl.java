@@ -39,6 +39,9 @@ public class PoManagementServiceImpl implements PoManagementService {
 	@Autowired
 	private PoManagementMapper	poManagementMapper;
 	
+	@Autowired
+	private ScmInterfaceManagementMapper	scmInterfaceManagementMapper;
+	
 	//	PO Issue
 	@Override
 	public List<EgovMap> selectPoCreatedList(Map<String, Object> params) {
@@ -106,9 +109,12 @@ public class PoManagementServiceImpl implements PoManagementService {
 				params.put("grMonth", grMonth);
 				params.put("grWeek", grWeek);
 				params.put("condPrcUnit", list.get("condPrcUnit"));
-				params.put("PurchPrc", list.get("PurchPrc"));
+				params.put("purchPrc", list.get("purchPrc"));
 				params.put("fobPrc", list.get("fobPrc"));
 				params.put("fobAmt", list.get("fobAmt"));
+				params.put("vendor", list.get("vendor"));
+				params.put("vendorTxt", list.get("vendorTxt"));
+				params.put("curr", list.get("curr"));
 				params.put("crtUserId", crtUserId);
 				LOGGER.debug("params : {}", params);
 				
@@ -195,8 +201,10 @@ public class PoManagementServiceImpl implements PoManagementService {
 		
 		int saveCnt	= 0;
 		int updUserId	= sessionVO.getUserId();
-		Map<String, Object> params = new HashMap<>();
+		Map<String, Object> params		= new HashMap<>();
+		Map<String, Object> ifParams	= new HashMap<>();
 		
+		//	po approve
 		try {
 			for ( Map<String, Object> list : updList ) {
 				params.put("updUserId", updUserId);

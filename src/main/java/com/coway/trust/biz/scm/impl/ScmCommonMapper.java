@@ -12,6 +12,9 @@ public interface ScmCommonMapper {
 	List<EgovMap> selectScmWeek(Map<String, Object> params);
 	List<EgovMap> selectScmTeam(Map<String, Object> params);
 	List<EgovMap> selectScmCdc(Map<String, Object> params);
+	List<EgovMap> selectScmIfType(Map<String, Object> params);
+	List<EgovMap> selectScmIfTranStatus(Map<String, Object> params);
+	List<EgovMap> selectScmIfErrCode(Map<String, Object> params);
 	List<EgovMap> selectScmStockCategory(Map<String, Object> params);
 	List<EgovMap> selectScmStockType(Map<String, Object> params);
 	List<EgovMap> selectScmStockCode(Map<String, Object> params);

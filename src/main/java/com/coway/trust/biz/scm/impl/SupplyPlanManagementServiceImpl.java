@@ -152,7 +152,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		try {
 			supplyPlanManagementMapper.insertSupplyPlanMaster(params);
 			saveCnt++;
-			LOGGER.debug(" createCnt : {} ", saveCnt);
+			LOGGER.debug(" saveCnt : {} ", saveCnt);
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
@@ -229,10 +229,10 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		LOGGER.debug("selectPsi5 : {}", selectPsi5);
 		
 		//	set params to get po cnt
-		
 		for ( int i = 0 ; i < selectTotalSplitInfo.size() ; i++ ) {
 			isSrptd	= Integer.parseInt(selectTotalSplitInfo.get(i).get("isSrptd").toString());
 			planWeek	= Integer.parseInt(selectTotalSplitInfo.get(i).get("planWeek").toString());
+			//planWeek	= Integer.parseInt(selectTotalSplitInfo.get(i).get("planWeek").toString());
 			planWeekSn	= Integer.parseInt(selectTotalSplitInfo.get(i).get("planWeekSn").toString());
 			LOGGER.debug("isSrptd : " + isSrptd + ", planWeek : " + planWeek + ", planWeekSn : " + planWeekSn);
 			if ( 1 == isSrptd ) {

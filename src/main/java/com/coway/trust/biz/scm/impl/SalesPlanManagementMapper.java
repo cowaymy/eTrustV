@@ -8,13 +8,20 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("salesPlanManagementMapper")
 public interface SalesPlanManagementMapper {
+	//	Sales Plan Manager
 	List<EgovMap> selectSalesPlanHeader(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanMonth(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanInfo(Map<String, Object> params);
 	List<EgovMap> selectSplitInfo(Map<String, Object> params);
 	List<EgovMap> selectChildField(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanList(Map<String, Object> params);
+	List<EgovMap> selectSalesPlanListAll(Map<String, Object> params);
+	
+	List<EgovMap> selectCreateCheck(Map<String, Object> params);
 	void insertSalesPlanMaster(Map<String, Object> params);
+	void insertSalesPlanDetail(Map<String, Object> params);
+	List<EgovMap> selectSalesPlanForUpdate(Map<String, Object> params);
+	
 	String callSpScmInsSalesPlanDetail(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanDetailSum(Map<String, Object> params);
 	void updateSalesPlanDetailSum(Map<String, Object> params);
