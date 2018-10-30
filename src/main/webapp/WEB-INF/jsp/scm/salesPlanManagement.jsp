@@ -67,14 +67,12 @@ $(function() {
 	gMonth	= gToday.getMonth() + 1;
 	gDay	= gToday.getDate();
 	
-	console.log("======= : " + gYear);
 	//	Set combo box
 	fnScmYearCbBox();
 	fnScmWeekCbBox();
 	fnScmTeamCbBox();
 	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
-	//fnScmStockCodeCbBox();
 });
 
 //	year
@@ -335,49 +333,49 @@ function fnSalesPlanHeader() {
 								children :
 									[
 									 {
-										 dataField : result.selectSalesPlanHeader[0].h1PlanId,
+										 dataField : result.selectSalesPlanHeader[0].planId,
 										 headerText : "Plan Id",
 										 visible : false
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h1PlanDtlId,
+										 dataField : result.selectSalesPlanHeader[0].planDtlId,
 										 headerText : "Plan Dtl Id",
 										 visible : false
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h1Stock,
+										 dataField : result.selectSalesPlanHeader[0].stock,
 										 headerText : "Stock",
 										 visible : false
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2Team,
+										 dataField : result.selectSalesPlanHeader[0].team,
 										 headerText : "Team",
 										 visible : true,
 										 style : "my-backColumn4"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2TypeId,
+										 dataField : result.selectSalesPlanHeader[0].typeId,
 										 headerText : "Type Id",
 										 visible : false,
 										 style : "my-backColumn4"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2TypeName,
+										 dataField : result.selectSalesPlanHeader[0].typeName,
 										 headerText : "Type",
 										 visible : true,
 										 style : "my-backColumn4"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2CategoryId,
+										 dataField : result.selectSalesPlanHeader[0].categoryId,
 										 headerText : "Category Id",
 										 visible : false,
 										 style : "my-backColumn4"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2CategoryName,
+										 dataField : result.selectSalesPlanHeader[0].categoryName,
 										 headerText : "Category",
 										 visible : true,
 										 style : "my-backColumn4"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2Code,
+										 dataField : result.selectSalesPlanHeader[0].code,
 										 headerText : "Code",
 										 visible : true,
 										 style : "my-backColumn4"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2Name,
+										 dataField : result.selectSalesPlanHeader[0].name,
 										 headerText : "Name",
 										 visible : true,
 										 style : "my-backColumn3"
@@ -385,65 +383,66 @@ function fnSalesPlanHeader() {
 									 ]
 							}, {
 								//	M-3 Issue Avg
-								dataField : result.selectSalesPlanHeader[0].h1M3IssueAvg,
+								dataField : result.selectSalesPlanHeader[0].preM3IssAvg,
 								headerText : "M-3 Issue<br/>Avg",
 								visible : true,
 								style : "my-backColumn4"
+							}, {
+								//	M-1 Order Sum
+								 dataField : result.selectSalesPlanHeader[0].preM1OrdSum,
+								 headerText : "M-1 Order<br/>Sum",
+								 visible : true,
+								 style : "my-backColumn3",
+								 dataType : "numeric",
+								 formatString : "#,##0"
 							}, {
 								headerText : "Monthly",
 								children :
 									[
 									 {
-										 dataField : result.selectSalesPlanHeader[0].h2M1Issue,
-										 headerText : "M-1 Issue",
-										 visible : true,
-										 style : "my-backColumn3",
-										 dataType : "numeric",
-										 formatString : "#,##0"
-									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2M0Order,
+										 dataField : result.selectSalesPlanHeader[0].m0OrdSum,
 										 headerText : "M0 Order",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2M0Plan,
-										 headerText : "M0 Plan",
+										 dataField : result.selectSalesPlanHeader[0].m0,
+										 headerText : "M0",
 										 visible : false,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2M0Exp,
+										 dataField : result.selectSalesPlanHeader[0].m0Exp,
 										 headerText : "M0 Exp",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2M1,
+										 dataField : result.selectSalesPlanHeader[0].m1,
 										 headerText : "M+1",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2M2,
+										 dataField : result.selectSalesPlanHeader[0].m2,
 										 headerText : "M+2",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2M3,
+										 dataField : result.selectSalesPlanHeader[0].m3,
 										 headerText : "M+3",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
-										 dataField : result.selectSalesPlanHeader[0].h2M4,
+										 dataField : result.selectSalesPlanHeader[0].m4,
 										 headerText : "M+4",
 										 visible : true,
 										 style : "my-backColumn3",
@@ -682,11 +681,18 @@ function fnSearch() {
 		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
 		scmStockCodeCbBox : $("#scmStockCodeCbBox").multipleSelect("getSelects")
 	};
-	
+	var team	= $("#scmTeamCbBox").val();
+	var url		= "";
+	console.log("team : " + team + ", ddd : " + $("#scmTeamCbBox").val());
+	if ( "" == team ) {
+		url	= "/scm/selectSalesPlanListAll.do";
+	} else {
+		url	= "/scm/selectSalesPlanList.do";
+	}
 	params	= $.extend($("#MainForm").serializeJSON(), params);
 	
 	Common.ajax("POST"
-			, "/scm/selectSalesPlanList.do"
+			, url
 			, params
 			, function(result) {
 				//console.log("Success fnSearch : " + result.length);
@@ -736,8 +742,10 @@ function fnCreate(obj) {
 			, "/scm/insertSalesPlanMaster.do"
 			, params
 			, function(result) {
-				if ( 99 == result.code ) {
-					Common.alert("Already Created Sales Plan.");
+				if ( "98" == result.code ) {
+					Common.alert("You must confirm before week's Sales Plan");
+				} else if ( "97" == result.code ) {
+					Common.alert("Already Created this week's Sales Plan.");
 				} else {
 					Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 					fnSalesPlanHeader();
@@ -885,10 +893,10 @@ function fnSumMnPlan(event) {
 				//console.log("not sum");
 			}
 		}
-		salesPlanList[event.rowIndex]["m0Plan"]	= parseInt(m0);
-		salesPlanList[event.rowIndex]["m0Exp"]	= parseInt(salesPlanList[event.rowIndex]["m0Order"]) + parseInt(salesPlanList[event.rowIndex]["m0Plan"]);
-		AUIGrid.setCellValue(myGridID, event.rowIndex, "m0Plan", m0);
-		AUIGrid.setCellValue(myGridID, event.rowIndex, "m0Exp", parseInt(salesPlanList[event.rowIndex]["m0Order"]) + parseInt(salesPlanList[event.rowIndex]["m0Plan"]));
+		salesPlanList[event.rowIndex]["m0"]	= parseInt(m0);
+		salesPlanList[event.rowIndex]["m0Exp"]	= parseInt(salesPlanList[event.rowIndex]["m0OrdSum"]) + parseInt(salesPlanList[event.rowIndex]["m0"]);
+		AUIGrid.setCellValue(myGridID, event.rowIndex, "m0", m0);
+		AUIGrid.setCellValue(myGridID, event.rowIndex, "m0Exp", parseInt(salesPlanList[event.rowIndex]["m0OrdSum"]) + parseInt(salesPlanList[event.rowIndex]["m0"]));
 		
 		//	sum 01
 		for ( var i = 0 ; i < m1WeekCnt ; i++ ) {
@@ -1194,7 +1202,7 @@ function fnBtnCtrl(result) {
 		if ( "" == scmTeamCbBox ) {
 			//console.log("===========btn2============");
 			$("#btnCreate").addClass("btn_disabled");
-			$("#btnSave").removeClass("btn_disabled");
+			$("#btnSave").addClass("btn_disabled");
 			$("#btnConfirm").addClass("btn_disabled");
 			$("#btnUnconfirm").addClass("btn_disabled");
 			$("#btnExcel").removeClass("btn_disabled");

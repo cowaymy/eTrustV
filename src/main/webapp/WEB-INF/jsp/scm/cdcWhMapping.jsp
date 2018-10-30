@@ -101,11 +101,11 @@ function fnValidMap() {
 
 //	Add CDC
 function fnAddCDC() {
-	var popUpObj	= Common.popupDiv("/scm/cdcWhMappingAddPop.do"
+	var popUpObj	= Common.popupDiv("/scm/cdcWhMappingPopupView.do"
 			, $("#MainForm").serializeJSON()
 			, null
 			, false
-			, "cdcWhMappingAddPop"
+			, "cdcWhMappingPopup"
 	);
 }
 
@@ -374,7 +374,7 @@ $(document).ready(function() {
 		<caption>table</caption>
 		<colgroup>
 			<col style="width:130px" />
-			<col style="width:130px" />
+			<col style="width:200px" />
 			<col style="width:*" />
 		</colgroup>
 		<tbody>
@@ -383,6 +383,7 @@ $(document).ready(function() {
 				<td>
 					<select class="w100p" id="scmCdcCbBox" name="scmCdcCbBox"></select>
 				</td>
+				<td></td>
 			</tr>
 		</tbody>
 	</table><!-- table end -->

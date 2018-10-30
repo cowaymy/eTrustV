@@ -238,6 +238,11 @@ var poCreateListLayout	=
 			headerText : "Currency",
 			editable : false,
 			style : "my-columnCenter1"
+		}, , {
+			dataField : "currName",
+			headerText : "Currency",
+			editable : false,
+			style : "my-columnCenter1"
 		}, {
 			dataField : "vendor",
 			headerText : "Vendor",
@@ -609,11 +614,12 @@ function fnMoveStock() {
 			type : AUIGrid.getCellValue(myGridID, selectedRow, "type"),
 			stockCode : AUIGrid.getCellValue(myGridID, selectedRow, "stockCode"),
 			name : AUIGrid.getCellValue(myGridID, selectedRow, "name"),
-			poQty : planQty,
+			poQty : poQty,
 			moq : AUIGrid.getCellValue(myGridID, selectedRow, "moq"),
 			fobPrc : fobPrc,
 			fobAmt : fobAmt,
 			curr : AUIGrid.getCellValue(myGridID, selectedRow, "curr"),
+			currName : AUIGrid.getCellValue(myGridID, selectedRow, "currName"),
 			vendor : AUIGrid.getCellValue(myGridID, selectedRow, "vendor"),
 			vendorTxt : AUIGrid.getCellValue(myGridID, selectedRow, "vendorTxt"),
 			purchPrc : AUIGrid.getCellValue(myGridID, selectedRow, "purchPrc"),
@@ -802,6 +808,10 @@ function fnPoTargetGrid() {
 				headerText : "Currency",
 				visible : false
 			}, {
+				dataField : "currName",
+				headerText : "Currency",
+				visible : false
+			}, {
 				dataField : "moq",
 				headerText : "Moq",
 				visible : false
@@ -982,9 +992,9 @@ $(document).ready(function() {
 			independentAllCheckBox : true,
 			rowCheckableFunction : function(rowIndex, isChecked, item) {
 				if ( false == isChecked ) {
-					addCheckedRowsByValue(AUIGrid.getCellValue(myGridID3, rowIndex, "poNo"));
+					//addCheckedRowsByValue(AUIGrid.getCellValue(myGridID3, rowIndex, "poNo"));
 				} else {
-					addUncheckedRowsByValue(AUIGrid.getCellValue(myGridID3, rowIndex, "poNo"));
+					//addUncheckedRowsByValue(AUIGrid.getCellValue(myGridID3, rowIndex, "poNo"));
 				}
 				return	true;
 			},

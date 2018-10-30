@@ -15,6 +15,45 @@
 	background:#a1a2a3;
 	color:#000;
 }
+.my-columnRight {
+	text-align : right;
+}
+.my-columnCenter {
+	text-align : center;
+}
+.my-columnLeft {
+	text-align : left;
+}
+.my-columnRight0 {
+	text-align : right;
+	background : #CCFFFF;
+	color : #000;
+}
+.my-columnCenter0 {
+	text-align : center;
+	background : #CCFFFF;
+	color : #000;
+}
+.my-columnLeft0 {
+	text-align : left;
+	background : #CCFFFF;
+	color : #000;
+}
+.my-columnRight1 {
+	text-align : right;
+	background : #CCCCFF;
+	color : #000;
+}
+.my-columnCenter1 {
+	text-align : center;
+	background : #CCCCFF;
+	color : #000;
+}
+.my-columnLeft1 {
+	text-align : left;
+	background : #CCCCFF;
+	color : #000;
+}
 </style>
 
 <script type="text/javaScript">
@@ -24,6 +63,7 @@ var format	= /^(19[7-9][0-9]|20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])
 $(function() {
 	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
+	fnScmStockCbBox();
 });
 
 //	category
@@ -53,6 +93,22 @@ function fnScmStockTypeCbBox() {
 			}
 			//, fnScmStockCodeCbBoxCallback);
 			, "");
+}
+
+//	stock code for default stock
+function fnScmStockCbBox() {
+	Common.ajaxSync("GET"
+					, "/scm/selectScmStockCode.do"
+					, $("#MainForm").serialize()
+					, function(result) {
+						for ( var i = 0 ; i < result.length ; i++ ) {
+							var list	= new Object();
+							list.id	= result[i].id;
+							list.name	= result[i].name;
+							keyValueList.push(list);
+						}
+					});
+	return	keyValueList;
 }
 
 //	search
@@ -213,18 +269,25 @@ var masterManagerLayout	=
 					{
 						dataField : "stockId",
 						headerText : "Stock Id",
-						visible : true
+						visible : false
 					}, {
 						dataField : "isNew",
 						headerText : "Is New",
-						visible : true
+						visible : false
 					}, {
 						dataField : "categoryId",
 						headerText : "Category Id",
 						visible : false
 					}, {
 						dataField : "category",
-						headerText : "<spring:message code='sys.scm.salesplan.Category'/>",
+						headerText : "Category",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnCenter1";
+							} else {
+								return	"my-columnCenter";
+							}
+						}
 					}, {
 						dataField : "typeId",
 						headerText : "Type Id",
@@ -232,12 +295,63 @@ var masterManagerLayout	=
 					}, {
 						dataField : "type",
 						headerText : "Type",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnCenter1";
+							} else {
+								return	"my-columnCenter";
+							}
+						}
 					}, {
 						dataField : "stockCode",
-						headerText : "<spring:message code='sys.scm.salesplan.Code'/>",
+						headerText : "Code",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnCenter1";
+							} else {
+								return	"my-columnCenter";
+							}
+						}
 					}, {
 						dataField : "stockDesc",
 						headerText : "Name",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnLeft1";
+							} else {
+								return	"my-columnLeft";
+							}
+						}
+					}, {
+						dataField : "dfltStock",
+						headerText : "Default Stock",
+						renderer : {
+							type : "DropDownListRenderer",
+							showEditorBtnOver : true,
+							listFunction : function(rowIndex, columnIndex, item, dataField) {
+								return	keyValueList;
+							},
+							keyField : "id",
+							valueField : "name"
+						},
+						labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
+							var retStr	= value;
+							var iCnt	= keyValueList.length;
+							for ( var i = 0 ; i < iCnt ; i++ ) {
+								if ( value == keyValueList[i]["id"] ) {
+									retStr	= keyValueList[i]["name"];
+									break;
+								}
+							}
+							return	retStr;
+						},
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnLeft1";
+							} else {
+								return	"my-columnLeft";
+							}
+						}
 					}
 				]
 		}, {
@@ -249,81 +363,106 @@ var masterManagerLayout	=
 					{
 						dataField : "isTrget",
 						headerText : "<spring:message code='sys.scm.mastermanager.Target'/>",
-						renderer :
-							{
-								type : "CheckBoxEditRenderer",
-								showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
-								editable : true,	//	체크박스 편집 활성화 여부(기본값 : false)
-								checkValue : "1",	//	true, false 인 경우가 기본
-								unCheckValue : "0"
-							}	//	renderer
+						renderer : {
+							type : "CheckBoxEditRenderer",
+							showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
+							editable : true,	//	체크박스 편집 활성화 여부(기본값 : false)
+							checkValue : "1",	//	true, false 인 경우가 기본
+							unCheckValue : "0"
+						},
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnCenter1";
+							} else {
+								return	"my-columnCenter";
+							}
+						}
 					}, {
 						dataField : "memo",
-						headerText : "<spring:message code='sys.scm.mastermanager.Memo'/>",
+						headerText : "Memo",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnLeft1";
+							} else {
+								return	"my-columnLeft";
+							}
+						}
 					}, {
 						dataField : "startDt",
 						headerText : "<spring:message code='sys.scm.mastermanager.Start'/>",
 						dataType : "date",
 						formatString : "dd-mm-yyyy",
-						editRenderer :
-							{
-								type : "CalendarRenderer",
-								defaultFormat : "mm/dd/yyyy",	//	원래 데이터 날짜 포맷과 일치 시키세요. (기본값: "yyyy/mm/dd")
-								showEditorBtnOver : true,		//	마우스 오버 시 에디터버턴 출력 여부
-								onlyCalendar : false,			//	사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-								showExtraDays : true,			//	지난 달, 다음 달 여분의 날짜(days) 출력
-								validator : function(oldValue, newValue, rowItem) {
-									//	에디팅 유효성 검사
-									console.log("rowItem: " + JSON.stringify(rowItem));
-									console.log("rowItem.endDt: " + rowItem.endDt);
-									
-									var date, isValid	= true;
-									if ( isNaN(Number(newValue)) ) {
-										//	20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
-										if ( isNaN(Date.parse(newValue)) ) {
-											//	그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
+						editRenderer : {
+							type : "CalendarRenderer",
+							defaultFormat : "mm/dd/yyyy",	//	원래 데이터 날짜 포맷과 일치 시키세요. (기본값: "yyyy/mm/dd")
+							showEditorBtnOver : true,		//	마우스 오버 시 에디터버턴 출력 여부
+							onlyCalendar : false,			//	사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+							showExtraDays : true,			//	지난 달, 다음 달 여분의 날짜(days) 출력
+							validator : function(oldValue, newValue, rowItem) {
+								//	에디팅 유효성 검사
+								console.log("rowItem: " + JSON.stringify(rowItem));
+								console.log("rowItem.endDt: " + rowItem.endDt);
+								
+								var date, isValid	= true;
+								if ( isNaN(Number(newValue)) ) {
+									//	20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
+									if ( isNaN(Date.parse(newValue)) ) {
+										//	그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
+										isValid	= false;
+									} else {
+										if ( 8 != newValue.length ) {
 											isValid	= false;
-										} else {
-											if ( 8 != newValue.length ) {
-												isValid	= false;
-											}
-											isValid	= true;
 										}
+										isValid	= true;
 									}
-									
-									//	리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-									return { "validate" : isValid, "message"  : " Type In 'yyyymmdd' Input." };
 								}
+								
+								//	리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+								return { "validate" : isValid, "message"  : " Type In 'yyyymmdd' Input." };
 							}
+						},
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnCenter1";
+							} else {
+								return	"my-columnCenter";
+							}
+						}
 					}, {
 						dataField : "endDt",
 						headerText : "<spring:message code='sys.scm.mastermanager.End'/>",
 						dataType : "date",
 						formatString : "dd-mm-yyyy",
-						editRenderer :
-							{
-								type : "CalendarRenderer",
-								defaultFormat : "mm/dd/yyyy",	//	원래 데이터 날짜 포맷과 일치 시키세요. (기본값: "yyyy/mm/dd")
-								showEditorBtnOver : true,		//	마우스 오버 시 에디터버턴 출력 여부
-								onlyCalendar : true,			//	사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
-								showExtraDays : true,			//	지난 달, 다음 달 여분의 날짜(days) 출력
-								validator : function(oldValue, newValue, rowItem) {
-									//	에디팅 유효성 검사
-									var date, isValid	= true;
-									if ( isNaN(Number(newValue)) ) {
-										//	20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
-										if ( isNaN(Date.parse(newValue)) ) {
-											//	그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
-											isValid	= false;
-										} else {
-											isValid	= true;
-										}
+						editRenderer : {
+							type : "CalendarRenderer",
+							defaultFormat : "mm/dd/yyyy",	//	원래 데이터 날짜 포맷과 일치 시키세요. (기본값: "yyyy/mm/dd")
+							showEditorBtnOver : true,		//	마우스 오버 시 에디터버턴 출력 여부
+							onlyCalendar : true,			//	사용자 입력 불가, 즉 달력으로만 날짜입력 (기본값 : true)
+							showExtraDays : true,			//	지난 달, 다음 달 여분의 날짜(days) 출력
+							validator : function(oldValue, newValue, rowItem) {
+								//	에디팅 유효성 검사
+								var date, isValid	= true;
+								if ( isNaN(Number(newValue)) ) {
+									//	20160201 형태 또는 그냥 1, 2 로 입력한 경우는 허락함.
+									if ( isNaN(Date.parse(newValue)) ) {
+										//	그냥 막 입력한 경우 인지 조사. 즉, JS 가 Date 로 파싱할 수 있는 형식인지 조사
+										isValid	= false;
+									} else {
+										isValid	= true;
 									}
-									
-									//	리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
-									return { "validate" : isValid, "message"  : " Type In 'yyyyMMdd' Input." };
 								}
+								
+								//	리턴값은 Object 이며 validate 의 값이 true 라면 패스, false 라면 message 를 띄움
+								return { "validate" : isValid, "message"  : " Type In 'yyyyMMdd' Input." };
 							}
+						},
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnCenter1";
+							} else {
+								return	"my-columnCenter";
+							}
+						}
 					}
 				]
 		},
@@ -342,58 +481,88 @@ var masterManagerLayout	=
 								{
 									dataField : "klTarget",
 									headerText : "<spring:message code='sys.scm.mastermanager.KL'/>",
-									renderer :
-										{
-											type : "CheckBoxEditRenderer",
-											showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
-											editable : true,	//	체크박스 편집 활성화 여부(기본값 : false)
-											checkValue : "1",	//	true, false 인 경우가 기본
-											unCheckValue : "0"
-										}	//	renderer
+									renderer : {
+										type : "CheckBoxEditRenderer",
+										showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
+										editable : true,	//	체크박스 편집 활성화 여부(기본값 : false)
+										checkValue : "1",	//	true, false 인 경우가 기본
+										unCheckValue : "0"
+									},
+									styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+										if ( 1 == item.isNew ) {
+											return	"my-columnCenter1";
+										} else {
+											return	"my-columnCenter";
+										}
+									}
 								}, {
 									dataField : "kkTarget",
 									headerText : "<spring:message code='sys.scm.mastermanager.KK'/>",
-									renderer :
-										{
-											type : "CheckBoxEditRenderer",
-											showLabel  : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
-											editable   : true,	//	체크박스 편집 활성화 여부(기본값 : false)
-											checkValue : "1",	//	true, false 인 경우가 기본
-											unCheckValue : "0"
-										}	//	renderer
+									renderer : {
+										type : "CheckBoxEditRenderer",
+										showLabel  : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
+										editable   : true,	//	체크박스 편집 활성화 여부(기본값 : false)
+										checkValue : "1",	//	true, false 인 경우가 기본
+										unCheckValue : "0"
+									},
+									styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+										if ( 1 == item.isNew ) {
+											return	"my-columnCenter1";
+										} else {
+											return	"my-columnCenter";
+										}
+									}
 								}, {
 									dataField : "jbTarget",
 									headerText : "<spring:message code='sys.scm.mastermanager.JB'/>",
-									renderer :
-										{
-											type : "CheckBoxEditRenderer",
-											showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
-											editable : true,	//	체크박스 편집 활성화 여부(기본값 : false)
-											checkValue : "1",	//	true, false 인 경우가 기본
-											unCheckValue : "0"
-										}	//	renderer
+									renderer : {
+										type : "CheckBoxEditRenderer",
+										showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
+										editable : true,	//	체크박스 편집 활성화 여부(기본값 : false)
+										checkValue : "1",	//	true, false 인 경우가 기본
+										unCheckValue : "0"
+									},
+									styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+										if ( 1 == item.isNew ) {
+											return	"my-columnCenter1";
+										} else {
+											return	"my-columnCenter";
+										}
+									}
 								}, {
 									dataField : "pnTarget",
 									headerText : "<spring:message code='sys.scm.mastermanager.PN'/>",
-									renderer :
-										{
-											type : "CheckBoxEditRenderer",
-											showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
-											editable : true,	//	체크박스 편집 활성화 여부(기본값 : false)
-											checkValue : "1",	//	true, false 인 경우가 기본
-											unCheckValue : "0"
-										}	//	renderer
+									renderer : {
+										type : "CheckBoxEditRenderer",
+										showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
+										editable : true,	//	체크박스 편집 활성화 여부(기본값 : false)
+										checkValue : "1",	//	true, false 인 경우가 기본
+										unCheckValue : "0"
+									},
+									styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+										if ( 1 == item.isNew ) {
+											return	"my-columnCenter1";
+										} else {
+											return	"my-columnCenter";
+										}
+									}
 								}, {
 									dataField : "kcTarget",
 									headerText : "<spring:message code='sys.scm.mastermanager.KC'/>",
-									renderer :
-										{
-											type : "CheckBoxEditRenderer",
-											showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
-											editable : true,	//	체크박스 편집 활성화 여부(기본값 : false)
-											checkValue : "1",	//	true, false 인 경우가 기본
-											unCheckValue : "0"
-										}	//	renderer
+									renderer : {
+										type : "CheckBoxEditRenderer",
+										showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
+										editable : true,	//	체크박스 편집 활성화 여부(기본값 : false)
+										checkValue : "1",	//	true, false 인 경우가 기본
+										unCheckValue : "0"
+									},
+									styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+										if ( 1 == item.isNew ) {
+											return	"my-columnCenter1";
+										} else {
+											return	"my-columnCenter";
+										}
+									}
 								}
 							]
 					},
@@ -405,18 +574,53 @@ var masterManagerLayout	=
 								{
 									dataField : "klMoq",
 									headerText : "<spring:message code='sys.scm.mastermanager.KL'/>",
+									styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+										if ( 1 == item.isNew ) {
+											return	"my-columnCenter1";
+										} else {
+											return	"my-columnCenter";
+										}
+									}
 								}, {
 									dataField : "kkMoq",
 									headerText : "<spring:message code='sys.scm.mastermanager.KK'/>",
+									styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+										if ( 1 == item.isNew ) {
+											return	"my-columnCenter1";
+										} else {
+											return	"my-columnCenter";
+										}
+									}
 								}, {
 									dataField : "jbMoq",
 									headerText : "<spring:message code='sys.scm.mastermanager.JB'/>",
+									styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+										if ( 1 == item.isNew ) {
+											return	"my-columnCenter1";
+										} else {
+											return	"my-columnCenter";
+										}
+									}
 								}, {
 									dataField : "pnMoq",
 									headerText : "<spring:message code='sys.scm.mastermanager.PN'/>",
+									styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+										if ( 1 == item.isNew ) {
+											return	"my-columnCenter1";
+										} else {
+											return	"my-columnCenter";
+										}
+									}
 								}, {
 									dataField : "kcMoq",
 									headerText : "<spring:message code='sys.scm.mastermanager.KC'/>",
+									styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+										if ( 1 == item.isNew ) {
+											return	"my-columnCenter1";
+										} else {
+											return	"my-columnCenter";
+										}
+									}
 								}
 							]
 					},
@@ -424,20 +628,41 @@ var masterManagerLayout	=
 						//	S.Stk
 						dataField : "safetyStock",
 						headerText : "<spring:message code='sys.scm.mastermanager.SStk'/>",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnCenter1";
+							} else {
+								return	"my-columnCenter";
+							}
+						}
 					}, {
 						dataField : "leadTm",
 						headerText : "<spring:message code='sys.scm.mastermanager.LTime'/>",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnCenter1";
+							} else {
+								return	"my-columnCenter";
+							}
+						}
 					}, {
 						dataField : "loadingQty",
 						headerText : "<spring:message code='sys.scm.mastermanager.LQty'/>",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( 1 == item.isNew ) {
+								return	"my-columnCenter1";
+							} else {
+								return	"my-columnCenter";
+							}
+						}
 					}, {
 						dataField : "formatStartDate",
 						headerText : "formatStartDate",
-						visible : false,
+						visible : false
 					}, {
 						dataField : "formatEndDate",
 						headerText : "formatEndDate",
-						visible : false,
+						visible : false
 					}
 					]
 		}
@@ -448,14 +673,14 @@ var myGridID
 
 $(document).ready(function() {
 	var masterManagerOptions	= {
-		usePaging : true,
+		usePaging : false,
 		useGroupingPanel : false,
 		showRowNumColumn : false,	//	그리드 넘버링
 		showStateColumn : true,		//	행 상태 칼럼 보이기
 		enableRestore : true,
 		softRemovePolicy : "exceptNew",	//	사용자추가한 행은 바로 삭제
 		pageRowCount : 30,			//	한 화면에 출력되는 행 개수 30개로 지정
-		fixedColumnCount : 8,
+		fixedColumnCount : 9,
 	};
 	
 	//	masterGrid 그리드를 생성합니다.
@@ -566,7 +791,7 @@ $(document).ready(function() {
 		</ul>
 		<article class="grid_wrap"><!-- grid_wrap start -->
 			<!-- 그리드 영역 1-->
-			<div id="masterManagerDiv" style="width:100%; height:480px; margin:0 auto;"></div>
+			<div id="masterManagerDiv" style="width:100%; height:700px; margin:0 auto;"></div>
 		</article><!-- grid_wrap end -->
 		<ul class="center_btns">
 			<li>

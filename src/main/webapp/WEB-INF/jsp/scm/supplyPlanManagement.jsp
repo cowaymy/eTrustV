@@ -71,10 +71,10 @@ var planId	= "";
 var weekStartCol	= 20;	//	w01 칼럼이 시작되는 column 차례 : 19번째 이전에 칼럼이 추가되면 변경해줘야 함
 
 $(function() {
-	fnScmYearCbBox();		//fnSelectExcuteYear
-	fnScmWeekCbBox();		//fnSelectPeriodReset
-	fnScmCdcCbBox();		//fnSelectCDCComboList : 349
-	fnScmStockTypeCbBox();	//fnSelectStockTypeComboList : 15
+	fnScmYearCbBox();
+	fnScmWeekCbBox();
+	fnScmCdcCbBox();
+	fnScmStockTypeCbBox();
 });
 
 //	year
@@ -802,7 +802,6 @@ function fnSearch() {
 				supplyPlanList	= result.selectSupplyPlanList;
 			});
 }
-
 
 //	create
 function fnCreate(obj) {
