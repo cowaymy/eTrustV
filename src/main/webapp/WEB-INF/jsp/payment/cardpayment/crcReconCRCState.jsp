@@ -15,7 +15,7 @@ var selectedGridValue;
 var gridPros = {
         // 편집 가능 여부 (기본값 : false)
         editable : false,
-        
+
         // 상태 칼럼 사용
         showStateColumn : false
 };
@@ -23,46 +23,46 @@ var gridPros = {
 var gridPros2 = {
         // 편집 가능 여부 (기본값 : false)
         editable : false,
-        
+
         // 체크박스 표시 설정
         showRowCheckColumn : true,
-        
+
         // 체크박스 대신 라디오버튼 출력함
         rowCheckToRadio : false,
-        
+
         softRemoveRowMode:false,
         // 상태 칼럼 사용
         showStateColumn : false
-        
+
 };
 
 var gridPros3 = {
         // 편집 가능 여부 (기본값 : false)
         editable : false,
-        
+
         // 체크박스 표시 설정
         showRowCheckColumn : true,
-        
+
         // 체크박스 대신 라디오버튼 출력함
         rowCheckToRadio : true,
-        
+
         softRemoveRowMode:false,
         // 상태 칼럼 사용
         showStateColumn : false
-        
+
 };
 
 $(document).ready(function(){
-	
-	doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'bankAcc' , 'S', '');    
-	
+
+	doGetCombo('/common/getAccountList.do', 'CRC' , ''   , 'bankAcc' , 'S', '');
+
 	mappingGridId = GridCommon.createAUIGrid("mapping_grid_wrap", mappingLayout,"",gridPros);
 	crcKeyInGridId = GridCommon.createAUIGrid("crcKeyIn_grid_wrap", crcKeyInLayout,"",gridPros2);
 	crcStateGridId = GridCommon.createAUIGrid("crcState_grid_wrap", crcStateLayout,"",gridPros3);
-	
+
 });
 
-var mappingLayout = [ 
+var mappingLayout = [
                        {
                            dataField : "crditCard",
                            headerText : "<spring:message code='pay.head.crc.credit'/>",
@@ -91,7 +91,7 @@ var mappingLayout = [
                            dataField : "amount",
                            headerText : "<spring:message code='pay.head.amount'/>",
                            editable : false,
-                           dataType:"numeric", 
+                           dataType:"numeric",
                            formatString:"#,##0.00"
                        },{
                            dataField : "groupSeq",
@@ -123,7 +123,7 @@ var mappingLayout = [
                            visible : false
                        }];
 
-var crcKeyInLayout = [ 
+var crcKeyInLayout = [
                        {
                            dataField : "salesOrdNo",
                            headerText : "<spring:message code='pay.head.orderNO'/>",
@@ -136,7 +136,7 @@ var crcKeyInLayout = [
                            dataField : "payItmRefDt",
                            headerText : "<spring:message code='pay.head.trDate'/>",
                            editable : false,
-                           dataType : "date", 
+                           dataType : "date",
                            formatString : "dd/mm/yyyy"
                        }, {
                            dataField : "payItmCcNo",
@@ -154,7 +154,7 @@ var crcKeyInLayout = [
                            dataField : "amount",
                            headerText : "<spring:message code='pay.head.Amount'/>",
                            editable : false,
-                           dataType:"numeric", 
+                           dataType:"numeric",
                            formatString:"#,##0.00"
                        },{
                            dataField : "groupSeq",
@@ -174,7 +174,7 @@ var crcKeyInLayout = [
                            visible : false
                        }];
 
-var crcStateLayout = [ 
+var crcStateLayout = [
                       {
                           dataField : "bankAccName",
                           headerText : "<spring:message code='pay.head.bankAccount'/>",
@@ -195,7 +195,7 @@ var crcStateLayout = [
                           dataField : "grosAmt",
                           headerText : "<spring:message code='pay.head.grossAmount'/>",
                           editable : false,
-                          dataType:"numeric", 
+                          dataType:"numeric",
                           formatString:"#,##0.00"
                       }, {
                           dataField : "crcTrnscId",
@@ -219,70 +219,70 @@ var crcStateLayout = [
                           visible : false
                       }];
 
-	
+
 	function fn_getCrcReconStateList(ordNo, ordId){
-		
+
 		if($("#bankAcc").val() == ''){
 
-	           Common.alert("Select Bank Account.");       
-		  
+	           Common.alert("Select Bank Account.");
+
 			return;
 		}
-		  
+
 		if($("#transDateFr").val() != '' && $("#transDateTo").val() != ''){
-			
-			
+
+
 			var fdate = $("#transDateFr").val();
             var fday = fdate.slice(0 , 2);
             var fmonth =  fdate.slice(3 , 5) ;
             var fyear = fdate.slice(6 , 11);
-              
-               
+
+
              var frdate = new Date(fyear , fmonth   , fday);
               console.log(frdate );
-              fmonth = frdate.getMonth() + 1; 
+              fyear = frdate.getFullYear() + 1;
                frdate = new Date(fyear , fmonth   , fday);
-               
-               
+
+
               var tdate = $("#transDateTo").val();
               var tday = tdate.slice(0 , 2);
               var tmonth =  tdate.slice(3 , 5);
               var tyear = tdate.slice(6 , 11);
-                   
-                   
+
+
                var todate = new Date(tyear , tmonth  , tday);
-                   
-                   
+
+
                console.log(frdate );
                console.log(todate );
                console.log(todate <= frdate );
-		
+
 			if(todate <= frdate) {
 				Common.ajax("GET","/payment/selectCrcReconCRCStateInfo.do", $("#searchForm").serialize(), function(result){
 			          console.log(result);
-	
+
 			          AUIGrid.setGridData(mappingGridId, result.mappingList);
 			          AUIGrid.setGridData(crcKeyInGridId, result.keyInList);
 			          AUIGrid.setGridData(crcStateGridId, result.stateList);
-			          
+
 			      });
-			
-			
+
+
 			}
 			else{
-				Common.alert("Please Select  Date  within a month.");
-				
+				Common.alert("Please Select  Date  within a year.");
+
 			}
-			
+
 		}else{
 			Common.alert("Select Transaction Date.");
 		}
 	}
-	
+
 	function fn_clear(){
 	    $("#searchForm")[0].reset();
 	}
-	
+
     function fn_mappingProc() {
 
     	var crcKeyInChkItem = AUIGrid.getCheckedRowItems(crcKeyInGridId);
@@ -301,11 +301,11 @@ var crcStateLayout = [
 			Common.alert("<spring:message code='pay.alert.crcStateData'/>");
 			return;
 		}
-		
+
 		for(i = 0 ; i < crcKeyInChkItem.length ; i++){
 			keyInRowItem = crcKeyInChkItem[i];
 	        stateRowItem = crcStateChkItem[0];
-                
+
 			crcKeyInVal = keyInRowItem.item.groupSeq;
 			item.cardModeName = keyInRowItem.item.cardModeName;
 			item.crcMcName = stateRowItem.item.bankAccName;
@@ -321,33 +321,33 @@ var crcStateLayout = [
 			item.crcTrnscMid = stateRowItem.item.crcTrnscMid;//hidden field
 			item.crcStateAccCode = stateRowItem.item.accCode;//hidden field
 			item.crditCard = stateRowItem.item.crditCard;//hidden field
-		
+
 			console.log(item);
-			AUIGrid.addRow(mappingGridId, item, "last");			
+			AUIGrid.addRow(mappingGridId, item, "last");
 		}
 
 		AUIGrid.removeCheckedRows(crcKeyInGridId);
 		AUIGrid.removeCheckedRows(crcStateGridId);
     }
-    
+
     function fn_mappingListKnockOff() {
-        
+
         var gridList = AUIGrid.getGridData(mappingGridId);
         var data = {};
         if(gridList.length > 0) {
             data.all = gridList;
-            
+
             Common.confirm("<spring:message code='pay.alert.knockOffCrc'/>",function (){
-            	
+
             	Common.ajax("POST","/payment/updCrcReconState.do", data , function(result){
                     console.log(result);
-                    
+
                     AUIGrid.clearGridData(mappingGridId);
                     Common.alert(result.message);
                 });
-            	
+
             });
-            
+
         }else{
         	Common.alert("<spring:message code='pay.alert.noMapping'/>");
         }
@@ -367,32 +367,32 @@ var crcStateLayout = [
 					var message = "Success Income Process";
 					Common.alert(message, function(){
 						fn_getCrcReconStateList();
-		    		});  
-					
+		    		});
+
 				});
 			});
 		}else{
 			Common.alert("<spring:message code='pay.alert.crcStateData'/>");
 		}
 	}
-	
+
 </script>
 <section id="content"><!-- content start -->
     <ul class="path">
         <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     </ul>
-    
+
     <aside class="title_line"><!-- title_line start -->
         <p class="fav"><a href="#" class="click_add_on"><spring:message code='pay.text.myMenu'/></a></p>
         <h2>Payment Key-In & Credit Card Statement</h2>
         <ul class="right_btns">
          <c:if test="${PAGE_AUTH.funcView == 'Y'}">
             <li><p class="btn_blue"><a href="javascript:fn_getCrcReconStateList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
-         </c:if>   
+         </c:if>
             <li><p class="btn_blue"><a href="javascript:fn_clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
     </aside><!-- title_line end -->
-    
+
     <section class="search_table"><!-- search_table start -->
         <form action="#" method="post" id="searchForm">
             <table class="type1"><!-- table start -->
@@ -422,9 +422,9 @@ var crcStateLayout = [
                     </tr>
                 </tbody>
             </table><!-- table end -->
-        </form> 
+        </form>
     </section><!-- search_table end -->
-    
+
     <!-- search_result start -->
     <section class="search_result">
         <!-- grid_wrap start -->
@@ -449,17 +449,16 @@ var crcStateLayout = [
         </div>
     </div>
 
-    
+
     <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
         <li><p class="btn_blue2"><a href="javascript:fn_incomeProc();" id="btnIncome">Income</a></p></li>
-    </c:if>    
+    </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
         <li><p class="btn_blue2"><a href="javascript:fn_mappingProc();" id="btnMapping"><spring:message code='pay.btn.mapping'/></a></p></li>
-    </c:if>    
+    </c:if>
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
         <li><p class="btn_blue2"><a href="javascript:fn_mappingListKnockOff();" id="btnKnockOff"><spring:message code='pay.btn.knockOff'/></a></p></li>
     </c:if>
     </ul>
 </section><!-- content end -->
-    
