@@ -42,9 +42,9 @@ console.log("loginPop.jsp");
         $("#ack2Div").attr("hidden", false);
 
         if("${popRejectFlg}" == "X") {
-            $("#agreementRejectBtn").attr("hidden", false);
-        } else {
             $("#agreementRejectBtn").attr("hidden", true);
+        } else {
+            $("#agreementRejectBtn").attr("hidden", false);
         }
     }
 
