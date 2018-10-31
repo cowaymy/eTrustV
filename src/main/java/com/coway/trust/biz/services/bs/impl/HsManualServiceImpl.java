@@ -502,13 +502,13 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 	            int custId = hsManualMapper.selectCustomer(params);
 	            int codyId = hsManualMapper.selectCody(params);
 	            params.put("bsResultId", nextSeq);
-	            String serialNo = hsManualMapper.selectSerialNo(params);
+	            //String serialNo = hsManualMapper.selectSerialNo(params);
 
 	            docSub2.put("hsNo", LOG_SVC0008D_NO);
 	            docSub2.put("custId", custId);
 	            docSub2.put("bsResultPartId", docSub3.get("stkId"));
 	            docSub2.put("bsResultPartQty", docSub3.get("name"));
-	            docSub2.put("serialNo",serialNo);
+	            docSub2.put("serialNo", docSub3.get("serialNo"));
 //	            docSub2.put("bsResultCrtDt");
 	            docSub2.put("bsCodyId",codyId);
 	            docSub2.put("bsResultId", nextSeq);
