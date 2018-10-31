@@ -108,7 +108,7 @@ public class PoManagementServiceImpl implements PoManagementService {
 				params.put("grYear", grYear);
 				params.put("grMonth", grMonth);
 				params.put("grWeek", grWeek);
-				params.put("condPrcUnit", list.get("condPrcUnit"));
+				params.put("prcUnit", list.get("prcUnit"));
 				params.put("purchPrc", list.get("purchPrc"));
 				params.put("fobPrc", list.get("fobPrc"));
 				params.put("fobAmt", list.get("fobAmt"));
@@ -209,7 +209,7 @@ public class PoManagementServiceImpl implements PoManagementService {
 			for ( Map<String, Object> list : updList ) {
 				params.put("updUserId", updUserId);
 				params.put("poNo", list.get("poNo"));
-				params.put("poApprStusId", 5);
+				params.put("poStusId", 5);
 				LOGGER.debug("params : {}", params);
 				
 				poManagementMapper.updatePoApprove(params);
