@@ -823,7 +823,7 @@ function fnSaveMaster(obj, conf) {
 	//	set planStusId
 	if ( "confirm" == conf ) {
 		msg	= $("#scmYearCbBox").val() + " year " + $("#scmWeekCbBox").val() + " th Week Sales Plan is confirmed";
-		$("#planStusId").val(4);
+		$("#planStusId").val(5);
 	} else if ( "unconfirm" == conf ) {
 		msg	= $("#scmYearCbBox").val() + " year " + $("#scmWeekCbBox").val() + " th Week Sales Plan is Unconfirmed";
 		$("#planStusId").val(1);

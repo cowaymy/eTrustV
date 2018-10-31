@@ -894,7 +894,7 @@ function fnSaveMaster(obj, conf) {
 	var planId	= supplyPlanList[0]["planId"];
 	var planStusId	= "";
 	if ( "confirm" == conf ) {
-		planStusId	= "4";
+		planStusId	= "5";
 	} else {
 		planStusId	= "1";
 	}
@@ -961,12 +961,12 @@ function fnSetSupplyPlanInfo(result) {
 		$("#cirSupply").removeClass("circle_blue");
 		$("#cirSupply").removeClass("circle_red");
 	} else {
-		if ( 4 == salesPlan || 8 == salesPlan || 12 == salesPlan ) {
+		if ( 5 == salesPlan || 10 == salesPlan || 15 == salesPlan ) {
 			console.log("sales blue");
 			$("#cirSales").removeClass("circle_grey");
 			$("#cirSales").addClass("circle_blue");
 			$("#cirSales").removeClass("circle_red");
-			if ( 4 == supplyPlan ) {
+			if ( 5 == supplyPlan ) {
 				console.log("supply blue");
 				$("#cirSupply").removeClass("circle_grey");
 				$("#cirSupply").addClass("circle_blue");
@@ -1011,9 +1011,9 @@ function fnBtnCtrl(result) {
 		console.log("1");
 	} else {
 		//if ( 12 == salesPlan ) {	//	4 * team cnt
-		if ( 4 == salesPlan || 8 == salesPlan || 12 == salesPlan ) {
+		if ( 5 == salesPlan || 10 == salesPlan || 15 == salesPlan ) {
 			//	SalesPlan Confirm status
-			if ( 4 == supplyPlan ) {
+			if ( 5 == supplyPlan ) {
 				//	SupplyPlan Confirm Status
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
