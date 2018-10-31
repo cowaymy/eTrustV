@@ -1804,4 +1804,45 @@ public class CustomerController {
 
         return ResponseEntity.ok(rtnCrc);
     }
+
+	@RequestMapping(value = "/selectCustomerOrderList.do")
+	public String selectCustomerOrderList(@ModelAttribute("customerVO") CustomerVO customerVO,
+			@RequestParam Map<String, Object>params, ModelMap model){
+
+		return "sales/order/customerCheckingList";
+	}
+
+    @RequestMapping(value = "/selectCustomerCheckingList", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectCustomerCheckingList(@RequestParam Map<String, Object>params, HttpServletRequest request, ModelMap model) {
+
+		List<EgovMap> customerList = null;
+
+
+		LOGGER.info("##### customerList START #####");
+		customerList = customerService.selectCustomerCheckingList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(customerList);
+	}
+
+    @RequestMapping(value = "/selectCustomerOrderView.do")
+	public String selectCustomerOrderView(@RequestParam Map<String, Object> params, ModelMap model)throws Exception{
+
+		EgovMap basicinfo = null;
+		EgovMap agingmonth = null;
+
+		LOGGER.info("##### customeView START #####");
+		basicinfo = customerService.selectCustomerCheckingListPop(params);
+		agingmonth = customerService.selectCustomerAgingMonth(params);
+
+
+		//ajax param
+		model.addAttribute("ordId", params.get("ordId"));
+
+		// infomation param
+		model.addAttribute("result", basicinfo);
+		model.addAttribute("aging", agingmonth);
+
+		return "sales/order/customerCheckingViewPop";
+	}
 }
