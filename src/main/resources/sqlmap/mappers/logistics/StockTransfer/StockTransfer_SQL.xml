@@ -98,10 +98,13 @@
               and l47.reqst_stus = #{sstatus}
            </if>
            <if test="userId == 71469">
-              and (l47.reqst_cdc_rdc = 1532 or l47.rciv_cdc_rdc = 1532)
+              and (l47.reqst_cdc_rdc in (1532,90865) or l47.rciv_cdc_rdc in (1532,90865))
            </if>
            <if test="userId == 71473">
-              and (l47.reqst_cdc_rdc in (46,90148) or l47.rciv_cdc_rdc in (46,90148))
+              and (l47.reqst_cdc_rdc in (46,90148,90865) or l47.rciv_cdc_rdc in (46,90148,90865))
+           </if>
+           <if test="userId == 71471">
+              and (l47.reqst_cdc_rdc in (90865) or l47.rciv_cdc_rdc in (90865))
            </if>
            ORDER BY l47.reqst_no DESC
     </select>
@@ -435,12 +438,14 @@
               and L54.DELVRY_GR_CMPLT = #{instatus}
            </if>
            <if test="userId == 71469">
-              and (l47.reqst_cdc_rdc = 1532 or l47.rciv_cdc_rdc = 1532)
+              and (l47.reqst_cdc_rdc in (1532,90865) or l47.rciv_cdc_rdc in (1532,90865))
            </if>
            <if test="userId == 71473">
-              and (l47.reqst_cdc_rdc in (46,90148) or l47.rciv_cdc_rdc in (46,90148))
+              and (l47.reqst_cdc_rdc in (46,90148,90865) or l47.rciv_cdc_rdc in (46,90148,90865))
            </if>
-
+           <if test="userId == 71471">
+              and (l47.reqst_cdc_rdc in (90865) or l47.rciv_cdc_rdc in (90865))
+           </if>
            ORDER BY l54.delvry_no DESC
            ) T
     </select>
