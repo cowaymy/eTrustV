@@ -172,8 +172,8 @@ INSERT INTO ITF0155M
      , PRC_UNIT
      , CUR
  )
-SELECT B.PO_ITEM_NO AS IF_KEY
-     , 1 AS SEQ
+SELECT '155' || TO_CHAR(SYSDATE, 'YYMMDD') || '_' || LPAD(A.IF_KEY + A.IF_KEY_SEQ, 7, '0') AS IF_KEY
+     , A.SEQ
      , '155' AS IF_TYPE
      , '20' AS TRAN_STATUS_CD
      , TO_CHAR(SYSDATE, 'YYYYMMDD') AS TRAN_DT
@@ -182,22 +182,45 @@ SELECT B.PO_ITEM_NO AS IF_KEY
      , TO_CHAR(SYSDATE, 'HH24MISS') AS RGST_TM
      , #{crtUserId} AS RGST_ID
      , A.PO_ID
-     , B.PO_NO
-     , B.PO_ITEM_NO AS PO_ITM_NO
+     , A.PO_NO
+     , A.PO_ITM_NO
      , 'N' AS DELFLAG
-     , B.VENDOR
-     , TO_CHAR(A.CRT_DT, 'YYYYMMDD') AS PO_ISSU_DT
+     , A.VENDOR
+     , A.PO_ISSU_DT
      , A.CDC
-     , B.STOCK_CODE
-     , B.PO_QTY AS QTY
-     , B.FOB_AMT
-     , B.FOB_PRC
-     , B.COND_PRC_UNIT
-     , B.CURR AS CUR
-  FROM SCM0052M A
-  LEFT OUTER JOIN SCM0053D B ON (A.PO_ID = B.PO_ID AND B.USE_YN = 'Y')
- WHERE B.PO_NO = #{poNo}
-   AND B.PO_ITEM_NO = #{poItemNo}
+     , A.STOCK_CODE
+     , A.QTY
+     , A.FOB_AMT
+     , A.FOB_PRC
+     , A.PRC_UNIT
+     , A.CUR
+  FROM (
+        SELECT ROW_NUMBER() OVER (PARTITION BY A.PO_ID ORDER BY B.PO_NO, B.PO_ITEM_NO) AS IF_KEY
+             , ROW_NUMBER() OVER (PARTITION BY B.PO_NO ORDER BY B.PO_ITEM_NO) AS SEQ
+             , (
+                SELECT CASE WHEN MAX(IF_KEY) IS NULL THEN 0
+                            ELSE TO_NUMBER(SUBSTR(MAX(IF_KEY), 11))
+                            END AS IF_KEY_SEQ
+                  FROM ITF0155M
+                 WHERE IF_KEY LIKE '155' || TO_CHAR(SYSDATE, 'YYMMDD') || '_' || '%'
+                ) AS IF_KEY_SEQ
+             , A.PO_ID
+             , B.PO_NO
+             , B.PO_ITEM_NO AS PO_ITM_NO
+             , B.VENDOR
+             , TO_CHAR(A.CRT_DT, 'YYYYMMDD') AS PO_ISSU_DT
+             , A.CDC
+             , B.STOCK_CODE
+             , B.PO_QTY AS QTY
+             , B.FOB_AMT
+             , B.FOB_PRC
+             , B.PRC_UNIT
+             , B.CURR AS CUR
+          FROM SCM0052M A
+          LEFT OUTER JOIN SCM0053D B ON (A.PO_ID = B.PO_ID AND B.USE_YN = 'Y')
+         WHERE B.PO_NO = #{poNo}
+           AND B.PO_ITEM_NO = #{poItemNo}
+        ) A
 </insert>
 
 </mapper>

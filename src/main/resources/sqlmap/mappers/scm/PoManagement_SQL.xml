@@ -6,7 +6,7 @@
 SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
      , DECODE(B.PO_MONTH, NULL, A.PLAN_MONTH, B.PO_MONTH) AS PO_MONTH
      , DECODE(B.PO_WEEK, NULL, A.PLAN_WEEK, B.PO_WEEK) AS PO_WEEK
-     , #{scmCdcCbBox} AS CDC
+     , '2010' AS CDC
      , G.CODE_DESC AS CDC_DESC
      , A.STOCK_CODE
      , C.STK_DESC AS NAME
@@ -28,10 +28,9 @@ SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
                       END
             ELSE NVL(B.FOB_AMT, 0)
             END AS FOB_AMT
-     , NVL(B.PO_ISS_STUS_ID, 0) AS PO_ISS_STUS_ID
-     , NVL(B.PO_APPR_STUS_ID, 0) AS PO_APPR_STUS_ID
+     , NVL(B.PO_STUS_ID, 0) AS PO_STUS_ID
      , F.PURCH_PRC
-     , F.COND_PRC_UNIT
+     , F.COND_PRC_UNIT AS PRC_UNIT
      , F.VENDOR
      , F.VENDOR_TXT
      , F.CURR
@@ -42,8 +41,8 @@ SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
              , NVL(X.W06, 0) AS W06, NVL(X.W07, 0) AS W07, NVL(X.W08, 0) AS W08, NVL(X.W09, 0) AS W09, NVL(X.W10, 0) AS W10
              , NVL(X.W11, 0) AS W11, NVL(X.W12, 0) AS W12, NVL(X.W13, 0) AS W13, NVL(X.W14, 0) AS W14, NVL(X.W15, 0) AS W15
           FROM SCM0005M Z
-          LEFT OUTER JOIN SCM0006D X ON (Z.PLAN_ID = X.PLAN_MASTER_ID)
-          LEFT OUTER JOIN SCM0017M Y ON (X.STOCK_CODE = Y.STOCK_CODE AND Z.CDC = Y.CDC_CODE)
+          LEFT OUTER JOIN SCM0006D X ON (Z.PLAN_ID = X.PLAN_ID)
+          LEFT OUTER JOIN SCM0017M Y ON (X.STOCK_CODE = Y.STOCK_CODE AND Z.CDC = Y.CDC)
          WHERE Z.PLAN_YEAR = #{scmYearCbBox}
            AND Z.PLAN_WEEK = #{scmWeekCbBox}
            AND Z.CDC = #{scmCdcCbBox}
@@ -56,8 +55,7 @@ SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
                         , Z.CDC
                         , X.STOCK_CODE
                         , X.PO_QTY
-                        , X.PO_ISS_STUS_ID
-                        , X.PO_APPR_STUS_ID
+                        , X.PO_STUS_ID
                         , X.FOB_PRC
                         , X.FOB_AMT
                      FROM SCM0052M Z
@@ -99,7 +97,7 @@ SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
 
 <select id="selectPoCreatedList" parameterType="Map" resultType="egovMap">
 SELECT 'PDF ' || '/ EXCEL' AS PDF
-     , DECODE(A.PO_APPR_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
+     , DECODE(A.PO_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
      , B.PO_ID
      , B.PO_YEAR
      , B.PO_MONTH
@@ -115,16 +113,15 @@ SELECT 'PDF ' || '/ EXCEL' AS PDF
      , E.CODE_NAME AS TYPE
      , NVL(A.PO_QTY, 0) AS PO_ISS_QTY
      , TO_CHAR(A.CRT_DT, 'YYYY-MM-DD') AS PO_ISS_DT
-     , A.PO_ISS_STUS_ID
-     , A.PO_APPR_STUS_ID
-     , F.NAME AS PO_APPR_STUS_NAME
+     , A.PO_STUS_ID
+     , F.NAME AS PO_STUS_NAME
      , A.GR_YEAR
      , A.GR_MONTH
      , A.GR_WEEK
      , NVL(A.GR_QTY, 0) AS GR_QTY
      , A.GR_STUS_ID
      , G.NAME AS GR_STUS_NAME
-     , NVL(A.COND_PRC_UNIT, 0) AS COND_PRC_UNIT
+     , NVL(A.PRC_UNIT, 0) AS PRC_UNIT
      , NVL(A.PURCH_PRC, 0) AS PURCH_PRC
      , NVL(A.FOB_PRC, 0) AS FOB_PRC
      , NVL(A.FOB_AMT, 0) AS FOB_AMT
@@ -133,7 +130,7 @@ SELECT 'PDF ' || '/ EXCEL' AS PDF
   LEFT OUTER JOIN SYS0026M C ON (A.STOCK_CODE = C.STK_CODE)
   LEFT OUTER JOIN SYS0013M D ON (C.STK_CTGRY_ID = D.CODE_ID AND D.CODE_MASTER_ID = 11) /* 11 : Stock Category */
   LEFT OUTER JOIN SYS0013M E ON (C.STK_TYPE_ID = E.CODE_ID AND E.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
-  LEFT OUTER JOIN SYS0038M F ON (A.PO_APPR_STUS_ID = F.STUS_CODE_ID)
+  LEFT OUTER JOIN SYS0038M F ON (A.PO_STUS_ID = F.STUS_CODE_ID)
   LEFT OUTER JOIN SYS0038M G ON (A.GR_STUS_ID = G.STUS_CODE_ID)
  WHERE 1 = 1
    AND A.USE_YN = 'Y'
@@ -208,12 +205,11 @@ INSERT INTO SCM0053D
      , GR_MONTH
      , GR_WEEK
      , GR_QTY
-     , COND_PRC_UNIT
+     , PRC_UNIT
      , PURCH_PRC
      , FOB_PRC
      , FOB_AMT
      , VENDOR
-     , VENDOR_TXT
      , CURR
      , CRT_DT
      , CRT_USER_ID
@@ -229,12 +225,11 @@ VALUES
      , #{grMonth}
      , #{grWeek}
      , 0
-     , #{condPrcUnit}
+     , #{prcUnit}
      , #{purchPrc}
      , #{fobPrc}
      , #{fobAmt}
      , #{vendor}
-     , #{vendorTxt}
      , #{curr}
      , SYSDATE
      , #{crtUserId}
@@ -260,8 +255,7 @@ UPDATE SCM0052M
 
 <update id="updatePoDetail" parameterType="Map">
 UPDATE SCM0053D
-   SET PO_ISS_STUS_ID = #{poIssStusId}
-     , PO_APPR_STUS_ID = #{poApprStusId}
+   SET PO_STUS_ID = #{poStusId}
      , GR_STUS_ID = #{grStusId}
      , GR_QTY = #{grQty}
      , UPD_DT = SYSDATE
@@ -285,7 +279,7 @@ UPDATE SCM0053D
 
 <update id="updatePoApprove" parameterType="Map">
 UPDATE SCM0053D
-   SET PO_APPR_STUS_ID = #{poApprStusId}
+   SET PO_STUS_ID = #{poStusId}
      , UPD_DT = SYSDATE
      , UPD_USER_ID = #{updUserId} 
  WHERE PO_NO = #{poNo}
@@ -325,7 +319,7 @@ SELECT C.STK_CTGRY_ID AS CTGRY_ID
 </select>
 
 <select id="selectPoApprList" parameterType="Map" resultType="egovMap">
-SELECT DECODE(A.PO_APPR_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
+SELECT DECODE(A.PO_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
      , B.PO_ID
      , B.PO_YEAR
      , B.PO_MONTH
@@ -341,16 +335,15 @@ SELECT DECODE(A.PO_APPR_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
      , E.CODE_NAME AS TYPE
      , NVL(A.PO_QTY, 0) AS PO_ISS_QTY
      , TO_CHAR(A.CRT_DT, 'YYYY-MM-DD') AS PO_ISS_DT
-     , A.PO_ISS_STUS_ID
-     , A.PO_APPR_STUS_ID
-     , F.NAME AS PO_APPR_STUS_NAME
+     , A.PO_STUS_ID
+     , F.NAME AS PO_STUS_NAME
      , A.GR_YEAR
      , A.GR_MONTH
      , A.GR_WEEK
      , NVL(A.GR_QTY, 0) AS GR_QTY
      , A.GR_STUS_ID
      , G.NAME AS GR_STUS_NAME
-     , NVL(A.COND_PRC_UNIT, 0) AS COND_PRC_UNIT
+     , NVL(A.PRC_UNIT, 0) AS PRC_UNIT
      , NVL(A.PURCH_PRC, 0) AS PURCH_PRC
      , NVL(A.FOB_PRC, 0) AS FOB_PRC
      , NVL(A.FOB_AMT, 0) AS FOB_AMT
@@ -359,7 +352,7 @@ SELECT DECODE(A.PO_APPR_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
   LEFT OUTER JOIN SYS0026M C ON (A.STOCK_CODE = C.STK_CODE)
   LEFT OUTER JOIN SYS0013M D ON (C.STK_CTGRY_ID = D.CODE_ID AND D.CODE_MASTER_ID = 11) /* 11 : Stock Category */
   LEFT OUTER JOIN SYS0013M E ON (C.STK_TYPE_ID = E.CODE_ID AND E.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
-  LEFT OUTER JOIN SYS0038M F ON (A.PO_APPR_STUS_ID = F.STUS_CODE_ID)
+  LEFT OUTER JOIN SYS0038M F ON (A.PO_STUS_ID = F.STUS_CODE_ID)
   LEFT OUTER JOIN SYS0038M G ON (A.GR_STUS_ID = G.STUS_CODE_ID)
  WHERE 1 = 1
    AND A.USE_YN = 'Y'

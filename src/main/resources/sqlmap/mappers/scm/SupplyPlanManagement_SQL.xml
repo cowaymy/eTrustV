@@ -526,8 +526,10 @@ SELECT NVL(SUM(QTY), 0) AS QTY
              , Z.BAS_YEAR
              , Z.EST_WEEK
              , X.GR_WEEK
-          FROM SCM0009M Z
-             , SCM0010D X
+/*          FROM SCM0009M Z
+             , SCM0010D X*/
+          FROM SCM0052M Z
+             , SCM0053D X
          WHERE Z.PO_ID = X.PO_ID
            AND X.PO_ITM_APPV_STUS = '5'
            AND Z.CDC = #{scmCdcCbBox}
@@ -767,8 +769,10 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
                                 , X.STOCK_CODE
                                 , X.GR_YEAR || LPAD(X.GR_MONTH, 2, '0') AS YYYYMM
                                 , NVL(X.PO_QTY, 0) - NVL(X.GR_QTY, 0) AS UNGR_QTY
-                             FROM SCM0009M Z
-                             LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*                             FROM SCM0009M Z
+                             LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+                             FROM SCM0052M Z
+                             LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
                             WHERE Z.CDC = #{scmCdcCbBox}
                            ) B ON (A.STOCK_CODE = B.STOCK_CODE AND A.YYYYMM > B.YYYYMM)
          GROUP BY A.STOCK_CODE
@@ -980,120 +984,150 @@ SELECT A.PLAN_ID
 <select id="selectPoInLeadTm" parameterType="Map" resultType="egovMap">
 SELECT B.STOCK_CODE
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week1}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W01
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week2}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W02
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week3}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W03
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week4}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W04
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week5}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W05
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week6}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W06
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week7}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W07
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week8}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W08
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week9}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W09
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week10}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W10
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week11}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W11
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week12}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W12
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week13}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W13
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week14}
                AND X.STOCK_CODE = B.STOCK_CODE
             ), 0) AS W14
      , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)
+/*              FROM SCM0009M Z
+              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PO_YEAR = A.PLAN_YEAR
                AND Z.CDC = A.CDC
                AND X.GR_WEEK = #{week15}

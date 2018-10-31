@@ -386,7 +386,7 @@ SELECT A.BEF_PLAN
          WHERE Z.PLAN_YEAR = #{befPlanYear}
            AND Z.PLAN_WEEK = #{befPlanWeek}
            AND Z.TEAM = #{scmTeamCbBox}
-           AND Z.PLAN_STUS_ID = 4
+           AND Z.PLAN_STUS_ID = 5
         ) A
      , (
         SELECT COUNT(*) AS THIS_PLAN
@@ -394,7 +394,7 @@ SELECT A.BEF_PLAN
          WHERE Z.PLAN_YEAR = #{scmYearCbBox}
            AND Z.PLAN_WEEK = #{scmWeekCbBox}
            AND Z.TEAM = #{scmTeamCbBox}
-           AND Z.PLAN_STUS_ID = 4
+           AND Z.PLAN_STUS_ID = 5
         ) B
 </select>
 
