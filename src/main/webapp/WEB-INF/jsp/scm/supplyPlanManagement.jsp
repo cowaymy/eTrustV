@@ -241,8 +241,8 @@ function fnSupplyPlanHeader() {
 				var leadTm		= result.selectTotalSplitInfo[0].leadTm;
 				var planWeekTh	= result.selectTotalSplitInfo[0].planWeekTh;
 				var splitCnt	= result.selectTotalSplitInfo[0].splitCnt;
-				leadTm	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(splitCnt);
-				//console.log("===leadTm : " + leadTm);
+				leadTm	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(splitCnt) - 1;
+				console.log("===leadTm : " + leadTm);
 				//	make header
 				if ( null != result.selectSupplyPlanHeader && 0 < result.selectSupplyPlanHeader.length ) {
 					dynamicLayout.push(
@@ -462,9 +462,6 @@ function fnSupplyPlanHeader() {
 					var startCnt	= 0;
 					var strWeekTh	= "W";
 					
-					//var sumWeekThStr	= "";
-					var m0HeaderLabel	= "";
-					//console.log("gWeekTh : " + gWeekTh);
 					/******************************
 					******** M0 Header
 					******************************/
@@ -528,7 +525,7 @@ function fnSupplyPlanHeader() {
 						if ( iLoopDataFieldCnt > leadTm ) {
 							groupM1.children.push({
 								dataField : "w" + intToStrFieldCnt,
-								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								headerText : result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
 								formatString : "#,##0",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
@@ -546,7 +543,7 @@ function fnSupplyPlanHeader() {
 						} else {
 							groupM1.children.push({
 								dataField : "w" + intToStrFieldCnt,
-								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								headerText : result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
 								formatString : "#,##0",
 								editable : false,

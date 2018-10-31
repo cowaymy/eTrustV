@@ -238,7 +238,7 @@ var poCreateListLayout	=
 			headerText : "Currency",
 			editable : false,
 			style : "my-columnCenter1"
-		}, , {
+		}, {
 			dataField : "currName",
 			headerText : "Currency",
 			editable : false,
@@ -260,7 +260,7 @@ var poCreateListLayout	=
 			editable : false,
 			style : "my-columnRight1"
 		}, {
-			dataField : "condPrcUnit",
+			dataField : "prcUnit",
 			headerText : "Unit Price",
 			dataType : "numeric",
 			formatString : "#,##0",
@@ -466,12 +466,8 @@ var poCreatedListLayout	=
 				}
 			}
 		}, {
-			dataField : "poIssStusId",
-			headerText : "Po Issue Status Id",
-			visible : false
-		}, {
-			dataField : "poApprStusId",
-			headerText : "Po Approve Status Id",
+			dataField : "poStusId",
+			headerText : "Po Status Id",
 			visible : false
 		}, {
 			dataField : "grYear",
@@ -564,7 +560,7 @@ function fnSearch() {
 					splitCnt	= result.selectTotalSplitInfo[0].splitCnt;
 					supplyPlanQty	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(splitCnt);
 					supplyPlanQty	= "w" + supplyPlanQty;
-					console.log("===========supplyPlanQty : " + supplyPlanQty);
+					//console.log("===========supplyPlanQty : " + supplyPlanQty);
 					fnPoTargetGrid();
 					
 					AUIGrid.setGridData(myGridID, result.selectPoTargetList);
@@ -623,7 +619,7 @@ function fnMoveStock() {
 			vendor : AUIGrid.getCellValue(myGridID, selectedRow, "vendor"),
 			vendorTxt : AUIGrid.getCellValue(myGridID, selectedRow, "vendorTxt"),
 			purchPrc : AUIGrid.getCellValue(myGridID, selectedRow, "purchPrc"),
-			condPrcUnit : AUIGrid.getCellValue(myGridID, selectedRow, "condPrcUnit")
+			prcUnit : AUIGrid.getCellValue(myGridID, selectedRow, "prcUnit")
 		};
 	console.log(item);
 	AUIGrid.addRow(myGridID2, item, "last");
@@ -666,8 +662,6 @@ function fnDelete(obj) {
 		return	false;
 	}
 	data.checked	= chkList;
-	//console.log(chkList);
-	//return	false;
 	
 	Common.ajax("POST"
 			, "/scm/deletePo.do"
@@ -780,19 +774,15 @@ function fnPoTargetGrid() {
 				style : "my-columnRight0",
 				width : "10%"
 			}, {
-				dataField : "poIssStusId",
-				headerText : "Po Iss Stus Id",
-				visible : false
-			}, {
-				dataField : "poApprStusId",
-				headerText : "Po Appr Stus Id",
+				dataField : "poStusId",
+				headerText : "Po Stus Id",
 				visible : false
 			}, {
 				dataField : "purchPrc",
 				headerText : "Purchase Price",
 				visible : false
 			}, {
-				dataField : "condPrcUnit",
+				dataField : "prcUnit",
 				headerText : "Unit Price",
 				visible : false
 			}, {
@@ -1057,16 +1047,6 @@ $(document).ready(function() {
 
 <section class="search_table"><!-- search_table start -->
 <form id="MainForm" method="post" action="">
-	<input type ="hidden" id="inStockCode"  name="inStockCode" value=""/>
-	<input type ="hidden" id="inStkCtgryId" name="inStkCtgryId" value=""/>
-	<input type ="hidden" id="inPlanQty"    name="inPlanQty" value="" />
-	<input type ="hidden" id="inPoQty"      name="inPoQty" value="" />
-	<input type ="hidden" id="inMoq"        name="inMoq" value=""/>
-	<input type ="hidden" id="inStkTypeId"  name="inStkTypeId" value=""/>
-	<input type ="hidden" id="inRoundUpPoQty"  name="inRoundUpPoQty" value=""/>
-	<input type ="hidden" id="inPreCdc"        name="inPreCdc" value=""/>
-	<input type ="hidden" id="inPreYear"    name="inPreYear" value=""/>
-	<input type ="hidden" id="inPreWeekTh"    name="inPreWeekTh" value=""/>
 	<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>

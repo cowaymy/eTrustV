@@ -1048,76 +1048,6 @@ function fnSumMnPlanAfterSearch() {
 			}
 		}
 	}
-	//	sum m0
-/*	for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
-		ms0	= "w0" + (parseInt(m0ThWeekStart) + parseInt(i)).toString();
-		for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
-			if ( planWeek < parseInt(i) + parseInt(m0ThWeekStart) ) {
-				m0	= parseInt(m0) + parseInt(salesPlanList[j][ms0]);
-				salesPlanList[j]["m0Plan"]	= m0;
-				AUIGrid.setCellValue(myGridID, j, "m0Plan", m0);
-			} else {
-				//console.log("not sum");
-			}
-		}
-	}
-	
-	//	sum 01
-	for ( var i = 0 ; i < m1WeekCnt ; i++ ) {
-		if ( 10 > parseInt(m1ThWeekStart) + parseInt(i) ) {
-			ms1	= "w0" + (parseInt(m1ThWeekStart) + parseInt(i)).toString();
-		} else {
-			ms1	= "w" + (parseInt(m1ThWeekStart) + parseInt(i)).toString();
-		}
-		for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
-			m1	= parseInt(m1) + parseInt(salesPlanList[j][ms1]);
-			salesPlanList[j]["m1"]	= m1;
-			AUIGrid.setCellValue(myGridID, j, "m1", m1);
-		}
-	}
-	
-	//	sum m2
-	for ( var i = 0 ; i < m2WeekCnt ; i++ ) {
-		if ( 10 > parseInt(m2ThWeekStart) + parseInt(i) ) {
-			ms2	= "w0" + (parseInt(m2ThWeekStart) + parseInt(i)).toString();
-		} else {
-			ms2	= "w" + (parseInt(m2ThWeekStart) + parseInt(i)).toString();
-		}
-		for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
-			m2	= parseInt(m2) + parseInt(salesPlanList[j][ms2]);
-			salesPlanList[j]["m2"]	= m2;
-			AUIGrid.setCellValue(myGridID, j, "m2", m2);
-		}
-	}
-	
-	//	sum m3
-	for ( var i = 0 ; i < m3WeekCnt ; i++ ) {
-		if ( 10 > parseInt(m3ThWeekStart) + parseInt(i) ) {
-			ms3	= "w0" + (parseInt(m3ThWeekStart) + parseInt(i)).toString();
-		} else {
-			ms3	= "w" + (parseInt(m3ThWeekStart) + parseInt(i)).toString();
-		}
-		for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
-			m3	= parseInt(m3) + parseInt(salesPlanList[j][ms3]);
-			salesPlanList[j]["m3"]	= m3;
-			AUIGrid.setCellValue(myGridID, j, "m3", m3);
-		}
-	}
-	
-	//	sum m4
-	for ( var i = 0 ; i < m4WeekCnt ; i++ ) {
-		if ( 10 > parseInt(m4ThWeekStart) + parseInt(i) ) {
-			ms4	= "w0" + (parseInt(m4ThWeekStart) + parseInt(i)).toString();
-		} else {
-			ms4	= "w" + (parseInt(m4ThWeekStart) + parseInt(i)).toString();
-		}
-		for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
-			m4	= parseInt(m4) + parseInt(salesPlanList[j][ms4]);
-			salesPlanList[j]["m4"]	= m4;
-			AUIGrid.setCellValue(myGridID, j, "m4", m4);
-		}
-	}
-	*/
 }
 
 //	set plan info
@@ -1214,7 +1144,7 @@ function fnBtnCtrl(result) {
 				$("#btnConfirm").removeClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
-			} else if ( 4 == planStusId1 || "4" == planStusId1 ) {
+			} else if ( 5 == planStusId1 || "5" == planStusId1 ) {
 				//console.log("===========btn4============");
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
@@ -1236,7 +1166,7 @@ function fnBtnCtrl(result) {
 				$("#btnConfirm").removeClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
-			} else if ( 4 == planStusId2 || "4" == planStusId2 ) {
+			} else if ( 5 == planStusId2 || "5" == planStusId2 ) {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
@@ -1256,7 +1186,7 @@ function fnBtnCtrl(result) {
 				$("#btnConfirm").removeClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
-			} else if ( 4 == planStusId3 || "4" == planStusId3 ) {
+			} else if ( 5 == planStusId3 || "5" == planStusId3 ) {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
