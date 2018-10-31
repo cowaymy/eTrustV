@@ -1,111 +1,128 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
-$(document).ready(function(){
-	$('.multy_select').on("change", function() {
-        //console.log($(this).val());
+  $(document).ready(function(){
+    $('.multy_select').on("change", function() {
+      //console.log($(this).val());
     }).multipleSelect({});
-    
-	
-	doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'S', '');
-	doGetCombo('/services/as/report/selectMemCodeList.do', '', '','CTCodeFrom', 'S' ,  '');
-	doGetCombo('/services/as/report/selectMemCodeList.do', '', '','CTCodeTo', 'S' ,  '');
-	
-});
 
+    doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'S', '');
+    doGetCombo('/services/as/report/selectMemCodeList.do', '', '','CTCodeFrom', 'S' ,  '');
+    doGetCombo('/services/as/report/selectMemCodeList.do', '', '','CTCodeTo', 'S' ,  '');
+  });
 
-function fn_validation(){
-	
-		if($("#reqStrDate").val() != '' && $("#asAppDtFr").val() != ''){
-	        Common.alert("<spring:message code='sys.common.alert.validation' arguments='either AS request date or AS Appointment date (From & To)' htmlEscape='false'/>");
-	        return false;
-	    }
-        if($("#orderNumFrom").val() == '' || $("#orderNumTo").val() == ''){
-            Common.alert("<spring:message code='sys.common.alert.validation' arguments='order number (From & To)' htmlEscape='false'/>");
-            return false;
-        }
-        if($("#CTCodeFrom").val() == '' || $("#CTCodeTo").val() == ''){
-            Common.alert("<spring:message code='sys.common.alert.validation' arguments='CT code (From & To)' htmlEscape='false'/>");
-            return false;
-        }
-        return true;
-}
+  function fn_validation(){
+    if($("#reqStrDate").val() != '' && $("#asAppDtFr").val() != ''){
+	  Common.alert("<spring:message code='sys.common.alert.validation' arguments='either AS request date or AS Appointment date (From & To)' htmlEscape='false'/>");
+	  return false;
+    }
 
-function fn_openGenerate(){
+    if($("#orderNumFrom").val() == '' || $("#orderNumTo").val() == ''){
+      Common.alert("<spring:message code='sys.common.alert.validation' arguments='order number (From & To)' htmlEscape='false'/>");
+      return false;
+    }
+
+    if($("#CTCodeFrom").val() == '' || $("#CTCodeTo").val() == ''){
+      Common.alert("<spring:message code='sys.common.alert.validation' arguments='CT code (From & To)' htmlEscape='false'/>");
+      return false;
+    }
+    return true;
+  }
+
+  function fn_openGenerate(){
 	if(fn_validation()){
-		
-		var fSONO1 = $("#orderNumFrom").val();
-		var fSONO2 = $("#orderNumTo").val();
-		var fMemCTID1 = $("#CTCodeFrom").val();
-		var fMemCTID2 = $("#CTCodeTo").val();
-		var reqDate1 = "";
-		var reqDate2 = "";
-		var appDate1 = "";
-		var appDate2 = "";
-		var whereSql = "";
-		var dscBranch = "";
-		var orderBy = " t1.f_Mem_Code ";
-		
-		if($("#asAppDtFr").val() != ''){
-			appDate1 = $("#asAppDtFr").val();
-			appDate2 = $("#asAppDtTo").val();
-			whereSql += " and (AE.AS_APPNT_DT between to_date('" + appDate1 + "', 'DD/MM/YYYY') and to_date('" + appDate2 + "' , 'DD/MM/YYYY')) ";
-		}else{
-			reqDate1 = $("#reqStrDate").val();
-			reqDate2 = $("#reqEndDate").val();
-			whereSql += " and (AE.AS_REQST_DT between to_date('" + reqDate1 + "', 'DD/MM/YYYY') and to_date('" + reqDate2 + "' , 'DD/MM/YYYY')) ";
-		}
-		
-		if($("#sortType").val() == 'AS'){
-			orderBy = " t1.As_no ";
-		}
-		
-		if($("#branch").val() != '' && $("#branch").val() != null){
-			dscBranch = " WHERE t1.Brnch_Code like '" + $("#branch option:selected").text().substring(0,6)  + "%' ";
-		}
-		
-		
-		var date = new Date();
-	    var month = date.getMonth()+1;
-	    var day = date.getDate();
-        if(date.getDate() < 10){
-            day = "0"+date.getDate();
-        }
-	    $("#reportFormASR #V_FSONO1").val(fSONO1);
-	    $("#reportFormASR #V_FSONO2").val(fSONO2);
-	    $("#reportFormASR #V_FMEMCTID1").val(fMemCTID1);
-	    $("#reportFormASR #V_FMEMCTID2").val(fMemCTID2);
-	    $("#reportFormASR #V_ORDERBY").val(orderBy);
-	    $("#reportFormASR #V_DSCBRANCH").val(dscBranch);
-	    $("#reportFormASR #V_WHERESQL").val(whereSql);
-	    $("#reportFormASR #reportFileName").val('/services/ASReport.rpt');
-	    $("#reportFormASR #viewType").val("PDF");
-	    $("#reportFormASR #reportDownFileName").val("ASReport_" +day+month+date.getFullYear());
-	    
-	    var option = {
-	            isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
-	    };
-	    
-	    Common.report("reportFormASR", option);
-	}
-}
+      var fSONO1 = $("#orderNumFrom").val();
+      var fSONO2 = $("#orderNumTo").val();
+      var fMemCTID1 = $("#CTCodeFrom").val();
+      var fMemCTID2 = $("#CTCodeTo").val();
+      var reqDate1 = "";
+	  var reqDate2 = "";
+      var appDate1 = "";
+      var appDate2 = "";
+      var whereSql = "";
+      var dscBranch = "";
+      var orderBy = " t1.f_Mem_Code ";
 
-$.fn.clearForm = function() {
+      if($("#asAppDtFr").val() != '') {
+        appDate1 = $("#asAppDtFr").val();
+		appDate2 = $("#asAppDtTo").val();
+
+		if (appDate2 != '') {
+	      whereSql += " and (AE.AS_APPNT_DT between to_date('" + appDate1 + "', 'DD/MM/YYYY') and to_date('" + appDate2 + "' , 'DD/MM/YYYY')) ";
+		} else {
+		  whereSql += "";
+	    }
+
+	  } else {
+	    reqDate1 = $("#reqStrDate").val();
+	    reqDate2 = $("#reqEndDate").val();
+
+	    if (reqDate1 != '' && reqDate2 != '') {
+		  whereSql += " and (AE.AS_REQST_DT between to_date('" + reqDate1 + "', 'DD/MM/YYYY') and to_date('" + reqDate2 + "' , 'DD/MM/YYYY')) ";
+	    } else {
+	      whereSql += "";
+	    }
+	  }
+
+	  if ($("#sortType").val() == 'AS'){
+        orderBy = " t1.As_no ";
+	  }
+
+	  if ($("#branch").val() != '' && $("#branch").val() != null){
+	    dscBranch = " WHERE t1.Brnch_Code like '" + $("#branch option:selected").text().substring(0,6)  + "%' ";
+	  }
+
+	  var date = new Date();
+	  var month = date.getMonth()+1;
+	  var day = date.getDate();
+      if(date.getDate() < 10){
+        day = "0"+date.getDate();
+      }
+
+      console.log("fSONO1 :: " + fSONO1);
+      console.log("fSONO2 :: " + fSONO2);
+      console.log("fMemCTID1 :: " + fMemCTID1);
+      console.log("fMemCTID2 :: " + fMemCTID2);
+      console.log("orderBy :: " + orderBy);
+      console.log("dscBranch :: " + dscBranch);
+      console.log("whereSql :: " + whereSql);
+
+	  $("#reportFormASR #V_FSONO1").val(fSONO1);
+	  $("#reportFormASR #V_FSONO2").val(fSONO2);
+	  $("#reportFormASR #V_FMEMCTID1").val(fMemCTID1);
+      $("#reportFormASR #V_FMEMCTID2").val(fMemCTID2);
+      $("#reportFormASR #V_ORDERBY").val(orderBy);
+	  $("#reportFormASR #V_DSCBRANCH").val(dscBranch);
+	  $("#reportFormASR #V_WHERESQL").val(whereSql);
+	  $("#reportFormASR #reportFileName").val('/services/ASReport.rpt');
+      $("#reportFormASR #viewType").val("PDF");
+	  $("#reportFormASR #reportDownFileName").val("ASReport_" +day+month+date.getFullYear());
+
+	  var option = {
+        isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
+	  };
+
+	  Common.report("reportFormASR", option);
+	}
+  }
+
+  $.fn.clearForm = function() {
     return this.each(function() {
-        var type = this.type, tag = this.tagName.toLowerCase();
-        if (tag === 'form'){
-            return $(':input',this).clearForm();
-        }
-        if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
-            this.value = '';
-        }else if (type === 'checkbox' || type === 'radio'){
-            this.checked = false;
-        }else if (tag === 'select'){
-            this.selectedIndex = -1;
-        }
-        
+      var type = this.type, tag = this.tagName.toLowerCase();
+      if (tag === 'form'){
+        return $(':input',this).clearForm();
+      }
+
+      if (type === 'text' || type === 'password' || type === 'hidden' || tag === 'textarea'){
+        this.value = '';
+      } else if (type === 'checkbox' || type === 'radio'){
+        this.checked = false;
+      } else if (tag === 'select'){
+        this.selectedIndex = -1;
+      }
     });
-};
+  };
+
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
