@@ -4456,13 +4456,21 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     <update id="updateCodyCfm" parameterType="Map">
         MERGE INTO ORG0003D
         USING(
-            SELECT *
-            FROM ORG0001D A
-            INNER JOIN ORG0003D B
-                ON A.MEM_CODE = B.APLICNT_CODE
-            WHERE A.MEM_CODE = #{userId}
+            SELECT
+                B.APLICNT_ID
+            FROM SYS0047M A
+            INNER JOIN ORG0001D B
+            <choose>
+                <when test=' userType == "4" '>
+                    ON A.HR_CODE = B.MEM_CODE
+                </when>
+                <otherwise>
+                    ON A.USER_NAME = B.MEM_CODE
+                </otherwise>
+            </choose>
+            WHERE A.USER_NAME = #{userId}
         ) SRC
-        ON (ORG0003D.APLICNT_CODE = SRC.MEM_CODE)
+        ON (ORG0003D.APLCTN_ID = SRC.APLICNT_ID)
         WHEN MATCHED THEN UPDATE
         SET CNFM = #{cnfm},
               CNFM_DT = SYSDATE,
@@ -4478,7 +4486,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
             TO_CHAR(a.CNFM_DT, 'YYYY-MM-DD') CNFM_DT
         FROM ORG0003D a
         INNER JOIN ORG0001D b
-            ON b.MEM_CODE = a.APLICNT_CODE
+            ON b.APLICNT_ID = a.APLCTN_ID
         WHERE b.MEM_CODE = #{userId}
     </select>
 
