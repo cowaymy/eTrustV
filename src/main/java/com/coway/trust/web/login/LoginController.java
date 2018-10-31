@@ -1,5 +1,6 @@
 package com.coway.trust.web.login;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -225,8 +226,99 @@ public class LoginController {
         model.put("userId", (String) params.get("userId"));
         model.put("password", (String) params.get("password"));
         model.put("userType", (String) params.get("loginUserType"));
+        model.put("pdfNm", params.get("loginPdf"));
+        model.put("popType", params.get("popType"));
+        model.put("popAck1", params.get("popAck1"));
+        model.put("popAck2", params.get("popAck2"));
 
         return "/login/loginPop";
+    }
+
+    @RequestMapping(value = "/loginPopCheck", method = RequestMethod.GET)
+    public ResponseEntity<Map> cdEagmt1(@RequestParam Map<String, Object> params, HttpServletRequest request, ModelMap model, SessionVO sessionVO) {
+
+        LOGGER.debug("==================== loginPopCheck ====================");
+
+        LOGGER.debug("params : {}", params);
+        model.put("loginUserId", (String) params.get("loginUserId"));
+        model.put("os", (String) params.get("os"));
+        model.put("browser", (String) params.get("browser"));
+        model.put("userId", (String) params.get("userId"));
+        model.put("password", (String) params.get("password"));
+        model.put("userType", (String) params.get("loginUserType"));
+
+        params.put("userId", sessionVO.getUserId());
+
+        // Get User type, role/contract type, agreement status (if applicable)
+        EgovMap item1 = new EgovMap();
+        item1 = (EgovMap) loginService.getDtls(params);
+
+        Map<String, Object> popInfo = new HashMap();
+
+        String userTypeId = params.get("userTypeId").toString();
+        while(userTypeId.length() < 4) {
+            userTypeId = "0" + userTypeId;
+            LOGGER.debug("userTypeId :: " + userTypeId);
+        }
+
+        params.put("userTypeId", userTypeId);
+        params.put("roleType", item1.get("roleType"));
+
+        String retMsg = "";
+
+        // If ORG0003D not empty/null = agreement exist
+        if(item1 != null) {
+            if(item1.containsKey("stusId")) {
+                String stusId = item1.get("stusId").toString();
+                String cnfm = item1.get("cnfm").toString();
+                String cnfmDt = item1.get("cnfmDt").toString().substring(0, 10);
+
+                // Pending
+                if("44".equals(stusId) && "0".equals(cnfm) && "1900-01-01".equals(cnfmDt)) {
+                    params.put("roleId", item1.get("roleType"));
+                    params.put("popType", "A");
+                }
+                // Accepted
+                else if("5".equals(stusId) && "1".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
+                    params.put("popType", "M");
+                }
+                // Rejected
+                else if("6".equals(stusId) && "0".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
+                    params.put("popType", "-");
+                    retMsg = "Application has been rejected.";
+                }
+            }
+        }
+
+        // Get pop up file name, pop exception members/roles
+        EgovMap item2 = new EgovMap();
+        item2 = (EgovMap) loginService.getPopDtls(params);
+
+        // Get Pop up configuration
+        if(item2 != null) {
+            // Pop up configuration exist - get configurations
+            if(item2.containsKey("popNewFlNm")) {
+                popInfo.put("popFlName", item2.get("popNewFlNm"));
+                popInfo.put("popExceptionMemroleCnt", item2.get("popExceptionMemroleCnt"));
+                popInfo.put("popExceptionUserCnt", item2.get("popExceptionUserCnt"));
+                popInfo.put("popType", item2.get("popType"));
+                popInfo.put("popRejectFlg", item2.get("popRejectFlg"));
+                popInfo.put("popAck1", item2.get("popAck1"));
+                popInfo.put("popAck2", item2.get("popAck2"));
+                popInfo.put("popAck3", item2.get("popAck3"));
+            } else {
+                popInfo.put("popFlName", "-");
+                popInfo.put("popExceptionMemroleCnt", "0");
+                popInfo.put("popExceptionUserCnt", "0");
+            }
+        } else {
+            // Pop up configuration does not exist > Exception default to 1 to by pass pop up window
+            popInfo.put("popExceptionMemroleCnt", "1");
+        }
+
+        popInfo.put("retMsg", retMsg);
+
+        return ResponseEntity.ok(popInfo);
     }
 
 }

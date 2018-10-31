@@ -244,32 +244,32 @@
                 else {  // 재로그인을 하지 않을려면, popup에서 호출.
                     fn_configCookies(userId);
 
-                    // 2018-07-19 - LaiKW - HP Pop Up (Temporary for July 2018)
-                    if(result.data.userTypeId == "1" || result.data.userTypeId == "4") {
-                        $("#loginUserType").val(result.data.userTypeId);
-                        Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
-                    }
-                    // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - Start
-                    else if(result.data.userTypeId == "2") {
-                        console.log("Cody");
-                        // Check agreement confirmation status from HP Applicant table
-                        Common.ajax("GET", "/organization/getCDInfo", {userId : userId}, function(result1) {
-                            if(result1.status == "Y") {
-                                fn_goMain();
-                            } else if(result1.status == "N") {
-                                Common.popupDiv("/organization/cdAgreement.do", $("#loginForm").serializeJSON(), null, false, '_cdAgreementPop');
-                            } else if(result1.status == "R") {
-                                Common.alert("Application has been rejected.");
+                    // HP, Cody, CT, Staff, Admin
+                    if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
+                        Common.ajax("GET", "/login/loginPopCheck", {userId : userId, userTypeId : result.data.userTypeId}, function(aResult) {
+                            console.log("aResult :: " + aResult);
+
+                            $("#loginUserType").val(result.data.userTypeId);
+
+                            if(aResult.retMsg == "") {
+                                if(aResult.popExceptionMemroleCnt > 0 || aResult.popExceptionUserCnt > 0) {
+                                    fn_goMain();
+                                } else {
+                                    $("#loginPdf").val(aResult.popFlName);
+                                    $("#popType").val(aResult.popType);
+                                    $("#popAck1").val(aResult.popAck1);
+                                    $("#popAck2").val(aResult.popAck2);
+                                    Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
+                            	}
+                            } else {
+                                Common.alert(aResult.retMsg);
                             }
                         });
-                    // 2018-06-14 - LaiKW - Cody agreement pop up and confirmation checking - End
+                        //fn_goMain();
                     }
+                    // External
                     else {
-                        if(result.data.userIsPartTime != "1" && result.data.userIsExternal != "1"){
-                            fn_goMain();
-                        }else{
-                            fn_goMainExternal();
-                        }
+                        fn_goMainExternal();
                     }
                 }
             }
@@ -389,6 +389,10 @@
             <input type="hidden" id="loginBrowser" name="browser" value=""/>
 
             <input type="hidden" id="loginUserType" name="loginUserType" value=""/> <!-- 2017-07-24 - LaiKW - Staff Memo Pop Up -->
+            <input type="hidden" id="loginPdf" name="loginPdf" value=""/>
+            <input type="hidden" id="popType" name="popType" value=""/>
+            <input type="hidden" id="popAck1" name="popAck1" value=""/>
+            <input type="hidden" id="popAck2" name="popAck2" value=""/>
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2>
             <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value=""/></p>

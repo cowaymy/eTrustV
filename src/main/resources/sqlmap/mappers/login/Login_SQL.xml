@@ -272,4 +272,67 @@
             APLICNT_IDNTFC = #{Identification}
     </select>
 
+    <select id="getDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.USER_TYPE_ID,
+            CASE WHEN D.CNTRCT_TYPE IS NULL THEN CAST(B.ROLE_ID AS VARCHAR(10)) ELSE D.CNTRCT_TYPE END ROLE_TYPE,
+            D.STUS_ID,
+            D.CNFM,
+            D.CNFM_DT
+        FROM SYS0047M A
+        INNER JOIN SYS0045M B
+            ON A.USER_ID = B.USER_ID
+        LEFT JOIN ORG0001D C
+        <choose>
+            <when test=' loginUserType == "4" '>
+                ON A.HR_CODE = C.MEM_CODE
+            </when>
+            <otherwise>
+                ON A.USER_NAME = C.MEM_CODE
+            </otherwise>
+        </choose>
+        LEFT JOIN ORG0003D D
+            ON C.APLICNT_ID = D.APLCTN_ID
+        WHERE A.USER_ID = #{userId}
+    </select>
+
+    <select id="getPopDtls" parameterType="Map" resultType="egovMap">
+        SELECT
+            A.POP_NEW_FL_NM,
+            A.POP_FLG,
+            A.POP_TYPE,
+            A.POP_REJECT_FLG,
+            A.POP_ACK1,
+            A.POP_ACK2,
+            A.POP_ACK3,
+            NVL(B.POP_EXCEPTION_MEMROLE_CNT, 0) POP_EXCEPTION_MEMROLE_CNT,
+            NVL(C.POP_EXCEPTION_USER_CNT, 0) POP_EXCEPTION_USER_CNT
+        FROM SYS0091M A
+        LEFT JOIN (
+            SELECT
+                POP_ID,
+                COUNT(*) POP_EXCEPTION_MEMROLE_CNT
+            FROM SYS0091M
+            WHERE POP_EXCEPTION_MEMROLE LIKE '%' || #{roleType} || '%'
+            GROUP BY POP_ID
+        ) B
+            ON A.POP_ID = B.POP_ID
+        LEFT JOIN (
+            SELECT
+                POP_ID,
+                COUNT(*) POP_EXCEPTION_USER_CNT
+            FROM SYS0091M
+            WHERE POP_EXCEPTION_USER LIKE '%' || #{userId} || '%'
+            GROUP BY POP_ID
+        ) C
+            ON A.POP_ID = C.POP_ID
+        WHERE SUBSTR(A.POP_MEM_TYPE, 1, 4) = #{userTypeId}
+        <if test="roleId != null and roleId != ''">
+            AND SUBSTR(A.POP_MEM_TYPE, 6, 3) = #{roleType}
+        </if>
+        <if test="popType != null and popType != ''">
+            AND POP_TYPE = #{popType}
+        </if>
+        AND POP_FLG = 'A'
+    </select>
 </mapper>

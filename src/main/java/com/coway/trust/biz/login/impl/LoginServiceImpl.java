@@ -163,4 +163,13 @@ public class LoginServiceImpl implements LoginService {
         return loginVO;
     }
 
+	@Override
+    public EgovMap getDtls(Map<String, Object> params) {
+        return loginMapper.getDtls(params);
+    }
+
+	@Override
+    public EgovMap getPopDtls(Map<String, Object> params) {
+        return loginMapper.getPopDtls(params);
+    }
 }

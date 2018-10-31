@@ -4,15 +4,16 @@
 <script src ="${pageContext.request.contextPath}/resources/js/pdfobject.js" type="text/javascript"></script>
 <script type="text/javaScript">
 var verCnt = 0;
+var userType = "";
 
 $(document).ready(function() {
 console.log("loginPop.jsp");
-    $("#PDF").attr("hidden", true);
-    $("#dlPDF").attr("hidden", true);
-    $("#staffPDF").attr("hidden", true);
-    $("#staffDlPDF").attr("hidden", true);
+    //$("#PDF").attr("hidden", true);
+    //$("#dlPDF").attr("hidden", true);
+    //$("#staffPDF").attr("hidden", true);
+    //$("#staffDlPDF").attr("hidden", true);
 
-    var userType = ${userType};
+    userType = ${userType};
 
     var isMobile = false;
 
@@ -20,18 +21,33 @@ console.log("loginPop.jsp");
         || /1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(navigator.userAgent.substr(0,4))) {
         isMobile = true;
 
-        if(userType == "1") {
-            $("#dlPDF").attr("hidden", false);
-        } else {
-            $("#staffDlPDF").attr("hidden", false);
-        }
+        $("#dlPDF").attr("hidden", false);
+
     } else if(!isMobile) {
-        if(userType == "1") {
-            $("#PDF").attr("hidden", false);
+        $("#PDF").attr("hidden", false);
+    }
+
+    if("${popType}" == "M") {
+        $("#memoButton").attr("hidden", false);
+        $("#agreementButton").attr("hidden", true);
+
+        $("#ack1Div").attr("hidden", true);
+        $("#ack2Div").attr("hidden", true);
+    }
+    if("${popType}" == "A") {
+        $("#agreementButton").attr("hidden", false);
+        $("#memoButton").attr("hidden", true);
+
+        $("#ack1Div").attr("hidden", false);
+        $("#ack2Div").attr("hidden", false);
+
+        if("${popRejectFlg}" == "X") {
+            $("#agreementRejectBtn").attr("hidden", false);
         } else {
-            $("#staffPDF").attr("hidden", false);
+            $("#agreementRejectBtn").attr("hidden", true);
         }
     }
+
 });
 
 function fn_cont() {
@@ -39,6 +55,60 @@ function fn_cont() {
         action: getContextPath() + "/common/main.do",
         method: "POST"
     }).submit();
+}
+
+function fn_AcceptAgreement() {
+    console.log("Accept.");
+
+    if($("#ack1").prop('checked') == false) {
+        Common.alert("* Please agree the terms and conditions.");
+        return false;
+    }
+
+    if($("#ack2").prop('checked')  == false) {
+        Common.alert("* Please agree the personal data protection.");
+        return false;
+    }
+
+    Common.confirm("Are you sure want to confirm this application?", function() {
+        // Update applicant status
+        Common.ajax("GET", "/organization/updateCodyCfm.do", {choice:"Y"}, function(result) {
+            if(result.message == "success.") {
+                var successMsg = "";
+
+                if(userType == "1") {
+                    successMsg = "Application confirmed."
+                } else if(userType == "2") {
+                    successMsg = "Thank you for signing up as Coway Malaysia Lady(Cody). <br /><br />";// +
+                }
+
+                // Redirect to login page
+                Common.alert(successMsg, function(event) {
+                    $("#loginForm").attr({
+                        action: getContextPath() + "/common/main.do",
+                        method: "POST"
+                    }).submit();
+                });
+            }
+        });
+    });
+}
+
+function fn_RejectAgreement() {
+    Common.confirm("Are you sure want to decline this agreement? ", function() {
+        Common.ajax("GET", "/organization/updateCodyCfm.do", {choice:"N"}, function(result) {
+            console.log(result.message);
+            if(result.message == "success.") {
+                Common.alert("Application has successfully rejected.", function(event) {
+                    // Redirect to login page
+                    $("#loginForm").attr({
+                        action: "/login/login.do",
+                        method: "POST"
+                    }).submit();
+                });
+            }
+        });
+    });
 }
 
 </script>
@@ -122,32 +192,43 @@ input {
 
 <section class="login_body"><!-- login_body start -->
 
+<form id="loginForm" method="post">
+    <input type="hidden" id="loginUserId" name="loginUserId" value="${loginUserId}"/>
+    <input type="hidden" id="loginOs" name="os" value="${os}"/>
+    <input type="hidden" id="loginBrowser" name="browser" value="${browser}"/>
+
+    <input type="hidden" title="ID" placeholder="ID" id="userId" name="userId" value="${userId}"/>
+    <input type="hidden" title="PASSWORD" placeholder="PASSWORD" id="password" name="password" value="${password}"/>
+</form>
+
 <form id="popForm" style="width: 100%">
 
-    <div id="PDF" style="height: 550px">`
-        <script>PDFObject.embed("/resources/report/prd/organization/2019_Half_Yearly_Incentive_Trip_v2.pdf", "#PDF");</script>
+    <div id="PDF" style="height: 550px">
+        <!-- <script>PDFObject.embed("/resources/report/prd/organization/2019_Half_Yearly_Incentive_Trip_v2.pdf", "#PDF");</script> -->
+        <embed src="${pdfNm}" style="overflow: auto; width: 100%; height: 100%;" type="application/pdf">
     </div>
 
-    <div id="staffPDF" style="height: 550px">`
-        <script>PDFObject.embed("/resources/report/prd/organization/PRIVACY_POLICY_-_ETRUST.pdf", "#staffPDF");</script>
+    <div id="ack1Div" style="padding-top:1%; padding-left: 5%; padding-right: 5%">
+        <label for="ack1">
+            <input type="checkbox" id="ack1Checkbox" name="ack1Checkbox" value="1" />
+            ${popAck1}
+        </label>
     </div>
 
-    <div id="dlPDF" style="padding-left: 5%; padding-right: 5%">
-        <b><font size="4">Please tap on the icon to view the agreement:</font></b>
-        <a href="/resources/report/prd/organization/2019_Half_Yearly_Incentive_Trip_v2.pdf">
-            <img src="${pageContext.request.contextPath}/resources/images/common/icon_pdf.png" alt="PDF" class="centerPDF">
-        </a>
+    <div id="ack2Div" style="padding-top:1%; padding-left: 5%; padding-right: 5%">
+        <label for="ack2">
+            <input type="checkbox" id="ack2Checkbox" name="ack2Checkbox" value="1" />
+            ${popAck2}
+        </label>
     </div>
 
-    <div id="staffDlPDF" style="padding-left: 5%; padding-right: 5%">
-        <b><font size="4">Please tap on the icon to view the agreement:</font></b>
-        <a href="/resources/report/prd/organization/PRIVACY_POLICY_-_ETRUST.pdf">
-            <img src="${pageContext.request.contextPath}/resources/images/common/icon_pdf.png" alt="staffPDF" class="centerPDF">
-        </a>
-    </div>
-
-    <ul class="center_btns" id="agreementChoices" style="padding: 10px">
+    <ul class="center_btns" id="memoButton" style="padding: 10px">
         <li><p class="btn_blue"><a href="javascript:fn_cont();">Close</a></p></li>
+    </ul>
+
+    <ul class="center_btns" id="agreementButton">
+        <li><p class="btn_blue" id="agreementAcceptBtn"><a href="javascript:fn_AcceptAgreement();">Accept</a></p></li>
+        <li><p class="btn_blue" id="agreementRejectBtn"><a href="javascript:fn_RejectAgreement();">Reject</a></p></li>
     </ul>
 </form>
 

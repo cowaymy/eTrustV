@@ -41,4 +41,8 @@ public interface LoginMapper {
 	EgovMap checkByPass(Map<String, Object> params);
 
 	LoginVO getAplcntInfo(Map<String, Object> params);
+
+	EgovMap getDtls(Map<String, Object> params);
+
+	EgovMap getPopDtls(Map<String, Object> params);
 }
