@@ -2348,4 +2348,108 @@
         WHERE A.NRIC = #{nric}
     </if>
   </select>
+
+      <select id="selectCustomerCheckingList" parameterType="Map" resultType="egovMap">
+
+        SELECT
+                A.SALES_ORD_ID,
+                A.SALES_ORD_NO,
+                E.CODE ORD_STUS,
+                C.NAME CUST_NAME,
+                L.STK_DESC PRODUCT,
+                F.CODE APP_CODE,
+                F.CODE_NAME APP_TYPE,
+                H.CODE PAY_MODE_CODE,
+                H.CODE_NAME PAY_MODE,
+                A.PV_MONTH ,
+                A.PV_YEAR,
+                I.FIRST_INSTALL_DT INSTALL_DT,
+                CASE WHEN A.SALES_ORD_ID_OLD is null or A.SALES_ORD_ID_OLD = 0 THEN 'No' ELSE 'Yes' END I_CARE,
+                D.STUS_CODE_ID RENT_STUS,
+                J.NAME BANK_NAME
+
+                FROM SAL0001D A
+                LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+                LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+                LEFT JOIN SAL0071D D ON D.SALES_ORD_ID = A.SALES_ORD_ID
+                LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = A.STUS_CODE_ID
+                LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
+                LEFT JOIN SAL0074D G ON G.SALES_ORD_ID = A.SALES_ORD_ID
+                LEFT JOIN SYS0013M H ON H.CODE_ID = G.MODE_ID
+                LEFT JOIN SAL1010V I ON I.ORD_ID = A.SALES_ORD_ID
+                LEFT JOIN SYS0004M J ON J.BANK_ID = G.BANK_ID
+                LEFT JOIN SYS0026M L ON L.STK_ID = B.ITM_STK_ID
+                                         WHERE 1=1
+
+                                            <if test="nric != null and nric !=''">
+                                                AND UPPER(C.NRIC) = UPPER(#{nric})
+                                            </if>
+
+
+                ORDER BY A.SALES_DT ASC
+
+    </select>
+
+
+    <select id="selectCustomerCheckingListPop" parameterType="Map" resultType="egovMap">
+
+        SELECT
+                A.SALES_ORD_ID,
+                A.SALES_ORD_NO,
+                E.CODE ORD_STUS,
+                C.NAME CUST_NAME,
+                L.STK_DESC PRODUCT,
+                F.CODE APP_CODE,
+                F.CODE_NAME APP_TYPE,
+                H.CODE PAY_MODE_CODE,
+                H.CODE_NAME PAY_MODE,
+                A.PV_MONTH ,
+                A.PV_YEAR,
+                I.FIRST_INSTALL_DT INSTALL_DT,
+                CASE WHEN A.SALES_ORD_ID_OLD is null or A.SALES_ORD_ID_OLD = 0 THEN 'No' ELSE 'Yes' END I_CARE,
+                D.STUS_CODE_ID RENT_STUS,
+                G.BANK_ID,
+                CASE WHEN G.BANK_ID = 0 OR G.BANK_ID is null THEN ' ' ELSE J.NAME END BANK_NAME
+
+                FROM SAL0001D A
+                LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+                LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+                LEFT JOIN SAL0071D D ON D.SALES_ORD_ID = A.SALES_ORD_ID
+                LEFT JOIN SYS0038M E ON E.STUS_CODE_ID = A.STUS_CODE_ID
+                LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
+                LEFT JOIN SAL0074D G ON G.SALES_ORD_ID = A.SALES_ORD_ID
+                LEFT JOIN SYS0013M H ON H.CODE_ID = G.MODE_ID
+                LEFT JOIN SAL1010V I ON I.ORD_ID = A.SALES_ORD_ID
+                LEFT JOIN SYS0004M J ON J.BANK_ID = G.BANK_ID
+                LEFT JOIN SYS0026M L ON L.STK_ID = B.ITM_STK_ID
+                                         WHERE 1=1
+
+                                            <if test="ordId != null and ordId !=''">
+                                                AND A.SALES_ORD_ID = #{ordId}
+                                            </if>
+
+
+                ORDER BY A.SALES_DT ASC
+
+    </select>
+
+        <select id="selectCustomerAgingMonth" parameterType="Map" resultType="egovMap">
+
+        SELECT
+                ROUND(((SUM(B.RENT_AMT))/A.MTH_RENT_AMT), 2) AGING_MTH
+
+
+                FROM SAL0001D A
+                LEFT JOIN PAY0022D B ON B.RENT_SO_ID = A.SALES_ORD_ID
+                WHERE 1=1
+
+                                            <if test="ordId != null and ordId !=''">
+                                                AND A.SALES_ORD_ID = #{ordId}
+                                            </if>
+                GROUP BY A.SALES_ORD_NO, A.MTH_RENT_AMT
+
+
+
+
+    </select>
 </mapper>
