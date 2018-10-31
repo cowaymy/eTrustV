@@ -815,4 +815,23 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     public EgovMap checkCRC2(Map<String, Object> params) {
         return customerMapper.checkCRC2(params);
     }
+
+	@Override
+	public List<EgovMap> selectCustomerCheckingList(Map<String, Object> params) {
+
+		return customerMapper.selectCustomerCheckingList(params);
+	}
+
+	@Override
+	public EgovMap selectCustomerCheckingListPop(Map<String, Object> params) {
+
+		return customerMapper.selectCustomerCheckingListPop(params);
+	}
+
+	@Override
+	public EgovMap selectCustomerAgingMonth(Map<String, Object> params) {
+
+		return customerMapper.selectCustomerAgingMonth(params);
+	}
+
 }
