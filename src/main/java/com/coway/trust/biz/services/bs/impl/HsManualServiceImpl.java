@@ -1402,7 +1402,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
     			}
     			usedFilter_Rev.put("SerialNo",  String.valueOf(qryUsedFilter.get(i).get("serialNo")));
     			usedFilter_Rev.put("CodyId", CommonUtils.intNvl(qryUsedFilter.get(i).get("codyId")));
-    			usedFilter_Rev.put("ResultId", BSResultM_resultID);
+    			usedFilter_Rev.put("ResultId", CommonUtils.intNvl(qryUsedFilter.get(i).get("resultId")));
     			if(CommonUtils.intNvl( qryResultDet.get(i).get("bsResultPartQty")) > 0){
     				hsManualMapper.addbsResultDet_Rev(bsResultDet_Rev);	//insert svc 0007d c
     				hsManualMapper.addusedFilter_Rev(usedFilter_Rev);	//insert log0082m
