@@ -4645,7 +4645,7 @@
             LOG0082M_SEQ.NEXTVAL
             ,#{HSNo}
             ,#{CustId}
-            ,sysdate
+            ,TO_DATE(#{CreatedDt}, 'DD/MM/YYYY')
             ,#{PartId}
             ,#{PartQty}
             ,nvl(#{SerialNo}, '')
