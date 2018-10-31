@@ -350,11 +350,6 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
-				//	psi5 음수확인
-				if ( psi5 < 0 ) {
-					psi5	= 0;
-					LOGGER.debug("stockCode : " + stockCode + ", psi5 : " + psi5);
-				}
 				m0Psi3	= m0Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
 				psi5Params.put("m0", psi5);	//	하나씩 덮어넣다보면 제일 마지막것이 들어간다.
@@ -407,11 +402,15 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
-				psi5	= psi5 - psi1 + psi3;
-				//	psi5 음수확인
-				if ( psi5 < 0 ) {
-					psi5	= 0;
-					LOGGER.debug("stockCode : " + stockCode + ", psi5 : " + psi5);
+				//psi5	= psi5 - psi1 + psi3;
+				if ( totLeadTm == iLoopDataFieldCnt2 ) {
+					if ( psi5 < 0 ) {
+						psi5	= 0 - psi1 + psi3;
+					} else {
+						psi5	= psi5 - psi1 + psi3;
+					}
+				} else {
+					psi5	= psi5 - psi1 + psi3;
 				}
 				m1Psi3	= m1Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
@@ -465,11 +464,15 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
-				psi5	= psi5 - psi1 + psi3;
-				//	psi5 음수확인
-				if ( psi5 < 0 ) {
-					psi5	= 0;
-					LOGGER.debug("stockCode : " + stockCode + ", psi5 : " + psi5);
+				//psi5	= psi5 - psi1 + psi3;
+				if ( totLeadTm == iLoopDataFieldCnt2 ) {
+					if ( psi5 < 0 ) {
+						psi5	= 0 - psi1 + psi3;
+					} else {
+						psi5	= psi5 - psi1 + psi3;
+					}
+				} else {
+					psi5	= psi5 - psi1 + psi3;
 				}
 				m2Psi3	= m2Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
@@ -517,11 +520,15 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
-				psi5	= psi5 - psi1 + psi3;
-				//	psi5 음수확인
-				if ( psi5 < 0 ) {
-					psi5	= 0;
-					LOGGER.debug("stockCode : " + stockCode + ", psi5 : " + psi5);
+				//psi5	= psi5 - psi1 + psi3;
+				if ( totLeadTm == iLoopDataFieldCnt2 ) {
+					if ( psi5 < 0 ) {
+						psi5	= 0 - psi1 + psi3;
+					} else {
+						psi5	= psi5 - psi1 + psi3;
+					}
+				} else {
+					psi5	= psi5 - psi1 + psi3;
 				}
 				m3Psi3	= m3Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
@@ -564,11 +571,15 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
-				psi5	= psi5 - psi1 + psi3;
-				//	psi5 음수확인
-				if ( psi5 < 0 ) {
-					psi5	= 0;
-					LOGGER.debug("stockCode : " + stockCode + ", psi5 : " + psi5);
+				//psi5	= psi5 - psi1 + psi3;
+				if ( totLeadTm == iLoopDataFieldCnt2 ) {
+					if ( psi5 < 0 ) {
+						psi5	= 0 - psi1 + psi3;
+					} else {
+						psi5	= psi5 - psi1 + psi3;
+					}
+				} else {
+					psi5	= psi5 - psi1 + psi3;
 				}
 				m4Psi3	= m4Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
