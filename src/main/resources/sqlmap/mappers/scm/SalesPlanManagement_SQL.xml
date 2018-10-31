@@ -296,10 +296,7 @@ SELECT A.PLAN_ID
 </select>
 
 <select id="selectSalesPlanListAll" parameterType="Map" resultType="egovMap">
-SELECT A.PLAN_ID
-     , B.PLAN_DTL_ID
-     , A.PLAN_STUS_ID
-     , 'All' AS TEAM
+SELECT 'All' AS TEAM
      , D.STK_TYPE_ID AS TYPE_ID
      , E.CODE_NAME AS CATEGORY_NAME
      , D.STK_CTGRY_ID AS CATEGORY_ID
@@ -371,16 +368,13 @@ SELECT A.PLAN_ID
 		</foreach>
 	</if>
    AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
- GROUP BY A.PLAN_ID
-     , B.PLAN_DTL_ID
-     , A.PLAN_STUS_ID
-     , D.STK_TYPE_ID
+ GROUP BY D.STK_TYPE_ID
      , E.CODE_NAME
      , D.STK_CTGRY_ID
      , F.CODE_NAME
      , B.STOCK_CODE
      , D.STK_DESC
- ORDER BY ORDER BY B.PLAN_DTL_ID
+ ORDER BY D.STK_TYPE_ID, D.STK_CTGRY_ID, B.STOCK_CODE
 </select>
 
 <select id="selectCreateCheck" parameterType="Map" resultType="egovMap">
