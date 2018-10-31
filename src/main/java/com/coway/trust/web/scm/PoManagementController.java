@@ -50,10 +50,11 @@ public class PoManagementController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	/**********************************************/
-	/**************** PO Issue ********************/
-	@RequestMapping(value = "/poIssue.do")
-	public String poIssue(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+	/*
+	 * Po Issue
+	 */
+	@RequestMapping(value = "/poIssueView.do")
+	public String poIssueView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/poIssue";
 	}
 	
@@ -118,10 +119,6 @@ public class PoManagementController {
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		/*
-		message.setCode(AppConstants.FAIL);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));*/
 		
 		return ResponseEntity.ok(message);
 	}
@@ -139,10 +136,6 @@ public class PoManagementController {
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		/*
-		message.setCode(AppConstants.FAIL);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));*/
 		
 		return ResponseEntity.ok(message);
 	}
@@ -161,6 +154,14 @@ public class PoManagementController {
 		map.put("selectPoApprList", selectPoApprList);
 		
 		return	ResponseEntity.ok(map);
+	}
+	
+	/*
+	 * Po Approval
+	 */
+	@RequestMapping(value = "/poApprovalView.do")
+	public String poApprovalView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/poApproval";
 	}
 	
 	@RequestMapping(value = "/approvePo.do", method = RequestMethod.POST)
@@ -186,15 +187,11 @@ public class PoManagementController {
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		/*
-		message.setCode(AppConstants.FAIL);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));*/
 		
 		return ResponseEntity.ok(message);
 	}
 	
-	
+	//	below for delete
 	/**********************************************/
    /**********************************************/
    /*********** PO Management && PO Issue ********/
@@ -321,14 +318,14 @@ public class PoManagementController {
 	   /**************************************/
 	   /************* PO Approval*************/
 	   /**************************************/
-
+/*
 	@RequestMapping(value = "/poApproval.do")
 	public String poApprovalManager(@RequestParam Map<String, Object> params, ModelMap model, Locale locale)
 	{
 		//model.addAttribute("languages", loginService.getLanguages());
 		return "/scm/poApproval";
 	}
-
+*/
 	// search btn
 	@RequestMapping(value = "/selectPoApprovalSearchBtn.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectPoApprovalSearchBtn(@RequestBody Map<String, Object> params)
