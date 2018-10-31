@@ -591,4 +591,11 @@ public interface CustomerMapper {
 
 	EgovMap checkCRC2(Map<String, Object> params);
 
+	List<EgovMap> selectCustomerCheckingList(Map<String, Object> params);
+
+	EgovMap selectCustomerCheckingListPop(Map<String, Object> params);
+
+	EgovMap selectCustomerAgingMonth(Map<String, Object> params);
+
+
 }
