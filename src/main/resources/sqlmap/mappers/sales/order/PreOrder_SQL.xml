@@ -119,7 +119,7 @@
 		     , T1.KEYIN_BRNCH_ID
 		     , T1.INST_ADD_ID
 		     , T1.DSC_BRNCH_ID
-		     , TO_CHAR(T1.PRE_DT, 'DD/MM/YYYY HH:MI:SS AM') AS PRE_DT
+		     , TO_CHAR(T1.PRE_DT, 'DD/MM/YYYY') AS PRE_DT
 		     , T1.PRE_TM
 		     , T1.INSTCT
 		     , T1.EX_TRADE
