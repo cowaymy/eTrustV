@@ -259,6 +259,7 @@
                                     $("#popType").val(aResult.popType);
                                     $("#popAck1").val(aResult.popAck1);
                                     $("#popAck2").val(aResult.popAck2);
+                                    $("#popRejectFlg").val(aResult.popRejectFlg);
                                     Common.popupDiv("/login/loginPop.do", $("#loginForm").serializeJSON(), null, false, '_loginPop');
                             	}
                             } else {
@@ -393,6 +394,7 @@
             <input type="hidden" id="popType" name="popType" value=""/>
             <input type="hidden" id="popAck1" name="popAck1" value=""/>
             <input type="hidden" id="popAck2" name="popAck2" value=""/>
+            <input type="hidden" id="popRejectFlg" name="popRejectFlg" value=""/>
 
             <h2><img src="${pageContext.request.contextPath}/resources/images/common/logo_etrust.gif" alt="Coway"/></h2>
             <p><input type="text" title="ID" placeholder="ID" id="userId" name="userId" value=""/></p>

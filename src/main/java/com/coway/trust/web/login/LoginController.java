@@ -230,6 +230,7 @@ public class LoginController {
         model.put("popType", params.get("popType"));
         model.put("popAck1", params.get("popAck1"));
         model.put("popAck2", params.get("popAck2"));
+        model.put("popRejectFlg", params.get("popRejectFlg"));
 
         return "/login/loginPop";
     }
