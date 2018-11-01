@@ -3,46 +3,45 @@
 <head>
 <script type="text/javaScript" language="javascript">
 
-	$(document).ready(function(){
+  $(document).ready(function(){
+    $('#txtCustName_RW').text($('#name').val());
+    $('#txtCustNRIC_RW').text($('#nric').val());
+    $('#txtProduct_RW').text($("#ordProudct option:selected").text());
+    $('#txtPromotion_RW').text($("#ordPromo option:selected").text());
+    $('#txtMemberCode_RW').text($('#salesmanCd').val());
+    $('#txtMemberName_RW').text($('#salesmanNm').val());
 
-        $('#txtCustName_RW').text($('#name').val());
-        $('#txtCustNRIC_RW').text($('#nric').val());
-        $('#txtProduct_RW').text($("#ordProudct option:selected").text());
-        $('#txtPromotion_RW').text($("#ordPromo option:selected").text());
-        $('#txtMemberCode_RW').text($('#salesmanCd').val());
-        $('#txtMemberName_RW').text($('#salesmanNm').val());
-        
-        if($('input:radio[name="advPay"]:checked').val() == 1) {
-            $('#tr1').removeClass("blind");
-            $('#txtAdvPayment_RW').text('YES');
-        }
+    if ($("#compType option:selected").val() != undefined) {
+      if ($("#compType option:selected").val() != "") {
+        $('#trAddCmpt').removeClass("blind");
+        $('#txtAddCmpt_RW').text($("#compType option:selected").text());
+      }
+    }
+
+    if($('input:radio[name="advPay"]:checked').val() == 1) {
+      $('#tr1').removeClass("blind");
+      $('#txtAdvPayment_RW').text('YES');
+    }
+  });
+
+  $(function(){
+    $('#btnConfirm_RW').click(function() {
+      console.log('!@# fn_doSaveOrder before call');
+
+      if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
+        console.log("attach file start");
+        var formData = Common.getFormData("fileUploadForm");
+
+        Common.ajaxFile("/sales/order/gstEurCertUpload.do", formData, function(result) {
+          console.log(result.atchFileGrpId);
+          $('#atchFileGrpId').val(result.atchFileGrpId);
+          fn_doSaveOrder();
+        });
+      } else {
+        fn_doSaveOrder();
+      }
 	});
-	
-	$(function(){
-	    $('#btnConfirm_RW').click(function() {
-            console.log('!@# fn_doSaveOrder before call');
-            
-            if(!$('#tabRC').hasClass("blind") && !FormUtil.checkReqValue($('#certRefFile'))) {
-
-                console.log("attach file start");
-
-        		var formData = Common.getFormData("fileUploadForm");
-                
-                Common.ajaxFile("/sales/order/gstEurCertUpload.do", formData, function(result) {//  첨부파일 정보를 공통 첨부파일 테이블 이용 : 웹 호출 테스트
-        
-        			//console.log("총 갯수 : " + result.length);
-        			console.log(result.atchFileGrpId);
-        			
-        			$('#atchFileGrpId').val(result.atchFileGrpId);
-        			
-        			fn_doSaveOrder();
-        		});
-            }
-            else {
-                fn_doSaveOrder();
-            }
-	    });
-	});
+  });
 
 </script>
 </head>
@@ -77,6 +76,10 @@
 <tr>
 	<th scope="row"><spring:message code="sal.text.product" /></th>
 	<td><span id="txtProduct_RW"></span></td>
+</tr>
+<tr id="trAddCmpt" class="blind">
+	<th scope="row"><spring:message code="sal.text.AddCmpt" /></th>
+	<td><span id="txtAddCmpt_RW"></span></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="sal.title.text.promo" /></th>
