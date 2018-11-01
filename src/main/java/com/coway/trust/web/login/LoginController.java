@@ -286,6 +286,8 @@ public class LoginController {
                 else if("6".equals(stusId) && "0".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
                     params.put("popType", "-");
                     retMsg = "Application has been rejected.";
+                } else {
+                    params.put("popType", "-");
                 }
             }
         }
