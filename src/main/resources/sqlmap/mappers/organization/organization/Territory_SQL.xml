@@ -155,7 +155,8 @@
                END
                   BRNCH_NAME,
                CT_BRNCH_CODE,
-               CT_SUB_GRP
+               CT_SUB_GRP,
+               SO_BRNCH_CODE
           FROM ORG0019M
           WHERE REQST_NO=#{reqstNo}
 	</select>
@@ -202,10 +203,38 @@
         </foreach>
 	</insert>
 
+	<insert id="insertSalesOffice" parameterType="java.util.List">
+        INSERT INTO ORG0019M(
+        REQST_NO
+        ,AREA_ID
+        ,REQST_DT
+        ,REQST_USER_ID
+        ,SO_BRNCH_CODE
+        ,BRNCH_TYPE
+        ,CNFM_STUS
+        )
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+            SELECT #{item.reqstNo}
+            ,#{item.areaId}
+            ,SYSDATE
+            ,#{item.requester}
+            ,#{item.branch}
+            ,#{item.brnchId}
+            ,'1'
+            FROM DUAL
+        </foreach>
+    </insert>
+
 	<update id="updateSYS0064MDream" parameterType="Map">
        UPDATE SYS0064M SET
        CT_BRNCH_CODE =  #{ctBrnchCode},
        CT_SUB_GRP = #{ctSubGrp}
+       WHERE AREA_ID=#{areaId}
+    </update>
+
+        <update id="updateSYS0064MSO" parameterType="Map">
+       UPDATE SYS0064M SET
+       SO_BRNCH_CODE =  #{soBrnchCode}
        WHERE AREA_ID=#{areaId}
     </update>
 
