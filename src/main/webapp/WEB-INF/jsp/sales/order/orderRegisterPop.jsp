@@ -26,7 +26,7 @@
         doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
 
         doGetComboData('/common/selectCodeList.do', {groupCode :'324'}, '',  'empChk',  'S'); //EMP_CHK
-        doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '0', 'exTrade', 'S'); //EX-TRADE
+        doGetComboData('/common/selectCodeList.do', {groupCode :'325',orderValue : 'CODE_ID'}, '0', 'exTrade', 'S'); //EX-TRADE
         doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '0', 'gstChk',  'S'); //GST_CHK
         doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
 
@@ -1108,7 +1108,7 @@
 
             $('#ordPromo option').remove();
 
-            if($("#exTrade").val() == '1') {
+            if($("#exTrade").val() == '1' || $("#exTrade").val() == '2') {
                 //$('#relatedNo').removeAttr("readonly").removeClass("readonly");
                 $('#btnRltdNo').removeClass("blind");
             }
@@ -1302,10 +1302,11 @@
 
             if($("#ordPromo option:selected").index() > 0) {
                 console.log('!@#### ordSaveBtn click START 00000');
-                if($("#exTrade").val() == 1) {
+                if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
                     console.log('!@#### ordSaveBtn click START 11111');
-                    $('#txtOldOrderID').val('');
-                    Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
+                    $('#txtOldOrderID').val();
+                    $('#relatedNo').val();
+                    Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val(), salesOrdNo :$('#relatedNo').val()}, null, true);
                 }
                 else {
                     console.log('!@#### ordSaveBtn click START 22222');
@@ -1407,7 +1408,7 @@
 
         if($("#ordPromo option:selected").index() > 0) {
 
-            if($("#exTrade").val() == 1) {
+            if($("#exTrade").val() == 1 || $("#exTrade").val() == 2) {
                 Common.popupDiv("/sales/order/oldOrderPop.do", {custId : $('#hiddenCustId').val()}, null, true);
             }
             else {

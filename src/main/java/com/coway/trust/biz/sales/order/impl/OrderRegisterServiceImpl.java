@@ -81,6 +81,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 	@Resource(name = "preOrderMapper")
 	private PreOrderMapper preOrderMapper;
 
+	@Resource(name = "orderLedgerMapper")
+	private OrderLedgerMapper orderLedgerMapper;
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
@@ -315,7 +318,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
               			//Renatal
               			if(SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) {
 
-              				if(this.isVerifyOldSalesOrderRentalScheme(getOldOrderID)) { //chia chia --18/01/2016 --ex-trade only allow rental status REG || INV || SUS
+              				if(this.isVerifyOldSalesOrderRentalScheme(getOldOrderID,0)) { //chia chia --18/01/2016 --ex-trade only allow rental status REG || INV || SUS
 
               					BigDecimal valiOutStanding = (BigDecimal)orderRegisterMapper.selectRentAmt(getOldOrderID);
               					valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
@@ -386,13 +389,175 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		return RESULT;
 	}
 
+	@Override
+	public EgovMap checkOldOrderIdICare(Map<String, Object> params) {
+
+		int getOldOrderID = 0;
+		int custId = 0, promoId = 0;
+		String ROOT_STATE = "", isInValid = "", msg = "", txtInstSpecialInstruction = "";
+
+		logger.info("!@#### custId:"+(String)params.get("custId"));
+		logger.info("!@#### salesOrdNo:"+(String)params.get("salesOrdNo"));
+		logger.info("!@#### all params :"+(String)params.toString());
+
+		custId = Integer.parseInt((String)params.get("custId"));
+		promoId = Integer.parseInt((String)params.get("promoId"));
+
+		EgovMap RESULT = new EgovMap();
+		EgovMap ordInfo = orderRegisterMapper.selectOldOrderId((String)params.get("salesOrdNo"));
+
+		if(ordInfo != null) {
+			getOldOrderID = CommonUtils.intNvl(Integer.parseInt(String.valueOf(ordInfo.get("salesOrdId"))));
+		}
+
+		EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(getOldOrderID);
+
+        if (getOldOrderID <= 0) {
+        	ROOT_STATE = "ROOT_1";
+        }
+        else {
+        	if(this.isVerifyOldSalesOrderNoValidity(getOldOrderID)) {
+
+        		EgovMap resultMap = this.selectSalesOrderM(getOldOrderID, 0);
+        		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(promoId);
+
+        		String appTypId = "";
+        		if(resultMap != null)
+        			appTypId = resultMap.get("appTypeId").toString();
+
+            	if("144".equals(appTypId) || "145".equals(appTypId)) { // 2018-09-13 - Disabled extrade for Education and Free Trial
+            		ROOT_STATE = "ROOT_2";
+            	}
+
+            	else {
+            		if(GetExpDate == null) {
+                    	ROOT_STATE = "ROOT_3";
+            		}
+            		else {
+
+            			Calendar calNow = Calendar.getInstance();
+
+            			int nowYear = calNow.YEAR;
+            			int nowMonth = calNow.MONTH + 1;
+            			int nowDate = calNow.DATE;
+
+            			logger.info("!@#### nowYear :"+nowYear);
+            			logger.info("!@#### nowMonth:"+nowMonth);
+            			logger.info("!@#### nowDate :"+nowDate);
+
+            			Date srvPrdExprDt = (Date)GetExpDate.get("srvPrdExprDt");
+            			Date srvPrdStartDt = (Date)GetExpDate.get("srvPrdStartDt");
+
+            			Calendar calExt = Calendar.getInstance();
+            			Calendar calSrt = Calendar.getInstance();
+
+            			calExt.setTime(srvPrdExprDt);
+            			calSrt.setTime(srvPrdStartDt);
+
+            			int expYear = calExt.YEAR;
+            			int expMonth = calExt.MONTH + 1;
+
+            			int srtYear = calSrt.YEAR;
+            			int srtMonth = calSrt.MONTH;
+
+            			calExt.add(Calendar.MONTH, -4);
+            			calSrt.add(Calendar.MONTH, 6);
+
+            			msg = "-SVM End Date : <b>" + (String)GetExpDate.get("srvPrdExprDtMmyy") + "</b> <br/>";
+
+              			if((calSrt.compareTo(calNow) <= 0) || (calExt.compareTo(calNow) >= 0)) {
+              				isInValid = "InValid";
+              			}
+
+              			EgovMap validateRentOutright = this.selectSalesOrderM(getOldOrderID, 0);
+
+              			//Renatal
+              			if(SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) {
+
+              				if(this.isVerifyOldSalesOrderRentalScheme(getOldOrderID,1)) { //Kit --ex-trade only allow rental status REG
+
+              					params.put("ordId",getOldOrderID);
+              					orderLedgerMapper.getOderOutsInfo(params);
+              					EgovMap   map =  (EgovMap)  ((ArrayList)params.get("p1")).get(0);
+
+              					BigDecimal valiOutStanding = new BigDecimal((String)map.get("ordOtstndMth"));
+              					valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+
+              					if(valiOutStanding.compareTo(BigDecimal.ZERO) > 2) {
+                                    msg = msg + " -With Outstanding payment not allowed for I-Care promo. <br/>";
+                                    isInValid = "InValid";
+              					}
+
+              					EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
+
+              					if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < 6) {
+                                    msg = msg + " -Below 6th months not allowed to entitle I-Care Promo. <br/>";
+                                    isInValid = "InValid";
+              					}else if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) >= 60){
+              						msg = msg + " -Above 60th months not allowed to entitle I-Care Promo. <br/>";
+                                    isInValid = "InValid";
+              					}
+
+              					if(custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
+                                    msg = msg + " -Different Customer is not allowed.";
+                                    isInValid = "InValid";
+              					}
+
+              					ROOT_STATE = "ROOT_4";
+
+              					txtInstSpecialInstruction = "(Old order No.)" + (String)params.get("salesOrdNo") + " , " + (String)promoMap.get("promoDesc")
+              					                        + " , SVM expired : " + (String)GetExpDate.get("srvPrdExprDtMmyy");
+              				}
+              				else {
+              					ROOT_STATE = "ROOT_5";
+              				}
+              			}
+              			else if(SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
+              					|| SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) { //outright,Installment
+
+          					ROOT_STATE = "ROOT_6";
+          					msg = msg + " -Outright and Installment Order are not eligable for I-Care Programme.<br/>";
+                            isInValid = "InValid";
+
+              			}
+
+              			else {
+          					ROOT_STATE = "ROOT_7";
+
+          					txtInstSpecialInstruction = "(Old order No.)" + (String)params.get("salesOrdNo") + " , " + (String)promoMap.get("promoDesc")
+		                        + " , SVM expired : " + (String)GetExpDate.get("srvPrdExprDtMmyy");
+
+              			}
+            		}
+            	}
+        	}
+        	else {
+        		ROOT_STATE = "ROOT_8";
+        	}
+        }
+
+        RESULT.put("ROOT_STATE", ROOT_STATE);
+        RESULT.put("IS_IN_VALID", isInValid);
+        RESULT.put("MSG", msg);
+        RESULT.put("OLD_ORDER_ID", getOldOrderID);
+        RESULT.put("INST_SPEC_INST", txtInstSpecialInstruction);
+
+
+		return RESULT;
+	}
+
 	private boolean isVerifyOldSalesOrderNoValidity(int getOldOrderID) {
 		EgovMap result = orderRegisterMapper.selectVerifyOldSalesOrderNoValidity(getOldOrderID);
 		return result == null ? true : false;
 	}
 
-	private boolean isVerifyOldSalesOrderRentalScheme(int getOldOrderID) {
-		EgovMap result = orderRegisterMapper.selectSalesOrderRentalScheme(getOldOrderID);
+	private boolean isVerifyOldSalesOrderRentalScheme(int getOldOrderID,int iCare) {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("value", getOldOrderID);
+		params.put("iCare", iCare);
+
+		EgovMap result = orderRegisterMapper.selectSalesOrderRentalScheme(params);
 		return result != null ? true : false;
 	}
 

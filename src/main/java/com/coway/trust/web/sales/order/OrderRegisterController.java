@@ -160,8 +160,13 @@ public class OrderRegisterController {
 
     @RequestMapping(value = "/checkOldOrderId.do", method = RequestMethod.GET)
     public ResponseEntity<EgovMap> selectOldOrderId(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
-
-    	EgovMap RESULT = orderRegisterService.checkOldOrderId(params);
+logger.info("extrade :: " + params.get("exTrade"));
+    	EgovMap RESULT;
+    	if(params.get("exTrade").equals("2")){
+    		RESULT = orderRegisterService.checkOldOrderIdICare(params);
+    	}else{
+    		RESULT = orderRegisterService.checkOldOrderId(params);
+    	}
 
     	// 데이터 리턴.
     	return ResponseEntity.ok(RESULT);

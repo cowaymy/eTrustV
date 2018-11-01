@@ -80,7 +80,7 @@ public interface OrderRegisterMapper {
 
 	EgovMap selectSalesOrderM(Map<String, Object> params);
 
-	EgovMap selectSalesOrderRentalScheme(int salesOrdId);
+	EgovMap selectSalesOrderRentalScheme(Map<String, Object> params);
 
 	EgovMap selectAccRentLedgers(int salesOrdId);
 

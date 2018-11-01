@@ -39,17 +39,25 @@
     </select>
 
     <select id="selectSvcExpire" parameterType="int" resultType="egovMap">
-        SELECT T.SRV_PRD_EXPR_DT
+       SELECT
+               T.SRV_PRD_START_DT
+             , T.SRV_PRD_START_DT_MMYY
+             , T.SRV_PRD_START_DT_MMYY_ADD
+             , T.SRV_PRD_EXPR_DT
              , T.SRV_PRD_EXPR_DT_MMYY
              , T.SRV_PRD_EXPR_DT_MMYY_ADD
           FROM
-             ( SELECT T1.SRV_EXPR_DT SRV_PRD_EXPR_DT
+             ( SELECT
+                      T1.SRV_START_DT SRV_PRD_START_DT
+                    , TO_CHAR(T1.SRV_START_DT, 'MM/YY') SRV_PRD_START_DT_MMYY
+                    , TO_CHAR(ADD_MONTHS(T1.SRV_START_DT, 1),'MM/YY') SRV_PRD_START_DT_MMYY_ADD
+                    , T1.SRV_EXPR_DT SRV_PRD_EXPR_DT
                     , TO_CHAR(T1.SRV_EXPR_DT, 'MM/YY') SRV_PRD_EXPR_DT_MMYY
                     , TO_CHAR(ADD_MONTHS(T1.SRV_EXPR_DT, 1),'MM/YY') SRV_PRD_EXPR_DT_MMYY_ADD
                  FROM SAL0095D T1
                 WHERE T1.SRV_SALES_ORD_ID = #{value}
-                  AND 4 = T1.SRV_STUS_CODE_ID
-                  AND SRV_EXPR_DT IS NOT NULL
+                 AND 4 = T1.SRV_STUS_CODE_ID
+                 AND SRV_EXPR_DT IS NOT NULL
                 ORDER BY T1.SRV_EXPR_DT DESC
              ) T
          WHERE ROWNUM &lt;= 1
@@ -182,7 +190,7 @@
            AND ROWNUM &lt;= 1
     </select>
 
-    <select id="selectSalesOrderRentalScheme" parameterType="int" resultType="egovMap">
+    <select id="selectSalesOrderRentalScheme" parameterType="Map" resultType="egovMap">
         SELECT T1.REN_SCH_ID
              , T1.SALES_ORD_ID
              , T1.STUS_CODE_ID
@@ -191,7 +199,14 @@
              , T1.IS_SYNC
           FROM SAL0071D T1
          WHERE T1.SALES_ORD_ID = #{value}
-           AND T1.STUS_CODE_ID IN ( 'REG','INV','SUS' )
+         <choose>
+         <when test='iCare == 1'>
+             AND T1.STUS_CODE_ID IN ( 'REG')
+         </when>
+         <otherwise>
+             AND T1.STUS_CODE_ID IN ( 'REG','INV','SUS' )
+         </otherwise>
+       </choose>
            AND ROWNUM &lt;= 1
     </select>
 

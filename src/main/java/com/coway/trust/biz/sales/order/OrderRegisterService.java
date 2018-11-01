@@ -55,7 +55,9 @@ public interface OrderRegisterService {
 	List<EgovMap> selectPrevOrderNoList(Map<String, Object> params);
 
 	EgovMap selectOldOrderId(Map<String, Object> params);
-	
+
 	List<EgovMap> selectProductComponent(Map<String, Object> params);
+
+	EgovMap checkOldOrderIdICare(Map<String, Object> params);
 
 }
