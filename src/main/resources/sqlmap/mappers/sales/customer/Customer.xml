@@ -2313,10 +2313,6 @@
     ) B
     ON A.CUST_ORI_CRC_NO = B.CUST_ORI_CRC_NO
     WHERE A.CUST_ORI_CRC_NO = #{cardNo}
-        AND A.CUST_CRC_TYPE_ID = #{ccType}
-        AND A.CUST_CRC_BANK_ID = #{ccBank}
-        AND A.CUST_CRC_EXPR = #{expDate}
-        AND A.CARD_TYPE_ID = #{cType}
   </select>
 
   <select id="checkCRC2" parameterType="Map" resultType="egovMap">
@@ -2338,10 +2334,6 @@
         ) B1
         ON A1.CUST_ORI_CRC_NO = B1.CUST_ORI_CRC_NO
         WHERE A1.CUST_ORI_CRC_NO = #{cardNo}
-            AND A1.CUST_CRC_TYPE_ID = #{ccType}
-            AND A1.CUST_CRC_BANK_ID = #{ccBank}
-            AND A1.CUST_CRC_EXPR = #{expDate}
-            AND A1.CARD_TYPE_ID = #{cType}
     ) B
     ON A.CUST_ID = B.CUST_ID
     <if test='step == "3" '>
