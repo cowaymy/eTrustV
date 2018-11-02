@@ -2134,6 +2134,18 @@
                    ITM_CPNT_NAME CODE_NAME
         FROM SAL0223M
         WHERE ITM_STK_ID = #{stkId}
+        AND DISAB = 0
+        AND to_date(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY')
+
+    </select>
+
+    <select id="selectProductComponentDefaultKey" parameterType="Map" resultType="egovMap">
+        SELECT ITM_CPNT_ID CODE
+        FROM SAL0223M
+        WHERE ITM_STK_ID = #{stkId}
+          AND DEF_SEL = 1
+          AND DISAB = 0
+          AND to_date(SYSDATE,'DD/MM/YYYY') BETWEEN TO_DATE(EFF_DT, 'DD/MM/YYYY') AND TO_DATE(EXP_DT, 'DD/MM/YYYY')
 
     </select>
 
