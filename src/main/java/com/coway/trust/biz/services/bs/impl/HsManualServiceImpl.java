@@ -1808,7 +1808,7 @@ public class HsManualServiceImpl extends EgovAbstractServiceImpl implements HsMa
 		params.put("AS_SMS", "0");
 		params.put("AS_CRT_USER_ID", params.get("userId").toString());
 		params.put("AS_UPD_USER_ID", params.get("userId").toString());
-		params.put("AS_TYPE_ID", "2972"); // SPECIAL AS
+		params.put("AS_TYPE_ID", "3154"); // ADD ON AS
 		// params.put("AS_REQSTER_TYPE_ID", "95164777");
 		params.put("AS_ALLOW_COMM", "1");
 		// params.put("AS_CALLLOG_ID", String.valueOf( ccrSeqMap.get("seq")).trim());
