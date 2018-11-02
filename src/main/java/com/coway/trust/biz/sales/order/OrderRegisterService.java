@@ -60,4 +60,5 @@ public interface OrderRegisterService {
 
 	EgovMap checkOldOrderIdICare(Map<String, Object> params);
 
+	EgovMap selectProductComponentDefaultKey(Map<String, Object> params);
 }
