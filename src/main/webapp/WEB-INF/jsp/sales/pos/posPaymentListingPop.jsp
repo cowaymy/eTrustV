@@ -6,34 +6,34 @@
 $(document).ready(function() {
 
      /*######################## Init Combo Box ########################*/
-     
+
     //PosModuleTypeComboBox
-    var moduleParam = {groupCode : 143, codeIn : [2390, 2391]};
+    var moduleParam = {groupCode : 143, codeIn : [2390]};
     CommonCombo.make('_cmbPosTypeId', "/sales/pos/selectPosModuleCodeList", moduleParam , '', optionModule);
-    
+
     //branch List
     CommonCombo.make('_cmbWhBrnchId', "/sales/pos/selectWhBrnchList", '' , '', '');
-    
+
     /*######################## Init Combo Box ########################*/
-    
+
 });
 
 function fn_posPaymentListing(){
-    
+
 	//Validation Check
-	var rtnVal = fn_chkPayListingValidation(); 
+	var rtnVal = fn_chkPayListingValidation();
 	if(rtnVal == false){
 		return;
 	}
-	
+
 	//Ins Log
-	
-	
-	
+
+
+
     var option = {
-            isProcedure : true 
+            isProcedure : true
     };
-    
+
     var whereSql = '';
     var showPaymentDate = "";
     var showKeyInBranch = "";
@@ -42,31 +42,31 @@ function fn_posPaymentListing(){
     var showKeyInUser = "";
     var showPosNo = "";
     var showMemberCode = "";
-    
+
     if($("#_frPosNo").val() != null && $("#_frPosNo").val() != '' && $("#_toPosNo").val() != null && $("#_toPosNo").val() != '' ){
-    	whereSql += " AND  posM.POS_NO BETWEEN '" + $("#_frPosNo").val().trim() + "'  AND '" + $("#_toPosNo").val().trim() + "' "; 
+    	whereSql += " AND  posM.POS_NO BETWEEN '" + $("#_frPosNo").val().trim() + "'  AND '" + $("#_toPosNo").val().trim() + "' ";
     	showPosNo += $("#_frPosNo").val().trim() + " To " + 	$("#_toPosNo").val().trim();
     }
-    
+
     if($("#_cmbPosTypeId").val() != null && $("#_cmbPosTypeId").val() != ''){
-    	whereSql += " AND posM.POS_MODULE_TYPE_ID = " + $("#_cmbPosTypeId").val(); 
+    	whereSql += " AND posM.POS_MODULE_TYPE_ID = " + $("#_cmbPosTypeId").val();
     }
-    
+
     if($("#_sttDate").val() != null && $("#_sttDate").val() != '' && $("#_eddDate").val() != null && $("#_eddDate").val() != ''){
-    	whereSql += " AND pm.CRT_DT BETWEEN TO_DATE('"+$("#_sttDate").val()+"' , 'DD/MM/YYYY')  AND TO_DATE('"+$("#_eddDate").val()+"' , 'DD/MM/YYYY') ";
+    	whereSql += " AND TO_DATE(TO_CHAR(pm.CRT_DT,'DD/MM/YYYY'),'DD/MM/YYYY') BETWEEN TO_DATE('"+$("#_sttDate").val()+"' , 'DD/MM/YYYY')  AND TO_DATE('"+$("#_eddDate").val()+"' , 'DD/MM/YYYY') ";
     	showPaymentDate += $("#_sttDate").val() + " To " + $("#_eddDate").val();
     }
-    
+
     if($("#_frReceiptNo").val() != null && $("#_frReceiptNo").val() != '' && $("#_toReceiptNo").val() != null && $("#_toReceiptNo").val() != '' ){
     	whereSql += " AND pm.OR_NO BETWEEN '" + $("#_frReceiptNo").val().trim() + "' AND '" + $("#_toReceiptNo").val().trim() + "'";
     	showReceiptNo += $("#_frReceiptNo").val().trim() + " To " + $("#_toReceiptNo").val().trim();
     }
-    
+
     if($("#_cmbWhBrnchId").val() != null && $("#_cmbWhBrnchId").val() != ''){
     	whereSql += " AND pm.BRNCH_ID = " + $("#_cmbWhBrnchId").val();
     	showKeyInBranch += $("#_cmbWhBrnchId").text();
     }
-    
+
     if($("#_frTrtNo").val() != null && $("#_frTrtNo").val() != '' && $("#_toTrNo").val() != null && $("#_toTrNo").val() != ''){
     	whereSql += " AND pm.TR_NO BETWEEN '" + $("#_frTrtNo").val() + "' AND '" + $("#_toTrNo").val() + "'";
     	showTrNo += $("#_frTrtNo").val() + " To " + $("#_toTrNo").val();
@@ -83,11 +83,11 @@ function fn_posPaymentListing(){
     }
 
    // console.log("whereSql : " + whereSql);
-    
+
     //params Setting
     $("#reportFileName").val("/sales/POSPaymentListing_PDF_New.rpt");
     $("#viewType").val("PDF");
-   
+
     $("#V_WHERESQL").val(whereSql);
     $("#V_SHOWPAYMENTDATE").val(showPaymentDate);
     $("#V_SHOWKEYINBRANCH").val(showKeyInBranch);
@@ -96,44 +96,44 @@ function fn_posPaymentListing(){
     $("#V_SHOWKEYINUSER").val(showKeyInUser);
     $("#V_SHOWPOSNO").val(showPosNo);
     $("#V_SHOWMEMBERCODE").val(showMemberCode);
-    
+
     fn_insTransactionLogPay(whereSql, showPaymentDate, showKeyInBranch, showReceiptNo, showTrNo, showKeyInUser, showPosNo, showMemberCode);
     Common.report("rptForm", option);
-    
+
 }
 
 function fn_chkPayListingValidation(){
-	
+
 	var isFalseChk = true;
-	
+
 	if(($("#_sttDate").val() != null && $("#_sttDate").val() != '') || ($("#_eddDate").val() != null && $("#_eddDate").val() != '')){ //choice at least one
 		if($("#_sttDate").val() == null || $("#_sttDate").val() == '' || $("#_eddDate").val() == null && $("#_eddDate").val() == ''){
 			Common.alert('<spring:message code="sal.alert.msg.keyInPaymentDate" />');
 			return false;
 		}
 	}
-	
+
 	if(($("#_frReceiptNo").val() != null && $("#_frReceiptNo").val() != '') || ($("#_toReceiptNo").val() != null && $("#_toReceiptNo").val() != '')){ //choice at least one
         if($("#_frReceiptNo").val() == null || $("#_frReceiptNo").val() == '' || $("#_toReceiptNo").val() == null && $("#_toReceiptNo").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.keyInPaymentDate" />');
             return false;
         }
     }
-	
+
 	if(($("#_frPosNo").val() != null && $("#_frPosNo").val() != '') || ($("#_toPosNo").val() != null && $("#_toPosNo").val() != '')){ //choice at least one
         if($("#_frPosNo").val() == null || $("#_frPosNo").val() == '' || $("#_toPosNo").val() == null && $("#_toPosNo").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.keyInPaymentDate" />');
             return false;
         }
     }
-	
+
 	if(($("#_frTrtNo").val() != null && $("#_frTrtNo").val() != '') || ($("#_toTrNo").val() != null && $("#_toTrNo").val() != '')){ //choice at least one
         if($("#_frTrtNo").val() == null || $("#_frTrtNo").val() == '' || $("#_toTrNo").val() == null && $("#_toTrNo").val() == ''){
             Common.alert('<spring:message code="sal.alert.msg.keyInPaymentDate" />');
             return false;
         }
     }
-	
+
 	if($("#_salesAgent").val() != null && $("#_salesAgent").val() != '' ){
 		Common.ajax("GET", "/sales/pos/chkUserIdByUserName", {userName : $("#_salesAgent").val()}, function(result){
 			if(result == null){
@@ -143,37 +143,37 @@ function fn_chkPayListingValidation(){
 				$("#_salesAgent").focus();
 				isFalseChk = false;
 			}else{
-			    
+
 				$("#_hidSalesAgentId").val(result.userId);
 			}
 		},'',{async : false});
 	}
-	
+
 	if(isFalseChk == false){
 		return false;
 	}
-	
+
 	if($("#_memberCode").val() != null && $("#_memberCode").val() != ''){
 		Common.ajax("GET", "/sales/pos/chkMemIdByMemCode", {memCode : $("#_memberCode").val()},function(result){
-		
+
 			if(result == null){
-                Common.alert('<spring:message code="sal.alert.msg.invalidMemCode" />');  
+                Common.alert('<spring:message code="sal.alert.msg.invalidMemCode" />');
                 $("#_memberCode").val('');
                 $("#_hidMemberCode").val('');
                 $("#_memberCode").focus();
                 isFalseChk = false;
             }else{
-            	
+
             	$("#_hidMemberCode").val(result.memId);
             }
 		}, '' , {async : false});
 	}
-	
+
 	if(isFalseChk == false){
         return false;
     }
-	
-	
+
+
 	//validaion Pass
 	return true;
 }
@@ -196,7 +196,7 @@ $.fn.clearForm = function() {
 };
 
 function fn_insTransactionLogPay(whereSql, showPaymentDate, showKeyInBranch, showReceiptNo, showTrNo, showKeyInUser, showPosNo, showMemberCode){
-    
+
 	var transacMap = {};
     transacMap.rptChkPoint = "http://etrust.my.coway.com/sales/pos/posPaymentListingPop.do";
     transacMap.rptModule = "POS";
@@ -204,12 +204,12 @@ function fn_insTransactionLogPay(whereSql, showPaymentDate, showKeyInBranch, sho
     transacMap.rptSubName = "POS Payment Listing - PDF";
     transacMap.rptEtType = "pdf";
     transacMap.rptPath = getContextPath()+"/sales/POSPaymentListing_PDF_New.rpt";
-    transacMap.rptParamtrValu = "@WhereSQL," + whereSql + ";@ShowPaymentDate," + showPaymentDate + 
-										    ";@ShowKeyInBranch," + showKeyInBranch +";@ShowReceiptNo," + showReceiptNo + 
+    transacMap.rptParamtrValu = "@WhereSQL," + whereSql + ";@ShowPaymentDate," + showPaymentDate +
+										    ";@ShowKeyInBranch," + showKeyInBranch +";@ShowReceiptNo," + showReceiptNo +
 										    ";@ShowTRNo," + showTrNo + ";@ShowKeyInUser," + showKeyInUser +
 										    ";@ShowPOSNo," + showPosNo + ";@ShowMemberCode," + showMemberCode + ";@WhereSQL," + whereSql;
     transacMap.rptRem = "";
-    
+
     Common.ajax("GET", "/sales/pos/insertTransactionLog", transacMap, function(result){
         if(result == null){
             Common.alert('<spring:message code="sal.alert.msg.failToSaveLog" />');
@@ -259,7 +259,7 @@ function fn_insTransactionLogPay(whereSql, showPaymentDate, showKeyInBranch, sho
     <th scope="row"><spring:message code="sal.title.payDate" /></th>
     <td>
     <div class="date_set w100p"><!-- date_set start -->
-    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate" id="_sttDate" value="${bfDay}"/></p>  
+    <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  name="sDate" id="_sttDate" value="${bfDay}"/></p>
     <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" name="eDate"  id="_eddDate" value="${toDay}"/></p>
     </div><!-- date_set end -->
