@@ -487,4 +487,11 @@ logger.info("extrade :: " + params.get("exTrade"));
     	List<EgovMap> codeList = orderRegisterService.selectProductComponent(params);
     	return ResponseEntity.ok(codeList);
     }
+
+    @RequestMapping(value = "/selectProductComponentDefaultKey.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> selectProductComponentDefaultKey(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+        EgovMap defaultKey = orderRegisterService.selectProductComponentDefaultKey(params);
+        // 데이터 리턴.
+        return ResponseEntity.ok(defaultKey);
+    }
 }
