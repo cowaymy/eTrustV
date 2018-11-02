@@ -303,6 +303,7 @@ function fn_asResultEditPop(){
     var salesOrdId  =selectedItems[0].item.asSoId;
     var asResultNo  =selectedItems[0].item.c3;
     var asResultId  =selectedItems[0].item.asResultId;
+    var asTypeID =selectedItems[0].item.code;
 
     if(asStusId  =="ACT"){
     	if(selectedItems[0].item.asSlutnResnId =='454' ){
@@ -311,7 +312,12 @@ function fn_asResultEditPop(){
             Common.alert("<b>[" + asNo + "] do no has any result yet. .</br> Result view is disallowed.");
             return ;
     	}
-   }
+    }
+    if(asTypeID == "AOAS") {
+    	Common.alert("<b>[" + asNo + "] is not allow to edit.</br> AS information edit is disallowed.");
+        return ;
+    }
+
     console.log(selectedItems[0].item);
 
 
