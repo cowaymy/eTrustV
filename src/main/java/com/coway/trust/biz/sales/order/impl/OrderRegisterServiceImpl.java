@@ -2030,4 +2030,9 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		return orderRegisterMapper.selectProductComponent(params);
 	}
 
+	@Override
+	public EgovMap selectProductComponentDefaultKey(Map<String, Object> params) {
+		EgovMap cpntKey = orderRegisterMapper.selectProductComponentDefaultKey(params);
+		return cpntKey;
+	}
 }
