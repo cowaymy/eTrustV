@@ -2360,7 +2360,9 @@
                 I.FIRST_INSTALL_DT INSTALL_DT,
                 CASE WHEN A.SALES_ORD_ID_OLD is null or A.SALES_ORD_ID_OLD = 0 THEN 'No' ELSE 'Yes' END I_CARE,
                 D.STUS_CODE_ID RENT_STUS,
-                J.NAME BANK_NAME
+                J.NAME BANK_NAME,
+                A.CUST_ID,
+                A.PROMO_ID
 
                 FROM SAL0001D A
                 LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
@@ -2393,6 +2395,7 @@
                 E.CODE ORD_STUS,
                 C.NAME CUST_NAME,
                 L.STK_DESC PRODUCT,
+                F.CODE_ID APP_TYPE_ID,
                 F.CODE APP_CODE,
                 F.CODE_NAME APP_TYPE,
                 H.CODE PAY_MODE_CODE,
@@ -2400,10 +2403,14 @@
                 A.PV_MONTH ,
                 A.PV_YEAR,
                 I.FIRST_INSTALL_DT INSTALL_DT,
+                A.SALES_ORD_ID_OLD,
                 CASE WHEN A.SALES_ORD_ID_OLD is null or A.SALES_ORD_ID_OLD = 0 THEN 'No' ELSE 'Yes' END I_CARE,
                 D.STUS_CODE_ID RENT_STUS,
                 G.BANK_ID,
-                CASE WHEN G.BANK_ID = 0 OR G.BANK_ID is null THEN ' ' ELSE J.NAME END BANK_NAME
+                CASE WHEN G.BANK_ID = 0 OR G.BANK_ID is null THEN ' ' ELSE J.NAME END BANK_NAME,
+                A.CUST_ID,
+                A.PROMO_ID,
+                M.CODE STK_CATEGORY
 
                 FROM SAL0001D A
                 LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
@@ -2416,6 +2423,7 @@
                 LEFT JOIN SAL1010V I ON I.ORD_ID = A.SALES_ORD_ID
                 LEFT JOIN SYS0004M J ON J.BANK_ID = G.BANK_ID
                 LEFT JOIN SYS0026M L ON L.STK_ID = B.ITM_STK_ID
+                LEFT JOIN SYS0013M M ON M.CODE_ID = L.STK_CTGRY_ID
                                          WHERE 1=1
 
                                             <if test="ordId != null and ordId !=''">
@@ -2444,6 +2452,23 @@
 
 
 
+
+    </select>
+
+    <select id="selectCustomerRentInst" parameterType="Map" resultType="egovMap">
+
+        SELECT A.SALES_ORD_ID,
+                   A.RENT_INST_DT,
+                   A.RENT_INST_NO
+
+                   FROM SAL0070D A
+                   WHERE 1=1
+
+                      <if test="ordId != null and ordId !=''">
+                        AND A.SALES_ORD_ID = #{ordId}
+                      </if>
+                        AND EXTRACT(MONTH FROM A.RENT_INST_DT) = EXTRACT(MONTH FROM SYSDATE)
+                        AND EXTRACT(YEAR FROM A.RENT_INST_DT) = EXTRACT(YEAR FROM SYSDATE)
 
     </select>
 </mapper>
