@@ -8,6 +8,7 @@ $(document).ready(function(){
 
 
 
+
 });
 
 
@@ -66,6 +67,12 @@ $(document).ready(function(){
     <td>${result.iCare }</td>
     <th scope="row">Aging Month</th>
     <td>${aging.agingMth }</td>
+</tr>
+<tr>
+    <th scope="row">Eligible for I-Care</th>
+    <td>${verify }</td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 </tbody>
 </table><!-- table end -->

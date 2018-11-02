@@ -25,6 +25,11 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(custGridID, "cellDoubleClick", function(event){
             $("#_ordId").val(event.item.salesOrdId);
+            $("#_ordNo").val(event.item.salesOrdNo);
+            $("#_custId").val(event.item.custId);
+            $("#_promoId").val(event.item.promoId);
+
+
 
             Common.popupDiv("/sales/customer/selectCustomerOrderView.do", $("#popForm").serializeJSON());
         });
@@ -149,8 +154,10 @@
 </script>
 
 <form id="popForm" method="post">
-    <input type="hidden" name="ordId"  id="_ordId"/> 
-
+    <input type="hidden" name="ordId"  id="_ordId"/>
+    <input type="hidden" name="salesOrdNo"  id="_ordNo"/>
+    <input type="hidden" name="custId"  id="_custId"/>
+    <input type="hidden" name="promoId"  id="_promoId"/>
 </form>
 
 
