@@ -94,6 +94,16 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 	}
 
 	@Override
+	public List<EgovMap> chkStockList2(Map<String, Object> params) throws Exception {
+
+		List<EgovMap> retunList = null;
+
+		retunList = posMapper.chkStockList2(params);
+
+		return retunList;
+	}
+
+	@Override
 	public EgovMap getMemCode(Map<String, Object> params) throws Exception {
 
 		return posMapper.getMemCode(params);
@@ -190,9 +200,9 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
 		if((SalesConstants.POS_SALES_MODULE_TYPE_DEDUCTION_COMMISSION).equals(String.valueOf(posMap.get("insPosModuleType")))){ //2391
 
-			rtnAmt = rtnAmt *memGird.size();
+/*			rtnAmt = rtnAmt *memGird.size();
 			rtnTax = rtnTax*memGird.size();
-			rtnCharge = rtnCharge*memGird.size();
+			rtnCharge = rtnCharge*memGird.size();*/
 
 		}
 
@@ -233,14 +243,17 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 		posMap.put("docNoPsn", docNoPsn); //posNo = 0  --문서채번
 		posMap.put("posBillId", SalesConstants.POS_BILL_ID); //pos Bill Id // 0
 
+		EgovMap memCodeMap = null;
+		memCodeMap = posMapper.selectMemberByMemberIDCode(params);
+
 		//TODO Other Income 만 사용?? Branch 없음 임시 번호 부여
 		if(String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_OTHER_INCOME)){ // 1357 Other Income
 
 			posMap.put("othCheck", SalesConstants.POS_OTH_CHECK_PARAM);  //OTH Check
 			posMap.put("posCustName", posMap.get("insPosCustName")); //posCustName = other Income만 사용함 .. 그러면 나머지는??
 			params.put("memCode", params.get("userName"));
-			EgovMap memCodeMap = null;
-			memCodeMap = posMapper.selectMemberByMemberIDCode(params);
+			/*EgovMap memCodeMap = null;
+			memCodeMap = posMapper.selectMemberByMemberIDCode(params);*/
 
 			//TODO IVYLIM is NULL
 			if(memCodeMap != null){
@@ -359,9 +372,11 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			for (int idx = 0; idx < basketGrid.size(); idx++) {  //basket Grid
 
 				Map<String, Object> deducItemMap = 	(Map<String, Object>)basketGrid.get(idx); //item Map
+
 				LOGGER.info("############### 2 - Member(Item) - [" + idx + "]  POS DETAIL(Member) MAP SETTING  ################");
-				for (int i = 0; i < memGird.size(); i++) {
-					Map<String, Object> memMap = 	(Map<String, Object>)memGird.get(i); //item List
+				//for (int i = 0; i < memGird.size(); i++) {
+					//Map<String, Object> memMap = 	(Map<String, Object>)memGird.get(i); //item List
+					Map<String, Object> memMap = new HashMap<String, Object>();
 					int posDetailDuducSeq = posMapper.getSeqSal0058D(); //detail Sequence
 					memMap.put("posDetailDuducSeq", posDetailDuducSeq);
 					memMap.put("posMasterSeq", posMasterSeq);
@@ -373,13 +388,21 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 					memMap.put("posDetailTaxs", deducItemMap.get("subChng")); //Tax
 					memMap.put("posItemTaxCodeId", SalesConstants.POS_ITM_TAX_CODE_ID); //32
 					memMap.put("posRcvStusId", SalesConstants.POS_SALES_STATUS_NON_RECEIVE); //RCV_STUS_ID  96 == nonReceive
+					memMap.put("memId", posMap.get("salesmanPopId"));
+					memMap.put("memCode", posMap.get("salesmanPopCd"));
+					memMap.put("memType", memCodeMap.get("memType"));
+					memMap.put("name", posMap.get("posCustName"));
+					memMap.put("fullName", posMap.get("posCustName"));
+					memMap.put("nric", memCodeMap.get("nric"));
+					memMap.put("stus", memCodeMap.get("stus"));
 					memMap.put("userId", params.get("userId"));
 
-					LOGGER.info("############### 2 - Member(Item ["+idx+"]) - MemLoop  [" + i + "]  POS DETAIL(Member) INSERT START  ################");
-    				LOGGER.info("############### 2 - Member(Item ["+idx+"]) - MemLoop  [" + i + "]  POS DETAIL(Member) INSERT param : " + memMap.toString());
+					//LOGGER.info("############### 2 - Member(Item ["+idx+"]) - MemLoop  [" + i + "]  POS DETAIL(Member) INSERT START  ################");
+    				//LOGGER.info("############### 2 - Member(Item ["+idx+"]) - MemLoop  [" + i + "]  POS DETAIL(Member) INSERT param : " + memMap.toString());
 					posMapper.insertDeductionPosDetail(memMap);
-					LOGGER.info("############### 2 - Member(Item ["+idx+"]) - MemLoop  [" + i + "]  POS DETAIL(Member) INSERT END  ################");
-				}
+					//LOGGER.info("############### 2 - Member(Item ["+idx+"]) - MemLoop  [" + i + "]  POS DETAIL(Member) INSERT END  ################");
+		//		}
+					LOGGER.info("############### 2 - Member(Item) - [" + idx + "]  POS DETAIL(Member) MAP SETTING END  ################");
 
 			}
 		}
@@ -544,7 +567,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
           //8.  ********************************************************************************************************* InvStkRecordCard --> Only For Filter/Spare Part Type
 
-       /*     if(String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_FILTER)){  //insPosSystemType == 1352   POS_SALES_TYPE_FILTER  posMap
+            if(String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_FILTER)){  //insPosSystemType == 1352   POS_SALES_TYPE_FILTER  posMap
 
             	for (int idx = 0; idx < basketGrid.size(); idx++) {
 
@@ -587,7 +610,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
             	 }
          	}// end 8
-*/
+
            //  *********************   PAYMENT LOGIC START *********************   //
             // When   'POS SALES' Case
             if((SalesConstants.POS_SALES_MODULE_TYPE_POS_SALES).equals(String.valueOf(posMap.get("insPosModuleType")))){  //2390 -- POS SALES
@@ -865,8 +888,9 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
           	//10.  ********************************************************************************************************* BOOKING
 
+            if(String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_FILTER)){ // POS - FILTER / SPARE PART / MISCELLANEOUS
 
-/*    		Map<String, Object>  logPram = new HashMap<String, Object>();
+    		Map<String, Object>  logPram = new HashMap<String, Object>();
 
     		logPram.put("psno", docNoPsn);
     		logPram.put("retype", "REQ");
@@ -876,14 +900,32 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
     		LOGGER.info("############### 10. POS BOOKING  START  ################");
     		LOGGER.info("#########  call Procedure Params : " + logPram.toString());
+
     		posMapper.posBookingCallSP_LOGISTIC_POS(logPram);
+
+
     		String reqResult  = 	String.valueOf(logPram.get("p1"));
     		LOGGER.debug("############ Procedure Result :  " + reqResult);
     		LOGGER.info("############### 10. POS BOOKING  END  ################");
             //
 
             LOGGER.info("################################## return value(docNoPsn): "  + docNoPsn);
-*/
+            //retrun Map
+            Map<String, Object> rtnMap = new HashMap<String, Object>();
+            rtnMap.put("reqDocNo", docNoPsn);
+
+            LOGGER.info("##################### POS Request Success!!! ######################################");
+            LOGGER.info("##################### POS Request Success!!! ######################################");
+            LOGGER.info("##################### POS Request Success!!! ######################################");
+
+		    rtnMap.put("logError", reqResult);
+		    //rtnMap.put("logError", "000");
+
+
+
+            return rtnMap;
+
+            }
 
             //retrun Map
             Map<String, Object> rtnMap = new HashMap<String, Object>();
@@ -893,8 +935,9 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
             LOGGER.info("##################### POS Request Success!!! ######################################");
             LOGGER.info("##################### POS Request Success!!! ######################################");
 
-		    	//rtnMap.put("logError", reqResult);
-            rtnMap.put("logError", "000");
+		    //rtnMap.put("logError", reqResult);
+		    rtnMap.put("logError", "000");
+
 
 
             return rtnMap;
@@ -1422,7 +1465,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
           			rePaymMap.put("taxInvcRefNo", String.valueOf(payInfoMap.get("taxInvcRefNo")));
           			rePaymMap.put("taxInvcRefDt", String.valueOf(payInfoMap.get("taxInvcRefDt")));//
           			rePaymMap.put("svcCntrctId", Integer.parseInt(String.valueOf(payInfoMap.get("svcCntrctId"))));
-          			rePaymMap.put("batchPayId", Integer.parseInt(String.valueOf(payInfoMap.get("batchPayId"))));
+          			rePaymMap.put("batchPayId", payInfoMap.get("batchPayId"));
 
           			LOGGER.info("############### 13. POS Reverse Pay M INSERT START  ################");
           			LOGGER.info("############### 13. POS Reverse Pay M INSERT PARAM   : " + rePaymMap.toString());
