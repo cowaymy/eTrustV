@@ -807,7 +807,7 @@ function fn_getDateGap(sdate, edate){
     <option value="674">Normal AS</option>
     <option value="2703">Request AS</option>
     <option value="2713">InHouseRepair</option>
-    <option value="2972">Special AS</option>
+    <option value="2972">Add-On AS</option>
 
     </select>
     </td>
