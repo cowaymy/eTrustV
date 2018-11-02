@@ -238,6 +238,19 @@ public class PosController {
 		return ResponseEntity.ok(stokList);
 	}
 
+	@RequestMapping(value = "/chkStockList2")
+	public ResponseEntity<List<EgovMap>> chkStockList2 (@RequestParam Map<String, Object> params , HttpServletRequest request) throws Exception{
+
+
+		String stkId[] = request.getParameterValues("itmLists");
+		params.put("stkId", stkId);
+
+		List<EgovMap> stokList = null;
+		stokList = posService.chkStockList2(params);
+
+		return ResponseEntity.ok(stokList);
+	}
+
 
 	@RequestMapping(value = "/getReasonCodeList")
 	public ResponseEntity<List<EgovMap>> getReasonCodeList (@RequestParam Map<String, Object> params) throws Exception{
