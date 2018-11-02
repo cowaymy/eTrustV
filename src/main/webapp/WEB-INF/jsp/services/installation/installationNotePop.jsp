@@ -5,8 +5,8 @@ $(document).ready(function(){
 	 $('.multy_select').on("change", function() {
 		    //console.log($(this).val());
 		}).multipleSelect({});
-	 
-	 doGetCombo('/common/selectCodeList.do', '10', '','appliType', 'S' , ''); 
+
+	 doGetCombo('/common/selectCodeList.do', '10', '','appliType', 'S' , '');
 	 doGetComboSepa("/common/selectBranchCodeList.do",5 , '-',''   , 'branch' , 'S', '');
 });
 
@@ -45,7 +45,7 @@ function fn_validation(){
          Common.alert("<spring:message code='sys.common.alert.validation' arguments='install status' htmlEscape='false'/>");
          return false;
      }
-	 
+
 	return true;
 }
 function fn_openReport(){
@@ -85,7 +85,7 @@ function fn_openReport(){
 	    if($("#instalType").val() != '' && $("#instalType").val() != null){
 	        whereSeq += "AND ce.Type_ID In (" + $("#instalType").val() + ") ";
 	    }
-	    
+
 	    if($("#sortType").val() == "2"){
 	        orderBySql = "ORDER BY CTMem.mem_Code ";
 	    }else{
@@ -99,19 +99,25 @@ function fn_openReport(){
 	     $("#installationNoteForm #reportFileName").val('/services/InstallationNote_WithOldOrderNo.rpt');
 	     $("#installationNoteForm #viewType").val("PDF");
 	     $("#installationNoteForm #reportDownFileName").val("InstallationNote_"+day+month+date.getFullYear());
-	  
+
+	     console.log("whereSeq : " + whereSeq);
+	     console.log("installStatus : " + installStatus);
+	     console.log("orderBySql : " + orderBySql);
+	     console.log("SelectSql : " + SelectSql);
+	     console.log("FullSql : " + FullSql);
+
 	   //report 호출
 	     var option = {
 	             isProcedure : true, // procedure 로 구성된 리포트 인경우 필수.
 	     };
-	     
+
 	     Common.report("installationNoteForm", option);
 	}
-	
+
 }
 
 function fn_clear(){
-	
+
 	$("#instalStatus").val('1');
 	$("#orderNoFrom").val('');
 	$("#orderNoTo").val('');
@@ -132,7 +138,7 @@ function fn_clear(){
 	$("#V_FULLSQL").val('');
 	$("#reportFileName").val('');
 	$("#viewType").val('');
-	
+
 }
 
 </script>
@@ -178,12 +184,12 @@ function fn_clear(){
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.ApplicationType'/></th>    
+    <th scope="row"><spring:message code='service.title.ApplicationType'/></th>
     <td>
     <select id="appliType" name="appType">
     </select>
     </td>
-    <th scope="row"><spring:message code='service.title.InstallationNo'/></th>    
+    <th scope="row"><spring:message code='service.title.InstallationNo'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -195,7 +201,7 @@ function fn_clear(){
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.InstallDate'/></th>    
+    <th scope="row"><spring:message code='service.title.InstallDate'/></th>
     <td>
 
     <div class="date_set"><!-- date_set start -->
@@ -205,7 +211,7 @@ function fn_clear(){
     </div><!-- date_set end -->
 
     </td>
-    <th scope="row"><spring:message code='service.title.InstallStatus'/></th>    
+    <th scope="row"><spring:message code='service.title.InstallStatus'/></th>
     <td>
     <select id="instalStatus" name="instalStatus">
     <option value="1">Active</option>
@@ -214,7 +220,7 @@ function fn_clear(){
     </td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code='service.title.DSCBranch'/></th>    
+    <th scope="row"><spring:message code='service.title.DSCBranch'/></th>
     <td>
     <select id="branch" name="branch">
     </select>
