@@ -102,7 +102,7 @@ $(document).ready(function() {
     	// 1 . filter
     	if($("#_posSystemType").val() == 1352){
 
-            Common.ajax('GET', '/sales/pos/chkStockList', $("#_itemSrcForm").serialize(), function(result) {
+            Common.ajax('GET', '/sales/pos/chkStockList2', $("#_itemSrcForm").serialize(), function(result) {
 
                 for (var i = 0; i < result.length; i++) {
                    var calResult = fn_calculateAmt(result[i].amt, 1);
@@ -631,7 +631,7 @@ function fn_initField(){
 
 		if($("#_posSystemType").val() == 1352){ ////Pos Filter / Spare Part / Miscellaneous 창고 선택시
 			//Type
-			var codes = [61 , 64 , 1370];
+			var codes = [61 , 62 , 63 , 64 , 1370];
             var codeM = {codeM : 15 , codes : codes};
 			$("#_gridArea").css("display" , "none");  //Serial Grid Display None
             CommonCombo.make('_purcItemType', "/sales/pos/selectPosTypeList", codeM , '', ComboOption);
