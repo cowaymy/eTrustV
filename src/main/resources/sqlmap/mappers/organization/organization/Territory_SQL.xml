@@ -84,16 +84,16 @@
                BRNCH_TYPE,
                CNFM_STUS,
                B.FULL_NAME,
-               CASE
-                  WHEN (BRNCH_TYPE = 42) THEN 'CODY BRANCH'
-                  ELSE 'DREAM SERVICE CENTER'
-               END  BRNCH_NAME,
+               C.CODE_NAME BRNCH_NAME,
               CASE
                   WHEN (CNFM_STUS = 1) THEN 'ACT'
                   WHEN (CNFM_STUS = 4) THEN 'COM'
                   ELSE ''
                END  CNFM_STUS_NAME
-             FROM ORG0019M INNER JOIN ORG0001D B ON REQST_USER_ID  = B.MEM_ID ) A
+             FROM ORG0019M
+             INNER JOIN ORG0001D B ON REQST_USER_ID  = B.MEM_ID
+             JOIN SYS0013M C ON BRNCH_TYPE = C.CODE_ID
+             ) A
              WHERE 1=1
 
 
@@ -102,7 +102,7 @@
                 <choose>
                 <!-- 전체조회 -->
                   <when test ="branchTypeList[0].equals('11') ">
-                   ( '42', '43')
+                   ( '42', '43', '45')
                    </when>
                 <otherwise>
                  <foreach item="item" collection="branchTypeList" index="index" open="(" separator="," close=")">
