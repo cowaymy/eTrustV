@@ -721,8 +721,8 @@ function createAUIGrid(){
                             {dataField : "codeName1", headerText : '<spring:message code="sal.title.salesType" />', width : '8%' , editable : false},
                             {dataField : "taxInvcRefNo", headerText : '<spring:message code="sal.title.invoiceNo" />', width : '8%' , editable : false},
                             {dataField : "name", headerText : '<spring:message code="sal.text.custName" />', width : '18%' , editable : false},
-                            {dataField : "whLocCode", headerText : '<spring:message code="sal.text.branch" />', width : '8%' , style : 'left_style' , editable : false},
-                            {dataField : "whLocCode", headerText : '<spring:message code="sal.title.warehouse" />', width : '8%' , editable : false},
+                            {dataField : "brnchDesc", headerText : '<spring:message code="sal.text.branch" />', width : '8%' , style : 'left_style' , editable : false},
+                            {dataField : "whLocDesc", headerText : '<spring:message code="sal.title.warehouse" />', width : '8%' , editable : false},
                             {dataField : "posTotAmt", headerText : '<spring:message code="sal.text.totAmt" />', width : '8%' , editable : false},
                             {dataField : "stusId", headerText : "Status", width : '10%',
                             	labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
@@ -788,23 +788,28 @@ function fn_posReceipt(){
     }
 
     console.log("clickChk[0].item.posModuleTypeId : " + clickChk[0].item.posModuleTypeId);
+    console.log("clickChk[0].item.posTypeId : " + clickChk[0].item.posTypeId);
 
-    if(clickChk[0].item.posModuleTypeId == 2390){  //Pos Sales
 
-    	fn_report(clickChk[0].item.posNo, clickChk[0].item.posTypeId);
+
+    fn_report(clickChk[0].item.posNo, clickChk[0].item.posModuleTypeId , clickChk[0].item.posTypeId );
+
+/*     if(clickChk[0].item.posModuleTypeId == 2390){  //Pos Sales
+
+    	fn_report(clickChk[0].item.posNo, clickChk[0].item.posTypeId , clickChk[0].item.posModuleTypeId );
 
     }else{
     	Common.alert('<spring:message code="sal.alert.msg.disallowPrint" />');
     	return;
-    }
+    } */
 
 }
 
 
-function fn_report(posNo, posTypeId){
+function fn_report(posNo, posModuleTypeId, posTypeId){
 
 	//insert Log
-	fn_insTransactionLog(posNo, posTypeId);
+	fn_insTransactionLog(posNo, posModuleTypeId ,  posTypeId);
 
 	var option = {
             isProcedure : true
@@ -815,7 +820,8 @@ function fn_report(posNo, posTypeId){
 	$("#reportFileName").val("/sales/POSReceipt_New.rpt");
 	$("#viewType").val("PDF");
 	$("#V_POSREFNO").val(posNo);
-	$("#V_POSMODULETYPEID").val(posTypeId);
+	$("#V_POSMODULETYPEID").val(posModuleTypeId);
+	 $("#V_POSTYPEID").val(posTypeId);
 
 	Common.report("rptForm", option);
 }
@@ -828,8 +834,10 @@ function fn_insTransactionLog(posNo, posTypeId){
     transacMap.rptSubName = "POS Receipt - PDF";
     transacMap.rptEtType = "pdf";
     transacMap.rptPath = getContextPath()+"/sales/POSReceipt_New.rpt";
-    transacMap.rptParamtrValu = "@PosRefNo," + posNo + ";@POSModuleTypeID," + posTypeId;
+    transacMap.rptParamtrValu = "@PosRefNo," + posNo  + ";@PosTypeId," + posTypeId;
     transacMap.rptRem = "";
+
+    console.log("transacMap " + transacMap);
 
     Common.ajax("GET", "/sales/pos/insertTransactionLog", transacMap, function(result){
     	if(result == null){
@@ -854,6 +862,7 @@ function fn_insTransactionLog(posNo, posTypeId){
     <!-- Receipt params -->
     <input type="hidden" id="V_POSREFNO" name="V_POSREFNO" />
     <input type="hidden" id="V_POSMODULETYPEID" name="V_POSMODULETYPEID" />
+    <input type="hidden" id="V_POSTYPEID" name="V_POSTYPEID">
 
     <!--Raw Data  -->
     <input type="hidden" id="V_WHERESQL" name="V_WHERESQL"/>
@@ -866,7 +875,7 @@ function fn_insTransactionLog(posNo, posTypeId){
     <input type="hidden" id="V_SHOWKEYINUSER" name="V_SHOWKEYINUSER">
     <input type="hidden" id="V_SHOWPOSNO" name="V_SHOWPOSNO">
     <input type="hidden" id="V_SHOWMEMBERCODE" name="V_SHOWMEMBERCODE">
-
+    <input type="hidden" id="V_SHOWPOSTYPEID" name="V_SHOWPOSTYPEID">
 </form>
 <section id="content"><!-- content start -->
 <ul class="path">
