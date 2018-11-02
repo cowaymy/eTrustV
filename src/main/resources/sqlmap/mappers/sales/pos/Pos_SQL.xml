@@ -94,7 +94,8 @@
                         CASE WHEN ( Extent5.WH_LOC_ID IS NOT NULL ) THEN Extent5.WH_LOC_DESC ELSE NULL END WH_LOC_DESC ,
                         CASE WHEN  (Extent4.MEM_ID IS NOT NULL) THEN  Extent4.MEM_CODE || ' - ' || Extent4.NAME ELSE 'CASH' END NAME ,
                         CASE WHEN ( NOT ( ( Extent7.TAX_INVC_ID IS NULL ) AND ( Extent7.TAX_INVC_REF_NO IS NULL ) ) ) THEN Extent7.TAX_INVC_REF_NO ELSE '' END TAX_INVC_REF_NO,
-                        Extent1.BRNCH_ID
+                        Extent1.BRNCH_ID,
+                        Extent9.CODE BRNCH_DESC
                 FROM SAL0057D Extent1
                         JOIN SYS0013M Extent2   ON Extent2.CODE_ID = Extent1.POS_MODULE_TYPE_ID
                         JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.POS_TYPE_ID
@@ -102,6 +103,7 @@
                         LEFT JOIN SYS0028M Extent5   ON Extent5.WH_LOC_ID = Extent1.POS_WH_ID
                         JOIN SYS0047M Extent6   ON Extent6.USER_ID = Extent1.POS_CRT_USER_ID
                         LEFT JOIN PAY0031D Extent7   ON Extent7.TAX_INVC_SVC_NO = Extent1.POS_NO
+                        LEFT JOIN SYS0005M Extent9   ON Extent9.BRNCH_ID = Extent1.BRNCH_ID
                         <if test="(deducMem != null and deducMem != '') or (deducMemNric != null and deducMemNric != '' )">
                             LEFT JOIN (SELECT DISTINCT POS_ID, MEM_CODE, NRIC FROM SAL0058D) Extent8   ON Extent8.POS_ID = Extent1.POS_ID
                         </if>
@@ -346,6 +348,72 @@
 									       AND STUS_CODE_ID = 1
 									      ) T1
 									WHERE T1.CNT <= 1)
+                                                                              Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                                 ]]>
+
+                             <![CDATA[
+                            LEFT JOIN
+                                (SELECT LOC_ID , ITM_CODE , SUM(NVL(REQST_QTY , 0)) - SUM(NVL(MOV_QTY , 0)) AS BOOKQTY FROM LOG0075M WHERE NVL(FINAL_CMPLT , 'N') <> 'Y'  GROUP BY LOC_ID , ITM_CODE ) Extent4
+                                 ON Extent2.STK_CODE = Extent4.ITM_CODE  AND Extent2.LOC_ID = Extent4.LOC_ID
+                             ]]>
+                         ) Project1
+                    WHERE   1 = 1
+                    <if test=" null != stkId and stkId.length > 0">
+                              AND Project1.STK_ID IN
+                              <foreach collection="stkId" item="item" open="(" separator="," close=")">
+                                  #{item}
+                              </foreach>
+                    </if>
+     </select>
+
+         <select id="chkStockList2" parameterType="Map" resultType="egovMap">
+                        SELECT
+                        Project1.LOC_ID,
+                        Project1.STK_ID,
+                        Project1.STK_CODE,
+                        Project1.STK_DESC,
+                        Project1.STK_TYPE_ID,
+                        Project1.STK_CTGRY_ID,
+                        NVL(Project1.QTY, 0 ) QTY,
+                        Project1.MOV_QTY,
+                        NVL(Project1.AMT , 0) AMT,
+                        (AMT * 100) / 100 SUB_CHANGES,
+                        AMT - ((AMT * 100) / 100) TAXES,
+                        Project1.SERIAL_CHK
+                    FROM (
+                            SELECT
+                                NVL(Extent2.LOC_ID, 0) LOC_ID,
+                                Extent1.STK_ID,
+                                Extent1.STK_CODE,
+                                Extent1.STK_DESC,
+                                Extent1.STK_TYPE_ID,
+                                Extent1.STK_CTGRY_ID,
+                                (Extent2.QTY - NVL(Extent4.BOOKQTY , 0)) AS QTY ,
+                                Extent2.MOV_QTY,
+                                <!-- NVL(Extent3.AMT, 0) AMT, -->
+                                NVL(Extent3.AMT, 0) AMT ,
+                                Extent1.SERIAL_CHK
+                            FROM
+                                SYS0026M Extent1
+                            LEFT JOIN
+                                LOG0056M Extent2 ON Extent2.STK_CODE = Extent1.STK_CODE AND Extent2.LOC_ID = #{locId}
+                            LEFT JOIN
+                               <!-- Price  -->
+                               <!-- <![CDATA[
+                               (SELECT STK_ID , AMT FROM  SAL0016M WHERE APP_TYPE_ID = 67 AND STUS_CODE_ID = 1) Extent3 ON Extent3.STK_ID = Extent1.STK_ID
+                               ]]>       -->
+                               <![CDATA[
+                                (SELECT
+                                         T1.STK_ID, T1.AMT
+                                       FROM
+                                          (SELECT
+                                              STK_ID, AMT, UPD_DT, ROW_NUMBER() OVER(PARTITION BY STK_ID ORDER BY UPD_DT DESC) CNT
+                                           FROM SAL0016M
+                                           WHERE MEM_PAC_ID = 0
+                                           AND APP_TYPE_ID = 67
+                                           AND STUS_CODE_ID = 1
+                                          ) T1
+                                    WHERE T1.CNT <= 1)
                                                                               Extent3 ON Extent3.STK_ID = Extent1.STK_ID
                                  ]]>
 
@@ -1866,6 +1934,7 @@
              , T.LVL3_UP_ID
              , T.LVL2_UP_ID
              , T.LVL1_UP_ID
+             , T.STUS
           FROM (
              SELECT T1.MEM_ID
                   , T1.MEM_CODE
@@ -1970,7 +2039,8 @@
                                AND (T3.LVL1_UP_ID   IS NULL)
                                AND (T3.LVL0_UP_ID   IS NULL))) THEN T3.LVL1_UP_ID
                          ELSE 0
-                    END LVL1_UP_ID
+                    END LVL1_UP_ID,
+                    T1.STUS
                FROM ORG0001D T1
                JOIN SYS0013M T2
                  ON T2.CODE_ID = T1.MEM_TYPE
@@ -2031,7 +2101,7 @@
 
 
        <resultMap type="egovMap" id="giMap"/>
-       <select id="posGICallSP_LOGISTIC_POS" parameterType="Map"  statementType="CALLABLE" >
+       <select id="60" parameterType="Map"  statementType="CALLABLE" >
        <![CDATA[
             {
                   call SP_LOGISTIC_POS ( #{psno}, #{retype} ,#{pType} ,#{posItmId}, #{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=giMap})
