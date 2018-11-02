@@ -597,5 +597,6 @@ public interface CustomerMapper {
 
 	EgovMap selectCustomerAgingMonth(Map<String, Object> params);
 
+	EgovMap selectCustomerRentInst(Map<String, Object> params);
 
 }
