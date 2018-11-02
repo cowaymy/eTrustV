@@ -1,5 +1,6 @@
 package com.coway.trust.web.sales.customer;
 
+import java.math.BigDecimal;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -1831,10 +1832,29 @@ public class CustomerController {
 
 		EgovMap basicinfo = null;
 		EgovMap agingmonth = null;
+		//EgovMap icare = null;
+		EgovMap rentInst = null;
+		String valid = null;
 
 		LOGGER.info("##### customeView START #####");
 		basicinfo = customerService.selectCustomerCheckingListPop(params);
 		agingmonth = customerService.selectCustomerAgingMonth(params);
+		rentInst = customerService.selectCustomerRentInst(params);
+	    String icare = (String)basicinfo.get("iCare");
+	    String rentStatus = (String) basicinfo.get("rentStus");
+	    String stkCategory = (String) basicinfo.get("stkCategory");
+	    BigDecimal valiOutStanding = (BigDecimal) agingmonth.get("agingMth");
+	    valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+	    BigDecimal rentInstNo = (BigDecimal) rentInst.get("rentInstNo");
+	    int apptypeId = Integer.parseInt(String.valueOf(basicinfo.get("appTypeId")));
+
+
+		if("REG".equals(rentStatus)  && "No".equals(icare) && "WP".equals(stkCategory) && (rentInstNo.compareTo(BigDecimal.valueOf(6)) == 0 || rentInstNo.compareTo(BigDecimal.valueOf(6)) == 1) && apptypeId == 66 && valiOutStanding.compareTo(BigDecimal.valueOf(2)) == -1){
+			valid = "Yes";
+		}
+		else{
+			valid = "No";
+		}
 
 
 		//ajax param
@@ -1843,6 +1863,8 @@ public class CustomerController {
 		// infomation param
 		model.addAttribute("result", basicinfo);
 		model.addAttribute("aging", agingmonth);
+		model.addAttribute("verify", valid);
+
 
 		return "sales/order/customerCheckingViewPop";
 	}
