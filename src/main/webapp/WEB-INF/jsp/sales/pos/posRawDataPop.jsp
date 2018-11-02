@@ -41,11 +41,13 @@ function fn_posRawData(){
 	var option = {
             isProcedure : true
     };
-
+// ADDED CHECKING POS MODULE TYPE ID FOR POS RAW DATA REPORT -- TPY
+	var posModuleTypeId = "";
 	var whereSql = '';
 
 	if($("#_cmbPosTypeId").val() != null && $("#_cmbPosTypeId").val() != '' ){
 		whereSql += " AND M.POS_MODULE_TYPE_ID = " + $("#_cmbPosTypeId").val();
+		posModuleTypeId = $("#_cmbPosTypeId").val();
 	}
 
 	if($("#_cmbSalesTypeId").val() != null && $("#_cmbSalesTypeId").val() != '' ){
@@ -90,13 +92,13 @@ function fn_posRawData(){
     }
 
     console.log("whereSql : " + whereSql);
-
+    console.log("POS Module Type Id : " + posModuleTypeId);
     //params Setting
     $("#reportFileName").val("/sales/POSRawData_Filter.rpt");
     $("#viewType").val("EXCEL");
     //
     $("#V_WHERESQL").val(whereSql);
-
+    $("#V_POSMODULETYPEID").val(posModuleTypeId);
    //Ins Log
     fn_insTransactionLogRaw(whereSql);
     Common.report("rptForm", option);
