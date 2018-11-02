@@ -1461,7 +1461,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 		//aSEntryVO.setAsUpdDt("");
 		aSEntryVO.setAsEntryIsSynch(0);
 		aSEntryVO.setAsEntryIsEdit(0);
-		aSEntryVO.setAsTypeId(2972);
+		aSEntryVO.setAsTypeId(3154);
 		aSEntryVO.setAsReqsterTypeId(0);
 		aSEntryVO.setAsIsBSWithin30days(0);
 		aSEntryVO.setAsAllowComm(0);
