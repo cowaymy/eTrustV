@@ -134,13 +134,14 @@ $(document).ready(function() {
              CommonCombo.make('_insPosSystemType', "/sales/pos/selectPosModuleCodeList", systemPopParam , '', optionModule);
              //PAYMENT TAB DISPLAY
              $("#_purchaseTab").click();
-             $("#_payTab").css("display" , "none");
+             //$("#_payTab").css("display" , "none");
+             $("#_payTab").css("display" , "");
 
              //MEM GRID DISPLAY
-             $("#_purchMemBtn").css("display" , "");
-             $("#_mainMemberGrid").css("display" , "");
-             //$("#_purchMemBtn").css("display" , "none");
-             //$("#_mainMemberGrid").css("display" , "none");
+             //$("#_purchMemBtn").css("display" , "");  // DISABLE MEMBER LIST GRID -- TPY 
+             //$("#_mainMemberGrid").css("display" , "");
+             $("#_purchMemBtn").css("display" , "none");
+             $("#_mainMemberGrid").css("display" , "none");
 
              //SERIAL GRID DISPLAY
              $("#_mainSerialGrid").css("display" , "none");
@@ -251,13 +252,13 @@ $(document).ready(function() {
     	if($("#_insPosModuleType").val() == 2390 || $("#_insPosModuleType").val() == 2391) {
 
 
-     		if($("#_insPosModuleType").val() == 2391){
-
-    			var memSize = AUIGrid.getGridData(memGridID);
+     	 	if($("#_insPosModuleType").val() == 2391){
+// DISABLE MEMBER LIST GRID CHECKING -- TPY
+/*     			var memSize = AUIGrid.getGridData(memGridID);
     			if(memSize == null || memSize.length <= 0){
     				Common.alert('* Please make sure Member List is not empty. ');
     				return;
-    			}
+    			} */
     		}
 
     		if($("#_insPosSystemType").val() == 1352){ //Pos Filter / Spare Part / Miscellaneous
@@ -280,6 +281,17 @@ $(document).ready(function() {
     		}
 
     	    if($("#_insPosSystemType").val() == 1353){ // Pos Item Bank
+// ADDED CHECKING FOR BRANCH & WAREHOUSE BEFORE PURCHASE ITEM -- TPY
+                // 창고 Validation
+                if($("#_cmbWhBrnchIdPop").val() == null || $("#_cmbWhBrnchIdPop").val() == ''){
+                    Common.alert('<spring:message code="sal.alert.msg.selectWarehsBrnch" />');
+                    return;
+                }
+                if($("#_hidLocId").val() == null || $("#_hidLocId").val() == ''){
+                    Common.alert('<spring:message code="sal.alert.msg.warehsHasNoBrnch" />');
+                    return;
+                }
+
     	    //	$("#_cmbWhBrnchIdPop").attr({"disabled" : "disabled" , "class" : "w100p disabled"});
     	    	$("#_hidInsPosModuleType").val($("#_insPosModuleType").val());
                 $("#_hidInsPosSystemType").val($("#_insPosSystemType").val());
@@ -322,14 +334,14 @@ $(document).ready(function() {
     		Common.alert('<spring:message code="sal.alert.msg.selectItms" />');
     		return;
     	}
-
-    	//Member Grid Null Check
-    	if($("#_insPosModuleType").val() == 2391){
+// DISABLE MEMBER LIST GRID CHECKING -- TPY
+    	//Member Grid Null Check 
+/*      	if($("#_insPosModuleType").val() == 2391){
     		if(AUIGrid.getGridData(memGridID) <= 0){
                 Common.alert('<spring:message code="sal.alert.msg.selectMembers" />');
                 return;
             }
-    	}
+    	} */
 
     	//Member Code and Id Null Check
     	if(null == $("#salesmanPopCd").val() || '' == $("#salesmanPopCd").val()){
@@ -1105,7 +1117,7 @@ function fn_inputAmt(obj){
 <tr>
     <th scope="row"><spring:message code="sal.title.text.recvDate" /></th>
     <td colspan="2">
-        <input type="text" title="기준년월" class="j_date w100p" placeholder="MM/YYYY" readonly="readonly"  id="_recvDate" name="recvDate"/>
+        <input type="text" title="" class="j_date w100p" placeholder="MM/YYYY" readonly="readonly"  id="_recvDate" name="recvDate"/>
     </td>
 </tr>
 <tr>
