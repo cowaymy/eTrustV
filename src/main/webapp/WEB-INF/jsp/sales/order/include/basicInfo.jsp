@@ -83,7 +83,9 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.obligationPeriod" /></th>
-    <td colspan="5">${orderDetail.basicInfo.obligtYear}</td>
+    <td colspan="1">${orderDetail.basicInfo.obligtYear}</td>
+    <th scope="row"><spring:message code="sal.text.AddCmpt" /></th>
+    <td colspan="3">${orderDetail.basicInfo.addCmpt}</td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
