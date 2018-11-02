@@ -143,24 +143,45 @@
     function fn_doSaveCreditCard() {
         console.log('fn_doSaveBankAcc() START');
 
-        Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
+        var checkCrc = {
+                //ccType : $("#cmbCrcTypeId").val(),
+                //ccBank : $("#cmbCrcBankId").val(),
+                cardNo : $("#custOriCrcNo").val(),
+                //expDate : $("#expDate").val(),
+                //nameCard : $("#custCrcOwner").val(),
+                //cType : $("#cmbCardTypeId").val(),
+                nric : "${insNric}",
+                src : "EC"
+            };
 
-                Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+        console.log(checkCrc);
 
-                if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
-        	        fn_loadCreditCard2(result.data);
-        	        $('#addCrcCloseBtn').click();
-        	    }
+        Common.ajax("GET", "/sales/customer/checkCrc.do", checkCrc, function(result) {
+            console.log(result);
 
-            }, function(jqXHR, textStatus, errorThrown) {
-                try {
-                    Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                }
-                catch(e) {
-                    console.log(e);
-                }
+            if(result != "0") {
+                Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.</br>Please inform respective HP/Cody.");
+            } else {
+                Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
+
+                        Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+
+                        if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
+                            fn_loadCreditCard2(result.data);
+                            $('#addCrcCloseBtn').click();
+                        }
+
+                    }, function(jqXHR, textStatus, errorThrown) {
+                        try {
+                             Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                        }
+                        catch(e) {
+                            console.log(e);
+                        }
+                    }
+                );
             }
-        );
+        });
     }
 </script>
 
@@ -176,6 +197,7 @@
 <section class="pop_body"><!-- pop_body start -->
 <form id="frmCrCard" method="post">
 <input type="hidden" id="custId" name="custId" value="${custId}" />
+<input type="hidden" id="nric" name="nric" value="${nric}" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>

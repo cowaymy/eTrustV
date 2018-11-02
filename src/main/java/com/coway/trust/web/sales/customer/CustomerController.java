@@ -194,6 +194,7 @@ public class CustomerController {
 
 		model.put("custId", params.get("custId"));
 		model.put("callPrgm", params.get("callPrgm"));
+		model.put("nric", params.get("nric"));
 
 		return "sales/customer/customerCreditCardAddPop"	;
 	}
