@@ -147,8 +147,10 @@ public interface OrderRegisterMapper {
 	EgovMap selectServiceContractPackage(Map<String, Object> params);
 
 	List<EgovMap> selectPrevOrderNoList(Map<String, Object> params);
-	
+
 	List<EgovMap> selectProductComponent(Map<String, Object> params);
+
+	EgovMap selectProductComponentDefaultKey(Map<String, Object> params);
 
 	void insertASEntry(ASEntryVO asEntryVo);
 
