@@ -124,7 +124,7 @@
         Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custOriCrcNo : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
                 if(rsltInfo.length >= 0){
-                    isExist = rsltInfo[i].custId;
+                    isExist = rsltInfo[0].custId;
                 }
             }
         }, null, {async : false});
