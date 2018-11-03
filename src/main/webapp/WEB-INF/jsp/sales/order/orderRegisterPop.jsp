@@ -660,7 +660,7 @@
         });
         $('#addCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC", nric : $('#nric').val()}, null, true);
+            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "ORD_REGISTER_PAYM_CRC"}, null, true);
         });
         $('#selCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
@@ -973,40 +973,28 @@
             }
             else {
                 $('#srvPacId option').remove();
-                // ONGHC - ADD
-                $('#ordProudct').prop("disabled", true);
             }
 
             $('#ordProudct option').remove();
             $('#ordProudct optgroup').remove();
-            // ONGHC - ADD
-            $('#ordPromo option').remove();
-            $('#ordPromo').prop("disabled", true);
-            $('#compType option').remove();
-            $('#compType').addClass("blind");
         });
         $('#srvPacId').change(function() {
-        	// ONGHC - ADD
+
             $('#ordProudct option').remove();
             $('#ordProudct optgroup').remove();
+
             $('#ordPromo option').remove();
-            $('#compType option').remove();
-            $('#ordPromo').prop("disabled", true);
             $('#compType').addClass("blind");
+
 
             var idx    = $("#srvPacId option:selected").index();
             var selVal = $("#srvPacId").val();
 
             if(idx > 0) {
                 var stkType = $("#appType").val() == '66' ? '1' : '2';
-                // ONGHC - ADD
-                $('#ordProudct').removeAttr("disabled");
-                //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
+              //doGetProductCombo('/sales/order/selectProductCodeList.do',  stkType, '', 'ordProudct', 'S', ''); //Product Code
 
                 doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
-            } else {
-            	// ONGHC - ADD
-            	$('#ordProudct').prop("disabled", true);
             }
         });
         $('#ordProudct').change(function() {
@@ -1068,14 +1056,16 @@
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
 
-            //if(stkIdVal == "1243") {
-            	//$('#compType').removeClass("blind");
-                //fn_loadProductComponent(stkIdVal);
-            //}else{
-            	//$('#compType').addClass("blind");
-            //}
-            fn_loadProductComponent(stkIdVal);
-            setTimeout(fn_check, 200);
+            if(stkIdVal == "1243") {
+
+            	$('#compType').removeClass("blind");
+
+                fn_loadProductComponent(stkIdVal);
+            }
+
+            else{
+            	$('#compType').addClass("blind");
+            }
         });
         $('#rentPayMode').change(function() {
 
@@ -1230,18 +1220,6 @@
         });
     });
 
-    // ONGHC ADD
-    function fn_check() {
-  	  console.log($('#compType option').length);
-  	  if ($('#compType option').length <= 1) {
-  	    $('#compType').addClass("blind");
-  	    $('#compType').prop("disabled", true);
-  	  } else {
-  		$('#compType').remove("blind");
-  		$('#compType').removeAttr("disabled");
-  	  }
-    }
-
     function fn_preCheckSave() {
         if(!fn_validCustomer()) {
             $('#aTabCS').click();
@@ -1389,19 +1367,7 @@
 
         //CLEAR SALES
         fn_tabOnOffSet('PAY_CHA', 'HIDE');
-        //fn_tabOnOffSet('BIL_DTL', 'HIDE'); //2018.01.01
-
-        // ONGHC - ADD
-        $('#srvPacId option').remove();
-        $('#ordProudct option').remove();
-        $('#ordProudct optgroup').remove();
-        $('#ordPromo option').remove();
-        $('#compType option').remove();
-
-        $('#compType').addClass("blind");
-        $('#srvPacId option').addClass("blind");
-        $('#ordProudct').prop("disabled", true);
-        $('#ordPromo').prop("disabled", true);
+      //fn_tabOnOffSet('BIL_DTL', 'HIDE'); //2018.01.01
 
         $('#appType').val('');
 
@@ -1781,18 +1747,6 @@ console.log("vBindingNo" + vBindingNo);
             isValid = false;
             msg += '* <spring:message code="sal.alert.msg.plzSelPrd" /><br>';
         }
-
-        // ADD ON COMPONENT CHECKING
-        if ($("#compType option:selected").val() != undefined){
-          console.log($("#compType option").length);
-          if($("#compType option").length > 1) {
-        	if ($("#compType option:selected").index() <= 0) {
-        	  isValid = false;
-              msg += '* <spring:message code="sal.alert.msg.plzSelAddCmpt" /><br>';
-            }
-          }
-        }
-        console.log("log :: " + $("#compType option:selected").val());
 
         if(!FormUtil.checkReqValue($('#hiddenSalesmanId'))) {
 
@@ -2235,20 +2189,11 @@ console.log("vBindingNo" + vBindingNo);
 
     //LoadProductComponent
     function fn_loadProductComponent(stkId) {
-    	$('#compType').removeClass("blind");
-        $('#compType').removeClass("disabled");
 
-        var key = 0;
-        Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : stkId}, function(defaultKey) {
-          if(defaultKey != null) {
-            key = defaultKey.code;
-            console.log(': '+key);
-          }
-          $('#compType').val(key).change();
-        });
 
-        console.log(key);
-        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
+
+
+        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', 'fn_setDefaultCompId'); //Common Code
     }
 
     //LoadProductPromotion

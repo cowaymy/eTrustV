@@ -410,8 +410,6 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 			getOldOrderID = CommonUtils.intNvl(Integer.parseInt(String.valueOf(ordInfo.get("salesOrdId"))));
 		}
 
-		EgovMap GetExpDate = orderRegisterMapper.selectSvcExpire(getOldOrderID);
-
         if (getOldOrderID <= 0) {
         	ROOT_STATE = "ROOT_1";
         }
@@ -430,105 +428,65 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             	}
 
             	else {
-            		if(GetExpDate == null) {
-                    	ROOT_STATE = "ROOT_3";
-            		}
-            		else {
+					EgovMap validateRentOutright = this.selectSalesOrderM(getOldOrderID, 0);
 
-            			Calendar calNow = Calendar.getInstance();
+					// Renatal
+					if (SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer
+							.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) {
 
-            			int nowYear = calNow.YEAR;
-            			int nowMonth = calNow.MONTH + 1;
-            			int nowDate = calNow.DATE;
+						if (this.isVerifyOldSalesOrderRentalScheme(getOldOrderID, 1)) { // Kit --ex-trade only allow
+																						// rental status REG
 
-            			logger.info("!@#### nowYear :"+nowYear);
-            			logger.info("!@#### nowMonth:"+nowMonth);
-            			logger.info("!@#### nowDate :"+nowDate);
+							params.put("ordId", getOldOrderID);
+							orderLedgerMapper.getOderOutsInfo(params);
+							EgovMap map = (EgovMap) ((ArrayList) params.get("p1")).get(0);
 
-            			Date srvPrdExprDt = (Date)GetExpDate.get("srvPrdExprDt");
-            			Date srvPrdStartDt = (Date)GetExpDate.get("srvPrdStartDt");
+							BigDecimal valiOutStanding = new BigDecimal((String) map.get("ordOtstndMth"));
+							valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
 
-            			Calendar calExt = Calendar.getInstance();
-            			Calendar calSrt = Calendar.getInstance();
+							if (valiOutStanding.compareTo(BigDecimal.ZERO) > 2) {
+								msg = msg + " -With Outstanding payment not allowed for I-Care promo. <br/>";
+								isInValid = "InValid";
+							}
 
-            			calExt.setTime(srvPrdExprDt);
-            			calSrt.setTime(srvPrdStartDt);
+							EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
 
-            			int expYear = calExt.YEAR;
-            			int expMonth = calExt.MONTH + 1;
+							if (Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < 6) {
+								msg = msg + " -Below 6th months not allowed to entitle I-Care Promo. <br/>";
+								isInValid = "InValid";
+							} else if (Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) >= 60) {
+								msg = msg + " -Above 60th months not allowed to entitle I-Care Promo. <br/>";
+								isInValid = "InValid";
+							}
 
-            			int srtYear = calSrt.YEAR;
-            			int srtMonth = calSrt.MONTH;
+							if (custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
+								msg = msg + " -Different Customer is not allowed.";
+								isInValid = "InValid";
+							}
 
-            			calExt.add(Calendar.MONTH, -4);
-            			calSrt.add(Calendar.MONTH, 6);
+							ROOT_STATE = "ROOT_4";
 
-            			msg = "-SVM End Date : <b>" + (String)GetExpDate.get("srvPrdExprDtMmyy") + "</b> <br/>";
+							txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
+									+ (String) promoMap.get("promoDesc");
+						} else {
+							ROOT_STATE = "ROOT_5";
+						}
+					} else if (SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
+							|| SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) { // outright,Installment
 
-              			if((calSrt.compareTo(calNow) <= 0) || (calExt.compareTo(calNow) >= 0)) {
-              				isInValid = "InValid";
-              			}
+						ROOT_STATE = "ROOT_6";
+						msg = msg + " -Outright and Installment Order are not eligable for I-Care Programme.<br/>";
+						isInValid = "InValid";
 
-              			EgovMap validateRentOutright = this.selectSalesOrderM(getOldOrderID, 0);
+					}
 
-              			//Renatal
-              			if(SalesConstants.APP_TYPE_CODE_ID_RENTAL == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) {
+					else {
+						ROOT_STATE = "ROOT_7";
 
-              				if(this.isVerifyOldSalesOrderRentalScheme(getOldOrderID,1)) { //Kit --ex-trade only allow rental status REG
+						txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
+								+ (String) promoMap.get("promoDesc");
 
-              					params.put("ordId",getOldOrderID);
-              					orderLedgerMapper.getOderOutsInfo(params);
-              					EgovMap   map =  (EgovMap)  ((ArrayList)params.get("p1")).get(0);
-
-              					BigDecimal valiOutStanding = new BigDecimal((String)map.get("ordOtstndMth"));
-              					valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
-
-              					if(valiOutStanding.compareTo(BigDecimal.ZERO) > 2) {
-                                    msg = msg + " -With Outstanding payment not allowed for I-Care promo. <br/>";
-                                    isInValid = "InValid";
-              					}
-
-              					EgovMap ValiRentInstNo = orderRegisterMapper.selectAccRentLedgers(getOldOrderID);
-
-              					if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < 6) {
-                                    msg = msg + " -Below 6th months not allowed to entitle I-Care Promo. <br/>";
-                                    isInValid = "InValid";
-              					}else if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) >= 60){
-              						msg = msg + " -Above 60th months not allowed to entitle I-Care Promo. <br/>";
-                                    isInValid = "InValid";
-              					}
-
-              					if(custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
-                                    msg = msg + " -Different Customer is not allowed.";
-                                    isInValid = "InValid";
-              					}
-
-              					ROOT_STATE = "ROOT_4";
-
-              					txtInstSpecialInstruction = "(Old order No.)" + (String)params.get("salesOrdNo") + " , " + (String)promoMap.get("promoDesc")
-              					                        + " , SVM expired : " + (String)GetExpDate.get("srvPrdExprDtMmyy");
-              				}
-              				else {
-              					ROOT_STATE = "ROOT_5";
-              				}
-              			}
-              			else if(SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
-              					|| SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) { //outright,Installment
-
-          					ROOT_STATE = "ROOT_6";
-          					msg = msg + " -Outright and Installment Order are not eligable for I-Care Programme.<br/>";
-                            isInValid = "InValid";
-
-              			}
-
-              			else {
-          					ROOT_STATE = "ROOT_7";
-
-          					txtInstSpecialInstruction = "(Old order No.)" + (String)params.get("salesOrdNo") + " , " + (String)promoMap.get("promoDesc")
-		                        + " , SVM expired : " + (String)GetExpDate.get("srvPrdExprDtMmyy");
-
-              			}
-            		}
+					}
             	}
         	}
         	else {
