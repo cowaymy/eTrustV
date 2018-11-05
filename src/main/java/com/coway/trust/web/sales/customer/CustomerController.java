@@ -1837,13 +1837,22 @@ public class CustomerController {
 		String valid = null;
 		BigDecimal valiOutStanding;
 		BigDecimal rentInstNo;
+		int oldId;
+		String icare;
 
 		LOGGER.info("##### customeView START #####");
 		basicinfo = customerService.selectCustomerCheckingListPop(params);
 		agingmonth = customerService.selectCustomerAgingMonth(params);
 		rentInst = customerService.selectCustomerRentInst(params);
+		oldId = customerService.selectCustomerOldId(params);
 
-	    String icare = (String)basicinfo.get("iCare");
+	    //String icare = (String)basicinfo.get("iCare");
+		if(oldId > 0){
+			icare = "Yes";
+		}
+		else{
+			icare = "No";
+		}
 	    String rentStatus = (String) basicinfo.get("rentStus");
 	    String stkCategory = (String) basicinfo.get("stkCategory");
 	    if(agingmonth != null){
@@ -1880,7 +1889,7 @@ public class CustomerController {
 		model.addAttribute("result", basicinfo);
 		model.addAttribute("aging", agingmonth);
 		model.addAttribute("verify", valid);
-
+		model.addAttribute("icare", icare);
 
 		return "sales/order/customerCheckingViewPop";
 	}

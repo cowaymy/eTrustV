@@ -2343,7 +2343,7 @@
     </if>
   </select>
 
-      <select id="selectCustomerCheckingList" parameterType="Map" resultType="egovMap">
+<select id="selectCustomerCheckingList" parameterType="Map" resultType="egovMap">
 
         SELECT
                 A.SALES_ORD_ID,
@@ -2357,7 +2357,9 @@
                 H.CODE_NAME PAY_MODE,
                 A.PV_MONTH ,
                 A.PV_YEAR,
-                I.FIRST_INSTALL_DT INSTALL_DT,
+                DECODE (I.install_dt,
+                  NULL, '01/01/1900',
+                  TO_CHAR (I.install_dt, 'DD/MM/YYYY')) INSTALL_DT,
                 CASE WHEN A.SALES_ORD_ID_OLD is null or A.SALES_ORD_ID_OLD = 0 THEN 'No' ELSE 'Yes' END I_CARE,
                 D.STUS_CODE_ID RENT_STUS,
                 J.NAME BANK_NAME,
@@ -2372,7 +2374,18 @@
                 LEFT JOIN SYS0013M F ON F.CODE_ID = A.APP_TYPE_ID
                 LEFT JOIN SAL0074D G ON G.SALES_ORD_ID = A.SALES_ORD_ID
                 LEFT JOIN SYS0013M H ON H.CODE_ID = G.MODE_ID
-                LEFT JOIN SAL1010V I ON I.ORD_ID = A.SALES_ORD_ID
+                LEFT JOIN (SELECT SALES_ORD_ID, INSTALL_ENTRY_ID
+                             FROM (SELECT SALES_ORD_ID,
+                                          INSTALL_ENTRY_ID,
+                                          RANK ()
+                                          OVER (
+                                             PARTITION BY SALES_ORD_ID
+                                             ORDER BY INSTALL_ENTRY_ID ASC)
+                                             RANK
+                                     FROM sal0046d
+                                    WHERE stus_code_id = 4)
+                            WHERE RANK = 1)Z ON Z.SALES_ORD_ID = A.SALES_ORD_ID
+                LEFT JOIN SAL0047D I ON I.ENTRY_ID = Z.INSTALL_ENTRY_ID
                 LEFT JOIN SYS0004M J ON J.BANK_ID = G.BANK_ID
                 LEFT JOIN SYS0026M L ON L.STK_ID = B.ITM_STK_ID
                                          WHERE 1=1
@@ -2411,6 +2424,7 @@
                 A.CUST_ID,
                 A.PROMO_ID,
                 M.CODE STK_CATEGORY
+
 
                 FROM SAL0001D A
                 LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
@@ -2469,6 +2483,20 @@
                       </if>
                         AND EXTRACT(MONTH FROM A.RENT_INST_DT) = EXTRACT(MONTH FROM SYSDATE)
                         AND EXTRACT(YEAR FROM A.RENT_INST_DT) = EXTRACT(YEAR FROM SYSDATE)
+
+    </select>
+
+        <select id="selectCustomerOldId" parameterType="Map" resultType="Integer">
+
+        SELECT COUNT(*)
+
+                   FROM SAL0001D A
+                   WHERE 1=1
+
+                      <if test="ordId != null and ordId !=''">
+                        AND A.SALES_ORD_ID_OLD = #{ordId}
+                      </if>
+
 
     </select>
 </mapper>

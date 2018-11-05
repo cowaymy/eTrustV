@@ -840,4 +840,10 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		return customerMapper.selectCustomerRentInst(params);
 	}
 
+	@Override
+	public int selectCustomerOldId(Map<String, Object> params) {
+
+		return customerMapper.selectCustomerOldId(params);
+	}
+
 }

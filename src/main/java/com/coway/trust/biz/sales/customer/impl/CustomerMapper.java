@@ -599,4 +599,6 @@ public interface CustomerMapper {
 
 	EgovMap selectCustomerRentInst(Map<String, Object> params);
 
+	int selectCustomerOldId(Map<String, Object> params);
+
 }

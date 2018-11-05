@@ -64,7 +64,7 @@ $(document).ready(function(){
 </tr>
 <tr>
     <th scope="row">Pair with I-Care</th>
-    <td>${result.iCare }</td>
+    <td>${icare }</td>
     <th scope="row">Aging Month</th>
     <td>${aging.agingMth }</td>
 </tr>
