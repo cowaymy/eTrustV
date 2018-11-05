@@ -113,7 +113,8 @@ SELECT PLAN_ID
                              , 'divOdd' AS DIV_ODD
                              , 'overdue' AS OVERDUE
                           FROM SCM0018M Z
-                         WHERE TO_CHAR(Z.WEEK_TH_SN_START, 'YYYYMM') BETWEEN #{salesPlanFrom} AND #{salesPlanTo}
+                         WHERE TO_CHAR(Z.WEEK_TH_SN_START, 'YYYYMM') BETWEEN #{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, '0')
+                                                                         AND #{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) + 4 FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, '0')
                         )
                 )
          PIVOT (
@@ -327,7 +328,7 @@ VALUES
 (
        SCM0005M_PLAN_ID_SEQ.NEXTVAL
      , #{scmYearCbBox}
-     , #{planMonth}
+     , (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox})
      , #{scmWeekCbBox}
      , #{scmCdcCbBox}
      , 0
@@ -903,7 +904,7 @@ UPDATE SCM0006D
 SELECT A.BEF_PLAN_YEAR
      , A.BEF_PLAN_WEEK
      , (
-        SELECT Z.SCM_MONTH
+        SELECT MIN(Z.SCM_MONTH)
           FROM SCM0018M Z
          WHERE Z.SCM_YEAR = A.BEF_PLAN_YEAR
            AND Z.WEEK_TH = A.BEF_PLAN_WEEK
@@ -913,7 +914,7 @@ SELECT A.BEF_PLAN_YEAR
         SELECT MIN(A.WEEK_TH)
           FROM SCM0018M A
          WHERE A.SCM_YEAR = #{scmYearCbBox}
-           AND A.SCM_MONTH = (SELECT Z.SCM_MONTH FROM SCM0018M Z WHERE Z.SCM_YEAR = #{scmYearCbBox} AND Z.WEEK_TH = #{scmWeekCbBox})
+           AND A.SCM_MONTH = (SELECT MIN(Z.SCM_MONTH) FROM SCM0018M Z WHERE Z.SCM_YEAR = #{scmYearCbBox} AND Z.WEEK_TH = #{scmWeekCbBox})
         ) AS FST_WEEK
      , (
         SELECT MIN(Z.LEAD_TM)

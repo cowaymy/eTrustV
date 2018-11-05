@@ -110,7 +110,8 @@ SELECT PLAN_ID
                              , 'm3' AS M3
                              , 'm4' AS M4
                           FROM SCM0018M Z
-                         WHERE TO_CHAR(Z.WEEK_TH_SN_START, 'YYYYMM') BETWEEN #{salesPlanFrom} AND #{salesPlanTo}
+                         WHERE TO_CHAR(Z.WEEK_TH_SN_START, 'YYYYMM') BETWEEN #{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, '0')
+                                                                         AND #{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) + 4 FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, '0')
                         )
                 )
          PIVOT (
@@ -172,31 +173,31 @@ SELECT A.WEEK_CNT AS M0_WEEK_CNT
         SELECT COUNT(*) AS WEEK_CNT
           FROM SCM0018M Z
          WHERE Z.USE_YN = 'Y'
-           AND TO_CHAR(Z.WEEK_TH_SN_END, 'YYYYMM') = #{scmYearCbBox} || LPAD(#{planMonth}, 2, 0)
+           AND TO_CHAR(Z.WEEK_TH_SN_END, 'YYYYMM') = #{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, '0')
         ) A
      , (
         SELECT COUNT(*) AS WEEK_CNT
           FROM SCM0018M Z
          WHERE Z.USE_YN = 'Y'
-           AND TO_CHAR(Z.WEEK_TH_SN_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD(#{planMonth}, 2, 0), 'YYYYMM'), 1), 'YYYYMM') FROM DUAL)
+           AND TO_CHAR(Z.WEEK_TH_SN_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, '0'), 'YYYYMM'), 1), 'YYYYMM') FROM DUAL)
         )B
      , (
         SELECT COUNT(*) AS WEEK_CNT
           FROM SCM0018M Z
          WHERE Z.USE_YN = 'Y'
-           AND TO_CHAR(Z.WEEK_TH_SN_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD(#{planMonth}, 2, 0), 'YYYYMM'), 2), 'YYYYMM') FROM DUAL)
+           AND TO_CHAR(Z.WEEK_TH_SN_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, '0'), 'YYYYMM'), 2), 'YYYYMM') FROM DUAL)
         )C
      , (
         SELECT COUNT(*) AS WEEK_CNT
           FROM SCM0018M Z
          WHERE Z.USE_YN = 'Y'
-           AND TO_CHAR(Z.WEEK_TH_SN_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD(#{planMonth}, 2, 0), 'YYYYMM'), 3), 'YYYYMM') FROM DUAL)
+           AND TO_CHAR(Z.WEEK_TH_SN_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, '0'), 'YYYYMM'), 3), 'YYYYMM') FROM DUAL)
         )D
      , (
         SELECT COUNT(*) AS WEEK_CNT
           FROM SCM0018M Z
          WHERE Z.USE_YN = 'Y'
-           AND TO_CHAR(Z.WEEK_TH_SN_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD(#{planMonth}, 2, 0), 'YYYYMM'), 4), 'YYYYMM') FROM DUAL)
+           AND TO_CHAR(Z.WEEK_TH_SN_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, '0'), 'YYYYMM'), 4), 'YYYYMM') FROM DUAL)
         )E
 </select>
 
@@ -208,7 +209,7 @@ SELECT A.SCM_YEAR
      , A.IS_SRPTD
      , ROW_NUMBER() OVER (PARTITION BY A.SCM_MONTH ORDER BY A.WEEK_TH) AS RN
   FROM SCM0018M A
- WHERE TO_CHAR(A.WEEK_TH_SN_END, 'YYYYMM') = #{scmYearCbBox} || LPAD(#{planMonth}, 2, 0)
+ WHERE TO_CHAR(A.WEEK_TH_SN_END, 'YYYYMM') = #{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, '0')
    AND A.USE_YN = 'Y'
  ORDER BY A.WEEK_TH
 </select>
@@ -413,7 +414,7 @@ VALUES
 (
        SCM0001M_PLAN_ID_SEQ.NEXTVAL
      , #{planYear}
-     , #{planMonth}
+     , (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox})
      , #{planWeek}
      , #{team}
      , SYSDATE
