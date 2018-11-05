@@ -1835,17 +1835,33 @@ public class CustomerController {
 		//EgovMap icare = null;
 		EgovMap rentInst = null;
 		String valid = null;
+		BigDecimal valiOutStanding;
+		BigDecimal rentInstNo;
 
 		LOGGER.info("##### customeView START #####");
 		basicinfo = customerService.selectCustomerCheckingListPop(params);
 		agingmonth = customerService.selectCustomerAgingMonth(params);
 		rentInst = customerService.selectCustomerRentInst(params);
+
 	    String icare = (String)basicinfo.get("iCare");
 	    String rentStatus = (String) basicinfo.get("rentStus");
 	    String stkCategory = (String) basicinfo.get("stkCategory");
-	    BigDecimal valiOutStanding = (BigDecimal) agingmonth.get("agingMth");
-	    valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
-	    BigDecimal rentInstNo = (BigDecimal) rentInst.get("rentInstNo");
+	    if(agingmonth != null){
+	    	valiOutStanding = (BigDecimal) agingmonth.get("agingMth");
+		    valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+	    }
+	    else{
+	    	valiOutStanding = BigDecimal.ZERO;
+	    }
+	    if(rentInst != null){
+		    rentInstNo = (BigDecimal) rentInst.get("rentInstNo");
+
+	    }
+	    else{
+		    rentInstNo = BigDecimal.ZERO;
+
+	    }
+
 	    int apptypeId = Integer.parseInt(String.valueOf(basicinfo.get("appTypeId")));
 
 
