@@ -167,12 +167,12 @@
     <li><img src="${pageContext.request.contextPath}/resources/images/common/path_home.gif" alt="Home" /></li>
     <li>Sales</li>
     <li>Order</li>
-    <li>Customer Checking UI</li>
+    <li>I-Care Programme Qualification</li>
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
-<h2>Customer Checking UI List</h2>
+<h2>I-Care Programme Qualification</h2>
 
 <ul class="right_btns">
 
