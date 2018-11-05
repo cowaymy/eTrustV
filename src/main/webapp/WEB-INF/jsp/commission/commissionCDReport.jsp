@@ -94,7 +94,12 @@
                     return;
                 }
 
+            if (month >= 10 && year >= 2018){
+                reportFileName = "/commission/CodyComm_PDF_201810.rpt"; //reportFileName
+            }
+            else{
                 reportFileName = "/commission/CodyComm_PDF.rpt"; //reportFileName
+            }
                 reportDownFileName = "CodyCommission_" + today; //report name
                 reportViewType = "PDF"; //viewType
 
