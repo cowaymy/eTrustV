@@ -53,10 +53,12 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 	@Override
 	public List<EgovMap> selectSalesPlanHeader(Map<String, Object> params) {
 		
+		LOGGER.debug("selectSalesPlanHeader : {} ", params);
+		//	2018.11.05 : 스플릿 주차를 조회하는 경우
+		//	기존 : n-2 주차가 가장 앞에 보이는 m1이 m0로
+		//	변경 : n-1 주차가 가장 뒤에 보이는 m0가 m0로 한번 더
+		/*
 		List<EgovMap> selectSalesplanMonth	= salesPlanManagementMapper.selectSalesPlanMonth(params);
-		
-		//	월의 마지막주차가 SPLIT인 경우는 FROM월을 1개월 뒤로 미룸
-		LOGGER.debug("selectSalesplanMonth : {} ", selectSalesplanMonth.toString());
 		
 		String planYear		= params.get("scmYearCbBox").toString();
 		String planMonth	= selectSalesplanMonth.get(0).get("planMonth").toString();
@@ -85,7 +87,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		
 		params.put("salesPlanFrom", salesPlanFrom);
 		params.put("salesPlanTo", salesPlanTo);
-		
+		*/
 		return	salesPlanManagementMapper.selectSalesPlanHeader(params);
 	}
 	@Override

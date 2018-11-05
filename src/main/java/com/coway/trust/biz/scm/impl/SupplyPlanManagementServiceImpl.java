@@ -61,6 +61,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 	@Override
 	public List<EgovMap> selectSupplyPlanHeader(Map<String, Object> params) {
 		
+		LOGGER.debug("selectSupplyPlanHeader : {} ", params);
+		//	2018.11.05 : 스플릿 주차를 조회하는 경우
+		//	기존 : n-2 주차가 가장 앞에 보이는 m1이 m0로
+		//	변경 : n-1 주차가 가장 뒤에 보이는 m0가 m0로 한번 더
+		/*
 		List<EgovMap> selectSupplyPlanMonth	= salesPlanManagementMapper.selectSalesPlanMonth(params);
 		
 		String planYear		= params.get("scmYearCbBox").toString();
@@ -90,7 +95,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		
 		params.put("salesPlanFrom", supplyPlanFrom);
 		params.put("salesPlanTo", supplyPlanTo);
-		
+		*/
 		return	supplyPlanManagementMapper.selectSupplyPlanHeader(params);
 	}
 	@Override
@@ -402,8 +407,8 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
-				//psi5	= psi5 - psi1 + psi3;
-				if ( totLeadTm == iLoopDataFieldCnt2 ) {
+				psi5	= psi5 - psi1 + psi3;
+				/*if ( totLeadTm == iLoopDataFieldCnt2 ) {
 					if ( psi5 < 0 ) {
 						psi5	= 0 - psi1 + psi3;
 					} else {
@@ -411,7 +416,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					}
 				} else {
 					psi5	= psi5 - psi1 + psi3;
-				}
+				}*/
 				m1Psi3	= m1Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
 				psi5Params.put("m1", psi5);
@@ -464,8 +469,8 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
-				//psi5	= psi5 - psi1 + psi3;
-				if ( totLeadTm == iLoopDataFieldCnt2 ) {
+				psi5	= psi5 - psi1 + psi3;
+				/*if ( totLeadTm == iLoopDataFieldCnt2 ) {
 					if ( psi5 < 0 ) {
 						psi5	= 0 - psi1 + psi3;
 					} else {
@@ -473,7 +478,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					}
 				} else {
 					psi5	= psi5 - psi1 + psi3;
-				}
+				}*/
 				m2Psi3	= m2Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
 				psi5Params.put("m1", psi5);
@@ -520,8 +525,8 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
-				//psi5	= psi5 - psi1 + psi3;
-				if ( totLeadTm == iLoopDataFieldCnt2 ) {
+				psi5	= psi5 - psi1 + psi3;
+				/*if ( totLeadTm == iLoopDataFieldCnt2 ) {
 					if ( psi5 < 0 ) {
 						psi5	= 0 - psi1 + psi3;
 					} else {
@@ -529,7 +534,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					}
 				} else {
 					psi5	= psi5 - psi1 + psi3;
-				}
+				}*/
 				m3Psi3	= m3Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
 				psi5Params.put("m3", psi5);
@@ -571,8 +576,8 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
-				//psi5	= psi5 - psi1 + psi3;
-				if ( totLeadTm == iLoopDataFieldCnt2 ) {
+				psi5	= psi5 - psi1 + psi3;
+				/*if ( totLeadTm == iLoopDataFieldCnt2 ) {
 					if ( psi5 < 0 ) {
 						psi5	= 0 - psi1 + psi3;
 					} else {
@@ -580,7 +585,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					}
 				} else {
 					psi5	= psi5 - psi1 + psi3;
-				}
+				}*/
 				m4Psi3	= m4Psi3 + psi3;
 				psi3Params.put("w" + intToStrFieldCnt2, psi3);
 				psi5Params.put("m4", psi5);
