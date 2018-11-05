@@ -551,6 +551,54 @@ function fnSalesPlanHeader() {
 						if ( 1 == intToStrFieldCnt.length ) {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
+						//if ( 0 == i ) {
+						//	startCnt	= parseInt(result.selectChildField[i].weekTh);
+						//} else {
+						//}
+						if ( parseInt(gWeekTh) > startCnt ) {
+							console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							if ( 2 > startCnt.toString().length ) {
+								strWeekTh	= "W0";
+							} else {
+								strWeekTh	= "W";
+							}
+							fieldStr		= "w" + iLoopCnt + "WeekSeq";
+							groupM1.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText : result.selectSalesPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								editable : false,
+								style : "my-backColumn1"
+							});
+							iLoopCnt++;
+						} else if ( parseInt(gWeekTh) == startCnt ) {
+							console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							fieldStr	= "w" + iLoopCnt + "WeekSeq";
+							groupM1.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText : result.selectSalesPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								editable : false,
+								style : "my-backColumn2"
+							});
+							iLoopCnt++;
+						} else {
+							console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							fieldStr	= "w" + iLoopCnt + "WeekSeq";
+							groupM1.children.push({
+								dataField : "w" + intToStrFieldCnt,	//	w00
+								headerText : result.selectSalesPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								//editable : false,
+								style : "my-column"
+							});
+							iLoopCnt++;
+						}
+						startCnt	= startCnt + 1;
+						/*
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
 						groupM1.children.push({
 							dataField : "w" + intToStrFieldCnt,
@@ -560,6 +608,7 @@ function fnSalesPlanHeader() {
 							style : "my-column"
 						});
 						iLoopCnt ++;
+						*/
 						iLoopDataFieldCnt++;
 					}
 					dynamicLayout.push(groupM1);
