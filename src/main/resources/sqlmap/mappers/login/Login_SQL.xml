@@ -281,7 +281,7 @@
             D.CNFM_DT
         FROM SYS0047M A
         INNER JOIN SYS0045M B
-            ON A.USER_ID = B.USER_ID
+            ON A.USER_ID = B.USER_ID and B.STUS_ID NOT IN ('8')
         LEFT JOIN ORG0001D C
         <choose>
             <when test=' loginUserType == "4" '>
