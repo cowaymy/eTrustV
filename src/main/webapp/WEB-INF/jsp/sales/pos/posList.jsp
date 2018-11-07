@@ -447,7 +447,7 @@ function createPosItmDetailGrid(){
 	                            {dataField : "chrg", headerText : '<spring:message code="sal.title.subTotalExclGST" />', width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
 	                            {dataField : "txs", headerText : '<spring:message code="sal.title.gstSixPerc" />', width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
 	                            {dataField : "tot", headerText : '<spring:message code="sal.text.totAmt" />', width : '10%', dataType : "numeric", formatString : "#,##0.00" , editable : false},
-	                            { dataField : "rcvStusId",  headerText : '<spring:message code="sal.title.rcvStusId" />', width : '10%',
+	                            { dataField : "rcvStusId",  headerText : "Status", width : '10%',
 	                               labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
 	                                    var retStr = "";
 	                                    for(var i=0,len=arrItmStusCode.length; i<len; i++) {
