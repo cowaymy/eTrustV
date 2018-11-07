@@ -942,7 +942,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                )
         LEFT JOIN SYS0013M Extent23   ON Extent23.CODE_ID = Extent1.RANK
                 LEFT JOIN SYS0013M Extent24   ON Extent24.CODE_ID = TO_NUMBER(Extent1.BIZ_TYPE,99999.99)
-                LEFT JOIN SYS0047M Extent25   ON Extent25.USER_FULL_NAME = Extent1.FULL_NAME
+                LEFT JOIN SYS0047M Extent25   ON Extent25.HR_CODE = Extent1.MEM_CODE
                 LEFT JOIN SYS0064M Extent26   ON Extent26.AREA_ID = Extent1.AREA_ID
                  left join SYS0004M BANK  ON BANK.BANK_ID = Extent1.BANK
                 LEFT JOIN SYS0013M Extent27   ON Extent27.CODE_ID = Extent1.RELIGION
