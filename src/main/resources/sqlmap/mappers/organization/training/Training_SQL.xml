@@ -35,6 +35,7 @@ SELECT PROJECT1.COURS_ID,
                                FROM      SYS0047M A
                                LEFT JOIN ORG0001D B
                                ON        A.USER_NRIC = B.NRIC AND B.STUS = 1
+                               AND       B.MEM_CODE NOT LIKE '100%'
                                WHERE     A.USER_ID = #{userId})) AS LOGIN_USER_APPLY_YN
 FROM   (
                 SELECT   PROJECT1.COURS_ID,
