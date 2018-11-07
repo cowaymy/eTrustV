@@ -301,19 +301,47 @@
         });
         //Payment Channel - Add New Bank Account
         $('#btnAddBankAccount').click(function() {
-            Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : CUST_ID}, null, true);
+            if($('#hiddenThrdPartyId').val() != null){
+                Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : $('#hiddenThrdPartyId').val()}, null, true);
+
+            }
+            else{
+                Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : CUST_ID}, null, true);
+
+            }
         });
         //Payment Channel - Select Another Bank Account
         $('#btnSelBankAccount').click(function() {
-            Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_BANK_ACC"});
+            if($('#hiddenThrdPartyId').val() != null){
+                Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : $('#hiddenThrdPartyId').val(), callPrgm : "ORD_MODIFY_BANK_ACC"});
+
+            }
+            else{
+                Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_BANK_ACC"});
+
+            }
         });
         //Payment Channel - Add New Credit Card
         $('#addCreditCardBtn').click(function() {
-            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : CUST_ID}, null, true);
+            if($('#hiddenThrdPartyId').val() != null){
+                Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : $('#hiddenThrdPartyId').val()}, null, true);
+
+            }
+            else{
+                Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : CUST_ID}, null, true);
+
+            }
         });
         //Payment Channel - Select Another Credit Card
         $('#selCreditCardBtn').click(function() {
+        if($('#hiddenThrdPartyId').val() != null){
+            Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : $('#hiddenThrdPartyId').val(), callPrgm : "ORD_MODIFY_PAY_CHAN"}, null, true);
+
+        }
+        else{
             Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : CUST_ID, callPrgm : "ORD_MODIFY_PAY_CHAN"}, null, true);
+
+        }
         });
         $('#btnNewCntc').click(function() {
             Common.popupDiv("/sales/customer/updateCustomerNewContactPop.do", {custId: CUST_ID, callParam : "ORD_MODIFY_CNTC_OWN"}, null , true);
