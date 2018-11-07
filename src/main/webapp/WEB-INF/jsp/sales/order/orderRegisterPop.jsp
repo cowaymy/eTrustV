@@ -1076,7 +1076,7 @@
             	//$('#compType').addClass("blind");
             //}
             fn_loadProductComponent(stkIdVal);
-            setTimeout(fn_check, 200);
+            setTimeout(function() { fn_check(0) }, 200);
         });
         $('#rentPayMode').change(function() {
 
@@ -1232,9 +1232,16 @@
     });
 
     // ONGHC ADD
-    function fn_check() {
-  	  console.log("fn_check ::: " + $('#compType option').length);
-  	  if ($('#compType option').length <= 1) {
+    function fn_check(a) {
+  	  console.log("CURRENT LENGTH :: " + $('#compType option').length);
+  	  if ($('#compType option').length <= 0) {
+  		  console.log("WAITING RESPONE :: RETRY  TIMES :: " + a);
+  		  if (a == 3) {
+  			  return;
+  		  } else {
+  			setTimeout(function() { fn_check( parseInt(a) + 1 ) }, 500);
+  		  }
+  	  } else if ($('#compType option').length <= 1) {
   	    $('#compType').addClass("blind");
   	    $('#compType').prop("disabled", true);
   	  } else if ($('#compType option').length > 1) {
@@ -1245,12 +1252,9 @@
         Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
           if(defaultKey != null) {
             key = defaultKey.code;
-            console.log(': '+key);
           }
           $('#compType').val(key).change();
         });
-
-        console.log(key);
   	  }
     }
 
