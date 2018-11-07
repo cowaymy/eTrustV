@@ -1076,7 +1076,7 @@
             	//$('#compType').addClass("blind");
             //}
             fn_loadProductComponent(stkIdVal);
-            setTimeout(fn_check, 200);
+            setTimeout(fn_check, 1000);
         });
         $('#rentPayMode').change(function() {
 
@@ -1233,7 +1233,7 @@
 
     // ONGHC ADD
     function fn_check() {
-  	  console.log("fn_check :: " + $('#compType option').length);
+  	  console.log("fn_check ::: " + $('#compType option').length);
   	  if ($('#compType option').length <= 1) {
   	    $('#compType').addClass("blind");
   	    $('#compType').prop("disabled", true);
@@ -2239,6 +2239,8 @@ console.log("vBindingNo" + vBindingNo);
     	$('#compType').removeClass("blind");
         $('#compType').removeClass("disabled");
 
+        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
+
         var key = 0;
         Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : stkId}, function(defaultKey) {
           if(defaultKey != null) {
@@ -2249,7 +2251,6 @@ console.log("vBindingNo" + vBindingNo);
         });
 
         console.log(key);
-        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
     }
 
     //LoadProductPromotion
