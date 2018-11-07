@@ -1076,7 +1076,7 @@
             	//$('#compType').addClass("blind");
             //}
             fn_loadProductComponent(stkIdVal);
-            setTimeout(fn_check, 1000);
+            setTimeout(fn_check, 200);
         });
         $('#rentPayMode').change(function() {
 
@@ -1234,12 +1234,25 @@
     // ONGHC ADD
     function fn_check() {
   	  console.log("fn_check ::: " + $('#compType option').length);
-  	  if ($('#compType option').length <= 1) {
+  	  if ($('#compType option').length == 0) {
+  		fn_check();
+  	  } else if ($('#compType option').length == 1) {
   	    $('#compType').addClass("blind");
   	    $('#compType').prop("disabled", true);
-  	  } else {
+  	  } else if ($('#compType option').length > 1) {
   		$('#compType').remove("blind");
   		$('#compType').removeAttr("disabled");
+
+        var key = 0;
+        Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
+          if(defaultKey != null) {
+            key = defaultKey.code;
+            console.log(': '+key);
+          }
+          $('#compType').val(key).change();
+        });
+
+        console.log(key);
   	  }
     }
 
@@ -2236,21 +2249,16 @@ console.log("vBindingNo" + vBindingNo);
 
     //LoadProductComponent
     function fn_loadProductComponent(stkId) {
+    	$('#compType option').remove();
     	$('#compType').removeClass("blind");
         $('#compType').removeClass("disabled");
+        console.log("fn_loadProductComponent ::: " + $('#compType option').length);
+
+  	    //$('#compType').addClass("blind");
+  	    //$('#compType').prop("disabled", true);
 
         doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
 
-        var key = 0;
-        Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : stkId}, function(defaultKey) {
-          if(defaultKey != null) {
-            key = defaultKey.code;
-            console.log(': '+key);
-          }
-          $('#compType').val(key).change();
-        });
-
-        console.log(key);
     }
 
     //LoadProductPromotion
