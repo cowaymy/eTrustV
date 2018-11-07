@@ -82,6 +82,7 @@ $(document).ready(function () {
 
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#registration_btn").click(fn_newStaffClaimPop);
+    $("#newExpStaffClaim").click(fn_NewClaimPop);
     $("#_staffClaimBtn").click(function() {
 
         //Param Set
@@ -122,6 +123,10 @@ $(document).ready(function () {
 
     fn_setToMonth();
 });
+
+function fn_NewClaimPop() {
+    Common.popupDiv("/newStaffClaim/newPop.do", {callType:"new"}, null, true, "newStaffClaimPop");
+}
 
 function fn_setToMonth() {
     var month = new Date();
@@ -1442,6 +1447,7 @@ function fn_checkClmMonthAndMemAccId() {
             <%-- <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}"> --%>
             <li><p class="link_btn"><a href="#" id="_staffClaimBtn">Staff Claim</a></p></li>
             <%-- </c:if> --%>
+            <li><p class="link_btn"><a href="#" id="newExpStaffClaim">New Staff Claim (Submission Only)</a></p></li>
         </ul>
         <ul class="btns">
         </ul>
