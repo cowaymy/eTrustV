@@ -502,7 +502,7 @@ function createDeductionGrid () {
 									{dataField : "posTypeId" , visible : false },
 									{
 	                                    dataField : "rcvStusId",
-	                                    headerText : '<spring:message code="sal.title.rcvStusId" />',
+	                                    headerText : "Status",
 	                                    width : '10%',
 	                                    labelFunction : function( rowIndex, columnIndex, value, headerText, item) {
 	                                        var retStr = "";
