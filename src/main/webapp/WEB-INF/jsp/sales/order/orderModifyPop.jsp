@@ -301,7 +301,7 @@
         });
         //Payment Channel - Add New Bank Account
         $('#btnAddBankAccount').click(function() {
-            if($('#hiddenThrdPartyId').val() != null){
+            if($('#thrdParty').is(":checked")){
                 Common.popupDiv("/sales/customer/customerBankAccountAddPop.do", {custId : $('#hiddenThrdPartyId').val()}, null, true);
 
             }
@@ -312,7 +312,7 @@
         });
         //Payment Channel - Select Another Bank Account
         $('#btnSelBankAccount').click(function() {
-            if($('#hiddenThrdPartyId').val() != null){
+            if($('#thrdParty').is(":checked")){
                 Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : $('#hiddenThrdPartyId').val(), callPrgm : "ORD_MODIFY_BANK_ACC"});
 
             }
@@ -323,7 +323,7 @@
         });
         //Payment Channel - Add New Credit Card
         $('#addCreditCardBtn').click(function() {
-            if($('#hiddenThrdPartyId').val() != null){
+            if($('#thrdParty').is(":checked")){
                 Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : $('#hiddenThrdPartyId').val()}, null, true);
 
             }
@@ -334,7 +334,7 @@
         });
         //Payment Channel - Select Another Credit Card
         $('#selCreditCardBtn').click(function() {
-        if($('#hiddenThrdPartyId').val() != null){
+        if($('#thrdParty').is(":checked")){
             Common.popupDiv("/sales/customer/customerCreditCardSearchPop.do", {custId : $('#hiddenThrdPartyId').val(), callPrgm : "ORD_MODIFY_PAY_CHAN"}, null, true);
 
         }
