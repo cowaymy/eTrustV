@@ -67,8 +67,7 @@
 
                     if(isExistCrc) {
                         isValid = false;
-                        msg += "<spring:message code='sal.alert.msg.creditCardUsed' /><br/>";
-                        msg += "CUSTOMER ID : " + isExistCrc;
+                        msg += "<spring:message code='sal.alert.msg.creditCardIsExisting' />";
                     }
                     else {
                         if($("#cmbCreditCardType option:selected").index() > 0) {
@@ -128,46 +127,58 @@
     function fn_existCrcNo(CustID, CrcNo, IssueBankID){
         var isExist = false;
 
-        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custOriCrcNo : CrcNo}, function(rsltInfo) {
-            if(rsltInfo != null) {
-            	if(rsltInfo.length > 0){
-                    isExist = rsltInfo[0].custId;
-                }
-            }
-        }, null, {async : false});
-        console.log('isExist ggg:'+isExist);
-        return isExist;
-        /* Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custOriCrcNo : CrcNo}, function(rsltInfo) {
+        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custOriCrcNo : CrcNo}, function(rsltInfo) {
             if(rsltInfo != null) {
                 console.log('rsltInfo.length:'+rsltInfo.length);
                 isExist = rsltInfo.length == 0 ? false : true;
             }
         }, null, {async : false});
         console.log('isExist ggg:'+isExist);
-        return isExist; */
+        return isExist;
     }
 
     function fn_doSaveCreditCard() {
         console.log('fn_doSaveBankAcc() START');
 
-        Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
+        var checkCrc = {
+                //ccType : $("#cmbCrcTypeId").val(),
+                //ccBank : $("#cmbCrcBankId").val(),
+                cardNo : $("#custOriCrcNo").val(),
+                //expDate : $("#expDate").val(),
+                //nameCard : $("#custCrcOwner").val(),
+                //cType : $("#cmbCardTypeId").val(),
+                nric : "${insNric}",
+                src : "EC"
+            };
 
-                Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+        console.log(checkCrc);
 
-                if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
-        	        fn_loadCreditCard2(result.data);
-        	        $('#addCrcCloseBtn').click();
-        	    }
+        Common.ajax("GET", "/sales/customer/checkCrc.do", checkCrc, function(result) {
+            console.log(result);
 
-            }, function(jqXHR, textStatus, errorThrown) {
-                try {
-                    Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
-                }
-                catch(e) {
-                    console.log(e);
-                }
+            if(result != "0") {
+                Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.</br>Please inform respective HP/Cody.");
+            } else {
+                Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
+
+                        Common.alert("Credit Card Added" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>");
+
+                        if('${callPrgm}' == 'ORD_REGISTER_PAYM_CRC' || '${callPrgm}' == 'PRE_ORD') {
+                            fn_loadCreditCard2(result.data);
+                            $('#addCrcCloseBtn').click();
+                        }
+
+                    }, function(jqXHR, textStatus, errorThrown) {
+                        try {
+                             Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save credit card. Please try again later.<br/>"+"Error message : " + jqXHR.responseJSON.message + "</b>");
+                        }
+                        catch(e) {
+                            console.log(e);
+                        }
+                    }
+                );
             }
-        );
+        });
     }
 </script>
 
