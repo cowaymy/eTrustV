@@ -18,13 +18,11 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
-/*
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.scm.OtdStatusManagementService;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.Precondition;
-*/
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Controller
@@ -32,8 +30,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class OtdStatusManagementController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(OtdStatusManagementController.class);
 
-/*	@Autowired
-	private OtdStatusManagementService otdStatusManagementService;*/
+	@Autowired
+	private OtdStatusManagementService otdStatusManagementService;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -43,12 +41,12 @@ public class OtdStatusManagementController {
 		return "/scm/otdStatusReport";
 	}
 
-/*	@RequestMapping(value = "/selectOtdStatus.do", method = RequestMethod.GET)
+	@RequestMapping(value = "/selectOtdStatus.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectOtdStatus(@RequestParam Map<String, Object> params) {
 		LOGGER.debug("selectOTDStatus : {}", params.toString());
 
 		List<EgovMap> selectOtdStatus = otdStatusManagementService.selectOtdStatus(params);
 
 		return ResponseEntity.ok(selectOtdStatus);
-	}*/
+	}
 }
