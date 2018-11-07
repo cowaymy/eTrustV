@@ -478,7 +478,7 @@
         });
         $('#addCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
-            Common.popupDiv("/sales/customer/customerCreditCardAddPop.do", {custId : vCustId, callPrgm : "PRE_ORD"}, null, true);
+            Common.popupDiv("/sales/customer/customerCreditCardeSalesAddPop.do", {custId : vCustId, callPrgm : "PRE_ORD"}, null, true);
         });
         $('#selCreditCardBtn').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
@@ -841,6 +841,11 @@
         if($("#dscBrnchId option:selected").index() <= 0) {
             isValid = false;
             msg += "* Please select the DSC branch.<br>";
+        }
+
+        if($("#keyinBrnchId option:selected").index() <= 0) {
+            isValid = false;
+            msg += "* Please select the Posting branch.<br>";
         }
 
         if(FormUtil.isEmpty($('#prefInstDt').val().trim())) {
@@ -1904,7 +1909,7 @@ console.log("email 1 : " + $('#billMthdEmailTxt1').val().trim());
 </tr>
 <tr>
     <th scope="row">Posting Branch<span class="must">*</span></th>
-    <td colspan="3"><select id="keyinBrnchId" name="keyinBrnchId" class="w100p" ></select></td>
+    <td colspan="3"><select id="keyinBrnchId" name="keyinBrnchId" class="w100p" disabled></select></td>
 </tr>
 <tr>
     <th scope="row">Prefer Install Date<span class="must">*</span></th>
