@@ -1234,9 +1234,7 @@
     // ONGHC ADD
     function fn_check() {
   	  console.log("fn_check ::: " + $('#compType option').length);
-  	  if ($('#compType option').length == 0) {
-  		//fn_check();
-  	  } else if ($('#compType option').length == 1) {
+  	  if ($('#compType option').length <= 1) {
   	    $('#compType').addClass("blind");
   	    $('#compType').prop("disabled", true);
   	  } else if ($('#compType option').length > 1) {
