@@ -1522,17 +1522,18 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
             BigDecimal mthRentAmt = new BigDecimal((String)oMap.get("orderRentalFeesPromo"));
             BigDecimal totPv = new BigDecimal((String)oMap.get("orderPVPromo"));
 
-            if(CommonUtils.intNvl(salesOrderMVO.getGstChk()) == 1) {
+            // [07/11/2018]ONGHC - REMOVE TO SOLVE PV ISSUE
+            //if(CommonUtils.intNvl(salesOrderMVO.getGstChk()) == 1) {
             	//totAmt = totAmt.multiply(new BigDecimal(1/1.06)).setScale(0, BigDecimal.ROUND_FLOOR);
             	//mthRentAmt = mthRentAmt.multiply(new BigDecimal(1/1.06)).setScale(0, BigDecimal.ROUND_FLOOR);
-            	totAmt = totAmt.multiply(new BigDecimal(1/1.00)).setScale(0, BigDecimal.ROUND_FLOOR);
-            	mthRentAmt = mthRentAmt.multiply(new BigDecimal(1/1.00)).setScale(0, BigDecimal.ROUND_FLOOR);
-            	totPv = new BigDecimal((String)oMap.get("orderPVPromoGST"));
+            	//totAmt = totAmt.multiply(new BigDecimal(1/1.00)).setScale(0, BigDecimal.ROUND_FLOOR);
+            	//mthRentAmt = mthRentAmt.multiply(new BigDecimal(1/1.00)).setScale(0, BigDecimal.ROUND_FLOOR);
+            	//totPv = new BigDecimal((String)oMap.get("orderPVPromoGST"));
 
-            	if(orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
-            		totAmt = totAmt.divide(new BigDecimal(10), 0, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10));
-            	}
-            }
+            	//if(orderAppType != SalesConstants.APP_TYPE_CODE_ID_RENTAL) {
+            		//totAmt = totAmt.divide(new BigDecimal(10), 0, BigDecimal.ROUND_FLOOR).multiply(new BigDecimal(10));
+            	//}
+            //}
 
             logger.debug("@#### totAmt    :"+totAmt);
             logger.debug("@#### mthRentAmt:"+mthRentAmt);
