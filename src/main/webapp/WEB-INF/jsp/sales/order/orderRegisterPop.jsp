@@ -1806,9 +1806,30 @@ console.log("vBindingNo" + vBindingNo);
         	  isValid = false;
               msg += '* <spring:message code="sal.alert.msg.plzSelAddCmpt" /><br>';
             }
+
+        	// TEMP.
+        	var today = new Date();
+            var dd = today.getDate();
+            var mm = today.getMonth() +1;
+            var yyyy = today.getFullYear();
+
+            if (yyyy == '2018') {
+              if (mm <= '12') {
+                if (dd <= '22') {
+                	if ($('#compType').val() == '3' || $('#compType').val() == '4') {
+                		if ($('#ordPromo').val() != '31810' && $('#ordPromo').val() != '31811' && $('#ordPromo').val() != '31814' ) {
+                			msg += '* <spring:message code="sal.alert.msg.plzSelPromoCde" /><br>';
+                		}
+                	} else if ($('#compType').val() == '1' || $('#compType').val() == '2') {
+                		if ($('#ordPromo').val() != '31736' && $('#ordPromo').val() != '31723') {
+                			msg += '* <spring:message code="sal.alert.msg.plzSelPromoCde" /><br>';
+                		}
+                    }
+                }
+              }
+            }
           }
         }
-        console.log("log :: " + $("#compType option:selected").val());
 
         if(!FormUtil.checkReqValue($('#hiddenSalesmanId'))) {
 
