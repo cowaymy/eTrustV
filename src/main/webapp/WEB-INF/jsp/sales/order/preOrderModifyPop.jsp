@@ -1547,8 +1547,8 @@ console.log("email 1 : " + $('#billMthdEmailTxt1').val().trim());
                 $("#instState").val(custInfo.state); //State
                 $("#instCountry").val(custInfo.country); //Country
 
-                $("#dscBrnchId").val('${preOrderInfo.dscBrnchId}'); //DSC Branch
-                $("#keyinBrnchId").val('${preOrderInfo.keyinBrnchId}'); //Posting Branch
+                $("#dscBrnchId").val(custInfo.brnchId); //DSC Branch
+                $("#keyinBrnchId").val(custInfo.soBrnchId); //Posting Branch
 //              if(!$("#gstChk").is('[disabled]')) {
 /*
                     if(custInfo.gstChk == '1') {

@@ -64,10 +64,18 @@
             return false;
         }
 
-        //insert
-		fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,bankRem);
-		//close
-		$("#_cardPopCloseBtn").click();
+        Common.ajax("GET", "/sales/customer/checkCrc.do", checkCrc, function(result) {
+            console.log(result);
+
+            if(result != "0") {
+                Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.");
+            } else {
+                //insert
+                fn_addCreditCardInfo(ccType,iBank,cardNo,expDate,nameCard,cType,bankRem);
+                //close
+                $("#_cardPopCloseBtn").click();
+            }
+        });
 	}
 </script>
 

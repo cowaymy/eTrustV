@@ -157,7 +157,7 @@
             console.log(result);
 
             if(result != "0") {
-                Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.</br>Please inform respective HP/Cody.");
+                Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.");
             } else {
                 Common.ajax("POST", "/sales/customer/insertCreditCardInfo2.do", $('#frmCrCard').serializeJSON(), function(result) {
 
