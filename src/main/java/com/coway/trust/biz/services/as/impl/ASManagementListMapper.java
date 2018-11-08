@@ -203,5 +203,7 @@ public interface ASManagementListMapper {
 	int insert_SAL0087D(Map<String, Object> params);
 	// AS RECEIVED ENTRY POP UP NOTIFICATION -- TPY
 	EgovMap checkASReceiveEntry(Map<String, Object> params);
+	EgovMap checkHSStatus(Map<String, Object> params);
+	EgovMap checkWarrentyStatus(Map<String, Object> params);
 
 }
