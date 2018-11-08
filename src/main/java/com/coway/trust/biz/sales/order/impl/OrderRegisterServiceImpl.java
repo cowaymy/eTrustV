@@ -464,7 +464,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 								isInValid = "InValid";
 							}
 
-							ROOT_STATE = (isInValid.equals("InValid")) ? "ROOT_9" : " ";
+							ROOT_STATE = (isInValid.equals("InValid")) ? "ROOT_9" : "ROOT_7";
 
 							txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
 									+ (String) promoMap.get("promoDesc");
