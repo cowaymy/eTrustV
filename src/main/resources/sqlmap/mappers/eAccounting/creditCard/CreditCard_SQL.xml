@@ -105,8 +105,12 @@
 </select>
 
 <select id="selectBankCode" resultType="egovMap">
-/* creditCardMapper.selectBankCode */
-    SELECT CODE , NAME FROM SYS0004M WHERE STUS_CODE_ID = 1
+    /* creditCardMapper.selectBankCode */
+    SELECT
+        MEM_ACC_ID CODE,
+        MEM_ACC_NAME NAME
+    FROM FCM0006M
+    WHERE MEM_ACC_NAME like '%BANK%'
 </select>
 
 <select id="selectNextCrditCardSeq" resultType="int">

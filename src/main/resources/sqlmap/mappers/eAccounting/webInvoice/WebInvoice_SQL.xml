@@ -954,7 +954,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
             ]]>
             <!-- 2018-10-26 - LaiKW - Amend for Credit Card expense to ECC -->
             <if test="clmType == 'J3'">
-                CASE WHEN(SUBSTR(T1.APPV_REQ_KEY_NO, 1, 2)) = 'J3' THEN T10.BANK_NAME ELSE T3.MEM_ACC_ID END AS MEM_ACC_ID,
+                CASE WHEN(SUBSTR(T1.APPV_REQ_KEY_NO, 1, 2)) = 'J3' THEN T10.BANK_CODE ELSE T3.MEM_ACC_ID END AS MEM_ACC_ID,
             </if>
             <if test="clmType != 'J3'">
                 T3.MEM_ACC_ID,
