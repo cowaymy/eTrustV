@@ -143,7 +143,7 @@
         var checkCrc = {
                 //ccType : $("#cmbCrcTypeId").val(),
                 //ccBank : $("#cmbCrcBankId").val(),
-                cardNo : $("#custOriCrcNo").val(),
+                cardNo : $("#cardNo").val(),
                 //expDate : $("#expDate").val(),
                 //nameCard : $("#custCrcOwner").val(),
                 //cType : $("#cmbCardTypeId").val(),
@@ -151,7 +151,7 @@
                 src : "EC"
             };
 
-        console.log(checkCrc);
+        console.log("CHECKING " + checkCrc);
 
         Common.ajax("GET", "/sales/customer/checkCrc.do", checkCrc, function(result) {
             console.log(result);
