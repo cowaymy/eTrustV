@@ -51,13 +51,10 @@ public class SupplyPlanManagementController {
 	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return "/scm/supplyPlanManagement";
 	}
-
-	// Supply Plan Summary View
 	@RequestMapping(value = "/supplyPlanSummary.do")
 	public String login2(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return "/scm/supplyPlanSummary";
 	}
-
 	@RequestMapping(value = "/selectScmCdc.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectScmCdc(@RequestParam Map<String, Object> params) {
 		LOGGER.debug("selectScmCdc : {}", params.toString());
@@ -66,42 +63,31 @@ public class SupplyPlanManagementController {
 
 		return ResponseEntity.ok(selectScmCdc);
 	}
-
+	
+	/*
+	 * Supply Plan By CDC
+	 */
 	@RequestMapping(value = "/selectSupplyPlanHeader.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectSupplyPlanHeader(@RequestBody Map<String, Object> params) {
 
 		LOGGER.debug("selectSupplyPlanHeader : {}", params.toString());
-
-		Map<String, Object> map = new HashMap<>();
-
-		List<EgovMap> selectSupplyPlanHeader = supplyPlanManagementService.selectSupplyPlanHeader(params);
-		List<EgovMap> selectSupplyPlanInfo = supplyPlanManagementService.selectSupplyPlanInfo(params);
-		List<EgovMap> selectTotalSplitInfo = supplyPlanManagementService.selectTotalSplitInfo(params);
-
+		
+		String headFrom	= "";
+		String headTo	= "";
+		
+		Map<String, Object> map	= new HashMap<>();
+		Map<String, Object> param1	= new HashMap<>();
+		
+		List<EgovMap> selectScmTotalInfo	= scmCommonService.selectScmTotalInfo(params);
+		headFrom	= selectScmTotalInfo.get(0).get("headFrom").toString();
+		headTo		= selectScmTotalInfo.get(0).get("headTo").toString();
+		param1.put("headFrom", headFrom);
+		param1.put("headTo", headTo);
+		
+		List<EgovMap> selectSupplyPlanHeader	= supplyPlanManagementService.selectSupplyPlanHeader(param1);
+		
+		map.put("selectScmTotalInfo", selectScmTotalInfo);
 		map.put("selectSupplyPlanHeader", selectSupplyPlanHeader);
-
-		if (!selectSupplyPlanInfo.isEmpty()) {
-			LOGGER.debug("planMonth : {}", selectSupplyPlanInfo.get(0).toString());
-			// String planMonth =
-			// String.valueOf(selectSupplyPlanInfo.get(0).get("planMonth"));
-			String planMonth = String.valueOf(selectTotalSplitInfo.get(0).get("planMonth"));
-			LOGGER.debug("planMonth : {}", planMonth);
-
-			((Map<String, Object>) params).put("planMonth", planMonth);
-			LOGGER.debug("selectSupplyPlanHeader : {}", params.toString());
-
-			// List<EgovMap> selectSplitInfo =
-			// salesPlanManagementService.selectSplitInfo(params);
-			List<EgovMap> selectChildField = salesPlanManagementService.selectChildField(params);
-
-			// LOGGER.debug("selectSplitInfo : {}", selectSplitInfo.toString());
-			LOGGER.debug("selectChildField : {}", selectChildField.toString());
-
-			map.put("selectSupplyPlanInfo", selectSupplyPlanInfo);
-			map.put("selectTotalSplitInfo", selectTotalSplitInfo);
-			// map.put("selectSplitInfo", selectSplitInfo);
-			map.put("selectChildField", selectChildField);
-		}
 
 		return ResponseEntity.ok(map);
 	}
@@ -110,11 +96,27 @@ public class SupplyPlanManagementController {
 	public ResponseEntity<Map<String, Object>> selectSupplyPlanList(@RequestBody Map<String, Object> params) {
 
 		LOGGER.debug("selectSupplyPlanList : {}", params.toString());
-
+		
+		int planYear	= 0;
+		int planWeek	= 0;
+		String cdc	= "";
+		
+		Map<String, Object> map	= new HashMap<>();
+		Map<String, Object> param1	= new HashMap<>();
+		
+		List<EgovMap> selectScmTotalInfo	= scmCommonService.selectScmTotalInfo(params);
+		planYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("planYear").toString());
+		planWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeek").toString());
+		cdc	= params.get("scmCdcCbBox").toString();
+		
+		param1.put("planYear", planYear);
+		param1.put("planWeek", planWeek);
+		param1.put("cdc", cdc);
+		
+		List<EgovMap> selectSupplyPlanInfo = supplyPlanManagementService.selectSupplyPlanInfo(param1);
 		List<EgovMap> selectSupplyPlanList = supplyPlanManagementService.selectSupplyPlanList(params);
 
-		Map<String, Object> map = new HashMap<>();
-
+		map.put("selectSupplyPlanInfo", selectSupplyPlanInfo);
 		map.put("selectSupplyPlanList", selectSupplyPlanList);
 
 		return ResponseEntity.ok(map);
@@ -126,12 +128,12 @@ public class SupplyPlanManagementController {
 		LOGGER.debug("insertSupplyPlanMaster : {}", params);
 
 		int totCnt = 0;
-		int dtlCnt = 0;
+		//int dtlCnt = 0;
 
-		List<EgovMap> selectSupplyPlanInfo = supplyPlanManagementService.selectSupplyPlanInfo(params);
+		//List<EgovMap> selectSupplyPlanInfo = supplyPlanManagementService.selectSupplyPlanInfo(params);
 
 		ReturnMessage message = new ReturnMessage();
-
+		/*
 		if (!selectSupplyPlanInfo.isEmpty()) {
 			LOGGER.debug("selectSupplyPlanInfo : {}", selectSupplyPlanInfo);
 			String salesPlanStusId = String.valueOf(selectSupplyPlanInfo.get(0).get("salesPlanStusId"));
@@ -165,6 +167,40 @@ public class SupplyPlanManagementController {
 				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 			}
 		}
+		*/
+		totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/updateSupplyPlanDetail.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> updateSupplyPlanDetail(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		
+		int updCnt = 0;
+		List<Object> updList = params.get(AppConstants.AUIGRID_UPDATE);
+		LOGGER.info("updateSupplyPlanDetail : {}", params.toString());
+
+		if (0 < updList.size()) {
+			updCnt = supplyPlanManagementService.updateSupplyPlanDetail(updList, sessionVO);
+		} else {
+			LOGGER.info("updateSupplyPlanDetail : no changed");
+		}
+
+		LOGGER.info("updCnt : ", updCnt);
+
+		ReturnMessage message = new ReturnMessage();
+
+		if ( 0 < updCnt ) {
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(updCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+		}
 
 		return ResponseEntity.ok(message);
 	}
@@ -173,16 +209,16 @@ public class SupplyPlanManagementController {
 	public ResponseEntity<ReturnMessage> updateSupplyPlanMaster(@RequestBody Map<String, Object> params,
 			SessionVO sessionVO) {
 
-		int saveCnt = 0;
+		int updCnt = 0;
 		LOGGER.info("updateSupplyPlanMaster : {}", params.toString());
 
-		saveCnt = supplyPlanManagementService.updateSupplyPlanMaster(params, sessionVO);
+		updCnt = supplyPlanManagementService.updateSupplyPlanMaster(params, sessionVO);
 
 		ReturnMessage message = new ReturnMessage();
 
-		if (0 < saveCnt) {
+		if (0 < updCnt) {
 			message.setCode(AppConstants.SUCCESS);
-			message.setData(saveCnt);
+			message.setData(updCnt);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		} else {
 			message.setCode(AppConstants.FAIL);
@@ -191,37 +227,10 @@ public class SupplyPlanManagementController {
 
 		return ResponseEntity.ok(message);
 	}
-
-	@RequestMapping(value = "/updateSupplyPlanDetail.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> updateSupplyPlanDetail(@RequestBody Map<String, ArrayList<Object>> params,
-			SessionVO sessionVO) {
-		int saveCnt = 0;
-		List<Object> updList = params.get(AppConstants.AUIGRID_UPDATE);
-		LOGGER.info("updateSupplyPlanDetail : {}", params.toString());
-
-		if (0 < updList.size()) {
-			saveCnt = supplyPlanManagementService.updateSupplyPlanDetail(updList, sessionVO);
-			saveCnt++;
-		} else {
-			LOGGER.info("updateSupplyPlanDetail : no changed");
-		}
-
-		LOGGER.info("saveCnt : ", saveCnt);
-
-		ReturnMessage message = new ReturnMessage();
-
-		if (0 < saveCnt) {
-			message.setCode(AppConstants.SUCCESS);
-			message.setData(saveCnt);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		} else {
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		}
-
-		return ResponseEntity.ok(message);
-	}
-
+	
+	/*
+	 * Supply Plan Summary View
+	 */
 	@RequestMapping(value = "/selectSupplyPlanSummaryList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectSupplyPlanSummaryList(@RequestBody Map<String, Object> params) {
 

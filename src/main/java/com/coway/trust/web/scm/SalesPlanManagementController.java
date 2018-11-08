@@ -109,31 +109,22 @@ public class SalesPlanManagementController {
 		
 		LOGGER.debug("selectSalesPlanHeader : {}", params.toString());
 		
+		String headFrom	= "";
+		String headTo	= "";
+		
 		Map<String, Object> map	= new HashMap<>();
+		Map<String, Object> param1	= new HashMap<>();
 		
-		List<EgovMap> selectSalesPlanHeader	= salesPlanManagementService.selectSalesPlanHeader(params);
-		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(params);
+		List<EgovMap> selectScmTotalInfo	= scmCommonService.selectScmTotalInfo(params);
+		headFrom	= selectScmTotalInfo.get(0).get("headFrom").toString();
+		headTo		= selectScmTotalInfo.get(0).get("headTo").toString();
+		param1.put("headFrom", headFrom);
+		param1.put("headTo", headTo);
 		
+		List<EgovMap> selectSalesPlanHeader	= salesPlanManagementService.selectSalesPlanHeader(param1);
+		
+		map.put("selectScmTotalInfo", selectScmTotalInfo);
 		map.put("selectSalesPlanHeader", selectSalesPlanHeader);
-		
-		if ( ! selectSalesPlanInfo.isEmpty() ) {
-			LOGGER.debug("planMonth_map : {}", selectSalesPlanInfo.get(0).toString());
-			String planMonth	= String.valueOf(selectSalesPlanInfo.get(0).get("planMonth"));
-			LOGGER.debug("planMonth : {}", planMonth);
-			
-			((Map<String, Object>) params).put("planMonth", planMonth);
-			LOGGER.debug("selectSalesPlanHeader : {}", params.toString());
-			
-			List<EgovMap> selectSplitInfo	= salesPlanManagementService.selectSplitInfo(params);
-			List<EgovMap> selectChildField	= salesPlanManagementService.selectChildField(params);
-			
-			LOGGER.debug("selectSplitInfo : {}", selectSplitInfo.toString());
-			LOGGER.debug("selectChildField : {}", selectChildField.toString());
-			
-			map.put("selectSalesPlanInfo", selectSalesPlanInfo);
-			map.put("selectSplitInfo", selectSplitInfo);
-			map.put("selectChildField", selectChildField);
-		}
 		
 		return	ResponseEntity.ok(map);
 	}
@@ -143,8 +134,31 @@ public class SalesPlanManagementController {
 	public ResponseEntity<Map<String, Object>> selectSalesPlanList(@RequestBody Map<String, Object> params) {
 		
 		LOGGER.debug("selectSalesPlanList : {}", params.toString());
-		List<EgovMap> selectSalesPlanList	= salesPlanManagementService.selectSalesPlanList(params);
+		
+		int planYear	= 0;	int befWeekYear	= 0;
+		int planWeek	= 0;	int befWeekWeek	= 0;
+		String team	= "";
+		
 		Map<String, Object> map	= new HashMap<>();
+		Map<String, Object> param1	= new HashMap<>();
+		
+		List<EgovMap> selectScmTotalInfo	= scmCommonService.selectScmTotalInfo(params);
+		planYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("planYear").toString());
+		planWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeek").toString());
+		befWeekYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekYear").toString());
+		befWeekWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekWeek").toString());
+		team	= params.get("scmTeamCbBox").toString();
+		
+		param1.put("planYear", planYear);
+		param1.put("planWeek", planWeek);
+		param1.put("befWeekYear", befWeekYear);
+		param1.put("befWeekWeek", befWeekWeek);
+		param1.put("team", team);
+		
+		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(param1);
+		List<EgovMap> selectSalesPlanList	= salesPlanManagementService.selectSalesPlanList(params);
+		
+		map.put("selectSalesPlanInfo", selectSalesPlanInfo);
 		map.put("selectSalesPlanList", selectSalesPlanList);
 		
 		return	ResponseEntity.ok(map);
@@ -155,8 +169,28 @@ public class SalesPlanManagementController {
 	public ResponseEntity<Map<String, Object>> selectSalesPlanListAll(@RequestBody Map<String, Object> params) {
 		
 		LOGGER.debug("selectSalesPlanListAll : {}", params.toString());
-		List<EgovMap> selectSalesPlanListAll	= salesPlanManagementService.selectSalesPlanListAll(params);
+		
+		int planYear	= 0;	int befWeekYear	= 0;
+		int planWeek	= 0;	int befWeekWeek	= 0;
+		
 		Map<String, Object> map	= new HashMap<>();
+		Map<String, Object> param1	= new HashMap<>();
+		
+		List<EgovMap> selectScmTotalInfo	= scmCommonService.selectScmTotalInfo(params);
+		planYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("planYear").toString());
+		planWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeek").toString());
+		befWeekYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekYear").toString());
+		befWeekWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekWeek").toString());
+		
+		param1.put("planYear", planYear);
+		param1.put("planWeek", planWeek);
+		param1.put("befWeekYear", befWeekYear);
+		param1.put("befWeekWeek", befWeekWeek);
+		
+		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(param1);
+		List<EgovMap> selectSalesPlanListAll	= salesPlanManagementService.selectSalesPlanListAll(params);
+		
+		map.put("selectSalesPlanInfo", selectSalesPlanInfo);
 		map.put("selectSalesPlanList", selectSalesPlanListAll);
 		
 		return	ResponseEntity.ok(map);
@@ -168,10 +202,10 @@ public class SalesPlanManagementController {
 		
 		LOGGER.debug("insertSalesPlanMaster : {}", params);
 		
-		int createCnt	= 0;
-		String befPlan	= "";	String thisPlan	= "";
+		int totCnt	= 0;
+		//String befPlan	= "";	String thisPlan	= "";
 		ReturnMessage message	= new ReturnMessage();
-		
+		/*
 		List<EgovMap> selectCreateCheck = salesPlanManagementService.selectCreateCheck(params);
 		LOGGER.debug("selectCreateCheck : {}", selectCreateCheck);
 		befPlan		= selectCreateCheck.get(0).get("befPlan").toString();
@@ -190,7 +224,11 @@ public class SalesPlanManagementController {
 			message.setCode(AppConstants.SUCCESS);
 			message.setData(createCnt);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		}
+		}*/
+		totCnt	= salesPlanManagementService.insertSalesPlanMaster(params, sessionVO);
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return	ResponseEntity.ok(message);
 	}
