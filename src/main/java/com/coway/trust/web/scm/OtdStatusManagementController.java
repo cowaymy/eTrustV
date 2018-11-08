@@ -40,13 +40,17 @@ public class OtdStatusManagementController {
 	public String otdStatusReportView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return "/scm/otdStatusReport";
 	}
-
-	@RequestMapping(value = "/selectOtdStatus.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectOtdStatus(@RequestParam Map<String, Object> params) {
+	
+	@RequestMapping(value = "/selectOtdStatus.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectOtdStatus(@RequestBody Map<String, Object> params) {
 		LOGGER.debug("selectOTDStatus : {}", params.toString());
-
+		
+		Map<String, Object> map = new HashMap<>();
+		
 		List<EgovMap> selectOtdStatus = otdStatusManagementService.selectOtdStatus(params);
+		
+		map.put("selectOtdStatus", selectOtdStatus);
 
-		return ResponseEntity.ok(selectOtdStatus);
+		return ResponseEntity.ok(map);
 	}
 }
