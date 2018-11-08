@@ -144,7 +144,7 @@ function fnOtdDetail(poNo) {
 									, $("#MainForm").serializeJSON()
 									, null
 									, false
-									, "otdStatusDetail");
+									, "otdStatusDetailPop");
 }
 
 /*************************************
@@ -163,7 +163,7 @@ var OtdStatusLayout	=
 						style : "myLinkStyle",
 						cellMerge : true
 					}, {
-						dataField : "poIssueDt",
+						dataField : "poDt",
 						headerText : "<spring:message code='sys.scm.otdview.IssueDate'/>",
 						cellMerge : true
 					}, {
@@ -190,24 +190,24 @@ var OtdStatusLayout	=
 						style : "aui-grid-right-column",
 						formatString : "#,##0"
 					}, {
-						dataField : "poStusId",
+						dataField : "poItemStusId",
 						headerText : "Po Status Id",
 						cellMerge : true
 					}, {
-						dataField : "poStusName",
+						dataField : "poItemStusName",
 						headerText : "Status",
 						cellMerge : true,
 						rederer : {
 							type : "TemplateRenderer"
 						},
 						labelFunction : function (rowIndex, columnIndex, value, headerText, item) {
-							if ( "5" == item.poStusId ) {
+							if ( "5" == item.poItemStusId ) {
 								var template	= "<div class='closeDiv'>";
 								template	+= "<span id='closeDiv'>";	//	"<span id='closeSpan'>";
 								template	+= "●";
 								template	+= "</span>";
 								return	template;
-							} else if ( "1" == item.poStusId ) {
+							} else if ( "1" == item.poItemStusId ) {
 								var template	= "<div class='openDiv'>";
 								template	+= "<span id='openDiv'>";
 								template	+= "●";
@@ -329,7 +329,7 @@ $(document).ready(function() {
 	myGridID	= GridCommon.createAUIGrid("OTDStatusDiv", OtdStatusLayout, "", otdStatusLayoutOptions);
 	AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 		var poNo	= AUIGrid.getCellValue(myGridID, event.rowIndex, "poNo");
-		fnOtdDetail(poNo);
+		//fnOtdDetail(poNo);
 	});
 });	//$(document).ready
 </script>
@@ -352,7 +352,6 @@ $(document).ready(function() {
 <section class="search_table"><!-- search_table start -->
 	<form id="MainForm" method="post" action="">
 	<input type="hidden" id="poNo" name="poNo" />
-	<input type="hidden" id="detailGbn" name="detailGbn" />
 	<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
