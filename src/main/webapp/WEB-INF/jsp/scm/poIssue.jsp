@@ -85,12 +85,17 @@
 
 <script type="text/javaScript">
 var supplyPlanQty	= "";
-var leadTm			= 0;
-var planWeekTh		= 0;
-var splitCnt		= 0;
 var headSelectCnt	= 6;	//	selectPoTargetList 에서 w01 앞에 있는 칼럼 갯수
 var poQtyTh			= 21;	//	selectPoTargetList 에서 poQty 의 위치
 var selectedRow		= 0;
+
+var leadTm	= 0;
+var splitCnt	= 0;
+var lastSplitYn	= 0;
+var lastWeekSplitYn	= 0;
+var planWeekTh	= 0;
+var fromPlanToPoSpltCnt	= 0;
+var planGrWeekSpltYn	= 0;
 
 $(function() {
 	fnScmYearCbBox();
@@ -286,6 +291,18 @@ var poCreateListLayout	=
 			dataField : "cdcDesc",
 			headerText : "Cdc Code",
 			visible : false
+		}, {
+			dataField : "planGrYear",
+			headerText : "Plan Gr Year",
+			visible : false
+		}, {
+			dataField : "planGrMonth",
+			headerText : "Plan Gr Month",
+			visible : false
+		}, {
+			dataField : "planGrWeek",
+			headerText : "Plan Gr Week",
+			visible : false
 		}
 	 ];
 //	footer
@@ -321,7 +338,7 @@ var poCreatedListLayout	=
 				return	template;
 			},
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -331,7 +348,7 @@ var poCreatedListLayout	=
 			dataField : "poNo",
 			headerText : "Po No",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -340,9 +357,9 @@ var poCreatedListLayout	=
 		}, {
 			dataField : "cdc",
 			headerText : "Cdc",
-			visible : false,
+			visible : true,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -351,9 +368,9 @@ var poCreatedListLayout	=
 		}, {
 			dataField : "poYear",
 			headerText : "Po Year",
-			visible : false,
+			visible : true,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -362,9 +379,9 @@ var poCreatedListLayout	=
 		}, {
 			dataField : "poMonth",
 			headerText : "Po Month",
-			visible : false,
+			visible : true,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -373,9 +390,9 @@ var poCreatedListLayout	=
 		}, {
 			dataField : "poWeek",
 			headerText : "Po Week",
-			visible : false,
+			visible : true,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -385,7 +402,7 @@ var poCreatedListLayout	=
 			dataField : "poItemNo",
 			headerText : "Po Item No",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -395,7 +412,7 @@ var poCreatedListLayout	=
 			dataField : "ctgry",
 			headerText : "Category",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -405,7 +422,7 @@ var poCreatedListLayout	=
 			dataField : "type",
 			headerText : "Type",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -415,7 +432,7 @@ var poCreatedListLayout	=
 			dataField : "stockCode",
 			headerText : "Code",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -425,19 +442,19 @@ var poCreatedListLayout	=
 			dataField : "name",
 			headerText : "Name",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnLeft2";
 				} else {
 					return	"my-columnLeft";
 				}
 			}
 		}, {
-			dataField : "poIssQty",
+			dataField : "poQty",
 			headerText : "Po Qty",
 			dataType : "numeric",
 			formatString : "#,##0",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnRight2";
 				} else {
 					return	"my-columnRight";
@@ -449,7 +466,7 @@ var poCreatedListLayout	=
 			dataType : "numeric",
 			formatString : "#,##0",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnRight2";
 				} else {
 					return	"my-columnRight";
@@ -459,7 +476,7 @@ var poCreatedListLayout	=
 			dataField : "poIssDt",
 			headerText : "Po Issue Date",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -470,42 +487,42 @@ var poCreatedListLayout	=
 			headerText : "Po Status Id",
 			visible : false
 		}, {
-			dataField : "grYear",
+			dataField : "planGrYear",
 			headerText : "Gr Year",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
 				}
 			}
 		}, {
-			dataField : "grMonth",
+			dataField : "planGrMonth",
 			headerText : "Gr Month",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
 				}
 			}
 		}, {
-			dataField : "grWeek",
+			dataField : "planGrWeek",
 			headerText : "Gr Week",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
 				}
 			}
-		}, {
+		}/*, {
 			dataField : "grQty",
 			headerText : "Gr Qty",
 			dataType : "numeric",
 			formatString : "#,##0",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poApprStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnRight2";
 				} else {
 					return	"my-columnRight";
@@ -514,8 +531,8 @@ var poCreatedListLayout	=
 		}, {
 			dataField : "grStusId",
 			headerText : "Gr Status Id",
-			visible : false
-		}
+			visible : true
+		}*/
 	 ];
 
 //	Button function
@@ -536,8 +553,6 @@ function fnSearch() {
 	AUIGrid.clearGridData(myGridID);
 	AUIGrid.clearGridData(myGridID2);
 	AUIGrid.clearGridData(myGridID3);
-	gSumAmount	= 0;
-	gMyGridSelRowIdx	= "";
 	
 	var params	= {
 		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects")	
@@ -552,53 +567,114 @@ function fnSearch() {
 				console.log(result);
 				
 				//	supplyPlanQty set
-				if ( 0 > result.selectTotalSplitInfo.length ) {
-					console.log("error");
+				leadTm		= result.selectScmTotalInfo[0].leadTm;
+				planWeekTh	= result.selectScmTotalInfo[0].planWeekTh;
+				fromPlanToPoSpltCnt	= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
+				planGrWeekSpltYn	= result.selectScmTotalInfo[0].planGrWeekSpltYn;
+				fnPoTargetGrid();
+				fnSetPlanQty(result.selectPoTargetList);
+				
+				//AUIGrid.setGridData(myGridID, result.selectPoTargetList);
+				AUIGrid.setGridData(myGridID3, result.selectPoCreatedList);
+				
+				if ( 0 < result.selectPoCreatedList.length ) {
+					$("#btnDelete").removeClass("btn_disabled");
 				} else {
-					leadTm		= result.selectTotalSplitInfo[0].leadTm;
-					planWeekTh	= result.selectTotalSplitInfo[0].planWeekTh;
-					splitCnt	= result.selectTotalSplitInfo[0].splitCnt;
-					supplyPlanQty	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(splitCnt);
-					supplyPlanQty	= "w" + supplyPlanQty;
-					//console.log("===========supplyPlanQty : " + supplyPlanQty);
-					fnPoTargetGrid();
-					
-					AUIGrid.setGridData(myGridID, result.selectPoTargetList);
-					AUIGrid.setGridData(myGridID3, result.selectPoCreatedList);
-					
-					if ( 0 < result.selectPoCreatedList.length ) {
-						$("#btnDelete").removeClass("btn_disabled");
-					} else {
-						$("#btnDelete").addClass("btn_disabled");
-					}
+					$("#btnDelete").addClass("btn_disabled");
 				}
 			});
+}
+function fnSetPlanQty(list) {
+	var planQty1	= 0;	var planQty1S	= "";
+	var planQty2	= 0;	var planQty2S	= "";
+	var totLeadCnt	= 0;
+	
+	totLeadCnt	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt) + 1;
+	console.log("totLeadCnt : " + totLeadCnt + ", planGrWeekSpltYn : " + planGrWeekSpltYn);
+	for ( var i = 0 ; i < list.length ; i++ ) {
+		if ( 1 == planGrWeekSpltYn ) {
+			//	PLAN_GR_WEEK IS NOT SPLIT WEEK
+			if ( 9 == totLeadCnt ) {
+				planQty1	= list[i].w09;	planQty2	= 0;
+			} else if ( 10 == totLeadCnt ) {
+				planQty1	= list[i].w10;	planQty2	= 0;
+			} else if ( 11 == totLeadCnt ) {
+				planQty1	= list[i].w11;	planQty2	= 0;
+			} else if ( 12 == totLeadCnt ) {
+				planQty1	= list[i].w12;	planQty2	= 0;
+			} else if ( 13 == totLeadCnt ) {
+				planQty1	= list[i].w13;	planQty2	= 0;
+			} else if ( 14 == totLeadCnt ) {
+				planQty1	= list[i].w14;	planQty2	= 0;
+			} else if ( 15 == totLeadCnt ) {
+				planQty1	= list[i].w15;	planQty2	= 0;
+			} else {
+				console.log("u must make more else if");
+			}
+		} else if ( 2 == planGrWeekSpltYn ) {
+			//	PLAN_GR_WEEK IS SPLIT WEEK
+			if ( 9 == totLeadCnt ) {
+				planQty1	= list[i].w09;	planQty2	= list[i].w10;
+			} else if ( 10 == totLeadCnt ) {
+				planQty1	= list[i].w10;	planQty2	= list[i].w11;
+			} else if ( 11 == totLeadCnt ) {
+				planQty1	= list[i].w11;	planQty2	= list[i].w12;
+			} else if ( 12 == totLeadCnt ) {
+				planQty1	= list[i].w12;	planQty2	= list[i].w13;
+			} else if ( 13 == totLeadCnt ) {
+				planQty1	= list[i].w13;	planQty2	= list[i].w14;
+			} else if ( 14 == totLeadCnt ) {
+				planQty1	= list[i].w14;	planQty2	= list[i].w15;
+			} else if ( 15 == totLeadCnt ) {
+				planQty1	= list[i].w15;	planQty2	= list[i].w15;
+			} else {
+				console.log("u must make more else if");
+			}
+		}
+		//console.log("planQty1 : " + planQty1 + ", planQty2 : " + planQty2);
+		list[i].planQty	= parseInt(planQty1) + parseInt(planQty2);
+	}
+	
+	AUIGrid.setGridData(myGridID, list);
 }
 function fnMoveStock() {
 	var planQtyTh	= 0;
 	var planQty		= 0;
-	var poIssQty	= 0;
+	var issQty		= 0;
 	var poQty		= 0;
 	var fobPrc		= 0;
 	var fobAmt		= 0;
+	var stockCode	= 0;
 	
-	planQty		= AUIGrid.getCellValue(myGridID, selectedRow, supplyPlanQty);
-	poIssQty	= AUIGrid.getCellValue(myGridID, selectedRow, "poIssQty");
+	stockCode	= AUIGrid.getCellValue(myGridID, selectedRow, "stockCode");
+	planQty	= AUIGrid.getCellValue(myGridID, selectedRow, "planQty");
+	issQty	= AUIGrid.getCellValue(myGridID, selectedRow, "poQty");
+	
+	var rows	= AUIGrid.getRowsByValue(myGridID2, "stockCode", stockCode);
+	//	stockCode check
+	if ( 0 < rows.length ) {
+		Common.alert("This Stock is already moved");
+		return	false;
+	} else {
+		console.log("this stock is first move");
+	}
+	
 	//	planQty check
 	if ( 0 == planQty ) {
 		return	false;
 	}
-	//	planQty, poQty comparison
-	if ( planQty == poIssQty ) {
+	//	planQty, issQty comparison
+	if ( planQty <= issQty ) {
 		Common.alert("This Stock is complete to issue PO");
 		return	false;
 	}
 	
 	//	poQty
-	poQty	= parseInt(planQty) - parseInt(poIssQty);
+	poQty	= parseInt(planQty) - parseInt(issQty);
 	fobPrc	= AUIGrid.getCellValue(myGridID, selectedRow, "fobPrc");
 	fobAmt	= parseInt(poQty) * parseInt(fobPrc);
-	console.log("planQty : " + planQty + ", poIssQty : " + poIssQty + ", poQty : " + poQty + ", fobPrc : " + fobPrc + ", fobAmt : " + fobAmt);
+	console.log("planQty : " + planQty + ", issQty : " + issQty + ", poQty : " + poQty + ", fobPrc : " + fobPrc + ", fobAmt : " + fobAmt);
+	
 	//	add row myGridID2
 	var item	=
 		{
@@ -607,6 +683,9 @@ function fnMoveStock() {
 			poWeek : AUIGrid.getCellValue(myGridID, selectedRow, "poWeek"),
 			cdc : AUIGrid.getCellValue(myGridID, selectedRow, "cdc"),
 			cdcDesc : AUIGrid.getCellValue(myGridID, selectedRow, "cdcDesc"),
+			planGrYear : AUIGrid.getCellValue(myGridID, selectedRow, "planGrYear"),
+			planGrMonth : AUIGrid.getCellValue(myGridID, selectedRow, "planGrMonth"),
+			planGrWeek : AUIGrid.getCellValue(myGridID, selectedRow, "planGrWeek"),
 			type : AUIGrid.getCellValue(myGridID, selectedRow, "type"),
 			stockCode : AUIGrid.getCellValue(myGridID, selectedRow, "stockCode"),
 			name : AUIGrid.getCellValue(myGridID, selectedRow, "name"),
@@ -729,6 +808,18 @@ function fnPoTargetGrid() {
 				headerText : "Cdc Name",
 				visible : false
 			}, {
+				dataField : "planGrYear",
+				headerText : "Plan Gr Year",
+				visible : false
+			}, {
+				dataField : "planGrMonth",
+				headerText : "Plan Gr Month",
+				visible : false
+			}, {
+				dataField : "planGrWeek",
+				headerText : "Plan Gr Week",
+				visible : false
+			}, {
 				dataField : "cdcDesc",
 				headerText : "Cdc Code",
 				visible : false
@@ -760,14 +851,14 @@ function fnPoTargetGrid() {
 				style : "my-columnLeft0",
 				width : "60%"
 			}, {
-				dataField : supplyPlanQty,
+				dataField : "planQty",
 				headerText : "Plan Qty",
 				dataType : "numeric",
 				formatString : "#,##0",
 				style : "my-columnRight0",
 				width : "10%"
 			}, {
-				dataField : "poIssQty",
+				dataField : "poQty",
 				headerText : "Issued Qty",
 				dataType : "numeric",
 				formatString : "#,##0",
@@ -807,49 +898,68 @@ function fnPoTargetGrid() {
 				visible : false
 			}, {
 				dataField : "w01",
-				headerText : "W01"
+				headerText : "W01",
+				visible : false
 			}, {
 				dataField : "w02",
-				headerText : "W02"
+				headerText : "W02",
+				visible : false
 			}, {
 				dataField : "w03",
-				headerText : "W03"
+				headerText : "W03",
+				visible : false
 			}, {
 				dataField : "w04",
-				headerText : "W04"
+				headerText : "W04",
+				visible : false
 			}, {
 				dataField : "w05",
-				headerText : "W05"
+				headerText : "W05",
+				visible : false
 			}, {
 				dataField : "w06",
-				headerText : "W06"
+				headerText : "W06",
+				visible : false
 			}, {
 				dataField : "w07",
-				headerText : "W07"
+				headerText : "W07",
+				visible : false
 			}, {
 				dataField : "w08",
-				headerText : "W08"
+				headerText : "W08",
+				visible : false
 			}, {
 				dataField : "w09",
-				headerText : "W09"
+				headerText : "W09",
+				visible : false
 			}, {
 				dataField : "w10",
-				headerText : "W10"
+				headerText : "W10",
+				visible : false
 			}, {
 				dataField : "w11",
-				headerText : "W11"
+				headerText : "W11",
+				visible : false
 			}, {
 				dataField : "w12",
-				headerText : "W12"
+				headerText : "W12",
+				visible : false
 			}, {
 				dataField : "w13",
-				headerText : "W13"
+				headerText : "W13",
+				visible : false
 			}, {
 				dataField : "w14",
-				headerText : "W14"
+				headerText : "W14",
+				visible : false
 			}, {
 				dataField : "w15",
-				headerText : "W15"
+				headerText : "W15",
+				visible : false
+			}, {
+				dataField : "w16",
+				headerText : "W16",
+				visible : false
 			}, {
 				dataField : "fobPrc",
 				headerText : "FOB Price",
@@ -867,7 +977,6 @@ function fnPoTargetGrid() {
 	AUIGrid.bind(myGridID, "addRow", fnEventRowAdd);
 	AUIGrid.bind(myGridID, "removeRow", fnEventRowRemove);
 	AUIGrid.bind(myGridID, "cellClick", function(event) {
-		gMyGridSelRowIdx	= event.rowIndex;
 		gMovingStockCode	= AUIGrid.getCellValue(myGridID, event.rowIndex, 0);
 		selectedRow	= event.rowIndex;
 	});

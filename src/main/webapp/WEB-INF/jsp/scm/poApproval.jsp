@@ -226,12 +226,12 @@ var poSummaryGridLayout =
 var poApprTargetGridLayout =
 	[
 		{
-			dataField : "poStusId",
-			headerText : "Po Stus Id",
+			dataField : "poItemStusId",
+			headerText : "Po Item Id",
 			editable : false,
 			visible : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					//return	"disable-check-style";
 					return	"my-columnCenter2";
 				} else {
@@ -239,11 +239,11 @@ var poApprTargetGridLayout =
 				}
 			}
 		}, {
-			dataField : "poStusName",
+			dataField : "poItemStusName",
 			headerText : "Po Status",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -254,7 +254,7 @@ var poApprTargetGridLayout =
 			headerText : "Po No",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -265,7 +265,7 @@ var poApprTargetGridLayout =
 			headerText : "Po Item No",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -276,7 +276,7 @@ var poApprTargetGridLayout =
 			headerText : "Category",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -287,7 +287,7 @@ var poApprTargetGridLayout =
 			headerText : "Type",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -298,7 +298,7 @@ var poApprTargetGridLayout =
 			headerText : "Code",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -309,53 +309,53 @@ var poApprTargetGridLayout =
 			headerText : "Name",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnLeft2";
 				} else {
 					return	"my-columnLeft";
 				}
 			}
 		}, {
-			dataField : "poIssQty",
+			dataField : "poQty",
 			headerText : "Po Issue Qty",
 			editable : false,
 			dataType : "numeric",
 			formatString : "#,##0",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnRight2";
 				} else {
 					return	"my-columnRight";
 				}
 			}
 		}, {
-			dataField : "grYear",
+			dataField : "planGrYear",
 			headerText : "Gr Year",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
 				}
 			}
 		}, {
-			dataField : "grMonth",
+			dataField : "planGrMonth",
 			headerText : "Gr Month",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	null;
 				}
 			}
 		}, {
-			dataField : "grWeek",
+			dataField : "planGrWeek",
 			headerText : "Gr Week",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -366,7 +366,7 @@ var poApprTargetGridLayout =
 			headerText : "IF Date",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poStusId ) {
+				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -498,7 +498,7 @@ function fnMainGridCreate() {
 			}
 		},
 		rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-			if ( 5 == item.poStusId ) {
+			if ( 5 == item.poItemStusId ) {
 				return	false;
 			}
 			return	true;
