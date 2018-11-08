@@ -1082,29 +1082,24 @@ public class MemberListController {
 
 		Calendar Startcal = Calendar.getInstance();
 
-		Startcal.add(Calendar.MONTH,2);
+		Startcal.add(Calendar.MONTH,1);
 
 		//현재 년도, 월, 일
 	    StringBuffer today2 = new StringBuffer();
 	    today2.append(String.format("%04d", Startcal.get(Startcal.YEAR)));
-	    today2.append(String.format("%02d", Startcal.get(Startcal.MONTH)));
+	    today2.append(String.format("%02d", Startcal.get(Startcal.MONTH) + 1));
         //today2.append(String.format("%02d",  01));
 
 	    String startDay = today2.toString();
 
 		Calendar Endcal = Calendar.getInstance();
 
-		Endcal.add(Calendar.MONTH,3);
+		Endcal.add(Calendar.MONTH,2);
 		//Endcal.set(year, month+3, day); //월은 -1해줘야 해당월로 인식
 
 	    StringBuffer today3 = new StringBuffer();
 	    today3.append(String.format("%04d", Endcal.get(Endcal.YEAR)));
-
-	    if("00".equals(String.format("%02d", Endcal.get(Endcal.MONTH)))) {
-	        today3.append("01");
-	    } else {
-	        today3.append(String.format("%02d", Endcal.get(Endcal.MONTH) ));
-	    }
+	    today3.append(String.format("%02d", Endcal.get(Endcal.MONTH) + 1));
 
 	    //today3.append(String.format("%02d", Endcal.getActualMaximum(Endcal.DAY_OF_MONTH)));
 
@@ -1724,6 +1719,7 @@ logger.debug("params : {}", params);
         // Session
         SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
         params.put("userId", sessionVO.getUserName());
+        //params.put("userType", sessionVO.getUserTypeId());
         if ("Y".equals(params.get("choice"))) {
             params.put("cnfm", "1");
             params.put("stusId", "5");
