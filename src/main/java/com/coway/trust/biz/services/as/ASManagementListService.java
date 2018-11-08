@@ -112,6 +112,10 @@ public interface ASManagementListService {
 
 	EgovMap checkASReceiveEntry(Map<String, Object> params);
 
+	EgovMap checkHSStatus(Map<String, Object> params);
+
+	EgovMap checkWarrentyStatus(Map<String, Object> params);
+
 
 
 }
