@@ -13,6 +13,7 @@
         doGetComboOrder('/common/selectCodeList.do', '19', 'CODE_NAME', '${preOrderInfo.rentPayModeId}', 'rentPayMode', 'S', ''); //Common Code
       //doGetComboOrder('/common/selectCodeList.do', '17', 'CODE_NAME', '', 'billPreferInitial', 'S', ''); //Common Code
         doGetComboSepa ('/common/selectBranchCodeList.do', '5',  ' - ', '', 'dscBrnchId',  'S', ''); //Branch Code
+        doGetComboSepa ('/common/selectBranchCodeList.do', '1',  ' - ', '', 'keyinBrnchId',  'S', ''); //Branch Code
 
         doGetComboData('/common/selectCodeList.do', {groupCode :'325'}, '${preOrderInfo.exTrade}', 'exTrade', 'S'); //EX-TRADE
         /*doGetComboData('/common/selectCodeList.do', {groupCode :'326'}, '${preOrderInfo.gstChk}',  'gstChk',  'S'); //GST_CHK */
@@ -885,7 +886,7 @@ console.log("email 1 : " + $('#billMthdEmailTxt1').val().trim());
                 gstChk               : $('#gstChk').val(),
 //              atchFileGrpId        :
                 custCntcId           : $('#hiddenCustCntcId').val(),
-//              keyinBrnchId         :
+                keyinBrnchId         : $('#keyinBrnchId').val(),
                 instAddId            : $('#hiddenCustAddId').val(),
                 dscBrnchId           : $('#dscBrnchId').val(),
                 preDt                : $('#prefInstDt').val().trim(),
