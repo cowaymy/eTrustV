@@ -9,15 +9,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 public interface SalesPlanManagementService {
 	//	Sales Plan Manager
-	List<EgovMap> selectSalesPlanInfo(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanHeader(Map<String, Object> params);
-	List<EgovMap> selectSplitInfo(Map<String, Object> params);
-	List<EgovMap> selectChildField(Map<String, Object> params);
+	List<EgovMap> selectSalesPlanInfo(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanList(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanListAll(Map<String, Object> params);
-	
-	List<EgovMap> selectCreateCheck(Map<String, Object> params);
 	int insertSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO);
 	int updateSalesPlanDetail(List<Object> updList, SessionVO sessionVO);
 	int updateSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO);
+	//List<EgovMap> selectSplitInfo(Map<String, Object> params);
+	//List<EgovMap> selectChildField(Map<String, Object> params);
+	//List<EgovMap> selectCreateCheck(Map<String, Object> params);
 }

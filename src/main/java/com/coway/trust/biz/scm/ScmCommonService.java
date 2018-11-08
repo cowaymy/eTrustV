@@ -20,4 +20,5 @@ public interface ScmCommonService
 	List<EgovMap> selectScmStockCategory(Map<String, Object> params);
 	List<EgovMap> selectScmStockType(Map<String, Object> params);
 	List<EgovMap> selectScmStockCode(Map<String, Object> params);
+	List<EgovMap> selectScmTotalInfo(Map<String, Object> params);
 }
