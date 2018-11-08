@@ -44,6 +44,38 @@ public class PoManagementServiceImpl implements PoManagementService {
 	
 	//	PO Issue
 	@Override
+	public List<EgovMap> selectLeadTm(Map<String, Object> params) {
+		return	poManagementMapper.selectLeadTm(params);
+	}
+	@Override
+	public List<EgovMap> selectLastWeekTh(Map<String, Object> params) {
+		return	poManagementMapper.selectLastWeekTh(params);
+	}
+	@Override
+	public List<EgovMap> selectSplitCnt(Map<String, Object> params) {
+		return	poManagementMapper.selectSplitCnt(params);
+	}
+	/*@Override
+	public List<EgovMap> selectSplitCnt1(Map<String, Object> params) {
+		return	poManagementMapper.selectSplitCnt1(params);
+	}
+	@Override
+	public List<EgovMap> selectSplitCnt2(Map<String, Object> params) {
+		return	poManagementMapper.selectSplitCnt2(params);
+	}*/
+	@Override
+	public List<EgovMap> selectLastWeekSplitYn(Map<String, Object> params) {
+		return	poManagementMapper.selectLastWeekSplitYn(params);
+	}
+	/*@Override
+	public List<EgovMap> selectLastWeekSplitYn1(Map<String, Object> params) {
+		return	poManagementMapper.selectLastWeekSplitYn1(params);
+	}
+	@Override
+	public List<EgovMap> selectLastWeekSplitYn2(Map<String, Object> params) {
+		return	poManagementMapper.selectLastWeekSplitYn2(params);
+	}*/
+	@Override
 	public List<EgovMap> selectPoCreatedList(Map<String, Object> params) {
 		return	poManagementMapper.selectPoCreatedList(params);
 	}
@@ -93,10 +125,6 @@ public class PoManagementServiceImpl implements PoManagementService {
 		
 		grParam.put("poYear", addList.get(0).get("poYear"));
 		grParam.put("poWeek", addList.get(0).get("poWeek"));
-		List<EgovMap> selectGetGrYMW	= poManagementMapper.selectGetGrYMW(grParam);
-		grYear	= Integer.parseInt(selectGetGrYMW.get(0).get("grYear").toString());
-		grMonth	= Integer.parseInt(selectGetGrYMW.get(0).get("grMonth").toString());
-		grWeek	= Integer.parseInt(selectGetGrYMW.get(0).get("grWeek").toString());
 		
 		try {
 			for ( Map<String, Object> list : addList ) {
@@ -105,9 +133,6 @@ public class PoManagementServiceImpl implements PoManagementService {
 				params.put("poItemNo", poItemNo);
 				params.put("stockCode", list.get("stockCode"));
 				params.put("poQty", list.get("poQty"));
-				params.put("grYear", grYear);
-				params.put("grMonth", grMonth);
-				params.put("grWeek", grWeek);
 				params.put("prcUnit", list.get("prcUnit"));
 				params.put("purchPrc", list.get("purchPrc"));
 				params.put("fobPrc", list.get("fobPrc"));
@@ -202,14 +227,14 @@ public class PoManagementServiceImpl implements PoManagementService {
 		int saveCnt	= 0;
 		int updUserId	= sessionVO.getUserId();
 		Map<String, Object> params		= new HashMap<>();
-		Map<String, Object> ifParams	= new HashMap<>();
+		//Map<String, Object> ifParams	= new HashMap<>();
 		
 		//	po approve
 		try {
 			for ( Map<String, Object> list : updList ) {
 				params.put("updUserId", updUserId);
 				params.put("poNo", list.get("poNo"));
-				params.put("poStusId", 5);
+				params.put("poItemStusId", 5);
 				LOGGER.debug("params : {}", params);
 				
 				poManagementMapper.updatePoApprove(params);

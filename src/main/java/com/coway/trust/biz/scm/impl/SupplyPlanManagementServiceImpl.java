@@ -484,7 +484,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				}*/
 				m2Psi3	= m2Psi3 + psi3;
 				psi3UpdParams.put("w" + intToStrFieldCnt2, psi3);
-				psi5UpdParams.put("m1", psi5);
+				psi5UpdParams.put("m2", psi5);
 				psi5UpdParams.put("w" + intToStrFieldCnt2, psi5);
 				
 				iLoopDataFieldCnt2++;

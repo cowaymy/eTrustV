@@ -10,6 +10,14 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface PoManagementMapper
 {
 	//	PO Issue
+	List<EgovMap> selectLeadTm(Map<String, Object> params);
+	List<EgovMap> selectLastWeekTh(Map<String, Object> params);
+	List<EgovMap> selectSplitCnt(Map<String, Object> params);
+	/*List<EgovMap> selectSplitCnt1(Map<String, Object> params);
+	List<EgovMap> selectSplitCnt2(Map<String, Object> params);*/
+	List<EgovMap> selectLastWeekSplitYn(Map<String, Object> params);
+	/*List<EgovMap> selectLastWeekSplitYn1(Map<String, Object> params);
+	List<EgovMap> selectLastWeekSplitYn2(Map<String, Object> params);*/
 	List<EgovMap> selectPoCreatedList(Map<String, Object> params);
 	List<EgovMap> selectPoTargetList(Map<String, Object> params);
 	List<EgovMap> selectPoInfo(Map<String, Object> params);
