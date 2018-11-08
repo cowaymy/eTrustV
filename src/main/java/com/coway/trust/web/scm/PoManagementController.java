@@ -34,19 +34,19 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public class PoManagementController {
 
 	private static final Logger LOGGER = LoggerFactory.getLogger(PoManagementController.class);
-	
+
 	@Autowired
 	private PoMngementService poMngementService;
-	
+
 	@Autowired
 	private PoManagementService poManagementService;
-	
+
 	@Autowired
 	private SupplyPlanManagementService supplyPlanManagementService;
-	
+
 	@Autowired
 	private ScmInterfaceManagementService scmInterfaceManagementService;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
@@ -57,36 +57,36 @@ public class PoManagementController {
 	public String poIssueView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/poIssue";
 	}
-	
+
 	@RequestMapping(value = "/selectPoTargetList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectPoTargetList(@RequestBody Map<String, Object> params) {
-		
+
 		LOGGER.debug("selectPoTargetList : {}", params.toString());
-		
+
 		Map<String, Object> map = new HashMap<>();
-		
+
 		List<EgovMap> selectPoCreatedList	= poManagementService.selectPoCreatedList(params);
 		List<EgovMap> selectPoTargetList	= poManagementService.selectPoTargetList(params);
-		List<EgovMap> selectTotalSplitInfo	= supplyPlanManagementService.selectTotalSplitInfo(params);
-		
+		//List<EgovMap> selectTotalSplitInfo	= supplyPlanManagementService.selectTotalSplitInfo(params);
+
 		map.put("selectPoCreatedList", selectPoCreatedList);
 		map.put("selectPoTargetList", selectPoTargetList);
-		map.put("selectTotalSplitInfo", selectTotalSplitInfo);
-		
+		//map.put("selectTotalSplitInfo", selectTotalSplitInfo);
+
 		return	ResponseEntity.ok(map);
 	}
-	
+
 	@RequestMapping(value = "/savePo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> savePo(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO) {
-		
+
 		LOGGER.debug("insertPo : {}", params.toString());
-		
+
 		int totCnt	= 0;
 		int poId	= 0;
-		
+
 		List<Map<String, Object>> addList	= params.get(AppConstants.AUIGRID_ADD);	//	Get grid addList
 		List<EgovMap> selectPoInfo	= poManagementService.selectPoInfo(addList.get(0));
-		
+
 		if ( 0 < selectPoInfo.size() ) {
 			//	Exist Po Master(SCM0052M)
 			//	poId
@@ -100,62 +100,62 @@ public class PoManagementController {
 			//	None Po Master(SCM0052M)
 			totCnt	= poManagementService.insertPoMaster(addList.get(0), sessionVO);
 			LOGGER.debug("Insert Po Master totCnt : ", totCnt);
-			
+
 			selectPoInfo	= poManagementService.selectPoInfo(addList.get(0));
 			poId	= Integer.parseInt(selectPoInfo.get(0).get("poId").toString());
 			for ( Map<String, Object> list : addList ) {
 				list.put("poId", poId);
 			}
-			
+
 			if ( 1 == totCnt ) {
 				//	Insert Po Detail(SCM0053D)
 				totCnt	= poManagementService.insertPoDetail(addList, sessionVO);
 				LOGGER.debug("Insert Po Detail not Exist totCnt : ", totCnt);
 			}
 		}
-		
+
 		ReturnMessage message = new ReturnMessage();
-		
+
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/deletePo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> deletePo(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO) {
-		
+
 		int totCnt	= 0;
 		List<Map<String, Object>> delList	= params.get(AppConstants.AUIGRID_CHECK);
-		
+
 		totCnt	= poManagementService.updatePoDetailDel(delList, sessionVO);
-		
+
 		ReturnMessage message = new ReturnMessage();
-		
+
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/selectPoSummary.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectPoSummary(@RequestBody Map<String, Object> params) {
-		
+
 		LOGGER.debug("selectPoSummary : {}", params.toString());
-		
+
 		Map<String, Object> map = new HashMap<>();
-		
+
 		List<EgovMap> selectPoSummary	= poManagementService.selectPoSummary(params);
 		List<EgovMap> selectPoApprList	= poManagementService.selectPoApprList(params);
-		
+
 		map.put("selectPoSummary", selectPoSummary);
 		map.put("selectPoApprList", selectPoApprList);
-		
+
 		return	ResponseEntity.ok(map);
 	}
-	
+
 	/*
 	 * Po Approval
 	 */
@@ -163,16 +163,16 @@ public class PoManagementController {
 	public String poApprovalView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/poApproval";
 	}
-	
+
 	@RequestMapping(value = "/approvePo.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> approvePo(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO) {
-		
+
 		int totCnt	= 0;
 		List<Map<String, Object>> chkList	= params.get(AppConstants.AUIGRID_CHECK);
 		ReturnMessage message = new ReturnMessage();
-		
+
 		totCnt	= poManagementService.updatePoApprove(chkList, sessionVO);
-		
+
 		if ( 0 < totCnt ) {
 			//	po approve success
 			LOGGER.debug("totCnt after po approve : " + totCnt);
@@ -183,14 +183,14 @@ public class PoManagementController {
 			message.setData(totCnt);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		}
-		
+
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	//	below for delete
 	/**********************************************/
    /**********************************************/
