@@ -1297,6 +1297,8 @@ public class ASManagementListController {
 		logger.debug("params {}", params);
 		String msg = "";
 		EgovMap asReceiveInfo =  ASManagementListService.checkASReceiveEntry(params);
+		EgovMap hsInfo =  ASManagementListService.checkHSStatus(params);
+		EgovMap warrentyInfo =  ASManagementListService.checkWarrentyStatus(params);
 
 		if(asReceiveInfo != null){
 
@@ -1307,19 +1309,19 @@ public class ASManagementListController {
 			else{
 				msg = msg + "* This order AS is under " + asReceiveInfo.get("asStusDesc") + " status.<br />" ;
 			}
-			logger.debug("Srv Stus : " + asReceiveInfo.get("srvStus"));
-			if(asReceiveInfo.get("srvStus") == null || asReceiveInfo.get("srvStus") == "" || asReceiveInfo.get("srvStus") == "null"){
+			logger.debug("Srv Stus : " + warrentyInfo.get("srvStus"));
+			if(warrentyInfo.get("srvStus") == null || warrentyInfo.get("srvStus") == "" || warrentyInfo.get("srvStus") == "null"){
 				 msg = msg + "* This order Membership is under Out of Warranty status.<br />" ;
 			}
 			else{
 				msg = msg + "" ;
 			}
-			logger.debug("HS Stus : " +  asReceiveInfo.get("hsStus"));
-			if(asReceiveInfo.get("hsStus") == null || asReceiveInfo.get("hsStus") == "" || asReceiveInfo.get("hsStus") == "null" ){
+			logger.debug("HS Stus : " +  hsInfo.get("hsStus"));
+			if(hsInfo.get("hsStus") == null || hsInfo.get("hsStus") == "" || hsInfo.get("hsStus") == "null" ){
 				msg = msg + "" ;
 			}
 			else{
-				 msg = msg + "* This order HS is under " + asReceiveInfo.get("hsStusDesc") + " status.<br />" ;
+				 msg = msg + "* This order HS is under " + hsInfo.get("hsStusDesc") + " status.<br />" ;
 			}
 
 
