@@ -74,6 +74,14 @@
                 $('#rwOldOrder').clearForm();
                 $('#lblOldOrderNo').text('<spring:message code="sal.alert.msg.usedExTrade" />');
             }
+            if(RESULT.rootState == 'ROOT_9') {//checking for I-CARE Rental
+                $('#rwOldOrder').clearForm();
+                Common.alert('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg, fn_apprvPopClose);
+            }
+            if(RESULT.rootState == 'ROOT_10') {//checking for I-CARE
+                $('#rwOldOrder').clearForm();
+                Common.alert('<spring:message code="sal.alert.msg.chkOldOrdNo" />' + DEFAULT_DELIMITER + RESULT.msg, fn_apprvPopClose);
+            }
         });
 	}
 

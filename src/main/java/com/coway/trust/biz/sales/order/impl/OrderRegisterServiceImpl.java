@@ -445,7 +445,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 							valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
 
 							if (valiOutStanding.compareTo(BigDecimal.ZERO) > 2) {
-								msg = msg + " -With Outstanding payment not allowed for I-Care promo. <br/>";
+								msg = msg + " -Outstanding payment more than 2 months not allowed for I-Care promo. <br/>";
 								isInValid = "InValid";
 							}
 
@@ -464,7 +464,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 								isInValid = "InValid";
 							}
 
-							ROOT_STATE = "ROOT_4";
+							ROOT_STATE = (isInValid.equals("InValid")) ? "ROOT_9" : " ";
 
 							txtInstSpecialInstruction = "(Old order No.)" + (String) params.get("salesOrdNo") + " , "
 									+ (String) promoMap.get("promoDesc");
@@ -474,7 +474,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 					} else if (SalesConstants.APP_TYPE_CODE_ID_OUTRIGHT == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))
 							|| SalesConstants.APP_TYPE_CODE_ID_INSTALLMENT == Integer.parseInt(String.valueOf(validateRentOutright.get("appTypeId")))) { // outright,Installment
 
-						ROOT_STATE = "ROOT_6";
+						ROOT_STATE = "ROOT_10";
 						msg = msg + " -Outright and Installment Order are not eligable for I-Care Programme.<br/>";
 						isInValid = "InValid";
 
