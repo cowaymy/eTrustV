@@ -292,39 +292,21 @@ function fnSalesPlanHeader() {
 				
 				console.log (result);
 				
-				//	if selectSalesPlanInfo result is null then alert
-				if ( null == result.selectSalesPlanInfo || 1 > result.selectSalesPlanInfo.length ) {
-					fnBtnCtrl(result.selectSalesPlanInfo);
-					Common.alert("Sales Plan was not created on this week");
-					return	false;
-				} else {
-					//console.log("selectSalesPlanInfo is not null")
-					fnSetSalesPlanInfo(result.selectSalesPlanInfo);
-				}
-				
-				//	if selectSplitInfo result is null then alert
-				if ( null == result.selectSplitInfo || 1 > result.selectSplitInfo.length ) {
-					Common.alert(" Sales Plan was not created on this week");
+				//	scm total info check
+				if ( null == result.selectScmTotalInfo || 1 > result.selectScmTotalInfo.length ) {
+					Common.alert("Scm Total Information is wrong");
 					return	false;
 				}
-				
-				//	if selectChildField result is null then alert
-				if ( null == result.selectChildField || 1 > result.selectChildField.length ) {
-					Common.alert("  Sales Plan was not created on this week");
-					return	false;
-				} else {
-					childField	= result.selectChildField;
-				}
-				
 				//	if selectSalesPlanHeader result null then remove grid
 				if ( null == result.selectSalesPlanHeader || 1 > result.selectSalesPlanHeader.length ) {
 					if ( AUIGrid.isCreated(myGridID) ) {
 						AUIGrid.destroy(myGridID);
 					}
-					
+					Common.alert("Calendar Information is wrong");
 					return	false;
 				}
 				
+				var planFstSpltWeek		= result.selectScmTotalInfo[0].planFstSpltWeek;
 				//	make header
 				if ( null != result.selectSalesPlanHeader && 0 < result.selectSalesPlanHeader.length ) {
 					dynamicLayout.push(
@@ -453,13 +435,13 @@ function fnSalesPlanHeader() {
 							}
 					);
 					
-					m0WeekCnt	= parseInt(result.selectSplitInfo[0].m0WeekCnt);
-					m1WeekCnt	= parseInt(result.selectSplitInfo[0].m1WeekCnt);
-					m2WeekCnt	= parseInt(result.selectSplitInfo[0].m2WeekCnt);
-					m3WeekCnt	= parseInt(result.selectSplitInfo[0].m3WeekCnt);
-					m4WeekCnt	= parseInt(result.selectSplitInfo[0].m4WeekCnt);
+					m0WeekCnt	= parseInt(result.selectScmTotalInfo[0].m0WeekCnt);
+					m1WeekCnt	= parseInt(result.selectScmTotalInfo[0].m1WeekCnt);
+					m2WeekCnt	= parseInt(result.selectScmTotalInfo[0].m2WeekCnt);
+					m3WeekCnt	= parseInt(result.selectScmTotalInfo[0].m3WeekCnt);
+					m4WeekCnt	= parseInt(result.selectScmTotalInfo[0].m4WeekCnt);
 					
-					m0ThWeekStart	= parseInt(result.selectChildField[0].weekTh);
+					m0ThWeekStart	= parseInt(result.selectScmTotalInfo[0].planFstSpltWeek);	//	수립주차가 포함된 월의 스플릿여부 상관없이 첫주차
 					m1ThWeekStart	= m0ThWeekStart + m0WeekCnt;
 					m2ThWeekStart	= m1ThWeekStart + m1WeekCnt;
 					m3ThWeekStart	= m2ThWeekStart + m2WeekCnt;
@@ -472,9 +454,7 @@ function fnSalesPlanHeader() {
 					var startCnt	= 0;
 					var strWeekTh	= "W";
 					
-					//var sumWeekThStr	= "";
 					var m0HeaderLabel	= "";
-					//console.log("gWeekTh : " + gWeekTh);
 					/******************************
 					******** M0 Header
 					******************************/
@@ -488,12 +468,12 @@ function fnSalesPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						if ( 0 == i ) {
-							startCnt	= parseInt(result.selectChildField[i].weekTh);
+							startCnt	= m0ThWeekStart;
 						} else {
 							startCnt	= startCnt + 1;
 						}
 						if ( parseInt(gWeekTh) > startCnt ) {
-							//console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							if ( 2 > startCnt.toString().length ) {
 								strWeekTh	= "W0";
 							} else {
@@ -510,7 +490,7 @@ function fnSalesPlanHeader() {
 							});
 							iLoopCnt++;
 						} else if ( parseInt(gWeekTh) == startCnt ) {
-							//console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -522,7 +502,7 @@ function fnSalesPlanHeader() {
 							});
 							iLoopCnt++;
 						} else {
-							//console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,	//	w00
@@ -551,12 +531,8 @@ function fnSalesPlanHeader() {
 						if ( 1 == intToStrFieldCnt.length ) {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
-						//if ( 0 == i ) {
-						//	startCnt	= parseInt(result.selectChildField[i].weekTh);
-						//} else {
-						//}
 						if ( parseInt(gWeekTh) > startCnt ) {
-							console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							console.log("4. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							if ( 2 > startCnt.toString().length ) {
 								strWeekTh	= "W0";
 							} else {
@@ -573,7 +549,7 @@ function fnSalesPlanHeader() {
 							});
 							iLoopCnt++;
 						} else if ( parseInt(gWeekTh) == startCnt ) {
-							console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							console.log("5. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							groupM1.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -585,7 +561,7 @@ function fnSalesPlanHeader() {
 							});
 							iLoopCnt++;
 						} else {
-							console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							console.log("6. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							groupM1.children.push({
 								dataField : "w" + intToStrFieldCnt,	//	w00
@@ -694,19 +670,10 @@ function fnSalesPlanHeader() {
 					//	Create Grid
 					myGridID	= AUIGrid.create("#dynamic_DetailGrid_wrap", dynamicLayout, dynamicOption);
 					
-					//	Grid Event
-					AUIGrid.bind(myGridID, "cellClick", function(event) {
-						//gSelMainRowIdx	= event.rowIndex;
-						//console.log("CellClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex);
-						//console.log("name : " + event.dataField);
-						//console.log("columnIndex : " + event.columnIndex + ", rowIndex : " + event.rowIndex + ", dataField Name : " + AUIGrid.getDataFieldByColumnIndex(event.columnIndex));
-					});
-					AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-						//console.log("DobleClick(" + event.rowIndex + ", " + event.columnIndex + ") :  " + " value : " + event.value );
-					});
+					//	Event
 					AUIGrid.bind(myGridID, "cellEditEnd", fnSumMnPlan);
 					
-					//	
+					//	search
 					fnSearch();
 				}
 			}
@@ -744,26 +711,19 @@ function fnSearch() {
 			, url
 			, params
 			, function(result) {
-				//console.log("Success fnSearch : " + result.length);
 				console.log(result);
 				
+				if ( "/scm/selectSalesPlanListAll.do" == url ) {
+					fnButtonControl("All", result.selectSalesPlanInfo, result.selectSalesPlanList);
+				} else if ( "/scm/selectSalesPlanList.do" == url ) {
+					fnButtonControl("None", result.selectSalesPlanInfo, result.selectSalesPlanList);
+				} else {
+					console.log("fnSearch Error");
+					return	false;
+				}
 				AUIGrid.setGridData(myGridID, result.selectSalesPlanList);
 				
-				//	set result list to object
 				salesPlanList	= result.selectSalesPlanList;
-				//fnSumMnPlanAfterSearch();	//	조회 후 합계
-				//console.log("-=======================-");
-				//console.log(salesPlanList);
-				
-				if ( null != result && 0 < result.selectSalesPlanList.length ) {
-				//	$("#btnConfirm").removeClass("btn_disabled");
-				//	$("#btnSave").removeClass("btn_disabled");
-				//	$("#btnDownload").removeClass("btn_disabled");
-				} else if ( 0 == result.selectSalesPlanList.length ) {
-				//	$("#btnUnconfirm").removeClass("btn_disabled");
-				//	$("#btnDownload").addClass("btn_disabled");
-				//	$("#btnSave").addClass("btn_disabled");
-				}
 			});
 }
 
@@ -856,33 +816,28 @@ function fnSaveMaster(obj, conf) {
 		return	false;
 	}
 	
-	//	set planId
-	if ( "DST" == $("#scmTeamCbBox").val() ) {
-		$("#planId").val($("#planId1").val());
-	} else if ( "CODY" == $("#scmTeamCbBox").val() ) {
-		$("#planId").val($("#planId2").val());
-	} else if ( "CS" == $("#scmTeamCbBox").val() ) {
-		$("#planId").val($("#planId3").val());
-	} else {
-		Common.alert("Error");
-		return	false;
-	}
-	
 	var msg	= "";
+	var planId	= salesPlanList[0].planId;
+	var planStusId	= 0;
+	
 	//	set planStusId
 	if ( "confirm" == conf ) {
 		msg	= $("#scmYearCbBox").val() + " year " + $("#scmWeekCbBox").val() + " th Week Sales Plan is confirmed";
-		$("#planStusId").val(5);
+		planStusId	= 5;
 	} else if ( "unconfirm" == conf ) {
 		msg	= $("#scmYearCbBox").val() + " year " + $("#scmWeekCbBox").val() + " th Week Sales Plan is Unconfirmed";
-		$("#planStusId").val(1);
+		planStusId	= 1;
 	}
+	
+	var params	= {
+			planId : planId,
+			planStusId : planStusId
+		};
 	
 	Common.ajax("POST"
 			, "/scm/updateSalesPlanMaster.do"
-			, $("#MainForm").serializeJSON()
+			, params
 			, function(result) {
-				//Common.alert(result.data  + "<spring:message code='sys.msg.savedCnt'/>");
 				Common.alert(msg);
 				fnSalesPlanHeader();
 				console.log("Success : " + JSON.stringify(result) + " /data : " + result.data);
@@ -912,6 +867,40 @@ function fnExcel(obj, fileName) {
 	GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileName + '_' + getTimeStamp());
 }
 
+//	validation
+function fnValidation() {
+	var result	= true;
+	var updList	= AUIGrid.getEditedRowItems(myGridID);
+	
+	if ( 0 == updList.length ) {
+		Common.alert("No Change");
+		result	= false;
+	}
+	
+	return	result;
+}
+
+//	get timestamp
+function getTimeStamp() {
+	function fnLeadingZeros(n, digits) {
+		var zero	= "";
+		n	= n.toString();
+		
+		if ( n.length < digits ) {
+			for (var i = 0 ; i < digits - n.length ; i++ ) {
+				zero	+= "0";
+			}
+		}
+		return	zero + n;
+	}
+	
+	var d	= new Date();
+	var date	= fnLeadingZeros(d.getFullYear(), 4) + fnLeadingZeros(d.getMonth() + 1, 2) + fnLeadingZeros(d.getDate(), 2);
+	var time	= fnLeadingZeros(d.getHours(), 2) + fnLeadingZeros(d.getMinutes(), 2) + fnLeadingZeros(d.getSeconds(), 2);
+	
+	return	date + "_" + time;
+}
+
 //	sum each Mn plan
 function fnSumMnPlan(event) {
 	//console.log(event);
@@ -928,7 +917,7 @@ function fnSumMnPlan(event) {
 		for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
 			ms0	= "w0" + (i + 1).toString();
 			//console.log("planWeek : " + planWeek + ", m0ThWeekStart : " + m0ThWeekStart + ", i : " + i + ", colChangeIdx : " + colChangeIdx);
-			if ( planWeek < parseInt(i) + parseInt(m0ThWeekStart) ) {
+			//if ( planWeek < parseInt(i) + parseInt(m0ThWeekStart) ) {
 				//console.log("sum");
 				if ( parseInt(i) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
 					m0	= parseInt(m0) + parseInt(event.value);
@@ -938,9 +927,9 @@ function fnSumMnPlan(event) {
 					m0	= parseInt(m0) + parseInt(salesPlanList[event.rowIndex][ms0]);
 					//console.log("02. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
 				}
-			} else {
-				//console.log("not sum");
-			}
+			//} else {
+			//	console.log("not sum");
+			//}
 		}
 		salesPlanList[event.rowIndex]["m0"]	= parseInt(m0);
 		salesPlanList[event.rowIndex]["m0Exp"]	= parseInt(salesPlanList[event.rowIndex]["m0OrdSum"]) + parseInt(salesPlanList[event.rowIndex]["m0"]);
@@ -1018,236 +1007,156 @@ function fnSumMnPlan(event) {
 	}
 }
 
-//	
-function fnSumMnPlanAfterSearch() {
-	var colStartIdx		= 18;	//	every week's cnt start column index : It should be changable, selectSalesPlanList query column count change
-	var planWeek	= $("#scmWeekCbBox").val();
-	var m0	= 0;	var m1	= 0;	var m2	= 0;	var m3	= 0;	var m4	= 0;
-	var ms0	= "";	var ms1	= "";	var ms2	= "";	var ms3	= "";	var ms4	= "";
+//	Button & status
+function fnButtonControl(div, list1, list2) {
+	var thisWeek	= list1[0].planStusId;	//	this week
+	var beforeWeek	= list1[1].planStusId;	//	before week
 	
-	console.log("m0WeekCnt : " + m0WeekCnt + ", m1WeekCnt : " + m1WeekCnt + ", m2WeekCnt : " + m2WeekCnt + ", m3WeekCnt : " + m3WeekCnt + ", m4WeekCnt : " + m4WeekCnt);
-	console.log("m0ThWeekStart : " + m0ThWeekStart + ", m1ThWeekStart : " + m1ThWeekStart + ", m2ThWeekStart : " + m2ThWeekStart + ", m3ThWeekStart : " + m3ThWeekStart + ", m4ThWeekStart : " + m4ThWeekStart);
-	//console.log(event.columnIndex);
-	
-	for ( var j = 0 ; j < salesPlanList.length ; j++ ) {
-		m0	= 0;	m1	= 0;	m2	= 0;	m3	= 0;	m4	= 0;
-		//	m0
-		for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
-			ms0	= "w0" + (parseInt(m0ThWeekStart) + parseInt(i)).toString();
-			if ( 0 == parseInt(salesPlanList[j][ms0]) ) {
-				if ( planWeek < parseInt(i) + parseInt(m0ThWeekStart) ) {
-					m0	= parseInt(m0) + parseInt(salesPlanList[j][ms0]);
-					salesPlanList[j]["m0Plan"]	= m0;
-					AUIGrid.setCellValue(myGridID, j, "m0Plan", m0);
-				} else {
-					//console.log("not sum");
-				}
-			}
-		}
-		//	m1
-		for ( var i = 0 ; i < m1WeekCnt ; i++ ) {
-			if ( 10 > parseInt(m1ThWeekStart) + parseInt(i) ) {
-				ms1	= "w0" + (parseInt(m1ThWeekStart) + parseInt(i)).toString();
-			} else {
-				ms1	= "w" + (parseInt(m1ThWeekStart) + parseInt(i)).toString();
-			}
-			if ( 0 == parseInt(salesPlanList[j][ms1]) ) {
-				m1	= parseInt(m1) + parseInt(salesPlanList[j][ms1]);
-				salesPlanList[j]["m1"]	= m1;
-				AUIGrid.setCellValue(myGridID, j, "m1", m1);
-			}
-		}
-		//	m2
-		for ( var i = 0 ; i < m2WeekCnt ; i++ ) {
-			if ( 10 > parseInt(m2ThWeekStart) + parseInt(i) ) {
-				ms2	= "w0" + (parseInt(m2ThWeekStart) + parseInt(i)).toString();
-			} else {
-				ms2	= "w" + (parseInt(m2ThWeekStart) + parseInt(i)).toString();
-			}
-			if ( 0 == parseInt(salesPlanList[j][ms2]) ) {
-				m2	= parseInt(m2) + parseInt(salesPlanList[j][ms2]);
-				salesPlanList[j]["m2"]	= m2;
-				AUIGrid.setCellValue(myGridID, j, "m2", m2);
-			}
-		}
-		//	m3
-		for ( var i = 0 ; i < m3WeekCnt ; i++ ) {
-			if ( 10 > parseInt(m3ThWeekStart) + parseInt(i) ) {
-				ms3	= "w0" + (parseInt(m3ThWeekStart) + parseInt(i)).toString();
-			} else {
-				ms3	= "w" + (parseInt(m3ThWeekStart) + parseInt(i)).toString();
-			}
-			if ( 0 == parseInt(salesPlanList[j][ms3]) ) {
-				m3	= parseInt(m3) + parseInt(salesPlanList[j][ms3]);
-				salesPlanList[j]["m3"]	= m3;
-				AUIGrid.setCellValue(myGridID, j, "m3", m3);
-			}
-		}
-		//	m4
-		for ( var i = 0 ; i < m4WeekCnt ; i++ ) {
-			if ( 10 > parseInt(m4ThWeekStart) + parseInt(i) ) {
-				ms4	= "w0" + (parseInt(m4ThWeekStart) + parseInt(i)).toString();
-			} else {
-				ms4	= "w" + (parseInt(m4ThWeekStart) + parseInt(i)).toString();
-			}
-			if ( 0 == parseInt(salesPlanList[j][ms4]) ) {
-				m4	= parseInt(m4) + parseInt(salesPlanList[j][ms4]);
-				salesPlanList[j]["m4"]	= m4;
-				AUIGrid.setCellValue(myGridID, j, "m4", m4);
-			}
-		}
-	}
-}
-
-//	set plan info
-function fnSetSalesPlanInfo(result) {
-	console.log(result);
-	for ( var i = 0 ; i < result.length ; i++ ) {
-		if ( "DST" == result[i].team ) {
-			$("#planId1").val(result[i].planId);
-			$("#planStusId1").val(result[i].planStusId);
-			$("#crtDt1").val(result[i].crtDt);
-			$("#planTeam1").text(result[i].team);
-			$("#planStatus1").text(result[i].planStusNm);
-			$("#planCreatedAt1").text(result[i].crtDt);
-		} else if ( "CODY" == result[i].team ) {
-			$("#planId2").val(result[i].planId);
-			$("#planStusId2").val(result[i].planStusId);
-			$("#crtDt2").val(result[i].crtDt);
-			$("#planTeam2").text(result[i].team);
-			$("#planStatus2").text(result[i].planStusNm);
-			$("#planCreatedAt2").text(result[i].crtDt);
-		} else if ( "CS" == result[i].team ) {
-			$("#planId3").val(result[i].planId);
-			$("#planStusId3").val(result[i].planStusId);
-			$("#crtDt3").val(result[i].crtDt);
-			$("#planTeam3").text(result[i].team);
-			$("#planStatus3").text(result[i].planStusNm);
-			$("#planCreatedAt3").text(result[i].crtDt);
-		}
-	}
-	fnBtnCtrl(result);
-}
-
-//	validation
-function fnValidation() {
-	var result	= true;
-	var updList	= AUIGrid.getEditedRowItems(myGridID);
-	
-	if ( 0 == updList.length ) {
-		Common.alert("No Change");
-		result	= false;
-	}
-	
-	return	result;
-}
-
-//	get timestamp
-function getTimeStamp() {
-	function fnLeadingZeros(n, digits) {
-		var zero	= "";
-		n	= n.toString();
-		
-		if ( n.length < digits ) {
-			for (var i = 0 ; i < digits - n.length ; i++ ) {
-				zero	+= "0";
-			}
-		}
-		return	zero + n;
-	}
-	
-	var d	= new Date();
-	var date	= fnLeadingZeros(d.getFullYear(), 4) + fnLeadingZeros(d.getMonth() + 1, 2) + fnLeadingZeros(d.getDate(), 2);
-	var time	= fnLeadingZeros(d.getHours(), 2) + fnLeadingZeros(d.getMinutes(), 2) + fnLeadingZeros(d.getSeconds(), 2);
-	
-	return	date + "_" + time;
-}
-
-//	button Control
-function fnBtnCtrl(result) {
-	var scmTeamCbBox	= $("#scmTeamCbBox").val();
-	var planId1	= $("#planId1").val();	var planStusId1	= $("#planStusId1").val();	//	DST
-	var planId2	= $("#planId2").val();	var planStusId2	= $("#planStusId2").val();	//	CODY
-	var planId3	= $("#planId3").val();	var planStusId3	= $("#planStusId3").val();	//	CS
-	
-	if ( null == result ) {
-		//console.log("===========btn1============");
-		$("#btnCreate").removeClass("btn_disabled");
-		$("#btnSave").addClass("btn_disabled");
-		$("#btnConfirm").addClass("btn_disabled");
-		$("#btnUnconfirm").addClass("btn_disabled");
-		$("#btnExcel").addClass("btn_disabled");
-	} else {
-		if ( "" == scmTeamCbBox ) {
-			//console.log("===========btn2============");
+	if ( "All" == div ) {
+		if ( null == list2 ) {
 			$("#btnCreate").addClass("btn_disabled");
 			$("#btnSave").addClass("btn_disabled");
 			$("#btnConfirm").addClass("btn_disabled");
 			$("#btnUnconfirm").addClass("btn_disabled");
-			$("#btnExcel").removeClass("btn_disabled");
-		} else if ( "DST" == scmTeamCbBox ) {
-			if ( 1 == planStusId1 || "1" == planStusId1 ) {
-				//console.log("===========btn3============");
-				$("#btnCreate").addClass("btn_disabled");
-				$("#btnSave").removeClass("btn_disabled");
-				$("#btnConfirm").removeClass("btn_disabled");
-				$("#btnUnconfirm").addClass("btn_disabled");
-				$("#btnExcel").removeClass("btn_disabled");
-			} else if ( 5 == planStusId1 || "5" == planStusId1 ) {
-				//console.log("===========btn4============");
-				$("#btnCreate").addClass("btn_disabled");
-				$("#btnSave").addClass("btn_disabled");
-				$("#btnConfirm").addClass("btn_disabled");
-				$("#btnUnconfirm").removeClass("btn_disabled");
-				$("#btnExcel").removeClass("btn_disabled");
+			$("#btnExcel").addClass("btn_disabled");
+		} else {
+			if ( 0 == beforeWeek ) {
+				$("#cirBeforeWeek").addClass("circle_grey");
+				$("#cirBeforeWeek").removeClass("circle_red");
+				$("#cirBeforeWeek").removeClass("circle_blue");
+			} else if ( 15 == beforeWeek ) {
+				$("#cirBeforeWeek").removeClass("circle_grey");
+				$("#cirBeforeWeek").removeClass("circle_red");
+				$("#cirBeforeWeek").addClass("circle_blue");
 			} else {
-				//console.log("===========btn5============");
+				$("#cirBeforeWeek").removeClass("circle_grey");
+				$("#cirBeforeWeek").addClass("circle_red");
+				$("#cirBeforeWeek").removeClass("circle_blue");
+			}
+			if ( 0 == thisWeek ) {
+				$("#cirBeforeWeek").addClass("circle_grey");
+				$("#cirBeforeWeek").removeClass("circle_red");
+				$("#cirBeforeWeek").removeClass("circle_blue");
+			} else if ( 15 == thisWeek ) {
+				$("#cirBeforeWeek").removeClass("circle_grey");
+				$("#cirBeforeWeek").removeClass("circle_red");
+				$("#cirBeforeWeek").addClass("circle_blue");
+			} else {
+				$("#cirBeforeWeek").removeClass("circle_grey");
+				$("#cirBeforeWeek").addClass("circle_red");
+				$("#cirBeforeWeek").removeClass("circle_blue");
+			}
+			if ( 0 == list2.length ) {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").addClass("btn_disabled");
-			}
-		} else if ( "CODY" == scmTeamCbBox ) {
-			if ( 1 == planStusId2 || "1" == planStusId2 ) {
-				$("#btnCreate").addClass("btn_disabled");
-				$("#btnSave").removeClass("btn_disabled");
-				$("#btnConfirm").removeClass("btn_disabled");
-				$("#btnUnconfirm").addClass("btn_disabled");
-				$("#btnExcel").removeClass("btn_disabled");
-			} else if ( 5 == planStusId2 || "5" == planStusId2 ) {
-				$("#btnCreate").addClass("btn_disabled");
-				$("#btnSave").addClass("btn_disabled");
-				$("#btnConfirm").addClass("btn_disabled");
-				$("#btnUnconfirm").removeClass("btn_disabled");
-				$("#btnExcel").removeClass("btn_disabled");
 			} else {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
-				$("#btnExcel").addClass("btn_disabled");
+				$("#btnExcel").removeClass("btn_disabled");
 			}
-		} else if ( "CS" == scmTeamCbBox ) {
-			if ( 1 == planStusId3 || "1" == planStusId3 ) {
+		}
+	} else if ( "None" == div ) {
+		console.log("beforeWeek : " + beforeWeek + ", thisWeek : " + thisWeek);
+		if ( 0 == beforeWeek ) {
+			//	no plan
+			$("#btnCreate").addClass("btn_disabled");
+			$("#btnSave").addClass("btn_disabled");
+			$("#btnConfirm").addClass("btn_disabled");
+			$("#btnUnconfirm").addClass("btn_disabled");
+			$("#btnExcel").addClass("btn_disabled");
+			
+			$("#cirBeforeWeek").addClass("circle_grey");
+			$("#cirBeforeWeek").removeClass("circle_red");
+			$("#cirBeforeWeek").removeClass("circle_blue");
+		} else if ( 1 == beforeWeek ) {
+			//	plan not confirmed
+			/*$("#btnCreate").addClass("btn_disabled");
+			$("#btnSave").addClass("btn_disabled");
+			$("#btnConfirm").addClass("btn_disabled");
+			$("#btnUnconfirm").addClass("btn_disabled");
+			$("#btnExcel").addClass("btn_disabled");*/
+			
+			$("#cirBeforeWeek").removeClass("circle_grey");
+			$("#cirBeforeWeek").addClass("circle_red");
+			$("#cirBeforeWeek").removeClass("circle_blue");
+			if ( 0 == thisWeek ) {
+				$("#btnCreate").removeClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnExcel").addClass("btn_disabled");
+				
+				$("#cirThisWeek").addClass("circle_grey");
+				$("#cirThisWeek").removeClass("circle_red");
+				$("#cirThisWeek").removeClass("circle_blue");
+			} else if ( 1 == thisWeek ) {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").removeClass("btn_disabled");
 				$("#btnConfirm").removeClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
-			} else if ( 5 == planStusId3 || "5" == planStusId3 ) {
+				
+				$("#cirThisWeek").removeClass("circle_grey");
+				$("#cirThisWeek").addClass("circle_red");
+				$("#cirThisWeek").removeClass("circle_blue");
+			} else if ( 5 == thisWeek ) {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
 				$("#btnUnconfirm").removeClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
+				
+				$("#cirThisWeek").removeClass("circle_grey");
+				$("#cirThisWeek").removeClass("circle_red");
+				$("#cirThisWeek").addClass("circle_blue");
 			} else {
-				$("#btnCreate").addClass("btn_disabled");
+				console.log("This week's sales plan info is wrong");
+			}
+		} else if ( 5 == beforeWeek ) {
+			$("#cirBeforeWeek").removeClass("circle_grey");
+			$("#cirBeforeWeek").removeClass("circle_red");
+			$("#cirBeforeWeek").addClass("circle_blue");
+			//	plan confirmed
+			if ( 0 == thisWeek ) {
+				$("#btnCreate").removeClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").addClass("btn_disabled");
+				
+				$("#cirThisWeek").addClass("circle_grey");
+				$("#cirThisWeek").removeClass("circle_red");
+				$("#cirThisWeek").removeClass("circle_blue");
+			} else if ( 1 == thisWeek ) {
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").removeClass("btn_disabled");
+				$("#btnConfirm").removeClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnExcel").removeClass("btn_disabled");
+				
+				$("#cirThisWeek").removeClass("circle_grey");
+				$("#cirThisWeek").addClass("circle_red");
+				$("#cirThisWeek").removeClass("circle_blue");
+			} else if ( 5 == thisWeek ) {
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").addClass("btn_disabled");
+				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnUnconfirm").removeClass("btn_disabled");
+				$("#btnExcel").removeClass("btn_disabled");
+				
+				$("#cirThisWeek").removeClass("circle_grey");
+				$("#cirThisWeek").removeClass("circle_red");
+				$("#cirThisWeek").addClass("circle_blue");
+			} else {
+				console.log("This week's sales plan info is wrong");
 			}
+		} else {
+			console.log("Before Week's Sales Plan info is wrong");
 		}
 	}
 }
@@ -1283,18 +1192,6 @@ $(document).ready(function() {
 	
 	<section class="search_table"><!-- search_table start -->
 		<form id="MainForm" method="get" action="">
-			<input type="hidden" id="planId" name="planId" value=""/>			<!-- for confirm/unconfirm -->
-			<input type="hidden" id="planStusId" name="planStusId" value=""/>	<!-- for confirm/unconfirm -->
-			<input type="hidden" id="planId1" name="planId1" value=""/>
-			<input type="hidden" id="planId2" name="planId2" value=""/>
-			<input type="hidden" id="planId3" name="planId3" value=""/>
-			<input type="hidden" id="planStusId1" name="planStusId1" value=""/>
-			<input type="hidden" id="planStusId2" name="planStusId2" value=""/>
-			<input type="hidden" id="planStusId3" name="planStusId3" value=""/>
-			<input type="hidden" id="crtDt1" name="crtDt1" value=""/>
-			<input type="hidden" id="crtDt2" name="crtDt2" value=""/>
-			<input type="hidden" id="crtDt3" name="crtDt3" value=""/>
-			<input type="hidden" id="planMonth" name="planMonth" value=""/>
 			<table class="type1"><!-- table start -->
 				<caption>table</caption>
 				<colgroup>
@@ -1315,8 +1212,16 @@ $(document).ready(function() {
 							</div><!-- date_set end -->
 						</td>
 						<th scope="row">Stock</th>
-						<td colspan="3">
+						<td>
 							<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
+						</td>
+						<th scope="row">Planning Status</th>
+						<td>
+							<div class="status_result">
+								<!-- circle_red, circle_blue, circle_grey -->
+								<p><span id ="cirBeforeWeek" class="circle circle_grey"></span>  Before Week's Plan</p>
+								<p><span id ="cirThisWeek" class="circle circle_grey"></span>  This Week's Plan</p>
+							</div>
 						</td>
 					</tr>
 					<tr>
@@ -1380,50 +1285,6 @@ $(document).ready(function() {
 			<li><p id="btnExcel" class="btn_grid btn_disabled"><a onclick="fnExcel(this, 'SalesPlanManagement');">Excel</a></p></li>
 			<!-- <li><p id='btnExcel'  class="btn_grid btn_disabled"><a onclick="fnExcel(this,'SalesPlanManagement');">Download</a></p></li> -->
 		</ul>
-		
-		<table class="type1 mt10"><!-- table start -->
-			<caption>table</caption>
-			<colgroup>
-				<col style="width:60px" />
-				<col style="width:*" />
-				<col style="width:80px" />
-				<col style="width:*" />
-				<col style="width:100px" />
-				<col style="width:170px" />
-				<col style="width:60px" />
-				<col style="width:*" />
-				<col style="width:80px" />
-				<col style="width:*" />
-				<col style="width:100px" />
-				<col style="width:170px" />
-				<col style="width:60px" />
-				<col style="width:*" />
-				<col style="width:80px" />
-				<col style="width:*" />
-				<col style="width:100px" />
-				<col style="width:170px" />
-			</colgroup>
-			<tbody>
-				<tr><!-- Team DST -->
-					<!-- <th scope="row">Year</th><td><span id="planYear1"></span></td>
-					<th scope="row">Month</th><td><span id="planMonth1"></span></td>
-					<th scope="row">Week</th><td><span id="planWeek1"></span></td> -->
-					<th scope="row">Team</th><td><span id="planTeam1"></span></td>
-					<th scope="row">Status</th><td><span id="planStatus1"></span></td>
-					<th scope="row">Created At</th><td><span id="planCreatedAt1"></span></td>
-					<th scope="row">Team</th><td><span id="planTeam2"></span></td>
-					<th scope="row">Status</th><td><span id="planStatus2"></span></td>
-					<th scope="row">Created At</th><td><span id="planCreatedAt2"></span></td>
-					<th scope="row">Team</th><td><span id="planTeam3"></span></td>
-					<th scope="row">Status</th><td><span id="planStatus3"></span></td>
-					<th scope="row">Created At</th><td><span id="planCreatedAt3"></span></td>
-					<!-- <th scope="row">Last Updated At</th><td><span id="lastUpdatedAt1"></span></td> -->
-				</tr>
-			</tbody>
-		</table><!-- table end -->
-		
-		<br/>
-		
 		<article class="grid_wrap"><!-- grid_wrap start -->
 			<!-- 그리드 영역 2-->
 			<div id="dynamic_DetailGrid_wrap" style="height:600px;"></div>
