@@ -8,13 +8,18 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Mapper("supplyPlanManagementMapper")
 public interface SupplyPlanManagementMapper {
-	/*
-	 * Supply Plan Management
-	 */
+	//	Supply Plan by CDC
 	List<EgovMap> selectSupplyPlanHeader(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanInfo(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanList(Map<String, Object> params);
 	void insertSupplyPlanMaster(Map<String, Object> params);
+	List<EgovMap> selectGetSupplyPlanId(Map<String, Object> params);
+	void insertSupplyPlanDetailPsi1(Map<String, Object> params);
+	void insertSupplyPlanDetailPsi235(Map<String, Object> params);
+	void insertSupplyPlanDetailPsi4(Map<String, Object> params);
+	List<EgovMap> selectGetPoCntTarget(Map<String, Object> params);
+	List<EgovMap> selectGetPoCnt(Map<String, Object> params);
+	
 	void insertSupplyPlanDetail(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanMoq(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanMonth(Map<String, Object> params);
@@ -32,9 +37,7 @@ public interface SupplyPlanManagementMapper {
 	void updateSupplyPlanMaster(Map<String, Object> params);
 	
 	
-	void insertSupplyPlanDetailPsi1(Map<String, Object> params);
-	void insertSupplyPlanDetailPsi4(Map<String, Object> params);
-	void insertSupplyPlanDetailPsi235(Map<String, Object> params);
+	
 	List<EgovMap> selectBefWeekInfo(Map<String, Object> params);
 	List<EgovMap> selectPsi1(Map<String, Object> params);
 	List<EgovMap> selectEachPsi(Map<String, Object> params);
