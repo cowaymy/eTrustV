@@ -144,14 +144,14 @@ SELECT A.PLAN_YEAR  /* 수립주차가 포함된 년 */
      , A.BEF_YEAR  /* 수립주차가 포함된 년의 바로전 년 */
      , A.BEF_MONTH /* 수립주차가 포함된 월의 바로전 월 */
      , A.BEF_WEEK  /* 수립주차가 포함된 주차의 바로전 주차 : 실질적으로 BEF_WEEK_WEEK랑 같음 */
-     , TO_NUMBER(A.PO_YEAR) AS PO_YEAR   /* PO발행 시 계획수량을 갖고올 주차가 포함된 년 */
-     , TO_NUMBER(A.PO_MONTH) AS PO_MONTH /* PO발행 시 계획수량을 갖고올 주차가 포함된 월 */
-     , TO_NUMBER(A.PO_WEEK) AS PO_WEEK   /* PO발행 시 계획수량을 갖고올 주차가 포함된 주차 */
-     , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PO_YEAR AND Z.SCM_WEEK = A.PO_WEEK) AS PO_WEEK_SPLT_YN /* PO주차가 스플릿인지 여부 : 2(스플릿), 1(스플릿아님) */
+     , TO_NUMBER(A.PLAN_GR_YEAR) AS PLAN_GR_YEAR   /* PO발행 시 계획수량을 갖고올 주차가 포함된 년 */
+     , TO_NUMBER(A.PLAN_GR_MONTH) AS PLAN_GR_MONTH /* PO발행 시 계획수량을 갖고올 주차가 포함된 월 */
+     , TO_NUMBER(A.PLAN_GR_WEEK) AS PLAN_GR_WEEK   /* PO발행 시 계획수량을 갖고올 주차가 포함된 주차 */
+     , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_GR_YEAR AND Z.SCM_WEEK = A.PLAN_GR_WEEK) AS PLAN_GR_WEEK_SPLT_YN /* PO주차가 스플릿인지 여부 : 2(스플릿), 1(스플릿아님) */
      , (
         SELECT COUNT(*)
           FROM SCM0018M Z
-         WHERE Z.SCM_YEAR || LPAD(Z.SCM_WEEK, 2, '0') BETWEEN A.PLAN_YEAR || LPAD(A.PLAN_WEEK, 2, '0') AND A.PO_YEAR || LPAD((A.PO_WEEK - 1), 2, '0')
+         WHERE Z.SCM_YEAR || LPAD(Z.SCM_WEEK, 2, '0') BETWEEN A.PLAN_YEAR || LPAD(A.PLAN_WEEK, 2, '0') AND A.PLAN_GR_YEAR || LPAD((A.PLAN_GR_WEEK - 1), 2, '0')
            AND Z.SCM_WEEK_SEQ = 2
         ) AS FROM_PLAN_TO_PO_SPLT_CNT /* 수립주차 ~ (PO주차 - 1) 사이의 주차 중 스플릿 주차 갯수 */
      , A.LEAD_TM
@@ -192,13 +192,13 @@ SELECT A.PLAN_YEAR  /* 수립주차가 포함된 년 */
              , CASE WHEN A.PLAN_WEEK = 1 THEN (SELECT MAX(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR - 1) ELSE A.PLAN_WEEK - 1 END AS BEF_WEEK
              , CASE WHEN A.PLAN_WEEK + A.LEAD_TM <![CDATA[ < ]]> A.PLAN_YEAR_LST_WEEK THEN TO_CHAR(A.PLAN_YEAR)
                     ELSE TO_CHAR(A.PLAN_YEAR + 1)
-                    END AS PO_YEAR
+                    END AS PLAN_GR_YEAR
              , CASE WHEN A.PLAN_WEEK + A.LEAD_TM <![CDATA[ < ]]> A.PLAN_YEAR_LST_WEEK THEN (SELECT TO_CHAR(MIN(Z.SCM_MONTH)) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_WEEK = A.PLAN_WEEK + A.LEAD_TM)
                     ELSE (SELECT TO_CHAR(MIN(Z.SCM_MONTH)) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR + 1 AND Z.SCM_WEEK = A.PLAN_WEEK + A.LEAD_TM - A.PLAN_YEAR_LST_WEEK)
-                    END AS PO_MONTH
+                    END AS PLAN_GR_MONTH
              , CASE WHEN A.PLAN_WEEK + A.LEAD_TM <![CDATA[ < ]]> A.PLAN_YEAR_LST_WEEK THEN TO_CHAR(A.PLAN_WEEK + A.LEAD_TM)
                     ELSE TO_CHAR(A.PLAN_WEEK + A.LEAD_TM - A.PLAN_YEAR_LST_WEEK)
-                    END AS PO_WEEK
+                    END AS PLAN_GR_WEEK
              , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 1), 'YYYYMM')) AS M1_WEEK_CNT
              , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 2), 'YYYYMM')) AS M2_WEEK_CNT
              , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YYYYMM = TO_CHAR(ADD_MONTHS(TO_DATE(TO_CHAR(A.PLAN_YEAR) || LPAD(A.PLAN_MONTH, 2, '0'), 'YYYYMM'), 3), 'YYYYMM')) AS M3_WEEK_CNT
