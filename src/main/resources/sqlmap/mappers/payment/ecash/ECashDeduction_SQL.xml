@@ -161,6 +161,7 @@
     <select id="selectECashDeductSubByIdPagingMBB" parameterType="Map" resultType="egovMap">
     SELECT *
         FROM (SELECT ROWNUM AS RNUM,
+        #{pageNo} as PAGENO,
         Z.*
         ,SUM(FILE_ITM_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
         ,COUNT(FILE_ITM_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
@@ -182,8 +183,13 @@
                     JOIN SAL0028D EXTENT4 on EXTENT4.CUST_CRC_ID = EXTENT3.CUST_CRC_ID
                 WHERE Extent1.FILE_BATCH_ID = #{fileBatchId}
                  ORDER BY Extent1.FILE_ITM_ID ) Z
-        WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY ROWNUM ASC)
-        WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+        <if test="rowCount != null and rowCount != '' ">
+            WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY ROWNUM ASC
+        </if>
+        )
+        <if test="rowCount != null and rowCount != '' ">
+            WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
+        </if>
     </select>
 
     <select id="selectECashDeductSubByIdCnt" parameterType="Map" resultType="int">
@@ -361,6 +367,7 @@
     <select id="selectECashGrpDeductByIdPaging" parameterType="Map" resultType="egovMap">
     SELECT *
         FROM (SELECT ROWNUM AS RNUM
+                            ,#{pageNo} as PAGENO,
                             ,Z.*
                             ,SUM(FILE_ITM_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
                             ,COUNT(FILE_BATCH_GRP_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM

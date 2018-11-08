@@ -422,7 +422,11 @@ public class ECashDeductionController {
         					claimMap.put("rowCount", 999);
         					claimMap.put("batchNo",totBatToday);
         					claimMap.put("pageCnt", pageCnt);
+        					claimMap.put("type", 1);
         					this.createECashGrpDeductionFileMBB(claimMap);
+
+        					claimMap.put("type", 2);
+                            this.createECashGrpDeductionFileMBB(claimMap);
         				}
         			}
                 }
@@ -453,6 +457,10 @@ public class ECashDeductionController {
         					claimMap.put("rowCount", 999);
         					claimMap.put("batchNo",totBatToday);
         					claimMap.put("pageCnt", pageCnt);
+        					claimMap.put("type", 1);
+        					this.createECashDeductionFileMBB(claimMap);
+
+        					claimMap.put("type", 2);
         					this.createECashDeductionFileMBB(claimMap);
         				}
         			}
@@ -558,13 +566,24 @@ public class ECashDeductionController {
 			inputDate = CommonUtils.nvl(claimMap.get("fileBatchCrtDt")).equals("") ? "1900-01-01" : (String) claimMap.get("fileBatchCrtDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "yyMMdd");
 			//sFile = "CZ" + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
-			sFile = "CZ" + todayDate + ".dat";
+			if(1 == (Integer) claimMap.get("type")) {
+			    sFile = "CZ" + todayDate + ".dat";
+			} else {
+			    sFile = "CZ" + todayDate + "_NEW" + ".dat";
+			}
 
 			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 			largeExcelService.downLoadECashDeductionFileMBB(claimMap, downloadHandler);
-			if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
-				downloadHandler.writeFooter();
-			}
+	        if(1 == (Integer) claimMap.get("type")) {
+	            if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
+	                downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
+	            }
+	        } else {
+	            downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
+	        }
+			//if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
+			//downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
+			//}
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
@@ -664,9 +683,13 @@ public class ECashDeductionController {
 
 			downloadHandler = getTextDownloadMBBGrpHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 			largeExcelService.downLoadECashGrpDeductionFileMBB(claimMap, downloadHandler);
-			if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
-				downloadHandler.writeFooter();
-			}
+			if(1 == (Integer) claimMap.get("type")) {
+                if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
+                    downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
+                }
+            } else {
+                downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
+            }
 
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);
