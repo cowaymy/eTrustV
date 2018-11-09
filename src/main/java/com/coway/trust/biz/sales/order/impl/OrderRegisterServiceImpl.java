@@ -26,6 +26,7 @@ import org.springframework.util.StringUtils;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.impl.CommonMapper;
+import com.coway.trust.biz.sales.customer.impl.CustomerMapper;
 import com.coway.trust.biz.sales.order.OrderRegisterService;
 import com.coway.trust.biz.sales.order.vo.AccClaimAdtVO;
 import com.coway.trust.biz.sales.order.vo.CallEntryVO;
@@ -458,6 +459,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 								msg = msg + " -Above 60th months not allowed to entitle I-Care Promo. <br/>";
 								isInValid = "InValid";
 							}
+
+							if(Integer.parseInt(String.valueOf(validateRentOutright.get("typeId"))) != 964){
+								msg = msg + " -Only Individual Customer is allowed.";
+								isInValid = "InValid";
+							}
+
 
 							if (custId != Integer.parseInt(String.valueOf(validateRentOutright.get("custId")))) {
 								msg = msg + " -Different Customer is not allowed.";

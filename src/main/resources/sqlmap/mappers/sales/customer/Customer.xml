@@ -2423,7 +2423,8 @@
                 CASE WHEN G.BANK_ID = 0 OR G.BANK_ID is null THEN ' ' ELSE J.NAME END BANK_NAME,
                 A.CUST_ID,
                 A.PROMO_ID,
-                M.CODE STK_CATEGORY
+                M.CODE STK_CATEGORY,
+                C.TYPE_ID CUST_TYPE_ID
 
 
                 FROM SAL0001D A

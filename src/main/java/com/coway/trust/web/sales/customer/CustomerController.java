@@ -1872,9 +1872,10 @@ public class CustomerController {
 	    }
 
 	    int apptypeId = Integer.parseInt(String.valueOf(basicinfo.get("appTypeId")));
+	    int custtypeid = Integer.parseInt(String.valueOf(basicinfo.get("custTypeId")));
 
 
-		if("REG".equals(rentStatus)  && "No".equals(icare) && "WP".equals(stkCategory) && (rentInstNo.compareTo(BigDecimal.valueOf(6)) == 0 || rentInstNo.compareTo(BigDecimal.valueOf(6)) == 1) && apptypeId == 66 && valiOutStanding.compareTo(BigDecimal.valueOf(2)) == -1){
+		if("REG".equals(rentStatus)  && "No".equals(icare) && "WP".equals(stkCategory) && (rentInstNo.compareTo(BigDecimal.valueOf(6)) == 0 || rentInstNo.compareTo(BigDecimal.valueOf(6)) == 1) && apptypeId == 66 && valiOutStanding.compareTo(BigDecimal.valueOf(2)) == -1 && custtypeid == 964){
 			valid = "Yes";
 		}
 		else{
