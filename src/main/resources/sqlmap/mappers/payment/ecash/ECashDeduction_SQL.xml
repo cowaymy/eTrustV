@@ -367,7 +367,7 @@
     <select id="selectECashGrpDeductByIdPaging" parameterType="Map" resultType="egovMap">
     SELECT *
         FROM (SELECT ROWNUM AS RNUM
-                            ,#{pageNo} as PAGENO,
+                            ,#{pageNo} as PAGENO
                             ,Z.*
                             ,SUM(FILE_ITM_AMT) OVER (ORDER BY ROWNUM ROWS  between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_AMT
                             ,COUNT(FILE_BATCH_GRP_ID) OVER (ORDER BY ROWNUM ROWS between 0 FOLLOWING AND UNBOUNDED FOLLOWING) AS TOT_ITM
