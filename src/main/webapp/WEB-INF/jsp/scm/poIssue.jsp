@@ -626,7 +626,7 @@ function fnSetPlanQty(list) {
 			} else if ( 14 == totLeadCnt ) {
 				planQty1	= list[i].w14;	planQty2	= list[i].w15;
 			} else if ( 15 == totLeadCnt ) {
-				planQty1	= list[i].w15;	planQty2	= list[i].w15;
+				planQty1	= list[i].w15;	planQty2	= list[i].w16;
 			} else {
 				console.log("u must make more else if");
 			}
@@ -899,67 +899,67 @@ function fnPoTargetGrid() {
 			}, {
 				dataField : "w01",
 				headerText : "W01",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w02",
 				headerText : "W02",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w03",
 				headerText : "W03",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w04",
 				headerText : "W04",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w05",
 				headerText : "W05",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w06",
 				headerText : "W06",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w07",
 				headerText : "W07",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w08",
 				headerText : "W08",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w09",
 				headerText : "W09",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w10",
 				headerText : "W10",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w11",
 				headerText : "W11",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w12",
 				headerText : "W12",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w13",
 				headerText : "W13",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w14",
 				headerText : "W14",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w15",
 				headerText : "W15",
-				visible : false
+				visible : true
 			}, {
 				dataField : "w16",
 				headerText : "W16",
-				visible : false
+				visible : true
 			}, {
 				dataField : "fobPrc",
 				headerText : "FOB Price",
