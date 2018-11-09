@@ -187,7 +187,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 					LOGGER.debug("planMonth == befWeekMonth : " + planMonth + ", " + befWeekMonth);
 					String intToStrFieldCnt1	= "";	int iLoopDataFieldCnt1	= 1;	//	전주의 실적을 가져오기 위해서 계산하는 주차변수
 					String intToStrFieldCnt2	= "";	int iLoopDataFieldCnt2	= 1;	//	이번주의 실적을 저장하기 위해서 계산하는 주차변수
-					if ( 2 == planWeekSpltCnt ) {
+					/*if ( 2 == planWeekSpltCnt ) {
 						//	planWeek가 해당 월의 가장 마지막 주이고, planWeek 가 split week인 경우
 						if ( 4 == m0WeekCnt ) {
 							iLoopDataFieldCnt1	= 5;
@@ -201,7 +201,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 					} else {
 						LOGGER.debug("Same : plan calendar is wroong");
 					}
-					LOGGER.debug("Same : Start iLoopDataFieldCnt1 : " + iLoopDataFieldCnt1 + ", planWeekSpltCnt : " + planWeekSpltCnt + ", m0WeekCnt : " + m0WeekCnt);
+					LOGGER.debug("Same : Start iLoopDataFieldCnt1 : " + iLoopDataFieldCnt1 + ", planWeekSpltCnt : " + planWeekSpltCnt + ", m0WeekCnt : " + m0WeekCnt);*/
 					//	3.1 m0
 					for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
 						intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
