@@ -314,7 +314,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 					LOGGER.debug("planMonth != befWeekMonth : " + planMonth + ", " + befWeekMonth);
 					String intToStrFieldCnt1	= "";	int iLoopDataFieldCnt1	= 1;	//	전주의 실적을 가져오기 위해서 계산하는 주차변수
 					String intToStrFieldCnt2	= "";	int iLoopDataFieldCnt2	= 1;	//	이번주의 실적을 저장하기 위해서 계산하는 주차변수
-					if ( 2 == planWeekSpltCnt ) {
+					//if ( 2 == planWeekSpltCnt ) {
 						//	planWeek가 해당 월의 가장 마지막 주이고, planWeek 가 split week인 경우
 						if ( 4 == m0WeekCnt ) {
 							iLoopDataFieldCnt1	= 5;
@@ -325,10 +325,10 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						} else {
 							LOGGER.debug("Diff : m0WeekCnt is wrong");
 						}
-					} else {
-						LOGGER.debug("Diff : plan calendar is wroong");
-					}
-					LOGGER.debug("Diff : Start iLoopDataFieldCnt1 : " + iLoopDataFieldCnt1 + ", planWeekSpltCnt : " + planWeekSpltCnt + ", m0WeekCnt : " + m0WeekCnt);
+					//} else {
+					//	LOGGER.debug("Diff : plan calendar is wroong");
+					//}
+					//LOGGER.debug("Diff : Start iLoopDataFieldCnt1 : " + iLoopDataFieldCnt1 + ", planWeekSpltCnt : " + planWeekSpltCnt + ", m0WeekCnt : " + m0WeekCnt);
 					//	3.1 m0
 					for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
 						intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
@@ -401,24 +401,24 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 					}
 					updParams.put("m3", m3Sum);
 					
-					if ( 2 == planWeekSpltCnt ) {
+					/*if ( 2 == planWeekSpltCnt ) {
 						//	빈 주차 채우기
 						int totWeekCnt	= m0WeekCnt + m1WeekCnt + m2WeekCnt + m3WeekCnt;
 						for ( int remain = totWeekCnt + 1 ; remain < 31 ; remain++ ) {
 							updParams.put("w" + remain, 0);
 						}
 						updParams.put("m4", 0);
-					} else {
+					} else {*/
 						//	3.5 m4
 						for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-						/*	if ( 1 == intToStrFieldCnt1.length() ) {
-								intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
-							}
-							if ( 1 == intToStrFieldCnt2.length() ) {
-								intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-							}*/
+						//	if ( 1 == intToStrFieldCnt1.length() ) {
+						//		intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
+						//	}
+						//	if ( 1 == intToStrFieldCnt2.length() ) {
+						//		intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
+						//	}
 							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 							m4Sum	= m4Sum + weekQty;
 							updParams.put("w" + intToStrFieldCnt2, weekQty);
@@ -432,7 +432,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						for ( int remain = totWeekCnt + 1 ; remain < 31 ; remain++ ) {
 							updParams.put("w" + remain, 0);
 						}
-					}
+					//}
 					//LOGGER.debug("updParams : {}", updParams);
 					salesPlanManagementMapper.updateSalesPlanDetail(updParams);
 				}
