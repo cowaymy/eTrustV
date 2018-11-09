@@ -372,6 +372,7 @@
              , REM2                       = #{rem2}
              , UPD_USER_ID                = #{updUserId}
              , UPD_DT                     = SYSDATE
+             , STUS_ID = #{stusId}
          WHERE PRE_ORD_ID                 = #{preOrdId}
     </update>
 

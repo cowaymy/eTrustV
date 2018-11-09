@@ -873,7 +873,8 @@
         var vIs3rdParty = $('#thrdParty').is(":checked") ? 1 : 0;
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
-console.log("email 1 : " + $('#billMthdEmailTxt1').val().trim());
+        var vStusId = ('${preOrderInfo.stusId}' != 1) ? 104 : 1;
+        console.log('SavePre ::' +  '${preOrderInfo.stusId}' + ', '  + vStusId);
         var orderVO = {
         		preOrdId             : $('#frmPreOrdReg #hiddenPreOrdId').val().trim(),
                 sofNo                : $('#sofNo').val().trim(),
@@ -925,7 +926,8 @@ console.log("email 1 : " + $('#billMthdEmailTxt1').val().trim());
                 custBillIsWebPortal  : $('#billGrpWeb').is(":checked")   ? 1 : 0,
                 custBillWebPortalUrl : $('#billGrpWebUrl').val().trim(),
                 custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
-                custBillCustCareCntId: $("#hiddenBPCareId").val()
+                custBillCustCareCntId: $("#hiddenBPCareId").val(),
+                stusId                     : vStusId
             };
         Common.ajax("POST", "/sales/order/modifyPreOrder.do", orderVO, function(result) {
             Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdModPop);
