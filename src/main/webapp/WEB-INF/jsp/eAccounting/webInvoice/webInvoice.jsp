@@ -67,7 +67,9 @@ var webInvoiceColumnLayout = [ {
     style : "aui-grid-user-custom-left"
 }, {
     dataField : "appvPrcssDt",
-    headerText : '<spring:message code="webInvoice.approvedDate" />'
+    headerText : '<spring:message code="webInvoice.approvedDate" />',
+    dataType : "date",
+    formatString : "dd/mm/yyyy"
 }
 ];
 
@@ -238,7 +240,7 @@ function fn_setCostCenterEvent() {
                 if(result.length > 0) {
                 	var row = result[0];
                     console.log(row);
-                    //$("#newCostCenterText").val(row.costCenterText);
+                    $("#newCostCenterText").val(row.costCenterText);
                     $("#costCentrName").val(row.costCenterText);
                 }
             });
@@ -844,14 +846,6 @@ function fn_editRejected() {
         Common.alert("* No Value Selected. ");
         return;
     }
-
-    /*if(gridObj == null || gridObj.length <= 0 ){
-        Common.alert("* No Value Selected. ");
-        return;
-    }*/
-
-
-
 }
 
 </script>
