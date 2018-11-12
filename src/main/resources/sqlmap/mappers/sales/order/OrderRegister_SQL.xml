@@ -2221,4 +2221,13 @@
              )
     </insert>
 
+    <select id="selectRentalInstNo" parameterType="int" resultType="egovMap">
+        SELECT T1.SALES_ORD_ID
+                 , T1.RENT_INST_NO
+          FROM SAL0070D T1
+         WHERE T1.SALES_ORD_ID = #{value}
+           AND TO_CHAR(T1.RENT_INST_DT, 'YYYYMM') = TO_CHAR(SYSDATE, 'YYYYMM')
+           AND ROWNUM &lt;= 1
+    </select>
+
 </mapper>

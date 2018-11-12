@@ -84,6 +84,8 @@ public interface OrderRegisterMapper {
 
 	EgovMap selectAccRentLedgers(int salesOrdId);
 
+	EgovMap selectRentalInstNo(int salesOrdId);
+
 	BigDecimal selectRentAmt(int salesOrdId);
 
 	EgovMap selectPromoDesc(int promoId);
