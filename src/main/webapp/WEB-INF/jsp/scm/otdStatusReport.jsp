@@ -73,7 +73,7 @@ function fnSearch() {
 				//console.log("Success fnSearch : " + result.length);
 				console.log(result);
 				
-				AUIGrid.setGridData(myGridID, result.selectSupplyPlanList);
+				AUIGrid.setGridData(myGridID, result.selectOtdStatus);
 			});
 }
 
@@ -282,27 +282,37 @@ var OtdStatusLayout	=
 					}
 				 ]
 		}, {
-			//	SBO
-			headerText : "SBO",
+			//	SAP
+			headerText : "SAP",
 			children :
 				[
 					{
-						dataField : "sboPoQty",
-						headerText : "<spring:message code='sys.scm.otdview.poQty'/>",
+						dataField : "sapPoNo",
+						headerText : "Po No",
+						cellMerge : true,
+						formatString : "#,##0"
+					}, {
+						dataField : "sapPoItemNo",
+						headerText : "Item No",
+						cellMerge : true,
+						formatString : "#,##0"
+					}, {
+						dataField : "sapPoQty",
+						headerText : "Po Qty",
 						cellMerge : true,
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0"
 					}, {
-						dataField : "sboApQty",
-						headerText : "<spring:message code='sys.scm.otdview.apQty'/>",
+						dataField : "sapApQty",
+						headerText : "Ap Qty",
 						cellMerge : true,
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0"
 					}, {
-						dataField : "sboGrQty",
-						headerText : "<spring:message code='sys.scm.otdview.gr'/>",
+						dataField : "sapGrQty",
+						headerText : "Gr Qty",
 						cellMerge : true,
 						dataType : "numeric",
 						style : "aui-grid-right-column",
