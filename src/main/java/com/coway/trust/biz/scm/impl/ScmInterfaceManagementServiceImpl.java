@@ -98,4 +98,30 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 		
 		return	saveCnt;
 	}
+	
+	@Override
+	public int insertSCM0039M(List<Map<String, Object>> chkList, SessionVO sessionVO) {
+		
+		int saveCnt	= 0;
+		int crtUserId	= sessionVO.getUserId();
+		Map<String, Object> params = new HashMap<>();
+		
+		try {
+			for ( Map<String, Object> list : chkList ) {
+				LOGGER.debug("chkList : ", list);
+				params.put("crtUserId", crtUserId);
+				params.put("poNo", list.get("poNo"));
+				params.put("poItemNo", list.get("poItemNo"));
+				params.put("stockCode", list.get("stockCode"));
+				params.put("poQty", list.get("poQty"));
+				params.put("poItemStusId", 5);	//	5 : Approvaed
+				scmInterfaceManagementMapper.insertSCM0039M(params);
+				saveCnt++;
+			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		return	saveCnt;
+	}
 }

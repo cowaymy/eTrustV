@@ -13,4 +13,6 @@ public interface ScmInterfaceManagementMapper
 	List<EgovMap> selectInterfaceList(Map<String, Object> params);
 	void doInterface(Map<String, Object> params);
 	void scmIf155(Map<String, Object> params);
+	
+	void insertSCM0039M(Map<String, Object> params);
 }
