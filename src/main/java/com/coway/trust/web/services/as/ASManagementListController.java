@@ -1301,33 +1301,41 @@ public class ASManagementListController {
 		EgovMap warrentyInfo =  ASManagementListService.checkWarrentyStatus(params);
 
 		if(asReceiveInfo != null){
-
-			logger.debug("AS Stus : " +  asReceiveInfo.get("asStus"));
-			if(asReceiveInfo.get("asStus") == null || asReceiveInfo.get("asStus") == "" || asReceiveInfo.get("asStus") == "null" ){
-				msg = msg + "" ;
-			}
-			else{
+			//logger.debug("AS Stus : " +  asReceiveInfo.get("asStus"));
+			if(asReceiveInfo.get("asStus") != null ){
 				msg = msg + "* This order AS is under " + asReceiveInfo.get("asStusDesc") + " status.<br />" ;
 			}
-			logger.debug("Srv Stus : " + warrentyInfo.get("srvStus"));
-			if(warrentyInfo.get("srvStus") == null || warrentyInfo.get("srvStus") == "" || warrentyInfo.get("srvStus") == "null"){
-				 msg = msg + "* This order Membership is under Out of Warranty status.<br />" ;
-			}
 			else{
 				msg = msg + "" ;
 			}
-			logger.debug("HS Stus : " +  hsInfo.get("hsStus"));
-			if(hsInfo.get("hsStus") == null || hsInfo.get("hsStus") == "" || hsInfo.get("hsStus") == "null" ){
+		}
+		else{
+			msg = msg + "";
+		}
+
+		if(warrentyInfo != null){
+			//logger.debug("Srv Stus : " + warrentyInfo.get("srvStus"));
 				msg = msg + "" ;
-			}
-			else{
+		}
+		else{
+			msg = msg +  "* This order Membership is under Out of Warranty status.<br />" ;
+		}
+
+		if(hsInfo != null){
+			//logger.debug("HS Stus : " +  hsInfo.get("hsStus"));
+			if(hsInfo.get("hsStus") != null){
 				 msg = msg + "* This order HS is under " + hsInfo.get("hsStusDesc") + " status.<br />" ;
 			}
-
-
-		}else{
-		 msg = "";
+			else{
+				msg = msg + "";
+			}
 		}
+		else{
+			msg = msg + "";
+		}
+
+
+
 		logger.debug("checkASReceiveEntry - msg : " + msg);
 		message.setMessage(msg);
 		return ResponseEntity.ok(message);
