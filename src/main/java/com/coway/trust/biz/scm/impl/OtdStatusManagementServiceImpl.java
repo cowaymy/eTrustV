@@ -58,8 +58,8 @@ public class OtdStatusManagementServiceImpl implements OtdStatusManagementServic
 		startDate	= startDate.replace("/", "");	startDate	= startDate.replace(".", "");	startDate	= startDate.replace("-", "");
 		endDate		= endDate.replace("/", "");		endDate		= endDate.replace(".", "");		endDate		= endDate.replace("-", "");
 		
-		startDate	= startDate.substring(4, 8) + startDate.substring(0, 2) + startDate.substring(2, 4);
-		endDate		= endDate.substring(4, 8) + endDate.substring(0, 2) + endDate.substring(2, 4);
+		startDate	= startDate.substring(4, 8) + startDate.substring(2, 4) + startDate.substring(0, 2);
+		endDate		= endDate.substring(4, 8) + endDate.substring(2, 4) + endDate.substring(0, 2);
 		
 		LOGGER.debug("startDate : " + startDate + ", endDate : " + endDate);
 		
