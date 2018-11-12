@@ -13,4 +13,5 @@ public interface ScmInterfaceManagementService
 	List<EgovMap> selectInterfaceList(Map<String, Object> params);
 	int doInterface(List<Map<String, Object>> chkList, SessionVO sessionVO);
 	int scmIf155(List<Map<String, Object>> chkList, SessionVO sessionVO);
+	int insertSCM0039M(List<Map<String, Object>> chkList, SessionVO sessionVO);
 }
