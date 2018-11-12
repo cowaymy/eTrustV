@@ -4649,7 +4649,10 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
 
     <update id="updateCdApl" parameterType="Map">
-        UPDATE ORG0001D SET APLICNT_ID = #{aplcntId} WHERE MEM_CODE = #{memCode}
+        UPDATE ORG0001D 
+             SET APLICNT_ID = #{aplcntId},
+                   UPD_USER_ID = #{userId}
+         WHERE MEM_CODE = #{memCode}
     </update>
 
     <update id="updateMeetpoint" parameterType="Map">

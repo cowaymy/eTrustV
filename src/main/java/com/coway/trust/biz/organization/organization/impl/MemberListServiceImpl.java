@@ -1497,6 +1497,7 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
 
             // 2018-07-12 - Insertion of trainee's e-Agreement
             paramM.put("memCode", resultValue.get("memCode"));
+            paramM.put("userId", sessionVO.getUserId());
             memberListMapper.updateCodyAplCde(paramM);
 
             memberListMapper.updateCdApl(paramM);
