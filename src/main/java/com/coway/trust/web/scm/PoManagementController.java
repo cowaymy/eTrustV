@@ -190,6 +190,10 @@ public class PoManagementController {
 			LOGGER.debug("totCnt after po approve : " + totCnt);
 			totCnt	= scmInterfaceManagementService.scmIf155(chkList, sessionVO);
 			LOGGER.debug("totCnt after po interface : " + totCnt);
+			
+			if ( 0 < totCnt ) {
+				totCnt	= scmInterfaceManagementService.insertSCM0039M(chkList, sessionVO);
+			}
 		} else {
 			message.setCode(AppConstants.FAIL);
 			message.setData(totCnt);
