@@ -125,19 +125,21 @@ $(document).ready(function() { //***********************************************
     	}
 
     	//Validation
+    	if(FormUtil.isEmpty($("#_posNo").val())){
     	if(FormUtil.isEmpty($('#_sDate').val()) || FormUtil.isEmpty($('#_eDate').val())) {
 			    Common.alert('<spring:message code="sal.alert.msg.selectOrdDate" />');
 			    return;
     	}
+    	}
 
     	//Gap
-    	var startDate = $('#_sDate').val();
+ /*    	var startDate = $('#_sDate').val();
     	var endDate = $('#_eDate').val();
 
     	if( fn_getDateGap(startDate , endDate) > 31){
     		Common.alert('<spring:message code="sal.alert.msg.dateTermThirtyOneDay" />');
     		return;
-    	}
+    	} */
 
     	//Grid Clear
     	AUIGrid.clearGridData(posGridID);
@@ -166,11 +168,12 @@ $(document).ready(function() { //***********************************************
     		Common.alert('<spring:message code="sal.alert.msg.posProhibit" />');
     		return;
     	}
-    	console.log("clickChk[0].item.stusId : " + clickChk[0].item.stusId);
+    	// NO CHECKING FOR POS STATUS FOR REVERSAL -- TPY
+    	/* console.log("clickChk[0].item.stusId : " + clickChk[0].item.stusId);
     	if(clickChk[0].item.stusId != 4){
     		Common.alert('<spring:message code="sal.alert.msg.canNotbeReversalByCompl" />');
             return;
-    	}
+    	} */
     	//
     	// Invoice Chk
     	var reRefNo = clickChk[0].item.posNo;
@@ -933,7 +936,7 @@ function fn_insTransactionLog(posNo, posTypeId){
 <tr>
     <th scope="row"><spring:message code="sal.title.text.posRefNo" /></th>
     <td>
-    <input type="text" title="" placeholder="POS No." class="w100p"  name="posNo" />
+    <input type="text" title="" placeholder="POS No." class="w100p"  id="_posNo" name="posNo" />
     </td>
     <th scope="row"><spring:message code="sal.title.salDate" /></th>
     <td>
