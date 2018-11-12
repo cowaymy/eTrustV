@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
-import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPFile;
-import org.apache.commons.net.ftp.FTPReply;
+//import org.apache.commons.net.ftp.FTPClient;
+//import org.apache.commons.net.ftp.FTPFile;
+//import org.apache.commons.net.ftp.FTPReply;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,33 +51,33 @@ public class ScmBatchController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
-	
-	@RequestMapping(value = "/connection.do", method = RequestMethod.GET)
+
+/*	@RequestMapping(value = "/connection.do", method = RequestMethod.GET)
 	public ResponseEntity<String> connection(@RequestParam Map<String, Object> params) {
-	
+
 		LOGGER.debug("selectSupplyCDC_ComboList : {}", params.toString());
-		
+
 		execute();
-		
+
 		return ResponseEntity.ok("OK");
-	}
-	
-	public static void execute() {
-		
+	}*/
+
+/*	public static void execute() {
+
 		String filePath	= "";
 		FTPClient client	= null;
-		
+
 		//	try ftp server & login & get files
 		try {
 			client	= new FTPClient();
-			
+
 			client.setControlEncoding("euc-kr");
 			LOGGER.debug("Commons NET FTP Client Test Program");
 			LOGGER.debug("Start GO");
-			
+
 			//	connection ftp server
 			client.connect("10.101.3.40");
-			
+
 			//	in case abnormal reply code, close
 			int reply	= client.getReplyCode();
 			if ( ! FTPReply.isPositiveCompletion(reply) ) {
@@ -85,14 +85,14 @@ public class ScmBatchController {
 				LOGGER.debug("FTP server refused connection");
 			} else {
 				LOGGER.debug(client.getReplyString());
-				
+
 				//	set time out
 				client.setSoTimeout(100000);
-				
+
 				//	login
 				client.login("etrustftp", "akffus#20!*");
 				LOGGER.debug("etrustftp login success...");
-				
+
 				//	file 우리쪽 서버로 카피
 				FTPFile[] ftpFiles	= client.listFiles("/");
 				if ( null != ftpFiles ) {
@@ -106,7 +106,7 @@ public class ScmBatchController {
 					}
 				}
 			}
-			
+
 			if ( executeQuery() ) {
 				LOGGER.debug("insert success");
 			} else {
@@ -126,10 +126,10 @@ public class ScmBatchController {
 			}
 		}
 	}
-	
+*/
 	public static boolean executeQuery() {
 		boolean ret	= true;
-		
+
 		Connection conn	= null;
 		//ResultSet rs	= null;
 		BufferedReader	br	= null;
@@ -143,8 +143,8 @@ public class ScmBatchController {
 		String fileName	= "";
 		String filePath	= "c:\\temp\\";
 		String row	= "";
-		
-		
+
+
 		//	GI
 		try {
 			fileName	= "COWAY_GI_DATA_" + ifDate + ".TXT";
@@ -159,7 +159,7 @@ public class ScmBatchController {
 			query1	= query1 + "   AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))";
 			//stmt	= conn.prepareStatement(query);
 			stmt1	= conn.prepareStatement(query1);
-			
+
 			String giQty	= "";
 			String giDt	= "";
 			String poNo	= "";
@@ -189,7 +189,7 @@ public class ScmBatchController {
 			ret	= false;
 			e.printStackTrace();
 		}
-		
+
 		//	SO
 		try {
 			fileName	= "COWAY_SO_DATA_" + ifDate + ".TXT";
@@ -207,7 +207,7 @@ public class ScmBatchController {
 			query1	= query1 + "   AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))";
 			//stmt	= conn.prepareStatement(query);
 			stmt1	= conn.prepareStatement(query1);
-			
+
 			String soQty	= "";
 			String soDt	= "";
 			String poNo	= "";
@@ -223,7 +223,7 @@ public class ScmBatchController {
 				for ( int i = 0 ; i < col.length ; i++ ) {
 					//	for ITF0310M
 					//stmt.setString(i + 3, col[i]);
-					
+
 					//	for SCM0039M
 					if ( 0 == i )	poNo		= col[i];
 					if ( 2 == i )	soNo		= col[i];
@@ -231,7 +231,7 @@ public class ScmBatchController {
 					if ( 4 == i )	stockCode	= col[i];
 					if ( 9 == i )	soDt		= col[i];
 					if ( 11 == i )	soQty		= col[i];
-					
+
 					stmt1.setString(1, soNo);
 					stmt1.setString(2, soItemNo);
 					stmt1.setString(3, soQty);
@@ -245,7 +245,7 @@ public class ScmBatchController {
 			ret	= false;
 			e.printStackTrace();
 		}
-		
+
 		//	PP
 		try {
 			fileName	= "COWAY_PP_DATA_" + ifDate + ".TXT";
@@ -263,7 +263,7 @@ public class ScmBatchController {
 			query1	= query1 + "   AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))";
 			//stmt	= conn.prepareStatement(query);
 			stmt1	= conn.prepareStatement(query1);
-			
+
 			String planQty	= "";
 			String prodQty	= "";
 			String startDt	= "";
@@ -279,7 +279,7 @@ public class ScmBatchController {
 				for ( int i = 0 ; i < col.length ; i++ ) {
 					//	for ITF0310M
 					//stmt.setString(i + 3, col[i]);
-					
+
 					//	for SCM0039M
 					if ( 0 == i )	poNo		= col[i];
 					if ( 3 == i )	stockCode	= col[i];
@@ -287,7 +287,7 @@ public class ScmBatchController {
 					if ( 6 == i )	prodQty		= col[i];
 					if ( 8 == i )	startDt		= col[i];
 					if ( 9 == i )	endDt		= col[i];
-					
+
 					stmt1.setString(1, planQty);
 					stmt1.setString(2, prodQty);
 					stmt1.setString(3, startDt);
@@ -302,7 +302,7 @@ public class ScmBatchController {
 			ret	= false;
 			e.printStackTrace();
 		}
-		
+
 		return	ret;
 	}
 }
