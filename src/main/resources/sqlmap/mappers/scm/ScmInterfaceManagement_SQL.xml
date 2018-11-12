@@ -161,7 +161,6 @@ INSERT INTO ITF0155M
      , PO_ID
      , PO_NO
      , PO_ITM_NO
-     , DELFLAG
      , VENDOR
      , PO_ISSU_DT
      , CDC
@@ -184,7 +183,6 @@ SELECT '155' || TO_CHAR(SYSDATE, 'YYMMDD') || '_' || LPAD(A.IF_KEY + A.IF_KEY_SE
      , A.PO_ID
      , A.PO_NO
      , A.PO_ITM_NO
-     , 'N' AS DELFLAG
      , A.VENDOR
      , A.PO_ISSU_DT
      , A.CDC
@@ -219,7 +217,29 @@ SELECT '155' || TO_CHAR(SYSDATE, 'YYMMDD') || '_' || LPAD(A.IF_KEY + A.IF_KEY_SE
           FROM SCM0052M A
           LEFT OUTER JOIN SCM0053D B ON (A.PO_ID = B.PO_ID AND B.USE_YN = 'Y')
          WHERE B.PO_NO = #{poNo}
+           AND B.PO_ITEM_NO = #{poItemNo}
         ) A
+</insert>
+
+<insert id="insertSCM0039M" parameterType="Map">
+INSERT INTO SCM0039M
+(
+       PO_NO
+     , PO_ITEM_NO
+     , STOCK_CODE
+     , PO_DT
+     , PO_QTY
+     , PO_ITEM_STUS_ID
+ )
+VALUES
+(
+       #{poNo}
+     , #{poItemNo}
+     , #{stockCode}
+     , TO_CHAR(SYSDATE, 'YYYYMMDD')
+     , #{poQty}
+     , #{poItemStusId}
+ )
 </insert>
 
 </mapper>

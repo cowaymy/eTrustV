@@ -9,27 +9,30 @@ SELECT A.PO_NO
      , B.STK_DESC AS NAME
      , B.STK_TYPE_ID AS TYPE_ID
      , C.CODE_NAME AS TYPE
-     , A.PO_DT
+     , TO_CHAR(TO_DATE(A.PO_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS PO_DT
      , A.PO_QTY
      , A.PO_ITEM_STUS_ID
      , A.SO_NO
      , A.SO_ITEM_NO
      , A.SO_QTY
-     , A.SO_DT
-     , A.GR_DT
+     , TO_CHAR(TO_DATE(A.SO_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS SO_DT
+     , TO_CHAR(TO_DATE(A.GR_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS GR_DT
      , A.PP_PLAN_QTY
      , A.PP_PROD_QTY
-     , A.PP_PROD_START_DT
-     , A.PP_PROD_END_DT
+     , TO_CHAR(TO_DATE(A.PP_PROD_START_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS PP_PROD_START_DT
+     , TO_CHAR(TO_DATE(A.PP_PROD_END_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS PP_PROD_END_DT
      , A.GI_QTY
-     , A.GI_DT
-     , A.SBO_PO_QTY
-     , A.SBO_AP_QTY
-     , A.SBO_GR_QTY
+     , TO_CHAR(TO_DATE(A.GI_DT, 'YYYY-MM-DD'), 'YYYY-MM-DD') AS GI_DT
+     , A.SAP_PO_NO
+     , A.SAP_PO_ITEM_NO
+     , A.SAP_PO_QTY
+     , A.SAP_AP_QTY
+     , A.SAP_GR_QTY
+     , A.REM
   FROM SCM0039M A
   LEFT OUTER JOIN SYS0026M B ON (A.STOCK_CODE = B.STK_CODE)
   LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
- WHERE A.PO_DT BETWEEN '20170101' AND '20171231'
+ WHERE A.PO_DT BETWEEN #{startDate} AND #{endDate}
 	<if test="poItemStusId != null and poItemStusId != ''">
    AND A.PO_ITEM_STUS_ID = #{poItemStusId}
 	</if>
@@ -40,7 +43,7 @@ SELECT A.PO_NO
 		#{item}
 		</foreach>
 	</if>
- ORDER BY B.STK_CODE
+ ORDER BY A.PO_NO, A.PO_ITEM_NO
 </select>
 
 </mapper>
