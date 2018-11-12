@@ -2130,7 +2130,19 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 				int tracePromoID = 600;
 
 				if(CommonUtils.intNvl(view.get("ordDt")) > 20140701) {
-					tracePromoID = 577;
+					// To get no promotion applied
+					Map<String, Object> noPromo = new HashMap <>();
+					noPromo.put("promoTypeId","2282");
+					noPromo.put("promoAppTypeId","2285");
+					noPromo.put("promoSrvMemPacId","3");
+					noPromo.put("promoPrcPrcnt","0");
+					noPromo.put("promoRpfDiscAmt","0");
+					noPromo.put("promoAddDiscPrc","0");
+					noPromo.put("dateBetween","1");
+
+					EgovMap promoId = orderRequestMapper.selectPromoD(noPromo);
+					tracePromoID = ((BigDecimal)promoId.get("promoId")).intValue();
+					//tracePromoID = 577;
 				}
 
 				params.put("promoId", tracePromoID);
