@@ -1,5 +1,8 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
+<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" import="com.coway.trust.util.FtpConnection"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+
+<jsp:useBean id="ftpConnection" class="com.coway.trust.util.FtpConnection" scope="page"></jsp:useBean>
+
 <style type="text/css">
 /* 칼럼 스타일 전체 재정의 */
 .aui-grid-right-column {
@@ -89,6 +92,14 @@ function fnScmIfErrCodeCbBox() {
 }
 
 function fnSearch() {
+	var tranDtFrom	= $("#tranDtFrom").val();
+	var tranDtTo	= $("#tranDtTo").val();
+	console.log("tranDtTo : " + tranDtTo);
+	if ( "" == tranDtFrom || "" == tranDtTo ) {
+		Common.alert("IF Date is must be selected");
+		return	false;
+	}
+	
 	var params	= {
 			scmIfTypeCbBox : $("#scmIfTypeCbBox").multipleSelect("getSelects"),
 			scmIfTranStatusCbBox : $("#scmIfTranStatusCbBox").multipleSelect("getSelects")//,
@@ -137,6 +148,14 @@ function fnDoInterface(obj) {
 				}
 				Common.alert("Fail : " + jqXHR.responseJSON.message);
 			});
+}
+
+function fnExecute() {
+	Common.ajax("GET"
+			, "/scm/connection.do"
+			, ""
+			, ""
+			, "");
 }
 
 /*************************************
@@ -303,6 +322,7 @@ $(document).ready(function() {
 <h2>Interface</h2>
 <ul class="right_btns">
 	<li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
+	<li><p class="btn_blue"><a onclick="fnExecute();"><span class="search"></span>Execute</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
