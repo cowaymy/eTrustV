@@ -423,7 +423,7 @@ public class PosController {
 
 		EgovMap revMap = null;
 		revMap = posService.insertPosReversal(params);
-
+		LOGGER.info("################################################ revMap : " + revMap.toString());
 		return ResponseEntity.ok(revMap);
 
 	}
