@@ -1452,6 +1452,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
           			rePaymMap.put("syncCheck", Integer.parseInt(String.valueOf(payInfoMap.get("syncHeck"))));
           			rePaymMap.put("thirdPartyCustId", Integer.parseInt(String.valueOf(payInfoMap.get("custId3party"))));
           			rePaymMap.put("totAmt", -1*Double.parseDouble(String.valueOf(payInfoMap.get("totAmt"))));
+          			//rePaymMap.put("totAmt", rtnAmt);
           			rePaymMap.put("matchId", Integer.parseInt(String.valueOf(payInfoMap.get("mtchId"))));
           			rePaymMap.put("crtUserId", params.get("userId"));
           			rePaymMap.put("isAllowRevMulti", Integer.parseInt(String.valueOf(payInfoMap.get("isAllowRevMulti"))));
@@ -1460,7 +1461,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
           			rePaymMap.put("trxSeq", Integer.parseInt(String.valueOf(payInfoMap.get("trxId"))));
           			rePaymMap.put("advMonth", Integer.parseInt(String.valueOf(payInfoMap.get("advMonth"))));
           			rePaymMap.put("orderBillId",  Integer.parseInt(String.valueOf(payInfoMap.get("accBillId"))));
-          			rePaymMap.put("trIssuDt", String.valueOf(payInfoMap.get("trIssuDt")));//
+          			rePaymMap.put("trIssuDt", payInfoMap.get("trIssuDt"));//
           			rePaymMap.put("payInvIsGen", Integer.parseInt(String.valueOf(payInfoMap.get("taxInvcIsGen"))));
           			rePaymMap.put("taxInvcRefNo", String.valueOf(payInfoMap.get("taxInvcRefNo")));
           			rePaymMap.put("taxInvcRefDt", String.valueOf(payInfoMap.get("taxInvcRefDt")));//
@@ -1491,6 +1492,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       				rePayxMap.put("trxSeq", payXseq);
       				rePayxMap.put("trxType", SalesConstants.POS_TRX_REVERSE_TYPE); // paytrx.TrxType = 101;
       				rePayxMap.put("trxAmt", -1*Double.parseDouble(String.valueOf(getTrxInfoMap.get("trxAmt")))); // paytrx.TrxAmount = -1 * paytrx.TrxAmount;
+      				//rePayxMap.put("trxAmt", rtnAmt); // paytrx.TrxAmount = -1 * paytrx.TrxAmount;
       				rePayxMap.put("trxMatchNo", getTrxInfoMap.get("trxMtchNo"));
 
       				LOGGER.info("############### 14. POS Reverse Pay X INSERT START  ################");
@@ -1667,7 +1669,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			List<EgovMap> revDetList = null;
 			bookMap.put("rcvStusId", SalesConstants.POS_DETAIL_NON_RECEIVE);
 			revDetList = posMapper.getPosItmIdListByPosNo(bookMap);
-
+			LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@ revDetList : " + revDetList);
 			for (int idx = 0; idx < revDetList.size(); idx++) {
 
 				//GI Call Procedure
