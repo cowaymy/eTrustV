@@ -52,14 +52,14 @@ SELECT   T.CLM_NO
                        )
                      ,'Temporary Save'
                      ) APPV_PRCSS_STUS
-                ,TO_CHAR (T3.APPV_PRCSS_DT, 'DD/MM/YYYY') AS APPV_PRCSS_DT
+                ,T3.APPV_PRCSS_DT AS APPV_PRCSS_DT
                 ,T1.UTIL_NO
             FROM FCM0002M T1
             LEFT JOIN FCM0006M T2
                 ON T1.MEM_ACC_ID = T2.MEM_ACC_ID
            LEFT JOIN FCM0004M T3
                 ON T1.APPV_PRCSS_NO = T3.APPV_PRCSS_NO
-           <if test="(loginUserId != null and loginUserId != '') or (brnchId != null and brnchId != '')">
+           <if test="(loginUserId != null and loginUserId != '') or (brnchId != null and brnchId != '') or (appStartDt != null and appStartDt != '') or (appEndDt != null and appEndDt != '') ">
                 WHERE 1=1
            </if>
            <if test="loginUserId != null and loginUserId != ''">
@@ -70,6 +70,19 @@ SELECT   T.CLM_NO
            </if>
            <if test="deptId != null and deptId != ''">
                 AND T1.DEPT_ID = #{deptId}
+           </if>
+           <if test="appStartDt != null and appStartDt != ''">
+               <![CDATA[
+                   AND T3.APPV_PRCSS_DT >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
+               ]]>
+           </if>
+            <if test="appEndDt != null and appEndDt != ''">
+               <![CDATA[
+                   AND T3.APPV_PRCSS_DT <= TO_DATE(#{appEndDt}, 'DD/MM/YYYY')
+               ]]>
+           </if>
+           <if test="(appStartDt != null and appStartDt != '') or (appEndDt != null and appEndDt != '') ">
+               AND T3.APPV_PRCSS_STUS = 'A'
            </if>
                  ) T
           WHERE 1=1
@@ -99,7 +112,7 @@ SELECT   T.CLM_NO
                 AND UPPER(T.CLM_NO) <= UPPER(#{clmNoEnd})
              ]]>
         </if>
-        <if test="appvPrcssStus != null and appvPrcssStus != ''">
+        <if test="(appvPrcssStus != null and appvPrcssStus != '' ) and ((appStartDt == null and appStartDt == '') or (appEndDt == null and appEndDt == ''))">
              AND T.APPV_PRCSS_STUS_CODE IN
          <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
              #{item}
@@ -121,16 +134,6 @@ SELECT   T.CLM_NO
         <if test="utilAccNo != null and utilAccNo != ''">
         <![CDATA[
              AND UPPER(T.UTIL_NO) LIKE UPPER('%'||#{utilAccNo}||'%')
-        ]]>
-        </if>
-        <if test="appStartDt != null and appStartDt != ''">
-        <![CDATA[
-             AND T.APPV_PRCSS_DT >=#{appStartDt}
-        ]]>
-        </if>
-        <if test="appEndDt != null and appEndDt != ''">
-        <![CDATA[
-             AND T.APPV_PRCSS_DT <= #{appEndDt}
         ]]>
         </if>
         ORDER BY T.CLM_NO
