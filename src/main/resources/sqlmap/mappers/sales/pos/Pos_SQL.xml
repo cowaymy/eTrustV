@@ -2101,7 +2101,7 @@
 
 
        <resultMap type="egovMap" id="giMap"/>
-       <select id="60" parameterType="Map"  statementType="CALLABLE" >
+       <select id="posGICallSP_LOGISTIC_POS" parameterType="Map"  statementType="CALLABLE" >
        <![CDATA[
             {
                   call SP_LOGISTIC_POS ( #{psno}, #{retype} ,#{pType} ,#{posItmId}, #{pPrgNm}, #{userId}, #{p1, mode=OUT,  jdbcType=VARCHAR, javaType=String,  resultMap=giMap})
@@ -2670,7 +2670,7 @@
                         #{trxSeq},
                         #{advMonth},
                         #{orderBillId},
-                        TO_DATE(#{trIssuDt}, 'DD/MM/YYYY'),
+                        TO_DATE(NVL(#{trIssuDt},'01/01/1900'), 'DD/MM/YYYY'),
                         #{payInvIsGen},
                         #{taxInvcRefNo},
                         TO_DATE(#{taxInvcRefDt} , 'DD/MM/YYYY'),
