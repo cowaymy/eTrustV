@@ -1211,9 +1211,9 @@ $(document).ready(function() {
 							<select class="sel_date" id="scmWeekCbBox" name="scmWeekCbBox" onchange="fnScmWeekCbBoxChange(this);"></select>
 							</div><!-- date_set end -->
 						</td>
-						<th scope="row">Stock</th>
+						<th scope="row">Team</th>
 						<td>
-							<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
+							<select class="w100p" id="scmTeamCbBox" name="scmTeamCbBox"></select>
 						</td>
 						<th scope="row">Planning Status</th>
 						<td>
@@ -1225,18 +1225,18 @@ $(document).ready(function() {
 						</td>
 					</tr>
 					<tr>
-						<th scope="row">Team</th>
+						<th scope="row">Type</th>
 						<td>
-							<select class="w100p" id="scmTeamCbBox" name="scmTeamCbBox"></select>
+							<!-- <select class="multy_select w100p" multiple="multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox"></select> -->
+							<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
 						</td>
 						<th scope="row">Category</th>
 						<td>
 							<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
 						</td>
-						<th scope="row">Type</th>
+						<th scope="row">Stock</th>
 						<td>
-							<!-- <select class="multy_select w100p" multiple="multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox"></select> -->
-							<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
+							<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
 						</td>
 					</tr>
 				</tbody>
