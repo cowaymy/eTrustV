@@ -96,6 +96,7 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 		for ( Object obj : params ) {
 			LOGGER.debug("saveScmMaster2 : {}", params.toString());
 			((Map<String, Object>) obj).put("stockId", ((Map<String, Object>) obj).get("stockId"));
+			((Map<String, Object>) obj).put("stockCode", ((Map<String, Object>) obj).get("stockCode"));
 			
 			//	KL
 			((Map<String, Object>) obj).put("cdc", "2010");
