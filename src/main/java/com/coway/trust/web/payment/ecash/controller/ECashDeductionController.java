@@ -711,7 +711,7 @@ public class ECashDeductionController {
 		File file = new File(filePath + "/CRC/" + sFile);
 		EmailVO email = new EmailVO();
 
-		email.setTo(emailReceiver);
+		email.setTo("kitwai.lai@coway.com.my");
 		email.setHtml(false);
 		email.setSubject("SCB eCash CRC Grouping Deduction File - Batch Date : " + inputDate + "_ "+ String.valueOf(claimMap.get("pageNo")));
 		email.setText("Please find attached the claim file for your kind perusal.");
