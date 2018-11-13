@@ -143,6 +143,7 @@ WHEN NOT MATCHED THEN
      (
             CDC
           , STOCK_ID
+          , STOCK_CODE
           , IS_TRGET
           , MOQ
       )
@@ -150,6 +151,7 @@ WHEN NOT MATCHED THEN
      (
             #{cdc}
           , #{stockId}
+          , #{stockCode}
           , NVL(#{isTrget}, 0)
           , NVL(#{moq}, 0)
       )
