@@ -397,15 +397,15 @@ WITH SALES_PLAN_SUMMARY
     </select>
 
     <select id="selectPeriodByYear" parameterType="Map" resultType="egovMap">
-			SELECT SCM_YEAR
-			     , WEEK_TH ||'-'|| WEEK_TH_SN ||decode(length(WEEK_TH),1,'  [','[')||TO_CHAR(WEEK_TH_SN_START,'YYYY-MM-DD') || ' ~ ' ||  WEEK_TH_SN_END ||']' SCM_PERIOD
-			     , SCM_MONTH
-			     , WEEK_TH
-			  FROM SCM0018M
-			 WHERE SCM_YEAR = #{year}
-			   AND WEEK_TH_SN = 1
-			   AND NVL(USE_YN,'Y')='Y'
-			   AND USE_YN = 'Y'
+      SELECT SCM_YEAR
+           , SCM_WEEK ||'-'|| SCM_WEEK_SEQ ||decode(length(SCM_WEEK),1,'  [','[')||TO_CHAR(SCM_WEEK_START,'YYYY-MM-DD') || ' ~ ' ||  SCM_WEEK_END ||']' SCM_PERIOD
+           , SCM_MONTH
+           , SCM_WEEK
+        FROM SCM0018M
+       WHERE SCM_YEAR = #{year}
+         AND SCM_WEEK_SEQ = 1
+         AND NVL(USE_YN,'Y')='Y'
+         AND USE_YN = 'Y'
     </select>
 
     <select id="selectScmTeamCode" parameterType="Map" resultType="egovMap">
