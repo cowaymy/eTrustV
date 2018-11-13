@@ -337,7 +337,7 @@ var mapGridID, unmapGridID
 
 $(document).ready(function() {
 	var MstGridLayoutOptions	= {
-			usePaging : true,
+			//usePaging : true,
 			useGroupingPanel : false,
 			showRowNumColumn : false,	//	그리드 넘버링
 			showStateColumn : true,		//	행 상태 칼럼 보이기
