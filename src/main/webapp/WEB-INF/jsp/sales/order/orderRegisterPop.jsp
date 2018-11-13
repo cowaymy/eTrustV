@@ -1818,10 +1818,12 @@ console.log("vBindingNo" + vBindingNo);
                 if (dd <= '22') {
                 	if ($('#compType').val() == '3' || $('#compType').val() == '4') {
                 		if ($('#ordPromo').val() != '31810' && $('#ordPromo').val() != '31811' && $('#ordPromo').val() != '31814' ) {
+                			isValid = false;
                 			msg += '* <spring:message code="sal.alert.msg.plzSelPromoCde" /><br>';
                 		}
                 	} else if ($('#compType').val() == '1' || $('#compType').val() == '2') {
                 		if ($('#ordPromo').val() != '31736' && $('#ordPromo').val() != '31723') {
+                			isValid = false;
                 			msg += '* <spring:message code="sal.alert.msg.plzSelPromoCde" /><br>';
                 		}
                     }
