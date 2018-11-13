@@ -38,7 +38,8 @@ var gSumAmount = 0;
 $(function() 
 {
   // set Year
-  fnSelectExcuteYear();
+  //fnSelectExcuteYear();
+  fnScmYearCbBox();
   // set PeriodByYear
   fnSelectPeriodReset(); 
   // set CDC
