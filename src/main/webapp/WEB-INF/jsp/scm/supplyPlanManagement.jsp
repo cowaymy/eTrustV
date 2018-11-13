@@ -1040,6 +1040,40 @@ function fnButtonControl(list1, list2) {
 		}
 	} else {
 		console.log("Sales Plan error");
+		//	button
+		if ( 0 == supplyPlanStusId ) {
+			$("#btnCreate").removeClass("btn_disabled");
+			$("#btnSave").addClass("btn_disabled");
+			$("#btnConfirm").addClass("btn_disabled");
+			$("#btnUnconfirm").addClass("btn_disabled");
+			$("#btnExcel").addClass("btn_disabled");
+		} else if ( 1 == supplyPlanStusId ) {
+			$("#btnCreate").addClass("btn_disabled");
+			$("#btnSave").removeClass("btn_disabled");
+			$("#btnConfirm").removeClass("btn_disabled");
+			$("#btnUnconfirm").addClass("btn_disabled");
+			$("#btnExcel").removeClass("btn_disabled");
+		} else if ( 5 == supplyPlanStusId ) {
+			$("#btnCreate").addClass("btn_disabled");
+			$("#btnSave").addClass("btn_disabled");
+			$("#btnConfirm").addClass("btn_disabled");
+			$("#btnUnconfirm").removeClass("btn_disabled");
+			$("#btnExcel").removeClass("btn_disabled");
+		} else {
+			console.log("Supply Plan error");
+		}
+		
+		//	status
+		$("#cirSales").removeClass("circle_grey");		$("#cirSales").addClass("circle_blue");		$("#cirSales").removeClass("circle_red");
+		if ( 0 == supplyPlanStusId ) {
+			$("#cirSupply").addClass("circle_grey");	$("#cirSupply").removeClass("circle_blue");	$("#cirSupply").removeClass("circle_red");
+		} else if ( 1 == supplyPlanStusId ) {
+			$("#cirSupply").removeClass("circle_grey");	$("#cirSupply").removeClass("circle_blue");	$("#cirSupply").addClass("circle_red");
+		} else if ( 5 == supplyPlanStusId ) {
+			$("#cirSupply").removeClass("circle_grey");	$("#cirSupply").addClass("circle_blue");	$("#cirSupply").removeClass("circle_red");
+		} else {
+			console.log("Supply Plan error2");
+		}
 	}
 }
 
