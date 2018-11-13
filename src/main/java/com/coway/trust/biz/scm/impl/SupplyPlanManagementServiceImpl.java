@@ -303,9 +303,15 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			LOGGER.debug("poParams : {}", poParams);
 			List<EgovMap> selectGetPoCnt	= supplyPlanManagementMapper.selectGetPoCnt(poParams);
 			
+			//	each sum var init
+			m0Psi1	= 0;	m0Psi3	= 0;
+			m1Psi1	= 0;	m1Psi3	= 0;
+			m2Psi1	= 0;	m2Psi3	= 0;
+			m3Psi1	= 0;	m3Psi3	= 0;
+			m4Psi1	= 0;	m4Psi3	= 0;
+			
 			//	m0
 			//	get m0Psi1
-			m0Psi3	= 0;
 			for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 				if ( 1 == intToStrFieldCnt1.length() ) {
@@ -318,6 +324,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					m0Psi1	= m0Psi1 + psi1;
 				}
 				iLoopDataFieldCnt1++;
+				LOGGER.debug("m0Psi1 : " + m0Psi1 + ", psi1 : " + psi1);
 			}
 			psi1UpdParams.put("m0", m0Psi1);
 			for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
@@ -369,7 +376,6 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			psi3UpdParams.put("m0", m0Psi3);
 			
 			//	m1
-			m1Psi3	= 0;
 			for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 				if ( 1 == intToStrFieldCnt1.length() ) {
@@ -432,7 +438,6 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			psi3UpdParams.put("m1", m1Psi3);
 			
 			//	m2
-			m2Psi3	= 0;
 			for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 				if ( 1 == intToStrFieldCnt1.length() ) {
@@ -495,7 +500,6 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			psi3UpdParams.put("m2", m2Psi3);
 			
 			//	m3
-			m3Psi3	= 0;
 			for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt1).toString());
@@ -552,7 +556,6 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			psi3UpdParams.put("m3", m3Psi3);
 			
 			//	m4
-			m4Psi3	= 0;
 			for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 				intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt1).toString());
