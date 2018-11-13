@@ -219,7 +219,7 @@
                     //doGetComboData('/common/selectCodeList.do', {pType : pType}, '',  'srvPacId',  'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
                     doGetComboData('/sales/order/selectServicePackageList.do', {appSubType : appSubType, pType : pType}, '', 'srvPacId', 'S', 'fn_setDefaultSrvPacId'); //APPLICATION SUBTYPE
 
-                    $('#ordProudct ').removeAttr("disabled");
+                    $('#ordProudct').removeAttr("disabled");
                 }
             }
             else {
@@ -348,9 +348,10 @@
             var stkIdVal   = $("#ordProudct").val();
             var empChk     = 0;
             var exTrade    = $("#exTrade").val();
+            var srvPacId = (appTypeVal == '66') ? $('#srvPacId').val() : 0;
 
             if(stkIdx > 0) {
-                fn_loadProductPrice(appTypeVal, stkIdVal);
+                fn_loadProductPrice(appTypeVal, stkIdVal,srvPacId);
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
         });
@@ -368,6 +369,7 @@
             var stkIdVal   = $("#ordProudct").val();
             var promoIdIdx = $("#ordPromo option:selected").index();
             var promoIdVal = $("#ordPromo").val();
+            var srvPacId = (appTypeVal == '66') ? $('#srvPacId').val() : 0;
 
             if(promoIdIdx > 0 && promoIdVal != '0') {
 /*
@@ -874,7 +876,7 @@
         var vCustomerId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
         var vCustBillId = vAppType == '66' ? $('input:radio[name="grpOpt"]:checked').val() == 'exist' ? $('#hiddenBillGrpId').val() : 0 : 0;
         var vStusId = ('${preOrderInfo.stusId}' != 1) ? 104 : 1;
-        console.log('SavePre ::' +  '${preOrderInfo.stusId}' + ', '  + vStusId);
+
         var orderVO = {
         		preOrdId             : $('#frmPreOrdReg #hiddenPreOrdId').val().trim(),
                 sofNo                : $('#sofNo').val().trim(),
@@ -927,6 +929,8 @@
                 custBillWebPortalUrl : $('#billGrpWebUrl').val().trim(),
                 custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
                 custBillCustCareCntId: $("#hiddenBPCareId").val(),
+                rem1                        : '${preOrderInfo.rem1}',
+                rem2                        : '${preOrderInfo.rem2}',
                 stusId                     : vStusId
             };
         Common.ajax("POST", "/sales/order/modifyPreOrder.do", orderVO, function(result) {
@@ -1058,7 +1062,7 @@
             $('#pBtnCal').addClass("blind");
         }
 
-        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId}, function(promoPriceInfo) {
+        Common.ajax("GET", "/sales/order/selectProductPromotionPriceByPromoStockID.do", {promoId : promoId, stkId : stkId, srvPacId : srvPacId}, function(promoPriceInfo) {
 
             if(promoPriceInfo != null) {
 
@@ -1092,7 +1096,7 @@
     }
 
     //LoadProductPrice
-    function fn_loadProductPrice(appTypeVal, stkId) {
+    function fn_loadProductPrice(appTypeVal, stkId, srvPacId) {
 
         if($('#gstChk').val() == '1') {
             $('#pBtnCal').removeClass("blind");
@@ -1108,7 +1112,7 @@
         $("#searchAppTypeId").val(appTypeId);
         $("#searchStkId").val(stkId);
 
-        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId}, function(stkPriceInfo) {
+        Common.ajax("GET", "/sales/order/selectStockPriceJsonInfo.do", {appTypeId : appTypeId, stkId : stkId, srvPacId : srvPacId}, function(stkPriceInfo) {
 
             if(stkPriceInfo != null) {
 
@@ -1136,13 +1140,13 @@
     }
 
     function fn_setDefaultSrvPacId() {
-        if($('#srvPacId option').size() == 2) {
+        //if($('#srvPacId option').size() == 2) {
             $('#srvPacId option:eq(1)').attr('selected', 'selected');
 
             var stkType = $("#appType").val() == '66' ? '1' : '2';
 
             doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:$('#srvPacId').val()}, '', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
-        }
+        //}
     }
 
     function fn_clearSales() {
@@ -1381,9 +1385,6 @@
         $('#installDur').val('${preOrderInfo.instPriod}');
         $('#poNo').val('${preOrderInfo.custPoNo}');
         $('#refereNo').val('${preOrderInfo.sofNo}');
-
-      //fn_loadProductPrice('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}');
-      //fn_loadProductPromotion('${preOrderInfo.appTypeId}', '${preOrderInfo.itmStkId}', '${preOrderInfo.empChk}', $("#typeId").val(), '${preOrderInfo.exTrade}');
 
         $('#ordPromo').removeAttr("disabled");
         doGetComboData('/sales/order/selectPromotionByAppTypeStock.do', {appTypeId:'${preOrderInfo.appTypeId}'
@@ -1627,7 +1628,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>Pre Order Management</h1>
+<h1>eKey-in</h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a id="btnPreOrdClose" href="#">CLOSE</a></p></li>
 </ul>

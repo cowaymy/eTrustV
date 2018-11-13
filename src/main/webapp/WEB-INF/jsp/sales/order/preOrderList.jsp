@@ -8,7 +8,7 @@
 	var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 	var CATE_ID  = "14";
 	var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
-
+	var myFileCaches = {};
     if(MEM_TYPE == '1') { //HP
         CATE_ID = "29";
     }
@@ -109,7 +109,7 @@
             $('#hiddenSof').val(sofNo);
 
             if(stusId == 4){
-                Common.alert("Failed");
+                Common.alert("Completed eKey-in cannot be edited.");
             }
             else{
             	$('#updFail_wrap').show();
@@ -120,8 +120,6 @@
     }
 
     function fn_doFailStatus(){
-    	console.log("Hi :: " + $('#hiddenSof').val() + ", " + $('#_rem_').val() + ", " + $('input[name=cmbFailCode]:checked').val() + " , " + $('#hiddenPreOrdId').val());
-
     	var failUpdOrd = {
     			failCode  : $('input[name=cmbFailCode]:checked').val(),
     		    remark    : $('#_rem_').val(),
@@ -377,6 +375,159 @@
         });
     };
 
+    function fn_setEvent() {
+        $("#form_newStaffClaim :text").change(function(){
+                var id = $(this).attr("id");
+                console.log(id);
+                if(id == "newClmMonth") {
+                    var clmMonth = $(this).val();
+                    console.log(clmMonth);
+                    var month = clmMonth.substring(0, 2);
+                    var year = clmMonth.substring(3);
+                    console.log("year : " + year + " month : " + month);
+                    clmMonth = year + month;
+
+                    var now = new Date;
+                    var mm = now.getMonth() + 1;
+                    var yyyy = now.getFullYear();
+                    if(mm < 10){
+                        mm = "0" + mm
+                    }
+                    now = yyyy + "" + mm;
+                    console.log("yyyy : " + yyyy + " mm : " + mm);
+
+                    console.log(clmMonth);
+                    console.log(now);
+                    if(Number(clmMonth) > Number(now)) {
+                        Common.alert('<spring:message code="pettyCashExp.onlyPastDt.msg" />');
+                        $(this).val(mm + "/" + yyyy);
+                    }
+                } else if(id == "newCostCenter") {
+                    if(!FormUtil.isEmpty($("#newCostCenter").val())){
+                        Common.ajax("GET", "/eAccounting/webInvoice/selectCostCenter.do?_cacheId=" + Math.random(), {costCenter:$("#newCostCenter").val()}, function(result) {
+                            console.log(result);
+                            if(result.length > 0) {
+                                var row = result[0];
+                                console.log(row);
+                                $("#newCostCenterText").val(row.costCenterText);
+                            }
+                        });
+                    }
+                } else if(id == "gstRgistNo") {
+                    if($("#invcType").val() == "F") {
+                        var gstRgistNo = $(this).val();
+                        console.log(gstRgistNo);
+                        /*if(gstRgistNo.length != 12) {
+                            Common.alert('Please insert 12 digits GST Registration No');
+                            $("#gstRgistNo").val("");
+                        }*/
+                    }
+                }
+           });
+
+         // 파일 선택하기
+            $('#file').on('change', function(evt) {
+                var data = null;
+                var file = evt.target.files[0];
+                if (typeof file == "undefined") {
+                    console.log("파일 선택 시 취소!!");
+
+                    delete myFileCaches[selectRowIdx + 1];
+
+                    AUIGrid.updateRow(mileageGridID, {
+                        atchFileName :  ""
+                    }, selectRowIdx);
+                    return;
+                }
+
+                /* if(file.size > 2048000) {
+                    alert("개별 파일은 2MB 를 초과해선 안됩니다.");
+                    return;
+                } */
+
+                console.log(recentGridItem);
+
+                // 서버로 보낼 파일 캐시에 보관
+                myFileCaches[selectRowIdx + 1  ] = {
+                    file : file
+                };
+
+                // 파일 수정이라면 수정하는 파일 아이디 보관
+                if(!FormUtil.isEmpty(recentGridItem.atchFileGrpId)) {
+                    update.push(recentGridItem.atchFileId);
+                    console.log(JSON.stringify(update));
+                }
+
+                console.log("업로드 할 파일 선택 : \r\n" + file.name);
+                console.log(myFileCaches);
+
+                // 선택 파일명 그리드에 출력 시킴
+                AUIGrid.updateRow(mileageGridID, {
+                    atchFileName :  file.name
+                }, selectRowIdx);
+            });
+
+         $(":input:radio[name=expGrp]").on('change', function(evt) {
+             fn_checkExpGrp();
+         });
+        }
+
+    function fn_upload(){
+    	var formData = new FormData();
+        $.each(myFileCaches, function(n, v) {
+            console.log("n : " + n + " v.file : " + v.file);
+            formData.append(n, v.file);
+        });
+
+	    Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
+	        var gridDataList = AUIGrid.getGridData(listGridID);
+	        var data = result.data.fileGroupKey;
+	        console.log(data);
+	    });
+    }
+
+    function fn_setFileEvent(){
+        $('#file').on('change', function(evt) {
+            var data = null;
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                console.log("파일 선택 시 취소!!");
+
+                delete myFileCaches[selectRowIdx + 1];
+
+                AUIGrid.updateRow(mileageGridID, {
+                    atchFileName :  ""
+                }, selectRowIdx);
+                return;
+            }
+
+            if(file.size > 2048000) {
+                alert("개별 파일은 2MB 를 초과해선 안됩니다.");
+                return;
+            }
+
+            console.log(recentGridItem);
+
+            // 서버로 보낼 파일 캐시에 보관
+            myFileCaches[selectRowIdx + 1  ] = {
+                file : file
+            };
+
+            // 파일 수정이라면 수정하는 파일 아이디 보관
+            if(!FormUtil.isEmpty(recentGridItem.atchFileGrpId)) {
+                update.push(recentGridItem.atchFileId);
+                console.log(JSON.stringify(update));
+            }
+
+            console.log("업로드 할 파일 선택 : \r\n" + file.name);
+            console.log(myFileCaches);
+
+            // 선택 파일명 그리드에 출력 시킴
+            AUIGrid.updateRow(mileageGridID, {
+                atchFileName :  file.name
+            }, selectRowIdx);
+        });
+    }
 
 </script>
 
@@ -388,7 +539,7 @@
 </ul>
 
 <aside class="title_line"><!-- title_line start -->
-<h2>eSales</h2>
+<h2>eKey-in</h2>
 <ul class="right_btns">
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 	   <li><p class="btn_blue"><a id="_btnConvOrder" href="#">Convert Order</a></p></li>

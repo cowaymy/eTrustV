@@ -23,11 +23,16 @@
         //doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
 
         //Attach File
-        $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
+        $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
 
         //UpperCase Field
         $("#nric").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
         $("#sofNo").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+
+        /* $("#nric").val("990531025365");
+        $("#sofNo").val("A"); */
+
+        fn_setFileEvent();
     });
 
     function createAUIGridStk() {
@@ -362,7 +367,7 @@
 //          var empChk     = $("#empChk").val();
             var empChk     = 0;
             var exTrade    = $("#exTrade").val();
-            var srvPacId = 0;
+            var srvPacId = (appTypeVal == '66') ? $('#srvPacId').val() : 0;
 
             if(appTypeVal == '66')
                 {
@@ -388,12 +393,7 @@
             var stkIdVal   = $("#ordProudct").val();
             var promoIdIdx = $("#ordPromo option:selected").index();
             var promoIdVal = $("#ordPromo").val();
-            var srvPacId = 0;
-
-            if(appTypeVal == '66')
-                {
-                    srvPacId   = $('#srvPacId').val();
-                }
+            var srvPacId = (appTypeVal == '66') ? $('#srvPacId').val() : 0;
 
             if(promoIdIdx > 0 && promoIdVal != '0') {
 /*
@@ -445,7 +445,7 @@
             }
 
             if(!fn_validOrderInfo()) {
-                $('#aTabBD').click();
+                $('#aTabOI').click();
                 return false;
             }
 
@@ -454,6 +454,11 @@
                 return false;
             }
 
+/*             if(!fn_validFile()) {
+                //$('#aTabFL').click();
+                return false;
+            }
+            fn_upload(); */
             fn_doSavePreOrder();
         });
         $('#btnCal').click(function() {
@@ -852,6 +857,11 @@
             msg += "* Please select the DSC branch.<br>";
         }
 
+        if($("#keyinBrnchId option:selected").index() <= 0) {
+            isValid = false;
+            msg += "* Please select the Posting branch.<br>";
+        }
+
         if(FormUtil.isEmpty($('#prefInstDt').val().trim())) {
             isValid = false;
             msg += "* Please select prefer install date.<br>";
@@ -865,6 +875,22 @@
         if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
 
         return isValid;
+    }
+
+    function fn_validFile() {
+    	var isValid = true, msg = "";
+    	if(FormUtil.isEmpty($('#sofFile').val().trim())) {
+            isValid = false;
+            msg += "* Please upload copy of SOF<br>";
+        }
+    	if(FormUtil.isEmpty($('#nricFile').val().trim())) {
+            isValid = false;
+            msg += "* Please upload copy of NRIC<br>";
+        }
+
+    	if(!isValid) Common.alert("Save Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
+
+    	return isValid;
     }
 
     function fn_doSavePreOrder() {
@@ -1337,7 +1363,7 @@
 
             }
             else {
-                Common.confirm('<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop);
+                Common.confirm('<b>* This customer is NEW customer.<br>Do you want to create a customer?</b>', fn_createCustomerPop, fn_closePreOrdRegPop);
             }
         });
     }
@@ -1517,7 +1543,7 @@
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 
 <header class="pop_header"><!-- pop_header start -->
-<h1>eSales</h1>
+<h1>eKey-in</h1>
 <ul class="right_opt">
 	<li><p class="btn_blue2"><a id="btnPreOrdClose" href="#">CLOSE | TUTUP</a></p></li>
 </ul>
@@ -1546,7 +1572,7 @@
 <tr>
 	<th scope="row">NRIC/Company No</th>
 	<td><input id="nric" name="nric" type="text" title="" placeholder="" class="w100p"  value=""'/></td>
-	<th scope="row">eSales(SOF) No</th>
+	<th scope="row">SOF No</th>
 	<td><input id="sofNo" name="sofNo" type="text" title="" placeholder="" class="w100p"   value=""'/></td>
 </tr>
 <tr>
@@ -1562,9 +1588,10 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
-	<li><a href="#" class="on">Customer</a></li>
-	<li><a href="#" onClick="javascript:chgTab('ord');">Order Info</a></li>
-	<li><a href="#" onClick="javascript:chgTab('pay');">Payment Info</a></li>
+	<li><a href="aTabCS" class="on">Customer</a></li>
+	<li><a href="aTabOI" onClick="javascript:chgTab('ord');">Order Info</a></li>
+	<li><a href="aTabBD" onClick="javascript:chgTab('pay');">Payment Info</a></li>
+	<li><a href="aTabFL" >Attachment</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -2392,6 +2419,35 @@
 
 </article><!-- tap_area end -->
 
+<article class="tap_area"><!-- tap_area start -->
+<aside class="title_line"><!-- title_line start -->
+<h3>Attachment area</h3>
+</aside><!-- title_line end -->
+
+
+<!-- <table class="type1">table start
+<caption>table</caption>
+<colgroup>
+    <col style="width:350px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Sales Order Form (SOF)<span class="must">*</span></th>
+    <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="sofFile" accept="image/*"/></div></td>
+</tr>
+<tr>
+    <th scope="row">NRIC & Bank Card<span class="must">*</span></th>
+    <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="nricFile" accept="image/*"/></div></td>
+</tr>
+<tr>
+    <th scope="row">Declaration letter/Others form</th>
+    <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="otherFile" accept="image/*"/></div></td>
+</tr>
+</tbody>
+</table> -->
+
+</article><!-- tap_area end -->
 
 </section><!-- tap_wrap end -->
 
