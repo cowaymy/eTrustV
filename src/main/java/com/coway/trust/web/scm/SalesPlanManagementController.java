@@ -39,6 +39,9 @@ public class SalesPlanManagementController {
 	private SalesPlanManagementService salesPlanManagementService;
 	
 	@Autowired
+	private SalesPlanMngementService salesPlanMngementService;
+	
+	@Autowired
 	private ScmCommonService scmCommonService;
 
 	@Autowired
@@ -282,5 +285,23 @@ public class SalesPlanManagementController {
 		}
 		
 		return	ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/selectPeriodByYear.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectPeriodByYearList(@RequestParam Map<String, Object> params) {
+
+		LOGGER.debug("selectPeriodByYearList : {}", params.toString());
+
+		List<EgovMap> selectPeriodByYearList = salesPlanMngementService.selectPeriodByYear(params);
+		return ResponseEntity.ok(selectPeriodByYearList);
+	}
+	
+	@RequestMapping(value = "/selectStockCode.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectStockCode(@RequestParam Map<String, Object> params )
+	 {
+		LOGGER.debug("selectStockCode : {}", params.toString());
+
+		List<EgovMap> selectStockCodeList = salesPlanMngementService.selectStockCode(params);
+		return ResponseEntity.ok(selectStockCodeList);
 	}
 }
