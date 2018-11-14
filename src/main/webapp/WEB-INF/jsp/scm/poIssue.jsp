@@ -215,8 +215,9 @@ var poCreateListLayout	=
 			headerText : "Po Qty",
 			dataType : "numeric",
 			formatString : "#,##0",
-			editable : true,
-			style : "my-columnEditable"
+			editable : false,
+			//style : "my-columnEditable"
+			style : "my-columnLeft1"
 		}, {
 			dataField : "moq",
 			headerText : "Moq",

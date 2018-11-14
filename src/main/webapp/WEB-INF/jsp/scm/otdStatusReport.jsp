@@ -56,6 +56,11 @@ function fnSearch() {
 	var fromDate	= $("#startDate").val();
 	var toDate		= $("#endDate").val();
 	console.log("fromDate : " + fromDate + ", toDate : " + toDate);
+	
+	if ( "" == fromDate || "" == toDate || null == fromDate || null == toDate ) {
+		Common.alert("<spring:message code='sys.msg.limitMore' arguments='FROM DATE ; TO DATE.' htmlEscape='false' argumentSeparator=';'/>");
+		return	false;
+	}
 	if ( 0 > fnGetDateGap(fromDate, toDate) ) {
 		Common.alert("<spring:message code='sys.msg.limitMore' arguments='FROM DATE ; TO DATE.' htmlEscape='false' argumentSeparator=';'/>");
 		return	false;
@@ -192,11 +197,12 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "poItemStusId",
 						headerText : "Po Status Id",
-						cellMerge : true
+						cellMerge : true,
+						visible : false
 					}, {
 						dataField : "poItemStusName",
 						headerText : "Status",
-						cellMerge : true,
+						cellMerge : true/*,
 						rederer : {
 							type : "TemplateRenderer"
 						},
@@ -214,7 +220,7 @@ var OtdStatusLayout	=
 								template	+= "</span>";
 								return	template;
 							}
-						}
+						}*/
 					}
 				 ]
 		}, {
