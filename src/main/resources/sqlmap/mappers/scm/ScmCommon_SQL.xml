@@ -139,7 +139,17 @@ SELECT A.PLAN_YEAR  /* 수립주차가 포함된 년 */
      , A.PLAN_WEEK_TH /* 수립주차가 해당 월에서 몇번째 주차인지 순서 : 스플릿주차로 계산 */
      , A.FST_WEEK_SPLT_YN /* 수립주차가 포함된 월의 첫째주차가 스플릿인지 여부 : 1(스플릿), 0(스플릿아님) */
      , A.BEF_WEEK_YEAR  /* 수립주차의 바로전 주차가 포함된 년 */
-     , A.BEF_WEEK_MONTH /* 수립주차의 바로전 주차가 포함된 월 */
+     , CASE WHEN A.PLAN_WEEK = 1 THEN 12
+            ELSE CASE WHEN A.FST_WEEK_SPLT_YN = 0 THEN CASE WHEN A.PLAN_FST_WEEK = A.PLAN_FST_SPLT_WEEK AND A.PLAN_WEEK = A.PLAN_FST_WEEK THEN A.PLAN_MONTH - 1
+                                                            ELSE A.PLAN_MONTH
+                                                            END
+                      ELSE CASE WHEN A.PLAN_MONTH = 1 AND A.PLAN_WEEK = 2 THEN A.PLAN_MONTH
+                                ELSE CASE WHEN A.PLAN_WEEK = A.PLAN_FST_WEEK THEN A.PLAN_MONTH - 1
+                                          ELSE A.PLAN_MONTH
+                                          END
+                                END
+                      END
+            END AS BEF_WEEK_MONTH /* 수립주차의 바로전 주차가 포함된 월 */
      , A.BEF_WEEK_WEEK  /* 수립주차의 바로전 주차가 포함된 주차 */
      , A.BEF_YEAR  /* 수립주차가 포함된 년의 바로전 년 */
      , A.BEF_MONTH /* 수립주차가 포함된 월의 바로전 월 */
@@ -148,12 +158,15 @@ SELECT A.PLAN_YEAR  /* 수립주차가 포함된 년 */
      , TO_NUMBER(A.PLAN_GR_MONTH) AS PLAN_GR_MONTH /* PO발행 시 계획수량을 갖고올 주차가 포함된 월 */
      , TO_NUMBER(A.PLAN_GR_WEEK) AS PLAN_GR_WEEK   /* PO발행 시 계획수량을 갖고올 주차가 포함된 주차 */
      , (SELECT COUNT(*) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_GR_YEAR AND Z.SCM_WEEK = A.PLAN_GR_WEEK) AS PLAN_GR_WEEK_SPLT_YN /* PO주차가 스플릿인지 여부 : 2(스플릿), 1(스플릿아님) */
-     , (
-        SELECT COUNT(*)
-          FROM SCM0018M Z
-         WHERE Z.SCM_YEAR || LPAD(Z.SCM_WEEK, 2, '0') BETWEEN A.PLAN_YEAR || LPAD(A.PLAN_WEEK, 2, '0') AND A.PLAN_GR_YEAR || LPAD((A.PLAN_GR_WEEK - 1), 2, '0')
-           AND Z.SCM_WEEK_SEQ = 2
-        ) AS FROM_PLAN_TO_PO_SPLT_CNT /* 수립주차 ~ (PO주차 - 1) 사이의 주차 중 스플릿 주차 갯수 */
+     , CASE WHEN A.FST_WEEK_SPLT_YN = 1 THEN (SELECT COUNT(*)
+                                                FROM SCM0018M Z
+                                               WHERE Z.SCM_YEAR || LPAD(Z.SCM_WEEK, 2, '0') BETWEEN A.PLAN_YEAR || LPAD(A.PLAN_WEEK + 1, 2, '0') AND A.PLAN_GR_YEAR || LPAD((A.PLAN_GR_WEEK - 1), 2, '0')
+                                                 AND Z.SCM_WEEK_SEQ = 2)
+            ELSE (SELECT COUNT(*)
+                    FROM SCM0018M Z
+                   WHERE Z.SCM_YEAR || LPAD(Z.SCM_WEEK, 2, '0') BETWEEN A.PLAN_YEAR || LPAD(A.PLAN_WEEK, 2, '0') AND A.PLAN_GR_YEAR || LPAD((A.PLAN_GR_WEEK - 1), 2, '0')
+                     AND Z.SCM_WEEK_SEQ = 2)
+            END AS FROM_PLAN_TO_PO_SPLT_CNT /* 수립주차 ~ (PO주차 - 1) 사이의 주차 중 스플릿 주차 갯수 */
      , A.LEAD_TM
      , A.CLOSE_YEAR
      , A.CLOSE_MONTH
@@ -179,11 +192,6 @@ SELECT A.PLAN_YEAR  /* 수립주차가 포함된 년 */
              , CASE WHEN A.PLAN_WEEK = 1 THEN A.PLAN_YEAR - 1
                     ELSE A.PLAN_YEAR
                     END AS BEF_WEEK_YEAR
-             , CASE WHEN A.PLAN_WEEK = 1 THEN 12
-                    ELSE CASE WHEN A.PLAN_WEEK = A.PLAN_FST_WEEK THEN A.PLAN_MONTH - 1
-                              ELSE A.PLAN_MONTH
-                              END
-                    END AS BEF_WEEK_MONTH
              , CASE WHEN A.PLAN_WEEK = 1 THEN (SELECT MAX(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR - 1)
                     ELSE A.PLAN_WEEK - 1
                     END AS BEF_WEEK_WEEK

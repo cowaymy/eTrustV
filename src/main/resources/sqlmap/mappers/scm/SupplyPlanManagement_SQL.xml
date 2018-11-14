@@ -516,10 +516,10 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
         UNION ALL
         SELECT 5 AS PSI_ID
              , B.STOCK_CODE
-             , NVL(C.OVERDUE_QTY, 0) AS OVERDUE
+             , NVL(C.INVEN_QTY, 0) AS OVERDUE
           FROM SCM0005M A
           LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
-          LEFT OUTER JOIN SCM0052S C ON (B.STOCK_CODE = C.STOCK_CODE AND C.CDC = #{cdc} AND C.CLOSE_YEAR = #{closeYear} AND C.CLOSE_MONTH = #{closeMonth})
+          LEFT OUTER JOIN SCM0053S C ON (B.STOCK_CODE = C.STOCK_CODE AND C.CDC = #{cdc} AND C.CLOSE_YEAR = #{closeYear} AND C.CLOSE_MONTH = #{closeMonth})
          WHERE A.PLAN_YEAR = #{planYear}
            AND A.PLAN_WEEK = #{planWeek}
            AND A.CDC = #{cdc}
