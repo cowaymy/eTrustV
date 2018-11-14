@@ -18,7 +18,7 @@ $(document).ready(function() {
 
 
 $.fn.clearForm = function() {
-    $("#cmbBranchCode").multipleSelect("checkAll");
+    //$("#cmbBranchCode").multipleSelect("checkAll");
 
     return this.each(function() {
         var type = this.type, tag = this.tagName.toLowerCase();
