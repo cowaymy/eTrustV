@@ -140,7 +140,7 @@ function btnGeneratePDF_Click(){
         if(date.toString().length == 1){
             date = "0" + date;
         }
-
+        console.log("aaa");
         $("#form #viewType").val("EXCEL");
         $("#form #reportFileName").val("/organization/organization/HPRawData_Excel.rpt");
         $("#reportDownFileName").val("HPRawData"+date+(new Date().getMonth()+1)+new Date().getFullYear());
