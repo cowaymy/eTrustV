@@ -83,6 +83,7 @@ function validRequiredField(){
 
 
 function btnGeneratePDF_Click(){
+	console.log("btnGeneratePDF_Click");
     if(validRequiredField() == true){
 
         var memType = "";
