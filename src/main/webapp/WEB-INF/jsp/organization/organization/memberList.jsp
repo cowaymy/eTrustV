@@ -610,6 +610,12 @@ function fn_genRawData() {
     Common.report("rawDataReport", option);
 }
 
+$(function() {
+$('#hpYSListingBtn').click(function() {
+    Common.popupDiv("/organization/HPYSListingPop.do", null, null, true);
+});
+});
+
 </script>
 
 <!-- --------------------------------------DESIGN------------------------------------------------ -->
@@ -819,6 +825,23 @@ function fn_genRawData() {
         <input type="text" name="aplcntNRIC"  id="aplcntNRIC"/>
     </div>
 </form>
+
+ <aside class="link_btns_wrap"><!-- link_btns_wrap start -->
+    <p class="show_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link.gif" alt="link show" /></a></p>
+    <dl class="link_list">
+        <dt><spring:message code="sal.title.text.link" /></dt>
+        <dd>
+        <ul class="btns">
+
+            <li><p class="link_btn"><a href="#" id="hpYSListingBtn">HP Raw Listing</a></p></li>
+
+        </ul>
+        <ul class="btns">
+        </ul>
+        <p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
+        </dd>
+    </dl>
+    </aside><!-- link_btns_wrap end -->
 
 <section class="search_result"><!-- search_result start -->
 

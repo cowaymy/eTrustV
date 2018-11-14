@@ -186,4 +186,10 @@ public interface MemberListService {
 	List<EgovMap> selectHpMeetPoint();
 
 	void updateMeetpoint(Map<String, Object> params);
+
+	List<EgovMap> selectMemberTypeHP(Map<String, Object> params);
+	
+	List<EgovMap> selectApprovalBranch(Map<String, Object> params);
+
+
 }

@@ -286,4 +286,10 @@ public interface MemberListMapper {
     void updateCdApl(Map<String, Object> params);
 
     void updateMeetpoint(Map<String, Object> params);
+
+	List<EgovMap> selectMemberTypeHP(Map<String, Object> params);
+	
+	List<EgovMap> selectApprovalBranch(Map<String, Object> params);
+
+
 }

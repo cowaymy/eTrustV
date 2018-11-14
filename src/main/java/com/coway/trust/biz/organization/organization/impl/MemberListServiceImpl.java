@@ -2372,4 +2372,16 @@ public class MemberListServiceImpl extends EgovAbstractServiceImpl implements Me
     public void updateMeetpoint(Map<String, Object> params) {
         memberListMapper.updateMeetpoint(params);
     }
+
+    @Override
+	public List<EgovMap> selectMemberTypeHP(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectMemberTypeHP(params);
+	}
+
+	@Override
+	public List<EgovMap> selectApprovalBranch(Map<String, Object> params) {
+		// TODO Auto-generated method stub
+		return memberListMapper.selectApprovalBranch(params);
+	}
 }

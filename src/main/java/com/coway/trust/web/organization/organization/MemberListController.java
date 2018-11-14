@@ -1785,4 +1785,22 @@ logger.debug("params : {}", params);
 		return ResponseEntity.ok(meetList);
 	}
 	// 2018-07-26 - LaiKW - Add HP Meeting Point drop down - End
+
+	@RequestMapping(value="/HPYSListingPop.do")
+	public String HPYSListingPop(){
+
+		return "organization/organization/HPYSListingPop";
+	}
+
+	@RequestMapping(value = "/selectMemberTypeHP.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMemberTypeHP(@RequestParam Map<String, Object> params) {
+		List<EgovMap> memberTypeHP = memberListService.selectMemberTypeHP(params);
+		return ResponseEntity.ok(memberTypeHP);
+	}
+
+	@RequestMapping(value = "/selectApprovalBranch.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectApprovalBranch(@RequestParam Map<String, Object> params) {
+		List<EgovMap> approvalBranch = memberListService.selectApprovalBranch(params);
+		return ResponseEntity.ok(approvalBranch);
+	}
 }

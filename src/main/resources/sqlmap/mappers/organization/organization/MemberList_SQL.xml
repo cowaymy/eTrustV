@@ -4649,7 +4649,7 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
     </select>
 
     <update id="updateCdApl" parameterType="Map">
-        UPDATE ORG0001D 
+        UPDATE ORG0001D
              SET APLICNT_ID = #{aplcntId},
                    UPD_USER_ID = #{userId}
          WHERE MEM_CODE = #{memCode}
@@ -4667,5 +4667,27 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
         WHEN MATCHED THEN UPDATE
         SET A.APLICNT_MEETPOINT = #{meetingPoint}
     </update>
+
+    <select id="selectMemberTypeHP" parameterType="Map" resultType="egovMap">
+                SELECT CODE_ID CODE_ID  ,
+                           CODE_NAME CODE_NAME
+                           FROM SYS0013M
+                           WHERE  CODE_MASTER_ID = 1
+                           AND CODE_ID = 1
+                  ORDER BY CODE_ID ASC
+
+
+          </select>
+
+
+       <select id="selectApprovalBranch" parameterType="Map" resultType="egovMap">
+                SELECT BRNCH_ID CODE_ID  ,
+                           CODE || '-' || NAME CODE_NAME
+                           FROM SYS0005M
+                           WHERE  TYPE_ID = 45
+                  ORDER BY CODE ASC
+
+
+          </select>
 
 </mapper>
