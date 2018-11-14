@@ -230,4 +230,43 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 		
 		return	saveCnt;
 	}
+	
+	/*
+	 * CDC Branch Mapping
+	 */
+	//	search
+	@Override
+	public List<EgovMap> selectCdcBrMappingList(Map<String, Object> params) {
+		return	scmMasterManagementMapper.selectCdcBrMappingList(params);
+	}
+	@Override
+	public List<EgovMap> selectCdcBrUnmappingList(Map<String, Object> params) {
+		return	scmMasterManagementMapper.selectCdcBrUnmappingList(params);
+	}
+	
+	//	save Unmap
+	@Override
+	public int insertCdcBrMapping(List<Object> insList, Integer crtUserId) {
+		int saveCnt	= 0;
+		
+		for ( Object obj : insList ) {
+			scmMasterManagementMapper.insertCdcBrMapping((Map<String, Object>) obj);
+			saveCnt++;
+		}
+		
+		return	saveCnt;
+	}
+	
+	//	save Map
+	@Override
+	public int deleteCdcBrMapping(List<Object> delList, Integer crtUserId) {
+		int saveCnt	= 0;
+		
+		for ( Object obj : delList ) {
+			scmMasterManagementMapper.deleteCdcBrMapping((Map<String, Object>) obj);
+			saveCnt++;
+		}
+		
+		return	saveCnt;
+	}
 }
