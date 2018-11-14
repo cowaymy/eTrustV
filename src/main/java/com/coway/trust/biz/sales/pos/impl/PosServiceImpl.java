@@ -898,7 +898,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     		logPram.put("pPrgNm", "PointOfSales");
     		logPram.put("userId", Integer.parseInt(String.valueOf(params.get("userId"))));
 
-    		LOGGER.info("############### 10. POS BOOKING  START  ################");
+    		LOGGER.info("############### 10. POS LOGISTIC REQUEST START  ################");
     		LOGGER.info("#########  call Procedure Params : " + logPram.toString());
 
     		posMapper.posBookingCallSP_LOGISTIC_POS(logPram);
@@ -906,25 +906,49 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
     		String reqResult  = 	String.valueOf(logPram.get("p1"));
     		LOGGER.debug("############ Procedure Result :  " + reqResult);
-    		LOGGER.info("############### 10. POS BOOKING  END  ################");
+    		LOGGER.info("############### 10. POS LOGISTIC REQUEST END  ################");
             //
 
             LOGGER.info("################################## return value(docNoPsn): "  + docNoPsn);
             //retrun Map
             Map<String, Object> rtnMap = new HashMap<String, Object>();
             rtnMap.put("reqDocNo", docNoPsn);
+            rtnMap.put("psno", docNoPsn);
 
-            LOGGER.info("##################### POS Request Success!!! ######################################");
-            LOGGER.info("##################### POS Request Success!!! ######################################");
-            LOGGER.info("##################### POS Request Success!!! ######################################");
+			//GetDetailList
+			List<EgovMap> revDetList = null;
+			rtnMap.put("rcvStusId", SalesConstants.POS_DETAIL_NON_RECEIVE);
+			revDetList = posMapper.getPosItmIdListByPosNo(rtnMap);
+			LOGGER.info("revDetList : " + revDetList);
+			for (int idx = 0; idx < revDetList.size(); idx++) {
 
-		    rtnMap.put("logError", reqResult);
-		    //rtnMap.put("logError", "000");
+				//GI Call Procedure
+				Map<String, Object> giMap = new HashMap<String, Object>();
+
+				giMap.put("psno", docNoPsn);
+				giMap.put("retype", "COM");
+				giMap.put("pType", "PS01");
+				giMap.put("posItmId", revDetList.get(idx).get("posItmId"));
+				giMap.put("pPrgNm", "PointOfSales");
+				giMap.put("userId", params.get("userId"));
+
+				LOGGER.info("############### 11. POS GI COMPLETE START  ################");
+				LOGGER.info("#########  call Procedure Params : " + giMap.toString());
+				posMapper.posGICallSP_LOGISTIC_POS(giMap);
+				reqResult = 	String.valueOf(giMap.get("p1"));
+				LOGGER.info("rtnResult : " + reqResult);
+				LOGGER.info("############### 11. POS GI COMPLETE  END  ################");
+
+	            LOGGER.info("##################### POS Request Success!!! ######################################");
+	            LOGGER.info("##################### POS Request Success!!! ######################################");
+	            LOGGER.info("##################### POS Request Success!!! ######################################");
+
+			    rtnMap.put("logError", reqResult);
+			    //rtnMap.put("logError", "000");
+	            return rtnMap;
 
 
-
-            return rtnMap;
-
+            	}
             }
 
             //retrun Map
