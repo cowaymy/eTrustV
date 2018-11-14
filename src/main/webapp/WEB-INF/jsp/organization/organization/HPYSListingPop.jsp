@@ -104,13 +104,13 @@ function btnGeneratePDF_Click(){
         }
 
         if(!($("#dpJoinedDateFrom").val() == null || $("#dpJoinedDateFrom").val().length == 0)){
-            whereSQL += " AND TO_DATE(H.UPD_DT) >= TO_DATE('"+$("#dpJoinedDateFrom").val()+"', 'dd/MM/YYYY')";
+            whereSQL += " AND TO_DATE(A.CRT_DT) >= TO_DATE('"+$("#dpJoinedDateFrom").val()+"', 'dd/MM/YYYY')";
             joinedDateFrom = $("#dpJoinedDateFrom").val();
 
         }
 
         if(!($("#dpJoinedDateTo").val() == null || $("#dpJoinedDateTo").val().length == 0)){
-            whereSQL += " AND TO_DATE(H.UPD_DT) <= TO_DATE('"+$("#dpJoinedDateTo").val()+"', 'dd/MM/YYYY')";
+            whereSQL += " AND TO_DATE(A.CRT_DT) <= TO_DATE('"+$("#dpJoinedDateTo").val()+"', 'dd/MM/YYYY')";
             joinedDateTo = $("#dpJoinedDateTo").val();
 
         }
