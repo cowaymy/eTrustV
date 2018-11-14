@@ -83,7 +83,6 @@ function validRequiredField(){
 
 
 function btnGeneratePDF_Click(){
-	console.log("btnGeneratePDF_Click");
     if(validRequiredField() == true){
 
         var memType = "";
@@ -140,9 +139,9 @@ function btnGeneratePDF_Click(){
         if(date.toString().length == 1){
             date = "0" + date;
         }
-        console.log("aaa");
+
         $("#form #viewType").val("EXCEL");
-        $("#form #reportFileName").val("/organization/organization/HPRawData_Excel.rpt");
+        $("#form #reportFileName").val("/organization/HPRawData_Excel.rpt");
         $("#reportDownFileName").val("HPRawData"+date+(new Date().getMonth()+1)+new Date().getFullYear());
         orderBySQL += " ORDER BY H.UPD_DT ";
 
