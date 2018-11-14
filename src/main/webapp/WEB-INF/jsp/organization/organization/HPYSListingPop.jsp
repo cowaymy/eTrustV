@@ -15,13 +15,7 @@ $(document).ready(function() {
 });
 
 
-/* 멀티셀렉트 플러그인 start */
-$('.multy_select').change(function() {
-   //console.log($(this).val());
-})
-.multipleSelect({
-   width: '100%'
-});
+
 
 $.fn.clearForm = function() {
     $("#cmbBranchCode").multipleSelect("checkAll");
