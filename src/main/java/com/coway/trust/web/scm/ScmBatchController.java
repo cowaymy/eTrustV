@@ -53,6 +53,30 @@ public class ScmBatchController {
 	@Value("${scm.file.download.path}")
     private static String ftpPath;
 
+	@Value("${scm.file.serverurl}")
+    private static String ftpUrl;
+
+	@Value("${scm.file.username}")
+    private static String ftpUsername;
+
+	@Value("${scm.file.password}")
+    private static String ftpPassword;
+
+	@Value("${scm.file.encoding}")
+    private static String ftpEncoding;
+
+	@Value("${spring.datasource.driver-class-name}")
+    private static String datasourceDriver;
+
+	@Value("${spring.datasource.url}")
+	private static String datasourceUrl;
+
+	@Value("${spring.datasource.username}")
+    private static String datasourceUsername;
+
+	@Value("${spring.datasource.password}")
+    private static String datasourcePassword;
+
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
@@ -75,12 +99,12 @@ public class ScmBatchController {
 		try {
 			client	= new FTPClient();
 
-			client.setControlEncoding("euc-kr");
+			client.setControlEncoding(ftpEncoding);
 			LOGGER.debug("Commons NET FTP Client Test Program");
 			LOGGER.debug("Start GO");
 
 			//	connection ftp server
-			client.connect("10.101.3.40");
+			client.connect(ftpUrl);
 
 			//	in case abnormal reply code, close
 			int reply	= client.getReplyCode();
@@ -94,7 +118,7 @@ public class ScmBatchController {
 				client.setSoTimeout(100000);
 
 				//	login
-				client.login("etrustftp", "akffus#20!*");
+				client.login(ftpUsername, ftpPassword);
 				LOGGER.debug("etrustftp login success...");
 
 				//	file 우리쪽 서버로 카피
@@ -152,8 +176,8 @@ public class ScmBatchController {
 		//	GI
 		try {
 			fileName	= "COWAY_GI_DATA_" + ifDate + ".TXT";
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn	= DriverManager.getConnection("jdbc:oracle:thin:@10.201.32.12:1521:gbslcvd", "GBSLCVAPL1", "GBSLCVD#2017");
+			Class.forName(datasourceDriver);
+			conn	= DriverManager.getConnection(datasourceUrl, datasourceUsername, datasourcePassword);
 			br	= new BufferedReader(new FileReader(ftpPath + fileName));
 			//String query	= "INSERT INTO ITF0300M VALUES(TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TO_CHAR(TO_NUMBER(TRIM(?))), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?))";
 			String query1	= "UPDATE SCM0039M ";
@@ -197,8 +221,8 @@ public class ScmBatchController {
 		//	SO
 		try {
 			fileName	= "COWAY_SO_DATA_" + ifDate + ".TXT";
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn	= DriverManager.getConnection("jdbc:oracle:thin:@10.201.32.12:1521:gbslcvd", "GBSLCVAPL1", "GBSLCVD#2017");
+			Class.forName(datasourceDriver);
+			conn	= DriverManager.getConnection(datasourceUrl, datasourceUsername, datasourcePassword);
 			br	= new BufferedReader(new FileReader(ftpPath + fileName));
 			//String query	= "INSERT INTO ITF0300M VALUES(TRIM(?), TRIM(?), TRIM(?), TRIM(?), TO_CHAR(TO_NUMBER(TRIM(?))), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?))";
 			//String query1	= "UPDATE SCM0039M SET GI_QTY = TO_NUMBER(TRIM(?)), GI_DT = TRIM(?) WHERE PO_NO = TRIM(?) AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))";
@@ -253,8 +277,8 @@ public class ScmBatchController {
 		//	PP
 		try {
 			fileName	= "COWAY_PP_DATA_" + ifDate + ".TXT";
-			Class.forName("oracle.jdbc.driver.OracleDriver");
-			conn	= DriverManager.getConnection("jdbc:oracle:thin:@10.201.32.12:1521:gbslcvd", "GBSLCVAPL1", "GBSLCVD#2017");
+			Class.forName(datasourceDriver);
+			conn	= DriverManager.getConnection(datasourceUrl, datasourceUsername, datasourcePassword);
 			br	= new BufferedReader(new FileReader(ftpPath + fileName));
 			//String query	= "INSERT INTO ITF0300M VALUES(TRIM(?), TRIM(?), TRIM(?), TRIM(?), TO_CHAR(TO_NUMBER(TRIM(?))), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?))";
 			//String query1	= "UPDATE SCM0039M SET GI_QTY = TO_NUMBER(TRIM(?)), GI_DT = TRIM(?) WHERE PO_NO = TRIM(?) AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))";
