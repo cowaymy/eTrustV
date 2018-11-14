@@ -20,4 +20,10 @@ public interface ScmMasterManagementService
 	List<EgovMap> selectCdcWhUnmappingList(Map<String, Object> params);
 	int insertCdcWhMapping(List<Object> insList, Integer crtUserId);
 	int deleteCdcWhMapping(List<Object> delList, Integer crtUserId);
+	
+	//	CDC Branch Mapping
+	List<EgovMap> selectCdcBrMappingList(Map<String, Object> params);
+	List<EgovMap> selectCdcBrUnmappingList(Map<String, Object> params);
+	int insertCdcBrMapping(List<Object> insList, Integer crtUserId);
+	int deleteCdcBrMapping(List<Object> delList, Integer crtUserId);
 }
