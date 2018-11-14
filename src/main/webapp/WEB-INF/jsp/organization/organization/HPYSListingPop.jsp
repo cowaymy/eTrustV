@@ -14,14 +14,6 @@ $(document).ready(function() {
 
 });
 
-function f_multiComboType() {
-    $(function() {
-        $('#cmbBranchCode').change(function() {
-        }).multipleSelect({
-            selectAll : true
-        });
-    });
-}
 
 /* 멀티셀렉트 플러그인 start */
 $('.multy_select').change(function() {
