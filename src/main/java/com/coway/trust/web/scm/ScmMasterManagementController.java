@@ -51,6 +51,10 @@ public class ScmMasterManagementController {
 	public String cdcWhMappingPopupView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return	"/scm/cdcWhMappingPopup";
 	}
+	@RequestMapping(value = "/cdcBrMappingView.do")
+	public String cdcBrMappingView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/cdcBrMapping";
+	}
 
 	/*
 	 * SCM Master Manager
@@ -145,6 +149,65 @@ public class ScmMasterManagementController {
 
 		if ( 0 < insList.size() ) {
 			totCnt	= scmMasterManagementService.insertCdcWhMapping(insList, sessionVO.getUserId());
+		}
+
+		ReturnMessage message	= new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return	ResponseEntity.ok(message);
+	}
+	
+	/*
+	 * CDC Branch Mapping
+	 */
+	@RequestMapping(value = "/selectCdcBrList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectCdcBrList(@RequestBody Map<String, Object> params) {
+		LOGGER.debug("selectCdcWhList : {}", params.toString());
+
+		List<EgovMap> selectCdcBrMappingList	= scmMasterManagementService.selectCdcBrMappingList(params);
+		List<EgovMap> selectCdcBrUnmappingList	= scmMasterManagementService.selectCdcBrUnmappingList(params);
+
+		Map<String, Object> map	= new HashMap<>();
+
+		//	main Data
+		map.put("selectCdcBrMappingList", selectCdcBrMappingList);
+		map.put("selectCdcBrUnmappingList", selectCdcBrUnmappingList);
+
+		return	ResponseEntity.ok(map);
+	}
+
+	//	save Unmap
+	@RequestMapping(value = "/saveUnmapBr.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveUnmapBr(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		int totCnt	= 0;
+
+		//	Only delete
+		List<Object> delList	= params.get(AppConstants.AUIGRID_UPDATE);	//	Get grid delList
+
+		if ( 0 < delList.size() ) {
+			totCnt	= scmMasterManagementService.deleteCdcBrMapping(delList, sessionVO.getUserId());
+		}
+
+		ReturnMessage message	= new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(totCnt);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+
+		return	ResponseEntity.ok(message);
+	}
+
+	//	save Map
+	@RequestMapping(value = "/saveMapBr.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> saveMapBr(@RequestBody Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
+		int totCnt	= 0;
+
+		//	Only delete
+		List<Object> insList	= params.get(AppConstants.AUIGRID_UPDATE);	//	Get grid insList : AUIGRID_UPDATE -> row insert
+
+		if ( 0 < insList.size() ) {
+			totCnt	= scmMasterManagementService.insertCdcBrMapping(insList, sessionVO.getUserId());
 		}
 
 		ReturnMessage message	= new ReturnMessage();
