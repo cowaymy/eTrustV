@@ -14,9 +14,9 @@ import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
-//import org.apache.commons.net.ftp.FTPClient;
-//import org.apache.commons.net.ftp.FTPFile;
-//import org.apache.commons.net.ftp.FTPReply;
+import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPFile;
+import org.apache.commons.net.ftp.FTPReply;
 
 import org.slf4j.*;
 
@@ -24,25 +24,25 @@ import com.coway.trust.biz.scm.impl.SupplyPlanManagementServiceImpl;
 
 public class FtpConnection {
 	private static FileInputStream inputStream;
-
+	
 	private static final Logger LOGGER = LoggerFactory.getLogger(FtpConnection.class);
-
-/*	public static void main(String[] args) {
-
+	
+	public static void main(String[] args) {
+		
 		String filePath	= "";
 		FTPClient client	= null;
-
+		
 		//	try ftp server & login & get files
 		try {
 			client	= new FTPClient();
-
+			
 			client.setControlEncoding("euc-kr");
 			LOGGER.debug("Commons NET FTP Client Test Program");
 			LOGGER.debug("Start GO");
-
+			
 			//	connection ftp server
 			client.connect("10.101.3.40");
-
+			
 			//	in case abnormal reply code, close
 			int reply	= client.getReplyCode();
 			if ( ! FTPReply.isPositiveCompletion(reply) ) {
@@ -50,14 +50,14 @@ public class FtpConnection {
 				LOGGER.debug("FTP server refused connection");
 			} else {
 				LOGGER.debug(client.getReplyString());
-
+				
 				//	set time out
 				client.setSoTimeout(100000);
-
+				
 				//	login
 				client.login("etrustftp", "akffus#20!*");
 				LOGGER.debug("etrustftp login success...");
-
+				
 				//	file 우리쪽 서버로 카피
 				FTPFile[] ftpFiles	= client.listFiles("/");
 				if ( null != ftpFiles ) {
@@ -71,7 +71,7 @@ public class FtpConnection {
 					}
 				}
 			}
-
+			
 			if ( executeQuery() ) {
 				LOGGER.debug("insert success");
 			} else {
@@ -91,10 +91,10 @@ public class FtpConnection {
 			}
 		}
 	}
-	*/
+	
 	public static boolean executeQuery() {
 		boolean ret	= true;
-
+		
 		Connection conn	= null;
 		//ResultSet rs	= null;
 		BufferedReader	br	= null;
@@ -108,8 +108,8 @@ public class FtpConnection {
 		String fileName	= "";
 		String filePath	= "c:\\temp\\";
 		String row	= "";
-
-
+		
+		
 		//	GI
 		try {
 			fileName	= "COWAY_GI_DATA_" + ifDate + ".TXT";
@@ -124,7 +124,7 @@ public class FtpConnection {
 			query1	= query1 + "   AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))";
 			//stmt	= conn.prepareStatement(query);
 			stmt1	= conn.prepareStatement(query1);
-
+			
 			String giQty	= "";
 			String giDt	= "";
 			String poNo	= "";
@@ -154,7 +154,7 @@ public class FtpConnection {
 			ret	= false;
 			e.printStackTrace();
 		}
-
+		
 		//	SO
 		try {
 			fileName	= "COWAY_SO_DATA_" + ifDate + ".TXT";
@@ -172,7 +172,7 @@ public class FtpConnection {
 			query1	= query1 + "   AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))";
 			//stmt	= conn.prepareStatement(query);
 			stmt1	= conn.prepareStatement(query1);
-
+			
 			String soQty	= "";
 			String soDt	= "";
 			String poNo	= "";
@@ -188,7 +188,7 @@ public class FtpConnection {
 				for ( int i = 0 ; i < col.length ; i++ ) {
 					//	for ITF0310M
 					//stmt.setString(i + 3, col[i]);
-
+					
 					//	for SCM0039M
 					if ( 0 == i )	poNo		= col[i];
 					if ( 2 == i )	soNo		= col[i];
@@ -196,7 +196,7 @@ public class FtpConnection {
 					if ( 4 == i )	stockCode	= col[i];
 					if ( 10 == i )	soDt		= col[i];
 					if ( 11 == i )	soQty		= col[i];
-
+					
 					stmt1.setString(1, soNo);
 					stmt1.setString(2, soItemNo);
 					stmt1.setString(3, soQty);
@@ -210,7 +210,7 @@ public class FtpConnection {
 			ret	= false;
 			e.printStackTrace();
 		}
-
+		
 		//	PP
 		try {
 			fileName	= "COWAY_PP_DATA_" + ifDate + ".TXT";
@@ -228,7 +228,7 @@ public class FtpConnection {
 			query1	= query1 + "   AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))";
 			//stmt	= conn.prepareStatement(query);
 			stmt1	= conn.prepareStatement(query1);
-
+			
 			String planQty	= "";
 			String prodQty	= "";
 			String startDt	= "";
@@ -244,7 +244,7 @@ public class FtpConnection {
 				for ( int i = 0 ; i < col.length ; i++ ) {
 					//	for ITF0310M
 					//stmt.setString(i + 3, col[i]);
-
+					
 					//	for SCM0039M
 					if ( 0 == i )	poNo		= col[i];
 					if ( 3 == i )	stockCode	= col[i];
@@ -253,7 +253,7 @@ public class FtpConnection {
 					if ( 8 == i )	endDt		= col[i];
 					//if ( 9 == i )	startDt		= col[i];
 					startDt		= endDt;
-
+					
 					stmt1.setString(1, planQty);
 					stmt1.setString(2, prodQty);
 					stmt1.setString(3, startDt);
@@ -268,7 +268,7 @@ public class FtpConnection {
 			ret	= false;
 			e.printStackTrace();
 		}
-
+		
 		return	ret;
 	}
 }
