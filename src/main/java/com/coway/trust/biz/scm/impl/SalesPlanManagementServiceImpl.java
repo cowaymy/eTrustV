@@ -162,10 +162,12 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		listParams.put("year", befWeekYear);
 		listParams.put("week", befWeekWeek);
 		listParams.put("team", team);
+		LOGGER.debug("selectBefWeekList listParams : {}", listParams);
 		List<EgovMap> selectBefWeekList		= salesPlanManagementMapper.selectSalesPlanForUpdate(listParams);
 		listParams.put("year", planYear);
 		listParams.put("week", planWeek);
 		listParams.put("team", team);
+		LOGGER.debug("selectPlanWeekList listParams : {}", listParams);
 		List<EgovMap> selectPlanWeekList	= salesPlanManagementMapper.selectSalesPlanForUpdate(listParams);
 		LOGGER.debug("selectBefWeekList : {}", selectBefWeekList);
 		LOGGER.debug("selectPlanWeekList : {}", selectPlanWeekList);
