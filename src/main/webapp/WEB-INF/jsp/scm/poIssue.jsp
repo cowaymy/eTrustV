@@ -355,50 +355,6 @@ var poCreatedListLayout	=
 				}
 			}
 		}, {
-			dataField : "cdc",
-			headerText : "Cdc",
-			visible : true,
-			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poItemStusId ) {
-					return	"my-columnCenter2";
-				} else {
-					return	"my-columnCenter";
-				}
-			}
-		}, {
-			dataField : "poYear",
-			headerText : "Po Year",
-			visible : true,
-			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poItemStusId ) {
-					return	"my-columnCenter2";
-				} else {
-					return	"my-columnCenter";
-				}
-			}
-		}, {
-			dataField : "poMonth",
-			headerText : "Po Month",
-			visible : true,
-			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poItemStusId ) {
-					return	"my-columnCenter2";
-				} else {
-					return	"my-columnCenter";
-				}
-			}
-		}, {
-			dataField : "poWeek",
-			headerText : "Po Week",
-			visible : true,
-			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 5 == item.poItemStusId ) {
-					return	"my-columnCenter2";
-				} else {
-					return	"my-columnCenter";
-				}
-			}
-		}, {
 			dataField : "poItemNo",
 			headerText : "Po Item No",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
@@ -409,8 +365,42 @@ var poCreatedListLayout	=
 				}
 			}
 		}, {
-			dataField : "ctgry",
-			headerText : "Category",
+			dataField : "cdc",
+			headerText : "Cdc",
+			visible : false,
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( 5 == item.poItemStusId ) {
+					return	"my-columnCenter2";
+				} else {
+					return	"my-columnCenter";
+				}
+			}
+		}, {
+			dataField : "poYear",
+			headerText : "PO Year",
+			visible : true,
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( 5 == item.poItemStusId ) {
+					return	"my-columnCenter2";
+				} else {
+					return	"my-columnCenter";
+				}
+			}
+		}, {
+			dataField : "poMonth",
+			headerText : "PO Month",
+			visible : true,
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( 5 == item.poItemStusId ) {
+					return	"my-columnCenter2";
+				} else {
+					return	"my-columnCenter";
+				}
+			}
+		}, {
+			dataField : "poWeek",
+			headerText : "PO Week",
+			visible : true,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
@@ -421,6 +411,16 @@ var poCreatedListLayout	=
 		}, {
 			dataField : "type",
 			headerText : "Type",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( 5 == item.poItemStusId ) {
+					return	"my-columnCenter2";
+				} else {
+					return	"my-columnCenter";
+				}
+			}
+		}, {
+			dataField : "ctgry",
+			headerText : "Category",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
@@ -488,7 +488,7 @@ var poCreatedListLayout	=
 			visible : false
 		}, {
 			dataField : "planGrYear",
-			headerText : "Gr Year",
+			headerText : "GR Year",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
@@ -498,7 +498,7 @@ var poCreatedListLayout	=
 			}
 		}, {
 			dataField : "planGrMonth",
-			headerText : "Gr Month",
+			headerText : "GR Month",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
@@ -508,7 +508,7 @@ var poCreatedListLayout	=
 			}
 		}, {
 			dataField : "planGrWeek",
-			headerText : "Gr Week",
+			headerText : "GR Week",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";

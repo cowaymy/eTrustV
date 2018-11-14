@@ -202,7 +202,7 @@ function fnSupplyPlanHeader() {
 			, $("#MainForm").serializeJSON()
 			, function(result) {
 				
-				console.log (result);
+				//console.log (result);
 				
 				//	scm total info check
 				if ( null == result.selectScmTotalInfo || 1 > result.selectScmTotalInfo.length ) {
@@ -221,6 +221,7 @@ function fnSupplyPlanHeader() {
 				var leadTm		= result.selectScmTotalInfo[0].leadTm;
 				var planWeekTh	= result.selectScmTotalInfo[0].planWeekTh;
 				var fromPlanToPoSpltCnt		= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
+				console.log("leadTm : " + leadTm + ", planWeekTh : " + planWeekTh + ", fromPlanToPoSpltCnt : " + fromPlanToPoSpltCnt);
 				leadTm	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt);
 				//	make header
 				if ( null != result.selectSupplyPlanHeader && 0 < result.selectSupplyPlanHeader.length ) {
@@ -715,7 +716,7 @@ function fnSearch() {
 			, "/scm/selectSupplyPlanList.do"
 			, params
 			, function(result) {
-				console.log(result);
+				//console.log(result);
 				
 				fnButtonControl(result.selectSupplyPlanInfo, result.selectSupplyPlanList);
 				
@@ -948,7 +949,7 @@ function fnCalcPsi5(event) {
 function fnButtonControl(list1, list2) {
 	var salesPlanStusId		= list1[0].planStusId;
 	var supplyPlanStusId	= list1[1].planStusId;
-	console.log("salesPlanStusId : " + salesPlanStusId + ", supplyPlanStusId : " + supplyPlanStusId);
+	//console.log("salesPlanStusId : " + salesPlanStusId + ", supplyPlanStusId : " + supplyPlanStusId);
 	if ( 0 == salesPlanStusId ) {
 		//	button
 		$("#btnCreate").addClass("btn_disabled");
