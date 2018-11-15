@@ -304,4 +304,12 @@ public class SalesPlanManagementController {
 		List<EgovMap> selectStockCodeList = salesPlanMngementService.selectStockCode(params);
 		return ResponseEntity.ok(selectStockCodeList);
 	}
+	@RequestMapping(value = "/selectMonthCombo.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectMonthCombo(@RequestParam Map<String, Object> params) {
+
+		LOGGER.debug("selectMonthComboList : {}", params.toString());
+
+		List<EgovMap> selectMonthCombo = salesPlanMngementService.selectMonthCombo(params);
+		return ResponseEntity.ok(selectMonthCombo);
+	}
 }
