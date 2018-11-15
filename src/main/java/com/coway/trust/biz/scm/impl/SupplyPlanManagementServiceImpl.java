@@ -341,7 +341,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m0Psi2;	//	ok
 				//	check leadTm
-				if ( totLeadTm > iLoopDataFieldCnt2 ) {
+				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
 					if ( 1 == m0 ) {
 						psi5	= basicQty - overdue;
@@ -402,7 +402,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				//	psi3, psi5
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m1Psi2;
-				if ( totLeadTm > iLoopDataFieldCnt2 ) {
+				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
 					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
 					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
@@ -464,7 +464,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				//	psi3, psi5
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m2Psi2;
-				if ( totLeadTm > iLoopDataFieldCnt2 ) {
+				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
 					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
 					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
@@ -520,7 +520,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				//	psi3, psi5
 				psi1	= Integer.parseInt(selectPsi1.get(i).get("w" + intToStrFieldCnt2).toString());
 				psi2	= m3Psi2;
-				if ( totLeadTm > iLoopDataFieldCnt2 ) {
+				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
 					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
 					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
