@@ -51,31 +51,31 @@ public class ScmBatchController {
 	private static FileInputStream inputStream;
 
 	@Value("${scm.file.download.path}")
-    private static String ftpPath;
+    private String ftpPath;
 
 	@Value("${scm.file.serverurl}")
-    private static String ftpUrl;
+    private String ftpUrl;
 
 	@Value("${scm.file.username}")
-    private static String ftpUsername;
+    private String ftpUsername;
 
 	@Value("${scm.file.password}")
-    private static String ftpPassword;
+    private String ftpPassword;
 
 	@Value("${scm.file.encoding}")
-    private static String ftpEncoding;
+    private String ftpEncoding;
 
 	@Value("${spring.datasource.driver-class-name}")
-    private static String datasourceDriver;
+    private String datasourceDriver;
 
 	@Value("${spring.datasource.url}")
-	private static String datasourceUrl;
+	private String datasourceUrl;
 
 	@Value("${spring.datasource.username}")
-    private static String datasourceUsername;
+    private String datasourceUsername;
 
 	@Value("${spring.datasource.password}")
-    private static String datasourcePassword;
+    private String datasourcePassword;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -90,7 +90,7 @@ public class ScmBatchController {
 		return ResponseEntity.ok("OK");
 	}
 
-	public static void execute() {
+	public void execute() {
 
 		String filePath	= "";
 		FTPClient client	= null;
@@ -126,7 +126,7 @@ public class ScmBatchController {
 				if ( null != ftpFiles ) {
 					for ( int i = 0 ; i < ftpFiles.length ; i++ ) {
 						FTPFile file	= ftpFiles[i];
-						filePath	= ftpPath + file.getName();
+						filePath	= ftpPath + "/" + file.getName();
 						File getFile = new File(filePath);
 
 						if (!getFile.getParentFile().exists()) {
@@ -160,7 +160,7 @@ public class ScmBatchController {
 		}
 	}
 
-	public static boolean executeQuery() {
+	public boolean executeQuery() {
 		boolean ret	= true;
 
 		Connection conn	= null;
@@ -183,7 +183,7 @@ public class ScmBatchController {
 			fileName	= "COWAY_GI_DATA_" + ifDate + ".TXT";
 			Class.forName(datasourceDriver);
 			conn	= DriverManager.getConnection(datasourceUrl, datasourceUsername, datasourcePassword);
-			br	= new BufferedReader(new FileReader(ftpPath + fileName));
+			br	= new BufferedReader(new FileReader(ftpPath + "/" + fileName));
 			//String query	= "INSERT INTO ITF0300M VALUES(TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TO_CHAR(TO_NUMBER(TRIM(?))), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?))";
 			String query1	= "UPDATE SCM0039M ";
 			query1	= query1 + "   SET GI_QTY = TO_NUMBER(TRIM(?)) ";
@@ -228,7 +228,7 @@ public class ScmBatchController {
 			fileName	= "COWAY_SO_DATA_" + ifDate + ".TXT";
 			Class.forName(datasourceDriver);
 			conn	= DriverManager.getConnection(datasourceUrl, datasourceUsername, datasourcePassword);
-			br	= new BufferedReader(new FileReader(ftpPath + fileName));
+			br	= new BufferedReader(new FileReader(ftpPath + "/" + fileName));
 			//String query	= "INSERT INTO ITF0300M VALUES(TRIM(?), TRIM(?), TRIM(?), TRIM(?), TO_CHAR(TO_NUMBER(TRIM(?))), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?))";
 			//String query1	= "UPDATE SCM0039M SET GI_QTY = TO_NUMBER(TRIM(?)), GI_DT = TRIM(?) WHERE PO_NO = TRIM(?) AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))";
 			String query1	= "UPDATE SCM0039M ";
@@ -284,7 +284,7 @@ public class ScmBatchController {
 			fileName	= "COWAY_PP_DATA_" + ifDate + ".TXT";
 			Class.forName(datasourceDriver);
 			conn	= DriverManager.getConnection(datasourceUrl, datasourceUsername, datasourcePassword);
-			br	= new BufferedReader(new FileReader(ftpPath + fileName));
+			br	= new BufferedReader(new FileReader(ftpPath + "/" + fileName));
 			//String query	= "INSERT INTO ITF0300M VALUES(TRIM(?), TRIM(?), TRIM(?), TRIM(?), TO_CHAR(TO_NUMBER(TRIM(?))), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?), TRIM(?))";
 			//String query1	= "UPDATE SCM0039M SET GI_QTY = TO_NUMBER(TRIM(?)), GI_DT = TRIM(?) WHERE PO_NO = TRIM(?) AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))";
 			String query1	= "UPDATE SCM0039M ";
