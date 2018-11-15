@@ -439,9 +439,10 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
                      FROM (
                            SELECT G.STOCK_CODE
                                 , SUM(G.ISS_QTY) AS STOCK_SUM
-                                /*, COUNT(DISTINCT G.CDC) AS CDC_SUM*/
                              FROM SCM0051S G
+                             LEFT OUTER JOIN SCM0017M Y ON (G.CDC = Y.CDC AND G.STOCK_CODE = Y.STOCK_CODE)
                             WHERE G.ISS_DT BETWEEN #{issDtFrom} AND #{issDtTo}
+                              AND Y.IS_TRGET = 1
                             GROUP BY G.STOCK_CODE
                            ) Z
                      LEFT OUTER JOIN (
@@ -449,7 +450,9 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
                                            , G.CDC
                                            , SUM(G.ISS_QTY) AS CDC_SUM
                                         FROM SCM0051S G
+                                        LEFT OUTER JOIN SCM0017M Y ON (G.CDC = Y.CDC AND G.STOCK_CODE = Y.STOCK_CODE)
                                        WHERE G.ISS_DT BETWEEN #{issDtFrom} AND #{issDtTo}
+                                         AND Y.IS_TRGET = 1
                                        GROUP BY G.STOCK_CODE, G.CDC
                                       ) X ON (Z.STOCK_CODE = X.STOCK_CODE)
                    ) C ON (A.STOCK_CODE = C.STOCK_CODE AND C.CDC = #{cdc}) /* FOR ISSUE QTY */
