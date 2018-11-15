@@ -37,6 +37,8 @@ var gSumAmount = 0;
 
 $(function() 
 {
+	fnScmYearCbBox();
+	fnScmWeekCbBox();
   // set Year
   //fnSelectExcuteYear();
   fnScmYearCbBox();
@@ -49,6 +51,60 @@ $(function()
   //stock type
   fnSelectStockTypeComboList('15');   
 });
+
+//year
+function fnScmYearCbBox() {
+	//	callback
+	var fnScmWeekCbBoxCallback	= function() {
+		$("#scmYearCbBox").on("change", function() {
+			var $this	= $(this);
+
+			CommonCombo.initById("scmPeriodCbBox");
+
+			if ( FormUtil.isNotEmpty($this.val()) ) {
+				CommonCombo.make("scmPeriodCbBox"
+						, "/scm/selectScmWeek.do"
+						, { scmYear : $this.val() }
+						, ""
+						, {
+							id : "id",
+							name : "name",
+							chooseMessage : "Select a Year"
+						}
+						, "");
+			} else {
+				fnScmWeekCbBox();
+			}
+		});
+	};
+    /**
+     * 공통 콤보박스 : option 으로 처리.
+     *
+     * @param _comboId           : 콤보박스 id     String               => "comboId" or "#comboId"
+     * @param _url                  : 호출 URL
+     * @param _jsonParam        : 넘길 파라미터  json object      => {id : "im7015", name : "lim"}
+     * @param _sSelectData      : 선택될 id        String              =>단건 : "aaa", 다건 :  "aaa|!|bbb|!|ccc"
+     * @param _option              : 옵션.             소스내                => var option 참조.
+     * @param _callback            : 콜백함수         function           => function(){..........}
+     */
+	CommonCombo.make("scmYearCbBox"
+			, "/scm/selectScmYear.do"
+			, ""
+			, ""
+			, {
+				id : "id",
+				name : "name",
+				chooseMessage : "Year"
+			}
+			, fnScmWeekCbBoxCallback);
+}
+
+//	default week
+function fnScmWeekCbBox() {
+	CommonCombo.initById("scmPeriodCbBox");	//	reset
+	var weekChkBox	= document.getElementById("scmPeriodCbBox");
+	weekChkBox.options[0]	= new Option("Select a Week", "");
+}
 
 function fnSelectPeriodReset()
 {
@@ -149,8 +205,8 @@ function fnSelectExcuteYear()
 }
 
 function fnChangeEventPeriod(object)
-{
-  gWeekThValue = object.value;
+{console.log("1");
+  gWeekThValue = object.value;console.log("2");
 
   Common.ajax("GET", "/scm/selectMonthCombo.do"
 	       ,  { scmYearCbBox: $("#scmYearCbBox").val(),
@@ -167,7 +223,7 @@ function fnChangeEventPeriod(object)
 	         }
 	       });
 
-  
+  console.log("3");
 }
 
 function fnClearDataSet()
@@ -403,13 +459,13 @@ function fnMoveRight()
 	     $("#inPreWeekTh").val(AUIGrid.getCellValue(myGridID, gMyGridSelRowIdx, "preWeekTh"));
 
 	     $("#inRoundUpPoQty").val( ( parseInt($("#inPlanQty").val()) - parseInt($("#inPoQty").val()))); 
-
+/*
  	     if ( $("#inMoq").val() <= 0)
 	     {
 	       Common.alert("<spring:message code='sys.scm.poissue.zeroDivisible'/> ");
 	       return false;
 	     } 
-	
+	*/
 	   Common.ajax("GET"
 	             , "/scm/selectPoRightMove.do"
 	             , {
@@ -616,7 +672,7 @@ var SCMPrePOViewLayout =
             dataField : "preCdc",
             headerText : "preCdc",   
             editable : false,
-            visible  : false,
+            visible  : true,
         }, {
             dataField : "preWeekTh",
             headerText : "preWeekTh",   
