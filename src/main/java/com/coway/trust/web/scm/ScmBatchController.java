@@ -50,32 +50,32 @@ public class ScmBatchController {
 	private static final Logger LOGGER = LoggerFactory.getLogger(ScmBatchController.class);
 	private static FileInputStream inputStream;
 
-	@Value("${scm.file.download.path}")
-    private String ftpPath;
+	//@Value("${scm.file.download.path}")
+    private String ftpPath = "/apps/domains/SalesDmain/servers/eTRUST/resources/WebShare/SCMFTP";
 
-	@Value("${scm.file.serverurl}")
-    private String ftpUrl;
+	//@Value("${scm.file.serverurl}")
+    private String ftpUrl = "10.101.3.40";
 
-	@Value("${scm.file.username}")
-    private String ftpUsername;
+	//@Value("${scm.file.username}")
+    private String ftpUsername = "etrustftp";
 
-	@Value("${scm.file.password}")
-    private String ftpPassword;
+	//@Value("${scm.file.password}")
+    private String ftpPassword = "akffus#20!*";
 
-	@Value("${scm.file.encoding}")
-    private String ftpEncoding;
+	//@Value("${scm.file.encoding}")
+    private String ftpEncoding = "euc-kr";
 
-	@Value("${spring.datasource.driver-class-name}")
-    private String datasourceDriver;
+	//@Value("${spring.datasource.driver-class-name}")
+    private String datasourceDriver = "oracle.jdbc.OracleDriver";
 
-	@Value("${spring.datasource.url}")
-	private String datasourceUrl;
+	//@Value("${spring.datasource.url}")
+	private String datasourceUrl = "jdbc:oracle:thin:@10.201.32.180:1521:gbslcvd";
 
-	@Value("${spring.datasource.username}")
-    private String datasourceUsername;
+	//@Value("${spring.datasource.username}")
+    private String datasourceUsername = "GBSLCVAPL1";
 
-	@Value("${spring.datasource.password}")
-    private String datasourcePassword;
+	//@Value("${spring.datasource.password}")
+    private String datasourcePassword= "GBSLCVD#2017";
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
