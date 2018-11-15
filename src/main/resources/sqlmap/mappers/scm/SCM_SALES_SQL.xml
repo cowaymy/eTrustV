@@ -390,8 +390,8 @@ WITH SALES_PLAN_SUMMARY
              SCM_MONTH
         FROM SCM0018M
        WHERE SCM_YEAR = #{scmYearCbBox}
-         AND WEEK_TH  = #{scmPeriodCbBox}
-         AND WEEK_TH_SN = 1
+         AND SCM_WEEK  = #{scmPeriodCbBox}
+         AND SCM_WEEK_SEQ = 1
          /*AND NVL(USE_YN,'Y')='Y'*/
          AND USE_YN = 'Y'
     </select>
