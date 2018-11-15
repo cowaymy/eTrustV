@@ -148,7 +148,7 @@ SELECT '2' AS GBN
 </select>
 
 <select id="selectSupplyPlanList" parameterType="Map" resultType="egovMap">
-SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_CTGRY_ID, B.STOCK_CODE), 2) AS DIV_ODD
+SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_ODD
      , A.PLAN_ID
      , A.PLAN_YEAR
      , A.PLAN_MONTH
@@ -225,11 +225,11 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_CTGRY_ID, B.STOCK_CODE), 2) AS DIV_
 		</foreach>
 	</if>
    AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
- ORDER BY B.STOCK_CODE, B.PSI_ID
+ ORDER BY D.STK_TYPE_ID, B.STOCK_CODE, B.PSI_ID
 </select>
 
 <select id="selectSupplyPlanSummaryList" parameterType="Map" resultType="egovMap">
-SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_CTGRY_ID, B.STOCK_CODE), 2) AS DIV_ODD
+SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_ODD
      , A.PLAN_ID
      , A.PLAN_YEAR
      , A.PLAN_MONTH
@@ -306,7 +306,7 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_CTGRY_ID, B.STOCK_CODE), 2) AS DIV_
      , F.CODE_NAME
      , B.STOCK_CODE
      , D.STK_DESC
- ORDER BY B.STOCK_CODE, B.PSI_ID
+ ORDER BY D.STK_TYPE_ID, B.STOCK_CODE, B.PSI_ID
 </select>
 
 <insert id="insertSupplyPlanMaster" parameterType="Map">
