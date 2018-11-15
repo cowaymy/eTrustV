@@ -128,6 +128,11 @@ public class ScmBatchController {
 						FTPFile file	= ftpFiles[i];
 						filePath	= ftpPath + file.getName();
 						File getFile = new File(filePath);
+
+						if (!getFile.getParentFile().exists()) {
+						    getFile.getParentFile().mkdirs();
+				        }
+
 						FileOutputStream outputstream	= new FileOutputStream(getFile);
 						boolean result = client.retrieveFile("/" + file.getName(), outputstream);
 						outputstream.close();
