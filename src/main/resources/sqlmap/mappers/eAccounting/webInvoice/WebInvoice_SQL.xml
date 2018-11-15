@@ -71,16 +71,6 @@ SELECT   T.CLM_NO
            <if test="deptId != null and deptId != ''">
                 AND T1.DEPT_ID = #{deptId}
            </if>
-           <if test="appStartDt != null and appStartDt != ''">
-               <![CDATA[
-                   AND T3.APPV_PRCSS_DT >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
-               ]]>
-           </if>
-            <if test="appEndDt != null and appEndDt != ''">
-               <![CDATA[
-                   AND T3.APPV_PRCSS_DT <= TO_DATE(#{appEndDt}, 'DD/MM/YYYY')
-               ]]>
-           </if>
            <if test="(appStartDt != null and appStartDt != '') or (appEndDt != null and appEndDt != '') ">
                AND T3.APPV_PRCSS_STUS = 'A'
            </if>
@@ -112,7 +102,7 @@ SELECT   T.CLM_NO
                 AND UPPER(T.CLM_NO) <= UPPER(#{clmNoEnd})
              ]]>
         </if>
-        <if test="(appvPrcssStus != null and appvPrcssStus != '' ) and ((appStartDt == null and appStartDt == '') or (appEndDt == null and appEndDt == ''))">
+        <if test="(appvPrcssStus != null and appvPrcssStus != '' ) and ((appStartDt == null or appStartDt == '') and (appEndDt == null or appEndDt == ''))">
              AND T.APPV_PRCSS_STUS_CODE IN
          <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
              #{item}
@@ -135,6 +125,16 @@ SELECT   T.CLM_NO
         <![CDATA[
              AND UPPER(T.UTIL_NO) LIKE UPPER('%'||#{utilAccNo}||'%')
         ]]>
+        </if>
+        <if test="appStartDt != null and appStartDt != ''">
+            <![CDATA[
+                AND T.APPV_PRCSS_DT >= TO_DATE(#{appStartDt}, 'DD/MM/YYYY')
+            ]]>
+        </if>
+        <if test="appEndDt != null and appEndDt != ''">
+            <![CDATA[
+                AND T.APPV_PRCSS_DT < TO_DATE(#{appEndDt}, 'DD/MM/YYYY') + 1
+            ]]>
         </if>
         ORDER BY T.CLM_NO
 </select>
@@ -1390,7 +1390,9 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         J_PAY_NO,
         BIL_PERIOD_F,
         BIL_PERIOD_T,
-        PREV_CLM_NO)
+        PREV_CLM_NO,
+        BRNCH_ID,
+        DEPT_ID)
     SELECT
         #{newClmNo},
         CLM_TYPE,
@@ -1416,7 +1418,9 @@ SELECT (CASE APPV_STUS WHEN 'R' THEN 0 ELSE 1 END) AS RESULT_DATA
         J_PAY_NO,
         BIL_PERIOD_F,
         BIL_PERIOD_T,
-        CLM_NO AS PREV_CLM_NO
+        CLM_NO AS PREV_CLM_NO,
+        BRNCH_ID,
+        DEPT_ID
     FROM
         FCM0002M
     WHERE
