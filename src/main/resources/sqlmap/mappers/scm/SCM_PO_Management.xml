@@ -190,12 +190,12 @@
         ,SCM17M.CDC PRE_CDC
         ,SYS26M.STK_TYPE_ID
    FROM SCM0008M SCM08M
-		    LEFT JOIN SCM0017M SCM17M  ON SCM17M.STOCK_CODE = SCM08M.STOCK_CODE AND SCM17M.CDC =  DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+		    LEFT JOIN SCM0017M SCM17M  ON SCM17M.STOCK_CODE = SCM08M.STOCK_CODE AND SCM17M.CDC =  #{cdcCbBox}
 		    LEFT JOIN SCM0011D SCM11D  ON SCM11D.PRE_STOCK_CODE = SCM08M.STOCK_CODE
 			                            AND SCM11D.PRE_YEAR = #{scmYearCbBox}
 			                            AND SCM11D.PRE_MONTH IN (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND SCM_WEEK = #{scmPeriodCbBox} AND SCM_WEEK_SEQ='1' )
 			                            AND PRE_WEEK_TH = #{scmPeriodCbBox}
-			                            AND PRE_CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+			                            AND PRE_CDC = #{cdcCbBox}
 			  LEFT JOIN SYS0026M SYS26M  ON SYS26M.STK_CODE = SCM08M.STOCK_CODE
    WHERE 1 = 1
   <choose>
@@ -256,7 +256,7 @@
 	  WHERE BAS_YEAR = #{scmYearCbBox}
 	    AND EST_WEEK = #{scmPeriodCbBox}
 	   <if test='cdcCbBox != null and cdcCbBox !="" '>
-	    AND CDC = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+	    AND CDC = #{cdcCbBox}
 	   </if>
 
 	    <choose>
@@ -329,7 +329,7 @@
 				            FROM SCM0011D
 				           WHERE PRE_YEAR    = #{scmYearCbBox}
 				             AND PRE_WEEK_TH = #{scmPeriodCbBox}
-				             AND PRE_CDC     = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+				             AND PRE_CDC     = #{cdcCbBox}
 				             AND (PRE_QTY - PO_QTY) <![CDATA[ > ]]> 0
 				        ) PRE_POITEM_CNT
 				       ,(
@@ -337,7 +337,7 @@
 				             FROM SCM0009M
 				            WHERE BAS_YEAR = #{scmYearCbBox}
 				              AND EST_WEEK = #{scmPeriodCbBox}
-				              AND CDC      = DECODE(#{cdcCbBox},'2010','KL','2020','PN','2030','JB','2040','KK','2050','KC',#{cdcCbBox})
+				              AND CDC      = #{cdcCbBox}
 				              AND PO_STUS <![CDATA[ <> ]]> 5
 				        )  SCMPOMASTER_CNT
 				   FROM DUAL
@@ -347,7 +347,7 @@
 <update id="updatePOIssuItem" parameterType="Map">
 MERGE INTO SCM0011D
       USING DUAL
-         ON (PRE_YEAR = #{preYear} AND PRE_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1')
+         ON (PRE_YEAR = #{preYear} AND PRE_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND SCM_WEEK= #{preWeekTh} AND SCM_WEEK_SEQ='1')
              AND  PRE_WEEK_TH = #{preWeekTh} AND PRE_STOCK_CODE = #{stockCode} AND PRE_CDC  = #{preCdc}
             )
 
@@ -355,7 +355,7 @@ MERGE INTO SCM0011D
               UPDATE
                  SET PO_QTY      = (PO_QTY + #{poQty})
                WHERE PRE_YEAR    = #{preYear}
-                 AND PRE_MONTH   = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1' )
+                 AND PRE_MONTH   = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND SCM_WEEK= #{preWeekTh} AND SCM_WEEK_SEQ='1' )
                  AND PRE_WEEK_TH = #{preWeekTh}
                  AND PRE_STOCK_CODE = #{stockCode}
                  AND PRE_CDC        = #{preCdc}
@@ -373,7 +373,7 @@ MERGE INTO SCM0011D
               VALUES
                  (
                    #{preYear}
-                  ,(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND WEEK_TH= #{preWeekTh} AND WEEK_TH_SN='1' )
+                  ,(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{preYear} AND SCM_WEEK= #{preWeekTh} AND SCM_WEEK_SEQ='1' )
                   ,#{preWeekTh}
                   ,#{stockCode}
                   ,#{preCdc}
@@ -393,7 +393,7 @@ MERGE INTO SCM0011D
  UPDATE SCM0011D
     SET PO_QTY    = ( PO_QTY - #{qty} )
   WHERE PRE_YEAR  = #{basYear}
-    AND PRE_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{basYear} AND WEEK_TH= #{estWeek} AND WEEK_TH_SN='1' )
+    AND PRE_MONTH = (SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR= #{basYear} AND SCM_WEEK= #{estWeek} AND SCM_WEEK_SEQ='1' )
     AND PRE_WEEK_TH    = #{estWeek}
     AND PRE_STOCK_CODE = #{stockCode}
     AND PRE_CDC = #{cdc}
