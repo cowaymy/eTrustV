@@ -58,7 +58,7 @@ public class GuardianOfComplianceController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	@Value("${com.file.upload.path}")
+	@Value("${web.resource.upload.file}")
 	private String uploadDir;
 
 	@Autowired
@@ -393,7 +393,7 @@ public class GuardianOfComplianceController {
 		logger.debug("fileDownload : {}",fileDownload);
 		return ResponseEntity.ok(fileDownload);
 	}
-	
+
 	@RequestMapping(value = "/updateGuardianCompliance.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updateGuardianCompliance(@RequestBody Map<String, Object> params, ModelMap model,SessionVO sessionVo) {
 		boolean success = false;
