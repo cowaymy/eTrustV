@@ -358,7 +358,7 @@ SELECT #{planId}
      , SCM0002D_PLAN_DTL_ID_SEQ.NEXTVAL
      , A.STOCK_CODE
      , NVL((
-            SELECT ROUND(COUNT(*) / 3)
+            SELECT ROUND(SUM(Z.ISS_QTY) / 3)
               FROM SCM0051S Z
              WHERE Z.ISS_DT BETWEEN #{issDtFrom} AND #{issDtTo}
                AND Z.TEAM = #{team}
