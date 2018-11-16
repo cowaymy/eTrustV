@@ -434,7 +434,7 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
                    SELECT Z.STOCK_CODE
                         , X.CDC
                         , CASE WHEN Z.STOCK_SUM = 0 THEN 0
-                               ELSE CEIL((X.CDC_SUM / Z.STOCK_SUM) * 100)
+                               ELSE ROUND((X.CDC_SUM / Z.STOCK_SUM) * 100, 3)
                                END AS CDC_RATE
                      FROM (
                            SELECT G.STOCK_CODE
