@@ -368,7 +368,10 @@ function fnSalesPlanHeader() {
 								dataField : result.selectSalesPlanHeader[0].preM3IssAvg,
 								headerText : "M-3 Issue<br/>Avg",
 								visible : true,
-								style : "my-backColumn4"
+								 style : "my-backColumn3",
+								 dataType : "numeric",
+								 formatString : "#,##0",
+								 editable : false
 							}, {
 								//	M-1 Order Sum
 								 dataField : result.selectSalesPlanHeader[0].preM1OrdSum,
@@ -376,7 +379,8 @@ function fnSalesPlanHeader() {
 								 visible : true,
 								 style : "my-backColumn3",
 								 dataType : "numeric",
-								 formatString : "#,##0"
+								 formatString : "#,##0",
+								 editable : false
 							}, {
 								headerText : "Monthly",
 								children :
@@ -387,49 +391,56 @@ function fnSalesPlanHeader() {
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0"
+										 formatString : "#,##0",
+										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m0,
 										 headerText : "M0",
 										 visible : false,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0"
+										 formatString : "#,##0",
+										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m0Exp,
 										 headerText : "M0 Exp",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0"
+										 formatString : "#,##0",
+										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m1,
 										 headerText : "M+1",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0"
+										 formatString : "#,##0",
+										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m2,
 										 headerText : "M+2",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0"
+										 formatString : "#,##0",
+										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m3,
 										 headerText : "M+3",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0"
+										 formatString : "#,##0",
+										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m4,
 										 headerText : "M+4",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0"
+										 formatString : "#,##0",
+										 editable : false
 									 }
 									 ]
 							}
