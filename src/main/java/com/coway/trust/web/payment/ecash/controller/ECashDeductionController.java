@@ -706,11 +706,8 @@ public class ECashDeductionController {
 		EmailVO email = new EmailVO();
 
 		List<String> recList = new ArrayList<String>();
-		recList.add(emailReceiver);
-		recList.add("kitwai.lai@coway.com.my");
 
-		//email.setTo(emailReceiver);
-		email.setTo(recList);
+		email.setTo(emailReceiver);
 		email.setHtml(false);
         if(1 == (Integer) claimMap.get("type")) {
             email.setSubject("SCB eCash CRC Grouping Deduction File - Batch Date : " + inputDate + "_ "+ String.valueOf(claimMap.get("pageNo")));
