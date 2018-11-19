@@ -572,8 +572,6 @@ public class CustomerController {
 		int tempCustSeq = 0 ;
 		tempCustSeq = customerService.getCustIdSeq();
 
-		final int customerId = tempCustSeq;
-
 		insmap.put("custSeq", tempCustSeq);
 		insmap.put("custName", vo.getCustName());
 		insmap.put("cmbNation", String.valueOf(vo.getCmbNation()) != null ? vo.getCmbNation() : 0);
@@ -717,7 +715,6 @@ public class CustomerController {
 		//	int getCustCrcIdSeq = customerService.getCustCrcIdSeq();
 			addList.forEach(form -> {
 				CustomerCVO customerCVO = new CustomerCVO();
-				customerCVO.setGetCustId(customerId);
 				customerCVO.setCrcType(form.getCrcType());
 				customerCVO.setBank(form.getBank());
 				customerCVO.setCardType(form.getCardType());
@@ -728,8 +725,8 @@ public class CustomerController {
 				customerCVO.setEncCrcNo(null);				//암호화 코드
 				customerCVO.setNmCard(form.getNmCard());
 				customerCVO.setCrcStusId(1);					//고정
-				customerCVO.setCrcUpdId(sessionVo.getUserId());			//임시
-				customerCVO.setCrcCrtId(sessionVo.getUserId());				//임시
+				customerCVO.setCrcUpdId(999999);			//임시
+				customerCVO.setCrcCrtId(999999);				//임시
 
 				String cardExpiry = form.getCardExpiry();
 				if(cardExpiry != null){
@@ -765,13 +762,13 @@ public class CustomerController {
 				customerBVO.setAccBankBrnch(form.getAccBankBrnch());
 				customerBVO.setAccRem(form.getAccRem());
 				customerBVO.setAccStusId(1);
-				customerBVO.setAccUpdUserId(sessionVo.getUserId()); 			//임시
+				customerBVO.setAccUpdUserId(999999); 			//임시
 				customerBVO.setAccNric("");							//고정
 				customerBVO.setAccIdOld(0);							//고정
 				customerBVO.setSoId(0);								//고정
 				customerBVO.setAccIdcm(0);							//고정
 				customerBVO.setHlbbId(0);							//고정
-				customerBVO.setAccCrtUserId(sessionVo.getUserId());			//임시
+				customerBVO.setAccCrtUserId(999999);			//임시
 
 				customerBankVOList.add(customerBVO);
 			});
