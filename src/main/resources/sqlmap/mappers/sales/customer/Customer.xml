@@ -1592,7 +1592,7 @@
 					                      CARD_TYPE_ID)
 					  VALUES   (
 					                SAL0028D_CUST_CRC_ID_SEQ.NEXTVAL  ,
-						            SAL0029D_CUST_ID_SEQ.CURRVAL,
+						            #{getCustId},
 						            #{crcNo},
 						            #{creditCardNo},
 						            #{encCrcNo},
