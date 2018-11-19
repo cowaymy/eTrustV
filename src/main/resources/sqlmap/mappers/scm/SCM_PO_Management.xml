@@ -187,7 +187,8 @@
         ,#{scmYearCbBox} PRE_YEAR
         ,(SELECT SCM_MONTH FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND SCM_WEEK = #{scmPeriodCbBox} AND SCM_WEEK_SEQ='1') PRE_MONTH
         ,#{scmPeriodCbBox} PRE_WEEK_TH
-        ,SCM17M.CDC PRE_CDC
+        ,SCM17M.CDC PRE_CDC1
+        , A.CODE_DESC AS PRE_CDC
         ,SYS26M.STK_TYPE_ID
    FROM SCM0008M SCM08M
 		    LEFT JOIN SCM0017M SCM17M  ON SCM17M.STOCK_CODE = SCM08M.STOCK_CODE AND SCM17M.CDC =  #{cdcCbBox}
@@ -197,6 +198,7 @@
 			                            AND PRE_WEEK_TH = #{scmPeriodCbBox}
 			                            AND PRE_CDC = #{cdcCbBox}
 			  LEFT JOIN SYS0026M SYS26M  ON SYS26M.STK_CODE = SCM08M.STOCK_CODE
+			  LEFT OUTER JOIN SYS0013M A ON (SCM17M.CDC = A.CODE AND A.CODE_MASTER_ID = 349)
    WHERE 1 = 1
   <choose>
    <when test='scmStockTypes != null and !scmStockTypes.isEmpty '>
@@ -256,7 +258,7 @@
 	  WHERE BAS_YEAR = #{scmYearCbBox}
 	    AND EST_WEEK = #{scmPeriodCbBox}
 	   <if test='cdcCbBox != null and cdcCbBox !="" '>
-	    AND CDC = #{cdcCbBox}
+	    AND CDC = DECODE(#{cdcCbBox}, '2010', 'KL', '2020', 'PN', '2030', 'JB', '2040', 'KK', '2050', 'KC')
 	   </if>
 
 	    <choose>
@@ -277,7 +279,7 @@
       </when>
     </choose>
 
-      ORDER BY PO_NO DESC, PO_ITM_NO
+      ORDER BY PO_ID DESC, PO_NO DESC, PO_ITM_NO
 </select>
 
 <select id="selectPoRightMove" parameterType="Map" resultType="egovMap">
