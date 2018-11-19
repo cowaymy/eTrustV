@@ -456,7 +456,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
     							if (Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) < 6) {
     								msg = msg + " -Below 6th months not allowed to entitle I-Care Promo. <br/>";
     								isInValid = "InValid";
-    							} else if (Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) >= 60) {
+    							} else if (Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) > 60) {
     								msg = msg + " -Above 60th months not allowed to entitle I-Care Promo. <br/>";
     								isInValid = "InValid";
     							}
