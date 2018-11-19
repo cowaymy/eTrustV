@@ -1031,7 +1031,11 @@ public class ClaimController {
         					claimMap.put("rowCount", 999);
         					claimMap.put("batchNo", totBatToday);
         					claimMap.put("pageCnt", pageCnt);
+        					claimMap.put("type", 1);
         					this.createCreditCardFileMBB(claimMap);
+
+        					claimMap.put("type", 2);
+                            this.createCreditCardFileMBB(claimMap);
         				}
         			}
                 }
@@ -1062,7 +1066,11 @@ public class ClaimController {
         					claimMap.put("rowCount", 999);
         					claimMap.put("batchNo", totBatToday);
         					claimMap.put("pageCnt", pageCnt);
+        					claimMap.put("type", 1);
         					this.createClaimFileCrcMBB(claimMap);
+
+        					claimMap.put("type", 2);
+                            this.createClaimFileCrcMBB(claimMap);
         				}
         			}
                 }
@@ -1852,13 +1860,17 @@ public class ClaimController {
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "yyMMdd");
-			sFile = "CZ" + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
+			if(1 == (Integer) claimMap.get("type")) {
+			    sFile = "CZ" + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
+            } else {
+                sFile = "CZ" + todayDate + "_NEW" + ".dat";
+            }
 
 			downloadHandler = getTextDownloadCrcMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 
 			largeExcelService.downLoadClaimFileCrcMBB(claimMap, downloadHandler);
 			if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
-				downloadHandler.writeFooter();
+				downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
 			}
 
 		} catch (Exception ex) {
@@ -1970,14 +1982,18 @@ public class ClaimController {
 		try {
 			inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) claimMap.get("ctrlBatchDt");
 			todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "yyMMdd");
-			sFile = "CZ" + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
+			if(1 == (Integer) claimMap.get("type")) {
+			    sFile = "CZ" + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
+			} else {
+			    sFile = "CZ" + todayDate + "_NEW" + ".dat";
+			}
 
 			downloadHandler = getTextDownloadCreditCardMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
 
 			largeExcelService.downLoadCreditCardFileMBB(claimMap, downloadHandler);
 
 			if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
-				downloadHandler.writeFooter();
+				downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
 			}
 		} catch (Exception ex) {
 			throw new ApplicationException(ex, AppConstants.FAIL);

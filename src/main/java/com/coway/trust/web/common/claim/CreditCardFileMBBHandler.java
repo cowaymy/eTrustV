@@ -1,5 +1,8 @@
 package com.coway.trust.web.common.claim;
 
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.util.Map;
@@ -91,30 +94,51 @@ public class CreditCardFileMBBHandler extends BasicTextDownloadHandler implement
 	public void handleResult(ResultContext<? extends Map<String, Object>> result) {
 		try {
 			if (!isStarted) {
-				init();
-				writeHeader(result);
+				init(String.valueOf(params.get("type")));
+				writeHeader(result, String.valueOf(params.get("type")));
 				isStarted = true;
 			}
 
-			writeBody(result);
+			writeBody(result, String.valueOf(params.get("type")));
 
 		} catch (Exception e) {
 			throw new ApplicationException(e, AppConstants.FAIL);
 		}
 	}
 
-	private void init() throws IOException {
-		out = createFile();
+	private void init(String Type) throws IOException {
+		out = createFile(Type);
 	}
 
-	private void writeHeader(ResultContext<? extends Map<String, Object>> result) throws IOException {
+	BufferedWriter createFile(String type) throws IOException {
+        File file = new File(fileInfoVO.getFilePath() + fileInfoVO.getSubFilePath() + fileInfoVO.getTextFilename());
+
+        // figure out how to handle
+        if (!file.getParentFile().exists()) {
+            file.getParentFile().mkdirs();
+        }
+
+        // append true
+        if("1".equals(type)) {
+            fileWriter = new FileWriter(file);
+        } else {
+            fileWriter = new FileWriter(file, true);
+        }
+        return new BufferedWriter(fileWriter);
+    }
+
+	private void writeHeader(ResultContext<? extends Map<String, Object>> result, String type) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
 		BigDecimal totA = (BigDecimal)dataRow.get("totAmt");
 		long limit = totA.multiply(hunred).longValue();
 
 		// 헤더 작성
 		messageType	= StringUtils.rightPad(String.valueOf("H"), 1, " ");
-		sbatchNo      	= StringUtils.leftPad(String.valueOf("1"), 5, "0");
+		if("1".equals(type)) {
+		    sbatchNo   = StringUtils.leftPad(String.valueOf("1"), 5, "0");
+		} else {
+		    sbatchNo   = StringUtils.leftPad(String.valueOf(dataRow.get("pageno")), 5, "0");
+		}
 		merOrg 			= StringUtils.rightPad(String.valueOf("001"), 3, " ");
 		merId 			= StringUtils.rightPad(String.valueOf("060012051"), 1, " ");
 		merName 		= StringUtils.rightPad(String.valueOf("COWAY (M) SDN BHD"), 20, " ");
@@ -143,13 +167,17 @@ public class CreditCardFileMBBHandler extends BasicTextDownloadHandler implement
 		LOGGER.debug("write Header complete.....");
 	}
 
-	private void writeBody(ResultContext<? extends Map<String, Object>> result) throws IOException {
+	private void writeBody(ResultContext<? extends Map<String, Object>> result, String type) throws IOException {
 		Map<String, Object> dataRow = result.getResultObject();
 
 		String crcExpiry = dataRow.get("bankDtlCrcExpr") == null ? "0000" : String.valueOf(dataRow.get("bankDtlCrcExpr")).trim();
 
 		bMessageType = StringUtils.rightPad("T", 1, " ");
-		bBatchNo      	= StringUtils.leftPad(String.valueOf("1"), 5, "0");
+		if("1".equals(type)) {
+            sbatchNo   = StringUtils.leftPad(String.valueOf("1"), 5, "0");
+        } else {
+            sbatchNo   = StringUtils.leftPad(String.valueOf(dataRow.get("pageno")), 5, "0");
+        }
 		//bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
 		bTransCode 	= StringUtils.rightPad("40", 2, " ");
 		bAccNo 			= StringUtils.rightPad(String.valueOf(dataRow.get("bankDtlCrcNo")), 19, " ");
@@ -191,12 +219,16 @@ public class CreditCardFileMBBHandler extends BasicTextDownloadHandler implement
 
 	}
 
-	public void writeFooter() throws IOException {
+	public void writeFooter(String type) throws IOException {
 
 		fTotalAmt = (BigDecimal)params.get("ctrlBillAmt");
 		fLimit = fTotalAmt.multiply(hunred).longValue();
 		fMessage = "R";
-		sNoOfBatch = StringUtils.leftPad(String.valueOf("1"),3,"0");
+		if("1".equals(type)) {
+		    sNoOfBatch = StringUtils.leftPad(String.valueOf("1"),3,"0");
+		} else {
+		    sNoOfBatch = StringUtils.leftPad(String.valueOf(params.get("pageNo")),3,"0");
+		}
 		//sRecTot    = StringUtils.leftPad(String.valueOf(iTotalCnt), 7, "0");
 		sRecTot    = StringUtils.leftPad(String.valueOf(params.get("ctrlTotItm")), 7, "0");
 		//sBatchTot = StringUtils.leftPad(String.valueOf(iTotalAmt), 13, "0");
