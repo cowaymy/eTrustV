@@ -25,7 +25,7 @@ $(document).ready(function(){
     fn_getBSHistoryInfo();
     fn_setComboBox();
 
-    fn_getErrMstList('${as_ord_basicInfo.ordNo}');
+    fn_getErrMstList('${orderDetail.basicInfo.ordNo}');
 
 
     <c:if test="${MOD eq 'VIEW'}">
@@ -47,7 +47,6 @@ $(document).ready(function(){
 
 
 function fn_getErrMstList(_ordNo){
-
 	 var SALES_ORD_NO = _ordNo ;
      $("#errorCode option").remove();
      doGetCombo('/services/as/getErrMstList.do?SALES_ORD_NO='+SALES_ORD_NO, '', '','errorCode', 'S' , '');
@@ -171,7 +170,7 @@ function fn_keyEvent(){
 
 
 function fn_getASHistoryInfo(){
-	    Common.ajax("GET", "/services/as/getASHistoryList.do", {SALES_ORD_ID:'${as_ord_basicInfo.ordId}'  ,SALES_ORD_NO:'${as_ord_basicInfo.ordNo}'  }, function(result) {
+	    Common.ajax("GET", "/services/as/getASHistoryList.do", {SALES_ORD_ID:'${orderDetail.basicInfo.ordId}'  ,SALES_ORD_NO:'${orderDetail.basicInfo.ordNo}'  }, function(result) {
             console.log("fn_getASHistoryInfo.");
             console.log( result);
             AUIGrid.setGridData(asHistoryGrid, result);
@@ -183,7 +182,7 @@ function fn_getASHistoryInfo(){
 
 function fn_getCustAddressInfo(){
 
-        Common.ajax("GET", "/services/as/getCustAddressInfo.do", {SALES_ORD_NO:'${as_ord_basicInfo.ordNo}'  }, function(result) {
+        Common.ajax("GET", "/services/as/getCustAddressInfo.do", {SALES_ORD_NO:'${orderDetail.basicInfo.ordNo}'  }, function(result) {
             console.log("fn_getCustAddressInfo.");
             console.log(result.fulladdr);
             $("#sms_CustFulladdr").val(result.fulladdr);
@@ -238,7 +237,7 @@ function createBSHistoryGrid(){
 function fn_doAllaction(){
 
 
-    var ord_id ='${as_ord_basicInfo.ordId}'   ;// '143486';
+    var ord_id ='${orderDetail.basicInfo.ordId}'   ;// '143486';
     var  vdte   =$("#requestDate").val();
 
 
@@ -257,7 +256,7 @@ function fn_doAllaction(){
 
 
 function fn_getBSHistoryInfo(){
-	    Common.ajax("GET", "/services/as/getBSHistoryList.do",{SALES_ORD_NO:'${as_ord_basicInfo.ordNo}' ,SALES_ORD_ID:'${as_ord_basicInfo.ordId}'  }, function(result) {
+	    Common.ajax("GET", "/services/as/getBSHistoryList.do",{SALES_ORD_NO:'${orderDetail.basicInfo.ordNo}' ,SALES_ORD_ID:'${orderDetail.basicInfo.ordId}'  }, function(result) {
             console.log("fn_getBSHistoryInfo.");
             console.log( result);
             AUIGrid.setGridData(bsHistoryGrid, result);
@@ -399,7 +398,7 @@ function fn_doUpDate(){
 
     if( fn_validRequiredField_Save()){
         var updateForm ={
-                 "AS_SO_ID"                  : '${as_ord_basicInfo.ordId}' ,
+                 "AS_SO_ID"                  : '${orderDetail.basicInfo.ordId}' ,
                  "AS_MEM_ID"                : $("#CTID").val() ,
                  "AS_MEM_GRP"               : $("#CTGroup").val(),
                  "AS_REQST_DT"              : $("#requestDate").val(),
@@ -466,7 +465,7 @@ function  fn_doNewSave(){
 
 	if( fn_validRequiredField_Save()){
 		var saveForm ={
-				 "AS_SO_ID"                  : '${as_ord_basicInfo.ordId}' ,
+				 "AS_SO_ID"                  : '${orderDetail.basicInfo.ordId}' ,
                  "AS_MEM_ID"                : $("#CTID").val() ,
                  "AS_MEM_GRP"               : $("#CTGroup").val(),
                  "AS_REQST_DT"              : $("#requestDate").val(),
@@ -551,9 +550,9 @@ function  fn_doNewSave(){
 			                            $("#sms_AsId").val(asId);
 			                            $("#sms_MemId").val(memId);
 			                            $("#sms_MemCode").val(memCode);
-			                            var ordNo          = '${as_ord_basicInfo.ordNo}';
-			                            var ordId           = '${as_ord_basicInfo.ordId}';
-			                            var custName    = "${as_ord_basicInfo.custName}".substring(0,49) ;
+			                            var ordNo          = '${orderDetail.basicInfo.ordNo}';
+			                            var ordId           = '${orderDetail.basicInfo.ordId}';
+			                            var custName    = "${orderDetail.basicInfo.custName}".substring(0,49) ;
 			                            var custInstAdd  = $("#sms_CustFulladdr").val();
 			                            var pic               = $("#perIncharge").val();
 			                            var piccontact    = $("#perContact").val();
@@ -580,7 +579,7 @@ function  fn_doNewSave(){
 			                               var  sMSMessage = "";
 			                               var  appDate =$("#appDate").val();
 			                               var branchDSC =$("#branchDSC option:selected").text();
-			                               sMSMessage="Order="+ '${as_ord_basicInfo.ordNo}'+"   AS="+result.asNo+"  Appt Date="+appDate+"  DSC="+branchDSC+" TQ ";
+			                               sMSMessage="Order="+ '${orderDetail.basicInfo.ordNo}'+"   AS="+result.asNo+"  Appt Date="+appDate+"  DSC="+branchDSC+" TQ ";
 			                               var t = $("#additionalCont").val();
 			                               fn_sendSms(t ,sMSMessage);
 			                        }
@@ -588,7 +587,7 @@ function  fn_doNewSave(){
 
 			                        if($("#checkSms2").prop("checked")){
                                         var  sMSMessage = "";
-                                        sMSMessage = "COWAY RM0.00: Your order =" +  '${as_ord_basicInfo.ordNo}' + "  product issue had been successfully registered. Thank you!";
+                                        sMSMessage = "COWAY RM0.00: Your order =" +  '${orderDetail.basicInfo.ordNo}' + "  product issue had been successfully registered. Thank you!";
                                         var t = $("#additionalCont").val();
                                         fn_sendSms(t ,sMSMessage);
 			                        }
