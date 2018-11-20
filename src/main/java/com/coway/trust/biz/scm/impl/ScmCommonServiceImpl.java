@@ -49,6 +49,10 @@ public class ScmCommonServiceImpl implements ScmCommonService {
 	private ScmCommonMapper scmCommonMapper;
 	
 	@Override
+	public List<EgovMap> selectScmTotalPeriod(Map<String, Object> params) {
+		return	scmCommonMapper.selectScmTotalPeriod(params);
+	}
+	@Override
 	public List<EgovMap> selectScmYear(Map<String, Object> params) {
 		return	scmCommonMapper.selectScmYear(params);
 	}

@@ -10,6 +10,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface ScmCommonService
 {
 	//	Scm Common
+	List<EgovMap> selectScmTotalPeriod(Map<String, Object> params);
 	List<EgovMap> selectScmYear(Map<String, Object> params);
 	List<EgovMap> selectScmWeek(Map<String, Object> params);
 	List<EgovMap> selectScmTeam(Map<String, Object> params);
