@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.scm.impl.SupplyPlanManagementMapper">
 
+<!-- Supply Plan By CDC -->
+<!-- Search -->
 <select id="selectSupplyPlanHeader" parameterType="Map" resultType="egovMap">
 SELECT PLAN_ID
      , PLAN_DTL_ID
@@ -125,7 +127,6 @@ SELECT PLAN_ID
                 )
         )
 </select>
-
 <select id="selectSupplyPlanInfo" parameterType="Map" resultType="egovMap">
 SELECT '1' AS GBN
      , NVL((
@@ -146,7 +147,6 @@ SELECT '2' AS GBN
             ), 0) AS PLAN_STUS_ID
   FROM DUAL
 </select>
-
 <select id="selectSupplyPlanList" parameterType="Map" resultType="egovMap">
 SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_ODD
      , A.PLAN_ID
@@ -224,91 +224,17 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_O
 		#{item}
 		</foreach>
 	</if>
-   AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
- ORDER BY D.STK_TYPE_ID, B.STOCK_CODE, B.PSI_ID
-</select>
-
-<select id="selectSupplyPlanSummaryList" parameterType="Map" resultType="egovMap">
-SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_ODD
-     , A.PLAN_ID
-     , A.PLAN_YEAR
-     , A.PLAN_MONTH
-     , A.PLAN_WEEK
-     , B.PSI_ID
-     , G.CODE_NAME AS PSI_NAME
-     , D.STK_TYPE_ID AS TYPE_ID
-     , E.CODE_NAME AS CATEGORY_NAME
-     , D.STK_CTGRY_ID AS CATEGORY_ID
-     , F.CODE_NAME AS TYPE_NAME
-     , B.STOCK_CODE AS CODE
-     , D.STK_DESC AS NAME
-     , SUM(NVL(B.M0, 0)) AS M0
-     , SUM(NVL(B.M1, 0)) AS M1
-     , SUM(NVL(B.M2, 0)) AS M2
-     , SUM(NVL(B.M3, 0)) AS M3
-     , SUM(NVL(B.M4, 0)) AS M4
-     , SUM(NVL(B.OVERDUE, 0)) AS OVERDUE
-     , SUM(NVL(B.W01, 0)) AS W01
-     , SUM(NVL(B.W02, 0)) AS W02
-     , SUM(NVL(B.W03, 0)) AS W03
-     , SUM(NVL(B.W04, 0)) AS W04
-     , SUM(NVL(B.W05, 0)) AS W05
-     , SUM(NVL(B.W06, 0)) AS W06
-     , SUM(NVL(B.W07, 0)) AS W07
-     , SUM(NVL(B.W08, 0)) AS W08
-     , SUM(NVL(B.W09, 0)) AS W09
-     , SUM(NVL(B.W10, 0)) AS W10
-     , SUM(NVL(B.W11, 0)) AS W11
-     , SUM(NVL(B.W12, 0)) AS W12
-     , SUM(NVL(B.W13, 0)) AS W13
-     , SUM(NVL(B.W14, 0)) AS W14
-     , SUM(NVL(B.W15, 0)) AS W15
-     , SUM(NVL(B.W16, 0)) AS W16
-     , SUM(NVL(B.W17, 0)) AS W17
-     , SUM(NVL(B.W18, 0)) AS W18
-     , SUM(NVL(B.W19, 0)) AS W19
-     , SUM(NVL(B.W20, 0)) AS W20
-     , SUM(NVL(B.W21, 0)) AS W21
-     , SUM(NVL(B.W22, 0)) AS W22
-     , SUM(NVL(B.W23, 0)) AS W23
-     , SUM(NVL(B.W24, 0)) AS W24
-     , SUM(NVL(B.W25, 0)) AS W25
-     , SUM(NVL(B.W26, 0)) AS W26
-     , SUM(NVL(B.W27, 0)) AS W27
-     , SUM(NVL(B.W28, 0)) AS W28
-     , SUM(NVL(B.W29, 0)) AS W29
-     , SUM(NVL(B.W30, 0)) AS W30
-  FROM SCM0005M A
-  LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
-  LEFT OUTER JOIN SCM0008M C ON (B.STOCK_CODE = C.STOCK_CODE)
-  LEFT OUTER JOIN SYS0026M D ON (C.STOCK_ID = D.STK_ID)
-  LEFT OUTER JOIN SYS0013M E ON (D.STK_CTGRY_ID = E.CODE_ID AND E.CODE_MASTER_ID = 11) /* 11 : Stock Category */
-  LEFT OUTER JOIN SYS0013M F ON (D.STK_TYPE_ID = F.CODE_ID AND F.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
-  LEFT OUTER JOIN SYS0013M G ON (B.PSI_ID = G.CODE AND G.CODE_MASTER_ID = 399) /* 399 : PSI ID */
- WHERE A.PLAN_YEAR = #{scmYearCbBox}
-   AND A.PLAN_WEEK = #{scmWeekCbBox}
-	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
-   AND D.STK_TYPE_ID IN
-		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+ 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
+   AND D.STK_CTGRY_ID IN
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
 		#{item}
 		</foreach>
 	</if>
    AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
- GROUP BY A.PLAN_ID
-     , A.PLAN_YEAR
-     , A.PLAN_MONTH
-     , A.PLAN_WEEK
-     , B.PSI_ID
-     , G.CODE_NAME
-     , D.STK_TYPE_ID
-     , E.CODE_NAME
-     , D.STK_CTGRY_ID
-     , F.CODE_NAME
-     , B.STOCK_CODE
-     , D.STK_DESC
  ORDER BY D.STK_TYPE_ID, B.STOCK_CODE, B.PSI_ID
 </select>
 
+<!-- Create -->
 <insert id="insertSupplyPlanMaster" parameterType="Map">
 INSERT INTO SCM0005M
 (
@@ -333,7 +259,6 @@ VALUES
      , #{crtUserId}
  )
 </insert>
-
 <select id="selectGetSupplyPlanId" parameterType="Map" resultType="egovMap">
 SELECT A.PLAN_ID
   FROM SCM0005M A
@@ -341,7 +266,6 @@ SELECT A.PLAN_ID
    AND A.PLAN_WEEK = #{scmWeekCbBox}
    AND A.CDC = #{scmCdcCbBox}
 </select>
-
 <insert id="insertSupplyPlanDetailPsi1" parameterType="Map">
 INSERT INTO SCM0006D
 (
@@ -474,7 +398,6 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
                       AND Z.DISAB = 0
                    ) E ON (1 = 1)
 </insert>
-
 <insert id="insertSupplyPlanDetailPsi235" parameterType="Map">
 INSERT INTO SCM0006D
 (
@@ -529,7 +452,6 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
            AND B.PSI_ID = 1
         ) A
 </insert>
-
 <insert id="insertSupplyPlanDetailPsi4" parameterType="Map">
 INSERT INTO SCM0006D
 (
@@ -584,7 +506,6 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
    AND A.CDC = #{cdc}
    AND B.PSI_ID = 1
 </insert>
-
 <select id="selectPsi1" parameterType="Map" resultType="egovMap">
 SELECT A.PLAN_ID
      , A.PLAN_MONTH
@@ -609,7 +530,6 @@ SELECT A.PLAN_ID
    AND A.CDC = #{scmCdcCbBox}
  ORDER BY B.STOCK_CODE
 </select>
-
 <select id="selectEachPsi" parameterType="Map" resultType="egovMap">
 SELECT A.PLAN_ID
      , A.PLAN_MONTH
@@ -630,7 +550,6 @@ SELECT A.PLAN_ID
    AND A.CDC = #{scmCdcCbBox}
  ORDER BY B.STOCK_CODE
 </select>
-
 <select id="selectGetPoCntTarget" parameterType="Map" resultType="egovMap">
 SELECT A.CAL_ID
      , A.SCM_YEAR
@@ -658,7 +577,6 @@ SELECT A.CAL_ID
         ) A
  ORDER BY A.CAL_ID
 </select>
-
 <select id="selectGetPoCnt" parameterType="Map" resultType="egovMap">
 SELECT A.STOCK_CODE
      , NVL((
@@ -799,59 +717,7 @@ SELECT A.STOCK_CODE
   FROM (SELECT #{stockCode} AS STOCK_CODE, #{cdc} AS CDC FROM DUAL) A
 </select>
 
-
-
-
-<resultMap id="insertSupplyPlanDetailResultMap" type="egovMap"></resultMap>
-<select id="callSpScmInsSupplyPlanDetail" statementType="CALLABLE" parameterType="Map">
-{ call GBSLCVD.SP_SCM_INS_SUPPLY_PLAN_DETAIL(#{scmYearCbBox}, #{scmWeekCbBox}, #{scmCdcCbBox}, #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=insertSupplyPlanDetailResultMap}) }
-</select>
-<!-- 
-<insert id="insertSupplyPlanDetail" parameterType="Map">
-INSERT INTO SCM0006D
-(
-       PLAN_DTL_ID
-     , PLAN_ID
-     , PSI_ID
-     , STOCK_CODE
-     , CMPLT
-     , M0_ORD
-     , M0
-     , M1
-     , M2
-     , M3
-     , M4
-     , OVERDUE
-     , W01, W02, W03, W04, W05, W06, W07, W08, W09, W10
-     , W11, W12, W13, W14, W15, W16, W17, W18, W19, W20
-     , W21, W22, W23, W24, W25, W26, W27, W28, W29, W30
- )
-VALUES
-(
-       SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL
-     , #{planMasterId}
-     , #{psiId}
-     , #{stockCode}
-     , 1
-     , 0
-     , NVL(#{m0}, 0)
-     , NVL(#{m1}, 0)
-     , NVL(#{m2}, 0)
-     , NVL(#{m3}, 0)
-     , NVL(#{m4}, 0)
-     , NVL(#{overdue}, 0)
-     , NVL(#{w01}, 0), NVL(#{w02}, 0), NVL(#{w03}, 0), NVL(#{w04}, 0), NVL(#{w05}, 0), NVL(#{w06}, 0), NVL(#{w07}, 0), NVL(#{w08}, 0), NVL(#{w09}, 0), NVL(#{w10}, 0)
-     , NVL(#{w11}, 0), NVL(#{w12}, 0), NVL(#{w13}, 0), NVL(#{w14}, 0), NVL(#{w15}, 0), NVL(#{w16}, 0), NVL(#{w17}, 0), NVL(#{w18}, 0), NVL(#{w19}, 0), NVL(#{w20}, 0)
-     , NVL(#{w21}, 0), NVL(#{w22}, 0), NVL(#{w23}, 0), NVL(#{w24}, 0), NVL(#{w25}, 0), NVL(#{w26}, 0), NVL(#{w27}, 0), NVL(#{w28}, 0), NVL(#{w29}, 0), NVL(#{w30}, 0)
- )
-</insert>
- -->
-<!-- 
-<resultMap id="insertSalesPlanDetailResultMap" type="egovMap"></resultMap>
-<select id="callSpScmInsSalesPlanDetail" statementType="CALLABLE" parameterType="Map">
-{ call GBSLCVD.SP_SCM_INS_SALES_PLAN_DETAIL(#{scmYearCbBox}, #{scmWeekCbBox}, #{scmTeamCbBox}, #{result, mode=OUT, jdbcType=VARCHAR, javaType=STRING, resultMap=insertSalesPlanDetailResultMap}) }
-</select>
- -->
+<!-- Save -->
 <update id="updateSupplyPlanDetail" parameterType="Map">
 UPDATE SCM0006D
    SET M0 = CEIL(TO_NUMBER(REPLACE(#{m0}, ',')))
@@ -892,517 +758,100 @@ UPDATE SCM0006D
  WHERE PLAN_DTL_ID = #{planDtlId}
 </update>
 
+<!-- Confirm & Unconfirm -->
 <update id="updateSupplyPlanMaster" parameterType="Map">
 UPDATE SCM0005M
    SET PLAN_STUS_ID = #{planStusId}
  WHERE PLAN_ID = #{planId}
 </update>
 
-<select id="selectCdcRate" parameterType="Map" resultType="egovMap">
-SELECT A.STOCK_CODE
-     , B.CDC
-     , CEIL((B.CDC_SUM / A.STOCK_SUM) * 100) AS CDC_RATE
-  FROM (
-        SELECT Z.STOCK_CODE
-             , SUM(Z.ISS_QTY) AS STOCK_SUM
-          FROM SCM0051S Z
-         WHERE Z.ISS_DT BETWEEN #{befDtFrom} AND #{befDtTo}
-         GROUP BY Z.STOCK_CODE
-        ) A
-  LEFT OUTER JOIN (
-                   SELECT Z.STOCK_CODE
-                        , Z.CDC
-                        , SUM(Z.ISS_QTY) AS CDC_SUM
-                     FROM SCM0051S Z
-                    WHERE Z.ISS_DT BETWEEN #{befDtFrom} AND #{befDtTo}
-                    GROUP BY Z.STOCK_CODE, Z.CDC
-                   ) B ON (A.STOCK_CODE = B.STOCK_CODE)
-</select>
-
-<select id="selectSupplyPlanMoq" parameterType="Map" resultType="egovMap">
-SELECT A.STOCK_CODE
-     , NVL(A.MOQ, 0) AS MOQ
-     , NVL(B.LEAD_TM, 0) AS LEAD_TM
-     , NVL(B.SAFETY_STOCK, 0) AS SAFETY_STOCK
-  FROM SCM0017M A
-  LEFT OUTER JOIN SCM0008M B ON (A.STOCK_ID = B.STOCK_ID)
- WHERE A.CDC_CODE = #{scmCdcCbBox}
-   AND A.IS_TRGET = 1
-</select>
-
-<select id="selectSupplyPlanMonth" parameterType="Map" resultType="egovMap">
-SELECT A.SCM_MONTH
-  FROM SCM0018M A
- WHERE A.SCM_YEAR = #{scmYearCbBox}
-   AND A.WEEK_TH = #{scmWeekCbBox}
-</select>
-
-<select id="selectSupplyPlanWeekCnt" parameterType="Map" resultType="int">
-SELECT COUNT(*) AS WEEK_CNT
-  FROM SCM0018M A
- WHERE A.SCM_YEAR = #{scmYearCbBox}
-   AND A.SCM_MONTH = #{scmMonth}
-   AND A.WEEK_TH <![CDATA[ < ]]> #{scmWeekCbBox}
-</select>
-
-<select id="selectBeforeOrdCnt" parameterType="Map" resultType="int">
-SELECT NVL(SUM(ORD_CNT), 0) AS ORD_CNT
-  FROM SCM0008M A
-     , (
-        SELECT Z.ORD_CNT
-             , Z.STOCK_CODE
-          FROM SCM0044S Z
-         WHERE Z.SCM_YEAR = #{scmYearCbBox}
-           AND Z.SCM_WEEK_TH= #{scmBeforeWeekCbBox}
-           AND Z.STOCK_CODE = #{stockCode}
-           AND Z.CDC = #{scmCdcCbBox}
-        ) B
- WHERE A.STOCK_CODE = B.STOCK_CODE(+)
-   AND A.STOCK_CODE = #{stockCode}
-</select>
-
-<select id="selectBeforePoCnt" parameterType="Map" resultType="int">
-SELECT NVL(SUM(QTY), 0) AS QTY
-  FROM (
-        SELECT SCM10D.STOCK_CODE
-             , SCM10D.PO_STUS_ID
-             , NVL(SCM10D.PO_QTY,0) AS PO_QTY
-             , SCM09M.PO_YEAR
-             , SCM09M.PO_WEEK
-             , SCM10D.GR_WEEK
-          FROM SCM0009M SCM09M
-             , SCM0010D SCM10D
-         WHERE SCM09M.PO_ID = SCM10D.PO_ID
-           AND SCM10D.PO_STUS_ID = '5'
-           AND SCM09M.CDC = #{scmCdcCbBox}
-           AND PO_YEAR = #{scmYearCbBox}
-           AND PO_WEEK = #{scmBeforeWeekCbBox}
-        ) A
-     , SCM0008M B
- WHERE B.STOCK_CODE = A.STOCK_CODE(+)
-   AND B.STOCK_CODE = #{stockCode}
-</select>
-
-<select id="selectAfterPoCnt" parameterType="Map" resultType="int">
-SELECT NVL(SUM(QTY), 0) AS QTY
-  FROM (
-        SELECT X.STOCK_CODE
-             , X.PO_ITM_APPV_STUS
-             , NVL(X.PO_QTY, 0) AS QTY
-             , Z.BAS_YEAR
-             , Z.EST_WEEK
-             , X.GR_WEEK
-/*          FROM SCM0009M Z
-             , SCM0010D X*/
-          FROM SCM0052M Z
-             , SCM0053D X
-         WHERE Z.PO_ID = X.PO_ID
-           AND X.PO_ITM_APPV_STUS = '5'
-           AND Z.CDC = #{scmCdcCbBox}
-           AND BAS_YEAR = FN_GET_CALYEAR(#{scmYearCbBox}, #{planMonth}, #{scmWeekCbBox}, #{scmAfterWeekCbBox})
-           AND EST_WEEK = FN_GET_CALWEEK(#{scmYearCbBox}, #{planMonth}, #{scmWeekCbBox}, #{scmAfterWeekCbBox})
-        ) A
-     , SCM0008M B
- WHERE B.STOCK_CODE = A.STOCK_CODE(+)
-   AND B.STOCK_CODE = #{stockCode}
-</select>
-
-<select id="selectSupplyPlanBeforeYearsLastWeek" parameterType="Map" resultType="egovMap">
-SELECT MAX(A.WEEK_TH) AS WEEK_TH
-  FROM SCM0018M A
- WHERE A.SCM_YEAR = TO_NUMBER(#{scmYearCbBox}) - 1
-</select>
-
-<select id="selectSupplyPlanEndingInventory" parameterType="Map" resultType="int">
-SELECT NVL(SUM(QTY) + SUM(MOV_QTY),0) QTY
-  FROM LOG0088M A
-     , SYS0028M B
- WHERE B.WH_LOC_ID  = A.LOG_ID
-   AND B.CDC_CODE = #{scmCdcCbBox}
-   AND A.ZMONTH = (#{beforeYear} || LPAD(#{beforeMonth},2,0))
-   AND A.STK_CODE = #{stockCode}
-</select>
-
-<select id="selectSalesPlanInSupplyPlan" parameterType="Map" resultType="egovMap">
-SELECT B.PLAN_DTL_ID
-     , B.STOCK_CODE
-     , NVL(C.SAFETY_STOCK, 0) AS SAFETY_STOCK
-     , NVL(C.LEAD_TM, 0) AS LEAD_TM
-     , NVL(D.MOQ, 0) AS MOQ
+<!-- Supply Plan Summary View -->
+<!-- Search -->
+<select id="selectSupplyPlanSummaryList" parameterType="Map" resultType="egovMap">
+SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_ODD
+     , A.PLAN_ID
+     , A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , B.PSI_ID
+     , G.CODE_NAME AS PSI_NAME
+     , D.STK_TYPE_ID AS TYPE_ID
+     , E.CODE_NAME AS CATEGORY_NAME
+     , D.STK_CTGRY_ID AS CATEGORY_ID
+     , F.CODE_NAME AS TYPE_NAME
+     , B.STOCK_CODE AS CODE
+     , D.STK_DESC AS NAME
+     , SUM(NVL(B.M0, 0)) AS M0
+     , SUM(NVL(B.M1, 0)) AS M1
+     , SUM(NVL(B.M2, 0)) AS M2
+     , SUM(NVL(B.M3, 0)) AS M3
+     , SUM(NVL(B.M4, 0)) AS M4
+     , SUM(NVL(B.OVERDUE, 0)) AS OVERDUE
+     , SUM(NVL(B.W01, 0)) AS W01
+     , SUM(NVL(B.W02, 0)) AS W02
+     , SUM(NVL(B.W03, 0)) AS W03
+     , SUM(NVL(B.W04, 0)) AS W04
+     , SUM(NVL(B.W05, 0)) AS W05
+     , SUM(NVL(B.W06, 0)) AS W06
+     , SUM(NVL(B.W07, 0)) AS W07
+     , SUM(NVL(B.W08, 0)) AS W08
+     , SUM(NVL(B.W09, 0)) AS W09
+     , SUM(NVL(B.W10, 0)) AS W10
+     , SUM(NVL(B.W11, 0)) AS W11
+     , SUM(NVL(B.W12, 0)) AS W12
+     , SUM(NVL(B.W13, 0)) AS W13
+     , SUM(NVL(B.W14, 0)) AS W14
+     , SUM(NVL(B.W15, 0)) AS W15
+     , SUM(NVL(B.W16, 0)) AS W16
+     , SUM(NVL(B.W17, 0)) AS W17
+     , SUM(NVL(B.W18, 0)) AS W18
+     , SUM(NVL(B.W19, 0)) AS W19
+     , SUM(NVL(B.W20, 0)) AS W20
+     , SUM(NVL(B.W21, 0)) AS W21
+     , SUM(NVL(B.W22, 0)) AS W22
+     , SUM(NVL(B.W23, 0)) AS W23
+     , SUM(NVL(B.W24, 0)) AS W24
+     , SUM(NVL(B.W25, 0)) AS W25
+     , SUM(NVL(B.W26, 0)) AS W26
+     , SUM(NVL(B.W27, 0)) AS W27
+     , SUM(NVL(B.W28, 0)) AS W28
+     , SUM(NVL(B.W29, 0)) AS W29
+     , SUM(NVL(B.W30, 0)) AS W30
   FROM SCM0005M A
   LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
   LEFT OUTER JOIN SCM0008M C ON (B.STOCK_CODE = C.STOCK_CODE)
-  LEFT OUTER JOIN SCM0017M D ON (B.STOCK_CODE = D.STOCK_CODE AND A.CDC = D.CDC_CODE)
+  LEFT OUTER JOIN SYS0026M D ON (C.STOCK_ID = D.STK_ID)
+  LEFT OUTER JOIN SYS0013M E ON (D.STK_CTGRY_ID = E.CODE_ID AND E.CODE_MASTER_ID = 11) /* 11 : Stock Category */
+  LEFT OUTER JOIN SYS0013M F ON (D.STK_TYPE_ID = F.CODE_ID AND F.CODE_MASTER_ID = 15) /* 15 : Spare Part Type */
+  LEFT OUTER JOIN SYS0013M G ON (B.PSI_ID = G.CODE AND G.CODE_MASTER_ID = 399) /* 399 : PSI ID */
  WHERE A.PLAN_YEAR = #{scmYearCbBox}
    AND A.PLAN_WEEK = #{scmWeekCbBox}
-   AND A.CDC = #{scmCdcCbBox}
-   AND B.PSI_ID = 2
-</select>
-
-<select id="selectInsertedSalesPlan" parameterType="Map" resultType="egovMap">
-SELECT B.PLAN_DTL_ID
+	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
+   AND D.STK_TYPE_ID IN
+		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
+   AND D.STK_CTGRY_ID IN
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+   AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
+ GROUP BY A.PLAN_ID
+     , A.PLAN_YEAR
+     , A.PLAN_MONTH
+     , A.PLAN_WEEK
+     , B.PSI_ID
+     , G.CODE_NAME
+     , D.STK_TYPE_ID
+     , E.CODE_NAME
+     , D.STK_CTGRY_ID
+     , F.CODE_NAME
      , B.STOCK_CODE
-     , NVL(B.W01, 0) AS W01, NVL(B.W02, 0) AS W02, NVL(B.W03, 0) AS W03, NVL(B.W04, 0) AS W04, NVL(B.W05, 0) AS W05
-     , NVL(B.W06, 0) AS W06, NVL(B.W07, 0) AS W07, NVL(B.W08, 0) AS W08, NVL(B.W09, 0) AS W09, NVL(B.W10, 0) AS W10
-     , NVL(B.W11, 0) AS W11, NVL(B.W12, 0) AS W12, NVL(B.W13, 0) AS W13, NVL(B.W14, 0) AS W14, NVL(B.W15, 0) AS W15
-     , NVL(B.W16, 0) AS W16, NVL(B.W17, 0) AS W17, NVL(B.W18, 0) AS W18, NVL(B.W19, 0) AS W19, NVL(B.W20, 0) AS W20
-     , NVL(B.W21, 0) AS W21, NVL(B.W22, 0) AS W22, NVL(B.W23, 0) AS W23, NVL(B.W24, 0) AS W24, NVL(B.W25, 0) AS W25
-     , NVL(B.W26, 0) AS W26, NVL(B.W27, 0) AS W27, NVL(B.W28, 0) AS W28, NVL(B.W29, 0) AS W29, NVL(B.W30, 0) AS W30
-  FROM SCM0005M A
-  LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
- WHERE A.PLAN_YEAR = #{scmYearCbBox}
-   AND A.PLAN_WEEK = #{scmWeekCbBox}
-   AND A.CDC = #{scmCdcCbBox}
-   AND B.STOCK_CODE = #{stockCode}
-   AND B.PSI_ID = 1
-</select>
-
-<update id="updateSupplyPlanDetailPsi1" parameterType="Map">
-UPDATE SCM0006D
-   SET M0 = CEIL(TO_NUMBER(REPLACE(#{m0}, ',')))
-     , M1 = CEIL(TO_NUMBER(REPLACE(#{m1}, ',')))
-     , M2 = CEIL(TO_NUMBER(REPLACE(#{m2}, ',')))
-     , M3 = CEIL(TO_NUMBER(REPLACE(#{m3}, ',')))
-     , M4 = CEIL(TO_NUMBER(REPLACE(#{m4}, ',')))
- WHERE PLAN_ID = #{planId}
-   AND PSI_ID = #{psiId}
-   AND STOCK_CODE = #{stockCode}
-</update>
-
-<update id="updateSupplyPlanDetailPsi235" parameterType="Map">
-UPDATE SCM0006D
-   SET M0 = CEIL(TO_NUMBER(REPLACE(#{m0}, ',')))
-     , M1 = CEIL(TO_NUMBER(REPLACE(#{m1}, ',')))
-     , M2 = CEIL(TO_NUMBER(REPLACE(#{m2}, ',')))
-     , M3 = CEIL(TO_NUMBER(REPLACE(#{m3}, ',')))
-     , M4 = CEIL(TO_NUMBER(REPLACE(#{m4}, ',')))
-     , W01 = CEIL(TO_NUMBER(REPLACE(#{w01}, ',')))
-     , W02 = CEIL(TO_NUMBER(REPLACE(#{w02}, ',')))
-     , W03 = CEIL(TO_NUMBER(REPLACE(#{w03}, ',')))
-     , W04 = CEIL(TO_NUMBER(REPLACE(#{w04}, ',')))
-     , W05 = CEIL(TO_NUMBER(REPLACE(#{w05}, ',')))
-     , W06 = CEIL(TO_NUMBER(REPLACE(#{w06}, ',')))
-     , W07 = CEIL(TO_NUMBER(REPLACE(#{w07}, ',')))
-     , W08 = CEIL(TO_NUMBER(REPLACE(#{w08}, ',')))
-     , W09 = CEIL(TO_NUMBER(REPLACE(#{w09}, ',')))
-     , W10 = CEIL(TO_NUMBER(REPLACE(#{w10}, ',')))
-     , W11 = CEIL(TO_NUMBER(REPLACE(#{w11}, ',')))
-     , W12 = CEIL(TO_NUMBER(REPLACE(#{w12}, ',')))
-     , W13 = CEIL(TO_NUMBER(REPLACE(#{w13}, ',')))
-     , W14 = CEIL(TO_NUMBER(REPLACE(#{w14}, ',')))
-     , W15 = CEIL(TO_NUMBER(REPLACE(#{w15}, ',')))
-     , W16 = CEIL(TO_NUMBER(REPLACE(#{w16}, ',')))
-     , W17 = CEIL(TO_NUMBER(REPLACE(#{w17}, ',')))
-     , W18 = CEIL(TO_NUMBER(REPLACE(#{w18}, ',')))
-     , W19 = CEIL(TO_NUMBER(REPLACE(#{w19}, ',')))
-     , W20 = CEIL(TO_NUMBER(REPLACE(#{w20}, ',')))
-     , W21 = CEIL(TO_NUMBER(REPLACE(#{w21}, ',')))
-     , W22 = CEIL(TO_NUMBER(REPLACE(#{w22}, ',')))
-     , W23 = CEIL(TO_NUMBER(REPLACE(#{w23}, ',')))
-     , W24 = CEIL(TO_NUMBER(REPLACE(#{w24}, ',')))
-     , W25 = CEIL(TO_NUMBER(REPLACE(#{w25}, ',')))
-     , W26 = CEIL(TO_NUMBER(REPLACE(#{w26}, ',')))
-     , W27 = CEIL(TO_NUMBER(REPLACE(#{w27}, ',')))
-     , W28 = CEIL(TO_NUMBER(REPLACE(#{w28}, ',')))
-     , W29 = CEIL(TO_NUMBER(REPLACE(#{w29}, ',')))
-     , W30 = CEIL(TO_NUMBER(REPLACE(#{w30}, ',')))
- WHERE PLAN_ID = #{planId}
-   AND PSI_ID = #{psiId}
-   AND STOCK_CODE = #{stockCode}
-</update>
-
-<select id="selectBefWeekInfo" parameterType="Map" resultType="egovMap">
-SELECT A.BEF_PLAN_YEAR
-     , A.BEF_PLAN_WEEK
-     , (
-        SELECT MIN(Z.SCM_MONTH)
-          FROM SCM0018M Z
-         WHERE Z.SCM_YEAR = A.BEF_PLAN_YEAR
-           AND Z.WEEK_TH = A.BEF_PLAN_WEEK
-           AND Z.SCM_WEEK_SEQ = 1
-        ) AS BEF_PLAN_MONTH
-     , (
-        SELECT MIN(A.WEEK_TH)
-          FROM SCM0018M A
-         WHERE A.SCM_YEAR = #{scmYearCbBox}
-           AND A.SCM_MONTH = (SELECT MIN(Z.SCM_MONTH) FROM SCM0018M Z WHERE Z.SCM_YEAR = #{scmYearCbBox} AND Z.WEEK_TH = #{scmWeekCbBox})
-        ) AS FST_WEEK
-     , (
-        SELECT MIN(Z.LEAD_TM)
-          FROM SCM0008M Z
-         WHERE Z.LEAD_TM IS NOT NULL
-           AND Z.LEAD_TM != 0
-        ) AS LEAD_TM
-  FROM (
-        SELECT A.BEF_PLAN_YEAR
-             , CASE WHEN TO_NUMBER(#{scmWeekCbBox}) = 1 THEN (SELECT TO_NUMBER(MAX(Z.WEEK_TH)) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.BEF_PLAN_YEAR)
-                    ELSE TO_NUMBER(#{scmWeekCbBox}) - 1 END AS BEF_PLAN_WEEK
-          FROM (
-                SELECT CASE WHEN TO_NUMBER(#{scmWeekCbBox}) = 1 THEN TO_NUMBER(#{scmYearCbBox}) - 1
-                            ELSE TO_NUMBER(#{scmYearCbBox}) END AS BEF_PLAN_YEAR
-                  FROM DUAL
-                ) A
-        ) A
-</select>
-
-<select id="selectPoInLeadTm" parameterType="Map" resultType="egovMap">
-SELECT B.STOCK_CODE
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week1}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W01
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week2}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W02
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week3}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W03
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week4}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W04
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week5}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W05
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week6}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W06
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week7}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W07
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week8}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W08
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week9}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W09
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week10}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W10
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week11}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W11
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week12}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W12
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week13}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W13
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week14}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W14
-     , NVL((SELECT SUM(NVL(X.PO_QTY, 0)) - SUM(NVL(X.GR_QTY, 0))
-/*              FROM SCM0009M Z
-              LEFT OUTER JOIN SCM0010D X ON (Z.PO_ID = X.PO_ID)*/
-              FROM SCM0052M Z
-              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-             WHERE Z.PO_YEAR = A.PLAN_YEAR
-               AND Z.CDC = A.CDC
-               AND X.GR_WEEK = #{week15}
-               AND X.STOCK_CODE = B.STOCK_CODE
-            ), 0) AS W15
-  FROM SCM0005M A
-  LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID AND B.PSI_ID = 1)
- WHERE A.PLAN_YEAR = #{scmYearCbBox}
-   AND A.PLAN_WEEK = #{scmWeekCbBox}
-   AND A.CDC = #{scmCdcCbBox}
- ORDER BY B.STOCK_CODE
-</select>
-
-<select id="selectTotalSplitInfo" parameterType="Map" resultType="egovMap">
-SELECT A.CAL_ID
-     , A.SCM_YEAR AS PLAN_YEAR
-     , A.SCM_MONTH
-     , B.PLAN_MONTH
-     , #{scmWeekCbBox} AS PLAN_WEEK
-     , (SELECT COUNT(*) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}) AS PLAN_WEEK_SPLIT_CNT
-     , A.WEEK_TH AS WEEK_TH
-     , A.SCM_WEEK_SEQ AS PLAN_WEEK_SN
-     , TO_CHAR(A.SCM_WEEK_SEQ_START, 'YYYYMMDD') AS PLAN_WEEK_START
-     , TO_CHAR(A.SCM_WEEK_SEQ_END, 'YYYYMMDD') AS PLAN_WEEK_END
-     , A.IS_SRPTD
-     , A.LEAD_TM
-     , A.PLAN_WEEK_TH
-     , A.FST_WEEK
-     , CASE WHEN A.FST_WEEK = A.WEEK_TH AND A.SCM_WEEK_SEQ = 2 THEN 1 ELSE 0 END AS FST_SPLIT_YN
-     , A.LST_WEEK
-     , CASE WHEN A.LST_WEEK = A.WEEK_TH AND A.SCM_WEEK_SEQ = 2 THEN 1 ELSE 0 END AS LST_SPLIT_YN
-     , (
-        SELECT SUM(CASE WHEN Z.SCM_WEEK_SEQ = 2 THEN 1 ELSE 0 END)
-          FROM SCM0018M Z
-         WHERE Z.SCM_YEAR = #{scmYearCbBox}
-           AND Z.WEEK_TH BETWEEN A.WEEK_TH AND TO_NUMBER(A.WEEK_TH) + TO_NUMBER(A.LEAD_TM) + TO_NUMBER(A.PLAN_WEEK_TH)
-        ) AS SPLIT_CNT /* wrong */
-     , B.BEF_PLAN_YEAR
-     , B.BEF_PLAN_WEEK
-     , (
-        SELECT Z.SCM_MONTH
-          FROM SCM0018M Z
-         WHERE Z.SCM_YEAR = B.BEF_PLAN_YEAR
-           AND Z.WEEK_TH = B.BEF_PLAN_WEEK
-           AND Z.SCM_WEEK_SEQ = 1
-        ) AS BEF_PLAN_MONTH
-     , C.WEEK_CNT AS M0_WEEK_CNT
-     , D.WEEK_CNT AS M1_WEEK_CNT
-     , E.WEEK_CNT AS M2_WEEK_CNT
-     , F.WEEK_CNT AS M3_WEEK_CNT
-     , G.WEEK_CNT AS M4_WEEK_CNT
-  FROM (
-        SELECT *
-          FROM SCM0018M A
-             , (SELECT MIN(Z.LEAD_TM) AS LEAD_TM
-                  FROM SCM0008M Z
-                 WHERE Z.LEAD_TM IS NOT NULL
-                   AND Z.LEAD_TM != 0) B
-             , (SELECT #{scmWeekCbBox} - MIN(Z.WEEK_TH) AS PLAN_WEEK_TH
-                     , MIN(Z.WEEK_TH) AS FST_WEEK
-                     , MAX(Z.WEEK_TH) AS LST_WEEK
-                  FROM SCM0018M Z
-                 WHERE Z.SCM_YEAR = #{scmYearCbBox}
-                   AND Z.SCM_MONTH = (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox})
-                 GROUP BY Z.SCM_YEAR) C
-         WHERE A.SCM_YEAR = #{scmYearCbBox}
-        ) A
-     , (
-        SELECT A.BEF_PLAN_YEAR
-             , (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}) AS PLAN_MONTH
-             , CASE WHEN TO_NUMBER(#{scmWeekCbBox}) = 1 THEN (SELECT TO_NUMBER(MAX(Z.WEEK_TH)) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.BEF_PLAN_YEAR)
-                    ELSE TO_NUMBER(#{scmWeekCbBox}) - 1 END AS BEF_PLAN_WEEK
-          FROM (
-                SELECT CASE WHEN TO_NUMBER(#{scmWeekCbBox}) = 1 THEN TO_NUMBER(#{scmYearCbBox}) - 1
-                            ELSE TO_NUMBER(#{scmYearCbBox}) END AS BEF_PLAN_YEAR
-                  FROM DUAL
-                ) A
-        ) B
-     , (
-        SELECT COUNT(*) AS WEEK_CNT
-          FROM SCM0018M Z
-         WHERE Z.USE_YN = 'Y'
-           AND TO_CHAR(Z.SCM_WEEK_SEQ_END, 'YYYYMM') = #{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, 0)
-        ) C
-     , (
-        SELECT COUNT(*) AS WEEK_CNT
-          FROM SCM0018M Z
-         WHERE Z.USE_YN = 'Y'
-           AND TO_CHAR(Z.SCM_WEEK_SEQ_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, 0), 'YYYYMM'), 1), 'YYYYMM') FROM DUAL)
-        ) D
-     , (
-        SELECT COUNT(*) AS WEEK_CNT
-          FROM SCM0018M Z
-         WHERE Z.USE_YN = 'Y'
-           AND TO_CHAR(Z.SCM_WEEK_SEQ_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, 0), 'YYYYMM'), 2), 'YYYYMM') FROM DUAL)
-        ) E
-     , (
-        SELECT COUNT(*) AS WEEK_CNT
-          FROM SCM0018M Z
-         WHERE Z.USE_YN = 'Y'
-           AND TO_CHAR(Z.SCM_WEEK_SEQ_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, 0), 'YYYYMM'), 3), 'YYYYMM') FROM DUAL)
-        ) F
-     , (
-        SELECT COUNT(*) AS WEEK_CNT
-          FROM SCM0018M Z
-         WHERE Z.USE_YN = 'Y'
-           AND TO_CHAR(Z.SCM_WEEK_SEQ_END, 'YYYYMM') = (SELECT TO_CHAR(ADD_MONTHS(TO_DATE(#{scmYearCbBox} || LPAD((SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}), 2, 0), 'YYYYMM'), 4), 'YYYYMM') FROM DUAL)
-        ) G
- WHERE A.WEEK_TH BETWEEN A.FST_WEEK AND A.LEAD_TM + A.FST_WEEK + A.PLAN_WEEK_TH - 1
-   AND A.SCM_MONTH >= B.PLAN_MONTH
- ORDER BY A.CAL_ID
+     , D.STK_DESC
+ ORDER BY D.STK_TYPE_ID, B.STOCK_CODE, B.PSI_ID
 </select>
 
 </mapper>

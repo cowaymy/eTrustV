@@ -2,6 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.scm.impl.PoManagementMapper">
 
+<!-- PO Issue -->
+<!-- Search -->
 <select id="selectPoTargetList" parameterType="Map" resultType="egovMap">
 SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
      , DECODE(B.PO_MONTH, NULL, A.PLAN_MONTH, B.PO_MONTH) AS PO_MONTH
@@ -100,10 +102,15 @@ SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
 		#{item}
 		</foreach>
 	</if>
+ 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
+   AND C.STK_CTGRY_ID IN
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
    AND ((A.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (C.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
  ORDER BY A.STOCK_CODE
 </select>
-
 <select id="selectPoCreatedList" parameterType="Map" resultType="egovMap">
 SELECT 'PDF ' || '/ EXCEL' AS PDF
      , DECODE(A.PO_ITEM_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
@@ -145,7 +152,6 @@ SELECT 'PDF ' || '/ EXCEL' AS PDF
    AND A.PO_ID IN (SELECT Z.PO_ID FROM SCM0052M Z WHERE Z.PO_YEAR = #{scmYearCbBox} AND Z.PO_WEEK = #{scmWeekCbBox} AND Z.CDC = #{scmCdcCbBox})
  ORDER BY A.PO_NO, A.PO_ITEM_NO
 </select>
-
 <select id="selectPoInfo" parameterType="Map" resultType="egovMap">
 SELECT A.PO_ID
      , A.PO_YEAR
@@ -164,6 +170,7 @@ SELECT A.PO_ID
    AND A.CDC = #{cdc}
 </select>
 
+<!-- Create PO -->
 <insert id="insertPoMaster" parameterType="Map">
 INSERT INTO SCM0052M
 (
@@ -192,7 +199,14 @@ VALUES
      , #{crtUserId}
  )
 </insert>
-
+<select id="selectGetPoNo" parameterType="Map" resultType="egovMap">
+SELECT CASE WHEN MAX(A.PO_NO) IS NULL
+            THEN 'MY' || #{cdcDesc} || TO_CHAR(SYSDATE, 'YYMMDD') || 'A' || '001'
+            ELSE 'MY' || #{cdcDesc} || TO_CHAR(SYSDATE, 'YYMMDD') || 'A' || LPAD(TO_NUMBER(SUBSTR(MAX(A.PO_NO), 12, 3)) + 1, 3, '0')
+            END AS PO_NO
+  FROM SCM0053D A
+ WHERE A.PO_NO LIKE 'MY' || #{cdcDesc} || TO_CHAR(SYSDATE, 'YYMMDD') || 'A' || '%'
+</select>
 <insert id="insertPoDetail" parameterType="Map">
 INSERT INTO SCM0053D
 (
@@ -228,23 +242,7 @@ VALUES
  )
 </insert>
 
-<select id="selectGetPoNo" parameterType="Map" resultType="egovMap">
-SELECT CASE WHEN MAX(A.PO_NO) IS NULL
-            THEN 'MY' || #{cdcDesc} || TO_CHAR(SYSDATE, 'YYMMDD') || 'A' || '001'
-            ELSE 'MY' || #{cdcDesc} || TO_CHAR(SYSDATE, 'YYMMDD') || 'A' || LPAD(TO_NUMBER(SUBSTR(MAX(A.PO_NO), 12, 3)) + 1, 3, '0')
-            END AS PO_NO
-  FROM SCM0053D A
- WHERE A.PO_NO LIKE 'MY' || #{cdcDesc} || TO_CHAR(SYSDATE, 'YYMMDD') || 'A' || '%'
-</select>
-
-<update id="updatePoMaster" parameterType="Map">
-UPDATE SCM0052M
-   SET PO_STUS_ID = #{poStusId}
-     , UPD_DT = SYSDATE
-     , UPD_USER_ID = {updUserId}
- WHERE PO_ID = #{poId}
-</update>
-
+<!-- Delete -->
 <update id="updatePoDetail" parameterType="Map">
 UPDATE SCM0053D
    SET PO_ITEM_STUS_ID = #{poItemStusId}
@@ -256,19 +254,8 @@ UPDATE SCM0053D
    AND USE_YN = 'Y'
 </update>
 
-<update id="updatePoDetailDel" parameterType="Map">
-UPDATE SCM0053D
-   SET USE_YN = 'N'
-     , UPD_DT = SYSDATE
-     , UPD_USER_ID = #{updUserId} 
- WHERE PO_NO = #{poNo}
-   AND PO_ITEM_NO = #{poItemNo}
-   AND STOCK_CODE = #{stockCode}
-   AND USE_YN = 'Y'
-</update>
-
-
-
+<!-- PO Approval -->
+<!-- Search -->
 <select id="selectPoSummary" parameterType="Map" resultType="egovMap">
 SELECT C.STK_CTGRY_ID AS CTGRY_ID
      , D.CODE_NAME AS CTGRY
@@ -297,10 +284,15 @@ SELECT C.STK_CTGRY_ID AS CTGRY_ID
 		#{item}
 		</foreach>
 	</if>
+ 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
+   AND C.STK_CTGRY_ID IN
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
  GROUP BY C.STK_CTGRY_ID, D.CODE_NAME, A.CDC
  ORDER BY C.STK_CTGRY_ID, D.CODE_NAME
 </select>
-
 <select id="selectPoApprList" parameterType="Map" resultType="egovMap">
 SELECT DECODE(A.PO_ITEM_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
      , B.PO_ID
@@ -347,9 +339,16 @@ SELECT DECODE(A.PO_ITEM_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
 		#{item}
 		</foreach>
 	</if>
+ 	<if test="scmStockCategoryCbBox != null and ! scmStockCategoryCbBox.isEmpty">
+   AND C.STK_CTGRY_ID IN
+		<foreach item="item" collection="scmStockCategoryCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
  ORDER BY A.PO_NO, A.PO_ITEM_NO
 </select>
 
+<!-- Approve -->
 <update id="updatePoApprove" parameterType="Map">
 UPDATE SCM0053D
    SET PO_ITEM_STUS_ID = #{poItemStusId}
@@ -359,140 +358,5 @@ UPDATE SCM0053D
  WHERE PO_NO = #{poNo}
    AND USE_YN = 'Y'
 </update>
-
-
-<!-- 
-<select id="selectLeadTm" parameterType="Map" resultType="egovMap">
-SELECT MIN(A.LEAD_TM) AS LEAD_TM
-  FROM SCM0008M A
- WHERE A.LEAD_TM IS NOT NULL
-   AND A.LEAD_TM > 0
-</select>
-<select id="selectLastWeekTh" parameterType="Map" resultType="egovMap">
-SELECT MAX(A.WEEK_TH) AS LAST_WEEK_TH
-  FROM SCM0018M A
- WHERE A.SCM_YEAR = #{scmYearCbBox}
-</select>
-<select id="selectSplitCnt" parameterType="Map" resultType="egovMap">
-SELECT SUM(A.SPLIT_CNT) AS SPLIT_CNT
-  FROM (
-        SELECT CASE WHEN Z.WEEK_TH_SN = 2 THEN 1 ELSE 0 END AS SPLIT_CNT
-          FROM SCM0018M Z
-         WHERE Z.SCM_YEAR = #{scmYearCbBox}
-           AND Z.WEEK_TH BETWEEN #{scmWeekCbBox} AND (#{scmWeekCbBox} + #{leadTm})
-        UNION ALL
-        SELECT CASE WHEN Z.WEEK_TH_SN = 2 THEN 1 ELSE 0 END AS SPLIT_CNT
-          FROM SCM0018M Z
-         WHERE Z.SCM_YEAR = #{nextYear}
-           AND Z.WEEK_TH BETWEEN 1 AND (#{scmWeekCbBox} + #{leadTm} - #{lastWeekTh})
-        ) A
-</select>
-<select id="selectSplitCnt1" parameterType="Map" resultType="egovMap">
-SELECT SUM(CASE WHEN A.WEEK_TH_SN = 2 THEN 1 ELSE 0 END) AS SPLIT_CNT
-  FROM SCM0018M A
- WHERE A.SCM_YEAR = #{scmYearCbBox}
-   AND A.WEEK_TH BETWEEN #{scmWeekCbBox} AND (#{scmWeekCbBox} + #{leadTm})
-</select>
-<select id="selectSplitCnt2" parameterType="Map" resultType="egovMap">
-SELECT SUM(A.SPLIT_CNT) AS SPLIT_CNT
-  FROM (
-        SELECT CASE WHEN Z.WEEK_TH_SN = 2 THEN 1 ELSE 0 END AS SPLIT_CNT
-          FROM SCM0018M Z
-         WHERE Z.SCM_YEAR = #{scmYearCbBox}
-           AND Z.WEEK_TH BETWEEN #{scmWeekCbBox} AND (#{scmWeekCbBox} + #{leadTm})
-        UNION ALL
-        SELECT CASE WHEN Z.WEEK_TH_SN = 2 THEN 1 ELSE 0 END AS SPLIT_CNT
-          FROM SCM0018M Z
-         WHERE Z.SCM_YEAR = #{nextYear}
-           AND Z.WEEK_TH BETWEEN 1 AND (#{scmWeekCbBox} + #{leadTm} - #{lastWeekTh})
-        ) A
-</select>
-<select id="selectLastWeekSplitYn1" parameterType="Map" resultType="egovMap">
-SELECT SUM(CASE WHEN A.RN = 1 AND A.WEEK_TH_SN = 2 THEN 1 ELSE 0 END) AS LAST_WEEK_SPLIT_YN
-  FROM (
-        SELECT ROW_NUMBER() OVER (PARTITION BY Z.USE_YN ORDER BY Z.CAL_ID DESC) AS RN
-             , Z.WEEK_TH_SN
-          FROM SCM0018M Z
-         WHERE Z.USE_YN = 'Y'
-           AND Z.SCM_YEAR = #{scmYearCbBox}
-           AND Z.WEEK_TH BETWEEN #{scmWeekCbBox} AND (#{scmWeekCbBox} + #{leadTm})
-        ) A
-</select>
-<select id="selectLastWeekSplitYn" parameterType="Map" resultType="egovMap">
-SELECT SUM(CASE WHEN A.RN = 1 AND A.WEEK_TH_SN = 2 THEN 1 ELSE 0 END) AS LAST_WEEK_SPLIT_YN
-  FROM (
-        SELECT ROW_NUMBER() OVER (PARTITION BY Z.USE_YN ORDER BY Z.CAL_ID DESC) AS RN
-             , Z.WEEK_TH_SN
-          FROM (
-                SELECT *
-                  FROM SCM0018M
-                 WHERE USE_YN = 'Y'
-                   AND SCM_YEAR = #{scmYearCbBox}
-                   AND WEEK_TH BETWEEN #{scmWeekCbBox} AND (#{scmWeekCbBox} + #{leadTm})
-                UNION ALL
-                SELECT *
-                  FROM SCM0018M
-                 WHERE USE_YN = 'Y'
-                   AND SCM_YEAR = #{nextYear}
-                   AND WEEK_TH BETWEEN 1 AND (#{scmWeekCbBox} + #{leadTm} - #{lastWeekTh})
-                ) Z
-        ) A
-</select>
-<select id="selectLastWeekSplitYn2" parameterType="Map" resultType="egovMap">
-SELECT SUM(CASE WHEN A.RN = 1 AND A.WEEK_TH_SN = 2 THEN 1 ELSE 0 END) AS LAST_WEEK_SPLIT_YN
-  FROM (
-        SELECT ROW_NUMBER() OVER (PARTITION BY Z.USE_YN ORDER BY Z.CAL_ID DESC) AS RN
-             , Z.WEEK_TH_SN
-          FROM (
-                SELECT *
-                  FROM SCM0018M
-                 WHERE USE_YN = 'Y'
-                   AND SCM_YEAR = #{scmYearCbBox}
-                   AND WEEK_TH BETWEEN #{scmWeekCbBox} AND (#{scmWeekCbBox} + #{leadTm})
-                UNION ALL
-                SELECT *
-                  FROM SCM0018M
-                 WHERE USE_YN = 'Y'
-                   AND SCM_YEAR = #{nextYear}
-                   AND WEEK_TH BETWEEN 1 AND (#{scmWeekCbBox} + #{leadTm} - #{lastWeekTh})
-                ) Z
-        ) A
-</select>
-
-<select id="selectGetGrYMW" parameterType="Map" resultType="egovMap">
-SELECT CASE WHEN B.PO_WEEK + C.LEAD_TM > A.MAX_WEEK
-            THEN #{poYear} + 1
-            ELSE #{poYear}
-            END AS GR_YEAR
-     , CASE WHEN B.PO_WEEK + C.LEAD_TM > A.MAX_WEEK
-            THEN (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = (#{poYear} + 1) AND WEEK_TH = (B.PO_WEEK + C.LEAD_TM - A.MAX_WEEK))
-            ELSE (SELECT MIN(SCM_MONTH) FROM SCM0018M WHERE SCM_YEAR = #{poYear} AND WEEK_TH = (B.PO_WEEK + C.LEAD_TM))
-            END AS GR_MONTH
-     , CASE WHEN B.PO_WEEK + C.LEAD_TM > A.MAX_WEEK
-            THEN (B.PO_WEEK + C.LEAD_TM - A.MAX_WEEK)
-            ELSE (B.PO_WEEK + C.LEAD_TM)
-            END AS GR_WEEK
-  FROM (SELECT MAX(Z.SCM_WEEK) AS MAX_WEEK FROM SCM0018M Z WHERE Z.SCM_YEAR = #{poYear}) A
-     , (SELECT #{poWeek} AS PO_WEEK FROM DUAL ) B
-     , (SELECT MIN(Z.LEAD_TM) AS LEAD_TM FROM SCM0008M Z WHERE Z.LEAD_TM IS NOT NULL AND Z.LEAD_TM != 0) C
-</select>
-
-<select id="selectLeadTmSplitInfo" parameterType="Map" resultType="egovMap">
-SELECT SUM(CASE WHEN A.RN = 1 AND A.WEEK_TH_SN = 2 THEN 1 ELSE 0 END) AS LAST_SPLIT_YN
-     , SUM(A.SPLIT_CNT) AS SPLIT_CNT
-     , A.LEAD_TM
-  FROM (
-        SELECT ROW_NUMBER() OVER (PARTITION BY X.LEAD_TM ORDER BY Z.CAL_ID DESC) AS RN
-             , CASE WHEN Z.WEEK_TH_SN = 2 THEN 1 ELSE 0 END AS SPLIT_CNT
-             , Z.WEEK_TH_SN
-             , X.LEAD_TM
-          FROM SCM0018M Z
-             , (SELECT MIN(LEAD_TM) AS LEAD_TM FROM SCM0008M WHERE LEAD_TM IS NOT NULL AND LEAD_TM > 0) X
-             , (SELECT CAL_ID FROM SCM0018M WHERE SCM_YEAR = #{scmYearCbBox} AND WEEK_TH = #{scmWeekCbBox}) Y
-         WHERE Z.CAL_ID BETWEEN Y.CAL_ID AND (Y.CAL_ID + X.LEAD_TM)
-        ) A
- GROUP BY A.LEAD_TM
-</select>
- -->
 
 </mapper>

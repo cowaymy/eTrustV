@@ -2,10 +2,23 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.scm.impl.ScmCommonMapper">
 
+<select id="selectScmTotalPeriod" parameterType="Map" resultType="egovMap">
+SELECT A.SCM_YEAR
+     , A.SCM_MONTH
+     , MIN(A.SCM_WEEK) AS SCM_WEEK
+  FROM SCM0018M A
+ WHERE A.SCM_YEAR = TO_CHAR(SYSDATE, 'YYYY')
+   AND A.SCM_MONTH = TO_CHAR(SYSDATE, 'MM')
+   AND SYSDATE BETWEEN A.SCM_WEEK_START AND A.SCM_WEEK_END
+ GROUP BY A.SCM_YEAR, A.SCM_MONTH
+</select>
+
 <select id="selectScmYear" parameterType="Map" resultType="egovMap">
 SELECT TO_CHAR(SYSDATE - 365, 'YYYY') AS ID, TO_CHAR(SYSDATE - 365, 'YYYY') AS NAME FROM DUAL
 UNION ALL
 SELECT TO_CHAR(SYSDATE, 'YYYY') AS ID, TO_CHAR(SYSDATE, 'YYYY') AS NAME FROM DUAL
+UNION ALL
+SELECT TO_CHAR(SYSDATE + 365, 'YYYY') AS ID, TO_CHAR(SYSDATE + 365, 'YYYY') AS NAME FROM DUAL
 </select>
 
 <select id="selectScmWeek" parameterType="Map" resultType="egovMap">
@@ -97,16 +110,49 @@ SELECT DISTINCT C.CODE_ID AS ID
 </select>
 
 <select id="selectScmStockType" parameterType="Map" resultType="egovMap">
-SELECT DISTINCT C.CODE_ID AS ID
-     , C.CODE_NAME AS NAME
-  FROM SCM0008M A
-  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
-  LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15)
- WHERE A.STUS_CODE_ID = 1
-   AND B.STUS_CODE_ID = 1
-   AND B.IS_NCV = 0
-   AND C.DISAB = 0
- ORDER BY C.CODE_ID
+SELECT DISTINCT A.ID
+     , A.NAME
+  FROM (
+        SELECT DISTINCT 'DST' AS TEAM
+             , C.CODE_ID AS ID
+             , C.CODE_NAME AS NAME
+          FROM SCM0008M A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15)
+         WHERE A.STUS_CODE_ID = 1
+           AND B.STUS_CODE_ID = 1
+           AND B.IS_NCV = 0
+           AND C.DISAB = 0
+           AND C.CODE_ID = 61
+        UNION ALL
+        SELECT DISTINCT 'CODY' AS TEAM
+             , C.CODE_ID AS ID
+             , C.CODE_NAME AS NAME
+          FROM SCM0008M A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15)
+         WHERE A.STUS_CODE_ID = 1
+           AND B.STUS_CODE_ID = 1
+           AND B.IS_NCV = 0
+           AND C.DISAB = 0
+           AND C.CODE_ID IN (61, 62)
+        UNION ALL
+        SELECT DISTINCT 'CS' AS TEAM
+             , C.CODE_ID AS ID
+             , C.CODE_NAME AS NAME
+          FROM SCM0008M A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
+          LEFT OUTER JOIN SYS0013M C ON (B.STK_TYPE_ID = C.CODE_ID AND C.CODE_MASTER_ID = 15)
+         WHERE A.STUS_CODE_ID = 1
+           AND B.STUS_CODE_ID = 1
+           AND B.IS_NCV = 0
+           AND C.DISAB = 0
+           AND C.CODE_ID IN (62, 63, 64)
+        ) A
+	<if test="scmTeamCbBox != null and scmTeamCbBox != ''">
+ WHERE A.TEAM = #{scmTeamCbBox}
+	</if>
+ ORDER BY A.ID
 </select>
 
 <select id="selectScmStockCode" parameterType="Map" resultType="egovMap">
