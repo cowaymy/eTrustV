@@ -1165,7 +1165,7 @@ var myGridID;
 				<td>
 					<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
 				</td>
-				<th scope="row">Stock</th>
+				<th scope="row">Material</th>
 				<td>
 					<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
 				</td>
