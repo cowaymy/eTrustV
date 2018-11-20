@@ -66,7 +66,9 @@ $(function() {
 	gYear1	= gToday.getFullYear() - 1;
 	gMonth	= gToday.getMonth() + 1;
 	gDay	= gToday.getDate();
+	console.log("gYear : " + gYear + ", gYear1 : " + gYear1 + ", gMonth : " + gMonth + ", gDay : " + gDay);
 	
+	//fnScmTotalPeriod();
 	//	Set combo box
 	fnScmYearCbBox();
 	fnScmWeekCbBox();
@@ -74,6 +76,18 @@ $(function() {
 	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
 });
+
+//	Scm Total Period
+function fnScmTotalPeriod() {
+	Common.ajax("POST"
+			, "/scm/selectScmTotalPeriod.do"
+			, ""
+			, function(result) {
+				console.log(result);
+				//console.loge
+				//$("#scmYearCbBox").val(result.selectScmTotalPeriod);
+			});
+}
 
 //	year
 function fnScmYearCbBox() {
@@ -159,30 +173,6 @@ function fnScmTeamCbBox() {
 
 //	category
 function fnScmStockCategoryCbBox() {
-	//	callback
-/*	var fnScmStockCodeCbBoxCallback	= function() {
-		$("#scmStockCategoryCbBox").on("change", function() {
-			var $this	= $(this);
-			
-			CommonCombo.initById("scmStockCodeCbBox");
-			
-			if ( FormUtil.isNotEmpty($this.val()) ) {
-				CommonCombo.make("scmStockCodeCbBox"
-						, "/scm/selectScmStockCode.do"
-						, { scmStockCategory : $this.val() + "" }
-						, ""
-						, {
-							id : "id",
-							name : "name",
-							type : "M"
-						}
-						, "");
-			} else {
-				fnScmStockCodeCbBox();
-			}
-		});
-	};*/
-	
 	CommonCombo.make("scmStockCategoryCbBox"
 			, "/scm/selectScmStockCategory.do"
 			, ""
@@ -192,54 +182,15 @@ function fnScmStockCategoryCbBox() {
 				name : "name",
 				type : "M"
 			}
-			//, fnScmStockCodeCbBoxCallback);
 			, "");
 }
 
 //	stock type
 function fnScmStockTypeCbBox() {
-	//	callback
-/*	var fnScmStockCodeCbBoxCallback	= function() {
-		$("#scmStockTypeCbBox").on("change", function() {
-			var $this	= $(this);
-			
-			CommonCombo.initById("scmStockCodeCbBox");
-			
-			if ( FormUtil.isNotEmpty($this.val()) ) {
-				CommonCombo.make("scmStockCodeCbBox"
-						, "/scm/selectScmStockCode.do"
-						, { scmStockType : $this.val() + "" }
-						, ""
-						, {
-							id : "id",
-							name : "name",
-							type : "M"
-						}
-						, "");
-			} else {
-				fnScmStockCodeCbBox();
-			}
-		});
-	};*/
-	
+	var params	= $.extend($("#MainForm").serializeJSON(), params);
 	CommonCombo.make("scmStockTypeCbBox"
 			, "/scm/selectScmStockType.do"
-			, ""
-			, ""
-			, {
-				id : "id",
-				name : "name",
-				type : "M"
-			}
-			//, fnScmStockCodeCbBoxCallback);
-			, "");
-}
-/*
-//	stock code
-function fnScmStockCodeCbBox() {
-	CommonCombo.make("scmStockCodeCbBox"
-			, "/scm/selectScmStockCode.do"
-			, ""
+			, params
 			, ""
 			, {
 				id : "id",
@@ -248,7 +199,7 @@ function fnScmStockCodeCbBox() {
 			}
 			, "");
 }
-*/
+
 //	header
 function fnSalesPlanHeader() {
 	if ( 1 > $("#scmYearCbBox").val().length ) {
@@ -704,9 +655,8 @@ function fnSalesPlanHeader() {
 //	search
 function fnSearch() {
 	var params	= {
-		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects"),
 		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
-		scmStockCodeCbBox : $("#scmStockCodeCbBox").multipleSelect("getSelects")
+		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects")
 	};
 	var team	= $("#scmTeamCbBox").val();
 	var url		= "";
@@ -824,6 +774,13 @@ function fnSaveMaster(obj, conf) {
 	
 	if ( 1 > $("#scmTeamCbBox").val().length ) {
 		Common.alert("<spring:message code='sys.msg.necessary' arguments='Team' htmlEscape='false'/>");
+		return	false;
+	}
+	
+	var updList	= AUIGrid.getEditedRowItems(myGridID);
+	
+	if ( 0 < updList.length ) {
+		Common.alert("Save First");
 		return	false;
 	}
 	
@@ -1224,7 +1181,7 @@ $(document).ready(function() {
 						</td>
 						<th scope="row">Team</th>
 						<td>
-							<select class="w100p" id="scmTeamCbBox" name="scmTeamCbBox"></select>
+							<select class="w100p" id="scmTeamCbBox" name="scmTeamCbBox" onchange="fnScmStockTypeCbBox();"></select>
 						</td>
 						<th scope="row">Planning Status</th>
 						<td>
@@ -1238,7 +1195,6 @@ $(document).ready(function() {
 					<tr>
 						<th scope="row">Type</th>
 						<td>
-							<!-- <select class="multy_select w100p" multiple="multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox"></select> -->
 							<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
 						</td>
 						<th scope="row">Category</th>

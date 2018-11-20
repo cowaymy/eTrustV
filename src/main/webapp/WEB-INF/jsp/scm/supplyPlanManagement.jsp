@@ -74,6 +74,7 @@ $(function() {
 	fnScmYearCbBox();
 	fnScmWeekCbBox();
 	fnScmCdcCbBox();
+	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
 });
 
@@ -145,17 +146,33 @@ function fnScmCdcCbBox() {
 			, "");
 }
 
-//	stock type
-function fnScmStockTypeCbBox() {
-	CommonCombo.make("scmStockTypeCbBox"
-			, "/scm/selectScmStockType.do"	//	"/scm/selectComboSupplyCDC.do"
+
+//	category
+function fnScmStockCategoryCbBox() {
+	CommonCombo.make("scmStockCategoryCbBox"
+			, "/scm/selectScmStockCategory.do"
 			, ""
 			, ""
 			, {
 				id : "id",
 				name : "name",
-				type : "M",
-				chooseMessage : "ALL"
+				type : "M"
+			}
+			, "");
+}
+
+//	stock type
+function fnScmStockTypeCbBox() {
+	//var params	= $.extend($("#MainForm").serializeJSON(), params);
+	CommonCombo.make("scmStockTypeCbBox"
+			, "/scm/selectScmStockType.do"
+			//, params
+			, ""
+			, ""
+			, {
+				id : "id",
+				name : "name",
+				type : "M"
 			}
 			, "");
 }
@@ -707,7 +724,8 @@ function fnSupplyPlanHeader() {
 //	search
 function fnSearch() {
 	var params	= {
-		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects")
+		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
+		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects")
 	};
 	
 	params	= $.extend($("#MainForm").serializeJSON(), params);
@@ -810,6 +828,13 @@ function fnSaveMaster(obj, conf) {
 	
 	if ( 1 > $("#scmCdcCbBox").val().length ) {
 		Common.alert("<spring:message code='sys.msg.necessary' arguments='CDC' htmlEscape='false'/>");
+		return	false;
+	}
+	
+	var updList	= AUIGrid.getEditedRowItems(myGridID);
+	
+	if ( 0 < updList.length ) {
+		Common.alert("Save First");
 		return	false;
 	}
 	
@@ -1132,14 +1157,17 @@ var myGridID;
 				</td>
 			</tr>
 			<tr>
-				<!-- Stock Type 추가 -->
-				<th scope="row">Stock Type</th>
+				<th scope="row">Type</th>
 				<td>
 					<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
 				</td>
+				<th scope="row">Category</th>
+				<td>
+					<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
+				</td>
 				<th scope="row">Stock</th>
-				<td colspan="3">
-					<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSupplyPlanHeader(); return false;}">
+				<td>
+					<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
 				</td>
 			</tr>
 		</tbody>

@@ -40,6 +40,7 @@
 $(function() {
 	fnScmYearCbBox();
 	fnScmWeekCbBox();
+	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
 });
 //	year
@@ -96,17 +97,32 @@ function fnScmWeekCbBox() {
 	weekChkBox.options[0]	= new Option("Select a Week", "");
 }
 
-//	stock type
-function fnScmStockTypeCbBox() {
-	CommonCombo.make("scmStockTypeCbBox"
-			, "/scm/selectScmStockType.do"	//	"/scm/selectComboSupplyCDC.do"
+//	category
+function fnScmStockCategoryCbBox() {
+	CommonCombo.make("scmStockCategoryCbBox"
+			, "/scm/selectScmStockCategory.do"
 			, ""
 			, ""
 			, {
 				id : "id",
 				name : "name",
-				type : "M",
-				chooseMessage : "ALL"
+				type : "M"
+			}
+			, "");
+}
+
+//	stock type
+function fnScmStockTypeCbBox() {
+	//var params	= $.extend($("#MainForm").serializeJSON(), params);
+	CommonCombo.make("scmStockTypeCbBox"
+			, "/scm/selectScmStockType.do"
+			//, params
+			, ""
+			, ""
+			, {
+				id : "id",
+				name : "name",
+				type : "M"
 			}
 			, "");
 }
@@ -528,7 +544,8 @@ function fnSearch() {
 	}
 	
 	var params	= {
-		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects")	
+		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
+		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects")
 	};
 	
 	params	= $.extend($("#MainForm").serializeJSON(), params);
@@ -664,10 +681,13 @@ $(document).ready(function() {
 						<select class="sel_date" id="scmWeekCbBox" name="scmWeekCbBox"></select>
 					</div><!-- date_set end -->
 				</td>
-				<!-- Stock Type 추가 -->
 				<th scope="row">Stock Type</th>
-				<td colspan="3">
+				<td>
 					<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
+				</td>
+				<th scope="row">Category</th>
+				<td>
+					<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
 				</td>
 			</tr>
 		</tbody>
