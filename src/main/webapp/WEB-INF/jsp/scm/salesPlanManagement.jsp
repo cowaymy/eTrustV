@@ -989,30 +989,30 @@ function fnButtonControl(div, list1, list2) {
 			$("#btnExcel").addClass("btn_disabled");
 		} else {
 			if ( 0 == beforeWeek ) {
-				$("#cirBeforeWeek").addClass("circle_grey");
-				$("#cirBeforeWeek").removeClass("circle_red");
-				$("#cirBeforeWeek").removeClass("circle_blue");
+				$("#cirPrevWeek").addClass("circle_grey");
+				$("#cirPrevWeek").removeClass("circle_red");
+				$("#cirPrevWeek").removeClass("circle_blue");
 			} else if ( 15 == beforeWeek ) {
-				$("#cirBeforeWeek").removeClass("circle_grey");
-				$("#cirBeforeWeek").removeClass("circle_red");
-				$("#cirBeforeWeek").addClass("circle_blue");
+				$("#cirPrevWeek").removeClass("circle_grey");
+				$("#cirPrevWeek").removeClass("circle_red");
+				$("#cirPrevWeek").addClass("circle_blue");
 			} else {
-				$("#cirBeforeWeek").removeClass("circle_grey");
-				$("#cirBeforeWeek").addClass("circle_red");
-				$("#cirBeforeWeek").removeClass("circle_blue");
+				$("#cirPrevWeek").removeClass("circle_grey");
+				$("#cirPrevWeek").addClass("circle_red");
+				$("#cirPrevWeek").removeClass("circle_blue");
 			}
 			if ( 0 == thisWeek ) {
-				$("#cirBeforeWeek").addClass("circle_grey");
-				$("#cirBeforeWeek").removeClass("circle_red");
-				$("#cirBeforeWeek").removeClass("circle_blue");
+				$("#cirPrevWeek").addClass("circle_grey");
+				$("#cirPrevWeek").removeClass("circle_red");
+				$("#cirPrevWeek").removeClass("circle_blue");
 			} else if ( 15 == thisWeek ) {
-				$("#cirBeforeWeek").removeClass("circle_grey");
-				$("#cirBeforeWeek").removeClass("circle_red");
-				$("#cirBeforeWeek").addClass("circle_blue");
+				$("#cirPrevWeek").removeClass("circle_grey");
+				$("#cirPrevWeek").removeClass("circle_red");
+				$("#cirPrevWeek").addClass("circle_blue");
 			} else {
-				$("#cirBeforeWeek").removeClass("circle_grey");
-				$("#cirBeforeWeek").addClass("circle_red");
-				$("#cirBeforeWeek").removeClass("circle_blue");
+				$("#cirPrevWeek").removeClass("circle_grey");
+				$("#cirPrevWeek").addClass("circle_red");
+				$("#cirPrevWeek").removeClass("circle_blue");
 			}
 			if ( 0 == list2.length ) {
 				$("#btnCreate").addClass("btn_disabled");
@@ -1038,9 +1038,9 @@ function fnButtonControl(div, list1, list2) {
 			$("#btnUnconfirm").addClass("btn_disabled");
 			$("#btnExcel").addClass("btn_disabled");
 			
-			$("#cirBeforeWeek").addClass("circle_grey");
-			$("#cirBeforeWeek").removeClass("circle_red");
-			$("#cirBeforeWeek").removeClass("circle_blue");
+			$("#cirPrevWeek").addClass("circle_grey");
+			$("#cirPrevWeek").removeClass("circle_red");
+			$("#cirPrevWeek").removeClass("circle_blue");
 		} else if ( 1 == beforeWeek ) {
 			//	plan not confirmed
 			/*$("#btnCreate").addClass("btn_disabled");
@@ -1049,9 +1049,9 @@ function fnButtonControl(div, list1, list2) {
 			$("#btnUnconfirm").addClass("btn_disabled");
 			$("#btnExcel").addClass("btn_disabled");*/
 			
-			$("#cirBeforeWeek").removeClass("circle_grey");
-			$("#cirBeforeWeek").addClass("circle_red");
-			$("#cirBeforeWeek").removeClass("circle_blue");
+			$("#cirPrevWeek").removeClass("circle_grey");
+			$("#cirPrevWeek").addClass("circle_red");
+			$("#cirPrevWeek").removeClass("circle_blue");
 			if ( 0 == thisWeek ) {
 				$("#btnCreate").removeClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
@@ -1059,9 +1059,9 @@ function fnButtonControl(div, list1, list2) {
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").addClass("btn_disabled");
 				
-				$("#cirThisWeek").addClass("circle_grey");
-				$("#cirThisWeek").removeClass("circle_red");
-				$("#cirThisWeek").removeClass("circle_blue");
+				$("#cirCurrWeek").addClass("circle_grey");
+				$("#cirCurrWeek").removeClass("circle_red");
+				$("#cirCurrWeek").removeClass("circle_blue");
 			} else if ( 1 == thisWeek ) {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").removeClass("btn_disabled");
@@ -1069,9 +1069,9 @@ function fnButtonControl(div, list1, list2) {
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
 				
-				$("#cirThisWeek").removeClass("circle_grey");
-				$("#cirThisWeek").addClass("circle_red");
-				$("#cirThisWeek").removeClass("circle_blue");
+				$("#cirCurrWeek").removeClass("circle_grey");
+				$("#cirCurrWeek").addClass("circle_red");
+				$("#cirCurrWeek").removeClass("circle_blue");
 			} else if ( 5 == thisWeek ) {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
@@ -1079,16 +1079,16 @@ function fnButtonControl(div, list1, list2) {
 				$("#btnUnconfirm").removeClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
 				
-				$("#cirThisWeek").removeClass("circle_grey");
-				$("#cirThisWeek").removeClass("circle_red");
-				$("#cirThisWeek").addClass("circle_blue");
+				$("#cirCurrWeek").removeClass("circle_grey");
+				$("#cirCurrWeek").removeClass("circle_red");
+				$("#cirCurrWeek").addClass("circle_blue");
 			} else {
 				console.log("This week's sales plan info is wrong");
 			}
 		} else if ( 5 == beforeWeek ) {
-			$("#cirBeforeWeek").removeClass("circle_grey");
-			$("#cirBeforeWeek").removeClass("circle_red");
-			$("#cirBeforeWeek").addClass("circle_blue");
+			$("#cirPrevWeek").removeClass("circle_grey");
+			$("#cirPrevWeek").removeClass("circle_red");
+			$("#cirPrevWeek").addClass("circle_blue");
 			//	plan confirmed
 			if ( 0 == thisWeek ) {
 				$("#btnCreate").removeClass("btn_disabled");
@@ -1097,9 +1097,9 @@ function fnButtonControl(div, list1, list2) {
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").addClass("btn_disabled");
 				
-				$("#cirThisWeek").addClass("circle_grey");
-				$("#cirThisWeek").removeClass("circle_red");
-				$("#cirThisWeek").removeClass("circle_blue");
+				$("#cirCurrWeek").addClass("circle_grey");
+				$("#cirCurrWeek").removeClass("circle_red");
+				$("#cirCurrWeek").removeClass("circle_blue");
 			} else if ( 1 == thisWeek ) {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").removeClass("btn_disabled");
@@ -1107,9 +1107,9 @@ function fnButtonControl(div, list1, list2) {
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
 				
-				$("#cirThisWeek").removeClass("circle_grey");
-				$("#cirThisWeek").addClass("circle_red");
-				$("#cirThisWeek").removeClass("circle_blue");
+				$("#cirCurrWeek").removeClass("circle_grey");
+				$("#cirCurrWeek").addClass("circle_red");
+				$("#cirCurrWeek").removeClass("circle_blue");
 			} else if ( 5 == thisWeek ) {
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
@@ -1117,9 +1117,9 @@ function fnButtonControl(div, list1, list2) {
 				$("#btnUnconfirm").removeClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
 				
-				$("#cirThisWeek").removeClass("circle_grey");
-				$("#cirThisWeek").removeClass("circle_red");
-				$("#cirThisWeek").addClass("circle_blue");
+				$("#cirCurrWeek").removeClass("circle_grey");
+				$("#cirCurrWeek").removeClass("circle_red");
+				$("#cirCurrWeek").addClass("circle_blue");
 			} else {
 				console.log("This week's sales plan info is wrong");
 			}
@@ -1187,8 +1187,8 @@ $(document).ready(function() {
 						<td>
 							<div class="status_result">
 								<!-- circle_red, circle_blue, circle_grey -->
-								<p><span id ="cirBeforeWeek" class="circle circle_grey"></span>  Before Week's Plan</p>
-								<p><span id ="cirThisWeek" class="circle circle_grey"></span>  This Week's Plan</p>
+								<p><span id ="cirPrevWeek" class="circle circle_grey"></span>  Previous Week Plan</p>
+								<p><span id ="cirCurrWeek" class="circle circle_grey"></span>  Current Week Plan</p>
 							</div>
 						</td>
 					</tr>
