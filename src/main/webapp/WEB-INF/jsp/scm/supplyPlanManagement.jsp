@@ -463,7 +463,7 @@ function fnSupplyPlanHeader() {
 					******** M0 Header
 					******************************/
 					var groupM0	= {
-						headerText : "M0",
+						headerText : result.selectScmTotalInfo[0].m0Mon,
 						children : []
 					};
 					for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
@@ -509,7 +509,7 @@ function fnSupplyPlanHeader() {
 					******** M1 Header
 					******************************/
 					var groupM1 = {
-						headerText : "M + 1",
+						headerText : result.selectScmTotalInfo[0].m1Mon,
 						children : []
 					};
 					for ( var i = 0 ; i < m1WeekCnt ; i++ ) {
@@ -556,7 +556,7 @@ function fnSupplyPlanHeader() {
 					******** M2 Header
 					******************************/
 					var groupM2 = {
-						headerText : "M + 2",
+						headerText : result.selectScmTotalInfo[0].m2Mon,
 						children : []
 					};
 					for ( var i = 0 ; i < m2WeekCnt ; i++ ) {
@@ -603,7 +603,7 @@ function fnSupplyPlanHeader() {
 					******** M3 Header
 					******************************/
 					var groupM3 = {
-						headerText : "M + 3",
+						headerText : result.selectScmTotalInfo[0].m3Mon,
 						children : []
 					};
 					for ( var i = 0 ; i < m3WeekCnt ; i++ ) {
@@ -650,7 +650,7 @@ function fnSupplyPlanHeader() {
 					******** M4 Header
 					******************************/
 					var groupM4 = {
-						headerText : "M + 4",
+						headerText : result.selectScmTotalInfo[0].m4Mon,
 						children : []
 					};
 					for ( var i = 0 ; i < m4WeekCnt ; i++ ) {
