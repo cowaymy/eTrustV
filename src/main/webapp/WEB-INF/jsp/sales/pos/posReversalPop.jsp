@@ -129,7 +129,7 @@ $(document).ready(function() {
                 	 returnMsg = '<spring:message code="sal.alert.msg.posRefNumber"  arguments="'+result.posRefNo+'"/>';
                  } */
 
-                 returnMsg = 'POS REF NO. : ' + result.posRefNo + "<br />" + 'POS WOR NO. : ' + result.posWorNo + "<br />";
+                 returnMsg = 'POS REF NO. : ' + result.posRefNo + "<br />";
 
                  Common.alert(returnMsg , fn_popClose());
     		 }
