@@ -6,6 +6,7 @@
 var posGridID;
 var deductionCmGridID;
 var posItmDetailGridID;
+var posPaymentDetailGridID;
 
 var optionModule = {
         type: "S",
@@ -36,6 +37,7 @@ $(document).ready(function() { //***********************************************
     createAUIGrid();
     createDeductionGrid();
     createPosItmDetailGrid();
+    createPosPaymentDetailGrid();
     girdHide();
 
      /*######################## Init Combo Box ########################*/
@@ -145,6 +147,7 @@ $(document).ready(function() { //***********************************************
     	AUIGrid.clearGridData(posGridID);
     	AUIGrid.clearGridData(posItmDetailGridID);
         AUIGrid.clearGridData(deductionCmGridID);
+        AUIGrid.clearGridData(posPaymentDetailGridID);
 
         fn_getPosListAjax();
     });
@@ -225,25 +228,35 @@ $(document).ready(function() { //***********************************************
     	//clear data
     	AUIGrid.clearGridData(posItmDetailGridID);
     	AUIGrid.clearGridData(deductionCmGridID);
+    	AUIGrid.clearGridData(posPaymentDetailGridID);
+
 
     	if(event.item.posModuleTypeId == 2390 || event.item.posModuleTypeId == 2392){ // POS SALES & OTHER(ITEM BANK(HQ))
 
     		//Mybatis Separate Param
     		//1. Grid Display Control
     		$("#_itmDetailGridDiv").css("display" , "");
+    		$("#_paymentDetailGridDiv").css("display" , "");
     		$("#_deducGridDiv").css("display", "none");
 
             var detailParam = {rePosId : event.item.posId};
+            var posParam = { billNo : event.item.posNo };
             //Ajax
             Common.ajax("GET", "/sales/pos/getPosDetailList", detailParam, function(result){
                 AUIGrid.setGridData(posItmDetailGridID, result);
             });
+
+            Common.ajax("GET", "/sales/pos/selectPosBillingList", posParam, function(result){
+                AUIGrid.setGridData(posPaymentDetailGridID, result);
+            });
+
     	}
 
         if(event.item.posModuleTypeId == 2391){ // DEDUCTION COMMISSION
 
         	//1. Grid Display Control
         	$("#_itmDetailGridDiv").css("display" , "none");
+        	$("#_paymentDetailGridDiv").css("display" , "none");
         	$("#_deducGridDiv").css("display", "");
 
         	//2. Grid Set Data
@@ -546,6 +559,48 @@ function createDeductionGrid () {
 	    deductionCmGridID = GridCommon.createAUIGrid("#deduc_grid_wrap", posDeducColumnLayout,'', memGridPros);  // address list
 }
 
+function createPosPaymentDetailGrid(){
+    var posPaymentColumnLayout =  [
+                                   { dataField:"payDt" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false  , visible:false, dataType : "date", formatString : "dd-mm-yyyy"},
+                                   { dataField:"payTypeId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false ,visible:false},
+                                   { dataField:"trxId" ,headerText:"<spring:message code='pay.head.trxNo'/>",editable : false },
+                                     { dataField:"trxDt" ,headerText:"<spring:message code='pay.head.trxDate'/>",editable : false , dataType : "date", formatString : "dd-mm-yyyy"},
+                                     { dataField:"trxAmt" ,headerText:"<spring:message code='pay.head.trxTotal'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"},
+                                     { dataField:"payId" ,headerText:"<spring:message code='pay.head.PID'/>" ,editable : false },
+                                     { dataField:"orNo" ,headerText:"<spring:message code='pay.head.ORNo'/>" ,editable : false },
+                                     { dataField:"payTypeName" ,headerText:"<spring:message code='pay.head.payType'/>" ,editable : false },
+                                     { dataField:"AdvMonth" ,headerText:"<spring:message code='pay.head.advMonth'/>" ,editable : false },
+                                     { dataField:"trNo" ,headerText:"<spring:message code='pay.head.TRNo'/>" ,editable : false },
+                                     { dataField:"orAmt" ,headerText:"<spring:message code='pay.head.ORTotal'/>" ,editable : false , dataType : "numeric", formatString : "#,##0.#"}
+                                     /* { dataField:"salesOrdNo" ,headerText:"<spring:message code='pay.head.orderNo'/>" ,editable : false },
+                                     { dataField:"appTypeName" ,headerText:"<spring:message code='pay.head.appType'/>" ,editable : false },
+                                     { dataField:"productDesc" ,headerText:"<spring:message code='pay.head.product'/>" ,editable : false },
+                                     { dataField:"custName" ,headerText:"<spring:message code='pay.head.customer'/>" ,editable : false },
+                                     { dataField:"custIc" ,headerText:"<spring:message code='pay.head.ICCONo'/>" ,editable : false },
+                                     { dataField:"virtlAccNo" ,headerText:"<spring:message code='pay.head.VANo'/>" ,editable : false },
+                                     { dataField:"clctrBrnchName" ,headerText:"<spring:message code='pay.head.branch'/>" ,editable : false },
+                                     { dataField:"keyinUserName" ,headerText:"<spring:message code='pay.head.userName'/>" ,editable : false },
+                                     { dataField:"salesOrdId" ,headerText:"<spring:message code='pay.head.salesOrdId'/>" ,editable : false, visible : true} */
+
+                           ];
+     //그리드 속성 설정
+    var paymentGridPros = {
+
+            usePaging           : true,         //페이징 사용
+            pageRowCount        : 10,           //한 화면에 출력되는 행 개수 20(기본값:20)
+            fixedColumnCount    : 1,
+            showStateColumn     : true,
+            displayTreeOpen     : false,
+  //          selectionMode       : "singleRow",  //"multipleCells",
+            headerHeight        : 30,
+            useGroupingPanel    : false,        //그룹핑 패널 사용
+            skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
+            wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
+            showRowNumColumn    : true
+    };
+
+    posPaymentDetailGridID = GridCommon.createAUIGrid("#payment_detail_grid_wrap", posPaymentColumnLayout,'',paymentGridPros);  // address list
+}
 
 //TODO 미개발 message
 function fn_underDevelop(){
@@ -779,7 +834,7 @@ function fn_getPosListAjax(){
 
 }
 
-/*************   Repoort *************/
+/*************   Report *************/
 
 function fn_posReceipt(){
 
@@ -1021,7 +1076,7 @@ function fn_insTransactionLog(posNo, posTypeId){
 <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     </c:if>
-    <li><p class="btn_blue2 big"><a id="_headerSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
+ <%--    <li><p class="btn_blue2 big"><a id="_headerSaveBtn"><spring:message code="sal.btn.save" /></a></p></li> --%>
 </ul>
 <!-- deduction Grid -->
 <div id="_deducGridDiv">
@@ -1034,7 +1089,7 @@ function fn_insTransactionLog(posNo, posTypeId){
 <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     </c:if>
-    <li><p class="btn_blue2 big"><a id="_deducSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
+    <%-- <li><p class="btn_blue2 big"><a id="_deducSaveBtn"><spring:message code="sal.btn.save" /></a></p></li> --%>
 </ul>
 </div>
 <!--item Grid  -->
@@ -1049,7 +1104,22 @@ function fn_insTransactionLog(posNo, posTypeId){
 <ul class="center_btns">
     <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
     </c:if>
-    <li><p class="btn_blue2 big"><a id="_itemSaveBtn"><spring:message code="sal.btn.save" /></a></p></li>
+   <%--  <li><p class="btn_blue2 big"><a id="_itemSaveBtn"><spring:message code="sal.btn.save" /></a></p></li> --%>
+</ul>
+</div>
+<!--payment Grid  -->
+<div id="_paymentDetailGridDiv">
+<aside class="title_line"><!-- title_line start -->
+<h3>Payment Details</h3>
+</aside><!-- title_line end -->
+<article class="grid_wrap"><!-- grid_wrap start -->
+<div id="payment_detail_grid_wrap" style="width:100%; height:300px; margin:0 auto;"></div>
+</article><!-- grid_wrap end -->
+
+<ul class="center_btns">
+    <c:if test="${PAGE_AUTH.funcChange == 'Y'}">
+    </c:if>
+   <%--  <li><p class="btn_blue2 big"><a id="_itemSaveBtn"><spring:message code="sal.btn.save" /></a></p></li> --%>
 </ul>
 </div>
 </section><!-- search_result end -->
