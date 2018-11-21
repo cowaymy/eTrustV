@@ -1239,7 +1239,7 @@
         console.log('fn_loadProductPromotion --> exTrade:'+exTrade);
 
         if(appTypeVal == 67 || appTypeVal == 68){
-            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val()}, '', 'cmbPromotionAexc', 'S', ''); //Common Code
+            doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:appTypeVal,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:$("#srvPacIdAexc").val()}, '', 'cmbPromotionAexc', 'S', 'fn_setDefaultPromotionAexc'); //Common Code
         }
 
         else
@@ -2465,6 +2465,16 @@
             fn_loadProductPromotionAexc($('#cmbAppTypeAexc').val(), STOCK_ID, EMP_CHK, CUST_TYPE_ID, $("#exTradeAexc").val());
             fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(), STOCK_ID, SRV_PAC_ID);
         }
+    }
+
+    function fn_setDefaultPromotionAexc() {
+
+
+        if($('#cmbPromotionAexc option').size() >= 2) {
+            $('#cmbPromotionAexc option:eq(3)').attr('selected', 'selected');
+
+        }
+
     }
 </script>
 
