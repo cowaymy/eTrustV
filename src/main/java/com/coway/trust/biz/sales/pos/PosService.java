@@ -80,4 +80,6 @@ public interface PosService {
 	EgovMap chkMemIdByMemCode(Map<String, Object> params)throws Exception;
 
 	EgovMap chkUserIdByUserName(Map<String, Object> params)throws Exception;
+
+	List<EgovMap> getPosBillingDetailList(Map<String, Object> params)throws Exception;
 }
