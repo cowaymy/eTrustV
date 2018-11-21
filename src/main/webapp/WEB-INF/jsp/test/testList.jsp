@@ -17,7 +17,7 @@ $(document).ready(function() {
 
     //staffClaimGridID = AUIGrid.create("#staffClaim_grid_wrap", staffClaimColumnLayout, staffClaimGridPros);
 
-    $("#newExpStaffClaim").click(fn_NewClaimPop);
+    //$("#newExpStaffClaim").click(fn_NewClaimPop);
 
     doGetComboAndGroup2('/common/selectProductCodeList.do', '', '', 'listProductId', 'S', '');//product 생성
 
