@@ -120,15 +120,28 @@ $(document).ready(function () {
         //Param Set
         var gridObj = AUIGrid.getSelectedItems(webInvoiceGridID);
 
+        var list = AUIGrid.getCheckedRowItems(webInvoiceGridID);
+
+        var clmNo = '';
 
         if(gridObj == null || gridObj.length <= 0 ){
-            Common.alert("* No Value Selected. ");
-            return;
+            if(list == null || list.length < 1) {
+                Common.alert("* No Value Selected. ");
+                return;
+            } else if(list.length > 1) {
+                Common.alert("* Only 1 record can be selected.");
+                return
+            } else {
+                clmNo = list[0].item.clmNo;
+            }
+        } else {
+            clmNo = gridObj[0].item.clmNo;
         }
 
-        var clmNo = gridObj[0].item.clmNo;
         $("#_clmNo").val(clmNo);
         console.log("clmNo : " + $("#_clmNo").val());
+
+        $("#reportDownFileName").val(clmNo);
 
         fn_report();
         //Common.alert('The program is under development.');
