@@ -230,4 +230,6 @@ public interface PosMapper {
 	void insertPayT(Map<String, Object> params);
 
 	int getSeqPay0240T();
+
+	List<EgovMap> getPosBillingDetailList(Map<String, Object> params);
 }
