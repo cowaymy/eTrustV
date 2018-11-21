@@ -413,7 +413,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       		accBillingMap.put("posBillSeq", posBillSeq);  // accbilling.BillID = 0;
       		accBillingMap.put("posBillTypeId", SalesConstants.POS_BILL_TYPE_ID); //accbilling.BillTypeID = 569;
       		accBillingMap.put("posBillSoId", 0); //   accbilling.BillSOID = 0;
-      		accBillingMap.put("posBillMemId", 0); // accbilling.BillMemID = 0;
+      		accBillingMap.put("posBillMemId", posMap.get("salesmanPopId")); // accbilling.BillMemID = 0;
       		accBillingMap.put("posBillAsId", 0);  //accbilling.BillASID = 0;
       		accBillingMap.put("posBillPayTypeId", 0);  //accbilling.BillPayTypeID = 0;
       		accBillingMap.put("docNoPsn", docNoPsn); // accbilling.BillNo = ""; //update later //POS RefNo.
@@ -1363,7 +1363,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     			}
 
     			//10.  ********************************************************************************************************* ACC ORDER VOID INVOICE
-    			Map<String, Object> ordVoidInvMap = new HashMap<String, Object>();
+/*    			Map<String, Object> ordVoidInvMap = new HashMap<String, Object>();
 
     			ordVoidSeq = posMapper.getSeqPay0017D();
 
@@ -1380,9 +1380,9 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     			LOGGER.info("############### 10. POS ACC ORDER VOID INVOICE REVERSAL INSERT PARAM : " + ordVoidInvMap.toString());
     			posMapper.insertAccOrderVoidInv(ordVoidInvMap);
     			LOGGER.info("############### 10. POS ACC ORDER VOID INVOICE REVERSAL INSERT END  ################");
-
+*/
     			//11.  ********************************************************************************************************* ACC ORDER VOID INVOICE SUB
-    			Map<String, Object> ordVoidSubMap = new HashMap<String, Object>();
+/*    			Map<String, Object> ordVoidSubMap = new HashMap<String, Object>();
 
     			ordVoidSubSeq = posMapper.getSeqPay0018D();
 
@@ -1400,7 +1400,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     			LOGGER.info("############### 11. POS ACC ORDER VOID INVOICE SUB REVERSAL INSERT PARAM : " + ordVoidSubMap.toString());
     			posMapper.insertAccOrderVoidInvSub(ordVoidSubMap);
     			LOGGER.info("############### 11. POS ACC ORDER VOID INVOICE SUB REVERSAL INSERT END  ################");
-
+*/
       		}// taxInvMap not null (miscM)
 
 
@@ -1438,24 +1438,24 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       		}
 
       		//Old_POSPayID
-      		LOGGER.info("###################### IS PAYED ?(More Than '0' is Payed )  = " + params.get("rePayId"));
-      		String trxNo = "";
-  			String rorNo = "";
-      		if(Integer.parseInt(String.valueOf(params.get("rePayId"))) > 0){
+      		//LOGGER.info("###################### IS PAYED ?(More Than '0' is Payed )  = " + params.get("rePayId"));
+      		//String trxNo = "";
+  			//String rorNo = "";
+      		//if(Integer.parseInt(String.valueOf(params.get("rePayId"))) > 0){
       			/***************** Params Setting  And Get Doc No ********************/
-      			params.put("docNoId", SalesConstants.POS_DOC_NO_TRX_NO);      			//DOC(23)
-      			trxNo = posMapper.getDocNo(params);  //23
-      			params.put("docNoId", SalesConstants.POS_DOC_ROR_NO);       			//DOC(82)
-      			rorNo = posMapper.getDocNo(params);
+      			//params.put("docNoId", SalesConstants.POS_DOC_NO_TRX_NO);      			//DOC(23)
+      			//trxNo = posMapper.getDocNo(params);  //23
+      			//params.put("docNoId", SalesConstants.POS_DOC_ROR_NO);       			//DOC(82)
+      			//rorNo = posMapper.getDocNo(params);
 
       			//13.  ********************************************************************************************************* Reverse Pay M
       			//Get Pay M Info
-      			EgovMap payInfoMap = null;
-      			int payMseq = 0;
-      			payInfoMap = posMapper.getPayInfoByPayId(params);
-      			Map<String, Object> rePaymMap = new HashMap<String, Object>();
+      			//EgovMap payInfoMap = null;
+      			//int payMseq = 0;
+      			//payInfoMap = posMapper.getPayInfoByPayId(params);
+      			//Map<String, Object> rePaymMap = new HashMap<String, Object>();
 
-      			if(payInfoMap != null){
+      			/*if(payInfoMap != null){
 
 
           			payMseq = posMapper.getSeqPay0064D();
@@ -1475,8 +1475,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
           			rePaymMap.put("updUserId", params.get("userId"));
           			rePaymMap.put("syncCheck", Integer.parseInt(String.valueOf(payInfoMap.get("syncHeck"))));
           			rePaymMap.put("thirdPartyCustId", Integer.parseInt(String.valueOf(payInfoMap.get("custId3party"))));
-          			rePaymMap.put("totAmt", -1*Double.parseDouble(String.valueOf(payInfoMap.get("totAmt"))));
-          			//rePaymMap.put("totAmt", rtnAmt);
+          			//rePaymMap.put("totAmt", -1*Double.parseDouble(String.valueOf(payInfoMap.get("totAmt"))));
+          			rePaymMap.put("totAmt", rtnAmt);
           			rePaymMap.put("matchId", Integer.parseInt(String.valueOf(payInfoMap.get("mtchId"))));
           			rePaymMap.put("crtUserId", params.get("userId"));
           			rePaymMap.put("isAllowRevMulti", Integer.parseInt(String.valueOf(payInfoMap.get("isAllowRevMulti"))));
@@ -1497,10 +1497,10 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
           			posMapper.insertRePayMaster(rePaymMap);
           			LOGGER.info("############### 13. POS Reverse Pay M INSERT END  ################");
 
-      			}
+      			}*/
 
       			//14.  ********************************************************************************************************* Reverse Pay X
-      			params.put("trxId", payInfoMap.get("trxId"));
+      			/*params.put("trxId", payInfoMap.get("trxId"));
 
       			EgovMap getTrxInfoMap = null;
       			getTrxInfoMap = posMapper.getTrxInfo(params);
@@ -1515,18 +1515,18 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
       				rePayxMap.put("trxSeq", payXseq);
       				rePayxMap.put("trxType", SalesConstants.POS_TRX_REVERSE_TYPE); // paytrx.TrxType = 101;
-      				rePayxMap.put("trxAmt", -1*Double.parseDouble(String.valueOf(getTrxInfoMap.get("trxAmt")))); // paytrx.TrxAmount = -1 * paytrx.TrxAmount;
-      				//rePayxMap.put("trxAmt", rtnAmt); // paytrx.TrxAmount = -1 * paytrx.TrxAmount;
+      				//rePayxMap.put("trxAmt", -1*Double.parseDouble(String.valueOf(getTrxInfoMap.get("trxAmt")))); // paytrx.TrxAmount = -1 * paytrx.TrxAmount;
+      				rePayxMap.put("trxAmt", rtnAmt); // paytrx.TrxAmount = -1 * paytrx.TrxAmount;
       				rePayxMap.put("trxMatchNo", getTrxInfoMap.get("trxMtchNo"));
 
       				LOGGER.info("############### 14. POS Reverse Pay X INSERT START  ################");
           			LOGGER.info("############### 14. POS Reverse Pay X INSERT PARAM   : " + rePayxMap.toString());
       				posMapper.insertRePayTrx(rePayxMap);
       				LOGGER.info("############### 14. POS Reverse Pay X INSERT END  ################");
-
+*/
       			    //15.  ********************************************************************************************************* Update Pay Master.trxId
 
-      				updPaymMap.put("payId", payMseq);
+      				/*updPaymMap.put("payId", payMseq);
       				updPaymMap.put("trxId", payXseq);
 
       				LOGGER.info("############### 15. POS Update Pay Master.trxId UPDATE START  ################");
@@ -1534,21 +1534,21 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       				posMapper.updatePayMTrxId(updPaymMap);
       				LOGGER.info("############### 15. POS Update Pay Master.trxId UPDATE END  ################");
       			}
-
+*/
       			/* Pay Detail And AccGLRoute*/
       			//Detail List (Info)
-      			List<EgovMap> rePayDList = null;
-      			rePayDList = posMapper.getPayDetailListByPayId(params);
+      			//List<EgovMap> rePayDList = null;
+      			//rePayDList = posMapper.getPayDetailListByPayId(params);
 
-      			if(rePayDList != null && rePayDList.size() > 0){
+      			//if(rePayDList != null && rePayDList.size() > 0){
 
       			    //LOOP Start
-      				for (int idx = 0; idx < rePayDList.size(); idx++) {
+      				//for (int idx = 0; idx < rePayDList.size(); idx++) {
 
       				//16.  ********************************************************************************************************* Reverse Pay D
-      					EgovMap rePayMap = rePayDList.get(idx);
+      					//EgovMap rePayMap = rePayDList.get(idx);
       					/* Pay D*/
-      					Map<String, Object> paydMap = new HashMap<String, Object>();
+      					/*Map<String, Object> paydMap = new HashMap<String, Object>();
       					int payDseq = posMapper.getSeqPay0065D();
 
       					paydMap.put("payItemId", payDseq);
@@ -1596,10 +1596,10 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
               			LOGGER.info("############### 16 -["+idx+"] POS Reverse Pay D INSERT PARAM   : " + paydMap.toString());
       					posMapper.insertRePayDetail(paydMap);
       					LOGGER.info("############### 16 -["+idx+"] POS Reverse Pay D INSERT END  ################");
-
+*/
       				//17.  ********************************************************************************************************* Reverse AccGLRoute
       					/* AccGlRoute*/
-      					EgovMap accGlRouteMap = null;
+      					/*EgovMap accGlRouteMap = null;
       					Map<String, Object> accReMap = new HashMap<String, Object>();
 
       					params.put("payItmRefItmId", rePayMap.get("payItmId"));
@@ -1639,7 +1639,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
       						LOGGER.info("############### 17 -["+idx+"] POS Reverse AccGLRoute INSERT END  ################");
       					}
 
-      					/****** ADD LOGIC  : INSERT PAY0252T  // ADD BY LEE SH (2018/01/25) ****/
+      					*//****** ADD LOGIC  : INSERT PAY0252T  // ADD BY LEE SH (2018/01/25) ****//*
                     	Map<String, Object> payTMap = new HashMap<String, Object>();
 
                     	payTMap.put("groupSeq", groupSeq);
@@ -1663,8 +1663,8 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 					}
       				//LOOP End
 
-      			}
-      		}// Pay Reverse
+      			}*/
+      		//}// Pay Reverse
 
       	    //18.  ********************************************************************************************************* GI Reverse
 
@@ -1721,7 +1721,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 			//Success
     		EgovMap rtnMap = new EgovMap();
   	      	rtnMap.put("posRefNo", posRefNo);
-  	      	rtnMap.put("posWorNo", rorNo);
+  	      	//rtnMap.put("posWorNo", rorNo);
   			return rtnMap;
 
 	}
@@ -2050,5 +2050,11 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 	public EgovMap chkUserIdByUserName(Map<String, Object> params) throws Exception {
 
 		return posMapper.chkUserIdByUserName(params);
+	}
+
+	@Override
+	public List<EgovMap> getPosBillingDetailList(Map<String, Object> params) throws Exception {
+
+		return posMapper.getPosBillingDetailList(params);
 	}
 }
