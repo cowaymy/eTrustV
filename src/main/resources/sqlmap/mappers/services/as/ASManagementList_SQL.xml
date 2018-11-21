@@ -4103,9 +4103,9 @@
            '1',
            #{AS_ORD_NO},
            SYSDATE,
-           '347',
+           '349',
            SYSDATE,
-           '347',
+           '349',
            TO_DATE(#{AS_SETL_DT},'DD/MM/YYYY'),
            '1'
          )
