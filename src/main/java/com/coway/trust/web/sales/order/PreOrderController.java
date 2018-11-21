@@ -3,6 +3,7 @@
  */
 package com.coway.trust.web.sales.order;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -13,6 +14,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -23,17 +26,25 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
+import com.coway.trust.api.mobile.common.CommonConstants;
+import com.coway.trust.biz.common.FileVO;
+import com.coway.trust.biz.common.type.FileType;
+import com.coway.trust.biz.eAccounting.staffClaim.StaffClaimApplication;
 import com.coway.trust.biz.sales.common.SalesCommonService;
 import com.coway.trust.biz.sales.order.OrderListService;
+import com.coway.trust.biz.sales.order.PreOrderApplication;
 import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderListVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
+import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.util.CommonUtils;
+import com.coway.trust.util.EgovFormBasedFileVo;
 import com.coway.trust.web.sales.SalesConstants;
 import com.crystaldecisions.jakarta.poi.util.StringUtil;
 
@@ -49,8 +60,14 @@ public class PreOrderController {
 
 	private static Logger logger = LoggerFactory.getLogger(PreOrderController.class);
 
+	@Value("${web.resource.upload.file}")
+	private String uploadDir;
+
 	@Resource(name = "preOrderService")
 	private PreOrderService preOrderService;
+
+	@Autowired
+	private PreOrderApplication preOrderApplication;
 
 	@Resource(name = "salesCommonService")
 	private SalesCommonService salesCommonService;
@@ -288,5 +305,28 @@ public class PreOrderController {
 		model.put("toDay", CommonUtils.getFormattedString(SalesConstants.DEFAULT_DATE_FORMAT1));
 
 		return "sales/order/orderRegisterPop";
+	}
+
+	@RequestMapping(value = "/attachFileUpload.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+		logger.debug("params =====================================>>  " + params.toString());
+		logger.debug("request =====================================>>  " + request);
+
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "preOrder", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+
+		logger.debug("list.size : {}", list.size());
+
+		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+		preOrderApplication.insertPreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params);
+
+		params.put("attachFiles", list);
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setData(params);
+
+		return ResponseEntity.ok(message);
 	}
 }

@@ -381,12 +381,12 @@
                 }
 */
 
-                fn_loadPromotionPrice(promoIdVal, stkIdVal);
+                fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId);
 
                 fn_selectPromotionFreeGiftListForList2(promoIdVal);
             }
             else {
-                fn_loadProductPrice(appTypeVal, stkIdVal);
+                fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
             }
         });
         $('#salesmanCd').change(function(event) {
@@ -473,9 +473,9 @@
                 var stkIdVal   = $("#ordProudct").val();
                 var promoIdVal = $("#ordPromo").val();
 
-                fn_loadProductPrice(appTypeVal, stkIdVal);
+                fn_loadProductPrice(appTypeVal, stkIdVal,srvPacId);
                 if(FormUtil.isNotEmpty(promoIdVal)) {
-                    fn_loadPromotionPrice(promoIdVal, stkIdVal);
+                    fn_loadPromotionPrice(promoIdVal, stkIdVal, srvPacId);
                 }
             }
         });
@@ -1053,7 +1053,7 @@
         });
     }
 
-    function fn_loadPromotionPrice(promoId, stkId) {
+    function fn_loadPromotionPrice(promoId, stkId, srvPacId) {
 
         if($('#gstChk').val() == '1') {
             $('#pBtnCal').removeClass("blind");
@@ -1630,7 +1630,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>eKey-in</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="btnPreOrdClose" href="#">CLOSE</a></p></li>
+	<li><p class="btn_blue2"><a id="btnPreOrdClose" href="#">CLOSE | TUTUP</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 

@@ -7,6 +7,7 @@
     var listGiftGridID;
     var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
     var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
+    var selectRowIdx;
 
     $(document).ready(function(){
 
@@ -29,8 +30,8 @@
         $("#nric").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
         $("#sofNo").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
 
-        /* $("#nric").val("990531025365");
-        $("#sofNo").val("A"); */
+        $("#nric").val("990531025365");
+        $("#sofNo").val("A");
 
         fn_setFileEvent();
     });
@@ -454,11 +455,11 @@
                 return false;
             }
 
-/*             if(!fn_validFile()) {
-                //$('#aTabFL').click();
+            if(!fn_validFile()) {
+                $('#aTabFL').click();
                 return false;
             }
-            fn_upload(); */
+
             fn_doSavePreOrder();
         });
         $('#btnCal').click(function() {
@@ -895,6 +896,9 @@
 
     function fn_doSavePreOrder() {
 
+    	fn_upload();//Save attachment first
+
+    	setTimeout(function() { //Timeout 5 sec to get attachment id
         var vAppType    = $('#appType').val();
         var vCustCRCID  = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCId').val() : 0;
         var vCustAccID  = $('#rentPayMode').val() == '132' ? $('#hiddenRentPayBankAccID').val() : 0;
@@ -909,10 +913,10 @@
             appTypeId            : vAppType,
             srvPacId             : $('#srvPacId').val(),
 //            instPriod            : $('#installDur').val().trim(),
-            custId               : $('#hiddenCustId').val(),
+            custId                 : $('#hiddenCustId').val(),
             empChk               : 0,
-            gstChk               : $('#gstChk').val(),
-//          atchFileGrpId        :
+            gstChk                 : $('#gstChk').val(),
+            atchFileGrpId        : $('#hiddenAtchFileGrpId').val(),
             custCntcId           : $('#hiddenCustCntcId').val(),
             keyinBrnchId         : $('#keyinBrnchId').val(),
             instAddId            : $('#hiddenCustAddId').val(),
@@ -955,6 +959,7 @@
             custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
             custBillCustCareCntId: $("#hiddenBPCareId").val()
         };
+        console.log(orderVO);
         Common.ajax("POST", "/sales/order/registerPreOrder.do", orderVO, function(result) {
             Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdRegPop);
         },
@@ -966,6 +971,8 @@
                 console.log(e);
             }
         });
+
+    	},5000);
     }
 
     function fn_closePreOrdRegPop() {
@@ -1537,6 +1544,23 @@
     function encryptIc(nric){
     	$('#nric').attr("placeholder", nric.substr(0).replace(/[\S]/g,"*"));
     	//$('#nric').val(nric.substr(0).replace(/[\S]/g,"*"));
+    }
+
+    function fn_upload(){
+        var formData = new FormData();
+        var atchFileGrpId = 0;
+
+        $.each(myFileCaches, function(n, v) {
+            console.log("n : " + n + " v.file : " + v.file);
+            formData.append(n, v.file);
+        });
+
+        Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
+            if(result != 0){
+                atchFileGrpId= result.data.fileGroupKey;
+                $('#hiddenAtchFileGrpId').val(atchFileGrpId);
+            }
+        });
     }
 </script>
 
@@ -2425,7 +2449,7 @@
 </aside><!-- title_line end -->
 
 
-<!-- <table class="type1">table start
+<table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:350px" />
@@ -2444,8 +2468,9 @@
     <th scope="row">Declaration letter/Others form</th>
     <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="otherFile" accept="image/*"/></div></td>
 </tr>
+<input id="hiddenAtchFileGrpId" name="hiddenAtchFileGrpId"   type="hidden"/>
 </tbody>
-</table> -->
+</table>
 
 </article><!-- tap_area end -->
 
