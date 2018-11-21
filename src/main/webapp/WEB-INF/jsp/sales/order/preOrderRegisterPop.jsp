@@ -30,8 +30,8 @@
         $("#nric").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
         $("#sofNo").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
 
-        $("#nric").val("990531025365");
-        $("#sofNo").val("A");
+        /* $("#nric").val("990531025365");
+        $("#sofNo").val("A"); */
 
         fn_setFileEvent();
     });
