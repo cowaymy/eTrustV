@@ -92,12 +92,12 @@ public class DailyCollectionController {
             		"username","description","payitemamt","payitemremark","fpayitemccno","paymode","trNo","refNo","crcmode",
             		"crctype","payitemccholdername","payitemccexpirydate","refdate","keyinby","issuedbank","deptcode","orderstatus",
             		"custvano","bankChgAmt","advancemth","runningno","cardtype","reconStatus","rclNo","crcStatementNo","crcStatus",
-            		"crcStatementRemark","custcategory","custtype"};
+            		"crcStatementRemark","custcategory","custtype","transId"};
 
             titles = new String[] {"RECEIPTNO","ORDERNO","TRX_DATE","NAME","BANK_ACC","DEBT_CODE","BRANCHCODE","PAYITEMAPPVNO","PAYITEMCHQNO","USERNAME",
             		"DESCRIPTION","PAYITEMAMT","PAYITEMREMARK","FPAYITEMCCNO","PAYMODE","TR_NO","REF_NO","CRCMODE","CRCTYPE","PAYITEMCCHOLDERNAME",
             		"PAYITEMCCEXPIRYDATE","REFDATE","KEYINBY","ISSUEDBANK","DEPTCODE","ORDERSTATUS","CUSTVANO","BANK_CHG_AMT","ADVANCEMTH",
-            		"RUNNINGNO","CARDTYPE","RECON_STATUS","RCL_NO","CRC_STATEMENT_NO","CRC_STATUS","CRC_STATEMENT_REMARK","CustCategory","CustType"};
+            		"RUNNINGNO","CARDTYPE","RECON_STATUS","RCL_NO","CRC_STATEMENT_NO","CRC_STATUS","CRC_STATEMENT_REMARK","CustCategory","CustType","TRANS_ID"};
 
 
 			downloadHandler = getExcelDownloadHandler(response, "DailyCollectionRawData.xlsx", columns, titles);

@@ -325,7 +325,8 @@
                 DDD1.CODE_NAME AS CustCategory  ,
                 DDD2.CODE_NAME AS CustType  ,
                 NVL(B.BATCH_PAY_ID, 0) AS BATCH_PAY_ID  ,
-                NVL(mbb1.MEM_CODE, ' ') AS PAYMENTCOLLECTOR
+                NVL(mbb1.MEM_CODE, ' ') AS PAYMENTCOLLECTOR,
+                GP.BANK_STATE_MAPPING_ID AS TRANS_ID
             FROM
                 PAY0064D B
                 JOIN PAY0065D A   ON A.PAY_ID = B.PAY_ID
@@ -420,7 +421,8 @@
                 DDD1.CODE_NAME CUSTCATEGORY  ,
                 DDD2.CODE_NAME CUST_TYPE  ,
                 NVL(B.BATCH_PAY_ID, 0) BATCH_PAY_ID  ,
-                NVL(mbb1.MEM_CODE, ' ') PAYMENTCOLLECTOR
+                NVL(mbb1.MEM_CODE, ' ') PAYMENTCOLLECTOR,
+                GP.BANK_STATE_MAPPING_ID AS TRANS_ID
             FROM
                 PAY0064D B
                 JOIN PAY0065D A   ON A.PAY_ID = B.PAY_ID
@@ -511,7 +513,8 @@
             ' ' CUSTCATEGORY  ,
             ' ' CUST_TYPE  ,
             NVL(B.BATCH_PAY_ID, 0) BATCH_PAY_ID  ,
-            NVL(mbb1.MEM_CODE, ' ') PAYMENTCOLLECTOR
+            NVL(mbb1.MEM_CODE, ' ') PAYMENTCOLLECTOR,
+            GP.BANK_STATE_MAPPING_ID AS TRANS_ID
         FROM
             PAY0064D B
             JOIN PAY0065D A   ON A.PAY_ID = B.PAY_ID
