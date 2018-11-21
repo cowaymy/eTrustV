@@ -639,4 +639,19 @@ public class PosController {
 		idMap = posService.chkUserIdByUserName(params);
 		return ResponseEntity.ok(idMap);
 	}
+
+	@RequestMapping(value = "/selectPosBillingList")
+	public ResponseEntity<List<EgovMap>> getPosBillingDetailList(@RequestParam Map<String, Object> params) throws Exception{
+
+		List<EgovMap> detailList = null;
+
+		LOGGER.info("################################## detail Grid PARAM : " + params.toString());
+
+		detailList = posService.getPosBillingDetailList(params);
+
+		return ResponseEntity.ok(detailList);
+	}
+
+
+
 }
