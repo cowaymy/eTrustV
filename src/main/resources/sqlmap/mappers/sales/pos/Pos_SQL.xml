@@ -3204,4 +3204,83 @@
     										NULL
 										)
      </insert>
+
+        <select id="getPosBillingDetailList"  parameterType="Map" resultType="egovMap">
+          SELECT t0.TRX_ID,
+          t0.TRX_DT,
+          t0.TRX_AMT,
+          t1.PAY_ID,
+          t1.OR_NO,
+          t1.TR_NO,
+          t1.PAY_DATA AS PAY_DT,
+          t1.UPD_DT AS LAST_UPD_DT,
+          t12.CODE_ID AS PAY_TYPE_ID,
+          t12.CODE_NAME AS PAY_TYPE_NAME,
+          t9.USER_ID AS LAST_UPD_USER_ID,
+          t9.USER_NAME AS LAST_UPD_USER_NAME,
+          t2.SALES_ORD_ID,
+          t2.SALES_ORD_NO,
+          t1.TOT_AMT AS OR_AMT,
+          t2.CUST_PO_NO AS PO_NO,
+          t3.BRNCH_ID AS CLCTR_BRNCH_ID,
+          t3.CODE AS CLCTR_BRNCH_CODE,
+          t3.NAME AS CLCTR_BRNCH_NAME,
+          t4.CUST_ID,
+          t4.NAME AS CUST_NAME,
+          t4.NRIC AS CUST_IC,
+          t11.CODE_ID AS CUST_TYPE_ID,
+          t11.CODE_NAME AS CUST_TYPE_NAME,
+          t10.CODE_ID AS PRODUCT_CTGRY_ID,
+          t10.CODE_NAME AS PRODUCT_CTGRY_NAME,
+          t6.STK_ID AS PRODUCT_ID,
+          t6.STK_CODE AS PRODUCT_CODE,
+          t6.STK_DESC AS PRODUCT_DESC,
+          t7.USER_ID AS KEYIN_USER_ID,
+          t7.USER_NAME AS KEYIN_USER_NAME,
+          NVL (t8.CODE_ID, 0) AS APP_TYPE_ID,
+          NVL (t8.CODE_NAME, '') AS APP_TYPE_NAME,
+          NVL (t13.FULL_NAME, '') AS CLCTR_NAME,
+          NVL (t13.MEM_CODE, '') AS CLCTR_CODE,
+          t14.BRNCH_ID AS KEYIN_BRNCH_ID,
+          t14.CODE AS KEYIN_BRNCH_CODE,
+          t14.NAME AS KEYIN_BRNCH_NAME,
+          t15.ACC_ID AS DEBTOR_ACC_ID,
+          t15.ACC_CODE AS DEBTOR_ACC_CODE,
+          t15.ACC_DESC AS DEBTOR_ACC_DESC,
+          t16.MEM_ID AS SALES_MEM_ID,
+          t16.MEM_CODE AS SALES_MEM_CODE,
+          t16.FULL_NAME AS SALES_MEM_NAME,
+          t4.CUST_VA_NO AS VIRTL_ACC_NO,
+          '' AS HP_CODE,
+          '' AS HP_NAME,
+          t17.BILL_MEM_ID AS HP_ID,
+          NVL (t1.COLL_MEM_ID, 0) AS CLCTR_ID,
+          NVL (t1.ALLOW_COMM, 0) AS ALLOW_COMM,
+          NVL (t1.ADV_MONTH, 0) AS ADV_MONTH,
+          NVL (t1.TR_ISSU_DT, TO_DATE ('1900-01-01', 'YYYY-MM-DD'))
+             AS TR_ISSU_DT,
+          NVL (t1.BATCH_PAY_ID, 0) AS BATCH_PAY_ID
+     FROM PAY0069D t0
+          LEFT JOIN PAY0064D t1 ON t0.TRX_ID = t1.TRX_ID
+          LEFT JOIN PAY0007D t17 ON t1.BILL_ID = t17.BILL_ID
+          LEFT JOIN SAL0001D t2 ON t2.SALES_ORD_ID = t17.BILL_SO_ID
+          LEFT JOIN SYS0005M t3 ON t1.BRNCH_ID = t3.BRNCH_ID
+          LEFT JOIN SAL0029D t4 ON t2.CUST_ID = t4.CUST_ID
+          LEFT JOIN SAL0002D t5 ON t2.SALES_ORD_ID = t5.SALES_ORD_ID
+          LEFT JOIN SYS0026M t6 ON t5.ITM_STK_ID = t6.STK_ID
+          LEFT JOIN SYS0047M t7 ON t1.CRT_USER_ID = t7.USER_ID
+          LEFT JOIN SYS0013M t8 ON t2.APP_TYPE_ID = t8.CODE_ID
+          LEFT JOIN SYS0047M t9 ON t1.UPD_USER_ID = t9.USER_ID
+          LEFT JOIN SYS0013M t10 ON t6.STK_CTGRY_ID = t10.CODE_ID
+          LEFT JOIN SYS0013M t11 ON t4.TYPE_ID = t11.CODE_ID
+          LEFT JOIN SYS0013M t12 ON t1.TYPE_ID = t12.CODE_ID
+          LEFT JOIN ORG0001D t13 ON t13.MEM_ID = t1.COLL_MEM_ID
+          LEFT JOIN SYS0005M t14 ON t14.BRNCH_ID = t7.USER_BRNCH_ID
+          LEFT JOIN SYS0001M t15 ON t15.ACC_ID = t1.BANK_ACC_ID
+          LEFT JOIN ORG0001D t16 ON t16.MEM_ID = t2.MEM_ID
+    WHERE t1.BILL_ID > 0 AND t1.SALES_ORD_ID = 0 AND t1.TYPE_ID NOT IN (577)
+            and  t17.BILL_NO = #{billNo}
+
+    </select>
+
 </mapper>
