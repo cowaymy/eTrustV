@@ -425,8 +425,8 @@ public class ECashDeductionController {
         					claimMap.put("type", 1);
         					this.createECashGrpDeductionFileMBB(claimMap);
 
-        					/*claimMap.put("type", 2);
-                            this.createECashGrpDeductionFileMBB(claimMap);*/
+        					claimMap.put("type", 2);
+                            this.createECashGrpDeductionFileMBB(claimMap);
         				}
         			}
                 }
@@ -460,8 +460,8 @@ public class ECashDeductionController {
         					claimMap.put("type", 1);
         					this.createECashDeductionFileMBB(claimMap);
 
-        					/*claimMap.put("type", 2);
-        					this.createECashDeductionFileMBB(claimMap);*/
+        					claimMap.put("type", 2);
+        					this.createECashDeductionFileMBB(claimMap);
         				}
         			}
                 }
