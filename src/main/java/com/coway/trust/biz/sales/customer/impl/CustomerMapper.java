@@ -601,4 +601,6 @@ public interface CustomerMapper {
 
 	int selectCustomerOldId(Map<String, Object> params);
 
+	EgovMap selectPairOrdId(Map<String, Object> params);
+
 }

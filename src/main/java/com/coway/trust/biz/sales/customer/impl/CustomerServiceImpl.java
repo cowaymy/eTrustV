@@ -846,4 +846,10 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
 		return customerMapper.selectCustomerOldId(params);
 	}
 
+	@Override
+	public EgovMap selectPairOrdId(Map<String, Object> params) {
+
+		return customerMapper.selectPairOrdId(params);
+	}
+
 }

@@ -533,4 +533,6 @@ public interface CustomerService {
 
 	int selectCustomerOldId(Map<String, Object> params);
 
+	EgovMap selectPairOrdId(Map<String, Object> params);
+
 }

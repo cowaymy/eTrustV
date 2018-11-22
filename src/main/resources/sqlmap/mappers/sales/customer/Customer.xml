@@ -2502,4 +2502,20 @@
 
 
     </select>
+
+        <select id="selectPairOrdId" parameterType="Map" resultType="egovMap">
+
+        SELECT A.SALES_ORD_ID,
+                   A.SALES_ORD_NO
+
+
+                   FROM SAL0001D A
+                   WHERE 1=1
+
+                      <if test="ordId != null and ordId !=''">
+                        AND A.SALES_ORD_ID_OLD = #{ordId}
+                      </if>
+
+
+    </select>
 </mapper>

@@ -26,11 +26,14 @@ import com.coway.trust.biz.sales.customer.CustomerBVO;
 import com.coway.trust.biz.sales.customer.CustomerCVO;
 import com.coway.trust.biz.sales.customer.CustomerService;
 import com.coway.trust.biz.sales.customer.CustomerVO;
+import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.cmmn.model.GridDataSet;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.web.sales.SalesConstants;
+import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -42,6 +45,9 @@ public class CustomerController {
 
 	@Resource(name = "customerService")
 	private CustomerService customerService;
+
+	@Resource(name = "orderRegisterMapper")
+	private OrderRegisterMapper orderRegisterMapper;
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
@@ -1837,6 +1843,7 @@ public class CustomerController {
 		EgovMap agingmonth = null;
 		//EgovMap icare = null;
 		EgovMap rentInst = null;
+		EgovMap pairOrdId = null;
 		String valid = null;
 		BigDecimal valiOutStanding;
 		BigDecimal rentInstNo;
@@ -1851,7 +1858,12 @@ public class CustomerController {
 
 	    //String icare = (String)basicinfo.get("iCare");
 		if(oldId > 0){
-			icare = "Yes";
+			pairOrdId = customerService.selectPairOrdId(params);
+			int salesOrdId = Integer.parseInt(String.valueOf(pairOrdId.get("salesOrdId")));
+			EgovMap resultMap = this.selectSalesOrderM(salesOrdId, 0);
+			String salesOrdNo = resultMap.get("salesOrdNo").toString();
+
+			icare = "Yes (Order No: " + salesOrdNo + ")";
 		}
 		else{
 			icare = "No";
@@ -1896,5 +1908,16 @@ public class CustomerController {
 		model.addAttribute("icare", icare);
 
 		return "sales/order/customerCheckingViewPop";
+	}
+
+	private EgovMap selectSalesOrderM(int ordId, int appTypeId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("salesOrdId", ordId);
+		params.put("appTypeId", appTypeId);
+
+		EgovMap result = orderRegisterMapper.selectSalesOrderM(params);
+
+		return result;
 	}
 }
