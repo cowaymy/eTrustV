@@ -406,7 +406,7 @@
                 FROM  PAY0288D EXTENT1
                 WHERE Extent1.FILE_BATCH_ID = #{fileBatchId}
                  ORDER BY Extent1.FILE_BATCH_GRP_ID ) Z
-        WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}) ORDER BY FILE_ITM_ACC_NO ASC)
+        WHERE ROWNUM <![CDATA[<=]]> ( #{pageNo} * #{rowCount}))
         WHERE RNUM > ((#{pageNo} - 1) * #{rowCount})
     </select>
 
