@@ -124,6 +124,15 @@ public class SalesPlanManagementController {
 		return ResponseEntity.ok(selectScmStockCode);
 	}
 	
+	@RequestMapping(value = "/selectScmStockCodeForMulti.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScmStockCodeForMulti(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectScmStockCodeForMulti : {}", params.toString());
+		
+		List<EgovMap> selectScmStockCodeForMulti	= scmCommonService.selectScmStockCodeForMulti(params);
+		return ResponseEntity.ok(selectScmStockCodeForMulti);
+	}
+	
 	//	search header
 	@RequestMapping(value = "/selectSalesPlanHeader.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectSalesPlanHeader(@RequestBody Map<String, Object> params) {
