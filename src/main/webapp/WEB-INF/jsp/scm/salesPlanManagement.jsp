@@ -435,6 +435,7 @@ function fnSalesPlanHeader() {
 							startCnt	= startCnt + 1;
 						}
 						if ( parseInt(gWeekTh) > startCnt ) {
+							//	수립주차 기준 당월의 과거 주차
 							console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							if ( 2 > startCnt.toString().length ) {
 								strWeekTh	= "W0";
@@ -452,6 +453,7 @@ function fnSalesPlanHeader() {
 							});
 							iLoopCnt++;
 						} else if ( parseInt(gWeekTh) == startCnt ) {
+							//	수립주차 기준 당월의 바로 전 주차
 							console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							groupM0.children.push({
@@ -464,16 +466,31 @@ function fnSalesPlanHeader() {
 							});
 							iLoopCnt++;
 						} else {
+							//	수립주차 기준 당월의 미래 주차
 							console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
-							groupM0.children.push({
-								dataField : "w" + intToStrFieldCnt,	//	w00
-								headerText : result.selectSalesPlanHeader[0][fieldStr],
-								dataType : "numeric",
-								formatString : "#,##0",
-								//editable : false,
-								style : "my-column"
-							});
+							var planStusId	= result.selectSalesPlanInfo[0].planStusId;	console.log("planStusId : " + planStusId);
+							if ( "5" == planStusId ) {
+								//	Confirm이면 읽기전용
+								groupM0.children.push({
+									dataField : "w" + intToStrFieldCnt,	//	w00
+									headerText : result.selectSalesPlanHeader[0][fieldStr],
+									dataType : "numeric",
+									formatString : "#,##0",
+									editable : false,
+									style : "my-column"
+								});
+							} else {
+								//	Unconfirm이면 편집가능
+								groupM0.children.push({
+									dataField : "w" + intToStrFieldCnt,	//	w00
+									headerText : result.selectSalesPlanHeader[0][fieldStr],
+									dataType : "numeric",
+									formatString : "#,##0",
+									editable : true,
+									style : "my-column"
+								});
+							}
 							iLoopCnt++;
 						}
 						iLoopDataFieldCnt++;
@@ -525,28 +542,29 @@ function fnSalesPlanHeader() {
 						} else {
 							console.log("6. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
-							groupM1.children.push({
-								dataField : "w" + intToStrFieldCnt,	//	w00
-								headerText : result.selectSalesPlanHeader[0][fieldStr],
-								dataType : "numeric",
-								formatString : "#,##0",
-								//editable : false,
-								style : "my-column"
-							});
+							var planStusId	= result.selectSalesPlanInfo[0].planStusId;	console.log("planStusId : " + planStusId);
+							if ( "5" == planStusId ) {
+								groupM1.children.push({
+									dataField : "w" + intToStrFieldCnt,	//	w00
+									headerText : result.selectSalesPlanHeader[0][fieldStr],
+									dataType : "numeric",
+									formatString : "#,##0",
+									editable : false,
+									style : "my-column"
+								});
+							} else {
+								groupM1.children.push({
+									dataField : "w" + intToStrFieldCnt,	//	w00
+									headerText : result.selectSalesPlanHeader[0][fieldStr],
+									dataType : "numeric",
+									formatString : "#,##0",
+									editable : true,
+									style : "my-column"
+								});
+							}
 							iLoopCnt++;
 						}
 						startCnt	= startCnt + 1;
-						/*
-						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM1.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSalesPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							style : "my-column"
-						});
-						iLoopCnt ++;
-						*/
 						iLoopDataFieldCnt++;
 					}
 					dynamicLayout.push(groupM1);
@@ -565,13 +583,26 @@ function fnSalesPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM2.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSalesPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							style : "my-column"
-						});
+						var planStusId	= result.selectSalesPlanInfo[0].planStusId;	console.log("planStusId : " + planStusId);
+						if ( "5" == planStusId ) {
+							groupM2.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSalesPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								editable : false,
+								style : "my-column"
+							});
+						} else {
+							groupM2.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSalesPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								editable : true,
+								style : "my-column"
+							});
+						}
 						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					};
@@ -591,13 +622,26 @@ function fnSalesPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM3.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSalesPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							style : "my-column"
-						});
+						var planStusId	= result.selectSalesPlanInfo[0].planStusId;	console.log("planStusId : " + planStusId);
+						if ( "5" == planStusId ) {
+							groupM3.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSalesPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								editable : false,
+								style : "my-column"
+							});
+						} else {
+							groupM3.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSalesPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								editable : true,
+								style : "my-column"
+							});
+						}
 						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					}
@@ -617,13 +661,26 @@ function fnSalesPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM4.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSalesPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							style : "my-column"
-						});
+						var planStusId	= result.selectSalesPlanInfo[0].planStusId;	console.log("planStusId : " + planStusId);
+						if ( "5" == planStusId ) {
+							groupM4.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSalesPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								editable : false,
+								style : "my-column"
+							});
+						} else {
+							groupM4.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSalesPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								formatString : "#,##0",
+								editable : true,
+								style : "my-column"
+							});
+						}
 						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					}

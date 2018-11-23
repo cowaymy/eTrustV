@@ -473,6 +473,7 @@ function fnSupplyPlanHeader() {
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
 						if ( iLoopDataFieldCnt > leadTm ) {
+							//	리드타임 이내
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,	//	w00
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
@@ -491,6 +492,7 @@ function fnSupplyPlanHeader() {
 								}
 							});
 						} else {
+							//	리드타임 이후
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,	//	w00
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
@@ -520,6 +522,7 @@ function fnSupplyPlanHeader() {
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
 						if ( iLoopDataFieldCnt > leadTm ) {
+							//	리드타임 이내
 							groupM1.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
@@ -538,6 +541,7 @@ function fnSupplyPlanHeader() {
 								}
 							});
 						} else {
+							//	리드타임 이후
 							groupM1.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
@@ -567,6 +571,7 @@ function fnSupplyPlanHeader() {
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
 						if ( iLoopDataFieldCnt > leadTm ) {
+							//	리드타임 이내
 							groupM2.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
@@ -585,6 +590,7 @@ function fnSupplyPlanHeader() {
 								}
 							});
 						} else {
+							//	리드타임 이후
 							groupM2.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
@@ -614,6 +620,7 @@ function fnSupplyPlanHeader() {
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
 						if ( iLoopDataFieldCnt > leadTm ) {
+							//	리드타임 이내
 							groupM3.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
@@ -632,6 +639,7 @@ function fnSupplyPlanHeader() {
 								}
 							});
 						} else {
+							//	리드타임 이후
 							groupM3.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
@@ -661,6 +669,7 @@ function fnSupplyPlanHeader() {
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
 						if ( iLoopDataFieldCnt > leadTm ) {
+							//	리드타임 이내
 							groupM4.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
@@ -679,6 +688,7 @@ function fnSupplyPlanHeader() {
 								}
 							});
 						} else {
+							//	리드타임 이후
 							groupM4.children.push({
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
@@ -700,6 +710,13 @@ function fnSupplyPlanHeader() {
 					AUIGrid.bind(myGridID, "cellEditBegin", function(event) {
 						if ( "3" != event.item.psiId ) {
 							return	false;
+						} else {
+							console.log("planStusId : " + event.item.planStusId);
+							if ( "5" == event.item.planStusId ) {
+								return	false;
+							} else {
+								return	true;
+							}
 						}
 					});
 					

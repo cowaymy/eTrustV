@@ -233,7 +233,7 @@ var poCreateListLayout	=
 			formatString : "#,##0",
 			editable : false,
 			//style : "my-columnEditable"
-			style : "my-columnLeft1"
+			style : "my-columnRight1"
 		}, {
 			dataField : "moq",
 			headerText : "Moq",
@@ -259,6 +259,7 @@ var poCreateListLayout	=
 			dataField : "curr",
 			headerText : "Currency",
 			editable : false,
+			visible : false,
 			style : "my-columnCenter1"
 		}, {
 			dataField : "currName",
@@ -329,7 +330,7 @@ var poCreatedListFooterLayout	=
 			labelText : "SUM:",
 			positionField : "fobPrice"
 		}, {
-			dataField : "fobAmount",
+			dataField : "fobAmt",
 			positionField : "fobAmount",
 			operation : "SUM",
 			formatString : "#,##0.0000",
