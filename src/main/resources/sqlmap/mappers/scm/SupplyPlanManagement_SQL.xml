@@ -230,7 +230,12 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_O
 		#{item}
 		</foreach>
 	</if>
-   AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
+ 	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
+   AND D.STK_CODE IN
+		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
  ORDER BY D.STK_TYPE_ID, B.STOCK_CODE, B.PSI_ID
 </select>
 

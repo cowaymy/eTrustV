@@ -108,7 +108,12 @@ SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
 		#{item}
 		</foreach>
 	</if>
-   AND ((A.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (C.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
+ 	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
+   AND C.STK_CODE IN
+		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
  ORDER BY A.STOCK_CODE
 </select>
 <select id="selectPoCreatedList" parameterType="Map" resultType="egovMap">

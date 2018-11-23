@@ -82,6 +82,12 @@ SELECT A.STK_ID AS STOCK_ID
        #{item}
 		</foreach>
 	</if>
+ 	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
+   AND A.STK_CODE IN
+		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
  ORDER BY A.STK_CTGRY_ID, A.STK_TYPE_ID, A.STK_DESC
 </select>
 
