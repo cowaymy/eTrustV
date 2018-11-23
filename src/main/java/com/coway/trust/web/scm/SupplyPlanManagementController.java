@@ -74,6 +74,9 @@ public class SupplyPlanManagementController {
 		
 		String headFrom	= "";
 		String headTo	= "";
+		//int planYear	= 0;
+		//int planWeek	= 0;
+		//String cdc	= "";
 		
 		Map<String, Object> map	= new HashMap<>();
 		Map<String, Object> param1	= new HashMap<>();
@@ -83,10 +86,19 @@ public class SupplyPlanManagementController {
 		headTo		= selectScmTotalInfo.get(0).get("headTo").toString();
 		param1.put("headFrom", headFrom);
 		param1.put("headTo", headTo);
-		
+		/*
+		planYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("planYear").toString());
+		planWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeek").toString());
+		cdc	= params.get("scmCdcCbBox").toString();
+		param1.put("planYear", planYear);
+		param1.put("planWeek", planWeek);
+		param1.put("cdc", cdc);
+		*/
 		List<EgovMap> selectSupplyPlanHeader	= supplyPlanManagementService.selectSupplyPlanHeader(param1);
+		//List<EgovMap> selectSupplyPlanInfo		= supplyPlanManagementService.selectSupplyPlanInfo(params);
 		
 		map.put("selectScmTotalInfo", selectScmTotalInfo);
+		//map.put("selectSupplyPlanInfo", selectSupplyPlanInfo);
 		map.put("selectSupplyPlanHeader", selectSupplyPlanHeader);
 
 		return ResponseEntity.ok(map);
@@ -113,8 +125,8 @@ public class SupplyPlanManagementController {
 		param1.put("planWeek", planWeek);
 		param1.put("cdc", cdc);
 		
-		List<EgovMap> selectSupplyPlanInfo = supplyPlanManagementService.selectSupplyPlanInfo(param1);
-		List<EgovMap> selectSupplyPlanList = supplyPlanManagementService.selectSupplyPlanList(params);
+		List<EgovMap> selectSupplyPlanInfo	= supplyPlanManagementService.selectSupplyPlanInfo(param1);
+		List<EgovMap> selectSupplyPlanList	= supplyPlanManagementService.selectSupplyPlanList(params);
 
 		map.put("selectSupplyPlanInfo", selectSupplyPlanInfo);
 		map.put("selectSupplyPlanList", selectSupplyPlanList);

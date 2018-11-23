@@ -132,6 +132,9 @@ public class SalesPlanManagementController {
 		
 		String headFrom	= "";
 		String headTo	= "";
+		int planYear	= 0;	int befWeekYear	= 0;
+		int planWeek	= 0;	int befWeekWeek	= 0;
+		String team	= "";
 		
 		Map<String, Object> map	= new HashMap<>();
 		Map<String, Object> param1	= new HashMap<>();
@@ -142,9 +145,23 @@ public class SalesPlanManagementController {
 		param1.put("headFrom", headFrom);
 		param1.put("headTo", headTo);
 		
+		planYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("planYear").toString());
+		planWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeek").toString());
+		befWeekYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekYear").toString());
+		befWeekWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekWeek").toString());
+		team	= params.get("scmTeamCbBox").toString();
+		
+		param1.put("planYear", planYear);
+		param1.put("planWeek", planWeek);
+		param1.put("befWeekYear", befWeekYear);
+		param1.put("befWeekWeek", befWeekWeek);
+		param1.put("team", team);
+		
+		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(param1);
 		List<EgovMap> selectSalesPlanHeader	= salesPlanManagementService.selectSalesPlanHeader(param1);
 		
 		map.put("selectScmTotalInfo", selectScmTotalInfo);
+		map.put("selectSalesPlanInfo", selectSalesPlanInfo);
 		map.put("selectSalesPlanHeader", selectSalesPlanHeader);
 		
 		return	ResponseEntity.ok(map);
