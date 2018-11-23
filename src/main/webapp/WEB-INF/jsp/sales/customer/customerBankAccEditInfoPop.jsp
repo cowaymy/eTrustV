@@ -3,57 +3,58 @@
 <script type="text/javascript">
 
     $(document).ready(function() {
-		
+
     	var selCodeAccType = $("#selCodeAccType").val();
     	var selCodeAccBankId = $("#selCodeAccBankId").val();
-    	
-    	doGetCombo('/common/selectCodeList.do', '20', selCodeAccType, 'bankCmbAccTypeId', 'S', ''); // cmbAccTypeId(Type) 
-    	doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, 'bankCmbAccBankId', 'S', '')//selCodeAccBankId(Issue Bank)
-    	
-    	
+
+    	doGetCombo('/common/selectCodeList.do', '20', selCodeAccType, 'bankCmbAccTypeId', 'S', ''); // cmbAccTypeId(Type)
+    	//doGetCombo('/sales/customer/selectAccBank.do', '', selCodeAccBankId, 'bankCmbAccBankId', 'S', '')//selCodeAccBankId(Issue Bank)
+    	doGetComboCodeId('/sales/customer/selectAccBank.do', {isAllowForDd : '1'}, '', 'bankCmbAccBankId',   'S', ''); //Issue Bank)
+
+
     	$("#_updBtn").click(function(){
-           
+
     		//Account Type
     		if("" == $("#bankCmbAccTypeId").val() || null == $("#bankCmbAccTypeId").val()){
     			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Type'/>");
     			return;
     		}
-    		
+
     		//Issue Bank
     		if("" == $("#bankCmbAccBankId").val() || null == $("#bankCmbAccBankId").val()){
     			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Issue Bank'/>");
                 return;
     		}
-    		
+
     		//Account No. IssueBankId = $("#cmbAccBankId").val() , AccountNo = $("#accountNo").val()
     		if("" == $("#bankAccountNo").val() || null == $("#bankAccountNo").val()){
     			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Number'/>");
     			return;
     		}else{ //not Null or Empty
-    			
+
     			//number check
     			if(FormUtil.checkNum($("#bankAccountNo"))){
     				Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Number'/>");
     				return;
     			}
-    			
+
     			var bankId; //bank Account Id
     			var AccNo; //Account Number
     			var lengResult = true; // true/false
     			var availableResult = false; // true/false
-    			
+
     			// 1.get Params
     			bankId =  $("#bankCmbAccBankId").val();
     			AccNo = $("#bankAccountNo").val();
-    			
+
     			// 2. Account No Validation
     			/* length validation  */
     			lengResult = fn_lengthCheck(bankId, AccNo);
     			if(lengResult == false){
     				Common.alert("<spring:message code='sal.alert.msg.invalidBankAccNum' />");
     				return;
-    			} 
-    			
+    			}
+
     			/* availability validation */
     			availableResult = fn_availabilityCheck(bankId, AccNo);
     			if(availableResult == true){
@@ -61,29 +62,29 @@
                     return;
     			}
     		}
-    		
+
     		//Account Owner
     		if("" == $("#bankCustAccOwner").val() || null == $("#bankCustAccOwner").val()){
     			Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Owner'/>");
                 return;
     		}
-    		
-    		//update 
+
+    		//update
     		 fn_customerBankInfoUpdateAjax();
         });
-    	
+
     	 $("#_delBtn").click(function() {
     	       Common.confirm("<spring:message code='sal.alert.msg.areYouSureWannaDelThisBankAcc' />", fn_deleteBankAjax);
    	     });
 	});
-    
+
     //update Call Ajax
     function fn_customerBankInfoUpdateAjax(){
     	Common.ajax("GET", "/sales/customer/updateCustomerBankInfoAf.do", $("#updForm").serialize(), function(result) {
     		Common.alert("<spring:message code='sal.alert.msg.successfully' />", fn_parentReload);
     	});
     }
-    
+
     // Parent Reload Func
     function fn_parentReload() {
     	fn_selectPstRequestDOListAjax(); //parent Method (Reload)
@@ -93,16 +94,16 @@
         Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
         Common.popupDiv("/sales/customer/updateCustomerBankAccEditInfoPop.do", $('#editForm').serializeJSON(), null , true, '_editDiv4Pop');
     }
-    
+
     //delete
     function fn_deleteBankAjax(){
-        
+
         Common.ajax("GET", "/sales/customer/deleteCustomerBank.do", $("#updForm").serialize(), function(result){
             //result alert and closePage
             Common.alert(<spring:message code='sal.alert.msg.successfully' />, fn_closePage);
         });
     }
-    
+
     //Parent Reload and PageClose Func
     function fn_closePage(){
     	fn_selectPstRequestDOListAjax(); //parent Method (Reload)
@@ -111,14 +112,14 @@
         $("#_selectParam").val('4');
         Common.popupDiv('/sales/customer/updateCustomerBankAccountPop.do', $('#popForm').serializeJSON(), null , true, '_editDiv4');
     }
-    
-    
+
+
     /* ########## length Check Start ##########*/
     function fn_lengthCheck(bankId, AccNo){
-    	
+
     	var valid = true; //result
     	var lengthOfAccNo = AccNo.length;
-    	
+
     	//MAYBANK
     	if(bankId == 21 || bankId == 30){
     		if(lengthOfAccNo != 12){
@@ -128,7 +129,7 @@
     	}
     	//CIMB BANK
     	if(bankId == 3 || bankId == 36){
-    		
+
     		if(lengthOfAccNo != 14 && lengthOfAccNo != 10){
     			valid = false;
     			return valid;
@@ -232,16 +233,16 @@
                 return valid;
             }
         }
-    	
+
     	return valid;
     }
     /*########## length Check End ##########*/
-    
+
     /*########## availability Check Start ##########*/
     function fn_availabilityCheck(bankId, AccNo){
-    	
+
     	var isReject = false; //result
-    	
+
     	//MAYBANK
     	if(bankId == 21 || bankId == 30){
     		if(AccNo.substr(0,1).trim() ==  '4'){
@@ -249,7 +250,7 @@
     			return isReject;
     		}
     	}
-    	
+
     	//CIMB BANK
     	if(bankId == 3 || bankId == 36){
     		if(AccNo.length == 14){
@@ -260,7 +261,7 @@
     			}
     		}
     	}
-    	
+
     	//PUBLIC BANK
     	if(bankId == 6 || bankId == 32){
     		if(AccNo.substr(0,1).trim() == '2' || AccNo.substr(0,1).trim() == '8'){
@@ -268,7 +269,7 @@
                 return isReject;
     		}
     	}
-    	
+
     	//RHB BANK
     	if(bankId == 7 || bankId == 33){
             if(AccNo.substr(0,1).trim() == '7'){
@@ -276,7 +277,7 @@
                 return isReject;
             }
         }
-    	
+
     	//HONG LEONG BANK
     	if(bankId == 5 || bankId == 29){
     		if(AccNo.substr(3,1).trim() == '8' || AccNo.substr(3,1).trim() == '9'){
@@ -287,7 +288,7 @@
     	return isReject;
     }
     /*########## availability Check End ##########*/
-    
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -297,8 +298,8 @@
     <li><p class="btn_blue2"><a href="#" id="_close1" ><spring:message code="sal.btn.close" /></a></p></li>
 </ul>
 </header><!-- pop_header end -->
-<input type="hidden" value="${detailbank.custAccTypeId}" id="selCodeAccType"> 
-<input type="hidden" value="${detailbank.custAccBankId}" id="selCodeAccBankId"> 
+<input type="hidden" value="${detailbank.custAccTypeId}" id="selCodeAccType">
+<input type="hidden" value="${detailbank.custAccBankId}" id="selCodeAccBankId">
 <section class="pop_body"><!-- pop_body start -->
 <form id="updForm"> <!-- Form Start  -->
 <input type="hidden" value="${detailbank.custAccId }" name="bankCustAccId">
@@ -323,7 +324,7 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.accNo" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="Account Number" class="w100p"  value="${detailbank.custAccNo}" maxlength="16" id="bankAccountNo" name="bankCustAccNo"/></td>
+    <td><input type="text" title="" placeholder="Account Number" class="w100p"  readonly value="${detailbank.custAccNo}" maxlength="16" id="bankAccountNo" name="bankCustAccNo"/></td>
     <th scope="row"><spring:message code="sal.text.bankBranch" /></th>
     <td><input type="text" title="" placeholder="Bank Branch" class="w100p" value="${detailbank.custAccBankBrnch}" maxlength="16" name="bankCustAccBankBrnch"/></td>
 </tr>
