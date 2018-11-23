@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+<link href="${pageContext.request.contextPath}/resources/css/select2.min.css" rel="stylesheet">
+<script src ="${pageContext.request.contextPath}/resources/js/select2.min.js" type="text/javascript"></script>
 <style type="text/css">
 /* 칼럼 스타일 전체 재정의 */
 .aui-grid-left-column {
@@ -75,6 +77,8 @@ $(function() {
 	fnScmTeamCbBox();
 	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
+	doGetComboAndGroup2("/scm/selectScmStockCodeForMulti.do", "", "", "scmStockCodeCbBox", "M", "");
+	$(".js-example-basic-multiple").select2();
 });
 
 //	Scm Total Period
@@ -713,11 +717,12 @@ function fnSalesPlanHeader() {
 function fnSearch() {
 	var params	= {
 		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
-		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects")
+		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects"),
+		scmStockCodeCbBox : $("#scmStockCodeCbBox").val()
 	};
 	var team	= $("#scmTeamCbBox").val();
 	var url		= "";
-	console.log("team : " + team + ", ddd : " + $("#scmTeamCbBox").val());
+	//console.log("team : " + team + ", ddd : " + $("#scmTeamCbBox").val());
 	if ( "" == team ) {
 		url	= "/scm/selectSalesPlanListAll.do";
 	} else {
@@ -728,6 +733,7 @@ function fnSearch() {
 	Common.ajax("POST"
 			, url
 			, params
+			//, $("#MainForm").serialize()
 			, function(result) {
 				console.log(result);
 				
@@ -1260,7 +1266,9 @@ $(document).ready(function() {
 						</td>
 						<th scope="row">Material</th>
 						<td>
-							<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
+							<!-- <input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
+							<select class="js-example-basic-multiple" id="select2t1m" name="select2t1m" multiple="multiple"> -->
+							<select class="js-example-basic-multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox" multiple="multiple">
 						</td>
 					</tr>
 				</tbody>

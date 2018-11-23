@@ -1,6 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
-
+<link href="${pageContext.request.contextPath}/resources/css/select2.min.css" rel="stylesheet">
+<script src ="${pageContext.request.contextPath}/resources/js/select2.min.js" type="text/javascript"></script>
 <style type="text/css">
 /* 커스텀 칼럼 스타일 정의 */
 .my-column {
@@ -64,6 +65,8 @@ $(function() {
 	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
 	fnScmStockCbBox();
+	doGetComboAndGroup2("/scm/selectScmStockCodeForMulti.do", "", "", "scmStockCodeCbBox", "M", "");
+	$(".js-example-basic-multiple").select2();
 });
 
 //	category
@@ -117,8 +120,9 @@ function fnSearch() {
 	
 	//	search parameters
 	var params	= {
-			scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects"),
-			scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects")
+		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
+		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects"),
+		scmStockCodeCbBox : $("#scmStockCodeCbBox").val()
 	};
 	
 	params	= $.extend($("#MainForm").serializeJSON(), params);
@@ -734,19 +738,20 @@ $(document).ready(function() {
 				</colgroup>
 				<tbody>
 					<tr>
-						<th scope="row">Stock Category</th>
-						<td>
-							<select multiple="multiple" id="scmStockCategoryCbBox" name="scmStockCategoryCbBox" class="w100p">
-							</select>
-						</td>
 						<th scope="row">Stock Type</th>
 						<td>
 							<select multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox" class="w100p">
 							</select>
 						</td>
-						<th scope="row">Stock</th>
+						<th scope="row">Stock Category</th>
 						<td>
-							<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}">
+							<select multiple="multiple" id="scmStockCategoryCbBox" name="scmStockCategoryCbBox" class="w100p">
+							</select>
+						</td>
+						<th scope="row">Material</th>
+						<td>
+							<!-- <input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}"> -->
+							<select class="js-example-basic-multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox" multiple="multiple">
 						</td>
 					</tr>
 				</tbody>

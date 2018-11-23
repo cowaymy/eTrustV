@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+<link href="${pageContext.request.contextPath}/resources/css/select2.min.css" rel="stylesheet">
+<script src ="${pageContext.request.contextPath}/resources/js/select2.min.js" type="text/javascript"></script>
 <style type="text/css">
 /* 칼럼 스타일 전체 재정의 */
 .aui-grid-right-column {
@@ -103,6 +105,8 @@ $(function() {
 	fnScmCdcCbBox();
 	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
+	doGetComboAndGroup2("/scm/selectScmStockCodeForMulti.do", "", "", "scmStockCodeCbBox", "M", "");
+	$(".js-example-basic-multiple").select2();
 });
 
 //	year
@@ -574,7 +578,8 @@ function fnSearch() {
 	
 	var params	= {
 		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
-		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects")
+		scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects"),
+		scmStockCodeCbBox : $("#scmStockCodeCbBox").val()
 	};
 	
 	params	= $.extend($("#MainForm").serializeJSON(), params);
@@ -1216,9 +1221,10 @@ $(document).ready(function() {
 				<td>
 					<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
 				</td>
-				<th scope="row">Stock</th>
+				<th scope="row">Material</th>
 				<td>
-					<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
+					<!-- <input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}"> -->
+					<select class="js-example-basic-multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox" multiple="multiple">
 				</td>
 			</tr>
 		</tbody>
