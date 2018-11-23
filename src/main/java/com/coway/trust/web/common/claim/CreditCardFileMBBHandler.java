@@ -174,9 +174,9 @@ public class CreditCardFileMBBHandler extends BasicTextDownloadHandler implement
 
 		bMessageType = StringUtils.rightPad("T", 1, " ");
 		if("1".equals(type)) {
-            sbatchNo   = StringUtils.leftPad(String.valueOf("1"), 5, "0");
+		    bBatchNo   = StringUtils.leftPad(String.valueOf("1"), 5, "0");
         } else {
-            sbatchNo   = StringUtils.leftPad(String.valueOf(dataRow.get("pageno")), 5, "0");
+            bBatchNo   = StringUtils.leftPad(String.valueOf(dataRow.get("pageno")), 5, "0");
         }
 		//bTransNo 		= StringUtils.leftPad(String.valueOf(dataRow.get("rnum")), 6, "0");
 		bTransCode 	= StringUtils.rightPad("40", 2, " ");
