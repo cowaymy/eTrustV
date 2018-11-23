@@ -279,8 +279,12 @@
                         if(GST_CHK == '1') {
                             fn_excludeGstAmtAexc();
                         }
+                        Common.showLoader();
+                        setTimeout(function(){
+                        	fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(), STOCK_ID, SRV_PAC_ID)
+                        	Common.removeLoader();
+                        },200);
 
-                        fn_loadPromotionPriceAexc($('#cmbPromotionAexc').val(), STOCK_ID, SRV_PAC_ID);
                     }
                 });
             }
