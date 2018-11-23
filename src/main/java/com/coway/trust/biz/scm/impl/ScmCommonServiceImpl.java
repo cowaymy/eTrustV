@@ -93,6 +93,10 @@ public class ScmCommonServiceImpl implements ScmCommonService {
 		return	scmCommonMapper.selectScmStockCode(params);
 	}
 	@Override
+	public List<EgovMap> selectScmStockCodeForMulti(Map<String, Object> params) {
+		return	scmCommonMapper.selectScmStockCodeForMulti(params);
+	}
+	@Override
 	public List<EgovMap> selectScmTotalInfo(Map<String, Object> params) {
 		return	scmCommonMapper.selectScmTotalInfo(params);
 	}
