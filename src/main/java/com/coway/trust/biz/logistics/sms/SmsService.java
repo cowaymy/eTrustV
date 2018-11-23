@@ -28,4 +28,6 @@ public interface SmsService {
 	void createBulkSmsBatch(Map<String, Object> params, SessionVO sessionVO)  throws Exception;
 
 	List<EgovMap> selectEnrolmentFilter(Map<String, Object> params);
+
+	void insertSmsViewBulk(Map<String, Object> bulkMap) throws Exception;
 }

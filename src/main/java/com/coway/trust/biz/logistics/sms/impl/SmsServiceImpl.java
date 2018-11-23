@@ -171,4 +171,9 @@ public class SmsServiceImpl implements SmsService
 		return smsMapper.selectEnrolmentFilter(params);
 	}
 
+	@Override
+	public void insertSmsViewBulk(Map<String, Object> bulkMap) throws Exception{
+		smsMapper.insertSmsViewBulk(bulkMap);
+	}
+
 }

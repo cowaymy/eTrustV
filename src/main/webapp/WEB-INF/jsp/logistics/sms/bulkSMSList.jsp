@@ -324,22 +324,18 @@ var updResultColLayout = [
             //data.all = [];
         }
 
-        //Ajax 호출
-        Common.ajax("POST", "/logistics/sms/uploadSmsBatch.do", data, function(result) {
-            resetUpdatedItems(); // 초기화
+        var formData = new FormData();
+        formData.append("csvFile", $("input[name=fileSelector]")[0].files[0]);
 
+        //Ajax 호출
+        Common.ajaxFile("/logistics/sms/uploadSmsBatchBulk.do", formData, function(result) {
+            resetUpdatedItems(); // 초기화
             var message = "";
 
-	            if(result.code == "FAILED"){
-	                for(var i = 0; i < result.data.length; i++){
-	                	if(result.data[i].validPhNo == false)
-	                    message += "Invalid Phone Number : " + result.data[i].msisdn + " at Line: " + result.data[i].line + "<br />";
-	               }
-	                Common.alert(message);
+	            if(result.code == 99){
+	                Common.alert(result.message);
 	            }else{
-	                message += "Total SMS : " + result.data[0].totalSms + "<br />";
-	                message += "<br />Are you sure want to confirm this result ?<br />";
-
+	                message = result.message;
 		            Common.confirm(message,
 		            function (){
 		                var data = {};
@@ -552,7 +548,7 @@ var updResultColLayout = [
                         <td>
                             <!-- auto_file start -->
                            <div class="auto_file">
-                               <input type="file" id="fileSelector" title="file add" accept=".csv" />
+                               <input type="file" id="fileSelector" name = "fileSelector" title="file add" accept=".csv" />
                            </div>
                            <!-- auto_file end -->
                         </td>

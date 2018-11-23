@@ -225,4 +225,32 @@ WHERE
         UNION ALL
         SELECT 2 as CODE_ID, '2' as CODE, 'False (no reject date)' as CODE_NAME, 'False (no reject date)' as DESCRIPTION FROM DUAL
     </select>
+
+
+    <insert id="insertSmsViewBulk" parameterType="java.util.List" >
+        INSERT INTO MSC0046T
+    ( SMS_MSG, SMS_MSISDN, SMS_TYPE_ID, SMS_PRIO, SMS_REF_NO
+    , SMS_BATCH_UPLOAD_ID, SMS_REM, SMS_START_DT, SMS_EXPR_DT, SMS_STUS_ID
+    , SMS_RETRY, SMS_CRT_DT, SMS_CRT_USER_ID, SMS_UPD_DT, SMS_UPD_USER_ID, SMS_VENDOR_ID)
+        <foreach collection="list" item="item" index="index" separator=" UNION ALL ">
+        SELECT
+          #{item.msg}
+        , #{item.msisdn}
+	    , #{item.smsType}
+	    , #{item.priority}
+	    , #{item.ordNo}
+	    , 0
+	    , #{item.remark}
+	    , SYSDATE
+	    , SYSDATE+1
+	    , #{item.stusId}
+	    , #{item.retryNo}
+	    , SYSDATE
+	    , #{item.userId}
+	    , SYSDATE
+	    , #{item.userId}
+	    , #{item.vendorId}
+        FROM DUAL
+        </foreach>
+    </insert>
 </mapper>

@@ -4,7 +4,7 @@ package com.coway.trust.web.logistics.sms;
  * Author	Date				Remark
  * Kit			2018/02/27		Create for SMS Live
  * Kit			2018/03/19		Create for SMS Bulk
- *
+ * Kit   		2018/11/22		Create for SMS Bulk Upload
  ***************************************/
 
 import java.math.BigDecimal;
@@ -13,6 +13,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -31,14 +32,19 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 
 import com.coway.trust.AppConstants;
 import com.coway.trust.biz.common.AdaptorService;
 import com.coway.trust.biz.logistics.sms.SmsService;
+import com.coway.trust.biz.logistics.sms.SmsUploadVO;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.cmmn.model.SmsResult;
 import com.coway.trust.cmmn.model.SmsVO;
+import com.coway.trust.config.csv.CsvReadComponent;
+import com.coway.trust.util.BeanConverter;
 import com.coway.trust.util.CommonUtils;
 import com.coway.trust.web.sales.SalesConstants;
 
@@ -62,6 +68,9 @@ public class BulkSMSListController {
 
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
+
+	@Autowired
+	private CsvReadComponent csvReadComponent;
 
 	@RequestMapping(value = "/initBulkSMSList.do")
 	public String initASManagementList(@RequestParam Map<String, Object> params, ModelMap model) {
@@ -192,4 +201,86 @@ public class BulkSMSListController {
 		return ResponseEntity.ok(codeList);
 	}
 
+    @RequestMapping(value = "/uploadSmsBatchBulk.do", method = RequestMethod.POST)
+    public ResponseEntity<ReturnMessage> uploadSmsBatchBulk(MultipartHttpServletRequest request, SessionVO sessionVO) throws Exception {
+
+		//CVS 파일 세팅
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+		MultipartFile multipartFile = fileMap.get("csvFile");
+		List<SmsUploadVO> vos = csvReadComponent.readCsvToList(multipartFile,true ,SmsUploadVO::create);
+
+		//CVS 파일 객체 세팅
+		Map<String, Object> cvsParam = new HashMap<String, Object>();
+		cvsParam.put("voList", vos);
+		cvsParam.put("userId", sessionVO.getUserId());
+
+		// cvs 파일 저장 처리
+		List<SmsUploadVO> vos2 = (List<SmsUploadVO>) cvsParam.get("voList");
+
+		List<Map> list = vos2.stream().map(r -> {
+			Map<String, Object> map = BeanConverter.toMap(r);
+			map.put("msg", r.getMsg());
+			map.put("msisdn", r.getMsisdn());
+			map.put("smsType", 976);
+			map.put("priority", 3);
+			map.put("ordNo", r.getOrdNo());
+			map.put("remark", "");
+			map.put("stusId", 1);
+			map.put("retryNo", 0);
+			map.put("userId", sessionVO.getUserId());
+			map.put("vendorId", 2);
+			return map;
+		}).collect(Collectors.toList());
+
+		String result = AppConstants.SUCCESS;
+    	int line = 1;
+    	String invalidMsg = "";
+    	String validMsg = "";
+    	String msg = "";
+
+		Map<String, Object> hm = null;
+		for (Object map : list) {
+			hm = (HashMap<String, Object>) map;
+			String msisdn = (String.valueOf(hm.get("msisdn"))).trim();
+			if((msisdn.length() < 10 || msisdn.length() > 11) || (StringUtil.isNumeric(msisdn) == false)){
+				invalidMsg += "Invalid Phone Number : " + msisdn + " at Line: " + line + "<br />";
+				result = AppConstants.FAIL;
+			}
+			line++;
+		}
+
+		smsService.deleteSmsTemp();
+		if(result != AppConstants.FAIL){
+    		int size = 500;
+    		int page = list.size() / size;
+    		int start;
+    		int end;
+
+    		Map<String, Object> bulkMap = new HashMap<>();
+    		for (int i = 0; i <= page; i++) {
+    			start = i * size;
+    			end = size;
+
+    			if (i == page) {
+    				end = list.size();
+    			}
+    			bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+    			smsService.insertSmsViewBulk(bulkMap);
+    		}
+
+    		validMsg = "Total SMS : " + list.size() + "<br />"
+    					+ "<br />Are you sure want to confirm this result ?<br />";
+		}
+
+    	// 결과 만들기.
+		msg = result == AppConstants.SUCCESS ? validMsg : invalidMsg ;
+
+    	ReturnMessage message = new ReturnMessage();
+    	message.setMessage(msg);
+    	message.setCode(result);
+
+    	return ResponseEntity.ok(message);
+    }
+
 }
+
