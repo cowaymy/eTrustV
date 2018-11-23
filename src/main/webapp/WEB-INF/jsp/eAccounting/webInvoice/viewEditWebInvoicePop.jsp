@@ -83,7 +83,7 @@ var myColumnLayout = [ {
         type : "IconRenderer",
         iconTableRef :  {
             "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },         
+        },
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -110,7 +110,7 @@ var myColumnLayout = [ {
         type : "IconRenderer",
         iconTableRef :  {
             "default" : "${pageContext.request.contextPath}/resources/images/common/normal_search.png"// default
-        },         
+        },
         iconWidth : 24,
         iconHeight : 24,
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -280,7 +280,7 @@ var approvalColumnLayout = [ {
 
 //그리드 속성 설정
 var myGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -303,21 +303,21 @@ $(document).ready(function () {
 	} else {
 		newGridID = AUIGrid.create("#viewEditWebInvoice_grid_wrap", approvalColumnLayout, myGridPros);
 	}
-    
+
     $("#tempSave").click(fn_tempSave);
     $("#submitPop").click(fn_approveLinePop);
     $("#add_row").click(fn_addRow);
     $("#delete_row").click(fn_removeRow);
     $("#supplier_search_btn").click(fn_popSupplierSearchPop);
     $("#costCenter_search_btn").click(fn_popCostCenterSearchPop);
-    
+
     fn_setNewGridEvent();
-    
+
     fn_setKeyInDate();
     fn_setPayDueDtEvent();
     fn_setCostCenterEvent();
     fn_setSupplierEvent();
-    
+
     if(gridDataList.length > 0) {
         fn_setGridData(gridDataList);
     }
@@ -326,7 +326,7 @@ $(document).ready(function () {
     if(attachmentList.length <= 0) {
         setInputFile2();
     }
-    
+
     // 파일 다운
     $(".input_text").dblclick(function() {
     	var oriFileName = $(this).val();
@@ -356,7 +356,7 @@ $(document).ready(function () {
     $(".auto_file2 a:contains('Delete')").click(function() {
         var div = $(this).parents(".auto_file2");
         var oriFileName = div.find(":text").val();
-        console.log(oriFileName);   
+        console.log(oriFileName);
         for(var i = 0; i < attachmentList.length; i++) {
             if(attachmentList[i].atchFileName == oriFileName) {
                 remove.push(attachmentList[i].atchFileId);
@@ -373,17 +373,17 @@ function setInputFile2(){//인풋파일 세팅하기
 
 function fn_approveLinePop() {
 	var checkResult = fn_checkEmpty();
-    
+
     if(!checkResult){
         return false;
     }
-    
+
     var data = {
             memAccId : $("#newMemAccId").val(),
-            invcNo : $("#invcNo").val(),
-            clmNo : $("#newClmNo").val()
+            invcNo : $("#invcNo").val()
+            //clmNo : $("#newClmNo").val()
     }
-    
+
     Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
         console.log(result);
         if(result.data && result.data != $("#newClmNo").val()) {
@@ -400,25 +400,25 @@ function fn_approveLinePop() {
             	console.log("fn_attachmentUpdate Action");
                 fn_attachmentUpdate("");
             }
-        	
+
             Common.popupDiv("/eAccounting/webInvoice/approveLinePop.do", null, null, true, "approveLineSearchPop");
         }
     });
-    
+
 }
 
 function fn_tempSave() {
 	var checkResult = fn_checkEmpty();
-    
+
     if(!checkResult){
         return false;
     }
-    
+
     var data = {
             memAccId : $("#newMemAccId").val(),
             invcNo : $("#invcNo").val()
     }
-    
+
     Common.ajax("GET", "/eAccounting/webInvoice/selectSameVender.do?_cacheId=" + Math.random(), data, function(result) {
         console.log(result);
         if(result.data && result.data != $("#newClmNo").val()) {
@@ -434,7 +434,7 @@ function fn_tempSave() {
             }
         }
     });
-    
+
 }
 
 function fn_attachmentUpload(st) {
@@ -479,7 +479,7 @@ function fn_updateWebInvoiceInfo(st) {
         }
         fn_selectWebInvoiceList();
     });
-    
+
 }
 
 function fn_setGridData(data) {
