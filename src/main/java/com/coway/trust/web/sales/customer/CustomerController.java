@@ -1260,6 +1260,7 @@ public class CustomerController {
 			detailcard = customerService.selectCustomerCreditCardDetailViewPop(params);
 
 			model.addAttribute("detailcard", detailcard);
+			model.addAttribute("custId", params.get("custId"));
 
 			return "sales/customer/customerCreditCardEditInfoPop";
 

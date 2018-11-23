@@ -66,12 +66,12 @@
                 msg += "* <spring:message code='sal.alert.msg.creditCardNumMustIn16Digits' /><br/>";
             }
             else {
-                if(FormUtil.checkNum($('#cardNo'))) {
+                if(FormUtil.checkNum($("#cardNo"))) {
                     isValid = false;
                     msg += "<spring:message code='sal.alert.msg.invalidCreditCardNum' />";
                 }
                 else {
-                    var isExistCrc = fn_existCrcNo('${custId}', $('#cardNo').val().trim());
+                    var isExistCrc = fn_existCrcNo('${custId}', $("#cardNo").val().trim());
 
                     if(isExistCrc) {
                         isValid = false;
@@ -136,7 +136,7 @@
         var checkCrc = {
                 //ccType : $("#cmbCrcTypeId").val(),
                 //ccBank : $("#cmbCrcBankId").val(),
-                cardNo : $("#custOriCrcNo").val(),
+                cardNo : $("#cardNo").val(),
                 //expDate : $("#expDate").val(),
                 //nameCard : $("#custCrcOwner").val(),
                 //cType : $("#cmbCardTypeId").val(),

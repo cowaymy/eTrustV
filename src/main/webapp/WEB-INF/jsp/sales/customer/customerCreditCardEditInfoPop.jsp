@@ -2,15 +2,15 @@
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javascript">
 	$(document).ready(function() {
-		
-		
+
+
 		//j_date
 	    var pickerOpts={
 	            changeMonth:true,
 	            changeYear:true,
 	            dateFormat: "dd/mm/yy"
 	    };
-	    
+
 	    $(".j_date").datepicker(pickerOpts);
 
 	    var monthOptions = {
@@ -21,61 +21,61 @@
 	    };
 
 	    $(".j_date2").monthpicker(monthOptions);
-	    
+
 		var tempDate;
 		//Date TransForm
 		if("" !=$("#tempCrcExpr").val() && null != $("#tempCrcExpr").val()){
 			tempDate = fn_transDateDBtoView($("#tempCrcExpr").val());
 	        $("#expDate").val(tempDate);
 		}
-		
+
 		//select Box Combo
 		var selCodeCrcTypeId = $("#selCodeCrcTypeId").val();
 		var selCodeCrcBankId = $("#selCodeCrcBankId").val();
 		var selCodeCardTypeId = $("#selCodeCardTypeId").val();
-		
+
 		doGetCombo('/common/selectCodeList.do', '21', selCodeCrcTypeId, 'cmbCrcTypeId', 'S', '');      // cmbCrcTypeId(Card Type)
 		doGetCombo('/sales/customer/selectCrcBank.do', '', selCodeCrcBankId, 'cmbCrcBankId', 'S', ''); //cmbCrcBankId(Issue Bank<Card>)
 		doGetCombo('/common/selectCodeList.do','115', selCodeCardTypeId, 'cmbCardTypeId', 'S', '');  //cmbCardTypeId
-		
+
 		//Update
 	    $("#_updBtn").click(function() {
-	        
+console.log("_updBtn .click");
 	    	/* disable params  */
 	    	$("#custCrcTypeId").val($("#cmbCrcTypeId").val());
-	    	
+
 	    	/* Validation */
 	    	//Credit Card Type
 	    	if("" == $("#cmbCrcTypeId").val() || null == $("#cmbCrcTypeId").val()){
 	    		Common.alert("* <spring:message code='sal.alert.msg.pleaseSelectCreditCardType' />");
 	            return;
 	    	}
-	        
+
 	    	//Issue Bank
 	    	if("" == $("#cmbCrcBankId").val() || null == $("#cmbCrcBankId").val()){
                 Common.alert("* <spring:message code='sal.alert.msg.pleaseSelectTheIssueBank' />");
                 return;
             }
-	    	
-	    	//Credit Card No 
+
+	    	//Credit Card No
 	    	if("" == $("#custOriCrcNo").val() || null == $("#custOriCrcNo").val()){
 	    		Common.alert("* <spring:message code='sal.alert.msg.pleaseKeyInCreditCardNum' />");
                 return;
 	    	}else{// not null and not empty
-	    		
+
 	    		// number Check
-	    	    if(FormUtil.checkNum($("#custOriCrcNo"))){ 
+	    	    if(FormUtil.checkNum($("#custOriCrcNo"))){
 	    	    	Common.alert("* <spring:message code='sal.alert.msg.invalidCreditCardNum' />.");
 	                return;
 	    	    }
-	    	    
+
 	    	    //digit 16
 	    	    if(16 != $("#custOriCrcNo").val().length){
 	    	    	Common.alert("* <spring:message code='sal.alert.msg.creditCardNumMustIn16Digits' />.");
                     return;
 	    	    }
 	    	}
-	    	
+
 	    	//Exp Date
 	    	if("" == $("#expDate").val() || null == $("#expDate").val()){
                 Common.alert("* <spring:message code='sal.alert.msg.pleaseSelectCreditCardExpDate' />.");
@@ -86,13 +86,13 @@
             	trans = fn_transDateViewtoDB($("#expDate").val());
             	$("#expDate").val(trans);
             }
-	    	
+
 	    	//Name On Card (Card Owner)
 	    	if("" == $("#custCrcOwner").val() || null == $("#custCrcOwner").val()){
                 Common.alert("* <spring:message code='sal.alert.msg.pleaseKeyInNameOnCard' />.");
                 return;
             }else{ // not null and not empty
-            	
+
             	//special character
             	var regExp = /^[a-zA-Z0-9 ]*$/i;
             	if( regExp.test($("#custCrcOwner").val()) == false ){
@@ -100,65 +100,88 @@
                      return;
             	}
             }
-	    	
-	    	//Card Type 
+
+	    	//Card Type
 	    	if("" == $("#cmbCardTypeId").val() || null == $("#cmbCardTypeId").val()){
                 Common.alert("* <spring:message code='sal.alert.pleaseSelectTheCardType' />.");
                 return;
             }
-	    	
+
 	    	/* Update  */
 	    	fn_customerCardInfoUpdateAjax();
-	    	
+
 	    });
-		
+
 	    $("#_delBtn").click(function() {
             Common.confirm("<spring:message code='sal.alert.msg.areYouSureWantToDelCreditCard' />", fn_deleteCardAjax);
         });
-		
+
 	});// document Ready Func End
-	
+
 	//date Form Translate(DB -> View)
-	function fn_transDateDBtoView(tempCrcExpr){ 
-		
+	function fn_transDateDBtoView(tempCrcExpr){
+
 		var crcMonth;
 		var crcYear;
 		var crcExpr;
-		
+
 		crcMonth = tempCrcExpr.substr(0, 2); //month
 		crcYear = tempCrcExpr.substr(2, 2); //year
-	    
+
 		if(crcYear >= 80){
 			crcYear = '19' + crcYear;
 		}else{
 			crcYear = '20' + crcYear;
 		}
-		
+
 		crcExpr = crcMonth + '/' + crcYear;
 		return crcExpr;
 	}
-	
+
 	//date Form Translate( View -> DB )
 	function fn_transDateViewtoDB(insertCrcExpr){
 		var insMonth;
 		var insYear
 		var expDate;
-		
+
 		insMonth = insertCrcExpr.substr(0, 2);
 		insYear = insertCrcExpr.substr(5, 7);
-		
+
 		expDate = insMonth + insYear;
-		
+
 		return expDate;
 	}
-	
+
 	 //update Call Ajax
     function fn_customerCardInfoUpdateAjax(){
-        Common.ajax("GET", "/sales/customer/updateCustomerCardInfoAf.do", $("#updForm").serialize(), function(result) {
-            Common.alert(result.message, fn_parentReload);
-        });
+		 // wrap here
+		 var isValid = true;
+
+		 var isExistCrc = fn_existCrcNo('${custId}', $("#custOriCrcNo").val().trim());
+
+		 if(isExistCrc) {
+			 isValid = false;
+			 Common.alert("<b>WARNING!</b></br>This Bank card number is used by another customer.</br>Please inform respective HP/Cody.");
+		 } else {
+			Common.ajax("GET", "/sales/customer/updateCustomerCardInfoAf.do", $("#updForm").serialize(), function(result) {
+		            Common.alert(result.message, fn_parentReload);
+		        });
+		 }
     }
-    
+
+    function fn_existCrcNo(CustID, CrcNo, IssueBankID){
+        var isExist = false;
+
+        Common.ajax("GET", "/sales/customer/selectCustomerCreditCardJsonList", {custId : CustID, custOriCrcNo : CrcNo}, function(rsltInfo) {
+            if(rsltInfo != null) {
+                console.log('rsltInfo.length:'+rsltInfo.length);
+                isExist = rsltInfo.length == 0 ? false : true;
+            }
+        }, null, {async : false});
+        console.log('isExist ggg:'+isExist);
+        return isExist;
+    }
+
     // Parent Reload Func
     function fn_parentReload() {
     	fn_selectPstRequestDOListAjax(); //parent Method (Reload)
@@ -168,16 +191,16 @@
         Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
         Common.popupDiv("/sales/customer/updateCustomerCreditCardInfoPop.do", $('#editForm').serializeJSON(), null , true, '_editDiv5Pop');
     }
-    
+
     //delete
     function fn_deleteCardAjax(){
-        
+
         Common.ajax("GET", "/sales/customer/deleteCustomerCard.do", $("#updForm").serialize(), function(result){
             //result alert and closePage
             Common.alert(result.message, fn_closePage);
         });
     }
-    
+
     //Parent Reload and PageClose Func
     function fn_closePage(){
     	fn_selectPstRequestDOListAjax(); //parent Method (Reload)
@@ -186,17 +209,17 @@
         $("#_selectParam").val('5');
         Common.popupDiv('/sales/customer/updateCustomerCreditCardPop.do', $('#popForm').serializeJSON(), null , true , '_editDiv5');
     }
-    
+
 	//카드번호 변경시 카드 타입 설정 func (Visa / Master)
 	function fn_cardNoChangeFunc(custOriCrcNo){
-		
+
 		var crcNo;
 		crcNo = custOriCrcNo;
-		
+
 		crcNo = crcNo.trim();
 		//select 박스 초기화
 		$("#cmbCrcTypeId").val("").prop("selected", true);
-		
+
 		//validation
 		if("" != crcNo && null != crcNo){
 			if('4' == crcNo.substr(0,1)){
@@ -209,7 +232,7 @@
             }
 		}
 	}
-	
+
 </script>
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
 <header class="pop_header"><!-- pop_header start -->
@@ -225,7 +248,7 @@
 <section class="pop_body"><!-- pop_body start -->
 <form id="updForm"><!-- form start  -->
 <input type="hidden" value="${detailcard.custCrcId }" name="custCrcId">
-<input type="hidden" name="custCrcTypeId" id="custCrcTypeId">  
+<input type="hidden" name="custCrcTypeId" id="custCrcTypeId">
 <table class="type1"><!-- table start -->
 <caption>table</caption>
 <colgroup>
@@ -247,7 +270,7 @@
 </tr>
 <tr>
     <th scope="row"><spring:message code="sal.text.creditCardNo" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="Account Number" class="w100p"  value="${detailcard.custOriCrcNo}" name="custOriCrcNo" 
+    <td><input type="text" title="" placeholder="Account Number" class="w100p"  value="${detailcard.custOriCrcNo}" name="custOriCrcNo"
     onchange="javascript : fn_cardNoChangeFunc(this.value)" id="custOriCrcNo" maxlength="16"/></td>
     <th scope="row"><spring:message code="sal.text.expiryDate" /><span class="must">*</span></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date2 w100p"  readonly="readonly" id="expDate" name="custCrcExpr"/></td>
