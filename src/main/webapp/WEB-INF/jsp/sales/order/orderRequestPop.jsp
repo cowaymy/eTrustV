@@ -1618,6 +1618,17 @@
                 }
 	        });
 
+	     /*BY KV - waiting call for installation, cant do product return , ccr0006d active but SAL0046D no record */
+	     //Valid OCR Status - (CallLog Type - 257, Stus - 1, SAL00046 - NO RECORD  )
+            Common.ajaxSync("GET", "/sales/order/validOCRStus2.do", {salesOrdId : ORD_ID}, function(result) {
+                if(result.callLogResult == 1) {
+                    isLock = true;
+                    msg = 'This order is under progress [ Call for Install ].<br />' + result.msg + '.<br/>';
+                }
+            });
+
+
+
         if(isLock) {
             if(tabNm == 'CANC') {
                 msg += '<spring:message code="sal.alert.msg.cancDisallowed" />';
@@ -1674,7 +1685,7 @@
         $('#txtRemark').prop("disabled", true);
         $('#txtPenaltyAdj').prop("disabled", true);
 
-        $('#btnReqOrder').addClass("blind");
+        $('#btnReqCancOrder').addClass("blind");
     }
 
     function fn_loadOrderInfoSCHM() {
