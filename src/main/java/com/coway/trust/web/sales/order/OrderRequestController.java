@@ -214,4 +214,14 @@ public class OrderRequestController {
     	return ResponseEntity.ok(rslt);
     }
 
+    /*BY KV - waiting call for installation, cant do product return , ccr0006d active but SAL0046D no record */
+    /* Valid OCR Status - (CallLog Type - 257, Stus - 1, SAL00046 - NO RECORD  )*/
+    @RequestMapping(value = "/validOCRStus2.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> validOCRStus2(@RequestParam Map<String, Object> params)    {
+    	EgovMap rslt = orderRequestService.validOCRStus2(params);
+    	return ResponseEntity.ok(rslt);
+    }
+
+
+
 }
