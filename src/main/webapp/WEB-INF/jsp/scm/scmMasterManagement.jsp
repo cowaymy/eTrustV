@@ -60,6 +60,7 @@
 <script type="text/javaScript">
 var keyValueList	= new Array();
 var format	= /^(19[7-9][0-9]|20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
+var gridDataLength	= 0;
 
 $(function() {
 	fnScmStockCategoryCbBox();
@@ -253,9 +254,45 @@ function fnEventHandler(event) {
 				return	false;
 			}
 		}
+		console.log("headerText : " + event.headerText);
+		if ( "Target" == event.headerText ) {
+			
+			var chkedItems	= AUIGrid.getItemsByValue(myGridID, "isTrget", "1");
+			if ( chkedItems.length != gridDataLength ) {
+				document.getElementById("isTrget").checked	= false;
+			} else if ( chkedItems.length == gridDataLength ) {
+				document.getElementById("isTrget").checked	= true;
+			}
+		}
 	} else if ( "cellEditCancel" == event.type ) {
 		console.log("에디팅 취소(cellEditCancel) : ( " + event.rowIndex + ", " + event.columnIndex + " ) " + event.headerText + ", value : " + event.value);
 	}
+}
+
+function headerClickHandler(event) {
+	console.log("event.dataField : " + event.dataField);
+	if ( "isTrget" == event.dataField ) {console.log("event.orgEvent.target.id : " + event.orgEvent.target.id);
+		if ( "isTrget" == event.orgEvent.target.id ) {
+			var isChked	= document.getElementById("isTrget").checked;
+			checkAll(isChked);
+		}
+		return	false;
+	}
+}
+
+function checkAll(isChked) {
+	console.log("isChked : " + isChked);
+	if ( isChked ) {
+		AUIGrid.updateAllToValue(myGridID, "isTrget", "1");
+	} else {
+		AUIGrid.updateAllToValue(myGridID, "isTrget", "0");
+	}
+}
+
+function getItemsByField() {
+	var activeItems	= AUIGrid.getItemsByValue(myGridID, "isTrget", "1");
+	
+	alert("Acitve 체크 개수 : " + activeItems.length);
 }
 
 /*************************************
@@ -279,12 +316,12 @@ var masterManagerLayout	=
 						headerText : "Is New",
 						visible : false
 					}, {
-						dataField : "categoryId",
-						headerText : "Category Id",
+						dataField : "typeId",
+						headerText : "Type Id",
 						visible : false
 					}, {
-						dataField : "category",
-						headerText : "Category",
+						dataField : "type",
+						headerText : "Type",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( 1 == item.isNew ) {
 								return	"my-columnCenter1";
@@ -293,12 +330,12 @@ var masterManagerLayout	=
 							}
 						}
 					}, {
-						dataField : "typeId",
-						headerText : "Type Id",
+						dataField : "categoryId",
+						headerText : "Category Id",
 						visible : false
 					}, {
-						dataField : "type",
-						headerText : "Type",
+						dataField : "category",
+						headerText : "Category",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( 1 == item.isNew ) {
 								return	"my-columnCenter1";
@@ -366,7 +403,7 @@ var masterManagerLayout	=
 				[
 					{
 						dataField : "isTrget",
-						headerText : "<spring:message code='sys.scm.mastermanager.Target'/>",
+						headerText : "<spring:message code='sys.scm.mastermanager.Target'/><br/><input type='checkbox' id='isTrget' style='width:15px;height:15px;'>",
 						renderer : {
 							type : "CheckBoxEditRenderer",
 							showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
@@ -649,7 +686,7 @@ var masterManagerLayout	=
 								return	"my-columnCenter";
 							}
 						}
-					}, {
+					}, /*{
 						dataField : "loadingQty",
 						headerText : "<spring:message code='sys.scm.mastermanager.LQty'/>",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
@@ -659,7 +696,7 @@ var masterManagerLayout	=
 								return	"my-columnCenter";
 							}
 						}
-					}, {
+					}, */{
 						dataField : "formatStartDate",
 						headerText : "formatStartDate",
 						visible : false
@@ -679,7 +716,7 @@ $(document).ready(function() {
 	var masterManagerOptions	= {
 		usePaging : false,
 		useGroupingPanel : false,
-		showRowNumColumn : false,	//	그리드 넘버링
+		showRowNumColumn : true,	//	그리드 넘버링
 		showStateColumn : true,		//	행 상태 칼럼 보이기
 		enableRestore : true,
 		softRemovePolicy : "exceptNew",	//	사용자추가한 행은 바로 삭제
@@ -688,7 +725,7 @@ $(document).ready(function() {
 	};
 	
 	//	masterGrid 그리드를 생성합니다.
-	myGridID	= GridCommon.createAUIGrid("#masterManagerDiv", masterManagerLayout,"", masterManagerOptions);
+	myGridID	= GridCommon.createAUIGrid("#masterManagerDiv", masterManagerLayout, "", masterManagerOptions);
 	
 	AUIGrid.bind(myGridID, "cellEditBegin", fnEventHandler);	//	에디팅 시작 이벤트 바인딩
 	AUIGrid.bind(myGridID, "cellEditEnd", fnEventHandler);		//	에디팅 정상 종료 이벤트 바인딩
@@ -700,6 +737,14 @@ $(document).ready(function() {
 	//	셀 더블클릭 이벤트 바인딩
 	AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 		console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );		
+	});
+	//AUIGrid.bind(myGridID, "rowAllCheckClick", function(checked) {
+	//	alert("전체 선택  checked : " + checked);
+	//});
+	AUIGrid.bind(myGridID, "headerClick", headerClickHandler);
+	// ready 이벤트 바인딩
+	AUIGrid.bind(myGridID, "ready", function(event) {
+		gridDataLength	= AUIGrid.getGridData(myGridID).length; // 그리드 전체 행수 보관
 	});
 });   //$(document).ready
 </script>
