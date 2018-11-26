@@ -2033,6 +2033,27 @@
     ]]>
     </select>
 
+
+     <!-- BY KV - waiting call for installation, cant do product return  ccr0006d active but SAL0046D no record  -->
+       <select id="validOCRStus2" parameterType="Map" resultType="int">
+    <![CDATA[
+       SELECT
+        COUNT(1)
+       FROM
+        SAL0001D SOM
+        JOIN CCR0006D CAL ON CAL.SALES_ORD_ID = SOM.SALES_ORD_ID
+                        AND CAL.CALL_ENTRY_ID  not in (select CALL_ENTRY_ID from SAL0046D )
+       WHERE
+        SOM.SALES_ORD_ID  =#{salesOrdId}
+        AND   CAL.STUS_CODE_ID = '1'
+        AND   CAL.TYPE_ID = '257'
+    ]]>
+    </select>
+
+
+
+
+
      <update id="updateSalesOrderLog" parameterType="Map">
         UPDATE SAL0009D
            SET REF_ID = 0,
