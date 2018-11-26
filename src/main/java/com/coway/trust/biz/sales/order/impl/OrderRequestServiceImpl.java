@@ -2466,4 +2466,21 @@ public class OrderRequestServiceImpl implements OrderRequestService {
 		return result;
 	}
 
+	 /*BY KV - waiting call for installation, cant do product return , ccr0006d active but SAL0046D no record
+    Valid OCR Status - (CallLog Type - 257, Stus - 1, SAL00046 - NO RECORD  )*/
+	@Override
+	public EgovMap validOCRStus2(Map<String, Object> params) {
+
+		EgovMap result = new EgovMap();
+
+		int callLogResult 		  = orderRequestMapper.validOCRStus2(params);
+
+		if(callLogResult > 0){
+			result.put("callLogResult",1);
+			result.put("msg", "OCR is not allowed due to Order Status still [ACTIVE]");
+		}
+
+		return result;
+	}
+
 }
