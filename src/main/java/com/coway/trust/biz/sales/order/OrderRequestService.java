@@ -53,4 +53,5 @@ public interface OrderRequestService {
 
 	EgovMap validOCRStus(Map<String, Object> params);
 
+	EgovMap validOCRStus2(Map<String, Object> params);
 }
