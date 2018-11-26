@@ -207,5 +207,8 @@ public interface OrderRequestMapper {
 	void updateSalesOrderMCanc(Map<String, Object> params);
 
 	int validOCRStus(Map<String, Object> params);
+	/*BY KV - waiting call for installation, cant do product return , ccr0006d active but SAL0046D no record
+    Valid OCR Status - (CallLog Type - 257, Stus - 1, SAL00046 - NO RECORD  )*/
+	int validOCRStus2(Map<String, Object> params);
 
 }
