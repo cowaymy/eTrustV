@@ -154,10 +154,14 @@ console.log("_updBtn .click");
 
 	 //update Call Ajax
     function fn_customerCardInfoUpdateAjax(){
-		 // wrap here
+		 console.log("fn_customerCardInfoUpdateAjax");
 		 var isValid = true;
 
-		 var isExistCrc = fn_existCrcNo('${custId}', $("#custOriCrcNo").val().trim());
+		 var isExistCrc = false;
+
+		 if("${detailcard.custOriCrcNo}" != $("#custOriCrcNo").val().trim()) {
+			 isExistCrc = fn_existCrcNo('${custId}', $("#custOriCrcNo").val().trim());
+		 }
 
 		 if(isExistCrc) {
 			 isValid = false;
