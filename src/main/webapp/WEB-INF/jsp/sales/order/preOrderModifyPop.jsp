@@ -5,6 +5,8 @@
 
     //AUIGrid 생성 후 반환 ID
     var listGiftGridID;
+    var update = new Array();
+    var remove = new Array();
 
     $(document).ready(function(){
 
@@ -20,7 +22,7 @@
         /* doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '${preOrderInfo.promoDiscPeriodTp}', 'promoDiscPeriodTp', 'S'); //Discount period */
 
         //Attach File
-        $(".auto_file").append("<label><span class='label_text'><a href='#'>File</a></span><input type='text' class='input_text' readonly='readonly' /></label>");
+        //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
 
         fn_loadPreOrderInfo('${preOrderInfo.custId}', null);
 
@@ -29,6 +31,12 @@
             $("#scPreOrdArea").find("p.btn_grid").hide();
             $('#btnSave').hide();
         }
+
+        if('${preOrderInfo.atchFileGrpId}' != 0){
+        	fn_loadAtchment('${preOrderInfo.atchFileGrpId}');
+        }
+
+        fn_setFileEvent();
 
     });
 
@@ -887,7 +895,7 @@
                 custId               : $('#hiddenCustId').val(),
                 empChk               : 0,
                 gstChk               : $('#gstChk').val(),
-//              atchFileGrpId        :
+                atchFileGrpId        : '${preOrderInfo.atchFileGrpId}',
                 custCntcId           : $('#hiddenCustCntcId').val(),
                 keyinBrnchId         : $('#keyinBrnchId').val(),
                 instAddId            : $('#hiddenCustAddId').val(),
@@ -1623,6 +1631,74 @@
                 break;
         }
     }
+
+    function fn_atchViewDown(fileGrpId, fileId) {
+        var data = {
+                atchFileGrpId : fileGrpId,
+                atchFileId : fileId
+        };
+        Common.ajax("GET", "/eAccounting/webInvoice/getAttachmentInfo.do", data, function(result) {
+            console.log(result)
+            var fileSubPath = result.fileSubPath;
+            fileSubPath = fileSubPath.replace('\', '/'');
+            console.log("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+            window.open("/file/fileDownWeb.do?subPath=" + fileSubPath + "&fileName=" + result.physiclFileName + "&orignlFileNm=" + result.atchFileName);
+        });
+    }
+
+    function fn_loadAtchment(atchFileGrpId) {
+    	Common.ajax("Get", "/sales/order/selectAttachList.do", {atchFileGrpId :atchFileGrpId} , function(result) {
+            console.log(result);
+	       if(result) {
+	            if(result.length > 0) {
+	                $("#attachTd").html("");
+	                for(var i = 0; i < result.length; i++) {
+	                    var atchTdId = "atchId" + (i+1);
+	                    if(i==0){$("#sofFileTxt").attr("name",atchTdId);}// index 0 : SOF File
+	                    if(i==1){$("#nricFileTxt").attr("name",atchTdId);}// index 1 : NRIC File
+	                    if(i==2){$("#otherFileTxt").attr("name",atchTdId);}// index 2 : Other File
+
+	                    $(".input_text[name='" + atchTdId + "']").val(result[i].atchFileName);
+	                }
+
+	                // 파일 다운
+	                $(".input_text").dblclick(function() {
+	                    var oriFileName = $(this).val();
+	                    var fileGrpId;
+	                    var fileId;
+	                    for(var i = 0; i < result.length; i++) {
+	                        if(result[i].atchFileName == oriFileName) {
+	                            fileGrpId = result[i].atchFileGrpId;
+	                            fileId = result[i].atchFileId;
+	                        }
+	                    }
+	                    if(fileId != null){
+	                       fn_atchViewDown(fileGrpId, fileId);
+	                    }
+	                });
+	            }
+	        }
+       });
+    }
+
+    function fn_reupload(){
+        var formData = new FormData();
+
+        formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
+        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+
+        $.each(myFileCaches, function(n, v) {
+            console.log("n : " + n + " v.file : " + v.file);
+            formData.append(n, v.file);
+        });
+
+        Common.ajaxFile("/sales/order/attachFileUpdate.do", formData, function(result) {
+        	Common.alert("Upload Successful");
+        });
+    }
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -1669,9 +1745,10 @@
 
 <section class="tap_wrap"><!-- tap_wrap start -->
 <ul class="tap_type1 num4">
-	<li><a href="#" class="on">Customer</a></li>
-	<li><a href="#" onClick="javascript:chgTab('ord');">Order Info</a></li>
-	<li><a href="#">Payment Info</a></li>
+	<li><a href="aTabCS" class="on">Customer</a></li>
+    <li><a href="aTabOI" onClick="javascript:chgTab('ord');">Order Info</a></li>
+    <li><a href="aTabBD" onClick="javascript:chgTab('pay');">Payment Info</a></li>
+    <li><a href="aTabFL" >Attachment</a></li>
 </ul>
 
 <article class="tap_area"><!-- tap_area start -->
@@ -2498,6 +2575,60 @@
 
 </article><!-- tap_area end -->
 
+<article class="tap_area"><!-- tap_area start -->
+<aside class="title_line"><!-- title_line start -->
+<h3>Attachment area</h3>
+</aside><!-- title_line end -->
+
+
+<table class="type1"><!-- table start -->
+<caption>table</caption>
+<colgroup>
+    <col style="width:350px" />
+    <col style="width:*" />
+</colgroup>
+<tbody>
+<tr>
+    <th scope="row">Sales Order Form (SOF)<span class="must">*</span></th>
+    <td>
+        <div class='auto_file2 auto_file3'>
+	        <input type='file' title='file add'  id='sofFile' accept='image/*''/>
+	        <label>
+		        <input type='text' class='input_text' readonly='readonly' id='sofFileTxt'/>
+		        <!-- <span class='label_text'><a href='#'>Upload</a></span> -->
+	        </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">NRIC & Bank Card<span class="must">*</span></th>
+    <td>
+        <div class='auto_file2 auto_file3'>
+            <input type='file' title='file add' id='nricFile' accept='image/*''/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' id='nricFileTxt'/>
+                <!-- <span class='label_text'><a href='#'>Upload</a></span> -->
+            </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Declaration letter/Others form</th>
+    <td id="tdOtherFile">
+	    <div class='auto_file2 auto_file3'>
+	            <input type='file' title='file add' id='otherFile' accept='image/*''/>
+	            <label>
+	                <input type='text' class='input_text' readonly='readonly' id='otherFileTxt' name=''/>
+	                <!-- <span class='label_text'><a href='#'>Upload</a></span> -->
+	            </label>
+	    </div>
+    </td>
+</tr>
+<input id="hiddenAtchFileGrpId" name="hiddenAtchFileGrpId"   type="hidden"/>
+</tbody>
+</table>
+
+</article><!-- tap_area end -->
 
 </section><!-- tap_wrap end -->
 
