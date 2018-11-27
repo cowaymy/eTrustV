@@ -259,6 +259,8 @@ function fn_openDivPop(val){
 		$("#new_wrap").show();
 		//NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
 		$("#newForm")[0].reset();
+
+		$("input:radio[name='newDeductSales']:radio[value='0']").prop("checked", true);
 	}
 }
 
@@ -376,6 +378,10 @@ function fn_genClaim(){
         Common.alert(" * Please select issue bank ");
         return;
 	}
+    if($('input[name=newDeductSales]:checked', '#newForm').val() == null){
+        Common.alert(" * Please select New Deduction Sales. <br/>");
+        return
+    }
 
     var runNo1 = 0;
     var issueBank = "";
@@ -825,6 +831,13 @@ function fn_report(){
                                 <option value="Visa Card">Visa Card</option>
                                 <option value="Master Card">Master Card</option>
                             </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th scope="row">New Deduction Sales<span class="must">*</span></th>
+                        <td>
+                            <label><input type="radio" name="newDeductSales" id="newDeductSales" value="1" /><span>Yes</span></label>
+                            <label><input type="radio" name="newDeductSales" id="newDeductSales" value="0"/><span>No</span></label>
                         </td>
                     </tr>
                    </tbody>

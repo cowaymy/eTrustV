@@ -770,6 +770,7 @@ public class ECashDeductionController {
     	LOGGER.debug("new_issueBank : {}", eCashDeduction.get("hiddenIssueBank"));
     	LOGGER.debug("new_merchantBank : {}", eCashDeduction.get("new_merchantBank"));
     	LOGGER.debug("cardType : {}", eCashDeduction.get("new_cardType"));
+    	LOGGER.debug("newDeductSales : {}", eCashDeduction.get("newDeductSales"));
 
     	int isGrp = eCashDeduction.get("v_isGrp") != null ? 1 : 0;
 		// HasActiveBatch : 동일한 bankId, eCashDeduction Type 에 해당하는 active 건이 있는지 확인한다.
