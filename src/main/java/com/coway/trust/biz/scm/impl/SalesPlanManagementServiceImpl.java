@@ -81,13 +81,14 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		int befWeekYear	= 0;	int befWeekMonth	= 0;	int befWeekWeek	= 0;
 		int year		= 0;	int month			= 0;	int week		= 0;
 		int planWeekSpltCnt	= 0;
-		//int planWeekTh	= 0;
+		int planWeekTh	= 0;
 		int leadTm		= 0;
 		int splitCnt	= 0;
 		int crtUserId	= 0;
 		//int fstWeek		= 0;	int lstWeek		= 0;
 		String fstSplitYn	= "";	String lstSplitYn	= "";
 		int m0WeekCnt	= 0;	int m1WeekCnt	= 0;	int m2WeekCnt	= 0;	int m3WeekCnt	= 0;	int m4WeekCnt	= 0;
+		String endDt	= "";
 		
 		Map<String, Object> listParams = new HashMap<String, Object>();
 		Map<String, Object> updParams = new HashMap<String, Object>();
@@ -105,7 +106,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		befWeekYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekYear").toString());
 		befWeekMonth	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekMonth").toString());
 		befWeekWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekWeek").toString());
-		//planWeekTh	= Integer.parseInt(selectTotalSplitInfo.get(0).get("planWeekTh").toString());
+		planWeekTh	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeekTh").toString());
 		//fstWeek		= Integer.parseInt(selectTotalSplitInfo.get(0).get("fstWeek").toString());
 		//lstWeek		= Integer.parseInt(selectTotalSplitInfo.get(0).get("lstWeek").toString());
 		//splitCnt	= Integer.parseInt(selectTotalSplitInfo.get(0).get("splitCnt").toString());
@@ -141,6 +142,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		m1OrdDtTo	= selectScmTotalInfo.get(0).get("ordDtTo").toString();
 		m0OrdDtFrom	= selectScmTotalInfo.get(0).get("m0DtFrom").toString();
 		m0OrdDtTo	= selectScmTotalInfo.get(0).get("m0DtTo").toString();
+		endDt	= selectScmTotalInfo.get(0).get("endDt").toString();
 		
 		Map<String, Object> dtlParams = new HashMap<String, Object>();
 		dtlParams.put("planId", planId);
@@ -151,6 +153,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		dtlParams.put("m0OrdDtFrom", m0OrdDtFrom);
 		dtlParams.put("m0OrdDtTo", m0OrdDtTo);
 		dtlParams.put("team", team);
+		dtlParams.put("endDt", endDt);
 		try {
 			LOGGER.debug(" dtlParams : {} ", dtlParams);
 			salesPlanManagementMapper.insertSalesPlanDetail(dtlParams);
@@ -160,31 +163,37 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		
 		//	3. update Sales Plan Detail
 		listParams.put("year", befWeekYear);
+		listParams.put("month", befWeekMonth);
 		listParams.put("week", befWeekWeek);
 		listParams.put("team", team);
-		LOGGER.debug("selectBefWeekList listParams : {}", listParams);
+		listParams.put("endDt", endDt);
+		//LOGGER.debug("selectBefWeekList listParams : {}", listParams);
 		List<EgovMap> selectBefWeekList		= salesPlanManagementMapper.selectSalesPlanForUpdate(listParams);
 		listParams.put("year", planYear);
+		listParams.put("month", planMonth);
 		listParams.put("week", planWeek);
-		listParams.put("team", team);
-		LOGGER.debug("selectPlanWeekList listParams : {}", listParams);
+		//listParams.put("team", team);
+		//LOGGER.debug("selectPlanWeekList listParams : {}", listParams);
 		List<EgovMap> selectPlanWeekList	= salesPlanManagementMapper.selectSalesPlanForUpdate(listParams);
+		LOGGER.debug("selectPlanWeekList listParams : {}", listParams);
+		List<EgovMap> selectThisMonthOrder	= salesPlanManagementMapper.selectThisMonthOrder(listParams);
 		LOGGER.debug("selectBefWeekList : {}", selectBefWeekList);
 		LOGGER.debug("selectPlanWeekList : {}", selectPlanWeekList);
+		LOGGER.debug("selectThisMonthOrder : {}", selectThisMonthOrder);
 		try {
 			if ( 0 == selectBefWeekList.size() ) {
 				LOGGER.debug("Sales Plan Error");
 				return	0;
 			}
 			
-			int	m0Sum	= 0;	int m1Sum	= 0;	int m2Sum	= 0;	int m3Sum	= 0;	int m4Sum	= 0;
+			int m0OrdSum	= 0;	int	m0Sum	= 0;	int m1Sum	= 0;	int m2Sum	= 0;	int m3Sum	= 0;	int m4Sum	= 0;
 			int	weekQty	= 0;
 			//	every stock
 			for ( int i = 0 ; i < selectBefWeekList.size() ; i++ ) {
 				//planDtlId	= Integer.parseInt(selectBefWeekList.get(i).get("planDtlId").toString());
 				planDtlId	= Integer.parseInt(selectPlanWeekList.get(i).get("planDtlId").toString());	//	must using selectPlanWeekList
 				updParams.put("planDtlId", planDtlId);
-				m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;
+				m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;
 				if ( planMonth == befWeekMonth ) {
 					LOGGER.debug("planMonth == befWeekMonth : " + planMonth + ", " + befWeekMonth);
 					String intToStrFieldCnt1	= "";	int iLoopDataFieldCnt1	= 1;	//	전주의 실적을 가져오기 위해서 계산하는 주차변수
@@ -215,13 +224,26 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 							intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 						}
 						//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-						weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
-						m0Sum	= m0Sum + weekQty;
+						
+						//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
+						if ( m0 <= planWeekTh ) {
+							//	selectThisMonthOrder 결과는 오직 1row
+							//	수립주차기준 과거주차
+							weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt1).toString());
+							m0OrdSum	= m0OrdSum + weekQty;
+						} else {
+							//	수립주차기준 현재+미래주차(수립주차포함)
+							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+							m0Sum	= m0Sum + weekQty;
+						}
+						//weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+						//m0Sum	= m0Sum + weekQty;
 						updParams.put("w" + intToStrFieldCnt2, weekQty);
 						iLoopDataFieldCnt1++;
 						iLoopDataFieldCnt2++;
 					}
 					updParams.put("m0", m0Sum);
+					updParams.put("m0OrdSum", m0OrdSum);
 					
 					//	3.2 m1
 					for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {

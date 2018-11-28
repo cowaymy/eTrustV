@@ -95,98 +95,44 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 		
 		for ( Object obj : params ) {
 			LOGGER.debug("saveScmMaster2 : {}", params.toString());
+			//	Common
 			((Map<String, Object>) obj).put("stockId", ((Map<String, Object>) obj).get("stockId"));
 			((Map<String, Object>) obj).put("stockCode", ((Map<String, Object>) obj).get("stockCode"));
 			
 			//	KL
+			((Map<String, Object>) obj).put("moq", Integer.parseInt(((Map<String, Object>) obj).get("klMoq").toString()));
 			((Map<String, Object>) obj).put("cdc", "2010");
-			if ( null != ((Map<String, Object>) obj).get("klTarget") ) {
-				isTrget	= ((Map<String, Object>) obj).get("klTarget").toString();
-				if ( "1".equals(isTrget) ) {
-					if ( null != ((Map<String, Object>) obj).get("klMoq") ) {
-						((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("klMoq"));
-					} else {
-						((Map<String, Object>) obj).put("moq", 0);
-					}
-					((Map<String, Object>) obj).put("isTrget", 1);
-					cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
-				} else {
-					scmMasterManagementMapper.deleteScmMaster2((Map<String, Object>) obj);
-				}
-			}
-			isTrget	= "";
+			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("klTarget"));
+			//if ( null == ((Map<String, Object>) obj).get("klTarget") ) {
+				
+			//} else {
+			//	((Map<String, Object>) obj).put("isTrget", 1);
+			//}
+			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
 			
 			//	PN
+			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("pnMoq"));
 			((Map<String, Object>) obj).put("cdc", "2020");
-			if ( null != ((Map<String, Object>) obj).get("pnTarget") ) {
-				isTrget	= ((Map<String, Object>) obj).get("pnTarget").toString();
-				if ( "1".equals(isTrget) ) {
-					if ( null != ((Map<String, Object>) obj).get("pnMoq") ) {
-						((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("pnMoq"));
-					} else {
-						((Map<String, Object>) obj).put("moq", 0);
-					}
-					((Map<String, Object>) obj).put("isTrget", 1);
-					cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
-				} else {
-					scmMasterManagementMapper.deleteScmMaster2((Map<String, Object>) obj);
-				}
-			}
-			isTrget	= "";
+			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("pnTarget"));
+			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
 			
 			//	JB
+			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("jbMoq"));
 			((Map<String, Object>) obj).put("cdc", "2030");
-			if ( null != ((Map<String, Object>) obj).get("jbTarget") ) {
-				isTrget	= ((Map<String, Object>) obj).get("jbTarget").toString();
-				if ( "1".equals(isTrget) ) {
-					if ( null != ((Map<String, Object>) obj).get("jbMoq") ) {
-						((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("jbMoq"));
-					} else {
-						((Map<String, Object>) obj).put("moq", 0);
-					}
-					((Map<String, Object>) obj).put("isTrget", 1);
-					cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
-				} else {
-					scmMasterManagementMapper.deleteScmMaster2((Map<String, Object>) obj);
-				}
-			}
-			isTrget	= "";
+			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("jbTarget"));
+			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
 			
 			//	KK
+			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("kkMoq"));
 			((Map<String, Object>) obj).put("cdc", "2040");
-			if ( null != ((Map<String, Object>) obj).get("kkTarget") ) {
-				isTrget	= ((Map<String, Object>) obj).get("kkTarget").toString();
-				if ( "1".equals(isTrget) ) {
-					if ( null != ((Map<String, Object>) obj).get("kkMoq") ) {
-						((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("kkMoq"));
-					} else {
-						((Map<String, Object>) obj).put("moq", 0);
-					}
-					((Map<String, Object>) obj).put("isTrget", 1);
-					cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
-				} else {
-					scmMasterManagementMapper.deleteScmMaster2((Map<String, Object>) obj);
-				}
-			}
-			isTrget	= "";
+			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("kkTarget"));
+			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
 			
 			//	KC
+			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("kcMoq"));
 			((Map<String, Object>) obj).put("cdc", "2050");
-			if ( null != ((Map<String, Object>) obj).get("kcTarget") ) {
-				isTrget	= ((Map<String, Object>) obj).get("kcTarget").toString();
-				if ( "1".equals(isTrget) ) {
-					if ( null != ((Map<String, Object>) obj).get("kcMoq") ) {
-						((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("kcMoq"));
-					} else {
-						((Map<String, Object>) obj).put("moq", 0);
-					}
-					((Map<String, Object>) obj).put("isTrget", 1);
-					cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
-				} else {
-					scmMasterManagementMapper.deleteScmMaster2((Map<String, Object>) obj);
-				}
-			}
-			isTrget	= "";
+			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("kcTarget"));
+			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
 		}
 		
 		return	cnt;
