@@ -59,8 +59,18 @@
 
 <script type="text/javaScript">
 var keyValueList	= new Array();
+var type61	= new Array();
+var type62	= new Array();
+var type63	= new Array();
+var type64	= new Array();
+//var n61	= 0;	int n62	= 0;	int n63	= 0;	int n64	= 0;
 var format	= /^(19[7-9][0-9]|20\d{2})-(0[0-9]|1[0-2])-(0[1-9]|[1-2][0-9]|3[0-1])$/;
 var gridDataLength	= 0;
+var gWeekTh	= "";
+var gToday	= new Date();
+var gYear	= "";
+var gMonth	= "";
+var gDay	= "";
 
 $(function() {
 	fnScmStockCategoryCbBox();
@@ -68,6 +78,11 @@ $(function() {
 	fnScmStockCbBox();
 	doGetComboAndGroup2("/scm/selectScmStockCodeForMulti.do", "", "", "scmStockCodeCbBox", "M", "");
 	$(".js-example-basic-multiple").select2();
+	
+	gYear	= gToday.getFullYear();
+	gYear1	= gToday.getFullYear() - 1;
+	gMonth	= gToday.getMonth() - 5;
+	gDay	= gToday.getDate();
 });
 
 //	category
@@ -109,6 +124,7 @@ function fnScmStockCbBox() {
 							var list	= new Object();
 							list.id	= result[i].id;
 							list.name	= result[i].name;
+							list.type	= result[i].type;
 							keyValueList.push(list);
 						}
 					});
@@ -254,14 +270,41 @@ function fnEventHandler(event) {
 				return	false;
 			}
 		}
-		console.log("headerText : " + event.headerText);
-		if ( "Target" == event.headerText ) {
-			
-			var chkedItems	= AUIGrid.getItemsByValue(myGridID, "isTrget", "1");
-			if ( chkedItems.length != gridDataLength ) {
-				document.getElementById("isTrget").checked	= false;
-			} else if ( chkedItems.length == gridDataLength ) {
-				document.getElementById("isTrget").checked	= true;
+		
+		if ( "klTarget" == event.dataField ) {
+			var items	= AUIGrid.getItemsByValue(myGridID, "klTarget", "1");
+			if ( gridDataLength != items.length ) {
+				document.getElementById("klTarget").checked	= false;
+			} else if ( gridDataLength == items.length ) {
+				document.getElementById("klTarget").checked	= true;
+			}
+		} else if ( "kkTarget" == event.dataField ) {
+			var items	= AUIGrid.getItemsByValue(myGridID, "kkTarget", "1");
+			if ( gridDataLength != items.length ) {
+				document.getElementById("kkTarget").checked	= false;
+			} else if ( gridDataLength == items.length ) {
+				document.getElementById("kkTarget").checked	= true;
+			}
+		} else if ( "jbTarget" == event.dataField ) {
+			var items	= AUIGrid.getItemsByValue(myGridID, "jbTarget", "1");
+			if ( gridDataLength != items.length ) {
+				document.getElementById("jbTarget").checked	= false;
+			} else if ( gridDataLength == items.length ) {
+				document.getElementById("jbTarget").checked	= true;
+			}
+		} else if ( "pnTarget" == event.dataField ) {
+			var items	= AUIGrid.getItemsByValue(myGridID, "pnTarget", "1");
+			if ( gridDataLength != items.length ) {
+				document.getElementById("pnTarget").checked	= false;
+			} else if ( gridDataLength == items.length ) {
+				document.getElementById("pnTarget").checked	= true;
+			}
+		} else if ( "kcTarget" == event.dataField ) {
+			var items	= AUIGrid.getItemsByValue(myGridID, "kcTarget", "1");
+			if ( gridDataLength != items.length ) {
+				document.getElementById("kcTarget").checked	= false;
+			} else if ( gridDataLength == items.length ) {
+				document.getElementById("kcTarget").checked	= true;
 			}
 		}
 	} else if ( "cellEditCancel" == event.type ) {
@@ -270,29 +313,75 @@ function fnEventHandler(event) {
 }
 
 function headerClickHandler(event) {
-	console.log("event.dataField : " + event.dataField);
-	if ( "isTrget" == event.dataField ) {console.log("event.orgEvent.target.id : " + event.orgEvent.target.id);
-		if ( "isTrget" == event.orgEvent.target.id ) {
-			var isChked	= document.getElementById("isTrget").checked;
-			checkAll(isChked);
+	if ( "klTarget" == event.dataField ) {
+		if ( "klTarget" == event.orgEvent.target.id ) {
+			var isChecked	= document.getElementById("klTarget").checked;
+			checkAll(isChecked, "klTarget");
+		}
+		return	false;
+	} else if ( "kkTarget" == event.dataField ) {
+		if ( "kkTarget" == event.orgEvent.target.id ) {
+			var isChecked	= document.getElementById("kkTarget").checked;
+			checkAll(isChecked, "kkTarget");
+		}
+		return	false;
+	} else if ( "jbTarget" == event.dataField ) {
+		if ( "jbTarget" == event.orgEvent.target.id ) {
+			var isChecked	= document.getElementById("jbTarget").checked;
+			checkAll(isChecked, "jbTarget");
+		}
+		return	false;
+	} else if ( "pnTarget" == event.dataField ) {
+		if ( "pnTarget" == event.orgEvent.target.id ) {
+			var isChecked	= document.getElementById("pnTarget").checked;
+			checkAll(isChecked, "pnTarget");
+		}
+		return	false;
+	} else if ( "kcTarget" == event.dataField ) {
+		if ( "kcTarget" == event.orgEvent.target.id ) {
+			var isChecked	= document.getElementById("kcTarget").checked;
+			checkAll(isChecked, "kcTarget");
 		}
 		return	false;
 	}
 }
 
-function checkAll(isChked) {
-	console.log("isChked : " + isChked);
-	if ( isChked ) {
-		AUIGrid.updateAllToValue(myGridID, "isTrget", "1");
+function checkAll(isChecked, field) {
+	if ( isChecked ) {
+		if ( "klTarget" == field ) {
+			AUIGrid.updateAllToValue(myGridID, "klTarget", "1");
+			document.getElementById("klTarget").checked	= true;
+		} else if ( "kkTarget" == field ) {
+			AUIGrid.updateAllToValue(myGridID, "kkTarget", "1");
+			document.getElementById("kkTarget").checked	= true;
+		} else if ( "jbTarget" == field ) {
+			AUIGrid.updateAllToValue(myGridID, "jbTarget", "1");
+			document.getElementById("jbTarget").checked	= true;
+		} else if ( "pnTarget" == field ) {
+			AUIGrid.updateAllToValue(myGridID, "pnTarget", "1");
+			document.getElementById("pnTarget").checked	= true;
+		} else if ( "kcTarget" == field ) {
+			AUIGrid.updateAllToValue(myGridID, "kcTarget", "1");
+			document.getElementById("kcTarget").checked	= true;
+		}
 	} else {
-		AUIGrid.updateAllToValue(myGridID, "isTrget", "0");
+		if ( "klTarget" == field ) {
+			AUIGrid.updateAllToValue(myGridID, "klTarget", "0");
+			document.getElementById("klTarget").checked	= false;
+		} else if ( "kkTarget" == field ) {
+			AUIGrid.updateAllToValue(myGridID, "kkTarget", "0");
+			document.getElementById("kkTarget").checked	= false;
+		} else if ( "jbTarget" == field ) {
+			AUIGrid.updateAllToValue(myGridID, "jbTarget", "0");
+			document.getElementById("jbTarget").checked	= false;
+		} else if ( "pnTarget" == field ) {
+			AUIGrid.updateAllToValue(myGridID, "pnTarget", "0");
+			document.getElementById("pnTarget").checked	= false;
+		} else if ( "kcTarget" == field ) {
+			AUIGrid.updateAllToValue(myGridID, "kcTarget", "0");
+			document.getElementById("kcTarget").checked	= false;
+		}
 	}
-}
-
-function getItemsByField() {
-	var activeItems	= AUIGrid.getItemsByValue(myGridID, "isTrget", "1");
-	
-	alert("Acitve 체크 개수 : " + activeItems.length);
 }
 
 /*************************************
@@ -365,15 +454,57 @@ var masterManagerLayout	=
 						}
 					}, {
 						dataField : "dfltStock",
-						headerText : "Default Stock",
+						headerText : "Default<br/>Stock",
 						renderer : {
 							type : "DropDownListRenderer",
 							showEditorBtnOver : true,
-							listFunction : function(rowIndex, columnIndex, item, dataField) {
-								return	keyValueList;
-							},
 							keyField : "id",
-							valueField : "name"
+							valueField : "name",
+							listFunction : function(rowIndcex, columnIndex, item, dataField) {
+								if ( 61 == item.typeId ) {
+									type61	= new Array();
+									var temp	= { id : "", name : "None", type : 0 };
+									type61.push(temp);
+									for ( var i = 0 ; i < keyValueList.length ; i++ ) {
+										if ( 61 == keyValueList[i]["type"] ) {
+											type61.push(keyValueList[i]);
+										}
+									}
+									return	type61;
+								} else if ( 62 == item.typeId ) {
+									type62	= new Array();
+									var temp	= { id : "", name : "None", type : 0 };
+									type62.push(temp);
+									for ( var i = 0 ; i < keyValueList.length ; i++ ) {
+										if ( 62 == keyValueList[i]["type"] ) {
+											type62.push(keyValueList[i]);
+										}
+									}
+									return	type62;
+								} else if ( 63 == item.typeId ) {
+									type63	= new Array();
+									var temp	= { id : "", name : "None", type : 0 };
+									type63.push(temp);
+									for ( var i = 0 ; i < keyValueList.length ; i++ ) {
+										if ( 63 == keyValueList[i]["type"] ) {
+											type63.push(keyValueList[i]);
+										}
+									}
+									return	type63;
+								} else if ( 64 == item.typeId ) {
+									type64	= new Array();
+									var temp	= { id : "", name : "None", type : 0 };
+									type64.push(temp);
+									for ( var i = 0 ; i < keyValueList.length ; i++ ) {
+										if ( 64 == keyValueList[i]["type"] ) {
+											type64.push(keyValueList[i]);
+										}
+									}
+									return	type64;
+								} else {
+									return	keyValueList;
+								}
+							}
 						},
 						labelFunction : function(rowIndex, columnIndex, value, headerText, item) {
 							var retStr	= value;
@@ -403,7 +534,7 @@ var masterManagerLayout	=
 				[
 					{
 						dataField : "isTrget",
-						headerText : "<spring:message code='sys.scm.mastermanager.Target'/><br/><input type='checkbox' id='isTrget' style='width:15px;height:15px;'>",
+						headerText : "<spring:message code='sys.scm.mastermanager.Target'/>",
 						renderer : {
 							type : "CheckBoxEditRenderer",
 							showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
@@ -521,7 +652,7 @@ var masterManagerLayout	=
 							[
 								{
 									dataField : "klTarget",
-									headerText : "<spring:message code='sys.scm.mastermanager.KL'/>",
+									headerText : "<spring:message code='sys.scm.mastermanager.KL'/><input type='checkbox' id='klTarget' style='width:15px;height:15px;'>",
 									renderer : {
 										type : "CheckBoxEditRenderer",
 										showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
@@ -538,7 +669,7 @@ var masterManagerLayout	=
 									}
 								}, {
 									dataField : "kkTarget",
-									headerText : "<spring:message code='sys.scm.mastermanager.KK'/>",
+									headerText : "<spring:message code='sys.scm.mastermanager.KK'/><input type='checkbox' id='kkTarget' style='width:15px;height:15px;'>",
 									renderer : {
 										type : "CheckBoxEditRenderer",
 										showLabel  : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
@@ -555,7 +686,7 @@ var masterManagerLayout	=
 									}
 								}, {
 									dataField : "jbTarget",
-									headerText : "<spring:message code='sys.scm.mastermanager.JB'/>",
+									headerText : "<spring:message code='sys.scm.mastermanager.JB'/><input type='checkbox' id='jbTarget' style='width:15px;height:15px;'>",
 									renderer : {
 										type : "CheckBoxEditRenderer",
 										showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
@@ -572,7 +703,7 @@ var masterManagerLayout	=
 									}
 								}, {
 									dataField : "pnTarget",
-									headerText : "<spring:message code='sys.scm.mastermanager.PN'/>",
+									headerText : "<spring:message code='sys.scm.mastermanager.PN'/><input type='checkbox' id='pnTarget' style='width:15px;height:15px;'>",
 									renderer : {
 										type : "CheckBoxEditRenderer",
 										showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
@@ -589,7 +720,7 @@ var masterManagerLayout	=
 									}
 								}, {
 									dataField : "kcTarget",
-									headerText : "<spring:message code='sys.scm.mastermanager.KC'/>",
+									headerText : "<spring:message code='sys.scm.mastermanager.KC'/><input type='checkbox' id='kcTarget' style='width:15px;height:15px;'>",
 									renderer : {
 										type : "CheckBoxEditRenderer",
 										showLabel : false,	//	참, 거짓 텍스트 출력여부( 기본값 false )
@@ -730,21 +861,25 @@ $(document).ready(function() {
 	AUIGrid.bind(myGridID, "cellEditBegin", fnEventHandler);	//	에디팅 시작 이벤트 바인딩
 	AUIGrid.bind(myGridID, "cellEditEnd", fnEventHandler);		//	에디팅 정상 종료 이벤트 바인딩
 	AUIGrid.bind(myGridID, "cellEditCancel", fnEventHandler);	//	에디팅 취소 이벤트 바인딩
-	//	cellClick event.
-	AUIGrid.bind(myGridID, "cellClick", function(event) {
-		gSelRowIdx	= event.rowIndex;
-	});
-	//	셀 더블클릭 이벤트 바인딩
-	AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
-		console.log("DobleClick ( " + event.rowIndex + ", " + event.columnIndex + ") :  " + " value: " + event.value );		
-	});
-	//AUIGrid.bind(myGridID, "rowAllCheckClick", function(checked) {
-	//	alert("전체 선택  checked : " + checked);
-	//});
-	AUIGrid.bind(myGridID, "headerClick", headerClickHandler);
-	// ready 이벤트 바인딩
+	AUIGrid.bind(myGridID, "headerClick", headerClickHandler);	//	헤더 클릭 이벤트
 	AUIGrid.bind(myGridID, "ready", function(event) {
 		gridDataLength	= AUIGrid.getGridData(myGridID).length; // 그리드 전체 행수 보관
+	});
+	AUIGrid.bind(myGridID, "cellClick", function(event) {
+		if ( "isTrget" == event.dataField ) {
+			var isTrget	= event.item.isTrget;
+			if ( "1" == isTrget ) {
+				//if ( "" == AUIGrid.getCellValue(myGridID, event.rowIndex, "startDt") ) {
+					AUIGrid.setCellValue(myGridID, event.rowIndex, "startDt", "20181127");
+					AUIGrid.setCellValue(myGridID, event.rowIndex, "endDt", "20991231");
+				//}
+			} else if ( "0" == isTrget ) {
+				//if ( "" != AUIGrid.getCellValue(myGridID, event.rowIndex, "startDt") || "" != AUIGrid.getCellValue(myGridID, event.rowIndex, "endDt") ) {
+					AUIGrid.setCellValue(myGridID, event.rowIndex, "startDt", "");
+					AUIGrid.setCellValue(myGridID, event.rowIndex, "endDt", "");
+				//}
+			}
+		}
 	});
 });   //$(document).ready
 </script>
@@ -766,7 +901,6 @@ $(document).ready(function() {
 	
 	<section class="search_table"><!-- search_table start -->
 		<form id="MainForm" method="get" action="">
-			<input type ="hidden" id="planMasterId" name="planMasterId" value=""/>
 			<table class="type1"><!-- table start -->
 				<caption>table</caption>
 				<colgroup>

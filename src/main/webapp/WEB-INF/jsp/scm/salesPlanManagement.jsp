@@ -66,7 +66,7 @@ $(function() {
 	//	Get Today Year, Week
 	gYear	= gToday.getFullYear();
 	gYear1	= gToday.getFullYear() - 1;
-	gMonth	= gToday.getMonth() + 1;
+	gMonth	= gToday.getMonth() - 5;
 	gDay	= gToday.getDate();
 	console.log("gYear : " + gYear + ", gYear1 : " + gYear1 + ", gMonth : " + gMonth + ", gDay : " + gDay);
 	
