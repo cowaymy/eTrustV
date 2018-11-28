@@ -156,21 +156,29 @@ SELECT DISTINCT A.ID
 </select>
 
 <select id="selectScmStockCode" parameterType="Map" resultType="egovMap">
-SELECT B.STK_CODE AS ID
-     , B.STK_CODE || ' - ' || B.STK_DESC AS NAME
-  FROM SCM0008M A
-  LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
- WHERE A.IS_TRGET = 1
-   AND A.STUS_CODE_ID = 1
-   AND B.IS_NCV = 0
-   AND B.STUS_CODE_ID = 1
+SELECT A.ID
+     , A.NAME
+     , A.TYPE
+  FROM (
+        SELECT '' AS ID, 'None' AS NAME, 0 AS TYPE FROM DUAL
+        UNION ALL
+        SELECT B.STK_CODE AS ID
+             , B.STK_CODE || ' - ' || B.STK_DESC AS NAME
+             , B.STK_TYPE_ID AS TYPE
+          FROM SCM0008M A
+          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
+         WHERE A.IS_TRGET = 1
+           AND A.STUS_CODE_ID = 1
+           AND B.IS_NCV = 0
+           AND B.STUS_CODE_ID = 1
 	<if test="scmStockType != null and scmStockType != ''">
-   AND B.STK_TYPE_ID IN (SELECT REGEXP_SUBSTR (#{scmStockType}, '[^,]+', 1, LEVEL) FROM DUAL CONNECT BY REGEXP_SUBSTR (#{scmStockType}, '[^,]+', 1, LEVEL) IS NOT NULL)
+           AND B.STK_TYPE_ID IN (SELECT REGEXP_SUBSTR (#{scmStockType}, '[^,]+', 1, LEVEL) FROM DUAL CONNECT BY REGEXP_SUBSTR (#{scmStockType}, '[^,]+', 1, LEVEL) IS NOT NULL)
 	</if>
 	<if test="scmStockCategory != null and scmStockCategory != ''">
-   AND B.STK_CTGRY_ID IN (SELECT REGEXP_SUBSTR (#{scmStockCategory}, '[^,]+', 1, LEVEL) FROM DUAL CONNECT BY REGEXP_SUBSTR (#{scmStockCategory}, '[^,]+', 1, LEVEL) IS NOT NULL)
+           AND B.STK_CTGRY_ID IN (SELECT REGEXP_SUBSTR (#{scmStockCategory}, '[^,]+', 1, LEVEL) FROM DUAL CONNECT BY REGEXP_SUBSTR (#{scmStockCategory}, '[^,]+', 1, LEVEL) IS NOT NULL)
 	</if>
- ORDER BY B.STK_CODE
+        ) A
+ ORDER BY A.ID DESC
 </select>
 
 <select id="selectScmStockCodeForMulti" parameterType="Map" resultType="egovMap">
@@ -253,6 +261,7 @@ SELECT A.PLAN_YEAR  /* 수립주차가 포함된 년 */
      , A.M2_MON
      , A.M3_MON
      , A.M4_MON
+     , A.END_DT
   FROM (
         SELECT A.*
              , CASE WHEN A.PLAN_MONTH = 1 THEN A.PLAN_YEAR - 1 ELSE A.PLAN_YEAR END AS CLOSE_YEAR
@@ -301,6 +310,7 @@ SELECT A.PLAN_YEAR  /* 수립주차가 포함된 년 */
                             END AS PLAN_FST_SPLT_WEEK
                      , (SELECT MAX(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_MONTH = A.PLAN_MONTH) AS PLAN_LST_WEEK
                      , (SELECT MAX(Z.SCM_WEEK) FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR) AS PLAN_YEAR_LST_WEEK
+                     , (SELECT TO_CHAR(MAX(Z.SCM_WEEK_END), 'YYYYMMDD') FROM SCM0018M Z WHERE Z.SCM_YEAR = A.PLAN_YEAR AND Z.SCM_WEEK = A.PLAN_WEEK) AS END_DT
                   FROM (
                         SELECT TO_NUMBER(#{scmYearCbBox}) AS PLAN_YEAR
                              , (SELECT MIN(Z.SCM_MONTH) FROM SCM0018M Z WHERE Z.SCM_YEAR = TO_NUMBER(#{scmYearCbBox}) AND Z.SCM_WEEK = TO_NUMBER(#{scmWeekCbBox})) AS PLAN_MONTH

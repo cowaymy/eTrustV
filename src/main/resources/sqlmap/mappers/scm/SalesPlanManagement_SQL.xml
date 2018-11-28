@@ -389,8 +389,7 @@ SELECT #{planId}
   FROM SCM0008M A
  WHERE A.STUS_CODE_ID = 1
    AND A.IS_TRGET = 1
-   AND TO_CHAR(A.START_DT, 'YYYYMMDD') <![CDATA[ <= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
-   AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
+   AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> #{endDt}
 </insert>
 <select id="selectSalesPlanForUpdate" parameterType="Map" resultType="egovMap">
 SELECT B.PLAN_ID
@@ -431,7 +430,7 @@ SELECT B.PLAN_ID
      , NVL(B.WS3, 0) AS WS3
      , NVL(B.WS4, 0) AS WS4
      , NVL(B.WS5, 0) AS WS5
-  FROM SCM0008M A          
+  FROM SCM0008M A
   LEFT OUTER JOIN (
                    SELECT Z.PLAN_ID
                         , X.PLAN_DTL_ID
@@ -479,9 +478,46 @@ SELECT B.PLAN_ID
                    ) B ON (A.STOCK_CODE = B.STOCK_CODE)
  WHERE A.STUS_CODE_ID = 1
    AND A.IS_TRGET = 1
-   AND TO_CHAR(A.START_DT, 'YYYYMMDD') <![CDATA[ <= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
-   AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> TO_CHAR(SYSDATE, 'YYYYMMDD')
- ORDER BY B.STOCK_CODE
+   AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> #{endDt}
+ ORDER BY A.STOCK_CODE
+</select>
+<select id="selectThisMonthOrder" parameterType="Map" resultType="egovMap">
+SELECT A.STOCK_CODE
+     , SUM(B.W01) AS W01
+     , SUM(B.W02) AS W02
+     , SUM(B.W03) AS W03
+     , SUM(B.W04) AS W04
+     , SUM(B.W05) AS W05
+     , SUM(B.W06) AS W06
+  FROM SCM0008M A
+  LEFT OUTER JOIN (
+                   SELECT Z.STOCK_CODE
+                        , CASE WHEN X.RN = 1 THEN (SELECT NVL(SUM(ORD_QTY), 0) FROM SCM0050S WHERE ORD_DT BETWEEN X.SCM_START AND X.SCM_END AND STOCK_CODE = Z.STOCK_CODE AND TEAM = #{team}) ELSE 0 END AS W01
+                        , CASE WHEN X.RN = 2 THEN (SELECT NVL(SUM(ORD_QTY), 0) FROM SCM0050S WHERE ORD_DT BETWEEN X.SCM_START AND X.SCM_END AND STOCK_CODE = Z.STOCK_CODE AND TEAM = #{team}) ELSE 0 END AS W02
+                        , CASE WHEN X.RN = 3 THEN (SELECT NVL(SUM(ORD_QTY), 0) FROM SCM0050S WHERE ORD_DT BETWEEN X.SCM_START AND X.SCM_END AND STOCK_CODE = Z.STOCK_CODE AND TEAM = #{team}) ELSE 0 END AS W03
+                        , CASE WHEN X.RN = 4 THEN (SELECT NVL(SUM(ORD_QTY), 0) FROM SCM0050S WHERE ORD_DT BETWEEN X.SCM_START AND X.SCM_END AND STOCK_CODE = Z.STOCK_CODE AND TEAM = #{team}) ELSE 0 END AS W04
+                        , CASE WHEN X.RN = 5 THEN (SELECT NVL(SUM(ORD_QTY), 0) FROM SCM0050S WHERE ORD_DT BETWEEN X.SCM_START AND X.SCM_END AND STOCK_CODE = Z.STOCK_CODE AND TEAM = #{team}) ELSE 0 END AS W05
+                        , CASE WHEN X.RN = 6 THEN (SELECT NVL(SUM(ORD_QTY), 0) FROM SCM0050S WHERE ORD_DT BETWEEN X.SCM_START AND X.SCM_END AND STOCK_CODE = Z.STOCK_CODE AND TEAM = #{team}) ELSE 0 END AS W06
+                     FROM (
+                           SELECT B.STOCK_CODE
+                             FROM SCM0001M A
+                             LEFT OUTER JOIN SCM0002D B ON (A.PLAN_ID = B.PLAN_ID)
+                            WHERE A.PLAN_YEAR = #{year}
+                              AND A.PLAN_WEEK = #{week}
+                              AND A.TEAM = #{team}
+                           ) Z
+                        , (
+                           SELECT ROW_NUMBER() OVER (PARTITION BY SCM_MONTH ORDER BY CAL_ID) AS RN
+                                , TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AS SCM_START
+                                , TO_CHAR(SCM_WEEK_END, 'YYYYMMDD') AS SCM_END
+                             FROM SCM0018M WHERE SCM_YEAR = #{year} AND SCM_MONTH = #{month} AND SCM_WEEK <![CDATA[ < ]]> #{week}
+                           ) X
+                   ) B ON (A.STOCK_CODE = B.STOCK_CODE)
+ WHERE A.STUS_CODE_ID = 1
+   AND A.IS_TRGET = 1
+   AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> #{endDt}
+ GROUP BY A.STOCK_CODE
+ ORDER BY A.STOCK_CODE
 </select>
 
 <!-- Save -->
