@@ -148,6 +148,15 @@ SELECT '2' AS GBN
 	</if>
             ), 0) AS PLAN_STUS_ID
   FROM DUAL
+UNION ALL
+SELECT '3' AS GBN
+     , NVL((
+            SELECT SUM(Z.PLAN_STUS_ID)
+              FROM SCM0005M Z
+             WHERE Z.PLAN_YEAR = #{planYear}
+               AND Z.PLAN_WEEK = #{planWeek}
+            ), 0) AS PLAN_STUS_ID
+  FROM DUAL
 </select>
 <select id="selectSalesPlanList" parameterType="Map" resultType="egovMap">
 SELECT A.PLAN_ID

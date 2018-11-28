@@ -146,6 +146,16 @@ SELECT '2' AS GBN
                AND Z.CDC = #{cdc}
             ), 0) AS PLAN_STUS_ID
   FROM DUAL
+UNION ALL
+SELECT '3' AS GBN
+     , NVL((
+            SELECT SUM(Z.PO_STUS_ID)
+              FROM SCM0052M Z
+             WHERE Z.PO_YEAR = #{planYear}
+               AND Z.PO_WEEK = #{planWeek}
+               AND Z.CDC = #{cdc}
+            ), 0) AS PLAN_STUS_ID
+  FROM DUAL
 </select>
 <select id="selectSupplyPlanList" parameterType="Map" resultType="egovMap">
 SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_ODD
@@ -721,6 +731,58 @@ SELECT A.STOCK_CODE
             ), 0) AS W15
   FROM (SELECT #{stockCode} AS STOCK_CODE, #{cdc} AS CDC FROM DUAL) A
 </select>
+<update id="updateSupplyPlanDetailPsi1" parameterType="Map">
+UPDATE SCM0006D
+   SET M0 = CEIL(TO_NUMBER(REPLACE(#{m0}, ',')))
+     , M1 = CEIL(TO_NUMBER(REPLACE(#{m1}, ',')))
+     , M2 = CEIL(TO_NUMBER(REPLACE(#{m2}, ',')))
+     , M3 = CEIL(TO_NUMBER(REPLACE(#{m3}, ',')))
+     , M4 = CEIL(TO_NUMBER(REPLACE(#{m4}, ',')))
+ WHERE PLAN_ID = #{planId}
+   AND PSI_ID = #{psiId}
+   AND STOCK_CODE = #{stockCode}
+</update>
+<update id="updateSupplyPlanDetailPsi235" parameterType="Map">
+UPDATE SCM0006D
+   SET M0 = CEIL(TO_NUMBER(REPLACE(#{m0}, ',')))
+     , M1 = CEIL(TO_NUMBER(REPLACE(#{m1}, ',')))
+     , M2 = CEIL(TO_NUMBER(REPLACE(#{m2}, ',')))
+     , M3 = CEIL(TO_NUMBER(REPLACE(#{m3}, ',')))
+     , M4 = CEIL(TO_NUMBER(REPLACE(#{m4}, ',')))
+     , W01 = CEIL(TO_NUMBER(REPLACE(#{w01}, ',')))
+     , W02 = CEIL(TO_NUMBER(REPLACE(#{w02}, ',')))
+     , W03 = CEIL(TO_NUMBER(REPLACE(#{w03}, ',')))
+     , W04 = CEIL(TO_NUMBER(REPLACE(#{w04}, ',')))
+     , W05 = CEIL(TO_NUMBER(REPLACE(#{w05}, ',')))
+     , W06 = CEIL(TO_NUMBER(REPLACE(#{w06}, ',')))
+     , W07 = CEIL(TO_NUMBER(REPLACE(#{w07}, ',')))
+     , W08 = CEIL(TO_NUMBER(REPLACE(#{w08}, ',')))
+     , W09 = CEIL(TO_NUMBER(REPLACE(#{w09}, ',')))
+     , W10 = CEIL(TO_NUMBER(REPLACE(#{w10}, ',')))
+     , W11 = CEIL(TO_NUMBER(REPLACE(#{w11}, ',')))
+     , W12 = CEIL(TO_NUMBER(REPLACE(#{w12}, ',')))
+     , W13 = CEIL(TO_NUMBER(REPLACE(#{w13}, ',')))
+     , W14 = CEIL(TO_NUMBER(REPLACE(#{w14}, ',')))
+     , W15 = CEIL(TO_NUMBER(REPLACE(#{w15}, ',')))
+     , W16 = CEIL(TO_NUMBER(REPLACE(#{w16}, ',')))
+     , W17 = CEIL(TO_NUMBER(REPLACE(#{w17}, ',')))
+     , W18 = CEIL(TO_NUMBER(REPLACE(#{w18}, ',')))
+     , W19 = CEIL(TO_NUMBER(REPLACE(#{w19}, ',')))
+     , W20 = CEIL(TO_NUMBER(REPLACE(#{w20}, ',')))
+     , W21 = CEIL(TO_NUMBER(REPLACE(#{w21}, ',')))
+     , W22 = CEIL(TO_NUMBER(REPLACE(#{w22}, ',')))
+     , W23 = CEIL(TO_NUMBER(REPLACE(#{w23}, ',')))
+     , W24 = CEIL(TO_NUMBER(REPLACE(#{w24}, ',')))
+     , W25 = CEIL(TO_NUMBER(REPLACE(#{w25}, ',')))
+     , W26 = CEIL(TO_NUMBER(REPLACE(#{w26}, ',')))
+     , W27 = CEIL(TO_NUMBER(REPLACE(#{w27}, ',')))
+     , W28 = CEIL(TO_NUMBER(REPLACE(#{w28}, ',')))
+     , W29 = CEIL(TO_NUMBER(REPLACE(#{w29}, ',')))
+     , W30 = CEIL(TO_NUMBER(REPLACE(#{w30}, ',')))
+ WHERE PLAN_ID = #{planId}
+   AND PSI_ID = #{psiId}
+   AND STOCK_CODE = #{stockCode}
+</update>
 
 <!-- Save -->
 <update id="updateSupplyPlanDetail" parameterType="Map">
