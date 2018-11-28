@@ -68,7 +68,7 @@ $(function() {
 	gYear1	= gToday.getFullYear() - 1;
 	gMonth	= gToday.getMonth() - 5;
 	gDay	= gToday.getDate();
-	console.log("gYear : " + gYear + ", gYear1 : " + gYear1 + ", gMonth : " + gMonth + ", gDay : " + gDay);
+	//console.log("gYear : " + gYear + ", gYear1 : " + gYear1 + ", gMonth : " + gMonth + ", gDay : " + gDay);
 	
 	//fnScmTotalPeriod();
 	//	Set combo box
@@ -440,7 +440,7 @@ function fnSalesPlanHeader() {
 						}
 						if ( parseInt(gWeekTh) > startCnt ) {
 							//	수립주차 기준 당월의 과거 주차
-							console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							//console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							if ( 2 > startCnt.toString().length ) {
 								strWeekTh	= "W0";
 							} else {
@@ -458,7 +458,7 @@ function fnSalesPlanHeader() {
 							iLoopCnt++;
 						} else if ( parseInt(gWeekTh) == startCnt ) {
 							//	수립주차 기준 당월의 바로 전 주차
-							console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							//console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -471,9 +471,9 @@ function fnSalesPlanHeader() {
 							iLoopCnt++;
 						} else {
 							//	수립주차 기준 당월의 미래 주차
-							console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							//console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
-							var planStusId	= result.selectSalesPlanInfo[0].planStusId;	console.log("planStusId : " + planStusId);
+							var planStusId	= result.selectSalesPlanInfo[0].planStusId;//	console.log("planStusId : " + planStusId);
 							if ( "5" == planStusId ) {
 								//	Confirm이면 읽기전용
 								groupM0.children.push({
@@ -515,7 +515,7 @@ function fnSalesPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						if ( parseInt(gWeekTh) > startCnt ) {
-							console.log("4. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							//console.log("4. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							if ( 2 > startCnt.toString().length ) {
 								strWeekTh	= "W0";
 							} else {
@@ -532,7 +532,7 @@ function fnSalesPlanHeader() {
 							});
 							iLoopCnt++;
 						} else if ( parseInt(gWeekTh) == startCnt ) {
-							console.log("5. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							//console.log("5. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							groupM1.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -544,9 +544,9 @@ function fnSalesPlanHeader() {
 							});
 							iLoopCnt++;
 						} else {
-							console.log("6. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							//console.log("6. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
-							var planStusId	= result.selectSalesPlanInfo[0].planStusId;	console.log("planStusId : " + planStusId);
+							var planStusId	= result.selectSalesPlanInfo[0].planStusId;//	console.log("planStusId : " + planStusId);
 							if ( "5" == planStusId ) {
 								groupM1.children.push({
 									dataField : "w" + intToStrFieldCnt,	//	w00
@@ -587,7 +587,7 @@ function fnSalesPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						var planStusId	= result.selectSalesPlanInfo[0].planStusId;	console.log("planStusId : " + planStusId);
+						var planStusId	= result.selectSalesPlanInfo[0].planStusId;//	console.log("planStusId : " + planStusId);
 						if ( "5" == planStusId ) {
 							groupM2.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -626,7 +626,7 @@ function fnSalesPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						var planStusId	= result.selectSalesPlanInfo[0].planStusId;	console.log("planStusId : " + planStusId);
+						var planStusId	= result.selectSalesPlanInfo[0].planStusId;//	console.log("planStusId : " + planStusId);
 						if ( "5" == planStusId ) {
 							groupM3.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -665,7 +665,7 @@ function fnSalesPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						var planStusId	= result.selectSalesPlanInfo[0].planStusId;	console.log("planStusId : " + planStusId);
+						var planStusId	= result.selectSalesPlanInfo[0].planStusId;//	console.log("planStusId : " + planStusId);
 						if ( "5" == planStusId ) {
 							groupM4.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -740,7 +740,7 @@ function fnSearch() {
 				if ( "/scm/selectSalesPlanListAll.do" == url ) {
 					fnButtonControl("All", result.selectSalesPlanInfo, result.selectSalesPlanList);
 				} else if ( "/scm/selectSalesPlanList.do" == url ) {
-					fnButtonControl("None", result.selectSalesPlanInfo, result.selectSalesPlanList);
+					fnButtonControl("Each", result.selectSalesPlanInfo, result.selectSalesPlanList);
 				} else {
 					console.log("fnSearch Error");
 					return	false;
@@ -1040,155 +1040,148 @@ function fnSumMnPlan(event) {
 
 //	Button & status
 function fnButtonControl(div, list1, list2) {
-	var thisWeek	= list1[0].planStusId;	//	this week
-	var beforeWeek	= list1[1].planStusId;	//	before week
-	
+	//	list1 : SalesPlan Info. 무조건 2개의 row
+	//	list2 : SalesPlan List. row가 없을 수도 있음
+	var currWeek	= list1[0].planStusId;	//	this week
+	var prevWeek	= list1[1].planStusId;	//	before week
+	var currSupp	= list1[2].planStusId;	//	this week supply plan
+	console.log("prevWeek : " + prevWeek + ", currWeek : " + currWeek + ", currSupp : " + currSupp);
+	//	Button
 	if ( "All" == div ) {
+		$("#btnCreate").addClass("btn_disabled");
+		$("#btnSave").addClass("btn_disabled");
+		$("#btnConfirm").addClass("btn_disabled");
+		$("#btnUnconfirm").addClass("btn_disabled");
 		if ( null == list2 ) {
+			//	팀전체, 판매계획 데이터가 없는 경우
+			$("#btnExcel").addClass("btn_disabled");
+		} else {
+			//	팀전체, 판매계획 데이터가 있는 경우
+			$("#btnExcel").removeClass("btn_disabled");
+		}
+	} else if ( "Each" == div ) {
+		//	prevWeek : 0 / 1 / 5
+		if ( 0 == prevWeek || 1 == prevWeek ) {
+			//	팀개별, 전주 판매계획이 없거나, confirmed인 경우
 			$("#btnCreate").addClass("btn_disabled");
 			$("#btnSave").addClass("btn_disabled");
 			$("#btnConfirm").addClass("btn_disabled");
 			$("#btnUnconfirm").addClass("btn_disabled");
 			$("#btnExcel").addClass("btn_disabled");
-		} else {
-			if ( 0 == beforeWeek ) {
-				$("#cirPrevWeek").addClass("circle_grey");
-				$("#cirPrevWeek").removeClass("circle_red");
-				$("#cirPrevWeek").removeClass("circle_blue");
-			} else if ( 15 == beforeWeek ) {
-				$("#cirPrevWeek").removeClass("circle_grey");
-				$("#cirPrevWeek").removeClass("circle_red");
-				$("#cirPrevWeek").addClass("circle_blue");
-			} else {
-				$("#cirPrevWeek").removeClass("circle_grey");
-				$("#cirPrevWeek").addClass("circle_red");
-				$("#cirPrevWeek").removeClass("circle_blue");
-			}
-			if ( 0 == thisWeek ) {
-				$("#cirPrevWeek").addClass("circle_grey");
-				$("#cirPrevWeek").removeClass("circle_red");
-				$("#cirPrevWeek").removeClass("circle_blue");
-			} else if ( 15 == thisWeek ) {
-				$("#cirPrevWeek").removeClass("circle_grey");
-				$("#cirPrevWeek").removeClass("circle_red");
-				$("#cirPrevWeek").addClass("circle_blue");
-			} else {
-				$("#cirPrevWeek").removeClass("circle_grey");
-				$("#cirPrevWeek").addClass("circle_red");
-				$("#cirPrevWeek").removeClass("circle_blue");
-			}
-			if ( 0 == list2.length ) {
-				$("#btnCreate").addClass("btn_disabled");
+		} else if ( 5 == prevWeek ) {
+			//	팀개별, 전주 판매계획 confirmed인 경우
+			if ( 0 == currWeek ) {
+				//	팀개별, 금주 판매계획 데이터가 없는 경우
+				$("#btnCreate").removeClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").addClass("btn_disabled");
-			} else {
+			} else if ( 1 == currWeek ) {
+				//	팀개별, 금주 판매계획 unconfirmed인 경우
+				$("#btnCreate").addClass("btn_disabled");
+				$("#btnSave").removeClass("btn_disabled");
+				$("#btnConfirm").removeClass("btn_disabled");
+				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnExcel").removeClass("btn_disabled");
+			} else if ( 5 == currWeek ) {
+				//	팀개별, 금주 판매계획 confirmed인 경우
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
-				$("#btnUnconfirm").addClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
+				if ( 0 == currSupp ) {
+					//	금주 공급계획이 아무것도 생성되지 않은 경우
+					$("#btnUnconfirm").removeClass("btn_disabled");
+				} else {
+					//	금주 공급계획이 최소 생성이 된 경우
+					$("#btnUnconfirm").addClass("btn_disabled");
+				}
+			} else {
+				console.log("button currWeek error");
 			}
+		} else {
+			console.log("button prevWeek error");
 		}
-	} else if ( "None" == div ) {
-		console.log("beforeWeek : " + beforeWeek + ", thisWeek : " + thisWeek);
-		if ( 0 == beforeWeek ) {
-			//	no plan
-			$("#btnCreate").addClass("btn_disabled");
-			$("#btnSave").addClass("btn_disabled");
-			$("#btnConfirm").addClass("btn_disabled");
-			$("#btnUnconfirm").addClass("btn_disabled");
-			$("#btnExcel").addClass("btn_disabled");
-			
+	} else {
+		console.log("button div error");
+	}
+	
+	//	Circle
+	if ( "All" == div ) {
+		//	prevWeek 정보
+		if ( 0 == prevWeek ) {
+			//	prevWeek에 판매계획정보 아무것도 없음
 			$("#cirPrevWeek").addClass("circle_grey");
 			$("#cirPrevWeek").removeClass("circle_red");
 			$("#cirPrevWeek").removeClass("circle_blue");
-		} else if ( 1 == beforeWeek ) {
-			//	plan not confirmed
-			/*$("#btnCreate").addClass("btn_disabled");
-			$("#btnSave").addClass("btn_disabled");
-			$("#btnConfirm").addClass("btn_disabled");
-			$("#btnUnconfirm").addClass("btn_disabled");
-			$("#btnExcel").addClass("btn_disabled");*/
-			
-			$("#cirPrevWeek").removeClass("circle_grey");
-			$("#cirPrevWeek").addClass("circle_red");
-			$("#cirPrevWeek").removeClass("circle_blue");
-			if ( 0 == thisWeek ) {
-				$("#btnCreate").removeClass("btn_disabled");
-				$("#btnSave").addClass("btn_disabled");
-				$("#btnConfirm").addClass("btn_disabled");
-				$("#btnUnconfirm").addClass("btn_disabled");
-				$("#btnExcel").addClass("btn_disabled");
-				
-				$("#cirCurrWeek").addClass("circle_grey");
-				$("#cirCurrWeek").removeClass("circle_red");
-				$("#cirCurrWeek").removeClass("circle_blue");
-			} else if ( 1 == thisWeek ) {
-				$("#btnCreate").addClass("btn_disabled");
-				$("#btnSave").removeClass("btn_disabled");
-				$("#btnConfirm").removeClass("btn_disabled");
-				$("#btnUnconfirm").addClass("btn_disabled");
-				$("#btnExcel").removeClass("btn_disabled");
-				
-				$("#cirCurrWeek").removeClass("circle_grey");
-				$("#cirCurrWeek").addClass("circle_red");
-				$("#cirCurrWeek").removeClass("circle_blue");
-			} else if ( 5 == thisWeek ) {
-				$("#btnCreate").addClass("btn_disabled");
-				$("#btnSave").addClass("btn_disabled");
-				$("#btnConfirm").addClass("btn_disabled");
-				$("#btnUnconfirm").removeClass("btn_disabled");
-				$("#btnExcel").removeClass("btn_disabled");
-				
-				$("#cirCurrWeek").removeClass("circle_grey");
-				$("#cirCurrWeek").removeClass("circle_red");
-				$("#cirCurrWeek").addClass("circle_blue");
-			} else {
-				console.log("This week's sales plan info is wrong");
-			}
-		} else if ( 5 == beforeWeek ) {
+		} else if ( 15 == prevWeek ) {
+			//	prevWeek에 판매계획정보 3개팀 전부 confirm
+			//	만약 팀이 1개 늘어날때마다 +5씩 해줘야 함
 			$("#cirPrevWeek").removeClass("circle_grey");
 			$("#cirPrevWeek").removeClass("circle_red");
 			$("#cirPrevWeek").addClass("circle_blue");
-			//	plan confirmed
-			if ( 0 == thisWeek ) {
-				$("#btnCreate").removeClass("btn_disabled");
-				$("#btnSave").addClass("btn_disabled");
-				$("#btnConfirm").addClass("btn_disabled");
-				$("#btnUnconfirm").addClass("btn_disabled");
-				$("#btnExcel").addClass("btn_disabled");
-				
-				$("#cirCurrWeek").addClass("circle_grey");
-				$("#cirCurrWeek").removeClass("circle_red");
-				$("#cirCurrWeek").removeClass("circle_blue");
-			} else if ( 1 == thisWeek ) {
-				$("#btnCreate").addClass("btn_disabled");
-				$("#btnSave").removeClass("btn_disabled");
-				$("#btnConfirm").removeClass("btn_disabled");
-				$("#btnUnconfirm").addClass("btn_disabled");
-				$("#btnExcel").removeClass("btn_disabled");
-				
-				$("#cirCurrWeek").removeClass("circle_grey");
-				$("#cirCurrWeek").addClass("circle_red");
-				$("#cirCurrWeek").removeClass("circle_blue");
-			} else if ( 5 == thisWeek ) {
-				$("#btnCreate").addClass("btn_disabled");
-				$("#btnSave").addClass("btn_disabled");
-				$("#btnConfirm").addClass("btn_disabled");
-				$("#btnUnconfirm").removeClass("btn_disabled");
-				$("#btnExcel").removeClass("btn_disabled");
-				
-				$("#cirCurrWeek").removeClass("circle_grey");
-				$("#cirCurrWeek").removeClass("circle_red");
-				$("#cirCurrWeek").addClass("circle_blue");
-			} else {
-				console.log("This week's sales plan info is wrong");
-			}
 		} else {
-			console.log("Before Week's Sales Plan info is wrong");
+			//	prevWeek에 판매계획정보 최소 생성 ~ 모든 팀이 confirm 은 아님
+			$("#cirPrevWeek").removeClass("circle_grey");
+			$("#cirPrevWeek").addClass("circle_red");
+			$("#cirPrevWeek").removeClass("circle_blue");
 		}
+		//	currWeek 정보
+		if ( 0 == currWeek ) {
+			//	currWeek에 판매계획정보 아무것도 없음
+			$("#cirCurrWeek").addClass("circle_grey");
+			$("#cirCurrWeek").removeClass("circle_red");
+			$("#cirCurrWeek").removeClass("circle_blue");
+		} else if ( 15 == currWeek ) {
+			//	currWeek에 판매계획정보 3개팀 전부 confirm
+			//	만약 팀이 1개 늘어날때마다 +5씩 해줘야 함
+			$("#cirCurrWeek").removeClass("circle_grey");
+			$("#cirCurrWeek").removeClass("circle_red");
+			$("#cirCurrWeek").addClass("circle_blue");
+		} else {
+			//	currWeek에 판매계획정보 최소 생성 ~ 모든 팀이 confirm 은 아님
+			$("#cirCurrWeek").removeClass("circle_grey");
+			$("#cirCurrWeek").addClass("circle_red");
+			$("#cirCurrWeek").removeClass("circle_blue");
+		}
+	} else if ( "Each" == div ) {
+		//	prevWeek 정보
+		if ( 0 == prevWeek ) {
+			//	prevWeek에 판매계획정보 아무것도 없음
+			$("#cirPrevWeek").addClass("circle_grey");
+			$("#cirPrevWeek").removeClass("circle_red");
+			$("#cirPrevWeek").removeClass("circle_blue");
+		} else if ( 5 == prevWeek ) {
+			//	prevWeek에 판매계획정보 1개팀 confirm
+			$("#cirPrevWeek").removeClass("circle_grey");
+			$("#cirPrevWeek").removeClass("circle_red");
+			$("#cirPrevWeek").addClass("circle_blue");
+		} else {
+			//	prevWeek에 판매계획정보 1개팀 unconfirm
+			$("#cirPrevWeek").removeClass("circle_grey");
+			$("#cirPrevWeek").addClass("circle_red");
+			$("#cirPrevWeek").removeClass("circle_blue");
+		}
+		//	currWeek 정보
+		if ( 0 == currWeek ) {
+			//	currWeek에 판매계획정보 아무것도 없음
+			$("#cirCurrWeek").addClass("circle_grey");
+			$("#cirCurrWeek").removeClass("circle_red");
+			$("#cirCurrWeek").removeClass("circle_blue");
+		} else if ( 5 == currWeek ) {
+			//	currWeek에 판매계획정보 1개팀 confirm
+			$("#cirCurrWeek").removeClass("circle_grey");
+			$("#cirCurrWeek").removeClass("circle_red");
+			$("#cirCurrWeek").addClass("circle_blue");
+		} else {
+			//	currWeek에 판매계획정보 1개팀 unconfirm
+			$("#cirCurrWeek").removeClass("circle_grey");
+			$("#cirCurrWeek").addClass("circle_red");
+			$("#cirCurrWeek").removeClass("circle_blue");
+		}
+	} else {
+		console.log("circle div error");
 	}
 }
 

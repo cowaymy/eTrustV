@@ -994,134 +994,91 @@ function fnCalcPsi5(event) {
 
 //	Button & status
 function fnButtonControl(list1, list2) {
+	//	list1 : SupplyPlan Info
+	//	list2 : SupplyPlan List
 	var salesPlanStusId		= list1[0].planStusId;
 	var supplyPlanStusId	= list1[1].planStusId;
-	//console.log("salesPlanStusId : " + salesPlanStusId + ", supplyPlanStusId : " + supplyPlanStusId);
+	var poStusId			= list1[2].planStusId;
+	console.log("salesPlanStusId : " + salesPlanStusId + ", supplyPlanStusId : " + supplyPlanStusId + ", poStusId : " + poStusId);
+	//	Button
 	if ( 0 == salesPlanStusId ) {
-		//	button
+		//	판매계획 3개티 모두 생성안됨
 		$("#btnCreate").addClass("btn_disabled");
 		$("#btnSave").addClass("btn_disabled");
 		$("#btnConfirm").addClass("btn_disabled");
 		$("#btnUnconfirm").addClass("btn_disabled");
+		$("#btnExcel").addClass("btn_disabled");
+	} else if ( 15 == salesPlanStusId ) {
+		//	판매계획 3개팀 모두 confirm
 		if ( 0 == supplyPlanStusId ) {
-			$("#btnExcel").addClass("btn_disabled");
-		} else if ( 1 == supplyPlanStusId ) {
-			$("#btnExcel").removeClass("btn_disabled");
-		} else if ( 5 == supplyPlanStusId ) {
-			$("#btnExcel").removeClass("btn_disabled");
-		} else {
-			console.log("Supply Plan error1");
-		}
-		
-		//	status
-		$("#cirSales").addClass("circle_grey");		$("#cirSales").removeClass("circle_blue");		$("#cirSales").removeClass("circle_red");
-		if ( 0 == supplyPlanStusId ) {
-			$("#cirSupply").addClass("circle_grey");	$("#cirSupply").removeClass("circle_blue");	$("#cirSupply").removeClass("circle_red");
-		} else if ( 1 == supplyPlanStusId ) {
-			$("#cirSupply").removeClass("circle_grey");	$("#cirSupply").removeClass("circle_blue");	$("#cirSupply").addClass("circle_red");
-		} else if ( 5 == supplyPlanStusId ) {
-			$("#cirSupply").removeClass("circle_grey");	$("#cirSupply").addClass("circle_blue");	$("#cirSupply").removeClass("circle_red");
-		} else {
-			console.log("Supply Plan error2");
-		}
-	} else if ( 1 == salesPlanStusId ) {
-		//	button
-		$("#btnCreate").addClass("btn_disabled");
-		$("#btnSave").addClass("btn_disabled");
-		$("#btnConfirm").addClass("btn_disabled");
-		$("#btnUnconfirm").addClass("btn_disabled");
-		if ( 0 == supplyPlanStusId ) {
-			$("#btnExcel").addClass("btn_disabled");
-		} else if ( 1 == supplyPlanStusId ) {
-			$("#btnExcel").removeClass("btn_disabled");
-		} else if ( 5 == supplyPlanStusId ) {
-			$("#btnExcel").removeClass("btn_disabled");
-		} else {
-			console.log("Supply Plan error");
-		}
-		
-		//	status
-		$("#cirSales").removeClass("circle_grey");		$("#cirSales").removeClass("circle_blue");		$("#cirSales").addClass("circle_red");
-		if ( 0 == supplyPlanStusId ) {
-			$("#cirSupply").addClass("circle_grey");	$("#cirSupply").removeClass("circle_blue");	$("#cirSupply").removeClass("circle_red");
-		} else if ( 1 == supplyPlanStusId ) {
-			$("#cirSupply").removeClass("circle_grey");	$("#cirSupply").removeClass("circle_blue");	$("#cirSupply").addClass("circle_red");
-		} else if ( 5 == supplyPlanStusId ) {
-			$("#cirSupply").removeClass("circle_grey");	$("#cirSupply").addClass("circle_blue");	$("#cirSupply").removeClass("circle_red");
-		} else {
-			console.log("Supply Plan error2");
-		}
-	} else if ( 5 == salesPlanStusId ) {
-		//	button
-		if ( 0 == supplyPlanStusId ) {
+			//	선택한 CDC의 공급계획 미생성
 			$("#btnCreate").removeClass("btn_disabled");
 			$("#btnSave").addClass("btn_disabled");
 			$("#btnConfirm").addClass("btn_disabled");
 			$("#btnUnconfirm").addClass("btn_disabled");
 			$("#btnExcel").addClass("btn_disabled");
 		} else if ( 1 == supplyPlanStusId ) {
+			//	선택한 CDC의 공급계획 unconfirmed
 			$("#btnCreate").addClass("btn_disabled");
 			$("#btnSave").removeClass("btn_disabled");
 			$("#btnConfirm").removeClass("btn_disabled");
 			$("#btnUnconfirm").addClass("btn_disabled");
 			$("#btnExcel").removeClass("btn_disabled");
 		} else if ( 5 == supplyPlanStusId ) {
+			//	선택한 CDC의 공급계획 confirmed
 			$("#btnCreate").addClass("btn_disabled");
 			$("#btnSave").addClass("btn_disabled");
 			$("#btnConfirm").addClass("btn_disabled");
-			$("#btnUnconfirm").removeClass("btn_disabled");
 			$("#btnExcel").removeClass("btn_disabled");
+			if ( 0 == poStusId ) {
+				//	PO가 1개도 생성되지 않은 경우
+				$("#btnUnconfirm").removeClass("btn_disabled");
+			} else {
+				//	PO가 1개라도 생성된 경우
+				$("#btnUnconfirm").addClass("btn_disabled");
+			}
 		} else {
-			console.log("Supply Plan error");
-		}
-		
-		//	status
-		$("#cirSales").removeClass("circle_grey");		$("#cirSales").addClass("circle_blue");		$("#cirSales").removeClass("circle_red");
-		if ( 0 == supplyPlanStusId ) {
-			$("#cirSupply").addClass("circle_grey");	$("#cirSupply").removeClass("circle_blue");	$("#cirSupply").removeClass("circle_red");
-		} else if ( 1 == supplyPlanStusId ) {
-			$("#cirSupply").removeClass("circle_grey");	$("#cirSupply").removeClass("circle_blue");	$("#cirSupply").addClass("circle_red");
-		} else if ( 5 == supplyPlanStusId ) {
-			$("#cirSupply").removeClass("circle_grey");	$("#cirSupply").addClass("circle_blue");	$("#cirSupply").removeClass("circle_red");
-		} else {
-			console.log("Supply Plan error2");
+			console.log("button supplyPlanStusId error");
 		}
 	} else {
-		console.log("Sales Plan error");
-		//	button
-		if ( 0 == supplyPlanStusId ) {
-			$("#btnCreate").removeClass("btn_disabled");
-			$("#btnSave").addClass("btn_disabled");
-			$("#btnConfirm").addClass("btn_disabled");
-			$("#btnUnconfirm").addClass("btn_disabled");
-			$("#btnExcel").addClass("btn_disabled");
-		} else if ( 1 == supplyPlanStusId ) {
-			$("#btnCreate").addClass("btn_disabled");
-			$("#btnSave").removeClass("btn_disabled");
-			$("#btnConfirm").removeClass("btn_disabled");
-			$("#btnUnconfirm").addClass("btn_disabled");
-			$("#btnExcel").removeClass("btn_disabled");
-		} else if ( 5 == supplyPlanStusId ) {
-			$("#btnCreate").addClass("btn_disabled");
-			$("#btnSave").addClass("btn_disabled");
-			$("#btnConfirm").addClass("btn_disabled");
-			$("#btnUnconfirm").removeClass("btn_disabled");
-			$("#btnExcel").removeClass("btn_disabled");
-		} else {
-			console.log("Supply Plan error");
-		}
-		
-		//	status
-		$("#cirSales").removeClass("circle_grey");		$("#cirSales").addClass("circle_blue");		$("#cirSales").removeClass("circle_red");
-		if ( 0 == supplyPlanStusId ) {
-			$("#cirSupply").addClass("circle_grey");	$("#cirSupply").removeClass("circle_blue");	$("#cirSupply").removeClass("circle_red");
-		} else if ( 1 == supplyPlanStusId ) {
-			$("#cirSupply").removeClass("circle_grey");	$("#cirSupply").removeClass("circle_blue");	$("#cirSupply").addClass("circle_red");
-		} else if ( 5 == supplyPlanStusId ) {
-			$("#cirSupply").removeClass("circle_grey");	$("#cirSupply").addClass("circle_blue");	$("#cirSupply").removeClass("circle_red");
-		} else {
-			console.log("Supply Plan error2");
-		}
+		//	판매계획 3개팀 모두 confirm이 아님
+		$("#btnCreate").addClass("btn_disabled");
+		$("#btnSave").addClass("btn_disabled");
+		$("#btnConfirm").addClass("btn_disabled");
+		$("#btnUnconfirm").addClass("btn_disabled");
+		$("#btnExcel").addClass("btn_disabled");
+	}
+	
+	//	Circle
+	//	SalesPlan
+	if ( 0 == salesPlanStusId ) {
+		$("#cirSales").addClass("circle_grey");
+		$("#cirSales").removeClass("circle_red");
+		$("#cirSales").removeClass("circle_blue");
+	} else if ( 15 == salesPlanStusId ) {
+		$("#cirSales").removeClass("circle_grey");
+		$("#cirSales").removeClass("circle_red");
+		$("#cirSales").addClass("circle_blue");
+	} else {
+		$("#cirSales").removeClass("circle_grey");
+		$("#cirSales").addClass("circle_red");
+		$("#cirSales").removeClass("circle_blue");
+	}
+	//	SupplyPlan
+	if ( 0 == supplyPlanStusId ) {
+		$("#cirSupply").addClass("circle_grey");
+		$("#cirSupply").removeClass("circle_red");
+		$("#cirSupply").removeClass("circle_blue");
+	} else if ( 1 == supplyPlanStusId ) {
+		$("#cirSupply").removeClass("circle_grey");
+		$("#cirSupply").addClass("circle_red");
+		$("#cirSupply").removeClass("circle_blue");
+	} else if ( 5 == supplyPlanStusId ) {
+		$("#cirSupply").removeClass("circle_grey");
+		$("#cirSupply").removeClass("circle_red");
+		$("#cirSupply").addClass("circle_blue");
+	} else {
+		console.log("circle supplyPlanStusId error");
 	}
 }
 
