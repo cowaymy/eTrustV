@@ -80,12 +80,12 @@ public class StockMovementController {
 			// 결과 만들기 예.
 			message.setCode(AppConstants.SUCCESS);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-			
+
 		}else{
 			message.setCode(AppConstants.FAIL);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		}
-		
+
 		message.setData(reqNo);
 
 		return ResponseEntity.ok(message);
@@ -166,14 +166,14 @@ public class StockMovementController {
 		String[] catetype = request.getParameterValues("catetype");
 		String toloc = request.getParameter("slocation");
 		String mcode = request.getParameter("materialCode");
-		
+
 		// logger.debug("type : {}", type);
 		Map<String, Object> smap = new HashMap();
 		smap.put("ctype", type);
 		smap.put("catetype", catetype);
 		smap.put("toloc", toloc);
 		smap.put("mcode", mcode);
-		
+
 		List<EgovMap> list = stockMovementService.selectTolocationItemList(smap);
 
 		smap.put("data", list);
@@ -304,7 +304,7 @@ public class StockMovementController {
 
 	/**
 	 * Delivery view
-	 * 
+	 *
 	 * @param model
 	 * @param request
 	 * @param response
@@ -347,7 +347,7 @@ public class StockMovementController {
 
 	/**
 	 * Delivery Number issues
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -360,12 +360,12 @@ public class StockMovementController {
 		params.put("userId", loginId);
 
 		Map<String , Object> map = stockMovementService.stockMovementReqDelivery(params);
-		
+
 		logger.debug(" :::: {}" , map);
-		
-		String reVal = (String)map.get("rdata");		
+
+		String reVal = (String)map.get("rdata");
 		String returnValue[] = reVal.split("∈");
-		
+
 		for (int i = 0 ; i < returnValue.length ; i++){
 			returnValue[i] = returnValue[i].replaceAll(" ", "");
 		}
@@ -398,7 +398,7 @@ public class StockMovementController {
 		return "logistics/stockMovement/stockMovementReceiptList";
 	}
 
-	
+
 	@RequestMapping(value = "/StockMovementGoodIssue.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> stockMovementGoodIssue(@RequestBody Map<String, Object> params, Model model,
 			SessionVO sessionVO) throws Exception {
@@ -419,7 +419,7 @@ public class StockMovementController {
     		message.setCode(AppConstants.SUCCESS);
     		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		}
-		
+
 		if ("Already processed.".equals((String)rmap.get("failMsg"))){
 			logger.debug(" :::: 듑체크 통과!!!!!" );
 			message.setCode(AppConstants.FAIL);
@@ -429,9 +429,9 @@ public class StockMovementController {
 
 		return ResponseEntity.ok(rmap);
 	}
-	
-	
-	
+
+
+
 	//백업
 //	@RequestMapping(value = "/StockMovementGoodIssue.do", method = RequestMethod.POST)
 //	public ResponseEntity<Map> stockMovementGoodIssue(@RequestBody Map<String, Object> params, Model model,
@@ -456,7 +456,7 @@ public class StockMovementController {
 //
 //		return ResponseEntity.ok(rmap);
 //	}
-	
+
 
 	@RequestMapping(value = "/StockMoveSearchDeliveryList.do", method = RequestMethod.POST)
 	public ResponseEntity<Map> StocktransferSearchDeliveryList(@RequestBody Map<String, Object> params, Model model)
@@ -472,7 +472,7 @@ public class StockMovementController {
 
 	/**
 	 * View Serial Pop up In Good Receipt
-	 * 
+	 *
 	 * @param params
 	 * @param model
 	 * @return
@@ -490,11 +490,11 @@ public class StockMovementController {
 
 		return ResponseEntity.ok(map);
 	}
-	
+
 	@RequestMapping(value = "/GetSerialDataCall.do", method = RequestMethod.GET)
 	public ResponseEntity<Map> GetSerialDataCall(@RequestParam Map<String, Object> params, Model model)
 			throws Exception {
-		
+
 		logger.debug("445 Line ::: {} " , params);
 
 		List<EgovMap> list = stockMovementService.selectGetSerialDataCall(params);
@@ -504,7 +504,7 @@ public class StockMovementController {
 
 		return ResponseEntity.ok(map);
 	}
-	
+
 	@RequestMapping(value = "/deleteSmoNo.do", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> deleteSmoNo(@RequestParam Map<String, Object> params,
 			Model model) {
@@ -519,5 +519,11 @@ public class StockMovementController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
+	@RequestMapping(value = "/stockMovementReport.do")
+	public String stockMovementReport(Model model, HttpServletRequest request, HttpServletResponse response) throws Exception {
+
+		return "logistics/stockMovement/stockMovementReport";
+	}
+
 }
