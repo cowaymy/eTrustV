@@ -603,9 +603,16 @@ public class ECashDeductionController {
         }
 		//email.setSubject("SCB eCash CRC Deduction File - Batch Date : " + inputDate + "_ "+ String.valueOf(claimMap.get("pageNo")));
 		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
 
-		adaptorService.sendEmail(email, false);
+		if(2 == (Integer) claimMap.get("type")) {
+		    if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
+		        email.addFile(new File(filePath + "/CRC/CZ" + todayDate + "_NEW" + ".dat"));
+		        adaptorService.sendEmail(email, false);
+		    }
+		} else {
+		    email.addFile(file);
+		    adaptorService.sendEmail(email, false);
+		}
 
 	}
 
@@ -716,9 +723,16 @@ public class ECashDeductionController {
         }
 		//email.setSubject("SCB eCash CRC Grouping Deduction File - Batch Date : " + inputDate + "_ "+ String.valueOf(claimMap.get("pageNo")));
 		email.setText("Please find attached the claim file for your kind perusal.");
-		email.addFile(file);
 
-		adaptorService.sendEmail(email, false);
+		if(2 == (Integer) claimMap.get("type")) {
+            if(claimMap.get("pageNo") == claimMap.get("pageCnt")){
+                email.addFile(new File(filePath + "/CRC/CZ" + todayDate + "_NEW" + ".dat"));
+                adaptorService.sendEmail(email, false);
+            }
+        } else {
+            email.addFile(file);
+            adaptorService.sendEmail(email, false);
+        }
 
 	}
 
