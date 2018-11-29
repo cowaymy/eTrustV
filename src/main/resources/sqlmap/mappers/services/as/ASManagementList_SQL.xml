@@ -4159,5 +4159,17 @@
              ]]>
      </select>
 
+     <select id="checkAOASRcdStat" parameterType="Map" resultType="egovMap">
+       SELECT A.AS_SO_ID,
+              B.NO,
+              C.OCCUR
+       FROM SVC0001D A
+       JOIN SVC0004D B ON A.AS_SO_ID = B.AS_SO_ID
+       JOIN (SELECT A.AS_SO_ID, COUNT(A.AS_SO_ID) OCCUR FROM SVC0001D A WHERE A.AS_TYPE_ID = '3154' GROUP BY  A.AS_SO_ID) C ON A.AS_SO_ID = C.AS_SO_ID
+       WHERE A.AS_TYPE_ID = '3154'
+        AND (A.NO IS NOT NULL AND B.NO IS NOT NULL)
+        AND A.AS_SO_ID = (SELECT SALES_ORD_ID FROM SAL0001D WHERE SALES_ORD_NO = #{ORD_NO})
+
+     </select>
 
 </mapper>
