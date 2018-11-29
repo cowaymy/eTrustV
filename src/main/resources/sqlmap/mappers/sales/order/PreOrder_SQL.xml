@@ -59,7 +59,7 @@
 	         </foreach>
          </if>
          <if test='_reqstStartDt != null and _reqstStartDt != "" and _reqstEndDt != null and _reqstEndDt != ""'>
-		   AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt}, 'DD/MM/YYYY')  AND TO_DATE(#{_reqstEndDt}, 'DD/MM/YYYY')
+		   AND T1.REQST_DT BETWEEN TO_DATE(#{_reqstStartDt}, 'DD/MM/YYYY')  AND TO_DATE(#{_reqstEndDt}, 'DD/MM/YYYY')+1
          </if>
          <if test='arrPreOrdStusId != null and arrPreOrdStusId != ""'>
            AND T8.CODE IN
@@ -399,6 +399,21 @@
 		  FROM ORG0001D
 		 WHERE STUS = 1
 		   AND SUBSTR(REPLACE(NRIC,'-',''), 0, 12) = #{nric}
+    </select>
+
+    <select id="selectAttachList" parameterType="Map" resultType="egovMap">
+            SELECT T1.ATCH_FILE_GRP_ID
+                   ,T1.ATCH_FILE_ID
+                   ,T2.ATCH_FILE_NAME
+                   ,T2.FILE_SUB_PATH
+                   ,T2.PHYSICL_FILE_NAME
+                   ,T2.FILE_EXTSN
+                   ,T2.FILE_SIZE
+          FROM SYS0070M T1
+          LEFT JOIN SYS0071D T2
+          ON T1.ATCH_FILE_ID = T2.ATCH_FILE_ID
+          WHERE T1.ATCH_FILE_GRP_ID = #{atchFileGrpId}
+          ORDER BY T1.ATCH_FILE_ID
     </select>
 
 </mapper>

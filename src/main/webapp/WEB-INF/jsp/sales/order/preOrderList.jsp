@@ -21,7 +21,7 @@
 
     $(document).ready(function(){
 
-        fn_statusCodeSearch();
+    	fn_statusCodeSearch();
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
 
@@ -383,51 +383,6 @@ console.log(selectRowIdx);
             }
         });
     };
-
-    function fn_setFileEvent(){
-        $('#sofFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            if(file.size > 2048000) {
-                alert("File size cannot exist 2MB .");
-                $('#sofFile').val('');
-                return;
-            }
-            myFileCaches[1] = {file:file};
-        });
-
-        $('#nricFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            if(file.size > 2048000) {
-                alert("File size cannot exist 2MB .");
-                $('#nricFile').val('');
-                return;
-            }
-            myFileCaches[2] = {file:file};
-        });
-
-        $('#otherFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            if(file.size > 2048000) {
-                alert("File size cannot exist 2MB .");
-                $('#otherFile').val('');
-                return;
-            }
-            myFileCaches[3] = {file:file};
-        });
-    }
-
 </script>
 
 <section id="content"><!-- content start -->

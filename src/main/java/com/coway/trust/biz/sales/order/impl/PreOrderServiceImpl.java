@@ -154,4 +154,9 @@ public class PreOrderServiceImpl extends EgovAbstractServiceImpl implements PreO
 	public int selectExistingMember(Map<String, Object> params) {
 		return preOrderMapper.selectExistingMember(params);
 	}
+
+	@Override
+	public List<EgovMap> getAttachList(Map<String, Object> params) {
+		return preOrderMapper.selectAttachList(params);
+	}
 }

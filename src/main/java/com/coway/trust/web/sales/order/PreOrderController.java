@@ -40,6 +40,7 @@ import com.coway.trust.biz.sales.order.PreOrderService;
 import com.coway.trust.biz.sales.order.vo.OrderVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderListVO;
 import com.coway.trust.biz.sales.order.vo.PreOrderVO;
+import com.coway.trust.cmmn.exception.ApplicationException;
 import com.coway.trust.cmmn.file.EgovFileUploadUtil;
 import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
@@ -312,8 +313,11 @@ public class PreOrderController {
 
 		logger.debug("params =====================================>>  " + params.toString());
 		logger.debug("request =====================================>>  " + request);
+		String err = "";
+		String code = "";
 
-		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "preOrder", AppConstants.UPLOAD_MAX_FILE_SIZE, true);
+		try{
+		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "sales" + File.separator + "preOrder", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 
 		logger.debug("list.size : {}", list.size());
 
@@ -322,11 +326,54 @@ public class PreOrderController {
 		preOrderApplication.insertPreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params);
 
 		params.put("attachFiles", list);
+		code = AppConstants.SUCCESS;
+		}catch(ApplicationException e){
+			err = e.getMessage();
+			code = AppConstants.FAIL;
+		}
 
 		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
+		message.setCode(code);
 		message.setData(params);
+		message.setMessage(err);
 
 		return ResponseEntity.ok(message);
 	}
+
+	@RequestMapping(value = "/selectAttachList.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> getAttachList( @RequestParam Map<String, Object> params,HttpServletRequest request, ModelMap model) {
+		logger.debug("params {}", params);
+		List<EgovMap> attachList = preOrderService.getAttachList(params) ;
+
+		return ResponseEntity.ok( attachList);
+	}
+
+	@RequestMapping(value = "/attachFileUpdate.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> attachFileUpdate(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
+
+		logger.debug("params =====================================>>  " + params);
+		String err = "";
+		String code = "";
+		try{
+			List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "sales" + File.separator + "preOrder", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
+			logger.debug("list.size : {}", list.size());
+			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
+
+			preOrderApplication.updatePreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+
+			params.put("attachFiles", list);
+			code = AppConstants.SUCCESS;
+		}catch(ApplicationException e){
+			err = e.getMessage();
+			code = AppConstants.FAIL;
+		}
+
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(code);
+		message.setData(params);
+		message.setMessage(err);
+
+		return ResponseEntity.ok(message);
+	}
+
 }

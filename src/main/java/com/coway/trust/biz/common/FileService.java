@@ -9,7 +9,7 @@ public interface FileService {
 
 	/**
 	 * 공통 첨부파일 저장.
-	 * 
+	 *
 	 * @param fileVOList
 	 * @param type
 	 *            {@link FileType}
@@ -28,7 +28,13 @@ public interface FileService {
 
 	void removeFileByFileId(FileType type, int fileId);
 
+	void removeFileByFileId2(FileType type, int fileId);
+
 	void changeFile(int fileGroupId, int preFileId, FileVO fileVO, FileType type, int userId);
 
 	int getUserIdByUserName(String userName);
+
+	void changeFileUpdate(int fileGroupId, int preFileId, FileVO fileVO, FileType type, int userId);
+
+	void updateFile(int preFileId, FileVO fileVO);
 }

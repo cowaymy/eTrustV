@@ -152,4 +152,35 @@ public class FileServiceImpl implements FileService {
 		}
 		return userId;
 	}
+
+	@Override // Added by Chew Kah Kit - 2018/11/27
+	public void changeFileUpdate(int fileGroupId, int preFileId, FileVO fileVO, FileType type, int userId) {
+		this.removeFileByFileId2(type, preFileId);
+		this.updateFile(preFileId, fileVO);
+	}
+
+	@Override
+	public void updateFile(int preFileId, FileVO fileVO) {
+		fileVO.setAtchFileId(preFileId);
+		fileMapper.updateFileDetail(fileVO);
+	}
+
+	@Override
+	public void removeFileByFileId2(FileType type, int fileId) {
+		/* This function created to remote file in folder only.
+		 * No removal in database.
+		 */
+
+		String baseDir = getBaseDir(type);
+		FileVO fileVO = this.getFile(fileId);
+
+		try {
+			if(fileVO != null){
+			FileUtils.forceDelete(new File(baseDir + File.separator + fileVO.getFileSubPath() + File.separator + fileVO.getPhysiclFileName()));
+			}
+		} catch (IOException e) {
+			LOGGER.error("deleteFile Fail : {}", e.getMessage());
+			// throw new ApplicationException(e);
+		}
+	}
 }

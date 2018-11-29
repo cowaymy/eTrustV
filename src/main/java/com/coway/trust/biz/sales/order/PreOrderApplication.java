@@ -12,6 +12,4 @@ public interface PreOrderApplication {
 
 	void updatePreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
 
-	void deletePreOrderAttachBiz(FileType type, Map<String, Object> params);
-
 }

@@ -47,12 +47,9 @@ public class PreOrderApplicationImpl implements PreOrderApplication {
 	@Override
 	public void updatePreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
-
-		LOGGER.debug("params =====================================>>  " + params);
-
+		LOGGER.debug("params =====================================>>  " + params.toString());
 		LOGGER.debug("list.size : {}", list.size());
-
-		// 243,258
+		LOGGER.debug("list.size ", list.toString());
 		String update = (String) params.get("update");
 		String[] updateList = null;
 		if(!StringUtils.isEmpty(update)) {
@@ -68,65 +65,14 @@ public class PreOrderApplicationImpl implements PreOrderApplication {
 					LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
 					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
 					LOGGER.debug("params.get('userId') =====================================>>  " + params.get("userId"));
-					fileService.changeFile(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
+					fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
 				} else {
-					FileGroupVO fileGroupVO = new FileGroupVO();
-
+					FileVO fileVO = new FileVO();
+					int fileGroupId = (Integer.parseInt(params.get("atchFileGrpId").toString()));
 					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
-					//fileMapper.insertFileDetail(list.get(i));
-
-					fileGroupVO.setAtchFileGrpId(Integer.parseInt(params.get("atchFileGrpId").toString()));
-					fileGroupVO.setAtchFileId(list.get(i).getAtchFileId());
-					fileGroupVO.setChenalType(type.getCode());
-					fileGroupVO.setCrtUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
-					fileGroupVO.setUpdUserId(Integer.parseInt(String.valueOf(params.get("userId"))));
-
-					LOGGER.debug("fileGroupVO =====================================>>  " + fileGroupVO);
-					fileMapper.insertFileGroup(fileGroupVO);
+					fileService.insertFile(fileGroupId, fileVO, type, Integer.parseInt(params.get("userId").toString()));
 				}
 			}
 		}
-
-		String remove = (String) params.get("remove");
-		String[] removeList = null;
-		if(!StringUtils.isEmpty(remove)) {
-			removeList = params.get("remove").toString().split(",");
-			LOGGER.debug("removeList.size : {}", removeList.length);
-		}
-		if(removeList != null && removeList.length > 0) {
-			for(int i = 0; i < removeList.length; i++) {
-				String atchFileId = removeList[i];
-				LOGGER.debug("atchFileId =====================================>>  " + atchFileId);
-				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
-			}
-		}
 	}
-
-	@Override
-	public void deletePreOrderAttachBiz(FileType type, Map<String, Object> params) {
-		// TODO Auto-generated method stub
-		LOGGER.debug("params =====================================>>  " + params);
-		if(CommonUtils.isEmpty(params.get("clmNo"))) {
-			// Not Temp. Save
-			// 저장된 파일만 삭제
-			fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
-		} else {
-			// Temp. Save
-			// 저장된 파일 삭제 및 테이블 데이터 삭제
-			/*// 2018-07-20 - LaiKW - Added check on atchFileGrpId for claims without attachments - Start
-			if(params.get("atchFileGrpId") != null) {
-				fileService.removeFilesByFileGroupId(type, (int) params.get("atchFileGrpId"));
-			}
-			// 2018-07-20 - LaiKW - Added check on atchFileGrpId for claims without attachments - End
-			preOrderService.deletePreOrderExpItem(params);
-			LOGGER.debug("expGrp =====================================>>  " + params.get("expGrp"));
-			if("1".equals(params.get("expGrp"))) {
-				preOrderService.deletePreOrderExpMileage(params);
-			}
-			preOrderService.updatePreOrderExpTotAmt(params);*/
-		}
-	}
-
-
-
 }

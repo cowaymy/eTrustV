@@ -8,6 +8,7 @@
     var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
     var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
     var selectRowIdx;
+    var atchFileGrpId = 0;
 
     $(document).ready(function(){
 
@@ -29,9 +30,6 @@
         //UpperCase Field
         $("#nric").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
         $("#sofNo").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
-
-        /* $("#nric").val("990531025365");
-        $("#sofNo").val("A"); */
 
         fn_setFileEvent();
     });
@@ -460,7 +458,25 @@
                 return false;
             }
 
-            fn_doSavePreOrder();
+            var formData = new FormData();
+            $.each(myFileCaches, function(n, v) {
+                console.log("n : " + n + " v.file : " + v.file);
+                formData.append(n, v.file);
+            });
+
+            Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
+                if(result != 0 && result.code == 00){
+                    atchFileGrpId= result.data.fileGroupKey;
+                    fn_doSavePreOrder();
+                    myFileCaches = {};
+                }else{
+                	Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+                    myFileCaches = {};
+                }
+            },function(result){
+                Common.alert("Upload Failed. Please check with System Administrator.");
+            });
+
         });
         $('#btnCal').click(function() {
 
@@ -896,9 +912,6 @@
 
     function fn_doSavePreOrder() {
 
-    	fn_upload();//Save attachment first
-
-    	setTimeout(function() { //Timeout 5 sec to get attachment id
         var vAppType    = $('#appType').val();
         var vCustCRCID  = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCId').val() : 0;
         var vCustAccID  = $('#rentPayMode').val() == '132' ? $('#hiddenRentPayBankAccID').val() : 0;
@@ -916,7 +929,7 @@
             custId                 : $('#hiddenCustId').val(),
             empChk               : 0,
             gstChk                 : $('#gstChk').val(),
-            atchFileGrpId        : $('#hiddenAtchFileGrpId').val(),
+            atchFileGrpId        : atchFileGrpId,//$('#hiddenAtchFileGrpId').val(),
             custCntcId           : $('#hiddenCustCntcId').val(),
             keyinBrnchId         : $('#keyinBrnchId').val(),
             instAddId            : $('#hiddenCustAddId').val(),
@@ -966,13 +979,12 @@
         function(jqXHR, textStatus, errorThrown) {
             try {
                 Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                Common.removeLoader();
             }
             catch (e) {
                 console.log(e);
             }
         });
-
-    	},5000);
     }
 
     function fn_closePreOrdRegPop() {
@@ -1558,8 +1570,42 @@
         Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
             if(result != 0){
                 atchFileGrpId= result.data.fileGroupKey;
-                $('#hiddenAtchFileGrpId').val(atchFileGrpId);
+                //$('#hiddenAtchFileGrpId').val(atchFileGrpId);
+                myFileCaches = {};
+                return true;
             }
+        },function(result){
+        	Common.alert("Upload Failed. Please check with System Administrator.");
+            return false;
+        });
+    }
+
+    function fn_setFileEvent(){
+        $('#sofFile').on('change', function(evt) {
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                delete myFileCaches[selectRowIdx + 1];
+                return;
+            }
+            myFileCaches[1] = {file:file};
+        });
+
+        $('#nricFile').on('change', function(evt) {
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                delete myFileCaches[selectRowIdx + 1];
+                return;
+            }
+            myFileCaches[2] = {file:file};
+        });
+
+        $('#otherFile').on('change', function(evt) {
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                delete myFileCaches[selectRowIdx + 1];
+                return;
+            }
+            myFileCaches[3] = {file:file};
         });
     }
 </script>

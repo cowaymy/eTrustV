@@ -94,13 +94,13 @@
             WHERE ATCH_FILE_GRP_ID = #{fileGroupId}
         )
     </delete>
-    
+
     <delete id="deleteFileGroupByFileId" parameterType="int">
         DELETE
         FROM SYS0070M
         WHERE ATCH_FILE_ID = #{fileId}
     </delete>
-    
+
     <delete id="deleteFileByFileId" parameterType="int">
         DELETE
         FROM SYS0071D
@@ -116,4 +116,15 @@
              WHERE GRP.ATCH_FILE_ID = #{fileId}
         )
     </select>
+
+    <update id="updateFileDetail" parameterType="fileVO">
+        UPDATE SYS0071D
+        SET ATCH_FILE_NAME = #{atchFileName}
+	        , FILE_SUB_PATH = #{fileSubPath}
+	        , PHYSICL_FILE_NAME = #{physiclFileName}
+	        , FILE_EXTSN = #{fileExtsn}
+	        , FILE_SIZE = #{fileSize}
+	        , FILE_PASSWORD = #{filePassword}
+        WHERE ATCH_FILE_ID = #{atchFileId}
+    </update>
 </mapper>

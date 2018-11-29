@@ -6,7 +6,12 @@
     //AUIGrid 생성 후 반환 ID
     var listGiftGridID;
     var update = new Array();
-    var remove = new Array();
+    var sofFileId;
+    var nricFileId;
+    var otherFileId;
+    var sofFileName;
+    var nricFileName;
+    var otherFileName;
 
     $(document).ready(function(){
 
@@ -438,7 +443,27 @@
                 return false;
             }
 
-            fn_doSavePreOrder();
+            var formData = new FormData();
+            formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
+            formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+            console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+            $.each(myFileCaches, function(n, v) {
+                console.log(v.file);
+                formData.append(n, v.file);
+            });
+
+            Common.ajaxFile("/sales/order/attachFileUpdate.do", formData, function(result) {
+            	if(result.code == 99){
+            		Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+            		myFileCaches = {};
+            	}else{
+            		fn_doSavePreOrder();
+                    myFileCaches = {};
+            	}
+            },function(result){
+                Common.alert(result.message+"<br/>Upload Failed. Please check with System Administrator.");
+            });
+
         });
         $('#btnCal').click(function() {
 
@@ -876,6 +901,7 @@
 
     function fn_doSavePreOrder() {
 
+    	//Save attachment first
         var vAppType    = $('#appType').val();
         var vCustCRCID  = $('#rentPayMode').val() == '131' ? $('#hiddenRentPayCRCId').val() : 0;
         var vCustAccID  = $('#rentPayMode').val() == '132' ? $('#hiddenRentPayBankAccID').val() : 0;
@@ -1652,15 +1678,27 @@
 	       if(result) {
 	            if(result.length > 0) {
 	                $("#attachTd").html("");
-	                for(var i = 0; i < result.length; i++) {
-	                    var atchTdId = "atchId" + (i+1);
-	                    if(i==0){$("#sofFileTxt").attr("name",atchTdId);}// index 0 : SOF File
-	                    if(i==1){$("#nricFileTxt").attr("name",atchTdId);}// index 1 : NRIC File
-	                    if(i==2){$("#otherFileTxt").attr("name",atchTdId);}// index 2 : Other File
-
-	                    $(".input_text[name='" + atchTdId + "']").val(result[i].atchFileName);
-	                }
-
+	               if(result[0]){
+	            	// index 0 : SOF File
+	            	   $("#sofFileTxt").attr("name","sofFileTxt");
+	            	   sofFileId = result[0].atchFileId;
+                       sofFileName = result[0].atchFileName;
+                       $(".input_text[name='sofFileTxt']").val(sofFileName);
+                   }
+	               if(result[1]){
+	            	   // index 1 : NRIC File
+                       $("#nricFileTxt").attr("name","nricFileTxt");
+                       nricFileId = result[1].atchFileId;
+                       nricFileName = result[1].atchFileName;
+                       $(".input_text[name='nricFileTxt']").val(nricFileName);
+	               }
+	               if(result[2]){
+	                    // index 2 : Other File
+                        $("#otherFileTxt").attr("name","otherFileTxt");
+                        otherFileId = result[0].atchFileId;
+                        otherFileName = result[2].atchFileName;
+                        $(".input_text[name='otherFileTxt']").val(otherFileName);
+	               }
 	                // 파일 다운
 	                $(".input_text").dblclick(function() {
 	                    var oriFileName = $(this).val();
@@ -1672,31 +1710,50 @@
 	                            fileId = result[i].atchFileId;
 	                        }
 	                    }
-	                    if(fileId != null){
-	                       fn_atchViewDown(fileGrpId, fileId);
-	                    }
+	                    if(fileId != null) fn_atchViewDown(fileGrpId, fileId);
 	                });
 	            }
 	        }
        });
     }
 
-    function fn_reupload(){
-        var formData = new FormData();
-
-        formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
-        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
-        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
-
-        $.each(myFileCaches, function(n, v) {
-            console.log("n : " + n + " v.file : " + v.file);
-            formData.append(n, v.file);
+    function fn_setFileEvent(){
+        $('#sofFile').on('change', function(evt) {
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                delete myFileCaches[selectRowIdx + 1];
+                return;
+            }
+             if(file.name != sofFileName){
+            	 myFileCaches[1] = {file:file};
+            	 update.push(sofFileId);
+             }
         });
 
-        Common.ajaxFile("/sales/order/attachFileUpdate.do", formData, function(result) {
-        	Common.alert("Upload Successful");
+        $('#nricFile').on('change', function(evt) {
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                delete myFileCaches[selectRowIdx + 1];
+                return;
+            }
+            if(file.name != nricFileName){
+                myFileCaches[2] = {file:file};
+                update.push(nricFileId);
+            }
+        });
+
+        $('#otherFile').on('change', function(evt) {
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                delete myFileCaches[selectRowIdx + 1];
+                return;
+            }
+            if(file.name != otherFileName){
+            	myFileCaches[3] = {file:file};
+            	if(otherFileName != null){
+            		   update.push(otherFileId);
+            	}
+            }
         });
     }
 </script>
@@ -2595,7 +2652,7 @@
 	        <input type='file' title='file add'  id='sofFile' accept='image/*''/>
 	        <label>
 		        <input type='text' class='input_text' readonly='readonly' id='sofFileTxt'/>
-		        <!-- <span class='label_text'><a href='#'>Upload</a></span> -->
+		        <span class='label_text'><a href='#'>Upload</a></span>
 	        </label>
         </div>
     </td>
@@ -2607,7 +2664,7 @@
             <input type='file' title='file add' id='nricFile' accept='image/*''/>
             <label>
                 <input type='text' class='input_text' readonly='readonly' id='nricFileTxt'/>
-                <!-- <span class='label_text'><a href='#'>Upload</a></span> -->
+                <span class='label_text'><a href='#'>Upload</a></span>
             </label>
         </div>
     </td>
@@ -2619,7 +2676,7 @@
 	            <input type='file' title='file add' id='otherFile' accept='image/*''/>
 	            <label>
 	                <input type='text' class='input_text' readonly='readonly' id='otherFileTxt' name=''/>
-	                <!-- <span class='label_text'><a href='#'>Upload</a></span> -->
+	                <span class='label_text'><a href='#'>Upload</a></span>
 	            </label>
 	    </div>
     </td>

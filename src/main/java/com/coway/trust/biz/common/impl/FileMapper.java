@@ -25,8 +25,10 @@ public interface FileMapper {
 	void deleteFileByGroupId(int fileGroupId);
 
 	void deleteFileGroupByFileId(int fileId);
-	
+
 	void deleteFileByFileId(int fileId);
 
 	int selectFileGroupCountByFileId(int fileId);
+
+	void updateFileDetail(FileVO fileVO);
 }
