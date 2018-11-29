@@ -2498,6 +2498,7 @@
 
                       <if test="ordId != null and ordId !=''">
                         AND A.SALES_ORD_ID_OLD = #{ordId}
+                        AND A.STUS_CODE_ID IN (1, 4)
                       </if>
 
 
