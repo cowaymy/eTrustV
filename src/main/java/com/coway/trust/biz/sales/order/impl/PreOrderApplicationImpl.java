@@ -31,12 +31,6 @@ public class PreOrderApplicationImpl implements PreOrderApplication {
 	@Autowired
 	private FileService fileService;
 
-	@Autowired
-	private FileMapper fileMapper;
-
-	@Autowired
-	private PreOrderService preOrderService;
-
 	@Override
 	public void insertPreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -70,7 +64,7 @@ public class PreOrderApplicationImpl implements PreOrderApplication {
 					FileVO fileVO = new FileVO();
 					int fileGroupId = (Integer.parseInt(params.get("atchFileGrpId").toString()));
 					LOGGER.debug("list.get(i) =====================================>>  " + list.get(i));
-					fileService.insertFile(fileGroupId, fileVO, type, Integer.parseInt(params.get("userId").toString()));
+					fileService.insertFile(fileGroupId, list.get(i), type, Integer.parseInt(params.get("userId").toString()));
 				}
 			}
 		}
