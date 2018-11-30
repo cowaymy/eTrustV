@@ -993,7 +993,7 @@
 
             $('#grpOpt1').prop("checked", true);
 
-            $('#sctBillMthd').removeClass("blind");
+            //$('#sctBillMthd').removeClass("blind");
             $('#sctBillAddr').removeClass("blind");
 //          $('#sctBillPrefer').removeClass("blind");
 
@@ -1461,7 +1461,7 @@
 
             $('#grpOpt1').prop("checked", true);
 
-            $('#sctBillMthd').removeClass("blind");
+//            $('#sctBillMthd').removeClass("blind");
             $('#sctBillAddr').removeClass("blind");
 //          $('#sctBillPrefer').removeClass("blind");
 
@@ -2394,7 +2394,7 @@
 <section class="search_table"><!-- search_table start -->
 
 <!-- New Billing Group Type start -->
-<table class="type1"><!-- table start -->
+<table class="type1" style="display:none"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:150px" />
@@ -2474,10 +2474,10 @@
 <h3>Billing Address</h3>
 </aside><!-- title_line end -->
 
-<ul class="right_btns mb10">
+<!-- <ul class="right_btns mb10">
     <li><p class="btn_grid"><a id="billNewAddrBtn" href="#">Add New Address</a></p></li>
     <li><p class="btn_grid"><a id="billSelAddrBtn" href="#">Select Another Address</a></p></li>
-</ul>
+</ul> -->
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -2681,7 +2681,9 @@
 	    </div>
     </td>
 </tr>
-<input id="hiddenAtchFileGrpId" name="hiddenAtchFileGrpId"   type="hidden"/>
+<tr>
+    <td colspan=2><span class="red_text">Only can upload in picture format (JPG, PNG, JPEG)</span></td>
+</tr>
 </tbody>
 </table>
 

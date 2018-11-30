@@ -244,6 +244,17 @@
 	</td>
 </tr>
 <tr>
+    <th scope="row" colspan=2>
+        <span class="red_text">
+        <br/>
+            ***NOTE : Debit Card  - follow customer IC name \ Credit Card - follow display name on card
+            <br/><br/>
+        </span>
+     </th>
+</tr>
+<tr>
+</tr>
+<tr>
 	<%-- <th scope="row"><spring:message code="sal.text.remark" /></th>
 	<td>
 	    <textarea id="cardRem" name="cardRem" cols="20" rows="5" placeholder="Remark"></textarea>

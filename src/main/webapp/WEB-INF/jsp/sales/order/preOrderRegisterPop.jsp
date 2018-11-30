@@ -929,7 +929,7 @@
             custId                 : $('#hiddenCustId').val(),
             empChk               : 0,
             gstChk                 : $('#gstChk').val(),
-            atchFileGrpId        : atchFileGrpId,//$('#hiddenAtchFileGrpId').val(),
+            atchFileGrpId        : atchFileGrpId,
             custCntcId           : $('#hiddenCustCntcId').val(),
             keyinBrnchId         : $('#keyinBrnchId').val(),
             instAddId            : $('#hiddenCustAddId').val(),
@@ -1000,7 +1000,7 @@
 
             $('#grpOpt1').prop("checked", true);
 
-            $('#sctBillMthd').removeClass("blind");
+            //$('#sctBillMthd').removeClass("blind");
             $('#sctBillAddr').removeClass("blind");
 //          $('#sctBillPrefer').removeClass("blind");
 
@@ -1570,7 +1570,6 @@
         Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
             if(result != 0){
                 atchFileGrpId= result.data.fileGroupKey;
-                //$('#hiddenAtchFileGrpId').val(atchFileGrpId);
                 myFileCaches = {};
                 return true;
             }
@@ -2251,7 +2250,7 @@
 <section class="search_table"><!-- search_table start -->
 
 <!-- New Billing Group Type start -->
-<table class="type1"><!-- table start -->
+<table class="type1" style="display:none"><!-- table start -->
 <caption>table</caption>
 <colgroup>
     <col style="width:150px" />
@@ -2318,6 +2317,7 @@
 </tr>
 </tbody>
 </table><!-- table end -->
+
 </section>
 
 <!------------------------------------------------------------------------------
@@ -2514,7 +2514,9 @@
     <th scope="row">Declaration letter/Others form</th>
     <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="otherFile" accept="image/*"/></div></td>
 </tr>
-<input id="hiddenAtchFileGrpId" name="hiddenAtchFileGrpId"   type="hidden"/>
+<tr>
+    <td colspan=2><span class="red_text">Only can upload in picture format (JPG, PNG, JPEG)</span></td>
+</tr>
 </tbody>
 </table>
 

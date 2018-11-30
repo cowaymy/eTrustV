@@ -416,12 +416,19 @@
 
     }
 
+    function fn_winClose2(){
+        window.opener.$('#nric').prop("readonly", false).removeClass("readonly");
+        window.opener.$('#sofNo').prop("readonly", false).removeClass("readonly");
+        window.opener.$('#btnConfirm').removeClass("blind");
+        window.opener.$('#btnClear').removeClass("blind");
+        window.close();
+    };
+
     function fn_winClose(){
     	//Parent Reload Method Call
+    	$("#_insCloseBtn").click();
     	window.opener.$("#btnConfirm").click();
         window.close();
-        $("#_insCloseBtn").click();
-
     }
 
     // Validation Check
@@ -823,7 +830,7 @@
     <header class="pop_header"><!-- pop_header start -->
         <h1><spring:message code="sal.title.text.newCustomer2" /></h1>
         <ul class="right_opt">
-            <li><p class="btn_blue2"><a id="_insCloseBtn" onclick="window.close()"><spring:message code="sal.btn.close" /></a></p></li>
+            <li><p class="btn_blue2"><a id="_insCloseBtn" onclick="fn_winClose2()"><spring:message code="sal.btn.close" /></a></p></li>
         </ul>
     </header>
     <!-- pop_header end -->
@@ -953,6 +960,9 @@
                             <tr>
                                 <th scope="row"><spring:message code="sal.title.text.extNo" /></th>
                                 <td><input type="text" id="_ext_" name="ext" title="" placeholder="Extension Number" class="w100p" /></td>
+                            </tr>
+                            <tr>
+                                <td colspan=2><span class="red_text">No Contain ' - ' in contact numbers</span></td>
                             </tr>
                             <%-- <tr>
             <th scope="row"><spring:message code="sal.title.remark" /></th>
@@ -1096,7 +1106,7 @@
                             <tr>
 					                <th scope="row"><spring:message code="sal.text.remarks" /></th>
 					                <td colspan="3"><textarea cols="20" rows="5" id="_addrRem_" name="addrRem" placeholder="Remark"></textarea></td>
-					               </tr>
+					        </tr>
                         </tbody>
                     </table>
                     <!-- table end -->
