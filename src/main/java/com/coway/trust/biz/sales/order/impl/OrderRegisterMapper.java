@@ -156,4 +156,6 @@ public interface OrderRegisterMapper {
 
 	void insertASEntry(ASEntryVO asEntryVo);
 
+	BigDecimal selectOutstandingAmt(int salesOrdId);
+
 }

@@ -1030,6 +1030,17 @@ function fn_rentalAdvMonthChangeTxt(){
 	    if(rowCnt > 0){
 	        for(i = 0 ; i < rowCnt ; i++){
 
+	        	if(rowCnt < 2){
+	                var salesOrdId = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdId");
+	                Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
+
+	                    if(RESULT.rootState == 'ROOT_1') {
+
+	                        Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
+	                    }
+	                });
+	            }
+
 	            var mstChkVal = AUIGrid.getCellValue(targetRenMstGridID, i ,"btnCheck");
 	            var mstSalesOrdNo = AUIGrid.getCellValue(targetRenMstGridID, i ,"salesOrdNo");
 	            var mstRpf = AUIGrid.getCellValue(targetRenMstGridID, i ,"rpf");
@@ -1238,6 +1249,17 @@ function isDupRentalToFinal(){
 	    if(rowCnt > 0){
 	        for(i = 0 ; i < rowCnt ; i++){
 
+	        	if(rowCnt < 2){
+	                var salesOrdId = AUIGrid.getCellValue(targetOutMstGridID, i ,"salesOrdId");
+	                Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
+
+	                    if(RESULT.rootState == 'ROOT_1') {
+
+	                        Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
+	                    }
+	                });
+	            }
+
 	            var targetAmt = AUIGrid.getCellValue(targetOutMstGridID, i ,"balance");
 
 	            if(targetAmt > 0){
@@ -1324,6 +1346,17 @@ function isDupOutToFinal(){
 
 	    if(rowCnt > 0){
 	        for(i = 0 ; i < rowCnt ; i++){
+
+	        	if(rowCnt < 2){
+	                var salesOrdId = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"salesOrdId");
+	                Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
+
+	                    if(RESULT.rootState == 'ROOT_1') {
+
+	                        Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
+	                    }
+	                });
+	            }
 
 	            var mstChkVal = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"btnCheck");
 	            var mstSrvCntrctRefNo = AUIGrid.getCellValue(targetSrvcMstGridID, i ,"srvCntrctRefNo");
@@ -1585,6 +1618,18 @@ function isDupSrvcToFinal(){
 
 	        if(rowCnt > 0){
 	            for(i = 0 ; i < rowCnt ; i++){
+
+	            	if(rowCnt < 2){
+	                    var salesOrdId = AUIGrid.getCellValue(targetBillMstGridID, i ,"billSoId");
+	                    Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
+
+	                        if(RESULT.rootState == 'ROOT_1') {
+
+	                            Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
+	                        }
+	                    });
+	                }
+
 	                if(AUIGrid.getCellValue(targetBillMstGridID, i ,"btnCheck") == 1){
 	                    var targetAmt = AUIGrid.getCellValue(targetBillMstGridID, i ,"billAmt") - AUIGrid.getCellValue(targetBillMstGridID, i ,"paidAmt");
 
@@ -2758,6 +2803,17 @@ function addOutSrvcToFinal(){
 
     if(rowCnt > 0){
         for(i = 0 ; i < rowCnt ; i++){
+
+        	if(rowCnt < 2){
+                var salesOrdId = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"ordId");
+                Common.ajax("GET", "/payment/common/checkOrderOutstanding.do", {salesOrdId : salesOrdId}, function(RESULT) {
+
+                    if(RESULT.rootState == 'ROOT_1') {
+
+                        Common.alert('No Outstanding' + DEFAULT_DELIMITER + RESULT.msg);
+                    }
+                });
+            }
 
 			var packageAmt = AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packageCharge") - AUIGrid.getCellValue(targetOutSrvcMstGridID, i ,"packagePaid");
 

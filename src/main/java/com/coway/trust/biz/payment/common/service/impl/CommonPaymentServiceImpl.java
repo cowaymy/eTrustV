@@ -1,6 +1,9 @@
 package com.coway.trust.biz.payment.common.service.impl;
 
+import java.math.BigDecimal;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -14,8 +17,12 @@ import org.springframework.stereotype.Service;
 import com.coway.trust.biz.payment.billinggroup.service.BillingGroupService;
 import com.coway.trust.biz.payment.common.service.CommonPaymentService;
 import com.coway.trust.biz.payment.common.service.CommonPopupPaymentService;
+import com.coway.trust.biz.sales.order.OrderRegisterService;
+import com.coway.trust.biz.sales.order.impl.OrderRegisterMapper;
 import com.coway.trust.config.datasource.DataSource;
 import com.coway.trust.config.datasource.DataSourceType;
+import com.coway.trust.util.CommonUtils;
+import com.coway.trust.web.sales.SalesConstants;
 
 import egovframework.rte.fdl.cmmn.EgovAbstractServiceImpl;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -26,6 +33,9 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 
 	@Resource(name = "commonPaymentMapper")
 	private CommonPaymentMapper commonPaymentMapper;
+
+	@Resource(name = "orderRegisterMapper")
+	private OrderRegisterMapper orderRegisterMapper;
 
 	/**
 	 * Payment - Order Info 조회 : order No로 Order ID 조회하기
@@ -1242,4 +1252,92 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
     	//WOR 번호 조회
     	return commonPaymentMapper.selectProcessPaymentResult(paramMap);
     }
+
+    @Override
+	public EgovMap checkOrderOutstanding(Map<String, Object> params) {
+
+		int orderId = 0;
+		String ROOT_STATE = "", isInValid = "", msg = "";
+
+
+
+		//orderId = Integer.parseInt((String)params.get("custId"));
+		orderId = CommonUtils.intNvl(Integer.parseInt(String.valueOf(params.get("salesOrdId"))));
+
+		EgovMap RESULT = new EgovMap();
+
+
+        EgovMap resultMap = this.selectSalesOrderM(orderId, 0);
+		EgovMap ValiRentInstNo = null;
+		ValiRentInstNo =orderRegisterMapper.selectRentalInstNo(orderId);
+
+
+        		String appTypId = "";
+        		BigDecimal rentInstNo;
+        		BigDecimal rentPeriod;
+        		String ordStus = "";
+    			BigDecimal valiOutStanding = (BigDecimal)orderRegisterMapper.selectOutstandingAmt(orderId);
+    			valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+        		if(resultMap != null)
+        			appTypId = resultMap.get("appTypeId").toString();
+
+            	if("66".equals(appTypId) || "1412".equals(appTypId)) {
+            		//if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) != 0 || String.valueOf(ValiRentInstNo.get("rentInstNo")) != null){
+            		if(ValiRentInstNo != null){
+            			rentInstNo = (BigDecimal)ValiRentInstNo.get("rentInstNo");
+            		}
+            		else{
+            			rentInstNo = (BigDecimal.valueOf(100));
+            		}
+            		//rentInstNo = ValiRentInstNo.get("rentInstNo") != null ? Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))): 100;
+            		rentPeriod = (BigDecimal)resultMap.get("rentalPeriod");
+            	}
+            	else {
+            		rentInstNo = BigDecimal.ZERO;
+            		rentPeriod = BigDecimal.ZERO;
+            	}
+            	ordStus = resultMap.get("stusCodeId").toString();
+            	if(rentInstNo.compareTo(rentPeriod) == 1 || "10".equals(ordStus) && (valiOutStanding.compareTo(BigDecimal.ZERO) == 0 || valiOutStanding.compareTo(BigDecimal.ZERO) == -1)){
+            		msg = "Order App Type : " + (String)resultMap.get("appTypeName") + "<br/>";
+            		msg = msg + "Order Status : " + (String)resultMap.get("orderStatus") + "<br/>";
+            		msg = msg + "Rental Status : " + (String)resultMap.get("rentalStatus") + "<br/>";
+            		if(valiOutStanding.compareTo(BigDecimal.ZERO) == -1){
+                		msg = msg + "Outstanding : RM " + "<span style='color:#ff0000;'>"+ valiOutStanding + "</span>";
+
+            		}
+            		else{
+                		msg = msg + "Outstanding : RM " +  valiOutStanding;
+
+            		}
+
+                    isInValid = "InValid";
+                    ROOT_STATE = "ROOT_1";
+            	}
+
+
+            	else {
+        		ROOT_STATE = "ROOT_2";
+        	}
+
+
+        RESULT.put("ROOT_STATE", ROOT_STATE);
+        RESULT.put("IS_IN_VALID", isInValid);
+        RESULT.put("MSG", msg);
+        RESULT.put("OLD_ORDER_ID", orderId);
+
+
+		return RESULT;
+	}
+
+	private EgovMap selectSalesOrderM(int ordId, int appTypeId) {
+		Map<String, Object> params = new HashMap<String, Object>();
+
+		params.put("salesOrdId", ordId);
+		params.put("appTypeId", appTypeId);
+
+		EgovMap result = orderRegisterMapper.selectSalesOrderM(params);
+
+		return result;
+	}
+
 }

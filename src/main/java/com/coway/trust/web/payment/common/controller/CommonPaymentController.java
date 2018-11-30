@@ -362,4 +362,14 @@ public class CommonPaymentController {
 		return ResponseEntity.ok(resultList);
 	}
 	
+    @RequestMapping(value = "/checkOrderOutstanding.do", method = RequestMethod.GET)
+    public ResponseEntity<EgovMap> checkOrderOutstanding(@RequestParam Map<String, Object>params, ModelMap model) throws Exception {
+    	EgovMap RESULT;
+
+    		RESULT = commonPaymentService.checkOrderOutstanding(params);
+
+
+    	return ResponseEntity.ok(RESULT);
+    }
+	
 }
