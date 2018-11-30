@@ -1035,7 +1035,7 @@
                 $('#promoId').val(promoId);
                 $('#stkId').val(stkId);
 
-                if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68){
+                if(APP_TYPE_ID == 67 || APP_TYPE_ID == 68 || APP_TYPE_ID == 144){
                     doGetComboData('/sales/order/selectPromotionByAppTypeStock2.do', {appTypeId:APP_TYPE_ID,stkId:stkId, empChk:empChk, promoCustType:custTypeVal, exTrade:exTrade, srvPacId:SRV_PAC_ID}, promoId, 'ordPromo', 'S', ''); //Common Code
                 }
                 else
