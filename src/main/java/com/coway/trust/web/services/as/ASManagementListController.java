@@ -892,6 +892,8 @@ public class ASManagementListController {
 
     logger.debug("newResultUpdate   done!!--->" + rtnValue.toString());
 
+    boolean rst = ASManagementListService.insertOptFlt(params);
+
     ReturnMessage message = new ReturnMessage();
     message.setCode(AppConstants.SUCCESS);
     message.setData(rtnValue.get("asNo"));
