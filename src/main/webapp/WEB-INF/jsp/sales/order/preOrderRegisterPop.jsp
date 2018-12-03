@@ -835,6 +835,18 @@
         if(FormUtil.checkReqValue($('#nric'))) {
             isValid = false;
             msg += "* Please key in NRIC/Company No.<br>";
+        }else{
+        	var dob = (Number($('#nric').val().substr(0,2)) + 18 )%100;// to take last 2 digit
+        	console.log(dob);
+
+	        var nowDt = new Date();
+	        var nowDtY = nowDt.getFullYear().toString().substr(-2);
+
+	        if(dob > nowDtY) {
+	            Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
+	            $('#scPreOrdArea').addClass("blind");
+	            return false;
+	        }
         }
         if(FormUtil.checkReqValue($('#sofNo'))) {
             isValid = false;
