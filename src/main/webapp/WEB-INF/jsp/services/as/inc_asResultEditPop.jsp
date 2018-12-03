@@ -861,6 +861,7 @@ function  fn_setSaveFormData(){
     var asResultM ={
                    AS_ENTRY_ID:              $("#asData_AS_ID").val(),
                    AS_SO_ID:                   $("#asData_AS_SO_ID").val(),
+                   AS_ORD_NO:                   $("#asData_AS_ORD_NO").val(),
                    AS_CT_ID:                   $('#ddlCTCode').val(),
                    AS_SETL_DT:               $('#dpSettleDate').val() ,
                    AS_SETL_TM:               $('#tpSettleTime').val(),
@@ -980,6 +981,7 @@ function  fn_setSaveFormData(){
                          }
         	}
 
+
              //Common.ajax("POST", "/services/as/newResultUpdate.do", saveForm, function(result)
             		 Common.ajax("POST", "/services/as/newResultUpdate_1.do", saveForm, function(result)
             		 {
@@ -1020,6 +1022,7 @@ function  fn_setSaveFormData(){
     <div style='display:none'>
                <input type="text"   id= 'asData_AS_ID' name='asData_AS_ID'/>
                <input type="text"   id= 'asData_AS_SO_ID' name='asData_AS_SO_ID'/>
+               <input type="text"   id= 'asData_AS_ORD_NO' name='asData_AS_ORD_NO'/>
                <input type="text"   id= 'asData_AS_RESULT_ID' name='asData_AS_RESULT_ID'/>
                <input type="text"   id= 'asData_AS_RESULT_NO' name='asData_AS_RESULT_NO'/>
                <input type="text"   id= 'requestMod' name='requestMod'/>
@@ -1482,6 +1485,7 @@ function fn_setASDataInit(ops){
 
     $("#asData_AS_ID").val(ops.AS_ID);
     $("#asData_AS_SO_ID").val(ops.AS_SO_ID);
+    $("#asData_AS_ORD_NO").val(ops.ORD_NO);
     $("#asData_AS_RESULT_ID").val(ops.AS_RESULT_ID);
     $("#asData_AS_RESULT_NO").val(ops.AS_RESULT_NO);
     $("#requestMod").val(ops.MOD);
