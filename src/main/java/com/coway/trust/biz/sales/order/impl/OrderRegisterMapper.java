@@ -156,6 +156,8 @@ public interface OrderRegisterMapper {
 
 	void insertASEntry(ASEntryVO asEntryVo);
 
-	BigDecimal selectOutstandingAmt(int salesOrdId);
+	EgovMap selectOutstandingAmt(int salesOrdId);
+
+	EgovMap selectOutrightPlusOutstandingAmt(int salesOrdId);
 
 }

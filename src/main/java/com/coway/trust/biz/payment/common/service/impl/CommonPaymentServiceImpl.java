@@ -1257,6 +1257,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	public EgovMap checkOrderOutstanding(Map<String, Object> params) {
 
 		int orderId = 0;
+		String appTypId = "";
 		String ROOT_STATE = "", isInValid = "", msg = "";
 
 
@@ -1268,18 +1269,28 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
 
 
         EgovMap resultMap = this.selectSalesOrderM(orderId, 0);
+
+		if(resultMap != null)
+			appTypId = resultMap.get("appTypeId").toString();
+
 		EgovMap ValiRentInstNo = null;
 		ValiRentInstNo =orderRegisterMapper.selectRentalInstNo(orderId);
 
+		EgovMap OutstandingAmt = null;
+		if("1412".equals(appTypId)){
+			OutstandingAmt = orderRegisterMapper.selectOutrightPlusOutstandingAmt(orderId);
+		}
+		else{
+			OutstandingAmt = orderRegisterMapper.selectOutstandingAmt(orderId);
+		}
 
-        		String appTypId = "";
+
         		BigDecimal rentInstNo;
         		BigDecimal rentPeriod;
         		String ordStus = "";
-    			BigDecimal valiOutStanding = (BigDecimal)orderRegisterMapper.selectOutstandingAmt(orderId);
-    			valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
-        		if(resultMap != null)
-        			appTypId = resultMap.get("appTypeId").toString();
+    			BigDecimal valiOutStanding;
+    			//valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+
 
             	if("66".equals(appTypId) || "1412".equals(appTypId)) {
             		//if(Integer.parseInt(String.valueOf(ValiRentInstNo.get("rentInstNo"))) != 0 || String.valueOf(ValiRentInstNo.get("rentInstNo")) != null){
@@ -1295,6 +1306,15 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
             	else {
             		rentInstNo = BigDecimal.ZERO;
             		rentPeriod = BigDecimal.ZERO;
+            	}
+
+            	if(OutstandingAmt != null){
+        		    valiOutStanding = (BigDecimal)OutstandingAmt.get("rentAmt");
+        			valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
+            	}
+            	else{
+        		    valiOutStanding = BigDecimal.ZERO;
+        			valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
             	}
             	ordStus = resultMap.get("stusCodeId").toString();
             	if(rentInstNo.compareTo(rentPeriod) == 1 || "10".equals(ordStus) && (valiOutStanding.compareTo(BigDecimal.ZERO) == 0 || valiOutStanding.compareTo(BigDecimal.ZERO) == -1)){

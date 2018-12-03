@@ -185,7 +185,7 @@
              , T2.TYPE_ID
              , T3.CODE_NAME APP_TYPE_NAME
              , T4.NAME ORDER_STATUS
-             , T5.STUS_CODE_ID RENTAL_STATUS
+             , NVL(T5.STUS_CODE_ID, '-') RENTAL_STATUS
              , T6.CNTRCT_RENTAL_PRIOD RENTAL_PERIOD
           FROM SAL0001D T1
           LEFT JOIN SAL0029D T2 ON T2.CUST_ID = T1.CUST_ID
@@ -2238,7 +2238,7 @@
            AND ROWNUM &lt;= 1
     </select>
 
-        <select id="selectOutstandingAmt" parameterType="int" resultType="java.math.BigDecimal">
+        <select id="selectOutstandingAmt" parameterType="int" resultType="egovMap">
         SELECT RENT_AMT
         FROM(
         SELECT SUM(T1.RENT_AMT) RENT_AMT
@@ -2254,5 +2254,15 @@
          WHERE T3.INSTLMT_SO_ID = #{value})
          WHERE RENT_AMT IS NOT NULL
     </select>
+
+    <select id="selectOutrightPlusOutstandingAmt" parameterType="int" resultType="egovMap">
+        SELECT RENT_AMT
+        FROM(
+         SELECT SUM(T1.INSTLMT_AMT) RENT_AMT
+          FROM PAY0010D T1
+         WHERE T1.INSTLMT_SO_ID = #{value})
+         WHERE RENT_AMT IS NOT NULL
+    </select>
+
 
 </mapper>
