@@ -250,29 +250,14 @@ public class SalesPlanManagementController {
 		LOGGER.debug("insertSalesPlanMaster : {}", params);
 		
 		int totCnt	= 0;
-		//String befPlan	= "";	String thisPlan	= "";
 		ReturnMessage message	= new ReturnMessage();
-		/*
-		List<EgovMap> selectCreateCheck = salesPlanManagementService.selectCreateCheck(params);
-		LOGGER.debug("selectCreateCheck : {}", selectCreateCheck);
-		befPlan		= selectCreateCheck.get(0).get("befPlan").toString();
-		thisPlan	= selectCreateCheck.get(0).get("thisPlan").toString();
 		
-		if ( "0".equals(befPlan) ) {
-			message.setCode("98");		//	BEFORE WEEK MUST HAVE TO CREATED
-			message.setData(createCnt);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		} else if ( "1".equals(thisPlan) ) {
-			message.setCode("97");		//	THIS WEEK ALREADY CREATED
-			message.setData(createCnt);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-		} else {
-			createCnt	= salesPlanManagementService.insertSalesPlanMaster(params, sessionVO);
-			message.setCode(AppConstants.SUCCESS);
-			message.setData(createCnt);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-		}*/
+		//	check re-calculate
+		if ( "Y".equals(params.get("reCalcYn").toString()) ) {
+			salesPlanManagementService.deleteSalesPlanMaster(params, sessionVO);
+		}
 		totCnt	= salesPlanManagementService.insertSalesPlanMaster(params, sessionVO);
+		
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));

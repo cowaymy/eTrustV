@@ -140,47 +140,14 @@ public class SupplyPlanManagementController {
 		LOGGER.debug("insertSupplyPlanMaster : {}", params);
 
 		int totCnt = 0;
-		//int dtlCnt = 0;
-
-		//List<EgovMap> selectSupplyPlanInfo = supplyPlanManagementService.selectSupplyPlanInfo(params);
-
 		ReturnMessage message = new ReturnMessage();
-		/*
-		if (!selectSupplyPlanInfo.isEmpty()) {
-			LOGGER.debug("selectSupplyPlanInfo : {}", selectSupplyPlanInfo);
-			String salesPlanStusId = String.valueOf(selectSupplyPlanInfo.get(0).get("salesPlanStusId"));
-			String supplyPlanStusId = String.valueOf(selectSupplyPlanInfo.get(0).get("supplyPlanStusId"));
-
-			if ("0".equals(supplyPlanStusId)) {
-				totCnt = supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
-				if (0 < totCnt) {
-					message.setCode(AppConstants.SUCCESS);
-					message.setData(totCnt);
-					message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-				} else {
-					message.setCode(AppConstants.FAIL);
-					message.setData(totCnt);
-					message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-				}
-			} else {
-				message.setCode(AppConstants.FAIL);
-				message.setData(totCnt);
-				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-			}
-		} else {
-			totCnt = supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
-			if (0 < totCnt) {
-				message.setCode(AppConstants.SUCCESS);
-				message.setData(totCnt);
-				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-			} else {
-				message.setCode(AppConstants.FAIL);
-				message.setData(totCnt);
-				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
-			}
+		
+		//	check re-calculate
+		if ( "Y".equals(params.get("reCalcYn").toString()) ) {
+			supplyPlanManagementService.deleteSupplyPlanMaster(params, sessionVO);
 		}
-		*/
 		totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
+		
 		message.setCode(AppConstants.SUCCESS);
 		message.setData(totCnt);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));

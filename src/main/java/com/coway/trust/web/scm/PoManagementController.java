@@ -78,10 +78,12 @@ public class PoManagementController {
 		params.put("planGrYear", planGrYear);
 		params.put("planGrMonth", planGrMonth);
 		params.put("planGrWeek", planGrWeek);
+		List<EgovMap> selectPoStatus		= poManagementService.selectPoStatus(params);
 		List<EgovMap> selectPoTargetList	= poManagementService.selectPoTargetList(params);
 		List<EgovMap> selectPoCreatedList	= poManagementService.selectPoCreatedList(params);
 		
 		map.put("selectScmTotalInfo", selectScmTotalInfo);
+		map.put("selectPoStatus", selectPoStatus);
 		map.put("selectPoTargetList", selectPoTargetList);
 		map.put("selectPoCreatedList", selectPoCreatedList);
 		
@@ -159,9 +161,11 @@ public class PoManagementController {
 		
 		Map<String, Object> map = new HashMap<>();
 		
+		List<EgovMap> selectPoStatus	= poManagementService.selectPoStatus(params);
 		List<EgovMap> selectPoSummary	= poManagementService.selectPoSummary(params);
 		List<EgovMap> selectPoApprList	= poManagementService.selectPoApprList(params);
 		
+		map.put("selectPoStatus", selectPoStatus);
 		map.put("selectPoSummary", selectPoSummary);
 		map.put("selectPoApprList", selectPoApprList);
 		
