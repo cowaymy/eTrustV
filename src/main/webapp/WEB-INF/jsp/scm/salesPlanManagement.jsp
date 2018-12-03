@@ -768,7 +768,10 @@ function fnCreate(obj) {
 		return	false;
 	}
 	
-	var params	= { planStusId : 1 };
+	var params	= {
+			planStusId : 1,
+			reCalcYn : "N"
+	};
 	params	= $.extend($("#MainForm").serializeJSON(), params);
 	
 	Common.ajax("POST"
@@ -840,33 +843,42 @@ function fnSaveMaster(obj, conf) {
 		return	false;
 	}
 	
+	//	그리드에 수정사항이 있는 경우 메시지
 	var updList	= AUIGrid.getEditedRowItems(myGridID);
-	
 	if ( 0 < updList.length ) {
 		Common.alert("Save First");
 		return	false;
 	}
 	
 	var msg	= "";
+	var url	= "";
 	var planId	= salesPlanList[0].planId;
 	var planStusId	= 0;
+	var reCalcYn	= "N";
 	
 	//	set planStusId
 	if ( "confirm" == conf ) {
 		msg	= $("#scmYearCbBox").val() + " year " + $("#scmWeekCbBox").val() + " th Week Sales Plan is confirmed";
+		url	= "/scm/updateSalesPlanMaster.do";
 		planStusId	= 5;
 	} else if ( "unconfirm" == conf ) {
 		msg	= $("#scmYearCbBox").val() + " year " + $("#scmWeekCbBox").val() + " th Week Sales Plan is Unconfirmed";
+		url	= "/scm/updateSalesPlanMaster.do";
+		planStusId	= 1;
+	} else if ( "reCalc" == conf ) {
+		url	= "/scm/insertSalesPlanMaster.do";
+		reCalcYn	= "Y";
 		planStusId	= 1;
 	}
 	
 	var params	= {
 			planId : planId,
-			planStusId : planStusId
+			planStusId : planStusId,
+			reCalcYn : reCalcYn
 		};
-	
+	params	= $.extend($("#MainForm").serializeJSON(), params);
 	Common.ajax("POST"
-			, "/scm/updateSalesPlanMaster.do"
+			, url
 			, params
 			, function(result) {
 				Common.alert(msg);
@@ -1052,6 +1064,7 @@ function fnButtonControl(div, list1, list2) {
 		$("#btnSave").addClass("btn_disabled");
 		$("#btnConfirm").addClass("btn_disabled");
 		$("#btnUnconfirm").addClass("btn_disabled");
+		$("#btnReCalc").addClass("btn_disabled");
 		if ( null == list2 ) {
 			//	팀전체, 판매계획 데이터가 없는 경우
 			$("#btnExcel").addClass("btn_disabled");
@@ -1067,6 +1080,7 @@ function fnButtonControl(div, list1, list2) {
 			$("#btnSave").addClass("btn_disabled");
 			$("#btnConfirm").addClass("btn_disabled");
 			$("#btnUnconfirm").addClass("btn_disabled");
+			$("#btnReCalc").addClass("btn_disabled");
 			$("#btnExcel").addClass("btn_disabled");
 		} else if ( 5 == prevWeek ) {
 			//	팀개별, 전주 판매계획 confirmed인 경우
@@ -1076,6 +1090,7 @@ function fnButtonControl(div, list1, list2) {
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnReCalc").addClass("btn_disabled");
 				$("#btnExcel").addClass("btn_disabled");
 			} else if ( 1 == currWeek ) {
 				//	팀개별, 금주 판매계획 unconfirmed인 경우
@@ -1083,12 +1098,14 @@ function fnButtonControl(div, list1, list2) {
 				$("#btnSave").removeClass("btn_disabled");
 				$("#btnConfirm").removeClass("btn_disabled");
 				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnReCalc").removeClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
 			} else if ( 5 == currWeek ) {
 				//	팀개별, 금주 판매계획 confirmed인 경우
 				$("#btnCreate").addClass("btn_disabled");
 				$("#btnSave").addClass("btn_disabled");
 				$("#btnConfirm").addClass("btn_disabled");
+				$("#btnReCalc").addClass("btn_disabled");
 				$("#btnExcel").removeClass("btn_disabled");
 				if ( 0 == currSupp ) {
 					//	금주 공급계획이 아무것도 생성되지 않은 경우
@@ -1307,6 +1324,7 @@ $(document).ready(function() {
 			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSaveDetail(this);">Save</a></p></li>
 			<li><p id="btnConfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'confirm');">Confirm</a></p></li>
 			<li><p id="btnUnconfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'unconfirm');">UnConfirm</a></p></li>
+			<li><p id="btnReCalc" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'reCalc');">Re-Calculation</a></p></li>
 			<li><p id="btnExcel" class="btn_grid btn_disabled"><a onclick="fnExcel(this, 'SalesPlanManagement');">Excel</a></p></li>
 			<!-- <li><p id='btnExcel'  class="btn_grid btn_disabled"><a onclick="fnExcel(this,'SalesPlanManagement');">Download</a></p></li> -->
 		</ul>

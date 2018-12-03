@@ -606,6 +606,8 @@ function fnSearch() {
 				} else {
 					$("#btnDelete").addClass("btn_disabled");
 				}
+				
+				fnCircleControl(result.selectPoStatus);
 			});
 }
 function fnSetPlanQty(list) {
@@ -787,6 +789,69 @@ function fnDelete(obj) {
 }
 
 //	user function
+function fnCircleControl(list) {
+	var suppConfCnt	= list[0].suppConfCnt;
+	var poIssCnt	= list[0].poIssCnt;
+	var poApprCnt	= list[0].poApprCnt;
+	console.log("suppConfCnt : " + suppConfCnt + ", poIssCnt : " + poIssCnt + ", poApprCnt : " + poApprCnt);
+	if ( 0 == suppConfCnt ) {
+		$("#cirIssue").addClass("circle_grey");
+		$("#cirIssue").removeClass("circle_red");
+		$("#cirIssue").removeClass("circle_blue");
+		$("#cirAppro").addClass("circle_grey");
+		$("#cirAppro").removeClass("circle_red");
+		$("#cirAppro").removeClass("circle_blue");
+	} else if ( 0 < suppConfCnt ) {
+		if ( 0 == poIssCnt ) {
+			$("#cirIssue").addClass("circle_grey");
+			$("#cirIssue").removeClass("circle_red");
+			$("#cirIssue").removeClass("circle_blue");
+			$("#cirAppro").addClass("circle_grey");
+			$("#cirAppro").removeClass("circle_red");
+			$("#cirAppro").removeClass("circle_blue");
+		} else if ( 0 < poIssCnt ) {
+			if ( poIssCnt == suppConfCnt ) {
+				$("#cirIssue").removeClass("circle_grey");
+				$("#cirIssue").addClass("circle_red");
+				$("#cirIssue").removeClass("circle_blue");
+				if ( 0 == poApprCnt ) {
+					$("#cirAppro").addClass("circle_grey");
+					$("#cirAppro").removeClass("circle_red");
+					$("#cirAppro").removeClass("circle_blue");
+				} else if ( 0 < poApprCnt ) {
+					if ( poIssCnt == poApprCnt ) {
+						$("#cirAppro").removeClass("circle_grey");
+						$("#cirAppro").removeClass("circle_red");
+						$("#cirAppro").addClass("circle_blue");
+					} else {
+						$("#cirAppro").removeClass("circle_grey");
+						$("#cirAppro").addClass("circle_red");
+						$("#cirAppro").removeClass("circle_blue");
+					}
+				}
+			} else {
+				$("#cirIssue").removeClass("circle_grey");
+				$("#cirIssue").addClass("circle_red");
+				$("#cirIssue").removeClass("circle_blue");
+				if ( 0 == poApprCnt ) {
+					$("#cirAppro").addClass("circle_grey");
+					$("#cirAppro").removeClass("circle_red");
+					$("#cirAppro").removeClass("circle_blue");
+				} else if ( 0 < poApprCnt ) {
+					if ( poIssCnt == poApprCnt ) {
+						$("#cirAppro").removeClass("circle_grey");
+						$("#cirAppro").removeClass("circle_red");
+						$("#cirAppro").addClass("circle_blue");
+					} else {
+						$("#cirAppro").removeClass("circle_grey");
+						$("#cirAppro").addClass("circle_red");
+						$("#cirAppro").removeClass("circle_blue");
+					}
+				}
+			}
+		}
+	}
+}
 function fnValidation() {
 	var addList	= AUIGrid.getAddedRowItems(myGridID2);
 	

@@ -783,7 +783,10 @@ function fnCreate(obj) {
 		return	false;
 	}
 	
-	var params	= { planStusId : 1 };
+	var params	= {
+			planStusId : 1,
+			reCalcYn : "N"
+	};
 	params	= $.extend($("#MainForm").serializeJSON(), params);
 	
 	Common.ajax("POST"
@@ -861,25 +864,34 @@ function fnSaveMaster(obj, conf) {
 	}
 	
 	var msg	= "";
+	var url	= "";
 	var planId	= supplyPlanList[0]["planId"];
 	var planStusId	= 0;
+	var reCalcYn	= "N";
 	
 	//	set planStusId
 	if ( "confirm" == conf ) {
 		msg	= $("#scmYearCbBox").val() + " year " + $("#scmWeekCbBox").val() + " th Week Supply Plan is confirmed";
+		url	= "/scm/updateSupplyPlanMaster.do";
 		planStusId	= 5;
 	} else if ( "unconfirm" == conf ) {
 		msg	= $("#scmYearCbBox").val() + " year " + $("#scmWeekCbBox").val() + " th Week Supply Plan is Unconfirmed";
+		url	= "/scm/updateSupplyPlanMaster.do";
+		planStusId	= 1;
+	} else if ( "reCalc" == conf ) {
+		url	= "/scm/insertSupplyPlanMaster.do";
+		reCalcYn	= "Y";
 		planStusId	= 1;
 	}
 	
 	var params	= {
 			planId : planId,
-			planStusId : planStusId
+			planStusId : planStusId,
+			reCalcYn : reCalcYn
 		};
-	
+	params	= $.extend($("#MainForm").serializeJSON(), params);
 	Common.ajax("POST"
-			, "/scm/updateSupplyPlanMaster.do"
+			, url
 			, params
 			, function(result) {
 				Common.alert(msg);
@@ -1007,6 +1019,7 @@ function fnButtonControl(list1, list2) {
 		$("#btnSave").addClass("btn_disabled");
 		$("#btnConfirm").addClass("btn_disabled");
 		$("#btnUnconfirm").addClass("btn_disabled");
+		$("#btnReCalc").addClass("btn_disabled");
 		$("#btnExcel").addClass("btn_disabled");
 	} else if ( 15 == salesPlanStusId ) {
 		//	판매계획 3개팀 모두 confirm
@@ -1016,6 +1029,7 @@ function fnButtonControl(list1, list2) {
 			$("#btnSave").addClass("btn_disabled");
 			$("#btnConfirm").addClass("btn_disabled");
 			$("#btnUnconfirm").addClass("btn_disabled");
+			$("#btnReCalc").addClass("btn_disabled");
 			$("#btnExcel").addClass("btn_disabled");
 		} else if ( 1 == supplyPlanStusId ) {
 			//	선택한 CDC의 공급계획 unconfirmed
@@ -1023,6 +1037,7 @@ function fnButtonControl(list1, list2) {
 			$("#btnSave").removeClass("btn_disabled");
 			$("#btnConfirm").removeClass("btn_disabled");
 			$("#btnUnconfirm").addClass("btn_disabled");
+			$("#btnReCalc").removeClass("btn_disabled");
 			$("#btnExcel").removeClass("btn_disabled");
 		} else if ( 5 == supplyPlanStusId ) {
 			//	선택한 CDC의 공급계획 confirmed
@@ -1033,9 +1048,11 @@ function fnButtonControl(list1, list2) {
 			if ( 0 == poStusId ) {
 				//	PO가 1개도 생성되지 않은 경우
 				$("#btnUnconfirm").removeClass("btn_disabled");
+				$("#btnReCalc").removeClass("btn_disabled");
 			} else {
 				//	PO가 1개라도 생성된 경우
 				$("#btnUnconfirm").addClass("btn_disabled");
+				$("#btnReCalc").addClass("btn_disabled");
 			}
 		} else {
 			console.log("button supplyPlanStusId error");
@@ -1046,6 +1063,7 @@ function fnButtonControl(list1, list2) {
 		$("#btnSave").addClass("btn_disabled");
 		$("#btnConfirm").addClass("btn_disabled");
 		$("#btnUnconfirm").addClass("btn_disabled");
+		$("#btnReCalc").addClass("btn_disabled");
 		$("#btnExcel").addClass("btn_disabled");
 	}
 	
@@ -1199,6 +1217,7 @@ var myGridID;
 			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSaveDetail(this);">Save</a></p></li>
 			<li><p id="btnConfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'confirm');">Confirm</a></p></li>
 			<li><p id="btnUnconfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'unconfirm');">UnConfirm</a></p></li>
+			<li><p id="btnReCalc" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'reCalc');">Re-Calculation</a></p></li>
 			<li><p id="btnExcel" class="btn_grid btn_disabled"><a onclick="fnExcel(this, 'SupplyPlanManagement');">Excel</a></p></li>
 		</ul>
 	</div><!-- side_btns end -->
