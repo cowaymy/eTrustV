@@ -832,6 +832,14 @@ UPDATE SCM0005M
  WHERE PLAN_ID = #{planId}
 </update>
 
+<!-- Re-Calculation -->
+<delete id="deleteSupplyPlanDetail" parameterType="Map">
+DELETE FROM SCM0006D WHERE PLAN_ID = (SELECT PLAN_ID FROM SCM0005M WHERE PLAN_YEAR = #{scmYearCbBox} AND PLAN_WEEK = #{scmWeekCbBox} AND CDC = #{scmCdcCbBox})
+</delete>
+<delete id="deleteSupplyPlanMaster" parameterType="Map">
+DELETE FROM SCM0005M WHERE PLAN_YEAR = #{scmYearCbBox} AND PLAN_WEEK = #{scmWeekCbBox} AND CDC = #{scmCdcCbBox}
+</delete>
+
 <!-- Supply Plan Summary View -->
 <!-- Search -->
 <select id="selectSupplyPlanSummaryList" parameterType="Map" resultType="egovMap">

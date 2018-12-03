@@ -528,6 +528,12 @@ SELECT A.STOCK_CODE
  GROUP BY A.STOCK_CODE
  ORDER BY A.STOCK_CODE
 </select>
+<delete id="deleteSalesPlanDetail" parameterType="Map">
+DELETE FROM SCM0002D WHERE PLAN_ID = (SELECT PLAN_ID FROM SCM0001M WHERE PLAN_YEAR = #{scmYearCbBox} AND PLAN_WEEK = #{scmWeekCbBox} AND TEAM = #{scmTeamCbBox})
+</delete>
+<delete id="deleteSalesPlanMaster" parameterType="Map">
+DELETE FROM SCM0001M WHERE PLAN_YEAR = #{scmYearCbBox} AND PLAN_WEEK = #{scmWeekCbBox} AND TEAM = #{scmTeamCbBox}
+</delete>
 
 <!-- Save -->
 <update id="updateSalesPlanDetail" parameterType="Map">

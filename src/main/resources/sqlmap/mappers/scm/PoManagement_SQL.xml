@@ -3,6 +3,33 @@
 <mapper namespace="com.coway.trust.biz.scm.impl.PoManagementMapper">
 
 <!-- PO Issue -->
+<!-- PO COMMON -->
+<select id="selectPoStatus" parameterType="Map" resultType="egovMap">
+SELECT SUM(A.SUPP_CONF_CNT) AS SUPP_CONF_CNT
+     , SUM(A.PO_ISS_CNT) AS PO_ISS_CNT
+     , SUM(A.PO_APPR_CNT) AS PO_APPR_CNT
+  FROM (
+        SELECT COUNT(*) AS SUPP_CONF_CNT, 0 AS PO_ISS_CNT, 0 AS PO_APPR_CNT
+          FROM SCM0005M A
+          LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
+         WHERE A.PLAN_YEAR = #{scmYearCbBox}
+           AND A.PLAN_WEEK = #{scmWeekCbBox}
+           AND A.PLAN_STUS_ID = 5
+        UNION ALL
+        SELECT 0 AS SUPP_CONF_CNT, COUNT(*) AS PO_ISS_CNT, 0 AS PO_APPR_CNT
+          FROM SCM0052M A
+          LEFT OUTER JOIN SCM0053D B ON (A.PO_ID = B.PO_ID)
+         WHERE A.PO_YEAR = #{scmYearCbBox}
+           AND A.PO_WEEK = #{scmWeekCbBox}
+        UNION ALL
+        SELECT 0 AS SUPP_CONF_CNT, 0 AS PO_ISS_CNT, COUNT(*) AS PO_APPR_CNT
+          FROM SCM0052M A
+          LEFT OUTER JOIN SCM0053D B ON (A.PO_ID = B.PO_ID)
+         WHERE A.PO_YEAR = #{scmYearCbBox}
+           AND A.PO_WEEK = #{scmWeekCbBox}
+           AND B.PO_ITEM_STUS_ID = 5
+        ) A
+</select>
 <!-- Search -->
 <select id="selectPoTargetList" parameterType="Map" resultType="egovMap">
 SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
