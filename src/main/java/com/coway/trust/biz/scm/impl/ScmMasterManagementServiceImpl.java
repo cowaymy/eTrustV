@@ -103,11 +103,6 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 			((Map<String, Object>) obj).put("moq", Integer.parseInt(((Map<String, Object>) obj).get("klMoq").toString()));
 			((Map<String, Object>) obj).put("cdc", "2010");
 			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("klTarget"));
-			//if ( null == ((Map<String, Object>) obj).get("klTarget") ) {
-				
-			//} else {
-			//	((Map<String, Object>) obj).put("isTrget", 1);
-			//}
 			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
 			
 			//	PN

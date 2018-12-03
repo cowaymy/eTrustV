@@ -10,6 +10,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface PoManagementService
 {
 	//	PO Issue
+	List<EgovMap> selectPoStatus(Map<String, Object> params);
 	List<EgovMap> selectLeadTm(Map<String, Object> params);
 	List<EgovMap> selectLastWeekTh(Map<String, Object> params);
 	List<EgovMap> selectSplitCnt(Map<String, Object> params);

@@ -468,6 +468,20 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		return	saveCnt;
 	}
 	@Override
+	public void deleteSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
+		int dtlCnt	= 0;
+		int mstCnt	= 0;
+		
+		try {
+			dtlCnt	= salesPlanManagementMapper.deleteSalesPlanDetail(params);
+			LOGGER.debug("Sales Plan Detail Delete cnt : " + dtlCnt);
+			mstCnt	= salesPlanManagementMapper.deleteSalesPlanMaster(params);
+			LOGGER.debug("Sales Plan Master Delete cnt : " + mstCnt);
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+	}
+	@Override
 	public int updateSalesPlanDetail(List<Object> updList, SessionVO sessionVO) {
 		
 		int updCnt	= 0;

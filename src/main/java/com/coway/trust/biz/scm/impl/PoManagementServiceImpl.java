@@ -44,6 +44,10 @@ public class PoManagementServiceImpl implements PoManagementService {
 	
 	//	PO Issue
 	@Override
+	public List<EgovMap> selectPoStatus(Map<String, Object> params) {
+		return	poManagementMapper.selectPoStatus(params);
+	}
+	@Override
 	public List<EgovMap> selectLeadTm(Map<String, Object> params) {
 		return	poManagementMapper.selectLeadTm(params);
 	}

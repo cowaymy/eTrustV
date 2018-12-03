@@ -626,6 +626,20 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		return	saveCnt;
 	}
 	@Override
+	public void deleteSupplyPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
+		int dtlCnt	= 0;
+		int mstCnt	= 0;
+		
+		try {
+			dtlCnt	= supplyPlanManagementMapper.deleteSupplyPlanDetail(params);
+			LOGGER.debug("Supply Plan Detail Delete cnt : " + dtlCnt);
+			mstCnt	= supplyPlanManagementMapper.deleteSupplyPlanMaster(params);
+			LOGGER.debug("Supply Plan Master Delete cnt : " + mstCnt);
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+	}
+	@Override
 	public int updateSupplyPlanDetail(List<Object> updList, SessionVO sessionVO) {
 		//	int var
 		int saveCnt	= 0;

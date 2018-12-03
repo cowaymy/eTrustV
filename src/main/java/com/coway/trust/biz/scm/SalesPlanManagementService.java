@@ -14,6 +14,7 @@ public interface SalesPlanManagementService {
 	List<EgovMap> selectSalesPlanList(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanListAll(Map<String, Object> params);
 	int insertSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO);
+	void deleteSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO);
 	int updateSalesPlanDetail(List<Object> updList, SessionVO sessionVO);
 	int updateSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO);
 	//List<EgovMap> selectSplitInfo(Map<String, Object> params);

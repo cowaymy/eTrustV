@@ -13,6 +13,8 @@ public interface SupplyPlanManagementMapper {
 	List<EgovMap> selectSupplyPlanInfo(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanList(Map<String, Object> params);
 	void insertSupplyPlanMaster(Map<String, Object> params);
+	int deleteSupplyPlanDetail(Map<String, Object> params);
+	int deleteSupplyPlanMaster(Map<String, Object> params);
 	List<EgovMap> selectGetSupplyPlanId(Map<String, Object> params);
 	void insertSupplyPlanDetailPsi1(Map<String, Object> params);
 	void insertSupplyPlanDetailPsi235(Map<String, Object> params);

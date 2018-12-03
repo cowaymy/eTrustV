@@ -61,6 +61,8 @@ public class OtdStatusManagementServiceImpl implements OtdStatusManagementServic
 		startDate	= startDate.substring(4, 8) + startDate.substring(2, 4) + startDate.substring(0, 2);
 		endDate		= endDate.substring(4, 8) + endDate.substring(2, 4) + endDate.substring(0, 2);
 		
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
 		LOGGER.debug("startDate : " + startDate + ", endDate : " + endDate);
 		
 		return	otdStatusManagementMapper.selectOtdStatus(params);

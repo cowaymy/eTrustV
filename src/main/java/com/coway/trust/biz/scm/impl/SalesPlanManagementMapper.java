@@ -18,6 +18,8 @@ public interface SalesPlanManagementMapper {
 	void insertSalesPlanDetail(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanForUpdate(Map<String, Object> params);
 	List<EgovMap> selectThisMonthOrder(Map<String, Object> params);
+	int deleteSalesPlanDetail(Map<String, Object> params);
+	int deleteSalesPlanMaster(Map<String, Object> params);
 	void updateSalesPlanDetail(Map<String, Object> params);
 	void updateSalesPlanMaster(Map<String, Object> params);
 	
