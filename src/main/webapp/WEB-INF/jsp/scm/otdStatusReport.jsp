@@ -81,19 +81,6 @@ function fnSearch() {
 				AUIGrid.setGridData(myGridID, result.selectOtdStatus);
 			});
 }
-
-//	excel
-function fnExcel(obj, fileName) {
-	//	1. grid id
-	//	2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
-	//	3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
-	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
-		return	false;
-	}
-	
-	GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileName + "_" + getTimeStamp());
-}
-
 //	get timestamp
 function getTimeStamp() {
 	function fnLeadingZeros(n, digits) {
@@ -143,13 +130,29 @@ function fnOtdDetail(poNo) {
 		Common.alert("<spring:message code='sys.msg.first.Select' arguments='PO NO' htmlEscape='false'/>");
 		return	false;
 	}
-	$("poNo").val(poNo);
-	
-	var popUpObj	= Common.popupDiv("/scm/selectOTDStatusDetail.do"
+	$("#poNoParam").val(poNo);
+	//console.log("on No : " + $})
+	//Common.alert($("poNo").val());
+	//var params	= {	poNo : poNo	};console.log(params)
+	var popUpObj	= Common.popupDiv("/scm/otdStatusReportPopView.do"
+									//, params
 									, $("#MainForm").serializeJSON()
 									, null
 									, false
-									, "otdStatusDetailPop");
+									, "otdStatusReportPop");
+	//window.open("otdStatusReportPop.jsp", "child", "width=570, height=350, resizable=no, scrollbars=no");
+}
+
+//	excel
+function fnExcel(obj, fileName) {
+	//	1. grid id
+	//	2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+	//	3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
+	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
+		return	false;
+	}
+	
+	GridCommon.exportTo("#OTDStatusDiv", "xlsx", fileName + "_" + getTimeStamp());
 }
 
 /*************************************
@@ -345,7 +348,7 @@ $(document).ready(function() {
 	myGridID	= GridCommon.createAUIGrid("OTDStatusDiv", OtdStatusLayout, "", otdStatusLayoutOptions);
 	AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
 		var poNo	= AUIGrid.getCellValue(myGridID, event.rowIndex, "poNo");
-		//fnOtdDetail(poNo);
+		fnOtdDetail(poNo);
 	});
 });	//$(document).ready
 </script>
@@ -367,7 +370,7 @@ $(document).ready(function() {
 
 <section class="search_table"><!-- search_table start -->
 	<form id="MainForm" method="post" action="">
-	<input type="hidden" id="poNo" name="poNo" />
+	<input type="hidden" id="poNoParam" name="poNoParam" />
 	<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
@@ -449,10 +452,11 @@ $(document).ready(function() {
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
-	<ul class="right_btns">
-		<!-- <li><input id="inputTxtPoNo" name="inputTxtPoNo" type="text" title="" placeholder="Enter PO Number" disabled /><li>
-		<li class="ml10"><p class="btn_blue3 btn_disabled"><a href="javascript:void(0);">Update OTD Status</a></p></li> -->
-	</ul>
+	<div class="side_btns">
+		<ul class="right_btns">
+			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'Otd Report');">Excel</a></p></li>
+		</ul>
+	</div>
 
 	<article class="grid_wrap"><!-- grid_wrap start -->
 		<!-- 그리드 영역1 -->
