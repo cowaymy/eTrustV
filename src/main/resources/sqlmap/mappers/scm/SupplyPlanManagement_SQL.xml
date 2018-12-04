@@ -840,6 +840,44 @@ DELETE FROM SCM0006D WHERE PLAN_ID = (SELECT PLAN_ID FROM SCM0005M WHERE PLAN_YE
 DELETE FROM SCM0005M WHERE PLAN_YEAR = #{scmYearCbBox} AND PLAN_WEEK = #{scmWeekCbBox} AND CDC = #{scmCdcCbBox}
 </delete>
 
+<!-- Popup -->
+<select id="selectSupplyPlanPsi1" parameterType="Map" resultType="egovMap">
+SELECT A.STOCK_CODE
+     , A.NAME
+     , A.CDC
+     , A.CDC_NAME
+     , A.M3, A.M2, A.M1, A.TOT, A.TOT_AVG
+     , CASE WHEN A.TOT_AVG = 0 THEN 0 ELSE ROUND(A.TOT / A.TOT_AVG * 100, 2) END AS PER_EACH
+  FROM (
+        SELECT #{stockCode} AS STOCK_CODE
+             , B.STK_DESC AS NAME
+             , A.CODE AS CDC
+             , A.CODE_DESC AS CDC_NAME
+             , NVL((SELECT SUM(Z.ISS_QTY) FROM SCM0051S Z WHERE Z.ISS_DT BETWEEN #{monFrom3} AND #{monTo3} AND Z.STOCK_CODE = #{stockCode} AND Z.CDC = A.CODE), 0) AS M3
+             , NVL((SELECT SUM(Z.ISS_QTY) FROM SCM0051S Z WHERE Z.ISS_DT BETWEEN #{monFrom2} AND #{monTo2} AND Z.STOCK_CODE = #{stockCode} AND Z.CDC = A.CODE), 0) AS M2
+             , NVL((SELECT SUM(Z.ISS_QTY) FROM SCM0051S Z WHERE Z.ISS_DT BETWEEN #{monFrom1} AND #{monTo1} AND Z.STOCK_CODE = #{stockCode} AND Z.CDC = A.CODE), 0) AS M1
+             , NVL((SELECT ROUND(SUM(Z.ISS_QTY)/3, 2) FROM SCM0051S Z WHERE Z.ISS_DT BETWEEN #{monFrom3} AND #{monTo1} AND Z.STOCK_CODE = #{stockCode} AND Z.CDC = A.CODE), 0) AS TOT
+             , NVL((SELECT ROUND(SUM(Z.ISS_QTY)/3, 2) FROM SCM0051S Z WHERE Z.ISS_DT BETWEEN #{monFrom3} AND #{monTo1} AND Z.STOCK_CODE = #{stockCode}), 0) AS TOT_AVG
+          FROM SYS0013M A
+          LEFT OUTER JOIN SYS0026M B ON (B.STK_CODE = #{stockCode})
+         WHERE A.CODE_MASTER_ID = 349
+           AND A.DISAB = 0
+        UNION ALL
+        SELECT #{stockCode} AS STOCK_CODE
+             , B.STK_DESC AS NAME
+             , 'ALL' AS CDC
+             , 'Total' AS CDC_NAME
+             , NVL((SELECT SUM(Z.ISS_QTY) FROM SCM0051S Z WHERE Z.ISS_DT BETWEEN #{monFrom3} AND #{monTo3} AND Z.STOCK_CODE = #{stockCode}), 0) AS M3
+             , NVL((SELECT SUM(Z.ISS_QTY) FROM SCM0051S Z WHERE Z.ISS_DT BETWEEN #{monFrom2} AND #{monTo2} AND Z.STOCK_CODE = #{stockCode}), 0) AS M2
+             , NVL((SELECT SUM(Z.ISS_QTY) FROM SCM0051S Z WHERE Z.ISS_DT BETWEEN #{monFrom1} AND #{monTo1} AND Z.STOCK_CODE = #{stockCode}), 0) AS M1
+             , NVL((SELECT ROUND(SUM(Z.ISS_QTY)/3, 2) FROM SCM0051S Z WHERE Z.ISS_DT BETWEEN #{monFrom3} AND #{monTo1} AND Z.STOCK_CODE = #{stockCode}), 0) AS TOT
+             , NVL((SELECT ROUND(SUM(Z.ISS_QTY)/3, 2) FROM SCM0051S Z WHERE Z.ISS_DT BETWEEN #{monFrom3} AND #{monTo1} AND Z.STOCK_CODE = #{stockCode}), 0) AS TOT_AVG
+          FROM SYS0026M B
+         WHERE B.STK_CODE = #{stockCode}
+        ) A
+ ORDER BY A.CDC
+</select>
+
 <!-- Supply Plan Summary View -->
 <!-- Search -->
 <select id="selectSupplyPlanSummaryList" parameterType="Map" resultType="egovMap">
