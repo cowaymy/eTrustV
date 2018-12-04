@@ -3006,7 +3006,7 @@
                                SRV_BS_WEEK = #{srvBsWeek},
                                SRV_CODY_ID = #{hidCodyId},
                                SRV_UPD_DT = sysdate
-                         WHERE   SRV_CONFIG_ID = #{srvConfigId}
+                         WHERE   SRV_SO_ID = #{hidSalesOrdId} AND SRV_STUS_ID = 1
 
                      </update>
 
