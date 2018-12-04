@@ -48,11 +48,21 @@ public class SupplyPlanManagementController {
 	private MessageSourceAccessor messageAccessor;
 
 	@RequestMapping(value = "/supplyPlanManager.do")
-	public String login(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+	public String supplyPlanManagement(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return "/scm/supplyPlanManagement";
 	}
+	@RequestMapping(value = "/supplyPlanPsi1Pop.do")
+	public String supplyPlanPsi1Pop(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		
+		LOGGER.debug("supplyPlanPsi1Pop : {}", params.toString());
+		
+		//	POPUP으로 넘길 파라미터
+		model.addAttribute("params", params);
+		
+		return "/scm/supplyPlanPsi1Pop";
+	}
 	@RequestMapping(value = "/supplyPlanSummary.do")
-	public String login2(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+	public String supplyPlanSummary(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return "/scm/supplyPlanSummary";
 	}
 	@RequestMapping(value = "/selectScmCdc.do", method = RequestMethod.GET)
@@ -205,6 +215,42 @@ public class SupplyPlanManagementController {
 		}
 
 		return ResponseEntity.ok(message);
+	}
+	
+	@RequestMapping(value = "/selectSupplyPlanPsi1.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSupplyPlanPsi1(@RequestBody Map<String, Object> params) {
+
+		LOGGER.debug("selectSupplyPlanPsi1 org : {}", params.toString());
+		
+		String stockCode	= "";
+		String monFrom1	= "";	String monFrom2	= "";	String monFrom3	= "";
+		String monTo1	= "";	String monTo2	= "";	String monTo3	= "";
+		
+		Map<String, Object> map	= new HashMap<>();
+		Map<String, Object> param1	= new HashMap<>();
+		
+		List<EgovMap> selectScmTotalInfo	= scmCommonService.selectScmTotalInfo(params);
+		monFrom1	= selectScmTotalInfo.get(0).get("monFrom1").toString();
+		monFrom2	= selectScmTotalInfo.get(0).get("monFrom2").toString();
+		monFrom3	= selectScmTotalInfo.get(0).get("monFrom3").toString();
+		monTo1	= selectScmTotalInfo.get(0).get("monTo1").toString();
+		monTo2	= selectScmTotalInfo.get(0).get("monTo2").toString();
+		monTo3	= selectScmTotalInfo.get(0).get("monTo3").toString();
+		stockCode	= params.get("stockCode").toString();
+		
+		param1.put("monFrom1", monFrom1);
+		param1.put("monFrom2", monFrom2);
+		param1.put("monFrom3", monFrom3);
+		param1.put("monTo1", monTo1);
+		param1.put("monTo2", monTo2);
+		param1.put("monTo3", monTo3);
+		param1.put("stockCode", stockCode);
+		LOGGER.debug("selectSupplyPlanPsi1 after : {}", param1.toString());
+		List<EgovMap> selectSupplyPlanPsi1	= supplyPlanManagementService.selectSupplyPlanPsi1(param1);
+
+		map.put("selectSupplyPlanPsi1", selectSupplyPlanPsi1);
+
+		return ResponseEntity.ok(map);
 	}
 	
 	/*

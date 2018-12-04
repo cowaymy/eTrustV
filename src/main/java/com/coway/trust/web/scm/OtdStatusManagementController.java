@@ -40,6 +40,16 @@ public class OtdStatusManagementController {
 	public String otdStatusReportView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
 		return "/scm/otdStatusReport";
 	}
+	@RequestMapping(value = "/otdStatusReportPopView.do")
+	public String otdStatusReportPopView(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		
+		LOGGER.debug("otdStatusReportPopView : {}", params.toString());
+		
+		//	POPUP으로 넘길 파라미터
+		model.addAttribute("params", params);
+		
+		return "/scm/otdStatusReportPop";
+	}
 	
 	@RequestMapping(value = "/selectOtdStatus.do", method = RequestMethod.POST)
 	public ResponseEntity<Map<String, Object>> selectOtdStatus(@RequestBody Map<String, Object> params) {
