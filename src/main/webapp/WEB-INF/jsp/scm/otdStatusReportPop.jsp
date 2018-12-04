@@ -25,11 +25,11 @@ var	poNo	= "";
 $(function() {
 	poNo	= "${params.poNoParam}";
 	if ( null != poNo && "" != poNo ) {
-		fnSearch(poNo);
+		fnSearchPop(poNo);
 	}
 });
 
-function fnSearch(poNo) {
+function fnSearchPop(poNo) {
 	var params	= {
 			poNo : poNo,
 			startDate : "00000000",
@@ -186,7 +186,7 @@ function fnDetailTabClick(pFlag) {
 	} else if ( "PP" == pFlag ) {
 		flag	= "PP";
 	}
-	fnSearch(poNo);
+	fnSearchPop(poNo);
 }
 
 /***************************************************[ Main GRID] ***************************************************/

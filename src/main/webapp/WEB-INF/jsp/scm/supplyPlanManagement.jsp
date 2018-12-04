@@ -723,6 +723,23 @@ function fnSupplyPlanHeader() {
 							}
 						}
 					});
+					AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+						if ( "1" == event.item.psiId ) {
+							var params	= {
+									stockCodeParam : AUIGrid.getCellValue(myGridID, event.rowIndex, "code"),
+									scmYearCbBoxParam : AUIGrid.getCellValue(myGridID, event.rowIndex, "planYear"),
+									scmWeekCbBoxParam : AUIGrid.getCellValue(myGridID, event.rowIndex, "planWeek")
+							}
+							var popUpObj	= Common.popupDiv("/scm/supplyPlanPsi1Pop.do"
+									, params
+									//, $("#MainForm").serializeJSON()
+									, null
+									, false
+									, "supplyPlanPsi1Pop");
+						} else {
+							console.log("no");
+						}
+					});
 					
 					//	search
 					fnSearch();

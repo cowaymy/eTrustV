@@ -152,7 +152,7 @@ function fnDoInterface(obj) {
 
 function fnExecute() {
 	Common.ajax("GET"
-			, "/scm/connection.do"
+			, "/scm/connection2.do"
 			, ""
 			, ""
 			, "");
@@ -322,7 +322,6 @@ $(document).ready(function() {
 <h2>Interface</h2>
 <ul class="right_btns">
 	<li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
-	<li><p class="btn_blue"><a onclick="fnExecute();"><span class="search"></span>Execute</a></p></li>
 </ul>
 </aside><!-- title_line end -->
 
@@ -408,6 +407,7 @@ $(document).ready(function() {
 <section class="search_result"><!-- search_result start -->
 	<ul class="right_btns">
 		<li><p id="btnInterface" class="btn_grid"><a onclick="fnDoInterface();">Do Interface</a></p></li>
+		<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute</a></p></li>
 	</ul>
 
 	<article class="grid_wrap"><!-- grid_wrap start -->
