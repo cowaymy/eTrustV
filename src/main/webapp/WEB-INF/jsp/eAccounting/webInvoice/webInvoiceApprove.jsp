@@ -658,9 +658,9 @@ function fn_makeGrid(){
     <td>
         <!-- <input type="text" title="" placeholder="" class="" id="clmNo" name="clmNo"/>  -->
         <div class="date_set w100p"><!-- date_set start -->
-            <p><input type="text" title="Claim No Start" id="clmNoStart" name="clmNoStart" class="cRange" /></p>
+            <p><input type="text" title="Claim No Start" id="clmNoStart" name="clmNoStart" class="w100p" /></p>
             <span><spring:message code="webInvoice.to" /></span>
-            <p><input type="text" title="Claim No End" id="clmNoEnd" name="clmNoEnd" class="cRange"  /></p>
+            <p><input type="text" title="Claim No End" id="clmNoEnd" name="clmNoEnd" class="w100p"  /></p>
         </div><!-- date_set end -->
     </td>
     <th scope="row">Approval Date</th>
