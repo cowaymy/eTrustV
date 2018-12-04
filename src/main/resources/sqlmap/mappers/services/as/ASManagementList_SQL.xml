@@ -362,8 +362,11 @@
 		                vOrderBasicInfo.CUST_BILL_ID CUST_BILL_ID  ,
 		                vOrderBasicInfo.OBLIGT_YEAR OBLIGT_YEAR
 		         FROM SAL1006V vOrderBasicInfo ) Extent1
+		         LEFT JOIN SAL0102D Extent2 ON Extent2.CCP_SALES_ORD_ID = Extent1.ORD_ID
 		 WHERE  ( Extent1.ORD_NO = #{orderNo} )
-		          AND ( Extent1.ORD_STUS_ID = 4 ) AND (Extent1.RENTAL_STUS NOT IN ('WOF','SUS','RET')) AND ROWNUM <= 1
+		          AND ( Extent1.ORD_STUS_ID = 4 ) AND (Extent1.RENTAL_STUS NOT IN ('WOF','SUS','RET'))
+		          AND Extent2.CCP_STUS_ID = 5
+		          AND ROWNUM <= 1
              ]]>
     </select>
 
