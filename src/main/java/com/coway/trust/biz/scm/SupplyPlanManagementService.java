@@ -10,6 +10,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 public interface SupplyPlanManagementService
 {
 	//	Supply Plan Management
+	List<EgovMap> selectSupplyPlanPsi1(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanHeader(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanInfo(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanList(Map<String, Object> params);

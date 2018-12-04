@@ -59,6 +59,10 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 	 * Supply Plan By CDC
 	 */
 	@Override
+	public List<EgovMap> selectSupplyPlanPsi1(Map<String, Object> params) {
+		return	supplyPlanManagementMapper.selectSupplyPlanPsi1(params);
+	}
+	@Override
 	public List<EgovMap> selectSupplyPlanHeader(Map<String, Object> params) {
 		return	supplyPlanManagementMapper.selectSupplyPlanHeader(params);
 	}

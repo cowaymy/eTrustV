@@ -21,6 +21,7 @@ public interface SupplyPlanManagementMapper {
 	void insertSupplyPlanDetailPsi4(Map<String, Object> params);
 	List<EgovMap> selectGetPoCntTarget(Map<String, Object> params);
 	List<EgovMap> selectGetPoCnt(Map<String, Object> params);
+	List<EgovMap> selectSupplyPlanPsi1(Map<String, Object> params);
 	
 	void insertSupplyPlanDetail(Map<String, Object> params);
 	List<EgovMap> selectSupplyPlanMoq(Map<String, Object> params);
