@@ -115,7 +115,7 @@ var invoAprveGridColLayout = [ {
         	myString = '<spring:message code="invoiceApprove.noAtch.msg" />';
         }
         return myString;
-     }, 
+     },
     renderer : {
         type : "ButtonRenderer",
         onclick : function(rowIndex, columnIndex, value, item) {
@@ -173,7 +173,7 @@ var invoAprveGridColLayout = [ {
 
 //그리드 속성 설정
 var invoAprveGridPros = {
-    // 페이징 사용       
+    // 페이징 사용
     usePaging : true,
     // 한 화면에 출력되는 행 개수 20(기본값:20)
     pageRowCount : 20,
@@ -191,15 +191,15 @@ var invoAprveGridID;
 
 $(document).ready(function () {
 	invoAprveGridID = AUIGrid.create("#approve_grid_wrap", invoAprveGridColLayout, invoAprveGridPros);
-    
+
     $("#search_supplier_btn").click(fn_supplierSearchPop);
     $("#search_costCenter_btn").click(fn_costCenterSearchPop);
     $("#search_createUser_btn").click(fn_searchUserIdPop);
     $("#approve_btn").click(fn_approveRegistPop);
     $("#reject_btn").click(fn_rejectRegistPop);
     $("#excelDown_btn").click(fn_getAppvExcelInfo);
-    
-    AUIGrid.bind(invoAprveGridID, "cellDoubleClick", function( event ) 
+
+    AUIGrid.bind(invoAprveGridID, "cellDoubleClick", function( event )
             {
                 console.log("CellDoubleClick rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
                 console.log("CellDoubleClick appvPrcssNo : " + event.item.appvPrcssNo);
@@ -209,27 +209,27 @@ $(document).ready(function () {
                 atchFileGrpId = event.item.atchFileGrpId;
                 var clmNo = event.item.clmNo;
                 clmType = clmNo.substr(0, 2);
-                
+
                 fn_webInvoiceAppvViewPop();
             });
-    
+
     // ready 이벤트 바인딩
     AUIGrid.bind(invoAprveGridID, "ready", function(event) {
         gridDataLength = AUIGrid.getGridData(invoAprveGridID).length; // 그리드 전체 행수 보관
     });
-    
+
     // 헤더 클릭 핸들러 바인딩
     AUIGrid.bind(invoAprveGridID, "headerClick", headerClickHandler);
-    
+
     // 셀 수정 완료 이벤트 바인딩
     AUIGrid.bind(invoAprveGridID, "cellEditEnd", function(event) {
-        
+
         // isActive 칼럼 수정 완료 한 경우
         if(event.dataField == "isActive") {
-            
+
             // 그리드 데이터에서 isActive 필드의 값이 Active 인 행 아이템 모두 반환
             var activeItems = AUIGrid.getItemsByValue(invoAprveGridID, "isActive", "Active");
-            
+
             // 헤더 체크 박스 전체 체크 일치시킴.
             if(activeItems.length != gridDataLength) {
                 document.getElementById("allCheckbox").checked = false;
@@ -238,21 +238,21 @@ $(document).ready(function () {
             }
         }
     });
-    
+
     CommonCombo.make("clmType", "/common/selectCodeList.do", {groupCode:'343', orderValue:'CODE'}, "", {
         id: "code",
         name: "codeName",
         type:"M"
     });
-    
+
     $("#appvPrcssStus").multipleSelect("checkAll");
-    
+
     fn_setToDay()
 });
 
 //그리드 헤더 클릭 핸들러
 function headerClickHandler(event) {
-	
+
     // isActive 칼럼 클릭 한 경우
     if(event.dataField == "isActive") {
         if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
@@ -265,9 +265,9 @@ function headerClickHandler(event) {
 
 // 전체 체크 설정, 전체 체크 해제 하기
 function checkAll(isChecked) {
-	
-	 var idx = AUIGrid.getRowCount(invoAprveGridID); 
-    
+
+	 var idx = AUIGrid.getRowCount(invoAprveGridID);
+
     // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
     if(isChecked) {
     	for(var i = 0; i < idx; i++){
@@ -279,25 +279,25 @@ function checkAll(isChecked) {
     } else {
         AUIGrid.updateAllToValue(invoAprveGridID, "isActive", "Inactive");
     }
-    
+
     // 헤더 체크 박스 일치시킴.
     document.getElementById("allCheckbox").checked = isChecked;
 }
 
 function fn_setToDay() {
     var today = new Date();
-    
+
     var dd = today.getDate();
     var mm = today.getMonth() + 1;
     var yyyy = today.getFullYear();
-    
+
     if(dd < 10) {
         dd = "0" + dd;
     }
     if(mm < 10){
         mm = "0" + mm
     }
-    
+
     today = dd + "/" + mm + "/" + yyyy;
     $("#startDt").val(today)
     $("#endDt").val(today)
@@ -342,6 +342,7 @@ function fn_setSupplier() {
 }
 
 function fn_selectApproveList() {
+	console.log("fn_selectApproveList()");
     Common.ajax("GET", "/eAccounting/webInvoice/selectApproveList.do?_cacheId=" + Math.random(), $("#form_approve").serialize(), function(result) {
         console.log(result);
         AUIGrid.setGridData(invoAprveGridID, result);
@@ -426,7 +427,7 @@ function fn_appvRejctSubmit(type, rejctResn) {
             }
         });
     }
-    
+
     // $("#webInvoiceAppvViewPop").length return 1 -> $("#webInvoiceAppvViewPop") exist
     if($("#webInvoiceAppvViewPop") > 0) {
         $("#webInvoiceAppvViewPop").remove();
@@ -439,12 +440,12 @@ function fn_getAppvExcelInfo() {
 	console.log(list);
     Common.ajax("POST", "/eAccounting/webInvoice/getAppvExcelInfo.do?_cacheId=" + Math.random(), {appvPrcssNo:list}, function(result) {
         console.log(result);
-        
+
         //그리드 생성
         fn_makeGrid();
-        
+
         AUIGrid.setGridData(excelGrid, result.data);
-        
+
         if(result.data.length > 0) {
             var clmNo = result.data[0].appvReqKeyNo;
             var reqstDt = result.data[0].reqstDt;
@@ -468,12 +469,12 @@ function fn_makeGrid(){
             dataField : "reqstDt",
             headerText : 'Request Date',
             width : 100,
-            cellMerge : true 
+            cellMerge : true
         },{
             dataField : "reqstUserId",
             headerText : 'Request User Id',
             width : 100,
-            cellMerge : true 
+            cellMerge : true
         },{
             dataField : "invcNo",
             headerText : 'Invoice No',
@@ -576,7 +577,7 @@ function fn_makeGrid(){
             width : 100
         }
     ];
-        
+
      var excelOptions = {
             enableCellMerge : true,
             showStateColumn:false,
@@ -584,8 +585,8 @@ function fn_makeGrid(){
             showRowNumColumn    : false,
             //headerHeight : 100,
             usePaging : false
-      }; 
-    
+      };
+
      excelGrid = GridCommon.createAUIGrid("#excel_grid_wrap", excelPop, "", excelOptions);
 }
 </script>
@@ -652,6 +653,25 @@ function fn_makeGrid(){
 		<option value="J"><spring:message code="pettyCashRqst.rejected" /></option>
 	</select>
 	</td>
+</tr>
+    <th scope="row"><spring:message code="invoiceApprove.clmNo" /></th>
+    <td>
+        <!-- <input type="text" title="" placeholder="" class="" id="clmNo" name="clmNo"/>  -->
+        <div class="date_set w100p"><!-- date_set start -->
+            <p><input type="text" title="Claim No Start" id="clmNoStart" name="clmNoStart" class="cRange" /></p>
+            <span><spring:message code="webInvoice.to" /></span>
+            <p><input type="text" title="Claim No End" id="clmNoEnd" name="clmNoEnd" class="cRange"  /></p>
+        </div><!-- date_set end -->
+    </td>
+    <th scope="row">Approval Date</th>
+    <td>
+        <div class="date_set w100p"><!-- date_set start -->
+            <p><input type="text" title="Approval Start Date" placeholder="DD/MM/YYYY" class="j_date" id="appStartDt" name="appStartDt"/></p>
+            <span><spring:message code="webInvoice.to" /></span>
+            <p><input type="text" title="Approval End Date" placeholder="DD/MM/YYYY" class="j_date" id="appEndDt" name="appEndDt"/></p>
+        </div><!-- date_set end -->
+    </td>
+<tr>
 </tr>
 </tbody>
 </table><!-- table end -->
