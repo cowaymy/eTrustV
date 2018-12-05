@@ -858,7 +858,7 @@ SELECT T.APPV_PRCSS_NO
                           WHERE  Q.RNUM = 1) T6 ON T3.ATCH_FILE_GRP_ID = T6.ATCH_FILE_GRP_ID
            WHERE     T2.APPV_LINE_USER_ID = #{memCode}
            <!-- WHERE 1=1 -->
-                 AND (T1.APPV_PRCSS_STUS = 'R' OR     T1.APPV_PRCSS_STUS = 'P' OR T1.APPV_PRCSS_STUS = 'A')
+                 AND (T1.APPV_PRCSS_STUS = 'R' OR T1.APPV_PRCSS_STUS = 'P' OR T1.APPV_PRCSS_STUS = 'A' or T1.APPV_PRCSS_STUS = 'J')
                  AND (T2.APPV_STUS = 'R' OR T2.APPV_STUS = 'A' OR T2.APPV_STUS = 'J')
         <!-- GROUP BY T1.APPV_PRCSS_NO
                 ,T2.APPV_LINE_SEQ
@@ -901,7 +901,7 @@ SELECT T.APPV_PRCSS_NO
         <if test="costCenter != null and costCenter != ''">
              AND UPPER(T.COST_CENTR) = UPPER(#{costCenter})
         </if>
-        <if test="appvPrcssStus != null and appvPrcssStus != '' ">
+        <if test="appvPrcssStus != null and appvPrcssStus != '' and ((appStartDt == null or appStartDt == '') and (appEndDt == null or appEndDt == ''))">
              AND T.APPV_PRCSS_STUS_CODE IN
          <foreach item="item" collection="appvPrcssStus" index="index" open="(" separator="," close=")">
              #{item}
