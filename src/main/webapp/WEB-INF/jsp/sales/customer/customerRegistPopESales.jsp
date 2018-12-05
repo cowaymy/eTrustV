@@ -901,7 +901,6 @@
                             </tr>
                             <tr>
                                 <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must">*</span>
-                                <!-- <span class="brown_text">#</span> --></th>
                                 <td><select class="w100p disabled" id="_cmbNation_" name="cmbNation" disabled="disabled"></select></td>
                             </tr>
                             <tr>
@@ -913,11 +912,11 @@
                                 <td><input type="text" id="_visaExpr_" name="visaExpr" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date"  disabled="disabled" /></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.text.dob2" /><span class="brown_text">#</span></th>
+                                <th scope="row"><spring:message code="sal.text.dob2" /></th>
                                 <td><input type="text" id="_dob_" name="dob" title="Create start Date" placeholder="Date Of Birth" class="j_date3 w100p" disabled="disabled" /></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.text.gender2" /><span class="brown_text">#</span></th>
+                                <th scope="row"><spring:message code="sal.text.gender2" /></th>
                                 <td>
                                     <div id="genderForm">
                                         <label><input type="radio" name="gender" value="M" disabled="disabled" /><span><spring:message code="sal.title.text.male" /></span></label>
@@ -930,7 +929,7 @@
                                 <td><input type="text" id="_email_" name="email" title="" onBlur="javascript:emailCheck()" placeholder="Email" class="w100p" /></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.text.race2" /><span class="brown_text">#</span></th>
+                                <th scope="row"><spring:message code="sal.text.race2" /></th>
                                 <td>
                                     <!-- <select class="w100p disabled" id="_cmbRace_" name="cmbRace" disabled="disabled"></select> -->
                                     <label><input type="radio" name="cmbRace" value="10" /><span>Malay</span></label>
@@ -946,7 +945,7 @@
                                 <td><input type="text" id="_telM1_" name="telM1" maxlength="20" title="" placeholder="Telephone Number (Mobile)" class="w100p" /></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.title.text.telROne" /><span class="must">*</span></th>
+                                <th scope="row"><spring:message code="sal.title.text.telROne" /></th>
                                 <td><input type="text" id="_telR_" name="telR" maxlength="20" title="" placeholder="Telephone Number (Residence)" class="w100p" /></td>
                                 <%-- <th scope="row"><spring:message code="sal.title.text.telFOne" /><span class="must">*</span></th>
             <td>
@@ -954,7 +953,7 @@
             </td> --%>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.title.text.telOOne" /><span class="must">*</span></th>
+                                <th scope="row"><spring:message code="sal.title.text.telOOne" /></th>
                                 <td><input type="text" id="_telO_" name="telO" maxlength="20" title="" placeholder="Telephone Number (Office)" class="w100p" /></td>
                             </tr>
                             <tr>
@@ -1015,11 +1014,11 @@
                                 <td><input type="text" id="_asTelM_" name="asTelM" title="" placeholder="Telephone Number (Mobile)" class="w100p" /></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.title.text.telRTwo" /><span class="must">*</span></th>
+                                <th scope="row"><spring:message code="sal.title.text.telRTwo" /></th>
                                 <td><input type="text" id="_asTelR_" name="asTelR" title="" placeholder="Telephone Number (Residence)" class="w100p" /></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.title.text.telOTwo" /><span class="must">*</span></th>
+                                <th scope="row"><spring:message code="sal.title.text.telOTwo" /></th>
                                 <td><input type="text" id="_asTelO_" name="asTelO" title="" placeholder="Telephone Number (Office)" class="w100p" /></td>
                             </tr>
                             <tr>

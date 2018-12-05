@@ -2682,7 +2682,7 @@
     </td>
 </tr>
 <tr>
-    <td colspan=2><span class="red_text">Only can upload in picture format (JPG, PNG, JPEG)</span></td>
+    <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
 </tr>
 </tbody>
 </table>

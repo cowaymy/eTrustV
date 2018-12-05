@@ -1704,7 +1704,7 @@
     <td><input id="custInitial" name="custInitial" type="text" title="Initial" placeholder="Initial" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.title.text.companyType2" /><span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.title.text.companyType2" /></th>
     <td><input id="corpTypeNm" name="corpTypeNm" type="text" title="" placeholder="" class="w100p readonly" /></td>
 </tr>
 <tr>
@@ -1732,7 +1732,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code="sal.text.nationality2" /></th>
+    <th scope="row"><spring:message code="sal.text.nationality2" /><span class="must">*</span></th>
     <td><input id="nationNm" name="nationNm" type="text" title="" placeholder="Nationality" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
@@ -1744,7 +1744,7 @@
     <td><input id="pasSportExpr" name="pasSportExpr" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.dob2" /><span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.dob2" /></th>
     <td><input id="dob" name="dob" type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
@@ -1752,25 +1752,25 @@
 	<td><input id="race" name="race" type="text" title="Create start Date" placeholder="Race" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="sal.text.gender2" /><span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.text.gender2" /></th>
 	<td><input id="gender" name="gender" type="text" title="" placeholder="Gender" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row"><spring:message code="sal.title.text.email2" /><span class="must">*</span></th>
+	<th scope="row"><spring:message code="sal.title.text.email2" /></th>
 	<td><input id="custEmail" name="custCntcEmail" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row">Tel (Mobile)<span class="must">*</span></th>
+	<th scope="row">Tel (Mobile)</th>
 	<td><input id="custTelM" name="custTelM" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
-	<th scope="row">Tel (Residence)<span class="must">*</span></th>
+	<th scope="row">Tel (Residence)</th>
 	<td><input id="custTelR" name="custTelR" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 <!-- 	<th scope="row">Tel (Fax)<span class="must">*</span></th>
 	<td><input id="custTelF" name="custTelF" type="text" title="" placeholder="" class="w100p readonly" readonly/></td> -->
 </tr>
 <tr>
-	<th scope="row">Tel (Office)<span class="must">*</span></th>
+	<th scope="row">Tel (Office)</th>
 	<td><input id="custTelO" name="custTelO" type="text" title="" placeholder="" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
@@ -2011,7 +2011,7 @@
         <input id="normalOrdPv"    name="normalOrdPv"    type="hidden" /></td>
 </tr>
 <tr>
-    <th scope="row">Rental Fee<span class="must">*</span></th>
+    <th scope="row">Rental Fee</th>
     <td><p><input id="ordRentalFees" name="ordRentalFees" type="text" title="" placeholder="" class="w100p readonly" readonly/></p></td>
 </tr>
 <tr>
@@ -2039,7 +2039,7 @@
         </td>
 </tr>
 <tr>
-    <th scope="row">Special Instruction<span class="must">*</span></th>
+    <th scope="row">Special Instruction</th>
     <td><textarea id="speclInstct" name="speclInstct" cols="20" rows="5"></textarea></td>
 </tr>
 <!-- <tr>
@@ -2174,7 +2174,7 @@
 </colgroup>
 <tbody>
 <tr>
-    <th scope="row"><spring:message code="sal.text.creditCardNo2" /><span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.creditCardNo2" /></th>
     <td><input id="rentPayCRCNo" name="rentPayCRCNo" type="text" title="" placeholder="Credit Card Number" class="w100p readonly" readonly/>
         <input id="hiddenRentPayCRCId" name="rentPayCRCId" type="hidden" />
         <input id="hiddenRentPayEncryptCRCNoId" name="hiddenRentPayEncryptCRCNoId" type="hidden" /></td>
@@ -2527,7 +2527,7 @@
     <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="otherFile" accept="image/*"/></div></td>
 </tr>
 <tr>
-    <td colspan=2><span class="red_text">Only can upload in picture format (JPG, PNG, JPEG)</span></td>
+    <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
 </tr>
 </tbody>
 </table>

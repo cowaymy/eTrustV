@@ -215,7 +215,7 @@
 	</td>
 </tr>
 <tr>
-    <th scope="row"><spring:message code="sal.text.nameOnCard2" /><span class="must">*</span></th>
+    <th scope="row"><spring:message code="sal.text.nameOnCard2" /><span class="must">***</span></th>
     <td>
         <input id="nameOnCard" name="nameOnCard" type="text" title="" placeholder="Name On Card" class="w100p" />
     </td>
@@ -261,7 +261,7 @@
 	</td> --%>
 	<th scope="row" colspan="2" >
 	   <span class="must"><br/>
-	   ***The card information provided here is CONFIDENTIAL and/or intended solely for the use of the recurring payment only. Compliance and Legal department may conduct investigations on sale transactions from time to time and may take action against any health planner if he / she is found to have engaged in any activity which constitutes an unethical transaction, violation of the law or misconduct, including but not limited to circumstances where a health planner is found to be paying on behalf of a customer without Coway (M) Sdn. Bhd.'s authorisation.
+	   The card information provided here is CONFIDENTIAL and/or intended solely for the use of the recurring payment only. Compliance and Legal department may conduct investigations on sale transactions from time to time and may take action against any health planner if he / she is found to have engaged in any activity which constitutes an unethical transaction, violation of the law or misconduct, including but not limited to circumstances where a health planner is found to be paying on behalf of a customer without Coway (M) Sdn. Bhd.'s authorisation.
 	   <br/><br/></span>
 	</th>
 </tr>
