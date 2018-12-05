@@ -1317,7 +1317,7 @@ public class CommonPaymentServiceImpl extends EgovAbstractServiceImpl implements
         			valiOutStanding = valiOutStanding.setScale(2, BigDecimal.ROUND_HALF_UP);
             	}
             	ordStus = resultMap.get("stusCodeId").toString();
-            	if(rentInstNo.compareTo(rentPeriod) == 1 || "10".equals(ordStus) && (valiOutStanding.compareTo(BigDecimal.ZERO) == 0 || valiOutStanding.compareTo(BigDecimal.ZERO) == -1)){
+            	if((rentInstNo.compareTo(rentPeriod) == 1 || "10".equals(ordStus)) && (valiOutStanding.compareTo(BigDecimal.ZERO) == 0 || valiOutStanding.compareTo(BigDecimal.ZERO) == -1)){
             		msg = "Order App Type : " + (String)resultMap.get("appTypeName") + "<br/>";
             		msg = msg + "Order Status : " + (String)resultMap.get("orderStatus") + "<br/>";
             		msg = msg + "Rental Status : " + (String)resultMap.get("rentalStatus") + "<br/>";
