@@ -425,8 +425,15 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
    */
   @Override
   public List<EgovMap> selectAccBank(Map<String, Object> params) {
-
-    return customerMapper.selectAccBank(params);
+    if (params.get("ddlChnl") != null) {
+      if ((params.get("ddlChnl").toString()).equals("3170")) {
+        return customerMapper.selectDdtChnlAccBank(params);
+      } else {
+        return customerMapper.selectAccBank(params);
+      }
+    } else {
+      return customerMapper.selectAccBank(params);
+    }
   }
 
   /**
@@ -589,6 +596,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
     custAccVO.setCustAccOwner((String) params.get("accName"));
     custAccVO.setCustAccTypeId(Integer.parseInt((String) params.get("bankType")));
     custAccVO.setCustAccBankId(Integer.parseInt((String) params.get("accBank")));
+    custAccVO.setDdtChnl(Integer.parseInt((String) params.get("ddlChnl")));
     custAccVO.setCustAccBankBrnch((String) params.get("accBankBranch"));
     custAccVO.setCustAccRem((String) params.get("accRemark"));
     custAccVO.setCustAccStusId(1);
