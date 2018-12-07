@@ -7,7 +7,7 @@ import java.util.Date;
 
 /**
  * The persistent class for the CCR0006D database table.
- * 
+ *
  */
 public class CustAccVO implements Serializable {
 	private static final long serialVersionUID = 1L;
@@ -49,6 +49,8 @@ public class CustAccVO implements Serializable {
 	private int custAccCrtUserId;
 
 	private Date custAccCrtDt;
+
+	private int ddtChnl;
 
 	public int getCustAccId() {
 		return custAccId;
@@ -201,5 +203,13 @@ public class CustAccVO implements Serializable {
 	public void setCustAccCrtDt(Date custAccCrtDt) {
 		this.custAccCrtDt = custAccCrtDt;
 	}
+
+    public int getDdtChnl() {
+      return ddtChnl;
+    }
+
+    public void setDdtChnl(int ddtChnl) {
+      this.ddtChnl = ddtChnl;
+    }
 
 }
