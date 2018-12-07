@@ -836,13 +836,12 @@
             isValid = false;
             msg += "* Please key in NRIC/Company No.<br>";
         }else{
-        	var dob = (Number($('#nric').val().substr(0,2)) + 18 )%100;// to take last 2 digit
-        	console.log(dob);
-
+        	var dob = Number($('#nric').val().substr(0,2));
 	        var nowDt = new Date();
-	        var nowDtY = nowDt.getFullYear().toString().substr(-2);
-
-	        if(dob > nowDtY) {
+	        var nowDtY = Number(nowDt.getFullYear().toString().substr(-2));
+	        var age = nowDtY- dob < 0 ? nowDtY- dob + 100 : nowDtY- dob ;
+	        console.log(age);
+	        if(age < 18) {
 	            Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>* Member must 18 years old and above.</b>");
 	            $('#scPreOrdArea').addClass("blind");
 	            return false;
