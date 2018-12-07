@@ -664,7 +664,8 @@
                     Project1.custAccCrtDt CUST_ACC_CRT_DT  ,
                     Project1.custAccUpdDt CUST_ACC_UPD_DT  ,
                     Project1.userName USER_NAME  ,
-                    Project1.userName1 USER_NAME1
+                    Project1.userName1 USER_NAME1,
+                    Project1.ddtChnl CUST_ACC_DDT_CHNL
         FROM   ( SELECT Project1.CUST_ACC_ID CUST_ACC_ID  ,
                                 Project1.CUST_ID CUST_ID  ,
                                 Project1.custAccNo custAccNo  ,
@@ -683,8 +684,8 @@
                                 Project1.custAccCrtDt custAccCrtDt  ,
                                 Project1.custAccUpdDt custAccUpdDt  ,
                                 Project1.userName userName  ,
-                                Project1.userName1 userName1
-
+                                Project1.userName1 userName1,
+                                Project1.ddtChnl ddtChnl
                   FROM ( SELECT Extent1.CUST_ACC_ID CUST_ACC_ID  ,
                                         Extent1.CUST_ID CUST_ID  ,
                                         CASE WHEN ( Extent1.CUST_ACC_NO IS NOT NULL ) THEN Extent1.CUST_ACC_NO ELSE ''  END custAccNo  ,
@@ -703,12 +704,14 @@
                                         CASE WHEN ( Extent1.CUST_ACC_CRT_DT IS NOT NULL ) THEN Extent1.CUST_ACC_CRT_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD')  END custAccCrtDt  ,
                                         CASE WHEN ( Extent1.CUST_ACC_UPD_DT IS NOT NULL ) THEN Extent1.CUST_ACC_UPD_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD')  END custAccUpdDt  ,
                                         CASE WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE '' END userName  ,
-                                        CASE WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE '' END userName1
+                                        CASE WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE '' END userName1,
+                                        CASE WHEN ( Extent6.CODE_DESC IS NOT NULL ) THEN Extent6.CODE_DESC ELSE '-' END ddtChnl
                            FROM SAL0022D Extent1
                                     LEFT JOIN SYS0004M Extent2   ON Extent2.BANK_ID = Extent1.CUST_ACC_BANK_ID
                                     LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.CUST_ACC_TYPE_ID
                                     LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CUST_ACC_CRT_USER_ID
                                     LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CUST_ACC_UPD_USER_ID
+                                    LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent1.CUST_ACC_DDT_CHL
                           WHERE  8 <> Extent1.CUST_ACC_STUS_ID
                               AND  Extent1.CUST_ID = #{custId}
          ]]>
@@ -727,7 +730,8 @@
 			'%'
 			OR UPPER(Extent3.CODE_NAME) LIKE '%' || UPPER(#{searchWord}) || '%'
 			OR UPPER(Extent2.CODE) LIKE '%' || UPPER(#{searchWord}) || '%'
-			OR UPPER(Extent2.NAME) LIKE '%' || UPPER(#{searchWord}) || '%')
+			OR UPPER(Extent2.NAME) LIKE '%' || UPPER(#{searchWord}) || '%'
+			OR UPPER(Extent6.CODE_DESC) LIKE '%' || UPPER(#{searchWord}) || '%')
 		</if>
         <![CDATA[
                               ) Project1
@@ -1265,7 +1269,8 @@
                    TO_CHAR(Limit1.custAccCrtDt, 'DD-MM-YYYY') CUST_ACC_CRT_DT  ,
                    TO_CHAR(Limit1.custAccUpdDt, 'DD-MM-YYYY') CUST_ACC_UPD_DT  ,
                    Limit1.userName USER_NAME  ,
-                   Limit1.userNAme1 USER_NAME1
+                   Limit1.userNAme1 USER_NAME1,
+                   Limit1.ddtChnl DDT_CHNL
               FROM ( SELECT Extent1.CUST_ACC_ID CUST_ACC_ID  ,
                             Extent1.CUST_ID CUST_ID  ,
                             CASE WHEN ( Extent1.CUST_ACC_NO IS NOT NULL ) THEN Extent1.CUST_ACC_NO ELSE '' END custAccNo  ,
@@ -1284,12 +1289,14 @@
                             CASE  WHEN ( Extent1.CUST_ACC_CRT_DT IS NOT NULL ) THEN Extent1.CUST_ACC_CRT_DT ELSE TO_DATE('1900-01-01' , 'YYYY-MM-DD') END custAccCrtDt  ,
                             CASE  WHEN ( Extent1.CUST_ACC_UPD_DT IS NOT NULL ) THEN Extent1.CUST_ACC_UPD_DT ELSE TO_DATE('1900-01-01', 'YYYY-MM-DD') END custAccUpdDt  ,
                             CASE  WHEN ( Extent4.USER_ID IS NOT NULL ) THEN Extent4.USER_NAME ELSE '' END userName  ,
-                            CASE  WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE '' END userNAme1
+                            CASE  WHEN ( Extent5.USER_ID IS NOT NULL ) THEN Extent5.USER_NAME ELSE '' END userNAme1,
+                            CASE  WHEN ( Extent6.CODE_NAME IS NOT NULL ) THEN Extent6.CODE_NAME ELSE '-' END ddtChnl
                      FROM SAL0022D Extent1
                             LEFT JOIN SYS0004M Extent2   ON Extent2.BANK_ID = Extent1.CUST_ACC_BANK_ID
                             LEFT JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent1.CUST_ACC_TYPE_ID
                             LEFT JOIN SYS0047M Extent4   ON Extent4.USER_ID = Extent1.CUST_ACC_CRT_USER_ID
                             LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent1.CUST_ACC_UPD_USER_ID
+                            LEFT JOIN SYS0013M Extent6   ON Extent6.CODE_ID = Extent1.CUST_ACC_DDT_CHL
                       WHERE  ( 8 <> Extent1.CUST_ACC_STUS_ID )
                                AND ( Extent1.CUST_ACC_ID =  #{getparam}) AND ROWNUM <= 1 ) Limit1
         ]]>
@@ -1793,6 +1800,7 @@
 		, CUST_HLBB_ID
 		, CUST_ACC_CRT_USER_ID
 		, CUST_ACC_CRT_DT
+		, CUST_ACC_DDT_CHL
 		)
 		VALUES
 		( #{custAccId}
@@ -1814,6 +1822,7 @@
 		, #{custHlbbId}
 		, #{custAccCrtUserId}
 		, SYSDATE
+		, #{ddtChnl}
 		)
 	</insert>
 
