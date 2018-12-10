@@ -222,6 +222,11 @@ var OtdStatusLayout	=
 						 visible : false,
 						 cellMerge : true
 					 }, {
+						 dataField : "poDivOdd",
+						 headerText : "PO Div Odd",
+						 visible : false,
+						 cellMerge : true
+					 }, {
 						dataField : "poNo",
 						headerText : "<spring:message code='sys.scm.pomngment.rowNo'/>",
 						//style : "myLinkStyle",
@@ -290,6 +295,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "poQty",
 						headerText : "PO Qty",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "divOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -307,6 +315,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "poItemStusName",
 						headerText : "Status",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "divOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -324,6 +335,9 @@ var OtdStatusLayout	=
 					{
 						dataField : "soQty",
 						headerText : "SO Qty",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -337,6 +351,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "soDt",
 						headerText : "SO Date",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -353,6 +370,9 @@ var OtdStatusLayout	=
 					{
 						dataField : "ppPlanQty",
 						headerText : "Plan Qty",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -366,6 +386,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "ppProdQty",
 						headerText : "Prod Qty",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -379,6 +402,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "ppProdStartDt",
 						headerText : "Prod Start",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -389,6 +415,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "ppProdEndDt",
 						headerText : "Prod End",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -406,6 +435,9 @@ var OtdStatusLayout	=
 					{
 						dataField : "giQty",
 						headerText : "GI Qty",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -419,6 +451,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "giDt",
 						headerText : "GI Date",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -436,6 +471,9 @@ var OtdStatusLayout	=
 					{
 						dataField : "sapPoNo",
 						headerText : "PO No",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						formatString : "#,##0",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
@@ -447,6 +485,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "sapPoItemNo",
 						headerText : "Item No",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						formatString : "#,##0",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
@@ -458,6 +499,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "sapPoQty",
 						headerText : "PO Qty",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						visible : false,
 						dataType : "numeric",
 						style : "aui-grid-right-column",
@@ -465,6 +509,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "grDt",
 						headerText : "GR Date",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnRight0";
@@ -475,6 +522,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "sapApQty",
 						headerText : "AP Qty",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -488,6 +538,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "sapGrQty",
 						headerText : "GR Qty",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
