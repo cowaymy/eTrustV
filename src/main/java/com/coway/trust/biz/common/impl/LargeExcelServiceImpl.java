@@ -12,6 +12,7 @@ import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcMBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
+import com.coway.trust.web.common.claim.ClaimFileGeneralHandler;
 import com.coway.trust.web.common.claim.ClaimFileHLBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileMBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileMyClearHandler;
@@ -361,5 +362,8 @@ public class LargeExcelServiceImpl implements LargeExcelService {
 		excelDownloadMapper.getSqlSession().select(id, parameter, resultHandler);
 	}
 
-
+	@Override
+	public void downLoadClaimFileGeneral(Object parameter, ClaimFileGeneralHandler claimFileGeneralHandler) {
+		this.downLoad(LargeExcelQuery.CLAIM_DETAIL.getQueryId(), parameter, claimFileGeneralHandler);
+	}
 }
