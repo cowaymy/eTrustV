@@ -52,6 +52,7 @@ import com.coway.trust.web.common.claim.ClaimFileCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcCIMBHandler;
 import com.coway.trust.web.common.claim.ClaimFileCrcMBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileFPXHandler;
+import com.coway.trust.web.common.claim.ClaimFileGeneralHandler;
 import com.coway.trust.web.common.claim.ClaimFileHLBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileMBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileMyClearHandler;
@@ -60,6 +61,7 @@ import com.coway.trust.web.common.claim.ClaimFilePBBHandler;
 import com.coway.trust.web.common.claim.ClaimFileRHBHandler;
 import com.coway.trust.web.common.claim.CreditCardFileCIMBHandler;
 import com.coway.trust.web.common.claim.CreditCardFileMBBHandler;
+
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -91,11 +93,11 @@ public class ClaimController {
 	@Autowired
 	private MessageSourceAccessor messageAccessor;
 
-	private String[] claimFileColumns = new String[] { "bankDtlId", "bankDtlCtrlId", "salesOrdId", "bankDtlDrDt",
-			"bankDtlDrBankTypeId", "bankDtlDrAccNo", "bankDtlDrName", "bankDtlAmt", "taskId", "crtUserId",
-			"crtDt", "updUserId", "updDt", "bankDtlDrNric", "bankDtlRenStus", "svcCntrctId", "bankDtlBankId",
-			"bankAppv", "bankDtlApprDt", "bic", "bankDtlFpxId", "fpxCode", "salesOrdNo", "bankDtlRptAmt",
-			"bankDtlRenAmt", "bankDtlCrcExpr", "srvCntrctRefNo", "billNo", "cntrctNOrdNo" };
+	  private String[] claimFileColumns = new String[] { "bankDtlId", "bankDtlCtrlId", "salesOrdId", "bankDtlDrDt",
+	      "bankDtlDrBankTypeId", "bankDtlDrAccNo", "bankDtlDrName", "bankDtlAmt", "taskId", "crtUserId", "crtDt",
+	      "updUserId", "updDt", "bankDtlDrNric", "bankDtlRenStus", "svcCntrctId", "bankDtlBankId", "bankAppv",
+	      "bankDtlApprDt", "bic", "bankDtlFpxId", "fpxCode", "salesOrdNo", "bankDtlRptAmt", "bankDtlRenAmt",
+	      "bankDtlCrcExpr", "srvCntrctRefNo", "billNo", "cntrctNOrdNo", "bankAchCode", "code" };
 
 	/******************************************************
 	 * Claim List
@@ -940,155 +942,145 @@ public class ClaimController {
 	 * @return
 	 */
 	@RequestMapping(value = "/createClaimFile.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> createClaimFile(@RequestBody Map<String, ArrayList<Object>> params,
-			Model model) throws Exception {
+	  public ResponseEntity<ReturnMessage> createClaimFile(@RequestBody Map<String, ArrayList<Object>> params, Model model)
+	      throws Exception {
 
-		List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
-		// Calim Master 데이터 조회
-		Map<String, Object> map = (Map<String, Object>) formList.get(0);
-		EgovMap claimMap = claimService.selectClaimById(map);
+	    List<Object> formList = params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터
+	                                                                   // 가져오기
+	    // Calim Master 데이터 조회
+	    Map<String, Object> map = (Map<String, Object>) formList.get(0);
+	    EgovMap claimMap = claimService.selectClaimById(map);
 
+	    // 파일 생성하기
+	    if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+	      if ("3170".equals(String.valueOf(claimMap.get("ctrlDdtChl")))) { // e-Mandate
+	        this.createClaimFileGenerator(claimMap);
+	      } else { // General
+	        // ALB
+	        if ("2".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          // this.createClaimFileALB(claimMap);
+	          // claimService.deleteClaimFileDownloadInfo(claimMap);
+	          this.createClaimFileNewALB(claimMap);
+	        }
 
-		// 파일 생성하기
-		if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
-			// ALB
-			if ("2".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-				//this.createClaimFileALB(claimMap);
-				//claimService.deleteClaimFileDownloadInfo(claimMap);
-				this.createClaimFileNewALB(claimMap);
-			}
+	        // CIMB
+	        if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          // claimService.deleteClaimFileDownloadInfo(claimMap);
+	          this.createClaimFileCIMB(claimMap);
+	        }
 
-            // CIMB
-            if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	//claimService.deleteClaimFileDownloadInfo(claimMap);
-            	this.createClaimFileCIMB(claimMap);
-            }
+	        // HLBB
+	        if ("5".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          // claimService.deleteClaimFileDownloadInfo(claimMap);
+	          this.createClaimFileHLBB(claimMap);
+	          this.createClaimFileHLBB2(claimMap);
+	        }
 
-            // HLBB
-            if ("5".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	//claimService.deleteClaimFileDownloadInfo(claimMap);
-            	this.createClaimFileHLBB(claimMap);
-            	this.createClaimFileHLBB2(claimMap);
-            }
+	        // MBB
+	        if ("21".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          // claimService.deleteClaimFileDownloadInfo(claimMap);
+	          this.createClaimFileMBB(claimMap);
+	        }
 
-            // MBB
-            if ("21".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	//claimService.deleteClaimFileDownloadInfo(claimMap);
-            	this.createClaimFileMBB(claimMap);
-            }
+	        // PBB
+	        if ("6".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          // claimService.deleteClaimFileDownloadInfo(claimMap);
+	          this.createClaimFilePBB(claimMap);
+	        }
 
-            // PBB
-            if ("6".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	//claimService.deleteClaimFileDownloadInfo(claimMap);
-            	this.createClaimFilePBB(claimMap);
-            }
+	        // RHB
+	        if ("7".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          // claimService.deleteClaimFileDownloadInfo(claimMap);
+	          this.createClaimFileRHB(claimMap);
+	        }
 
-            // RHB
-            if ("7".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	//claimService.deleteClaimFileDownloadInfo(claimMap);
-            	this.createClaimFileRHB(claimMap);
-            }
+	        // BSN
+	        if ("9".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          // claimService.deleteClaimFileDownloadInfo(claimMap);
+	          this.createClaimFileBSN(claimMap);
+	        }
 
-            // BSN
-            if ("9".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	//claimService.deleteClaimFileDownloadInfo(claimMap);
-            	this.createClaimFileBSN(claimMap);
-            }
+	        // My Clear
+	        if ("46".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          // claimService.deleteClaimFileDownloadInfo(claimMap);
+	          this.createClaimFileMyClear(claimMap);
+	        }
+	      }
+	    } else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
 
-            // My Clear
-            if ("46".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
-            	//claimService.deleteClaimFileDownloadInfo(claimMap);
-            	this.createClaimFileMyClear(claimMap);
-            }
-		} else if ("1".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+	      String isCrc = map.get("isCrc") != null ? (String) map.get("isCrc") : "";
 
-			String isCrc  = map.get("isCrc") != null ?  (String)map.get("isCrc") : "";
+	      if (isCrc.equals("crc")) {
+	        if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          // 10000건 단위로 추출하기 위해 전체 건수 조회
+	          int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
+	          int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
 
-			if(isCrc.equals("crc") ){
-				if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
-                {
-        			//10000건 단위로 추출하기 위해 전체 건수 조회
-        			int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
-        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
+	          if (pageCnt > 0) {
+	            for (int i = 1; i <= pageCnt; i++) {
+	              claimMap.put("pageNo", i);
+	              claimMap.put("rowCount", 10000);
+	              this.createCreditCardFileCIMB(claimMap);
+	            }
+	          }
+	        } else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
+	          int totBatToday = claimService.selectClaimDetailBatchGen(map);
+	          int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
 
-        			if (pageCnt > 0){
-        				for(int i = 1 ; i <= pageCnt ; i++){
-        					claimMap.put("pageNo", i);
-        					claimMap.put("rowCount", 10000);
-        					this.createCreditCardFileCIMB(claimMap);
-        				}
-        			}
-                }
-                else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId"))))
-                {
-        			int totRowCount = claimService.selectCCClaimDetailByIdCnt(map);
-        			int totBatToday =  claimService.selectClaimDetailBatchGen(map);
-        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
+	          if (pageCnt > 0) {
+	            for (int i = 1; i <= pageCnt; i++) {
+	              claimMap.put("pageNo", i);
+	              claimMap.put("rowCount", 999);
+	              claimMap.put("batchNo", totBatToday);
+	              claimMap.put("pageCnt", pageCnt);
+	              this.createCreditCardFileMBB(claimMap);
+	            }
+	          }
+	        }
+	      } else {
+	        if ("3".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          // 10000건 단위로 추출하기 위해 전체 건수 조회
+	          int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+	          int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
 
-        			if (pageCnt > 0){
-        				for(int i = 1 ; i <= pageCnt ; i++){
-        					claimMap.put("pageNo", i);
-        					claimMap.put("rowCount", 999);
-        					claimMap.put("batchNo", totBatToday);
-        					claimMap.put("pageCnt", pageCnt);
-        					claimMap.put("type", 1);
-        					this.createCreditCardFileMBB(claimMap);
+	          if (pageCnt > 0) {
+	            for (int i = 1; i <= pageCnt; i++) {
+	              claimMap.put("pageNo", i);
+	              claimMap.put("rowCount", 10000);
+	              this.createClaimFileCrcCIMB(claimMap, i);
+	            }
+	          }
+	        } else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId")))) {
+	          int totRowCount = claimService.selectClaimDetailByIdCnt(map);
+	          int totBatToday = claimService.selectClaimDetailBatchGen(map);
+	          int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
 
-        					claimMap.put("type", 2);
-                            this.createCreditCardFileMBB(claimMap);
-        				}
-        			}
-                }
-			}else{
-				if ("3".equals(String.valueOf(claimMap.get("ctrlBankId"))))
-                {
-        			//10000건 단위로 추출하기 위해 전체 건수 조회
-        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
-        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 10000.0));
+	          if (pageCnt > 0) {
+	            for (int i = 1; i <= pageCnt; i++) {
+	              claimMap.put("pageNo", i);
+	              claimMap.put("rowCount", 999);
+	              claimMap.put("batchNo", totBatToday);
+	              claimMap.put("pageCnt", pageCnt);
+	              this.createClaimFileCrcMBB(claimMap);
+	            }
+	          }
+	        }
+	      }
 
-        			if (pageCnt > 0){
-        				for(int i = 1 ; i <= pageCnt ; i++){
-        					claimMap.put("pageNo", i);
-        					claimMap.put("rowCount", 10000);
-        					this.createClaimFileCrcCIMB(claimMap,i);
-        				}
-        			}
-                }
-                else if ("19".equals(String.valueOf(claimMap.get("ctrlBankId"))))
-                {
-        			int totRowCount = claimService.selectClaimDetailByIdCnt(map);
-        			int totBatToday =  claimService.selectClaimDetailBatchGen(map);
-        			int pageCnt = (int) Math.round(Math.ceil(totRowCount / 999.0));
+	    } else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
+	      // claimService.deleteClaimFileDownloadInfo(claimMap);
+	      this.createClaimFileFPX(claimMap);
+	    }
 
-        			if (pageCnt > 0){
-        				for(int i = 1 ; i <= pageCnt ; i++){
-        					claimMap.put("pageNo", i);
-        					claimMap.put("rowCount", 999);
-        					claimMap.put("batchNo", totBatToday);
-        					claimMap.put("pageCnt", pageCnt);
-        					claimMap.put("type", 1);
-        					this.createClaimFileCrcMBB(claimMap);
+	    // 결과 만들기
+	    ReturnMessage message = new ReturnMessage();
+	    message.setCode(AppConstants.SUCCESS);
+	    message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
-        					claimMap.put("type", 2);
-                            this.createClaimFileCrcMBB(claimMap);
-        				}
-        			}
-                }
-			}
+	    return ResponseEntity.ok(message);
 
-		} else if ("134".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
-			//claimService.deleteClaimFileDownloadInfo(claimMap);
-			this.createClaimFileFPX(claimMap);
-		}
-
-		// 결과 만들기
-		ReturnMessage message = new ReturnMessage();
-		message.setCode(AppConstants.SUCCESS);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
-
-		return ResponseEntity.ok(message);
-
-	}
+	  }
 
 	public void createClaimFileALB(EgovMap claimMap) throws Exception {
 
@@ -1776,6 +1768,128 @@ public class ClaimController {
 		return new ClaimFileMyClearHandler(excelDownloadVO, params);
 	}
 
+	  /**
+	   * General - Create Claim File
+	   *
+	   * @param claimMap
+	   * @param claimDetailList
+	   * @throws Exception
+	   */
+	  public void createClaimFileGenerator(EgovMap claimMap) throws Exception {
+	    ClaimFileGeneralHandler downloadHandler = null;
+	    String sFile = "";
+	    String bnkCde = "";
+	    String subPath = "";
+	    String todayDate = "";
+	    String inputDate = "";
+
+	    /*
+	     * {0} - TODAY DATE {1} - BANK SHORT CODE
+	     */
+	    Map<String, Object> map = new HashMap<String, Object>();
+	    map.put("ctrlIsCrc", claimMap.get("ctrlIsCrc"));
+	    map.put("ctrlBankId", claimMap.get("ctrlBankId"));
+	    List<EgovMap> fileInfo = claimService.selectMstConf(map);
+
+	    if (fileInfo.size() == 0) {
+	      // GET GENERATE SETTING
+	      map.put("ctrlBankId", "0");
+	      fileInfo = claimService.selectMstConf(map);
+	    }
+
+	    try {
+	      if (fileInfo.size() > 0) {
+	        for (int a = 0; a < fileInfo.size(); a++) {
+	          Map<String, Object> fileInfoConf = new HashMap<String, Object>();
+	          fileInfoConf = (Map<String, Object>) fileInfo.get(a);
+	          claimMap.put("ctrlConfId", fileInfoConf.get("id"));
+
+	          inputDate = CommonUtils.nvl(claimMap.get("ctrlBatchDt")).equals("") ? "1900-01-01"
+	              : (String) claimMap.get("ctrlBatchDt");
+	          bnkCde = CommonUtils.nvl(claimMap.get("ctrlBankId"));
+	          if (!bnkCde.equals("")) {
+	            bnkCde = claimService.selectBnkCde(bnkCde);
+	          }
+
+	          // FORM FILE NAME
+	          if (CommonUtils.nvl(fileInfoConf.get("ctrlDtFmt")).equals("")) {
+	            todayDate = CommonUtils.getNowDate();
+	          } else {
+	            todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd",
+	                fileInfoConf.get("ctrlDtFmt").toString());
+	          }
+
+	          sFile = fileInfoConf.get("ctrlFileNm").toString().replace("{0}", todayDate).replace("{1}", bnkCde) + "."
+	              + (fileInfoConf.get("ctrlFileExt").toString().replace(".", "").toLowerCase());
+
+	          subPath = CommonUtils.nvl(fileInfoConf.get("ctrlSubPath")).toString().replace("{0}", todayDate).replace("{1}",
+	              bnkCde);
+
+	          downloadHandler = getTextDownloadGeneralHandler(sFile, claimFileColumns, null, filePath, subPath, claimMap);
+	          largeExcelService.downLoadClaimFileGeneral(claimMap, downloadHandler);
+	          downloadHandler.writeFooter();
+	        }
+	      }
+	    } catch (Exception ex) {
+	      LOGGER.debug(ex.getMessage());
+	      throw new ApplicationException(ex, AppConstants.FAIL);
+	    } finally {
+	      if (downloadHandler != null) {
+	        try {
+	          downloadHandler.close();
+	        } catch (Exception ex) {
+	          LOGGER.info(ex.getMessage());
+	        }
+	      }
+	    }
+
+	    // SEND EMAIL
+	    if (fileInfo.size() > 0) {
+	      for (int a = 0; a < fileInfo.size(); a++) {
+	        Map<String, Object> fileInfoConf = new HashMap<String, Object>();
+	        fileInfoConf = (Map<String, Object>) fileInfo.get(a);
+
+	        if (CommonUtils.nvl(fileInfoConf.get("ctrlEmail")).toString().toUpperCase().equals("Y")) { // CTRL_EMAIL
+	          File file = new File(filePath + fileInfoConf.get("ctrlSubPath").toString() + sFile);
+
+	          String emailSubj = fileInfoConf.get("ctrlEmailSubj").toString().replace("{0}", inputDate);
+	          String emailTxt = fileInfoConf.get("ctrlEmailText").toString();
+
+	          EmailVO email = new EmailVO();
+	          email.setTo(emailReceiver);
+	          email.setHtml(false);
+	          email.setSubject(emailSubj);
+	          email.setText(emailTxt);
+	          email.addFile(file);
+
+	          adaptorService.sendEmail(email, false);
+	        }
+	      }
+	    }
+	  }
+
+	  private ClaimFileGeneralHandler getTextDownloadGeneralHandler(String fileName, String[] columns, String[] titles,
+	      String path, String subPath, Map<String, Object> params) {
+	    FileInfoVO excelDownloadVO = FormDef.getTextDownloadVO(fileName, columns, titles);
+	    excelDownloadVO.setFilePath(path);
+	    excelDownloadVO.setSubFilePath(subPath);
+
+	    Map<String, Object> confPrm = new HashMap<String, Object>();
+	    confPrm.put("id", params.get("ctrlConfId").toString());
+	    confPrm.put("part", "H");
+
+	    List<EgovMap> headerInfo = claimService.selectSubConf(confPrm); // HEADER
+
+	    confPrm.put("part", "D");
+	    List<EgovMap> datailInfo = claimService.selectSubConf(confPrm); // DETAIL
+
+	    confPrm.put("part", "T");
+	    List<EgovMap> trailerInfo = claimService.selectSubConf(confPrm); // FOOTER
+
+	    return new ClaimFileGeneralHandler(excelDownloadVO, headerInfo, datailInfo, trailerInfo, params);
+	  }
+
+
 
 	/**
 	 * CRC CIMB - Create Claim File
@@ -2120,6 +2234,18 @@ public class ClaimController {
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(resultList);
 	}
+
+	  @RequestMapping(value = "/selectClmStat.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectClmStat(@RequestParam Map<String, Object> params) throws Exception {
+	    List<EgovMap> codeList = claimService.selectClmStat(params);
+	    return ResponseEntity.ok(codeList);
+	  }
+
+	  @RequestMapping(value = "/selectListing.do", method = RequestMethod.GET)
+	  public ResponseEntity<List<EgovMap>> selectListing(@RequestParam Map<String, Object> params) throws Exception {
+	    List<EgovMap> codeList = claimService.selectListing(params);
+	    return ResponseEntity.ok(codeList);
+	  }
 
 }
 
