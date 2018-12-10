@@ -63,7 +63,27 @@
 </style>
 
 <script type="text/javaScript">
+var gToday	= new Date();
+var gYear	= "";
+var gMonth	= "";
+var gDay	= "";
+
 $(function() {
+	var start	= new Date();
+	var end		= new Date();
+	start.setMonth(start.getMonth() - 3);
+	end.setMonth(end.getMonth());
+	
+	if ( 10 == (start.getMonth()+1)|| 11 == (start.getMonth()+1) || 12 == (start.getMonth()+1) ) {
+		$("#startDate").val(start.getDate() + "/" + (start.getMonth()+1) + "/" + start.getFullYear());
+	} else {
+		$("#startDate").val(start.getDate() + "/0" + (start.getMonth()+1) + "/" + start.getFullYear());
+	}
+	if ( 10 == (end.getMonth()+1) || 11 == (end.getMonth()+1) || 12 == (end.getMonth()+1) ) {
+		$("#endDate").val(end.getDate() + "/" + (end.getMonth()+1) + "/" + end.getFullYear());
+	} else {
+		$("#endDate").val(end.getDate() + "/0" + (end.getMonth()+1) + "/" + end.getFullYear());
+	}
 	fnScmStockTypeCbBox();
 });
 
@@ -86,7 +106,7 @@ function fnScmStockTypeCbBox() {
 function fnSearch() {
 	var fromDate	= $("#startDate").val();
 	var toDate		= $("#endDate").val();
-	console.log("fromDate : " + fromDate + ", toDate : " + toDate);
+	//console.log("fromDate : " + fromDate + ", toDate : " + toDate);
 	
 	if ( "" == fromDate || "" == toDate || null == fromDate || null == toDate ) {
 		Common.alert("<spring:message code='sys.msg.limitMore' arguments='FROM DATE ; TO DATE.' htmlEscape='false' argumentSeparator=';'/>");
