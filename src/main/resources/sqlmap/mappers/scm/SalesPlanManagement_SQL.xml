@@ -374,31 +374,29 @@ INSERT INTO SCM0002D
 SELECT #{planId}
      , SCM0002D_PLAN_DTL_ID_SEQ.NEXTVAL
      , A.STOCK_CODE
-     , NVL((
-            SELECT ROUND(SUM(Z.ISS_QTY) / 3)
-              FROM SCM0051S Z
-             WHERE Z.ISS_DT BETWEEN #{issDtFrom} AND #{issDtTo}
-               AND Z.TEAM = #{team}
-               AND Z.STOCK_CODE = A.STOCK_CODE
-            ), 0) AS PRE_M3_ISS_AVG
-     , NVL((
-            SELECT SUM(Z.ORD_QTY)
-              FROM SCM0050S Z
-             WHERE Z.ORD_DT BETWEEN #{m1OrdDtFrom} AND #{m1OrdDtTo}
-               AND Z.TEAM = #{team}
-               AND Z.STOCK_CODE = A.STOCK_CODE
-            ), 0) AS PRE_M1_ORD_SUM
-     , NVL((
-            SELECT SUM(Z.ORD_QTY)
-              FROM SCM0050S Z
-             WHERE Z.ORD_DT BETWEEN #{m0OrdDtFrom} AND #{m0OrdDtTo}
-               AND Z.TEAM = #{team}
-               AND Z.STOCK_CODE = A.STOCK_CODE
-            ), 0) AS M0_ORD_SUM
-  FROM SCM0008M A
- WHERE A.STUS_CODE_ID = 1
-   AND A.IS_TRGET = 1
-   AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> #{endDt}
+     , ROUND((A.M3 + A.M2 + A.M1) / A.DIV_NO) AS PRE_M3_ISS_AVG
+     , A.PRE_M1_ORD_SUM
+     , A.M0_ORD_SUM
+  FROM (
+        SELECT Z.STOCK_CODE
+             , CASE WHEN Z.M3 = 0 THEN CASE WHEN Z.M2 = 0 THEN 1 ELSE 2 END
+                    ELSE 3 END AS DIV_NO
+             , Z.M3, Z.M2, Z.M1
+             , Z.PRE_M1_ORD_SUM
+             , Z.M0_ORD_SUM
+          FROM (
+                SELECT G.STOCK_CODE
+                     , NVL((SELECT SUM(H.ISS_QTY) FROM SCM0051S H WHERE H.ISS_DT BETWEEN #{m3From} AND #{m3To} AND H.STOCK_CODE = G.STOCK_CODE AND H.TEAM = #{team}), 0) AS M3
+                     , NVL((SELECT SUM(H.ISS_QTY) FROM SCM0051S H WHERE H.ISS_DT BETWEEN #{m2From} AND #{m2To} AND H.STOCK_CODE = G.STOCK_CODE AND H.TEAM = #{team}), 0) AS M2
+                     , NVL((SELECT SUM(H.ISS_QTY) FROM SCM0051S H WHERE H.ISS_DT BETWEEN #{m1From} AND #{m1To} AND H.STOCK_CODE = G.STOCK_CODE AND H.TEAM = #{team}), 0) AS M1
+                     , NVL((SELECT SUM(H.ORD_QTY) FROM SCM0050S H WHERE H.ORD_DT BETWEEN #{m1From} AND #{m1To} AND H.STOCK_CODE = G.STOCK_CODE AND H.TEAM = #{team}), 0) AS PRE_M1_ORD_SUM
+                     , NVL((SELECT SUM(H.ORD_QTY) FROM SCM0050S H WHERE H.ORD_DT BETWEEN #{m0From} AND #{m0To} AND H.STOCK_CODE = G.STOCK_CODE AND H.TEAM = #{team}), 0) AS M0_ORD_SUM
+                  FROM SCM0008M G
+                 WHERE G.STUS_CODE_ID = 1
+                   AND G.IS_TRGET = 1
+                   AND TO_CHAR(G.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> #{endDt}
+                ) Z
+        ) A
 </insert>
 <select id="selectSalesPlanForUpdate" parameterType="Map" resultType="egovMap">
 SELECT B.PLAN_ID
@@ -519,7 +517,11 @@ SELECT A.STOCK_CODE
                            SELECT ROW_NUMBER() OVER (PARTITION BY SCM_MONTH ORDER BY CAL_ID) AS RN
                                 , TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AS SCM_START
                                 , TO_CHAR(SCM_WEEK_END, 'YYYYMMDD') AS SCM_END
-                             FROM SCM0018M WHERE SCM_YEAR = #{year} AND SCM_MONTH = #{month} AND SCM_WEEK <![CDATA[ < ]]> #{week}
+                             FROM SCM0018M
+                            WHERE SCM_YEAR = #{year} AND SCM_MONTH = #{month}
+                              AND SCM_WEEK IN (CASE WHEN #{month} = 12 THEN (SELECT SCM_WEEK FROM SCM0018M WHERE SCM_YEAR = #{year} AND SCM_MONTH = #{month} AND SCM_WEEK <![CDATA[ < ]]> #{week} AND SCM_WEEK != 1)
+                                                                       ELSE (SELECT SCM_WEEK FROM SCM0018M WHERE SCM_YEAR = #{year} AND SCM_MONTH = #{month} AND SCM_WEEK <![CDATA[ < ]]> #{week})
+                                                                       END)
                            ) X
                    ) B ON (A.STOCK_CODE = B.STOCK_CODE)
  WHERE A.STUS_CODE_ID = 1
