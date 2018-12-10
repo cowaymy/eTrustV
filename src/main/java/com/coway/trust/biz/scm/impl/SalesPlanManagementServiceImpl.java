@@ -74,7 +74,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		LOGGER.debug("insertSalesPlanMaster : {}", params);
 		
 		//	variables
-		String issDtFrom	= "";	String issDtTo	= "";	String m1OrdDtFrom	= "";	String m1OrdDtTo	= "";	String m0OrdDtFrom	= "";	String m0OrdDtTo	= "";
+		//String issDtFrom	= "";	String issDtTo	= "";	String m1OrdDtFrom	= "";	String m1OrdDtTo	= "";	String m0OrdDtFrom	= "";	String m0OrdDtTo	= "";
+		String m0From	= "";	String m0To	= "";	String m1From	= "";	String m1To	= "";	String m2From	= "";	String m2To	= "";	String m3From	= "";	String m3To	= "";
 		String team		= "";
 		int	planId		= 0;	int planDtlId		= 0;
 		int planYear	= 0;	int planMonth		= 0;	int planWeek	= 0;
@@ -136,22 +137,26 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		//	2. insert Sales Plan Detail
 		List<EgovMap> selectGetSalesPlanId	= salesPlanManagementMapper.selectGetSalesPlanId(params);
 		planId	= Integer.parseInt(selectGetSalesPlanId.get(0).get("planId").toString());
-		issDtFrom	= selectScmTotalInfo.get(0).get("issDtFrom").toString();
-		issDtTo		= selectScmTotalInfo.get(0).get("issDtTo").toString();
-		m1OrdDtFrom	= selectScmTotalInfo.get(0).get("ordDtFrom").toString();
-		m1OrdDtTo	= selectScmTotalInfo.get(0).get("ordDtTo").toString();
-		m0OrdDtFrom	= selectScmTotalInfo.get(0).get("m0DtFrom").toString();
-		m0OrdDtTo	= selectScmTotalInfo.get(0).get("m0DtTo").toString();
+		m0From	= selectScmTotalInfo.get(0).get("m0DtFrom").toString();
+		m0To	= selectScmTotalInfo.get(0).get("m0DtTo").toString();
+		m1From	= selectScmTotalInfo.get(0).get("monFrom1").toString();
+		m1To	= selectScmTotalInfo.get(0).get("monTo1").toString();
+		m2From	= selectScmTotalInfo.get(0).get("monFrom2").toString();
+		m2To	= selectScmTotalInfo.get(0).get("monTo2").toString();
+		m3From	= selectScmTotalInfo.get(0).get("monFrom3").toString();
+		m3To	= selectScmTotalInfo.get(0).get("monTo3").toString();
 		endDt	= selectScmTotalInfo.get(0).get("endDt").toString();
 		
 		Map<String, Object> dtlParams = new HashMap<String, Object>();
 		dtlParams.put("planId", planId);
-		dtlParams.put("issDtFrom", issDtFrom);
-		dtlParams.put("issDtTo", issDtTo);
-		dtlParams.put("m1OrdDtFrom", m1OrdDtFrom);
-		dtlParams.put("m1OrdDtTo", m1OrdDtTo);
-		dtlParams.put("m0OrdDtFrom", m0OrdDtFrom);
-		dtlParams.put("m0OrdDtTo", m0OrdDtTo);
+		dtlParams.put("m0From", m0From);
+		dtlParams.put("m0To", m0To);
+		dtlParams.put("m1From", m1From);
+		dtlParams.put("m1To", m1To);
+		dtlParams.put("m2From", m2From);
+		dtlParams.put("m2To", m2To);
+		dtlParams.put("m3From", m3From);
+		dtlParams.put("m3To", m3To);
 		dtlParams.put("team", team);
 		dtlParams.put("endDt", endDt);
 		try {
@@ -349,6 +354,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						} else {
 							LOGGER.debug("Diff : m0WeekCnt is wrong");
 						}
+						LOGGER.debug("m0WeekCnt : " + m0WeekCnt);
 					//} else {
 					//	LOGGER.debug("Diff : plan calendar is wroong");
 					//}
@@ -363,13 +369,26 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						if ( 1 == intToStrFieldCnt2.length() ) {
 							intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 						}
-						weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
-						m0Sum	= m0Sum + weekQty;
+						LOGGER.debug("intToStrFieldCnt1 : " + intToStrFieldCnt1);
+						//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
+						if ( m0 <= planWeekTh ) {
+							//	selectThisMonthOrder 결과는 오직 1row
+							//	수립주차 기준 과거주차
+							weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt2).toString());
+							m0OrdSum	= m0OrdSum + weekQty;
+						} else {
+							//	수립주차기준 현재+미래주차(수립주차포함)
+							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+							m0Sum	= m0Sum + weekQty;
+						}
+						//weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+						//m0Sum	= m0Sum + weekQty;
 						updParams.put("w" + intToStrFieldCnt2, weekQty);
 						iLoopDataFieldCnt1++;
 						iLoopDataFieldCnt2++;
 					}
 					updParams.put("m0", m0Sum);
+					updParams.put("m0OrdSum", m0OrdSum);
 					
 					//	3.2 m1
 					for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
