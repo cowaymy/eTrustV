@@ -32,8 +32,9 @@
 						}, '', 'smsSend', 'S', '');
 
 						//New Result 팝업 페이지
-						doGetComboCodeId('/payment/selectClmTyp.do', '', '',
-								'new_claimType', 'S', '');
+						doGetComboCodeId('/payment/selectListing.do', {
+							ind : 'CLM_TYP'
+						}, '', 'new_claimType', 'S', '');
 						//doDefCombo(claimDayData, '', 'new_claimDay', 'S', ''); //Claim Day 생성
 						doGetComboCodeId('/payment/selectListing.do', {
 							ind : 'CLM_DY'
