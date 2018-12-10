@@ -26,7 +26,7 @@ function fnClose()
 
 function fnDetailTabClick(flag)
 {
-	fnSelectOTDDetailPopData(flag);
+	//fnSelectOTDDetailPopData(flag);
 }
 
 function fnSelectOTDDetailPopData(flag)
@@ -283,8 +283,8 @@ $(document).ready(function()
 		<section class="tap_wrap mt0"><!-- tap_wrap start -->
 	
 			<ul class="tap_type1 num4">
-				<li><a onclick="javascript:fnDetailTabClick('GI');" class="on">SO GI Details</a></li>
-				<li><a onclick="javascript:fnDetailTabClick('PP');">SO PP Details</a></li>
+				<li><a onclick="" class="on">SO GI Details</a></li>
+				<li><a onclick="">SO PP Details</a></li>
 			</ul>
 		
 			<article class="tap_area"><!-- tap_area start -->
