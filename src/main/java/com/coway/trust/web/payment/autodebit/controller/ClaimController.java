@@ -149,11 +149,19 @@ public class ClaimController {
 		// 조회.
 		List<EgovMap> resultList = claimService.selectClaimList(params);
 
-		if (resultList != null && resultList.size() > 0) {
-			returnMap = resultList.get(0);
-		} else {
-			returnMap = new EgovMap();
-		}
+	    if (resultList != null && resultList.size() > 0) {
+	      returnMap = resultList.get(0);
+
+	      // CONVERT DECIMAL
+	      if (returnMap.get("ctrlBillAmt") != null) {
+	        returnMap.put("ctrlBillAmt", CommonUtils.getNumberFormat(returnMap.get("ctrlBillAmt").toString(), "#,##0.00"));
+	      }
+	      if (returnMap.get("ctrlBillPayAmt") != null) {
+	        returnMap.put("ctrlBillPayAmt", CommonUtils.getNumberFormat(returnMap.get("ctrlBillPayAmt").toString(), "#,##0.00"));
+	      }
+	    } else {
+	      returnMap = new EgovMap();
+	    }
 
 		// 조회 결과 리턴.
 		return ResponseEntity.ok(returnMap);
