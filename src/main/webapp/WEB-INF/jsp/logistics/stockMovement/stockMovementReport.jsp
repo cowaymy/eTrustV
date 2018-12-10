@@ -23,8 +23,9 @@ function fn_report(type) {
     }
 
     var yyyyStr =  $("#yyyymmDate").val();
-    $("#V_YEAR").val( yyyyStr.substring(3,7));
-
+    $("#V_YEAR").val( yyyyStr.substring(3,7));  //MM/YYYY
+    var mmStr =  $("#yyyymmDate").val();
+    $("#V_MONTH").val( mmStr.substring(1,2)); //
 
     if(type == "PDF"){
         $("#viewType").val('PDF');
@@ -34,10 +35,18 @@ function fn_report(type) {
         return false;
     }
 
-    if(dataForm.reportType.value=="1"){
-        $("#reportFileName").val('/logistics/StockAMovSumByMonth_PDF.rpt');
-        $("#reportDownFileName").val("StkAMovSumByMth_PDF_" + $("#V_YEAR").val());
-    }else{
+     if(dataForm.reportType.value=="3"){
+        $("#reportFileName").val('/logistics/StockAMovementSummaryByModel_PDF.rpt');
+        $("#reportDownFileName").val("StkAMovSumByModel_PDF_" + $("#V_YEAR").val());
+    }
+    else if(dataForm.reportType.value=="4"){
+        $("#reportFileName").val('/logistics/StockBMovementSummaryByModel_PDF.rpt');
+        $("#reportDownFileName").val("StkBMovSumByModel_PDF_" + $("#V_YEAR").val());
+    }
+
+
+
+    else{
     	return false;
     }
 
@@ -84,6 +93,7 @@ function fn_report(type) {
     <input type="hidden" id="reportFileName" name="reportFileName" value="/logistics/StockAMovSumByMonth_PDF.rpt" />
     <input type="hidden" id="viewType" name="viewType" />
     <input type="hidden" id="V_YEAR" name="V_YEAR" />
+    <input type="hidden" id="V_MONTH" name="V_MONTH" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
 
 
@@ -101,8 +111,10 @@ function fn_report(type) {
                   <th scope="row">Report Type</th>
                                     <td><select class="w100p" id="reportType" name="reportType">
                                     <option value="0" selected>Choose One</option>
-                                    <option value="1">Stock A Movement Summary In By Month</option>
-                                   <!--  <option value="2">Stock B Movement Summary In By Month</option> -->
+<!--                                     <option value="1">Stock A Movement Summary In By Month</option>
+                                   <option value="2">Stock B Movement Summary In By Month</option> -->
+                                   <option value="3">Stock A Movement Summary By Model</option>
+                                   <option value="4">Stock B Movement Summary By Model</option>
                             </select></td>
                     </tr>
                                        <tr>
