@@ -20,6 +20,8 @@ import java.util.Map;
 
 import com.coway.trust.biz.payment.payment.service.PayDHistoryVO;
 import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
+import com.coway.trust.biz.payment.payment.service.RentalCollectionByOrganizationVO;
+
 
 import egovframework.rte.psl.dataaccess.mapper.Mapper;
 import egovframework.rte.psl.dataaccess.util.EgovMap;
@@ -232,4 +234,7 @@ public interface SearchPaymentMapper {
 	 * @return
 	 */
 	List<RentalCollectionByBSSearchVO> searchRCByBSAgingMonthList(RentalCollectionByBSSearchVO searchVO);
+
+	List<RentalCollectionByOrganizationVO> searchRCByOrganizationList(RentalCollectionByOrganizationVO orgVO);
+
 }

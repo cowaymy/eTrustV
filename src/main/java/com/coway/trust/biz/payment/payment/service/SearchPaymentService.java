@@ -198,4 +198,12 @@ public interface SearchPaymentService
 	 */
     List<RentalCollectionByBSSearchVO> searchRCByBSAgingMonthList(RentalCollectionByBSSearchVO searchVO);
 
+    /**
+	 * RentalCollectionByOrganization 조회
+	 * @param params
+	 * @return
+	 */
+    List<RentalCollectionByOrganizationVO> searchRCByOrganizationList(RentalCollectionByOrganizationVO searchVO);
+
+
 }

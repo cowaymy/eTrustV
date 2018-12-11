@@ -35,6 +35,7 @@ import com.coway.trust.biz.common.CommonService;
 import com.coway.trust.biz.payment.payment.service.PayDHistoryVO;
 import com.coway.trust.biz.payment.payment.service.PayDVO;
 import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
+import com.coway.trust.biz.payment.payment.service.RentalCollectionByOrganizationVO;
 import com.coway.trust.biz.payment.payment.service.SearchPaymentService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
@@ -1087,6 +1088,33 @@ public class SearchPaymentController {
 
         // 조회.
         List<RentalCollectionByBSSearchVO> resultList = searchPaymentService.searchRCByBSAgingMonthList(searchVO);
+
+        // 조회 결과 리턴.
+        return ResponseEntity.ok(resultList);
+	}
+	
+	@RequestMapping(value = "/initRCByOrganization.do")
+	public String initRCByOrganization(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+
+			params.put("userId", sessionVO.getUserId());
+			EgovMap result =  salesCommonService.getUserInfo(params);
+
+			model.put("orgCode", result.get("orgCode"));
+			model.put("grpCode", result.get("grpCode"));
+			model.put("deptCode", result.get("deptCode"));
+			model.put("memCode", result.get("memCode"));
+		}
+
+		return "payment/payment/rentalCollectionByOrganization";
+	}
+
+	@RequestMapping(value = "/selectRCByOrganizationList", method = RequestMethod.GET)
+	public ResponseEntity<List<RentalCollectionByOrganizationVO>> selectRCByOrganizationList(@ModelAttribute("searchVO")RentalCollectionByOrganizationVO searchVO
+				, @RequestParam Map<String, Object> params, ModelMap model) {
+
+        // 조회.
+        List<RentalCollectionByOrganizationVO> resultList = searchPaymentService.searchRCByOrganizationList(searchVO);
 
         // 조회 결과 리턴.
         return ResponseEntity.ok(resultList);

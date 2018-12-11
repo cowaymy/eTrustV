@@ -1437,4 +1437,73 @@
        </if> -->
     </select>
 
+
+        <select id="searchRCByOrganizationList" parameterType="rentalCollectionByOrganizationVO" resultType="egovMap">
+       SELECT A.SALES_ORD_ID SALES_ORD_ID,
+       A.SALES_ORD_NO SALES_ORD_NO,
+       F.CODE ORD_STUS,
+       (A.PV_MONTH || '/' || PV_YEAR) NET_MONTH ,
+       C.NAME CUST_NAME,
+       G.STK_DESC STK_DESC,
+       H.CODE_NAME PAY_MODE,
+       TO_CHAR(ROUND(I.ACC_DEBT_SUB_CURR_OTSTND_AGING, 2),'fm999999999999999990.00')  AGING_MONTH,
+       TO_CHAR(ROUND(SUM(J.RENT_AMT), 2),'fm999999999999999990.00')  OUTSTANDING_AMT,
+    <!--   ROUND(I.ACC_DEBT_SUB_CURR_OTSTND_AGING, 2)  AGING_MONTH,
+       ROUND(SUM(J.RENT_AMT), 2)  OUTSTANDING_AMT,-->
+       E.MEM_CODE HP_CODE,
+       A.DEPT_CODE DEPT_CODE,
+       A.GRP_CODE GRP_CODE
+        FROM SAL0001D A
+        LEFT JOIN SAL0002D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+        LEFT JOIN SAL0029D C ON C.CUST_ID = A.CUST_ID
+        LEFT JOIN SAL0074D D ON D.SALES_ORD_ID = A.SALES_ORD_ID
+        LEFT JOIN ORG0001D E ON E.MEM_ID = A.MEM_ID
+        LEFT JOIN SYS0038M F ON F.STUS_CODE_ID = A.STUS_CODE_ID
+        LEFT JOIN SYS0026M G ON G.STK_ID = B.ITM_STK_ID
+        LEFT JOIN SYS0013M H ON H.CODE_ID = D.MODE_ID
+        LEFT JOIN PAY0053S I ON I.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
+        LEFT JOIN PAY0022D J ON J.RENT_SO_ID = A.SALES_ORD_ID
+        LEFT JOIN (SELECT * from SAL0046D SM
+                        where SM.INSTALL_ENTRY_ID = (SELECT MAX(aa.INSTALL_ENTRY_ID)
+                                               from SAL0046D aa
+                                                where
+                                                aa.SALES_ORD_ID = SM.SALES_ORD_ID))SM
+                                                on (SM.SALES_ORD_ID = A.SALES_ORD_ID)
+        WHERE 1=1
+        <if test="orgCode != '' ">
+           AND A.ORG_CODE = #{orgCode}
+       </if>
+       <if test="grpCode != '' ">
+           AND A.GRP_CODE = #{grpCode}
+       </if>
+       <if test="deptCode != '' ">
+           AND A.DEPT_CODE = #{deptCode}
+       </if>
+        <if test="memCode != '' ">
+           AND E.MEM_CODE = #{memCode}
+       </if>
+       <if test="cmbAppType != '' and cmbAppType != 0">
+           AND A.APP_TYPE_ID = #{cmbAppType}
+       </if>
+       <if test="cmbCustTypeId != '' ">
+           AND C.TYPE_ID = #{cmbCustTypeId}
+       </if>
+       <if test="cmbInstallStatus != '' and cmbInstallStatus != 0">
+           AND SM.STUS_CODE_ID = #{cmbInstallStatus}
+       </if>
+
+       GROUP BY A.SALES_ORD_ID,
+       A.SALES_ORD_NO ,
+       F.CODE ,
+       (A.PV_MONTH || '/' || PV_YEAR) ,
+       C.NAME ,
+       G.STK_DESC ,
+       H.CODE_NAME ,
+       I.ACC_DEBT_SUB_CURR_OTSTND_AGING ,
+       E.MEM_CODE ,
+       A.DEPT_CODE ,
+       A.GRP_CODE
+
+    </select>
+
 </mapper>

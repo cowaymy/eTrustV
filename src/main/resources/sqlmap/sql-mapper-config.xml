@@ -34,6 +34,8 @@
 		<!-- RentalCollectionByBS Search -->
         <typeAlias alias="rentalCollectionByBSSearchVO" type="com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO"/>
         <typeAlias alias="rentalCollectionByBSListVO" type="com.coway.trust.biz.payment.payment.service.RentalCollectionByBSListVO"/>
+        <typeAlias alias="rentalCollectionByOrganizationVO" type="com.coway.trust.biz.payment.payment.service.RentalCollectionByOrganizationVO"/>
+
 
 		<!-- Sales PST -->
 		<typeAlias alias="pstRequestVO" type="com.coway.trust.biz.sales.pst.PSTRequestDOVO"/>

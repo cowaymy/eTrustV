@@ -23,6 +23,7 @@ import com.coway.trust.biz.common.impl.CommonMapper;
 import com.coway.trust.biz.payment.payment.service.PayDHistoryVO;
 import com.coway.trust.biz.payment.payment.service.PayDVO;
 import com.coway.trust.biz.payment.payment.service.RentalCollectionByBSSearchVO;
+import com.coway.trust.biz.payment.payment.service.RentalCollectionByOrganizationVO;
 import com.coway.trust.biz.payment.payment.service.SearchPaymentService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementService;
 import com.coway.trust.biz.payment.reconciliation.service.CRCStatementVO;
@@ -774,6 +775,11 @@ public class SearchPaymentServiceImpl extends EgovAbstractServiceImpl implements
 	@Override
 	public List<RentalCollectionByBSSearchVO> searchRCByBSAgingMonthList(RentalCollectionByBSSearchVO searchVO) {
 		return searchPaymentMapper.searchRCByBSAgingMonthList(searchVO);
+	}
+
+	@Override
+	public List<RentalCollectionByOrganizationVO> searchRCByOrganizationList(RentalCollectionByOrganizationVO searchVO) {
+		return searchPaymentMapper.searchRCByOrganizationList(searchVO);
 	}
 
 }
