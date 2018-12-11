@@ -982,30 +982,12 @@
 		CTRL_SEQ
 	</select>
 
-	<select id="selectClmTyp" parameterType="Map" resultType="egovMap">
-		SELECT A.CODE CODE_ID,
-		A.CODE_NAME
-		FROM SYS0013M A
-		WHERE A.CODE_MASTER_ID = '404'
-		AND A.DISAB = 0
-		ORDER BY CODE_ID
-	</select>
-
 	<select id="selectClmStat" parameterType="Map" resultType="egovMap">
 		SELECT A.STUS_CODE_ID CODE_ID,
 		A.NAME CODE_NAME
 		FROM SYS0038M A
 		WHERE A.STUS_CODE_ID IN ('1', '4', '8')
 		ORDER BY A.STUS_CODE_ID
-	</select>
-
-	<select id="selectYesNo" parameterType="Map" resultType="egovMap">
-		SELECT A.CODE CODE_ID,
-		A.CODE_NAME
-		FROM SYS0013M A
-		WHERE A.CODE_MASTER_ID = '405'
-		AND A.DISAB = 0
-		ORDER BY CODE_ID
 	</select>
 
 	<select id="selectListing" parameterType="Map" resultType="egovMap">
