@@ -363,7 +363,7 @@ function fnSupplyPlanHeader() {
 									[
 									 {
 										 dataField : result.selectSupplyPlanHeader[0].m0,
-										 headerText : "M + 0",
+										 headerText : result.selectScmTotalInfo[0].m0Mon,
 										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
@@ -376,7 +376,7 @@ function fnSupplyPlanHeader() {
 										 formatString : "#,##0"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m1,
-										 headerText : "M + 1",
+										 headerText : result.selectScmTotalInfo[0].m1Mon,
 										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
@@ -389,7 +389,7 @@ function fnSupplyPlanHeader() {
 										 formatString : "#,##0"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m2,
-										 headerText : "M + 2",
+										 headerText : result.selectScmTotalInfo[0].m2Mon,
 										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
@@ -402,7 +402,7 @@ function fnSupplyPlanHeader() {
 										 formatString : "#,##0"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m3,
-										 headerText : "M + 3",
+										 headerText : result.selectScmTotalInfo[0].m3Mon,
 										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
@@ -415,7 +415,7 @@ function fnSupplyPlanHeader() {
 										 formatString : "#,##0"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m4,
-										 headerText : "M + 4",
+										 headerText : result.selectScmTotalInfo[0].m4Mon,
 										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {

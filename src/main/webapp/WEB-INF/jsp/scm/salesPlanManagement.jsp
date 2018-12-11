@@ -342,7 +342,7 @@ function fnSalesPlanHeader() {
 									[
 									 {
 										 dataField : result.selectSalesPlanHeader[0].m0OrdSum,
-										 headerText : "M0 Order",
+										 headerText : result.selectScmTotalInfo[0].m0Mon + " Order",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
@@ -350,7 +350,7 @@ function fnSalesPlanHeader() {
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m0,
-										 headerText : "M0",
+										 headerText : result.selectScmTotalInfo[0].m0Mon,
 										 visible : false,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
@@ -358,7 +358,7 @@ function fnSalesPlanHeader() {
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m0Exp,
-										 headerText : "M0 Exp",
+										 headerText : result.selectScmTotalInfo[0].m0Mon + " Exp",
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
@@ -366,7 +366,7 @@ function fnSalesPlanHeader() {
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m1,
-										 headerText : "M+1",
+										 headerText : result.selectScmTotalInfo[0].m1Mon,
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
@@ -374,7 +374,7 @@ function fnSalesPlanHeader() {
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m2,
-										 headerText : "M+2",
+										 headerText : result.selectScmTotalInfo[0].m2Mon,
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
@@ -382,7 +382,7 @@ function fnSalesPlanHeader() {
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m3,
-										 headerText : "M+3",
+										 headerText : result.selectScmTotalInfo[0].m3Mon,
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
@@ -390,7 +390,7 @@ function fnSalesPlanHeader() {
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m4,
-										 headerText : "M+4",
+										 headerText : result.selectScmTotalInfo[0].m4Mon,
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
