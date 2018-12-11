@@ -189,6 +189,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		//	2-3. psi #4 : Before Week Supply Plan
 		psi4InsParams.put("planId", planId);
 		psi4InsParams.put("planYear", planYear);
+		psi4InsParams.put("planMonth", planMonth);
 		psi4InsParams.put("planWeek", planWeek);
 		psi4InsParams.put("cdc", cdc);
 		psi4InsParams.put("befWeekYear", befWeekYear);
@@ -212,9 +213,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		
 		params.put("psiId", 1);	List<EgovMap> selectPsi1	= supplyPlanManagementMapper.selectPsi1(params);		//	psi1
 		params.put("psiId", 2);	List<EgovMap> selectPsi2	= supplyPlanManagementMapper.selectEachPsi(params);		//	psi2
+		params.put("psiId", 4);	List<EgovMap> selectPsi4	= supplyPlanManagementMapper.selectEachPsi(params);		//	psi4
 		params.put("psiId", 5);	List<EgovMap> selectPsi5	= supplyPlanManagementMapper.selectEachPsi(params);		//	psi5
 		LOGGER.debug("selectPsi1 : {}", selectPsi1);
 		LOGGER.debug("selectPsi2 : {}", selectPsi2);
+		LOGGER.debug("selectPsi4 : {}", selectPsi4);
 		LOGGER.debug("selectPsi5 : {}", selectPsi5);
 		
 		//	psi2, psi5
@@ -227,6 +230,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		int safetyStock	= 0;
 		//int loadingQty	= 0;
 		int basicQty	= 0;
+		int earlyGr		= 0;
 		int overdue		= 0;
 		int totLeadTm	= leadTm + planWeekTh + fromPlanToPoSpltCnt;	//	stock의 leadTm, 수립주차(planWeek), 수립주차의 해당월의 주차순서, leadTm 내의 스플릿주차 등을 감안한 최종 leadTm
 		//	selectPsi1.size() == selectPsi2.size() == selectPsi5.size()
@@ -245,6 +249,10 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			//loadingQty	= Integer.parseInt(selectPsi1.get(i).get("loadingQty").toString());
 			basicQty	= Integer.parseInt(selectPsi5.get(i).get("overdue").toString());	//	psi1의 overdue는 전월 기초재고
 			overdue		= Integer.parseInt(selectPsi1.get(i).get("overdue").toString());	//	psi5의 overdue는 전월 Overdue
+			earlyGr		= Integer.parseInt(selectPsi4.get(i).get("overdue").toString());	//	psi4의 overdue는 수립월 기준 early gr
+			
+			//	basicQty다시 계산
+			basicQty	= basicQty - overdue - earlyGr;
 			
 			psi1UpdParams.put("planId", planId);
 			psi1UpdParams.put("psiId", 1);
@@ -348,14 +356,16 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
 					if ( 1 == m0 ) {
-						psi5	= basicQty - overdue;
+						//psi5	= basicQty - overdue - earlyGr;
+						psi5	= basicQty;
 					}
 					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
 					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 					psi5	= psi5 - psi1 + psi3;
 				} else {
 					if ( 1 == m0 ) {
-						psi5	= basicQty - overdue;
+						//psi5	= basicQty - overdue - earlyGr;
+						psi5	= basicQty;
 					}
 					if ( 0 > psi1 + psi2 - psi5 ) {
 						psi3	= 0;
@@ -621,10 +631,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			LOGGER.debug("psi2UpdParams : {}", psi2UpdParams);
 			LOGGER.debug("psi3UpdParams : {}", psi3UpdParams);
 			LOGGER.debug("psi5UpdParams : {}", psi5UpdParams);
+			psi5UpdParams.put("basicQty", basicQty);	//	마지막에 basicQty 수정
 			supplyPlanManagementMapper.updateSupplyPlanDetailPsi1(psi1UpdParams);
-			supplyPlanManagementMapper.updateSupplyPlanDetailPsi235(psi2UpdParams);
-			supplyPlanManagementMapper.updateSupplyPlanDetailPsi235(psi3UpdParams);
-			supplyPlanManagementMapper.updateSupplyPlanDetailPsi235(psi5UpdParams);
+			supplyPlanManagementMapper.updateSupplyPlanDetailPsi23(psi2UpdParams);
+			supplyPlanManagementMapper.updateSupplyPlanDetailPsi23(psi3UpdParams);
+			supplyPlanManagementMapper.updateSupplyPlanDetailPsi5(psi5UpdParams);
 		}
 		
 		return	saveCnt;
