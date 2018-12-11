@@ -96,6 +96,7 @@ public class AgreementController {
         memInfo.put("memLvl", item.get("memlvl"));
         memInfo.put("stus", item.get("stus"));
         memInfo.put("signDt", item.get("cnfmdt"));
+        memInfo.put("promoDt", item.get("promoDt"));
 
         // getMemHPpayment
         if("1".equals(params.get("memType"))) {

@@ -12,7 +12,8 @@
             B.GRPCODE grpCode,
             B.ORGCODE orgCode,
             E.ROLE_DESC userRole,
-            F.NAME status
+            F.NAME status,
+            NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') promoDt
         FROM ORG0001D A
         INNER JOIN (
             SELECT
@@ -79,7 +80,8 @@
                     WHEN C.UPD_DT >= TO_DATE('2017/05/02', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/05/01', 'YYYY/MM/DD') THEN '201704'
                     WHEN C.UPD_DT >= TO_DATE('2018/05/01', 'YYYY/MM/DD') AND C.UPD_DT < TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201805'
                     WHEN C.UPD_DT >= TO_DATE('2018/06/09', 'YYYY/MM/DD') THEN '201806'
-                END AS CNFMDT
+                END AS CNFMDT,
+                NVL(TO_CHAR(A.PROMO_DT, 'DD/MM/YYYY'), '-') PROMO_DT
             FROM ORG0001D A
             INNER JOIN ORG0005D B
                 ON A.MEM_ID = B.MEM_ID

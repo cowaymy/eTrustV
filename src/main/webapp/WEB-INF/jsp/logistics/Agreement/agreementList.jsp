@@ -109,6 +109,12 @@ $(document).ready(function() {
 
                 //userAgreement
                 $("#userAgreement").val(result.signDt);
+
+                $("#promoDt").val(result.promoDt);
+
+                if(result.memLvl == 4) {
+                    $("#startDt").attr("disabled", true);
+                }
             }
 
             if(memType == 2) {
@@ -128,6 +134,30 @@ $(document).ready(function() {
         $("#orgCode").attr("disabled", true);
         $("#grid_wrap_memList").attr("hidden", true);
     }
+
+    /*$("#startDt").blur(function() {
+        console.log($("#startDt").val());
+    });*/
+    $("#startDt").on("change", function() {
+        console.log($("#startDt").val());
+
+        var day = $("#startDt").val().substring(0, 2);
+        var mth = $("#startDt").val().substring(3, 5);
+        var year = $("#startDt").val().substring(6);
+
+        var expDay = "";
+        var expMth = "";
+
+        if(mth <= "06") {
+            expDay = "30";
+            expMth = "06";
+        } else {
+            expDay = "31";
+            expMth = "12";
+        }
+
+        $("#endDt").val(expDay + "/" + expMth + "/" + year);
+    });
 });
 
 function fn_onChgMemType() {
@@ -219,6 +249,31 @@ function fn_downloadAgreement() {
 
     if($("#memTypeCom").val() == "1") {
         // HP Download
+        if($("#memLevelCom").val() < "4") {
+            if(FormUtil.checkReqValue($("#startDt")) && FormUtil.checkReqValue($("#startDt"))) {
+                Common.alert("Please key in contract start date.");
+                return false;
+            }
+        }
+
+        if($("startDt").val() != "") {
+            var day = $("#startDt").val().substring(0, 2);
+            var mth = $("#startDt").val().substring(3, 5);
+            var year = $("#startDt").val().substring(6);
+
+            var startDt = new Date(year, mth - 1, day);
+
+            // 2018-12-11 - LaiKW - HM, SM, GM e-Agreement commence start date @ 2018-07-01
+            var d = new Date(2018, 06, 01);
+            console.log(d);
+
+            var startDt = new Date(year, mth - 1, day);
+
+            if(startDt < d) {
+                Common.alert("Please refer to Sales Planning or Sales Support for scanned copy.");
+                return false;
+            }
+        }
 
         Common.ajax("GET", "/logistics/agreement/getMemberInfo", {memID : code, memType : $("#memTypeCom").val()}, function(result) {
             console.log(result);
@@ -228,8 +283,16 @@ function fn_downloadAgreement() {
             	signDt = "201604";
             }
 
-            $("#reportFileName").val("/logistics/HPAgreement_" + signDt + ".rpt");
-            $("#reportDownFileName").val("HPAgreement_" + code);
+            if($("#memLevelCom").val == "4") {
+                $("#reportFileName").val("/logistics/HPAgreement_" + signDt + ".rpt");
+                $("#reportDownFileName").val("HPAgreement_" + code);
+            } else {
+            	$("#v_contractStartDt").val($("#startDt").val().substring(6) + "/" + $("#startDt").val().substring(3, 5)+ "/" + $("#startDt").val().substring(0, 2));
+            	$("#v_contractEndDt").val($("#endDt").val().substring(6) + "/" + $("#endDt").val().substring(3, 5)+ "/" + $("#endDt").val().substring(0, 2));
+
+                $("#reportFileName").val("/logistics/HMAgreement_20180704.rpt");
+                $("#reportDownFileName").val("Manager_Agreement_" + code);
+            }
 
             Common.report("agreementReport", option);
 
@@ -303,6 +366,10 @@ function createAUIGrid() {
         headerText : "Status",
         editable : false,
         width : 130
+    }, {
+        dataField : "promoDt",
+        editable : false,
+        visible : false
     } ]; //visible : false
 
     var gridPros = {
@@ -358,10 +425,14 @@ function createAUIGrid() {
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />
 
     <input type="hidden" id="v_memCode" name="v_memCode" value="" />
+    <input type="hidden" id="v_contractStartDt" name="v_contractStartDt" value="" />
+    <input type="hidden" id="v_contractEndDt" name="v_contractEndDt" value="" />
 </form>
 
 <section class="search_table"><!-- search_table start -->
 <form action="#" id="searchForm" method="post">
+
+<input type="hidden" id="promoDt" name="promoDt" value="" />
 
 <table class="type1"><!-- table start -->
 <caption>table</caption>
@@ -435,6 +506,14 @@ function createAUIGrid() {
            <option value="${list.brnchId}">${list.branchCode} - ${list.branchName}</option>
         </c:forEach>
     </select>
+    </td>
+    <th scope="row">Contract Period</th>
+    <td>
+        <div class="date_set w100p"><!-- date_set start -->
+            <p><input type="text" title="Contract Start Date" placeholder="DD/MM/YYYY" class="j_date" id="startDt" name="startDt"/></p>
+            <span><spring:message code="webInvoice.to" /></span>
+            <p><input type="text" title="Contract End Date" placeholder="DD/MM/YYYY" class="j_date" id="endDt" name="endDt" disabled/></p>
+        </div><!-- date_set end -->
     </td>
     <th scope="row" id="versionLbl">Version</th>
     <td  id="versionCol">
