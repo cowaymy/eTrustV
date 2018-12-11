@@ -544,6 +544,11 @@ function saveAdvPayment(){
 	        return;
 	    }
 
+        if($("#cashAmount").val() > 200000 ){
+            Common.alert("Amount exceed RM 200000");
+            return;
+        }
+
 		if(cashBankType == "2730"){
 			if(cashVAAccount == "" ){
 				Common.alert("<spring:message code='pay.alert.noVAAccount'/>");
@@ -598,6 +603,11 @@ function saveAdvPayment(){
             return;
         }
 
+        if($("#chequeAmount").val() > 200000 ){
+            Common.alert("Amount exceed RM 200000");
+            return;
+        }
+
 		if(chequeBankType == "2730"){
             if(chequeVAAccount == "" ){
                 Common.alert("<spring:message code='pay.alert.noVAAccount'/>");
@@ -649,6 +659,11 @@ function saveAdvPayment(){
 
 		if(FormUtil.checkReqValue($("#onlineAmount")) ||$("#onlineAmount").val() <= 0 ){
             Common.alert("<spring:message code='pay.alert.noAmount'/>");
+            return;
+        }
+
+        if($("#onlineAmount").val() > 200000 ){
+            Common.alert("Amount exceed RM 200000");
             return;
         }
 

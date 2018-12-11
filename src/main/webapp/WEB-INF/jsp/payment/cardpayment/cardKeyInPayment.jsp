@@ -538,6 +538,11 @@ function savePayment(){
         return;
     }
 
+    if($("#keyInAmount").val() > 200000 ){
+        Common.alert("Amount exceed RM 200000");
+        return;
+    }
+
 	//카드번호 체크
 	if(FormUtil.checkReqValue($("#keyInCardNo1")) ||
 			FormUtil.checkReqValue($("#keyInCardNo2")) ||
