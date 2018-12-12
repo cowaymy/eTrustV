@@ -86,6 +86,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		int leadTm		= 0;
 		int splitCnt	= 0;
 		int crtUserId	= 0;
+		int planFstWeek	= 0;	int planFstSpltWeek	= 0;
 		//int fstWeek		= 0;	int lstWeek		= 0;
 		String fstSplitYn	= "";	String lstSplitYn	= "";
 		int m0WeekCnt	= 0;	int m1WeekCnt	= 0;	int m2WeekCnt	= 0;	int m3WeekCnt	= 0;	int m4WeekCnt	= 0;
@@ -118,6 +119,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		m3WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m3WeekCnt").toString());
 		m4WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m4WeekCnt").toString());
 		planWeekSpltCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeekSpltCnt").toString());
+		planFstWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planFstWeek").toString());
+		planFstSpltWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planFstSpltWeek").toString());
 		
 		//	1. insert Sales Plan Master
 		Map<String, Object> mstParams = new HashMap<String, Object>();
@@ -170,10 +173,17 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		listParams.put("year", befWeekYear);
 		listParams.put("month", befWeekMonth);
 		listParams.put("week", befWeekWeek);
+		listParams.put("planYear", planYear);
+		listParams.put("planMonth", planMonth);
+		listParams.put("planWeek", planWeek);
 		listParams.put("team", team);
 		listParams.put("endDt", endDt);
 		//LOGGER.debug("selectBefWeekList listParams : {}", listParams);
 		List<EgovMap> selectBefWeekList		= salesPlanManagementMapper.selectSalesPlanForUpdate(listParams);
+		
+		List<EgovMap> selectThisMonthOrder	= salesPlanManagementMapper.selectThisMonthOrder(listParams);
+		LOGGER.debug("selectThisMonthOrder : {}", selectThisMonthOrder);
+		
 		listParams.put("year", planYear);
 		listParams.put("month", planMonth);
 		listParams.put("week", planWeek);
@@ -181,10 +191,11 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		//LOGGER.debug("selectPlanWeekList listParams : {}", listParams);
 		List<EgovMap> selectPlanWeekList	= salesPlanManagementMapper.selectSalesPlanForUpdate(listParams);
 		LOGGER.debug("selectPlanWeekList listParams : {}", listParams);
-		List<EgovMap> selectThisMonthOrder	= salesPlanManagementMapper.selectThisMonthOrder(listParams);
+		
 		LOGGER.debug("selectBefWeekList : {}", selectBefWeekList);
 		LOGGER.debug("selectPlanWeekList : {}", selectPlanWeekList);
-		LOGGER.debug("selectThisMonthOrder : {}", selectThisMonthOrder);
+		
+		
 		try {
 			if ( 0 == selectBefWeekList.size() ) {
 				LOGGER.debug("Sales Plan Error");
@@ -192,136 +203,126 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 			}
 			
 			int m0OrdSum	= 0;	int	m0Sum	= 0;	int m1Sum	= 0;	int m2Sum	= 0;	int m3Sum	= 0;	int m4Sum	= 0;
-			int	weekQty	= 0;
+			int	weekQty		= 0;
+			String stkTypeId	= "";
+			
 			//	every stock
 			for ( int i = 0 ; i < selectBefWeekList.size() ; i++ ) {
 				//planDtlId	= Integer.parseInt(selectBefWeekList.get(i).get("planDtlId").toString());
 				planDtlId	= Integer.parseInt(selectPlanWeekList.get(i).get("planDtlId").toString());	//	must using selectPlanWeekList
+				stkTypeId	= selectBefWeekList.get(i).get("stkTypeId").toString();	//	필터류들을 별도로 생성하기 위해서
 				updParams.put("planDtlId", planDtlId);
 				m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;
+				
+				//	수립주차의 월 / 수립전주차의 월 비교
 				if ( planMonth == befWeekMonth ) {
 					LOGGER.debug("planMonth == befWeekMonth : " + planMonth + ", " + befWeekMonth);
 					String intToStrFieldCnt1	= "";	int iLoopDataFieldCnt1	= 1;	//	전주의 실적을 가져오기 위해서 계산하는 주차변수
 					String intToStrFieldCnt2	= "";	int iLoopDataFieldCnt2	= 1;	//	이번주의 실적을 저장하기 위해서 계산하는 주차변수
-					/*if ( 2 == planWeekSpltCnt ) {
-						//	planWeek가 해당 월의 가장 마지막 주이고, planWeek 가 split week인 경우
-						if ( 4 == m0WeekCnt ) {
-							iLoopDataFieldCnt1	= 5;
-						} else if ( 5 == m0WeekCnt ) {
-							iLoopDataFieldCnt1	= 6;
-						} else if ( 6 == m0WeekCnt ) {
-							iLoopDataFieldCnt1	= 7;
+					
+					//	stkTypeId = 62(필터) 확인
+/*					if ( "62".equals(stkTypeId) ) {
+						//	Filter
+						if ( planFstWeek == planFstSpltWeek ) {
+							//	첫주차가 스플릿 주차가 아닌 경우
+							for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
+								
+							}
 						} else {
-							LOGGER.debug("Same : m0WeekCnt is wrong");
+							//	첫주차가 스플릿 주차인 경우
 						}
-					} else {
-						LOGGER.debug("Same : plan calendar is wroong");
-					}
-					LOGGER.debug("Same : Start iLoopDataFieldCnt1 : " + iLoopDataFieldCnt1 + ", planWeekSpltCnt : " + planWeekSpltCnt + ", m0WeekCnt : " + m0WeekCnt);*/
-					//	3.1 m0
-					for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
-						intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
-						intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-						if ( 1 == intToStrFieldCnt1.length() ) {
-							intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
-						}
-						if ( 1 == intToStrFieldCnt2.length() ) {
-							intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-						}
-						//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-						
-						//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
-						if ( m0 <= planWeekTh ) {
-							//	selectThisMonthOrder 결과는 오직 1row
-							//	수립주차기준 과거주차
-							weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt1).toString());
-							m0OrdSum	= m0OrdSum + weekQty;
-						} else {
-							//	수립주차기준 현재+미래주차(수립주차포함)
-							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
-							m0Sum	= m0Sum + weekQty;
-						}
-						//weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
-						//m0Sum	= m0Sum + weekQty;
-						updParams.put("w" + intToStrFieldCnt2, weekQty);
-						iLoopDataFieldCnt1++;
-						iLoopDataFieldCnt2++;
-					}
-					updParams.put("m0", m0Sum);
-					updParams.put("m0OrdSum", m0OrdSum);
-					
-					//	3.2 m1
-					for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
-						intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
-						intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-						if ( 1 == intToStrFieldCnt1.length() ) {
-							intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
-						}
-						if ( 1 == intToStrFieldCnt2.length() ) {
-							intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-						}
-						weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
-						m1Sum	= m1Sum + weekQty;
-						updParams.put("w" + intToStrFieldCnt2, weekQty);
-						iLoopDataFieldCnt1++;
-						iLoopDataFieldCnt2++;
-					}
-					updParams.put("m1", m1Sum);
-					
-					//	3.3 m2
-					for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
-						intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
-						intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-						if ( 1 == intToStrFieldCnt1.length() ) {
-							intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
-						}
-						if ( 1 == intToStrFieldCnt2.length() ) {
-							intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-						}
-						weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
-						m2Sum	= m2Sum + weekQty;
-						updParams.put("w" + intToStrFieldCnt2, weekQty);
-						iLoopDataFieldCnt1++;
-						iLoopDataFieldCnt2++;
-					}
-					updParams.put("m2", m2Sum);
-					
-					//	3.4 m3
-					for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
-						intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
-						intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-						if ( 1 == intToStrFieldCnt1.length() ) {
-							intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
-						}
-						if ( 1 == intToStrFieldCnt2.length() ) {
-							intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-						}
-						weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
-						m3Sum	= m3Sum + weekQty;
-						updParams.put("w" + intToStrFieldCnt2, weekQty);
-						iLoopDataFieldCnt1++;
-						iLoopDataFieldCnt2++;
-					}
-					updParams.put("m3", m3Sum);
-					
-					/*if ( 2 == planWeekSpltCnt ) {
-						//	빈 주차 채우기
-						int totWeekCnt	= m0WeekCnt + m1WeekCnt + m2WeekCnt + m3WeekCnt;
-						for ( int remain = totWeekCnt + 1 ; remain < 31 ; remain++ ) {
-							updParams.put("w" + remain, 0);
-						}
-						updParams.put("m4", 0);
 					} else {*/
+						//	Except Filter
+						//	3.1 m0
+						for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
+							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
+							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
+							if ( 1 == intToStrFieldCnt1.length() ) {
+								intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
+							}
+							if ( 1 == intToStrFieldCnt2.length() ) {
+								intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
+							}
+							//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+							
+							//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
+							if ( m0 <= planWeekTh ) {
+								//	selectThisMonthOrder 결과는 오직 1row
+								//	수립주차기준 과거주차
+								weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt1).toString());
+								m0OrdSum	= m0OrdSum + weekQty;
+							} else {
+								//	수립주차기준 현재+미래주차(수립주차포함)
+								weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+								m0Sum	= m0Sum + weekQty;
+							}
+							//weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+							//m0Sum	= m0Sum + weekQty;
+							updParams.put("w" + intToStrFieldCnt2, weekQty);
+							iLoopDataFieldCnt1++;
+							iLoopDataFieldCnt2++;
+						}
+						updParams.put("m0", m0Sum);
+						updParams.put("m0OrdSum", m0OrdSum);
+						
+						//	3.2 m1
+						for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
+							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
+							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
+							if ( 1 == intToStrFieldCnt1.length() ) {
+								intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
+							}
+							if ( 1 == intToStrFieldCnt2.length() ) {
+								intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
+							}
+							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+							m1Sum	= m1Sum + weekQty;
+							updParams.put("w" + intToStrFieldCnt2, weekQty);
+							iLoopDataFieldCnt1++;
+							iLoopDataFieldCnt2++;
+						}
+						updParams.put("m1", m1Sum);
+						
+						//	3.3 m2
+						for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
+							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
+							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
+							if ( 1 == intToStrFieldCnt1.length() ) {
+								intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
+							}
+							if ( 1 == intToStrFieldCnt2.length() ) {
+								intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
+							}
+							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+							m2Sum	= m2Sum + weekQty;
+							updParams.put("w" + intToStrFieldCnt2, weekQty);
+							iLoopDataFieldCnt1++;
+							iLoopDataFieldCnt2++;
+						}
+						updParams.put("m2", m2Sum);
+						
+						//	3.4 m3
+						for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
+							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
+							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
+							if ( 1 == intToStrFieldCnt1.length() ) {
+								intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
+							}
+							if ( 1 == intToStrFieldCnt2.length() ) {
+								intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
+							}
+							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+							m3Sum	= m3Sum + weekQty;
+							updParams.put("w" + intToStrFieldCnt2, weekQty);
+							iLoopDataFieldCnt1++;
+							iLoopDataFieldCnt2++;
+						}
+						updParams.put("m3", m3Sum);
+						
 						//	3.5 m4
 						for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-						//	if ( 1 == intToStrFieldCnt1.length() ) {
-						//		intToStrFieldCnt1	= "0" + intToStrFieldCnt1;
-						//	}
-						//	if ( 1 == intToStrFieldCnt2.length() ) {
-						//		intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-						//	}
 							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 							m4Sum	= m4Sum + weekQty;
 							updParams.put("w" + intToStrFieldCnt2, weekQty);
