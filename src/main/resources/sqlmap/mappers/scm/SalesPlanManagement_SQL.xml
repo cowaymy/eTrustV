@@ -402,6 +402,7 @@ SELECT #{planId}
 SELECT B.PLAN_ID
      , B.PLAN_DTL_ID
      , A.STOCK_CODE
+     , C.STK_TYPE_ID
      , NVL(B.W01, 0) AS W01
      , NVL(B.W02, 0) AS W02
      , NVL(B.W03, 0) AS W03
@@ -483,6 +484,7 @@ SELECT B.PLAN_ID
                       AND Z.PLAN_WEEK = #{week}
                       AND Z.TEAM = #{team}
                    ) B ON (A.STOCK_CODE = B.STOCK_CODE)
+  LEFT OUTER JOIN SYS0026M C ON (A.STOCK_CODE = C.STK_CODE)
  WHERE A.STUS_CODE_ID = 1
    AND A.IS_TRGET = 1
    AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> #{endDt}
@@ -518,16 +520,45 @@ SELECT A.STOCK_CODE
                                 , TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AS SCM_START
                                 , TO_CHAR(SCM_WEEK_END, 'YYYYMMDD') AS SCM_END
                              FROM SCM0018M
-                            WHERE SCM_YEAR = #{year} AND SCM_MONTH = #{month}
-                              AND SCM_WEEK IN (CASE WHEN #{month} = 12 THEN (SELECT SCM_WEEK FROM SCM0018M WHERE SCM_YEAR = #{year} AND SCM_MONTH = #{month} AND SCM_WEEK <![CDATA[ < ]]> #{week} AND SCM_WEEK != 1)
-                                                                       ELSE (SELECT SCM_WEEK FROM SCM0018M WHERE SCM_YEAR = #{year} AND SCM_MONTH = #{month} AND SCM_WEEK <![CDATA[ < ]]> #{week})
-                                                                       END)
+                            WHERE SCM_YEAR = #{planYear} AND SCM_MONTH = #{planMonth}
+                              AND SCM_WEEK IN (SELECT SCM_WEEK FROM SCM0018M WHERE SCM_YEAR = #{planYear} AND SCM_MONTH = #{planMonth} AND SCM_WEEK <![CDATA[ < ]]> #{planWeek} AND SCM_WEEK != 1)
                            ) X
                    ) B ON (A.STOCK_CODE = B.STOCK_CODE)
  WHERE A.STUS_CODE_ID = 1
    AND A.IS_TRGET = 1
    AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> #{endDt}
  GROUP BY A.STOCK_CODE
+ ORDER BY A.STOCK_CODE
+</select>
+<select id="selectFilterPlan" parameterType="Map" resultType="egovMap">
+SELECT B.PLAN_ID
+     , B.PLAN_DTL_ID
+     , A.STOCK_CODE
+     , B.M0_QTY
+     , B.M1_QTY
+     , B.M2_QTY
+     , B.M3_QTY
+     , B.M4_QTY
+  FROM SCM0008M A
+  LEFT OUTER JOIN (
+                   SELECT Z.PLAN_ID
+                        , X.PLAN_DTL_ID
+                        , X.STOCK_CODE
+                        , NVL(Y.M0_QTY, 0) AS M0_QTY
+                        , NVL(Y.M1_QTY, 0) AS M1_QTY
+                        , NVL(Y.M2_QTY, 0) AS M2_QTY
+                        , NVL(Y.M3_QTY, 0) AS M3_QTY
+                        , NVL(Y.M4_QTY, 0) AS M4_QTY
+                     FROM SCM0001M Z
+                     LEFT OUTER JOIN SCM0002D X ON (Z.PLAN_ID = X.PLAN_ID)
+                     LEFT OUTER JOIN SCM0054S Y ON (Z.PLAN_YEAR = Y.PLAN_YEAR AND Z.PLAN_MONTH = Y.PLAN_MONTH AND Z.TEAM = Y.TEAM AND X.STOCK_CODE = Y.STOCK_CODE)
+                    WHERE Z.PLAN_YEAR = #{year}
+                      AND Z.PLAN_WEEK = #{week}
+                      AND Z.TEAM = #{team}
+                   ) B ON (A.STOCK_CODE = B.STOCK_CODE)
+ WHERE A.STUS_CODE_ID = 1
+   AND A.IS_TRGET = 1
+   AND TO_CHAR(A.END_DT, 'YYYYMMDD') <![CDATA[ >= ]]> #{endDt}
  ORDER BY A.STOCK_CODE
 </select>
 <delete id="deleteSalesPlanDetail" parameterType="Map">
