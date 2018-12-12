@@ -1032,7 +1032,7 @@ SELECT Extent1.MEM_ID MEM_ID  ,
                     JOIN PAY0007D Extent2   ON Extent2.BILL_MEM_ID = Extent1.MEM_ID
                     JOIN SYS0013M Extent3   ON Extent3.CODE_ID = Extent2.BILL_PAY_TYPE_ID
                     JOIN PAY0064D Extent4   ON ( Extent4.BILL_ID = Extent2.BILL_ID )
-                    AND ( Extent4.TYPE_ID IN ( 102,224,225,226 )
+                    AND ( Extent4.TYPE_ID IN ( 102,222,224,225,226 )
                    )
                     LEFT JOIN SYS0047M Extent5   ON Extent5.USER_ID = Extent4.CRT_USER_ID
               WHERE  Extent1.MEM_ID = #{MemberID}) Project1
