@@ -67,10 +67,10 @@ function validRequiredField(){
     }
 
 
-    if($("#cmbBranchCode").val() == null || $("#cmbBranchCode").val().length == 0){
+   /*  if($("#cmbBranchCode").val() == null || $("#cmbBranchCode").val().length == 0){
         valid = false;
         message += 'Please select Branch Code';
-   }
+   } */
 
     if(valid == false){
         Common.alert('<spring:message code="sal.alert.title.reportGenSummary" />' + DEFAULT_DELIMITER + message);
