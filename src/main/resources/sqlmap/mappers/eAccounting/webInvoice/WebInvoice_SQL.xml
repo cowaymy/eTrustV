@@ -1248,7 +1248,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
        ,'R1'
        ,TO_CHAR(TO_DATE(#{reqstDt}, 'DD/MM/YYYY'), 'YYYYMMDD')
        ,#{memAccName}
-       ,#{costCentr}
+       ,#{memAccId}
        ,#{costCentrName}
        ,#{netAmt}
     )
