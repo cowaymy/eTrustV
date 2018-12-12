@@ -23,9 +23,13 @@ function fn_report(type) {
     }
 
     var yyyyStr =  $("#yyyymmDate").val();
-    $("#V_YEAR").val( yyyyStr.substring(3,7));  //MM/YYYY
     var mmStr =  $("#yyyymmDate").val();
-    $("#V_MONTH").val( mmStr.substring(1,2)); //
+    var yyyyStrValue = yyyyStr.substring(3,7);
+    var mmStrValue = mmStr.substring(0,2);
+
+
+
+
 
     if(type == "PDF"){
         $("#viewType").val('PDF');
@@ -38,10 +42,49 @@ function fn_report(type) {
      if(dataForm.reportType.value=="3"){
         $("#reportFileName").val('/logistics/StockAMovementSummaryByModel_PDF.rpt');
         $("#reportDownFileName").val("StkAMovSumByModel_PDF_" + $("#V_YEAR").val());
+        $("#V_YEAR").val( yyyyStr.substring(3,7));  //YYYY
+        $("#V_MONTH").val( mmStr.substring(1,2)); //MM
+
     }
     else if(dataForm.reportType.value=="4"){
+
+    	var displayStkB = "0";
+    	var displayLocB = "0";
+
+         if(yyyyStrValue <= "2012"){
+
+        	 if(yyyyStrValue == "2012" && mmStrValue > "7"){
+
+        		 displayLocB = "0";
+
+        	 }else{
+
+        		 displayLocB = "1";
+        	 }
+
+         }
+
+
+         if(yyyyStrValue >= "2012"){
+
+             if(yyyyStrValue == "2012" && mmStrValue < "7"){
+
+                 displayStkB = "0";
+
+             }else{
+
+                 displayStkB = "1";
+             }
+
+         }
+
+
         $("#reportFileName").val('/logistics/StockBMovementSummaryByModel_PDF.rpt');
         $("#reportDownFileName").val("StkBMovSumByModel_PDF_" + $("#V_YEAR").val());
+        $("#V_YEAR").val( yyyyStr.substring(3,7));  //YYYY
+        $("#V_MONTH").val( mmStr.substring(1,2)); //MM
+        $("#V_DISPLAYSTKB").val( displayStkB );
+        $("#V_DISPLAYLOCB").val( displayLocB );
     }
 
 
@@ -50,7 +93,7 @@ function fn_report(type) {
     	return false;
     }
 
- // alert($("#V_YEAR").val());
+  //alert( mmStrValue + "/" + yyyyStrValue + " " + " DISPLAY :  "+ $("#V_DISPLAYSTKB").val() + "|" + $("#V_DISPLAYLOCB").val() );
 
     var option = {
         isProcedure : true
@@ -89,11 +132,13 @@ function fn_report(type) {
 
     <section class="search_table">
 
-        <form id="dataForm" name="searchForm">
+    <form id="dataForm" name="searchForm">
     <input type="hidden" id="reportFileName" name="reportFileName" value="/logistics/StockAMovSumByMonth_PDF.rpt" />
     <input type="hidden" id="viewType" name="viewType" />
     <input type="hidden" id="V_YEAR" name="V_YEAR" />
     <input type="hidden" id="V_MONTH" name="V_MONTH" />
+    <input type="hidden" id="V_DISPLAYSTKB" name="V_DISPLAYSTKB" />
+    <input type="hidden" id="V_DISPLAYLOCB" name="V_DISPLAYLOCB" />
     <input type="hidden" id="reportDownFileName" name="reportDownFileName"  />
 
 
