@@ -288,8 +288,8 @@ function fn_downloadAgreement() {
                 $("#reportFileName").val("/logistics/HPAgreement_" + signDt + ".rpt");
                 $("#reportDownFileName").val("HPAgreement_" + code);
             } else {
-            	$("#v_contractStartDt").val($("#startDt").val().substring(6) + "/" + $("#startDt").val().substring(3, 5)+ "/" + $("#startDt").val().substring(0, 2));
-            	$("#v_contractEndDt").val($("#endDt").val().substring(6) + "/" + $("#endDt").val().substring(3, 5)+ "/" + $("#endDt").val().substring(0, 2));
+            	$("#v_contractStartDt").val($("#startDt").val());
+            	$("#v_contractEndDt").val($("#endDt").val());
 
                 $("#reportFileName").val("/logistics/HMAgreement_20180704.rpt");
                 $("#reportDownFileName").val("Manager_Agreement_" + code);
