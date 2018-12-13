@@ -324,7 +324,7 @@ function fnSalesPlanHeader() {
 								visible : true,
 								 style : "my-backColumn3",
 								 dataType : "numeric",
-								 formatString : "#,##0",
+								 //formatString : "#,##0",
 								 editable : false
 							}, {
 								//	M-1 Order Sum
@@ -333,7 +333,7 @@ function fnSalesPlanHeader() {
 								 visible : true,
 								 style : "my-backColumn3",
 								 dataType : "numeric",
-								 formatString : "#,##0",
+								 //formatString : "#,##0",
 								 editable : false
 							}, {
 								headerText : "Monthly",
@@ -345,7 +345,7 @@ function fnSalesPlanHeader() {
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0",
+										 //formatString : "#,##0",
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m0,
@@ -353,7 +353,7 @@ function fnSalesPlanHeader() {
 										 visible : false,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0",
+										 //formatString : "#,##0",
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m0Exp,
@@ -361,7 +361,7 @@ function fnSalesPlanHeader() {
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0",
+										 //formatString : "#,##0",
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m1,
@@ -369,7 +369,7 @@ function fnSalesPlanHeader() {
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0",
+										 //formatString : "#,##0",
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m2,
@@ -377,7 +377,7 @@ function fnSalesPlanHeader() {
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0",
+										 //formatString : "#,##0",
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m3,
@@ -385,7 +385,7 @@ function fnSalesPlanHeader() {
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0",
+										 //formatString : "#,##0",
 										 editable : false
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].m4,
@@ -393,7 +393,7 @@ function fnSalesPlanHeader() {
 										 visible : true,
 										 style : "my-backColumn3",
 										 dataType : "numeric",
-										 formatString : "#,##0",
+										 //formatString : "#,##0",
 										 editable : false
 									 }
 									 ]
@@ -450,7 +450,7 @@ function fnSalesPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText : result.selectSalesPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								////formatString : "#,##0",
 								editable : false,
 								style : "my-backColumn1"
 							});
@@ -463,7 +463,7 @@ function fnSalesPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText : result.selectSalesPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								////formatString : "#,##0",
 								editable : false,
 								style : "my-backColumn2"
 							});
@@ -479,7 +479,7 @@ function fnSalesPlanHeader() {
 									dataField : "w" + intToStrFieldCnt,	//	w00
 									headerText : result.selectSalesPlanHeader[0][fieldStr],
 									dataType : "numeric",
-									formatString : "#,##0",
+									////formatString : "#,##0",
 									editable : false,
 									style : "my-column"
 								});
@@ -489,7 +489,7 @@ function fnSalesPlanHeader() {
 									dataField : "w" + intToStrFieldCnt,	//	w00
 									headerText : result.selectSalesPlanHeader[0][fieldStr],
 									dataType : "numeric",
-									formatString : "#,##0",
+									////formatString : "#,##0",
 									editable : true,
 									style : "my-column"
 								});
@@ -525,7 +525,7 @@ function fnSalesPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText : result.selectSalesPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : false,
 								style : "my-backColumn1"
 							});
@@ -537,7 +537,7 @@ function fnSalesPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText : result.selectSalesPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : false,
 								style : "my-backColumn2"
 							});
@@ -551,7 +551,7 @@ function fnSalesPlanHeader() {
 									dataField : "w" + intToStrFieldCnt,	//	w00
 									headerText : result.selectSalesPlanHeader[0][fieldStr],
 									dataType : "numeric",
-									formatString : "#,##0",
+									//formatString : "#,##0",
 									editable : false,
 									style : "my-column"
 								});
@@ -560,7 +560,7 @@ function fnSalesPlanHeader() {
 									dataField : "w" + intToStrFieldCnt,	//	w00
 									headerText : result.selectSalesPlanHeader[0][fieldStr],
 									dataType : "numeric",
-									formatString : "#,##0",
+									//formatString : "#,##0",
 									editable : true,
 									style : "my-column"
 								});
@@ -592,7 +592,7 @@ function fnSalesPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSalesPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : false,
 								style : "my-column"
 							});
@@ -601,7 +601,7 @@ function fnSalesPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSalesPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : true,
 								style : "my-column"
 							});
@@ -631,7 +631,7 @@ function fnSalesPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSalesPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : false,
 								style : "my-column"
 							});
@@ -640,7 +640,7 @@ function fnSalesPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSalesPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : true,
 								style : "my-column"
 							});
@@ -670,7 +670,7 @@ function fnSalesPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSalesPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : false,
 								style : "my-column"
 							});
@@ -679,7 +679,7 @@ function fnSalesPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSalesPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : true,
 								style : "my-column"
 							});
