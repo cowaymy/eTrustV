@@ -1491,6 +1491,8 @@
        <if test="cmbInstallStatus != '' and cmbInstallStatus != 0">
            AND SM.STUS_CODE_ID = #{cmbInstallStatus}
        </if>
+           AND TO_DATE(SM.INSTALL_DT) >= TO_DATE(ADD_MONTHS(SYSDATE, -12))
+
 
        GROUP BY A.SALES_ORD_ID,
        A.SALES_ORD_NO ,
