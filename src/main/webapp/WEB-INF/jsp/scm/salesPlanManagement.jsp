@@ -70,7 +70,6 @@ $(function() {
 	gDay	= gToday.getDate();
 	//console.log("gYear : " + gYear + ", gYear1 : " + gYear1 + ", gMonth : " + gMonth + ", gDay : " + gDay);
 	
-	//fnScmTotalPeriod();
 	//	Set combo box
 	fnScmYearCbBox();
 	fnScmWeekCbBox();
