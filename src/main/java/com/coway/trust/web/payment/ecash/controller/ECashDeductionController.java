@@ -569,7 +569,7 @@ public class ECashDeductionController {
 			if(1 == (Integer) claimMap.get("type")) {
 			    sFile = "CZ" + todayDate + ".dat";
 			} else {
-			    sFile = "CZ" + todayDate + "_NEW" + ".dat";
+			    sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("fileBatchId") + ".dat";
 			}
 
 			downloadHandler = getTextDownloadMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
@@ -599,7 +599,7 @@ public class ECashDeductionController {
 		if(1 == (Integer) claimMap.get("type")) {
             email.setSubject("SCB eCash CRC Grouping Deduction File - Batch Date : " + inputDate + "_ "+ String.valueOf(claimMap.get("pageNo")));
         } else {
-            email.setSubject("SCB eCash CRC Grouping Deduction File - Batch Date : " + inputDate + "_NEW_ "+ String.valueOf(claimMap.get("pageNo")));
+            email.setSubject("SCB eCash CRC Grouping Deduction File - Batch Date : " + inputDate + "_NEW_ " + claimMap.get("fileBatchId") + "_" + String.valueOf(claimMap.get("pageNo")));
         }
 		//email.setSubject("SCB eCash CRC Deduction File - Batch Date : " + inputDate + "_ "+ String.valueOf(claimMap.get("pageNo")));
 		email.setText("Please find attached the claim file for your kind perusal.");
@@ -687,7 +687,7 @@ public class ECashDeductionController {
 	        if(1 == (Integer) claimMap.get("type")) {
 	            sFile = "CZ" + todayDate + ".dat";
 	        } else {
-	            sFile = "CZ" + todayDate + "_NEW" + ".dat";
+	            sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("fileBatchId") + ".dat";
 	        }
 
 			downloadHandler = getTextDownloadMBBGrpHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
@@ -719,7 +719,7 @@ public class ECashDeductionController {
         if(1 == (Integer) claimMap.get("type")) {
             email.setSubject("SCB eCash CRC Grouping Deduction File - Batch Date : " + inputDate + "_ "+ String.valueOf(claimMap.get("pageNo")));
         } else {
-            email.setSubject("SCB eCash CRC Grouping Deduction File - Batch Date : " + inputDate + "_NEW_ "+ String.valueOf(claimMap.get("pageNo")));
+            email.setSubject("SCB eCash CRC Grouping Deduction File - Batch Date : " + inputDate + "_NEW_ " + claimMap.get("fileBatchId") + "_" + String.valueOf(claimMap.get("pageNo")));
         }
 		//email.setSubject("SCB eCash CRC Grouping Deduction File - Batch Date : " + inputDate + "_ "+ String.valueOf(claimMap.get("pageNo")));
 		email.setText("Please find attached the claim file for your kind perusal.");
