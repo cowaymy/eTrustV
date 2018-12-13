@@ -212,7 +212,8 @@ function fnSupplyPlanHeader() {
 		showStateColumn : true,
 		showEditedCellMarker : true,
 		enableCellMerge : true,
-		fixedColumnCount : weekStartCol,	//	고정칼럼 카운트 지정
+		//fixedColumnCount : weekStartCol,	//	고정칼럼 카운트 지정
+		fixedColumnCount : 14,	//	고정칼럼 카운트 지정
 		enableRestore : true,
 		showRowCheckColumn : false,
 		usePaging : false					//	페이징처리 설정
