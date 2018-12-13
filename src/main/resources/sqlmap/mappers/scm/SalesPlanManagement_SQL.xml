@@ -492,12 +492,12 @@ SELECT B.PLAN_ID
 </select>
 <select id="selectThisMonthOrder" parameterType="Map" resultType="egovMap">
 SELECT A.STOCK_CODE
-     , SUM(B.W01) AS W01
-     , SUM(B.W02) AS W02
-     , SUM(B.W03) AS W03
-     , SUM(B.W04) AS W04
-     , SUM(B.W05) AS W05
-     , SUM(B.W06) AS W06
+     , NVL(SUM(B.W01), 0) AS W01
+     , NVL(SUM(B.W02), 0) AS W02
+     , NVL(SUM(B.W03), 0) AS W03
+     , NVL(SUM(B.W04), 0) AS W04
+     , NVL(SUM(B.W05), 0) AS W05
+     , NVL(SUM(B.W06), 0) AS W06
   FROM SCM0008M A
   LEFT OUTER JOIN (
                    SELECT Z.STOCK_CODE
