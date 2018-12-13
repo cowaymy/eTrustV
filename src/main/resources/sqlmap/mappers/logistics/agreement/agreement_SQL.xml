@@ -102,6 +102,7 @@
             <if test="memType !=null and memType !=''">
                 AND A.MEM_TYPE = #{memType}
             </if>
+            AND B.BILL_TYPE_ID = '222'
         ORDER BY
             A.MEM_ID DESC
     </select>

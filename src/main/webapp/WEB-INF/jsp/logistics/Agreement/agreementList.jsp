@@ -250,29 +250,32 @@ function fn_downloadAgreement() {
 
     if($("#memTypeCom").val() == "1") {
         // HP Download
-        if($("#memLevelCom").val() < "4") {
+        console.log("memLvl :: " + $("#memLevelCom").val());
+        var memLvl = $("#memLevelCom").val();
+
+        if(memLvl < "4" && memLvl != "") {
             if(FormUtil.checkReqValue($("#startDt")) && FormUtil.checkReqValue($("#startDt"))) {
                 Common.alert("Please key in contract start date.");
                 return false;
             }
-        }
 
-        if($("startDt").val() != "") {
-            var day = $("#startDt").val().substring(0, 2);
-            var mth = $("#startDt").val().substring(3, 5);
-            var year = $("#startDt").val().substring(6);
+            if($("startDt").val() != "") {
+                var day = $("#startDt").val().substring(0, 2);
+                var mth = $("#startDt").val().substring(3, 5);
+                var year = $("#startDt").val().substring(6);
 
-            var startDt = new Date(year, mth - 1, day);
+                var startDt = new Date(year, mth - 1, day);
 
-            // 2018-12-11 - LaiKW - HM, SM, GM e-Agreement commence start date @ 2018-07-01
-            var d = new Date(2018, 06, 01);
-            console.log(d);
+                // 2018-12-11 - LaiKW - HM, SM, GM e-Agreement commence start date @ 2018-07-01
+                var d = new Date(2018, 06, 01);
+                console.log(d);
 
-            var startDt = new Date(year, mth - 1, day);
+                var startDt = new Date(year, mth - 1, day);
 
-            if(startDt < d) {
-                Common.alert("Please refer to Sales Planning or Sales Support for scanned copy.");
-                return false;
+                if(startDt < d) {
+                    Common.alert("For Manager level and above agreement, please refer to Sales Planning for scanned copy.");
+                    return false;
+                }
             }
         }
 
@@ -284,7 +287,7 @@ function fn_downloadAgreement() {
             	signDt = "201604";
             }
 
-            if($("#memLevelCom").val == "4") {
+            if(result.memLvl == "4") {
                 $("#reportFileName").val("/logistics/HPAgreement_" + signDt + ".rpt");
                 $("#reportDownFileName").val("HPAgreement_" + code);
             } else {
