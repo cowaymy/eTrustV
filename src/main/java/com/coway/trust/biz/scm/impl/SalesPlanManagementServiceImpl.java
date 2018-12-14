@@ -223,6 +223,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 					
 					//	stkTypeId = 62(필터) 확인
 					if ( "62".equals(stkTypeId) ) {
+						m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;
 						//	Filter
 						if ( planFstWeek == planFstSpltWeek ) {
 							//	첫주차가 스플릿 주차가 아닌 경우
@@ -400,10 +401,12 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									//	수립주차기준 과거주차
 									weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt1).toString());
 									m0OrdSum	= m0OrdSum + weekQty;
+									LOGGER.debug("1 weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum);
 								} else {
 									//	수립주차기준 현재+미래주차(수립주차포함)
 									weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 									m0Sum	= m0Sum + weekQty;
+									LOGGER.debug("2 weekQty : " + weekQty + ", m0Sum : " + m0Sum);
 								}
 							} else {
 								if ( m0 <= planWeekTh ) {
@@ -411,10 +414,12 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									//	수립주차기준 과거주차
 									weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt1).toString());
 									m0OrdSum	= m0OrdSum + weekQty;
+									LOGGER.debug("3 weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum);
 								} else {
 									//	수립주차기준 현재+미래주차(수립주차포함)
 									weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 									m0Sum	= m0Sum + weekQty;
+									LOGGER.debug("4 weekQty : " + weekQty + ", m0Sum : " + m0Sum);
 								}
 							}
 
@@ -524,6 +529,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 					
 					//	stkTypeId = 62(필터) 확인
 					if ( "62".equals(stkTypeId) ) {
+						m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;
 						//	Filter
 						if ( planFstWeek == planFstSpltWeek ) {
 							//	첫주차가 스플릿 주차가 아닌 경우
@@ -701,10 +707,12 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									//	수립주차 기준 과거주차
 									weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt2).toString());
 									m0OrdSum	= m0OrdSum + weekQty;
+									LOGGER.debug("1 weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum);
 								} else {
 									//	수립주차기준 현재+미래주차(수립주차포함)
 									weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 									m0Sum	= m0Sum + weekQty;
+									LOGGER.debug("2 weekQty : " + weekQty + ", m0Sum : " + m0Sum);
 								}
 							} else {
 								//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
@@ -713,10 +721,12 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									//	수립주차 기준 과거주차
 									weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt2).toString());
 									m0OrdSum	= m0OrdSum + weekQty;
+									LOGGER.debug("3 weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum);
 								} else {
 									//	수립주차기준 현재+미래주차(수립주차포함)
 									weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 									m0Sum	= m0Sum + weekQty;
+									LOGGER.debug("4 weekQty : " + weekQty + ", m0Sum : " + m0Sum);
 								}
 							}
 							//weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
