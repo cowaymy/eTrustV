@@ -83,7 +83,7 @@
                REQST_USER_ID,
                BRNCH_TYPE,
                CNFM_STUS,
-               B.FULL_NAME,
+               B.USER_FULL_NAME FULL_NAME,
                C.CODE_NAME BRNCH_NAME,
               CASE
                   WHEN (CNFM_STUS = 1) THEN 'ACT'
@@ -91,7 +91,8 @@
                   ELSE ''
                END  CNFM_STUS_NAME
              FROM ORG0019M
-             INNER JOIN ORG0001D B ON REQST_USER_ID  = B.MEM_ID
+             <!-- INNER JOIN ORG0001D B ON REQST_USER_ID  = B.MEM_ID -->
+             INNER JOIN SYS0047M B ON REQST_USER_ID  = B.USER_ID
              JOIN SYS0013M C ON BRNCH_TYPE = C.CODE_ID
              ) A
              WHERE 1=1
