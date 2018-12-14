@@ -345,7 +345,9 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 				}
 				//	psi2
-				m0Psi2	= m0Psi1 / 30 * safetyStock;
+				//m0Psi2	= (int)((double)(m0Psi1 / 30) * safetyStock);
+				m0Psi2	= (int) Math.ceil((m0Psi1 / 30.0) * safetyStock);
+				LOGGER.debug("before calc : " + (m0Psi1 / 30.0 * safetyStock) + ", after calc : " + (int) Math.ceil((m0Psi1 / 30.0) * safetyStock));
 				psi2UpdParams.put("m0", m0Psi2);
 				psi2UpdParams.put("w" + intToStrFieldCnt2, m0Psi2);
 				
@@ -360,7 +362,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 						psi5	= basicQty;
 					}
 					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
-					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
+					//LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 					psi5	= psi5 - psi1 + psi3;
 				} else {
 					if ( 1 == m0 ) {
@@ -373,11 +375,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 						psi3	= psi1 + psi2 - psi5;
 					}
 					psi5	= psi5 - psi1 + psi3;
-					LOGGER.debug("2. m0 : " + m0 + ", psi1 : " + psi1 + ", psi2 : " + psi2 + ", psi3 : " + psi3 + ", psi5 : " + psi5 + ", m0Psi3 : " + m0Psi3);
+					//LOGGER.debug("2. m0 : " + m0 + ", psi1 : " + psi1 + ", psi2 : " + psi2 + ", psi3 : " + psi3 + ", psi5 : " + psi5 + ", m0Psi3 : " + m0Psi3);
 				}
 				//	moq와 비교
 				if ( psi3 < moq && psi3 > 0 ) {
-					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
+					//LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
 				m0Psi3	= m0Psi3 + psi3;
@@ -410,7 +412,9 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 				}
 				//	psi2
-				m1Psi2	= m1Psi1 / 30 * safetyStock;
+				//m1Psi2	= m1Psi1 / 30 * safetyStock;
+				m1Psi2	= (int) Math.ceil((m1Psi1 / 30.0) * safetyStock);
+				LOGGER.debug("before calc : " + (m1Psi1 / 30.0 * safetyStock) + ", after calc : " + (int) Math.ceil((m1Psi1 / 30.0) * safetyStock));
 				psi2UpdParams.put("m1", m1Psi2);
 				psi2UpdParams.put("w" + intToStrFieldCnt2, m1Psi2);
 				//	psi3, psi5
@@ -419,7 +423,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
 					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
-					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
+					//LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 				} else {
 					if ( 0 > psi1 + psi2 - psi5 ) {
 						psi3	= 0;
@@ -429,7 +433,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				}
 				//	moq와 비교
 				if ( psi3 < moq && psi3 > 0 ) {
-					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
+					//LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
 				psi5	= psi5 - psi1 + psi3;
@@ -472,7 +476,9 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 					intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 				}
 				//	psi2
-				m2Psi2	= m2Psi1 / 30 * safetyStock;
+				//m2Psi2	= m2Psi1 / 30 * safetyStock;
+				m2Psi2	= (int) Math.ceil((m2Psi1 / 30.0) * safetyStock);
+				LOGGER.debug("before calc : " + (m2Psi1 / 30.0 * safetyStock) + ", after calc : " + (int) Math.ceil((m2Psi1 / 30.0) * safetyStock));
 				psi2UpdParams.put("m2", m2Psi2);
 				psi2UpdParams.put("w" + intToStrFieldCnt2, m2Psi2);
 				//	psi3, psi5
@@ -481,7 +487,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
 					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
-					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
+					//LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 				} else {
 					if ( 0 > psi1 + psi2 - psi5 ) {
 						psi3	= 0;
@@ -491,7 +497,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				}
 				//	moq와 비교
 				if ( psi3 < moq && psi3 > 0 ) {
-					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
+					//LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
 				psi5	= psi5 - psi1 + psi3;
@@ -528,7 +534,9 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
 				intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 				//	psi2
-				m3Psi2	= m3Psi1 / 30 * safetyStock;
+				//m3Psi2	= m3Psi1 / 30 * safetyStock;
+				m3Psi2	= (int) Math.ceil((m3Psi1 / 30.0) * safetyStock);
+				LOGGER.debug("before calc : " + (m3Psi1 / 30.0 * safetyStock) + ", after calc : " + (int) Math.ceil((m3Psi1 / 30.0) * safetyStock));
 				psi2UpdParams.put("m3", m3Psi2);
 				psi2UpdParams.put("w" + intToStrFieldCnt2, m3Psi2);
 				//	psi3, psi5
@@ -537,7 +545,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				if ( totLeadTm >= iLoopDataFieldCnt2 ) {
 				//if ( totLeadTm > iLoopDataFieldCnt2 || totLeadTm == iLoopDataFieldCnt2 ) {
 					psi3	= Integer.parseInt(selectGetPoCnt.get(0).get("w" + intToStrFieldCnt2).toString());
-					LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
+					//LOGGER.debug("In leadTm get PO cnt : " + intToStrFieldCnt2);
 				} else {
 					if ( 0 > psi1 + psi2 - psi5 ) {
 						psi3	= 0;
@@ -547,7 +555,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				}
 				//	moq와 비교
 				if ( psi3 < moq && psi3 > 0 ) {
-					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
+					//LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
 				psi5	= psi5 - psi1 + psi3;
@@ -584,7 +592,9 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 				intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 				//	psi2
-				m4Psi2	= m4Psi1 / 30 * safetyStock;
+				//m4Psi2	= m4Psi1 / 30 * safetyStock;
+				m4Psi2	= (int) Math.ceil((m4Psi1 / 30.0) * safetyStock);
+				LOGGER.debug("before calc : " + (m4Psi1 / 30.0 * safetyStock) + ", after calc : " + (int) Math.ceil((m4Psi1 / 30.0) * safetyStock));
 				psi2UpdParams.put("m4", m4Psi2);
 				psi2UpdParams.put("w" + intToStrFieldCnt2, m4Psi2);
 				//	psi3, psi5
@@ -597,7 +607,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				}
 				//	moq와 비교
 				if ( psi3 < moq && psi3 > 0 ) {
-					LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
+					//LOGGER.debug("stockCode : " + stockCode + ", psi3 : " + psi3 + ", moq : " + moq);
 					psi3	= moq;
 				}
 				psi5	= psi5 - psi1 + psi3;
