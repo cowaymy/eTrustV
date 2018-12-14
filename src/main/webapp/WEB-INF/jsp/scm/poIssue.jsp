@@ -234,7 +234,7 @@ var poCreateListLayout	=
 			dataField : "poQty",
 			headerText : "Po Qty",
 			dataType : "numeric",
-			formatString : "#,##0",
+			//formatString : "#,##0",
 			editable : false,
 			//style : "my-columnEditable"
 			style : "my-columnRight1"
@@ -242,21 +242,21 @@ var poCreateListLayout	=
 			dataField : "moq",
 			headerText : "Moq",
 			dataType : "numeric",
-			formatString : "#,##0",
+			//formatString : "#,##0",
 			editable : false,
 			style : "my-columnRight1"
 		}, {
 			dataField : "fobPrc",
 			headerText : "FOB Price",
 			dataType : "numeric",
-			formatString : "#,##0",
+			//formatString : "#,##0",
 			editable : false,
 			style : "my-columnRight1"
 		}, {
 			dataField : "fobAmt",
 			headerText : "FOB Amount",
 			dataType : "numeric",
-			formatString : "#,##0",
+			//formatString : "#,##0",
 			editable : false,
 			style : "my-columnRight1"
 		}, {
@@ -283,14 +283,14 @@ var poCreateListLayout	=
 			dataField : "purchPrc",
 			headerText : "Purchase Price",
 			dataType : "numeric",
-			formatString : "#,##0",
+			//formatString : "#,##0",
 			editable : false,
 			style : "my-columnRight1"
 		}, {
 			dataField : "prcUnit",
 			headerText : "Unit Price",
 			dataType : "numeric",
-			formatString : "#,##0",
+			//formatString : "#,##0",
 			editable : false,
 			style : "my-columnRight1"
 		}, {
@@ -474,7 +474,7 @@ var poCreatedListLayout	=
 			dataField : "poQty",
 			headerText : "Po Qty",
 			dataType : "numeric",
-			formatString : "#,##0",
+			//formatString : "#,##0",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnRight2";
@@ -486,7 +486,7 @@ var poCreatedListLayout	=
 			dataField : "fobAmt",
 			headerText : "FOB Amount",
 			dataType : "numeric",
-			formatString : "#,##0",
+			//formatString : "#,##0",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnRight2";
@@ -542,7 +542,7 @@ var poCreatedListLayout	=
 			dataField : "grQty",
 			headerText : "Gr Qty",
 			dataType : "numeric",
-			formatString : "#,##0",
+			//formatString : "#,##0",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnRight2";
@@ -943,14 +943,14 @@ function fnPoTargetGrid() {
 				dataField : "planQty",
 				headerText : "Plan Qty",
 				dataType : "numeric",
-				formatString : "#,##0",
+				//formatString : "#,##0",
 				style : "my-columnRight0",
 				width : "10%"
 			}, {
 				dataField : "poQty",
 				headerText : "Issued Qty",
 				dataType : "numeric",
-				formatString : "#,##0",
+				//formatString : "#,##0",
 				style : "my-columnRight0",
 				width : "10%"
 			}, {

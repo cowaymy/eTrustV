@@ -336,7 +336,7 @@ var poApprTargetGridLayout =
 			headerText : "Po Issue Qty",
 			editable : false,
 			dataType : "numeric",
-			formatString : "#,##0",
+			////formatString : "#,##0",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnRight2";

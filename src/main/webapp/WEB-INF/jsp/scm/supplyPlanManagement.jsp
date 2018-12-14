@@ -386,8 +386,7 @@ function fnSupplyPlanHeader() {
 												 return	"my-columnRight1";
 											 }
 										 },
-										 dataType : "numeric",
-										 formatString : "#,##0"
+										 dataType : "numeric"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m2,
 										 headerText : result.selectScmTotalInfo[0].m2Mon,
@@ -399,8 +398,7 @@ function fnSupplyPlanHeader() {
 												 return	"my-columnRight1";
 											 }
 										 },
-										 dataType : "numeric",
-										 formatString : "#,##0"
+										 dataType : "numeric"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m3,
 										 headerText : result.selectScmTotalInfo[0].m3Mon,
@@ -412,8 +410,7 @@ function fnSupplyPlanHeader() {
 												 return	"my-columnRight1";
 											 }
 										 },
-										 dataType : "numeric",
-										 formatString : "#,##0"
+										 dataType : "numeric"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m4,
 										 headerText : result.selectScmTotalInfo[0].m4Mon,
@@ -425,8 +422,7 @@ function fnSupplyPlanHeader() {
 												 return	"my-columnRight1";
 											 }
 										 },
-										 dataType : "numeric",
-										 formatString : "#,##0"
+										 dataType : "numeric"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].overdue,
 										 headerText : "OVERDUE",
@@ -438,8 +434,7 @@ function fnSupplyPlanHeader() {
 												 return	"my-columnRight1";
 											 }
 										 },
-										 dataType : "numeric",
-										 formatString : "#,##0"
+										 dataType : "numeric"
 									 }
 									 ]
 							}
@@ -483,7 +478,7 @@ function fnSupplyPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,	//	w00
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									if ( 3 != item.psiId ) {
 										if ( "0" == item.divOdd ) {
@@ -502,7 +497,7 @@ function fnSupplyPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,	//	w00
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : false,
 								style : "my-columnLeadTm"
 							});
@@ -532,7 +527,7 @@ function fnSupplyPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									if ( 3 != item.psiId ) {
 										if ( "0" == item.divOdd ) {
@@ -551,7 +546,7 @@ function fnSupplyPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText : result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : false,
 								style : "my-columnLeadTm"
 							});
@@ -581,7 +576,7 @@ function fnSupplyPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									if ( 3 != item.psiId ) {
 										if ( "0" == item.divOdd ) {
@@ -600,7 +595,7 @@ function fnSupplyPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : false,
 								style : "my-columnLeadTm"
 							});
@@ -630,7 +625,7 @@ function fnSupplyPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									if ( 3 != item.psiId ) {
 										if ( "0" == item.divOdd ) {
@@ -649,7 +644,7 @@ function fnSupplyPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								editable : false,
 								style : "my-columnLeadTm"
 							});
@@ -679,7 +674,7 @@ function fnSupplyPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 									if ( 3 != item.psiId ) {
 										if ( "0" == item.divOdd ) {
@@ -698,7 +693,7 @@ function fnSupplyPlanHeader() {
 								dataField : "w" + intToStrFieldCnt,
 								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
 								dataType : "numeric",
-								formatString : "#,##0",
+								//formatString : "#,##0",
 								style : "my-columnLeadTm"
 							});
 						}
