@@ -342,7 +342,7 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
              , SUM(NVL(X.W08, 0)) AS W08
              , SUM(NVL(X.W09, 0)) AS W09
              , SUM(NVL(X.W10, 0)) AS W10
-             , SUM(NVL(X.W01, 0)) AS W11
+             , SUM(NVL(X.W11, 0)) AS W11
              , SUM(NVL(X.W12, 0)) AS W12
              , SUM(NVL(X.W13, 0)) AS W13
              , SUM(NVL(X.W14, 0)) AS W14
