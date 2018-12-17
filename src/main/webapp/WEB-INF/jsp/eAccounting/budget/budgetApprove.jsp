@@ -125,6 +125,9 @@ $(document).ready(function(){
         style : "my-right-style",
         width : 100
     },{
+        dataField : "signal",
+        headerText : 'Signal'
+    },{
         dataField : "adjRem",
         headerText : '<spring:message code="budget.Remark" />',
         style : "aui-grid-user-custom-left ",

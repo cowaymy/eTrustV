@@ -888,6 +888,7 @@ WHERE 1=1
                  ,CASE WHEN A.ATCH_FILE_GRP_ID IS NOT NULL THEN 'view' ELSE '' END  FILE_SUB_PATH
                  ,'N' AS CHECK_ID
                  ,A.BUDGET_DOC_NO || B.BUDGET_DOC_SEQ AS SEQ
+                 ,B.SIGNAL
         FROM FCM0105M C
         INNER JOIN FCM0102M A
             ON C.BUDGET_DOC_NO = A.BUDGET_DOC_NO
