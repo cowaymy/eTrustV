@@ -297,7 +297,7 @@ INSERT INTO SCM0006D
 SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , #{planId}
      , 1 AS PSI_ID
-     , A.STOCK_CODE
+     , M.STOCK_CODE
      , 1 AS CMPLT
      , NVL(D.OVERDUE_QTY, 0) AS OVERDUE
      , CEIL(A.W01 * NVL(C.CDC_RATE, E.DEF_CDC_RATE) / 100) AS W01
@@ -330,44 +330,45 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , CEIL(A.W28 * NVL(C.CDC_RATE, E.DEF_CDC_RATE) / 100) AS W28
      , CEIL(A.W29 * NVL(C.CDC_RATE, E.DEF_CDC_RATE) / 100) AS W29
      , CEIL(A.W30 * NVL(C.CDC_RATE, E.DEF_CDC_RATE) / 100) AS W30
-  FROM (
-        SELECT X.STOCK_CODE
-             , SUM(NVL(X.W01, 0)) AS W01
-             , SUM(NVL(X.W02, 0)) AS W02
-             , SUM(NVL(X.W03, 0)) AS W03
-             , SUM(NVL(X.W04, 0)) AS W04
-             , SUM(NVL(X.W05, 0)) AS W05
-             , SUM(NVL(X.W06, 0)) AS W06
-             , SUM(NVL(X.W07, 0)) AS W07
-             , SUM(NVL(X.W08, 0)) AS W08
-             , SUM(NVL(X.W09, 0)) AS W09
-             , SUM(NVL(X.W10, 0)) AS W10
-             , SUM(NVL(X.W11, 0)) AS W11
-             , SUM(NVL(X.W12, 0)) AS W12
-             , SUM(NVL(X.W13, 0)) AS W13
-             , SUM(NVL(X.W14, 0)) AS W14
-             , SUM(NVL(X.W15, 0)) AS W15
-             , SUM(NVL(X.W16, 0)) AS W16
-             , SUM(NVL(X.W17, 0)) AS W17
-             , SUM(NVL(X.W18, 0)) AS W18
-             , SUM(NVL(X.W19, 0)) AS W19
-             , SUM(NVL(X.W20, 0)) AS W20
-             , SUM(NVL(X.W21, 0)) AS W21
-             , SUM(NVL(X.W22, 0)) AS W22
-             , SUM(NVL(X.W23, 0)) AS W23
-             , SUM(NVL(X.W24, 0)) AS W24
-             , SUM(NVL(X.W25, 0)) AS W25
-             , SUM(NVL(X.W26, 0)) AS W26
-             , SUM(NVL(X.W27, 0)) AS W27
-             , SUM(NVL(X.W28, 0)) AS W28
-             , SUM(NVL(X.W29, 0)) AS W29
-             , SUM(NVL(X.W30, 0)) AS W30
-          FROM SCM0001M Z
-          LEFT OUTER JOIN SCM0002D X ON (Z.PLAN_ID = X.PLAN_ID)
-         WHERE Z.PLAN_YEAR = #{planYear}
-           AND Z.PLAN_WEEK = #{planWeek}
-         GROUP BY X.STOCK_CODE
-        ) A
+  FROM (SELECT STOCK_CODE FROM SCM0017M WHERE CDC = #{cdc} AND IS_TRGET = 1) M
+  LEFT OUTER JOIN (
+                   SELECT X.STOCK_CODE
+                        , SUM(NVL(X.W01, 0)) AS W01
+                        , SUM(NVL(X.W02, 0)) AS W02
+                        , SUM(NVL(X.W03, 0)) AS W03
+                        , SUM(NVL(X.W04, 0)) AS W04
+                        , SUM(NVL(X.W05, 0)) AS W05
+                        , SUM(NVL(X.W06, 0)) AS W06
+                        , SUM(NVL(X.W07, 0)) AS W07
+                        , SUM(NVL(X.W08, 0)) AS W08
+                        , SUM(NVL(X.W09, 0)) AS W09
+                        , SUM(NVL(X.W10, 0)) AS W10
+                        , SUM(NVL(X.W11, 0)) AS W11
+                        , SUM(NVL(X.W12, 0)) AS W12
+                        , SUM(NVL(X.W13, 0)) AS W13
+                        , SUM(NVL(X.W14, 0)) AS W14
+                        , SUM(NVL(X.W15, 0)) AS W15
+                        , SUM(NVL(X.W16, 0)) AS W16
+                        , SUM(NVL(X.W17, 0)) AS W17
+                        , SUM(NVL(X.W18, 0)) AS W18
+                        , SUM(NVL(X.W19, 0)) AS W19
+                        , SUM(NVL(X.W20, 0)) AS W20
+                        , SUM(NVL(X.W21, 0)) AS W21
+                        , SUM(NVL(X.W22, 0)) AS W22
+                        , SUM(NVL(X.W23, 0)) AS W23
+                        , SUM(NVL(X.W24, 0)) AS W24
+                        , SUM(NVL(X.W25, 0)) AS W25
+                        , SUM(NVL(X.W26, 0)) AS W26
+                        , SUM(NVL(X.W27, 0)) AS W27
+                        , SUM(NVL(X.W28, 0)) AS W28
+                        , SUM(NVL(X.W29, 0)) AS W29
+                        , SUM(NVL(X.W30, 0)) AS W30
+                     FROM SCM0001M Z
+                     LEFT OUTER JOIN SCM0002D X ON (Z.PLAN_ID = X.PLAN_ID)
+                    WHERE Z.PLAN_YEAR = #{planYear}
+                      AND Z.PLAN_WEEK = #{planWeek}
+                    GROUP BY X.STOCK_CODE
+                   ) A ON (M.STOCK_CODE = A.STOCK_CODE)
   LEFT OUTER JOIN SCM0017M B ON (A.STOCK_CODE = B.STOCK_CODE AND B.CDC = #{cdc} AND B.IS_TRGET = 1)
   LEFT OUTER JOIN (
                    SELECT Z.STOCK_CODE
@@ -592,7 +593,7 @@ SELECT A.CAL_ID
 <select id="selectGetPoCnt" parameterType="Map" resultType="egovMap">
 SELECT A.STOCK_CODE
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year1}
@@ -601,7 +602,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W01
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year2}
@@ -610,7 +611,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W02
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year3}
@@ -619,7 +620,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W03
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year4}
@@ -628,7 +629,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W04
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year5}
@@ -637,7 +638,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W05
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year6}
@@ -646,7 +647,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W06
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year7}
@@ -655,7 +656,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W07
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year8}
@@ -664,7 +665,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W08
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year9}
@@ -673,7 +674,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W09
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year10}
@@ -682,7 +683,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W10
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year11}
@@ -691,7 +692,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W11
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year12}
@@ -700,7 +701,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W12
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year13}
@@ -709,7 +710,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W13
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year14}
@@ -718,7 +719,7 @@ SELECT A.STOCK_CODE
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W14
      , NVL((
-            SELECT NVL(X.PO_QTY, 0)
+            SELECT SUM(NVL(X.PO_QTY, 0))
               FROM SCM0052M Z
               LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
              WHERE Z.PLAN_GR_YEAR = #{year15}
