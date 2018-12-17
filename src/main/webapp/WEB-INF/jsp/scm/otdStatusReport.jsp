@@ -206,6 +206,14 @@ function fnExcel(obj, fileName) {
 	GridCommon.exportTo("#OTDStatusDiv", "xlsx", fileName + "_" + getTimeStamp());
 }
 
+function fnExecute() {
+	Common.ajax("GET"
+			, "/scm/connection2.do"
+			, ""
+			, ""
+			, "");
+}
+
 /*************************************
  **********  Grid-LayOut  ************
  *************************************/
@@ -333,6 +341,34 @@ var OtdStatusLayout	=
 			children :
 				[
 					{
+						dataField : "soNo",
+						headerText : "SO No",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
+						formatString : "#,##0",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( "0" == item.divOdd ) {
+								return	"my-columnCenter0";
+							} else {
+								return	"my-columnCenter1";
+							}
+						}
+					}, {
+						dataField : "soItemNo",
+						headerText : "Item No",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
+						formatString : "#,##0",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( "0" == item.divOdd ) {
+								return	"my-columnCenter0";
+							} else {
+								return	"my-columnCenter1";
+							}
+						}
+					}, {
 						dataField : "soQty",
 						headerText : "SO Qty",
 						cellMerge : true,
@@ -680,6 +716,7 @@ $(document).ready(function() {
 <section class="search_result"><!-- search_result start -->
 	<div class="side_btns">
 		<ul class="right_btns">
+			<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute</a></p></li>
 			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'Otd Report');">Excel</a></p></li>
 		</ul>
 	</div>

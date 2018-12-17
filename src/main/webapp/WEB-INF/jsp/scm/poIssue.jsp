@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+<%@ page import="org.json.simple.JSONObject" %>
+<%@ page import="org.json.simple.JSONArray" %>
 <link href="${pageContext.request.contextPath}/resources/css/select2.min.css" rel="stylesheet">
 <script src ="${pageContext.request.contextPath}/resources/js/select2.min.js" type="text/javascript"></script>
 <style type="text/css">
@@ -98,6 +100,8 @@ var lastWeekSplitYn	= 0;
 var planWeekTh	= 0;
 var fromPlanToPoSpltCnt	= 0;
 var planGrWeekSpltYn	= 0;
+
+var poTargetList	= new Array();
 
 $(function() {
 	fnScmYearCbBox();
@@ -573,7 +577,7 @@ function fnSearch() {
 	}
 	
 	AUIGrid.clearGridData(myGridID);
-	AUIGrid.clearGridData(myGridID2);
+	//AUIGrid.clearGridData(myGridID2);
 	AUIGrid.clearGridData(myGridID3);
 	
 	var params	= {
@@ -596,19 +600,60 @@ function fnSearch() {
 				fromPlanToPoSpltCnt	= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
 				planGrWeekSpltYn	= result.selectScmTotalInfo[0].planGrWeekSpltYn;
 				fnPoTargetGrid();
-				fnSetPlanQty(result.selectPoTargetList);
 				
+				fnSetPlanQty(result.selectPoTargetList);
+				fnFilterPoTargetList(result.selectPoTargetList);
 				//AUIGrid.setGridData(myGridID, result.selectPoTargetList);
 				AUIGrid.setGridData(myGridID3, result.selectPoCreatedList);
 				
-				if ( 0 < result.selectPoCreatedList.length ) {
+				if ( 0 < poTargetList.length ) {
 					$("#btnDelete").removeClass("btn_disabled");
 				} else {
 					$("#btnDelete").addClass("btn_disabled");
 				}
 				
-				fnCircleControl(result.selectPoStatus);
+				fnCircleControl(poTargetList);
 			});
+}
+function fnFilterPoTargetList(list) {
+	//var poTargetList	= new Array();
+	poTargetList	= [];
+	for ( var i = 0 ; i < list.length ; i++ ) {
+		if ( 0 < list[i].planQty ) {
+			var poList	= new Object();
+			
+			poList.poYear	= list[i].poYear;
+			poList.poMonth	= list[i].poMonth;
+			poList.poWeek	= list[i].poWeek;
+			poList.cdc		= list[i].cdc;
+			poList.planGrYear	= list[i].planGrYear;
+			poList.planGrMonth	= list[i].planGrMonth;
+			poList.planGrWeek	= list[i].planGrWeek;
+			poList.desc		= list[i].desc;
+			poList.stockCode	= list[i].stockCode;
+			poList.name	= list[i].name;
+			poList.ctgryId	= list[i].ctgryId;
+			poList.ctgry	= list[i].ctgry;
+			poList.typeId	= list[i].typeId;
+			poList.type		= list[i].type;
+			poList.planQty	= list[i].planQty;
+			poList.moq		= list[i].moq;
+			poList.poQty	= list[i].poQty;
+			poList.fobPrc	= list[i].fobPrc;
+			poList.fobAmt	= list[i].fobAmt;
+			poList.poStusId	= list[i].poStusId;
+			poList.poItemStusId	= list[i].poItemStusId;
+			poList.purchPrc	= list[i].purchPrc;
+			poList.prcUnit	= list[i].prcUnit;
+			poList.vendor	= list[i].vendor;
+			poList.vendorTxt	= list[i].vendorTxt;
+			poList.curr		= list[i].curr;
+			poList.currName	= list[i].currName;
+			
+			poTargetList.push(poList);
+		}
+	}
+	AUIGrid.setGridData(myGridID, poTargetList);
 }
 function fnSetPlanQty(list) {
 	var planQty1	= 0;	var planQty1S	= "";
@@ -660,8 +705,6 @@ function fnSetPlanQty(list) {
 		//console.log("planQty1 : " + planQty1 + ", planQty2 : " + planQty2);
 		list[i].planQty	= parseInt(planQty1) + parseInt(planQty2);
 	}
-	
-	AUIGrid.setGridData(myGridID, list);
 }
 function fnMoveStock() {
 	var planQtyTh	= 0;
@@ -790,64 +833,52 @@ function fnDelete(obj) {
 
 //	user function
 function fnCircleControl(list) {
-	var suppConfCnt	= list[0].suppConfCnt;
-	var poIssCnt	= list[0].poIssCnt;
-	var poApprCnt	= list[0].poApprCnt;
-	console.log("suppConfCnt : " + suppConfCnt + ", poIssCnt : " + poIssCnt + ", poApprCnt : " + poApprCnt);
-	if ( 0 == suppConfCnt ) {
+	var poTargetCnt	= list.length;
+	var poIssCnt	= 0;
+	var poApprCnt	= 0;
+	
+	for ( var i = 0 ; i < poTargetCnt ; i++ ) {
+		if ( 0 < list[i].poQty ) {
+			poIssCnt	= poIssCnt + 1;
+			if ( 5 == list[i].poItemStusId ) {
+				poApprCnt	= poApprCnt + 1;
+			}
+		}
+	}
+	console.log("poTargetCnt : " + poTargetCnt + ", poIssCnt : " + poIssCnt + ", poArrpCnt : " + poApprCnt);
+	if ( 0 == poIssCnt ) {
 		$("#cirIssue").addClass("circle_grey");
 		$("#cirIssue").removeClass("circle_red");
 		$("#cirIssue").removeClass("circle_blue");
 		$("#cirAppro").addClass("circle_grey");
 		$("#cirAppro").removeClass("circle_red");
 		$("#cirAppro").removeClass("circle_blue");
-	} else if ( 0 < suppConfCnt ) {
-		if ( 0 == poIssCnt ) {
-			$("#cirIssue").addClass("circle_grey");
+	} else {
+		if ( poTargetCnt == poIssCnt ) {
+			$("#cirIssue").removeClass("circle_grey");
 			$("#cirIssue").removeClass("circle_red");
-			$("#cirIssue").removeClass("circle_blue");
-			$("#cirAppro").addClass("circle_grey");
-			$("#cirAppro").removeClass("circle_red");
-			$("#cirAppro").removeClass("circle_blue");
-		} else if ( 0 < poIssCnt ) {
-			if ( poIssCnt == suppConfCnt ) {
-				$("#cirIssue").removeClass("circle_grey");
-				$("#cirIssue").addClass("circle_red");
-				$("#cirIssue").removeClass("circle_blue");
-				if ( 0 == poApprCnt ) {
-					$("#cirAppro").addClass("circle_grey");
-					$("#cirAppro").removeClass("circle_red");
-					$("#cirAppro").removeClass("circle_blue");
-				} else if ( 0 < poApprCnt ) {
-					if ( poIssCnt == poApprCnt ) {
-						$("#cirAppro").removeClass("circle_grey");
-						$("#cirAppro").removeClass("circle_red");
-						$("#cirAppro").addClass("circle_blue");
-					} else {
-						$("#cirAppro").removeClass("circle_grey");
-						$("#cirAppro").addClass("circle_red");
-						$("#cirAppro").removeClass("circle_blue");
-					}
-				}
+			$("#cirIssue").addClass("circle_blue");
+			if ( poIssCnt == poApprCnt ) {
+				$("#cirAppro").removeClass("circle_grey");
+				$("#cirAppro").removeClass("circle_red");
+				$("#cirAppro").addClass("circle_blue");
 			} else {
-				$("#cirIssue").removeClass("circle_grey");
-				$("#cirIssue").addClass("circle_red");
-				$("#cirIssue").removeClass("circle_blue");
-				if ( 0 == poApprCnt ) {
-					$("#cirAppro").addClass("circle_grey");
-					$("#cirAppro").removeClass("circle_red");
-					$("#cirAppro").removeClass("circle_blue");
-				} else if ( 0 < poApprCnt ) {
-					if ( poIssCnt == poApprCnt ) {
-						$("#cirAppro").removeClass("circle_grey");
-						$("#cirAppro").removeClass("circle_red");
-						$("#cirAppro").addClass("circle_blue");
-					} else {
-						$("#cirAppro").removeClass("circle_grey");
-						$("#cirAppro").addClass("circle_red");
-						$("#cirAppro").removeClass("circle_blue");
-					}
-				}
+				$("#cirAppro").removeClass("circle_grey");
+				$("#cirAppro").addClass("circle_red");
+				$("#cirAppro").removeClass("circle_blue");
+			}
+		} else {
+			$("#cirIssue").removeClass("circle_grey");
+			$("#cirIssue").addClass("circle_red");
+			$("#cirIssue").removeClass("circle_blue");
+			if ( 0 < poApprCnt ) {
+				$("#cirAppro").removeClass("circle_grey");
+				$("#cirAppro").addClass("circle_red");
+				$("#cirAppro").removeClass("circle_blue");
+			} else {
+				$("#cirAppro").addClass("circle_grey");
+				$("#cirAppro").removeClass("circle_red");
+				$("#cirAppro").removeClass("circle_blue");
 			}
 		}
 	}
@@ -988,67 +1019,67 @@ function fnPoTargetGrid() {
 			}, {
 				dataField : "w01",
 				headerText : "W01",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w02",
 				headerText : "W02",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w03",
 				headerText : "W03",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w04",
 				headerText : "W04",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w05",
 				headerText : "W05",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w06",
 				headerText : "W06",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w07",
 				headerText : "W07",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w08",
 				headerText : "W08",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w09",
 				headerText : "W09",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w10",
 				headerText : "W10",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w11",
 				headerText : "W11",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w12",
 				headerText : "W12",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w13",
 				headerText : "W13",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w14",
 				headerText : "W14",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w15",
 				headerText : "W15",
-				visible : true
+				visible : false
 			}, {
 				dataField : "w16",
 				headerText : "W16",
-				visible : true
+				visible : false
 			}, {
 				dataField : "fobPrc",
 				headerText : "FOB Price",
