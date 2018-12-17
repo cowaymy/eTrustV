@@ -23,7 +23,7 @@ var adjMGridID;
 var rowIndex = 0;
 
 $(document).ready(function(){
-	
+
     CommonCombo.make("budgetAdjType", "/common/selectCodeList.do", {groupCode:'347', orderValue:'CODE'}, "", {
         id: "code",
         name: "codeName",
@@ -32,10 +32,10 @@ $(document).ready(function(){
 
     $("#stYearMonth").val("${stYearMonth}");
     $("#edYearMonth").val("${edYearMonth}");
-    
+
     $("#btnSearch").click(fn_selectListAjax);
-    
-    
+
+
     var adjLayout = [ {
         dataField : "checkId",
         headerText : '<input type="checkbox" id="allCheckbox" style="width:15px;height:15px;">',
@@ -43,7 +43,7 @@ $(document).ready(function(){
         mergeRef : "budgetDocNo", // 이전 칼럼(대분류) 셀머지의 값을 비교해서 실행함. (mergePolicy : "restrict" 설정 필수)
         mergePolicy : "restrict",
         width : 50,
-        renderer : {        	
+        renderer : {
         	type : "CheckBoxEditRenderer",
             showLabel : false, // 참, 거짓 텍스트 출력여부( 기본값 false )
             editable : true, // 체크박스 편집 활성화 여부(기본값 : false)
@@ -52,7 +52,7 @@ $(document).ready(function(){
             disabledFunction : function(rowIndex, columnIndex, value, isChecked, item, dataField) {
                 if(item.status == "Close" || item.status == "Open")
                     return true; // true 반환하면 disabled 시킴
-                return false;                    
+                return false;
             }
       }
     },{
@@ -129,6 +129,9 @@ $(document).ready(function(){
         style : "my-right-style",
         width : 100
     },{
+        dataField : "signal",
+        headerText : 'Signal'
+    },{
         dataField : "adjRem",
         headerText : '<spring:message code="budget.Remark" />',
         style : "aui-grid-user-custom-left ",
@@ -175,44 +178,44 @@ $(document).ready(function(){
         headerText : '',
         visible : false,
     }];
-         
+
     var adjOptions = {
             enableCellMerge : true,
             showStateColumn:false,
-//            selectionMode       : "singleRow", 
-            selectionMode       : "singleCell", 
+//            selectionMode       : "singleRow",
+            selectionMode       : "singleCell",
             showRowNumColumn    : false,
             usePaging : false,
             editable :false
-      }; 
-    
+      };
+
     adjMGridID = GridCommon.createAUIGrid("#adjMGridID", adjLayout, "seq", adjOptions);
-    
+
     // 헤더 클릭 핸들러 바인딩
     AUIGrid.bind(adjMGridID, "headerClick", headerClickHandler);
-    
+
     //셀 클릭 핸들러 바인딩
     AUIGrid.bind(adjMGridID, "cellClick", auiCellClikcHandler);
-    
+
     $("#appvStus").multipleSelect("checkAll");
-       
+
 });
 
 function auiCellClikcHandler(event){
-    console.log("dataField : " +event.dataField + " rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked"); 
-    
+    console.log("dataField : " +event.dataField + " rowIndex : " + event.rowIndex + ", columnIndex : " + event.columnIndex + " clicked");
+
     var str = AUIGrid.getCellValue(adjMGridID, event.rowIndex, "budgetDocNo");
     var check = AUIGrid.getCellValue(adjMGridID, event.rowIndex, "checkId");
-    
-    var idx = AUIGrid.getRowCount(adjMGridID); 
-        
-    if(event.columnIndex == 0){    	
+
+    var idx = AUIGrid.getRowCount(adjMGridID);
+
+    if(event.columnIndex == 0){
         for(var i = 0; i < idx; i++){
             if(AUIGrid.getCellValue(adjMGridID, i, "budgetDocNo") == str){
                 AUIGrid.setCellValue(adjMGridID, i, "checkId", check);
             }
-        }  
-    }else if(event.columnIndex == 2){  
+        }
+    }else if(event.columnIndex == 2){
     	$("#atchFileGrpId").val(AUIGrid.getCellValue(adjMGridID, event.rowIndex, "atchFileGrpId"));
     	$("#gridBudgetDocNo").val(AUIGrid.getCellValue(adjMGridID, event.rowIndex, "budgetDocNo"));
     	fn_budgetAdjustmentPop('grid') ;
@@ -221,17 +224,17 @@ function auiCellClikcHandler(event){
             window.open(DEFAULT_RESOURCE_FILE + AUIGrid.getCellValue(adjMGridID, event.rowIndex, "filePath"));
     	}
     }
-    
-}     
+
+}
 
 
 //리스트 조회.
-function fn_selectListAjax() {        
+function fn_selectListAjax() {
     Common.ajax("GET", "/eAccounting/budget/selectAdjustmentList", $("#listSForm").serialize(), function(result) {
-        
+
          console.log("성공.");
          console.log( result);
-         
+
         AUIGrid.setGridData(adjMGridID, result);
 
     });
@@ -241,29 +244,29 @@ function fn_selectListAjax() {
 //Budget Code Pop 호출
 function fn_budgetCodePop(){
     $("#budgetCode").val("");
-    $("#budgetCodeName").val("");  
+    $("#budgetCodeName").val("");
     $("#pBudgetCode").val("");
-    $("#pBudgetCodeName").val(""); 
+    $("#pBudgetCodeName").val("");
     Common.popupDiv("/eAccounting/expense/budgetCodeSearchPop.do",null, null, true, "budgetCodeSearchPop");
-}  
+}
 
 function  fn_setBudgetData(){
 	$("#budgetCode").val($("#pBudgetCode").val());
-	$("#budgetCodeName").val( $("#pBudgetCodeName").val());    
+	$("#budgetCodeName").val( $("#pBudgetCodeName").val());
 }
 
 //Gl Account Pop 호출
 function fn_glAccountSearchPop(){
     $("#glAccCode").val("");
-    $("#glAccCodeName").val("");     
+    $("#glAccCodeName").val("");
     $("#pGlAccCode").val("");
     $("#pGlAccCodeName").val("");
     Common.popupDiv("/eAccounting/expense/glAccountSearchPop.do", null, null, true, "glAccountSearchPop");
 }
 
-function fn_setGlData (){    
+function fn_setGlData (){
 	$("#glAccCode").val($("#pGlAccCode").val());
-	$("#glAccCodeName").val( $("#pGlAccCodeName").val());        
+	$("#glAccCodeName").val( $("#pGlAccCodeName").val());
 }
 
 //Cost Center
@@ -282,22 +285,22 @@ function fn_setCostCenter (){
 
 //adjustment Pop
 function fn_budgetAdjustmentPop(value) {
-	
+
 	if(value == 'pop'){
-        $("#gridBudgetDocNo").val("");   
-        $("#atchFileGrpId").val("");   
+        $("#gridBudgetDocNo").val("");
+        $("#atchFileGrpId").val("");
 	}
     Common.popupDiv("/eAccounting/budget/budgetAdjustmentPop.do", $("#listSForm").serializeJSON(), fn_selectListAjax, true, "budgetAdjustmentPop");
 }
 
 //그리드 헤더 클릭 핸들러
 function headerClickHandler(event) {
-    
+
     // isActive 칼럼 클릭 한 경우
     if(event.dataField == "checkId") {
         if(event.orgEvent.target.id == "allCheckbox") { // 정확히 체크박스 클릭 한 경우만 적용 시킴.
             var  isChecked = document.getElementById("allCheckbox").checked;
-        
+
             checkAll(isChecked);
         }
         return false;
@@ -306,87 +309,87 @@ function headerClickHandler(event) {
 
 //전체 체크 설정, 전체 체크 해제 하기
 function checkAll(isChecked) {
-    
-	
-	 var idx = AUIGrid.getRowCount(adjMGridID); 
-	
+
+
+	 var idx = AUIGrid.getRowCount(adjMGridID);
+
     // 그리드의 전체 데이터를 대상으로 isActive 필드를 "Active" 또는 "Inactive" 로 바꿈.
-    if(isChecked) {    	
+    if(isChecked) {
     	for(var i = 0; i < idx; i++){
             if(AUIGrid.getCellValue(adjMGridID, i, "status") != 'Close' && AUIGrid.getCellValue(adjMGridID, i, "status") != 'Request'){
                 AUIGrid.setCellValue(adjMGridID, i, "checkId", "Y")
             }
-        }        
+        }
     } else {
         AUIGrid.updateAllToValue(adjMGridID, "checkId", "N");
     }
-    
+
     // 헤더 체크 박스 일치시킴.
     document.getElementById("allCheckbox").checked = isChecked;
 }
 
-function fn_budgetApproval(){   
-    
+function fn_budgetApproval(){
+
     // 그리드 데이터에서 checkId 필드의 값이 Y 인 행 아이템 모두 반환
     var activeItems = AUIGrid.getItemsByValue(adjMGridID, "checkId", "Y");
-    
+
     if(activeItems.length == 0){
     	Common.alert("<spring:message code='budget.msg.select' />");
         return;
     }
-    
+
     if(Common.confirm("<spring:message code='sys.common.alert.save'/>", function(){
-    	 
-    	$("#appvStus").val("O"); // adjustment 
-        $("#appvPrcssStus").val("R"); //Approval 
-    	
-    	 var obj = $("#listSForm").serializeJSON();   
+
+    	$("#appvStus").val("O"); // adjustment
+        $("#appvPrcssStus").val("R"); //Approval
+
+    	 var obj = $("#listSForm").serializeJSON();
     	 var gridData = GridCommon.getEditData(adjMGridID);
     	 obj.gridData = gridData;
-            
+
     Common.ajax("POST", "/eAccounting/budget/saveBudgetApprovalReq", obj , function(result)    {
     	  console.log("성공." + JSON.stringify(result));
           console.log("data : " + result.data);
-          
+
           var arryList = result.data.resultAmtList;
           var idx = arryList.length;
-          
+
           if(idx > 0){
-        	  
+
         	  for(var i = 0; i < idx; i++){
-        		  
+
                   var budgetDocNo = arryList[i].budgetDocNo;
                   var costCentr = arryList[i].costCentr;
                   var budgetCode = arryList[i].budgetCode;
                   var glAccCode = arryList[i].glAccCode;
                   var adjYearMonth = arryList[i].budgetAdjMonth + "/"+ arryList[i].budgetAdjYear;
-                     
+
                   for(var j=0; j < AUIGrid.getRowCount(adjMGridID); j++){
-                      
-                     var gridBudgetDoc = AUIGrid.getCellValue(adjMGridID, j, "budgetDocNo"); 
-                     var gridCostCentr = AUIGrid.getCellValue(adjMGridID, j, "costCentr"); 
-                     var gridBudgetCode = AUIGrid.getCellValue(adjMGridID, j, "budgetCode"); 
-                     var gridGlAccCode = AUIGrid.getCellValue(adjMGridID, j, "glAccCode"); 
-                     var gridAdjYearMonth = AUIGrid.getCellValue(adjMGridID, j, "adjYearMonth"); 
-                     var gridBudgetAdjType = AUIGrid.getCellValue(adjMGridID, j, "budgetAdjType"); 
-                     
-                      if(budgetDocNo == gridBudgetDoc && gridCostCentr == costCentr && gridBudgetCode == budgetCode 
+
+                     var gridBudgetDoc = AUIGrid.getCellValue(adjMGridID, j, "budgetDocNo");
+                     var gridCostCentr = AUIGrid.getCellValue(adjMGridID, j, "costCentr");
+                     var gridBudgetCode = AUIGrid.getCellValue(adjMGridID, j, "budgetCode");
+                     var gridGlAccCode = AUIGrid.getCellValue(adjMGridID, j, "glAccCode");
+                     var gridAdjYearMonth = AUIGrid.getCellValue(adjMGridID, j, "adjYearMonth");
+                     var gridBudgetAdjType = AUIGrid.getCellValue(adjMGridID, j, "budgetAdjType");
+
+                      if(budgetDocNo == gridBudgetDoc && gridCostCentr == costCentr && gridBudgetCode == budgetCode
                                  && gridGlAccCode == glAccCode && gridAdjYearMonth == adjYearMonth && gridBudgetAdjType !='01') {
-                          AUIGrid.setCellValue(adjMGridID, j, "overBudgetFlag","Y"); 
-                      }                      
+                          AUIGrid.setCellValue(adjMGridID, j, "overBudgetFlag","Y");
+                      }
                   }
               }
           }else{
         	  fn_selectListAjax();
           }
-          
+
           AUIGrid.setProp(adjMGridID, "rowStyleFunction", function(rowIndex, item) {
               if(item.overBudgetFlag == "Y") {
                      return "my-row-style";
                  }
                  return "";
 
-             }); 
+             });
 
              // 변경된 rowStyleFunction 이 적용되도록 그리드 업데이트
              AUIGrid.update(adjMGridID);
@@ -404,9 +407,9 @@ function fn_budgetApproval(){
          }
          Common.alert("Fail : " + jqXHR.responseJSON.message);
           });
-    
+
     }));
-    
+
 }
 
 function fn_goBudgetPlan(){
@@ -414,23 +417,23 @@ function fn_goBudgetPlan(){
 }
 
 function fn_budgetDelete() {
-	 
+
     // 그리드 데이터에서 checkId 필드의 값이 Y 인 행 아이템 모두 반환
     var activeItems = AUIGrid.getItemsByValue(adjMGridID, "checkId", "Y");
-    
+
     if(activeItems.length == 0){
     	Common.alert('<spring:message code="budget.msg.delete" />');
         return;
     }
-    
+
     if(Common.confirm("<spring:message code='sys.common.alert.delete'/>", function(){
-         
+
          var gridData = GridCommon.getEditData(adjMGridID);
-            
+
     Common.ajax("POST", "/eAccounting/budget/deleteBudgetAdjustment", {gridData:gridData} , function(result)    {
           console.log("성공." + JSON.stringify(result));
           console.log("data : " + result.data);
-          
+
           fn_selectListAjax();
     }
     , function(jqXHR, textStatus, errorThrown){
@@ -446,7 +449,7 @@ function fn_budgetDelete() {
          }
          Common.alert("Fail : " + jqXHR.responseJSON.message);
           });
-    
+
     }));
 }
 </script>
@@ -475,10 +478,10 @@ function fn_budgetDelete() {
     <input type="hidden" id = "pBudgetCodeName" name="pBudgetCodeName" />
     <input type="hidden" id = "pGlAccCode" name="pGlAccCode" />
     <input type="hidden" id = "pGlAccCodeName" name="pGlAccCodeName" />
-    
+
     <input type="hidden" id = "search_costCentr" name="search_costCentr" />
     <input type="hidden" id = "search_costCentrName" name="search_costCentrName" />
-    
+
     <input type="hidden" id = "gridBudgetDocNo" name="gridBudgetDocNo" />
     <input type="hidden" id = "atchFileGrpId" name="atchFileGrpId" />
     <input type="hidden" id = "budgetStatus" name="budgetStatus" />
