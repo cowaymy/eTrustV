@@ -138,7 +138,7 @@ $(document).ready(function() {
              $("#_payTab").css("display" , "");
 
              //MEM GRID DISPLAY
-             //$("#_purchMemBtn").css("display" , "");  // DISABLE MEMBER LIST GRID -- TPY 
+             //$("#_purchMemBtn").css("display" , "");  // DISABLE MEMBER LIST GRID -- TPY
              //$("#_mainMemberGrid").css("display" , "");
              $("#_purchMemBtn").css("display" , "none");
              $("#_mainMemberGrid").css("display" , "none");
@@ -335,7 +335,7 @@ $(document).ready(function() {
     		return;
     	}
 // DISABLE MEMBER LIST GRID CHECKING -- TPY
-    	//Member Grid Null Check 
+    	//Member Grid Null Check
 /*      	if($("#_insPosModuleType").val() == 2391){
     		if(AUIGrid.getGridData(memGridID) <= 0){
                 Common.alert('<spring:message code="sal.alert.msg.selectMembers" />');
@@ -1123,7 +1123,7 @@ function fn_inputAmt(obj){
 <tr>
     <th scope="row"><spring:message code="sal.title.remark" /></th>
     <td colspan="2">
-        <input type="text" title="" placeholder="" class="w100p" id="_posRemark" name="posRemark" />
+        <input type="text" title="" placeholder="" class="w100p" id="_posRemark" name="posRemark" maxlength = "50" />
     </td>
 </tr>
 </tbody>
