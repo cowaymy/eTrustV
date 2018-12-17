@@ -206,14 +206,16 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 			int m0OrdSum	= 0;	int	m0Sum	= 0;	int m1Sum	= 0;	int m2Sum	= 0;	int m3Sum	= 0;	int m4Sum	= 0;
 			int	weekQty		= 0;
 			String stkTypeId	= "";
+			String stockCode	= "";
 			
 			//	every stock
 			for ( int i = 0 ; i < selectBefWeekList.size() ; i++ ) {
 				//planDtlId	= Integer.parseInt(selectBefWeekList.get(i).get("planDtlId").toString());
 				planDtlId	= Integer.parseInt(selectPlanWeekList.get(i).get("planDtlId").toString());	//	must using selectPlanWeekList
 				stkTypeId	= selectBefWeekList.get(i).get("stkTypeId").toString();	//	필터류들을 별도로 생성하기 위해서
+				stockCode	= selectBefWeekList.get(i).get("stockCode").toString();
 				updParams.put("planDtlId", planDtlId);
-				m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;
+				m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;	weekQty		= 0;
 				
 				//	수립주차의 월 / 수립전주차의 월 비교
 				if ( planMonth == befWeekMonth ) {
@@ -223,7 +225,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 					
 					//	stkTypeId = 62(필터) 확인
 					if ( "62".equals(stkTypeId) ) {
-						m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;
+						m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;	weekQty		= 0;
 						//	Filter
 						if ( planFstWeek == planFstSpltWeek ) {
 							//	첫주차가 스플릿 주차가 아닌 경우
@@ -232,84 +234,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m0 ) {
-									//	제일 첫번째 주차에 월합계 입력
-									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()));
-									updParams.put("m0", Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()));
-								} else {
-									updParams.put("w" + intToStrFieldCnt2, 0);
-								}
-								iLoopDataFieldCnt2++;
-							}
-							for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
-								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-								if ( 1 == intToStrFieldCnt2.length() ) {
-									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m1 ) {
-									//	제일 첫번째 주차에 월합계 입력
-									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()));
-									updParams.put("m1", Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()));
-								} else {
-									updParams.put("w" + intToStrFieldCnt2, 0);
-								}
-								iLoopDataFieldCnt2++;
-							}
-							for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
-								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-								if ( 1 == intToStrFieldCnt2.length() ) {
-									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m2 ) {
-									//	제일 첫번째 주차에 월합계 입력
-									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()));
-									updParams.put("m2", Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()));
-								} else {
-									updParams.put("w" + intToStrFieldCnt2, 0);
-								}
-								iLoopDataFieldCnt2++;
-							}
-							for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
-								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-								if ( 1 == intToStrFieldCnt2.length() ) {
-									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m3 ) {
-									//	제일 첫번째 주차에 월합계 입력
-									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()));
-									updParams.put("m3", Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()));
-								} else {
-									updParams.put("w" + intToStrFieldCnt2, 0);
-								}
-								iLoopDataFieldCnt2++;
-							}
-							for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
-								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-								if ( 1 == intToStrFieldCnt2.length() ) {
-									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m4 ) {
-									//	제일 첫번째 주차에 월합계 입력
-									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()));
-									updParams.put("m4", Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()));
-								} else {
-									updParams.put("w" + intToStrFieldCnt2, 0);
-								}
-								iLoopDataFieldCnt2++;
-							}
-						} else {
-							//	첫주차가 스플릿 주차인 경우
-							for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
-								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-								if ( 1 == intToStrFieldCnt2.length() ) {
-									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
-								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
 								if ( 1 == m0 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()));
@@ -318,14 +243,15 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
+								LOGGER.debug("i : " + i + ", m0 : " + m0 + ", STOCK_CODE : " + stockCode + ", m0" + Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 							for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m1 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 1 == m1 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()));
 									updParams.put("m1", Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()));
@@ -333,13 +259,14 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
+								LOGGER.debug("i : " + i + ", m1 : " + m1 + ", STOCK_CODE : " + stockCode + ", m1 : " + Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 							for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
 								if ( 1 == m2 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()));
@@ -348,13 +275,14 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
+								LOGGER.debug("i : " + i + ", m2 : " + m2 + ", STOCK_CODE : " + stockCode + ", m2 : " + Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 							for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
 								if ( 1 == m3 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()));
@@ -363,13 +291,14 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
+								LOGGER.debug("i : " + i + ", m3 : " + m3 + ", STOCK_CODE : " + stockCode + ", m3 : " + Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 							for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
 								if ( 1 == m4 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()));
@@ -378,10 +307,94 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
+								LOGGER.debug("i : " + i + ", m4 : " + m4 + ", STOCK_CODE : " + stockCode + ", m4 : " + Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()) + ", w" + intToStrFieldCnt2);
+							}
+						} else {
+							//	첫주차가 스플릿 주차인 경우
+							for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
+								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
+								if ( 1 == intToStrFieldCnt2.length() ) {
+									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
+								}
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 2 == m0 ) {
+									//	제일 첫번째 주차에 월합계 입력
+									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()));
+									updParams.put("m0", Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()));
+								} else {
+									updParams.put("w" + intToStrFieldCnt2, 0);
+								}
+								iLoopDataFieldCnt2++;
+								LOGGER.debug("1-i : " + i + ", m0 : " + m0 + ", STOCK_CODE : " + stockCode + ", m0" + Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()) + ", w" + intToStrFieldCnt2);
+							}
+							for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
+								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
+								if ( 1 == intToStrFieldCnt2.length() ) {
+									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
+								}
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 2 == m1 ) {
+									//	제일 첫번째 주차에 월합계 입력
+									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()));
+									updParams.put("m1", Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()));
+								} else {
+									updParams.put("w" + intToStrFieldCnt2, 0);
+								}
+								iLoopDataFieldCnt2++;
+								LOGGER.debug("1-i : " + i + ", m1 : " + m1 + ", STOCK_CODE : " + stockCode + ", m1 : " + Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()) + ", w" + intToStrFieldCnt2);
+							}
+							for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
+								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
+								if ( 1 == intToStrFieldCnt2.length() ) {
+									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
+								}
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 2 == m2 ) {
+									//	제일 첫번째 주차에 월합계 입력
+									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()));
+									updParams.put("m2", Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()));
+								} else {
+									updParams.put("w" + intToStrFieldCnt2, 0);
+								}
+								iLoopDataFieldCnt2++;
+								LOGGER.debug("2-i : " + i + ", m2 : " + m2 + ", STOCK_CODE : " + stockCode + ", m2 : " + Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()) + ", w" + intToStrFieldCnt2);
+							}
+							for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
+								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
+								if ( 1 == intToStrFieldCnt2.length() ) {
+									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
+								}
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 2 == m3 ) {
+									//	제일 첫번째 주차에 월합계 입력
+									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()));
+									updParams.put("m3", Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()));
+								} else {
+									updParams.put("w" + intToStrFieldCnt2, 0);
+								}
+								iLoopDataFieldCnt2++;
+								LOGGER.debug("3-i : " + i + ", m3 : " + m3 + ", STOCK_CODE : " + stockCode + ", m3 : " + Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()) + ", w" + intToStrFieldCnt2);
+							}
+							for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
+								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
+								if ( 1 == intToStrFieldCnt2.length() ) {
+									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
+								}
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 2 == m4 ) {
+									//	제일 첫번째 주차에 월합계 입력
+									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()));
+									updParams.put("m4", Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()));
+								} else {
+									updParams.put("w" + intToStrFieldCnt2, 0);
+								}
+								iLoopDataFieldCnt2++;
+								LOGGER.debug("4-i : " + i + ", m4 : " + m4 + ", STOCK_CODE : " + stockCode + ", m4 : " + Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 						}
 					} else {
 						//	Except Filter
+						m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;	weekQty		= 0;
 						//	3.1 m0
 						for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
 							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
@@ -392,7 +405,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 							if ( 1 == intToStrFieldCnt2.length() ) {
 								intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 							}
-							LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+							//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
 							
 							//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
 							if ( planFstWeek == planFstSpltWeek ) {
@@ -442,7 +455,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 							if ( 1 == intToStrFieldCnt2.length() ) {
 								intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 							}
-							LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+							//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
 							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 							m1Sum	= m1Sum + weekQty;
 							updParams.put("w" + intToStrFieldCnt2, weekQty);
@@ -461,7 +474,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 							if ( 1 == intToStrFieldCnt2.length() ) {
 								intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 							}
-							LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+							//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
 							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 							m2Sum	= m2Sum + weekQty;
 							updParams.put("w" + intToStrFieldCnt2, weekQty);
@@ -480,7 +493,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 							if ( 1 == intToStrFieldCnt2.length() ) {
 								intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 							}
-							LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+							//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
 							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 							m3Sum	= m3Sum + weekQty;
 							updParams.put("w" + intToStrFieldCnt2, weekQty);
@@ -493,7 +506,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
-							LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+							//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt1 " + iLoopDataFieldCnt1 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
 							weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 							m4Sum	= m4Sum + weekQty;
 							updParams.put("w" + intToStrFieldCnt2, weekQty);
@@ -525,11 +538,11 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 					} else {
 						LOGGER.debug("Diff : m0WeekCnt is wrong");
 					}
-					LOGGER.debug("m0WeekCnt : " + m0WeekCnt);
+					//LOGGER.debug("m0WeekCnt : " + m0WeekCnt);
 					
 					//	stkTypeId = 62(필터) 확인
 					if ( "62".equals(stkTypeId) ) {
-						m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;
+						m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;	weekQty		= 0;
 						//	Filter
 						if ( planFstWeek == planFstSpltWeek ) {
 							//	첫주차가 스플릿 주차가 아닌 경우
@@ -538,8 +551,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m0 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 1 == m0 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()));
 									updParams.put("m0", Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()));
@@ -553,8 +566,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m1 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 1 == m1 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()));
 									updParams.put("m1", Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()));
@@ -568,8 +581,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m2 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 1 == m2 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()));
 									updParams.put("m2", Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()));
@@ -583,8 +596,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m3 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 1 == m3 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()));
 									updParams.put("m3", Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()));
@@ -598,8 +611,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m4 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 1 == m4 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()));
 									updParams.put("m4", Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()));
@@ -615,8 +628,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 1 == m0 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 2 == m0 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()));
 									updParams.put("m0", Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()));
@@ -630,8 +643,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 0 == m1 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 2 == m1 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()));
 									updParams.put("m1", Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()));
@@ -645,8 +658,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 1 == m2 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 2 == m2 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()));
 									updParams.put("m2", Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()));
@@ -660,8 +673,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 1 == m3 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 2 == m3 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()));
 									updParams.put("m3", Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()));
@@ -675,8 +688,8 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
-								if ( 1 == m4 ) {
+								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
+								if ( 2 == m4 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()));
 									updParams.put("m4", Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()));
@@ -688,6 +701,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						}
 					} else {
 						//	Except Filter
+						m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;	weekQty		= 0;
 						//	3.1 m0
 						for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
 							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
@@ -698,7 +712,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 							if ( 1 == intToStrFieldCnt2.length() ) {
 								intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 							}
-							LOGGER.debug("intToStrFieldCnt1 : " + intToStrFieldCnt1);
+							//LOGGER.debug("intToStrFieldCnt1 : " + intToStrFieldCnt1);
 							
 							if ( planFstWeek == planFstSpltWeek ) {
 								//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
