@@ -1464,7 +1464,7 @@
         LEFT JOIN PAY0053S I ON I.ACC_DEBT_ORD_ID = A.SALES_ORD_ID
         LEFT JOIN PAY0022D J ON J.RENT_SO_ID = A.SALES_ORD_ID
         LEFT JOIN (SELECT * from SAL0046D SM
-                        where SM.INSTALL_ENTRY_ID = (SELECT MAX(aa.INSTALL_ENTRY_ID)
+                        where SM.INSTALL_ENTRY_ID = (SELECT MIN(aa.INSTALL_ENTRY_ID)
                                                from SAL0046D aa
                                                 where
                                                 aa.SALES_ORD_ID = SM.SALES_ORD_ID))SM

@@ -91,8 +91,8 @@ var columnLayout = [
     , {dataField : "custName", headerText : "Customer Name", editable : false,width : 150 }
     , {dataField : "stkDesc", headerText : "Product Description", editable : false,width : 120}
     , {dataField : "payMode", headerText : "Paymode", editable : false,width : 120}
-    , {dataField : "agingMonth", headerText : "Aging Month", editable : false,width : 150}
-    , {dataField : "outstandingAmt", headerText : "Outstanding", editable : false,width : 150}
+    , {dataField : "agingMonth", headerText : "Aging Month", editable : false,width : 150,dataType : "numeric", formatString : "#,##0.00"}
+    , {dataField : "outstandingAmt", headerText : "Outstanding", editable : false,width : 150,dataType : "numeric", formatString : "#,##0.00"}
     , {dataField : "hpCode", headerText : "HP Code", editable : false}
     , {dataField : "deptCode", headerText : "Dept Code", editable : false}
     , {dataField : "grpCode", headerText : "Grp Code", editable : false}
