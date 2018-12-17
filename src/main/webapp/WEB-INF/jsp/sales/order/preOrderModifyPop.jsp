@@ -461,10 +461,10 @@
             Common.ajaxFile("/sales/order/attachFileUpdate.do", formData, function(result) {
             	if(result.code == 99){
             		Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-            		myFileCaches = {};
+            		//myFileCaches = {};
             	}else{
             		fn_doSavePreOrder();
-                    myFileCaches = {};
+                    //myFileCaches = {};
             	}
             },function(result){
                 Common.alert(result.message+"<br/>Upload Failed. Please check with System Administrator.");

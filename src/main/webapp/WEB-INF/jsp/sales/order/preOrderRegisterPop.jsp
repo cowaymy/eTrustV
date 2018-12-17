@@ -469,10 +469,10 @@
                 	console.log("atchFileGrpId ::" + result.data.fileGroupKey);
                     atchFileGrpId= result.data.fileGroupKey;
                     fn_doSavePreOrder();
-                    myFileCaches = {};
+                    //myFileCaches = {};
                 }else{
                 	Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-                    myFileCaches = {};
+                    //myFileCaches = {};
                     $('#sofFile').on('change');
                     $('#nricFile').on('change');
                     $('#payFile').on('change');
