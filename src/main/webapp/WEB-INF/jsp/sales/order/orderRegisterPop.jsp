@@ -1819,7 +1819,8 @@ console.log("vBindingNo" + vBindingNo);
                   if (appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
                     if ($('#compType').val() == '3' || $('#compType').val() == '4') {
                       if ($('#ordPromo').val() != '31810' && $('#ordPromo').val() != '31811' && $('#ordPromo').val() != '31814' && $('#ordPromo').val() != '31813' && $('#ordPromo').val() != '31812'
-                    		  && $('#ordPromo').val() != '31815' && $('#ordPromo').val() != '31816' && $('#ordPromo').val() != '31817') {
+                    		  && $('#ordPromo').val() != '31815' && $('#ordPromo').val() != '31816' && $('#ordPromo').val() != '31817'
+                    		  && $('#ordPromo').val() != '31716' && $('#ordPromo').val() != '31715' && $('#ordPromo').val() != '31730' && $('#ordPromo').val() != '31729' && $('#ordPromo').val() != '31728') {
                 	    isValid = false;
                 		msg += '* <spring:message code="sal.alert.msg.plzSelPromoCde" /><br>';
                 	  }
