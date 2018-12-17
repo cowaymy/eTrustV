@@ -1,5 +1,8 @@
 package com.coway.trust.web.login;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -30,6 +33,7 @@ import com.coway.trust.cmmn.model.ReturnMessage;
 import com.coway.trust.cmmn.model.SessionVO;
 import com.coway.trust.config.handler.SessionHandler;
 import com.coway.trust.util.Precondition;
+import com.ibm.icu.util.Calendar;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
@@ -281,7 +285,58 @@ public class LoginController {
                 }
                 // Accepted
                 else if("5".equals(stusId) && "1".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
-                    params.put("popType", "M");
+                    // HP Renewal
+                    if("0001".equals(userTypeId) /* && !"115".equals(item.get("roleType")) */) {
+                        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+
+                        Date currDate = new Date(); // Current Date
+                        Date janRe = null; // January Renewal
+                        Date julRe = null; // July Renewal
+                        Date cnfmDate = null; // Agreement Confirmation Date
+
+                        Calendar cal = Calendar.getInstance();
+
+                        cal.setTime(currDate);
+                        int cYear = cal.get(Calendar.YEAR);
+                        int cMth = cal.get(Calendar.MONTH);
+                        if(cMth < 7) {
+                            cMth = 1;
+                        } else {
+                            cMth = 2;
+                        }
+
+                        try {
+                            janRe = sdf.parse(Integer.toString(cYear) + "-01-01");
+                            julRe = sdf.parse(Integer.toString(cYear) + "-07-01");
+                            cnfmDate = sdf.parse(cnfmDt);
+
+                            switch(cMth) {
+                                case 1:
+                                    if(cnfmDate.compareTo(janRe) < 0) {
+                                        params.put("popType", "A");
+                                    } else {
+                                        params.put("popType", "M");
+                                    }
+                                    break;
+                                case 2:
+                                    if(cnfmDate.compareTo(julRe) < 0) {
+                                        params.put("popType", "A");
+                                    } else {
+                                        params.put("popType", "M");
+                                    }
+                                    break;
+                                default:
+                                    params.put("popType", "M");
+                                    break;
+                            }
+                        } catch (Exception e) {
+                            LOGGER.error(e.toString());
+                        }
+                    }
+                    // Other than HP user type
+                    else {
+                        params.put("popType", "M");
+                    }
                 }
                 // Rejected
                 else if("6".equals(stusId) && "0".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
