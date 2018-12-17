@@ -8,9 +8,14 @@
     var update = new Array();
     var sofFileId;
     var nricFileId;
+    var payFileId;
+    var trFileId;
     var otherFileId;
+
     var sofFileName;
     var nricFileName;
+    var payFileName;
+    var trFileName;
     var otherFileName;
 
     $(document).ready(function(){
@@ -35,6 +40,7 @@
             $('#scPreOrdArea').find("input,textarea,button,select").attr("disabled",true);
             $("#scPreOrdArea").find("p.btn_grid").hide();
             $('#btnSave').hide();
+            $(".input_text").attr('disabled',false).addClass("readonly");;
         }
 
         if('${preOrderInfo.atchFileGrpId}' != 0){
@@ -843,7 +849,7 @@
         }
         if(FormUtil.checkReqValue($('#sofNo'))) {
             isValid = false;
-            msg += "* Please key in eSales(SOF) No.<br>";
+            msg += "* Please key in SOF No.<br>";
         }
 
         if(!isValid) Common.alert("Pre-Order Summary" + DEFAULT_DELIMITER + "<b>"+msg+"</b>");
@@ -1677,28 +1683,44 @@
             console.log(result);
 	       if(result) {
 	            if(result.length > 0) {
-	                $("#attachTd").html("");
-	               if(result[0]){
-	            	// index 0 : SOF File
-	            	   $("#sofFileTxt").attr("name","sofFileTxt");
-	            	   sofFileId = result[0].atchFileId;
-                       sofFileName = result[0].atchFileName;
-                       $(".input_text[name='sofFileTxt']").val(sofFileName);
-                   }
-	               if(result[1]){
-	            	   // index 1 : NRIC File
-                       $("#nricFileTxt").attr("name","nricFileTxt");
-                       nricFileId = result[1].atchFileId;
-                       nricFileName = result[1].atchFileName;
-                       $(".input_text[name='nricFileTxt']").val(nricFileName);
-	               }
-	               if(result[2]){
-	                    // index 2 : Other File
-                        $("#otherFileTxt").attr("name","otherFileTxt");
-                        otherFileId = result[0].atchFileId;
-                        otherFileName = result[2].atchFileName;
-                        $(".input_text[name='otherFileTxt']").val(otherFileName);
-	               }
+	            	$("#attachTd").html("");
+	            	for ( var i = 0 ; i < result.length ; i++ ) {
+	                    switch (result[i].fileKeySeq){
+	                    case '1':
+	                        $("#sofFileTxt").attr("name","sofFileTxt");
+	                        sofFileId = result[i].atchFileId;
+	                        sofFileName = result[i].atchFileName;
+	                        $(".input_text[name='sofFileTxt']").val(sofFileName);
+	                        break;
+	                    case '2':
+	                        $("#nricFileTxt").attr("name","nricFileTxt");
+	                        nricFileId = result[i].atchFileId;
+	                        nricFileName = result[i].atchFileName;
+	                        $(".input_text[name='nricFileTxt']").val(nricFileName);
+	                        break;
+	                    case '3':
+	                        $("#payFileTxt").attr("name","payFileTxt");
+	                        payFileId = result[i].atchFileId;
+	                        payFileName = result[i].atchFileName;
+	                        $(".input_text[name='payFileTxt']").val(payFileName);
+	                        break;
+	                    case '4':
+	                        $("#trFileTxt").attr("name","trFileTxt");
+	                        trFileId = result[i].atchFileId;
+	                        trFileName = result[i].atchFileName;
+	                        $(".input_text[name='trFileTxt']").val(trFileName);
+	                        break;
+	                    case '5':
+	                        $("#otherFileTxt").attr("name","otherFileTxt");
+	                        otherFileId = result[i].atchFileId;
+	                        otherFileName = result[i].atchFileName;
+	                        $(".input_text[name='otherFileTxt']").val(otherFileName);
+	                        break;
+	                     default:
+	                    	 Common.alert("no files");
+	                    }
+	                }
+
 	                // 파일 다운
 	                $(".input_text").dblclick(function() {
 	                    var oriFileName = $(this).val();
@@ -1742,6 +1764,34 @@
             }
         });
 
+        $('#payFile').on('change', function(evt) {
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                delete myFileCaches[selectRowIdx + 1];
+                return;
+            }
+            if(file.name != payFileName){
+                myFileCaches[3] = {file:file};
+                if(payFileName != null){
+                       update.push(payFileId);
+                }
+            }
+        });
+
+        $('#trFile').on('change', function(evt) {
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                delete myFileCaches[selectRowIdx + 1];
+                return;
+            }
+            if(file.name != trFileName){
+                myFileCaches[4] = {file:file};
+                if(trFileName != null){
+                       update.push(trFileId);
+                }
+            }
+        });
+
         $('#otherFile').on('change', function(evt) {
             var file = evt.target.files[0];
             if (typeof file == "undefined") {
@@ -1749,7 +1799,7 @@
                 return;
             }
             if(file.name != otherFileName){
-            	myFileCaches[3] = {file:file};
+            	myFileCaches[5] = {file:file};
             	if(otherFileName != null){
             		   update.push(otherFileId);
             	}
@@ -1789,7 +1839,7 @@
 <tr>
 	<th scope="row">NRIC/Company No</th>
 	<td><input id="nric" name="nric" type="text" value="" title="" placeholder="" class="w100p readonly" readonly /></td>
-	<th scope="row">eSales(SOF) No</th>
+	<th scope="row">SOF No</th>
 	<td><input id="sofNo" name="sofNo" type="text" value="${preOrderInfo.sofNo}" title="" placeholder="" class="w100p readonly" readonly /></td>
 </tr>
 </tbody>
@@ -2666,6 +2716,30 @@
                 <input type='text' class='input_text' readonly='readonly' id='nricFileTxt'/>
                 <span class='label_text'><a href='#'>Upload</a></span>
             </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Payment document</th>
+    <td id="tdPayFile">
+        <div class='auto_file2 auto_file3'>
+                <input type='file' title='file add' id='payFile' accept='image/*''/>
+                <label>
+                    <input type='text' class='input_text' readonly='readonly' id='payFileTxt' name=''/>
+                    <span class='label_text'><a href='#'>Upload</a></span>
+                </label>
+        </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Coway temporary receipt (TR)</th>
+    <td id="tdTrFile">
+        <div class='auto_file2 auto_file3'>
+                <input type='file' title='file add' id='trFile' accept='image/*''/>
+                <label>
+                    <input type='text' class='input_text' readonly='readonly' id='trFileTxt' name=''/>
+                    <span class='label_text'><a href='#'>Upload</a></span>
+                </label>
         </div>
     </td>
 </tr>

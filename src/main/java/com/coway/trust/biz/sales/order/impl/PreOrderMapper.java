@@ -44,4 +44,8 @@ public interface PreOrderMapper {
 	int selectExistingMember(Map<String, Object> params);
 
 	List<EgovMap> selectAttachList(Map<String, Object> params);
+
+	int selectNextFileId();
+
+	void insertFileDetail(Map<String, Object> flInfo);
 }

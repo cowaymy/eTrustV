@@ -7,7 +7,6 @@
     var listGiftGridID;
     var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
     var MEM_TYPE     = '${SESSION_INFO.userTypeId}';
-    var selectRowIdx;
     var atchFileGrpId = 0;
 
     $(document).ready(function(){
@@ -438,7 +437,7 @@
         });
         $('#btnSave').click(function() {
 
-            if(!fn_validCustomer()) {
+             if(!fn_validCustomer()) {
                 $('#aTabCS').click();
                 return false;
             }
@@ -465,13 +464,20 @@
             });
 
             Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
+            	console.log(result);
                 if(result != 0 && result.code == 00){
+                	console.log("atchFileGrpId ::" + result.data.fileGroupKey);
                     atchFileGrpId= result.data.fileGroupKey;
                     fn_doSavePreOrder();
                     myFileCaches = {};
                 }else{
                 	Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
                     myFileCaches = {};
+                    $('#sofFile').on('change');
+                    $('#nricFile').on('change');
+                    $('#payFile').on('change');
+                    $('#trFile').on('change');
+                    $('#otherFile').on('change');
                 }
             },function(result){
                 Common.alert("Upload Failed. Please check with System Administrator.");
@@ -1569,27 +1575,6 @@
     	//$('#nric').val(nric.substr(0).replace(/[\S]/g,"*"));
     }
 
-    function fn_upload(){
-        var formData = new FormData();
-        var atchFileGrpId = 0;
-
-        $.each(myFileCaches, function(n, v) {
-            console.log("n : " + n + " v.file : " + v.file);
-            formData.append(n, v.file);
-        });
-
-        Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
-            if(result != 0){
-                atchFileGrpId= result.data.fileGroupKey;
-                myFileCaches = {};
-                return true;
-            }
-        },function(result){
-        	Common.alert("Upload Failed. Please check with System Administrator.");
-            return false;
-        });
-    }
-
     function fn_setFileEvent(){
         $('#sofFile').on('change', function(evt) {
             var file = evt.target.files[0];
@@ -1609,13 +1594,31 @@
             myFileCaches[2] = {file:file};
         });
 
-        $('#otherFile').on('change', function(evt) {
+        $('#payFile').on('change', function(evt) {
             var file = evt.target.files[0];
             if (typeof file == "undefined") {
                 delete myFileCaches[selectRowIdx + 1];
                 return;
             }
             myFileCaches[3] = {file:file};
+        });
+
+        $('#trFile').on('change', function(evt) {
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                delete myFileCaches[selectRowIdx + 1];
+                return;
+            }
+            myFileCaches[4] = {file:file};
+        });
+
+        $('#otherFile').on('change', function(evt) {
+            var file = evt.target.files[0];
+            if (typeof file == "undefined") {
+                delete myFileCaches[selectRowIdx + 1];
+                return;
+            }
+            myFileCaches[5] = {file:file};
         });
     }
 </script>
@@ -2520,6 +2523,14 @@
 <tr>
     <th scope="row">NRIC & Bank Card<span class="must">*</span></th>
     <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="nricFile" accept="image/*"/></div></td>
+</tr>
+<tr>
+    <th scope="row">Payment document</th>
+    <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="payFile" accept="image/*"/></div></td>
+</tr>
+<tr>
+    <th scope="row">Coway temporary receipt (TR)</th>
+    <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="trFile" accept="image/*"/></div></td>
 </tr>
 <tr>
     <th scope="row">Declaration letter/Others form</th>

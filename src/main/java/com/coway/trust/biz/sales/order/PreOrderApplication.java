@@ -8,8 +8,8 @@ import com.coway.trust.biz.common.type.FileType;
 
 public interface PreOrderApplication {
 
-	void insertPreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
+	void insertPreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params, List<String> seqs);
 
-	void updatePreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params);
+	void updatePreOrderAttachBiz(List<FileVO> list, FileType type, Map<String, Object> params,List<String> seqs);
 
 }

@@ -4,10 +4,13 @@
 package com.coway.trust.web.sales.order;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
@@ -311,19 +314,27 @@ public class PreOrderController {
 	@RequestMapping(value = "/attachFileUpload.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> attachFileUpload(MultipartHttpServletRequest request, @RequestParam Map<String, Object> params, Model model, SessionVO sessionVO) throws Exception {
 
-		logger.debug("params =====================================>>  " + params.toString());
-		logger.debug("request =====================================>>  " + request);
 		String err = "";
 		String code = "";
+		List<String> seqs = new ArrayList<>();
 
 		try{
+			 Set set = request.getFileMap().entrySet();
+			 Iterator i = set.iterator();
+
+			 while(i.hasNext()) {
+			     Map.Entry me = (Map.Entry)i.next();
+			     String key = (String)me.getKey();
+			     seqs.add(key);
+			 }
+
 		List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "sales" + File.separator + "preOrder", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 
 		logger.debug("list.size : {}", list.size());
 
 		params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-		preOrderApplication.insertPreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params);
+		preOrderApplication.insertPreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE,  params, seqs);
 
 		params.put("attachFiles", list);
 		code = AppConstants.SUCCESS;
@@ -354,12 +365,23 @@ public class PreOrderController {
 		logger.debug("params =====================================>>  " + params);
 		String err = "";
 		String code = "";
+		List<String> seqs = new ArrayList<>();
+
 		try{
+			 Set set = request.getFileMap().entrySet();
+			 Iterator i = set.iterator();
+
+			 while(i.hasNext()) {
+			     Map.Entry me = (Map.Entry)i.next();
+			     String key = (String)me.getKey();
+			     seqs.add(key);
+			 }
+
 			List<EgovFormBasedFileVo> list = EgovFileUploadUtil.uploadFiles(request, uploadDir, File.separator + "sales" + File.separator + "preOrder", AppConstants.UPLOAD_MIN_FILE_SIZE, true);
 			logger.debug("list.size : {}", list.size());
 			params.put(CommonConstants.USER_ID, sessionVO.getUserId());
 
-			preOrderApplication.updatePreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params);
+			preOrderApplication.updatePreOrderAttachBiz(FileVO.createList(list), FileType.WEB_DIRECT_RESOURCE, params, seqs);
 
 			params.put("attachFiles", list);
 			code = AppConstants.SUCCESS;

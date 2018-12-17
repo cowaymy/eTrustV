@@ -8,8 +8,10 @@
 	var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 	var CATE_ID  = "14";
 	var appTypeData = [{"codeId": "66","codeName": "Rental"},{"codeId": "67","codeName": "Outright"},{"codeId": "68","codeName": "Instalment"}];
+	var actData= [{"codeId": "21","codeName": "Failed"},{"codeId": "10","codeName": "Cancel"}];
 	var myFileCaches = {};
 	var recentGridItem = null;
+	var selectRowIdx;
 
     if(MEM_TYPE == '1') { //HP
         CATE_ID = "29";
@@ -89,9 +91,11 @@
 
         //doGetComboOrder('/common/selectCodeList.do', '10', 'CODE_ID', '', '_appTypeId', 'M', 'fn_multiCombo'); //Common Code
         doDefCombo(appTypeData, '' ,'_appTypeId', 'M', 'fn_multiCombo');
+        doDefCombo(actData, '' ,'_action', 'S', '');
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
+
     });
 
     function fn_statusCodeSearch(){
@@ -106,47 +110,66 @@
     }
 
     function fn_validStatus() {
-console.log(selectRowIdx);
+        var isValid = true;
         if(selectRowIdx > -1) {
             var stusId    = AUIGrid.getCellValue(listGridID, selectRowIdx, "stusId");
             var preOrdId = AUIGrid.getCellValue(listGridID, selectRowIdx, "preOrdId");
             var sofNo     = AUIGrid.getCellValue(listGridID, selectRowIdx, "sofNo");
+            var custNric  = AUIGrid.getCellValue(listGridID, selectRowIdx, "nric");
 
             $('#hiddenPreOrdId').val(preOrdId);
             $('#hiddenSof').val(sofNo);
+            $('#view_sofNo').text(sofNo);
+            $('#view_custIc').text(custNric);
 
             if(stusId == 4){
                 Common.alert("Completed eKey-in cannot be edited.");
-            }
-            else{
-            	$('#updFail_wrap').show();
+                isValid = false;
             }
         }else {
-                Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
+           Common.alert("Pre-Order Missing" + DEFAULT_DELIMITER + "<b>No pre-order selected.</b>");
+           isValid = false;
         }
+
+        return isValid;
     }
 
     function fn_doFailStatus(){
+
+    	var action = $('#_action option:selected').val().trim();
+    	var name = $('#_action option:selected').text();
+        var sof = $('#hiddenSof').val();
+
+    	if(action == "" ){
+    		Common.alert("Please select action");
+            return;
+    	}
+    	if(action == 21 && ($('input[name=cmbFailCode]:checked').val() == null || $('#_rem_').val() == null) ){
+    		Common.alert("Please select Reason Code and key in Remark");
+    		return;
+    	}
+
     	var failUpdOrd = {
     			failCode  : $('input[name=cmbFailCode]:checked').val(),
     		    remark    : $('#_rem_').val(),
-    		    sof         : $('#hiddenSof').val(),
+    		    sof         : sof,
     		    preOrdId : $('#hiddenPreOrdId').val(),
-    		    stusId       : '21'
+    		    stusId     : action
     	};
 
-    	Common.ajax("POST", "/sales/order/updateFailPreOrderStatus.do", failUpdOrd, function(result) {
-            Common.alert("Order Failed" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closeFailedStusPop);
-
-        },
-        function(jqXHR, textStatus, errorThrown) {
-            try {
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
-            }
-            catch (e) {
-                console.log(e);
-            }
-        });
+    	Common.confirm("Confirm to " + name + " SOF : " + sof  + " ? " , function(){
+	    	Common.ajax("POST", "/sales/order/updateFailPreOrderStatus.do", failUpdOrd, function(result) {
+	            Common.alert("Order Failed" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closeFailedStusPop);
+	        },
+	        function(jqXHR, textStatus, errorThrown) {
+	            try {
+	                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+	            }
+	            catch (e) {
+	                console.log(e);
+	            }
+	        });
+    	});
     }
 
     function fn_closeFailedStusPop() {
@@ -160,18 +183,19 @@ console.log(selectRowIdx);
     	//AUIGrid 칼럼 설정
         var columnLayout = [
             /* { headerText : "Channel",         dataField : "channel",    editable : false, width : 60  } ,*/
-           { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width : 100 }
-          , { headerText : "App Type",        dataField : "appType",    editable : false, width : 80  }
-          , { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width : 100 }
-          , { headerText : "eKey-in Time",  dataField : "requestTm",  editable : false, width : 100 }
-          , { headerText : "Product",         dataField : "product",    editable : false}
-          , { headerText : "Customer Name",   dataField : "custNm",     editable : false, width : 80  }
-          , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  }
-          , { headerText : "NRIC/Company No", dataField : "nric",       editable : false, width : 100 }
-          , { headerText : "Creator",         dataField : "userName",   editable : false, width : 100 }
-          , { headerText : "Status",          dataField : "stusName",     editable : false,  width : 100 }
-          , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,  width : 100 }
-          , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,  width : 100 }
+           { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width : '7%' }
+          /* , { headerText : "App Type",        dataField : "appType",    editable : false, width : 80  } */
+          , { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width : '7%' }
+          , { headerText : "eKey-in Time",  dataField : "requestTm",  editable : false, width : '8%' }
+          , { headerText : "Product",         dataField : "product",    editable : false, width : '10%'}
+          , { headerText : "Customer Name",   dataField : "custNm",     editable : false, width : '8%'  }
+          /* , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  } */
+          , { headerText : "NRIC/Company No", dataField : "nric",       editable : false, width : '8%' }
+          , { headerText : "Creator",         dataField : "crtName",   editable : false, width : '8%' }
+          , { headerText : "Status",          dataField : "stusName",     editable : false,  width : '8%' }
+          , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,  width : '9%' }
+          , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,  width : '9%' }
+          , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false, width : '18%' }
           , { headerText : "StatusId",          dataField : "stusId",     editable : false, visible  : false,  width : 100 }
           /* { headerText : "Status",          dataField : "stusId",     editable : true,  width : 100 ,
                     labelFunction : function(  rowIndex, columnIndex, value, headerText, item ) {
@@ -209,6 +233,7 @@ console.log(selectRowIdx);
             wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
             showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
             noDataMessage       : "No order found.",
+            wordWrap : true,
             groupingMessage     : "Here groupping"
         };
 
@@ -229,7 +254,9 @@ console.log(selectRowIdx);
             fn_convToOrderPop();
         });
         $('#_btnFail').click(function() {
-            fn_validStatus();
+            if(fn_validStatus()){
+            	$('#updFail_wrap').show();
+            }
         });
         $('#_btnFailSave').click(function() {
             fn_doFailStatus();
@@ -253,6 +280,17 @@ console.log(selectRowIdx);
                     fn_loadOrderSalesman(memCd);
                 }
                 return false;
+            }
+        });
+        $('#_action').change(function(event) {
+            var action = $('#_action').val().trim();
+
+            if(action == 21){
+            	$("#fail_reason").show();
+            	$("#fail_rem").show();
+            }else{
+            	$("#fail_reason").hide();
+                $("#fail_rem").hide();
             }
         });
     });
@@ -487,7 +525,7 @@ console.log(selectRowIdx);
 <div class="popup_wrap" id="updFail_wrap" style="display:none;">
     <!-- pop_header start -->
     <header class="pop_header" id="updFail_pop_header">
-        <h1>Failed Status</h1>
+        <h1>Update Status</h1>
         <ul class="right_opt">
             <li><p class="btn_blue2"><a href="#" onclick="hideViewPopup('#updFail_wrap')">CLOSE</a></p></li>
         </ul>
@@ -507,23 +545,36 @@ console.log(selectRowIdx);
                  <colgroup>
                     <col style="width:250px" />
                     <col style="width:*" />
+                    <col style="width:250px" />
+                    <col style="width:*" />
                 </colgroup>
 
                 <tbody>
-                    <tr>
-                        <th scope="row">Please select fail reason Code<span class="must">*</span></th>
-                            <td>
-                                <label><input type="radio" name="cmbFailCode" value="Incomplete document" /><span>Incomplete document</span></label>
-                                <label><input type="radio" name="cmbFailCode" value="Incorrect key-in" /><span>Incorrect key-in</span></label>
-                            </td>
-                    </tr>
-                    <tr>
-                        <th scope="row"><spring:message code="sal.title.remark" /></th>
-                            <td>
-                                <textarea cols="20" rows="2" id="_rem_" name="rem" placeholder="Remark"></textarea>
-                            </td>
-                    </tr>
-                   </tbody>
+                <tr>
+                    <th scope="row">SOF NO</th>
+                    <td id="view_sofNo"></td>
+                    <th scope="row">Customer NRIC</th>
+                    <td id="view_custIc"></td>
+                </tr>
+                <tr>
+                     <th scope="row">Action<span class="must">*</span></th>
+                     <td colspan="3" ><select ass="mr5" id="_action" name="_action"></select></td>
+                 </tr>
+
+                 <tr id="fail_reason" style="display: none;">
+                     <th scope="row">Please select fail reason code<span class="must">*</span></th>
+                         <td colspan="3" >
+                             <label><input type="radio" name="cmbFailCode" value="Incomplete document" /><span>Incomplete document</span></label>
+                             <label><input type="radio" name="cmbFailCode" value="Incorrect key-in" /><span>Incorrect key-in</span></label>
+                         </td>
+                 </tr>
+                 <tr id="fail_rem" style="display: none;">
+                     <th scope="row"><spring:message code="sal.title.remark" /></th>
+                         <td colspan="3" >
+                             <textarea cols="20" rows="2" id="_rem_" name="rem" placeholder="Remark"></textarea>
+                         </td>
+                 </tr>
+                </tbody>
             </table>
         </section>
 
