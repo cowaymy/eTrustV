@@ -1614,7 +1614,8 @@
 		         LEFT JOIN SYS0026M Extent8   ON Extent1.INSTALL_STK_ID = Extent8.STK_ID
 		         LEFT JOIN ORG0005D Extent9   ON Extent6.MEM_ID = Extent9.MEM_ID
 		         LEFT JOIN SAL0017D Extent10   ON Extent4.PROMO_ID = Extent10.PROMO_ID
-		         LEFT JOIN SAL0017D Extent11   ON Extent3.SO_EXCHG_OLD_PROMO_ID = Extent11.PROMO_ID
+		         <!-- LEFT JOIN SAL0017D Extent11   ON Extent3.SO_EXCHG_OLD_PROMO_ID = Extent11.PROMO_ID -->
+             LEFT JOIN SAL0017D Extent11   ON Extent3.SO_EXCHG_NW_PROMO_ID = Extent11.PROMO_ID
 		         LEFT JOIN SYS0038M Extent12   ON Extent1.STUS_CODE_ID = Extent12.STUS_CODE_ID
 		 WHERE  Extent1.INSTALL_ENTRY_ID = #{installEntryId}
 		 </select>
