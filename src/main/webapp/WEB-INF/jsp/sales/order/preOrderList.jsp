@@ -122,7 +122,7 @@
             $('#view_sofNo').text(sofNo);
             $('#view_custIc').text(custNric);
 
-            if(stusId == 4){
+            if(stusId == 4 || stusId == 10){
                 Common.alert("Completed eKey-in cannot be edited.");
                 isValid = false;
             }
@@ -437,7 +437,7 @@
 	   <li><p class="btn_blue"><a id="_btnConvOrder" href="#">Convert Order</a></p></li>
 	</c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
-        <li><p class="btn_blue"><a id="_btnFail" href="#">Update Fail</a></p></li>
+        <li><p class="btn_blue"><a id="_btnFail" href="#">Update Status</a></p></li>
     </c:if>
 	<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 	   <li><p class="btn_blue"><a id="_btnNew" href="#">NEW</a></p></li>
