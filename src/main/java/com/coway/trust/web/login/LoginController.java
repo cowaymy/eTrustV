@@ -313,6 +313,7 @@ public class LoginController {
                             switch(cMth) {
                                 case 1:
                                     if(cnfmDate.compareTo(janRe) < 0) {
+                                        params.put("roleId", item1.get("roleType"));
                                         params.put("popType", "A");
                                     } else {
                                         params.put("popType", "M");
@@ -320,6 +321,7 @@ public class LoginController {
                                     break;
                                 case 2:
                                     if(cnfmDate.compareTo(julRe) < 0) {
+                                        params.put("roleId", item1.get("roleType"));
                                         params.put("popType", "A");
                                     } else {
                                         params.put("popType", "M");
