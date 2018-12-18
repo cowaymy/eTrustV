@@ -70,16 +70,19 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_NO), 2) AS DIV_ODD
 	<if test="startDate != null and startDate != ''">
    AND A.PO_DT BETWEEN #{startDate} AND #{endDate}
 	</if>
-	<if test="poItemStusId != null and poItemStusId != ''">
-   AND A.PO_ITEM_STUS_ID = #{poItemStusId}
-	</if>
 	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
    AND A.STK_TYPE_ID IN
 		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
 		#{item}
 		</foreach>
 	</if>
- ORDER BY A.PO_NO, A.PO_ITEM_NO, A.SO_NO, A.SO_ITEM_NO, A.SAP_PO_NO, A.SAP_PO_ITEM_NO
+ 	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
+   AND A.STOCK_CODE IN
+		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ ORDER BY A.PO_NO, A.PO_ITEM_NO, A.SO_NO, A.SO_ITEM_NO, A.SAP_PO_NO, A.SAP_PO_ITEM_NO, A.SO_QTY, A.GI_QTY, A.GI_DT, A.SAP_GR_QTY
 </select>
 
 </mapper>
