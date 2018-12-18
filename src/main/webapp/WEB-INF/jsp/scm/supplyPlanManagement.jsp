@@ -347,7 +347,7 @@ function fnSupplyPlanHeader() {
 										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].psiName,
-										 headerText : "Psi",
+										 headerText : "PSI",
 										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {

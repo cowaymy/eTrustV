@@ -62,6 +62,10 @@ var m4ThWeekStart	= 0;	//	M4월 시작주차
 var salesPlanList	= new Object();
 var childField	= new Object();
 
+var planFstWeek		= 0;
+var planFstSpltWeek	= 0;
+var planWeekTh		= 0;
+
 $(function() {
 	//	Get Today Year, Week
 	gYear	= gToday.getFullYear();
@@ -405,6 +409,10 @@ function fnSalesPlanHeader() {
 					m2WeekCnt	= parseInt(result.selectScmTotalInfo[0].m2WeekCnt);
 					m3WeekCnt	= parseInt(result.selectScmTotalInfo[0].m3WeekCnt);
 					m4WeekCnt	= parseInt(result.selectScmTotalInfo[0].m4WeekCnt);
+					
+					planFstWeek	= parseInt(result.selectScmTotalInfo[0].planFstWeek);
+					planFstSpltWeek	= parseInt(result.selectScmTotalInfo[0].planFstSpltWeek);
+					planWeekTh	= parseInt(result.selectScmTotalInfo[0].planWeekTh);
 					
 					m0ThWeekStart	= parseInt(result.selectScmTotalInfo[0].planFstSpltWeek);	//	수립주차가 포함된 월의 스플릿여부 상관없이 첫주차
 					m1ThWeekStart	= m0ThWeekStart + m0WeekCnt;
@@ -953,22 +961,44 @@ function fnSumMnPlan(event) {
 	var ms0	= "";	var ms1	= "";	var ms2	= "";	var ms3	= "";	var ms4	= "";
 	
 	if ( "cellEditEnd" == event.type ) {
-		console.log("m0WeekCnt : " + m0WeekCnt + ", m1WeekCnt : " + m1WeekCnt + ", m2WeekCnt : " + m2WeekCnt + ", m3WeekCnt : " + m3WeekCnt + ", m4WeekCnt : " + m4WeekCnt);
+		//console.log("m0WeekCnt : " + m0WeekCnt + ", m1WeekCnt : " + m1WeekCnt + ", m2WeekCnt : " + m2WeekCnt + ", m3WeekCnt : " + m3WeekCnt + ", m4WeekCnt : " + m4WeekCnt);
 		
+		console.log("planFstWeek : " + planFstWeek + ", planFstSpltWeek : " + planFstSpltWeek + ", planWeekTh : " + planWeekTh);
 		//	sum m0
 		for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
 			ms0	= "w0" + (i + 1).toString();
 			//console.log("planWeek : " + planWeek + ", m0ThWeekStart : " + m0ThWeekStart + ", i : " + i + ", colChangeIdx : " + colChangeIdx);
 			//if ( planWeek < parseInt(i) + parseInt(m0ThWeekStart) ) {
 				//console.log("sum");
-				if ( parseInt(i) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
-					m0	= parseInt(m0) + parseInt(event.value);
-					salesPlanList[event.rowIndex][ms0]	= ((event.value).toString()).replace(",", "");
-					//console.log("01. i : " + i + ", ms0 : " + ms0 + ", value : " + event.value);
+			if ( planFstWeek == planFstSpltWeek ) {
+				if ( i < parseInt(planWeekTh) + 1 ) {
+					null;
+					console.log("null");
 				} else {
-					m0	= parseInt(m0) + parseInt(salesPlanList[event.rowIndex][ms0]);
-					//console.log("02. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
+					if ( parseInt(i) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
+						m0	= parseInt(m0) + parseInt(event.value);
+						salesPlanList[event.rowIndex][ms0]	= ((event.value).toString()).replace(",", "");
+						console.log("01. i : " + i + ", ms0 : " + ms0 + ", value : " + event.value);
+					} else {
+						m0	= parseInt(m0) + parseInt(salesPlanList[event.rowIndex][ms0]);
+						console.log("02. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
+					}
 				}
+			} else {
+				if ( i < parseInt(planWeekTh) ) {
+					null;
+					console.log("null");
+				} else {
+					if ( parseInt(i) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
+						m0	= parseInt(m0) + parseInt(event.value);
+						salesPlanList[event.rowIndex][ms0]	= ((event.value).toString()).replace(",", "");
+						console.log("21. i : " + i + ", ms0 : " + ms0 + ", value : " + event.value);
+					} else {
+						m0	= parseInt(m0) + parseInt(salesPlanList[event.rowIndex][ms0]);
+						console.log("22. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
+					}
+				}
+			}
 			//} else {
 			//	console.log("not sum");
 			//}

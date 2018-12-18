@@ -599,6 +599,7 @@ $(document).ready(function() {
 	var otdStatusLayoutOptions =
 		{
 			usePaging : false,
+			editable : false,
 			useGroupingPanel : false,
 			showRowNumColumn : false,
 			showStateColumn : false,
