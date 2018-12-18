@@ -39,14 +39,36 @@ function fn_report(type) {
         return false;
     }
 
-     if(dataForm.reportType.value=="3"){
+    if(dataForm.reportType.value=="1"){
+        $("#reportFileName").val('/logistics/StockTurnOverReport_PDF.rpt');
+        $("#reportDownFileName").val("StockTurnOverReport_PDF_" + $("#yyyymmDate").val());
+        $("#V_YEAR").val( yyyyStr.substring(3,7));  //YYYY
+
+    }
+
+    else if(dataForm.reportType.value=="2"){
+        $("#reportFileName").val('/logistics/StockTurnOverFilter_PDF.rpt');
+        $("#reportDownFileName").val("StockTurnOverFilter_PDF_" + $("#yyyymmDate").val());
+        $("#V_YEAR").val( yyyyStr.substring(3,7));  //YYYY
+
+    }
+
+    else if(dataForm.reportType.value=="3"){
+        $("#reportFileName").val('/logistics/StockTurnOverAllReport_PDF.rpt');
+        $("#reportDownFileName").val("StockTurnOverAllReport_PDF_" + $("#yyyymmDate").val());
+        $("#V_YEAR").val( yyyyStr.substring(3,7));  //YYYY
+
+    }
+
+
+    else if(dataForm.reportType.value=="4"){
         $("#reportFileName").val('/logistics/StockAMovementSummaryByModel_PDF.rpt');
-        $("#reportDownFileName").val("StkAMovSumByModel_PDF_" + $("#V_YEAR").val());
+        $("#reportDownFileName").val("StkAMovSumByModel_PDF_" + $("#yyyymmDate").val());
         $("#V_YEAR").val( yyyyStr.substring(3,7));  //YYYY
         $("#V_MONTH").val( mmStr.substring(1,2)); //MM
 
     }
-    else if(dataForm.reportType.value=="4"){
+    else if(dataForm.reportType.value=="5"){
 
     	var displayStkB = "0";
     	var displayLocB = "0";
@@ -80,7 +102,7 @@ function fn_report(type) {
 
 
         $("#reportFileName").val('/logistics/StockBMovementSummaryByModel_PDF.rpt');
-        $("#reportDownFileName").val("StkBMovSumByModel_PDF_" + $("#V_YEAR").val());
+        $("#reportDownFileName").val("StkBMovSumByModel_PDF_" + $("#yyyymmDate").val());
         $("#V_YEAR").val( yyyyStr.substring(3,7));  //YYYY
         $("#V_MONTH").val( mmStr.substring(1,2)); //MM
         $("#V_DISPLAYSTKB").val( displayStkB );
@@ -156,10 +178,11 @@ function fn_report(type) {
                   <th scope="row">Report Type</th>
                                     <td><select class="w100p" id="reportType" name="reportType">
                                     <option value="0" selected>Choose One</option>
-<!--                                     <option value="1">Stock A Movement Summary In By Month</option>
-                                   <option value="2">Stock B Movement Summary In By Month</option> -->
-                                   <option value="3">Stock A Movement Summary By Model</option>
-                                   <option value="4">Stock B Movement Summary By Model</option>
+                                     <option value="1">Turn Over - Stock</option>
+                                <option value="2">Turn Over Report - Filter & Spare Part</option>
+                                <option value="3">Turn Over - Stock , Filter & Spare Part</option>
+                                   <option value="4">Stock A Movement Summary By Model</option>
+                                   <option value="5">Stock B Movement Summary By Model</option>
                             </select></td>
                     </tr>
                                        <tr>
