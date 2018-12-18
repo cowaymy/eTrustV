@@ -207,16 +207,21 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 			int	weekQty		= 0;
 			String stkTypeId	= "";
 			String stockCode	= "";
-			
+			String stockCodePlan	= "";
+			String stockCodeOrder	= "";
+			String stockCodeFilter	= "";
 			//	every stock
 			for ( int i = 0 ; i < selectBefWeekList.size() ; i++ ) {
 				//planDtlId	= Integer.parseInt(selectBefWeekList.get(i).get("planDtlId").toString());
 				planDtlId	= Integer.parseInt(selectPlanWeekList.get(i).get("planDtlId").toString());	//	must using selectPlanWeekList
 				stkTypeId	= selectBefWeekList.get(i).get("stkTypeId").toString();	//	필터류들을 별도로 생성하기 위해서
 				stockCode	= selectBefWeekList.get(i).get("stockCode").toString();
+				stockCodePlan	= selectPlanWeekList.get(i).get("stockCode").toString();
+				stockCodeOrder	= selectThisMonthOrder.get(i).get("stockCode").toString();
+				stockCodeFilter	= selectFilterPlan.get(i).get("stockCode").toString();
 				updParams.put("planDtlId", planDtlId);
 				m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;	weekQty		= 0;
-				
+				LOGGER.debug("Before stock : " + stockCode + ", Plan stock : " + stockCodePlan + ", Order stock ; " + stockCodeOrder + ", Filter stock : " + stockCodeFilter);
 				//	수립주차의 월 / 수립전주차의 월 비교
 				if ( planMonth == befWeekMonth ) {
 					LOGGER.debug("planMonth == befWeekMonth : " + planMonth + ", " + befWeekMonth);
@@ -234,7 +239,6 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
 								}
-								//LOGGER.debug("i : " + i + ", iLoopDataFieldCnt2 " + iLoopDataFieldCnt2 + ", iLoopDataFieldCnt2 : " + iLoopDataFieldCnt2);
 								if ( 1 == m0 ) {
 									//	제일 첫번째 주차에 월합계 입력
 									updParams.put("w" + intToStrFieldCnt2, Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()));
@@ -242,8 +246,10 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								} else {
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
+								updParams.put("m0OrdSum", 0);	//	m0월의 필터주문수량은 0으로
 								iLoopDataFieldCnt2++;
-								LOGGER.debug("i : " + i + ", m0 : " + m0 + ", STOCK_CODE : " + stockCode + ", m0" + Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()) + ", w" + intToStrFieldCnt2);
+								//LOGGER.debug("Filter : 1-1 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0 : " + updParams.get("m0").toString() + ", m0OrdSum : " + m0OrdSum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);'
+								LOGGER.debug("FILTER - 1 - M0 : " + updParams.get("m0").toString());
 							}
 							for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
@@ -259,7 +265,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
-								LOGGER.debug("i : " + i + ", m1 : " + m1 + ", STOCK_CODE : " + stockCode + ", m1 : " + Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()) + ", w" + intToStrFieldCnt2);
+								//LOGGER.debug("i : " + i + ", m1 : " + m1 + ", STOCK_CODE : " + stockCode + ", m1 : " + Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 							for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
@@ -275,7 +281,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
-								LOGGER.debug("i : " + i + ", m2 : " + m2 + ", STOCK_CODE : " + stockCode + ", m2 : " + Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()) + ", w" + intToStrFieldCnt2);
+								//LOGGER.debug("i : " + i + ", m2 : " + m2 + ", STOCK_CODE : " + stockCode + ", m2 : " + Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 							for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
@@ -291,7 +297,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
-								LOGGER.debug("i : " + i + ", m3 : " + m3 + ", STOCK_CODE : " + stockCode + ", m3 : " + Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()) + ", w" + intToStrFieldCnt2);
+								//LOGGER.debug("i : " + i + ", m3 : " + m3 + ", STOCK_CODE : " + stockCode + ", m3 : " + Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 							for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
@@ -307,7 +313,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
-								LOGGER.debug("i : " + i + ", m4 : " + m4 + ", STOCK_CODE : " + stockCode + ", m4 : " + Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()) + ", w" + intToStrFieldCnt2);
+								//LOGGER.debug("i : " + i + ", m4 : " + m4 + ", STOCK_CODE : " + stockCode + ", m4 : " + Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 						} else {
 							//	첫주차가 스플릿 주차인 경우
@@ -324,8 +330,10 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								} else {
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
+								updParams.put("m0OrdSum", 0);	//	m0월의 필터주문수량은 0으로
 								iLoopDataFieldCnt2++;
-								LOGGER.debug("1-i : " + i + ", m0 : " + m0 + ", STOCK_CODE : " + stockCode + ", m0" + Integer.parseInt(selectFilterPlan.get(i).get("m0Qty").toString()) + ", w" + intToStrFieldCnt2);
+								//LOGGER.debug("Filter : 1-2 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0 : " + updParams.get("m0").toString() + ", m0OrdSum : " + m0OrdSum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
+								LOGGER.debug("FILTER - 2 - M0 : " + updParams.get("m0").toString());
 							}
 							for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
@@ -341,7 +349,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
-								LOGGER.debug("1-i : " + i + ", m1 : " + m1 + ", STOCK_CODE : " + stockCode + ", m1 : " + Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()) + ", w" + intToStrFieldCnt2);
+								//LOGGER.debug("1-i : " + i + ", m1 : " + m1 + ", STOCK_CODE : " + stockCode + ", m1 : " + Integer.parseInt(selectFilterPlan.get(i).get("m1Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 							for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
@@ -357,7 +365,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
-								LOGGER.debug("2-i : " + i + ", m2 : " + m2 + ", STOCK_CODE : " + stockCode + ", m2 : " + Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()) + ", w" + intToStrFieldCnt2);
+								//LOGGER.debug("2-i : " + i + ", m2 : " + m2 + ", STOCK_CODE : " + stockCode + ", m2 : " + Integer.parseInt(selectFilterPlan.get(i).get("m2Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 							for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
@@ -373,7 +381,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
-								LOGGER.debug("3-i : " + i + ", m3 : " + m3 + ", STOCK_CODE : " + stockCode + ", m3 : " + Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()) + ", w" + intToStrFieldCnt2);
+								//LOGGER.debug("3-i : " + i + ", m3 : " + m3 + ", STOCK_CODE : " + stockCode + ", m3 : " + Integer.parseInt(selectFilterPlan.get(i).get("m3Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 							for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
@@ -389,7 +397,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
 								iLoopDataFieldCnt2++;
-								LOGGER.debug("4-i : " + i + ", m4 : " + m4 + ", STOCK_CODE : " + stockCode + ", m4 : " + Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()) + ", w" + intToStrFieldCnt2);
+								//LOGGER.debug("4-i : " + i + ", m4 : " + m4 + ", STOCK_CODE : " + stockCode + ", m4 : " + Integer.parseInt(selectFilterPlan.get(i).get("m4Qty").toString()) + ", w" + intToStrFieldCnt2);
 							}
 						}
 					} else {
@@ -409,30 +417,32 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 							
 							//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
 							if ( planFstWeek == planFstSpltWeek ) {
-								if ( m0 < planWeekTh ) {
-									//	selectThisMonthOrder 결과는 오직 1row
-									//	수립주차기준 과거주차
-									weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt1).toString());
-									m0OrdSum	= m0OrdSum + weekQty;
-									LOGGER.debug("1 weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum);
-								} else {
-									//	수립주차기준 현재+미래주차(수립주차포함)
-									weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
-									m0Sum	= m0Sum + weekQty;
-									LOGGER.debug("2 weekQty : " + weekQty + ", m0Sum : " + m0Sum);
-								}
-							} else {
+								LOGGER.debug("1) planFstWeek == planFstSpltWeek AND planWeekTh : " + planWeekTh + "m0 : " + m0);
 								if ( m0 <= planWeekTh ) {
 									//	selectThisMonthOrder 결과는 오직 1row
 									//	수립주차기준 과거주차
 									weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt1).toString());
 									m0OrdSum	= m0OrdSum + weekQty;
-									LOGGER.debug("3 weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum);
+									LOGGER.debug("1-1 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
 								} else {
 									//	수립주차기준 현재+미래주차(수립주차포함)
 									weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 									m0Sum	= m0Sum + weekQty;
-									LOGGER.debug("4 weekQty : " + weekQty + ", m0Sum : " + m0Sum);
+									LOGGER.debug("1-2 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0Sum : " + m0Sum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
+								}
+							} else {
+								LOGGER.debug("2) planFstWeek != planFstSpltWeek AND planWeekTh : " + planWeekTh + "m0 : " + m0);
+								if ( m0 <= planWeekTh ) {
+									//	selectThisMonthOrder 결과는 오직 1row
+									//	수립주차기준 과거주차
+									weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt1).toString());
+									m0OrdSum	= m0OrdSum + weekQty;
+									LOGGER.debug("2-1 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
+								} else {
+									//	수립주차기준 현재+미래주차(수립주차포함)
+									weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+									m0Sum	= m0Sum + weekQty;
+									LOGGER.debug("2-2 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0Sum : " + m0Sum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
 								}
 							}
 
@@ -444,6 +454,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						}
 						updParams.put("m0", m0Sum);
 						updParams.put("m0OrdSum", m0OrdSum);
+						LOGGER.debug("NOT FILTER - 1 - M0 : " + updParams.get("m0").toString());
 						
 						//	3.2 m1
 						for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
@@ -522,7 +533,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						}
 					}
 					
-					//LOGGER.debug("updParams : {}", updParams);
+					LOGGER.debug("updParams : Sum : ", updParams.get("m0").toString());
 					salesPlanManagementMapper.updateSalesPlanDetail(updParams);
 				} else {
 					LOGGER.debug("planMonth != befWeekMonth : " + planMonth + ", " + befWeekMonth);
@@ -559,7 +570,10 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								} else {
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
+								updParams.put("m0OrdSum", 0);	//	m0월의 필터주문수량은 0으로
 								iLoopDataFieldCnt2++;
+								//LOGGER.debug("Filter : 2-1 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0 : " + updParams.get("m0").toString() + ", m0OrdSum : " + m0OrdSum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
+								LOGGER.debug("FILTER - 3 - M0 : " + updParams.get("m0").toString());
 							}
 							for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
@@ -636,7 +650,10 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								} else {
 									updParams.put("w" + intToStrFieldCnt2, 0);
 								}
+								updParams.put("m0OrdSum", 0);	//	m0월의 필터주문수량은 0으로
 								iLoopDataFieldCnt2++;
+								//LOGGER.debug("Filter : 2-2 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0 : " + updParams.get("m0").toString() + ", m0OrdSum : " + m0OrdSum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
+								LOGGER.debug("FILTER - 4 - M0 : " + updParams.get("m0").toString());
 							}
 							for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
@@ -715,32 +732,34 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 							//LOGGER.debug("intToStrFieldCnt1 : " + intToStrFieldCnt1);
 							
 							if ( planFstWeek == planFstSpltWeek ) {
-								//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
-								if ( m0 < planWeekTh ) {
-									//	selectThisMonthOrder 결과는 오직 1row
-									//	수립주차 기준 과거주차
-									weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt2).toString());
-									m0OrdSum	= m0OrdSum + weekQty;
-									LOGGER.debug("1 weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum);
-								} else {
-									//	수립주차기준 현재+미래주차(수립주차포함)
-									weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
-									m0Sum	= m0Sum + weekQty;
-									LOGGER.debug("2 weekQty : " + weekQty + ", m0Sum : " + m0Sum);
-								}
-							} else {
+								//LOGGER.debug("3) planFstWeek == planFstSpltWeek AND planWeekTh : " + planWeekTh + "m0 : " + m0);
 								//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
 								if ( m0 <= planWeekTh ) {
 									//	selectThisMonthOrder 결과는 오직 1row
 									//	수립주차 기준 과거주차
 									weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt2).toString());
 									m0OrdSum	= m0OrdSum + weekQty;
-									LOGGER.debug("3 weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum);
+									//LOGGER.debug("3-1 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
 								} else {
 									//	수립주차기준 현재+미래주차(수립주차포함)
 									weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
 									m0Sum	= m0Sum + weekQty;
-									LOGGER.debug("4 weekQty : " + weekQty + ", m0Sum : " + m0Sum);
+									//LOGGER.debug("3-2 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0Sum : " + m0Sum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
+								}
+							} else {
+								//LOGGER.debug("4) planFstWeek != planFstSpltWeek AND planWeekTh : " + planWeekTh + "m0 : " + m0);
+								//	M0 월은 수립주차 기준 과거 주차이면 해당월의 주문실적 갖고오도록
+								if ( m0 <= planWeekTh ) {
+									//	selectThisMonthOrder 결과는 오직 1row
+									//	수립주차 기준 과거주차
+									weekQty	= Integer.parseInt(selectThisMonthOrder.get(i).get("w" + intToStrFieldCnt2).toString());
+									m0OrdSum	= m0OrdSum + weekQty;
+									//LOGGER.debug("4-1 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0OrdSum : " + m0OrdSum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
+								} else {
+									//	수립주차기준 현재+미래주차(수립주차포함)
+									weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
+									m0Sum	= m0Sum + weekQty;
+									//LOGGER.debug("4-2 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0Sum : " + m0Sum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
 								}
 							}
 							//weekQty	= Integer.parseInt(selectBefWeekList.get(i).get("w" + intToStrFieldCnt1).toString());
@@ -751,6 +770,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						}
 						updParams.put("m0", m0Sum);
 						updParams.put("m0OrdSum", m0OrdSum);
+						LOGGER.debug("NOT FILTER - 2 - M0 : " + updParams.get("m0").toString());
 						
 						//	3.2 m1
 						for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
