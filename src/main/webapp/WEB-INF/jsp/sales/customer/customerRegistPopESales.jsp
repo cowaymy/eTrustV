@@ -929,7 +929,7 @@
                                 <td><input type="text" id="_email_" name="email" title="" onBlur="javascript:emailCheck()" placeholder="Email" class="w100p" /></td>
                             </tr>
                             <tr>
-                                <th scope="row"><spring:message code="sal.text.race2" /></th>
+                                <th scope="row"><spring:message code="sal.text.race2" /><span class="must">*</span></th>
                                 <td>
                                     <!-- <select class="w100p disabled" id="_cmbRace_" name="cmbRace" disabled="disabled"></select> -->
                                     <label><input type="radio" name="cmbRace" value="10" /><span>Malay</span></label>
