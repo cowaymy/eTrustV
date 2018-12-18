@@ -162,15 +162,12 @@ SELECT A.ID
   FROM (
         SELECT '' AS ID, 'None' AS NAME, 0 AS TYPE FROM DUAL
         UNION ALL
-        SELECT B.STK_CODE AS ID
-             , B.STK_CODE || ' - ' || B.STK_DESC AS NAME
-             , B.STK_TYPE_ID AS TYPE
-          FROM SCM0008M A
-          LEFT OUTER JOIN SYS0026M B ON (A.STOCK_ID = B.STK_ID)
-         WHERE A.IS_TRGET = 1
+        SELECT A.STK_CODE AS ID
+             , A.STK_CODE || ' - ' || A.STK_DESC AS NAME
+             , A.STK_TYPE_ID AS TYPE
+          FROM SYS0026M A
+         WHERE A.IS_NCV = 0
            AND A.STUS_CODE_ID = 1
-           AND B.IS_NCV = 0
-           AND B.STUS_CODE_ID = 1
 	<if test="scmStockType != null and scmStockType != ''">
            AND B.STK_TYPE_ID IN (SELECT REGEXP_SUBSTR (#{scmStockType}, '[^,]+', 1, LEVEL) FROM DUAL CONNECT BY REGEXP_SUBSTR (#{scmStockType}, '[^,]+', 1, LEVEL) IS NOT NULL)
 	</if>

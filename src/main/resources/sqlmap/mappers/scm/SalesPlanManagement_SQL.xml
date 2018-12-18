@@ -369,28 +369,27 @@ INSERT INTO SCM0002D
      , STOCK_CODE
      , PRE_M3_ISS_AVG
      , PRE_M1_ORD_SUM
-     , M0_ORD_SUM
+     --, M0_ORD_SUM
  )
 SELECT #{planId}
      , SCM0002D_PLAN_DTL_ID_SEQ.NEXTVAL
      , A.STOCK_CODE
      , ROUND((A.M3 + A.M2 + A.M1) / A.DIV_NO) AS PRE_M3_ISS_AVG
      , A.PRE_M1_ORD_SUM
-     , A.M0_ORD_SUM
+     --, 0
   FROM (
         SELECT Z.STOCK_CODE
              , CASE WHEN Z.M3 = 0 THEN CASE WHEN Z.M2 = 0 THEN 1 ELSE 2 END
                     ELSE 3 END AS DIV_NO
              , Z.M3, Z.M2, Z.M1
              , Z.PRE_M1_ORD_SUM
-             , Z.M0_ORD_SUM
+             --, Z.M0_ORD_SUM
           FROM (
                 SELECT G.STOCK_CODE
                      , NVL((SELECT SUM(H.ISS_QTY) FROM SCM0051S H WHERE H.ISS_DT BETWEEN #{m3From} AND #{m3To} AND H.STOCK_CODE = G.STOCK_CODE AND H.TEAM = #{team}), 0) AS M3
                      , NVL((SELECT SUM(H.ISS_QTY) FROM SCM0051S H WHERE H.ISS_DT BETWEEN #{m2From} AND #{m2To} AND H.STOCK_CODE = G.STOCK_CODE AND H.TEAM = #{team}), 0) AS M2
                      , NVL((SELECT SUM(H.ISS_QTY) FROM SCM0051S H WHERE H.ISS_DT BETWEEN #{m1From} AND #{m1To} AND H.STOCK_CODE = G.STOCK_CODE AND H.TEAM = #{team}), 0) AS M1
                      , NVL((SELECT SUM(H.ORD_QTY) FROM SCM0050S H WHERE H.ORD_DT BETWEEN #{m1From} AND #{m1To} AND H.STOCK_CODE = G.STOCK_CODE AND H.TEAM = #{team}), 0) AS PRE_M1_ORD_SUM
-                     , NVL((SELECT SUM(H.ORD_QTY) FROM SCM0050S H WHERE H.ORD_DT BETWEEN #{m0From} AND #{m0To} AND H.STOCK_CODE = G.STOCK_CODE AND H.TEAM = #{team}), 0) AS M0_ORD_SUM
                   FROM SCM0008M G
                  WHERE G.STUS_CODE_ID = 1
                    AND G.IS_TRGET = 1
@@ -519,9 +518,35 @@ SELECT A.STOCK_CODE
                            SELECT ROW_NUMBER() OVER (PARTITION BY SCM_MONTH ORDER BY CAL_ID) AS RN
                                 , TO_CHAR(SCM_WEEK_START, 'YYYYMMDD') AS SCM_START
                                 , TO_CHAR(SCM_WEEK_END, 'YYYYMMDD') AS SCM_END
-                             FROM SCM0018M
-                            WHERE SCM_YEAR = #{planYear} AND SCM_MONTH = #{planMonth}
-                              AND SCM_WEEK IN (SELECT SCM_WEEK FROM SCM0018M WHERE SCM_YEAR = #{planYear} AND SCM_MONTH = #{planMonth} AND SCM_WEEK <![CDATA[ < ]]> #{planWeek} AND SCM_WEEK != 1)
+                             FROM SCM0018M G
+                                , (
+                                   SELECT (
+                                           SELECT CAL_ID
+                                             FROM (
+                                                   SELECT ROW_NUMBER() OVER (PARTITION BY SCM_YEAR ORDER BY CAL_ID) AS RN
+                                                        , CAL_ID
+                                                     FROM SCM0018M
+                                                    WHERE SCM_YEAR = #{planYear}
+                                                      AND SCM_MONTH = #{planMonth}
+                                                      AND SCM_WEEK <![CDATA[ < ]]> #{planWeek}
+                                                   )
+                                            WHERE RN = 1
+                                           ) AS FROM_CAL
+                                        , (
+                                           SELECT CAL_ID
+                                             FROM (
+                                                   SELECT ROW_NUMBER() OVER (PARTITION BY SCM_YEAR ORDER BY CAL_ID DESC) AS RN
+                                                        , CAL_ID
+                                                     FROM SCM0018M
+                                                    WHERE SCM_YEAR = #{planYear}
+                                                      AND SCM_MONTH = #{planMonth}
+                                                      AND SCM_WEEK <![CDATA[ < ]]> #{planWeek}
+                                                   )
+                                            WHERE RN = 1
+                                           ) AS TO_CAL
+                                     FROM DUAL
+                                   ) H
+                            WHERE G.CAL_ID BETWEEN H.FROM_CAL AND H.TO_CAL
                            ) X
                    ) B ON (A.STOCK_CODE = B.STOCK_CODE)
  WHERE A.STUS_CODE_ID = 1
@@ -571,7 +596,8 @@ DELETE FROM SCM0001M WHERE PLAN_YEAR = #{scmYearCbBox} AND PLAN_WEEK = #{scmWeek
 <!-- Save -->
 <update id="updateSalesPlanDetail" parameterType="Map">
 UPDATE SCM0002D
-   SET M0 = TO_NUMBER(REPLACE(#{m0}, ','))
+   SET M0_ORD_SUM = TO_NUMBER(REPLACE(#{m0OrdSum}, ','))
+     , M0 = TO_NUMBER(REPLACE(#{m0}, ','))
      , M1 = TO_NUMBER(REPLACE(#{m1}, ','))
      , M2 = TO_NUMBER(REPLACE(#{m2}, ','))
      , M3 = TO_NUMBER(REPLACE(#{m3}, ','))
