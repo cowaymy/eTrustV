@@ -105,6 +105,9 @@ public class ScmBatchController2 {
 			String soFileName	= "COWAY_SO_DATA_" + today + ".TXT";
 			String ppFileName	= "COWAY_PP_DATA_" + today + ".TXT";
 			String giFileName	= "COWAY_GI_DATA_" + today + ".TXT";
+			//String soFileName	= "COWAY_SO_DATA_" + "20181205" + ".TXT";
+			//String ppFileName	= "COWAY_PP_DATA_" + "20181205" + ".TXT";
+			//String giFileName	= "COWAY_GI_DATA_" + "20181205" + ".TXT";
 			
 			for ( int i = 0 ; i < files.length ; i++ ) {
 				LOGGER.debug(i + "th filename : " + files[i].getName() + ", filesize : " + files[i].getSize());
@@ -325,8 +328,8 @@ public class ScmBatchController2 {
 			query	+= "UPDATE ";
 			query	+= "   SET PP_PLAN_QTY = PP_PLAN_QTY + TO_NUMBER(TRIM(?)) ";
 			query	+= "     , PP_PROD_QTY = PP_PROD_QTY + TO_NUMBER(TRIM(?)) ";
-			query	+= "     , PP_PROD_START_DT = CASE WHEN PP_PROD_START_DT > TRIM(?) THEN TRIM(?) ELSE PP_PROD_START_DT END ";
-			query	+= "     , PP_PROD_END_DT = CASE WHEN PP_PROD_END_DT < TRIM(?) THEN TRIM(?) ELSE PP_PROD_END_DT END ";
+			query	+= "     , PP_PROD_START_DT = CASE WHEN TRIM(?) = '00000000' THEN PP_PROD_START_DT ELSE CASE WHEN PP_PROD_START_DT > TRIM(?) THEN TRIM(?) ELSE PP_PROD_START_DT END END ";
+			query	+= "     , PP_PROD_END_DT = CASE WHEN TRIM(?) = '00000000' THEN PP_PROD_END_DT ELSE CASE WHEN PP_PROD_END_DT < TRIM(?) THEN TRIM(?) ELSE PP_PROD_END_DT END END ";
 			query	+= "WHEN NOT MATCHED THEN ";
 			query	+= "INSERT ";
 			query	+= "( ";
@@ -371,16 +374,18 @@ public class ScmBatchController2 {
 					ps.setInt(6, ppProdQty);
 					ps.setString(7, ppProdStartDt);
 					ps.setString(8, ppProdStartDt);
-					ps.setString(9, ppProdEndDt);
+					ps.setString(9, ppProdStartDt);
 					ps.setString(10, ppProdEndDt);
-					ps.setString(11, poNo);
-					ps.setString(12, soNo);
-					ps.setInt(13, soItemNo);
-					ps.setString(14, stockCode);
-					ps.setInt(15, ppPlanQty);
-					ps.setInt(16, ppProdQty);
-					ps.setString(17, ppProdStartDt);
-					ps.setString(18, ppProdEndDt);
+					ps.setString(11, ppProdEndDt);
+					ps.setString(12, ppProdEndDt);
+					ps.setString(13, poNo);
+					ps.setString(14, soNo);
+					ps.setInt(15, soItemNo);
+					ps.setString(16, stockCode);
+					ps.setInt(17, ppPlanQty);
+					ps.setInt(18, ppProdQty);
+					ps.setString(19, ppProdStartDt);
+					ps.setString(20, ppProdEndDt);
 				}
 				LOGGER.debug(query);
 				ps.executeQuery();
