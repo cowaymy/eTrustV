@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+<link href="${pageContext.request.contextPath}/resources/css/select2.min.css" rel="stylesheet">
+<script src ="${pageContext.request.contextPath}/resources/js/select2.min.js" type="text/javascript"></script>
 <style type="text/css">
 /* 칼럼 스타일 전체 재정의 */
 .aui-grid-right-column {
@@ -85,6 +87,8 @@ $(function() {
 		$("#endDate").val(end.getDate() + "/0" + (end.getMonth()+1) + "/" + end.getFullYear());
 	}
 	fnScmStockTypeCbBox();
+	doGetComboAndGroup2("/scm/selectScmStockCodeForMulti.do", "", "", "scmStockCodeCbBox", "M", "");
+	$(".js-example-basic-multiple").select2();
 });
 
 //	stock type
@@ -117,7 +121,8 @@ function fnSearch() {
 		return	false;
 	}
 	var params	= {
-		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects")
+		scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
+		scmStockCodeCbBox : $("#scmStockCodeCbBox").val()
 	};
 	
 	params	= $.extend($("#MainForm").serializeJSON(), params);
@@ -221,7 +226,7 @@ var OtdStatusLayout	=
 	[
 		{
 			//	PO
-			headerText : "PO",
+			headerText : "Purchase Order",
 			children :
 				[
 					{
@@ -235,9 +240,8 @@ var OtdStatusLayout	=
 						 visible : false,
 						 cellMerge : true
 					 }, {
-						dataField : "poNo",
-						headerText : "<spring:message code='sys.scm.pomngment.rowNo'/>",
-						//style : "myLinkStyle",
+						dataField : "poDt",
+						headerText : "Issue Date",
 						cellMerge : true,
 						mergePolicy : "restrict",
 						mergeRef : "divOdd",
@@ -249,8 +253,9 @@ var OtdStatusLayout	=
 							}
 						}
 					}, {
-						dataField : "poDt",
-						headerText : "<spring:message code='sys.scm.otdview.IssueDate'/>",
+						dataField : "poNo",
+						headerText : "P/O No.",
+						//style : "myLinkStyle",
 						cellMerge : true,
 						mergePolicy : "restrict",
 						mergeRef : "divOdd",
@@ -275,8 +280,22 @@ var OtdStatusLayout	=
 							}
 						}
 					}, {
+						dataField : "poItemNo",
+						headerText : "Item No.",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "divOdd",
+						formatString : "#,##0",
+						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+							if ( "0" == item.divOdd ) {
+								return	"my-columnCenter0";
+							} else {
+								return	"my-columnCenter1";
+							}
+						}
+					}, {
 						dataField : "stockCode",
-						headerText : "Code",
+						headerText : "Material",
 						cellMerge : true,
 						mergePolicy : "restrict",
 						mergeRef : "divOdd",
@@ -289,7 +308,7 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "name",
-						headerText : "Name",
+						headerText : "Desc.",
 						cellMerge : true,
 						mergePolicy : "restrict",
 						mergeRef : "divOdd",
@@ -302,10 +321,10 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "poQty",
-						headerText : "PO Qty",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "divOdd",
+						headerText : "Qty",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "divOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -316,36 +335,19 @@ var OtdStatusLayout	=
 								return	"my-columnRight1";
 							}
 						}
-					}, {
-						dataField : "poItemStusId",
-						headerText : "Po Status Id",
-						visible : false
-					}, {
-						dataField : "poItemStusName",
-						headerText : "Status",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "divOdd",
-						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-							if ( "0" == item.divOdd ) {
-								return	"my-columnCenter0";
-							} else {
-								return	"my-columnCenter1";
-							}
-						}
 					}
 				 ]
 		}, {
 			//	SO
-			headerText : "SO",
+			headerText : "Sales Order(HQ)",
 			children :
 				[
 					{
 						dataField : "soNo",
-						headerText : "SO No",
+						headerText : "S/O No.",
 						cellMerge : true,
 						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						mergeRef : "divOdd",
 						formatString : "#,##0",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
@@ -356,10 +358,10 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "soItemNo",
-						headerText : "Item No",
+						headerText : "Item No.",
 						cellMerge : true,
 						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						mergeRef : "divOdd",
 						formatString : "#,##0",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
@@ -370,10 +372,10 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "soQty",
-						headerText : "SO Qty",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "Qty",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "divOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -386,10 +388,7 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "soDt",
-						headerText : "SO Date",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "S/O Date",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -400,15 +399,15 @@ var OtdStatusLayout	=
 					}
 				 ]
 		}, {
-			headerText : "PP",
+			headerText : "Production(HQ)",
 			children :
 				[
 					{
 						dataField : "ppPlanQty",
 						headerText : "Plan Qty",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -422,9 +421,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "ppProdQty",
 						headerText : "Prod Qty",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -437,10 +436,10 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "ppProdStartDt",
-						headerText : "Prod Start",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "Start Date",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -450,10 +449,10 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "ppProdEndDt",
-						headerText : "Prod End",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "End Date",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -465,15 +464,15 @@ var OtdStatusLayout	=
 				 ]
 		}, {
 			//	GI
-			headerText : "GI",
+			headerText : "Good Issue(HQ)",
 			children :
 				[
 					{
 						dataField : "giQty",
-						headerText : "GI Qty",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "G/I Qty",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -486,10 +485,10 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "giDt",
-						headerText : "GI Date",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "G/I Date",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -506,10 +505,10 @@ var OtdStatusLayout	=
 				[
 					{
 						dataField : "sapPoNo",
-						headerText : "PO No",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "P/O No.",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						formatString : "#,##0",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
@@ -520,10 +519,10 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "sapPoItemNo",
-						headerText : "Item No",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "Item No.",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						formatString : "#,##0",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
@@ -534,20 +533,20 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "sapPoQty",
-						headerText : "PO Qty",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "P/O Qty",
+						//cellMerge : true,
+						///mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						visible : false,
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0"
 					}, {
 						dataField : "grDt",
-						headerText : "GR Date",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "G/R Date",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnRight0";
@@ -557,10 +556,10 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "sapApQty",
-						headerText : "AP Qty",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "A/P Qty",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -573,10 +572,10 @@ var OtdStatusLayout	=
 						}
 					}, {
 						dataField : "sapGrQty",
-						headerText : "GR Qty",
-						cellMerge : true,
-						mergePolicy : "restrict",
-						mergeRef : "poDivOdd",
+						headerText : "G/R Qty",
+						//cellMerge : true,
+						//mergePolicy : "restrict",
+						//mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -656,26 +655,28 @@ $(document).ready(function() {
 						<input type="text" id="endDate" name="endDate" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 					</div><!-- date_set end -->
 				</td>
-				<th scope="row">PO Status</th>
+				<th scope="row">PO No</th>
 				<td>
-					<select id="poStusId" name="poStusId" class="w100p">
-						<option value="" selected>All</option>
-						<option value="1">Active</option>	<!-- active -->
-						<option value="5">Approved</option>	<!-- approved -->
-					</select>
+					<input type="text" id="poNo" name="poNo" title="" placeholder="" class="w100p" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}" />
 				</td>
-				<th scope="row">PO NO</th>
-				<td>
-					<input type="text" id="poNo" name="poNo" title="" placeholder="" class="w100p" />
-				</td>
-			</tr>
-			<tr>
 				<!-- Stock Type 추가 -->
 				<th scope="row">Stock Type</th>
 				<td>
 					<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
 				</td>
-				<td colspan="4"></td>
+			</tr>
+			<tr>
+				<th scope="row">Material</th>
+				<td>
+					<!-- <input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
+					<select class="js-example-basic-multiple" id="select2t1m" name="select2t1m" multiple="multiple"> -->
+					<select class="js-example-basic-multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox" multiple="multiple">
+				</td>
+				<th scope="row">SO No</th>
+				<td>
+					<input type="text" id="soNo" name="soNo" title="" placeholder="" class="w100p" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}"  />
+				</td>
+				<td colspan="2"></td>
 			</tr>
 		</tbody>
 	</table><!-- table end -->

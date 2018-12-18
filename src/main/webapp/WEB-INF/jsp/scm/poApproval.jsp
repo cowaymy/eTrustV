@@ -256,7 +256,7 @@ var poApprTargetGridLayout =
 			}
 		}, {
 			dataField : "poItemStusName",
-			headerText : "Po Status",
+			headerText : "PO Status",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
@@ -267,7 +267,7 @@ var poApprTargetGridLayout =
 			}
 		}, {
 			dataField : "poNo",
-			headerText : "Po No",
+			headerText : "PO No.",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
@@ -278,7 +278,7 @@ var poApprTargetGridLayout =
 			}
 		}, {
 			dataField : "poItemNo",
-			headerText : "Po Item No",
+			headerText : "PO Item No.",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
@@ -311,7 +311,7 @@ var poApprTargetGridLayout =
 			}
 		}, {
 			dataField : "stockCode",
-			headerText : "Code",
+			headerText : "Material",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
@@ -322,7 +322,7 @@ var poApprTargetGridLayout =
 			}
 		}, {
 			dataField : "name",
-			headerText : "Name",
+			headerText : "Desc.",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
@@ -333,7 +333,7 @@ var poApprTargetGridLayout =
 			}
 		}, {
 			dataField : "poQty",
-			headerText : "Po Issue Qty",
+			headerText : "PO Issue Qty",
 			editable : false,
 			dataType : "numeric",
 			////formatString : "#,##0",
@@ -346,7 +346,7 @@ var poApprTargetGridLayout =
 			}
 		}, {
 			dataField : "planGrYear",
-			headerText : "Gr Year",
+			headerText : "GR Year",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
@@ -357,7 +357,7 @@ var poApprTargetGridLayout =
 			}
 		}, {
 			dataField : "planGrMonth",
-			headerText : "Gr Month",
+			headerText : "GR Month",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
@@ -368,7 +368,7 @@ var poApprTargetGridLayout =
 			}
 		}, {
 			dataField : "planGrWeek",
-			headerText : "Gr Week",
+			headerText : "GR Week",
 			editable : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {

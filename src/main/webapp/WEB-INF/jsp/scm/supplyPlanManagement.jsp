@@ -249,7 +249,7 @@ function fnSupplyPlanHeader() {
 				if ( null != result.selectSupplyPlanHeader && 0 < result.selectSupplyPlanHeader.length ) {
 					dynamicLayout.push(
 							{
-								headerText : "Stock",
+								headerText : "Material",
 								children :
 									[
 									 {
@@ -329,7 +329,7 @@ function fnSupplyPlanHeader() {
 										 }
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].name,
-										 headerText : "Name",
+										 headerText : "Desc.",
 										 visible : true,
 										 cellMerge : true,
 										 mergePolicy : "restrict",

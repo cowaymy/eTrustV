@@ -226,17 +226,17 @@ var poCreateListLayout	=
 			style : "my-columnCenter1"
 		}, {
 			dataField : "stockCode",
-			headerText : "Code",
+			headerText : "Material",
 			editable : false,
 			style : "my-columnCenter1"
 		}, {
 			dataField : "name",
-			headerText : "Name",
+			headerText : "Desc.",
 			editable : false,
 			style : "my-columnLeft1"
 		}, {
 			dataField : "poQty",
-			headerText : "Po Qty",
+			headerText : "PO Qty",
 			dataType : "numeric",
 			//formatString : "#,##0",
 			editable : false,
@@ -244,7 +244,7 @@ var poCreateListLayout	=
 			style : "my-columnRight1"
 		}, {
 			dataField : "moq",
-			headerText : "Moq",
+			headerText : "MOQ",
 			dataType : "numeric",
 			//formatString : "#,##0",
 			editable : false,
@@ -319,15 +319,15 @@ var poCreateListLayout	=
 			visible : false
 		}, {
 			dataField : "planGrYear",
-			headerText : "Plan Gr Year",
+			headerText : "Plan GR Year",
 			visible : false
 		}, {
 			dataField : "planGrMonth",
-			headerText : "Plan Gr Month",
+			headerText : "Plan GR Month",
 			visible : false
 		}, {
 			dataField : "planGrWeek",
-			headerText : "Plan Gr Week",
+			headerText : "Plan GR Week",
 			visible : false
 		}
 	 ];
@@ -372,7 +372,7 @@ var poCreatedListLayout	=
 			}
 		}, {
 			dataField : "poNo",
-			headerText : "Po No",
+			headerText : "PO No.",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
@@ -382,7 +382,7 @@ var poCreatedListLayout	=
 			}
 		}, {
 			dataField : "poItemNo",
-			headerText : "Po Item No",
+			headerText : "PO Item No.",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
@@ -392,7 +392,7 @@ var poCreatedListLayout	=
 			}
 		}, {
 			dataField : "cdc",
-			headerText : "Cdc",
+			headerText : "CDC",
 			visible : false,
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
@@ -456,7 +456,7 @@ var poCreatedListLayout	=
 			}
 		}, {
 			dataField : "stockCode",
-			headerText : "Code",
+			headerText : "Material",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
@@ -466,7 +466,7 @@ var poCreatedListLayout	=
 			}
 		}, {
 			dataField : "name",
-			headerText : "Name",
+			headerText : "Desc.",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnLeft2";
@@ -476,7 +476,7 @@ var poCreatedListLayout	=
 			}
 		}, {
 			dataField : "poQty",
-			headerText : "Po Qty",
+			headerText : "PO Qty",
 			dataType : "numeric",
 			//formatString : "#,##0",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
@@ -500,7 +500,7 @@ var poCreatedListLayout	=
 			}
 		}, {
 			dataField : "poIssDt",
-			headerText : "Po Issue Date",
+			headerText : "PO Issue Date",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnCenter2";
@@ -962,12 +962,12 @@ function fnPoTargetGrid() {
 				width : "10%"
 			}, {
 				dataField : "stockCode",
-				headerText : "Code",
+				headerText : "Material",
 				style : "my-columnCenter0",
 				width : "10%"
 			}, {
 				dataField : "name",
-				headerText : "Name",
+				headerText : "Desc.",
 				style : "my-columnLeft0",
 				width : "60%"
 			}, {

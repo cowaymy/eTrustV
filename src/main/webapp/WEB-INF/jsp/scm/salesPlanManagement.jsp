@@ -269,7 +269,7 @@ function fnSalesPlanHeader() {
 				if ( null != result.selectSalesPlanHeader && 0 < result.selectSalesPlanHeader.length ) {
 					dynamicLayout.push(
 							{
-								headerText : "Stock",
+								headerText : "Material",
 								children :
 									[
 									 {
@@ -316,7 +316,7 @@ function fnSalesPlanHeader() {
 										 style : "my-backColumn4"
 									 }, {
 										 dataField : result.selectSalesPlanHeader[0].name,
-										 headerText : "Name",
+										 headerText : "Desc.",
 										 visible : true,
 										 style : "my-backColumn3"
 									 }

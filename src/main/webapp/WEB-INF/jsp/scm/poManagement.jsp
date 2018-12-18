@@ -630,37 +630,37 @@ var SCMPrePOViewLayout =
     [      
         {    
             dataField : "stockCode",
-            headerText : "<spring:message code='sys.scm.pomngment.stockCode' />",
+            headerText : "Code",
             width : "22%"
         }, {
             dataField : "stockName",
-            headerText : "<spring:message code='sys.scm.pomngment.stockName'/>",
+            headerText : "Desc.",
             width : "33%"
         }, {
             dataField : "stkTypeName",
-            headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
+            headerText : "Type",
             visible  : true,
             width : "16%"
         }, {
             dataField : "planQty",
-            headerText : "<spring:message code='sys.scm.pomngment.planQty'/>",
+            headerText : "Plan Qty",
             style : "aui-grid-right-column",
             width : "13%"
         }, {
             dataField : "poQty",
-            headerText : "<spring:message code='sys.scm.pomngment.poQty'/>",
+            headerText : "PO Qty",
             style : "aui-grid-right-column",
             //width : "15%",
             editable : false
         }, {
             dataField : "moq",
-            headerText : "<spring:message code='sys.scm.mastermanager.MOQ'/>",
+            headerText : "MOQ",
             style : "aui-grid-right-column",
             editable : false,
             visible  : false,
         }, {
             dataField : "stkCtgryId",
-            headerText :  "<spring:message code='sys.scm.poApproval.stockCategory'/>",   
+            headerText :  "Category",   
             editable : false,
             visible  : false,
         }, {
@@ -680,7 +680,7 @@ var SCMPrePOViewLayout =
             visible  : false,
         }, {
             dataField : "stkTypeId",
-            headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
+            headerText : "Type Id",
             editable : false,
             visible  : false,
         }
@@ -715,28 +715,28 @@ var SCMPrePOViewLayout2 =
           }  //renderer
       },{
             dataField : "stockCode",
-            headerText : "<spring:message code='sys.scm.pomngment.stockCode' />",
+            headerText : "Code",
             width : "15%",
             editable : false
         }, {
             dataField : "stockName",
-            headerText : "<spring:message code='sys.scm.pomngment.stockName'/>",
+            headerText : "Desc.",
             width : "15%",
             editable : false
         }, {
             dataField : "stockType",
-            headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
+            headerText : "Type",
             visible  : false,
             width : "10%"
         }, {
             dataField : "poQty",
-            headerText : "<spring:message code='sys.scm.pomngment.poQty'/>",
+            headerText : "PO Qty",
             style : "aui-grid-right-column",
             width : "10%",
             editable : true
         }, {
             dataField : "fobPrice",
-            headerText : "<spring:message code='sys.scm.pomngment.FOBPrice'/>",
+            headerText : "FOB Price",
             style : "aui-grid-right-column",
             width : "15%",
             editable : false
@@ -744,43 +744,43 @@ var SCMPrePOViewLayout2 =
         // for Save temporaryDataField
         , {
             dataField : "fobAmount",
-            headerText : "<spring:message code='sys.scm.pomngment.FobAmount'/>",
+            headerText : "FOB Amount",
             style : "aui-grid-right-column",
             visible  : true,
             width : "20%",
             editable : false
         }, {
             dataField : "currency",  
-            headerText : "<spring:message code='log.head.currency'/>",
+            headerText : "Curr.",
             visible  : true,
             width : "10%",
         }, {
             dataField : "vendor",
-            headerText : "<spring:message code='log.head.vendor'/>",  
+            headerText : "Vendor",  
             visible  : true,
             width : "10%",
             editable : false
         }, {
             dataField : "vendorTxt",
-            headerText : "<spring:message code='log.head.vendortext'/>", 
+            headerText : "Vendor", 
             visible  : true,
             width : "10%",
             editable : false
         },{
             dataField : "reqDate",
-            headerText : "<spring:message code='log.head.requestdate'/>",   
+            headerText : "Request Date",   
             visible  : true,
             width : "13%",
             editable : false
         },{
             dataField : "stockCategory",
-            headerText : "<spring:message code='sys.scm.poApproval.stockCategory'/>",   
+            headerText : "Category",   
             visible  : true,
             width : "13%",
             editable : false
         },{
             dataField : "moq",
-            headerText : "<spring:message code='sys.scm.mastermanager.MOQ'/>",
+            headerText : "MOQ",
             style : "aui-grid-right-column",
             width : "10%",
             editable : false
@@ -856,53 +856,53 @@ var SCMPOViewLayout =
           visible: false
       },{
           dataField : "poNo",
-          headerText : "<spring:message code='sys.scm.pomngment.PONO'/>",
+          headerText : "PO No.",
           width : "10%"
       },{
           dataField : "poItmNo",
-          headerText : "<spring:message code='sys.scm.pomngment.POItem'/>",
+          headerText : "Item No.",
           width : "5%"
       },{
           dataField : "estWeek",
-          headerText : "<spring:message code='sys.scm.pomngment.EstWeek'/>",
+          headerText : "Est Week",
           width : "7%",
       },{
           dataField : "grWeek",
-          headerText : "<spring:message code='sys.scm.pomngment.grWeek'/>",
+          headerText : "GR Week",
           width : "7%"
       },{
           dataField : "poIssuDt",
-          headerText : "<spring:message code='sys.scm.pomngment.poIssueDate'/>",
+          headerText : "Issue Date",
           width : "7%"
       },{
           dataField : "stockCode",
-          headerText : "<spring:message code='sys.scm.pomngment.stockCode'/>",
+          headerText : "Code",
           width : "7%"
       },{
           dataField : "stockName",
-          headerText : "<spring:message code='sys.scm.pomngment.stockName'/>",
+          headerText : "Desc.",
           width : "13%",
       },{
           dataField : "stkTypeId",
-          headerText : "<spring:message code='sys.scm.inventory.stockType'/>",
+          headerText : "Type Id",
           width : "7%",
       },{
           dataField : "qty",
-          headerText : "<spring:message code='sys.scm.pomngment.quantity'/>",
+          headerText : "Qty",
           style : "aui-grid-right-column",
           width : "7%"
       },{
           dataField : "fobAmt",
-          headerText : "<spring:message code='sys.scm.pomngment.FobAmount'/>",
+          headerText : "FOB Amount",
           style : "aui-grid-right-column",
           width : "7%"
       },{
           dataField : "cdc",
-          headerText : "<spring:message code='sys.scm.pomngment.cdc'/>",
+          headerText : "CDC",
           width : "5%"
       },{
           dataField : "rtpgrWeek",
-          headerText : "<spring:message code='sys.scm.pomngment.rptGrWeek'/>",
+          headerText : "Rpt. Week",
           width : "7%",
       },{
           dataField : "poAppvStus",

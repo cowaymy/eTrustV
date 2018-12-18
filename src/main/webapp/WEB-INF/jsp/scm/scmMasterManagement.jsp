@@ -71,6 +71,7 @@ var gToday	= new Date();
 var gYear	= "";
 var gMonth	= "";
 var gDay	= "";
+var gYYYYMMDD	= "";
 
 $(function() {
 	fnScmStockCategoryCbBox();
@@ -78,11 +79,16 @@ $(function() {
 	fnScmStockCbBox();
 	doGetComboAndGroup2("/scm/selectScmStockCodeForMulti.do", "", "", "scmStockCodeCbBox", "M", "");
 	$(".js-example-basic-multiple").select2();
+	console.log("today : " + gToday);
 	
 	gYear	= gToday.getFullYear();
-	gYear1	= gToday.getFullYear() - 1;
-	gMonth	= gToday.getMonth() - 5;
+	gMonth	= gToday.getMonth() + 1;
 	gDay	= gToday.getDate();
+	if ( 10 != gMonth && 11 != gMonth && 12 != gMonth ) {
+		gMonth	= "0" + gMonth;
+	}
+	gYYYYMMDD	= gYear + "" + gMonth + "" + gDay;
+	console.log("gYYYYMMDD : " + gYYYYMMDD);
 });
 
 //	category
@@ -391,7 +397,7 @@ var masterManagerLayout	=
 	[
 		{
 			//	Stock
-			headerText : "<spring:message code='sys.scm.mastermanager.Stock'/>",
+			headerText : "Material",
 			width : "45%",
 			usePaging : true,
 			children :
@@ -444,7 +450,7 @@ var masterManagerLayout	=
 						}
 					}, {
 						dataField : "stockDesc",
-						headerText : "Name",
+						headerText : "Desc.",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( 1 == item.isNew ) {
 								return	"my-columnLeft1";
@@ -870,7 +876,7 @@ $(document).ready(function() {
 			var isTrget	= event.item.isTrget;
 			if ( "1" == isTrget ) {
 				//if ( "" == AUIGrid.getCellValue(myGridID, event.rowIndex, "startDt") ) {
-					AUIGrid.setCellValue(myGridID, event.rowIndex, "startDt", "20181127");
+					AUIGrid.setCellValue(myGridID, event.rowIndex, "startDt", gYYYYMMDD);
 					AUIGrid.setCellValue(myGridID, event.rowIndex, "endDt", "20991231");
 				//}
 			} else if ( "0" == isTrget ) {
