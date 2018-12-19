@@ -44,6 +44,8 @@ import com.crystaldecisions.sdk.occa.report.lib.ReportSDKExceptionBase;
  * CAUTION : 135 Server only ////@Scheduled of ReportBatchController should be
  * uncommented. Then the report batch is executed. Note: If another instance is
  * uncommented, it will be executed multiple times.
+ * Path: apps/domains/SalesDmain/servers/eTRUST_report/WEB-INF/classes/com/coway/trust/web/common/visualcut
+ * Folder: /apps/apache/htdocs/resources/WebShare/RawData/Public
  */
 @Controller
 @RequestMapping(value = "/report/batch")
