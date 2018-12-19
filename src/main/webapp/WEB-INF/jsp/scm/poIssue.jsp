@@ -663,6 +663,7 @@ function fnFilterPoTargetList(list) {
 			poList.poMonth	= list[i].poMonth;
 			poList.poWeek	= list[i].poWeek;
 			poList.cdc		= list[i].cdc;
+			poList.cdcDesc	= list[i].cdcDesc;
 			poList.planGrYear	= list[i].planGrYear;
 			poList.planGrMonth	= list[i].planGrMonth;
 			poList.planGrWeek	= list[i].planGrWeek;
@@ -961,10 +962,6 @@ function fnPoTargetGrid() {
 				headerText : "Po Week",
 				visible : false
 			}, {
-				dataField : "cdc",
-				headerText : "Cdc Name",
-				visible : false
-			}, {
 				dataField : "planGrYear",
 				headerText : "Plan Gr Year",
 				visible : false
@@ -977,8 +974,12 @@ function fnPoTargetGrid() {
 				headerText : "Plan Gr Week",
 				visible : false
 			}, {
+				dataField : "cdc",
+				headerText : "Cdc Name",
+				visible : false
+			}, {
 				dataField : "cdcDesc",
-				headerText : "Cdc Code",
+				headerText : "cdcDesc",
 				visible : false
 			}, {
 				dataField : "ctgryId",
