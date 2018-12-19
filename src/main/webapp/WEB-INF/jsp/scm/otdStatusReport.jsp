@@ -322,9 +322,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "poQty",
 						headerText : "Qty",
-						//cellMerge : true,
-						//mergePolicy : "restrict",
-						//mergeRef : "divOdd",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -373,9 +373,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "soQty",
 						headerText : "Qty",
-						//cellMerge : true,
-						//mergePolicy : "restrict",
-						//mergeRef : "divOdd",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -389,6 +389,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "soDt",
 						headerText : "S/O Date",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -405,9 +408,9 @@ var OtdStatusLayout	=
 					{
 						dataField : "ppPlanQty",
 						headerText : "Plan Qty",
-						//cellMerge : true,
-						//mergePolicy : "restrict",
-						//mergeRef : "poDivOdd",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -421,9 +424,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "ppProdQty",
 						headerText : "Prod Qty",
-						//cellMerge : true,
-						//mergePolicy : "restrict",
-						//mergeRef : "poDivOdd",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						dataType : "numeric",
 						style : "aui-grid-right-column",
 						formatString : "#,##0",
@@ -437,9 +440,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "ppProdStartDt",
 						headerText : "Start Date",
-						//cellMerge : true,
-						//mergePolicy : "restrict",
-						//mergeRef : "poDivOdd",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
@@ -450,9 +453,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "ppProdEndDt",
 						headerText : "End Date",
-						//cellMerge : true,
-						//mergePolicy : "restrict",
-						//mergeRef : "poDivOdd",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
 								return	"my-columnCenter0";
