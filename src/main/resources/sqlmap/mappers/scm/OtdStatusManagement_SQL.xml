@@ -4,6 +4,7 @@
 
 <select id="selectOtdStatus" parameterType="Map" resultType="egovMap">
 SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO), 2) AS DIV_ODD
+     , MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO, A.PO_ITEM_NO), 2) AS PO_DIV_ODD
      , A.PO_NO, A.PO_ITEM_NO
      , A.STOCK_CODE, A.NAME, A.TYPE_ID, A.TYPE
      , A.PO_QTY, A.PO_ITEM_STUS_ID, A.PO_ITEM_STUS_NAME
