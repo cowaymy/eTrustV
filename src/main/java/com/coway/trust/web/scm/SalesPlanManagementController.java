@@ -58,7 +58,25 @@ public class SalesPlanManagementController {
 	 */
 	//	combo box
 	@RequestMapping(value = "/selectScmTotalPeriod.do", method = RequestMethod.POST)
-	public ResponseEntity<Map<String, Object>> selectScmTotalPeriod(@RequestBody Map<String, Object> params) {
+	public ResponseEntity<Map<String, Object>> selectScmTotalPeriod(@RequestParam Map<String, Object> params) {
+		
+		LOGGER.debug("selectScmTotalPeriod : {}", params.toString());
+		
+		List<EgovMap> selectScmTotalPeriod= scmCommonService.selectScmTotalPeriod(params);
+		List<EgovMap> selectScmYear	= scmCommonService.selectScmYear(params);
+		params.put("scmYear", Integer.parseInt(selectScmTotalPeriod.get(0).get("scmYear").toString()));
+		List<EgovMap> selectScmWeek	= scmCommonService.selectScmWeek(params);
+		
+		Map<String, Object> map	= new HashMap<>();
+		
+		map.put("selectScmTotalPeriod", selectScmTotalPeriod);
+		map.put("selectScmYear", selectScmYear);
+		map.put("selectScmWeek", selectScmWeek);
+		
+		return	ResponseEntity.ok(map);
+	}
+	@RequestMapping(value = "/selectScmTotalPeriod1.do", method = RequestMethod.GET)
+	public ResponseEntity<Map<String, Object>> selectScmTotalPeriod1(@RequestBody Map<String, Object> params) {
 		
 		LOGGER.debug("selectScmTotalPeriod : {}", params.toString());
 		
