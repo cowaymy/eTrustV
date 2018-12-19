@@ -24,13 +24,11 @@
         //doGetComboOrder('/common/selectCodeList.do', '322', 'CODE_ID', '', 'promoDiscPeriodTp', 'S'); //Discount period
 
         //Attach File
-        $(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
+        //$(".auto_file2").append("<label><input type='text' class='input_text' readonly='readonly' /><span class='label_text'><a href='#'>Upload</a></span></label>");
 
         //UpperCase Field
         $("#nric").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
         $("#sofNo").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
-
-        fn_setFileEvent();
     });
 
     function createAUIGridStk() {
@@ -437,7 +435,7 @@
         });
         $('#btnSave').click(function() {
 
-             if(!fn_validCustomer()) {
+            if(!fn_validCustomer()) {
                 $('#aTabCS').click();
                 return false;
             }
@@ -457,31 +455,8 @@
                 return false;
             }
 
-            var formData = new FormData();
-            $.each(myFileCaches, function(n, v) {
-                console.log("n : " + n + " v.file : " + v.file);
-                formData.append(n, v.file);
-            });
-
-            Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
-            	console.log(result);
-                if(result != 0 && result.code == 00){
-                	console.log("atchFileGrpId ::" + result.data.fileGroupKey);
-                    atchFileGrpId= result.data.fileGroupKey;
-                    fn_doSavePreOrder();
-                    //myFileCaches = {};
-                }else{
-                	Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-                    //myFileCaches = {};
-                    $('#sofFile').on('change');
-                    $('#nricFile').on('change');
-                    $('#payFile').on('change');
-                    $('#trFile').on('change');
-                    $('#otherFile').on('change');
-                }
-            },function(result){
-                Common.alert("Upload Failed. Please check with System Administrator.");
-            });
+            Common.popupDiv("/sales/order/cnfmPreOrderDetailPop.do");
+            //fn_doSavePreOrder();
 
         });
         $('#btnCal').click(function() {
@@ -549,6 +524,55 @@
         $('#btnSelBankAccount').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : vCustId, callPrgm : "PRE_ORD"});
+        });
+        $('#sofFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[1] != null){
+            	delete myFileCaches[1];
+            }else if(file != null){
+            	myFileCaches[1] = {file:file};
+            }
+            console.log(myFileCaches);
+        });
+
+        $('#nricFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[2] != null){
+                delete myFileCaches[2];
+            }else if(file != null){
+                myFileCaches[2] = {file:file};
+            }
+            console.log(myFileCaches);
+        });
+
+        $('#payFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[3] != null){
+                delete myFileCaches[3];
+            }else if(file != null){
+                myFileCaches[3] = {file:file};
+            }
+            console.log(myFileCaches);
+        });
+
+        $('#trFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[4] != null){
+                delete myFileCaches[4];
+            }else if(file != null){
+                myFileCaches[4] = {file:file};
+            }
+            console.log(myFileCaches);
+        });
+
+        $('#otherFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[5] != null){
+                delete myFileCaches[5];
+            }else if(file != null){
+                myFileCaches[5] = {file:file};
+            }
+            console.log(myFileCaches);
         });
     });
 
@@ -989,23 +1013,48 @@
             custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
             custBillCustCareCntId: $("#hiddenBPCareId").val()
         };
-        console.log(orderVO);
-        Common.ajax("POST", "/sales/order/registerPreOrder.do", orderVO, function(result) {
-            Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdRegPop);
-        },
-        function(jqXHR, textStatus, errorThrown) {
-            try {
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
-                Common.removeLoader();
+
+        var formData = new FormData();
+        $.each(myFileCaches, function(n, v) {
+            console.log("n : " + n + " v.file : " + v.file);
+            formData.append(n, v.file);
+        });
+        //formData.append('atchFileGrpId',atchFileGrpId);
+
+        Common.ajaxFile("/sales/order/attachFileUpload.do", formData, function(result) {
+            if(result != 0 && result.code == 00){
+                //atchFileGrpId = result.data.fileGroupKey;
+                orderVO["atchFileGrpId"] = result.data.fileGroupKey;
+                Common.ajax("POST", "/sales/order/registerPreOrder.do", orderVO, function(result) {
+                    Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdRegPop);
+                },
+                function(jqXHR, textStatus, errorThrown) {
+                    try {
+                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                        Common.removeLoader();
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                });
+
+            }else{
+                Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
             }
-            catch (e) {
-                console.log(e);
-            }
+        },function(result){
+            Common.alert("Upload Failed. Please check with System Administrator.");
         });
     }
 
     function fn_closePreOrdRegPop() {
         fn_getPreOrderList();
+        myFileCaches = {};
+        $('#_divPreOrdRegPop').remove();
+        $('#btnCnfmOrderClose').click();
+    }
+
+    function fn_closePreOrdRegPop2() {
+        myFileCaches = {};
         $('#_divPreOrdRegPop').remove();
     }
 
@@ -1575,51 +1624,17 @@
     	//$('#nric').val(nric.substr(0).replace(/[\S]/g,"*"));
     }
 
-    function fn_setFileEvent(){
-        $('#sofFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            myFileCaches[1] = {file:file};
-        });
-
-        $('#nricFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            myFileCaches[2] = {file:file};
-        });
-
-        $('#payFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            myFileCaches[3] = {file:file};
-        });
-
-        $('#trFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            myFileCaches[4] = {file:file};
-        });
-
-        $('#otherFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            myFileCaches[5] = {file:file};
-        });
+    function fn_removeFile(name){
+        if(name == "PAY") {
+             $("#payFile").val("");
+             $('#payFile').change();
+        }else if(name == "TRF"){
+            $("#trFile").val("");
+            $('#trFile').change();
+        }else if(name == "OTH"){
+            $("#otherFile").val("");
+            $('#otherFile').change();
+        }
     }
 </script>
 
@@ -1628,7 +1643,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>eKey-in</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="btnPreOrdClose" href="#">CLOSE | TUTUP</a></p></li>
+	<li><p class="btn_blue2"><a id="btnPreOrdClose" onClick="javascript:fn_closePreOrdRegPop2();" href="#">CLOSE | TUTUP</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -2518,23 +2533,67 @@
 <tbody>
 <tr>
     <th scope="row">Sales Order Form (SOF)<span class="must">*</span></th>
-    <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="sofFile" accept="image/*"/></div></td>
+    <td>
+        <div class="auto_file2 auto_file3">
+	        <input type="file" title="file add" id="sofFile" accept="image/*"/>
+	        <label>
+	            <input type='text' class='input_text' readonly='readonly' />
+	            <span class='label_text'><a href='#'>Upload</a></span>
+	        </label>
+        </div>
+    </td>
 </tr>
 <tr>
     <th scope="row">NRIC & Bank Card<span class="must">*</span></th>
-    <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="nricFile" accept="image/*"/></div></td>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="nricFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
+        </div>
+    </td>
 </tr>
 <tr>
     <th scope="row">Payment document</th>
-    <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="payFile" accept="image/*"/></div></td>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="payFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
+            <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span>
+        </div>
+    </td>
 </tr>
 <tr>
     <th scope="row">Coway temporary receipt (TR)</th>
-    <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="trFile" accept="image/*"/></div></td>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="trFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
+            <span class='label_text'><a href='#' onclick='fn_removeFile("TRF")'>Remove</a></span>
+        </div>
+    </td>
 </tr>
 <tr>
     <th scope="row">Declaration letter/Others form</th>
-    <td><div class="auto_file2 auto_file3"><input type="file" title="file add" id="otherFile" accept="image/*"/></div></td>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="otherFile" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
+            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
+        </div>
+
+    </td>
 </tr>
 <tr>
     <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>

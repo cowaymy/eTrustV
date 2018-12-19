@@ -6,17 +6,18 @@
     //AUIGrid 생성 후 반환 ID
     var listGiftGridID;
     var update = new Array();
-    var sofFileId;
-    var nricFileId;
-    var payFileId;
-    var trFileId;
-    var otherFileId;
+    var remove = new Array();
+    var sofFileId = 0;
+    var nricFileId = 0;
+    var payFileId = 0;
+    var trFileId = 0;
+    var otherFileId = 0;
 
-    var sofFileName;
-    var nricFileName;
-    var payFileName;
-    var trFileName;
-    var otherFileName;
+    var sofFileName = "";
+    var nricFileName = "";
+    var payFileName = "";
+    var trFileName = "";
+    var otherFileName = "";
 
     $(document).ready(function(){
 
@@ -46,8 +47,6 @@
         if('${preOrderInfo.atchFileGrpId}' != 0){
         	fn_loadAtchment('${preOrderInfo.atchFileGrpId}');
         }
-
-        fn_setFileEvent();
 
     });
 
@@ -452,23 +451,15 @@
             var formData = new FormData();
             formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
             formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+            formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
             console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+            console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
             $.each(myFileCaches, function(n, v) {
                 console.log(v.file);
                 formData.append(n, v.file);
             });
 
-            Common.ajaxFile("/sales/order/attachFileUpdate.do", formData, function(result) {
-            	if(result.code == 99){
-            		Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
-            		//myFileCaches = {};
-            	}else{
-            		fn_doSavePreOrder();
-                    //myFileCaches = {};
-            	}
-            },function(result){
-                Common.alert(result.message+"<br/>Upload Failed. Please check with System Administrator.");
-            });
+            fn_doSavePreOrder();
 
         });
         $('#btnCal').click(function() {
@@ -535,6 +526,56 @@
         $('#btnSelBankAccount').click(function() {
             var vCustId = $('#thrdParty').is(":checked") ? $('#hiddenThrdPartyId').val() : $('#hiddenCustId').val();
             Common.popupDiv("/sales/customer/customerBankAccountSearchPop.do", {custId : vCustId, callPrgm : "PRE_ORD"});
+        });
+        $('#sofFile').change( function(evt) {
+            var file = evt.target.files[0];
+             if(file.name != sofFileName){
+                 myFileCaches[1] = {file:file};
+                 update.push(sofFileId);
+             }
+        });
+        $('#nricFile').change( function(evt) {
+            var file = evt.target.files[0];
+            if(file.name != nricFileName){
+                myFileCaches[2] = {file:file};
+                update.push(nricFileId);
+            }
+        });
+        $('#payFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null){
+                remove.push(payFileId);
+            }else if(file.name != payFileName){
+                myFileCaches[3] = {file:file};
+                if(payFileName != ""){
+                    update.push(payFileId);
+                }
+            }
+        });
+
+        $('#trFile').change(function(evt) {
+            var file = evt.target.files[0];
+
+            if(file == null){
+                remove.push(trFileId);
+            }else if(file.name != trFileName){
+	            myFileCaches[4] = {file:file};
+	            if(trFileName != ""){
+	            	update.push(trFileId);
+	           }
+	        }
+        });
+
+        $('#otherFile').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null){
+                remove.push(otherFileId);
+            }else if(file.name != otherFileName){
+                myFileCaches[5] = {file:file};
+                if(otherFileName != ""){
+                    update.push(otherFileId);
+                }
+            }
         });
     });
 
@@ -973,22 +1014,55 @@
                 rem2                        : '${preOrderInfo.rem2}',
                 stusId                     : vStusId
             };
-        Common.ajax("POST", "/sales/order/modifyPreOrder.do", orderVO, function(result) {
-            Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdModPop);
-        },
-        function(jqXHR, textStatus, errorThrown) {
-            try {
-                Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+
+        var formData = new FormData();
+        formData.append("atchFileGrpId", '${preOrderInfo.atchFileGrpId}');
+        formData.append("update", JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        formData.append("remove", JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(update).replace(/[\[\]\"]/gi, ''));
+        console.log(JSON.stringify(remove).replace(/[\[\]\"]/gi, ''));
+        $.each(myFileCaches, function(n, v) {
+            console.log(v.file);
+            formData.append(n, v.file);
+        });
+
+        Common.ajaxFile("/sales/order/attachFileUpdate.do", formData, function(result) {
+            if(result.code == 99){
+                Common.alert("Attachment Upload Failed" + DEFAULT_DELIMITER + result.message);
+                //myFileCaches = {};
+            }else{
+
+                Common.ajax("POST", "/sales/order/modifyPreOrder.do", orderVO, function(result) {
+                    Common.alert("Order Saved" + DEFAULT_DELIMITER + "<b>"+result.message+"</b>", fn_closePreOrdModPop);
+                },
+                function(jqXHR, textStatus, errorThrown) {
+                    try {
+                        Common.alert("Failed To Save" + DEFAULT_DELIMITER + "<b>Failed to save order.</b>");
+                    }
+                    catch (e) {
+                        console.log(e);
+                    }
+                });
+                //myFileCaches = {};
             }
-            catch (e) {
-                console.log(e);
-            }
+        },function(result){
+            Common.alert(result.message+"<br/>Upload Failed. Please check with System Administrator.");
         });
     }
 
     function fn_closePreOrdModPop() {
         fn_getPreOrderList();
+        myFileCaches = {};
+        delete update;
+        delete remove;
         $('#_divPreOrdModPop').remove();
+    }
+
+    function fn_closePreOrdModPop2(){
+    	myFileCaches = {};
+    	delete update;
+        delete remove;
+    	$('#_divPreOrdModPop').remove();
     }
 
     function fn_setBillGrp(grpOpt) {
@@ -1687,34 +1761,29 @@
 	            	for ( var i = 0 ; i < result.length ; i++ ) {
 	                    switch (result[i].fileKeySeq){
 	                    case '1':
-	                        $("#sofFileTxt").attr("name","sofFileTxt");
 	                        sofFileId = result[i].atchFileId;
 	                        sofFileName = result[i].atchFileName;
-	                        $(".input_text[name='sofFileTxt']").val(sofFileName);
+	                        $(".input_text[id='sofFileTxt']").val(sofFileName);
 	                        break;
 	                    case '2':
-	                        $("#nricFileTxt").attr("name","nricFileTxt");
 	                        nricFileId = result[i].atchFileId;
 	                        nricFileName = result[i].atchFileName;
-	                        $(".input_text[name='nricFileTxt']").val(nricFileName);
+	                        $(".input_text[id='nricFileTxt']").val(nricFileName);
 	                        break;
 	                    case '3':
-	                        $("#payFileTxt").attr("name","payFileTxt");
 	                        payFileId = result[i].atchFileId;
 	                        payFileName = result[i].atchFileName;
-	                        $(".input_text[name='payFileTxt']").val(payFileName);
+	                        $(".input_text[id='payFileTxt']").val(payFileName);
 	                        break;
 	                    case '4':
-	                        $("#trFileTxt").attr("name","trFileTxt");
 	                        trFileId = result[i].atchFileId;
 	                        trFileName = result[i].atchFileName;
-	                        $(".input_text[name='trFileTxt']").val(trFileName);
+	                        $(".input_text[id='trFileTxt']").val(trFileName);
 	                        break;
 	                    case '5':
-	                        $("#otherFileTxt").attr("name","otherFileTxt");
 	                        otherFileId = result[i].atchFileId;
 	                        otherFileName = result[i].atchFileName;
-	                        $(".input_text[name='otherFileTxt']").val(otherFileName);
+	                        $(".input_text[id='otherFileTxt']").val(otherFileName);
 	                        break;
 	                     default:
 	                    	 Common.alert("no files");
@@ -1739,73 +1808,22 @@
        });
     }
 
-    function fn_setFileEvent(){
-        $('#sofFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-             if(file.name != sofFileName){
-            	 myFileCaches[1] = {file:file};
-            	 update.push(sofFileId);
-             }
-        });
-
-        $('#nricFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            if(file.name != nricFileName){
-                myFileCaches[2] = {file:file};
-                update.push(nricFileId);
-            }
-        });
-
-        $('#payFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            if(file.name != payFileName){
-                myFileCaches[3] = {file:file};
-                if(payFileName != null){
-                       update.push(payFileId);
-                }
-            }
-        });
-
-        $('#trFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            if(file.name != trFileName){
-                myFileCaches[4] = {file:file};
-                if(trFileName != null){
-                       update.push(trFileId);
-                }
-            }
-        });
-
-        $('#otherFile').on('change', function(evt) {
-            var file = evt.target.files[0];
-            if (typeof file == "undefined") {
-                delete myFileCaches[selectRowIdx + 1];
-                return;
-            }
-            if(file.name != otherFileName){
-            	myFileCaches[5] = {file:file};
-            	if(otherFileName != null){
-            		   update.push(otherFileId);
-            	}
-            }
-        });
+    function fn_removeFile(name){
+        if(name == "PAY") {
+             $("#payFile").val("");
+             $(".input_text[name='PayFileTxt']").val("");
+             $('#payFile').change();
+        }else if(name == "TRF"){
+            $("#trFile").val("");
+            $(".input_text[name='trFileTxt']").val("");
+            $('#trFile').change();
+        }else if(name == "OTH"){
+            $("#otherFile").val("");
+            $(".input_text[name='otherFileTxt']").val("");
+            $('#otherFile').change();
+        }
     }
+
 </script>
 
 <div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
@@ -1813,7 +1831,7 @@
 <header class="pop_header"><!-- pop_header start -->
 <h1>eKey-in</h1>
 <ul class="right_opt">
-	<li><p class="btn_blue2"><a id="btnPreOrdClose" href="#">CLOSE | TUTUP</a></p></li>
+	<li><p class="btn_blue2"><a id="btnPreOrdClose" onClick="javascript:fn_closePreOrdModPop2();" href="#">CLOSE | TUTUP</a></p></li>
 </ul>
 </header><!-- pop_header end -->
 
@@ -2728,6 +2746,7 @@
                     <input type='text' class='input_text' readonly='readonly' id='payFileTxt' name=''/>
                     <span class='label_text'><a href='#'>Upload</a></span>
                 </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("PAY")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -2740,6 +2759,7 @@
                     <input type='text' class='input_text' readonly='readonly' id='trFileTxt' name=''/>
                     <span class='label_text'><a href='#'>Upload</a></span>
                 </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("TRF")'>Remove</a></span>
         </div>
     </td>
 </tr>
@@ -2752,6 +2772,7 @@
 	                <input type='text' class='input_text' readonly='readonly' id='otherFileTxt' name=''/>
 	                <span class='label_text'><a href='#'>Upload</a></span>
 	            </label>
+	            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
 	    </div>
     </td>
 </tr>

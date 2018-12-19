@@ -398,4 +398,12 @@ public class PreOrderController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/cnfmPreOrderDetailPop.do")
+	public String cnfmPreOrderDetailPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		model.addAttribute("atchFileGrpId", params.get("atchFileGrpId"));
+
+		return "sales/order/cnfmPreOrderDetailPop";
+	}
+
 }

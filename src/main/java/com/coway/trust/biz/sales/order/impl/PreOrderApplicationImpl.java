@@ -85,26 +85,36 @@ public class PreOrderApplicationImpl implements PreOrderApplication {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params.toString());
 		LOGGER.debug("list.size : {}", list.size());
-		LOGGER.debug("list.size ", list.toString());
 		String update = (String) params.get("update");
+		String remove = (String) params.get("remove");
 		String[] updateList = null;
+		String[] removeList = null;
 		if(!StringUtils.isEmpty(update)) {
 			updateList = params.get("update").toString().split(",");
 			LOGGER.debug("updateList.length : {}", updateList.length);
+		}
+		if(!StringUtils.isEmpty(remove)) {
+			removeList = params.get("remove").toString().split(",");
+			LOGGER.debug("removeList.length : {}", removeList.length);
 		}
 		// serivce 에서 파일정보를 가지고, DB 처리.
 		if (list.size() > 0) {
 			for(int i = 0; i < list.size(); i++) {
 				if(updateList != null && i < updateList.length) {
 					String atchFileId = updateList[i];
-					LOGGER.debug("atchFileGrpId :"  + params.get("atchFileGrpId"));
-					LOGGER.debug("atchFileId :  " + atchFileId);
-					LOGGER.debug("list.get(i)  : " + list.get(i));
 					fileService.changeFileUpdate(Integer.parseInt(String.valueOf(params.get("atchFileGrpId"))), Integer.parseInt(atchFileId), list.get(i), type, Integer.parseInt(String.valueOf(params.get("userId"))));
-				} else {
+				}
+				else {
 					int fileGroupId = (Integer.parseInt(params.get("atchFileGrpId").toString()));
 					this.insertFile(fileGroupId, list.get(i), type,params, seqs.get(i));
 				}
+			}
+		}
+		if(removeList != null && removeList.length > 0){
+			for(String id : removeList){
+				LOGGER.info(id);
+				String atchFileId = id;
+				fileService.removeFileByFileId(type, Integer.parseInt(atchFileId));
 			}
 		}
 	}
