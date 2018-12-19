@@ -614,7 +614,7 @@ function fnSearch() {
 	}
 	
 	AUIGrid.clearGridData(myGridID);
-	//AUIGrid.clearGridData(myGridID2);
+	AUIGrid.clearGridData(myGridID2);
 	AUIGrid.clearGridData(myGridID3);
 	
 	var params	= {
@@ -995,6 +995,9 @@ function fnPoTargetGrid() {
 			}, {
 				dataField : "type",
 				headerText : "Type",
+				filter : {
+					showIcon : true
+				},
 				style : "my-columnCenter0",
 				width : "10%"
 			}, {
