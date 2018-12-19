@@ -179,7 +179,7 @@ function fn_report(type) {
                                     <td><select class="w100p" id="reportType" name="reportType">
                                     <option value="0" selected>Choose One</option>
                                      <option value="1">Turn Over - Stock</option>
-                                <option value="2">Turn Over Report - Filter & Spare Part</option>
+                                <option value="2">Turn Over - Filter & Spare Part</option>
                                 <option value="3">Turn Over - Stock , Filter & Spare Part</option>
                                    <option value="4">Stock A Movement Summary By Model</option>
                                    <option value="5">Stock B Movement Summary By Model</option>
