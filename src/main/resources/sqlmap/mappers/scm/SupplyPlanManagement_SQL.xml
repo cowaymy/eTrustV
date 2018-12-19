@@ -477,6 +477,10 @@ INSERT INTO SCM0006D
      , STOCK_CODE
      , CMPLT
      , OVERDUE
+     , M0 , M1, M2, M3, M4
+     , W01, W02, W03, W04, W05, W06, W07, W08, W09, W10
+     , W11, W12, W13, W14, W15, W16, W17, W18, W19, W20
+     , W21, W22, W23, W24, W25, W26, W27, W28, W29, W30
  )
 SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , #{planId}
@@ -484,8 +488,35 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , B.STOCK_CODE
      , 1 AS CMPLT
      , D.OVERDUE
+     , NVL(C.M0, 0) AS M0 , NVL(C.M1, 0) AS M1, NVL(C.M2, 0) AS M2, NVL(C.M3, 0) AS M3, NVL(C.M4, 0) AS M4
+     , NVL(C.W01, 0) AS W01, NVL(C.W02, 0) AS W02, NVL(C.W03, 0) AS W03, NVL(C.W04, 0) AS W04, NVL(C.W05, 0) AS W05
+     , NVL(C.W06, 0) AS W06, NVL(C.W07, 0) AS W07, NVL(C.W08, 0) AS W08, NVL(C.W09, 0) AS W09, NVL(C.W10, 0) AS W10
+     , NVL(C.W11, 0) AS W11, NVL(C.W12, 0) AS W12, NVL(C.W13, 0) AS W13, NVL(C.W14, 0) AS W14, NVL(C.W15, 0) AS W15
+     , NVL(C.W16, 0) AS W16, NVL(C.W17, 0) AS W17, NVL(C.W18, 0) AS W18, NVL(C.W19, 0) AS W19, NVL(C.W20, 0) AS W20
+     , NVL(C.W21, 0) AS W21, NVL(C.W22, 0) AS W22, NVL(C.W23, 0) AS W23, NVL(C.W24, 0) AS W24, NVL(C.W25, 0) AS W25
+     , NVL(C.W26, 0) AS W26, NVL(C.W27, 0) AS W27, NVL(C.W28, 0) AS W28, NVL(C.W29, 0) AS W29, NVL(C.W30, 0) AS W30
   FROM SCM0005M A
   LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
+  LEFT OUTER JOIN (
+                   SELECT A.PLAN_ID
+                        , 4 AS PSI_ID
+                        , B.STOCK_CODE
+                        , 1 AS CMPLT
+                        , 0 AS OVERDUE
+                        , NVL(B.M0, 0) AS M0, NVL(B.M1, 0) AS M1, NVL(B.M2, 0) AS M2, NVL(B.M3, 0) AS M3, NVL(B.M4, 0) AS M4
+                        , NVL(B.W01, 0) AS W01, NVL(B.W02, 0) AS W02, NVL(B.W03, 0) AS W03, NVL(B.W04, 0) AS W04, NVL(B.W05, 0) AS W05
+                        , NVL(B.W06, 0) AS W06, NVL(B.W07, 0) AS W07, NVL(B.W08, 0) AS W08, NVL(B.W09, 0) AS W09, NVL(B.W10, 0) AS W10
+                        , NVL(B.W11, 0) AS W11, NVL(B.W12, 0) AS W12, NVL(B.W13, 0) AS W13, NVL(B.W14, 0) AS W14, NVL(B.W15, 0) AS W15
+                        , NVL(B.W16, 0) AS W16, NVL(B.W17, 0) AS W17, NVL(B.W18, 0) AS W18, NVL(B.W19, 0) AS W19, NVL(B.W20, 0) AS W20
+                        , NVL(B.W21, 0) AS W21, NVL(B.W22, 0) AS W22, NVL(B.W23, 0) AS W23, NVL(B.W24, 0) AS W24, NVL(B.W25, 0) AS W25
+                        , NVL(B.W26, 0) AS W26, NVL(B.W27, 0) AS W27, NVL(B.W28, 0) AS W28, NVL(B.W29, 0) AS W29, NVL(B.W30, 0) AS W30
+                     FROM SCM0005M A
+                     LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
+                    WHERE A.PLAN_YEAR = #{befWeekYear}
+                      AND A.PLAN_WEEK = #{befWeekWeek}
+                      AND A.CDC = #{cdc}
+                      AND B.PSI_ID = 3
+                   ) C ON (B.STOCK_CODE = C.STOCK_CODE)
   LEFT OUTER JOIN (
                    SELECT X.STOCK_CODE
                         , Z.CDC

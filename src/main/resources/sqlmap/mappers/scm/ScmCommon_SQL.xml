@@ -63,7 +63,7 @@ SELECT A.CODE AS ID
   FROM SYS0013M A
  WHERE A.CODE_MASTER_ID = 349
    AND A.DISAB = 0
- ORDER BY A.CODE_ID
+ ORDER BY A.CODE
 </select>
 
 <select id="selectScmIfType" parameterType="Map" resultType="egovMap">
