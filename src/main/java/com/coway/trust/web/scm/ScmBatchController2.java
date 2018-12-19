@@ -106,7 +106,7 @@ public class ScmBatchController2 {
 			String ppFileName	= "COWAY_PP_DATA_" + today + ".TXT";
 			String giFileName	= "COWAY_GI_DATA_" + today + ".TXT";
 			//String soFileName	= "COWAY_SO_DATA_" + "20181205" + ".TXT";
-			//String ppFileName	= "COWAY_PP_DATA_" + "20181205" + ".TXT";
+			//String ppFileName	= "COWAY_PP_DATA_" + "20181214" + ".TXT";
 			//String giFileName	= "COWAY_GI_DATA_" + "20181205" + ".TXT";
 			
 			for ( int i = 0 ; i < files.length ; i++ ) {
@@ -326,8 +326,8 @@ public class ScmBatchController2 {
 			query	+= "USING DUAL ON (PO_NO = TRIM(?) AND SO_NO = TRIM(?) AND SO_ITEM_NO = TO_NUMBER(TRIM(?)) AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))) ";
 			query	+= "WHEN MATCHED THEN ";
 			query	+= "UPDATE ";
-			query	+= "   SET PP_PLAN_QTY = PP_PLAN_QTY + TO_NUMBER(TRIM(?)) ";
-			query	+= "     , PP_PROD_QTY = PP_PROD_QTY + TO_NUMBER(TRIM(?)) ";
+			query	+= "   SET PP_PLAN_QTY = NVL(PP_PLAN_QTY, 0) + TO_NUMBER(TRIM(?)) ";
+			query	+= "     , PP_PROD_QTY = NVL(PP_PROD_QTY, 0) + TO_NUMBER(TRIM(?)) ";
 			query	+= "     , PP_PROD_START_DT = CASE WHEN TRIM(?) = '00000000' THEN PP_PROD_START_DT ELSE CASE WHEN PP_PROD_START_DT > TRIM(?) THEN TRIM(?) ELSE PP_PROD_START_DT END END ";
 			query	+= "     , PP_PROD_END_DT = CASE WHEN TRIM(?) = '00000000' THEN PP_PROD_END_DT ELSE CASE WHEN PP_PROD_END_DT < TRIM(?) THEN TRIM(?) ELSE PP_PROD_END_DT END END ";
 			query	+= "WHEN NOT MATCHED THEN ";
