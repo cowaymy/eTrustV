@@ -23,7 +23,7 @@ SELECT TO_CHAR(SYSDATE + 365, 'YYYY') AS ID, TO_CHAR(SYSDATE + 365, 'YYYY') AS N
 
 <select id="selectScmWeek" parameterType="Map" resultType="egovMap">
 SELECT A.SCM_YEAR
-     , A.SCM_WEEK || DECODE(LENGTH(A.SCM_WEEK), 1, '  [', '[') || TO_CHAR(A.SCM_WEEK_START, 'YYYY-MM-DD') || ' ~ ]' AS NAME
+     , A.SCM_WEEK || DECODE(LENGTH(A.SCM_WEEK), 1, '  [', '[') || TO_CHAR(A.SCM_WEEK_START, 'DD/MM/YYYY') || ' ~ ]' AS NAME
      , A.SCM_MONTH
      , A.SCM_WEEK AS ID
   FROM (
