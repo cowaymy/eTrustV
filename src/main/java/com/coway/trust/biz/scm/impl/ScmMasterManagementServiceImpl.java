@@ -59,21 +59,29 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 		String endDt		= "";
 		
 		for ( Object obj : params ) {
-			if ( null != ((Map<String, Object>) obj).get("startDt") ) {
+			if ( null != ((Map<String, Object>) obj).get("startDt") && ! "".equals(((Map<String, Object>) obj).get("startDt").toString())) {
 				startDt	= ((Map<String, Object>) obj).get("startDt").toString();
 				LOGGER.debug("startDt : " + startDt);
-				startDt	= startDt.replace("-", "");	startDt	= startDt.replace("/", "");
-				startDt	= startDt.substring(4, 8) + startDt.substring(0, 2) + startDt.substring(2, 4);
-				((Map<String, Object>) obj).put("startDt", startDt);
+				if ( ! startDt.equals(startDt.replace("-", "")) ) {
+					startDt	= startDt.replace("-", "");	startDt	= startDt.replace("/", "");
+					startDt	= startDt.substring(4, 8) + startDt.substring(0, 2) + startDt.substring(2, 4);
+					((Map<String, Object>) obj).put("startDt", startDt);
+				}
 				LOGGER.debug("startDt : " + startDt);
+			} else {
+				((Map<String, Object>) obj).put("startDt", "19000101");
 			}
-			if ( null != ((Map<String, Object>) obj).get("endDt") ) {
+			if ( null != ((Map<String, Object>) obj).get("endDt") && ! "".equals(((Map<String, Object>) obj).get("endDt").toString()) ) {
 				endDt	= ((Map<String, Object>) obj).get("endDt").toString();
-				LOGGER.debug("startDt : " + startDt);
-				endDt	= endDt.replace("-", "");	endDt	= endDt.replace("/", "");
-				endDt	= endDt.substring(4, 8) + endDt.substring(0, 2) + endDt.substring(2, 4);
-				((Map<String, Object>) obj).put("endDt", endDt);
 				LOGGER.debug("endDt : " + endDt);
+				if ( ! endDt.equals(endDt.replace("-", "")) ) {
+					endDt	= endDt.replace("-", "");	endDt	= endDt.replace("/", "");
+					endDt	= endDt.substring(4, 8) + endDt.substring(0, 2) + endDt.substring(2, 4);
+					((Map<String, Object>) obj).put("endDt", endDt);
+				}
+				LOGGER.debug("endDt : " + endDt);
+			} else {
+				((Map<String, Object>) obj).put("endDt", "19000101");
 			}
 			scmMasterManagementMapper.saveScmMaster((Map<String, Object>) obj);
 			cnt++;
@@ -100,7 +108,7 @@ public class ScmMasterManagementServiceImpl implements ScmMasterManagementServic
 			((Map<String, Object>) obj).put("stockCode", ((Map<String, Object>) obj).get("stockCode"));
 			
 			//	KL
-			((Map<String, Object>) obj).put("moq", Integer.parseInt(((Map<String, Object>) obj).get("klMoq").toString()));
+			((Map<String, Object>) obj).put("moq", ((Map<String, Object>) obj).get("klMoq").toString());
 			((Map<String, Object>) obj).put("cdc", "2010");
 			((Map<String, Object>) obj).put("isTrget", ((Map<String, Object>) obj).get("klTarget"));
 			cnt	= cnt + scmMasterManagementMapper.saveScmMaster2((Map<String, Object>) obj);
