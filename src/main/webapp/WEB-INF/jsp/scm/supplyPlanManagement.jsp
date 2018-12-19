@@ -72,15 +72,37 @@ var scmTotalInfo	= new Object();
 var planId	= "";
 var weekStartCol	= 20;	//	w01 칼럼이 시작되는 column 차례 : 19번째 이전에 칼럼이 추가되면 변경해줘야 함
 
+var planYear	= 0;
+var planMonth	= 0;
+var planWeek	= 0;
+
 $(function() {
-	fnScmYearCbBox();
-	fnScmWeekCbBox();
+	//	Set combo box
+	fnScmTotalPeriod();
+	//fnScmYearCbBox();
+	//fnScmWeekCbBox();
 	fnScmCdcCbBox();
 	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
 	doGetComboAndGroup2("/scm/selectScmStockCodeForMulti.do", "", "", "scmStockCodeCbBox", "M", "");
 	$(".js-example-basic-multiple").select2();
 });
+
+//	Scm Total Period
+function fnScmTotalPeriod() {
+	Common.ajax("POST"
+			, "/scm/selectScmTotalPeriod.do"
+			, ""
+			, function(result) {
+				console.log(result);
+				
+				planYear	= result.selectScmTotalPeriod[0].scmYear;
+				planMonth	= result.selectScmTotalPeriod[0].scmMonth;
+				planWeek	= result.selectScmTotalPeriod[0].scmWeek;
+				fnScmYearCbBox();
+				fnScmWeekCbBoxThis();
+			});
+}
 
 //	year
 function fnScmYearCbBox() {
@@ -107,20 +129,20 @@ function fnScmYearCbBox() {
 			}
 		});
 	};
-    /**
-     * 공통 콤보박스 : option 으로 처리.
-     *
-     * @param _comboId           : 콤보박스 id     String               => "comboId" or "#comboId"
-     * @param _url                  : 호출 URL
-     * @param _jsonParam        : 넘길 파라미터  json object      => {id : "im7015", name : "lim"}
-     * @param _sSelectData      : 선택될 id        String              =>단건 : "aaa", 다건 :  "aaa|!|bbb|!|ccc"
-     * @param _option              : 옵션.             소스내                => var option 참조.
-     * @param _callback            : 콜백함수         function           => function(){..........}
-     */
+	/**
+	 * 공통 콤보박스 : option 으로 처리.
+	 *
+	 * @param _comboId           : 콤보박스 id     String               => "comboId" or "#comboId"
+	 * @param _url                  : 호출 URL
+	 * @param _jsonParam        : 넘길 파라미터  json object      => {id : "im7015", name : "lim"}
+	 * @param _sSelectData      : 선택될 id        String              =>단건 : "aaa", 다건 :  "aaa|!|bbb|!|ccc"
+	 * @param _option              : 옵션.             소스내                => var option 참조.
+	 * @param _callback            : 콜백함수         function           => function(){..........}
+	 */
 	CommonCombo.make("scmYearCbBox"
 			, "/scm/selectScmYear.do"
 			, ""
-			, ""
+			, planYear.toString()
 			, {
 				id : "id",
 				name : "name",
@@ -134,6 +156,20 @@ function fnScmWeekCbBox() {
 	CommonCombo.initById("scmWeekCbBox");	//	reset
 	var weekChkBox	= document.getElementById("scmWeekCbBox");
 	weekChkBox.options[0]	= new Option("Select a Week", "");
+}
+
+//	today week
+function fnScmWeekCbBoxThis() {
+	CommonCombo.make("scmWeekCbBox"
+			, "/scm/selectScmWeek.do"
+			, { scmYear : planYear }
+			, planWeek.toString()
+			, {
+				id : "id",
+				name : "name",
+				chooseMessage : "Select a Year"
+			}
+			, "");
 }
 
 //	Cdc

@@ -14,22 +14,22 @@
 }
 .my-backColumn1 {
 	text-align:right;
-	background:#818284;
+	background:#CCE5FF;
 	color:#000;
 }
 .my-backColumn2 {
 	text-align:right;
-	background:#a1a2a3;
+	background:#cccccc;
 	color:#000;
 }
 .my-backColumn3 {
 	text-align : right;
-	background : #c0c0c0;
+	background : #cccccc;
 	color : #000;
 }
 .my-backColumn4 {
 	text-align : center;
-	background : #c0c0c0;
+	background : #cccccc;
 	color : #000;
 }
 .my-editable {
@@ -66,17 +66,15 @@ var planFstWeek		= 0;
 var planFstSpltWeek	= 0;
 var planWeekTh		= 0;
 
+var planYear	= 0;
+var planMonth	= 0;
+var planWeek	= 0;
+
 $(function() {
-	//	Get Today Year, Week
-	gYear	= gToday.getFullYear();
-	gYear1	= gToday.getFullYear() - 1;
-	gMonth	= gToday.getMonth() - 5;
-	gDay	= gToday.getDate();
-	//console.log("gYear : " + gYear + ", gYear1 : " + gYear1 + ", gMonth : " + gMonth + ", gDay : " + gDay);
-	
 	//	Set combo box
-	fnScmYearCbBox();
-	fnScmWeekCbBox();
+	fnScmTotalPeriod();
+	//fnScmYearCbBox();
+	//fnScmWeekCbBox();
 	fnScmTeamCbBox();
 	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
@@ -91,8 +89,12 @@ function fnScmTotalPeriod() {
 			, ""
 			, function(result) {
 				console.log(result);
-				//console.loge
-				//$("#scmYearCbBox").val(result.selectScmTotalPeriod);
+				
+				planYear	= result.selectScmTotalPeriod[0].scmYear;
+				planMonth	= result.selectScmTotalPeriod[0].scmMonth;
+				planWeek	= result.selectScmTotalPeriod[0].scmWeek;
+				fnScmYearCbBox();
+				fnScmWeekCbBoxThis();
 			});
 }
 
@@ -134,7 +136,7 @@ function fnScmYearCbBox() {
 	CommonCombo.make("scmYearCbBox"
 			, "/scm/selectScmYear.do"
 			, ""
-			, ""
+			, planYear.toString()
 			, {
 				id : "id",
 				name : "name",
@@ -151,11 +153,11 @@ function fnScmWeekCbBox() {
 }
 
 //	today week
-function fnScmWeekCbBox1() {
+function fnScmWeekCbBoxThis() {
 	CommonCombo.make("scmWeekCbBox"
 			, "/scm/selectScmWeek.do"
-			, { scmYear : $this.val() }
-			, ""
+			, { scmYear : planYear }
+			, planWeek.toString()
 			, {
 				id : "id",
 				name : "name",
@@ -1241,6 +1243,7 @@ var myGridID;
 /*
 $(document).ready(function() {
 	//
+	
 }
 */
 </script>
