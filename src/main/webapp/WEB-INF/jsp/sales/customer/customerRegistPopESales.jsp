@@ -512,7 +512,7 @@
                    return false;
             }
             // Gender validation check (해야함.) * Customer is exist.
-            if(!$('input[name=cmbRace]:checked')){//if($("#_cmbRace_").val() == ''){
+            if(!$('input[name=cmbRace]:checked').val()){//if($("#_cmbRace_").val() == ''){
                 Common.alert('<spring:message code="sal.alert.msg.plzSelCustRace" />');
                    return false;
             }
