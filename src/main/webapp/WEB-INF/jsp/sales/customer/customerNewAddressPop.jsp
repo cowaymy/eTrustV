@@ -250,6 +250,7 @@
             if('${callParam}' == 'PRE_ORD_INST_ADD'){
                 fn_loadInstallAddr(result.data);
                 fn_loadBillAddr(result.data);
+                $("#_close1").click();
             }
             if('${callParam}' == 'ORD_MODIFY_MAIL_ADR2') {
                 fn_loadMailAddress(result.data);
