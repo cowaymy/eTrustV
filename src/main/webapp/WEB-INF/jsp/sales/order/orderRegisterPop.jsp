@@ -1490,6 +1490,7 @@ console.log("vBindingNo" + vBindingNo);
             vBindingNo = $('#trialNo').val().trim();
             vCnvrSchemeId = $('#trialId').val().trim();
         }
+        var  vBrnchId = '${CONV_TO_ORD_YN}' == 'Y' ? '${preOrderInfo.keyinBrnchId}' : '${SESSION_INFO.userBranchId}'
         //----------------------------------------------------------------------
         // rentPaySetVO
         //----------------------------------------------------------------------
@@ -1572,7 +1573,8 @@ console.log("vBindingNo" + vBindingNo);
                 norAmt                  : $('#orgOrdPrice').val().trim(),
                 norRntFee               : $('#orgOrdRentalFees').val().trim(),
                 discRntFee              : $('#ordRentalFees').val().trim(),
-                gstChk                  : $('#gstChk').val()
+                gstChk                  : $('#gstChk').val(),
+                brnchId                 : vBrnchId
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),

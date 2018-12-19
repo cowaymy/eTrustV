@@ -578,7 +578,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
 		salesOrderMVO.setSalesOrdId(0);
 		salesOrderMVO.setSalesOrdNo("");
-		salesOrderMVO.setBrnchId(sessionVO.getUserBranchId());
+		//salesOrderMVO.setBrnchId(sessionVO.getUserBranchId());
 		salesOrderMVO.setDscntAmt(BigDecimal.ZERO);
 		salesOrderMVO.setTaxAmt(BigDecimal.ZERO);
 		salesOrderMVO.setCcPromoId(0);
