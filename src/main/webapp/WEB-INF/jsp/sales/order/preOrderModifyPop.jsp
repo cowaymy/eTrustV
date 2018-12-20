@@ -40,6 +40,8 @@
         if('${preOrderInfo.stusId}' == 4 || '${preOrderInfo.stusId}' == 10 ){
             $('#scPreOrdArea').find("input,textarea,button,select").attr("disabled",true);
             $("#scPreOrdArea").find("p.btn_grid").hide();
+            $('#btnSave').hide();
+            $(".input_text").attr('disabled',false).addClass("readonly");;
         }
 
         if('${preOrderInfo.atchFileGrpId}' != 0){
