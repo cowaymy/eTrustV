@@ -12,7 +12,6 @@
 }
 </style>
 <script type="text/javascript">
-console.log("1");
 var myGridID;
 var myGridData = $.parseJSON('${appvInfoAndItems}');
 var attachList = null;
