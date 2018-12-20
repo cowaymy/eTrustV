@@ -597,7 +597,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         salesOrderMVO.setLok(0);
         salesOrderMVO.setAeonStusId(0);
         salesOrderMVO.setCommDt(SalesConstants.DEFAULT_DATE2);
-        salesOrderMVO.setCrtUserId(sessionVO.getUserId());
+        //salesOrderMVO.setCrtUserId(sessionVO.getUserId());
         salesOrderMVO.setPayComDt(SalesConstants.DEFAULT_DATE2);
         salesOrderMVO.setRefDocId(0);
         salesOrderMVO.setRentPromoId(0);

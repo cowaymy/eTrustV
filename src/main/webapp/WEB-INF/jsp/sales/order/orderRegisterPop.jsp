@@ -1490,7 +1490,8 @@ console.log("vBindingNo" + vBindingNo);
             vBindingNo = $('#trialNo').val().trim();
             vCnvrSchemeId = $('#trialId').val().trim();
         }
-        var  vBrnchId = '${CONV_TO_ORD_YN}' == 'Y' ? '${preOrderInfo.keyinBrnchId}' : '${SESSION_INFO.userBranchId}'
+        var  vBrnchId = convToOrdYn == 'Y' ? '${preOrderInfo.keyinBrnchId}' : '${SESSION_INFO.userBranchId}';
+        var  vcrtUserId = convToOrdYn == 'Y' ? '${preOrderInfo.crtUserId}' : '${SESSION_INFO.userId}';
         //----------------------------------------------------------------------
         // rentPaySetVO
         //----------------------------------------------------------------------
