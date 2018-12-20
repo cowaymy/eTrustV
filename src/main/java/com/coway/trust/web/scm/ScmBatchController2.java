@@ -100,14 +100,17 @@ public class ScmBatchController2 {
 		
 		try {
 			client.changeWorkingDirectory("/");
+			String[] names	= client.listNames();
+			LOGGER.debug("cnt : " + names.length);
+			LOGGER.debug("names : {}", names);
 			FTPFile[] files = client.listFiles();
 			LOGGER.debug("cnt : " + files.length);
 			String soFileName	= "COWAY_SO_DATA_" + today + ".TXT";
 			String ppFileName	= "COWAY_PP_DATA_" + today + ".TXT";
 			String giFileName	= "COWAY_GI_DATA_" + today + ".TXT";
-			//String soFileName	= "COWAY_SO_DATA_" + "20181205" + ".TXT";
-			//String ppFileName	= "COWAY_PP_DATA_" + "20181214" + ".TXT";
-			//String giFileName	= "COWAY_GI_DATA_" + "20181205" + ".TXT";
+			//soFileName	= "COWAY_SO_DATA_" + "20181205" + ".TXT";
+			//ppFileName	= "COWAY_PP_DATA_" + "20181214" + ".TXT";
+			//giFileName	= "COWAY_GI_DATA_" + "20181205" + ".TXT";
 			
 			for ( int i = 0 ; i < files.length ; i++ ) {
 				LOGGER.debug(i + "th filename : " + files[i].getName() + ", filesize : " + files[i].getSize());

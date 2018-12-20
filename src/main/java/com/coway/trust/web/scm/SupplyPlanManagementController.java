@@ -152,15 +152,36 @@ public class SupplyPlanManagementController {
 		int totCnt = 0;
 		ReturnMessage message = new ReturnMessage();
 		
-		//	check re-calculate
-		if ( "Y".equals(params.get("reCalcYn").toString()) ) {
-			supplyPlanManagementService.deleteSupplyPlanMaster(params, sessionVO);
+		//	params
+		params.put("planYear", params.get("scmYearCbBox").toString());
+		params.put("planWeek", params.get("scmWeekCbBox").toString());
+		params.put("cdc", params.get("scmCdcCbBox").toString());
+		List<EgovMap> selectSupplyPlanInfo	= supplyPlanManagementService.selectSupplyPlanInfo(params);
+		LOGGER.debug("selectSupplyPlanInfo : {}", selectSupplyPlanInfo);
+		if ( "0".equals(selectSupplyPlanInfo.get(1).get("planStusId").toString()) ) {
+			LOGGER.debug("Supply Plan is not yet created");
+			//	check re-calculate
+			if ( "Y".equals(params.get("reCalcYn").toString()) ) {
+				supplyPlanManagementService.deleteSupplyPlanMaster(params, sessionVO);
+			}
+			totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(totCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			//	check re-calculate
+			if ( "Y".equals(params.get("reCalcYn").toString()) ) {
+				supplyPlanManagementService.deleteSupplyPlanMaster(params, sessionVO);
+				totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
+				message.setCode(AppConstants.SUCCESS);
+				message.setData(totCnt);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			} else {
+				LOGGER.debug("Supply Plan is already created");
+				message.setCode(AppConstants.FAIL);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			}
 		}
-		totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
-		
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 
 		return ResponseEntity.ok(message);
 	}
