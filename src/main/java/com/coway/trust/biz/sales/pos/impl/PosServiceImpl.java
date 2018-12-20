@@ -932,23 +932,24 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 				giMap.put("pPrgNm", "PointOfSales");
 				giMap.put("userId", params.get("userId"));
 
-				LOGGER.info("############### 11. POS GI COMPLETE START  ################");
+				LOGGER.info("############### 11. POS GI COMPLETE START : "+ idx +"  ################");
 				LOGGER.info("#########  call Procedure Params : " + giMap.toString());
 				posMapper.posGICallSP_LOGISTIC_POS(giMap);
 				reqResult = 	String.valueOf(giMap.get("p1"));
 				LOGGER.info("rtnResult : " + reqResult);
-				LOGGER.info("############### 11. POS GI COMPLETE  END  ################");
+				LOGGER.info("############### 11. POS GI COMPLETE  END : "+ idx +" ################");
 
-	            LOGGER.info("##################### POS Request Success!!! ######################################");
-	            LOGGER.info("##################### POS Request Success!!! ######################################");
-	            LOGGER.info("##################### POS Request Success!!! ######################################");
-
-			    rtnMap.put("logError", reqResult);
+/*			    rtnMap.put("logError", reqResult);
 			    //rtnMap.put("logError", "000");
-	            return rtnMap;
+	            return rtnMap;*/
 
 
             	}
+
+		    rtnMap.put("logError", reqResult);
+		    //rtnMap.put("logError", "000");
+            return rtnMap;
+
             }
 
             //retrun Map
@@ -961,6 +962,7 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 
 		    //rtnMap.put("logError", reqResult);
 		    rtnMap.put("logError", "000");
+
 
 
 
