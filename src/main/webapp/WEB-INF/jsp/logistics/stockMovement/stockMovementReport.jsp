@@ -65,7 +65,7 @@ function fn_report(type) {
         $("#reportFileName").val('/logistics/StockAMovementSummaryByModel_PDF.rpt');
         $("#reportDownFileName").val("StkAMovSumByModel_PDF_" + $("#yyyymmDate").val());
         $("#V_YEAR").val( yyyyStr.substring(3,7));  //YYYY
-        $("#V_MONTH").val( mmStr.substring(1,2)); //MM
+        $("#V_MONTH").val( mmStr.substring(0,2)); //MM
 
     }
     else if(dataForm.reportType.value=="5"){
@@ -104,7 +104,7 @@ function fn_report(type) {
         $("#reportFileName").val('/logistics/StockBMovementSummaryByModel_PDF.rpt');
         $("#reportDownFileName").val("StkBMovSumByModel_PDF_" + $("#yyyymmDate").val());
         $("#V_YEAR").val( yyyyStr.substring(3,7));  //YYYY
-        $("#V_MONTH").val( mmStr.substring(1,2)); //MM
+        $("#V_MONTH").val( mmStr.substring(0,2)); //MM
         $("#V_DISPLAYSTKB").val( displayStkB );
         $("#V_DISPLAYLOCB").val( displayLocB );
     }
