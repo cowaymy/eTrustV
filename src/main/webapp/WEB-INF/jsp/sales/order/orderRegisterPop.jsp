@@ -1575,7 +1575,8 @@ console.log("vBindingNo" + vBindingNo);
                 norRntFee               : $('#orgOrdRentalFees').val().trim(),
                 discRntFee              : $('#ordRentalFees').val().trim(),
                 gstChk                  : $('#gstChk').val(),
-                brnchId                 : vBrnchId
+                brnchId                 : vBrnchId,
+                crtUserId               : vcrtUserId
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),
