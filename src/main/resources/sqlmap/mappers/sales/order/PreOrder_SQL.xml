@@ -363,6 +363,7 @@
     <update id="updatePreOrderStatus" parameterType="preOrderVO">
         UPDATE SAL0213M
            SET STUS_ID                    = #{stusId}
+             , SALES_ORD_ID             = #{salesOrdId}
              , UPD_USER_ID                = #{updUserId}
              , UPD_DT                     = SYSDATE
          WHERE PRE_ORD_ID                 = #{preOrdId}
