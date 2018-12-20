@@ -369,7 +369,6 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
                       AND Z.PLAN_WEEK = #{planWeek}
                     GROUP BY X.STOCK_CODE
                    ) A ON (M.STOCK_CODE = A.STOCK_CODE)
-  LEFT OUTER JOIN SCM0017M B ON (A.STOCK_CODE = B.STOCK_CODE AND B.CDC = #{cdc} AND B.IS_TRGET = 1)
   LEFT OUTER JOIN (
                    SELECT Z.STOCK_CODE
                         , X.CDC
@@ -518,16 +517,21 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
                       AND B.PSI_ID = 3
                    ) C ON (B.STOCK_CODE = C.STOCK_CODE)
   LEFT OUTER JOIN (
-                   SELECT X.STOCK_CODE
+                   SELECT M.STOCK_CODE
                         , Z.CDC
                         , SUM(Y.GR_QTY) AS OVERDUE
-                     FROM SCM0052M Z
-                     LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
-                     LEFT OUTER JOIN SCM0039M W ON (X.PO_NO = W.PO_NO AND X.PO_ITEM_NO = W.PO_ITEM_NO)
+                     FROM (SELECT STOCK_CODE FROM SCM0017M WHERE CDC = #{cdc} AND IS_TRGET = 1) M
+                     LEFT OUTER JOIN (
+                                      SELECT X.PO_NO, Z.CDC, X.PO_ITEM_NO, X.STOCK_CODE
+                                        FROM SCM0052M Z
+                                        LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
+                                       WHERE TO_DATE(Z.PLAN_GR_YEAR || LPAD(Z.PLAN_GR_MONTH, 2, '0'), 'YYYYMM') <![CDATA[ >= ]]> TO_DATE(#{planYear} || LPAD(#{planMonth}, 2, '0'), 'YYYYMM')
+                                      ) Z ON (M.STOCK_CODE = Z.STOCK_CODE)
+                     LEFT OUTER JOIN SCM0039M W ON (Z.PO_NO = W.PO_NO AND Z.PO_ITEM_NO = W.PO_ITEM_NO)
                      LEFT OUTER JOIN SCM0012D Y ON (W.SAP_PO_NO = Y.SAP_PO_NO AND W.STOCK_CODE = Y.STOCK_CODE)
-                    WHERE TO_DATE(Z.PLAN_GR_YEAR || LPAD(Z.PLAN_GR_MONTH, 2, '0'), 'YYYYMM') <![CDATA[ >= ]]> TO_DATE(#{planYear} || LPAD(#{planMonth}, 2, '0'), 'YYYYMM')
-                      AND TO_DATE(Y.GR_YEAR || LPAD(Y.GR_MONTH, 2, '0'), 'YYYYMM') <![CDATA[ < ]]> TO_DATE(#{planYear} || LPAD(#{planMonth}, 2, '0'), 'YYYYMM')
-                    GROUP BY Z.CDC, X.STOCK_CODE
+                    WHERE TO_DATE(Y.GR_YEAR || LPAD(Y.GR_MONTH, 2, '0'), 'YYYYMM') <![CDATA[ < ]]> TO_DATE(#{planYear} || LPAD(#{planMonth}, 2, '0'), 'YYYYMM')
+                      AND Z.CDC = #{cdc}
+                    GROUP BY M.STOCK_CODE, Z.CDC
                    ) D ON (B.STOCK_CODE = D.STOCK_CODE AND A.CDC = D.CDC)
  WHERE A.PLAN_YEAR = #{planYear}
    AND A.PLAN_WEEK = #{planWeek}
