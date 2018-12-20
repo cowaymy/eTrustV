@@ -264,8 +264,10 @@ public class BulkSMSListController {
     			if (i == page) {
     				end = list.size();
     			}
-    			bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
-    			smsService.insertSmsViewBulk(bulkMap);
+    			if( (start - end) != 0 ){
+        			bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
+        			smsService.insertSmsViewBulk(bulkMap);
+    			}
     		}
 
     		validMsg = "Total SMS : " + list.size() + "<br />"
