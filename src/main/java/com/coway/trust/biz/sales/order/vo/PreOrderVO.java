@@ -8,133 +8,135 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 /**
  * The persistent class for the SAL0213M database table.
- * 
+ *
  */
 @JsonIgnoreProperties(ignoreUnknown = true)
 public class PreOrderVO implements Serializable {
 	private static final long serialVersionUID = 1L;
 
     private int preOrdId;
-    
+
     private String reqstDt;
-    
+
     private int chnnl;
-    
+
     private int stusId;
-    
+
     private String sofNo;
-    
+
     private String custPoNo;
-    
+
     private int appTypeId;
-    
+
     private int srvPacId;
-    
+
     private int instPriod;
-    
+
     private int custId;
-    
+
     private int empChk;
-    
+
     private int gstChk;
-    
+
     private String eurcCustRgsNo;
-    
+
     private int atchFileGrpId;
-    
+
     private int custCntcId;
-    
+
     private int keyinBrnchId;
-    
+
     private int instAddId;
-    
+
     private int dscBrnchId;
-    
+
     private String preDt;
-    
+
     private String preTm;
-    
+
     private String instct;
-    
+
     private int exTrade;
-    
+
     private int itmStkId;
-    
+
     private int promoId;
-    
+
     private BigDecimal mthRentAmt;
-    
+
     private int promoDiscPeriodTp;
-    
+
     private BigDecimal promoDiscPeriod;
-    
+
     private BigDecimal totAmt;
-    
+
     private BigDecimal norAmt;
-    
+
     private BigDecimal norRntFee;
-    
+
     private BigDecimal discRntFee;
-    
+
     private BigDecimal totPv;
-    
+
     private BigDecimal totPvGst;
-    
+
     private int prcId;
-    
+
     private String memCode;
-    
+
     private int advBill;
-    
+
     private int custCrcId;
-    
+
     private int bankId;
-    
+
     private int custAccId;
-    
+
     private int is3rdParty;
-    
+
     private int rentPayCustId;
 
     private int rentPayModeId;
-    
+
     private int custBillId;
-    
+
     private int custBillCustId;
-    
+
     private int custBillCntId;
-    
+
     private int custBillAddId;
-    
+
     private String custBillRem;
-    
+
     private String custBillEmail;
-    
+
     private int custBillIsSms;
-    
+
     private int custBillIsPost;
-    
+
     private String custBillEmailAdd;
-    
+
     private int custBillIsWebPortal;
-    
+
     private String custBillWebPortalUrl;
-    
+
     private int custBillIsSms2;
-    
+
     private int custBillCustCareCntId;
-    
+
     private int crtUserId;
-    
+
     private String crtDt;
-    
+
     private int updUserId;
-    
+
     private String updDt;
 
     private String rem1;
 
     private String rem2;
+
+    private int salesOrdId;
 
 	public int getPreOrdId() {
 		return preOrdId;
@@ -622,6 +624,14 @@ public class PreOrderVO implements Serializable {
 
 	public void setCustBillId(int custBillId) {
 		this.custBillId = custBillId;
+	}
+
+	public int getSalesOrdId() {
+		return salesOrdId;
+	}
+
+	public void setSalesOrdId(int salesOrdId) {
+		this.salesOrdId = salesOrdId;
 	}
 
 }
