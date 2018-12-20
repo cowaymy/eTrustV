@@ -1490,8 +1490,7 @@ console.log("vBindingNo" + vBindingNo);
             vBindingNo = $('#trialNo').val().trim();
             vCnvrSchemeId = $('#trialId').val().trim();
         }
-        var  vBrnchId = convToOrdYn == 'Y' ? '${preOrderInfo.keyinBrnchId}' : '${SESSION_INFO.userBranchId}';
-        var  vcrtUserId = convToOrdYn == 'Y' ? '${preOrderInfo.crtUserId}' : '${SESSION_INFO.userId}';
+
         //----------------------------------------------------------------------
         // rentPaySetVO
         //----------------------------------------------------------------------
@@ -1575,8 +1574,6 @@ console.log("vBindingNo" + vBindingNo);
                 norRntFee               : $('#orgOrdRentalFees').val().trim(),
                 discRntFee              : $('#ordRentalFees').val().trim(),
                 gstChk                  : $('#gstChk').val(),
-                brnchId                 : vBrnchId,
-                crtUserId               : vcrtUserId
             },
             salesOrderDVO : {
                 itmPrc                  : $('#ordPrice').val().trim(),

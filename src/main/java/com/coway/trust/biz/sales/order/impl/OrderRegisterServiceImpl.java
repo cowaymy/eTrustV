@@ -578,7 +578,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
 		salesOrderMVO.setSalesOrdId(0);
 		salesOrderMVO.setSalesOrdNo("");
-		//salesOrderMVO.setBrnchId(sessionVO.getUserBranchId());
+		salesOrderMVO.setBrnchId(sessionVO.getUserBranchId());
 		salesOrderMVO.setDscntAmt(BigDecimal.ZERO);
 		salesOrderMVO.setTaxAmt(BigDecimal.ZERO);
 		salesOrderMVO.setCcPromoId(0);
@@ -597,7 +597,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         salesOrderMVO.setLok(0);
         salesOrderMVO.setAeonStusId(0);
         salesOrderMVO.setCommDt(SalesConstants.DEFAULT_DATE2);
-        //salesOrderMVO.setCrtUserId(sessionVO.getUserId());
+        salesOrderMVO.setCrtUserId(sessionVO.getUserId());
         salesOrderMVO.setPayComDt(SalesConstants.DEFAULT_DATE2);
         salesOrderMVO.setRefDocId(0);
         salesOrderMVO.setRentPromoId(0);
@@ -1727,10 +1727,12 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
         if("Y".equals(orderVO.getPreOrderYN())) {
         	PreOrderVO preOrderVO = new PreOrderVO();
+        	int salesOrdId = (int) regOrderVO.getSalesOrderMVO().getSalesOrdId();
 
         	preOrderVO.setPreOrdId(orderVO.getPreOrdId());
         	preOrderVO.setUpdUserId(sessionVO.getUserId());
         	preOrderVO.setStusId(SalesConstants.STATUS_COMPLETED);
+        	preOrderVO.setSalesOrdId(salesOrdId);
 
         	preOrderMapper.updatePreOrderStatus(preOrderVO);
         }
