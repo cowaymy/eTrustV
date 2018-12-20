@@ -524,7 +524,7 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
                      FROM SCM0052M Z
                      LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
                      LEFT OUTER JOIN SCM0039M W ON (X.PO_NO = W.PO_NO AND X.PO_ITEM_NO = W.PO_ITEM_NO)
-                     LEFT OUTER JOIN SCM0012D Y ON (W.SAP_PO_NO = Y.SAP_PO_NO AND W.SAP_PO_ITEM_NO = Y.SAP_PO_ITEM_NO)
+                     LEFT OUTER JOIN SCM0012D Y ON (W.SAP_PO_NO = Y.SAP_PO_NO AND W.STOCK_CODE = Y.STOCK_CODE)
                     WHERE TO_DATE(Z.PLAN_GR_YEAR || LPAD(Z.PLAN_GR_MONTH, 2, '0'), 'YYYYMM') <![CDATA[ >= ]]> TO_DATE(#{planYear} || LPAD(#{planMonth}, 2, '0'), 'YYYYMM')
                       AND TO_DATE(Y.GR_YEAR || LPAD(Y.GR_MONTH, 2, '0'), 'YYYYMM') <![CDATA[ < ]]> TO_DATE(#{planYear} || LPAD(#{planMonth}, 2, '0'), 'YYYYMM')
                     GROUP BY Z.CDC, X.STOCK_CODE
