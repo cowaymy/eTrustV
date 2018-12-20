@@ -264,7 +264,9 @@ public class BulkSMSListController {
     			if (i == page) {
     				end = list.size();
     			}
-    			if( (start - end) != 0 ){
+
+    			if( ((list.size() - start) != 0)){
+    				logger.info( i + " :: " + end + " minus " + start);
         			bulkMap.put("list", list.stream().skip(start).limit(end).collect(Collectors.toCollection(ArrayList::new)));
         			smsService.insertSmsViewBulk(bulkMap);
     			}
