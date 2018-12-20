@@ -67,7 +67,7 @@
     $(function(){
         $('#btnConfirm').click(function() {
             if(!fn_validConfirm())  return false;
-            if(fn_isExistMember() == 'true') return false;
+            //if(fn_isExistMember() == 'true') return false;
             if(fn_isExistESalesNo() == 'true') return false;
 
             //encryptIc($('#nric').val());
@@ -84,7 +84,7 @@
         $('#nric').keydown(function (event) {
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
-                if(fn_isExistMember() == 'true') return false;
+                //if(fn_isExistMember() == 'true') return false;
                 if(fn_isExistESalesNo() == 'true') return false;
 
                 /* $('#refereNo').val($('#sofNo').val().trim()) */
@@ -100,7 +100,7 @@
         $('#sofNo').keydown(function (event) {
             if (event.which === 13) {
                 if(!fn_validConfirm())  return false;
-                if(fn_isExistMember() == 'true') return false;
+                //if(fn_isExistMember() == 'true') return false;
                 if(fn_isExistESalesNo() == 'true') return false;
 
                 $('#nric').prop("readonly", true).addClass("readonly");
