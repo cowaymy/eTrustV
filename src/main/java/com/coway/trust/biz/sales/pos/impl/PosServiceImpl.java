@@ -515,16 +515,17 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     		LOGGER.info("############### 6. POS ACC TAX INVOICE MISCELLANEOUS END  ################");
     	//7.  ********************************************************************************************************* ACC TAX INVOICE MISCELLANEOUS_SUB
     		int invItemTypeID = 0;
-            if (String.valueOf(params.get("insPosType")).equals(SalesConstants.POS_SALES_TYPE_FILTER)){ //filter
+
+            if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_FILTER)){ //filter
             	invItemTypeID = 1355;
             }
-            if (String.valueOf(params.get("insPosType")).equals(SalesConstants.POS_SALES_TYPE_ITMBANK)){ //item bank
+            if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_ITMBANK)){ //item bank
             	invItemTypeID = 1356;
             }
-            if (String.valueOf(params.get("insPosType")).equals(SalesConstants.POS_SALES_TYPE_OTHER_INCOME)) { //other income
+            if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_OTHER_INCOME)) { //other income
             	invItemTypeID = 1359;
             }
-            if (String.valueOf(params.get("insPosType")).equals(SalesConstants.POS_SALES_TYPE_ITMBANK_HQ)){ //item bank-HQ
+            if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_ITMBANK_HQ)){ //item bank-HQ
             	invItemTypeID = 1360;
             }
             for (int idx = 0; idx < basketGrid.size(); idx++) {
