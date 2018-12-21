@@ -1732,7 +1732,32 @@
         switch(tabNm) {
             case 'ord' :
                 AUIGrid.resize(listGiftGridID, 980, 180);
+
+                if(MEM_TYPE == '1' || MEM_TYPE == '2'){
+                    $('#memBtn').addClass("blind");
+                    $('#salesmanCd').val("${SESSION_INFO.userName}");
+                    $('#salesmanCd').change();
+                }
+
+                $('#appType').val("66");
+                $('#appType').prop("disabled", true);
+
+                if($('#ordProudct').val() == null){
+                       $('#appType').change();
+                }
+
+                $('[name="advPay"]').prop("disabled", true);
+                $('#advPayNo').prop("checked", true);
+                $('#poNo').prop("disabled", true);
+
                 break;
+            case 'pay' :
+                if($('#appType').val() == '66'){
+                    $('#rentPayMode').val('131')
+                    $('#rentPayMode').change();
+                    $('#rentPayMode').prop("disabled", true);
+                    $('#thrdParty').prop("disabled", true);
+                }
             default :
                 break;
         }

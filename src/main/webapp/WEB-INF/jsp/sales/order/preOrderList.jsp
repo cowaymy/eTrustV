@@ -190,9 +190,9 @@
           , { headerText : "Product",         dataField : "product",    editable : false, width : '10%'}
           , { headerText : "Customer Name",   dataField : "custNm",     editable : false, width : '8%'  }
           /* , { headerText : "Customer Type",   dataField : "custType",   editable : false, width : 80  } */
-          , { headerText : "NRIC/Company No", dataField : "nric",       editable : false, width : '8%' }
           , { headerText : "Creator",         dataField : "crtName",   editable : false, width : '8%' }
           , { headerText : "Status",          dataField : "stusName",     editable : false,  width : '8%' }
+          , { headerText : "Order Number", dataField : "salesOrdNo",       editable : false, width : '8%' }
           , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,  width : '9%' }
           , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,  width : '9%' }
           , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false, width : '18%' }
