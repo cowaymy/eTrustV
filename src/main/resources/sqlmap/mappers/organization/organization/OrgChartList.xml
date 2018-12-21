@@ -2,16 +2,16 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.coway.trust.biz.organization.organization.impl.OrgChartListMapper">
 
-    <!-- 
+    <!--
         CLOB 컬럼을 사용하기 위해서는 아래와 같이 resultMap을 선언 후
          <select id="selectClobData" parameterType="Map"  resultMap="clobMap"> 와 같이
           resultMap="clobMap" 을 사용해야 함.
     -->
     <resultMap id="clobMap" type="EgovMap">
         <result property="typeDesc" column="type_Desc" jdbcType="CLOB" javaType="java.lang.String"/>
-    </resultMap>    
-    
-    
+    </resultMap>
+
+
         <select id="selectOrgChartHpList" parameterType="Map" resultType="egovMap">
         <![CDATA[
                     SELECT Project1.MEM_ID MEM_ID  ,
@@ -81,7 +81,7 @@
                            Project1.APLICNT_ID APLICNT_ID  ,
                            Project1.BIZ_TYPE BIZ_TYPE  ,
                            Project1.HSPTLZ HSPTLZ  ,
-                           Project1.C1 C1  
+                           Project1.C1 C1
                       FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
                                     Extent1.MEM_UP_ID MEM_UP_ID  ,
                                     Extent1.MEM_LVL MEM_LVL  ,
@@ -149,15 +149,15 @@
                                     Extent2.APLICNT_ID APLICNT_ID  ,
                                     Extent2.BIZ_TYPE BIZ_TYPE  ,
                                     Extent2.HSPTLZ HSPTLZ  ,
-                                    CASE 
+                                    CASE
                                          WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
                                     ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
-                                       END C1  
+                                       END C1
                              FROM ORG0005D Extent1
                                     JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
                                     LEFT JOIN (SELECT *
 										            FROM ORG0007D C
-                             ]]>                                           
+                             ]]>
 										            <choose>
 										             <when test="searchDt != null and searchDt != '' ">
 							<![CDATA[			     WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
@@ -166,7 +166,7 @@
 							<![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
 										              </otherwise>
 										            </choose>
-										            ) Extent3 
+										            ) Extent3
 						            ON Extent1.MEM_ID = Extent3.MEM_ID
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
 <![CDATA[                         AND ( '''' <> Extent1.DEPT_CODE ) ]]>
@@ -184,13 +184,13 @@
 <![CDATA[                                      OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_LVL = #{memLvl} ) ]]>
 		                                            OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_LVL = #{memLvl} )
                                         </otherwise>
-                                       </choose>   
+                                       </choose>
                             <choose>
                                     <when test="memLvl == 1">
-                                        AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+                                        AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
                                     </when>
                                     <when test="memLvl == 2">
-                                        AND Extent1.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+                                        AND Extent1.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
                                     </when>
                                     <when test="memLvl == 3">
                                         AND Extent1.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
@@ -198,7 +198,7 @@
                                     <when test="memLvl == 4">
                                         AND Extent2.MEM_CODE = #{userName}
                                     </when>
-                            </choose>                                        
+                            </choose>
                                        AND ( Extent2.STUS IN ( 1,8 ) )
                                        AND ( Extent3.PROMO_ID    IN (SELECT MAX(C.PROMO_ID)
 													                              FROM ORG0007D C
@@ -216,13 +216,13 @@
 									         OR (Extent3.STUS_ID <> 4 OR Extent3.STUS_ID IS NULL ) ) ]]>
                                        ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
- 
+
         </select>
-        
-        
-        
-        
-        
+
+
+
+
+
                 <select id="selectHpChildList" parameterType="Map" resultType="egovMap">
         <![CDATA[
                     SELECT Project1.MEM_ID MEM_ID  ,
@@ -292,7 +292,7 @@
                            Project1.APLICNT_ID APLICNT_ID  ,
                            Project1.BIZ_TYPE BIZ_TYPE  ,
                            Project1.HSPTLZ HSPTLZ  ,
-                           Project1.C1 C1  
+                           Project1.C1 C1
                       FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
                                     Extent1.MEM_UP_ID MEM_UP_ID  ,
                                     Extent1.MEM_LVL MEM_LVL  ,
@@ -360,15 +360,15 @@
                                     Extent2.APLICNT_ID APLICNT_ID  ,
                                     Extent2.BIZ_TYPE BIZ_TYPE  ,
                                     Extent2.HSPTLZ HSPTLZ  ,
-                                    CASE 
+                                    CASE
                                          WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
                                     ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
-                                       END C1  
+                                       END C1
                              FROM ORG0005D Extent1
                                     JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
                                     LEFT JOIN (SELECT *
                                                     FROM ORG0007D C
-                             ]]>                                           
+                             ]]>
                                                     <choose>
                                                      <when test="searchDt != null and searchDt != '' ">
                             <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
@@ -377,7 +377,7 @@
                             <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
                                                       </otherwise>
                                                     </choose>
-                                                    ) Extent3 
+                                                    ) Extent3
                                     ON Extent1.MEM_ID = Extent3.MEM_ID
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
 <![CDATA[                         AND ( '''' <> Extent1.DEPT_CODE ) ]]>
@@ -400,23 +400,23 @@
                                                                                   GROUP BY C.MEM_ID)
                                                 OR Extent3.PROMO_ID      IS NULL )
 <![CDATA[                         AND ( (Extent3.PROMO_TYPE_ID NOT IN (757, 758) OR Extent3.PROMO_TYPE_ID IS NULL)
-                                             OR (Extent3.STUS_ID <> 4 OR Extent3.STUS_ID IS NULL ) ) 
+                                             OR (Extent3.STUS_ID <> 4 OR Extent3.STUS_ID IS NULL ) )
                                        AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.PARENT_ID_TO = #{memId})
 									        OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_UP_ID = #{memId} )
 									        OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_UP_ID = #{memId} )]]>
                                       ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
         </select>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
         <select id="getDeptTreeList" parameterType="Map" resultType="egovMap">
              <![CDATA[
             SELECT Project1.MEM_ID CODE_ID  ,
@@ -486,7 +486,7 @@
                            Project1.APLICNT_ID APLICNT_ID  ,
                            Project1.BIZ_TYPE BIZ_TYPE  ,
                            Project1.HSPTLZ HSPTLZ  ,
-                           Project1.C1 CODE_NAME     
+                           Project1.C1 CODE_NAME
                       FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
                                     Extent1.MEM_UP_ID MEM_UP_ID  ,
                                     Extent1.MEM_LVL MEM_LVL  ,
@@ -554,10 +554,10 @@
                                     Extent2.APLICNT_ID APLICNT_ID  ,
                                     Extent2.BIZ_TYPE BIZ_TYPE  ,
                                     Extent2.HSPTLZ HSPTLZ  ,
-                                    CASE 
+                                    CASE
                                          WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
                                     ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
-                                       END C1  
+                                       END C1
                              FROM ORG0005D Extent1
                                     JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
@@ -569,15 +569,15 @@
                                        AND ( Extent2.STUS IN ( 1,8 )
                                       ) ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
-           ]]>     
+           ]]>
         </select>
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
                 <select id="getGroupTreeList" parameterType="Map" resultType="egovMap">
              <![CDATA[
             SELECT Project1.MEM_ID CODE  ,
@@ -647,7 +647,7 @@
                            Project1.APLICNT_ID APLICNT_ID  ,
                            Project1.BIZ_TYPE BIZ_TYPE  ,
                            Project1.HSPTLZ HSPTLZ  ,
-                           Project1.C1 CODE_NAME     
+                           Project1.C1 CODE_NAME
                       FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
                                     Extent1.MEM_UP_ID MEM_UP_ID  ,
                                     Extent1.MEM_LVL MEM_LVL  ,
@@ -715,10 +715,10 @@
                                     Extent2.APLICNT_ID APLICNT_ID  ,
                                     Extent2.BIZ_TYPE BIZ_TYPE  ,
                                     Extent2.HSPTLZ HSPTLZ  ,
-                                    CASE 
+                                    CASE
                                          WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
                                     ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
-                                       END C1  
+                                       END C1
                              FROM ORG0005D Extent1
                                     JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
@@ -730,33 +730,33 @@
                                        AND ( Extent2.STUS IN ( 1,8 )
                                       ) ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
-           ]]>     
+           ]]>
         </select>
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         <select id="selectOrgChartCdList" parameterType="Map" resultType="egovMap">
         <![CDATA[
                     SELECT Project1.MEM_ID MEM_ID  ,
@@ -826,7 +826,7 @@
                            Project1.APLICNT_ID APLICNT_ID  ,
                            Project1.BIZ_TYPE BIZ_TYPE  ,
                            Project1.HSPTLZ HSPTLZ  ,
-                           Project1.C1 C1  
+                           Project1.C1 C1
                       FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
                                     Extent1.MEM_UP_ID MEM_UP_ID  ,
                                     Extent1.MEM_LVL MEM_LVL  ,
@@ -894,15 +894,15 @@
                                     Extent2.APLICNT_ID APLICNT_ID  ,
                                     Extent2.BIZ_TYPE BIZ_TYPE  ,
                                     Extent2.HSPTLZ HSPTLZ  ,
-                                    CASE 
+                                    CASE
                                          WHEN ( 4 = Extent1.MEM_LVL ) THEN Extent2.MEM_CODE || ' - ' || Extent2.NAME
                                     ELSE Extent1.DEPT_CODE || ' - ' || Extent2.NAME
-                                       END C1  
+                                       END C1
                              FROM ORG0005D Extent1
                                     JOIN ORG0001D Extent2   ON Extent1.MEM_ID = Extent2.MEM_ID
                                     LEFT JOIN (SELECT *
                                                     FROM ORG0007D C
-                             ]]>                                           
+                             ]]>
                                                     <choose>
                                                      <when test="searchDt != null and searchDt != '' ">
                             <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= #{searchDt} ]]>
@@ -911,7 +911,7 @@
                             <![CDATA[               WHERE TO_CHAR( C.EVT_APPLY_DT, 'MM/YYYY' ) <= TO_CHAR(SYSDATE,'MM/YYYY') ]]>
                                                       </otherwise>
                                                     </choose>
-                                                    ) Extent3 
+                                                    ) Extent3
                                     ON Extent1.MEM_ID = Extent3.MEM_ID
                               WHERE  ( Extent1.DEPT_CODE IS NOT NULL )
 <![CDATA[                         AND ( '''' <> Extent1.DEPT_CODE ) ]]>
@@ -932,19 +932,19 @@
                                        AND ( Extent2.STUS IN ( 1,8 ) )
                                       <if test="deptIdCd != null and deptIdCd != '' and deptIdCd != '0' ">
                                             AND Extent1.mem_id = #{deptIdCd}
-                                      </if>    
+                                      </if>
                                       <if test="groupCode != null and groupCode != ''">
 <![CDATA[                              AND ( (Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID = 4 AND Extent3.PARENT_ID_TO = #{groupCode})
                                             OR ( Extent3.PROMO_TYPE_ID IN (747, 748, 749) AND Extent3.STUS_ID <> 4 AND Extent1.MEM_UP_ID = #{groupCode} )
                                             OR ( Extent3.PROMO_TYPE_ID NOT IN (747, 748, 749) OR Extent3.PROMO_TYPE_ID IS NULL ) AND Extent1.MEM_UP_ID = #{groupCode} ) ]]>
-                                      </if>     
-                                      <if test="groupCode == null or groupCode == ''">                                   
+                                      </if>
+                                      <if test="groupCode == null or groupCode == ''">
 			                            <choose>
 			                                    <when test="memLvl == 1">
-			                                        AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+			                                        AND Extent1.LAST_ORG_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
 			                                    </when>
 			                                    <when test="memLvl == 2">
-			                                        AND Extent1.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )        
+			                                        AND Extent1.LAST_GRP_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
 			                                    </when>
 			                                    <when test="memLvl == 3">
 			                                        AND Extent1.LAST_DEPT_CODE IN (SELECT B.DEPT_CODE FROM ORG0001D A, ORG0005D B WHERE A.MEM_ID = B.MEM_ID AND A.MEM_CODE = #{userName} )
@@ -952,8 +952,8 @@
 			                                    <when test="memLvl == 4">
 			                                        AND Extent2.MEM_CODE  = #{userName}
 			                                    </when>
-			                            </choose>                                                         
-			                            </if>                     
+			                            </choose>
+			                            </if>
 			                          AND ( Extent3.PROMO_ID    IN (SELECT MAX(C.PROMO_ID)
                                                                                   FROM ORG0007D C
                                                                                   <choose>
@@ -970,11 +970,11 @@
                                              OR (Extent3.STUS_ID <> 4 OR Extent3.STUS_ID IS NULL ) ) ]]>
                                       ) Project1
                       ORDER BY Project1.DEPT_CODE ASC
-                               
-        </select>        
-        
-        
-        
+
+        </select>
+
+
+
         <select id="selectOrgChartDetList" parameterType="Map" resultType="egovMap">
        select *
 	   from (
@@ -984,33 +984,33 @@
 			                   search2.NRIC NRIC  ,
 			                   search2.NAME NAME  ,
 			                   search2.MEM_LVL MEM_LVL,
-			                   
-			                    case when (search2.LAST_DEPT_CODE is not null 
-			                            or search2.LAST_GRP_CODE is not null 
+
+			                    case when (search2.LAST_DEPT_CODE is not null
+			                            or search2.LAST_GRP_CODE is not null
 			                            or search2.LAST_ORG_CODE is not null)
 			                        THEN search2.LAST_DEPT_CODE
-			                   Else search2.DEPT_CODE   
+			                   Else search2.DEPT_CODE
 			                   end DEPT_CODE,
-			                   
-			                   case when (search2.LAST_DEPT_CODE is not null 
-			                            or search2.LAST_GRP_CODE is not null 
+
+			                   case when (search2.LAST_DEPT_CODE is not null
+			                            or search2.LAST_GRP_CODE is not null
 			                            or search2.LAST_ORG_CODE is not null)
 			                          THEN search2.LAST_GRP_CODE
 			                    ELSE   search2.GRP_CODE
 			                    END GRP_CODE  ,
-			                    
-			                    case when (search2.LAST_DEPT_CODE is not null 
-			                            or search2.LAST_GRP_CODE is not null 
+
+			                    case when (search2.LAST_DEPT_CODE is not null
+			                            or search2.LAST_GRP_CODE is not null
 			                            or search2.LAST_ORG_CODE is not null)
 			                          then search2.LAST_ORG_CODE
-			                    else search2.ORG_CODE 
+			                    else search2.ORG_CODE
 			                    end ORG_CODE  ,
-			                          
+
 			                     case when (search2.code is not null) then search2.code
-			                   else search2.MEM_ORG_DESC_CODE 
+			                   else search2.MEM_ORG_DESC_CODE
 			                   end MEM_ORG_DESC_CODE ,
-			                
-			                   case when search2.EVT_APPLY_DT is not null then  to_char(search2.EVT_APPLY_DT, 'MM/YYYY') 
+
+			                   case when search2.EVT_APPLY_DT is not null then  to_char(search2.EVT_APPLY_DT, 'MM/YYYY')
 			             <choose>
 			             <when test="nowDate != null and nowDate != '' ">
 			               else #{nowDate}
@@ -1020,9 +1020,9 @@
 			               </otherwise>
 			               </choose>
 			                 end EVT_APPLY_DT
-			                   
-			    
-			                   
+
+
+
 			        FROM(
 			            SELECT Project1.MEM_ID MEM_ID  ,
 			                   Project1.C1 C1  ,
@@ -1030,7 +1030,7 @@
 			                   Project1.NRIC NRIC  ,
 			                   Project1.NAME NAME  ,
 			                   project2.LAST_DEPT_CODE,
-			                   Project1.DEPT_CODE , 
+			                   Project1.DEPT_CODE ,
 			                   project2.LAST_GRP_CODE,
 			                   Project1.GRP_CODE,
 			                   project2.LAST_ORG_CODE ,
@@ -1039,7 +1039,7 @@
 			                   project2.code,
 			                   Project1.MEM_ORG_DESC_CODE ,
 			                   project2.EVT_APPLY_DT
-			                   
+
 			              FROM ( SELECT Extent1.MEM_ID MEM_ID  ,
 			                            Extent1.MEM_CODE MEM_CODE  ,
 			                            Extent1.NAME NAME  ,
@@ -1049,10 +1049,10 @@
 			                            Extent2.GRP_CODE GRP_CODE  ,
 			                            Extent2.ORG_CODE ORG_CODE  ,
 			                            Extent3.MEM_ORG_DESC_CODE MEM_ORG_DESC_CODE  ,
-			                            CASE 
+			                            CASE
 			                                 WHEN ( Extent1.MEM_TYPE IS NOT NULL ) THEN Extent1.MEM_TYPE
 			                            ELSE 0
-			                               END C1  
+			                               END C1
 			                     FROM ORG0001D Extent1
 			                            JOIN ( SELECT vMemberOrg.MEM_ID MEM_ID  ,
 			                                          vMemberOrg.MEM_CODE MEM_CODE  ,
@@ -1065,10 +1065,10 @@
 			                                          vMemberOrg.LVL3_UP_ID LVL3_UP_ID  ,
 			                                          vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
 			                                          vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
-			                                          vMemberOrg.LVL0_UP_ID LVL0_UP_ID  
+			                                          vMemberOrg.LVL0_UP_ID LVL0_UP_ID
 			                                   FROM ORG1001V vMemberOrg ) Extent2   ON Extent2.MEM_ID = Extent1.MEM_ID
 			                            JOIN ORG0012D Extent3   ON ( Extent3.MEM_ORG_LVL = Extent2.MEM_LVL )
-			                            AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE 
+			                            AND  Extent3.MEM_TYPE_ID = Extent1.MEM_TYPE
 			                      WHERE   1 = Extent1.STUS
 			                               AND  Extent1.MEM_TYPE IN ( 1,2,3 )
 			                               AND  EXTENT1.MEM_ID NOT IN (
@@ -1084,31 +1084,31 @@
 																                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) <= to_char(SYSDATE, 'MM/YYYY' ) ]]>
 																                             </otherwise>
 																                             </choose>
-			                                                                                ) 
-			                              ) Project1 , 
+			                                                                                )
+			                              ) Project1 ,
 			                            (
-			                            
-						                       select ABC.*  
+
+						                       select ABC.*
 						                      ,case when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 3) then 'CM'
 						                               when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 2) then 'SCM'
-						                               when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 1) then 'GCM' 
-						  
+						                               when ( ABC.MEM_TYPE_ID=2 and ABC.MEM_LVL_TO = 1) then 'GCM'
+
 						                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 3) then 'CTL'
 						                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 2) then 'CTM'
-						                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 1) then 'RM' 
+						                               when ( ABC.MEM_TYPE_ID=3 and ABC.MEM_LVL_TO = 1) then 'RM'
 						                    else ABC.CODE1
 						                    end CODE
 						                     from (
-						
+
 							                             SELECT  A.* , b.code CODE1
 							                             FROM ORG0007D A ,sys0013M  B
-							                             where A.MEM_TYPE_ID = B.code_id 
-							                             and promo_id in ( select max(promo_id) 
+							                             where A.MEM_TYPE_ID = B.code_id
+							                             and promo_id in ( select max(promo_id)
 										                                              from  ORG0007D C
 										                                              where c.stus_id = 4
 										                                              and C.PROMO_TYPE_ID   in ( 747, 748, 749)
-							                                             
-							               
+
+
 														                             <choose>
 														                             <when test="evntDate != null and evntDate != '' ">
 														                                  <![CDATA[  and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = #{evntDate} ]]>
@@ -1117,16 +1117,16 @@
 														                               <![CDATA[     and to_char( C.EVT_APPLY_DT, 'MM/YYYY' ) = to_char(SYSDATE, 'MM/YYYY' ) ]]>
 														                             </otherwise>
 														                             </choose>
-														                                 group by C.MEM_ID 
+														                                 group by C.MEM_ID
 							                                                        )
 						                                ) ABC
-			                           )  Project2 
-			                           where 1=1 
+			                           )  Project2
+			                           where 1=1
 			                           and project1.mem_id = project2.mem_id(+)
-			                           )  search2  
-                           
+			                           )  search2
+
                         )   search1
-                        
+
                            where 1=1
                               <if test="codeList != null and codeList != '' ">
                                      AND  search1.MEM_LVL IN
@@ -1135,46 +1135,72 @@
                                       </foreach>
                                </if>
                                <if test="memType != null and memType != ''">
-                               AND  CASE 
+                               AND  CASE
                                     WHEN ( search1.C1 IS NOT NULL ) THEN search1.C1
                                     ELSE 0 END = #{memType}
                                 </if>
-                                <if test="orgId != null and orgId != ''">                                    
+                                <if test="orgId != null and orgId != ''">
                                AND  search1.ORG_CODE =  (select DEPT_CODE
                                                             from org0005d Extent1
                                                             where        1=1
                                                                              AND (Extent1.MEM_LVL = 1)
-                                                                             AND (Extent1.MEM_UP_ID = 31983)        
+                                                                             AND (Extent1.MEM_UP_ID = 31983)
                                                                              and   mem_id  = #{orgId})
                                </if>
-                               <if test="gropId != null and gropId != ''">                                    
+                               <if test="gropId != null and gropId != ''">
                                AND  search1.GRP_CODE = (select DEPT_CODE
                                                             from org0005d Extent1
                                                             where        1=1
-                                                                             AND Extent1.MEM_LVL = 2                                                                                    
+                                                                             AND Extent1.MEM_LVL = 2
                                                                              and   mem_id  = #{gropId})
                                </if>
-                               <if test="deptCode != null and deptCode != ''">                                    
+                               <if test="deptCode != null and deptCode != ''">
                                AND  search1.DEPT_CODE = (select DEPT_CODE
                                                             from org0005d Extent1
                                                             where        1=1
-                                                                             AND Extent1.MEM_LVL = 3                                                                                    
-                                                                             and   mem_id  = #{deptCode})  
+                                                                             AND Extent1.MEM_LVL = 3
+                                                                             and   mem_id  = #{deptCode})
                                </if>
-                               <if test="srchDate != null and srchDate != '' "> 
+                               <if test="srchDate != null and srchDate != '' ">
                                 AND search1.EVT_APPLY_DT = #{srchDate}
                                </if>
-                              
+
                   ORDER BY search1.C1 ASC,
                            search1.ORG_CODE ASC,
                            search1.GRP_CODE ASC,
                            search1.DEPT_CODE ASC,
                            search1.MEM_LVL ASC,
                            search1.MEM_CODE ASC
-        
+
         </select>
-        
-        
-        
-        
-</mapper>        
+
+        <select id="selectStatus" parameterType="Map" resultType="egovMap">
+        SELECT
+        Distinct1.StatusCodeID CODE_ID,
+        Distinct1.Code Code,
+        Distinct1.Name CODE_NAME
+        FROM ( SELECT DISTINCT
+        Extent1.STUS_CODE_ID StatusCodeID,
+        Extent1.CODE Code,
+        Extent1.NAME Name
+        FROM  SYS0038M Extent1
+        INNER JOIN ORG0001D Extent2 ON Extent1.STUS_CODE_ID = Extent2.STUS
+         union
+        SELECT DISTINCT
+        Extent1.STUS_CODE_ID StatusCodeID,
+        Extent1.CODE Code,
+        Extent1.NAME Name
+        FROM  SYS0038M Extent1
+        INNER JOIN ORG0003D Extent2 ON Extent1.STUS_CODE_ID = Extent2.STUS_ID
+    )  Distinct1
+    </select>
+
+<select id="selectMemberName" parameterType="Map" resultType="egovMap">
+        SELECT NAME
+        FROM ORG0001D
+        WHERE MEM_CODE = #{memCode}
+
+    </select>
+
+
+</mapper>

@@ -20,8 +20,8 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Service("orgChartListService")
 public class OrgChartListServiceImpl extends EgovAbstractServiceImpl implements OrgChartListService{
 
-	
-	
+
+
 	@SuppressWarnings("unused")
 	private static final Logger logger = LoggerFactory.getLogger(MemberEventServiceImpl.class);
 
@@ -34,53 +34,53 @@ public class OrgChartListServiceImpl extends EgovAbstractServiceImpl implements 
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
-	
+
 	@Override
 	public List<EgovMap> selectOrgChartHpList(Map<String, Object> params) {
-	
+
 		return orgChartListMapper.selectOrgChartHpList(params);
 	}
 
 	@Override
 	public List<EgovMap> selectHpChildList(Map<String, Object> params) {
-	
+
 		return orgChartListMapper.selectHpChildList(params);
 	}
-	
-	
+
+
 	@Override
 	public List<EgovMap> selectOrgChartCdList(Map<String, Object> params) {
-	
+
 		return orgChartListMapper.selectOrgChartCdList(params);
 	}
-	
-	
-	
+
+
+
 	@Override
 	public List<EgovMap> selectOrgChartCtList(Map<String, Object> params) {
-	
+
 		return orgChartListMapper.selectOrgChartCtList(params);
 	}
 
 	@Override
 	public List<EgovMap> getDeptTreeList(Map<String, Object> params) {
-		
+
 		String memUpId ="";
-		
+
 		if(params.get("groupCode").equals("1")){
 			memUpId = "124";
 		}else if(params.get("groupCode").equals("2")){
 			memUpId = "31983";
 		}else if(params.get("groupCode").equals("3")){
-			memUpId = "23259";     
+			memUpId = "23259";
 		}
-		params.put("memUpId", memUpId);			
-		
+		params.put("memUpId", memUpId);
+
 		return orgChartListMapper.getDeptTreeList(params);
 	}
 
-	
-	
+
+
 	@Override
 	public List<EgovMap> getGroupTreeList(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -98,5 +98,14 @@ public class OrgChartListServiceImpl extends EgovAbstractServiceImpl implements 
 	public String selectLastGroupCode(Map<String,Object> params){
 		return orgChartListMapper.selectLastGroupCode(params);
 	}
-	
+
+	public List<EgovMap> selectStatus() {
+		return orgChartListMapper.selectStatus();
+	}
+
+	public List<EgovMap> selectMemberName(Map<String, Object> params) {
+
+		return orgChartListMapper.selectMemberName(params);
+	}
+
 }
