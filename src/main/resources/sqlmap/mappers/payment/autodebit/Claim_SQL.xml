@@ -1197,4 +1197,16 @@
     AND A.DISB = 0
     ORDER BY CODE_ID
   </select>
+
+  <select id="selectAccBank" parameterType="Map" resultType="egovMap">
+    SELECT B.BANK_ID CODE_ID,
+    B.CODE || ' - ' || B.NAME CODE_NAME
+    FROM SYS0093M A JOIN
+    SYS0004M B ON A.BANK_ID = B.BANK_ID
+    WHERE B.STUS_CODE_ID = 1
+    AND SYSDATE BETWEEN A.EFF_DT AND A.EXP_DT
+    AND A.BANK_CHNL = 'C'
+    AND A.DISB = 0
+    ORDER BY B.NAME
+  </select>
 </mapper>
