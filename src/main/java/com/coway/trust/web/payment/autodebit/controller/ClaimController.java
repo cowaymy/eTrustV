@@ -2281,4 +2281,10 @@ public class ClaimController {
     return ResponseEntity.ok(codeList);
   }
 
+  @RequestMapping(value = "/selectAccBank.do", method = RequestMethod.GET)
+  public ResponseEntity<List<EgovMap>> selectAccBank(@RequestParam Map<String, Object> params) throws Exception {
+    List<EgovMap> codeList = claimService.selectAccBank(params);
+    return ResponseEntity.ok(codeList);
+  }
+
 }
