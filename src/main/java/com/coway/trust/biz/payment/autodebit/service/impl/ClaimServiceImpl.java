@@ -550,4 +550,8 @@ public class ClaimServiceImpl extends EgovAbstractServiceImpl implements ClaimSe
     return claimMapper.selectListing(param);
   }
 
+  @Override
+  public List<EgovMap> selectAccBank(Map<String, Object> param) {
+    return claimMapper.selectAccBank(param);
+  }
 }
