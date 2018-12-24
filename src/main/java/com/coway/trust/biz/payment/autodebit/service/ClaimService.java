@@ -236,6 +236,8 @@ public interface ClaimService {
 
   List<EgovMap> selectListing(Map<String, Object> param);
 
+  List<EgovMap> selectAccBank(Map<String, Object> param);
+
   String selectBnkCde(String params);
 
 }
