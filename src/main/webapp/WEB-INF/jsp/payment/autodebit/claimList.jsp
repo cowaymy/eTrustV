@@ -2,1338 +2,1338 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript">
-	//AUIGrid 그리드 객체
-	var myGridID, updResultGridID, smsGridID;
-
-	//Grid에서 선택된 RowID
-	var selectedGridValue;
-
-	// Empty Set
-	var emptyData = [];
-
-	// 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
-	$(document)
-			.ready(
-					function() {
-						// CLAIM TYPE
-						doGetComboCodeId('/payment/selectListing.do', {
-							ind : 'CLM_TYP'
-						}, '', 'claimType', 'S', '');
-						// STATUS
-						doGetComboCodeId('/payment/selectClmStat.do', '', '',
-								'status', 'S', '');
-						// DEDUCTION CHANNEL
-						doDefCombo(emptyData, '', 'ddtChnl', 'S', '');
-						// ISSUE BANK
-						doDefCombo(emptyData, '', 'issueBank', 'S', '');
-						// SMS SEND
-						doGetComboCodeId('/payment/selectListing.do', {
-							ind : 'Y_N'
-						}, '', 'smsSend', 'S', '');
-
-						//New Result 팝업 페이지
-						doGetComboCodeId('/payment/selectListing.do', {
-							ind : 'CLM_TYP'
-						}, '', 'new_claimType', 'S', '');
-						//doDefCombo(claimDayData, '', 'new_claimDay', 'S', ''); //Claim Day 생성
-						doGetComboCodeId('/payment/selectListing.do', {
-							ind : 'CLM_DY'
-						}, '', 'new_claimDay', 'S', '');
-
-						//Claim Type Combo 변경시 Issue Bank Combo 변경
-						$('#claimType')
-								.change(
-										function() {
-											if ($(this).val() == 132) {
-												$('#issueBank').val('');
-												$('#issueBank').attr(
-														"disabled", false);
-
-												$('#ddtChnl').val('');
-												$('#ddtChnl').attr("disabled",
-														false);
-
-												// LOAD DEDUCTION CHANNEL LISTING
-												doGetComboCodeId(
-														'/sales/customer/selectDdlChnl.do',
-														{
-															isAllowForDd : '1'
-														}, '', 'ddtChnl', 'S',
-														'');
-											} else {
-												$('#issueBank').val('');
-												$('#issueBank').attr(
-														"disabled", true);
-
-												$('#ddtChnl').val('');
-												$('#ddtChnl').attr("disabled",
-														true);
-											}
-										});
-
-						$('#ddtChnl')
-								.change(
-										function() {
-											if ($('#ddtChnl').val() != "") {
-
-												if ($('#ddtChnl').val() == 3170) {
-													doGetComboCodeId(
-															'/sales/customer/selectAccBank.do',
-															{
-																isAllowForDd : '1',
-																ddlChnl : $(
-																		'#ddtChnl')
-																		.val()
-															}, '', 'issueBank',
-															'S', '');
-												} else {
-
-													$('#issueBank option')
-															.remove();
-
-													doGetComboCodeId(
-															'/payment/selectListing.do',
-															{
-																ind : 'CLM_GENBNK'
-															}, '', 'issueBank',
-															'S', '');
-												}
-											} else {
-												$('#issueBank option').remove();
-
-												doDefCombo(emptyData, '',
-														'issueBank', 'S', '');
-											}
-										});
-
-						//Pop-Up Claim Type Combo 변경시 Claim Day, Issue Bank Combo 변경
-						$('#new_claimType')
-								.change(
-										function() {
-
-											$('#new_claimDay').val('');
-											$('#new_ddtChnl').val('');
-											$('#new_issueBank').val('');
-											$('#new_cardType').val('');
-											$('#new_claimDay').attr("disabled",
-													true);
-											$('#new_ddtChnl').attr("disabled",
-													true);
-											$('#new_issueBank').attr(
-													"disabled", true);
-											$('#new_cardType').attr("disabled",
-													true);
-											$('#new_debitDate')
-													.attr("placeholder",
-															"Debit Date");
-
-											//NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
-											$("#claimDayMust").hide();
-											$("#issueBankMust").hide();
-											$("#cardTypeMust").hide();
-											$("#ddtChnlMust").hide();
-
-											if ($(this).val() == 131
-													|| $(this).val() == 134) {
-												$('#new_claimDay').attr(
-														"disabled", false);
-												$("#claimDayMust").show();
-
-												if ($(this).val() == 131) {
-													$('#new_debitDate')
-															.attr(
-																	"placeholder",
-																	"Debit Date (Same Day)");
-													$('#new_cardType').attr(
-															"disabled", false);
-													$("#cardTypeMust").show();
-													$('#new_issueBank').attr(
-															"disabled", false);
-													$("#issueBankMust").show();
-													$("#ddtChnlMust").show();
-
-													doGetComboCodeId(
-															'/payment/selectListing.do',
-															{
-																ind : 'CLM_CRCBNK'
-															}, '',
-															'new_issueBank',
-															'S', '');
-
-													doGetComboCodeId(
-															'/payment/selectListing.do',
-															{
-																ind : 'CRD_TYP'
-															}, '',
-															'new_cardType',
-															'S', '');
-												}
-											} else {
-												doDefCombo(emptyData, '',
-														'new_issueBank', 'S',
-														'');
-												// LOAD DEDUCTION CHANNEL LISTING
-												doGetComboCodeId(
-														'/sales/customer/selectDdlChnl.do',
-														{
-															isAllowForDd : '1'
-														}, '', 'new_ddtChnl',
-														'S', '');
-												$('#new_issueBank').attr(
-														"disabled", false);
-												$('#new_ddtChnl').attr(
-														"disabled", false);
-												$("#issueBankMust").show();
-												$("#ddtChnlMust").show();
-											}
-
-										});
-
-						$('#new_ddtChnl')
-								.change(
-										function() {
-											if ($(this).val() != '') {
-												if ($(this).val() == 3170) {
-													doGetComboCodeId(
-															'/sales/customer/selectAccBank.do',
-															{
-																isAllowForDd : '1',
-																ddlChnl : $(
-																		'#new_ddtChnl')
-																		.val()
-															}, '',
-															'new_issueBank',
-															'S', '');
-												} else {
-													$('#issueBank option')
-															.remove();
-
-													doGetComboCodeId(
-															'/payment/selectListing.do',
-															{
-																ind : 'CLM_GENBNK'
-															}, '',
-															'new_issueBank',
-															'S', '');
-												}
-											} else {
-												$('#issueBank option').remove();
-
-												doDefCombo(emptyData, '',
-														'new_issueBank', 'S',
-														'');
-											}
-
-										});
-
-						//Pop-Up Issue Combo 변경시
-						$('#new_issueBank')
-								.change(
-										function() {
-
-											if ($('#new_claimType').val() != 131) {
-												$('#new_debitDate').attr(
-														"placeholder",
-														"Debit Date");
-
-												switch ($(this).val()) {
-												case "2":
-													$('#new_debitDate')
-															.attr(
-																	"placeholder",
-																	"Debit Date (+1 Day Send Same Day)");
-													break;
-												case "3":
-												case "6":
-													$('#new_debitDate')
-															.attr(
-																	"placeholder",
-																	"Debit Date (Same Day)");
-													break;
-												case "7":
-												case "9":
-												case "21":
-													$('#new_debitDate')
-															.attr(
-																	"placeholder",
-																	"Debit Date (+1 Days)");
-													break;
-												default:
-													break;
-												}
-											}
-										});
-
-						//Grid Properties 설정
-						var gridPros = {
-							editable : false, // 편집 가능 여부 (기본값 : false)
-							showStateColumn : false, // 상태 칼럼 사용
-							softRemoveRowMode : false
-						};
-
-						// Order 정보 (Master Grid) 그리드 생성
-						myGridID = GridCommon.createAUIGrid("grid_wrap",
-								columnLayout, null, gridPros);
-						updResultGridID = GridCommon.createAUIGrid(
-								"updResult_grid_wrap", updResultColLayout,
-								null, gridPros);
-						smsGridID = GridCommon.createAUIGrid("sms_grid_wrap",
-								smsColLayout, null, gridPros);
-
-						// Master Grid 셀 클릭시 이벤트
-						AUIGrid.bind(myGridID, "cellClick", function(event) {
-							selectedGridValue = event.rowIndex;
-						});
-
-						// HTML5 브라우저인지 체크 즉, FileReader 를 사용할 수 있는지 여부
-						function checkHTML5Brower() {
-							var isCompatible = false;
-							if (window.File && window.FileReader
-									&& window.FileList && window.Blob) {
-								isCompatible = true;
-							}
-							return isCompatible;
-						}
-						;
-
-					});
-
-	// AUIGrid 칼럼 설정
-	var columnLayout = [
-			{
-				dataField : "ctrlId",
-				headerText : "<spring:message code='pay.head.batchId'/>",
-				width : 120,
-				editable : false
-			},
-			{
-				dataField : "stusCode",
-				headerText : "<spring:message code='pay.head.status'/>",
-				width : 100,
-				editable : false
-			},
-			{
-				dataField : "ctrlIsCrcName",
-				headerText : "<spring:message code='pay.head.type'/>",
-				width : 100,
-				editable : false
-			},
-			{
-				dataField : "ddtChnl",
-				headerText : "<spring:message code='pay.head.ddtChnl'/>",
-				width : 100,
-				editable : false
-			},
-			{
-				dataField : "bankCode",
-				headerText : "<spring:message code='pay.head.issueBank'/>",
-				width : 100,
-				editable : false
-			},
-			{
-				dataField : "ctrlBatchDt",
-				headerText : "<spring:message code='pay.head.debitDate'/>",
-				width : 120,
-				editable : false
-			},
-			{
-				dataField : "ctrlTotItm",
-				headerText : "<spring:message code='pay.head.totalItem'/>",
-				width : 120,
-				editable : false
-			},
-			{
-				dataField : "ctrlBillAmt",
-				headerText : "<spring:message code='pay.head.targetAmt'/>",
-				width : 120,
-				editable : false,
-				dataType : "numeric",
-				formatString : "#,##0.00"
-			},
-			{
-				dataField : "ctrlBillPayAmt",
-				headerText : "<spring:message code='pay.head.receiveAmt'/>",
-				width : 120,
-				editable : false,
-				dataType : "numeric",
-				formatString : "#,##0.00"
-			},
-			{
-				dataField : "crtDt",
-				headerText : "<spring:message code='pay.head.createDate'/>",
-				width : 200,
-				editable : false
-			},
-			{
-				dataField : "crtUserName",
-				headerText : "<spring:message code='pay.head.creator'/>",
-				width : 150,
-				editable : false
-			},
-			{
-				dataField : "ctrlFailSmsIsPump",
-				headerText : "<spring:message code='pay.head.sms'/>",
-				width : 100,
-				editable : false,
-				labelFunction : function(rowIndex, columnIndex, value,
-						headerText, item, dataField) {
-					var myString = "";
-
-					if (value == 1) {
-						myString = "Yes";
-					} else {
-						myString = "No";
-					}
-					return myString;
-				}
-			}, {
-				dataField : "ctrlWaitSync",
-				headerText : "<spring:message code='pay.head.waitSync'/>",
-				width : 100,
-				editable : false,
-				renderer : {
-					type : "CheckBoxEditRenderer",
-					checkValue : "1",
-					unCheckValue : "0"
-				}
-			}, {
-				dataField : "ctrlStusId",
-				headerText : "<spring:message code='pay.head.statusId'/>",
-				width : 120,
-				visible : false,
-				editable : false
-			}, {
-				dataField : "stusName",
-				headerText : "<spring:message code='pay.head.statusName'/>",
-				width : 120,
-				visible : false,
-				editable : false
-			}, {
-				dataField : "crtUserName",
-				headerText : "<spring:message code='pay.head.creatorName'/>",
-				width : 120,
-				visible : false,
-				editable : false
-			}, {
-				dataField : "bankName",
-				headerText : "<spring:message code='pay.head.bankName'/>",
-				width : 120,
-				visible : false,
-				editable : false
-			}, {
-				dataField : "updDt",
-				headerText : "<spring:message code='pay.head.updateDate'/>",
-				width : 120,
-				visible : false,
-				editable : false
-			}, {
-				dataField : "ctrlTotSucces",
-				headerText : "<spring:message code='pay.head.success'/>",
-				width : 120,
-				visible : false,
-				editable : false
-			}, {
-				dataField : "ctrlTotFail",
-				headerText : "<spring:message code='pay.head.fail'/>",
-				width : 120,
-				visible : false,
-				editable : false
-			}, {
-				dataField : "ctrlIsCrc",
-				headerText : "<spring:message code='pay.head.ctrlIsCrc'/>",
-				width : 120,
-				visible : false,
-				editable : false
-			}, {
-				dataField : "bankId",
-				headerText : "<spring:message code='pay.head.bankId'/>",
-				width : 120,
-				visible : false,
-				editable : false
-			}, ];
-
-	var updResultColLayout = [ {
-		dataField : "0",
-		headerText : "<spring:message code='pay.head.refNo'/>",
-		editable : true
-	}, {
-		dataField : "1",
-		headerText : "<spring:message code='pay.head.refCode'/>",
-		editable : true
-	}, {
-		dataField : "2",
-		headerText : "<spring:message code='pay.head.itemId'/>",
-		editable : true
-	} ];
-
-	var smsColLayout = [ {
-		dataField : "bankDtlApprCode",
-		headerText : "<spring:message code='pay.head.approvalCode'/>",
-		width : 150,
-		editable : false
-	}, {
-		dataField : "salesOrdNo",
-		headerText : "<spring:message code='pay.head.orderNo'/>",
-		width : 150,
-		editable : false
-	}, {
-		dataField : "bankDtlDrAccNo",
-		headerText : "<spring:message code='pay.head.accountNo'/>",
-		width : 150,
-		editable : false
-	}, {
-		dataField : "bankDtlDrName",
-		headerText : "<spring:message code='pay.head.name'/>",
-		width : 150,
-		editable : false
-	}, {
-		dataField : "bankDtlDrNric",
-		headerText : "<spring:message code='pay.head.nric'/>",
-		width : 150,
-		editable : false
-	}, {
-		dataField : "bankDtlAmt",
-		headerText : "<spring:message code='pay.head.claimAmt'/>",
-		width : 150,
-		editable : false
-	}, {
-		dataField : "bankDtlRenAmt",
-		headerText : "<spring:message code='pay.head.rentAmt'/>",
-		width : 150,
-		editable : false
-	}, {
-		dataField : "bankDtlRptAmt",
-		headerText : "<spring:message code='pay.head.penaltyAmt'/>",
-		width : 150,
-		editable : false
-	} ];
-
-	// 리스트 조회.
-	function fn_getClaimListAjax() {
-		Common.ajax("GET", "/payment/selectClaimList", $("#searchForm")
-				.serialize(), function(result) {
-			AUIGrid.setGridData(myGridID, result);
-		});
-	}
-
-	//View Claim Pop-UP
-	function fn_openDivPop(val) {
-
-		if (val == "VIEW" || val == "RESULT" || val == "RESULTNEXT"
-				|| val == "FILE" || val == "SMS") {
-
-			var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-
-			if (selectedItem[0] > -1) {
-
-				var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue,
-						"ctrlId");
-				var ctrlStusId = AUIGrid.getCellValue(myGridID,
-						selectedGridValue, "ctrlStusId");
-				var stusName = AUIGrid.getCellValue(myGridID,
-						selectedGridValue, "stusName");
-				var smsSend = AUIGrid.getCellValue(myGridID, selectedGridValue,
-						"ctrlFailSmsIsPump");
-
-				if ((val == "RESULT" || val == "RESULTNEXT") && ctrlStusId != 1) {
-					Common
-							.alert("<spring:message code='pay.alert.claimResult' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
-				} else if (val == "FILE" && ctrlStusId != 1) {
-					Common
-							.alert("<spring:message code='pay.alert.claimFile' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
-				} else if (val == "SMS" && ctrlStusId != 4) {
-					Common
-							.alert("<spring:message code='pay.alert.failSms' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
-				} else if (val == "SMS" && smsSend == 1) {
-					Common
-							.alert("<spring:message code='pay.alert.failSmsProcess' arguments='"+ctrlId+"' htmlEscape='false'/>");
-				} else {
-
-					$('#sms_grid_wrap').hide();
-
-					Common.ajax("GET", "/payment/selectClaimMasterById.do", {
-						"batchId" : ctrlId
-					}, function(result) {
-						$("#view_wrap").show();
-						$("#new_wrap").hide();
-
-						$("#view_batchId").text(result.ctrlId);
-						$("#view_status").text(result.stusName);
-						$("#view_type").text(result.ctrlIsCrcName);
-						$("#view_creator").text(result.crtUserName);
-						$("#view_ddtChnl").text(result.ddtChnl);
-						$("#view_issueBank").text(
-								result.bankCode + ' - ' + result.bankName);
-						$("#view_createDt").text(result.crtDt);
-						$("#view_totalItem").text(result.ctrlTotItm);
-						$("#view_debitDate").text(result.ctrlBatchDt);
-						$("#view_targetAmount").text(result.ctrlBillAmt);
-						$("#view_updator").text(result.crtUserName);
-						$("#view_receiveAmount").text(result.ctrlBillPayAmt);
-						$("#view_updateDate").text(result.updDt);
-						$("#view_totalSuccess").text(result.ctrlTotSucces);
-						$("#view_totalFail").text(result.ctrlTotFail);
-					});
-
-					if (val == "SMS") {
-						$('#sms_grid_wrap').show();
-
-						Common.ajax("GET",
-								"/payment/selectFailClaimDetailList.do", {
-									"batchId" : ctrlId
-								}, function(result) {
-									AUIGrid.setGridData(smsGridID, result);
-									AUIGrid.resize(smsGridID);
-								});
-					}
-				}
-
-				//팝업 헤더 TEXT 및 버튼 설정
-				if (val == "VIEW") {
-					$('#pop_header h1').text(
-							"<spring:message code='pay.title.vwClm'/>");
-					$('#center_btns1').hide();
-					$('#center_btns2').hide();
-					$('#center_btns3').hide();
-					$('#center_btns4').hide();
-
-				} else if (val == "RESULT") {
-					$('#pop_header h1').text(
-							"<spring:message code='pay.title.clmRst'/>");
-					$('#center_btns1').show();
-					$('#center_btns2').hide();
-					$('#center_btns3').hide();
-					$('#center_btns4').hide();
-
-				} else if (val == "RESULTNEXT") {
-					$('#pop_header h1').text(
-							"<spring:message code='pay.title.clmRstNxtDay'/>");
-					$('#center_btns1').hide();
-					$('#center_btns2').show();
-					$('#center_btns3').hide();
-					$('#center_btns4').hide();
-
-				} else if (val == "FILE") {
-					$('#pop_header h1').text(
-							"<spring:message code='pay.title.clmFileGen'/>");
-					$('#center_btns1').hide();
-					$('#center_btns2').hide();
-					$('#center_btns3').show();
-					$('#center_btns4').hide();
-
-				} else if (val == "SMS") {
-					$('#pop_header h1').text(
-							"<spring:message code='pay.title.failDdtSms'/>");
-					$('#center_btns1').hide();
-					$('#center_btns2').hide();
-					$('#center_btns3').hide();
-					$('#center_btns4').show();
-				}
-
-			} else {
-				Common.alert("<spring:message code='pay.alert.noClaim'/>");
-			}
-		} else {
-			$("#view_wrap").hide();
-			$("#new_wrap").show();
-
-			//NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
-			$("#newForm")[0].reset();
-			$("#claimDayMust").hide();
-			$("#issueBankMust").hide();
-			$("#cardTypeMust").hide();
-			$("#ddtChnlMust").hide();
-		}
-	}
-
-	//Layer close
-	hideViewPopup = function(val) {
-		//AUIGrid.destroy(updResultGridID);
-		//AUIGrid.destroy(smsGridID);
-		$('#sms_grid_wrap').hide();
-		$(val).hide();
-	}
-
-	// Pop-UP 에서 Deactivate 처리
-	function fn_deactivate() {
-		Common
-				.confirm(
-						"<spring:message code='pay.alert.deactivateBatch'/>",
-						function() {
-							var ctrlId = AUIGrid.getCellValue(myGridID,
-									selectedGridValue, "ctrlId");
-
-							Common
-									.ajax(
-											"GET",
-											"/payment/updateDeactivate.do",
-											{
-												"ctrlId" : ctrlId
-											},
-											function(result) {
-												Common
-														.alert(
-																"<spring:message code='pay.alert.deactivateSuccess'/>",
-																"fn_openDivPop('VIEW')");
-
-											},
-											function(result) {
-												Common
-														.alert("<spring:message code='pay.alert.deactivateFail'/>");
-											});
-						});
-	}
-
-	//Pop-UP 에서 Fail Deduction SMS 처리
-	function fn_sendFailDeduction() {
-		var ctrlId = AUIGrid
-				.getCellValue(myGridID, selectedGridValue, "ctrlId");
-
-		Common.ajax("GET", "/payment/sendFaileDeduction.do", {
-			"ctrlId" : ctrlId
-		}, function(result) {
-			Common.alert("<spring:message code='pay.alert.claimSmsSuccess'/>",
-					function() {
-						fn_openDivPop('VIEW');
-					});
-
-		}, function(result) {
-			Common.alert("<spring:message code='pay.alert.claimSmsFail'/>");
-		});
-
-	}
-
-	var updateResultItemKind = ""; //claim result update시 구분 (LIVE :current / NEXT : batch)
-
-	//Pop-UP 에서 Update Result 버튼 클릭시 팝업창 생성
-	function fn_updateResult(val) {
-		updateResultItemKind = val;
-		$("#updResult_wrap").show();
-	}
-
-	function fn_uploadFile() {
-
-		var ctrlId = AUIGrid
-				.getCellValue(myGridID, selectedGridValue, "ctrlId");
-		var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue,
-				"ctrlIsCrc");
-		var bankId = AUIGrid
-				.getCellValue(myGridID, selectedGridValue, "bankId");
-
-		var formData = new FormData();
-
-		formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
-		formData.append("ctrlId", ctrlId);
-		formData.append("ctrlIsCrc", ctrlIsCrc);
-		formData.append("bankId", bankId);
-
-		Common
-				.ajaxFile(
-						"/payment/updateClaimResultItemBulk.do",
-						formData,
-						function(result) {
-							resetUpdatedItems(); // 초기화
-
-							var message = "";
-							message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
+  //AUIGrid 그리드 객체
+  var myGridID, updResultGridID, smsGridID;
+
+  //Grid에서 선택된 RowID
+  var selectedGridValue;
+
+  // Empty Set
+  var emptyData = [];
+
+  // 화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
+  $(document)
+      .ready(
+          function() {
+            // CLAIM TYPE
+            doGetComboCodeId('/payment/selectListing.do', {
+              ind : 'CLM_TYP'
+            }, '', 'claimType', 'S', '');
+            // STATUS
+            doGetComboCodeId('/payment/selectClmStat.do', '', '',
+                'status', 'S', '');
+            // DEDUCTION CHANNEL
+            doDefCombo(emptyData, '', 'ddtChnl', 'S', '');
+            // ISSUE BANK
+            doDefCombo(emptyData, '', 'issueBank', 'S', '');
+            // SMS SEND
+            doGetComboCodeId('/payment/selectListing.do', {
+              ind : 'Y_N'
+            }, '', 'smsSend', 'S', '');
+
+            //New Result 팝업 페이지
+            doGetComboCodeId('/payment/selectListing.do', {
+              ind : 'CLM_TYP'
+            }, '', 'new_claimType', 'S', '');
+            //doDefCombo(claimDayData, '', 'new_claimDay', 'S', ''); //Claim Day 생성
+            doGetComboCodeId('/payment/selectListing.do', {
+              ind : 'CLM_DY'
+            }, '', 'new_claimDay', 'S', '');
+
+            //Claim Type Combo 변경시 Issue Bank Combo 변경
+            $('#claimType')
+                .change(
+                    function() {
+                      if ($(this).val() == 132) {
+                        $('#issueBank').val('');
+                        $('#issueBank').attr(
+                            "disabled", false);
+
+                        $('#ddtChnl').val('');
+                        $('#ddtChnl').attr("disabled",
+                            false);
+
+                        // LOAD DEDUCTION CHANNEL LISTING
+                        doGetComboCodeId(
+                            '/sales/customer/selectDdlChnl.do',
+                            {
+                              isAllowForDd : '1'
+                            }, '', 'ddtChnl', 'S',
+                            '');
+                      } else {
+                        $('#issueBank').val('');
+                        $('#issueBank').attr(
+                            "disabled", true);
+
+                        $('#ddtChnl').val('');
+                        $('#ddtChnl').attr("disabled",
+                            true);
+                      }
+                    });
+
+            $('#ddtChnl')
+                .change(
+                    function() {
+                      if ($('#ddtChnl').val() != "") {
+
+                        if ($('#ddtChnl').val() == 3170) {
+                          doGetComboCodeId(
+                              '/payment/selectAccBank.do',
+                              {
+                                isAllowForDd : '1',
+                                ddlChnl : $(
+                                    '#ddtChnl')
+                                    .val()
+                              }, '', 'issueBank',
+                              'S', '');
+                        } else {
+
+                          $('#issueBank option')
+                              .remove();
+
+                          doGetComboCodeId(
+                              '/payment/selectListing.do',
+                              {
+                                ind : 'CLM_GENBNK'
+                              }, '', 'issueBank',
+                              'S', '');
+                        }
+                      } else {
+                        $('#issueBank option').remove();
+
+                        doDefCombo(emptyData, '',
+                            'issueBank', 'S', '');
+                      }
+                    });
+
+            //Pop-Up Claim Type Combo 변경시 Claim Day, Issue Bank Combo 변경
+            $('#new_claimType')
+                .change(
+                    function() {
+
+                      $('#new_claimDay').val('');
+                      $('#new_ddtChnl').val('');
+                      $('#new_issueBank').val('');
+                      $('#new_cardType').val('');
+                      $('#new_claimDay').attr("disabled",
+                          true);
+                      $('#new_ddtChnl').attr("disabled",
+                          true);
+                      $('#new_issueBank').attr(
+                          "disabled", true);
+                      $('#new_cardType').attr("disabled",
+                          true);
+                      $('#new_debitDate')
+                          .attr("placeholder",
+                              "Debit Date");
+
+                      //NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
+                      $("#claimDayMust").hide();
+                      $("#issueBankMust").hide();
+                      $("#cardTypeMust").hide();
+                      $("#ddtChnlMust").hide();
+
+                      if ($(this).val() == 131
+                          || $(this).val() == 134) {
+                        $('#new_claimDay').attr(
+                            "disabled", false);
+                        $("#claimDayMust").show();
+
+                        if ($(this).val() == 131) {
+                          $('#new_debitDate')
+                              .attr(
+                                  "placeholder",
+                                  "Debit Date (Same Day)");
+                          $('#new_cardType').attr(
+                              "disabled", false);
+                          $("#cardTypeMust").show();
+                          $('#new_issueBank').attr(
+                              "disabled", false);
+                          $("#issueBankMust").show();
+                          $("#ddtChnlMust").show();
+
+                          doGetComboCodeId(
+                              '/payment/selectListing.do',
+                              {
+                                ind : 'CLM_CRCBNK'
+                              }, '',
+                              'new_issueBank',
+                              'S', '');
+
+                          doGetComboCodeId(
+                              '/payment/selectListing.do',
+                              {
+                                ind : 'CRD_TYP'
+                              }, '',
+                              'new_cardType',
+                              'S', '');
+                        }
+                      } else {
+                        doDefCombo(emptyData, '',
+                            'new_issueBank', 'S',
+                            '');
+                        // LOAD DEDUCTION CHANNEL LISTING
+                        doGetComboCodeId(
+                            '/sales/customer/selectDdlChnl.do',
+                            {
+                              isAllowForDd : '1'
+                            }, '', 'new_ddtChnl',
+                            'S', '');
+                        $('#new_issueBank').attr(
+                            "disabled", false);
+                        $('#new_ddtChnl').attr(
+                            "disabled", false);
+                        $("#issueBankMust").show();
+                        $("#ddtChnlMust").show();
+                      }
+
+                    });
+
+            $('#new_ddtChnl')
+                .change(
+                    function() {
+                      if ($(this).val() != '') {
+                        if ($(this).val() == 3170) {
+                          doGetComboCodeId(
+                              '/payment/selectAccBank.do',
+                              {
+                                isAllowForDd : '1',
+                                ddlChnl : $(
+                                    '#new_ddtChnl')
+                                    .val()
+                              }, '',
+                              'new_issueBank',
+                              'S', '');
+                        } else {
+                          $('#issueBank option')
+                              .remove();
+
+                          doGetComboCodeId(
+                              '/payment/selectListing.do',
+                              {
+                                ind : 'CLM_GENBNK'
+                              }, '',
+                              'new_issueBank',
+                              'S', '');
+                        }
+                      } else {
+                        $('#issueBank option').remove();
+
+                        doDefCombo(emptyData, '',
+                            'new_issueBank', 'S',
+                            '');
+                      }
+
+                    });
+
+            //Pop-Up Issue Combo 변경시
+            $('#new_issueBank')
+                .change(
+                    function() {
+
+                      if ($('#new_claimType').val() != 131) {
+                        $('#new_debitDate').attr(
+                            "placeholder",
+                            "Debit Date");
+
+                        switch ($(this).val()) {
+                        case "2":
+                          $('#new_debitDate')
+                              .attr(
+                                  "placeholder",
+                                  "Debit Date (+1 Day Send Same Day)");
+                          break;
+                        case "3":
+                        case "6":
+                          $('#new_debitDate')
+                              .attr(
+                                  "placeholder",
+                                  "Debit Date (Same Day)");
+                          break;
+                        case "7":
+                        case "9":
+                        case "21":
+                          $('#new_debitDate')
+                              .attr(
+                                  "placeholder",
+                                  "Debit Date (+1 Days)");
+                          break;
+                        default:
+                          break;
+                        }
+                      }
+                    });
+
+            //Grid Properties 설정
+            var gridPros = {
+              editable : false, // 편집 가능 여부 (기본값 : false)
+              showStateColumn : false, // 상태 칼럼 사용
+              softRemoveRowMode : false
+            };
+
+            // Order 정보 (Master Grid) 그리드 생성
+            myGridID = GridCommon.createAUIGrid("grid_wrap",
+                columnLayout, null, gridPros);
+            updResultGridID = GridCommon.createAUIGrid(
+                "updResult_grid_wrap", updResultColLayout,
+                null, gridPros);
+            smsGridID = GridCommon.createAUIGrid("sms_grid_wrap",
+                smsColLayout, null, gridPros);
+
+            // Master Grid 셀 클릭시 이벤트
+            AUIGrid.bind(myGridID, "cellClick", function(event) {
+              selectedGridValue = event.rowIndex;
+            });
+
+            // HTML5 브라우저인지 체크 즉, FileReader 를 사용할 수 있는지 여부
+            function checkHTML5Brower() {
+              var isCompatible = false;
+              if (window.File && window.FileReader
+                  && window.FileList && window.Blob) {
+                isCompatible = true;
+              }
+              return isCompatible;
+            }
+            ;
+
+          });
+
+  // AUIGrid 칼럼 설정
+  var columnLayout = [
+      {
+        dataField : "ctrlId",
+        headerText : "<spring:message code='pay.head.batchId'/>",
+        width : 120,
+        editable : false
+      },
+      {
+        dataField : "stusCode",
+        headerText : "<spring:message code='pay.head.status'/>",
+        width : 100,
+        editable : false
+      },
+      {
+        dataField : "ctrlIsCrcName",
+        headerText : "<spring:message code='pay.head.type'/>",
+        width : 100,
+        editable : false
+      },
+      {
+        dataField : "ddtChnl",
+        headerText : "<spring:message code='pay.head.ddtChnl'/>",
+        width : 100,
+        editable : false
+      },
+      {
+        dataField : "bankCode",
+        headerText : "<spring:message code='pay.head.issueBank'/>",
+        width : 100,
+        editable : false
+      },
+      {
+        dataField : "ctrlBatchDt",
+        headerText : "<spring:message code='pay.head.debitDate'/>",
+        width : 120,
+        editable : false
+      },
+      {
+        dataField : "ctrlTotItm",
+        headerText : "<spring:message code='pay.head.totalItem'/>",
+        width : 120,
+        editable : false
+      },
+      {
+        dataField : "ctrlBillAmt",
+        headerText : "<spring:message code='pay.head.targetAmt'/>",
+        width : 120,
+        editable : false,
+        dataType : "numeric",
+        formatString : "#,##0.00"
+      },
+      {
+        dataField : "ctrlBillPayAmt",
+        headerText : "<spring:message code='pay.head.receiveAmt'/>",
+        width : 120,
+        editable : false,
+        dataType : "numeric",
+        formatString : "#,##0.00"
+      },
+      {
+        dataField : "crtDt",
+        headerText : "<spring:message code='pay.head.createDate'/>",
+        width : 200,
+        editable : false
+      },
+      {
+        dataField : "crtUserName",
+        headerText : "<spring:message code='pay.head.creator'/>",
+        width : 150,
+        editable : false
+      },
+      {
+        dataField : "ctrlFailSmsIsPump",
+        headerText : "<spring:message code='pay.head.sms'/>",
+        width : 100,
+        editable : false,
+        labelFunction : function(rowIndex, columnIndex, value,
+            headerText, item, dataField) {
+          var myString = "";
+
+          if (value == 1) {
+            myString = "Yes";
+          } else {
+            myString = "No";
+          }
+          return myString;
+        }
+      }, {
+        dataField : "ctrlWaitSync",
+        headerText : "<spring:message code='pay.head.waitSync'/>",
+        width : 100,
+        editable : false,
+        renderer : {
+          type : "CheckBoxEditRenderer",
+          checkValue : "1",
+          unCheckValue : "0"
+        }
+      }, {
+        dataField : "ctrlStusId",
+        headerText : "<spring:message code='pay.head.statusId'/>",
+        width : 120,
+        visible : false,
+        editable : false
+      }, {
+        dataField : "stusName",
+        headerText : "<spring:message code='pay.head.statusName'/>",
+        width : 120,
+        visible : false,
+        editable : false
+      }, {
+        dataField : "crtUserName",
+        headerText : "<spring:message code='pay.head.creatorName'/>",
+        width : 120,
+        visible : false,
+        editable : false
+      }, {
+        dataField : "bankName",
+        headerText : "<spring:message code='pay.head.bankName'/>",
+        width : 120,
+        visible : false,
+        editable : false
+      }, {
+        dataField : "updDt",
+        headerText : "<spring:message code='pay.head.updateDate'/>",
+        width : 120,
+        visible : false,
+        editable : false
+      }, {
+        dataField : "ctrlTotSucces",
+        headerText : "<spring:message code='pay.head.success'/>",
+        width : 120,
+        visible : false,
+        editable : false
+      }, {
+        dataField : "ctrlTotFail",
+        headerText : "<spring:message code='pay.head.fail'/>",
+        width : 120,
+        visible : false,
+        editable : false
+      }, {
+        dataField : "ctrlIsCrc",
+        headerText : "<spring:message code='pay.head.ctrlIsCrc'/>",
+        width : 120,
+        visible : false,
+        editable : false
+      }, {
+        dataField : "bankId",
+        headerText : "<spring:message code='pay.head.bankId'/>",
+        width : 120,
+        visible : false,
+        editable : false
+      }, ];
+
+  var updResultColLayout = [ {
+    dataField : "0",
+    headerText : "<spring:message code='pay.head.refNo'/>",
+    editable : true
+  }, {
+    dataField : "1",
+    headerText : "<spring:message code='pay.head.refCode'/>",
+    editable : true
+  }, {
+    dataField : "2",
+    headerText : "<spring:message code='pay.head.itemId'/>",
+    editable : true
+  } ];
+
+  var smsColLayout = [ {
+    dataField : "bankDtlApprCode",
+    headerText : "<spring:message code='pay.head.approvalCode'/>",
+    width : 150,
+    editable : false
+  }, {
+    dataField : "salesOrdNo",
+    headerText : "<spring:message code='pay.head.orderNo'/>",
+    width : 150,
+    editable : false
+  }, {
+    dataField : "bankDtlDrAccNo",
+    headerText : "<spring:message code='pay.head.accountNo'/>",
+    width : 150,
+    editable : false
+  }, {
+    dataField : "bankDtlDrName",
+    headerText : "<spring:message code='pay.head.name'/>",
+    width : 150,
+    editable : false
+  }, {
+    dataField : "bankDtlDrNric",
+    headerText : "<spring:message code='pay.head.nric'/>",
+    width : 150,
+    editable : false
+  }, {
+    dataField : "bankDtlAmt",
+    headerText : "<spring:message code='pay.head.claimAmt'/>",
+    width : 150,
+    editable : false
+  }, {
+    dataField : "bankDtlRenAmt",
+    headerText : "<spring:message code='pay.head.rentAmt'/>",
+    width : 150,
+    editable : false
+  }, {
+    dataField : "bankDtlRptAmt",
+    headerText : "<spring:message code='pay.head.penaltyAmt'/>",
+    width : 150,
+    editable : false
+  } ];
+
+  // 리스트 조회.
+  function fn_getClaimListAjax() {
+    Common.ajax("GET", "/payment/selectClaimList", $("#searchForm")
+        .serialize(), function(result) {
+      AUIGrid.setGridData(myGridID, result);
+    });
+  }
+
+  //View Claim Pop-UP
+  function fn_openDivPop(val) {
+
+    if (val == "VIEW" || val == "RESULT" || val == "RESULTNEXT"
+        || val == "FILE" || val == "SMS") {
+
+      var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+
+      if (selectedItem[0] > -1) {
+
+        var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue,
+            "ctrlId");
+        var ctrlStusId = AUIGrid.getCellValue(myGridID,
+            selectedGridValue, "ctrlStusId");
+        var stusName = AUIGrid.getCellValue(myGridID,
+            selectedGridValue, "stusName");
+        var smsSend = AUIGrid.getCellValue(myGridID, selectedGridValue,
+            "ctrlFailSmsIsPump");
+
+        if ((val == "RESULT" || val == "RESULTNEXT") && ctrlStusId != 1) {
+          Common
+              .alert("<spring:message code='pay.alert.claimResult' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
+        } else if (val == "FILE" && ctrlStusId != 1) {
+          Common
+              .alert("<spring:message code='pay.alert.claimFile' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
+        } else if (val == "SMS" && ctrlStusId != 4) {
+          Common
+              .alert("<spring:message code='pay.alert.failSms' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
+        } else if (val == "SMS" && smsSend == 1) {
+          Common
+              .alert("<spring:message code='pay.alert.failSmsProcess' arguments='"+ctrlId+"' htmlEscape='false'/>");
+        } else {
+
+          $('#sms_grid_wrap').hide();
+
+          Common.ajax("GET", "/payment/selectClaimMasterById.do", {
+            "batchId" : ctrlId
+          }, function(result) {
+            $("#view_wrap").show();
+            $("#new_wrap").hide();
+
+            $("#view_batchId").text(result.ctrlId);
+            $("#view_status").text(result.stusName);
+            $("#view_type").text(result.ctrlIsCrcName);
+            $("#view_creator").text(result.crtUserName);
+            $("#view_ddtChnl").text(result.ddtChnl);
+            $("#view_issueBank").text(
+                result.bankCode + ' - ' + result.bankName);
+            $("#view_createDt").text(result.crtDt);
+            $("#view_totalItem").text(result.ctrlTotItm);
+            $("#view_debitDate").text(result.ctrlBatchDt);
+            $("#view_targetAmount").text(result.ctrlBillAmt);
+            $("#view_updator").text(result.crtUserName);
+            $("#view_receiveAmount").text(result.ctrlBillPayAmt);
+            $("#view_updateDate").text(result.updDt);
+            $("#view_totalSuccess").text(result.ctrlTotSucces);
+            $("#view_totalFail").text(result.ctrlTotFail);
+          });
+
+          if (val == "SMS") {
+            $('#sms_grid_wrap').show();
+
+            Common.ajax("GET",
+                "/payment/selectFailClaimDetailList.do", {
+                  "batchId" : ctrlId
+                }, function(result) {
+                  AUIGrid.setGridData(smsGridID, result);
+                  AUIGrid.resize(smsGridID);
+                });
+          }
+        }
+
+        //팝업 헤더 TEXT 및 버튼 설정
+        if (val == "VIEW") {
+          $('#pop_header h1').text(
+              "<spring:message code='pay.title.vwClm'/>");
+          $('#center_btns1').hide();
+          $('#center_btns2').hide();
+          $('#center_btns3').hide();
+          $('#center_btns4').hide();
+
+        } else if (val == "RESULT") {
+          $('#pop_header h1').text(
+              "<spring:message code='pay.title.clmRst'/>");
+          $('#center_btns1').show();
+          $('#center_btns2').hide();
+          $('#center_btns3').hide();
+          $('#center_btns4').hide();
+
+        } else if (val == "RESULTNEXT") {
+          $('#pop_header h1').text(
+              "<spring:message code='pay.title.clmRstNxtDay'/>");
+          $('#center_btns1').hide();
+          $('#center_btns2').show();
+          $('#center_btns3').hide();
+          $('#center_btns4').hide();
+
+        } else if (val == "FILE") {
+          $('#pop_header h1').text(
+              "<spring:message code='pay.title.clmFileGen'/>");
+          $('#center_btns1').hide();
+          $('#center_btns2').hide();
+          $('#center_btns3').show();
+          $('#center_btns4').hide();
+
+        } else if (val == "SMS") {
+          $('#pop_header h1').text(
+              "<spring:message code='pay.title.failDdtSms'/>");
+          $('#center_btns1').hide();
+          $('#center_btns2').hide();
+          $('#center_btns3').hide();
+          $('#center_btns4').show();
+        }
+
+      } else {
+        Common.alert("<spring:message code='pay.alert.noClaim'/>");
+      }
+    } else {
+      $("#view_wrap").hide();
+      $("#new_wrap").show();
+
+      //NEW CLAIM 팝업에서 필수항목 표시 DEFAULT
+      $("#newForm")[0].reset();
+      $("#claimDayMust").hide();
+      $("#issueBankMust").hide();
+      $("#cardTypeMust").hide();
+      $("#ddtChnlMust").hide();
+    }
+  }
+
+  //Layer close
+  hideViewPopup = function(val) {
+    //AUIGrid.destroy(updResultGridID);
+    //AUIGrid.destroy(smsGridID);
+    $('#sms_grid_wrap').hide();
+    $(val).hide();
+  }
+
+  // Pop-UP 에서 Deactivate 처리
+  function fn_deactivate() {
+    Common
+        .confirm(
+            "<spring:message code='pay.alert.deactivateBatch'/>",
+            function() {
+              var ctrlId = AUIGrid.getCellValue(myGridID,
+                  selectedGridValue, "ctrlId");
+
+              Common
+                  .ajax(
+                      "GET",
+                      "/payment/updateDeactivate.do",
+                      {
+                        "ctrlId" : ctrlId
+                      },
+                      function(result) {
+                        Common
+                            .alert(
+                                "<spring:message code='pay.alert.deactivateSuccess'/>",
+                                "fn_openDivPop('VIEW')");
+
+                      },
+                      function(result) {
+                        Common
+                            .alert("<spring:message code='pay.alert.deactivateFail'/>");
+                      });
+            });
+  }
+
+  //Pop-UP 에서 Fail Deduction SMS 처리
+  function fn_sendFailDeduction() {
+    var ctrlId = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "ctrlId");
+
+    Common.ajax("GET", "/payment/sendFaileDeduction.do", {
+      "ctrlId" : ctrlId
+    }, function(result) {
+      Common.alert("<spring:message code='pay.alert.claimSmsSuccess'/>",
+          function() {
+            fn_openDivPop('VIEW');
+          });
+
+    }, function(result) {
+      Common.alert("<spring:message code='pay.alert.claimSmsFail'/>");
+    });
+
+  }
+
+  var updateResultItemKind = ""; //claim result update시 구분 (LIVE :current / NEXT : batch)
+
+  //Pop-UP 에서 Update Result 버튼 클릭시 팝업창 생성
+  function fn_updateResult(val) {
+    updateResultItemKind = val;
+    $("#updResult_wrap").show();
+  }
+
+  function fn_uploadFile() {
+
+    var ctrlId = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "ctrlId");
+    var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue,
+        "ctrlIsCrc");
+    var bankId = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "bankId");
+
+    var formData = new FormData();
+
+    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+    formData.append("ctrlId", ctrlId);
+    formData.append("ctrlIsCrc", ctrlIsCrc);
+    formData.append("bankId", bankId);
+
+    Common
+        .ajaxFile(
+            "/payment/updateClaimResultItemBulk.do",
+            formData,
+            function(result) {
+              resetUpdatedItems(); // 초기화
+
+              var message = "";
+              message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
             result.data.totalItem+" ; "+
             result.data.totalSuccess+" ; "+
             result.data.totalFail+"' htmlEscape='false' argumentSeparator=';' />";
 
-							Common
-									.confirm(
-											message,
-											function() {
-												var ctrlId = AUIGrid
-														.getCellValue(
-																myGridID,
-																selectedGridValue,
-																"ctrlId");
+              Common
+                  .confirm(
+                      message,
+                      function() {
+                        var ctrlId = AUIGrid
+                            .getCellValue(
+                                myGridID,
+                                selectedGridValue,
+                                "ctrlId");
 
-												//param data array
-												var data = {};
-												data.form = [ {
-													"ctrlId" : ctrlId,
-													"ctrlIsCrc" : ctrlIsCrc,
-													"bankId" : bankId
-												} ];
+                        //param data array
+                        var data = {};
+                        data.form = [ {
+                          "ctrlId" : ctrlId,
+                          "ctrlIsCrc" : ctrlIsCrc,
+                          "bankId" : bankId
+                        } ];
 
-												//CALIM RESULT UPDATE
-												if (updateResultItemKind == 'LIVE') {
-													Common
-															.ajax(
-																	"POST",
-																	"/payment/updateClaimResultLive.do",
-																	data,
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
-																	},
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
-																	});
-												}
+                        //CALIM RESULT UPDATE
+                        if (updateResultItemKind == 'LIVE') {
+                          Common
+                              .ajax(
+                                  "POST",
+                                  "/payment/updateClaimResultLive.do",
+                                  data,
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
+                                  },
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimUpdateFail'/>");
+                                  });
+                        }
 
-												//CALIM RESULT UPDATE NEXT DAY
-												if (updateResultItemKind == 'NEXT') {
-													Common
-															.ajax(
-																	"POST",
-																	"/payment/updateClaimResultNextDay.do",
-																	data,
-																	function(
-																			result) {
-																		var resultMsg = "";
-																		resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
+                        //CALIM RESULT UPDATE NEXT DAY
+                        if (updateResultItemKind == 'NEXT') {
+                          Common
+                              .ajax(
+                                  "POST",
+                                  "/payment/updateClaimResultNextDay.do",
+                                  data,
+                                  function(
+                                      result) {
+                                    var resultMsg = "";
+                                    resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
 
-																		Common
-																				.alert(resultMsg);
-																	},
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
-																	});
-												}
-											});
-						}, function(jqXHR, textStatus, errorThrown) {
-							try {
-								console.log("status : " + jqXHR.status);
-								console
-										.log("code : "
-												+ jqXHR.responseJSON.code);
-								console.log("message : "
-										+ jqXHR.responseJSON.message);
-								console.log("detailMessage : "
-										+ jqXHR.responseJSON.detailMessage);
-							} catch (e) {
-								console.log(e);
-							}
-							Common
-									.alert("Fail : "
-											+ jqXHR.responseJSON.message);
-						});
+                                    Common
+                                        .alert(resultMsg);
+                                  },
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
+                                  });
+                        }
+                      });
+            }, function(jqXHR, textStatus, errorThrown) {
+              try {
+                console.log("status : " + jqXHR.status);
+                console
+                    .log("code : "
+                        + jqXHR.responseJSON.code);
+                console.log("message : "
+                    + jqXHR.responseJSON.message);
+                console.log("detailMessage : "
+                    + jqXHR.responseJSON.detailMessage);
+              } catch (e) {
+                console.log(e);
+              }
+              Common
+                  .alert("Fail : "
+                      + jqXHR.responseJSON.message);
+            });
 
-	}
+  }
 
-	function fn_uploadFile3() {
+  function fn_uploadFile3() {
 
-		var ctrlId = AUIGrid
-				.getCellValue(myGridID, selectedGridValue, "ctrlId");
-		var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue,
-				"ctrlIsCrc");
-		var bankId = AUIGrid
-				.getCellValue(myGridID, selectedGridValue, "bankId");
+    var ctrlId = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "ctrlId");
+    var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue,
+        "ctrlIsCrc");
+    var bankId = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "bankId");
 
-		var formData = new FormData();
+    var formData = new FormData();
 
-		formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
-		formData.append("ctrlId", ctrlId);
-		formData.append("ctrlIsCrc", ctrlIsCrc);
-		formData.append("bankId", bankId);
+    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+    formData.append("ctrlId", ctrlId);
+    formData.append("ctrlIsCrc", ctrlIsCrc);
+    formData.append("bankId", bankId);
 
-		Common
-				.ajaxFile(
-						"/payment/updateClaimResultItemBulk3.do",
-						formData,
-						function(result) {
-							resetUpdatedItems(); // 초기화
+    Common
+        .ajaxFile(
+            "/payment/updateClaimResultItemBulk3.do",
+            formData,
+            function(result) {
+              resetUpdatedItems(); // 초기화
 
-							var message = "";
-							message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
+              var message = "";
+              message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
             result.data.totalItem+" ; "+
             result.data.totalSuccess+" ; "+
             result.data.totalFail+"' htmlEscape='false' argumentSeparator=';' />";
 
-							Common
-									.confirm(
-											message,
-											function() {
-												var ctrlId = AUIGrid
-														.getCellValue(
-																myGridID,
-																selectedGridValue,
-																"ctrlId");
+              Common
+                  .confirm(
+                      message,
+                      function() {
+                        var ctrlId = AUIGrid
+                            .getCellValue(
+                                myGridID,
+                                selectedGridValue,
+                                "ctrlId");
 
-												//param data array
-												var data = {};
-												data.form = [ {
-													"ctrlId" : ctrlId,
-													"ctrlIsCrc" : ctrlIsCrc,
-													"bankId" : bankId
-												} ];
+                        //param data array
+                        var data = {};
+                        data.form = [ {
+                          "ctrlId" : ctrlId,
+                          "ctrlIsCrc" : ctrlIsCrc,
+                          "bankId" : bankId
+                        } ];
 
-												//CALIM RESULT UPDATE
-												if (updateResultItemKind == 'LIVE') {
-													Common
-															.ajax(
-																	"POST",
-																	"/payment/updateClaimResultLive.do",
-																	data,
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
-																	},
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
-																	});
-												}
+                        //CALIM RESULT UPDATE
+                        if (updateResultItemKind == 'LIVE') {
+                          Common
+                              .ajax(
+                                  "POST",
+                                  "/payment/updateClaimResultLive.do",
+                                  data,
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
+                                  },
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimUpdateFail'/>");
+                                  });
+                        }
 
-												//CALIM RESULT UPDATE NEXT DAY
-												if (updateResultItemKind == 'NEXT') {
-													Common
-															.ajax(
-																	"POST",
-																	"/payment/updateClaimResultNextDay.do",
-																	data,
-																	function(
-																			result) {
-																		var resultMsg = "";
-																		resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
+                        //CALIM RESULT UPDATE NEXT DAY
+                        if (updateResultItemKind == 'NEXT') {
+                          Common
+                              .ajax(
+                                  "POST",
+                                  "/payment/updateClaimResultNextDay.do",
+                                  data,
+                                  function(
+                                      result) {
+                                    var resultMsg = "";
+                                    resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
 
-																		Common
-																				.alert(resultMsg);
-																	},
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
-																	});
-												}
-											});
-						}, function(jqXHR, textStatus, errorThrown) {
-							try {
-								console.log("status : " + jqXHR.status);
-								console
-										.log("code : "
-												+ jqXHR.responseJSON.code);
-								console.log("message : "
-										+ jqXHR.responseJSON.message);
-								console.log("detailMessage : "
-										+ jqXHR.responseJSON.detailMessage);
-							} catch (e) {
-								console.log(e);
-							}
-							Common
-									.alert("Fail : "
-											+ jqXHR.responseJSON.message);
-						});
+                                    Common
+                                        .alert(resultMsg);
+                                  },
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
+                                  });
+                        }
+                      });
+            }, function(jqXHR, textStatus, errorThrown) {
+              try {
+                console.log("status : " + jqXHR.status);
+                console
+                    .log("code : "
+                        + jqXHR.responseJSON.code);
+                console.log("message : "
+                    + jqXHR.responseJSON.message);
+                console.log("detailMessage : "
+                    + jqXHR.responseJSON.detailMessage);
+              } catch (e) {
+                console.log(e);
+              }
+              Common
+                  .alert("Fail : "
+                      + jqXHR.responseJSON.message);
+            });
 
-	}
+  }
 
-	function fn_uploadFile4() {
+  function fn_uploadFile4() {
 
-		var ctrlId = AUIGrid
-				.getCellValue(myGridID, selectedGridValue, "ctrlId");
-		var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue,
-				"ctrlIsCrc");
-		var bankId = AUIGrid
-				.getCellValue(myGridID, selectedGridValue, "bankId");
+    var ctrlId = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "ctrlId");
+    var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue,
+        "ctrlIsCrc");
+    var bankId = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "bankId");
 
-		var formData = new FormData();
+    var formData = new FormData();
 
-		formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
-		formData.append("ctrlId", ctrlId);
-		formData.append("ctrlIsCrc", ctrlIsCrc);
-		formData.append("bankId", bankId);
+    formData.append("csvFile", $("input[name=uploadfile]")[0].files[0]);
+    formData.append("ctrlId", ctrlId);
+    formData.append("ctrlIsCrc", ctrlIsCrc);
+    formData.append("bankId", bankId);
 
-		Common
-				.ajaxFile(
-						"/payment/updateClaimResultItemBulk4.do",
-						formData,
-						function(result) {
-							resetUpdatedItems(); // 초기화
+    Common
+        .ajaxFile(
+            "/payment/updateClaimResultItemBulk4.do",
+            formData,
+            function(result) {
+              resetUpdatedItems(); // 초기화
 
-							var message = "";
-							message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
+              var message = "";
+              message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
             result.data.totalItem+" ; "+
             result.data.totalSuccess+" ; "+
             result.data.totalFail+"' htmlEscape='false' argumentSeparator=';' />";
 
-							Common
-									.confirm(
-											message,
-											function() {
-												var ctrlId = AUIGrid
-														.getCellValue(
-																myGridID,
-																selectedGridValue,
-																"ctrlId");
+              Common
+                  .confirm(
+                      message,
+                      function() {
+                        var ctrlId = AUIGrid
+                            .getCellValue(
+                                myGridID,
+                                selectedGridValue,
+                                "ctrlId");
 
-												//param data array
-												var data = {};
-												data.form = [ {
-													"ctrlId" : ctrlId,
-													"ctrlIsCrc" : ctrlIsCrc,
-													"bankId" : bankId
-												} ];
+                        //param data array
+                        var data = {};
+                        data.form = [ {
+                          "ctrlId" : ctrlId,
+                          "ctrlIsCrc" : ctrlIsCrc,
+                          "bankId" : bankId
+                        } ];
 
-												//CALIM RESULT UPDATE
-												if (updateResultItemKind == 'LIVE') {
-													Common
-															.ajax(
-																	"POST",
-																	"/payment/updateClaimResultLive.do",
-																	data,
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
-																	},
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
-																	});
-												}
+                        //CALIM RESULT UPDATE
+                        if (updateResultItemKind == 'LIVE') {
+                          Common
+                              .ajax(
+                                  "POST",
+                                  "/payment/updateClaimResultLive.do",
+                                  data,
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
+                                  },
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimUpdateFail'/>");
+                                  });
+                        }
 
-												//CALIM RESULT UPDATE NEXT DAY
-												if (updateResultItemKind == 'NEXT') {
-													Common
-															.ajax(
-																	"POST",
-																	"/payment/updateClaimResultNextDay.do",
-																	data,
-																	function(
-																			result) {
-																		var resultMsg = "";
-																		resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
+                        //CALIM RESULT UPDATE NEXT DAY
+                        if (updateResultItemKind == 'NEXT') {
+                          Common
+                              .ajax(
+                                  "POST",
+                                  "/payment/updateClaimResultNextDay.do",
+                                  data,
+                                  function(
+                                      result) {
+                                    var resultMsg = "";
+                                    resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
 
-																		Common
-																				.alert(resultMsg);
-																	},
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
-																	});
-												}
-											});
-						}, function(jqXHR, textStatus, errorThrown) {
-							try {
-								console.log("status : " + jqXHR.status);
-								console
-										.log("code : "
-												+ jqXHR.responseJSON.code);
-								console.log("message : "
-										+ jqXHR.responseJSON.message);
-								console.log("detailMessage : "
-										+ jqXHR.responseJSON.detailMessage);
-							} catch (e) {
-								console.log(e);
-							}
-							Common
-									.alert("Fail : "
-											+ jqXHR.responseJSON.message);
-						});
+                                    Common
+                                        .alert(resultMsg);
+                                  },
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
+                                  });
+                        }
+                      });
+            }, function(jqXHR, textStatus, errorThrown) {
+              try {
+                console.log("status : " + jqXHR.status);
+                console
+                    .log("code : "
+                        + jqXHR.responseJSON.code);
+                console.log("message : "
+                    + jqXHR.responseJSON.message);
+                console.log("detailMessage : "
+                    + jqXHR.responseJSON.detailMessage);
+              } catch (e) {
+                console.log(e);
+              }
+              Common
+                  .alert("Fail : "
+                      + jqXHR.responseJSON.message);
+            });
 
-	}
+  }
 
-	//Result Update Pop-UP 에서 Upload 버튼 클릭시 처리
-	function fn_resultFileUp() {
+  //Result Update Pop-UP 에서 Upload 버튼 클릭시 처리
+  function fn_resultFileUp() {
 
-		var ctrlId = AUIGrid
-				.getCellValue(myGridID, selectedGridValue, "ctrlId");
-		var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue,
-				"ctrlIsCrc");
-		var bankId = AUIGrid
-				.getCellValue(myGridID, selectedGridValue, "bankId");
+    var ctrlId = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "ctrlId");
+    var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue,
+        "ctrlIsCrc");
+    var bankId = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "bankId");
 
-		//param data array
-		var data = {};
-		var gridList = AUIGrid.getGridData(updResultGridID); //그리드 데이터
+    //param data array
+    var data = {};
+    var gridList = AUIGrid.getGridData(updResultGridID); //그리드 데이터
 
-		//array에 담기
-		if (gridList.length > 0) {
-			data.all = gridList;
-		} else {
-			Common
-					.alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
-			return;
-			//data.all = [];
-		}
+    //array에 담기
+    if (gridList.length > 0) {
+      data.all = gridList;
+    } else {
+      Common
+          .alert("<spring:message code='pay.alert.claimSelectCsvFile'/>");
+      return;
+      //data.all = [];
+    }
 
-		//form객체 담기
-		data.form = [ {
-			"ctrlId" : ctrlId,
-			"ctrlIsCrc" : ctrlIsCrc,
-			"bankId" : bankId
-		} ];
+    //form객체 담기
+    data.form = [ {
+      "ctrlId" : ctrlId,
+      "ctrlIsCrc" : ctrlIsCrc,
+      "bankId" : bankId
+    } ];
 
-		//Ajax 호출
-		Common
-				.ajax(
-						"POST",
-						"/payment/updateClaimResultItem.do",
-						data,
-						function(result) {
-							resetUpdatedItems(); // 초기화
+    //Ajax 호출
+    Common
+        .ajax(
+            "POST",
+            "/payment/updateClaimResultItem.do",
+            data,
+            function(result) {
+              resetUpdatedItems(); // 초기화
 
-							var message = "";
-							message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
-	    	result.data.totalItem+" ; "+
-	    	result.data.totalSuccess+" ; "+
-	    	result.data.totalFail+"' htmlEscape='false' argumentSeparator=';' />";
+              var message = "";
+              message += "<spring:message code='pay.alert.updateClaimResultItem' arguments='"+result.data.ctrlId+" ; "+
+        result.data.totalItem+" ; "+
+        result.data.totalSuccess+" ; "+
+        result.data.totalFail+"' htmlEscape='false' argumentSeparator=';' />";
 
-							Common
-									.confirm(
-											message,
-											function() {
-												var ctrlId = AUIGrid
-														.getCellValue(
-																myGridID,
-																selectedGridValue,
-																"ctrlId");
+              Common
+                  .confirm(
+                      message,
+                      function() {
+                        var ctrlId = AUIGrid
+                            .getCellValue(
+                                myGridID,
+                                selectedGridValue,
+                                "ctrlId");
 
-												//param data array
-												var data = {};
-												data.form = [ {
-													"ctrlId" : ctrlId,
-													"ctrlIsCrc" : ctrlIsCrc,
-													"bankId" : bankId
-												} ];
+                        //param data array
+                        var data = {};
+                        data.form = [ {
+                          "ctrlId" : ctrlId,
+                          "ctrlIsCrc" : ctrlIsCrc,
+                          "bankId" : bankId
+                        } ];
 
-												//CALIM RESULT UPDATE
-												if (updateResultItemKind == 'LIVE') {
-													Common
-															.ajax(
-																	"POST",
-																	"/payment/updateClaimResultLive.do",
-																	data,
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
-																	},
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimUpdateFail'/>");
-																	});
-												}
-												//CALIM RESULT UPDATE NEXT DAY
-												if (updateResultItemKind == 'NEXT') {
-													Common
-															.ajax(
-																	"POST",
-																	"/payment/updateClaimResultNextDay.do",
-																	data,
-																	function(
-																			result) {
-																		var resultMsg = "";
-																		resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
+                        //CALIM RESULT UPDATE
+                        if (updateResultItemKind == 'LIVE') {
+                          Common
+                              .ajax(
+                                  "POST",
+                                  "/payment/updateClaimResultLive.do",
+                                  data,
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimUpdateSuccess'/>");
+                                  },
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimUpdateFail'/>");
+                                  });
+                        }
+                        //CALIM RESULT UPDATE NEXT DAY
+                        if (updateResultItemKind == 'NEXT') {
+                          Common
+                              .ajax(
+                                  "POST",
+                                  "/payment/updateClaimResultNextDay.do",
+                                  data,
+                                  function(
+                                      result) {
+                                    var resultMsg = "";
+                                    resultMsg += "<spring:message code='pay.alert.claimResultNextDay'/>";
 
-																		Common
-																				.alert(resultMsg);
-																	},
-																	function(
-																			result) {
-																		Common
-																				.alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
-																	});
-												}
-											});
-						}, function(jqXHR, textStatus, errorThrown) {
-							try {
-								console.log("status : " + jqXHR.status);
-								console
-										.log("code : "
-												+ jqXHR.responseJSON.code);
-								console.log("message : "
-										+ jqXHR.responseJSON.message);
-								console.log("detailMessage : "
-										+ jqXHR.responseJSON.detailMessage);
-							} catch (e) {
-								console.log(e);
-							}
-							alert("Fail : " + jqXHR.responseJSON.message);
-						});
-	}
+                                    Common
+                                        .alert(resultMsg);
+                                  },
+                                  function(
+                                      result) {
+                                    Common
+                                        .alert("<spring:message code='pay.alert.claimResultNextDayFail'/>");
+                                  });
+                        }
+                      });
+            }, function(jqXHR, textStatus, errorThrown) {
+              try {
+                console.log("status : " + jqXHR.status);
+                console
+                    .log("code : "
+                        + jqXHR.responseJSON.code);
+                console.log("message : "
+                    + jqXHR.responseJSON.message);
+                console.log("detailMessage : "
+                    + jqXHR.responseJSON.detailMessage);
+              } catch (e) {
+                console.log(e);
+              }
+              alert("Fail : " + jqXHR.responseJSON.message);
+            });
+  }
 
-	//그리드 초기화.
-	function resetUpdatedItems() {
-		AUIGrid.resetUpdatedItems(updResultGridID, "a");
-	}
+  //그리드 초기화.
+  function resetUpdatedItems() {
+    AUIGrid.resetUpdatedItems(updResultGridID, "a");
+  }
 
-	//NEW CLAIM Pop-UP 에서 Generate Claim 처리
-	function fn_genClaim() {
+  //NEW CLAIM Pop-UP 에서 Generate Claim 처리
+  function fn_genClaim() {
 
-		if ($("#new_claimType option:selected").val() == '') {
-			Common.alert("<spring:message code='pay.alert.selectClaimType'/>");
-			return;
-		} else {
+    if ($("#new_claimType option:selected").val() == '') {
+      Common.alert("<spring:message code='pay.alert.selectClaimType'/>");
+      return;
+    } else {
 
-			if ($("#new_claimType option:selected").val() == "131"
-					|| $("#new_claimType option:selected").val() == "134") {
-				if ($("#new_claimDay option:selected").val() == '') {
-					Common
-							.alert("<spring:message code='pay.alert.selectClaimDay'/>");
-					return;
-				}
-			}
-			if ($("#new_claimType option:selected").val() == "131") {
-				if ($("#new_cardType option:selected").val() == '') {
-					Common.alert(" * Please select card type.");
-					return;
-				}
+      if ($("#new_claimType option:selected").val() == "131"
+          || $("#new_claimType option:selected").val() == "134") {
+        if ($("#new_claimDay option:selected").val() == '') {
+          Common
+              .alert("<spring:message code='pay.alert.selectClaimDay'/>");
+          return;
+        }
+      }
+      if ($("#new_claimType option:selected").val() == "131") {
+        if ($("#new_cardType option:selected").val() == '') {
+          Common.alert(" * Please select card type.");
+          return;
+        }
 
-				if ($("#new_issueBank option:selected").val() == '') {
-					Common
-							.alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
-					return;
-				}
-			} else if ($("#new_claimType option:selected").val() == "132") {
-				if ($("#new_issueBank option:selected").val() == '') {
-					Common
-							.alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
-					return;
-				}
-				if ($("#new_ddtChnl option:selected").val() == '') {
-					Common
-							.alert("<spring:message code='pay.alert.selectClaimDdtChnl'/>");
-					return;
-				}
-			}
-		}
+        if ($("#new_issueBank option:selected").val() == '') {
+          Common
+              .alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
+          return;
+        }
+      } else if ($("#new_claimType option:selected").val() == "132") {
+        if ($("#new_issueBank option:selected").val() == '') {
+          Common
+              .alert("<spring:message code='pay.alert.selectClaimIssueBank'/>");
+          return;
+        }
+        if ($("#new_ddtChnl option:selected").val() == '') {
+          Common
+              .alert("<spring:message code='pay.alert.selectClaimDdtChnl'/>");
+          return;
+        }
+      }
+    }
 
-		if ($("#new_debitDate").val() == '') {
-			Common.alert("<spring:message code='pay.alert.insertDate'/>");
-			return;
-		}
+    if ($("#new_debitDate").val() == '') {
+      Common.alert("<spring:message code='pay.alert.insertDate'/>");
+      return;
+    }
 
-		//저장 처리
-		var data = {};
-		var formList = $("#newForm").serializeArray(); //폼 데이터
+    //저장 처리
+    var data = {};
+    var formList = $("#newForm").serializeArray(); //폼 데이터
 
-		if (formList.length > 0)
-			data.form = formList;
-		else
-			data.form = [];
+    if (formList.length > 0)
+      data.form = formList;
+    else
+      data.form = [];
 
-		Common
-				.ajax(
-						"POST",
-						"/payment/generateNewClaim.do",
-						data,
-						function(result) {
-							var message = "";
+    Common
+        .ajax(
+            "POST",
+            "/payment/generateNewClaim.do",
+            data,
+            function(result) {
+              var message = "";
 
-							if (result.code == "IS_BATCH") {
-								message += "<spring:message code='pay.alert.claimIsBatch' arguments='"+result.data.ctrlId+" ; "+
-		        	 result.data.crtUserName+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
+              if (result.code == "IS_BATCH") {
+                message += "<spring:message code='pay.alert.claimIsBatch' arguments='"+result.data.ctrlId+" ; "+
+               result.data.crtUserName+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
 
-							} else if (result.code == "FILE_OK") {
-								message += "<spring:message code='pay.alert.claimFileOk' arguments='"+result.data.ctrlId+" ; "+result.data.ctrlBillAmt+" ; "+result.data.ctrlTotItm+" ; "+
+              } else if (result.code == "FILE_OK") {
+                message += "<spring:message code='pay.alert.claimFileOk' arguments='"+result.data.ctrlId+" ; "+result.data.ctrlBillAmt+" ; "+result.data.ctrlTotItm+" ; "+
                      result.data.crtUserId+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
 
-							} else if (result.code == "FILE_FAIL") {
-								message += "<spring:message code='pay.alert.claimFileFail' arguments='"+result.data.ctrlId+" ; "+result.data.ctrlBillAmt+" ; "+result.data.ctrlTotItm+" ; "+
+              } else if (result.code == "FILE_FAIL") {
+                message += "<spring:message code='pay.alert.claimFileFail' arguments='"+result.data.ctrlId+" ; "+result.data.ctrlBillAmt+" ; "+result.data.ctrlTotItm+" ; "+
                      result.data.crtUserId+" ; "+result.data.crtDt+"' htmlEscape='false' argumentSeparator=';' />";
 
-							} else {
-								message += "<spring:message code='pay.alert.generateFailClaimBatch'/>";
-							}
+              } else {
+                message += "<spring:message code='pay.alert.generateFailClaimBatch'/>";
+              }
 
-							Common.alert("<b>" + message + "</b>");
-						},
-						function(result) {
-							Common
-									.alert("<spring:message code='pay.alert.generateFailClaimBatch'/>");
-						});
-	}
+              Common.alert("<b>" + message + "</b>");
+            },
+            function(result) {
+              Common
+                  .alert("<spring:message code='pay.alert.generateFailClaimBatch'/>");
+            });
+  }
 
-	//NEW CLAIM Pop-UP 에서 Generate Claim 처리
-	function fn_createFile() {
+  //NEW CLAIM Pop-UP 에서 Generate Claim 처리
+  function fn_createFile() {
 
-		var ctrlId = AUIGrid
-				.getCellValue(myGridID, selectedGridValue, "ctrlId");
+    var ctrlId = AUIGrid
+        .getCellValue(myGridID, selectedGridValue, "ctrlId");
 
-		//param data array
-		var data = {};
-		data.form = [ {
-			"ctrlId" : ctrlId
-		} ];
+    //param data array
+    var data = {};
+    data.form = [ {
+      "ctrlId" : ctrlId
+    } ];
 
-		Common
-				.ajax(
-						"POST",
-						"/payment/createClaimFile.do",
-						data,
-						function(result) {
-							Common
-									.alert("<spring:message code='pay.alert.claimSucessCreate'/>");
+    Common
+        .ajax(
+            "POST",
+            "/payment/createClaimFile.do",
+            data,
+            function(result) {
+              Common
+                  .alert("<spring:message code='pay.alert.claimSucessCreate'/>");
 
-						},
-						function(result) {
-							Common
-									.alert("<spring:message code='pay.alert.claimFailGenFile'/>");
-						});
+            },
+            function(result) {
+              Common
+                  .alert("<spring:message code='pay.alert.claimFailGenFile'/>");
+            });
 
-	}
+  }
 
-	function fn_clear() {
-		$("#searchForm")[0].reset();
-	}
+  function fn_clear() {
+    $("#searchForm")[0].reset();
+  }
 
-	//**************************************************
-	//**************************************************
-	// Schedule Claim Batch 관련 Script
-	//**************************************************
-	//**************************************************
-	// Schedule Claim Batch 팝업
-	function fn_openDivScheduleBatchPop() {
-		Common.popupWin("searchForm", "/payment/initScheduleClaimBatchPop.do",
-				{
-					width : "1200px",
-					height : "550",
-					resizable : "no",
-					scrollbars : "no"
-				});
-	}
+  //**************************************************
+  //**************************************************
+  // Schedule Claim Batch 관련 Script
+  //**************************************************
+  //**************************************************
+  // Schedule Claim Batch 팝업
+  function fn_openDivScheduleBatchPop() {
+    Common.popupWin("searchForm", "/payment/initScheduleClaimBatchPop.do",
+        {
+          width : "1200px",
+          height : "550",
+          resizable : "no",
+          scrollbars : "no"
+        });
+  }
 
-	// Schedule Claim Batch Setting 팝업
-	function fn_openDivScheduleSettingPop() {
-		Common.popupWin("searchForm",
-				"/payment/initScheduleClaimSettingPop.do", {
-					width : "1200px",
-					height : "550",
-					resizable : "no",
-					scrollbars : "no"
-				});
-	}
+  // Schedule Claim Batch Setting 팝업
+  function fn_openDivScheduleSettingPop() {
+    Common.popupWin("searchForm",
+        "/payment/initScheduleClaimSettingPop.do", {
+          width : "1200px",
+          height : "550",
+          resizable : "no",
+          scrollbars : "no"
+        });
+  }
 
-	//Generation File Download 팝업
-	function fn_openDivPopDown() {
+  //Generation File Download 팝업
+  function fn_openDivPopDown() {
 
-		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
+    var selectedItem = AUIGrid.getSelectedIndex(myGridID);
 
-		if (selectedItem[0] > -1) {
+    if (selectedItem[0] > -1) {
 
-			var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue,
-					"ctrlId");
-			var ctrlStusId = AUIGrid.getCellValue(myGridID, selectedGridValue,
-					"ctrlStusId");
-			var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue,
-					"stusName");
+      var ctrlId = AUIGrid.getCellValue(myGridID, selectedGridValue,
+          "ctrlId");
+      var ctrlStusId = AUIGrid.getCellValue(myGridID, selectedGridValue,
+          "ctrlStusId");
+      var stusName = AUIGrid.getCellValue(myGridID, selectedGridValue,
+          "stusName");
 
-			if (ctrlStusId != 1) {
-				Common
-						.alert("<spring:message code='pay.alert.claimFile' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
-			} else {
-				Common.popupDiv('/payment/initClaimFileDownPop.do', {
-					"ctrlId" : ctrlId
-				}, null, true, '_claimFileDownPop');
-			}
-		} else {
-			Common.alert("<spring:message code='pay.alert.noClaim'/>");
-		}
-	}
+      if (ctrlStusId != 1) {
+        Common
+            .alert("<spring:message code='pay.alert.claimFile' arguments='"+ctrlId+" ; "+stusName+"' htmlEscape='false' argumentSeparator=';' />");
+      } else {
+        Common.popupDiv('/payment/initClaimFileDownPop.do', {
+          "ctrlId" : ctrlId
+        }, null, true, '_claimFileDownPop');
+      }
+    } else {
+      Common.alert("<spring:message code='pay.alert.noClaim'/>");
+    }
+  }
 </script>
 <!-- content start -->
 <section id="content">
@@ -1776,7 +1776,7 @@
                            <div class="auto_file">
                                <input type="file" id="fileSelector" title="file add" accept=".csv" />
                            </div>
-						   --> <!-- auto_file end -->
+               --> <!-- auto_file end -->
         <div class="auto_file">
          <!-- auto_file start -->
          <input type="file" title="file add" id="uploadfile"
