@@ -1803,37 +1803,9 @@ console.log("vBindingNo" + vBindingNo);
         if ($("#compType option:selected").val() != undefined){
           console.log($("#compType option").length);
           if($("#compType option").length > 1) {
-        	if ($("#compType option:selected").index() <= 0) {
-        	  isValid = false;
+            if ($("#compType option:selected").index() <= 0) {
+              isValid = false;
               msg += '* <spring:message code="sal.alert.msg.plzSelAddCmpt" /><br>';
-            }
-
-        	// TEMP.
-        	var today = new Date();
-            var dd = today.getDate();
-            var mm = today.getMonth() +1;
-            var yyyy = today.getFullYear();
-
-            if (yyyy == '2018') {
-              if (mm <= '12') {
-                if (dd <= '22') {
-                  if (appTypeVal == '66' || appTypeVal == '67' || appTypeVal == '68') {
-                    if ($('#compType').val() == '3' || $('#compType').val() == '4') {
-                      if ($('#ordPromo').val() != '31810' && $('#ordPromo').val() != '31811' && $('#ordPromo').val() != '31814' && $('#ordPromo').val() != '31813' && $('#ordPromo').val() != '31812'
-                    		  && $('#ordPromo').val() != '31815' && $('#ordPromo').val() != '31816' && $('#ordPromo').val() != '31817'
-                    		  && $('#ordPromo').val() != '31716' && $('#ordPromo').val() != '31715' && $('#ordPromo').val() != '31730' && $('#ordPromo').val() != '31729' && $('#ordPromo').val() != '31728') {
-                	    isValid = false;
-                		msg += '* <spring:message code="sal.alert.msg.plzSelPromoCde" /><br>';
-                	  }
-                	} else if ($('#compType').val() == '1' || $('#compType').val() == '2') {
-                	  if ($('#ordPromo').val() != '31736' && $('#ordPromo').val() != '31723') {
-                	    isValid = false;
-                	    msg += '* <spring:message code="sal.alert.msg.plzSelPromoCde" /><br>';
-                	  }
-                    }
-                  }
-                }
-              }
             }
           }
         }
@@ -2141,6 +2113,7 @@ console.log("vBindingNo" + vBindingNo);
                 $("#accBranch").val(rsltInfo.custAccBankBrnch);
                 $("#accBank").val(rsltInfo.bankCode + ' - ' + rsltInfo.bankName);
                 $("#hiddenAccBankId").val(rsltInfo.custAccBankId);
+                $("#ddcChl").val(rsltInfo.ddtChnl);
             }
         });
     }
@@ -3108,9 +3081,13 @@ console.log("vBindingNo" + vBindingNo);
     <td><input id="accBranch" name="accBranch" type="text" title="" placeholder="Issue Bank Branch" class="w100p readonly" readonly/></td>
 </tr>
 <tr>
+    <spring:message code="sal.text.ddcChnl" var="ddcChnl"/> <!-- DEDUCTION CHANNEL -->
+    <th scope="row">${ddcChnl}</th>
+    <td><input id="ddcChl" name="ddcChl" type="text" title="" placeholder="${ddcChnl}" class="w100p readonly" readonly />
+    <input id="hiddenAccBankId" name="hiddenDdcChl" type="hidden" /></td>
     <th scope="row"><spring:message code="sal.text.issueBank" /></th>
-    <td colspan=3><input id="accBank" name="accBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly/>
-        <input id="hiddenAccBankId" name="hiddenAccBankId" type="hidden" /></td>
+    <td><input id="accBank" name="accBank" type="text" title="" placeholder="Issue Bank" class="w100p readonly" readonly />
+    <input id="hiddenAccBankId" name="hiddenAccBankId" type="hidden" /></td>
 </tr>
 </tbody>
 </table><!-- table end -->
