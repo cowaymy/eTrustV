@@ -269,4 +269,6 @@ public interface ClaimMapper {
   List<EgovMap> selectClmStat(Map<String, Object> params);
 
   List<EgovMap> selectListing(Map<String, Object> params);
+
+  List<EgovMap> selectAccBank(Map<String, Object> params);
 }
