@@ -23,6 +23,7 @@ public class ClaimFileBSNHandler extends BasicTextDownloadHandler implements Res
 	String sorigid = "";
 	String todayDate = "";
 	String sorgacc = "";
+	String inputDate = "";
 
 	// 본문 작성을 위한 변수
 	int counter = 1;
@@ -73,16 +74,17 @@ public class ClaimFileBSNHandler extends BasicTextDownloadHandler implements Res
 		try {
     		sorigid = "M4743600";
     		todayDate = CommonUtils.changeFormat(CommonUtils.getNowDate(), "yyyyMMdd", "yyyy-MM-dd");
+    		inputDate = CommonUtils.nvl(params.get("ctrlBatchDt")).equals("") ? "1900-01-01" : (String) params.get("ctrlBatchDt");
     		//senrdate = CommonUtils.getNowDate();;
     		sorgacc = "1410029000510851";
     		//sText = sorigid + CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd") + "29755" + "0000000" + sorgacc + StringUtils.leftPad("", 76, " ");
-    		sText = sorigid + CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 0, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd") + "29755" + "0000000" + sorgacc + StringUtils.leftPad("", 76, " ");
+    		sText = sorigid + CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd") + "29755" + "0000000" + sorgacc + StringUtils.leftPad("", 76, " ");
     		out.write(sText);
     		out.newLine();
     		out.flush();
 
     		LOGGER.debug("write Header complete.....");
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -117,13 +119,15 @@ public class ClaimFileBSNHandler extends BasicTextDownloadHandler implements Res
 
 
     		if ((String.valueOf(dataRow.get("bankDtlDrNric"))).trim().length() == 12) {
-    			stextDetails = sorigid + CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd") + "29755" + StringUtils.leftPad(String.valueOf(counter), 7, "0")
-    									+ sLimit + sDrAccNo + "A100" + StringUtils.rightPad("", 4, " ") + sDocno
-    									+ StringUtils.rightPad("", 12, " ") + sNRIC + StringUtils.rightPad("", 8, " ") + " ";
+    			//CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd")
+    			stextDetails = sorigid + CommonUtils.changeFormat(String.valueOf(dataRow.get("bankDtlDrDt")), "yyyy-MM-dd", "yyyyMMdd") + "29755" + StringUtils.leftPad(String.valueOf(counter), 7, "0")
+				+ sLimit + sDrAccNo + "A100" + StringUtils.rightPad("", 4, " ") + sDocno
+				+ StringUtils.rightPad("", 12, " ") + sNRIC + StringUtils.rightPad("", 8, " ") + " ";
     		} else {
-    			stextDetails = sorigid + CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd") + "29755" + StringUtils.leftPad(String.valueOf(counter), 7, "0")
-    					+ sLimit + sDrAccNo + "A100" + StringUtils.rightPad("", 4, " ") + sDocno
-    					+ StringUtils.rightPad("", 12, " ") + StringUtils.rightPad("", 12, " ") + sMNric + " ";
+    			//CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd")
+    			stextDetails = sorigid + CommonUtils.changeFormat(String.valueOf(dataRow.get("bankDtlDrDt")), "yyyy-MM-dd", "yyyyMMdd") + "29755" + StringUtils.leftPad(String.valueOf(counter), 7, "0")
+				+ sLimit + sDrAccNo + "A100" + StringUtils.rightPad("", 4, " ") + sDocno
+				+ StringUtils.rightPad("", 12, " ") + StringUtils.rightPad("", 12, " ") + sMNric + " ";
     		}
 
     		iHashTot = iHashTot + Long.parseLong(CommonUtils.right(sDrAccNo.trim(), 4));
@@ -134,7 +138,7 @@ public class ClaimFileBSNHandler extends BasicTextDownloadHandler implements Res
 
     		counter = counter + 1;
     		iTotalCnt++;
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -144,7 +148,7 @@ public class ClaimFileBSNHandler extends BasicTextDownloadHandler implements Res
 		try {
     		fText = sorigid +
     				//CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 1, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd")
-    				CommonUtils.changeFormat(CommonUtils.getAddDay(todayDate, 0, "yyyy-MM-dd"), "yyyy-MM-dd", "yyyyMMdd")
+    				CommonUtils.changeFormat(inputDate, "yyyy-MM-dd", "yyyyMMdd")
     					+ "29755" + "9999999" + StringUtils.leftPad(String.valueOf(iTotalAmt), 15, "0")
     					+ StringUtils.leftPad(String.valueOf(iTotalCnt + 2), 9, "0")
     					+ StringUtils.leftPad(String.valueOf(iHashTot % 10000), 4, "0") + StringUtils.rightPad("", 64, " ");
@@ -152,7 +156,7 @@ public class ClaimFileBSNHandler extends BasicTextDownloadHandler implements Res
     		out.write(fText);
     		out.newLine();
     		out.flush();
-		} catch (ParseException e) {
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
