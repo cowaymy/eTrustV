@@ -10,7 +10,7 @@ var invoiceTypeData = [{"codeId": "1","codeName": "Outright Invoice"},
                        {"codeId": "117","codeName": "HP Registration Invoice"},
                        {"codeId": "118","codeName": "AS Invoice"},
                        {"codeId": "119","codeName": "Service Membership Invoice"},
-                       {"codeId": "121","codeName": "POS Invoice"},
+                       {"codeId": "142","codeName": "POS Invoice"},
                        {"codeId": "122","codeName": "Item Bank Invoice"},
                        {"codeId": "123","codeName": "WholeSales Invoice"},
                        {"codeId": "124","codeName": "Product Lost Invoice"},
@@ -18,7 +18,7 @@ var invoiceTypeData = [{"codeId": "1","codeName": "Outright Invoice"},
                        ];
 
 //AUIGrid 칼럼 설정
-var searchInvoicePopLayout = [   
+var searchInvoicePopLayout = [
     { dataField:"taxInvcId" ,headerText:"<spring:message code='pay.head.taxInvoiceId'/>",width: 100 , editable : false ,visible : false},
     { dataField:"taxInvcType" ,headerText:"<spring:message code='pay.head.taxInvoiceType'/>",width: 100 , editable : false ,visible : false},
     { dataField:"month" ,headerText:"<spring:message code='pay.head.month'/>", editable : false ,visible : false},
@@ -41,39 +41,39 @@ var searchInvoicePopLayout = [
             }
         }
       }
-    
+
     ];
-    
+
 //화면 초기화 함수 (jQuery 의 $(document).ready(function() {}); 과 같은 역할을 합니다.
-$(document).ready(function(){    
+$(document).ready(function(){
     //메인 페이지
     doDefCombo(invoiceTypeData, '' ,'invoiceType', 'S', '');        //Claim Type 생성
-    
-    //Grid Properties 설정 
-    var gridPros = {            
+
+    //Grid Properties 설정
+    var gridPros = {
             editable : false,                 // 편집 가능 여부 (기본값 : false)
             showStateColumn : false     // 상태 칼럼 사용
     };
-    
+
     // Order 정보 (Master Grid) 그리드 생성
     searchInvoicePopGridID = GridCommon.createAUIGrid("grid_invoicePop_wrap", searchInvoicePopLayout,null,gridPros);
-   
+
 });
 
 //리스트 조회.
-function fn_getInvoiceListAjax() {   
+function fn_getInvoiceListAjax() {
 	if(FormUtil.checkReqValue($("#invoiceType option:selected")) ){
 		Common.alert("<spring:message code='pay.alert.selectInvoiceType'/>");
 		return;
 	}
-	
+
 	if(FormUtil.checkReqValue($("#_invoicePopForm #invoiceNo")) &&
 			FormUtil.checkReqValue($("#_invoicePopForm #serviceNo")) &&
 			FormUtil.checkReqValue($("#_invoicePopForm #orderNo"))){
         Common.alert("<spring:message code='pay.alert.invoiceNoOrOrderNoOrServiceNo'/>");
         return;
     }
-	
+
 	Common.ajax("POST", "/payment/common/selectCommonSearchInvoicePop.do", $("#_invoicePopForm ").serializeJSON(), function(result) {
 		AUIGrid.setGridData(searchInvoicePopGridID, result);
 	});
@@ -123,14 +123,14 @@ function fn_getInvoiceListAjax() {
                     </tr>
                     <tr>
                         <th scope="row">Customer Name</th>
-                        <td colspan="3"><input type="text" id="customerName" name="customerName" title="Customer Name" placeholder="Customer Name" class="w100p" /></td>                            
-                    </tr>                 
+                        <td colspan="3"><input type="text" id="customerName" name="customerName" title="Customer Name" placeholder="Customer Name" class="w100p" /></td>
+                    </tr>
                 </tbody>
             </table>
             <!-- table end -->
         </form>
         <!--Form End  -->
-        
+
         <!-- search_result start -->
         <section class="search_result">
             <!-- grid_wrap start -->
