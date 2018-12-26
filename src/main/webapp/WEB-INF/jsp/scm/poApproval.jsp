@@ -46,6 +46,7 @@ $(function() {
 	fnScmTotalPeriod();
 	//fnScmYearCbBox();
 	//fnScmWeekCbBox();
+	fnScmCdcCbBox();
 	fnScmStockCategoryCbBox();
 	fnScmStockTypeCbBox();
 });
@@ -131,6 +132,20 @@ function fnScmWeekCbBoxThis() {
 				id : "id",
 				name : "name",
 				chooseMessage : "Select a Year"
+			}
+			, "");
+}
+
+//	Cdc
+function fnScmCdcCbBox() {
+	CommonCombo.make("scmCdcCbBox"
+			, "/scm/selectScmCdc.do"
+			, ""
+			, ""
+			, {
+				id : "id",
+				name : "name",
+				chooseMessage : "Select a CDC"
 			}
 			, "");
 }
@@ -429,7 +444,7 @@ var poApprTargetGridLayout =
 		}
 	 ];
 
-//footer
+//	footer
 var poSummaryGridFooterLayout	=
 	[
 		{
@@ -771,6 +786,13 @@ $(document).ready(function() {
 						<select class="sel_date" id="scmWeekCbBox" name="scmWeekCbBox"></select>
 					</div><!-- date_set end -->
 				</td>
+				<th scope="row">CDC</th>
+				<td>
+					<select class="w100p" id="scmCdcCbBox" name="scmCdcCbBox"></select>
+				</td>
+				<td colspan="2"></td>
+			</tr>
+			<tr>
 				<th scope="row">Stock Type</th>
 				<td>
 					<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
@@ -779,6 +801,7 @@ $(document).ready(function() {
 				<td>
 					<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
 				</td>
+				<td colspan="2"></td>
 			</tr>
 		</tbody>
 	</table><!-- table end -->

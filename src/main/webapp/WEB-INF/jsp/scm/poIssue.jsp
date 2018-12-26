@@ -85,6 +85,7 @@
 	background : #FFCCFF;
 	color : #d3825c;
 }
+
 </style>
 
 <script type="text/javaScript">
@@ -254,6 +255,27 @@ function fnScmStockTypeCbBox() {
 var poTargetListLayout	= [];
 var poTargetListLayoutOptions	= {};
 
+var poCreateListFooterLayout	=
+	[
+		{
+			labelText : "Total",
+			positionField : "type"
+		}, {
+			dataField : "planQty",
+			positionField : "planQty",
+			operation : "SUM",
+			formatString : "#,##0",
+			width : 200,
+			style : "aui-grid-right-column"
+		}, {
+			dataField : "poQty",
+			positionField : "poQty",
+			operation : "SUM",
+			formatString : "#,##0",
+			width : 200,
+			style : "aui-grid-right-column"
+		}
+	 ];
 var poCreateListLayout	=
 	[
 		{
@@ -372,14 +394,22 @@ var poCreateListLayout	=
 var poCreatedListFooterLayout	=
 	[
 		{
-			labelText : "SUM:",
-			positionField : "fobPrice"
+			labelText : "Total",
+			positionField : "type"
 		}, {
 			dataField : "fobAmt",
-			positionField : "fobAmount",
+			positionField : "fobAmt",
 			operation : "SUM",
-			formatString : "#,##0.0000",
-			width : 200
+			formatString : "#,##0",
+			width : 200,
+			style : "aui-grid-right-column"
+		}, {
+			dataField : "poQty",
+			positionField : "poQty",
+			operation : "SUM",
+			formatString : "#,##0",
+			width : 200,
+			style : "aui-grid-right-column"
 		}
 	 ];
 var poCreatedListLayout	=
@@ -744,6 +774,106 @@ function fnSetPlanQty(list) {
 		list[i].planQty	= parseInt(planQty1) + parseInt(planQty2);
 	}
 }
+function fnMoveStockGroup() {
+	var planQtyTh	= 0;
+	var planQty		= 0;
+	var issQty		= 0;
+	var poQty		= 0;
+	var fobPrc		= 0;
+	var fobAmt		= 0;
+	var stockCode	= 0;
+	var list		= AUIGrid.getCheckedRowItemsAll(myGridID);
+	
+	for ( var i = 0 ; i < list.length ; i++ ) {
+		stockCode	= list[i].stockCode;
+		planQty	= list[i].planQty;
+		issQty	= list[i].poQty;
+		
+		console.log("stockCode : " + stockCode);
+		var rows	= AUIGrid.getRowsByValue(myGridID2, "stockCode", stockCode);
+		//	stockCode check
+		if ( 0 < rows.length ) {
+			Common.alert("This(" + stockCode + ") Stock is already moved");
+			//AUIGrid.clearGridData(myGridID2);
+			return	false;
+		} else {
+			console.log("this stock is first move");
+		}
+		//	planQty check
+		if ( 0 == planQty ) {
+			Common.alert("This(" + stockCode + ") Stock Plan Qty is 0");
+			//AUIGrid.clearGridData(myGridID2);
+			return	false;
+		}
+		//	planQty, issQty comparison
+		if ( planQty <= issQty ) {
+			Common.alert("This(" + stockCode + ") Stock is complete to issue PO");
+			//AUIGrid.clearGridData(myGridID2);
+			return	false;
+		}
+		
+		//	poQty
+		poQty	= parseInt(planQty) - parseInt(issQty);
+		fobPrc	= AUIGrid.getCellValue(myGridID, selectedRow, "fobPrc");
+		fobAmt	= parseInt(poQty) * parseInt(fobPrc);
+		
+		//	add row myGridID2
+		var item	=
+		{
+			poYear : list[i].poYear,
+			poMonth : list[i].poMonth,
+			poWeek : list[i].poWeek,
+			cdc : list[i].cdc,
+			cdcDesc : list[i].cdcDesc,
+			planGrYear : list[i].planGrYear,
+			planGrMonth : list[i].planGrMonth,
+			planGrWeek : list[i].planGrWeek,
+			type : list[i].type,
+			stockCode : stockCode,
+			name : list[i].name,
+			poQty : poQty,
+			moq : list[i].moq,
+			fobPrc : fobPrc,
+			fobAmt : fobAmt,
+			curr : list[i].curr,
+			currName : list[i].currName,
+			vendor : list[i].vendor,
+			vendorTxt : list[i].vendorTxt,
+			purchPrc : list[i].purchPrc,
+			prcUnit : list[i].prcUnit
+		};
+		AUIGrid.addRow(myGridID2, item, "last");
+	}
+	AUIGrid.setAllCheckedRows(myGridID, false);
+	/*
+	//	add row myGridID2
+	var item	=
+		{
+			poYear : AUIGrid.getCellValue(myGridID, selectedRow, "poYear"),
+			poMonth : AUIGrid.getCellValue(myGridID, selectedRow, "poMonth"),
+			poWeek : AUIGrid.getCellValue(myGridID, selectedRow, "poWeek"),
+			cdc : AUIGrid.getCellValue(myGridID, selectedRow, "cdc"),
+			cdcDesc : AUIGrid.getCellValue(myGridID, selectedRow, "cdcDesc"),
+			planGrYear : AUIGrid.getCellValue(myGridID, selectedRow, "planGrYear"),
+			planGrMonth : AUIGrid.getCellValue(myGridID, selectedRow, "planGrMonth"),
+			planGrWeek : AUIGrid.getCellValue(myGridID, selectedRow, "planGrWeek"),
+			type : AUIGrid.getCellValue(myGridID, selectedRow, "type"),
+			stockCode : AUIGrid.getCellValue(myGridID, selectedRow, "stockCode"),
+			name : AUIGrid.getCellValue(myGridID, selectedRow, "name"),
+			poQty : poQty,
+			moq : AUIGrid.getCellValue(myGridID, selectedRow, "moq"),
+			fobPrc : fobPrc,
+			fobAmt : fobAmt,
+			curr : AUIGrid.getCellValue(myGridID, selectedRow, "curr"),
+			currName : AUIGrid.getCellValue(myGridID, selectedRow, "currName"),
+			vendor : AUIGrid.getCellValue(myGridID, selectedRow, "vendor"),
+			vendorTxt : AUIGrid.getCellValue(myGridID, selectedRow, "vendorTxt"),
+			purchPrc : AUIGrid.getCellValue(myGridID, selectedRow, "purchPrc"),
+			prcUnit : AUIGrid.getCellValue(myGridID, selectedRow, "prcUnit")
+		};
+	console.log(item);
+	AUIGrid.addRow(myGridID2, item, "last");*/
+}
 function fnMoveStock() {
 	var planQtyTh	= 0;
 	var planQty		= 0;
@@ -938,15 +1068,13 @@ function fnPoTargetGrid() {
 	poTargetListLayout	= [];
 	poTargetListLayoutOptions	= 
 	{
-		usePaging : false,
-		useGroupingPanel : false,
-		showRowNumColumn : false,
-		showStateColumn : false,
-		enableRestore : false,
-		editable : false,
-		wrapSelectionMove : true,		//	칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-		softRemovePolicy : "exceptNew",	//	사용자추가한 행은 바로 삭제
-		selectionMode : "singleRow"
+			editable : false,
+			usePaging : false,
+			showFooter : true,
+			showRowNumColumn : false,
+			showRowCheckColumn : true,
+			showStateColumn : false,
+			wrapSelectionMove : true		//	칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
 	};
 	poTargetListLayout.push(
 			{
@@ -993,38 +1121,48 @@ function fnPoTargetGrid() {
 				dataField : "typeId",
 				headerText : "Type Id",
 				visible : false
-			}, {
+			}/*, {
+				dataField : "chk",
+				headerText : "<input type='checkbox' id='allCheckBox' style='width:15px;height:15px;'>",
+				renderer : {
+					type : "CheckBoxEditRenderer",
+					showLabel : false,
+					editable : true,
+					checkValue : "1",
+					unCheckValue : "0"
+				}
+			}*/, {
 				dataField : "type",
 				headerText : "Type",
 				filter : {
 					showIcon : true
 				},
 				style : "my-columnCenter0",
-				width : "10%"
+				width : "13%"
 			}, {
 				dataField : "stockCode",
 				headerText : "Material",
 				style : "my-columnCenter0",
-				width : "10%"
+				width : "13%"
 			}, {
 				dataField : "name",
 				headerText : "Desc.",
 				style : "my-columnLeft0",
-				width : "60%"
+				width : "40%"
 			}, {
 				dataField : "planQty",
 				headerText : "Plan Qty",
 				dataType : "numeric",
 				//formatString : "#,##0",
 				style : "my-columnRight0",
-				width : "10%"
+				width : "17%"
 			}, {
 				dataField : "poQty",
 				headerText : "Issued Qty",
 				dataType : "numeric",
 				//formatString : "#,##0",
 				style : "my-columnRight0",
-				width : "10%"
+				width : "17%"
 			}, {
 				dataField : "poStusId",
 				headerText : "Po Stus Id",
@@ -1132,6 +1270,7 @@ function fnPoTargetGrid() {
 			}
 	);
 	myGridID	= GridCommon.createAUIGrid("poTargetListGridDiv", poTargetListLayout, "", poTargetListLayoutOptions);	//	create left grid
+	AUIGrid.setFooter(myGridID, poCreateListFooterLayout);
 	AUIGrid.bind(myGridID, "cellEditBegin", fnEventCellEdit);
 	AUIGrid.bind(myGridID, "cellEditEnd", fnEventCellEdit);
 	AUIGrid.bind(myGridID, "cellEditCancel", fnEventCellEdit);
@@ -1383,7 +1522,7 @@ $(document).ready(function() {
 					<div id="poCreateListGridDiv"></div>
 				</article><!-- grid_wrap end -->
 				<ul class="btns">
-					<li><a onclick="fnMoveStock();"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right.gif" alt="right" /></a></li>
+					<li><a onclick="fnMoveStockGroup();"><img src="${pageContext.request.contextPath}/resources/images/common/btn_right.gif" alt="right" /></a></li>
 				</ul>
 				<ul class="center_btns">
 					<li>
