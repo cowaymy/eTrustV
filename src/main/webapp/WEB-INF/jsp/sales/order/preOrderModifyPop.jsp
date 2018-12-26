@@ -1493,7 +1493,7 @@
 
         $('#ordProudct').removeAttr("disabled");
 
-        var stkType = $("#appType").val() == '66' ? '1' : '2';
+        var stkType = '${preOrderInfo.appTypeId}' == '66' ? '1' : '2';
         doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.itmStkId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
 
         $('#installDur').val('${preOrderInfo.instPriod}');
