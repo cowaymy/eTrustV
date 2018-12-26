@@ -93,6 +93,9 @@
             }
         });
 
+        $("#addrDtl").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+        $("#streetDtl").bind("keyup", function(){$(this).val($(this).val().toUpperCase());});
+
 	});//Document Ready Func End
 
 
