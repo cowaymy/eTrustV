@@ -988,8 +988,8 @@
             norAmt               : $('#normalOrdPrice').val().trim(),
 //            norRntFee            : $('#normalOrdRentalFees').val().trim(),
             discRntFee           : $('#ordRentalFees').val().trim(),
-//            totPv                : $('#ordPv').val().trim(),
-//            totPvGst             : $('#ordPvGST').val().trim(),
+            totPv                : $('#ordPv').val().trim(),
+            totPvGst             : $('#ordPvGST').val().trim(),
             prcId                : $('#ordPriceId').val(),
             memCode              : $('#salesmanCd').val(),
             advBill              : $('input:radio[name="advPay"]:checked').val(),
@@ -2059,14 +2059,14 @@
     <th scope="row">Special Instruction</th>
     <td><textarea id="speclInstct" name="speclInstct" cols="20" rows="5"></textarea></td>
 </tr>
-<!-- <tr>
+<tr style="display:none;">
 	<th scope="row">PV<span class="must">*</span></th>
     <td><input id="ordPv"    name="ordPv"    type="text" title="" placeholder="Point Value (PV)" class="w100p readonly" readonly />
         <input id="ordPvGST" name="ordPvGST" type="hidden" /></td>
 	<th scope="row">Discount Type /  Period (month)</th>
     <td><p><select id="promoDiscPeriodTp" name="promoDiscPeriodTp" class="w100p" disabled></select></p>
         <p><input id="promoDiscPeriod" name="promoDiscPeriod" type="text" title="" placeholder="" style="width:42px;" class="readonly" readonly/></p></td>
-</tr> -->
+</tr>
 </tbody>
 </table><!-- table end -->
 
