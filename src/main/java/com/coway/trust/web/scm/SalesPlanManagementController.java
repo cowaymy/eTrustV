@@ -53,6 +53,12 @@ public class SalesPlanManagementController {
 		return	"/scm/salesPlanManagement";
 	}
 	
+	//	view
+	@RequestMapping(value = "/salesPlanSummaryView.do")
+	public String salesPlanSummary(@RequestParam Map<String, Object> params, ModelMap model, Locale locale) {
+		return	"/scm/salesPlanSummary";
+	}
+	
 	/*
 	 * Sales Plan Manager
 	 */
@@ -176,7 +182,9 @@ public class SalesPlanManagementController {
 		planWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeek").toString());
 		befWeekYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekYear").toString());
 		befWeekWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekWeek").toString());
-		team	= params.get("scmTeamCbBox").toString();
+		if ( null != params.get("scmTeamCbBox") ) {
+			team	= params.get("scmTeamCbBox").toString();
+		}
 		
 		param1.put("planYear", planYear);
 		param1.put("planWeek", planWeek);
@@ -270,15 +278,27 @@ public class SalesPlanManagementController {
 		int totCnt	= 0;
 		ReturnMessage message	= new ReturnMessage();
 		
-		//	check re-calculate
-		if ( "Y".equals(params.get("reCalcYn").toString()) ) {
-			salesPlanManagementService.deleteSalesPlanMaster(params, sessionVO);
+		//	params
+		params.put("planYear", params.get("scmYearCbBox").toString());
+		params.put("planWeek", params.get("scmWeekCbBox").toString());
+		params.put("team", params.get("scmTeamCbBox").toString());
+		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(params);
+		LOGGER.debug("selectSalesPlanInfo : {}", selectSalesPlanInfo);
+		if ( "0".equals(selectSalesPlanInfo.get(0).get("planStusId").toString()) ) {
+			LOGGER.debug("Sales Plan is not yet created");
+			//	check re-calculate
+			if ( "Y".equals(params.get("reCalcYn").toString()) ) {
+				salesPlanManagementService.deleteSalesPlanMaster(params, sessionVO);
+			}
+			totCnt	= salesPlanManagementService.insertSalesPlanMaster(params, sessionVO);
+			message.setCode(AppConstants.SUCCESS);
+			message.setData(totCnt);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		} else {
+			LOGGER.debug("Sales Plan is already created");
+			message.setCode(AppConstants.FAIL);
+			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
 		}
-		totCnt	= salesPlanManagementService.insertSalesPlanMaster(params, sessionVO);
-		
-		message.setCode(AppConstants.SUCCESS);
-		message.setData(totCnt);
-		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		
 		return	ResponseEntity.ok(message);
 	}
@@ -332,6 +352,41 @@ public class SalesPlanManagementController {
 		}
 		
 		return	ResponseEntity.ok(message);
+	}
+	
+	/*
+	 * Sales Plan Summary View
+	 */
+	//	search all
+	@RequestMapping(value = "/selectSalesPlanSummaryList.do", method = RequestMethod.POST)
+	public ResponseEntity<Map<String, Object>> selectSalesPlanSummaryList(@RequestBody Map<String, Object> params) {
+		
+		LOGGER.debug("selectSalesPlanSummaryList : {}", params.toString());
+		
+		int planYear	= 0;	int befWeekYear	= 0;
+		int planWeek	= 0;	int befWeekWeek	= 0;
+		
+		Map<String, Object> map	= new HashMap<>();
+		Map<String, Object> param1	= new HashMap<>();
+		
+		List<EgovMap> selectScmTotalInfo	= scmCommonService.selectScmTotalInfo(params);
+		planYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("planYear").toString());
+		planWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("planWeek").toString());
+		befWeekYear	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekYear").toString());
+		befWeekWeek	= Integer.parseInt(selectScmTotalInfo.get(0).get("befWeekWeek").toString());
+		
+		param1.put("planYear", planYear);
+		param1.put("planWeek", planWeek);
+		param1.put("befWeekYear", befWeekYear);
+		param1.put("befWeekWeek", befWeekWeek);
+		
+		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(param1);
+		List<EgovMap> selectSalesPlanSummaryList	= salesPlanManagementService.selectSalesPlanSummaryList(params);
+		
+		map.put("selectSalesPlanInfo", selectSalesPlanInfo);
+		map.put("selectSalesPlanSummaryList", selectSalesPlanSummaryList);
+		
+		return	ResponseEntity.ok(map);
 	}
 	
 	@RequestMapping(value = "/selectPeriodByYear.do", method = RequestMethod.GET)
