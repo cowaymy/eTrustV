@@ -163,6 +163,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		psi1InsParams.put("issDtTo", issDtTo);
 		psi1InsParams.put("closeYear", closeYear);
 		psi1InsParams.put("closeMonth", closeMonth);
+		psi1InsParams.put("crtUserId", crtUserId);
 		try {
 			LOGGER.debug("psi1InsParams : {} ", psi1InsParams);
 			supplyPlanManagementMapper.insertSupplyPlanDetailPsi1(psi1InsParams);
@@ -178,6 +179,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		psi235InsParams.put("cdc", cdc);
 		psi235InsParams.put("closeYear", closeYear);
 		psi235InsParams.put("closeMonth", closeMonth);
+		psi235InsParams.put("crtUserId", crtUserId);
 		try {
 			LOGGER.debug("psi235InsParams : {} ", psi235InsParams);
 			supplyPlanManagementMapper.insertSupplyPlanDetailPsi235(psi235InsParams);
@@ -194,6 +196,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		psi4InsParams.put("cdc", cdc);
 		psi4InsParams.put("befWeekYear", befWeekYear);
 		psi4InsParams.put("befWeekWeek", befWeekWeek);
+		psi4InsParams.put("crtUserId", crtUserId);
 		try {
 			LOGGER.debug("psi4InsParams : {} ", psi4InsParams);
 			supplyPlanManagementMapper.insertSupplyPlanDetailPsi4(psi4InsParams);
@@ -668,9 +671,11 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 	public int updateSupplyPlanDetail(List<Object> updList, SessionVO sessionVO) {
 		//	int var
 		int saveCnt	= 0;
+		int updUserId	= sessionVO.getUserId();
 		
 		try {
 			for ( Object obj : updList ) {
+				((Map<String, Object>) obj).put("updUserId", updUserId);
 				supplyPlanManagementMapper.updateSupplyPlanDetail((Map<String, Object>) obj);
 				LOGGER.debug("planDtlId : ", ((Map<String, Object>) obj).get("planDtlId"));
 				saveCnt++;

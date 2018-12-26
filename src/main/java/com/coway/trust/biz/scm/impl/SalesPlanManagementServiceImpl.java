@@ -166,6 +166,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		dtlParams.put("m3To", m3To);
 		dtlParams.put("team", team);
 		dtlParams.put("endDt", endDt);
+		dtlParams.put("crtUserId", crtUserId);
 		try {
 			LOGGER.debug(" dtlParams : {} ", dtlParams);
 			salesPlanManagementMapper.insertSalesPlanDetail(dtlParams);
@@ -864,9 +865,11 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 	public int updateSalesPlanDetail(List<Object> updList, SessionVO sessionVO) {
 		
 		int updCnt	= 0;
+		int updUserId	= sessionVO.getUserId();
 		
 		try {
 			for ( Object obj : updList ) {
+				((Map<String, Object>) obj).put("updUserId", updUserId);
 				salesPlanManagementMapper.updateSalesPlanDetail((Map<String, Object>) obj);
 				LOGGER.debug("planDtlId : ", ((Map<String, Object>) obj).get("planDtlId"));
 				updCnt++;
