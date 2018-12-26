@@ -16,6 +16,7 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO), 2) AS DIV_ODD
      , A.PP_PROD_END_DT
      , A.GI_QTY
      , A.GI_DT
+     , A.CI_NO
      , A.SAP_PO_NO, A.SAP_PO_ITEM_NO, A.SAP_AP_QTY, A.SAP_GR_QTY
      , A.GR_DT
   FROM (
@@ -32,6 +33,7 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO), 2) AS DIV_ODD
              , CASE WHEN C.GI_DT IS NULL OR C.GI_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(C.GI_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS GI_DT
              , A.SAP_PO_NO, A.SAP_PO_ITEM_NO, D.AP_QTY AS SAP_AP_QTY, D.GR_QTY AS SAP_GR_QTY
              , CASE WHEN D.GR_DT IS NULL OR D.GR_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(D.GR_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS GR_DT
+             , D.CI_NO
              , E.STK_TYPE_ID
           FROM SCM0039M A
           LEFT OUTER JOIN SCM0014D B ON (A.PO_NO = B.PO_NO AND A.SO_NO = B.SO_NO AND A.STOCK_CODE = B.STOCK_CODE)
@@ -55,6 +57,7 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO), 2) AS DIV_ODD
              , CASE WHEN C.GI_DT IS NULL OR C.GI_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(C.GI_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS GI_DT
              , A.SAP_PO_NO, A.SAP_PO_ITEM_NO, D.AP_QTY AS SAP_AP_QTY, D.GR_QTY AS SAP_GR_QTY
              , CASE WHEN D.GR_DT IS NULL OR D.GR_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(D.GR_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS GR_DT
+             , D.CI_NO
              , E.STK_TYPE_ID
           FROM SCM0039M A
           LEFT OUTER JOIN SCM0014D B ON (A.PO_NO = B.PO_NO AND A.SO_NO = B.SO_NO AND A.STOCK_CODE = B.STOCK_CODE)
@@ -70,6 +73,9 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO), 2) AS DIV_ODD
 	<if test="soNo != null and soNo != ''">
    AND A.SO_NO LIKE '%' || #{soNo} || '%'
 	</if>
+	<if test="sapPoNo != null and sapPoNo != ''">
+   AND A.SAP_PO_NO LIKE '%' || #{sapPoNo} || '%'
+	</if>
 	<if test="startDate != null and startDate != ''">
    AND A.PO_DT BETWEEN #{startDate} AND #{endDate}
 	</if>
@@ -84,6 +90,9 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO), 2) AS DIV_ODD
 		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
 		#{item}
 		</foreach>
+	</if>
+	<if test="ciNo != null and ciNo != ''">
+   AND A.CI_NO LIKE '%' || #{ciNo} || '%'
 	</if>
  ORDER BY A.PO_DT DESC, A.PO_NO, A.PO_ITEM_NO, A.SO_NO, A.SO_ITEM_NO, A.SAP_PO_NO, A.SAP_PO_ITEM_NO, A.SO_QTY, A.GI_QTY, A.GI_DT, A.SAP_GR_QTY
 </select>
