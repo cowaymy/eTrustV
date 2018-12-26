@@ -68,6 +68,10 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		return salesPlanManagementMapper.selectSalesPlanListAll(params);
 	}
 	@Override
+	public List<EgovMap> selectSalesPlanSummaryList(Map<String, Object> params) {
+		return salesPlanManagementMapper.selectSalesPlanSummaryList(params);
+	}
+	@Override
 	public int insertSalesPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
 		
 		int saveCnt	= 0;

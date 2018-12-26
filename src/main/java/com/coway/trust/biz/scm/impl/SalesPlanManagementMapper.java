@@ -24,6 +24,8 @@ public interface SalesPlanManagementMapper {
 	void updateSalesPlanDetail(Map<String, Object> params);
 	void updateSalesPlanMaster(Map<String, Object> params);
 	
+	List<EgovMap> selectSalesPlanSummaryList(Map<String, Object> params);
+	
 	//List<EgovMap> selectSalesPlanMonth(Map<String, Object> params);
 	//List<EgovMap> selectSplitInfo(Map<String, Object> params);
 	//List<EgovMap> selectChildField(Map<String, Object> params);
