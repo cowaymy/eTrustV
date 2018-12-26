@@ -10,7 +10,6 @@ SELECT PLAN_ID
      , STOCK
      , CDC
      , PLAN_STUS_ID
-     , VER_NO
      , TYPE_ID
      , TYPE_NAME
      , CATEGORY_ID
@@ -69,7 +68,6 @@ SELECT PLAN_ID
                      , STOCK
                      , CDC
                      , PLAN_STUS_ID
-                     , VER_NO
                      , TYPE_ID
                      , TYPE_NAME
                      , CATEGORY_ID
@@ -97,7 +95,6 @@ SELECT PLAN_ID
                              , 'stock' AS STOCK
                              , 'cdc' AS CDC
                              , 'planStusId' AS PLAN_STUS_ID
-                             , 'verNo' AS VER_NO
                              , 'typeId' AS TYPE_ID
                              , 'typeName' AS TYPE_NAME
                              , 'categoryId' AS CATEGORY_ID
@@ -165,7 +162,6 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_O
      , A.PLAN_WEEK
      , A.CDC
      , A.PLAN_STUS_ID
-     , A.VER_NO
      , (
         SELECT SUM(TO_NUMBER(Z.PLAN_STUS_ID))
           FROM SCM0001M Z
@@ -258,7 +254,6 @@ INSERT INTO SCM0005M
      , PLAN_MONTH
      , PLAN_WEEK
      , CDC
-     , VER_NO
      , CRT_DT
      , CRT_USER_ID
  )
@@ -269,7 +264,6 @@ VALUES
      , #{planMonth}
      , #{planWeek}
      , #{cdc}
-     , 0
      , SYSDATE
      , #{crtUserId}
  )
@@ -293,6 +287,7 @@ INSERT INTO SCM0006D
      , W01, W02, W03, W04, W05, W06, W07, W08, W09, W10
      , W11, W12, W13, W14, W15, W16, W17, W18, W19, W20
      , W21, W22, W23, W24, W25, W26, W27, W28, W29, W30
+     , CRT_USER_ID
  )
 SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , #{planId}
@@ -330,6 +325,7 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , CEIL(A.W28 * NVL(C.CDC_RATE, E.DEF_CDC_RATE) / 100) AS W28
      , CEIL(A.W29 * NVL(C.CDC_RATE, E.DEF_CDC_RATE) / 100) AS W29
      , CEIL(A.W30 * NVL(C.CDC_RATE, E.DEF_CDC_RATE) / 100) AS W30
+     , #{crtUserId}
   FROM (SELECT STOCK_CODE FROM SCM0017M WHERE CDC = #{cdc} AND IS_TRGET = 1) M
   LEFT OUTER JOIN (
                    SELECT X.STOCK_CODE
@@ -422,6 +418,7 @@ INSERT INTO SCM0006D
      , STOCK_CODE
      , CMPLT
      , OVERDUE
+     , CRT_USER_ID
  )
 SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , #{planId}
@@ -429,6 +426,7 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , A.STOCK_CODE
      , 1 AS CMPLT
      , A.OVERDUE
+     , #{crtUserId}
   FROM (
         SELECT 2 AS PSI_ID
              , B.STOCK_CODE
@@ -480,6 +478,7 @@ INSERT INTO SCM0006D
      , W01, W02, W03, W04, W05, W06, W07, W08, W09, W10
      , W11, W12, W13, W14, W15, W16, W17, W18, W19, W20
      , W21, W22, W23, W24, W25, W26, W27, W28, W29, W30
+     , CRT_USER_ID
  )
 SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , #{planId}
@@ -494,6 +493,7 @@ SELECT SCM0006D_PLAN_DETAIL_SEQ.NEXTVAL AS PLAN_DTL_ID
      , NVL(C.W16, 0) AS W16, NVL(C.W17, 0) AS W17, NVL(C.W18, 0) AS W18, NVL(C.W19, 0) AS W19, NVL(C.W20, 0) AS W20
      , NVL(C.W21, 0) AS W21, NVL(C.W22, 0) AS W22, NVL(C.W23, 0) AS W23, NVL(C.W24, 0) AS W24, NVL(C.W25, 0) AS W25
      , NVL(C.W26, 0) AS W26, NVL(C.W27, 0) AS W27, NVL(C.W28, 0) AS W28, NVL(C.W29, 0) AS W29, NVL(C.W30, 0) AS W30
+     , #{crtUserId}
   FROM SCM0005M A
   LEFT OUTER JOIN SCM0006D B ON (A.PLAN_ID = B.PLAN_ID)
   LEFT OUTER JOIN (
@@ -862,7 +862,9 @@ UPDATE SCM0006D
 <!-- Save -->
 <update id="updateSupplyPlanDetail" parameterType="Map">
 UPDATE SCM0006D
-   SET M0 = CEIL(TO_NUMBER(REPLACE(#{m0}, ',')))
+   SET UPD_DT = SYSDATE
+     , UPD_USER_ID = #{updUserId}
+     , M0 = CEIL(TO_NUMBER(REPLACE(#{m0}, ',')))
      , M1 = CEIL(TO_NUMBER(REPLACE(#{m1}, ',')))
      , M2 = CEIL(TO_NUMBER(REPLACE(#{m2}, ',')))
      , M3 = CEIL(TO_NUMBER(REPLACE(#{m2}, ',')))
@@ -957,16 +959,15 @@ SELECT A.STOCK_CODE
 <!-- Search -->
 <select id="selectSupplyPlanSummaryList" parameterType="Map" resultType="egovMap">
 SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_ODD
-     , A.PLAN_ID
      , A.PLAN_YEAR
      , A.PLAN_MONTH
      , A.PLAN_WEEK
      , B.PSI_ID
      , G.CODE_NAME AS PSI_NAME
      , D.STK_TYPE_ID AS TYPE_ID
-     , E.CODE_NAME AS CATEGORY_NAME
-     , D.STK_CTGRY_ID AS CATEGORY_ID
      , F.CODE_NAME AS TYPE_NAME
+     , D.STK_CTGRY_ID AS CATEGORY_ID
+     , E.CODE_NAME AS CATEGORY_NAME
      , B.STOCK_CODE AS CODE
      , D.STK_DESC AS NAME
      , SUM(NVL(B.M0, 0)) AS M0
@@ -1026,9 +1027,13 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY D.STK_TYPE_ID, B.STOCK_CODE), 2) AS DIV_O
 		#{item}
 		</foreach>
 	</if>
-   AND ((B.STOCK_CODE LIKE '%' || #{scmStockCode} || '%') OR (D.STK_DESC LIKE '%' || #{scmStockCode} || '%'))
- GROUP BY A.PLAN_ID
-     , A.PLAN_YEAR
+ 	<if test="scmStockCodeCbBox != null and ! scmStockCodeCbBox.isEmpty">
+   AND D.STK_CODE IN
+		<foreach item="item" collection="scmStockCodeCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ GROUP BY A.PLAN_YEAR
      , A.PLAN_MONTH
      , A.PLAN_WEEK
      , B.PSI_ID

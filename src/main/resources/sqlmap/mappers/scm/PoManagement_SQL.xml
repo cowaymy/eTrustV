@@ -32,7 +32,8 @@ SELECT SUM(A.SUPP_CONF_CNT) AS SUPP_CONF_CNT
 </select>
 <!-- Search -->
 <select id="selectPoTargetList" parameterType="Map" resultType="egovMap">
-SELECT DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
+SELECT '0' AS CHK
+     , DECODE(B.PO_YEAR, NULL, A.PLAN_YEAR, B.PO_YEAR) AS PO_YEAR
      , DECODE(B.PO_MONTH, NULL, A.PLAN_MONTH, B.PO_MONTH) AS PO_MONTH
      , DECODE(B.PO_WEEK, NULL, A.PLAN_WEEK, B.PO_WEEK) AS PO_WEEK
      , #{scmCdcCbBox} AS CDC
@@ -364,7 +365,14 @@ SELECT DECODE(A.PO_ITEM_STUS_ID, 1, 1, 5) AS CB_BOX_FLAG
   LEFT OUTER JOIN SYS0038M G ON (B.PO_STUS_ID = G.STUS_CODE_ID)
  WHERE 1 = 1
    AND A.USE_YN = 'Y'
-   AND A.PO_ID IN (SELECT Z.PO_ID FROM SCM0052M Z WHERE Z.PO_YEAR = #{scmYearCbBox} AND Z.PO_WEEK = #{scmWeekCbBox})
+   AND A.PO_ID IN (
+                   SELECT Z.PO_ID
+                     FROM SCM0052M Z
+                    WHERE Z.PO_YEAR = #{scmYearCbBox} AND Z.PO_WEEK = #{scmWeekCbBox}
+	<if test="scmCdcCbBox != null and scmCdcCbBox != ''">
+                      AND Z.CDC = #{scmCdcCbBox}
+	</if>
+                   )
 	<if test="scmStockTypeCbBox != null and ! scmStockTypeCbBox.isEmpty">
    AND C.STK_TYPE_ID IN
 		<foreach item="item" collection="scmStockTypeCbBox" index="index" open="(" separator="," close=")">
