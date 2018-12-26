@@ -627,7 +627,7 @@ $(document).ready(function() {
 	
 <aside class="title_line"><!-- title_line start -->
 	<p class="fav"><a href="javascript:void(0);" class="click_add_on">My menu</a></p>
-	<h2>OTD Status Viewer</h2>
+	<h2>OTD(Order To Delivery) Status Viewer</h2>
 	<ul class="right_btns">
 		<li><p class="btn_blue"><a onclick="fnSearch();"><span class="search"></span>Search</a></p></li>
 	</ul>
@@ -658,28 +658,38 @@ $(document).ready(function() {
 						<input type="text" id="endDate" name="endDate" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 					</div><!-- date_set end -->
 				</td>
-				<th scope="row">PO No</th>
-				<td>
-					<input type="text" id="poNo" name="poNo" title="" placeholder="" class="w100p" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}" />
-				</td>
 				<!-- Stock Type 추가 -->
 				<th scope="row">Stock Type</th>
 				<td>
 					<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
 				</td>
-			</tr>
-			<tr>
 				<th scope="row">Material</th>
 				<td>
 					<!-- <input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}">
 					<select class="js-example-basic-multiple" id="select2t1m" name="select2t1m" multiple="multiple"> -->
 					<select class="js-example-basic-multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox" multiple="multiple">
 				</td>
+			</tr>
+			<tr>
+				<th scope="row">PO No</th>
+				<td>
+					<input type="text" id="poNo" name="poNo" title="" placeholder="" class="w100p" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}" />
+				</td>
 				<th scope="row">SO No</th>
 				<td>
 					<input type="text" id="soNo" name="soNo" title="" placeholder="" class="w100p" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}"  />
 				</td>
-				<td colspan="2"></td>
+				<th scope="row">SAP PO No</th>
+				<td>
+					<input type="text" id="sapPoNo" name="sapPoNo" title="" placeholder="" class="w100p" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}"  />
+				</td>
+			</tr>
+			<tr>
+				<th scope="row">CI No</th>
+				<td>
+					<input type="text" id="ciNo" name="ciNo" title="" placeholder="" class="w100p" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}" />
+				</td>
+				<td colspan="4"></td>
 			</tr>
 		</tbody>
 	</table><!-- table end -->
