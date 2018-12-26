@@ -205,7 +205,7 @@
 <tr>
     <th scope="row"><spring:message code="sal.text.creditCardNo2" /><span class="must">*</span></th>
     <td>
-        <input id="cardNo" name="cardNo" type="text" title="" placeholder="Credit Card Number" class="w100p" />
+        <input id="cardNo" name="cardNo" type="text" maxlength="16" title="" placeholder="Credit Card Number" class="w100p"/>
     </td>
 </tr>
 <tr>
