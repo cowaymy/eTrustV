@@ -5,8 +5,8 @@
 
 var myGridID,subGridID;
 
-//Grid Properties 설정 
-var gridPros = {            
+//Grid Properties 설정
+var gridPros = {
         editable : false,                 // 편집 가능 여부 (기본값 : false)
         showStateColumn : false     // 상태 칼럼 사용
 };
@@ -27,7 +27,8 @@ var columnLayout=[
     { dataField:"deptName" ,headerText:"<spring:message code='pay.head.department'/>" ,editable : false },
     { dataField:"memoAdjCrtDt" ,headerText:"<spring:message code='pay.head.creationDate'/>" ,editable : false },
     { dataField:"updUserName" ,headerText:"<spring:message code='pay.head.finalApproval'/>" ,editable : false },
-    { dataField:"memoAdjUpdDt" ,headerText:"<spring:message code='pay.head.approvalDateFin'/>" ,editable : false }
+    { dataField:"memoAdjUpdDt" ,headerText:"<spring:message code='pay.head.approvalDateFin'/>" ,editable : false },
+    { dataField:"memoItmRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false }
     ];
 
 // 리스트 조회.
@@ -46,10 +47,10 @@ function fn_getAdjustmentListAjax() {
 
 function ValidRequiredField(){
 	var valid = true;
-	
+
 	if($("#date1").val() == "" || $("#date2").val() == "")
 		valid = false;
-	
+
 	return valid;
 }
 function fn_cmmSearchInvoicePop(){
@@ -57,13 +58,13 @@ function fn_cmmSearchInvoicePop(){
 }
 
 function _callBackInvoicePop(searchInvoicePopGridID,rowIndex, columnIndex, value, item){
-    location.href="/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo");    
+    location.href="/payment/initNewAdj.do?refNo=" + AUIGrid.getCellValue(searchInvoicePopGridID, rowIndex, "taxInvcRefNo");
     $('#_searchInvoice').hide();
-    
+
 }
 
 function fn_excelDown(){
-	
+
 	var valid = ValidRequiredField();
      if(!valid){
     	 Common.alert("<spring:message code='pay.alert.createDate'/>");
@@ -71,7 +72,7 @@ function fn_excelDown(){
     else{
 		var date1 = $("#date1").val();
 		var date2 = $("#date2").val();
-		
+
 		Common.ajax("GET", "/payment/countAdjustmentExcelList.do", $("#searchForm").serialize(), function(result) {
 	       var cnt = result;
 	       if(cnt > 0){
@@ -79,15 +80,15 @@ function fn_excelDown(){
 				Common.showLoader();
 		        $.fileDownload("/payment/selectAdjustmentExcelList.do?date1=" + date1 + "&date2="+date2+"&status=4")
 				.done(function () {
-			        Common.alert("<spring:message code='pay.alert.fileDownSuceess'/>");                
-					Common.removeLoader();            
+			        Common.alert("<spring:message code='pay.alert.fileDownSuceess'/>");
+					Common.removeLoader();
 		        })
 			    .fail(function () {
-					Common.alert("<spring:message code='pay.alert.fileDownFailed'/>");                
-		            Common.removeLoader();            
+					Common.alert("<spring:message code='pay.alert.fileDownFailed'/>");
+		            Common.removeLoader();
 				});
 		   }else{
-	    	   Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>"); 
+	    	   Common.alert("<spring:message code='sys.info.grid.noDataMessage'/>");
 	       }
        });
    }
@@ -110,15 +111,15 @@ function fn_excelDown(){
                 <caption>table</caption>
 				<colgroup>
 				    <col style="width:180px" />
-				    <col style="width:300px" />	
-				    <col style="width:*" /> 		    
+				    <col style="width:300px" />
+				    <col style="width:*" />
 				</colgroup>
 				<tbody>
 				    <tr>
 				        <th scope="row">Create Date</th>
 					    <td>
 					       <div class="date_set w100p">
-					       <p><input name="date1" id="date1" type="text" placeholder="DD/MM/YYYY" class="j_date" /></p> 
+					       <p><input name="date1" id="date1" type="text" placeholder="DD/MM/YYYY" class="j_date" /></p>
 					       <span>~</span>
 					       <p><input name="date2" id="date2" type="text"placeholder="DD/MM/YYYY" class="j_date" /></p>
 					       </div>
@@ -128,8 +129,8 @@ function fn_excelDown(){
                 </tbody>
             </table>
             <!-- table end -->
-        </form>			
-		
+        </form>
+
         <!-- grid_wrap start -->
         <article id="grid_wrap" class="grid_wrap"></article>
         <!-- grid_wrap end -->

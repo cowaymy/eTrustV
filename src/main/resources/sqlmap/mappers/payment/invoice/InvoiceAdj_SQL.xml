@@ -23,7 +23,8 @@
 			       UnionAll2.MEMO_ADJ_REM,
 			       UnionAll2.UPD_USER_NAME,
                    TO_CHAR(UnionAll2.MEMO_ADJ_UPD_DT, 'DD-MM-YYYY') MEMO_ADJ_UPD_DT,
-                   UnionAll2.BATCH_ID
+                   UnionAll2.BATCH_ID,
+                   UnionAll2.MEMO_ITM_REM
 			  FROM ( SELECT UnionAll1.MEMO_ADJ_ID MEMO_ADJ_ID  ,
 			                UnionAll1.MEMOADJUSTID1 MEMOADJUSTID1  ,
 			                UnionAll1.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
@@ -45,7 +46,8 @@
 			                UnionAll1.MEMO_ADJ_REM,
 			                UnionAll1.UPD_USER_NAME,
                             UnionAll1.MEMO_ADJ_UPD_DT,
-                            UnionAll1.BATCH_ID
+                            UnionAll1.BATCH_ID,
+                            UnionAll1.MEMO_ITM_REM
 			         FROM ( SELECT Extent1.MEMO_ADJ_ID MEMO_ADJ_ID  ,
 			                       Extent1.MEMO_ADJ_ID MEMOADJUSTID1  ,
 			                       Extent1.MEMO_ADJ_REF_NO MEMO_ADJ_REF_NO  ,
@@ -67,7 +69,8 @@
 			                       Extent1.MEMO_ADJ_REM,
 			                       Extent71.USER_NAME UPD_USER_NAME,
                                    Extent1.MEMO_ADJ_UPD_DT MEMO_ADJ_UPD_DT,
-                                   Extent1.BATCH_ID
+                                   Extent1.BATCH_ID,
+                                   Extent2.MEMO_ITM_REM
 			                FROM PAY0011D Extent1
 			                       JOIN PAY0012D Extent2   ON Extent2.MEMO_ADJ_ID = Extent1.MEMO_ADJ_ID
 			                       LEFT JOIN SYS0032M Extent3   ON Extent3.RESN_ID = Extent1.MEMO_ADJ_RESN_ID
@@ -130,7 +133,8 @@
 			                       Extent9.MEMO_ADJ_REM,
                                    Extent151.USER_NAME UPD_USER_NAME,
                                    Extent9.MEMO_ADJ_UPD_DT MEMO_ADJ_UPD_DT,
-                                   Extent9.BATCH_ID
+                                   Extent9.BATCH_ID,
+                                   Extent10.MEMO_ITM_REM
 			                FROM PAY0011D Extent9
 			                       JOIN PAY0012D Extent10   ON Extent10.MEMO_ADJ_ID = Extent9.MEMO_ADJ_ID
 			                       LEFT JOIN SYS0032M Extent11   ON Extent11.RESN_ID = Extent9.MEMO_ADJ_RESN_ID
@@ -195,7 +199,8 @@
 			                Extent17.MEMO_ADJ_REM,
 			                Extent231.USER_NAME UPD_USER_NAME,
                             Extent17.MEMO_ADJ_UPD_DT MEMO_ADJ_UPD_DT,
-                            Extent17.BATCH_ID
+                            Extent17.BATCH_ID,
+                            Extent18.MEMO_ITM_REM
 			         FROM PAY0011D Extent17
 			                JOIN PAY0012D Extent18   ON Extent18.MEMO_ADJ_ID = Extent17.MEMO_ADJ_ID
 			                LEFT JOIN SYS0032M Extent19   ON Extent19.RESN_ID = Extent17.MEMO_ADJ_RESN_ID

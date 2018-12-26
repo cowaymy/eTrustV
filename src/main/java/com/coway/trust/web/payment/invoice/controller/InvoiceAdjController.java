@@ -715,8 +715,8 @@ public class InvoiceAdjController {
     		String[] columns;
             String[] titles;
 
-            columns = new String[] { "code","invcItmOrdNo","memoAdjRefNo","memoAdjInvcNo","resnDesc","memoItmAmt","userName","deptName","memoAdjCrtDt","updUserName","memoAdjUpdDt" };
-			titles = new String[] {"TYPE","ORDER NO","ADJUSTMENT NO","INVOICE NO","REASON","ADJ. AMOUNT","REQUESTOR", "DEPARTMENT", "CREATE DATE", "FINAL APPROVAL", "FINAL APPROVAL DATE" };
+            columns = new String[] { "code","invcItmOrdNo","memoAdjRefNo","memoAdjInvcNo","resnDesc","memoItmAmt","userName","deptName","memoAdjCrtDt","updUserName","memoAdjUpdDt","memoItmRem" };
+			titles = new String[] {"TYPE","ORDER NO","ADJUSTMENT NO","INVOICE NO","REASON","ADJ. AMOUNT","REQUESTOR", "DEPARTMENT", "CREATE DATE", "FINAL APPROVAL", "FINAL APPROVAL DATE","REMARK" };
 
 			downloadHandler = getExcelDownloadHandler(response, "InvoiceAdjustmentSummary.xlsx", columns, titles);
 
