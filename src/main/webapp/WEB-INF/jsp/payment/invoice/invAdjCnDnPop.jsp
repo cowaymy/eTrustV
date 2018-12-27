@@ -28,7 +28,7 @@ var columnLayout=[
     { dataField:"memoAdjCrtDt" ,headerText:"<spring:message code='pay.head.creationDate'/>" ,editable : false },
     { dataField:"updUserName" ,headerText:"<spring:message code='pay.head.finalApproval'/>" ,editable : false },
     { dataField:"memoAdjUpdDt" ,headerText:"<spring:message code='pay.head.approvalDateFin'/>" ,editable : false },
-    { dataField:"memoItmRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false }
+    { dataField:"memoAdjRem" ,headerText:"<spring:message code='pay.head.remark'/>" ,editable : false }
     ];
 
 // 리스트 조회.
