@@ -1234,6 +1234,24 @@ public class ReportBatchController {
     LOGGER.info("[END] dailyRentCollRtTrd...");
   }
 
+  @RequestMapping(value = "/dailyRentCollRtTrdInd.do")
+  // @Scheduled(cron = "0 20 6 * * *")//Daily (06:20am)
+  public void dailyRentCollRtTrdInd() throws IOException {
+    LOGGER.info("[START] dailyRentCollRtTrdInd...");
+    Map<String, Object> params = new HashMap<>();
+    params.put(REPORT_FILE_NAME, "/visualcut/DailyRCCollectionAnalysisInd.rpt");// visualcut
+                                                                               // rpt
+                                                                               // file
+                                                                               // name.
+    params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
+    params.put("V_TEMP", "TEMP");// parameter
+    params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Daily Rental Collection" + File.separator
+        + "DailyRentalCollectionRateTrendInd" + CommonUtils.getNowDate() + ".pdf");
+
+    this.viewProcedure(null, null, params);
+    LOGGER.info("[END] dailyRentCollRtTrdInd...");
+  }
+
   private void view(HttpServletRequest request, HttpServletResponse response, Map<String, Object> params)
       throws IOException {
     checkArgument(params);
