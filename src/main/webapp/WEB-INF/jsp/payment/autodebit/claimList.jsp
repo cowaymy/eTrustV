@@ -76,7 +76,7 @@
                     function() {
                       if ($('#ddtChnl').val() != "") {
 
-                        if ($('#ddtChnl').val() == 3170) {
+                        if ($('#ddtChnl').val() == 3182) {
                           doGetComboCodeId(
                               '/payment/selectAccBank.do',
                               {
@@ -193,7 +193,7 @@
                 .change(
                     function() {
                       if ($(this).val() != '') {
-                        if ($(this).val() == 3170) {
+                        if ($(this).val() == 3182) {
                           doGetComboCodeId(
                               '/payment/selectAccBank.do',
                               {
