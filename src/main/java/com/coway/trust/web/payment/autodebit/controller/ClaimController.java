@@ -989,7 +989,7 @@ public class ClaimController {
 
     // 파일 생성하기
     if ("0".equals(String.valueOf(claimMap.get("ctrlIsCrc")))) {
-      if ("3170".equals(String.valueOf(claimMap.get("ctrlDdtChl")))) { // e-Mandate
+      if ("3182".equals(String.valueOf(claimMap.get("ctrlDdtChl")))) { // e-Mandate
         this.createClaimFileGenerator(claimMap);
       } else { // General
         // ALB
