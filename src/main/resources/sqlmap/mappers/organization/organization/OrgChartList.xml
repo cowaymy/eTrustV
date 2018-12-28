@@ -1196,9 +1196,11 @@
     </select>
 
 <select id="selectMemberName" parameterType="Map" resultType="egovMap">
-        SELECT NAME
-        FROM ORG0001D
-        WHERE MEM_CODE = #{memCode}
+        SELECT A.NAME,
+                   B.MEM_LVL
+        FROM ORG0001D A
+        LEFT JOIN ORG0005D B ON B.MEM_ID = A.MEM_ID
+        WHERE A.MEM_CODE = #{memCode}
 
     </select>
 

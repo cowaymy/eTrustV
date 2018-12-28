@@ -498,6 +498,10 @@
         	$('#sponsorListingBtn').click(function() {
         	    Common.popupDiv("/organization/SponsorListingPop.do", null, null, true);
         	});
+
+            $('#organizationListingBtn').click(function() {
+                Common.popupDiv("/organization/OrganizationListingPop.do", null, null, true);
+            });
         	});
 
 
@@ -657,7 +661,9 @@
       <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
             <li><p class="link_btn"><a href="#" id="sponsorListingBtn">Sponsor Listing</a></p></li>
       </c:if>
-
+      <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+            <li><p class="link_btn"><a href="#" id="organizationListingBtn">Organization Listing</a></p></li>
+      </c:if>
         </ul>
         <ul class="btns">
         </ul>

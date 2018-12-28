@@ -201,7 +201,7 @@ public class OrgChartListController {
 
 			model.put("name", result.get("name"));
 			model.put("memCode", result.get("memCode"));
-
+			model.put("memLvl", result.get("memLvl"));
 		}
 
 		return "organization/organization/sponsorListingPop";
@@ -224,6 +224,22 @@ public class OrgChartListController {
 
 
 		return ResponseEntity.ok(memName);
+	}
+
+	@RequestMapping(value="/OrganizationListingPop.do")
+	public String OrganizationListingPop(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO){
+		if( sessionVO.getUserTypeId() == 1 || sessionVO.getUserTypeId() == 2){
+
+			params.put("userId", sessionVO.getUserId());
+			EgovMap result =  salesCommonService.getUserInfo(params);
+
+
+			model.put("name", result.get("name"));
+			model.put("memCode", result.get("memCode"));
+			model.put("memLvl", result.get("memLvl"));
+		}
+
+		return "organization/organization/organizationListingPop";
 	}
 
 
