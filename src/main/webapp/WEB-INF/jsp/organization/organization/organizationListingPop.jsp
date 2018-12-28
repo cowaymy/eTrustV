@@ -7,6 +7,10 @@ $(document).ready(function() {
 
     //CommonCombo.make('status', '/organization/selectStatus.do', '', '', {type:'M', isCheckAll:true});
 
+$("#dpJoinedDateFrom").attr("class", "w100p readonly");
+$("#dpJoinedDateFrom").attr("readonly", "readonly");
+$("#dpJoinedDateTo").attr("class", "w100p readonly");
+$("#dpJoinedDateTo").attr("readonly", "readonly");
 	if("${SESSION_INFO.userTypeId}" == "1"  || "${SESSION_INFO.userTypeId}" == "2" ){
 
 
@@ -339,7 +343,7 @@ function btnGenerateExcel_Click(){
 <tr>
     <th scope="row">Joined Date</th>
     <td>
-    <div class="date_set w100p disabled"><!-- date_set start -->
+    <div class="date_set w100p"><!-- date_set start -->
     <p><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" id="dpJoinedDateFrom"/></p>
     <span><spring:message code="sal.title.to" /></span>
     <p><input type="text" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" id="dpJoinedDateTo"/></p>
