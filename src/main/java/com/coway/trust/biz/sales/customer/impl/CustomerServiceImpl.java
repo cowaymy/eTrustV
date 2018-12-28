@@ -426,7 +426,7 @@ public class CustomerServiceImpl extends EgovAbstractServiceImpl implements Cust
   @Override
   public List<EgovMap> selectAccBank(Map<String, Object> params) {
     if (params.get("ddlChnl") != null) {
-      if ((params.get("ddlChnl").toString()).equals("3170")) {
+      if ((params.get("ddlChnl").toString()).equals("3182")) {
         return customerMapper.selectDdtChnlAccBank(params);
       } else {
         return customerMapper.selectAccBank(params);
