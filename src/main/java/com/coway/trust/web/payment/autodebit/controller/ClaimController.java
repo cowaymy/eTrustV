@@ -431,12 +431,14 @@ public class ClaimController {
     LOGGER.debug("ctrlId : {}  ", request.getParameter("ctrlId"));
     LOGGER.debug("ctrlIsCrc : {}  ", request.getParameter("ctrlIsCrc"));
     LOGGER.debug("bankId : {}  ", request.getParameter("bankId"));
+    LOGGER.debug("ddtChnl : {}  ", request.getParameter("ddtChnl"));
 
     // Master 정보 세팅
     Map<String, Object> claimMap = new HashMap<String, Object>();
     claimMap.put("ctrlId", request.getParameter("ctrlId"));
     claimMap.put("ctrlIsCrc", request.getParameter("ctrlIsCrc"));
     claimMap.put("bankId", request.getParameter("bankId"));
+    claimMap.put("ddtChnl", request.getParameter("ddtChnl"));
 
     // 기존 데이터 삭제
     claimService.deleteClaimResultItem(claimMap);
