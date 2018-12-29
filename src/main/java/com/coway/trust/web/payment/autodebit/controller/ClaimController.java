@@ -4,6 +4,7 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -1812,12 +1813,15 @@ public class ClaimController {
     ClaimFileGeneralHandler downloadHandler = null;
     String sFile = "";
     String bnkCde = "";
+    String bchId = "";
     String subPath = "";
     String todayDate = "";
     String inputDate = "";
 
     /*
-     * {0} - TODAY DATE {1} - BANK SHORT CODE
+     * {0} - TODAY DATE
+     * {1} - BANK SHORT CODE
+     * {2} - BATCH ID
      */
     Map<String, Object> map = new HashMap<String, Object>();
     map.put("ctrlIsCrc", claimMap.get("ctrlIsCrc"));
@@ -1844,6 +1848,9 @@ public class ClaimController {
             bnkCde = claimService.selectBnkCde(bnkCde);
           }
 
+          bchId = CommonUtils.nvl(claimMap.get("ctrlId")).equals("") ? inputDate
+              : new BigDecimal(claimMap.get("ctrlId").toString()).toPlainString();
+
           // FORM FILE NAME
           if (CommonUtils.nvl(fileInfoConf.get("ctrlDtFmt")).equals("")) {
             todayDate = CommonUtils.getNowDate();
@@ -1852,7 +1859,7 @@ public class ClaimController {
                 fileInfoConf.get("ctrlDtFmt").toString());
           }
 
-          sFile = fileInfoConf.get("ctrlFileNm").toString().replace("{0}", todayDate).replace("{1}", bnkCde) + "."
+          sFile = fileInfoConf.get("ctrlFileNm").toString().replace("{0}", todayDate).replace("{1}", bnkCde).replace("{2}", bchId) + "."
               + (fileInfoConf.get("ctrlFileExt").toString().replace(".", "").toLowerCase());
 
           subPath = CommonUtils.nvl(fileInfoConf.get("ctrlSubPath")).toString().replace("{0}", todayDate).replace("{1}",
@@ -1885,7 +1892,7 @@ public class ClaimController {
         if (CommonUtils.nvl(fileInfoConf.get("ctrlEmail")).toString().toUpperCase().equals("Y")) { // CTRL_EMAIL
           File file = new File(filePath + fileInfoConf.get("ctrlSubPath").toString() + sFile);
 
-          String emailSubj = fileInfoConf.get("ctrlEmailSubj").toString().replace("{0}", inputDate);
+          String emailSubj = fileInfoConf.get("ctrlEmailSubj").toString().replace("{0}", inputDate).replace("{1}", bnkCde).replace("{2}", bchId);
           String emailTxt = fileInfoConf.get("ctrlEmailText").toString();
 
           EmailVO email = new EmailVO();
