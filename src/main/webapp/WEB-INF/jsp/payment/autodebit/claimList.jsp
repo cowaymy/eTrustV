@@ -325,6 +325,13 @@
         editable : false
       },
       {
+        dataField : "ctrlDdtChl",
+        headerText : "<spring:message code='pay.head.ddtChnl'/>",
+        width : 100,
+        visible : false,
+        editable : false
+      },
+      {
         dataField : "bankCode",
         headerText : "<spring:message code='pay.head.issueBank'/>",
         width : 100,
@@ -714,7 +721,7 @@
   function fn_uploadFile() {
 
     var ctrlId = AUIGrid
-        .getCellValue(myGridID, selectedGridValue, "ctrlId");
+        .getCellValue(myGridID, selectedGridValue, "ctrlId");1
     var ctrlIsCrc = AUIGrid.getCellValue(myGridID, selectedGridValue,
         "ctrlIsCrc");
     var bankId = AUIGrid
@@ -726,6 +733,7 @@
     formData.append("ctrlId", ctrlId);
     formData.append("ctrlIsCrc", ctrlIsCrc);
     formData.append("bankId", bankId);
+    formData.append("ddtChnl", ddtChnl);
 
     Common
         .ajaxFile(
@@ -755,7 +763,8 @@
                         data.form = [ {
                           "ctrlId" : ctrlId,
                           "ctrlIsCrc" : ctrlIsCrc,
-                          "bankId" : bankId
+                          "bankId" : bankId,
+                          "ddtChnl" : ddtChnl
                         } ];
 
                         //CALIM RESULT UPDATE
@@ -834,6 +843,7 @@
     formData.append("ctrlId", ctrlId);
     formData.append("ctrlIsCrc", ctrlIsCrc);
     formData.append("bankId", bankId);
+    formData.append("ddtChnl", ddtChnl);
 
     Common
         .ajaxFile(
@@ -863,7 +873,8 @@
                         data.form = [ {
                           "ctrlId" : ctrlId,
                           "ctrlIsCrc" : ctrlIsCrc,
-                          "bankId" : bankId
+                          "bankId" : bankId,
+                          "ddtChnl" : ddtChnl
                         } ];
 
                         //CALIM RESULT UPDATE
@@ -935,6 +946,8 @@
         "ctrlIsCrc");
     var bankId = AUIGrid
         .getCellValue(myGridID, selectedGridValue, "bankId");
+    var ddtChnl = AUIGrid
+    .getCellValue(myGridID, selectedGridValue, "ctrlDdtChl");
 
     var formData = new FormData();
 
@@ -942,6 +955,7 @@
     formData.append("ctrlId", ctrlId);
     formData.append("ctrlIsCrc", ctrlIsCrc);
     formData.append("bankId", bankId);
+    formData.append("ddtChnl", ddtChnl);
 
     Common
         .ajaxFile(
@@ -971,7 +985,8 @@
                         data.form = [ {
                           "ctrlId" : ctrlId,
                           "ctrlIsCrc" : ctrlIsCrc,
-                          "bankId" : bankId
+                          "bankId" : bankId,
+                          "ddtChnl" : ddtChnl
                         } ];
 
                         //CALIM RESULT UPDATE
