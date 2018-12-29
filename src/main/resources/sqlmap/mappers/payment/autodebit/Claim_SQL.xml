@@ -45,6 +45,7 @@
     ,
     NVL(Extent4.USER_NAME,' ') AS CRT_USER_NAME,
     NVL(Extent5.USER_NAME,' ') AS UPD_USER_NAME,
+    Extent1.CTRL_DDT_CHL,
     Extent6.CODE_NAME
     DDT_CHNL
     FROM PAY0041D Extent1
@@ -245,7 +246,7 @@
     parameterType="Map">
     {
     call
-    SP_AUTO_DEBT_UPD_RESULT(#{ctrlId},#{ctrlIsCrc},#{bankId},#{userId})
+    SP_AUTO_DEBT_UPD_RESULT(#{ctrlId},#{ctrlIsCrc},#{bankId},#{userId},#{ddtChnl})
     }
   </update>
 
