@@ -47,7 +47,8 @@ public class ClaimFileGeneralHandler extends BasicTextDownloadHandler implements
   List<EgovMap> datailInfo; // TO KEEP DETAIL CONFIGURATION
   List<EgovMap> trailerInfo; // TO KEEP TRAILER CONFIGURATION
 
-  public ClaimFileGeneralHandler(FileInfoVO fileInfoVO, List<EgovMap> headerInfo, List<EgovMap> datailInfo, List<EgovMap> trailerInfo, Map<String, Object> params) {
+  public ClaimFileGeneralHandler(FileInfoVO fileInfoVO, List<EgovMap> headerInfo, List<EgovMap> datailInfo,
+      List<EgovMap> trailerInfo, Map<String, Object> params) {
     super(fileInfoVO, params);
     this.headerInfo = headerInfo;
     this.datailInfo = datailInfo;
@@ -140,11 +141,11 @@ public class ClaimFileGeneralHandler extends BasicTextDownloadHandler implements
     if (trailerInfo != null) {
       if (trailerInfo.size() > 0) {
         for (int a = 0; a < trailerInfo.size(); a++) {
-        	Map<String, Object> footConf = new HashMap<String, Object>();
-        	footConf = (Map<String, Object>) trailerInfo.get(a);
-        	StrFtData = this.dataReplace(footConf, tData);
-        	StrFtData = this.dataProcessor(footConf, StrFtData);
-        	strTrailer += StrFtData;
+          Map<String, Object> footConf = new HashMap<String, Object>();
+          footConf = (Map<String, Object>) trailerInfo.get(a);
+          StrFtData = this.dataReplace(footConf, tData);
+          StrFtData = this.dataProcessor(footConf, StrFtData);
+          strTrailer += StrFtData;
 
         }
       }
@@ -175,16 +176,15 @@ public class ClaimFileGeneralHandler extends BasicTextDownloadHandler implements
     // DATA TYPE :: S - STRING; N - NUMERIC; D - DATE
     if ((CommonUtils.nvl(conf.get("ctrlDatTyp")).toString().toUpperCase()).equals("S")) {
       str = this.padProcessor(conf, strDtlData);
-   	} else if ((CommonUtils.nvl(conf.get("ctrlDatTyp")).toString().toUpperCase()).equals("N")) {
-      str = CommonUtils.getNumberFormat(String.valueOf(strDtlData),
-   					                    (CommonUtils.nvl(conf.get("ctrlDatFmt")).equals("") ?  "0.00" : CommonUtils.nvl(conf.get("ctrlDatFmt")).toString()));
+    } else if ((CommonUtils.nvl(conf.get("ctrlDatTyp")).toString().toUpperCase()).equals("N")) {
+      str = CommonUtils.getNumberFormat(String.valueOf(strDtlData), (CommonUtils.nvl(conf.get("ctrlDatFmt")).equals("")
+          ? "0.00" : CommonUtils.nvl(conf.get("ctrlDatFmt")).toString()));
       str = this.padProcessor(conf, str);
     } else if ((CommonUtils.nvl(conf.get("ctrlDatTyp")).toString().toUpperCase()).equals("D")) {
-      str = CommonUtils.changeFormat(strDtlData,
-   						             "yyyyMMdd",
-   						             (CommonUtils.nvl(conf.get("ctrlDatFmt")).equals("") ?  "yyyyMMdd" : CommonUtils.nvl(conf.get("ctrlDatFmt")).toString()));
+      str = CommonUtils.changeFormat(strDtlData, "yyyyMMdd", (CommonUtils.nvl(conf.get("ctrlDatFmt")).equals("")
+          ? "yyyyMMdd" : CommonUtils.nvl(conf.get("ctrlDatFmt")).toString()));
       str = this.padProcessor(conf, str);
-   	}
+    }
     if (!CommonUtils.nvl(conf.get("ctrlDelimeter")).equals("")) {
       str = str + conf.get("ctrlDelimeter");
     }
@@ -194,14 +194,16 @@ public class ClaimFileGeneralHandler extends BasicTextDownloadHandler implements
   private String padProcessor(Map<String, Object> conf, String strDtlData) {
     String str = "";
 
-    if ((CommonUtils.nvl(conf.get("ctrlPad")).toString().toUpperCase()).equals("L")) { // LEFT PAD
-      str = StringUtils.leftPad(strDtlData,
-                                Integer.parseInt(CommonUtils.nvl(conf.get("ctrlDatLgth")).toString()),
-                                (CommonUtils.nvl(conf.get("ctrlPadVal")).equals("") ?  " " : CommonUtils.nvl(conf.get("ctrlPadVal")).toString()));
-    } else if ((CommonUtils.nvl(conf.get("ctrlPad")).toString().toUpperCase()).equals("R")) { // RIGHT PAD
-      str = StringUtils.rightPad(strDtlData,
-                                 Integer.parseInt(CommonUtils.nvl(conf.get("ctrlDatLgth")).toString()),
-                                 (CommonUtils.nvl(conf.get("ctrlPadVal")).equals("") ?  " " : CommonUtils.nvl(conf.get("ctrlPadVal")).toString()));
+    if ((CommonUtils.nvl(conf.get("ctrlPad")).toString().toUpperCase()).equals("L")) { // LEFT
+                                                                                       // PAD
+      str = StringUtils.leftPad(strDtlData, Integer.parseInt(CommonUtils.nvl(conf.get("ctrlDatLgth")).toString()),
+          (CommonUtils.nvl(conf.get("ctrlPadVal")).equals("") ? " "
+              : CommonUtils.nvl(conf.get("ctrlPadVal")).toString()));
+    } else if ((CommonUtils.nvl(conf.get("ctrlPad")).toString().toUpperCase()).equals("R")) { // RIGHT
+                                                                                              // PAD
+      str = StringUtils.rightPad(strDtlData, Integer.parseInt(CommonUtils.nvl(conf.get("ctrlDatLgth")).toString()),
+          (CommonUtils.nvl(conf.get("ctrlPadVal")).equals("") ? " "
+              : CommonUtils.nvl(conf.get("ctrlPadVal")).toString()));
     } else {
       str = strDtlData;
     }
