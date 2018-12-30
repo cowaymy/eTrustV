@@ -3,11 +3,11 @@
 <head>
 <script type="text/javaScript" language="javascript">
 
-	//AUIGrid 생성 후 반환 ID
-	var addrGridID;
+  //AUIGrid 생성 후 반환 ID
+  var addrGridID;
 
-	$(document).ready(function(){
-	    //AUIGrid 그리드를 생성합니다.
+  $(document).ready(function(){
+      //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
         fn_getCustomerAddressAjax();
 
@@ -17,49 +17,49 @@
             $('#custPopCloseBtn').click();
         });
 
-	});
+  });
 
-	function fn_setData(custAddId) {
-	    if($('#callPrgm').val() == 'ORD_REGISTER_BILL_MTH' || $('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR') {
-	        fn_loadMailAddr(custAddId);
-	    }
-	    else if($('#callPrgm').val() == 'ORD_REGISTER_INST_ADD') {
-	        fn_loadInstallAddr(custAddId);
-	    }
-	    else if($('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR') {
-	        fn_loadMailAddr(custAddId);
-	    }
-	    else if($('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR2') {
-	        fn_loadMailAddress(custAddId);
-	    }
-	    else if($('#callPrgm').val() == 'ORD_MODIFY_INST_ADR') {
-	        fn_loadInstallAddrInfoNew(custAddId);
-	    }
-	    else if($('#addrSearchForm #callPrgm').val() == 'PRE_ORD_BILL_ADD') {
-	        fn_loadBillAddr(custAddId);
-	    }
-	    else if($('#addrSearchForm #callPrgm').val() == 'PRE_ORD_INST_ADD'){
-	    	fn_loadInstallAddr(custAddId);
-	    	fn_loadBillAddr(custAddId);
-	    }
-	    else{
-	    	eval(${callPrgm}(custAddId));
-	    }
-	}
+  function fn_setData(custAddId) {
+      if($('#callPrgm').val() == 'ORD_REGISTER_BILL_MTH' || $('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR') {
+          fn_loadMailAddr(custAddId);
+      }
+      else if($('#callPrgm').val() == 'ORD_REGISTER_INST_ADD') {
+          fn_loadInstallAddr(custAddId);
+      }
+      else if($('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR') {
+          fn_loadMailAddr(custAddId);
+      }
+      else if($('#callPrgm').val() == 'ORD_MODIFY_MAIL_ADR2') {
+          fn_loadMailAddress(custAddId);
+      }
+      else if($('#callPrgm').val() == 'ORD_MODIFY_INST_ADR') {
+          fn_loadInstallAddrInfoNew(custAddId);
+      }
+      else if($('#addrSearchForm #callPrgm').val() == 'PRE_ORD_BILL_ADD') {
+          fn_loadBillAddr(custAddId);
+      }
+      else if($('#addrSearchForm #callPrgm').val() == 'PRE_ORD_INST_ADD'){
+        fn_loadInstallAddr(custAddId);
+        fn_loadBillAddr(custAddId);
+      }
+      else{
+        eval(${callPrgm}(custAddId));
+      }
+  }
 
     function createAUIGrid() {
 
         //AUIGrid 칼럼 설정
         var columnLayout = [{
-	            dataField : "name",
-	            headerText : '<spring:message code="sal.title.status" />',
-	            width : 80
-	        }, {
-	            dataField : "addr",
-	            headerText : '<spring:message code="sal.title.address" />'
-	        },{
-	            dataField : "custAddId",
-	            visible : false
+              dataField : "name",
+              headerText : '<spring:message code="sal.title.status" />',
+              width : 80
+          }, {
+              dataField : "addr",
+              headerText : '<spring:message code="sal.title.address" />'
+          },{
+              dataField : "custAddId",
+              visible : false
             }];
 
         //그리드 속성 설정
@@ -83,11 +83,11 @@
         addrGridID = GridCommon.createAUIGrid("grid_addr_wrap", columnLayout, "", gridPros);
     }
 
-	$(function(){
-	    $('#cntcSearchBtn').click(function() {
-	        fn_getCustomerAddressAjax();
-	    });
-	});
+  $(function(){
+      $('#cntcSearchBtn').click(function() {
+          fn_getCustomerAddressAjax();
+      });
+  });
 
     //Get Contact by Ajax
     function fn_getCustomerAddressAjax(){
@@ -99,54 +99,71 @@
 </script>
 </head>
 <body>
-
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
-
-<header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.page.title.custAddr" /></h1>
-<ul class="right_opt">
-	<li><p class="btn_blue2"><a id="custPopCloseBtn" href="#"><spring:message code="sal.btn.close" /></a></p></li>
-</ul>
-</header><!-- pop_header end -->
-
-<section class="pop_body"><!-- pop_body start -->
-
-<section class="search_table"><!-- search_table start -->
-<form id="addrSearchForm" name="cnctSearchForm" action="#" method="post">
-<input id="callPrgm" name="callPrgm" value="${callPrgm}" type="hidden" />
-<input id="custId" name="custId" value="${custId}" type="hidden" />
-
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-	<col style="width:160px" />
-	<col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-	<th scope="row"><spring:message code="sal.text.addrKeyword" /></th>
-	<td ><input id="searchWord" name="searchWord" type="text" title="" placeholder="Keyword" class="w100p" /></td>
-</tr>
-</tbody>
-</table><!-- table end -->
-</form>
-<section class="search_result"><!-- search_result start -->
-
-<ul class="right_btns">
-	<li><p class="btn_grid"><a id="cntcSearchBtn" href="#""><spring:message code="sal.btn.search" /></a></p></li>
-	<li><p class="btn_grid"><a href="#"><spring:message code="sal.btn.clear" /></a></p></li>
-</ul>
-
-<article class="grid_wrap"><!-- grid_wrap start -->
-<div id="grid_addr_wrap" style="width:100%; height:380px; margin:0 auto;"></div>
-</article><!-- grid_wrap end -->
-
-</section><!-- search_result end -->
-
-</section><!-- search_table end -->
-
-</section><!-- pop_body end -->
-
-</div><!-- popup_wrap end -->
+ <div id="popup_wrap" class="popup_wrap">
+  <!-- popup_wrap start -->
+  <header class="pop_header">
+   <!-- pop_header start -->
+   <h1>
+    <spring:message code="sal.page.title.custAddr" />
+   </h1>
+   <ul class="right_opt">
+    <li><p class="btn_blue2">
+      <a id="custPopCloseBtn" href="#"><spring:message
+        code="sal.btn.close" /></a>
+     </p></li>
+   </ul>
+  </header>
+  <!-- pop_header end -->
+  <section class="pop_body">
+   <!-- pop_body start -->
+   <section class="search_table">
+    <!-- search_table start -->
+    <form id="addrSearchForm" name="cnctSearchForm" action="#"
+     method="post">
+     <input id="callPrgm" name="callPrgm" value="${callPrgm}"
+      type="hidden" /> <input id="custId" name="custId"
+      value="${custId}" type="hidden" />
+     <table class="type1">
+      <!-- table start -->
+      <caption>table</caption>
+      <colgroup>
+       <col style="width: 160px" />
+       <col style="width: *" />
+      </colgroup>
+      <tbody>
+       <tr>
+        <th scope="row"><spring:message code="sal.text.addrKeyword" /></th>
+        <td><input id="searchWord" name="searchWord" type="text"
+         title="" placeholder="Keyword" class="w100p" /></td>
+       </tr>
+      </tbody>
+     </table>
+     <!-- table end -->
+    </form>
+    <section class="search_result">
+     <!-- search_result start -->
+     <ul class="right_btns">
+      <li><p class="btn_grid">
+        <a id="cntcSearchBtn" href="#""><spring:message
+          code="sal.btn.search" /></a>
+       </p></li>
+      <li><p class="btn_grid">
+        <a href="#"><spring:message code="sal.btn.clear" /></a>
+       </p></li>
+     </ul>
+     <article class="grid_wrap">
+      <!-- grid_wrap start -->
+      <div id="grid_addr_wrap"
+       style="width: 100%; height: 380px; margin: 0 auto;"></div>
+     </article>
+     <!-- grid_wrap end -->
+    </section>
+    <!-- search_result end -->
+   </section>
+   <!-- search_table end -->
+  </section>
+  <!-- pop_body end -->
+ </div>
+ <!-- popup_wrap end -->
 </body>
 </html>
