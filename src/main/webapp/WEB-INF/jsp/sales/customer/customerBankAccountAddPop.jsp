@@ -1,146 +1,146 @@
 <%@ page contentType="text/html; charset=utf-8" pageEncoding="utf-8"%>
 <%@ include file="/WEB-INF/tiles/view/common.jsp"%>
 <script type="text/javaScript" language="javascript">
-	//AUIGrid ���� �� ��ȯ ID
+  //AUIGrid ���� �� ��ȯ ID
 
-	$(document).ready(
-			function() {
-				doGetCombo('/common/selectCodeList.do', '20', '',
-						'cmbBankType', 'S', ''); //Add Bank Type Combo Box
-				doGetComboCodeId('/sales/customer/selectDdlChnl.do', {
-					isAllowForDd : '1'
-				}, '', 'cmbDdtChnl', 'S', ''); //DEDUCTION CHANNEL
-			});
+  $(document).ready(
+      function() {
+        doGetCombo('/common/selectCodeList.do', '20', '',
+            'cmbBankType', 'S', ''); //Add Bank Type Combo Box
+        doGetComboCodeId('/sales/customer/selectDdlChnl.do', {
+          isAllowForDd : '1'
+        }, '', 'cmbDdtChnl', 'S', ''); //DEDUCTION CHANNEL
+      });
 
-	$(function() {
-		$('#btnAddBankAcc').click(function() {
-			if (!fn_validBankAcc())
-				return false;
-			fn_doSaveBankAcc();
-		});
+  $(function() {
+    $('#btnAddBankAcc').click(function() {
+      if (!fn_validBankAcc())
+        return false;
+      fn_doSaveBankAcc();
+    });
 
-		$('#cmbDdtChnl').change(function(event) {
-			if ($('#cmbDdtChnl').val() != "") {
-				doGetComboCodeId('/sales/customer/selectAccBank.do', {
-					isAllowForDd : '1',
-					ddlChnl : $('#cmbDdtChnl').val()
-				}, '', 'cmbAccBank', 'S', '');
-			} else {
-				$('#cmbAccBank option').remove();
-			}
-		});
-	});
+    $('#cmbDdtChnl').change(function(event) {
+      if ($('#cmbDdtChnl').val() != "") {
+        doGetComboCodeId('/sales/customer/selectAccBank.do', {
+          isAllowForDd : '1',
+          ddlChnl : $('#cmbDdtChnl').val()
+        }, '', 'cmbAccBank', 'S', '');
+      } else {
+        $('#cmbAccBank option').remove();
+      }
+    });
+  });
 
-	function fn_validBankAcc() {
-		var isValid = true, msg = "";
+  function fn_validBankAcc() {
+    var isValid = true, msg = "";
 
-		if (FormUtil.isEmpty($('#txtAccName').val())) {
-			isValid = false;
-			msg += "<spring:message code='sal.alert.msg.pleaseKeyBankAccOwnName' /><br/>";
-		}
+    if (FormUtil.isEmpty($('#txtAccName').val())) {
+      isValid = false;
+      msg += "<spring:message code='sal.alert.msg.pleaseKeyBankAccOwnName' /><br/>";
+    }
 
-		if ($("#cmbBankType option:selected").index() <= 0) {
-			isValid = false;
-			msg += "<spring:message code='sal.alert.msg.pleaseSelectTheAccType' />";
-		}
+    if ($("#cmbBankType option:selected").index() <= 0) {
+      isValid = false;
+      msg += "<spring:message code='sal.alert.msg.pleaseSelectTheAccType' />";
+    }
 
-		if ($("#cmbDdtChnl option:selected").index() <= 0) {
-			isValid = false;
-			msg += "<spring:message code='sal.alert.msg.pleaseSelectTheDdtChnl' />";
-		}
+    if ($("#cmbDdtChnl option:selected").index() <= 0) {
+      isValid = false;
+      msg += "<spring:message code='sal.alert.msg.pleaseSelectTheDdtChnl' />";
+    }
 
-		if ($("#cmbAccBank option:selected").index() <= 0) {
-			isValid = false;
-			msg += "<spring:message code='sal.alert.msg.pleaseSelectTheIssueBank' />";
-		}
+    if ($("#cmbAccBank option:selected").index() <= 0) {
+      isValid = false;
+      msg += "<spring:message code='sal.alert.msg.pleaseSelectTheIssueBank' />";
+    }
 
-		if (FormUtil.isEmpty($('#txtAccNo').val())) {
-			isValid = false;
-			msg += "<spring:message code='sal.alert.msg.pleaseKeyInTheBankAccNum' />";
-		} else {
-			if (FormUtil.checkNum($('#txtAccNo'))) {
-				isValid = false;
-				msg += "<spring:message code='sal.alert.msg.invalidBankAccNum' /><br/>";
-			} else {
-				if ($("#cmbAccBank option:selected").index() > 0) {
-					if (!FormUtil.IsValidBankAccount($('#cmbAccBank').val(), $(
-							'#txtAccNo').val())) {
-						isValid = false;
-						msg += "<spring:message code='sal.alert.msg.invalidBankAccNum' /><br/>";
-					} else {
-						var isExist = fn_existAccNo('${custId}', $('#txtAccNo')
-								.val().trim(), $('#cmbAccBank').val());
-						console.log('xxxxxxisExist:' + isExist);
-						if (isExist) {
-							console.log('xxxxxx');
-							isValid = false;
-							msg += "<spring:message code='sal.alert.msg.bankAccIsExisting' />";
-						}
-					}
-				}
-			}
-		}
+    if (FormUtil.isEmpty($('#txtAccNo').val())) {
+      isValid = false;
+      msg += "<spring:message code='sal.alert.msg.pleaseKeyInTheBankAccNum' />";
+    } else {
+      if (FormUtil.checkNum($('#txtAccNo'))) {
+        isValid = false;
+        msg += "<spring:message code='sal.alert.msg.invalidBankAccNum' /><br/>";
+      } else {
+        if ($("#cmbAccBank option:selected").index() > 0) {
+          if (!FormUtil.IsValidBankAccount($('#cmbAccBank').val(), $(
+              '#txtAccNo').val())) {
+            isValid = false;
+            msg += "<spring:message code='sal.alert.msg.invalidBankAccNum' /><br/>";
+          } else {
+            var isExist = fn_existAccNo('${custId}', $('#txtAccNo')
+                .val().trim(), $('#cmbAccBank').val());
+            console.log('xxxxxxisExist:' + isExist);
+            if (isExist) {
+              console.log('xxxxxx');
+              isValid = false;
+              msg += "<spring:message code='sal.alert.msg.bankAccIsExisting' />";
+            }
+          }
+        }
+      }
+    }
 
-		if (!isValid)
-			Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"
-					+ msg + "</b>");
+    if (!isValid)
+      Common.alert("Order Update Summary" + DEFAULT_DELIMITER + "<b>"
+          + msg + "</b>");
 
-		return isValid;
-	}
+    return isValid;
+  }
 
-	function fn_existAccNo(CustID, AccNo, IssueBankID) {
-		var isExist = false;
+  function fn_existAccNo(CustID, AccNo, IssueBankID) {
+    var isExist = false;
 
-		Common.ajax("GET", "/sales/customer/selectCustomerBankAccJsonList", {
-			custId : CustID,
-			custAccNo : AccNo,
-			custAccBankId : IssueBankID
-		}, function(rsltInfo) {
-			if (rsltInfo != null) {
-				isExist = rsltInfo.length == 0 ? false : true;
-			}
-		}, null, {
-			async : false
-		});
-		console.log('isExist ggg:' + isExist);
-		return isExist;
-	}
+    Common.ajax("GET", "/sales/customer/selectCustomerBankAccJsonList", {
+      custId : CustID,
+      custAccNo : AccNo,
+      custAccBankId : IssueBankID
+    }, function(rsltInfo) {
+      if (rsltInfo != null) {
+        isExist = rsltInfo.length == 0 ? false : true;
+      }
+    }, null, {
+      async : false
+    });
+    console.log('isExist ggg:' + isExist);
+    return isExist;
+  }
 
-	function fn_doSaveBankAcc() {
-		console.log('fn_doSaveBankAcc() START');
+  function fn_doSaveBankAcc() {
+    console.log('fn_doSaveBankAcc() START');
 
-		Common
-				.ajax(
-						"POST",
-						"/sales/customer/insertBankAccountInfo2.do",
-						$('#frmBankAcc').serializeJSON(),
-						function(result) {
+    Common
+        .ajax(
+            "POST",
+            "/sales/customer/insertBankAccountInfo2.do",
+            $('#frmBankAcc').serializeJSON(),
+            function(result) {
 
-							Common
-									.alert("<spring:message code='sal.alert.title.bankAccAdded' />"
-											+ DEFAULT_DELIMITER
-											+ "<b><spring:message code='sal.alert.msg.successfully' /></b>");
+              Common
+                  .alert("<spring:message code='sal.alert.title.bankAccAdded' />"
+                      + DEFAULT_DELIMITER
+                      + "<b><spring:message code='sal.alert.msg.successfully' /></b>");
 
-							if ('${callPrgm}' == 'ORD_REGISTER_BANK_ACC'
-									|| '${callPrgm}' == 'PRE_ORD') {
-								fn_loadBankAccountPop(result.data);
-								$('#addDdCloseBtn').click();
-							}
-						},
-						function(jqXHR, textStatus, errorThrown) {
-							try {
-								Common
-										.alert("<spring:message code='sal.alert.title.failedToAdd' />"
-												+ DEFAULT_DELIMITER
-												+ "<b><spring:message code='sal.alert.msg.failedToAddNewbankAcc' />"
-												+ "Error message : "
-												+ jqXHR.responseJSON.message
-												+ "</b>");
-							} catch (e) {
-								console.log(e);
-							}
-						});
-	}
+              if ('${callPrgm}' == 'ORD_REGISTER_BANK_ACC'
+                  || '${callPrgm}' == 'PRE_ORD') {
+                fn_loadBankAccountPop(result.data);
+                $('#addDdCloseBtn').click();
+              }
+            },
+            function(jqXHR, textStatus, errorThrown) {
+              try {
+                Common
+                    .alert("<spring:message code='sal.alert.title.failedToAdd' />"
+                        + DEFAULT_DELIMITER
+                        + "<b><spring:message code='sal.alert.msg.failedToAddNewbankAcc' />"
+                        + "Error message : "
+                        + jqXHR.responseJSON.message
+                        + "</b>");
+              } catch (e) {
+                console.log(e);
+              }
+            });
+  }
 </script>
 <div id="popup_wrap" class="popup_wrap">
  <!-- popup_wrap start -->
