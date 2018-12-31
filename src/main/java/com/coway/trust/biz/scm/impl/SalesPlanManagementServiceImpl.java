@@ -51,6 +51,10 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 	private ScmCommonMapper scmCommonMapper;
 	
 	@Override
+	public List<EgovMap> selectSalesPlanSummaryHeader(Map<String, Object> params) {
+		return	salesPlanManagementMapper.selectSalesPlanSummaryHeader(params);
+	}
+	@Override
 	public List<EgovMap> selectSalesPlanHeader(Map<String, Object> params) {
 		return	salesPlanManagementMapper.selectSalesPlanHeader(params);
 	}

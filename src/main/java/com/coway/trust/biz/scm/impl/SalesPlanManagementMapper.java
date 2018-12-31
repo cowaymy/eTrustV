@@ -9,6 +9,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 @Mapper("salesPlanManagementMapper")
 public interface SalesPlanManagementMapper {
 	//	Sales Plan Manager
+	List<EgovMap> selectSalesPlanSummaryHeader(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanHeader(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanInfo(Map<String, Object> params);
 	List<EgovMap> selectSalesPlanList(Map<String, Object> params);
