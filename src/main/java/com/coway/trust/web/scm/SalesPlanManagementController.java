@@ -68,7 +68,7 @@ public class SalesPlanManagementController {
 		
 		LOGGER.debug("selectScmTotalPeriod : {}", params.toString());
 		
-		List<EgovMap> selectScmTotalPeriod= scmCommonService.selectScmTotalPeriod(params);
+		List<EgovMap> selectScmTotalPeriod	= scmCommonService.selectScmTotalPeriod(params);
 		List<EgovMap> selectScmYear	= scmCommonService.selectScmYear(params);
 		params.put("scmYear", Integer.parseInt(selectScmTotalPeriod.get(0).get("scmYear").toString()));
 		List<EgovMap> selectScmWeek	= scmCommonService.selectScmWeek(params);
@@ -194,10 +194,12 @@ public class SalesPlanManagementController {
 		
 		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(param1);
 		List<EgovMap> selectSalesPlanHeader	= salesPlanManagementService.selectSalesPlanHeader(param1);
+		List<EgovMap> selectSalesPlanSummaryHeader	= salesPlanManagementService.selectSalesPlanSummaryHeader(param1);
 		
 		map.put("selectScmTotalInfo", selectScmTotalInfo);
 		map.put("selectSalesPlanInfo", selectSalesPlanInfo);
 		map.put("selectSalesPlanHeader", selectSalesPlanHeader);
+		map.put("selectSalesPlanSummaryHeader", selectSalesPlanSummaryHeader);
 		
 		return	ResponseEntity.ok(map);
 	}
@@ -230,9 +232,11 @@ public class SalesPlanManagementController {
 		
 		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(param1);
 		List<EgovMap> selectSalesPlanList	= salesPlanManagementService.selectSalesPlanList(params);
+		List<EgovMap> selectSalesPlanSummaryList	= salesPlanManagementService.selectSalesPlanSummaryList(param1);
 		
 		map.put("selectSalesPlanInfo", selectSalesPlanInfo);
 		map.put("selectSalesPlanList", selectSalesPlanList);
+		map.put("selectSalesPlanSummaryList", selectSalesPlanSummaryList);
 		
 		return	ResponseEntity.ok(map);
 	}
@@ -259,12 +263,15 @@ public class SalesPlanManagementController {
 		param1.put("planWeek", planWeek);
 		param1.put("befWeekYear", befWeekYear);
 		param1.put("befWeekWeek", befWeekWeek);
+		param1.put("team", "");
 		
 		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(param1);
 		List<EgovMap> selectSalesPlanListAll	= salesPlanManagementService.selectSalesPlanListAll(params);
+		List<EgovMap> selectSalesPlanSummaryList	= salesPlanManagementService.selectSalesPlanSummaryList(param1);
 		
 		map.put("selectSalesPlanInfo", selectSalesPlanInfo);
 		map.put("selectSalesPlanList", selectSalesPlanListAll);
+		map.put("selectSalesPlanSummaryList", selectSalesPlanSummaryList);
 		
 		return	ResponseEntity.ok(map);
 	}
