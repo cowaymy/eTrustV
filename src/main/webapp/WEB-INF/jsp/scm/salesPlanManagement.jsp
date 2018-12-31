@@ -12,6 +12,10 @@
 	text-align:right;
 	margin-top:-20px;
 }
+.my-columnCenter {
+	text-align:center;
+	margin-top:-20px;
+}
 .my-backColumn1 {
 	text-align:right;
 	background:#CCE5FF;
@@ -39,6 +43,66 @@
 .Atag-Disabled {
 	pointer-events: none;
 	cursor: default;
+}
+.my-columnCenter0 {
+	text-align : center;
+	background : #CCFFFF;
+	color : #000;
+}
+.my-columnCenter1 {
+	text-align : center;
+	background : #CCCCFF;
+	color : #000;
+}
+.my-columnCenter2 {
+	text-align : center;
+	background : #FFFFCC;
+	color : #000;
+}
+.my-columnCenter3 {
+	text-align : center;
+	background : #FFCCCC;
+	color : #000;
+}
+.my-columnLeft0 {
+	text-align : left;
+	background : #CCFFFF;
+	color : #000;
+}
+.my-columnLeft1 {
+	text-align : left;
+	background : #CCCCFF;
+	color : #000;
+}
+.my-columnLeft2 {
+	text-align : left;
+	background : #FFFFCC;
+	color : #000;
+}
+.my-columnLeft3 {
+	text-align : left;
+	background : #FFCCCC;
+	color : #000;
+}
+.my-columnRight0 {
+	text-align : right;
+	background : #CCFFFF;
+	color : #000;
+}
+.my-columnRight1 {
+	text-align : right;
+	background : #CCCCFF;
+	color : #000;
+}
+.my-columnRight2 {
+	text-align : right;
+	background : #FFFFCC;
+	color : #000;
+}
+.my-columnRight3 {
+	text-align : right;
+	background : #FFCCCC;
+	color : #000;
 }
 </style>
 
@@ -164,6 +228,7 @@ function fnScmWeekCbBoxThis() {
 				chooseMessage : "Select a Year"
 			}
 			, "");
+	gWeekTh	= planWeek.toString();
 }
 
 //	team
@@ -220,29 +285,41 @@ function fnSalesPlanHeader() {
 		return	false;
 	}
 	
+	var dynamicSummaryLayout	= [];
+	var dynamicSummaryOption	= {};
 	var dynamicLayout	= [];
 	var dynamicOption	= {};
 	
+	if ( AUIGrid.isCreated(mySummaryGridID) ) {
+		AUIGrid.destroy(mySummaryGridID);
+	}
 	if ( AUIGrid.isCreated(myGridID) ) {
 		AUIGrid.destroy(myGridID);
 	}
 	
-	dynamicOption	=
-	{
-		usePaging : true,
-		useGroupingPanel : false,
-		showRowNumColumn : true,
-		editable : true,
-		showStateColumn : true,
-		showEditedCellMarker : true,
-		enableCellMerge : true,
-		//fixedColumnCount : 19,			//	M4
-		fixedColumnCount : 10,				//	name
-		enableRestore : true,
-		//softRemovePolicy : "exceptNew",	//	사용자추가한 행은 바로 삭제
-		showRowCheckColumn : false,
-		//independentAllCheckBox : true,	//	전체 선택 체크박스가 독립적인 역할을 할지 여부
-		usePaging : false				//	페이징처리 설정
+	dynamicSummaryOption	= {
+			usePaging : false,
+			useGroupingPanel : false,
+			showRowNumColumn : true,
+			showRowCheckColumn : false,
+			showStateColumn : false,
+			showEditedCellMarker : false,
+			editable : false,
+			enableCellMerge : true,
+			enableRestore : false,
+			fixedColumnCount : 2
+	};
+	dynamicOption	= {
+			usePaging : false,
+			useGroupingPanel : false,
+			showRowNumColumn : true,
+			showRowCheckColumn : false,
+			showStateColumn : true,
+			showEditedCellMarker : true,
+			editable : true,
+			enableCellMerge : true,
+			enableRestore : true,
+			fixedColumnCount : 10
 	};
 	
 	Common.ajax("POST"
@@ -257,6 +334,14 @@ function fnSalesPlanHeader() {
 					Common.alert("Scm Total Information is wrong");
 					return	false;
 				}
+				//	if selectSalesPlanSummaryHeader result null then remove grid
+				if ( null == result.selectSalesPlanSummaryHeader || 1 > result.selectSalesPlanSummaryHeader.length ) {
+					if ( AUIGrid.isCreated(mySummaryGridID) ) {
+						AUIGrid.destroy(mySummaryGridID);
+					}
+					Common.alert("Calendar Information is wrong");
+					return	false;
+				}
 				//	if selectSalesPlanHeader result null then remove grid
 				if ( null == result.selectSalesPlanHeader || 1 > result.selectSalesPlanHeader.length ) {
 					if ( AUIGrid.isCreated(myGridID) ) {
@@ -267,7 +352,290 @@ function fnSalesPlanHeader() {
 				}
 				
 				var planFstSpltWeek		= result.selectScmTotalInfo[0].planFstSpltWeek;
-				//	make header
+				//	1. make summary header
+				if ( null != result.selectSalesPlanSummaryHeader && 0 < result.selectSalesPlanSummaryHeader.length ) {
+					dynamicSummaryLayout.push(
+							{
+								headerText : "Team",
+								dataField : result.selectSalesPlanSummaryHeader[0].team,
+								cellMerge : true,
+								mergePolicy : "restrict",
+								mergeRef : "team",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( "DST" == item.team ) {
+										return	"my-columnCenter0";
+									} else if ( "CODY" == item.team ) {
+										return	"my-columnCenter1";
+									} else if ( "CS" == item.team ) {
+										return	"my-columnCenter2";
+									}
+								}
+							}, {
+								headerText : "Type",
+								dataField : result.selectSalesPlanSummaryHeader[0].typeName,
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( "DST" == item.team ) {
+										return	"my-columnCenter0";
+									} else if ( "CODY" == item.team ) {
+										return	"my-columnCenter1";
+									} else if ( "CS" == item.team ) {
+										return	"my-columnCenter2";
+									}
+								}
+							}, {
+								headerText : result.selectScmTotalInfo[0].m0Mon,
+								dataField : result.selectSalesPlanSummaryHeader[0].m0,
+								dataType : "numeric",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( "DST" == item.team ) {
+										return	"my-columnRight0";
+									} else if ( "CODY" == item.team ) {
+										return	"my-columnRight1";
+									} else if ( "CS" == item.team ) {
+										return	"my-columnRight2";
+									}
+								}
+							}, {
+								headerText : result.selectScmTotalInfo[0].m1Mon,
+								dataField : result.selectSalesPlanSummaryHeader[0].m1,
+								dataType : "numeric",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( "DST" == item.team ) {
+										return	"my-columnRight0";
+									} else if ( "CODY" == item.team ) {
+										return	"my-columnRight1";
+									} else if ( "CS" == item.team ) {
+										return	"my-columnRight2";
+									}
+								}
+							}, {
+								headerText : result.selectScmTotalInfo[0].m2Mon,
+								dataField : result.selectSalesPlanSummaryHeader[0].m2,
+								dataType : "numeric",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( "DST" == item.team ) {
+										return	"my-columnRight0";
+									} else if ( "CODY" == item.team ) {
+										return	"my-columnRight1";
+									} else if ( "CS" == item.team ) {
+										return	"my-columnRight2";
+									}
+								}
+							}, {
+								headerText : result.selectScmTotalInfo[0].m3Mon,
+								dataField : result.selectSalesPlanSummaryHeader[0].m3,
+								dataType : "numeric",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( "DST" == item.team ) {
+										return	"my-columnRight0";
+									} else if ( "CODY" == item.team ) {
+										return	"my-columnRight1";
+									} else if ( "CS" == item.team ) {
+										return	"my-columnRight2";
+									}
+								}
+							}, {
+								headerText : result.selectScmTotalInfo[0].m4Mon,
+								dataField : result.selectSalesPlanSummaryHeader[0].m4,
+								dataType : "numeric",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( "DST" == item.team ) {
+										return	"my-columnRight0";
+									} else if ( "CODY" == item.team ) {
+										return	"my-columnRight1";
+									} else if ( "CS" == item.team ) {
+										return	"my-columnRight2";
+									}
+								}
+							}
+					);
+					
+					m0WeekCnt	= parseInt(result.selectScmTotalInfo[0].m0WeekCnt);
+					m1WeekCnt	= parseInt(result.selectScmTotalInfo[0].m1WeekCnt);
+					m2WeekCnt	= parseInt(result.selectScmTotalInfo[0].m2WeekCnt);
+					m3WeekCnt	= parseInt(result.selectScmTotalInfo[0].m3WeekCnt);
+					m4WeekCnt	= parseInt(result.selectScmTotalInfo[0].m4WeekCnt);
+					
+					planFstWeek	= parseInt(result.selectScmTotalInfo[0].planFstWeek);
+					planFstSpltWeek	= parseInt(result.selectScmTotalInfo[0].planFstSpltWeek);
+					planWeekTh	= parseInt(result.selectScmTotalInfo[0].planWeekTh);
+					
+					m0ThWeekStart	= parseInt(result.selectScmTotalInfo[0].planFstSpltWeek);	//	수립주차가 포함된 월의 스플릿여부 상관없이 첫주차
+					m1ThWeekStart	= m0ThWeekStart + m0WeekCnt;
+					m2ThWeekStart	= m1ThWeekStart + m1WeekCnt;
+					m3ThWeekStart	= m2ThWeekStart + m2WeekCnt;
+					m4ThWeekStart	= m3ThWeekStart + m3WeekCnt;
+					
+					var iLoopCnt	= 1;
+					var iLoopDataFieldCnt	= 1;
+					var intToStrFieldCnt	= "";
+					var fieldStr	= "";
+					var startCnt	= 0;
+					var strWeekTh	= "W";
+					
+					/******************************
+					******** M0 Header
+					******************************/
+					var groupM0	= {
+						headerText : result.selectScmTotalInfo[0].m0Mon,
+						children : []
+					};
+					for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
+						intToStrFieldCnt	= iLoopDataFieldCnt.toString();
+						if ( 1 == intToStrFieldCnt.length ) {
+							intToStrFieldCnt	= "0" + intToStrFieldCnt;
+						}
+						fieldStr	= "w" + iLoopCnt + "WeekSeq";
+						groupM0.children.push({
+							dataField : "w" + intToStrFieldCnt,	//	w00
+							headerText : result.selectSalesPlanHeader[0][fieldStr],
+							dataType : "numeric",
+							styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+								if ( "DST" == item.team ) {
+									return	"my-columnRight0";
+								} else if ( "CODY" == item.team ) {
+									return	"my-columnRight1";
+								} else if ( "CS" == item.team ) {
+									return	"my-columnRight2";
+								}
+							}
+						});
+						iLoopCnt++;
+						iLoopDataFieldCnt++;
+					}
+					dynamicSummaryLayout.push(groupM0);
+					
+					/******************************
+					******** M1 Header
+					******************************/
+					var groupM1 = {
+						headerText : result.selectScmTotalInfo[0].m1Mon,
+						children : []
+					};
+					for ( var i = 0 ; i < m1WeekCnt ; i++ ) {
+						intToStrFieldCnt	= iLoopDataFieldCnt.toString();
+						if ( 1 == intToStrFieldCnt.length ) {
+							intToStrFieldCnt	= "0" + intToStrFieldCnt;
+						}
+						fieldStr	= "w" + iLoopCnt + "WeekSeq";
+						groupM1.children.push({
+							dataField : "w" + intToStrFieldCnt,
+							headerText : result.selectSalesPlanHeader[0][fieldStr],
+							dataType : "numeric",
+							styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+								if ( "DST" == item.team ) {
+									return	"my-columnRight0";
+								} else if ( "CODY" == item.team ) {
+									return	"my-columnRight1";
+								} else if ( "CS" == item.team ) {
+									return	"my-columnRight2";
+								}
+							}
+						});
+						iLoopCnt++;
+						iLoopDataFieldCnt++;
+					}
+					dynamicSummaryLayout.push(groupM1);
+					
+					/******************************
+					******** M2 Header
+					******************************/
+					var groupM2 = {
+						headerText : result.selectScmTotalInfo[0].m2Mon,
+						children : []
+					};
+					for ( var i = 0 ; i < m2WeekCnt ; i++ ) {
+						intToStrFieldCnt	= iLoopDataFieldCnt.toString();
+						
+						if ( 1 == intToStrFieldCnt.length ) {
+							intToStrFieldCnt	= "0" + intToStrFieldCnt;
+						}
+						fieldStr	= "w" + iLoopCnt + "WeekSeq";
+						groupM2.children.push({
+							dataField : "w" + intToStrFieldCnt,
+							headerText :  result.selectSalesPlanHeader[0][fieldStr],
+							dataType : "numeric",
+							styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+								if ( "DST" == item.team ) {
+									return	"my-columnRight0";
+								} else if ( "CODY" == item.team ) {
+									return	"my-columnRight1";
+								} else if ( "CS" == item.team ) {
+									return	"my-columnRight2";
+								}
+							}
+						});
+						iLoopCnt++;
+						iLoopDataFieldCnt++;
+					};
+					dynamicSummaryLayout.push(groupM2);
+					
+					/******************************
+					******** M3 Header
+					******************************/
+					var groupM3 = {
+						headerText : result.selectScmTotalInfo[0].m3Mon,
+						children : []
+					};
+					for ( var i = 0 ; i < m3WeekCnt ; i++ ) {
+						intToStrFieldCnt	= iLoopDataFieldCnt.toString();
+						if ( 1 == intToStrFieldCnt.length ) {
+							intToStrFieldCnt	= "0" + intToStrFieldCnt;
+						}
+						fieldStr	= "w" + iLoopCnt + "WeekSeq";
+						groupM3.children.push({
+							dataField : "w" + intToStrFieldCnt,
+							headerText :  result.selectSalesPlanHeader[0][fieldStr],
+							dataType : "numeric",
+							styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+								if ( "DST" == item.team ) {
+									return	"my-columnRight0";
+								} else if ( "CODY" == item.team ) {
+									return	"my-columnRight1";
+								} else if ( "CS" == item.team ) {
+									return	"my-columnRight2";
+								}
+							}
+						});
+						iLoopCnt++;
+						iLoopDataFieldCnt++;
+					}
+					dynamicSummaryLayout.push(groupM3);
+					
+					/******************************
+					******** M4 Header
+					******************************/
+					var groupM4 = {
+						headerText : result.selectScmTotalInfo[0].m4Mon,
+						children : []
+					};
+					for ( var i = 0 ; i < m4WeekCnt ; i++ ) {
+						intToStrFieldCnt	= iLoopDataFieldCnt.toString();
+						if ( 1 == intToStrFieldCnt.length ) {
+							intToStrFieldCnt	= "0" + intToStrFieldCnt;
+						}
+						fieldStr	= "w" + iLoopCnt + "WeekSeq";
+						groupM4.children.push({
+							dataField : "w" + intToStrFieldCnt,
+							headerText :  result.selectSalesPlanHeader[0][fieldStr],
+							dataType : "numeric",
+							styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+								if ( "DST" == item.team ) {
+									return	"my-columnRight0";
+								} else if ( "CODY" == item.team ) {
+									return	"my-columnRight1";
+								} else if ( "CS" == item.team ) {
+									return	"my-columnRight2";
+								}
+							}
+						});
+						iLoopCnt++;
+						iLoopDataFieldCnt++;
+					}
+					dynamicSummaryLayout.push(groupM4);
+				}
+				
+				//	2. make plan header
 				if ( null != result.selectSalesPlanHeader && 0 < result.selectSalesPlanHeader.length ) {
 					dynamicLayout.push(
 							{
@@ -429,7 +797,6 @@ function fnSalesPlanHeader() {
 					var startCnt	= 0;
 					var strWeekTh	= "W";
 					
-					var m0HeaderLabel	= "";
 					/******************************
 					******** M0 Header
 					******************************/
@@ -449,7 +816,7 @@ function fnSalesPlanHeader() {
 						}
 						if ( parseInt(gWeekTh) > startCnt ) {
 							//	수립주차 기준 당월의 과거 주차
-							//console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							console.log("1. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							if ( 2 > startCnt.toString().length ) {
 								strWeekTh	= "W0";
 							} else {
@@ -467,7 +834,7 @@ function fnSalesPlanHeader() {
 							iLoopCnt++;
 						} else if ( parseInt(gWeekTh) == startCnt ) {
 							//	수립주차 기준 당월의 바로 전 주차
-							//console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							console.log("2. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							groupM0.children.push({
 								dataField : "w" + intToStrFieldCnt,
@@ -480,7 +847,7 @@ function fnSalesPlanHeader() {
 							iLoopCnt++;
 						} else {
 							//	수립주차 기준 당월의 미래 주차
-							//console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
+							console.log("3. startCnt : " + startCnt + ", gWeekTh : " + gWeekTh);
 							fieldStr	= "w" + iLoopCnt + "WeekSeq";
 							var planStusId	= result.selectSalesPlanInfo[0].planStusId;//	console.log("planStusId : " + planStusId);
 							if ( "5" == planStusId ) {
@@ -700,7 +1067,8 @@ function fnSalesPlanHeader() {
 					dynamicLayout.push(groupM4);
 					
 					//	Create Grid
-					myGridID	= AUIGrid.create("#dynamic_DetailGrid_wrap", dynamicLayout, dynamicOption);
+					mySummaryGridID	= GridCommon.createAUIGrid("sales_plan_summary_wrap", dynamicSummaryLayout, "", dynamicSummaryOption);
+					myGridID	= GridCommon.createAUIGrid("sales_plan_wrap", dynamicLayout, "", dynamicOption);
 					
 					//	Event
 					AUIGrid.bind(myGridID, "cellEditEnd", fnSumMnPlan);
@@ -746,6 +1114,10 @@ function fnSearch() {
 			, function(result) {
 				console.log(result);
 				
+				//	Sales Plan Summary
+				AUIGrid.setGridData(mySummaryGridID, result.selectSalesPlanSummaryList);
+				
+				//	Sales Plan
 				if ( "/scm/selectSalesPlanListAll.do" == url ) {
 					fnButtonControl("All", result.selectSalesPlanInfo, result.selectSalesPlanList);
 				} else if ( "/scm/selectSalesPlanList.do" == url ) {
@@ -916,7 +1288,7 @@ function fnExcel(obj, fileName) {
 		return	false;
 	}
 	
-	GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileName + '_' + getTimeStamp());
+	GridCommon.exportTo("#sales_plan_wrap", "xlsx", fileName + '_' + getTimeStamp());
 }
 
 //	validation
@@ -1240,6 +1612,7 @@ function fnScmWeekCbBoxChange(object) {
 
 //	Grid
 var myGridID;
+var mySummaryGridID;
 /*
 $(document).ready(function() {
 	//
@@ -1351,6 +1724,10 @@ $(document).ready(function() {
 	</section><!-- search_table end -->
 
 	<section class="search_result"><!-- search_result start -->
+		<article class="grid_wrap"><!-- grid_wrap start -->
+			<!-- 그리드 영역 1-->
+			<div id="sales_plan_summary_wrap" style="height:226px;"></div>
+		</article><!-- grid_wrap end -->
 		<ul class="right_btns">
 			<li><p id="btnCreate" class="btn_grid btn_disabled"><a onclick="fnCreate(this);">Create</a></p></li>
 			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSaveDetail(this);">Save</a></p></li>
@@ -1362,7 +1739,7 @@ $(document).ready(function() {
 		</ul>
 		<article class="grid_wrap"><!-- grid_wrap start -->
 			<!-- 그리드 영역 2-->
-			<div id="dynamic_DetailGrid_wrap" style="height:600px;"></div>
+			<div id="sales_plan_wrap" style="height:400px;"></div>
 		</article><!-- grid_wrap end -->
 	</section><!-- search_result end -->
 </section><!-- content end -->

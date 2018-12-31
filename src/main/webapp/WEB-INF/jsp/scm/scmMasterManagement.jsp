@@ -390,6 +390,38 @@ function checkAll(isChecked, field) {
 	}
 }
 
+//	excel
+function fnExcel(obj, fileName) {
+	//	1. grid id
+	//	2. type : "xlsx", "csv", "txt", "xml", "json", "pdf", "object"
+	//	3. exprot ExcelFileName  MonthlyGridID, WeeklyGridID
+	if ( true == $(obj).parents().hasClass("btn_disabled") ) {
+		return	false;
+	}
+	
+	GridCommon.exportTo("#masterManagerDiv", "xlsx", fileName + "_" + getTimeStamp());
+}
+//	get timestamp
+function getTimeStamp() {
+	function fnLeadingZeros(n, digits) {
+		var zero	= "";
+		n	= n.toString();
+		
+		if ( n.length < digits ) {
+			for (var i = 0 ; i < digits - n.length ; i++ ) {
+				zero	+= "0";
+			}
+		}
+		return	zero + n;
+	}
+	
+	var d	= new Date();
+	var date	= fnLeadingZeros(d.getFullYear(), 4) + fnLeadingZeros(d.getMonth() + 1, 2) + fnLeadingZeros(d.getDate(), 2);
+	var time	= fnLeadingZeros(d.getHours(), 2) + fnLeadingZeros(d.getMinutes(), 2) + fnLeadingZeros(d.getSeconds(), 2);
+	
+	return	date + "_" + time;
+}
+
 /*************************************
 **********  Grid-LayOut  ************
 *************************************/
@@ -978,6 +1010,7 @@ $(document).ready(function() {
 		<ul class="right_btns">
 			<!-- <li><p class="btn_grid"><a onclick="fnAddNewPop();">Add New</a></p></li> -->
 			<li><p class="btn_grid"><a onclick="fnSave();">Save</a></p></li>
+			<li><p id="btnExcel" class="btn_grid"><a onclick="fnExcel(this, 'SCM Master');">Excel</a></p></li>
 		</ul>
 		<article class="grid_wrap"><!-- grid_wrap start -->
 			<!-- 그리드 영역 1-->

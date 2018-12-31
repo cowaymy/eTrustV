@@ -1,5 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <%@ include file="/WEB-INF/tiles/view/common.jsp" %>
+<link href="${pageContext.request.contextPath}/resources/css/select2.min.css" rel="stylesheet">
+<script src ="${pageContext.request.contextPath}/resources/js/select2.min.js" type="text/javascript"></script>
 <style type="text/css">
 /* 칼럼 스타일 전체 재정의 */
 .aui-grid-left-column {
@@ -7,6 +9,10 @@
 }
 
 /* 커스텀 칼럼 스타일 정의 */
+.my-columnEditable {
+	text-align : right;
+	margin-top : -20px;
+}
 .my-columnRight0 {
 	text-align : right;
 	background : #CCFFFF;
@@ -15,6 +21,11 @@
 .my-columnRight1 {
 	text-align : right;
 	background : #CCCCFF;
+	color : #000;
+}
+.my-columnLeadTm {
+	text-align : right;
+	background : #FFCCFF;
 	color : #000;
 }
 .my-columnCenter0 {
@@ -37,17 +48,55 @@
 	background : #CCCCFF;
 	color : #000;
 }
+.my-header {
+	background:#828282;
+	color:#000;
+}
 </style>
 
 <script type="text/javaScript">
 var gWeekThValue	= "";
 var weekStartCol	= 16;
 
+var m0WeekCnt	= 0;	//	M0월 주차갯수
+var m1WeekCnt	= 0;	//	M+1월 주차갯수
+var m2WeekCnt	= 0;	//	M+2월 주차갯수
+var m3WeekCnt	= 0;	//	M+3월 주차갯수
+var m4WeekCnt	= 0;	//	M+4월 주차갯수
+var m0ThWeekStart	= 0;	//	M0월 시작주차
+var m1ThWeekStart	= 0;	//	M1월 시작주차
+var m2ThWeekStart	= 0;	//	M2월 시작주차
+var m3ThWeekStart	= 0;	//	M3월 시작주차
+var m4ThWeekStart	= 0;	//	M4월 시작주차
+
+var planYear	= 0;
+var planMonth	= 0;
+var planWeek	= 0;
+
 $(function() {
-	fnScmYearCbBox();		//fnSelectExcuteYear
-	fnScmWeekCbBox();		//fnSelectPeriodReset
-	fnScmStockTypeCbBox();	//fnSelectStockTypeComboList : 15
+	//	Set combo box
+	fnScmTotalPeriod();
+	fnScmStockCategoryCbBox();
+	fnScmStockTypeCbBox();
+	doGetComboAndGroup2("/scm/selectScmStockCodeForMulti.do", "", "", "scmStockCodeCbBox", "M", "");
+	$(".js-example-basic-multiple").select2();
 });
+
+//	Scm Total Period
+function fnScmTotalPeriod() {
+	Common.ajax("POST"
+			, "/scm/selectScmTotalPeriod.do"
+			, ""
+			, function(result) {
+				console.log(result);
+				
+				planYear	= result.selectScmTotalPeriod[0].scmYear;
+				planMonth	= result.selectScmTotalPeriod[0].scmMonth;
+				planWeek	= result.selectScmTotalPeriod[0].scmWeek;
+				fnScmYearCbBox();
+				fnScmWeekCbBoxThis();
+			});
+}
 
 //	year
 function fnScmYearCbBox() {
@@ -87,7 +136,7 @@ function fnScmYearCbBox() {
 	CommonCombo.make("scmYearCbBox"
 			, "/scm/selectScmYear.do"
 			, ""
-			, ""
+			, planYear.toString()
 			, {
 				id : "id",
 				name : "name",
@@ -103,21 +152,50 @@ function fnScmWeekCbBox() {
 	weekChkBox.options[0]	= new Option("Select a Week", "");
 }
 
+//	today week
+function fnScmWeekCbBoxThis() {
+	CommonCombo.make("scmWeekCbBox"
+			, "/scm/selectScmWeek.do"
+			, { scmYear : planYear }
+			, planWeek.toString()
+			, {
+				id : "id",
+				name : "name",
+				chooseMessage : "Select a Year"
+			}
+			, "");
+}
 
-//	stock type
-function fnScmStockTypeCbBox() {
-	CommonCombo.make("scmStockTypeCbBox"
-			, "/scm/selectScmStockType.do"	//	"/scm/selectComboSupplyCDC.do"
+//	category
+function fnScmStockCategoryCbBox() {
+	CommonCombo.make("scmStockCategoryCbBox"
+			, "/scm/selectScmStockCategory.do"
 			, ""
 			, ""
 			, {
 				id : "id",
 				name : "name",
-				type : "M",
-				chooseMessage : "ALL"
+				type : "M"
 			}
 			, "");
 }
+
+//	stock type
+function fnScmStockTypeCbBox() {
+	//var params	= $.extend($("#MainForm").serializeJSON(), params);
+	CommonCombo.make("scmStockTypeCbBox"
+			, "/scm/selectScmStockType.do"
+			//, params
+			, ""
+			, ""
+			, {
+				id : "id",
+				name : "name",
+				type : "M"
+			}
+			, "");
+}
+
 
 //	excel
 function fnExcel(obj, fileName) {
@@ -128,13 +206,15 @@ function fnExcel(obj, fileName) {
 		return	false;
 	}
 	
-	GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileName + $("#scmWeekCbBox").val());
+	GridCommon.exportTo("#supply_plan_summary_wrap", "xlsx", fileName + $("#scmWeekCbBox").val());
 }
 
 //	search
 function fnSearch() {
 	var params	= {
-			scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects")
+			scmStockTypeCbBox : $("#scmStockTypeCbBox").multipleSelect("getSelects"),
+			scmStockCategoryCbBox : $("#scmStockCategoryCbBox").multipleSelect("getSelects"),
+			scmStockCodeCbBox : $("#scmStockCodeCbBox").val()
 		};
 		
 		params	= $.extend($("#MainForm").serializeJSON(), params);
@@ -143,17 +223,13 @@ function fnSearch() {
 				, "/scm/selectSupplyPlanSummaryList.do"
 				, params
 				, function(result) {
-					//console.log("Success fnSearch : " + result.length);
 					console.log(result);
 					
 					AUIGrid.setGridData(myGridID, result.selectSupplyPlanSummaryList);
-					
-					//	set result list to object
-					//supplyPlanList	= result.selectSupplyPlanList;
 				});
 }
 
-//	supply plan header
+//supply plan header
 function fnSupplyPlanHeader() {
 	if ( 1 > $("#scmYearCbBox").val().length ) {
 		Common.alert("<spring:message code='sys.msg.necessary' arguments='Year' htmlEscape='false'/>");
@@ -171,58 +247,45 @@ function fnSupplyPlanHeader() {
 		AUIGrid.destroy(myGridID);
 	}
 	
-	dynamicOption	=
-	{
-		//usePaging : true,
-		useGroupingPanel : false,
-		showRowNumColumn : false,
-		editable : false,
-		fixedColumnCount : weekStartCol,	//	고정칼럼 카운트 지정
-		enableCellMerge : true,
-		cellMergePolicy : "withNull",
-		selectionMode : "multipleCells"
+	dynamicOption	= {
+			editable : false,
+			useGroupingPanel : false,
+			showRowNumColumn : true,
+			enableCellMerge : true,
+			enableRestore : true,
+			fixedColumnCount : 13,
+			usePaging : false
 	};
 	
 	Common.ajax("POST"
 			, "/scm/selectSupplyPlanHeader.do"
 			, $("#MainForm").serializeJSON()
 			, function(result) {
-				
-				console.log (result);
-				
-				//	selectSupplyPlanInfo : SalesPlan Info + SupplyPlanInfo
-				if ( null == result.selectSupplyPlanInfo || 1 > result.selectSupplyPlanInfo.length ) {
-					Common.alert("Sales Plan must be first created on this week");
+				//console.log (result);
+				//	scm total info check
+				if ( null == result.selectScmTotalInfo || 1 > result.selectScmTotalInfo.length ) {
+					Common.alert("Scm Total Information is wrong");
 					return	false;
 				}
-				
-				//	if selectTotalSplitInfo result is null then check SCM0018M Table
-				if ( null == result.selectTotalSplitInfo || 1 > result.selectTotalSplitInfo.length ) {
-					Common.alert("Check SCM0018M Table : selectTotalSplitInfo");
-					return	false;
-				}
-				
-				//	if selectTotalSplitInfo result is null then check SCM0018M Table
-				if ( null == result.selectChildField || 1 > result.selectChildField.length ) {
-					Common.alert("Check SCM0018M Table : selectChildField");
-					return	false;
-				}
-				
 				//	if selectSupplyPlanHeader result null then remove grid
 				if ( null == result.selectSupplyPlanHeader || 1 > result.selectSupplyPlanHeader.length ) {
 					if ( AUIGrid.isCreated(myGridID) ) {
 						AUIGrid.destroy(myGridID);
 					}
-					
+					Common.alert("Calendar Information is wrong");
 					return	false;
 				}
-				
+				scmTotalInfo	= result.selectScmTotalInfo;
+				var leadTm		= result.selectScmTotalInfo[0].leadTm;
+				var planWeekTh	= result.selectScmTotalInfo[0].planWeekTh;
+				var fromPlanToPoSpltCnt		= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
+				console.log("leadTm : " + leadTm + ", planWeekTh : " + planWeekTh + ", fromPlanToPoSpltCnt : " + fromPlanToPoSpltCnt);
+				leadTm	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt);
 				//	make header
 				if ( null != result.selectSupplyPlanHeader && 0 < result.selectSupplyPlanHeader.length ) {
 					dynamicLayout.push(
 							{
-								headerText : "Stock",
-								cellMerge : true,
+								headerText : "Material",
 								children :
 									[
 									 {
@@ -231,33 +294,13 @@ function fnSupplyPlanHeader() {
 										 visible : false,
 										 cellMerge : true
 									 }, {
-										 dataField : result.selectSupplyPlanHeader[0].planId,
-										 headerText : "Plan Id",
-										 visible : false
-									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].typeId,
 										 headerText : "Type Id",
 										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].typeName,
 										 headerText : "Type",
-										 cellMerge : true,
-										 mergePolicy : "restrict",
-										 mergeRef : result.selectSupplyPlanHeader[0].divOdd,
-										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-											 if ( "0" == item.divOdd ) {
-												 return	"my-columnCenter0";
-											 } else {
-												 return	"my-columnCenter1";
-											 }
-										 }
-									 }, {
-										 dataField : result.selectSupplyPlanHeader[0].categoryId,
-										 headerText : "Category Id",
-										 visible : false
-									 }, {
-										 dataField : result.selectSupplyPlanHeader[0].categoryName,
-										 headerText : "Category",
+										 visible : true,
 										 cellMerge : true,
 										 mergePolicy : "restrict",
 										 mergeRef : result.selectSupplyPlanHeader[0].divOdd,
@@ -271,7 +314,10 @@ function fnSupplyPlanHeader() {
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].code,
 										 headerText : "Code",
+										 visible : true,
 										 cellMerge : true,
+										 mergePolicy : "restrict",
+										 mergeRef : result.selectSupplyPlanHeader[0].divOdd,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnCenter0";
@@ -281,8 +327,11 @@ function fnSupplyPlanHeader() {
 										 }
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].name,
-										 headerText : "Name",
+										 headerText : "Desc.",
+										 visible : true,
 										 cellMerge : true,
+										 mergePolicy : "restrict",
+										 mergeRef : result.selectSupplyPlanHeader[0].divOdd,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnLeft0";
@@ -296,7 +345,8 @@ function fnSupplyPlanHeader() {
 										 visible : false
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].psiName,
-										 headerText : "Psi",
+										 headerText : "PSI",
+										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnLeft0";
@@ -312,31 +362,7 @@ function fnSupplyPlanHeader() {
 									[
 									 {
 										 dataField : result.selectSupplyPlanHeader[0].m0,
-										 headerText : "M + 0",
-										 dataType : "numeric",
-										 formatString : "#,##0",
-										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-											 if ( "0" == item.divOdd ) {
-												 return	"my-columnRight0";
-											 } else {
-												 return	"my-columnRight1";
-											 }
-										 }
-									 }, {
-										 dataField : result.selectSupplyPlanHeader[0].m1,
-										 headerText : "M + 1",
-										 dataType : "numeric",
-										 formatString : "#,##0",
-										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-											 if ( "0" == item.divOdd ) {
-												 return	"my-columnRight0";
-											 } else {
-												 return	"my-columnRight1";
-											 }
-										 }
-									 }, {
-										 dataField : result.selectSupplyPlanHeader[0].m2,
-										 headerText : "M + 2",
+										 headerText : result.selectScmTotalInfo[0].m0Mon,
 										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
@@ -348,55 +374,77 @@ function fnSupplyPlanHeader() {
 										 dataType : "numeric",
 										 formatString : "#,##0"
 									 }, {
-										 dataField : result.selectSupplyPlanHeader[0].m3,
-										 headerText : "M + 3",
-										 dataType : "numeric",
-										 formatString : "#,##0",
+										 dataField : result.selectSupplyPlanHeader[0].m1,
+										 headerText : result.selectScmTotalInfo[0].m1Mon,
+										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnRight0";
 											 } else {
 												 return	"my-columnRight1";
 											 }
-										 }
+										 },
+										 dataType : "numeric"
+									 }, {
+										 dataField : result.selectSupplyPlanHeader[0].m2,
+										 headerText : result.selectScmTotalInfo[0].m2Mon,
+										 visible : true,
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnRight0";
+											 } else {
+												 return	"my-columnRight1";
+											 }
+										 },
+										 dataType : "numeric"
+									 }, {
+										 dataField : result.selectSupplyPlanHeader[0].m3,
+										 headerText : result.selectScmTotalInfo[0].m3Mon,
+										 visible : true,
+										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+											 if ( "0" == item.divOdd ) {
+												 return	"my-columnRight0";
+											 } else {
+												 return	"my-columnRight1";
+											 }
+										 },
+										 dataType : "numeric"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].m4,
-										 headerText : "M + 4",
-										 dataType : "numeric",
-										 formatString : "#,##0",
+										 headerText : result.selectScmTotalInfo[0].m4Mon,
+										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnRight0";
 											 } else {
 												 return	"my-columnRight1";
 											 }
-										 }
+										 },
+										 dataType : "numeric"
 									 }, {
 										 dataField : result.selectSupplyPlanHeader[0].overdue,
 										 headerText : "OVERDUE",
-										 dataType : "numeric",
-										 formatString : "#,##0",
+										 visible : true,
 										 styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 											 if ( "0" == item.divOdd ) {
 												 return	"my-columnRight0";
 											 } else {
 												 return	"my-columnRight1";
 											 }
-										 }
+										 },
+										 dataType : "numeric"
 									 }
 									 ]
 							}
 					);
 					
-					//	set m0 ~ m4 Week cnt
-					m0WeekCnt	= parseInt(result.selectTotalSplitInfo[0].m0WeekCnt);
-					m1WeekCnt	= parseInt(result.selectTotalSplitInfo[0].m1WeekCnt);
-					m2WeekCnt	= parseInt(result.selectTotalSplitInfo[0].m2WeekCnt);
-					m3WeekCnt	= parseInt(result.selectTotalSplitInfo[0].m3WeekCnt);
-					m4WeekCnt	= parseInt(result.selectTotalSplitInfo[0].m4WeekCnt);
+					m0WeekCnt	= parseInt(result.selectScmTotalInfo[0].m0WeekCnt);
+					m1WeekCnt	= parseInt(result.selectScmTotalInfo[0].m1WeekCnt);
+					m2WeekCnt	= parseInt(result.selectScmTotalInfo[0].m2WeekCnt);
+					m3WeekCnt	= parseInt(result.selectScmTotalInfo[0].m3WeekCnt);
+					m4WeekCnt	= parseInt(result.selectScmTotalInfo[0].m4WeekCnt);
 					
-					//	set every week's start th
-					m0ThWeekStart	= parseInt(result.selectChildField[0].weekTh);
+					m0ThWeekStart	= parseInt(result.selectScmTotalInfo[0].planFstSpltWeek);
 					m1ThWeekStart	= m0ThWeekStart + m0WeekCnt;
 					m2ThWeekStart	= m1ThWeekStart + m1WeekCnt;
 					m3ThWeekStart	= m2ThWeekStart + m2WeekCnt;
@@ -413,7 +461,7 @@ function fnSupplyPlanHeader() {
 					******** M0 Header
 					******************************/
 					var groupM0	= {
-						headerText : "M0",
+						headerText : result.selectScmTotalInfo[0].m0Mon,
 						children : []
 					};
 					for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
@@ -422,19 +470,36 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM0.children.push({
-							dataField : "w" + intToStrFieldCnt,	//	w00
-							headerText : result.selectSupplyPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-								if ( "0" == item.divOdd ) {
-									return	"my-columnRight0";
-								} else {
-									return	"my-columnRight1";
+						if ( iLoopDataFieldCnt > leadTm ) {
+							//	리드타임 이내
+							groupM0.children.push({
+								dataField : "w" + intToStrFieldCnt,	//	w00
+								headerText : result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								//formatString : "#,##0",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( 3 != item.psiId ) {
+										if ( "0" == item.divOdd ) {
+											return	"my-columnRight0";
+										} else {
+											return	"my-columnRight1";
+										}
+									} else {
+										return	"my-columnEditable";
+									}
 								}
-							}
-						});
+							});
+						} else {
+							//	리드타임 이후
+							groupM0.children.push({
+								dataField : "w" + intToStrFieldCnt,	//	w00
+								headerText : result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								//formatString : "#,##0",
+								editable : false,
+								style : "my-columnLeadTm"
+							});
+						}
 						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					}
@@ -444,7 +509,7 @@ function fnSupplyPlanHeader() {
 					******** M1 Header
 					******************************/
 					var groupM1 = {
-						headerText : "M + 1",
+						headerText : result.selectScmTotalInfo[0].m1Mon,
 						children : []
 					};
 					for ( var i = 0 ; i < m1WeekCnt ; i++ ) {
@@ -454,19 +519,36 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM1.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSupplyPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-								if ( "0" == item.divOdd ) {
-									return	"my-columnRight0";
-								} else {
-									return	"my-columnRight1";
+						if ( iLoopDataFieldCnt > leadTm ) {
+							//	리드타임 이내
+							groupM1.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText : result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								//formatString : "#,##0",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( 3 != item.psiId ) {
+										if ( "0" == item.divOdd ) {
+											return	"my-columnRight0";
+										} else {
+											return	"my-columnRight1";
+										}
+									} else {
+										return	"my-columnEditable";
+									}
 								}
-							}
-						});
+							});
+						} else {
+							//	리드타임 이후
+							groupM1.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText : result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								//formatString : "#,##0",
+								editable : false,
+								style : "my-columnLeadTm"
+							});
+						}
 						iLoopCnt ++;
 						iLoopDataFieldCnt++;
 					}
@@ -476,7 +558,7 @@ function fnSupplyPlanHeader() {
 					******** M2 Header
 					******************************/
 					var groupM2 = {
-						headerText : "M + 2",
+						headerText : result.selectScmTotalInfo[0].m2Mon,
 						children : []
 					};
 					for ( var i = 0 ; i < m2WeekCnt ; i++ ) {
@@ -486,19 +568,36 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM2.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSupplyPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-								if ( "0" == item.divOdd ) {
-									return	"my-columnRight0";
-								} else {
-									return	"my-columnRight1";
+						if ( iLoopDataFieldCnt > leadTm ) {
+							//	리드타임 이내
+							groupM2.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								//formatString : "#,##0",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( 3 != item.psiId ) {
+										if ( "0" == item.divOdd ) {
+											return	"my-columnRight0";
+										} else {
+											return	"my-columnRight1";
+										}
+									} else {
+										return	"my-columnEditable";
+									}
 								}
-							}
-						});
+							});
+						} else {
+							//	리드타임 이후
+							groupM2.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								//formatString : "#,##0",
+								editable : false,
+								style : "my-columnLeadTm"
+							});
+						}
 						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					};
@@ -508,7 +607,7 @@ function fnSupplyPlanHeader() {
 					******** M3 Header
 					******************************/
 					var groupM3 = {
-						headerText : "M + 3",
+						headerText : result.selectScmTotalInfo[0].m3Mon,
 						children : []
 					};
 					for ( var i = 0 ; i < m3WeekCnt ; i++ ) {
@@ -518,19 +617,36 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM3.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSupplyPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-								if ( "0" == item.divOdd ) {
-									return	"my-columnRight0";
-								} else {
-									return	"my-columnRight1";
+						if ( iLoopDataFieldCnt > leadTm ) {
+							//	리드타임 이내
+							groupM3.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								//formatString : "#,##0",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( 3 != item.psiId ) {
+										if ( "0" == item.divOdd ) {
+											return	"my-columnRight0";
+										} else {
+											return	"my-columnRight1";
+										}
+									} else {
+										return	"my-columnEditable";
+									}
 								}
-							}
-						});
+							});
+						} else {
+							//	리드타임 이후
+							groupM3.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								//formatString : "#,##0",
+								editable : false,
+								style : "my-columnLeadTm"
+							});
+						}
 						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					}
@@ -540,7 +656,7 @@ function fnSupplyPlanHeader() {
 					******** M4 Header
 					******************************/
 					var groupM4 = {
-						headerText : "M + 4",
+						headerText : result.selectScmTotalInfo[0].m4Mon,
 						children : []
 					};
 					for ( var i = 0 ; i < m4WeekCnt ; i++ ) {
@@ -550,31 +666,61 @@ function fnSupplyPlanHeader() {
 							intToStrFieldCnt	= "0" + intToStrFieldCnt;
 						}
 						fieldStr	= "w" + iLoopCnt + "WeekSeq";
-						groupM4.children.push({
-							dataField : "w" + intToStrFieldCnt,
-							headerText :  result.selectSupplyPlanHeader[0][fieldStr],
-							dataType : "numeric",
-							formatString : "#,##0",
-							styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-								if ( "0" == item.divOdd ) {
-									return	"my-columnRight0";
-								} else {
-									return	"my-columnRight1";
+						if ( iLoopDataFieldCnt > leadTm ) {
+							//	리드타임 이내
+							groupM4.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								//formatString : "#,##0",
+								styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+									if ( 3 != item.psiId ) {
+										if ( "0" == item.divOdd ) {
+											return	"my-columnRight0";
+										} else {
+											return	"my-columnRight1";
+										}
+									} else {
+										return	"my-columnEditable";
+									}
 								}
-							}
-						});
+							});
+						} else {
+							//	리드타임 이후
+							groupM4.children.push({
+								dataField : "w" + intToStrFieldCnt,
+								headerText :  result.selectSupplyPlanHeader[0][fieldStr],
+								dataType : "numeric",
+								//formatString : "#,##0",
+								style : "my-columnLeadTm"
+							});
+						}
 						iLoopCnt++;
 						iLoopDataFieldCnt++;
 					}
 					dynamicLayout.push(groupM4);
 					
 					//	Create Grid
-					myGridID	= AUIGrid.create("#dynamic_DetailGrid_wrap", dynamicLayout, dynamicOption);
+					myGridID	= GridCommon.createAUIGrid("supply_plan_summary_wrap", dynamicLayout, "", dynamicOption);
+					AUIGrid.bind(myGridID, "cellDoubleClick", function(event) {
+						if ( "1" == event.item.psiId ) {
+							var params	= {
+									stockCodeParam : AUIGrid.getCellValue(myGridID, event.rowIndex, "code"),
+									scmYearCbBoxParam : AUIGrid.getCellValue(myGridID, event.rowIndex, "planYear"),
+									scmWeekCbBoxParam : AUIGrid.getCellValue(myGridID, event.rowIndex, "planWeek")
+							}
+							var popUpObj	= Common.popupDiv("/scm/supplyPlanPsi1Pop.do"
+									, params
+									//, $("#MainForm").serializeJSON()
+									, null
+									, false
+									, "supplyPlanPsi1Pop");
+						} else {
+							console.log("no");
+						}
+					});
 					
-					//	Grid Event
-					AUIGrid.setCellMerge(myGridID, true);
-					//	none
-					
+					//	search
 					fnSearch();
 				}
 			}
@@ -590,6 +736,7 @@ function fnSupplyPlanHeader() {
 				Common.alert("Fail : " + jqXHR.responseJSON.message);
 			});
 }
+
 
 /****************************  Form Ready ******************************************/
 
@@ -620,11 +767,11 @@ $(document).ready(function() {
 	<table class="type1"><!-- table start -->
 		<caption>table</caption>
 		<colgroup>
-			<col style="width:160px" />
+			<col style="width:140px" />
 			<col style="width:*" />
-			<col style="width:90px" />
+			<col style="width:70px" />
 			<col style="width:*" />
-			<col style="width:120px" />
+			<col style="width:100px" />
 			<col style="width:*" />
 		</colgroup>
 		<tbody>
@@ -636,15 +783,22 @@ $(document).ready(function() {
 						<select class="sel_date" id="scmWeekCbBox" name="scmWeekCbBox"></select>
 					</div><!-- date_set end -->
 				</td>
-				<!-- Stock Type 추가 -->
-				<th scope="row">Stock Type</th>
+				<th scope="row">Type</th>
 				<td>
 					<select class="w100p" multiple="multiple" id="scmStockTypeCbBox" name="scmStockTypeCbBox"></select>
 				</td>
-				<th scope="row">Stock</th>
-				<td colspan="3">
-					<input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSupplyPlanHeader(); return false;}">
+				<th scope="row">Category</th>
+				<td>
+					<select class="w100p" id="scmStockCategoryCbBox" multiple="multiple" name="scmStockCategoryCbBox"></select>
 				</td>
+			</tr>
+			<tr>
+				<th scope="row">Material</th>
+				<td>
+					<!-- <input class="w100p" type="text" id="scmStockCode" name="scmStockCode" onkeypress="if(event.keyCode==13) {fnSalesPlanHeader(); return false;}"> -->
+					<select class="js-example-basic-multiple" id="scmStockCodeCbBox" name="scmStockCodeCbBox" multiple="multiple">
+				</td>
+				<td colspan="4"></td>
 			</tr>
 		</tbody>
 	</table><!-- table end -->
@@ -690,7 +844,7 @@ $(document).ready(function() {
 
 <article class="grid_wrap"><!-- grid_wrap start -->
 	<!-- 그리드 영역 -->
-	<div id="dynamic_DetailGrid_wrap" style="height:700px;"></div>
+	<div id="supply_plan_summary_wrap" style="height:700px;"></div>
 </article><!-- grid_wrap end -->
 
 <ul class="center_btns">

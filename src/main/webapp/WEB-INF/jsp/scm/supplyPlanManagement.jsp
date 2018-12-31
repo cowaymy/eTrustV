@@ -739,7 +739,7 @@ function fnSupplyPlanHeader() {
 					dynamicLayout.push(groupM4);
 					
 					//	Create Grid
-					myGridID	= AUIGrid.create("#dynamic_DetailGrid_wrap", dynamicLayout, dynamicOption);
+					myGridID	= GridCommon.createAUIGrid("supply_plan_wrap", dynamicLayout, "", dynamicOption);
 					
 					//	Event
 					AUIGrid.bind(myGridID, "cellEditEnd", fnCalcPsi5);
@@ -969,7 +969,7 @@ function fnExcel(obj, fileName) {
 		return	false;
 	}
 	
-	GridCommon.exportTo("#dynamic_DetailGrid_wrap", "xlsx", fileName + "_" + getTimeStamp());
+	GridCommon.exportTo("#supply_plan_wrap", "xlsx", fileName + "_" + getTimeStamp());
 }
 
 //	validation
@@ -1273,7 +1273,7 @@ var myGridID;
 
 	<article class="grid_wrap"><!-- grid_wrap start -->
 		<!-- 그리드 영역 -->
-		<div id="dynamic_DetailGrid_wrap" style="height:700px;"></div>
+		<div id="supply_plan_wrap" style="height:700px;"></div>
 	</article><!-- grid_wrap end -->
 
 	<ul class="center_btns">

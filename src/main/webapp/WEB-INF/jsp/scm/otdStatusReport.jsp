@@ -689,7 +689,14 @@ $(document).ready(function() {
 				<td>
 					<input type="text" id="ciNo" name="ciNo" title="" placeholder="" class="w100p" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}" />
 				</td>
-				<td colspan="4"></td>
+				<th scope="row">BL No</th>
+				<td>
+					<input type="text" id="blNo" name="blNo" title="" placeholder="" class="w100p" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}" />
+				</td>
+				<th scope="row">DN No</th>
+				<td>
+					<input type="text" id="delvNo" name="delvNo" title="" placeholder="" class="w100p" onkeypress="if(event.keyCode==13) {fnSearch(); return false;}" />
+				</td>
 			</tr>
 		</tbody>
 	</table><!-- table end -->
