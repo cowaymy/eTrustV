@@ -33,7 +33,7 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO), 2) AS DIV_ODD
              , CASE WHEN C.GI_DT IS NULL OR C.GI_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(C.GI_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS GI_DT
              , A.SAP_PO_NO, A.SAP_PO_ITEM_NO, D.AP_QTY AS SAP_AP_QTY, D.GR_QTY AS SAP_GR_QTY
              , CASE WHEN D.GR_DT IS NULL OR D.GR_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(D.GR_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS GR_DT
-             , D.CI_NO
+             , D.CI_NO, D.DELV_NO, D.BL_NO
              , E.STK_TYPE_ID
           FROM SCM0039M A
           LEFT OUTER JOIN SCM0014D B ON (A.PO_NO = B.PO_NO AND A.SO_NO = B.SO_NO AND A.STOCK_CODE = B.STOCK_CODE)
@@ -57,7 +57,7 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO), 2) AS DIV_ODD
              , CASE WHEN C.GI_DT IS NULL OR C.GI_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(C.GI_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS GI_DT
              , A.SAP_PO_NO, A.SAP_PO_ITEM_NO, D.AP_QTY AS SAP_AP_QTY, D.GR_QTY AS SAP_GR_QTY
              , CASE WHEN D.GR_DT IS NULL OR D.GR_DT = '00000000' THEN '' ELSE TO_CHAR(TO_DATE(D.GR_DT, 'YYYY-MM-DD'), 'DD/MM/YYYY') END AS GR_DT
-             , D.CI_NO
+             , D.CI_NO, D.DELV_NO, D.BL_NO
              , E.STK_TYPE_ID
           FROM SCM0039M A
           LEFT OUTER JOIN SCM0014D B ON (A.PO_NO = B.PO_NO AND A.SO_NO = B.SO_NO AND A.STOCK_CODE = B.STOCK_CODE)
@@ -93,6 +93,12 @@ SELECT MOD(DENSE_RANK() OVER (ORDER BY A.PO_DT DESC, A.PO_NO), 2) AS DIV_ODD
 	</if>
 	<if test="ciNo != null and ciNo != ''">
    AND A.CI_NO LIKE '%' || #{ciNo} || '%'
+	</if>
+	<if test="delvNo != null and delvNo != ''">
+   AND A.DELV_NO LIKE '%' || #{delvNo} || '%'
+	</if>
+	<if test="blNo != null and blNo != ''">
+   AND A.BL_NO LIKE '%' || #{blNo} || '%'
 	</if>
  ORDER BY A.PO_DT DESC, A.PO_NO, A.PO_ITEM_NO, A.SO_NO, A.SO_ITEM_NO, A.SAP_PO_NO, A.SAP_PO_ITEM_NO, A.SO_QTY, A.GI_QTY, A.GI_DT, A.SAP_GR_QTY
 </select>
