@@ -285,26 +285,31 @@ public class SalesPlanManagementController {
 		int totCnt	= 0;
 		ReturnMessage message	= new ReturnMessage();
 		
-		//	params
+		//	paramsinsertSalesPlanMaster
 		params.put("planYear", params.get("scmYearCbBox").toString());
 		params.put("planWeek", params.get("scmWeekCbBox").toString());
 		params.put("team", params.get("scmTeamCbBox").toString());
 		List<EgovMap> selectSalesPlanInfo	= salesPlanManagementService.selectSalesPlanInfo(params);
 		LOGGER.debug("selectSalesPlanInfo : {}", selectSalesPlanInfo);
-		if ( "0".equals(selectSalesPlanInfo.get(0).get("planStusId").toString()) ) {
-			LOGGER.debug("Sales Plan is not yet created");
-			//	check re-calculate
-			if ( "Y".equals(params.get("reCalcYn").toString()) ) {
-				salesPlanManagementService.deleteSalesPlanMaster(params, sessionVO);
-			}
+		if ( "Y".equals(params.get("reCalcYn").toString()) ) {
+			LOGGER.debug("Sales Plan reCalculation");
+			salesPlanManagementService.deleteSalesPlanMaster(params, sessionVO);
 			totCnt	= salesPlanManagementService.insertSalesPlanMaster(params, sessionVO);
 			message.setCode(AppConstants.SUCCESS);
 			message.setData(totCnt);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		} else {
-			LOGGER.debug("Sales Plan is already created");
-			message.setCode(AppConstants.FAIL);
-			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			if ( "0".equals(selectSalesPlanInfo.get(0).get("planStusId").toString()) ) {
+				LOGGER.debug("Sales Plan is creating");
+				totCnt	= salesPlanManagementService.insertSalesPlanMaster(params, sessionVO);
+				message.setCode(AppConstants.SUCCESS);
+				message.setData(totCnt);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+			} else {
+				LOGGER.debug("Sales Plan is already created");
+				message.setCode(AppConstants.FAIL);
+				message.setMessage(messageAccessor.getMessage(AppConstants.MSG_FAIL));
+			}
 		}
 		
 		return	ResponseEntity.ok(message);

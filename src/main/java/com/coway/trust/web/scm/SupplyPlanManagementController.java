@@ -158,20 +158,16 @@ public class SupplyPlanManagementController {
 		params.put("cdc", params.get("scmCdcCbBox").toString());
 		List<EgovMap> selectSupplyPlanInfo	= supplyPlanManagementService.selectSupplyPlanInfo(params);
 		LOGGER.debug("selectSupplyPlanInfo : {}", selectSupplyPlanInfo);
-		if ( "0".equals(selectSupplyPlanInfo.get(1).get("planStusId").toString()) ) {
-			LOGGER.debug("Supply Plan is not yet created");
-			//	check re-calculate
-			if ( "Y".equals(params.get("reCalcYn").toString()) ) {
-				supplyPlanManagementService.deleteSupplyPlanMaster(params, sessionVO);
-			}
+		if ( "Y".equals(params.get("reCalcYn").toString()) ) {
+			LOGGER.debug("Supply Plan reCalculation");
+			supplyPlanManagementService.deleteSupplyPlanMaster(params, sessionVO);
 			totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
 			message.setCode(AppConstants.SUCCESS);
 			message.setData(totCnt);
 			message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		} else {
-			//	check re-calculate
-			if ( "Y".equals(params.get("reCalcYn").toString()) ) {
-				supplyPlanManagementService.deleteSupplyPlanMaster(params, sessionVO);
+			if ( "0".equals(selectSupplyPlanInfo.get(1).get("planStusId").toString()) ) {
+				LOGGER.debug("Supply Plan is creating");
 				totCnt	= supplyPlanManagementService.insertSupplyPlanMaster(params, sessionVO);
 				message.setCode(AppConstants.SUCCESS);
 				message.setData(totCnt);

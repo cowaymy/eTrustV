@@ -8,10 +8,14 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.Reader;
+import java.io.Writer;
 import java.net.SocketException;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
@@ -28,6 +32,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.ibm.icu.util.Calendar;
+
+import oracle.jdbc.OracleResultSet;
+import oracle.sql.CLOB;
 
 
 @Controller
@@ -52,9 +59,26 @@ public class ScmBatchController2 {
 		 etrustftp Home : /home/etrustftp/data
 			 */
 		//execute();
-		connect("10.101.3.40", "etrustftp", "akffus#20!*", 21);
+		try {
+			connect("10.101.3.40", "etrustftp3", "akffus#20!*", 21);
+			disconnect();
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
 		
-		disconnect();
+		try {
+			connect1("10.101.3.40", "etrustftp3", "akffus#20!*", 21);
+			disconnect();
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		try {
+			connect2("10.101.3.40", "etrustftp3", "akffus#20!*", 21);
+			disconnect();
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
 
 		return ResponseEntity.ok("OK");
 	}
@@ -79,6 +103,46 @@ public class ScmBatchController2 {
 		}
 	}
 	
+	public void connect1(String host, String name, String pass, int port) {
+		client	= new FTPClient();
+		client.setControlEncoding("euc-kr");
+		
+		FTPClientConfig	config	= new FTPClientConfig();
+		client.configure(config);
+		
+		try {
+			client.connect(host, port);
+			LOGGER.debug("ftp connected==================");
+			
+			client.login(name, pass);
+			LOGGER.debug("ftp login======================");
+			
+			read1(client);
+		} catch ( Exception se ) {
+			se.printStackTrace();
+		}
+	}
+	
+	public void connect2(String host, String name, String pass, int port) {
+		client	= new FTPClient();
+		client.setControlEncoding("euc-kr");
+		
+		FTPClientConfig	config	= new FTPClientConfig();
+		client.configure(config);
+		
+		try {
+			client.connect(host, port);
+			LOGGER.debug("ftp connected==================");
+			
+			client.login(name, pass);
+			LOGGER.debug("ftp login======================");
+			
+			read2(client);
+		} catch ( Exception se ) {
+			se.printStackTrace();
+		}
+	}
+	
 	public void disconnect() {
 		try {
 			client.logout();
@@ -93,80 +157,51 @@ public class ScmBatchController2 {
 	
 	public static void read(FTPClient client) {
 		BufferedReader reader	= null;
-		String fileName	= "";
 		SimpleDateFormat sdf	= new SimpleDateFormat("yyyyMMdd");
 		Calendar cal	= Calendar.getInstance();
 		String today	= sdf.format(cal.getTime());
+		String fileName	= "";
+		String fileExistYn	= "N";
+		long fileSize	= 0;
+		CLOB conts		= null;
+		Writer wr		= null;
+		Reader rd		= null;
+		String cmd		= "SELECT * FROM SCM0055S FOR UPDATE";
 		
 		try {
 			client.changeWorkingDirectory("/");
 			String[] names	= client.listNames();
-			LOGGER.debug("cnt : " + names.length);
-			LOGGER.debug("names : {}", names);
+			//LOGGER.debug("cnt : " + names.length);
+			//LOGGER.debug("names : {}", names);
 			FTPFile[] files = client.listFiles();
 			LOGGER.debug("cnt : " + files.length);
 			String soFileName	= "COWAY_SO_DATA_" + today + ".TXT";
-			String ppFileName	= "COWAY_PP_DATA_" + today + ".TXT";
-			String giFileName	= "COWAY_GI_DATA_" + today + ".TXT";
 			//soFileName	= "COWAY_SO_DATA_" + "20181205" + ".TXT";
-			//ppFileName	= "COWAY_PP_DATA_" + "20181214" + ".TXT";
-			//giFileName	= "COWAY_GI_DATA_" + "20181205" + ".TXT";
 			
 			for ( int i = 0 ; i < files.length ; i++ ) {
 				LOGGER.debug(i + "th filename : " + files[i].getName() + ", filesize : " + files[i].getSize());
-				if ( 0 < files[i].getSize() ) {
-					fileName	= files[i].getName();
-					if ( soFileName.equals(fileName) ) {
-						InputStream is	= client.retrieveFileStream("/" + fileName);
+				//if ( 0 < files[i].getSize() ) {
+					if ( soFileName.equals(files[i].getName()) ) {
+						InputStream is	= client.retrieveFileStream("/" + files[i].getName());
 						if ( null != is ) {
+							//	parameter setting
+							//ifDate		= today;
+							fileName	= files[i].getName();
+							fileExistYn	= "Y";
+							fileSize	= files[i].getSize();
 							reader	= new BufferedReader(new InputStreamReader(is, "utf-8"));
+							
+							//conts	= ((OracleResultSet))
+							
 							LOGGER.debug("writing to DB : " + reader.readLine());
 							executeQuery(reader, fileName);
-							LOGGER.debug("writing to DB(log) ");
-							//executeQueryLog(reader, fileName, today);
+							//LOGGER.debug("writing to DB(log) ");
+							//executeQueryLog(reader, fileName, today, fileExistYn, fileSize);
 						} else {
 							LOGGER.debug("did not write");
 						}
 					}
-				}
-			}
-			
-			for ( int i = 0 ; i < files.length ; i++ ) {
-				LOGGER.debug(i + "th filename : " + files[i].getName() + ", filesize : " + files[i].getSize());
-				if ( 0 < files[i].getSize() ) {
-					fileName	= files[i].getName();
-					if ( ppFileName.equals(fileName) ) {
-						InputStream is	= client.retrieveFileStream("/" + fileName);
-						if ( null != is ) {
-							reader	= new BufferedReader(new InputStreamReader(is, "utf-8"));
-							LOGGER.debug("writing to DB : " + reader.readLine());
-							executeQuery1(reader, fileName);
-							LOGGER.debug("writing to DB(log) ");
-							//executeQueryLog(reader, fileName, today);
-						} else {
-							LOGGER.debug("did not write");
-						}
-					}
-				}
-			}
-			
-			for ( int i = 0 ; i < files.length ; i++ ) {
-				LOGGER.debug(i + "th filename : " + files[i].getName() + ", filesize : " + files[i].getSize());
-				if ( 0 < files[i].getSize() ) {
-					fileName	= files[i].getName();
-					if ( giFileName.equals(fileName) ) {
-						InputStream is	= client.retrieveFileStream("/" + fileName);
-						if ( null != is ) {
-							reader	= new BufferedReader(new InputStreamReader(is, "utf-8"));
-							LOGGER.debug("writing to DB : " + reader.readLine());
-							executeQuery2(reader, fileName);
-							LOGGER.debug("writing to DB(log) ");
-							//executeQueryLog(reader, fileName, today);
-						} else {
-							LOGGER.debug("did not write");
-						}
-					}
-				}
+				//}
 			}
 		} catch ( IOException e ) {
 			e.printStackTrace();
@@ -179,9 +214,129 @@ public class ScmBatchController2 {
 		}
 	}
 	
-	public static void executeQueryLog(BufferedReader br, String fileName, String today) {
+	public static void read1(FTPClient client) {
+		BufferedReader reader	= null;
+		SimpleDateFormat sdf	= new SimpleDateFormat("yyyyMMdd");
+		Calendar cal	= Calendar.getInstance();
+		String today	= sdf.format(cal.getTime());
+		String fileName	= "";
+		String fileExistYn	= "N";
+		long fileSize	= 0;
+		
+		try {
+			client.changeWorkingDirectory("/");
+			String[] names	= client.listNames();
+			//LOGGER.debug("cnt : " + names.length);
+			//LOGGER.debug("names : {}", names);
+			FTPFile[] files = client.listFiles();
+			LOGGER.debug("cnt : " + files.length);
+			//String soFileName	= "COWAY_SO_DATA_" + today + ".TXT";
+			String ppFileName	= "COWAY_PP_DATA_" + today + ".TXT";
+			//String giFileName	= "COWAY_GI_DATA_" + today + ".TXT";
+			//soFileName	= "COWAY_SO_DATA_" + "20181205" + ".TXT";
+			//ppFileName	= "COWAY_PP_DATA_" + "20181214" + ".TXT";
+			//giFileName	= "COWAY_GI_DATA_" + "20181205" + ".TXT";
+			
+			for ( int i = 0 ; i < files.length ; i++ ) {
+				//LOGGER.debug(i + "th filename : " + files[i].getName() + ", filesize : " + files[i].getSize());
+				//if ( 0 < files[i].getSize() ) {
+				if ( ppFileName.equals(files[i].getName()) ) {
+					InputStream is	= client.retrieveFileStream("/" + files[i].getName());
+					if ( null != is ) {
+						//	parameter setting
+						//ifDate		= today;
+						fileName	= files[i].getName();
+						fileExistYn	= "Y";
+						fileSize	= files[i].getSize();
+						reader	= new BufferedReader(new InputStreamReader(is, "utf-8"));
+						
+						//conts	= ((OracleResultSet))
+						
+						LOGGER.debug("writing to DB : " + reader.readLine());
+						executeQuery1(reader, fileName);
+						//LOGGER.debug("writing to DB(log) ");
+						//executeQueryLog(reader, fileName, today, fileExistYn, fileSize);
+					} else {
+						LOGGER.debug("did not write");
+					}
+				}
+			//}
+			}
+		} catch ( IOException e ) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if ( null != reader )	try { reader.close(); } catch (IOException logOrIgnore) {}
+			} catch ( Exception e ) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void read2(FTPClient client) {
+		BufferedReader reader	= null;
+		SimpleDateFormat sdf	= new SimpleDateFormat("yyyyMMdd");
+		Calendar cal	= Calendar.getInstance();
+		String today	= sdf.format(cal.getTime());
+		String fileName	= "";
+		String fileExistYn	= "N";
+		long fileSize	= 0;
+		
+		try {
+			client.changeWorkingDirectory("/");
+			String[] names	= client.listNames();
+			//LOGGER.debug("cnt : " + names.length);
+			//LOGGER.debug("names : {}", names);
+			FTPFile[] files = client.listFiles();
+			LOGGER.debug("cnt : " + files.length);
+			//String soFileName	= "COWAY_SO_DATA_" + today + ".TXT";
+			//String ppFileName	= "COWAY_PP_DATA_" + today + ".TXT";
+			String giFileName	= "COWAY_GI_DATA_" + today + ".TXT";
+			//soFileName	= "COWAY_SO_DATA_" + "20181205" + ".TXT";
+			//ppFileName	= "COWAY_PP_DATA_" + "20181214" + ".TXT";
+			giFileName	= "COWAY_GI_DATA_" + "TEST" + ".TXT";
+			//BufferedReader brLog	= new BufferedReader(brLog);
+			for ( int i = 0 ; i < files.length ; i++ ) {
+				//LOGGER.debug(i + "th filename : " + files[i].getName() + ", filesize : " + files[i].getSize());
+				//if ( 0 < files[i].getSize() ) {
+				if ( giFileName.equals(files[i].getName()) ) {
+					InputStream is	= client.retrieveFileStream("/" + files[i].getName());
+					if ( null != is ) {
+						//	parameter setting
+						//ifDate		= today;
+						fileName	= files[i].getName();
+						fileExistYn	= "Y";
+						fileSize	= files[i].getSize();
+						reader	= new BufferedReader(new InputStreamReader(is, "utf-8"));
+						
+						//conts	= ((OracleResultSet))
+						
+						LOGGER.debug("writing to DB : " + reader.readLine());
+						executeQuery2(reader, fileName);
+						//LOGGER.debug("writing to DB(log) ");
+						//executeQueryLog(reader, fileName, today, fileExistYn, fileSize);
+					} else {
+						LOGGER.debug("did not write");
+					}
+				}
+			//}
+			}
+		} catch ( IOException e ) {
+			e.printStackTrace();
+		} finally {
+			try {
+				if ( null != reader )	try { reader.close(); } catch (IOException logOrIgnore) {}
+			} catch ( Exception e ) {
+				e.printStackTrace();
+			}
+		}
+	}
+	
+	public static void executeQueryLog(BufferedReader br, String fileName, String today, String fileExistYn, long fileSize) {
 		Connection conn	= null;
 		PreparedStatement ps	= null;
+		Statement st	= null;
+		ResultSet rs	= null;
 		
 		try {
 			String query	= "";
@@ -193,12 +348,26 @@ public class ScmBatchController2 {
 				remark	= "this file is empty";
 			}
 			LOGGER.debug("1. fileName is : " + fileName);
-			query	= "INSERT INTO SCM0055S ";
+			query	= "MERGE INTO SCM0055S ";
+			query	+= "USING DUAL ON (IF_DATE = ? AND FILE_NAME = ?) ";
+			query	+= "WHEN MATCHED THEN ";
+			query	+= "UPDATE ";
+			query	+= "   SET UPD_DT = SYSDATE ";
+			query	+= "     , UPD_USER_ID = 'SCM_BATCH' ";
+			query	+= "     , FILE_EXIST_YN = ? ";
+			query	+= "     , FILE_SIZE = ? ";
+			query	+= "     , CONTS = EMPTY_CLOB() ";
+			query	+= "     , REMARK = ? ";
+			query	+= "WHEN NOT MATCHED THEN ";
+			query	+= "INSERT ";
 			query	+= "( ";
-			query	+= "       READ_DT ";
+			query	+= "       IF_DATE ";
 			query	+= "     , FILE_NAME ";
+			query	+= "     , FILE_EXIST_YN ";
+			query	+= "     , FILE_SIZE ";
 			query	+= "     , CONTS ";
 			query	+= "     , REMARK ";
+			query	+= "     , CRT_USER_ID ";
 			query	+= " ) ";
 			query	+= "VALUES ";
 			query	+= "( ";
@@ -206,13 +375,40 @@ public class ScmBatchController2 {
 			query	+= "     , ? ";
 			query	+= "     , ? ";
 			query	+= "     , ? ";
+			query	+= "     , EMPTY_CLOB() ";
+			query	+= "     , ? ";
+			query	+= "     , 'SCM_BATCH' ";
 			query	+= " ) ";
 			ps	= conn.prepareStatement(query);
 			ps.setString(1, today);
 			ps.setString(2, fileName);
-			ps.setString(3, br.toString());
-			ps.setString(4, remark);
+			ps.setString(3, fileExistYn);
+			ps.setLong(4, fileSize);
+			//ps.setString(5, br.toString());
+			ps.setString(5, remark);
+			ps.setString(6, today);
+			ps.setString(7, fileName);
+			ps.setString(8, fileExistYn);
+			ps.setLong(9, fileSize);
+			//ps.setString(11, br.toString());
+			ps.setString(10, remark);
+			
 			ps.executeQuery();
+			LOGGER.debug("TODAY : " + today + ", FILE NAME : " + fileName + ", FILE SIZE : " + fileSize);
+			//LOGGER.debug(ps.toString());
+			
+			query	= "SELECT CONTS FROM SCM0055S WHERE IF_DATE = ? AND FILE_NAME = ? ";
+			st	= conn.createStatement();
+			rs	= st.executeQuery(query);
+			
+			if ( rs.next() ) {
+				CLOB clob	= null;
+				Writer wr	= null;
+				Reader rd	= null;
+				char[] buffer	= null;
+				int read	= 0;
+				//clob	= ((OracleResultSet)rs).g
+			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
@@ -233,33 +429,6 @@ public class ScmBatchController2 {
 			LOGGER.debug("1. fileName is : " + fileName);
 			//	SO
 			String soDt	= "";		int soQty		= 0;	
-			/*query	= "MERGE INTO SCM0015D ";
-			query	+= "USING DUAL ON (PO_NO = TRIM(?) AND PO_DT = TRIM(?) AND SO_NO = TRIM(?) AND SO_ITEM_NO = TO_NUMBER(TRIM(?)) AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))) ";
-			query	+= "WHEN MATCHED THEN ";
-			query	+= "UPDATE ";
-			query	+= "   SET SO_QTY = TO_NUMBER(TRIM(?)) ";
-			query	+= "     , SO_DT = TRIM(?) ";
-			query	+= "WHEN NOT MATCHED THEN ";
-			query	+= "INSERT ";
-			query	+= "( ";
-			query	+= "       PO_NO ";
-			query	+= "     , PO_DT ";
-			query	+= "     , SO_NO ";
-			query	+= "     , SO_ITEM_NO ";
-			query	+= "     , STOCK_CODE ";
-			query	+= "     , SO_QTY ";
-			query	+= "     , SO_DT ";
-			query	+= " ) ";
-			query	+= "VALUES ";
-			query	+= "( ";
-			query	+= "       TRIM(?) ";
-			query	+= "     , TRIM(?) ";
-			query	+= "     , TRIM(?) ";
-			query	+= "     , TO_NUMBER(TRIM(?)) ";
-			query	+= "     , TO_CHAR(TO_NUMBER(TRIM(?))) ";
-			query	+= "     , TO_NUMBER(TRIM(?)) ";
-			query	+= "     , TRIM(?) ";
-			query	+= " ) ";*/
 			query	= "UPDATE SCM0039M ";
 			query	+= "   SET UPD_DT = SYSDATE ";
 			query	+= "     , UPD_USER_ID = 'BATCH' ";
@@ -301,7 +470,8 @@ public class ScmBatchController2 {
 					ps.setString(5, poNo);
 					ps.setString(6, stockCode);
 				}
-				LOGGER.debug(query);
+				//LOGGER.debug(ps.toString());
+				LOGGER.debug("PO NO : " + poNo + ", PO DT : " + poDt + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", STOCK CODE : " + stockCode);
 				ps.executeQuery();
 			}
 		} catch ( Exception e ) {
@@ -390,7 +560,8 @@ public class ScmBatchController2 {
 					ps.setString(19, ppProdStartDt);
 					ps.setString(20, ppProdEndDt);
 				}
-				LOGGER.debug(query);
+				//LOGGER.debug(ps.toString());
+				LOGGER.debug("PO NO : " + poNo + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", STOCK CODE : " + stockCode);
 				ps.executeQuery();
 			}
 		} catch ( Exception e ) {
@@ -473,7 +644,8 @@ public class ScmBatchController2 {
 					ps.setInt(15, giQty);
 					ps.setString(16, giDt);
 				}
-				LOGGER.debug(query);
+				//LOGGER.debug(ps.toString());
+				LOGGER.debug("PO NO : " + poNo + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", DELV NO : " + delvNo + ", DELV ITEM NO : " + delvItemNo + ", STOCK CODE : " + stockCode);
 				ps.executeQuery();
 			}
 		} catch ( Exception e ) {
