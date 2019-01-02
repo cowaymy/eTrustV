@@ -12,6 +12,14 @@
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(accGridID, "cellDoubleClick", function(event) {
+          // TEMP. CHECKING
+          if ((AUIGrid.getCellValue(accGridID, event.rowIndex,"bankCodeName")).includes("HLBB")) {
+            if (AUIGrid.getCellValue(accGridID, event.rowIndex,"custAccDdtChnl").includes("General")) {
+              Common.alert('<spring:message code="cus.alert.msg.inactDdtChnl" />');
+              return;
+            }
+          }
+
           fn_setData(AUIGrid.getCellValue(accGridID, event.rowIndex,
               "custAccId"));
         });
