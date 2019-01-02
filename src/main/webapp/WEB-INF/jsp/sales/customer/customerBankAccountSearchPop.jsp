@@ -15,7 +15,7 @@
           // TEMP. CHECKING
           if ((AUIGrid.getCellValue(accGridID, event.rowIndex,"bankCodeName")).includes("HLBB")) {
             if (AUIGrid.getCellValue(accGridID, event.rowIndex,"custAccDdtChnl").includes("General")) {
-              Common.alert('<spring:message code="cus.alert.msg.inactDdtChnl" />');
+              Common.alert('Selected bank deduction channel are inactive. Please create or choose other deduction channel.');
               return;
             }
           }
