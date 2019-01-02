@@ -77,14 +77,42 @@ $(function() {
 	end.setMonth(end.getMonth());
 	
 	if ( 10 == (start.getMonth()+1)|| 11 == (start.getMonth()+1) || 12 == (start.getMonth()+1) ) {
-		$("#startDate").val(start.getDate() + "/" + (start.getMonth()+1) + "/" + start.getFullYear());
+		if ( 1 == start.getDate() || 2 == start.getDate() || 3 == start.getDate() || 4 == start.getDate() || 5 == start.getDate()
+			|| 6 == start.getDate() || 7 == start.getDate() || 8 == start.getDate() || 9 == start.getDate() ) {
+			$("#startDate").val("0" + start.getDate() + "/" + (start.getMonth()+1) + "/" + start.getFullYear());
+			console.log("1. start.getDate : " + start.getDate() + ", start.getMonth : " + start.getMonth()+1 + ", start.getFullYear : " + start.getFullYear());
+		} else {
+			$("#startDate").val(start.getDate() + "/" + (start.getMonth()+1) + "/" + start.getFullYear());
+			console.log("2. start.getDate : " + start.getDate() + ", start.getMonth : " + start.getMonth()+1 + ", start.getFullYear : " + start.getFullYear());
+		}
 	} else {
-		$("#startDate").val(start.getDate() + "/0" + (start.getMonth()+1) + "/" + start.getFullYear());
+		if ( 1 == start.getDate() || 2 == start.getDate() || 3 == start.getDate() || 4 == start.getDate() || 5 == start.getDate()
+			|| 6 == start.getDate() || 7 == start.getDate() || 8 == start.getDate() || 9 == start.getDate() ) {
+			$("#startDate").val("0" + start.getDate() + "/0" + (start.getMonth()+1) + "/" + start.getFullYear());
+			console.log("3. start.getDate : " + start.getDate() + ", start.getMonth : " + start.getMonth()+1 + ", start.getFullYear : " + start.getFullYear());
+		} else {
+			$("#startDate").val(start.getDate() + "/0" + (start.getMonth()+1) + "/" + start.getFullYear());
+			console.log("4. start.getDate : " + start.getDate() + ", start.getMonth : " + start.getMonth()+1 + ", start.getFullYear : " + start.getFullYear());
+		}
 	}
 	if ( 10 == (end.getMonth()+1) || 11 == (end.getMonth()+1) || 12 == (end.getMonth()+1) ) {
-		$("#endDate").val(end.getDate() + "/" + (end.getMonth()+1) + "/" + end.getFullYear());
+		if ( 1 == start.getDate() || 2 == start.getDate() || 3 == start.getDate() || 4 == start.getDate() || 5 == start.getDate()
+			|| 6 == start.getDate() || 7 == start.getDate() || 8 == start.getDate() || 9 == start.getDate() ) {
+			$("#endDate").val("0" + end.getDate() + "/" + (end.getMonth()+1) + "/" + end.getFullYear());
+			console.log("5. end.getDate : " + end.getDate() + ", end.getMonth : " + end.getMonth()+1 + ", end.getFullYear : " + end.getFullYear());
+		} else {
+			$("#endDate").val(end.getDate() + "/" + (end.getMonth()+1) + "/" + end.getFullYear());
+			console.log("6. end.getDate : " + end.getDate() + ", end.getMonth : " + end.getMonth()+1 + ", end.getFullYear : " + end.getFullYear());
+		}
 	} else {
-		$("#endDate").val(end.getDate() + "/0" + (end.getMonth()+1) + "/" + end.getFullYear());
+		if ( 1 == start.getDate() || 2 == start.getDate() || 3 == start.getDate() || 4 == start.getDate() || 5 == start.getDate()
+			|| 6 == start.getDate() || 7 == start.getDate() || 8 == start.getDate() || 9 == start.getDate() ) {
+			$("#endDate").val("0" + end.getDate() + "/0" + (end.getMonth()+1) + "/" + end.getFullYear());
+			console.log("7. end.getDate : " + end.getDate() + ", end.getMonth : " + end.getMonth()+1 + ", end.getFullYear : " + end.getFullYear());
+		} else {
+			$("#endDate").val(end.getDate() + "/0" + (end.getMonth()+1) + "/" + end.getFullYear());
+			console.log("8. end.getDate : " + end.getDate() + ", end.getMonth : " + end.getMonth()+1 + ", end.getFullYear : " + end.getFullYear());
+		}
 	}
 	fnScmStockTypeCbBox();
 	doGetComboAndGroup2("/scm/selectScmStockCodeForMulti.do", "", "", "scmStockCodeCbBox", "M", "");
