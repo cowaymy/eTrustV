@@ -28,7 +28,7 @@ function fn_confirmOrder(){
 
 
         if(result ==null) {
-            Common.alert("Order Not Found"+DEFAULT_DELIMITER+"<b>No order found or this order is not under complete status.</b>");
+            Common.alert("Order Not Found"+DEFAULT_DELIMITER+"<b>No order found or this order is not under complete status or CCP Status is rejected.</b>");
 
             $("#Panel_AS").attr("style" ,"display:none");
 
@@ -158,7 +158,7 @@ function fn_checkASReceiveEntryConfirmation(){
 
 
         if(result ==null) {
-            Common.alert("Order Not Found"+DEFAULT_DELIMITER+"<b>No order found or this order is not under complete status.</b>");
+            Common.alert("Order Not Found"+DEFAULT_DELIMITER+"<b>No order found or this order is not under complete status or CCP Status is rejected.</b>");
 
             $("#Panel_AS").attr("style" ,"display:none");
 
