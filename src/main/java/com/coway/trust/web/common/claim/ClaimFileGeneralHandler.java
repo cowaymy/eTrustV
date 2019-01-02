@@ -181,7 +181,7 @@ public class ClaimFileGeneralHandler extends BasicTextDownloadHandler implements
           ? "0.00" : CommonUtils.nvl(conf.get("ctrlDatFmt")).toString()));
       str = this.padProcessor(conf, str);
     } else if ((CommonUtils.nvl(conf.get("ctrlDatTyp")).toString().toUpperCase()).equals("D")) {
-      str = CommonUtils.changeFormat(strDtlData, "yyyyMMdd", (CommonUtils.nvl(conf.get("ctrlDatFmt")).equals("")
+      str = CommonUtils.changeFormat(strDtlData, "yyyy-MM-dd", (CommonUtils.nvl(conf.get("ctrlDatFmt")).equals("")
           ? "yyyyMMdd" : CommonUtils.nvl(conf.get("ctrlDatFmt")).toString()));
       str = this.padProcessor(conf, str);
     }
