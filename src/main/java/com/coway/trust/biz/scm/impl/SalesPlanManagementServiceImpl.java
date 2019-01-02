@@ -97,7 +97,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		int planFstWeek	= 0;	int planFstSpltWeek	= 0;
 		//int fstWeek		= 0;	int lstWeek		= 0;
 		String fstSplitYn	= "";	String lstSplitYn	= "";
-		int m0WeekCnt	= 0;	int m1WeekCnt	= 0;	int m2WeekCnt	= 0;	int m3WeekCnt	= 0;	int m4WeekCnt	= 0;
+		int mm1WeekCnt	= 0;	int m0WeekCnt	= 0;	int m1WeekCnt	= 0;	int m2WeekCnt	= 0;	int m3WeekCnt	= 0;	int m4WeekCnt	= 0;
 		String endDt	= "";
 		
 		Map<String, Object> listParams = new HashMap<String, Object>();
@@ -121,6 +121,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 		//lstWeek		= Integer.parseInt(selectTotalSplitInfo.get(0).get("lstWeek").toString());
 		//splitCnt	= Integer.parseInt(selectTotalSplitInfo.get(0).get("splitCnt").toString());
 		leadTm		= Integer.parseInt(selectScmTotalInfo.get(0).get("leadTm").toString());
+		mm1WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("mm1WeekCnt").toString());
 		m0WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m0WeekCnt").toString());
 		m1WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m1WeekCnt").toString());
 		m2WeekCnt	= Integer.parseInt(selectScmTotalInfo.get(0).get("m2WeekCnt").toString());
@@ -549,16 +550,16 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 					String intToStrFieldCnt1	= "";	int iLoopDataFieldCnt1	= 1;	//	전주의 실적을 가져오기 위해서 계산하는 주차변수
 					String intToStrFieldCnt2	= "";	int iLoopDataFieldCnt2	= 1;	//	이번주의 실적을 저장하기 위해서 계산하는 주차변수
 					//	planWeek가 해당 월의 가장 마지막 주이고, planWeek 가 split week인 경우
-					if ( 4 == m0WeekCnt ) {
+					if ( 4 == mm1WeekCnt ) {
 						iLoopDataFieldCnt1	= 5;
-					} else if ( 5 == m0WeekCnt ) {
+					} else if ( 5 == mm1WeekCnt ) {
 						iLoopDataFieldCnt1	= 6;
-					} else if ( 6 == m0WeekCnt ) {
+					} else if ( 6 == mm1WeekCnt ) {
 						iLoopDataFieldCnt1	= 7;
 					} else {
-						LOGGER.debug("Diff : m0WeekCnt is wrong");
+						LOGGER.debug("Diff : mm1WeekCnt is wrong");
 					}
-					//LOGGER.debug("m0WeekCnt : " + m0WeekCnt);
+					//LOGGER.debug("mm1WeekCnt : " + mm1WeekCnt);
 					
 					//	stkTypeId = 62(필터) 확인
 					if ( "62".equals(stkTypeId) ) {
@@ -566,7 +567,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						//	Filter
 						if ( planFstWeek == planFstSpltWeek ) {
 							//	첫주차가 스플릿 주차가 아닌 경우
-							for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
+							for ( int m0 = 1 ; m0 < mm1WeekCnt + 1 ; m0++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
@@ -584,7 +585,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								//LOGGER.debug("Filter : 2-1 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0 : " + updParams.get("m0").toString() + ", m0OrdSum : " + m0OrdSum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
 								LOGGER.debug("FILTER - 3 - M0 : " + updParams.get("m0").toString());
 							}
-							for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
+							for ( int m1 = 1 ; m1 < m0WeekCnt + 1 ; m1++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
@@ -599,7 +600,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								}
 								iLoopDataFieldCnt2++;
 							}
-							for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
+							for ( int m2 = 1 ; m2 < m1WeekCnt + 1 ; m2++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
@@ -614,7 +615,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								}
 								iLoopDataFieldCnt2++;
 							}
-							for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
+							for ( int m3 = 1 ; m3 < m2WeekCnt + 1 ; m3++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
@@ -629,7 +630,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								}
 								iLoopDataFieldCnt2++;
 							}
-							for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
+							for ( int m4 = 1 ; m4 < m3WeekCnt + 1 ; m4++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
@@ -646,7 +647,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 							}
 						} else {
 							//	첫주차가 스플릿 주차인 경우
-							for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
+							for ( int m0 = 1 ; m0 < mm1WeekCnt + 1 ; m0++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
@@ -664,7 +665,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								//LOGGER.debug("Filter : 2-2 stockCode : " + stockCode + ", weekQty : " + weekQty + ", m0 : " + updParams.get("m0").toString() + ", m0OrdSum : " + m0OrdSum + ", intToStrFieldCnt1 : " + intToStrFieldCnt1);
 								LOGGER.debug("FILTER - 4 - M0 : " + updParams.get("m0").toString());
 							}
-							for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
+							for ( int m1 = 1 ; m1 < m0WeekCnt + 1 ; m1++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
@@ -679,7 +680,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								}
 								iLoopDataFieldCnt2++;
 							}
-							for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
+							for ( int m2 = 1 ; m2 < m1WeekCnt + 1 ; m2++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
@@ -694,7 +695,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								}
 								iLoopDataFieldCnt2++;
 							}
-							for ( int m3 = 1 ; m3 < m3WeekCnt + 1 ; m3++ ) {
+							for ( int m3 = 1 ; m3 < m2WeekCnt + 1 ; m3++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
@@ -709,7 +710,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 								}
 								iLoopDataFieldCnt2++;
 							}
-							for ( int m4 = 1 ; m4 < m4WeekCnt + 1 ; m4++ ) {
+							for ( int m4 = 1 ; m4 < m3WeekCnt + 1 ; m4++ ) {
 								intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 								if ( 1 == intToStrFieldCnt2.length() ) {
 									intToStrFieldCnt2	= "0" + intToStrFieldCnt2;
@@ -729,7 +730,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						//	Except Filter
 						m0OrdSum	= 0;	m0Sum	= 0;	m1Sum	= 0;	m2Sum	= 0;	m3Sum	= 0;	m4Sum	= 0;	weekQty		= 0;
 						//	3.1 m0
-						for ( int m0 = 1 ; m0 < m0WeekCnt + 1 ; m0++ ) {
+						for ( int m0 = 1 ; m0 < mm1WeekCnt + 1 ; m0++ ) {
 							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 							if ( 1 == intToStrFieldCnt1.length() ) {
@@ -782,7 +783,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						LOGGER.debug("NOT FILTER - 2 - M0 : " + updParams.get("m0").toString());
 						
 						//	3.2 m1
-						for ( int m1 = 1 ; m1 < m1WeekCnt + 1 ; m1++ ) {
+						for ( int m1 = 1 ; m1 < m0WeekCnt + 1 ; m1++ ) {
 							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 							if ( 1 == intToStrFieldCnt1.length() ) {
@@ -800,7 +801,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						updParams.put("m1", m1Sum);
 						
 						//	3.3 m2
-						for ( int m2 = 1 ; m2 < m2WeekCnt + 1 ; m2++ ) {
+						for ( int m2 = 1 ; m2 < m1WeekCnt + 1 ; m2++ ) {
 							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 							if ( 1 == intToStrFieldCnt1.length() ) {
@@ -818,7 +819,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						updParams.put("m2", m2Sum);
 						
 						//	3.4 m3
-						for ( int m3 = 1 ; m3 < m0WeekCnt + 1 ; m3++ ) {
+						for ( int m3 = 1 ; m3 < m2WeekCnt + 1 ; m3++ ) {
 							intToStrFieldCnt1	= String.valueOf(iLoopDataFieldCnt1);
 							intToStrFieldCnt2	= String.valueOf(iLoopDataFieldCnt2);
 							if ( 1 == intToStrFieldCnt1.length() ) {
@@ -836,7 +837,7 @@ public class SalesPlanManagementServiceImpl implements SalesPlanManagementServic
 						updParams.put("m3", m3Sum);
 						
 						//	빈 주차 채우기
-						int totWeekCnt	= m0WeekCnt + m1WeekCnt + m2WeekCnt + m3WeekCnt;
+						int totWeekCnt	= mm1WeekCnt + m0WeekCnt + m1WeekCnt + m2WeekCnt;
 						for ( int remain = totWeekCnt + 1 ; remain < 31 ; remain++ ) {
 							updParams.put("w" + remain, 0);
 						}
