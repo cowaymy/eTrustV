@@ -1073,6 +1073,10 @@ public class ClaimController {
               claimMap.put("rowCount", 999);
               claimMap.put("batchNo", totBatToday);
               claimMap.put("pageCnt", pageCnt);
+              claimMap.put("type", 1);
+              this.createCreditCardFileMBB(claimMap);
+
+              claimMap.put("type", 2);
               this.createCreditCardFileMBB(claimMap);
             }
           }
@@ -2149,7 +2153,7 @@ public class ClaimController {
 
       largeExcelService.downLoadCreditCardFileMBB(claimMap, downloadHandler);
 
-      if (claimMap.get("pageNo") == claimMap.get("pageCnt")) {
+      if (claimMap.get("pageNo").equals(claimMap.get("pageCnt"))) {
         downloadHandler.writeFooter(Integer.toString((Integer) claimMap.get("type")));
       }
     } catch (Exception ex) {
@@ -2170,8 +2174,7 @@ public class ClaimController {
 
     email.setTo(emailReceiver);
     email.setHtml(false);
-    email.setSubject(
-        "SCB CRC Deduction File - Batch Date : " + inputDate + "_" + String.valueOf(claimMap.get("pageNo")));
+    email.setSubject("SCB CRC Deduction File - Batch Date : " + inputDate + "_" + String.valueOf(claimMap.get("pageNo")));
     email.setText("Please find attached the claim file for your kind perusal.");
     email.addFile(file);
 
