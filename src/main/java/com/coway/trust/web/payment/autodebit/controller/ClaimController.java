@@ -1105,6 +1105,10 @@ public class ClaimController {
               claimMap.put("rowCount", 999);
               claimMap.put("batchNo", totBatToday);
               claimMap.put("pageCnt", pageCnt);
+              claimMap.put("type", 1);
+              this.createClaimFileCrcMBB(claimMap);
+
+              claimMap.put("type", 2);
               this.createClaimFileCrcMBB(claimMap);
             }
           }
@@ -2020,7 +2024,7 @@ public class ClaimController {
       if (1 == (Integer) claimMap.get("type")) {
           sFile = "CZ" + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
       } else {
-          sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("fileBatchId") + ".dat";
+          sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("ctrlId") + ".dat";
       }
 
       downloadHandler = getTextDownloadCrcMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
@@ -2146,7 +2150,7 @@ public class ClaimController {
       if (1 == (Integer) claimMap.get("type")) {
           sFile = "CZ" + todayDate + StringUtils.leftPad(String.valueOf(claimMap.get("pageNo")), 2, "0") + ".dat";
       } else {
-          sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("fileBatchId") + ".dat";
+          sFile = "CZ" + todayDate + "_NEW_" + claimMap.get("ctrlId") + ".dat";
       }
 
       downloadHandler = getTextDownloadCreditCardMBBHandler(sFile, claimFileColumns, null, filePath, "/CRC/", claimMap);
