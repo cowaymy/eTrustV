@@ -232,6 +232,17 @@
                 headerText : '<spring:message code="sal.text.accNo" />',
                 editable : true
             }, {
+                dataField : "ddtChnl",
+                headerText : '<spring:message code="sal.text.ddcChnl" />',
+                width : 100,
+                editable : true
+            }, {
+                dataField : "ddtChnlCde",
+                headerText : '<spring:message code="sal.text.ddcChnl" />',
+                width : 100,
+                visible : false,
+                editable : true
+            }, {
                 dataField : "bankBranch",
                 headerText : '<spring:message code="sal.text.bankBranch" />',
                 width : 100,
@@ -612,7 +623,7 @@
         }
     }
 
-    function fn_addBankAccountInfo(accType,accBank,accNo,bankBranch,accOwner,accRem){
+    function fn_addBankAccountInfo(accType,accBank,accNo,bankBranch,accOwner,accRem,ddtChnl,ddtChnlCde){
 
         var accItem = new Object();
 
@@ -623,6 +634,8 @@
             accItem.bankBranch = bankBranch;
             accItem.accOwner = accOwner;
             accItem.accRem = accRem;
+            accItem.ddtChnl = ddtChnl;
+            accItem.ddtChnlCde = ddtChnlCde;
             AUIGrid.addRow(myGridID1, accItem, "last");
         }
     }
