@@ -655,8 +655,8 @@ SELECT B.PLAN_ID
                      FROM SCM0001M Z
                      LEFT OUTER JOIN SCM0002D X ON (Z.PLAN_ID = X.PLAN_ID)
                      LEFT OUTER JOIN SCM0054S Y ON (Z.PLAN_YEAR = Y.PLAN_YEAR AND Z.PLAN_MONTH = Y.PLAN_MONTH AND Z.TEAM = Y.TEAM AND X.STOCK_CODE = Y.STOCK_CODE)
-                    WHERE Z.PLAN_YEAR = #{year}
-                      AND Z.PLAN_WEEK = #{week}
+                    WHERE Z.PLAN_YEAR = #{planYear}
+                      AND Z.PLAN_WEEK = #{planWeek}
                       AND Z.TEAM = #{team}
                    ) B ON (A.STOCK_CODE = B.STOCK_CODE)
  WHERE A.STUS_CODE_ID = 1
