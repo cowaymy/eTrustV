@@ -35,9 +35,6 @@ doGetComboCodeId('/sales/customer/selectDdlChnl.do', { isAllowForDd : '1' }, '',
         var ddtChnl = $("#cmbDdtChnl option:selected").text();
         var ddtChnlCde = document.insAccountForm.cmbDdtChnl.value;
 
-        alert(">>ddtChnl> " + ddtChnl);
-        alert(">>ddtChnlCde> " + ddtChnlCde);
-
         if(accType == ''){
             Common.alert("<spring:message code='sal.alert.msg.pleaseSelectTheAccType' />");
             return false;
