@@ -499,8 +499,8 @@ public class ScmBatchController2 {
 			query	+= "USING DUAL ON (PO_NO = TRIM(?) AND SO_NO = TRIM(?) AND SO_ITEM_NO = TO_NUMBER(TRIM(?)) AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))) ";
 			query	+= "WHEN MATCHED THEN ";
 			query	+= "UPDATE ";
-			query	+= "   SET PP_PLAN_QTY = NVL(PP_PLAN_QTY, 0) + TO_NUMBER(TRIM(?)) ";
-			query	+= "     , PP_PROD_QTY = NVL(PP_PROD_QTY, 0) + TO_NUMBER(TRIM(?)) ";
+			query	+= "   SET PP_PLAN_QTY = TO_NUMBER(TRIM(?)) ";
+			query	+= "     , PP_PROD_QTY = TO_NUMBER(TRIM(?)) ";
 			query	+= "     , PP_PROD_START_DT = CASE WHEN TRIM(?) = '00000000' THEN PP_PROD_START_DT ELSE CASE WHEN PP_PROD_START_DT > TRIM(?) THEN TRIM(?) ELSE PP_PROD_START_DT END END ";
 			query	+= "     , PP_PROD_END_DT = CASE WHEN TRIM(?) = '00000000' THEN PP_PROD_END_DT ELSE CASE WHEN PP_PROD_END_DT < TRIM(?) THEN TRIM(?) ELSE PP_PROD_END_DT END END ";
 			query	+= "WHEN NOT MATCHED THEN ";
@@ -561,7 +561,7 @@ public class ScmBatchController2 {
 					ps.setString(20, ppProdEndDt);
 				}
 				//LOGGER.debug(ps.toString());
-				LOGGER.debug("PO NO : " + poNo + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", STOCK CODE : " + stockCode);
+				LOGGER.debug("PO NO : " + poNo + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", STOCK CODE : " + stockCode + ", PP_PLAN_QTY : " + ppPlanQty + ", PP_PROD_QTY : " + ppProdQty);
 				ps.executeQuery();
 			}
 		} catch ( Exception e ) {
@@ -645,7 +645,7 @@ public class ScmBatchController2 {
 					ps.setString(16, giDt);
 				}
 				//LOGGER.debug(ps.toString());
-				LOGGER.debug("PO NO : " + poNo + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", DELV NO : " + delvNo + ", DELV ITEM NO : " + delvItemNo + ", STOCK CODE : " + stockCode);
+				LOGGER.debug("PO NO : " + poNo + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", DELV NO : " + delvNo + ", DELV ITEM NO : " + delvItemNo + ", STOCK CODE : " + stockCode + ", GI_QTY : " + giQty + ", GI_DT : " + giDt);
 				ps.executeQuery();
 			}
 		} catch ( Exception e ) {
