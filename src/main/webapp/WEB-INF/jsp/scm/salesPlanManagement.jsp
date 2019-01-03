@@ -1333,11 +1333,13 @@ function fnSumMnPlan(event) {
 	var planWeek	= $("#scmWeekCbBox").val();
 	var m0	= 0;	var m1	= 0;	var m2	= 0;	var m3	= 0;	var m4	= 0;
 	var ms0	= "";	var ms1	= "";	var ms2	= "";	var ms3	= "";	var ms4	= "";
+	var team	= "";	var type	= 0;	var weekFrom	= 0;	var weekTo	= 0;	var value	= 0;
 	
 	if ( "cellEditEnd" == event.type ) {
 		//console.log("m0WeekCnt : " + m0WeekCnt + ", m1WeekCnt : " + m1WeekCnt + ", m2WeekCnt : " + m2WeekCnt + ", m3WeekCnt : " + m3WeekCnt + ", m4WeekCnt : " + m4WeekCnt);
 		
 		console.log("planFstWeek : " + planFstWeek + ", planFstSpltWeek : " + planFstSpltWeek + ", planWeekTh : " + planWeekTh);
+		
 		//	sum m0
 		for ( var i = 0 ; i < m0WeekCnt ; i++ ) {
 			ms0	= "w0" + (i + 1).toString();
@@ -1352,24 +1354,24 @@ function fnSumMnPlan(event) {
 					if ( parseInt(i) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
 						m0	= parseInt(m0) + parseInt(event.value);
 						salesPlanList[event.rowIndex][ms0]	= ((event.value).toString()).replace(",", "");
-						console.log("01. i : " + i + ", ms0 : " + ms0 + ", value : " + event.value);
+						//console.log("01. i : " + i + ", ms0 : " + ms0 + ", value : " + event.value);
 					} else {
 						m0	= parseInt(m0) + parseInt(salesPlanList[event.rowIndex][ms0]);
-						console.log("02. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
+						//console.log("02. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
 					}
 				}
 			} else {
 				if ( i < parseInt(planWeekTh) ) {
 					null;
-					console.log("null");
+					//console.log("null");
 				} else {
 					if ( parseInt(i) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
 						m0	= parseInt(m0) + parseInt(event.value);
 						salesPlanList[event.rowIndex][ms0]	= ((event.value).toString()).replace(",", "");
-						console.log("21. i : " + i + ", ms0 : " + ms0 + ", value : " + event.value);
+						//console.log("21. i : " + i + ", ms0 : " + ms0 + ", value : " + event.value);
 					} else {
 						m0	= parseInt(m0) + parseInt(salesPlanList[event.rowIndex][ms0]);
-						console.log("22. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
+						//console.log("22. i : " + i + ", ms0 : " + ms0 + ", value : " + salesPlanList[event.rowIndex][ms0]);
 					}
 				}
 			}
@@ -1393,10 +1395,10 @@ function fnSumMnPlan(event) {
 			if ( i + parseInt(m0WeekCnt) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
 				m1	= parseInt(m1) + parseInt(event.value);
 				salesPlanList[event.rowIndex][ms1]	= ((event.value).toString()).replace(",", "");
-				console.log("11. i : " + i + ", ms1 : " + ms1 + ", value : " + event.value);
+				//console.log("11. i : " + i + ", ms1 : " + ms1 + ", value : " + event.value);
 			} else {
 				m1	= parseInt(m1) + parseInt(salesPlanList[event.rowIndex][ms1]);
-				console.log("12. i : " + i + ", ms1 : " + ms1 + ", value : " + salesPlanList[event.rowIndex][ms1]);
+				//console.log("12. i : " + i + ", ms1 : " + ms1 + ", value : " + salesPlanList[event.rowIndex][ms1]);
 			}
 		}
 		salesPlanList[event.rowIndex]["m1"]	= parseInt(m1);
@@ -1412,10 +1414,10 @@ function fnSumMnPlan(event) {
 			if ( i + parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
 				m2	= parseInt(m2) + parseInt(event.value);
 				salesPlanList[event.rowIndex][ms2]	=  ((event.value).toString()).replace(",", "");
-				console.log("21. i : " + i + ", ms2 : " + ms2 + ", value : " + event.value);
+				//console.log("21. i : " + i + ", ms2 : " + ms2 + ", value : " + event.value);
 			} else {
 				m2	= parseInt(m2) + parseInt(salesPlanList[event.rowIndex][ms2]);
-				console.log("22. i : " + i + ", ms2 : " + ms2 + ", value : " + salesPlanList[event.rowIndex][ms2]);
+				//console.log("22. i : " + i + ", ms2 : " + ms2 + ", value : " + salesPlanList[event.rowIndex][ms2]);
 			}
 		}
 		salesPlanList[event.rowIndex]["m2"]	= parseInt(m2);
@@ -1427,10 +1429,10 @@ function fnSumMnPlan(event) {
 			if ( i + parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
 				m3	= parseInt(m3) + parseInt(event.value);
 				salesPlanList[event.rowIndex][ms3]	= ((event.value).toString()).replace(",", "");
-				console.log("31. i : " + i + ", ms3 : " + ms3 + ", value : " + event.value);
+				//console.log("31. i : " + i + ", ms3 : " + ms3 + ", value : " + event.value);
 			} else {
 				m3	= parseInt(m3) + parseInt(salesPlanList[event.rowIndex][ms3]);
-				console.log("32. i : " + i + ", ms3 : " + ms3 + ", value : " + salesPlanList[event.rowIndex][ms3]);
+				//console.log("32. i : " + i + ", ms3 : " + ms3 + ", value : " + salesPlanList[event.rowIndex][ms3]);
 			}
 		}
 		salesPlanList[event.rowIndex]["m3"]	= parseInt(m3);
@@ -1442,15 +1444,38 @@ function fnSumMnPlan(event) {
 			if ( i + parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt) + parseInt(m3WeekCnt) + parseInt(colStartIdx) == parseInt(colChangeIdx) ) {
 				m4	= parseInt(m4) + parseInt(event.value);
 				salesPlanList[event.rowIndex][ms4]	= ((event.value).toString()).replace(",", "");
-				console.log("41. i : " + i + ", ms4 : " + ms4 + ", value : " + event.value);
+				//console.log("41. i : " + i + ", ms4 : " + ms4 + ", value : " + event.value);
 			} else {
 				m4	= parseInt(m4) + parseInt(salesPlanList[event.rowIndex][ms4]);
-				console.log("42. i : " + i + ", ms4 : " + ms4 + ", value : " + salesPlanList[event.rowIndex][ms4]);
+				//console.log("42. i : " + i + ", ms4 : " + ms4 + ", value : " + salesPlanList[event.rowIndex][ms4]);
 			}
 		}
 		salesPlanList[event.rowIndex]["m4"]	= parseInt(m4);
 		AUIGrid.setCellValue(myGridID, event.rowIndex, "m4", m4);
+		
+		team	= AUIGrid.getCellValue(myGridID, event.rowIndex, "team");
+		type	= AUIGrid.getCellValue(myGridID, event.rowIndex, "typeId");
+		var week	= colChangeIdx - 18;
+		var month	= "";
+		value	= event.value;
+		if ( 1 <= week && parseInt(m0WeekCnt) >= week ) {
+			month	= "m0";
+		} else if ( parseInt(m0WeekCnt) + 1 <= week && parseInt(m0WeekCnt) + parseInt(m1WeekCnt) >= week ) {
+			month	= "m1";
+		} else if ( parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + 1 <= week && parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt) >= week ) {
+			month	= "m2";
+		} else if ( parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt) + 1 <= week && parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt) + parseInt(m3WeekCnt) >= week ) {
+			month	= "m3";
+		} else if ( parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt) + parseInt(m3WeekCnt) + 1 <= week && parseInt(m0WeekCnt) + parseInt(m1WeekCnt) + parseInt(m2WeekCnt) + parseInt(m3WeekCnt) + parseInt(m4WeekCnt) >= week ) {
+			month	= "m4";
+		}
+		console.log("team : " + team + ", type : " + type + ", month : " + month + ", week : " + week + ", value : " + value);
 	}
+}
+
+//	Summary calc
+function fnSummaryCalc(event) {
+	
 }
 
 //	Button & status
