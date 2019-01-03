@@ -4,10 +4,10 @@
 
     $(document).ready(function() {
 
-
         doGetCombo('/common/selectCodeList.do', '20', '', 'bankCmbAccTypeId', 'S', ''); // cmbAccTypeId(Type)
         //doGetCombo('/sales/customer/selectAccBank.do', '', '', 'bankCmbAccBankId', 'S', '')//selCodeAccBankId(Issue Bank)
-        doGetComboCodeId('/sales/customer/selectAccBank.do', {isAllowForDd : '1'}, '', 'bankCmbAccBankId',   'S', ''); //Issue Bank)
+        doDefCombo(emptyData, '', 'bankCmbAccBankId', 'S', '');
+        doGetComboCodeId('/sales/customer/selectDdlChnl.do', { isAllowForDd : '1' }, '', 'cmbDdtChnl', 'S', ''); //DEDUCTION CHANNEL
 
         $("#_saveBtn").click(function(){
 
@@ -69,6 +69,17 @@
             //Add
              fn_customerBankInfoAddAjax();
         });
+
+        $('#cmbDdtChnl').change(function(event) {
+            if ($('#cmbDdtChnl').val() != "") {
+              doGetComboCodeId('/sales/customer/selectAccBank.do', {
+                isAllowForDd : '1',
+                ddlChnl : $('#cmbDdtChnl').val()
+              }, '', 'bankCmbAccBankId', 'S', '');
+            } else {
+              $('bankCmbAccBankId option').remove();
+            }
+          });
 
     });
 
@@ -265,58 +276,82 @@
     /*########## availability Check End ##########*/
 
 </script>
-
-<div id="popup_wrap" class="popup_wrap"><!-- popup_wrap start -->
-<header class="pop_header"><!-- pop_header start -->
-<h1><spring:message code="sal.btn.addNewBankAcc" /></h1>
-<ul class="right_opt">
-    <li><p class="btn_blue2"><a href="#" id="_close1" ><spring:message code="sal.btn.close" /></a></p></li>
-</ul>
-</header><!-- pop_header end -->
-<section class="pop_body"><!-- pop_body start -->
-<form id="addForm"> <!-- Form Start  -->
-<input type="hidden" value="${insCustId}" id="_insCustId" name="insCustId">
-<table class="type1"><!-- table start -->
-<caption>table</caption>
-<colgroup>
-    <col style="width:150px" />
-    <col style="width:*" />
-    <col style="width:130px" />
-    <col style="width:*" />
-</colgroup>
-<tbody>
-<tr>
-    <th scope="row"><spring:message code="sal.title.type" /><span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="bankCmbAccTypeId" name="bankCustAccTypeId"></select>
-    </td>
-    <th scope="row"><spring:message code="sal.text.issueBank" /><span class="must">*</span></th>
-    <td>
-    <select class="w100p" id="bankCmbAccBankId" name="bankCustAccBankId"></select>
-    </td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.text.accNo" /><span class="must">*</span></th>
-    <td><input type="text" title="" placeholder="Account Number" class="w100p"  maxlength="16" id="bankAccountNo" name="bankCustAccNo"/></td>
-    <th scope="row"><spring:message code="sal.text.bankBranch" /></th>
-    <td><input type="text" title="" placeholder="Bank Branch" class="w100p"  maxlength="16" name="bankCustAccBankBrnch"/></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.text.accountOwner" /><span class="must">*</span></th>
-    <td colspan="3"><input type="text" title="" placeholder="Account Owner" class="w100p"   id="bankCustAccOwner" name="bankCustAccOwner"/></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="sal.text.remarks" /></th>
-    <td colspan="3">
-    <textarea cols="20" rows="5" name="bankCustAccRem"></textarea>
-    </td>
-</tr>
-</tbody>
-</table><!-- table end -->
-</form><!-- Form end  -->
-<ul class="center_btns">
-    <li><p class="btn_blue2 big"><a href="#" id="_saveBtn"><spring:message code="sal.btn.save2" /></a></p></li>
-</ul>
-
-</section><!-- pop_body end -->
+<div id="popup_wrap" class="popup_wrap">
+ <!-- popup_wrap start -->
+ <header class="pop_header">
+  <!-- pop_header start -->
+  <h1>
+   <spring:message code="sal.btn.addNewBankAcc" />
+  </h1>
+  <ul class="right_opt">
+   <li><p class="btn_blue2">
+     <a href="#" id="_close1"><spring:message code="sal.btn.close" /></a>
+    </p></li>
+  </ul>
+ </header>
+ <!-- pop_header end -->
+ <section class="pop_body">
+  <!-- pop_body start -->
+  <form id="addForm">
+   <!-- Form Start  -->
+   <input type="hidden" value="${insCustId}" id="_insCustId"
+    name="insCustId">
+   <table class="type1">
+    <!-- table start -->
+    <caption>table</caption>
+    <colgroup>
+     <col style="width: 150px" />
+     <col style="width: *" />
+     <col style="width: 130px" />
+     <col style="width: *" />
+    </colgroup>
+    <tbody>
+      <tr>
+      <th scope="row"><spring:message code="sal.title.type" /><span
+       class="must">*</span></th>
+      <td><select class="w100p" id="bankCmbAccTypeId"
+       name="bankCustAccTypeId"></select></td>
+       <th scope="row"><spring:message code="sal.text.ddcChnl" /><span
+       class="must">*</span></th>
+      <td><select id="cmbDdtChnl" name="ddlChnl" class="w100p"></select>
+      </td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code="sal.text.issueBank" /><span
+       class="must">*</span></th>
+      <td><select class="w100p" id="bankCmbAccBankId"
+       name="bankCustAccBankId"></select></td>
+      <th scope="row"><spring:message code="sal.text.accNo" /><span
+       class="must">*</span></th>
+      <td><input type="text" title="" placeholder="Account Number"
+       class="w100p" maxlength="16" id="bankAccountNo"
+       name="bankCustAccNo" /></td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code="sal.text.bankBranch" /></th>
+      <td><input type="text" title="" placeholder="Bank Branch"
+       class="w100p" maxlength="16" name="bankCustAccBankBrnch" /></td>
+      <th scope="row"><spring:message code="sal.text.accountOwner" /><span
+       class="must">*</span></th>
+      <td><input type="text" title=""
+       placeholder="Account Owner" class="w100p" id="bankCustAccOwner"
+       name="bankCustAccOwner" /></td>
+     </tr>
+     <tr>
+      <th scope="row"><spring:message code="sal.text.remarks" /></th>
+      <td colspan="3"><textarea cols="20" rows="5"
+        name="bankCustAccRem"></textarea></td>
+     </tr>
+    </tbody>
+   </table>
+   <!-- table end -->
+  </form>
+  <!-- Form end  -->
+  <ul class="center_btns">
+   <li><p class="btn_blue2 big">
+     <a href="#" id="_saveBtn"><spring:message code="sal.btn.save2" /></a>
+    </p></li>
+  </ul>
+ </section>
+ <!-- pop_body end -->
 </div>
