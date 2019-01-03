@@ -807,6 +807,7 @@ public class CustomerController {
         customerBVO.setAccIdcm(0); // 고정
         customerBVO.setHlbbId(0); // 고정
         customerBVO.setAccCrtUserId(sessionVo.getUserId()); // 임시
+        customerBVO.setDdtChnlCde(form.getDdtChnlCde());
 
         customerBankVOList.add(customerBVO);
       });
