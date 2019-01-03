@@ -6,70 +6,71 @@
 var bankAccountGirdID; // bank account list
 
 $(document).ready(function(){
-    
+
 	/*  Gird */
     //AUIGrid 그리드를 생성합니다. (address, contact , bank, creditcard, ownorder, thirdparty )
     createBankGrid();
     fn_getCustomerBankAjax(); // bank account list
-	
+
 	/* Move Page */
     $("#_editCustomerInfo").change(function(){
-          
+
         var stateVal = $(this).val();
         $("#_selectParam").val(stateVal);
-        
+
     });
-    
+
     $("#_confirm").click(function (currPage) {
     	fn_comboAuthCtrl();
     });
-    
+
     // 셀 더블클릭 이벤트 바인딩
     AUIGrid.bind(bankAccountGirdID, "cellDoubleClick", function(event){
         $("#_editCustId").val(event.item.custId);
-        $("#_editCustBankId").val(event.item.custAccId); 
+        $("#_editCustBankId").val(event.item.custAccId);
         Common.popupDiv("/sales/customer/updateCustomerBankAccEditInfoPop.do", $("#editForm").serializeJSON(), null , true, '_editDiv4Pop');
     });
-    
+
     $("#_newBank").click(function() {
     	Common.popupDiv('/sales/customer/updateCustomerNewBankPop.do', $("#popForm").serializeJSON(), null , true ,'_editDiv4New');
 	});
-    
+
 });// Document Ready End
-     
+
     function createBankGrid(){
-	
+
     	// Bank Column
         var bankColumnLayout= [
-               {dataField : "custAccOwner", headerText : '<spring:message code="sal.title.accountHolder" />', width : '25%'}, 
-               {dataField : "codeName", headerText : '<spring:message code="sal.title.type" />', width : '25%'}, 
+               {dataField : "custAccOwner", headerText : '<spring:message code="sal.title.accountHolder" />', width : '25%'},
+               {dataField : "codeName", headerText : '<spring:message code="sal.title.type" />', width : '25%'},
                {dataField : "bankName", headerText : '<spring:message code="sal.title.issueBank" />', width : '25%'},
                {dataField : "custAccNo", headerText : '<spring:message code="sal.title.accNo" />', width : '25%'},
+               {dataField : "custAccDdtChnl", headerText : '<spring:message code="sal.text.ddcChnl" />', width : '25%'},
                {dataField : "custAccId" , visible : false},
                {dataField : "custId" , visible : false}
          ];
-    	
+
       //그리드 속성 설정
         var gridPros = {
-                
+
                 usePaging           : true,         //페이징 사용
-                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)            
-                editable            : false,            
-                fixedColumnCount    : 1,            
-                showStateColumn     : true,             
-                displayTreeOpen     : false,            
-      //          selectionMode       : "singleRow",  //"multipleCells",            
-                headerHeight        : 30,       
+                pageRowCount        : 20,           //한 화면에 출력되는 행 개수 20(기본값:20)
+                editable            : false,
+                fixedColumnCount    : 1,
+                showStateColumn     : true,
+                displayTreeOpen     : false,
+      //          selectionMode       : "singleRow",  //"multipleCells",
+                headerHeight        : 30,
                 useGroupingPanel    : false,        //그룹핑 패널 사용
                 skipReadonlyColumns : true,         //읽기 전용 셀에 대해 키보드 선택이 건너 뛸지 여부
                 wrapSelectionMove   : true,         //칼럼 끝에서 오른쪽 이동 시 다음 행, 처음 칼럼으로 이동할지 여부
-                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력    
+                showRowNumColumn    : true,         //줄번호 칼럼 렌더러 출력
                 noDataMessage       : "No order found.",
                 groupingMessage     : "Here groupping"
         };
-      
+
         bankAccountGirdID = GridCommon.createAUIGrid("#bank_grid_wrap", bankColumnLayout,'',gridPros); // bank account list
-	
+
     }
 
     //Get address by Ajax
@@ -78,7 +79,7 @@ $(document).ready(function(){
             AUIGrid.setGridData(bankAccountGirdID, result);
         });
     }
-    
+
    //close Func
      function fn_closeFunc(){
           $("#_selectParam").val('1');
@@ -96,7 +97,7 @@ $(document).ready(function(){
 <form id="editForm">
     <input type="hidden" name="custId" value="${custId}"/>
     <input type="hidden" name="custAddId" value="${custAddId}"/>
-    <input type="hidden" name="custCntcId" value="${custCntcId}" > 
+    <input type="hidden" name="custCntcId" value="${custCntcId}" >
     <input type="hidden" name="custAccId" value="${custAccId}" id="custAccId">
     <input type="hidden" name="selectParam"  id="_selectParam"/>
 </form>
@@ -154,9 +155,9 @@ $(document).ready(function(){
     <td><span>${result.custId}</span></td>
     <th scope="row"><spring:message code="sal.text.custType" /></th>
     <td>
-        <span> 
+        <span>
                 ${result.codeName1}
-                <!-- not Individual -->  
+                <!-- not Individual -->
                 <c:if test="${ result.typeId ne 964}">
                     (${result.codeName})
                 </c:if>
@@ -269,7 +270,7 @@ $(document).ready(function(){
                      Female
                 </c:when>
                 <c:otherwise>
-                    <!-- korean : 5  -->                    
+                    <!-- korean : 5  -->
                 </c:otherwise>
             </c:choose>
      </td>
@@ -282,7 +283,7 @@ $(document).ready(function(){
         <span>
             <c:if test="${contactinfo.dob ne  '01-01-1900'}">
                 ${contactinfo.dob}
-            </c:if> 
+            </c:if>
         </span>
     </td>
     <th scope="row"><spring:message code="sal.text.race" /></th>
