@@ -1755,7 +1755,9 @@
     CUST_ACC_IDCM,
     CUST_HLBB_ID,
     CUST_ACC_CRT_USER_ID,
-    CUST_ACC_CRT_DT)
+    CUST_ACC_CRT_DT,
+    CUST_ACC_DDT_CHL
+    )
     VALUES (
     SAL0022D_CUST_ACC_ID_SEQ.NEXTVAL,
     SAL0029D_CUST_ID_SEQ.CURRVAL,
@@ -1775,7 +1777,8 @@
     #{accIdcm},
     #{hlbbId},
     #{accCrtUserId},
-    SYSDATE
+    SYSDATE,
+    #{ddtChnlCde}
     )
   </insert>
 
@@ -1918,7 +1921,8 @@
     CUST_ACC_NO = #{bankCustAccNo},
     CUST_ACC_BANK_BRNCH = #{bankCustAccBankBrnch},
     CUST_ACC_OWNER = #{bankCustAccOwner},
-    CUST_ACC_REM = #{bankCustAccRem}
+    CUST_ACC_REM = #{bankCustAccRem},
+    CUST_ACC_DDT_CHL = #{ddlChnl}
     WHERE
     CUST_ACC_ID = #{bankCustAccId}
   </update>
@@ -2130,7 +2134,8 @@
     CUST_ACC_IDCM,
     CUST_HLBB_ID,
     CUST_ACC_CRT_USER_ID,
-    CUST_ACC_CRT_DT)
+    CUST_ACC_CRT_DT,
+    CUST_ACC_DDT_CHL)
     VALUES (
     SAL0022D_CUST_ACC_ID_SEQ.NEXTVAL ,
     #{insCustId},
@@ -2150,7 +2155,8 @@
     0,
     0,
     #{userId} , <!-- SESSION -->
-    SYSDATE
+    SYSDATE,
+    #{ddlChnl}
     )
   </insert>
 
