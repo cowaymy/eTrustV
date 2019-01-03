@@ -100,7 +100,7 @@
 
         Common.ajax("GET", "/sales/customer/deleteCustomerBank.do", $("#updForm").serialize(), function(result){
             //result alert and closePage
-            Common.alert(<spring:message code='sal.alert.msg.successfully' />, fn_closePage);
+            Common.alert("<spring:message code='sal.alert.msg.successfully' />", fn_closePage);
         });
     }
 
