@@ -69,7 +69,7 @@
             msg += "<spring:message code='sal.alert.msg.invalidBankAccNum' /><br/>";
           } else {
             var isExist = fn_existAccNo('${custId}', $('#txtAccNo')
-                .val().trim(), $('#cmbAccBank').val());
+                .val().trim(), $('#cmbAccBank').val(), $("#cmbDdtChnl option:selected").text());
             console.log('xxxxxxisExist:' + isExist);
             if (isExist) {
               console.log('xxxxxx');
@@ -88,7 +88,7 @@
     return isValid;
   }
 
-  function fn_existAccNo(CustID, AccNo, IssueBankID) {
+  function fn_existAccNo(CustID, AccNo, IssueBankID, ddtChnl) {
     var isExist = false;
 
     Common.ajax("GET", "/sales/customer/selectCustomerBankAccJsonList", {
@@ -96,8 +96,18 @@
       custAccNo : AccNo,
       custAccBankId : IssueBankID
     }, function(rsltInfo) {
+
       if (rsltInfo != null) {
-        isExist = rsltInfo.length == 0 ? false : true;
+        //isExist = rsltInfo.length == 0 ? false : true;
+        if (rsltInfo.length > 0) {
+          for (var a = 0; a < rsltInfo.length; a++) {
+            if (rsltInfo[a].custAccDdtChnl == ddtChnl){
+              isExist = true;
+            }
+          }
+        } else {
+          isExist = false;
+        }
       }
     }, null, {
       async : false
