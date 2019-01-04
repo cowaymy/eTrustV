@@ -410,11 +410,13 @@ function fn_getTotalAmount() {
 function fn_addRow() {
 	if(AUIGrid.getRowCount(newGridID) > 0) {
 		console.log("clamUn" + AUIGrid.getCellValue(newGridID, 0, "clamUn"));
-		AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+		//AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+		AUIGrid.addRow(newGridID, {clamUn:AUIGrid.getCellValue(newGridID, 0, "clamUn"),taxCode:"OP (Purchase(0%):Out of scope)",cur:"MYR",totAmt:0}, "last");
 	} else {
 		Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J1"}, function(result) {
 	        console.log(result);
-	        AUIGrid.addRow(newGridID, {clamUn:result.clamUn,cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+	        //AUIGrid.addRow(newGridID, {clamUn:result.clamUn,cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+	        AUIGrid.addRow(newGridID, {clamUn:result.clamUn,taxCode:"OP (Purchase(0%):Out of scope)",cur:"MYR",totAmt:0}, "last");
 	    });
 	}
 }
@@ -439,7 +441,7 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
-	if($("#invcType").val() == "F") {
+	//if($("#invcType").val() == "F") {
 	    if(FormUtil.isEmpty($("#newMemAccId").val())) {
 	        Common.alert('<spring:message code="webInvoice.supplier.msg" />');
 	        checkResult = false;
@@ -458,7 +460,7 @@ function fn_checkEmpty() {
 	    var length = AUIGrid.getGridData(newGridID).length;
 	    if(length > 0) {
 	    	for(var i = 0; i < length; i++) {
-	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "taxCode"))) {
+	            /*if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "taxCode"))) {
 	                Common.alert('<spring:message code="webInvoice.taxCode.msg" />' + (i +1) + ".");
 	                checkResult = false;
 	                return checkResult;
@@ -467,7 +469,7 @@ function fn_checkEmpty() {
                     Common.alert('<spring:message code="webInvoice.netAmt.msg" />' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
-                }
+                }*/
 	            if(FormUtil.isEmpty(AUIGrid.getCellValue(newGridID, i, "expDesc"))) {
                     Common.alert('Please enter the description of line line ' + (i +1) + ".");
                     checkResult = false;
@@ -475,7 +477,7 @@ function fn_checkEmpty() {
                 }
 	        }
 	    }
-	}
+	//}
 	return checkResult;
 }
 
@@ -870,7 +872,7 @@ function fn_editRejected() {
 </style>
 
 <form id="dataForm">
-    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Web_Invoice.rpt" /><!-- Report Name  -->
+    <input type="hidden" id="reportFileName" name="reportFileName" value="/e-accounting/Web_Invoice_N.rpt" /><!-- Report Name  -->
     <input type="hidden" id="viewType" name="viewType" value="PDF" /><!-- View Type  -->
     <!-- <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="123123" /> --><!-- Download Name -->
     <input type="hidden" id="reportDownFileName" name="reportDownFileName" value="" />

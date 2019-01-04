@@ -94,22 +94,22 @@ var myColumnLayout = [ {
 }, {
     dataField : "taxCode",
     headerText : '<spring:message code="newWebInvoice.taxCode" />',
-    renderer : {
+    /*renderer : {
         type : "DropDownListRenderer",
         list : keyValueList, //key-value Object 로 구성된 리스트
         keyField : "taxCode", // key 에 해당되는 필드명
         valueField : "taxName", // value 에 해당되는 필드명
 
-    }
-}, {
+    }*/
+}, /*{
     dataField : "taxRate",
     dataType: "numeric",
     visible : false // Color 칼럼은 숨긴채 출력시킴
-}, {
+}, */{
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
-}, {
+}, /*{
     dataField : "netAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
     style : "aui-grid-user-custom-right",
@@ -153,17 +153,17 @@ var myColumnLayout = [ {
         autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
         allowPoint : true // 소수점(.) 입력 가능 설정
     }
-}, {
+},*/ {
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editable : false,
-    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+    //editable : false,
+    /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
         return (item.netAmt + item.taxAmt + item.taxNonClmAmt);
-    },
+    },*/
     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
         if(item.yN == "N") {
             return "my-cell-style";
@@ -388,8 +388,8 @@ function fn_updateWebInvoiceInfo(st) {
 <form action="#" method="post" enctype="multipart/form-data" id="form_newWebInvoice">
 <input type="hidden" id="newClmNo" name="clmNo">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId">
-<!-- <input type="hidden" id="newCostCenterText" name="costCentrName">
-<input type="hidden" id="newMemAccName" name="memAccName"> -->
+<input type="hidden" id="newCostCenterText" name="costCentrName">
+<!-- <input type="hidden" id="newMemAccName" name="memAccName"> -->
 <input type="hidden" id="bankCode" name="bankCode">
 <input type="hidden" id="totAmt" name="totAmt">
 <input type="hidden" id="crtUserId" name="crtUserId" value="${userId}">
@@ -425,20 +425,22 @@ function fn_updateWebInvoiceInfo(st) {
 <tr>
 	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt"/></td>
-	<th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
+    <th scope="row"><spring:message code="newWebInvoice.invoiceNo" /></th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off/></td>
+	<!--<th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
 	<td>
 	<select class="w100p" id="invcType" name="invcType">
 		<option value="F"><spring:message code="newWebInvoice.select.fullTax" /></option>
 		<option value="S"><spring:message code="newWebInvoice.select.simpleTax" /></option>
 	</select>
-	</td>
+	</td> -->
 </tr>
-<tr>
+<!-- <tr>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceNo" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off/></td>
 	<th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstRgistNo" name="gstRgistNo"/></td>
-</tr>
+</tr> -->
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>
 	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="bankName"/></td>

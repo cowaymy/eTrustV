@@ -304,10 +304,10 @@ SELECT   T.CLM_NO
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{taxCode}
-       ,#{taxNonClmAmt}
-       ,#{netAmt}
-       ,#{taxAmt}
+       ,'VB'
+       ,'0'
+       ,'0'
+       ,'0'
        ,#{totAmt}
        ,#{expDesc}
        ,#{clamUn}
@@ -532,10 +532,6 @@ SELECT   T.CLM_NO
        ,GL_ACC_CODE_NAME = #{glAccCodeName}
        ,BUDGET_CODE = #{budgetCode}
        ,BUDGET_CODE_NAME = #{budgetCodeName}
-       ,TAX_CODE = #{taxCode}
-       ,TAX_NON_CLM_AMT = #{taxNonClmAmt}
-       ,NET_AMT = #{netAmt}
-       ,TAX_AMT = #{taxAmt}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
        ,UPD_DT = SYSDATE

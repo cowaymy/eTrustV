@@ -39,11 +39,11 @@ var obj = {
         ,budgetCodeName : "${data.budgetCodeName}"
         ,taxCode : "${data.taxCode}"
         ,taxName : "${data.taxName}"
-        ,taxRate : Number("${data.taxRate}")
+        //,taxRate : Number("${data.taxRate}")
         ,cur : "${data.cur}"
-        ,netAmt : Number("${data.netAmt}")
-        ,taxAmt : Number("${data.taxAmt}")
-        ,taxNonClmAmt : Number("${data.taxNonClmAmt}")
+        //,netAmt : Number("${data.netAmt}")
+        //,taxAmt : Number("${data.taxAmt}")
+        //,taxNonClmAmt : Number("${data.taxNonClmAmt}")
         ,totAmt : Number("${data.totAmt}")
         ,expDesc : "${data.expDesc}"
         ,clamUn : "${data.clamUn}"
@@ -140,7 +140,7 @@ var myColumnLayout = [ {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
-}, {
+}, /*{
     dataField : "netAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
     style : "aui-grid-user-custom-right",
@@ -184,17 +184,17 @@ var myColumnLayout = [ {
         autoThousandSeparator : true, // 천단위 구분자 삽입 여부 (onlyNumeric=true 인 경우 유효)
         allowPoint : true // 소수점(.) 입력 가능 설정
     }
-}, {
+}, */{
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editable : false,
+    /*editable : false,
     expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
         return (item.netAmt + item.taxAmt + item.taxNonClmAmt);
-    },
+    },*/
     styleFunction :  function(rowIndex, columnIndex, value, headerText, item, dataField) {
         if(item.yN == "N") {
             return "my-cell-style";
@@ -241,7 +241,7 @@ var approvalColumnLayout = [ {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
-}, {
+}, /*{
     dataField : "netAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
     style : "aui-grid-user-custom-right",
@@ -262,7 +262,7 @@ var approvalColumnLayout = [ {
     dataType: "numeric",
     formatString : "#,##0.00",
     editable : false
-}, {
+}, */{
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
@@ -510,7 +510,7 @@ function fn_setGridData(data) {
 <form action="#" method="post" enctype="multipart/form-data" id=form_newWebInvoice>
 <input type="hidden" id="newClmNo" name="clmNo" value="${webInvoiceInfo.clmNo}">
 <input type="hidden" id="atchFileGrpId" name="atchFileGrpId" value="${webInvoiceInfo.atchFileGrpId}">
-<input type="hidden" id="newMemAccName" name="memAccName" value="${webInvoiceInfo.memAccName}">
+<!-- <input type="hidden" id="newMemAccName" name="memAccName" value="${webInvoiceInfo.memAccName}"> -->
 <input type="hidden" id="newCostCenterText" name="costCentrName" value="${webInvoiceInfo.costCentrName}">
 <input type="hidden" id="bankCode" name="bankCode" value="${webInvoiceInfo.bankCode}">
 <input type="hidden" id="totAmt" name="totAmt" value="${webInvoiceInfo.totAmt}">
@@ -526,33 +526,37 @@ function fn_setGridData(data) {
 </colgroup>
 <tbody>
 <tr>
-	<th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
-	<td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" value="${webInvoiceInfo.invcDt}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></td>
 	<th scope="row"><spring:message code="newWebInvoice.keyInDate" /></th>
 	<td><input type="text" title="" placeholder="DD/MM/YYYY" class="j_date w100p" id="keyDate" name="keyDate" value="${webInvoiceInfo.crtDt}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></td>
+	<th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
+    <td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${webInvoiceInfo.crtUserName}" /></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.costCenter" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newCostCenter" name="costCentr" value="${webInvoiceInfo.costCentr}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}"><a href="#" class="search_btn" id="costCenter_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
-	<th scope="row"><spring:message code="newWebInvoice.createUserId" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" value="${webInvoiceInfo.crtUserName}" /></td>
+	<th scope="row">Cost Centre Name</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="costCentrName" name="costCentrName" value="${webInvoiceInfo.costCentrName}" disabled/></td>
 </tr>
 <tr>
 	<th scope="row"><spring:message code="webInvoice.supplier" /></th>
 	<td><input type="text" title="" placeholder="" class="" id="newMemAccId" name="memAccId" value="${webInvoiceInfo.memAccId}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/><c:if test="${webInvoiceInfo.appvPrcssNo eq null or webInvoiceInfo.appvPrcssNo eq ''}"><a href="#" class="search_btn" id="supplier_search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a></c:if></td>
-	<th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
+	<th scope="row">Supplier Name</th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="newMemAccName" name="memAccName" value="${webInvoiceInfo.memAccName}" disabled/></td>
+	<!-- <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
 	<td>
 	<select class="w100p" id="invcType" name="invcType" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>>
 		<option value="F" <c:if test="${webInvoiceInfo.invcType eq 'F'}">selected</c:if>><spring:message code="newWebInvoice.select.fullTax" /></option>
 		<option value="S" <c:if test="${webInvoiceInfo.invcType eq 'S'}">selected</c:if>><spring:message code="newWebInvoice.select.simpleTax" /></option>
 	</select>
-	</td>
+	</td>-->
 </tr>
 <tr>
+    <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
+    <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" value="${webInvoiceInfo.invcDt}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">disabled</c:if>/></td>
 	<th scope="row"><spring:message code="newWebInvoice.invoiceNo" /></th>
 	<td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off value="${webInvoiceInfo.invcNo}" <c:if test="${webInvoiceInfo.appvPrcssNo ne null and webInvoiceInfo.appvPrcssNo ne ''}">readonly</c:if>/></td>
-	<th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
-	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstRgistNo" name="gstRgistNo" value="${webInvoiceInfo.gstRgistNo}" /></td>
+	<!-- <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
+	<td><input type="text" title="" placeholder="" class="readonly w100p" readonly="readonly" id="gstRgistNo" name="gstRgistNo" value="${webInvoiceInfo.gstRgistNo}" /></td>-->
 </tr>
 <tr>
 	<th scope="row"><spring:message code="newWebInvoice.bank" /></th>
