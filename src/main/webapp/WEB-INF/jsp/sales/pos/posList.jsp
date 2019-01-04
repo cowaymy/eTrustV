@@ -951,7 +951,7 @@ function fn_insTransactionLog(posNo, posTypeId){
     <li><p class="btn_blue"><a href="#" id="_systemBtn"><spring:message code="sal.title.text.posSystem" /></a></p></li>
     </c:if>
     <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
-    <li><p class="btn_blue"><a href="#" id="_reversalBtn"><spring:message code="sal.title.text.posReversal" /></a></p></li>
+<%--     <li><p class="btn_blue"><a href="#" id="_reversalBtn"><spring:message code="sal.title.text.posReversal" /></a></p></li> --%>
     </c:if>
     <c:if test="${PAGE_AUTH.funcView == 'Y'}">
     <li><p class="btn_blue"><a href="#" id="_search"><span class="search"></span><spring:message code="sal.btn.search" /></a></p></li>
