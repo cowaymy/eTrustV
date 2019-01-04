@@ -19,7 +19,7 @@ doGetComboCodeId('/sales/customer/selectDdlChnl.do', { isAllowForDd : '1' }, '',
           ddlChnl : $('#cmbDdtChnl').val()
         }, '', '_insCmbAccBank', 'S', '');
       } else {
-        $('_insCmbAccBank option').remove();
+        $('#_insCmbAccBank option').remove();
       }
     });
   });
@@ -37,6 +37,10 @@ doGetComboCodeId('/sales/customer/selectDdlChnl.do', { isAllowForDd : '1' }, '',
 
         if(accType == ''){
             Common.alert("<spring:message code='sal.alert.msg.pleaseSelectTheAccType' />");
+            return false;
+        }
+        if(ddtChnlCde == ''){
+            Common.alert("<spring:message code='sys.common.alert.validation' arguments='Deduction Channel'/>");
             return false;
         }
         if(accBank == ''){
