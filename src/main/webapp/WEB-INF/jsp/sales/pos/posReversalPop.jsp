@@ -110,6 +110,8 @@ $(document).ready(function() {
 
     	//Param Setting
     	 $("#_rePosRcvDt").val($("#_recevDateOri").val());
+
+    	if ($("#_rePosSysTypeId").val() == 1352){
     	 Common.ajax("POST", "/sales/pos/insertPosReversal.do", $("#_revForm").serializeJSON(), function(result){
 
     		 var returnMsg = '<spring:message code="sal.alert.msg.posRevSucss" />';
@@ -134,7 +136,39 @@ $(document).ready(function() {
                  Common.alert(returnMsg , fn_popClose());
     		 }
     	 });
+
+    	}
+    	else {
+
+    	       Common.ajax("POST", "/sales/pos/insertPosReversalItemBank.do", $("#_revForm").serializeJSON(), function(result){
+
+    	             var returnMsg = '<spring:message code="sal.alert.msg.posRevSucss" />';
+
+    	             if(result == null){
+    	                 Common.alert('<spring:message code="sal.alert.msg.posFailToReverse" />');
+    	             }else{
+    	                 //console.log("result : "+result);
+    	                 //console.log("result.posRefNo : " + result.posRefNo);
+
+    	     /*             if(result.posWorNo != null && result.posWorNo != ''){
+    	                     //returnMsg += "POS Ref No. : " + result.posRefNo + " <br />";
+    	                     returnMsg = '<spring:message code="sal.alert.msg.posRefNumber"  arguments="'+result.posRefNo+'"/>';
+    	                 }
+    	                 if(result.posWorNo != null && result.posWorNo != ''){
+    	                     //returnMsg += "POS Ref No. : " + result.posWorNo + " <br />";
+    	                     returnMsg = '<spring:message code="sal.alert.msg.posRefNumber"  arguments="'+result.posRefNo+'"/>';
+    	                 } */
+
+    	                 returnMsg = 'POS REF NO. : ' + result.posRefNo + "<br />";
+
+    	                 Common.alert(returnMsg , fn_popClose());
+    	             }
+    	         });
+
+    	}
+
 	});
+
 
 })//Doc Ready Func End
 
