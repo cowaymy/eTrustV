@@ -407,7 +407,7 @@ function fn_goSVMDetails(){
 
 		<!-- <li><p class="link_btn"><a onclick="javascript:fn_goSVMDetails()" href="#">View Rental SVM Details</a></p></li> -->
 
-		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+		<c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
 		<li><p class="link_btn"><a onclick="javascript:fn_goLEDGER()" href="#"><spring:message code="sal.btn.link.ledger" /></a></p></li>
 		</c:if>
 		<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
