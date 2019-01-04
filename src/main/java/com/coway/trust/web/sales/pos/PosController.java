@@ -428,6 +428,21 @@ public class PosController {
 
 	}
 
+	@RequestMapping(value = "/insertPosReversalItemBank.do" , method = RequestMethod.POST)
+	public ResponseEntity<EgovMap> insertPosReversalItemBank(@RequestBody Map<String, Object> params) throws Exception{
+
+		//Session
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		params.put("userId", sessionVO.getUserId());
+		params.put("userDeptId", sessionVO.getUserDeptId());
+
+		EgovMap revMap = null;
+		revMap = posService.insertPosReversalItemBank(params);
+		LOGGER.info("################################################ revMap : " + revMap.toString());
+		return ResponseEntity.ok(revMap);
+
+	}
+
 	@RequestMapping(value = "/getPurchMemList")
 	public ResponseEntity<List<EgovMap>> getPurchMemList (@RequestParam Map<String, Object> params) throws Exception{
 
