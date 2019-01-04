@@ -170,7 +170,7 @@ public class InstallationReversalController {
 		memID = Integer.parseInt(memid);
 		params.put("memID",memID);
 
-		int configID = 0;
+		int configID = -1;
 		String configid = null;
 		configid = installationReversalService.getLatestConfigIDBySalesOrderID(params);
 		if(configid!=null)
