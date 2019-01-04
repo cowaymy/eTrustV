@@ -13,8 +13,8 @@
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(accGridID, "cellDoubleClick", function(event) {
           // TEMP. CHECKING
-          if ((AUIGrid.getCellValue(accGridID, event.rowIndex,"bankCodeName")).includes("HLBB")) {
-            if (AUIGrid.getCellValue(accGridID, event.rowIndex,"custAccDdtChnl").includes("General")) {
+          if ((AUIGrid.getCellValue(accGridID, event.rowIndex,"bankCodeName")).indexOf("HLBB") >= 0) {
+            if (AUIGrid.getCellValue(accGridID, event.rowIndex,"custAccDdtChnl").indexOf("General") >= 0) {
               Common.alert('Selected bank deduction channel are inactive. Please create or choose other deduction channel.');
               return;
             }
