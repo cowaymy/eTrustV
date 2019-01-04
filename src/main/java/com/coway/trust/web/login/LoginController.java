@@ -286,7 +286,7 @@ public class LoginController {
                 // Accepted
                 else if("5".equals(stusId) && "1".equals(cnfm) && !"1900-01-01".equals(cnfmDt)) {
                     // HP Renewal
-                    if("0001".equals(userTypeId) /* && !"115".equals(item.get("roleType")) */) {
+                    if("0001".equals(userTypeId) && !"115".equals(item1.get("roleType"))) {
                         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 
                         Date currDate = new Date(); // Current Date
