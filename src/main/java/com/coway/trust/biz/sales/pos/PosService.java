@@ -82,4 +82,6 @@ public interface PosService {
 	EgovMap chkUserIdByUserName(Map<String, Object> params)throws Exception;
 
 	List<EgovMap> getPosBillingDetailList(Map<String, Object> params)throws Exception;
+
+	EgovMap insertPosReversalItemBank(Map<String, Object> params) throws Exception;
 }
