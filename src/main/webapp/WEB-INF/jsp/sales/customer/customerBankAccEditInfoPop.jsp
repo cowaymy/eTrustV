@@ -32,7 +32,7 @@ var emptyData = [];
                 ddlChnl : $('#cmbDdtChnl').val()
               }, '', 'bankCmbAccBankId', 'S', '');
             } else {
-              $('bankCmbAccBankId option').remove();
+              $('#bankCmbAccBankId option').remove();
             }
           });
 
@@ -41,6 +41,11 @@ var emptyData = [];
         //Account Type
         if("" == $("#bankCmbAccTypeId").val() || null == $("#bankCmbAccTypeId").val()){
           Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Type'/>");
+          return;
+        }
+
+        if("" == $("#cmbDdtChnl").val() || null == $("#cmbDdtChnl").val()){
+          Common.alert("<spring:message code='sys.common.alert.validation' arguments='Deduction Channel'/>");
           return;
         }
 
