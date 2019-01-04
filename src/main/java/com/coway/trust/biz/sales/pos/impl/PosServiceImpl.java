@@ -516,10 +516,10 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
     	//7.  ********************************************************************************************************* ACC TAX INVOICE MISCELLANEOUS_SUB
     		int invItemTypeID = 0;
 
-            if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_FILTER)){ //filter
+            if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_FILTER)){ //filter 1352
             	invItemTypeID = 1355;
             }
-            if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_ITMBANK)){ //item bank
+            if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_ITMBANK)){ //item bank 1353
             	invItemTypeID = 1356;
             }
             if (String.valueOf(posMap.get("insPosSystemType")).equals(SalesConstants.POS_SALES_TYPE_OTHER_INCOME)) { //other income
@@ -1720,6 +1720,473 @@ public class PosServiceImpl extends EgovAbstractServiceImpl implements PosServic
 					return null;
 				}
 			}
+
+			//Success
+    		EgovMap rtnMap = new EgovMap();
+  	      	rtnMap.put("posRefNo", posRefNo);
+  	      	//rtnMap.put("posWorNo", rorNo);
+  			return rtnMap;
+
+	}
+
+	@Override
+	@Transactional
+	public EgovMap insertPosReversalItemBank(Map<String, Object> params) throws Exception {
+
+			/*########### get Params ###############*/
+    		double rtnAmt = 0;
+    		double rtnCharge = 0;
+    		double rtnTax = 0;
+    		double rtnDisc = 0;
+    		double tempBillAmt = 0;
+
+    		String posRefNo = "";   // SOI no. (144)
+			String voidNo = "";    // Void no.  (112)
+			String rptNo = "";   // RD no. (18)
+			String cnno = "";   //CN-New (134)
+
+			int posMasterSeq = 0;
+			int posDetailDuducSeq = 0;
+			int posBillSeq = 0;
+			int memoAdjSeq = 0;
+			int noteSeq = 0;
+			int miscSubSeq = 0;
+			int noteSubSeq = 0;
+			int ordVoidSeq = 0;
+			int ordVoidSubSeq = 0;
+			int stkSeq = 0;
+			int groupSeq = 0;
+
+			String giResult = "";
+			String reqResult = "";
+
+			/*################################### Get Doc No #############################*/
+
+			params.put("docNoId", SalesConstants.POS_DOC_NO_PSN_NO); //(144)
+			posRefNo = posMapper.getDocNo(params);
+
+			params.put("docNoId", SalesConstants.POS_DOC_NO_VOID_NO); //(112)
+			voidNo = posMapper.getDocNo(params);
+
+			params.put("docNoId", SalesConstants.POS_DOC_NO_RD_NO); //(18)
+			rptNo = posMapper.getDocNo(params);
+
+			params.put("docNoId", SalesConstants.POS_DOC_NO_CN_NEW_NO); //(134)
+			cnno = posMapper.getDocNo(params);
+
+			//1. ********************************************************************************************************* POS MASTER
+
+			//Price and Qty Setting
+
+			rtnAmt = -1 * Double.parseDouble(String.valueOf(params.get("rePosTotAmt")));
+			rtnCharge = -1 * Double.parseDouble(String.valueOf(params.get("rePosTotChrg")));
+			rtnTax = -1 * Double.parseDouble(String.valueOf(params.get("rePosTotTxs")));
+			rtnDisc = -1 * Double.parseDouble(String.valueOf(params.get("rePosTotDscnt")));
+
+			//Seq
+			posMasterSeq = posMapper.getSeqSal0057D(); //master Sequence
+			Map<String, Object> posMap = new HashMap<String, Object>();
+
+			posMap.put("posMasterSeq", posMasterSeq); //posId = 0   -- 시퀀스
+			posMap.put("docNoPsn", posRefNo); //posNo = 0  --문서채번
+			posMap.put("posBillId", SalesConstants.POS_BILL_ID); //pos Bill Id // 0
+
+			posMap.put("posCustName", params.get("rePosCustName")); //posCustName = other Income만 사용함 .. 그러면 나머지는??
+			posMap.put("insPosModuleType", params.get("rePosModuleTypeId"));
+			posMap.put("insPosSystemType", SalesConstants.POS_SALES_TYPE_REVERSAL); // 1361
+			posMap.put("posTotalAmt", rtnAmt);
+			posMap.put("posCharge", rtnCharge);
+			posMap.put("posTaxes", rtnTax);
+			posMap.put("posDiscount", rtnDisc);
+			posMap.put("hidLocId", params.get("rePosWhId"));
+			posMap.put("posRemark", params.get("reversalRem"));
+			posMap.put("posMtchId", params.get("rePosId")); //pos Old ID
+			posMap.put("salesmanPopId", params.get("rePosMemId"));
+			posMap.put("posCustomerId", SalesConstants.POS_CUST_ID);  //107205
+			posMap.put("userId", params.get("userId"));
+
+			/*if(params.get("userDeptId") == null){
+				params.put("userDeptId", 0);
+			}
+			posMap.put("userDeptId", params.get("userDeptId"));*/
+			posMap.put("userDeptId", 0);
+			if(params.get("userDeptId") == null){
+				params.put("userDeptCode", " ");
+			}
+			posMap.put("userDeptCode", params.get("userDeptId"));
+			posMap.put("crAccId", params.get("rePosCrAccId"));
+			posMap.put("drAccId", params.get("rePosDrAccId"));
+			posMap.put("posReason", params.get("rePosResnId"));
+			posMap.put("cmbWhBrnchIdPop", params.get("rePosBrnchId")); //Brnch
+			posMap.put("recvDate", params.get("rePosRcvDt"));
+			posMap.put("posStusId",params.get("rePosStusId"));
+
+			if(params.get("rePosModuleTypeId").equals(SalesConstants.POS_SALES_MODULE_TYPE_OTH)){
+				posMap.put("chkOth", SalesConstants.POS_OTH_CHECK_PARAM);
+				posMap.put("getAreaId", params.get("getAreaId"));
+				posMap.put("addrDtl", params.get("addrDtl"));
+				posMap.put("streetDtl", params.get("streetDtl"));
+			}
+
+			//Pos Master Insert
+			LOGGER.info("############### 1. POS MASTER REVERSAL INSERT START  ################");
+			LOGGER.info("############### 1. POS MASTER REVERSAL INSERT param : " + posMap.toString());
+			posMapper.insertPosReversalMaster(posMap);
+			LOGGER.info("############### 1. POS MASTER REVERSAL INSERT END  ################");
+
+			//2. ********************************************************************************************************* POS DETAIL
+
+			List<EgovMap> oldDetailList = null;
+			oldDetailList = posMapper.getOldDetailList(params); //Old Pos Id == param
+			//old pos id 로 디테일 리스트 불러옴
+			if(oldDetailList != null && oldDetailList.size() > 0){ //for (old List)
+
+				for (int idx = 0; idx < oldDetailList.size(); idx++) {
+
+					EgovMap revDetailMap = null;
+					double tempTot = 0 ;
+					double tempChrg = 0;
+					double tempTxs = 0;
+					int tempQty = 0;
+
+					revDetailMap = oldDetailList.get(idx); // map 생성   --parameter // params setting >>  old List.get(i)    >> Map 에 put
+
+					posDetailDuducSeq = posMapper.getSeqSal0058D(); //detail Sequence
+
+					//detail 생성 ....
+					revDetailMap.put("posDetailDuducSeq", posDetailDuducSeq); //seq
+					revDetailMap.put("posMasterSeq", posMasterSeq);  //master Seq
+
+
+					tempQty = Integer.parseInt(String.valueOf(revDetailMap.get("posItmQty")));
+					tempQty = -1 * tempQty;
+					revDetailMap.put("posDetailQty", tempQty);
+
+					tempTot = Double.parseDouble(String.valueOf(revDetailMap.get("posItmTot")));
+					tempTot = -1 * tempTot;
+					revDetailMap.put("posDetailTotal", tempTot);
+
+					tempChrg = Double.parseDouble(String.valueOf(revDetailMap.get("posItmChrg")));
+					tempChrg = -1 * tempChrg;
+					revDetailMap.put("posDetailCharge", tempChrg);
+
+					tempTxs = Double.parseDouble(String.valueOf(revDetailMap.get("posItmTxs")));
+					tempTxs = -1 * tempTxs;
+					revDetailMap.put("posDetailTaxs", tempTxs);
+
+					revDetailMap.put("posRcvStusId", SalesConstants.POS_DETAIL_NON_RECEIVE); //RCV_STUS_ID  == 96 (Non Receive)
+					revDetailMap.put("userId", params.get("userId"));
+
+					if(revDetailMap != null){
+						LOGGER.info("############### 2 - ["+idx+"]  POS DETAIL REVERSAL INSERT START  ################");
+						LOGGER.info("############### 2 - ["+idx+"]  POS DETAIL REVERSAL INSERT param : " + revDetailMap.toString());
+						posMapper.insertPosReversalDetail(revDetailMap);
+						LOGGER.info("############### 2 - ["+idx+"]  POS DETAIL REVERSAL INSERT END  ################");
+					}
+				}
+				//2 - 1 . ********************************************************************************************************* POS DETAIL
+				List<EgovMap> oldSerialList = null;
+				oldSerialList = posMapper.chkOldReqSerial(params);
+
+				if(oldSerialList != null && oldSerialList.size() > 0){
+					//Serial Insert
+					for (int idx = 0; idx < oldSerialList.size(); idx++) {
+						int serialSeq =  posMapper.getSeqSal0147M();
+						EgovMap oldSerialMap = oldSerialList.get(idx);
+
+						Map<String, Object> serialMap = new HashMap<String, Object>();
+
+						serialMap.put("serialSeq", serialSeq);
+						serialMap.put("posMasterSeq", posMasterSeq);
+						serialMap.put("stkId", oldSerialMap.get("posItmStockId")); //POS_ITM_STOCK_ID
+						serialMap.put("serialNo", oldSerialMap.get("posSerialNo")); //POS_SERIAL_NO
+						serialMap.put("userId", params.get("userId"));
+
+						LOGGER.info("############### 2 - Serial - " + idx + "  POS SERIAL INSERT START  ################");
+        				LOGGER.info("############### 2 - Serial - " + idx + "  POS SERIAL INSERT param : " + serialMap.toString());
+        				posMapper.insertSerialNo(serialMap);
+        				LOGGER.info("############### 2 - Serial - " + idx + "  POS SERIAL INSERT END  ################");
+
+					}
+				}
+			}
+
+			EgovMap billInfoMap = null;
+			billInfoMap = posMapper.getBillInfo(params);
+
+			if(billInfoMap != null){
+				   //3.  ********************************************************************************************************* ACC BILLING
+        			tempBillAmt = Double.parseDouble(String.valueOf(billInfoMap.get("billAmt")));
+        			tempBillAmt = -1 * tempBillAmt;
+
+        			posBillSeq = posMapper.getSeqPay0007D(); //seq
+
+        			billInfoMap.put("billAmt", tempBillAmt);
+        			billInfoMap.put("posBillSeq", posBillSeq);
+        			billInfoMap.put("docNoPsn", posRefNo); //posNo = 0  --문서채번
+        			billInfoMap.put("userId", params.get("userId"));
+
+        			//insert
+        			LOGGER.info("############### 3. POS  REVERSAL  ACC BILLING UPDATE START  ################");
+        			LOGGER.info("############### 3. POS  REVERSAL  ACC BILLING UPDATE PARAM : " + billInfoMap.toString());
+        			posMapper.insertPosReversalBilling(billInfoMap);
+        			LOGGER.info("############### 3. POS  REVERSAL  ACC BILLING UPDATE END  ################");
+        			//4.  ********************************************************************************************************* POS MASTER UPDATE BILL_ID
+        			//posMaster 의 만들어진 시퀀스 번호가 조건일때   posBillId == accBilling 의 시퀀스 ()
+        			Map<String, Object> posUpMap = new HashMap<String, Object>();
+              		posUpMap.put("posBillSeq", posBillSeq);
+              		posUpMap.put("posMasterSeq", posMasterSeq);
+              		LOGGER.info("############### 4. POS  REVERSAL  BILL_ID UPDATE TO MASTER START  ################");
+            		LOGGER.info("############### 4. POS  REVERSAL  BILL_ID UPDATE TO MASTER param : " + posUpMap.toString());
+              		posMapper.updatePosMasterPosBillId(posUpMap);
+              		LOGGER.info("############### 4. POS  REVERSAL  BILL_ID UPDATE TO MASTER END  ################");
+
+			}
+
+      		EgovMap taxInvMap = null;
+      		EgovMap getAccMap = null;
+      		taxInvMap = posMapper.getTaxInvoiceMisc(params);  //PAY0031D   miscM  // MISC(M)  MASTER
+
+      		if(taxInvMap != null){
+      		   //5.  ********************************************************************************************************* ACC ORDER BILL
+      			Map<String, Object> accInfoMap = new HashMap<String, Object>();
+      			accInfoMap.put("taxInvcRefNo", taxInvMap.get("taxInvcRefNo"));
+
+      			getAccMap = 	posMapper.getAccOrderBill(accInfoMap); //인서트 칠 인포메이션 ACC_BILL_ID //
+
+      			if(getAccMap != null){
+
+          			Map<String, Object> accOrdUpMap = new HashMap<String, Object>();
+
+          			accOrdUpMap.put("accBillId", getAccMap.get("accBillId"));
+          			accOrdUpMap.put("accBillStatus", SalesConstants.POS_ACC_BILL_STATUS);  //74
+          			accOrdUpMap.put("accBillTaskId", SalesConstants.POS_ACC_BILL_TASK_ID);
+
+          			LOGGER.info("############### 5. POS ACC ORDER BILL REVERSAL UPDATE START  ################");
+          			LOGGER.info("############### 5. POS ACC ORDER BILL REVERSAL UPDATE PARAM  : " + accOrdUpMap.toString());
+          			posMapper.updateAccOrderBillingWithPosReversal(accOrdUpMap);
+          			LOGGER.info("############### 5. POS ACC ORDER BILL REVERSAL UPDATE END  ################");
+      			}
+      		   //6.  ********************************************************************************************************* INVOICE ADJUSTMENT (MASTER)
+
+      			Map<String, Object> adjMap =  new HashMap<String, Object>();
+
+      			memoAdjSeq = posMapper.getSeqPay0011D();
+
+      			adjMap.put("memoAdjSeq", memoAdjSeq);
+      			adjMap.put("memoAdjRefNo", cnno); // 134  //InvAdjM.MemoAdjustRefNo = ""; //update later
+      			adjMap.put("memoAdjReptNo", rptNo); //18 //InvAdjM.MemoAdjustReportNo = ""; //update later
+      			adjMap.put("memoAdjTypeId", SalesConstants.POS_INV_ADJM_MEMO_TYPE_ID);   //InvAdjM.MemoAdjustTypeID = 1293; //Type - CN
+      			adjMap.put("memoAdjInvNo", taxInvMap.get("taxInvcRefNo")); //TAX_INVC_REF_NO InvAdjM.MemoAdjustInvoiceNo = ""; //update later-InvoiceNo BR68..
+      			adjMap.put("memoAdjInvTypeId", SalesConstants.POS_INV_ADJM_MEMO_INVOICE_TYPE_ID); //InvAdjM.MemoAdjustInvoiceTypeID = 128; // Invoice-Miscellaneous
+      			adjMap.put("memoAdjStatusId", SalesConstants.POS_INV_ADJM_MEMO_STATUS_ID); //InvAdjM.MemoAdjustStatusID = 4;
+      			adjMap.put("memoAdjReasonId", SalesConstants.POS_INV_ADJM_MEMO_RESN_ID); //InvAdjM.MemoAdjustReasonID = 2038; // Invoice Reversal
+      			adjMap.put("memoAdjRem", params.get("reversalRem")); //rem   InvAdjM.MemoAdjustRemark = this.txtReversalRemark.Text.Trim();
+      			adjMap.put("memoAdjTotTxs", taxInvMap.get("taxInvcTxs"));	 //TAX_INVC_TXS InvAdjM.MemoAdjustTaxesAmount = miscM.TaxInvoiceTaxes;
+      			adjMap.put("memoAdjTotAmt", taxInvMap.get("taxInvcAmtDue"));	 //TAX_INVC_AMT_DUE InvAdjM.MemoAdjustTotalAmount = miscM.TaxInvoiceAmountDue;
+      			adjMap.put("userId", params.get("userId"));
+
+      			//insert
+      			LOGGER.info("############### 6. POS INVOICE ADJUSTMENT (MASTER) REVERSAL INSERT START  ################");
+      			LOGGER.info("############### 6. POS INVOICE ADJUSTMENT (MASTER) REVERSAL INSERT PARAM : " + adjMap.toString());
+      			posMapper.insertInvAdjMemo(adjMap);
+      			LOGGER.info("############### 6. POS INVOICE ADJUSTMENT (MASTER) REVERSAL INSERT END  ################");
+
+      		   //7.  ********************************************************************************************************* ACC TAX DEBIT CREDIT NOTE
+
+      			Map<String, Object> noteMap = new HashMap<String, Object>();
+
+      			noteSeq = posMapper.getSeqPay0027D();
+
+      			noteMap.put("noteSeq", noteSeq);  //seq
+      			noteMap.put("memoAdjSeq", memoAdjSeq); // dcnM.NoteEntryID = InvAdjM.MemoAdjustID;
+      			noteMap.put("noteTypeId", SalesConstants.POS_NOTE_TYPE_ID); //dcnM.NoteTypeID = 1293; //CN
+      			noteMap.put("noteGrpNo", taxInvMap.get("taxInvcSvcNo")); //dcnM.NoteGroupNo = miscM.TaxInvoiceServiceNo;  TAX_INVC_SVC_NO
+      			noteMap.put("noteRefNo", cnno); // dcnM.NoteRefNo = InvAdjM.MemoAdjustRefNo;
+      			noteMap.put("noteRefDate", taxInvMap.get("taxInvcRefDt")); // TAX_INVC_REF_DT  //dcnM.NoteRefDate = miscM.TaxInvoiceRefDate;
+      			noteMap.put("noteInvNo", taxInvMap.get("taxInvcRefNo")); //dcnM.NoteInvoiceNo = InvAdjM.MemoAdjustInvoiceNo;
+      			noteMap.put("noteInvTypeId", SalesConstants.POS_NOTE_INVOICE_TYPE_ID); //dcnM.NoteInvoiceTypeID = 128; //MISC
+      			noteMap.put("noteInvCustName", taxInvMap.get("taxInvcCustName")); //dcnM.NoteCustName = miscM.TaxInvoiceCustName;  //TAX_INVC_CUST_NAME,
+      			noteMap.put("noteCntcPerson", taxInvMap.get("taxInvcCntcPerson"));  //  dcnM.NoteContatcPerson = miscM.TaxInvoiceContactPerson;  //TAX_INVC_CNTC_PERSON,
+              /*dcnM.NoteAddress1 = miscM.TaxInvoiceAddress1;
+                 dcnM.NoteAddress2 = miscM.TaxInvoiceAddress2;
+                 dcnM.NoteAddress3 = miscM.TaxInvoiceAddress3;
+                 dcnM.NoteAddress4 = miscM.TaxInvoiceAddress4;
+                 dcnM.NotePostCode = miscM.TaxInvoicePostCode;
+                 dcnM.NoteAreaName = "";
+                 dcnM.NoteStateName = miscM.TaxInvoiceStateName;
+                 dcnM.NoteCountryName = miscM.TaxInvoiceCountry;*/
+      			noteMap.put("noteInvTxs", taxInvMap.get("taxInvcTxs")); // dcnM.NoteTaxes = miscM.TaxInvoiceTaxes;
+      			noteMap.put("noteInvChrg", taxInvMap.get("taxInvcChrg"));  // dcnM.NoteCharges = miscM.TaxInvoiceCharges;  //  TAX_INVC_CHRG,
+      			noteMap.put("noteInvAmt", taxInvMap.get("taxInvcAmtDue")); //dcnM.NoteAmountDue = miscM.TaxInvoiceAmountDue;
+
+      			String soRem = String.valueOf(taxInvMap.get("taxInvcSvcNo"));
+      			noteMap.put("noteRem", SalesConstants.POS_REM_SOI_COMMENT + soRem); //dcnM.NoteRemark = "SOI Reversal - " + miscM.TaxInvoiceServiceNo;
+      			noteMap.put("noteStatusId", SalesConstants.POS_NOTE_STATUS_ID); //dcnM.NoteStatusID = 4;
+      			noteMap.put("userId", params.get("userId"));
+
+      			LOGGER.info("############### 7. POS ACC TAX DEBIT CREDIT NOTE REVERSAL INSERT START  ################");
+      			LOGGER.info("############### 7. POS ACC TAX DEBIT CREDIT NOTE REVERSAL INSERT PARAM :  " + noteMap.toString());
+      			posMapper.insertTaxDebitCreditNote(noteMap);
+      			LOGGER.info("############### 7. POS ACC TAX DEBIT CREDIT NOTE REVERSAL INSERT END  ################");
+
+      			Map<String, Object> miscSubMap = new HashMap<String, Object>();
+    			miscSubMap.put("taxInvcId", taxInvMap.get("taxInvcId"));
+    			List<EgovMap> miscSubList = null;
+    			miscSubList = posMapper.getMiscSubList(miscSubMap);
+
+    			if( null != miscSubList && miscSubList.size() > 0){
+
+    				for (int idx = 0; idx < miscSubList.size(); idx++) {
+    					//8.  ********************************************************************************************************* INVOICE ADJUSTMENT SUB
+    					EgovMap tempSubMap = null;
+    					tempSubMap = miscSubList.get(idx);
+
+    					miscSubSeq = posMapper.getSeqPay0012D();
+    					Map<String, Object> accInvSubMap = new HashMap<String, Object>();
+    					accInvSubMap.put("miscSubSeq", miscSubSeq);
+    					accInvSubMap.put("memoAdjSeq", memoAdjSeq); //memoAdjSeq
+    					accInvSubMap.put("memoSubItmInvItmId", tempSubMap.get("invcItmId"));  //INVC_ITM_ID
+    					accInvSubMap.put("memoSubItmInvItmQty", tempSubMap.get("invcItmQty"));  //INVC_ITM_QTY
+
+    					accInvSubMap.put("memoSubItmCrditAccId", params.get("rePosCrAccId"));
+    					accInvSubMap.put("memoSubItmDebtAccId", params.get("rePosDrAccId"));
+    					accInvSubMap.put("memoSubItmTaxCodeId", getAccMap.get("accBillTaxCodeId"));
+    					accInvSubMap.put("memoSubItmStusId", SalesConstants.POS_MEMO_ITM_STATUS_ID);  //1
+    					accInvSubMap.put("memoSubItmRem", params.get("reversalRem"));  ////InvAdjM.MemoAdjustRemark;
+
+    					accInvSubMap.put("memoSubItmInvItmGSTRate", tempSubMap.get("invcItmGstRate"));  //INVC_ITM_GST_RATE
+    					accInvSubMap.put("memoSubItmInvItmCharges", tempSubMap.get("invcItmChrg"));  //INVC_ITM_CHRG
+    					accInvSubMap.put("memoSubItmInvItmTaxes", tempSubMap.get("invcItmGstTxs"));  //INVC_ITM_GST_TXS
+    					accInvSubMap.put("memoSubItmInvItmAmount", tempSubMap.get("invcItmAmtDue"));  //INVC_ITM_AMT_DUE
+
+    					LOGGER.info("############### 8 - ["+idx+"] POS INVOICE ADJUSTMENT SUB REVERSAL INSERT START  ################");
+    					LOGGER.info("############### 8 - ["+idx+"] POS INVOICE ADJUSTMENT SUB REVERSAL INSERT PARAM : " +  accInvSubMap.toString());
+    					posMapper.insertInvAdjMemoSub(accInvSubMap);
+    					LOGGER.info("############### 8 - ["+idx+"] POS INVOICE ADJUSTMENT SUB REVERSAL INSERT END  ################");
+
+    					//9.  ********************************************************************************************************* ACC TAX DEBIT CREDIT NOTE SUB
+
+    					Map<String, Object> noteSubMap = new HashMap<String, Object>();
+    					noteSubSeq = posMapper.getSeqPay0028D();
+
+    					noteSubMap.put("noteSubSeq", noteSubSeq);
+    					noteSubMap.put("noteSeq", noteSeq); //dcnS.NoteID = dcnM.NoteID;
+    					noteSubMap.put("noteSubItmId", tempSubMap.get("invcItmId")); //dcnS.NoteItemInvoiceItemID = miscSub.InvocieItemID;
+    					noteSubMap.put("noteSubOrdNo", tempSubMap.get("invcItmOrdNo")); //dcnS.NoteItemOrderNo = miscSub.InvoiceItemOrderNo;
+    					noteSubMap.put("noteSubItmProductModel", tempSubMap.get("invcItmDesc1")); //dcnS.NoteItemProductModel = miscSub.InvoiceItemDescription1;
+    					noteSubMap.put("noteSubItmSerialNo", tempSubMap.get("invcItmSerialNo")); //dcnS.NoteItemSerialNo = miscSub.InvoiceItemSerialNo;
+    					noteSubMap.put("noteSubItmInstDt", tempSubMap.get("invcItmInstallDt")); //dcnS.NoteItemInstallationDate = miscSub.InvoiceItemInstallDate;
+    					/* dcnS.NoteItemAdd1 = miscSub.InvoiceItemAdd1;
+                         dcnS.NoteItemAdd2 = miscSub.InvoiceItemAdd2;
+                         dcnS.NoteItemAdd3 = miscSub.InvoiceItemAdd3;
+                         dcnS.NoteItemAdd4 = miscSub.InvoiceItemAdd4;
+                         dcnS.NoteItemPostcode = miscSub.InvoiceItemPostCode;
+                         dcnS.NoteItemAreaName = miscSub.InvoiceItemAreaName;
+                         dcnS.NoteItemStateName = miscSub.InvoiceItemStateName;
+                         dcnS.NoteItemCountry = miscSub.InvoiceItemCountry;*/
+    					noteSubMap.put("noteSubItmQty", tempSubMap.get("invcItmQty")); //dcnS.NoteItemQuantity = miscSub.InvoiceItemQuantity;
+    					noteSubMap.put("noteSubItmUnitPrc", tempSubMap.get("invcItmUnitPrc")); //dcnS.NoteItemUnitPrice = miscSub.InvoiceItemUnitPrice;
+    					noteSubMap.put("noteSubItmGstRate", tempSubMap.get("invcItmGstRate")); //dcnS.NoteItemGSTRate = miscSub.InvoiceItemGSTRate;
+    					noteSubMap.put("noteSubItmGstTxs", tempSubMap.get("invcItmGstTxs")); //dcnS.NoteItemGSTTaxes = miscSub.InvoiceItemGSTTaxes;
+    					noteSubMap.put("noteSubItmChrg", tempSubMap.get("invcItmChrg")); //dcnS.NoteItemCharges = miscSub.InvoiceItemCharges;
+    					noteSubMap.put("noteSubItmDueAmt", tempSubMap.get("invcItmAmtDue")); //dcnS.NoteItemDueAmount = miscSub.InvoiceItemAmountDue;
+
+    					LOGGER.info("############### 9 - ["+idx+"] POS ACC TAX DEBIT CREDIT NOTE SUB REVERSAL INSERT START  ################");
+    					LOGGER.info("############### 9 - ["+idx+"] POS ACC TAX DEBIT CREDIT NOTE SUB REVERSAL INSERT PARAM : " +noteSubMap.toString());
+    					posMapper.insertTaxDebitCreditNoteSub(noteSubMap);
+    					LOGGER.info("############### 9 - ["+idx+"] POS ACC TAX DEBIT CREDIT NOTE SUB REVERSAL INSERT END  ################");
+    				}
+
+    			}
+
+
+      		}// taxInvMap not null (miscM)
+
+
+      	   //12.  ********************************************************************************************************* STOCK RECORD CARD
+      		if(SalesConstants.POS_SALES_TYPE_FILTER.equals(String.valueOf(params.get("rePosSysTypeId")))){ //1352  filter & spare part
+      			Map<String, Object> stkMap = new HashMap<String, Object>();
+      			List<EgovMap> stkList = null;
+
+      			stkMap.put("rePosNo", params.get("rePosNo"));
+      			stkList = posMapper.selectStkCardRecordList(stkMap);
+
+      			if(stkList != null && stkList.size() > 0){
+      				for (int idx = 0; idx < stkList.size(); idx++) {
+      				   EgovMap reStkMap =	 null;
+      				   reStkMap = stkList.get(idx);
+
+      				   stkSeq = posMapper.getSeqLog0014D();
+
+      				   reStkMap.put("stkSeq", stkSeq);
+      				   reStkMap.put("posRefNo", posRefNo); // irc.RefNo = posRefNo;
+
+      				   int stkTempQty =  Integer.parseInt(String.valueOf(reStkMap.get("qty")));
+      				   stkTempQty = -1 * stkTempQty;
+      				   reStkMap.put("stkTempQty", stkTempQty); //     irc.Qty = -1 * irc.Qty;
+
+      				   reStkMap.put("stkRem", SalesConstants.POS_REM_SOI_COMMENT_INV_VOID + String.valueOf(params.get("rePosNo")));
+
+      				   LOGGER.info("############### 12 - ["+idx+"] POS STOCK RECORD CARD REVERSAL INSERT START  ################");
+      				   LOGGER.info("############### 12 - ["+idx+"] POS STOCK RECORD CARD REVERSAL INSERT PARAM : " + reStkMap.toString());
+      				   posMapper.insertStkCardRecordReversal(reStkMap);
+      				   LOGGER.info("############### 12 - ["+idx+"] POS STOCK RECORD CARD REVERSAL INSERT END  ################");
+
+					}
+      			}
+      		}
+
+
+      		//Request
+     /* 		Map<String, Object> bookMap = new HashMap<String, Object>();
+
+      		bookMap.put("psno", posRefNo);
+      		bookMap.put("retype", "REQ");
+      		bookMap.put("pType", "PS02");   // PS02 - cancel
+      		bookMap.put("pPrgNm", "PointOfSales");
+      		bookMap.put("userId", Integer.parseInt(String.valueOf(params.get("userId"))));
+
+    		LOGGER.info("############### 18. POS Booking Reverse  START  ################");
+    		LOGGER.info("#########  call Procedure Params : " + bookMap.toString());
+    		posMapper.posBookingCallSP_LOGISTIC_POS(bookMap);
+    		reqResult = String.valueOf(bookMap.get("p1"));
+    		LOGGER.debug("############ Procedure Result :  " + reqResult);
+    		LOGGER.info("############### 18. POS Booking Reverse  END  ################");
+
+    		if(!"000".equals(reqResult)){  //Err
+    			return null;
+    		}*/
+
+
+			//GetDetailList
+		/*	List<EgovMap> revDetList = null;
+			bookMap.put("rcvStusId", SalesConstants.POS_DETAIL_NON_RECEIVE);
+			revDetList = posMapper.getPosItmIdListByPosNo(bookMap);
+			LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@ revDetList : " + revDetList);
+			for (int idx = 0; idx < revDetList.size(); idx++) {
+
+				//GI Call Procedure
+				Map<String, Object> giMap = new HashMap<String, Object>();
+
+				giMap.put("psno", posRefNo);
+				giMap.put("retype", "COM");
+				giMap.put("pType", "PS01");
+				giMap.put("posItmId", revDetList.get(idx).get("posItmId"));
+				giMap.put("pPrgNm", "PointOfSales");
+				giMap.put("userId", params.get("userId"));
+
+				LOGGER.info("############### 19. POS GI Reverse  START  ################");
+				LOGGER.info("#########  call Procedure Params : " + giMap.toString());
+				posMapper.posGICallSP_LOGISTIC_POS(giMap);
+				giResult = 	String.valueOf(giMap.get("p1"));
+				LOGGER.info("@@@@@@@@@@@@@@@@@@@@@@@@@@ rtnResult : " + giResult);
+				LOGGER.info("############### 19. POS GI Reverse  END  ################");
+
+				if(!"000".equals(giResult)){  //Err
+					return null;
+				}
+			}*/
 
 			//Success
     		EgovMap rtnMap = new EgovMap();
