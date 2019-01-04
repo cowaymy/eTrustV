@@ -1185,11 +1185,15 @@
 <p class="fav"><a href="#" class="click_add_on">My menu</a></p>
 <h2>HS Management</h2>
 <ul class="right_btns">
+     <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
+
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_codyChangeHQ();" id="codyChangeHQ">Assign Cody Transfer HQ</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_codyChange();" id="codyChange" >Assign Cody Transfer</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getHSAddListAjax();" id="addResult">Add HS Result</a></p></li>
     <li><p class="btn_blue"><a id="hSConfiguration" name="hSConfiguration">Create HS Order</a></p></li>
     <li><p class="btn_blue"><a href="#" onclick="javascript:fn_getBSListAjax();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
+    </c:if>
+
 </ul>
 <!--조회조건 추가  -->
 <!--     <label><input type="radio" name="searchDivCd" value="1" onClick="fn_checkRadioButton('comm_stat_flag')" checked />HS Order Search</label>
@@ -1291,13 +1295,23 @@
                 <dt>Link</dt>
                 <dd>
                     <ul class="btns">
+                        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsCountForecastListing()">HS Count Forecast Listing</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportSingle()">HS Report(Single)</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsReportGroup()">HS Report(Group)</a></p></li>
+                        </c:if>
+                        <c:if test="${PAGE_AUTH.funcUserDefine3 == 'Y'}">
+
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsSummary()">HS Summary Listing</a></p></li>
+                        </c:if>
+                        <c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
+
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_filterForecastList()">HS Filter Forecast Listring</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsConfigOld()">HS Config(Old system version)</a></p></li>
                         <li><p class="link_btn type2"><a href="#" onclick="javascript:fn_hsMonthlySetting()">HS Current Month Setting(Old system version)</a></p></li>
+                        </c:if>
+
                     </ul>
 <!--              <ul class="btns">
                     <li><p class="link_btn"><a href="#">menu1</a></p></li>
