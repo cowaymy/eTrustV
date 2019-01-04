@@ -279,8 +279,8 @@
 
             console.log('rentPayMode click event');
 
-            fn_clearRentPaySetCRC();
-            fn_clearRentPaySetDD();
+            //fn_clearRentPaySetCRC();
+            //fn_clearRentPaySetDD();
 
             var rentPayModeIdx = $("#rentPayMode option:selected").index();
             var rentPayModeVal = $("#rentPayMode").val();
@@ -614,7 +614,7 @@
 
     function fn_loadCreditCard2(custCrcId) {
         console.log("fn_loadCreditCard START");
-
+        console.log(custCrcId);
         Common.ajax("GET", "/sales/order/selectCustomerCreditCardDetailView.do", {getparam : custCrcId}, function(rsltInfo) {
             if(rsltInfo != null) {
                 $("#hiddenRentPayCRCId").val(rsltInfo.custCrcId);
