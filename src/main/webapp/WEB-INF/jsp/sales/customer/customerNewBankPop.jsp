@@ -17,13 +17,15 @@ var emptyData = [];
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Type'/>");
                 return;
             }
-
+            if("" == $("#cmbDdtChnl").val() || null == $("#cmbDdtChnl").val()){
+                Common.alert("<spring:message code='sys.common.alert.validation' arguments='Deduction Channel'/>");
+                return;
+            }
             //Issue Bank
             if("" == $("#bankCmbAccBankId").val() || null == $("#bankCmbAccBankId").val()){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Issue Bank'/>");
                 return;
             }
-
             //Account No. IssueBankId = $("#cmbAccBankId").val() , AccountNo = $("#accountNo").val()
             if("" == $("#bankAccountNo").val() || null == $("#bankAccountNo").val()){
                 Common.alert("<spring:message code='sys.common.alert.validation' arguments='Account Number'/>");
@@ -78,7 +80,7 @@ var emptyData = [];
                 ddlChnl : $('#cmbDdtChnl').val()
               }, '', 'bankCmbAccBankId', 'S', '');
             } else {
-              $('bankCmbAccBankId option').remove();
+              $('#bankCmbAccBankId option').remove();
             }
           });
 
