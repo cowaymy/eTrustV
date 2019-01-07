@@ -4204,8 +4204,8 @@ SELECT Extent1.APLCTN_ID MEM_ID  ,
                                                          <if test="cmbBranch != null and cmbBranch != '' ">
                                                             AND ( UTILS.CONVERT_TO_NUMBER(Extent1.BRNCH,10,0) = #{cmbBranch} )
                                                          </if>
-                                                         <if test="deptCd != null and deptCd != '' ">
-                                                            AND ( Extent5.DEPT_CODE = #{deptCd})
+                                                         <if test="orgCd != null and orgCd != '' ">
+                                                            AND ( Extent5.LAST_ORG_CODE = #{orgCd})
                                                          </if>
                                                          AND Extent1.STUS = 1
                                                          ) Project1

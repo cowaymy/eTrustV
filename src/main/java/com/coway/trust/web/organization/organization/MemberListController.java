@@ -1208,7 +1208,7 @@ public class MemberListController {
 			EgovMap item = new EgovMap();
 			item = (EgovMap) memberListService.getOrgDtls(params);
 
-			if(sessionVO.getMemberLevel() == 3) {
+			/*if(sessionVO.getMemberLevel() == 3) {
 				logger.debug("3");
 				params.put("deptCodeHd", item.get("lastDeptCode"));
 				params.put("grpCodeHd", item.get("lastGrpCode"));
@@ -1220,10 +1220,10 @@ public class MemberListController {
 			} else if(sessionVO.getMemberLevel() == 1) {
 				logger.debug("1");
 				params.put("orgCodeHd", item.get("lastOrgCode"));
-			}
+			}*/
 //			params.put("deptCodeHd", item.get("lastDeptCode"));
 //			params.put("grpCodeHd", item.get("lastGrpCode"));
-//			params.put("orgCodeHd", item.get("lastOrgCode"));
+			params.put("orgCodeHd", item.get("lastOrgCode"));
 		}
 
 		EgovMap checkSponsor = memberListService.checkSponsor(params);
@@ -1448,7 +1448,12 @@ public class MemberListController {
 
 		// 2018-07-16 - LaiKW - Amend sponsor pop up search only limited to own department for HP only
 		if(sessionVO.getUserTypeId() == 1) {
-			model.addAttribute("deptCd", params.get("deptCd"));
+		    params.put("userId", sessionVO.getUserId());
+
+		    EgovMap item = new EgovMap();
+	        item = (EgovMap) memberListService.getOrgDtls(params);
+
+		    model.addAttribute("orgCd", item.get("lastOrgCode"));
 		}
 
 		// 호출될 화면
