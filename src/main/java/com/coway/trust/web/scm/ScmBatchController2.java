@@ -11,6 +11,7 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.Writer;
 import java.net.SocketException;
+import java.sql.CallableStatement;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -59,6 +60,7 @@ public class ScmBatchController2 {
 		 etrustftp Home : /home/etrustftp/data
 			 */
 		//execute();
+		
 		try {
 			connect("10.101.3.40", "etrustftp3", "akffus#20!*", 21);
 			disconnect();
@@ -79,7 +81,7 @@ public class ScmBatchController2 {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-
+		
 		return ResponseEntity.ok("OK");
 	}
 	
@@ -253,7 +255,7 @@ public class ScmBatchController2 {
 						//conts	= ((OracleResultSet))
 						
 						LOGGER.debug("writing to DB : " + reader.readLine());
-						executeQuery1(reader, fileName);
+						executeQuery1(reader, fileName, today);
 						//LOGGER.debug("writing to DB(log) ");
 						//executeQueryLog(reader, fileName, today, fileExistYn, fileSize);
 					} else {
@@ -479,12 +481,16 @@ public class ScmBatchController2 {
 		}
 	}
 	
-	public static void executeQuery1(BufferedReader br, String fileName) {
+	public static void executeQuery1(BufferedReader br, String fileName, String ifDate) {
 		Connection conn	= null;
 		PreparedStatement ps	= null;
+		PreparedStatement ps1	= null;
+		CallableStatement cs	= null;
+		String result	= "";
 		
 		try {
 			String query	= "";
+			String query1	= "";
 			Class.forName("oracle.jdbc.OracleDriver");
 			conn	= DriverManager.getConnection("jdbc:oracle:thin:@10.201.32.180:1521:gbslcvd", "GBSLCVAPL1", "GBSLCVD#2017#");
 			
@@ -496,17 +502,18 @@ public class ScmBatchController2 {
 			int ppPlanQty	= 0;			int ppProdQty	= 0;
 			String ppProdStartDt	= "";	String ppProdEndDt	= "";
 			query	= "MERGE INTO SCM0014D ";
-			query	+= "USING DUAL ON (PO_NO = TRIM(?) AND SO_NO = TRIM(?) AND SO_ITEM_NO = TO_NUMBER(TRIM(?)) AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))) ";
+			query	+= "USING DUAL ON (IF_DATE = ? AND PP_PROD_END_DT = TRIM(?) AND PO_NO = TRIM(?) AND SO_NO = TRIM(?) AND SO_ITEM_NO = TO_NUMBER(TRIM(?)) AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))) ";
 			query	+= "WHEN MATCHED THEN ";
 			query	+= "UPDATE ";
 			query	+= "   SET PP_PLAN_QTY = TO_NUMBER(TRIM(?)) ";
 			query	+= "     , PP_PROD_QTY = TO_NUMBER(TRIM(?)) ";
 			query	+= "     , PP_PROD_START_DT = CASE WHEN TRIM(?) = '00000000' THEN PP_PROD_START_DT ELSE CASE WHEN PP_PROD_START_DT > TRIM(?) THEN TRIM(?) ELSE PP_PROD_START_DT END END ";
-			query	+= "     , PP_PROD_END_DT = CASE WHEN TRIM(?) = '00000000' THEN PP_PROD_END_DT ELSE CASE WHEN PP_PROD_END_DT < TRIM(?) THEN TRIM(?) ELSE PP_PROD_END_DT END END ";
+			//query	+= "     , PP_PROD_END_DT = CASE WHEN TRIM(?) = '00000000' THEN PP_PROD_END_DT ELSE CASE WHEN PP_PROD_END_DT < TRIM(?) THEN TRIM(?) ELSE PP_PROD_END_DT END END ";
 			query	+= "WHEN NOT MATCHED THEN ";
 			query	+= "INSERT ";
 			query	+= "( ";
-			query	+= "       PO_NO ";
+			query	+= "       IF_DATE ";
+			query	+= "     , PO_NO ";
 			query	+= "     , SO_NO ";
 			query	+= "     , SO_ITEM_NO ";
 			query	+= "     , STOCK_CODE ";
@@ -517,7 +524,8 @@ public class ScmBatchController2 {
 			query	+= " ) ";
 			query	+= "VALUES ";
 			query	+= "( ";
-			query	+= "       TRIM(?) ";
+			query	+= "       ? ";
+			query	+= "     , TRIM(?) ";
 			query	+= "     , TRIM(?) ";
 			query	+= "     , TO_NUMBER(TRIM(?)) ";
 			query	+= "     , TO_CHAR(TO_NUMBER(TRIM(?))) ";
@@ -526,6 +534,16 @@ public class ScmBatchController2 {
 			query	+= "     , TRIM(?) ";
 			query	+= "     , TRIM(?) ";
 			query	+= " ) ";
+			
+			query1	= "DELETE FROM SCM0014D ";
+			query1	+= " WHERE IF_DATE < ? ";
+			query1	+= "   AND PO_NO = ? ";
+			query1	+= "   AND SO_NO = ? ";
+			query1	+= "   AND SO_ITEM_NO = ? ";
+			query1	+= "   AND STOCK_CODE = ? ";
+			//cs	= conn.prepareCall("{call SP_SCM_0014D_INSERT(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+			//query	= "EXEC SP_SCM_0014D_INSERT(?, ?, ?, ?, ?, ?, ?, ?, ?)";
+			ps1	= conn.prepareStatement(query1);
 			ps	= conn.prepareStatement(query);
 			while ( null != (row = br.readLine()) ) {
 				String col[]	= row.split("\\|");
@@ -538,19 +556,32 @@ public class ScmBatchController2 {
 					if ( 6 == i )	ppProdQty	= Integer.parseInt(col[i].toString().replace(" ", "").replace(".000", ""));
 					if ( 8 == i )	ppProdStartDt	= col[i];
 					if ( 9 == i )	ppProdEndDt		= col[i];
+					/*
+					cs.setString(1, poNo);
+					cs.setString(2, soNo);
+					cs.setInt(3, soItemNo);
+					cs.setString(4, stockCode);
+					cs.setInt(5, ppPlanQty);
+					cs.setInt(6, ppProdQty);
+					cs.setString(7, ppProdStartDt);
+					cs.setString(8, ppProdEndDt);
+					cs.registerOutParameter(9, java.sql.Types.VARCHAR);*/
 					
-					ps.setString(1, poNo);
-					ps.setString(2, soNo);
-					ps.setInt(3, soItemNo);
-					ps.setString(4, stockCode);
-					ps.setInt(5, ppPlanQty);
-					ps.setInt(6, ppProdQty);
-					ps.setString(7, ppProdStartDt);
-					ps.setString(8, ppProdStartDt);
+					ps.setString(1, ppProdEndDt);
+					ps.setString(2, ppProdEndDt);
+					ps.setString(3, poNo);
+					ps.setString(4, soNo);
+					ps.setInt(5, soItemNo);
+					ps.setString(6, stockCode);
+					ps.setInt(7, ppPlanQty);
+					ps.setInt(8, ppProdQty);
 					ps.setString(9, ppProdStartDt);
-					ps.setString(10, ppProdEndDt);
-					ps.setString(11, ppProdEndDt);
-					ps.setString(12, ppProdEndDt);
+					ps.setString(10, ppProdStartDt);
+					ps.setString(11, ppProdStartDt);
+					//ps.setString(12, ppProdEndDt);
+					//ps.setString(13, ppProdEndDt);
+					//ps.setString(14, ppProdEndDt);
+					ps.setString(12, ifDate);
 					ps.setString(13, poNo);
 					ps.setString(14, soNo);
 					ps.setInt(15, soItemNo);
@@ -559,10 +590,21 @@ public class ScmBatchController2 {
 					ps.setInt(18, ppProdQty);
 					ps.setString(19, ppProdStartDt);
 					ps.setString(20, ppProdEndDt);
+					
+					ps1.setString(1, ifDate);
+					ps1.setString(2, poNo);
+					ps1.setString(3, soNo);
+					ps1.setInt(4, soItemNo);
+					ps1.setString(5, stockCode);
 				}
 				//LOGGER.debug(ps.toString());
-				LOGGER.debug("PO NO : " + poNo + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", STOCK CODE : " + stockCode + ", PP_PLAN_QTY : " + ppPlanQty + ", PP_PROD_QTY : " + ppProdQty);
+				//cs.execute();
+				//result	= cs.getString(9);
+				ps1.executeQuery();
 				ps.executeQuery();
+				LOGGER.debug("IF_DATE : " + ifDate + " : " + query1);
+				LOGGER.debug("IF_DATE : " + ifDate + " : " + query);
+				//LOGGER.debug("Result : " + result + ", PO NO : " + poNo + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", STOCK CODE : " + stockCode + ", PP_PLAN_QTY : " + ppPlanQty + ", PP_PROD_QTY : " + ppProdQty);
 			}
 		} catch ( Exception e ) {
 			e.printStackTrace();
