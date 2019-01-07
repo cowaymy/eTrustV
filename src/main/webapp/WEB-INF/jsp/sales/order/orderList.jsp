@@ -16,6 +16,12 @@
     $(document).ready(function(){
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
+        if("${SESSION_INFO.userTypeId}" == "2" ){
+
+            if("${SESSION_INFO.memberLevel}" =="3" || "${SESSION_INFO.memberLevel}" =="4"){
+            	$("#btnReq").hide();
+            }
+        }
 
         // 셀 더블클릭 이벤트 바인딩
         AUIGrid.bind(listMyGridID, "cellDoubleClick", function(event) {

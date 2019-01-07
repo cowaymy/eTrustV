@@ -286,7 +286,13 @@
 	$(function() {
 		$('#btnEditType').click(function() {
 			var tabNm = $('#ordEditType').val();
-			fn_changeTab(tabNm);
+			if("${SESSION_INFO.roleId}" == "256" && tabNm == 'PRM'){
+				Common.alert('<spring:message code="sal.alert.msg.accRights" />' + DEFAULT_DELIMITER + '<b><spring:message code="sal.alert.msg.noAccRights" /></b>');
+			}
+			else{
+			    fn_changeTab(tabNm);
+			}
+
 		});
 		$('#btnSaveBasicInfo').click(function() {
 			if (!fn_validBasicInfo())
@@ -2184,6 +2190,8 @@
 
 		return isValid;
 	}
+
+
 
 	function fn_validCntcPerson() {
 		var isValid = true, msg = "";
