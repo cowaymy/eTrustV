@@ -14,22 +14,22 @@
 
 	//Grid에서 선택된 RowID
 	var selectedGridValue;
-	
+
 	//Grid Properties 설정
 	var gridPros = {
 	        // 편집 가능 여부 (기본값 : false)
-	        editable : false,        
+	        editable : false,
 	        // 상태 칼럼 사용
 	        showStateColumn : false,
 	        // 기본 헤더 높이 지정
 	        headerHeight : 35,
-	        
+
 	        softRemoveRowMode:false
-	
+
 	};
 
 	// AUIGrid 칼럼 설정
-	var columnLayout = [ 
+	var columnLayout = [
         {dataField : "groupSeq",headerText : "<spring:message code='pay.head.paymentGrpNo'/>",width : 100 , editable : false},
         {dataField : "appType",headerText : "<spring:message code='pay.head.appType'/>",width : 130 , editable : false},
         {dataField : "payItmModeId",headerText : "<spring:message code='pay.head.payTypeId'/>",width : 240 , editable : false, visible : false},
@@ -50,65 +50,73 @@
 		{dataField : "revDt",headerText : "<spring:message code='pay.head.reverseDate'/>",width : 110,editable : false, dataType:"date",formatString:"dd/mm/yyyy"},
 		{dataField : "payId",headerText : "<spring:message code='pay.head.PID'/>",width : 110,editable : false, visible : false}
 	];
-	
-    
+
+
 	$(document).ready(function(){
 		//그리드 생성
+
+        if("${SESSION_INFO.userTypeId}" == "2" ){
+
+            if("${SESSION_INFO.memberLevel}" =="2" || "${SESSION_INFO.memberLevel}" =="3"){
+                $("#btnrequestFT").hide();
+            }
+        }
+
 	    myGridID = GridCommon.createAUIGrid("grid_wrap", columnLayout,null,gridPros);
-		
+
 		// Master Grid 셀 클릭시 이벤트
-	    AUIGrid.bind(myGridID, "cellClick", function( event ){ 
+	    AUIGrid.bind(myGridID, "cellClick", function( event ){
 		    selectedGridValue = event.rowIndex;
 	    });
-	    
+
 	});
 
     // ajax list 조회.
     function searchList(){
-    	
+
     	if(FormUtil.checkReqValue($("#ordNo")) && FormUtil.checkReqValue($("#orNo"))){
     		Common.alert("Please key in the order number OR OR No.");
     		return;
     	}
-        
+
         //if(FormUtil.checkReqValue($("#tranDateFr")) ||
 		//	FormUtil.checkReqValue($("#tranDateTo"))){
         //   Common.alert("<spring:message code='pay.alert.inputTransDate'/>");
         //    return;
         //}
-    	
-    	Common.ajax("POST","/payment/selectGroupPaymentList.do",$("#searchForm").serializeJSON(), function(result){    		
+
+    	Common.ajax("POST","/payment/selectGroupPaymentList.do",$("#searchForm").serializeJSON(), function(result){
     		AUIGrid.setGridData(myGridID, result);
     	});
     }
-    
+
     // 화면 초기화
     function clear(){
     	//화면내 모든 form 객체 초기화
     	$("#searchForm")[0].reset();
-    	
+
     	//그리드 초기화
     	//AUIGrid.clearGridData(myGridID);
     }
-    
+
     //Search Order 팝업
     function fn_orderSearchPop(){
     	Common.popupDiv("/sales/order/orderSearchPop.do", {callPrgm : "RENTAL_PAYMENT", indicator : "SearchOrder"});
     }
-    
+
     //Search Order 팝업에서 결과값 받기
     function fn_callBackRentalOrderInfo(ordNo, ordId){
     	$("#ordId").val(ordId);
         $("#ordNo").val(ordNo);
    }
-    
 
-  
-  
+
+
+
 	//Request DCF 팝업
 	function fn_requestDCFPop(){
 		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-		
+
 		if (selectedItem[0] > -1){
 			var groupSeq = AUIGrid.getCellValue(myGridID, selectedGridValue, "groupSeq");
 			var revStusId = AUIGrid.getCellValue(myGridID, selectedGridValue, "revStusId");
@@ -122,14 +130,14 @@
 			}
 		}else{
              Common.alert('No Payment List selected.');
-        }	
+        }
 	}
 
 
 	//Request Fund Transfer 팝업
 	function fn_requestFTPop(){
 		var selectedItem = AUIGrid.getSelectedIndex(myGridID);
-		
+
 		if (selectedItem[0] > -1){
 			var groupSeq = AUIGrid.getCellValue(myGridID, selectedGridValue, "groupSeq");
 			var payId = AUIGrid.getCellValue(myGridID, selectedGridValue, "payId");
@@ -161,15 +169,15 @@
 				if(ftStusId == 0 || ftStusId == 6) {
 					Common.popupDiv('/payment/initRequestFTPop.do', {"groupSeq" : groupSeq , "payId" : payId , "appTypeId" : appTypeId}, null , true ,'_requestFTPop');
 				}else{
-					Common.alert("<b>This has already been Fund Transfer processing Requested. </b>");   
+					Common.alert("<b>This has already been Fund Transfer processing Requested. </b>");
 				}
 			} else {
-				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been REVERSE processing Requested. </b>");   
-			} 
+				Common.alert("<b>Payment Group Number [" + groupSeq + "] has already been REVERSE processing Requested. </b>");
+			}
 
 		}else{
              Common.alert('No Payment List selected.');
-        }	
+        }
 	}
 
 </script>
@@ -185,7 +193,7 @@
         <h2>Payment List</h2>
         <ul class="right_btns">
            <c:if test="${PAGE_AUTH.funcView == 'Y'}">
-            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>     
+            <li><p class="btn_blue"><a href="javascript:searchList();"><span class="search"></span><spring:message code='sys.btn.search'/></a></p></li>
            </c:if>
             <li><p class="btn_blue"><a href="javascript:clear();"><span class="clear"></span><spring:message code='sys.btn.clear'/></a></p></li>
         </ul>
@@ -256,9 +264,9 @@
 			<dd>
 				<ul class="btns">
 				 <c:if test="${PAGE_AUTH.funcUserDefine1 == 'Y'}">
-					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();"><spring:message code='pay.btn.requestDcf'/></a></p></li>
+					<li><p class="link_btn"><a href="javascript:fn_requestDCFPop();" id="btnrequestDCF"><spring:message code='pay.btn.requestDcf'/></a></p></li>
 				</c:if>
-					<li><p class="link_btn"><a href="javascript:fn_requestFTPop();"><spring:message code='pay.btn.requestFT'/></a></p></li>
+					<li><p class="link_btn"><a href="javascript:fn_requestFTPop();" id="btnrequestFT"><spring:message code='pay.btn.requestFT'/></a></p></li>
 				</ul>
 				<p class="hide_btn"><a href="#"><img src="${pageContext.request.contextPath}/resources/images/common/btn_link_close.gif" alt="hide" /></a></p>
 			</dd>
