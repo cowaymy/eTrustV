@@ -1272,6 +1272,7 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
              AND END_DT  >= SYSDATE
         ]]> -->
         AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
+        AND TO_CHAR(END_DT, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
         <if test="costCentr == 'G9901' or costCentr == 'g9901'">
            AND T2.BUDGET_CODE != '99999'
         </if>
