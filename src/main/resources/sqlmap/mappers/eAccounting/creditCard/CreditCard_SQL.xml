@@ -480,10 +480,10 @@ WHERE T1.CRDIT_CARD_NO = #{crditCardNo}
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{taxCode}
-       ,#{netAmt}
-       ,#{taxAmt}
-       ,#{taxNonClmAmt}
+       ,'VB'
+       ,'0'
+       ,'0'
+       ,'0'
        ,#{totAmt}
        ,#{atchFileGrpId}
        ,#{expDesc}
@@ -647,7 +647,8 @@ SELECT T1.CLM_SEQ,
        T1.GL_ACC_CODE_NAME,
        T1.BUDGET_CODE,
        T1.BUDGET_CODE_NAME,
-       T1.TAX_CODE,
+       <!-- T1.TAX_CODE, -->
+       T2.INDUSTRY_CODE || ' - ' || T2.TAX_NAME TAX_CODE,
        T2.TAX_NAME,
        T2.TAX_RATE,
        'MYR' AS CUR,
@@ -734,10 +735,6 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,INVC_TYPE = #{invcType}
        ,INVC_NO = #{invcNo}
        ,INVC_DT = TO_DATE(#{invcDt}, 'DD/MM/YYYY')
-       ,TAX_CODE = #{taxCode}
-       ,NET_AMT = #{netAmt}
-       ,TAX_AMT = #{taxAmt}
-       ,TAX_NON_CLM_AMT = #{taxNonClmAmt}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
        ,COST_CENTR = UPPER(#{sCostCentr})
@@ -801,10 +798,10 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{taxCode}
-       ,#{netAmt}
-       ,#{taxAmt}
-       ,#{taxNonClmAmt}
+       ,'VB'
+       ,'0'
+       ,'0'
+       ,'0'
        ,#{totAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}

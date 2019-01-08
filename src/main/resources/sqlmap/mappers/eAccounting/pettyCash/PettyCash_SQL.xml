@@ -600,7 +600,6 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
         ,INVC_TYPE
         ,INVC_NO
         ,INVC_DT
-        ,GST_RGIST_NO
         ,TAX_CODE
         ,GST_BEFOR_AMT
         ,GST_AMT
@@ -632,11 +631,10 @@ ORDER BY T.CLM_NO, T.CLM_MONTH, T.REQST_DT
        ,#{invcType}
        ,#{invcNo}
        ,TO_DATE(#{invcDt}, 'DD/MM/YYYY')
-       ,#{gstRgistNo}
-       ,#{taxCode}
-       ,#{gstBeforAmt}
-       ,#{gstAmt}
-       ,#{nonClmGstAmt}
+       ,'VB'
+       ,'0'
+       ,'0'
+       ,'0'
        ,#{totAmt}
        ,#{atchFileGrpId}
        ,#{expDesc}
@@ -1083,10 +1081,10 @@ WHERE  T1.CLM_NO = #{clmNo}
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{taxCode}
-       ,#{gstBeforAmt}
-       ,#{gstAmt}
-       ,#{nonClmGstAmt}
+       ,'VB'
+       ,'0'
+       ,'0'
+       ,'0'
        ,#{totAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}

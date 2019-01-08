@@ -195,16 +195,16 @@ function fn_setEvent() {
                 Common.alert('<spring:message code="pettyCashExp.onlyPastDt.msg" />');
                 $(this).val(mm + "/" + yyyy);
             }
-        } else if(id == "gstRgistNo") {
+        } /*else if(id == "gstRgistNo") {
         	if($("#invcType").val() == "F") {
         		var gstRgistNo = $(this).val();
                 console.log(gstRgistNo);
-                /*if(gstRgistNo.length != 12) {
+                if(gstRgistNo.length != 12) {
                     Common.alert('Please insert 12 digits GST Registration No');
                     $("#gstRgistNo").val("");
-                }*/
+                }
         	}
-        }
+        }*/
    });
 }
 
@@ -396,7 +396,7 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
-    if($("#invcType").val() == "F") {
+    //if($("#invcType").val() == "F") {
         if(FormUtil.isEmpty($("#sMemAccName").val())) {
             Common.alert('<spring:message code="webInvoice.supplier.msg" />');
             checkResult = false;
@@ -407,11 +407,11 @@ function fn_checkEmpty() {
             checkResult = false;
             return checkResult;
         }
-        if(FormUtil.isEmpty($("#gstRgistNo").val())) {
+        /*if(FormUtil.isEmpty($("#gstRgistNo").val())) {
             Common.alert('Please enter GST Rgist No.');
             checkResult = false;
             return checkResult;
-        }
+        }*/
         var length = AUIGrid.getGridData(myGridID).length;
         if(length > 0) {
             for(var i = 0; i < length; i++) {
@@ -420,19 +420,20 @@ function fn_checkEmpty() {
                     checkResult = false;
                     return checkResult;
                 }
-                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "taxCode"))) {
+                /*if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "taxCode"))) {
                     Common.alert('<spring:message code="webInvoice.taxCode.msg" />' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
-                }
-                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "gstBeforAmt"))) {
-                    Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
+                }*/
+                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "totAmt"))) { //gstBeforAmt
+                    //Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
+                    Common.alert('Please enter amount for detail line' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
                 }
             }
         }
-    }
+    //}
     return checkResult;
 }
 
@@ -449,11 +450,13 @@ function fn_newExpensePop() {
 
 function fn_addMyGridRow() {
 	if(AUIGrid.getRowCount(myGridID) > 0) {
-		AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),cur:"MYR",gstBeforAmt:0,gstAmt:0,nonClmGstAmt:0,totAmt:0}, "last");
+		//AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),cur:"MYR",gstBeforAmt:0,gstAmt:0,nonClmGstAmt:0,totAmt:0}, "last");
+		AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),taxCode:"OP (Purchase(0%):Out of scope)",cur:"MYR",totAmt:0}, "last");
 	} else {
 		Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J2"}, function(result) {
             console.log(result);
-            AUIGrid.addRow(myGridID, {clamUn:result.clamUn,cur:"MYR",gstBeforAmt:0,gstAmt:0,nonClmGstAmt:0,totAmt:0}, "last");
+            //AUIGrid.addRow(myGridID, {clamUn:result.clamUn,cur:"MYR",gstBeforAmt:0,gstAmt:0,nonClmGstAmt:0,totAmt:0}, "last");
+            AUIGrid.addRow(myGridID, {clamUn:result.clamUn,taxCode:"OP (Purchase(0%):Out of scope)",cur:"MYR",totAmt:0}, "last");
         });
 	}
 }
@@ -468,6 +471,7 @@ function fn_addRow() {
     if(fn_checkEmpty()) {
         var formData = Common.getFormData("form_newExpense");
         if(clmSeq == 0) {
+        	console.log("fn_addrow clmseq 0");
         	var data = {
                     costCentr : $("#newCostCenter").val()
                     ,costCentrName : $("#newCostCenterText").val()
@@ -500,6 +504,9 @@ function fn_addRow() {
 
                 if(data.gridData.add.length > 0) {
                 	for(var i = 0; i < data.gridData.add.length; i++) {
+
+                		console.log("data.totAmt :: " + data.totAmt);
+
                 		data.gridData.add[i].costCentr = data.costCentr;
                 		data.gridData.add[i].costCentrName = data.costCentrName;
                 		data.gridData.add[i].memAccId = data.memAccId;
@@ -509,7 +516,7 @@ function fn_addRow() {
                 		data.gridData.add[i].clmMonth = data.clmMonth;
                 		data.gridData.add[i].sMemAccId = data.sMemAccId;
                 		data.gridData.add[i].sMemAccName = data.sMemAccName;
-                		data.gridData.add[i].gstRgistNo = data.gstRgistNo;
+                		//data.gridData.add[i].gstRgistNo = data.gstRgistNo;
                 		data.gridData.add[i].invcDt = data.invcDt;
                 		data.gridData.add[i].invcNo = data.invcNo;
                 		data.gridData.add[i].invcType = data.invcType;
@@ -521,6 +528,8 @@ function fn_addRow() {
                 		data.gridData.add[i].bilPeriodF = data.bilPeriodF;
                 		data.gridData.add[i].bilPeriodT = data.bilPeriodT;
                 		data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
+                		data.gridData.add[i].taxCode = "VB";
+                		data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
                 		AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                 	}
                 }
@@ -528,6 +537,7 @@ function fn_addRow() {
                 fn_getAllTotAmt();
             });
         } else {
+        	console.log("fn_addrow clmseq > 0");
         	var data = {
         			costCentr : $("#newCostCenter").val()
                     ,costCentrName : $("#newCostCenterText").val()

@@ -333,16 +333,16 @@ function fn_setEvent() {
                     }
                 });
             }
-        } else if(id == "gstRgistNo") {
+        } /*else if(id == "gstRgistNo") {
         	if($("#invcType").val() == "F") {
                 var gstRgistNo = $(this).val();
                 console.log(gstRgistNo);
-                /*if(gstRgistNo.length != 12) {
+                if(gstRgistNo.length != 12) {
                     Common.alert('Please insert 12 digits GST Registration No');
                     $("#gstRgistNo").val("");
-                }*/
+                }
             }
-        }
+        }*/
    });
 }
 
@@ -401,7 +401,7 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
-    if($("#invcType").val() == "F") {
+    //if($("#invcType").val() == "F") {
         if(FormUtil.isEmpty($("#newSupplyName").val())) {
             Common.alert('<spring:message code="crditCardReim.supplierName.msg" />');
             checkResult = false;
@@ -412,11 +412,11 @@ function fn_checkEmpty() {
             checkResult = false;
             return checkResult;
         }
-        if(FormUtil.isEmpty($("#gstRgistNo").val())) {
+        /*if(FormUtil.isEmpty($("#gstRgistNo").val())) {
             Common.alert('Please enter GST Rgist No.');
             checkResult = false;
             return checkResult;
-        }
+        }*/
         var length = AUIGrid.getGridData(myGridID).length;
         if(length > 0) {
             for(var i = 0; i < length; i++) {
@@ -425,29 +425,32 @@ function fn_checkEmpty() {
                     checkResult = false;
                     return checkResult;
                 }
-                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "taxCode"))) {
+                /*if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "taxCode"))) {
                     Common.alert('<spring:message code="webInvoice.taxCode.msg" />' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
-                }
-                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "netAmt"))) {
-                    Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
+                }*/
+                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "totAmt"))) { //gstBeforAmt
+                    //Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
+                    Common.alert('Please enter amount for detail line' + (i +1) + ".");
                     checkResult = false;
                     return checkResult;
                 }
             }
         }
-    }
+    //}
     return checkResult;
 }
 
 function fn_addMyGridRow() {
     if(AUIGrid.getRowCount(myGridID) > 0) {
-        AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+        //AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+        AUIGrid.addRow(myGridID, {clamUn:AUIGrid.getCellValue(myGridID, 0, "clamUn"),taxCode:"OP (Purchase(0%):Out of scope)",cur:"MYR",totAmt:0}, "last");
     } else {
         Common.ajax("GET", "/eAccounting/webInvoice/selectClamUn.do?_cacheId=" + Math.random(), {clmType:"J3"}, function(result) {
             console.log(result);
-            AUIGrid.addRow(myGridID, {clamUn:result.clamUn,cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+            //AUIGrid.addRow(myGridID, {clamUn:result.clamUn,cur:"MYR",netAmt:0,taxAmt:0,taxNonClmAmt:0,totAmt:0}, "last");
+            AUIGrid.addRow(myGridID, {clamUn:result.clamUn,taxCode:"OP (Purchase(0%):Out of scope)",cur:"MYR",totAmt:0}, "last");
         });
     }
 }
@@ -516,6 +519,8 @@ function fn_addRow() {
                         data.gridData.add[i].cur = data.cur;
                         data.gridData.add[i].expDesc = data.expDesc;
                         data.gridData.add[i].atchFileGrpId = data.atchFileGrpId;
+                        data.gridData.add[i].taxCode = "VB";
+                        data.gridData.add[i].taxName = "OP (Purchase(0%):Out of scope)";
                         AUIGrid.addRow(newGridID, data.gridData.add[i], "last");
                     }
                 }
