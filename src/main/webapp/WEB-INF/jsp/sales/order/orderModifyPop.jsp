@@ -150,7 +150,7 @@
 		//그리드 속성 설정
 		var docGridPros = {
 			usePaging : true, //페이징 사용
-			pageRowCount : 10, //한 화면에 출력되는 행 개수 20(기본값:20)
+			pageRowCount : 12, //한 화면에 출력되는 행 개수 20(기본값:20)
 			editable : true,
 			fixedColumnCount : 0,
 			showStateColumn : false,
