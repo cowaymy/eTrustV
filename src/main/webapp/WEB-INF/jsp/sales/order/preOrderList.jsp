@@ -4,6 +4,7 @@
 <script type="text/javaScript" language="javascript">
 
 	var listGridID;
+	var excelListGridID;
 	var keyValueList = [];
 	var MEM_TYPE = '${SESSION_INFO.userTypeId}';
 	var CATE_ID  = "14";
@@ -26,6 +27,7 @@
     	fn_statusCodeSearch();
         //AUIGrid 그리드를 생성합니다.
         createAUIGrid();
+        createExcelAUIGrid();
 
         if(MEM_TYPE == "1" || MEM_TYPE == "2" ){
 
@@ -95,6 +97,15 @@
         doGetComboData('/status/selectStatusCategoryCdList.do', {selCategoryId : CATE_ID, parmDisab : 0}, '', '_stusId', 'M', 'fn_multiCombo');
         doGetComboSepa('/common/selectBranchCodeList.do',  '1', ' - ', '', '_brnchId', 'M', 'fn_multiCombo'); //Branch Code
         doGetComboOrder('/common/selectCodeList.do', '8', 'CODE_ID', '', '_typeId', 'M', 'fn_multiCombo'); //Common Code
+
+        //excel Download
+        $('#excelDown').click(function() {
+            var excelProps = {
+                fileName     : "eKey-in",
+               exceptColumnFields : AUIGrid.getHiddenColumnDataFields(excelListGridID)
+            };
+            AUIGrid.exportToXlsx(excelListGridID, excelProps);
+        });
 
     });
 
@@ -240,6 +251,39 @@
         listGridID = GridCommon.createAUIGrid("list_grid_wrap", columnLayout, "", gridPros);
     }
 
+    function createExcelAUIGrid() {
+
+        //AUIGrid 칼럼 설정
+        var excelColumnLayout = [
+           { headerText : "eKey-in Date",  dataField : "requestDt",  editable : false, width:100}
+          , { headerText : "SOF No.",         dataField : "sofNo",      editable : false, width:100}
+          , { headerText : "Order Number", dataField : "salesOrdNo",       editable : false, width:100}
+          , { headerText : "Status",          dataField : "stusName",     editable : false,width:150}
+          , { headerText : "Customer Name",   dataField : "custNm",     editable : false,width:300}
+          , { headerText : "Area",             dataField : "area",     editable : false,width:450}
+          , { headerText : "Posting Branch",             dataField : "soBrnchCode",     editable : false,width:100}
+          , { headerText : "Product",         dataField : "product",    editable : false,width:450}
+          , { headerText : "Fail Reason Code", dataField : "rem1",     editable : false,width:500}
+          , { headerText : "Fail Remark",         dataField : "rem2",     editable : false,width:750}
+          , { headerText : "Creator",         dataField : "crtName",   editable : false,width:100}
+          , { headerText : "Last Update At (By)", dataField : "lastUpd",   editable : false,width:400}
+            ];
+
+        //그리드 속성 설정
+        var excelGridPros = {
+             enterKeyColumnBase : true,
+             useContextMenu : true,
+             enableFilter : true,
+             showStateColumn : true,
+             displayTreeOpen : true,
+             noDataMessage : "<spring:message code='sys.info.grid.noDataMessage' />",
+             groupingMessage : "<spring:message code='sys.info.grid.groupingMessage' />",
+             exportURL : "/common/exportGrid.do"
+         };
+
+        excelListGridID = GridCommon.createAUIGrid("excel_list_grid_wrap", excelColumnLayout, "", excelGridPros);
+    }
+
     $(function(){
         $('#_btnNew').click(function() {
             Common.popupDiv("/sales/order/preOrderRegisterPop.do", null, null, true, '_divPreOrdRegPop');
@@ -363,6 +407,7 @@
     function fn_getPreOrderList() {
         Common.ajax("GET", "/sales/order/selectPreOrderList.do", $("#_frmPreOrdSrch").serialize(), function(result) {
             AUIGrid.setGridData(listGridID, result);
+            AUIGrid.setGridData(excelListGridID, result);
         });
     }
 
@@ -514,8 +559,17 @@
 </form>
 </section><!-- search_table end -->
 
+<section class="search_result"><!-- search_result start -->
+<c:if test="${PAGE_AUTH.funcView == 'Y'}">
+<ul class="right_btns">
+    <li><p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p></li>
+</ul>
+</c:if>
+</section><!-- search_result end -->
+
 <article class="grid_wrap"><!-- grid_wrap start -->
     <div id="list_grid_wrap" style="width:100%; height:480px; margin:0 auto;"></div>
+    <div id="excel_list_grid_wrap" style="display: none;"></div>
 </article><!-- grid_wrap end -->
 
 <!---------------------------------------------------------------
