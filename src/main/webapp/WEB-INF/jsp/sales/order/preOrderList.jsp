@@ -560,7 +560,7 @@
 </section><!-- search_table end -->
 
 <section class="search_result"><!-- search_result start -->
-<c:if test="${PAGE_AUTH.funcView == 'Y'}">
+<c:if test="${PAGE_AUTH.funcUserDefine2 == 'Y'}">
 <ul class="right_btns">
     <li><p class="btn_grid"><a href="#" id="excelDown">GENERATE</a></p></li>
 </ul>
