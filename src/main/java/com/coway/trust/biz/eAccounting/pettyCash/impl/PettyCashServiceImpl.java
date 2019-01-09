@@ -22,18 +22,18 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
 
 @Service("pettyCashService")
 public class PettyCashServiceImpl implements PettyCashService {
-	
+
 	private static final Logger LOGGER = LoggerFactory.getLogger(SampleServiceImpl.class);
-	
+
 	@Value("${app.name}")
 	private String appName;
-	
+
 	@Autowired
 	private WebInvoiceMapper webInvoiceMapper;
-	
+
 	@Resource(name = "pettyCashMapper")
 	private PettyCashMapper pettyCashMapper;
-	
+
 	@Autowired
 	private MessageSourceAccessor messageSourceAccessor;
 
@@ -53,7 +53,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 	public void insertCustodian(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		pettyCashMapper.insertCustodian(params);
 	}
 
@@ -73,7 +73,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 	public void deleteCustodian(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		pettyCashMapper.deleteCustodian(params);
 	}
 
@@ -82,7 +82,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 		// TODO Auto-generated method stub
 		return pettyCashMapper.selectRequestList(params);
 	}
-	
+
 	@Override
 	public String selectNextRqstClmNo() {
 		// TODO Auto-generated method stub
@@ -94,7 +94,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 		// TODO Auto-generated method stub
 		pettyCashMapper.insertPettyCashReqst(params);
 	}
-	
+
 	@Override
 	public String selectNextIfKey() {
 		// TODO Auto-generated method stub
@@ -118,7 +118,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 		// TODO Auto-generated method stub
 		return pettyCashMapper.selectRequestInfo(params);
 	}
-	
+
 	@Override
 	public void updatePettyCashReqst(Map<String, Object> params) {
 		// TODO Auto-generated method stub
@@ -129,17 +129,17 @@ public class PettyCashServiceImpl implements PettyCashService {
 	public void insertRqstApproveManagement(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		List<Object> apprGridList = (List<Object>) params.get("apprGridList");
-		
+
 		params.put("appvLineCnt", apprGridList.size());
-		
+
 		LOGGER.debug("insertApproveManagement =====================================>>  " + params);
 		webInvoiceMapper.insertApproveManagement(params);
-		
+
 		if (apprGridList.size() > 0) {
 			Map hm = null;
-			
+
 			for (Object map : apprGridList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
@@ -150,13 +150,13 @@ public class PettyCashServiceImpl implements PettyCashService {
 				webInvoiceMapper.insertApproveLineDetail(hm);
 			}
 		}
-		
+
 		int appvItmSeq = webInvoiceMapper.selectNextAppvItmSeq(String.valueOf(params.get("appvPrcssNo")));
 		params.put("appvItmSeq", appvItmSeq);
 		LOGGER.debug("insertApproveItems =====================================>>  " + params);
 		// TODO appvLineItemsTable Insert
 		pettyCashMapper.insertRqstApproveItems(params);
-		
+
 		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
 		// TODO pettyCashReqst table update
 		pettyCashMapper.updateRqstAppvPrcssNo(params);
@@ -178,24 +178,24 @@ public class PettyCashServiceImpl implements PettyCashService {
 	public void insertPettyCashExp(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		List<Object> gridDataList = (List<Object>) params.get("gridDataList");
-		
+
 		Map<String, Object> masterData = (Map<String, Object>) gridDataList.get(0);
-		
+
 		String clmNo = pettyCashMapper.selectNextExpClmNo();
 		params.put("clmNo", clmNo);
-		
+
 		masterData.put("clmNo", clmNo);
 		masterData.put("allTotAmt", params.get("allTotAmt"));
 		masterData.put("userId", params.get("userId"));
 		masterData.put("userName", params.get("userName"));
-		
+
 		LOGGER.debug("masterData =====================================>>  " + masterData);
 		pettyCashMapper.insertPettyCashExp(masterData);
-		
+
 		String clamUn = null;
-		
+
 		for(int i = 0; i < gridDataList.size(); i++) {
 			Map<String, Object> item = (Map<String, Object>) gridDataList.get(i);
 			int clmSeq = pettyCashMapper.selectNextExpClmSeq(clmNo);
@@ -236,11 +236,11 @@ public class PettyCashServiceImpl implements PettyCashService {
 	public void updatePettyCashExp(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		// TODO editGridDataList GET
 		List<Object> addList = (List<Object>) params.get("add"); // 추가 리스트 얻기
 		List<Object> updateList = (List<Object>) params.get("update"); // 수정 리스트 얻기
-		
+
 		if (addList.size() > 0) {
 			Map hm = null;
 			// biz처리
@@ -276,7 +276,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 				pettyCashMapper.updatePettyCashExpItem(hm);
 			}
 		}
-		
+
 		LOGGER.info("추가 : {}", addList.toString());
 		LOGGER.info("수정 : {}", updateList.toString());
 	}
@@ -285,18 +285,18 @@ public class PettyCashServiceImpl implements PettyCashService {
 	public void insertExpApproveManagement(Map<String, Object> params) {
 		// TODO Auto-generated method stub
 		LOGGER.debug("params =====================================>>  " + params);
-		
+
 		List<Object> apprGridList = (List<Object>) params.get("apprGridList");
 		List<Object> newGridList = (List<Object>) params.get("newGridList");
 
 		params.put("appvLineCnt", apprGridList.size());
-		
+
 		LOGGER.debug("insertApproveManagement =====================================>>  " + params);
 		webInvoiceMapper.insertApproveManagement(params);
-		
+
 		if (apprGridList.size() > 0) {
 			Map hm = null;
-			
+
 			for (Object map : apprGridList) {
 				hm = (HashMap<String, Object>) map;
 				hm.put("appvPrcssNo", params.get("appvPrcssNo"));
@@ -307,10 +307,10 @@ public class PettyCashServiceImpl implements PettyCashService {
 				webInvoiceMapper.insertApproveLineDetail(hm);
 			}
 		}
-		
+
 		if (newGridList.size() > 0) {
 			Map hm = null;
-			
+
 			// biz처리
 			for (Object map : newGridList) {
 				hm = (HashMap<String, Object>) map;
@@ -324,7 +324,7 @@ public class PettyCashServiceImpl implements PettyCashService {
 				pettyCashMapper.insertExpApproveItems(hm);
 			}
 		}
-		
+
 		LOGGER.debug("updateAppvPrcssNo =====================================>>  " + params);
 		// TODO pettyCashReqst table update
 		pettyCashMapper.updateExpAppvPrcssNo(params);
@@ -353,9 +353,38 @@ public class PettyCashServiceImpl implements PettyCashService {
 		// TODO Auto-generated method stub
 		return pettyCashMapper.selectExpenseItemGrpForAppv(params);
 	}
-	
-	
 
-	
+    @Override
+    public String selectNextExpClmNo() {
+        return pettyCashMapper.selectNextExpClmNo();
+    }
 
+    @Override
+    public void editRejected(Map<String, Object> params) {
+
+        LOGGER.debug("editRejected =====================================>>  " + params);
+
+        pettyCashMapper.insertRejectM(params);
+
+        pettyCashMapper.insertRejectD(params);
+
+        List<EgovMap> oldSeq = pettyCashMapper.getOldDisClamUn(params);
+        for(int i = 0; i < oldSeq.size(); i++) {
+            Map<String, Object> oldSeq1 = (Map<String, Object>) oldSeq.get(i);
+            String oldClamUn = oldSeq1.get("clamUn").toString();
+            LOGGER.debug("oldClamUn :: " + oldClamUn);
+
+            params.put("clmType", "J3");
+            EgovMap clamUn = webInvoiceMapper.selectClamUn(params);
+            clamUn.put("clmType", "J3");
+
+            webInvoiceMapper.updateClamUn(clamUn);
+
+            LOGGER.debug(clamUn.get("clamUn").toString());
+            params.put("oldClamUn", oldClamUn);
+            params.put("newClamUn", clamUn.get("clamUn"));
+            pettyCashMapper.updateExistingClamUn(params);
+        }
+
+    }
 }
