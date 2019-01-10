@@ -304,10 +304,10 @@ SELECT   T.CLM_NO
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{taxCode}
-       ,#{taxNonClmAmt}
-       ,#{netAmt}
-       ,#{taxAmt}
+       ,'VB'
+       ,'0'
+       ,'0'
+       ,'0'
        ,#{totAmt}
        ,#{expDesc}
        ,#{clamUn}
@@ -532,10 +532,6 @@ SELECT   T.CLM_NO
        ,GL_ACC_CODE_NAME = #{glAccCodeName}
        ,BUDGET_CODE = #{budgetCode}
        ,BUDGET_CODE_NAME = #{budgetCodeName}
-       ,TAX_CODE = #{taxCode}
-       ,TAX_NON_CLM_AMT = #{taxNonClmAmt}
-       ,NET_AMT = #{netAmt}
-       ,TAX_AMT = #{taxAmt}
        ,TOT_AMT = #{totAmt}
        ,EXP_DESC = #{expDesc}
        ,UPD_DT = SYSDATE
@@ -692,10 +688,10 @@ SELECT   T.CLM_NO
        ,#{glAccCodeName}
        ,#{budgetCode}
        ,#{budgetCodeName}
-       ,#{taxCode}
-       ,#{taxNonClmAmt}
-       ,#{netAmt}
-       ,#{taxAmt}
+       ,'VB'
+       ,'0'
+       ,'0'
+       ,'0'
        ,#{totAmt}
        ,#{expDesc}
        ,#{atchFileGrpId}
@@ -1003,7 +999,8 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
             NVL(T9.GST_AMT, T3.TAX_AMT) TAX_AMT,
             NVL(T9.NON_CLM_GST_AMT, T3.TAX_NON_CLM_AMT) TAX_NON_CLM_AMT,
             NVL(T9.TOT_AMT, T3.APPV_AMT) APPV_AMT,
-            CASE WHEN (T9.TOT_AMT <> '' OR T9.TOT_AMT IS NOT NULL) THEN T9.GST_BEFOR_AMT + T9.GST_AMT ELSE T7.TOT_AMT END TOT_AMT,
+            /*CASE WHEN (T9.TOT_AMT <> '' OR T9.TOT_AMT IS NOT NULL) THEN T9.GST_BEFOR_AMT + T9.GST_AMT ELSE T7.TOT_AMT END TOT_AMT,*/
+            NVL(T9.TOT_AMT, T3.APPV_AMT) TOT_AMT,
             REGEXP_REPLACE(NVL(T9.EXP_DESC, T3.EXP_DESC), '(^[[:space:]]+)|([[:space:]]+$)', NULL) EXP_DESC,
             NVL(T9.CLAM_UN, T3.CLAM_UN) CLAM_UN,
             T3.J_PAY_NO,
@@ -1271,8 +1268,8 @@ WHERE  APPV_PRCSS_NO = #{appvPrcssNo} AND APPV_LINE_SEQ = #{appvLineSeq}
              AND START_DT <= SYSDATE
              AND END_DT  >= SYSDATE
         ]]> -->
-        AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
         AND TO_CHAR(END_DT, 'YYYYMMDD') >= TO_CHAR(SYSDATE, 'YYYYMMDD')
+        AND UPPER(T1.COST_CENTR) = UPPER(#{costCentr})
         <if test="costCentr == 'G9901' or costCentr == 'g9901'">
            AND T2.BUDGET_CODE != '99999'
         </if>

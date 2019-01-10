@@ -54,7 +54,7 @@ var myColumnLayout = [ {
 }, {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />'
-}, {
+}, /*{
     dataField : "netAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
     style : "aui-grid-user-custom-right",
@@ -72,17 +72,17 @@ var myColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
-}, {
+}, */{
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    editable : false,
-    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+    editable : false//,
+    /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
         return (item.netAmt + item.taxAmt + item.taxNonClmAmt);
-    }
+    }*/
 }, {
     dataField : "expDesc",
     headerText : '<spring:message code="newWebInvoice.description" />',
@@ -145,7 +145,7 @@ var mGridColumnLayout = [ {
     dataField : "cur",
     headerText : '<spring:message code="newWebInvoice.cur" />',
     editable : false
-}, {
+}, /*{
     dataField : "gstBeforAmt",
     headerText : '<spring:message code="newWebInvoice.netAmount" />',
     style : "aui-grid-user-custom-right",
@@ -171,16 +171,16 @@ var mGridColumnLayout = [ {
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00"
-}, {
+}, */{
     dataField : "totAmt",
     headerText : '<spring:message code="newWebInvoice.totalAmount" />',
     style : "aui-grid-user-custom-right",
     dataType: "numeric",
     formatString : "#,##0.00",
-    expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
+    /*expFunction : function( rowIndex, columnIndex, item, dataField ) { // 여기서 실제로 출력할 값을 계산해서 리턴시킴.
         // expFunction 의 리턴형은 항상 Number 여야 합니다.(즉, 수식만 가능)
         return (item.gstBeforAmt + item.gstAmt + item.taxNonClmAmt);
-    }
+    }*/
 }, {
     dataField : "atchFileGrpId",
     visible : false // Color 칼럼은 숨긴채 출력시킴
