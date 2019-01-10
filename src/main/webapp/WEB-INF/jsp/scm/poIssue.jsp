@@ -815,8 +815,8 @@ function fnMoveStockGroup() {
 		//	poQty
 		poQty	= parseInt(planQty) - parseInt(issQty);
 		fobPrc	= AUIGrid.getCellValue(myGridID, selectedRow, "fobPrc");
-		fobAmt	= parseInt(poQty) * parseInt(fobPrc);
-		
+		fobAmt	= parseFloat(poQty) * parseFloat(fobPrc);
+		console.log("qty : " + poQty + ", fobPrc : " + fobPrc + ", forAmt : " + fobAmt);
 		//	add row myGridID2
 		var item	=
 		{
@@ -909,7 +909,7 @@ function fnMoveStock() {
 	//	poQty
 	poQty	= parseInt(planQty) - parseInt(issQty);
 	fobPrc	= AUIGrid.getCellValue(myGridID, selectedRow, "fobPrc");
-	fobAmt	= parseInt(poQty) * parseInt(fobPrc);
+	fobAmt	= parseFloat(poQty) * parseFloat(fobPrc);
 	console.log("planQty : " + planQty + ", issQty : " + issQty + ", poQty : " + poQty + ", fobPrc : " + fobPrc + ", fobAmt : " + fobAmt);
 	
 	//	add row myGridID2
