@@ -2554,6 +2554,7 @@
     <if test="ordId != null and ordId !=''">
       AND A.SALES_ORD_ID_OLD = #{ordId}
       AND A.STUS_CODE_ID IN (1, 4)
+      AND A.EX_TRADE = 2
     </if>
 
   </select>
@@ -2561,9 +2562,14 @@
   <select id="selectPairOrdId" parameterType="Map" resultType="egovMap">
 
     SELECT A.SALES_ORD_ID,
-    A.SALES_ORD_NO
+    A.SALES_ORD_NO,
+    NVL (C.ADDR_DTL, ' ') || ' ' || NVL (C.STREET, ' ') || ' '|| NVL (D.AREA, ' ') || ' '|| NVL (D.POSTCODE, ' ') || ' '|| NVL (D.CITY, ' ') || ' '|| NVL (D.STATE, ' ') || ' '|| NVL (D.COUNTRY, ' ') AS INST_ADD
+
 
     FROM SAL0001D A
+    LEFT JOIN SAL0045D B ON B.SALES_ORD_ID = A.SALES_ORD_ID
+    LEFT JOIN SAL0023D C ON C.CUST_ADD_ID = B.ADD_ID
+    LEFT JOIN SYS0064M D ON D.AREA_ID = C.AREA_ID
     WHERE 1=1
 
     <if test="ordId != null and ordId !=''">

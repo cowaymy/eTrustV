@@ -64,7 +64,7 @@ public interface OrderRegisterMapper {
 
 	EgovMap selectTrialNo(Map<String, Object> params);
 
-	EgovMap selectMemberByMemberIDCode(Map<String, Object> params);
+	EgovMap selectMemberByMemberIDCode(Map<String, Object> paraselectVerifyOldSalesOrderNoValidityICarems);
 
 	List<EgovMap> selectMemberList(Map<String, Object> params);
 
@@ -77,6 +77,8 @@ public interface OrderRegisterMapper {
 	EgovMap selectSvcExpire(int srvSoId);
 
 	EgovMap selectVerifyOldSalesOrderNoValidity(int salesOrdIdOld);
+
+	EgovMap selectVerifyOldSalesOrderNoValidityICare(int salesOrdIdOld);
 
 	EgovMap selectSalesOrderM(Map<String, Object> params);
 

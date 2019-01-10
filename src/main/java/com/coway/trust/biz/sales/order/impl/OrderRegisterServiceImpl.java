@@ -415,7 +415,7 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
         	ROOT_STATE = "ROOT_1";
         }
         else {
-        	if(this.isVerifyOldSalesOrderNoValidity(getOldOrderID)) {
+        	if(this.isVerifyOldSalesOrderNoValidityICare(getOldOrderID)) {
 
         		EgovMap resultMap = this.selectSalesOrderM(getOldOrderID, 0);
         		EgovMap promoMap = orderRegisterMapper.selectPromoDesc(promoId);
@@ -515,6 +515,11 @@ public class OrderRegisterServiceImpl extends EgovAbstractServiceImpl implements
 
 	private boolean isVerifyOldSalesOrderNoValidity(int getOldOrderID) {
 		EgovMap result = orderRegisterMapper.selectVerifyOldSalesOrderNoValidity(getOldOrderID);
+		return result == null ? true : false;
+	}
+	
+	private boolean isVerifyOldSalesOrderNoValidityICare(int getOldOrderID) {
+		EgovMap result = orderRegisterMapper.selectVerifyOldSalesOrderNoValidityICare(getOldOrderID);
 		return result == null ? true : false;
 	}
 

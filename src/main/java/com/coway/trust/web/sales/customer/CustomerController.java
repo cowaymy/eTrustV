@@ -1912,6 +1912,7 @@ public class CustomerController {
     BigDecimal rentInstNo;
     int oldId;
     String icare;
+    String instAdd;
 
     LOGGER.info("##### customeView START #####");
     basicinfo = customerService.selectCustomerCheckingListPop(params);
@@ -1923,12 +1924,15 @@ public class CustomerController {
     if (oldId > 0) {
       pairOrdId = customerService.selectPairOrdId(params);
       int salesOrdId = Integer.parseInt(String.valueOf(pairOrdId.get("salesOrdId")));
+      String address = pairOrdId.get("instAdd").toString();
       EgovMap resultMap = this.selectSalesOrderM(salesOrdId, 0);
       String salesOrdNo = resultMap.get("salesOrdNo").toString();
 
       icare = "Yes (Order No: " + salesOrdNo + ")";
+      instAdd = address;
     } else {
       icare = "No";
+      instAdd = "";
     }
     String rentStatus = (String) basicinfo.get("rentStus");
     String stkCategory = (String) basicinfo.get("stkCategory");
@@ -1965,6 +1969,7 @@ public class CustomerController {
     model.addAttribute("aging", agingmonth);
     model.addAttribute("verify", valid);
     model.addAttribute("icare", icare);
+    model.addAttribute("address", instAdd);
 
     return "sales/order/customerCheckingViewPop";
   }

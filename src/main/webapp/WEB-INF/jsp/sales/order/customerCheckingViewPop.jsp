@@ -71,8 +71,8 @@ $(document).ready(function(){
 <tr>
     <th scope="row">Eligible for I-Care</th>
     <td>${verify }</td>
-    <th scope="row"></th>
-    <td></td>
+    <th scope="row">Installation Address</th>
+    <td>${address }</td>
 </tr>
 </tbody>
 </table><!-- table end -->
