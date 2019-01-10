@@ -118,6 +118,7 @@
           FROM SAL0001D T1
          WHERE T1.SALES_ORD_ID_OLD = #{value}
            AND T1.STUS_CODE_ID IN (1,4)
+           AND T1.EX_TRADE = 1
            AND ROWNUM &lt;= 1
     </select>
 
