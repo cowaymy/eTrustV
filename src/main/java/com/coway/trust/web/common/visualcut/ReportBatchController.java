@@ -130,7 +130,7 @@ public class ReportBatchController {
   }
 
   @RequestMapping(value = "/ColorGrid_Daily_2018_Jan_Dec_S.do")
-  // @Scheduled(cron = "0 0 3 * * *")//Daily (3:00am)
+  // @Scheduled(cron = "0 0 6 * * *")//Daily (6:00am)
   public void colorGridDaily2018JanDecS() {
     LOGGER.info("[START] SQLColorGrid_NoRental-Out-Ins_Excel...");
     Map<String, Object> params = new HashMap<>();
