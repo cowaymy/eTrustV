@@ -694,8 +694,10 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
     <td id="invcNo"></td>
-    <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
-    <td id="invcType"></td>
+    <th scope="row">Billing Period</th>
+    <td id="bilPeriod"></td>
+    <!-- <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
+    <td id="invcType"></td> -->
 </tr>
 <!-- <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
@@ -706,8 +708,8 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr id="payInfo1">
     <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
     <td id="utilNo"></td>
-    <th scope="row">Billing Period</th>
-    <td id="bilPeriod"></td>
+    <th scope="row"></th>
+    <td></td>
 </tr>
 <tr id="payInfo2" style="display: none;">
     <th scope="row">JomPAY No</th>
