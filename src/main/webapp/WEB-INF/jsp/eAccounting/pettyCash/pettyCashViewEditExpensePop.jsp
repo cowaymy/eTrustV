@@ -565,16 +565,18 @@ function fn_tempSave() {
 <tr>
     <th scope="row"><spring:message code="webInvoice.invoiceDate" /></th>
     <td><input type="text" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date w100p" id="invcDt" name="invcDt" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>/></td>
-    <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="utilNo" name="utilNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
+    <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
 </tr>
 <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.supplierName" /></th>
     <td><input type="text" title="" placeholder="" class="w100p" id="sMemAccName" name="sMemAccName" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
-    <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
+    <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="utilNo" name="utilNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
+    <!-- <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
+    <td><input type="text" title="" placeholder="" class="w100p" id="gstRgistNo" name="gstRgistNo" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td> -->
 </tr>
-<tr>
+<!-- <tr>
     <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
     <td>
     <select class="w100p" id="invcType" name="invcType" <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">disabled</c:if>>
@@ -582,9 +584,7 @@ function fn_tempSave() {
         <option value="S"><spring:message code="newWebInvoice.select.simpleTax" /></option>
     </select>
     </td>
-    <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
-    <td><input type="text" title="" placeholder="" class="w100p" id="invcNo" name="invcNo" autocomplete=off <c:if test="${appvPrcssNo ne null and appvPrcssNo ne ''}">readonly</c:if>/></td>
-</tr>
+</tr> -->
 <tr>
     <th scope="row">Billing Period</th>
     <td>
