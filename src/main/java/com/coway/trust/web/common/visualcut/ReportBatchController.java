@@ -1264,7 +1264,7 @@ public class ReportBatchController {
     params.put(REPORT_VIEW_TYPE, "PDF"); // viewType
     params.put("V_TEMP", "TEMP");// parameter
     params.put(AppConstants.REPORT_DOWN_FILE_NAME, "Daily Rental Collection" + File.separator
-        + "DailyRentalCollectionRateTrendInd" + CommonUtils.getNowDate() + ".pdf");
+        + "DailyRentalCollectionRateTrendCom" + CommonUtils.getNowDate() + ".pdf");
 
     this.viewProcedure(null, null, params);
     LOGGER.info("[END] dailyRentCollRtTrdCom...");
