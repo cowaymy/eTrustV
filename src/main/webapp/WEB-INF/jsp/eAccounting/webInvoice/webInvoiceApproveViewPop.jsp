@@ -691,15 +691,15 @@ function fn_atchViewDown(fileGrpId, fileId) {
 <tr>
     <th scope="row"><spring:message code="pettyCashNewExp.invcNo" /></th>
     <td id="invcNo"></td>
-    <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
-    <td id="invcType"></td>
-</tr>
-<tr>
-    <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
-    <td id="gstRgistNo"></td>
     <th scope="row" id="supplirTh"></th>
     <td id="supplirTd"></td>
+    <!--  <th scope="row"><spring:message code="newWebInvoice.invoiceType" /></th>
+    <td id="invcType"></td> -->
 </tr>
+<!-- <tr>
+    <th scope="row"><spring:message code="pettyCashNewExp.gstRgistNo" /></th>
+    <td id="gstRgistNo"></td>
+</tr> -->
 <tr id="payInfo1">
     <th scope="row"><spring:message code="newWebInvoice.utilNo" /></th>
     <td id="utilNo"></td>
