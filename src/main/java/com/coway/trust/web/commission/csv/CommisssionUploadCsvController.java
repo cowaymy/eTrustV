@@ -35,26 +35,26 @@ public class CommisssionUploadCsvController {
 
 	@Autowired
 	private SessionHandler sessionHandler;
-	
+
 	@Autowired
 	private CsvReadComponent csvReadComponent;
-	
+
 	@Resource(name = "commissionCalculationService")
 	private CommissionCalculationService commissionCalculationService;
-	
+
 
 	@RequestMapping(value = "/upload", method = RequestMethod.POST)
 	public ResponseEntity<String> readExcel(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {
 		//ReturnMessage message = new ReturnMessage();
-		
+
 		Map<String, MultipartFile> fileMap = request.getFileMap();
 		MultipartFile multipartFile = fileMap.get("csvFile");
 
 		List<IncentiveDataVO> vos = csvReadComponent.readCsvToList(multipartFile, true, IncentiveDataVO::create);
-		
+
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		String loginId = String.valueOf(sessionVO.getUserId());
-		
+
 		//marster
 		Map mMap = new HashMap();
 		mMap.put("uploadID",request.getParameter("type"));
@@ -68,10 +68,10 @@ public class CommisssionUploadCsvController {
 		mMap.put("creator",loginId);
 		mMap.put("updator",loginId);
 		mMap.put("memberTypeID",request.getParameter("memberType"));
-		
+
 		commissionCalculationService.insertIncentiveMaster(mMap);
 		String uploadId = commissionCalculationService.selectUploadId(mMap);
-		
+
 		for (IncentiveDataVO vo : vos) {
 			/*det.Updated = DateTime.Now;*/
 			Map map = new HashMap();
@@ -87,11 +87,63 @@ public class CommisssionUploadCsvController {
 			map.put("sysRefLvl","0");
 			map.put("updated",loginId);
 			map.put("sysMemberTypeID","0");
-			
+
 			commissionCalculationService.insertIncentiveDetail(map);
 		}
 		commissionCalculationService.callIncentiveDetail(Integer.parseInt(uploadId));
-		
+
+		return ResponseEntity.ok(uploadId);
+	}
+
+	@RequestMapping(value = "/mboUpload", method = RequestMethod.POST)
+	public ResponseEntity<Integer> readMboExcel(MultipartHttpServletRequest request) throws IOException, InvalidFormatException {
+
+		Map<String, MultipartFile> fileMap = request.getFileMap();
+		MultipartFile multipartFile = fileMap.get("csvFile");
+
+		List<IncentiveDataVO> vos = csvReadComponent.readCsvToList(multipartFile, true, IncentiveDataVO::create);
+
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		String loginId = String.valueOf(sessionVO.getUserId());
+
+		//master
+		Map<String, Object> mMap = new HashMap<String, Object>();
+		mMap.put("uploadTypeID",request.getParameter("type"));
+		mMap.put("statusID","1");
+
+		String dt = CommonUtils.getCalMonth(-1);
+		mMap.put("actionDate",dt.substring(0,6));
+
+		mMap.put("creator",loginId);
+		mMap.put("updator",loginId);
+		mMap.put("memberTypeID",request.getParameter("memberType"));
+
+		int uploadId = commissionCalculationService.mboMasterUploadId();
+		mMap.put("uploadId",uploadId);
+
+		commissionCalculationService.insertMboMaster(mMap);
+
+
+		for (IncentiveDataVO vo : vos) {
+			/*det.Updated = DateTime.Now;*/
+			Map<String, Object> map = new HashMap<String, Object>();
+			map.put("uploadID",uploadId);
+			map.put("statusID","1");
+			map.put("validStatusID","1");
+			map.put("userMemberCode",vo.getMemberCode());
+			map.put("userRefCode",vo.getRefCode());
+			map.put("userTargetAmt",vo.getTargetAmt());
+			map.put("userRefLvl",vo.getLevel());
+			map.put("sysMemberID","0");
+			map.put("sysTargetAmt","0");
+			map.put("sysRefLvl","0");
+			map.put("updated",loginId);
+			map.put("sysMemberTypeID","0");
+
+			commissionCalculationService.insertMboDetail(map);
+		}
+		commissionCalculationService.callMboDetail(uploadId);
+
 		return ResponseEntity.ok(uploadId);
 	}
 }

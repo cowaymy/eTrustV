@@ -37,7 +37,10 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @see
  *
  * 	 Copyright (C) by MOPAS All right reserved.
- */
+ ***************************************
+ * Author	Date				Remark
+ * Kit			2019/01/11		Add new function for MBO Upload
+ ***************************************/
 
 @Service("commissionCalculationService")
 public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl implements CommissionCalculationService {
@@ -57,7 +60,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 
 	/**
 	 * search Commssion Procedure Group List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -66,10 +69,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCommPrdGroupListl(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCommPrdGroupListl(params);
 	}
-	
+
 	/**
 	 * search Organization Code List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -78,10 +81,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectOrgCdListAll(Map<String, Object> params) {
 		return commissionCalculationMapper.selectOrgCdListAll(params);
 	}
-	
+
 	/**
-	 * Calculation List Select 
-	 * 
+	 * Calculation List Select
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -90,10 +93,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCalculationList(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCalculationList(params);
 	}
-	
+
 	/**
 	 * Basic Data List Select
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -104,7 +107,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	}
 	/**
 	 * Basic Data State Search
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -113,10 +116,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public Map<String, Object> selectBasicStatus(Map<String, Object> params) {
 		return commissionCalculationMapper.selectBasicStatus(params);
 	}
-	
+
 	/**
 	 * call Commission Procedure
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -126,10 +129,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 public Map<String, Object> callCommProcedure(Map<String, Object> param){
 		return commissionCalculationMapper.callCommProcedure(param);
 	}
-	
+
 	/**
 	 * procedure Log insert
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -141,10 +144,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		int cnt  = commissionCalculationMapper.callCommPrdLogIns(param);
 		return cnt;
 	}
-	
+
 	/**
 	 * procedure Last Log Extraction Search
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -154,10 +157,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 public List<EgovMap> selectCommRunningPrdLog(Map<String, Object> param){
 		return commissionCalculationMapper.selectCommRunningPrdLog(param);
 	}
-	
+
 	/**
 	 * Commission Procedure Log Update(S/F)
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -168,10 +171,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		commissionCalculationMapper.callCommLogUpdate(param);
 		commissionCalculationMapper.callCommPrdLog(param);
 	}
-	
+
 	/**
 	 * Commission Fail Next Procedure Log Update
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -182,10 +185,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		commissionCalculationMapper.callCommPrdLog(param);
 		return 8;
 	}
-	
+
 	/**
 	 * Commssion Procedure Log List Select
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -194,10 +197,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectLogList(Map<String, Object> params) {
 		return commissionCalculationMapper.selectLogList(params);
 	}
-	
+
 	/**
 	 * Organization Gruop List Select
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -206,10 +209,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectOrgGrList(Map<String, Object> params) {
 		return commissionCalculationMapper.selectOrgGrList(params);
 	}
-	
+
 	/**
 	 * calculation Data 7001 List Select (CD,CT,HP)
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -246,7 +249,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	}
 	/**
 	 * calculation Data 7002 List Select (CD,CT,HP)
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -281,10 +284,10 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 			}else return null;
 		}
 	}
-	
+
 	/**
 	 * Basic Data List Select
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -297,7 +300,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0006T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0006T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0007T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0007T(params);
@@ -306,7 +309,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0007T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0007T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0008T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0008T(params);
@@ -316,7 +319,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0008T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0008T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0009T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0009T(params);
@@ -325,7 +328,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0009T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0009T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0010T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0010T(params);
@@ -334,7 +337,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0010T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0010T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0011T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0011T(params);
@@ -343,7 +346,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0011T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0011T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0012T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0012T(params);
@@ -352,7 +355,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0012T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0012T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0013T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0013T(params);
@@ -361,7 +364,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0013T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0013T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0014T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0014T(params);
@@ -370,7 +373,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0014T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0014T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0015T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0015T(params);
@@ -379,7 +382,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0015T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0015T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0016T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0016T(params);
@@ -388,7 +391,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0016T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0016T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0017T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0017T(params);
@@ -397,7 +400,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0017T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0017T(params);
 	}
-	
+
 	/* CT Calculation
 	@Override
 	public int cntCMM0018T(Map<String, Object> params) {
@@ -419,7 +422,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		}
 		return list;
 	}
-	
+
 	@Override
 	public int cntCMM0019T(Map<String, Object> params) {
 		int cnt =0;
@@ -440,7 +443,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		}
 		return list;
 	}
-	
+
 	@Override
 	public int cntCMM0020T(Map<String, Object> params) {
 		int cnt =0;
@@ -461,7 +464,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		}
 		return list;
 	}
-	
+
 	@Override
 	public int cntCMM0021T(Map<String, Object> params) {
 		int cnt =0;
@@ -482,7 +485,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		}
 		return list;
 	}*/
-	
+
 	@Override
 	public int cntCMM0018T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0018T(params);
@@ -491,7 +494,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0018T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0018T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0019T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0019T(params);
@@ -500,7 +503,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0019T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0019T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0020T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0020T(params);
@@ -509,7 +512,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0020T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0020T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0021T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0021T(params);
@@ -518,7 +521,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0021T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0021T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0022T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0022T(params);
@@ -527,7 +530,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0022T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0022T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0023T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0023T(params);
@@ -536,7 +539,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0023T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0023T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0024T(Map<String, Object> params) {
 		int cnt =0;
@@ -557,7 +560,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		}
 		return list;
 	}
-	
+
 	@Override
 	public int cntCMM0025T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0025T(params);
@@ -566,7 +569,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0025T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0025T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0026T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0026T(params);
@@ -575,7 +578,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0026T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0026T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0060T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0060T(params);
@@ -584,7 +587,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0060T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0060T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0067T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0067T(params);
@@ -593,7 +596,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0067T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0067T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0068T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0068T(params);
@@ -602,7 +605,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0068T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0068T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0069T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0069T(params);
@@ -611,7 +614,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0069T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0069T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0070T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0070T(params);
@@ -620,7 +623,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0070T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0070T(params);
 	}
-	
+
 	@Override
 	public int cntCMM0071T(Map<String, Object> params) {
 		return commissionCalculationMapper.cntCMM0071T(params);
@@ -629,11 +632,11 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> selectCMM0071T(Map<String, Object> params) {
 		return commissionCalculationMapper.selectCMM0071T(params);
 	}
-	
-	
+
+
 	/**
-	 * Basic Data Exclude Update 
-	 * 
+	 * Basic Data Exclude Update
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -735,8 +738,8 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 		commissionCalculationMapper.udtDataCMM0071T(params);
 	}
 
-	
-	
+
+
 	/**
      * Adjustment Code List
      */
@@ -744,7 +747,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public List<EgovMap> adjustmentCodeList(Map<String, Object> params) {
 		return commissionCalculationMapper.adjustmentCodeList(params);
 	}
-	
+
 	/**
      * Member Code info search
      */
@@ -752,7 +755,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public Map<String, Object> memberInfoSearch(Map<String, Object> params) {
 		return commissionCalculationMapper.memberInfoSearch(params);
 	}
-	
+
 	/**
      * order number info search
      */
@@ -760,7 +763,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public Map<String, Object> ordNoInfoSearch(Map<String, Object> params) {
 		return commissionCalculationMapper.ordNoInfoSearch(params);
 	}
-	
+
 	/**
      * adjustment Insert
      */
@@ -768,7 +771,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public void adjustmentInsert(Map<String, Object> params) {
 		commissionCalculationMapper.adjustmentInsert(params);
 	}
-	
+
 	/**
      * HP NeoPro insert
      */
@@ -776,29 +779,29 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public void neoProInsert(Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
 		int loginId = sessionVO.getUserId();
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
-    	
+
     	String dt = CommonUtils.getNowDate().substring(4,6)+"/"+CommonUtils.getNowDate().substring(0, 4);
-		
+
 		String pvMonth = dt.substring(0,2);
 		int pvYear = Integer.parseInt(dt.substring(3));
 		Map<String, Object> delMap = new HashMap<String, Object>();
 		delMap.put("pvYear", pvYear);
 		delMap.put("pvMonth", pvMonth);
 		commissionCalculationMapper.neoProDel(delMap);
-		
+
     	Map<String, Object> dataMap = null;
     	if(gridList.size() > 1){
     		for(int i=1; i<gridList.size(); i++){
     			Map<String, Object> csvMap = (Map<String, Object>) gridList.get(i);
     			dataMap = new HashMap<String, Object>();
-    			
+
     			if(csvMap.get("0") !=null && !("".equals((csvMap.get("0").toString()).trim()))){
         			String month= csvMap.get("2").toString();
         			month=month.length()<2?"0"+month:month;
         			String days= csvMap.get("3").toString();
         			days=days.length()<2?"0"+days:days;
         			String joinDt = csvMap.get("1")+""+month+""+days;
-        			
+
         			dataMap.put("hpCode", csvMap.get("0"));
         			dataMap.put("hpType", CommissionConstants.COMIS_NEO_TYPE);
         			dataMap.put("pvMonth", pvMonth);
@@ -806,43 +809,43 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
         			dataMap.put("loginId", loginId);
         			dataMap.put("joinDt", joinDt);
         			dataMap.put("isNw", csvMap.get("4"));
-        			
+
         			commissionCalculationMapper.neoProInsert(dataMap);
     			}
     		}
     	}
-		
+
 	}
-	
-	
+
+
 	/**
      * CT Upload insert
      */
 	@Override
 	public void ctUploadInsert(Map<String, ArrayList<Object>> params, SessionVO sessionVO) {
-		
-		
+
+
 		int loginId = sessionVO.getUserId();
-    	
+
 		List<Object> gridList = params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
-    	
+
 		String dt = CommonUtils.getCalMonth(-1);
 		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
-		
+
 		int pvMonth = Integer.parseInt(dt.substring(0,2));
 		int pvYear = Integer.parseInt(dt.substring(3));
-		
+
 		Map<String, Object> delMap = new HashMap<String, Object>();
 		delMap.put("fYear", pvYear);
 		delMap.put("fMonth", pvMonth);
 		commissionCalculationMapper.ctUploadDel(delMap);
-		
+
     	Map<String, Object> dataMap = null;
     	if(gridList.size() > 1){
     		for(int i=1; i<gridList.size(); i++){
     			Map<String, Object> csvMap = (Map<String, Object>) gridList.get(i);
     			dataMap = new HashMap<String, Object>();
-    			
+
     			if(csvMap.get("0") !=null && !("".equals((csvMap.get("0").toString()).trim()))){
     				dataMap.put("fBatchId", pvMonth+""+pvYear);
     				dataMap.put("fCtCode", csvMap.get("0"));
@@ -860,29 +863,29 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
     				dataMap.put("fCffRewrd", csvMap.get("4"));
     				dataMap.put("fYear", pvYear);
     				dataMap.put("fMonth", pvMonth);
-    				
+
     				commissionCalculationMapper.ctUploadInsert(dataMap);
     			}
     		}
     	}
-		
+
 	}
-	
+
 	@Override
 	public List<EgovMap> incentiveStatus(Map<String, Object> params) {
 		return commissionCalculationMapper.incentiveStatus(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> incentiveType(Map<String, Object> params) {
 		return commissionCalculationMapper.incentiveType(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> incentiveTargetList(Map<String, Object> params) {
 		return commissionCalculationMapper.incentiveTargetList(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> incentiveSample(Map<String, Object> params) {
 		return commissionCalculationMapper.incentiveSample(params);
@@ -907,17 +910,17 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public void callIncentiveDetail(int uploadId) {
 		commissionCalculationMapper.callIncentiveDetail(uploadId);
 	}
-	
+
 	@Override
 	 public Map<String, Object> incentiveMasterDetail(int uploadId){
 		return commissionCalculationMapper.incentiveMasterDetail(uploadId);
 	}
-	
+
 	@Override
 	 public int incentiveItemCnt(Map<String, Object> params){
 		return commissionCalculationMapper.incentiveItemCnt(params);
 	}
-	
+
 	@Override
 	public List<EgovMap> incentiveItemList(Map<String, Object> params) {
 		return commissionCalculationMapper.incentiveItemList(params);
@@ -927,7 +930,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public void removeIncentiveItem(Map<String, Object> params) {
 		commissionCalculationMapper.removeIncentiveItem(params);
 	}
-	
+
 	@Override
 	 public Map<String, Object> incentiveItemAddMem(Map<String, Object> params){
 		return commissionCalculationMapper.incentiveItemAddMem(params);
@@ -936,7 +939,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	 public int cntIncentiveMem(Map<String, Object> params){
 		return commissionCalculationMapper.cntIncentiveMem(params);
 	}
-	
+
 	@Override
 	 public int cntUploadMemberCheck(Map<String, Object> params){
 		return commissionCalculationMapper.cntUploadMemberCheck(params);
@@ -945,7 +948,7 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public Map<String, Object> incentiveUploadMember(Map<String, Object> params){
 		return commissionCalculationMapper.incentiveUploadMember(params);
 	}
-	
+
 	@Override
 	public void incentiveItemInsert(Map<String, Object> params){
 		commissionCalculationMapper.incentiveItemInsert(params);
@@ -958,30 +961,83 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public int deactivateCheck(String uploadId){
 		return commissionCalculationMapper.deactivateCheck(uploadId);
 	}
-	
+
 	@Override
 	public void incentiveDeactivate(Map<String, Object> params){
 		commissionCalculationMapper.incentiveDeactivate(params);
 	}
-	
+
 	@Override
 	public void callIncentiveConfirm(Map<String, Object> params){
 		commissionCalculationMapper.callIncentiveConfirm(params);
 	}
-	
+
 	@Override
 	 public List<EgovMap> runningPrdCheck(Map<String, Object> params){
 		return commissionCalculationMapper.runningPrdCheck(params);
 	}
-	
+
 	@Override
 	 public List<EgovMap> runPrdTimeValid(Map<String, Object> params){
 		return commissionCalculationMapper.runPrdTimeValid(params);
 	}
-	
+
 	@Override
 	public void prdBatchSuccessHistory(Map<String, Object> params){
 		commissionCalculationMapper.prdBatchSuccessHistory(params);
 	}
-	
+
+	@Override
+	public List<EgovMap> mboTargetList(Map<String, Object> params) {
+		return commissionCalculationMapper.mboTargetList(params);
+	}
+	@Override
+	public int mboActiveUploadBatch(Map<String, Object> params) {
+		return commissionCalculationMapper.mboActiveUploadBatch(params);
+	}
+	@Override
+	public void insertMboMaster(Map<String, Object> params) {
+		commissionCalculationMapper.insertMboMaster(params);
+	}
+
+	@Override
+	public void insertMboDetail(Map<String, Object> params) {
+		commissionCalculationMapper.insertMboDetail(params);
+	}
+
+	@Override
+	public int mboMasterUploadId() {
+		return commissionCalculationMapper.mboMasterUploadId();
+	}
+
+	@Override
+	public void callMboDetail(int uploadId) {
+		commissionCalculationMapper.callMboDetail(uploadId);
+	}
+
+	@Override
+	 public Map<String, Object> mboMasterDetail(int uploadId){
+		return commissionCalculationMapper.mboMasterDetail(uploadId);
+	}
+
+	@Override
+	 public int mboItemCnt(Map<String, Object> params){
+		return commissionCalculationMapper.mboItemCnt(params);
+	}
+
+	@Override
+	public List<EgovMap> mboItemList(Map<String, Object> params) {
+		return commissionCalculationMapper.mboItemList(params);
+	}
+
+	@Override
+	public void mboDeactivate(Map<String, Object> params){
+		commissionCalculationMapper.mboDeactivate(params);
+	}
+
+	@Override
+	public void callMboConfirm(Map<String, Object> params){
+		commissionCalculationMapper.callMboConfirm(params);
+	}
+
 }

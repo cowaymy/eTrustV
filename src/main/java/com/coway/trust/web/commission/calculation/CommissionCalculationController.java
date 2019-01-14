@@ -1,5 +1,5 @@
 /**
- * 
+ *
  */
 package com.coway.trust.web.commission.calculation;
 
@@ -39,10 +39,11 @@ import com.coway.trust.web.commission.CommissionConstants;
 
 import egovframework.rte.psl.dataaccess.util.EgovMap;
 
-/**
- * @author Yunseok_Jang
- *
- */
+/**************************************
+ * Author	Date				Remark
+ * Kit			2019/01/11		Add new function for MBO Upload
+ ***************************************/
+
 @Controller
 @RequestMapping(value = "/commission/calculation")
 public class CommissionCalculationController {
@@ -87,7 +88,7 @@ public class CommissionCalculationController {
 		// 호출될 화면
 		return "commission/commissionCalculationMng";
 	}
-	
+
 	/**
 	 * procedure Basic List Page call
 	 *
@@ -117,7 +118,7 @@ public class CommissionCalculationController {
 	@RequestMapping(value = "/selectCalculationList", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectCalculationList(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		List<EgovMap> itemList = null;
-		
+
 		if( (CommissionConstants.COMIS_ACTION_TYPE).equals(params.get("actionType").toString()) ){
 			params.put("mstId", CommissionConstants.COMIS_PRO_CD_A);
 			// 조회.
@@ -133,7 +134,7 @@ public class CommissionCalculationController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(itemList);
 	}
-	
+
 	/**
 	 * Basic List Select
 	 *
@@ -170,7 +171,7 @@ public class CommissionCalculationController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(map);
 	}
-	
+
 	private int taskIdCalculation(String prams){
 		String dt = "";
 		int sTaskID = 0;
@@ -179,48 +180,48 @@ public class CommissionCalculationController {
 		}else{
 			dt = String.valueOf(prams);
 		}
-		
+
 		int pvMonth = Integer.parseInt(dt.substring(0,2));
-		int pvYear = Integer.parseInt(dt.substring(3));		
-		
+		int pvYear = Integer.parseInt(dt.substring(3));
+
 		sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
-		
+
 		return sTaskID;
 	}
-	
+
 	@RequestMapping(value = "/runningPrdCheck", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> runningPrdCheck(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		ReturnMessage message = new ReturnMessage();
-		
+
 		params.put("stateId",CommissionConstants.COMIS_RUNNING);
 		if(CommissionConstants.COMIS_ACTION_TYPE.equals( params.get("actionType")) ){
 			params.put("mstId",CommissionConstants.COMIS_PRO_CD_A);
 		}else if(CommissionConstants.COMIS_SIMUL_TYPE.equals( params.get("actionType")) ){
 			params.put("mstId",CommissionConstants.COMIS_PRO_CD_S);
 		}
-		
+
 		List<EgovMap> map = commissionCalculationService.runningPrdCheck(params);
-		
+
 		message.setData(map);
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/runPrdTimeValid", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> runPrdTimeValid(@RequestParam Map<String, Object> params, ModelMap model, HttpServletRequest request) {
 		ReturnMessage message = new ReturnMessage();
-		
+
 		params.put("stateId",CommissionConstants.COMIS_RUNNING);
 		if(CommissionConstants.COMIS_ACTION_TYPE.equals( params.get("actionType")) ){
 			params.put("mstId",CommissionConstants.COMIS_PRO_CD_A);
 		}else if(CommissionConstants.COMIS_SIMUL_TYPE.equals( params.get("actionType")) ){
 			params.put("mstId",CommissionConstants.COMIS_PRO_CD_S);
 		}
-		
+
 		List<EgovMap> map = commissionCalculationService.runPrdTimeValid(params);
 		System.out.println(map);
 		message.setData(map);
-		
+
 		return ResponseEntity.ok(message);
 	}
 
@@ -239,42 +240,42 @@ public class CommissionCalculationController {
 		EgovMap item = new EgovMap();
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
-		
+
 		List<Object> gridList =  params.get(AppConstants.AUIGRID_ALL); // 그리드 데이터 가져오기
 		List<Object> formList =  params.get(AppConstants.AUIGRID_FORM); // 폼 객체 데이터 가져오기
-		
+
 		Map<String, Object> formMap = new HashMap<String, Object>();
-		
+
 		if (formList.size() > 0) {
-    		
+
     		formList.forEach(obj -> {
                 Map<String, Object> map = (Map<String, Object>) obj;
                 formMap.put((String)map.get("name"),map.get("value"));
-    		});    		
+    		});
     	}
 
 		/*
 		 * Date and taskId
 		 */
-		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());	
+		int sTaskID = taskIdCalculation(formMap.get("searchDt").toString());
 		Calendar calendar = Calendar.getInstance();
 		Date date = calendar.getTime();
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
 
-		
+
 		if (gridList.size() > 0) {
 			Map lMap = null; 		//log map
 			Map pMap = null;		//prceduar map
 			Map dMap = null;		//data Map
 			Map<String, Object> prdBatchMap = null;
 			Map<String, Object> prdMap = null;//procedual information map
-			
+
 			/*
 			 * call Procedure Log Insert
 			 */
 			String taskId = String.valueOf(sTaskID);
 			String searchDt = df.format(date);
-			
+
 			List<Object> prdList = new ArrayList();
 			for (Object map : gridList) {
 				lMap = (HashMap<String, Object>) map;
@@ -282,40 +283,40 @@ public class CommissionCalculationController {
 				lMap.put("taskId", taskId);
 				lMap.put("loginId", loginId);
 				prdBatchMap = new HashMap<String, Object>();
-				
-				prdBatchMap.put("state",CommissionConstants.COMIS_RUNNING); 
-				prdBatchMap.put("procedureNm",lMap.get("codeName")); 
-				prdBatchMap.put("cdds",lMap.get("cdds")); 
-				prdBatchMap.put("calState",lMap.get("calState")); 
-				prdBatchMap.put("calStartTime",lMap.get("calStartTime")); 
-				prdBatchMap.put("codeId", lMap.get("codeId").toString()); 
-				prdBatchMap.put("code",lMap.get("code")); 
+
+				prdBatchMap.put("state",CommissionConstants.COMIS_RUNNING);
+				prdBatchMap.put("procedureNm",lMap.get("codeName"));
+				prdBatchMap.put("cdds",lMap.get("cdds"));
+				prdBatchMap.put("calState",lMap.get("calState"));
+				prdBatchMap.put("calStartTime",lMap.get("calStartTime"));
+				prdBatchMap.put("codeId", lMap.get("codeId").toString());
+				prdBatchMap.put("code",lMap.get("code"));
 				prdBatchMap.put("mstId", CommissionConstants.COMIS_PRO_CD_A);
 				prdBatchMap.put("searchDt",lMap.get("searchDt"));
 				prdBatchMap.put("taskId", String.valueOf(sTaskID));
 				prdBatchMap.put("loginId", lMap.get("loginId"));
 				prdBatchMap.put("calYM", (formMap.get("searchDt").toString()).replace("/", ""));
 				prdBatchMap.put("actionType", formMap.get("actionType").toString());
-				int cnt = commissionCalculationService.callCommPrdLogIns(prdBatchMap); 
+				int cnt = commissionCalculationService.callCommPrdLogIns(prdBatchMap);
 			}
-			
+
 			/*
 			 * call Procedure success / fail update
 			 */
-			
+
 			int failCntTemp = 0;
 			for (Object map : gridList) {
 				pMap = (HashMap<String, Object>) map;
 				prdMap = new HashMap<String, Object>();
-				
+
 				prdMap.put("searchDt",searchDt);
 				prdMap.put("taskId", taskId);
 				prdMap.put("loginId", loginId);
 				prdMap.put("codeId", pMap.get("codeId"));
-				
+
 				List<EgovMap> logList = commissionCalculationService.selectCommRunningPrdLog(prdMap); //Running Data Select
-				
-				
+
+
 				prdMap.put("calSeq", logList.get(0).get("calSeq"));
 				prdMap.put("procedureNm", logList.get(0).get("calName"));
 				prdMap.put("startDt", logList.get(0).get("calStartTime"));
@@ -323,13 +324,13 @@ public class CommissionCalculationController {
 				String callDt = formMap.get("searchDt").toString();
 				callDt = callDt.substring(3,7)+callDt.substring(0,2)+"01";
 				prdMap.put("searchDt",callDt);
-				
+
 				if(failCntTemp >0){
 					prdMap.put("state",CommissionConstants.COMIS_FAIL_NEXT); //8:FAIL
 					failCntTemp = commissionCalculationService.callCommFailNextPrdLog(prdMap);
 				}else{
 					item = (EgovMap) commissionCalculationService.callCommProcedure(prdMap); // call proceduar
-					
+
     				if (CommissionConstants.COMIS_SUCCESS.equals(prdMap.get("v_result"))) {
     					prdMap.put("state",CommissionConstants.COMIS_SUCCESS); //0:SUCCESS
     					commissionCalculationService.callCommPrdLogUpdate(prdMap);
@@ -340,19 +341,19 @@ public class CommissionCalculationController {
     				}
 				}
 			}
-			
+
 			/*
-			 * batch success history 
+			 * batch success history
 			 */
 			if(failCntTemp == 0){
 				Map historyMap = new HashMap();
-				
+
 				String callDt = formMap.get("searchDt").toString();
 				historyMap.put("taskId", taskId);
 				historyMap.put("year", callDt.substring(3,7));
 				historyMap.put("month", callDt.substring(0,2));
 				historyMap.put("loginId", loginId);
-				
+
 				String empType= "";
 				if(CommissionConstants.COMIS_CD.equals(formMap.get("ItemGrCd").toString())){
 					empType = CommissionConstants.COMIS_CD_GRCD;
@@ -361,14 +362,14 @@ public class CommissionCalculationController {
 				}else if(CommissionConstants.COMIS_CT.equals(formMap.get("ItemGrCd").toString())){
 					empType = CommissionConstants.COMIS_CT_GRCD;
 				}
-				
+
 				historyMap.put("ItemGrCd", empType);
-				
+
 				commissionCalculationService.prdBatchSuccessHistory(historyMap);
 			}
-			
-		} 
-		
+
+		}
+
 
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
@@ -391,49 +392,49 @@ public class CommissionCalculationController {
 		// params, Model model) {
 		EgovMap item = new EgovMap();
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		int loginId = sessionVO.getUserId();          
+		int loginId = sessionVO.getUserId();
 		params.put("mstId", CommissionConstants.COMIS_PRO_CD_A);
-		
+
 		/*
 		 * Date and taskId
 		 */
-		Calendar calendar = Calendar.getInstance();	
+		Calendar calendar = Calendar.getInstance();
 		Date date = calendar.getTime();
 		SimpleDateFormat df = new SimpleDateFormat("yyyyMMdd", Locale.getDefault(Locale.Category.FORMAT));
-		
-		int sTaskID = taskIdCalculation(params.get("searchDt").toString());	
+
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		String callDt = params.get("searchDt").toString();
 		callDt = callDt.substring(3,7)+callDt.substring(0,2)+"01";
-		
+
 		params.put("calYM", (params.get("searchDt").toString()).replace("/", ""));
 		params.put("searchDt",callDt);
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("loginId", loginId);
 		params.put("state",CommissionConstants.COMIS_RUNNING); //1:Running
 		params.put("actionType", params.get("actionType").toString());
-		
+
 		/*
 		 * call Procedure List
 		 */
-		int cnt = commissionCalculationService.callCommPrdLogIns(params); 
-		
+		int cnt = commissionCalculationService.callCommPrdLogIns(params);
+
 		List<EgovMap> logList = commissionCalculationService.selectCommRunningPrdLog(params); //Running Data Select
 		for(int i=0; i<logList.size();i++){
 			params.put("calSeq", logList.get(i).get("calSeq"));
 			params.put("calName", logList.get(i).get("calName"));
 			params.put("startDt", logList.get(i).get("calStartTime"));
 		}
-		
+
 		item = (EgovMap) commissionCalculationService.callCommProcedure(params);
 		logger.debug("params : {}", params);
 		logger.debug("v_result : {}", params.get("v_result"));
 		logger.debug("v_sqlcode : {}", params.get("v_sqlcode"));
 		logger.debug("v_sqlcont : {}", params.get("v_sqlcont"));
-		
+
 		if (params.get("v_result").equals(CommissionConstants.COMIS_SUCCESS)) {
 			params.put("state",CommissionConstants.COMIS_SUCCESS); //0:SUCCESS
 			commissionCalculationService.callCommPrdLogUpdate(params);
-			
+
 			if("Y".equals( params.get("lastLine") )){
 				String empType= "";
 				if(CommissionConstants.COMIS_CD.equals(params.get("ItemGrCd").toString())){
@@ -446,23 +447,23 @@ public class CommissionCalculationController {
 				params.put("ItemGrCd", empType);
 				params.put("year", callDt.substring(0,4));
 				params.put("month", callDt.substring(4,6));
-				
+
 				commissionCalculationService.prdBatchSuccessHistory(params);
 			}
 		} else {
 			params.put("state",CommissionConstants.COMIS_FAIL); //9:FAIL
 			commissionCalculationService.callCommPrdLogUpdate(params);
 		}
-		
+
 		// 결과 만들기.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
 		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
 		return ResponseEntity.ok(message);
 	}
-	
-	
-	
+
+
+
 	/**
 	 * procedure Calculation Log Pop
 	 *
@@ -491,8 +492,8 @@ public class CommissionCalculationController {
 		// 호출될 화면
 		return "commission/commissionCalculationLogPop";
 	}
-	
-	
+
+
 	/**
 	 * procedure Log Select
 	 *
@@ -508,9 +509,9 @@ public class CommissionCalculationController {
 		// 호출될 화면
 		return ResponseEntity.ok(logList);
 	}
-	
-	
-	
+
+
+
 	/*********************************************************************************************
 	 * calculation Data Pop
 	 *
@@ -524,21 +525,21 @@ public class CommissionCalculationController {
 		params.put("mstId", CommissionConstants.COMIS_EMP_CD);
 		List<EgovMap> orgGrList = commissionCalculationService.selectOrgGrList(params);
 		model.addAttribute("orgGrList", orgGrList);
-				
-		
+
+
 		model.addAttribute("codeId", params.get("codeId"));
 		model.addAttribute("prdNm", params.get("prdNm"));
 		model.addAttribute("prdDec", params.get("prdDec"));
 		model.addAttribute("code", params.get("code"));
 		model.addAttribute("searchDt_pop", params.get("searchDt"));
 		model.addAttribute("actionType", params.get("actionType"));
-		
+
 		Date date = new Date();
 		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
-		String today = df.format(date);	
-		
+		String today = df.format(date);
+
 		model.addAttribute("today", today);
-		
+
 		String popName= "";
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01)){
 			popName = "calculationData7001CTL_Pop";
@@ -569,7 +570,7 @@ public class CommissionCalculationController {
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPT_P01)){
 			popName = "calculationData7001HPT_Pop";
 		}
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P02)){
 			popName = "calculationData7002CTL_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P02)) {
@@ -601,13 +602,13 @@ public class CommissionCalculationController {
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P02)){
 			popName = "calculationData7002HPB_Pop";
 		}
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P01)){
 			popName = "calculationData0016T_Pop";
 		}else if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P03)){
 			popName = "calculationData0024T_Pop";
 		}
-		
+
 		// 호출될 화면
 		if(popName != null && !"".equals(popName)){
 			return "commission/"+popName;
@@ -615,8 +616,8 @@ public class CommissionCalculationController {
 			return null;
 		}
 	}
-	
-	
+
+
 	/**
 	 * Search CT Data 7001
 	 *
@@ -627,21 +628,21 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/selectData7001CT")
 	public ResponseEntity<List<EgovMap>> selectData7001CT(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		int sTaskID = taskIdCalculation(params.get("searchDt").toString());	
-		
+
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_CT);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CT_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTL_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTM_LEV);
-		
+
 		List<EgovMap> dataList = commissionCalculationService.selectData7001(params);
-		
+
 		return ResponseEntity.ok(dataList);
 	}
 	@RequestMapping(value = "/cntData7001CT")
@@ -655,7 +656,7 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTL_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTM_LEV);
-		
+
 		int cnt = commissionCalculationService.cntCMM0028D(params);
 		return ResponseEntity.ok(cnt);
 	}
@@ -669,21 +670,21 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/selectData7002CT")
 	public ResponseEntity<List<EgovMap>> selectData7002CT(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
-		
+
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_CT);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CT_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTL_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTM_LEV);
-		
+
 		List<EgovMap> dataList = commissionCalculationService.selectData7002(params);
-		
+
 		return ResponseEntity.ok(dataList);
 	}
 	@RequestMapping(value = "/cntData7002CT")
@@ -691,18 +692,18 @@ public class CommissionCalculationController {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_CT);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTR_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CT_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTL_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTL_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CTM_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CT_CTM_LEV);
-		
+
 		int cnt = commissionCalculationService.cntCMM0029D(params);
 		return ResponseEntity.ok(cnt);
 	}
-	
+
 	/**
 	 * Search CD Data 7001
 	 *
@@ -713,13 +714,13 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/selectData7001CD")
 	public ResponseEntity<List<EgovMap>> selectData7001CD(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
-		
+
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("isExclude", 0);
 		params.put("codeGruop", CommissionConstants.COMIS_CD);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P01) ){
 			params.put("emplyLev", CommissionConstants.COMIS_CD_CD_LEV);
 			params.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
@@ -734,9 +735,9 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_CD_SCM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDG_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CD_GCM_LEV);
-		
+
 		List<EgovMap> dataList = commissionCalculationService.selectData7001(params);
-		
+
 		return ResponseEntity.ok(dataList);
 	}
 	@RequestMapping(value = "/cntData7001CD")
@@ -744,7 +745,7 @@ public class CommissionCalculationController {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_CD);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P01) ){
 			params.put("emplyLev", CommissionConstants.COMIS_CD_CD_LEV);
 			params.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
@@ -755,16 +756,16 @@ public class CommissionCalculationController {
 		}
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDM_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_CD_CM_LEV);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDS_P01)){
 			params.put("emplyLev", CommissionConstants.COMIS_CD_SCM_LEV);
 		}
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDG_P01)){
 			params.put("emplyLev", CommissionConstants.COMIS_CD_GCM_LEV);
 		}
-			
-		
+
+
 		int cnt = commissionCalculationService.cntCMM0028D(params);
 		return ResponseEntity.ok(cnt);
 	}
@@ -778,13 +779,13 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/selectData7002CD")
 	public ResponseEntity<List<EgovMap>> selectData7002CD(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
-		
+
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("isExclude", 0);
 		params.put("codeGruop", CommissionConstants.COMIS_CD);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P02) ){
 			params.put("emplyLev", CommissionConstants.COMIS_CD_CD_LEV);
 			params.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
@@ -797,13 +798,13 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_CD_CM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDS_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CD_SCM_LEV);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDG_P02)){
 			params.put("emplyLev", CommissionConstants.COMIS_CD_GCM_LEV);
 		}
-		
+
 		List<EgovMap> dataList = commissionCalculationService.selectData7002(params);
-		
+
 		return ResponseEntity.ok(dataList);
 	}
 	@RequestMapping(value = "/cntData7002CD")
@@ -811,7 +812,7 @@ public class CommissionCalculationController {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_CD);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDC_P02) ){
 			params.put("emplyLev", CommissionConstants.COMIS_CD_CD_LEV);
 			params.put("bizType", CommissionConstants.COMIS_CD_CDC_BIZTYPE);
@@ -824,11 +825,11 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_CD_CM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDS_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_CD_SCM_LEV);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_CDG_P02)){
 			params.put("emplyLev", CommissionConstants.COMIS_CD_GCM_LEV);
 		}
-		
+
 		int cnt = commissionCalculationService.cntCMM0029D(params);
 		return ResponseEntity.ok(cnt);
 	}
@@ -842,13 +843,13 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/selectData7001HP")
 	public ResponseEntity<List<EgovMap>> selectData7001HP(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		int sTaskID = taskIdCalculation(params.get("searchDt").toString());	
-		
+
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("isExclude", 0);
 		params.put("codeGruop", CommissionConstants.COMIS_HP);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPF_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_HP_HP_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPG_P01))
@@ -859,10 +860,10 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_HP_SM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPT_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_HP_SGM_LEV);
-		
-		
+
+
 		List<EgovMap> dataList = commissionCalculationService.selectData7001(params);
-		
+
 		return ResponseEntity.ok(dataList);
 	}
 	@RequestMapping(value = "/cntData7001HP")
@@ -870,7 +871,7 @@ public class CommissionCalculationController {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_HP);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPF_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_HP_HP_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPG_P01))
@@ -881,7 +882,7 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_HP_SM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPT_P01))
 			params.put("emplyLev", CommissionConstants.COMIS_HP_SGM_LEV);
-		
+
 		int cnt = commissionCalculationService.cntCMM0028D(params);
 		return ResponseEntity.ok(cnt);
 	}
@@ -895,13 +896,13 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/selectData7002HP")
 	public ResponseEntity<List<EgovMap>> selectData7002HP(@RequestParam Map<String, Object> params, ModelMap model) {
-		
-		int sTaskID = taskIdCalculation(params.get("searchDt").toString());		
-		
+
+		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
+
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("isExclude", 0);
 		params.put("codeGruop", CommissionConstants.COMIS_HP);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPF_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_HP_HP_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPG_P02))
@@ -914,10 +915,10 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_HP_SGM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_HP_HP_LEV);
-		
-		
+
+
 		List<EgovMap> dataList = commissionCalculationService.selectData7002(params);
-		
+
 		return ResponseEntity.ok(dataList);
 	}
 	@RequestMapping(value = "/cntData7002HP")
@@ -925,7 +926,7 @@ public class CommissionCalculationController {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", String.valueOf(sTaskID));
 		params.put("codeGruop", CommissionConstants.COMIS_HP);
-		
+
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPF_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_HP_HP_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPG_P02))
@@ -938,12 +939,12 @@ public class CommissionCalculationController {
 			params.put("emplyLev", CommissionConstants.COMIS_HP_SGM_LEV);
 		if((params.get("code")).equals(CommissionConstants.COMIS_HPB_P02))
 			params.put("emplyLev", CommissionConstants.COMIS_HP_HP_LEV);
-		
+
 		int cnt = commissionCalculationService.cntCMM0029D(params);
 		return ResponseEntity.ok(cnt);
 	}
-	
-	
+
+
 	/*********************************************************************************************
 	 * Basic Data Pop
 	 *
@@ -957,20 +958,20 @@ public class CommissionCalculationController {
 		params.put("mstId", CommissionConstants.COMIS_EMP_CD);
 		List<EgovMap> orgGrList = commissionCalculationService.selectOrgGrList(params);
 		model.addAttribute("orgGrList", orgGrList);
-		
+
 		String code = params.get("codeId").toString();
 		params.put("code", code);
 		model.addAttribute("code", params.get("code"));
 		model.addAttribute("prdNm", params.get("prdNm"));
 		model.addAttribute("prdDec", params.get("prdDec"));
 		model.addAttribute("searchDt_pop", params.get("searchDt"));
-		
+
 		Date date = new Date();
 		SimpleDateFormat df = new SimpleDateFormat("ddMMyyyy", Locale.getDefault(Locale.Category.FORMAT));
-		String today = df.format(date);	
-		
+		String today = df.format(date);
+
 		model.addAttribute("today", today);
-		
+
 		String popName= "";
 		if((params.get("code")).equals(CommissionConstants.COMIS_BSD_P01)){
 			popName = "calculationData0006T_Pop";
@@ -1028,78 +1029,78 @@ public class CommissionCalculationController {
 		// 호출될 화면
 		return "commission/"+popName;
 	}
-	
-	
+
+
 	@RequestMapping(value = "/cntCMM0006T")
 	public ResponseEntity<Integer> cntCMM0006T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0006T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0007T")
 	public ResponseEntity<Integer> cntCMM0007T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0007T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0008T")
 	public ResponseEntity<Integer> cntCMM0008T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0008T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0009T")
 	public ResponseEntity<Integer> cntCMM0009T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0009T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0010T")
 	public ResponseEntity<Integer> cntCMM0010T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0010T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0011T")
 	public ResponseEntity<Integer> cntCMM0011T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0011T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0012T")
 	public ResponseEntity<Integer> cntCMM0012T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0012T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0013T")
 	public ResponseEntity<Integer> cntCMM0013T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0013T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0014T")
 	public ResponseEntity<Integer> cntCMM0014T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0014T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0015T")
 	public ResponseEntity<Integer> cntCMM0015T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0015T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0016T")
 	public ResponseEntity<Integer> cntCMM0016T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
@@ -1114,7 +1115,7 @@ public class CommissionCalculationController {
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0017T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0018T")
 	public ResponseEntity<Integer> cntCMM0018T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
@@ -1149,14 +1150,14 @@ public class CommissionCalculationController {
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0022T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0023T")
 	public ResponseEntity<Integer> cntCMM0023T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0023T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0024T")
 	public ResponseEntity<Integer> cntCMM0024T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
@@ -1170,55 +1171,55 @@ public class CommissionCalculationController {
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0025T(params);
 		return ResponseEntity.ok(cnt);
-	}	
+	}
 	@RequestMapping(value = "/cntCMM0026T")
 	public ResponseEntity<Integer> cntCMM0026T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0026T(params);
 		return ResponseEntity.ok(cnt);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/cntCMM0060T")
 	public ResponseEntity<Integer> cntCMM0060T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0060T(params);
 		return ResponseEntity.ok(cnt);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/cntCMM0067T")
 	public ResponseEntity<Integer> cntCMM0067T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0067T(params);
 		return ResponseEntity.ok(cnt);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/cntCMM0068T")
 	public ResponseEntity<Integer> cntCMM0068T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0068T(params);
 		return ResponseEntity.ok(cnt);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/cntCMM0069T")
 	public ResponseEntity<Integer> cntCMM0069T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0069T(params);
 		return ResponseEntity.ok(cnt);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/cntCMM0070T")
 	public ResponseEntity<Integer> cntCMM0070T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
 		params.put("taskId", sTaskID);
 		int cnt = commissionCalculationService.cntCMM0070T(params);
 		return ResponseEntity.ok(cnt);
-	}	
-	
+	}
+
 	@RequestMapping(value = "/cntCMM0071T")
 	public ResponseEntity<Integer> cntCMM0071T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
@@ -1226,9 +1227,9 @@ public class CommissionCalculationController {
 		int cnt = commissionCalculationService.cntCMM0071T(params);
 		return ResponseEntity.ok(cnt);
 	}
-	
-	
-	
+
+
+
 	@RequestMapping(value = "/selectDataCMM006T")
 	public ResponseEntity<List<EgovMap>> selectDataCMM006T(@RequestParam Map<String, Object> params, ModelMap model) {
 		int sTaskID = taskIdCalculation(params.get("searchDt").toString());
@@ -1418,7 +1419,7 @@ public class CommissionCalculationController {
 		List<EgovMap> dataList = commissionCalculationService.selectCMM0071T(params);
 		return ResponseEntity.ok(dataList);
 	}
-	
+
 	/**
 	 * Use Map and Edit Grid Insert,Update,Delete
 	 *
@@ -1431,12 +1432,12 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_06T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0006T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1444,17 +1445,17 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_07T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_07T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0007T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1462,17 +1463,17 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_08T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_08T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0008T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1480,12 +1481,12 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_09T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_09T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0009T(cMap);
@@ -1498,12 +1499,12 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_10T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_10T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0010T(cMap);
@@ -1516,12 +1517,12 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_11T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_11T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0011T(cMap);
@@ -1538,7 +1539,7 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_12T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0012T(cMap);
@@ -1555,7 +1556,7 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_13T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0013T(cMap);
@@ -1572,7 +1573,7 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_14T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0014T(cMap);
@@ -1589,7 +1590,7 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_15T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0015T(cMap);
@@ -1606,7 +1607,7 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_17T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0017T(cMap);
@@ -1619,12 +1620,12 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_18T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_18T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0018T(cMap);
@@ -1637,12 +1638,12 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_19T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_19T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0019T(cMap);
@@ -1655,12 +1656,12 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_20T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_20T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0020T(cMap);
@@ -1677,7 +1678,7 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_21T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0021T(cMap);
@@ -1694,12 +1695,12 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_22T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0022T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1711,12 +1712,12 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_23T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0023T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1728,12 +1729,12 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_25T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0026T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1745,12 +1746,12 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_60T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0060T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1762,12 +1763,12 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_67T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0067T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1779,12 +1780,12 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> updatePrdData_68T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0068T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1792,17 +1793,17 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_69T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_69T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0069T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1810,17 +1811,17 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_70T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_70T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0070T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1828,17 +1829,17 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/updatePrdData_71T.do", method = RequestMethod.POST)
 	public ResponseEntity<ReturnMessage> updatePrdData_71T(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map cMap = null;
-		
+
 		for (Object map : checkList) {
 			cMap = (HashMap<String, Object>) map;
 			commissionCalculationService.udtDataCMM0071T(cMap);
 		}
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -1846,32 +1847,32 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
-	
-	
+
+
+
 	@RequestMapping(value = "/commAdjustment.do")
 	public String commAdjustment(@RequestParam Map<String, Object> params, ModelMap model) {
 		params.put("mstId",CommissionConstants.COMIS_ADJUST_CD);
 		List<EgovMap> adjustList = commissionCalculationService.adjustmentCodeList(params);
 		model.addAttribute("adjustList", adjustList);
-		
+
 		// 호출될 화면
 		return "commission/commissionAdjustment";
 	}
-	
+
 	@RequestMapping(value = "/memberInfoSearch")
 	public ResponseEntity<Map> memberExistence(@RequestParam Map<String, Object> params, ModelMap model) {
 		Map<String, Object> memInfo = commissionCalculationService.memberInfoSearch(params);
 		return ResponseEntity.ok(memInfo);
 	}
-	
+
 	@RequestMapping(value = "/saveAdjustment")
 	public ResponseEntity<ReturnMessage> saveAdjustment(@RequestParam Map<String, Object> params, ModelMap model) {
 		ReturnMessage message = new ReturnMessage();
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
-		int loginId = sessionVO.getUserId();          
+		int loginId = sessionVO.getUserId();
 		params.put("loginId", loginId);
-		
+
 		String ordId ="0";
 		try{
 			Map<String, Object> ordNoInfo = commissionCalculationService.ordNoInfoSearch(params);
@@ -1879,25 +1880,25 @@ public class CommissionCalculationController {
 		}catch(Exception e){
 			 ordId = "0";
 		}
-		
+
 		params.put("ordId",ordId);
-		
+
 		int sTaskID = 0;
-		
+
 		String dt = CommonUtils.getCalMonth(-1);
 		dt = dt.substring(4,6) + "/" + dt.substring(0, 4);
-		
+
 		int pvMonth = Integer.parseInt(dt.substring(0,2));
 		int pvYear = Integer.parseInt(dt.substring(3));
-		
+
 		sTaskID = (((pvMonth) + (pvYear) * 12) - 24157);
-		
+
 		params.put("aMonth",pvMonth);
 		params.put("aYear",pvYear);
 		params.put("taskId",sTaskID);
-		
+
 		//params : {memId=8393, adjustmentType=900, memCode=508023, ordNo=0410694, adjustmentAmt=, adjustmentDesc=, ordId=64244, aMonth=8, aYear=2017, taskId=55}
-		
+
 		try{
 			commissionCalculationService.adjustmentInsert(params);
 			message.setCode(AppConstants.SUCCESS);
@@ -1905,17 +1906,17 @@ public class CommissionCalculationController {
 		}catch(Exception e){
 			message.setMessage("Error Insert!");
 		}
-		
+
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	@RequestMapping(value = "/commNeoUpload.do")
 	public String commNeoUpload(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "commission/commissionNeoProUpload";
 	}
-	
+
 	/**
 	 * EnrollResultNew업로드
 	 * @param Map
@@ -1927,24 +1928,24 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> neoUploadFile(
 			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
 		String message = "";
-		
+
 		// 결과 만들기.
     	ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
-		
+
 		commissionCalculationService.neoProInsert(params,sessionVO);
 		message = AppConstants.MSG_SUCCESS;
-		
+
 		msg.setMessage(message);
         return ResponseEntity.ok(msg);
 	}
-	
+
 	@RequestMapping(value = "/commCTUpload.do")
 	public String commCTUpload(@RequestParam Map<String, Object> params, ModelMap model) {
 		// 호출될 화면
 		return "commission/commissionCTUpload";
 	}
-	
+
 	/**
 	 * EnrollResultNew업로드
 	 * @param Map
@@ -1956,18 +1957,18 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> ctUploadFile(
 			@RequestBody Map<String, ArrayList<Object>> params, ModelMap model, SessionVO sessionVO) {
 		String message = "";
-		
+
 		// 결과 만들기.
     	ReturnMessage msg = new ReturnMessage();
     	msg.setCode(AppConstants.SUCCESS);
-		
+
 		commissionCalculationService.ctUploadInsert(params, sessionVO);
     	message = AppConstants.MSG_SUCCESS;
-    	
+
 		msg.setMessage(message);
         return ResponseEntity.ok(msg);
 	}
-	
+
 	/**
 	 * Incentive Target Upload Pop
 	 * @param params
@@ -1979,7 +1980,7 @@ public class CommissionCalculationController {
 		// 호출될 화면
 		return "commission/commissionIncentiveTargetUpload";
 	}
-	
+
 	/**
 	 * search Member Type List
 	 * @param params
@@ -2005,9 +2006,9 @@ public class CommissionCalculationController {
 		List statusList = commissionCalculationService.incentiveStatus(params);
 		return ResponseEntity.ok(statusList);
 	}
-	
+
 	/**
-	 * select incentive target list 
+	 * select incentive target list
 	 * @param params
 	 * @param model
 	 * @param request
@@ -2015,11 +2016,11 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/selectIncentiveTargetList", method = RequestMethod.POST)
 	public ResponseEntity<List<EgovMap>> selectIncentiveTargetList(@RequestBody Map<String, Object> params, ModelMap model, HttpServletRequest request) {
-		
+
 		List<Object> type = (List<Object>) params.get("typeList");
 		List<Object> memberType = (List<Object>) params.get("memberTypeList");
 		List<Object> status = (List<Object>) params.get("statusList");
-		
+
 		//TODO 조건 변경하기.
 		if(type !=null){
 			String typeTemp ="";
@@ -2048,7 +2049,7 @@ public class CommissionCalculationController {
 		// 데이터 리턴.
 		return ResponseEntity.ok(itemList);
 	}
-	
+
 	/**
 	 * incentive target upload new pop
 	 * @param params
@@ -2062,9 +2063,9 @@ public class CommissionCalculationController {
 		// 호출될 화면
 		return "commission/commissionIncentiveTargetUploadNewPop";
 	}
-	
+
 	/**
-	 * Incentive Upload Sample Pop 
+	 * Incentive Upload Sample Pop
 	 * @param params
 	 * @param model
 	 * @return
@@ -2074,7 +2075,7 @@ public class CommissionCalculationController {
 		// 호출될 화면
 		return "commission/commissionIncentiveUploadSamplePop";
 	}
-	
+
 	/**
 	 * Sample HP List
 	 * @param params
@@ -2101,7 +2102,7 @@ public class CommissionCalculationController {
 		// 호출될 화면
 		return ResponseEntity.ok(sampleList);
 	}
-	
+
 	/**
 	 * Csv File Overlap Count Search
 	 * @param params
@@ -2113,8 +2114,8 @@ public class CommissionCalculationController {
 		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);
 		int cnt = commissionCalculationService.cntUploadBatch(params);
 		return ResponseEntity.ok(cnt);
-	}	
-	
+	}
+
 	/**
 	 * incentive Confirm pop
 	 * @param params
@@ -2125,28 +2126,28 @@ public class CommissionCalculationController {
 	public String commIncentiveConfirm(@RequestParam Map<String, Object> params, ModelMap model) {
 		Map detail = commissionCalculationService.incentiveMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
 		model.addAttribute("detail", detail);
-		
+
 		Map map = new HashMap<>();
 		map.put("uploadId", params.get("uploadId"));
-		
+
 		int totalCnt = commissionCalculationService.incentiveItemCnt(map);
 		model.addAttribute("totalCnt", totalCnt);
-		
+
 		map.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
 		int totalValid = commissionCalculationService.incentiveItemCnt(map);
 		model.addAttribute("totalValid", totalValid);
-		
+
 		map.put("vStusId", CommissionConstants.COMIS_INCENTIVE_INVALID);
 		int totalInvalid = commissionCalculationService.incentiveItemCnt(map);
 		model.addAttribute("totalInvalid", totalInvalid);
-		
+
 		model.addAttribute("uploadId", params.get("uploadId"));
 		model.addAttribute("typeId", params.get("typeId"));
-		
+
 		// 호출될 화면
 		return "commission/commissionIncentiveConfirmPop";
 	}
-	
+
 	/**
 	 * incentive valid / invalid list search
 	 * @param params
@@ -2156,11 +2157,11 @@ public class CommissionCalculationController {
 	@RequestMapping(value = "/incentiveItemList")
 	public ResponseEntity<List<EgovMap>> incentiveItemList(@RequestParam Map<String, Object> params, ModelMap model) {
 		List itemList = commissionCalculationService.incentiveItemList(params);
-		
+
 		// 호출될 화면
 		return ResponseEntity.ok(itemList);
 	}
-	
+
 	/**
 	 * remove incentive item update
 	 * @param params
@@ -2171,33 +2172,33 @@ public class CommissionCalculationController {
 	public ResponseEntity<ReturnMessage> removeIncentiveItem(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
 		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
 		int loginId = sessionVO.getUserId();
-		
+
 		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
 		Map iMap = null;
-		
+
 		for (Object map : checkList) {
 			iMap = (HashMap<String, Object>) map;
 			iMap.put("statusId", CommissionConstants.COMIS_INCENTIVE_REMOVE);
 			iMap.put("loginId", loginId);
-			
+
 			if( "1".equals(iMap.get("remove")) ){
 				commissionCalculationService.removeIncentiveItem(iMap);;
 			}
 		}
 		Map cntMap = new HashMap();
 		cntMap.put("uploadId", iMap.get("uploadId"));
-		
+
 		int totalCnt = commissionCalculationService.incentiveItemCnt(cntMap);
 		cntMap.put("totalCnt", totalCnt);
-		
+
 		cntMap.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
 		int totalValid = commissionCalculationService.incentiveItemCnt(cntMap);
 		cntMap.put("totalValid", totalValid);
-		
+
 		cntMap.put("vStusId", CommissionConstants.COMIS_INCENTIVE_INVALID);
 		int totalInvalid = commissionCalculationService.incentiveItemCnt(cntMap);
 		cntMap.put("totalInvalid", totalInvalid);
-		
+
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.SUCCESS);
@@ -2206,7 +2207,7 @@ public class CommissionCalculationController {
 
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
 	 * incentive item add pop
 	 * @param params
@@ -2221,16 +2222,16 @@ public class CommissionCalculationController {
 		// 호출될 화면
 		return "commission/commissionIncentiveAddItemPop";
 	}
-	
-	
+
+
 	@RequestMapping(value = "/incentiveItemValid", method = RequestMethod.GET)
 	public ResponseEntity<ReturnMessage> incentiveItemValid(@RequestParam Map<String, Object> params, Model model) {
 		// 결과 만들기 예.
 		ReturnMessage message = new ReturnMessage();
 		message.setCode(AppConstants.FAIL);
-		
+
 		String msg = "";
-		
+
 		Map memMap = commissionCalculationService.incentiveItemAddMem(params);
 		if(memMap.get("MEM_CODE") == null || "".equals(memMap.get("MEM_CODE"))){
 			msg = "Invalid member.";
@@ -2256,15 +2257,15 @@ public class CommissionCalculationController {
             	msg="Invalid member type.";
             }
 		}
-		
-		
-		
+
+
+
 		message.setMessage(msg);
 
 		return ResponseEntity.ok(message);
 	}
-	
-	
+
+
 	/**
 	 * incentive member info search
 	 * @param params
@@ -2290,7 +2291,7 @@ public class CommissionCalculationController {
 		int totalValid = commissionCalculationService.cntIncentiveMem(params);
 		return ResponseEntity.ok(totalValid);
 	}	*/
-	
+
 	/**
 	 * incentive item insert
 	 * @param params
@@ -2304,46 +2305,46 @@ public class CommissionCalculationController {
 		ReturnMessage msg = new ReturnMessage();
 		msg.setCode(AppConstants.SUCCESS);
 		int loginId = sessionVO.getUserId();
-		
+
 		params.put("loginId", loginId);
 		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);
 		params.put("vStatusId", CommissionConstants.COMIS_INCENTIVE_VALID);
 		int memCnt = commissionCalculationService.cntUploadMemberCheck(params);
-		
+
 		if(memCnt > 0){
 			//update
 			Map memMap = commissionCalculationService.incentiveUploadMember(params);
-			
+
 			params.put("updateDetId", memMap.get("UPLOAD_DET_ID"));
-			
+
 			commissionCalculationService.incentiveItemUpdate(params);
 		}else{
 			//insert
 			commissionCalculationService.incentiveItemInsert(params);
 		}
-		
-		
+
+
 		params.put("vStusId", null);
 		int totalCnt = commissionCalculationService.incentiveItemCnt(params);
 		params.put("totalCnt", totalCnt);
-		
+
 		params.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
 		int totalValid = commissionCalculationService.incentiveItemCnt(params);
 		params.put("totalValid", totalValid);
-		
+
 		params.put("vStusId", CommissionConstants.COMIS_INCENTIVE_INVALID);
 		int totalInvalid = commissionCalculationService.incentiveItemCnt(params);
 		params.put("totalInvalid", totalInvalid);
-		
-		
+
+
 		// 결과 만들기.
     	message = AppConstants.MSG_SUCCESS;
-    	
+
 		msg.setMessage(message);
 		msg.setData(params);
         return ResponseEntity.ok(msg);
 	}
-	
+
 	/**
 	 * incentive view pop
 	 * @param params
@@ -2352,29 +2353,29 @@ public class CommissionCalculationController {
 	 */
 	@RequestMapping(value = "/commIncntivViewPop.do")
 	public String commIncntivViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
-		
+
 		Map detail = commissionCalculationService.incentiveMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
 		model.addAttribute("detail", detail);
-		
+
 		Map map = new HashMap<>();
 		map.put("uploadId", params.get("uploadId"));
-		
+
 		int totalCnt = commissionCalculationService.incentiveItemCnt(map);
 		model.addAttribute("totalCnt", totalCnt);
-		
+
 		map.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
 		int totalValid = commissionCalculationService.incentiveItemCnt(map);
 		model.addAttribute("totalValid", totalValid);
-		
+
 		map.put("vStusId", CommissionConstants.COMIS_INCENTIVE_INVALID);
 		int totalInvalid = commissionCalculationService.incentiveItemCnt(map);
 		model.addAttribute("totalInvalid", totalInvalid);
-		
+
 		model.addAttribute("uploadId", params.get("uploadId"));
 		// 호출될 화면
 		return "commission/commissionIncentiveViewPop";
 	}
-	
+
 	/**
 	 * deactivate Check
 	 * @param params
@@ -2385,8 +2386,8 @@ public class CommissionCalculationController {
 	public ResponseEntity<Integer> deactivateCheck(@RequestParam Map<String, Object> params, ModelMap model) {
 		int cnt = commissionCalculationService.deactivateCheck(params.get("uploadId").toString());
 		return ResponseEntity.ok(cnt);
-	}	
-	
+	}
+
 	/**
 	 * incentive Deactivate Update
 	 * @param params
@@ -2402,12 +2403,12 @@ public class CommissionCalculationController {
 		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_REMOVE);
 
 		commissionCalculationService.incentiveDeactivate(params);
-		
+
 		return ResponseEntity.ok(message);
 	}
-	
+
 	/**
-	 * incentive confirm 
+	 * incentive confirm
 	 * @param params
 	 * @param model
 	 * @return
@@ -2420,16 +2421,160 @@ public class CommissionCalculationController {
 		params.put("loginId", loginId);
 
 		commissionCalculationService.callIncentiveConfirm(params);
-		
+
 		String msg = null;
 		if(params.get("v_sqlcode") != null)
 			msg = "("+ params.get("v_sqlcode") +")"+ params.get("v_sqlcont");
 		System.out.println("##msg : "+msg);
 		Map detail = commissionCalculationService.incentiveMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
-		
+
 		message.setData(detail);
 		message.setMessage(msg);
 		return ResponseEntity.ok(message);
 	}
-	
+
+	@RequestMapping(value = "/commMBOUpload.do")
+	public String mboUpload(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "commission/commissionManagementByObjectiveUpload";
+	}
+
+	@RequestMapping(value = "/commMBOUploadNewPop.do")
+	public String mboUploadNewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		return "commission/commissionManagementByObjectiveUploadNewPop";
+	}
+
+	@RequestMapping(value = "/selectMBOTargetList", method = RequestMethod.POST)
+	public ResponseEntity<List<EgovMap>> selectMBOTargetList(@RequestBody Map<String, Object> params, ModelMap model, HttpServletRequest request) {
+
+		List<Object> type = (List<Object>) params.get("typeList");
+		List<Object> memberType = (List<Object>) params.get("memberTypeList");
+		List<Object> status = (List<Object>) params.get("statusList");
+
+		//TODO 조건 변경하기.
+		if(type !=null){
+			String typeTemp ="";
+			for(int i = 0; i < type.size() ; i++){
+				typeTemp+=type.get(i)+",";
+			}
+			params.put("typeList", typeTemp.substring(0,typeTemp.length()-1));
+		}
+		if(memberType !=null){
+			String memberTypeTemp ="";
+			for(int i = 0; i < memberType.size() ; i++){
+				memberTypeTemp+=memberType.get(i)+",";
+			}
+			params.put("memberTypeList", memberTypeTemp.substring(0,memberTypeTemp.length()-1));
+		}
+		if(status !=null){
+			String statusTemp ="";
+			for(int i = 0; i < status.size() ; i++){
+				statusTemp+=status.get(i)+",";
+			}
+			params.put("statusList", statusTemp.substring(0,statusTemp.length()-1));
+		}
+		// 조회.
+		logger.debug(params.toString());
+		List<EgovMap> itemList = commissionCalculationService.mboTargetList(params);
+
+		// 데이터 리턴.
+		return ResponseEntity.ok(itemList);
+	}
+
+	@RequestMapping(value = "/mboActiveUploadBatch")
+	public ResponseEntity<Integer> mboActiveUploadBatch(@RequestParam Map<String, Object> params, ModelMap model) {
+		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);
+		int active = commissionCalculationService.mboActiveUploadBatch(params);
+		return ResponseEntity.ok(active);
+	}
+
+	@RequestMapping(value = "/commMboViewPop.do")
+	public String commMboViewPop(@RequestParam Map<String, Object> params, ModelMap model) {
+
+		Map detail = commissionCalculationService.mboMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
+		model.addAttribute("detail", detail);
+
+		Map map = new HashMap<>();
+		map.put("uploadId", params.get("uploadId"));
+
+		int totalCnt = commissionCalculationService.mboItemCnt(map);
+		model.addAttribute("totalCnt", totalCnt);
+
+		map.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
+		int totalValid = commissionCalculationService.mboItemCnt(map);
+		model.addAttribute("totalValid", totalValid);
+
+		map.put("vStusId", CommissionConstants.COMIS_INCENTIVE_INVALID);
+		int totalInvalid = commissionCalculationService.mboItemCnt(map);
+		model.addAttribute("totalInvalid", totalInvalid);
+
+		model.addAttribute("uploadId", params.get("uploadId"));
+		// 호출될 화면
+		return "commission/commissionManagementByObjectiveViewPop";
+	}
+
+	@RequestMapping(value = "/mboItemList")
+	public ResponseEntity<List<EgovMap>> mboItemList(@RequestParam Map<String, Object> params, ModelMap model) {
+		List itemList = commissionCalculationService.mboItemList(params);
+		return ResponseEntity.ok(itemList);
+	}
+
+	@RequestMapping(value = "/mboDeactivate")
+	public ResponseEntity<ReturnMessage> mboDeactivate(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+
+		params.put("loginId", sessionVO.getUserId());
+		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_REMOVE);
+
+		commissionCalculationService.mboDeactivate(params);
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/commMboConfirmPop.do")
+	public String commMboConfirm(@RequestParam Map<String, Object> params, ModelMap model) {
+		Map detail = commissionCalculationService.mboMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
+		model.addAttribute("detail", detail);
+
+		Map map = new HashMap<>();
+		map.put("uploadId", params.get("uploadId"));
+
+		int totalCnt = commissionCalculationService.mboItemCnt(map);
+		model.addAttribute("totalCnt", totalCnt);
+
+		map.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
+		int totalValid = commissionCalculationService.mboItemCnt(map);
+		model.addAttribute("totalValid", totalValid);
+
+		map.put("vStusId", CommissionConstants.COMIS_INCENTIVE_INVALID);
+		int totalInvalid = commissionCalculationService.mboItemCnt(map);
+		model.addAttribute("totalInvalid", totalInvalid);
+
+		model.addAttribute("uploadId", params.get("uploadId"));
+		model.addAttribute("typeId", params.get("typeId"));
+
+		// 호출될 화면
+		return "commission/commissionManagementByObjectiveConfirmPop";
+	}
+
+	@RequestMapping(value = "/mboConfirm")
+	public ResponseEntity<ReturnMessage> mboConfirm(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("loginId", loginId);
+
+		commissionCalculationService.callMboConfirm(params);
+
+		String msg = null;
+		if(params.get("v_sqlcode") != null)
+			msg = "("+ params.get("v_sqlcode") +")"+ params.get("v_sqlcont");
+		System.out.println("##msg : "+msg);
+		Map detail = commissionCalculationService.mboMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
+
+		message.setData(detail);
+		message.setMessage(msg);
+		return ResponseEntity.ok(message);
+	}
+
 }

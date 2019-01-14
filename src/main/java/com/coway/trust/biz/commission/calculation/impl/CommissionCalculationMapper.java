@@ -28,7 +28,7 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  * @since 2014.01.24
  * @version 1.0
  * @see
- * 
+ *
  *      <pre>
  *  == 개정이력(Modification Information) ==
  *
@@ -40,120 +40,120 @@ import egovframework.rte.psl.dataaccess.util.EgovMap;
  */
 @Mapper("commissionCalculationMapper")
 public interface CommissionCalculationMapper {
-	
+
 	/**
 	 * search Commission Procedure Group List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectCommPrdGroupListl(Map<String, Object> params);
-	
+
 	/**
 	 * search Organization Code List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectOrgCdListAll(Map<String, Object> params);
-	
+
 	/**
 	 * search Organization Item List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectCalculationList(Map<String, Object> params);
-	
+
 	/**
 	 * search Basic Calculation List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectBasicList(Map<String, Object> params);
-	
+
 	/**
 	 * search Basic Calculation Sate Select
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	Map<String, Object> selectBasicStatus(Map<String, Object> params);
-	
-	
+
+
 	/**
-	 * Commssion Procedure Call 
-	 * 
+	 * Commssion Procedure Call
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	Map<String, Object> callCommProcedure(Map<String, Object> param);
-	
+
 	/**
 	 * Commssion Procedure Call Running Log
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int callCommPrdLogIns(Map<String, Object> param);
-	
+
 	/**
 	 * Procedure Last Log Extraction Select
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectCommRunningPrdLog(Map<String, Object> param);
-	
+
 	/**
 	 * Commssion Procedure Log Update
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int callCommLogUpdate(Map<String, Object> param);
-	
+
 	/**
 	 * Commssion Procedure Log Insert(success/fail)
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	int callCommPrdLog(Map<String, Object>  param);
-	
-	
+
+
 	/**
 	 * Commssion Procedure Log Select
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectLogList(Map<String, Object> params);
-	
+
 	/**
 	 * search Organization Gruop List
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
 	 */
 	List<EgovMap> selectOrgGrList(Map<String, Object> params);
-	
+
 	/**
 	 * calculation Data select(CMM0028D CD, CT, HP)
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -163,7 +163,7 @@ public interface CommissionCalculationMapper {
 	List<EgovMap> selectCMM0028DHP(Map<String, Object> params);
 	/**
 	 * CMM0029D CD, CT, HP Data select
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -171,10 +171,10 @@ public interface CommissionCalculationMapper {
 	List<EgovMap> selectCMM0029DCT(Map<String, Object> params);
 	List<EgovMap> selectCMM0029DCD(Map<String, Object> params);
 	List<EgovMap> selectCMM0029DHP(Map<String, Object> params);
-	
+
 	/**
 	 * Basic Data select
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -206,10 +206,10 @@ public interface CommissionCalculationMapper {
 	List<EgovMap> selectCMM0069T(Map<String, Object> params);
 	List<EgovMap> selectCMM0070T(Map<String, Object> params);
 	List<EgovMap> selectCMM0071T(Map<String, Object> params);
-	
+
 	/**
 	 * search Basic Data Count
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -243,10 +243,10 @@ public interface CommissionCalculationMapper {
 	int cntCMM0069T(Map<String, Object>  param);
 	int cntCMM0070T(Map<String, Object>  param);
 	int cntCMM0071T(Map<String, Object>  param);
-	
+
 	/**
 	 * basic Data  Exclude Update
-	 * 
+	 *
 	 * @param Map
 	 * @return
 	 * @exception Exception
@@ -275,32 +275,32 @@ public interface CommissionCalculationMapper {
 	void udtDataCMM0069T(Map<String, Object>  param);
 	void udtDataCMM0070T(Map<String, Object>  param);
 	void udtDataCMM0071T(Map<String, Object>  param);
-	
+
 	/**
      * Adjustment Code List
      */
 	List<EgovMap> adjustmentCodeList(Map<String, Object> params);
-	
+
 	/**
      * member info Search
      */
 	Map<String, Object> memberInfoSearch(Map<String, Object> params);
-	
+
 	/**
      * order Number info Search
      */
 	Map<String, Object> ordNoInfoSearch(Map<String, Object> params);
-	
+
 	/**
      * Adjustment Insert
      */
 	void adjustmentInsert(Map<String, Object> params);
-	
+
 	/**
      * HP NeoPro Delete
      */
 	void neoProDel(Map<String, Object> params);
-	
+
 	/**
      * HP NeoPro Insert
      */
@@ -309,12 +309,12 @@ public interface CommissionCalculationMapper {
      * CT Data Delete
      */
 	void ctUploadDel(Map<String, Object> params);
-	
+
 	/**
      * CT Upload Insert
      */
 	void ctUploadInsert(Map<String, Object> params);
-	
+
 	List<EgovMap> incentiveStatus(Map<String, Object> params);
 	List<EgovMap> incentiveType(Map<String, Object> params);
 	List<EgovMap> incentiveTargetList(Map<String, Object> params);
@@ -337,31 +337,44 @@ public interface CommissionCalculationMapper {
 	int deactivateCheck(String uploadId);
 	void incentiveDeactivate(Map<String, Object> params);
 	void callIncentiveConfirm(Map<String, Object> params);
-	
+
 	int cntCMM0028T(Map<String, Object>  param);
 	int cntCMM0029T(Map<String, Object>  param);
-	
+
 	List<EgovMap> selectCMM0028TCT(Map<String, Object> params);
 	List<EgovMap> selectCMM0028TCD(Map<String, Object> params);
 	List<EgovMap> selectCMM0028THP(Map<String, Object> params);
 	List<EgovMap> selectCMM0029TCT(Map<String, Object> params);
 	List<EgovMap> selectCMM0029TCD(Map<String, Object> params);
 	List<EgovMap> selectCMM0029THP(Map<String, Object> params);
-	
+
 	List<EgovMap> selectSimulCMM0018T(Map<String, Object> params);
 	List<EgovMap> selectSimulCMM0019T(Map<String, Object> params);
 	List<EgovMap> selectSimulCMM0020T(Map<String, Object> params);
 	List<EgovMap> selectSimulCMM0021T(Map<String, Object> params);
 	List<EgovMap> selectSimulCMM0024T(Map<String, Object> params);
-	
+
 	int cntSimulCMM0018T(Map<String, Object>  param);
 	int cntSimulCMM0019T(Map<String, Object>  param);
 	int cntSimulCMM0020T(Map<String, Object>  param);
 	int cntSimulCMM0021T(Map<String, Object>  param);
 	int cntSimulCMM0024T(Map<String, Object>  param);
-	
+
 	List<EgovMap> runningPrdCheck(Map<String, Object> params);
 	List<EgovMap> runPrdTimeValid(Map<String, Object> params);
-	
+
 	void prdBatchSuccessHistory(Map<String, Object> params);
+
+	int mboMasterUploadId();
+	List<EgovMap> mboTargetList(Map<String, Object> params);
+	int mboActiveUploadBatch(Map<String, Object>  param);
+	void insertMboMaster(Map<String, Object> params);
+	void insertMboDetail(Map<String, Object> params);
+	void callMboDetail(int uploadId);
+	Map<String, Object> mboMasterDetail(int uploadId);
+	int mboItemCnt(Map<String, Object> params);
+	List<EgovMap> mboItemList(Map<String, Object> params);
+	void mboDeactivate(Map<String, Object> params);
+	void callMboConfirm(Map<String, Object> params);
+
 }
