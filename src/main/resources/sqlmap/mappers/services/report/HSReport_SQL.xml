@@ -180,7 +180,26 @@
 					                                     vMemberOrg.LVL2_UP_ID LVL2_UP_ID  ,
 					                                     vMemberOrg.LVL1_UP_ID LVL1_UP_ID  ,
 					                                     vMemberOrg.LVL0_UP_ID LVL0_UP_ID
-					                              FROM ORG1001V vMemberOrg ) Extent2   ON Extent2.MEM_ID = Extent1.CODY_ID
+					                              FROM ORG1001V vMemberOrg
+					                          UNION
+					                                SELECT
+                            vmemberorg2.mem_id mem_id,
+                            vmemberorg2.mem_code mem_code,
+                            vmemberorg2.mem_lvl mem_lvl,
+                            vmemberorg2.dept_code dept_code,
+                            vmemberorg2.grp_code grp_code,
+                            vmemberorg2.org_code org_code,
+                            vmemberorg2.top_org_code top_org_code,
+                            vmemberorg2.mem_up_id mem_up_id,
+                            vmemberorg2.lvl3_up_id lvl3_up_id,
+                            vmemberorg2.lvl2_up_id lvl2_up_id,
+                            vmemberorg2.lvl1_up_id lvl1_up_id,
+                            vmemberorg2.lvl0_up_id lvl0_up_id
+                        FROM
+                            org1001v vmemberorg2
+                        WHERE vmemberorg2.MEM_ID IN (SELECT MEM_ID FROM ORG0005D WHERE BRNCH_ID = 151)
+
+					                               ) Extent2   ON Extent2.MEM_ID = Extent1.CODY_ID
 					                 WHERE  ( Extent1.MONTH =  to_char(sysdate, 'mm' ) )
 					                          AND ( Extent1.YEAR = to_char(sysdate, 'yyyy' ) )
 					                          ]]>
