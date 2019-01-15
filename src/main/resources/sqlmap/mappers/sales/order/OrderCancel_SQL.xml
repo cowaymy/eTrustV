@@ -339,9 +339,9 @@
 			        Filter1.RESULT_ID ,
 			        Filter1.DOC_ID ,
 			        Filter1.CRT_USER_ID ,
-			        Filter1.CRT_DT ,
+			        TO_CHAR(Filter1.CRT_DT,'DD/MM/YYYY') AS CRT_DT,
 			        Filter1.IS_WAIT_FOR_CANCL ,
-			        Filter1.UPD_DT ,
+			        TO_CHAR(Filter1.UPD_DT,'DD/MM/YYYY') AS UPD_DT,
 			        Filter1.UPD_USER_ID ,
 			        Filter1.CODE2 CODE  ,
 			        Filter1.NAME ,
@@ -395,7 +395,7 @@
 			     LEFT JOIN SYS0047M Extent5
 			       ON Extent5.USER_ID = Filter1.UPD_USER_ID
 			  WHERE  Filter1.DOC_ID = #{docId}
-			      AND  Filter1.TYPE_ID = #{typeId}
+			     AND  Filter1.TYPE_ID = #{typeId}
     </select>
 
     <select id="productReturnTransctionList" parameterType="Map" resultType="egovMap">
