@@ -100,11 +100,11 @@ var itemGridID;
 	}
 
 	function fn_itemAdd(){
-		Common.popupDiv("/commission/calculation/commInctivItemAddPop.do",$("#conForm").serializeJSON());
+		Common.popupDiv("/commission/calculation/commMboItemAddPop.do",$("#conForm").serializeJSON());
 	}
 
 	function fn_removeItem(){
-		Common.ajax("POST", "/commission/calculation/removeIncentiveItem.do", GridCommon.getEditData(itemGridID) , function(result) {
+		Common.ajax("POST", "/commission/calculation/removeMboItem.do", GridCommon.getEditData(itemGridID) , function(result) {
 			Common.alert('<spring:message code="commission.alert.incentive.itemRemove"/>');
 			$("#totalCntTxt").text(result.data.totalCnt);
             $("#totalValidTxt").text(result.data.totalValid);

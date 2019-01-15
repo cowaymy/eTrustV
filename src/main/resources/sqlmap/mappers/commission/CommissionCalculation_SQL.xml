@@ -2992,6 +2992,9 @@
               <if test="memId != null and memId != ''">
               AND t4.MEM_ID = #{memId}
               </if>
+              <if test="itemMemCd != null and itemMemCd != ''">
+              AND t1.USER_MEM_CODE = #{itemMemCd}
+              </if>
         )   sub
     </select>
 
@@ -3015,7 +3018,7 @@
             t2.CODE AS CODE,
             CASE WHEN (t3.CODE_ID IS NOT NULL) THEN t3.CODE ELSE 'N' END AS CODE_NM,
             CASE WHEN (t4.MEM_ID IS NOT NULL) THEN t4.NAME ELSE 'N' END AS MEM_NM
-        FROM    CMM0077D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+        FROM  CMM0077D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
         LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
         LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
         WHERE  t1.STUS_ID=1
@@ -3026,11 +3029,14 @@
            <if test="memId != null and memId != ''">
              AND t4.MEM_ID = #{memId}
              </if>
+            <if test="itemMemCd != null and itemMemCd != ''">
+             AND t1.USER_MEM_CODE = #{itemMemCd}
+            </if>
         ORDER BY t1.UPLOAD_DET_ID ASC
     </select>
 
     <update id="mboDeactivate" parameterType="Map">
-        UPDATE CMM0003D
+        UPDATE CMM0076D
         SET
             STUS_ID = #{statusId},
             UPD_DT = SYSDATE,
@@ -3041,5 +3047,63 @@
     <select id="callMboConfirm"  parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
         { call  SP_MBO_TRGET_UP_CNFM(#{uploadId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR}) }
     </select>
+
+        <update id="removeMboItem"  parameterType="Map">
+        UPDATE CMM0077D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT  = SYSDATE,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{uploadDetId}
+    </update>
+
+    <select id="cntMboMem" parameterType="Map" resultType="integer">
+        SELECT
+           COUNT(*) cnt
+        FROM    CMM0077D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+            LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+            LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+        WHERE t1.STUS_ID = #{statusId}
+            AND t1.UPLOAD_ID = #{uploadId}
+            AND t1.VALID_STUS_ID = #{vStusId}
+            AND t1.SYS_MEM_ID = #{memId}
+    </select>
+
+        <select id="cntMboUploadMemberCheck" parameterType="Map" resultType="integer">
+        SELECT
+        COUNT(*) cnt
+        FROM CMM0077D t1
+        WHERE t1.UPLOAD_ID = #{uploadId}
+          AND t1.USER_MEM_CODE = #{itemMemCd}
+    </select>
+
+      <update id="mboItemUpdate" parameterType="Map">
+        UPDATE CMM0077D
+        SET
+           VALID_STUS_ID = #{vStatusId},
+           VALID_REM = '',
+           USER_REF_CODE = #{itemRCd},
+           USER_TRGET_AMT = #{itemTAmt},
+           USER_REF_LVL = #{itemRCd},
+           SYS_REF_CODE = #{itemRCd},
+           SYS_TRGET_AMT = #{itemTAmt},
+           SYS_REF_LVL = #{itemRCd},
+           UPD_DT = SYSDATE,
+           UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{updateDetId}
+    </update>
+
+    <insert  id="mboItemInsert" parameterType="Map">
+        INSERT INTO CMM0077D
+            (UPLOAD_DET_ID,UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_REF_CODE, USER_TRGET_AMT, USER_REF_LVL, SYS_MEM_ID
+            , SYS_REF_CODE, SYS_TRGET_AMT, SYS_REF_LVL, UPD_DT, UPD_USER_ID
+            , SYS_MEM_TYPE_ID)
+        VALUES
+           (CMM0077D_UPLOAD_DET_ID_SEQ.nextval,#{uploadId},#{statusId} , #{vStatusId}, ''
+           , #{itemMemCd}, #{itemRCd}, #{itemTAmt}, #{itemRCd}, #{hiddenMemberID}
+           , #{itemRCd}, #{itemTAmt}, #{itemLvl}, SYSDATE, #{loginId}
+           , #{hiddenMemberTypeID})
+    </insert>
 
 </mapper>

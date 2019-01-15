@@ -999,45 +999,52 @@ public class CommissionCalculationServiceImpl extends EgovAbstractServiceImpl im
 	public void insertMboMaster(Map<String, Object> params) {
 		commissionCalculationMapper.insertMboMaster(params);
 	}
-
 	@Override
 	public void insertMboDetail(Map<String, Object> params) {
 		commissionCalculationMapper.insertMboDetail(params);
 	}
-
 	@Override
 	public int mboMasterUploadId() {
 		return commissionCalculationMapper.mboMasterUploadId();
 	}
-
 	@Override
 	public void callMboDetail(int uploadId) {
 		commissionCalculationMapper.callMboDetail(uploadId);
 	}
-
 	@Override
 	 public Map<String, Object> mboMasterDetail(int uploadId){
 		return commissionCalculationMapper.mboMasterDetail(uploadId);
 	}
-
 	@Override
 	 public int mboItemCnt(Map<String, Object> params){
 		return commissionCalculationMapper.mboItemCnt(params);
 	}
-
 	@Override
 	public List<EgovMap> mboItemList(Map<String, Object> params) {
 		return commissionCalculationMapper.mboItemList(params);
 	}
-
 	@Override
 	public void mboDeactivate(Map<String, Object> params){
 		commissionCalculationMapper.mboDeactivate(params);
 	}
-
 	@Override
 	public void callMboConfirm(Map<String, Object> params){
 		commissionCalculationMapper.callMboConfirm(params);
 	}
-
+	@Override
+	public void removeMboItem(Map<String, Object> params) {
+		commissionCalculationMapper.removeMboItem(params);
+	}
+	@Override
+	 public int cntMboMem(Map<String, Object> params){
+		return commissionCalculationMapper.cntMboMem(params);
+	}
+	@Override
+	public void mboItemInsert(Map<String, Object> params){
+		commissionCalculationMapper.mboItemInsert(params);
+	}
+	@Override
+	public void mboItemUpdate(Map<String, Object> params){
+		commissionCalculationMapper.mboItemUpdate(params);
+	}
 }

@@ -56,7 +56,7 @@ $(document).on(//인풋파일 삭제
 			        Common.ajaxFile("/commission/csv/mboUpload", formData, function (result) {
 			        	$("#search").click();
 			        	document.newForm.reset();
-			        	Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result+'" htmlEscape="false"/>');
+			        	Common.alert('<spring:message code="commission.alert.incentive.new.success" arguments="'+result+'" htmlEscape="false"/>',$("#popClose").click());
 			        });
 				}
 			});
@@ -84,7 +84,7 @@ $(document).on(//인풋파일 삭제
 	<header class="pop_header">
 		<h1><spring:message code='commission.title.pop.head.mboNew'/></h1>
 		<ul class="right_opt">
-			<li><p class="btn_blue2"><a href="#"><spring:message code='sys.btn.close'/></a></p></li>
+			<li><p class="btn_blue2"><a href="#" id="popClose"><spring:message code='sys.btn.close'/></a></p></li>
 		</ul>
 	</header>
 

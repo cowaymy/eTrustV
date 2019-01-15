@@ -271,4 +271,8 @@ public interface CommissionCalculationService
     List<EgovMap> mboItemList(Map<String, Object> params);
     void mboDeactivate(Map<String, Object> params);
     void callMboConfirm(Map<String, Object> params);
+    void removeMboItem(Map<String, Object> params);
+    int cntMboMem(Map<String, Object> params);
+    void mboItemInsert(Map<String, Object> params);
+    void mboItemUpdate(Map<String, Object> params);
 }

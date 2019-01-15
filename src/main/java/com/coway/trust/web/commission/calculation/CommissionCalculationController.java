@@ -2577,4 +2577,134 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/commMboItemAddPop.do")
+	public String commMboItemAddPop(@RequestParam Map<String, Object> params, ModelMap model) {
+		model.addAttribute("uploadId", params.get("uploadId"));
+		model.addAttribute("uploadTypeId", params.get("uploadTypeId"));
+		model.addAttribute("typeCd", params.get("typeCd"));
+		// 호출될 화면
+		return "commission/commissionManagementByObjectiveAddItemPop";
+	}
+
+	@RequestMapping(value = "/removeMboItem.do", method = RequestMethod.POST)
+	public ResponseEntity<ReturnMessage> removeMboItem(@RequestBody Map<String, ArrayList<Object>> params, Model model) {
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+
+		List<Object> checkList =  params.get(AppConstants.AUIGRID_UPDATE);
+		Map iMap = null;
+
+		for (Object map : checkList) {
+			iMap = (HashMap<String, Object>) map;
+			iMap.put("statusId", CommissionConstants.COMIS_INCENTIVE_REMOVE);
+			iMap.put("loginId", loginId);
+
+			if( "1".equals(iMap.get("remove")) ){
+				commissionCalculationService.removeMboItem(iMap);;
+			}
+		}
+		Map cntMap = new HashMap();
+		cntMap.put("uploadId", iMap.get("uploadId"));
+
+		int totalCnt = commissionCalculationService.mboItemCnt(cntMap);
+		cntMap.put("totalCnt", totalCnt);
+
+		cntMap.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
+		int totalValid = commissionCalculationService.mboItemCnt(cntMap);
+		cntMap.put("totalValid", totalValid);
+
+		cntMap.put("vStusId", CommissionConstants.COMIS_INCENTIVE_INVALID);
+		int totalInvalid = commissionCalculationService.mboItemCnt(cntMap);
+		cntMap.put("totalInvalid", totalInvalid);
+
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.SUCCESS);
+		message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+		message.setData(cntMap);
+
+		return ResponseEntity.ok(message);
+	}
+
+	@RequestMapping(value = "/mboItemInsert", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> mboItemInsert(@RequestParam Map<String, Object> params, ModelMap model, SessionVO sessionVO) {
+		String message = "";
+		ReturnMessage msg = new ReturnMessage();
+		msg.setCode(AppConstants.SUCCESS);
+		int loginId = sessionVO.getUserId();
+
+		params.put("loginId", loginId);
+		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);
+		params.put("vStatusId", CommissionConstants.COMIS_INCENTIVE_VALID);
+		int memCnt = commissionCalculationService.mboItemCnt(params);
+
+		if(memCnt > 0){
+			//update
+			Map memMap = (Map) commissionCalculationService.mboItemList(params);
+			params.put("updateDetId", memMap.get("UPLOAD_DET_ID"));
+			commissionCalculationService.mboItemUpdate(params);
+		}else{
+			//insert
+			commissionCalculationService.mboItemInsert(params);
+		}
+
+		params.put("vStusId", null);
+		int totalCnt = commissionCalculationService.mboItemCnt(params);
+		params.put("totalCnt", totalCnt);
+
+		params.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
+		int totalValid = commissionCalculationService.mboItemCnt(params);
+		params.put("totalValid", totalValid);
+
+		params.put("vStusId", CommissionConstants.COMIS_INCENTIVE_INVALID);
+		int totalInvalid = commissionCalculationService.mboItemCnt(params);
+		params.put("totalInvalid", totalInvalid);
+
+
+		// 결과 만들기.
+    	message = AppConstants.MSG_SUCCESS;
+
+		msg.setMessage(message);
+		msg.setData(params);
+        return ResponseEntity.ok(msg);
+	}
+
+	@RequestMapping(value = "/mboItemValid", method = RequestMethod.GET)
+	public ResponseEntity<ReturnMessage> mboItemValid(@RequestParam Map<String, Object> params, Model model) {
+		// 결과 만들기 예.
+		ReturnMessage message = new ReturnMessage();
+		message.setCode(AppConstants.FAIL);
+
+		String msg = "";
+
+		Map memMap = commissionCalculationService.incentiveItemAddMem(params); // Share function
+		if(memMap.get("MEM_CODE") == null || "".equals(memMap.get("MEM_CODE"))){
+			msg = "Invalid member.";
+		}else{
+            if( ("1".equals(memMap.get("MEM_TYPE").toString())) ||  ("2".equals(memMap.get("MEM_TYPE").toString())) ){
+            	if(!(params.get("uploadTypeCd").toString()).equals(memMap.get("MEM_TYPE").toString())){
+            		msg="Invalid member type.";
+            	}else if( !("1".equals(memMap.get("STUS").toString())) ){
+            		msg = "This member is not active.";
+            	}else{
+            		params.put("statusId", CommissionConstants.COMIS_INCENTIVE_ACTIVE);
+            		params.put("vStusId", CommissionConstants.COMIS_INCENTIVE_VALID);
+            		params.put("memId", memMap.get("MEM_ID"));
+            		int cnt = commissionCalculationService.cntMboMem(params);
+            		if(cnt > 0){
+            			msg = "This member is existing in the upload batch";
+            		}else{
+            			message.setCode(AppConstants.SUCCESS);
+            			message.setData(memMap);
+            		}
+            	}
+            }else{
+            	msg="Invalid member type.";
+            }
+		}
+		message.setMessage(msg);
+
+		return ResponseEntity.ok(message);
+	}
+
 }
