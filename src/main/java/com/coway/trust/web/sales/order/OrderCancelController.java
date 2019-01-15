@@ -167,6 +167,7 @@ public class OrderCancelController {
 		//params.put("typeId", "296");	//임시 CT Assignment
 		//params.put("docId", "101795");	//임시 CT Assignment
 
+		params.put("typeId", "259");	//임시 CT Assignment
 		List<EgovMap> cancelLogTransList = orderCancelService.cancelLogTransctionList(params);
 
 		return ResponseEntity.ok(cancelLogTransList);
