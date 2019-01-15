@@ -457,11 +457,11 @@
             return false;
         }
         console.log("4.  tel check");
-        if($("#_telM1_").val() == '' && $("#_telR_").val() == '' && $("#_telF_").val() == '' && $("#_telO_").val() == '' ){
+        if(FormUtil.isEmpty($("#_telM1_").val()) && FormUtil.isEmpty($("#_telR_").val()) && FormUtil.isEmpty($("#_telF_").val()) && FormUtil.isEmpty($("#_telO_").val()) ){
             Common.alert('<spring:message code="sal.msg.keyInContactNum" />');
             return false;
         }else{
-            if($("#_telM1_").val() != ''){
+            if(FormUtil.isEmpty($("#_telM1_").val())){
                 if(FormUtil.checkNum($("#_telM1_"))){
                     Common.alert('<spring:message code="sal.alert.msg.invaildTelNumM" />');
                     return false;
@@ -471,7 +471,7 @@
                     return false;
                 }
             }
-            if($("#_telO_").val() != ''){
+            /*   if($("#_telO_").val() != ''){
 
                    if(FormUtil.checkNum($("#_telO_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumO" />');
@@ -491,7 +491,7 @@
                        return false;
                    }
                }
-           /*  if($("#_telF_").val() != ''){
+           if($("#_telF_").val() != ''){
                    if(FormUtil.checkNum($("#_telF_"))){
                        Common.alert('<spring:message code="sal.alert.msg.invaildTelNumF" />');
                    }
