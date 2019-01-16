@@ -73,8 +73,8 @@ public class ScmCommonServiceImpl implements ScmCommonService {
 		return	scmCommonMapper.selectScmIfType(params);
 	}
 	@Override
-	public List<EgovMap> selectScmIfTranStatus(Map<String, Object> params) {
-		return	scmCommonMapper.selectScmIfTranStatus(params);
+	public List<EgovMap> selectScmIfStatus(Map<String, Object> params) {
+		return	scmCommonMapper.selectScmIfStatus(params);
 	}
 	@Override
 	public List<EgovMap> selectScmIfErrCode(Map<String, Object> params) {

@@ -42,18 +42,22 @@ public class ScmInterfaceManagementServiceImpl implements ScmInterfaceManagement
 	//	Interface
 	@Override
 	public List<EgovMap> selectInterfaceList(Map<String, Object> params) {
-		String tranDtFrom	= params.get("tranDtFrom").toString();
-		String tranDtTo		= params.get("tranDtTo").toString();
-		LOGGER.debug("tranDtFrom : " + tranDtFrom + ", tranDtTo : " + tranDtTo);
-		tranDtFrom	= tranDtFrom.replace("/", "");
-		tranDtTo	= tranDtTo.replace("/", "");
+		String startDate	= "";
+		String endDate		= "";
 		
-		tranDtFrom	= tranDtFrom.substring(4, 8) + tranDtFrom.substring(2, 4) + tranDtFrom.substring(0, 2);
-		tranDtTo	= tranDtTo.substring(4, 8) + tranDtTo.substring(2, 4) + tranDtTo.substring(0, 2);
+		startDate	= params.get("startDate").toString();
+		endDate		= params.get("endDate").toString();
 		
-		params.put("tranDtFrom", tranDtFrom);
-		params.put("tranDtTo", tranDtTo);
-		LOGGER.debug("tranDtFrom : " + tranDtFrom + ", tranDtTo : " + tranDtTo);
+		startDate	= startDate.replace("/", "");	startDate	= startDate.replace(".", "");	startDate	= startDate.replace("-", "");
+		endDate		= endDate.replace("/", "");		endDate		= endDate.replace(".", "");		endDate		= endDate.replace("-", "");
+		
+		startDate	= startDate.substring(4, 8) + startDate.substring(2, 4) + startDate.substring(0, 2);
+		endDate		= endDate.substring(4, 8) + endDate.substring(2, 4) + endDate.substring(0, 2);
+		
+		params.put("startDate", startDate);
+		params.put("endDate", endDate);
+		LOGGER.debug("startDate : " + startDate + ", endDate : " + endDate);
+		
 		return	scmInterfaceManagementMapper.selectInterfaceList(params);
 	}
 	@Override
