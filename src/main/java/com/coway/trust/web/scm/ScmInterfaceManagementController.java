@@ -56,13 +56,13 @@ public class ScmInterfaceManagementController {
 		List<EgovMap> selectScmIfType	= scmCommonService.selectScmIfType(params);
 		return ResponseEntity.ok(selectScmIfType);
 	}
-	@RequestMapping(value = "/selectScmIfTranStatus.do", method = RequestMethod.GET)
-	public ResponseEntity<List<EgovMap>> selectScmIfTranStatus(@RequestParam Map<String, Object> params) {
+	@RequestMapping(value = "/selectScmIfStatus.do", method = RequestMethod.GET)
+	public ResponseEntity<List<EgovMap>> selectScmIfStatus(@RequestParam Map<String, Object> params) {
 		
 		LOGGER.debug("selectScmIfTranStatus : {}", params.toString());
 		
-		List<EgovMap> selectScmIfTranStatus	= scmCommonService.selectScmIfTranStatus(params);
-		return ResponseEntity.ok(selectScmIfTranStatus);
+		List<EgovMap> selectScmIfStatus	= scmCommonService.selectScmIfStatus(params);
+		return ResponseEntity.ok(selectScmIfStatus);
 	}
 	@RequestMapping(value = "/selectScmIfErrCode.do", method = RequestMethod.GET)
 	public ResponseEntity<List<EgovMap>> selectScmIfErrCode(@RequestParam Map<String, Object> params) {

@@ -1,10 +1,12 @@
 package com.coway.trust.web.scm;
 
+import java.io.BufferedInputStream;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FileReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -16,6 +18,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -157,6 +160,7 @@ public class ScmBatchController2 {
 		}
 	}
 	
+	@SuppressWarnings("deprecation")
 	public static void read(FTPClient client) {
 		BufferedReader reader	= null;
 		SimpleDateFormat sdf	= new SimpleDateFormat("yyyyMMdd");
@@ -165,6 +169,7 @@ public class ScmBatchController2 {
 		String fileName	= "";
 		String fileExistYn	= "N";
 		long fileSize	= 0;
+		
 		CLOB conts		= null;
 		Writer wr		= null;
 		Reader rd		= null;
@@ -178,12 +183,13 @@ public class ScmBatchController2 {
 			FTPFile[] files = client.listFiles();
 			LOGGER.debug("cnt : " + files.length);
 			String soFileName	= "COWAY_SO_DATA_" + today + ".TXT";
-			//soFileName	= "COWAY_SO_DATA_" + "20181205" + ".TXT";
+			//soFileName	= "COWAY_SO_DATA_" + "TEST" + ".TXT";
 			
 			for ( int i = 0 ; i < files.length ; i++ ) {
 				LOGGER.debug(i + "th filename : " + files[i].getName() + ", filesize : " + files[i].getSize());
 				//if ( 0 < files[i].getSize() ) {
 					if ( soFileName.equals(files[i].getName()) ) {
+						//	SO DB에 쓰기
 						InputStream is	= client.retrieveFileStream("/" + files[i].getName());
 						if ( null != is ) {
 							//	parameter setting
@@ -202,6 +208,29 @@ public class ScmBatchController2 {
 						} else {
 							LOGGER.debug("did not write");
 						}
+						/*
+						//	IF LOG DB에 쓰기
+						File file	= new File(files[i].getName());
+						FileReader in	= new FileReader(file);
+						try {
+							Writer out	= conts.getCharacterOutputStream();
+							
+							int chunk	= conts.getChunkSize();
+							System.out.print("The chunk size is : " + chunk);
+							char[] buffer	= new char[chunk];
+							int length;
+							
+							while ( (length = in.read(buffer, 0, chunk)) != -1 )
+							out.write(buffer, 0, length);
+							
+							in.close();
+							out.close();
+						} catch (SQLException e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						
+						*/
 					}
 				//}
 			}
@@ -224,6 +253,7 @@ public class ScmBatchController2 {
 		String fileName	= "";
 		String fileExistYn	= "N";
 		long fileSize	= 0;
+		BufferedInputStream bis	= null;
 		
 		try {
 			client.changeWorkingDirectory("/");
@@ -296,7 +326,7 @@ public class ScmBatchController2 {
 			String giFileName	= "COWAY_GI_DATA_" + today + ".TXT";
 			//soFileName	= "COWAY_SO_DATA_" + "20181205" + ".TXT";
 			//ppFileName	= "COWAY_PP_DATA_" + "20181214" + ".TXT";
-			giFileName	= "COWAY_GI_DATA_" + "TEST" + ".TXT";
+			//giFileName	= "COWAY_GI_DATA_" + "TEST" + ".TXT";
 			//BufferedReader brLog	= new BufferedReader(brLog);
 			for ( int i = 0 ; i < files.length ; i++ ) {
 				//LOGGER.debug(i + "th filename : " + files[i].getName() + ", filesize : " + files[i].getSize());
@@ -335,13 +365,21 @@ public class ScmBatchController2 {
 	}
 	
 	public static void executeQueryLog(BufferedReader br, String fileName, String today, String fileExistYn, long fileSize) {
+		try {
+			LOGGER.debug("================================ : " + br.toString());
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+	}
+	
+/*	public static void executeQueryLog(BufferedReader br, String fileName, String today, String fileExistYn, long fileSize) {
 		Connection conn	= null;
 		PreparedStatement ps	= null;
 		Statement st	= null;
 		ResultSet rs	= null;
 		
 		try {
-			String query	= "";
+			String query	= "";	String query1	= "";
 			Class.forName("oracle.jdbc.OracleDriver");
 			conn	= DriverManager.getConnection("jdbc:oracle:thin:@10.201.32.180:1521:gbslcvd", "GBSLCVAPL1", "GBSLCVD#2017#");
 			
@@ -349,6 +387,9 @@ public class ScmBatchController2 {
 			if ( null == br ) {
 				remark	= "this file is empty";
 			}
+			
+			query1	= "";
+			query1	+= "";
 			LOGGER.debug("1. fileName is : " + fileName);
 			query	= "MERGE INTO SCM0055S ";
 			query	+= "USING DUAL ON (IF_DATE = ? AND FILE_NAME = ?) ";
@@ -414,7 +455,7 @@ public class ScmBatchController2 {
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
-	}
+	}*/
 	
 	public static void executeQuery(BufferedReader br, String fileName) {
 		Connection conn	= null;
@@ -484,13 +525,13 @@ public class ScmBatchController2 {
 	public static void executeQuery1(BufferedReader br, String fileName, String ifDate) {
 		Connection conn	= null;
 		PreparedStatement ps	= null;
-		PreparedStatement ps1	= null;
+		//PreparedStatement ps1	= null;
 		CallableStatement cs	= null;
 		String result	= "";
 		
 		try {
 			String query	= "";
-			String query1	= "";
+			//String query1	= "";
 			Class.forName("oracle.jdbc.OracleDriver");
 			conn	= DriverManager.getConnection("jdbc:oracle:thin:@10.201.32.180:1521:gbslcvd", "GBSLCVAPL1", "GBSLCVD#2017#");
 			
@@ -501,7 +542,7 @@ public class ScmBatchController2 {
 			//	PP
 			int ppPlanQty	= 0;			int ppProdQty	= 0;
 			String ppProdStartDt	= "";	String ppProdEndDt	= "";
-			query	= "MERGE INTO SCM0014D ";
+			/*query	= "MERGE INTO SCM0014D ";
 			query	+= "USING DUAL ON (IF_DATE = ? AND PP_PROD_END_DT = TRIM(?) AND PO_NO = TRIM(?) AND SO_NO = TRIM(?) AND SO_ITEM_NO = TO_NUMBER(TRIM(?)) AND STOCK_CODE = TO_CHAR(TO_NUMBER(TRIM(?)))) ";
 			query	+= "WHEN MATCHED THEN ";
 			query	+= "UPDATE ";
@@ -540,11 +581,11 @@ public class ScmBatchController2 {
 			query1	+= "   AND PO_NO = ? ";
 			query1	+= "   AND SO_NO = ? ";
 			query1	+= "   AND SO_ITEM_NO = ? ";
-			query1	+= "   AND STOCK_CODE = ? ";
-			//cs	= conn.prepareCall("{call SP_SCM_0014D_INSERT(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
-			//query	= "EXEC SP_SCM_0014D_INSERT(?, ?, ?, ?, ?, ?, ?, ?, ?)";
-			ps1	= conn.prepareStatement(query1);
-			ps	= conn.prepareStatement(query);
+			query1	+= "   AND STOCK_CODE = ? ";*/
+			
+			cs	= conn.prepareCall("{call SP_SCM_0014D_INSERT(?, ?, ?, ?, ?, ?, ?, ?, ?)}");
+			//ps1	= conn.prepareStatement(query1);
+			//ps	= conn.prepareStatement(query);
 			while ( null != (row = br.readLine()) ) {
 				String col[]	= row.split("\\|");
 				for ( int i = 0 ; i < col.length ; i++ ) {
@@ -556,7 +597,7 @@ public class ScmBatchController2 {
 					if ( 6 == i )	ppProdQty	= Integer.parseInt(col[i].toString().replace(" ", "").replace(".000", ""));
 					if ( 8 == i )	ppProdStartDt	= col[i];
 					if ( 9 == i )	ppProdEndDt		= col[i];
-					/*
+					
 					cs.setString(1, poNo);
 					cs.setString(2, soNo);
 					cs.setInt(3, soItemNo);
@@ -565,9 +606,9 @@ public class ScmBatchController2 {
 					cs.setInt(6, ppProdQty);
 					cs.setString(7, ppProdStartDt);
 					cs.setString(8, ppProdEndDt);
-					cs.registerOutParameter(9, java.sql.Types.VARCHAR);*/
+					cs.registerOutParameter(9, java.sql.Types.VARCHAR);
 					
-					ps.setString(1, ppProdEndDt);
+					/*ps.setString(1, ppProdEndDt);
 					ps.setString(2, ppProdEndDt);
 					ps.setString(3, poNo);
 					ps.setString(4, soNo);
@@ -595,17 +636,40 @@ public class ScmBatchController2 {
 					ps1.setString(2, poNo);
 					ps1.setString(3, soNo);
 					ps1.setInt(4, soItemNo);
-					ps1.setString(5, stockCode);
+					ps1.setString(5, stockCode);*/
 				}
 				//LOGGER.debug(ps.toString());
-				//cs.execute();
-				//result	= cs.getString(9);
-				ps1.executeQuery();
-				ps.executeQuery();
-				LOGGER.debug("IF_DATE : " + ifDate + " : " + query1);
-				LOGGER.debug("IF_DATE : " + ifDate + " : " + query);
-				//LOGGER.debug("Result : " + result + ", PO NO : " + poNo + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", STOCK CODE : " + stockCode + ", PP_PLAN_QTY : " + ppPlanQty + ", PP_PROD_QTY : " + ppProdQty);
+				cs.execute();
+				result	= cs.getString(9);
+				//ps1.executeQuery();
+				//ps.executeQuery();
+				//LOGGER.debug("IF_DATE : " + ifDate + " : " + query1);
+				//LOGGER.debug("IF_DATE : " + ifDate + " : " + query);
+				LOGGER.debug("Result : " + result + ", PO NO : " + poNo + ", SO NO : " + soNo + ", SO ITEM NO : " + soItemNo + ", STOCK CODE : " + stockCode + ", PP_PLAN_QTY : " + ppPlanQty + ", PP_PROD_QTY : " + ppProdQty);
 			}
+		} catch ( Exception e ) {
+			e.printStackTrace();
+		}
+		
+		try {
+			String query	= "";
+			Class.forName("oracle.jdbc.OracleDriver");
+			conn	= DriverManager.getConnection("jdbc:oracle:thin:@10.201.32.180:1521:gbslcvd", "GBSLCVAPL1", "GBSLCVD#2017#");
+			
+			query	= "DELETE FROM SCM0014D ";
+			query	+= " WHERE PO_NO||SO_NO||SO_ITEM_NO||STOCK_CODE||PP_PROD_END_DT IN (";
+			query	+= " SELECT PO_NO||SO_NO||SO_ITEM_NO||STOCK_CODE||PP_PROD_END_DT ";
+			query	+= "   FROM SCM0014D ";
+			query	+= "  GROUP BY PO_NO||SO_NO||SO_ITEM_NO||STOCK_CODE||PP_PROD_END_DT ";
+			query	+= "  HAVING COUNT(*) > 1) ";
+			query	+= "   AND IF_DATE < ? ";
+			
+			ps	= conn.prepareStatement(query);
+			
+			ps.setString(1, ifDate);
+			
+			ps.executeQuery();
+			LOGGER.debug("DELETED");
 		} catch ( Exception e ) {
 			e.printStackTrace();
 		}
