@@ -389,7 +389,7 @@ var OtdStatusLayout	=
 						headerText : "Item No.",
 						cellMerge : true,
 						mergePolicy : "restrict",
-						mergeRef : "divOdd",
+						mergeRef : "poDivOdd",
 						formatString : "#,##0",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
@@ -537,9 +537,9 @@ var OtdStatusLayout	=
 					{
 						dataField : "sapPoNo",
 						headerText : "P/O No.",
-						//cellMerge : true,
-						//mergePolicy : "restrict",
-						//mergeRef : "poDivOdd",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "divOdd",
 						formatString : "#,##0",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {
@@ -551,9 +551,9 @@ var OtdStatusLayout	=
 					}, {
 						dataField : "sapPoItemNo",
 						headerText : "Item No.",
-						//cellMerge : true,
-						//mergePolicy : "restrict",
-						//mergeRef : "poDivOdd",
+						cellMerge : true,
+						mergePolicy : "restrict",
+						mergeRef : "poDivOdd",
 						formatString : "#,##0",
 						styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 							if ( "0" == item.divOdd ) {

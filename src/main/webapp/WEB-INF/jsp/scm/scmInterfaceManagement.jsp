@@ -46,6 +46,49 @@
 
 <script type="text/javaScript">
 $(function() {
+	var start	= new Date();
+	var end		= new Date();
+	start.setMonth(start.getMonth() - 3);
+	end.setMonth(end.getMonth());
+	
+	if ( 10 == (start.getMonth()+1)|| 11 == (start.getMonth()+1) || 12 == (start.getMonth()+1) ) {
+		if ( 1 == start.getDate() || 2 == start.getDate() || 3 == start.getDate() || 4 == start.getDate() || 5 == start.getDate()
+			|| 6 == start.getDate() || 7 == start.getDate() || 8 == start.getDate() || 9 == start.getDate() ) {
+			$("#startDate").val("0" + start.getDate() + "/" + (start.getMonth()+1) + "/" + start.getFullYear());
+			console.log("1. start.getDate : " + start.getDate() + ", start.getMonth : " + start.getMonth()+1 + ", start.getFullYear : " + start.getFullYear());
+		} else {
+			$("#startDate").val(start.getDate() + "/" + (start.getMonth()+1) + "/" + start.getFullYear());
+			console.log("2. start.getDate : " + start.getDate() + ", start.getMonth : " + start.getMonth()+1 + ", start.getFullYear : " + start.getFullYear());
+		}
+	} else {
+		if ( 1 == start.getDate() || 2 == start.getDate() || 3 == start.getDate() || 4 == start.getDate() || 5 == start.getDate()
+			|| 6 == start.getDate() || 7 == start.getDate() || 8 == start.getDate() || 9 == start.getDate() ) {
+			$("#startDate").val("0" + start.getDate() + "/0" + (start.getMonth()+1) + "/" + start.getFullYear());
+			console.log("3. start.getDate : " + start.getDate() + ", start.getMonth : " + start.getMonth()+1 + ", start.getFullYear : " + start.getFullYear());
+		} else {
+			$("#startDate").val(start.getDate() + "/0" + (start.getMonth()+1) + "/" + start.getFullYear());
+			console.log("4. start.getDate : " + start.getDate() + ", start.getMonth : " + start.getMonth()+1 + ", start.getFullYear : " + start.getFullYear());
+		}
+	}
+	if ( 10 == (end.getMonth()+1) || 11 == (end.getMonth()+1) || 12 == (end.getMonth()+1) ) {
+		if ( 1 == start.getDate() || 2 == start.getDate() || 3 == start.getDate() || 4 == start.getDate() || 5 == start.getDate()
+			|| 6 == start.getDate() || 7 == start.getDate() || 8 == start.getDate() || 9 == start.getDate() ) {
+			$("#endDate").val("0" + end.getDate() + "/" + (end.getMonth()+1) + "/" + end.getFullYear());
+			console.log("5. end.getDate : " + end.getDate() + ", end.getMonth : " + end.getMonth()+1 + ", end.getFullYear : " + end.getFullYear());
+		} else {
+			$("#endDate").val(end.getDate() + "/" + (end.getMonth()+1) + "/" + end.getFullYear());
+			console.log("6. end.getDate : " + end.getDate() + ", end.getMonth : " + end.getMonth()+1 + ", end.getFullYear : " + end.getFullYear());
+		}
+	} else {
+		if ( 1 == start.getDate() || 2 == start.getDate() || 3 == start.getDate() || 4 == start.getDate() || 5 == start.getDate()
+			|| 6 == start.getDate() || 7 == start.getDate() || 8 == start.getDate() || 9 == start.getDate() ) {
+			$("#endDate").val("0" + end.getDate() + "/0" + (end.getMonth()+1) + "/" + end.getFullYear());
+			console.log("7. end.getDate : " + end.getDate() + ", end.getMonth : " + end.getMonth()+1 + ", end.getFullYear : " + end.getFullYear());
+		} else {
+			$("#endDate").val(end.getDate() + "/0" + (end.getMonth()+1) + "/" + end.getFullYear());
+			console.log("8. end.getDate : " + end.getDate() + ", end.getMonth : " + end.getMonth()+1 + ", end.getFullYear : " + end.getFullYear());
+		}
+	}
 	fnScmIfTypeCbBox();
 	fnScmIfTranStatusCbBox();
 	//fnScmIfErrCodeCbBox();
@@ -65,8 +108,8 @@ function fnScmIfTypeCbBox() {
 			, "");
 }
 function fnScmIfTranStatusCbBox() {
-	CommonCombo.make("scmIfTranStatusCbBox"
-			, "/scm/selectScmIfTranStatus.do"
+	CommonCombo.make("scmIfStatusCbBox"
+			, "/scm/selectScmIfStatus.do"
 			, ""
 			, ""
 			, {
@@ -92,17 +135,21 @@ function fnScmIfErrCodeCbBox() {
 }
 
 function fnSearch() {
-	var tranDtFrom	= $("#tranDtFrom").val();
-	var tranDtTo	= $("#tranDtTo").val();
-	console.log("tranDtTo : " + tranDtTo);
-	if ( "" == tranDtFrom || "" == tranDtTo ) {
-		Common.alert("IF Date is must be selected");
+	var fromDate	= $("#startDate").val();
+	var toDate		= $("#endDate").val();
+	//console.log("fromDate : " + fromDate + ", toDate : " + toDate);
+	
+	if ( "" == fromDate || "" == toDate || null == fromDate || null == toDate ) {
+		Common.alert("<spring:message code='sys.msg.limitMore' arguments='FROM DATE ; TO DATE.' htmlEscape='false' argumentSeparator=';'/>");
 		return	false;
 	}
-	
+	if ( 0 > fnGetDateGap(fromDate, toDate) ) {
+		Common.alert("<spring:message code='sys.msg.limitMore' arguments='FROM DATE ; TO DATE.' htmlEscape='false' argumentSeparator=';'/>");
+		return	false;
+	}
 	var params	= {
 			scmIfTypeCbBox : $("#scmIfTypeCbBox").multipleSelect("getSelects"),
-			scmIfTranStatusCbBox : $("#scmIfTranStatusCbBox").multipleSelect("getSelects")//,
+			scmIfStatusCbBox : $("#scmIfStatusCbBox").multipleSelect("getSelects")//,
 			//scmIfErrCodeCbBox : $("#scmIfErrCodeCbBox").multipleSelect("getSelects")
 	};
 	
@@ -116,6 +163,29 @@ function fnSearch() {
 				
 				AUIGrid.setGridData(myGridID, result.selectInterfaceList);
 			});
+}
+
+function fnGetDateGap(val1, val2) {
+	var format	= "\/";
+	console.log("val1 : " + val1 + ", val2 : " + val2);
+	if ( 10 != val1.length || 10 != val2.length ) {
+		return	null;
+	}
+	if ( 0 > val1.indexOf(format) || 0 > val2.indexOf(format) ) {
+		return	null;
+	}
+	
+	var fromDate	= val1.split(format);
+	var toDate		= val2.split(format);
+	
+	//	Number()를 이용하여 10진수(08,09)로 인식하게 함.
+	fromDate[1]	= (Number(fromDate[1]) - 1) + "";
+	toDate[1]	= (Number(toDate[1]) - 1) + "";
+	
+	var finFromDate	= new Date(fromDate[2], fromDate[1], fromDate[0] );
+	var finToDate	= new Date(toDate[2], toDate[1], toDate[0]);
+	
+	return	(finToDate.getTime() - finFromDate.getTime()) / 1000 / 60 / 60 / 24;
 }
 
 function fnDoInterface(obj) {
@@ -164,10 +234,30 @@ function fnExecute() {
 var interfaceLayout	=
 	[
 		{
-			dataField : "ifType",
-			headerText : "IF Type",
+			dataField : "ifDate",
+			headerText : "IF Date",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
+				if ( 20 == item.ifStatus ) {
+					return	"my-columnCenter2";
+				} else {
+					return	"my-columnCenter";
+				}
+			}
+		}, {
+			dataField : "ifSeq",
+			headerText : "SEQ",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( 20 == item.ifStatus ) {
+					return	"my-columnCenter2";
+				} else {
+					return	"my-columnCenter";
+				}
+			}
+		}, {
+			dataField : "ifTime",
+			headerText : "IF Time",
+			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
+				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -177,47 +267,47 @@ var interfaceLayout	=
 			dataField : "ifTypeName",
 			headerText : "IF Type",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
+				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
 				}
 			}
 		}, {
-			dataField : "tranStatusCd",
-			headerText : "Tran Status Cd",
+			dataField : "ifTypeName",
+			headerText : "IF Type",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
+				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
 				}
 			}
 		}, {
-			dataField : "tranStatusName",
-			headerText : "Tran Status",
+			dataField : "ifStatusName",
+			headerText : "IF Status",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
+				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
 				}
 			}
 		}, {
-			dataField : "errCd",
-			headerText : "Err Cd",
+			dataField : "ifCycleName",
+			headerText : "IF Cycle",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
+				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
 				}
 			}
 		}, {
-			dataField : "errName",
-			headerText : "Error",
+			dataField : "execCnt",
+			headerText : "Result Count",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
+				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -225,49 +315,9 @@ var interfaceLayout	=
 			}
 		}, {
 			dataField : "errMsg",
-			headerText : "Err Message",
+			headerText : "Error",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
-					return	"my-columnCenter2";
-				} else {
-					return	"my-columnCenter";
-				}
-			}
-		}, {
-			dataField : "tranDt",
-			headerText : "Tran Date",
-			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
-					return	"my-columnCenter2";
-				} else {
-					return	"my-columnCenter";
-				}
-			}
-		}, {
-			dataField : "tranTm",
-			headerText : "Tran Time",
-			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
-					return	"my-columnCenter2";
-				} else {
-					return	"my-columnCenter";
-				}
-			}
-		}, {
-			dataField : "rgstDt",
-			headerText : "Regist Date",
-			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
-					return	"my-columnCenter2";
-				} else {
-					return	"my-columnCenter";
-				}
-			}
-		}, {
-			dataField : "rgstTm",
-			headerText : "Regist Time",
-			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
-				if ( 20 == item.tranStatusCd ) {
+				if ( 20 == item.ifStatus ) {
 					return	"my-columnCenter2";
 				} else {
 					return	"my-columnCenter";
@@ -287,22 +337,7 @@ $(document).ready(function() {
 			showStateColumn : false,
 			showRowCheckColumn : true,
 			enableRestore : true,
-			softRemovePolicy : "exceptNew",
-			rowCheckableFunction : function(rowIndex, isChecked, item) {
-				if ( false == isChecked ) {
-					//fnBtnCtrl(false);
-					//$("#btnInterface").removeClass("btn_disabled");
-				} else {
-					//fnBtnCtrl(true);
-					//$("#btnInterface").addClass("btn_disabled");
-				}
-			},
-			rowCheckDisabledFunction : function(rowIndex, isChecked, item) {
-				if ( 20 == item.tranStatusCd ) {
-					return	false;
-				}
-				return	true;
-			}
+			softRemovePolicy : "exceptNew"
 	};
 	
 	myGridID	= GridCommon.createAUIGrid("InterfaceGridDiv", interfaceLayout, "", interfaceLayoutOption);
@@ -345,25 +380,21 @@ $(document).ready(function() {
 				<th scope="row">IF Date</th>
 				<td>
 					<div class="date_set w100p"><!-- date_set start -->
-					<p>
-					<input type="text" id="tranDtFrom" name="tranDtFrom" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
-					<span>To</span>
-					<p>
-					<input type="text" id="tranDtTo" name="tranDtTo" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+						<p>
+						<input type="text" id="startDate" name="startDate" title="Create start Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
+						<span>To</span>
+						<p>
+						<input type="text" id="endDate" name="endDate" title="Create end Date" placeholder="DD/MM/YYYY" class="j_date" /></p>
 					</div><!-- date_set end -->
 				</td>
 				<th scope="row">IF Type</th>
 				<td>
 					<select class="w100p" multiple="multiple" id="scmIfTypeCbBox" name="scmIfTypeCbBox"></select>
 				</td>
-				<th scope="row">Trans Status</th>
+				<th scope="row">IF Status</th>
 				<td>
-					<select class="w100p" multiple="multiple" id="scmIfTranStatusCbBox" name="scmIfTranStatusCbBox"></select>
+					<select class="w100p" multiple="multiple" id="scmIfStatusCbBox" name="scmIfStatusCbBox"></select>
 				</td>
-<!-- 				<th scope="row">Error Code</th>
-				<td>
-					<select class="w100p" multiple="multiple" id="scmIfErrCodeCbBox" name="scmIfErrCodeCbBox"></select>
-				</td> -->
 			</tr>
 			<tr>
 			</tr>
@@ -406,7 +437,7 @@ $(document).ready(function() {
 
 <section class="search_result"><!-- search_result start -->
 	<ul class="right_btns">
-		<li><p id="btnInterface" class="btn_grid"><a onclick="fnDoInterface();">Do Interface</a></p></li>
+		<!-- <li><p id="btnInterface" class="btn_grid"><a onclick="fnDoInterface();">Do Interface</a></p></li> -->
 		<li><p id="btnExecute" class="btn_grid"><a onclick="fnExecute();">Execute</a></p></li>
 	</ul>
 
