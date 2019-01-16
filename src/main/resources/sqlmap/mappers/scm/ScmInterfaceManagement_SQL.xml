@@ -3,144 +3,36 @@
 <mapper namespace="com.coway.trust.biz.scm.impl.ScmInterfaceManagementMapper">
 
 <select id="selectInterfaceList" parameterType="Map" resultType="egovMap">
-SELECT A.IF_TYPE
+SELECT TO_CHAR(TO_DATE(A.IF_DATE, 'YYYY-MM-DD'), 'DD/MM/YYYY') AS IF_DATE
+     , TO_CHAR(TO_DATE(A.IF_TIME, 'HH24MISS'), 'HH:MI:SS') AS IF_TIME
+     , A.IF_SEQ
+     , A.IF_TYPE
      , B.CODE_NAME AS IF_TYPE_NAME
-     , A.TRAN_STATUS_CD
-     , C.CODE_NAME AS TRAN_STATUS_NAME
-     , A.ERR_CD
-     , D.CODE_NAME AS ERR_NAME
+     , A.IF_STATUS
+     , C.CODE_NAME AS IF_STATUS_NAME
+     , A.IF_CYCLE
+     , D.CODE_NAME AS IF_CYCLE_NAME
+     , A.EXEC_CNT
+     , A.CONTS
      , A.ERR_MSG
-     , SUBSTR(A.TRAN_DT, 5, 2) || '-' || SUBSTR(A.TRAN_DT, 7, 2) || '-' || SUBSTR(A.TRAN_DT, 1, 4) AS TRAN_DT
-     , SUBSTR(A.TRAN_TM, 1, 2) || ':' || SUBSTR(A.TRAN_TM, 3, 2) || ':' || SUBSTR(A.TRAN_TM, 5, 4) AS TRAN_TM
-     , SUBSTR(A.RGST_DT, 5, 2) || '-' || SUBSTR(A.RGST_DT, 7, 2) || '-' || SUBSTR(A.RGST_DT, 1, 4) AS RGST_DT
-     , SUBSTR(A.RGST_TM, 1, 2) || ':' || SUBSTR(A.RGST_TM, 3, 2) || ':' || SUBSTR(A.RGST_TM, 5, 4) AS RGST_TM
-  FROM (
-        SELECT Z.IF_TYPE
-             , Z.TRAN_STATUS_CD
-             , Z.ERR_CD
-             , Z.ERR_MSG
-             , Z.TRAN_DT
-             , Z.TRAN_TM
-             , Z.RGST_DT
-             , Z.RGST_TM
-          FROM ITF0151M Z
-         WHERE Z.TRAN_DT BETWEEN #{tranDtFrom} AND #{tranDtTo}
-	<if test="scmIfTranStatusCbBox != null and ! scmIfTranStatusCbBox.isEmpty">
-           AND Z.TRAN_STATUS_CD IN
-		<foreach item="item" collection="scmIfTranStatusCbBox" index="index" open="(" separator="," close=")">
-           #{item}
-		</foreach>
-	</if>
-<!-- 	<if test="scmIfErrCodeCbBox != null and ! scmIfErrCodeCbBox.isEmpty">
-           AND Z.ERR_CD IN
-		<foreach item="item" collection="scmIfErrCodeCbBox" index="index" open="(" separator="," close=")">
-           #{item}
-		</foreach>
-	</if> -->
-        UNION ALL
-        SELECT Z.IF_TYPE
-             , Z.TRAN_STATUS_CD
-             , Z.ERR_CD
-             , Z.ERR_MSG
-             , Z.TRAN_DT
-             , Z.TRAN_TM
-             , Z.RGST_DT
-             , Z.RGST_TM
-          FROM ITF0152M Z
-         WHERE Z.TRAN_DT BETWEEN #{tranDtFrom} AND #{tranDtTo}
-	<if test="scmIfTranStatusCbBox != null and ! scmIfTranStatusCbBox.isEmpty">
-           AND Z.TRAN_STATUS_CD IN
-		<foreach item="item" collection="scmIfTranStatusCbBox" index="index" open="(" separator="," close=")">
-           #{item}
-		</foreach>
-	</if>
-<!-- 	<if test="scmIfErrCodeCbBox != null and ! scmIfErrCodeCbBox.isEmpty">
-           AND Z.ERR_CD IN
-		<foreach item="item" collection="scmIfErrCodeCbBox" index="index" open="(" separator="," close=")">
-           #{item}
-		</foreach>
-	</if> -->
-        UNION ALL
-        SELECT Z.IF_TYPE
-             , Z.TRAN_STATUS_CD
-             , Z.ERR_CD
-             , Z.ERR_MSG
-             , Z.TRAN_DT
-             , Z.TRAN_TM
-             , Z.RGST_DT
-             , Z.RGST_TM
-          FROM ITF0153M Z
-         WHERE Z.TRAN_DT BETWEEN #{tranDtFrom} AND #{tranDtTo}
-	<if test="scmIfTranStatusCbBox != null and ! scmIfTranStatusCbBox.isEmpty">
-           AND Z.TRAN_STATUS_CD IN
-		<foreach item="item" collection="scmIfTranStatusCbBox" index="index" open="(" separator="," close=")">
-           #{item}
-		</foreach>
-	</if>
-<!-- 	<if test="scmIfErrCodeCbBox != null and ! scmIfErrCodeCbBox.isEmpty">
-           AND Z.ERR_CD IN
-		<foreach item="item" collection="scmIfErrCodeCbBox" index="index" open="(" separator="," close=")">
-           #{item}
-		</foreach>
-	</if> -->
-        UNION ALL
-        SELECT Z.IF_TYPE
-             , Z.TRAN_STATUS_CD
-             , Z.ERR_CD
-             , Z.ERR_MSG
-             , Z.TRAN_DT
-             , Z.TRAN_TM
-             , Z.RGST_DT
-             , Z.RGST_TM
-          FROM ITF0155M Z
-         WHERE Z.TRAN_DT BETWEEN #{tranDtFrom} AND #{tranDtTo}
-	<if test="scmIfTranStatusCbBox != null and ! scmIfTranStatusCbBox.isEmpty">
-           AND Z.TRAN_STATUS_CD IN
-		<foreach item="item" collection="scmIfTranStatusCbBox" index="index" open="(" separator="," close=")">
-           #{item}
-		</foreach>
-	</if>
-<!-- 	<if test="scmIfErrCodeCbBox != null and ! scmIfErrCodeCbBox.isEmpty">
-           AND Z.ERR_CD IN
-		<foreach item="item" collection="scmIfErrCodeCbBox" index="index" open="(" separator="," close=")">
-           #{item}
-		</foreach>
-	</if> -->
-        UNION ALL
-        SELECT Z.IF_TYPE
-             , Z.TRAN_STATUS_CD
-             , Z.ERR_CD
-             , Z.ERR_MSG
-             , Z.TRAN_DT
-             , Z.TRAN_TM
-             , Z.RGST_DT
-             , Z.RGST_TM
-          FROM ITF0156M Z
-         WHERE Z.TRAN_DT BETWEEN #{tranDtFrom} AND #{tranDtTo}
-	<if test="scmIfTranStatusCbBox != null and ! scmIfTranStatusCbBox.isEmpty">
-           AND Z.TRAN_STATUS_CD IN
-		<foreach item="item" collection="scmIfTranStatusCbBox" index="index" open="(" separator="," close=")">
-           #{item}
-		</foreach>
-	</if>
-<!-- 	<if test="scmIfErrCodeCbBox != null and ! scmIfErrCodeCbBox.isEmpty">
-           AND Z.ERR_CD IN
-		<foreach item="item" collection="scmIfErrCodeCbBox" index="index" open="(" separator="," close=")">
-           #{item}
-		</foreach>
-	</if> -->
-        ) A
-  LEFT OUTER JOIN SYS0013M B ON (A.IF_TYPE = B.CODE AND B.CODE_MASTER_ID = 352) /* 352 : SCM Interface Type */
-  LEFT OUTER JOIN SYS0013M C ON (A.TRAN_STATUS_CD = C.CODE AND C.CODE_MASTER_ID = 400) /* 400 : SCM Interface Trans Status */
-  LEFT OUTER JOIN SYS0013M D ON (A.ERR_CD = D.CODE AND D.CODE_MASTER_ID = 401) /* 401 : SCM Interface Interface Error Code */
- WHERE 1 = 1
+  FROM SCM0055L A
+  LEFT OUTER JOIN SYS0013M B ON (A.IF_TYPE = B.CODE AND B.CODE_MASTER_ID = 352) /* CODE_MASTER_ID = 352 : SCM Interface Type */
+  LEFT OUTER JOIN SYS0013M C ON (A.IF_TYPE = C.CODE AND C.CODE_MASTER_ID = 405) /* CODE_MASTER_ID = 405 : SCM Interface Status */
+  LEFT OUTER JOIN SYS0013M D ON (A.IF_TYPE = D.CODE AND D.CODE_MASTER_ID = 404) /* CODE_MASTER_ID = 352 : SCM Interface Cycle */
+ WHERE A.IF_DATE BETWEEN #{startDate} AND #{endDate}
 	<if test="scmIfTypeCbBox != null and ! scmIfTypeCbBox.isEmpty">
    AND A.IF_TYPE IN
 		<foreach item="item" collection="scmIfTypeCbBox" index="index" open="(" separator="," close=")">
-       #{item}
+		#{item}
 		</foreach>
 	</if>
- ORDER BY A.TRAN_DT DESC
+	<if test="scmIfStatusCbBox != null and ! scmIfStatusCbBox.isEmpty">
+   AND A.IF_STATUS IN
+		<foreach item="item" collection="scmIfStatusCbBox" index="index" open="(" separator="," close=")">
+		#{item}
+		</foreach>
+	</if>
+ ORDER BY A.IF_DATE DESC, A.IF_SEQ, A.IF_TYPE, A.IF_STATUS
 </select>
 
 <select id="doInterface" parameterType="Map" resultType="egovMap">

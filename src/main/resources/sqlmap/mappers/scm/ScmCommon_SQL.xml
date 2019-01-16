@@ -74,7 +74,7 @@ SELECT A.CODE AS ID
  ORDER BY A.CODE_ID
 </select>
 
-<select id="selectScmIfTranStatus" parameterType="Map" resultType="egovMap">
+<select id="selectScmIfStatus" parameterType="Map" resultType="egovMap">
 SELECT A.CODE AS ID
      , A.CODE_DESC AS ID2
      , A.CODE_NAME AS NAME
