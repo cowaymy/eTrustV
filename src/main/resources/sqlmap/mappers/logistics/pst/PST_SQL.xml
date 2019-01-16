@@ -20,7 +20,7 @@
 	     , S63.PST_ITM_REQ_QTY qty  , S63.PST_ITM_DO_QTY doqty, S63.PST_ITM_BAL_QTY balqty , S63.PST_ITM_PRC itmprc
 	     , 0 reqqty , S62.CRT_USER_ID userid , S26.SERIAL_CHK serialchk , S62.PST_CUR_RATE pcr
 	     , S62.PST_CUR_TYPE_ID pcti, CUR.CODE pctcd , S32.CNT_NAME cntname
-	     , S59.PST_DO_REF_NO pstno
+
 	  FROM SAL0062D S62
 	     , SAL0063D S63
 	     , SYS0038M S38
@@ -31,7 +31,7 @@
 	     , (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 358) PTYPE
 	     , (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 42) UOM
 	     , (SELECT * FROM SYS0013M WHERE CODE_MASTER_ID = 94) CUR
-	     , SAL0059D S59
+
 	 WHERE 1 = 1
 	   AND S62.PST_LOC_ID       = S28.WH_LOC_ID
 	   AND S26.UOM              = UOM.CODE_ID
@@ -42,7 +42,7 @@
 	   AND S62.PST_DEALER_ID    = S30.DEALER_ID
 	   AND S62.PST_STUS_ID      = S38.STUS_CODE_ID
 	   AND S62.PST_SALES_ORD_ID = S63.PST_SALES_ORD_ID
-	   AND S62.PST_SALES_ORD_ID = S59.PST_SALES_ORD_ID
+
 	   <if test="pstno != null and pstno != ''">
 	       AND S62.PST_REF_NO = #{pstno}
 	   </if>
