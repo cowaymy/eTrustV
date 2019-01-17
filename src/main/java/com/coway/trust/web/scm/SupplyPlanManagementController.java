@@ -107,7 +107,18 @@ public class SupplyPlanManagementController {
 		List<EgovMap> selectSupplyPlanHeader	= supplyPlanManagementService.selectSupplyPlanHeader(param1);
 		//List<EgovMap> selectSupplyPlanInfo		= supplyPlanManagementService.selectSupplyPlanInfo(params);
 		
+		Map<String, Object> targetParams = new HashMap<String, Object>();
+		//LOGGER.debug("planFstWeek : " + planFstWeek + ", planFstSpltWeekk : " + planFstSpltWeek + ", planWeekTh : " + planWeekTh);
+		targetParams.put("planYear", selectScmTotalInfo.get(0).get("planYear"));
+		targetParams.put("planMonth", selectScmTotalInfo.get(0).get("planMonth"));
+		targetParams.put("planWeekTh", selectScmTotalInfo.get(0).get("planWeekTh"));
+		targetParams.put("planFstSpltWeek", selectScmTotalInfo.get(0).get("planFstSpltWeek"));
+		targetParams.put("planYearLstWeek", selectScmTotalInfo.get(0).get("planYearLstWeek"));
+		targetParams.put("leadTm", selectScmTotalInfo.get(0).get("leadTm"));
+		List<EgovMap> selectGetPoCntTargetCnt	= supplyPlanManagementService.selectGetPoCntTargetCnt(targetParams);
+		
 		map.put("selectScmTotalInfo", selectScmTotalInfo);
+		map.put("selectGetPoCntTargetCnt", selectGetPoCntTargetCnt);
 		//map.put("selectSupplyPlanInfo", selectSupplyPlanInfo);
 		map.put("selectSupplyPlanHeader", selectSupplyPlanHeader);
 
