@@ -2617,10 +2617,7 @@
     </update>
 
     <select id="deactivateCheck" parameterType="String" resultType="integer">
-	    SELECT
-		   COUNT(*)
-		FROM CMM0003D
-		WHERE UPLOAD_ID = #{uploadId}
+	    SELECT COUNT(*) FROM CMM0003D WHERE UPLOAD_ID = #{uploadId}
     </select>
 
     <update id="incentiveDeactivate" parameterType="Map">
@@ -3105,5 +3102,225 @@
            , #{itemRCd}, #{itemTAmt}, #{itemLvl}, SYSDATE, #{loginId}
            , #{hiddenMemberTypeID})
     </insert>
+
+    <select id="cffList" parameterType="Map" resultType="EgovMap">
+        SELECT
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.STUS_ID AS STUS_ID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            to_char(t1.CRT_DT,'DD-MM-YYYY HH24:MI:SS') AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            to_char(t1.UPD_DT,'DD-MM-YYYY HH24:MI:SS') AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS C1,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS C2
+        FROM  CMM0079D  t1
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE 1=1
+        <if test="uploadId != null and uploadId != ''">
+           AND t1.UPLOAD_ID= #{uploadId}
+        </if>
+        <if test="statusList != null and statusList != ''">
+           AND t1.STUS_ID IN (${statusList})
+        </if>
+        <if test="actionDate != null and actionDate != ''">
+           AND t1.ACTN_DT = to_date(#{actionDate},'mm-yyyy')
+        </if>
+        <if test="uploadDateFr != null and uploadDateFr != ''">
+            <![CDATA[AND t1.CRT_DT >= to_date(#{uploadDateFr},'dd-mm-yyyy')]]>
+        </if>
+        <if test="uploadDateTo != null and uploadDateTo != ''">
+            <![CDATA[ AND t1.CRT_DT <=  TO_DATE(TO_CHAR((TO_DATE(#{uploadDateTo},'dd-mm-yyyy')+1) - 1/24/60/60,'DDMMYYYY HH24:MI:SS'),'DDMMYYYY HH24:MI:SS')]]>
+        </if>
+        <if test="creator != null and creator != ''">
+            AND t6.USER_NAME = #{creator}
+        </if>
+        <if test="memberTypeList != null and memberTypeList != ''">
+            AND t1.MEM_TYPE_ID IN (${memberTypeList})
+         </if>
+        ORDER BY t1.UPLOAD_ID ASC
+   </select>
+
+   <select id="cffActiveUploadBatch" parameterType="Map" resultType="integer">
+            SELECT COUNT(*) FROM CMM0079D  t1
+            WHERE 1=1
+                <if test="statusId != null and statusId != ''">
+                AND t1.STUS_ID = #{statusId}
+                </if>
+                <if test="cmbType != null and cmbType != ''">
+                AND t1.UPLOAD_TYPE_ID = #{cmbType}
+                </if>
+                <if test="cmbMemberType != null and cmbMemberType != ''">
+                AND t1.MEM_TYPE_ID = #{cmbMemberType}
+                </if>
+   </select>
+
+    <select id="cffMasterUploadId" resultType="Integer">
+        SELECT CMM0079D_UPLOAD_ID_SEQ.nextval FROM dual
+   </select>
+
+    <insert id="insertCffMaster" parameterType="Map" >
+        INSERT INTO CMM0079D (UPLOAD_ID, STUS_ID, ACTN_DT, CRT_DT, CRT_USER_ID, UPD_DT, UPD_USER_ID, MEM_TYPE_ID)
+        VALUES (#{uploadId}, ${statusID}, <if test="actionDate != null and actionDate != ''">to_date(#{actionDate},'yyyymm')</if>  <if test="actionDate == null or actionDate == ''">sysdate</if> , sysdate, ${creator}, sysdate, ${updator}, ${memberTypeID})
+   </insert>
+   <insert id="insertCffDetail" parameterType="Map" >
+        INSERT INTO CMM0080D(UPLOAD_DET_ID, UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_CFF_MARK, SYS_MEM_ID, SYS_CFF_MARK,
+            UPD_DT, UPD_USER_ID, SYS_MEM_TYPE_ID)
+        VALUES(CMM0080D_UPLOAD_DET_ID_SEQ.nextval,#{uploadID},#{statusID},#{validStatusID},''
+          ,#{userMemberCode}, #{userCffMark},#{sysMemberID},#{sysCffMark},SYSDATE,#{updated},#{sysMemberTypeID})
+   </insert>
+
+      <select id="callCffDetail" parameterType="integer">
+        {call  SP_CFF_UP_DET_VERIFY(#{uploadId})}
+    </select>
+
+    <select id="cffMasterDetail" parameterType="integer" resultType="Map">
+        SELECT
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.STUS_ID AS STUS_ID,
+            to_char(t1.ACTN_DT,'mm-yyyy') AS ACTN_DT,
+            t1.CRT_DT AS CRT_DT,
+            t1.CRT_USER_ID AS CRT_USER_ID,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.MEM_TYPE_ID AS MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            t2.NAME AS NAME,
+            t4.CODE_NAME AS CODENAME1,
+            CASE WHEN (t5.USER_ID IS NOT NULL) THEN t5.USER_NAME ELSE 'N' END AS CRT_USER_NAME,
+            CASE WHEN (t6.USER_ID IS NOT NULL) THEN t6.USER_NAME ELSE 'N' END AS UPD_USER_NAME
+        FROM CMM0079D  t1
+            JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.STUS_ID
+            JOIN SYS0013M  t4 ON t4.CODE_ID = t1.MEM_TYPE_ID
+            LEFT OUTER JOIN SYS0047M  t5 ON t5.USER_ID = t1.CRT_USER_ID
+            LEFT OUTER JOIN SYS0047M  t6 ON t6.USER_ID = t1.UPD_USER_ID
+        WHERE t1.UPLOAD_ID = #{uploadId}
+    </select>
+
+    <select id="cffItemList" parameterType="Map" resultType="EgovMap">
+      SELECT
+            t1.UPLOAD_DET_ID AS UPLOAD_DET_ID,
+            t1.UPLOAD_ID AS UPLOAD_ID,
+            t1.VALID_STUS_ID AS VALID_STUS_ID,
+            t1.VALID_REM AS VALID_REM,
+            t1.USER_MEM_CODE AS USER_MEM_CODE,
+            t1.USER_CFF_MARK AS USER_CFF_MARK,
+            t1.SYS_MEM_ID AS SYS_MEM_ID,
+            t1.SYS_CFF_MARK AS SYS_CFF_MARK,
+            t1.UPD_DT AS UPD_DT,
+            t1.UPD_USER_ID AS UPD_USER_ID,
+            t1.SYS_MEM_TYPE_ID AS SYS_MEM_TYPE_ID,
+            t2.CODE AS CODE,
+            CASE WHEN (t3.CODE_ID IS NOT NULL) THEN t3.CODE ELSE 'N' END AS CODE_NM,
+            CASE WHEN (t4.MEM_ID IS NOT NULL) THEN t4.NAME ELSE 'N' END AS MEM_NM
+        FROM  CMM0080D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+        LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+        LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+        WHERE  t1.STUS_ID=1
+            AND t1.UPLOAD_ID = #{uploadId}
+           <if test="vStusId != null and vStusId != ''">
+           AND t1.VALID_STUS_ID = #{vStusId}
+           </if>
+           <if test="memId != null and memId != ''">
+             AND t4.MEM_ID = #{memId}
+             </if>
+            <if test="itemMemCd != null and itemMemCd != ''">
+             AND t1.USER_MEM_CODE = #{itemMemCd}
+            </if>
+        ORDER BY t1.UPLOAD_DET_ID ASC
+    </select>
+
+    <select id="cffItemCnt" parameterType="Map" resultType="integer">
+        SELECT
+          COUNT(*) cnt
+        FROM ( SELECT *
+            FROM    CMM0080D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+            LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+            LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+            WHERE t1.STUS_ID=1
+              AND t1.UPLOAD_ID = #{uploadId}
+              <if test="vStusId != null and vStusId != ''">
+              AND t1.VALID_STUS_ID = #{vStusId}
+              </if>
+              <if test="memId != null and memId != ''">
+              AND t4.MEM_ID = #{memId}
+              </if>
+              <if test="itemMemCd != null and itemMemCd != ''">
+              AND t1.USER_MEM_CODE = #{itemMemCd}
+              </if>
+        )   sub
+    </select>
+
+    <select id="cntCffMem" parameterType="Map" resultType="integer">
+        SELECT
+           COUNT(*) cnt
+        FROM    CMM0080D  t1 JOIN SYS0038M  t2 ON t2.STUS_CODE_ID = t1.VALID_STUS_ID
+            LEFT OUTER JOIN SYS0013M  t3 ON t3.CODE_ID = t1.SYS_MEM_TYPE_ID
+            LEFT OUTER JOIN ORG0001D  t4 ON (t4.MEM_ID = t1.SYS_MEM_ID) AND (t1.SYS_MEM_ID > 0)
+        WHERE t1.STUS_ID = #{statusId}
+            AND t1.UPLOAD_ID = #{uploadId}
+            AND t1.VALID_STUS_ID = #{vStusId}
+            AND t1.SYS_MEM_ID = #{memId}
+    </select>
+
+    <update id="cffItemUpdate" parameterType="Map">
+        UPDATE CMM0077D
+        SET
+           VALID_STUS_ID = #{vStatusId},
+           VALID_REM = '',
+           USER_TRGET_AMT = #{itemMark},
+           SYS_TRGET_AMT = #{itemMark},
+           UPD_DT = SYSDATE,
+           UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{updateDetId}
+    </update>
+
+   <insert id="cffItemInsert" parameterType="Map" >
+        INSERT INTO CMM0080D(UPLOAD_DET_ID, UPLOAD_ID, STUS_ID, VALID_STUS_ID, VALID_REM
+            , USER_MEM_CODE, USER_CFF_MARK, SYS_MEM_ID, SYS_CFF_MARK,
+            UPD_DT, UPD_USER_ID, SYS_MEM_TYPE_ID)
+        VALUES
+          (CMM0080D_UPLOAD_DET_ID_SEQ.nextval,#{uploadId},#{statusId} , #{vStatusId}, ''
+           , #{itemMemCd}, #{itemMark}, #{hiddenMemberID}, #{itemMark}, SYSDATE, #{loginId}, #{hiddenMemberTypeID})
+   </insert>
+
+   <select id="deactivateMboCheck" parameterType="String" resultType="integer">
+        SELECT COUNT(*) FROM CMM0076D WHERE UPLOAD_ID = #{uploadId}
+    </select>
+
+    <select id="deactivateCffCheck" parameterType="String" resultType="integer">
+        SELECT COUNT(*) FROM CMM0079D WHERE UPLOAD_ID = #{uploadId}
+    </select>
+
+    <update id="cffDeactivate" parameterType="Map">
+        UPDATE CMM0079D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT = SYSDATE,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_ID = #{uploadId}
+    </update>
+
+    <select id="callCffConfirm"  parameterType="Map"  statementType="CALLABLE" resultType="EgovMap">
+        { call  SP_CFF_TRGET_UP_CNFM(#{uploadId},#{loginId}, #{ v_sqlcode,mode=OUT,jdbcType=VARCHAR} , #{ v_sqlcont,mode=OUT,jdbcType=VARCHAR}) }
+    </select>
+
+    <update id="removeCffItem"  parameterType="Map">
+        UPDATE CMM0080D
+        SET
+            STUS_ID = #{statusId},
+            UPD_DT  = SYSDATE,
+            UPD_USER_ID = #{loginId}
+        WHERE UPLOAD_DET_ID = #{uploadDetId}
+    </update>
+
 
 </mapper>

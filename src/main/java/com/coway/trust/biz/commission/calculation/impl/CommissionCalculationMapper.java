@@ -380,5 +380,22 @@ public interface CommissionCalculationMapper {
 	int cntMboMem(Map<String, Object> params);
 	void mboItemInsert(Map<String, Object> params);
 	void mboItemUpdate(Map<String, Object> params);
+	int deactivateMboCheck(String uploadId);
 
+	int cffMasterUploadId();
+	List<EgovMap> cffList(Map<String, Object> params);
+	int cffActiveUploadBatch(Map<String, Object>  param);
+	void insertCffMaster(Map<String, Object> params);
+	void insertCffDetail(Map<String, Object> params);
+	void callCffDetail(int uploadId);
+	Map<String, Object> cffMasterDetail(int uploadId);
+	int cffItemCnt(Map<String, Object> params);
+	List<EgovMap> cffItemList(Map<String, Object> params);
+	void cffDeactivate(Map<String, Object> params);
+	void callCffConfirm(Map<String, Object> params);
+	void removeCffItem(Map<String, Object> params);
+	int cntCffMem(Map<String, Object> params);
+	void cffItemInsert(Map<String, Object> params);
+	void cffItemUpdate(Map<String, Object> params);
+	int deactivateCffCheck(String uploadId);
 }
