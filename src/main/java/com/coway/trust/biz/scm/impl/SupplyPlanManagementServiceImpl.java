@@ -75,6 +75,10 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 		return	supplyPlanManagementMapper.selectSupplyPlanList(params);
 	}
 	@Override
+	public List<EgovMap> selectGetPoCntTargetCnt(Map<String, Object> params) {
+		return	supplyPlanManagementMapper.selectGetPoCntTargetCnt(params);
+	}
+	@Override
 	public int insertSupplyPlanMaster(Map<String, Object> params, SessionVO sessionVO) {
 		
 		int saveCnt	= 0;
@@ -308,7 +312,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 				LOGGER.debug("j : " + j + ", seq : " + seq + ", year" + seq + " : " + poParams.get("year" + seq) + ", week" + seq + " : " + poParams.get("week" + seq));
 			}
 			//	fill dummy params
-			for ( int j = selectGetPoCntTarget.size() + 1 ; j < 16 ; j++ ) {
+			for ( int j = selectGetPoCntTarget.size() + 1 ; j < 18 ; j++ ) {
 			//for ( int j = poLoop + 1 ; j < 16 ; j++ ) {
 				poParams.put("year" + j, 9999);
 				poParams.put("week" + j, 99);
@@ -316,6 +320,7 @@ public class SupplyPlanManagementServiceImpl implements SupplyPlanManagementServ
 			poParams.put("cdc", cdc);
 			poParams.put("stockCode", stockCode);
 			LOGGER.debug("poParams : {}", poParams);
+			LOGGER.debug("This week confirm section : " + selectGetPoCntTarget.size());
 			List<EgovMap> selectGetPoCnt	= supplyPlanManagementMapper.selectGetPoCnt(poParams);
 			
 			//	each sum var init
