@@ -312,14 +312,14 @@ var poCreateListLayout	=
 			dataField : "fobPrc",
 			headerText : "FOB Price",
 			dataType : "numeric",
-			//formatString : "#,##0",
+			formatString : "#,##0.00",
 			editable : false,
 			style : "my-columnRight1"
 		}, {
 			dataField : "fobAmt",
 			headerText : "FOB Amount",
 			dataType : "numeric",
-			//formatString : "#,##0",
+			formatString : "#,##0.00",
 			editable : false,
 			style : "my-columnRight1"
 		}, {
@@ -545,7 +545,7 @@ var poCreatedListLayout	=
 			dataField : "poQty",
 			headerText : "PO Qty",
 			dataType : "numeric",
-			//formatString : "#,##0",
+			formatString : "#,##0.00",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnRight2";
@@ -557,7 +557,7 @@ var poCreatedListLayout	=
 			dataField : "fobAmt",
 			headerText : "FOB Amount",
 			dataType : "numeric",
-			//formatString : "#,##0",
+			formatString : "#,##0.00",
 			styleFunction : function(rowIndex, columnIndex, value, headerText, item, dataField) {
 				if ( 5 == item.poItemStusId ) {
 					return	"my-columnRight2";
@@ -814,7 +814,7 @@ function fnMoveStockGroup() {
 		
 		//	poQty
 		poQty	= parseInt(planQty) - parseInt(issQty);
-		fobPrc	= AUIGrid.getCellValue(myGridID, selectedRow, "fobPrc");
+		//fobPrc	= AUIGrid.getCellValue(myGridID, selectedRow, "fobPrc");
 		fobAmt	= parseFloat(poQty) * parseFloat(fobPrc);
 		console.log("qty : " + poQty + ", fobPrc : " + fobPrc + ", forAmt : " + fobAmt);
 		//	add row myGridID2
@@ -833,8 +833,8 @@ function fnMoveStockGroup() {
 			name : list[i].name,
 			poQty : poQty,
 			moq : list[i].moq,
-			fobPrc : fobPrc,
-			fobAmt : fobAmt,
+			fobPrc : list[i].fobPrc,
+			fobAmt : parseFloat(poQty) * parseFloat(list[i].fobPrc),
 			curr : list[i].curr,
 			currName : list[i].currName,
 			vendor : list[i].vendor,

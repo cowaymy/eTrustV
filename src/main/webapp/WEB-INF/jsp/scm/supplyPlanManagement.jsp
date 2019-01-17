@@ -275,12 +275,17 @@ function fnSupplyPlanHeader() {
 					Common.alert("Calendar Information is wrong");
 					return	false;
 				}
+				
 				scmTotalInfo	= result.selectScmTotalInfo;
 				var leadTm		= result.selectScmTotalInfo[0].leadTm;
 				var planWeekTh	= result.selectScmTotalInfo[0].planWeekTh;
 				var fromPlanToPoSpltCnt		= result.selectScmTotalInfo[0].fromPlanToPoSpltCnt;
 				console.log("leadTm : " + leadTm + ", planWeekTh : " + planWeekTh + ", fromPlanToPoSpltCnt : " + fromPlanToPoSpltCnt);
 				leadTm	= parseInt(leadTm) + parseInt(planWeekTh) + parseInt(fromPlanToPoSpltCnt);
+				
+				leadTm	= result.selectGetPoCntTargetCnt[0].cnt;
+				console.log("leadTm : " + leadTm);
+				
 				//	make header
 				if ( null != result.selectSupplyPlanHeader && 0 < result.selectSupplyPlanHeader.length ) {
 					dynamicLayout.push(
@@ -1262,11 +1267,11 @@ var myGridID;
 			<li><p class="btn_grid"><!-- <input type='button' id='UpdateBtn' name='UpdateBtn' value='Update M0 Data' disabled /> --></p></li>
 		</ul>
 		<ul class="right_btns">
-			<li><p id="btnCreate" class="btn_grid btn_disabled"><a onclick="fnCreate(this);">Create</a></p></li>
+			<li><p id="btnCreate" class="btn_grid"><a onclick="fnCreate(this);">Create</a></p></li>
 			<li><p id="btnSave" class="btn_grid btn_disabled"><a onclick="fnSaveDetail(this);">Save</a></p></li>
 			<li><p id="btnConfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'confirm');">Confirm</a></p></li>
 			<li><p id="btnUnconfirm" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'unconfirm');">UnConfirm</a></p></li>
-			<li><p id="btnReCalc" class="btn_grid btn_disabled"><a onclick="fnSaveMaster(this, 'reCalc');">Re-Calculation</a></p></li>
+			<li><p id="btnReCalc" class="btn_grid"><a onclick="fnSaveMaster(this, 'reCalc');">Re-Calculation</a></p></li>
 			<li><p id="btnExcel" class="btn_grid btn_disabled"><a onclick="fnExcel(this, 'SupplyPlanManagement');">Excel</a></p></li>
 		</ul>
 	</div><!-- side_btns end -->

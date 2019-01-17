@@ -203,7 +203,7 @@ var poSummaryGridLayout =
 					headerText : "<spring:message code='sys.scm.poApproval.fobAmt'/>",
 					style : "aui-grid-right-column",
 					dataType : "numeric",
-					formatString : "#,##0"
+					formatString : "#,##0.00"
 				}
 			 ]
 		}, {
@@ -221,7 +221,7 @@ var poSummaryGridLayout =
 					headerText : "<spring:message code='sys.scm.poApproval.fobAmt'/>",
 					style : "aui-grid-right-column",
 					dataType : "numeric",
-					formatString : "#,##0"
+					formatString : "#,##0.00"
 				}
 			 ]
 		}, {
@@ -239,7 +239,7 @@ var poSummaryGridLayout =
 					headerText : "<spring:message code='sys.scm.poApproval.fobAmt'/>",
 					style : "aui-grid-right-column",
 					dataType : "numeric",
-					formatString : "#,##0"
+					formatString : "#,##0.00"
 				}
 			 ]
 		}, {
@@ -257,7 +257,7 @@ var poSummaryGridLayout =
 					headerText : "<spring:message code='sys.scm.poApproval.fobAmt'/>",
 					style : "aui-grid-right-column",
 					dataType : "numeric",
-					formatString : "#,##0"
+					formatString : "#,##0.00"
 				}
 			 ]
 		}, {
@@ -275,7 +275,7 @@ var poSummaryGridLayout =
 					headerText : "<spring:message code='sys.scm.poApproval.fobAmt'/>",
 					style : "aui-grid-right-column",
 					dataType : "numeric",
-					formatString : "#,##0"
+					formatString : "#,##0.00"
 				}
 			 ]
 		}, {
@@ -289,7 +289,7 @@ var poSummaryGridLayout =
 			headerText : "<spring:message code='sys.scm.poApproval.totSumOfQty'/>",
 			style : "aui-grid-right-column",
 			dataType : "numeric",
-			formatString : "#,##0"
+			formatString : "#,##0.00"
 		}
 	 ];
 var poApprTargetGridLayout =
@@ -461,7 +461,7 @@ var poSummaryGridFooterLayout	=
 			positionField : "amt2010",
 			operation : "SUM",
 			style : "aui-grid-right-column",
-			formatString : "#,##0"
+			formatString : "#,##0.00"
 		}, {
 			dataField : "qty2020",
 			positionField : "qty2020",
@@ -473,7 +473,7 @@ var poSummaryGridFooterLayout	=
 			positionField : "amt2020",
 			operation : "SUM",
 			style : "aui-grid-right-column",
-			formatString : "#,##0"
+			formatString : "#,##0.00"
 		}, {
 			dataField : "qty2030",
 			positionField : "qty2030",
@@ -485,7 +485,7 @@ var poSummaryGridFooterLayout	=
 			positionField : "amt2030",
 			operation : "SUM",
 			style : "aui-grid-right-column",
-			formatString : "#,##0"
+			formatString : "#,##0.00"
 		}, {
 			dataField : "qty2040",
 			positionField : "qty2040",
@@ -497,7 +497,7 @@ var poSummaryGridFooterLayout	=
 			positionField : "amt2040",
 			operation : "SUM",
 			style : "aui-grid-right-column",
-			formatString : "#,##0"
+			formatString : "#,##0.00"
 		}, {
 			dataField : "qty2050",
 			positionField : "qty2050",
@@ -509,7 +509,7 @@ var poSummaryGridFooterLayout	=
 			positionField : "amt2050",
 			operation : "SUM",
 			style : "aui-grid-right-column",
-			formatString : "#,##0"
+			formatString : "#,##0.00"
 		}, {
 			dataField : "totQty",
 			positionField : "totQty",
@@ -521,7 +521,7 @@ var poSummaryGridFooterLayout	=
 			positionField : "totAmt",
 			operation : "SUM",
 			style : "aui-grid-right-column",
-			formatString : "#,##0"
+			formatString : "#,##0.00"
 		}
 	 ];
 
