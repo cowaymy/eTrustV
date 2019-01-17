@@ -198,6 +198,7 @@
     <input id="docId" name="docId" type="hidden" value="${paramDocId}">
     <input id="typeId" name="typeId" type="hidden" value="${paramTypeId}">
     <input id="refId" name="refId" type="hidden" value="${paramRefId}">
+    <input id="salesOrdId" name="salesOrdId" type="hidden" value="${cancelReqInfo.ordId}">
 </form>
 <section class="pop_body"><!-- pop_body start -->
 
@@ -447,8 +448,8 @@
     </article><!-- grid_wrap end -->
 
     </dd>
-    <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(prodReturnGridID)"><spring:message code="sal.text.productReturnTransaction" /></a></dt>
-    <dd>
+<%--     <dt class="click_add_on"><a href="#" onclick="javascript: fn_resizefunc(prodReturnGridID)"><spring:message code="sal.text.productReturnTransaction" /></a></dt>
+ --%>    <dd>
 
     <article class="grid_wrap"><!-- grid_wrap start -->
         <div id="productReturn" style="width:100%; height:480px; margin:0 auto;"></div>
