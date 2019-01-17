@@ -600,7 +600,7 @@ SELECT A.CAL_ID
                              , CASE WHEN A.SCM_MONTH = 1 AND A.SCM_WEEK = 1 THEN 1 ELSE A.SCM_WEEK_SEQ END AS SCM_WEEK_SEQ
                           FROM SCM0018M A
                          WHERE A.SCM_YEAR = #{planYear}
-                           AND A.SCM_WEEK BETWEEN #{planFstSpltWeek} AND (#{planFstSpltWeek} + #{leadTm} + #{planWeekTh} - 2)
+                           AND A.SCM_WEEK BETWEEN #{planFstSpltWeek} AND (#{planFstSpltWeek} + #{leadTm} + #{planWeekTh})
                            AND A.SCM_MONTH || A.SCM_WEEK != '121'
                            AND A.SCM_MONTH <![CDATA[ >= ]]> #{planMonth}
                         ) A
@@ -615,14 +615,82 @@ SELECT A.CAL_ID
                              , CASE WHEN A.SCM_MONTH = 1 AND A.SCM_WEEK = 1 THEN 1 ELSE A.SCM_WEEK_SEQ END AS SCM_WEEK_SEQ
                           FROM SCM0018M A
                          WHERE A.SCM_YEAR = (#{planYear} + 1)
-                           AND A.SCM_WEEK BETWEEN 1 AND (#{planFstSpltWeek} + #{leadTm} + #{planWeekTh} - 2 - #{planYearLstWeek})
+                           AND A.SCM_WEEK BETWEEN 1 AND (#{planFstSpltWeek} + #{leadTm} + #{planWeekTh} - #{planYearLstWeek})
                            AND A.SCM_MONTH || A.SCM_WEEK != '121'
                         ) A
                  WHERE A.RN = 1
-                ) AS TO_CAL
+                ) AS TO_CAL1
+             , (
+                SELECT A.CAL_ID
+                  FROM (
+                        SELECT ROW_NUMBER() OVER (PARTITION BY A.SCM_YEAR ORDER BY A.CAL_ID DESC) AS RN
+                             , A.CAL_ID, A.SCM_YEAR, A.SCM_MONTH, A.SCM_WEEK
+                             , CASE WHEN A.SCM_MONTH = 1 AND A.SCM_WEEK = 1 THEN 0 ELSE A.IS_SPLT END AS IS_SPLT
+                             , CASE WHEN A.SCM_MONTH = 1 AND A.SCM_WEEK = 1 THEN 1 ELSE A.SCM_WEEK_SEQ END AS SCM_WEEK_SEQ
+                          FROM SCM0018M A
+                         WHERE A.SCM_YEAR = #{planYear}
+                           AND A.SCM_WEEK BETWEEN #{planFstSpltWeek} AND (#{planFstSpltWeek} + #{leadTm} + #{planWeekTh})
+                           AND A.SCM_MONTH || A.SCM_WEEK != '121'
+                           AND A.SCM_MONTH <![CDATA[ >= ]]> #{planMonth}
+                        ) A
+                 WHERE A.RN = 1
+                ) AS TO_CAL2
           FROM DUAL
         ) B
- WHERE A.CAL_ID BETWEEN B.FROM_CAL AND B.TO_CAL
+ WHERE A.CAL_ID BETWEEN B.FROM_CAL AND NVL(B.TO_CAL1, B.TO_CAL2)
+ ORDER BY A.CAL_ID
+</select>
+<select id="selectGetPoCntTargetCnt" parameterType="Map" resultType="egovMap">
+SELECT COUNT(*) AS CNT
+  FROM SCM0018M A
+     , (
+        SELECT (
+                SELECT A.CAL_ID
+                  FROM (
+                        SELECT ROW_NUMBER() OVER (PARTITION BY A.SCM_YEAR ORDER BY A.CAL_ID) AS RN
+                             , A.CAL_ID, A.SCM_YEAR, A.SCM_MONTH, A.SCM_WEEK
+                             , CASE WHEN A.SCM_MONTH = 1 AND A.SCM_WEEK = 1 THEN 0 ELSE A.IS_SPLT END AS IS_SPLT
+                             , CASE WHEN A.SCM_MONTH = 1 AND A.SCM_WEEK = 1 THEN 1 ELSE A.SCM_WEEK_SEQ END AS SCM_WEEK_SEQ
+                          FROM SCM0018M A
+                         WHERE A.SCM_YEAR = #{planYear}
+                           AND A.SCM_WEEK BETWEEN #{planFstSpltWeek} AND (#{planFstSpltWeek} + #{leadTm} + #{planWeekTh})
+                           AND A.SCM_MONTH || A.SCM_WEEK != '121'
+                           AND A.SCM_MONTH <![CDATA[ >= ]]> #{planMonth}
+                        ) A
+                 WHERE A.RN = 1
+                ) AS FROM_CAL
+             , (
+                SELECT A.CAL_ID
+                  FROM (
+                        SELECT ROW_NUMBER() OVER (PARTITION BY A.SCM_YEAR ORDER BY A.CAL_ID DESC) AS RN
+                             , A.CAL_ID, A.SCM_YEAR, A.SCM_MONTH, A.SCM_WEEK
+                             , CASE WHEN A.SCM_MONTH = 1 AND A.SCM_WEEK = 1 THEN 0 ELSE A.IS_SPLT END AS IS_SPLT
+                             , CASE WHEN A.SCM_MONTH = 1 AND A.SCM_WEEK = 1 THEN 1 ELSE A.SCM_WEEK_SEQ END AS SCM_WEEK_SEQ
+                          FROM SCM0018M A
+                         WHERE A.SCM_YEAR = (#{planYear} + 1)
+                           AND A.SCM_WEEK BETWEEN 1 AND (#{planFstSpltWeek} + #{leadTm} + #{planWeekTh} - #{planYearLstWeek})
+                           AND A.SCM_MONTH || A.SCM_WEEK != '121'
+                        ) A
+                 WHERE A.RN = 1
+                ) AS TO_CAL1
+             , (
+                SELECT A.CAL_ID
+                  FROM (
+                        SELECT ROW_NUMBER() OVER (PARTITION BY A.SCM_YEAR ORDER BY A.CAL_ID DESC) AS RN
+                             , A.CAL_ID, A.SCM_YEAR, A.SCM_MONTH, A.SCM_WEEK
+                             , CASE WHEN A.SCM_MONTH = 1 AND A.SCM_WEEK = 1 THEN 0 ELSE A.IS_SPLT END AS IS_SPLT
+                             , CASE WHEN A.SCM_MONTH = 1 AND A.SCM_WEEK = 1 THEN 1 ELSE A.SCM_WEEK_SEQ END AS SCM_WEEK_SEQ
+                          FROM SCM0018M A
+                         WHERE A.SCM_YEAR = #{planYear}
+                           AND A.SCM_WEEK BETWEEN #{planFstSpltWeek} AND (#{planFstSpltWeek} + #{leadTm} + #{planWeekTh})
+                           AND A.SCM_MONTH || A.SCM_WEEK != '121'
+                           AND A.SCM_MONTH <![CDATA[ >= ]]> #{planMonth}
+                        ) A
+                 WHERE A.RN = 1
+                ) AS TO_CAL2
+          FROM DUAL
+        ) B
+ WHERE A.CAL_ID BETWEEN B.FROM_CAL AND NVL(B.TO_CAL1, B.TO_CAL2)
  ORDER BY A.CAL_ID
 </select>
 <select id="selectGetPoCnt" parameterType="Map" resultType="egovMap">
@@ -762,6 +830,24 @@ SELECT A.STOCK_CODE
                AND Z.CDC = A.CDC
                AND X.STOCK_CODE = A.STOCK_CODE
             ), 0) AS W15
+     , NVL((
+            SELECT SUM(NVL(X.PO_QTY, 0))
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
+             WHERE Z.PLAN_GR_YEAR = #{year16}
+               AND Z.PLAN_GR_WEEK = #{week16}
+               AND Z.CDC = A.CDC
+               AND X.STOCK_CODE = A.STOCK_CODE
+            ), 0) AS W16
+     , NVL((
+            SELECT SUM(NVL(X.PO_QTY, 0))
+              FROM SCM0052M Z
+              LEFT OUTER JOIN SCM0053D X ON (Z.PO_ID = X.PO_ID)
+             WHERE Z.PLAN_GR_YEAR = #{year17}
+               AND Z.PLAN_GR_WEEK = #{week17}
+               AND Z.CDC = A.CDC
+               AND X.STOCK_CODE = A.STOCK_CODE
+            ), 0) AS W17
   FROM (SELECT #{stockCode} AS STOCK_CODE, #{cdc} AS CDC FROM DUAL) A
 </select>
 <update id="updateSupplyPlanDetailPsi1" parameterType="Map">
