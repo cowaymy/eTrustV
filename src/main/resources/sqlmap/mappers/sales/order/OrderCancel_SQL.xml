@@ -394,7 +394,7 @@
 				      ]]>
 			     LEFT JOIN SYS0047M Extent5
 			       ON Extent5.USER_ID = Filter1.UPD_USER_ID
-			  WHERE  Filter1.DOC_ID = #{docId}
+			  WHERE  Filter1.SALES_ORD_ID = #{salesOrdId}
 			     AND  Filter1.TYPE_ID = #{typeId}
     </select>
 
