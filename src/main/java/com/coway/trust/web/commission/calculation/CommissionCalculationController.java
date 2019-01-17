@@ -2961,4 +2961,25 @@ public class CommissionCalculationController {
 		return ResponseEntity.ok(message);
 	}
 
+	@RequestMapping(value = "/cffConfirm")
+	public ResponseEntity<ReturnMessage> cffConfirm(@RequestParam Map<String, Object> params, ModelMap model) {
+		ReturnMessage message = new ReturnMessage();
+		SessionVO sessionVO = sessionHandler.getCurrentSessionInfo();
+		int loginId = sessionVO.getUserId();
+		params.put("loginId", loginId);
+
+		commissionCalculationService.callCffConfirm(params);
+
+		String msg = null;
+		if(params.get("v_sqlcode") != null){
+			msg = "("+ params.get("v_sqlcode") +")"+ params.get("v_sqlcont");
+		}
+		System.out.println("##msg : "+msg);
+		Map detail = commissionCalculationService.cffMasterDetail(Integer.parseInt(params.get("uploadId").toString()));
+
+		message.setData(detail);
+		message.setMessage(msg);
+		return ResponseEntity.ok(message);
+	}
+
 }

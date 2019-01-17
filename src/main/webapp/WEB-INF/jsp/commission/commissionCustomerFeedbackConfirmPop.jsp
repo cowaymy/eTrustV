@@ -123,8 +123,9 @@ var itemGridID;
 		if(Number($("#cntValid").val()) < 1){
 			Common.alert('<spring:message code="commission.alert.incentive.confirm.fail"/>');
 		}else{
-			Common.ajax("GET", "/commission/calculation/mboConfirm", $("#conForm").serializeJSON() , function(result) {
-				if(result.message != null){
+			Common.ajax("GET", "/commission/calculation/cffConfirm", $("#conForm").serializeJSON() , function(result) {
+				console.log(result.message);
+				if(result.message != null ){
 					Common.alert("<spring:message code='commission.alert.incentive.noValid' arguments='"+result.message+"' htmlEscape='false'/>");
 				}else{
 					Common.alert('<spring:message code="commission.alert.incentive.confirm.fail"/>');
