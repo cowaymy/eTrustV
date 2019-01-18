@@ -194,6 +194,8 @@ function fn_departmentCode(value){
         $("#searchdepartment").attr("disabled", false);
         $("#searchSubDept").attr("disabled", false);
 
+
+
      }
 
 
@@ -356,6 +358,16 @@ function fn_departmentCode(value){
 
                 });
 	        }
+
+
+/*         case "3201" : // HOMECARE TECHNICIAN DEPARTMENT CODE -- Added by Tommy
+
+            var jsonObj = {
+                memberLvl : 3,
+                flag :  "%HTM%"
+        };
+           doGetCombo("/organization/selectHomecareDepartmentCode", jsonObj , ''   , 'deptCd' , 'S', '');
+ */
 	        /*
 	        $("#branch").find('option').each(function() {
                     $(this).remove();
@@ -475,6 +487,20 @@ console.log("ready");
         }
         fn_departmentCode(memberType);
      });
+
+	$("#traineeType1").click(function(){   // CHECK Trainee Type = Cody then Disable Main & Sub Department selection -- Added by Tommy
+		var traineeType = $("#traineeType1").val();
+
+		if(traineeType == 2){
+            $("#searchdepartment").attr("disabled", true);
+            $("#searchSubDept").attr("disabled", true);
+		}else{
+            $("#searchdepartment").attr("disabled", false);
+            $("#searchSubDept").attr("disabled", false);
+		}
+
+	});
+
 
      $("#searchdepartment").change(function(){
 
@@ -1220,6 +1246,7 @@ function checkBankAccNo() {
         <option value="4">Coway Staff (Staff)</option>
         <option value="5" selected="selected">Trainee</option>
         <option value="2803">HP Applicant</option>
+<!--         <option value="3201">HOMECARE Technician</option> -->
     </select>
     </td>
 </tr>
