@@ -1410,6 +1410,8 @@
 							$('#modRejectDate').removeAttr("disabled");
 							$('#modStartDate').val("").prop("disabled", true);
 							$('#modRejectReason').removeAttr("disabled");
+                            $("#chkRejectDate").prop("checked", true);
+
 						}
 
 						$('#modPayTerm').val(rsltInfo.payTrm);
@@ -1429,6 +1431,7 @@
 		} else if (paymodeId == '132') {
 			typeId = 170;
 		}
+
 
 		doGetComboCodeId('/common/selectReasonCodeList.do', {
 			typeId : typeId,
@@ -3806,7 +3809,7 @@
        <td><input id="modStartDate" name="startDate" type="text"
         title="Create start Date" placeholder="DD/MM/YYYY"
         class="j_date w100p" /></td>
-       <th scope="row"><label> <input id="chkRejectDate"
+       <th scope="row"><label> <input id="chkRejectDate" name="chkRejectDate"
          type="checkbox" value="1" /><span>Reject Date</span><span
          id="spRjctDate" class="must"></span></label></th>
        <td><input id="modRejectDate" name="rejectDate" type="text"
