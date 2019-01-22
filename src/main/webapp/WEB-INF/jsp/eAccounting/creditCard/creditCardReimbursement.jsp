@@ -401,6 +401,11 @@ function fn_checkEmpty() {
         checkResult = false;
         return checkResult;
     }
+    if(FormUtil.isEmpty($("#sCostCentr").val())) {
+        Common.alert('<spring:message code="pettyCashCustdn.costCentr.msg" />');
+        checkResult = false;
+        return checkResult;
+    }
     //if($("#invcType").val() == "F") {
         if(FormUtil.isEmpty($("#newSupplyName").val())) {
             Common.alert('<spring:message code="crditCardReim.supplierName.msg" />');
@@ -417,6 +422,12 @@ function fn_checkEmpty() {
             checkResult = false;
             return checkResult;
         }*/
+        //
+        if(FormUtil.isEmpty($("#expDesc").val())) {
+            Common.alert('Please enter remark.');
+            checkResult = false;
+            return checkResult;
+        }
         var length = AUIGrid.getGridData(myGridID).length;
         if(length > 0) {
             for(var i = 0; i < length; i++) {
@@ -430,7 +441,7 @@ function fn_checkEmpty() {
                     checkResult = false;
                     return checkResult;
                 }*/
-                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "totAmt"))) { //gstBeforAmt
+                if(FormUtil.isEmpty(AUIGrid.getCellValue(myGridID, i, "totAmt")) || AUIGrid.getCellValue(myGridID, i, "totAmt") <= 0) { //gstBeforAmt
                     //Common.alert('<spring:message code="pettyCashExp.amtBeforeGstOfLine.msg" />' + (i +1) + ".");
                     Common.alert('Please enter amount for detail line' + (i +1) + ".");
                     checkResult = false;
