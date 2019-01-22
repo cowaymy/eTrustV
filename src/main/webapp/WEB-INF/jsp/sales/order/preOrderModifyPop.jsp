@@ -1493,7 +1493,7 @@
                     $("#corpTypeNm").val(""); //Industry Code
                 }
 
-                if(custInfo.custAddId > 0) {
+                if('${preOrderInfo.custBillAddId}' != null && '${preOrderInfo.custBillAddId}' != null) {
                     //----------------------------------------------------------
                     // [Billing Detail] : Billing Address SETTING
                     //----------------------------------------------------------
