@@ -825,6 +825,254 @@ public class CustomerController {
     return ResponseEntity.ok(tempCustSeq);
   }
 
+  @RequestMapping(value = "/insCustBasicInfoEkeyin.do", method = RequestMethod.POST)
+  public ResponseEntity<Integer> insCustBasicInfoEkeyin(@RequestBody CustomerForm customerForm, Model model)
+      throws Exception {
+
+    int getCustCareCntId = 0;
+    String defaultDate = "01/01/1900";
+    SessionVO sessionVo = sessionHandler.getCurrentSessionInfo();
+    CustomerVO vo = customerForm.getCustomerVO();
+
+    // Credit Card addList
+    GridDataSet<CustomerCardListGridForm> dataSet = customerForm.getDataSet();
+    List<CustomerCardListGridForm> addList = dataSet.getAdd();
+    List<CustomerCVO> customerCardVOList = new ArrayList<>();
+    // Bank Account addList
+    GridDataSet<CustomerBankAccListGridForm> dataSetBank = customerForm.getDataSetBank();
+    List<CustomerBankAccListGridForm> addBankList = dataSetBank.getAdd();
+    List<CustomerBVO> customerBankVOList = new ArrayList<>();
+
+    getCustCareCntId = customerService.getCustCareCntIdSeq();
+
+    LOGGER.info("##########getCustCareCntId :::::::   " + getCustCareCntId);
+
+    Map<String, Object> insmap = new HashMap();
+
+    Map<String, Object> ins29Dmap = new HashMap();
+
+    // Basic Info
+    int tempCustSeq = 0;
+    tempCustSeq = customerService.getCustIdSeq();
+
+    final int customerId = tempCustSeq;
+
+    insmap.put("custSeq", tempCustSeq);
+    insmap.put("custName", vo.getCustName());
+    insmap.put("cmbNation", String.valueOf(vo.getCmbNation()) != null ? vo.getCmbNation() : 0);
+    if (vo.getDob() != null && !"".equals(vo.getDob())) {
+      insmap.put("dob", vo.getDob());
+    } else {
+      insmap.put("dob", defaultDate);
+    }
+    insmap.put("nric", vo.getNric() != null ? vo.getNric() : "");
+    insmap.put("oldNric", vo.getOldNric() != null ? vo.getOldNric() : "");
+    LOGGER.info("##########vo.getGender() :::::::   " + vo.getGender());
+    insmap.put("gender", vo.getGender() != null ? vo.getGender() : "");
+    insmap.put("cmbRace", String.valueOf(vo.getCmbRace()) != null ? vo.getCmbRace() : 0);
+    insmap.put("email", vo.getEmail() != null ? vo.getEmail() : "");
+    if (vo.getRem() != null) {
+      insmap.put("rem", vo.getRem());
+    } else {
+      insmap.put("rem", null);
+    }
+    insmap.put("stusCodeId", 1); // 고정
+    insmap.put("updUserId", sessionVo.getUserId());
+    insmap.put("renGrp", ""); // 고정
+    insmap.put("pstTerms", 0); // 고정
+    insmap.put("idOld", 0); // 고정
+    insmap.put("crtUserId", sessionVo.getUserId());
+    insmap.put("cmbTypeId", vo.getCmbTypeId());
+    insmap.put("pasSportExpr", vo.getPasSportExpr() != null ? vo.getPasSportExpr() : defaultDate);
+    insmap.put("visaExpr", vo.getVisaExpr() != null ? vo.getVisaExpr() : defaultDate);
+    insmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
+    insmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
+
+    // 98 9920 0068 7067
+
+    String getCustVano = "";
+    int custseqLenghth = Integer.toString(tempCustSeq).length();
+    String tempCustSeqVa = String.valueOf(tempCustSeq);
+    LOGGER.info("##########custseqLenghth :::::::   " + custseqLenghth);
+    LOGGER.info("##########tempCustSeqVa :::::::   " + tempCustSeqVa);
+    if (custseqLenghth == 4) {
+      getCustVano = "98 9920 0000" + tempCustSeqVa;
+    } else if (custseqLenghth == 5) {
+      getCustVano = "98 9920 000" + tempCustSeqVa.substring(0, 1) + " " + tempCustSeqVa.substring(1);
+    } else if (custseqLenghth == 6) {
+      getCustVano = "98 9920 00" + tempCustSeqVa.substring(0, 2) + " " + tempCustSeqVa.substring(2);
+    } else if (custseqLenghth == 7) {
+      getCustVano = "98 9920 0" + tempCustSeqVa.substring(0, 3) + " " + tempCustSeqVa.substring(3);
+    } else if (custseqLenghth == 8) {
+      getCustVano = "98 9920 " + tempCustSeqVa.substring(0, 4) + " " + tempCustSeqVa.substring(4);
+    }
+
+    ins29Dmap.put("getCustVano", getCustVano);
+    ins29Dmap.put("custSeq", tempCustSeq);
+    ins29Dmap.put("custName", vo.getCustName());
+    ins29Dmap.put("cmbNation", String.valueOf(vo.getCmbNation()) != null ? vo.getCmbNation() : 0);
+    if (vo.getDob() != null && !"".equals(vo.getDob())) {
+      ins29Dmap.put("dob", vo.getDob());
+    } else {
+      ins29Dmap.put("dob", defaultDate);
+    }
+    ins29Dmap.put("nric", vo.getNric() != null ? vo.getNric() : "");
+    ins29Dmap.put("oldNric", vo.getOldNric() != null ? vo.getOldNric() : "");
+    LOGGER.info("########## vo.getGender() :::::::   " + vo.getGender());
+    ins29Dmap.put("gender", vo.getGender() != null ? vo.getGender() : "");
+    ins29Dmap.put("cmbRace", String.valueOf(vo.getCmbRace()) != null ? vo.getCmbRace() : 0);
+    ins29Dmap.put("email", vo.getEmail() != null ? vo.getEmail() : "");
+    if (vo.getRem() != null) {
+      ins29Dmap.put("rem", vo.getRem());
+    } else {
+      ins29Dmap.put("rem", null);
+    }
+    ins29Dmap.put("stusCodeId", 1); // 고정
+    ins29Dmap.put("updUserId", sessionVo.getUserId());
+    ins29Dmap.put("renGrp", ""); // 고정
+    ins29Dmap.put("pstTerms", 0); // 고정
+    ins29Dmap.put("idOld", 0); // 고정
+    ins29Dmap.put("crtUserId", sessionVo.getUserId());
+    ins29Dmap.put("cmbTypeId", vo.getCmbTypeId());
+    ins29Dmap.put("pasSportExpr", vo.getPasSportExpr() != null ? vo.getPasSportExpr() : defaultDate);
+    ins29Dmap.put("visaExpr", vo.getVisaExpr() != null ? vo.getVisaExpr() : defaultDate);
+    ins29Dmap.put("cmbCorpTypeId", vo.getCmbTypeId() == 965 ? vo.getCmbCorpTypeId() : 0);
+    ins29Dmap.put("gstRgistNo", vo.getGstRgistNo() != null ? vo.getGstRgistNo() : "");
+
+    // Address
+    insmap.put("addrDtl", vo.getAddrDtl());
+    insmap.put("areaId", vo.getAreaId());
+    insmap.put("streetDtl", vo.getStreetDtl());
+
+    // insmap.put("addr3", vo.getAddr3());
+    // insmap.put("addr4", ""); //고정
+    // insmap.put("postCodeId", String.valueOf(vo.getCmbPostCd()) != null ?
+    // vo.getCmbPostCd() : 0);
+    // insmap.put("postCode", ""); //고정
+    // insmap.put("areaId", String.valueOf(vo.getCmbArea()) != null ?
+    // vo.getCmbArea() : 0);
+    // insmap.put("area", ""); //고정
+    // insmap.put("stateId", String.valueOf(vo.getMstate()) != null ?
+    // vo.getMstate() : 0);
+    // insmap.put("cntyId", 1); //고정 (cmbCoountry)
+    // insmap.put("stusCodeId", 9); // 고정
+    // insmap.put("addrRem", vo.getAddrRem()); // 고정
+    // insmap.put("idOld", 0); // 고정
+    // insmap.put("soId", 0); // 고정
+    // insmap.put("idcm", 0); // 고정
+
+    // additional service contact
+    insmap.put("getCustCareCntId", getCustCareCntId);
+    insmap.put("custInitial", String.valueOf(vo.getCustInitial()) != null ? vo.getCustInitial() : 0);
+    insmap.put("pos", ""); // 고정
+    insmap.put("telM1", vo.getTelM1());
+    insmap.put("telM2", ""); // 고정
+    insmap.put("telO", vo.getTelO());
+    insmap.put("telR", vo.getTelR());
+    insmap.put("telF", vo.getTelF());
+    insmap.put("dept", ""); // 고정
+    insmap.put("dcm", 0); // 고정
+    insmap.put("ext", vo.getExt());
+
+    insmap.put("asTelM", vo.getAsTelM());
+    insmap.put("asTelO", vo.getAsTelO());
+    insmap.put("asTelR", vo.getAsTelR());
+    insmap.put("asTelF", vo.getAsTelF());
+    insmap.put("asExt", vo.getAsExt());
+    insmap.put("asEmail", vo.getAsEmail());
+    insmap.put("asCustName", vo.getAsCustName());
+
+    /* NRIC Dup Check */
+
+    EgovMap nricDupMap = customerService.nricDupChk(insmap);
+    if (nricDupMap != null) {
+      return null;
+    }
+
+    LOGGER.info("########## ins29Dmap :::::::   " + ins29Dmap.toString());
+
+    customerService.insertCustomerInfo(ins29Dmap);
+    //customerService.insertAddressInfo(insmap);
+    customerService.insertContactInfo(insmap);
+    customerService.insertCareContactInfo(insmap);
+
+    // insert Credit Card Info
+    if (addList != null) {
+      // int getCustCrcIdSeq = customerService.getCustCrcIdSeq();
+      addList.forEach(form -> {
+        CustomerCVO customerCVO = new CustomerCVO();
+        customerCVO.setGetCustId(customerId);
+        customerCVO.setCrcType(form.getCrcType());
+        customerCVO.setBank(form.getBank());
+        customerCVO.setCardType(form.getCardType());
+        customerCVO.setCardRem(null); // 임시
+        // customerCVO.setGetCustCrcIdSeq(getCustCrcIdSeq);
+        customerCVO.setCrcNo(null); // 암호화 코드
+        customerCVO.setCreditCardNo(form.getCreditCardNo());
+        customerCVO.setEncCrcNo(null); // 암호화 코드
+        customerCVO.setNmCard(form.getNmCard());
+        customerCVO.setCrcStusId(1); // 고정
+        customerCVO.setCrcUpdId(sessionVo.getUserId()); // 임시
+        customerCVO.setCrcCrtId(sessionVo.getUserId()); // 임시
+
+        String cardExpiry = form.getCardExpiry();
+        if (cardExpiry != null) {
+          cardExpiry = cardExpiry.substring(0, 2) + cardExpiry.substring(5, 7);
+        } else {
+          cardExpiry = null;
+        }
+        customerCVO.setCardExpiry(cardExpiry);
+        customerCVO.setCrcIdOld(0); // 고정
+        customerCVO.setSoId(0); // 고정
+        customerCVO.setCrcIdcm(0); // 고정
+
+        customerCardVOList.add(customerCVO);
+
+      });
+
+      customerService.insertCreditCardInfo(customerCardVOList);
+      LOGGER.info("추가 : {}", addList.toString());
+    }
+
+    // insert Bank Account Info
+    if (addBankList != null) {
+      // int getCustAccIdSeq = customerService.getCustAccIdSeq();
+      addBankList.forEach(form -> {
+        CustomerBVO customerBVO = new CustomerBVO();
+        // customerBVO.setGetCustAccIdSeq(getCustAccIdSeq);
+        customerBVO.setAccNo(form.getAccNo());
+        customerBVO.setEncAccNo(form.getEncAccNo());
+        customerBVO.setAccOwner(form.getAccOwner());
+        customerBVO.setAccTypeId(form.getAccTypeId()); // 0
+        customerBVO.setAccBankId(form.getAccBankId()); // 0
+        customerBVO.setAccBankBrnch(form.getAccBankBrnch());
+        customerBVO.setAccRem(form.getAccRem());
+        customerBVO.setAccStusId(1);
+        customerBVO.setAccUpdUserId(sessionVo.getUserId()); // 임시
+        customerBVO.setAccNric(""); // 고정
+        customerBVO.setAccIdOld(0); // 고정
+        customerBVO.setSoId(0); // 고정
+        customerBVO.setAccIdcm(0); // 고정
+        customerBVO.setHlbbId(0); // 고정
+        customerBVO.setAccCrtUserId(sessionVo.getUserId()); // 임시
+        customerBVO.setDdtChnlCde(form.getDdtChnlCde());
+
+        customerBankVOList.add(customerBVO);
+      });
+
+      customerService.insertBankAccountInfo(customerBankVOList);
+      LOGGER.info("Bank추가 : {}", addBankList.toString());
+    }
+
+    /*
+     * ReturnMessage message = new ReturnMessage();
+     * message.setCode(AppConstants.SUCCESS);
+     * message.setMessage(messageAccessor.getMessage(AppConstants.MSG_SUCCESS));
+     */
+
+    return ResponseEntity.ok(tempCustSeq);
+  }
+
   /**
    *
    * NRIC / Company No 중복체크

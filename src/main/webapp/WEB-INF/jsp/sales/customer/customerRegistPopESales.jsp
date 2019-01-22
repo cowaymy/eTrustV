@@ -380,7 +380,7 @@
                 }
             };
 
-            Common.ajax("POST", "/sales/customer/insCustBasicInfo.do", customerForm, function(result) {
+            Common.ajax("POST", "/sales/customer/insCustBasicInfoEkeyin.do", customerForm, function(result) {
 
                 if(result != null){
                     $("._custMakeBtn").css("display" , "none");
