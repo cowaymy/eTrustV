@@ -362,8 +362,8 @@
              , CUST_BILL_WEB_PORTAL_URL   = #{custBillWebPortalUrl}
              , CUST_BILL_IS_SMS2          = #{custBillIsSms2}
              , CUST_BILL_CUST_CARE_CNT_ID = #{custBillCustCareCntId}
-             , REM1                       = #{rem1}
-             , REM2                       = #{rem2}
+             <!-- , REM1                       = #{rem1}
+             , REM2                       = #{rem2} -->
              , UPD_USER_ID                = #{updUserId}
              , UPD_DT                     = SYSDATE
              , STUS_ID = #{stusId}

@@ -1028,8 +1028,6 @@
                 custBillWebPortalUrl : $('#billGrpWebUrl').val().trim(),
                 custBillIsSms2       : $('#billMthdSms2').is(":checked") ? 1 : 0,
                 custBillCustCareCntId: $("#hiddenBPCareId").val(),
-                rem1                        : '${preOrderInfo.rem1}',
-                rem2                        : '${preOrderInfo.rem2}',
                 stusId                     : vStusId
             };
 
