@@ -646,6 +646,16 @@
 	</td>
 </tr>
 <tr>
+    <th scope="row"><spring:message code='sales.isEKeyin'/></th>
+    <td>
+    <input id="isEKeyin" name="isEKeyin" type="checkbox"/>
+    </td>
+    <th scope="row"></th>
+    <td></td>
+    <th scope="row"></th>
+    <td></td>
+</tr>
+<tr>
     <th scope="row" colspan="6" ><span class="must"><spring:message code='sales.msg.ordlist.keyin'/></span></th>
 </tr>
 </tbody>

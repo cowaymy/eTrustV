@@ -88,6 +88,12 @@
     <td colspan="3">${orderDetail.basicInfo.addCmpt}</td>
 </tr>
 <tr>
+    <th scope="row"><spring:message code="sal.text.ekeyCrtUser" /></th>
+    <td colspan="1">${orderDetail.basicInfo.ekeyCrtUser}</td>
+    <th scope="row"><spring:message code="sal.text.ekeyBrnchName" /></th>
+    <td colspan="3">${orderDetail.basicInfo.ekeyBrnchName}</td>
+</tr>
+<tr>
     <th scope="row"><spring:message code="sal.text.remark" /></th>
     <td colspan="5">${orderDetail.basicInfo.ordRem}</td>
 </tr>

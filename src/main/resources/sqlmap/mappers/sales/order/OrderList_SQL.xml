@@ -177,6 +177,9 @@
                                       FROM PAY0015D
                                      WHERE PO_REF_NO = #{invoicePoNo})
                 </if>
+                <if test='isEKeyin != null and isEKeyin != ""'>
+                  AND EKEY_IN_ID IS NOT NULL
+                </if>
                ) T
            ORDER BY T.ORD_NO ASC
     </select>

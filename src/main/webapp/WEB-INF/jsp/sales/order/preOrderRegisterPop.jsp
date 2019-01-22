@@ -374,6 +374,10 @@
                 fn_loadProductPrice(appTypeVal, stkIdVal, srvPacId);
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
+
+            fn_loadProductComponent(stkIdVal);
+            setTimeout(function() { fn_check(0) }, 200);
+
         });
         $('#ordPromo').change(function() {
 
@@ -571,6 +575,16 @@
                 delete myFileCaches[5];
             }else if(file != null){
                 myFileCaches[5] = {file:file};
+            }
+            console.log(myFileCaches);
+        });
+
+        $('#otherFile2').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null && myFileCaches[6] != null){
+                delete myFileCaches[6];
+            }else if(file != null){
+                myFileCaches[6] = {file:file};
             }
             console.log(myFileCaches);
         });
@@ -951,6 +965,32 @@
     	return isValid;
     }
 
+    function fn_check(a) {
+        console.log("CURRENT LENGTH :: " + $('#compType option').length);
+        if ($('#compType option').length <= 0) {
+            console.log("WAITING RESPONE :: RETRY  TIMES :: " + a);
+            if (a == 3) {
+                return;
+            } else {
+              setTimeout(function() { fn_check( parseInt(a) + 1 ) }, 500);
+            }
+        } else if ($('#compType option').length <= 1) {
+          $('#compType').addClass("blind");
+          $('#compType').prop("disabled", true);
+        } else if ($('#compType option').length > 1) {
+          $('#compType').removeClass("blind");
+          $('#compType').removeAttr("disabled");
+
+          var key = 0;
+          Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
+            if(defaultKey != null) {
+              key = defaultKey.code;
+            }
+            $('#compType').val(key).change();
+          });
+        }
+      }
+
     function fn_doSavePreOrder() {
 
         var vAppType    = $('#appType').val();
@@ -980,6 +1020,7 @@
             instct               : $('#speclInstct').val().trim(),
             exTrade              : $('#exTrade').val(),
             itmStkId             : $('#ordProudct').val(),
+            itmCompId          : $('#compType').val(),
             promoId              : $('#ordPromo').val(),
             mthRentAmt           : $('#ordRentalFees').val().trim(),
 //            promoDiscPeriodTp    : $('#promoDiscPeriodTp').val(),
@@ -1190,6 +1231,11 @@
         });
     }
 
+  //LoadProductComponent
+    function fn_loadProductComponent(stkId) {
+        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
+    }
+
     //LoadProductPromotion
     function fn_loadProductPromotion(appTypeVal, stkId, empChk, custTypeVal, exTrade) {
         console.log('fn_loadProductPromotion --> appTypeVal:'+appTypeVal);
@@ -1268,6 +1314,7 @@
         $('#ordPriceId').val('');
         $('#ordPv').val('');
         $('#ordRentalFees').val('');
+        $('#compType').addClass("blind");
     }
 
     //ClearControl_BillGroup
@@ -1634,6 +1681,9 @@
         }else if(name == "OTH"){
             $("#otherFile").val("");
             $('#otherFile').change();
+        }else if(name == "OTH2"){
+            $("#otherFile2").val("");
+            $('#otherFile2').change();
         }
     }
 </script>
@@ -2010,11 +2060,13 @@
 </tr>
 <tr>
     <th scope="row">Product | Produk<span class="must">*</span></th>
-    <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select></td>
+    <td><select id="ordProudct" name="ordProudct" class="w50p" disabled></select>
+            <select id="compType" name="compType" class="w50p blind" ></select>
+    </td>
 </tr>
 <tr>
     <th scope="row">Promotion | Promosi<span class="must">*</span></th>
-    <td><select id="ordPromo" name="ordPromo" class="w100p" disabled></select></td>
+    <td><select id="ordPromo" name="ordPromo" class="w50p" disabled></select></td>
 </tr>
 <!-- <tr>
 	<th scope="row">Installment Duration<span class="must">*</span></th>
@@ -2022,7 +2074,7 @@
 </tr> -->
 <tr>
     <th scope="row">Price / RPF (RM)</th>
-    <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w100p readonly" readonly />
+    <td><input id="ordPrice"    name="ordPrice"    type="text" title="" placeholder="Price/Rental Processing Fees (RPF)" class="w50p readonly" readonly />
         <input id="ordPriceId"  name="ordPriceId"  type="hidden" />
         <input id="normalOrdPrice" name="normalOrdPrice" type="hidden" />
         <input id="normalOrdPv"    name="normalOrdPv"    type="hidden" /></td>
@@ -2052,7 +2104,7 @@
 	<th scope="row">Salesman Code / Name<span class="must">*</span></th>
     <td><input id="salesmanCd" name="salesmanCd" type="text" style="width:115px;" title="" placeholder="" class=""/>
         <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <p><input id="salesmanNm" name="salesmanNm" type="text" style="width:115px;" title="" placeholder="Salesman Name" readonly disabled/></p>
+        <p><input id="salesmanNm" name="salesmanNm" type="text" class="w100p readyonly" title="" placeholder="Salesman Name" disabled/></p>
         </td>
 </tr>
 <tr>
@@ -2592,9 +2644,22 @@
             </label>
             <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
         </div>
-
     </td>
 </tr>
+<tr>
+    <th scope="row">Declaration letter/Others form 2</th>
+    <td>
+        <div class="auto_file2 auto_file3">
+            <input type="file" title="file add" id="otherFile2" accept="image/*"/>
+            <label>
+                <input type='text' class='input_text' readonly='readonly' />
+                <span class='label_text'><a href='#'>Upload</a></span>
+            </label>
+            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
+        </div>
+    </td>
+</tr>
+
 <tr>
     <td colspan=2><span class="red_text">Only allow picture format (JPG, PNG, JPEG)</span></td>
 </tr>

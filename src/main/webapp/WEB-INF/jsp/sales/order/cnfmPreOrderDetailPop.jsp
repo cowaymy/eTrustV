@@ -31,6 +31,7 @@
         if(myFileCaches[3] != null) $('#txtPayFileName_RW').text(myFileCaches[3].file.name);
         if(myFileCaches[4] != null) $('#txtTrFileName_RW').text(myFileCaches[4].file.name);
         if(myFileCaches[5] != null) $('#txtOtherFileName_RW').text(myFileCaches[5].file.name);
+        if(myFileCaches[6] != null) $('#txtOtherFileName2_RW').text(myFileCaches[6].file.name);
     }
 
   });
@@ -64,6 +65,9 @@
                           $(".input_text[id='txtTrFileName_RW']").val(result[i].atchFileName);
                           break;
                       case '5':
+                          $(".input_text[id='txtOtherFileName_RW']").val(result[i].atchFileName);
+                          break;
+                      case '6':
                           $(".input_text[id='txtOtherFileName_RW']").val(result[i].atchFileName);
                           break;
                        default:
@@ -184,6 +188,10 @@
     <th scope="row">Declaration letter/Others form</th>
     <!-- <td><label><input type='text' class='input_text' readonly='readonly' id='txtOtherFileName_RW'/></label></td> -->
     <td><span id="txtOtherFileName_RW"></span></td>
+</tr>
+<tr>
+    <th scope="row">Declaration letter/Others form</th>
+    <td><span id="txtOtherFileName2_RW"></span></td>
 </tr>
 </tbody>
 </table><!-- table end -->

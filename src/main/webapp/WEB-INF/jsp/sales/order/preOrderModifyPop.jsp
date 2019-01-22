@@ -12,12 +12,14 @@
     var payFileId = 0;
     var trFileId = 0;
     var otherFileId = 0;
+    var otherFileId2 = 0;
 
     var sofFileName = "";
     var nricFileName = "";
     var payFileName = "";
     var trFileName = "";
     var otherFileName = "";
+    var otherFileName2 = "";
 
     $(document).ready(function(){
 
@@ -372,6 +374,9 @@
                 fn_loadProductPrice(appTypeVal, stkIdVal,srvPacId);
                 fn_loadProductPromotion(appTypeVal, stkIdVal, empChk, custTypeVal, exTrade);
             }
+
+            fn_loadProductComponent(stkIdVal);
+            setTimeout(function() { fn_check(0) }, 200);
         });
         $('#ordPromo').change(function() {
 
@@ -574,6 +579,18 @@
                 myFileCaches[5] = {file:file};
                 if(otherFileName != ""){
                     update.push(otherFileId);
+                }
+            }
+        });
+
+        $('#otherFile2').change(function(evt) {
+            var file = evt.target.files[0];
+            if(file == null){
+                remove.push(otherFileId2);
+            }else if(file.name != otherFileName2){
+                myFileCaches[6] = {file:file};
+                if(otherFileName2 != ""){
+                    update.push(otherFileId2);
                 }
             }
         });
@@ -978,6 +995,7 @@
                 instct               : $('#speclInstct').val().trim(),
                 exTrade              : $('#exTrade').val(),
                 itmStkId             : $('#ordProudct').val(),
+                itmCompId          : $('#compType').val(),
                 promoId              : $('#ordPromo').val(),
                 mthRentAmt           : $('#ordRentalFees').val().trim(),
 //                promoDiscPeriodTp    : $('#promoDiscPeriodTp').val(),
@@ -1049,6 +1067,32 @@
             Common.alert(result.message+"<br/>Upload Failed. Please check with System Administrator.");
         });
     }
+
+    function fn_check(a) {
+        console.log("CURRENT LENGTH :: " + $('#compType option').length);
+        if ($('#compType option').length <= 0) {
+            console.log("WAITING RESPONE :: RETRY  TIMES :: " + a);
+            if (a == 3) {
+                return;
+            } else {
+              setTimeout(function() { fn_check( parseInt(a) + 1 ) }, 500);
+            }
+        } else if ($('#compType option').length <= 1) {
+          $('#compType').addClass("blind");
+          $('#compType').prop("disabled", true);
+        } else if ($('#compType option').length > 1) {
+          $('#compType').removeClass("blind");
+          $('#compType').removeAttr("disabled");
+
+          var key = 0;
+          Common.ajax("GET", "/sales/order/selectProductComponentDefaultKey.do", {stkId : $("#ordProudct").val()}, function(defaultKey) {
+            if(defaultKey != null) {
+              key = defaultKey.code;
+            }
+            $('#compType').val(key).change();
+          });
+        }
+      }
 
     function fn_closePreOrdModPop() {
         fn_getPreOrderList();
@@ -1195,6 +1239,11 @@
                 $("#promoDiscPeriod").val(promoPriceInfo.promoDiscPeriod);
             }
         });
+    }
+
+    //LoadProductComponent
+    function fn_loadProductComponent(stkId) {
+        doGetComboData('/sales/order/selectProductComponent.do', {stkId:stkId}, '', 'compType', 'S', ''); //Common Code
     }
 
     //LoadProductPromotion
@@ -1495,6 +1544,12 @@
 
         var stkType = '${preOrderInfo.appTypeId}' == '66' ? '1' : '2';
         doGetComboAndGroup2('/sales/order/selectProductCodeList.do', {stkType:stkType, srvPacId:'${preOrderInfo.srvPacId}'}, '${preOrderInfo.itmStkId}', 'ordProudct', 'S', 'fn_setOptGrpClass');//product 생성
+
+        if('${preOrderInfo.cpntId}' != null){
+        	$('#compType').removeClass("blind");
+        	fn_loadProductComponent('${preOrderInfo.itmStkId}');
+        	setTimeout(function() { fn_check() }, 200);
+        }
 
         $('#installDur').val('${preOrderInfo.instPriod}');
         $('#poNo').val('${preOrderInfo.custPoNo}');
@@ -1816,6 +1871,11 @@
 	                        otherFileName = result[i].atchFileName;
 	                        $(".input_text[id='otherFileTxt']").val(otherFileName);
 	                        break;
+	                    case '6':
+                            otherFileId = result[i].atchFileId;
+                            otherFileName = result[i].atchFileName;
+                            $(".input_text[id='otherFileTxt2']").val(otherFileName2);
+                            break;
 	                     default:
 	                    	 Common.alert("no files");
 	                    }
@@ -1852,6 +1912,10 @@
             $("#otherFile").val("");
             $(".input_text[name='otherFileTxt']").val("");
             $('#otherFile').change();
+        }else if(name == "OTH2"){
+            $("#otherFile2").val("");
+            $(".input_text[name='otherFileTxt2']").val("");
+            $('#otherFile2').change();
         }
     }
 
@@ -2226,11 +2290,14 @@
 </tr>
 <tr>
     <th scope="row">Product | Produk<span class="must">*</span></th>
-    <td><select id="ordProudct" name="ordProudct" class="w100p" disabled></select></td>
+    <td>
+        <select id="ordProudct" name="ordProudct" class="w50p" disabled></select>
+        <select id="compType" name="compType" class="w50p blind" ></select>
+    </td>
 </tr>
 <tr>
     <th scope="row">Promotion | Promosi<span class="must">*</span></th>
-    <td><select id="ordPromo" name="ordPromo" class="w100p" disabled></select></td>
+    <td><select id="ordPromo" name="ordPromo" class="w50p" disabled></select></td>
 </tr>
 <!-- <tr>
     <th scope="row">Installment Duration<span class="must">*</span></th>
@@ -2268,7 +2335,7 @@
     <th scope="row">Salesman Code / Name<span class="must">*</span></th>
     <td><input id="salesmanCd" name="salesmanCd" type="text" style="width:115px;" title="" placeholder="" class=""/>
         <a id="memBtn" href="#" class="search_btn"><img src="${pageContext.request.contextPath}/resources/images/common/normal_search.gif" alt="search" /></a>
-        <p><input id="salesmanNm" name="salesmanNm" type="text" style="width:115px;" title="" placeholder="Salesman Name" readonly disabled/></p>
+        <p><input id="salesmanNm" name="salesmanNm" type="text" class="w100p readonly" title="" placeholder="Salesman Name" disabled/></p>
         </td>
 </tr>
 <tr>
@@ -2805,6 +2872,19 @@
 	            </label>
 	            <span class='label_text'><a href='#' onclick='fn_removeFile("OTH")'>Remove</a></span>
 	    </div>
+    </td>
+</tr>
+<tr>
+    <th scope="row">Declaration letter/Others form 2</th>
+    <td id="tdOtherFile2">
+        <div class='auto_file2 auto_file3'>
+                <input type='file' title='file add' id='otherFile2' accept='image/*''/>
+                <label>
+                    <input type='text' class='input_text' readonly='readonly' id='otherFileTxt2' name=''/>
+                    <span class='label_text'><a href='#'>Upload</a></span>
+                </label>
+                <span class='label_text'><a href='#' onclick='fn_removeFile("OTH2")'>Remove</a></span>
+        </div>
     </td>
 </tr>
 <tr>
