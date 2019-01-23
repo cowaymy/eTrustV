@@ -86,13 +86,14 @@ public class ScmInterfaceManagementController {
 		
 		return	ResponseEntity.ok(map);
 	}
+	
 	@RequestMapping(value = "/doInterface.do", method = RequestMethod.POST)
-	public ResponseEntity<ReturnMessage> doInterface(@RequestBody Map<String, List<Map<String, Object>>> params,	SessionVO sessionVO) {
+	public ResponseEntity<ReturnMessage> doInterface(@RequestBody Map<String, List<Map<String, Object>>> params) {
 		
 		int totCnt	= 0;
 		List<Map<String, Object>> chkList	= params.get(AppConstants.AUIGRID_CHECK);
-		
-		totCnt	= scmInterfaceManagementService.doInterface(chkList, sessionVO);
+		LOGGER.debug("chkList : {}", chkList.toString());
+		totCnt	= scmInterfaceManagementService.doInterface(chkList);
 		
 		ReturnMessage message = new ReturnMessage();
 		
