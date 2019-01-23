@@ -1224,6 +1224,7 @@ function   fn_LoadRentalSVMPackage(_packId){
 
              $("#hiddenNomalFees").val(result.packageInfo.srvPacItmRental);
              $("#txtBSFreq").text(result.packageInfo.c1 +"month(s)");
+             $("#hiddentxtBSFreq").val(result.packageInfo.c1);
 
              $("#zeroRatYn").val(result.packageInfo.zeroRatYn);
              $("#eurCertYn").val(result.packageInfo.eurCertYn);
