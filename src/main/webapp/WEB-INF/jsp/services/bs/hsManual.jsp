@@ -1222,10 +1222,10 @@
           type="text" title="" placeholder="HS Order" class="w100p" />
          </td>
          <th scope="row">HS Period</th>
-         <td><p style="width:65%">
+         <td><p style="width:70%;">
          <input id="myBSMonth" name="myBSMonth" type="text"
           title="기준년월" placeholder="MM/YYYY" class="j_date2 w100p"/></p>
-          <p class="btn_grid" style="width:25%;align:right">
+          <p class="btn_gray">
            <a href="#" onclick="fn_cMyBSMonth('myBSMonth')">Clear</a>
           </p></td>
          <th scope="row">HS Status</th>
@@ -1242,10 +1242,10 @@
           type="text" title="" placeholder="Sales Order" class="w100p" />
          </td>
          <th scope="row">Install Month</th>
-         <td><p style="width:65%"><input id="myInstallMonth" name="myInstallMonth"
+         <td><p style="width:70%"><input id="myInstallMonth" name="myInstallMonth"
           type="text" title="기준년월" placeholder="MM/YYYY"
           class="j_date2 w100p" /></p>
-          <p class="btn_grid" style="width:25%;align:right">
+          <p class="btn_gray">
            <a href="#" onclick="fn_cMyBSMonth('myInstallMonth')">Clear</a>
           </p>
           </td>
@@ -1357,10 +1357,10 @@
           type="text" title="" placeholder="Sales Order" class="w100p" />
          </td>
          <th scope="row">HS Period</th>
-         <td><p style="width:73%"><input id="ManuaMyBSMonth" name="ManuaMyBSMonth"
+         <td><p style="width:70%"><input id="ManuaMyBSMonth" name="ManuaMyBSMonth"
           type="text" title="기준년월" placeholder="MM/YYYY"
           class="j_date2 w100p" readonly /></p>
-          <p class="btn_grid" style="width:25%;align:right">
+          <p class="btn_gray">
            <a href="#" onclick="fn_cMyBSMonth('ManuaMyBSMonth')">Clear</a>
           </p>
          </td>
